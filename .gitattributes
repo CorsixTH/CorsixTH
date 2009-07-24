@@ -7,6 +7,7 @@ CorsixTH/Bitmap/build_room_dialog_close.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.exe -text
+CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/CorsixTH.vcproj eol=crlf
