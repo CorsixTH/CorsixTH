@@ -1,0 +1,43 @@
+---- CorsixTH configuration file ----------------------------------------------
+-- Lines starting with two dashes (like this one) are ignored.
+-- Text settings should have their values between double square braces, e.g.
+--  setting = [[value]]
+-- Number settings should not have anything around their value, e.g.
+--  setting = 42
+
+-------------------------------------------------------------------------------
+-- Theme hospital install folder: original game data files are loaded from this
+-- folder. Between the square braces should be the folder which contains the
+-- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
+-- the Theme Hospital demo, though a full install of the original game is
+-- preferred.
+theme_hospital_install = [[X:\ThemeHospital\hospital]]
+-- theme_hospital_install = [[X:\ThemeHospital\Demo\]]
+-- theme_hospital_install = [[/home/corsix/hospital/]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Language to use for ingame text. Between the square braces should be one of:
+--  English / en / eng
+--  French  / fr / fre / fra
+--  German  / de / ger / deu
+--  Italian / it / ita
+--  Spanish / es / spa
+--  Swedish / sv / swe
+language = [[English]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Screen size. Must be at least 640x480. Larger sizes will require better
+-- hardware in order to maintain a playable framerate. The fullscreen setting
+-- can be true or false, and the game will run windowed if not fullscreen.
+if false then
+ width = 1280
+ height = 1024
+ fullscreen = true
+else
+ width = 1024
+ height = 768
+ fullscreen = false
+end
+-------------------------------------------------------------------------------
