@@ -26,6 +26,11 @@ function dofile(name)
   return do_file(code_dir .. name .. ".lua")
 end
 
+-- Enable strict mode
+TheApp = false
+dofile "strict"
+require = destrict(require)
+
 -- Load the class system (required for App)
 dofile "class"
 

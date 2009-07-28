@@ -25,16 +25,32 @@ SOFTWARE.
 
 /** Rendering engine choice **/
 // SDL - Multiplatform, but suboptimal on some platforms
-// DX9 - Windows only, but always has HW accellerated alpha blitting
+// DX9 - Windows only, but always has HW accellerated (alpha) blitting
 #ifdef _WIN32
 #define CORSIX_TH_USE_DX9_RENDERER
 #else
 #define CORSIX_TH_USE_SDL_RENDERER
 #endif
 
+/** Windows Platform SDK usage **/
+// When compiling on Windows, the platform SDK should be used. However, when
+// using the SDL rendering engine, the platform SDK is not used for anything
+// critical, and so its use can be avoided if necessary.
+#ifdef _WIN32
+#define CORSIX_TH_USE_WIN32_SDK
+#endif
+
+/** SDL options **/
+// On Windows, the default is to use the copy of SDLmain which is included with
+// CorsixTH (SDL_main_win32.c), but a prebuilt SDLmain library can be used
+// instead.
+#ifdef CORSIX_TH_USE_WIN32_SDK
+#define CORSIX_TH_USE_INCLUDED_SDL_MAIN
+#endif
+
 /** DX9 rendering engine options **/
 // Uncomment the next line to render faster than the monitor refresh rate
-// #define CORSIX_TH_DX9_UNLIMITED_FPS
+//#define CORSIX_TH_DX9_UNLIMITED_FPS
 
 /** Standard includes **/
 #include <stddef.h>
@@ -51,4 +67,3 @@ typedef unsigned __int32 uint32_t;
 #endif // _MSC_VER
 
 #endif // CORSIX_TH_CONFIG_H_
-

@@ -123,10 +123,10 @@ function UIEditRoom:finishRoom()
       if x == rect.x and y == rect.y then
         local _, east, north = map:getCell(x, y)
         if world:getWallIdFromBlockId(east) ~= "external" then
-          map:setCell(x, y, 2, wall_type.inside_tiles.east)
+          map:setCell(x, y, 2, wall_type.inside_tiles.north)
         end
         if world:getWallIdFromBlockId(north) ~= "external" then
-          map:setCell(x, y, 3, wall_type.inside_tiles.north)
+          map:setCell(x, y, 3, wall_type.inside_tiles.west)
         end
       else
         local tiles = "outside_tiles"
@@ -137,8 +137,8 @@ function UIEditRoom:finishRoom()
         if tag == "window" then
           tiles = "window_tiles"
         end
-        local dir = (anim:getFlag() % 2 == 1) and "north" or "east"
-        local layer = dir == "east" and 2 or 3
+        local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
+        local layer = dir == "north" and 2 or 3
         if tag == "door" then
           world:newObject("door", x, y, dir)
         elseif world:getWallIdFromBlockId(map:getCell(x, y, layer)) ~= "external" then
@@ -188,68 +188,68 @@ function UIEditRoom:screenToWall(x, y)
     -- top corner
     local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
-      return cellx + 1, celly, "east"
+      return cellx + 1, celly, "north"
     else
-      return cellx, celly + 1, "north"
+      return cellx, celly + 1, "west"
     end
   elseif cellx == rect.x + rect.w - 1 and celly == rect.y + rect.h - 1 then
     -- bottom corner
     local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
-      return cellx, celly - 1, "south"
+      return cellx, celly - 1, "east"
     else
-      return cellx - 1, celly, "west"
+      return cellx - 1, celly, "south"
     end
   elseif cellx == rect.x and celly == rect.y + rect.h - 1 then
     -- left corner
     local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
-      return cellx + 1, celly, "west"
+      return cellx + 1, celly, "south"
     else
-      return cellx, celly - 1, "north"
+      return cellx, celly - 1, "west"
     end
   elseif cellx == rect.x + rect.w - 1 and celly == rect.y then
     -- right corner
     local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
-      return cellx, celly + 1, "south"
+      return cellx, celly + 1, "east"
     else
-      return cellx - 1, celly, "east"
+      return cellx - 1, celly, "north"
     end
   elseif (cellx == rect.x - 1 or cellx == rect.x) and rect.y <= celly and celly < rect.y + rect.h then
-    -- north edge
+    -- west edge
     if celly == rect.y then
       celly = rect.y + 1
     elseif celly == rect.y + rect.h - 1 then
       celly = rect.y + rect.h - 2
     end
-    return rect.x, celly, "north"
+    return rect.x, celly, "west"
   elseif (celly == rect.y - 1 or celly == rect.y) and rect.x <= cellx and cellx < rect.x + rect.w then
-    -- east edge
+    -- north edge
     if cellx == rect.x then
       cellx = rect.x + 1
     elseif cellx == rect.x + rect.w - 1 then
       cellx = rect.x + rect.w - 2
     end
-    return cellx, rect.y, "east"
+    return cellx, rect.y, "north"
   elseif (cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1)
       and rect.y <= celly and celly < rect.y + rect.h then
-    -- south edge
+    -- east edge
     if celly == rect.y then
       celly = rect.y + 1
     elseif celly == rect.y + rect.h - 1 then
       celly = rect.y + rect.h - 2
     end
-    return rect.x + rect.w - 1, celly, "south"
+    return rect.x + rect.w - 1, celly, "east"
   elseif (celly == rect.y + rect.h or celly == rect.y + rect.h - 1)
       and rect.x <= cellx and cellx < rect.x + rect.w then
-    -- west edge
+    -- south edge
     if cellx == rect.x then
       cellx = rect.x + 1
     elseif cellx == rect.x + rect.w - 1 then
       cellx = rect.x + rect.w - 2 
     end
-    return cellx, rect.y + rect.h - 1, "west"
+    return cellx, rect.y + rect.h - 1, "south"
   end
 end
 
@@ -371,12 +371,12 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   local orig_y = y
   local orig_wall = wall
   
-  if wall == "west" then
+  if wall == "south" then
     y = y + 1
-    wall = "east"
-  elseif wall == "south" then
-    x = x + 1
     wall = "north"
+  elseif wall == "east" then
+    x = x + 1
+    wall = "west"
   end
   
   local map = self.ui.app.map.th
@@ -407,13 +407,13 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   self.blueprint_door.valid = true
   local flags
-  if wall == "north" then
+  if wall == "west" then
     flags = 1
     if map:getCell(x, y, 3) ~= 0 then
       flags = flags + 16
       self.blueprint_door.valid = false
     end
-  else--if wall == "east" then
+  else--if wall == "north" then
     flags = 0
     if map:getCell(x, y, 2) ~= 0 then
       flags = flags + 16
@@ -438,12 +438,12 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   local orig_y = y
   local orig_wall = wall
   
-  if wall == "west" then
+  if wall == "south" then
     y = y + 1
-    wall = "east"
-  elseif wall == "south" then
-    x = x + 1
     wall = "north"
+  elseif wall == "east" then
+    x = x + 1
+    wall = "west"
   end
   
   local map = self.ui.app.map.th
@@ -480,13 +480,13 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   end
   self.blueprint_window.valid = true
   local flags
-  if wall == "north" then
+  if wall == "west" then
     flags = 1
     if world:getWallIdFromBlockId(map:getCell(x, y, 3)) == "external" then
       self.blueprint_window.valid = false
       flags = flags + 16
     end
-  else--if wall == "east" then
+  else--if wall == "north" then
     flags = 0
     if world:getWallIdFromBlockId(map:getCell(x, y, 2)) == "external" then
       self.blueprint_window.valid = false

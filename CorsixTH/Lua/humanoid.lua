@@ -22,12 +22,12 @@ class "Humanoid" (Entity)
 
 local walk_animations = {}
 local door_animations = {}
-local function anims(name, walkE, walkS, idleE, idleS, doorL, doorE)
+local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE)
   walk_animations[name] = {
     walk_east = walkE,
-    walk_south = walkS,
+    walk_north = walkN,
     idle_east = idleE,
-    idle_south = idleS,
+    idle_north = idleN,
   }
   door_animations[name] = {
     entering = doorE,
@@ -35,7 +35,7 @@ local function anims(name, walkE, walkS, idleE, idleS, doorL, doorE)
   }
 end
 
---   |Name                       |WalkE|WalkS|IdleE|IdleS|DoorL|DoorE| Notes
+--   |Name                       |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE| Notes
 -----+---------------------------+-----+-----+-----+-----+-----+-----+---------
 anims("Standard Male Patient",       16,   18,   24,   26,  182,  184) -- 0-16, ABC
 anims("Gowned Male Patient",        406,  408,  414,  416)             -- 0-10
@@ -70,7 +70,7 @@ function Humanoid:setType(humanoid_class)
   assert(walk_animations[humanoid_class], "Invalid humanoid class: " .. tostring(humanoid_class))
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
-  self:setAnimation(self.walk_anims.idle_south)
+  self:setAnimation(self.walk_anims.idle_east)
 end
 
 local walk_timer_weak_set = setmetatable({}, {__mode = "k"})
@@ -154,38 +154,38 @@ function Humanoid:walkTo(tile_x, tile_y, when_done)
     end
     
     if x1 ~= x2 then
-      if x1 < x2 then -- Walking south
-        idle = self.walk_anims.idle_south
-        if map:getCellFlags(x2, y2, flags).doorNorth and self.door_anims then
-          return navigateDoor(x1, y1, x2, y2, "south")
+      if x1 < x2 then -- Walking east
+        idle = self.walk_anims.idle_east
+        if map:getCellFlags(x2, y2, flags).doorWest and self.door_anims then
+          return navigateDoor(x1, y1, x2, y2, "east")
         else
-          self:setAnimation(self.walk_anims.walk_south, 1024)
+          self:setAnimation(self.walk_anims.walk_east, 1024)
           self:setTilePositionSpeed(x2, y2, -32, -16, 4, 2)
         end
-      else -- Walking north
-        idle = self.walk_anims.idle_east
-        if map:getCellFlags(x1, y1, flags).doorNorth and self.door_anims then
-          return navigateDoor(x1, y1, x2, y2, "north")
+      else -- Walking west
+        idle = self.walk_anims.idle_north
+        if map:getCellFlags(x1, y1, flags).doorWest and self.door_anims then
+          return navigateDoor(x1, y1, x2, y2, "west")
         else
-          self:setAnimation(self.walk_anims.walk_east, 1024 + 1)
+          self:setAnimation(self.walk_anims.walk_north, 1024 + 1)
           self:setTilePositionSpeed(x1, y1, 0, 0, -4, -2)
         end
       end
     else
-      if y1 < y2 then -- Walking west
-        idle = self.walk_anims.idle_south
-        if map:getCellFlags(x2, y2, flags).doorEast and self.door_anims then
-          return navigateDoor(x1, y1, x2, y2, "west")
+      if y1 < y2 then -- Walking south
+        idle = self.walk_anims.idle_east
+        if map:getCellFlags(x2, y2, flags).doorNorth and self.door_anims then
+          return navigateDoor(x1, y1, x2, y2, "south")
         else
-          self:setAnimation(self.walk_anims.walk_south, 1)
+          self:setAnimation(self.walk_anims.walk_east, 1)
           self:setTilePositionSpeed(x2, y2, 32, -16, -4, 2)
         end
-      else -- Walking east
-        idle = self.walk_anims.idle_east
-        if map:getCellFlags(x1, y1, flags).doorEast and self.door_anims then
-          return navigateDoor(x1, y1, x2, y2, "east")
+      else -- Walking north
+        idle = self.walk_anims.idle_north
+        if map:getCellFlags(x1, y1, flags).doorNorth and self.door_anims then
+          return navigateDoor(x1, y1, x2, y2, "north")
         else
-          self:setAnimation(self.walk_anims.walk_east)
+          self:setAnimation(self.walk_anims.walk_north)
           self:setTilePositionSpeed(x1, y1, 0, 0, 4, -2)
         end
       end
@@ -198,13 +198,13 @@ function Humanoid:walkTo(tile_x, tile_y, when_done)
   navigateDoor = function(x1, y1, x2, y2, direction)   
     local dx, dy, dd = x1, y1, direction
     local duration = 12
-    if direction == "south" then
+    if direction == "east" then
       dx = dx + 1
-      dd = "north"
+      dd = "west"
       duration = 10
-    elseif direction == "west" then
+    elseif direction == "south" then
       dy = dy + 1
-      dd = "east"
+      dd = "north"
       duration = 10
     end
     local door = self.world:getObject(dx, dy, "door")
@@ -218,16 +218,16 @@ function Humanoid:walkTo(tile_x, tile_y, when_done)
     door:setUser(self)
     self:setTile(dx, dy)
     self:setSpeed(0, 0)
-    if direction == "east" then
+    if direction == "north" then
       self:setAnimation(self.door_anims.leaving)
       self:setPosition(-1, 0)
-    elseif direction == "north" then
+    elseif direction == "west" then
       self:setAnimation(self.door_anims.leaving, 1024 + 1)
       self:setPosition(1, 0)
-    elseif direction == "south" then
+    elseif direction == "east" then
       self:setAnimation(self.door_anims.entering, 1024)
       self:setPosition(-1, 0)
-    elseif direction == "west" then
+    elseif direction == "south" then
       self:setAnimation(self.door_anims.entering, 1)
       self:setPosition(1, 0)
     end

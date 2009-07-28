@@ -23,32 +23,30 @@ SOFTWARE.
 #include "config.h"
 #include "th_pathfind.h"
 #include "lua.hpp"
+#include <malloc.h>
+#include <stdlib.h>
 #include <queue>
 
 THPathfinder::THPathfinder()
 {
     m_pNodes = NULL;
     m_ppDirtyList = NULL;
+    m_ppOpenHeap = (node_t**)malloc(sizeof(node_t*) * 8);
     m_pDestination = NULL;
     m_pDefaultMap = NULL;
     m_iNodeCacheWidth = 0;
     m_iNodeCacheHeight = 0;
     m_iDirtyCount = 0;
+    m_iOpenCount = 0;
+    m_iOpenSize = 8;
 }
 
 THPathfinder::~THPathfinder()
 {
+    free(m_ppOpenHeap);
     delete[] m_pNodes;
     delete[] m_ppDirtyList;
 }
-
-struct node_compare
-{
-    bool operator() (THPathfinder::node_t* a, THPathfinder::node_t* b)
-    {
-        return (b->distance + b->guess) < (a->distance + a->guess);
-    }
-};
 
 void THPathfinder::setDefaultMap(const THMap *pMap)
 {
@@ -57,8 +55,6 @@ void THPathfinder::setDefaultMap(const THMap *pMap)
 
 bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY)
 {
-    std::priority_queue<node_t*, std::vector<node_t*>, node_compare> queOpen;
-
     if(pMap == NULL)
         pMap = m_pDefaultMap;
     if(pMap == NULL || pMap->getNode(iEndX, iEndY) == NULL
@@ -68,76 +64,84 @@ bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEn
         return false;
     }
 
+    // As diagonal movement is not allowed, the minimum distance between two
+    // points is the sum of the distance in X and the distance in Y. Provided
+    // that the compiler generates clever assembly for abs(), this means that
+    // guesses can be calculated without branching and without sqrt().
 #define MakeGuess(pNode) \
-    pNode->guess = 0 /*abs(pNode->x - iEndX) + abs(pNode->y - iEndY) */
+    pNode->guess = abs(pNode->x - iEndX) + abs(pNode->y - iEndY)
 
     int iWidth = pMap->getWidth();
-    int iHeight = pMap->getHeight();
-    _allocNodeCache(iWidth, iHeight);
+    _allocNodeCache(iWidth, pMap->getHeight());
     node_t *pNode = m_pNodes + iStartY * iWidth + iStartX;
     node_t *pTarget = m_pNodes + iEndY * iWidth + iEndX;
     pNode->prev = NULL;
     pNode->distance = 0;
     MakeGuess(pNode);
-    m_ppDirtyList[m_iDirtyCount++] = pNode;
-    queOpen.push(pNode);
+    m_ppDirtyList[0] = pNode;
+    m_iDirtyCount = 1;
+    m_iOpenCount = 0;
 
-    while(!queOpen.empty())
+    while(true)
     {
-        pNode = queOpen.top();
-        queOpen.pop();
         if(pNode == pTarget)
         {
-            break;
+            m_pDestination = pTarget;
+            return true;
         }
 
         unsigned long iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
         unsigned long iPassable = iFlags & THMN_Passable;
 
 #define TryNode(n) \
+    node_t *pNeighbour = n; \
+    int iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+    if(iNFlags & THMN_Passable || iPassable == 0) \
     { \
-        node_t *pNeighbor = n; \
-        if(pNeighbor->prev == pNeighbor) \
+        if(pNeighbour->prev == pNeighbour) \
         { \
-            int iNFlags = pMap->getNodeUnchecked(pNeighbor->x, pNeighbor->y)->iFlags; \
-            if(iNFlags & THMN_Passable || iPassable == 0) \
-            { \
-                pNeighbor->prev = pNode; \
-                pNeighbor->distance = pNode->distance + 1; \
-                MakeGuess(pNeighbor); \
-                m_ppDirtyList[m_iDirtyCount++] = pNeighbor; \
-                queOpen.push(pNeighbor); \
-            } \
+            pNeighbour->prev = pNode; \
+            pNeighbour->distance = pNode->distance + 1; \
+            MakeGuess(pNeighbour); \
+            m_ppDirtyList[m_iDirtyCount++] = pNeighbour; \
+            _openHeapPush(pNeighbour); \
+        } \
+        else if((pNode->distance + 1) < pNeighbour->distance) \
+        { \
+            pNeighbour->prev = pNode; \
+            pNeighbour->distance = pNode->distance + 1; \
+            /* guess doesn't change, and already in the dirty list */ \
+            _openHeapPromote(pNeighbour); \
         } \
     }
 
-        if(iFlags & THMN_CanTravelN)
+        // No need to check for the node being on the map edge, as the N/E/S/W
+        // flags are set as to prevent travelling off the map (as well as to
+        // prevent walking through walls).
+        if(iFlags & THMN_CanTravelW)
         {
             TryNode(pNode - 1);
         }
-        if(iFlags & THMN_CanTravelS)
+        if(iFlags & THMN_CanTravelE)
         {
             TryNode(pNode + 1);
         }
-        if(iFlags & THMN_CanTravelE)
+        if(iFlags & THMN_CanTravelN)
         {
             TryNode(pNode - iWidth);
         }
-        if(iFlags & THMN_CanTravelW)
+        if(iFlags & THMN_CanTravelS)
         {
             TryNode(pNode + iWidth);
         }
-    }
 
-    if(pNode == pTarget)
-    {
-        m_pDestination = pTarget;
-        return true;
-    }
-    else
-    {
-        m_pDestination = NULL;
-        return false;
+        if(m_iOpenCount == 0)
+        {
+            m_pDestination = NULL;
+            return false;
+        }
+        else
+            pNode = _openHeapPop();
     }
 
 #undef MakeGuess
@@ -158,6 +162,8 @@ void THPathfinder::_allocNodeCache(int iWidth, int iHeight)
                 pNode->prev = pNode;
                 pNode->x = iX;
                 pNode->y = iY;
+                // Other fields are undefined as the node is not part of a
+                // path, and thus can be left uninitialised.
             }
         }
         delete[] m_ppDirtyList;
@@ -170,6 +176,8 @@ void THPathfinder::_allocNodeCache(int iWidth, int iHeight)
         for(int i = 0; i < m_iDirtyCount; ++i)
         {
             m_ppDirtyList[i]->prev = m_ppDirtyList[i];
+            // Other fields are undefined as the node is not part of a path,
+            // and thus can keep their old values.
         }
     }
     m_iDirtyCount = 0;
@@ -198,11 +206,78 @@ void THPathfinder::pushResult(lua_State *L) const
     lua_createtable(L, iLength + 1, 0);
     lua_createtable(L, iLength + 1, 0);
 
-    for(node_t* pNode = m_pDestination; pNode; pNode = pNode->prev)
+    for(const node_t* pNode = m_pDestination; pNode; pNode = pNode->prev)
     {
         lua_pushinteger(L, pNode->x + 1);
         lua_rawseti(L, -3, pNode->distance + 1);
         lua_pushinteger(L, pNode->y + 1);
         lua_rawseti(L, -2, pNode->distance + 1);
     }
+}
+
+void THPathfinder::_openHeapPush(THPathfinder::node_t* pNode)
+{
+    if(m_iOpenCount == m_iOpenSize)
+    {
+        m_iOpenSize = (m_iOpenSize + 1) * 2;
+        m_ppOpenHeap = (node_t**)realloc(m_ppOpenHeap, sizeof(node_t*) * m_iOpenSize);
+    }
+    int i = m_iOpenCount++;
+    m_ppOpenHeap[i] = pNode;
+    pNode->open_idx = i;
+    _openHeapPromote(pNode);
+}
+
+void THPathfinder::_openHeapPromote(THPathfinder::node_t* pNode)
+{
+    int i = pNode->open_idx;
+    while(i > 0)
+    {
+        int parent = (i - 1) / 2;
+        node_t *pParent = m_ppOpenHeap[parent];
+        if(pParent->value() <= pNode->value())
+            break;
+        pParent->open_idx = i;
+        m_ppOpenHeap[i] = pParent;
+        m_ppOpenHeap[parent] = pNode;
+        i = parent;
+    }
+    pNode->open_idx = i;
+}
+
+THPathfinder::node_t* THPathfinder::_openHeapPop()
+{
+    node_t *pResult = m_ppOpenHeap[0];
+    node_t *pNode = m_ppOpenHeap[--m_iOpenCount];
+    m_ppOpenHeap[0] = pNode;
+    int i = 0;
+    int min = 0;
+    int left = i * 2 + 1;
+    const int value = pNode->value();
+    while(left < m_iOpenCount)
+    {
+        min = i;
+        const int right = (i + 1) * 2;
+        int minvalue = value;
+        node_t *pSwap;
+        node_t *pTest = m_ppOpenHeap[left];
+        if(pTest->value() < minvalue)
+            min = left, minvalue = pTest->value(), pSwap = pTest;
+        if(right < m_iOpenCount)
+        {
+            pTest = m_ppOpenHeap[right];
+            if(pTest->value() < minvalue)
+                min = right, pSwap = pTest;
+        }
+        if(min == i)
+            break;
+
+        pSwap->open_idx = i;
+        m_ppOpenHeap[i] = pSwap;
+        m_ppOpenHeap[min] = pNode;
+        i = min;
+        left = i * 2 + 1;
+    }
+    pNode->open_idx = min;
+    return pResult;
 }

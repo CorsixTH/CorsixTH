@@ -67,7 +67,7 @@ static l_surface_t* l_check_surface_raw(lua_State *L, int idx)
         }
     }
     lua_pop(L, 1);
-    luaL_argerror(L, idx, "Expected SDL Surface");
+    luaL_typerror(L, idx, "SDL Surface");
     return NULL; // To prevent compiler warnings
 }
 
@@ -84,13 +84,14 @@ static SDL_Surface* l_check_surface(lua_State *L, int idx)
         }
     }
     lua_pop(L, 1);
-    luaL_argerror(L, idx, "Expected SDL Surface");
+    luaL_typerror(L, idx, "SDL Surface");
     return NULL; // To prevent compiler warnings
 }
 
 /**
   @function sdl.video.setMode
-  @arguments int width, int height [, int bpp]
+  @arguments int width, int height [, int bpp [, "hardware"] [, "doublebuf"]
+                 [, "fullscreen"]]
   @return SDL_Surface
   @return nil, error_string
 */
@@ -152,6 +153,12 @@ static int l_free(lua_State *L)
     return 0;
 }
 
+/**
+  @function sdl.video.loadBitmap
+  @arguments string filename
+  @return SDL_Surface
+  @return nil, error_string
+*/
 static int l_load_bmp(lua_State *L)
 {
     const char* filename = luaL_checkstring(L, 1);
@@ -185,6 +192,7 @@ static int l_load_bmp(lua_State *L)
   @arg[opt, bool] software
   @arg[opt, bool] colorkey
   @arg[opt, bool] alpha
+  @arg[opt, THPalette] palette
   @return SDL_Surface
   @return nil, error_string
 */
@@ -326,7 +334,7 @@ static int l_new_surface(lua_State *L)
 }
 
 /**
-  @function sdl.video.drawSurface
+  @function sdl.video.draw
   @arguments SDL_Surface src, SDL_Surface dest [, int x, int y [, int srcx, int srcy, int srcw, int srch]]
   @return bool
 */
@@ -365,19 +373,6 @@ static int l_blit_surface(lua_State *L)
         lua_pushboolean(L, 0);
     }
     return 1;
-}
-
-static int l_draw_auto(lua_State *L)
-{
-    SDL_Surface *dst = l_check_surface(L, 1);
-    if(lua_type(L, 2) == LUA_TUSERDATA)
-    {
-        return l_blit_surface(L);
-    }
-    else
-    {
-        return luaL_error(L, "Invalid draw arguments");
-    }
 }
 
 /**
@@ -438,7 +433,7 @@ static int l_ensure_hw_surface(lua_State *L)
 }
 
 /**
-  @function sdl.video.flip
+  @function sdl.video.endFrame
   @arguments SDL_Surface surface
   @return bool
 */
@@ -474,12 +469,22 @@ static int l_save_bmp(lua_State *L)
     }
 }
 
+/**
+  @function sdl.video.getHeight
+  @arguments SDL_Surface surface
+  @return int
+*/
 static int l_get_height(lua_State *L)
 {
     lua_pushinteger(L, l_check_surface(L, 1)->h);
     return 1;
 }
 
+/**
+  @function sdl.video.fillBlack
+  @arguments SDL_Surface surface
+  @return surface
+*/
 static int l_draw_black_rect(lua_State *L)
 {
     SDL_Surface *s = l_check_surface(L, 1);
@@ -500,7 +505,7 @@ static const struct luaL_reg sdl_videolib[] = {
     {"setMode", l_set_mode},
     {"freeSurface", l_free},
     {"draw", l_blit_surface},
-    {"fillBlack", l_draw_black_rect}, // temp
+    {"fillBlack", l_draw_black_rect},
     {"startFrame", l_nop},
     {"endFrame", l_flip},
     {"saveBitmap", l_save_bmp},

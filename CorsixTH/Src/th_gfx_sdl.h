@@ -24,6 +24,10 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_SDL_H_
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_RENDERER
+#ifdef CORSIX_TH_HAS_RENDERING_ENGINE
+#error More than one rendering engine enabled in config file
+#endif
+#define CORSIX_TH_HAS_RENDERING_ENGINE
 
 struct SDL_Surface;
 typedef SDL_Surface THRenderTarget;
@@ -37,6 +41,9 @@ struct THClipRect
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
 void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
+
+void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget);
+void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget);
 
 class THPalette
 {

@@ -37,6 +37,16 @@ void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect
     SDL_SetClipRect(pTarget, reinterpret_cast<const SDL_Rect*>(pRect));
 }
 
+void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
+{
+    // SDL has no optimisations for drawing lots of non-overlapping sprites
+}
+
+void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
+{
+    // SDL has no optimisations for drawing lots of non-overlapping sprites
+}
+
 THPalette::THPalette()
 {
     m_iNumColours = 0;

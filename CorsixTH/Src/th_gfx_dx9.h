@@ -24,6 +24,10 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_DX9_H_
 #include "config.h"
 #ifdef CORSIX_TH_USE_DX9_RENDERER
+#ifdef CORSIX_TH_HAS_RENDERING_ENGINE
+#error More than one rendering engine enabled in config file
+#endif
+#define CORSIX_TH_HAS_RENDERING_ENGINE
 
 struct IDirect3D9;
 struct IDirect3DDevice9;
@@ -49,6 +53,9 @@ struct THRenderTarget
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
 void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
+
+void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget);
+void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget);
 
 class THPalette
 {

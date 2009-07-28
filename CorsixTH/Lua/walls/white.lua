@@ -21,15 +21,15 @@ SOFTWARE. --]]
 local wall = {}
 wall.id = "white"
 wall.inside_tiles = {
-  east = 82,
-  north = 83,
+  north = 82,
+  west = 83,
 }
 wall.outside_tiles = {
-  east = 90,
-  north = 91,
+  north = 90,
+  west = 91,
 }
 wall.window_tiles = {
-  east = 128,
-  north = 129,
+  north = 128,
+  west = 129,
 }
 return wall

@@ -28,6 +28,7 @@ SOFTWARE.
 #include <new>
 #include <string.h>
 
+//! Set a field on the environment table of an object
 static void luaT_setenvfield(lua_State *L, int index, const char *k)
 {
     lua_getfenv(L, index);
@@ -37,6 +38,7 @@ static void luaT_setenvfield(lua_State *L, int index, const char *k)
     lua_pop(L, 2);
 }
 
+//! Push a C closure as a callable table
 static void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
 {
     lua_pushcclosure(L, fn, n); // .. fn <top
@@ -49,6 +51,7 @@ static void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
     lua_setmetatable(L, -2); // .. t <top
 }
 
+//! Check for a string or userdata
 static const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 {
     const unsigned char *pData;
@@ -125,6 +128,8 @@ THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 
 static int l_map_updateblueprint(lua_State *L)
 {
+    // NB: This function can be implemented in Lua, but is implemented in C for
+    // efficiency.
     const unsigned short iFloorTileGood = 24 + (THDF_Alpha50 << 8);
     const unsigned short iFloorTileGoodCenter = 37 + (THDF_Alpha50 << 8);
     const unsigned short iFloorTileBad  = 67 + (THDF_Alpha50 << 8);
@@ -331,7 +336,7 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_Hospital, "hospital")
     Flag(THMN_Buildable, "buildable")
     Flag(THMN_Room, "room")
-    Flag(THMN_DoorEast, "doorEast")
+    Flag(THMN_DoorWest, "doorWest")
     Flag(THMN_DoorNorth, "doorNorth")
 
 #undef Flag
@@ -369,7 +374,7 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_Hospital, "hospital")
             Flag(THMN_Buildable, "buildable")
             Flag(THMN_Room, "room")
-            Flag(THMN_DoorEast, "doorEast")
+            Flag(THMN_DoorWest, "doorWest")
             Flag(THMN_DoorNorth, "doorNorth")
             /* else */ {
                 luaL_error(L, "Invalid flag \'%s\'", field);

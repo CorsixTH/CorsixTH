@@ -27,6 +27,10 @@ SOFTWARE.
 #include "th_gfx_dx9.h"
 #include <stddef.h>
 
+#ifndef CORSIX_TH_HAS_RENDERING_ENGINE
+#error No rendering engine enabled in config file
+#endif
+
 enum THDrawFlags
 {
     // Sprite drawing flags

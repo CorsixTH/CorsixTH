@@ -110,8 +110,8 @@ enum THMapNodeFlags
     THMN_ShadowHalf = 1 <<  9, //!< Rendering: Put block 75 over floor
     THMN_ShadowFull = 1 << 10, //!< Rendering: Put block 74 over floor
     THMN_ShadowWall = 1 << 11, //!< Rendering: Put block 156 over east wall
-    THMN_DoorEast   = 1 << 12, //!< World, Shadows: Door on east wall of tile
-    THMN_DoorNorth  = 1 << 13, //!< World, Shadows: Door on north wall of tile
+    THMN_DoorNorth  = 1 << 12, //!< World, Shadows: Door on north wall of tile
+    THMN_DoorWest   = 1 << 13, //!< World, Shadows: Door on west wall of tile
 
     // NB: Bits 24 through 31 reserved for object type
 };
@@ -131,8 +131,8 @@ struct THMapNode : public THLinkList
     // For each tile, the lower byte is the index in the sprite sheet, and the
     // upper byte is for the drawing flags.
     // Layer 0 is for the floor
-    // Layer 1 is for the east wall
-    // Layer 2 is for the north wall
+    // Layer 1 is for the north wall
+    // Layer 2 is for the west wall
     // Layer 3 is for the UI
     // NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
     uint16_t iBlock[4];

@@ -18,18 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local wall = {}
-wall.id = "yellow"
-wall.inside_tiles = {
-  north = 84,
-  west = 85,
+local object = {}
+object.id = "radiator"
+object.name = _S(2, 45)
+object.ticks = false
+object.corridor_object = 5
+object.build_cost = 20
+object.build_preview_animation = 914
+object.idle_animations = {
+  east = 750,
+  north = 752,
 }
-wall.outside_tiles = {
-  north = 92,
-  west = 93,
-}
-wall.window_tiles = {
-  north = 132,
-  west = 133,
-}
-return wall
+
+return object

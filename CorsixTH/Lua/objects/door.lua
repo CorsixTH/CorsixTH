@@ -23,22 +23,20 @@ object.id = "door"
 object.class = "Door"
 object.ticks = false
 object.idle_animations = {
-  east = 104,
-  north = 106,
+  north = 104,
+  west = 106,
 }
 
 class "Door" (Object)
 
 function Door:Door(...)
   self:Object(...)
-  --if self.direction == "east" then
-    self:setPosition(-1, 0)
-  --end
+  self:setPosition(-1, 0)
 end
 
 local door_flag_name = {
-  east = "doorEast",
   north = "doorNorth",
+  west = "doorWest",
 }
 
 function Door:setTile(x, y)
@@ -48,7 +46,7 @@ function Door:setTile(x, y)
       [door_flag_name[self.direction]] = false,
       buildable = true,
     })
-    if self.direction == "north" then
+    if self.direction == "west" then
       map:setCellFlags(self.x - 1, self.y, {buildable = true})
     else
       map:setCellFlags(self.x, self.y - 1, {buildable = true})
@@ -60,7 +58,7 @@ function Door:setTile(x, y)
       [door_flag_name[self.direction]] = true,
       buildable = false,
     })
-    if self.direction == "north" then
+    if self.direction == "west" then
       map:setCellFlags(x - 1, y, {buildable = false})
     else
       map:setCellFlags(x, y - 1, {buildable = false})
@@ -74,7 +72,7 @@ local flag_list_bottom = 2048
 
 function Door:setAnimation(animation, flags)
   flags = (flags or 0) + flag_list_bottom
-  if self.direction == "east" then
+  if self.direction == "north" then
     flags = flags + flag_early_list
   end
   return Object.setAnimation(self, animation, flags)

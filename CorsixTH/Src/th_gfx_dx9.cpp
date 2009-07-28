@@ -59,6 +59,27 @@ void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect
     }
 }
 
+void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
+{
+    if(pTarget->pSprite)
+    {
+        pTarget->pSprite->End();
+        pTarget->pSprite->Begin(D3DXSPRITE_ALPHABLEND |
+            D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DONOTMODIFY_RENDERSTATE |
+            D3DXSPRITE_SORT_TEXTURE);
+    }
+}
+
+void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
+{
+    if(pTarget->pSprite)
+    {
+        pTarget->pSprite->End();
+        pTarget->pSprite->Begin(D3DXSPRITE_ALPHABLEND |
+            D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
+    }
+}
+
 THPalette::THPalette()
 {
 }
@@ -94,7 +115,8 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
 
 void THPalette::assign(THRenderTarget* pTarget) const
 {
-    // NOP
+    // DX9 rendering engine must have palettes assigned during texture creation
+    // and hence assigning one later is a null operation.
 }
 
 int THPalette::getColourCount() const
@@ -113,6 +135,8 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        IDirect3DDevice9* pDevice,
                                        bool bNoAllocate)
 {
+    // The easiest way to load a texture appears to be prefixing the data with
+    // a TGA header and having D3DX load it as a TGA file in memory.
 #pragma pack(push)
 #pragma pack(1)
     struct tga_header

@@ -22,6 +22,9 @@ SOFTWARE.
 
 #include "config.h"
 #ifdef CORSIX_TH_USE_DX9_RENDERER
+#ifndef CORSIX_TH_USE_WIN32_SDK
+#error Windows Platform SDK usage must be enabled to use DX9 renderer
+#endif
 #include "th_lua.h"
 #include "th_gfx_dx9.h"
 #include <windows.h>
@@ -127,9 +130,12 @@ static int l_start_frame(lua_State *L)
     l_surface_t *pSurface = l_check_surface(L, 1);
     if(pSurface->target.pSprite)
     {
-        pSurface->target.pDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+        pSurface->target.pDevice->Clear(0, NULL, D3DCLEAR_TARGET,
+            D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
         pSurface->target.pDevice->BeginScene();
-        pSurface->target.pSprite->Begin(D3DXSPRITE_ALPHABLEND);
+        pSurface->target.pSprite->Begin(D3DXSPRITE_ALPHABLEND |
+            D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DO_NOT_ADDREF_TEXTURE |
+            D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
     }
     return 0;
 }
@@ -261,6 +267,12 @@ static int l_set_mode(lua_State *L)
     {
         err("Could not create D3DX sprite");
     }
+
+    // Setup device state for sprite rendering
+    oTarget.pDevice->BeginScene();
+    oTarget.pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_DONOTSAVESTATE);
+    oTarget.pSprite->End();
+    oTarget.pDevice->EndScene();
 
 #undef err
 

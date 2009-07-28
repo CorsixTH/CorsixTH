@@ -29,7 +29,7 @@ extern "C" {
 #include "th_lua.h"
 #include "lua_sdl.h"
 #include "jit_opt.h"
-#ifdef _WIN32
+#ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #endif
 
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
             }
             lua_close(L);
 #ifndef _DEBUG
-#ifdef _WIN32
+#ifdef CORSIX_TH_USE_WIN32_SDK
             // As a Win32 command line application, the command prompt will
             // disappear when the application terminates (unless launched from
             // the command line, which is rare in Windows). Hence a message box
@@ -266,8 +266,8 @@ static int l_stacktrace(lua_State *L)
 */
 static int l_panic(lua_State *L)
 {
-    fprintf(stderr, "An Lua error has occured in CorsixTH outside of protected"
-        " mode!!\n");
+    fprintf(stderr, "A Lua error has occured in CorsixTH outside of protected "
+        "mode!!\n");
     fflush(stderr);
 
     if(lua_type(L, -1) == LUA_TSTRING)

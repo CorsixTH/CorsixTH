@@ -5,6 +5,10 @@
 */
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
+#include "config.h"
+#ifndef CORSIX_TH_USE_INCLUDED_SDL_MAIN
+#pragma comment(lib, "SDLmain")
+#else
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -386,4 +390,5 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 	return 0;
 }
 
+#endif
 #endif

@@ -58,3 +58,8 @@ function UIBottomPanel:dialogBuildRoom()
   local dlg = UIBuildRoom(self.ui)
   self.ui:addWindow(dlg)
 end
+
+function UIBottomPanel:dialogFurnishCorridor()
+  local dlg = UIFurnishCorridor(self.ui)
+  self.ui:addWindow(dlg)
+end

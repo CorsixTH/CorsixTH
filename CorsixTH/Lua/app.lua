@@ -204,9 +204,6 @@ function App:onTick(...)
   return true
 end
 
-local sx = 0
-local sy = 0
-
 function App:drawFrame()
   self.video:startFrame()
   self.ui:draw(self.video)
@@ -256,30 +253,35 @@ function App:checkInstallFolder()
   
   -- *nix is case sensitive, so discover the case of various required directories.
   -- At the same time, check that the expected directories actually exist.
+  local required = true
+  local optional = false
   local dir_map = {
-    ANIMS = true,
-    DATA = true,
-    DATAM = true,
-    INTRO = true,
-    LEVELS = true,
-    QDATA = true,
-    QDATAM = true,
-    SOUND = true,
+    ANIMS  = optional,
+    DATA   = required,
+    DATAM  = optional,
+    INTRO  = optional,
+    LEVELS = required,
+    QDATA  = required,
+    QDATAM = optional,
+    SOUND  = optional,
   }
   for item in lfs.dir(install_folder) do
-    if dir_map[item:upper()] then
+    if dir_map[item:upper()] ~= nil then
       dir_map[item:upper()] = item
     end
   end
   for dir, name in pairs(dir_map) do
-    if name == true then
-      error(("Directory '%s' not present in specified Theme Hospital  folder ('%s')"):format(dir, install_folder))
+    if name == required then
+      error(("Directory '%s' not present in specified Theme Hospital folder ('%s')"):format(dir, install_folder))
+    elseif name == optional then
+      print(("Notice: Directory \'%s\' not present in specified Theme Hospital folder."):format(dir))
+      dir_map[dir] = nil
     end
   end
   self.data_dir_map = dir_map
   
   -- Check for demo version
-  local demo = io.open(install_folder .. dir_map.DATAM .. pathsep .. "DEMO.DAT")
+  local demo = io.open(install_folder .. (dir_map.DATAM or "DATAM") .. pathsep .. "DEMO.DAT")
   if demo then
     demo:close()
     print "Notice: Using data files from demo version of Theme Hospital."
@@ -315,7 +317,7 @@ function App:loadLuaFolder(dir, no_results)
       else
         local status, result = pcall(chunk, self)
         if not status then
-          print("Runtime error loading " .. dir .. "/" .. file .. ":\n" .. tostring(e))
+          print("Runtime error loading " .. dir .. "/" .. file .. ":\n" .. tostring(result))
         else
           if result == nil then
             if not no_results then

@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "lua_sdl.h"
-#ifdef _WIN32
+#ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #include <SDL_syswm.h>
 #include "../resource.h"
@@ -40,7 +40,7 @@ static int l_set_icon_win32(lua_State *L)
     // Does nothing (and returns false) on other platforms.
 
     lua_pushboolean(L, 0);
-#ifdef _WIN32
+#ifdef CORSIX_TH_USE_WIN32_SDK
     SDL_SysWMinfo oWindowInfo;
     oWindowInfo.version.major = SDL_MAJOR_VERSION;
     oWindowInfo.version.minor = SDL_MINOR_VERSION;

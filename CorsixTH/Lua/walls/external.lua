@@ -21,20 +21,20 @@ SOFTWARE. --]]
 local wall = {}
 wall.id = "external"
 wall.inside_tiles = {
-  east = 122,
-  east_window_1 = 124,
-  east_window_2 = 126,
-  north = 123,
-  north_window_1 = 127,
-  north_window_2 = 125,
+  north = 122,
+  north_window_1 = 124,
+  north_window_2 = 126,
+  west = 123,
+  west_window_1 = 127,
+  west_window_2 = 125,
 }
 wall.outside_tiles = {
-  east = 114,
-  east_window_1 = 116,
-  east_window_2 = 118,
-  north = 115,
-  north_window_1 = 119,
-  north_window_2 = 117,
+  north = 114,
+  north_window_1 = 116,
+  north_window_2 = 118,
+  west = 115,
+  west_window_1 = 119,
+  west_window_2 = 117,
 }
 wall.window_tiles = {
 }

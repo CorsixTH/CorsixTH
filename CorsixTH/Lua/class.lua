@@ -45,8 +45,8 @@ SOFTWARE. --]]
 -- C code does not use this file, but does use the same syntax for creating a
 -- class instance and calling methods on it.
 
-local setmetatable
-    = setmetatable
+local setmetatable, getmetatable
+    = setmetatable, getmetatable
 
 local function define_class(name, super)
   local mt = {}
@@ -70,7 +70,7 @@ local function define_class(name, super)
   _G[name] = methods
 end
 
-function class(name)
+class = destrict(function(name)
   define_class(name)
   
   return function(super)
@@ -79,4 +79,4 @@ function class(name)
     end
     define_class(name, super)
   end
-end
+end)

@@ -18,18 +18,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local wall = {}
-wall.id = "yellow"
-wall.inside_tiles = {
-  north = 84,
-  west = 85,
-}
-wall.outside_tiles = {
-  north = 92,
-  west = 93,
-}
-wall.window_tiles = {
-  north = 132,
-  west = 133,
-}
-return wall
+-- Force local variables to be used for everything except functions (and for
+-- any code running in derestriced mode). This helps to catch typos in variable
+-- names, and promotes usage of locals over globals (which improves speed).
+
+local type, rawset, error, tostring
+    = type, rawset, error, tostring
+local strict_mt = {}
+
+local function newindex(t, k, v)
+  if type(v) == "function" then
+    rawset(t, k, v)
+  else
+    error("assign to undeclared variable \'" .. tostring(k) .. "\'", 2)
+  end
+end
+
+local function index(t, k)
+  error("use of undeclared variable \'" .. tostring(k) .. "\'", 2)
+end
+
+local function restrict(...)
+  strict_mt.__newindex = newindex
+  strict_mt.__index = index
+  return ...
+end
+restrict()
+
+function destrict(fn)
+  return function(...)
+    strict_mt.__newindex = nil
+    strict_mt.__index = nil
+    return restrict(fn(...))
+  end
+end
+
+setmetatable(_G, strict_mt)

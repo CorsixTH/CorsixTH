@@ -25,8 +25,9 @@ SOFTWARE.
 #include <string.h>
 #ifndef _MSC_VER
 #define stricmp strcasecmp
-#endif
+#else
 #pragma warning (disable: 4996) // CRT deprecation
+#endif
 
 static int l_init(lua_State *L)
 {
@@ -88,8 +89,11 @@ struct fps_ctrl
     {
         Uint32 now = SDL_GetTicks();
         frame_time[q_front] = now;
-        q_front = (q_front + 1) % 1024;
-        ++frame_count;
+        q_front = (q_front + 1) % (sizeof(frame_time) / sizeof(*frame_time));
+        if(q_front == q_back)
+            q_back = (q_back + 1) % (sizeof(frame_time) / sizeof(*frame_time));
+        else
+            ++frame_count;
         if(now < 1000)
             now = 0;
         else
@@ -97,7 +101,7 @@ struct fps_ctrl
         while(frame_time[q_back] < now)
         {
             --frame_count;
-            q_back = (q_back + 1) % 1024;
+            q_back = (q_back + 1) % (sizeof(frame_time) / sizeof(*frame_time));
         }
     }
 };

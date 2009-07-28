@@ -102,23 +102,23 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
             unsigned char iBaseTile = gs_iTHMapBlockLUT[pData[2]];
             pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS | THMN_CanTravelW;
             if(iX == 0)
-                pNode->iFlags &= ~THMN_CanTravelN;
-            else if(iX == 127)
-                pNode->iFlags &= ~THMN_CanTravelS;
-            if(iY == 0)
-                pNode->iFlags &= ~THMN_CanTravelE;
-            else if(iY == 127)
                 pNode->iFlags &= ~THMN_CanTravelW;
+            else if(iX == 127)
+                pNode->iFlags &= ~THMN_CanTravelE;
+            if(iY == 0)
+                pNode->iFlags &= ~THMN_CanTravelN;
+            else if(iY == 127)
+                pNode->iFlags &= ~THMN_CanTravelS;
             pNode->iBlock[0] = iBaseTile;
             if(pData[3] == 0)
                 pNode->iBlock[1] = 0;
             else
             {
                 pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
-                pNode->iFlags &= ~THMN_CanTravelE;
+                pNode->iFlags &= ~THMN_CanTravelN;
                 if(iY != 0)
                 {
-                    pNode[-128].iFlags &= ~THMN_CanTravelW;
+                    pNode[-128].iFlags &= ~THMN_CanTravelS;
                 }
             }
             if(pData[4] == 0)
@@ -126,10 +126,10 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
             else
             {
                 pNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->iFlags &= ~THMN_CanTravelW;
                 if(iX != 0)
                 {
-                    pNode[-1].iFlags &= ~THMN_CanTravelS;
+                    pNode[-1].iFlags &= ~THMN_CanTravelE;
                 }
             }
 
@@ -139,7 +139,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
             case 0x15: case 0x16: case 0x17: case 0x42: case 0x4C:
                 pNode->iFlags |= THMN_Hospital | THMN_Buildable;
                 // fall-through
-            case 0x04: case 0x05: case 0x32: case 0x3A:
+            case 0x0F: case 0x04: case 0x05: case 0x32: case 0x3A:
                 pNode->iFlags |= THMN_Passable;
                 break;
             }
@@ -236,6 +236,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
     int iBaseY = iStartY;
 
     // 1st pass
+    THRenderTarget_StartNonOverlapping(pCanvas);
     while(true)
     {
         int iX = iBaseX;
@@ -265,16 +266,6 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                     m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
                     m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs + iCanvasX - 32,
                         iYs + iCanvasY - iH + 32, iBlock >> 8);
-                    if(pLastNode->iFlags & THMN_ShadowFull)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, 74, iXs + iCanvasX - 32,
-                            iYs + iCanvasY, THDF_Alpha75);
-                    }
-                    else if(pLastNode->iFlags & THMN_ShadowHalf)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, 75, iXs + iCanvasX - 32,
-                            iYs + iCanvasY, THDF_Alpha75);
-                    }
                 }
                 else
                     break;
@@ -291,6 +282,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
         else
             ++iBaseY;
     }
+    THRenderTarget_FinishNonOverlapping(pCanvas);
 
     // 2nd pass
     iBaseX = iStartX;
@@ -321,6 +313,17 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                 {
                     pLastNode = getNodeUnchecked(iX, iY);
                     ++iNodeCount;
+
+                    if(pLastNode->iFlags & THMN_ShadowFull)
+                    {
+                        m_pBlocks->drawSprite(pCanvas, 74, iXs + iCanvasX - 32,
+                            iYs + iCanvasY, THDF_Alpha75);
+                    }
+                    else if(pLastNode->iFlags & THMN_ShadowHalf)
+                    {
+                        m_pBlocks->drawSprite(pCanvas, 75, iXs + iCanvasX - 32,
+                            iYs + iCanvasY, THDF_Alpha75);
+                    }
                 }
                 else
                     break;
@@ -415,27 +418,27 @@ void THMap::updatePathfinding()
         {
             pNode->iFlags |= THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS | THMN_CanTravelW;
             if(iX == 0)
-                pNode->iFlags &= ~THMN_CanTravelN;
-            else if(iX == 127)
-                pNode->iFlags &= ~THMN_CanTravelS;
-            if(iY == 0)
-                pNode->iFlags &= ~THMN_CanTravelE;
-            else if(iY == 127)
                 pNode->iFlags &= ~THMN_CanTravelW;
+            else if(iX == 127)
+                pNode->iFlags &= ~THMN_CanTravelE;
+            if(iY == 0)
+                pNode->iFlags &= ~THMN_CanTravelN;
+            else if(iY == 127)
+                pNode->iFlags &= ~THMN_CanTravelS;
             if(pNode->iBlock[1])
             {
-                pNode->iFlags &= ~THMN_CanTravelE;
+                pNode->iFlags &= ~THMN_CanTravelN;
                 if(iY != 0)
                 {
-                    pNode[-128].iFlags &= ~THMN_CanTravelW;
+                    pNode[-128].iFlags &= ~THMN_CanTravelS;
                 }
             }
             if(pNode->iBlock[2])
             {
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->iFlags &= ~THMN_CanTravelW;
                 if(iX != 0)
                 {
-                    pNode[-1].iFlags &= ~THMN_CanTravelS;
+                    pNode[-1].iFlags &= ~THMN_CanTravelE;
                 }
             }
         }
@@ -453,10 +456,10 @@ void THMap::updateShadows()
         for(int iX = 0; iX < 128; ++iX, ++pNode)
         {
             pNode->iFlags &= ~(THMN_ShadowHalf | THMN_ShadowFull | THMN_ShadowWall);
-            if(IsWall(pNode->iBlock[2], pNode->iFlags & THMN_DoorNorth))
+            if(IsWall(pNode->iBlock[2], pNode->iFlags & THMN_DoorWest))
             {
                 pNode->iFlags |= THMN_ShadowHalf;
-                if(IsWall(pNode->iBlock[1], pNode->iFlags & THMN_DoorEast))
+                if(IsWall(pNode->iBlock[1], pNode->iFlags & THMN_DoorNorth))
                 {
                     pNode->iFlags |= THMN_ShadowWall;
                 }
@@ -464,7 +467,7 @@ void THMap::updateShadows()
                 {
                     THMapNode *pNeighbour = pNode - 128;
                     pNeighbour->iFlags |= THMN_ShadowFull;
-                    if(iX != 0 && !IsWall(pNeighbour->iBlock[2], pNeighbour->iFlags & THMN_DoorNorth))
+                    if(iX != 0 && !IsWall(pNeighbour->iBlock[2], pNeighbour->iFlags & THMN_DoorWest))
                     {
                         pNeighbour[-1].iFlags |= THMN_ShadowFull;
                     }

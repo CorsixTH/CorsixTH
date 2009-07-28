@@ -16,12 +16,14 @@ CorsixTH/Lua/class.lua -text
 CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
+CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
 CorsixTH/Lua/objects/door.lua -text
+CorsixTH/Lua/objects/radiator.lua -text
 CorsixTH/Lua/rooms/general_diag.lua -text
 CorsixTH/Lua/rooms/gp.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text
@@ -30,6 +32,7 @@ CorsixTH/Lua/rooms/psych.lua -text
 CorsixTH/Lua/rooms/staff_room.lua -text
 CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/rooms/ward.lua -text
+CorsixTH/Lua/strict.lua -text
 CorsixTH/Lua/ui.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text
