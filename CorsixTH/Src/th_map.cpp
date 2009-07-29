@@ -69,23 +69,29 @@ bool THMap::setSize(int iWidth, int iHeight)
 }
 
 static const unsigned char gs_iTHMapBlockLUT[256] = {
-    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10,
-    0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20,
-    0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30,
-    0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40,
-    0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50,
-    0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61,
-    0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71,
-    0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f, 0x80, 0x81,
-    0x84, 0x85, 0x88, 0x89, 0x8c, 0x8d, 0x51, 0x51, 0x51, 0x51, 0x51, 0x51, 0x8d, 0x8e, 0x51, 0x51,
-    0x51, 0x51, 0x8e, 0x8f, 0xd5, 0xd6, 0x9c, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-    0xb3, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xb3, 0xb3, 0xb4, 0xb4,
-    0xba, 0xbb, 0xbc, 0xbd, 0xbe, 0xbf, 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
-    0xca, 0xcb, 0x51, 0x82, 0x83, 0x86, 0x87, 0x8a, 0x8b, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98,
-    0x99, 0x9a, 0x9b, 0x51, 0x9d, 0x9e, 0x9f, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xd7, 0xd8, 0xd9, 0xda,
-    0xdb, 0xdc, 0xdd, 0xde, 0xdf, 0xe0, 0xe1, 0xe2,/***********************************************
-    **********************************************/ 0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D,
-    0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D,
+    0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+    0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
+    0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24,
+    0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30,
+    0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c,
+    0x3d, 0x3e, 0x3f, 0x40, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
+    0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x52, 0x53, 0x54, 0x55,
+    0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f, 0x60, 0x61,
+    0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d,
+    0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79,
+    0x7a, 0x7b, 0x7c, 0x7d, 0x7e, 0x7f, 0x80, 0x81, 0x84, 0x85, 0x88, 0x89,
+    0x8c, 0x8d, 0x51, 0x51, 0x51, 0x51, 0x51, 0x51, 0x8d, 0x8e, 0x51, 0x51,
+    0x51, 0x51, 0x8e, 0x8f, 0xd5, 0xd6, 0x9c, 0xcc, 0xcd, 0xce, 0xcf, 0xd0,
+    0xd1, 0xd2, 0xd3, 0xd4, 0xb3, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5,
+    0xb6, 0xb7, 0xb8, 0xb9, 0xb3, 0xb3, 0xb4, 0xb4, 0xba, 0xbb, 0xbc, 0xbd,
+    0xbe, 0xbf, 0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
+    0xca, 0xcb, 0x51, 0x82, 0x83, 0x86, 0x87, 0x8a, 0x8b, 0x92, 0x93, 0x94,
+    0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b, 0x51, 0x9d, 0x9e, 0x9f, 0xa0,
+    0xa1, 0xa2, 0xa3, 0xa4, 0xd7, 0xd8, 0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde,
+    0xdf, 0xe0, 0xe1, 0xe2,/***********************************************
+    **********************/ 0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D,
+    0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D, 0xBA, 0xAD, 0xF0, 0x0D,
+    0xBA, 0xAD, 0xF0, 0x0D,
 };
 
 bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
@@ -100,7 +106,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
         for(int iX = 0; iX < 128; ++iX, ++pNode, pData += 8)
         {
             unsigned char iBaseTile = gs_iTHMapBlockLUT[pData[2]];
-            pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS | THMN_CanTravelW;
+            pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS
+                | THMN_CanTravelW;
             if(iX == 0)
                 pNode->iFlags &= ~THMN_CanTravelW;
             else if(iX == 127)
@@ -192,7 +199,54 @@ void THMap::setAllWallDrawFlags(unsigned char iFlags)
     }
 }
 
-void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth, int iHeight, int iCanvasX, int iCanvasY) const
+static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
+{
+    if(rcClip.x < rcIntersect.x)
+    {
+        if(rcClip.x + static_cast<int16_t>(rcClip.w) <= rcIntersect.x)
+        {
+            rcClip.w = 0;
+            rcClip.h = 0;
+            return;
+        }
+        rcClip.w = rcClip.x - rcIntersect.x + rcClip.w;
+        rcClip.x = rcIntersect.x;
+    }
+    if(rcClip.y < rcIntersect.y)
+    {
+        if(rcClip.y + static_cast<int16_t>(rcClip.h) <= rcIntersect.y)
+        {
+            rcClip.w = 0;
+            rcClip.h = 0;
+            return;
+        }
+        rcClip.h = rcClip.y - rcIntersect.y + rcClip.h;
+        rcClip.y = rcIntersect.y;
+    }
+    if(rcClip.x + rcClip.w > rcIntersect.x + rcIntersect.w)
+    {
+        if(rcIntersect.x + static_cast<int16_t>(rcIntersect.w) <= rcClip.x)
+        {
+            rcClip.w = 0;
+            rcClip.h = 0;
+            return;
+        }
+        rcClip.w = rcIntersect.x + rcIntersect.w - rcClip.x;
+    }
+    if(rcClip.y + rcClip.h > rcIntersect.y + rcIntersect.h)
+    {
+        if(rcIntersect.y + static_cast<int16_t>(rcIntersect.h) <= rcClip.y)
+        {
+            rcClip.w = 0;
+            rcClip.h = 0;
+            return;
+        }
+        rcClip.h = rcIntersect.y + rcIntersect.h - rcClip.y;
+    }
+}
+
+void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
+                 int iWidth, int iHeight, int iCanvasX, int iCanvasY) const
 {
     /*
        The map is drawn in two passes, with each pass done one scanline at a
@@ -207,8 +261,8 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
        1st pass:
         1) For each node, left to right, the floor tile (layer 0)
        2nd pass:
-        1) For each node, right to left, the east wall (1), then the early entities
-        2) For each node, left to right, the north wall (2), then the late entities
+        1) For each node, right to left, the east wall, then the early entities
+        2) For each node, left to right, the north wall, then the late entities
     */
 
     if(m_pBlocks == NULL || m_pCells == NULL)
@@ -264,8 +318,11 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                     unsigned int iH = 32;
                     unsigned int iBlock = pLastNode->iBlock[0];
                     m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
-                    m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs + iCanvasX - 32,
+                    m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
+                        iXs + iCanvasX - 32,
                         iYs + iCanvasY - iH + 32, iBlock >> 8);
+                    // Shadow for floor done in 2nd pass as it overlaps with
+                    // the floor.
                 }
                 else
                     break;
@@ -339,13 +396,16 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                 iXs -= 64;
                 const THMapNode *pNode = pLastNode;
                 int iNodeIndex = 0;
-                for(; iNodeIndex < iNodeCount; ++iNodeIndex, pNode -= iNodeStep, iXs -= 64)
+                for(; iNodeIndex < iNodeCount; ++iNodeIndex,
+                    pNode -= iNodeStep, iXs -= 64)
                 {
                     unsigned int iH;
                     unsigned int iBlock = pNode->iBlock[1];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH) && iH > 0)
+                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                        NULL, &iH) && iH > 0)
                     {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32, iYs - iH + 32, iBlock >> 8);
+                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
+                            iYs - iH + 32, iBlock >> 8);
                         if(pNode->iFlags & THMN_ShadowWall)
                         {
                             THClipRect rcOldClip, rcNewClip;
@@ -354,15 +414,17 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                             rcNewClip.y = iYs - iH + 32 + 4;
                             rcNewClip.w = 64;
                             rcNewClip.h = 86 - 4;
-                            // Todo: Intersect new clip with old clip
+                            IntersectClipRect(rcNewClip, rcOldClip);
                             THRenderTarget_SetClipRect(pCanvas, &rcNewClip);
-                            m_pBlocks->drawSprite(pCanvas, 156, iXs - 32, iYs - 56, THDF_Alpha75);
+                            m_pBlocks->drawSprite(pCanvas, 156, iXs - 32,
+                                iYs - 56, THDF_Alpha75);
                             THRenderTarget_SetClipRect(pCanvas, &rcOldClip);
                         }
                     }
                     if(pNode->oEarlyEntities.pNext != NULL)
                     {
-                        THDrawable *pItem = (THDrawable*)(pNode->oEarlyEntities.pNext);
+                        THDrawable *pItem = (THDrawable*)
+                            (pNode->oEarlyEntities.pNext);
                         do
                         {
                             pItem->fnDraw(pItem, pCanvas, iXs, iYs);
@@ -376,14 +438,18 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth
                 {
                     unsigned int iH;
                     unsigned int iBlock = pNode->iBlock[2];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH) && iH > 0)
+                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                        NULL, &iH) && iH > 0)
                     {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32, iYs - iH + 32, iBlock >> 8);
+                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
+                            iYs - iH + 32, iBlock >> 8);
                     }
                     iBlock = pNode->iBlock[3];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH) && iH > 0)
+                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                        NULL, &iH) && iH > 0)
                     {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32, iYs - iH + 32, iBlock >> 8);
+                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
+                            iYs - iH + 32, iBlock >> 8);
                     }
                     if(pNode->pNext != NULL)
                     {
@@ -416,7 +482,8 @@ void THMap::updatePathfinding()
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode)
         {
-            pNode->iFlags |= THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS | THMN_CanTravelW;
+            pNode->iFlags |= THMN_CanTravelN | THMN_CanTravelE |
+                THMN_CanTravelS | THMN_CanTravelW;
             if(iX == 0)
                 pNode->iFlags &= ~THMN_CanTravelW;
             else if(iX == 127)
@@ -447,19 +514,21 @@ void THMap::updatePathfinding()
 
 void THMap::updateShadows()
 {
-#define IsWall(block, door) \
-    ((door) != 0 || (82 <= (block) && (block) <= 155))
+#define IsWall(node, block, door) \
+    (((node)->iFlags & (door)) != 0 || \
+    (82 <= ((node)->iBlock[(block)]) && ((node)->iBlock[(block)]) <= 155))
 
     THMapNode *pNode = m_pCells;
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode)
         {
-            pNode->iFlags &= ~(THMN_ShadowHalf | THMN_ShadowFull | THMN_ShadowWall);
-            if(IsWall(pNode->iBlock[2], pNode->iFlags & THMN_DoorWest))
+            pNode->iFlags &= ~(THMN_ShadowHalf | THMN_ShadowFull |
+                THMN_ShadowWall);
+            if(IsWall(pNode, 2, THMN_DoorWest))
             {
                 pNode->iFlags |= THMN_ShadowHalf;
-                if(IsWall(pNode->iBlock[1], pNode->iFlags & THMN_DoorNorth))
+                if(IsWall(pNode, 1, THMN_DoorNorth))
                 {
                     pNode->iFlags |= THMN_ShadowWall;
                 }
@@ -467,7 +536,7 @@ void THMap::updateShadows()
                 {
                     THMapNode *pNeighbour = pNode - 128;
                     pNeighbour->iFlags |= THMN_ShadowFull;
-                    if(iX != 0 && !IsWall(pNeighbour->iBlock[2], pNeighbour->iFlags & THMN_DoorWest))
+                    if(iX != 0 && !IsWall(pNeighbour, 2, THMN_DoorWest))
                     {
                         pNeighbour[-1].iFlags |= THMN_ShadowFull;
                     }

@@ -933,6 +933,16 @@ static int l_anim_set_position(lua_State *L)
     return 1;
 }
 
+static int l_anim_get_position(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+
+    lua_pushinteger(L, pAnimation->getX());
+    lua_pushinteger(L, pAnimation->getY());
+
+    return 2;
+}
+
 static int l_anim_set_speed(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
@@ -1220,6 +1230,8 @@ int luaopen_th(lua_State *L)
     lua_setfield(L, -2, "getTag");
     lua_pushcfunction(L, l_anim_set_position);
     lua_setfield(L, -2, "setPosition");
+    lua_pushcfunction(L, l_anim_get_position);
+    lua_setfield(L, -2, "getPosition");
     lua_pushcfunction(L, l_anim_set_speed);
     lua_setfield(L, -2, "setSpeed");
     lua_pushcfunction(L, l_anim_set_layer);

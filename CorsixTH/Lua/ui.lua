@@ -37,6 +37,7 @@ local key_codes = invert {
   down = 274,
   right = 275,
   left = 276,
+  F9 = 290,
   F10 = 291,
 }
 
@@ -138,6 +139,8 @@ function UI:onKeyDown(code)
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
+  elseif key == "F9" then
+    self:addWindow(UIPatient(self, entity))
   end
 end
 

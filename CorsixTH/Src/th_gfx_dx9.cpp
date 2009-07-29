@@ -359,6 +359,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         return;
     sprite_t *pSprite = m_pSprites + iSprite;
 
+    // Find or create the texture
     IDirect3DTexture9 *pTexture = pSprite->pBitmap;
     if(pTexture == NULL)
     {
@@ -380,22 +381,37 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         }
     }
 
-    D3DCOLOR cColour;
+    // Crop to clip rectangle
     RECT rcSource;
     rcSource.left = 0;
     rcSource.top = 0;
     rcSource.right = m_pSprites[iSprite].iWidth;
     rcSource.bottom = m_pSprites[iSprite].iHeight;
+    if(iX + rcSource.right > pCanvas->rcClip.x + pCanvas->rcClip.w)
+    {
+        rcSource.right = pCanvas->rcClip.x + pCanvas->rcClip.w - iX;
+    }
+    if(iY + rcSource.bottom > pCanvas->rcClip.y + pCanvas->rcClip.h)
+    {
+        rcSource.bottom = pCanvas->rcClip.y + pCanvas->rcClip.h - iY;
+    }
     if(iX + rcSource.left < pCanvas->rcClip.x)
     {
         rcSource.left = pCanvas->rcClip.x - iX;
-        iX += rcSource.left;
+        iX = pCanvas->rcClip.x;
     }
     if(iY + rcSource.top < pCanvas->rcClip.y)
     {
         rcSource.top = pCanvas->rcClip.y - iY;
-        iY += rcSource.top;
+        iY = pCanvas->rcClip.y;
     }
+    if(rcSource.right < rcSource.left)
+        rcSource.right = rcSource.left;
+    if(rcSource.bottom < rcSource.top)
+        rcSource.bottom = rcSource.top;
+
+    // Set alpha blending options
+    D3DCOLOR cColour;
     switch(iFlags & (THDF_Alpha50 | THDF_Alpha75))
     {
     case 0:
@@ -408,6 +424,8 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         cColour = D3DCOLOR_ARGB(0x40, 0xFF, 0xFF, 0xFF);
         break;
     }
+
+    // Perform horizontal and vertical flips
     switch(iFlags & (THDF_FlipHorizontal | THDF_FlipVertical))
     {
     case 0:
@@ -415,18 +433,20 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         break;
     case THDF_FlipHorizontal:
         pCanvas->pSprite->SetTransform(&g_mtxFlipH);
-        iX = -iX - m_pSprites[iSprite].iWidth;
+        iX = -iX + rcSource.left - rcSource.right;
         break;
     case THDF_FlipVertical:
         pCanvas->pSprite->SetTransform(&g_mtxFlipV);
-        iY = -iY - m_pSprites[iSprite].iHeight;
+        iY = -iY + rcSource.top - rcSource.bottom;
         break;
     case THDF_FlipHorizontal | THDF_FlipVertical:
         pCanvas->pSprite->SetTransform(&g_mtxFlipVH);
-        iX = -iX - m_pSprites[iSprite].iWidth;
-        iY = -iY - m_pSprites[iSprite].iHeight;
+        iX = -iX + rcSource.left - rcSource.right;
+        iY = -iY + rcSource.top - rcSource.bottom;
         break;
     }
+
+    // Do the actual drawing
     D3DXVECTOR3 vPosition((FLOAT)iX, (FLOAT)iY, 0.0f);
     pCanvas->pSprite->Draw(pTexture, &rcSource, NULL, &vPosition, cColour);
 }

@@ -17,6 +17,7 @@ CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
 CorsixTH/Lua/dialogs/furnish_corridor.lua -text
+CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text

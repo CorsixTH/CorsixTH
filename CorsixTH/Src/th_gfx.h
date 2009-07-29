@@ -191,6 +191,8 @@ public:
     THLinkList* getPrevious() {return this->pPrev;}
     unsigned long getFlags() {return this->iFlags;}
     unsigned int getAnimation() {return m_iAnimation;}
+    int getX() {return m_iX;}
+    int getY() {return m_iY;}
 
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setFlags(unsigned long iFlags) {this->iFlags = iFlags;}
