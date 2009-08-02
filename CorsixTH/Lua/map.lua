@@ -19,12 +19,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 class "Map"
+local math_floor, tostring, table_concat
+    = math.floor, tostring, table.concat
 local thMap = require"TH".map
 
 function Map:Map()
   self.width = false
   self.height = false
   self.th = thMap()
+  self.debug_text = false
+  self.debug_font = false
 end
 
 -- Convert between world co-ordinates and screen co-ordinates
@@ -47,6 +51,16 @@ end
 function Map:load(thData)
   assert(self.th:load(thData))
   self.width, self.height = self.th:size()
+  
+  --[[
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self:setDebugText(x, y, thData:byte(35 + xy * 8 + 5))
+      --self:setDebugText(x, y, thData:byte(131107 + xy * 2 + 0, 131107 + xy * 2 + 1))
+    end
+  end
+  --]]
 end
 
 function Map:setBlocks(blocks)
@@ -57,11 +71,82 @@ function Map:setCellFlags(...)
   self.th:setCellFlags(...)
 end
 
+function Map:setDebugFont(font)
+  self.debug_font = font
+  self.cell_outline = TheApp.gfx:loadBitmap"map_cell_outline"
+end
+
+function Map:setDebugText(x, y, msg, ...)
+  if not self.debug_text then
+    self.debug_text = {}
+  end
+  local text
+  if ... then
+    text = {msg, ...}
+    for i, v in ipairs(text) do
+      text[i] = tostring(v)
+    end
+    text = table_concat(text, ",")
+  else
+    text = msg
+  end
+  self.debug_text[(y - 1) * self.width + x - 1] = text
+end
+
 --[[!
   @arguments canvas, screen_x, screen_y, screen_width, screen_height, destination_x, destination_y
   
   Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
-  return self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
+  self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
+  
+  if self.debug_font and self.debug_text then
+    local startX = 0
+    local startY = math_floor((sy - 32) / 16)
+    if startY < 0 then
+      startY = 0
+    elseif startY >= self.height then
+      startX = startY - self.height + 1
+      startY = self.height - 1
+      if startX >= self.width then
+        startX = self.width - 1
+      end
+    end
+    local baseX = startX
+    local baseY = startY
+    while true do
+      local x = baseX
+      local y = baseY
+      local screenX = 32 * (x - y) - sx
+      local screenY = 16 * (x + y) - sy
+      if screenY >= sh + 70 then
+        break
+      elseif screenY > -32 then
+        repeat
+          if screenX < -32 then
+          elseif screenX < sw + 32 then
+            local msg = self.debug_text[y * self.width + x]
+            if msg and msg ~= "" then
+              self.cell_outline:draw(canvas, screenX - 32, screenY)
+              self.debug_font:draw(canvas, msg, screenX - 32, screenY, 64, 32)
+            end
+          else
+            break
+          end
+          x = x + 1
+          y = y - 1
+          screenX = screenX + 64
+        until y < 0 or x >= self.width
+      end
+      if baseY == self.height - 1 then
+        baseX = baseX + 1
+        if baseX == self.width then
+          break
+        end
+      else
+        baseY = baseY + 1
+      end
+    end
+  end
 end

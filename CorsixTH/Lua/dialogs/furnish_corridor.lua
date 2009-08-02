@@ -38,6 +38,24 @@ function UIFurnishCorridor:UIFurnishCorridor(ui)
   self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
   self.blue_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font02V"))
   self.title_text = _S(16, 4) -- Choose Items
+  self.price_text = (_S(16, 6) .. " "):gsub("  $", " ") -- "Price: "
+  self.total_text = (_S(16, 7) .. " "):gsub("  $", " ") -- "Total: "
+  self.item_price = 0
+  self.total_price = 0
+  
+  self.list_hover_index = 0
+  self.preview_anim = TH.animation()
+  
+  self.objects = {
+  }
+  for _, object in ipairs(app.objects) do
+    if object.corridor_object then
+      self.objects[#self.objects + 1] = {object = object, qty = 0}
+    end
+  end
+  table.sort(self.objects, function(o1, o2)
+    return o1.object.corridor_object < o2.object.corridor_object
+  end)
   
   self:addPanel(228, 0, 0) -- Grid top
   for y = 33, 103, 10 do
@@ -52,8 +70,81 @@ function UIFurnishCorridor:UIFurnishCorridor(ui)
   self:addPanel(242, 9, 237):makeButton(0, 0, 129, 28, 243, self.close)
   
   self:addPanel(235, 146, 0) -- List top
-  for y = 34, 205, 19 do
-    self:addPanel(239, 146, y) -- List body
-  end
   self:addPanel(236, 146, 223) -- List bottom
+  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm)
+  local i = 1
+  local function item_callback(index, qty)
+    return function(self)
+      self:purchaseItem(index, qty)
+    end
+  end
+  for y = 34, 205, 19 do
+    local x = 146
+    self:addPanel(239, x, y) -- List body
+    if i <= #self.objects then
+      self:addPanel(240, x + 12, y):makeButton(0, 0, 125, 19, 241, item_callback(i, 1))
+      self:addPanel(244, x + 139, y + 1):makeButton(0, 0, 17, 17, 245, item_callback(i, -1))
+      self:addPanel(246, x + 183, y + 1):makeButton(0, 0, 17, 17, 247, item_callback(i, 1))
+    end
+    i = i + 1
+  end
+end
+
+function UIFurnishCorridor:purchaseItem(index, quantity)
+  local o = self.objects[index]
+  if self.buttons_down.ctrl then
+    quantity = quantity * 10
+  elseif self.buttons_down.shift then
+    quantity = quantity * 5
+  end
+  quantity = quantity + o.qty
+  if quantity < 0 then
+    quantity = 0
+  elseif quantity > 99 then
+    quantity = 99
+  end
+  quantity = quantity - o.qty
+  o.qty = o.qty + quantity
+  self.total_price = self.total_price + quantity * o.object.build_cost
+end
+
+function UIFurnishCorridor:draw(canvas)
+  Window.draw(self, canvas)
+  
+  local x, y = self.x, self.y
+  self.white_font:draw(canvas, self.title_text, x + 163, y + 18)
+  self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24, y + 173)
+  self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24, y + 202)
+  
+  for i, o in ipairs(self.objects) do
+    local font = self.white_font
+    if i == self.list_hover_index then
+      font = self.blue_font
+    end
+    font:draw(canvas, o.object.name, x + 163, y + 20 + i * 19)
+    font:draw(canvas, o.qty, x + 306, y + 20 + i * 19, 19, 0)
+  end
+  
+  self.preview_anim:draw(canvas, x + 72, y + 57)
+end
+
+function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
+  local repaint = Window.onMouseMove(self, x, y, dx, dy)
+  
+  local hover_idx = 0
+  if 158 <= x and x < 346 and 34 <= y and y < 224 then
+    hover_idx = math_floor((y - 15) / 19)
+  end
+  
+  if hover_idx ~= self.list_hover_index then
+    if 1 <= hover_idx and hover_idx <= #self.objects then
+      local obj = self.objects[hover_idx].object
+      self.item_price = obj.build_cost
+      self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
+    end
+    self.list_hover_index = hover_idx
+    repaint = true
+  end
+  
+  return repaint
 end

@@ -52,7 +52,7 @@ public:
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
-    void assign(THRenderTarget* pTarget) const;
+    void assign(THRenderTarget* pTarget, bool bTransparent = true) const;
 
 protected:
     struct colour_t

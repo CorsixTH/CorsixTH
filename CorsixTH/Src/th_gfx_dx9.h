@@ -66,7 +66,7 @@ public:
 
     int getColourCount() const;
     const unsigned char* getColourData() const;
-    void assign(THRenderTarget* pTarget) const;
+    void assign(THRenderTarget* pTarget, bool bTransparent) const;
 
 protected:
 #pragma pack(push)

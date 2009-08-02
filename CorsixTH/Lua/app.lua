@@ -64,7 +64,7 @@ function App:init()
   self:checkInstallFolder()
   
   -- Create the window
-  if not SDL.init("video", "timer") then
+  if not SDL.init("audio", "video", "timer") then
     return false, "Cannot initialise SDL"
   end
   SDL.wm.setCaption "CorsixTH"
@@ -77,10 +77,13 @@ function App:init()
   
   -- Put up the loading screen
   self.video:startFrame()
-  self.gfx:loadRaw"Load01V":draw(self.video, (self.config.width - 640) / 2, (self.config.height - 480) / 2)
+  self.gfx:loadRaw("Load01V", 640, 480, true):draw(self.video,
+    (self.config.width - 640) / 2, (self.config.height - 480) / 2)
   self.video:endFrame()
   
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
+  
+  math.randomseed(os.time() + SDL.getTicks())
   
   -- Load strings before UI and before additional Lua
   self.strings = assert(TH.LoadStrings(self:readDataFile("Data", self.config.language .. ".dat")), "Cannot load strings")
@@ -92,11 +95,17 @@ function App:init()
     return str
   end
   
+  -- Load audio
+  dofile "audio"
+  self.audio = Audio(self)
+  self.audio:init()
+  
   -- Load map before world
   dofile "map"
   self.map = Map()
   self.map:load(self:readDataFile("Levels", "Level.L1"))
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
+  self.map:setDebugFont(self.gfx:loadFont(self.gfx:loadSpriteTable("QData", "Font01V")))
   
   -- Load additional Lua before world
   self.walls = self:loadLuaFolder"walls"
@@ -107,7 +116,7 @@ function App:init()
   -- Load world before UI
   dofile "world"
   self.anims = self.gfx:loadAnimations("Data", "V")
-  self.world = World(self.map, self.anims, self.walls, self.objects)
+  self.world = World(self)
   
   -- Load UI
   dofile "ui"

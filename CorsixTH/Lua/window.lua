@@ -23,7 +23,11 @@ class "Window"
 Window.buttons_down = {
   left = false,
   middle = false,
-  right = false
+  right = false,
+  
+  alt = false,
+  ctrl = false,
+  shift = false,
 }
 
 function Window:Window()

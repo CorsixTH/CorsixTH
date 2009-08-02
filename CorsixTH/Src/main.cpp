@@ -24,6 +24,7 @@ SOFTWARE.
 #include "lua.hpp"
 extern "C" {
 #include "../../LFS/lfs.h"
+int luaopen_random(lua_State *L);
 }
 #include "rnc.h"
 #include "th_lua.h"
@@ -32,6 +33,7 @@ extern "C" {
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #endif
+#include <stack>
 
 static int l_main(lua_State *L);
 static int l_stacktrace(lua_State *L);
@@ -118,15 +120,32 @@ int main(int argc, char** argv)
         lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
         bRun = lua_toboolean(L, -1) != 0;
 
+        std::stack<void(*)(void)> stkCleanup;
+        lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
+        if(lua_type(L, -1) == LUA_TTABLE)
+        {
+            for(unsigned int i = 1; i <= lua_objlen(L, -1); ++i)
+            {
+                lua_rawgeti(L, -1, (int)i);
+                stkCleanup.push((void(*)(void))lua_touserdata(L, -1));
+                lua_pop(L, 1);
+            }
+        }
+
         lua_close(L);
+
+        // The cleanup functions are executed _after_ the Lua state is fully
+        // closed, and in reserve order to that in which they were registered.
+        while(!stkCleanup.empty())
+        {
+            if(stkCleanup.top() != NULL)
+                stkCleanup.top()();
+            stkCleanup.pop();
+        }
 
         if(bRun)
         {
             printf("Restarting...\n");
-            // The call to SDL_Quit is a bit of a hack, but it needs to be done
-            // _after_ the Lua state has been destroyed (incase the __gc on any
-            // global objects requires SDL).
-            SDL_Quit();
         }
     }
     return 0;
@@ -152,6 +171,13 @@ static int l_main(lua_State *L)
         return lua_error(L);
     }
     lua_pop(L, 1);
+
+    // registry._CLEANUP = {}
+    lua_newtable(L);
+    lua_setfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
+
+    // math.random* = Mersenne twister variant
+    lua_cpcall(L, luaopen_random, NULL);
 
     // package.preload["jit.opt"] = load(jit_opt_lua)
     // package.preload["jit.opt_inline"] = load(jit_opt_inline_lua)

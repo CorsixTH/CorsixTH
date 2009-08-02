@@ -72,7 +72,7 @@ function Graphics:loadBitmap(name)
   return surface
 end
 
-function Graphics:loadRaw(name, width, height)
+function Graphics:loadRaw(name, width, height, opaque)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -83,6 +83,7 @@ function Graphics:loadRaw(name, width, height)
     height = height or 480,
     depth = 8,
     target = self.target,
+    transparent = not opaque,
     palette = self:loadPalette("QData", name .. ".pal"),
   })
   surface:ensureHardwareSurface()

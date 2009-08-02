@@ -29,6 +29,9 @@ SOFTWARE.
 int luaopen_th(lua_State *L);
 
 #define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
+void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
+const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
+void luaT_setenvfield(lua_State *L, int index, const char *k);
 
 template <class T>
 static T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = false)

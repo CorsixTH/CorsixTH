@@ -215,6 +215,7 @@ static int l_new_surface(lua_State *L)
     Uint32 Bmask = 0;
     Uint32 Amask = 0;
     bool has_palette = false;
+    bool transparent = true;
 
     lua_pushnil(L);
     while(lua_next(L, 1) != 0)
@@ -256,6 +257,8 @@ static int l_new_surface(lua_State *L)
                 flags |= lua_toboolean(L, 4) * SDL_SRCALPHA;
             else if(stricmp(key, "palette") == 0)
                 has_palette = true;
+            else if(stricmp(key, "transparent") == 0)
+                transparent = lua_toboolean(L, 4) != 0;
         }
         lua_pop(L, 1);
     }
@@ -319,7 +322,8 @@ static int l_new_surface(lua_State *L)
                 lua_getfield(L, -1, "assign");
                 lua_insert(L, -2);
                 lua_pushvalue(L, -3);
-                lua_call(L, 2, 0);
+                lua_pushboolean(L, transparent ? 1 : 0);
+                lua_call(L, 3, 0);
             }
             lua_createtable(L, 0, 1);
             lua_pushliteral(L, "data");

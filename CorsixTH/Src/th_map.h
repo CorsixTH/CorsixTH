@@ -26,7 +26,8 @@ SOFTWARE.
 
 /*
     Object type enumeration uses same values as original TH does.
-    See game string table section 39 for proof.
+    See game string table section 39 for proof. Section 1 also has
+    names in this order.
 */
 enum THObjectType
 {
@@ -42,7 +43,7 @@ enum THObjectType
     THOB_Inflator = 9,
     THOB_PoolTable = 10,
     THOB_ReceptionDesk = 11,
-    THOB_BTable = 12, // ?
+    THOB_BTable = 12, // Not in game?
     THOB_Cardio = 13,
     THOB_Scanner = 14,
     THOB_ScannerConsole = 15,
@@ -50,7 +51,7 @@ enum THObjectType
     THOB_LitterBomb = 17,
     THOB_Couch = 18,
     THOB_Sofa = 19,
-    THOB_Crash = 20, // ?
+    THOB_Crash = 20, // The trolley in general diagnosis
     THOB_TV = 21,
     THOB_Ultrascan = 22,
     THOB_DNAFixer = 23,
@@ -72,8 +73,8 @@ enum THObjectType
     THOB_Pharmacy = 39,
     THOB_Computer = 40,
     THOB_ChemicalMixer = 41,
-    THOB_BloodMachine = 42, // ?
-    THOB_Extenguisher = 43,
+    THOB_BloodMachine = 42,
+    THOB_Extinguisher = 43,
     THOB_Radiator = 44,
     THOB_Plant = 45,
     THOB_Electro = 46,
@@ -88,8 +89,8 @@ enum THObjectType
     THOB_Autopsy = 55,
     THOB_Bookcase = 56,
     THOB_VideoGame = 57,
-    THOB_EntraceLeftDoor = 58,
-    THOB_EntraceRightDoor = 59,
+    THOB_EntranceLeftDoor = 58,
+    THOB_EntranceRightDoor = 59,
     THOB_Skeleton = 60,
     THOB_ComfyChair = 61,
 };

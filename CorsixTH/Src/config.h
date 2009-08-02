@@ -52,6 +52,12 @@ SOFTWARE.
 // Uncomment the next line to render faster than the monitor refresh rate
 //#define CORSIX_TH_DX9_UNLIMITED_FPS
 
+/** Audio options **/
+// SDL_mixer is used for ingame audio. If this library is not present on your
+// system, then you can comment out the next line and the game will not have
+// any music.
+#define CORSIX_TH_USE_SDL_MIXER
+
 /** Standard includes **/
 #include <stddef.h>
 #ifdef _MSC_VER

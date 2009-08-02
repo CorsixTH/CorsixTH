@@ -25,10 +25,12 @@ SOFTWARE.
 
 #include <D3D9.h>
 #include <D3DX9.h>
-#pragma comment(lib, "D3D9")
-#pragma comment(lib, "D3DX9")
 #include "th_gfx.h"
 #include <new>
+#ifdef _MSC_VER
+#pragma comment(lib, "D3D9")
+#pragma comment(lib, "D3DX9")
+#endif
 
 THRenderTarget::THRenderTarget()
 {
@@ -113,7 +115,7 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     return true;
 }
 
-void THPalette::assign(THRenderTarget* pTarget) const
+void THPalette::assign(THRenderTarget*, bool) const
 {
     // DX9 rendering engine must have palettes assigned during texture creation
     // and hence assigning one later is a null operation.

@@ -29,7 +29,7 @@ SOFTWARE.
 #include <string.h>
 
 //! Set a field on the environment table of an object
-static void luaT_setenvfield(lua_State *L, int index, const char *k)
+void luaT_setenvfield(lua_State *L, int index, const char *k)
 {
     lua_getfenv(L, index);
     lua_pushstring(L, k);
@@ -51,8 +51,18 @@ static void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
     lua_setmetatable(L, -2); // .. t <top
 }
 
+void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void))
+{
+    lua_checkstack(L, 2);
+    lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
+    int idx = 1 + (int)lua_objlen(L, -1);
+    lua_pushlightuserdata(L, (void*)fnCleanup);
+    lua_rawseti(L, -2, idx);
+    lua_pop(L, 1);
+}
+
 //! Check for a string or userdata
-static const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
+const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 {
     const unsigned char *pData;
     size_t iLength;
@@ -484,7 +494,7 @@ static int l_palette_assign(lua_State *L)
     THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 1, LUA_ENVIRONINDEX, "Palette");
     THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
 
-    pPalette->assign(pSurface);
+    pPalette->assign(pSurface, lua_toboolean(L, 3) != 0);
 
     lua_settop(L, 1);
     return 1;

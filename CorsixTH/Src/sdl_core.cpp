@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "lua_sdl.h"
+#include "th_lua.h"
 #include <string.h>
 #ifndef _MSC_VER
 #define stricmp strcasecmp
@@ -53,7 +54,7 @@ static int l_init(lua_State *L)
         lua_pushboolean(L, 0);
         return 1;
     }
-    atexit(SDL_Quit);
+    luaT_addcleanup(L, SDL_Quit);
     lua_pushboolean(L, 1);
     return 1;
 }
@@ -247,15 +248,23 @@ static int l_get_fps(lua_State *L)
     return 1;
 }
 
+static int l_get_ticks(lua_State *L)
+{
+    lua_pushinteger(L, (lua_Integer)SDL_GetTicks());
+    return 1;
+}
+
 static const struct luaL_reg sdllib[] = {
 	{"init", l_init},
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
     {"limitFPS", l_limit_fps},
+    {"getTicks", l_get_ticks},
 	{NULL, NULL}
 };
 
+int luaopen_sdl_audio(lua_State *L);
 int luaopen_sdl_video(lua_State *L);
 int luaopen_sdl_wm(lua_State *L);
 
@@ -264,6 +273,10 @@ int luaopen_sdl(lua_State *L)
     fps_ctrl* ctrl = (fps_ctrl*)lua_newuserdata(L, sizeof(fps_ctrl));
     ctrl->init();
     luaL_openlib(L, "sdl", sdllib, 1);
+
+    lua_pushcfunction(L, luaopen_sdl_audio);
+    lua_call(L, 0, 1);
+    lua_setfield(L, -2, "audio");
 
     lua_pushcfunction(L, luaopen_sdl_video);
     lua_call(L, 0, 1);

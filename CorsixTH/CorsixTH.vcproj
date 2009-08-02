@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\LuaJIT\src\;..\SDL\include"
+				AdditionalIncludeDirectories="..\LuaJIT\src\;..\SDL\include;..\SDL_mixer-1.2.8"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_BIND_TO_CURRENT_VCLIBS_VERSION=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -119,7 +119,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..\LuaJIT\src\;..\SDL\include"
+				AdditionalIncludeDirectories="..\LuaJIT\src\;..\SDL\include;..\SDL_mixer-1.2.8"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_BIND_TO_CURRENT_VCLIBS_VERSION=1"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -191,7 +191,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\random.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\rnc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\sdl_audio.cpp"
 				>
 			</File>
 			<File
@@ -236,6 +244,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\th_pathfind.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\xmi2mid.cpp"
 				>
 			</File>
 		</Filter>
@@ -294,6 +306,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\th_pathfind.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\xmi2mid.h"
 				>
 			</File>
 		</Filter>

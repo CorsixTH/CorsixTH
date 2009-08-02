@@ -28,20 +28,20 @@ dofile "humanoid"
 
 class "World"
 
-function World:World(map, animator, wall_types, object_types)
-  self.map = map
-  self.wall_types = wall_types
-  self.object_types = object_types
-  self.anims = animator
+function World:World(app)
+  self.map = app.map
+  self.wall_types = app.walls
+  self.object_types = app.objects
+  self.anims = app.anims
   self.pathfinder = TH.pathfinder()
-  self.pathfinder:setMap(map.th)
+  self.pathfinder:setMap(app.map.th)
   self.entities = {}
   self.objects = {}
   self.tick_rate = 3
   self.tick_timer = 0
   
   self.wall_id_by_block_id = {}
-  for _, wall_type in ipairs(wall_types) do
+  for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
       for name, id in pairs(wall_type[set]) do
         self.wall_id_by_block_id[id] = wall_type.id

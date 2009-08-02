@@ -27,7 +27,13 @@ local TH = require "TH"
 local function invert(t)
   local r = {}
   for k, v in pairs(t) do
-    r[v] = k
+    if type(v) == "table" then
+      for _, v in ipairs(v) do
+        r[v] = k
+      end
+    else
+      r[v] = k
+    end
   end
   return r
 end
@@ -39,6 +45,9 @@ local key_codes = invert {
   left = 276,
   F9 = 290,
   F10 = 291,
+  shift = {303, 304},
+  ctrl = {305, 306},
+  alt = {307, 308, 313},
 }
 
 local button_codes = invert {
@@ -98,7 +107,7 @@ end
 local entity = TheApp.world:newEntity("Humanoid", 2)
 entity:setType"Standard Male Patient"
 entity:setTile(63, 63)
-entity:setLayer(0, 2)
+entity:setLayer(0, 8)
 
 function UI:draw(canvas) 
   local app = self.app
@@ -125,6 +134,9 @@ function UI:onKeyDown(code)
   if not key then
     return
   end
+  if self.buttons_down[key] == false then
+    self.buttons_down[key] = true
+  end
   if scroll_keys[key] then
     local dx, dy = scroll_keys[key].x, scroll_keys[key].y
     if self.tick_scroll_amount then
@@ -148,6 +160,9 @@ function UI:onKeyUp(code)
   local key = key_codes[code]
   if not key then
     return
+  end
+  if self.buttons_down[key] == true then
+    self.buttons_down[key] = false
   end
   if scroll_keys[key] then
     local dx, dy = scroll_keys[key].x, scroll_keys[key].y

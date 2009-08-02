@@ -82,7 +82,7 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     return true;
 }
 
-void THPalette::assign(THRenderTarget* pTarget) const
+void THPalette::assign(THRenderTarget* pTarget, bool bTransparent) const
 {
     struct compile_time_assert
     {
@@ -90,7 +90,10 @@ void THPalette::assign(THRenderTarget* pTarget) const
     };
 
     SDL_SetPalette(pTarget, SDL_PHYSPAL | SDL_LOGPAL, (SDL_Color*)m_aColours, 0, m_iNumColours);
-    SDL_SetColorKey(pTarget, SDL_SRCCOLORKEY | SDL_RLEACCEL, 0xFF);
+    if(bTransparent)
+        SDL_SetColorKey(pTarget, SDL_SRCCOLORKEY | SDL_RLEACCEL, 0xFF);
+    else
+        SDL_SetColorKey(pTarget, 0, 0);
 }
 
 THSpriteSheet::THSpriteSheet()
