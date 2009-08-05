@@ -48,19 +48,47 @@ function Map:ScreenToWorld(x, y)
   return y + x, y - x
 end
 
+local function bits(n)
+  local vals = {}
+  local m = 256
+  while m >= 1 do
+    if n >= m then
+      vals[#vals + 1] = m
+      n = n - m
+    end
+    m = m / 2
+  end
+  if vals[1] then
+    return unpack(vals)
+  else
+    return 0
+  end
+end
+
 function Map:load(thData)
   assert(self.th:load(thData))
+  self.thData = thData
   self.width, self.height = self.th:size()
-  
-  --[[
+end
+
+function Map:clearDebugText()
+  self.debug_text = false
+end
+
+function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
+  self.debug_text = false
+  local thData = self.thData
   for x = 1, self.width do
     for y = 1, self.height do
       local xy = (y - 1) * self.width + x - 1
-      self:setDebugText(x, y, thData:byte(35 + xy * 8 + 5))
-      --self:setDebugText(x, y, thData:byte(131107 + xy * 2 + 0, 131107 + xy * 2 + 1))
+      local offset = base_offset + xy * xy_offset
+      if bits_ then
+        self:setDebugText(x, y, bits(thData:byte(offset + first, offset + last)))
+      else
+        self:setDebugText(x, y, thData:byte(offset + first, offset + last))
+      end
     end
   end
-  --]]
 end
 
 function Map:setBlocks(blocks)
@@ -88,7 +116,7 @@ function Map:setDebugText(x, y, msg, ...)
     end
     text = table_concat(text, ",")
   else
-    text = msg
+    text = msg ~= 0 and msg or nil
   end
   self.debug_text[(y - 1) * self.width + x - 1] = text
 end
@@ -128,8 +156,10 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
           elseif screenX < sw + 32 then
             local msg = self.debug_text[y * self.width + x]
             if msg and msg ~= "" then
-              self.cell_outline:draw(canvas, screenX - 32, screenY)
-              self.debug_font:draw(canvas, msg, screenX - 32, screenY, 64, 32)
+              local x = dx + screenX - 32
+              local y = dy + screenY
+              self.cell_outline:draw(canvas, x, y)
+              self.debug_font:draw(canvas, msg, x, y, 64, 32)
             end
           else
             break

@@ -129,11 +129,15 @@ end
 
 function Window:draw(canvas)
   local x, y = self.x, self.y
-  for _, panel in ipairs(self.panels) do
-    if panel.custom_draw then
-      panel:custom_draw(canvas, x, y)
-    else
-      self.panel_sprites:draw(canvas, panel.sprite_index, x + panel.x, y + panel.y)
+  if self.panels[1] then
+    local panel_sprites = self.panel_sprites
+    local panel_sprites_draw = panel_sprites.draw
+    for _, panel in ipairs(self.panels) do
+      if panel.custom_draw then
+        panel:custom_draw(canvas, x, y)
+      else
+        panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
+      end
     end
   end
   if self.windows then

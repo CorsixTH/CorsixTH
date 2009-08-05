@@ -56,6 +56,8 @@ local button_codes = invert {
   right = 3,
 }
 
+local entity
+
 function UI:UI(app)
   self:Window()
   self.app = app
@@ -68,9 +70,9 @@ function UI:UI(app)
   app:loadLuaFolder("dialogs", true)
   
   self.bottom_panel = UIBottomPanel(self)
+  self.menu_bar = UIMenuBar(self)
   self:addWindow(self.bottom_panel)
-  
-  --app.map:setDebugFont(app.gfx:createFont(app.gfx:loadSpriteTable("QData", "Font50V")))
+  self:addWindow(self.menu_bar)
   
   do
     local map_w = app.map.width
@@ -98,16 +100,12 @@ function UI:UI(app)
     self.limit_to_visible_diamond = true
   end
 
+  -- Temporary code
+  entity = TheApp.world:newEntity("Humanoid", 2)
+  entity:setType"Standard Male Patient"
+  entity:setTile(63, 63)
+  entity:setLayer(0, 8)
 end
-
-function UI:VuiToScreen(x, y)
-  return x + (self.app.config.width - 640) / 2, y + self.app.config.height - 48
-end
-
-local entity = TheApp.world:newEntity("Humanoid", 2)
-entity:setType"Standard Male Patient"
-entity:setTile(63, 63)
-entity:setLayer(0, 8)
 
 function UI:draw(canvas) 
   local app = self.app

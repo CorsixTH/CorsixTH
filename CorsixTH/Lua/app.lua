@@ -102,27 +102,46 @@ function App:init()
   
   -- Load map before world
   dofile "map"
-  self.map = Map()
-  self.map:load(self:readDataFile("Levels", "Level.L1"))
-  self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
-  self.map:setDebugFont(self.gfx:loadFont(self.gfx:loadSpriteTable("QData", "Font01V")))
   
   -- Load additional Lua before world
   self.walls = self:loadLuaFolder"walls"
   dofile "object"
   self.objects = self:loadLuaFolder"objects"
   self.rooms = self:loadLuaFolder"rooms"
-  
+   
   -- Load world before UI
   dofile "world"
   self.anims = self.gfx:loadAnimations("Data", "V")
+   
+  -- Load UI
+  dofile "ui"
+  
+  -- Load level
+  self:loadLevel "Level.L1"
+ 
+  return true
+end
+
+function App:loadLevel(filename)
+  -- Check that we can load the data before unloading current map
+  local data = self:readDataFile("Levels", filename)
+  
+  -- Unload ui, world and map
+  self.ui = nil
+  self.world = nil
+  self.map = nil
+  
+  -- Load map
+  self.map = Map()
+  self.map:load(data)
+  self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
+  self.map:setDebugFont(self.gfx:loadFont(self.gfx:loadSpriteTable("QData", "Font01V")))
+  
+  -- Load world
   self.world = World(self)
   
   -- Load UI
-  dofile "ui"
   self.ui = UI(self)
- 
-  return true
 end
 
 local function invert_lang_table(t)

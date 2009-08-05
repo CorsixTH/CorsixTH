@@ -120,6 +120,7 @@ int main(int argc, char** argv)
         lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
         bRun = lua_toboolean(L, -1) != 0;
 
+        // Get cleanup functions out of the Lua state (but don't run them yet)
         std::stack<void(*)(void)> stkCleanup;
         lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
         if(lua_type(L, -1) == LUA_TTABLE)
@@ -297,13 +298,10 @@ static int l_panic(lua_State *L)
     fflush(stderr);
 
     if(lua_type(L, -1) == LUA_TSTRING)
-    {
         fprintf(stderr, "%s\n", lua_tostring(L, -1));
-    }
     else
-    {
         fprintf(stderr, "%p\n", lua_topointer(L, -1));
-    }
+    fflush(stderr);
 
     // A stack trace would be nice, but they cannot be done in a panic.
 

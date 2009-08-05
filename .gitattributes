@@ -6,6 +6,7 @@ CorsixTH/AnimView.exe -text
 CorsixTH/Bitmap/build_room_dialog_close.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/CorsixTH.aps -text
+CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.exe -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
@@ -19,6 +20,7 @@ CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
 CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
+CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text

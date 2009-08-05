@@ -30,6 +30,8 @@ function Audio:Audio(app)
   self.background_playlist = {
     -- {title = "", filename = ""},
   }
+  self.has_bg_music = false
+  self.bg_music_volume = 0.5
 end
 
 local function linepairs(filename)
@@ -110,6 +112,7 @@ function Audio:init()
       table.sort(self.background_playlist, function(left, right)
         return left.title:lower() < right.title:lower()
       end)
+      self.has_bg_music = true
     end
   end
   
@@ -131,7 +134,12 @@ function Audio:playRandomBackgroundTrack()
   end
   data = SDL.audio.transcodeXmiToMid(data)  
   local music = assert(SDL.audio.loadMusic(data))
-  SDL.audio.setMusicVolume(0.5)
+  SDL.audio.setMusicVolume(self.bg_music_volume)
   assert(SDL.audio.playMusic(music))
   self.background_music = music
+end
+
+function Audio:setBackgroundVolume(volume)
+  self.bg_music_volume = volume
+  SDL.audio.setMusicVolume(volume)
 end

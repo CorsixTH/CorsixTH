@@ -12,6 +12,19 @@ if _VERSION ~= "Lua 5.1" then
   error "Please recompile CorsixTH and link against Lua version 5.1"
 end
 
+-- If being debugged in Decoda, turn off JIT compilation (as it cannot debug
+-- machine code). Note that this file cannot be debugged, but all other files
+-- can be. See http://www.unknownworlds.com/decoda/ for Decoda info.
+if decoda_output then
+  _DECODA = true
+  if jit then
+    jit.off()
+    decoda_output "JIT compilation disabled"
+  end
+else
+  _DECODA = false
+end
+
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)

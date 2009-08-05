@@ -119,6 +119,16 @@ double genrand_res53(void)
 } 
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
+/**
+  @function math.random
+  @arguments [[range_start, ] range_end]
+  @return number
+  
+  If called with no arguments, returns a random number in the range [0, 1).
+  If called with one argument, returns a random integer in the range
+  [1, range_end]. If called with two or more arguments, returns a random
+  integer in the range [range_start, range_end].
+*/
 static int l_random(lua_State *L)
 {
     uint32_t min, max;
@@ -141,6 +151,14 @@ static int l_random(lua_State *L)
     return 1;
 }
 
+/**
+  @function math.randomdump
+  @arguments
+  @return string
+  
+  Returns a string which can later be passed to math.randomseed() to restore
+  the random number generator to its current state.
+*/
 static int l_randomdump(lua_State *L)
 {
     lua_pushlstring(L, (const char*)mt, N * 4);
@@ -149,6 +167,16 @@ static int l_randomdump(lua_State *L)
     return 1;
 }
 
+/**
+  @function math.randomseed
+  @arguments number
+  @arguments string
+  @return
+  
+  Seeds the random number generator using the given seed number, or restores
+  the random number generator state from a string previously generated from
+  math.randomdump().
+*/
 static int l_randomseed(lua_State *L)
 {
     if(lua_type(L, 1) == LUA_TSTRING)

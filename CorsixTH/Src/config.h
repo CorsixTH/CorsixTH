@@ -25,12 +25,12 @@ SOFTWARE.
 
 /** Rendering engine choice **/
 // SDL - Multiplatform, but suboptimal on some platforms
-// DX9 - Windows only, but always has HW accellerated (alpha) blitting
-#ifdef _WIN32
+// DirectX 9 - Windows only, but always has HW accellerated (alpha) blitting
+// OpenGL - Faster than SDL on supported platforms, but DX9 may still be
+//          preferable on Windows (not yet finished).
 #define CORSIX_TH_USE_DX9_RENDERER
-#else
-#define CORSIX_TH_USE_SDL_RENDERER
-#endif
+//#define CORSIX_TH_USE_OGL_RENDERER
+//#define CORSIX_TH_USE_SDL_RENDERER
 
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when

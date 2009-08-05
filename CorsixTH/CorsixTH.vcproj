@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\ogl_video.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\random.c"
 				>
 			</File>
@@ -228,6 +232,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\th_gfx_dx9.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\th_gfx_ogl.cpp"
 				>
 			</File>
 			<File
@@ -290,6 +298,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\th_gfx_dx9.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\th_gfx_ogl.h"
 				>
 			</File>
 			<File
