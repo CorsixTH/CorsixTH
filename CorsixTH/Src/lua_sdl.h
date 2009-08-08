@@ -26,6 +26,10 @@ SOFTWARE.
 #include "lua.hpp"
 #include <SDL.h>
 
+#define SDL_USEREVENT_TICK (SDL_USEREVENT + 0)
+#define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
+#define SDL_USEREVENT_CPCALL (SDL_USEREVENT + 2)
+
 int luaopen_sdl(lua_State *L);
 
 #endif // CORSIX_TH_LUA_SDL_H_

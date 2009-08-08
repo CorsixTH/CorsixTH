@@ -39,7 +39,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.height = 159
   self.x = app.config.width - self.width - 20
   self.y = 20
-  self.cell_outline = app.gfx:loadBitmap"map_cell_outline"
+  self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
   self.room_type = room_type
@@ -285,7 +285,7 @@ end
 function UIEditRoom:draw(canvas)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
-  self.cell_outline:draw(canvas, x - 32, y)
+  self.cell_outline:draw(canvas, 2, x - 32, y)
   
   Window.draw(self, canvas)
   

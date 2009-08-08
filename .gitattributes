@@ -3,8 +3,12 @@ AnimView/AnimView.vcproj eol=crlf
 /CorsixTH.sln eol=crlf
 /CorsixTH.suo -text
 CorsixTH/AnimView.exe -text
+CorsixTH/Bitmap/aux_ui.dat -text
+CorsixTH/Bitmap/aux_ui.spec -text
+CorsixTH/Bitmap/aux_ui.tab -text
 CorsixTH/Bitmap/build_room_dialog_close.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
+CorsixTH/Bitmap/mksheet.lua -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.exe -text

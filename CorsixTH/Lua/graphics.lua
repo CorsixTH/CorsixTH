@@ -128,10 +128,15 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   
   local sheet = TH.sheet()
   sheet:setPalette(palette or self:loadPalette())
-  if not sheet:load(
-  self.app:readDataFile(dir, name .. ".tab"),
-  self.app:readDataFile(dir, name .. ".dat"),
-  complex, self.target) then
+  local data_tab, data_dat
+  if dir == "Bitmap" then
+    data_tab = self.app:readBitmapDataFile(name .. ".tab")
+    data_dat = self.app:readBitmapDataFile(name .. ".dat")
+  else
+    data_tab = self.app:readDataFile(dir, name .. ".tab")
+    data_dat = self.app:readDataFile(dir, name .. ".dat")
+  end
+  if not sheet:load(data_tab, data_dat, complex, self.target) then
     error("Cannot load sprite sheet " .. dir .. ":" .. name)
   end
   

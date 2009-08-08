@@ -101,7 +101,7 @@ end
 
 function Map:setDebugFont(font)
   self.debug_font = font
-  self.cell_outline = TheApp.gfx:loadBitmap"map_cell_outline"
+  self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
 end
 
 function Map:setDebugText(x, y, msg, ...)
@@ -158,7 +158,7 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
             if msg and msg ~= "" then
               local x = dx + screenX - 32
               local y = dy + screenY
-              self.cell_outline:draw(canvas, x, y)
+              self.cell_outline:draw(canvas, 2, x, y)
               self.debug_font:draw(canvas, msg, x, y, 64, 32)
             end
           else

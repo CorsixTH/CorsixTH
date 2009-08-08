@@ -183,9 +183,6 @@ function UI:onMouseDown(code, x, y)
     return
   end
   self.buttons_down[button] = true
-  if button == "right" then
-    self.app.map.th:setWallDrawFlags(4)
-  end
   
   return Window.onMouseDown(self, button, x, y)
 end
@@ -198,13 +195,10 @@ function UI:onMouseUp(code, x, y)
     return
   end
   self.buttons_down[button] = false
-  if button == "right" then
-    self.app.map.th:setWallDrawFlags(0)
-  end
   
   Window.onMouseUp(self, button, x, y)
   
-  if button == "left" or button == "right" then
+  if button == "right" then
     if highlight_x then
       entity:walkTo(highlight_x, highlight_y)
     end

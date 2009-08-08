@@ -28,9 +28,10 @@ class "Audio"
 function Audio:Audio(app)
   self.app = app
   self.background_playlist = {
-    -- {title = "", filename = ""},
+    -- {title = "", filename = "", enabled = true, music = nil},
   }
   self.has_bg_music = false
+  self.not_loaded = not app.config.audio
   self.bg_music_volume = 0.5
 end
 
@@ -53,6 +54,9 @@ local function linepairs(filename)
 end
 
 function Audio:init()
+  if self.not_loaded then
+    return
+  end
   local sound_dir = self.app.data_dir_map.SOUND
   if not sound_dir or not SDL.audio.loaded then
     if not sound_dir then
@@ -103,6 +107,7 @@ function Audio:init()
         if not info.title then
           info.title = short_name:sub(1, 1) .. short_name:match".(.*)%.":lower()
         end
+        info.enabled = true
         self.background_playlist[#self.background_playlist + 1] = info
       end
     end
@@ -125,18 +130,80 @@ function Audio:playRandomBackgroundTrack()
     return
   end
   local index = math.random(1, #self.background_playlist)
-  local info = self.background_playlist[index]
-  local file = assert(io.open(info.filename, "rb"))
-  local data = file:read"*a"
-  file:close()
-  if data:sub(1, 3) == "RNC" then
-    data = assert(rnc.decompress(data))
+  self:playBackgroundTrack(index)
+end
+
+function Audio:playNextBackgroundTrack()
+  if self.not_loaded or #self.background_playlist == 0 then
+    return
   end
-  data = SDL.audio.transcodeXmiToMid(data)  
-  local music = assert(SDL.audio.loadMusic(data))
+  
+  if not self.background_music then
+    self:playRandomBackgroundTrack()
+    return
+  end
+  
+  -- Find index of current track
+  local index = 1
+  for i, info in ipairs(self.background_playlist) do
+    if info.music == self.background_music then
+      index = i
+      break
+    end
+  end
+  
+  -- Find next track
+  for i = 1, #self.background_playlist do
+    i = ((index + i - 1) % #self.background_playlist) + 1
+    self:playBackgroundTrack(i)
+    return
+  end
+end
+
+SDL.audio.loadMusicAsyncx = function(data, cb)
+  cb(SDL.audio.loadMusic(data))
+end
+
+function Audio:playBackgroundTrack(index)
+  local info = self.background_playlist[index]
+  assert(info, "Index not valid")
+  local music = info.music
+  if not music then
+    local file = assert(io.open(info.filename, "rb"))
+    local data = file:read"*a"
+    file:close()
+    if data:sub(1, 3) == "RNC" then
+      data = assert(rnc.decompress(data))
+    end
+    data = SDL.audio.transcodeXmiToMid(data)
+    -- Loading of music files can incur a slight pause, which is why it is
+    -- done asynchronously.
+    SDL.audio.loadMusicAsync(data, function(music)
+      if music == nil then
+        error("Could not load music file \'" .. info.filename .. "\'")
+      else
+        if _DECODA then
+          debug.getmetatable(music).__tostring = function(ud)
+            return debug.getfenv(ud).tostring
+          end
+          debug.getfenv(music).tostring = "Music <".. info.filename .. ">"
+        end
+        info.music = music
+        return self:playBackgroundTrack(index)
+      end
+    end)
+    return
+  end
   SDL.audio.setMusicVolume(self.bg_music_volume)
   assert(SDL.audio.playMusic(music))
   self.background_music = music
+end
+
+function Audio:onMusicOver()
+  if self.not_loaded or #self.background_playlist == 0 then
+    return
+  end
+  self:playNextBackgroundTrack()
 end
 
 function Audio:setBackgroundVolume(volume)

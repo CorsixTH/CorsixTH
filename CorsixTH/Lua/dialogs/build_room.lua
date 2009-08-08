@@ -64,7 +64,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   end
   
   -- The close button has no sprite for when pressed, so it has to be custom drawn
-  local build_room_dialog_close = app.gfx:loadBitmap"build_room_dialog_close"
+  local build_room_dialog_close = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close)
   .panel_for_sprite.custom_draw = function(panel, canvas, x, y)
     x = x + panel.x
@@ -72,7 +72,7 @@ function UIBuildRoom:UIBuildRoom(ui)
     panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)
     local btn = panel.window.active_button
     if btn and btn.panel_for_sprite == panel and btn.active then
-      build_room_dialog_close:draw(canvas, x + 8, y + 34)
+      build_room_dialog_close:draw(canvas, 1, x + 8, y + 34)
     end
   end
   

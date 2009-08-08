@@ -50,6 +50,13 @@ struct music_t
     }
 };
 
+static void audio_music_over_callback()
+{
+    SDL_Event e;
+    e.type = SDL_USEREVENT_MUSIC_OVER;
+    SDL_PushEvent(&e);
+}
+
 static int l_init(lua_State *L)
 {
     if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 1024) != 0)
@@ -58,8 +65,132 @@ static int l_init(lua_State *L)
     {
         lua_pushboolean(L, 1);
         luaT_addcleanup(L, Mix_CloseAudio);
+        Mix_HookMusicFinished(audio_music_over_callback);
     }
     return 1;
+}
+
+struct load_music_async_t
+{
+    lua_State* L;
+    Mix_Music* music;
+    SDL_RWops* rwop;
+};
+
+static int l_load_music_async_callback(lua_State *L)
+{
+    load_music_async_t *async = (load_music_async_t*)lua_touserdata(L, 1);
+
+    // Replace light UD with full UD
+    lua_pushvalue(L, 1);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    lua_insert(L, 1);
+    lua_pushnil(L);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    // Get CB state and function
+    lua_pushvalue(L, 1);
+    lua_gettable(L, LUA_REGISTRYINDEX);
+    int size = lua_gettop(L);
+    int top = lua_type(L, -1);
+    lua_rawgeti(L, -1, 1);
+    lua_State *cbL = lua_tothread(L, -1);
+    // NB: cbL may equal L, or it may not
+    lua_pop(L, 1);
+    lua_rawgeti(L, -1, 2);
+    if(L != cbL)
+        lua_xmove(L, cbL, 1);
+
+    // Push CB arg
+    if(async->music == NULL)
+        lua_pushnil(cbL);
+    else
+    {
+        lua_rawgeti(L, 2, 3);
+        if(L != cbL)
+            lua_xmove(L, cbL, 1);
+        music_t* pLMusic = (music_t*)lua_touserdata(cbL, -1);
+        pLMusic->pMusic = async->music;
+        pLMusic->pRWop = async->rwop;
+        async->music = NULL;
+        async->rwop = NULL;
+    }
+
+    // Finish cleanup
+    if(async->rwop)
+        SDL_FreeRW(async->rwop);
+    lua_pushvalue(L, 1);
+    lua_pushnil(L);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    // Callback
+    if(cbL == L)
+    {
+        lua_call(cbL, 1, 0);
+        return 0;
+    }
+    if(lua_pcall(cbL, 1, 0, 0) != 0)
+    {
+        lua_pushliteral(L, "Error in async music load callback: ");
+        lua_xmove(cbL, L, 1);
+        lua_tostring(L, -1);
+        lua_concat(L, 2);
+        lua_error(L);
+    }
+    return 0;
+}
+
+static int load_music_async_thread(void* arg)
+{
+    load_music_async_t *async = (load_music_async_t*)arg;
+    async->music = Mix_LoadMUS_RW(async->rwop);
+    SDL_Event e;
+    e.type = SDL_USEREVENT_CPCALL;
+    e.user.data1 = (void*)l_load_music_async_callback;
+    e.user.data2 = arg;
+    SDL_PushEvent(&e);
+    return 0;
+}
+
+static int l_load_music_async(lua_State *L)
+{
+    size_t iLength;
+    const unsigned char *pData = luaT_checkfile(L, 1, &iLength);
+    luaL_checktype(L, 2, LUA_TFUNCTION);
+    SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
+    lua_settop(L, 2);
+
+    load_music_async_t *async = luaT_new(L, load_music_async_t);
+    lua_pushlightuserdata(L, async);
+    lua_pushvalue(L, -2);
+    lua_settable(L, LUA_REGISTRYINDEX);
+    async->L = L;
+    async->music = NULL;
+    async->rwop = rwop;
+    lua_createtable(L, 2, 0);
+    lua_pushthread(L);
+    lua_rawseti(L, -2, 1);
+    lua_pushvalue(L, 2);
+    lua_rawseti(L, -2, 2);
+    luaT_stdnew<music_t>(L, LUA_ENVIRONINDEX, true);
+    lua_rawseti(L, -2, 3);
+    lua_settable(L, LUA_REGISTRYINDEX);
+
+    /*
+        In registry:
+          [light userdata async] -> [full userdata async]
+          [full userdata async] -> {
+            [1] = callback_thread,
+            [2] = callback_function,
+            [3] = empty music_t userdata,
+          }
+        
+        New thread will load music, and inform the main loop, which will then
+        call the callback and remove the new entries from the registry.
+    */
+
+    SDL_CreateThread(load_music_async_thread, async);
+    return 0;
 }
 
 static int l_load_music(lua_State *L)
@@ -67,7 +198,6 @@ static int l_load_music(lua_State *L)
     size_t iLength;
     const unsigned char *pData = luaT_checkfile(L, 1, &iLength);
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
-
     Mix_Music* pMusic = Mix_LoadMUS_RW(rwop);
     if(pMusic == NULL)
     {
@@ -135,6 +265,7 @@ static const struct luaL_reg sdl_audiolib[] = {
 
 static const struct luaL_reg sdl_musiclib[] = {
     {"loadMusic", l_load_music},
+    {"loadMusicAsync", l_load_music_async},
     {"playMusic", l_play_music},
     {"setMusicVolume", l_music_volume},
     {NULL, NULL}

@@ -11,7 +11,8 @@
 -- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
-theme_hospital_install = [[X:\ThemeHospital\hospital]]
+theme_hospital_install = [[X:\ThemeHospital\CVR\]]
+-- theme_hospital_install = [[X:\ThemeHospital\minimal\]]
 -- theme_hospital_install = [[X:\ThemeHospital\Demo\]]
 -- theme_hospital_install = [[/home/corsix/hospital/]]
 -------------------------------------------------------------------------------
@@ -36,8 +37,13 @@ if false then
  height = 1024
  fullscreen = true
 else
- width = 1024
- height = 768
+ width = 800
+ height = 600
  fullscreen = false
 end
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Audio global on/off switch.
+audio = true
 -------------------------------------------------------------------------------

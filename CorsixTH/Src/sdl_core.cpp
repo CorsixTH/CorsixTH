@@ -59,10 +59,10 @@ static int l_init(lua_State *L)
     return 1;
 }
 
-Uint32 timer_frame_callback(Uint32 interval, void *param)
+static Uint32 timer_frame_callback(Uint32 interval, void *param)
 {
     SDL_Event e;
-    e.type = SDL_USEREVENT;
+    e.type = SDL_USEREVENT_TICK;
     SDL_PushEvent(&e);
     return interval;
 }
@@ -159,7 +159,20 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.motion.yrel);
                 nargs = 5;
                 break;
-            case SDL_USEREVENT:
+            case SDL_USEREVENT_MUSIC_OVER:
+                lua_pushliteral(dispatcher, "music_over");
+                nargs = 1;
+                break;
+            case SDL_USEREVENT_CPCALL:
+                if(lua_cpcall(L, (lua_CFunction)e.user.data1, e.user.data2))
+                {
+                    SDL_RemoveTimer(timer);
+                    lua_pushliteral(L, "callback");
+                    return 2;
+                }
+                nargs = 0;
+                break;
+            case SDL_USEREVENT_TICK:
                 do_timer = true;
                 nargs = 0;
                 break;

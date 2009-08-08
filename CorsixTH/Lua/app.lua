@@ -47,6 +47,7 @@ function App:App()
     buttonup = self.onMouseUp,
     buttondown = self.onMouseDown,
     motion = self.onMouseMove,
+    music_over = self.onMusicOver,
   }
   self.strings = {}
 end
@@ -62,6 +63,7 @@ function App:init()
   setfenv(assert(loadfile"config.txt"), self.config)()
   self:fixConfig()
   self:checkInstallFolder()
+  self:checkLanguageFile()
   
   -- Create the window
   if not SDL.init("audio", "video", "timer") then
@@ -198,9 +200,12 @@ function App:run()
   
   self.running = true
   coroutine.resume(co, self)
-  local e = SDL.mainloop(co)
+  local e, where = SDL.mainloop(co)
   self.running = false
   if e ~= nil then
+    if where then
+      self.last_dispatch_type = where
+    end
     print("An error has occured while running the " .. self.last_dispatch_type .. " handler.")
     print("A stack trace is included below, and the handler has been disconnected.")
     print(debug.traceback(co, e, 0))
@@ -262,6 +267,10 @@ function App:onMouseMove(...)
   return self.ui:onMouseMove(...)
 end
 
+function App:onMusicOver(...)
+  return self.audio:onMusicOver(...)
+end
+
 function App:checkInstallFolder()
   -- Check that it is actually a folder
   local install_folder = self.config.theme_hospital_install
@@ -315,6 +324,53 @@ function App:checkInstallFolder()
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end
+end
+
+function App:checkLanguageFile()
+  -- Some TH installs are trimmed down to a single language file, rather than
+  -- providing every language file. If the user has selected a language which
+  -- isn't present, then we should detect this and inform the user of their
+  -- options.
+  
+  local filename = self.config.theme_hospital_install ..
+    self.data_dir_map.DATA .. pathsep .. self.config.language .. ".DAT"
+  local file, err = io.open(filename, "rb")
+  if file then
+    -- Everything is fine
+    file:close()
+    return
+  end
+  
+  print "Theme Hospital install seems to be missing the language file for the language which you requested."
+  print "The following language files are present:"
+  local none = true
+  for item in lfs.dir(self.config.theme_hospital_install .. self.data_dir_map.DATA) do
+    local n = item:upper():match"LANG%-([0-9]+)%.DAT"
+    if n then
+      local name = ({[0] = "EN", "FR", "DE", "IT", "ES", "SV"})[tonumber(n)] or "??"
+      local warning = ""
+      if item ~= item:upper() and pathsep ~= "\\" then
+        warning = " (Filename needs to be renamed to UPPER CASE)"
+      end
+      print(" " .. item .. " (" .. name .. ")" .. warning)
+      none = false
+    end
+  end
+  if none then
+    print " (none)"
+  end
+  error(err)
+end
+
+function App:readBitmapDataFile(filename)
+  filename = "Bitmap" .. pathsep .. filename
+  local file = assert(io.open(filename, "rb"))
+  local data = file:read"*a"
+  file:close()
+  if data:sub(1, 3) == "RNC" then
+    data = assert(rnc.decompress(data))
+  end
+  return data
 end
 
 function App:readDataFile(dir, filename)
