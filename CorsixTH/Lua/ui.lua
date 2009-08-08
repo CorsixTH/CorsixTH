@@ -66,6 +66,9 @@ function UI:UI(app)
   self.background = false
   self.tick_scroll_amount = false
   self.tick_scroll_mult = 1
+  self.modal_windows = {
+    -- [class_name] -> window,
+  }
   
   app:loadLuaFolder("dialogs", true)
   
@@ -149,9 +152,11 @@ function UI:onKeyDown(code)
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
-  elseif key == "F9" then
-    self:addWindow(UIPatient(self, entity))
   end
+end
+
+function UI:debugShowPatientWindow()
+  self:addWindow(UIPatient(self, entity))
 end
 
 function UI:onKeyUp(code)
@@ -319,4 +324,14 @@ function UI:scrollMap(dx, dy)
   
   self.screen_offset_x = floor(dx + 0.5)
   self.screen_offset_y = floor(dy + 0.5)
+end
+
+function UI:addWindow(window)
+  if window.modal_class then
+    if self.modal_windows[window.modal_class] then
+      self.modal_windows[window.modal_class]:close()
+    end
+    self.modal_windows[window.modal_class] = window
+  end
+  Window.addWindow(self, window)
 end

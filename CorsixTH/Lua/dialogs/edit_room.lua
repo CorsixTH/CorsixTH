@@ -28,6 +28,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self:Window()
   
   local app = ui.app
+  self.modal_class = "main"
   self.ui = ui
   self.anims = app.anims
   -- Set alt palette on wall blueprint to make it red

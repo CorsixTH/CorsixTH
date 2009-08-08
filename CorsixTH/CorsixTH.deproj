@@ -123,4 +123,7 @@
   <file>
     <filename>Lua\dialogs\menu.lua</filename>
   </file>
+  <file>
+    <filename>Lua\dialogs\place_objects.lua</filename>
+  </file>
 </project>

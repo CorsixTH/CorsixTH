@@ -429,7 +429,7 @@ function UIMenuBar:makeMenu(app)
       :appendCheckItem(_S(9, 9), vol(0.2))
       :appendCheckItem(_S(9,10), vol(0.1)) -- 10%
     )
-    :appendItem(_S(3, -1)) -- Jukebox
+    :appendItem(_S(3, -1), function() self.ui:addWindow(UIJukebox(app)) end) -- Jukebox
   end
   self:addMenu(_S(1, 2), options) -- Options
   self:addMenu(_S(1, 4), UIMenu() -- Charts
@@ -463,7 +463,8 @@ function UIMenuBar:makeMenu(app)
   self:addMenu(_S(1, 5), UIMenu() -- Debug
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
-    :appendItem(_"Patient dialog")
+    :appendItem(_"Patient dialog", function() self.ui:debugShowPatientWindow() end)
+    :appendItem(_"Place Objects", function() self.ui:addWindow(UIPlaceObjects(self.ui)) end)
     :appendMenu(_"Map overlay", UIMenu()
       :appendCheckItem(_"None", true, overlay(), "")
       :appendCheckItem(_"Byte 0 & 1", false, overlay(35, 8, 0, 1, false), "")

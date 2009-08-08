@@ -239,6 +239,24 @@ static int l_play_music(lua_State *L)
     return 1;
 }
 
+static int l_pause_music(lua_State *L)
+{
+    Mix_PauseMusic();
+    return 0;
+}
+
+static int l_resume_music(lua_State *L)
+{
+    Mix_ResumeMusic();
+    return 0;
+}
+
+static int l_stop_music(lua_State *L)
+{
+    Mix_HaltMusic();
+    return 0;
+}
+
 static int l_transcode_xmi(lua_State *L)
 {
     size_t iLength, iMidLength;
@@ -267,6 +285,9 @@ static const struct luaL_reg sdl_musiclib[] = {
     {"loadMusic", l_load_music},
     {"loadMusicAsync", l_load_music_async},
     {"playMusic", l_play_music},
+    {"stopMusic", l_stop_music},
+    {"pauseMusic", l_pause_music},
+    {"resumeMusic", l_resume_music},
     {"setMusicVolume", l_music_volume},
     {NULL, NULL}
 };

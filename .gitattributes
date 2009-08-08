@@ -26,6 +26,7 @@ CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
 CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
+CorsixTH/Lua/dialogs/place_objects.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text

@@ -26,7 +26,12 @@ object.corridor_object = 6
 object.build_cost = 5
 object.build_preview_animation = 934
 object.idle_animations = {
-  -- TODO
+  north = 1956,
+}
+object.orientations = {
+  north = {
+    footprint = { {0, 0} }
+  },
 }
 
 return object

@@ -907,6 +907,22 @@ static int l_anim_set_flag(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_flag_partial(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    int iFlags = luaL_checkint(L, 2);
+    if(lua_isnone(L, 3) || lua_toboolean(L, 3))
+    {
+        pAnimation->setFlags(pAnimation->getFlags() | iFlags);
+    }
+    else
+    {
+        pAnimation->setFlags(pAnimation->getFlags() & ~iFlags);
+    }
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_anim_make_visible(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
@@ -1228,6 +1244,8 @@ int luaopen_th(lua_State *L)
     lua_setfield(L, -2, "getTile");
     lua_pushcfunction(L, l_anim_set_flag);
     lua_setfield(L, -2, "setFlag");
+    lua_pushcfunction(L, l_anim_set_flag_partial);
+    lua_setfield(L, -2, "setPartialFlag");
     lua_pushcfunction(L, l_anim_get_flag);
     lua_setfield(L, -2, "getFlag");
     lua_pushcfunction(L, l_anim_make_visible);

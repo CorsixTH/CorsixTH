@@ -28,6 +28,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui)
   self:Window()
   
   local app = ui.app
+  self.modal_class = "main"
   self.ui = ui
   self.anims = app.anims
   self.width = 360

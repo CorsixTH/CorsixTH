@@ -22,6 +22,8 @@ local pathsep = package.config:sub(1, 1)
 local rnc = require "rnc"
 local lfs = require "lfs"
 local SDL = require "sdl"
+local ipairs
+    = ipairs
 
 class "Audio"
 
@@ -129,7 +131,16 @@ function Audio:playRandomBackgroundTrack()
   if self.not_loaded or #self.background_playlist == 0 then
     return
   end
-  local index = math.random(1, #self.background_playlist)
+  local enabled = {}
+  for i, info in ipairs(self.background_playlist) do
+    if info.enabled then
+      enabled[#enabled + 1] = i
+    end
+  end
+  if not enabled[1] then
+    return
+  end
+  local index = enabled[math.random(1, #enabled)]
   self:playBackgroundTrack(index)
 end
 
@@ -155,13 +166,26 @@ function Audio:playNextBackgroundTrack()
   -- Find next track
   for i = 1, #self.background_playlist do
     i = ((index + i - 1) % #self.background_playlist) + 1
-    self:playBackgroundTrack(i)
-    return
+    if self.background_playlist[i].enabled then
+      self:playBackgroundTrack(i)
+      return
+    end
   end
 end
 
-SDL.audio.loadMusicAsyncx = function(data, cb)
-  cb(SDL.audio.loadMusic(data))
+function Audio:pauseBackgroundTrack()
+  if self.background_paused then
+    self.background_paused = nil
+    SDL.audio.resumeMusic()
+  else
+    SDL.audio.pauseMusic()
+    self.background_paused = true
+  end
+end
+
+function Audio:stopBackgroundTrack()
+  SDL.audio.stopMusic()
+  self.background_music = nil
 end
 
 function Audio:playBackgroundTrack(index)

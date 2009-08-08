@@ -27,6 +27,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   
   local app = ui.app
   self.ui = ui
+  self.modal_class = "main"
   self.x = (app.config.width - 300) / 2
   self.y = (app.config.height - 300) / 2
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
@@ -135,7 +136,6 @@ function UIBuildRoom:setCategory(index)
 end
 
 function UIBuildRoom:buildRoom(index)
-  self:close()
   local edit_dlg = UIEditRoom(self.ui, self.list[index])
   self.ui:addWindow(edit_dlg)
 end

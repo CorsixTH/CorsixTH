@@ -21,8 +21,8 @@ SOFTWARE. --]]
 local TH = require "TH"
 local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
-local assert
-    = assert
+local assert, string_char, table_concat
+    = assert, string.char, table.concat
 
 class "Graphics"
 
@@ -33,22 +33,51 @@ function Graphics:Graphics(app)
     raw = {},
     tabled = {},
     palette = {},
+    palette_greyscale_ghost = {},
     ghosts = {},
     anims = {},
     bitmap = {},
   }
 end
 
+function Graphics:makeGreyscaleGhost(pal)
+  local entries = {}
+  local remap = {}
+  for i = 1, #pal, 3 do
+    local entry = {pal:byte(i, i + 2)}
+    entries[(i - 1) / 3] = entry
+  end
+  for i = 0, #entries do
+    local entry = entries[i]
+    local g = entry[1] * 0.299 + entry[2] * 0.587 + entry[3] * 0.114
+    local g_index = 0
+    local g_diff = 100000
+    for j = 0, #entries do
+      local entry = entries[j]
+      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2 
+      if diff < g_diff then
+        g_diff = diff
+        g_index = j
+      end
+    end
+    remap[i] = string_char(g_index)
+  end
+  return table_concat(remap, "", 0, 255)
+end
+
 function Graphics:loadPalette(dir, name)
   name = name or "MPalette.dat"
   if self.cache.palette[name] then
-    return self.cache.palette[name]
+    return self.cache.palette[name],
+      self.cache.palette_greyscale_ghost[name]
   end
   
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
-  return palette
+  self.cache.palette_greyscale_ghost[name] = self:makeGreyscaleGhost(data)
+  self.cache.palette[name] = palette
+  return palette, self.cache.palette_greyscale_ghost[name]
 end
 
 function Graphics:loadGhost(dir, name, index)

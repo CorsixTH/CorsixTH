@@ -48,7 +48,12 @@ end
 
 local panel_mt = {
   __index = {
-    makeButton = function(...) return (...).window:makeButtonOnPanel(...) end,
+    makeButton = function(...)
+      return (...).window:makeButtonOnPanel(...)
+    end,
+    makeToggleButton = function(...)
+      return (...).window:makeButtonOnPanel(...):makeToggle()
+    end,
   }
 }
 
@@ -104,6 +109,27 @@ local button_mt = {
       end
       return self
     end,
+    
+    makeToggle = function(self)
+      self.is_toggle = true
+      self.toggled = false
+      return self
+    end,
+    
+    toggle = function(self)
+      self.sprite_index_normal, self.sprite_index_active =
+        self.sprite_index_active, self.sprite_index_normal
+      self.panel_for_sprite.sprite_index = self.sprite_index_normal
+      self.toggled = not self.toggled
+      return self.toggled
+    end,
+    
+    preservePanel = function(self)
+      local window = self.panel_for_sprite.window
+      self.panel_for_sprite = window:addPanel(0, self.x, self.y)
+      self.sprite_index_normal = 0
+      return self
+    end,
   }
 }
 
@@ -111,6 +137,7 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
   x = x + panel.x
   y = y + panel.y
   local button = setmetatable({
+    is_toggle = false,
     x = x,
     y = y,
     r = x + w,
@@ -188,11 +215,15 @@ function Window:onMouseUp(button, x, y)
       btn.active = false
       self.active_button = false
       if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+        local arg = nil
+        if btn.is_toggle then
+          arg = btn:toggle()
+        end
         if btn.on_click == nil then
           print("Warning: No handler for button click")
           btn.on_click = function() end
         else
-          btn.on_click(btn.on_click_self)
+          btn.on_click(btn.on_click_self, arg)
         end
       end
       repaint = true

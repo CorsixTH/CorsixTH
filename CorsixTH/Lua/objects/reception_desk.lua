@@ -26,7 +26,22 @@ object.corridor_object = 1
 object.build_cost = 150
 object.build_preview_animation = 5060
 object.idle_animations = {
-  -- TODO
+  north = 2062,
+  east = 2064,
+}
+object.orientations = {
+  north = {
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+  },
+  east = {
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+  },
+  south = {
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+  },
+  west = {
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+  },
 }
 
 return object
