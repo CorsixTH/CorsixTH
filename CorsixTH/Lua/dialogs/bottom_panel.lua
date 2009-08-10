@@ -25,6 +25,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   local app = ui.app
   self.ui = ui
+  self.world = app.world
   self.x = (app.config.width - 640) / 2
   self.y = app.config.height - 48
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
@@ -51,7 +52,8 @@ function UIBottomPanel:draw(canvas)
 
   local x, y = self.x, self.y
   self.money_font:draw(canvas, ("%7i"):format(40000), x + 44, y + 9)
-  self.date_font:draw(canvas, "7 " .. _S(6, 2), x + 140, y + 20, 60, 0)
+  local month, day = self.world:getDate()
+  self.date_font:draw(canvas, day .. " " .. _S(6, month), x + 140, y + 20, 60, 0)
 end
 
 function UIBottomPanel:dialogBuildRoom()

@@ -348,6 +348,10 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_Room, "room")
     Flag(THMN_DoorWest, "doorWest")
     Flag(THMN_DoorNorth, "doorNorth")
+    Flag(THMN_CanTravelN, "travelNorth")
+    Flag(THMN_CanTravelE, "travelEast")
+    Flag(THMN_CanTravelS, "travelSouth")
+    Flag(THMN_CanTravelW, "travelWest")
 
 #undef Flag
 

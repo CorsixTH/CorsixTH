@@ -21,8 +21,11 @@ SOFTWARE. --]]
 local TH = require "TH"
 local ipairs, math_floor
     = ipairs, math.floor
-    
-local ATTACH_BLUEPRINT_TO_TILE = true
+
+-- Visually, it looks better to have the object being placed not attached to a
+-- tile (so that it is always on top of walls, etc.), but for debugging it can
+-- be useful to attach it to a tile.
+local ATTACH_BLUEPRINT_TO_TILE = false
 
 class "UIPlaceObjects" (Window)
 
@@ -34,7 +37,9 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   self.ui = ui
   self.map = app.map
   self.anims = app.anims
+  self.world = app.world
   self.width = 186
+  self.height = 167 + #object_list * 29
   self.x = app.config.width - self.width - 20
   self.y = 20
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
@@ -53,14 +58,6 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   self:addPanel(128,  92, 100) -- Disabled pick up items button
   self:addPanel(129, 134, 100) -- Disabled confirm button
   
-  object_list = {
-    {object = TheApp.objects.radiator, qty = 5},
-    {object = TheApp.objects.plant, qty = 5},
-    {object = TheApp.objects.bench, qty = 5},
-    {object = TheApp.objects.drinks_machine, qty = 5},
-    {object = TheApp.objects.reception_desk, qty = 5},
-    {object = TheApp.objects.extinguisher, qty = 5},
-  }
   self.objects = object_list
   self.object_anim = TH.animation()
   self.object_footprint = {}
@@ -82,6 +79,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
       :makeButton(15, 8, 130, 23, 125, idx(i))
       :preservePanel()
   end
+  -- Last object list entry
   self:addPanel(156, 0, 117 + #object_list * 29)
     :makeButton(15, 12, 130, 23, 125, idx(#object_list))
     :preservePanel()
@@ -145,15 +143,47 @@ function UIPlaceObjects:nextOrientation()
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
-function UIPlaceObjects:onMouseUp(button, ...)
-  local repaint = Window.onMouseUp(self, button, ...)
+function UIPlaceObjects:onMouseUp(button, x, y)
+  local repaint = Window.onMouseUp(self, button, x, y)
   
   if button == "right" then
     self:nextOrientation()
     repaint = true
+  elseif button == "left" then
+    if self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
+      self:placeObject()
+      repaint = true
+    end
   end
   
   return repaint
+end
+
+function UIPlaceObjects:placeObject()
+  local object = self.objects[self.active_index]
+  self.world:newObject(object.object.id, self.object_cell_x,
+    self.object_cell_y, self.object_orientation)
+    
+  object.qty = object.qty - 1
+  if object.qty == 0 then
+    if #self.objects == 1 then
+      self:close()
+      return
+    end
+    local idx = self.active_index
+    table.remove(self.objects, idx)
+    self.active_index = 0 -- avoid case of index changing from 1 to 1
+    self:setActiveIndex(1)
+    self.height = self.height - 29
+    -- NB: Two panels per item, the latter being a dummy for the button
+    self.panels[#self.panels] = nil
+    local spr_idx = self.panels[#self.panels].sprite_index
+    self.panels[#self.panels] = nil
+    self.buttons[#self.buttons] = nil
+    local last_panel = self.panels[#self.panels - 1]
+    last_panel.y = last_panel.y - 4
+    last_panel.sprite_index = spr_idx
+  end
 end
 
 function UIPlaceObjects:draw(canvas)
@@ -182,7 +212,9 @@ function UIPlaceObjects:clearBlueprint()
   local map = self.map.th
   self.object_anim:setTile(nil)
   for _, xy in ipairs(self.object_footprint) do
-    map:setCell(xy[1], xy[2], 4, 0)
+    if xy[1] ~= 0 then
+      map:setCell(xy[1], xy[2], 4, 0)
+    end
   end
 end
 
@@ -196,6 +228,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   if x and y then
     local object = self.objects[self.active_index].object
     local object_footprint = object.orientations[self.object_orientation].footprint
+    local w, h = self.map.width, self.map.height
     local map = self.map.th
     if #object_footprint ~= #self.object_footprint then
       self.object_footprint = {}
@@ -208,11 +241,23 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     for i, xy in ipairs(object_footprint) do
       local x = x + xy[1]
       local y = y + xy[2]
-      if map:getCellFlags(x, y, flags).buildable then
-        map:setCell(x, y, 4, 24 + flag_alpha75)
-      else
-        map:setCell(x, y, 4, 67 + flag_alpha75)
+      if x < 1 or x > w or y < 1 or y > h then
         allgood = false
+        x = 0
+        y = 0
+      else
+        local flag = "buildable"
+        local good_tile = 24 + flag_alpha75
+        if xy.only_passable then
+          flag = "passable"
+          good_tile = 0
+        end
+        if map:getCellFlags(x, y, flags)[flag] then
+          map:setCell(x, y, 4, good_tile)
+        else
+          map:setCell(x, y, 4, 67 + flag_alpha75)
+          allgood = false
+        end
       end
       self.object_footprint[i][1] = x
       self.object_footprint[i][2] = y
@@ -221,6 +266,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_anim:setTile(map, x, y)
     end
     self.object_anim:setPartialFlag(flag_altpal, not allgood)
+    self.object_blueprint_good = allgood
   else
     self.object_footprint = {}
   end
@@ -230,11 +276,14 @@ function UIPlaceObjects:onMouseMove(x, y, ...)
   local repaint = Window.onMouseMove(self, x, y, ...)
   
   local ui = self.ui
-  local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
-  wx = math_floor(wx)
-  wy = math_floor(wy)
-  if wx < 1 or wy < 1 or wx > self.map.width or wy > self.map.height then
-    wx, wy = nil
+  local wx, wy
+  if x < 0 or x >= self.width or y < 0 or y >= self.height then
+    wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
+    wx = math_floor(wx)
+    wy = math_floor(wy)
+    if wx < 1 or wy < 1 or wx > self.map.width or wy > self.map.height then
+      wx, wy = nil
+    end
   end
   if wx ~= self.object_cell_x or wy ~= self.object_cell_y then
     self:setBlueprintCell(wx, wy)

@@ -109,6 +109,20 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   self.total_price = self.total_price + quantity * o.object.build_cost
 end
 
+function UIFurnishCorridor:confirm()
+  local to_purchase = {}
+  for i, o in ipairs(self.objects) do
+    if o.qty > 0 then
+      to_purchase[#to_purchase + 1] = o
+    end
+  end
+  if #to_purchase == 0 then
+    self:close()
+  else
+    self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase))
+  end
+end
+
 function UIFurnishCorridor:draw(canvas)
   Window.draw(self, canvas)
   

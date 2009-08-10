@@ -456,6 +456,16 @@ function UIMenuBar:makeMenu(app)
       end
     end
   end
+  local function place_objs()
+    self.ui:addWindow(UIPlaceObjects(self.ui, {
+      {object = TheApp.objects.radiator, qty = 5},
+      {object = TheApp.objects.plant, qty = 5},
+      {object = TheApp.objects.bench, qty = 5},
+      {object = TheApp.objects.drinks_machine, qty = 5},
+      {object = TheApp.objects.reception_desk, qty = 5},
+      {object = TheApp.objects.extinguisher, qty = 5},
+    }))
+  end
   local function limit_camera(item)
     app.ui.limit_to_visible_diamond = item.checked
     app.ui:scrollMap(0, 0)
@@ -464,10 +474,14 @@ function UIMenuBar:makeMenu(app)
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
     :appendItem(_"Patient dialog", function() self.ui:debugShowPatientWindow() end)
-    :appendItem(_"Place Objects", function() self.ui:addWindow(UIPlaceObjects(self.ui)) end)
+    :appendItem(_"Place Objects",place_objs)
     :appendMenu(_"Map overlay", UIMenu()
       :appendCheckItem(_"None", true, overlay(), "")
+      :appendCheckItem(_"Flags", false, overlay"flags", "")
       :appendCheckItem(_"Byte 0 & 1", false, overlay(35, 8, 0, 1, false), "")
+      :appendCheckItem(_"Byte Floor", false, overlay(35, 8, 2, 2, false), "")
+      :appendCheckItem(_"Byte N Wall", false, overlay(35, 8, 3, 3, false), "")
+      :appendCheckItem(_"Byte W Wall", false, overlay(35, 8, 4, 4, false), "")
       :appendCheckItem(_"Byte 5", false, overlay(35, 8, 5, 5, true), "")
       :appendCheckItem(_"Byte 6", false, overlay(35, 8, 6, 6, true), "")
       :appendCheckItem(_"Byte 7", false, overlay(35, 8, 7, 7, true), "")

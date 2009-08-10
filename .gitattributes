@@ -3,10 +3,17 @@ AnimView/AnimView.vcproj eol=crlf
 /CorsixTH.sln eol=crlf
 /CorsixTH.suo -text
 CorsixTH/AnimView.exe -text
-CorsixTH/Bitmap/aux_ui.dat -text
+CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
 CorsixTH/Bitmap/build_room_dialog_close.bmp -text
+CorsixTH/Bitmap/flag_buildable.bmp -text
+CorsixTH/Bitmap/flag_hospital.bmp -text
+CorsixTH/Bitmap/flag_passable.bmp -text
+CorsixTH/Bitmap/flag_travel_east.bmp -text
+CorsixTH/Bitmap/flag_travel_north.bmp -text
+CorsixTH/Bitmap/flag_travel_south.bmp -text
+CorsixTH/Bitmap/flag_travel_west.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mksheet.lua -text
 CorsixTH/CorsixTH.aps -text

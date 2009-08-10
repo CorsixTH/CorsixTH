@@ -39,6 +39,9 @@ function World:World(app)
   self.objects = {}
   self.tick_rate = 3
   self.tick_timer = 0
+  self.month = 1 -- January
+  self.day = 1
+  self.hour = 0
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -54,9 +57,47 @@ function World:getWallIdFromBlockId(block_id)
   return self.wall_id_by_block_id[block_id]
 end
 
+local month_length = {
+  31, -- Jan
+  28, -- Feb (29 in leap years, but TH doesn't have leap years)
+  31, -- Mar
+  30, -- Apr
+  31, -- May
+  30, -- Jun
+  31, -- Jul
+  31, -- Aug
+  30, -- Sep
+  31, -- Oct
+  30, -- Nov
+  31, -- Dec
+}
+
+function World:getDate()
+  return self.month, self.day
+end
+
 function World:onTick()
   if self.tick_timer == 0 then
     self.tick_timer = self.tick_rate
+    self.hour = self.hour + 1
+    -- There doesn't need to be 24 hours in a day. Whatever value gives the
+    -- best ingame speed can be used, but 24 works OK and is a good starting
+    -- point. Vanilla TH appears to take ~3 seconds per day at normal speed.
+    -- With ~33 ticks/sec, reduced to 11 /sec at normal speed, 3 seconds -> 33
+    -- ticks, which is 1 day and 9 hours.
+    if self.hour == 24 then
+      self.hour = 0
+      self.day = self.day + 1
+      if self.day > month_length[self.month] then
+        self:onEndMonth()
+        self.day = 1
+        self.month = self.month + 1
+        if self.month > 12 then
+          self:onEndYear();
+          self.month = 1
+        end
+      end
+    end
     for _, entity in ipairs(self.entities) do
       if entity.ticks then
         entity:tick()
@@ -64,6 +105,12 @@ function World:onTick()
     end
   end
   self.tick_timer = self.tick_timer - 1
+end
+
+function World:onEndMonth()
+end
+
+function World:onEndYear()
 end
 
 function World:getPathDistance(x1, y1, x2, y2)

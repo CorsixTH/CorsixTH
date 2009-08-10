@@ -28,6 +28,7 @@ function Map:Map()
   self.height = false
   self.th = thMap()
   self.debug_text = false
+  self.debug_flags = false
   self.debug_font = false
 end
 
@@ -73,10 +74,22 @@ end
 
 function Map:clearDebugText()
   self.debug_text = false
+  self.debug_flags = false
 end
 
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   self.debug_text = false
+  self.debug_flags = false
+  if base_offset == "flags" then
+    self.debug_flags = {}
+    for x = 1, self.width do
+      for y = 1, self.height do
+        local xy = (y - 1) * self.width + x - 1
+        self.debug_flags[xy] = assert(self.th:getCellFlags(x, y))
+      end
+    end
+    return
+  end
   local thData = self.thData
   for x = 1, self.width do
     for y = 1, self.height do
@@ -129,7 +142,7 @@ end
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
   
-  if self.debug_font and self.debug_text then
+  if self.debug_font and (self.debug_text or self.debug_flags) then
     local startX = 0
     local startY = math_floor((sy - 32) / 16)
     if startY < 0 then
@@ -154,12 +167,38 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
         repeat
           if screenX < -32 then
           elseif screenX < sw + 32 then
-            local msg = self.debug_text[y * self.width + x]
-            if msg and msg ~= "" then
-              local x = dx + screenX - 32
-              local y = dy + screenY
-              self.cell_outline:draw(canvas, 2, x, y)
-              self.debug_font:draw(canvas, msg, x, y, 64, 32)
+            local xy = y * self.width + x
+            local x = dx + screenX - 32
+            local y = dy + screenY
+            if self.debug_flags then
+              local flags = self.debug_flags[xy]
+              if flags.passable then
+                self.cell_outline:draw(canvas, 3, x, y)
+              end
+              if flags.hospital then
+                self.cell_outline:draw(canvas, 8, x, y)
+              end
+              if flags.buildable then
+                self.cell_outline:draw(canvas, 9, x, y)
+              end
+              if flags.travelNorth and self.debug_flags[xy - self.width].passable then
+                self.cell_outline:draw(canvas, 4, x, y)
+              end
+              if flags.travelEast and self.debug_flags[xy + 1].passable then
+                self.cell_outline:draw(canvas, 5, x, y)
+              end
+              if flags.travelSouth and self.debug_flags[xy + self.width].passable then
+                self.cell_outline:draw(canvas, 6, x, y)
+              end
+              if flags.travelWest and self.debug_flags[xy - 1].passable then
+                self.cell_outline:draw(canvas, 7, x, y)
+              end
+            else
+              local msg = self.debug_text[xy]
+              if msg and msg ~= "" then
+                self.cell_outline:draw(canvas, 2, x, y)
+                self.debug_font:draw(canvas, msg, x, y, 64, 32)
+              end
             end
           else
             break

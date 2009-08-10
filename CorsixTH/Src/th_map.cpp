@@ -97,14 +97,15 @@ static const unsigned char gs_iTHMapBlockLUT[256] = {
 
 bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
 {
-    if(iDataLength < (34 + 128 * 128 * 8) || !setSize(128, 128))
+    if(iDataLength < 163948 || !setSize(128, 128))
         return false;
 
     THMapNode *pNode = m_pCells;
+    const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
     for(int iY = 0; iY < 128; ++iY)
     {
-        for(int iX = 0; iX < 128; ++iX, ++pNode, pData += 8)
+        for(int iX = 0; iX < 128; ++iX, ++pNode, pData += 8, ++pParcel)
         {
             unsigned char iBaseTile = gs_iTHMapBlockLUT[pData[2]];
             pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS
@@ -118,7 +119,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
             else if(iY == 127)
                 pNode->iFlags &= ~THMN_CanTravelS;
             pNode->iBlock[0] = iBaseTile;
-            if(pData[3] == 0)
+            if(pData[3] == 0 || pData[3] == /* Parcel divider wall */ 140)
             {
                 // Tiles 71, 72 and 73 (pond foliage) are used as floor tiles,
                 // but are too tall to be floor tiles, so move them to a wall,
@@ -140,7 +141,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
                     pNode[-128].iFlags &= ~THMN_CanTravelS;
                 }
             }
-            if(pData[4] == 0)
+            if(pData[4] == 0 || pData[4] == /* Parcel divider wall */ 141)
                 pNode->iBlock[2] = 0;
             else
             {
@@ -152,6 +153,20 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
                 }
             }
 
+            if(!(pData[5] & 1))
+            {
+                pNode->iFlags |= THMN_Passable;
+                if(*pParcel && !(pData[7] & 16))
+                {
+                    pNode->iFlags |= THMN_Hospital;
+                    if(!(pData[5] & 2))
+                        pNode->iFlags |= THMN_Buildable;
+                }
+            }
+
+            /*
+            // This code now done from map file data rather than tile numbers,
+            // but kept here incase it is required to do it by tile again.
             switch(iBaseTile)
             {
             case 0x10: case 0x11: case 0x12: case 0x13: case 0x14:
@@ -162,6 +177,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
                 pNode->iFlags |= THMN_Passable;
                 break;
             }
+            */
         }
     }
 

@@ -354,17 +354,17 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
 end
 
 local door_floor_blueprint_markers = {
-  north = 31,
-  east = 26,
-  south = 27,
-  west = 30,
+  north = 25,
+  east = 28,
+  south = 29,
+  west = 32,
 }
 
 local window_floor_blueprint_markers = {
-  north = 36,
-  east = 33,
-  south = 34,
-  west = 35,
+  north = 33,
+  east = 34,
+  south = 35,
+  west = 36,
 }
 
 function UIEditRoom:setDoorBlueprint(x, y, wall)
