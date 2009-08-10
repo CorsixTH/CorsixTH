@@ -512,6 +512,7 @@ static const struct luaL_reg sdl_videolib[] = {
     {"fillBlack", l_draw_black_rect},
     {"startFrame", l_nop},
     {"endFrame", l_flip},
+    {"nonOverlapping", l_nop},
     {"saveBitmap", l_save_bmp},
     {"loadBitmap", l_load_bmp},
     {NULL, NULL}

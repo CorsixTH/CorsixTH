@@ -92,14 +92,20 @@ function UIMenuBar:draw(canvas)
   end
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
+  canvas:nonOverlapping()
   panel_sprites_draw(panel_sprites, canvas, 1, 0,  0)
   panel_sprites_draw(panel_sprites, canvas, 4, 0,  6)
   panel_sprites_draw(panel_sprites, canvas, 7, 0, 10)
   for x = 10, self.width - 10, 10 do
     panel_sprites_draw(panel_sprites, canvas, 2, x,  0)
+  end
+  for x = 10, self.width - 10, 10 do
     panel_sprites_draw(panel_sprites, canvas, 5, x,  6)
+  end
+  for x = 10, self.width - 10, 10 do
     panel_sprites_draw(panel_sprites, canvas, 8, x, 10)
   end
+  canvas:nonOverlapping(false)
   local x = self.width - 10
   panel_sprites_draw(panel_sprites, canvas, 3, x,  0)
   panel_sprites_draw(panel_sprites, canvas, 6, x,  6)
@@ -121,24 +127,28 @@ function UIMenuBar:drawMenu(menu, canvas)
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
   local x, y, w, h = menu.x, menu.y, menu.width, menu.height
+  canvas:nonOverlapping()
   panel_sprites_draw(panel_sprites, canvas, 1, x, y)
   for x = x + 10, x + w - 10, 10 do
     panel_sprites_draw(panel_sprites, canvas, 2, x, y)
   end
-  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
   for y = y + 6, y + h - 6, 4 do
     panel_sprites_draw(panel_sprites, canvas, 4, x, y)
     for x = x + 10, x + w - 10, 10 do
       panel_sprites_draw(panel_sprites, canvas, 5, x, y)
     end
+  end
+  local btmy = y + h - 6
+  panel_sprites_draw(panel_sprites, canvas, 7, x, btmy)
+  for x = x + 10, x + w - 10, 10 do
+    panel_sprites_draw(panel_sprites, canvas, 8, x, btmy)
+  end
+  canvas:nonOverlapping(false)
+  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)  
+  for y = y + 6, y + h - 6, 4 do
     panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
   end
-  y = y + h - 6
-  panel_sprites_draw(panel_sprites, canvas, 7, x, y)
-  for x = x + 10, x + w - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 8, x, y)
-  end
-  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, y)
+  panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
   
   x = menu.x
   y = menu.y + 4

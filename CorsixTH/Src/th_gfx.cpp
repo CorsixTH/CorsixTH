@@ -77,6 +77,7 @@ void THFont::getTextSize(const char* sMessage, size_t iMessageLength, int* pX, i
 
 void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const
 {
+    THRenderTarget_StartNonOverlapping(pCanvas);
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
@@ -96,6 +97,7 @@ void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMes
             --iMessageLength, ++sMessage;
         }
     }
+    THRenderTarget_FinishNonOverlapping(pCanvas);
 }
 
 void THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth) const

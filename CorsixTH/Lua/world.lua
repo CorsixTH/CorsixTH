@@ -103,6 +103,7 @@ function World:onTick()
         entity:tick()
       end
     end
+    self.map:onTick()
   end
   self.tick_timer = self.tick_timer - 1
 end

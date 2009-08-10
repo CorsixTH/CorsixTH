@@ -52,6 +52,12 @@ SOFTWARE.
 // Uncomment the next line to render faster than the monitor refresh rate
 //#define CORSIX_TH_DX9_UNLIMITED_FPS
 
+// D3D9X can used to augment D3D9, but this introduces an extra DLL dependency,
+// so its usage can be disabled to cut down on required DLLs. It may actually
+// be faster to not use D3D9X, but it also means that some (rarely used) Lua
+// API video functions may be unavailable.
+//#define CORSIX_TH_USE_D3D9X
+
 /** Audio options **/
 // SDL_mixer is used for ingame audio. If this library is not present on your
 // system, then you can comment out the next line and the game will not have

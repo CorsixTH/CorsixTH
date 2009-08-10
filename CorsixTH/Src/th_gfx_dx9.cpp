@@ -24,19 +24,25 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_DX9_RENDERER
 
 #include <D3D9.h>
+#ifdef CORSIX_TH_USE_D3D9X
 #include <D3DX9.h>
+#endif
 #include "th_gfx.h"
 #include <new>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
+#ifdef CORSIX_TH_USE_D3D9X
 #pragma comment(lib, "D3DX9")
+#endif
 #endif
 
 THRenderTarget::THRenderTarget()
 {
     pD3D = NULL;
     pDevice = NULL;
+#ifdef CORSIX_TH_USE_D3D9X
     pSprite = NULL;
+#endif
     pTexture = NULL;
     THRenderTarget_SetClipRect(this, NULL);
 }
@@ -61,6 +67,8 @@ void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect
     }
 }
 
+#ifdef CORSIX_TH_USE_D3D9X
+
 void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
 {
     if(pTarget->pSprite)
@@ -81,6 +89,49 @@ void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
             D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
     }
 }
+
+#else
+
+void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
+{
+    pTarget->iNonOverlappingStart = pTarget->iVertexCount;
+    //THDX9_FlushSprites(pTarget);
+    pTarget->bNonOverlapping = true;
+}
+
+static int sprite_tex_compare(const void* left, const void* right)
+{
+    const THDX9_Vertex *pLeft  = reinterpret_cast<const THDX9_Vertex*>(left);
+    const THDX9_Vertex *pRight = reinterpret_cast<const THDX9_Vertex*>(right);
+
+    if(pLeft->tex == pRight->tex)
+        return 0;
+    else if(pLeft->tex < pRight->tex)
+        return -1;
+    else
+        return 1;
+}
+
+void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
+{
+    size_t iStart = pTarget->iNonOverlappingStart;
+    IDirect3DTexture9 *pTexture = pTarget->pVerticies[iStart].tex;
+    for(size_t i = iStart + 6; i < pTarget->iVertexCount; i += 6)
+    {
+        if(pTarget->pVerticies[i].tex != pTexture)
+        {
+            qsort(pTarget->pVerticies + iStart,
+                (pTarget->iVertexCount - iStart) / 6,
+                sizeof(THDX9_Vertex) * 6, sprite_tex_compare);
+            break;
+        }
+    }
+
+    //THDX9_FlushSprites(pTarget);
+    pTarget->bNonOverlapping = false;
+}
+
+#endif
 
 THPalette::THPalette()
 {
@@ -104,12 +155,16 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
         return false;
 
     m_iNumColours = iDataLength / 3;
-    colour_t* pColour = m_aColours;
-    for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pColour)
+    colour_t* pCol = m_aColours;
+    for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pCol)
     {
-        pColour->r = gs_iTHColourLUT[pData[0] & 0x3F];
-        pColour->g = gs_iTHColourLUT[pData[1] & 0x3F];
-        pColour->b = gs_iTHColourLUT[pData[2] & 0x3F];
+        pCol->r = gs_iTHColourLUT[pData[0] & 0x3F];
+        pCol->g = gs_iTHColourLUT[pData[1] & 0x3F];
+        pCol->b = gs_iTHColourLUT[pData[2] & 0x3F];
+        if(pCol->r == 0xFF && pCol->g == 0 && pCol->b == 0xFF)
+            m_aColoursARGB[i] = D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00);
+        else
+            m_aColoursARGB[i] = D3DCOLOR_ARGB(0xFF, pCol->r, pCol->g, pCol->b);
     }
 
     return true;
@@ -130,6 +185,13 @@ const unsigned char* THPalette::getColourData() const
 {
     return &m_aColours[0].b;
 }
+
+const uint32_t* THPalette::getARGBData() const
+{
+    return m_aColoursARGB;
+}
+
+#ifdef CORSIX_TH_USE_D3D9X
 
 IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const unsigned char* pPixels,
@@ -206,12 +268,110 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
     }
 }
 
+#else
+
+IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
+                                       const unsigned char* pPixels,
+                                       const THPalette* pPalette,
+                                       IDirect3DDevice9* pDevice,
+                                       bool)
+{
+    int iWidth2 = 1;
+    int iHeight2 = 1;
+    while(iWidth2 < iWidth)
+        iWidth2 <<= 1;
+    while(iHeight2 < iHeight)
+        iHeight2 <<= 1;
+
+    IDirect3DTexture9 *pTexture = NULL;
+    if(pDevice->CreateTexture(iWidth2, iHeight2, 1, 0, D3DFMT_A8R8G8B8,
+        D3DPOOL_MANAGED, &pTexture, NULL) != D3D_OK || pTexture == NULL)
+    {
+        return NULL;
+    }
+    D3DLOCKED_RECT rcLocked;
+    if(pTexture->LockRect(0, &rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+    {
+        pTexture->Release();
+        return NULL;
+    }
+
+    uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
+    const uint32_t* pColours = pPalette->getARGBData();
+    for(int y = 0; y < iHeight; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(int x = 0; x < iWidth; ++x, ++pPixels, ++pRow)
+        {
+            *pRow = pColours[*pPixels];
+        }
+        for(int x = iWidth; x < iWidth2; ++x, ++pRow)
+        {
+            *pRow = D3DCOLOR_ARGB(0, 0, 0, 0);
+        }
+    }
+    for(int y = iHeight; y < iHeight2; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(int x = 0; x < iWidth2; ++x, ++pRow)
+        {
+            *pRow = D3DCOLOR_ARGB(0, 0, 0, 0);
+        }
+    }
+
+    pTexture->UnlockRect(0);
+    return pTexture;
+}
+
+THDX9_Vertex* THDX9_AllocVerticies(THRenderTarget* pTarget, size_t iCount)
+{
+    if(pTarget->iVertexCount + iCount > pTarget->iVertexLength)
+    {
+        pTarget->iVertexLength = (pTarget->iVertexLength * 2) + iCount;
+        pTarget->pVerticies = (THDX9_Vertex*)realloc(pTarget->pVerticies,
+            sizeof(THDX9_Vertex) * pTarget->iVertexLength);
+    }
+    THDX9_Vertex *pResult = pTarget->pVerticies + pTarget->iVertexCount;
+    pTarget->iVertexCount += iCount;
+    return pResult;
+}
+
+void THDX9_FlushSprites(THRenderTarget* pTarget)
+{
+    if(pTarget->iVertexCount == 0)
+        return;
+    
+    IDirect3DTexture9 *pTexture = pTarget->pVerticies[0].tex;
+    pTarget->pDevice->SetTexture(0, pTexture);
+    size_t iStart = 0;
+    for(size_t i = 6; i < pTarget->iVertexCount; i += 6)
+    {
+        if(pTarget->pVerticies[i].tex != pTexture)
+        {
+            pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
+                (i - iStart) / 3, pTarget->pVerticies + iStart,
+                sizeof(THDX9_Vertex));
+            iStart = i;
+            pTexture = pTarget->pVerticies[i].tex;
+            pTarget->pDevice->SetTexture(0, pTexture);
+        }
+    }
+    pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
+        (pTarget->iVertexCount - iStart) / 3, pTarget->pVerticies + iStart,
+        sizeof(THDX9_Vertex));
+
+    pTarget->iVertexCount = 0;
+}
+
+#endif
+
 THSpriteSheet::THSpriteSheet()
 {
     m_pSprites = 0;
     m_iSpriteCount = 0;
     m_pPalette = NULL;
     m_pDevice = NULL;
+    m_pMegaSheet = NULL;
 }
 
 THSpriteSheet::~THSpriteSheet()
@@ -223,10 +383,17 @@ void THSpriteSheet::_freeSprites()
 {
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
-        if(m_pSprites[i].pBitmap)
+        if(m_pSprites[i].pBitmap && m_pSprites[i].pBitmap != m_pMegaSheet)
             m_pSprites[i].pBitmap->Release();
+        if(m_pSprites[i].pAltBitmap)
+            m_pSprites[i].pAltBitmap->Release();
         if(m_pSprites[i].pData)
             delete[] (m_pSprites[i].pData - 1024);
+    }
+    if(m_pMegaSheet)
+    {
+        m_pMegaSheet->Release();
+        m_pMegaSheet = NULL;
     }
     delete[] m_pSprites;
     m_pSprites = NULL;
@@ -275,6 +442,12 @@ bool THSpriteSheet::loadFromTHFile(
         pSprite->pAltPaletteMap = NULL;
         pSprite->iWidth = pTHSprite->width;
         pSprite->iHeight = pTHSprite->height;
+        pSprite->iWidth2 = 1;
+        pSprite->iHeight2 = 1;
+        while(pSprite->iWidth2 < pSprite->iWidth)
+            pSprite->iWidth2 <<= 1;
+        while(pSprite->iHeight2 < pSprite->iHeight)
+            pSprite->iHeight2 <<= 1;
 
         if(pSprite->iWidth == 0 || pSprite->iHeight == 0)
             continue;
@@ -289,7 +462,158 @@ bool THSpriteSheet::loadFromTHFile(
             pSprite->pData = oRenderer.takeData();
         }
     }
+
+    sprite_t **ppSortedSprites = new sprite_t*[m_iSpriteCount];
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        ppSortedSprites[i] = m_pSprites + i;
+    }
+    qsort(ppSortedSprites, m_iSpriteCount, sizeof(sprite_t*), _sortSpritesHeight);
+
+    unsigned int iSize;
+    if(_tryFitSingleTex(ppSortedSprites, 2048))
+    {
+        iSize = 2048;
+        if(_tryFitSingleTex(ppSortedSprites, 1024))
+        {
+            iSize = 1024;
+            if(_tryFitSingleTex(ppSortedSprites, 512))
+            {
+                iSize = 512;
+                if(_tryFitSingleTex(ppSortedSprites, 256))
+                {
+                    iSize = 256;
+                    if(_tryFitSingleTex(ppSortedSprites, 128))
+                        iSize = 128;
+                }
+            }
+        }
+    }
+    else
+    {
+        delete[] ppSortedSprites;
+        return true;
+    }
+
+    _makeSingleTex(ppSortedSprites, iSize);
+    delete[] ppSortedSprites;
     return true;
+}
+
+void THSpriteSheet::_makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
+{
+    IDirect3DTexture9 *pTexture = NULL;
+    if(m_pDevice->CreateTexture(iSize, iSize, 1, 0, D3DFMT_A8R8G8B8,
+        D3DPOOL_MANAGED, &pTexture, NULL) != D3D_OK || pTexture == NULL)
+    {
+        return;
+    }
+    D3DLOCKED_RECT rcLocked;
+    if(pTexture->LockRect(0, &rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+    {
+        pTexture->Release();
+        return;
+    }
+
+    // Pass 1: Fill entirely transparent
+    uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
+    for(unsigned int y = 0; y < iSize; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(unsigned int x = 0; x < iSize; ++x, ++pRow)
+        {
+            *pRow = D3DCOLOR_ARGB(0, 0, 0, 0);
+        }
+    }
+
+    // Pass 2: Blit sprites onto sheet
+    const uint32_t* pColours = m_pPalette->getARGBData();
+    unsigned int iX = 0;
+    unsigned int iY = 0;
+    unsigned int iTallest = ppSortedSprites[0]->iHeight;
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        sprite_t *pSprite = ppSortedSprites[i];
+        if(pSprite->pData == NULL)
+            break;
+
+        pSprite->pBitmap = pTexture;
+        if(iX + pSprite->iWidth > iSize)
+        {
+            iX = 0;
+            iY += iTallest;
+            iTallest = pSprite->iHeight;
+        }
+        pSprite->iSheetX = iX;
+        pSprite->iSheetY = iY;
+        iX += pSprite->iWidth;
+
+        const unsigned char *pPixels = pSprite->pData;
+        uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
+        pData += pSprite->iSheetY * rcLocked.Pitch + pSprite->iSheetX * 4;
+        for(unsigned int y = 0; y < pSprite->iHeight; ++y, pData += rcLocked.Pitch)
+        {
+            uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+            for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pRow, ++pPixels)
+            {
+                *pRow = pColours[*pPixels];
+            }
+        }
+    }
+
+    pTexture->UnlockRect(0);
+    m_pMegaSheet = pTexture;
+    m_iMegaSheetSize = iSize;
+}
+
+int THSpriteSheet::_sortSpritesHeight(const void* left, const void* right)
+{
+    const sprite_t *pLeft = *reinterpret_cast<const sprite_t* const*>(left);
+    const sprite_t *pRight = *reinterpret_cast<const sprite_t* const*>(right);
+
+    // Move all NULL datas to the end
+    if(pLeft->pData == NULL || pRight->pData == NULL)
+    {
+        if(pLeft->pData == NULL && pRight->pData == NULL)
+            return 0;
+        if(pLeft->pData == NULL)
+            return 1;
+        else
+            return -1;
+    }
+
+    // Sort from tallest to shortest
+    return static_cast<int>(pRight->iHeight) - static_cast<int>(pLeft->iHeight);
+}
+
+bool THSpriteSheet::_tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
+{
+    // There are probably better algorithms for trying to fit lots of small
+    // rectangular sprites onto a single square sheet, but sorting them by
+    // height and then filling up one row at a time is simple and yields a good
+    // enough result.
+
+    unsigned int iX = 0;
+    unsigned int iY = 0;
+    unsigned int iTallest = ppSortedSprites[0]->iHeight;
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        sprite_t *pSprite = ppSortedSprites[i];
+        if(pSprite->pData == NULL)
+            break;
+        if(pSprite->iWidth > iSize || pSprite->iHeight > iSize)
+            return false;
+        if(iX + pSprite->iWidth > iSize)
+        {
+            iX = 0;
+            iY += iTallest;
+            iTallest = pSprite->iHeight;
+        }
+        iX += pSprite->iWidth;
+    }
+
+    iY += iTallest;
+    return iY <= iSize;
 }
 
 void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
@@ -331,6 +655,7 @@ void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* p
     *pY = m_pSprites[iSprite].iHeight;
 }
 
+#ifdef CORSIX_TH_USE_D3D9X
 static const D3DXMATRIX g_mtxIdentity(
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
@@ -354,6 +679,7 @@ static const D3DXMATRIX g_mtxFlipVH(
     0.0f,-1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 1.0f);
+#endif
 
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
@@ -383,12 +709,32 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         }
     }
 
+    if(pTexture == m_pMegaSheet)
+    {
+        THDX9_Draw(pCanvas, pTexture, m_pSprites[iSprite].iWidth,
+            m_pSprites[iSprite].iHeight, iX, iY, iFlags, m_iMegaSheetSize,
+            m_iMegaSheetSize, m_pSprites[iSprite].iSheetX,
+            m_pSprites[iSprite].iSheetY);
+    }
+    else
+    {
+        THDX9_Draw(pCanvas, pTexture, m_pSprites[iSprite].iWidth,
+            m_pSprites[iSprite].iHeight, iX, iY, iFlags,
+            m_pSprites[iSprite].iWidth2, m_pSprites[iSprite].iHeight2, 0, 0);
+    }
+}
+
+void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
+                unsigned int iWidth, unsigned int iHeight, int iX, int iY,
+                unsigned long iFlags, unsigned int iWidth2,
+                unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY)
+{
     // Crop to clip rectangle
     RECT rcSource;
     rcSource.left = 0;
     rcSource.top = 0;
-    rcSource.right = m_pSprites[iSprite].iWidth;
-    rcSource.bottom = m_pSprites[iSprite].iHeight;
+    rcSource.right = iWidth;
+    rcSource.bottom = iHeight;
     if(iX + rcSource.right > pCanvas->rcClip.x + pCanvas->rcClip.w)
     {
         rcSource.right = pCanvas->rcClip.x + pCanvas->rcClip.w - iX;
@@ -412,6 +758,11 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     if(rcSource.bottom < rcSource.top)
         rcSource.bottom = rcSource.top;
 
+    rcSource.left += iTexX;
+    rcSource.right += iTexX;
+    rcSource.bottom += iTexY;
+    rcSource.top += iTexY;
+
     // Set alpha blending options
     D3DCOLOR cColour;
     switch(iFlags & (THDF_Alpha50 | THDF_Alpha75))
@@ -427,6 +778,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         break;
     }
 
+#ifdef CORSIX_TH_USE_D3D9X
     // Perform horizontal and vertical flips
     switch(iFlags & (THDF_FlipHorizontal | THDF_FlipVertical))
     {
@@ -451,6 +803,59 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     // Do the actual drawing
     D3DXVECTOR3 vPosition((FLOAT)iX, (FLOAT)iY, 0.0f);
     pCanvas->pSprite->Draw(pTexture, &rcSource, NULL, &vPosition, cColour);
+#else
+    float fX = (float)iX;
+    float fY = (float)iY;
+    float fWidth = (float)(rcSource.right - rcSource.left);
+    float fHeight = (float)(rcSource.bottom - rcSource.top);
+    float fSprWidth = (float)iWidth2;
+    float fSprHeight = (float)iHeight2;
+    if(iFlags & THDF_FlipHorizontal)
+    {
+        LONG tmp = rcSource.right;
+        rcSource.right = rcSource.left;
+        rcSource.left = tmp;
+    }
+    if(iFlags & THDF_FlipVertical)
+    {
+        LONG tmp = rcSource.bottom;
+        rcSource.bottom = rcSource.top;
+        rcSource.top = tmp;
+    }
+
+#define SetVertexData(n) \
+    pVerticies[0].tex = pTexture; \
+    pVerticies[0].x = fX; \
+    pVerticies[0].y = fY; \
+    pVerticies[0].z = 0.0f; \
+    pVerticies[1].x = fX + fWidth; \
+    pVerticies[1].y = fY; \
+    pVerticies[1].z = 0.0f; \
+    pVerticies[2].x = fX + fWidth; \
+    pVerticies[2].y = fY + fHeight; \
+    pVerticies[2].z = 0.0f; \
+    pVerticies[n].x = fX; \
+    pVerticies[n].y = fY + fHeight; \
+    pVerticies[n].z = 0.0f; \
+    pVerticies[0].colour = cColour; \
+    pVerticies[1].colour = cColour; \
+    pVerticies[2].colour = cColour; \
+    pVerticies[n].colour = cColour; \
+    pVerticies[0].u = (float)rcSource.left   / fSprWidth; \
+    pVerticies[0].v = (float)rcSource.top    / fSprHeight; \
+    pVerticies[1].u = (float)rcSource.right  / fSprWidth; \
+    pVerticies[1].v = pVerticies[0].v; \
+    pVerticies[2].u = pVerticies[1].u; \
+    pVerticies[2].v = (float)rcSource.bottom / fSprHeight; \
+    pVerticies[n].u = pVerticies[0].u; \
+    pVerticies[n].v = pVerticies[2].v; \
+
+    THDX9_Vertex *pVerticies = THDX9_AllocVerticies(pCanvas, 6);
+    SetVertexData(5);
+    pVerticies[3] = pVerticies[0];
+    pVerticies[4] = pVerticies[2];
+#undef SetVertexData
+#endif
 }
 
 IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)

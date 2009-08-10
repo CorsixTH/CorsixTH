@@ -30,6 +30,7 @@ function Map:Map()
   self.debug_text = false
   self.debug_flags = false
   self.debug_font = false
+  self.debug_tick_timer = 1
 end
 
 -- Convert between world co-ordinates and screen co-ordinates
@@ -85,7 +86,7 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
     for x = 1, self.width do
       for y = 1, self.height do
         local xy = (y - 1) * self.width + x - 1
-        self.debug_flags[xy] = assert(self.th:getCellFlags(x, y))
+        self.debug_flags[xy] = self.th:getCellFlags(x, y)
       end
     end
     return
@@ -101,6 +102,22 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
         self:setDebugText(x, y, thData:byte(offset + first, offset + last))
       end
     end
+  end
+end
+
+function Map:onTick()
+  if self.debug_tick_timer == 1 then
+    if self.debug_flags then
+      for x = 1, self.width do
+        for y = 1, self.height do
+          local xy = (y - 1) * self.width + x - 1
+          self.th:getCellFlags(x, y, self.debug_flags[xy])
+        end
+      end
+    end
+    self.debug_tick_timer = 10
+  else
+    self.debug_tick_timer = self.debug_tick_timer - 1
   end
 end
 

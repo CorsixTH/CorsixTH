@@ -218,7 +218,7 @@ static int l_mainloop(lua_State *L)
         }
 
         // No events pending - a good time to do a bit of garbage collection
-        lua_gc(L, LUA_GCSTEP, 1);
+        lua_gc(L, LUA_GCSTEP, 2);
     }
 
 leave_loop:

@@ -32,7 +32,11 @@ SOFTWARE.
 struct IDirect3D9;
 struct IDirect3DDevice9;
 struct IDirect3DTexture9;
+#ifdef CORSIX_TH_USE_D3D9X
 struct ID3DXSprite;
+#else
+struct IDirect3DVertexBuffer9;
+#endif
 
 struct THClipRect
 {
@@ -40,13 +44,36 @@ struct THClipRect
 	uint16_t w, h;
 };
 
+#ifndef CORSIX_TH_USE_D3D9X
+#pragma pack(push)
+#pragma pack(1)
+struct THDX9_Vertex
+{
+    float x, y, z;
+    uint32_t colour;
+    float u, v;
+    // Not part of FVF:
+    IDirect3DTexture9 *tex;
+};
+#pragma pack(pop)
+#endif
+
 struct THRenderTarget
 {
     THRenderTarget();
 
     IDirect3D9 *pD3D;
     IDirect3DDevice9 *pDevice;
+#ifdef CORSIX_TH_USE_D3D9X
     ID3DXSprite *pSprite;
+#else
+    THDX9_Vertex *pVerticies;
+    size_t iVertexCount;
+    size_t iVertexLength;
+    bool bNonOverlapping;
+    size_t iNonOverlappingStart;
+#endif
+    int iNonOverlapping;
     IDirect3DTexture9 *pTexture;
     THClipRect rcClip;
 };
@@ -66,6 +93,7 @@ public:
 
     int getColourCount() const;
     const unsigned char* getColourData() const;
+    const uint32_t* getARGBData() const;
     void assign(THRenderTarget* pTarget, bool bTransparent) const;
 
 protected:
@@ -77,6 +105,7 @@ protected:
         unsigned char g;
         unsigned char r;
     } m_aColours[256];
+    uint32_t m_aColoursARGB[256];
 #pragma pack(pop)
     int m_iNumColours;
 };
@@ -86,6 +115,15 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const THPalette* pPalette,
                                        IDirect3DDevice9* pDevice,
                                        bool bNoAllocate = false);
+
+void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
+                unsigned int iWidth, unsigned int iHeight, int iX, int iY,
+                unsigned long iFlags, unsigned int iWidth2,
+                unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY);
+
+#ifndef CORSIX_TH_USE_D3D9X
+void THDX9_FlushSprites(THRenderTarget* pTarget);
+#endif
 
 class THSpriteSheet
 {
@@ -124,15 +162,24 @@ protected:
         IDirect3DTexture9 *pAltBitmap;
         unsigned char *pData;
         const unsigned char *pAltPaletteMap;
+        unsigned int iSheetX;
+        unsigned int iSheetY;
         unsigned int iWidth;
         unsigned int iHeight;
+        unsigned int iWidth2;
+        unsigned int iHeight2;
     } *m_pSprites;
     const THPalette* m_pPalette;
     IDirect3DDevice9* m_pDevice;
+    IDirect3DTexture9* m_pMegaSheet;
+    unsigned int m_iMegaSheetSize;
     unsigned int m_iSpriteCount;
 
     void _freeSprites();
+    bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
+    void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
     IDirect3DTexture9* _makeAltBitmap(sprite_t *pSprite);
+    static int _sortSpritesHeight(const void*, const void*);
 };
 
 #endif // CORSIX_TH_USE_DX9_RENDERER

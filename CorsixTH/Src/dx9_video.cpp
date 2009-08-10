@@ -32,7 +32,9 @@ SOFTWARE.
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <D3D9.h>
+#ifdef CORSIX_TH_USE_D3D9X
 #include <D3DX9.h>
+#endif
 #ifndef _MSC_VER
 #define stricmp strcasecmp
 #else
@@ -82,6 +84,7 @@ static int l_ensure_hw_surface(lua_State *L)
 
 static int l_load_bmp(lua_State *L)
 {
+#ifdef CORSIX_TH_USE_D3D9X
     const char* sFilename = luaL_checkstring(L, 1);
     l_surface_t *pTarget = l_check_surface(L, 2);
     if(pTarget->target.pDevice == NULL)
@@ -106,10 +109,16 @@ static int l_load_bmp(lua_State *L)
     pSurface->target.pTexture = pTexture;
     pSurface->own_texture = true;
     return 1;
+#else
+    return luaL_error(L, "Loading of bitmaps not supported by DX9 renderer "
+        "when D3D9X is not being used. Recompile CorsixTH with D3D9X usage "
+        "enabled, or with the SDL renderer enabled.");
+#endif
 }
 
 static int l_save_bmp(lua_State *L)
 {
+#ifdef CORSIX_TH_USE_D3D9X
     l_surface_t *pSurface = l_check_surface(L, 1);
     if(pSurface->target.pTexture == NULL)
         return luaL_typerror(L, 1, "Surface");
@@ -123,19 +132,26 @@ static int l_save_bmp(lua_State *L)
         lua_pushboolean(L, 0);
     }
     return 1;
+#else
+    return luaL_error(L, "Saving of bitmaps not supported by DX9 renderer "
+        "when D3D9X is not being used. Recompile CorsixTH with D3D9X usage "
+        "enabled, or with the SDL renderer enabled.");
+#endif
 }
 
 static int l_start_frame(lua_State *L)
 {
     l_surface_t *pSurface = l_check_surface(L, 1);
-    if(pSurface->target.pSprite)
+    if(pSurface->target.pDevice)
     {
         pSurface->target.pDevice->Clear(0, NULL, D3DCLEAR_TARGET,
             D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
         pSurface->target.pDevice->BeginScene();
+#ifdef CORSIX_TH_USE_D3D9X
         pSurface->target.pSprite->Begin(D3DXSPRITE_ALPHABLEND |
             D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DO_NOT_ADDREF_TEXTURE |
             D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
+#endif
     }
     return 0;
 }
@@ -143,9 +159,13 @@ static int l_start_frame(lua_State *L)
 static int l_end_frame(lua_State *L)
 {
     l_surface_t *pSurface = l_check_surface(L, 1);
-    if(pSurface->target.pSprite)
+    if(pSurface->target.pDevice)
     {
+#ifdef CORSIX_TH_USE_D3D9X
         pSurface->target.pSprite->End();
+#else
+        THDX9_FlushSprites(pSurface->target_p);
+#endif
         pSurface->target.pDevice->EndScene();
         pSurface->target.pDevice->Present(NULL,NULL,NULL,NULL);
     }
@@ -209,7 +229,9 @@ static int l_set_mode(lua_State *L)
     THRenderTarget oTarget;
     oTarget.pD3D = NULL;
     oTarget.pDevice = NULL;
+#ifdef CORSIX_TH_USE_D3D9X
     oTarget.pSprite = NULL;
+#endif
     
     oTarget.pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if(oTarget.pD3D == NULL)
@@ -263,6 +285,7 @@ static int l_set_mode(lua_State *L)
         err("Could not create device");
     }
 
+#ifdef CORSIX_TH_USE_D3D9X
     if(FAILED(D3DXCreateSprite(oTarget.pDevice, &oTarget.pSprite)))
     {
         err("Could not create D3DX sprite");
@@ -273,6 +296,86 @@ static int l_set_mode(lua_State *L)
     oTarget.pSprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_DONOTSAVESTATE);
     oTarget.pSprite->End();
     oTarget.pDevice->EndScene();
+#else
+    oTarget.iVertexCount = 0;
+    oTarget.iVertexLength = 768;
+    oTarget.pVerticies = (THDX9_Vertex*)malloc(sizeof(THDX9_Vertex) * oTarget.iVertexLength);
+    oTarget.bNonOverlapping = false;
+    oTarget.pDevice->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
+    oTarget.pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+    oTarget.pDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+    oTarget.pDevice->SetRenderState(D3DRS_ALPHAREF, 0x00);
+    oTarget.pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, d3dCaps.AlphaCmpCaps);
+    oTarget.pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+    oTarget.pDevice->SetRenderState(D3DRS_CLIPPING, TRUE);
+    oTarget.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+    oTarget.pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    oTarget.pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+    oTarget.pDevice->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
+    oTarget.pDevice->SetRenderState(D3DRS_ENABLEADAPTIVETESSELLATION, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+    oTarget.pDevice->SetRenderState(D3DRS_FOGENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_RANGEFOGENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+    oTarget.pDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+    oTarget.pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_VERTEXBLEND, FALSE);
+    oTarget.pDevice->SetRenderState(D3DRS_WRAP0, 0);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
+    oTarget.pDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE);
+    oTarget.pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
+    oTarget.pDevice->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC)
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
+    else
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_MAXMIPLEVEL, 0);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, d3dCaps.MaxAnisotropy);
+    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFANISOTROPIC)
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
+    else
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MIPFLINEAR)
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+    else
+        oTarget.pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_MIPMAPLODBIAS, 0);
+    oTarget.pDevice->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, 0);
+
+    D3DMATRIX mtxIdentity = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+
+    oTarget.pDevice->SetTransform(D3DTS_WORLD, &mtxIdentity);
+    oTarget.pDevice->SetTransform(D3DTS_VIEW, &mtxIdentity);
+
+    float fWidth = (float)iWidth;
+    float fHeight = (float)iHeight;
+
+    mtxIdentity.m[0][0] = 2.0f / fWidth;
+    mtxIdentity.m[1][1] = -2.0f / fHeight;
+    mtxIdentity.m[3][0] = -1.0f - (1.0f / fWidth);
+    mtxIdentity.m[3][1] =  1.0f + (1.0f / fHeight);
+
+    oTarget.pDevice->SetTransform(D3DTS_PROJECTION, &mtxIdentity);
+#endif
 
 #undef err
 
@@ -295,8 +398,10 @@ static int l_free(lua_State *L)
     }
     if(pSurface->own_device)
     {
+#ifdef CORSIX_TH_USE_D3D9X
         pSurface->target.pSprite->Release();
         pSurface->target.pSprite = NULL;
+#endif
         pSurface->target.pDevice->Release();
         pSurface->target.pDevice = NULL;
         pSurface->target.pD3D->Release();
@@ -313,35 +418,37 @@ static int l_free(lua_State *L)
 */
 static int l_blit_surface(lua_State *L)
 {
-    D3DXVECTOR3 vDestination(0, 0, 0);
+    int iX = 0;
+    int iY = 0;
 
     l_surface_t *src = l_check_surface(L, 1);
     if(src->target.pTexture == NULL)
         return luaL_argerror(L, 1, "Surface");
     l_surface_t *dst = l_check_surface(L, 2);
-    if(dst->target.pSprite == NULL)
+    if(dst->target.pDevice == NULL)
         return luaL_argerror(L, 2, "Video Surface");
+
+    D3DSURFACE_DESC oDesc;
+    if(src->target.pTexture->GetLevelDesc(0, &oDesc) != D3D_OK)
+    {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
 
     switch(lua_gettop(L))
     {
     case 8:
         return luaL_error(L, "TODO: Implement 8 argument DX9 surface blit");
     case 4:
-        vDestination.x = (float)luaL_checknumber(L, 3);
-        vDestination.y = (float)luaL_checknumber(L, 4);
+        iX = luaL_checkint(L, 3);
+        iY = luaL_checkint(L, 4);
     default:
         break;
     }
 
-    if(dst->target.pSprite->Draw(src->target.pTexture, NULL, NULL,
-        &vDestination, 0xFFFFFFFF) == S_OK)
-    {
-        lua_pushboolean(L, 1);
-    }
-    else
-    {
-        lua_pushboolean(L, 0);
-    }
+    THDX9_Draw(dst->target_p, src->target.pTexture, oDesc.Width, oDesc.Height,
+        iX, iY, 0, oDesc.Width, oDesc.Height, 0, 0);
+    lua_pushboolean(L, 1);
     return 1;
 }
 
@@ -454,6 +561,16 @@ static int l_new_surface(lua_State *L)
     return 1;
 }
 
+static int l_non_overlapping(lua_State *L)
+{
+    l_surface_t *pSource = l_check_surface(L, 1);
+    if(lua_isnone(L, 2) || lua_toboolean(L, 2) != 0)
+        THRenderTarget_StartNonOverlapping(pSource->target_p);
+    else
+        THRenderTarget_FinishNonOverlapping(pSource->target_p);
+    return 0;
+}
+
 static const struct luaL_reg sdl_videolib[] = {
     {"newSurface", l_new_surface},
     {"ensureHardwareSurface", l_ensure_hw_surface},
@@ -463,6 +580,7 @@ static const struct luaL_reg sdl_videolib[] = {
     {"draw", l_blit_surface},
     {"fillBlack", l_fill_black},
     {"startFrame", l_start_frame},
+    {"nonOverlapping", l_non_overlapping},
     {"endFrame", l_end_frame},
     {"saveBitmap", l_save_bmp},
     {"loadBitmap", l_load_bmp},
