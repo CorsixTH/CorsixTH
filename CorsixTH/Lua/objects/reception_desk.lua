@@ -31,16 +31,16 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+    footprint = { {0, 0}, {0, -1}, {0, 1, only_passable = true}, {1, 0}, {-1, 0} }
   },
   east = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0, only_passable = true} }
   },
   south = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+    footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1}, {1, 0}, {-1, 0} }
   },
   west = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0}, {-1, 0} }
+    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0, only_passable = true}, {-1, 0} }
   },
 }
 

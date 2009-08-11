@@ -812,15 +812,13 @@ void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
     float fSprHeight = (float)iHeight2;
     if(iFlags & THDF_FlipHorizontal)
     {
-        LONG tmp = rcSource.right;
-        rcSource.right = rcSource.left;
-        rcSource.left = tmp;
+        rcSource.left = iTexX * 2 + iWidth - rcSource.left;
+        rcSource.right = iTexX * 2 + iWidth - rcSource.right;
     }
     if(iFlags & THDF_FlipVertical)
     {
-        LONG tmp = rcSource.bottom;
-        rcSource.bottom = rcSource.top;
-        rcSource.top = tmp;
+        rcSource.top = iTexY * 2 + iHeight - rcSource.top;
+        rcSource.bottom = iTexY * 2 + iHeight - rcSource.bottom;
     }
 
 #define SetVertexData(n) \

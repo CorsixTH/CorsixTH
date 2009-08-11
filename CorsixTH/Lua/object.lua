@@ -23,6 +23,13 @@ dofile "entity"
 
 class "Object" (Entity)
 
+local orient_mirror = {
+  north = "west",
+  west = "north",
+  east = "south",
+  south = "east",
+}
+
 function Object:Object(world, object_type, x, y, direction)
   local th = TH.animation()
   self:Entity(th)
@@ -33,7 +40,19 @@ function Object:Object(world, object_type, x, y, direction)
   self.direction = direction
   self.user = false
 
-  self:setAnimation(object_type.idle_animations[direction])  
+  local flags = 0
+  local anim = object_type.idle_animations[direction]
+  if not anim then
+    anim = object_type.idle_animations[orient_mirror[direction]]
+    flags = 1
+  end
+  local footprint = object_type.orientations
+  footprint = footprint and footprint[direction]
+  footprint = footprint and footprint.footprint
+  if footprint then
+    self.footprint = footprint
+  end
+  self:setAnimation(anim, flags)
   self:setTile(x, y)
 end
 
@@ -44,6 +63,15 @@ function Object:setTile(x, y)
   Entity.setTile(self, x, y)
   if x then
     self.world:addObjectToTile(self, x, y)
+    if self.footprint then
+      local map = self.world.map.th
+      for _, xy in ipairs(self.footprint) do
+        map:setCellFlags(x + xy[1], y + xy[2], {
+          buildable = false,
+          passable = not not xy.only_passable,
+        })
+      end
+    end
   end
   return self
 end

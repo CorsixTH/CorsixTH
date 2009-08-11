@@ -333,7 +333,7 @@ function App:checkLanguageFile()
   -- options.
   
   local filename = self.config.theme_hospital_install ..
-    self.data_dir_map.DATA .. pathsep .. self.config.language .. ".DAT"
+    self.data_dir_map.DATA .. pathsep .. self.config.language:upper() .. ".DAT"
   local file, err = io.open(filename, "rb")
   if file then
     -- Everything is fine
