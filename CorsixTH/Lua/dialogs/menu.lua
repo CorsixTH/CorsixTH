@@ -63,8 +63,8 @@ function UIMenuBar:UIMenuBar(ui)
   self.height = 16
   self.visible = false
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
-  self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
-  self.blue_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font02V"))
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.blue_font = app.gfx:loadFont("QData", "Font02V")
   self.menus = {}
   self.active_menu = false
   
@@ -483,6 +483,7 @@ function UIMenuBar:makeMenu(app)
   self:addMenu(_S(1, 5), UIMenu() -- Debug
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
+    :appendItem(_"Make Patients", function() self.ui:debugMakePatients() end)
     :appendItem(_"Patient dialog", function() self.ui:debugShowPatientWindow() end)
     :appendItem(_"Place Objects",place_objs)
     :appendMenu(_"Map overlay", UIMenu()

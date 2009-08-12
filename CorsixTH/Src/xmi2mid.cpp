@@ -28,6 +28,9 @@ SOFTWARE.
 #include <new>
 #include <vector>
 
+/*!
+    Utility class for reading or writing to memory as if it were a file.
+*/
 class MemoryBuffer
 {
 public:
@@ -233,7 +236,7 @@ struct midi_token_t
 	uint8_t	iData;
 };
 
-bool operator < (const midi_token_t& oLeft, const midi_token_t& oRight)
+static bool operator < (const midi_token_t& oLeft, const midi_token_t& oRight)
 {
     return oLeft.iTime < oRight.iTime;
 }

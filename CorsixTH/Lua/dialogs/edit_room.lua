@@ -31,6 +31,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.modal_class = "main"
   self.ui = ui
   self.anims = app.anims
+  self.world = app.world
   -- Set alt palette on wall blueprint to make it red
   self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   -- Set on door and window blueprints too
@@ -42,7 +43,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.y = 20
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
-  self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.room_type = room_type
   self.title_text = room_type.name
   self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
@@ -149,7 +150,8 @@ function UIEditRoom:finishRoom()
       anim:setTile(nil)
     end
   end
-  map:markRoom(rect.x, rect.y, rect.w, rect.h, room_type.floor_tile)
+  local room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type)
+  map:markRoom(rect.x, rect.y, rect.w, rect.h, room_type.floor_tile, room.id)
   self:close()
 end
 

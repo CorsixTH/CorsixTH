@@ -56,7 +56,16 @@ local button_codes = invert {
   right = 3,
 }
 
-local entity
+local patients = {}
+local function get_patient()
+  local n = patients.n
+  if n == #patients then
+    patients.n = 1
+  else
+    patients.n = n + 1
+  end
+  return patients[n]
+end
 
 function UI:UI(app)
   self:Window()
@@ -104,10 +113,27 @@ function UI:UI(app)
   end
 
   -- Temporary code
-  entity = TheApp.world:newEntity("Humanoid", 2)
-  entity:setType"Standard Male Patient"
-  entity:setTile(63, 63)
-  entity:setLayer(0, 8)
+  self:debugMakePatients()
+end
+
+function UI:debugMakePatients()
+  patients.n = #patients + 1
+  for i = 1, 4 do
+    local entity = TheApp.world:newEntity("Humanoid", 2)
+    local types = {
+      "Standard Male Patient",
+      "Alternate Male Patient",
+      "Slack Male Patient",
+      "Transparent Male Patient",
+      "Standard Female Patient",
+      "Transparent Female Patient",
+    }
+    entity:setType(types[math.random(1, #types)])
+    entity:setTile(63 + (i - 1) % 2, 63 + math.floor(i / 3))
+    entity:setLayer(0, math.random(1, 4) * 2)
+    entity:setLayer(1, math.random(0, 3) * 2)
+    patients[#patients + 1] = entity
+  end
 end
 
 function UI:draw(canvas) 
@@ -156,7 +182,7 @@ function UI:onKeyDown(code)
 end
 
 function UI:debugShowPatientWindow()
-  self:addWindow(UIPatient(self, entity))
+  self:addWindow(UIPatient(self, get_patient()))
 end
 
 function UI:onKeyUp(code)
@@ -205,7 +231,7 @@ function UI:onMouseUp(code, x, y)
   
   if button == "right" then
     if highlight_x then
-      entity:walkTo(highlight_x, highlight_y)
+      get_patient():walkTo(highlight_x, highlight_y)
     end
   end
 end

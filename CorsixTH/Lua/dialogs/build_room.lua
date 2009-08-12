@@ -31,8 +31,8 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.x = (app.config.width - 300) / 2
   self.y = (app.config.height - 300) / 2
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
-  self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
-  self.blue_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font02V"))
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.blue_font = app.gfx:loadFont("QData", "Font02V")
   self.category_index = 0
   self.list_hover_index = 0
   self.preview_anim = false

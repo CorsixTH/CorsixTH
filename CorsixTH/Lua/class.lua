@@ -70,6 +70,7 @@ local function define_class(name, super)
   _G[name] = methods
 end
 
+strict_declare_global "class"
 class = destrict(function(name)
   define_class(name)
   

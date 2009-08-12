@@ -18,40 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- Force local variables to be used for everything (except for explicity
--- declared variables and any code running in derestriced mode). This helps to
--- catch typos in variable names, and promotes usage of locals over globals
--- (which improves speed).
+class "Room"
 
-local rawset, error, tostring
-    = rawset, error, tostring
-local strict_mt = {}
-
-local function newindex(t, k, v)
-  error("assign to undeclared variable \'" .. tostring(k) .. "\'", 2)
+function Room:Room(x, y, w, h, id, room_info)
+  self.id = id
+  -- TODO
 end
-
-local function index(t, k)
-  error("use of undeclared variable \'" .. tostring(k) .. "\'", 2)
-end
-
-local function restrict(...)
-  strict_mt.__newindex = newindex
-  strict_mt.__index = index
-  return ...
-end
-restrict()
-
-function destrict(fn)
-  return function(...)
-    strict_mt.__newindex = nil
-    strict_mt.__index = nil
-    return restrict(fn(...))
-  end
-end
-
-function strict_declare_global(name)
-  rawset(_G, name, false)
-end
-
-setmetatable(_G, strict_mt)

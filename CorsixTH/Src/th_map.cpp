@@ -153,6 +153,9 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
                 }
             }
 
+            pNode->iRoomId = 0;
+            pNode->iParcelId = *pParcel;
+
             if(!(pData[5] & 1))
             {
                 pNode->iFlags |= THMN_Passable;
@@ -542,6 +545,9 @@ void THMap::updatePathfinding()
 
 void THMap::updateShadows()
 {
+    // For shadow casting, a tile is considered to have a wall on a direction
+    // if it has a door in that direction, or the block is from the hardcoded
+    // range of wall-like blocks.
 #define IsWall(node, block, door) \
     (((node)->iFlags & (door)) != 0 || \
     (82 <= ((node)->iBlock[(block)]) && ((node)->iBlock[(block)]) <= 155))
@@ -566,6 +572,12 @@ void THMap::updateShadows()
                     pNeighbour->iFlags |= THMN_ShadowFull;
                     if(iX != 0 && !IsWall(pNeighbour, 2, THMN_DoorWest))
                     {
+                        // Wrap the shadow around a corner (no need to continue
+                        // all the way along the wall, as the shadow would be
+                        // occluded by the wall. If Debug->Transparent Walls is
+                        // toggled on, then this optimisation becomes very
+                        // visible, but it's a debug option, so it doesn't
+                        // matter).
                         pNeighbour[-1].iFlags |= THMN_ShadowFull;
                     }
                 }

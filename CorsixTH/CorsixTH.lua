@@ -40,7 +40,6 @@ function dofile(name)
 end
 
 -- Enable strict mode
-TheApp = false
 dofile "strict"
 require = destrict(require)
 
@@ -51,6 +50,7 @@ dofile "class"
 dofile "app"
 
 -- Create an instance of the App class and transfer control to it
+strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(...)
 assert(TheApp:init())

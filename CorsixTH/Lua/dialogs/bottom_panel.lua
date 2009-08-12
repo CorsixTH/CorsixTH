@@ -29,8 +29,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.x = (app.config.width - 640) / 2
   self.y = app.config.height - 48
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font05V"))
-  self.date_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font16V"))
+  self.money_font = app.gfx:loadFont("QData", "Font05V")
+  self.date_font = app.gfx:loadFont("QData", "Font16V")
   
   self:addPanel( 1,   0, 0) -- $ button
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date

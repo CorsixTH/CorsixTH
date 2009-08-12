@@ -23,6 +23,7 @@ local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
 dofile "entity"
+dofile "room"
 dofile "object"
 dofile "humanoid"
 
@@ -37,6 +38,7 @@ function World:World(app)
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
   self.objects = {}
+  self.rooms = {}
   self.tick_rate = 3
   self.tick_timer = 0
   self.month = 1 -- January
@@ -51,6 +53,13 @@ function World:World(app)
       end
     end
   end
+end
+
+function World:newRoom(x, y, w, h, room_info)
+  local id = #self.rooms + 1
+  local room = Room(x, y, w, h, id, room_info)
+  self.rooms[id] = room
+  return room
 end
 
 function World:getWallIdFromBlockId(block_id)

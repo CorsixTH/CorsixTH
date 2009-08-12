@@ -23,10 +23,10 @@ local rnc = require "rnc"
 local lfs = require "lfs"
 local TH = require "TH"
 local SDL = require "sdl"
-local assert, io, type
-    = assert, io, type
+local assert, io, type, dofile, loadfile, pcall, tonumber, print
+    = assert, io, type, dofile, loadfile, pcall, tonumber, print
 
--- Change to true to show FPS and Lua memory usage in the window title
+-- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
 local TRACK_FPS = false
@@ -70,7 +70,8 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
   SDL.wm.setCaption "CorsixTH"
-  self.video = assert(SDL.video.setMode(self.config.width, self.config.height, "hardware", "doublebuf", self.config.fullscreen and "fullscreen" or ""))
+  self.video = assert(SDL.video.setMode(self.config.width, self.config.height,
+    "hardware", "doublebuf", self.config.fullscreen and "fullscreen" or ""))
   SDL.wm.setIconWin32()
   
   -- Prereq 2: Load and initialise the graphics subsystem
@@ -88,7 +89,8 @@ function App:init()
   math.randomseed(os.time() + SDL.getTicks())
   
   -- Load strings before UI and before additional Lua
-  self.strings = assert(TH.LoadStrings(self:readDataFile("Data", self.config.language .. ".dat")), "Cannot load strings")
+  self.strings = assert(TH.LoadStrings(self:readDataFile(self.config.language .. ".dat")), "Cannot load strings")
+  strict_declare_global "_S"
   _S = function(sec, str, ...)
     str = self.strings[sec][str]
     if ... then
@@ -110,15 +112,15 @@ function App:init()
   dofile "object"
   self.objects = self:loadLuaFolder"objects"
   self.rooms = self:loadLuaFolder"rooms"
-   
+  
   -- Load world before UI
   dofile "world"
   self.anims = self.gfx:loadAnimations("Data", "V")
-   
+  
   -- Load UI
   dofile "ui"
   
-  -- Load level
+  -- Load level (which creates the map, world, and UI)
   self:loadLevel "Level.L1"
  
   return true
@@ -137,7 +139,7 @@ function App:loadLevel(filename)
   self.map = Map()
   self.map:load(data)
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
-  self.map:setDebugFont(self.gfx:loadFont(self.gfx:loadSpriteTable("QData", "Font01V")))
+  self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
   
   -- Load world
   self.world = World(self)
@@ -147,16 +149,18 @@ function App:loadLevel(filename)
 end
 
 local function invert_lang_table(t)
-  local r = {}
+  local name_to_filename = {}
+  local number_to_name = {}
   for language_file, names in pairs(t) do
     for _, name in ipairs(names) do
-      r[name] = language_file
+      name_to_filename[name] = language_file
     end
+    number_to_name[tonumber(language_file:match"[0-9]+")] = names[1]
   end
-  return r
+  return name_to_filename, number_to_name
 end
 
-local languages = invert_lang_table {
+local languages, languages_by_num = invert_lang_table {
   -- Language name (in english) along with ISO 639 codes for it
   ["Lang-0"] = {"english", "en", "eng"},
   ["Lang-1"] = {"french" , "fr", "fre", "fra"},
@@ -184,6 +188,13 @@ function App:fixConfig()
 end
 
 function App:run()
+  -- The application "main loop" is an SDL event loop written in C, which calls
+  -- a coroutine whenver an event occurs. Initially it may seem odd to involve
+  -- coroutines, but it does give a few advantages:
+  --  1) Lua can signal the main loop to exit by finishing the coroutine
+  --  2) If an error occurs, the call stack is preserved in the coroutine, so
+  --     Lua can query or print the call stack as required, rather than
+  --     hardcoding error behaviour in C.
   local co = coroutine.create(function(self)
     local yield = coroutine.yield
     local dispatch = self.dispatch
@@ -204,12 +215,16 @@ function App:run()
   self.running = false
   if e ~= nil then
     if where then
+      -- Errors from an asynchronous callback done on the dispatcher coroutine
+      -- will end up here. As the error didn't originate from a dispatched
+      -- event, self.last_dispatch_type is wrong. Therefore, an extra value is
+      -- returned from mainloop(), meaning that where == "callback".
       self.last_dispatch_type = where
     end
     print("An error has occured while running the " .. self.last_dispatch_type .. " handler.")
-    print("A stack trace is included below, and the handler has been disconnected.")
+    print "A stack trace is included below, and the handler has been disconnected."
     print(debug.traceback(co, e, 0))
-    print""
+    print ""
     self.eventHandlers[self.last_dispatch_type] = nil
     return self:run()
   end
@@ -234,7 +249,7 @@ end
 function App:onTick(...)
   self.world:onTick(...)
   self.ui:onTick(...)
-  return true
+  return true -- tick events always result in a repaint
 end
 
 function App:drawFrame()
@@ -318,7 +333,7 @@ function App:checkInstallFolder()
   self.data_dir_map = dir_map
   
   -- Check for demo version
-  local demo = io.open(install_folder .. (dir_map.DATAM or "DATAM") .. pathsep .. "DEMO.DAT")
+  local demo = io.open(self:getDataFilename("DataM", "Demo.dat"), "rb")
   if demo then
     demo:close()
     print "Notice: Using data files from demo version of Theme Hospital."
@@ -332,8 +347,7 @@ function App:checkLanguageFile()
   -- isn't present, then we should detect this and inform the user of their
   -- options.
   
-  local filename = self.config.theme_hospital_install ..
-    self.data_dir_map.DATA .. pathsep .. self.config.language:upper() .. ".DAT"
+  local filename = self:getDataFilename(self.config.language .. ".dat")
   local file, err = io.open(filename, "rb")
   if file then
     -- Everything is fine
@@ -344,13 +358,14 @@ function App:checkLanguageFile()
   print "Theme Hospital install seems to be missing the language file for the language which you requested."
   print "The following language files are present:"
   local none = true
+  local is_win32 = not not package.cpath:lower():find(".dll", 1, true)
   for item in lfs.dir(self.config.theme_hospital_install .. self.data_dir_map.DATA) do
-    local n = item:upper():match"LANG%-([0-9]+)%.DAT"
+    local n = item:upper():match"^LANG%-([0-9]+)%.DAT$"
     if n then
-      local name = ({[0] = "EN", "FR", "DE", "IT", "ES", "SV"})[tonumber(n)] or "??"
+      local name = languages_by_num[tonumber(n)] or "??"
       local warning = ""
-      if item ~= item:upper() and pathsep ~= "\\" then
-        warning = " (Filename needs to be renamed to UPPER CASE)"
+      if not is_win32 and item ~= item:upper() then
+        warning = " (Needs to be renamed to " .. item:upper() .. ")"
       end
       print(" " .. item .. " (" .. name .. ")" .. warning)
       none = false
@@ -373,13 +388,18 @@ function App:readBitmapDataFile(filename)
   return data
 end
 
-function App:readDataFile(dir, filename)
+function App:getDataFilename(dir, filename)
   if filename == nil then
-    dir, filename = "DATA", dir
+    filename = dir
+    dir = "DATA"
   end
   dir = dir:upper()
   dir = self.data_dir_map[dir] or dir
-  filename = self.config.theme_hospital_install .. dir .. pathsep .. filename:upper()
+  return self.config.theme_hospital_install .. dir .. pathsep .. filename:upper()
+end
+
+function App:readDataFile(dir, filename)
+  filename = self:getDataFilename(dir, filename)
   local file = assert(io.open(filename, "rb"))
   local data = file:read"*a"
   file:close()
@@ -391,21 +411,22 @@ end
 
 function App:loadLuaFolder(dir, no_results)
   local ourpath = debug.getinfo(1, "S").source:sub(2, -8)
-  local path = ourpath .. dir .. pathsep
+  dir = dir .. pathsep
+  local path = ourpath .. dir
   local results = no_results and "" or {}
   for file in lfs.dir(path) do
     if file:match"[.]lua$" then
       local chunk, e = loadfile(path .. file)
       if e then
-        print("Error loading " .. dir .. "/" .. file .. ":\n" .. tostring(e))
+        print("Error loading " .. dir .. file .. ":\n" .. tostring(e))
       else
         local status, result = pcall(chunk, self)
         if not status then
-          print("Runtime error loading " .. dir .. "/" .. file .. ":\n" .. tostring(result))
+          print("Runtime error loading " .. dir ..  file .. ":\n" .. tostring(result))
         else
           if result == nil then
             if not no_results then
-              print("Warning: " .. dir .. "/" .. file .. " returned no value")
+              print("Warning: " .. dir .. file .. " returned no value")
             end
           else
             if type(result) == "table" and result.id then

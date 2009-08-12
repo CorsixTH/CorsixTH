@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th.h"
 #include <string.h>
 #include <memory.h>
+#include <new>
 
 THLinkList::THLinkList()
 {
@@ -84,7 +85,9 @@ bool THStringList::loadFromTHFile(const unsigned char* pData, size_t iDataLength
     if(iDataLength < iHeaderLength)
         return false;
 
-    m_sData = new char[iDataLength - iHeaderLength + 2];
+    m_sData = new (std::nothrow) char[iDataLength - iHeaderLength + 2];
+    if(m_sData == NULL)
+        return false;
     memcpy(m_sData, pData + iHeaderLength, iDataLength - iHeaderLength);
     m_sData[iDataLength - iHeaderLength] = 0;
     m_sData[iDataLength - iHeaderLength + 1] = 0;

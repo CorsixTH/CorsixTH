@@ -46,6 +46,7 @@ CorsixTH/Lua/objects/fire_extinguisher.lua -text
 CorsixTH/Lua/objects/plant.lua -text
 CorsixTH/Lua/objects/radiator.lua -text
 CorsixTH/Lua/objects/reception_desk.lua -text
+CorsixTH/Lua/room.lua -text
 CorsixTH/Lua/rooms/general_diag.lua -text
 CorsixTH/Lua/rooms/gp.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text

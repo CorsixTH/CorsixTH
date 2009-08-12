@@ -138,6 +138,13 @@ struct THMapNode : public THLinkList
     // NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
     uint16_t iBlock[4];
 
+    // Parcels (plots) of land have an ID, with each tile in the plot having
+    // that ID. Parcel 0 is the outside.
+    uint16_t iParcelId;
+
+    // Rooms have an ID, with room #0 being the corridor (and the outside).
+    uint16_t iRoomId;
+
     // Flags for information (lower 24 bits) and object type (top 8 bits)
     unsigned long iFlags;
 };

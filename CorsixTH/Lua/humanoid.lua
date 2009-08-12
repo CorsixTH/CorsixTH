@@ -137,6 +137,7 @@ function Humanoid:walkTo(tile_x, tile_y, when_done)
   end
   walk_timer_weak_set[next_step] = true
   
+  local navigateDoor
   local flags = {}
   path_step = function(index)
     local x1, y1 = path_x[index  ], path_y[index  ]

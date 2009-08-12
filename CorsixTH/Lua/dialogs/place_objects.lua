@@ -43,8 +43,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   self.x = app.config.width - self.width - 20
   self.y = 20
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
-  self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
-  self.blue_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font02V"))
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.blue_font = app.gfx:loadFont("QData", "Font02V")
   self.title_text = _S(14, 29) -- Corridor Objects
   self.desc_text = _S(3, 17) -- Place the objects down in a corridor
   
@@ -252,7 +252,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           flag = "passable"
           good_tile = 0
         end
-        if map:getCellFlags(x, y, flags)[flag] then
+        if map:getCellFlags(x, y, flags)[flag] and flags.roomId == 0 then
           map:setCell(x, y, 4, good_tile)
         else
           map:setCell(x, y, 4, 67 + flag_alpha75)

@@ -21,8 +21,8 @@ SOFTWARE. --]]
 local TH = require "TH"
 local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
-local assert, string_char, table_concat
-    = assert, string.char, table.concat
+local assert, string_char, table_concat, unpack
+    = assert, string.char, table.concat, unpack
 
 class "Graphics"
 
@@ -49,6 +49,7 @@ function Graphics:makeGreyscaleGhost(pal)
   end
   for i = 0, #entries do
     local entry = entries[i]
+    -- NB: g is for grey, not green
     local g = entry[1] * 0.299 + entry[2] * 0.587 + entry[3] * 0.114
     local g_index = 0
     local g_diff = 100000
@@ -121,7 +122,26 @@ function Graphics:loadRaw(name, width, height, opaque)
   return surface
 end
 
-function Graphics:loadFont(sprite_table, x_sep, y_sep)
+function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
+  -- Allow (multiple) arguments for loading a sprite table in place of the
+  -- sprite_table argument.
+  if type(sprite_table) == "string" then
+    local arg = {sprite_table, x_sep, y_sep, ...}
+    local n_pass_on_args = #arg
+    for i = 2, #arg do
+      if type(arg[i]) == "number" then -- x_sep
+        n_pass_on_args = i - 1
+        break
+      end
+    end
+    sprite_table = self:loadSpriteTable(unpack(arg, 1, n_pass_on_args))
+    if n_pass_on_args < #arg then
+      x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
+    else
+      x_sep, y_sep = nil
+    end
+  end
+  
   local font = TH.font()
   font:setSheet(sprite_table)
   font:setSeparation(x_sep or 0, y_sep or 0)

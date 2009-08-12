@@ -342,6 +342,13 @@ static int l_map_getcellflags(lua_State *L)
         lua_settable(L, 4); \
     }
 
+#define FlagInt(CField, LName) \
+    { \
+        lua_pushliteral(L, LName); \
+        lua_pushinteger(L, pNode->CField); \
+        lua_settable(L, 4); \
+    }
+
     Flag(THMN_Passable, "passable")
     Flag(THMN_Hospital, "hospital")
     Flag(THMN_Buildable, "buildable")
@@ -353,6 +360,9 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_CanTravelS, "travelSouth")
     Flag(THMN_CanTravelW, "travelWest")
 
+    FlagInt(iRoomId, "roomId")
+
+#undef FlagInt
 #undef Flag
 
     return 1;
@@ -437,6 +447,7 @@ static int l_map_mark_room(lua_State *L)
     int iW = luaL_checkint(L, 4);
     int iH = luaL_checkint(L, 5);
     int iTile = luaL_checkint(L, 6);
+    int iRoomId = luaL_optint(L, 7, 0);
 
     if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->getWidth() || (iY_ + iH) > pMap->getHeight())
         luaL_argerror(L, 2, "Rectangle is out of bounds");
@@ -453,6 +464,7 @@ static int l_map_mark_room(lua_State *L)
             iFlags |= (iFlags & THMN_PassableIfNotForBlueprint) >> THMN_PassableIfNotForBlueprint_ShiftDelta;
             iFlags &= ~THMN_PassableIfNotForBlueprint;
             pNode->iFlags = iFlags;
+            pNode->iRoomId = iRoomId;
         }
     }
 
@@ -889,12 +901,19 @@ static int l_anim_get_tile(lua_State *L)
         return 0;
     }
     THMap* pMap = (THMap*)lua_touserdata(L, 2);
-    THLinkList* pListNode = pAnimation->getPrevious();
+    const THLinkList* pListNode = pAnimation->getPrevious();
     while(pListNode->pPrev)
     {
         pListNode = pListNode->pPrev;
     }
-    int iIndex = reinterpret_cast<THMapNode*>(pListNode) - pMap->getNodeUnchecked(0, 0);
+    // Casting pListNode to a THMapNode* is slightly dubious, but it should
+    // work. If on the normal list, then pListNode will be a THMapNode*, and
+    // all is fine. However, if on the early list, pListNode will be pointing
+    // to a member of a THMapNode, so we're relying on pointer arithmetic
+    // being a subtract and integer divide by sizeof(THMapNode) to yield the
+    // correct map node.
+    const THMapNode *pRootNode = pMap->getNodeUnchecked(0, 0);
+    int iIndex = reinterpret_cast<const THMapNode*>(pListNode) - pRootNode;
     int iY = iIndex / pMap->getWidth();
     int iX = iIndex - (iY * pMap->getWidth());
     lua_pushinteger(L, iX + 1);

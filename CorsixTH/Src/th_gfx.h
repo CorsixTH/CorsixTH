@@ -34,24 +34,37 @@ SOFTWARE.
 
 enum THDrawFlags
 {
-    // Sprite drawing flags
+    /** Sprite drawing flags **/
     THDF_FlipHorizontal = 1 <<  0,
     THDF_FlipVertical   = 1 <<  1,
+    //! Draw with 50% transparency
     THDF_Alpha50        = 1 <<  2,
+    //! Draw with 75% transparency
     THDF_Alpha75        = 1 <<  3,
+    //! Draw using a remapped palette
     THDF_AltPalette     = 1 <<  4,
 
-    // Object attached to tile flags
+    /** Object attached to tile flags **/
+    /* (should be set prior to attaching to a tile) */
+    //! Attach to the early sprite list (right-to-left pass)
     THDF_EarlyList      = 1 << 10,
+    //! Keep this sprite at the bottom of the attached list
     THDF_ListBottom     = 1 << 11,
 };
 
+/*!
+    Base class for a linked list of drawable objects.
+*/
 struct THDrawable : public THLinkList
 {
     void (*fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
     unsigned long iFlags;
 };
 
+/*!
+    Utility class for decoding Theme Hospital "chunked" graphics files.
+    Generally used internally by THSpriteSheet.
+*/
 class THChunkRenderer
 {
 public:
@@ -64,9 +77,16 @@ public:
     unsigned char* takeData();
     inline const unsigned char* getData() const {return m_data;}
 
+    //! Perform a "copy" chunk (normally called by decodeChunks)
     void chunkCopy(int npixels, const unsigned char* data);
+
+    //! Perform a "fill" chunk (normally called by decodeChunks)
     void chunkFill(int npixels, unsigned char value);
+
+    //! Perform a "fill to end of line" chunk (normally called by decodeChunks)
     void chunkFillToEndOfLine(unsigned char value);
+
+    //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
     void chunkFinish(unsigned char value);
 
 protected:
@@ -78,6 +98,9 @@ protected:
     bool m_skip_eol;
 };
 
+/*!
+    Utility class for using a sprite sheet as a font.
+*/
 class THFont
 {
 public:
@@ -205,7 +228,9 @@ protected:
     THAnimationManager *m_pManager;
     unsigned int m_iAnimation;
     unsigned int m_iFrame;
+    //! X position on tile (not tile x-index)
     int m_iX;
+    //! Y position on tile (not tile y-index)
     int m_iY;
     int m_iSpeedX;
     int m_iSpeedY;

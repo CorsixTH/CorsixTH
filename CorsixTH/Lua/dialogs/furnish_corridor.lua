@@ -36,8 +36,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui)
   self.x = (app.config.width - self.width) / 2
   self.y = (app.config.height - self.height - 48) / 2
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
-  self.white_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font01V"))
-  self.blue_font = app.gfx:loadFont(app.gfx:loadSpriteTable("QData", "Font02V"))
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.blue_font = app.gfx:loadFont("QData", "Font02V")
   self.title_text = _S(16, 4) -- Choose Items
   self.price_text = (_S(16, 6) .. " "):gsub("  $", " ") -- "Price: "
   self.total_text = (_S(16, 7) .. " "):gsub("  $", " ") -- "Total: "
