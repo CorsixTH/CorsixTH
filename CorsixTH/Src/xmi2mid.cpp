@@ -151,7 +151,7 @@ public:
     template <class T>
     bool write(const T* values, size_t count)
     {
-        if(!skip(sizeof(T) * count))
+        if(!skip(static_cast<int>(sizeof(T) * count)))
             return false;
         memcpy(m_pPointer - sizeof(T) * count, values, sizeof(T) * count);
         return true;
@@ -402,7 +402,7 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
         }
     }
 
-    uint32_t iLength = bufOutput.tell() - 22;
+    uint32_t iLength = static_cast<uint32_t>(bufOutput.tell() - 22);
     bufOutput.seek(18);
     bufOutput.writeBigEndianUInt32(iLength);
 

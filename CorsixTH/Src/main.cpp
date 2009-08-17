@@ -207,6 +207,11 @@ static int l_main(lua_State *L)
         lua_getglobal(L, "print");
         lua_pushliteral(L, "Notice: LuaJIT not being used.\nConsider replacing"
             " Lua with LuaJIT to improve performance.");
+#ifdef CORSIX_TH_64BIT
+        lua_pushliteral(L, " Note that there is not currently a 64 bit version"
+            " of LuaJIT.");
+        lua_concat(L, 2);
+#endif
         lua_call(L, 1, 0);
     }
     else

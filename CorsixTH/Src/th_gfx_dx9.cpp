@@ -154,7 +154,7 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     if(iDataLength != 256 * 3)
         return false;
 
-    m_iNumColours = iDataLength / 3;
+    m_iNumColours = static_cast<int>(iDataLength / 3);
     colour_t* pCol = m_aColours;
     for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pCol)
     {
@@ -349,16 +349,16 @@ void THDX9_FlushSprites(THRenderTarget* pTarget)
         if(pTarget->pVerticies[i].tex != pTexture)
         {
             pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-                (i - iStart) / 3, pTarget->pVerticies + iStart,
-                sizeof(THDX9_Vertex));
+                static_cast<UINT>(i - iStart) / 3, pTarget->pVerticies + iStart,
+                static_cast<UINT>(sizeof(THDX9_Vertex)));
             iStart = i;
             pTexture = pTarget->pVerticies[i].tex;
             pTarget->pDevice->SetTexture(0, pTexture);
         }
     }
     pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-        (pTarget->iVertexCount - iStart) / 3, pTarget->pVerticies + iStart,
-        sizeof(THDX9_Vertex));
+        static_cast<UINT>(pTarget->iVertexCount - iStart) / 3, pTarget->pVerticies + iStart,
+        static_cast<UINT>(sizeof(THDX9_Vertex)));
 
     pTarget->iVertexCount = 0;
 }

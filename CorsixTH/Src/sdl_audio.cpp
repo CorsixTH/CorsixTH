@@ -28,6 +28,7 @@ SOFTWARE.
 #include <SDL_mixer.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL_mixer")
+#pragma warning(disable: 4996) // CRT deprecation
 #endif
 
 struct music_t
@@ -75,6 +76,7 @@ struct load_music_async_t
     lua_State* L;
     Mix_Music* music;
     SDL_RWops* rwop;
+    char* err;
 };
 
 static int l_load_music_async_callback(lua_State *L)
@@ -102,8 +104,20 @@ static int l_load_music_async_callback(lua_State *L)
         lua_xmove(L, cbL, 1);
 
     // Push CB arg
+    int nargs = 1;
     if(async->music == NULL)
+    {
         lua_pushnil(cbL);
+        if(async->err)
+        {
+            if(*async->err)
+            {
+                lua_pushstring(cbL, async->err);
+                nargs = 2;
+            }
+            free(async->err);
+        }
+    }
     else
     {
         lua_rawgeti(L, 2, 3);
@@ -126,10 +140,10 @@ static int l_load_music_async_callback(lua_State *L)
     // Callback
     if(cbL == L)
     {
-        lua_call(cbL, 1, 0);
+        lua_call(cbL, nargs, 0);
         return 0;
     }
-    if(lua_pcall(cbL, 1, 0, 0) != 0)
+    if(lua_pcall(cbL, nargs, 0, 0) != 0)
     {
         lua_pushliteral(L, "Error in async music load callback: ");
         lua_xmove(cbL, L, 1);
@@ -144,6 +158,8 @@ static int load_music_async_thread(void* arg)
 {
     load_music_async_t *async = (load_music_async_t*)arg;
     async->music = Mix_LoadMUS_RW(async->rwop);
+    if(async->music == NULL)
+        async->err = strdup(Mix_GetError());
     SDL_Event e;
     e.type = SDL_USEREVENT_CPCALL;
     e.user.data1 = (void*)l_load_music_async_callback;
@@ -167,12 +183,15 @@ static int l_load_music_async(lua_State *L)
     async->L = L;
     async->music = NULL;
     async->rwop = rwop;
+    async->err = NULL;
     lua_createtable(L, 2, 0);
     lua_pushthread(L);
     lua_rawseti(L, -2, 1);
     lua_pushvalue(L, 2);
     lua_rawseti(L, -2, 2);
     luaT_stdnew<music_t>(L, LUA_ENVIRONINDEX, true);
+    lua_pushvalue(L, 1);
+    luaT_setenvfield(L, -2, "data");
     lua_rawseti(L, -2, 3);
     lua_settable(L, LUA_REGISTRYINDEX);
 

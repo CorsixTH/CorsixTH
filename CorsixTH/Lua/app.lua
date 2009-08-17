@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = false
+local TRACK_FPS = true
 
 class "App"
 
@@ -54,13 +54,19 @@ end
 
 function App:setCommandLine(...)
   self.command_line = {...}
+  for i, arg in ipairs(self.command_line) do
+    local setting, value = arg:match"^%-%-([^=]*)=(.*)$"
+	if value then
+	  self.command_line[setting] = value
+	end
+  end
 end
 
 function App:init()
   -- App initialisation 1st goal: Get the loading screen up
   
   -- Prereq 1: Config file (for screen width / height / TH folder)
-  setfenv(assert(loadfile"config.txt"), self.config)()
+  setfenv(assert(loadfile(self.command_line["config-file"] or "config.txt")), self.config)()
   self:fixConfig()
   self:checkInstallFolder()
   self:checkLanguageFile()
@@ -378,7 +384,7 @@ function App:checkLanguageFile()
 end
 
 function App:readBitmapDataFile(filename)
-  filename = "Bitmap" .. pathsep .. filename
+  filename = (self.command_line["bitmap-dir"] or "Bitmap") .. pathsep .. filename
   local file = assert(io.open(filename, "rb"))
   local data = file:read"*a"
   file:close()

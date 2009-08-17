@@ -54,7 +54,7 @@ SOFTWARE.
 
 /** DX9 rendering engine options **/
 // Uncomment the next line to render faster than the monitor refresh rate
-//#define CORSIX_TH_DX9_UNLIMITED_FPS
+#define CORSIX_TH_DX9_UNLIMITED_FPS
 
 // D3D9X can used to augment D3D9, but this introduces an extra DLL dependency,
 // so its usage can be disabled to cut down on required DLLs. It may actually
@@ -67,6 +67,13 @@ SOFTWARE.
 // system, then you can comment out the next line and the game will not have
 // any music.
 #define CORSIX_TH_USE_SDL_MIXER
+
+/** Environment detection **/
+#if defined(__amd64__) || defined(__IA64__) || defined(__x86_64__) || \
+    defined(_M_IA64) ||  defined(_IA64) || defined(_M_X64) || defined(_WIN64) \
+    || defined(__x86_64) || defined(__ia64__) || defined(__amd64)
+#define CORSIX_TH_64BIT
+#endif
 
 /** Standard includes **/
 #include <stddef.h>

@@ -267,7 +267,7 @@ static int l_map_updateblueprint(lua_State *L)
 #undef IsValid
 
     // Clear away extra animations
-    int iAnimCount = lua_objlen(L, 10);
+    int iAnimCount = (int)lua_objlen(L, 10);
     if(iAnimCount >= iNextAnim)
     {
         for(int i = iNextAnim; i <= iAnimCount; ++i)
@@ -913,7 +913,7 @@ static int l_anim_get_tile(lua_State *L)
     // being a subtract and integer divide by sizeof(THMapNode) to yield the
     // correct map node.
     const THMapNode *pRootNode = pMap->getNodeUnchecked(0, 0);
-    int iIndex = reinterpret_cast<const THMapNode*>(pListNode) - pRootNode;
+    int iIndex = (int)(reinterpret_cast<const THMapNode*>(pListNode) - pRootNode);
     int iY = iIndex / pMap->getWidth();
     int iX = iIndex - (iY * pMap->getWidth());
     lua_pushinteger(L, iX + 1);

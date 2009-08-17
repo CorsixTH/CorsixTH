@@ -368,7 +368,7 @@ void THChunkRenderer::chunkFillToEndOfLine(unsigned char value)
 
 void THChunkRenderer::chunkFinish(unsigned char value)
 {
-    chunkFill(m_end - m_ptr, value);
+    chunkFill(static_cast<int>(m_end - m_ptr), value);
 }
 
 void THChunkRenderer::chunkFill(int npixels, unsigned char value)
@@ -396,7 +396,7 @@ inline void THChunkRenderer::_fixNpixels(int& npixels) const
 {
     if(m_ptr + npixels > m_end)
     {
-        npixels = m_end - m_ptr;
+        npixels = static_cast<int>(m_end - m_ptr);
     }
 }
 

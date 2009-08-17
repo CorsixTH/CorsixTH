@@ -56,7 +56,8 @@ local button_codes = invert {
   right = 3,
 }
 
-local patients = {}
+-- Temporary code
+local patients
 local function get_patient()
   local n = patients.n
   if n == #patients then
@@ -113,11 +114,14 @@ function UI:UI(app)
   end
 
   -- Temporary code
+  patients = {}
   self:debugMakePatients()
 end
 
 function UI:debugMakePatients()
-  patients.n = #patients + 1
+  if patients.n == 1 or patients.n == nil then
+    patients.n = #patients + 1
+  end
   for i = 1, 4 do
     local entity = TheApp.world:newEntity("Humanoid", 2)
     local types = {
@@ -127,11 +131,17 @@ function UI:debugMakePatients()
       "Transparent Male Patient",
       "Standard Female Patient",
       "Transparent Female Patient",
+      "Chewbacca Patient",
+      "Elvis Patient",
+      "Invisible Patient",
     }
     entity:setType(types[math.random(1, #types)])
     entity:setTile(63 + (i - 1) % 2, 63 + math.floor(i / 3))
     entity:setLayer(0, math.random(1, 4) * 2)
     entity:setLayer(1, math.random(0, 3) * 2)
+    entity:setLayer(2, math.random(0, 2) * 2)
+    entity:setLayer(3, math.random(0, 5) * 2)
+    entity:setLayer(4, math.random(0, 5) * 2)
     patients[#patients + 1] = entity
   end
 end

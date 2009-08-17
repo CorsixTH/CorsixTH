@@ -70,6 +70,7 @@ function Audio:init()
     return
   end
   sound_dir = self.app.config.theme_hospital_install .. sound_dir .. pathsep
+  local mp3 = self.app.config.audio_mp3
   local subdirs = {
     DATA = false,
     MIDI = false,
@@ -95,6 +96,7 @@ function Audio:init()
     for item in lfs.dir(midi_dir) do
       if item:upper():match"%.XMI$" then
         midi(item).filename = midi_dir .. item
+        midi(item).filename_mp3 = mp3 and mp3:format(item:match"(.-)%.XMI")
       elseif item:upper():match"^MIDI.*%.TXT$" then
         for filename, title in linepairs(midi_dir .. item) do
           midi(filename).title = title
@@ -193,18 +195,21 @@ function Audio:playBackgroundTrack(index)
   assert(info, "Index not valid")
   local music = info.music
   if not music then
-    local file = assert(io.open(info.filename, "rb"))
+    local file = assert(io.open(info.filename_mp3 or info.filename, "rb"))
     local data = file:read"*a"
     file:close()
     if data:sub(1, 3) == "RNC" then
       data = assert(rnc.decompress(data))
     end
-    data = SDL.audio.transcodeXmiToMid(data)
+    if not info.filename_mp3 then
+      data = SDL.audio.transcodeXmiToMid(data)
+    end
     -- Loading of music files can incur a slight pause, which is why it is
     -- done asynchronously.
-    SDL.audio.loadMusicAsync(data, function(music)
+    SDL.audio.loadMusicAsync(data, function(music, e)
       if music == nil then
-        error("Could not load music file \'" .. info.filename .. "\'")
+        error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
+          .. (e and (" (" .. e .. ")" or "")))
       else
         if _DECODA then
           debug.getmetatable(music).__tostring = function(ud)

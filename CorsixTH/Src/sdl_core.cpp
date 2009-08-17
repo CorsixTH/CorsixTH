@@ -75,7 +75,7 @@ struct fps_ctrl
     int q_front;
     int q_back;
     int frame_count;
-    Uint32 frame_time[1024];
+    Uint32 frame_time[4096];
 
     void init()
     {

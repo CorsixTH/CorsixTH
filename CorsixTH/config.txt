@@ -11,7 +11,7 @@
 -- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
-theme_hospital_install = [[X:\ThemeHospital\CVR\]]
+theme_hospital_install = [[C:\CPP\CorsixTH\Hospital]]
 -- theme_hospital_install = [[X:\ThemeHospital\minimal\]]
 -- theme_hospital_install = [[X:\ThemeHospital\Demo\]]
 -- theme_hospital_install = [[/home/corsix/hospital/]]
@@ -45,5 +45,19 @@ end
 
 -------------------------------------------------------------------------------
 -- Audio global on/off switch.
+-- Note that audio will also be disabled if CorsixTH was compiled without the
+-- SDL_mixer library.
 audio = true
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- High quality (MP3 rather than MIDI) audio replacements.
+-- If you want to listen to high quality MP3 audio rather than the original XMI
+-- (MIDI) audio, then follow these steps:
+--  1) Find MP3 versions of the original tracks (for example the remixes by ZR
+--     from http://www.mobstar.biz/openTH/forums/viewtopic.php?t=77 ).
+--  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
+--  3) Uncomment the next line and point it to where the mp3s are, using %s in
+--     place of the track name.
+--audio_mp3 = [[X:\ThemeHospital\Music\Theme Hospital - %s (ZR remix).mp3]]
 -------------------------------------------------------------------------------

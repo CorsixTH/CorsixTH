@@ -29,6 +29,12 @@ end
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)
 local code_dir = "Lua" .. pathsep
+for _, arg in ipairs{...} do
+  local dir = arg:match"^%-%-lua%-dir=(.*)$"
+  if dir then
+    code_dir = dir .. pathsep
+  end
+end
 local done_files = {}
 local do_file = dofile
 function dofile(name)
