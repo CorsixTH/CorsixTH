@@ -32,11 +32,6 @@ SOFTWARE.
 struct IDirect3D9;
 struct IDirect3DDevice9;
 struct IDirect3DTexture9;
-#ifdef CORSIX_TH_USE_D3D9X
-struct ID3DXSprite;
-#else
-struct IDirect3DVertexBuffer9;
-#endif
 
 struct THClipRect
 {
@@ -44,7 +39,6 @@ struct THClipRect
 	uint16_t w, h;
 };
 
-#ifndef CORSIX_TH_USE_D3D9X
 #pragma pack(push)
 #pragma pack(1)
 struct THDX9_Vertex
@@ -52,30 +46,32 @@ struct THDX9_Vertex
     float x, y, z;
     uint32_t colour;
     float u, v;
-    // Not part of FVF:
+    // The texture is not part of the FVF, but is included with the vertex data
+    // to make it simpler to sort verticies by texture.
     IDirect3DTexture9 *tex;
 };
 #pragma pack(pop)
-#endif
+
+// The index buffer length must be a multiple of 6 (as 6 are used per quad).
+// A 16-bit index buffer is used, hence it can only reference 2^16 verticies.
+// As each quad uses 4 verticies and 6 indicies, the optimum index buffer
+// length is ((2 ^ 16) / 4) * 6 == 0x18000
+#define THDX9_INDEX_BUFFER_LENGTH  0x18000
 
 struct THRenderTarget
 {
     THRenderTarget();
+    ~THRenderTarget();
 
     IDirect3D9 *pD3D;
     IDirect3DDevice9 *pDevice;
-#ifdef CORSIX_TH_USE_D3D9X
-    ID3DXSprite *pSprite;
-#else
     THDX9_Vertex *pVerticies;
+    THClipRect rcClip;
     size_t iVertexCount;
     size_t iVertexLength;
-    bool bNonOverlapping;
     size_t iNonOverlappingStart;
-#endif
     int iNonOverlapping;
-    IDirect3DTexture9 *pTexture;
-    THClipRect rcClip;
+    uint16_t aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
 };
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
@@ -92,21 +88,10 @@ public:
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
     int getColourCount() const;
-    const unsigned char* getColourData() const;
     const uint32_t* getARGBData() const;
-    void assign(THRenderTarget* pTarget, bool bTransparent) const;
 
 protected:
-#pragma pack(push)
-#pragma pack(1)
-    struct colour_t
-    {
-        unsigned char b;
-        unsigned char g;
-        unsigned char r;
-    } m_aColours[256];
     uint32_t m_aColoursARGB[256];
-#pragma pack(pop)
     int m_iNumColours;
 };
 
@@ -114,16 +99,38 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const unsigned char* pPixels,
                                        const THPalette* pPalette,
                                        IDirect3DDevice9* pDevice,
-                                       bool bNoAllocate = false);
+                                       int* pWidth2 = NULL,
+                                       int* pHeight2 = NULL);
 
 void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
-                unsigned int iWidth, unsigned int iHeight, int iX, int iY,
-                unsigned long iFlags, unsigned int iWidth2,
+                unsigned int iWidth, unsigned int iHeight,
+                int iX, int iY, unsigned long iFlags, unsigned int iWidth2,
                 unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY);
 
-#ifndef CORSIX_TH_USE_D3D9X
 void THDX9_FlushSprites(THRenderTarget* pTarget);
-#endif
+void THDX9_FillIndexBuffer(uint16_t* pVerticies, size_t iFirst, size_t iCount);
+
+class THRawBitmap
+{
+public:
+    THRawBitmap();
+    ~THRawBitmap();
+
+    void setPalette(const THPalette* pPalette);
+
+    bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
+                        int iWidth, THRenderTarget *pEventualCanvas);
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
+
+protected:
+    IDirect3DTexture9* m_pBitmap;
+    const THPalette* m_pPalette;
+    int m_iWidth;
+    int m_iWidth2;
+    int m_iHeight;
+    int m_iHeight2;
+};
 
 class THSpriteSheet
 {

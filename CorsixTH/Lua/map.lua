@@ -41,10 +41,17 @@ end
 -- for this).
 
 function Map:WorldToScreen(x, y)
+  -- Adjust origin from (1, 1) to (0, 0) and then linear transform by matrix:
+  -- 32 -32
+  -- 16  16
   return 32 * (x - y), 16 * (x + y - 2)
 end
 
 function Map:ScreenToWorld(x, y)
+  -- Transform by matrix: (inverse of the WorldToScreen matrix)
+  --  1/64 1/32
+  -- -1/64 1/32
+  -- And then adjust origin from (0, 0) to (1, 1)
   y = (y / 32) + 1
   x = x / 64
   return y + x, y - x

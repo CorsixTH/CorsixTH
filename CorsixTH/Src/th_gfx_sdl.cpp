@@ -24,7 +24,6 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_SDL_RENDERER
 #include "th_gfx.h"
 #include "th_map.h"
-#include <SDL.h>
 #include <new>
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect)
@@ -50,6 +49,7 @@ void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
 THPalette::THPalette()
 {
     m_iNumColours = 0;
+    m_iTransparentIndex = -1;
 }
 
 static const unsigned char gs_iTHColourLUT[0x40] = {
@@ -70,30 +70,87 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
         return false;
 
     m_iNumColours = iDataLength / 3;
+    m_iTransparentIndex = -1;
     colour_t* pColour = m_aColours;
     for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pColour)
     {
         pColour->r = gs_iTHColourLUT[pData[0] & 0x3F];
         pColour->g = gs_iTHColourLUT[pData[1] & 0x3F];
         pColour->b = gs_iTHColourLUT[pData[2] & 0x3F];
+        if(pColour->r == 0xFF && pColour->g == 0 && pColour->b == 0xFF)
+            m_iTransparentIndex = i;
         pColour->unused = 0;
     }
 
     return true;
 }
 
-void THPalette::assign(THRenderTarget* pTarget, bool bTransparent) const
+void THPalette::_assign(THRenderTarget* pTarget) const
 {
-    struct compile_time_assert
+    SDL_SetPalette(pTarget, SDL_PHYSPAL | SDL_LOGPAL,
+        const_cast<SDL_Colour*>(m_aColours), 0, m_iNumColours);
+    if(m_iTransparentIndex != -1)
     {
-        int colour_size[sizeof(SDL_Color) == sizeof(colour_t) ? 1 : -1];
-    };
-
-    SDL_SetPalette(pTarget, SDL_PHYSPAL | SDL_LOGPAL, (SDL_Color*)m_aColours, 0, m_iNumColours);
-    if(bTransparent)
-        SDL_SetColorKey(pTarget, SDL_SRCCOLORKEY | SDL_RLEACCEL, 0xFF);
+        SDL_SetColorKey(pTarget, SDL_SRCCOLORKEY | SDL_RLEACCEL,
+            static_cast<Uint32>(m_iTransparentIndex));
+    }
     else
         SDL_SetColorKey(pTarget, 0, 0);
+}
+
+THRawBitmap::THRawBitmap()
+{
+    m_pBitmap = NULL;
+    m_pPalette = NULL;
+    m_pData = NULL;
+}
+
+THRawBitmap::~THRawBitmap()
+{
+    SDL_FreeSurface(m_pBitmap);
+    delete[] m_pData;
+}
+
+void THRawBitmap::setPalette(const THPalette* pPalette)
+{
+    m_pPalette = pPalette;
+}
+
+bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
+                                 size_t iPixelDataLength,
+                                 int iWidth, THRenderTarget *pUnused)
+{
+    if(m_pPalette == NULL)
+        return false;
+
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
+    delete[] m_pData;
+    m_pData = NULL;
+
+    m_pData = new (std::nothrow) unsigned char[iPixelDataLength];
+    if(m_pData == NULL)
+        return false;
+    memcpy(m_pData, pPixelData, iPixelDataLength);
+
+    int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
+    m_pBitmap = SDL_CreateRGBSurfaceFrom(m_pData, iWidth, iHeight, 8, iWidth, 0, 0, 0, 0);
+    if(m_pBitmap == NULL)
+        return false;
+    m_pPalette->_assign(m_pBitmap);
+
+    return true;
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+    if(m_pBitmap == NULL)
+        return;
+
+    SDL_Rect rcDest;
+    rcDest.x = iX;
+    rcDest.y = iY;
+    SDL_BlitSurface(m_pBitmap, NULL, pCanvas, &rcDest);
 }
 
 THSpriteSheet::THSpriteSheet()
@@ -180,7 +237,7 @@ bool THSpriteSheet::loadFromTHFile(
             pSprite->iWidth, pSprite->iHeight, 8, pSprite->iWidth, 0, 0, 0, 0);
 
         if(pSprite->pBitmap[0] != NULL)
-            m_pPalette->assign(pSprite->pBitmap[0]);
+            m_pPalette->_assign(pSprite->pBitmap[0]);
     }
 
     return true;
@@ -277,7 +334,7 @@ THRenderTarget* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned l
 
     pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
         pBaseBitmap->w, pBaseBitmap->h, 8, 0, 0, 0, 0);
-    m_pPalette->assign(pBitmap);
+    m_pPalette->_assign(pBitmap);
 
     if(eTask == THDF_AltPalette)
     {

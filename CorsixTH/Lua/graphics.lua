@@ -102,24 +102,22 @@ function Graphics:loadBitmap(name)
   return surface
 end
 
-function Graphics:loadRaw(name, width, height, opaque)
+function Graphics:loadRaw(name, width, height)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
   
-  local surface = assert(SDL.video.newSurface {
-    data = self.app:readDataFile("QData", name .. ".dat"),
-    width = width or 640,
-    height = height or 480,
-    depth = 8,
-    target = self.target,
-    transparent = not opaque,
-    palette = self:loadPalette("QData", name .. ".pal"),
-  })
-  surface:ensureHardwareSurface()
+  width = width or 640
+  height = height or 480
+  local data = self.app:readDataFile("QData", name .. ".dat")
+  data = data:sub(1, width * height)
   
-  self.cache.raw[name] = surface
-  return surface
+  local bitmap = TH.bitmap()
+  bitmap:setPalette(self:loadPalette("QData", name .. ".pal"))
+  assert(bitmap:load(data, width, self.target))
+  
+  self.cache.raw[name] = bitmap
+  return bitmap
 end
 
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)

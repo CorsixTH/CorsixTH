@@ -76,8 +76,14 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
   SDL.wm.setCaption "CorsixTH"
-  self.video = assert(SDL.video.setMode(self.config.width, self.config.height,
-    "hardware", "doublebuf", self.config.fullscreen and "fullscreen" or ""))
+  local modes = {"hardware", "doublebuf"}
+  if self.config.fullscreen then
+    modes[#modes + 1] = "fullscreen"
+  end
+  if TRACK_FPS then
+    modes[#modes + 1] = "present immediate"
+  end
+  self.video = assert(SDL.video.setMode(self.config.width, self.config.height, unpack(modes)))
   SDL.wm.setIconWin32()
   
   -- Prereq 2: Load and initialise the graphics subsystem
@@ -86,7 +92,7 @@ function App:init()
   
   -- Put up the loading screen
   self.video:startFrame()
-  self.gfx:loadRaw("Load01V", 640, 480, true):draw(self.video,
+  self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
     (self.config.width - 640) / 2, (self.config.height - 480) / 2)
   self.video:endFrame()
   

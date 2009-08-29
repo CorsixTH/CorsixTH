@@ -28,16 +28,10 @@ SOFTWARE.
 #error More than one rendering engine enabled in config file
 #endif
 #define CORSIX_TH_HAS_RENDERING_ENGINE
+#include <SDL.h>
 
-struct SDL_Surface;
 typedef SDL_Surface THRenderTarget;
-
-struct THClipRect
-{
-    // Conveniently the same as an SDL_Rect
-	int16_t x, y;
-	uint16_t w, h;
-};
+typedef SDL_Rect THClipRect;
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
 void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
@@ -52,18 +46,35 @@ public:
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
-    void assign(THRenderTarget* pTarget, bool bTransparent = true) const;
+protected:
+    friend class THSpriteSheet;
+    friend class THRawBitmap;
+
+    void _assign(THRenderTarget* pTarget) const;
+
+    typedef SDL_Colour colour_t;
+    colour_t m_aColours[256];
+    int m_iNumColours;
+    int m_iTransparentIndex;
+};
+
+class THRawBitmap
+{
+public:
+    THRawBitmap();
+    ~THRawBitmap();
+
+    void setPalette(const THPalette* pPalette);
+
+    bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
+                        int iWidth, THRenderTarget *pUnused);
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
 
 protected:
-    struct colour_t
-    {
-        // Conveniently the same as an SDL_Color
-        unsigned char r;
-        unsigned char g;
-        unsigned char b;
-        unsigned char unused;
-    } m_aColours[256];
-    int m_iNumColours;
+    THRenderTarget* m_pBitmap;
+    unsigned char* m_pData;
+    const THPalette* m_pPalette;
 };
 
 class THSpriteSheet
@@ -76,7 +87,7 @@ public:
 
     bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                         const unsigned char* pChunkData, size_t iChunkDataLength,
-                        bool bComplexChunks, THRenderTarget *pUnused = NULL);
+                        bool bComplexChunks, THRenderTarget *pUnused);
 
     void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap);
 

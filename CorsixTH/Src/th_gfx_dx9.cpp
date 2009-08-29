@@ -24,27 +24,41 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_DX9_RENDERER
 
 #include <D3D9.h>
-#ifdef CORSIX_TH_USE_D3D9X
-#include <D3DX9.h>
-#endif
 #include "th_gfx.h"
 #include <new>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
-#ifdef CORSIX_TH_USE_D3D9X
-#pragma comment(lib, "D3DX9")
-#endif
 #endif
 
 THRenderTarget::THRenderTarget()
 {
     pD3D = NULL;
     pDevice = NULL;
-#ifdef CORSIX_TH_USE_D3D9X
-    pSprite = NULL;
-#endif
-    pTexture = NULL;
+    pVerticies = NULL;
     THRenderTarget_SetClipRect(this, NULL);
+    iVertexCount = 0;
+    iVertexLength = 0;
+    iNonOverlappingStart = 0;
+    iNonOverlapping = 0;
+}
+
+THRenderTarget::~THRenderTarget()
+{
+    if(pVerticies != NULL)
+    {
+        free(pVerticies);
+        pVerticies = NULL;
+    }
+    if(pDevice != NULL)
+    {
+        pDevice->Release();
+        pDevice = NULL;
+    }
+    if(pD3D != NULL)
+    {
+        pD3D->Release();
+        pD3D = NULL;
+    }
 }
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect)
@@ -66,37 +80,10 @@ void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect
         pTarget->rcClip.h = 0xFFFF;
     }
 }
-
-#ifdef CORSIX_TH_USE_D3D9X
-
 void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
 {
-    if(pTarget->pSprite)
-    {
-        pTarget->pSprite->End();
-        pTarget->pSprite->Begin(D3DXSPRITE_ALPHABLEND |
-            D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DONOTMODIFY_RENDERSTATE |
-            D3DXSPRITE_SORT_TEXTURE);
-    }
-}
-
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
-{
-    if(pTarget->pSprite)
-    {
-        pTarget->pSprite->End();
-        pTarget->pSprite->Begin(D3DXSPRITE_ALPHABLEND |
-            D3DXSPRITE_DONOTSAVESTATE | D3DXSPRITE_DONOTMODIFY_RENDERSTATE);
-    }
-}
-
-#else
-
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
-{
-    pTarget->iNonOverlappingStart = pTarget->iVertexCount;
-    //THDX9_FlushSprites(pTarget);
-    pTarget->bNonOverlapping = true;
+    if(pTarget->iNonOverlapping++ == 0)
+        pTarget->iNonOverlappingStart = pTarget->iVertexCount;
 }
 
 static int sprite_tex_compare(const void* left, const void* right)
@@ -114,24 +101,26 @@ static int sprite_tex_compare(const void* left, const void* right)
 
 void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
 {
+    if(--pTarget->iNonOverlapping > 0)
+        return;
+
+    // If more than one texture is used in the range of non-overlapping
+    // sprites, then sort the entire range by texture.
+
     size_t iStart = pTarget->iNonOverlappingStart;
     IDirect3DTexture9 *pTexture = pTarget->pVerticies[iStart].tex;
-    for(size_t i = iStart + 6; i < pTarget->iVertexCount; i += 6)
+    for(size_t i = iStart + 4; i < pTarget->iVertexCount; i += 4)
     {
         if(pTarget->pVerticies[i].tex != pTexture)
         {
             qsort(pTarget->pVerticies + iStart,
-                (pTarget->iVertexCount - iStart) / 6,
-                sizeof(THDX9_Vertex) * 6, sprite_tex_compare);
+                (pTarget->iVertexCount - iStart) / 4,
+                sizeof(THDX9_Vertex) * 4, sprite_tex_compare);
             break;
         }
     }
-
-    //THDX9_FlushSprites(pTarget);
-    pTarget->bNonOverlapping = false;
 }
 
-#endif
 
 THPalette::THPalette()
 {
@@ -155,25 +144,19 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
         return false;
 
     m_iNumColours = static_cast<int>(iDataLength / 3);
-    colour_t* pCol = m_aColours;
-    for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pCol)
+    for(int i = 0; i < m_iNumColours; ++i, pData += 3)
     {
-        pCol->r = gs_iTHColourLUT[pData[0] & 0x3F];
-        pCol->g = gs_iTHColourLUT[pData[1] & 0x3F];
-        pCol->b = gs_iTHColourLUT[pData[2] & 0x3F];
-        if(pCol->r == 0xFF && pCol->g == 0 && pCol->b == 0xFF)
-            m_aColoursARGB[i] = D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00);
-        else
-            m_aColoursARGB[i] = D3DCOLOR_ARGB(0xFF, pCol->r, pCol->g, pCol->b);
+        unsigned char iR = gs_iTHColourLUT[pData[0] & 0x3F];
+        unsigned char iG = gs_iTHColourLUT[pData[1] & 0x3F];
+        unsigned char iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        D3DCOLOR iColour = D3DCOLOR_ARGB(0xFF, iR, iG, iB);
+        // Remap magenta to transparent
+        if(iColour == D3DCOLOR_ARGB(0xFF, 0xFF, 0x00, 0xFF))
+            iColour = D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00);
+        m_aColoursARGB[i] = iColour;
     }
 
     return true;
-}
-
-void THPalette::assign(THRenderTarget*, bool) const
-{
-    // DX9 rendering engine must have palettes assigned during texture creation
-    // and hence assigning one later is a null operation.
 }
 
 int THPalette::getColourCount() const
@@ -181,100 +164,17 @@ int THPalette::getColourCount() const
     return m_iNumColours;
 }
 
-const unsigned char* THPalette::getColourData() const
-{
-    return &m_aColours[0].b;
-}
-
 const uint32_t* THPalette::getARGBData() const
 {
     return m_aColoursARGB;
 }
 
-#ifdef CORSIX_TH_USE_D3D9X
-
 IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const unsigned char* pPixels,
                                        const THPalette* pPalette,
                                        IDirect3DDevice9* pDevice,
-                                       bool bNoAllocate)
-{
-    // The easiest way to load a texture appears to be prefixing the data with
-    // a TGA header and having D3DX load it as a TGA file in memory.
-#pragma pack(push)
-#pragma pack(1)
-    struct tga_header
-    {
-        uint8_t ident_size;
-        uint8_t colour_map_type;
-        uint8_t image_type;
-        uint16_t colour_map_start;
-        uint16_t colour_map_length;
-        uint8_t colour_map_bpp;
-        uint16_t x_start;
-        uint16_t y_start;
-        uint16_t width;
-        uint16_t height;
-        uint8_t bpp;
-        uint8_t flags;
-    };
-#pragma pack(pop)
-
-    size_t iPaletteSize = pPalette->getColourCount() * 3;
-    size_t iHeaderSize = iPaletteSize + sizeof(tga_header);
-    size_t iDataSize = iWidth * iHeight;
-    size_t iTGASize = iHeaderSize + iDataSize;
-    unsigned char *pTGA;
-    if(bNoAllocate)
-        pTGA = const_cast<unsigned char*>(pPixels) - iHeaderSize;
-    else
-        pTGA = new unsigned char[iTGASize];
-    tga_header *pHeader = reinterpret_cast<tga_header*>(pTGA);
-
-    pHeader->ident_size = 0;
-    pHeader->colour_map_type = 1;
-    pHeader->image_type = 1;
-    pHeader->colour_map_start = 0;
-    pHeader->colour_map_length = static_cast<uint16_t>(pPalette->getColourCount());
-    pHeader->colour_map_bpp = 24;
-    pHeader->x_start = 0;
-    pHeader->y_start = 0;
-    pHeader->width = static_cast<uint16_t>(iWidth);
-    pHeader->height = static_cast<uint16_t>(iHeight);
-    pHeader->bpp = 8;
-    pHeader->flags = 0x20;
-
-    memcpy(pTGA + sizeof(tga_header), pPalette->getColourData(), iPaletteSize);
-    if(!bNoAllocate)
-    {
-        memcpy(pTGA + iHeaderSize, pPixels, iDataSize);
-    }
-
-    IDirect3DTexture9 *pTexture = NULL;
-    if(D3DXCreateTextureFromFileInMemoryEx(pDevice, pTGA, iTGASize,
-        D3DX_DEFAULT, D3DX_DEFAULT, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED,
-        D3DX_FILTER_NONE, D3DX_FILTER_NONE, D3DCOLOR_ARGB(0xFF, 0xFF, 0, 0xFF),
-        NULL, NULL, &pTexture) != D3D_OK || pTexture == NULL)
-    {
-        if(!bNoAllocate)
-            delete[] pTGA;
-        return NULL;
-    }
-    else
-    {
-        if(!bNoAllocate)
-            delete[] pTGA;
-        return pTexture;
-    }
-}
-
-#else
-
-IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
-                                       const unsigned char* pPixels,
-                                       const THPalette* pPalette,
-                                       IDirect3DDevice9* pDevice,
-                                       bool)
+                                       int* pWidth2,
+                                       int* pHeight2)
 {
     int iWidth2 = 1;
     int iHeight2 = 1;
@@ -282,6 +182,14 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
         iWidth2 <<= 1;
     while(iHeight2 < iHeight)
         iHeight2 <<= 1;
+    if(pWidth2)
+        *pWidth2 = iWidth2;
+    if(pHeight2)
+        *pHeight2 = iHeight2;
+
+    // It might seem attractive to try and use 8-bit paletted textures rather
+    // than 32-bit RGBA textures, but very few cards support 8-bit textures, so
+    // it isn't worth implementing.
 
     IDirect3DTexture9 *pTexture = NULL;
     if(pDevice->CreateTexture(iWidth2, iHeight2, 1, 0, D3DFMT_A8R8G8B8,
@@ -323,7 +231,9 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
     return pTexture;
 }
 
-THDX9_Vertex* THDX9_AllocVerticies(THRenderTarget* pTarget, size_t iCount)
+THDX9_Vertex* THDX9_AllocVerticies(THRenderTarget* pTarget,
+                                   size_t iCount,
+                                   IDirect3DTexture9* pTexture)
 {
     if(pTarget->iVertexCount + iCount > pTarget->iVertexLength)
     {
@@ -332,38 +242,98 @@ THDX9_Vertex* THDX9_AllocVerticies(THRenderTarget* pTarget, size_t iCount)
             sizeof(THDX9_Vertex) * pTarget->iVertexLength);
     }
     THDX9_Vertex *pResult = pTarget->pVerticies + pTarget->iVertexCount;
+    pResult[0].tex = pTexture;
     pTarget->iVertexCount += iCount;
     return pResult;
+}
+
+static inline void THDX9_DrawVerts(THRenderTarget* pTarget, size_t iFirst, size_t iLast)
+{
+    // Note: Convential wisdom might suggest that DrawIndexedPrimitive
+    // would be more efficient to use than DrawIndexedPrimitiveUP, however the
+    // vertex buffer would have to be modified each frame. My experiments have
+    // shown that using vertex buffers and index buffers yields no frame rate
+    // increase, whilst still increasing the complexity. Therefore the code
+    // should stick to using DrawIndexedPrimitiveUP for the immediate future.
+
+    UINT iCount = static_cast<UINT>(iLast - iFirst);
+    pTarget->pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, iCount,
+        iCount / 2, pTarget->aiVertexIndicies, D3DFMT_INDEX16,
+        pTarget->pVerticies + iFirst, static_cast<UINT>(sizeof(THDX9_Vertex)));
 }
 
 void THDX9_FlushSprites(THRenderTarget* pTarget)
 {
     if(pTarget->iVertexCount == 0)
         return;
-    
+  
     IDirect3DTexture9 *pTexture = pTarget->pVerticies[0].tex;
     pTarget->pDevice->SetTexture(0, pTexture);
     size_t iStart = 0;
-    for(size_t i = 6; i < pTarget->iVertexCount; i += 6)
+    size_t iIndexCount = 0;
+    for(size_t i = 4; i < pTarget->iVertexCount; i += 4)
     {
-        if(pTarget->pVerticies[i].tex != pTexture)
+        iIndexCount += 6;
+        if(pTarget->pVerticies[i].tex != pTexture ||
+            iIndexCount == THDX9_INDEX_BUFFER_LENGTH)
         {
-            pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-                static_cast<UINT>(i - iStart) / 3, pTarget->pVerticies + iStart,
-                static_cast<UINT>(sizeof(THDX9_Vertex)));
+            THDX9_DrawVerts(pTarget, iStart, i);
+            iIndexCount = 0;
             iStart = i;
             pTexture = pTarget->pVerticies[i].tex;
             pTarget->pDevice->SetTexture(0, pTexture);
         }
     }
-    pTarget->pDevice->DrawPrimitiveUP(D3DPT_TRIANGLELIST,
-        static_cast<UINT>(pTarget->iVertexCount - iStart) / 3, pTarget->pVerticies + iStart,
-        static_cast<UINT>(sizeof(THDX9_Vertex)));
+    THDX9_DrawVerts(pTarget, iStart, pTarget->iVertexCount);
 
     pTarget->iVertexCount = 0;
 }
 
-#endif
+THRawBitmap::THRawBitmap()
+{
+    m_pBitmap = NULL;
+    m_pPalette = NULL;
+    m_iWidth = -1;
+    m_iHeight = -1;
+}
+
+THRawBitmap::~THRawBitmap()
+{
+    if(m_pBitmap)
+        m_pBitmap->Release();
+}
+
+void THRawBitmap::setPalette(const THPalette* pPalette)
+{
+    m_pPalette = pPalette;
+}
+
+bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
+                                 size_t iPixelDataLength,
+                                 int iWidth, THRenderTarget *pEventualCanvas)
+{
+    if(m_pPalette == NULL)
+        return false;
+
+    if(m_pBitmap)
+    {
+        m_pBitmap->Release();
+        m_pBitmap = NULL;
+    }
+
+    m_iWidth = iWidth;
+    m_iHeight = static_cast<int>(iPixelDataLength) / iWidth;
+    m_pBitmap = THDX9_CreateTexture(iWidth, m_iHeight, pPixelData, m_pPalette,
+        pEventualCanvas->pDevice, &m_iWidth2, &m_iHeight2);
+
+    return m_pBitmap != NULL;
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+    THDX9_Draw(pCanvas, m_pBitmap, m_iWidth, m_iHeight, iX, iY, 0,
+        m_iWidth2, m_iHeight2, 0, 0);
+}
 
 THSpriteSheet::THSpriteSheet()
 {
@@ -655,32 +625,6 @@ void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* p
     *pY = m_pSprites[iSprite].iHeight;
 }
 
-#ifdef CORSIX_TH_USE_D3D9X
-static const D3DXMATRIX g_mtxIdentity(
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
-
-static const D3DXMATRIX g_mtxFlipH(
-   -1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
-
-static const D3DXMATRIX g_mtxFlipV(
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f,-1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
-
-static const D3DXMATRIX g_mtxFlipVH(
-   -1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f,-1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
-#endif
-
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL)
@@ -695,7 +639,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
             return;
 
         pTexture = THDX9_CreateTexture(pSprite->iWidth, pSprite->iHeight,
-            pSprite->pData, m_pPalette, m_pDevice, true);
+            pSprite->pData, m_pPalette, m_pDevice);
         pSprite->pBitmap = pTexture;
     }
     if(iFlags & THDF_AltPalette)
@@ -725,8 +669,8 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
 }
 
 void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
-                unsigned int iWidth, unsigned int iHeight, int iX, int iY,
-                unsigned long iFlags, unsigned int iWidth2,
+                unsigned int iWidth, unsigned int iHeight,
+                int iX, int iY, unsigned long iFlags, unsigned int iWidth2,
                 unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY)
 {
     // Crop to clip rectangle
@@ -777,33 +721,6 @@ void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
         cColour = D3DCOLOR_ARGB(0x40, 0xFF, 0xFF, 0xFF);
         break;
     }
-
-#ifdef CORSIX_TH_USE_D3D9X
-    // Perform horizontal and vertical flips
-    switch(iFlags & (THDF_FlipHorizontal | THDF_FlipVertical))
-    {
-    case 0:
-        pCanvas->pSprite->SetTransform(&g_mtxIdentity);
-        break;
-    case THDF_FlipHorizontal:
-        pCanvas->pSprite->SetTransform(&g_mtxFlipH);
-        iX = -iX + rcSource.left - rcSource.right;
-        break;
-    case THDF_FlipVertical:
-        pCanvas->pSprite->SetTransform(&g_mtxFlipV);
-        iY = -iY + rcSource.top - rcSource.bottom;
-        break;
-    case THDF_FlipHorizontal | THDF_FlipVertical:
-        pCanvas->pSprite->SetTransform(&g_mtxFlipVH);
-        iX = -iX + rcSource.left - rcSource.right;
-        iY = -iY + rcSource.top - rcSource.bottom;
-        break;
-    }
-
-    // Do the actual drawing
-    D3DXVECTOR3 vPosition((FLOAT)iX, (FLOAT)iY, 0.0f);
-    pCanvas->pSprite->Draw(pTexture, &rcSource, NULL, &vPosition, cColour);
-#else
     float fX = (float)iX;
     float fY = (float)iY;
     float fWidth = (float)(rcSource.right - rcSource.left);
@@ -821,39 +738,32 @@ void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
         rcSource.bottom = iTexY * 2 + iHeight - rcSource.bottom;
     }
 
-#define SetVertexData(n) \
-    pVerticies[0].tex = pTexture; \
-    pVerticies[0].x = fX; \
-    pVerticies[0].y = fY; \
-    pVerticies[0].z = 0.0f; \
-    pVerticies[1].x = fX + fWidth; \
-    pVerticies[1].y = fY; \
-    pVerticies[1].z = 0.0f; \
-    pVerticies[2].x = fX + fWidth; \
-    pVerticies[2].y = fY + fHeight; \
-    pVerticies[2].z = 0.0f; \
-    pVerticies[n].x = fX; \
-    pVerticies[n].y = fY + fHeight; \
+#define SetVertexData(n, x_, y_, u_, v_) \
+    pVerticies[n].x = fX + (float) x_; \
+    pVerticies[n].y = fY + (float) y_; \
     pVerticies[n].z = 0.0f; \
-    pVerticies[0].colour = cColour; \
-    pVerticies[1].colour = cColour; \
-    pVerticies[2].colour = cColour; \
     pVerticies[n].colour = cColour; \
-    pVerticies[0].u = (float)rcSource.left   / fSprWidth; \
-    pVerticies[0].v = (float)rcSource.top    / fSprHeight; \
-    pVerticies[1].u = (float)rcSource.right  / fSprWidth; \
-    pVerticies[1].v = pVerticies[0].v; \
-    pVerticies[2].u = pVerticies[1].u; \
-    pVerticies[2].v = (float)rcSource.bottom / fSprHeight; \
-    pVerticies[n].u = pVerticies[0].u; \
-    pVerticies[n].v = pVerticies[2].v; \
+    pVerticies[n].u = (float) u_; \
+    pVerticies[n].v = (float) v_; \
 
-    THDX9_Vertex *pVerticies = THDX9_AllocVerticies(pCanvas, 6);
-    SetVertexData(5);
-    pVerticies[3] = pVerticies[0];
-    pVerticies[4] = pVerticies[2];
+    THDX9_Vertex *pVerticies = THDX9_AllocVerticies(pCanvas, 4, pTexture);
+    SetVertexData(0, 0, 0, rcSource.left / fSprWidth, rcSource.top / fSprHeight);
+    SetVertexData(1, fWidth, 0, rcSource.right  / fSprWidth, pVerticies[0].v);
+    SetVertexData(2, fWidth, fHeight, pVerticies[1].u, rcSource.bottom / fSprHeight);
+    SetVertexData(3, 0, fHeight, pVerticies[0].u, pVerticies[2].v);
 #undef SetVertexData
-#endif
+}
+
+uint16_t gs_iIndexLUT[6] = {0, 1, 2, 0, 2, 3};
+
+void THDX9_FillIndexBuffer(uint16_t* pVerticies, size_t iFirst, size_t iCount)
+{
+    for(; iCount > 0; ++iFirst, --iCount)
+    {
+        size_t iMod = iFirst % 6;
+        size_t iBase = (iFirst / 6) * 4;
+        pVerticies[iFirst] = static_cast<uint16_t>(iBase) + gs_iIndexLUT[iMod];
+    }
 }
 
 IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
@@ -876,7 +786,7 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
             pData[i] = iPixel;
         }
         pSprite->pAltBitmap = THDX9_CreateTexture(pSprite->iWidth,
-            pSprite->iHeight, pData, m_pPalette, m_pDevice, true);
+            pSprite->iHeight, pData, m_pPalette, m_pDevice);
         pData -= 1024;
         delete[] pData;
     }

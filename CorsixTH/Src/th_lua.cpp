@@ -498,6 +498,7 @@ static int l_palette_load(lua_State *L)
     THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 1, LUA_ENVIRONINDEX, "Palette");
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
+
     if(pPalette->loadFromTHFile(pData, iDataLen))
         lua_pushboolean(L, 1);
     else
@@ -505,12 +506,45 @@ static int l_palette_load(lua_State *L)
     return 1;
 }
 
-static int l_palette_assign(lua_State *L)
+static int l_rawbitmap_new(lua_State *L)
 {
-    THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 1, LUA_ENVIRONINDEX, "Palette");
-    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THRawBitmap* pBitmap = luaT_stdnew<THRawBitmap>(L, LUA_ENVIRONINDEX, true);
+    return 1;
+}
 
-    pPalette->assign(pSurface, lua_toboolean(L, 3) != 0);
+static int l_rawbitmap_set_pal(lua_State *L)
+{
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
+    THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 2, lua_upvalueindex(1), "Palette");
+    lua_settop(L, 2);
+
+    pBitmap->setPalette(pPalette);
+    luaT_setenvfield(L, 1, "palette");
+    return 1;
+}
+
+static int l_rawbitmap_load(lua_State *L)
+{
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
+    size_t iDataLen;
+    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
+    int iWidth = luaL_checkint(L, 3);
+    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget, true>(L, 4, lua_upvalueindex(1), NULL);
+
+    if(pBitmap->loadFromTHFile(pData, iDataLen, iWidth, pSurface))
+        lua_pushboolean(L, 1);
+    else
+        lua_pushboolean(L, 0);
+
+    return 1;
+}
+
+static int l_rawbitmap_draw(lua_State *L)
+{
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+
+    pBitmap->draw(pCanvas,luaL_optint(L, 3, 0), luaL_optint(L, 4, 0));
 
     lua_settop(L, 1);
     return 1;
@@ -1074,23 +1108,37 @@ static int l_load_strings(lua_State *L)
     return 1;
 }
 
+static void luaT_setclosure(lua_State *L, lua_CFunction fn, int iUpIndex1, ...)
+{
+    int iUpCount = 0;
+    va_list args;
+    va_start(args, iUpIndex1);
+    for(; iUpIndex1 != 0; iUpIndex1 = va_arg(args, int), ++iUpCount)
+        lua_pushvalue(L, iUpIndex1);
+    va_end(args);
+    lua_pushcclosure(L, fn, iUpCount);
+}
+
 int luaopen_th(lua_State *L)
 {
     lua_settop(L, 0);
 
     // Create metatables
-    const int iMapMT     = 1; lua_createtable(L, 0, 0);
-    const int iPaletteMT = 2; lua_createtable(L, 0, 0);
-    const int iSheetMT   = 3; lua_createtable(L, 0, 0);
-    const int iFontMT    = 4; lua_createtable(L, 0, 0);
-    const int iLayersMT  = 5; lua_createtable(L, 0, 0);
-    const int iAnimsMT   = 6; lua_createtable(L, 0, 0);
-    const int iAnimMT    = 7; lua_createtable(L, 0, 0);
-    const int iPathMT    = 8; lua_createtable(L, 0, 0);
+    const int iMapMT     = 1; lua_createtable(L, 0, 2);
+    const int iPaletteMT = 2; lua_createtable(L, 0, 2);
+    const int iSheetMT   = 3; lua_createtable(L, 0, 3);
+    const int iFontMT    = 4; lua_createtable(L, 0, 2);
+    const int iLayersMT  = 5; lua_createtable(L, 0, 3);
+    const int iAnimsMT   = 6; lua_createtable(L, 0, 2);
+    const int iAnimMT    = 7; lua_createtable(L, 0, 2);
+    const int iPathMT    = 8; lua_createtable(L, 0, 2);
     const int iSurfaceMT = 9; lua_getfield(L, LUA_REGISTRYINDEX, "Surface_meta");
+    const int iBitmapMT  =10; lua_createtable(L, 0, 2);
 
-    const int iTH = 10; lua_createtable(L, 0, 5);
+    const int iTH        =11; lua_createtable(L, 0,10);
     const int iTop = iTH;
+
+    lua_checkstack(L, 10);
 
     if(lua_isnil(L, iSurfaceMT))
     {
@@ -1101,216 +1149,130 @@ int luaopen_th(lua_State *L)
         lua_replace(L, iSurfaceMT);
     }
 
+#define luaT_class(typnam, new_fn, name, mt_idx) { \
+    const char * sCurrentClassName = name; \
+    int iCurrentClassMT = mt_idx; \
+    lua_settop(L, iTop); \
+    /* Make metatable the environment for registered functions */ \
+    lua_pushvalue(L, mt_idx); \
+    lua_replace(L, LUA_ENVIRONINDEX); \
+    /* Set the __gc metamethod to C++ destructor */ \
+    lua_pushcclosure(L, luaT_stdgc<typnam, false, LUA_ENVIRONINDEX>, 0); \
+    lua_setfield(L, mt_idx, "__gc"); \
+    /* Create the methods table; call it -> new instance */ \
+    luaT_pushcclosuretable(L, new_fn, 0); \
+    /* Set __index to the methods table */ \
+    lua_pushvalue(L, -1); \
+    lua_setfield(L, mt_idx, "__index")
+
+#define luaT_endclass() \
+    lua_setfield(L, iTH, sCurrentClassName); }
+
+#define luaT_setmetamethod(fn, name, ...) \
+    luaT_setclosure(L, fn, ## __VA_ARGS__, 0); \
+    lua_setfield(L, iCurrentClassMT, "__" name)
+
+#define luaT_setfunction(fn, name, ...) \
+    luaT_setclosure(L, fn, ## __VA_ARGS__, 0); \
+    lua_setfield(L, -2, name)
+
     // Misc
     lua_settop(L, iTop);
-    lua_pushcfunction(L, l_load_strings);
-    lua_setfield(L, iTH, "LoadStrings");
+    luaT_setfunction(l_load_strings, "LoadStrings");
 
     // Map
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iMapMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THMap, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iMapMT, "__gc");
-    luaT_pushcclosuretable(L, l_map_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iMapMT, "__index");
-    lua_pushcfunction(L, l_map_load);
-    lua_setfield(L, -2, "load");
-    lua_pushcfunction(L, l_map_getsize);
-    lua_setfield(L, -2, "size");
-    lua_pushcfunction(L, l_map_getcell);
-    lua_setfield(L, -2, "getCell");
-    lua_pushcfunction(L, l_map_getcellflags);
-    lua_setfield(L, -2, "getCellFlags");
-    lua_pushcfunction(L, l_map_setcellflags);
-    lua_setfield(L, -2, "setCellFlags");
-    lua_pushcfunction(L, l_map_setcell);
-    lua_setfield(L, -2, "setCell");
-    lua_pushcfunction(L, l_map_setwallflags);
-    lua_setfield(L, -2, "setWallDrawFlags");
-    lua_pushvalue(L, iAnimsMT);
-    lua_pushvalue(L, iAnimMT);
-    lua_pushcclosure(L, l_map_updateblueprint, 2);
-    lua_setfield(L, -2, "updateRoomBlueprint");
-    lua_pushcfunction(L, l_map_mark_room);
-    lua_setfield(L, -2, "markRoom");
-    lua_pushvalue(L, iSheetMT);
-    lua_pushcclosure(L, l_map_set_sheet, 1);
-    lua_setfield(L, -2, "setSheet");   
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_map_draw, 1);
-    lua_setfield(L, -2, "draw");
-    lua_setfield(L, iTH, "map");
+    luaT_class(THMap, l_map_new, "map", iMapMT);
+    luaT_setfunction(l_map_load, "load");
+    luaT_setfunction(l_map_getsize, "size");
+    luaT_setfunction(l_map_getcell, "getCell");
+    luaT_setfunction(l_map_getcellflags, "getCellFlags");
+    luaT_setfunction(l_map_setcellflags, "setCellFlags");
+    luaT_setfunction(l_map_setcell, "setCell");
+    luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
+    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", iAnimsMT, iAnimMT);
+    luaT_setfunction(l_map_mark_room, "markRoom");
+    luaT_setfunction(l_map_set_sheet, "setSheet", iSheetMT);
+    luaT_setfunction(l_map_draw, "draw", iSurfaceMT);
+    luaT_endclass();
 
     // Palette
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iPaletteMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THPalette, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iPaletteMT, "__gc");
-    luaT_pushcclosuretable(L, l_palette_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iPaletteMT, "__index");
-    lua_pushcfunction(L, l_palette_load);
-    lua_setfield(L, -2, "load");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_palette_assign, 1);
-    lua_setfield(L, -2, "assign");
-    lua_setfield(L, iTH, "palette");
+    luaT_class(THPalette, l_palette_new, "palette", iPaletteMT);
+    luaT_setfunction(l_palette_load, "load");
+    luaT_endclass();
+
+    // Raw bitmap
+    luaT_class(THRawBitmap, l_rawbitmap_new, "bitmap", iBitmapMT);
+    luaT_setfunction(l_rawbitmap_load, "load", iSurfaceMT);
+    luaT_setfunction(l_rawbitmap_set_pal, "setPalette", iPaletteMT);
+    luaT_setfunction(l_rawbitmap_draw, "draw", iSurfaceMT);
+    luaT_endclass();
 
     // Sprite sheet
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iSheetMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THSpriteSheet, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iSheetMT, "__gc");
-    lua_pushcfunction(L, l_spritesheet_count);
-    lua_setfield(L, iSheetMT, "__len");
-    luaT_pushcclosuretable(L, l_spritesheet_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iSheetMT, "__index");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_spritesheet_load, 1);
-    lua_setfield(L, -2, "load");
-    lua_pushvalue(L, iPaletteMT);
-    lua_pushcclosure(L, l_spritesheet_set_pal, 1);
-    lua_setfield(L, -2, "setPalette");
-    lua_pushcfunction(L, l_spritesheet_size);
-    lua_setfield(L, -2, "size");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_spritesheet_draw, 1);
-    lua_setfield(L, -2, "draw");
-    lua_setfield(L, iTH, "sheet");
+    luaT_class(THSpriteSheet, l_spritesheet_new, "sheet", iSheetMT);
+    luaT_setmetamethod(l_spritesheet_count, "len");
+    luaT_setfunction(l_spritesheet_load, "load", iSurfaceMT);
+    luaT_setfunction(l_spritesheet_set_pal, "setPalette", iPaletteMT);
+    luaT_setfunction(l_spritesheet_size, "size");
+    luaT_setfunction(l_spritesheet_draw, "draw", iSurfaceMT);
+    luaT_endclass();
 
     // Font
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iFontMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THFont, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iFontMT, "__gc");
-    luaT_pushcclosuretable(L, l_font_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iFontMT, "__index");
-    lua_pushcfunction(L, l_font_get_size);
-    lua_setfield(L, -2, "sizeOf");
-    lua_pushvalue(L, iSheetMT);
-    lua_pushcclosure(L, l_font_set_spritesheet, 1);
-    lua_setfield(L, -2, "setSheet");
-    lua_pushcfunction(L, l_font_set_sep);
-    lua_setfield(L, -2, "setSeparation");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_font_draw, 1);
-    lua_setfield(L, -2, "draw");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_font_draw_wrapped, 1);
-    lua_setfield(L, -2, "drawWrapped");
-    lua_setfield(L, iTH, "font");
+    luaT_class(THFont, l_font_new, "font", iFontMT);
+    luaT_setfunction(l_font_get_size, "sizeOf");
+    luaT_setfunction(l_font_set_spritesheet, "setSheet", iSheetMT);
+    luaT_setfunction(l_font_set_sep, "setSeparation");
+    luaT_setfunction(l_font_draw, "draw", iSurfaceMT);
+    luaT_setfunction(l_font_draw_wrapped, "drawWrapped", iSurfaceMT);
+    luaT_endclass();
 
     // Layers
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iLayersMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THLayers_t, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iLayersMT, "__gc");
-    lua_pushcfunction(L, l_layers_get);
-    lua_setfield(L, iLayersMT, "__index");
-    lua_pushcfunction(L, l_layers_set);
-    lua_setfield(L, iLayersMT, "__newindex");
-    luaT_pushcclosuretable(L, l_layers_new, 0);
-    lua_setfield(L, iTH, "layers");
+    luaT_class(THLayers_t, l_layers_new, "layers", iLayersMT);
+    luaT_setmetamethod(l_layers_get, "index");
+    luaT_setmetamethod(l_layers_set, "newindex");
+    luaT_endclass();
 
     // Anims
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iAnimsMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THAnimationManager, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iAnimsMT, "__gc");
-    luaT_pushcclosuretable(L, l_anims_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iAnimsMT, "__index");
-    lua_pushcfunction(L, l_anims_load);
-    lua_setfield(L, -2, "load");
-    lua_pushvalue(L, iSheetMT);
-    lua_pushcclosure(L, l_anims_set_spritesheet, 1);
-    lua_setfield(L, -2, "setSheet");
-    lua_pushcfunction(L, l_anims_getfirst);
-    lua_setfield(L, -2, "getFirstFrame");
-    lua_pushcfunction(L, l_anims_getnext);
-    lua_setfield(L, -2, "getNextFrame");
-    lua_pushcfunction(L, l_anims_set_alt_pal);
-    lua_setfield(L, -2, "setAnimationGhostPalette");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushvalue(L, iLayersMT);
-    lua_pushcclosure(L, l_anims_draw, 2);
-    lua_setfield(L, -2, "draw");
-    lua_setfield(L, iTH, "anims");
+    luaT_class(THAnimationManager, l_anims_new, "anims", iAnimsMT);
+    luaT_setfunction(l_anims_load, "load");
+    luaT_setfunction(l_anims_set_spritesheet, "setSheet", iSheetMT);
+    luaT_setfunction(l_anims_getfirst, "getFirstFrame");
+    luaT_setfunction(l_anims_getnext, "getNextFrame");
+    luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
+    luaT_setfunction(l_anims_draw, "draw", iSurfaceMT, iLayersMT);
+    luaT_endclass();
 
     // Anim
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iAnimMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THAnimation, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iAnimMT, "__gc");
-    luaT_pushcclosuretable(L, l_anim_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iAnimMT, "__index");
-    lua_pushvalue(L, iAnimsMT);
-    lua_pushcclosure(L, l_anim_set_anim, 1);
-    lua_setfield(L, -2, "setAnimation");
-    lua_pushcfunction(L, l_anim_get_anim);
-    lua_setfield(L, -2, "getAnimation");
-    lua_pushvalue(L, iMapMT);
-    lua_pushcclosure(L, l_anim_set_tile, 1);
-    lua_setfield(L, -2, "setTile");
-    lua_pushcfunction(L, l_anim_get_tile);
-    lua_setfield(L, -2, "getTile");
-    lua_pushcfunction(L, l_anim_set_flag);
-    lua_setfield(L, -2, "setFlag");
-    lua_pushcfunction(L, l_anim_set_flag_partial);
-    lua_setfield(L, -2, "setPartialFlag");
-    lua_pushcfunction(L, l_anim_get_flag);
-    lua_setfield(L, -2, "getFlag");
-    lua_pushcfunction(L, l_anim_make_visible);
-    lua_setfield(L, -2, "makeVisible");
-    lua_pushcfunction(L, l_anim_make_invisible);
-    lua_setfield(L, -2, "makeInvisible");
-    lua_pushcfunction(L, l_anim_set_tag);
-    lua_setfield(L, -2, "setTag");
-    lua_pushcfunction(L, l_anim_get_tag);
-    lua_setfield(L, -2, "getTag");
-    lua_pushcfunction(L, l_anim_set_position);
-    lua_setfield(L, -2, "setPosition");
-    lua_pushcfunction(L, l_anim_get_position);
-    lua_setfield(L, -2, "getPosition");
-    lua_pushcfunction(L, l_anim_set_speed);
-    lua_setfield(L, -2, "setSpeed");
-    lua_pushcfunction(L, l_anim_set_layer);
-    lua_setfield(L, -2, "setLayer");
-    lua_pushcfunction(L, l_anim_tick);
-    lua_setfield(L, -2, "tick");
-    lua_pushvalue(L, iSurfaceMT);
-    lua_pushcclosure(L, l_anim_draw, 1);
-    lua_setfield(L, -2, "draw");
-    lua_setfield(L, iTH, "animation");
+    luaT_class(THAnimation, l_anim_new, "animation", iAnimMT);
+    luaT_setfunction(l_anim_set_anim, "setAnimation", iAnimsMT);
+    luaT_setfunction(l_anim_get_anim, "getAnimation");
+    luaT_setfunction(l_anim_set_tile, "setTile", iMapMT);
+    luaT_setfunction(l_anim_get_tile, "getTile");
+    luaT_setfunction(l_anim_set_flag, "setFlag");
+    luaT_setfunction(l_anim_set_flag_partial, "setPartialFlag");
+    luaT_setfunction(l_anim_get_flag, "getFlag");
+    luaT_setfunction(l_anim_make_visible, "makeVisible");
+    luaT_setfunction(l_anim_make_invisible, "makeInvisible");
+    luaT_setfunction(l_anim_set_tag, "setTag");
+    luaT_setfunction(l_anim_get_tag, "getTag");
+    luaT_setfunction(l_anim_set_position, "setPosition");
+    luaT_setfunction(l_anim_get_position, "getPosition");
+    luaT_setfunction(l_anim_set_speed, "setSpeed");
+    luaT_setfunction(l_anim_set_layer, "setLayer");
+    luaT_setfunction(l_anim_tick, "tick");
+    luaT_setfunction(l_anim_draw, "draw", iSurfaceMT);
+    luaT_endclass();
 
     // Path
-    lua_settop(L, iTop);
-    lua_pushvalue(L, iPathMT);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<THPathfinder, false, LUA_ENVIRONINDEX>, 0);
-    lua_setfield(L, iPathMT, "__gc");
-    luaT_pushcclosuretable(L, l_path_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, iPathMT, "__index");
-    lua_pushcfunction(L, l_path_distance);
-    lua_setfield(L, -2, "findDistance");
-    lua_pushcfunction(L, l_path_path);
-    lua_setfield(L, -2, "findPath");
-    lua_pushvalue(L, iMapMT);
-    lua_pushcclosure(L, l_path_set_map, 1);
-    lua_setfield(L, -2, "setMap");   
-    lua_setfield(L, iTH, "pathfinder");
+    luaT_class(THPathfinder, l_path_new, "pathfinder", iPathMT);
+    luaT_setfunction(l_path_distance, "findDistance");
+    luaT_setfunction(l_path_path, "findPath");
+    luaT_setfunction(l_path_set_map, "setMap", iMapMT);
+    luaT_endclass();
+
+#undef luaT_class
+#undef luaT_endclass
+#undef luaT_setmetamethod
+#undef luaT_setfunction
 
     lua_settop(L, iTH);
     return 1;
