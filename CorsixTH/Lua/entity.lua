@@ -72,7 +72,7 @@ function Entity:tick()
       self.timer_time = nil
       local timer_function = self.timer_function
       self.timer_function = nil
-      timer_function()
+      timer_function(self)
     else
       self.timer_time = timer
     end

@@ -27,7 +27,79 @@ object.build_cost = 40
 object.build_preview_animation = 902
 object.idle_animations = {
   north = 112,
-  east = 114,
+  east  = 114,
+}
+object.usage_animations = {
+  north = {
+    begin_use = {
+      ["Standard Male Patient"     ] =   96,
+      ["Standard Female Patient"   ] =  232,
+      ["Transparent Male Patient"  ] = 1080,
+      ["Slack Male Patient"        ] = 1500,
+      ["Invisible Patient"         ] = 1812,
+      ["Alternate Male Patient"    ] = 2732,
+      ["Transparent Female Patient"] = 3028,
+      ["Elvis Patient"             ] = 3642,
+      ["Chewbacca Patient"         ] = 3744,
+    },
+    in_use = {
+      ["Standard Male Patient"     ] =  146,
+      ["Standard Female Patient"   ] =  224,
+      ["Transparent Male Patient"  ] = 1088,
+      ["Slack Male Patient"        ] = 1508,
+      ["Invisible Patient"         ] = 1820,
+      ["Alternate Male Patient"    ] = 2724,
+      ["Transparent Female Patient"] = 3036,
+      ["Chewbacca Patient"         ] = 3760,
+      ["Elvis Patient"             ] = 4110,
+    },
+    finish_use = {
+      ["Standard Male Patient"     ] =  216,
+      ["Standard Female Patient"   ] =  240,
+      ["Transparent Male Patient"  ] = 1096,
+      ["Slack Male Patient"        ] = 1516,
+      ["Invisible Patient"         ] = 1828,
+      ["Alternate Male Patient"    ] = 2740,
+      ["Transparent Female Patient"] = 3044,
+      ["Chewbacca Patient"         ] = 3752,
+      ["Elvis Patient"             ] = 4102,
+    },
+  },
+  east = {
+    begin_use = {
+      ["Standard Male Patient"     ] =   98,
+      ["Standard Female Patient"   ] =  234,
+      ["Transparent Male Patient"  ] = 1082,
+      ["Slack Male Patient"        ] = 1502,
+      ["Invisible Patient"         ] = 1814,
+      ["Alternate Male Patient"    ] = 2734,
+      ["Transparent Female Patient"] = 3030,
+      ["Elvis Patient"             ] = 3644,
+      ["Chewbacca Patient"         ] = 3746,
+    },
+    in_use = {
+      ["Standard Male Patient"     ] =  148,
+      ["Standard Female Patient"   ] =  226,
+      ["Transparent Male Patient"  ] = 1090,
+      ["Slack Male Patient"        ] = 1510,
+      ["Invisible Patient"         ] = 1822,
+      ["Alternate Male Patient"    ] = 2726,
+      ["Transparent Female Patient"] = 3038,
+      ["Chewbacca Patient"         ] = 3762,
+      ["Elvis Patient"             ] = 4112,
+    },
+    finish_use = {
+      ["Standard Male Patient"     ] =  218,
+      ["Standard Female Patient"   ] =  242,
+      ["Transparent Male Patient"  ] = 1098,
+      ["Slack Male Patient"        ] = 1518,
+      ["Invisible Patient"         ] = 1830,
+      ["Alternate Male Patient"    ] = 2742,
+      ["Transparent Female Patient"] = 3046,
+      ["Chewbacca Patient"         ] = 3754,
+      ["Elvis Patient"             ] = 4104,
+    },
+  },
 }
 object.orientations = {
   north = {

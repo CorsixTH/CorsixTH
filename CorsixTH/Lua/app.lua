@@ -55,10 +55,10 @@ end
 function App:setCommandLine(...)
   self.command_line = {...}
   for i, arg in ipairs(self.command_line) do
-    local setting, value = arg:match"^%-%-([^=]*)=(.*)$"
-	if value then
-	  self.command_line[setting] = value
-	end
+    local setting, value = arg:match"^%-%-([^=]*)=(.*)$" --setting=value
+	  if value then
+	    self.command_line[setting] = value
+	  end
   end
 end
 
@@ -124,6 +124,7 @@ function App:init()
   dofile "object"
   self.objects = self:loadLuaFolder"objects"
   self.rooms = self:loadLuaFolder"rooms"
+  self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
   
   -- Load world before UI
   dofile "world"
@@ -427,7 +428,7 @@ function App:loadLuaFolder(dir, no_results)
   local path = ourpath .. dir
   local results = no_results and "" or {}
   for file in lfs.dir(path) do
-    if file:match"[.]lua$" then
+    if file:match"%.lua$" then
       local chunk, e = loadfile(path .. file)
       if e then
         print("Error loading " .. dir .. file .. ":\n" .. tostring(e))
@@ -443,6 +444,8 @@ function App:loadLuaFolder(dir, no_results)
           else
             if type(result) == "table" and result.id then
               results[result.id] = result
+            elseif type(result) == "function" then
+              results[file:match"(.*)%."] = result
             end
             results[#results + 1] = result
           end

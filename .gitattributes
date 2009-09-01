@@ -37,6 +37,8 @@ CorsixTH/Lua/dialogs/place_objects.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text
+CorsixTH/Lua/humanoid_actions/idle.lua -text
+CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
 CorsixTH/Lua/objects/bench.lua -text
@@ -46,6 +48,7 @@ CorsixTH/Lua/objects/fire_extinguisher.lua -text
 CorsixTH/Lua/objects/plant.lua -text
 CorsixTH/Lua/objects/radiator.lua -text
 CorsixTH/Lua/objects/reception_desk.lua -text
+CorsixTH/Lua/queue.lua -text
 CorsixTH/Lua/room.lua -text
 CorsixTH/Lua/rooms/general_diag.lua -text
 CorsixTH/Lua/rooms/gp.lua -text

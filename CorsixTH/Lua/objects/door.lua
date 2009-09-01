@@ -27,11 +27,14 @@ object.idle_animations = {
   west = 106,
 }
 
+dofile "Queue"
+
 class "Door" (Object)
 
 function Door:Door(...)
   self:Object(...)
   self:setPosition(-1, 0)
+  self.queue = Queue()
 end
 
 local door_flag_name = {
