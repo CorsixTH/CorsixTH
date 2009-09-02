@@ -125,12 +125,14 @@ function UI:debugMakePatients()
   for i = 1, 4 do
     local entity = TheApp.world:newEntity("Humanoid", 2)
     local types = {
-      "Standard Male Patient",
-      "Alternate Male Patient",
-      "Slack Male Patient",
-      "Transparent Male Patient",
-      "Standard Female Patient",
-      "Transparent Female Patient",
+      -- Types with variations doubled up to make them more likely:
+      "Standard Male Patient", "Standard Male Patient",
+      "Alternate Male Patient", "Alternate Male Patient",
+      "Slack Male Patient", "Slack Male Patient",
+      "Transparent Male Patient", "Transparent Male Patient",
+      "Standard Female Patient", "Standard Female Patient",
+      "Transparent Female Patient", "Transparent Female Patient",
+      -- Types with no variation:
       "Chewbacca Patient",
       "Elvis Patient",
       "Invisible Patient",

@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "reception_desk"
+object.thob = 11
 object.name = _S(2, 12)
 object.ticks = false
 object.corridor_object = 1

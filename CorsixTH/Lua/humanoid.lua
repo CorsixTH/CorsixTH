@@ -101,12 +101,21 @@ function Humanoid:setNextAction(action)
       queue[j].todo_interrupt = true
     end
   end
+  -- Remove actions which are no longer going to happen
+  local done_set = {}
+  for j = #queue, i, -1 do
+    local removed = queue[j]
+    queue[j] = nil
+    if removed.until_leave_queue and not done_set[removed.until_leave_queue] then
+      removed.until_leave_queue:removeValue(self)
+      done_set[removed.until_leave_queue] = true
+    end
+    if removed.object and removed.object.reserved_for == self then
+      removed.object.reserved_for = nil
+    end
+  end
   -- Add the new action to the queue
   queue[i] = action
-  -- Remove actions which are no longer going to happen
-  for j = #queue, i + 1, -1 do
-    queue[j] = nil
-  end
   -- Start the action if it has become the current action
   if not interrupted then
     Humanoid_startAction(self)
@@ -139,7 +148,43 @@ function Humanoid:setType(humanoid_class)
   assert(walk_animations[humanoid_class], "Invalid humanoid class: " .. tostring(humanoid_class))
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
+  self.humanoid_class = humanoid_class
   self:setNextAction {name = "idle"}
+end
+
+function Humanoid:onAdvanceQueue(queue, n)
+  local action = self.action_queue[1]
+  if action.until_leave_queue then
+    if action.name == "idle" then
+      local ix, iy = self.world:getIdleTile(action.x1, action.y1, n - 1)
+      if ix then
+        self:queueAction({
+          name = "walk",
+          until_leave_queue = queue,
+          must_happen = action.must_happen,
+          destination_unimportant = true,
+          x = ix,
+          y = iy,
+        }, 0)
+      end
+    elseif action.name == "walk" and action.destination_unimportant then
+      local idle = self.action_queue[2]
+      if idle and idle.name == "idle" then
+        local ix, iy = self.world:getIdleTile(idle.x1, idle.y1, n - 1)
+        if ix then
+          action:on_interrupt(self)
+          self:queueAction({
+            name = "walk",
+            until_leave_queue = queue,
+            must_happen = idle.must_happen,
+            destination_unimportant = true,
+            x = ix,
+            y = iy,
+          }, 1)
+        end    
+      end
+    end
+  end
 end
 
 function Humanoid:onLeaveQueue()

@@ -45,9 +45,15 @@ struct music_t
     ~music_t()
     {
         if(pMusic)
+        {
             Mix_FreeMusic(pMusic);
+            pMusic = NULL;
+        }
         if(pRWop)
+        {
             SDL_FreeRW(pRWop);
+            pRWop = NULL;
+        }
     }
 };
 

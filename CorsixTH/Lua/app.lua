@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = true
+local TRACK_FPS = false
 
 class "App"
 

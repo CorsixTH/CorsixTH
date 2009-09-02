@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "door"
+object.thob = 3
 object.class = "Door"
 object.ticks = false
 object.idle_animations = {
@@ -27,7 +28,7 @@ object.idle_animations = {
   west = 106,
 }
 
-dofile "Queue"
+dofile "queue"
 
 class "Door" (Object)
 
@@ -35,6 +36,7 @@ function Door:Door(...)
   self:Object(...)
   self:setPosition(-1, 0)
   self.queue = Queue()
+  -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
 local door_flag_name = {
@@ -48,11 +50,12 @@ function Door:setTile(x, y)
     map:setCellFlags(self.x, self.y, {
       [door_flag_name[self.direction]] = false,
       buildable = true,
+      doNotIdle = false,
     })
     if self.direction == "west" then
-      map:setCellFlags(self.x - 1, self.y, {buildable = true})
+      map:setCellFlags(self.x - 1, self.y, {buildable = true, doNotIdle = false})
     else
-      map:setCellFlags(self.x, self.y - 1, {buildable = true})
+      map:setCellFlags(self.x, self.y - 1, {buildable = true, doNotIdle = false})
     end
   end
   Object.setTile(self, x, y)
@@ -60,11 +63,12 @@ function Door:setTile(x, y)
     map:setCellFlags(x, y, {
       [door_flag_name[self.direction]] = true,
       buildable = false,
+      doNotIdle = true,
     })
     if self.direction == "west" then
-      map:setCellFlags(x - 1, y, {buildable = false})
+      map:setCellFlags(x - 1, y, {buildable = false, doNotIdle = true})
     else
-      map:setCellFlags(x, y - 1, {buildable = false})
+      map:setCellFlags(x, y - 1, {buildable = false, doNotIdle = true})
     end
   end
   return self

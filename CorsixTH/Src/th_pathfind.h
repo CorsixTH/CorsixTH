@@ -49,9 +49,15 @@ public:
 
     void setDefaultMap(const THMap *pMap);
 
-    bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
+    bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX,
+                  int iEndY);
+    bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
+    bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
+                      THObjectType eTHOB, int iMaxDistance, lua_State *L,
+                      int iVisitFunction);
 
     int getPathLength() const;
+    bool getPathEnd(int* pX, int* pY) const;
     void pushResult(lua_State *L) const;
 
 protected:

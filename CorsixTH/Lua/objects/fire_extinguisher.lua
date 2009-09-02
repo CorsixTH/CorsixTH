@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "extinguisher"
+object.thob = 43
 object.name = _S(2, 44)
 object.ticks = false
 object.corridor_object = 4

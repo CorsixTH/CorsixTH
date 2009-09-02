@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local function action_idle_interrupt(action, humanoid)
+  humanoid:setTimer(1, humanoid.finishAction)
+end
+
 local function action_idle_start(action, humanoid)
   local direction = humanoid.last_move_direction
   local anims = humanoid.walk_anims
@@ -32,6 +36,9 @@ local function action_idle_start(action, humanoid)
   end
   humanoid.th:setTile(humanoid.th:getTile())
   humanoid:setSpeed(0, 0)
+  if action.must_happen then
+    action.on_interrupt = action_idle_interrupt
+  end
 end
 
 return action_idle_start

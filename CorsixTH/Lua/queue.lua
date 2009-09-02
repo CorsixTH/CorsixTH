@@ -32,10 +32,42 @@ function Queue:push(humanoid)
 end
 
 function Queue:pop()
+  for i = #self, 2, -1 do
+    local humanoid = self[i]
+    if humanoid.onAdvanceQueue then
+      humanoid:onAdvanceQueue(self, i - 1)
+    end
+  end
+  
   local oldfront = self[1]
   table.remove(self, 1)
   if oldfront.onLeaveQueue then
     oldfront:onLeaveQueue(self)
   end
   return oldfront
+end
+
+function Queue:remove(index)
+  if self[index] == nil then
+    return
+  end
+  local value = self[index]
+  for i = #self, index + 1, -1 do
+    local humanoid = self[i]
+    if humanoid.onAdvanceQueue then
+      humanoid:onAdvanceQueue(self, i - 1)
+    end
+  end
+  table.remove(self, index)
+  return value
+end
+
+function Queue:removeValue(value)
+  for i = 1, #self do
+    if self[i] == value then
+      self:remove(i)
+      return true
+    end
+  end
+  return false
 end

@@ -26,6 +26,7 @@ SOFTWARE.
 #include <malloc.h>
 #include <stdlib.h>
 #include <queue>
+#include <math.h>
 
 THPathfinder::THPathfinder()
 {
@@ -43,9 +44,21 @@ THPathfinder::THPathfinder()
 
 THPathfinder::~THPathfinder()
 {
-    free(m_ppOpenHeap);
-    delete[] m_pNodes;
-    delete[] m_ppDirtyList;
+    if(m_ppOpenHeap)
+    {
+        free(m_ppOpenHeap);
+        m_ppOpenHeap = NULL;
+    }
+    if(m_pNodes)
+    {
+        delete[] m_pNodes;
+        m_pNodes = NULL;
+    }
+    if(m_ppDirtyList)
+    {
+        delete[] m_ppDirtyList;
+        m_ppDirtyList = NULL;
+    }
 }
 
 void THPathfinder::setDefaultMap(const THMap *pMap)
@@ -53,49 +66,40 @@ void THPathfinder::setDefaultMap(const THMap *pMap)
     m_pDefaultMap = pMap;
 }
 
-bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY)
-{
-    if(pMap == NULL)
-        pMap = m_pDefaultMap;
-    if(pMap == NULL || pMap->getNode(iEndX, iEndY) == NULL
-        || (pMap->getNodeUnchecked(iEndX, iEndY)->iFlags & THMN_Passable) == 0)
-    {
-        m_pDestination = NULL;
-        return false;
-    }
-
-    // As diagonal movement is not allowed, the minimum distance between two
-    // points is the sum of the distance in X and the distance in Y. Provided
-    // that the compiler generates clever assembly for abs(), this means that
-    // guesses can be calculated without branching and without sqrt().
-#define MakeGuess(pNode) \
-    pNode->guess = abs(pNode->x - iEndX) + abs(pNode->y - iEndY)
-
-    int iWidth = pMap->getWidth();
-    _allocNodeCache(iWidth, pMap->getHeight());
-    node_t *pNode = m_pNodes + iStartY * iWidth + iStartX;
-    node_t *pTarget = m_pNodes + iEndY * iWidth + iEndX;
-    pNode->prev = NULL;
-    pNode->distance = 0;
-    MakeGuess(pNode);
-    m_ppDirtyList[0] = pNode;
-    m_iDirtyCount = 1;
+#define Pathing_Init() \
+    int iWidth = pMap->getWidth(); \
+    _allocNodeCache(iWidth, pMap->getHeight()); \
+    node_t *pNode = m_pNodes + iStartY * iWidth + iStartX; \
+    pNode->prev = NULL; \
+    pNode->distance = 0; \
+    MakeGuess(pNode); \
+    m_ppDirtyList[0] = pNode; \
+    m_iDirtyCount = 1; \
     m_iOpenCount = 0;
 
-    while(true)
-    {
-        if(pNode == pTarget)
-        {
-            m_pDestination = pTarget;
-            return true;
-        }
+    /* No need to check for the node being on the map edge, as the N/E/S/W
+       flags are set as to prevent travelling off the map (as well as to
+       prevent walking through walls). */
+#define Pathing_Neighbours() \
+    unsigned long iPassable = iFlags & THMN_Passable; \
+    if(iFlags & THMN_CanTravelW) \
+    { \
+        TryNode(pNode - 1, 3); \
+    } \
+    if(iFlags & THMN_CanTravelE) \
+    { \
+        TryNode(pNode + 1, 1); \
+    } \
+    if(iFlags & THMN_CanTravelN) \
+    { \
+        TryNode(pNode - iWidth, 0); \
+    } \
+    if(iFlags & THMN_CanTravelS) \
+    { \
+        TryNode(pNode + iWidth, 2); \
+    } \
 
-        unsigned long iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
-        unsigned long iPassable = iFlags & THMN_Passable;
-
-#define TryNode(n) \
-    node_t *pNeighbour = n; \
-    int iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+#define Pathing_TryNode() \
     if(iNFlags & THMN_Passable || iPassable == 0) \
     { \
         if(pNeighbour->prev == pNeighbour) \
@@ -115,38 +119,224 @@ bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEn
         } \
     }
 
-        // No need to check for the node being on the map edge, as the N/E/S/W
-        // flags are set as to prevent travelling off the map (as well as to
-        // prevent walking through walls).
-        if(iFlags & THMN_CanTravelW)
+#define Pathing_Next() \
+    if(m_iOpenCount == 0) \
+    { \
+        m_pDestination = NULL; \
+        break; \
+    } \
+    else \
+        pNode = _openHeapPop()
+
+bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY)
+{
+    if(pMap == NULL)
+        pMap = m_pDefaultMap;
+    if(pMap == NULL || pMap->getNode(iEndX, iEndY) == NULL
+        || (pMap->getNodeUnchecked(iEndX, iEndY)->iFlags & THMN_Passable) == 0)
+    {
+        m_pDestination = NULL;
+        return false;
+    }
+
+    // As diagonal movement is not allowed, the minimum distance between two
+    // points is the sum of the distance in X and the distance in Y. Provided
+    // that the compiler generates clever assembly for abs(), this means that
+    // guesses can be calculated without branching and without sqrt().
+#define MakeGuess(pNode) \
+    pNode->guess = abs(pNode->x - iEndX) + abs(pNode->y - iEndY)
+
+    Pathing_Init();
+    node_t *pTarget = m_pNodes + iEndY * iWidth + iEndX;
+
+    while(true)
+    {
+        if(pNode == pTarget)
         {
-            TryNode(pNode - 1);
-        }
-        if(iFlags & THMN_CanTravelE)
-        {
-            TryNode(pNode + 1);
-        }
-        if(iFlags & THMN_CanTravelN)
-        {
-            TryNode(pNode - iWidth);
-        }
-        if(iFlags & THMN_CanTravelS)
-        {
-            TryNode(pNode + iWidth);
+            m_pDestination = pTarget;
+            return true;
         }
 
-        if(m_iOpenCount == 0)
-        {
-            m_pDestination = NULL;
-            return false;
-        }
-        else
-            pNode = _openHeapPop();
+        uint32_t iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
+
+#define TryNode(n, d) \
+        node_t *pNeighbour = n; \
+        uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+        Pathing_TryNode()
+
+        Pathing_Neighbours();
+        Pathing_Next();
     }
+    return false;
 
 #undef MakeGuess
 #undef TryNode
 }
+
+bool THPathfinder::findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN)
+{
+    if(pMap == NULL)
+        pMap = m_pDefaultMap;
+    if(pMap == NULL)
+    {
+        m_pDestination = NULL;
+        return false;
+    }
+
+#define MakeGuess(pNode) \
+    pNode->guess = 0
+
+    Pathing_Init();
+    node_t *pPossibleResult = NULL;
+
+    while(true)
+    {
+        pNode->open_idx = -1;
+        uint32_t iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
+
+        if((iFlags & THMN_DoNotIdle) == 0)
+        {
+            if(iN == 0)
+            {
+                m_pDestination = pNode;
+                return true;
+            }
+            else
+            {
+                pPossibleResult = pNode;
+                --iN;
+            }
+        }
+
+        node_t* pBestNext = NULL;
+        double fBestDistance = 0.0;
+
+#define TryNode(n, d) \
+        node_t *pNeighbour = n; \
+        uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+        /* When finding an idle tile, do not navigate through doors */ \
+        switch(d) \
+        { \
+        case 0: \
+            if((iFlags & THMN_DoorNorth) == 0) {Pathing_TryNode()} \
+            break; \
+        case 1: \
+            if((iNFlags & THMN_DoorWest) == 0) {Pathing_TryNode()} \
+            break; \
+        case 2: \
+            if((iNFlags & THMN_DoorNorth) == 0) {Pathing_TryNode()} \
+            break; \
+        case 3: \
+            if((iFlags & THMN_DoorWest) == 0)  {Pathing_TryNode()} \
+            break; \
+        } \
+        /* Identify the neighbour in the open list nearest to the start */ \
+        if(pNeighbour->prev != pNeighbour && pNeighbour->open_idx != -1) \
+        { \
+            int iDX = pNeighbour->x - iStartX; \
+            int iDY = pNeighbour->y - iStartY; \
+            double fDistance = sqrt((double)(iDX * iDX + iDY * iDY)); \
+            if(pBestNext == NULL || fDistance < fBestDistance) \
+                pBestNext = pNeighbour, fBestDistance = fDistance; \
+        }
+
+        Pathing_Neighbours();
+
+        if(m_iOpenCount == 0)
+        {
+            m_pDestination = NULL;
+            break;
+        }
+        if(pBestNext)
+        {
+            // Promote the best neighbour to the front of the open list
+            // This causes sequential iN to give neighbouring results for most iN
+            pBestNext->guess = -pBestNext->distance;
+            _openHeapPromote(pBestNext);
+        }
+        pNode = _openHeapPop();
+    }
+    if(pPossibleResult)
+    {
+        m_pDestination = pPossibleResult;
+        return true;
+    }
+    return false;
+
+#undef MakeGuess
+#undef TryNode
+}
+
+bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
+                                THObjectType eTHOB, int iMaxDistance,
+                                lua_State *L, int iVisitFunction)
+{
+    if(pMap == NULL)
+        pMap = m_pDefaultMap;
+    if(pMap == NULL)
+    {
+        m_pDestination = NULL;
+        return false;
+    }
+
+#define MakeGuess(pNode) \
+    pNode->guess = 0
+
+    Pathing_Init();
+    uint32_t iTHOB = static_cast<uint32_t>(eTHOB) << 24;
+
+    while(true)
+    {
+        uint32_t iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
+
+#define TryNode(n, d) \
+        node_t *pNeighbour = n; \
+        uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+        if((iNFlags & 0xFF000000) == iTHOB) \
+        { \
+            lua_pushvalue(L, iVisitFunction); \
+            lua_pushinteger(L, pNeighbour->x + 1); \
+            lua_pushinteger(L, pNeighbour->y + 1); \
+            lua_pushinteger(L, d); \
+            lua_call(L, 3, 1); \
+            if(lua_toboolean(L, -1) != 0) \
+            { \
+                lua_pop(L, 1); \
+                return true; \
+            } \
+            lua_pop(L, 1); \
+        } \
+        if(pNode->distance < iMaxDistance) \
+        { \
+            switch(d) \
+            { \
+            case 0: \
+                if((iFlags & THMN_DoorNorth) == 0) {Pathing_TryNode()} \
+                break; \
+            case 1: \
+                if((iNFlags & THMN_DoorWest) == 0) {Pathing_TryNode()} \
+                break; \
+            case 2: \
+                if((iNFlags & THMN_DoorNorth) == 0) {Pathing_TryNode()} \
+                break; \
+            case 3: \
+                if((iFlags & THMN_DoorWest) == 0)  {Pathing_TryNode()} \
+                break; \
+            } \
+        }
+
+        Pathing_Neighbours();
+        Pathing_Next();
+    }
+    return false;
+
+#undef MakeGuess
+#undef TryNode
+}
+
+#undef Pathing_Init
+#undef Pathing_TryNode
+#undef Pathing_NeighboursAndNext
 
 void THPathfinder::_allocNodeCache(int iWidth, int iHeight)
 {
@@ -189,6 +379,23 @@ int THPathfinder::getPathLength() const
         return m_pDestination->distance;
     else
         return -1;
+}
+
+bool THPathfinder::getPathEnd(int* pX, int* pY) const
+{
+    if(m_pDestination == NULL)
+    {
+        if(pX)
+            *pX = -1;
+        if(pY)
+            *pY = -1;
+        return false;
+    }
+    if(pX)
+        *pX = m_pDestination->x;
+    if(pY)
+        *pY = m_pDestination->y;
+    return true;
 }
 
 void THPathfinder::pushResult(lua_State *L) const

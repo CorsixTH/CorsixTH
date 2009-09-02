@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "drinks_machine"
+object.thob = 7
 object.name = _S(2, 8)
 object.ticks = false
 object.corridor_object = 3

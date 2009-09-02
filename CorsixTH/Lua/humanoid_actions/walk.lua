@@ -32,6 +32,48 @@ local flag_flip_h = 1
 
 local navigateDoor
 
+local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
+  local anims = humanoid.walk_anims
+  if x1 ~= x2 then
+    if x1 < x2 then
+      if map and map:getCellFlags(x2, y2).doorWest then
+        return navigateDoor(humanoid, x1, y1, "east")
+      else
+        humanoid.last_move_direction = "east"
+        humanoid:setAnimation(anims.walk_east, flag_early_list)
+        humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4, 2)
+      end
+    else
+      if map and map:getCellFlags(x1, y1).doorWest then
+        return navigateDoor(humanoid, x1, y1, "west")
+      else
+        humanoid.last_move_direction = "west"
+        humanoid:setAnimation(anims.walk_north, flag_early_list + flag_flip_h)
+        humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4, -2)
+      end
+    end
+  else
+    if y1 < y2 then
+      if map and map:getCellFlags(x2, y2).doorNorth then
+        return navigateDoor(humanoid, x1, y1, "south")
+      else
+        humanoid.last_move_direction = "south"
+        humanoid:setAnimation(anims.walk_east, flag_flip_h)
+        humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4, 2)
+      end
+    else
+      if map and map:getCellFlags(x1, y1).doorNorth then
+        return navigateDoor(humanoid, x1, y1, "north")
+      else
+        humanoid.last_move_direction = "north"
+        humanoid:setAnimation(anims.walk_north)
+        humanoid:setTilePositionSpeed(x1, y1, 0, 0, 4, -2)
+      end
+    end
+  end
+  humanoid:setTimer(8, timer_fn)
+end
+
 local function action_walk_tick(humanoid)
   local action = humanoid.action_queue[1]
   local path_x = action.path_x
@@ -61,50 +103,14 @@ local function action_walk_tick(humanoid)
     end
   end
   
-  -- Perform walk step
-  local anims = humanoid.walk_anims
-  if x1 ~= x2 then
-    if x1 < x2 then
-      if check_doors and map:getCellFlags(x2, y2).doorWest then
-        return navigateDoor(humanoid, x1, y1, "east")
-      else
-        humanoid.last_move_direction = "east"
-        humanoid:setAnimation(anims.walk_east, flag_early_list)
-        humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4, 2)
-      end
-    else
-      if check_doors and map:getCellFlags(x1, y1).doorWest then
-        return navigateDoor(humanoid, x1, y1, "west")
-      else
-        humanoid.last_move_direction = "west"
-        humanoid:setAnimation(anims.walk_north, flag_early_list + flag_flip_h)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4, -2)
-      end
-    end
-  else
-    if y1 < y2 then
-      if check_doors and map:getCellFlags(x2, y2).doorNorth then
-        return navigateDoor(humanoid, x1, y1, "south")
-      else
-        humanoid.last_move_direction = "south"
-        humanoid:setAnimation(anims.walk_east, flag_flip_h)
-        humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4, 2)
-      end
-    else
-      if check_doors and map:getCellFlags(x1, y1).doorNorth then
-        return navigateDoor(humanoid, x1, y1, "north")
-      else
-        humanoid.last_move_direction = "north"
-        humanoid:setAnimation(anims.walk_north)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, 4, -2)
-      end
-    end
-  end
-  
-  -- Queue next step
+  action_walk_raw(humanoid, x1, y1, x2, y2, check_doors and map, action_walk_tick)
   action.path_index = path_index + 1
-  humanoid:setTimer(8, action_walk_tick)
 end
+
+-- This is a slight hack, but is the easiest way to make walk functionality
+-- available to other actions which want to do low-level walk operations.
+strict_declare_global "HumanoidRawWalk"
+HumanoidRawWalk = action_walk_raw
 
 local function action_walk_tick_door(humanoid)
   local door = humanoid.user_of
@@ -130,14 +136,46 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   
   local door = humanoid.world:getObject(dx, dy, "door")
-  if door.user then
-    -- door in use; go idle and try again later
+  if door.user or (door.reserved_for and door.reserved_for ~= humanoid) then
+    -- door in use; go idle (or find a bench) and try again later
     humanoid:setTilePositionSpeed(x1, y1)
     action.must_happen = action.saved_must_happen
-    humanoid:queueAction({
-      name = "idle",
-      until_leave_queue = true,
-    }, 0)
+    action.reserve_on_resume = door
+    local queue = door.queue
+    local bench, ix, iy = humanoid.world:getFreeBench(x1, y1, 10)
+    if not ix then
+      ix, iy = humanoid.world:getIdleTile(x1, y1, queue:size())
+      if not ix then
+        ix, iy = humanoid.world:getIdleTile(x1, y1)
+      end
+    end
+    if ix then
+      humanoid:queueAction({
+        name = "walk",
+        until_leave_queue = queue,
+        must_happen = action.saved_must_happen,
+        destination_unimportant = not bench,
+        x = ix,
+        y = iy,
+      }, 0)
+    end
+    if bench then
+      humanoid:queueAction({
+        name = "use_object",
+        until_leave_queue = queue,
+        must_happen = action.saved_must_happen,
+        object = bench
+      }, 1)
+      bench.reserved_for = humanoid
+    else
+      humanoid:queueAction({
+        name = "idle",
+        until_leave_queue = queue,
+        must_happen = action.saved_must_happen,
+        x1 = x1,
+        y1 = y1,
+      }, ix and 1 or 0)
+    end
     door.queue:push(humanoid)
     return
   end
@@ -172,7 +210,7 @@ local function action_walk_start(action, humanoid)
   -- pathfinding in two steps, with the building door as a middle node
   local path_x, path_y = humanoid.world:getPath(humanoid.tile_x, humanoid.tile_y, action.x, action.y)
   if not path_x then
-    humanoid:finishAction(action)
+    humanoid:setTimer(1, humanoid.finishAction)
     return
   end
   action.path_x = path_x
@@ -182,6 +220,10 @@ local function action_walk_start(action, humanoid)
   action.on_restart = action_walk_start
   action.saved_must_happen = action.must_happen
   action.must_happen = true
+  if action.reserve_on_resume then
+    action.reserve_on_resume.reserved_for = humanoid
+    action.reserve_on_resume = nil
+  end
   
   return action_walk_tick(humanoid)
 end

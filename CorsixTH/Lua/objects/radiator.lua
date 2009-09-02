@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "radiator"
+object.thob = 44
 object.name = _S(2, 45)
 object.ticks = false
 object.corridor_object = 5

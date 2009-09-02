@@ -34,6 +34,7 @@ function World:World(app)
   self.wall_types = app.walls
   self.object_types = app.objects
   self.anims = app.anims
+  self.anim_length_cache = {}
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
@@ -44,6 +45,7 @@ function World:World(app)
   self.month = 1 -- January
   self.day = 1
   self.hour = 0
+  self.idle_cache = {}
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -55,11 +57,31 @@ function World:World(app)
   end
 end
 
+function World:getAnimLength(anim)
+  if not self.anim_length_cache[anim] then
+    local length = 0
+    local seen = {}
+    local frame = self.anims:getFirstFrame(anim)
+    while not seen[frame] do
+      seen[frame] = true
+      length = length + 1
+      frame = self.anims:getNextFrame(frame)
+    end
+    self.anim_length_cache[anim] = length
+  end
+  return self.anim_length_cache[anim]
+end
+
 function World:newRoom(x, y, w, h, room_info)
   local id = #self.rooms + 1
   local room = Room(x, y, w, h, id, room_info)
   self.rooms[id] = room
+  self:clearCaches()
   return room
+end
+
+function World:clearCaches()
+  self.idle_cache = {}
 end
 
 function World:getWallIdFromBlockId(block_id)
@@ -131,6 +153,57 @@ function World:getPath(x, y, dest_x, dest_y)
   return self.pathfinder:findPath(x, y, dest_x, dest_y)
 end
 
+function World:getIdleTile(x, y, idx)
+  local cache_idx = (y - 1) * self.map.width + x
+  local cache = self.idle_cache[cache_idx]
+  if not cache then
+    cache = {
+      x = {},
+      y = {},
+    }
+    self.idle_cache[cache_idx] = cache
+  end
+  if not cache.x[idx] then
+    local ix, iy = self.pathfinder:findIdleTile(x, y, idx)
+    if not ix then
+      return ix, iy
+    end
+    cache.x[idx] = ix
+    cache.y[idx] = iy
+  end
+  return cache.x[idx], cache.y[idx]
+end
+
+local face_dir = {
+  [0] = "south",
+  [1] = "west",
+  [2] = "north",
+  [3] = "east",
+}
+
+function World:getFreeBench(x, y, distance)
+  local bench, rx, ry
+  self.pathfinder:findObject(x, y, self.object_types.bench.thob, distance, function(x, y, d)
+    local b = self:getObject(x, y, "bench")
+    if b and not b.user and not b.reserved_for and face_dir[d] == b.direction then
+      if d == 0 then
+        y = y + 1
+      elseif d == 1 then
+        x = x - 1
+      elseif d == 2 then
+        y = y - 1
+      else--if d == 3
+        x = x + 1
+      end
+      rx = x
+      ry = y
+      bench = b
+      return true
+    end
+  end)
+  return bench, rx, ry
+end
+
 function World:newEntity(class, animation)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
@@ -153,12 +226,19 @@ function World:newObject(id, ...)
 end
 
 function World:removeObjectFromTile(object, x, y)
-  local index = y * self.map.width + x
+  local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
   if objects then
     for k, v in ipairs(objects) do
       if v == object then
         table_remove(objects, k)
+        if k == 1 then
+          if objects[1] then
+            self.map.th:setCellFlags(x, y, {thob = objects[1].object_type.thob})
+          else
+            self.map.th:setCellFlags(x, y, {thob = 0})
+          end
+        end
         return true
       end
     end
@@ -167,19 +247,27 @@ function World:removeObjectFromTile(object, x, y)
 end
 
 function World:addObjectToTile(object, x, y)
-  local index = y * self.map.width + x
+  local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
   if objects then
+    if #objects >= 1 then
+      -- Until it is clear how multiple objects will work, this warning should
+      -- be in place.
+      print("Warning: Multiple objects on tile " .. x .. "," .. y .. " - only one will be encoded")
+    else
+      self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
+    end
     objects[#objects + 1] = object
   else
     objects = {object}
     self.objects[index] = objects
+    self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
   end
   return true
 end
 
 function World:getObject(x, y, id)
-  local index = y * self.map.width + x
+  local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
   if objects then
     if not id then

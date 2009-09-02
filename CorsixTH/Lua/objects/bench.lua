@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "bench"
+object.thob = 4
 object.name = _S(2, 5)
 object.ticks = false
 object.corridor_object = 2
@@ -29,6 +30,7 @@ object.idle_animations = {
   north = 112,
   east  = 114,
 }
+object.walk_in_to_use = true
 object.usage_animations = {
   north = {
     begin_use = {

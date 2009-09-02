@@ -359,8 +359,10 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_CanTravelE, "travelEast")
     Flag(THMN_CanTravelS, "travelSouth")
     Flag(THMN_CanTravelW, "travelWest")
+    Flag(THMN_DoNotIdle, "doNotIdle")
 
     FlagInt(iRoomId, "roomId")
+    FlagInt(iFlags >> 24, "thob")
 
 #undef FlagInt
 #undef Flag
@@ -400,7 +402,14 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_Room, "room")
             Flag(THMN_DoorWest, "doorWest")
             Flag(THMN_DoorNorth, "doorNorth")
-            /* else */ {
+            Flag(THMN_DoNotIdle, "doNotIdle")
+            /* else */ if(strcmp(field, "thob") == 0)
+            {
+                pNode->iFlags &= 0x00FFFFFF;
+                pNode->iFlags |= static_cast<uint32_t>(lua_tointeger(L, 6)) << 24;
+            }
+            else
+            {
                 luaL_error(L, "Invalid flag \'%s\'", field);
             }
         }
@@ -863,6 +872,31 @@ static int l_path_path(lua_State *L)
     return 2;
 }
 
+static int l_path_idle(lua_State *L)
+{
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    if(!pPathfinder->findIdleTile(NULL, luaL_checkint(L, 2) - 1,
+        luaL_checkint(L, 3) - 1, luaL_optint(L, 4, 0)))
+    {
+        return 0;
+    }
+    int iX, iY;
+    pPathfinder->getPathEnd(&iX, &iY);
+    lua_pushinteger(L, iX + 1);
+    lua_pushinteger(L, iY + 1);
+    return 2;
+}
+
+static int l_path_visit(lua_State *L)
+{
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    luaL_checktype(L, 6, LUA_TFUNCTION);
+    lua_pushboolean(L, pPathfinder->visitObjects(NULL, luaL_checkint(L, 2) - 1,
+        luaL_checkint(L, 3) - 1, static_cast<THObjectType>(luaL_checkint(L, 4)),
+        luaL_checkint(L, 5), L, 6) ? 1 : 0);
+    return 1;
+}
+
 static int l_anim_new(lua_State *L)
 {
     THAnimation* pAnimation = luaT_stdnew<THAnimation>(L, LUA_ENVIRONINDEX, true);
@@ -1266,6 +1300,8 @@ int luaopen_th(lua_State *L)
     luaT_class(THPathfinder, l_path_new, "pathfinder", iPathMT);
     luaT_setfunction(l_path_distance, "findDistance");
     luaT_setfunction(l_path_path, "findPath");
+    luaT_setfunction(l_path_idle, "findIdleTile");
+    luaT_setfunction(l_path_visit, "findObject");
     luaT_setfunction(l_path_set_map, "setMap", iMapMT);
     luaT_endclass();
 

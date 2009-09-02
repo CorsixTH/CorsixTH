@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "plant"
+object.thob = 45
 object.name = _S(2, 46)
 object.ticks = false
 object.corridor_object = 6

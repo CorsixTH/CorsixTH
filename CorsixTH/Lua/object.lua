@@ -73,6 +73,7 @@ function Object:setTile(x, y)
       end
     end
   end
+  self.world:clearCaches()
   return self
 end
 
@@ -80,6 +81,7 @@ function Object:setUser(user)
   self.user = user or false
   if user then
     self.th:makeInvisible()
+    self.reserved_for = nil
   else
     self.th:makeVisible()
   end
