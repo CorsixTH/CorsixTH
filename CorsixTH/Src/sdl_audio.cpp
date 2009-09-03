@@ -67,14 +67,18 @@ static void audio_music_over_callback()
 static int l_init(lua_State *L)
 {
     if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 1, 1024) != 0)
+    {
         lua_pushboolean(L, 0);
+        lua_pushstring(L, Mix_GetError());
+        return 2;
+    }
     else
     {
         lua_pushboolean(L, 1);
         luaT_addcleanup(L, Mix_CloseAudio);
         Mix_HookMusicFinished(audio_music_over_callback);
+        return 1;
     }
-    return 1;
 }
 
 struct load_music_async_t

@@ -125,8 +125,15 @@ function Audio:init()
     end
   end
   
-  assert(SDL.audio.init())
-  self:playRandomBackgroundTrack()
+  local status, err = SDL.audio.init()
+  if status then
+    self:playRandomBackgroundTrack()
+  else
+    print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
+    self.not_loaded = true
+    self.has_bg_music = false
+    self.background_playlist = {}
+  end
 end
 
 function Audio:playRandomBackgroundTrack()
