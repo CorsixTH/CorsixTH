@@ -75,7 +75,11 @@ local function bits(n)
 end
 
 function Map:load(thData)
-  assert(self.th:load(thData))
+  local _, objects = assert(self.th:load(thData))
+  for _, object in ipairs(objects) do
+    local x, y, thob, flags = unpack(object)
+    
+  end
   self.thData = thData
   self.width, self.height = self.th:size()
 end

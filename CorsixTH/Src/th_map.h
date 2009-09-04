@@ -152,6 +152,8 @@ struct THMapNode : public THLinkList
 
 class THSpriteSheet;
 
+typedef void (*THMapLoadObjectCallback_t)(void*, int, int, THObjectType, uint8_t);
+
 class THMap
 {
 public:
@@ -159,7 +161,9 @@ public:
     ~THMap();
 
     bool setSize(int iWidth, int iHeight);
-    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength,
+                        THMapLoadObjectCallback_t fnObjectCallback,
+                        void* pCallbackToken);
     void setBlockSheet(THSpriteSheet* pSheet);
     void setAllWallDrawFlags(unsigned char iFlags);
     void updatePathfinding();

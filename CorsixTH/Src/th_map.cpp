@@ -95,7 +95,9 @@ static const unsigned char gs_iTHMapBlockLUT[256] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
+bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
+                           THMapLoadObjectCallback_t fnObjectCallback,
+                           void* pCallbackToken)
 {
     if(iDataLength < 163948 || !setSize(128, 128))
         return false;
@@ -181,6 +183,11 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
                 break;
             }
             */
+
+            if(pData[1] != 0 && fnObjectCallback != NULL)
+            {
+                fnObjectCallback(pCallbackToken, iX, iY, (THObjectType)pData[1], pData[0]);
+            }
         }
     }
 

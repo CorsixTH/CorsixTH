@@ -97,16 +97,36 @@ static int l_map_set_sheet(lua_State *L)
     return 1;
 }
 
+static void l_map_load_obj_cb(void *pL, int iX, int iY, THObjectType eTHOB, uint8_t iFlags)
+{
+    lua_State *L = reinterpret_cast<lua_State*>(pL);
+    lua_createtable(L, 4, 0);
+
+    lua_pushinteger(L, 1 + (lua_Integer)iX);
+    lua_rawseti(L, -2, 1);
+    lua_pushinteger(L, 1 + (lua_Integer)iY);
+    lua_rawseti(L, -2, 2);
+    lua_pushinteger(L, (lua_Integer)eTHOB);
+    lua_rawseti(L, -2, 3);
+    lua_pushinteger(L, (lua_Integer)iFlags);
+    lua_rawseti(L, -2, 4);
+
+    lua_rawseti(L, 3, static_cast<int>(lua_objlen(L, 3)) + 1);
+}
+
 static int l_map_load(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
-    if(pMap->loadFromTHFile(pData, iDataLen))
+    lua_settop(L, 2);
+    lua_newtable(L);
+    if(pMap->loadFromTHFile(pData, iDataLen, l_map_load_obj_cb, (void*)L))
         lua_pushboolean(L, 1);
     else
         lua_pushboolean(L, 0);
-    return 1;
+    lua_insert(L, -2);
+    return 2;
 }
 
 THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
