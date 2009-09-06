@@ -33,7 +33,6 @@ class "EntranceDoor" (Object)
 
 function EntranceDoor:EntranceDoor(world, object_type, x, y, direction, etc)
   self.is_master = object_type == object
-  self.init_anim_flags = 2048 -- list bottom (wall-like)
   self:Object(world, object_type, x, y, direction, etc)
   self.occupant_count = 0
   self.is_open = false

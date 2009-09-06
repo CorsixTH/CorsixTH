@@ -23,10 +23,12 @@ class "UIHireStaff" (Window)
 function UIHireStaff:UIHireStaff(ui)
   self:Window()
   self.modal_class = "main"
+  self.world = ui.app.world
   self.x = 100
   self.y = 100
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
+  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
   
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -47,7 +49,20 @@ function UIHireStaff:UIHireStaff(ui)
   
   -- Right hand side
   self:addPanel(256,  56,   0) -- Dialog header
+  for y = 49, 113, 11 do
+    self:addPanel(257,56,   y) -- Dialog background
+  end
+  self:addPanel(260,  55, 114) -- Abilities background
+  self:addPanel(261,  55, 160) -- Wage background
+  self.abilities_blanker =
+  self:addColourPanel(73, 133, 156, 34, 60, 174, 203) -- Hides abilities list
+  for y = 207, 262, 3 do
+    self:addPanel(262, 54,  y) -- Description background
+  end
+  self:addColourPanel(155, 45, 72, 81, 211, 255, 255) -- Portrait background
   self:addPanel(263,  56, 263) -- Dialog midpiece
+  self.complete_blanker =
+  self:addColourPanel(68, 15, 161, 257, 60, 174, 203) -- Hides all staff info
   self:addPanel(272,  56, 277):makeButton(8, 10, 43, 27, 273, self.movePrevious)
   self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire)
   self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close)
@@ -96,11 +111,54 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(408, self.width - 61, y)
 end
 
+function UIHireStaff:draw(canvas)
+  local x, y = self.x, self.y
+  Window.draw(self, canvas)
+  if self.category and self.current_index then
+    local profile = self.world.available_staff[self.category]
+    profile = profile and profile[self.current_index]
+    if not profile then
+      return
+    end
+    local font = self.white_font
+    font:draw(canvas, profile.name, x + 79, y + 21)
+    profile:drawFace(canvas, x + 158, y + 48, self.face_parts)
+    font:draw(canvas, "$" .. profile.wage, x + 116, y + 179)
+    font:drawWrapped(canvas, profile.desc, x + 74, y + 205, 149)
+    -- TODO: Skill level and abilities
+  end
+end
+
+function UIHireStaff:movePrevious()
+  self:moveBy(-1)
+end
+
+function UIHireStaff:moveNext()
+  self:moveBy(1)
+end
+
+function UIHireStaff:moveBy(n)
+  self.current_index = self.current_index + n
+  local category = self.world.available_staff[self.category]
+  if self.current_index < 1 then
+    self.current_index = 1
+  elseif self.current_index > #category then
+    self.current_index = #category
+  else
+    return true
+  end
+  return false
+end
+
 function UIHireStaff:setCategory(name)
+  self.complete_blanker.visible = not name
+  self.abilities_blanker.visible = name ~= "Doctor"
+  self.category = name
   for i, btn in ipairs(self.tabs) do
     local should_be_toggled = btn.on_click_self == name
     if btn.toggled ~= should_be_toggled then
       btn:toggle()
     end
   end
+  self.current_index = 1
 end

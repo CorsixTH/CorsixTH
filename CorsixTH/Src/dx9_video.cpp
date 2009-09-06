@@ -260,6 +260,12 @@ static int l_set_mode(lua_State *L)
 
     THDX9_FillIndexBuffer(oTarget.aiVertexIndicies, 0, THDX9_INDEX_BUFFER_LENGTH);
 
+	if((oTarget.pWhiteTexture = THDX9_CreateSolidTexture(1, 1,
+		D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF), oTarget.pDevice)) == NULL)
+	{
+		err("Could not create reference texture");
+	}
+
 #undef err
 
     l_surface_t *pSurface = luaT_new(L, l_surface_t);
@@ -269,6 +275,7 @@ static int l_set_mode(lua_State *L)
     oTarget.pD3D = NULL;
     oTarget.pDevice = NULL;
     oTarget.pVerticies = NULL;
+	oTarget.pWhiteTexture = NULL;
     return 1;
 }
 
@@ -301,6 +308,33 @@ static int l_non_overlapping(lua_State *L)
     return 0;
 }
 
+static int l_map_rgb(lua_State *L)
+{
+	lua_pushnumber(L, (lua_Number)D3DCOLOR_ARGB(0xFF,
+		(uint8_t)luaL_checkinteger(L, 2),
+		(uint8_t)luaL_checkinteger(L, 3),
+		(uint8_t)luaL_checkinteger(L, 4)));
+	return 1;
+}
+
+static int l_fill_rect(lua_State *L)
+{
+	l_surface_t *pSource = l_check_surface(L, 1);
+	Uint32 iColour = (Uint32)luaL_checknumber(L, 2);
+	int iX = luaL_checkint(L, 3);
+	int iY = luaL_checkint(L, 4);
+	int iW = luaL_checkint(L, 5);
+	int iH = luaL_checkint(L, 6);
+	THDX9_Draw(pSource->target_p, pSource->target.pWhiteTexture, iW, iH, iX,
+		iY, 0, 1, 1, 0, 0);
+	THDX9_Vertex *pVerts = pSource->target.pVerticies;
+	for(size_t i = 1; i <= 4; ++i)
+	{
+		pVerts[pSource->target.iVertexCount - i].colour = iColour;
+	}
+	return 0;
+}
+
 static const struct luaL_reg sdl_videolib[] = {
     {"ensureHardwareSurface", l_ensure_hw_surface},
     {"setMode", l_set_mode},
@@ -308,6 +342,8 @@ static const struct luaL_reg sdl_videolib[] = {
     {"startFrame", l_start_frame},
     {"nonOverlapping", l_non_overlapping},
     {"endFrame", l_end_frame},
+	{"mapRGB", l_map_rgb},
+	{"drawRect", l_fill_rect},
     {NULL, NULL}
 };
 

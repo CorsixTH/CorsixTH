@@ -26,6 +26,7 @@ dofile "entity"
 dofile "room"
 dofile "object"
 dofile "humanoid"
+dofile "staff_profile"
 
 class "World"
 
@@ -59,6 +60,19 @@ function World:World(app)
   self.object_id_by_thob = {}
   for _, object_type in ipairs(self.object_types) do
     self.object_id_by_thob[object_type.thob] = object_type.id
+  end
+  self:makeAvailableStaff()
+end
+
+function World:makeAvailableStaff()
+  self.available_staff = {}
+  for _, class in ipairs{"Doctor", "Nurse", "Handyman", "Receptionist"} do
+    local group = {}
+    for i = 1, math.random(3, 12) do
+      group[i] = StaffProfile(class)
+      group[i]:randomise()
+    end
+    self.available_staff[class] = group
   end
 end
 
@@ -172,6 +186,7 @@ function World:onTick()
 end
 
 function World:onEndMonth()
+  self:makeAvailableStaff()
 end
 
 function World:onEndYear()

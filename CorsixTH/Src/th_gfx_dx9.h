@@ -66,6 +66,7 @@ struct THRenderTarget
     IDirect3D9 *pD3D;
     IDirect3DDevice9 *pDevice;
     THDX9_Vertex *pVerticies;
+	IDirect3DTexture9 *pWhiteTexture;
     THClipRect rcClip;
     size_t iVertexCount;
     size_t iVertexLength;
@@ -95,6 +96,10 @@ protected:
     int m_iNumColours;
 };
 
+IDirect3DTexture9* THDX9_CreateSolidTexture(int iWidth, int iHeight,
+											uint32_t iColour,
+											IDirect3DDevice9* pDevice);
+
 IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const unsigned char* pPixels,
                                        const THPalette* pPalette,
@@ -122,6 +127,8 @@ public:
                         int iWidth, THRenderTarget *pEventualCanvas);
 
     void draw(THRenderTarget* pCanvas, int iX, int iY);
+	void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+		      int iWidth, int iHeight);
 
 protected:
     IDirect3DTexture9* m_pBitmap;

@@ -92,9 +92,6 @@ function App:init()
   
   -- Put up the loading screen
   self.video:startFrame()
-  --self.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat"):draw(self.video, 0, 0)
-  --self.video:endFrame()
-  --while true do end
   self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
     (self.config.width - 640) / 2, (self.config.height - 480) / 2)
   self.video:endFrame()

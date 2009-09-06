@@ -34,6 +34,20 @@ local desc_texts = {
   bad  = TheApp.strings[48],
 }
 
+local function shuffle(t)
+  local r = {}
+  local i = {}
+  for k in ipairs(t) do
+    r[k] = math.random()
+    i[k] = k
+  end
+  table.sort(i, function(x, y) return r[x] < r[y] end)
+  for k in ipairs(t) do
+    r[k] = t[i[k]]
+  end
+  return r
+end
+
 function StaffProfile:randomise()
   self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
@@ -50,6 +64,57 @@ function StaffProfile:randomise()
     self.is_researcher   = math.random() < 0.20 and 1.0 or nil
   end
   self.wage = math.floor(self:getFairWage() * (math.random(85, 115) / 100) + 0.5)
+  local desc_table1, desc_table2
+  if self.skill < 0.33 then
+    desc_table1 = desc_texts.bad
+    desc_table2 = desc_texts.bad
+  elseif self.skill < 0.66 then
+    desc_table1 = desc_texts.good
+    desc_table2 = desc_texts.bad
+  else
+    desc_table1 = desc_texts.good
+    desc_table2 = desc_texts.good
+  end
+  local descs = {desc_texts.misc[math.random(1, #desc_texts.misc - 1)],
+                 desc_table1[math.random(1, #desc_table1 - 1)],
+                 desc_table2[math.random(1, #desc_table2 - 1)]}
+  if descs[2] == descs[3] then
+    descs[3] = nil
+  end
+  while #table.concat(descs) > 96 do
+    descs[#descs] = nil
+  end
+  self.desc = table.concat(shuffle(descs))
+  if self.humanoid_class == "Doctor" then
+    self.is_black = math.random(0, 1) == 0
+    if self.is_black then
+      self.hair_index = math.random(5, 9)
+      self.face_index = math.random(5, 9)
+      self.chin_index = math.random(5, 9)
+    else
+      self.hair_index = math.random(0, 4)
+      self.face_index = math.random(0, 4)
+      self.chin_index = math.random(0, 4)
+    end
+  elseif self.humanoid_class == "Nurse" then
+    self.hair_index = math.random(10, 12)
+    self.face_index = math.random(10, 12)
+    self.chin_index = math.random(10, 12)
+  elseif self.humanoid_class == "Receptionist" then
+    self.hair_index = math.random(13, 14)
+    self.face_index = math.random(13, 14)
+    self.chin_index = math.random(13, 14)
+  elseif self.humanoid_class == "Handyman" then
+    self.hair_index = math.random(15, 17)
+    self.face_index = math.random(15, 17)
+    self.chin_index = math.random(15, 17)
+  end
+end
+
+function StaffProfile:drawFace(canvas, x, y, parts_bitmap)
+  parts_bitmap:draw(canvas, x, y     , 0,       self.hair_index * 29, 65, 29)
+  parts_bitmap:draw(canvas, x, y + 29, 0, 522 + self.face_index * 24, 65, 24)
+  parts_bitmap:draw(canvas, x, y + 53, 0, 954 + self.chin_index * 22, 65, 22)
 end
 
 function StaffProfile:parseSkillLevel()
@@ -86,7 +151,7 @@ function StaffProfile:getFairWage()
   local multiplier = 1
   for name, multipler in pairs(ability_multipler) do
     if self[name] then
-      wage = wage + ability_base[name]
+      wage = wage + (ability_base[name] or 0)
       multiplier = multiplier * ((multiplier - 1) * self[name] + 1)
     end
   end

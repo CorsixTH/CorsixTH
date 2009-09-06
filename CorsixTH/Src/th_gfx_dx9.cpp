@@ -35,6 +35,7 @@ THRenderTarget::THRenderTarget()
     pD3D = NULL;
     pDevice = NULL;
     pVerticies = NULL;
+	pWhiteTexture = NULL;
     THRenderTarget_SetClipRect(this, NULL);
     iVertexCount = 0;
     iVertexLength = 0;
@@ -44,6 +45,11 @@ THRenderTarget::THRenderTarget()
 
 THRenderTarget::~THRenderTarget()
 {
+	if(pWhiteTexture != NULL)
+	{
+		pWhiteTexture->Release();
+		pWhiteTexture = NULL;
+	}
     if(pVerticies != NULL)
     {
         free(pVerticies);
@@ -167,6 +173,37 @@ int THPalette::getColourCount() const
 const uint32_t* THPalette::getARGBData() const
 {
     return m_aColoursARGB;
+}
+
+IDirect3DTexture9* THDX9_CreateSolidTexture(int iWidth, int iHeight,
+											uint32_t iColour,
+											IDirect3DDevice9* pDevice)
+{
+	IDirect3DTexture9 *pTexture = NULL;
+    if(pDevice->CreateTexture(iWidth, iHeight, 1, 0, D3DFMT_A8R8G8B8,
+        D3DPOOL_MANAGED, &pTexture, NULL) != D3D_OK || pTexture == NULL)
+    {
+        return NULL;
+    }
+    D3DLOCKED_RECT rcLocked;
+    if(pTexture->LockRect(0, &rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+    {
+        pTexture->Release();
+        return NULL;
+    }
+
+    uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
+    for(int y = 0; y < iHeight; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(int x = 0; x < iWidth; ++x, ++pRow)
+        {
+            *pRow = iColour;
+        }
+    }
+
+    pTexture->UnlockRect(0);
+    return pTexture;
 }
 
 IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
@@ -333,6 +370,13 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
     THDX9_Draw(pCanvas, m_pBitmap, m_iWidth, m_iHeight, iX, iY, 0,
         m_iWidth2, m_iHeight2, 0, 0);
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
+		      int iSrcX, int iSrcY, int iWidth, int iHeight)
+{
+	THDX9_Draw(pCanvas, m_pBitmap, iWidth, iHeight, iX, iY, 0,
+		m_iWidth2, m_iHeight2, iSrcX, iSrcY);
 }
 
 THSpriteSheet::THSpriteSheet()

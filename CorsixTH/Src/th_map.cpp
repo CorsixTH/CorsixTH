@@ -327,6 +327,10 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     int iBaseX = iStartX;
     int iBaseY = iStartY;
 
+// 32 for basic floor tiles etc.
+// extra bit for wide objects like entrance doors
+#define TILE_X_OVERLAP /* plus/minus */ 56
+
     // 1st pass
     THRenderTarget_StartNonOverlapping(pCanvas);
     while(true)
@@ -345,11 +349,11 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
             do
             {
-                if(iXs < -32)
+                if(iXs < -TILE_X_OVERLAP)
                 {
                     // Nothing to do
                 }
-                else if(iXs < iWidth + 32)
+                else if(iXs < iWidth + TILE_X_OVERLAP)
                 {
                     pLastNode = getNodeUnchecked(iX, iY);
 
@@ -400,11 +404,11 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
             do
             {
-                if(iXs < -32)
+                if(iXs < -TILE_X_OVERLAP)
                 {
                     // Nothing to do
                 }
-                else if(iXs < iWidth + 32)
+                else if(iXs < iWidth + TILE_X_OVERLAP)
                 {
                     pLastNode = getNodeUnchecked(iX, iY);
                     ++iNodeCount;
@@ -511,6 +515,8 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     }
 
     THRenderTarget_SetClipRect(pCanvas, NULL);
+
+#undef TILE_X_OVERLAP
 }
 
 void THMap::updatePathfinding()

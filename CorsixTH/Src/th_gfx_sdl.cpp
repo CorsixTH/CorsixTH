@@ -69,7 +69,7 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     if(iDataLength != 256 * 3)
         return false;
 
-    m_iNumColours = iDataLength / 3;
+    m_iNumColours = static_cast<int>(iDataLength) / 3;
     m_iTransparentIndex = -1;
     colour_t* pColour = m_aColours;
     for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pColour)
@@ -151,6 +151,23 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
     rcDest.x = iX;
     rcDest.y = iY;
     SDL_BlitSurface(m_pBitmap, NULL, pCanvas, &rcDest);
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, 
+		               int iSrcX, int iSrcY, int iWidth, int iHeight)
+{
+	if(m_pBitmap == NULL)
+        return;
+
+	SDL_Rect rcSrc;
+	rcSrc.x = iSrcX;
+	rcSrc.y = iSrcY;
+	rcSrc.w = iWidth;
+	rcSrc.h = iHeight;
+    SDL_Rect rcDest;
+    rcDest.x = iX;
+    rcDest.y = iY;
+    SDL_BlitSurface(m_pBitmap, &rcSrc, pCanvas, &rcDest);
 }
 
 THSpriteSheet::THSpriteSheet()

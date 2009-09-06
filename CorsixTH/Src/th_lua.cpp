@@ -585,7 +585,14 @@ static int l_rawbitmap_draw(lua_State *L)
     THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
 
-    pBitmap->draw(pCanvas,luaL_optint(L, 3, 0), luaL_optint(L, 4, 0));
+	if(lua_gettop(L) >= 8)
+	{
+		pBitmap->draw(pCanvas, luaL_checkint(L, 3), luaL_checkint(L, 4),
+			luaL_checkint(L, 5), luaL_checkint(L, 6), luaL_checkint(L, 7),
+			luaL_checkint(L, 8));
+	}
+	else
+		pBitmap->draw(pCanvas, luaL_optint(L, 3, 0), luaL_optint(L, 4, 0));
 
     lua_settop(L, 1);
     return 1;

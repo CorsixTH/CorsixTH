@@ -68,6 +68,27 @@ function Window:addPanel(sprite_index, x, y)
   return panel
 end
 
+local function panel_colour_draw(panel, canvas, x, y)
+  if panel.visible then
+    canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
+  end
+end
+
+function Window:addColourPanel(x, y, w, h, r, g, b)
+  local panel = setmetatable({
+    window = self,
+    x = x,
+    y = y,
+    w = w,
+    h = h,
+    colour = TheApp.video:mapRGB(r, g, b),
+    custom_draw = panel_colour_draw,
+    visible = true,
+  }, panel_mt)
+  self.panels[#self.panels + 1] = panel
+  return panel
+end
+
 function Window:addWindow(window)
   if not self.windows then
     self.windows = {}

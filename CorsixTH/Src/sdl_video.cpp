@@ -241,6 +241,36 @@ static int l_draw_black_rect(lua_State *L)
     return 1;
 }
 
+static int l_save_bitmap(lua_State *L)
+{
+	SDL_Surface *s = l_check_surface(L, 1);
+	SDL_SaveBMP(s, luaL_checkstring(L, 2));
+	return 0;
+}
+
+static int l_map_rgb(lua_State *L)
+{
+	SDL_Surface *s = l_check_surface(L, 1);
+	lua_pushnumber(L, (lua_Number)SDL_MapRGB(s->format,
+		(Uint8)luaL_checkinteger(L, 2),
+		(Uint8)luaL_checkinteger(L, 3),
+		(Uint8)luaL_checkinteger(L, 4)));
+	return 1;
+}
+
+static int l_fill_rect(lua_State *L)
+{
+	SDL_Surface *s = l_check_surface(L, 1);
+	Uint32 iColour = (Uint32)luaL_checknumber(L, 2);
+	SDL_Rect rcRect;
+	rcRect.x = (Sint16)luaL_checkint(L, 3);
+	rcRect.y = (Sint16)luaL_checkint(L, 4);
+	rcRect.w = (Uint16)luaL_checkint(L, 5);
+	rcRect.h = (Uint16)luaL_checkint(L, 6);
+	SDL_FillRect(s, &rcRect, iColour);
+	return 0;
+}
+
 static int l_nop(lua_State *L)
 {
     return 0;
@@ -253,6 +283,9 @@ static const struct luaL_reg sdl_videolib[] = {
     {"startFrame", l_nop},
     {"endFrame", l_flip},
     {"nonOverlapping", l_nop},
+	{"mapRGB", l_map_rgb},
+	{"drawRect", l_fill_rect},
+	{"debugDumpBitmap", l_save_bitmap},
     {NULL, NULL}
 };
 

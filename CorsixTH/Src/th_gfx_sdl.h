@@ -70,6 +70,8 @@ public:
                         int iWidth, THRenderTarget *pUnused);
 
     void draw(THRenderTarget* pCanvas, int iX, int iY);
+	void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+		      int iWidth, int iHeight);
 
 protected:
     THRenderTarget* m_pBitmap;
