@@ -235,7 +235,7 @@ bool THAnimationManager::loadFromTHFile(
         element_t *pElement = m_pElements + i;
         pElement->iSprite = pTHElement->table_position / 6;
         pElement->iFlags = pTHElement->flags & 0xF;
-        pElement->iX = static_cast<int>(pTHElement->offx) - 140;
+        pElement->iX = static_cast<int>(pTHElement->offx) - 141;
         pElement->iY = static_cast<int>(pTHElement->offy) - 186;
         pElement->iLayer = pTHElement->flags >> 4;
         if(pElement->iLayer > 12)
@@ -564,6 +564,11 @@ void THAnimation::setAnimation(THAnimationManager* pManager, unsigned int iAnima
     m_pManager = pManager;
     m_iAnimation = iAnimation;
     m_iFrame = pManager->getFirstFrame(iAnimation);
+}
+
+void THAnimation::setFrame(unsigned int iFrame)
+{
+	m_iFrame = iFrame;
 }
 
 void THAnimation::setLayer(int iLayer, int iId)

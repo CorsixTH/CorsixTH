@@ -92,6 +92,9 @@ function App:init()
   
   -- Put up the loading screen
   self.video:startFrame()
+  --self.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat"):draw(self.video, 0, 0)
+  --self.video:endFrame()
+  --while true do end
   self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
     (self.config.width - 640) / 2, (self.config.height - 480) / 2)
   self.video:endFrame()
@@ -102,6 +105,7 @@ function App:init()
   
   -- Load strings before UI and before additional Lua
   self.strings = assert(TH.LoadStrings(self:readDataFile(self.config.language .. ".dat")), "Cannot load strings")
+  --self:dumpStrings"debug-strings.txt"
   strict_declare_global "_S"
   _S = function(sec, str, ...)
     str = self.strings[sec][str]
@@ -150,15 +154,28 @@ function App:loadLevel(filename)
   
   -- Load map
   self.map = Map()
-  self.map:load(data)
+  local map_objects = self.map:load(data)
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
   self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
   
   -- Load world
   self.world = World(self)
+  self.world:createMapObjects(map_objects)
   
   -- Load UI
   self.ui = UI(self)
+end
+
+-- This is a useful debug and devlopment aid
+function App:dumpStrings(filename)
+  local fi = assert(io.open(filename, "wt"))
+  for i, sec in ipairs(self.strings) do
+    for j, str in ipairs(sec) do
+      fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(str))
+    end
+    fi:write"\n"
+  end
+  fi:close()
 end
 
 local function invert_lang_table(t)

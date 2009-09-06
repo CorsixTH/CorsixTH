@@ -37,7 +37,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
   self:addPanel( 8, 285, 0) -- Edit rooms / items button
-  self:addPanel(10, 322, 0) -- Hire staff button
+  self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff)
   self:addPanel(15, 364, 0) -- Staff management button
   self:addPanel(17, 407, 0) -- Town map button
   self:addPanel(19, 445, 0) -- Drug casebook button
@@ -63,5 +63,10 @@ end
 
 function UIBottomPanel:dialogFurnishCorridor()
   local dlg = UIFurnishCorridor(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogHireStaff()
+  local dlg = UIHireStaff(self.ui)
   self.ui:addWindow(dlg)
 end

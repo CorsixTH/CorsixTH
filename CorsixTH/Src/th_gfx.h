@@ -219,6 +219,7 @@ public:
     int getY() {return m_iY;}
 
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
+	void setFrame(unsigned int iFrame);
     void setFlags(unsigned long iFlags) {this->iFlags = iFlags;}
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}

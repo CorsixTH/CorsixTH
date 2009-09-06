@@ -39,6 +39,7 @@ function World:World(app)
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
   self.objects = {}
+  self.objects_notify_occupants = {}
   self.rooms = {}
   self.tick_rate = 3
   self.tick_timer = 0
@@ -55,6 +56,37 @@ function World:World(app)
       end
     end
   end
+  self.object_id_by_thob = {}
+  for _, object_type in ipairs(self.object_types) do
+    self.object_id_by_thob[object_type.thob] = object_type.id
+  end
+end
+
+function World:notifyObjectOfOccupants(x, y, object)
+  local idx = (y - 1) * self.map.width + x
+  self.objects_notify_occupants[idx] =  object or nil
+end
+
+function World:getObjectToNotifyOfOccupants(x, y)
+  local idx = (y - 1) * self.map.width + x
+  return self.objects_notify_occupants[idx]
+end
+
+function World:createMapObjects(objects)
+  for _, object in ipairs(objects) do repeat
+    local x, y, thob, flags = unpack(object)
+    local object_id = self.object_id_by_thob[thob]
+	if not object_id then
+	  print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
+	  break
+	end
+	local object_type = self.object_types[object_id]
+	if not object_type or not object_type.supports_creation_for_map then
+	  print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
+	  break
+	end
+	self:newObject(object_id, x, y, flags, "map object")
+  until true end
 end
 
 function World:getAnimLength(anim)

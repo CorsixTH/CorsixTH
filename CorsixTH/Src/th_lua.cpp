@@ -375,6 +375,8 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_Room, "room")
     Flag(THMN_DoorWest, "doorWest")
     Flag(THMN_DoorNorth, "doorNorth")
+	Flag(THMN_TallWest, "tallWest")
+    Flag(THMN_TallNorth, "tallNorth")
     Flag(THMN_CanTravelN, "travelNorth")
     Flag(THMN_CanTravelE, "travelEast")
     Flag(THMN_CanTravelS, "travelSouth")
@@ -422,6 +424,8 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_Room, "room")
             Flag(THMN_DoorWest, "doorWest")
             Flag(THMN_DoorNorth, "doorNorth")
+			Flag(THMN_TallWest, "tallWest")
+            Flag(THMN_TallNorth, "tallNorth")
             Flag(THMN_DoNotIdle, "doNotIdle")
             /* else */ if(strcmp(field, "thob") == 0)
             {
@@ -466,6 +470,14 @@ static int l_map_setcell(lua_State *L)
 
     lua_settop(L, 1);
     return 1;
+}
+
+static int l_map_updateshadows(lua_State *L)
+{
+	THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+	pMap->updateShadows();
+	lua_settop(L, 1);
+	return 1;
 }
 
 static int l_map_mark_room(lua_State *L)
@@ -923,6 +935,14 @@ static int l_anim_new(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_frame(lua_State *L)
+{
+	THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+	pAnimation->setFrame(luaL_checkint(L, 2));
+	lua_settop(L, 1);
+	return 1;
+}
+
 static int l_anim_set_anim(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
@@ -1244,6 +1264,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_map_setcell, "setCell");
     luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", iAnimsMT, iAnimMT);
+	luaT_setfunction(l_map_updateshadows, "updateShadows");
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_set_sheet, "setSheet", iSheetMT);
     luaT_setfunction(l_map_draw, "draw", iSurfaceMT);
@@ -1298,6 +1319,7 @@ int luaopen_th(lua_State *L)
     // Anim
     luaT_class(THAnimation, l_anim_new, "animation", iAnimMT);
     luaT_setfunction(l_anim_set_anim, "setAnimation", iAnimsMT);
+	luaT_setfunction(l_anim_set_frame, "setFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");
     luaT_setfunction(l_anim_set_tile, "setTile", iMapMT);
     luaT_setfunction(l_anim_get_tile, "getTile");

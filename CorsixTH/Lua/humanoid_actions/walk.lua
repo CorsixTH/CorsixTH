@@ -34,6 +34,15 @@ local navigateDoor
 
 local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
   local anims = humanoid.walk_anims
+  local world = humanoid.world
+  local notify_object = world:getObjectToNotifyOfOccupants(x2, y2)
+  if notify_object then
+    notify_object:onOccupantChange(1)
+  end
+  notify_object = world:getObjectToNotifyOfOccupants(x1, y1)
+  if notify_object then
+    notify_object:onOccupantChange(-1)
+  end
   if x1 ~= x2 then
     if x1 < x2 then
       if map and map:getCellFlags(x2, y2).doorWest then
@@ -181,22 +190,17 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   
   local anims = humanoid.door_anims
-  humanoid:setTile(dx, dy)
-  humanoid:setSpeed(0, 0)
+  humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)
   if dir == "north" then
     humanoid:setAnimation(anims.leaving, flag_list_bottom)
-    humanoid:setPosition(-1, 0)
   elseif dir == "west" then
     humanoid:setAnimation(anims.leaving, flag_list_bottom + flag_early_list + flag_flip_h)
-    humanoid:setPosition(1, 0)
   elseif dir == "east" then
     humanoid:setAnimation(anims.entering, flag_list_bottom + flag_early_list)
-    humanoid:setPosition(-1, 0)
   elseif dir == "south" then
     humanoid:setAnimation(anims.entering, flag_list_bottom + flag_flip_h)
-    humanoid:setPosition(1, 0)
   end
   humanoid.last_move_direction = dir
   

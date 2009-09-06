@@ -30,9 +30,17 @@ local orient_mirror = {
   south = "east",
 }
 
-function Object:Object(world, object_type, x, y, direction)
+function Object:Object(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)
+  
+  if etc == "map object" then
+    if direction % 2 == 0 then
+	  direction = "north"
+	else
+	  direction = "west"
+	end
+  end
   
   self.ticks = object_type.ticks
   self.object_type = object_type
@@ -40,7 +48,7 @@ function Object:Object(world, object_type, x, y, direction)
   self.direction = direction
   self.user = false
 
-  local flags = 0
+  local flags = self.init_anim_flags or 0
   local anim = object_type.idle_animations[direction]
   if not anim then
     anim = object_type.idle_animations[orient_mirror[direction]]

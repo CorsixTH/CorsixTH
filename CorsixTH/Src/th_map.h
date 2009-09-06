@@ -111,9 +111,11 @@ enum THMapNodeFlags
     THMN_ShadowHalf = 1 <<  9, //!< Rendering: Put block 75 over floor
     THMN_ShadowFull = 1 << 10, //!< Rendering: Put block 74 over floor
     THMN_ShadowWall = 1 << 11, //!< Rendering: Put block 156 over east wall
-    THMN_DoorNorth  = 1 << 12, //!< World, Shadows: Door on north wall of tile
-    THMN_DoorWest   = 1 << 13, //!< World, Shadows: Door on west wall of tile
+    THMN_DoorNorth  = 1 << 12, //!< World: Door on north wall of tile
+    THMN_DoorWest   = 1 << 13, //!< World: Door on west wall of tile
     THMN_DoNotIdle  = 1 << 14, //!< World: Humanoids should not idle on tile
+	THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
+	THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
 
     // NB: Bits 24 through 31 reserved for object type
 };

@@ -557,8 +557,7 @@ void THMap::updateShadows()
     // range of wall-like blocks.
 #define IsWall(node, block, door) \
     (((node)->iFlags & (door)) != 0 || \
-    (82 <= ((node)->iBlock[(block)]) && ((node)->iBlock[(block)]) <= 155))
-
+    (82 <= ((node)->iBlock[(block)]) && ((node)->iBlock[(block)]) <= 164))
     THMapNode *pNode = m_pCells;
     for(int iY = 0; iY < 128; ++iY)
     {
@@ -566,10 +565,10 @@ void THMap::updateShadows()
         {
             pNode->iFlags &= ~(THMN_ShadowHalf | THMN_ShadowFull |
                 THMN_ShadowWall);
-            if(IsWall(pNode, 2, THMN_DoorWest))
+            if(IsWall(pNode, 2, THMN_TallWest))
             {
                 pNode->iFlags |= THMN_ShadowHalf;
-                if(IsWall(pNode, 1, THMN_DoorNorth))
+                if(IsWall(pNode, 1, THMN_TallNorth))
                 {
                     pNode->iFlags |= THMN_ShadowWall;
                 }
@@ -577,7 +576,7 @@ void THMap::updateShadows()
                 {
                     THMapNode *pNeighbour = pNode - 128;
                     pNeighbour->iFlags |= THMN_ShadowFull;
-                    if(iX != 0 && !IsWall(pNeighbour, 2, THMN_DoorWest))
+                    if(iX != 0 && !IsWall(pNeighbour, 2, THMN_TallWest))
                     {
                         // Wrap the shadow around a corner (no need to continue
                         // all the way along the wall, as the shadow would be

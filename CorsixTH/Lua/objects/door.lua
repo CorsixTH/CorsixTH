@@ -34,34 +34,36 @@ class "Door" (Object)
 
 function Door:Door(...)
   self:Object(...)
-  self:setPosition(-1, 0)
   self.queue = Queue()
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
 local door_flag_name = {
-  north = "doorNorth",
-  west = "doorWest",
+  north = {"doorNorth", "tallNorth"},
+  west = {"doorWest", "tallWest"},
 }
 
 function Door:setTile(x, y)
   local map = self.world.map
+  local flag_names = door_flag_name[self.direction]
   if self.tile_x then
-    map:setCellFlags(self.x, self.y, {
-      [door_flag_name[self.direction]] = false,
+    map:setCellFlags(self.tile_x, self.tile_y, {
+      [flag_names[1]] = false,
+      [flag_names[2]] = false,
       buildable = true,
       doNotIdle = false,
     })
     if self.direction == "west" then
-      map:setCellFlags(self.x - 1, self.y, {buildable = true, doNotIdle = false})
+      map:setCellFlags(self.tile_x - 1, self.tile_y, {buildable = true, doNotIdle = false})
     else
-      map:setCellFlags(self.x, self.y - 1, {buildable = true, doNotIdle = false})
+      map:setCellFlags(self.tile_x, self.tile_y - 1, {buildable = true, doNotIdle = false})
     end
   end
   Object.setTile(self, x, y)
   if x then
     map:setCellFlags(x, y, {
-      [door_flag_name[self.direction]] = true,
+      [flag_names[1]] = true,
+      [flag_names[2]] = true,
       buildable = false,
       doNotIdle = true,
     })
@@ -71,6 +73,7 @@ function Door:setTile(x, y)
       map:setCellFlags(x, y - 1, {buildable = false, doNotIdle = true})
     end
   end
+  map.th:updateShadows()
   return self
 end
 

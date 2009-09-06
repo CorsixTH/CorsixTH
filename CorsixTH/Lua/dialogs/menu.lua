@@ -498,5 +498,6 @@ function UIMenuBar:makeMenu(app)
       :appendCheckItem(_"Byte 7", false, overlay(35, 8, 7, 7, true), "")
       :appendCheckItem(_"Parcel", false, overlay(131107, 2, 0, 0, false), "")
     )
+    :appendItem(_"Sprite viewer", function() dofile "sprite_viewer" end)
   )
 end

@@ -102,7 +102,7 @@ function Graphics:loadBitmap(name)
   return surface
 end
 
-function Graphics:loadRaw(name, width, height)
+function Graphics:loadRaw(name, width, height, paldir, pal)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
@@ -113,7 +113,11 @@ function Graphics:loadRaw(name, width, height)
   data = data:sub(1, width * height)
   
   local bitmap = TH.bitmap()
-  bitmap:setPalette(self:loadPalette("QData", name .. ".pal"))
+  if pal and paldir then
+    bitmap:setPalette(self:loadPalette(paldir, pal))
+  else
+    bitmap:setPalette(self:loadPalette("QData", name .. ".pal"))
+  end
   assert(bitmap:load(data, width, self.target))
   
   self.cache.raw[name] = bitmap

@@ -30,6 +30,7 @@ CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
 CorsixTH/Lua/dialogs/furnish_corridor.lua -text
+CorsixTH/Lua/dialogs/hire_staff.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
 CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
@@ -45,6 +46,8 @@ CorsixTH/Lua/object.lua -text
 CorsixTH/Lua/objects/bench.lua -text
 CorsixTH/Lua/objects/door.lua -text
 CorsixTH/Lua/objects/drinks_machine.lua -text
+CorsixTH/Lua/objects/entrance_left_door.lua -text
+CorsixTH/Lua/objects/entrance_right_door.lua -text
 CorsixTH/Lua/objects/fire_extinguisher.lua -text
 CorsixTH/Lua/objects/plant.lua -text
 CorsixTH/Lua/objects/radiator.lua -text
@@ -59,6 +62,8 @@ CorsixTH/Lua/rooms/psych.lua -text
 CorsixTH/Lua/rooms/staff_room.lua -text
 CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/rooms/ward.lua -text
+CorsixTH/Lua/sprite_viewer.lua -text
+CorsixTH/Lua/staff_profile.lua -text
 CorsixTH/Lua/strict.lua -text
 CorsixTH/Lua/ui.lua -text
 CorsixTH/Lua/walls/blue.lua -text
