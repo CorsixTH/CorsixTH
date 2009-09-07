@@ -63,7 +63,9 @@ function StaffProfile:randomise()
     self.is_psychiatrist = math.random() < 0.25 and 1.0 or nil
     self.is_researcher   = math.random() < 0.20 and 1.0 or nil
   end
-  self.wage = math.floor(self:getFairWage() * (math.random(85, 115) / 100) + 0.5)
+  self.wage = self:getFairWage()
+  -- Vary wage by +/- 15%
+  self.wage = math.floor(self.wage * (math.random(850, 1150) / 1000) + 0.5)
   local desc_table1, desc_table2
   if self.skill < 0.33 then
     desc_table1 = desc_texts.bad
@@ -132,28 +134,28 @@ local skill_multiplier = {
 }
 
 local ability_base = {
-  is_surgeon      = 15,
-  is_psychiatrist = 15,
-  is_researcher   = 15,
-  is_consultant   = 15,
+  is_surgeon      = 30,
+  is_psychiatrist = 30,
+  is_researcher   = 30,
+  is_consultant   = 10,
 }
 
 local ability_multipler = {
-  is_surgeon      = 1.20, -- +20% for fully trained surgeon
-  is_psychiatrist = 1.15, -- +15% for fully trained psychiatrist
-  is_researcher   = 1.15, -- +15% for fully trained researcher
-  is_consultant   = 1.30, -- +30% for 100% skill (reducing linearlly to +0% at ~90% skill)
+  is_surgeon      = 1.30, -- +30% for fully trained surgeon
+  is_psychiatrist = 1.25, -- +25% for fully trained psychiatrist
+  is_researcher   = 1.25, -- +25% for fully trained researcher
+  is_consultant   = 1.50, -- +50% for 100% skill (reducing linearlly to +0% at ~90% skill)
   is_junior       = 0.90, -- -10% for   0% skill (reducing linearlly to -0% at ~40% skill)
 }
 
 function StaffProfile:getFairWage()
   local wage = 20 + self.skill * skill_multiplier[self.humanoid_class]
-  local multiplier = 1
-  for name, multipler in pairs(ability_multipler) do
+  local mult = 1
+  for name, multiplier in pairs(ability_multipler) do
     if self[name] then
       wage = wage + (ability_base[name] or 0)
-      multiplier = multiplier * ((multiplier - 1) * self[name] + 1)
+      mult = mult * ((multiplier - 1) * self[name] + 1)
     end
   end
-  return wage * multiplier
+  return wage * mult
 end

@@ -52,7 +52,10 @@ function UIHireStaff:UIHireStaff(ui)
   for y = 49, 113, 11 do
     self:addPanel(257,56,   y) -- Dialog background
   end
+  self.ability_bg_panel = 
   self:addPanel(260,  55, 114) -- Abilities background
+  self.skill_bg_panel = 
+  self:addPanel(259,  68,  95) -- Skill background
   self:addPanel(261,  55, 160) -- Wage background
   self.abilities_blanker =
   self:addColourPanel(73, 133, 156, 34, 60, 174, 203) -- Hides abilities list
@@ -114,18 +117,55 @@ end
 function UIHireStaff:draw(canvas)
   local x, y = self.x, self.y
   Window.draw(self, canvas)
+  local font = self.white_font
+  local staff = self.world.available_staff
+  font:draw(canvas, #staff.Doctor      , x + 16, y +  58, 26, 0)
+  font:draw(canvas, #staff.Nurse       , x + 16, y + 137, 26, 0)
+  font:draw(canvas, #staff.Handyman    , x + 16, y + 216, 26, 0)
+  font:draw(canvas, #staff.Receptionist, x + 16, y + 295, 26, 0)
   if self.category and self.current_index then
-    local profile = self.world.available_staff[self.category]
+    local profile = staff[self.category]
     profile = profile and profile[self.current_index]
     if not profile then
       return
     end
-    local font = self.white_font
     font:draw(canvas, profile.name, x + 79, y + 21)
     profile:drawFace(canvas, x + 158, y + 48, self.face_parts)
     font:draw(canvas, "$" .. profile.wage, x + 116, y + 179)
     font:drawWrapped(canvas, profile.desc, x + 74, y + 205, 149)
-    -- TODO: Skill level and abilities
+    local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
+    if skill_bar_width ~= 0 then
+      local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
+      px = px + x
+      py = py + y
+      for x = 0, skill_bar_width - 1 do
+        self.panel_sprites:draw(canvas, 3, px + 22 + x, py + 9)
+      end
+    end
+    if self.category == "Doctor" then
+      -- Junior / Doctor / Consultant marker
+      self.panel_sprites:draw(canvas, 258, x + 71, y + 49)
+      if profile.is_junior then
+        self.panel_sprites:draw(canvas, 296, x +  79, y + 80)
+      elseif profile.is_consultant then
+        self.panel_sprites:draw(canvas, 296, x + 131, y + 80)
+      else
+        self.panel_sprites:draw(canvas, 296, x + 101, y + 80)
+      end
+      -- Ability markers
+      local px, py = self.ability_bg_panel.x, self.ability_bg_panel.y
+      px = px + x
+      py = py + y
+      if profile.is_surgeon then
+        self.panel_sprites:draw(canvas, 292, px +  65, py + 22)
+      end
+      if profile.is_psychiatrist then
+        self.panel_sprites:draw(canvas, 293, px +  82, py + 28)
+      end
+      if profile.is_researcher then
+        self.panel_sprites:draw(canvas, 294, px + 109, py + 27)
+      end
+    end
   end
 end
 

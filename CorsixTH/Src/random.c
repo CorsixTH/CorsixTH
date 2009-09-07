@@ -131,17 +131,20 @@ double genrand_res53(void)
 */
 static int l_random(lua_State *L)
 {
-    uint32_t min, max;
+	lua_Integer min;
+    uint32_t max;
     switch(lua_gettop(L))
     {
     default:
     case 2:
-        min = (uint32_t)luaL_checkinteger(L, 1);
-        max = (uint32_t)luaL_checkinteger(L, 2) - min + 1;
-        lua_pushinteger(L, (lua_Integer)(min + genrand_int32() % max));
+        min = luaL_checkinteger(L, 1);
+        max = (uint32_t)(luaL_checkinteger(L, 2) - min + 1);
+		luaL_argcheck(L, max > 0, 2, "interval is empty");
+        lua_pushinteger(L, min + (lua_Integer)(genrand_int32() % max));
         break;
     case 1:
         max = (uint32_t)luaL_checkinteger(L, 1);
+		luaL_argcheck(L, 1 <= max, 1, "interval is empty");
         lua_pushinteger(L, (lua_Integer)(genrand_int32() % max));
         break;
     case 0:
