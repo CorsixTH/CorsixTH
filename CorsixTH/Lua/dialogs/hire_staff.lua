@@ -23,7 +23,9 @@ class "UIHireStaff" (Window)
 function UIHireStaff:UIHireStaff(ui)
   self:Window()
   self.modal_class = "main"
+  self.esc_closes = true
   self.world = ui.app.world
+  self.ui = ui
   self.x = 100
   self.y = 100
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
@@ -70,48 +72,24 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire)
   self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close)
   self:addPanel(278, 190, 277):makeButton(0, 10, 44, 27, 279, self.moveNext)
-  
-  do return end
-  
-  -- Dialog head (current track title & exit button)
-  self:addPanel(389, 0, 0)
-  for x = 30, self.width - 61, 24 do
-    self:addPanel(390, x, 0)
+end
+
+function UIHireStaff:onMouseUp(button, x, y)
+  self.mouse_up_x = self.x + x
+  self.mouse_up_y = self.y + y
+  return Window.onMouseUp(self, button, x, y)
+end
+
+function UIHireStaff:hire()
+  local profile
+  if self.category and self.current_index then
+    profile = self.world.available_staff[self.category]
+    profile = profile and profile[self.current_index]
   end
-  self:addPanel(391, self.width - 61, 0)
-  self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close)
-  
-  self.play_btn =
-  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393)
-  if self.audio.background_music then
-    self.play_btn:toggle()
+  if not profile then
+    return
   end
-  self:addPanel(394,  87, 49) -- Previous
-  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio)
-  self:addPanel(398, 157, 49) -- Stop
-  self:addPanel(400, 185, 49) -- Loop
-  
-  -- Track list
-  for i, info in ipairs(self.audio.background_playlist) do
-    local y = 47 + i * 30
-    self:addPanel(402, 0, y)
-    for x = 30, self.width - 61, 24 do
-      self:addPanel(403, x, y)
-    end
-    local btn = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405)
-    if not info.enabled then
-      btn:toggle()
-    end
-    btn.on_click = function(self, off) self:toggleTrack(i, info, not off) end
-  end
-  
-  -- Dialog footer
-  local y = 74 + 30 * #self.audio.background_playlist
-  self:addPanel(406, 0, y)
-  for x = 30, self.width - 61, 24 do
-    self:addPanel(407, x, y)
-  end
-  self:addPanel(408, self.width - 61, y)
+  self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
 
 function UIHireStaff:draw(canvas)
@@ -178,14 +156,16 @@ function UIHireStaff:moveNext()
 end
 
 function UIHireStaff:moveBy(n)
-  self.current_index = self.current_index + n
-  local category = self.world.available_staff[self.category]
-  if self.current_index < 1 then
-    self.current_index = 1
-  elseif self.current_index > #category then
-    self.current_index = #category
-  else
-    return true
+  if self.category then
+    self.current_index = self.current_index + n
+    local category = self.world.available_staff[self.category]
+    if self.current_index < 1 then
+      self.current_index = 1
+    elseif self.current_index > #category then
+      self.current_index = #category
+    else
+      return true
+    end
   end
   return false
 end

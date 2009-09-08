@@ -39,6 +39,7 @@ local function invert(t)
 end
 
 local key_codes = invert {
+  esc = 27,
   up = 273,
   down = 274,
   right = 275,
@@ -123,7 +124,7 @@ function UI:debugMakePatients()
     patients.n = #patients + 1
   end
   for i = 1, 4 do
-    local entity = TheApp.world:newEntity("Humanoid", 2)
+    local entity = self.app.world:newEntity("Humanoid", 2)
     local types = {
       -- Types with variations doubled up to make them more likely:
       "Standard Male Patient", "Standard Male Patient",
@@ -186,7 +187,15 @@ function UI:onKeyDown(code)
     end
     return
   end
-  if key == "F10" then
+  if key == "esc" then
+    for i = #self.windows, 1, -1 do
+      local window = self.windows[i]
+      if window.esc_closes then
+        window:close()
+        return true
+      end
+    end
+  elseif key == "F10" then
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
@@ -306,6 +315,11 @@ function UI:onTick()
 end
 
 local abs, sqrt_5, floor = math.abs, math.sqrt(1 / 5), math.floor
+
+function UI:scrollMapTo(x, y)
+  return self:scrollMap(x - self.screen_offset_x - self.app.config.width / 2,
+                        y - self.screen_offset_y - self.app.config.height / 2)
+end
 
 function UI:scrollMap(dx, dy)
   dx = dx + self.screen_offset_x

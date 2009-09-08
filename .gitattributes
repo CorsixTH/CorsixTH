@@ -35,10 +35,12 @@ CorsixTH/Lua/dialogs/jukebox.lua -text
 CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/dialogs/place_objects.lua -text
+CorsixTH/Lua/dialogs/place_staff.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text
 CorsixTH/Lua/humanoid_actions/idle.lua -text
+CorsixTH/Lua/humanoid_actions/meander.lua -text
 CorsixTH/Lua/humanoid_actions/use_object.lua -text
 CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
@@ -63,6 +65,7 @@ CorsixTH/Lua/rooms/staff_room.lua -text
 CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/rooms/ward.lua -text
 CorsixTH/Lua/sprite_viewer.lua -text
+CorsixTH/Lua/staff.lua -text
 CorsixTH/Lua/staff_profile.lua -text
 CorsixTH/Lua/strict.lua -text
 CorsixTH/Lua/ui.lua -text

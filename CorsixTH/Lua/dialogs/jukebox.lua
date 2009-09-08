@@ -26,6 +26,7 @@ class "UIJukebox" (Window)
 function UIJukebox:UIJukebox(app)
   self:Window()
   self.modal_class = "jukebox"
+  self.esc_closes = true
   self.audio = app.audio
   self.x = 26
   self.y = 26
@@ -43,27 +44,28 @@ function UIJukebox:UIJukebox(app)
   self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close)
   
   self.play_btn =
-  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393)
-  if self.audio.background_music then
+  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause)
+  if self.audio.background_music and not self.audio.background_paused then
     self.play_btn:toggle()
   end
-  self:addPanel(394,  87, 49) -- Previous
+  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio)
   self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio)
-  self:addPanel(398, 157, 49) -- Stop
-  self:addPanel(400, 185, 49) -- Loop
+  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack)
+  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack)
   
   -- Track list
+  self.track_buttons = {}
   for i, info in ipairs(self.audio.background_playlist) do
     local y = 47 + i * 30
     self:addPanel(402, 0, y)
     for x = 30, self.width - 61, 24 do
       self:addPanel(403, x, y)
     end
-    local btn = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405)
+    self.track_buttons[i] = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405)
     if not info.enabled then
-      btn:toggle()
+      self.track_buttons[i]:toggle()
     end
-    btn.on_click = function(self, off) self:toggleTrack(i, info, not off) end
+    self.track_buttons[i].on_click = function(self, off) self:toggleTrack(i, info, not off) end
   end
   
   -- Dialog footer
@@ -75,11 +77,70 @@ function UIJukebox:UIJukebox(app)
   self:addPanel(408, self.width - 61, y)
 end
 
+function UIJukebox:togglePlayPause()
+  if not self.audio.background_music then
+    self.audio:playRandomBackgroundTrack()
+  else
+    -- NB: Explicit false check, as old C side returned nil in all cases
+    if  self.audio:pauseBackgroundTrack() == false then
+      -- SDL doesn't seeem to support pausing/resuming for this format/driver,
+      -- so just stop the music instead.
+      self.audio:stopBackgroundTrack()
+    else
+      -- SDL can also be odd and report music as paused even though it is still
+      -- playing. If it really is paused, then there is no harm in muting it.
+      -- If it wasn't really paused, then muting it is the next best thing that
+      -- we can do (even though it'll continue playing).
+      if self.play_btn.toggled then
+        self.audio:setBackgroundVolume(self.audio.old_bg_music_volume)
+        self.audio.old_bg_music_volume = nil
+      else
+        self.audio.old_bg_music_volume = self.audio.bg_music_volume
+        self.audio:setBackgroundVolume(0)
+      end
+    end
+  end
+end
+
+function UIJukebox:stopBackgroundTrack()
+  self.audio:stopBackgroundTrack()
+  if self.play_btn.toggled then
+    self.play_btn:toggle()
+  end
+end
+
 function UIJukebox:toggleTrack(index, info, on)
   info.enabled = on
   if not on and self.audio.background_music == info.music then
     self.audio:stopBackgroundTrack()
     self.audio:playRandomBackgroundTrack()
+  end
+end
+
+function UIJukebox:loopTrack()
+  local index = self.audio:findIndexOfCurrentTrack()
+  local playlist = self.audio.background_playlist
+  
+  if playlist[index].loop then
+    playlist[index].loop = false
+
+    for i, list_entry in ipairs(playlist) do
+      if list_entry.enabled_before_loop and index ~= i then
+        list_entry.enabled_before_loop = nil
+        self:toggleTrack(i, list_entry, true)
+        self.track_buttons[i]:toggle()
+      end
+    end 
+  else
+    playlist[index].loop = true
+
+    for i, list_entry in ipairs(playlist) do
+      if list_entry.enabled and index ~= i then
+        list_entry.enabled_before_loop = true
+        self:toggleTrack(i, list_entry, false)
+        self.track_buttons[i]:toggle()
+      end
+    end
   end
 end
 

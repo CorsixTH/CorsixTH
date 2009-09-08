@@ -28,6 +28,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   local app = ui.app
   self.ui = ui
   self.modal_class = "main"
+  self.esc_closes = true
   self.x = (app.config.width - 300) / 2
   self.y = (app.config.height - 300) / 2
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)

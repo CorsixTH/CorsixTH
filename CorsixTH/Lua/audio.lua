@@ -153,7 +153,17 @@ function Audio:playRandomBackgroundTrack()
   self:playBackgroundTrack(index)
 end
 
-function Audio:playNextBackgroundTrack()
+function Audio:findIndexOfCurrentTrack()
+  for i, info in ipairs(self.background_playlist) do
+    if info.music == self.background_music then
+      return i
+    end
+  end
+  
+  return 1
+end
+
+function Audio:playNextOrPreviousBackgroundTrack(direction)
   if self.not_loaded or #self.background_playlist == 0 then
     return
   end
@@ -163,18 +173,11 @@ function Audio:playNextBackgroundTrack()
     return
   end
   
-  -- Find index of current track
-  local index = 1
-  for i, info in ipairs(self.background_playlist) do
-    if info.music == self.background_music then
-      index = i
-      break
-    end
-  end
+  local index = self:findIndexOfCurrentTrack()
   
-  -- Find next track
+  -- Find next/previous track
   for i = 1, #self.background_playlist do
-    i = ((index + i - 1) % #self.background_playlist) + 1
+    i = ((index + direction * i - 1) % #self.background_playlist) + 1
     if self.background_playlist[i].enabled then
       self:playBackgroundTrack(i)
       return
@@ -182,14 +185,24 @@ function Audio:playNextBackgroundTrack()
   end
 end
 
+function Audio:playNextBackgroundTrack()
+  self:playNextOrPreviousBackgroundTrack(1)
+end
+
+function Audio:playPreviousBackgroundTrack()
+  self:playNextOrPreviousBackgroundTrack(-1)
+end
+
 function Audio:pauseBackgroundTrack()
+  local status
   if self.background_paused then
     self.background_paused = nil
-    SDL.audio.resumeMusic()
+    status = SDL.audio.resumeMusic()
   else
-    SDL.audio.pauseMusic()
+    status = SDL.audio.pauseMusic()
     self.background_paused = true
   end
+  return status
 end
 
 function Audio:stopBackgroundTrack()

@@ -66,6 +66,10 @@ function Humanoid:Humanoid(...)
   self.last_move_direction = "east"
 end
 
+function Humanoid.getIdleAnimation(humanoid_class)
+  return assert(walk_animations[humanoid_class], "Invalid humanoid class").idle_east
+end
+
 local function Humanoid_startAction(self)
   local action = self.action_queue[1]
   assert(action, "Empty action queue")
