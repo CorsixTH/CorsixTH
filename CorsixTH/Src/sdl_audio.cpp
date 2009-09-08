@@ -51,7 +51,11 @@ struct music_t
         }
         if(pRWop)
         {
-            SDL_FreeRW(pRWop);
+			// Some SDL_Mixer backends will free this for you, and some will
+			// not. As we do not know what the backend will do, we have to do
+			// the same in every case, and a minor memory leak is less serious
+			// (see http://code.google.com/p/corsix-th/issues/detail?id=3).
+            //SDL_FreeRW(pRWop);
             pRWop = NULL;
         }
     }
@@ -271,13 +275,15 @@ static int l_play_music(lua_State *L)
 static int l_pause_music(lua_State *L)
 {
     Mix_PauseMusic();
-    return 0;
+	lua_pushboolean(L, Mix_PausedMusic() != 0 ? 1 : 0);
+    return 1;
 }
 
 static int l_resume_music(lua_State *L)
 {
     Mix_ResumeMusic();
-    return 0;
+	lua_pushboolean(L, Mix_PausedMusic() == 0 ? 1 : 0);
+    return 1;
 }
 
 static int l_stop_music(lua_State *L)
