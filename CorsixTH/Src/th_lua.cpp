@@ -995,7 +995,11 @@ static int l_anim_set_tile(lua_State *L)
         if(pNode)
             pAnimation->attachToTile(pNode);
         else
-            luaL_argerror(L, 2, "Map index out of bounds");
+		{
+            luaL_argerror(L, 3, lua_pushfstring(L, "Map index out of bounds ("
+				LUA_NUMBER_FMT "," LUA_NUMBER_FMT ")", lua_tonumber(L, 3),
+				lua_tonumber(L, 4)));
+		}
 
         lua_settop(L, 2);
         luaT_setenvfield(L, 1, "map");
@@ -1028,7 +1032,9 @@ static int l_anim_get_tile(lua_State *L)
     // being a subtract and integer divide by sizeof(THMapNode) to yield the
     // correct map node.
     const THMapNode *pRootNode = pMap->getNodeUnchecked(0, 0);
-    int iIndex = (int)(reinterpret_cast<const THMapNode*>(pListNode) - pRootNode);
+	uintptr_t iDiff = reinterpret_cast<const char*>(pListNode) -
+		              reinterpret_cast<const char*>(pRootNode);
+    int iIndex = (int)(iDiff / sizeof(THMapNode));
     int iY = iIndex / pMap->getWidth();
     int iX = iIndex - (iY * pMap->getWidth());
     lua_pushinteger(L, iX + 1);
