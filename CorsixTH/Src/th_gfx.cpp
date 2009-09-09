@@ -171,6 +171,18 @@ void THAnimationManager::setSpriteSheet(THSpriteSheet* pSpriteSheet)
     m_pSpriteSheet = pSpriteSheet;
 }
 
+inline static void _setmin(int& iLeft, int iRight)
+{
+	if(iRight < iLeft)
+		iLeft = iRight;
+}
+
+inline static void _setmax(int& iLeft, int iRight)
+{
+	if(iRight > iLeft)
+		iLeft = iRight;
+}
+
 bool THAnimationManager::loadFromTHFile(
                         const unsigned char* pStartData, size_t iStartDataLength,
                         const unsigned char* pFrameData, size_t iFrameDataLength,
@@ -243,6 +255,36 @@ bool THAnimationManager::loadFromTHFile(
         pElement->iLayerId = pTHElement->layerid;
     }
 
+	unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
+	for(unsigned int i = 0; i < m_iFrameCount; ++i)
+	{
+		frame_t* pFrame = m_pFrames + i;
+		pFrame->iBoundingLeft = INT_MAX;
+		pFrame->iBoundingRight = -INT_MAX;
+		pFrame->iBoundingTop = INT_MAX;
+		pFrame->iBoundingBottom = -INT_MAX;
+		unsigned int iListIndex = pFrame->iListIndex;
+		for(; ; ++iListIndex)
+		{
+			uint16_t iElement = m_pElementList[iListIndex];
+			if(iElement >= m_iElementCount)
+				break;
+
+			element_t* pElement = m_pElements + iElement;
+			if(pElement->iSprite >= iSpriteCount)
+			{
+				continue;
+			}
+
+			unsigned int iWidth, iHeight;
+			m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth, &iHeight);
+			_setmin(pFrame->iBoundingLeft  , pElement->iX);
+			_setmin(pFrame->iBoundingTop   , pElement->iY);
+			_setmax(pFrame->iBoundingRight , pElement->iX - 1 + (int)iWidth);
+			_setmax(pFrame->iBoundingBottom, pElement->iY - 1 + (int)iHeight);
+		}
+	}
+
     return true;
 }
 
@@ -293,6 +335,28 @@ void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, cons
         }
         iFrame = m_pFrames[iFrame].iNextFrame;
     } while(iFrame != iFirstFrame);
+}
+
+bool THAnimationManager::hitTest(unsigned int iFrame, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const
+{
+	if(iFrame >= m_iFrameCount)
+		return false;
+
+	const frame_t* pFrame = m_pFrames + iFrame;
+	iTestX -= iX;
+	iTestY -= iY;
+
+	if(iFlags & THDF_FlipHorizontal)
+		iTestX = -iTestX;
+	if(iTestX < pFrame->iBoundingLeft || iTestX > pFrame->iBoundingRight)
+		return false;
+
+	if(iFlags & THDF_FlipVertical)
+		iTestY = -iTestY;
+	if(iTestY < pFrame->iBoundingTop || iTestY > pFrame->iBoundingBottom)
+		return false;
+
+	return true;
 }
 
 void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const
@@ -509,6 +573,20 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
         m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX, m_iY + iDestY, iFlags);
 }
 
+bool THAnimation::hitTest(int iDestX, int iDestY, int iTestX, int iTestY)
+{
+	if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+        return false;
+	if(m_pManager == NULL)
+		return false;
+	return m_pManager->hitTest(m_iFrame, m_iX + iDestX, m_iY + iDestY, iFlags, iTestX, iTestY);
+}
+
+static bool THAnimation_HitTest(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
+{
+	return reinterpret_cast<THAnimation*>(pSelf)->hitTest(iDestX, iDestY, iTestX, iTestY);
+}
+
 static void THAnimation_Draw(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
     reinterpret_cast<THAnimation*>(pSelf)->draw(pCanvas, iDestX, iDestY);
@@ -517,6 +595,7 @@ static void THAnimation_Draw(THDrawable* pSelf, THRenderTarget* pCanvas, int iDe
 THAnimation::THAnimation()
 {
     fnDraw = THAnimation_Draw;
+	fnHitTest = THAnimation_HitTest;
     m_pManager = NULL;
     iFlags = 0;
     m_iAnimation = 0;

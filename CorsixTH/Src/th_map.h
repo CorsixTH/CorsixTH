@@ -175,6 +175,7 @@ public:
     inline int getHeight() const {return m_iHeight;}
 
     void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
+	THDrawable* hitTest(int iTestX, int iTestY) const;
 
           THMapNode* getNode(int iX, int iY);
     const THMapNode* getNode(int iX, int iY) const;
@@ -198,6 +199,9 @@ public:
     }
 
 protected:
+	THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+								  int iTestX, int iTestY) const;
+
     int m_iWidth;
     int m_iHeight;
     THMapNode* m_pCells;

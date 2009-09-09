@@ -255,6 +255,7 @@ function World:newEntity(class, animation)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
   local entity = _G[class](th)
+  th:setHitTestResult(entity)
   self.entities[#self.entities + 1] = entity
   entity.world = self
   return entity

@@ -528,6 +528,18 @@ static int l_map_draw(lua_State *L)
     return 1;
 }
 
+static int l_map_hittest(lua_State *L)
+{
+	THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+	THDrawable* pObject = pMap->hitTest(luaL_checkint(L, 2), luaL_checkint(L, 3));
+	if(pObject == NULL)
+		return 0;
+	lua_rawgeti(L, lua_upvalueindex(1), 1);
+	lua_pushlightuserdata(L, pObject);
+	lua_gettable(L, -2);
+	return 1;
+}
+
 static int l_palette_new(lua_State *L)
 {
     THPalette* pPalette = luaT_stdnew<THPalette>(L);
@@ -942,6 +954,18 @@ static int l_anim_new(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_hitresult(lua_State *L)
+{
+	luaL_checktype(L, 1, LUA_TUSERDATA);
+	lua_settop(L, 2);
+	lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+	lua_pushlightuserdata(L, lua_touserdata(L, 1));
+	lua_pushvalue(L, 2);
+	lua_settable(L, 3);
+	lua_settop(L, 1);
+	return 1;
+}
+
 static int l_anim_set_frame(lua_State *L)
 {
 	THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
@@ -1281,6 +1305,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_set_sheet, "setSheet", iSheetMT);
     luaT_setfunction(l_map_draw, "draw", iSurfaceMT);
+	luaT_setfunction(l_map_hittest, "hitTestObjects", iAnimMT);
     luaT_endclass();
 
     // Palette
@@ -1329,7 +1354,15 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_anims_draw, "draw", iSurfaceMT, iLayersMT);
     luaT_endclass();
 
-    // Anim
+    // Weak table at AnimMetatable[1] for light UD -> object lookup
+	lua_newtable(L);
+	lua_createtable(L, 0, 1);
+	lua_pushliteral(L, "v");
+	lua_setfield(L, -2, "__mode");
+	lua_setmetatable(L, -2);
+	lua_rawseti(L, iAnimMT, 1);
+
+	// Anim
     luaT_class(THAnimation, l_anim_new, "animation", iAnimMT);
     luaT_setfunction(l_anim_set_anim, "setAnimation", iAnimsMT);
 	luaT_setfunction(l_anim_set_frame, "setFrame");
@@ -1347,6 +1380,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_anim_get_position, "getPosition");
     luaT_setfunction(l_anim_set_speed, "setSpeed");
     luaT_setfunction(l_anim_set_layer, "setLayer");
+	luaT_setfunction(l_anim_set_hitresult, "setHitTestResult");
     luaT_setfunction(l_anim_tick, "tick");
     luaT_setfunction(l_anim_draw, "draw", iSurfaceMT);
     luaT_endclass();

@@ -58,6 +58,7 @@ enum THDrawFlags
 struct THDrawable : public THLinkList
 {
     void (*fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
+	bool (*fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
     unsigned long iFlags;
 };
 
@@ -146,6 +147,8 @@ public:
     void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap);
     void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
 
+	bool hitTest(unsigned int iFrame, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
+
 protected:
 #pragma pack(push)
 #pragma pack(1)
@@ -178,6 +181,10 @@ protected:
     {
         unsigned int iListIndex;
         unsigned int iNextFrame;
+		int iBoundingLeft;
+		int iBoundingRight;
+		int iBoundingTop;
+		int iBoundingBottom;
     };
 
     struct element_t
@@ -211,6 +218,7 @@ public:
 
     void tick();
     void draw(THRenderTarget* pCanvas, int iDestX, int iDestY);
+	bool hitTest(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return this->pPrev;}
     unsigned long getFlags() {return this->iFlags;}

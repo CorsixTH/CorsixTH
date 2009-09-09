@@ -515,8 +515,122 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     }
 
     THRenderTarget_SetClipRect(pCanvas, NULL);
+}
 
-#undef TILE_X_OVERLAP
+THDrawable* THMap::hitTest(int iTestX, int iTestY) const
+{
+	// This function needs to hitTest each drawable object, in the reverse
+	// order to that in which they would be drawn.
+
+	if(m_pBlocks == NULL || m_pCells == NULL)
+        return NULL;
+
+	int iScreenX = iTestX - 64;
+	int iScreenY = iTestY - 64;
+    int iWidth = 128;
+	int iHeight = 128;
+	iTestX = 64;
+	iTestY = 64;
+	int iBaseX = m_iWidth - 1;
+	int iBaseY = m_iHeight - 1;
+	int iNodeStep = 1 - m_iWidth;
+
+	while(true)
+    {
+        int iX = iBaseX;
+        int iY = iBaseY;
+        int iXs = iX, iYs = iY;
+        worldToScreen(iXs, iYs);
+        iXs -= iScreenX;
+        iYs -= iScreenY;
+        if(iYs < 0)
+            break;
+        else if(iYs < iHeight + 70)
+        {
+			const THMapNode *pLastNode = NULL;
+            int iNodeCount = 0;
+
+            do
+            {
+                if(iXs < -TILE_X_OVERLAP)
+                {
+                    // Nothing to do
+                }
+                else if(iXs < iWidth + TILE_X_OVERLAP)
+                {
+                    pLastNode = getNodeUnchecked(iX, iY);
+                    ++iNodeCount;
+                }
+                else
+                    break;
+                --iY;
+                ++iX;
+                iXs += 64;
+            } while (iY >= 0 && iX < m_iWidth);
+
+			if(iNodeCount != 0)
+            {
+                iXs -= 64;
+                const THMapNode *pNode = pLastNode;
+                int iNodeIndex = 0;
+                for(; iNodeIndex < iNodeCount; ++iNodeIndex,
+                    pNode -= iNodeStep, iXs -= 64)
+                {
+					if(pNode->pNext != NULL)
+					{
+						THDrawable* pResult = _hitTestDrawables(pNode->pNext,
+							iXs, iYs, iTestX, iTestY);
+						if(pResult)
+							return pResult;
+					}
+				}
+				pNode += iNodeStep;
+                iXs += 64;
+                for(; iNodeCount; --iNodeCount, pNode += iNodeStep, iXs += 64)
+                {
+					if(pNode->oEarlyEntities.pNext != NULL)
+					{
+						THDrawable* pResult = _hitTestDrawables(
+							pNode->oEarlyEntities.pNext, iXs, iYs, iTestX, iTestY);
+						if(pResult)
+							return pResult;
+					}
+				}
+			}
+		}
+		if(iBaseX == 0)
+		{
+			if(iBaseY == 0)
+				break;
+			else
+				--iBaseY;
+		}
+		else
+			--iBaseX;
+	}
+	return NULL;
+
+	#undef TILE_X_OVERLAP
+}
+
+THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+								     int iTestX, int iTestY) const
+{
+	THLinkList* pListEnd = pListStart;
+	while(pListEnd->pNext)
+		pListEnd = pListEnd->pNext;
+	THDrawable* pList = (THDrawable*)pListEnd;
+
+	while(true)
+	{
+		if(pList->fnHitTest(pList, iXs, iYs, iTestX, iTestY))
+			return pList;
+
+		if(pList == pListStart)
+			return NULL;
+		else
+			pList = (THDrawable*)pList->pPrev;
+	}
 }
 
 void THMap::updatePathfinding()

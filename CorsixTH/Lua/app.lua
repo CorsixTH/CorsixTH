@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = false
+local TRACK_FPS = true
 
 class "App"
 
@@ -279,13 +279,22 @@ function App:onTick(...)
   return true -- tick events always result in a repaint
 end
 
+local fps_history = {} -- Used to average FPS over the last thirty frames
+for i = 1, 30 do fps_history[i] = 0 end
+local fps_sum = 0 -- Sum of fps_history array
+local fps_next = 1 -- Used to loop through fps_history when [over]writing
+
 function App:drawFrame()
   self.video:startFrame()
   self.ui:draw(self.video)
   self.video:endFrame()
   
   if TRACK_FPS then
-    SDL.wm.setCaption(("%i FPS, %.1f Kb Lua memory"):format(SDL.getFPS(), collectgarbage"count"))
+    fps_sum = fps_sum - fps_history[fps_next]
+    fps_history[fps_next] = SDL.getFPS()
+    fps_sum = fps_sum + fps_history[fps_next]
+    fps_next = (fps_next % #fps_history) + 1
+    SDL.wm.setCaption(("%i FPS, %.1f Kb Lua memory"):format(fps_sum / #fps_history, collectgarbage"count"))
   end
 end
 

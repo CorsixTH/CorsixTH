@@ -268,9 +268,23 @@ function UI:WorldToScreen(x, y)
   return x, y
 end
 
+function UI:onCursorWorldPositionChange()
+  -- TODO: Hit test and update context sensitive cursor.
+  
+  -- For debugging / development:
+  local x = self.screen_offset_x + self.cursor_x
+  local y = self.screen_offset_y + self.cursor_y
+  print(self.app.map.th:hitTestObjects(x, y))
+end
+
 function UI:onMouseMove(x, y, dx, dy)
   local repaint = false
   
+  self.cursor_x = x
+  self.cursor_y = y
+  if self:onCursorWorldPositionChange() then
+    repaint = true
+  end
   if self.buttons_down.middle then
     self:scrollMap(-dx, -dy)
     repaint = true
@@ -309,6 +323,9 @@ function UI:onTick()
     end
     self.tick_scroll_mult = mult
     self:scrollMap(self.tick_scroll_amount.x * mult, self.tick_scroll_amount.y * mult)
+    repaint = true
+  end
+  if self:onCursorWorldPositionChange() then
     repaint = true
   end
   return repaint
