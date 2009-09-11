@@ -22,6 +22,7 @@ class "Staff" (Humanoid)
 
 function Staff:Staff(...)
   self:Humanoid(...)
+  self.hover_cursor = TheApp.gfx:loadMainCursor(16)
 end
 
 function Staff:setProfile(profile)

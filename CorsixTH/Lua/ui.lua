@@ -23,6 +23,7 @@ dofile "window"
 class "UI" (Window)
 
 local TH = require "TH"
+local WM = require "sdl".wm
 
 local function invert(t)
   local r = {}
@@ -74,8 +75,10 @@ function UI:UI(app)
   self.app = app
   self.screen_offset_x = 0
   self.screen_offset_y = 0
+  self.cursor = nil
   self.cursor_x = 0
   self.cursor_y = 0
+  self.cursor_entity = nil
   self.background = false
   self.tick_scroll_amount = false
   self.tick_scroll_mult = 1
@@ -83,7 +86,10 @@ function UI:UI(app)
     -- [class_name] -> window,
   }
   
-  app.gfx:setCursor(app.gfx:loadSpriteTable("Data", "MPointer"), 1)
+  self.down_count = 0
+  self.default_cursor = app.gfx:loadMainCursor(1)
+  self.down_cursor = app.gfx:loadMainCursor(2)
+  self:setCursor(self.default_cursor)
   
   app:loadLuaFolder("dialogs", true)
   
@@ -117,7 +123,7 @@ function UI:UI(app)
     self.in_visible_diamond = true
     self.limit_to_visible_diamond = true
   end
-
+  
   -- Temporary code
   patients = {}
   self:debugMakePatients()
@@ -153,6 +159,24 @@ function UI:debugMakePatients()
   end
 end
 
+function UI:setCursor(cursor)
+  if cursor ~= self.cursor then
+    self.cursor = cursor
+    if cursor.use then
+      -- Cursor is a true C cursor, perhaps even a hardware cursor.
+      -- Make the real cursor visible, and use this as it.
+      self.simulated_cursor = nil
+      WM.showCursor(true)
+      cursor:use(self.app.video)
+    else
+      -- Cursor is a Lua simulated cursor.
+      -- Make the real cursor invisible, and simulate it with this.
+      WM.showCursor(false)
+      self.simulated_cursor = cursor
+    end
+  end
+end
+
 function UI:draw(canvas) 
   local app = self.app
   local config = app.config
@@ -164,6 +188,9 @@ function UI:draw(canvas)
   end
   app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
   Window.draw(self, canvas)
+  if self.simulated_cursor then
+    self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
+  end
 end
 
 local scroll_keys = {
@@ -234,31 +261,55 @@ function UI:onKeyUp(code)
 end
 
 function UI:onMouseDown(code, x, y)
+  local repaint = false
   local button = button_codes[code]
   if not button then
     return
   end
+  if self.cursor_entity == nil and self.down_count == 0 then
+    self:setCursor(self.down_cursor)
+    repaint = true
+  end
+  self.down_count = self.down_count + 1
   self.buttons_down[button] = true
   
-  return Window.onMouseDown(self, button, x, y)
+  return Window.onMouseDown(self, button, x, y) or repaint
 end
 
 local highlight_x, highlight_y
 
 function UI:onMouseUp(code, x, y)
+  local repaint = false
   local button = button_codes[code]
   if not button then
     return
   end
+  self.down_count = self.down_count - 1
+  if self.down_count <= 0 then
+    if self.cursor_entity == nil then
+      self:setCursor(self.default_cursor)
+      repaint = true
+    end
+    self.down_count = 0
+  end
   self.buttons_down[button] = false
   
-  Window.onMouseUp(self, button, x, y)
+  if Window.onMouseUp(self, button, x, y) then
+    repaint = true
+  else
+    if self.cursor_entity and self.cursor_entity.onClick then
+      self.cursor_entity:onClick(self, button)
+      repaint = true
+    end
+  end
   
   if button == "right" then
     if highlight_x then
       get_patient():walkTo(highlight_x, highlight_y)
     end
   end
+  
+  return repaint
 end
 
 function UI:ScreenToWorld(x, y)
@@ -273,12 +324,16 @@ function UI:WorldToScreen(x, y)
 end
 
 function UI:onCursorWorldPositionChange()
-  -- TODO: Hit test and update context sensitive cursor.
-  
-  -- For debugging / development:
   local x = self.screen_offset_x + self.cursor_x
   local y = self.screen_offset_y + self.cursor_y
-  --print(self.app.map.th:hitTestObjects(x, y))
+  -- TODO: Hit test against UI first (-> entity = nil)
+  local entity = self.app.map.th:hitTestObjects(x, y)
+  if entity ~= self.cursor_entity then
+    self.cursor_entity = entity
+    local cursor = entity and entity.hover_cursor or
+      (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+    self:setCursor(cursor)
+  end
 end
 
 local UpdateCursorPosition = TH.cursor.setPosition

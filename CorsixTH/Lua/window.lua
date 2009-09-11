@@ -221,6 +221,7 @@ end
 
 function Window:onMouseUp(button, x, y)
   local repaint = false
+
   if self.windows then
     for _, window in ipairs(self.windows) do
       if window:onMouseUp(button, x - window.x, y - window.y) then

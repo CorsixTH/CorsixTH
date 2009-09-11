@@ -22,6 +22,7 @@ class "Entity"
 
 function Entity:Entity(animation)
   self.th = animation
+  animation:setHitTestResult(self)
   self.ticks = true
 end
 

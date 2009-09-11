@@ -39,14 +39,13 @@ function Graphics:Graphics(app)
     bitmap = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
-  self.current_cursor_sheet = nil
-  self.current_cursor_index = nil
 end
 
-function Graphics:setCursor(sheet, index, hot_x, hot_y)
-  if sheet == self.current_cursor_sheet and index == self.current_cursor_index then
-    return
-  end
+function Graphics:loadMainCursor(...)
+  return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), ...)
+end
+
+function Graphics:loadCursor(sheet, index, hot_x, hot_y)
   local sheet_cache = self.cache.cursors[sheet]
   if not sheet_cache then
     sheet_cache = {}
@@ -54,23 +53,19 @@ function Graphics:setCursor(sheet, index, hot_x, hot_y)
   end
   local cursor = sheet_cache[index]
   if not cursor then
+    hot_x = hot_x or 0
+    hot_y = hot_y or 0
     cursor = TH.cursor()
-    if not cursor:load(sheet, index, hot_x or 0, hot_y or 0) then
+    if not cursor:load(sheet, index, hot_x, hot_y) then
       cursor = {
-        sheet = sheet,
-        index = index,
-        hot_x = hot_x or 0,
-        hot_y = hot_y or 0,
+        draw = function(canvas, x, y)
+          sheet:draw(canvas, index, x - hot_x, y - hot_y)
+        end,
       }
     end
     sheet_cache[index] = cursor
   end
-  if cursor.use then
-    self.simulated_cursor = nil
-    cursor:use(self.target)
-  else
-    self.simulated_cursor = cursor
-  end
+  return cursor
 end
 
 function Graphics:makeGreyscaleGhost(pal)

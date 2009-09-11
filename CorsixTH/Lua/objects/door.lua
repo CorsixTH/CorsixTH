@@ -35,6 +35,7 @@ class "Door" (Object)
 function Door:Door(...)
   self:Object(...)
   self.queue = Queue()
+  self.hover_cursor = TheApp.gfx:loadMainCursor(19)
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
