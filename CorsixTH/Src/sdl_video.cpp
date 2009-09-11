@@ -23,6 +23,7 @@ SOFTWARE.
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_RENDERER
 #include "th_lua.h"
+#include "th_gfx_sdl.h"
 #include <SDL.h>
 #include <string.h>
 #ifndef _MSC_VER
@@ -33,8 +34,7 @@ SOFTWARE.
 
 struct l_surface_t
 {
-    SDL_Surface *surface;
-    bool owned;
+    THRenderTarget* pTarget;
 };
 
 static int l_push_error(lua_State *L)
@@ -44,11 +44,10 @@ static int l_push_error(lua_State *L)
     return 2;
 }
 
-static void l_push_surface(lua_State *L, SDL_Surface *surface, bool owned = true)
+static void l_push_surface(lua_State *L, SDL_Surface *surface)
 {
     l_surface_t *s = luaT_new(L, l_surface_t);
-    s->surface = surface;
-    s->owned = owned;
+    s->pTarget = new THRenderTarget(surface);
 
     lua_pushvalue(L, LUA_ENVIRONINDEX);
     lua_setmetatable(L, -2);
@@ -77,10 +76,10 @@ static SDL_Surface* l_check_surface(lua_State *L, int idx)
     if(s != NULL)
     {
         lua_getmetatable(L, idx);
-        if(lua_equal(L, -1, LUA_ENVIRONINDEX) && s->surface != NULL)
+        if(lua_equal(L, -1, LUA_ENVIRONINDEX) && s->pTarget != NULL)
         {
             lua_pop(L, 1);
-            return s->surface;
+            return s->pTarget->getRawSurface();
         }
     }
     lua_pop(L, 1);
@@ -132,7 +131,7 @@ static int l_set_mode(lua_State *L)
     {
         return l_push_error(L);
     }
-    l_push_surface(L, surface, false);
+    l_push_surface(L, surface);
     return 1;
 }
 
@@ -144,70 +143,9 @@ static int l_set_mode(lua_State *L)
 static int l_free(lua_State *L)
 {
     l_surface_t *s = l_check_surface_raw(L, 1);
-    if(s->owned && s->surface != NULL)
-    {
-        SDL_FreeSurface(s->surface);
-        s->surface = NULL;
-        s->owned = false;
-    }
+	delete s->pTarget;
+    s->pTarget = NULL;
     return 0;
-}
-
-/**
-  @function sdl.video.ensureHardwareSurface
-  @arguments SDL_Surface surface
-  @return surface
-  @return nil, error_string
-*/
-static int l_ensure_hw_surface(lua_State *L)
-{
-    l_surface_t *surf = l_check_surface_raw(L, 1);
-    lua_settop(L, 1);
-    if(surf->surface == NULL)
-    {
-        luaL_argerror(L, 1, "Expected SDL Surface");
-    }
-    if(surf->surface->flags & SDL_HWSURFACE)
-    {
-        // Already a HW surface
-        return 1;
-    }
-    SDL_Surface *surface = SDL_CreateRGBSurface(
-        SDL_HWSURFACE | (surf->surface->flags & (SDL_SRCCOLORKEY | SDL_SRCALPHA)),
-        surf->surface->w, surf->surface->h, surf->surface->format->BitsPerPixel,
-        surf->surface->format->Rmask, surf->surface->format->Gmask,
-        surf->surface->format->Bmask, surf->surface->format->Amask);
-    if(surface == NULL)
-    {
-        return l_push_error(L);
-    }
-    if((surface->flags & SDL_HWSURFACE) != SDL_HWSURFACE)
-    {
-        SDL_FreeSurface(surface);
-        lua_pushnil(L);
-        lua_pushliteral(L, "SDL could not create hardware surface");
-        return 2;
-    }
-    if(surf->surface->format->BytesPerPixel == 1)
-    {
-        SDL_SetPalette(surface, SDL_LOGPAL | SDL_PHYSPAL, surf->surface->format->palette->colors,
-            0, surf->surface->format->palette->ncolors);
-    }
-    if(surf->surface->flags & SDL_SRCCOLORKEY)
-    {
-        SDL_SetColorKey(surface, SDL_SRCCOLORKEY, surf->surface->format->colorkey);
-    }
-    if(SDL_BlitSurface(surf->surface, NULL, surface, NULL) != 0)
-    {
-        SDL_FreeSurface(surface);
-        return l_push_error(L);
-    }
-    if(surf->owned)
-    {
-        SDL_FreeSurface(surf->surface);
-    }
-    surf->surface = surface;
-    return 1;
 }
 
 /**
@@ -217,7 +155,8 @@ static int l_ensure_hw_surface(lua_State *L)
 */
 static int l_flip(lua_State *L)
 {
-    if(SDL_Flip(l_check_surface(L, 1)) == 0)
+	THRenderTarget *pTarget = l_check_surface_raw(L, 1)->pTarget;
+    if(pTarget && (pTarget->drawCursor(), SDL_Flip(pTarget->getRawSurface()) == 0))
     {
         lua_pushboolean(L, 1);
     }
@@ -277,7 +216,6 @@ static int l_nop(lua_State *L)
 }
 
 static const struct luaL_reg sdl_videolib[] = {
-    {"ensureHardwareSurface", l_ensure_hw_surface},
     {"setMode", l_set_mode},
     {"fillBlack", l_draw_black_rect},
     {"startFrame", l_nop},

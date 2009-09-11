@@ -26,6 +26,7 @@ SOFTWARE.
 #include <D3D9.h>
 #include "th_gfx.h"
 #include <new>
+#include <SDL.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
 #endif
@@ -57,6 +58,10 @@ THRenderTarget::~THRenderTarget()
     }
     if(pDevice != NULL)
     {
+		D3DDEVICE_CREATION_PARAMETERS oParams;
+		pDevice->GetCreationParameters(&oParams);
+		if(pDevice == (IDirect3DDevice9*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
+			SetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA, 0);
         pDevice->Release();
         pDevice = NULL;
     }
@@ -712,6 +717,22 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     }
 }
 
+bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
+{
+	if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
+        return false;
+	int iWidth = m_pSprites[iSprite].iWidth;
+	int iHeight = m_pSprites[iSprite].iHeight;
+	if(iX >= iWidth || iY >= iHeight)
+		return false;
+	if(iFlags & THDF_FlipHorizontal)
+		iX = iWidth - iX - 1;
+	if(iFlags & THDF_FlipVertical)
+		iY = iHeight - iY - 1;
+	return (m_pPalette->getARGBData()
+		[m_pSprites[iSprite].pData[iY * iWidth + iX]] >> 24) != 0;
+}
+
 void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
                 unsigned int iWidth, unsigned int iHeight,
                 int iX, int iY, unsigned long iFlags, unsigned int iWidth2,
@@ -835,6 +856,116 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
         delete[] pData;
     }
     return pSprite->pAltBitmap;
+}
+
+THCursor::THCursor()
+{
+	m_pBitmap = NULL;
+	m_iHotspotX = 0;
+	m_iHotspotY = 0;
+	m_bHardwareCompatible = false;
+}
+
+THCursor::~THCursor()
+{
+	if(m_pBitmap)
+		m_pBitmap->Release();
+}
+
+bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+						        int iHotspotX, int iHotspotY)
+{
+	if(m_pBitmap)
+		m_pBitmap->Release();
+	m_pBitmap = NULL;
+	m_bHardwareCompatible = false;
+
+	if(iHotspotX < 0 || iHotspotY < 0)
+		return false;
+
+	unsigned int iWidth, iHeight;
+	if(pSheet == NULL || !pSheet->getSpriteSize(iSprite, &iWidth, &iHeight)
+	|| pSheet->m_pDevice == NULL)
+	{
+		return false;
+	}
+
+	// Hardware cursors must be size 32x32
+	unsigned int iSize = 32;
+	if(iWidth > 32 || iHeight > 32)
+	{
+		m_bHardwareCompatible = false;
+		while(iSize < iWidth || iSize < iHeight)
+			iSize <<= 1;
+	}
+
+	if(pSheet->m_pDevice->CreateOffscreenPlainSurface(iSize, iSize,
+		D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &m_pBitmap, NULL) != D3D_OK)
+	{
+		return false;
+	}
+
+	D3DLOCKED_RECT rcLocked;
+    if(m_pBitmap->LockRect(&rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+    {
+        m_pBitmap->Release();
+		m_pBitmap = NULL;
+        return false;
+    }
+
+	const unsigned char* pPixels = pSheet->m_pSprites[iSprite].pData;
+    uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
+    const uint32_t* pColours = pSheet->m_pPalette->getARGBData();
+    for(unsigned int y = 0; y < iHeight; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(unsigned int x = 0; x < iWidth; ++x, ++pPixels, ++pRow)
+        {
+            uint32_t iColour = pColours[*pPixels];
+			// Cursors cannot have semi-transparency
+			if((iColour >> 24) != 0)
+				iColour |= 0xFF000000;
+			*pRow = iColour;
+        }
+        for(unsigned int x = iWidth; x < iSize; ++x, ++pRow)
+        {
+            *pRow = D3DCOLOR_ARGB(0, 0, 0, 0);
+        }
+    }
+    for(unsigned int y = iHeight; y < iSize; ++y, pData += rcLocked.Pitch)
+    {
+        uint32_t* pRow = reinterpret_cast<uint32_t*>(pData);
+        for(unsigned int x = 0; x < iSize; ++x, ++pRow)
+        {
+            *pRow = D3DCOLOR_ARGB(0, 0, 0, 0);
+        }
+    }
+
+    m_pBitmap->UnlockRect();
+	return true;
+}
+
+void THCursor::use(THRenderTarget* pTarget)
+{
+	SetCursor(NULL);
+	pTarget->pDevice->SetCursorProperties(m_iHotspotX,
+		m_iHotspotY, m_pBitmap);
+	pTarget->pDevice->ShowCursor(TRUE);
+	pTarget->bIsCursorInHardware = pTarget->bIsWindowed ||
+		(pTarget->bIsHardwareCursorSupported && m_bHardwareCompatible);
+}
+
+bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
+{
+	if(pTarget->bIsCursorInHardware)
+	{
+		// Cursor movement done by operating system / hardware - no need to do
+		// anything or repaint anything.
+		return false;
+	}
+
+	pTarget->pDevice->SetCursorPosition(iX, iY, 0);
+	return true;
 }
 
 #endif // CORSIX_TH_USE_DX9_RENDERER

@@ -74,12 +74,16 @@ function UI:UI(app)
   self.app = app
   self.screen_offset_x = 0
   self.screen_offset_y = 0
+  self.cursor_x = 0
+  self.cursor_y = 0
   self.background = false
   self.tick_scroll_amount = false
   self.tick_scroll_mult = 1
   self.modal_windows = {
     -- [class_name] -> window,
   }
+  
+  app.gfx:setCursor(app.gfx:loadSpriteTable("Data", "MPointer"), 1)
   
   app:loadLuaFolder("dialogs", true)
   
@@ -274,11 +278,13 @@ function UI:onCursorWorldPositionChange()
   -- For debugging / development:
   local x = self.screen_offset_x + self.cursor_x
   local y = self.screen_offset_y + self.cursor_y
-  print(self.app.map.th:hitTestObjects(x, y))
+  --print(self.app.map.th:hitTestObjects(x, y))
 end
 
+local UpdateCursorPosition = TH.cursor.setPosition
+
 function UI:onMouseMove(x, y, dx, dy)
-  local repaint = false
+  local repaint = UpdateCursorPosition(self.app.video, x, y)
   
   self.cursor_x = x
   self.cursor_y = y

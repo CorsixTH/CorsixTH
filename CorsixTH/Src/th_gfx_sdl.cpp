@@ -26,14 +26,22 @@ SOFTWARE.
 #include "th_map.h"
 #include <new>
 
+THRenderTarget::THRenderTarget(SDL_Surface* pSurface)
+{
+	m_pSurface = pSurface;
+	m_pCursor = NULL;
+}
+
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect)
 {
-    SDL_GetClipRect(const_cast<SDL_Surface*>(pTarget), reinterpret_cast<SDL_Rect*>(pRect));
+    SDL_GetClipRect(const_cast<SDL_Surface*>(pTarget->getRawSurface()),
+		reinterpret_cast<SDL_Rect*>(pRect));
 }
 
 void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect)
 {
-    SDL_SetClipRect(pTarget, reinterpret_cast<const SDL_Rect*>(pRect));
+    SDL_SetClipRect(pTarget->getRawSurface(),
+		reinterpret_cast<const SDL_Rect*>(pRect));
 }
 
 void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
@@ -87,15 +95,20 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
 
 void THPalette::_assign(THRenderTarget* pTarget) const
 {
-    SDL_SetPalette(pTarget, SDL_PHYSPAL | SDL_LOGPAL,
+	_assign(pTarget->getRawSurface());
+}
+
+void THPalette::_assign(SDL_Surface *pSurface) const
+{
+    SDL_SetPalette(pSurface, SDL_PHYSPAL | SDL_LOGPAL,
         const_cast<SDL_Colour*>(m_aColours), 0, m_iNumColours);
     if(m_iTransparentIndex != -1)
     {
-        SDL_SetColorKey(pTarget, SDL_SRCCOLORKEY | SDL_RLEACCEL,
+        SDL_SetColorKey(pSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL,
             static_cast<Uint32>(m_iTransparentIndex));
     }
     else
-        SDL_SetColorKey(pTarget, 0, 0);
+        SDL_SetColorKey(pSurface, 0, 0);
 }
 
 THRawBitmap::THRawBitmap()
@@ -150,7 +163,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
     SDL_Rect rcDest;
     rcDest.x = iX;
     rcDest.y = iY;
-    SDL_BlitSurface(m_pBitmap, NULL, pCanvas, &rcDest);
+    SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, 
@@ -167,7 +180,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     SDL_Rect rcDest;
     rcDest.x = iX;
     rcDest.y = iY;
-    SDL_BlitSurface(m_pBitmap, &rcSrc, pCanvas, &rcDest);
+    SDL_BlitSurface(m_pBitmap, &rcSrc, pCanvas->getRawSurface(), &rcDest);
 }
 
 THSpriteSheet::THSpriteSheet()
@@ -294,7 +307,22 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     SDL_Rect rctDest;
     rctDest.x = iX;
     rctDest.y = iY;
-    SDL_BlitSurface(pSprite, NULL, pCanvas, &rctDest);
+    SDL_BlitSurface(pSprite, NULL, pCanvas->getRawSurface(), &rctDest);
+}
+
+bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
+{
+	if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
+        return false;
+	int iWidth = (int)m_pSprites[iSprite].iWidth;
+	int iHeight = (int)m_pSprites[iSprite].iHeight;
+	if(iX >= iWidth || iY >= iHeight)
+		return false;
+	if(iFlags & THDF_FlipHorizontal)
+		iX = iWidth - iX - 1;
+	if(iFlags & THDF_FlipVertical)
+		iY = iHeight - iY - 1;
+	return (int)m_pSprites[iSprite].pData[iY * iWidth + iX] != m_pPalette->m_iTransparentIndex;
 }
 
 void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
@@ -314,7 +342,7 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
     }
 }
 
-THRenderTarget* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long iFlags)
+SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long iFlags)
 {
     SDL_Surface* pBitmap = m_pSprites[iSprite].pBitmap[iFlags];
     if(pBitmap != NULL)
@@ -433,6 +461,73 @@ THRenderTarget* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned l
 
     m_pSprites[iSprite].pBitmap[iFlags] = pBitmap;
     return pBitmap;
+}
+
+THCursor::THCursor()
+{
+	m_pBitmap = NULL;
+	m_iHotspotX = 0;
+	m_iHotspotY = 0;
+}
+
+THCursor::~THCursor()
+{
+	SDL_FreeSurface(m_pBitmap);
+}
+
+bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+						        int iHotspotX, int iHotspotY)
+{
+	SDL_FreeSurface(m_pBitmap);
+	m_pBitmap = NULL;
+
+	if(pSheet == NULL || iSprite >= pSheet->getSpriteCount())
+		return false;
+	SDL_Surface *pSprite = pSheet->_getSpriteBitmap(iSprite, 0);
+	if(pSprite == NULL || (m_pBitmap = SDL_DisplayFormat(pSprite)) == NULL)
+		return false;
+	m_iHotspotX = iHotspotX;
+	m_iHotspotY = iHotspotY;
+	return true;
+}
+
+void THCursor::use(THRenderTarget* pTarget)
+{
+	SDL_ShowCursor(0);
+	pTarget->setCursor(this);
+}
+
+bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
+{
+	pTarget->setCursorPosition(iX, iY);
+	return true;
+}
+
+void THRenderTarget::setCursor(THCursor* pCursor)
+{
+	m_pCursor = pCursor;
+}
+
+void THRenderTarget::setCursorPosition(int iX, int iY)
+{
+	m_iCursorX = iX;
+	m_iCursorY = iY;
+}
+
+void THRenderTarget::drawCursor()
+{
+	if(m_pCursor)
+	{
+		m_pCursor->draw(this, m_iCursorX, m_iCursorY);
+	}
+}
+
+void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+	SDL_Rect rcDest;
+	rcDest.x = (Sint16)(iX - m_iHotspotX);
+	rcDest.y = (Sint16)(iY - m_iHotspotY);
+	SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

@@ -147,7 +147,7 @@ public:
     void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap);
     void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
 
-	bool hitTest(unsigned int iFrame, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
+	bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
 
 protected:
 #pragma pack(push)

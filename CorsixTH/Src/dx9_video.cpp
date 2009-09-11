@@ -56,13 +56,6 @@ static l_surface_t* l_check_surface(lua_State *L, int idx)
     return luaT_testuserdata<l_surface_t, false>(L, idx, LUA_ENVIRONINDEX, "Surface");
 }
 
-static int l_ensure_hw_surface(lua_State *L)
-{
-    // DX9 surfaces are always hardware surfaces
-    lua_pushboolean(L, 1);
-    return 1;
-}
-
 static int l_start_frame(lua_State *L)
 {
     l_surface_t *pSurface = l_check_surface(L, 1);
@@ -86,6 +79,24 @@ static int l_end_frame(lua_State *L)
     }
     return 0;
 }
+
+static WNDPROC g_fnSDLWindowProc;
+LRESULT CALLBACK WindowProcIntercept(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
+{
+	if(iMessage == WM_SETCURSOR)
+	{
+		SetCursor(NULL);
+		IDirect3DDevice9* pDevice = (IDirect3DDevice9*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+		if(pDevice)
+			pDevice->ShowCursor(TRUE);
+		return TRUE;
+	}
+	else
+	{
+		return CallWindowProc(g_fnSDLWindowProc, hWnd, iMessage, wParam, lParam);
+	}
+}
+
 
 static int l_set_mode(lua_State *L)
 {
@@ -128,7 +139,7 @@ static int l_set_mode(lua_State *L)
             iPresentInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
     }
 
-    SDL_Surface *pSDLSurface = SDL_SetVideoMode(iWidth, iHeight, iBPP, iSDLFlags);
+	SDL_Surface *pSDLSurface = SDL_SetVideoMode(iWidth, iHeight, iBPP, iSDLFlags);
     if(pSDLSurface == NULL)
         err("Could not set SDL video mode (%ix%ix%i)", iWidth, iHeight, iBPP);
 
@@ -143,6 +154,9 @@ static int l_set_mode(lua_State *L)
     }
     else
         err("Could not get HWND from SDL");
+
+	g_fnSDLWindowProc = (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC);
+	SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)WindowProcIntercept);
     
     oTarget.pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if(oTarget.pD3D == NULL)
@@ -193,6 +207,9 @@ static int l_set_mode(lua_State *L)
         err("Could not create device");
     }
 
+	oTarget.bIsWindowed = (iSDLFlags & SDL_FULLSCREEN) ? false : true;
+	oTarget.bIsHardwareCursorSupported = (d3dCaps.CursorCaps &
+		(iHeight < 400 ? D3DCURSORCAPS_LOWRES : D3DCURSORCAPS_COLOR)) != 0;
     oTarget.iVertexCount = 0;
     oTarget.iVertexLength = 768;
     oTarget.pVerticies = (THDX9_Vertex*)malloc(sizeof(THDX9_Vertex) * oTarget.iVertexLength);
@@ -272,6 +289,7 @@ static int l_set_mode(lua_State *L)
     lua_pushvalue(L, LUA_ENVIRONINDEX);
     lua_setmetatable(L, -2);
     pSurface->target = oTarget;
+	SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)oTarget.pDevice);
     oTarget.pD3D = NULL;
     oTarget.pDevice = NULL;
     oTarget.pVerticies = NULL;
@@ -336,7 +354,6 @@ static int l_fill_rect(lua_State *L)
 }
 
 static const struct luaL_reg sdl_videolib[] = {
-    {"ensureHardwareSurface", l_ensure_hw_surface},
     {"setMode", l_set_mode},
     {"fillBlack", l_fill_black},
     {"startFrame", l_start_frame},

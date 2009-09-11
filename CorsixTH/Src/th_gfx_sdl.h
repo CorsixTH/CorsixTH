@@ -30,7 +30,27 @@ SOFTWARE.
 #define CORSIX_TH_HAS_RENDERING_ENGINE
 #include <SDL.h>
 
-typedef SDL_Surface THRenderTarget;
+class THCursor;
+
+class THRenderTarget
+{
+public:
+	THRenderTarget(SDL_Surface* pSurface);
+
+	SDL_Surface* getRawSurface() {return m_pSurface;}
+	const SDL_Surface* getRawSurface() const {return m_pSurface;}
+
+	void setCursor(THCursor* pCursor);
+	void setCursorPosition(int iX, int iY);
+	void drawCursor();
+
+protected:
+	SDL_Surface* m_pSurface;
+	THCursor* m_pCursor;
+	int m_iCursorX;
+	int m_iCursorY;
+};
+
 typedef SDL_Rect THClipRect;
 
 void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
@@ -51,6 +71,7 @@ protected:
     friend class THRawBitmap;
 
     void _assign(THRenderTarget* pTarget) const;
+	void _assign(SDL_Surface* pSurface) const;
 
     typedef SDL_Colour colour_t;
     colour_t m_aColours[256];
@@ -74,7 +95,7 @@ public:
 		      int iWidth, int iHeight);
 
 protected:
-    THRenderTarget* m_pBitmap;
+    SDL_Surface* m_pBitmap;
     unsigned char* m_pData;
     const THPalette* m_pPalette;
 };
@@ -98,8 +119,10 @@ public:
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
+	bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
 
 protected:
+	friend class THCursor;
 #pragma pack(push)
 #pragma pack(1)
     struct th_sprite_t
@@ -112,7 +135,7 @@ protected:
 
     struct sprite_t
     {
-        THRenderTarget *pBitmap[32];
+        SDL_Surface *pBitmap[32];
         unsigned char *pData;
         const unsigned char *pAltPaletteMap;
         unsigned int iWidth;
@@ -123,7 +146,27 @@ protected:
     bool m_bHasAnyFlaggedBitmaps;
 
     void _freeSprites();
-    THRenderTarget* _getSpriteBitmap(unsigned int iSprite, unsigned long iFlags);
+    SDL_Surface* _getSpriteBitmap(unsigned int iSprite, unsigned long iFlags);
+};
+
+class THCursor
+{
+public:
+	THCursor();
+	~THCursor();
+
+	bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+						  int iHotspotX = 0, int iHotspotY = 0);
+
+	void use(THRenderTarget* pTarget);
+
+	static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
+
+	void draw(THRenderTarget* pCanvas, int iX, int iY);
+protected:
+	SDL_Surface* m_pBitmap;
+	int m_iHotspotX;
+	int m_iHotspotY;
 };
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

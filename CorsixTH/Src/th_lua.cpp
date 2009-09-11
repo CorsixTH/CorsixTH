@@ -1191,6 +1191,44 @@ static int l_anim_draw(lua_State *L)
     return 1;
 }
 
+static int l_cursor_new(lua_State *L)
+{
+	THCursor* pCursor = luaT_stdnew<THCursor>(L, LUA_ENVIRONINDEX, false);
+    return 1;
+}
+
+static int l_cursor_load(lua_State *L)
+{
+	THCursor* pCursor = luaT_testuserdata<THCursor, false>(L, 1, LUA_ENVIRONINDEX, "Cursor");
+	THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 2, lua_upvalueindex(1), "SpriteSheet");
+	if(pCursor->createFromSprite(pSheet, (unsigned int)luaL_checkint(L, 3),
+		luaL_optint(L, 4, 0), luaL_optint(L, 5, 0)))
+	{
+		lua_settop(L, 1);
+		return 1;
+	}
+	else
+	{
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+}
+
+static int l_cursor_use(lua_State *L)
+{
+	THCursor* pCursor = luaT_testuserdata<THCursor, false>(L, 1, LUA_ENVIRONINDEX, "Cursor");
+	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+	pCursor->use(pCanvas);
+	return 0;
+}
+
+static int l_cursor_position(lua_State *L)
+{
+	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 1, lua_upvalueindex(1), "Surface");
+	THCursor::setPosition(pCanvas, luaL_checkint(L, 2), luaL_checkint(L, 3));
+	return 0;
+}
+
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
@@ -1245,8 +1283,9 @@ int luaopen_th(lua_State *L)
     const int iPathMT    = 8; lua_createtable(L, 0, 2);
     const int iSurfaceMT = 9; lua_getfield(L, LUA_REGISTRYINDEX, "Surface_meta");
     const int iBitmapMT  =10; lua_createtable(L, 0, 2);
+	const int iCursorMT  =11; lua_createtable(L, 0, 2);
 
-    const int iTH        =11; lua_createtable(L, 0,10);
+    const int iTH        =12; lua_createtable(L, 0,11);
     const int iTop = iTH;
 
     lua_checkstack(L, 10);
@@ -1393,6 +1432,13 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_path_visit, "findObject");
     luaT_setfunction(l_path_set_map, "setMap", iMapMT);
     luaT_endclass();
+
+	// Cursor
+	luaT_class(THCursor, l_cursor_new, "cursor", iCursorMT);
+	luaT_setfunction(l_cursor_load, "load", iSheetMT);
+	luaT_setfunction(l_cursor_use, "use", iSurfaceMT);
+	luaT_setfunction(l_cursor_position, "setPosition", iSurfaceMT);
+	luaT_endclass();
 
 #undef luaT_class
 #undef luaT_endclass

@@ -37,7 +37,40 @@ function Graphics:Graphics(app)
     ghosts = {},
     anims = {},
     bitmap = {},
+    cursors = setmetatable({}, {__mode = "k"}),
   }
+  self.current_cursor_sheet = nil
+  self.current_cursor_index = nil
+end
+
+function Graphics:setCursor(sheet, index, hot_x, hot_y)
+  if sheet == self.current_cursor_sheet and index == self.current_cursor_index then
+    return
+  end
+  local sheet_cache = self.cache.cursors[sheet]
+  if not sheet_cache then
+    sheet_cache = {}
+    self.cache.cursors[sheet] = sheet_cache
+  end
+  local cursor = sheet_cache[index]
+  if not cursor then
+    cursor = TH.cursor()
+    if not cursor:load(sheet, index, hot_x or 0, hot_y or 0) then
+      cursor = {
+        sheet = sheet,
+        index = index,
+        hot_x = hot_x or 0,
+        hot_y = hot_y or 0,
+      }
+    end
+    sheet_cache[index] = cursor
+  end
+  if cursor.use then
+    self.simulated_cursor = nil
+    cursor:use(self.target)
+  else
+    self.simulated_cursor = cursor
+  end
 end
 
 function Graphics:makeGreyscaleGhost(pal)
