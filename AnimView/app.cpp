@@ -29,10 +29,10 @@ IMPLEMENT_APP(ThemeHospitalAnimViewApp)
 bool ThemeHospitalAnimViewApp::OnInit()
 {
     wxTopLevelWindow *pForm;
-    //if(::wxMessageBox(L"Launch animation viewer? (No -> sprite viewer)", L"AnimView", wxYES_NO) == wxYES)
+    if(::wxMessageBox(L"Launch animation viewer? (No -> sprite viewer)", L"AnimView", wxYES_NO) == wxYES)
         pForm = new frmMain;
-    //else
-        //pForm = new frmSprites;
+    else
+        pForm = new frmSprites;
 
     pForm->Show(true);
     SetTopWindow(pForm);

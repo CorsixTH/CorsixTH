@@ -120,7 +120,7 @@ public:
     }
 
 protected:
-    unsigned __int32 m_iMask[13];
+    uint32_t m_iMask[13];
 };
 
 class Bitmap
@@ -130,10 +130,10 @@ public:
     ~Bitmap();
 
     void create(int iWidth, int iHeight);
-    void create(int iWidth, int iHeight, const unsigned __int8* pData);
+    void create(int iWidth, int iHeight, const uint8_t* pData);
 
-    inline unsigned __int8 pixel(int iX, int iY) const {return m_pData[iY * m_iWidth + iX];}
-    inline unsigned __int8& pixel(int iX, int iY) {return m_pData[iY * m_iWidth + iX];}
+    inline uint8_t pixel(int iX, int iY) const {return m_pData[iY * m_iWidth + iX];}
+    inline uint8_t& pixel(int iX, int iY) {return m_pData[iY * m_iWidth + iX];}
 
     int getWidth() const {return m_iWidth;}
     int getHeight() const {return m_iHeight;}
@@ -146,7 +146,7 @@ public:
 protected:
     int m_iWidth;
     int m_iHeight;
-    unsigned __int8* m_pData;
+    uint8_t* m_pData;
 };
 
 class THAnimations
@@ -209,7 +209,7 @@ protected:
         iCount = iLen / sizeof(T);
         return true;
     }
-    th_element_t* _getElement(unsigned __int32 iListIndex);
+    th_element_t* _getElement(uint32_t iListIndex);
 
     th_anim_t* m_pAnims;
     th_frame_t* m_pFrames;
