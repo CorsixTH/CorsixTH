@@ -36,11 +36,13 @@ CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/dialogs/place_objects.lua -text
 CorsixTH/Lua/dialogs/place_staff.lua -text
+CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/humanoid.lua -text
 CorsixTH/Lua/humanoid_actions/idle.lua -text
 CorsixTH/Lua/humanoid_actions/meander.lua -text
+CorsixTH/Lua/humanoid_actions/pickup.lua -text
 CorsixTH/Lua/humanoid_actions/use_object.lua -text
 CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text

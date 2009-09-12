@@ -71,7 +71,7 @@ local function define_class(name, super)
 end
 
 strict_declare_global "class"
-class = destrict(function(name)
+class = destrict(function(_, name)
   define_class(name)
   
   return function(super)
@@ -81,3 +81,15 @@ class = destrict(function(name)
     define_class(name, super)
   end
 end)
+class = setmetatable({}, {__call = class})
+
+function class.is(instance, class)
+  local methods = instance
+  while methods do
+    if methods == class then
+      return true
+    end
+    methods = getmetatable(methods).__index
+  end
+  return false
+end

@@ -30,6 +30,10 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.world = ui.app.world
   self.modal_class = "main"
   self.esc_closes = true
+  if class.is(profile, Staff) then
+    self.staff = profile
+    profile = profile.profile
+  end
   self.profile = profile
   self.anim = TH.animation()
   self.anim:setLayer(5, profile.layer5)
@@ -39,6 +43,14 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.world.anims:setAnimationGhostPalette(idle_anim, ghost)
   self:onMouseMove(x, y)
   self:Window()
+end
+
+function UIPlaceStaff:close()
+  if self.staff then
+    self.staff.action_queue[1].window = nil
+    self.staff:setNextAction{name = "meander"}
+  end
+  Window.close(self)
 end
 
 function UIPlaceStaff:onMouseMove(x, y)
@@ -63,10 +75,14 @@ function UIPlaceStaff:onMouseUp(button, x, y)
     self:onMouseMove(x, y)
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
     if flag_cache.hospital then
-      local entity = self.world:newEntity("Staff", 2)
-      entity:setProfile(self.profile)
-      entity:setTile(self.tile_x, self.tile_y)
-      entity:setNextAction{name = "meander"}
+      if self.staff then
+        self.staff:setTile(self.tile_x, self.tile_y)
+      else
+        local entity = self.world:newEntity("Staff", 2)
+        entity:setProfile(self.profile)
+        entity:setTile(self.tile_x, self.tile_y)
+        entity:setNextAction{name = "meander"}
+      end
       self:close()
       return true
     end

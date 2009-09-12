@@ -69,7 +69,9 @@ function Humanoid:Humanoid(...)
 end
 
 function Humanoid:onClick(ui, button)
-  ui:addWindow(UIPatient(ui, self))
+  if button == "left" then
+    ui:addWindow(UIPatient(ui, self))
+  end
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)

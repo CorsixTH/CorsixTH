@@ -30,6 +30,7 @@ function UIPatient:UIPatient(ui, patient)
   local app = ui.app
   self.esc_closes = true
   self.ui = ui
+  self.modal_class = "humanoid_info"
   self.width = 191
   self.height = 310
   self.x = app.config.width - self.width - 20

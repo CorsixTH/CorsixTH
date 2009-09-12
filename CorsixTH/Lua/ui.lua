@@ -233,10 +233,6 @@ function UI:onKeyDown(code)
   end
 end
 
-function UI:debugShowPatientWindow()
-  self:addWindow(UIPatient(self, get_patient()))
-end
-
 function UI:onKeyUp(code)
   local key = key_codes[code]
   if not key then
@@ -321,6 +317,10 @@ function UI:WorldToScreen(x, y)
   x = x - self.screen_offset_x
   y = y - self.screen_offset_y
   return x, y
+end
+
+function UI:getScreenOffset()
+  return self.screen_offset_x, self.screen_offset_y
 end
 
 function UI:onCursorWorldPositionChange()
@@ -464,4 +464,16 @@ function UI:addWindow(window)
     self.modal_windows[window.modal_class] = window
   end
   Window.addWindow(self, window)
+end
+
+function UI:removeWindow(window)
+  if Window.removeWindow(self, window) then
+    local class = window.modal_class
+    if class and self.modal_windows[class] == window then
+      self.modal_windows[class] = nil
+    end
+    return true
+  else
+    return false
+  end
 end

@@ -25,6 +25,12 @@ function Staff:Staff(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor(16)
 end
 
+function Staff:onClick(ui, button)
+  if button == "left" then
+    ui:addWindow(UIStaff(ui, self))
+  end
+end
+
 function Staff:setProfile(profile)
   self.profile = profile
   self:setType(profile.humanoid_class)
