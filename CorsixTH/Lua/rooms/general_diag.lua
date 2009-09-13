@@ -25,6 +25,7 @@ room.build_preview_animation = 916
 room.categories = {
   diagnosis = 2,
 }
+room.minimum_size = 5
 room.wall_type = "green"
 room.floor_tile = 21
 return room

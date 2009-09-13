@@ -47,6 +47,7 @@ local key_codes = invert {
   left = 276,
   F9 = 290,
   F10 = 291,
+  F11 = 292,
   shift = {303, 304},
   ctrl = {305, 306},
   alt = {307, 308, 313},
@@ -93,8 +94,10 @@ function UI:UI(app)
   
   app:loadLuaFolder("dialogs", true)
   
+  self.adviser = UIAdviser(self)
   self.bottom_panel = UIBottomPanel(self)
   self.menu_bar = UIMenuBar(self)
+  self:addWindow(self.adviser)
   self:addWindow(self.bottom_panel)
   self:addWindow(self.menu_bar)
   
@@ -157,6 +160,14 @@ function UI:debugMakePatients()
     entity:setLayer(4, math.random(0, 5) * 2)
     patients[#patients + 1] = entity
   end
+end
+
+function UI:debugMakeAdviserTalk()
+  local id = 2
+  while _S(54, id) == "." do
+    id = math.floor(3 + math.random() * 112)
+  end
+  self.adviser:say(_S(54, id))
 end
 
 function UI:setCursor(cursor)
@@ -230,6 +241,8 @@ function UI:onKeyDown(code)
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
+  elseif key == "F11" then
+    self:debugMakeAdviserTalk()
   end
 end
 
@@ -351,6 +364,25 @@ function UI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
   
+  if x <= 10 or y <= 10 or x >= self.app.config.width - 10 or y >= self.app.config.height - 10 then
+    local dx = 0
+    local dy = 0
+    if x <= 10 then
+      dx = -10
+    elseif x >= self.app.config.width - 10 then
+      dx = 10
+    end
+    if y <= 10 then
+      dy = -10
+    elseif y >= self.app.config.height - 10 then
+      dy = 10
+    end
+
+    self.tick_scroll_amount = {x = dx, y = dy}
+  else
+    self.tick_scroll_amount = false
+  end
+  
   if Window.onMouseMove(self, x, y, dx, dy) then
     repaint = true
   end
@@ -374,7 +406,8 @@ function UI:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
-function UI:onTick()  
+function UI:onTick()
+  Window.onTick(self)
   local repaint = false
   if self.tick_scroll_amount then
     local mult = self.tick_scroll_mult

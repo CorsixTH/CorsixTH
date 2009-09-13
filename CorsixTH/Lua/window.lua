@@ -291,3 +291,11 @@ function Window:onMouseMove(x, y, dx, dy)
   
   return repaint
 end
+
+function Window:onTick()
+  if self.windows then
+    for i=1, #self.windows do
+      self.windows[i]:onTick()
+    end
+  end
+end

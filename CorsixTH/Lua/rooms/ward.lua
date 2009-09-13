@@ -26,6 +26,7 @@ room.categories = {
   treatment = 2,
   diagnosis = 4,
 }
+room.minimum_size = 6
 room.wall_type = "white"
 room.floor_tile = 21
 return room

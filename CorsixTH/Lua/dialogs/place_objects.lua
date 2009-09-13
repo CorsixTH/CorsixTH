@@ -153,6 +153,8 @@ function UIPlaceObjects:onMouseUp(button, x, y)
     if self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
       self:placeObject()
       repaint = true
+    elseif self.object_cell_x and self.object_cell_y and not self.object_blueprint_good then
+      self.ui.adviser:say(_S(11,56))
     end
   end
   

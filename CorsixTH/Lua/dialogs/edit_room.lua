@@ -59,7 +59,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   }
   self.blueprint_window = {
   }
-  self.phase = "walls" --> "door" --> "windows"
+  self.phase = "walls" --> "door" --> "windows" --> "closed"
   self.mouse_down_x = false
   self.mouse_down_y = false
   self.mouse_cell_x = 0
@@ -89,6 +89,7 @@ function UIEditRoom:close(...)
     end
     self.blueprint_wall_anims[k] = nil
   end
+  self.phase = "closed"
   self:setBlueprintRect(1, 1, 0, 0)
   return Window.close(self, ...)
 end
@@ -310,6 +311,8 @@ function UIEditRoom:onMouseDown(button, x, y)
     elseif self.phase == "door" then
       if self.blueprint_door.valid then
         self:confirm()
+      else
+        self.ui.adviser:say(_S(11, 54))
       end
     elseif self.phase == "windows" then
       self:placeWindowBlueprint()
@@ -339,13 +342,23 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
     return
   end
   
-  local too_small = w < 4 or h < 4
+  local too_small = w < self.room_type.minimum_size or h < self.room_type.minimum_size
   
   -- Entire update of floor tiles and wall animations done in C to replace
   -- several hundred calls into C with just a single call. The price for this
   -- is reduced flexibility. See l_map_updateblueprint in th_lua.cpp for code.
   local is_valid = map.th:updateRoomBlueprint(rect.x, rect.y, rect.w, rect.h,
     x, y, w, h, self.blueprint_wall_anims, self.anims, too_small)
+
+  if self.phase ~= "closed" then
+    if too_small then
+      self.ui.adviser:say(_S(11, 62))
+    elseif not is_valid then
+      self.ui.adviser:say(_S(11, 52))
+    else
+      self.ui.adviser:say(_S(11, 57))
+    end
+  end
   
   self.confirm_button:enable(is_valid)
   
@@ -433,6 +446,8 @@ end
 function UIEditRoom:placeWindowBlueprint()
   if self.blueprint_window.anim and self.blueprint_window.valid then
     self.blueprint_window = {}
+  elseif self.blueprint_window.anim and not self.blueprint_window.valid then
+    self.ui.adviser:say(_S(11, 55))
   end
 end
 

@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "reception_desk"
 object.thob = 11
+object.class = "ReceptionDesk"
 object.name = _S(2, 12)
 object.ticks = false
 object.corridor_object = 1
@@ -44,5 +45,15 @@ object.orientations = {
     footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0, only_passable = true}, {-1, 0} }
   },
 }
+
+dofile "queue"
+
+class "ReceptionDesk" (Object)
+
+function ReceptionDesk:ReceptionDesk(...)
+  self:Object(...)
+  self.queue = Queue()
+  self.hover_cursor = TheApp.gfx:loadMainCursor(19)
+end
 
 return object

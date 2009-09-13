@@ -26,6 +26,7 @@ CorsixTH/CorsixTH.vcproj eol=crlf
 CorsixTH/Lua/app.lua -text
 CorsixTH/Lua/audio.lua -text
 CorsixTH/Lua/class.lua -text
+CorsixTH/Lua/dialogs/adviser.lua -text
 CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
