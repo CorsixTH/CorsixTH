@@ -94,4 +94,7 @@ CorsixTH/x64/SDL_mixer.dll -text
 CorsixTH/x64/lua5.1.dll -text
 CorsixTH/x64/msvcp90.dll -text
 CorsixTH/x64/msvcr90.dll -text
+LDocGen/c_tokenise.lua -text
+LDocGen/helpers.lua -text
+LDocGen/main.lua -text
 LFS/lfs.def -text
