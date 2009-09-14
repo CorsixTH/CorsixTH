@@ -354,7 +354,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
         return false;
     }
     BITMAPFILEHEADER oFileHeader;
-    oFileHeader.bfType = 'BM';
+    oFileHeader.bfType = 'MB';
     oFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     oFileHeader.bfSize = oFileHeader.bfOffBits + oMode.Width * oMode.Height * 4;
     oFileHeader.bfReserved1 = 0;
