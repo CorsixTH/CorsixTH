@@ -37,7 +37,7 @@ struct THRenderTargetCreationParams;
 class THRenderTarget
 {
 public:
-	THRenderTarget();
+    THRenderTarget();
     ~THRenderTarget();
 
     bool create(const THRenderTargetCreationParams* pParams);
@@ -53,17 +53,17 @@ public:
     void startNonOverlapping();
     void finishNonOverlapping();
     void setCursor(THCursor* pCursor);
-	void setCursorPosition(int iX, int iY);
-	bool takeScreenshot(const unsigned char* pFile);
+    void setCursorPosition(int iX, int iY);
+    bool takeScreenshot(const char* sFile);
 
-	SDL_Surface* getRawSurface() {return m_pSurface;}
-	const SDL_Surface* getRawSurface() const {return m_pSurface;}
+    SDL_Surface* getRawSurface() {return m_pSurface;}
+    const SDL_Surface* getRawSurface() const {return m_pSurface;}
 
 protected:
-	SDL_Surface* m_pSurface;
-	THCursor* m_pCursor;
-	int m_iCursorX;
-	int m_iCursorY;
+    SDL_Surface* m_pSurface;
+    THCursor* m_pCursor;
+    int m_iCursorX;
+    int m_iCursorY;
 };
 
 class THPalette
@@ -78,7 +78,7 @@ protected:
     friend class THRawBitmap;
 
     void _assign(THRenderTarget* pTarget) const;
-	void _assign(SDL_Surface* pSurface) const;
+    void _assign(SDL_Surface* pSurface) const;
 
     typedef SDL_Colour colour_t;
     colour_t m_aColours[256];
@@ -98,8 +98,8 @@ public:
                         int iWidth, THRenderTarget *pUnused);
 
     void draw(THRenderTarget* pCanvas, int iX, int iY);
-	void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
-		      int iWidth, int iHeight);
+    void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+              int iWidth, int iHeight);
 
 protected:
     SDL_Surface* m_pBitmap;
@@ -126,10 +126,10 @@ public:
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
-	bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
+    bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
 
 protected:
-	friend class THCursor;
+    friend class THCursor;
 #pragma pack(push)
 #pragma pack(1)
     struct th_sprite_t
@@ -159,21 +159,21 @@ protected:
 class THCursor
 {
 public:
-	THCursor();
-	~THCursor();
+    THCursor();
+    ~THCursor();
 
-	bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
-						  int iHotspotX = 0, int iHotspotY = 0);
+    bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+                          int iHotspotX = 0, int iHotspotY = 0);
 
-	void use(THRenderTarget* pTarget);
+    void use(THRenderTarget* pTarget);
 
-	static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
+    static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
 
-	void draw(THRenderTarget* pCanvas, int iX, int iY);
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
 protected:
-	SDL_Surface* m_pBitmap;
-	int m_iHotspotX;
-	int m_iHotspotY;
+    SDL_Surface* m_pBitmap;
+    int m_iHotspotX;
+    int m_iHotspotY;
 };
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

@@ -38,8 +38,8 @@ struct THRenderTargetCreationParams;
 
 struct THClipRect
 {
-	int16_t x, y;
-	uint16_t w, h;
+    int16_t x, y;
+    uint16_t w, h;
 };
 
 #pragma pack(push)
@@ -80,7 +80,8 @@ public:
     void startNonOverlapping();
     void finishNonOverlapping();
     void setCursor(THCursor* pCursor);
-	bool setCursorPosition(int iX, int iY);
+    bool setCursorPosition(int iX, int iY);
+    bool takeScreenshot(const char* sFile);
 
     IDirect3DDevice9* getRawDevice() {return m_pDevice;}
     THDX9_Vertex* allocVerticies(size_t iCount, IDirect3DTexture9* pTexture);
@@ -94,16 +95,16 @@ protected:
     IDirect3D9 *m_pD3D;
     IDirect3DDevice9 *m_pDevice;
     THDX9_Vertex *m_pVerticies;
-	IDirect3DTexture9 *m_pWhiteTexture;
+    IDirect3DTexture9 *m_pWhiteTexture;
     const char *m_sLastError;
     THClipRect m_rcClip;
     size_t m_iVertexCount;
     size_t m_iVertexLength;
     size_t m_iNonOverlappingStart;
     int m_iNonOverlapping;
-	bool m_bIsWindowed;
-	bool m_bIsHardwareCursorSupported;
-	bool m_bIsCursorInHardware;
+    bool m_bIsWindowed;
+    bool m_bIsHardwareCursorSupported;
+    bool m_bIsCursorInHardware;
     uint16_t m_aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
 
     void _drawVerts(size_t iFirst, size_t iLast);
@@ -125,8 +126,8 @@ protected:
 };
 
 IDirect3DTexture9* THDX9_CreateSolidTexture(int iWidth, int iHeight,
-											uint32_t iColour,
-											IDirect3DDevice9* pDevice);
+                                            uint32_t iColour,
+                                            IDirect3DDevice9* pDevice);
 
 IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        const unsigned char* pPixels,
@@ -149,8 +150,8 @@ public:
                         int iWidth, THRenderTarget *pEventualCanvas);
 
     void draw(THRenderTarget* pCanvas, int iX, int iY);
-	void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
-		      int iWidth, int iHeight);
+    void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+              int iWidth, int iHeight);
 
 protected:
     IDirect3DTexture9* m_pBitmap;
@@ -180,10 +181,10 @@ public:
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
-	bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
+    bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
 
 protected:
-	friend class THCursor;
+    friend class THCursor;
 #pragma pack(push)
 #pragma pack(1)
     struct th_sprite_t
@@ -223,23 +224,23 @@ protected:
 class THCursor
 {
 public:
-	THCursor();
-	~THCursor();
+    THCursor();
+    ~THCursor();
 
-	bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
-						  int iHotspotX = 0, int iHotspotY = 0);
+    bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+                          int iHotspotX = 0, int iHotspotY = 0);
 
-	void use(THRenderTarget* pTarget);
+    void use(THRenderTarget* pTarget);
 
-	static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
+    static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
 
 protected:
-	friend class THRenderTarget;
+    friend class THRenderTarget;
 
-	IDirect3DSurface9* m_pBitmap;
-	unsigned int m_iHotspotX;
-	unsigned int m_iHotspotY;
-	bool m_bHardwareCompatible;
+    IDirect3DSurface9* m_pBitmap;
+    unsigned int m_iHotspotX;
+    unsigned int m_iHotspotY;
+    bool m_bHardwareCompatible;
 };
 
 #endif // CORSIX_TH_USE_DX9_RENDERER

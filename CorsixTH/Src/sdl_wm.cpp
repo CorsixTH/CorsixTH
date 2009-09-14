@@ -59,14 +59,14 @@ static int l_set_icon_win32(lua_State *L)
 
 static int l_show_cursor(lua_State *L)
 {
-	SDL_ShowCursor(lua_toboolean(L, 1));
-	return 0;
+    SDL_ShowCursor(lua_toboolean(L, 1));
+    return 0;
 }
 
 static const struct luaL_reg sdl_wmlib[] = {
     {"setIconWin32", l_set_icon_win32},
     {"setCaption", l_set_caption},
-	{"showCursor", l_show_cursor},
+    {"showCursor", l_show_cursor},
     {NULL, NULL}
 };
 

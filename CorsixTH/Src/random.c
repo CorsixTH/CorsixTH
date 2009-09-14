@@ -66,7 +66,7 @@ void init_genrand(uint32_t s)
     mt[0]= s;
     for (mti=1; mti<N; mti++) {
         mt[mti] = 
-	    (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti); 
+        (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti); 
         /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
         /* In the previous versions, MSBs of the seed affect   */
         /* only MSBs of the array mt[].                        */
@@ -131,7 +131,7 @@ double genrand_res53(void)
 */
 static int l_random(lua_State *L)
 {
-	lua_Integer min;
+    lua_Integer min;
     uint32_t max;
     switch(lua_gettop(L))
     {
@@ -139,12 +139,12 @@ static int l_random(lua_State *L)
     case 2:
         min = luaL_checkinteger(L, 1);
         max = (uint32_t)(luaL_checkinteger(L, 2) - min + 1);
-		luaL_argcheck(L, max > 0, 2, "interval is empty");
+        luaL_argcheck(L, max > 0, 2, "interval is empty");
         lua_pushinteger(L, min + (lua_Integer)(genrand_int32() % max));
         break;
     case 1:
         max = (uint32_t)luaL_checkinteger(L, 1);
-		luaL_argcheck(L, 1 <= max, 1, "interval is empty");
+        luaL_argcheck(L, 1 <= max, 1, "interval is empty");
         lua_pushinteger(L, (lua_Integer)(genrand_int32() % max));
         break;
     case 0:

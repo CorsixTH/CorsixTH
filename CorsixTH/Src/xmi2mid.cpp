@@ -232,8 +232,8 @@ struct midi_token_t
     int iTime;
     unsigned int iBufferLength;
     const char *pBuffer;
-	uint8_t	iType;
-	uint8_t	iData;
+    uint8_t    iType;
+    uint8_t    iData;
 };
 
 static bool operator < (const midi_token_t& oLeft, const midi_token_t& oRight)

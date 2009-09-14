@@ -114,8 +114,8 @@ enum THMapNodeFlags
     THMN_DoorNorth  = 1 << 12, //!< World: Door on north wall of tile
     THMN_DoorWest   = 1 << 13, //!< World: Door on west wall of tile
     THMN_DoNotIdle  = 1 << 14, //!< World: Humanoids should not idle on tile
-	THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
-	THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
+    THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
+    THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
 
     // NB: Bits 24 through 31 reserved for object type
 };
@@ -175,7 +175,7 @@ public:
     inline int getHeight() const {return m_iHeight;}
 
     void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
-	THDrawable* hitTest(int iTestX, int iTestY) const;
+    THDrawable* hitTest(int iTestX, int iTestY) const;
 
           THMapNode* getNode(int iX, int iY);
     const THMapNode* getNode(int iX, int iY) const;
@@ -199,8 +199,8 @@ public:
     }
 
 protected:
-	THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
-								  int iTestX, int iTestY) const;
+    THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+                                  int iTestX, int iTestY) const;
 
     int m_iWidth;
     int m_iHeight;

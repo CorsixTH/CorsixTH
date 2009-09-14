@@ -58,19 +58,19 @@ static const unsigned short rnc_crc_table[256] = {
 
 struct bit_stream
 {
-    unsigned long bitbuf;	       /* holds between 16 and 32 bits */
-    int bitcount;		       /* how many bits does bitbuf hold? */
+    unsigned long bitbuf;           /* holds between 16 and 32 bits */
+    int bitcount;               /* how many bits does bitbuf hold? */
 };
 
 struct huf_table
 {
-	int num;			       /* number of nodes in the tree */
-	struct
+    int num;                   /* number of nodes in the tree */
+    struct
     {
-	    unsigned long code;
-	    int codelen;
-	    int value;
-	} table[32];
+        unsigned long code;
+        int codelen;
+        int value;
+    } table[32];
 };
 
 /*
@@ -82,8 +82,8 @@ static long rnc_crc(const unsigned char* data, long len)
 
     while(len--)
     {
-	    val ^= *data++;
-	    val = (val >> 8) ^ rnc_crc_table[val & 0xFF];
+        val ^= *data++;
+        val = (val >> 8) ^ rnc_crc_table[val & 0xFF];
     }
 
     return val;
@@ -146,14 +146,14 @@ static unsigned long mirror (unsigned long x, int n)
     unsigned long top = 1 << (n-1), bottom = 1;
     while (top > bottom)
     {
-	    unsigned long mask = top | bottom;
-	    unsigned long masked = x & mask;
-	    if (masked != 0 && masked != mask)
+        unsigned long mask = top | bottom;
+        unsigned long masked = x & mask;
+        if (masked != 0 && masked != mask)
         {
-	        x ^= mask;
+            x ^= mask;
         }
-	    top >>= 1;
-	    bottom <<= 1;
+        top >>= 1;
+        bottom <<= 1;
     }
     return x;
 }
@@ -198,9 +198,9 @@ static void bit_advance (bit_stream *bs, int n, const unsigned char **p)
     bs->bitcount -= n;
     if (bs->bitcount < 16)
     {
-	    (*p) += 2;
-	    bs->bitbuf |= (lword(*p)<<bs->bitcount);
-	    bs->bitcount += 16;
+        (*p) += 2;
+        bs->bitbuf |= (lword(*p)<<bs->bitcount);
+        bs->bitcount += 16;
     }
 }
 
@@ -222,22 +222,22 @@ static void read_huftable(huf_table *h, bit_stream *bs, const unsigned char **p)
     int i, j, k, num;
     int leaflen[32];
     int leafmax;
-    unsigned long codeb;	       /* big-endian form of code */
+    unsigned long codeb;           /* big-endian form of code */
 
     num = bit_read(bs, 0x1F, 5, p);
 
     if(num == 0)
     {
-	    return;
+        return;
     }
 
     leafmax = 1;
     for(i = 0; i < num; i++)
     {
-	    leaflen[i] = bit_read(bs, 0x0F, 4, p);
-	    if (leafmax < leaflen[i])
+        leaflen[i] = bit_read(bs, 0x0F, 4, p);
+        if (leafmax < leaflen[i])
         {
-	        leafmax = leaflen[i];
+            leafmax = leaflen[i];
         }
     }
 
@@ -245,18 +245,18 @@ static void read_huftable(huf_table *h, bit_stream *bs, const unsigned char **p)
     k = 0;
     for(i = 1; i <= leafmax; i++)
     {
-	    for(j = 0; j < num; j++)
+        for(j = 0; j < num; j++)
         {
-	        if(leaflen[j] == i)
+            if(leaflen[j] == i)
             {
-		        h->table[k].code = mirror(codeb, i);
-		        h->table[k].codelen = i;
-		        h->table[k].value = j;
-		        codeb++;
-		        k++;
-	        }
+                h->table[k].code = mirror(codeb, i);
+                h->table[k].codelen = i;
+                h->table[k].value = j;
+                codeb++;
+                k++;
+            }
         }
-	    codeb <<= 1;
+        codeb <<= 1;
     }
     h->num = k;
 }
@@ -271,15 +271,15 @@ static unsigned long huf_read(huf_table *h, bit_stream *bs, const unsigned char 
 
     for (i = 0; i < h->num; i++)
     {
-	    unsigned long mask = (1 << h->table[i].codelen) - 1;
-	    if(bit_peek(bs, mask) == h->table[i].code)
+        unsigned long mask = (1 << h->table[i].codelen) - 1;
+        if(bit_peek(bs, mask) == h->table[i].code)
         {
-	        break;
+            break;
         }
     }
     if(i == h->num)
     {
-	    return -1;
+        return -1;
     }
     bit_advance(bs, h->table[i].codelen, p);
 
@@ -287,8 +287,8 @@ static unsigned long huf_read(huf_table *h, bit_stream *bs, const unsigned char 
 
     if (val >= 2)
     {
-	    val = 1 << (val-1);
-	    val |= bit_read(bs, val-1, h->table[i].value - 1, p);
+        val = 1 << (val-1);
+        val |= bit_read(bs, val-1, h->table[i].value - 1, p);
     }
     return val;
 }
@@ -304,13 +304,13 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
     unsigned out_crc;
     if(blong(input) != RNC_SIGNATURE)
     {
-	    return RNC_FILE_IS_NOT_RNC;
+        return RNC_FILE_IS_NOT_RNC;
     }
     ret_len = blong(input + 4);
     outputend = output + ret_len;
     inputend = input + 18 + blong(input + 8);
 
-    input += 18;		       /* skip header */
+    input += 18;               /* skip header */
 
     /*
      * Check the packed-data CRC. Also save the unpacked-data CRC
@@ -318,7 +318,7 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
      */
     if(rnc_crc(input, static_cast<long>(inputend-input)) != bword(input - 4))
     {
-	    return RNC_PACKED_CRC_ERROR;
+        return RNC_PACKED_CRC_ERROR;
     }
     out_crc = bword(input - 6);
 
@@ -330,54 +330,54 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
      */
     while (output < outputend)
     {
-	    read_huftable(&raw, &bs, &input);
-	    read_huftable(&dist, &bs, &input);
-	    read_huftable(&len, &bs, &input);
-	    ch_count = bit_read(&bs, 0xFFFF, 16, &input);
+        read_huftable(&raw, &bs, &input);
+        read_huftable(&dist, &bs, &input);
+        read_huftable(&len, &bs, &input);
+        ch_count = bit_read(&bs, 0xFFFF, 16, &input);
 
-	    while(true)
+        while(true)
         {
-	        long length, posn;
+            long length, posn;
 
-	        length = huf_read(&raw, &bs, &input);
-	        if(length == -1)
+            length = huf_read(&raw, &bs, &input);
+            if(length == -1)
             {
-		        return RNC_HUF_DECODE_ERROR;
+                return RNC_HUF_DECODE_ERROR;
             }
-	        if(length)
+            if(length)
             {
-		        while(length--)
-		            *output++ = *input++;
-		        bitread_fix(&bs, &input);
-	        }
-	        if(--ch_count <= 0)
+                while(length--)
+                    *output++ = *input++;
+                bitread_fix(&bs, &input);
+            }
+            if(--ch_count <= 0)
             {
-		        break;
+                break;
             }
 
-	        posn = huf_read(&dist, &bs, &input);
-	        if(posn == -1)
+            posn = huf_read(&dist, &bs, &input);
+            if(posn == -1)
             {
-		        return RNC_HUF_DECODE_ERROR;
+                return RNC_HUF_DECODE_ERROR;
             }
-	        length = huf_read(&len, &bs, &input);
-	        if(length == -1)
+            length = huf_read(&len, &bs, &input);
+            if(length == -1)
             {
-		        return RNC_HUF_DECODE_ERROR;
+                return RNC_HUF_DECODE_ERROR;
             }
-	        posn += 1;
-	        length += 2;
-	        while(length--)
+            posn += 1;
+            length += 2;
+            while(length--)
             {
-		        *output = output[-posn];
-		        output++;
-	        }
-	    }
+                *output = output[-posn];
+                output++;
+            }
+        }
     }
 
     if(outputend != output)
     {
-	    return RNC_FILE_SIZE_MISMATCH;
+        return RNC_FILE_SIZE_MISMATCH;
     }
 
     /*
@@ -385,7 +385,7 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
      */
     if(rnc_crc(outputend - ret_len, ret_len) != out_crc)
     {
-	    return RNC_UNPACKED_CRC_ERROR;
+        return RNC_UNPACKED_CRC_ERROR;
     }
 
     return RNC_OK;
@@ -443,12 +443,12 @@ static int l_decompress(lua_State *L)
 }
 
 static const struct luaL_reg rnclib[] = {
-	{"decompress", l_decompress},
-	{NULL, NULL}
+    {"decompress", l_decompress},
+    {NULL, NULL}
 };
 
 int luaopen_rnc(lua_State *L)
 {
     luaL_register(L, "rnc", rnclib);
-	return 1;
+    return 1;
 }

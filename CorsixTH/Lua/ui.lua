@@ -266,7 +266,10 @@ function UI:onKeyDown(code)
     else
       modes[index] = ""
     end
+    self.app.video:endFrame()
     self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
+    self.app.gfx:updateTarget(self.app.video)
+    self.app.video:startFrame()
     self.cursor:use(self.app.video) -- Redraw cursor
   elseif key == "S" then
      -- Find an index for screenshot which is not already used

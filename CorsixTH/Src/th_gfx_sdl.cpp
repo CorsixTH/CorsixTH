@@ -28,8 +28,8 @@ SOFTWARE.
 
 THRenderTarget::THRenderTarget()
 {
-	m_pSurface = NULL;
-	m_pCursor = NULL;
+    m_pSurface = NULL;
+    m_pCursor = NULL;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -58,9 +58,9 @@ bool THRenderTarget::startFrame()
 bool THRenderTarget::endFrame()
 {
     if(m_pCursor)
-	{
-		m_pCursor->draw(this, m_iCursorX, m_iCursorY);
-	}
+    {
+        m_pCursor->draw(this, m_iCursorX, m_iCursorY);
+    }
     return SDL_Flip(m_pSurface) == 0;
 }
 
@@ -106,18 +106,18 @@ void THRenderTarget::finishNonOverlapping()
 
 void THRenderTarget::setCursor(THCursor* pCursor)
 {
-	m_pCursor = pCursor;
+    m_pCursor = pCursor;
 }
 
 void THRenderTarget::setCursorPosition(int iX, int iY)
 {
-	m_iCursorX = iX;
-	m_iCursorY = iY;
+    m_iCursorX = iX;
+    m_iCursorY = iY;
 }
 
-bool THRenderTarget::takeScreenshot(const unsigned char* pFile)
+bool THRenderTarget::takeScreenshot(const char* sFile)
 {
-    return SDL_SaveBMP(m_pSurface, (char*) pFile) == 0;
+    return SDL_SaveBMP(m_pSurface, sFile) == 0;
 }
 
 THPalette::THPalette()
@@ -161,7 +161,7 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
 
 void THPalette::_assign(THRenderTarget* pTarget) const
 {
-	_assign(pTarget->getRawSurface());
+    _assign(pTarget->getRawSurface());
 }
 
 void THPalette::_assign(SDL_Surface *pSurface) const
@@ -233,16 +233,16 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, 
-		               int iSrcX, int iSrcY, int iWidth, int iHeight)
+                       int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
-	if(m_pBitmap == NULL)
+    if(m_pBitmap == NULL)
         return;
 
-	SDL_Rect rcSrc;
-	rcSrc.x = iSrcX;
-	rcSrc.y = iSrcY;
-	rcSrc.w = iWidth;
-	rcSrc.h = iHeight;
+    SDL_Rect rcSrc;
+    rcSrc.x = iSrcX;
+    rcSrc.y = iSrcY;
+    rcSrc.w = iWidth;
+    rcSrc.h = iHeight;
     SDL_Rect rcDest;
     rcDest.x = iX;
     rcDest.y = iY;
@@ -378,17 +378,17 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
 
 bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
 {
-	if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
+    if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
-	int iWidth = (int)m_pSprites[iSprite].iWidth;
-	int iHeight = (int)m_pSprites[iSprite].iHeight;
-	if(iX >= iWidth || iY >= iHeight)
-		return false;
-	if(iFlags & THDF_FlipHorizontal)
-		iX = iWidth - iX - 1;
-	if(iFlags & THDF_FlipVertical)
-		iY = iHeight - iY - 1;
-	return (int)m_pSprites[iSprite].pData[iY * iWidth + iX] != m_pPalette->m_iTransparentIndex;
+    int iWidth = (int)m_pSprites[iSprite].iWidth;
+    int iHeight = (int)m_pSprites[iSprite].iHeight;
+    if(iX >= iWidth || iY >= iHeight)
+        return false;
+    if(iFlags & THDF_FlipHorizontal)
+        iX = iWidth - iX - 1;
+    if(iFlags & THDF_FlipVertical)
+        iY = iHeight - iY - 1;
+    return (int)m_pSprites[iSprite].pData[iY * iWidth + iX] != m_pPalette->m_iTransparentIndex;
 }
 
 void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
@@ -531,50 +531,50 @@ SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long
 
 THCursor::THCursor()
 {
-	m_pBitmap = NULL;
-	m_iHotspotX = 0;
-	m_iHotspotY = 0;
+    m_pBitmap = NULL;
+    m_iHotspotX = 0;
+    m_iHotspotY = 0;
 }
 
 THCursor::~THCursor()
 {
-	SDL_FreeSurface(m_pBitmap);
+    SDL_FreeSurface(m_pBitmap);
 }
 
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
-						        int iHotspotX, int iHotspotY)
+                                int iHotspotX, int iHotspotY)
 {
-	SDL_FreeSurface(m_pBitmap);
-	m_pBitmap = NULL;
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
 
-	if(pSheet == NULL || iSprite >= pSheet->getSpriteCount())
-		return false;
-	SDL_Surface *pSprite = pSheet->_getSpriteBitmap(iSprite, 0);
-	if(pSprite == NULL || (m_pBitmap = SDL_DisplayFormat(pSprite)) == NULL)
-		return false;
-	m_iHotspotX = iHotspotX;
-	m_iHotspotY = iHotspotY;
-	return true;
+    if(pSheet == NULL || iSprite >= pSheet->getSpriteCount())
+        return false;
+    SDL_Surface *pSprite = pSheet->_getSpriteBitmap(iSprite, 0);
+    if(pSprite == NULL || (m_pBitmap = SDL_DisplayFormat(pSprite)) == NULL)
+        return false;
+    m_iHotspotX = iHotspotX;
+    m_iHotspotY = iHotspotY;
+    return true;
 }
 
 void THCursor::use(THRenderTarget* pTarget)
 {
-	SDL_ShowCursor(0);
-	pTarget->setCursor(this);
+    SDL_ShowCursor(0);
+    pTarget->setCursor(this);
 }
 
 bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
-	pTarget->setCursorPosition(iX, iY);
-	return true;
+    pTarget->setCursorPosition(iX, iY);
+    return true;
 }
 
 void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
-	SDL_Rect rcDest;
-	rcDest.x = (Sint16)(iX - m_iHotspotX);
-	rcDest.y = (Sint16)(iY - m_iHotspotY);
-	SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+    SDL_Rect rcDest;
+    rcDest.x = (Sint16)(iX - m_iHotspotX);
+    rcDest.y = (Sint16)(iY - m_iHotspotY);
+    SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

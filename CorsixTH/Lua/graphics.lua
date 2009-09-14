@@ -39,6 +39,12 @@ function Graphics:Graphics(app)
     bitmap = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+  -- If the video target changes then resources will need to be reloaded
+  -- (at least with some rendering engines).
+  self.reload_functions = setmetatable({}, {__mode = "k"})
+  -- Cursors need to be reloaded after sprite sheets, as they are created
+  -- from a sprite sheet.
+  self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
 end
 
 function Graphics:loadMainCursor(...)
@@ -62,6 +68,10 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
           sheet:draw(canvas, index, x - hot_x, y - hot_y)
         end,
       }
+    else
+      self.reload_functions_cursors[cursor] = function(res)
+        assert(res:load(sheet, index, hot_x, hot_y))
+      end
     end
     sheet_cache[index] = cursor
   end
@@ -147,6 +157,9 @@ function Graphics:loadRaw(name, width, height, paldir, pal)
     bitmap:setPalette(self:loadPalette("QData", name .. ".pal"))
   end
   assert(bitmap:load(data, width, self.target))
+  self.reload_functions[bitmap] = function(res)
+    assert(res:load(data, width, self.target))
+  end
   
   self.cache.raw[name] = bitmap
   return bitmap
@@ -218,7 +231,19 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   if not sheet:load(data_tab, data_dat, complex, self.target) then
     error("Cannot load sprite sheet " .. dir .. ":" .. name)
   end
+  self.reload_functions[sheet] = function(res)
+    assert(res:load(data_tab, data_dat, complex, self.target))
+  end
   
   self.cache.tabled[name] = sheet
   return sheet
+end
+
+function Graphics:updateTarget(target)
+  self.target = target
+  for _, res_set in ipairs{"reload_functions", "reload_functions_cursors"} do
+    for resource, reloader in pairs(self[res_set]) do
+      reloader(resource)
+    end
+  end
 end

@@ -268,13 +268,13 @@ static int l_get_ticks(lua_State *L)
 }
 
 static const struct luaL_reg sdllib[] = {
-	{"init", l_init},
+    {"init", l_init},
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
     {"limitFPS", l_limit_fps},
     {"getTicks", l_get_ticks},
-	{NULL, NULL}
+    {NULL, NULL}
 };
 
 int luaopen_sdl_audio(lua_State *L);
@@ -294,5 +294,5 @@ int luaopen_sdl(lua_State *L)
     lua_call(L, 0, 1);
     lua_setfield(L, -2, "wm");
 
-	return 1;
+    return 1;
 }

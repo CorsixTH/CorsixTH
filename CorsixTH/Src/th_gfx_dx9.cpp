@@ -39,7 +39,7 @@ THRenderTarget::THRenderTarget()
     m_pD3D = NULL;
     m_pDevice = NULL;
     m_pVerticies = NULL;
-	m_pWhiteTexture = NULL;
+    m_pWhiteTexture = NULL;
     m_sLastError = "";
     setClipRect(NULL);
     m_iVertexCount = 0;
@@ -50,11 +50,11 @@ THRenderTarget::THRenderTarget()
 
 THRenderTarget::~THRenderTarget()
 {
-	if(m_pWhiteTexture != NULL)
-	{
-		m_pWhiteTexture->Release();
-		m_pWhiteTexture = NULL;
-	}
+    if(m_pWhiteTexture != NULL)
+    {
+        m_pWhiteTexture->Release();
+        m_pWhiteTexture = NULL;
+    }
     if(m_pVerticies != NULL)
     {
         free(m_pVerticies);
@@ -62,10 +62,10 @@ THRenderTarget::~THRenderTarget()
     }
     if(m_pDevice != NULL)
     {
-		D3DDEVICE_CREATION_PARAMETERS oParams;
-		m_pDevice->GetCreationParameters(&oParams);
-		if(m_pDevice == (IDirect3DDevice9*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
-			SetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA, 0);
+        D3DDEVICE_CREATION_PARAMETERS oParams;
+        m_pDevice->GetCreationParameters(&oParams);
+        if(m_pDevice == (IDirect3DDevice9*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
+            SetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA, 0);
         m_pDevice->Release();
         m_pDevice = NULL;
     }
@@ -76,21 +76,21 @@ THRenderTarget::~THRenderTarget()
     }
 }
 
-static WNDPROC g_fnSDLWindowProc;
+static WNDPROC g_fnSDLWindowProc = NULL;
 LRESULT CALLBACK WindowProcIntercept(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
-	if(iMessage == WM_SETCURSOR)
-	{
-		SetCursor(NULL);
-		IDirect3DDevice9* pDevice = (IDirect3DDevice9*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-		if(pDevice)
-			pDevice->ShowCursor(TRUE);
-		return TRUE;
-	}
-	else
-	{
-		return CallWindowProc(g_fnSDLWindowProc, hWnd, iMessage, wParam, lParam);
-	}
+    if(iMessage == WM_SETCURSOR)
+    {
+        SetCursor(NULL);
+        IDirect3DDevice9* pDevice = (IDirect3DDevice9*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        if(pDevice)
+            pDevice->ShowCursor(TRUE);
+        return TRUE;
+    }
+    else
+    {
+        return CallWindowProc(g_fnSDLWindowProc, hWnd, iMessage, wParam, lParam);
+    }
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -118,8 +118,13 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-	g_fnSDLWindowProc = (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC);
-	SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)WindowProcIntercept);
+    // When the video mode is changed (i.e. from windowed to fullscreen), SDL
+    // reuses the same HWND, so be careful not to subclass it twice, as that
+    // will lead to a stack overflow.
+    if(g_fnSDLWindowProc == NULL)
+        g_fnSDLWindowProc = (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC);
+    if(g_fnSDLWindowProc == (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC))
+        SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)WindowProcIntercept);
     
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if(m_pD3D == NULL)
@@ -129,40 +134,40 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     }
 
     D3DDISPLAYMODE d3ddm;
-	if(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm) != D3D_OK)
+    if(m_pD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddm) != D3D_OK)
     {
         m_sLastError = "Could not query display adapter";
         return false;
     }
 
     D3DCAPS9 d3dCaps;
-	ZeroMemory(&d3dCaps, sizeof(d3dCaps));
-	D3DDEVTYPE eDeviceTypeToUse = D3DDEVTYPE_HAL;
+    ZeroMemory(&d3dCaps, sizeof(d3dCaps));
+    D3DDEVTYPE eDeviceTypeToUse = D3DDEVTYPE_HAL;
     if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
-	{
-		eDeviceTypeToUse = D3DDEVTYPE_SW;
-		if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
-		{
-			eDeviceTypeToUse = D3DDEVTYPE_REF;
-			if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
-			{
-				m_sLastError = "Could not get DirectX device capabilities for HAL, SW or REF";
+    {
+        eDeviceTypeToUse = D3DDEVTYPE_SW;
+        if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
+        {
+            eDeviceTypeToUse = D3DDEVTYPE_REF;
+            if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
+            {
+                m_sLastError = "Could not get DirectX device capabilities for HAL, SW or REF";
                 return false;
-			}
-		}
-	}
+            }
+        }
+    }
 
     D3DPRESENT_PARAMETERS oPresentParams;
-	ZeroMemory(&oPresentParams, sizeof(oPresentParams));
-	oPresentParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	oPresentParams.EnableAutoDepthStencil = false;
-	oPresentParams.AutoDepthStencilFormat = D3DFMT_D16;
-	oPresentParams.hDeviceWindow = hWindow;
-	oPresentParams.BackBufferCount = 1;
+    ZeroMemory(&oPresentParams, sizeof(oPresentParams));
+    oPresentParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    oPresentParams.EnableAutoDepthStencil = false;
+    oPresentParams.AutoDepthStencilFormat = D3DFMT_D16;
+    oPresentParams.hDeviceWindow = hWindow;
+    oPresentParams.BackBufferCount = 1;
     oPresentParams.Windowed = pParams->bFullscreen ? FALSE : TRUE;
-	oPresentParams.BackBufferWidth = pParams->iWidth;
-	oPresentParams.BackBufferHeight = pParams->iHeight;
-	oPresentParams.BackBufferFormat = d3ddm.Format;
+    oPresentParams.BackBufferWidth = pParams->iWidth;
+    oPresentParams.BackBufferHeight = pParams->iHeight;
+    oPresentParams.BackBufferFormat = d3ddm.Format;
     oPresentParams.PresentationInterval = pParams->bPresentImmediate ?
         D3DPRESENT_INTERVAL_IMMEDIATE : D3DPRESENT_INTERVAL_DEFAULT;
 
@@ -179,8 +184,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-	m_bIsWindowed = !pParams->bFullscreen;
-	m_bIsHardwareCursorSupported = (d3dCaps.CursorCaps & (pParams->iHeight
+    m_bIsWindowed = !pParams->bFullscreen;
+    m_bIsHardwareCursorSupported = (d3dCaps.CursorCaps & (pParams->iHeight
         < 400 ? D3DCURSORCAPS_LOWRES : D3DCURSORCAPS_COLOR)) != 0;
     m_iVertexCount = 0;
     m_iVertexLength = 768;
@@ -264,20 +269,26 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 
     THDX9_FillIndexBuffer(m_aiVertexIndicies, 0, THDX9_INDEX_BUFFER_LENGTH);
 
-	if((m_pWhiteTexture = THDX9_CreateSolidTexture(1, 1,
-		D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF), m_pDevice)) == NULL)
-	{
-		m_sLastError = "Could not create reference texture";
+    if((m_pWhiteTexture = THDX9_CreateSolidTexture(1, 1,
+        D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF), m_pDevice)) == NULL)
+    {
+        m_sLastError = "Could not create reference texture";
         return false;
-	}
+    }
 
-	SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)m_pDevice);
+    SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)m_pDevice);
     return true;
 }
 
 const char* THRenderTarget::getLastError()
 {
     return m_sLastError;
+}
+
+bool THRenderTarget::takeScreenshot(const char* sFile)
+{
+    // TODO
+    return false;
 }
 
 bool THRenderTarget::startFrame()
@@ -334,11 +345,11 @@ uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
 bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
     draw(m_pWhiteTexture, iW, iH, iX, iY, 0, 1, 1, 0, 0);
-	THDX9_Vertex* pVerts = m_pVerticies + m_iVertexCount;
-	for(int i = 1; i <= 4; ++i)
-	{
-		pVerts[-i].colour = iColour;
-	}
+    THDX9_Vertex* pVerts = m_pVerticies + m_iVertexCount;
+    for(int i = 1; i <= 4; ++i)
+    {
+        pVerts[-i].colour = iColour;
+    }
     return true;
 }
 
@@ -450,10 +461,10 @@ const uint32_t* THPalette::getARGBData() const
 }
 
 IDirect3DTexture9* THDX9_CreateSolidTexture(int iWidth, int iHeight,
-											uint32_t iColour,
-											IDirect3DDevice9* pDevice)
+                                            uint32_t iColour,
+                                            IDirect3DDevice9* pDevice)
 {
-	IDirect3DTexture9 *pTexture = NULL;
+    IDirect3DTexture9 *pTexture = NULL;
     if(pDevice->CreateTexture(iWidth, iHeight, 1, 0, D3DFMT_A8R8G8B8,
         D3DPOOL_MANAGED, &pTexture, NULL) != D3D_OK || pTexture == NULL)
     {
@@ -646,9 +657,9 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
-		      int iSrcX, int iSrcY, int iWidth, int iHeight)
+              int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
-	pCanvas->draw(m_pBitmap, iWidth, iHeight, iX, iY, 0, m_iWidth2, m_iHeight2,
+    pCanvas->draw(m_pBitmap, iWidth, iHeight, iX, iY, 0, m_iWidth2, m_iHeight2,
         iSrcX, iSrcY);
 }
 
@@ -987,18 +998,18 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
 
 bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
 {
-	if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
+    if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
-	int iWidth = m_pSprites[iSprite].iWidth;
-	int iHeight = m_pSprites[iSprite].iHeight;
-	if(iX >= iWidth || iY >= iHeight)
-		return false;
-	if(iFlags & THDF_FlipHorizontal)
-		iX = iWidth - iX - 1;
-	if(iFlags & THDF_FlipVertical)
-		iY = iHeight - iY - 1;
-	return (m_pPalette->getARGBData()
-		[m_pSprites[iSprite].pData[iY * iWidth + iX]] >> 24) != 0;
+    int iWidth = m_pSprites[iSprite].iWidth;
+    int iHeight = m_pSprites[iSprite].iHeight;
+    if(iX >= iWidth || iY >= iHeight)
+        return false;
+    if(iFlags & THDF_FlipHorizontal)
+        iX = iWidth - iX - 1;
+    if(iFlags & THDF_FlipVertical)
+        iY = iHeight - iY - 1;
+    return (m_pPalette->getARGBData()
+        [m_pSprites[iSprite].pData[iY * iWidth + iX]] >> 24) != 0;
 }
 
 void THRenderTarget::draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
@@ -1129,60 +1140,60 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
 
 THCursor::THCursor()
 {
-	m_pBitmap = NULL;
-	m_iHotspotX = 0;
-	m_iHotspotY = 0;
-	m_bHardwareCompatible = false;
+    m_pBitmap = NULL;
+    m_iHotspotX = 0;
+    m_iHotspotY = 0;
+    m_bHardwareCompatible = false;
 }
 
 THCursor::~THCursor()
 {
-	if(m_pBitmap)
-		m_pBitmap->Release();
+    if(m_pBitmap)
+        m_pBitmap->Release();
 }
 
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
-						        int iHotspotX, int iHotspotY)
+                                int iHotspotX, int iHotspotY)
 {
-	if(m_pBitmap)
-		m_pBitmap->Release();
-	m_pBitmap = NULL;
-	m_bHardwareCompatible = false;
-
-	if(iHotspotX < 0 || iHotspotY < 0)
-		return false;
-
-	unsigned int iWidth, iHeight;
-	if(pSheet == NULL || !pSheet->getSpriteSize(iSprite, &iWidth, &iHeight)
-	|| pSheet->m_pDevice == NULL)
-	{
-		return false;
-	}
-
-	// Hardware cursors must be size 32x32
-	unsigned int iSize = 32;
-	if(iWidth > 32 || iHeight > 32)
-	{
-		m_bHardwareCompatible = false;
-		while(iSize < iWidth || iSize < iHeight)
-			iSize <<= 1;
-	}
-
-	if(pSheet->m_pDevice->CreateOffscreenPlainSurface(iSize, iSize,
-		D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &m_pBitmap, NULL) != D3D_OK)
-	{
-		return false;
-	}
-
-	D3DLOCKED_RECT rcLocked;
-    if(m_pBitmap->LockRect(&rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
-    {
+    if(m_pBitmap)
         m_pBitmap->Release();
-		m_pBitmap = NULL;
+    m_pBitmap = NULL;
+    m_bHardwareCompatible = false;
+
+    if(iHotspotX < 0 || iHotspotY < 0)
+        return false;
+
+    unsigned int iWidth, iHeight;
+    if(pSheet == NULL || !pSheet->getSpriteSize(iSprite, &iWidth, &iHeight)
+    || pSheet->m_pDevice == NULL)
+    {
         return false;
     }
 
-	const unsigned char* pPixels = pSheet->m_pSprites[iSprite].pData;
+    // Hardware cursors must be size 32x32
+    unsigned int iSize = 32;
+    if(iWidth > 32 || iHeight > 32)
+    {
+        m_bHardwareCompatible = false;
+        while(iSize < iWidth || iSize < iHeight)
+            iSize <<= 1;
+    }
+
+    if(pSheet->m_pDevice->CreateOffscreenPlainSurface(iSize, iSize,
+        D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &m_pBitmap, NULL) != D3D_OK)
+    {
+        return false;
+    }
+
+    D3DLOCKED_RECT rcLocked;
+    if(m_pBitmap->LockRect(&rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+    {
+        m_pBitmap->Release();
+        m_pBitmap = NULL;
+        return false;
+    }
+
+    const unsigned char* pPixels = pSheet->m_pSprites[iSprite].pData;
     uint8_t* pData = reinterpret_cast<uint8_t*>(rcLocked.pBits);
     const uint32_t* pColours = pSheet->m_pPalette->getARGBData();
     for(unsigned int y = 0; y < iHeight; ++y, pData += rcLocked.Pitch)
@@ -1191,10 +1202,10 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
         for(unsigned int x = 0; x < iWidth; ++x, ++pPixels, ++pRow)
         {
             uint32_t iColour = pColours[*pPixels];
-			// Cursors cannot have semi-transparency
-			if((iColour >> 24) != 0)
-				iColour |= 0xFF000000;
-			*pRow = iColour;
+            // Cursors cannot have semi-transparency
+            if((iColour >> 24) != 0)
+                iColour |= 0xFF000000;
+            *pRow = iColour;
         }
         for(unsigned int x = iWidth; x < iSize; ++x, ++pRow)
         {
@@ -1211,22 +1222,22 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
     }
 
     m_pBitmap->UnlockRect();
-	return true;
+    return true;
 }
 
 void THRenderTarget::setCursor(THCursor* pCursor)
 {
     SetCursor(NULL);
-	m_pDevice->SetCursorProperties(pCursor->m_iHotspotX,
-		pCursor->m_iHotspotY, pCursor->m_pBitmap);
-	m_pDevice->ShowCursor(TRUE);
-	m_bIsCursorInHardware = m_bIsWindowed || (m_bIsHardwareCursorSupported &&
+    m_pDevice->SetCursorProperties(pCursor->m_iHotspotX,
+        pCursor->m_iHotspotY, pCursor->m_pBitmap);
+    m_pDevice->ShowCursor(TRUE);
+    m_bIsCursorInHardware = m_bIsWindowed || (m_bIsHardwareCursorSupported &&
         pCursor->m_bHardwareCompatible);
 }
 
 void THCursor::use(THRenderTarget* pTarget)
 {
-	pTarget->setCursor(this);
+    pTarget->setCursor(this);
 }
 
 bool THRenderTarget::setCursorPosition(int iX, int iY)
@@ -1234,7 +1245,7 @@ bool THRenderTarget::setCursorPosition(int iX, int iY)
     if(m_bIsCursorInHardware)
     {
         // Cursor movement done by operating system / hardware - no need to do
-		// anything or repaint anything.
+        // anything or repaint anything.
         return false;
     }
 
@@ -1244,7 +1255,7 @@ bool THRenderTarget::setCursorPosition(int iX, int iY)
 
 bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
-	return pTarget->setCursorPosition(iX, iY);
+    return pTarget->setCursorPosition(iX, iY);
 }
 
 #endif // CORSIX_TH_USE_DX9_RENDERER
