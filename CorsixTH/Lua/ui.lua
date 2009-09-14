@@ -25,6 +25,7 @@ class "UI" (Window)
 local TH = require "TH"
 local WM = require "sdl".wm
 local lfs = require "lfs"
+local pathsep = package.config:sub(1, 1)
 
 local function invert(t)
   local r = {}
@@ -274,10 +275,12 @@ function UI:onKeyDown(code)
   elseif key == "S" then
      -- Find an index for screenshot which is not already used
     local i = 0
-    while lfs.attributes("./screenshot" .. tostring(i) .. ".bmp", "size") ~= nil do
+    local filename
+    repeat
+      filename = (".%sscreenshot%i.bmp"):format(pathsep, i)
       i = i + 1
-    end
-    self.app.video:takeScreenshot("./screenshot" .. tostring(i) .. ".bmp") -- Take screenshot
+    until lfs.attributes(filename, "size") == nil
+    self.app.video:takeScreenshot(filename) -- Take screenshot
   end
 end
 

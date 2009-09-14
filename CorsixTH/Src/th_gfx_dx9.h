@@ -55,17 +55,28 @@ struct THDX9_Vertex
 };
 #pragma pack(pop)
 
+enum eTHDX9DeviceChangeType
+{
+    THDX9DCT_DeviceDestroyed,
+};
+
+struct THDX9_DeviceResource : public THLinkList
+{
+    void (*fnOnDeviceChange)(THDX9_DeviceResource*, eTHDX9DeviceChangeType);
+};
+
 // The index buffer length must be a multiple of 6 (as 6 are used per quad).
 // A 16-bit index buffer is used, hence it can only reference 2^16 verticies.
 // As each quad uses 4 verticies and 6 indicies, the optimum index buffer
 // length is ((2 ^ 16) / 4) * 6 == 0x18000
 #define THDX9_INDEX_BUFFER_LENGTH  0x18000
 
-class THRenderTarget
+class THRenderTarget : protected THDX9_DeviceResource
 {
 public:
     THRenderTarget();
     ~THRenderTarget();
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     bool create(const THRenderTargetCreationParams* pParams);
     const char* getLastError();
@@ -83,6 +94,7 @@ public:
     bool setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
 
+    IDirect3DDevice9* getRawDevice(THDX9_DeviceResource* pUser);
     IDirect3DDevice9* getRawDevice() {return m_pDevice;}
     THDX9_Vertex* allocVerticies(size_t iCount, IDirect3DTexture9* pTexture);
     void draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
@@ -138,11 +150,12 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
 
 void THDX9_FillIndexBuffer(uint16_t* pVerticies, size_t iFirst, size_t iCount);
 
-class THRawBitmap
+class THRawBitmap : protected THDX9_DeviceResource
 {
 public:
     THRawBitmap();
     ~THRawBitmap();
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     void setPalette(const THPalette* pPalette);
 
@@ -162,11 +175,12 @@ protected:
     int m_iHeight2;
 };
 
-class THSpriteSheet
+class THSpriteSheet : protected THDX9_DeviceResource
 {
 public:
     THSpriteSheet();
     ~THSpriteSheet();
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     void setPalette(const THPalette* pPalette);
 
@@ -221,11 +235,12 @@ protected:
     static int _sortSpritesHeight(const void*, const void*);
 };
 
-class THCursor
+class THCursor : protected THDX9_DeviceResource
 {
 public:
     THCursor();
     ~THCursor();
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
                           int iHotspotX = 0, int iHotspotY = 0);

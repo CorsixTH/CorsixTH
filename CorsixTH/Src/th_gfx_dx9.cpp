@@ -30,12 +30,21 @@ SOFTWARE.
 #include <new>
 #include <SDL.h>
 #include <SDL_syswm.h>
+#include <assert.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
 #endif
 
+template <class T>
+static void THDX9_OnDeviceChangeThunk(THDX9_DeviceResource *pThis,
+                                      eTHDX9DeviceChangeType eType)
+{
+    reinterpret_cast<T*>(pThis)->onDeviceChange(eType);
+}
+
 THRenderTarget::THRenderTarget()
 {
+    fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THRenderTarget>;
     m_pD3D = NULL;
     m_pDevice = NULL;
     m_pVerticies = NULL;
@@ -62,11 +71,17 @@ THRenderTarget::~THRenderTarget()
     }
     if(m_pDevice != NULL)
     {
+        while(pNext)
+        {
+            THDX9_DeviceResource* pResource =
+                reinterpret_cast<THDX9_DeviceResource*>(pNext);
+            pResource->fnOnDeviceChange(pResource, THDX9DCT_DeviceDestroyed);
+        }
         D3DDEVICE_CREATION_PARAMETERS oParams;
         m_pDevice->GetCreationParameters(&oParams);
         if(m_pDevice == (IDirect3DDevice9*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
             SetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA, 0);
-        m_pDevice->Release();
+        assert(m_pDevice->Release() == 0);
         m_pDevice = NULL;
     }
     if(m_pD3D != NULL)
@@ -74,6 +89,23 @@ THRenderTarget::~THRenderTarget()
         m_pD3D->Release();
         m_pD3D = NULL;
     }
+}
+
+void THRenderTarget::onDeviceChange(eTHDX9DeviceChangeType eChangeType)
+{
+    // We caused the device change, so there is no need to do anything in
+    // response to that change.
+}
+
+IDirect3DDevice9* THRenderTarget::getRawDevice(THDX9_DeviceResource* pUser)
+{
+    pUser->removeFromList();
+    pUser->pPrev = this;
+    pUser->pNext = pNext;
+    if(pNext)
+        pNext->pPrev = pUser;
+    pNext = pUser;
+    return getRawDevice();
 }
 
 static WNDPROC g_fnSDLWindowProc = NULL;
@@ -287,8 +319,69 @@ const char* THRenderTarget::getLastError()
 
 bool THRenderTarget::takeScreenshot(const char* sFile)
 {
-    // TODO
-    return false;
+    D3DDISPLAYMODE oMode;
+    if(m_pDevice->GetDisplayMode(0, &oMode) != D3D_OK)
+    {
+        m_sLastError = "Could not get display mode";
+        return false;
+    }
+    IDirect3DSurface9 *pSurfaceBuffer;
+    if(m_pDevice->CreateOffscreenPlainSurface(oMode.Width, oMode.Height,
+        D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pSurfaceBuffer, NULL) != D3D_OK)
+    {
+        m_sLastError = "Could not create screenshot buffer";
+        return false;
+    }
+    if(m_pDevice->GetFrontBufferData(0, pSurfaceBuffer) != D3D_OK)
+    {
+        m_sLastError = "Could not obtain screenshot data";
+        pSurfaceBuffer->Release();
+        return false;
+    }
+    D3DLOCKED_RECT oLock;
+    if(pSurfaceBuffer->LockRect(&oLock, NULL, D3DLOCK_READONLY) != D3D_OK)
+    {
+        m_sLastError = "Could not lock screenshot data";
+        pSurfaceBuffer->Release();
+        return false;
+    }
+    FILE* fBitmap = fopen(sFile, "wb");
+    if(fBitmap == NULL)
+    {
+        m_sLastError = "Could not open output file";
+        pSurfaceBuffer->UnlockRect();
+        pSurfaceBuffer->Release();
+        return false;
+    }
+    BITMAPFILEHEADER oFileHeader;
+    oFileHeader.bfType = 'BM';
+    oFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    oFileHeader.bfSize = oFileHeader.bfOffBits + oMode.Width * oMode.Height * 4;
+    oFileHeader.bfReserved1 = 0;
+    oFileHeader.bfReserved2 = 0;
+    BITMAPINFOHEADER oInfoHeader;
+    oInfoHeader.biSize = sizeof(BITMAPINFOHEADER);
+    oInfoHeader.biWidth = oMode.Width;
+    oInfoHeader.biHeight = oMode.Height;
+    oInfoHeader.biPlanes = 1;
+    oInfoHeader.biBitCount = 32;
+    oInfoHeader.biCompression = BI_RGB;
+    oInfoHeader.biSizeImage = 0;
+    oInfoHeader.biXPelsPerMeter = 72;
+    oInfoHeader.biYPelsPerMeter = 72;
+    oInfoHeader.biClrUsed = 0;
+    oInfoHeader.biClrImportant = 0;
+    fwrite(&oFileHeader, sizeof(BITMAPFILEHEADER), 1, fBitmap);
+    fwrite(&oInfoHeader, sizeof(BITMAPINFOHEADER), 1, fBitmap);
+    for(int iY = oMode.Height - 1; iY >= 0; --iY)
+    {
+        fwrite(reinterpret_cast<char*>(oLock.pBits) + oLock.Pitch * iY,
+            4, oMode.Width, fBitmap);
+    }
+    fclose(fBitmap);
+    pSurfaceBuffer->UnlockRect();
+    pSurfaceBuffer->Release();
+    return true;
 }
 
 bool THRenderTarget::startFrame()
@@ -612,6 +705,7 @@ void THRenderTarget::flushSprites()
 
 THRawBitmap::THRawBitmap()
 {
+    fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THRawBitmap>;
     m_pBitmap = NULL;
     m_pPalette = NULL;
     m_iWidth = -1;
@@ -622,6 +716,16 @@ THRawBitmap::~THRawBitmap()
 {
     if(m_pBitmap)
         m_pBitmap->Release();
+}
+
+void THRawBitmap::onDeviceChange(eTHDX9DeviceChangeType eChangeType)
+{
+    if(m_pBitmap)
+    {
+        m_pBitmap->Release();
+        m_pBitmap = NULL;
+    }
+    removeFromList();
 }
 
 void THRawBitmap::setPalette(const THPalette* pPalette)
@@ -645,7 +749,7 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
     m_iWidth = iWidth;
     m_iHeight = static_cast<int>(iPixelDataLength) / iWidth;
     m_pBitmap = THDX9_CreateTexture(iWidth, m_iHeight, pPixelData, m_pPalette,
-        pEventualCanvas->getRawDevice(), &m_iWidth2, &m_iHeight2);
+        pEventualCanvas->getRawDevice(this), &m_iWidth2, &m_iHeight2);
 
     return m_pBitmap != NULL;
 }
@@ -665,6 +769,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
 
 THSpriteSheet::THSpriteSheet()
 {
+    fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THSpriteSheet>;
     m_pSprites = 0;
     m_iSpriteCount = 0;
     m_pPalette = NULL;
@@ -673,6 +778,11 @@ THSpriteSheet::THSpriteSheet()
 }
 
 THSpriteSheet::~THSpriteSheet()
+{
+    _freeSprites();
+}
+
+void THSpriteSheet::onDeviceChange(eTHDX9DeviceChangeType eChangeType)
 {
     _freeSprites();
 }
@@ -701,6 +811,7 @@ void THSpriteSheet::_freeSprites()
         m_pDevice->Release();
         m_pDevice = NULL;
     }
+    removeFromList();
 }
 
 void THSpriteSheet::setPalette(const THPalette* pPalette)
@@ -718,7 +829,7 @@ bool THSpriteSheet::loadFromTHFile(
     {
         return false;
     }
-    m_pDevice = pCanvas->getRawDevice();
+    m_pDevice = pCanvas->getRawDevice(this);
     m_pDevice->AddRef();
 
     m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
@@ -1140,6 +1251,7 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
 
 THCursor::THCursor()
 {
+    fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THCursor>;
     m_pBitmap = NULL;
     m_iHotspotX = 0;
     m_iHotspotY = 0;
@@ -1152,6 +1264,16 @@ THCursor::~THCursor()
         m_pBitmap->Release();
 }
 
+void THCursor::onDeviceChange(eTHDX9DeviceChangeType eChangeType)
+{
+    if(m_pBitmap)
+    {
+        m_pBitmap->Release();
+        m_pBitmap = NULL;
+    }
+    removeFromList();
+}
+
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
                                 int iHotspotX, int iHotspotY)
 {
@@ -1159,6 +1281,7 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
         m_pBitmap->Release();
     m_pBitmap = NULL;
     m_bHardwareCompatible = false;
+    removeFromList();
 
     if(iHotspotX < 0 || iHotspotY < 0)
         return false;
@@ -1170,6 +1293,11 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
         return false;
     }
 
+    pPrev = pSheet->pPrev;
+    pNext = pSheet;
+    pPrev->pNext = this;
+    pNext->pPrev = this;
+
     // Hardware cursors must be size 32x32
     unsigned int iSize = 32;
     if(iWidth > 32 || iHeight > 32)
@@ -1178,6 +1306,8 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
         while(iSize < iWidth || iSize < iHeight)
             iSize <<= 1;
     }
+    else
+        m_bHardwareCompatible = true;
 
     if(pSheet->m_pDevice->CreateOffscreenPlainSurface(iSize, iSize,
         D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &m_pBitmap, NULL) != D3D_OK)
