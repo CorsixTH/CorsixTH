@@ -31,18 +31,32 @@ SOFTWARE.
 #include <SDL.h>
 
 class THCursor;
+typedef SDL_Rect THClipRect;
+struct THRenderTargetCreationParams;
 
 class THRenderTarget
 {
 public:
-	THRenderTarget(SDL_Surface* pSurface);
+	THRenderTarget();
+    ~THRenderTarget();
+
+    bool create(const THRenderTargetCreationParams* pParams);
+    const char* getLastError();
+
+    bool startFrame();
+    bool endFrame();
+    bool fillBlack();
+    uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
+    bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
+    void getClipRect(THClipRect* pRect) const;
+    void setClipRect(const THClipRect* pRect);
+    void startNonOverlapping();
+    void finishNonOverlapping();
+    void setCursor(THCursor* pCursor);
+	void setCursorPosition(int iX, int iY);
 
 	SDL_Surface* getRawSurface() {return m_pSurface;}
 	const SDL_Surface* getRawSurface() const {return m_pSurface;}
-
-	void setCursor(THCursor* pCursor);
-	void setCursorPosition(int iX, int iY);
-	void drawCursor();
 
 protected:
 	SDL_Surface* m_pSurface;
@@ -50,14 +64,6 @@ protected:
 	int m_iCursorX;
 	int m_iCursorY;
 };
-
-typedef SDL_Rect THClipRect;
-
-void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
-void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
-
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget);
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget);
 
 class THPalette
 {

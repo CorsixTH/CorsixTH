@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = true
+local TRACK_FPS = false
 
 class "App"
 
@@ -83,7 +83,7 @@ function App:init()
   if TRACK_FPS then
     modes[#modes + 1] = "present immediate"
   end
-  self.video = assert(SDL.video.setMode(self.config.width, self.config.height, unpack(modes)))
+  self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   SDL.wm.setIconWin32()
   
   -- Prereq 2: Load and initialise the graphics subsystem

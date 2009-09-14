@@ -47,8 +47,70 @@ static T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = fa
     return p;
 }
 
-template <class T, bool dethunk>
-static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, const char* name)
+template <typename T> struct luaT_classinfo {};
+
+class THRenderTarget;
+template <> struct luaT_classinfo<THRenderTarget> {
+    static inline const char* name() {return "Surface";}
+};
+
+class THMap;
+template <> struct luaT_classinfo<THMap> {
+    static inline const char* name() {return "Map";}
+};
+
+class THSpriteSheet;
+template <> struct luaT_classinfo<THSpriteSheet> {
+    static inline const char* name() {return "SpriteSheet";}
+};
+
+class THAnimation;
+template <> struct luaT_classinfo<THAnimation> {
+    static inline const char* name() {return "Animation";}
+};
+
+class THAnimationManager;
+template <> struct luaT_classinfo<THAnimationManager> {
+    static inline const char* name() {return "Animator";}
+};
+
+class THPalette;
+template <> struct luaT_classinfo<THPalette> {
+    static inline const char* name() {return "Palette";}
+};
+
+class THRawBitmap;
+template <> struct luaT_classinfo<THRawBitmap> {
+    static inline const char* name() {return "RawBitmap";}
+};
+
+class THFont;
+template <> struct luaT_classinfo<THFont> {
+    static inline const char* name() {return "Font";}
+};
+
+struct THLayers_t;
+template <> struct luaT_classinfo<THLayers_t> {
+    static inline const char* name() {return "Layers";}
+};
+
+class THPathfinder;
+template <> struct luaT_classinfo<THPathfinder> {
+    static inline const char* name() {return "Pathfinder";}
+};
+
+class THCursor;
+template <> struct luaT_classinfo<THCursor> {
+    static inline const char* name() {return "Cursor";}
+};
+
+struct music_t;
+template <> struct luaT_classinfo<music_t> {
+    static inline const char* name() {return "Music";}
+};
+
+template <class T>
+static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {
     if(mt_idx < 0 && mt_idx > LUA_REGISTRYINDEX)
         mt_idx = lua_gettop(L) + mt_idx + 1;
@@ -59,40 +121,32 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, const char* name)
         if(lua_equal(L, mt_idx, -1) != 0)
         {
             lua_pop(L, 1);
-            if(dethunk)
-            {
-                T* t = *(T**)ud;
-                if(t != NULL)
-                    return t;
-            }
-            else
-            {
-                return (T*)ud;
-            }
+            return (T*)ud;
         }
         lua_pop(L, 1);
     }
 
-    if(name != NULL)
-        luaL_typerror(L, idx, name);
+    if(required)
+        luaL_typerror(L, idx, luaT_classinfo<T>::name());
     return NULL;
 }
 
-template <class T, bool dethunk, int mt>
+template <class T>
+static T* luaT_testuserdata(lua_State *L, int idx = 1)
+{
+    int iMetaIndex = LUA_ENVIRONINDEX;
+    if(idx > 1)
+        iMetaIndex = lua_upvalueindex(idx - 1);
+    return luaT_testuserdata<T>(L, idx, iMetaIndex);
+}
+
+template <class T, int mt>
 static int luaT_stdgc(lua_State *L)
 {
-    T* p = luaT_testuserdata<T, false>(L, 1, mt, NULL);
+    T* p = luaT_testuserdata<T>(L, 1, mt, false);
     if(p != NULL)
     {
-        if(dethunk)
-        {
-            delete *(T**)p;
-            *(T**)p = (T*)NULL;
-        }
-        else
-        {
-            p->~T();
-        }
+        p->~T();
     }
     return 0;
 }

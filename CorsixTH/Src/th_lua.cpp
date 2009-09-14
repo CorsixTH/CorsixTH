@@ -26,7 +26,13 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_pathfind.h"
 #include <new>
+#include <SDL.h>
 #include <string.h>
+#ifndef _MSC_VER
+#define stricmp strcasecmp
+#else
+#pragma warning(disable: 4996) // Deprecated CRT
+#endif
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -88,8 +94,8 @@ static int l_map_new(lua_State *L)
 
 static int l_map_set_sheet(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 2, lua_upvalueindex(1), "SpriteSheet");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
     lua_settop(L, 2);
 
     pMap->setBlockSheet(pSheet);
@@ -116,7 +122,7 @@ static void l_map_load_obj_cb(void *pL, int iX, int iY, THObjectType eTHOB, uint
 
 static int l_map_load(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
     lua_settop(L, 2);
@@ -149,7 +155,7 @@ THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     }
     else
     {
-        pAnim = luaT_testuserdata<THAnimation, false>(L, -1, lua_upvalueindex(2), "Animation");
+        pAnim = luaT_testuserdata<THAnimation>(L, -1, lua_upvalueindex(2));
         lua_pop(L, 1);
     }
     ++iIndex;
@@ -166,7 +172,7 @@ static int l_map_updateblueprint(lua_State *L)
     const unsigned int iWallAnimTopCorner = 124;
     const unsigned int iWallAnim = 120;
 
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iOldX = luaL_checkint(L, 2) - 1;
     int iOldY = luaL_checkint(L, 3) - 1;
     int iOldW = luaL_checkint(L, 4);
@@ -176,7 +182,7 @@ static int l_map_updateblueprint(lua_State *L)
     int iNewW = luaL_checkint(L, 8);
     int iNewH = luaL_checkint(L, 9);
     luaL_checktype(L, 10, LUA_TTABLE); // Animation list
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 11, lua_upvalueindex(1), "Animator");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 11, lua_upvalueindex(1));
     bool entire_invalid = lua_toboolean(L, 12) != 0;
     bool valid = !entire_invalid;
 
@@ -305,7 +311,7 @@ static int l_map_updateblueprint(lua_State *L)
 
 static int l_map_getsize(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     lua_pushinteger(L, pMap->getWidth());
     lua_pushinteger(L, pMap->getHeight());
     return 2;
@@ -313,7 +319,7 @@ static int l_map_getsize(lua_State *L)
 
 static int l_map_getcell(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
     int iY = luaL_checkint(L, 3) - 1; // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
@@ -339,7 +345,7 @@ static int l_map_getcell(lua_State *L)
 
 static int l_map_getcellflags(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
     int iY = luaL_checkint(L, 3) - 1; // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
@@ -394,7 +400,7 @@ static int l_map_getcellflags(lua_State *L)
 
 static int l_map_setcellflags(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
     int iY = luaL_checkint(L, 3) - 1; // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
@@ -447,7 +453,7 @@ static int l_map_setcellflags(lua_State *L)
 
 static int l_map_setwallflags(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     pMap->setAllWallDrawFlags((unsigned char)luaL_checkint(L, 2));
     lua_settop(L, 1);
     return 1;
@@ -455,7 +461,7 @@ static int l_map_setwallflags(lua_State *L)
 
 static int l_map_setcell(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
     int iY = luaL_checkint(L, 3) - 1; // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
@@ -474,7 +480,7 @@ static int l_map_setcell(lua_State *L)
 
 static int l_map_updateshadows(lua_State *L)
 {
-	THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+	THMap* pMap = luaT_testuserdata<THMap>(L);
 	pMap->updateShadows();
 	lua_settop(L, 1);
 	return 1;
@@ -482,7 +488,7 @@ static int l_map_updateshadows(lua_State *L)
 
 static int l_map_mark_room(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
     int iX_ = luaL_checkint(L, 2) - 1;
     int iY_ = luaL_checkint(L, 3) - 1;
     int iW = luaL_checkint(L, 4);
@@ -518,8 +524,8 @@ static int l_map_mark_room(lua_State *L)
 
 static int l_map_draw(lua_State *L)
 {
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
 
     pMap->draw(pCanvas, luaL_checkint(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5),
         luaL_checkint(L, 6), luaL_optint(L, 7, 0), luaL_optint(L, 8, 0));
@@ -530,7 +536,7 @@ static int l_map_draw(lua_State *L)
 
 static int l_map_hittest(lua_State *L)
 {
-	THMap* pMap = luaT_testuserdata<THMap, false>(L, 1, LUA_ENVIRONINDEX, "Map");
+	THMap* pMap = luaT_testuserdata<THMap>(L);
 	THDrawable* pObject = pMap->hitTest(luaL_checkint(L, 2), luaL_checkint(L, 3));
 	if(pObject == NULL)
 		return 0;
@@ -548,7 +554,7 @@ static int l_palette_new(lua_State *L)
 
 static int l_palette_load(lua_State *L)
 {
-    THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 1, LUA_ENVIRONINDEX, "Palette");
+    THPalette* pPalette = luaT_testuserdata<THPalette>(L);
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
 
@@ -567,8 +573,8 @@ static int l_rawbitmap_new(lua_State *L)
 
 static int l_rawbitmap_set_pal(lua_State *L)
 {
-    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
-    THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 2, lua_upvalueindex(1), "Palette");
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap>(L);
+    THPalette* pPalette = luaT_testuserdata<THPalette>(L, 2);
     lua_settop(L, 2);
 
     pBitmap->setPalette(pPalette);
@@ -578,11 +584,11 @@ static int l_rawbitmap_set_pal(lua_State *L)
 
 static int l_rawbitmap_load(lua_State *L)
 {
-    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap>(L);
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
     int iWidth = luaL_checkint(L, 3);
-    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget, true>(L, 4, lua_upvalueindex(1), NULL);
+    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 4, lua_upvalueindex(1), false);
 
     if(pBitmap->loadFromTHFile(pData, iDataLen, iWidth, pSurface))
         lua_pushboolean(L, 1);
@@ -594,8 +600,8 @@ static int l_rawbitmap_load(lua_State *L)
 
 static int l_rawbitmap_draw(lua_State *L)
 {
-    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap, false>(L, 1, LUA_ENVIRONINDEX, "RawBitmap");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
 
 	if(lua_gettop(L) >= 8)
 	{
@@ -618,8 +624,8 @@ static int l_spritesheet_new(lua_State *L)
 
 static int l_spritesheet_set_pal(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 1, LUA_ENVIRONINDEX, "SpriteSheet");
-    THPalette* pPalette = luaT_testuserdata<THPalette, false>(L, 2, lua_upvalueindex(1), "Palette");
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
+    THPalette* pPalette = luaT_testuserdata<THPalette>(L, 2);
     lua_settop(L, 2);
 
     pSheet->setPalette(pPalette);
@@ -629,12 +635,12 @@ static int l_spritesheet_set_pal(lua_State *L)
 
 static int l_spritesheet_load(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 1, LUA_ENVIRONINDEX, "SpriteSheet");
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
     size_t iDataLenTable, iDataLenChunk;
     const unsigned char* pDataTable = luaT_checkfile(L, 2, &iDataLenTable);
     const unsigned char* pDataChunk = luaT_checkfile(L, 3, &iDataLenChunk);
     bool bComplex = lua_toboolean(L, 4) != 0;
-    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget, true>(L, 5, lua_upvalueindex(1), NULL);
+    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 5, lua_upvalueindex(1), false);
 
     if(pSheet->loadFromTHFile(pDataTable, iDataLenTable, pDataChunk, iDataLenChunk, bComplex, pSurface))
         lua_pushboolean(L, 1);
@@ -646,7 +652,7 @@ static int l_spritesheet_load(lua_State *L)
 
 static int l_spritesheet_count(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 1, LUA_ENVIRONINDEX, "SpriteSheet");
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
 
     lua_pushinteger(L, pSheet->getSpriteCount());
     return 1;
@@ -654,7 +660,7 @@ static int l_spritesheet_count(lua_State *L)
 
 static int l_spritesheet_size(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 1, LUA_ENVIRONINDEX, "SpriteSheet");
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
     int iSprite = luaL_checkint(L, 2); // No array adjustment
     if(iSprite < 0 || (unsigned int)iSprite >= pSheet->getSpriteCount())
         return luaL_argerror(L, 2, "Sprite index out of bounds");
@@ -669,8 +675,8 @@ static int l_spritesheet_size(lua_State *L)
 
 static int l_spritesheet_draw(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 1, LUA_ENVIRONINDEX, "SpriteSheet");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     int iSprite = luaL_checkint(L, 3); // No array adjustment
 
     pSheet->drawSprite(pCanvas, iSprite, luaL_optint(L, 4, 0), luaL_optint(L, 5, 0), luaL_optint(L, 6, 0));
@@ -687,8 +693,8 @@ static int l_font_new(lua_State *L)
 
 static int l_font_set_spritesheet(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont, false>(L, 1, LUA_ENVIRONINDEX, "Font");
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 2, lua_upvalueindex(1), "SpriteSheet");
+    THFont* pFont = luaT_testuserdata<THFont>(L);
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
     lua_settop(L, 2);
 
     pFont->setSpriteSheet(pSheet);
@@ -698,7 +704,7 @@ static int l_font_set_spritesheet(lua_State *L)
 
 static int l_font_set_sep(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont, false>(L, 1, LUA_ENVIRONINDEX, "Font");
+    THFont* pFont = luaT_testuserdata<THFont>(L);
 
     pFont->setSeparation(luaL_checkint(L, 2), luaL_optint(L, 3, 0));
 
@@ -708,7 +714,7 @@ static int l_font_set_sep(lua_State *L)
 
 static int l_font_get_size(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont, false>(L, 1, LUA_ENVIRONINDEX, "Font");
+    THFont* pFont = luaT_testuserdata<THFont>(L);
     size_t iMsgLen;
     const char* sMsg = luaL_checklstring(L, 2, &iMsgLen);
 
@@ -722,8 +728,8 @@ static int l_font_get_size(lua_State *L)
 
 static int l_font_draw(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont, false>(L, 1, LUA_ENVIRONINDEX, "Font");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THFont* pFont = luaT_testuserdata<THFont>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
     const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
@@ -747,8 +753,8 @@ static int l_font_draw(lua_State *L)
 
 static int l_font_draw_wrapped(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont, false>(L, 1, LUA_ENVIRONINDEX, "Font");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THFont* pFont = luaT_testuserdata<THFont>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
     const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
@@ -771,7 +777,7 @@ static int l_layers_new(lua_State *L)
 
 static int l_layers_get(lua_State *L)
 {
-    THLayers_t* pLayers = luaT_testuserdata<THLayers_t, false>(L, 1, LUA_ENVIRONINDEX, "Layers");
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
     int iLayer = luaL_checkint(L, 2);
     if(0 <= iLayer && iLayer < 13)
         lua_pushinteger(L, pLayers->iLayerContents[iLayer]);
@@ -782,7 +788,7 @@ static int l_layers_get(lua_State *L)
 
 static int l_layers_set(lua_State *L)
 {
-    THLayers_t* pLayers = luaT_testuserdata<THLayers_t, false>(L, 1, LUA_ENVIRONINDEX, "Layers");
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
     int iLayer = luaL_checkint(L, 2);
     int iValue = luaL_checkint(L, 3);
     if(0 <= iLayer && iLayer < 13)
@@ -798,8 +804,8 @@ static int l_anims_new(lua_State *L)
 
 static int l_anims_set_spritesheet(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 2, lua_upvalueindex(1), "SpriteSheet");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
     lua_settop(L, 2);
 
     pAnims->setSpriteSheet(pSheet);
@@ -809,7 +815,7 @@ static int l_anims_set_spritesheet(lua_State *L)
 
 static int l_anims_load(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     size_t iStartDataLength, iFrameDataLength, iListDataLength, iElementDataLength;
     const unsigned char* pStartData = luaT_checkfile(L, 2, &iStartDataLength);
     const unsigned char* pFrameData = luaT_checkfile(L, 3, &iFrameDataLength);
@@ -831,7 +837,7 @@ static int l_anims_load(lua_State *L)
 
 static int l_anims_getfirst(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     int iAnim = luaL_checkint(L, 2);
 
     lua_pushinteger(L, pAnims->getFirstFrame((unsigned int)iAnim));
@@ -840,7 +846,7 @@ static int l_anims_getfirst(lua_State *L)
 
 static int l_anims_getnext(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     int iFrame = luaL_checkint(L, 2);
 
     lua_pushinteger(L, pAnims->getNextFrame((unsigned int)iFrame));
@@ -849,7 +855,7 @@ static int l_anims_getnext(lua_State *L)
 
 static int l_anims_set_alt_pal(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     unsigned int iAnimation = luaL_checkint(L, 2);
     size_t iPalLen;
     const unsigned char *pPal = luaT_checkfile(L, 3, &iPalLen);
@@ -868,10 +874,10 @@ static int l_anims_set_alt_pal(lua_State *L)
 
 static int l_anims_draw(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager, false>(L, 1, LUA_ENVIRONINDEX, "Animator");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     int iFrame = luaL_checkint(L, 3);
-    THLayers_t* pLayers = luaT_testuserdata<THLayers_t, false>(L, 4, lua_upvalueindex(2), "Layers");
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L, 4, lua_upvalueindex(2));
     int iX = luaL_checkint(L, 5);
     int iY = luaL_checkint(L, 6);
     int iFlags = luaL_optint(L, 7, 0);
@@ -890,8 +896,8 @@ static int l_path_new(lua_State *L)
 
 static int l_path_set_map(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
-    THMap* pMap = luaT_testuserdata<THMap, false>(L, 2, lua_upvalueindex(1), "Map");
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    THMap* pMap = luaT_testuserdata<THMap>(L, 2);
     lua_settop(L, 2);
 
     pPathfinder->setDefaultMap(pMap);
@@ -901,7 +907,7 @@ static int l_path_set_map(lua_State *L)
 
 static int l_path_distance(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     if(pPathfinder->findPath(NULL, luaL_checkint(L, 2) - 1, luaL_checkint(L, 3) - 1,
         luaL_checkint(L, 4) - 1, luaL_checkint(L, 5) - 1))
     {
@@ -916,7 +922,7 @@ static int l_path_distance(lua_State *L)
 
 static int l_path_path(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     pPathfinder->findPath(NULL, luaL_checkint(L, 2) - 1, luaL_checkint(L, 3) - 1,
         luaL_checkint(L, 4) - 1, luaL_checkint(L, 5) - 1);
     pPathfinder->pushResult(L);
@@ -925,7 +931,7 @@ static int l_path_path(lua_State *L)
 
 static int l_path_idle(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     if(!pPathfinder->findIdleTile(NULL, luaL_checkint(L, 2) - 1,
         luaL_checkint(L, 3) - 1, luaL_optint(L, 4, 0)))
     {
@@ -940,7 +946,7 @@ static int l_path_idle(lua_State *L)
 
 static int l_path_visit(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder, false>(L, 1, LUA_ENVIRONINDEX, "Pathfinder");
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     luaL_checktype(L, 6, LUA_TFUNCTION);
     lua_pushboolean(L, pPathfinder->visitObjects(NULL, luaL_checkint(L, 2) - 1,
         luaL_checkint(L, 3) - 1, static_cast<THObjectType>(luaL_checkint(L, 4)),
@@ -968,7 +974,7 @@ static int l_anim_set_hitresult(lua_State *L)
 
 static int l_anim_set_frame(lua_State *L)
 {
-	THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+	THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
 	pAnimation->setFrame(luaL_checkint(L, 2));
 	lua_settop(L, 1);
 	return 1;
@@ -976,8 +982,8 @@ static int l_anim_set_frame(lua_State *L)
 
 static int l_anim_set_anim(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
-    THAnimationManager* pManager = luaT_testuserdata<THAnimationManager, false>(L, 2, lua_upvalueindex(1), "Animator");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    THAnimationManager* pManager = luaT_testuserdata<THAnimationManager>(L, 2);
     int iAnim = luaL_checkint(L, 3);
     if(iAnim < 0 || (unsigned int)iAnim >= pManager->getAnimationCount())
         luaL_argerror(L, 3, "Animation index out of bounds");
@@ -996,7 +1002,7 @@ static int l_anim_set_anim(lua_State *L)
 
 static int l_anim_get_anim(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_pushinteger(L, pAnimation->getAnimation());
 
     return 1;
@@ -1004,7 +1010,7 @@ static int l_anim_get_anim(lua_State *L)
 
 static int l_anim_set_tile(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     if(lua_isnoneornil(L, 2))
     {
         pAnimation->removeFromTile();
@@ -1014,7 +1020,7 @@ static int l_anim_set_tile(lua_State *L)
     }
     else
     {
-        THMap* pMap = luaT_testuserdata<THMap, false>(L, 2, lua_upvalueindex(1), "Map");
+        THMap* pMap = luaT_testuserdata<THMap>(L, 2);
         THMapNode* pNode = pMap->getNode(luaL_checkint(L, 3) - 1, luaL_checkint(L, 4) - 1);
         if(pNode)
             pAnimation->attachToTile(pNode);
@@ -1034,7 +1040,7 @@ static int l_anim_set_tile(lua_State *L)
 
 static int l_anim_get_tile(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 1);
     lua_getfenv(L, 1);
     lua_getfield(L, 2, "map");
@@ -1068,7 +1074,7 @@ static int l_anim_get_tile(lua_State *L)
 
 static int l_anim_set_flag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     pAnimation->setFlags(luaL_checkint(L, 2));
 
     lua_settop(L, 1);
@@ -1077,7 +1083,7 @@ static int l_anim_set_flag(lua_State *L)
 
 static int l_anim_set_flag_partial(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     int iFlags = luaL_checkint(L, 2);
     if(lua_isnone(L, 3) || lua_toboolean(L, 3))
     {
@@ -1093,7 +1099,7 @@ static int l_anim_set_flag_partial(lua_State *L)
 
 static int l_anim_make_visible(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     pAnimation->setFlags(pAnimation->getFlags() & ~(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
@@ -1102,7 +1108,7 @@ static int l_anim_make_visible(lua_State *L)
 
 static int l_anim_make_invisible(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     pAnimation->setFlags(pAnimation->getFlags() | THDF_Alpha50 | THDF_Alpha75);
 
     lua_settop(L, 1);
@@ -1111,7 +1117,7 @@ static int l_anim_make_invisible(lua_State *L)
 
 static int l_anim_get_flag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_pushinteger(L, pAnimation->getFlags());
 
     return 1;
@@ -1119,7 +1125,7 @@ static int l_anim_get_flag(lua_State *L)
 
 static int l_anim_set_position(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
 
     pAnimation->setPosition(luaL_checkint(L, 2), luaL_checkint(L, 3));
 
@@ -1129,7 +1135,7 @@ static int l_anim_set_position(lua_State *L)
 
 static int l_anim_get_position(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
 
     lua_pushinteger(L, pAnimation->getX());
     lua_pushinteger(L, pAnimation->getY());
@@ -1139,7 +1145,7 @@ static int l_anim_get_position(lua_State *L)
 
 static int l_anim_set_speed(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
 
     pAnimation->setSpeed(luaL_optint(L, 2, 0), luaL_optint(L, 3, 0));
 
@@ -1149,7 +1155,7 @@ static int l_anim_set_speed(lua_State *L)
 
 static int l_anim_set_layer(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
 
     pAnimation->setLayer(luaL_checkint(L, 2), luaL_optint(L, 3, 0));
 
@@ -1159,7 +1165,7 @@ static int l_anim_set_layer(lua_State *L)
 
 static int l_anim_set_tag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 2);
     luaT_setenvfield(L, 1, "tag");
     return 1;
@@ -1167,7 +1173,7 @@ static int l_anim_set_tag(lua_State *L)
 
 static int l_anim_get_tag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 1);
     lua_getfenv(L, 1);
     lua_getfield(L, 2, "tag");
@@ -1176,7 +1182,7 @@ static int l_anim_get_tag(lua_State *L)
 
 static int l_anim_tick(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     pAnimation->tick();
     lua_settop(L, 1);
     return 1;
@@ -1184,8 +1190,8 @@ static int l_anim_tick(lua_State *L)
 
 static int l_anim_draw(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation, false>(L, 1, LUA_ENVIRONINDEX, "Animation");
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     pAnimation->draw(pCanvas, luaL_checkint(L, 3), luaL_checkint(L, 4));
     lua_settop(L, 1);
     return 1;
@@ -1199,8 +1205,8 @@ static int l_cursor_new(lua_State *L)
 
 static int l_cursor_load(lua_State *L)
 {
-	THCursor* pCursor = luaT_testuserdata<THCursor, false>(L, 1, LUA_ENVIRONINDEX, "Cursor");
-	THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet, false>(L, 2, lua_upvalueindex(1), "SpriteSheet");
+	THCursor* pCursor = luaT_testuserdata<THCursor>(L);
+	THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
 	if(pCursor->createFromSprite(pSheet, (unsigned int)luaL_checkint(L, 3),
 		luaL_optint(L, 4, 0), luaL_optint(L, 5, 0)))
 	{
@@ -1216,17 +1222,130 @@ static int l_cursor_load(lua_State *L)
 
 static int l_cursor_use(lua_State *L)
 {
-	THCursor* pCursor = luaT_testuserdata<THCursor, false>(L, 1, LUA_ENVIRONINDEX, "Cursor");
-	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 2, lua_upvalueindex(1), "Surface");
+	THCursor* pCursor = luaT_testuserdata<THCursor>(L);
+	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
 	pCursor->use(pCanvas);
 	return 0;
 }
 
 static int l_cursor_position(lua_State *L)
 {
-	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget, true>(L, 1, lua_upvalueindex(1), "Surface");
+	THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 1, lua_upvalueindex(1));
 	THCursor::setPosition(pCanvas, luaL_checkint(L, 2), luaL_checkint(L, 3));
 	return 0;
+}
+
+static int l_surface_new(lua_State *L)
+{
+    lua_remove(L, 1); // Value inserted by __call
+
+    THRenderTargetCreationParams oParams;
+    oParams.iWidth = luaL_checkint(L, 1);
+    oParams.iHeight = luaL_checkint(L, 2);
+    int iArg = 3;
+    if(lua_type(L, iArg) == LUA_TNUMBER)
+        oParams.iBPP = luaL_checkint(L, iArg++);
+    else
+        oParams.iBPP = 0;
+    oParams.iSDLFlags = 0;
+    oParams.bHardware = false;
+    oParams.bDoubleBuffered = false;
+    oParams.bFullscreen = false;
+    oParams.bPresentImmediate = false;
+
+#define FLAG(name, field, flag) \
+    else if(stricmp(sOption, name) == 0) \
+        oParams.field = true, oParams.iSDLFlags |= flag
+    
+    for(int iArgCount = lua_gettop(L); iArg <= iArgCount; ++iArg)
+    {
+        const char* sOption = luaL_checkstring(L, iArg);
+        if(sOption[0] == 0)
+            continue;
+        FLAG("hardware"         , bHardware        , SDL_HWSURFACE );
+        FLAG("doublebuf"        , bDoubleBuffered  , SDL_DOUBLEBUF );
+        FLAG("fullscreen"       , bFullscreen      , SDL_FULLSCREEN);
+        FLAG("present immediate", bPresentImmediate, 0             );
+    }
+
+#undef FLAG
+
+    THRenderTarget* pCanvas = luaT_stdnew<THRenderTarget>(L);
+    if(pCanvas->create(&oParams))
+        return 1;
+
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
+}
+
+static int l_surface_fill_black(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_settop(L, 1);
+    if(pCanvas->fillBlack())
+        return 1;
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
+}
+
+static int l_surface_start_frame(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_settop(L, 1);
+    if(pCanvas->startFrame())
+        return 1;
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
+}
+
+static int l_surface_end_frame(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_settop(L, 1);
+    if(pCanvas->endFrame())
+        return 1;
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
+}
+
+static int l_surface_nonoverlapping(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    if(lua_isnone(L, 2) || lua_toboolean(L, 2) != 0)
+        pCanvas->startNonOverlapping();
+    else
+        pCanvas->finishNonOverlapping();
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_surface_map(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_pushnumber(L, (lua_Number)pCanvas->mapColour(
+		(Uint8)luaL_checkinteger(L, 2),
+		(Uint8)luaL_checkinteger(L, 3),
+		(Uint8)luaL_checkinteger(L, 4)));
+    return 1;
+}
+
+static int l_surface_rect(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    if(pCanvas->fillRect((uint32_t)luaL_checknumber(L, 2),
+        luaL_checkint(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5),
+        luaL_checkint(L, 6)))
+    {
+        lua_settop(L, 1);
+        return 1;
+    }
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
 }
 
 static int l_load_strings(lua_State *L)
@@ -1281,7 +1400,7 @@ int luaopen_th(lua_State *L)
     const int iAnimsMT   = 6; lua_createtable(L, 0, 2);
     const int iAnimMT    = 7; lua_createtable(L, 0, 2);
     const int iPathMT    = 8; lua_createtable(L, 0, 2);
-    const int iSurfaceMT = 9; lua_getfield(L, LUA_REGISTRYINDEX, "Surface_meta");
+    const int iSurfaceMT = 9; lua_createtable(L, 0, 2);
     const int iBitmapMT  =10; lua_createtable(L, 0, 2);
 	const int iCursorMT  =11; lua_createtable(L, 0, 2);
 
@@ -1289,15 +1408,6 @@ int luaopen_th(lua_State *L)
     const int iTop = iTH;
 
     lua_checkstack(L, 10);
-
-    if(lua_isnil(L, iSurfaceMT))
-    {
-        lua_getglobal(L, "require");
-        lua_pushliteral(L, "sdl");
-        lua_call(L, 1, 0);
-        lua_getfield(L, LUA_REGISTRYINDEX, "Surface_meta");
-        lua_replace(L, iSurfaceMT);
-    }
 
 #define luaT_class(typnam, new_fn, name, mt_idx) { \
     const char * sCurrentClassName = name; \
@@ -1307,7 +1417,7 @@ int luaopen_th(lua_State *L)
     lua_pushvalue(L, mt_idx); \
     lua_replace(L, LUA_ENVIRONINDEX); \
     /* Set the __gc metamethod to C++ destructor */ \
-    lua_pushcclosure(L, luaT_stdgc<typnam, false, LUA_ENVIRONINDEX>, 0); \
+    lua_pushcclosure(L, luaT_stdgc<typnam, LUA_ENVIRONINDEX>, 0); \
     lua_setfield(L, mt_idx, "__gc"); \
     /* Create the methods table; call it -> new instance */ \
     luaT_pushcclosuretable(L, new_fn, 0); \
@@ -1439,6 +1549,16 @@ int luaopen_th(lua_State *L)
 	luaT_setfunction(l_cursor_use, "use", iSurfaceMT);
 	luaT_setfunction(l_cursor_position, "setPosition", iSurfaceMT);
 	luaT_endclass();
+
+    // Surface
+    luaT_class(THRenderTarget, l_surface_new, "surface", iSurfaceMT);
+    luaT_setfunction(l_surface_fill_black, "fillBlack");
+    luaT_setfunction(l_surface_start_frame, "startFrame");
+    luaT_setfunction(l_surface_end_frame, "endFrame");
+    luaT_setfunction(l_surface_nonoverlapping, "nonOverlapping");
+    luaT_setfunction(l_surface_map, "mapRGB");
+    luaT_setfunction(l_surface_rect, "drawRect");
+    luaT_endclass();
 
 #undef luaT_class
 #undef luaT_endclass

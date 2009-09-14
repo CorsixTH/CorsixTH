@@ -261,7 +261,7 @@ static int l_music_volume(lua_State *L)
 
 static int l_play_music(lua_State *L)
 {
-    music_t* pLMusic = luaT_testuserdata<music_t, false>(L, 1, LUA_ENVIRONINDEX, "Music");
+    music_t* pLMusic = luaT_testuserdata<music_t>(L);
     if(Mix_PlayMusic(pLMusic->pMusic, luaL_optint(L, 2, 1)) != 0)
     {
         lua_pushnil(L);
@@ -337,7 +337,7 @@ int luaopen_sdl_audio(lua_State *L)
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, -1);
     lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<music_t, false, LUA_ENVIRONINDEX>, 0);
+    lua_pushcclosure(L, luaT_stdgc<music_t, LUA_ENVIRONINDEX>, 0);
     lua_setfield(L, -2, "__gc");
     lua_pushvalue(L, 1);
     lua_setfield(L, -2, "__index");

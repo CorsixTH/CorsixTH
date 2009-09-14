@@ -278,7 +278,6 @@ static const struct luaL_reg sdllib[] = {
 };
 
 int luaopen_sdl_audio(lua_State *L);
-int luaopen_sdl_video(lua_State *L);
 int luaopen_sdl_wm(lua_State *L);
 
 int luaopen_sdl(lua_State *L)
@@ -290,10 +289,6 @@ int luaopen_sdl(lua_State *L)
     lua_pushcfunction(L, luaopen_sdl_audio);
     lua_call(L, 0, 1);
     lua_setfield(L, -2, "audio");
-
-    lua_pushcfunction(L, luaopen_sdl_video);
-    lua_call(L, 0, 1);
-    lua_setfield(L, -2, "video");
 
     lua_pushcfunction(L, luaopen_sdl_wm);
     lua_call(L, 0, 1);

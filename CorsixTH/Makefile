@@ -9,8 +9,8 @@ CFLAGS= `sdl-config --cflags`
 LIBS= -llua `sdl-config --libs` -lSDL_mixer
 
 ALL_T= CorsixTH
-ALL_O= lfs.o main.o rnc.o sdl_core.o sdl_video.o sdl_wm.o th.o th_gfx.o \
-	th_lua.o th_map.o th_pathfind.o dx9_video.o th_gfx_dx9.o th_gfx_sdl.o \
+ALL_O= lfs.o main.o rnc.o sdl_core.o sdl_wm.o th.o th_gfx.o \
+	th_lua.o th_map.o th_pathfind.o th_gfx_dx9.o th_gfx_sdl.o \
 	random.o SDL_main_win32.o xmi2mid.o sdl_audio.o
 
 default: all
@@ -41,14 +41,8 @@ sdl_audio.o:
 sdl_core.o:
 	$(CPP) -c Src/sdl_core.cpp $(CFLAGS)
 
-sdl_video.o:
-	$(CPP) -c Src/sdl_video.cpp $(CFLAGS)
-
 SDL_main_win32.o:
 	$(CC) -c Src/SDL_main_win32.c $(CFLAGS)
-
-dx9_video.o:
-	$(CPP) -c Src/dx9_video.cpp $(CFLAGS)
 
 sdl_wm.o:
 	$(CPP) -c Src/sdl_wm.cpp $(CFLAGS)

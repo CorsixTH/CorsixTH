@@ -311,7 +311,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     rcClip.y = iCanvasY;
     rcClip.w = iWidth;
     rcClip.h = iHeight;
-    THRenderTarget_SetClipRect(pCanvas, &rcClip);
+    pCanvas->setClipRect(&rcClip);
 
     int iStartX = 0;
     int iStartY = (iScreenY - 32) / 16;
@@ -332,7 +332,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 #define TILE_X_OVERLAP /* plus/minus */ 56
 
     // 1st pass
-    THRenderTarget_StartNonOverlapping(pCanvas);
+    pCanvas->startNonOverlapping();
     while(true)
     {
         int iX = iBaseX;
@@ -381,7 +381,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         else
             ++iBaseY;
     }
-    THRenderTarget_FinishNonOverlapping(pCanvas);
+    pCanvas->finishNonOverlapping();
 
     // 2nd pass
     iBaseX = iStartX;
@@ -451,16 +451,16 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                         if(pNode->iFlags & THMN_ShadowWall)
                         {
                             THClipRect rcOldClip, rcNewClip;
-                            THRenderTarget_GetClipRect(pCanvas, &rcOldClip);
+                            pCanvas->getClipRect(&rcOldClip);
                             rcNewClip.x = iXs - 32;
                             rcNewClip.y = iYs - iH + 32 + 4;
                             rcNewClip.w = 64;
                             rcNewClip.h = 86 - 4;
                             IntersectClipRect(rcNewClip, rcOldClip);
-                            THRenderTarget_SetClipRect(pCanvas, &rcNewClip);
+                            pCanvas->setClipRect(&rcNewClip);
                             m_pBlocks->drawSprite(pCanvas, 156, iXs - 32,
                                 iYs - 56, THDF_Alpha75);
-                            THRenderTarget_SetClipRect(pCanvas, &rcOldClip);
+                            pCanvas->setClipRect(&rcOldClip);
                         }
                     }
                     if(pNode->oEarlyEntities.pNext != NULL)
@@ -514,7 +514,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             ++iBaseY;
     }
 
-    THRenderTarget_SetClipRect(pCanvas, NULL);
+    pCanvas->setClipRect(NULL);
 }
 
 THDrawable* THMap::hitTest(int iTestX, int iTestY) const

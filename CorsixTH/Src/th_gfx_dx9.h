@@ -34,6 +34,7 @@ struct IDirect3DDevice9;
 struct IDirect3DTexture9;
 struct IDirect3DSurface9;
 class THCursor;
+struct THRenderTargetCreationParams;
 
 struct THClipRect
 {
@@ -60,31 +61,53 @@ struct THDX9_Vertex
 // length is ((2 ^ 16) / 4) * 6 == 0x18000
 #define THDX9_INDEX_BUFFER_LENGTH  0x18000
 
-struct THRenderTarget
+class THRenderTarget
 {
+public:
     THRenderTarget();
     ~THRenderTarget();
 
-    IDirect3D9 *pD3D;
-    IDirect3DDevice9 *pDevice;
-    THDX9_Vertex *pVerticies;
-	IDirect3DTexture9 *pWhiteTexture;
-    THClipRect rcClip;
-    size_t iVertexCount;
-    size_t iVertexLength;
-    size_t iNonOverlappingStart;
-    int iNonOverlapping;
-	bool bIsWindowed;
-	bool bIsHardwareCursorSupported;
-	bool bIsCursorInHardware;
-    uint16_t aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
+    bool create(const THRenderTargetCreationParams* pParams);
+    const char* getLastError();
+
+    bool startFrame();
+    bool endFrame();
+    bool fillBlack();
+    uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
+    bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
+    void getClipRect(THClipRect* pRect) const;
+    void setClipRect(const THClipRect* pRect);
+    void startNonOverlapping();
+    void finishNonOverlapping();
+    void setCursor(THCursor* pCursor);
+	bool setCursorPosition(int iX, int iY);
+
+    IDirect3DDevice9* getRawDevice() {return m_pDevice;}
+    THDX9_Vertex* allocVerticies(size_t iCount, IDirect3DTexture9* pTexture);
+    void draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
+        unsigned int iHeight, int iX, int iY, unsigned long iFlags,
+        unsigned int iWidth2, unsigned int iHeight2, unsigned int iTexX,
+        unsigned int iTexY);
+    void flushSprites();
+
+protected:
+    IDirect3D9 *m_pD3D;
+    IDirect3DDevice9 *m_pDevice;
+    THDX9_Vertex *m_pVerticies;
+	IDirect3DTexture9 *m_pWhiteTexture;
+    const char *m_sLastError;
+    THClipRect m_rcClip;
+    size_t m_iVertexCount;
+    size_t m_iVertexLength;
+    size_t m_iNonOverlappingStart;
+    int m_iNonOverlapping;
+	bool m_bIsWindowed;
+	bool m_bIsHardwareCursorSupported;
+	bool m_bIsCursorInHardware;
+    uint16_t m_aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
+
+    void _drawVerts(size_t iFirst, size_t iLast);
 };
-
-void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
-void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
-
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget);
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget);
 
 class THPalette
 {
@@ -112,12 +135,6 @@ IDirect3DTexture9* THDX9_CreateTexture(int iWidth, int iHeight,
                                        int* pWidth2 = NULL,
                                        int* pHeight2 = NULL);
 
-void THDX9_Draw(THRenderTarget* pCanvas, IDirect3DTexture9 *pTexture,
-                unsigned int iWidth, unsigned int iHeight,
-                int iX, int iY, unsigned long iFlags, unsigned int iWidth2,
-                unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY);
-
-void THDX9_FlushSprites(THRenderTarget* pTarget);
 void THDX9_FillIndexBuffer(uint16_t* pVerticies, size_t iFirst, size_t iCount);
 
 class THRawBitmap
@@ -217,7 +234,7 @@ public:
 	static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
 
 protected:
-	friend struct THRenderTarget;
+	friend class THRenderTarget;
 
 	IDirect3DSurface9* m_pBitmap;
 	unsigned int m_iHotspotX;

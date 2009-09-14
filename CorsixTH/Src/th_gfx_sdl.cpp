@@ -26,32 +26,93 @@ SOFTWARE.
 #include "th_map.h"
 #include <new>
 
-THRenderTarget::THRenderTarget(SDL_Surface* pSurface)
+THRenderTarget::THRenderTarget()
 {
-	m_pSurface = pSurface;
+	m_pSurface = NULL;
 	m_pCursor = NULL;
 }
 
-void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect)
+THRenderTarget::~THRenderTarget()
 {
-    SDL_GetClipRect(const_cast<SDL_Surface*>(pTarget->getRawSurface()),
-		reinterpret_cast<SDL_Rect*>(pRect));
 }
 
-void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect)
+bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 {
-    SDL_SetClipRect(pTarget->getRawSurface(),
-		reinterpret_cast<const SDL_Rect*>(pRect));
+    if(m_pSurface != NULL)
+        return false;
+    m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight,
+        pParams->iBPP, pParams->iSDLFlags);
+    return m_pSurface != NULL;
 }
 
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
+const char* THRenderTarget::getLastError()
 {
-    // SDL has no optimisations for drawing lots of non-overlapping sprites
+    return SDL_GetError();
 }
 
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
+bool THRenderTarget::startFrame()
 {
-    // SDL has no optimisations for drawing lots of non-overlapping sprites
+    return true;
+}
+
+bool THRenderTarget::endFrame()
+{
+    if(m_pCursor)
+	{
+		m_pCursor->draw(this, m_iCursorX, m_iCursorY);
+	}
+    return SDL_Flip(m_pSurface) == 0;
+}
+
+bool THRenderTarget::fillBlack()
+{
+    return SDL_FillRect(m_pSurface, NULL, mapColour(0, 0, 0)) == 0;
+}
+
+uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    return SDL_MapRGB(m_pSurface->format, iR, iG, iB);
+}
+
+bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
+{
+    SDL_Rect rcDest;
+    rcDest.x = iX;
+    rcDest.y = iY;
+    rcDest.w = iW;
+    rcDest.h = iH;
+    return SDL_FillRect(m_pSurface, &rcDest, iColour) == 0;
+}
+
+void THRenderTarget::getClipRect(THClipRect* pRect) const
+{
+    SDL_GetClipRect(m_pSurface, reinterpret_cast<SDL_Rect*>(pRect));
+}
+
+void THRenderTarget::setClipRect(const THClipRect* pRect)
+{
+    SDL_SetClipRect(m_pSurface, reinterpret_cast<const SDL_Rect*>(pRect));
+}
+
+void THRenderTarget::startNonOverlapping()
+{
+     // SDL has no optimisations for drawing lots of non-overlapping sprites
+}
+
+void THRenderTarget::finishNonOverlapping()
+{
+     // SDL has no optimisations for drawing lots of non-overlapping sprites
+}
+
+void THRenderTarget::setCursor(THCursor* pCursor)
+{
+	m_pCursor = pCursor;
+}
+
+void THRenderTarget::setCursorPosition(int iX, int iY)
+{
+	m_iCursorX = iX;
+	m_iCursorY = iY;
 }
 
 THPalette::THPalette()
@@ -501,25 +562,6 @@ bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
 	pTarget->setCursorPosition(iX, iY);
 	return true;
-}
-
-void THRenderTarget::setCursor(THCursor* pCursor)
-{
-	m_pCursor = pCursor;
-}
-
-void THRenderTarget::setCursorPosition(int iX, int iY)
-{
-	m_iCursorX = iX;
-	m_iCursorY = iY;
-}
-
-void THRenderTarget::drawCursor()
-{
-	if(m_pCursor)
-	{
-		m_pCursor->draw(this, m_iCursorX, m_iCursorY);
-	}
 }
 
 void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)

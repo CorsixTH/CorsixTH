@@ -52,6 +52,18 @@ enum THDrawFlags
     THDF_ListBottom     = 1 << 11,
 };
 
+struct THRenderTargetCreationParams
+{
+    int iWidth;
+    int iHeight;
+    int iBPP;
+    uint32_t iSDLFlags;
+    bool bHardware;
+    bool bDoubleBuffered;
+    bool bFullscreen;
+    bool bPresentImmediate;
+};
+
 /*!
     Base class for a linked list of drawable objects.
 */
