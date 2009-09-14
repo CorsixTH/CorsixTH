@@ -78,11 +78,15 @@ function App:init()
   SDL.wm.setCaption "CorsixTH"
   local modes = {"hardware", "doublebuf"}
   if self.config.fullscreen then
+    self.fullscreen = true
     modes[#modes + 1] = "fullscreen"
+  else
+    self.fullscreen = false
   end
   if TRACK_FPS then
     modes[#modes + 1] = "present immediate"
   end
+  self.modes = modes
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   SDL.wm.setIconWin32()
   

@@ -54,6 +54,7 @@ public:
     void finishNonOverlapping();
     void setCursor(THCursor* pCursor);
 	void setCursorPosition(int iX, int iY);
+	bool takeScreenshot(const unsigned char* pFile);
 
 	SDL_Surface* getRawSurface() {return m_pSurface;}
 	const SDL_Surface* getRawSurface() const {return m_pSurface;}

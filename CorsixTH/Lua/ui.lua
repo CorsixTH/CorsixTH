@@ -24,6 +24,7 @@ class "UI" (Window)
 
 local TH = require "TH"
 local WM = require "sdl".wm
+local lfs = require "lfs"
 
 local function invert(t)
   local r = {}
@@ -48,6 +49,8 @@ local key_codes = invert {
   F9 = 290,
   F10 = 291,
   F11 = 292,
+  S = 115,
+  Enter = 13,
   shift = {303, 304},
   ctrl = {305, 306},
   alt = {307, 308, 313},
@@ -165,7 +168,7 @@ end
 function UI:debugMakeAdviserTalk()
   local id = 2
   while _S(54, id) == "." do
-    id = math.floor(3 + math.random() * 112)
+    id = math.floor(math.random(3, 115))
   end
   self.adviser:say(_S(54, id))
 end
@@ -237,12 +240,41 @@ function UI:onKeyDown(code)
         return true
       end
     end
-  elseif key == "F10" then
+  elseif key == "F10" then -- Restart
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
-  elseif key == "F11" then
+  elseif key == "F11" then -- Make Adviser say a random phrase
     self:debugMakeAdviserTalk()
+  elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
+    local modes = self.app.modes
+    
+    -- Search in modes table if it contains a fullscreen value and keep the index
+    -- If not found, we will add an index at end of table
+    local index = #modes + 1
+    for i=1, #modes do
+      if modes[i] == "fullscreen" then
+        index = i
+        break
+      end
+    end
+    
+    -- Toggle Fullscreen mode
+    self.app.fullscreen = not self.app.fullscreen
+    if self.app.fullscreen then
+      modes[index] = "fullscreen"
+    else
+      modes[index] = ""
+    end
+    self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
+    self.cursor:use(self.app.video) -- Redraw cursor
+  elseif key == "S" then
+     -- Find an index for screenshot which is not already used
+    local i = 0
+    while lfs.attributes("./screenshot" .. tostring(i) .. ".bmp", "size") ~= nil do
+      i = i + 1
+    end
+    self.app.video:takeScreenshot("./screenshot" .. tostring(i) .. ".bmp") -- Take screenshot
   end
 end
 
@@ -364,23 +396,23 @@ function UI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
   
-  if x <= 10 or y <= 10 or x >= self.app.config.width - 10 or y >= self.app.config.height - 10 then
+  if x <= 3 or y <= 3 or x >= self.app.config.width - 3 or y >= self.app.config.height - 3 then
     local dx = 0
     local dy = 0
-    if x <= 10 then
+    if x <= 3 then
       dx = -10
-    elseif x >= self.app.config.width - 10 then
+    elseif x >= self.app.config.width - 3 then
       dx = 10
     end
-    if y <= 10 then
+    if y <= 3 then
       dy = -10
-    elseif y >= self.app.config.height - 10 then
+    elseif y >= self.app.config.height - 3 then
       dy = 10
     end
 
     self.tick_scroll_amount = {x = dx, y = dy}
   else
-    self.tick_scroll_amount = false
+    self.tick_scroll_amount = {x = 0, y = 0}
   end
   
   if Window.onMouseMove(self, x, y, dx, dy) then

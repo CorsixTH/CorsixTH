@@ -29,13 +29,13 @@ function UIAdviser:UIAdviser(ui)
   
   self.esc_closes = false
   self.modal_class = "adviser"
-  self.tick_count = 0
-  self.frame = 1
+  self.tick_count = 0       -- Initialize animation counter
+  self.frame = 1            -- Current frame
   self.visible = false
-  self.number_frames = 4
-  self.speech = nil
-  self.is_talking = false
-  self.timer = nil
+  self.number_frames = 4    -- Used for playing animation only once
+  self.speech = nil         -- Store what adviser is going to say
+  self.is_talking = false   -- If adviser is already been saying something
+  self.timer = nil          -- Timer which hide adviser when ends
   self.ui = ui
   self.width = 200
   self.height = 64
@@ -45,7 +45,6 @@ function UIAdviser:UIAdviser(ui)
   self.black_font = app.gfx:loadFont("QData", "Font50V")
   
   local th = TH.animation()
-  th:setSpeed(0, 0)
   self.th = th
 end
 
@@ -83,6 +82,7 @@ function UIAdviser:say(speech)
   self.frame = 1
   self.number_frames = 28
   
+  -- Calculate number of lines needed for the text. Each "/" at end of string indicates a blank line
   local number_lines = 3
   for i=1, 2 do
     if speech:sub(-1) == "/" then
@@ -91,10 +91,11 @@ function UIAdviser:say(speech)
     end
   end
   
+  -- Calculate balloon width from string len
   self.balloon_width = math.floor(#speech / number_lines) * 7
-  if self.balloon_width >= 400 then
+  if self.balloon_width >= 400 then -- Balloon too large
     self.balloon_width = 400
-  elseif self.balloon_width <= 40 then
+  elseif self.balloon_width <= 40 then -- Balloon too small
     self.balloon_width = 40
   end
   self.is_talking = true
@@ -107,6 +108,7 @@ function UIAdviser:draw(canvas)
   Window.draw(self, canvas)
   self.th:draw(canvas, x + 200, y)
   if self.is_talking == true then
+    -- Draw ballon
     local x_left_sprite
     for dx=0, self.balloon_width, 16 do
       x_left_sprite = x + 139 - dx
@@ -114,21 +116,22 @@ function UIAdviser:draw(canvas)
     end
     self.panel_sprites:draw(canvas, 37, x_left_sprite - 16, y - 25)
     self.panel_sprites:draw(canvas, 39, x + 155, y - 40)
+    -- Draw text
     self.black_font:drawWrapped(canvas, self.speech, x_left_sprite - 8, y - 20, self.balloon_width + 60)
   end
 end
 
 function UIAdviser:onTick()
    if self.timer == 0 then
-    self:hide()
+    self:hide() -- Timer ends, so we hide the adviser
    elseif self.timer ~= nil then
       self.timer = self.timer - 1
   end
 
   if self.frame < self.number_frames then
-    if self.tick_count == 6 then
+    if self.tick_count == 6 then -- Used for making a smooth animation
       self.tick_count = 0
-      if self.th:getAnimation() ~= 0 then
+      if self.th:getAnimation() ~= 0 then -- If no animation set (adviser not being shown already)
         self.th:tick()
         self.frame = self.frame + 1
       end
@@ -136,8 +139,10 @@ function UIAdviser:onTick()
       self.tick_count = self.tick_count + 1
     end
   elseif self.visible == false and self.frame == self.number_frames then
+    -- Visibility is set to false so we want to hide adviser but we have to wait until the animation ends
     self.th:makeInvisible()
   elseif self.visible == true and self.speech ~= nil and self.is_talking == false then
+    -- Adviser not already talking and he has something to say so let's him speak
     self:say(self.speech)
   end
 end

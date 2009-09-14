@@ -1348,6 +1348,20 @@ static int l_surface_rect(lua_State *L)
     return 2;
 }
 
+static int l_surface_screenshot(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    size_t iFileLen;
+    const unsigned char *pFile = luaT_checkfile(L, 2, &iFileLen);
+    if (pCanvas->takeScreenshot(pFile)) {
+        lua_settop(L, 1);
+        return 1;
+    }
+    lua_pushnil(L);
+    lua_pushstring(L, pCanvas->getLastError());
+    return 2;
+}
+
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
@@ -1558,6 +1572,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_surface_nonoverlapping, "nonOverlapping");
     luaT_setfunction(l_surface_map, "mapRGB");
     luaT_setfunction(l_surface_rect, "drawRect");
+    luaT_setfunction(l_surface_screenshot, "takeScreenshot");
     luaT_endclass();
 
 #undef luaT_class

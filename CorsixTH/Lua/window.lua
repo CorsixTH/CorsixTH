@@ -294,8 +294,6 @@ end
 
 function Window:onTick()
   if self.windows then
-    for i=1, #self.windows do
-      self.windows[i]:onTick()
-    end
+    for index, window in ipairs(self.windows) do window:onTick() end
   end
 end

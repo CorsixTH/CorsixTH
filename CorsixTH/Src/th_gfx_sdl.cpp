@@ -115,6 +115,11 @@ void THRenderTarget::setCursorPosition(int iX, int iY)
 	m_iCursorY = iY;
 }
 
+bool THRenderTarget::takeScreenshot(const unsigned char* pFile)
+{
+    return SDL_SaveBMP(m_pSurface, (char*) pFile) == 0;
+}
+
 THPalette::THPalette()
 {
     m_iNumColours = 0;
