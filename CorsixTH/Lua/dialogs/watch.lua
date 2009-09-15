@@ -34,7 +34,7 @@ function UIWatch:UIWatch(ui)
   self.width = 200
   self.height = 64
   self.x = 20
-  self.y = 0.75 * app.config.height
+  self.y = app.config.height - self.height - 100
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   

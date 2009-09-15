@@ -216,6 +216,15 @@ function App:fixConfig()
     if key == "language" and type(value) == "string" then
       self.config[key] = languages[value:lower()] or value
     end
+    
+    -- For resolution, check if resolution is at least 640x480
+    if key == "width" and type(value) == "number" and self.config[key] < 640 then
+      self.config[key] = 640
+    end
+    
+    if key == "height" and type(value) == "number" and self.config[key] < 480 then
+      self.config[key] = 480
+    end
   end
 end
 
