@@ -120,6 +120,10 @@ public:
 
     void setPalette(const THPalette* pPalette);
 
+    //! Load a sprite sheet from Theme Hospital data
+    /*!
+        @param bComplexChunks See THChunkRenderer::decodeChunks()
+    */
     bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                         const unsigned char* pChunkData, size_t iChunkDataLength,
                         bool bComplexChunks, THRenderTarget *pUnused);

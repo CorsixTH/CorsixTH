@@ -129,11 +129,12 @@ protected:
 
 class THPalette
 {
-public:
+public: // External API
     THPalette();
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
+public: // Internal (this rendering engine only) API
     int getColourCount() const;
     const uint32_t* getARGBData() const;
 
@@ -157,10 +158,9 @@ void THDX9_FillIndexBuffer(uint16_t* pVerticies, size_t iFirst, size_t iCount);
 
 class THRawBitmap : protected THDX9_DeviceResource
 {
-public:
+public: // External API
     THRawBitmap();
     ~THRawBitmap();
-    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     void setPalette(const THPalette* pPalette);
 
@@ -170,6 +170,9 @@ public:
     void draw(THRenderTarget* pCanvas, int iX, int iY);
     void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
               int iWidth, int iHeight);
+
+public: // Internal (this rendering engine only) API
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
 protected:
     IDirect3DTexture9* m_pBitmap;
@@ -182,10 +185,9 @@ protected:
 
 class THSpriteSheet : protected THDX9_DeviceResource
 {
-public:
+public: // External API
     THSpriteSheet();
     ~THSpriteSheet();
-    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     void setPalette(const THPalette* pPalette);
 
@@ -201,6 +203,9 @@ public:
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
+
+public: // Internal (this rendering engine only) API
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
 protected:
     friend class THCursor;

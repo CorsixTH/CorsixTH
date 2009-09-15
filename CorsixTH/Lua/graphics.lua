@@ -24,6 +24,9 @@ local pathsep = package.config:sub(1, 1)
 local assert, string_char, table_concat, unpack
     = assert, string.char, table.concat, unpack
 
+-- The Graphics class handles loading and caching of graphics resources.
+-- It can adapt as the API to C changes, and hide these changes from most of
+-- the other Lua code.
 class "Graphics"
 
 function Graphics:Graphics(app)
@@ -36,7 +39,6 @@ function Graphics:Graphics(app)
     palette_greyscale_ghost = {},
     ghosts = {},
     anims = {},
-    bitmap = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
   -- If the video target changes then resources will need to be reloaded
@@ -79,18 +81,21 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
 end
 
 function Graphics:makeGreyscaleGhost(pal)
-  local entries = {}
   local remap = {}
+  -- Convert pal from a string to an array of palette entries
+  local entries = {}
   for i = 1, #pal, 3 do
-    local entry = {pal:byte(i, i + 2)}
+    local entry = {pal:byte(i, i + 2)} -- R, G, B at [1], [2], [3]
     entries[(i - 1) / 3] = entry
   end
+  -- For each palette entry, convert it to grey and then find the nearest
+  -- entry in the palette to that grey.
   for i = 0, #entries do
     local entry = entries[i]
     -- NB: g is for grey, not green
     local g = entry[1] * 0.299 + entry[2] * 0.587 + entry[3] * 0.114
     local g_index = 0
-    local g_diff = 100000
+    local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
       local entry = entries[j]
       local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2 
@@ -101,6 +106,7 @@ function Graphics:makeGreyscaleGhost(pal)
     end
     remap[i] = string_char(g_index)
   end
+  -- Convert remap from an array to a string
   return table_concat(remap, "", 0, 255)
 end
 
@@ -127,17 +133,6 @@ function Graphics:loadGhost(dir, name, index)
     self.cache.ghosts[name] = cached
   end
   return cached:sub(index * 256 + 1, index * 256 + 256)
-end
-
-function Graphics:loadBitmap(name)
-  if self.cache.bitmap[name] then
-    return self.cache.bitmap[name]
-  end
-  
-  local surface = assert(SDL.video.loadBitmap("Bitmap" .. pathsep .. name .. ".bmp", self.target))
-  
-  self.cache.bitmap[name] = surface
-  return surface
 end
 
 function Graphics:loadRaw(name, width, height, paldir, pal)

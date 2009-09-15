@@ -519,7 +519,7 @@ void THChunkRenderer::decodeChunks(const unsigned char* data, int datalen, bool 
 {
     if(complex)
     {
-        while(!isDone() && datalen > 0)
+        while(!_isDone() && datalen > 0)
         {
             unsigned char b = *data;
             --datalen;
@@ -572,7 +572,7 @@ void THChunkRenderer::decodeChunks(const unsigned char* data, int datalen, bool 
     }
     else
     {
-        while(!isDone() && datalen > 0)
+        while(!_isDone() && datalen > 0)
         {
             unsigned char b = *data;
             --datalen;

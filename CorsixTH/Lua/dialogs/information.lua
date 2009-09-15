@@ -18,10 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-local ipairs, math_floor
-    = ipairs, math.floor
-
 class "UIInformation" (Window)
 
 function UIInformation:UIInformation(ui, text, callback)
@@ -46,7 +42,12 @@ function UIInformation:UIInformation(ui, text, callback)
   end
   self:addPanel(359, 0, 136)  -- Dialog footer
   self:addPanel(360, 0, 146):makeButton(8, 10, 82, 34, 361, self.close)  -- Cancel button
-  self:addPanel(362, 90, 146):makeButton(8, 10, 82, 34, 363, function() self:close(); self:callback() end)  -- OK button
+  self:addPanel(362, 90, 146):makeButton(8, 10, 82, 34, 363, self.ok)  -- OK button
+end
+
+function UIInformation:ok()
+  self:close()
+  self.callback()
 end
 
 function UIInformation:draw(canvas)

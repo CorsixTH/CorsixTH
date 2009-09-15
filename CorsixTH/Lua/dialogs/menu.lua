@@ -439,6 +439,18 @@ function UIMenuBar:makeMenu(app)
     )
     :appendItem(_S(3, -1), function() self.ui:addWindow(UIJukebox(app)) end) -- Jukebox
   end
+  local function rate(num, denom)
+    return num == 1 and denom == 3, function()
+      app.world:setTickRate(num, denom)
+    end, ""
+  end
+  options:appendMenu(_S(3, 8), UIMenu() -- Game speed
+    :appendCheckItem(_S(12, 1), rate(1, 9)) -- Slowest
+    :appendCheckItem(_S(12, 2), rate(1, 5)) -- Slower
+    :appendCheckItem(_S(12, 3), rate(1, 3)) -- Normal (default)
+    :appendCheckItem(_S(12, 4), rate(1, 1)) -- Max speed
+    :appendCheckItem(_S(12, 5), rate(3, 1)) -- And then some more
+  )
   self:addMenu(_S(1, 2), options) -- Options
   self:addMenu(_S(1, 4), UIMenu() -- Charts
     :appendItem(_S(5, 1)) -- Statement
@@ -484,7 +496,7 @@ function UIMenuBar:makeMenu(app)
     :appendItem(_"Make Patients", function() self.ui:debugMakePatients() end)
     :appendItem(_"Make Adviser Talk", function() self.ui:debugMakeAdviserTalk() end)
     :appendItem(_"Show watch", function() self.ui:addWindow(UIWatch(self.ui)) end)
-    :appendItem(_"Place Objects",place_objs)
+    :appendItem(_"Place Objects", place_objs)
     :appendMenu(_"Map overlay", UIMenu()
       :appendCheckItem(_"None", true, overlay(), "")
       :appendCheckItem(_"Flags", false, overlay"flags", "")

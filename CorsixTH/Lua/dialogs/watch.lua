@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-
 class "UIWatch" (Window)
 
 function UIWatch:UIWatch(ui)
@@ -29,7 +27,7 @@ function UIWatch:UIWatch(ui)
   
   self.esc_closes = false
   self.modal_class = "open_countdown"
-  self.tick_rate = app.world.tick_rate * 24 * 8 -- Counter seems to advance every 8 days in original TH
+  self.tick_rate = 24 * 8 -- Counter seems to advance every 8 days in original TH
   self.tick_timer = self.tick_rate  -- Initialize tick timer
   self.open_timer = 12
   self.ui = ui
@@ -67,7 +65,7 @@ function UIWatch:draw(canvas)
   end
 end
 
-function UIWatch:onTick()
+function UIWatch:onWorldTick()
   if self.tick_timer == 0 and self.open_timer > 0 then -- Used for making a smooth animation
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1

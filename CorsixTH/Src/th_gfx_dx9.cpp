@@ -33,6 +33,7 @@ SOFTWARE.
 #include <assert.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
+#pragma warning(disable: 4996) // Deprecated fopen
 #endif
 
 template <class T>

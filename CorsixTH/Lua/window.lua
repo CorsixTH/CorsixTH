@@ -294,6 +294,16 @@ end
 
 function Window:onTick()
   if self.windows then
-    for index, window in ipairs(self.windows) do window:onTick() end
+    for _, window in ipairs(self.windows) do
+      window:onTick()
+    end
+  end
+end
+
+function Window:onWorldTick()
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      window:onWorldTick()
+    end
   end
 end

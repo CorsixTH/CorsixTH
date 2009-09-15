@@ -165,6 +165,7 @@ function App:loadLevel(filename)
   
   -- Load UI
   self.ui = UI(self)
+  self.world.ui = self.ui
 end
 
 -- This is a useful debug and devlopment aid

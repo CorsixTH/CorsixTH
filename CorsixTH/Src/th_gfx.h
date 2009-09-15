@@ -98,13 +98,38 @@ struct THDrawable : public THLinkList
 class THChunkRenderer
 {
 public:
+    //! Initialise a renderer for a specific size result
+    /*!
+        @param width Pixel width of the resulting image
+        @param height Pixel height of the resulting image
+        @param buffer If NULL, then a new buffer is created to render the image
+          onto. Otherwise, should be an array at least width*height in size.
+          Ownership of this pointer is assumed by the class - call takeData()
+          to take ownership back again.
+    */
     THChunkRenderer(int width, int height, unsigned char *buffer = NULL);
+
     ~THChunkRenderer();
 
+    //! Convert a stream of chunks into a raw bitmap
+    /*!
+        @param bComplex true if pData is a stream of "complex" chunks, false if
+          pData is a stream of "simple" chunks. Passing the wrong value will
+          usually result in a very visible wrong result.
+
+        Use getData() or takeData() to obtain the resulting bitmap.
+    */
     void decodeChunks(const unsigned char* pData, int iDataLen, bool bComplex);
 
-    inline bool isDone() {return m_ptr == m_end;}
+    //! Get the result buffer, and take ownership of it
+    /*!
+        This transfers ownership of the buffer to the caller. After calling,
+        the class will not have any buffer, and thus cannot be used for
+        anything.
+    */
     unsigned char* takeData();
+
+    //! Get the result buffer
     inline const unsigned char* getData() const {return m_data;}
 
     //! Perform a "copy" chunk (normally called by decodeChunks)
@@ -120,6 +145,7 @@ public:
     void chunkFinish(unsigned char value);
 
 protected:
+    inline bool _isDone() {return m_ptr == m_end;}
     inline void _fixNpixels(int& npixels) const;
     inline void _incrementPosition(int npixels);
 
@@ -267,6 +293,8 @@ protected:
     struct th_frame_t
     {
         uint32_t list_index;
+        // These fields have something to do with width and height, but it's
+        // not clear quite exactly how.
         uint8_t width;
         uint8_t height;
         uint16_t flags;
@@ -278,7 +306,10 @@ protected:
         uint16_t table_position;
         uint8_t offx;
         uint8_t offy;
+        // High nibble: The layer which the element belongs to [0, 12]
+        // Low  nibble: Zero or more THDrawFlags flags
         uint8_t flags;
+        // The layer option / layer id
         uint8_t layerid;
     };
 #pragma pack(pop)
@@ -287,6 +318,8 @@ protected:
     {
         unsigned int iListIndex;
         unsigned int iNextFrame;
+        // Bounding rectangle is with all layers / options enabled - used as a
+        // quick test prior to a full pixel perfect test.
         int iBoundingLeft;
         int iBoundingRight;
         int iBoundingTop;

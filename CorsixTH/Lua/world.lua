@@ -42,6 +42,7 @@ function World:World(app)
   self.objects = {}
   self.objects_notify_occupants = {}
   self.rooms = {}
+  self.ticks_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
   self.month = 1 -- January
@@ -153,34 +154,44 @@ function World:getDate()
   return self.month, self.day
 end
 
+function World:setTickRate(numerator, denominator)
+  self.ticks_per_tick = numerator
+  self.tick_rate = denominator
+end
+
 function World:onTick()
   if self.tick_timer == 0 then
     self.tick_timer = self.tick_rate
-    self.hour = self.hour + 1
+    self.hour = self.hour + self.ticks_per_tick
     -- There doesn't need to be 24 hours in a day. Whatever value gives the
     -- best ingame speed can be used, but 24 works OK and is a good starting
     -- point. Vanilla TH appears to take ~3 seconds per day at normal speed.
     -- With ~33 ticks/sec, reduced to 11 /sec at normal speed, 3 seconds -> 33
     -- ticks, which is 1 day and 9 hours.
-    if self.hour == 24 then
-      self.hour = 0
+    if self.hour >= 24 then
+      self.hour = self.hour - 24
       self.day = self.day + 1
       if self.day > month_length[self.month] then
         self:onEndMonth()
         self.day = 1
         self.month = self.month + 1
         if self.month > 12 then
-          self:onEndYear();
+          self:onEndYear()
           self.month = 1
         end
       end
     end
-    for _, entity in ipairs(self.entities) do
-      if entity.ticks then
-        entity:tick()
+    for i = 1, self.ticks_per_tick do
+      for _, entity in ipairs(self.entities) do
+        if entity.ticks then
+          entity:tick()
+        end
+      end
+      self.map:onTick()
+      if self.ui then
+        self.ui:onWorldTick()
       end
     end
-    self.map:onTick()
   end
   self.tick_timer = self.tick_timer - 1
 end
