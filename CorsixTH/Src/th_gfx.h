@@ -32,10 +32,15 @@ SOFTWARE.
 #error No rendering engine enabled in config file
 #endif
 
+//! Bitflags for drawing operations
 enum THDrawFlags
 {
     /** Sprite drawing flags **/
+    /* Where possible, designed to be the same values used by TH data files */
+
+    //! Draw with the left becoming the right and vice versa
     THDF_FlipHorizontal = 1 <<  0,
+    //! Draw with the top becoming the bottom and vice versa
     THDF_FlipVertical   = 1 <<  1,
     //! Draw with 50% transparency
     THDF_Alpha50        = 1 <<  2,
@@ -46,6 +51,7 @@ enum THDrawFlags
 
     /** Object attached to tile flags **/
     /* (should be set prior to attaching to a tile) */
+
     //! Attach to the early sprite list (right-to-left pass)
     THDF_EarlyList      = 1 << 10,
     //! Keep this sprite at the bottom of the attached list
@@ -66,11 +72,22 @@ struct THRenderTargetCreationParams
 
 /*!
     Base class for a linked list of drawable objects.
+    Note that "object" is used as a generic term, not in specific reference to
+    game objects (though they are the most common thing in drawing lists).
 */
 struct THDrawable : public THLinkList
 {
+    //! Draw the object at a specific point on a render target
     void (*fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
+
+    //! Perform a hit test against the object
+    /*!
+        Should return true if when the object is drawn at (iDestX, iDestY) on a canvas,
+        the point (iTestX, iTestY) is within / on the object.
+    */
     bool (*fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
+
+    //! Drawing flags (zero or more list flags from THDrawFlags)
     unsigned long iFlags;
 };
 
@@ -119,11 +136,33 @@ class THFont
 public:
     THFont();
 
+    //! Set the character glyph sprite sheet
+    /*!
+        The sprite sheet should have the space character (ASCII 0x20) at sprite
+        index 1, and other ASCII characters following on in simple order (i.e.
+        '!' (ASCII 0x21) at index 2, 'A' (ASCII 0x41) at index 34, etc.)
+    */
     void setSpriteSheet(THSpriteSheet* pSpriteSheet);
+
+    //! Set the seperation between characters and between lines
+    /*!
+        Generally, the sprite sheet glyphs will already include separation, and
+        thus no extra separation is required (set iCharSep and iLineSep to 0).
+    */
     void setSeparation(int iCharSep, int iLineSep);
 
+    //! Get the size of a single line of text
     void getTextSize(const char* sMessage, size_t iMessageLength, int* pX, int* pY) const;
+
+    //! Draw a single line of text
     void drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const;
+
+    //! Draw a single line of text, splitting it at word boundaries
+    /*!
+        This function still only draws a single line of text (i.e. any line
+        breaks like \r and \n in sMessage are ignored), but inserts line breaks
+        between words so that no single line is wider than iWidth pixels.
+    */
     void drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth) const;
 
 protected:
@@ -132,11 +171,18 @@ protected:
     int m_iLineSep;
 };
 
+//! Layer information (see THAnimationManager::drawFrame)
 struct THLayers_t
 {
     unsigned char iLayerContents[13];
 };
 
+//! Theme Hospital sprite animation manager
+/*!
+    An animation manager takes a sprite sheet and four animation information
+    files, and uses them to draw animation frames and provide information about
+    the animations.
+*/
 class THAnimationManager
 {
 public:
@@ -145,18 +191,64 @@ public:
 
     void setSpriteSheet(THSpriteSheet* pSpriteSheet);
 
+    //! Load animation information
+    /*!
+        setSpriteSheet() must be called before calling this.
+        @param pStartData Animation first frame indicies (e.g. VSTART-1.ANI)
+        @param pFrameData Frame details (e.g. VFRA-1.ANI)
+        @param pListData Element indicies list (e.g. VLIST-1.ANI)
+        @param pElementData Element details (e.g. VELE-1.ANI)
+    */
     bool loadFromTHFile(const unsigned char* pStartData, size_t iStartDataLength,
                         const unsigned char* pFrameData, size_t iFrameDataLength,
                         const unsigned char* pListData, size_t iListDataLength,
                         const unsigned char* pElementData, size_t iElementDataLength);
 
+    //! Get the total numer of animations
     unsigned int getAnimationCount() const;
+
+    //! Get the total number of animation frames
     unsigned int getFrameCount() const;
 
+    //! Get the index of the first frame of an animation
     unsigned int getFirstFrame(unsigned int iAnimation) const;
+
+    //! Get the index of the frame after a given frame
+    /*!
+        To draw an animation frame by frame, call getFirstFrame() to get the
+        index of the first frame, and then keep on calling getNextFrame() using
+        the most recent return value from getNextFrame() or getFirstFrame().
+    */
     unsigned int getNextFrame(unsigned int iFrame) const;
 
+    //! Set the palette remap data for an animation
+    /*!
+        This sets the palette remap data for every single sprite used by the
+        given animation. If the animation (or any of its sprites) are drawn
+        using the THDF_AltPalette flag, then palette indicies will be mapped to
+        new palette indicies by the 256 byte array pMap. This is typically used
+        to draw things in different colours or in greyscale.
+    */
     void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap);
+
+    //! Draw an animation frame
+    /*!
+        @param pCanvas The render target to draw onto.
+        @param iFrame The frame index to draw (should be in range [0, getFrameCount() - 1])
+        @param oLayers Information to decide what to draw on each layer.
+            An animation is comprised of upto thirteen layers, numbered 0
+            through 12. Some animations will have different options for what to
+            render on each layer. For example, patient animations generally
+            have the different options on layer 1 as different clothes, so if
+            layer 1 is set to the value 0, they may have their default clothes,
+            and if set to the value 2 or 4 or 6, they may have other clothes.
+            Play with the AnimView tool for a better understanding of layers,
+            though note that while it can draw more than one option on each
+            layer, this class can only draw a single option for each layer.
+        @param iX The screen position to use as the animation X origin.
+        @param iY The screen position to use as the animation Y origin.
+        @param iFlags Zero or more THDrawFlags flags.
+    */
     void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
 
     bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
@@ -167,6 +259,8 @@ protected:
     struct th_anim_t
     {
         uint16_t frame;
+        // It could be that frame is a uint32_t rather than a uint16_t, which
+        // would resolve the following unknown (which seems to always be zero).
         uint16_t unknown;
     };
 
@@ -253,7 +347,9 @@ protected:
     int m_iX;
     //! Y position on tile (not tile y-index)
     int m_iY;
+    //! Amount to change m_iX per tick
     int m_iSpeedX;
+    //! Amount to change m_iY per tick
     int m_iSpeedY;
     THLayers_t m_oLayers;
 };

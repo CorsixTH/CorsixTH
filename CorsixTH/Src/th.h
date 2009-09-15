@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_H_
 #define CORSIX_TH_TH_H_
 
+//! Generic linked list class (for inheriting from)
 struct THLinkList
 {
     THLinkList();
@@ -34,6 +35,7 @@ struct THLinkList
     void removeFromList();
 };
 
+//! Theme Hospital localised string list
 class THStringList
 {
 public:
@@ -42,19 +44,34 @@ public:
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
+    //! Get the number of sections in the string list
     unsigned int getSectionCount();
+
+    //! Get the number of strings in a section of the string list
     unsigned int getSectionSize(unsigned int iSection);
+
+    //! Get a string from the string list
+    /*!
+        @param iSection Section index in range [0, getSectionCount() - 1]
+        @param iIndex String index in range [0, getSectionSize(iSection) - 1]
+        @return NULL if the index is invalid, otherwise a string
+    */
     const char* getString(unsigned int iSection, unsigned int iIndex);
 
 protected:
     struct section_t
     {
+        //! Size of pStrings array
         unsigned int iSize;
+        //! Array of string pointers (into THStringList::m_sData)
         const char** pStrings;
     };
 
+    //! Size of m_pSections array
     unsigned int m_iSectionCount;
+    //! Section information
     section_t* m_pSections;
+    //! Memory block containing all the actual strings
     char* m_sData;
 };
 

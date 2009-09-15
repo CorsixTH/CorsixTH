@@ -93,6 +93,7 @@ enum THObjectType
     THOB_EntranceRightDoor = 59,
     THOB_Skeleton = 60,
     THOB_ComfyChair = 61,
+    // 62 through 255 are unused
 };
 
 enum THMapNodeFlags
@@ -177,6 +178,8 @@ public:
     void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
     THDrawable* hitTest(int iTestX, int iTestY) const;
 
+    // When using the unchecked versions, the map co-ordinates MUST be valid.
+    // When using the normal versions, NULL is returned for invalid co-ords.
           THMapNode* getNode(int iX, int iY);
     const THMapNode* getNode(int iX, int iY) const;
           THMapNode* getNodeUnchecked(int iX, int iY);

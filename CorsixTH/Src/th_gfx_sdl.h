@@ -36,7 +36,7 @@ struct THRenderTargetCreationParams;
 
 class THRenderTarget
 {
-public:
+public: // External API
     THRenderTarget();
     ~THRenderTarget();
 
@@ -55,6 +55,11 @@ public:
     void setCursor(THCursor* pCursor);
     void setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
+    // If you add any extra methods here which are called from outside the
+    // rendering engine, then be sure to at least add dummy implementations
+    // to the other rendering engines.
+
+public: // Internal (this rendering engine only) API
 
     SDL_Surface* getRawSurface() {return m_pSurface;}
     const SDL_Surface* getRawSurface() const {return m_pSurface;}
@@ -122,7 +127,22 @@ public:
     void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap);
 
     unsigned int getSpriteCount() const;
+
+    //! Get the size of a sprite
+    /*!
+        @param iSprite Sprite index. Should be in range [0, getSpriteCount() - 1].
+        @param pX Pointer to store width at. May be NULL.
+        @param pY Pointer to store height at. May be NULL.
+        @return true if the sprite index was valid, false otherwise.
+    */
     bool getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
+
+    //! Get the size of a sprite
+    /*!
+        @param iSprite Sprite index. Must be in range [0, getSpriteCount() - 1].
+        @param pX Pointer to store width at. Must not be NULL.
+        @param pY Pointer to store height at. Must not be NULL.
+    */
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);

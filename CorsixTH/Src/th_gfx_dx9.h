@@ -73,10 +73,9 @@ struct THDX9_DeviceResource : public THLinkList
 
 class THRenderTarget : protected THDX9_DeviceResource
 {
-public:
+public: // External API
     THRenderTarget();
     ~THRenderTarget();
-    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     bool create(const THRenderTargetCreationParams* pParams);
     const char* getLastError();
@@ -93,6 +92,12 @@ public:
     void setCursor(THCursor* pCursor);
     bool setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
+    // If you add any extra methods here which are called from outside the
+    // rendering engine, then be sure to at least add dummy implementations
+    // to the other rendering engines.
+
+public: // Internal (this rendering engine only) API
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     IDirect3DDevice9* getRawDevice(THDX9_DeviceResource* pUser);
     IDirect3DDevice9* getRawDevice() {return m_pDevice;}

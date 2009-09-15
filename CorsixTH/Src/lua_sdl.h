@@ -26,8 +26,13 @@ SOFTWARE.
 #include "lua.hpp"
 #include <SDL.h>
 
+// SDL event codes used for delivering custom events to l_mainloop in
+// sdl_core.cpp
+// SDL_USEREVENT_TICK - informs script of a timer tick
 #define SDL_USEREVENT_TICK (SDL_USEREVENT + 0)
+// SDL_USEREVENT_MUSIC_OVER - informs script of SDL_Mixer music finishing
 #define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
+// SDL_USEREVENT_CPCALL - calls lua_cpcall with SDL_Event user.data1 and data2
 #define SDL_USEREVENT_CPCALL (SDL_USEREVENT + 2)
 
 int luaopen_sdl(lua_State *L);
