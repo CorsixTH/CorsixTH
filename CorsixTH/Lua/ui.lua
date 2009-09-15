@@ -87,6 +87,7 @@ function UI:UI(app)
   self.cursor_entity = nil
   self.background = false
   self.tick_scroll_amount = false
+  self.tick_scroll_amount_mouse = false
   self.tick_scroll_mult = 1
   self.modal_windows = {
     -- [class_name] -> window,
@@ -210,10 +211,10 @@ function UI:draw(canvas)
 end
 
 local scroll_keys = {
-  up = {x = 0, y = -10},
-  right = {x = 10, y = 0},
-  down = {x = 0, y = 10},
-  left = {x = -10, y = 0},
+  up    = {x =   0, y = -10},
+  right = {x =  10, y =   0},
+  down  = {x =   0, y =  10},
+  left  = {x = -10, y =   0},
 }
 
 function UI:onKeyDown(code)
@@ -301,7 +302,6 @@ function UI:onKeyUp(code)
     dy = self.tick_scroll_amount.y - dy
     if dx == 0 and dy == 0 then
       self.tick_scroll_amount = false
-      self.tick_scroll_mult = 1
     else
       self.tick_scroll_amount.x = dx
       self.tick_scroll_amount.y = dy
@@ -405,23 +405,28 @@ function UI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
   
-  if x <= 3 or y <= 3 or x >= self.app.config.width - 3 or y >= self.app.config.height - 3 then
+  if x < 3 or y < 3 or x >= self.app.config.width - 3 or y >= self.app.config.height - 3 then
     local dx = 0
     local dy = 0
-    if x <= 3 then
+    if x < 3 then
       dx = -10
     elseif x >= self.app.config.width - 3 then
       dx = 10
     end
-    if y <= 3 then
+    if y < 3 then
       dy = -10
     elseif y >= self.app.config.height - 3 then
       dy = 10
     end
 
-    self.tick_scroll_amount = {x = dx, y = dy}
+    if not self.tick_scroll_amount_mouse then
+      self.tick_scroll_amount_mouse = {x = dx, y = dy}
+    else
+      self.tick_scroll_amount_mouse.x = dx
+      self.tick_scroll_amount_mouse.y = dy
+    end
   else
-    self.tick_scroll_amount = {x = 0, y = 0}
+    self.tick_scroll_amount_mouse = false
   end
   
   if Window.onMouseMove(self, x, y, dx, dy) then
@@ -450,15 +455,36 @@ end
 function UI:onTick()
   Window.onTick(self)
   local repaint = false
-  if self.tick_scroll_amount then
+  if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
+    -- The scroll amount per tick gradually increases as the duration of the
+    -- scroll increases due to this multiplier.
     local mult = self.tick_scroll_mult
     mult = mult + 0.02
     if mult > 2 then
       mult = 2
     end
     self.tick_scroll_mult = mult
-    self:scrollMap(self.tick_scroll_amount.x * mult, self.tick_scroll_amount.y * mult)
+    
+    -- Combine the mouse scroll and keyboard scroll
+    local dx, dy = 0, 0
+    if self.tick_scroll_amount_mouse then
+      dx, dy = self.tick_scroll_amount_mouse.x, self.tick_scroll_amount_mouse.y
+      -- If the middle mouse button is down, then the world is being dragged,
+      -- and so the scroll direction due to the cursor being at the map edge
+      -- should be opposite to normal to make it feel more natural.
+      if self.buttons_down.middle then
+        dx, dy = -dx, -dy
+      end
+    end
+    if self.tick_scroll_amount then
+      dx = dx + self.tick_scroll_amount.x
+      dy = dy + self.tick_scroll_amount.y
+    end
+    
+    self:scrollMap(dx * mult, dy * mult)
     repaint = true
+  else
+    self.tick_scroll_mult = 1
   end
   if self:onCursorWorldPositionChange() then
     repaint = true

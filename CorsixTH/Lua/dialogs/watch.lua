@@ -40,11 +40,9 @@ function UIWatch:UIWatch(ui)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   
-  if self.epidemic then
-    self.end_button = self:addPanel(14, 4, 0):makeButton(4, 0, 27, 28, 15, self.onCountdownEnd)
-  else
-    self.end_button = self:addPanel(16, 4, 0):makeButton(4, 0, 27, 28, 17, self.onCountdownEnd)
-  end
+  local end_sprite = self.epidemic and 14 or 16
+  self.end_button = self:addPanel(end_sprite, 4, 0)
+    :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
 end
 
 function UIWatch:onCountdownEnd()
