@@ -32,6 +32,7 @@ CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
 CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/dialogs/hire_staff.lua -text
+CorsixTH/Lua/dialogs/information.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
 CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text

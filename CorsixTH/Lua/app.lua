@@ -486,3 +486,7 @@ function App:loadLuaFolder(dir, no_results)
     return results
   end
 end
+
+function App:quit()
+  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), function() self.running = false end))
+end

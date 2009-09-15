@@ -408,13 +408,11 @@ function UIMenuBar:makeMenu(app)
       app:loadLevel(("LEVEL.L%i"):format(L))
     end)
   end
-  local function quit()
-    app.running = false
-  end
+
   
   self:addMenu(_S(1, 1), UIMenu() -- File
     :appendMenu(_S(2, 1), levels_menu) -- Load
-    :appendItem(_S(2, -1), quit) -- Quit
+    :appendItem(_S(2, -1), function() app.quit(app) end) -- Quit
   )
   local options = UIMenu()
   if app.audio.has_bg_music then
