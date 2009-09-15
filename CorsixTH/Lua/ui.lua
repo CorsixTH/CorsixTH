@@ -50,6 +50,7 @@ local key_codes = invert {
   F9 = 290,
   F10 = 291,
   F11 = 292,
+  F12 = 293,
   S = 115,
   Enter = 13,
   shift = {303, 304},
@@ -247,6 +248,8 @@ function UI:onKeyDown(code)
     return true
   elseif key == "F11" then -- Make Adviser say a random phrase
     self:debugMakeAdviserTalk()
+  elseif key == "F12" then -- Show watch
+    self:addWindow(UIWatch(self))
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
     local modes = self.app.modes
     
@@ -272,7 +275,7 @@ function UI:onKeyDown(code)
     self.app.gfx:updateTarget(self.app.video)
     self.app.video:startFrame()
     self.cursor:use(self.app.video) -- Redraw cursor
-  elseif key == "S" then
+  elseif key == "S" then -- Take a screenshot
      -- Find an index for screenshot which is not already used
     local i = 0
     local filename

@@ -29,13 +29,14 @@ function UIAdviser:UIAdviser(ui)
   
   self.esc_closes = false
   self.modal_class = "adviser"
-  self.tick_count = 0       -- Initialize animation counter
-  self.frame = 1            -- Current frame
+  self.tick_rate = app.world.tick_rate
+  self.tick_timer = self.tick_rate -- Initialize tick timer
+  self.frame = 1                   -- Current frame
   self.visible = false
-  self.number_frames = 4    -- Used for playing animation only once
-  self.speech = nil         -- Store what adviser is going to say
-  self.is_talking = false   -- If adviser is already been saying something
-  self.timer = nil          -- Timer which hide adviser when ends
+  self.number_frames = 4           -- Used for playing animation only once
+  self.speech = nil                -- Store what adviser is going to say
+  self.is_talking = false          -- If adviser is already been saying something
+  self.timer = nil                 -- Timer which hide adviser when ends
   self.ui = ui
   self.width = 200
   self.height = 64
@@ -123,20 +124,20 @@ end
 
 function UIAdviser:onTick()
    if self.timer == 0 then
-    self:hide() -- Timer ends, so we hide the adviser
+      self:hide() -- Timer ends, so we hide the adviser
    elseif self.timer ~= nil then
       self.timer = self.timer - 1
   end
 
   if self.frame < self.number_frames then
-    if self.tick_count == 6 then -- Used for making a smooth animation
-      self.tick_count = 0
+    if self.tick_timer == 0 then -- Used for making a smooth animation
+      self.tick_timer = self.tick_rate
       if self.th:getAnimation() ~= 0 then -- If no animation set (adviser not being shown already)
         self.th:tick()
         self.frame = self.frame + 1
       end
     else
-      self.tick_count = self.tick_count + 1
+      self.tick_timer = self.tick_timer - 1
     end
   elseif self.visible == false and self.frame == self.number_frames then
     -- Visibility is set to false so we want to hide adviser but we have to wait until the animation ends
