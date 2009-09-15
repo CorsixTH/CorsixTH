@@ -105,6 +105,7 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
+    early_list = true,
     footprint = { {0, 0}, {0, -1, only_passable = true} }
   },
   east = {

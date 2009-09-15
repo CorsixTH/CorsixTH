@@ -132,6 +132,9 @@ local function action_use_object_start(action, humanoid)
     orient = orient_mirror[orient]
     flags = flags + 1
   end
+  if object.object_type.orientations[object.direction].early_list then
+    flags = flags + 1024
+  end
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags

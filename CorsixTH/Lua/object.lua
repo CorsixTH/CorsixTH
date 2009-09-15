@@ -56,6 +56,9 @@ function Object:Object(world, object_type, x, y, direction, etc)
   end
   local footprint = object_type.orientations
   footprint = footprint and footprint[direction]
+  if footprint and footprint.early_list then
+    flags = flags + 1024
+  end
   footprint = footprint and footprint.footprint
   if footprint then
     self.footprint = footprint
