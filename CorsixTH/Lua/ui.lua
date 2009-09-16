@@ -47,6 +47,7 @@ local key_codes = invert {
   down = 274,
   right = 275,
   left = 276,
+  F8 = 289,
   F9 = 290,
   F10 = 291,
   F11 = 292,
@@ -243,6 +244,10 @@ function UI:onKeyDown(code)
         return true
       end
     end
+  elseif key == "F8" then -- Open an alert window
+    local types = invert({ emergency = 0, epidemy = 1, strike = 2, personnality = 3, information = 4, disease = 5, report = 6 })
+    local random = math.random(0, 6)
+    self.bottom_panel:queueMessage(types[random])
   elseif key == "F10" then -- Restart
     debug.getregistry()._RESTART = true
     TheApp.running = false
@@ -321,7 +326,9 @@ function UI:onMouseDown(code, x, y)
     repaint = true
   end
   self.down_count = self.down_count + 1
-  self.buttons_down[button] = true
+  if x >= 3 and y >= 3 and x <= self.app.config.width - 3 and y <= self.app.config.height - 3 then
+    self.buttons_down[button] = true
+  end
   
   return Window.onMouseDown(self, button, x, y) or repaint
 end
@@ -410,12 +417,12 @@ function UI:onMouseMove(x, y, dx, dy)
     local dy = 0
     if x < 3 then
       dx = -10
-    elseif x >= self.app.config.width - 3 then
+    elseif x > self.app.config.width - 3 then
       dx = 10
     end
     if y < 3 then
       dy = -10
-    elseif y >= self.app.config.height - 3 then
+    elseif y > self.app.config.height - 3 then
       dy = 10
     end
 

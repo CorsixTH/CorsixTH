@@ -35,6 +35,7 @@ CorsixTH/Lua/dialogs/hire_staff.lua -text
 CorsixTH/Lua/dialogs/information.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
 CorsixTH/Lua/dialogs/menu.lua -text
+CorsixTH/Lua/dialogs/message.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/dialogs/place_objects.lua -text
 CorsixTH/Lua/dialogs/place_staff.lua -text

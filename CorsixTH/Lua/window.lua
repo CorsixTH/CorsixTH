@@ -190,8 +190,16 @@ function Window:draw(canvas)
   end
   if self.windows then
     local windows = self.windows
+    local windows_on_top = {}
     for i = #windows, 1, -1 do
-      windows[i]:draw(canvas)
+      if windows[i].on_top == true then
+        windows_on_top[#windows_on_top + 1] = windows[i]
+      else
+        windows[i]:draw(canvas)
+      end
+    end
+    for i = #windows_on_top, 1, -1 do
+      windows_on_top[i]:draw(canvas)
     end
   end
 end
