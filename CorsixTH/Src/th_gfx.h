@@ -58,6 +58,13 @@ enum THDrawFlags
     THDF_ListBottom     = 1 << 11,
 };
 
+//! Bitflags for animation frames
+enum THFrameFlags
+{
+    //! First frame of an animation
+    THFF_AnimationStart = 1 << 0,
+};
+
 struct THRenderTargetCreationParams
 {
     int iWidth;
@@ -297,7 +304,10 @@ protected:
         // not clear quite exactly how.
         uint8_t width;
         uint8_t height;
-        uint16_t flags;
+        // If non-zero, index into sound.dat filetable.
+        uint8_t sound;
+        // Combination of zero or more THFrameFlags values
+        uint8_t flags;
         uint16_t next;
     };
 

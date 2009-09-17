@@ -118,7 +118,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(WXWIN)\include\msvc;$(WXWIN)\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;wxUSE_UNICODE =1"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;wxUSE_UNICODE =1;_BIND_TO_CURRENT_VCLIBS_VERSION=1"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"

@@ -171,6 +171,7 @@ public:
     size_t getFrameCount(size_t iAnimation);
     bool isAnimationDuplicate(size_t iAnimation);
     bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
+    uint16_t getFrameFlags(size_t iAnimation, size_t iFrame);
     void getAnimationMask(size_t iAnimation, THLayerMask& mskLayers);
 
     Bitmap* getSpriteBitmap(size_t iSprite, bool bComplex = false);

@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #include "th.h"
+#include <wx/app.h>
+#include <wx/toplevel.h>
 #include <map>
 
 static const unsigned char palette_upscale_map[0x40] = {
@@ -454,6 +456,18 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex)
     }
 
     return m_pSpriteBitmaps + iSprite;
+}
+
+uint16_t THAnimations::getFrameFlags(size_t iAnimation, size_t iFrame)
+{
+    if(iAnimation >= m_iAnimCount)
+        return 0;
+    uint16_t iFrameIndex = m_pAnims[iAnimation].frame;
+    while(iFrame--)
+    {
+        iFrameIndex = m_pFrames[iFrameIndex].next;
+    }
+    return m_pFrames[iFrameIndex].flags;
 }
 
 void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size)

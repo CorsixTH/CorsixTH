@@ -50,6 +50,7 @@ public:
         ID_TIMER_ANIMATE,
         ID_SEARCH_LAYER_ID,
         ID_SEARCH_FRAME,
+        ID_SEARCH_SOUND,
         ID_SEARCH_RESULTS,
         ID_GHOST_0,
         ID_GHOST_1,
@@ -74,6 +75,7 @@ protected:
     void _onToggleMask(wxCommandEvent& evt);
     void _onSearchLayerId(wxCommandEvent& evt);
     void _onSearchFrame(wxCommandEvent& evt);
+    void _onSearchSoundIndex(wxCommandEvent& evt);
     void _onGotoSearchResult(wxCommandEvent& evt);
     void _onAnimChar(wxCommandEvent& evt);
     void _onGhostFileChange(wxCommandEvent& evt);
@@ -99,6 +101,8 @@ protected:
     wxTextCtrl* m_txtAnimCount;
     wxTextCtrl* m_txtFrameIndex;
     wxTextCtrl* m_txtFrameCount;
+    wxTextCtrl* m_txtFrameFlags[2];
+    wxCheckBox* m_chkFrameFlags[16];
     wxListBox* m_lstSearchResults;
     wxPanel* m_panFrame;
     DECLARE_EVENT_TABLE();

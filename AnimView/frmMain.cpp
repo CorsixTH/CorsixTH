@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_BUTTON(ID_PLAY_PAUSE, frmMain::_onPlayPause)
   EVT_BUTTON(ID_SEARCH_LAYER_ID, frmMain::_onSearchLayerId)
   EVT_BUTTON(ID_SEARCH_FRAME, frmMain::_onSearchFrame)
+  EVT_BUTTON(ID_SEARCH_SOUND, frmMain::_onSearchSoundIndex)
   EVT_LISTBOX(ID_SEARCH_RESULTS, frmMain::_onGotoSearchResult)
   EVT_RADIOBUTTON(ID_GHOST_0, frmMain::_onGhostFileChange)
   EVT_RADIOBUTTON(ID_GHOST_1, frmMain::_onGhostFileChange)
@@ -192,15 +193,47 @@ frmMain::frmMain()
     wxBoxSizer *pSearchButtons = new wxBoxSizer(wxHORIZONTAL);
     pSearchButtons->Add(new wxButton(this, ID_SEARCH_LAYER_ID, L"Layer/ID"), 0, wxALL, 1);
     pSearchButtons->Add(new wxButton(this, ID_SEARCH_FRAME, L"Frame"), 0, wxALL, 1);
+    pSearchButtons->Add(new wxButton(this, ID_SEARCH_SOUND, L"Sound"), 0, wxALL, 1);
     pSearch->Add(pSearchButtons, 0);
     pSearch->Add(m_lstSearchResults = new wxListBox(this, ID_SEARCH_RESULTS), 1, wxEXPAND | wxALL, 1);
-    pSidebarSizer->Add(pSearch, 1, wxEXPAND | wxALL, 0);
+
+    wxStaticBoxSizer *pFrameFlags = new wxStaticBoxSizer(wxHORIZONTAL, this, L"Frame Flags");
+    wxBoxSizer *pFlags1 = new wxBoxSizer(wxVERTICAL);
+    pFlags1->Add(m_txtFrameFlags[0] = new wxTextCtrl(this, wxID_ANY), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[0] = new wxCheckBox(this, wxID_ANY, L"2^0"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[1] = new wxCheckBox(this, wxID_ANY, L"2^1"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[2] = new wxCheckBox(this, wxID_ANY, L"2^2"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[3] = new wxCheckBox(this, wxID_ANY, L"2^3"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[4] = new wxCheckBox(this, wxID_ANY, L"2^4"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[5] = new wxCheckBox(this, wxID_ANY, L"2^5"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[6] = new wxCheckBox(this, wxID_ANY, L"2^6"), 0, wxEXPAND | wxALL, 2);
+    pFlags1->Add(m_chkFrameFlags[7] = new wxCheckBox(this, wxID_ANY, L"2^7"), 0, wxEXPAND | wxALL, 2);
+    pFrameFlags->Add(pFlags1, 1, wxEXPAND);
+    wxBoxSizer *pFlags2 = new wxBoxSizer(wxVERTICAL);
+    pFlags2->Add(m_txtFrameFlags[1] = new wxTextCtrl(this, wxID_ANY), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[8] = new wxCheckBox(this, wxID_ANY, L"2^8 (Animation Start)"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[9] = new wxCheckBox(this, wxID_ANY, L"2^9"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[10] = new wxCheckBox(this, wxID_ANY, L"2^10"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[11] = new wxCheckBox(this, wxID_ANY, L"2^11"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[12] = new wxCheckBox(this, wxID_ANY, L"2^12"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[13] = new wxCheckBox(this, wxID_ANY, L"2^13"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[14] = new wxCheckBox(this, wxID_ANY, L"2^14"), 0, wxEXPAND | wxALL, 2);
+    pFlags2->Add(m_chkFrameFlags[15] = new wxCheckBox(this, wxID_ANY, L"2^15"), 0, wxEXPAND | wxALL, 2);
+    pFrameFlags->Add(pFlags2, 1, wxEXPAND);
 
     pMainSizer->Add(pSidebarSizer, 0, wxEXPAND | wxALL, 2);
 
-    pMainSizer->Add(m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 1, wxALIGN_CENTER_VERTICAL | wxALL, 2);
+    wxSizer* pRightHandSizer = new wxBoxSizer(wxVERTICAL);
+    pRightHandSizer->AddSpacer(1);
+
+    pRightHandSizer->Add(m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0, wxEXPAND | wxALL, 2);
     m_panFrame->Connect(wxEVT_PAINT, (wxObjectEventFunction)&frmMain::_onPanelPaint, NULL, this);
     m_panFrame->SetMinSize(m_panFrame->ClientToWindowSize(wxSize(402, 402)));
+
+    pRightHandSizer->AddSpacer(1);
+    pRightHandSizer->Add(pSearch, 1, wxEXPAND | wxALL, 0);
+    pRightHandSizer->Add(pFrameFlags, 0, wxEXPAND | wxALL, 0);
+    pMainSizer->Add(pRightHandSizer, 1, wxEXPAND | wxALL, 0);
 
     SetBackgroundColour(m_btnPlayPause->GetBackgroundColour());
     SetSizer(pMainSizer);
@@ -456,6 +489,13 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     }
     wxSize oSize;
     m_oAnims.drawFrame(imgCanvas, m_iCurrentAnim, m_iCurrentFrame, &m_mskLayers, oSize);
+    uint16_t iFlags = m_oAnims.getFrameFlags(m_iCurrentAnim, m_iCurrentFrame);
+    int iFlags1 = (int)(iFlags & 0xFF);
+    int iFlags2 = (int)(iFlags >> 8);
+    m_txtFrameFlags[0]->SetValue(wxString::Format("0x%02x (%03i)", iFlags1, iFlags1));
+    m_txtFrameFlags[1]->SetValue(wxString::Format("0x%02x00 (256 * %03i)", iFlags2, iFlags2));
+    for(int i = 0; i < 16; ++i)
+        m_chkFrameFlags[i]->SetValue((iFlags & (1 << i)) != 0);
 
     wxBitmap bmpCanvas(imgCanvas);
 
@@ -502,6 +542,30 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt)
         if(m_oAnims.doesAnimationIncludeFrame(i, iFrame))
         {
             m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+        }
+    }
+}
+
+void frmMain::_onSearchSoundIndex(wxCommandEvent& evt)
+{
+    int iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.", L"Sound index:", L"Search for sound", 0, 0, 256, this);
+    if(iFrame == -1)
+        return;
+
+    m_lstSearchResults->Clear();
+    wxBusyCursor oBusy;
+    for(size_t i = 0; i < m_oAnims.getAnimationCount(); ++i)
+    {
+        if(m_oAnims.isAnimationDuplicate(i))
+            continue;
+        size_t iCount = m_oAnims.getFrameCount(i);
+        for(size_t j = 0; j < iCount; ++j)
+        {
+            if((m_oAnims.getFrameFlags(i, j) & 0xFF) == iFrame)
+            {
+                m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+                break;
+            }
         }
     }
 }
