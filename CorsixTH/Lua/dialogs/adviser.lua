@@ -40,7 +40,7 @@ function UIAdviser:UIAdviser(ui)
   self.ui = ui
   self.width = 200
   self.height = 64
-  self.x = 0.5 * app.config.width
+  self.x = (app.config.width - 640) / 2 + 365
   self.y = app.config.height - self.height
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.black_font = app.gfx:loadFont("QData", "Font50V")
@@ -51,7 +51,6 @@ end
 
 function UIAdviser:show()
   self.th:setAnimation(self.ui.app.world.anims, 438)
-  self.tick_count = 0
   self.frame = 1
   self.visible = true
   self.number_frames = 4
@@ -59,7 +58,6 @@ end
 
 function UIAdviser:hide()
   self.th:setAnimation(self.ui.app.world.anims, 440)
-  self.tick_count = 0
   self.frame = 1
   self.visible = false
   self.number_frames = 4
@@ -68,10 +66,18 @@ function UIAdviser:hide()
   self.timer = nil
 end
 
+function UIAdviser:idle()
+  self.speech = nil
+  self.is_talking = false
+  self.timer = 150
+end
+
 function UIAdviser:say(speech)
   if speech ~= self.speech then
     self.speech = speech
   end
+  
+  self.timer = nil
 
   if self.visible == false then
     self:show()
@@ -79,9 +85,8 @@ function UIAdviser:say(speech)
   end
   
   self.th:setAnimation(self.ui.app.world.anims, 460)
-  self.tick_count = 0
   self.frame = 1
-  self.number_frames = 28
+  self.number_frames = 45
   
   -- Calculate number of lines needed for the text. Each "/" at end of string indicates a blank line
   local number_lines = 3
@@ -94,13 +99,12 @@ function UIAdviser:say(speech)
   
   -- Calculate balloon width from string len
   self.balloon_width = math.floor(#speech / number_lines) * 7
-  if self.balloon_width >= 400 then -- Balloon too large
-    self.balloon_width = 400
+  if self.balloon_width >= 420 then -- Balloon too large
+    self.balloon_width = 420
   elseif self.balloon_width <= 40 then -- Balloon too small
     self.balloon_width = 40
   end
   self.is_talking = true
-  self.timer = 300
 end
 
 function UIAdviser:draw(canvas)
@@ -145,5 +149,8 @@ function UIAdviser:onTick()
   elseif self.visible == true and self.speech ~= nil and self.is_talking == false then
     -- Adviser not already talking and he has something to say so let's him speak
     self:say(self.speech)
+  elseif self.visible == true and self.is_talking == true and self.frame == self.number_frames then
+    -- Adviser finished to talk so make him idle
+    self:idle()
   end
 end

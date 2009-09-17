@@ -94,7 +94,13 @@ function Window:addWindow(window)
     self.windows = {}
   end
   window.parent = self
-  self.windows[#self.windows + 1] = window
+  if window.on_top then
+    -- As self.windows array is ordered from top to bottom and drawn by the end, a "On Top" window has be added at start
+    table.insert(self.windows, 1, window) 
+  else
+    -- Normal windows, are added to the end
+    self.windows[#self.windows + 1] = window
+  end
 end
 
 function Window:removeWindow(window)
@@ -190,16 +196,8 @@ function Window:draw(canvas)
   end
   if self.windows then
     local windows = self.windows
-    local windows_on_top = {}
     for i = #windows, 1, -1 do
-      if windows[i].on_top == true then
-        windows_on_top[#windows_on_top + 1] = windows[i]
-      else
-        windows[i]:draw(canvas)
-      end
-    end
-    for i = #windows_on_top, 1, -1 do
-      windows_on_top[i]:draw(canvas)
+      windows[i]:draw(canvas)
     end
   end
 end
@@ -313,5 +311,21 @@ function Window:onWorldTick()
     for _, window in ipairs(self.windows) do
       window:onWorldTick()
     end
+  end
+end
+
+function Window:sendToTop(window)
+  local window_index
+  if self.windows then
+    for i = 1, #self.windows do -- Search specified window in windows list
+      if self.windows[i] == window then
+        window_index = i -- Keep window index
+      end
+    end
+  end
+
+  if window_index ~= nil then
+    table.remove(self.windows, window_index) -- Remove the window from the list
+    table.insert(self.windows, 1, window)    -- And reinsert it at start of the table
   end
 end

@@ -114,7 +114,7 @@ function UIBottomPanel:createMessageWindow()
   
   local message_windows = self.message_windows
   local message_type = self.message_queue[#self.message_queue].type
-  local alert_window = UIMessage(self.ui, self.x + 173, self.x + #message_windows * 30, onClose, message_type) -- Create the message window
+  local alert_window = UIMessage(self.ui, self.x + 175, self.x + 1 + #message_windows * 30, onClose, message_type) -- Create the message window
   message_windows[#message_windows + 1] = alert_window
   self.ui:addWindow(alert_window)
   self.factory_direction = 1

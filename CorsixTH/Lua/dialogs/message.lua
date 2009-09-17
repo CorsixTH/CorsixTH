@@ -26,15 +26,16 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type)
   local app = ui.app
   
   self.esc_closes = false
-  self.on_top = true
+  self.on_top = false
   self.onClose = onClose
   self.timer = 25 * 24 -- Time to wait before considering to choose an automatic response
   self.ui = ui
   self.width = 30
   self.height = 28
   self.stop_x = stop_x
+  self.stop_y = app.config.height - 72
   self.x = x
-  self.y = app.config.height - 70
+  self.y = app.config.height - 44
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   
   local types = { emergency = 43, epidemy = 45, strike = 47, personnality = 49, information = 51, disease = 53, report = 55 }
@@ -58,8 +59,25 @@ function UIMessage:moveLeft()
 end
 
 function UIMessage:onTick()
-  if self.x > self.stop_x then
-    self.x = self.x - 3
+  if self.on_top == false and self.y == self.stop_y then
+    self.ui:sendToTop(self)
+    self.on_top = true
+  end
+  
+  if self.y > self.stop_y then
+    local y = self.y - 8
+    if y > self.stop_y then
+      self.y = y
+    else
+      self.y = self.stop_y
+    end
+  elseif self.x > self.stop_x then
+    local x = self.x - 3
+    if x > self.stop_x then
+      self.x = x
+    else
+      self.x = self.stop_x
+    end
   end
 end
 

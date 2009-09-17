@@ -326,7 +326,7 @@ function UI:onMouseDown(code, x, y)
     repaint = true
   end
   self.down_count = self.down_count + 1
-  if x >= 3 and y >= 3 and x <= self.app.config.width - 3 and y <= self.app.config.height - 3 then
+  if x >= 3 and y >= 3 and x < self.app.config.width - 3 and y < self.app.config.height - 3 then
     self.buttons_down[button] = true
   end
   
@@ -417,12 +417,12 @@ function UI:onMouseMove(x, y, dx, dy)
     local dy = 0
     if x < 3 then
       dx = -10
-    elseif x > self.app.config.width - 3 then
+    elseif x >= self.app.config.width - 3 then
       dx = 10
     end
     if y < 3 then
       dy = -10
-    elseif y > self.app.config.height - 3 then
+    elseif y >= self.app.config.height - 3 then
       dy = 10
     end
 
