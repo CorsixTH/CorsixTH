@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_lua.h"
 #include "th_map.h"
 #include "th_gfx.h"
+#include "th_sound.h"
 #include "th_pathfind.h"
 #include <new>
 #include <SDL.h>
@@ -1362,6 +1363,109 @@ static int l_surface_screenshot(lua_State *L)
     return 2;
 }
 
+static int l_soundarc_new(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_stdnew<THSoundArchive>(L, LUA_ENVIRONINDEX, true);
+    return 1;
+}
+
+static int l_soundarc_load(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    size_t iDataLen;
+    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
+
+    if(pArchive->loadFromTHFile(pData, iDataLen))
+        lua_pushboolean(L, 1);
+    else
+        lua_pushboolean(L, 0);
+    return 1;
+}
+
+static int l_soundarc_count(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    lua_pushnumber(L, (lua_Number)pArchive->getSoundCount());
+    return 1;
+}
+
+static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchive)
+{
+    if(lua_isnumber(L, iArg))
+    {
+        size_t iIndex = (size_t)lua_tonumber(L, iArg);
+        if(iIndex >= pArchive->getSoundCount())
+        {
+            luaL_argerror(L, iArg, lua_pushfstring(L, "Sound index out of "
+                "bounds (%f is not in range [0, %d])", lua_tonumber(L, iArg),
+                static_cast<int>(pArchive->getSoundCount()) - 1));
+        }
+        return iIndex;
+    }
+    const char* sName = luaL_checkstring(L, iArg);
+    lua_getfenv(L, 1);
+    lua_gettable(L, iArg);
+    if(lua_type(L, -1) == LUA_TLIGHTUSERDATA)
+    {
+        size_t iIndex = (size_t)lua_topointer(L, -1);
+        lua_pop(L, 2);
+        return 1;
+    }
+    lua_pop(L, 2);
+    size_t iCount = pArchive->getSoundCount();
+    for(size_t i = 0; i < iCount; ++i)
+    {
+        if(stricmp(sName, pArchive->getSoundFilename(i)) == 0)
+        {
+            lua_getfenv(L, 1);
+            lua_pushvalue(L, iArg);
+            lua_pushlightuserdata(L, (void*)i);
+            lua_settable(L, -3);
+            lua_pop(L, 1);
+            return i;
+        }
+    }
+    lua_pushliteral(L, "File not found in sound archive: ");
+    lua_pushvalue(L, iArg);
+    lua_concat(L, 2);
+    luaL_argerror(L, iArg, lua_tostring(L, -1));
+    return 0; // Never happens
+}
+
+static int l_soundarc_filename(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    lua_pushstring(L, pArchive->getSoundFilename(l_soundarc_checkidx(L, 2, pArchive)));
+    return 1;
+}
+
+static int l_soundarc_duration(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    size_t iDuration = pArchive->getSoundDuration(l_soundarc_checkidx(L, 2, pArchive));
+    lua_pushnumber(L, static_cast<lua_Number>(iDuration) / static_cast<lua_Number>(1000));
+    return 1;
+}
+
+static int l_soundarc_filedata(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    SDL_RWops *pRWops = pArchive->loadSound(iIndex);
+    if(!pRWops)
+        return 0;
+    int iLength = SDL_RWseek(pRWops, 0, SEEK_END);
+    SDL_RWseek(pRWops, 0, SEEK_SET);
+    // There is a potential leak of pRWops if either of these Lua calls cause
+    // a memory error, but it isn't very likely, and this a debugging function
+    // anyway, so it isn't very important.
+    void *pBuffer = lua_newuserdata(L, iLength);
+    lua_pushlstring(L, (const char*)pBuffer,
+        SDL_RWread(pRWops, pBuffer, 1, iLength));
+    SDL_RWclose(pRWops);
+    return 1;
+}
+
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
@@ -1417,8 +1521,9 @@ int luaopen_th(lua_State *L)
     const int iSurfaceMT = 9; lua_createtable(L, 0, 2);
     const int iBitmapMT  =10; lua_createtable(L, 0, 2);
     const int iCursorMT  =11; lua_createtable(L, 0, 2);
+    const int iSoundArcMT=12; lua_createtable(L, 0, 3);
 
-    const int iTH        =12; lua_createtable(L, 0,11);
+    const int iTH        =13; lua_createtable(L, 0,12);
     const int iTop = iTH;
 
     lua_checkstack(L, 10);
@@ -1573,6 +1678,15 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_surface_map, "mapRGB");
     luaT_setfunction(l_surface_rect, "drawRect");
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
+    luaT_endclass();
+
+    // Sound Archive
+    luaT_class(THSoundArchive, l_soundarc_new, "soundArchive", iSoundArcMT);
+    luaT_setmetamethod(l_soundarc_count, "len");
+    luaT_setfunction(l_soundarc_load, "load");
+    luaT_setfunction(l_soundarc_filename, "getFilename");
+    luaT_setfunction(l_soundarc_duration, "getDuration");
+    luaT_setfunction(l_soundarc_filedata, "getFileData");
     luaT_endclass();
 
 #undef luaT_class

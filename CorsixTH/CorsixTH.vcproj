@@ -405,6 +405,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Src\th_sound.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Src\xmi2mid.cpp"
 				>
 			</File>
@@ -468,6 +472,10 @@
 			</File>
 			<File
 				RelativePath=".\Src\th_pathfind.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Src\th_sound.h"
 				>
 			</File>
 			<File

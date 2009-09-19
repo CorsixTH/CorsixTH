@@ -328,6 +328,8 @@ protected:
     {
         unsigned int iListIndex;
         unsigned int iNextFrame;
+        unsigned int iSound;
+        unsigned int iFlags;
         // Bounding rectangle is with all layers / options enabled - used as a
         // quick test prior to a full pixel perfect test.
         int iBoundingLeft;

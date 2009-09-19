@@ -28,13 +28,32 @@ SOFTWARE.
 
 int luaopen_th(lua_State *L);
 
+//! Version of operator new which allocates into a Lua userdata
+/*!
+    If a specific constructor of T is required, then call like:
+      T* variable = luaT_new(L, T)(constructor arguments);
+    If the default constructor is wanted, it can be called like:
+      T* variable = luaT_new(L, T);
+    See also luaT_stdnew() which allocates, and also sets up the environment
+    table and metatable for the userdata.
+*/
 #define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
+
+//! Register a function to be called after a lua_State is destroyed
 void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
+
+//! Check that a Lua argument is a binary data blob
+/*!
+    If the given argument is a string or (full) userdata, then returns a
+    pointer to the start of it, and the length of it. Otherwise, throws a
+    Lua error.
+*/
 const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
+
 void luaT_setenvfield(lua_State *L, int index, const char *k);
 
 template <class T>
-static T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = false)
+inline T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = false)
 {
     T* p = luaT_new(L, T);
     lua_pushvalue(L, mt_idx);
@@ -109,10 +128,15 @@ template <> struct luaT_classinfo<music_t> {
     static inline const char* name() {return "Music";}
 };
 
+class THSoundArchive;
+template <> struct luaT_classinfo<THSoundArchive> {
+    static inline const char* name() {return "SoundArchive";}
+};
+
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {
-    if(mt_idx < 0 && mt_idx > LUA_REGISTRYINDEX)
+    if(mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
         mt_idx = lua_gettop(L) + mt_idx + 1;
 
     void *ud = lua_touserdata(L, idx);

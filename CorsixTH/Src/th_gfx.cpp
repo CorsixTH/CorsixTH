@@ -237,6 +237,9 @@ bool THAnimationManager::loadFromTHFile(
         const th_frame_t* pFrame = reinterpret_cast<const th_frame_t*>(pFrameData) + i;
         m_pFrames[i].iListIndex = pFrame->list_index < iListCount ? pFrame->list_index : 0;
         m_pFrames[i].iNextFrame = pFrame->next < m_iFrameCount ? pFrame->next : 0;
+        m_pFrames[i].iSound = pFrame->sound;
+        m_pFrames[i].iFlags = pFrame->flags;
+        // Bounding box fields initialised later
     }
 
     memcpy(m_pElementList, pListData, iListCount * 2);

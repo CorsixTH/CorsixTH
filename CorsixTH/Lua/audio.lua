@@ -22,6 +22,7 @@ local pathsep = package.config:sub(1, 1)
 local rnc = require "rnc"
 local lfs = require "lfs"
 local SDL = require "sdl"
+local TH = require "TH"
 local ipairs
     = ipairs
 
@@ -133,7 +134,49 @@ function Audio:init()
     self.not_loaded = true
     self.has_bg_music = false
     self.background_playlist = {}
+    return
   end
+  
+  if subdirs.DATA == false then
+    print "Notice: No sound effects as no SOUND/DATA directory found"
+  else
+    local data_dir = sound_dir .. subdirs.DATA .. pathsep
+    local archive_name
+    for item in lfs.dir(data_dir) do
+      if item:upper() == "SOUND-0.DAT" then
+        archive_name = item
+        break
+      end
+    end
+    if not archive_name then
+      print "Notice: No sound effects as no SOUND/DATA/SOUND-0.DAT file found"
+    else
+      local file = assert(io.open(data_dir .. archive_name, "rb"))
+      local data = file:read"*a"
+      file:close()
+      if data:sub(1, 3) == "RNC" then
+        data = assert(rnc.decompress(data))
+      end
+      self.sound_archive = TH.soundArchive()
+      if not self.sound_archive:load(data) then
+        print "Notice: No sound effects as SOUND/DATA/SOUND-0.DAT could not be loaded"
+      else
+        --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
+      end
+    end
+  end
+end
+
+function Audio:dumpSoundArchive(out_dir)
+  local info = io.open(out_dir .. "info.csv", "wt")
+  for i = 1, #self.sound_archive - 1 do
+    local filename = self.sound_archive:getFilename(i)
+    info:write(i, ",", filename, ",", self.sound_archive:getDuration(i), ",\n")
+    local file = io.open(out_dir .. i .. "_" .. filename, "wb")
+    file:write(self.sound_archive:getFileData(i))
+    file:close()
+  end
+  info:close()
 end
 
 function Audio:playRandomBackgroundTrack()

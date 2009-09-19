@@ -11,7 +11,7 @@ LIBS= -llua `sdl-config --libs` -lSDL_mixer
 ALL_T= CorsixTH
 ALL_O= lfs.o main.o rnc.o sdl_core.o sdl_wm.o th.o th_gfx.o \
 	th_lua.o th_map.o th_pathfind.o th_gfx_dx9.o th_gfx_sdl.o \
-	random.o SDL_main_win32.o xmi2mid.o sdl_audio.o
+	random.o SDL_main_win32.o xmi2mid.o sdl_audio.o th_sound.o
 
 default: all
 
@@ -67,6 +67,9 @@ th_map.o:
 
 th_pathfind.o:
 	$(CPP) -c Src/th_pathfind.cpp $(CFLAGS)
+
+th_sound.o:
+	$(CPP) -c Src/th_sound.cpp $(CFLAGS)
 
 xmi2mid.o:
 	$(CPP) -c Src/xmi2mid.cpp $(CFLAGS)

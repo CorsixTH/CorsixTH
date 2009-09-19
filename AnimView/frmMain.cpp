@@ -492,8 +492,8 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     uint16_t iFlags = m_oAnims.getFrameFlags(m_iCurrentAnim, m_iCurrentFrame);
     int iFlags1 = (int)(iFlags & 0xFF);
     int iFlags2 = (int)(iFlags >> 8);
-    m_txtFrameFlags[0]->SetValue(wxString::Format("0x%02x (%03i)", iFlags1, iFlags1));
-    m_txtFrameFlags[1]->SetValue(wxString::Format("0x%02x00 (256 * %03i)", iFlags2, iFlags2));
+    m_txtFrameFlags[0]->SetValue(wxString::Format(L"0x%02x (%03i)", iFlags1, iFlags1));
+    m_txtFrameFlags[1]->SetValue(wxString::Format(L"0x%02x00 (256 * %03i)", iFlags2, iFlags2));
     for(int i = 0; i < 16; ++i)
         m_chkFrameFlags[i]->SetValue((iFlags & (1 << i)) != 0);
 
