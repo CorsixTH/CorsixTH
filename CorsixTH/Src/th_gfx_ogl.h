@@ -210,7 +210,7 @@ protected:
     void _freeSprites();
     bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
     void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
-    //IDirect3DTexture9* _makeAltBitmap(sprite_t *pSprite);
+    GLuint _makeAltBitmap(sprite_t *pSprite);
     static int _sortSpritesHeight(const void*, const void*);
 };
 

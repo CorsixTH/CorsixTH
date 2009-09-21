@@ -1233,8 +1233,7 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
     else
     {
         int iPixelCount = pSprite->iHeight * pSprite->iWidth;
-        unsigned char *pData = new unsigned char[iPixelCount + 1024];
-        pData += 1024;
+        unsigned char *pData = new unsigned char[iPixelCount];
         for(int i = 0; i < iPixelCount; ++i)
         {
             unsigned char iPixel = pSprite->pData[i];
@@ -1244,7 +1243,6 @@ IDirect3DTexture9* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
         }
         pSprite->pAltBitmap = THDX9_CreateTexture(pSprite->iWidth,
             pSprite->iHeight, pData, m_pPalette, m_pDevice);
-        pData -= 1024;
         delete[] pData;
     }
     return pSprite->pAltBitmap;

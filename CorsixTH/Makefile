@@ -6,12 +6,13 @@ CC= gcc
 CPP= g++
 RM= rm -f
 CFLAGS= `sdl-config --cflags`
-LIBS= -llua `sdl-config --libs` -lSDL_mixer
+LIBS= -llua `sdl-config --libs` -lSDL_mixer -lGL
 
 ALL_T= CorsixTH
 ALL_O= lfs.o main.o rnc.o sdl_core.o sdl_wm.o th.o th_gfx.o \
 	th_lua.o th_map.o th_pathfind.o th_gfx_dx9.o th_gfx_sdl.o \
-	random.o SDL_main_win32.o xmi2mid.o sdl_audio.o th_sound.o
+	random.o SDL_main_win32.o xmi2mid.o sdl_audio.o th_sound.o \
+	th_gfx_ogl.o
 
 default: all
 
@@ -55,6 +56,9 @@ th_gfx.o:
 
 th_gfx_dx9.o:
 	$(CPP) -c Src/th_gfx_dx9.cpp $(CFLAGS)
+
+th_gfx_ogl.o:
+	$(CPP) -c Src/th_gfx_ogl.cpp $(CFLAGS)
 
 th_gfx_sdl.o:
 	$(CPP) -c Src/th_gfx_sdl.cpp $(CFLAGS)

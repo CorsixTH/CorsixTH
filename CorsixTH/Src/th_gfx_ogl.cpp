@@ -27,6 +27,11 @@ SOFTWARE.
 #include <new>
 #ifdef _MSC_VER
 #pragma comment(lib, "OpenGL32")
+#else
+struct RECT
+{
+    long top, bottom, left, right;
+};
 #endif
 
 THRenderTarget::THRenderTarget()
@@ -42,7 +47,11 @@ THRenderTarget::THRenderTarget()
 
 THRenderTarget::~THRenderTarget()
 {
-    // TODO
+    if(m_pVerticies != NULL)
+    {
+        free(m_pVerticies);
+        m_pVerticies = NULL;
+    }
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -70,9 +79,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         break;
     }
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered ? 1 : 0);
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0 : 1);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered   ? 1:0);
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0:1);
     m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight, iBPP,
         pParams->iSDLFlags | SDL_OPENGL);
     if(m_pSurface == NULL)
@@ -85,13 +93,19 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, pParams->iWidth, pParams->iHeight);
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0.0, (GLdouble)pParams->iWidth, (GLdouble)pParams->iHeight, 0.0, 0.0, 1.0);
+    GLdouble fWidth = (GLdouble)pParams->iWidth;
+    GLdouble fHeight = (GLdouble)pParams->iHeight;
+    // NB: The loaded matrix is the transpose of the visible matrix
+    const GLdouble mtxProjection[16] = {
+              2.0 / fWidth ,        0.0           , 0.0, 0.0,
+              0.0          ,       -2.0 / fHeight , 0.0, 0.0,
+              0.0          ,        0.0           , 1.0, 0.0,
+      -1.0 - (1.0 / fWidth), 1.0 + (1.0 / fHeight), 0.0, 1.0
+    };
+    glLoadMatrixd(mtxProjection);
+    glTranslated(0.5, 0.5, 0.0);
     glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
     glLoadIdentity();
-    glTranslatef(0.375f, -0.375f, 0.0f);
 
     if(getGLError() != GL_NO_ERROR)
     {
@@ -130,22 +144,24 @@ bool THRenderTarget::flushSprites()
     glBindTexture(GL_TEXTURE_2D, iTexture);
     if(getGLError() != GL_NO_ERROR)
         goto gl_err;
-    size_t iStart = 0;
-    for(size_t i = 4; i < m_iVertexCount; i += 4)
     {
-        if(m_pVerticies[i].tex != iTexture)
+        size_t iStart = 0;
+        for(size_t i = 4; i < m_iVertexCount; i += 4)
         {
-            _drawVerts(iStart, i);
-            if(getGLError() != GL_NO_ERROR)
-                goto gl_err;
-            iStart = i;
-            iTexture = m_pVerticies[i].tex;
-            glBindTexture(GL_TEXTURE_2D, iTexture);
-            if(getGLError() != GL_NO_ERROR)
-                goto gl_err;
+            if(m_pVerticies[i].tex != iTexture)
+            {
+                _drawVerts(iStart, i);
+                if(getGLError() != GL_NO_ERROR)
+                    goto gl_err;
+                iStart = i;
+                iTexture = m_pVerticies[i].tex;
+                glBindTexture(GL_TEXTURE_2D, iTexture);
+                if(getGLError() != GL_NO_ERROR)
+                    goto gl_err;
+            }
         }
+        _drawVerts(iStart, m_iVertexCount);
     }
-    _drawVerts(iStart, m_iVertexCount);
     if(getGLError() != GL_NO_ERROR)
         goto gl_err;
 
@@ -161,6 +177,7 @@ GLenum THRenderTarget::getGLError()
     GLenum eError = glGetError();
     if(eError != GL_NO_ERROR)
     {
+        // Clear multiple error bits, if there are any
         while(glGetError())
             ;
     }
@@ -176,7 +193,7 @@ void THRenderTarget::_drawVerts(size_t iFirst, size_t iLast)
 
 bool THRenderTarget::fillBlack()
 {
-    glClearColor(0.0, 0.0,0.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     return getGLError() == GL_NO_ERROR;
 }
@@ -188,7 +205,12 @@ uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
 
 bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
-    // TODO
+    draw(0, iW, iH, iX, iY, 0, 1, 1, 0, 0);
+    THOGL_Vertex* pVerts = m_pVerticies + m_iVertexCount;
+    for(int i = 1; i <= 4; ++i)
+    {
+        pVerts[-i].colour = iColour;
+    }
     return true;
 }
 
@@ -218,22 +240,48 @@ void THRenderTarget::startNonOverlapping()
         m_iNonOverlappingStart = m_iVertexCount;
 }
 
+static int sprite_tex_compare(const void* left, const void* right)
+{
+    const THOGL_Vertex *pLeft  = reinterpret_cast<const THOGL_Vertex*>(left);
+    const THOGL_Vertex *pRight = reinterpret_cast<const THOGL_Vertex*>(right);
+
+    if(pLeft->tex == pRight->tex)
+        return 0;
+    else if(pLeft->tex < pRight->tex)
+        return -1;
+    else
+        return 1;
+}
+
 void THRenderTarget::finishNonOverlapping()
 {
     if(--m_iNonOverlapping > 0)
         return;
 
-    // TODO: Sort verticies by texture
+    // If more than one texture is used in the range of non-overlapping
+    // sprites, then sort the entire range by texture.
+
+    size_t iStart = m_iNonOverlappingStart;
+    GLuint iTexture = m_pVerticies[iStart].tex;
+    for(size_t i = iStart + 4; i < m_iVertexCount; i += 4)
+    {
+        if(m_pVerticies[i].tex != iTexture)
+        {
+            qsort(m_pVerticies + iStart, (m_iVertexCount - iStart) / 4,
+                sizeof(THOGL_Vertex) * 4, sprite_tex_compare);
+            break;
+        }
+    }
 }
 
 void THRenderTarget::setCursor(THCursor* pCursor)
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
 }
 
 void THRenderTarget::setCursorPosition(int iX, int iY)
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
 }
 
 bool THRenderTarget::takeScreenshot(const char* sFile)
@@ -327,9 +375,6 @@ void THRenderTarget::draw(GLuint iTexture, unsigned int iWidth,
                           unsigned int iHeight2, unsigned int iTexX,
                           unsigned int iTexY)
 {
-    if(iTexture == 0)
-        return;
-
     // Crop to clip rectangle
     RECT rcSource;
     rcSource.left = 0;
@@ -472,7 +517,7 @@ THRawBitmap::THRawBitmap()
 
 THRawBitmap::~THRawBitmap()
 {
-    // TODO
+    glDeleteTextures(1, &m_iTexture);
 }
 
 void THRawBitmap::setPalette(const THPalette* pPalette)
@@ -541,6 +586,9 @@ void THSpriteSheet::_freeSprites()
     delete[] m_pSprites;
     m_pSprites = NULL;
     m_iSpriteCount = 0;
+    glDeleteTextures(1, &m_iMegaTexture);
+    m_iMegaTexture = 0;
+    m_iMegaTextureSize = 0;
 }
 
 void THSpriteSheet::setPalette(const THPalette* pPalette)
@@ -746,7 +794,16 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
     if(iSprite >= m_iSpriteCount)
         return;
 
-    // TODO
+    sprite_t *pSprite = m_pSprites + iSprite;
+    if(pSprite->pAltPaletteMap != pMap)
+    {
+        pSprite->pAltPaletteMap = pMap;
+        if(pSprite->iAltTexture)
+        {
+            glDeleteTextures(1, &pSprite->iAltTexture);
+            pSprite->iAltTexture = 0;
+        }
+    }
 }
 
 unsigned int THSpriteSheet::getSpriteCount() const
@@ -793,8 +850,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         iTexture = pSprite->iAltTexture;
         if(iTexture == 0)
         {
-            // TODO
-            //iTexture = _makeAltBitmap(pSprite);
+            iTexture = _makeAltBitmap(pSprite);
             if(iTexture == 0)
                 return;
         }
@@ -815,37 +871,64 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     }
 }
 
+GLuint THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
+{
+    int iPixelCount = pSprite->iHeight * pSprite->iWidth;
+    unsigned char *pData = new unsigned char[iPixelCount];
+    for(int i = 0; i < iPixelCount; ++i)
+    {
+        unsigned char iPixel = pSprite->pData[i];
+        if(iPixel != 0xFF && pSprite->pAltPaletteMap)
+            iPixel = pSprite->pAltPaletteMap[iPixel];
+        pData[i] = iPixel;
+    }
+    pSprite->iAltTexture = m_pTarget->createTexture(pSprite->iWidth,
+        pSprite->iHeight, pData, m_pPalette);
+    delete[] pData;
+    return pSprite->iAltTexture;
+}
+
 bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
 {
-    // TODO
-    return true;
+    if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
+        return false;
+    int iWidth = m_pSprites[iSprite].iWidth;
+    int iHeight = m_pSprites[iSprite].iHeight;
+    if(iX >= iWidth || iY >= iHeight)
+        return false;
+    if(iFlags & THDF_FlipHorizontal)
+        iX = iWidth - iX - 1;
+    if(iFlags & THDF_FlipVertical)
+        iY = iHeight - iY - 1;
+    return (m_pPalette->getARGBData()
+        [m_pSprites[iSprite].pData[iY * iWidth + iX]] >> 24) != 0;
 }
 
 THCursor::THCursor()
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
 }
 
 THCursor::~THCursor()
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
 }
 
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
                                 int iHotspotX, int iHotspotY)
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
     return false;
 }
 
 void THCursor::use(THRenderTarget* pTarget)
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
 }
 
 bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
-    // TODO
+    // TODO (low priority, as Lua will simulate a cursor)
     return false;
 }
 

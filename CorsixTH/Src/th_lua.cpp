@@ -1353,7 +1353,7 @@ static int l_surface_screenshot(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
     const char *sFile = luaL_checkstring(L, 2);
-    if (pCanvas->takeScreenshot(sFile))
+    if(pCanvas->takeScreenshot(sFile))
     {
         lua_settop(L, 1);
         return 1;
