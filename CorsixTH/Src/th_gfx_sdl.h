@@ -31,7 +31,11 @@ SOFTWARE.
 #include <SDL.h>
 
 class THCursor;
-typedef SDL_Rect THClipRect;
+struct THClipRect : public SDL_Rect
+{
+    typedef Sint16 xy_t;
+    typedef Uint16 wh_t;
+};
 struct THRenderTargetCreationParams;
 
 class THRenderTarget
@@ -40,21 +44,48 @@ public: // External API
     THRenderTarget();
     ~THRenderTarget();
 
+    //! Initialise the render target
     bool create(const THRenderTargetCreationParams* pParams);
+
+    //! Get the reason for the last operation failing
     const char* getLastError();
 
+    //! Begin rendering a new frame
     bool startFrame();
+
+    //! Finish rendering the current frame and present it
     bool endFrame();
+
+    //! Paint the entire render target black
     bool fillBlack();
+
+    //! Encode an RGB triplet for fillRect()
     uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
+
+    //! Fill a rectangle of the render target with a solid colour
     bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
+
+    //! Get the current clip rectangle
     void getClipRect(THClipRect* pRect) const;
+
+    //! Set the new clip rectangle
     void setClipRect(const THClipRect* pRect);
+
+    //! Enable optimisations for non-overlapping draws
     void startNonOverlapping();
+
+    //! Disable optimisations for non-overlapping draws
     void finishNonOverlapping();
+
+    //! Set the cursor to be used
     void setCursor(THCursor* pCursor);
+
+    //! Update the cursor position (if the cursor is being simulated)
     void setCursorPosition(int iX, int iY);
+
+    //! Take a screenshot and save it as a bitmap
     bool takeScreenshot(const char* sFile);
+
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.

@@ -797,7 +797,7 @@ void THSpriteSheet::_freeSprites()
         if(m_pSprites[i].pAltBitmap)
             m_pSprites[i].pAltBitmap->Release();
         if(m_pSprites[i].pData)
-            delete[] (m_pSprites[i].pData - 1024);
+            delete[] m_pSprites[i].pData;
     }
     if(m_pMegaSheet)
     {
@@ -863,8 +863,8 @@ bool THSpriteSheet::loadFromTHFile(
             continue;
 
         {
-            unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight + 1024];
-            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData + 1024);
+            unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight];
+            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
             if(iDataLen < 0)
                 iDataLen = 0;
@@ -1201,7 +1201,7 @@ void THRenderTarget::draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
     pVerticies[n].z = 0.0f; \
     pVerticies[n].colour = cColour; \
     pVerticies[n].u = (float) u_; \
-    pVerticies[n].v = (float) v_; \
+    pVerticies[n].v = (float) v_
 
     THDX9_Vertex *pVerticies = allocVerticies(4, pTexture);
     SetVertexData(0, 0, 0, rcSource.left / fSprWidth, rcSource.top / fSprHeight);

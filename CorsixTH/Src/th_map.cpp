@@ -241,7 +241,7 @@ static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
 {
     if(rcClip.x < rcIntersect.x)
     {
-        if(rcClip.x + static_cast<int16_t>(rcClip.w) <= rcIntersect.x)
+        if(rcClip.x + static_cast<THClipRect::xy_t>(rcClip.w) <= rcIntersect.x)
         {
             rcClip.w = 0;
             rcClip.h = 0;
@@ -252,7 +252,7 @@ static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
     }
     if(rcClip.y < rcIntersect.y)
     {
-        if(rcClip.y + static_cast<int16_t>(rcClip.h) <= rcIntersect.y)
+        if(rcClip.y + static_cast<THClipRect::xy_t>(rcClip.h) <= rcIntersect.y)
         {
             rcClip.w = 0;
             rcClip.h = 0;
@@ -263,7 +263,7 @@ static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
     }
     if(rcClip.x + rcClip.w > rcIntersect.x + rcIntersect.w)
     {
-        if(rcIntersect.x + static_cast<int16_t>(rcIntersect.w) <= rcClip.x)
+        if(rcIntersect.x + static_cast<THClipRect::xy_t>(rcIntersect.w) <= rcClip.x)
         {
             rcClip.w = 0;
             rcClip.h = 0;
@@ -273,7 +273,7 @@ static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
     }
     if(rcClip.y + rcClip.h > rcIntersect.y + rcIntersect.h)
     {
-        if(rcIntersect.y + static_cast<int16_t>(rcIntersect.h) <= rcClip.y)
+        if(rcIntersect.y + static_cast<THClipRect::xy_t>(rcIntersect.h) <= rcClip.y)
         {
             rcClip.w = 0;
             rcClip.h = 0;
@@ -307,10 +307,10 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         return;
 
     THClipRect rcClip;
-    rcClip.x = iCanvasX;
-    rcClip.y = iCanvasY;
-    rcClip.w = iWidth;
-    rcClip.h = iHeight;
+    rcClip.x = static_cast<THClipRect::xy_t>(iCanvasX);
+    rcClip.y = static_cast<THClipRect::xy_t>(iCanvasY);
+    rcClip.w = static_cast<THClipRect::wh_t>(iWidth);
+    rcClip.h = static_cast<THClipRect::wh_t>(iHeight);
     pCanvas->setClipRect(&rcClip);
 
     int iStartX = 0;
@@ -452,10 +452,10 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                         {
                             THClipRect rcOldClip, rcNewClip;
                             pCanvas->getClipRect(&rcOldClip);
-                            rcNewClip.x = iXs - 32;
-                            rcNewClip.y = iYs - iH + 32 + 4;
-                            rcNewClip.w = 64;
-                            rcNewClip.h = 86 - 4;
+                            rcNewClip.x = static_cast<THClipRect::xy_t>(iXs - 32);
+                            rcNewClip.y = static_cast<THClipRect::xy_t>(iYs - iH + 32 + 4);
+                            rcNewClip.w = static_cast<THClipRect::wh_t>(64);
+                            rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
                             IntersectClipRect(rcNewClip, rcOldClip);
                             pCanvas->setClipRect(&rcNewClip);
                             m_pBlocks->drawSprite(pCanvas, 156, iXs - 32,

@@ -35,48 +35,129 @@ SOFTWARE.
 #include <windows.h>
 #endif
 #include <GL/gl.h>
+#include <SDL.h>
+
+class THCursor;
+struct THRenderTargetCreationParams;
 
 struct THClipRect
 {
-    // Conveniently the same as an SDL_Rect
-    int16_t x, y;
-    uint16_t w, h;
+    typedef  int16_t xy_t;
+    typedef uint16_t wh_t;
+    xy_t x, y;
+    wh_t w, h;
 };
 
-struct THRenderTarget
+struct THOGL_Vertex
 {
-    THRenderTarget();
-
-    struct SDL_Surface* pSurface;
-    GLuint iGLid;
+    float u, v;
+    uint32_t colour;
+    float x, y, z;
+    // The texture is not part of the GL vertex, but is included with the
+    // vertex data to make it simpler to sort verticies by texture.
+    GLuint tex;
 };
-
-void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect);
-void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect);
-
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget);
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget);
 
 class THPalette
 {
-public:
+public: // External API
     THPalette();
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
 
+public: // Internal (this rendering engine only) API
+    inline static uint32_t packARGB(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
+    {
+        return (static_cast<uint32_t>(iR) <<  0) |
+               (static_cast<uint32_t>(iG) <<  8) |
+               (static_cast<uint32_t>(iB) << 16) |
+               (static_cast<uint32_t>(iA) << 24) ;
+    }
     int getColourCount() const;
-    const unsigned char* getColourData() const;
-    void assign(THRenderTarget* pTarget, bool bTransparent) const;
+    const uint32_t* getARGBData() const;
 
 protected:
-    typedef uint32_t colour_t;
-    colour_t m_aColours[256];
+    uint32_t m_aColoursARGB[256];
     int m_iNumColours;
+};
+
+class THRenderTarget
+{
+public: // External API
+    THRenderTarget();
+    ~THRenderTarget();
+
+    bool create(const THRenderTargetCreationParams* pParams);
+    const char* getLastError();
+
+    bool startFrame();
+    bool endFrame();
+    bool fillBlack();
+    uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
+    bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
+    void getClipRect(THClipRect* pRect) const;
+    void setClipRect(const THClipRect* pRect);
+    void startNonOverlapping();
+    void finishNonOverlapping();
+    void setCursor(THCursor* pCursor);
+    void setCursorPosition(int iX, int iY);
+    bool takeScreenshot(const char* sFile);
+    // If you add any extra methods here which are called from outside the
+    // rendering engine, then be sure to at least add dummy implementations
+    // to the other rendering engines.
+
+public: // Internal (this rendering engine only) API
+    THOGL_Vertex* allocVerticies(size_t iCount, GLuint iTexture);
+    void draw(GLuint iTexture, unsigned int iWidth, unsigned int iHeight,
+        int iX, int iY, unsigned long iFlags, unsigned int iWidth2,
+        unsigned int iHeight2, unsigned int iTexX, unsigned int iTexY);
+    bool flushSprites();
+    GLuint createTexture(int iWidth, int iHeight, const unsigned char* pPixels,
+                         const THPalette* pPalette, int* pWidth2 = NULL,
+                         int* pHeight2 = NULL);
+    GLuint createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels);
+    GLenum getGLError();
+
+protected:
+    SDL_Surface* m_pSurface;
+    THOGL_Vertex *m_pVerticies;
+    THClipRect m_rcClip;
+    size_t m_iVertexCount;
+    size_t m_iVertexLength;
+    size_t m_iNonOverlappingStart;
+    int m_iNonOverlapping;
+
+    void _drawVerts(size_t iFirst, size_t iLast);
+};
+
+class THRawBitmap
+{
+public: // External API
+    THRawBitmap();
+    ~THRawBitmap();
+
+    void setPalette(const THPalette* pPalette);
+
+    bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
+                        int iWidth, THRenderTarget *pEventualCanvas);
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
+    void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+              int iWidth, int iHeight);
+
+protected:
+    GLuint m_iTexture;
+    const THPalette* m_pPalette;
+    THRenderTarget* m_pTarget;
+    int m_iWidth;
+    int m_iWidth2;
+    int m_iHeight;
+    int m_iHeight2;
 };
 
 class THSpriteSheet
 {
-public:
+public: // External API
     THSpriteSheet();
     ~THSpriteSheet();
 
@@ -93,8 +174,10 @@ public:
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
+    bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
 
 protected:
+    friend class THCursor;
 #pragma pack(push)
 #pragma pack(1)
     struct th_sprite_t
@@ -107,18 +190,45 @@ protected:
 
     struct sprite_t
     {
-        THRenderTarget oBitmap;
-        THRenderTarget oAltBitmap;
+        GLuint iTexture;
+        GLuint iAltTexture;
         unsigned char *pData;
         const unsigned char *pAltPaletteMap;
+        unsigned int iSheetX;
+        unsigned int iSheetY;
         unsigned int iWidth;
         unsigned int iHeight;
+        unsigned int iWidth2;
+        unsigned int iHeight2;
     } *m_pSprites;
     const THPalette* m_pPalette;
+    THRenderTarget* m_pTarget;
+    GLuint m_iMegaTexture;
+    unsigned int m_iMegaTextureSize;
     unsigned int m_iSpriteCount;
 
     void _freeSprites();
+    bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
+    void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
     //IDirect3DTexture9* _makeAltBitmap(sprite_t *pSprite);
+    static int _sortSpritesHeight(const void*, const void*);
+};
+
+class THCursor
+{
+public: // External API
+    THCursor();
+    ~THCursor();
+
+    bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+                          int iHotspotX = 0, int iHotspotY = 0);
+
+    void use(THRenderTarget* pTarget);
+
+    static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
+
+protected:
+    friend class THRenderTarget;
 };
 
 #endif // CORSIX_TH_USE_OGL_RENDERER

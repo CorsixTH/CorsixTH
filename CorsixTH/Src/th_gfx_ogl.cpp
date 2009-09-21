@@ -31,29 +31,389 @@ SOFTWARE.
 
 THRenderTarget::THRenderTarget()
 {
-    pSDL = NULL;
+    m_pSurface = NULL;
+    m_pVerticies = NULL;
+    setClipRect(NULL);
+    m_iVertexCount = 0;
+    m_iVertexLength = 0;
+    m_iNonOverlappingStart = 0;
+    m_iNonOverlapping = 0;
 }
 
-void THRenderTarget_GetClipRect(const THRenderTarget* pTarget, THClipRect* pRect)
+THRenderTarget::~THRenderTarget()
 {
+    // TODO
 }
 
-void THRenderTarget_SetClipRect(THRenderTarget* pTarget, const THClipRect* pRect)
+bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 {
+    int iBPP = pParams->iBPP;
+    if(iBPP == 0)
+        iBPP = SDL_GetVideoInfo()->vfmt->BitsPerPixel;
+    switch(iBPP)
+    {
+    case 8:
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   3);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 3);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  2);
+        break;
+    case 15:
+    case 16:
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   5);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  5);
+        break;
+    default:
+        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
+        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
+        break;
+    }
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered ? 1 : 0);
+    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0 : 1);
+    m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight, iBPP,
+        pParams->iSDLFlags | SDL_OPENGL);
+    if(m_pSurface == NULL)
+        return false;
+
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glViewport(0, 0, pParams->iWidth, pParams->iHeight);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0.0, (GLdouble)pParams->iWidth, (GLdouble)pParams->iHeight, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glTranslatef(0.375f, -0.375f, 0.0f);
+
+    if(getGLError() != GL_NO_ERROR)
+    {
+        m_pSurface = NULL;
+        return false;
+    }
+
+    return true;
 }
 
-void THRenderTarget_StartNonOverlapping(THRenderTarget* pTarget)
+const char* THRenderTarget::getLastError()
 {
-    // No optimisations at the moment
+    return SDL_GetError();
 }
 
-void THRenderTarget_FinishNonOverlapping(THRenderTarget* pTarget)
+bool THRenderTarget::startFrame()
 {
-    // No optimisations at the moment
+    return true;
+}
+
+bool THRenderTarget::endFrame()
+{
+    if(!flushSprites())
+        return false;
+
+    SDL_GL_SwapBuffers();
+    return true;
+}
+
+bool THRenderTarget::flushSprites()
+{
+    if(m_iVertexCount == 0)
+        return true;
+  
+    GLuint iTexture = m_pVerticies[0].tex;
+    glBindTexture(GL_TEXTURE_2D, iTexture);
+    if(getGLError() != GL_NO_ERROR)
+        goto gl_err;
+    size_t iStart = 0;
+    for(size_t i = 4; i < m_iVertexCount; i += 4)
+    {
+        if(m_pVerticies[i].tex != iTexture)
+        {
+            _drawVerts(iStart, i);
+            if(getGLError() != GL_NO_ERROR)
+                goto gl_err;
+            iStart = i;
+            iTexture = m_pVerticies[i].tex;
+            glBindTexture(GL_TEXTURE_2D, iTexture);
+            if(getGLError() != GL_NO_ERROR)
+                goto gl_err;
+        }
+    }
+    _drawVerts(iStart, m_iVertexCount);
+    if(getGLError() != GL_NO_ERROR)
+        goto gl_err;
+
+    m_iVertexCount = 0;
+    return true;
+gl_err:
+    m_iVertexCount = 0;
+    return false;
+}
+
+GLenum THRenderTarget::getGLError()
+{
+    GLenum eError = glGetError();
+    if(eError != GL_NO_ERROR)
+    {
+        while(glGetError())
+            ;
+    }
+    return eError;
+}
+
+void THRenderTarget::_drawVerts(size_t iFirst, size_t iLast)
+{
+    glInterleavedArrays(GL_T2F_C4UB_V3F, sizeof(THOGL_Vertex),
+        m_pVerticies + iFirst);
+    glDrawArrays(GL_QUADS, 0, iLast - iFirst);
+}
+
+bool THRenderTarget::fillBlack()
+{
+    glClearColor(0.0, 0.0,0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    return getGLError() == GL_NO_ERROR;
+}
+
+uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    return THPalette::packARGB(0xFF, iR, iG, iB);
+}
+
+bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
+{
+    // TODO
+    return true;
+}
+
+void THRenderTarget::getClipRect(THClipRect* pRect) const
+{
+    *pRect = m_rcClip;
+}
+
+void THRenderTarget::setClipRect(const THClipRect* pRect)
+{
+    if(pRect != NULL)
+    {
+        m_rcClip = *pRect;
+    }
+    else
+    {
+        m_rcClip.x = -1000;
+        m_rcClip.y = -1000;
+        m_rcClip.w = 0xFFFF;
+        m_rcClip.h = 0xFFFF;
+    }
+}
+
+void THRenderTarget::startNonOverlapping()
+{
+    if(m_iNonOverlapping++ == 0)
+        m_iNonOverlappingStart = m_iVertexCount;
+}
+
+void THRenderTarget::finishNonOverlapping()
+{
+    if(--m_iNonOverlapping > 0)
+        return;
+
+    // TODO: Sort verticies by texture
+}
+
+void THRenderTarget::setCursor(THCursor* pCursor)
+{
+    // TODO
+}
+
+void THRenderTarget::setCursorPosition(int iX, int iY)
+{
+    // TODO
+}
+
+bool THRenderTarget::takeScreenshot(const char* sFile)
+{
+    // TODO
+    return false;
+}
+
+GLuint THRenderTarget::createTexture(int iWidth, int iHeight,
+                                     const unsigned char* pPixels,
+                                     const THPalette* pPalette,
+                                     int* pWidth2, int* pHeight2)
+{
+    int iWidth2 = 1;
+    int iHeight2 = 1;
+    while(iWidth2 < iWidth)
+        iWidth2 <<= 1;
+    while(iHeight2 < iHeight)
+        iHeight2 <<= 1;
+    if(pWidth2)
+        *pWidth2 = iWidth2;
+    if(pHeight2)
+        *pHeight2 = iHeight2;
+
+    uint32_t *pRGBAPixels = new (std::nothrow) uint32_t[iWidth2 * iHeight2];
+    if(pRGBAPixels == NULL)
+        return 0;
+    const uint32_t iTransparent = THPalette::packARGB(0x00, 0x00, 0x00, 0x00);
+    const uint32_t* pColours = pPalette->getARGBData();
+
+    uint32_t *pRow = pRGBAPixels;
+    for(int y = 0; y < iHeight; ++y)
+    {
+        for(int x = 0; x < iWidth; ++x, ++pPixels, ++pRow)
+        {
+            *pRow = pColours[*pPixels];
+        }
+        for(int x = iWidth; x < iWidth2; ++x, ++pRow)
+        {
+            *pRow = iTransparent;
+        }
+    }
+    for(int y = iHeight; y < iHeight2; ++y)
+    {
+        for(int x = 0; x < iWidth2; ++x, ++pRow)
+        {
+            *pRow = iTransparent;
+        }
+    }
+
+    GLuint iTextureID = createTexture(iWidth2, iHeight2, pRGBAPixels);
+    delete[] pRGBAPixels;
+    return iTextureID;
+}
+
+GLuint THRenderTarget::createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels)
+{
+    GLuint iTextureID;
+    glGenTextures(1, &iTextureID);
+    glBindTexture(GL_TEXTURE_2D, iTextureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, iWidth2, iHeight2, 0, GL_RGBA,
+        GL_UNSIGNED_BYTE, pPixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    if(getGLError() != GL_NO_ERROR)
+    {
+        glDeleteTextures(1, &iTextureID);
+        return 0;
+    }
+    return iTextureID;
+}
+
+THOGL_Vertex* THRenderTarget::allocVerticies(size_t iCount,
+                                             GLuint iTexture)
+{
+    if(m_iVertexCount + iCount > m_iVertexLength)
+    {
+        m_iVertexLength = (m_iVertexLength * 2) + iCount;
+        m_pVerticies = (THOGL_Vertex*)realloc(m_pVerticies,
+            sizeof(THOGL_Vertex) * m_iVertexLength);
+    }
+    THOGL_Vertex *pResult = m_pVerticies + m_iVertexCount;
+    pResult[0].tex = iTexture;
+    m_iVertexCount += iCount;
+    return pResult;
+}
+
+void THRenderTarget::draw(GLuint iTexture, unsigned int iWidth,
+                          unsigned int iHeight, int iX, int iY,
+                          unsigned long iFlags, unsigned int iWidth2,
+                          unsigned int iHeight2, unsigned int iTexX,
+                          unsigned int iTexY)
+{
+    if(iTexture == 0)
+        return;
+
+    // Crop to clip rectangle
+    RECT rcSource;
+    rcSource.left = 0;
+    rcSource.top = 0;
+    rcSource.right = iWidth;
+    rcSource.bottom = iHeight;
+    if(iX + rcSource.right > m_rcClip.x + m_rcClip.w)
+    {
+        rcSource.right = m_rcClip.x + m_rcClip.w - iX;
+    }
+    if(iY + rcSource.bottom > m_rcClip.y + m_rcClip.h)
+    {
+        rcSource.bottom = m_rcClip.y + m_rcClip.h - iY;
+    }
+    if(iX + rcSource.left < m_rcClip.x)
+    {
+        rcSource.left = m_rcClip.x - iX;
+        iX = m_rcClip.x;
+    }
+    if(iY + rcSource.top < m_rcClip.y)
+    {
+        rcSource.top = m_rcClip.y - iY;
+        iY = m_rcClip.y;
+    }
+    if(rcSource.right < rcSource.left)
+        rcSource.right = rcSource.left;
+    if(rcSource.bottom < rcSource.top)
+        rcSource.bottom = rcSource.top;
+
+    rcSource.left += iTexX;
+    rcSource.right += iTexX;
+    rcSource.bottom += iTexY;
+    rcSource.top += iTexY;
+
+    // Set alpha blending options
+    uint32_t cColour;
+    switch(iFlags & (THDF_Alpha50 | THDF_Alpha75))
+    {
+    case 0:
+        cColour = THPalette::packARGB(0xFF, 0xFF, 0xFF, 0xFF);
+        break;
+    case THDF_Alpha50:
+        cColour = THPalette::packARGB(0x80, 0xFF, 0xFF, 0xFF);
+        break;
+    default:
+        cColour = THPalette::packARGB(0x40, 0xFF, 0xFF, 0xFF);
+        break;
+    }
+    float fX = (float)iX;
+    float fY = (float)iY;
+    float fWidth = (float)(rcSource.right - rcSource.left);
+    float fHeight = (float)(rcSource.bottom - rcSource.top);
+    float fSprWidth = (float)iWidth2;
+    float fSprHeight = (float)iHeight2;
+    if(iFlags & THDF_FlipHorizontal)
+    {
+        rcSource.left = iTexX * 2 + iWidth - rcSource.left;
+        rcSource.right = iTexX * 2 + iWidth - rcSource.right;
+    }
+    if(iFlags & THDF_FlipVertical)
+    {
+        rcSource.top = iTexY * 2 + iHeight - rcSource.top;
+        rcSource.bottom = iTexY * 2 + iHeight - rcSource.bottom;
+    }
+
+#define SetVertexData(n, x_, y_, u_, v_) \
+    pVerticies[n].x = fX + (float) x_; \
+    pVerticies[n].y = fY + (float) y_; \
+    pVerticies[n].z = 0.0f; \
+    pVerticies[n].colour = cColour; \
+    pVerticies[n].u = (float) u_; \
+    pVerticies[n].v = (float) v_
+
+    THOGL_Vertex *pVerticies = allocVerticies(4, iTexture);
+    SetVertexData(0, 0, 0, rcSource.left / fSprWidth, rcSource.top / fSprHeight);
+    SetVertexData(1, fWidth, 0, rcSource.right  / fSprWidth, pVerticies[0].v);
+    SetVertexData(2, fWidth, fHeight, pVerticies[1].u, rcSource.bottom / fSprHeight);
+    SetVertexData(3, 0, fHeight, pVerticies[0].u, pVerticies[2].v);
+#undef SetVertexData
 }
 
 THPalette::THPalette()
 {
+    m_iNumColours = 0;
 }
 
 static const unsigned char gs_iTHColourLUT[0x40] = {
@@ -73,21 +433,20 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     if(iDataLength != 256 * 3)
         return false;
 
-    m_iNumColours = iDataLength / 3;
-    colour_t* pColour = m_aColours;
-    for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pColour)
+    m_iNumColours = static_cast<int>(iDataLength / 3);
+    for(int i = 0; i < m_iNumColours; ++i, pData += 3)
     {
-        *pColour = 0xFF << 24
-            | (gs_iTHColourLUT[pData[0] & 0x3F])
-            | (gs_iTHColourLUT[pData[1] & 0x3F]) << 8
-            | (gs_iTHColourLUT[pData[2] & 0x3F]) << 16;
+        unsigned char iR = gs_iTHColourLUT[pData[0] & 0x3F];
+        unsigned char iG = gs_iTHColourLUT[pData[1] & 0x3F];
+        unsigned char iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        uint32_t iColour = packARGB(0xFF, iR, iG, iB);
+        // Remap magenta to transparent
+        if(iColour == packARGB(0xFF, 0xFF, 0x00, 0xFF))
+            iColour = packARGB(0x00, 0x00, 0x00, 0x00);
+        m_aColoursARGB[i] = iColour;
     }
 
     return true;
-}
-
-void THPalette::assign(THRenderTarget*, bool) const
-{
 }
 
 int THPalette::getColourCount() const
@@ -95,16 +454,74 @@ int THPalette::getColourCount() const
     return m_iNumColours;
 }
 
-const unsigned char* THPalette::getColourData() const
+const uint32_t* THPalette::getARGBData() const
 {
-    return (unsigned char*)m_aColours;
+    return m_aColoursARGB;
+}
+
+THRawBitmap::THRawBitmap()
+{
+    m_iTexture = 0;
+    m_pPalette = NULL;
+    m_pTarget = NULL;
+    m_iWidth = 0;
+    m_iWidth2 = 0;
+    m_iHeight = 0;
+    m_iHeight2 = 0;
+}
+
+THRawBitmap::~THRawBitmap()
+{
+    // TODO
+}
+
+void THRawBitmap::setPalette(const THPalette* pPalette)
+{
+    m_pPalette = pPalette;
+}
+
+bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
+                                 size_t iPixelDataLength, int iWidth,
+                                 THRenderTarget *pEventualCanvas)
+{
+    if(pEventualCanvas == NULL)
+        return false;
+    if(!(m_iTexture = pEventualCanvas->createTexture(iWidth,
+        static_cast<int>(iPixelDataLength)/iWidth, pPixelData, m_pPalette,
+        &m_iWidth2, &m_iHeight2)))
+    {
+        return false;
+    }
+    m_iWidth = iWidth;
+    m_iHeight = static_cast<int>(iPixelDataLength) / iWidth;
+    m_pTarget = pEventualCanvas;
+
+    return true;
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+    draw(pCanvas, iX, iY, 0, 0, m_iWidth, m_iHeight);
+}
+
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX,
+                       int iSrcY, int iWidth, int iHeight)
+{
+    if(pCanvas == NULL || pCanvas != m_pTarget)
+        return;
+
+    pCanvas->draw(m_iTexture, iWidth, iHeight, iX, iY, 0, m_iWidth2,
+        m_iHeight2, iSrcX, iSrcY);
 }
 
 THSpriteSheet::THSpriteSheet()
 {
-    m_pSprites = 0;
-    m_iSpriteCount = 0;
+    m_pSprites = NULL;
     m_pPalette = NULL;
+    m_pTarget = NULL;
+    m_iMegaTexture = 0;
+    m_iMegaTextureSize = 0;
+    m_iSpriteCount = 0;
 }
 
 THSpriteSheet::~THSpriteSheet()
@@ -116,12 +533,10 @@ void THSpriteSheet::_freeSprites()
 {
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
-        /*
-        if(m_pSprites[i].pBitmap)
-            m_pSprites[i].pBitmap->Release();
-            */
+        glDeleteTextures(1, &m_pSprites[i].iTexture);
+        glDeleteTextures(1, &m_pSprites[i].iAltTexture);
         if(m_pSprites[i].pData)
-            delete[] (m_pSprites[i].pData - 1024);
+            delete[] m_pSprites[i].pData;
     }
     delete[] m_pSprites;
     m_pSprites = NULL;
@@ -138,7 +553,192 @@ bool THSpriteSheet::loadFromTHFile(
                     const unsigned char* pChunkData, size_t iChunkDataLength,
                     bool bComplexChunks, THRenderTarget* pCanvas)
 {
-    return false;
+    _freeSprites();
+    if(pCanvas == NULL)
+        return false;
+    
+    m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
+    if(m_pSprites == NULL)
+    {
+        m_iSpriteCount = 0;
+        return false;
+    }
+    m_pTarget = pCanvas;
+
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        sprite_t *pSprite = m_pSprites + i;
+        const th_sprite_t *pTHSprite = reinterpret_cast<const th_sprite_t*>(pTableData) + i;
+
+        pSprite->iTexture = 0;
+        pSprite->iAltTexture = 0;
+        pSprite->pData = NULL;
+        pSprite->pAltPaletteMap = NULL;
+        pSprite->iWidth = pTHSprite->width;
+        pSprite->iHeight = pTHSprite->height;
+        pSprite->iWidth2 = 1;
+        pSprite->iHeight2 = 1;
+        while(pSprite->iWidth2 < pSprite->iWidth)
+            pSprite->iWidth2 <<= 1;
+        while(pSprite->iHeight2 < pSprite->iHeight)
+            pSprite->iHeight2 <<= 1;
+
+        if(pSprite->iWidth == 0 || pSprite->iHeight == 0)
+            continue;
+
+        {
+            unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight];
+            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
+            int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
+            if(iDataLen < 0)
+                iDataLen = 0;
+            oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
+            pSprite->pData = oRenderer.takeData();
+        }
+    }
+
+    sprite_t **ppSortedSprites = new sprite_t*[m_iSpriteCount];
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        ppSortedSprites[i] = m_pSprites + i;
+    }
+    qsort(ppSortedSprites, m_iSpriteCount, sizeof(sprite_t*), _sortSpritesHeight);
+
+    unsigned int iSize;
+    if(_tryFitSingleTex(ppSortedSprites, 2048))
+    {
+        iSize = 2048;
+        if(_tryFitSingleTex(ppSortedSprites, 1024))
+        {
+            iSize = 1024;
+            if(_tryFitSingleTex(ppSortedSprites, 512))
+            {
+                iSize = 512;
+                if(_tryFitSingleTex(ppSortedSprites, 256))
+                {
+                    iSize = 256;
+                    if(_tryFitSingleTex(ppSortedSprites, 128))
+                        iSize = 128;
+                }
+            }
+        }
+    }
+    else
+    {
+        delete[] ppSortedSprites;
+        return true;
+    }
+
+    _makeSingleTex(ppSortedSprites, iSize);
+    delete[] ppSortedSprites;
+    return true;
+}
+
+int THSpriteSheet::_sortSpritesHeight(const void* left, const void* right)
+{
+    const sprite_t *pLeft = *reinterpret_cast<const sprite_t* const*>(left);
+    const sprite_t *pRight = *reinterpret_cast<const sprite_t* const*>(right);
+
+    // Move all NULL datas to the end
+    if(pLeft->pData == NULL || pRight->pData == NULL)
+    {
+        if(pLeft->pData == NULL && pRight->pData == NULL)
+            return 0;
+        if(pLeft->pData == NULL)
+            return 1;
+        else
+            return -1;
+    }
+
+    // Sort from tallest to shortest
+    return static_cast<int>(pRight->iHeight) - static_cast<int>(pLeft->iHeight);
+}
+
+bool THSpriteSheet::_tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
+{
+    // There are probably better algorithms for trying to fit lots of small
+    // rectangular sprites onto a single square sheet, but sorting them by
+    // height and then filling up one row at a time is simple and yields a good
+    // enough result.
+
+    unsigned int iX = 0;
+    unsigned int iY = 0;
+    unsigned int iTallest = ppSortedSprites[0]->iHeight;
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        sprite_t *pSprite = ppSortedSprites[i];
+        if(pSprite->pData == NULL)
+            break;
+        if(pSprite->iWidth > iSize || pSprite->iHeight > iSize)
+            return false;
+        if(iX + pSprite->iWidth > iSize)
+        {
+            iX = 0;
+            iY += iTallest;
+            iTallest = pSprite->iHeight;
+        }
+        iX += pSprite->iWidth;
+    }
+
+    iY += iTallest;
+    return iY <= iSize;
+}
+
+void THSpriteSheet::_makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
+{
+    uint32_t *pData = new (std::nothrow) uint32_t[iSize * iSize];
+    if(pData == NULL)
+        return;
+
+    // Pass 1: Fill entirely transparent
+    uint32_t* pRow = pData;
+    uint32_t iTransparent = THPalette::packARGB(0x00, 0x00, 0x00, 0x00);
+    for(unsigned int y = 0; y < iSize; ++y)
+    {
+        for(unsigned int x = 0; x < iSize; ++x, ++pRow)
+        {
+            *pRow = iTransparent;
+        }
+    }
+
+    // Pass 2: Blit sprites onto sheet
+    const uint32_t* pColours = m_pPalette->getARGBData();
+    unsigned int iX = 0;
+    unsigned int iY = 0;
+    unsigned int iTallest = ppSortedSprites[0]->iHeight;
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    {
+        sprite_t *pSprite = ppSortedSprites[i];
+        if(pSprite->pData == NULL)
+            break;
+
+        pSprite->iTexture = m_iMegaTexture;
+        if(iX + pSprite->iWidth > iSize)
+        {
+            iX = 0;
+            iY += iTallest;
+            iTallest = pSprite->iHeight;
+        }
+        pSprite->iSheetX = iX;
+        pSprite->iSheetY = iY;
+        iX += pSprite->iWidth;
+
+        const unsigned char *pPixels = pSprite->pData;
+        pRow = pData + pSprite->iSheetY * iSize + pSprite->iSheetX;
+        for(unsigned int y = 0; y < pSprite->iHeight; ++y)
+        {
+            for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pRow, ++pPixels)
+            {
+                *pRow = pColours[*pPixels];
+            }
+        }
+    }
+
+    m_iMegaTexture = m_pTarget->createTexture(iSize, iSize, pData);
+    delete[] pData;
+    if(m_iMegaTexture != 0)
+        m_iMegaTextureSize = iSize;
 }
 
 void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
@@ -146,18 +746,7 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
     if(iSprite >= m_iSpriteCount)
         return;
 
-    /*
-    sprite_t *pSprite = m_pSprites + iSprite;
-    if(pSprite->pAltPaletteMap != pMap)
-    {
-        pSprite->pAltPaletteMap = pMap;
-        if(pSprite->pAltBitmap)
-        {
-            pSprite->pAltBitmap->Release();
-            pSprite->pAltBitmap = NULL;
-        }
-    }
-    */
+    // TODO
 }
 
 unsigned int THSpriteSheet::getSpriteCount() const
@@ -184,9 +773,80 @@ void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* p
 
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
-    if(iSprite >= m_iSpriteCount || pCanvas == NULL)
+    if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
         return;
+    sprite_t *pSprite = m_pSprites + iSprite;
 
+    // Find or create the texture
+    GLuint iTexture = pSprite->iTexture;
+    if(iTexture == 0)
+    {
+        if(pSprite->pData == NULL)
+            return;
+
+        iTexture = m_pTarget->createTexture(pSprite->iWidth, pSprite->iHeight,
+            pSprite->pData, m_pPalette);
+        pSprite->iTexture = iTexture;
+    }
+    if(iFlags & THDF_AltPalette)
+    {
+        iTexture = pSprite->iAltTexture;
+        if(iTexture == 0)
+        {
+            // TODO
+            //iTexture = _makeAltBitmap(pSprite);
+            if(iTexture == 0)
+                return;
+        }
+    }
+
+    if(iTexture == m_iMegaTexture)
+    {
+        pCanvas->draw(iTexture, m_pSprites[iSprite].iWidth,
+            m_pSprites[iSprite].iHeight, iX, iY, iFlags, m_iMegaTextureSize,
+            m_iMegaTextureSize, m_pSprites[iSprite].iSheetX,
+            m_pSprites[iSprite].iSheetY);
+    }
+    else
+    {
+        pCanvas->draw(iTexture, m_pSprites[iSprite].iWidth,
+            m_pSprites[iSprite].iHeight, iX, iY, iFlags,
+            m_pSprites[iSprite].iWidth2, m_pSprites[iSprite].iHeight2, 0, 0);
+    }
+}
+
+bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
+{
+    // TODO
+    return true;
+}
+
+THCursor::THCursor()
+{
+    // TODO
+}
+
+THCursor::~THCursor()
+{
+    // TODO
+}
+
+bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+                                int iHotspotX, int iHotspotY)
+{
+    // TODO
+    return false;
+}
+
+void THCursor::use(THRenderTarget* pTarget)
+{
+    // TODO
+}
+
+bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
+{
+    // TODO
+    return false;
 }
 
 #endif // CORSIX_TH_USE_OGL_RENDERER

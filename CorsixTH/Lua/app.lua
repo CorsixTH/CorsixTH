@@ -217,12 +217,12 @@ function App:fixConfig()
       self.config[key] = languages[value:lower()] or value
     end
     
-    -- For resolution, check if resolution is at least 640x480
-    if key == "width" and type(value) == "number" and self.config[key] < 640 then
+    -- For resolution, check that resolution is at least 640x480
+    if key == "width" and type(value) == "number" and value < 640 then
       self.config[key] = 640
     end
     
-    if key == "height" and type(value) == "number" and self.config[key] < 480 then
+    if key == "height" and type(value) == "number" and value < 480 then
       self.config[key] = 480
     end
   end
@@ -498,5 +498,7 @@ function App:loadLuaFolder(dir, no_results)
 end
 
 function App:quit()
-  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), function() self.running = false end))
+  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), function()
+    self.running = false
+  end))
 end

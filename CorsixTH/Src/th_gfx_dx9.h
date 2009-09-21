@@ -38,8 +38,10 @@ struct THRenderTargetCreationParams;
 
 struct THClipRect
 {
-    int16_t x, y;
-    uint16_t w, h;
+    typedef  int16_t xy_t;
+    typedef uint16_t wh_t;
+    xy_t x, y;
+    wh_t w, h;
 };
 
 #pragma pack(push)
@@ -247,10 +249,9 @@ protected:
 
 class THCursor : protected THDX9_DeviceResource
 {
-public:
+public: // External API
     THCursor();
     ~THCursor();
-    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
     bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
                           int iHotspotX = 0, int iHotspotY = 0);
@@ -258,6 +259,9 @@ public:
     void use(THRenderTarget* pTarget);
 
     static bool setPosition(THRenderTarget* pTarget, int iX, int iY);
+
+public: // Internal (this rendering engine only) API
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType);
 
 protected:
     friend class THRenderTarget;

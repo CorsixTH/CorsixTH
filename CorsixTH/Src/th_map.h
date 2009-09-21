@@ -118,7 +118,8 @@ enum THMapNodeFlags
     THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
     THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
 
-    // NB: Bits 24 through 31 reserved for object type
+    // NB: Bits 24 through 31 reserved for object type (that being one of the
+    // THObjectType values)
 };
 
 struct THMapNode : public THLinkList
@@ -150,11 +151,21 @@ struct THMapNode : public THLinkList
     uint16_t iRoomId;
 
     // Flags for information (lower 24 bits) and object type (top 8 bits)
-    unsigned long iFlags;
+    // See THMapNodeFlags for lower 24 bits, and THObjectType for top 8.
+    uint32_t iFlags;
 };
 
 class THSpriteSheet;
 
+//! Prototype for object callbacks from THMap::loadFromTHFile
+/*!
+    The callback function will receive 5 arguments:
+      * The opaque pointer passed to THMap::loadFromTHFile (pCallbackToken).
+      * The tile X/Y position of the object.
+      * The object type.
+      * The object flags present in the map data. The meaning of this
+        value is left unspecified.
+*/
 typedef void (*THMapLoadObjectCallback_t)(void*, int, int, THObjectType, uint8_t);
 
 class THMap
@@ -167,15 +178,49 @@ public:
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
+
+    //! Set the sprite sheet to be used for drawing the map
+    /*!
+        The sprites for map floor tiles, wall tiles, and map decorators
+        all come from the given sheet.
+    */
     void setBlockSheet(THSpriteSheet* pSheet);
+
+    //! Set the draw flags on all wall blocks
+    /*!
+        This is typically called with THDF_Alpha50 to draw walls transparently,
+        or with 0 to draw them opaque again.
+    */
     void setAllWallDrawFlags(unsigned char iFlags);
+
     void updatePathfinding();
     void updateShadows();
 
+    //! Get the map width (in tiles)
     inline int getWidth()  const {return m_iWidth;}
+
+    //! Get the map height (in tiles)
     inline int getHeight() const {return m_iHeight;}
 
-    void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth, int iHeight, int iCanvasX, int iCanvasY) const;
+    //! Draw the map (and any attached animations)
+    /*!
+        Draws the world pixel rectangle (iScreenX, iScreenY, iWidth, iHeight)
+        to the rectangle (iCanvasX, iCanvasY, iWidth, iHeight) on pCanvas. Note
+        that world pixel co-ordinates are also known as absolute screen
+        co-ordinates - they are not world (tile) co-ordinates, nor (relative)
+        screen co-ordinates.
+    */
+    void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth,
+              int iHeight, int iCanvasX, int iCanvasY) const;
+
+    //! Perform a hit-test against the animations attached to the map
+    /*!
+        If there is an animation at world pixel co-ordinates (iTestX, iTestY),
+        then it is returned. Otherwise NULL is returned.
+        To perform a hit-test using world (tile) co-ordinates, get the node
+        itself and query the top 8 bits of THMapNode::iFlags, or traverse the
+        node's animation lists.
+    */
     THDrawable* hitTest(int iTestX, int iTestY) const;
 
     // When using the unchecked versions, the map co-ordinates MUST be valid.
@@ -185,6 +230,7 @@ public:
           THMapNode* getNodeUnchecked(int iX, int iY);
     const THMapNode* getNodeUnchecked(int iX, int iY) const;
 
+    //! Convert world (tile) co-ordinates to absolute screen co-ordinates
     template <typename T>
     static inline void worldToScreen(T& x, T& y)
     {
@@ -193,6 +239,7 @@ public:
         y = (T)16 * (x_ + y);
     }
 
+    //! Convert absolute screen co-ordinates to world (tile) co-ordinates
     template <typename T>
     static inline void screenToWorld(T& x, T& y)
     {
@@ -205,10 +252,10 @@ protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
 
-    int m_iWidth;
-    int m_iHeight;
     THMapNode* m_pCells;
     THSpriteSheet* m_pBlocks;
+    int m_iWidth;
+    int m_iHeight;
 };
 
 #endif // CORSIX_TH_TH_MAP_H_

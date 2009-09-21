@@ -81,7 +81,7 @@ void THPathfinder::setDefaultMap(const THMap *pMap)
        flags are set as to prevent travelling off the map (as well as to
        prevent walking through walls). */
 #define Pathing_Neighbours() \
-    unsigned long iPassable = iFlags & THMN_Passable; \
+    uint32_t iPassable = iFlags & THMN_Passable; \
     if(iFlags & THMN_CanTravelW) \
     { \
         TryNode(pNode - 1, 3); \

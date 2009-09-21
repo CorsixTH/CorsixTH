@@ -507,7 +507,7 @@ static int l_map_mark_room(lua_State *L)
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[0] = iTile;
             pNode->iBlock[3] = 0;
-            unsigned long iFlags = pNode->iFlags;
+            uint32_t iFlags = pNode->iFlags;
             iFlags |= THMN_Room;
             iFlags |= (iFlags & THMN_PassableIfNotForBlueprint) >> THMN_PassableIfNotForBlueprint_ShiftDelta;
             iFlags &= ~THMN_PassableIfNotForBlueprint;
