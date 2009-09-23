@@ -75,6 +75,7 @@ struct THRenderTargetCreationParams
     bool bDoubleBuffered;
     bool bFullscreen;
     bool bPresentImmediate;
+    bool bReuseContext;
 };
 
 /*!

@@ -130,6 +130,7 @@ function Map:onTick()
 end
 
 function Map:setBlocks(blocks)
+  self.blocks = blocks
   self.th:setSheet(blocks)
 end
 

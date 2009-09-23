@@ -25,6 +25,8 @@ else
   _DECODA = false
 end
 
+_MAP_EDITOR = _MAP_EDITOR or false
+
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)

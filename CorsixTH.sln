@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CorsixTH", "CorsixTH\Corsix
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnimView", "AnimView\AnimView.vcproj", "{AF32893D-1E28-4499-A227-46966A1289FD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapEdit", "MapEdit\MapEdit.vcproj", "{F575CD94-AB31-4147-AE5A-01DBCAEBB24A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{AF32893D-1E28-4499-A227-46966A1289FD}.Debug|Win32.Build.0 = Debug|Win32
 		{AF32893D-1E28-4499-A227-46966A1289FD}.Release|Win32.ActiveCfg = Release|Win32
 		{AF32893D-1E28-4499-A227-46966A1289FD}.Release|Win32.Build.0 = Release|Win32
+		{F575CD94-AB31-4147-AE5A-01DBCAEBB24A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F575CD94-AB31-4147-AE5A-01DBCAEBB24A}.Debug|Win32.Build.0 = Debug|Win32
+		{F575CD94-AB31-4147-AE5A-01DBCAEBB24A}.Release|Win32.ActiveCfg = Release|Win32
+		{F575CD94-AB31-4147-AE5A-01DBCAEBB24A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

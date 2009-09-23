@@ -57,53 +57,48 @@ THRenderTarget::~THRenderTarget()
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 {
     int iBPP = pParams->iBPP;
-    if(iBPP == 0)
-        iBPP = SDL_GetVideoInfo()->vfmt->BitsPerPixel;
-    switch(iBPP)
+    if(!pParams->bReuseContext)
     {
-    case 8:
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   3);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 3);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  2);
-        break;
-    case 15:
-    case 16:
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   5);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  5);
-        break;
-    default:
-        SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
-        SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-        SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
-        break;
+        if(iBPP == 0)
+            iBPP = SDL_GetVideoInfo()->vfmt->BitsPerPixel;
+        switch(iBPP)
+        {
+        case 8:
+            SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   3);
+            SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 3);
+            SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  2);
+            break;
+        case 15:
+        case 16:
+            SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   5);
+            SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+            SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  5);
+            break;
+        default:
+            SDL_GL_SetAttribute(SDL_GL_RED_SIZE,   8);
+            SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+            SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,  8);
+            break;
+        }
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered   ? 1:0);
+        SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0:1);
+        m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight, iBPP,
+            pParams->iSDLFlags | SDL_OPENGL);
+        if(m_pSurface == NULL)
+            return false;
     }
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 0);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered   ? 1:0);
-    SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0:1);
-    m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight, iBPP,
-        pParams->iSDLFlags | SDL_OPENGL);
-    if(m_pSurface == NULL)
-        return false;
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glViewport(0, 0, pParams->iWidth, pParams->iHeight);
-    glMatrixMode(GL_PROJECTION);
+    if(!pParams->bReuseContext)
+        glViewport(0, 0, pParams->iWidth, pParams->iHeight);
     GLdouble fWidth = (GLdouble)pParams->iWidth;
     GLdouble fHeight = (GLdouble)pParams->iHeight;
-    // NB: The loaded matrix is the transpose of the visible matrix
-    const GLdouble mtxProjection[16] = {
-              2.0 / fWidth ,        0.0           , 0.0, 0.0,
-              0.0          ,       -2.0 / fHeight , 0.0, 0.0,
-              0.0          ,        0.0           , 1.0, 0.0,
-      -1.0 - (1.0 / fWidth), 1.0 + (1.0 / fHeight), 0.0, 1.0
-    };
-    glLoadMatrixd(mtxProjection);
-    glTranslated(0.5, 0.5, 0.0);
+    setGLProjection(fWidth, fHeight);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -114,6 +109,20 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     }
 
     return true;
+}
+
+void THRenderTarget::setGLProjection(GLdouble fWidth, GLdouble fHeight)
+{
+    // NB: The loaded matrix is the transpose of the visible matrix
+    const GLdouble mtxProjection[16] = {
+              2.0 / fWidth ,        0.0           , 0.0, 0.0,
+              0.0          ,       -2.0 / fHeight , 0.0, 0.0,
+              0.0          ,        0.0           , 1.0, 0.0,
+      -1.0 - (1.0 / fWidth), 1.0 + (1.0 / fHeight), 0.0, 1.0
+    };
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixd(mtxProjection);
+    glTranslated(0.5, 0.5, 0.0);
 }
 
 const char* THRenderTarget::getLastError()
@@ -131,7 +140,8 @@ bool THRenderTarget::endFrame()
     if(!flushSprites())
         return false;
 
-    SDL_GL_SwapBuffers();
+    if(m_pSurface)
+        SDL_GL_SwapBuffers();
     return true;
 }
 
@@ -868,6 +878,26 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         pCanvas->draw(iTexture, m_pSprites[iSprite].iWidth,
             m_pSprites[iSprite].iHeight, iX, iY, iFlags,
             m_pSprites[iSprite].iWidth2, m_pSprites[iSprite].iHeight2, 0, 0);
+    }
+}
+
+void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData)
+{
+    if(iSprite >= m_iSpriteCount || pRGBData == NULL || pAData == NULL)
+        return;
+    sprite_t *pSprite = m_pSprites + iSprite;
+    const uint32_t* pColours = m_pPalette->getARGBData();
+
+    const unsigned char *pPixels = pSprite->pData;
+    for(unsigned int y = 0; y < pSprite->iHeight; ++y)
+    {
+        for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pPixels, ++pAData, pRGBData += 3)
+        {
+            pRGBData[0] = (pColours[*pPixels] >>  0) & 0xFF;
+            pRGBData[1] = (pColours[*pPixels] >>  8) & 0xFF;
+            pRGBData[2] = (pColours[*pPixels] >> 16) & 0xFF;
+            pAData  [0] = (pColours[*pPixels] >> 24) & 0xFF;
+        }
     }
 }
 

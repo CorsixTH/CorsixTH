@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = false
+local TRACK_FPS = true
 
 class "App"
 
@@ -77,11 +77,14 @@ function App:init()
   end
   SDL.wm.setCaption "CorsixTH"
   local modes = {"hardware", "doublebuf"}
-  if self.config.fullscreen then
+  self.fullscreen = false
+  if _MAP_EDITOR then
+    modes[#modes + 1] = "reuse context"
+    self.config.width = 640
+    self.config.height = 480
+  elseif self.config.fullscreen then
     self.fullscreen = true
     modes[#modes + 1] = "fullscreen"
-  else
-    self.fullscreen = false
   end
   if TRACK_FPS then
     modes[#modes + 1] = "present immediate"

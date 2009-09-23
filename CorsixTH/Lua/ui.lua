@@ -97,16 +97,21 @@ function UI:UI(app)
   self.down_count = 0
   self.default_cursor = app.gfx:loadMainCursor(1)
   self.down_cursor = app.gfx:loadMainCursor(2)
-  self:setCursor(self.default_cursor)
   
   app:loadLuaFolder("dialogs", true)
   
-  self.adviser = UIAdviser(self)
-  self.bottom_panel = UIBottomPanel(self)
-  self.menu_bar = UIMenuBar(self)
-  self:addWindow(self.adviser)
-  self:addWindow(self.bottom_panel)
-  self:addWindow(self.menu_bar)
+  if _MAP_EDITOR then
+    self.setCursor = function() end
+    self:addWindow(UIMapEditor(self))
+  else
+    self:setCursor(self.default_cursor)
+    self.adviser = UIAdviser(self)
+    self.bottom_panel = UIBottomPanel(self)
+    self.menu_bar = UIMenuBar(self)
+    self:addWindow(self.adviser)
+    self:addWindow(self.bottom_panel)
+    self:addWindow(self.menu_bar)
+  end
   
   do
     local map_w = app.map.width
@@ -131,12 +136,14 @@ function UI:UI(app)
     self.screen_offset_x = self.visible_diamond.x
     self.screen_offset_y = self.visible_diamond.y
     self.in_visible_diamond = true
-    self.limit_to_visible_diamond = true
+    self.limit_to_visible_diamond = not _MAP_EDITOR
   end
   
   -- Temporary code
   patients = {}
-  self:debugMakePatients()
+  if not _MAP_EDITOR then
+    self:debugMakePatients()
+  end
 end
 
 function UI:debugMakePatients()
@@ -360,10 +367,8 @@ function UI:onMouseUp(code, x, y)
     end
   end
   
-  if button == "right" then
-    if highlight_x then
-      get_patient():walkTo(highlight_x, highlight_y)
-    end
+  if button == "right" and not _MAP_EDITOR and highlight_x then
+    get_patient():walkTo(highlight_x, highlight_y)
   end
   
   return repaint
@@ -404,7 +409,7 @@ function UI:onMouseMove(x, y, dx, dy)
   
   self.cursor_x = x
   self.cursor_y = y
-  if self:onCursorWorldPositionChange() then
+  if self:onCursorWorldPositionChange() or self.simulated_cursor then
     repaint = true
   end
   if self.buttons_down.middle then

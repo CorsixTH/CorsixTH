@@ -101,3 +101,4 @@ LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text
 LFS/lfs.def -text
+MapEdit/MapEdit.vcproj eol=crlf

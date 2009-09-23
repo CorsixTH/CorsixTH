@@ -117,6 +117,7 @@ public: // Internal (this rendering engine only) API
                          int* pHeight2 = NULL);
     GLuint createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels);
     GLenum getGLError();
+    static void setGLProjection(GLdouble fWidth, GLdouble fHeight);
 
 protected:
     SDL_Surface* m_pSurface;
@@ -175,6 +176,10 @@ public: // External API
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
+
+public: // Internal (this rendering engine only) API
+    //! Draw a sprite into wxImage data arrays (for the Map Editor)
+    void wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData);
 
 protected:
     friend class THCursor;

@@ -468,12 +468,21 @@ static int l_map_setcell(lua_State *L)
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == NULL)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
-    int iLayer = luaL_checkint(L, 4) - 1;
-    if(iLayer < 0 || iLayer >= 4)
-        return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
-    int iBlock = luaL_checkint(L, 5);
-
-    pNode->iBlock[iLayer] = (uint16_t)iBlock;
+    if(lua_gettop(L) >= 7)
+    {
+        pNode->iBlock[0] = (uint16_t)luaL_checkint(L, 4);
+        pNode->iBlock[1] = (uint16_t)luaL_checkint(L, 5);
+        pNode->iBlock[2] = (uint16_t)luaL_checkint(L, 6);
+        pNode->iBlock[3] = (uint16_t)luaL_checkint(L, 7);
+    }
+    else
+    {
+        int iLayer = luaL_checkint(L, 4) - 1;
+        if(iLayer < 0 || iLayer >= 4)
+            return luaL_argerror(L, 4, "Layer index is out of bounds (1-4)");
+        int iBlock = luaL_checkint(L, 5);
+        pNode->iBlock[iLayer] = (uint16_t)iBlock;
+    }
 
     lua_settop(L, 1);
     return 1;
@@ -1267,6 +1276,7 @@ static int l_surface_new(lua_State *L)
         FLAG("doublebuf"        , bDoubleBuffered  , SDL_DOUBLEBUF );
         FLAG("fullscreen"       , bFullscreen      , SDL_FULLSCREEN);
         FLAG("present immediate", bPresentImmediate, 0             );
+        FLAG("reuse context"    , bReuseContext    , 0             );
     }
 
 #undef FLAG

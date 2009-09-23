@@ -35,6 +35,7 @@ int luaopen_random(lua_State *L);
 #endif
 #include <stack>
 
+#ifndef CORSIX_TH_MAP_EDITOR
 static int l_main(lua_State *L);
 static int l_stacktrace(lua_State *L);
 static int l_panic(lua_State *L);
@@ -159,6 +160,9 @@ int main(int argc, char** argv)
     possible behaviour is hardcoded into C rather than Lua).
 */
 static int l_main(lua_State *L)
+#else // CORSIX_TH_MAP_EDITOR
+int THMain_l_main(lua_State *L)
+#endif // CORSIX_TH_MAP_EDITOR
 {
     // assert(_VERSION == LUA_VERSION)
     size_t iLength;
@@ -255,7 +259,9 @@ static int l_main(lua_State *L)
     lua_call(L, 1, 2);
     lua_call(L, 2, 1);
     lua_insert(L, 1);
+#ifndef CORSIX_TH_MAP_EDITOR
     lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
+#endif
 
     return lua_gettop(L);
 }
@@ -267,7 +273,11 @@ static int l_main(lua_State *L)
     processing the error, main() receives LUA_ERRERR rather than panicking
     while processing it itself.
 */
+#ifdef CORSIX_TH_MAP_EDITOR
+int THMain_l_stacktrace(lua_State *L)
+#else
 static int l_stacktrace(lua_State *L)
+#endif
 {
     // err = tostring(err)
     lua_settop(L, 1);
