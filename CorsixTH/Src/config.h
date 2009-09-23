@@ -37,7 +37,7 @@ SOFTWARE.
 //#define CORSIX_TH_USE_OGL_RENDERER
 #define CORSIX_TH_USE_SDL_RENDERER
 #endif
-#endif CORSIX_TH_RENDERING_ENGINE_DEFINED
+#endif //CORSIX_TH_RENDERING_ENGINE_DEFINED
 
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when

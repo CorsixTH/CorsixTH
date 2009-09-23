@@ -52,6 +52,10 @@ CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
 CorsixTH/Lua/objects/bench.lua -text
+CorsixTH/Lua/objects/bin.lua -text
+CorsixTH/Lua/objects/cabinet.lua -text
+CorsixTH/Lua/objects/chair.lua -text
+CorsixTH/Lua/objects/desk.lua -text
 CorsixTH/Lua/objects/door.lua -text
 CorsixTH/Lua/objects/drinks_machine.lua -text
 CorsixTH/Lua/objects/entrance_left_door.lua -text
