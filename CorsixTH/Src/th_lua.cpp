@@ -1262,6 +1262,7 @@ static int l_surface_new(lua_State *L)
     oParams.bDoubleBuffered = false;
     oParams.bFullscreen = false;
     oParams.bPresentImmediate = false;
+    oParams.bReuseContext = false;
 
 #define FLAG(name, field, flag) \
     else if(stricmp(sOption, name) == 0) \
