@@ -1,8 +1,29 @@
 /*
-    RNC decompression library. Copyright and ownership status unknown.
+Copyright (c) 1997 Simon Tatham
 
-    Original code was from http://www.yoda.arachsys.com/dk/utils.html, but that
-    site nor the code itself states any ownership or copyright claims.
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+    Original code was from http://www.yoda.arachsys.com/dk/utils.html. While
+    that site and the original code do not state copyright or license, email
+    communication releaved the original author, and they agreed to releasing it
+    under the MIT license (above).
+
     Modifications made to the original code include:
       * Const correctness
       * Prebuilt CRC table
