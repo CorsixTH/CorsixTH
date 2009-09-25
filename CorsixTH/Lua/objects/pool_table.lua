@@ -22,7 +22,6 @@ local object = {}
 object.id = "pool_table"
 object.thob = 10
 object.name = _S(2, 11)
-object.corridor_object = 2
 object.ticks = false
 object.build_cost = 550
 object.build_preview_animation = 5058
