@@ -18,29 +18,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-class "Room"
+local object = {}
+object.id = "pool_table"
+object.thob = 10
+object.name = _S(2, 11)
+object.corridor_object = 2
+object.ticks = false
+object.build_cost = 550
+object.build_preview_animation = 5058
+object.idle_animations = {
+  north = 2130,
+  south = 2130,
+}
+object.orientations = {
+  north = {
+    footprint = { {-1, -2, only_passable = true},  {0, -2, only_passable = true}, {1, -2, only_passable = true},
+                  {-1, -1, only_passable = true},  {0, -1},                       {1, -1, only_passable = true},
+                  {-1, 0, only_passable = true},   {0, 0, only_passable = true},  {1, 0, only_passable = true} }
+  },
+  east = {
+    footprint = {{-2, -1, only_passable = true},  {-1, -1, only_passable = true}, {0, -1, only_passable = true},
+                  {-2, 0, only_passable = true},  {-1, 0},                         {0, 0, only_passable = true},
+                  {-2, 1, only_passable = true},   {-1, 1, only_passable = true}, {0, 1, only_passable = true} }
+  },
+}
 
-function Room:Room(x, y, w, h, id, room_info)
-  self.id = id
-  self.objects_additional = {}
-  if room_info.objects_additional then
-    for i = 1, #room_info.objects_additional do
-      self.objects_additional[i] = { object = TheApp.objects[room_info.objects_additional[i]], qty = 1 }
-    end
-  end
-
-  self.objects_needed = {}
-  if room_info.objects_needed then
-    for i = 1, #room_info.objects_needed do
-      self.objects_needed[i] = { object = TheApp.objects[room_info.objects_needed[i]], qty = 1, needed = true }
-    end
-  end
-  
-  self.objects_additional = {}
-  if room_info.objects_additional then
-    for i = 1, #room_info.objects_additional do
-      self.objects_additional[i] = { object = TheApp.objects[room_info.objects_additional[i]], qty = 0 }
-    end
-  end
-  -- TODO
-end
+return object

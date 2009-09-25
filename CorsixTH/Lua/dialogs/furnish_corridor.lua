@@ -24,11 +24,16 @@ local math_floor
 
 class "UIFurnishCorridor" (Window)
 
-function UIFurnishCorridor:UIFurnishCorridor(ui)
+function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
   
   local app = ui.app
-  self.modal_class = "main"
+  if edit_dialog then
+    self.modal_class = "furnish"
+    self.edit_dialog = edit_dialog
+  else
+    self.modal_class = "main"
+  end
   self.esc_closes = true
   self.ui = ui
   self.anims = app.anims
@@ -50,14 +55,20 @@ function UIFurnishCorridor:UIFurnishCorridor(ui)
   
   self.objects = {
   }
-  for _, object in ipairs(app.objects) do
-    if object.corridor_object then
-      self.objects[#self.objects + 1] = {object = object, qty = 0}
+  if objects then
+    for _, object in pairs(objects) do
+      self.objects[#self.objects + 1] = {object = object.object, qty = 0} -- Had to make a copy of objects list. Otherwise, we will modify the original variable (Opening dialog twice keeps memory of previously choosen quantities)
     end
+  else
+    for _, object in ipairs(app.objects) do
+      if object.corridor_object then
+        self.objects[#self.objects + 1] = {object = object, qty = 0}
+      end
+    end
+    table.sort(self.objects, function(o1, o2)
+      return o1.object.corridor_object < o2.object.corridor_object
+    end)
   end
-  table.sort(self.objects, function(o1, o2)
-    return o1.object.corridor_object < o2.object.corridor_object
-  end)
   
   self:addPanel(228, 0, 0) -- Grid top
   for y = 33, 103, 10 do
@@ -117,7 +128,10 @@ function UIFurnishCorridor:confirm()
       to_purchase[#to_purchase + 1] = o
     end
   end
-  if #to_purchase == 0 then
+  if #to_purchase == 0 or self.edit_dialog then
+    if self.edit_dialog and #to_purchase ~= 0 then
+      self.edit_dialog:addObjects(to_purchase) -- Add Objects to Edit Dialog (We are building a room)
+    end
     self:close()
   else
     self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase))

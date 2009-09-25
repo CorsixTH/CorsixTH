@@ -40,6 +40,7 @@ function Window:Window()
   self.windows = false -- => {} when first window added
   self.active_button = false
   self.panel_sprites = false
+  self.visible = true
 end
 
 function Window:close()
@@ -198,7 +199,9 @@ function Window:draw(canvas)
   if self.windows then
     local windows = self.windows
     for i = #windows, 1, -1 do
-      windows[i]:draw(canvas)
+      if windows[i].visible then
+        windows[i]:draw(canvas)
+      end
     end
   end
 end

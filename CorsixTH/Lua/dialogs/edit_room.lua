@@ -144,7 +144,9 @@ function UIEditRoom:finishRoom()
 end
 
 function UIEditRoom:purchaseItems()
-  --TODO
+  self.visible = false
+  self.place_objects = false
+  self.ui:addWindow(UIFurnishCorridor(self.ui, self.room.objects_additional, self))
 end
 
 function UIEditRoom:returnToWallPhase()
@@ -572,7 +574,7 @@ function UIEditRoom:placeObject()
   local enable_confirm = true
   for _, o in pairs(self.objects) do
     if o.needed == true then
-      enable_confirm = false
+      enable_confirm = false -- While a needed object is not already placed, don't allow to confirm
     end
   end
   self.confirm_button:enable(enable_confirm)

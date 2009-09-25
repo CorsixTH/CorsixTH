@@ -66,7 +66,6 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   
   self.objects = {}
   self.object_footprint = {}
-  self:setActiveIndex(1)
   
   self:addObjects(object_list)
     
@@ -86,6 +85,9 @@ function UIPlaceObjects:addObjects(object_list)
       end
     end
   end
+  
+  self.visible = true       -- Visibility of dialog
+  self.place_objects = true -- When adding objects guess we want to place objects
 
   self.object_anim = TH.animation()
   local total_objects = #self.objects + #object_list
@@ -96,34 +98,32 @@ function UIPlaceObjects:addObjects(object_list)
     self.list_header = self:addPanel(123, 0, 146) -- Object list header
   end
   
-  if #object_list > 0 then
-    for i = #self.objects + 1, total_objects - 1 do
-      self:addPanel(124, 0, 121 + i * 29)
-        :makeButton(15, 8, 130, 23, 125, idx(i))
-        :preservePanel()
-    end
-    -- Last object list entry
-    self:addPanel(156, 0, 117 + total_objects * 29)
-      :makeButton(15, 12, 130, 23, 125, idx(total_objects))
+  for i = #self.objects + 1, total_objects - 1 do
+    self:addPanel(124, 0, 121 + i * 29)
+      :makeButton(15, 8, 130, 23, 125, idx(i))
       :preservePanel()
-    for _, object in pairs(object_list) do
-      self.objects[#self.objects + 1] = object
-    end
-    self:setActiveIndex(1)
   end
+  -- Last object list entry
+  self:addPanel(156, 0, 117 + total_objects * 29)
+    :makeButton(15, 12, 130, 23, 125, idx(total_objects))
+    :preservePanel()
+  for _, object in pairs(object_list) do
+    self.objects[#self.objects + 1] = object
+  end
+  self.active_index = 0 -- avoid case of index changing from 1 to 1
+  self:setActiveIndex(1)
 end
 
 function UIPlaceObjects:removeObject(object, dont_close_if_empty)
   object.qty = object.qty - 1
   if object.qty == 0 then
     if #self.objects == 1 then
-      if not dont_close_if_empty then
+      if dont_close_if_empty then
+        self.list_header.visible = false
+        self.place_objects = false -- No object to place
+      else
         self:close()
         return
-      else
-        self.list_header.visible = false
-        self.object_anim = false
-        self.object_footprint = {}
       end
     end
     local idx = self.active_index
@@ -214,6 +214,10 @@ end
 function UIPlaceObjects:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
   
+  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+    return
+  end
+  
   if #self.objects > 0 then
     if button == "right" then
       self:nextOrientation()
@@ -232,6 +236,10 @@ function UIPlaceObjects:onMouseUp(button, x, y)
 end
 
 function UIPlaceObjects:placeObject(dont_close_if_empty)
+  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+    return
+  end
+
   local object = self.objects[self.active_index]
   self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
@@ -240,6 +248,10 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
 end
 
 function UIPlaceObjects:draw(canvas)
+  if not self.visible then
+    return -- Do nothing it dialog is not visible
+  end
+
   if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
     self.object_anim:draw(canvas, self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y))
   end
@@ -352,6 +364,10 @@ end
 
 function UIPlaceObjects:onMouseMove(x, y, ...)
   local repaint = Window.onMouseMove(self, x, y, ...)
+  
+  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+    return
+  end
   
   local ui = self.ui
   local wx, wy
