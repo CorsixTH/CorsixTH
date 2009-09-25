@@ -22,5 +22,25 @@ class "Room"
 
 function Room:Room(x, y, w, h, id, room_info)
   self.id = id
+  self.objects_additional = {}
+  if room_info.objects_additional then
+    for i = 1, #room_info.objects_additional do
+      self.objects_additional[i] = { object = TheApp.objects[room_info.objects_additional[i]], qty = 1 }
+    end
+  end
+
+  self.objects_needed = {}
+  if room_info.objects_needed then
+    for i = 1, #room_info.objects_needed do
+      self.objects_needed[i] = { object = TheApp.objects[room_info.objects_needed[i]], qty = 1, needed = true }
+    end
+  end
+  
+  self.objects_allowed = {}
+  if room_info.objects_allowed then
+    for i = 1, #room_info.objects_allowed do
+      self.objects_allowed[i] = { object = TheApp.objects[room_info.objects_allowed[i]], qty = 1 }
+    end
+  end
   -- TODO
 end

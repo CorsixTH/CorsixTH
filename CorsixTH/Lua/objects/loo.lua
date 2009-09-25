@@ -19,27 +19,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local object = {}
-object.id = "cabinet"
-object.thob = 2
-object.name = _S(2, 3)
+object.id = "loo"
+object.thob = 51
+object.name = _S(2, 52)
 object.ticks = false
-object.build_cost = 100
-object.build_preview_animation = 5054
+object.build_cost = 300
+object.build_preview_animation = 5098
 object.idle_animations = {
-  north = 80,
-  east = 82,
+  north = 1760,
+  south = 1760,
 }
 object.orientations = {
   north = {
     footprint = { {0, 0}, {0, 1, only_passable = true} }
   },
   east = {
-    footprint = { {0, 0}, {-1, 0, only_passable = true} }
-  },
-  south = {
-    footprint = { {0, 0}, {0, -1, only_passable = true} }
-  },
-  west = {
     footprint = { {0, 0}, {1, 0, only_passable = true} }
   },
 }

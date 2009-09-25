@@ -63,15 +63,14 @@ function Window:addPanel(sprite_index, x, y)
     x = x,
     y = y,
     sprite_index = sprite_index,
+    visible = true,
   }, panel_mt)
   self.panels[#self.panels + 1] = panel
   return panel
 end
 
 local function panel_colour_draw(panel, canvas, x, y)
-  if panel.visible then
-    canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
-  end
+  canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
 end
 
 function Window:addColourPanel(x, y, w, h, r, g, b)
@@ -187,10 +186,12 @@ function Window:draw(canvas)
     local panel_sprites = self.panel_sprites
     local panel_sprites_draw = panel_sprites.draw
     for _, panel in ipairs(self.panels) do
-      if panel.custom_draw then
-        panel:custom_draw(canvas, x, y)
-      else
-        panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
+      if panel.visible then
+        if panel.custom_draw then
+          panel:custom_draw(canvas, x, y)
+        else
+          panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
+        end
       end
     end
   end

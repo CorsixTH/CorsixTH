@@ -21,29 +21,21 @@ SOFTWARE. --]]
 local TH = require "TH"
 local math_floor
     = math.floor
+    
+dofile "dialogs/place_objects"
 
-class "UIEditRoom" (Window)
+class "UIEditRoom" (UIPlaceObjects)
 
 function UIEditRoom:UIEditRoom(ui, room_type)
-  self:Window()
+  self.UIPlaceObjects(self, ui)
   
   local app = ui.app
-  self.modal_class = "main"
-  self.ui = ui
-  self.anims = app.anims
-  self.world = app.world
   -- Set alt palette on wall blueprint to make it red
   self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   -- Set on door and window blueprints too
   self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
-  self.width = 186
-  self.height = 159
-  self.x = app.config.width - self.width - 20
-  self.y = 20
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.room_type = room_type
   self.title_text = room_type.name
   self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
@@ -59,23 +51,11 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   }
   self.blueprint_window = {
   }
-  self.phase = "walls" --> "door" --> "windows" --> "closed"
+  self.phase = "walls" --> "door" --> "windows" --> "objects" --> "closed"
   self.mouse_down_x = false
   self.mouse_down_y = false
   self.mouse_cell_x = 0
   self.mouse_cell_y = 0
-  
-  self:addPanel(112, 0, 0) -- Dialog header
-  for y = 48, 83, 7 do
-    self:addPanel(113, 0, y) -- Desc text box
-  end
-  self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel)
-  self:addPanel(127,  50, 100) -- Disabled purchase items button
-  self:addPanel(128,  92, 100) -- Disabled pick up items button
-  self.confirm_button = 
-  self:addPanel(121, 134, 100):makeButton(0, 8, 43, 42, 122, self.confirm)
-    :setDisabledSprite(129):enable(false)
 end
 
 function UIEditRoom:close(...)
@@ -91,12 +71,15 @@ function UIEditRoom:close(...)
   end
   self.phase = "closed"
   self:setBlueprintRect(1, 1, 0, 0)
-  return Window.close(self, ...)
+  return UIPlaceObjects.close(self, ...)
 end
 
 function UIEditRoom:cancel()
   if self.phase == "walls" then
     self:close()
+  elseif self.phase == "objects" then
+    self.phase = "door"
+    self:returnToDoorPhase()
   else
     self.phase = "walls"
     self:returnToWallPhase()
@@ -110,8 +93,12 @@ function UIEditRoom:confirm()
   elseif self.phase == "door" then
     self.phase = "windows"
     self:enterWindowsPhase()
-  else
+  elseif self.phase == "windows" then
+    self.phase = "objects"
     self:finishRoom()
+    self:enterObjectsPhase()
+  else
+    self:close()
   end
 end
 
@@ -153,7 +140,11 @@ function UIEditRoom:finishRoom()
   end
   local room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type)
   map:markRoom(rect.x, rect.y, rect.w, rect.h, room_type.floor_tile, room.id)
-  self:close()
+  self.room = room
+end
+
+function UIEditRoom:purchaseItems()
+  --TODO
 end
 
 function UIEditRoom:returnToWallPhase()
@@ -170,6 +161,19 @@ function UIEditRoom:returnToWallPhase()
   self:setBlueprintRect(1, 1, 0, 0)
   self:setBlueprintRect(x, y, w, h)
   self.blueprint_door = {}
+end
+
+function UIEditRoom:returnToDoorPhase()
+  local map = self.ui.app.map.th
+  local rect = self.blueprint_rect
+  
+  self.desc_text = _S(3, 13)
+  self.confirm_button:enable(true)
+  self.purchase_button:enable(false)
+  self.world.rooms[self.room.id] = nil
+  UIPlaceObjects.removeAllObjects(self)
+  
+  --TODO
 end
 
 function UIEditRoom:screenToWall(x, y)
@@ -286,16 +290,27 @@ function UIEditRoom:enterWindowsPhase()
   self.confirm_button:enable(true)
 end
 
+function UIEditRoom:enterObjectsPhase()
+  if #self.room.objects_additional == 0 and #self.room.objects_needed == 0 then
+    self:confirm()
+    return
+  end
+  self.desc_text = _S(3, 15)
+  if #self.room.objects_additional > 0 then
+    self.purchase_button:enable(true)
+  end
+  if #self.room.objects_needed > 0 then
+    self.confirm_button:enable(false)
+    self:addObjects(self.room.objects_needed)
+  end
+end
+
 function UIEditRoom:draw(canvas)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
   
-  Window.draw(self, canvas)
-  
-  x, y = self.x, self.y
-  self.white_font:draw(canvas, self.title_text, x + 17, y + 21, 153, 0)
-  self.white_font:drawWrapped(canvas, self.desc_text, x + 20, y + 46, 147)
+  UIPlaceObjects.draw(self, canvas)
 end
 
 function UIEditRoom:onMouseDown(button, x, y)
@@ -319,7 +334,7 @@ function UIEditRoom:onMouseDown(button, x, y)
     end
   end
   
-  return Window.onMouseDown(self, button, x, y) or true
+  return UIPlaceObjects.onMouseDown(self, button, x, y) or true
 end
 
 function UIEditRoom:onMouseUp(button, x, y)
@@ -328,7 +343,7 @@ function UIEditRoom:onMouseUp(button, x, y)
     self.mouse_down_y = false
   end
   
-  return Window.onMouseUp(self, button, x, y)
+  return UIPlaceObjects.onMouseUp(self, button, x, y)
 end
 
 function UIEditRoom:setBlueprintRect(x, y, w, h)
@@ -519,7 +534,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
 end
 
 function UIEditRoom:onMouseMove(x, y, dx, dy)
-  local repaint = Window.onMouseMove(self, x, y, dx, dy)
+  local repaint = UIPlaceObjects.onMouseMove(self, x, y, dx, dy)
   
   local ui = self.ui
   local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
@@ -530,7 +545,7 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
     if self.phase == "door" then
       self:setDoorBlueprint(cell_x, cell_y, wall)
-    else
+    elseif self.phase == "windows" then
       self:setWindowBlueprint(cell_x, cell_y, wall)
     end
   end
@@ -550,4 +565,15 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
   self.mouse_cell_y = wy
   
   return repaint
+end
+
+function UIEditRoom:placeObject()
+  UIPlaceObjects.placeObject(self, true)
+  local enable_confirm = true
+  for _, o in pairs(self.objects) do
+    if o.needed == true then
+      enable_confirm = false
+    end
+  end
+  self.confirm_button:enable(enable_confirm)
 end

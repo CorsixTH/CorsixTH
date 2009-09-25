@@ -61,9 +61,13 @@ CorsixTH/Lua/objects/drinks_machine.lua -text
 CorsixTH/Lua/objects/entrance_left_door.lua -text
 CorsixTH/Lua/objects/entrance_right_door.lua -text
 CorsixTH/Lua/objects/fire_extinguisher.lua -text
+CorsixTH/Lua/objects/loo.lua -text
 CorsixTH/Lua/objects/plant.lua -text
 CorsixTH/Lua/objects/radiator.lua -text
 CorsixTH/Lua/objects/reception_desk.lua -text
+CorsixTH/Lua/objects/sink.lua -text
+CorsixTH/Lua/objects/sofa.lua -text
+CorsixTH/Lua/objects/tv.lua -text
 CorsixTH/Lua/queue.lua -text
 CorsixTH/Lua/room.lua -text
 CorsixTH/Lua/rooms/general_diag.lua -text
