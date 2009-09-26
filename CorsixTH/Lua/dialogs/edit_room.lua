@@ -323,7 +323,12 @@ function UIEditRoom:onMouseDown(button, x, y)
         local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
         self.mouse_down_x = math_floor(x)
         self.mouse_down_y = math_floor(y)
-        self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+        if self.move_rect then
+          self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
+          self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
+        else
+          self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+        end
       end
     elseif self.phase == "door" then
       if self.blueprint_door.valid then
@@ -343,6 +348,11 @@ function UIEditRoom:onMouseUp(button, x, y)
   if self.mouse_down_x then
     self.mouse_down_x = false
     self.mouse_down_y = false
+  end
+  
+  if self.move_rect_x then
+    self.move_rect_x = false
+    self.move_rect_y = false
   end
   
   return UIPlaceObjects.onMouseUp(self, button, x, y)
@@ -543,16 +553,30 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
   wx = math_floor(wx)
   wy = math_floor(wy)
   
-  if self.phase ~= "walls" then
+  if self.phase == "walls" then
+    local rect = self.blueprint_rect
+    if not self.mouse_down_x then
+      if wx >= rect.x and wx < rect.x + rect.w and wy >= rect.y and wy < rect.y + rect.h then
+        ui:setCursor(ui.app.gfx:loadMainCursor(8))
+        self.move_rect = true
+      else
+        ui:setCursor(ui.default_cursor)
+        self.move_rect = false
+      end
+    end
+  else
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
     if self.phase == "door" then
       self:setDoorBlueprint(cell_x, cell_y, wall)
     elseif self.phase == "windows" then
       self:setWindowBlueprint(cell_x, cell_y, wall)
-    end
+    end    
   end
   
-  if self.mouse_down_x then
+  if self.mouse_down_x and self.move_rect then
+    local rect = self.blueprint_rect
+    self:setBlueprintRect(wx - self.move_rect_x, wy - self.move_rect_y, rect.w, rect.h)
+  elseif self.mouse_down_x then
     local x1, x2 = self.mouse_down_x, wx
     local y1, y2 = self.mouse_down_y, wy
     if x1 > x2 then x1, x2 = x2, x1 end
