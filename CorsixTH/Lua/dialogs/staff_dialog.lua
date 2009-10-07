@@ -154,6 +154,8 @@ function UIStaff:onMouseUp(button, x, y)
     local staff = self.staff
     ui:scrollMapTo(ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y))
     repaint = true
+  elseif button == "right" then
+    --TODO: Right clicking on staff view should go to the next staff
   end
   return repaint
 end

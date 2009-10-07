@@ -66,6 +66,7 @@ function UIPatient:onMouseUp(button, x, y)
     local patient = self.patient
     ui:scrollMapTo(ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y))
     repaint = true
-  end
-  return repaint
+  elseif button == "right" then
+    --TODO: Right clicking on patient view should go to the next patient
+  end  return repaint
 end

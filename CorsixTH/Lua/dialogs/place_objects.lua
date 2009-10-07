@@ -86,6 +86,16 @@ function UIPlaceObjects:addObjects(object_list)
     end
   end
   
+  -- Detect objects already existing in self.objects and increment its quantity rather than adding new objects lines
+  for new_index, new_object in ipairs(object_list) do
+    for index, object in ipairs(self.objects) do
+      if new_object.qty > 0 and new_object.object.thob == object.object.thob then
+        object.qty = object.qty + new_object.qty
+        table.remove(object_list, new_index)
+      end
+    end
+  end
+
   self.visible = true       -- Visibility of dialog
   self.place_objects = true -- When adding objects guess we want to place objects
 

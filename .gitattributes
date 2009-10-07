@@ -51,6 +51,7 @@ CorsixTH/Lua/humanoid_actions/use_object.lua -text
 CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
+CorsixTH/Lua/objects/bed.lua -text
 CorsixTH/Lua/objects/bench.lua -text
 CorsixTH/Lua/objects/bin.lua -text
 CorsixTH/Lua/objects/cabinet.lua -text
