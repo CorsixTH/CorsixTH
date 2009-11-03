@@ -18,16 +18,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local room = {}
-room.name = _S(14, 25)
-room.build_cost = 1000
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "screen", "crash_trolley" }
-room.build_preview_animation = 916
-room.categories = {
-  diagnosis = 2,
+local object = {}
+object.id = "pharmacy_cabinet"
+object.thob = 39
+object.name = _S(2, 40)
+object.ticks = false
+object.build_cost = 1000
+object.build_preview_animation = 5088
+object.idle_animations = {
+  north = 1578,
+  south = 1578,
 }
-room.minimum_size = 5
-room.wall_type = "green"
-room.floor_tile = 21
-return room
+object.orientations = {
+  north = {
+    footprint = { {0, 0}, {0, 1, only_passable = true}, {-1, 1, only_passable = true} }
+  },
+  east = {
+    footprint = { {0, 0}, {1, 0, only_passable = true}, {1, -1, only_passable = true} }
+  },
+}
+
+return object

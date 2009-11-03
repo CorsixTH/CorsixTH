@@ -18,16 +18,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local room = {}
-room.name = _S(14, 25)
-room.build_cost = 1000
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "screen", "crash_trolley" }
-room.build_preview_animation = 916
-room.categories = {
-  diagnosis = 2,
+local object = {}
+object.id = "crash_trolley"
+object.thob = 20
+object.name = _S(2, 21)
+object.ticks = false
+object.build_cost = 250
+object.build_preview_animation = 916
+object.idle_animations = {
+  north = 1134,
+  south = 1134, -- there's also a back view (1132), but animation is missing for that
 }
-room.minimum_size = 5
-room.wall_type = "green"
-room.floor_tile = 21
-return room
+object.orientations = {
+  north = {
+    footprint = { {0, -1}, {0, 0, only_passable = true}, {1, -1, only_passable = true}, {1, 0} }
+  },
+  east = {
+    footprint = { {-1, 0}, {-1, 1, only_passable = true}, {0, 0, only_passable = true}, {0, 1} }
+  },
+}
+
+return object

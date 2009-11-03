@@ -18,16 +18,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local room = {}
-room.name = _S(14, 25)
-room.build_cost = 1000
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "screen", "crash_trolley" }
-room.build_preview_animation = 916
-room.categories = {
-  diagnosis = 2,
+local object = {}
+object.id = "inflator"
+object.thob = 9
+object.name = _S(2, 10)
+object.ticks = false
+object.build_cost = 2500
+object.build_preview_animation = 908
+object.idle_animations = {
+  north = 572,
+  south = 572,
 }
-room.minimum_size = 5
-room.wall_type = "green"
-room.floor_tile = 21
-return room
+object.orientations = {
+  north = {
+    footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
+                  {-1, 0}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1} } --FIXME: Why {1, 1} is not only passable in Vanilla TH? Is this a bug?
+  },
+  east = {
+    footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
+                  {-1, 0}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1} }
+  },
+}
+
+return object

@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local room = {}
 room.name = _S(14, 6)
 room.build_cost = 2500
+room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bookcase", "skeleton" }
+room.objects_needed = { "screen", "couch", "comfortable_chair" }
 room.build_preview_animation = 924
 room.categories = {
   treatment = 1,
