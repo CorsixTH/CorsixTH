@@ -253,13 +253,15 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local object = self.objects[self.active_index]
   self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
+  -- Update blueprint
+  self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
     
   self:removeObject(object, dont_close_if_empty)
 end
 
 function UIPlaceObjects:draw(canvas)
   if not self.visible then
-    return -- Do nothing it dialog is not visible
+    return -- Do nothing if dialog is not visible
   end
 
   if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
