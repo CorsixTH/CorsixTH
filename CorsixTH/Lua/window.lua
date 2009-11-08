@@ -160,7 +160,7 @@ local button_mt = {
   }
 }
 
-function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self)
+function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x
   y = y + panel.y
   local button = setmetatable({
@@ -175,6 +175,7 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
     sprite_index_active = sprite,
     on_click = on_click,
     on_click_self = on_click_self or self,
+    on_rightclick = on_rightclick,
     enabled = true,
   }, button_mt)
   self.buttons[#self.buttons + 1] = button
@@ -215,9 +216,9 @@ function Window:onMouseDown(button, x, y)
       end
     end
   end
-  if button == "left" then
+  if button == "left" or button == "right" then
     for _, btn in ipairs(self.buttons) do
-      if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+      if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b and (button == "left" or btn.on_rightclick ~= nil) then
         btn.panel_for_sprite.sprite_index = btn.sprite_index_active
         self.active_button = btn
         btn.active = true
@@ -240,7 +241,7 @@ function Window:onMouseUp(button, x, y)
     end
   end
   
-  if button == "left" then
+  if button == "left" or button == "right" then
     local btn = self.active_button
     if btn then
       btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
@@ -251,11 +252,17 @@ function Window:onMouseUp(button, x, y)
         if btn.is_toggle then
           arg = btn:toggle()
         end
-        if btn.on_click == nil then
-          print("Warning: No handler for button click")
-          btn.on_click = function() end
+        if button == "left" then
+          if btn.on_click == nil then
+            print("Warning: No handler for button click")
+            btn.on_click = function() end
+          else
+            btn.on_click(btn.on_click_self, arg)
+          end
         else
-          btn.on_click(btn.on_click_self, arg)
+          if btn.on_rightclick ~= nil then
+            btn.on_rightclick(btn.on_click_self, arg)
+          end
         end
       end
       repaint = true
