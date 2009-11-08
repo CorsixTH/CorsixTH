@@ -87,6 +87,10 @@ function UI:UI(app)
   self.cursor_y = 0
   self.cursor_entity = nil
   self.background = false
+  -- tick_scroll_amount will either hold a table containing x and y values, at
+  -- at least one of which being non-zero. If both x and y are zero, then the
+  -- value false should be used instead, so that tests to see if there is any
+  -- scrolling to be done are quick and simple.
   self.tick_scroll_amount = false
   self.tick_scroll_amount_mouse = false
   self.tick_scroll_mult = 1
@@ -309,9 +313,16 @@ function UI:onKeyUp(code)
     self.buttons_down[key] = false
   end
   if scroll_keys[key] then
-    local dx, dy = scroll_keys[key].x, scroll_keys[key].y
-    dx = self.tick_scroll_amount.x - dx
-    dy = self.tick_scroll_amount.y - dy
+    local dx, dy = -scroll_keys[key].x, -scroll_keys[key].y
+    if self.tick_scroll_amount then
+      dx = dx + self.tick_scroll_amount.x
+      dy = dy + self.tick_scroll_amount.y
+    else
+      -- NB: No current scroll (perhaps due to opposing keyboard buttons being
+      -- pressed prior), and dx ~= 0 or dy ~= 0, so we need a table ready for
+      -- the second branch of the next if.
+      self.tick_scroll_amount = {}
+    end
     if dx == 0 and dy == 0 then
       self.tick_scroll_amount = false
     else
