@@ -51,6 +51,8 @@ CorsixTH/Lua/humanoid_actions/use_object.lua -text
 CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
+CorsixTH/Lua/objects/analyser.lua -text
+CorsixTH/Lua/objects/autopsy.lua -text
 CorsixTH/Lua/objects/bed.lua -text
 CorsixTH/Lua/objects/bench.lua -text
 CorsixTH/Lua/objects/bin.lua -text
@@ -58,6 +60,7 @@ CorsixTH/Lua/objects/bookcase.lua -text
 CorsixTH/Lua/objects/cabinet.lua -text
 CorsixTH/Lua/objects/chair.lua -text
 CorsixTH/Lua/objects/comfortable_chair.lua -text
+CorsixTH/Lua/objects/computer.lua -text
 CorsixTH/Lua/objects/couch.lua -text
 CorsixTH/Lua/objects/crash_trolley.lua -text
 CorsixTH/Lua/objects/desk.lua -text
@@ -86,6 +89,7 @@ CorsixTH/Lua/rooms/gp.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text
 CorsixTH/Lua/rooms/pharmacy.lua -text
 CorsixTH/Lua/rooms/psych.lua -text
+CorsixTH/Lua/rooms/research.lua -text
 CorsixTH/Lua/rooms/staff_room.lua -text
 CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/rooms/ward.lua -text

@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Peter "Corsix" Cawley
+--[[ Copyright (c) 2009 Manuel König
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,16 +18,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local room = {}
-room.name = _S(14, 27)
-room.build_cost = 1500
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "loo", "sink" }
-room.objects_needed = { "loo", "sink" }
-room.build_preview_animation = 5098
-room.categories = {
-  facilities = 3,
+local object = {}
+object.id = "analyser"
+object.thob = 41
+object.name = _S(2, 42)
+object.ticks = false
+object.build_cost = 10000
+object.build_preview_animation = 5092
+object.idle_animations = {
+  north = 2134,
+  south = 2134,
 }
-room.minimum_size = 4
-room.wall_type = "green"
-room.floor_tile = 21
-return room
+object.orientations = {
+  north = {
+    footprint = { {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0, only_passable = true}, {1, 0} }
+  },
+  east = {
+    footprint = { {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true}, {-1, 1}, {0, 1} }
+  },
+}
+
+return object

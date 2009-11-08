@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Peter "Corsix" Cawley
+--[[ Copyright (c) 2009 Manuel König
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,15 +19,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S(14, 27)
-room.build_cost = 1500
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "loo", "sink" }
-room.objects_needed = { "loo", "sink" }
-room.build_preview_animation = 5098
+room.name = _S(14, 26)
+room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "computer", "desk", "cabinet", "analyser" }
+room.objects_needed = { "desk", "cabinet", "autopsy" }
+room.build_cost = 5000
+room.build_preview_animation = 5102
 room.categories = {
-  facilities = 3,
+  facilities = 2,
 }
-room.minimum_size = 4
+room.minimum_size = 5
 room.wall_type = "green"
 room.floor_tile = 21
 return room
