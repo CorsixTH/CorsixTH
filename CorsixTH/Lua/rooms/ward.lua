@@ -26,7 +26,7 @@ room.build_cost = 2000
 room.build_preview_animation = 910
 room.categories = {
   treatment = 2,
-  diagnosis = 4,
+  diagnosis = 9,
 }
 room.minimum_size = 6
 room.wall_type = "white"

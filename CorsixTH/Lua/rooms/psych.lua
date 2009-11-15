@@ -26,7 +26,7 @@ room.objects_needed = { "screen", "couch", "comfortable_chair" }
 room.build_preview_animation = 924
 room.categories = {
   treatment = 1,
-  diagnosis = 3,
+  diagnosis = 8,
 }
 room.minimum_size = 5
 room.wall_type = "white"

@@ -28,6 +28,8 @@ end
 function Staff:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
+  elseif button == "right" then
+    self:setNextAction{name = "pickup", ui = ui}
   end
 end
 
