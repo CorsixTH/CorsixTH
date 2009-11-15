@@ -34,7 +34,8 @@ object.orientations = {
     footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0}, {0, 0}, {-2, 1, only_passable = true}, {-1, 1}, {0, 1, only_passable = true} }
   },
   east = {
-    footprint = { {-1, -2}, {0, -2}, {1, -2, only_passable = true}, {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0}, {1, 0, only_passable = true} }
+    footprint = { {-1, -2}, {0, -2}, {1, -2, only_passable = true}, {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0}, {1, 0, only_passable = true} },
+    footprint_origin = {-1, 0},
   },
 }
 

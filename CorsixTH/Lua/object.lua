@@ -36,10 +36,10 @@ function Object:Object(world, object_type, x, y, direction, etc)
   
   if etc == "map object" then
     if direction % 2 == 0 then
-	  direction = "north"
-	else
-	  direction = "west"
-	end
+      direction = "north"
+    else
+      direction = "west"
+    end
   end
   
   self.ticks = object_type.ticks
@@ -58,6 +58,9 @@ function Object:Object(world, object_type, x, y, direction, etc)
   footprint = footprint and footprint[direction]
   if footprint and footprint.early_list then
     flags = flags + 1024
+  end
+  if footprint and footprint.animation_offset then
+    self:setPosition(unpack(footprint.animation_offset))
   end
   footprint = footprint and footprint.footprint
   if footprint then
@@ -95,5 +98,25 @@ function Object:setUser(user)
     self.reserved_for = nil
   else
     self.th:makeVisible()
+  end
+end
+
+function Object.processTypeDefinition(object_type)
+  if object_type.orientations then
+    for direction, details in pairs(object_type.orientations) do
+      if not details.animation_offset then
+        details.animation_offset = {0, 0}
+      end
+      if details.footprint_origin then
+        local x, y = unpack(details.footprint_origin)
+        for _, point in pairs(details.footprint) do
+          point[1] = point[1] - x
+          point[2] = point[2] - y
+        end
+        x, y = Map:WorldToScreen(x + 1, y + 1)
+        details.animation_offset[1] = details.animation_offset[1] - x
+        details.animation_offset[2] = details.animation_offset[2] - y
+      end
+    end
   end
 end

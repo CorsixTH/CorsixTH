@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 -- Change to true to show FPS and Lua memory usage in the window title.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
-local TRACK_FPS = true
+local TRACK_FPS = false
 
 class "App"
 
@@ -131,6 +131,9 @@ function App:init()
   self.walls = self:loadLuaFolder"walls"
   dofile "object"
   self.objects = self:loadLuaFolder"objects"
+  for _, v in ipairs(self.objects) do
+    Object.processTypeDefinition(v)
+  end
   self.rooms = self:loadLuaFolder"rooms"
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
   

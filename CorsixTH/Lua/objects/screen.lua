@@ -30,7 +30,8 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {-1, -1, only_passable = true}, {-1, 0}, {0, -1}, {0, 0} }
+    footprint = { {-1, -1, only_passable = true}, {-1, 0}, {0, -1}, {0, 0} },
+    footprint_origin = {-1, 0},
   },
 }
 

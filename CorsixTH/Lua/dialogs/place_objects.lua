@@ -223,7 +223,11 @@ function UIPlaceObjects:nextOrientation()
     anim = object.idle_animations[orient_mirror[orient]]
     flag = 1
   end
+  if object.orientations[orient].early_list then
+    flag = flag + 1024
+  end
   self.object_anim:setAnimation(self.anims, anim, flag)
+  self.object_anim:setPosition(unpack(object.orientations[orient].animation_offset))
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
