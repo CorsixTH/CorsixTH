@@ -189,20 +189,34 @@ navigateDoor = function(humanoid, x1, y1, dir)
     return
   end
   
+  local to_x, to_y
   local anims = humanoid.door_anims
   humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)
   if dir == "north" then
     humanoid:setAnimation(anims.leaving, flag_list_bottom)
+    to_x, to_y = dx, dy - 1
   elseif dir == "west" then
     humanoid:setAnimation(anims.leaving, flag_list_bottom + flag_early_list + flag_flip_h)
+    to_x, to_y = dx - 1, dy
   elseif dir == "east" then
     humanoid:setAnimation(anims.entering, flag_list_bottom + flag_early_list)
+    to_x, to_y = dx, dy
   elseif dir == "south" then
     humanoid:setAnimation(anims.entering, flag_list_bottom + flag_flip_h)
+    to_x, to_y = dx, dy
   end
   humanoid.last_move_direction = dir
+  
+  local room = humanoid.world:getRoom(x1, y1)
+  if room then
+    room:onHumanoidLeave(humanoid)
+  end
+  room = humanoid.world:getRoom(to_x, to_y)
+  if room then
+    room:onHumanoidEnter(humanoid)
+  end
   
   action.path_index = action.path_index + 1
   humanoid:setTimer(duration, action_walk_tick_door)

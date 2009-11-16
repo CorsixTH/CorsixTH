@@ -33,6 +33,10 @@ function Map:Map()
   self.debug_tick_timer = 1
 end
 
+function Map:getRoomId(x, y)
+  return self.th:getCellFlags(x, y).roomId
+end
+
 -- Convert between world co-ordinates and screen co-ordinates
 -- World co-ordinates are (at least for standard maps) in the range [1, 128)
 -- for both x and y, with the floor of the values giving the cell index.
@@ -218,6 +222,12 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
               end
               if flags.travelWest and self.debug_flags[xy - 1].passable then
                 self.cell_outline:draw(canvas, 7, x, y)
+              end
+              if flags.thob ~= 0 then
+                self.debug_font:draw(canvas, "T"..flags.thob, x, y, 64, 16)
+              end
+              if flags.roomId ~= 0 then
+                self.debug_font:draw(canvas, "R"..flags.roomId, x, y + 16, 64, 16)
               end
             else
               local msg = self.debug_text[xy]

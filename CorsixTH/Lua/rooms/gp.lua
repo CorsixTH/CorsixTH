@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 5)
+room.class = "GPRoom"
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { "desk", "cabinet", "chair" }
 room.build_cost = 2500
@@ -30,4 +31,15 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "white"
 room.floor_tile = 18
+room.required_staff = {
+  Doctor = 1,
+}
+room.maximum_staff = room.required_staff
+
+class "GPRoom" (Room)
+
+function GPRoom:GPRoom(...)
+  self:Room(...)
+end
+
 return room

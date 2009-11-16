@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Manuel König
+--[[ Copyright (c) 2009 Peter "Corsix" Cawley
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,21 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local room = {}
-room.name = _S(14, 13)
-room.build_cost = 6000
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "blood_machine" }
-room.build_preview_animation = 5094
-room.categories = {
-  diagnosis = 6,
-}
-room.minimum_size = 4
-room.wall_type = "yellow"
-room.floor_tile = 19
-room.required_staff = {
-  Doctor = 1,
-}
-room.maximum_staff = room.required_staff
+class "Patient" (Humanoid)
 
-return room
+function Patient:Patient(...)
+  self:Humanoid(...)
+  self.hover_cursor = TheApp.gfx:loadMainCursor(18)
+end
+
+function Patient:onClick(ui, button)
+  if button == "left" then
+    ui:addWindow(UIPatient(ui, self))
+  end
+end

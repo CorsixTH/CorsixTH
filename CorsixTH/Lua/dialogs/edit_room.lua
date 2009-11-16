@@ -108,6 +108,7 @@ function UIEditRoom:finishRoom()
   local world = self.ui.app.world
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
+  local door
   for x, obj in pairs(self.blueprint_wall_anims) do
     for y, anim in pairs(obj) do
       if x == rect.x and y == rect.y then
@@ -130,7 +131,7 @@ function UIEditRoom:finishRoom()
         local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
         local layer = dir == "north" and 2 or 3
         if tag == "door" then
-          world:newObject("door", x, y, dir)
+          door = world:newObject("door", x, y, dir)
         elseif world:getWallIdFromBlockId(map:getCell(x, y, layer)) ~= "external" then
           map:setCell(x, y, layer, wall_type[tiles][dir])
         end
@@ -138,9 +139,9 @@ function UIEditRoom:finishRoom()
       anim:setTile(nil)
     end
   end
-  local room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type)
-  map:markRoom(rect.x, rect.y, rect.w, rect.h, room_type.floor_tile, room.id)
-  self.room = room
+  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type)
+  door.room = self.room
+  self.room.door = door
 end
 
 function UIEditRoom:purchaseItems()

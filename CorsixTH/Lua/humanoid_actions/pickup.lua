@@ -23,6 +23,10 @@ local function action_pickup_interrupt(action, humanoid)
     action.window:close()
   end
   humanoid.th:makeVisible()
+  local room = humanoid:getRoom()
+  if room then
+    room:onHumanoidEnter(humanoid)
+  end
   humanoid:setTimer(1, humanoid.finishAction)
 end
 
@@ -32,6 +36,10 @@ local function action_pickup_start(action, humanoid)
   end
   humanoid:setSpeed(0, 0)
   humanoid.th:makeInvisible()
+  local room = humanoid:getRoom()
+  if room then
+    room:onHumanoidLeave(humanoid)
+  end
   action.must_happen = true
   action.on_interrupt = action_pickup_interrupt
   local ui = action.ui

@@ -20,8 +20,19 @@ SOFTWARE. --]]
 
 class "Room"
 
-function Room:Room(x, y, w, h, id, room_info)
+function Room:Room(x, y, w, h, id, room_info, world)
   self.id = id
+  self.world = world
+  self.x = x
+  self.y = y
+  self.width = w
+  self.height = h
+  self.maximum_patients = 1 -- A good default for most rooms
+  
+  self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
+  
+  self.humanoids = {--[[a set rather than a list]]}
+  
   self.objects_additional = {}
   if room_info.objects_additional then
     for i = 1, #room_info.objects_additional do
@@ -36,4 +47,36 @@ function Room:Room(x, y, w, h, id, room_info)
     end
   end
   -- TODO
+end
+
+function Room:createLeaveAction()
+  local door = self.door
+  local x, y = door.tile_x, door.tile_y
+  if self.world:getRoom(x, y) == self then
+    if door.direction == "north" then
+      y = y - 1
+    elseif door.direction == "west" then
+      x = x - 1
+    end
+  end
+  return {name = "walk", x = x, y = y}
+end
+
+function Room:onHumanoidEnter(humanoid)
+  assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+  self.humanoids[humanoid] = true
+  --print(humanoid, "enter", self.id, class.is(humanoid, Staff), class.is(humanoid, Patient), class.is(humanoid, Humanoid))
+  
+  -- For now, staff always leave rooms, even if they are suitable for the room
+  -- TODO: Change this
+  if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
+    humanoid:setNextAction(self:createLeaveAction())
+    humanoid:queueAction{name = "meander"}
+  end
+end
+
+function Room:onHumanoidLeave(humanoid)
+  assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
+  self.humanoids[humanoid] = nil
+  --print(humanoid, "leave", self.id)
 end

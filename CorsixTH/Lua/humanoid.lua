@@ -64,14 +64,9 @@ function Humanoid:Humanoid(...)
   self.action_queue = {
   }
   self.last_move_direction = "east"
-  -- TODO: Move to patient.lua (when created):
-  self.hover_cursor = TheApp.gfx:loadMainCursor(18)
 end
 
 function Humanoid:onClick(ui, button)
-  if button == "left" then
-    ui:addWindow(UIPatient(ui, self))
-  end
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)

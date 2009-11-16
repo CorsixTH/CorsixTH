@@ -30,4 +30,9 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "blue"
 room.floor_tile = 17
+room.required_staff = {
+  Doctor = 1,
+}
+room.maximum_staff = room.required_staff
+
 return room

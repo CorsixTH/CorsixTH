@@ -46,6 +46,10 @@ function Entity:setTile(x, y)
   return self
 end
 
+function Entity:getRoom()
+  return self.world:getRoom(self.tile_x, self.tile_y)
+end
+
 function Entity:setPosition(x, y)
   self.th:setPosition(x, y)
   return self

@@ -39,6 +39,10 @@ function Door:Door(...)
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
+function Door:getRoom()
+  return self.room
+end
+
 local door_flag_name = {
   north = {"doorNorth", "tallNorth"},
   west = {"doorWest", "tallWest"},

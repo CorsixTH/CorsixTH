@@ -26,6 +26,7 @@ dofile "entity"
 dofile "room"
 dofile "object"
 dofile "humanoid"
+dofile "patient"
 dofile "staff_profile"
 
 class "World"
@@ -91,16 +92,16 @@ function World:createMapObjects(objects)
   for _, object in ipairs(objects) do repeat
     local x, y, thob, flags = unpack(object)
     local object_id = self.object_id_by_thob[thob]
-	if not object_id then
-	  print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
-	  break
-	end
-	local object_type = self.object_types[object_id]
-	if not object_type or not object_type.supports_creation_for_map then
-	  print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
-	  break
-	end
-	self:newObject(object_id, x, y, flags, "map object")
+    if not object_id then
+      print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
+      break -- continue
+    end
+    local object_type = self.object_types[object_id]
+    if not object_type or not object_type.supports_creation_for_map then
+      print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
+      break -- continue
+    end
+    self:newObject(object_id, x, y, flags, "map object")
   until true end
 end
 
@@ -121,7 +122,9 @@ end
 
 function World:newRoom(x, y, w, h, room_info)
   local id = #self.rooms + 1
-  local room = Room(x, y, w, h, id, room_info)
+  -- Note: Room IDs will be unique, but they may not form continuous values
+  -- from 1, as IDs of deleted rooms may not be re-issued for a while
+  local room = Room(x, y, w, h, id, room_info, self)
   self.rooms[id] = room
   self:clearCaches()
   return room
@@ -339,4 +342,8 @@ function World:getObject(x, y, id)
     end
   end
   return -- nil
+end
+
+function World:getRoom(x, y)
+  return self.rooms[self.map:getRoomId(x, y)]
 end

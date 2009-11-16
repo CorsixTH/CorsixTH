@@ -155,7 +155,7 @@ function UI:debugMakePatients()
     patients.n = #patients + 1
   end
   for i = 1, 4 do
-    local entity = self.app.world:newEntity("Humanoid", 2)
+    local entity = self.app.world:newEntity("Patient", 2)
     local types = {
       -- Types with variations doubled up to make them more likely:
       "Standard Male Patient", "Standard Male Patient",

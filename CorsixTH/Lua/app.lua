@@ -134,6 +134,7 @@ function App:init()
   for _, v in ipairs(self.objects) do
     Object.processTypeDefinition(v)
   end
+  dofile "room"
   self.rooms = self:loadLuaFolder"rooms"
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
   
