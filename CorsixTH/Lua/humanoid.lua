@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 class "Humanoid" (Entity)
 
+local TH = require "TH"
+
 local walk_animations = {}
 local door_animations = {}
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE)
@@ -67,6 +69,33 @@ function Humanoid:Humanoid(...)
 end
 
 function Humanoid:onClick(ui, button)
+end
+
+function Humanoid:setMood(mood)
+  if mood == nil then
+    self.mood_info = false
+    return
+  end
+  local moods = { idea1 = 2464, idea2 = 2466, idea3 = 4044,
+                   emergency = 3914,
+                   cofee = 3986,
+                   hot = 3988,
+                   tired = 3990,
+                   sad1 = 3992, sad2 = 4000, sad3 = 4002, sad4 = 4004, sad5 = 4006, sad6 = 4008, sad7 = 4578,
+                   cold = 3994,
+                   poo = 3996,
+                   money = 4018,
+                   reflexion = 4020, cantfind = 4050,
+                   unhappy = 4046, happy = 4048, 
+                   exit = 4052,
+                   bored = 4054,
+                   repairing = 4564, 
+                   epidemy1 = 4566, epidemy2 = 4570, epidemy3 = 4572, epidemy4 = 4574,
+                   queue = 4568,
+                   rise = 4576,
+                   wait = 5006 }
+  self.mood_info = TH.animation()                 
+  self.mood_info:setAnimation(self.world.anims, moods[mood])
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)

@@ -53,7 +53,7 @@ class "ReceptionDesk" (Object)
 function ReceptionDesk:ReceptionDesk(...)
   self:Object(...)
   self.queue = Queue()
-  self.hover_cursor = TheApp.gfx:loadMainCursor(19)
+  self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
 end
 
 return object

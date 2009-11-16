@@ -29,6 +29,26 @@ local assert, string_char, table_concat, unpack
 -- the other Lua code.
 class "Graphics"
 
+local cursors_name = { default = 1,
+                       clicked = 2,
+                       resize_room = 3,
+                       edit_room = 4,
+                       ns_arrow = 5,
+                       we_arrow = 6,
+                       nswe_arrow = 7,
+                       move_room = 8,
+                       sleep = 9,
+                       kill_rat = 10,
+                       kill_rat_hover = 11,
+                       epidemic_hover = 12,
+                       epidemic = 13,
+                       grab = 14,
+                       quit = 15,
+                       staff = 16,
+                       repair = 17,
+                       patient = 18,
+                       queue = 19 }
+
 function Graphics:Graphics(app)
   self.app = app
   self.target = self.app.video
@@ -49,8 +69,11 @@ function Graphics:Graphics(app)
   self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
 end
 
-function Graphics:loadMainCursor(...)
-  return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), ...)
+function Graphics:loadMainCursor(id)
+  if type(id) ~= "number" then
+      id = cursors_name[id]
+  end
+  return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
 end
 
 function Graphics:loadCursor(sheet, index, hot_x, hot_y)

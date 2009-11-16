@@ -22,7 +22,7 @@ class "Patient" (Humanoid)
 
 function Patient:Patient(...)
   self:Humanoid(...)
-  self.hover_cursor = TheApp.gfx:loadMainCursor(18)
+  self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
 end
 
 function Patient:onClick(ui, button)

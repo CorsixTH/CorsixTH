@@ -99,8 +99,8 @@ function UI:UI(app)
   }
   
   self.down_count = 0
-  self.default_cursor = app.gfx:loadMainCursor(1)
-  self.down_cursor = app.gfx:loadMainCursor(2)
+  self.default_cursor = app.gfx:loadMainCursor("default")
+  self.down_cursor = app.gfx:loadMainCursor("clicked")
   
   app:loadLuaFolder("dialogs", true)
   
@@ -169,6 +169,24 @@ function UI:debugMakePatients()
       "Elvis Patient",
       "Invisible Patient",
     }
+    local moods = { "idea1", "idea2" , "idea3",
+                   "emergency",
+                   "cofee",
+                   "hot",
+                   "tired",
+                   "sad1", "sad2", "sad3", "sad4", "sad5", "sad6", "sad7",
+                   "cold",
+                   "poo",
+                   "money",
+                   "reflexion", "cantfind",
+                   "unhappy", "happy",
+                   "exit",
+                   "bored",
+                   "repairing",
+                   "epidemy1", "epidemy2", "epidemy3", "epidemy4",
+                   "queue",
+                   "rise",
+                   "wait" }
     entity:setType(types[math.random(1, #types)])
     entity:setTile(63 + (i - 1) % 2, 63 + math.floor(i / 3))
     entity:setLayer(0, math.random(1, 4) * 2)
@@ -176,6 +194,7 @@ function UI:debugMakePatients()
     entity:setLayer(2, math.random(0, 2) * 2)
     entity:setLayer(3, math.random(0, 5) * 2)
     entity:setLayer(4, math.random(0, 5) * 2)
+    entity:setMood(moods[math.random(1, 31)])
     patients[#patients + 1] = entity
   end
 end

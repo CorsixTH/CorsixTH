@@ -43,6 +43,9 @@ function Entity:setTile(x, y)
   self.tile_x = x
   self.tile_y = y
   self.th:setTile(self.world.map.th, x, y)
+  if self.mood_info then
+    self.mood_info:setTile(self.world.map.th, x, y)
+  end
   return self
 end
 
@@ -52,11 +55,17 @@ end
 
 function Entity:setPosition(x, y)
   self.th:setPosition(x, y)
+  if self.mood_info then
+    self.mood_info:setPosition(x, y - 76)
+  end
   return self
 end
 
 function Entity:setSpeed(x, y)
   self.th:setSpeed(x, y)
+  if self.mood_info then
+    self.mood_info:setSpeed(x, y)
+  end
   return self
 end
 
@@ -69,6 +78,10 @@ end
 
 function Entity:tick()
   self.th:tick()
+  if self.mood_info then
+    self.mood_info:tick()
+  end
+  
   
   local timer = self.timer_time
   if timer then

@@ -22,7 +22,7 @@ class "Staff" (Humanoid)
 
 function Staff:Staff(...)
   self:Humanoid(...)
-  self.hover_cursor = TheApp.gfx:loadMainCursor(16)
+  self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
 end
 
 function Staff:onClick(ui, button)
