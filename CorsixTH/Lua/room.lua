@@ -70,8 +70,7 @@ function Room:onHumanoidEnter(humanoid)
   -- For now, staff always leave rooms, even if they are suitable for the room
   -- TODO: Change this
   if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
-    humanoid:setNextAction(self:createLeaveAction())
-    humanoid:queueAction{name = "meander"}
+    humanoid:queueAction(self:createLeaveAction(), 1)
   end
 end
 

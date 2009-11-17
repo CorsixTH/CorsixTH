@@ -105,38 +105,34 @@ end
 local function Humanoid_startAction(self)
   local action = self.action_queue[1]
   assert(action, "Empty action queue")
+  
+  -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
+  
   if action.todo_interrupt then
     action.todo_interrupt = nil
-    if action.on_interrupt then
-      action.must_happen = true
-      action:on_interrupt(self)
+    local on_interrupt = action.on_interrupt
+    if on_interrupt then
       action.on_interrupt = nil
+      on_interrupt(action, self)
     end
   end
 end
 
 function Humanoid:setNextAction(action)
+  -- Aim: Cleanly finish the current action (along with any subsequent actions
+  -- which must happen), then replace all the remaining actions with the given
+  -- one.
   local i = 1
   local queue = self.action_queue
   local interrupted = false
+  
   -- Skip over any actions which must happen
   while queue[i] and queue[i].must_happen do
     interrupted = true
     i = i + 1
   end
-  -- Interrupt the current action and queue other actions to be interrupted
-  -- when they start.
-  if interrupted then
-    interrupted = queue[1]
-    if interrupted.on_interrupt then
-      interrupted:on_interrupt(self)
-      interrupted.on_interrupt = nil
-    end
-    for j = 2, i - 1 do
-      queue[j].todo_interrupt = true
-    end
-  end
+  
   -- Remove actions which are no longer going to happen
   local done_set = {}
   for j = #queue, i, -1 do
@@ -150,10 +146,24 @@ function Humanoid:setNextAction(action)
       removed.object.reserved_for = nil
     end
   end
+  
   -- Add the new action to the queue
   queue[i] = action
-  -- Start the action if it has become the current action
-  if not interrupted then
+  
+  -- Interrupt the current action and queue other actions to be interrupted
+  -- when they start.
+  if interrupted then
+    interrupted = queue[1]
+    for j = 2, i - 1 do
+      queue[j].todo_interrupt = true
+    end
+    local on_interrupt = interrupted.on_interrupt
+    if on_interrupt then
+      interrupted.on_interrupt = nil
+      on_interrupt(interrupted, self)
+    end
+  else
+    -- Start the action if it has become the current action
     Humanoid_startAction(self)
   end
   return self
