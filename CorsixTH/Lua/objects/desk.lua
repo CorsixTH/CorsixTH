@@ -29,6 +29,36 @@ object.idle_animations = {
   north = 48,
   east = 50,
 }
+object.usage_animations = {
+  north = {
+    begin_use = {
+      Doctor =   56,
+      Nurse  = 3240,
+    },
+    in_use = {
+      Doctor =   72, -- Also 718
+      Nurse  = 3256,
+    },
+    finish_use = {
+      Doctor =   64,
+      Nurse  = 3248,
+    },
+  },
+  east = {
+    begin_use = {
+      Doctor =   58,
+      Nurse  = 3242,
+    },
+    in_use = {
+      Doctor =   74, -- No analogue to 718 :(
+      Nurse  = 3258,
+    },
+    finish_use = {
+      Doctor =   66,
+      Nurse  = 3250,
+    },
+  },
+}
 object.orientations = {
   north = {
     footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
@@ -37,10 +67,12 @@ object.orientations = {
   east = {
     footprint = { {0, -2}, {-1, -1}, {0, -1}, {-1, 0, only_passable = true}, {0, 0} },
     footprint_origin = {0, -1},
+    use_position = {-1, 0},
   },
   south = {
     footprint = { {-2, -1, only_passable = true}, {-2, 0}, {-1, -1}, {-1, 0}, {0, 0} },
     footprint_origin = {-2, 0},
+    use_position = {0, -1},
   },
   west = {
     footprint = { {-1, -2}, {0, -2, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0} },

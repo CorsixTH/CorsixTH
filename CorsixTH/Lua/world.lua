@@ -124,7 +124,9 @@ function World:newRoom(x, y, w, h, room_info)
   local id = #self.rooms + 1
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
-  local room = Room(x, y, w, h, id, room_info, self)
+  local class = room_info.class and _G[room_info.class] or Room
+  local room = class(x, y, w, h, id, room_info, self)
+  
   self.rooms[id] = room
   self:clearCaches()
   return room
@@ -265,6 +267,25 @@ function World:getFreeBench(x, y, distance)
   return bench, rx, ry
 end
 
+function World:findObjectNear(humanoid, object_type_name, distance, callback)
+  if not distance then
+    distance = 2^30
+  end
+  local obj, ox, oy, dir
+  if not callback then
+    callback = function(x, y, d)
+      obj = self:getObject(x, y, object_type_name)
+      dir = face_dir[d]
+      ox = x
+      oy = y
+      return true
+    end
+  end
+  self.pathfinder:findObject(humanoid.tile_x, humanoid.tile_y,
+    self.object_types[object_type_name].thob, distance, callback)
+  return obj, ox, oy, dir
+end
+
 function World:newEntity(class, animation)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)
@@ -313,7 +334,9 @@ function World:addObjectToTile(object, x, y)
   if objects then
     if #objects >= 1 then
       -- Until it is clear how multiple objects will work, this warning should
-      -- be in place.
+      -- be in place. In most cases, having multiple objects on a tile should
+      -- be impossible, but there are some edge cases like having two radiators
+      -- or bins on a tile which need thinking about.
       print("Warning: Multiple objects on tile " .. x .. "," .. y .. " - only one will be encoded")
     else
       self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})

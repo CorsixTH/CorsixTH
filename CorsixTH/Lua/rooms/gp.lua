@@ -42,4 +42,47 @@ function GPRoom:GPRoom(...)
   self:Room(...)
 end
 
+function GPRoom:onHumanoidEnter(humanoid)
+  -- Don't copy this function for other rooms just yet - I'm not entirely 
+  -- happy with some of it, so the way in which it is implemented will likely
+  -- change.
+  
+  -- This logic for deciding whether or not to make use of the humanoid will
+  -- probably be generalised and moved into Room:onHumanoidEnter()
+  local take_control = false
+  if humanoid.humanoid_class == "Doctor" then
+    take_control = true
+    for human in pairs(self.humanoids) do
+      if human.humanoid_class == "Doctor" then
+        take_control = false
+        break
+      end
+    end
+  end
+  if not take_control then
+    return Room.onHumanoidEnter(self, humanoid)
+  end
+  self.humanoids[humanoid] = true
+  
+  local desk, ox, oy = self.world:findObjectNear(humanoid, "desk")
+  -- THOB markers may be adjusted to incorporate the footprint origin, making
+  -- these next few lines unrequired in the future.
+  -- Alternatively, THOB markers may remain the same, but these lines moved to
+  -- World:findObjectNear()'s default callback
+  local origin = desk.object_type.orientations[desk.direction]
+  if origin.footprint_origin then
+    ox = ox - origin.footprint_origin[1]
+    oy = oy - origin.footprint_origin[2]
+  end
+  if origin.use_position then
+    ox = ox + origin.use_position[1]
+    oy = oy + origin.use_position[2]
+  end
+  -- The method for chaining something to happen after a walk will probably
+  -- also change.
+  humanoid:walkTo(ox, oy, function()
+    humanoid:setNextAction{name = "use_object", object = desk}
+  end)
+end
+
 return room

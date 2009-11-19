@@ -78,7 +78,15 @@ local function action_use_phase(action, humanoid, phase)
   end
   local anim = anim_table[humanoid.humanoid_class]
   humanoid:setAnimation(anim, action.mirror_flags)
-  humanoid:setTilePositionSpeed(object.tile_x, object.tile_y)
+  
+  local footprint = object.object_type.orientations
+  footprint = footprint and footprint[object.direction]
+  local px, py = 0, 0
+  if footprint.animation_offset then
+    px, py = footprint.animation_offset[1], footprint.animation_offset[2]
+  end
+  
+  humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, px, py)
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)
   if phase == 0 and length == 1 and action.prolonged_usage and action.on_interrupt then
