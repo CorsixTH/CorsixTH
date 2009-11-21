@@ -61,22 +61,24 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
-    footprint_origin = {0, -1},
+    footprint = { {-2, -1}, {-1, -1}, {-1, 0}, {0, -1}, {0, 0, only_passable = true} },
+    render_attach_position = {0, -1},
+    use_position = "passable",
   },
   east = {
     footprint = { {0, -2}, {-1, -1}, {0, -1}, {-1, 0, only_passable = true}, {0, 0} },
-    footprint_origin = {0, -1},
-    use_position = {-1, 0},
+    render_attach_position = {0, -1},
+    use_position = "passable",
   },
   south = {
-    footprint = { {-2, -1, only_passable = true}, {-2, 0}, {-1, -1}, {-1, 0}, {0, 0} },
-    footprint_origin = {-2, 0},
-    use_position = {0, -1},
+    footprint = { {0, -1, only_passable = true}, {-2, 0}, {-1, -1}, {-1, 0}, {0, 0} },
+    render_attach_position = {-2, 0},
+    use_position = "passable",
   },
   west = {
-    footprint = { {-1, -2}, {0, -2, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0} },
-    footprint_origin = {-1, 0},
+    footprint = { {-1, -2}, {0, 0, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0} },
+    render_attach_position = {-1, 0},
+    use_position = "passable",
   },
 }
 

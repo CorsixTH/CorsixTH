@@ -70,11 +70,24 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self:setTile(x, y)
 end
 
+function Object:getRenderAttachTile()
+  local x, y = self.tile_x, self.tile_y
+  local offset = self.object_type.orientations
+  if offset then
+    offset = offset[self.direction].render_attach_position
+    x = x + offset[1]
+    y = y + offset[2]
+  end
+  return x, y
+end
+
 function Object:setTile(x, y)
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
   end
-  Entity.setTile(self, x, y)
+  self.tile_x = x
+  self.tile_y = y
+  self.th:setTile(self.world.map.th, self:getRenderAttachTile())
   if x then
     self.world:addObjectToTile(self, x, y)
     if self.footprint then
@@ -101,22 +114,72 @@ function Object:setUser(user)
   end
 end
 
+local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
+
 function Object.processTypeDefinition(object_type)
   if object_type.orientations then
     for direction, details in pairs(object_type.orientations) do
+      -- Set default values
       if not details.animation_offset then
         details.animation_offset = {0, 0}
       end
-      if details.footprint_origin then
-        local x, y = unpack(details.footprint_origin)
-        for _, point in pairs(details.footprint) do
-          point[1] = point[1] - x
-          point[2] = point[2] - y
-        end
-        x, y = Map:WorldToScreen(x + 1, y + 1)
-        details.animation_offset[1] = details.animation_offset[1] - x
-        details.animation_offset[2] = details.animation_offset[2] - y
+      if not details.render_attach_position then
+        details.render_attach_position = {0, 0}
       end
+      -- Set the usage position
+      if details.use_position == "passable" then
+        -- "passable" => the *first* passable tile in the footprint list
+        for _, point in pairs(details.footprint) do
+          if point.only_passable then
+            details.use_position = {point[1], point[2]}
+            break
+          end
+        end
+      elseif not details.use_position then
+        details.use_position = {0, 0}
+      end
+      -- Find the nearest solid tile in the footprint to the usage position
+      local use_position = details.use_position
+      local solid_near_use_position
+      local solid_near_use_position_d = 10000
+      for _, point in pairs(details.footprint) do repeat
+        if point.only_passable then
+          break -- continue
+        end
+        local d = (point[1] - use_position[1])^2 + (point[2] - use_position[2])^2
+        if d >= solid_near_use_position_d then
+          break -- continue
+        end
+        solid_near_use_position = point
+        solid_near_use_position_d = d
+      until true end
+      if solid_near_use_position_d ~= 1 then
+        details.pathfind_allowed_dirs = all_pathfind_dirs
+      else
+        if use_position[1] < solid_near_use_position[1] then
+          details.pathfind_allowed_dirs = {[1] = true}
+        elseif use_position[1] > solid_near_use_position[1] then
+          details.pathfind_allowed_dirs = {[3] = true}
+        elseif use_position[2] < solid_near_use_position[2] then
+          details.pathfind_allowed_dirs = {[2] = true}
+        else
+          details.pathfind_allowed_dirs = {[0] = true}
+        end
+      end
+      -- Adjust the footprint to make this tile the origin
+      local x, y = unpack(solid_near_use_position)
+      for _, point in pairs(details.footprint) do
+        point[1] = point[1] - x
+        point[2] = point[2] - y
+      end
+      use_position[1] = use_position[1] - x
+      use_position[2] = use_position[2] - y
+      local rx, ry = unpack(details.render_attach_position)
+      details.render_attach_position[1] = rx - x
+      details.render_attach_position[2] = ry - y
+      x, y = Map:WorldToScreen(rx + 1, ry + 1)
+      details.animation_offset[1] = details.animation_offset[1] - x
+      details.animation_offset[2] = details.animation_offset[2] - y
     end
   end
 end

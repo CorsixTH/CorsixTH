@@ -32,7 +32,7 @@ object.idle_animations = {
 object.orientations = {
   north = {
     footprint = { {-1, 0}, {0, 0}, {0, -1, only_passable = true} },
-    footprint_origin = {-1, 0},
+    render_attach_position = {-1, 0},
   },
   east = {
     footprint = { {0, -1}, {0, 0}, {1, 0, only_passable = true} }

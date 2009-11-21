@@ -32,6 +32,8 @@ THMapNode::THMapNode()
     iBlock[1] = 0;
     iBlock[2] = 0;
     iBlock[3] = 0;
+    iParcelId = 0;
+    iRoomId = 0;
     iFlags = 0;
 }
 
@@ -299,8 +301,8 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
        1st pass:
         1) For each node, left to right, the floor tile (layer 0)
        2nd pass:
-        1) For each node, right to left, the east wall, then the early entities
-        2) For each node, left to right, the north wall, then the late entities
+        1) For each node, right to left, the north wall, then the early entities
+        2) For each node, left to right, the west wall, then the late entities
     */
 
     if(m_pBlocks == NULL || m_pCells == NULL)

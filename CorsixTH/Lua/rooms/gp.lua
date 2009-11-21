@@ -65,19 +65,6 @@ function GPRoom:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
   
   local desk, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  -- THOB markers may be adjusted to incorporate the footprint origin, making
-  -- these next few lines unrequired in the future.
-  -- Alternatively, THOB markers may remain the same, but these lines moved to
-  -- World:findObjectNear()'s default callback
-  local origin = desk.object_type.orientations[desk.direction]
-  if origin.footprint_origin then
-    ox = ox - origin.footprint_origin[1]
-    oy = oy - origin.footprint_origin[2]
-  end
-  if origin.use_position then
-    ox = ox + origin.use_position[1]
-    oy = oy + origin.use_position[2]
-  end
   -- The method for chaining something to happen after a walk will probably
   -- also change.
   humanoid:walkTo(ox, oy, function()

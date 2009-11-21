@@ -246,22 +246,17 @@ local face_dir = {
 
 function World:getFreeBench(x, y, distance)
   local bench, rx, ry
-  self.pathfinder:findObject(x, y, self.object_types.bench.thob, distance, function(x, y, d)
+  local object_type = self.object_types.bench
+  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d)
     local b = self:getObject(x, y, "bench")
-    if b and not b.user and not b.reserved_for and face_dir[d] == b.direction then
-      if d == 0 then
-        y = y + 1
-      elseif d == 1 then
-        x = x - 1
-      elseif d == 2 then
-        y = y - 1
-      else--if d == 3
-        x = x + 1
+    if b and not b.user and not b.reserved_for then
+      local orientation = object_type.orientations[b.direction]
+      if orientation.pathfind_allowed_dirs[d] then
+        rx = x + orientation.use_position[1]
+        ry = y + orientation.use_position[2]
+        bench = b
+        return true
       end
-      rx = x
-      ry = y
-      bench = b
-      return true
     end
   end)
   return bench, rx, ry
@@ -269,13 +264,25 @@ end
 
 function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not distance then
+    -- Note that regardless of distance, only the room which the humanoid is in
+    -- is searched (or the corridor if the humanoid is not in a room).
     distance = 2^30
   end
-  local obj, ox, oy, dir
+  local obj, ox, oy
   if not callback then
+    -- The default callback returns the first object found, along with its
+    -- usage tile position.
     callback = function(x, y, d)
       obj = self:getObject(x, y, object_type_name)
-      dir = face_dir[d]
+      local orientation = obj.object_type.orientations
+      if orientation then
+        orientation = orientation[obj.direction]
+        if not orientation.pathfind_allowed_dirs[d] then
+          return
+        end
+        x = x + orientation.use_position[1]
+        y = y + orientation.use_position[2]
+      end
       ox = x
       oy = y
       return true
@@ -283,7 +290,9 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   end
   self.pathfinder:findObject(humanoid.tile_x, humanoid.tile_y,
     self.object_types[object_type_name].thob, distance, callback)
-  return obj, ox, oy, dir
+  -- These return values are only relevent for the default callback - are nil
+  -- for custom callbacks
+  return obj, ox, oy
 end
 
 function World:newEntity(class, animation)

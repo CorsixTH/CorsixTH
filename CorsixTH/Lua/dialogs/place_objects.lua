@@ -227,7 +227,11 @@ function UIPlaceObjects:nextOrientation()
     flag = flag + 1024
   end
   self.object_anim:setAnimation(self.anims, anim, flag)
-  self.object_anim:setPosition(unpack(object.orientations[orient].animation_offset))
+  local px, py = unpack(object.orientations[orient].render_attach_position)
+  px, py = Map:WorldToScreen(px + 1, py + 1)
+  px = object.orientations[orient].animation_offset[1] + px
+  py = object.orientations[orient].animation_offset[2] + py
+  self.object_anim:setPosition(px, py)
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
