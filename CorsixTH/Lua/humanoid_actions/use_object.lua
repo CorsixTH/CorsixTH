@@ -81,8 +81,14 @@ local function action_use_phase(action, humanoid, phase)
   
   local offset = object.object_type.orientations
   if offset then
-    local tx, ty = object:getRenderAttachTile()
-    offset = offset[object.direction].animation_offset
+    local tx, ty
+    offset = offset[object.direction]
+    if offset.use_animate_from_use_position then
+      tx, ty = action.old_tile_x, action.old_tile_y
+    else
+      tx, ty = object:getRenderAttachTile()
+    end
+    offset = offset.animation_offset
     humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
   else
     humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
@@ -107,15 +113,15 @@ action_use_object_tick = function(humanoid)
   end
   if phase ~= 0 or not action.prolonged_usage or not action.on_interrupt then
     phase = action_use_next_phase(action, phase)
+  elseif action.loop_callback then
+    action.loop_callback()
   end
   if oldphase <= 1 and phase > 1 then
     object:setUser(nil)
     humanoid.user_of = nil
   end
   if phase == 100 then
-    if oldphase == 2 then
-      humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
-    end
+    humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
     humanoid:finishAction(action)
   else
     action_use_phase(action, humanoid, phase)

@@ -29,18 +29,36 @@ object.idle_animations = {
   north = 80,
   east = 82,
 }
-object.orientations = {
+object.usage_animations = {
   north = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} }
+    in_use = {
+      Doctor = 88,
+    },
   },
   east = {
-    footprint = { {0, 0}, {-1, 0, only_passable = true} }
+    in_use = {
+      Doctor = 90,
+    },
+  },
+}
+object.orientations = {
+  north = {
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+  },
+  east = {
+    footprint = { {0, 0}, {-1, 0, only_passable = true} },
+    use_position = "passable",
   },
   south = {
-    footprint = { {0, 0}, {0, -1, only_passable = true} }
+    footprint = { {0, 0}, {0, -1, only_passable = true} },
+    use_position = "passable",
   },
   west = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} }
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
   },
 }
 

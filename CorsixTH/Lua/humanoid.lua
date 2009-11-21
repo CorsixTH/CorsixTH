@@ -260,19 +260,10 @@ function Humanoid:onLeaveQueue()
   end
 end
 
-function Humanoid:walkTo(tile_x, tile_y, when_done)
-  if tile_x == self.tile_x and tile_y == self.tile_y then
-    if when_done then
-      when_done()
-    end
-    return
-  end
-  
+function Humanoid:walkTo(tile_x, tile_y)
   self:setNextAction {
     name = "walk",
     x = tile_x,
     y = tile_y,
-    when_done = when_done,
   }
-  self:queueAction {name = "idle"}
 end

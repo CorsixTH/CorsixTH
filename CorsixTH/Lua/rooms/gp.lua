@@ -64,12 +64,25 @@ function GPRoom:onHumanoidEnter(humanoid)
   end
   self.humanoids[humanoid] = true
   
-  local desk, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  -- The method for chaining something to happen after a walk will probably
-  -- also change.
-  humanoid:walkTo(ox, oy, function()
-    humanoid:setNextAction{name = "use_object", object = desk}
-  end)
+  self:doStaffUseCycle(humanoid)
+end
+
+function GPRoom:doStaffUseCycle(humanoid)
+  local obj, ox, oy = self.world:findObjectNear(humanoid, "cabinet")
+  humanoid:walkTo(ox, oy)
+  humanoid:queueAction{name = "use_object", object = obj}
+  obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
+  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  local desk_use_time = math.random(8, 20)
+  humanoid:queueAction{name = "use_object",
+    object = obj,
+    loop_callback = function()
+      desk_use_time = desk_use_time - 1
+      if desk_use_time == 0 then
+        self:doStaffUseCycle(humanoid)
+      end
+    end,
+  }
 end
 
 return room

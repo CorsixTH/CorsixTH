@@ -96,9 +96,6 @@ local function action_walk_tick(humanoid)
     -- Arrival at final tile
     humanoid:setTilePositionSpeed(x1, y1)
     humanoid:finishAction(action)
-    if action.when_done then
-      action.when_done()
-    end
     return
   end
   
@@ -227,7 +224,16 @@ local function action_walk_start(action, humanoid)
   -- to somewhere outside the hospital (or from one building to another?), do
   -- pathfinding in two steps, with the building door as a middle node
   local path_x, path_y = humanoid.world:getPath(humanoid.tile_x, humanoid.tile_y, action.x, action.y)
-  if not path_x then
+  if not path_x or #path_x == 1 then
+    -- Finishing an action from within the start handler is a very bad idea, as
+    -- it is normal when ordering several actions to setNextAction the first
+    -- one, then queueAction the rest. If the first starts straight away, and
+    -- then finishes straight away, then the humanoid is left with an empty
+    -- action queue. Hence we wait one tick before finishing. We still need to
+    -- set the humanoid animation / position though, which is delegated to the
+    -- idle action (if this wasn't done, then the previous animation would be
+    -- used, which might involve an object).
+    TheApp.humanoid_actions.idle(action, humanoid)
     humanoid:setTimer(1, humanoid.finishAction)
     return
   end

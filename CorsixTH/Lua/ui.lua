@@ -398,7 +398,9 @@ function UI:onMouseUp(code, x, y)
   end
   
   if button == "right" and not _MAP_EDITOR and highlight_x then
-    get_patient():walkTo(highlight_x, highlight_y)
+    local patient = get_patient()
+    patient:walkTo(highlight_x, highlight_y)
+    patient:queueAction{name = "idle"}
   end
   
   return repaint
