@@ -168,9 +168,13 @@ function Object.processTypeDefinition(object_type)
       end
       -- Adjust the footprint to make this tile the origin
       local x, y = unpack(solid_near_use_position)
+      local solid_points = {}
       for _, point in pairs(details.footprint) do
         point[1] = point[1] - x
         point[2] = point[2] - y
+        if not point.only_passable then
+          solid_points[point[1] * 100 + point[2]] = point
+        end
       end
       use_position[1] = use_position[1] - x
       use_position[2] = use_position[2] - y
@@ -180,6 +184,21 @@ function Object.processTypeDefinition(object_type)
       x, y = Map:WorldToScreen(rx + 1, ry + 1)
       details.animation_offset[1] = details.animation_offset[1] - x
       details.animation_offset[2] = details.animation_offset[2] - y
+      -- Find the region around the solid part of the footprint
+      local adjacent_set = {}
+      local adjacent_list = {}
+      details.adjacent_to_solid_footprint = adjacent_list
+      for k, point in pairs(solid_points) do
+        for _, delta in ipairs{{-1, 0}, {0, -1}, {0, 1}, {1, 0}} do
+          local x = point[1] + delta[1]
+          local y = point[2] + delta[2]
+          local k2 = x * 100 + y
+          if not solid_points[k2] and not adjacent_set[k2] then
+            adjacent_set[k2] = {x, y}
+            adjacent_list[#adjacent_list+1] = adjacent_set[k2]
+          end
+        end
+      end
     end
   end
 end

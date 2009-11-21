@@ -331,6 +331,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     end
     local flags = {}
     local allgood = true
+    local world = self.ui.app.world
+    local roomId = self.room and self.room.id
     for i, xy in ipairs(object_footprint) do
       local x = x + xy[1]
       local y = y + xy[2]
@@ -347,18 +349,22 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         end
         local cell_flags = map:getCellFlags(x, y, flags)[flag]
         local is_object_allowed = false
-        if flags.roomId == 0 and object.corridor_object then
+        if roomId and flags.roomId ~= roomId then
+          is_object_allowed = false
+        elseif flags.roomId == 0 and object.corridor_object then
           is_object_allowed = true
+          roomId = flags.roomId
         elseif flags.roomId == 0 and not object.corridor_object then
           is_object_allowed = false
         else
-          for _, o in pairs(self.ui.app.world.rooms[flags.roomId].objects_additional) do
+          roomId = flags.roomId
+          for _, o in pairs(world.rooms[roomId].objects_additional) do
             if o.object.thob == object.thob then
               is_object_allowed = true
               break
             end
           end
-          for _, o in pairs(self.ui.app.world.rooms[flags.roomId].objects_needed) do
+          for _, o in pairs(world.rooms[roomId].objects_needed) do
             if o.object.thob == object.thob then
               is_object_allowed = true
               break
@@ -377,6 +383,42 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i][2] = y
     end
     if self.object_anim then
+      if allgood then
+        -- Check that pathfinding still works, i.e. that placing the object
+        -- wouldn't disconnect one part of the hospital from another
+        local flags_to_set = {passable = false}
+        for _, xy in ipairs(object_footprint) do
+          local x = x + xy[1]
+          local y = y + xy[2]
+          if not xy.only_passable then
+            map:setCellFlags(x, y, flags_to_set)
+          end
+        end
+        local prev_x, prev_y
+        for _, xy in ipairs(object.orientations[self.object_orientation].adjacent_to_solid_footprint) do
+          local _x, _y = x, y
+          local x = x + xy[1]
+          local y = y + xy[2]
+          if map:getCellFlags(x, y, flags).roomId == roomId and flags.passable then
+            if prev_x then
+              if not world.pathfinder:findDistance(x, y, prev_x, prev_y) then
+                allgood = false
+                break
+              end
+            end
+            prev_x = x
+            prev_y = y
+          end
+        end
+        flags_to_set.passable = true
+        for _, xy in ipairs(object_footprint) do
+          local x = x + xy[1]
+          local y = y + xy[2]
+          if not xy.only_passable then
+            map:setCellFlags(x, y, flags_to_set)
+          end
+        end
+      end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)
       end
