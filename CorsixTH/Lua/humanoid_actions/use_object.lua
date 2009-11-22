@@ -27,13 +27,19 @@ local orient_mirror = {
 
 local function action_use_next_phase(action, phase)
   phase = phase + 1
-  if phase < -2 then
-    phase = -2
+  if phase < -4 then
+    phase = -4
   end
-  if phase == -2 and not action.do_walk then
+  if phase == -4 and not action.do_walk then
     phase = phase + 1
   end
-  if phase == -1 and not action.anims.begin_use then
+  if phase == -3 and not action.anims.begin_use then
+    phase = phase + 1
+  end
+  if phase == -2 and not action.anims.begin_use_2 then
+    phase = phase + 1
+  end
+  if phase == -1 and not action.anims.begin_use_3 then
     phase = phase + 1
   end
   if phase == 0 and not action.anims.in_use then
@@ -57,7 +63,7 @@ local function action_use_phase(action, humanoid, phase)
   local object = action.object
   humanoid.user_of = nil -- Temporary to avoid tile change warning
   action.phase = phase
-  if phase == -2 then
+  if phase == -4 then
     HumanoidRawWalk(humanoid,
       action.old_tile_x, action.old_tile_y,
       object.tile_x, object.tile_y,
@@ -71,8 +77,12 @@ local function action_use_phase(action, humanoid, phase)
     return
   end
   local anim_table = action.anims.in_use
-  if phase == -1 then
+  if phase == -3 then
     anim_table = action.anims.begin_use
+  elseif phase == -2 then
+    anim_table = action.anims.begin_use_2
+  elseif phase == -1 then
+    anim_table = action.anims.begin_use_3
   elseif phase == 1 then
     anim_table = action.anims.finish_use
   end
@@ -102,7 +112,7 @@ local function action_use_phase(action, humanoid, phase)
   end
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)
-  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage and action.on_interrupt then
+  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage and action.on_interrupt and not action.loop_callback then
     -- a timer would be redundant, so do not set one
   else
     humanoid:setTimer(length, action_use_object_tick)
@@ -114,7 +124,7 @@ action_use_object_tick = function(humanoid)
   local object = action.object
   local phase = action.phase
   local oldphase = phase
-  if oldphase == -2 then
+  if oldphase == -4 then
     object:setUser(humanoid)
     humanoid.user_of = object
   end

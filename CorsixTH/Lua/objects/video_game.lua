@@ -29,12 +29,38 @@ object.idle_animations = {
   north = 3696,
   south = 3696,
 }
+-- There are only animations for the doctor and the nurse.
+-- It seems the handyman doesn't play video games.
+--
+-- For the Doctor, there's an additional animation standing still.
+-- Don't know how to use that one...
+
+object.usage_animations = {
+  north = {
+    in_use = {
+      Doctor   = 3700, -- also 3692, standing still in front of the game
+      Nurse    = 4764,
+    },
+  },
+  south = { -- duplicate of north
+    in_use = {
+      Doctor   = 3700,
+      Nurse    = 4764,
+    },
+  },
+}
+
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} }
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} }
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+    -- KNOWN BUG: glitch during animation when placed at south wall
   },
 }
 

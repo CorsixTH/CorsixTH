@@ -29,19 +29,72 @@ object.idle_animations = {
   north = 2122,
   east = 2124,
 }
-object.orientations = {
+object.usage_animations = {
   north = {
-    footprint = { {-1, 0}, {0, 0}, {0, -1, only_passable = true} },
-    render_attach_position = {-1, 0},
+    begin_use = {
+      Doctor   = 2178,
+      Nurse    = 3878,
+      Handyman = 3570,
+    },
+    begin_use_2 = {
+      Doctor   = 2186,
+      Nurse    = 3886,
+      Handyman = 3578,
+    },
+    in_use = {
+      Doctor   = 2208,
+      Nurse    = 4780, -- also 4786, duplicate?
+      Handyman = 4772,
+    },
+    finish_use = {
+      Doctor   = 2194,
+      Nurse    = 3894,
+      Handyman = 3586,
+    },
   },
   east = {
-    footprint = { {0, -1}, {0, 0}, {1, 0, only_passable = true} }
+    begin_use = {
+      Doctor   = 2180,
+      Nurse    = 3880,
+      Handyman = 3572,
+    },
+    begin_use_2 = {
+      Doctor   = 2188,
+      Nurse    = 3888,
+      Handyman = 3580,
+    },
+    in_use = {
+      Doctor   = 2210,
+      Nurse    = 4782, -- also 4784, duplicate?
+      Handyman = 4774, -- also 4776, duplicate?
+    },
+    finish_use = {
+      Doctor   = 2196,
+      Nurse    = 3896,
+      Handyman = 3588,
+    },
+  },
+}
+object.orientations = {
+  north = {
+    footprint = { {-1, 0}, {0, 0}, {-1, -1, only_passable = true} },
+    render_attach_position = {-1, 0},
+    use_position = "passable",
+  },
+  east = {
+    footprint = { {0, -1}, {0, 0}, {1, -1, only_passable = true} },
+    use_position = "passable",
   },
   south = {
-    footprint = { {-1, 0}, {0, 0}, {-1, 1, only_passable = true} }
+    footprint = { {-1, 0}, {0, 0}, {-1, 1, only_passable = true} },
+    -- KNOWN BUG: glitch when a humanoid goes from {-2, 1} to {-1, 1}
+    -- Using render_attach_position = {-1, 0} would fix this, but cause
+    -- even bigger glitches with north walls
+    use_position = "passable",
   },
   west = {
-    footprint = { {0, -1}, {0, 0}, {-1, -1, only_passable = true} }
+    footprint = { {0, -1}, {0, 0}, {-1, -1, only_passable = true} },
+    use_position = "passable",
   },
 }
 

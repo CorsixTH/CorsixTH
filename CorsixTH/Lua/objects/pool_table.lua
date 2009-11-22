@@ -29,16 +29,80 @@ object.idle_animations = {
   north = 2130,
   south = 2130,
 }
+-- There are five animations, for each the doctor and the handyman.
+-- The nurses don't like pool, appearently.
+-- 
+-- anim      | doctor | handyman
+-- -----------------------------
+-- aim       |  1230  |   3924
+-- shoot     |  1234  |   3928
+-- chalk     |  1238  |   3932
+-- take cue  |  1244  |   3936
+-- leave cue |  1248  |   3940
+--
+-- the playing procedure is: take cue, chalk, aim, shoot, leave cue
+
+object.usage_animations = {
+  north = {
+    begin_use = {
+      Doctor   = 1244,
+      Handyman = 3936,
+    },
+    begin_use_2 = {
+      Doctor   = 1238,
+      Handyman = 3932,
+    },
+    begin_use_3 = {
+      Doctor   = 1230,
+      Handyman = 3924,
+    },
+    in_use = {
+      Doctor   = 1234,
+      Handyman = 3928,
+    },
+    finish_use = {
+      Doctor   = 1248,
+      Handyman = 3940,
+    },
+  },
+  south = { -- duplicate of north
+    begin_use = {
+      Doctor   = 1244,
+      Handyman = 3936,
+    },
+    begin_use_2 = {
+      Doctor   = 1238,
+      Handyman = 3932,
+    },
+    begin_use_3 = {
+      Doctor   = 1230,
+      Handyman = 3924,
+    },
+    in_use = {
+      Doctor   = 1234,
+      Handyman = 3928,
+    },
+    finish_use = {
+      Doctor   = 1248,
+      Handyman = 3940,
+    },
+  },
+}
+
 object.orientations = {
   north = {
     footprint = { {-1, -2, only_passable = true},  {0, -2, only_passable = true}, {1, -2, only_passable = true},
                   {-1, -1, only_passable = true},  {0, -1},                       {1, -1, only_passable = true},
-                  {-1, 0, only_passable = true},   {0, 0, only_passable = true},  {1, 0, only_passable = true} }
+                  {-1, 0, only_passable = true},   {0, 0, only_passable = true},  {1, 0, only_passable = true} },
+    render_attach_position = {-1, 0},
+    use_position = {0, 0},
   },
   east = {
     footprint = {{-2, -1, only_passable = true},  {-1, -1, only_passable = true}, {0, -1, only_passable = true},
                   {-2, 0, only_passable = true},  {-1, 0},                         {0, 0, only_passable = true},
-                  {-2, 1, only_passable = true},   {-1, 1, only_passable = true}, {0, 1, only_passable = true} }
+                  {-2, 1, only_passable = true},   {-1, 1, only_passable = true}, {0, 1, only_passable = true} },
+    render_attach_position = {0, -1},
+    use_position = {0, 0},
   },
 }
 

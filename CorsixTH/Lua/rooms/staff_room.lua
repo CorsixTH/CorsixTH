@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 23)
+room.class = "StaffRoom"
 room.objects_additional = { "extinguisher", "radiator", "plant", "sofa", "pool_table", "tv", "video_game" }
 room.objects_needed = { "sofa" }
 room.build_cost = 1500
@@ -30,4 +31,21 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "green"
 room.floor_tile = 17
+
+class "StaffRoom" (Room)
+
+function StaffRoom:StaffRoom(...)
+  self:Room(...)
+end
+
+function StaffRoom:onHumanoidEnter(humanoid)
+  self.humanoids[humanoid] = true
+  if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Receptionist" then
+    humanoid:setNextAction({name = "use_staffroom"})
+  else
+    -- No staff? Out with you! (receptionists not welcome either)
+    humanoid:queueAction(self:createLeaveAction(), 1)
+  end
+end
+
 return room
