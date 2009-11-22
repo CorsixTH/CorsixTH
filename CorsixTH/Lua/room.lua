@@ -63,6 +63,24 @@ function Room:createLeaveAction()
   return {name = "walk", x = x, y = y}
 end
 
+function Room:getPatient()
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then
+      return humanoid
+    end
+  end
+end
+
+function Room:dealtWithPatient(patient)
+  patient = patient or self:getPatient()
+  patient:setNextAction(self:createLeaveAction())
+  -- TODO: Give player money
+  -- TODO: Inform logic controlling patient
+  -- The following lines are temporary:
+  patient:queueAction{name = "meander", count = 1}
+  patient:queueAction{name = "idle"}
+end
+
 local profile_attributes = {
   Psychiatrist = "is_psychiatrist",
   Surgeon = "is_surgeon",

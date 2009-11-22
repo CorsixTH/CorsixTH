@@ -36,7 +36,9 @@ object.usage_animations = {
       Nurse  = 3240,
     },
     in_use = {
-      Doctor =   72, -- Also 718
+      -- Note: 72 (normal usage) should happen alot more often than 718 (head
+      -- scratching), hence it appears in the list many times.
+      Doctor = {72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 72, 718},
       Nurse  = 3256,
     },
     finish_use = {

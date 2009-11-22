@@ -76,7 +76,14 @@ local function action_use_phase(action, humanoid, phase)
   elseif phase == 1 then
     anim_table = action.anims.finish_use
   end
+  local is_list = false
   local anim = anim_table[humanoid.humanoid_class]
+  if type(anim) == "table" then
+    -- If an animation list is provided rather than a single animation, then
+    -- choose an animation from the list at random.
+    is_list = true
+    anim = anim[math.random(1, #anim)]
+  end
   humanoid:setAnimation(anim, action.mirror_flags)
   
   local offset = object.object_type.orientations
@@ -95,7 +102,7 @@ local function action_use_phase(action, humanoid, phase)
   end
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)
-  if phase == 0 and length == 1 and action.prolonged_usage and action.on_interrupt then
+  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage and action.on_interrupt then
     -- a timer would be redundant, so do not set one
   else
     humanoid:setTimer(length, action_use_object_tick)

@@ -55,11 +55,23 @@ function GPRoom:doStaffUseCycle(humanoid)
       desk_use_time = desk_use_time - 1
       if desk_use_time == 0 then
         self:doStaffUseCycle(humanoid)
+        if math.random() <= (0.5 + 0.5 * humanoid.profile.skill) then
+          local patient = self:getPatient()
+          if patient and patient.user_of then
+            self:dealtWithPatient(patient)
+          end
+        end
       end
     end,
   }
 end
 
 GPRoom.commandEnteringStaff = GPRoom.doStaffUseCycle
+
+function GPRoom:commandEnteringPatient(humanoid)
+  local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
+  humanoid:walkTo(ox, oy)
+  humanoid:queueAction{name = "use_object", object = obj}
+end
 
 return room

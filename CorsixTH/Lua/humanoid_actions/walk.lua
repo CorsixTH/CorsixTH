@@ -95,6 +95,9 @@ local function action_walk_tick(humanoid)
   if not x2 then
     -- Arrival at final tile
     humanoid:setTilePositionSpeed(x1, y1)
+    if action.on_next_tile_set then
+      action.on_next_tile_set()
+    end
     humanoid:finishAction(action)
     return
   end
@@ -105,12 +108,22 @@ local function action_walk_tick(humanoid)
   if not map:getCellFlags(x2, y2).passable then
     if map:getCellFlags(x1, y1).passable then
       humanoid:setTilePositionSpeed(x1, y1)
+      if action.on_next_tile_set then
+        action.on_next_tile_set()
+      end
       return action:on_restart(humanoid)
     end
   end
   
+  -- on_next_tile_set can be set in the call to action_walk_raw, but it is
+  -- then to be called AFTER the next raw walk or tile set, which is why we
+  -- remember the previous value and call that, rather than call the new value.
+  local on_next_tile_set = action.on_next_tile_set
   action_walk_raw(humanoid, x1, y1, x2, y2, check_doors and map, action_walk_tick)
   action.path_index = path_index + 1
+  if on_next_tile_set then
+    on_next_tile_set()
+  end
 end
 
 -- This is a slight hack, but is the easiest way to make walk functionality
@@ -206,14 +219,24 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   humanoid.last_move_direction = dir
   
-  local room = humanoid.world:getRoom(x1, y1)
-  if room then
-    room:onHumanoidLeave(humanoid)
+  -- We want to notify the rooms on either side of the door that the humanoid
+  -- has entered / left, but we want to do this AFTER the humanoid has gone
+  -- through the door (so that their tile position reflects the room which they
+  -- are now in).
+  local function on_next_tile_set()
+    if action.on_next_tile_set == on_next_tile_set then
+      action.on_next_tile_set = nil
+    end
+    local room = humanoid.world:getRoom(x1, y1)
+    if room then
+      room:onHumanoidLeave(humanoid)
+    end
+    room = humanoid.world:getRoom(to_x, to_y)
+    if room then
+      room:onHumanoidEnter(humanoid)
+    end
   end
-  room = humanoid.world:getRoom(to_x, to_y)
-  if room then
-    room:onHumanoidEnter(humanoid)
-  end
+  action.on_next_tile_set = on_next_tile_set
   
   action.path_index = action.path_index + 1
   humanoid:setTimer(duration, action_walk_tick_door)
