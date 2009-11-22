@@ -22,10 +22,20 @@ local function meander_action_start(action, humanoid)
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
     humanoid.tile_y, math.random(1, 20))
   if x == humanoid.tile_x and y == humanoid.tile_y then
-    -- Nowhere to walk to - go idle instead
-    humanoid:queueAction{name = "idle"}
+    -- Nowhere to walk to - go idle instead, or go onto the next action
+    if #humanoid.humanoid_actions == 1 then
+      humanoid:queueAction{name = "idle"}
+    end
     humanoid:finishAction()
     return
+  end
+  if action.count then
+    if action.count == 0 then
+      humanoid:finishAction()
+      return
+    else
+      action.count = action.count - 1
+    end
   end
   humanoid:queueAction({
     name = "walk",
