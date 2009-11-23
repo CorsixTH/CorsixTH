@@ -49,6 +49,7 @@ object.orientations = {
   },
   east = {
     footprint = { {0, 0}, {-1, 0, only_passable = true} },
+    early_list = true,
     use_position = "passable",
   },
   south = {
@@ -57,6 +58,7 @@ object.orientations = {
   },
   west = {
     footprint = { {0, 0}, {1, 0, only_passable = true} },
+    early_list = true,
     use_position = "passable",
     use_animate_from_use_position = true,
   },
