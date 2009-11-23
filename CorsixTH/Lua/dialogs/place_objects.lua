@@ -267,10 +267,11 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local object = self.objects[self.active_index]
   self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
-  -- Update blueprint
-  self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
     
   self:removeObject(object, dont_close_if_empty)
+
+  -- Update blueprint
+  self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
 function UIPlaceObjects:draw(canvas)
@@ -343,9 +344,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       else
         local flag = "buildable"
         local good_tile = 24 + flag_alpha75
+        local bad_tile = 67 + flag_alpha75
         if xy.only_passable then
           flag = "passable"
-          good_tile = 0
         end
         local cell_flags = map:getCellFlags(x, y, flags)[flag]
         local is_object_allowed = false
@@ -375,7 +376,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         if cell_flags and is_object_allowed then
           map:setCell(x, y, 4, good_tile)
         else
-          map:setCell(x, y, 4, 67 + flag_alpha75)
+          map:setCell(x, y, 4, bad_tile)
           allgood = false
         end
       end
