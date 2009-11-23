@@ -271,7 +271,9 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   local obj, ox, oy
   if not callback then
     -- The default callback returns the first object found, along with its
-    -- usage tile position.
+    -- usage tile position. Note that this may return an object already being
+    -- used - if you want to find an object not in use (in order to use it),
+    -- then call findFreeObjectNearToUse instead.
     callback = function(x, y, d)
       obj = self:getObject(x, y, object_type_name)
       local orientation = obj.object_type.orientations
@@ -293,6 +295,38 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   -- These return values are only relevent for the default callback - are nil
   -- for custom callbacks
   return obj, ox, oy
+end
+
+function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, which)
+  -- If which == nil or false, then the nearest object is taken.
+  -- If which == "far", then the furthest object is taken.
+  -- Other values for which may be added in the future.
+  local object, ox, oy
+  self:findObjectNear(humanoid, object_type_name, nil, function(x, y, d)
+    local obj = self:getObject(x, y, object_type_name)
+    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) then
+      return
+    end
+    local orientation = obj.object_type.orientations
+    if orientation then
+      orientation = orientation[obj.direction]
+      if not orientation.pathfind_allowed_dirs[d] then
+        return
+      end
+      x = x + orientation.use_position[1]
+      y = y + orientation.use_position[2]
+    end
+    object = obj
+    ox = x
+    oy = y
+    if which ~= "far" then
+      return true
+    end
+  end)
+  if object then
+    object.reserved_for = humanoid
+  end
+  return object, ox, oy
 end
 
 function World:newEntity(class, animation)
