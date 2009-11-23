@@ -24,6 +24,14 @@ local function action_walk_interrupt(action, humanoid)
     action.path_x[j] = nil
     action.path_y[j] = nil
   end
+  -- Unreserve any door which we had reserved
+  local door = action.reserve_on_resume
+  if door and door.reserved_for == humanoid then
+    door.reserved_for = nil
+    if door.queue:size() > 0 then
+      door.queue:pop()
+    end
+  end
 end
 
 local flag_list_bottom = 2048
@@ -269,7 +277,6 @@ local function action_walk_start(action, humanoid)
   action.must_happen = true
   if action.reserve_on_resume then
     action.reserve_on_resume.reserved_for = humanoid
-    action.reserve_on_resume = nil
   end
   
   return action_walk_tick(humanoid)

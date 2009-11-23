@@ -251,6 +251,9 @@ function Humanoid:onLeaveQueue()
         end
         i = i + 1
       else
+        if action.object and action.object.reserved_for == self then
+          action.object.reserved_for = nil
+        end
         table.remove(self.action_queue, i)
       end
     end
