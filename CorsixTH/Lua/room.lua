@@ -71,6 +71,16 @@ function Room:getPatient()
   end
 end
 
+function Room:getPatientCount()
+  local count = 0
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then
+      count = count + 1
+    end
+  end
+  return count
+end
+
 function Room:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
@@ -147,6 +157,10 @@ function Room:getMaximumStaffCritera()
   return self.room_info.maximum_staff or self.room_info.required_staff or no_staff
 end
 
+function Room:getRequiredStaffCritera()
+  return self.room_info.required_staff or no_staff
+end
+
 function Room:onHumanoidEnter(humanoid)
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
   if humanoid.humanoid_class == "Handyman" then
@@ -166,9 +180,11 @@ function Room:onHumanoidEnter(humanoid)
       self.humanoids[humanoid] = true
       self:commandEnteringStaff(humanoid)
     end
+    self:tryAdvanceQueue()
     return
   end
   self.humanoids[humanoid] = true
+  self:tryAdvanceQueue()
   if class.is(humanoid, Patient) then
     -- Patients should only be entering if they are meant to, so don't perform
     -- any checks here - just take control of them.
@@ -181,10 +197,35 @@ function Room:commandEnteringStaff(humanoid)
 end
 
 function Room:commandEnteringPatient(humanoid)
-  -- To be implemented in derived classes
+  -- To be extended in derived classes
+  self.door.queue.visitor_count = self.door.queue.visitor_count + 1
+end
+
+function Room:tryAdvanceQueue()
+  if self.door.queue:size() > 0 then
+    local front = self.door.queue:front()
+    if self.humanoids[front] or self:canHumanoidEnter(front) then
+      self.door.queue:pop()
+    end
+  end
 end
 
 function Room:onHumanoidLeave(humanoid)
   assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
   self.humanoids[humanoid] = nil
+  self:tryAdvanceQueue()
+end
+
+function Room:canHumanoidEnter(humanoid)
+  -- By default, staff can always enter
+  if class.is(humanoid, Staff) then
+    return true
+  end
+  -- By default, patients can only enter if there are sufficient staff and not
+  -- too many patients.
+  if class.is(humanoid, Patient) then
+    return self:testStaffCritera(self:getRequiredStaffCritera()) and self:getPatientCount() < self.maximum_patients
+  end
+  -- By default, other classes of humanoids cannot enter
+  return false
 end

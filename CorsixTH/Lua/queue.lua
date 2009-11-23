@@ -19,6 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 class "Queue"
+-- A queue stores a list of humanoids waiting to use an object.
+-- For a reception desk, this is as expected.
+-- For a room, the queue is for the door, not the room. Hence the queue stores
+-- the list of patients waiting to enter (the traditional queue for the room),
+-- the list of staff waiting to enter (because of the door being in use for
+-- example), the list of staff and patients waiting to leave (again due to door
+-- being in use).
 
 function Queue:Queue()
   self.expected = 0
@@ -42,8 +49,42 @@ function Queue:size()
   return #self
 end
 
+function Queue:setPriorityForSameRoom(entity)
+  self.same_room_priority = entity
+end
+
 function Queue:push(humanoid)
-  self[#self + 1] = humanoid
+  local index = #self + 1
+  if self.same_room_priority then
+    -- If humanoid in the priority room, then position them in the queue before
+    -- humanoids not in the room (because if they are in the room and in the
+    -- queue, then they are trying to leave the room).
+    local room = self.same_room_priority:getRoom()
+    if humanoid:getRoom() == room then
+      while index > 1 do
+        local before = self[index - 1]
+        if before:getRoom() == room then
+          break
+        end
+        index = index - 1
+      end
+    end
+  end
+  if class.is(humanoid, Staff) then
+    -- Give staff priority over patients
+    while index > 1 do
+      local before = self[index - 1]
+      if class.is(before, Staff) then
+        break
+      end
+      index = index - 1
+    end
+  end
+  table.insert(self, index, humanoid)
+end
+
+function Queue:front()
+  return self[1]
 end
 
 function Queue:pop()

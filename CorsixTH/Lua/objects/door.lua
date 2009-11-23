@@ -35,6 +35,11 @@ class "Door" (Object)
 function Door:Door(...)
   self:Object(...)
   self.queue = Queue()
+  -- Priority should be given to humanoids already inside the door's room, as
+  -- otherwise we could end up in a situation where a patient trying to leave
+  -- a room is in the queue behind a patient trying to enter, and the entering
+  -- one cannot enter until the leaving one has left, etc.
+  self.queue:setPriorityForSameRoom(self)
   self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end

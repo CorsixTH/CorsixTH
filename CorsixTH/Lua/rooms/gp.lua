@@ -72,6 +72,7 @@ function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
   humanoid:queueAction{name = "use_object", object = obj}
+  return Room.commandEnteringPatient(self, humanoid)
 end
 
 return room

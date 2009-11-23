@@ -143,9 +143,6 @@ local function action_walk_tick_door(humanoid)
   local door = humanoid.user_of
   door:setUser(nil)
   humanoid.user_of = nil
-  if door.queue:size() > 0 then
-    door.queue:pop()
-  end
   return action_walk_tick(humanoid)
 end
 
@@ -163,7 +160,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   
   local door = humanoid.world:getObject(dx, dy, "door")
-  if door.user or (door.reserved_for and door.reserved_for ~= humanoid) then
+  local room = door:getRoom()
+  if (door.user)
+  or (door.reserved_for and door.reserved_for ~= humanoid)
+  or (room and humanoid:getRoom() ~= room and not room:canHumanoidEnter(humanoid)) then
     -- door in use; go idle (or find a bench) and try again later
     humanoid:setTilePositionSpeed(x1, y1)
     action.must_happen = action.saved_must_happen
