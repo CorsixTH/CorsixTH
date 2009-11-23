@@ -40,11 +40,11 @@ end
 
 function StaffRoom:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
-  if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Receptionist" then
-    humanoid:setNextAction({name = "use_staffroom"})
+  if class.is(humanoid, Staff) then
+    -- Receptionists cannot enter, so we do not have to worry about them
+    humanoid:setNextAction{name = "use_staffroom"}
   else
-    -- No staff? Out with you! (receptionists not welcome either)
-    humanoid:queueAction(self:createLeaveAction(), 1)
+    -- Other humanoids shouldn't be entering, so don't worry about them
   end
 end
 

@@ -35,6 +35,9 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
     profile = profile.profile
   end
   self.profile = profile
+  -- The receptionist has no door animations, and hence would not
+  -- be able to leave a room if placed in one.
+  self.allow_in_rooms = profile.humanoid_class ~= "Receptionist"
   self.anim = TH.animation()
   self.anim:setLayer(5, profile.layer5)
   local idle_anim = Humanoid.getIdleAnimation(profile.humanoid_class)
@@ -63,7 +66,8 @@ local flag_cache = {}
 local flag_altpal = 16
 function UIPlaceStaff:draw(canvas)
   self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-  self.anim:setFlag(flag_cache.hospital and 0 or flag_altpal)
+  local valid = flag_cache.hospital and (self.allow_in_rooms or flag_cache.roomId == 0)
+  self.anim:setFlag(valid and 0 or flag_altpal)
   self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
 end
 
@@ -74,7 +78,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
   elseif button == "left" then
     self:onMouseMove(x, y)
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-    if flag_cache.hospital then
+    if flag_cache.hospital and (self.allow_in_rooms or flag_cache.roomId == 0) then
       if self.staff then
         self.staff:setTile(self.tile_x, self.tile_y)
       else
