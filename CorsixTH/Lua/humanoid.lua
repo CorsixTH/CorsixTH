@@ -24,7 +24,7 @@ local TH = require "TH"
 
 local walk_animations = {}
 local door_animations = {}
-local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE)
+local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE)
   walk_animations[name] = {
     walk_east = walkE,
     walk_north = walkN,
@@ -34,25 +34,27 @@ local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE)
   door_animations[name] = {
     entering = doorE,
     leaving = doorL,
+    knock_north = knockN,
+    knock_east = knockE,
   }
 end
 
---   |Name                       |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE| Notes
------+---------------------------+-----+-----+-----+-----+-----+-----+---------
-anims("Standard Male Patient",       16,   18,   24,   26,  182,  184) -- 0-16, ABC
-anims("Gowned Male Patient",        406,  408,  414,  416)             -- 0-10
-anims("Stripped Male Patient",      818,  820,  826,  828)             -- 0-16
-anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750) -- 0-10, ABC
-anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526) -- 0-14, ABC
-anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106) -- 0-16, ABC
-anims("Standard Female Patient",      0,    2,    8,   10,  258,  260) -- 0-16, ABC
-anims("Gowned Female Patient",     2876, 2878, 2884, 2886)             -- 0-8
-anims("Stripped Female Patient",    834,  836,  842,  844)             -- 0-16
-anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054) -- 0-8, ABC
-anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528)
-anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636)
-anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798)
-anims("Alien Patient",             3598, 3600, 3606, 3608)             -- Is it a patient?
+--   |Name                       |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE| Notes
+-----+---------------------------+-----+-----+-----+-----+-----+-----+------+------+
+anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288) -- 0-16, ABC
+anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
+anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
+anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
+anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
+anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1074) -- 0-16, ABC
+anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296) -- 0-16, ABC
+anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
+anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
+anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
+anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
+anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
+anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798,  4192,  4194)
+anims("Alien Patient",             3598, 3600, 3606, 3608) -- Is it a patient?
 anims("Doctor",                      32,   34,   40,   42,  670,  672)
 anims("Surgeon",                   2288, 2290, 2296, 2298)
 anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266)

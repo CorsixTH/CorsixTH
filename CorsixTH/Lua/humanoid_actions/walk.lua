@@ -161,9 +161,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
   
   local door = humanoid.world:getObject(dx, dy, "door")
   local room = door:getRoom()
+  local is_entering_room = room and humanoid:getRoom() ~= room
   if (door.user)
   or (door.reserved_for and door.reserved_for ~= humanoid)
-  or (room and humanoid:getRoom() ~= room and not room:canHumanoidEnter(humanoid)) then
+  or (is_entering_room and not room:canHumanoidEnter(humanoid)) then
     -- door in use; go idle (or find a bench) and try again later
     humanoid:setTilePositionSpeed(x1, y1)
     action.must_happen = action.saved_must_happen
@@ -176,6 +177,16 @@ navigateDoor = function(humanoid, x1, y1, dir)
         ix, iy = humanoid.world:getIdleTile(x1, y1)
       end
     end
+    local action_index = 0
+    if is_entering_room and queue:size() == 0 and not room:getPatient()
+    and not door.user and not door.reserved_for then
+      humanoid:queueAction({
+        name = "knock_door",
+        door = door,
+        direction = dir,
+      }, action_index)
+      action_index = action_index + 1
+    end
     if ix then
       humanoid:queueAction({
         name = "walk",
@@ -184,7 +195,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
         destination_unimportant = not bench,
         x = ix,
         y = iy,
-      }, 0)
+      }, action_index)
+      action_index = action_index + 1
     end
     if bench then
       humanoid:queueAction({
@@ -192,7 +204,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
         until_leave_queue = queue,
         must_happen = action.saved_must_happen,
         object = bench
-      }, 1)
+      }, action_index)
       bench.reserved_for = humanoid
     else
       humanoid:queueAction({
@@ -201,9 +213,23 @@ navigateDoor = function(humanoid, x1, y1, dir)
         must_happen = action.saved_must_happen,
         x1 = x1,
         y1 = y1,
-      }, ix and 1 or 0)
+      }, action_index)
     end
     door.queue:push(humanoid)
+    return
+  end
+  if action.reserve_on_resume then
+    assert(action.reserve_on_resume == door)
+    action.reserve_on_resume = nil
+  elseif is_entering_room and not action.done_knock then
+    humanoid:setTilePositionSpeed(x1, y1)
+    humanoid:queueAction({
+      name = "knock_door",
+      door = door,
+      direction = dir,
+    }, 0)
+    action.reserve_on_resume = door
+    action.done_knock = true
     return
   end
   
