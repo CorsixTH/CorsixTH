@@ -163,7 +163,9 @@ local function action_use_object_start(action, humanoid)
     orient = orient_mirror[orient]
     flags = flags + 1
   end
-  if object.object_type.orientations[object.direction].early_list then
+  local spec = object.object_type.orientations[object.direction]
+  -- early_list_while_in_use (if defined) will take precedence over early_list
+  if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
     flags = flags + 1024
   end
   local anims = object.object_type.usage_animations[orient]
