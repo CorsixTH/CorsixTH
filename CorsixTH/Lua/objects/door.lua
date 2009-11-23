@@ -43,6 +43,11 @@ function Door:getRoom()
   return self.room
 end
 
+function Door:onClick()
+  local queue_window = UIQueue(TheApp.ui, self.queue)
+  TheApp.ui:addWindow(queue_window)
+end
+
 local door_flag_name = {
   north = {"doorNorth", "tallNorth"},
   west = {"doorWest", "tallWest"},

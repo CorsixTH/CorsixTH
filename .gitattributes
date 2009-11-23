@@ -39,6 +39,7 @@ CorsixTH/Lua/dialogs/message.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/dialogs/place_objects.lua -text
 CorsixTH/Lua/dialogs/place_staff.lua -text
+CorsixTH/Lua/dialogs/queue_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/dialogs/watch.lua -text
 CorsixTH/Lua/entity.lua -text

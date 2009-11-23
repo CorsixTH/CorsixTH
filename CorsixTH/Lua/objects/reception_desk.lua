@@ -56,4 +56,9 @@ function ReceptionDesk:ReceptionDesk(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
 end
 
+function ReceptionDesk:onClick()
+  local queue_window = UIQueue(TheApp.ui, self.queue)
+  TheApp.ui:addWindow(queue_window)
+end
+
 return object

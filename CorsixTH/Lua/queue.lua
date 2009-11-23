@@ -21,6 +21,21 @@ SOFTWARE. --]]
 class "Queue"
 
 function Queue:Queue()
+  self.expected = 0
+  self.visitor_count = 0
+  self.max_size = 20
+end
+
+function Queue:decrease_max_size()
+  if self.max_size > 0 then
+    self.max_size = self.max_size - 1
+  end
+end
+
+function Queue:increase_max_size()
+  if self.max_size < 30 then
+    self.max_size = self.max_size + 1
+  end
 end
 
 function Queue:size()
