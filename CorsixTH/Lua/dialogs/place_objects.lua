@@ -134,6 +134,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty)
   object.qty = object.qty - 1
   if object.qty == 0 then
     if #self.objects == 1 then
+      self:clearBlueprint()
       if dont_close_if_empty then
         self.list_header.visible = false
         self.place_objects = false -- No object to place
@@ -158,6 +159,8 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty)
       last_panel.sprite_index = spr_idx
     end
   end
+  -- Update blueprint
+  self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
 function UIPlaceObjects:removeAllObjects()
@@ -267,11 +270,8 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local object = self.objects[self.active_index]
   self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
-    
-  self:removeObject(object, dont_close_if_empty)
 
-  -- Update blueprint
-  self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
+  self:removeObject(object, dont_close_if_empty)
 end
 
 function UIPlaceObjects:draw(canvas)
