@@ -87,9 +87,7 @@ object.orientations = {
   },
   south = {
     footprint = { {-1, 0}, {0, 0}, {-1, 1, only_passable = true} },
-    -- KNOWN BUG: glitch when a humanoid goes from {-2, 1} to {-1, 1}
-    -- Using render_attach_position = {-1, 0} would fix this, but cause
-    -- even bigger glitches with north walls
+    early_list = true,
     use_position = "passable",
   },
   west = {
