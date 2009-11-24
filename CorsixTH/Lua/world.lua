@@ -334,9 +334,6 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, whi
       return true
     end
   end)
-  if object then
-    object.reserved_for = humanoid
-  end
   return object, ox, oy
 end
 

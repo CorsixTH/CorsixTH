@@ -41,8 +41,7 @@ local function decide_next_target(action, humanoid)
   end
   
   -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
-  -- Also avoid re-using the previous object.
-  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near", action.target_obj)
+  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near")
   if not obj then
     return
   end
@@ -65,9 +64,17 @@ local function use_staffroom_action_start(action, humanoid)
   assert(class.is(humanoid, Staff), "use_staffroom action called for non-staff humanoid")
   assert(humanoid.humanoid_class ~= "Receptionist", "use_staffroom action called for receptionist")
 
-  -- For initial call of this function or (TODO) when the target object
-  -- happens to be in use on arrival, we have to decide a new target now
-  action.target_obj, action.ox, action.oy, action.target_type = decide_next_target(action, humanoid)
+  -- For initial call of this function we have to decide a new target now
+  -- Else, there should be already a new target defined
+  if not (action.next_target_obj and action.next_ox and action.next_oy and action.next_target_type) then
+    action.target_obj, action.ox, action.oy, action.target_type = decide_next_target(action, humanoid)
+    if action.target_obj then
+      action.target_obj.reserved_for = humanoid
+    end
+  else
+    action.target_obj, action.ox, action.oy, action.target_type = action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type
+    action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = nil
+  end
   
   -- If no target was found, then walk around for a bit and try again later
   if not action.target_obj then
@@ -77,7 +84,8 @@ local function use_staffroom_action_start(action, humanoid)
   
   -- Otherwise, walk to and use the object:
   -- Note: force prolonged_usage, because video_game wouldn't get it by default (because it has no begin and end animation)
-  -- Then unset prolonged_usage after a certain amount of time has elapsed.
+  -- After a certain amount of time has elapsed, decide on the next target. If it happens to be of the same type as the current,
+  -- extend the object use time, else unset prolonged_usage.
   local object_action
   local obj_use_time = generate_use_time(action.target_type)
   object_action = {
@@ -86,7 +94,15 @@ local function use_staffroom_action_start(action, humanoid)
     object = action.target_obj,
     loop_callback = function()
       obj_use_time = obj_use_time - 1
-      object_action.prolonged_usage = obj_use_time > 0
+      if obj_use_time == 0 then
+        action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
+        if not action.next_target_type or action.next_target_type == action.target_type then
+          obj_use_time = generate_use_time(action.target_type)
+        else
+          action.next_target_obj.reserved_for = humanoid
+          object_action.prolonged_usage = false
+        end
+      end
     end
   }
   humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
