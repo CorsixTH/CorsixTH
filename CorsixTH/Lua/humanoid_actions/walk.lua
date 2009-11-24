@@ -89,6 +89,13 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
     end
   end
   humanoid:setTimer(8, timer_fn)
+  -- temporary, later it should be much much lower, or no fatigue at all just for walking around
+  if humanoid.fatigue then
+    humanoid.fatigue = humanoid.fatigue + 0.005
+    if humanoid.fatigue > 1 then
+      humanoid.fatigue = 1
+    end
+  end
 end
 
 local function action_walk_tick(humanoid)

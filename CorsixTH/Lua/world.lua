@@ -337,6 +337,24 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, whi
   return object, ox, oy
 end
 
+function World:findRoomNear(humanoid, roomclass, distance)
+  local room
+  if not distance then
+    distance = 2^30
+  end
+  for _, r in ipairs(self.rooms) do
+    if not roomclass or class.is(r, roomclass) then
+      local x, y = r:getEntranceXY(false)
+      local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+      if d and d < distance then
+        distance = d
+        room = r
+      end
+    end
+  end
+  return room
+end
+
 function World:newEntity(class, animation)
   local th = TH.animation()
   th:setAnimation(self.anims, animation)

@@ -106,6 +106,15 @@ function UIStaff:draw(canvas)
       font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
   
+  if self.staff.fatigue then
+    local fatigue_bar_width = math_floor(self.staff.fatigue * 40 + 0.5)
+    if fatigue_bar_width ~= 0 then
+      for dx = 0, fatigue_bar_width - 1 do
+        self.panel_sprites:draw(canvas, 349, x + 139 + dx, y + 89)
+      end
+    end
+  end
+  
   local skill_bar_width = math_floor(profile.skill * 40 + 0.5)
   if skill_bar_width ~= 0 then
     for dx = 0, skill_bar_width - 1 do

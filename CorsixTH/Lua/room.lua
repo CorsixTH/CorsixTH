@@ -50,16 +50,26 @@ function Room:Room(x, y, w, h, id, room_info, world)
   -- TODO
 end
 
-function Room:createLeaveAction()
+function Room:getEntranceXY(inside)
   local door = self.door
   local x, y = door.tile_x, door.tile_y
-  if self.world:getRoom(x, y) == self then
+  if (inside and self.world:getRoom(x, y) ~= self) or (not inside and self.world:getRoom(x, y) == self) then
     if door.direction == "north" then
       y = y - 1
     elseif door.direction == "west" then
       x = x - 1
     end
   end
+  return x, y
+end
+
+function Room:createLeaveAction()
+  local x, y = self:getEntranceXY(false)
+  return {name = "walk", x = x, y = y}
+end
+
+function Room:createEnterAction()
+  local x, y = self:getEntranceXY(true)
   return {name = "walk", x = x, y = y}
 end
 

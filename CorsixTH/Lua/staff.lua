@@ -25,6 +25,23 @@ function Staff:Staff(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
 end
 
+function Staff:tick()
+  Entity.tick(self)
+
+  if self.fatigue and self.fatigue >= 0.8 and not self.going_to_staffroom and not class.is(self:getRoom(), StaffRoom) then
+    local room = self.world:findRoomNear(self, StaffRoom)
+    if room then
+      self.going_to_staffroom = true
+
+      local action = room:createEnterAction()
+      action.on_interrupt = function()
+        self.going_to_staffroom = false
+      end
+      self:setNextAction(action)
+    end
+  end
+end
+
 function Staff:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
@@ -36,5 +53,9 @@ end
 function Staff:setProfile(profile)
   self.profile = profile
   self:setType(profile.humanoid_class)
+  if (self.humanoid_class ~= "Receptionist") then
+    self.fatigue = 0
+    self.going_to_staffroom = false
+  end
   self:setLayer(5, profile.layer5)
 end

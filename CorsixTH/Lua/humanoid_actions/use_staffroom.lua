@@ -61,6 +61,13 @@ local function generate_use_time(type)
   end
 end
 
+-- table of how much relaxation an object gives per tick
+local relaxation = {
+  sofa = 0.001,
+  pool_table = 0.05,
+  video_game = 0.025,
+}
+
 -- main function of the staffroom action
 local function use_staffroom_action_start(action, humanoid)
   assert(class.is(humanoid, Staff), "use_staffroom action called for non-staff humanoid")
@@ -93,18 +100,26 @@ local function use_staffroom_action_start(action, humanoid)
     prolonged_usage = true,
     object = action.target_obj,
     loop_callback = function()
+      humanoid.fatigue = humanoid.fatigue - relaxation[action.target_type]
+      if humanoid.fatigue < 0 then
+        humanoid.fatigue = 0
+      end
       obj_use_time = obj_use_time - 1
-      -- After a certain amount of time has elapsed, decide on the next target.
       if obj_use_time == 0 then
-        action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-        -- If it happens to be of the same type as the current, just continue using the current.
-        if action.next_target_type == action.target_type then
-          obj_use_time = generate_use_time(action.target_type)
+        if humanoid.fatigue == 0 then
+          humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
+          humanoid:queueAction({name = "meander"})
         else
-          if action.next_target_obj then
-            action.next_target_obj.reserved_for = humanoid
+          -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
+          action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
+          if action.next_target_type == action.target_type then
+            obj_use_time = generate_use_time(action.target_type)
+          else
+            if action.next_target_obj then
+              action.next_target_obj.reserved_for = humanoid
+            end
+            object_action.prolonged_usage = false
           end
-          object_action.prolonged_usage = false
         end
       end
     end
