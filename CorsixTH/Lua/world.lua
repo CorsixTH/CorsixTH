@@ -297,14 +297,16 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   return obj, ox, oy
 end
 
-function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, which)
+function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, which, current_object)
   -- If which == nil or false, then the nearest object is taken.
   -- If which == "far", then the furthest object is taken.
+  -- If which == "near", then the nearest object is taken with 50% probabilty, the second nearest with 25%, and so on
   -- Other values for which may be added in the future.
+  -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
   self:findObjectNear(humanoid, object_type_name, nil, function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
-    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) then
+    if obj.user or (obj.reserved_for and obj.reserved_for ~= humanoid) or (current_object and obj == current_object) then
       return
     end
     local orientation = obj.object_type.orientations
@@ -319,7 +321,16 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, whi
     object = obj
     ox = x
     oy = y
-    if which ~= "far" then
+    if which == "far" then
+      -- just take the last found object, so don't ever abort
+    elseif which == "near" then
+      -- abort at each item with 50% probability
+      local chance = math.random(1, 2)
+      if chance == 1 then
+        return true
+      end
+    else
+      -- default: return at the first found item
       return true
     end
   end)

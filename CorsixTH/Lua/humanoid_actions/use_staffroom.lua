@@ -40,13 +40,10 @@ local function decide_next_target(action, humanoid)
     new_type = "video_game"
   end
   
-  -- Take the furthest free object, as this keeps staff moving around the room
-  -- rather than staying in one area. Also avoid re-using the previous object.
-  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "far")
+  -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
+  -- Also avoid re-using the previous object.
+  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near", action.target_obj)
   if not obj then
-    return
-  elseif obj == action.target_obj then
-    obj.reserved_for = nil
     return
   end
   return obj, ox, oy, new_type
