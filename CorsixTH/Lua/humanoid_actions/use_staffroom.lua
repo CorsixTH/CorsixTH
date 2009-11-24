@@ -20,31 +20,33 @@ SOFTWARE. --]]
 
 -- decide on the next source of relaxation the humanoid will go to
 -- returns target_obj, ox, oy, new_type
--- OR returns nil to indicate that there are no suitable relaxation objects
+-- the function will always return a value for new_type, depending on what type was chosen,
+-- but target_obj, ox and oy will be nil, if no object of the chosen target was found
 local function decide_next_target(action, humanoid)
   assert(action.name == "use_staffroom", "decide_next_target only works with the use_staffroom action")
   local cur_type = action.target_type
   assert(class.is(humanoid, Staff), "decide_next_target called for non-staff humanoid")
   local h_class = humanoid.humanoid_class
   
+  local chance = math.random(1, 10)
+  
   -- take sofa as default
   local new_type = "sofa"
-  
-  -- With a chance of 1 in 5, look for a pool table (Doctor and Handyman only)
-  if (h_class == "Doctor" or h_class == "Handyman") and math.random(1, 5) == 1 then
+
+  -- With a chance of 20%, look for a pool table (Doctor and Handyman only)
+  -- Don't choose pool table two times in a row though
+  if (h_class == "Doctor" or h_class == "Handyman") and cur_type ~= "pool_table" and chance <= 2 then
     new_type = "pool_table"
   end
 
-  -- With a chance of 1 in 5, look for a video game (Doctor and Nurse only)
-  if (h_class == "Doctor" or h_class == "Nurse") and math.random(1, 5) == 1 then
+  -- With a chance of 20%, look for a video game (Doctor and Nurse only)
+  -- Don't choose video game two times in a row though
+  if (h_class == "Doctor" or h_class == "Nurse") and cur_type ~= "video_game" and 2 < chance and chance <= 4 then
     new_type = "video_game"
   end
   
   -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
   local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near")
-  if not obj then
-    return
-  end
   return obj, ox, oy, new_type
 end
 
@@ -66,7 +68,7 @@ local function use_staffroom_action_start(action, humanoid)
 
   -- For initial call of this function we have to decide a new target now
   -- Else, there should be already a new target defined
-  if not (action.next_target_obj and action.next_ox and action.next_oy and action.next_target_type) then
+  if not action.next_target_type then
     action.target_obj, action.ox, action.oy, action.target_type = decide_next_target(action, humanoid)
     if action.target_obj then
       action.target_obj.reserved_for = humanoid
@@ -84,8 +86,6 @@ local function use_staffroom_action_start(action, humanoid)
   
   -- Otherwise, walk to and use the object:
   -- Note: force prolonged_usage, because video_game wouldn't get it by default (because it has no begin and end animation)
-  -- After a certain amount of time has elapsed, decide on the next target. If it happens to be of the same type as the current,
-  -- extend the object use time, else unset prolonged_usage.
   local object_action
   local obj_use_time = generate_use_time(action.target_type)
   object_action = {
@@ -94,12 +94,16 @@ local function use_staffroom_action_start(action, humanoid)
     object = action.target_obj,
     loop_callback = function()
       obj_use_time = obj_use_time - 1
+      -- After a certain amount of time has elapsed, decide on the next target.
       if obj_use_time == 0 then
         action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-        if not action.next_target_type or action.next_target_type == action.target_type then
+        -- If it happens to be of the same type as the current, just continue using the current.
+        if action.next_target_type == action.target_type then
           obj_use_time = generate_use_time(action.target_type)
         else
-          action.next_target_obj.reserved_for = humanoid
+          if action.next_target_obj then
+            action.next_target_obj.reserved_for = humanoid
+          end
           object_action.prolonged_usage = false
         end
       end
