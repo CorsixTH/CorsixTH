@@ -24,6 +24,10 @@ local math_floor
 
 class "UIQueue" (Window)
 
+--TODO: interact with patients in the queue
+--TODO: max_size doesn't do anything
+--TODO: implement "expected" patients
+
 function UIQueue:UIQueue(ui, queue)
   self:Window()
   
@@ -62,7 +66,7 @@ function UIQueue:increase_max_size()
   self.queue:increase_max_size()
 end
 
-function UIQueue:draw(canvas) --TODO: draw patients in the queue
+function UIQueue:draw(canvas)
   local x, y = self.x, self.y
   local font = self.white_font
   local queue = self.queue  
@@ -80,4 +84,18 @@ function UIQueue:draw(canvas) --TODO: draw patients in the queue
   
   font:draw(canvas, _S(49, 4), x + 22, y + 93) -- Max Size
   font:draw(canvas, queue.max_size, x + 119, y + 93)
+  
+  local dx = 0
+  if #self.queue ~= 1 then
+    dx = 276 / (#self.queue - 1)
+  end
+  for index, patient in ipairs(self.queue) do
+    local anim = TH.animation()
+    local idle_anim = patient.getIdleAnimation(patient.humanoid_class)
+    anim:setAnimation(self.ui.app.world.anims, idle_anim, 1) --flag 1 is for having patients in west position (looking the door in the dialog)
+    for layer, id in pairs(patient.layers) do
+      anim:setLayer(layer, id)
+    end
+    anim:draw(canvas, x + 239 + dx * (index - 1), y + 72)
+  end
 end

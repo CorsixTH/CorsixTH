@@ -22,6 +22,7 @@ class "Entity"
 
 function Entity:Entity(animation)
   self.th = animation
+  self.layers = {}
   animation:setHitTestResult(self)
   self.ticks = true
 end
@@ -99,6 +100,7 @@ end
 
 function Entity:setLayer(layer, id)
   self.th:setLayer(layer, id)
+  self.layers[layer] = id
   return self
 end
 
