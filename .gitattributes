@@ -75,7 +75,6 @@ CorsixTH/Lua/objects/inflator.lua -text
 CorsixTH/Lua/objects/loo.lua -text
 CorsixTH/Lua/objects/pharmacy_cabinet.lua -text
 CorsixTH/Lua/objects/plant.lua -text
-CorsixTH/Lua/objects/pool_table.lua -text
 CorsixTH/Lua/objects/radiator.lua -text
 CorsixTH/Lua/objects/reception_desk.lua -text
 CorsixTH/Lua/objects/screen.lua -text
