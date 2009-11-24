@@ -26,8 +26,11 @@ class "Queue"
 -- the list of staff waiting to enter (because of the door being in use for
 -- example), the list of staff and patients waiting to leave (again due to door
 -- being in use).
+-- Queues are currently implemented as normal Lua arrays, but you should access
+-- a queue via its methods rather than directly.
 
 function Queue:Queue()
+  self.reported_size = 0
   self.expected = 0
   self.visitor_count = 0
   self.max_size = 20
@@ -46,7 +49,20 @@ function Queue:increase_max_size()
 end
 
 function Queue:size()
+  -- Rememeber, the size includes people waiting to leave and staff waiting to enter
+  -- For just the patients waiting to enter, use Queue:reportedSize()
+  -- Most of the time, size() == reportedSize(), so it won't be immediately obvious
+  -- if you're using the wrong method, but from time to time, staff or exiting
+  -- patients will be in the queue, at which point the sizes will differ.
   return #self
+end
+
+function Queue:reportedSize()
+  return self.reported_size
+end
+
+function Queue:reportedHumanoid(index)
+  return self[#self - self.reported_size + index]
 end
 
 function Queue:setPriorityForSameRoom(entity)
@@ -55,6 +71,7 @@ end
 
 function Queue:push(humanoid)
   local index = #self + 1
+  local increment_reported_size = true
   if self.same_room_priority then
     -- If humanoid in the priority room, then position them in the queue before
     -- humanoids not in the room (because if they are in the room and in the
@@ -68,6 +85,7 @@ function Queue:push(humanoid)
         end
         index = index - 1
       end
+      increment_reported_size = false
     end
   end
   if class.is(humanoid, Staff) then
@@ -79,6 +97,10 @@ function Queue:push(humanoid)
       end
       index = index - 1
     end
+    increment_reported_size = false
+  end
+  if increment_reported_size then
+    self.reported_size = self.reported_size + 1
   end
   table.insert(self, index, humanoid)
 end
@@ -95,6 +117,9 @@ function Queue:pop()
     end
   end
   
+  if self.reported_size == #self then
+    self.reported_size = self.reported_size - 1
+  end
   local oldfront = self[1]
   table.remove(self, 1)
   if oldfront.onLeaveQueue then

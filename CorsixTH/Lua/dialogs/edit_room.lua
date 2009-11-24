@@ -453,13 +453,15 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   local flags
   if wall == "west" then
     flags = 1
-    if map:getCell(x, y, 3) ~= 0 then
+    -- Check for a wall to the west, and prevent placing a door on top of an
+    -- existing wall.
+    if map:getCell(x, y, 3) % 0x100 ~= 0 then
       flags = flags + 16
       self.blueprint_door.valid = false
     end
   else--if wall == "north" then
     flags = 0
-    if map:getCell(x, y, 2) ~= 0 then
+    if map:getCell(x, y, 2) % 0x100 ~= 0 then
       flags = flags + 16
       self.blueprint_door.valid = false
     end

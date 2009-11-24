@@ -73,8 +73,9 @@ function UIQueue:draw(canvas)
     
   Window.draw(self, canvas)
 
+  local num_patients = queue:reportedSize()
   font:draw(canvas, _S(49, 1), x + 22, y + 22) -- Queue Size
-  font:draw(canvas, queue:size(), x + 140, y + 22)
+  font:draw(canvas, num_patients, x + 140, y + 22)
     
   font:draw(canvas, _S(49, 2), x + 22, y + 45) -- Expected
   font:draw(canvas, queue.expected, x + 140, y + 45)
@@ -86,10 +87,16 @@ function UIQueue:draw(canvas)
   font:draw(canvas, queue.max_size, x + 119, y + 93)
   
   local dx = 0
-  if #self.queue ~= 1 then
-    dx = 276 / (#self.queue - 1)
+  if num_patients ~= 1 then
+    local width_to_use = 276
+    if num_patients < 8 then
+      dx = width_to_use / num_patients
+    else
+      dx = width_to_use / (num_patients - 1)
+    end
   end
-  for index, patient in ipairs(self.queue) do
+  for index = 1, num_patients do
+    local patient = queue:reportedHumanoid(index)
     local anim = TH.animation()
     local idle_anim = patient.getIdleAnimation(patient.humanoid_class)
     anim:setAnimation(self.ui.app.world.anims, idle_anim, 1) --flag 1 is for having patients in west position (looking the door in the dialog)

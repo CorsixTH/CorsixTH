@@ -652,7 +652,7 @@ void THMap::updatePathfinding()
                 pNode->iFlags &= ~THMN_CanTravelN;
             else if(iY == 127)
                 pNode->iFlags &= ~THMN_CanTravelS;
-            if(pNode->iBlock[1])
+            if(pNode->iBlock[1] & 0xFF)
             {
                 pNode->iFlags &= ~THMN_CanTravelN;
                 if(iY != 0)
@@ -660,7 +660,7 @@ void THMap::updatePathfinding()
                     pNode[-128].iFlags &= ~THMN_CanTravelS;
                 }
             }
-            if(pNode->iBlock[2])
+            if(pNode->iBlock[2] & 0xFF)
             {
                 pNode->iFlags &= ~THMN_CanTravelW;
                 if(iX != 0)
@@ -679,7 +679,7 @@ void THMap::updateShadows()
     // range of wall-like blocks.
 #define IsWall(node, block, door) \
     (((node)->iFlags & (door)) != 0 || \
-    (82 <= ((node)->iBlock[(block)]) && ((node)->iBlock[(block)]) <= 164))
+    (82 <= ((node)->iBlock[(block)] & 0xFF) && ((node)->iBlock[(block)] & 0xFF) <= 164))
     THMapNode *pNode = m_pCells;
     for(int iY = 0; iY < 128; ++iY)
     {
