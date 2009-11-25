@@ -36,13 +36,13 @@ function Queue:Queue()
   self.max_size = 20
 end
 
-function Queue:decrease_max_size()
+function Queue:decreaseMaxSize()
   if self.max_size > 0 then
     self.max_size = self.max_size - 1
   end
 end
 
-function Queue:increase_max_size()
+function Queue:increaseMaxSize()
   if self.max_size < 30 then
     self.max_size = self.max_size + 1
   end
@@ -139,7 +139,7 @@ function Queue:remove(index)
       humanoid:onAdvanceQueue(self, i - 1)
     end
   end
-  if self.reported_size == #self then
+  if index > #self - self.reported_size then
     self.reported_size = self.reported_size - 1
   end
   table.remove(self, index)

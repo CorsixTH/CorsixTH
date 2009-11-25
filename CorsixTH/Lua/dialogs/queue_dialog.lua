@@ -53,17 +53,17 @@ function UIQueue:UIQueue(ui, queue)
     self:addPanel(367, x, 0)
   end
   self:addPanel(368, 529, 0)  -- Left extremity of the panel
-  self:addPanel(369, 97,  self.height - 33):makeButton(0, 0, 17, 17, 370, self.decrease_max_size)
-  self:addPanel(371, 144, self.height - 33):makeButton(0, 0, 17, 17, 372, self.increase_max_size)
+  self:addPanel(369, 97,  self.height - 33):makeButton(0, 0, 17, 17, 370, self.decreaseMaxSize)
+  self:addPanel(371, 144, self.height - 33):makeButton(0, 0, 17, 17, 372, self.increaseMaxSize)
   self:addPanel(373, self.width - 42, 17):makeButton(0, 0, 24, 24, 374, self.close) 
 end
 
-function UIQueue:decrease_max_size()
-  self.queue:decrease_max_size()
+function UIQueue:decreaseMaxSize()
+  self.queue:decreaseMaxSize()
 end
 
-function UIQueue:increase_max_size()
-  self.queue:increase_max_size()
+function UIQueue:increaseMaxSize()
+  self.queue:increaseMaxSize()
 end
 
 function UIQueue:draw(canvas)
