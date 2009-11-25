@@ -65,7 +65,7 @@ end
 local relaxation = {
   sofa = 0.001,
   pool_table = 0.05,
-  video_game = 0.025,
+  video_game = 0.04,
 }
 
 -- main function of the staffroom action
