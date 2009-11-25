@@ -116,7 +116,7 @@ function Queue:pop()
       humanoid:onAdvanceQueue(self, i - 1)
     end
   end
-  
+
   if self.reported_size == #self then
     self.reported_size = self.reported_size - 1
   end
@@ -138,6 +138,9 @@ function Queue:remove(index)
     if humanoid.onAdvanceQueue then
       humanoid:onAdvanceQueue(self, i - 1)
     end
+  end
+  if self.reported_size == #self then
+    self.reported_size = self.reported_size - 1
   end
   table.remove(self, index)
   return value
