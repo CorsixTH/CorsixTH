@@ -69,6 +69,9 @@ local button_codes = invert {
 local patients
 local function get_patient()
   local n = patients.n
+  if not n then
+    return
+  end
   if n == #patients then
     patients.n = 1
   else
@@ -145,9 +148,6 @@ function UI:UI(app)
   
   -- Temporary code
   patients = {}
-  if not _MAP_EDITOR then
-    self:debugMakePatients()
-  end
 end
 
 function UI:debugMakePatients()
@@ -399,8 +399,10 @@ function UI:onMouseUp(code, x, y)
   
   if button == "right" and not _MAP_EDITOR and highlight_x then
     local patient = get_patient()
-    patient:walkTo(highlight_x, highlight_y)
-    patient:queueAction{name = "idle"}
+    if patient then
+      patient:walkTo(highlight_x, highlight_y)
+      patient:queueAction{name = "idle"}
+    end
   end
   
   return repaint
