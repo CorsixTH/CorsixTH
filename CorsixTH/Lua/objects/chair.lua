@@ -42,10 +42,11 @@ local function make_list(not_talking, nodding, talking)
   return list
 end
 object.usage_animations = {
-  -- NB: "Slack Male Patient" has east animations, but no north animations!!
+  -- NB: "Slack Male Patient" has no dedicated north animations, use standard patient instead. It works, since his mouth is not visible.
   north = {
     begin_use = {
       ["Standard Male Patient"     ] =  678,
+      ["Slack Male Patient"        ] =  678,
       ["Elvis Patient"             ] = 1054,
       ["Standard Female Patient"   ] = 2824,
       ["Chewbacca Patient"         ] = 3792,
@@ -58,6 +59,7 @@ object.usage_animations = {
       -- Note that patient mouth not visible in this orientation, so we only
       -- need one animation, and not the collection of animations.
       ["Standard Male Patient"     ] =  702,
+      ["Slack Male Patient"        ] =  702,
       ["Elvis Patient"             ] = 1038,
       ["Standard Female Patient"   ] = 2814,
       ["Chewbacca Patient"         ] = 3784,
@@ -68,6 +70,7 @@ object.usage_animations = {
     },
     finish_use = {
       ["Standard Male Patient"     ] =  694,
+      ["Slack Male Patient"        ] =  694,
       ["Standard Female Patient"   ] = 2832,
       ["Chewbacca Patient"         ] = 3776,
       ["Elvis Patient"             ] = 4070,
