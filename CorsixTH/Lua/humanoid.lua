@@ -112,16 +112,17 @@ local function Humanoid_startAction(self)
   TheApp.humanoid_actions[action.name](action, self)
   
   if action.todo_interrupt then
+    local high_priority = action.todo_interrupt == "high"
     action.todo_interrupt = nil
     local on_interrupt = action.on_interrupt
     if on_interrupt then
       action.on_interrupt = nil
-      on_interrupt(action, self)
+      on_interrupt(action, self, high_priority)
     end
   end
 end
 
-function Humanoid:setNextAction(action)
+function Humanoid:setNextAction(action, high_priority)
   -- Aim: Cleanly finish the current action (along with any subsequent actions
   -- which must happen), then replace all the remaining actions with the given
   -- one.
@@ -157,12 +158,12 @@ function Humanoid:setNextAction(action)
   if interrupted then
     interrupted = queue[1]
     for j = 2, i - 1 do
-      queue[j].todo_interrupt = true
+      queue[j].todo_interrupt = high_priority and "high" or true
     end
     local on_interrupt = interrupted.on_interrupt
     if on_interrupt then
       interrupted.on_interrupt = nil
-      on_interrupt(interrupted, self)
+      on_interrupt(interrupted, self, high_priority or false)
     end
   else
     -- Start the action if it has become the current action

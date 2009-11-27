@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_walk_interrupt(action, humanoid)
+local function action_walk_interrupt(action, humanoid, high_priority)
   -- Truncate the remainder of the path
   for j = #action.path_x, action.path_index + 1, -1 do
     action.path_x[j] = nil
@@ -31,6 +31,12 @@ local function action_walk_interrupt(action, humanoid)
     if door.queue:size() > 0 then
       door.queue:pop()
     end
+  end
+  -- Terminate immediately if high-priority
+  if high_priority then
+    local timer_function = humanoid.timer_function
+    humanoid:setTimer(nil)
+    timer_function(humanoid)
   end
 end
 

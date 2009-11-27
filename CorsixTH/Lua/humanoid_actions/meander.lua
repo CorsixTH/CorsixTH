@@ -29,6 +29,10 @@ local function meander_action_start(action, humanoid)
     humanoid:finishAction()
     return
   end
+  if action.todo_interrupt then
+    humanoid:finishAction()
+    return
+  end
   if action.count then
     if action.count == 0 then
       humanoid:finishAction()
@@ -41,6 +45,7 @@ local function meander_action_start(action, humanoid)
     name = "walk",
     x = x,
     y = y,
+    must_happen = action.must_happen,
   }, 0)
 end
 

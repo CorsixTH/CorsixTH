@@ -18,15 +18,26 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- Go to the nearest staff room, if any is found. Else, walk around for a bit.
-
 local function seek_staffroom_action_start(action, humanoid)
-  local room = humanoid.world:findRoomNear(humanoid, StaffRoom)
-  if room then
-    humanoid:queueAction(room:createEnterAction(), 0)
-  else
-    humanoid:queueAction({name = "meander", count = 1}, 0)
+  -- Mechanism for clearing the going_to_staffroom flag when this action is
+  -- interrupted (due to entering the staff room, being picked up, etc.)
+  if action.todo_interrupt then
+    humanoid.going_to_staffroom = nil
+    humanoid:finishAction()
+    return
   end
+  action.must_happen = true
+  
+  -- Go to the nearest staff room, if any is found. Else, walk around for a bit.
+  local room = humanoid.world:findRoomNear(humanoid, StaffRoom)
+  local task
+  if room then
+    task = room:createEnterAction()
+  else
+    task = {name = "meander", count = 1}
+  end
+  task.must_happen = true
+  humanoid:queueAction(task, 0)
 end
 
 return seek_staffroom_action_start

@@ -145,8 +145,19 @@ action_use_object_tick = function(humanoid)
   end
 end
 
-local function action_use_object_interrupt(action, humanoid)
-  if not humanoid.timer_function then
+local function action_use_object_interrupt(action, humanoid, high_priority)
+  if high_priority then
+    local object = action.object
+    if humanoid.user_of then
+      object:setUser(nil)
+      humanoid.user_of = nil
+    elseif object.reserved_for == humanoid then
+      object.reserved_for = nil
+    end
+    humanoid:setTimer(nil)
+    humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
+    humanoid:finishAction()
+  elseif not humanoid.timer_function then
     humanoid:setTimer(1, action_use_object_tick)
   end
 end

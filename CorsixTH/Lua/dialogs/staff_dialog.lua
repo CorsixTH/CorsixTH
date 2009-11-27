@@ -160,8 +160,7 @@ function UIStaff:onMouseUp(button, x, y)
   -- Test for hit within the view circle
   if button == "left" and (x - 55)^2 + (y - circle_center_y)^2 < 38^2 then
     local ui = self.ui
-    local staff = self.staff
-    ui:scrollMapTo(ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y))
+    ui:scrollMapTo(self:getStaffPosition())
     repaint = true
   elseif button == "right" then
     --TODO: Right clicking on staff view should go to the next staff
@@ -170,7 +169,12 @@ function UIStaff:onMouseUp(button, x, y)
 end
 
 function UIStaff:placeStaff()
-  self.staff:setNextAction{name = "pickup", ui = self.ui, todo_close = self}
+  self.staff:setNextAction({
+    name = "pickup",
+    ui = self.ui,
+    todo_close = self,
+    must_happen = true,
+  }, true)
 end
 
 function UIStaff:fireStaff()

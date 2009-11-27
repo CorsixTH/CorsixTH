@@ -40,7 +40,7 @@ function Staff:onClick(ui, button)
     end
     print("Fatigue: ", self.fatigue)
   elseif button == "right" then
-    self:setNextAction{name = "pickup", ui = ui}
+    self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
   end
 end
 
@@ -79,12 +79,12 @@ end
 function Staff:checkIfNeedRest()
   if self.fatigue and self.fatigue >= 0.8 and not class.is(self:getRoom(), StaffRoom) then
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
-    for i = 1, #self.action_queue do
-      if self.action_queue[i].name == "seek_staffroom" or self.action_queue[i].name == "pickup" then
-        return
-      end
+    if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
+      return
     end
     -- Else, seek a staff room now
-    self:setNextAction({name = "seek_staffroom"})
+    self:setNextAction{name = "seek_staffroom", must_happen = true}
+    self.going_to_staffroom = true
+    -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   end
 end

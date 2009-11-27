@@ -30,6 +30,10 @@ local function action_pickup_interrupt(action, humanoid)
   humanoid:finishAction()
 end
 
+local function action_pickup_dont_interrupt(action, humanoid)
+  action.on_interrupt = action_pickup_interrupt
+end
+
 local function action_pickup_start(action, humanoid)
   if action.todo_close then
     action.todo_close:close()
@@ -41,7 +45,19 @@ local function action_pickup_start(action, humanoid)
     room:onHumanoidLeave(humanoid)
   end
   action.must_happen = true
-  action.on_interrupt = action_pickup_interrupt
+  if action.todo_interrupt and action.todo_interrupt ~= "high" then
+    -- If you pick up a staff member as they walk through a door, then the walk
+    -- action will be given a high priority interrupt, and hence immediately
+    -- dump the staff member in the room, at which point the room will command
+    -- the entering staff, sending this pick up action a normal interrupt. We
+    -- will completely ignore that, as the user's wish to pick up the staff is
+    -- more important than the room's wish to command the staff.
+    -- action_pickup_dont_interrupt will then set the interrupt handler back to
+    -- normal, as that is called when the staff member is placed down again.
+    action.on_interrupt = action_pickup_dont_interrupt
+  else
+    action.on_interrupt = action_pickup_interrupt
+  end
   local ui = action.ui
   action.window = UIPlaceStaff(ui, humanoid, ui.cursor_x, ui.cursor_y)
   ui:addWindow(action.window)
