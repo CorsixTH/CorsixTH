@@ -49,7 +49,6 @@ function Staff:setProfile(profile)
   self:setType(profile.humanoid_class)
   if (self.humanoid_class ~= "Receptionist") then
     self.fatigue = 0
-    self.going_to_staffroom = false
   end
   self:setLayer(5, profile.layer5)
 end

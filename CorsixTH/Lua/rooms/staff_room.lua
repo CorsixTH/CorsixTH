@@ -40,9 +40,10 @@ end
 
 function StaffRoom:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
+  self:tryAdvanceQueue()
+
   if class.is(humanoid, Staff) then
     -- Receptionists cannot enter, so we do not have to worry about them
-    humanoid.going_to_staffroom = false
     humanoid:setNextAction({name = "use_staffroom"})
     self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   else
