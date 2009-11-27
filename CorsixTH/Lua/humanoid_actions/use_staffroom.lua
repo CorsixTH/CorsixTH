@@ -53,7 +53,7 @@ end
 -- randomly generate the use time for a given source of relaxation
 local function generate_use_time(type)
   if type == "sofa" then
-    return math.random(20, 40)
+    return math.random(50, 80)
   elseif type == "pool_table" then
     return math.random(2, 5)
   elseif type == "video_game" then
@@ -65,7 +65,7 @@ end
 local relaxation = {
   sofa = 0.001,
   pool_table = 0.05,
-  video_game = 0.04,
+  video_game = 0.05,
 }
 
 -- main function of the staffroom action
@@ -100,13 +100,11 @@ local function use_staffroom_action_start(action, humanoid)
     prolonged_usage = true,
     object = action.target_obj,
     loop_callback = function()
-      humanoid.fatigue = humanoid.fatigue - relaxation[action.target_type]
-      if humanoid.fatigue < 0 then
-        humanoid.fatigue = 0
-      end
+      humanoid:wake(relaxation[action.target_type])
       obj_use_time = obj_use_time - 1
       if obj_use_time == 0 then
         if humanoid.fatigue == 0 then
+          -- TODO: return to the room you were previously in
           humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
           humanoid:queueAction({name = "meander"})
         else

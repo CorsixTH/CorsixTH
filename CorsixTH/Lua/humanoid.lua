@@ -272,3 +272,11 @@ function Humanoid:walkTo(tile_x, tile_y)
     y = tile_y,
   }
 end
+
+-- Stub functions for handling fatigue. These are overridden by the staff subclass,
+-- but also defined here, so we can just call it on any humanoid
+function Humanoid:tire(amount)
+end
+
+function Humanoid:wake(amount)
+end

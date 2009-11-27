@@ -27,24 +27,18 @@ end
 
 function Staff:tick()
   Entity.tick(self)
-
-  if self.fatigue and self.fatigue >= 0.8 and not self.going_to_staffroom and not class.is(self:getRoom(), StaffRoom) then
-    local room = self.world:findRoomNear(self, StaffRoom)
-    if room then
-      self.going_to_staffroom = true
-
-      local action = room:createEnterAction()
-      action.on_interrupt = function()
-        self.going_to_staffroom = false
-      end
-      self:setNextAction(action)
-    end
-  end
+  self:checkIfNeedRest()
 end
 
 function Staff:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
+    -- temporary for debugging
+    print("Actions of ", self.profile.name, ": ")
+    for i = 1, #self.action_queue do
+      print(self.action_queue[i].name)
+    end
+    print("Fatigue: ", self.fatigue)
   elseif button == "right" then
     self:setNextAction{name = "pickup", ui = ui}
   end
@@ -58,4 +52,40 @@ function Staff:setProfile(profile)
     self.going_to_staffroom = false
   end
   self:setLayer(5, profile.layer5)
+end
+
+-- Function for increasing fatigue. Fatigue can be between 0 and 1,
+-- so amounts here should be appropriately small comma values.
+function Staff:tire(amount)
+  if self.fatigue then
+    self.fatigue = self.fatigue + amount
+    if self.fatigue > 1 then
+      self.fatigue = 1
+    end
+  end
+end
+
+-- Function for decreasing fatigue. Fatigue can be between 0 and 1,
+-- so amounts here should be appropriately small comma values.
+function Staff:wake(amount)
+  if self.fatigue then
+    self.fatigue = self.fatigue - amount
+    if self.fatigue < 0 then
+      self.fatigue = 0
+    end
+  end
+end
+
+-- Check if fatigue is over a certain level (now: 0.8, later: configurable), and go to the StaffRoom if it is.
+function Staff:checkIfNeedRest()
+  if self.fatigue and self.fatigue >= 0.8 and not class.is(self:getRoom(), StaffRoom) then
+    -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
+    for i = 1, #self.action_queue do
+      if self.action_queue[i].name == "seek_staffroom" or self.action_queue[i].name == "pickup" then
+        return
+      end
+    end
+    -- Else, seek a staff room now
+    self:setNextAction({name = "seek_staffroom"})
+  end
 end

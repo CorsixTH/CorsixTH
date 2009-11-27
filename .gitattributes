@@ -49,7 +49,6 @@ CorsixTH/Lua/humanoid_actions/idle.lua -text
 CorsixTH/Lua/humanoid_actions/meander.lua -text
 CorsixTH/Lua/humanoid_actions/pickup.lua -text
 CorsixTH/Lua/humanoid_actions/use_object.lua -text
-CorsixTH/Lua/humanoid_actions/use_staffroom.lua -text
 CorsixTH/Lua/humanoid_actions/walk.lua -text
 CorsixTH/Lua/map.lua -text
 CorsixTH/Lua/object.lua -text
