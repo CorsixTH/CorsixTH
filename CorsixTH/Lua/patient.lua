@@ -30,3 +30,8 @@ function Patient:onClick(ui, button)
     ui:addWindow(UIPatient(ui, self))
   end
 end
+
+function Patient:setDisease(disease)
+  self.disease = disease
+  disease.initPatient(self)
+end

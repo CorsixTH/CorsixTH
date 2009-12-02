@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 9)
+room.class = "PharmacyRoom"
 room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { "pharmacy_cabinet" }
@@ -34,5 +35,40 @@ room.required_staff = {
   Nurse = 1,
 }
 room.maximum_staff = room.required_staff
+
+class "PharmacyRoom" (Room)
+
+function PharmacyRoom:PharmacyRoom(...)
+  self:Room(...)
+end
+
+function PharmacyRoom:commandEnteringStaff(staff)
+  self.staff_member = staff
+  staff:setNextAction{name = "meander"}
+end
+
+function PharmacyRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local cabinet, stf_x, stf_y = self.world:findObjectNear(patient, "pharmacy_cabinet")
+  local pat_x, pat_y
+  local orientation = cabinet.object_type.orientations[cabinet.direction]
+  pat_x = stf_x - orientation.use_position[1] + orientation.use_position_secondary[1]
+  pat_y = stf_y - orientation.use_position[2] + orientation.use_position_secondary[2]
+  
+  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
+  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:queueAction{
+    name = "multi_use_object",
+    object = cabinet,
+    use_with = patient,
+    layer3 = math.random(0, 2) * 2, -- Flask colour
+    after_use = function()
+      staff:setNextAction{name = "meander"}
+      -- TODO: Morph invisible / transparent patients into standard patients
+      self:dealtWithPatient(patient)
+    end,
+  }
+end
 
 return room

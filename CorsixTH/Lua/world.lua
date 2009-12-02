@@ -50,6 +50,7 @@ function World:World(app)
   self.day = 1
   self.hour = 0
   self.idle_cache = {}
+  self.available_diseases = app.diseases -- TODO: Choose available diseases based on level
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -64,6 +65,48 @@ function World:World(app)
     self.object_id_by_thob[object_type.thob] = object_type.id
   end
   self:makeAvailableStaff()
+  self:calculateSpawnTiles()
+end
+
+function World:calculateSpawnTiles()
+  self.spawn_points = {}
+  local w, h = self.map.width, self.map.height
+  for _, edge in ipairs{
+    {direction = "north", origin = {1, 1}, step = { 1,  0}},
+    {direction = "east" , origin = {w, 1}, step = { 0,  1}},
+    {direction = "south", origin = {w, h}, step = {-1,  0}},
+    {direction = "west" , origin = {1, h}, step = { 0, -1}},
+  } do
+    -- Find all possible spawn points on the edge
+    local xs = {}
+    local ys = {}
+    local x, y = edge.origin[1], edge.origin[2]
+    repeat
+      if self.pathfinder:isReachableFromHospital(x, y) then
+        xs[#xs + 1] = x
+        ys[#ys + 1] = y
+      end
+      x = x + edge.step[1]
+      y = y + edge.step[2]
+    until x < 1 or x > w or y < 1 or y > h
+    
+    -- Choose at most 8 points for the edge
+    local num = math.min(8, #xs)
+    for i = 1, num do
+      local index = 1 + math.floor((i - 1) / (num - 1) * (#xs - 1) + 0.5)
+      self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
+    end
+  end
+end
+
+function World:spawnPatient()
+  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+  local patient = self:newEntity("Patient", 2)
+  local disease = self.available_diseases[math.random(1, #self.available_diseases)]
+  patient:setDisease(disease)
+  patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  patient:queueAction{name = "seek_reception"}
+  return patient
 end
 
 function World:makeAvailableStaff()
@@ -362,6 +405,16 @@ function World:newEntity(class, animation)
   self.entities[#self.entities + 1] = entity
   entity.world = self
   return entity
+end
+
+function World:destroyEntity(entity)
+  for i, e in ipairs(self.entities) do
+    if e == entity then
+      table.remove(self.entities, i)
+      break
+    end
+  end
+  entity:onDestroy()
 end
 
 function World:newObject(id, ...)

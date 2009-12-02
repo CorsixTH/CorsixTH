@@ -137,6 +137,7 @@ function App:init()
   dofile "room"
   self.rooms = self:loadLuaFolder"rooms"
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
+  self.diseases = self:loadLuaFolder"diseases"
   
   -- Load world before UI
   dofile "world"

@@ -121,20 +121,9 @@ function UI:UI(app)
   end
   
   do
-    local map_w = app.map.width
-    local map_h = app.map.height
-    assert(map_w == map_h, "UI limiter requires square map")
     local scr_w = app.config.width
     local scr_h = app.config.height
-    -- The visible diamond is the region which the top-left corner of the screen
-    -- is limited to, and ensures that the map always covers all of the screen.
-    -- Its verticies are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
-    self.visible_diamond = {
-      x = - scr_w / 2,
-      y = 16 * map_h - scr_h / 2,
-      w = 32 * map_h - scr_h - scr_w / 2,
-      h = 16 * map_h - scr_h / 2 - scr_w / 4,
-    }
+    self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
     if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
       -- For a standard 128x128 map, screen size would have to be in the
       -- region of 3276x2457 in order to be too large.
@@ -148,6 +137,22 @@ function UI:UI(app)
   
   -- Temporary code
   patients = {}
+end
+
+function UI.makeVisibleDiamond(scr_w, scr_h)
+  local map_w = TheApp.map.width
+  local map_h = TheApp.map.height
+  assert(map_w == map_h, "UI limiter requires square map")
+  
+  -- The visible diamond is the region which the top-left corner of the screen
+  -- is limited to, and ensures that the map always covers all of the screen.
+  -- Its verticies are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
+  return {
+    x = - scr_w / 2,
+    y = 16 * map_h - scr_h / 2,
+    w = 32 * map_h - scr_h - scr_w / 2,
+    h = 16 * map_h - scr_h / 2 - scr_w / 4,
+  }
 end
 
 function UI:debugMakePatients()
@@ -194,7 +199,7 @@ function UI:debugMakePatients()
     entity:setLayer(2, math.random(0, 2) * 2)
     entity:setLayer(3, math.random(0, 5) * 2)
     entity:setLayer(4, math.random(0, 5) * 2)
-    entity:setMood(moods[math.random(1, 31)])
+    --entity:setMood(moods[math.random(1, 31)])
     patients[#patients + 1] = entity
   end
 end
@@ -545,18 +550,13 @@ function UI:scrollMapTo(x, y)
                         y - self.screen_offset_y - self.app.config.height / 2)
 end
 
-function UI:scrollMap(dx, dy)
-  dx = dx + self.screen_offset_x
-  dy = dy + self.screen_offset_y
-
+function UI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
   -- If point outside visible diamond, then move point to the nearest position
   -- on the edge of the diamond (NB: relies on diamond.w == 2 * diamond.h).
-  local visible_diamond = self.visible_diamond
   local rx = dx - visible_diamond.x
   local ry = dy - visible_diamond.y
-  self.in_visible_diamond = true
   if abs(rx) + abs(ry) * 2 > visible_diamond.w then
-    if self.limit_to_visible_diamond then
+    if do_limit then
       -- Determine the quadrant which the point lies in and accordingly set:
       --  (vx, vy) : a unit vector perpendicular to the diamond edge in the quadrant
       --  (p1x, p1y), (p2x, p2y) : the two diamond verticies in the quadrant
@@ -594,9 +594,18 @@ function UI:scrollMap(dx, dy)
         dx, dy = dx - d * vx, dy - d * vy
       end
     else
-      self.in_visible_diamond = false
+      return dx, dy, false
     end
   end
+  return dx, dy, true
+end
+
+function UI:scrollMap(dx, dy)
+  dx = dx + self.screen_offset_x
+  dy = dy + self.screen_offset_y
+
+  dx, dy, self.in_visible_diamond = self.limitPointToDiamond(dx, dy,
+    self.visible_diamond, self.limit_to_visible_diamond)
   
   self.screen_offset_x = floor(dx + 0.5)
   self.screen_offset_y = floor(dy + 0.5)

@@ -25,20 +25,43 @@ object.name = _S(2, 10)
 object.ticks = false
 object.build_cost = 2500
 object.build_preview_animation = 908
-object.idle_animations = {
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
   north = 572,
-  south = 572,
 }
+object.multi_usage_animations = {
+  ["Standard Male Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 464, -- Patient invited onto machine
+      begin_use_2 = 478, -- Doctor pops patient's head
+      begin_use_3 = 482, -- Doctor moves to other side of machine
+      in_use      = 496, -- Doctor re-inflates head (do not loop)
+      finish_use  = 576, -- Patients walks off machine
+    },
+  },
+}
+
 object.orientations = {
   north = {
+    use_position = {0, 1},
+    use_position_secondary = {-1, 1},
+    finish_use_position = {1, 0},
+    finish_use_position_secondary = {1, -1},
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
                   {-1, 0}, {0, 0}, {1, 0, only_passable = true},
-                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1} } --FIXME: Why {1, 1} is not only passable in Vanilla TH? Is this a bug?
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1, only_passable = true} },
   },
   east = {
+    use_position = {1, 0},
+    use_position_secondary = {1, -1},
+    finish_use_position = {0, 1},
+    finish_use_position_secondary = {-1, 1},
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
                   {-1, 0}, {0, 0}, {1, 0, only_passable = true},
-                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1} }
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1, only_passable = true} },
   },
 }
 

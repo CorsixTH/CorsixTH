@@ -18,37 +18,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function meander_action_start(action, humanoid)
-  local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
-    humanoid.tile_y, math.random(1, 24))
-  if x == humanoid.tile_x and y == humanoid.tile_y then
-    -- Nowhere to walk to - go idle instead, or go onto the next action
-    if #humanoid.humanoid_actions == 1 then
-      humanoid:queueAction{name = "idle"}
-    end
-    humanoid:finishAction()
-    return
-  end
-  if action.todo_interrupt then
-    humanoid:finishAction()
-    return
-  end
-  if action.count then
-    if action.count == 0 then
-      humanoid:finishAction()
-      return
-    else
-      action.count = action.count - 1
-    end
-  end
+local function action_seek_reception_start(action, humanoid)
+  local world = humanoid.world
+  
+  -- TODO: Look for, and then use, reception desk
+  
+  -- No reception desk found. One will probably be built soon, somewhere in
+  -- the hospital, so either walk to the hospital, or walk around the hospital.
   local procreation
-  if math.random(1, 5) == 1 then
-    procreation = {name = "idle", count = math.random(15, 30)}
+  if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
+    procreation = {name = "meander", count = 1}
   else
-    procreation = {name = "walk", x = x, y = y}
+    local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
+    procreation = {name = "walk", x = hosp_x, y = hosp_y}
   end
   procreation.must_happen = action.must_happen
   humanoid:queueAction(procreation, 0)
 end
 
-return meander_action_start
+return action_seek_reception_start

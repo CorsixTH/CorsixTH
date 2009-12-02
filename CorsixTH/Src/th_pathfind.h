@@ -52,6 +52,7 @@ public:
     bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX,
                   int iEndY);
     bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
+    bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
     bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
                       THObjectType eTHOB, int iMaxDistance, lua_State *L,
                       int iVisitFunction);

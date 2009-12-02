@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 15)
+room.class = "InflationRoom"
 room.build_cost = 4000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { "inflator" }
@@ -34,5 +35,39 @@ room.required_staff = {
   Doctor = 1,
 }
 room.maximum_staff = room.required_staff
+
+class "InflationRoom" (Room)
+
+function InflationRoom:InflationRoom(...)
+  self:Room(...)
+end
+
+function InflationRoom:commandEnteringStaff(staff)
+  self.staff_member = staff
+  staff:setNextAction{name = "meander"}
+end
+
+function InflationRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
+  local stf_x, stf_y
+  local orientation = inflator.object_type.orientations[inflator.direction]
+  stf_x = pat_x - orientation.use_position[1] + orientation.use_position_secondary[1]
+  stf_y = pat_y - orientation.use_position[2] + orientation.use_position_secondary[2]
+  
+  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
+  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:queueAction{
+    name = "multi_use_object",
+    object = inflator,
+    use_with = staff,
+    after_use = function()
+      patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
+      staff:setNextAction{name = "meander"}
+      self:dealtWithPatient(patient)
+    end,
+  }
+end
 
 return room

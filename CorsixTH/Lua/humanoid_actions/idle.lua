@@ -23,7 +23,7 @@ local function action_idle_interrupt(action, humanoid)
 end
 
 local function action_idle_start(action, humanoid)
-  local direction = humanoid.last_move_direction
+  local direction = action.direction or humanoid.last_move_direction
   local anims = humanoid.walk_anims
   if direction == "north" then
     humanoid:setAnimation(anims.idle_north, 0)
@@ -38,6 +38,9 @@ local function action_idle_start(action, humanoid)
   humanoid:setSpeed(0, 0)
   if action.must_happen then
     action.on_interrupt = action_idle_interrupt
+  end
+  if action.count then
+    humanoid:setTimer(action.count, humanoid.finishAction)
   end
 end
 

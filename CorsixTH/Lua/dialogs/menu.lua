@@ -490,10 +490,19 @@ function UIMenuBar:makeMenu(app)
     app.ui.limit_to_visible_diamond = item.checked
     app.ui:scrollMap(0, 0)
   end
+  local function spawn_patient()
+    local patient = self.ui.app.world:spawnPatient()
+    -- Temporary code to locate the new patient:
+    patient:onClick(self.ui, "left")
+    local px, py = app.map:WorldToScreen(patient.tile_x, patient.tile_y)
+    local dx, dy = patient.th:getPosition()
+    self.ui:scrollMapTo(px + dx, py + dy)
+  end
   self:addMenu(_S(1, 5), UIMenu() -- Debug
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
     :appendItem(_"Make Patients", function() self.ui:debugMakePatients() end)
+    :appendItem(_"Spawn Patient", spawn_patient)
     :appendItem(_"Make Adviser Talk", function() self.ui:debugMakeAdviserTalk() end)
     :appendItem(_"Show watch", function() self.ui:addWindow(UIWatch(self.ui)) end)
     :appendItem(_"Place Objects", place_objs)

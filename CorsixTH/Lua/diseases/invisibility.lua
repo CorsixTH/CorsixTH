@@ -18,37 +18,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function meander_action_start(action, humanoid)
-  local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
-    humanoid.tile_y, math.random(1, 24))
-  if x == humanoid.tile_x and y == humanoid.tile_y then
-    -- Nowhere to walk to - go idle instead, or go onto the next action
-    if #humanoid.humanoid_actions == 1 then
-      humanoid:queueAction{name = "idle"}
-    end
-    humanoid:finishAction()
-    return
-  end
-  if action.todo_interrupt then
-    humanoid:finishAction()
-    return
-  end
-  if action.count then
-    if action.count == 0 then
-      humanoid:finishAction()
-      return
-    else
-      action.count = action.count - 1
-    end
-  end
-  local procreation
-  if math.random(1, 5) == 1 then
-    procreation = {name = "idle", count = math.random(15, 30)}
-  else
-    procreation = {name = "walk", x = x, y = y}
-  end
-  procreation.must_happen = action.must_happen
-  humanoid:queueAction(procreation, 0)
+local disease = {}
+disease.name = _S(4, 6)
+disease.cause = _S(44, 71)
+disease.symptoms = _S(44, 72)
+disease.cure = _S(44, 73)
+disease.cure_price = 1400 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.initPatient = function(patient)
+  patient:setType("Invisible Patient")
+  patient:setLayer(0, math.random(0, 1) * 2)
+  patient:setLayer(1, 0)
+  patient:setLayer(2, 0)
+  patient:setLayer(3, 0)
+  patient:setLayer(4, 0)
 end
+-- Diagnosis rooms are the rooms other than the GPs office which can be visited
+-- to aid in diagnosis. The need not be visited, and if they are visited, the
+-- order in which they are visited is not fixed.
+disease.diagnosis_rooms = {
+  -- TODO
+}
+-- Treatment rooms are the rooms which must be visited, in the given order, to
+-- cure the disease.
+disease.treatment_rooms = {
+  "pharmacy",
+}
 
-return meander_action_start
+return disease

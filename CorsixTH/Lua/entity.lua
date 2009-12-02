@@ -43,9 +43,10 @@ function Entity:setTile(x, y)
   end
   self.tile_x = x
   self.tile_y = y
-  self.th:setTile(self.world.map.th, x, y)
+  -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
+  self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
-    self.mood_info:setTile(self.world.map.th, x, y)
+    self.mood_info:setTile(x and self.world.map.th, x, y)
   end
   return self
 end
@@ -107,4 +108,15 @@ end
 function Entity:setTimer(tick_count, f)
   self.timer_time = tick_count
   self.timer_function = f
+end
+
+function Entity:onDestroy()
+  self:setTile(nil)
+  -- Debug aid to check that there are no hanging references after the entity
+  -- has been destroyed:
+  -- [[
+  self.gc_dummy = newproxy(true) -- undocumented Lua library function
+  getmetatable(self.gc_dummy).__gc = function()
+    print("Entity " .. tostring(self) .. " has been garbage collected.")
+  end --]]
 end

@@ -87,8 +87,8 @@ function Object:setTile(x, y)
   end
   self.tile_x = x
   self.tile_y = y
-  self.th:setTile(self.world.map.th, self:getRenderAttachTile())
   if x then
+    self.th:setTile(self.world.map.th, self:getRenderAttachTile())
     self.world:addObjectToTile(self, x, y)
     if self.footprint then
       local map = self.world.map.th
@@ -99,6 +99,8 @@ function Object:setTile(x, y)
         })
       end
     end
+  else
+    self.th:setTile(nil)
   end
   self.world:clearCaches()
   return self

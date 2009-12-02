@@ -173,6 +173,45 @@ bool THPathfinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEn
 #undef TryNode
 }
 
+bool THPathfinder::findPathToHospital(const THMap *pMap, int iStartX, int iStartY)
+{
+    if(pMap == NULL)
+        pMap = m_pDefaultMap;
+    if(pMap == NULL || pMap->getNode(iStartX, iStartY) == NULL
+        || (pMap->getNodeUnchecked(iStartX, iStartY)->iFlags & THMN_Passable) == 0)
+    {
+        m_pDestination = NULL;
+        return false;
+    }
+
+#define MakeGuess(pNode) pNode->guess = 0
+
+    Pathing_Init();
+
+    while(true)
+    {
+        uint32_t iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
+
+        if(iFlags & THMN_Hospital)
+        {
+            m_pDestination = pNode;
+            return true;
+        }
+
+#define TryNode(n, d) \
+        node_t *pNeighbour = n; \
+        uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
+        Pathing_TryNode()
+
+        Pathing_Neighbours();
+        Pathing_Next();
+    }
+    return false;
+
+#undef MakeGuess
+#undef TryNode
+}
+
 bool THPathfinder::findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN)
 {
     if(pMap == NULL)

@@ -915,6 +915,26 @@ static int l_path_set_map(lua_State *L)
     return 1;
 }
 
+static int l_path_is_reachable_from_hospital(lua_State *L)
+{
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    if(pPathfinder->findPathToHospital(NULL, luaL_checkint(L, 2) - 1,
+        luaL_checkint(L, 3) - 1))
+    {
+        lua_pushboolean(L, 1);
+        int iX, iY;
+        pPathfinder->getPathEnd(&iX, &iY);
+        lua_pushinteger(L, iX + 1);
+        lua_pushinteger(L, iY + 1);
+        return 3;
+    }
+    else
+    {
+        lua_pushboolean(L, 0);
+        return 1;
+    }
+}
+
 static int l_path_distance(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
@@ -1667,6 +1687,7 @@ int luaopen_th(lua_State *L)
     // Path
     luaT_class(THPathfinder, l_path_new, "pathfinder", iPathMT);
     luaT_setfunction(l_path_distance, "findDistance");
+    luaT_setfunction(l_path_is_reachable_from_hospital, "isReachableFromHospital");
     luaT_setfunction(l_path_path, "findPath");
     luaT_setfunction(l_path_idle, "findIdleTile");
     luaT_setfunction(l_path_visit, "findObject");
