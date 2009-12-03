@@ -139,9 +139,7 @@ function UIEditRoom:finishRoom()
       anim:setTile(nil)
     end
   end
-  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type)
-  door.room = self.room
-  self.room.door = door
+  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door)
 end
 
 function UIEditRoom:purchaseItems()

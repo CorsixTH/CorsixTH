@@ -51,6 +51,7 @@ function World:World(app)
   self.hour = 0
   self.idle_cache = {}
   self.available_diseases = app.diseases -- TODO: Choose available diseases based on level
+  self.room_build_callbacks = {--[[a set rather than a list]]}
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -163,15 +164,26 @@ function World:getAnimLength(anim)
   return self.anim_length_cache[anim]
 end
 
-function World:newRoom(x, y, w, h, room_info)
+function World:registerRoomBuildCallback(callback)
+  self.room_build_callbacks[callback] = true
+end
+
+function World:unregisterRoomBuildCallback(callback)
+  self.room_build_callbacks[callback] = nil
+end
+
+function World:newRoom(x, y, w, h, room_info, ...)
   local id = #self.rooms + 1
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
   local class = room_info.class and _G[room_info.class] or Room
-  local room = class(x, y, w, h, id, room_info, self)
+  local room = class(x, y, w, h, id, room_info, self, ...)
   
   self.rooms[id] = room
   self:clearCaches()
+  for callback in pairs(self.room_build_callbacks) do
+    callback(room)
+  end
   return room
 end
 
@@ -380,13 +392,13 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, whi
   return object, ox, oy
 end
 
-function World:findRoomNear(humanoid, roomclass, distance)
+function World:findRoomNear(humanoid, room_type_id, distance)
   local room
   if not distance then
     distance = 2^30
   end
   for _, r in ipairs(self.rooms) do
-    if not roomclass or class.is(r, roomclass) then
+    if not room_type_id or r.room_info.id == room_type_id then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
       if d and d < distance then

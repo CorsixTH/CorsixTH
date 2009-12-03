@@ -26,6 +26,8 @@ local function action_pickup_interrupt(action, humanoid)
   local room = humanoid:getRoom()
   if room then
     room:onHumanoidEnter(humanoid)
+  else
+    humanoid:onPlaceInCorridor()
   end
   humanoid:finishAction()
 end

@@ -81,6 +81,17 @@ function Object:getRenderAttachTile()
   return x, y
 end
 
+function Object:getSecondaryUsageTile()
+  local x, y = self.tile_x, self.tile_y
+  local offset = self.object_type.orientations
+  if offset then
+    offset = offset[self.direction].use_position_secondary
+    x = x + offset[1]
+    y = y + offset[2]
+  end
+  return x, y
+end
+
 function Object:setTile(x, y)
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)

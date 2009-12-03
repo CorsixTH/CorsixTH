@@ -34,4 +34,7 @@ end
 function Patient:setDisease(disease)
   self.disease = disease
   disease.initPatient(self)
+  self.diagnosed = false
+  self.diagnosis_progress = 0
+  self.cure_rooms_visited = 0
 end

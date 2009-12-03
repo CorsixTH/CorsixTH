@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 class "Room"
 
-function Room:Room(x, y, w, h, id, room_info, world)
+function Room:Room(x, y, w, h, id, room_info, world, door)
   self.id = id
   self.world = world
   self.x = x
@@ -29,6 +29,8 @@ function Room:Room(x, y, w, h, id, room_info, world)
   self.height = h
   self.room_info = room_info
   self.maximum_patients = 1 -- A good default for most rooms
+  door.room = self
+  self.door = door
   
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
   
@@ -94,11 +96,35 @@ end
 function Room:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
+  if patient.disease and not patient.diagnosed then
+    -- Patient not yet diagnosed, hence just been in a diagnosis room.
+    -- Increment diagnosis_progress, and send patient back to GP.
+    -- TODO: Variate progress with respect to room type and staff skill, etc.
+    patient.diagnosis_progress = patient.diagnosis_progress + 0.4
+    if patient.diagnosis_progress >= 1.0 then
+      patient.diagnosis_progress = 1.0
+    end
+    patient:queueAction{name = "seek_room", room_type = "gp"}
+  elseif patient.disease and patient.diagnosed then
+    -- Patient just been in a cure room, so either patient now cured, or needs
+    -- to move onto next cure room.
+    patient.cure_rooms_visited = patient.cure_rooms_visited + 1
+    local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
+    if next_room then
+      patient:queueAction{name = "seek_room", room_type = next_room}
+    else
+      local spawn_points = self.world.spawn_points
+      patient:queueAction{
+        name = "spawn",
+        mode = "despawn",
+        point = spawn_points[math.random(1, #spawn_points)],
+      }
+    end
+  else
+    patient:queueAction{name = "meander", count = 2}
+    patient:queueAction{name = "idle"}
+  end
   -- TODO: Give player money
-  -- TODO: Inform logic controlling patient
-  -- The following lines are temporary:
-  patient:queueAction{name = "meander", count = 1}
-  patient:queueAction{name = "idle"}
 end
 
 local profile_attributes = {

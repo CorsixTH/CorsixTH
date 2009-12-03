@@ -29,7 +29,7 @@ local function seek_staffroom_action_start(action, humanoid)
   action.must_happen = true
   
   -- Go to the nearest staff room, if any is found. Else, walk around for a bit.
-  local room = humanoid.world:findRoomNear(humanoid, StaffRoom)
+  local room = humanoid.world:findRoomNear(humanoid, "staff_room")
   local task
   if room then
     task = room:createEnterAction()

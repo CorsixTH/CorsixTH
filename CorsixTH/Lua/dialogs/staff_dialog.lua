@@ -178,7 +178,8 @@ function UIStaff:placeStaff()
 end
 
 function UIStaff:fireStaff()
-  -- TODO
+  self:close()
+  self.staff:fire()
 end
 
 function UIStaff:doMoreCleaning()

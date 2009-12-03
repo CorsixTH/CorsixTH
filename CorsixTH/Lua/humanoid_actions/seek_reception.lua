@@ -18,10 +18,69 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local flag_cache = {}
+local function can_join_queue_at(humanoid, x, y, use_x, use_y)
+  return humanoid.world.map.th:getCellFlags(x, y, flag_cache).hospital
+    and (not flag_cache.room)
+    and (x - use_x)^2 + (y - use_y)^2 < 12^2
+end
+
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
   
-  -- TODO: Look for, and then use, reception desk
+  local found_desk = false
+  world:findObjectNear(humanoid, "reception_desk", nil, function(x, y, d)
+    local desk = world:getObject(x, y, "reception_desk")
+    if not desk.receptionist and not desk.reserved_for then
+      return
+    end
+    
+    local orientation = desk.object_type.orientations[desk.direction]
+    if not orientation.pathfind_allowed_dirs[d] then
+      return
+    end
+    x = x + orientation.use_position[1]
+    y = y + orientation.use_position[2]
+    
+    -- We don't want patients which have just spawned to be joining the queue
+    -- immediately, so walk them closer to the desk before joining the queue
+    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
+      local queue = desk.queue
+      local ix, iy = world:getIdleTile(x, y, queue:size())
+      humanoid:setNextAction{
+        name = "walk",
+        until_leave_queue = queue,
+        must_happen = action.must_happen,
+        destination_unimportant = true,
+        x = ix,
+        y = iy,
+      }
+      humanoid:queueAction{
+        name = "idle",
+        until_leave_queue = queue,
+        must_happen = action.must_happen,
+      }
+      queue:push(humanoid)
+    else
+      local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
+      humanoid:queueAction(walk, 0)
+      
+      -- Trim the walk to finish once it is possible to join the queue
+      for i = #walk.path_x, 2, -1 do
+        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], x, y) then
+          walk.path_x[i + 1] = nil
+          walk.path_y[i + 1] = nil
+        else
+          break
+        end
+      end
+    end
+    found_desk = true
+    return true
+  end)
+  if found_desk then
+    return
+  end
   
   -- No reception desk found. One will probably be built soon, somewhere in
   -- the hospital, so either walk to the hospital, or walk around the hospital.

@@ -89,6 +89,8 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         local room = entity:getRoom()
         if room then
           room:onHumanoidEnter(entity)
+        else
+          entity:onPlaceInCorridor()
         end
       end
       self:close()

@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 25)
+room.id = "general_diag"
 room.build_cost = 1000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { "screen", "crash_trolley" }

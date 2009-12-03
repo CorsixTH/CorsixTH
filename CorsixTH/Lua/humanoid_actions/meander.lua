@@ -42,9 +42,10 @@ local function meander_action_start(action, humanoid)
     end
   end
   local procreation
-  if math.random(1, 5) == 1 then
+  if action.can_idle and math.random(1, 5) == 1 then
     procreation = {name = "idle", count = math.random(15, 30)}
   else
+    action.can_idle = true
     procreation = {name = "walk", x = x, y = y}
   end
   procreation.must_happen = action.must_happen

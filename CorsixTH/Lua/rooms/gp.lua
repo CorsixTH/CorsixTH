@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.name = _S(14, 5)
+room.id = "gp"
 room.class = "GPRoom"
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { "desk", "cabinet", "chair" }
@@ -73,6 +74,26 @@ function GPRoom:commandEnteringPatient(humanoid)
   humanoid:walkTo(ox, oy)
   humanoid:queueAction{name = "use_object", object = obj}
   return Room.commandEnteringPatient(self, humanoid)
+end
+
+function GPRoom:dealtWithPatient(patient)
+  patient = patient or self:getPatient()
+  patient:setNextAction(self:createLeaveAction())
+  if patient.disease and not patient.diagnosed then
+    -- TODO: Variate progress with respect to disease and staff skill, etc.
+    patient.diagnosis_progress = patient.diagnosis_progress + 1.0
+    if patient.diagnosis_progress >= 1.0 then
+      patient.diagnosed = true
+      patient.diagnosis_progress = 1.0
+      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+    else
+      -- TODO: Choose next diagnosis room
+    end
+  else
+    patient:queueAction{name = "meander", count = 2}
+    patient:queueAction{name = "idle"}
+  end
+  -- TODO: Give player money
 end
 
 return room

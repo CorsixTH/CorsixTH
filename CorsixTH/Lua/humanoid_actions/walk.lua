@@ -219,8 +219,6 @@ navigateDoor = function(humanoid, x1, y1, dir)
         name = "idle",
         until_leave_queue = queue,
         must_happen = action.saved_must_happen,
-        x1 = x1,
-        y1 = y1,
       }, action_index)
     end
     door.queue:push(humanoid)

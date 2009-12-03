@@ -30,7 +30,29 @@ function Staff:tick()
   self:checkIfNeedRest()
 end
 
+function Staff:fire()
+  if self.fired then
+    return
+  end
+  
+  self.fired = true
+  local spawn_points = self.world.spawn_points
+  self:setNextAction{
+    name = "spawn",
+    mode = "despawn",
+    point = spawn_points[math.random(1, #spawn_points)],
+    must_happen = true,
+  }
+  self.hover_cursor = nil
+  self.fatigue = nil
+  -- TODO: Remove from world/hospital staff list
+end
+
 function Staff:onClick(ui, button)
+  if self.fired then
+    return
+  end
+  
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
     -- temporary for debugging
@@ -87,4 +109,23 @@ function Staff:checkIfNeedRest()
     self.going_to_staffroom = true
     -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   end
+end
+
+function Staff:onPlaceInCorridor()
+  if self.humanoid_class ~= "Receptionist" then
+    return
+  end
+  
+  local world = self.world
+  world:findObjectNear(self, "reception_desk", nil, function(x, y)
+    local obj = world:getObject(x, y, "reception_desk")
+    if not obj.receptionist and not obj.reserved_for then
+      obj.reserved_for = self
+      self.associated_desk = obj
+      local use_x, use_y = obj:getSecondaryUsageTile()
+      self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
+      self:queueAction{name = "staff_reception", object = obj, must_happen = true}
+      return true
+    end
+  end)
 end

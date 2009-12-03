@@ -34,6 +34,7 @@ function Queue:Queue()
   self.expected = 0
   self.visitor_count = 0
   self.max_size = 20
+  self.bench_threshold = 0
 end
 
 function Queue:decreaseMaxSize()
@@ -46,6 +47,10 @@ function Queue:increaseMaxSize()
   if self.max_size < 30 then
     self.max_size = self.max_size + 1
   end
+end
+
+function Queue:setBenchThreshold(standing_count)
+  self.bench_threshold = standing_count
 end
 
 function Queue:size()
