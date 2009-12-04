@@ -1026,6 +1026,20 @@ static int l_anim_set_anim(lua_State *L)
     pAnimation->setAnimation(pManager, iAnim);
     lua_settop(L, 2);
     luaT_setenvfield(L, 1, "animator");
+    lua_pushnil(L);
+    luaT_setenvfield(L, 1, "morph_target");
+
+    return 1;
+}
+
+static int l_anim_set_morph(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    THAnimation* pMorphTarget = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX);
+
+    pAnimation->setMorphTarget(pMorphTarget);
+    lua_settop(L, 2);
+    luaT_setenvfield(L, 1, "morph_target");
 
     return 1;
 }
@@ -1664,6 +1678,7 @@ int luaopen_th(lua_State *L)
     // Anim
     luaT_class(THAnimation, l_anim_new, "animation", iAnimMT);
     luaT_setfunction(l_anim_set_anim, "setAnimation", iAnimsMT);
+    luaT_setfunction(l_anim_set_morph, "setMorph");
     luaT_setfunction(l_anim_set_frame, "setFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");
     luaT_setfunction(l_anim_set_tile, "setTile", iMapMT);

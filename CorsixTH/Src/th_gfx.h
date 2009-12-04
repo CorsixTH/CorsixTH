@@ -285,6 +285,8 @@ public:
     */
     void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
 
+    void getFrameExtent(unsigned int iFrame, const THLayers_t& oLayers, int* pMinX, int* pMaxX, int* pMinY, int* pMaxY, unsigned long iFlags) const;
+
     bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
 
 protected:
@@ -371,6 +373,8 @@ public:
     void tick();
     void draw(THRenderTarget* pCanvas, int iDestX, int iDestY);
     bool hitTest(int iDestX, int iDestY, int iTestX, int iTestY);
+    void drawMorph(THRenderTarget* pCanvas, int iDestX, int iDestY);
+    bool hitTestMorph(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return this->pPrev;}
     unsigned long getFlags() {return this->iFlags;}
@@ -379,6 +383,7 @@ public:
     int getY() {return m_iY;}
 
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
+    void setMorphTarget(THAnimation *pMorphTarget);
     void setFrame(unsigned int iFrame);
     void setFlags(unsigned long iFlags) {this->iFlags = iFlags;}
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
@@ -387,6 +392,7 @@ public:
 
 protected:
     THAnimationManager *m_pManager;
+    THAnimation* m_pMorphTarget;
     unsigned int m_iAnimation;
     unsigned int m_iFrame;
     //! X position on tile (not tile x-index)
