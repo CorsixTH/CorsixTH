@@ -31,6 +31,11 @@ disease.initPatient = function(patient)
   patient:setLayer(2, 0)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
+  patient.cured_layers = {
+    [0] = math.random(1, 5) * 2,
+    [1] = math.random(0, 3) * 2,
+    [2] = patient.layers[0] == 2 and 4 or (math.random(0, 1) * 2), -- Preserve hat
+  }
 end
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited
 -- to aid in diagnosis. The need not be visited, and if they are visited, the

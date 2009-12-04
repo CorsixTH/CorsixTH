@@ -84,7 +84,6 @@ function Entity:tick()
     self.mood_info:tick()
   end
   
-  
   local timer = self.timer_time
   if timer then
     timer = timer - 1

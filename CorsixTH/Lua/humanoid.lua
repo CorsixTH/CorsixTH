@@ -74,6 +74,7 @@ function Humanoid:onClick(ui, button)
 end
 
 function Humanoid:setMood(mood)
+  self.mood = mood
   if mood == nil then
     self.mood_info = false
     return
@@ -96,7 +97,7 @@ function Humanoid:setMood(mood)
                    queue = 4568,
                    rise = 4576,
                    wait = 5006 }
-  self.mood_info = TH.animation()                 
+  self.mood_info = TH.animation()
   self.mood_info:setAnimation(self.world.anims, moods[mood])
 end
 

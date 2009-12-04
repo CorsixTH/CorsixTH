@@ -99,12 +99,18 @@ local function action_multi_use_phase(action, humanoid, phase)
     if type(secondary_anim) == "table" and secondary_anim[1] == "morph" then
       use_with:setAnimation(secondary_anim[2], action.mirror_flags)
       local morph_target = TH.animation()
-      secondary_anim = secondary_anim[3]
-      morph_target:setAnimation(use_with.world.anims, secondary_anim, action.mirror_flags)
+      morph_target:setAnimation(use_with.world.anims, secondary_anim[3], action.mirror_flags)
       for layer, id in pairs(use_with.layers) do
         morph_target:setLayer(layer, id)
       end
+      if secondary_anim.layers then
+        for layer, id in pairs(use_with[secondary_anim.layers]) do
+          morph_target:setLayer(layer, id)
+        end
+        action.change_secondary_layers = use_with[secondary_anim.layers]
+      end
       use_with.th:setMorph(morph_target)
+      secondary_anim = secondary_anim[3]
     else
       use_with:setAnimation(secondary_anim, action.mirror_flags)
     end
@@ -117,6 +123,18 @@ local function action_multi_use_phase(action, humanoid, phase)
   humanoid:setTimer(length, action_multi_use_object_tick)
 end
 
+local function copy_layers(dest, src)
+  if class.is(dest, Staff) then
+    dest:setLayer(0, src.layers[0])
+    dest:setLayer(1, src.layers[1])
+    dest:setLayer(2, src.layers[2])
+    dest:setLayer(3, src.layers[3])
+    dest:setLayer(4, src.layers[4])
+  elseif class.is(src, Staff) then
+    dest:setLayer(5, src.layers[5])
+  end
+end
+
 action_multi_use_object_tick = function(humanoid)
   local action = humanoid.action_queue[1]
   local use_with = action.use_with
@@ -124,6 +142,13 @@ action_multi_use_object_tick = function(humanoid)
   local phase = action.phase
   local oldphase = phase
   phase = action_multi_use_next_phase(action, phase)
+  if action.change_secondary_layers then
+    for layer, id in pairs(action.change_secondary_layers) do
+      use_with:setLayer(layer, id)
+    end
+    action.change_secondary_layers = nil
+    copy_layers(humanoid, use_with)
+  end
   if oldphase <= 2 and phase > 2 then
     object:setUser(nil)
     humanoid.user_of = nil
@@ -183,15 +208,7 @@ local function action_multi_use_object_start(action, humanoid)
   
   object:setUser(humanoid)
   humanoid.user_of = object
-  if class.is(humanoid, Staff) then
-    humanoid:setLayer(0, use_with.layers[0])
-    humanoid:setLayer(1, use_with.layers[1])
-    humanoid:setLayer(2, use_with.layers[2])
-    humanoid:setLayer(3, use_with.layers[3])
-    humanoid:setLayer(4, use_with.layers[4])
-  elseif class.is(use_with, Staff) then
-    humanoid:setLayer(5, use_with.layers[5])
-  end
+  copy_layers(humanoid, use_with)
   if action.layer3 then
     action.old_layer3_humanoid = humanoid.layers[3]
     action.old_layer3_use_with = use_with.layers[3]
