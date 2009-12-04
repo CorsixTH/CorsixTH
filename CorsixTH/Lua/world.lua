@@ -242,6 +242,10 @@ function World:onTick()
       end
     end
     for i = 1, self.ticks_per_tick do
+      if math.random(1, 200) == 1 then
+        -- TODO: Variate spawn rate based on level, reputation, etc.
+        self:spawnPatient()
+      end
       for _, entity in ipairs(self.entities) do
         if entity.ticks then
           entity:tick()

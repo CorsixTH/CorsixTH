@@ -59,6 +59,8 @@ local function action_seek_reception_start(action, humanoid)
         name = "idle",
         until_leave_queue = queue,
         must_happen = action.must_happen,
+        x1 = x,
+        y1 = y,
       }
       queue:push(humanoid)
     else
