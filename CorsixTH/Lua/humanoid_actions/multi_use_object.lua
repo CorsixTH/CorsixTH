@@ -18,6 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require "TH"
 local orient_mirror = {
   north = "west",
   west = "north",
@@ -95,7 +96,18 @@ local function action_multi_use_phase(action, humanoid, phase)
   local secondary_anim = action.anims.secondary and action.anims.secondary[anim_name]
   if secondary_anim then
     local use_with = action.use_with
-    use_with:setAnimation(secondary_anim, action.mirror_flags)
+    if type(secondary_anim) == "table" and secondary_anim[1] == "morph" then
+      use_with:setAnimation(secondary_anim[2], action.mirror_flags)
+      local morph_target = TH.animation()
+      secondary_anim = secondary_anim[3]
+      morph_target:setAnimation(use_with.world.anims, secondary_anim, action.mirror_flags)
+      for layer, id in pairs(use_with.layers) do
+        morph_target:setLayer(layer, id)
+      end
+      use_with.th:setMorph(morph_target)
+    else
+      use_with:setAnimation(secondary_anim, action.mirror_flags)
+    end
     use_with.th:makeVisible()
     local secondary_length = use_with.world:getAnimLength(secondary_anim)
     if secondary_length > length then

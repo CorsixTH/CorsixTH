@@ -56,6 +56,16 @@ function PharmacyRoom:commandEnteringPatient(patient)
   pat_x = stf_x - orientation.use_position[1] + orientation.use_position_secondary[1]
   pat_y = stf_y - orientation.use_position[2] + orientation.use_position_secondary[2]
   
+  local layer3
+  local patient_class = patient.humanoid_class
+  if patient_class == "Standard Female Patient" or patient_class == "Transparent Female Patient" then
+    -- Female patients cannot use flask colour 2, as in their idle animation,
+    -- layer 3 item 2 is a bandage.
+    layer3 = math.random(0, 1) * 4
+  else
+    layer3 = math.random(0, 2) * 2
+  end
+  
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
   patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
@@ -63,10 +73,14 @@ function PharmacyRoom:commandEnteringPatient(patient)
     name = "multi_use_object",
     object = cabinet,
     use_with = patient,
-    layer3 = math.random(0, 2) * 2, -- Flask colour
+    layer3 = layer3,
     after_use = function()
       staff:setNextAction{name = "meander"}
-      -- TODO: Morph invisible / transparent patients into standard patients
+      if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
+        patient:setType "Standard Male Patient"
+      elseif patient_class == "Transparent Female Patient" then
+        patient:setType "Standard Female Patient"
+      end
       self:dealtWithPatient(patient)
     end,
   }
