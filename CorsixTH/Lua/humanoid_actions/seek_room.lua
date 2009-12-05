@@ -27,7 +27,7 @@ local function action_seek_room_interrupt(action, humanoid)
 end
 
 local function action_seek_room_start(action, humanoid)
-  local room = humanoid.world:findRoomNear(humanoid, action.room_type)
+  local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "smallqueue")
   if room then
     humanoid:setNextAction(room:createEnterAction())
   else

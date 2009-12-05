@@ -396,8 +396,15 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, whi
   return object, ox, oy
 end
 
-function World:findRoomNear(humanoid, room_type_id, distance)
+function World:findRoomNear(humanoid, room_type_id, distance, mode)
+  -- If mode == "nearest" (or nil), the nearest room is taken
+  -- If mode == "smallqueue", a room with a smaller queue is preferred
   local room
+  local queue
+  local tile_factor = 20 -- how many tiles further are we willing to walk for 1 person fewer in the queue
+  if not mode then
+    mode = "nearest" -- default mode
+  end
   if not distance then
     distance = 2^30
   end
@@ -405,7 +412,11 @@ function World:findRoomNear(humanoid, room_type_id, distance)
     if not room_type_id or r.room_info.id == room_type_id then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      if d and d < distance then
+        -- TODO: change q to include expected patients (once implemented), so it reacts faster
+      local q = r.door.queue:reportedSize()
+      if d and (mode == "nearest" and d < distance) or
+               (mode == "smallqueue" and (not queue or tile_factor * (queue - q) > (d - distance))) then
+        queue = q
         distance = d
         room = r
       end
