@@ -89,6 +89,7 @@ function UIHireStaff:hire()
   if not profile then
     return
   end
+  table.remove(self.world.available_staff[self.category], self.current_index)
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
 

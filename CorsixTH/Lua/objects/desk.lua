@@ -68,14 +68,16 @@ object.orientations = {
     use_position = "passable",
   },
   east = {
-    footprint = { {0, -2}, {-1, -1}, {0, -1}, {-1, 0, only_passable = true}, {0, 0} },
+    footprint = { {0, -2}, {-1, -1}, {0, -1}, {-1, 0, only_passable = true}, {0, 0} , {-1, -2, only_passable = true}},
     render_attach_position = {0, -1},
-    use_position = "passable",
+    use_position = {-1, 0},
+    finish_use_position = {-1, -2},
   },
   south = {
-    footprint = { {0, -1, only_passable = true}, {-2, 0}, {-1, -1}, {-1, 0}, {0, 0} },
+    footprint = { {0, -1, only_passable = true}, {-2, 0}, {-1, -1}, {-1, 0}, {0, 0}, {-2, -1, only_passable = true} },
     render_attach_position = {-2, 0},
-    use_position = "passable",
+    use_position = {0, -1},
+    finish_use_position = {-2, -1},
   },
   west = {
     footprint = { {-1, -2}, {0, 0, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0} },

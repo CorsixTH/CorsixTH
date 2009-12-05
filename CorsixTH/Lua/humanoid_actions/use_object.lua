@@ -179,6 +179,10 @@ local function action_use_object_start(action, humanoid)
   if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
     flags = flags + 1024
   end
+  if spec.finish_use_position then
+    action.old_tile_x = object.tile_x + spec.finish_use_position[1]
+    action.old_tile_y = object.tile_y + spec.finish_use_position[2]
+  end
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags
