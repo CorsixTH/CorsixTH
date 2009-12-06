@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.name = _S(4, 16)
+disease.id = "transparency"
 disease.cause = _S(44, 101)
 disease.symptoms = _S(44, 102)
 disease.cure = _S(44, 103)

@@ -38,3 +38,16 @@ function Patient:setDisease(disease)
   self.diagnosis_progress = 0
   self.cure_rooms_visited = 0
 end
+
+function Patient:setHospital(hospital)
+  if self.hospital then
+    self.hospital:removePatient(self)
+  end
+  Humanoid.setHospital(self, hospital)
+  if hospital then
+    if hospital.is_in_world then
+      self:setNextAction{name = "seek_reception", hospital = hospital}
+    end
+    hospital:addPatient(self)
+  end
+end

@@ -80,9 +80,10 @@ local function get_patient()
   return patients[n]
 end
 
-function UI:UI(app)
+function UI:UI(app, local_hospital)
   self:Window()
   self.app = app
+  self.hospital = local_hospital
   self.screen_offset_x = 0
   self.screen_offset_y = 0
   self.cursor = nil

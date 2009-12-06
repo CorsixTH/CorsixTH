@@ -75,7 +75,16 @@ function App:init()
   if not SDL.init("audio", "video", "timer") then
     return false, "Cannot initialise SDL"
   end
-  SDL.wm.setCaption "CorsixTH"
+  local compile_opts = TH.GetCompileOptions()
+  local caption_descs = {compile_opts.renderer}
+  if compile_opts.jit then
+    caption_descs[#caption_descs + 1] = compile_opts.jit
+  end
+  if compile_opts.arch_64 then
+    caption_descs[#caption_descs + 1] = "64 bit"
+  end
+  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
+  SDL.wm.setCaption(self.caption)
   local modes = {"hardware", "doublebuf"}
   self.fullscreen = false
   if _MAP_EDITOR then
@@ -172,7 +181,7 @@ function App:loadLevel(filename)
   self.world:createMapObjects(map_objects)
   
   -- Load UI
-  self.ui = UI(self)
+  self.ui = UI(self, self.world:getLocalPlayerHospital())
   self.world.ui = self.ui
 end
 
@@ -316,7 +325,7 @@ function App:drawFrame()
     fps_history[fps_next] = SDL.getFPS()
     fps_sum = fps_sum + fps_history[fps_next]
     fps_next = (fps_next % #fps_history) + 1
-    SDL.wm.setCaption(("%i FPS, %.1f Kb Lua memory"):format(fps_sum / #fps_history, collectgarbage"count"))
+    SDL.wm.setCaption(self.caption .. (" - %i FPS, %.1f Kb Lua memory"):format(fps_sum / #fps_history, collectgarbage"count"))
   end
 end
 

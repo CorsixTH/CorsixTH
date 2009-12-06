@@ -28,6 +28,7 @@ dofile "object"
 dofile "humanoid"
 dofile "patient"
 dofile "staff_profile"
+dofile "hospital"
 
 class "World"
 
@@ -50,8 +51,19 @@ function World:World(app)
   self.day = 1
   self.hour = 0
   self.idle_cache = {}
-  self.available_diseases = app.diseases -- TODO: Choose available diseases based on level
+  self.available_diseases = {}
+  for i, disease in ipairs(app.diseases) do
+    -- TODO: Also skip disease if not enabled in level config
+    if not disease.pseudo then
+      self.available_diseases[#self.available_diseases + 1] = disease
+      self.available_diseases[disease.id] = disease
+    end
+  end
   self.room_build_callbacks = {--[[a set rather than a list]]}
+  self.hospitals = {}
+  
+  self.hospitals[1] = Hospital(self) -- Player's hospital
+  -- TODO: Add AI and/or multiplayer hospitals
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -67,6 +79,10 @@ function World:World(app)
   end
   self:makeAvailableStaff()
   self:calculateSpawnTiles()
+end
+
+function World:getLocalPlayerHospital()
+  return self.hospitals[1]
 end
 
 function World:calculateSpawnTiles()
@@ -100,13 +116,13 @@ function World:calculateSpawnTiles()
   end
 end
 
-function World:spawnPatient()
+function World:spawnPatient(hospital)
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local patient = self:newEntity("Patient", 2)
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
-  patient:queueAction{name = "seek_reception"}
+  patient:setHospital(hospital)
   return patient
 end
 
@@ -177,7 +193,9 @@ function World:newRoom(x, y, w, h, room_info, ...)
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
   local class = room_info.class and _G[room_info.class] or Room
-  local room = class(x, y, w, h, id, room_info, self, ...)
+  -- TODO: Take hospital based on the owner of the plot the room is built on
+  local hospital = self.hospitals[1]
+  local room = class(x, y, w, h, id, room_info, self, hospital, ...)
   
   self.rooms[id] = room
   self:clearCaches()
@@ -232,19 +250,23 @@ function World:onTick()
       self.hour = self.hour - 24
       self.day = self.day + 1
       if self.day > month_length[self.month] then
+        self.day = month_length[self.month]
         self:onEndMonth()
+        for _, hospital in ipairs(self.hospitals) do
+          hospital:onEndMonth()
+        end
         self.day = 1
         self.month = self.month + 1
         if self.month > 12 then
+          self.month = 12
           self:onEndYear()
           self.month = 1
         end
       end
     end
     for i = 1, self.ticks_per_tick do
-      if math.random(1, 200) == 1 then
-        -- TODO: Variate spawn rate based on level, reputation, etc.
-        self:spawnPatient()
+      for _, hospital in ipairs(self.hospitals) do
+        hospital:tick()
       end
       for _, entity in ipairs(self.entities) do
         if entity.ticks then

@@ -20,9 +20,10 @@ SOFTWARE. --]]
 
 class "Room"
 
-function Room:Room(x, y, w, h, id, room_info, world, door)
+function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.id = id
   self.world = world
+  self.hospital = hospital
   self.x = x
   self.y = y
   self.width = w
@@ -105,6 +106,7 @@ function Room:dealtWithPatient(patient)
       patient.diagnosis_progress = 1.0
     end
     patient:queueAction{name = "seek_room", room_type = "gp"}
+    self.hospital:receiveMoneyForTreatment(patient)
   elseif patient.disease and patient.diagnosed then
     -- Patient just been in a cure room, so either patient now cured, or needs
     -- to move onto next cure room.
@@ -113,18 +115,14 @@ function Room:dealtWithPatient(patient)
     if next_room then
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
-      local spawn_points = self.world.spawn_points
-      patient:queueAction{
-        name = "spawn",
-        mode = "despawn",
-        point = spawn_points[math.random(1, #spawn_points)],
-      }
+      self.hospital:receiveMoneyForTreatment(patient)
+      patient:setMood "happy"
+      patient:setHospital(nil)
     end
   else
     patient:queueAction{name = "meander", count = 2}
     patient:queueAction{name = "idle"}
   end
-  -- TODO: Give player money
 end
 
 local profile_attributes = {

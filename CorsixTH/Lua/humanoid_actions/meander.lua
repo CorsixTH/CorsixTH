@@ -41,15 +41,15 @@ local function meander_action_start(action, humanoid)
       action.count = action.count - 1
     end
   end
-  local procreation
+  local procrastination
   if action.can_idle and math.random(1, 5) == 1 then
-    procreation = {name = "idle", count = math.random(15, 30)}
+    procrastination = {name = "idle", count = math.random(15, 30)}
   else
     action.can_idle = true
-    procreation = {name = "walk", x = x, y = y}
+    procrastination = {name = "walk", x = x, y = y}
   end
-  procreation.must_happen = action.must_happen
-  humanoid:queueAction(procreation, 0)
+  procrastination.must_happen = action.must_happen
+  humanoid:queueAction(procrastination, 0)
 end
 
 return meander_action_start

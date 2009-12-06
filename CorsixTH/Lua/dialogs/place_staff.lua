@@ -92,6 +92,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         else
           entity:onPlaceInCorridor()
         end
+        self.ui.hospital:addStaff(entity)
       end
       self:close()
       return true

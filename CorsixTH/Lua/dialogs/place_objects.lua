@@ -68,7 +68,6 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   self.object_footprint = {}
   
   self:addObjects(object_list)
-    
 end
 
 function UIPlaceObjects:addObjects(object_list)
@@ -270,6 +269,8 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local object = self.objects[self.active_index]
   self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
+  
+  self.ui.hospital:spendMoney(object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
 
   self:removeObject(object, dont_close_if_empty)
 end

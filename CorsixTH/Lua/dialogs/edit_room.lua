@@ -98,6 +98,12 @@ function UIEditRoom:confirm()
     self:finishRoom()
     self:enterObjectsPhase()
   else
+    -- Pay for room
+    local cost = self.room_type.build_cost
+    for i, obj in ipairs(self.room.objects_needed) do
+      cost = cost - obj.object.build_cost
+    end
+    self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
     self:close()
   end
 end

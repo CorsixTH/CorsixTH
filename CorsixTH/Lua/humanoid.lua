@@ -73,6 +73,19 @@ end
 function Humanoid:onClick(ui, button)
 end
 
+function Humanoid:setHospital(hospital)
+  self.hospital = hospital
+  if not hospital or not hospital.is_in_world then
+    local spawn_points = self.world.spawn_points
+    self:setNextAction{
+      name = "spawn",
+      mode = "despawn",
+      point = spawn_points[math.random(1, #spawn_points)],
+      must_happen = true,
+    }
+  end
+end
+
 function Humanoid:setMood(mood)
   self.mood = mood
   if mood == nil then

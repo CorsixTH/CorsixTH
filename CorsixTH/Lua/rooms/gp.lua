@@ -80,6 +80,7 @@ function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
   if patient.disease and not patient.diagnosed then
+    self.hospital:receiveMoneyForTreatment(patient)
     -- TODO: Variate progress with respect to disease and staff skill, etc.
     patient.diagnosis_progress = patient.diagnosis_progress + 1.0
     if patient.diagnosis_progress >= 1.0 then
@@ -93,7 +94,6 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction{name = "meander", count = 2}
     patient:queueAction{name = "idle"}
   end
-  -- TODO: Give player money
 end
 
 return room

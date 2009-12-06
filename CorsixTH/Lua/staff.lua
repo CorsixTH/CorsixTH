@@ -36,13 +36,7 @@ function Staff:fire()
   end
   
   self.fired = true
-  local spawn_points = self.world.spawn_points
-  self:setNextAction{
-    name = "spawn",
-    mode = "despawn",
-    point = spawn_points[math.random(1, #spawn_points)],
-    must_happen = true,
-  }
+  self:setHospital(nil)
   self.hover_cursor = nil
   self.fatigue = nil
   -- TODO: Remove from world/hospital staff list
@@ -128,4 +122,14 @@ function Staff:onPlaceInCorridor()
       return true
     end
   end)
+end
+
+function Staff:setHospital(hospital)
+  if self.hospital then
+    self.hospital:removeStaff(self)
+  end
+  Humanoid.setHospital(self, hospital)
+  if hospital then
+    hospital:addStaff(self)
+  end
 end

@@ -86,15 +86,15 @@ local function action_seek_reception_start(action, humanoid)
   
   -- No reception desk found. One will probably be built soon, somewhere in
   -- the hospital, so either walk to the hospital, or walk around the hospital.
-  local procreation
+  local procrastination
   if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
-    procreation = {name = "meander", count = 1}
+    procrastination = {name = "meander", count = 1}
   else
     local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-    procreation = {name = "walk", x = hosp_x, y = hosp_y}
+    procrastination = {name = "walk", x = hosp_x, y = hosp_y}
   end
-  procreation.must_happen = action.must_happen
-  humanoid:queueAction(procreation, 0)
+  procrastination.must_happen = action.must_happen
+  humanoid:queueAction(procrastination, 0)
 end
 
 return action_seek_reception_start
