@@ -856,6 +856,23 @@ void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
     fnDraw = THAnimation_DrawMorph;
     fnHitTest = THAnimation_HitTestMorph;
 
+    /* Morphing is the process by which two animations are combined to give a
+    single animation of one animation turning into another. At the moment,
+    morphing is done by having a y value, above which the original animation is
+    rendered, and below which the new animation is rendered, and having the y
+    value move upward a bit each frame.
+    One example of where this is used is when transparent or invisible patients
+    are cured at the pharmacy cabinet.
+    The process of morphing requires four state variables, which are stored in
+    the morph target animation:
+      * The y value top limit - m_pMorphTarget->m_iX
+      * The y value threshold - m_pMorphTarget->m_iY
+      * The y value bottom limit - m_pMorphTarget->m_iSpeedX
+      * The y value increment per frame - m_pMorphTarget->m_iSpeedY
+    This obviously means that the morph target should not be ticked or rendered
+    as it's position and speed contain other values.
+    */
+
     int iOrigMinY, iOrigMaxY;
     int iMorphMinY, iMorphMaxY;
 

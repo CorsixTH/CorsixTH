@@ -1539,6 +1539,53 @@ static int l_load_strings(lua_State *L)
     return 1;
 }
 
+static int l_get_compile_options(lua_State *L)
+{
+    lua_settop(L, 0);
+    lua_newtable(L);
+
+#if CORSIX_TH_64BIT
+    lua_pushboolean(L, 1);
+#else
+    lua_pushboolean(L, 0);
+#endif
+    lua_setfield(L, -2, "arch_64");
+
+#if defined(CORSIX_TH_USE_OGL_RENDERER)
+    lua_pushliteral(L, "OpenGL");
+#elif defined(CORSIX_TH_USE_DX9_RENDERER)
+    lua_pushliteral(L, "DirectX 9");
+#elif defined(CORSIX_TH_USE_SDL_RENDERER)
+    lua_pushliteral(L, "SDL");
+#else
+    lua_pushliteral(L, "Unknown");
+#endif
+    lua_setfield(L, -2, "renderer");
+
+#ifdef CORSIX_TH_USE_SDL_MIXER
+    lua_pushboolean(L, 1);
+#else
+    lua_pushboolean(L, 0);
+#endif
+    lua_setfield(L, -2, "audio");
+
+    lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+    lua_getfield(L, -1, "jit");
+    if(lua_type(L, -1) == LUA_TNIL)
+    {
+        lua_replace(L, -2);
+    }
+    else
+    {
+        lua_getfield(L, -1, "version");
+        lua_replace(L, -3);
+        lua_pop(L, 1);
+    }
+    lua_setfield(L, -2, "jit");
+
+    return 1;
+}
+
 static void luaT_setclosure(lua_State *L, lua_CFunction fn, int iUpIndex1, ...)
 {
     int iUpCount = 0;
@@ -1603,6 +1650,7 @@ int luaopen_th(lua_State *L)
     // Misc
     lua_settop(L, iTop);
     luaT_setfunction(l_load_strings, "LoadStrings");
+    luaT_setfunction(l_get_compile_options, "GetCompileOptions");
 
     // Map
     luaT_class(THMap, l_map_new, "map", iMapMT);
