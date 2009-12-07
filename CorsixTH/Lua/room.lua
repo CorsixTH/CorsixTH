@@ -68,7 +68,7 @@ end
 
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return {name = "walk", x = x, y = y}
+  return {name = "walk", x = x, y = y, is_leaving = true}
 end
 
 function Room:createEnterAction()
@@ -248,6 +248,19 @@ function Room:onHumanoidLeave(humanoid)
   assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
   self.humanoids[humanoid] = nil
   self:tryAdvanceQueue()
+  if class.is(humanoid, Staff) then
+    -- Make patients leave the room if there are no longer enough staff
+    if not self:testStaffCritera(self:getRequiredStaffCritera()) then
+      for humanoid in pairs(self.humanoids) do
+        if class.is(humanoid, Patient) then
+          if not humanoid.action_queue[1].is_leaving then
+            humanoid:setNextAction(self:createLeaveAction())
+            humanoid:queueAction(self:createEnterAction())
+          end
+        end
+      end
+    end
+  end
 end
 
 function Room:canHumanoidEnter(humanoid)

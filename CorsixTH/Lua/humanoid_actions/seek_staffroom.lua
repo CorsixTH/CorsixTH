@@ -23,10 +23,14 @@ local function seek_staffroom_action_start(action, humanoid)
   -- interrupted (due to entering the staff room, being picked up, etc.)
   if action.todo_interrupt then
     humanoid.going_to_staffroom = nil
+    if humanoid.mood == "tired" then
+      humanoid:setMood(nil)
+    end
     humanoid:finishAction()
     return
   end
   action.must_happen = true
+  humanoid:setMood "tired"
   
   -- Go to the nearest staff room, if any is found. Else, walk around for a bit.
   local room = humanoid.world:findRoomNear(humanoid, "staff_room")
@@ -34,7 +38,14 @@ local function seek_staffroom_action_start(action, humanoid)
   if room then
     task = room:createEnterAction()
   else
-    task = {name = "meander", count = 1}
+    -- If no staff room found, then leave the current room and walk along the
+    -- corridor rather than walking around in the room.
+    room = humanoid:getRoom()
+    if room then
+      task = room:createLeaveAction()
+    else
+      task = {name = "meander", count = 1}
+    end
   end
   task.must_happen = true
   humanoid:queueAction(task, 0)
