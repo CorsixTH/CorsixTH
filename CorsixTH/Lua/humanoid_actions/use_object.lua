@@ -94,6 +94,11 @@ local function action_use_phase(action, humanoid, phase)
     is_list = true
     anim = anim[math.random(1, #anim)]
   end
+  if not anim then
+    error("No animation for " .. humanoid.humanoid_class .. " using " ..
+      object.object_type.id .. " facing " .. object.direction .. " phase " ..
+      phase)
+  end
   humanoid:setAnimation(anim, action.mirror_flags)
   
   local offset = object.object_type.orientations
