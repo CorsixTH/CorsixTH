@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_sound.h"
+#include <math.h>
 #include <new>
 
 THSoundArchive::THSoundArchive()
@@ -153,3 +154,134 @@ SDL_RWops* THSoundArchive::loadSound(size_t iIndex)
     th_fileinfo_t *pFile = m_pFiles + iIndex;
     return SDL_RWFromConstMem(m_pData + pFile->position, pFile->length);
 }
+
+#ifdef CORSIX_TH_USE_SDL_MIXER
+
+THSoundEffects* THSoundEffects::ms_pSingleton = NULL;
+
+THSoundEffects::THSoundEffects()
+{
+    m_ppSounds = NULL;
+    m_iSoundCount = 0;
+    ms_pSingleton = this;
+    m_iCameraX = 0;
+    m_iCameraY = 0;
+    m_fCameraRadius = 1.0;
+    m_fMasterVolume = 1.0;
+    m_iPostionlessVolume = MIX_MAX_VOLUME;
+
+#define NUM_CHANNELS 32
+#if NUM_CHANNELS >= 32
+    m_iChannelStatus = ~0;
+    Mix_AllocateChannels(32);
+#else
+    m_iChannelStatus = (1 << NUM_CHANNELS) - 1;
+    Mix_AllocateChannels(NUM_CHANNELS);
+#endif
+#undef NUM_CHANNELS
+
+    Mix_ChannelFinished(_onChannelFinish);
+}
+
+THSoundEffects::~THSoundEffects()
+{
+    setSoundArchive(NULL);
+    if(ms_pSingleton == this)
+        ms_pSingleton = NULL;
+}
+
+void THSoundEffects::_onChannelFinish(int iChannel)
+{
+    THSoundEffects *pThis = getSingleton();
+    if(pThis == NULL)
+        return;
+
+    pThis->m_iChannelStatus |= (1 << iChannel);
+}
+
+THSoundEffects* THSoundEffects::getSingleton()
+{
+    return ms_pSingleton;
+}
+
+void THSoundEffects::setSoundArchive(THSoundArchive *pArchive)
+{
+    for(size_t i = 0; i < m_iSoundCount; ++i)
+    {
+        Mix_FreeChunk(m_ppSounds[i]);
+    }
+    delete[] m_ppSounds;
+    m_ppSounds = NULL;
+    m_iSoundCount = 0;
+
+    if(pArchive == NULL)
+        return;
+
+    m_ppSounds = new Mix_Chunk*[pArchive->getSoundCount()];
+    for(; m_iSoundCount < pArchive->getSoundCount(); ++m_iSoundCount)
+    {
+        m_ppSounds[m_iSoundCount] = NULL;
+        SDL_RWops *pRwop = pArchive->loadSound(m_iSoundCount);
+        if(pRwop)
+        {
+            m_ppSounds[m_iSoundCount] = Mix_LoadWAV_RW(pRwop, 1);
+            if(m_ppSounds[m_iSoundCount])
+                Mix_VolumeChunk(m_ppSounds[m_iSoundCount], MIX_MAX_VOLUME);
+        }
+    }
+}
+
+void THSoundEffects::playSound(size_t iIndex)
+{
+    if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
+        return;
+
+    int iChannel = 0;
+    for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
+
+    Mix_Volume(iChannel, m_iPostionlessVolume);
+    Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);
+}
+
+void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
+{
+    if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
+        return;
+
+    double fDX = (double)(iX - m_iCameraX);
+    double fDY = (double)(iY - m_iCameraY);
+    double fDistance = sqrt(fDX * fDX + fDY * fDY);
+    if(fDistance > m_fCameraRadius)
+        return;
+    fDistance = fDistance / m_fCameraRadius;
+
+    int iChannel = 0;
+    for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
+
+    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.9) * (double)MIX_MAX_VOLUME;
+    Mix_Volume(iChannel, (int)(fVolume + 0.5));
+    Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);
+
+    playSound(iIndex);
+}
+
+void THSoundEffects::setCamera(int iX, int iY, int iRadius)
+{
+    m_iCameraX = iX;
+    m_iCameraY = iY;
+    m_fCameraRadius = (double)iRadius;
+    if(m_fCameraRadius < 0.001)
+        m_fCameraRadius = 0.001;
+}
+
+#else // CORSIX_TH_USE_SDL_MIXER
+
+THSoundEffects::THSoundEffects() {}
+THSoundEffects::~THSoundEffects() {}
+THSoundEffects* THSoundEffects::getSingleton() {return NULL;}
+void THSoundEffects::setSoundArchive(THSoundArchive *pArchive) {}
+void THSoundEffects::playSound(size_t iIndex) {}
+void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY) {}
+void THSoundEffects::setCamera(int iX, int iY, int iRadius) {}
+
+#endif // CORSIX_TH_USE_SDL_MIXER

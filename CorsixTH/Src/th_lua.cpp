@@ -1511,6 +1511,36 @@ static int l_soundarc_filedata(lua_State *L)
     return 1;
 }
 
+static int l_soundfx_new(lua_State *L)
+{
+    THSoundEffects* pEffects = luaT_stdnew<THSoundEffects>(L, LUA_ENVIRONINDEX, true);
+    return 1;
+}
+
+static int l_soundfx_set_archive(lua_State *L)
+{
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    THSoundArchive *pArchive = luaT_testuserdata<THSoundArchive>(L, 2);
+    pEffects->setSoundArchive(pArchive);
+    lua_settop(L, 2);
+    luaT_setenvfield(L, 1, "archive");
+    return 1;
+}
+
+static int l_soundfx_play(lua_State *L)
+{
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    pEffects->playSound((size_t)luaL_checkint(L, 2));
+    return 0;
+}
+
+static int l_soundfx_set_camera(lua_State *L)
+{
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    pEffects->setCamera(luaL_checkint(L, 2), luaL_checkint(L, 3), luaL_checkint(L, 4));
+    return 0;
+}
+
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
@@ -1622,8 +1652,9 @@ int luaopen_th(lua_State *L)
     const int iBitmapMT  =10; lua_createtable(L, 0, 2);
     const int iCursorMT  =11; lua_createtable(L, 0, 2);
     const int iSoundArcMT=12; lua_createtable(L, 0, 3);
+    const int iSoundFxMT =13; lua_createtable(L, 0, 2);
 
-    const int iTH        =13; lua_createtable(L, 0,12);
+    const int iTH        =14; lua_createtable(L, 0,13);
     const int iTop = iTH;
 
     lua_checkstack(L, 10);
@@ -1790,6 +1821,13 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_soundarc_filename, "getFilename");
     luaT_setfunction(l_soundarc_duration, "getDuration");
     luaT_setfunction(l_soundarc_filedata, "getFileData");
+    luaT_endclass();
+
+    // Sound Effects
+    luaT_class(THSoundEffects, l_soundfx_new, "soundEffects", iSoundFxMT);
+    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", iSoundArcMT);
+    luaT_setfunction(l_soundfx_play, "play");
+    luaT_setfunction(l_soundfx_set_camera, "setCamera");
     luaT_endclass();
 
 #undef luaT_class

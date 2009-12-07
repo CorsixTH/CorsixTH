@@ -161,6 +161,10 @@ function Audio:init()
       if not self.sound_archive:load(data) then
         print "Notice: No sound effects as SOUND/DATA/SOUND-0.DAT could not be loaded"
       else
+        self.sound_fx = TH.soundEffects()
+        self.sound_fx:setSoundArchive(self.sound_archive)
+        local w, h = self.app.config.width / 2, self.app.config.height / 2
+        self.sound_fx:setCamera(w, h, (w^2 + h^2)^0.5)
         --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
       end
     end

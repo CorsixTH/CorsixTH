@@ -286,6 +286,7 @@ public:
     void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
 
     void getFrameExtent(unsigned int iFrame, const THLayers_t& oLayers, int* pMinX, int* pMaxX, int* pMinY, int* pMaxY, unsigned long iFlags) const;
+    unsigned int getFrameSound(unsigned int iFrame);
 
     bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
 
@@ -403,6 +404,10 @@ protected:
     int m_iSpeedX;
     //! Amount to change m_iY per tick
     int m_iSpeedY;
+
+    int m_iLastX;
+    int m_iLastY;
+
     THLayers_t m_oLayers;
 };
 

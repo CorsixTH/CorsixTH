@@ -23,6 +23,7 @@ SOFTWARE.
 #include "config.h"
 #include "th_gfx.h"
 #include "th_map.h"
+#include "th_sound.h"
 #include <new>
 #include <memory.h>
 #include <limits.h>
@@ -451,6 +452,14 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
     }
 }
 
+unsigned int THAnimationManager::getFrameSound(unsigned int iFrame)
+{
+    if(iFrame < m_iFrameCount)
+        return m_pFrames[iFrame].iSound;
+    else
+        return 0;
+}
+
 void THAnimationManager::getFrameExtent(unsigned int iFrame, const THLayers_t& oLayers, int* pMinX, int* pMaxX, int* pMinY, int* pMaxY, unsigned long iFlags) const
 {
     int iMinX = INT_MAX;
@@ -674,6 +683,18 @@ void THAnimation::tick()
         if(m_pMorphTarget->m_iY < m_pMorphTarget->m_iX)
             m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
     }
+
+    if(m_iLastX != INT_MAX)
+    {
+        unsigned int iSound = m_pManager->getFrameSound(m_iFrame);
+        if(iSound)
+        {
+            THSoundEffects *pSounds = THSoundEffects::getSingleton();
+            if(pSounds)
+                pSounds->playSoundAt(iSound, m_iLastX, m_iLastY);
+        }
+        m_iLastX = INT_MAX;
+    }
 }
 
 void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
@@ -681,6 +702,8 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
     if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
         return;
 
+    m_iLastX = m_iX + iDestX;
+    m_iLastY = m_iY + iDestY;
     if(m_pManager)
         m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX, m_iY + iDestY, iFlags);
 }
@@ -774,6 +797,8 @@ THAnimation::THAnimation()
     m_iY = 0;
     m_iSpeedX = 0;
     m_iSpeedY = 0;
+    m_iLastX = INT_MAX;
+    m_iLastY = INT_MAX;
     for(int i = 0; i < 13; ++i)
         m_oLayers.iLayerContents[i] = 0;
 }

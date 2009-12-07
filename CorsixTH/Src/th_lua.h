@@ -133,6 +133,11 @@ template <> struct luaT_classinfo<THSoundArchive> {
     static inline const char* name() {return "SoundArchive";}
 };
 
+class THSoundEffects;
+template <> struct luaT_classinfo<THSoundEffects> {
+    static inline const char* name() {return "SoundEffects";}
+};
+
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {

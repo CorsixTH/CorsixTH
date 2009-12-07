@@ -24,6 +24,9 @@ SOFTWARE.
 #define CORSIX_TH_TH_SOUND_H_
 #include "th.h"
 #include <SDL.h>
+#ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_mixer.h>
+#endif
 
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
 class THSoundArchive
@@ -79,6 +82,36 @@ protected:
     th_fileinfo_t* m_pFiles;
     unsigned char* m_pData;
     size_t m_iFileCount;
+};
+
+class THSoundEffects
+{
+public:
+    THSoundEffects();
+    ~THSoundEffects();
+
+    static THSoundEffects* getSingleton();
+
+    void setSoundArchive(THSoundArchive *pArchive);
+
+    void playSound(size_t iIndex);
+    void playSoundAt(size_t iIndex, int iX, int iY);
+    void setCamera(int iX, int iY, int iRadius);
+
+protected:
+#ifdef CORSIX_TH_USE_SDL_MIXER
+    static THSoundEffects* ms_pSingleton;
+    static void _onChannelFinish(int iChannel);
+
+    Mix_Chunk **m_ppSounds;
+    size_t m_iSoundCount;
+    uint32_t m_iChannelStatus;
+    int m_iCameraX;
+    int m_iCameraY;
+    double m_fCameraRadius;
+    double m_fMasterVolume;
+    int m_iPostionlessVolume;
+#endif // CORSIX_TH_USE_SDL_MIXER
 };
 
 #endif // CORSIX_TH_TH_SOUND_H_
