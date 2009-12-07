@@ -1544,7 +1544,7 @@ static int l_get_compile_options(lua_State *L)
     lua_settop(L, 0);
     lua_newtable(L);
 
-#if CORSIX_TH_64BIT
+#ifdef CORSIX_TH_64BIT
     lua_pushboolean(L, 1);
 #else
     lua_pushboolean(L, 0);
