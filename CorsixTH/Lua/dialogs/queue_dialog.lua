@@ -78,7 +78,7 @@ function UIQueue:draw(canvas)
   font:draw(canvas, num_patients, x + 140, y + 22)
     
   font:draw(canvas, _S(49, 2), x + 22, y + 45) -- Expected
-  font:draw(canvas, queue.expected, x + 140, y + 45)
+  font:draw(canvas, queue.expected_count, x + 140, y + 45)
     
   font:draw(canvas, _S(49, 3), x + 22, y + 68) -- Visitor Count
   font:draw(canvas, queue.visitor_count, x + 140, y + 68)

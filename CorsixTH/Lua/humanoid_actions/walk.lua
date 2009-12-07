@@ -185,6 +185,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   
   local door = humanoid.world:getObject(dx, dy, "door")
+  door.queue:unexpect(humanoid)
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
   if (door.user)

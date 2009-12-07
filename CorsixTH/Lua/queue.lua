@@ -31,10 +31,25 @@ class "Queue"
 
 function Queue:Queue()
   self.reported_size = 0
-  self.expected = 0
+  self.expected = {}
+  self.expected_count = 0
   self.visitor_count = 0
   self.max_size = 20
   self.bench_threshold = 0
+end
+
+function Queue:expect(humanoid)
+  if not self.expected[humanoid] then
+    self.expected[humanoid] = true
+    self.expected_count = self.expected_count + 1
+  end
+end
+
+function Queue:unexpect(humanoid)
+  if self.expected[humanoid] then
+    self.expected[humanoid] = nil
+    self.expected_count = self.expected_count - 1
+  end
 end
 
 function Queue:decreaseMaxSize()

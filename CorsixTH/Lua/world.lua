@@ -434,8 +434,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     if not room_type_id or r.room_info.id == room_type_id then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-        -- TODO: change q to include expected patients (once implemented), so it reacts faster
-      local q = r.door.queue:reportedSize()
+      local q = r.door.queue:reportedSize() + r.door.queue.expected_count
       if d and (mode == "nearest" and d < distance) or
                (mode == "smallqueue" and (not queue or tile_factor * (queue - q) > (d - distance))) then
         queue = q

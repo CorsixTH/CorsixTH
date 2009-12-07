@@ -30,6 +30,7 @@ local function action_seek_room_start(action, humanoid)
   local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "smallqueue")
   if room then
     humanoid:setNextAction(room:createEnterAction())
+    room.door.queue:expect(humanoid)
   else
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
     humanoid:setMood "wait"
