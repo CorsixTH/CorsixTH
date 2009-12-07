@@ -76,6 +76,17 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
+  local api_version = dofile "api_version"
+  if api_version ~= compile_opts.api_version then
+    api_version = api_version or 0
+    compile_opts.api_version = compile_opts.api_version or 0
+    if api_version < compile_opts.api_version then
+      print "Notice: Compiled binary is more recent than Lua scripts."
+    elseif api_version > compile_opts.api_version then
+      print("Warning: Compiled binary is out of date. CorsixTH will likely"..
+      " fail to run.")
+    end
+  end
   local caption_descs = {compile_opts.renderer}
   if compile_opts.jit then
     caption_descs[#caption_descs + 1] = compile_opts.jit

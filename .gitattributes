@@ -23,6 +23,7 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/CorsixTH.vcproj eol=crlf
+CorsixTH/Lua/api_version.lua -text
 CorsixTH/Lua/app.lua -text
 CorsixTH/Lua/audio.lua -text
 CorsixTH/Lua/class.lua -text

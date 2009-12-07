@@ -134,6 +134,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty)
   if object.qty == 0 then
     if #self.objects == 1 then
       self:clearBlueprint()
+      self.object_cell_x, self.object_cell_y = nil
       if dont_close_if_empty then
         self.list_header.visible = false
         self.place_objects = false -- No object to place

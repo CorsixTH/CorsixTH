@@ -1539,6 +1539,13 @@ static int l_load_strings(lua_State *L)
     return 1;
 }
 
+static int get_api_version()
+{
+#define local int
+#include "../Lua/api_version.lua"
+#undef local
+}
+
 static int l_get_compile_options(lua_State *L)
 {
     lua_settop(L, 0);
@@ -1582,6 +1589,9 @@ static int l_get_compile_options(lua_State *L)
         lua_pop(L, 1);
     }
     lua_setfield(L, -2, "jit");
+
+    lua_pushinteger(L, get_api_version());
+    lua_setfield(L, -2, "api_version");
 
     return 1;
 }

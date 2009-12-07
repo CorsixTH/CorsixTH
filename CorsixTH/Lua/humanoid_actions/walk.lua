@@ -103,6 +103,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
   end
 end
 
+local flags_here, flags_there = {}, {}
 local function action_walk_tick(humanoid)
   local action = humanoid.action_queue[1]
   local path_x = action.path_x
@@ -125,7 +126,17 @@ local function action_walk_tick(humanoid)
   -- Make sure that the next tile hasn't somehow become impassable since our
   -- route was determined
   local map = humanoid.world.map.th
-  if not map:getCellFlags(x2, y2).passable then
+  map:getCellFlags(x1, y1, flags_here)
+  map:getCellFlags(x2, y2, flags_there)
+  local recalc_route = not flags_there.passable and flags_here.passable
+  if not recalc_route and flags_here.roomId ~= flags_there.roomId then
+    local door = TheApp.objects.door.thob
+    if (flags_here.thob ~= door and flags_there.thob ~= door)
+    or map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId then
+      recalc_route = true
+    end
+  end
+  if recalc_route then
     if map:getCellFlags(x1, y1).passable then
       humanoid:setTilePositionSpeed(x1, y1)
       if action.on_next_tile_set then
