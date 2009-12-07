@@ -84,7 +84,7 @@ function App:init()
       print "Notice: Compiled binary is more recent than Lua scripts."
     elseif api_version > compile_opts.api_version then
       print("Warning: Compiled binary is out of date. CorsixTH will likely"..
-      " fail to run.")
+      " fail to run until you recompile the binary.")
     end
   end
   local caption_descs = {compile_opts.renderer}

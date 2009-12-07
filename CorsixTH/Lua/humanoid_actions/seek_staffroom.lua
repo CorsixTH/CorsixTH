@@ -37,6 +37,7 @@ local function seek_staffroom_action_start(action, humanoid)
     humanoid.last_room = humanoid:getRoom()
     local task = room:createEnterAction()
     task.must_happen = true
+    task.is_leaving = true
     humanoid:queueAction(task, 0)
   else
     -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists

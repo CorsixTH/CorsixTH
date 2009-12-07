@@ -140,7 +140,7 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
   for attribute, count in pairs(criteria) do
     if attribute == "Nurse" then
       for humanoid in pairs(self.humanoids) do
-        if humanoid.humanoid_class == "Nurse" then
+        if humanoid.humanoid_class == "Nurse" and not humanoid.action_queue[1].is_leaving then
           count = count - 1
         end
       end
@@ -152,7 +152,8 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
       end
     elseif attribute == "Doctor" then
       for humanoid in pairs(self.humanoids) do
-        if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon" then
+        if (humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon")
+        and not humanoid.action_queue[1].is_leaving then
           count = count - 1
         end
       end
@@ -165,7 +166,8 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
     elseif attribute == "Psychiatrist" or attribute == "Surgeon" or attribute == "Researcher" then
       attribute = profile_attributes[attribute]
       for humanoid in pairs(self.humanoids) do
-        if humanoid.profile and humanoid.profile[attribute] == 1.0 then
+        if humanoid.profile and humanoid.profile[attribute] == 1.0
+        and not humanoid.action_queue[1].is_leaving then
           count = count - 1
         end
       end

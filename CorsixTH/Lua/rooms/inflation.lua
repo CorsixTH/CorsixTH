@@ -69,6 +69,8 @@ function InflationRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end,
   }
+  
+  return Room.commandEnteringPatient(self, patient)
 end
 
 return room

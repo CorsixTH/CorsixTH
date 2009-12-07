@@ -109,7 +109,7 @@ local function use_staffroom_action_start(action, humanoid)
           if room and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
             humanoid:queueAction(room:createEnterAction())
           else
-            humanoid:queueAction({name = "meander"})
+            humanoid:queueAction{name = "meander"}
           end
           humanoid.last_room = nil
         else

@@ -1541,9 +1541,7 @@ static int l_load_strings(lua_State *L)
 
 static int get_api_version()
 {
-#define local int
 #include "../Lua/api_version.lua"
-#undef local
 }
 
 static int l_get_compile_options(lua_State *L)
