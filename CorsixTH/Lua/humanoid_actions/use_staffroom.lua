@@ -104,9 +104,14 @@ local function use_staffroom_action_start(action, humanoid)
       obj_use_time = obj_use_time - 1
       if obj_use_time == 0 then
         if humanoid.fatigue == 0 then
-          -- TODO: return to the room you were previously in
           humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
-          humanoid:queueAction({name = "meander"})
+          local room = humanoid.last_room
+          if room and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+            humanoid:queueAction(room:createEnterAction())
+          else
+            humanoid:queueAction({name = "meander"})
+          end
+          humanoid.last_room = nil
         else
           -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
           action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)

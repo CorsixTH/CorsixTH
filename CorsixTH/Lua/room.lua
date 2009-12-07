@@ -131,12 +131,12 @@ local profile_attributes = {
   Researcher = "is_researcher",
 }
 
-function Room:testStaffCritera(criteria, extra_humanoid)
-  -- critera should be required_staff or maximum_staff table.
+function Room:testStaffCriteria(criteria, extra_humanoid)
+  -- criteria should be required_staff or maximum_staff table.
   -- if extra_humanoid is nil, then returns true if the humanoids in the room
-  -- meet the given critera, and false otherwise.
+  -- meet the given criteria, and false otherwise.
   -- if extra_humanoid is not nil, then returns true if the given humanoid
-  -- would assist in satisfying the given critera, and false if they would not.
+  -- would assist in satisfying the given criteria, and false if they would not.
   for attribute, count in pairs(criteria) do
     if attribute == "Nurse" then
       for humanoid in pairs(self.humanoids) do
@@ -185,13 +185,13 @@ function Room:testStaffCritera(criteria, extra_humanoid)
 end
 
 local no_staff = {}
-function Room:getMaximumStaffCritera()
+function Room:getMaximumStaffCriteria()
   -- Some rooms have dynamic criteria (i.e. dependent upon the number of items
   -- in the room), so this method is provided for such rooms to override it.
   return self.room_info.maximum_staff or self.room_info.required_staff or no_staff
 end
 
-function Room:getRequiredStaffCritera()
+function Room:getRequiredStaffCriteria()
   return self.room_info.required_staff or no_staff
 end
 
@@ -205,8 +205,8 @@ function Room:onHumanoidEnter(humanoid)
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
-    local critera = self:getMaximumStaffCritera()
-    if self:testStaffCritera(critera) or not self:testStaffCritera(critera, humanoid) then
+    local criteria = self:getMaximumStaffCriteria()
+    if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, humanoid) then
       self.humanoids[humanoid] = true
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction{name = "meander"}
@@ -221,7 +221,7 @@ function Room:onHumanoidEnter(humanoid)
   self:tryAdvanceQueue()
   if class.is(humanoid, Patient) then
     -- Check if the staff requirements are still fulfilled (the staff might have left / been picked up meanwhile)
-    if self:testStaffCritera(self:getRequiredStaffCritera()) then
+    if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
       self:commandEnteringPatient(humanoid)
     else
       humanoid:setNextAction(self:createLeaveAction())
@@ -254,7 +254,7 @@ function Room:onHumanoidLeave(humanoid)
   self:tryAdvanceQueue()
   if class.is(humanoid, Staff) then
     -- Make patients leave the room if there are no longer enough staff
-    if not self:testStaffCritera(self:getRequiredStaffCritera()) then
+    if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) then
           if not humanoid.action_queue[1].is_leaving then
@@ -275,7 +275,7 @@ function Room:canHumanoidEnter(humanoid)
   -- By default, patients can only enter if there are sufficient staff and not
   -- too many patients.
   if class.is(humanoid, Patient) then
-    return self:testStaffCritera(self:getRequiredStaffCritera()) and self:getPatientCount() < self.maximum_patients
+    return self:testStaffCriteria(self:getRequiredStaffCriteria()) and self:getPatientCount() < self.maximum_patients
   end
   -- By default, other classes of humanoids cannot enter
   return false
