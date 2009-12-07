@@ -129,10 +129,12 @@ local function action_walk_tick(humanoid)
   map:getCellFlags(x1, y1, flags_here)
   map:getCellFlags(x2, y2, flags_there)
   local recalc_route = not flags_there.passable and flags_here.passable
+  -- Also make sure that a room hasn't unexpectedly been built on top of the
+  -- path since the route was calculated.
   if not recalc_route and flags_here.roomId ~= flags_there.roomId then
     local door = TheApp.objects.door.thob
-    if (flags_here.thob ~= door and flags_there.thob ~= door)
-    or map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId then
+    if (flags_here.thob ~= door and flags_there.thob ~= door) and (not flags_there.room
+    or map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId) then
       recalc_route = true
     end
   end
