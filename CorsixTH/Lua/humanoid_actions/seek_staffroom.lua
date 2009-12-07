@@ -30,25 +30,18 @@ local function seek_staffroom_action_start(action, humanoid)
     return
   end
   action.must_happen = true
-  humanoid:setMood "tired"
   
-  -- Go to the nearest staff room, if any is found. Else, walk around for a bit.
+  -- Go to the nearest staff room, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "staff_room")
-  local task
   if room then
-    task = room:createEnterAction()
+    local task = room:createEnterAction()
+    task.must_happen = true
+    humanoid:queueAction(task, 0)
   else
-    -- If no staff room found, then leave the current room and walk along the
-    -- corridor rather than walking around in the room.
-    room = humanoid:getRoom()
-    if room then
-      task = room:createLeaveAction()
-    else
-      task = {name = "meander", count = 1}
-    end
+    -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists
+    print("No staff room found in seek_staffroom action")
+    humanoid.going_to_staffroom = nil
   end
-  task.must_happen = true
-  humanoid:queueAction(task, 0)
 end
 
 return seek_staffroom_action_start

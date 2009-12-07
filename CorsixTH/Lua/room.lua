@@ -220,9 +220,13 @@ function Room:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
   self:tryAdvanceQueue()
   if class.is(humanoid, Patient) then
-    -- Patients should only be entering if they are meant to, so don't perform
-    -- any checks here - just take control of them.
-    self:commandEnteringPatient(humanoid)
+    -- Check if the staff requirements are still fulfilled (the staff might have left / been picked up meanwhile)
+    if self:testStaffCritera(self:getRequiredStaffCritera()) then
+      self:commandEnteringPatient(humanoid)
+    else
+      humanoid:setNextAction(self:createLeaveAction())
+      humanoid:queueAction(self:createEnterAction())
+    end
   end
 end
 

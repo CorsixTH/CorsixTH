@@ -94,14 +94,29 @@ end
 -- Check if fatigue is over a certain level (now: 0.8, later: configurable), and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   if self.fatigue and self.fatigue >= 0.8 and not class.is(self:getRoom(), StaffRoom) then
+    self:setMood("tired")
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
     if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
+      return
+    end
+    -- If no staff room exists, prevent further checks until one is built
+    if not self.world:findRoomNear(self, "staff_room") then
+      self.going_to_staffroom = true
+      local callback
+      callback = function(room)
+        if room.room_info.id == "staff_room" then
+          self.going_to_staffroom = false
+          self.world:unregisterRoomBuildCallback(callback)
+        end
+      end
+      self.world:registerRoomBuildCallback(callback)
       return
     end
     -- Else, seek a staff room now
     self:setNextAction{name = "seek_staffroom", must_happen = true}
     self.going_to_staffroom = true
     -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
+    -- Exception: if no staff room exists, it is also set to true until one is built
   end
 end
 
