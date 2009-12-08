@@ -88,7 +88,13 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   local i = 1
   local function item_callback(index, qty)
     return function(self)
-      self:purchaseItem(index, qty)
+      if self:purchaseItem(index, qty) == 0 then
+        self.ui:playSound "wrong2.wav"
+      elseif qty > 0 then
+        self.ui:playSound "AddItemJ.wav"
+      else
+        self.ui:playSound "DelItemJ.wav"
+      end
     end
   end
   for y = 34, 205, 19 do
@@ -119,6 +125,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   quantity = quantity - o.qty
   o.qty = o.qty + quantity
   self.total_price = self.total_price + quantity * o.object.build_cost
+  return quantity
 end
 
 function UIFurnishCorridor:confirm()

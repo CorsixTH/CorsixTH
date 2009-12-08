@@ -229,8 +229,10 @@ public:
     // When using the normal versions, NULL is returned for invalid co-ords.
           THMapNode* getNode(int iX, int iY);
     const THMapNode* getNode(int iX, int iY) const;
+    const THMapNode* getOriginalNode(int iX, int iY) const;
           THMapNode* getNodeUnchecked(int iX, int iY);
     const THMapNode* getNodeUnchecked(int iX, int iY) const;
+    const THMapNode* getOriginalNodeUnchecked(int iX, int iY) const;
 
     //! Convert world (tile) co-ordinates to absolute screen co-ordinates
     template <typename T>
@@ -255,6 +257,7 @@ protected:
                                   int iTestX, int iTestY) const;
 
     THMapNode* m_pCells;
+    THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
     THSpriteSheet* m_pBlocks;
     int m_iWidth;
     int m_iHeight;

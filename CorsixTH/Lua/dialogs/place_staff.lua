@@ -53,6 +53,7 @@ function UIPlaceStaff:close()
     self.staff.action_queue[1].window = nil
     self.staff:setNextAction{name = "meander"}
   end
+  self.ui:playSound "plac_st2.wav"
   Window.close(self)
 end
 

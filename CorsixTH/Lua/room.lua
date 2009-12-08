@@ -32,6 +32,7 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.maximum_patients = 1 -- A good default for most rooms
   door.room = self
   self.door = door
+  self.built = false
   
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
   

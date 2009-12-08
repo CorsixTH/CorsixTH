@@ -55,14 +55,14 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
     self:addPanel(113, 0, y) -- Desc text box
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel)
+  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav"
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(9, 8, 41, 42, 118, self.purchaseItems) -- Disabled purchase items button
     :setDisabledSprite(127):enable(false)
   self:addPanel(128,  92, 100) -- Disabled pick up items button
   self.confirm_button = 
   self:addPanel(121, 134, 100):makeButton(0, 8, 43, 42, 122, self.confirm)
-    :setDisabledSprite(129):enable(false) -- Disabled confirm button
+    :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
   
   self.objects = {}
   self.object_footprint = {}

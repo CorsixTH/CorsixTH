@@ -216,10 +216,14 @@ function World:newRoom(x, y, w, h, room_info, ...)
   
   self.rooms[id] = room
   self:clearCaches()
+  return room
+end
+
+function World:markRoomAsBuilt(room)
+  room.built = true
   for callback in pairs(self.room_build_callbacks) do
     callback(room)
   end
-  return room
 end
 
 function World:clearCaches()
@@ -456,7 +460,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     distance = 2^30
   end
   for _, r in ipairs(self.rooms) do
-    if not room_type_id or r.room_info.id == room_type_id then
+    if r.built and (not room_type_id or r.room_info.id == room_type_id) then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
       local q = r.door.queue:reportedSize() + r.door.queue.expected_count

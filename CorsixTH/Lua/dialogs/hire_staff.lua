@@ -39,8 +39,16 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(255, 0, 241)
   
   -- Left hand side tabs
-  local function category(name, state)
-    self:setCategory(state and name or nil)
+  local function category(name, state, btn)
+    if #self.world.available_staff[name] == 0 then
+      self.ui:playSound "wrong2.wav"
+      if state then
+        btn:toggle()
+      end
+    else
+      self.ui:playSound "selectx.wav"
+      self:setCategory(state and name or nil)
+    end
   end
   self.tabs = {
     self:addPanel(264, 8,   8):makeToggleButton(0, 0, 40, 69, 265, category, "Doctor"),
@@ -87,8 +95,10 @@ function UIHireStaff:hire()
     profile = profile and profile[self.current_index]
   end
   if not profile then
+    self.ui:playSound "wrong2.wav"
     return
   end
+  self.ui:playSound "YesX.wav"
   table.remove(self.world.available_staff[self.category], self.current_index)
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
@@ -165,9 +175,11 @@ function UIHireStaff:moveBy(n)
     elseif self.current_index > #category then
       self.current_index = #category
     else
+      self.ui:playSound "selectx.wav"
       return true
     end
   end
+  self.ui:playSound "wrong2.wav"
   return false
 end
 

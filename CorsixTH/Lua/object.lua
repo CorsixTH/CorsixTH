@@ -95,6 +95,15 @@ end
 function Object:setTile(x, y)
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+    if self.footprint then
+      local map = self.world.map.th
+      for _, xy in ipairs(self.footprint) do
+        map:setCellFlags(self.tile_x + xy[1], self.tile_y + xy[2], {
+          buildable = true,
+          passable = true,
+        })
+      end
+    end
   end
   self.tile_x = x
   self.tile_y = y

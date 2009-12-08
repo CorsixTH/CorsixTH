@@ -104,6 +104,8 @@ function UIEditRoom:confirm()
       cost = cost - obj.object.build_cost
     end
     self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
+    
+    self.world:markRoomAsBuilt(self.room)
     self:close()
   end
 end
@@ -185,7 +187,7 @@ function UIEditRoom:finishRoom()
             break
           end
           local tag = anim:getTag()
-          if tag == "window" or existing == "window" then
+          if tag == "window" or existing == "window_tiles" then
             tiles = "window_tiles"
           end
           if tag == "door" then
@@ -226,14 +228,68 @@ end
 function UIEditRoom:returnToDoorPhase()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
+  local room = self.room
   
-  self.desc_text = _S(3, 13)
-  self.confirm_button:enable(true)
   self.purchase_button:enable(false)
-  self.world.rooms[self.room.id] = nil
+  self.world.rooms[room.id] = nil
   UIPlaceObjects.removeAllObjects(self)
   
-  --TODO
+  -- Remove (and sell) any placed objects
+  for x = room.x, room.x + room.width - 1 do
+    for y = room.y, room.y + room.height - 1 do
+      while true do
+        local object = self.world:getObject(x, y)
+        if not object or object == room.door then
+          break
+        end
+        self.world:destroyEntity(object)
+        local object_type = object.object_type
+        self.ui.hospital:receiveMoney(object_type.build_cost, _S(8, 27) .. ": " .. object_type.name)
+      end
+    end
+  end
+  self.world:destroyEntity(self.room.door)
+  
+  -- Remove walls
+  local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
+    for i = 1, n_steps do
+      local existing = map:getCell(x, y, layer)
+      if self.world:getWallIdFromBlockId(existing) ~= "external" then
+        local neighbour = self.world:getRoom(x + neigh_x, y + neigh_y)
+        if neighbour then
+          if neigh_x ~= 0 or neigh_y ~= 0 then
+            local set = self.world:getWallSetFromBlockId(existing)
+            local dir = self.world:getWallDirFromBlockId(existing)
+            if set == "inside_tiles" then
+              set = "outside_tiles"
+            end
+            map:setCell(x, y, layer, self.world.wall_types[neighbour.room_info.wall_type][set][dir])
+          end
+        else
+          map:setCell(x, y, layer, 0)
+        end
+      end
+      x = x + step_x
+      y = y + step_y
+    end
+  end
+  remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0)
+  remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1)
+  remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0)
+  remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0)
+  
+  -- Reset floor tiles and flags
+  self.world.map.th:unmarkRoom(room.x, room.y, room.width, room.height)
+  
+  -- Re-create blueprint
+  local rect = self.blueprint_rect
+  local old_w, old_h = rect.w, rect.h
+  rect.w = 0
+  rect.h = 0
+  self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
+  
+  -- We've gone all the way back to wall phase, so step forward to door phase
+  self:enterDoorPhase()
 end
 
 function UIEditRoom:screenToWall(x, y)

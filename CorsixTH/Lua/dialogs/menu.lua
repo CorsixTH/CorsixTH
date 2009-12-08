@@ -268,6 +268,7 @@ function UIMenuBar:onMouseDown(button, x, y)
   if new_active ~= self.active_menu then
     self.active_menu = new_active
     repaint = true
+    self.ui:playSound "selectx.wav"
   end
   return repaint
 end
@@ -318,6 +319,7 @@ function UIMenuBar:onMouseUp(button, x, y)
         end
         self.active_menu = false
       end
+      self.ui:playSound "selectx.wav"
       return true
     end
   end

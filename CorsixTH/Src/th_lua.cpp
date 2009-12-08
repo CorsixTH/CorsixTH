@@ -532,6 +532,35 @@ static int l_map_mark_room(lua_State *L)
     return 1;
 }
 
+static int l_map_unmark_room(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX_ = luaL_checkint(L, 2) - 1;
+    int iY_ = luaL_checkint(L, 3) - 1;
+    int iW = luaL_checkint(L, 4);
+    int iH = luaL_checkint(L, 5);
+
+    if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->getWidth() || (iY_ + iH) > pMap->getHeight())
+        luaL_argerror(L, 2, "Rectangle is out of bounds");
+
+    for(int iY = iY_; iY < iY_ + iH; ++iY)
+    {
+        for(int iX = iX_; iX < iX_ + iW; ++iX)
+        {
+            THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
+            pNode->iBlock[0] = pMap->getOriginalNodeUnchecked(iX, iY)->iBlock[0];
+            pNode->iFlags &= ~THMN_Room;
+            pNode->iRoomId = 0;
+        }
+    }
+
+    pMap->updatePathfinding();
+    pMap->updateShadows();
+
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_map_draw(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -1723,6 +1752,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", iAnimsMT, iAnimMT);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
     luaT_setfunction(l_map_mark_room, "markRoom");
+    luaT_setfunction(l_map_unmark_room, "unmarkRoom");
     luaT_setfunction(l_map_set_sheet, "setSheet", iSheetMT);
     luaT_setfunction(l_map_draw, "draw", iSurfaceMT);
     luaT_setfunction(l_map_hittest, "hitTestObjects", iAnimMT);

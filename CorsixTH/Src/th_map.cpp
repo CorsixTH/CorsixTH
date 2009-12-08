@@ -42,12 +42,14 @@ THMap::THMap()
     m_iWidth = 0;
     m_iHeight = 0;
     m_pCells = NULL;
+    m_pOriginalCells = NULL;
     m_pBlocks = NULL;
 }
 
 THMap::~THMap()
 {
     delete[] m_pCells;
+    delete[] m_pOriginalCells;
 }
 
 bool THMap::setSize(int iWidth, int iHeight)
@@ -56,12 +58,20 @@ bool THMap::setSize(int iWidth, int iHeight)
         return false;
 
     delete[] m_pCells;
+    delete[] m_pOriginalCells;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
+    m_pCells = NULL;
     m_pCells = new (std::nothrow) THMapNode[iWidth * iHeight];
+    m_pOriginalCells = NULL;
+    m_pOriginalCells = new (std::nothrow) THMapNode[iWidth * iHeight];
 
-    if(m_pCells == NULL)
+    if(m_pCells == NULL || m_pOriginalCells == NULL)
     {
+        delete[] m_pCells;
+        delete[] m_pOriginalCells;
+        m_pOriginalCells = NULL;
+        m_pCells = NULL;
         m_iWidth = 0;
         m_iHeight = 0;
         return false;
@@ -105,11 +115,12 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
         return false;
 
     THMapNode *pNode = m_pCells;
+    THMapNode *pOriginalNode = m_pOriginalCells;
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
     for(int iY = 0; iY < 128; ++iY)
     {
-        for(int iX = 0; iX < 128; ++iX, ++pNode, pData += 8, ++pParcel)
+        for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
         {
             unsigned char iBaseTile = gs_iTHMapBlockLUT[pData[2]];
             pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS
@@ -171,6 +182,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                 }
             }
 
+            *pOriginalNode = *pNode;
+
             /*
             // This code now done from map file data rather than tile numbers,
             // but kept here incase it is required to do it by tile again.
@@ -213,6 +226,14 @@ const THMapNode* THMap::getNode(int iX, int iY) const
         return NULL;
 }
 
+const THMapNode* THMap::getOriginalNode(int iX, int iY) const
+{
+    if(0 <= iX && iX < m_iWidth && 0 <= iY && iY < m_iHeight)
+        return getOriginalNodeUnchecked(iX, iY);
+    else
+        return NULL;
+}
+
 THMapNode* THMap::getNodeUnchecked(int iX, int iY)
 {
     return m_pCells + iY * m_iWidth + iX;
@@ -221,6 +242,11 @@ THMapNode* THMap::getNodeUnchecked(int iX, int iY)
 const THMapNode* THMap::getNodeUnchecked(int iX, int iY) const
 {
     return m_pCells + iY * m_iWidth + iX;
+}
+
+const THMapNode* THMap::getOriginalNodeUnchecked(int iX, int iY) const
+{
+    return m_pOriginalCells + iY * m_iWidth + iX;
 }
 
 void THMap::setBlockSheet(THSpriteSheet* pSheet)

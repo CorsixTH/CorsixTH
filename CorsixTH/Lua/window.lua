@@ -270,7 +270,7 @@ function Window:onMouseUp(button, x, y)
             print("Warning: No handler for button click")
             btn.on_click = function() end
           else
-            btn.on_click(btn.on_click_self, arg)
+            btn.on_click(btn.on_click_self, arg, btn)
           end
         else
           if btn.sound then
