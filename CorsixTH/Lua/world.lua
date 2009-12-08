@@ -73,6 +73,23 @@ function World:World(app)
       end
     end
   end
+  self.wall_set_by_block_id = {}
+  for _, wall_type in ipairs(self.wall_types) do
+    for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
+      for name, id in pairs(wall_type[set]) do
+        self.wall_set_by_block_id[id] = set
+      end
+    end
+  end
+  self.wall_dir_by_block_id = {}
+  for _, wall_type in ipairs(self.wall_types) do
+    for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
+      for name, id in pairs(wall_type[set]) do
+        self.wall_dir_by_block_id[id] = name
+      end
+    end
+  end
+  
   self.object_id_by_thob = {}
   for _, object_type in ipairs(self.object_types) do
     self.object_id_by_thob[object_type.thob] = object_type.id
@@ -211,6 +228,14 @@ end
 
 function World:getWallIdFromBlockId(block_id)
   return self.wall_id_by_block_id[block_id]
+end
+
+function World:getWallSetFromBlockId(block_id)
+  return self.wall_set_by_block_id[block_id]
+end
+
+function World:getWallDirFromBlockId(block_id)
+  return self.wall_dir_by_block_id[block_id]
 end
 
 local month_length = {

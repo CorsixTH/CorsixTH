@@ -115,32 +115,85 @@ function UIEditRoom:finishRoom()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local door
+  local function check_external_window(x, y, layer)
+    -- If a wall is built which is normal to an external window, then said
+    -- window needs to be removed, otherwise it looks odd (see issue #59).
+    local block = map:getCell(x, y, layer)
+    local dir = world:getWallDirFromBlockId(block)
+    local tiles = self.ui.app.walls.external[world:getWallSetFromBlockId(block)]
+    if dir == "north_window_1" then
+      if x ~= rect.x then
+        map:setCell(x, y, layer, tiles.north)
+        map:setCell(x + 1, y, layer, tiles.north)
+      end
+    elseif dir == "north_window_2" then
+      if x == rect.x then
+        map:setCell(x - 1, y, layer, tiles.north)
+        map:setCell(x, y, layer, tiles.north)
+      end
+    elseif dir == "west_window_1" then
+      if y == rect.y then
+        map:setCell(x, y, layer, tiles.west)
+        map:setCell(x, y - 1, layer, tiles.west)
+      end
+    elseif dir == "west_window_2" then
+      if y ~= rect.y then
+        map:setCell(x, y + 1, layer, tiles.west)
+        map:setCell(x, y, layer, tiles.west)
+      end
+    end
+  end
   for x, obj in pairs(self.blueprint_wall_anims) do
     for y, anim in pairs(obj) do
       if x == rect.x and y == rect.y then
         local _, east, north = map:getCell(x, y)
-        if world:getWallIdFromBlockId(east) ~= "external" then
+        if world:getWallIdFromBlockId(east) == "external" then
+          check_external_window(x, y, 2)
+        elseif world:getWallSetFromBlockId(east) == "window_tiles" then
+          map:setCell(x, y, 2, wall_type.window_tiles.north)
+        else
           map:setCell(x, y, 2, wall_type.inside_tiles.north)
         end
-        if world:getWallIdFromBlockId(north) ~= "external" then
+        if world:getWallIdFromBlockId(north) == "external" then
+          check_external_window(x, y, 3)
+        elseif world:getWallSetFromBlockId(north) == "window_tiles" then
+          map:setCell(x, y, 3, wall_type.window_tiles.west)
+        else
           map:setCell(x, y, 3, wall_type.inside_tiles.west)
         end
       else
-        local tiles = "outside_tiles"
-        if (rect.x <= x and x < rect.x + rect.w) and (rect.y <= y and y < rect.y + rect.h) then
-          tiles = "inside_tiles"
-        end
-        local tag = anim:getTag()
-        if tag == "window" then
-          tiles = "window_tiles"
-        end
-        local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
-        local layer = dir == "north" and 2 or 3
-        if tag == "door" then
-          door = world:newObject("door", x, y, dir)
-        elseif world:getWallIdFromBlockId(map:getCell(x, y, layer)) ~= "external" then
-          map:setCell(x, y, layer, wall_type[tiles][dir])
-        end
+        repeat
+          local tiles = "outside_tiles"
+          local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
+          local layer = dir == "north" and 2 or 3
+          if world:getWallIdFromBlockId(map:getCell(x, y, layer)) == "external" then
+            if layer == 2 then
+              if (x == rect.x or x == rect.x + rect.w - 1) and (y == rect.y or y == rect.y + rect.h) then
+                check_external_window(x, y, 2)
+              end
+            else
+              if (x == rect.x or x == rect.x + rect.w) and (y == rect.y or y == rect.y + rect.h - 1) then
+                check_external_window(x, y, 3)
+              end
+            end
+            break
+          end
+          local existing = world:getWallSetFromBlockId(map:getCell(x, y, layer))
+          if rect.x <= x and x < rect.x + rect.w and rect.y <= y and y < rect.y + rect.h then
+            tiles = "inside_tiles"
+          elseif existing then
+            break
+          end
+          local tag = anim:getTag()
+          if tag == "window" or existing == "window" then
+            tiles = "window_tiles"
+          end
+          if tag == "door" then
+            door = world:newObject("door", x, y, dir)
+          else
+            map:setCell(x, y, layer, wall_type[tiles][dir])
+          end
+        until true
       end
       anim:setTile(nil)
     end
@@ -534,13 +587,13 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   local flags
   if wall == "west" then
     flags = 1
-    if world:getWallIdFromBlockId(map:getCell(x, y, 3)) == "external" then
+    if world:getWallIdFromBlockId(map:getCell(x, y, 3)) then
       self.blueprint_window.valid = false
       flags = flags + 16
     end
   else--if wall == "north" then
     flags = 0
-    if world:getWallIdFromBlockId(map:getCell(x, y, 2)) == "external" then
+    if world:getWallIdFromBlockId(map:getCell(x, y, 2)) then
       self.blueprint_window.valid = false
       flags = flags + 16
     end
