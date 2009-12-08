@@ -236,11 +236,7 @@ void THSoundEffects::playSound(size_t iIndex)
     if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
         return;
 
-    int iChannel = 0;
-    for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
-
-    Mix_Volume(iChannel, m_iPostionlessVolume);
-    Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);
+    _playRaw(iIndex, m_iPostionlessVolume);
 }
 
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
@@ -255,14 +251,19 @@ void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
         return;
     fDistance = fDistance / m_fCameraRadius;
 
+    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME;
+
+    _playRaw(iIndex, (int)(fVolume + 0.5));
+}
+
+void THSoundEffects::_playRaw(size_t iIndex, int iVolume)
+{
     int iChannel = 0;
     for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
+    m_iChannelStatus &=~ (1 << iChannel);
 
-    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.9) * (double)MIX_MAX_VOLUME;
-    Mix_Volume(iChannel, (int)(fVolume + 0.5));
+    Mix_Volume(iChannel, iVolume);
     Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);
-
-    playSound(iIndex);
 }
 
 void THSoundEffects::setCamera(int iX, int iY, int iRadius)

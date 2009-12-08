@@ -247,6 +247,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
   
   if #self.objects > 0 then
     if button == "right" then
+      self.ui:playSound "swoosh.wav"
       self:nextOrientation()
       repaint = true
     elseif button == "left" then
@@ -272,6 +273,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     self.object_cell_y, self.object_orientation)
   
   self.ui.hospital:spendMoney(object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
+  self.ui:playSound "place_r.wav"
 
   self:removeObject(object, dont_close_if_empty)
 end

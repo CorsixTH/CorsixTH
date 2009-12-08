@@ -1449,12 +1449,13 @@ static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchi
     }
     const char* sName = luaL_checkstring(L, iArg);
     lua_getfenv(L, 1);
-    lua_gettable(L, iArg);
+    lua_pushvalue(L, iArg);
+    lua_rawget(L, -2);
     if(lua_type(L, -1) == LUA_TLIGHTUSERDATA)
     {
         size_t iIndex = (size_t)lua_topointer(L, -1);
         lua_pop(L, 2);
-        return 1;
+        return iIndex;
     }
     lua_pop(L, 2);
     size_t iCount = pArchive->getSoundCount();
@@ -1530,7 +1531,26 @@ static int l_soundfx_set_archive(lua_State *L)
 static int l_soundfx_play(lua_State *L)
 {
     THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-    pEffects->playSound((size_t)luaL_checkint(L, 2));
+    lua_settop(L, 4);
+    lua_getfenv(L, 1);
+    lua_pushliteral(L, "archive");
+    lua_rawget(L, 5);
+    THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 6);
+    if(pArchive == NULL)
+    {
+        return 0;
+    }
+    // l_soundarc_checkidx requires the archive at the bottom of the stack
+    lua_replace(L, 1);
+    size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(lua_isnil(L, 3))
+    {
+        pEffects->playSound(iIndex);
+    }
+    else
+    {
+        pEffects->playSoundAt(iIndex, luaL_checkint(L, 3), luaL_checkint(L, 4));
+    }
     return 0;
 }
 

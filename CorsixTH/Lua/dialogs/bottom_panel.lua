@@ -38,6 +38,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.money_font = app.gfx:loadFont("QData", "Font05V")
   self.date_font = app.gfx:loadFont("QData", "Font16V")
   
+  self.default_button_sound = "selectx.wav"
+  
   self:addPanel( 1,   0, 0) -- $ button
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)

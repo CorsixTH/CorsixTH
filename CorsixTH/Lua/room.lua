@@ -116,7 +116,10 @@ function Room:dealtWithPatient(patient)
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
       self.hospital:receiveMoneyForTreatment(patient)
+      -- TODO: If treatment was bad, have grim reaper kill patient, or patient
+      -- float up to heaven.
       patient:setMood "happy"
+      patient:playSound "cheer.wav"
       patient:setHospital(nil)
     end
   else

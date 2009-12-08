@@ -157,6 +157,11 @@ local button_mt = {
       self.sprite_index_normal = 0
       return self
     end,
+    
+    setSound = function(self, name)
+      self.sound = name
+      return self
+    end,
   }
 }
 
@@ -178,6 +183,11 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
     on_rightclick = on_rightclick,
     enabled = true,
   }, button_mt)
+  if self.ui and on_click == self.close then
+    button.sound = "no4.wav"
+  elseif self.default_button_sound then
+    button.sound = self.default_button_sound
+  end
   self.buttons[#self.buttons + 1] = button
   return button
 end
@@ -253,6 +263,9 @@ function Window:onMouseUp(button, x, y)
           arg = btn:toggle()
         end
         if button == "left" then
+          if btn.sound then
+            self.ui:playSound(btn.sound)
+          end
           if btn.on_click == nil then
             print("Warning: No handler for button click")
             btn.on_click = function() end
@@ -260,6 +273,9 @@ function Window:onMouseUp(button, x, y)
             btn.on_click(btn.on_click_self, arg)
           end
         else
+          if btn.sound then
+            self.ui:playSound(btn.sound)
+          end
           if btn.on_rightclick ~= nil then
             btn.on_rightclick(btn.on_click_self, arg)
           end

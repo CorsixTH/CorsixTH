@@ -11,7 +11,7 @@
 -- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
-theme_hospital_install = [[C:\CPP\CorsixTH\Hospital]]
+theme_hospital_install = [[X:\ThemeHospital\CVR\]]
 -- theme_hospital_install = [[X:\ThemeHospital\minimal\]]
 -- theme_hospital_install = [[X:\ThemeHospital\Demo\]]
 -- theme_hospital_install = [[/home/corsix/hospital/]]
@@ -48,6 +48,17 @@ end
 -- Note that audio will also be disabled if CorsixTH was compiled without the
 -- SDL_mixer library.
 audio = true
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Audio playback settings.
+-- These can be commented out to use the default values from the game binary.
+-- Note: On some platforms, these settings may not effect MIDI playback - only
+-- sound effects and MP3 audio. If you are experiencing poor audio playback,
+-- then try doubling the buffer size.
+audio_frequency = 22050
+audio_channels = 2
+audio_buffer_size = 2048
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------

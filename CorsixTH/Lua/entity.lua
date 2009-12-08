@@ -27,6 +27,14 @@ function Entity:Entity(animation)
   self.ticks = true
 end
 
+function Entity:playSound(name)
+  -- This plays a sound "at" the entity, meaning the sound will not be played
+  -- if the entity is off-screen, and the volume will be quieter the further
+  -- the entity is from the center of the screen. If this is not what you want
+  -- then use UI:playSound instead.
+  TheApp.audio:playSound(name, self)
+end
+
 function Entity:setAnimation(animation, flags)
   flags = flags or 0
   if animation ~= self.animation_idx or flags ~= self.animation_flags then

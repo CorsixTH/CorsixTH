@@ -390,6 +390,7 @@ function UIEditRoom:onMouseDown(button, x, y)
       end
     elseif self.phase == "door" then
       if self.blueprint_door.valid then
+        self.ui:playSound "buildclk.wav"
         self:confirm()
       else
         self.ui.adviser:say(_S(11, 54))
@@ -533,6 +534,7 @@ end
 function UIEditRoom:placeWindowBlueprint()
   if self.blueprint_window.anim and self.blueprint_window.valid then
     self.blueprint_window = {}
+    self.ui:playSound "buildclk.wav"
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
     self.ui.adviser:say(_S(11, 55))
   end

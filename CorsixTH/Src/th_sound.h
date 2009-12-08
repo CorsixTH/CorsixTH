@@ -103,6 +103,8 @@ protected:
     static THSoundEffects* ms_pSingleton;
     static void _onChannelFinish(int iChannel);
 
+    inline void _playRaw(size_t iIndex, int iVolume);
+
     Mix_Chunk **m_ppSounds;
     size_t m_iSoundCount;
     uint32_t m_iChannelStatus;

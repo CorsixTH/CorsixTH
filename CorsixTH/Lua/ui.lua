@@ -140,6 +140,10 @@ function UI:UI(app, local_hospital)
   patients = {}
 end
 
+function UI:playSound(name)
+  self.app.audio:playSound(name)
+end
+
 function UI.makeVisibleDiamond(scr_w, scr_h)
   local map_w = TheApp.map.width
   local map_h = TheApp.map.height

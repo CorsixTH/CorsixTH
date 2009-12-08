@@ -126,7 +126,8 @@ function Audio:init()
     end
   end
   
-  local status, err = SDL.audio.init()
+  local status, err = SDL.audio.init(self.app.config.audio_frequency,
+    self.app.config.audio_channels, self.app.config.audio_buffer_size)
   if status then
     self:playRandomBackgroundTrack()
   else
@@ -181,6 +182,22 @@ function Audio:dumpSoundArchive(out_dir)
     file:close()
   end
   info:close()
+end
+
+function Audio:playSound(name, where)
+  local sound_fx = self.sound_fx
+  if sound_fx then
+    if where then
+      local x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
+      local dx, dy = where.th:getPosition()
+      local ui = self.app.ui
+      x = x + dx - ui.screen_offset_x
+      y = y + dy - ui.screen_offset_y
+      sound_fx:play(name, x, y)
+    else
+      sound_fx:play(name)
+    end
+  end
 end
 
 function Audio:playRandomBackgroundTrack()

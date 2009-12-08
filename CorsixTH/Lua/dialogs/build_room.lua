@@ -37,6 +37,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.category_index = 0
   self.list_hover_index = 0
   self.preview_anim = false
+  self.default_button_sound = "selectx.wav"
   
   local function cat(n)
     return function(self) return self:setCategory(n) end
@@ -156,6 +157,7 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   end
   
   if hover_idx ~= self.list_hover_index then
+    self.ui:playSound "HLightP2.wav"
     if hover_idx == 0 then
       self.cost_box = _S(16, 5) .. "0"
       self.preview_anim = false
