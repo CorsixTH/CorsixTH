@@ -142,15 +142,26 @@ function Audio:init()
     print "Notice: No sound effects as no SOUND/DATA directory found"
   else
     local data_dir = sound_dir .. subdirs.DATA .. pathsep
+    local sound_file = "SOUND-" .. self.app.config.language .. ".DAT"
     local archive_name
-    for item in lfs.dir(data_dir) do
-      if item:upper() == "SOUND-0.DAT" then
-        archive_name = item
-        break
+    local function find_sound_file(dir, file)
+      for item in lfs.dir(dir) do
+        if item:upper() == file then
+          return item
+        end
       end
     end
+    
+    archive_name = find_sound_file(data_dir, sound_file)
+    
+    --If sound file not found and language choosen is not English, maybe we can have more chance loading English sounds
+    if not archive_name and self.app.config.language ~= "0" then
+      print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. sound_file .. " file found")        
+      archive_name = find_sound_file(data_dir, "SOUND-0.DAT")
+    end
+    
     if not archive_name then
-      print "Notice: No sound effects as no SOUND/DATA/SOUND-0.DAT file found"
+      print("Notice: No sound effects as no SOUND/DATA/" .. sound_file .. " file found")
     else
       local file = assert(io.open(data_dir .. archive_name, "rb"))
       local data = file:read"*a"
@@ -160,7 +171,7 @@ function Audio:init()
       end
       self.sound_archive = TH.soundArchive()
       if not self.sound_archive:load(data) then
-        print "Notice: No sound effects as SOUND/DATA/SOUND-0.DAT could not be loaded"
+        print("Notice: No sound effects as SOUND/DATA/" .. sound_file .. " could not be loaded")
       else
         self.sound_fx = TH.soundEffects()
         self.sound_fx:setSoundArchive(self.sound_archive)
