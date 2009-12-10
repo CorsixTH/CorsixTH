@@ -145,6 +145,9 @@ function Room:getMissingStaff(criteria)
           count = count - 1
         end
       end
+      if count <= 0 then
+        count = nil
+      end
       result[attribute] = count
     elseif attribute == "Doctor" then
       for humanoid in pairs(self.humanoids) do
@@ -152,6 +155,9 @@ function Room:getMissingStaff(criteria)
         and not humanoid.action_queue[1].is_leaving then
           count = count - 1
         end
+      end
+      if count <= 0 then
+        count = nil
       end
       result[attribute] = count
     elseif attribute == "Psychiatrist" or attribute == "Surgeon" or attribute == "Researcher" then
@@ -161,6 +167,9 @@ function Room:getMissingStaff(criteria)
         and not humanoid.action_queue[1].is_leaving then
           count = count - 1
         end
+      end
+      if count <= 0 then
+        count = nil
       end
       result[attribute] = count
     end
@@ -174,53 +183,31 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
   -- meet the given criteria, and false otherwise.
   -- if extra_humanoid is not nil, then returns true if the given humanoid
   -- would assist in satisfying the given criteria, and false if they would not.
-  for attribute, count in pairs(criteria) do
-    if attribute == "Nurse" then
-      for humanoid in pairs(self.humanoids) do
-        if humanoid.humanoid_class == "Nurse" and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
-      end
-      if extra_humanoid and count > 0 then
-        local humanoid = extra_humanoid
-        if humanoid.humanoid_class == "Nurse" then
-          return true
-        end
-      end
-    elseif attribute == "Doctor" then
-      for humanoid in pairs(self.humanoids) do
-        if (humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon")
-        and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
-      end
-      if extra_humanoid and count > 0 then
-        local humanoid = extra_humanoid
-        if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon" then
-          return true
-        end
-      end
-    elseif attribute == "Psychiatrist" or attribute == "Surgeon" or attribute == "Researcher" then
-      attribute = profile_attributes[attribute]
-      for humanoid in pairs(self.humanoids) do
-        if humanoid.profile and humanoid.profile[attribute] == 1.0
-        and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
-      end
-      if extra_humanoid and count > 0 then
-        local humanoid = extra_humanoid
-        print(humanoid.profile[attribute])
-        if humanoid.profile and humanoid.profile[attribute] == 1.0 then
+  local missing = self:getMissingStaff(criteria)
+  
+  if extra_humanoid then
+    local class = extra_humanoid.humanoid_class
+    if class == "Surgeon" then
+      class = "Doctor"
+    end
+    if missing[class] then
+      return true
+    end
+    if class == "Doctor" then
+      -- check for special proficiencies
+      for attribute, profile_attribute in pairs(profile_attributes) do
+        if extra_humanoid.profile and extra_humanoid.profile[profile_attribute] == 1.0 and missing[attribute] then
           return true
         end
       end
     end
-    if not extra_humanoid and count > 0 then
+    return false
+  else
+    for attribute, count in pairs(missing) do
       return false
     end
+    return true
   end
-  return not extra_humanoid
 end
 
 local no_staff = {}
