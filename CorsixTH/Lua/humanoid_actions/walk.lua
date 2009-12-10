@@ -323,7 +323,9 @@ local function action_walk_start(action, humanoid)
   action.path_x = path_x
   action.path_y = path_y
   action.path_index = 1
-  action.on_interrupt = action_walk_interrupt
+  if not action.no_truncate then
+    action.on_interrupt = action_walk_interrupt
+  end
   action.on_restart = action_walk_start
   action.saved_must_happen = action.must_happen
   action.must_happen = true

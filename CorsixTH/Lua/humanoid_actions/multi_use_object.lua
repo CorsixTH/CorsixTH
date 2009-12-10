@@ -94,6 +94,10 @@ local function action_multi_use_phase(action, humanoid, phase)
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)
   local secondary_anim = action.anims.secondary and action.anims.secondary[anim_name]
+  if action.secondary_anim then
+    secondary_anim = action.secondary_anim
+    action.secondary_anim = nil
+  end
   if secondary_anim then
     local use_with = action.use_with
     if type(secondary_anim) == "table" and secondary_anim[1] == "morph" then
@@ -141,7 +145,11 @@ action_multi_use_object_tick = function(humanoid)
   local object = action.object
   local phase = action.phase
   local oldphase = phase
-  phase = action_multi_use_next_phase(action, phase)
+  if phase ~= 0 or not action.prolonged_usage then
+    phase = action_multi_use_next_phase(action, phase)
+  elseif action.loop_callback then
+    action:loop_callback()
+  end
   if action.change_secondary_layers then
     for layer, id in pairs(action.change_secondary_layers) do
       use_with:setLayer(layer, id)
@@ -177,6 +185,12 @@ action_multi_use_object_tick = function(humanoid)
   end
 end
 
+local function action_multi_use_object_interrupt(action, humanoid)
+  if not action.loop_callback then
+    action.prolonged_usage = false
+  end
+end
+
 local function action_multi_use_object_start(action, humanoid)
   local use_with = action.use_with
   if use_with.action_queue[1].name ~= "idle" then
@@ -189,6 +203,13 @@ local function action_multi_use_object_start(action, humanoid)
     use_with.action_queue[1].must_happen = true
   end
   action.must_happen = true
+  if action.prolonged_usage then
+    action.on_interrupt = action_multi_use_object_interrupt
+    use_with.action_queue[1].on_interrupt = function()
+      action:on_interrupt()
+      action.on_interrupt = nil
+    end
+  end
   local object = action.object
   local orient = object.direction
   local flags = 0

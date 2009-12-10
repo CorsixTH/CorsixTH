@@ -136,7 +136,7 @@ action_use_object_tick = function(humanoid)
   if phase ~= 0 or not action.prolonged_usage or not action.on_interrupt then
     phase = action_use_next_phase(action, phase)
   elseif action.loop_callback then
-    action.loop_callback()
+    action:loop_callback()
   end
   if oldphase <= 1 and phase > 1 then
     object:setUser(nil)

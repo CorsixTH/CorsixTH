@@ -40,6 +40,11 @@ local function meander_action_start(action, humanoid)
     else
       action.count = action.count - 1
     end
+  elseif action.loop_callback then
+    action.loop_callback()
+    if action ~= humanoid.action_queue[1] then
+      return
+    end
   end
   local procrastination
   if action.can_idle and math.random(1, 5) == 1 then

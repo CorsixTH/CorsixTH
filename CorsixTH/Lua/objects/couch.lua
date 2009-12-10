@@ -25,9 +25,31 @@ object.name = _S(2, 19)
 object.ticks = false
 object.build_cost = 100
 object.build_preview_animation = 5064
-object.idle_animations = {
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
   north = 2540,
-  south = 2540,
+}
+object.usage_animations = copy_north_to_south {
+  north = {
+    begin_use = {
+      ["Elvis Patient"          ] = 1014,
+      ["Standard Male Patient"  ] = 2528,
+      ["Standard Female Patient"] = 3180,
+    },
+    in_use = {
+      ["Elvis Patient"          ] =  942,
+      ["Standard Male Patient"  ] = 2536,
+      ["Standard Female Patient"] = 3330,
+    },
+    finish_use = {
+      ["Elvis Patient"          ] =  938,
+      ["Standard Male Patient"  ] = 2532,
+      ["Standard Female Patient"] = 3326,
+    },
+  },
 }
 object.orientations = {
   north = {

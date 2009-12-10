@@ -87,7 +87,16 @@ function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
 end
 
 function Entity:tick()
-  self.th:tick()
+  if self.num_animation_ticks then
+    for i = 1, self.num_animation_ticks do
+      self.th:tick()
+    end
+    if self.num_animation_ticks == 1 then
+      self.num_animation_ticks = nil
+    end
+  else
+    self.th:tick()
+  end
   if self.mood_info then
     self.mood_info:tick()
   end

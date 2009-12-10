@@ -25,18 +25,52 @@ object.name = _S(2, 14)
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 918
-object.idle_animations = {
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
   north = 648,
-  south = 648,
 }
+object.multi_usage_animations = {
+  ["Stripped Male Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 1018,
+      in_use      =  652,
+      finish_use  = 3282,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
+  ["Stripped Female Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 3008,
+      in_use      = 2840,
+      finish_use  = 4556,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
+}
+
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {-1, 0}, {1, -1, only_passable = true}, {0, -1}, {0, 0, only_passable = true} },
     render_attach_position = {-1, 0},
+    use_position = {1, -1},
+    use_position_secondary = {0, 0},
   },
   east = {
     footprint = { {-1, -1}, {-1, 0}, {0, -1}, {0, 0, only_passable = true}, {-1, 1, only_passable = true} },
     render_attach_position = {0, -1},
+    use_position = {-1, 1},
+    use_position_secondary = {0, 0},
   },
 }
 

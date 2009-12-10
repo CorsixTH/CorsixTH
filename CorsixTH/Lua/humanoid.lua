@@ -221,7 +221,9 @@ function Humanoid:setType(humanoid_class)
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
   self.humanoid_class = humanoid_class
-  self:setNextAction {name = "idle"}
+  if #self.action_queue == 0 then
+    self:setNextAction {name = "idle"}
+  end
 end
 
 function Humanoid:onAdvanceQueue(queue, n)
