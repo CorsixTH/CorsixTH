@@ -128,7 +128,7 @@ function App:init()
   math.randomseed(os.time() + SDL.getTicks())
   
   -- Load strings before UI and before additional Lua
-  self.strings = assert(TH.LoadStrings(self:readDataFile(self.config.language .. ".dat")), "Cannot load strings")
+  self.strings = assert(TH.LoadStrings(self:readDataFile("Lang-" .. self.config.language .. ".dat")), "Cannot load strings")
   --self:dumpStrings"debug-strings.txt"
   strict_declare_global "_S"
   _S = function(sec, str, ...)
@@ -222,12 +222,12 @@ end
 
 local languages, languages_by_num = invert_lang_table {
   -- Language name (in english) along with ISO 639 codes for it
-  ["Lang-0"] = {"english", "en", "eng"},
-  ["Lang-1"] = {"french" , "fr", "fre", "fra"},
-  ["Lang-2"] = {"german" , "de", "ger", "deu"},
-  ["Lang-3"] = {"italian", "it", "ita"},
-  ["Lang-4"] = {"spanish", "es", "spa"},
-  ["Lang-5"] = {"swedish", "sv", "swe"},
+  ["0"] = {"english", "en", "eng"},
+  ["1"] = {"french" , "fr", "fre", "fra"},
+  ["2"] = {"german" , "de", "ger", "deu"},
+  ["3"] = {"italian", "it", "ita"},
+  ["4"] = {"spanish", "es", "spa"},
+  ["5"] = {"swedish", "sv", "swe"},
 }
 
 function App:fixConfig()
@@ -425,7 +425,7 @@ function App:checkLanguageFile()
   -- isn't present, then we should detect this and inform the user of their
   -- options.
   
-  local filename = self:getDataFilename(self.config.language .. ".dat")
+  local filename = self:getDataFilename("Lang-" .. self.config.language .. ".dat")
   local file, err = io.open(filename, "rb")
   if file then
     -- Everything is fine
