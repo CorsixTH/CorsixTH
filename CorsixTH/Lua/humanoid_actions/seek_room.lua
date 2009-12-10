@@ -27,10 +27,13 @@ local function action_seek_room_interrupt(action, humanoid)
 end
 
 local function action_seek_room_start(action, humanoid)
-  local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "smallqueue")
+  local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "advanced")
   if room then
     humanoid:setNextAction(room:createEnterAction())
     room.door.queue:expect(humanoid)
+    if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
+      humanoid.world:callForStaff(room)
+    end
   else
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
     humanoid:setMood "wait"

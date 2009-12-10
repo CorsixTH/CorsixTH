@@ -135,6 +135,39 @@ local profile_attributes = {
   Researcher = "is_researcher",
 }
 
+-- Given any type of staff criteria (required/maximum), subtract the staff in the room and return the result
+function Room:getMissingStaff(criteria)
+  local result = {}
+  for attribute, count in pairs(criteria) do
+    if attribute == "Nurse" then
+      for humanoid in pairs(self.humanoids) do
+        if humanoid.humanoid_class == "Nurse" and not humanoid.action_queue[1].is_leaving then
+          count = count - 1
+        end
+      end
+      result[attribute] = count
+    elseif attribute == "Doctor" then
+      for humanoid in pairs(self.humanoids) do
+        if (humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon")
+        and not humanoid.action_queue[1].is_leaving then
+          count = count - 1
+        end
+      end
+      result[attribute] = count
+    elseif attribute == "Psychiatrist" or attribute == "Surgeon" or attribute == "Researcher" then
+      local p_attribute = profile_attributes[attribute]
+      for humanoid in pairs(self.humanoids) do
+        if humanoid.profile and humanoid.profile[p_attribute] == 1.0
+        and not humanoid.action_queue[1].is_leaving then
+          count = count - 1
+        end
+      end
+      result[attribute] = count
+    end
+  end
+  return result
+end
+
 function Room:testStaffCriteria(criteria, extra_humanoid)
   -- criteria should be required_staff or maximum_staff table.
   -- if extra_humanoid is nil, then returns true if the humanoids in the room

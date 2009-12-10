@@ -31,4 +31,5 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "yellow"
 room.floor_tile = 19
+room.call_sound = "reqd007.wav"
 return room

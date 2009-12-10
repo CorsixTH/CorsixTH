@@ -37,6 +37,7 @@ room.required_staff = {
   Psychiatrist = 1,
 }
 room.maximum_staff = room.required_staff
+room.call_sound = "reqd003.wav"
 
 class "PsychRoom" (Room)
 

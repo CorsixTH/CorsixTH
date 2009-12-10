@@ -449,10 +449,11 @@ end
 
 function World:findRoomNear(humanoid, room_type_id, distance, mode)
   -- If mode == "nearest" (or nil), the nearest room is taken
-  -- If mode == "smallqueue", a room with a smaller queue is preferred
+  -- If mode == "advanced", prefer a near room, but also few patients and fulfilled staff criteria
   local room
   local queue
-  local tile_factor = 20 -- how many tiles further are we willing to walk for 1 person fewer in the queue
+  local tile_factor = 20     -- how many tiles further are we willing to walk for 1 person fewer in the queue
+  local readiness_bonus = 30 -- how many tiles further are we willing to walk if the room has all the required staff
   if not mode then
     mode = "nearest" -- default mode
   end
@@ -463,9 +464,13 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     if r.built and (not room_type_id or r.room_info.id == room_type_id) then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      local q = r.door.queue:reportedSize() + r.door.queue.expected_count
+      local q = r.door.queue:reportedSize() + r.door.queue.expected_count + r:getPatientCount() - r.maximum_patients
+      local bonus = 0
+      if r:testStaffCriteria(r:getRequiredStaffCriteria()) then
+        bonus = readiness_bonus
+      end
       if d and (mode == "nearest" and d < distance) or
-               (mode == "smallqueue" and (not queue or tile_factor * (queue - q) > (d - distance))) then
+               (mode == "advanced" and (not queue or tile_factor * (queue - q) + bonus > (d - distance))) then
         queue = q
         distance = d
         room = r
@@ -568,4 +573,26 @@ end
 
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
+end
+
+function World:debugPrintCriteria(criteria)
+  for attribute, count in pairs(criteria) do
+    print(attribute, ": ", count)
+  end
+end
+
+-- Search for available staff to meet the requirements for the room. Also notify the player with a sound.
+function World:callForStaff(room)
+  local sound = room.room_info.call_sound
+  
+  if sound then
+    self.ui:playSound(sound)
+  end
+  
+  local criteria2 = room:getMissingStaff(room:getRequiredStaffCriteria())
+  print("missing staff:")
+  self:debugPrintCriteria(criteria2)
+  
+  -- TODO: search for staff that have nothing to do and send them to the room
+  
 end
