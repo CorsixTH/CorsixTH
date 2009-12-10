@@ -74,7 +74,7 @@ end
 
 function Room:createEnterAction()
   local x, y = self:getEntranceXY(true)
-  return {name = "walk", x = x, y = y}
+  return {name = "walk", x = x, y = y, is_entering = true}
 end
 
 function Room:getPatient()
@@ -139,40 +139,15 @@ local profile_attributes = {
 function Room:getMissingStaff(criteria)
   local result = {}
   for attribute, count in pairs(criteria) do
-    if attribute == "Nurse" then
-      for humanoid in pairs(self.humanoids) do
-        if humanoid.humanoid_class == "Nurse" and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
+    for humanoid in pairs(self.humanoids) do
+      if class.is(humanoid, Staff) and humanoid:fulfillsCriterium(attribute) and not humanoid.action_queue[1].is_leaving then
+        count = count - 1
       end
-      if count <= 0 then
-        count = nil
-      end
-      result[attribute] = count
-    elseif attribute == "Doctor" then
-      for humanoid in pairs(self.humanoids) do
-        if (humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Surgeon")
-        and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
-      end
-      if count <= 0 then
-        count = nil
-      end
-      result[attribute] = count
-    elseif attribute == "Psychiatrist" or attribute == "Surgeon" or attribute == "Researcher" then
-      local p_attribute = profile_attributes[attribute]
-      for humanoid in pairs(self.humanoids) do
-        if humanoid.profile and humanoid.profile[p_attribute] == 1.0
-        and not humanoid.action_queue[1].is_leaving then
-          count = count - 1
-        end
-      end
-      if count <= 0 then
-        count = nil
-      end
-      result[attribute] = count
     end
+    if count <= 0 then
+      count = nil
+    end
+    result[attribute] = count
   end
   return result
 end

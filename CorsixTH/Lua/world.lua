@@ -575,12 +575,6 @@ function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
 end
 
-function World:debugPrintCriteria(criteria)
-  for attribute, count in pairs(criteria) do
-    print(attribute, ": ", count)
-  end
-end
-
 -- Search for available staff to meet the requirements for the room. Also notify the player with a sound.
 function World:callForStaff(room)
   local sound = room.room_info.call_sound
@@ -589,10 +583,15 @@ function World:callForStaff(room)
     self.ui:playSound(sound)
   end
   
-  local criteria2 = room:getMissingStaff(room:getRequiredStaffCriteria())
-  print("missing staff:")
-  self:debugPrintCriteria(criteria2)
+  local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
   
-  -- TODO: search for staff that have nothing to do and send them to the room
+  for attribute, count in pairs(missing) do
+    for i, e in ipairs(self.entities) do
+      if count > 0 and class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
+        count = count - 1
+        e:setNextAction(room:createEnterAction())
+      end
+    end
+  end
   
 end

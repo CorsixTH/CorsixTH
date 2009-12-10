@@ -149,3 +149,53 @@ function Staff:setHospital(hospital)
     hospital:addStaff(self)
   end
 end
+
+local profile_attributes = {
+  Psychiatrist = "is_psychiatrist",
+  Surgeon = "is_surgeon",
+  Researcher = "is_researcher",
+}
+
+-- Helper function to decide if Staff fulfills a criterium (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon" and "Researcher")
+function Staff:fulfillsCriterium(criterium)
+  local class = self.humanoid_class
+  if criterium == "Doctor" then
+    if class == "Doctor" or class == "Surgeon" then
+      return true
+    end
+  elseif criterium == "Nurse" then
+    if class == "Nurse" then
+      return true
+    end
+  elseif criterium == "Psychiatrist" or criterium == "Surgeon" or criterium == "Researcher" then
+    if self.profile and self.profile[profile_attributes[criterium]] == 1.0 then
+      return true
+    end
+  else
+    error("Unknown criterium " .. criterium)
+  end
+  return false
+end
+
+-- Function to decide if staff currently has nothing to do and can be called to a room where he's needed
+function Staff:isIdle()
+  local room = self:getRoom()
+  if room then
+    -- in special rooms, never
+    if room.room_info.id == "staff_room" or room.room_info.id == "research" then -- TODO training room
+      return false
+    end
+    -- in regular rooms (diagnosis / treatment), if no patient is in sight
+    -- TODO: There's a short moment where a patient is in neither of the three: when he is called to enter the room, until he enters the room.
+    --       Solve this by only removing patients from the queue in the moment they are actually entering.
+    if room:getPatientCount() == 0 and room.door.queue:reportedSize() == 0 and room.door.queue.expected_count == 0 then
+      return true
+    end
+  else
+    -- on the corridor, if not heading to a room already
+    if not self.action_queue[1].is_entering then
+      return true
+    end
+  end
+  return false
+end
