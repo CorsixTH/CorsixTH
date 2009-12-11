@@ -241,7 +241,7 @@ function Room:commandEnteringPatient(humanoid)
 end
 
 function Room:tryAdvanceQueue()
-  if self.door.queue:size() > 0 then
+  if self.door.queue:size() > 0 and not self.door.user and not self.door.reserved_for then
     local front = self.door.queue:front()
     if self.humanoids[front] or self:canHumanoidEnter(front) then
       self.door.queue:pop()

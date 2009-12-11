@@ -130,7 +130,7 @@ function Entity:onDestroy()
   self:setTile(nil)
   -- Debug aid to check that there are no hanging references after the entity
   -- has been destroyed:
-  -- [[
+  --[[
   self.gc_dummy = newproxy(true) -- undocumented Lua library function
   getmetatable(self.gc_dummy).__gc = function()
     print("Entity " .. tostring(self) .. " has been garbage collected.")

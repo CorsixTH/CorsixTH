@@ -134,7 +134,7 @@ local function Humanoid_startAction(self)
   -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
   
-  if action.todo_interrupt then
+  if action == self.action_queue[1] and action.todo_interrupt then
     local high_priority = action.todo_interrupt == "high"
     action.todo_interrupt = nil
     local on_interrupt = action.on_interrupt
@@ -223,71 +223,6 @@ function Humanoid:setType(humanoid_class)
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}
-  end
-end
-
-function Humanoid:onAdvanceQueue(queue, n)
-  local action = self.action_queue[1]
-  if action.until_leave_queue then
-    if action.name == "idle" then
-      local ix, iy = self.world:getIdleTile(action.x1, action.y1, n - 1)
-      if ix then
-        self:queueAction({
-          name = "walk",
-          until_leave_queue = queue,
-          must_happen = action.must_happen,
-          destination_unimportant = true,
-          x = ix,
-          y = iy,
-        }, 0)
-      end
-    elseif action.name == "walk" and action.destination_unimportant then
-      local idle = self.action_queue[2]
-      if idle and idle.name == "idle" then
-        local ix, iy = self.world:getIdleTile(idle.x1, idle.y1, n - 1)
-        if ix then
-          action:on_interrupt(self)
-          self:queueAction({
-            name = "walk",
-            until_leave_queue = queue,
-            must_happen = idle.must_happen,
-            destination_unimportant = true,
-            x = ix,
-            y = iy,
-          }, 1)
-        end    
-      end
-    end
-  end
-end
-
-function Humanoid:onLeaveQueue()
-  if self.action_queue[1].until_leave_queue then
-    local interrupted = false
-    local i = 1
-    while self.action_queue[i].until_leave_queue do
-      local action = self.action_queue[i]
-      if action.must_happen then
-        if interrupted then
-          action.todo_interrupt = true
-        else
-          if action.on_interrupt then
-            action:on_interrupt(self)
-            action.on_interrupt = nil
-          end
-          interrupted = true
-        end
-        i = i + 1
-      else
-        if action.object and action.object.reserved_for == self then
-          action.object.reserved_for = nil
-        end
-        table.remove(self.action_queue, i)
-      end
-    end
-    if not interrupted then
-      Humanoid_startAction(self)
-    end
   end
 end
 

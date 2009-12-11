@@ -32,6 +32,7 @@ class "Queue"
 function Queue:Queue()
   self.reported_size = 0
   self.expected = {}
+  self.callbacks = {}
   self.expected_count = 0
   self.visitor_count = 0
   self.max_size = 20
@@ -89,7 +90,7 @@ function Queue:setPriorityForSameRoom(entity)
   self.same_room_priority = entity
 end
 
-function Queue:push(humanoid)
+function Queue:push(humanoid, callbacks_on)
   local index = #self + 1
   local increment_reported_size = true
   if self.same_room_priority then
@@ -122,7 +123,15 @@ function Queue:push(humanoid)
   if increment_reported_size then
     self.reported_size = self.reported_size + 1
   end
+  self.callbacks[humanoid] = callbacks_on
   table.insert(self, index, humanoid)
+  for i = index + 1, #self do
+    local humanoid = self[i]
+    local callbacks = self.callbacks[humanoid]
+    if callbacks then
+      callbacks:onChangeQueuePosition(humanoid)
+    end
+  end
 end
 
 function Queue:front()
@@ -130,20 +139,20 @@ function Queue:front()
 end
 
 function Queue:pop()
-  for i = #self, 2, -1 do
-    local humanoid = self[i]
-    if humanoid.onAdvanceQueue then
-      humanoid:onAdvanceQueue(self, i - 1)
-    end
-  end
-
   if self.reported_size == #self then
     self.reported_size = self.reported_size - 1
   end
   local oldfront = self[1]
   table.remove(self, 1)
-  if oldfront.onLeaveQueue then
-    oldfront:onLeaveQueue(self)
+  local callbacks = self.callbacks[oldfront]
+  if callbacks then
+    callbacks:onLeaveQueue(oldfront)
+  end
+  for _, humanoid in ipairs(self) do
+    local callbacks = self.callbacks[humanoid]
+    if callbacks then
+      callbacks:onChangeQueuePosition(humanoid)
+    end
   end
   return oldfront
 end
@@ -153,16 +162,16 @@ function Queue:remove(index)
     return
   end
   local value = self[index]
-  for i = #self, index + 1, -1 do
+  if index > #self - self.reported_size then
+    self.reported_size = self.reported_size - 1
+  end
+  table.remove(self, index)
+  for i = #self, index, -1 do
     local humanoid = self[i]
     if humanoid.onAdvanceQueue then
       humanoid:onAdvanceQueue(self, i - 1)
     end
   end
-  if index > #self - self.reported_size then
-    self.reported_size = self.reported_size - 1
-  end
-  table.remove(self, index)
   return value
 end
 

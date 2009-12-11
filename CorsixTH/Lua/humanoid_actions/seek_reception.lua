@@ -45,24 +45,16 @@ local function action_seek_reception_start(action, humanoid)
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
-      local queue = desk.queue
-      local ix, iy = world:getIdleTile(x, y, queue:size())
+      local face_x, face_y = desk:getSecondaryUsageTile()
       humanoid:setNextAction{
-        name = "walk",
-        until_leave_queue = queue,
+        name = "queue",
+        x = x,
+        y = y,
+        queue = desk.queue,
+        face_x = face_x,
+        face_y = face_y,
         must_happen = action.must_happen,
-        destination_unimportant = true,
-        x = ix,
-        y = iy,
       }
-      humanoid:queueAction{
-        name = "idle",
-        until_leave_queue = queue,
-        must_happen = action.must_happen,
-        x1 = x,
-        y1 = y,
-      }
-      queue:push(humanoid)
     else
       local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
       humanoid:queueAction(walk, 0)

@@ -191,18 +191,14 @@ navigateDoor = function(humanoid, x1, y1, dir)
   if (door.user)
   or (door.reserved_for and door.reserved_for ~= humanoid)
   or (is_entering_room and not room:canHumanoidEnter(humanoid)) then
-    -- door in use; go idle (or find a bench) and try again later
-    humanoid:setTilePositionSpeed(x1, y1)
-    action.must_happen = action.saved_must_happen
-    action.reserve_on_resume = door
     local queue = door.queue
-    local bench, ix, iy = humanoid.world:getFreeBench(x1, y1, 10)
-    if not ix then
-      ix, iy = humanoid.world:getIdleTile(x1, y1, queue:size())
-      if not ix then
-        ix, iy = humanoid.world:getIdleTile(x1, y1)
+    if door.reserved_for == humanoid then
+      door.reserved_for = nil
+      if queue:size() > 0 then
+        queue:pop()
       end
     end
+    humanoid:setTilePositionSpeed(x1, y1)
     local action_index = 0
     if is_entering_room and queue:size() == 0 and not room:getPatient()
     and not door.user and not door.reserved_for and class.is(humanoid, Patient) then
@@ -213,35 +209,15 @@ navigateDoor = function(humanoid, x1, y1, dir)
       }, action_index)
       action_index = action_index + 1
     end
-    if ix then
-      humanoid:queueAction({
-        name = "walk",
-        until_leave_queue = queue,
-        must_happen = action.saved_must_happen,
-        destination_unimportant = not bench,
-        x = ix,
-        y = iy,
-      }, action_index)
-      action_index = action_index + 1
-    end
-    if bench then
-      humanoid:queueAction({
-        name = "use_object",
-        until_leave_queue = queue,
-        must_happen = action.saved_must_happen,
-        object = bench
-      }, action_index)
-      bench.reserved_for = humanoid
-    else
-      humanoid:queueAction({
-        name = "idle",
-        until_leave_queue = queue,
-        must_happen = action.saved_must_happen,
-        x1 = x1,
-        y1 = y1,
-      }, action_index)
-    end
-    door.queue:push(humanoid)
+    humanoid:queueAction({
+      name = "queue",
+      x = x1,
+      y = y1,
+      queue = queue,
+      reserve_when_done = door,
+    }, action_index)
+    action.must_happen = action.saved_must_happen
+    action.reserve_on_resume = door
     return
   end
   if action.reserve_on_resume then
@@ -329,7 +305,7 @@ local function action_walk_start(action, humanoid)
   action.on_restart = action_walk_start
   action.saved_must_happen = action.must_happen
   action.must_happen = true
-  if action.reserve_on_resume then
+  if action.reserve_on_resume and not action.todo_interrupt then
     action.reserve_on_resume.reserved_for = humanoid
   end
   

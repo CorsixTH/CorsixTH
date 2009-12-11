@@ -355,9 +355,9 @@ local face_dir = {
 }
 
 function World:getFreeBench(x, y, distance)
-  local bench, rx, ry
+  local bench, rx, ry, bench_distance
   local object_type = self.object_types.bench
-  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d)
+  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d, dist)
     local b = self:getObject(x, y, "bench")
     if b and not b.user and not b.reserved_for then
       local orientation = object_type.orientations[b.direction]
@@ -365,11 +365,12 @@ function World:getFreeBench(x, y, distance)
         rx = x + orientation.use_position[1]
         ry = y + orientation.use_position[2]
         bench = b
+        bench_distance = dist
         return true
       end
     end
   end)
-  return bench, rx, ry
+  return bench, rx, ry, bench_distance
 end
 
 function World:findObjectNear(humanoid, object_type_name, distance, callback)

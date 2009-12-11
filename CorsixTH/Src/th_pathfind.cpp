@@ -333,15 +333,17 @@ bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
         uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
         if((iNFlags & 0xFF000000) == iTHOB) \
         { \
-            /* call the given Lua function, passing three arguments: */ \
+            /* call the given Lua function, passing four arguments: */ \
             /* The x and y position of the object (Lua tile co-ords) */ \
             /* The direction which was last travelled in to reach (x,y); */ \
             /*   0 (north), 1 (east), 2 (south), 3 (west) */ \
+            /* The distance to the object from the search starting point */ \
             lua_pushvalue(L, iVisitFunction); \
             lua_pushinteger(L, pNeighbour->x + 1); \
             lua_pushinteger(L, pNeighbour->y + 1); \
             lua_pushinteger(L, d); \
-            lua_call(L, 3, 1); \
+            lua_pushinteger(L, pNode->distance); \
+            lua_call(L, 4, 1); \
             if(lua_toboolean(L, -1) != 0) \
             { \
                 lua_pop(L, 1); \
