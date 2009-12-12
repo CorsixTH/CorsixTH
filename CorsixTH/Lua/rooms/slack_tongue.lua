@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Peter "Corsix" Cawley
+--[[ Copyright (c) 2009 Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,13 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S(14, 15)
-room.id = "inflation"
-room.class = "InflationRoom"
-room.build_cost = 4000
+room.name = _S(14, 18)
+room.id = "slack_tongue"
+room.class = "SlackTongueRoom"
+room.build_cost = 3000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "inflator" }
-room.build_preview_animation = 908
+room.objects_needed = { "slicer" }
+room.build_preview_animation = 932
 room.categories = {
   clinics = 1,
 }
@@ -36,39 +36,43 @@ room.required_staff = {
   Doctor = 1,
 }
 room.maximum_staff = room.required_staff
-room.call_sound = "reqd014.wav"
+room.call_sound = "reqd005.wav"
 
-class "InflationRoom" (Room)
+class "SlackTongueRoom" (Room)
 
-function InflationRoom:InflationRoom(...)
+function SlackTongueRoom:SlackTongueRoom(...)
   self:Room(...)
 end
 
-function InflationRoom:commandEnteringStaff(staff)
+function SlackTongueRoom:commandEnteringStaff(staff)
   self.staff_member = staff
   staff:setNextAction{name = "meander"}
 end
 
-function InflationRoom:commandEnteringPatient(patient)
+function SlackTongueRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
-  local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
-  local orientation = inflator.object_type.orientations[inflator.direction]
-  local stf_x, stf_y = inflator:getSecondaryUsageTile()
-  
+  local slicer, pat_x, pat_y = self.world:findObjectNear(patient, "slicer")
+  local orientation = slicer.object_type.orientations[slicer.direction]
+  local stf_x, stf_y = slicer:getSecondaryUsageTile()
+
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
+  staff:queueAction{name = "idle", direction = slicer.direction == "north" and "east" or "south"}
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
   patient:queueAction{
     name = "multi_use_object",
-    object = inflator,
+    object = slicer,
     use_with = staff,
     after_use = function()
-      patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
+      if patient.humanoid_class == "Slack Male Patient" then
+        patient:setType "Standard Male Patient" -- Change to normal head
+      else
+        patient:setLayer(0, patient.layers[0] - 8) -- Change to normal head
+      end
       staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

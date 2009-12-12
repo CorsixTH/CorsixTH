@@ -98,8 +98,8 @@ local function action_multi_use_phase(action, humanoid, phase)
     secondary_anim = action.secondary_anim
     action.secondary_anim = nil
   end
+  local use_with = action.use_with
   if secondary_anim then
-    local use_with = action.use_with
     if type(secondary_anim) == "table" and secondary_anim[1] == "morph" then
       use_with:setAnimation(secondary_anim[2], action.mirror_flags)
       local morph_target = TH.animation()
@@ -123,6 +123,8 @@ local function action_multi_use_phase(action, humanoid, phase)
     if secondary_length > length then
       length = secondary_length
     end
+  else
+    use_with.th:makeInvisible()
   end
   humanoid:setTimer(length, action_multi_use_object_tick)
 end
@@ -180,7 +182,6 @@ action_multi_use_object_tick = function(humanoid)
     end
     humanoid:finishAction(action)
   else
-    use_with.th:makeInvisible()
     action_multi_use_phase(action, humanoid, phase)
   end
 end

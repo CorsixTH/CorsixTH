@@ -59,6 +59,9 @@ function Object:Object(world, object_type, x, y, direction, etc)
   if footprint and footprint.early_list then
     flags = flags + 1024
   end
+  if footprint and footprint.list_bottom then
+    flags = flags + 2048
+  end
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
   end
