@@ -1,0 +1,74 @@
+---- CorsixTH configuration file ----------------------------------------------
+-- Lines starting with two dashes (like this one) are ignored.
+-- Text settings should have their values between double square braces, e.g.
+--  setting = [[value]]
+-- Number settings should not have anything around their value, e.g.
+--  setting = 42
+
+-------------------------------------------------------------------------------
+-- Theme hospital install folder: original game data files are loaded from this
+-- folder. Between the square braces should be the folder which contains the
+-- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
+-- the Theme Hospital demo, though a full install of the original game is
+-- preferred.
+theme_hospital_install = [[X:\ThemeHospital\CVR\]]
+-- theme_hospital_install = [[X:\ThemeHospital\minimal\]]
+-- theme_hospital_install = [[X:\ThemeHospital\Demo\]]
+-- theme_hospital_install = [[/home/corsix/hospital/]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Language to use for ingame text. Between the square braces should be one of:
+--  English / en / eng
+--  French  / fr / fre / fra
+--  German  / de / ger / deu
+--  Italian / it / ita
+--  Spanish / es / spa
+--  Swedish / sv / swe
+language = [[English]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Screen size. Must be at least 640x480. Larger sizes will require better
+-- hardware in order to maintain a playable framerate. The fullscreen setting
+-- can be true or false, and the game will run windowed if not fullscreen.
+if false then
+ width = 1280
+ height = 1024
+ fullscreen = true
+else
+ width = 800
+ height = 600
+ fullscreen = false
+end
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Audio global on/off switch.
+-- Note that audio will also be disabled if CorsixTH was compiled without the
+-- SDL_mixer library.
+audio = true
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Audio playback settings.
+-- These can be commented out to use the default values from the game binary.
+-- Note: On some platforms, these settings may not effect MIDI playback - only
+-- sound effects and MP3 audio. If you are experiencing poor audio playback,
+-- then try doubling the buffer size.
+audio_frequency = 22050
+audio_channels = 2
+audio_buffer_size = 2048
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- High quality (MP3 rather than MIDI) audio replacements.
+-- If you want to listen to high quality MP3 audio rather than the original XMI
+-- (MIDI) audio, then follow these steps:
+--  1) Find MP3 versions of the original tracks (for example the remixes by ZR
+--     from http://www.mobstar.biz/openTH/forums/viewtopic.php?t=77 ).
+--  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
+--  3) Uncomment the next line and point it to where the mp3s are, using %s in
+--     place of the track name.
+--audio_mp3 = [[X:\ThemeHospital\Music\Theme Hospital - %s (ZR remix).mp3]]
+-------------------------------------------------------------------------------
