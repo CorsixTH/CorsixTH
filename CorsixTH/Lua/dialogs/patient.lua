@@ -45,6 +45,8 @@ function UIPatient:UIPatient(ui, patient)
   self:addPanel(323,   0, 201) -- View circle top
   self:addPanel(324,   0, 254) -- View circle bottom
   self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close)
+  
+  self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue)
 end
 
 function UIPatient:draw(canvas)
@@ -88,4 +90,15 @@ function UIPatient:onMouseUp(button, x, y)
   elseif button == "right" then
     --TODO: Right clicking on patient view should go to the next patient
   end  return repaint
+end
+
+function UIPatient:viewQueue()
+  for i, action in ipairs(self.patient.action_queue) do
+    if action.name == "queue" then
+      self.ui:addWindow(UIQueue(self.ui, action.queue))
+      self.ui:playSound "selectx.wav"
+      return
+    end
+  end
+  self.ui:playSound "wrong2.wav"
 end

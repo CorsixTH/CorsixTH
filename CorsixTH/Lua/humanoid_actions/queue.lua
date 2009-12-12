@@ -205,38 +205,13 @@ local function action_queue_is_standing(action)
 end
 
 local function action_queue_on_leave(action, humanoid)
-  print(humanoid, "leavin queue")
-  print("Current queue:")
-  for i = 1, #humanoid.action_queue do
-    print(humanoid.action_queue[i].name)
-    for key, val in pairs(humanoid.action_queue[i]) do
-      print("",key,val)
-    end
-  end
-  
   action.is_in_queue = false
   if action.reserve_when_done then
-    if action.reserve_when_done.user then
-      print("Us:", humanoid, humanoid.humanoid_class)
-      print("User:", action.reserve_when_done.user, action.reserve_when_done.user.humanoid_class)
-      error("")
-    end
-    assert(not action.reserve_when_done.reserved_for)
-    
     action.reserve_when_done.reserved_for = humanoid
   end
   for i, current_action in ipairs(humanoid.action_queue) do
     if current_action == action then
       interrupt_head(humanoid, i)
-      
-      print("New queue:")
-      for i = 1, #humanoid.action_queue do
-        print(humanoid.action_queue[i].name)
-        for key, val in pairs(humanoid.action_queue[i]) do
-          print("",key,val)
-        end
-      end
-      
       return
     end
   end
@@ -280,10 +255,7 @@ local function action_queue_start(action, humanoid)
   action:onChangeQueuePosition(humanoid)
   
   if queue:size() == 1 and queue.same_room_priority then
-    print(humanoid, "trying...")
-    print(humanoid.timer_time, humanoid.timer_function)
     queue.same_room_priority:getRoom():tryAdvanceQueue()
-    print(humanoid.timer_time, humanoid.timer_function)
   end
 end
 

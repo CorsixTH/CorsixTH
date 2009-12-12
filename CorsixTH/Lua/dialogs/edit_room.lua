@@ -59,6 +59,15 @@ function UIEditRoom:UIEditRoom(ui, room_type)
 end
 
 function UIEditRoom:close(...)
+  if self.phase == "objects" and self.confirm_button.enabled then
+    if not self.closed_cleanly then
+      self:confirm()
+    end
+  else
+    while self.phase ~= "walls" do
+      self:cancel()
+    end
+  end
   for k, obj in pairs(self.blueprint_wall_anims) do
     if obj.setTile then
       obj:setTile(nil)
@@ -106,6 +115,7 @@ function UIEditRoom:confirm()
     self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
     
     self.world:markRoomAsBuilt(self.room)
+    self.closed_cleanly = true
     self:close()
   end
 end

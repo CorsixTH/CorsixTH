@@ -452,32 +452,36 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   -- If mode == "nearest" (or nil), the nearest room is taken
   -- If mode == "advanced", prefer a near room, but also few patients and fulfilled staff criteria
   local room
-  local queue
-  local tile_factor = 20     -- how many tiles further are we willing to walk for 1 person fewer in the queue
-  local readiness_bonus = 30 -- how many tiles further are we willing to walk if the room has all the required staff
+  local score
+  local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue
+  local readiness_bonus = 50 -- how many tiles further are we willing to walk if the room has all the required staff
   if not mode then
     mode = "nearest" -- default mode
   end
   if not distance then
     distance = 2^30
   end
-  for _, r in ipairs(self.rooms) do
+  for _, r in ipairs(self.rooms) do repeat
     if r.built and (not room_type_id or r.room_info.id == room_type_id) then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-      local q = r.door.queue:reportedSize() + r.door.queue.expected_count + r:getPatientCount() - r.maximum_patients
-      local bonus = 0
-      if r:testStaffCriteria(r:getRequiredStaffCriteria()) then
-        bonus = readiness_bonus
+      if d > distance then
+        break -- continue
       end
-      if d and (mode == "nearest" and d < distance) or
-               (mode == "advanced" and (not queue or tile_factor * (queue - q) + bonus > (d - distance))) then
-        queue = q
-        distance = d
+      local this_score = d
+      if mode == "advanced" then
+        local q = r.door.queue:reportedSize() + r.door.queue.expected_count + r:getPatientCount() - r.maximum_patients
+        this_score = this_score + q * tile_factor
+        if r:testStaffCriteria(r:getRequiredStaffCriteria()) then
+          this_score = this_score + readiness_bonus
+        end
+      end
+      if not score or this_score < score then
+        score = this_score
         room = r
       end
     end
-  end
+  until true end
   return room
 end
 
