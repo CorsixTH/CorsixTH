@@ -217,6 +217,19 @@ function UI:debugMakeAdviserTalk()
   self.adviser:say(_S(54, id))
 end
 
+function UI:setDefaultCursor(cursor)
+  if cursor == nil then
+    cursor = "default"
+  end
+  if type(cursor) == "string" then
+    cursor = self.app.gfx:loadMainCursor(cursor)
+  end
+  if self.cursor == self.default_cursor then
+    self:setCursor(cursor)
+  end
+  self.default_cursor = cursor
+end
+
 function UI:setCursor(cursor)
   if cursor ~= self.cursor then
     self.cursor = cursor

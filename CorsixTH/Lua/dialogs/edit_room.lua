@@ -51,7 +51,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   }
   self.blueprint_window = {
   }
-  self.phase = "walls" --> "door" --> "windows" --> "objects" --> "closed"
+  self.phase = "walls" --> "door" --> "windows" --> "clear_area" --> "objects" --> "closed"
   self.mouse_down_x = false
   self.mouse_down_y = false
   self.mouse_cell_x = 0
@@ -90,6 +90,11 @@ function UIEditRoom:cancel()
     self.phase = "door"
     self:returnToDoorPhase()
   else
+    if self.phase == "clear_area" then
+      self.ui:setDefaultCursor(nil)
+      self.check_for_clear_area_timer = nil
+      self.humanoids_to_watch = nil
+    end
     self.phase = "walls"
     self:returnToWallPhase()
   end
@@ -103,6 +108,10 @@ function UIEditRoom:confirm()
     self.phase = "windows"
     self:enterWindowsPhase()
   elseif self.phase == "windows" then
+    self.phase = "clear_area"
+    self:clearArea()
+  elseif self.phase == "clear_area" then
+    self.ui:setDefaultCursor(nil)
     self.phase = "objects"
     self:finishRoom()
     self:enterObjectsPhase()
@@ -117,6 +126,113 @@ function UIEditRoom:confirm()
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
     self:close()
+  end
+end
+
+function UIEditRoom:clearArea()
+  self.confirm_button:enable(false)
+  local rect = self.blueprint_rect
+  local world = self.ui.app.world
+  world:clearCaches() -- To invalidate idle tiles in case we need to move people
+  local humanoids_to_watch = setmetatable({}, {__mode = "k"})
+  do
+    local x1 = rect.x - 1
+    local x2 = rect.x + rect.w
+    local y1 = rect.y - 1
+    local y2 = rect.y + rect.h
+    for _, entity in ipairs(world.entities) do repeat
+      if x1 <= entity.tile_x and entity.tile_x <= x2 and y1 <= entity.tile_y and entity.tile_y <= y2 then
+        if not class.is(entity, Humanoid) then
+          -- We're only interested in humanoids.
+          break -- continue
+        end
+        if (x1 == entity.tile_x or x2 == entity.tile_x) and (y1 == entity.tile_y or y2 == entity.tile_y) then
+          -- Humanoid not in the rectangle, but might be walking into it
+          local action = entity.action_queue[1]
+          if action.name ~= "walk" then
+            break -- continue
+          end
+          local next_x = action.path_x[action.path_index]
+          local next_y = action.path_y[action.path_index]
+          if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
+            break -- continue
+          end
+        end
+        
+        humanoids_to_watch[entity] = true
+        
+        -- Try to make the humanoid leave the area
+        local meander = entity.action_queue[2]
+        if meander and meander.name == "meander" then
+          -- Interrupt the idle or walk, which will cause a new meander target
+          -- to be chosen, which will be outside the blueprint rectangle
+          meander.can_idle = false
+          local on_interrupt = entity.action_queue[1].on_interrupt
+          if on_interrupt then
+            entity.action_queue[1].on_interrupt = nil
+            on_interrupt(entity.action_queue[1], entity)
+          end
+        elseif entity.action_queue[1].name == "seek_room" or (meander and meander.name == "seek_room") then
+          -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
+          if entity.action_queue[1].name == "seek_room" then
+            entity:queueAction({name = "meander", count = 1, must_happen = true}, 0)
+          else
+            meander.done_walk = false
+          end
+        else
+          -- Look for a queue action and re-arrange the people in it, which
+          -- should cause anyone queueing within the blueprint to move
+          for i, action in ipairs(entity.action_queue) do
+            if action.name == "queue" then
+              for _, humanoid in ipairs(action.queue) do
+                local callbacks = action.queue.callbacks[humanoid]
+                if callbacks then
+                  callbacks:onChangeQueuePosition(humanoid)
+                end
+              end
+              break
+            end
+          end
+          -- TODO: Consider any other actions which might be causing the
+          -- humanoid to be staying within the rectangle for a long time.
+        end
+      end
+    until true end
+  end
+  
+  if next(humanoids_to_watch) == nil then
+    -- No humanoids within the area, so continue with the room placement
+    self:confirm()
+    return
+  end
+  
+  self.check_for_clear_area_timer = 10
+  self.humanoids_to_watch = humanoids_to_watch
+  self.ui:setDefaultCursor "sleep"
+end
+
+function UIEditRoom:onTick()
+  if self.check_for_clear_area_timer then
+    self.check_for_clear_area_timer = self.check_for_clear_area_timer - 1
+    if self.check_for_clear_area_timer == 0 then
+      local rect = self.blueprint_rect
+      local x1 = rect.x
+      local x2 = rect.x + rect.w - 1
+      local y1 = rect.y
+      local y2 = rect.y + rect.h - 1
+      for humanoid in pairs(self.humanoids_to_watch) do
+        if x1 > humanoid.tile_x or humanoid.tile_x > x2 or y1 > humanoid.tile_y or humanoid.tile_y > y2 then
+          self.humanoids_to_watch[humanoid] = nil
+        end
+      end
+      if next(self.humanoids_to_watch) then
+        self.check_for_clear_area_timer = 10
+      else
+        self.check_for_clear_area_timer = nil
+        self.humanoids_to_watch = nil
+        self:confirm()
+      end
+    end
   end
 end
 

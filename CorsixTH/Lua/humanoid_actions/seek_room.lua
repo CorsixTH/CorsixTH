@@ -36,15 +36,18 @@ local function action_seek_room_start(action, humanoid)
     end
   else
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
-    humanoid:setMood "wait"
-    action.must_happen = true
-    action.build_callback = function(room)
-      if room.room_info.id == action.room_type then
-        humanoid:setNextAction(room:createEnterAction())
+    if not action.done_init then
+      action.done_init = true
+      humanoid:setMood "wait"
+      action.must_happen = true
+      action.build_callback = function(room)
+        if room.room_info.id == action.room_type then
+          humanoid:setNextAction(room:createEnterAction())
+        end
       end
+      humanoid.world:registerRoomBuildCallback(action.build_callback)
+      action.on_interrupt = action_seek_room_interrupt
     end
-    humanoid.world:registerRoomBuildCallback(action.build_callback)
-    action.on_interrupt = action_seek_room_interrupt
     if not action.done_walk then
       humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
       action.done_walk = true

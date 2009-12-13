@@ -233,7 +233,7 @@ bool THPathfinder::findIdleTile(const THMap *pMap, int iStartX, int iStartY, int
         pNode->open_idx = -1;
         uint32_t iFlags = pMap->getNodeUnchecked(pNode->x, pNode->y)->iFlags;
 
-        if((iFlags & THMN_DoNotIdle) == 0)
+        if((iFlags & THMN_DoNotIdle) == 0 && (iFlags & THMN_Passable))
         {
             if(iN == 0)
             {
