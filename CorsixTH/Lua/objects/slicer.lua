@@ -49,20 +49,20 @@ object.orientations = {
   north = {
     footprint = {
       {-1, -1, only_passable = true}, {-1, 0}, {-1, 1},
-	    {0, -1, only_passable = true}, {0, 0, only_passable = true}, {0, 1, only_passable = true},
+      {0, -1, only_passable = true}, {0, 0, only_passable = true}, {0, 1, only_passable = true},
     },
     use_position = {0, 0},
     use_position_secondary = {-1, -1},
     list_bottom = true,
   },
   east = {
-	  footprint = {
+    footprint = {
       {-1, -1, only_passable = true}, {0, -1}, {1, -1}, 
-	    {-1, 0, only_passable = true}, {0, 0, only_passable = true}, {1, 0, only_passable = true},
+      {-1, 0, only_passable = true}, {0, 0, only_passable = true}, {1, 0, only_passable = true},
     },
     use_position = {0, 0},
     use_position_secondary = {-1, -1},
-	  early_list = true,
+    early_list = true,
     list_bottom = true,
   },
 }

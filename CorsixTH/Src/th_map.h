@@ -152,8 +152,8 @@ struct THMapNode : public THLinkList
 
     // Flags for information (lower 24 bits) and object type (top 8 bits)
     // See THMapNodeFlags for lower 24 bits, and THObjectType for top 8.
-	// The point of storing the object type here is to allow pathfinding code
-	// to use object types as pathfinding goals.
+    // The point of storing the object type here is to allow pathfinding code
+    // to use object types as pathfinding goals.
     uint32_t iFlags;
 };
 

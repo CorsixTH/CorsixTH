@@ -424,15 +424,15 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
         if((pElement->iLayerId != 0 && oLayers.iLayerContents[pElement->iLayer] != pElement->iLayerId)
          || pElement->iSprite >= iSpriteCount)
         {
-			// Some animations involving doctors (i.e. #72, #74, maybe others)
-			// only provide versions for heads W1 and B1, not W2 and B2. The
-			// quickest way to fix this is this dirty hack here, which draws
-			// the W1 layer as well as W2 if W2 is being used, and similarly
-			// for B1 / B2. A better fix would be to go into each animation
-			// which needs it, and duplicate the W1 / B1 layers to W2 / B2.
-			if(pElement->iLayer == 5 && oLayers.iLayerContents[5] - 4 == pElement->iLayerId)
+            // Some animations involving doctors (i.e. #72, #74, maybe others)
+            // only provide versions for heads W1 and B1, not W2 and B2. The
+            // quickest way to fix this is this dirty hack here, which draws
+            // the W1 layer as well as W2 if W2 is being used, and similarly
+            // for B1 / B2. A better fix would be to go into each animation
+            // which needs it, and duplicate the W1 / B1 layers to W2 / B2.
+            if(pElement->iLayer == 5 && oLayers.iLayerContents[5] - 4 == pElement->iLayerId)
                 /* don't skip */;
-			else
+            else
                 continue;
         }
 

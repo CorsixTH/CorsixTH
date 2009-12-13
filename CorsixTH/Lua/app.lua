@@ -56,9 +56,9 @@ function App:setCommandLine(...)
   self.command_line = {...}
   for i, arg in ipairs(self.command_line) do
     local setting, value = arg:match"^%-%-([^=]*)=(.*)$" --setting=value
-	  if value then
-	    self.command_line[setting] = value
-	  end
+    if value then
+      self.command_line[setting] = value
+    end
   end
 end
 
