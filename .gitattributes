@@ -14,6 +14,14 @@ CorsixTH/Bitmap/flag_travel_east.bmp -text
 CorsixTH/Bitmap/flag_travel_north.bmp -text
 CorsixTH/Bitmap/flag_travel_south.bmp -text
 CorsixTH/Bitmap/flag_travel_west.bmp -text
+CorsixTH/Bitmap/fullscreen_border_bottom.bmp -text
+CorsixTH/Bitmap/fullscreen_border_bottomleft.bmp -text
+CorsixTH/Bitmap/fullscreen_border_bottomright.bmp -text
+CorsixTH/Bitmap/fullscreen_border_left.bmp -text
+CorsixTH/Bitmap/fullscreen_border_right.bmp -text
+CorsixTH/Bitmap/fullscreen_border_top.bmp -text
+CorsixTH/Bitmap/fullscreen_border_topleft.bmp -text
+CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mksheet.lua -text
 CorsixTH/CorsixTH.aps -text
@@ -30,6 +38,8 @@ CorsixTH/Lua/dialogs/adviser.lua -text
 CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
+CorsixTH/Lua/dialogs/fax.lua -text
+CorsixTH/Lua/dialogs/fullscreen.lua -text
 CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/dialogs/hire_staff.lua -text
 CorsixTH/Lua/dialogs/information.lua -text

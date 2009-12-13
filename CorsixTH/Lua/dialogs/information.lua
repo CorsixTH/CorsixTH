@@ -26,6 +26,7 @@ function UIInformation:UIInformation(ui, text, callback)
   local app = ui.app
   self.modal_class = "information"
   self.esc_closes = true
+  self.on_top = true
   self.ui = ui
   self.width = 183
   self.height = 199

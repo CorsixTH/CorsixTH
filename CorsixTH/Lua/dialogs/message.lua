@@ -49,6 +49,9 @@ function UIMessage:draw(canvas)
 end
 
 function UIMessage:openMessage(out_of_time)
+  if not out_of_time then
+    self.ui:addWindow(UIFax(self.ui))
+  end
   self:close()
   self:onClose(out_of_time or false)
   --TODO
