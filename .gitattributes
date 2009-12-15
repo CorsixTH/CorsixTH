@@ -114,7 +114,6 @@ CorsixTH/Lua/walls/yellow.lua -text
 CorsixTH/Lua/window.lua -text
 CorsixTH/Lua/world.lua -text
 CorsixTH/Src/lua.hpp -text
-/FindLua51.cmake -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text

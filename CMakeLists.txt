@@ -30,11 +30,6 @@ OPTION(WITH_DIRECTX "Activate DirectX Renderer" OFF)
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 
-# Include current directory to CMAKE_MODULE_PATH to help cmake find FindLua5.1.cmake
-SET(
-  CMAKE_MODULE_PATH ".;${CMAKE_MODULE_PATH}"
-)
-
 # Basic platform dependant stuff
 IF(UNIX)
   IF(APPLE)
@@ -127,7 +122,7 @@ set_target_properties(CorsixTH PROPERTIES RUNTIME_OUTPUT_DIRECTORY CorsixTH)
 IF(WIN32)
   # Release-mode executables should be created at CorsixTH/CorsixTH.exe, not CorsixTH/Release/CorsixTH.exe
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME_RELEASE ../CorsixTH)
-ENDIF(UNIX)
+ENDIF(WIN32)
 install(DIRECTORY CorsixTH/Lua DESTINATION . PATTERN "svn" EXCLUDE)
 install(DIRECTORY CorsixTH/Bitmap DESTINATION . PATTERN "svn" EXCLUDE)
 install(FILES CorsixTH/config.txt DESTINATION . )
