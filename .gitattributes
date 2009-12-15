@@ -1,8 +1,5 @@
 * text=auto !eol
 AnimView/AnimView.vcproj eol=crlf
-/CorsixTH.sln eol=crlf
-/CorsixTH.suo -text
-CorsixTH/AnimView.exe -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
@@ -26,11 +23,9 @@ CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mksheet.lua -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
-CorsixTH/CorsixTH.exe -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
-CorsixTH/CorsixTH.vcproj eol=crlf
 CorsixTH/Lua/api_version.lua -text
 CorsixTH/Lua/audio.lua -text
 CorsixTH/Lua/class.lua -text
@@ -118,13 +113,7 @@ CorsixTH/Lua/walls/white.lua -text
 CorsixTH/Lua/walls/yellow.lua -text
 CorsixTH/Lua/window.lua -text
 CorsixTH/Lua/world.lua -text
-CorsixTH/Microsoft.VC90.CRT.manifest -text
-CorsixTH/SDL.dll -text
-CorsixTH/SDL_mixer.dll -text
 CorsixTH/Src/lua.hpp -text
-CorsixTH/lua5.1.dll -text
-CorsixTH/msvcp90.dll -text
-CorsixTH/msvcr90.dll -text
 CorsixTH/x64/CorsixTH.exe -text
 CorsixTH/x64/CorsixTH.lua -text
 CorsixTH/x64/Microsoft.VC90.CRT.manifest -text
@@ -133,6 +122,7 @@ CorsixTH/x64/SDL_mixer.dll -text
 CorsixTH/x64/lua5.1.dll -text
 CorsixTH/x64/msvcp90.dll -text
 CorsixTH/x64/msvcr90.dll -text
+/FindLua51.cmake -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text

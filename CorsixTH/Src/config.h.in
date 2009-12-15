@@ -29,14 +29,9 @@ SOFTWARE.
 // OpenGL - Faster than SDL on supported platforms, but DX9 may still be
 //          preferable on Windows (not yet finished, but should work).
 #ifndef CORSIX_TH_RENDERING_ENGINE_DEFINED
-#ifdef _WIN32
-//#define CORSIX_TH_USE_DX9_RENDERER
-#define CORSIX_TH_USE_OGL_RENDERER
-//#define CORSIX_TH_USE_SDL_RENDERER
-#else
-//#define CORSIX_TH_USE_OGL_RENDERER
-#define CORSIX_TH_USE_SDL_RENDERER
-#endif
+#cmakedefine CORSIX_TH_USE_OGL_RENDERER
+#cmakedefine CORSIX_TH_USE_DX9_RENDERER
+#cmakedefine CORSIX_TH_USE_SDL_RENDERER
 #endif //CORSIX_TH_RENDERING_ENGINE_DEFINED
 
 /** Windows Platform SDK usage **/
@@ -59,27 +54,30 @@ SOFTWARE.
 // SDL_mixer is used for ingame audio. If this library is not present on your
 // system, then you can comment out the next line and the game will not have
 // any music.
-#define CORSIX_TH_USE_SDL_MIXER
+#cmakedefine CORSIX_TH_USE_SDL_MIXER
 
 /** Environment detection **/
 #if defined(__amd64__) || defined(__IA64__) || defined(__x86_64__) || \
-    defined(_M_IA64) ||  defined(_IA64) || defined(_M_X64) || defined(_WIN64) \
-    || defined(__x86_64) || defined(__ia64__) || defined(__amd64)
+    defined(__x86_64) || defined(_M_IA64) ||  defined(_IA64) || \
+    defined(_M_X64) || defined(_WIN64) || defined(__ia64__) || \
+    defined(__amd64) || defined (_LP64) || defined(__ia64)
 #define CORSIX_TH_64BIT
 #endif
 
 /** Standard includes **/
 #include <stddef.h>
-#ifdef _MSC_VER
-// MSVC doesn't have stdint.h, so define the types we want
+#cmakedefine CORSIX_TH_HAS_STDINT_H
+#ifdef CORSIX_TH_HAS_STDINT_H
+#include <stdint.h>
+#else
+// Some compilers (e.g. MSVC) don't have stdint.h, so define the bits we use
+// from stdint.h
 typedef signed __int8 int8_t;
 typedef signed __int16 int16_t;
 typedef signed __int32 int32_t;
 typedef unsigned __int8 uint8_t;
 typedef unsigned __int16 uint16_t;
 typedef unsigned __int32 uint32_t;
-#else
-#include <stdint.h>
-#endif // _MSC_VER
+#endif // CORSIX_TH_HAS_STDINT
 
 #endif // CORSIX_TH_CONFIG_H_
