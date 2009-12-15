@@ -53,8 +53,11 @@ CorsixTH/Lua/dialogs/queue_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/dialogs/watch.lua -text
 CorsixTH/Lua/diseases/diag_gp.lua -text
+CorsixTH/Lua/diseases/gut_rot.lua -text
+CorsixTH/Lua/diseases/hairyitis.lua -text
 CorsixTH/Lua/diseases/king_complex.lua -text
 CorsixTH/Lua/diseases/slack_tongue.lua -text
+CorsixTH/Lua/diseases/tv_personalities.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/hospital.lua -text
@@ -78,6 +81,7 @@ CorsixTH/Lua/objects/crash_trolley.lua -text
 CorsixTH/Lua/objects/desk.lua -text
 CorsixTH/Lua/objects/door.lua -text
 CorsixTH/Lua/objects/drinks_machine.lua -text
+CorsixTH/Lua/objects/electrolyser.lua -text
 CorsixTH/Lua/objects/entrance_left_door.lua -text
 CorsixTH/Lua/objects/entrance_right_door.lua -text
 CorsixTH/Lua/objects/fire_extinguisher.lua -text
@@ -96,6 +100,7 @@ CorsixTH/Lua/objects/tv.lua -text
 CorsixTH/Lua/objects/video_game.lua -text
 CorsixTH/Lua/queue.lua -text
 CorsixTH/Lua/room.lua -text
+CorsixTH/Lua/rooms/electrolysis.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text
 CorsixTH/Lua/rooms/pharmacy.lua -text
 CorsixTH/Lua/rooms/slack_tongue.lua -text

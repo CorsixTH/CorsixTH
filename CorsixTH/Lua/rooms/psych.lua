@@ -83,7 +83,7 @@ function PsychRoom:commandEnteringPatient(patient)
       duration = duration - 1
     end
     if duration <= 0 then
-      if patient.diagnosed then
+      if patient.diagnosed and patient.humanoid_class == "Elvis Patient" then
         -- Diagnosed patients (Elvis) need to change clothes
         obj, ox, oy = self.world:findObjectNear(patient, "screen")
         patient:walkTo(ox, oy)

@@ -43,6 +43,9 @@ local function action_idle_start(action, humanoid)
   if action.must_happen then
     action.on_interrupt = action_idle_interrupt
   end
+  if action.loop_callback then
+    action:loop_callback()
+  end
 end
 
 return action_idle_start

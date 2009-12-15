@@ -144,7 +144,11 @@ action_use_object_tick = function(humanoid)
   end
   if phase == 100 then
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
+    if action.after_use then
+      action.after_use()
+    end
     humanoid:finishAction(action)
+    
   else
     action_use_phase(action, humanoid, phase)
   end
