@@ -57,13 +57,28 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   local function loop_callback()
     -- If the other humanoid has already started to idle we move on
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+      -- Skilled doctors require less electrocutions
+      local num_electrocutions = math.random(1, 5) * (2 - staff.profile.skill)
       patient:setNextAction{
         name = "use_object",
         object = electrolyser,
+        loop_callback = function(action)
+          num_electrocutions = num_electrocutions - 1
+          if num_electrocutions <= 0 then
+            -- Tired doctors can continue electrocuting for a bit too long...
+            -- Fatigue 0.00 - normal number of electrocutions
+            -- Fatigue 0.45 - normal number of electrocutions
+            -- Fatigue 0.80 - expect 1 extra electrocution
+            -- Fatigue 1.00 - expect 9 extra electrocutions
+            if math.random() <= 0.1 + 2 * (1 - staff.fatigue) then
+              action.prolonged_usage = false
+            end
+          end
+        end,
         after_use = function()
           patient:setType("Standard Male Patient") -- Change to normal body
           self:dealtWithPatient(patient)
-          self:commandEnteringStaff(staff)
+          staff:setNextAction{name = "meander"}
         end,
       }
     
@@ -71,12 +86,6 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
         name = "use_object",
         object = console,
       }
-      -- The doctor will be done before the patient is, make sure the queue doesn't get empty.
-      staff:queueAction{name = "idle"}
-      -- We don't want the animations to repeat (electrocuting would be nice to repeat, but
-      -- there aren't enough phases after that part to finish everything if done like that.
-      patient.action_queue[1].prolonged_usage = false;
-      staff.action_queue[1].prolonged_usage = false;
     end
   end
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.
@@ -92,8 +101,6 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
     direction = console.direction == "north" and "east" or "south",
     loop_callback = loop_callback,
   }
-  
-  
   
   return Room.commandEnteringPatient(self, patient)
 end

@@ -21,9 +21,9 @@ SOFTWARE. --]]
 local disease = {}
 disease.name = _S(4, 34)
 disease.id = "gut_rot"
-disease.cause = _S(44, 98)
-disease.symptoms = _S(44, 99)
-disease.cure = _S(44, 97)
+disease.cause = _S(44, 155)
+disease.symptoms = _S(44, 156)
+disease.cure = _S(44, 157)
 disease.cure_price = 350 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
@@ -43,6 +43,7 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
+  "cardiogram",
   -- TODO
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to

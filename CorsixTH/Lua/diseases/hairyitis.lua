@@ -27,9 +27,11 @@ disease.cure = _S(44, 67)
 disease.cure_price = 1150 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
   patient:setType("Chewbacca Patient")
+  -- NB: Layers have no effect on the appearance until cured, at which point
+  -- they are standard male patient layers.
   patient:setLayer(0, math.random(1, 5) * 2)
-  patient:setLayer(1, 0)
-  patient:setLayer(2, 0)
+  patient:setLayer(1, math.random(0, 3) * 2)
+  patient:setLayer(2, math.random(0, 1) * 2)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
 end

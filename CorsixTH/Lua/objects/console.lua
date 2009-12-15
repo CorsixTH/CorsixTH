@@ -36,7 +36,10 @@ object.usage_animations = copy_north_to_south {
   north = {
     begin_use   = {Doctor = 798}, -- Doctor sits down
     begin_use_2 = {Doctor = 806}, -- Pulls the handle
-    in_use      = {Doctor = 810}, -- Sits idle
+    in_use      = {Doctor = {
+      810, -- Sits idle
+      814, -- Pushing buttons
+    }},
     finish_use  = {Doctor = 802}, -- Doctor stands up
   },
 }

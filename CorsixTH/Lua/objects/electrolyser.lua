@@ -34,28 +34,29 @@ object.idle_animations = copy_north_to_south {
 }
 object.usage_animations = copy_north_to_south {
   north = {
-    begin_use   = {["Chewbacca Patient"] = 1266}, -- Patient invited onto machine
-    begin_use_2 = {["Chewbacca Patient"] = 1274}, -- Patient gets electrocuted
-    begin_use_3 = {["Chewbacca Patient"] = 1278}, -- Patient sparks
-    in_use      = {["Chewbacca Patient"] = 1286}, -- Hair falls off
-    finish_use  = {["Chewbacca Patient"] = 1294}, -- Patient leaves machine
+    begin_use    = {["Chewbacca Patient"] = 1266}, -- Patient invited onto machine
+    in_use       = {["Chewbacca Patient"] = 1274}, -- Patient gets electrocuted
+    finish_use   = {["Chewbacca Patient"] = 1278}, -- Patient sparks
+    finish_use_2 = {["Chewbacca Patient"] = 1286}, -- Hair falls off
+    finish_use_3 = {["Chewbacca Patient"] = 1294}, -- Patient leaves machine
   },
 }
 
 object.orientations = {
   north = {
     render_attach_position = {-1, -1},
-    footprint = { {-2, -2}, {-1, -2},
-                  {-2, -1}, {-1, -1}, {0, -1}, {0, -2},
-                  {-2, 0}, {-1, 0}, {0, 0}, {-1, 1, only_passable = true} },
+    footprint = { {-2, -2}, {-1, -2}, {0, -2},
+                  {-2, -1}, {-1, -1}, {0, -1},
+                  {-2,  0}, {-1,  0}, {0,  0},
+                  {-1, 1, only_passable = true} },
     use_position = "passable"
   },
   east = {
     render_attach_position = {-1, -1},
     footprint = { {-2, -2}, {-1, -2}, {0, -2},
                   {-2, -1}, {-1, -1}, {0, -1},
-                  {-1, 0}, {0, 0},
-                  {-2, 0}, {1, -1, only_passable = true} },
+                  {-2,  0}, {-1,  0}, {0,  0},
+                  {1, -1, only_passable = true} },
     use_position = "passable"
   },
 }

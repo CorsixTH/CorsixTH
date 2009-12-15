@@ -48,10 +48,16 @@ local function action_use_next_phase(action, phase)
   if phase == 1 and not action.anims.finish_use then
     phase = phase + 1
   end
-  if phase == 2 and not action.do_walk then
+  if phase == 2 and not action.anims.finish_use_2 then
     phase = phase + 1
   end
-  if phase > 2 then
+  if phase == 3 and not action.anims.finish_use_3 then
+    phase = phase + 1
+  end
+  if phase == 4 and not action.do_walk then
+    phase = phase + 1
+  end
+  if phase > 4 then
     phase = 100
   end
   return phase
@@ -69,7 +75,7 @@ local function action_use_phase(action, humanoid, phase)
       object.tile_x, object.tile_y,
       nil, action_use_object_tick)
     return
-  elseif phase == 2 then
+  elseif phase == 4 then
     HumanoidRawWalk(humanoid,
       object.tile_x, object.tile_y,
       action.old_tile_x, action.old_tile_y,
@@ -85,6 +91,10 @@ local function action_use_phase(action, humanoid, phase)
     anim_table = action.anims.begin_use_3
   elseif phase == 1 then
     anim_table = action.anims.finish_use
+  elseif phase == 2 then
+    anim_table = action.anims.finish_use_2
+  elseif phase == 3 then
+    anim_table = action.anims.finish_use_3
   end
   local is_list = false
   local anim = anim_table[humanoid.humanoid_class]
@@ -138,7 +148,7 @@ action_use_object_tick = function(humanoid)
   elseif action.loop_callback then
     action:loop_callback()
   end
-  if oldphase <= 1 and phase > 1 then
+  if oldphase <= 3 and phase > 3 then
     object:setUser(nil)
     humanoid.user_of = nil
   end
@@ -195,7 +205,7 @@ local function action_use_object_start(action, humanoid)
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags
-  if anims.begin_use and anims.in_use and anims.finish_use then
+  if action.prolonged_usage == nil and anims.begin_use and anims.in_use and anims.finish_use then
     action.prolonged_usage = true
   end
   if object.object_type.walk_in_to_use then
