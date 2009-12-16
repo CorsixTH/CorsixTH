@@ -27,6 +27,16 @@ dofile "dialogs/place_objects"
 class "UIEditRoom" (UIPlaceObjects)
 
 function UIEditRoom:UIEditRoom(ui, room_type)
+  self.phase = "walls" --> "door" --> "windows" --> "clear_area" --> "objects" --> "closed"
+  self.blueprint_rect = {
+    x = 1,
+    y = 1,
+    w = 0,
+    h = 0,
+  }
+
+  -- NB: UIEditRoom:onMouseMove is called by the UIPlaceObjects constructor,
+  -- hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
   
   local app = ui.app
@@ -39,19 +49,12 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.room_type = room_type
   self.title_text = room_type.name
   self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
-  self.blueprint_rect = {
-    x = 1,
-    y = 1,
-    w = 0,
-    h = 0,
-  }
   self.blueprint_wall_anims = {
   }
   self.blueprint_door = {
   }
   self.blueprint_window = {
   }
-  self.phase = "walls" --> "door" --> "windows" --> "clear_area" --> "objects" --> "closed"
   self.mouse_down_x = false
   self.mouse_down_y = false
   self.mouse_cell_x = 0
@@ -118,8 +121,8 @@ function UIEditRoom:confirm()
   else
     -- Pay for room
     local cost = self.room_type.build_cost
-    for i, obj in ipairs(self.room.objects_needed) do
-      cost = cost - obj.object.build_cost
+    for obj, num in pairs(self.room.room_info.objects_needed_new) do
+      cost = cost - num * TheApp.objects[obj].build_cost
     end
     self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
     
@@ -332,7 +335,13 @@ end
 function UIEditRoom:purchaseItems()
   self.visible = false
   self.place_objects = false
-  self.ui:addWindow(UIFurnishCorridor(self.ui, self.room.objects_additional, self))
+
+  local object_list = {} -- transform set to list
+  for i, o in ipairs(self.room.room_info.objects_additional) do
+    object_list[i] = { object = TheApp.objects[o], qty = 0 }
+  end
+  
+  self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
 function UIEditRoom:returnToWallPhase()
@@ -533,18 +542,20 @@ function UIEditRoom:enterWindowsPhase()
 end
 
 function UIEditRoom:enterObjectsPhase()
-  if #self.room.objects_additional == 0 and #self.room.objects_needed == 0 then
+  local confirm = self:checkEnableConfirm()
+  if #self.room.room_info.objects_additional == 0 and confirm then
     self:confirm()
     return
   end
   self.desc_text = _S(3, 15)
-  if #self.room.objects_additional > 0 then
+  if #self.room.room_info.objects_additional > 0 then
     self.purchase_button:enable(true)
   end
-  if #self.room.objects_needed > 0 then
-    self.confirm_button:enable(false)
-    self:addObjects(self.room.objects_needed)
+  local object_list = {} -- transform set to list
+  for o, num in pairs(self.room.room_info.objects_needed_new) do
+    object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
   end
+  self:addObjects(object_list)
 end
 
 function UIEditRoom:draw(canvas)
@@ -837,13 +848,36 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
-function UIEditRoom:placeObject()
-  UIPlaceObjects.placeObject(self, true)
-  local enable_confirm = true
-  for _, o in pairs(self.objects) do
-    if o.needed == true then
-      enable_confirm = false -- While a needed object is not already placed, don't allow to confirm
+-- checks if all required objects are placed, and enables/disables the confirm button accordingly.
+-- also returns the new state of the confirm button
+function UIEditRoom:checkEnableConfirm()
+  local needed = {} -- copy list of required objects
+  for k, v in pairs(self.room.room_info.objects_needed_new) do
+    needed[k] = v
+  end
+  
+  -- subtract existing objects from the required numbers
+  for o in pairs(self.room.objects) do
+    local id = o.object_type.id
+    if needed[id] then
+      needed[id] = needed[id] - 1
+      if needed[id] == 0 then
+        needed[id] = nil
+      end
     end
   end
-  self.confirm_button:enable(enable_confirm)
+  
+  -- disable if there are not fulfilled requirements
+  local confirm = not next(needed)
+  
+  self.confirm_button:enable(confirm)
+  return confirm
+end
+
+function UIEditRoom:placeObject()
+  local obj = UIPlaceObjects.placeObject(self, true)
+  if obj then
+    self.room.objects[obj] = true
+    self:checkEnableConfirm()
+  end
 end

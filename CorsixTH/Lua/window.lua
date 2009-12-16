@@ -119,6 +119,17 @@ function Window:removeWindow(window)
   return false
 end
 
+-- searches in child windows for window of given class, and returns it (or nil)
+function Window:getWindow(window_class)
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if class.is(window, window_class) then
+        return window
+      end
+    end
+  end
+end
+
 local button_mt = {
   __index = {
     setDisabledSprite = function(self, index)

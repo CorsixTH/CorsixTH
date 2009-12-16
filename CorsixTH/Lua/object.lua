@@ -139,6 +139,40 @@ function Object:setUser(user)
   end
 end
 
+function Object:onClick(ui, button)
+  if button == "right" then
+    local object_list = {{object = self.object_type, qty = 1}}
+    local room = self.world:getRoom(self.tile_x, self.tile_y)
+    local window = ui:getWindow(UIEditRoom)
+    local direction = self.direction
+    
+    if (not room and window) or (room and not (window and window.room == room)) then
+      return
+    end
+
+    self.world:destroyEntity(self)
+    -- NB: the object has to be destroyed before updating/creating the window,
+    -- or the blueprint will be wrong
+    if not window then
+      window = UIPlaceObjects(ui, object_list)
+      ui:addWindow(window)
+    else
+      window:addObjects(object_list)
+      window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
+    end
+    window:setOrientation(direction)
+    ui:playSound("pickup.wav")
+  end
+end
+
+function Object:onDestroy()
+  local room = self:getRoom()
+  if room then
+    room.objects[self] = nil
+  end
+  Entity.onDestroy(self)
+end
+
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
 
 function Object.processTypeDefinition(object_type)

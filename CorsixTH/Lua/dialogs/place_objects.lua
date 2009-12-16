@@ -127,6 +127,7 @@ function UIPlaceObjects:addObjects(object_list)
   end
   self.active_index = 0 -- avoid case of index changing from 1 to 1
   self:setActiveIndex(1)
+  self:onMouseMove(self.ui:getCursorPosition(self))
 end
 
 function UIPlaceObjects:removeObject(object, dont_close_if_empty)
@@ -209,17 +210,10 @@ local orient_next = {
   west = "north",
 }
 
-function UIPlaceObjects:nextOrientation()
-  if not self.object_anim then
-    return
-  end
-  local object = self.objects[self.active_index].object
-  local orient = self.object_orientation
-  repeat
-    orient = orient_next[orient]
-  until object.orientations[orient]
+function UIPlaceObjects:setOrientation(orient)
   self.object_orientation = orient
   
+  local object = self.objects[self.active_index].object
   local anim = object.idle_animations[orient]
   local flag = 0
   if not anim then
@@ -236,6 +230,18 @@ function UIPlaceObjects:nextOrientation()
   py = object.orientations[orient].animation_offset[2] + py
   self.object_anim:setPosition(px, py)
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
+end
+
+function UIPlaceObjects:nextOrientation()
+  if not self.object_anim then
+    return
+  end
+  local object = self.objects[self.active_index].object
+  local orient = self.object_orientation
+  repeat
+    orient = orient_next[orient]
+  until object.orientations[orient]
+  self:setOrientation(orient)
 end
 
 function UIPlaceObjects:onMouseUp(button, x, y)
@@ -269,13 +275,15 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   end
 
   local object = self.objects[self.active_index]
-  self.world:newObject(object.object.id, self.object_cell_x,
+  local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   
   self.ui.hospital:spendMoney(object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
   self.ui:playSound "place_r.wav"
 
   self:removeObject(object, dont_close_if_empty)
+  
+  return real_obj
 end
 
 function UIPlaceObjects:draw(canvas)
@@ -363,14 +371,14 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           is_object_allowed = false
         else
           roomId = flags.roomId
-          for _, o in pairs(world.rooms[roomId].objects_additional) do
-            if o.object.thob == object.thob then
+          for _, o in pairs(world.rooms[roomId].room_info.objects_additional) do
+            if TheApp.objects[o].thob == object.thob then
               is_object_allowed = true
               break
             end
           end
-          for _, o in pairs(world.rooms[roomId].objects_needed) do
-            if o.object.thob == object.thob then
+          for o, num in pairs(world.rooms[roomId].room_info.objects_needed_new) do
+            if TheApp.objects[o].thob == object.thob then
               is_object_allowed = true
               break
             end
@@ -437,6 +445,7 @@ end
 
 function UIPlaceObjects:onMouseMove(x, y, ...)
   local repaint = Window.onMouseMove(self, x, y, ...)
+  repaint = true
   
   if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return

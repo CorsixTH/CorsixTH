@@ -37,20 +37,15 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
   
   self.humanoids = {--[[a set rather than a list]]}
+  self.objects = {--[[a set rather than a list]]}
   
-  self.objects_additional = {}
-  if room_info.objects_additional then
-    for i = 1, #room_info.objects_additional do
-      self.objects_additional[i] = { object = TheApp.objects[room_info.objects_additional[i]], qty = 0 }
+  if not self.room_info.objects_needed_new then
+    self.room_info.objects_needed_new = {}
+    for i = 1, #self.room_info.objects_needed do
+      self.room_info.objects_needed_new[self.room_info.objects_needed[i]] = 1
     end
   end
-
-  self.objects_needed = {}
-  if room_info.objects_needed then
-    for i = 1, #room_info.objects_needed do
-      self.objects_needed[i] = { object = TheApp.objects[room_info.objects_needed[i]], qty = 1, needed = true }
-    end
-  end
+  
   -- TODO
 end
 

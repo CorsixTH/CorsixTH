@@ -650,3 +650,15 @@ function UI:removeWindow(window)
     return false
   end
 end
+
+function UI:getCursorPosition(window)
+  -- Given no argument, returns the cursor position in screen space
+  -- Otherwise, returns the cursor position in the space of the given window
+  local x, y = self.cursor_x, self.cursor_y
+  while window ~= nil and window ~= self do
+    x = x - window.x
+    y = y - window.y
+    window = window.parent
+  end
+  return x, y
+end
