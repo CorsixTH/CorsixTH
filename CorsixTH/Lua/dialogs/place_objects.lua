@@ -312,6 +312,10 @@ function UIPlaceObjects:draw(canvas)
   end
 end
 
+function UIPlaceObjects:hitTest(x, y)
+  return self.visible
+end
+
 function UIPlaceObjects:clearBlueprint()
   local map = self.map.th
   if self.object_anim then

@@ -70,3 +70,24 @@ function UIFullscreen:draw(canvas)
   end
   return Window.draw(self, canvas)
 end
+
+function UIFullscreen:hitTest(x, y)
+  if x >= 0 and y >= 0 and x < self.width and y < self.height then
+    return true
+  end
+  local sprites = self.border_sprites
+  if not sprites then
+    return false
+  end
+  if x < -9 or y < -9 or x >= self.width + 9 or y >= self.height + 9 then
+    return false
+  end
+  if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
+    return true
+  end
+  local test = sprites.hitTest
+  return test(sprites, 10, x + 9, y + 9)
+      or test(sprites, 12, x - 600, y + 9)
+      or test(sprites, 15, x + 9, y - 440)
+      or test(sprites, 17, x - 600, y - 440)
+end

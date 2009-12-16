@@ -449,8 +449,10 @@ end
 function UI:onCursorWorldPositionChange()
   local x = self.screen_offset_x + self.cursor_x
   local y = self.screen_offset_y + self.cursor_y
-  -- TODO: Hit test against UI first (-> entity = nil)
-  local entity = self.app.map.th:hitTestObjects(x, y)
+  local entity = nil
+  if not self:hitTest(self.cursor_x, self.cursor_y) then
+    entity = self.app.map.th:hitTestObjects(x, y)
+  end
   if entity ~= self.cursor_entity then
     self.cursor_entity = entity
     local cursor = entity and entity.hover_cursor or

@@ -228,6 +228,42 @@ function Window:draw(canvas)
   end
 end
 
+function Window:hitTest(x, y)
+  if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
+    return false
+  end
+  if self.panels[1] then
+    local panel_sprites = self.panel_sprites
+    local panel_sprites_hittest = panel_sprites.hitTest
+    for _, panel in ipairs(self.panels) do repeat
+      if not panel.visible then
+        break -- continue
+      end
+      local x, y = x - panel.x, y - panel.y
+      if x < 0 or y < 0 then
+        break -- continue
+      end
+      if panel.w and panel.h then
+        if x <= panel.w and y <= panel.h then
+          return true
+        end
+      else
+        if panel_sprites_hittest(panel_sprites, panel.sprite_index, x, y) then
+          return true
+        end
+      end
+    until true end
+  end
+  if self.windows then
+    for _, child in ipairs(self.windows) do
+      if child:hitTest(x - child.x, y - child.y) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function Window:onMouseDown(button, x, y)
   local repaint = false
   if self.windows then

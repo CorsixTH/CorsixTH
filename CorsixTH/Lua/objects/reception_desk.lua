@@ -66,9 +66,13 @@ function ReceptionDesk:ReceptionDesk(...)
   self.queue_advance_timer = 0
 end
 
-function ReceptionDesk:onClick()
-  local queue_window = UIQueue(TheApp.ui, self.queue)
-  TheApp.ui:addWindow(queue_window)
+function ReceptionDesk:onClick(ui, button)
+  if button == "left" then
+    local queue_window = UIQueue(ui, self.queue)
+    ui:addWindow(queue_window)
+  else
+    return Object.onClick(self, ui, button)
+  end
 end
 
 function ReceptionDesk:tick()

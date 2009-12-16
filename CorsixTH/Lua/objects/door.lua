@@ -48,9 +48,12 @@ function Door:getRoom()
   return self.room
 end
 
-function Door:onClick()
-  local queue_window = UIQueue(TheApp.ui, self.queue)
-  TheApp.ui:addWindow(queue_window)
+function Door:onClick(ui, button)
+  -- For consistency with reception desk, only open queue from a left click
+  if button == "left" then
+    local queue_window = UIQueue(ui, self.queue)
+    ui:addWindow(queue_window)
+  end
 end
 
 local door_flag_name = {

@@ -27,8 +27,10 @@ function UIBottomPanel:UIBottomPanel(ui)
 
   self.ui = ui
   self.world = app.world
-  self.x = (app.config.width - 640) / 2
-  self.y = app.config.height - 48
+  self.width = 640
+  self.height = 48
+  self.x = (app.config.width - self.width) / 2
+  self.y = app.config.height - self.height
   self.show_animation = true
   self.factory_counter = 22
   self.factory_direction = 0
@@ -78,6 +80,10 @@ function UIBottomPanel:draw(canvas)
       self.panel_sprites:draw(canvas, 42, x + 201, y + 1)
     end
   end
+end
+
+function UIBottomPanel:hitTest(x, y)
+  return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
 
 function UIBottomPanel:queueMessage(type)

@@ -724,6 +724,16 @@ static int l_spritesheet_draw(lua_State *L)
     return 1;
 }
 
+static int l_spritesheet_hittest(lua_State *L)
+{
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
+    unsigned int iSprite = (unsigned int)luaL_checkinteger(L, 2);
+    int iX = luaL_checkint(L, 3);
+    int iY = luaL_checkint(L, 4);
+    unsigned long iFlags = (unsigned long)luaL_optint(L, 5, 0);
+    return pSheet->hitTestSprite(iSprite, iX, iY, iFlags);
+}
+
 static int l_font_new(lua_State *L)
 {
     THFont* pFont = luaT_stdnew<THFont>(L, LUA_ENVIRONINDEX, true);
@@ -1777,6 +1787,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_spritesheet_set_pal, "setPalette", iPaletteMT);
     luaT_setfunction(l_spritesheet_size, "size");
     luaT_setfunction(l_spritesheet_draw, "draw", iSurfaceMT);
+    luaT_setfunction(l_spritesheet_hittest, "hitTest");
     luaT_endclass();
 
     // Font
