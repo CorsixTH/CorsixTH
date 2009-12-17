@@ -138,7 +138,7 @@ end
 
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
   if pay_for and object.object.build_cost then
-    self.ui.hospital:receiveMoney(object.object.build_cost, _S(8, 27) .. ": " .. object_type.name)
+    self.ui.hospital:receiveMoney(object.object.build_cost, _S(8, 27) .. ": " .. object.object.name)
   end
 
   object.qty = object.qty - 1
@@ -154,7 +154,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
         return
       end
     end
-    local idx = self.active_index
+    local idx = self.active_index -- TODO: fix things here
     table.remove(self.objects, idx)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
     self:setActiveIndex(1)

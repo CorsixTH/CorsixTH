@@ -119,9 +119,12 @@ function UIEditRoom:confirm()
     self:finishRoom()
     self:enterObjectsPhase()
   else
-    -- Pay for room (full room cost; needed objects are included in this cost)
+    -- Pay for room (subtract cost of needed objects, which were already paid for)
     local cost = self.room_type.build_cost
-    self.ui.hospital:spendMoney(self.room_type.build_cost, _S(8, 5) .. ": " .. self.title_text)
+    for obj, num in pairs(self.room.room_info.objects_needed) do
+      cost = cost - num * TheApp.objects[obj].build_cost
+    end
+    self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
@@ -364,21 +367,29 @@ function UIEditRoom:returnToDoorPhase()
   
   self.purchase_button:enable(false)
   self.world.rooms[room.id] = nil
-  UIPlaceObjects.removeAllObjects(self)
   
-  -- Remove (and sell) any placed objects
+  -- Remove any placed objects (add them to list again)
   for x = room.x, room.x + room.width - 1 do
     for y = room.y, room.y + room.height - 1 do
       while true do
-        local object = self.world:getObject(x, y)
-        if not object or object == room.door then
+        local obj = self.world:getObject(x, y)
+        if not obj or obj == room.door then
           break
         end
-        self.world:destroyEntity(object)
+        self:addObjects({{object = TheApp.objects[obj.object_type.id], qty = 1}})
+        self.world:destroyEntity(obj)
       end
     end
   end
   self.world:destroyEntity(self.room.door)
+  
+  -- backup list of objects
+  self.objects_backup = {}
+  for k, o in pairs(self.objects) do
+    self.objects_backup[k] = o
+  end
+  
+  UIPlaceObjects.removeAllObjects(self, true)
   
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
@@ -550,7 +561,7 @@ function UIEditRoom:enterObjectsPhase()
   for o, num in pairs(self.room.room_info.objects_needed) do
     object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
   end
-  self:addObjects(object_list) -- don't pay for the required objects, they are included in the room cost
+  self:addObjects(object_list, true)
 end
 
 function UIEditRoom:draw(canvas)
