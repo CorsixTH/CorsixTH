@@ -53,6 +53,7 @@ CorsixTH/Lua/dialogs/queue_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/dialogs/watch.lua -text
 CorsixTH/Lua/diseases/diag_gp.lua -text
+CorsixTH/Lua/diseases/fractured_bones.lua -text
 CorsixTH/Lua/diseases/gut_rot.lua -text
 CorsixTH/Lua/diseases/hairyitis.lua -text
 CorsixTH/Lua/diseases/king_complex.lua -text
@@ -73,6 +74,7 @@ CorsixTH/Lua/objects/bench.lua -text
 CorsixTH/Lua/objects/bin.lua -text
 CorsixTH/Lua/objects/bookcase.lua -text
 CorsixTH/Lua/objects/cabinet.lua -text
+CorsixTH/Lua/objects/cast_remover.lua -text
 CorsixTH/Lua/objects/chair.lua -text
 CorsixTH/Lua/objects/comfortable_chair.lua -text
 CorsixTH/Lua/objects/computer.lua -text
@@ -101,6 +103,7 @@ CorsixTH/Lua/objects/video_game.lua -text
 CorsixTH/Lua/queue.lua -text
 CorsixTH/Lua/room.lua -text
 CorsixTH/Lua/rooms/electrolysis.lua -text
+CorsixTH/Lua/rooms/fracture_clinic.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text
 CorsixTH/Lua/rooms/pharmacy.lua -text
 CorsixTH/Lua/rooms/slack_tongue.lua -text

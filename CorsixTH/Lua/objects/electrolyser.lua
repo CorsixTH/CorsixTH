@@ -34,11 +34,26 @@ object.idle_animations = copy_north_to_south {
 }
 object.usage_animations = copy_north_to_south {
   north = {
-    begin_use    = {["Chewbacca Patient"] = 1266}, -- Patient invited onto machine
-    in_use       = {["Chewbacca Patient"] = 1274}, -- Patient gets electrocuted
-    finish_use   = {["Chewbacca Patient"] = 1278}, -- Patient sparks
-    finish_use_2 = {["Chewbacca Patient"] = 1286}, -- Hair falls off
-    finish_use_3 = {["Chewbacca Patient"] = 1294}, -- Patient leaves machine
+    begin_use    = { -- Patient invited onto machine
+      ["Standard Female Patient"] = 1266,
+      ["Standard Male Patient"  ] = 1266,
+    },
+    in_use       = { -- Patient gets electrocuted
+      ["Standard Female Patient"] = 1274,
+      ["Standard Male Patient"  ] = 1274,
+    },
+    finish_use   = { -- Patient sparks
+      ["Standard Female Patient"] = 1278,
+      ["Standard Male Patient"  ] = 1278,
+    }, 
+    finish_use_2 = { -- Hair falls off 
+      ["Standard Female Patient"] = 2940,
+      ["Standard Male Patient"  ] = 1286,
+    },
+    finish_use_3 = { -- Patient leaves machine
+      ["Standard Female Patient"] = 2944,
+      ["Standard Male Patient"  ] = 1294,
+    },
   },
 }
 

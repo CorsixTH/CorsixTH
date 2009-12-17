@@ -19,22 +19,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 4)
-disease.id = "hairyitis"
-disease.cause = _S(44, 65)
-disease.symptoms = _S(44, 66)
-disease.cure = _S(44, 67)
-disease.cure_price = 1150 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S(4, 10)
+disease.id = "fractured_bones"
+disease.cause = _S(44, 83)
+disease.symptoms = _S(44, 84)
+disease.cure = _S(44, 85)
+disease.cure_price = 450 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
-  patient:setType("Chewbacca Patient")
-  -- NB: Layers have no effect on the appearance until cured, at which point
-  -- they are standard male patient layers. The clinic does however sometimes  
-  -- change this so that a female emerge.
-  patient:setLayer(0, math.random(1, 5) * 2)
+  if 1 == 2 then -- Right now the female animation in the cast remover is bad
+    patient:setType("Standard Female Patient")
+    patient:setLayer(0, math.random(1, 4) * 2)
+    local num1 = math.random(0, 1) -- The first bandage yes/no
+    patient:setLayer(2, num1 * 2)
+    -- There needs to be at least one bandage on the patient
+    patient:setLayer(3, (num1 == 0 and 1 or math.random(0, 1)) * 2)
+    patient:setLayer(4, 0)
+  else
+    patient:setType("Alternate Male Patient")
+    patient:setLayer(0, math.random(1, 5) * 2)
+    -- Some bandage types may be duplicated, then it shall be so
+    local num1 = math.random(0, 2) -- The first bandage yes/no
+    patient:setLayer(2, num1 * 2)
+    local num2 = math.random(0, 5) -- The second bandage yes/no
+    -- 6 does not exist, a few more arm bandages instead
+    if num2 == 3 then num2 = 4 end 
+    patient:setLayer(3, num2 * 2)
+    -- There needs to be at least one bandage on the patient
+    local num3 = math.random(0, 5)
+    if num3 == 3 then num3 = 4 end
+    patient:setLayer(4, ((num1 == 0 and num2 == 0) and 1 or num3) * 2)
+  end
   patient:setLayer(1, math.random(0, 3) * 2)
-  patient:setLayer(2, math.random(0, 1) * 2)
-  patient:setLayer(3, 0)
-  patient:setLayer(4, 0)
 end
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
@@ -45,7 +60,7 @@ disease.diagnosis_rooms = {
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.
 disease.treatment_rooms = {
-  "electrolysis",
+  "fracture_clinic",
 }
 
 return disease
