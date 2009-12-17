@@ -24,7 +24,7 @@ room.id = "cardiogram"
 room.class = "CardiogramRoom"
 room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "cardio", "screen" }
+room.objects_needed = { cardio = 1, screen = 1 }
 room.build_preview_animation = 918
 room.categories = {
   diagnosis = 3,

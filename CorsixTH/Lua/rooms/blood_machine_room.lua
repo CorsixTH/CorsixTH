@@ -23,7 +23,7 @@ room.name = _S(14, 13)
 room.id = "blood_machine"
 room.build_cost = 6000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "blood_machine" }
+room.objects_needed = { blood_machine = 1 }
 room.build_preview_animation = 5094
 room.categories = {
   diagnosis = 6,

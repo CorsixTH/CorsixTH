@@ -23,7 +23,7 @@ room.name = _S(14, 12)
 room.id = "ultrascan"
 room.build_cost = 8000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "ultrascanner" }
+room.objects_needed = { ultrascanner = 1 }
 room.build_preview_animation = 5068
 room.categories = {
   diagnosis = 5,

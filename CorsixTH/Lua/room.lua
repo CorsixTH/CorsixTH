@@ -39,13 +39,6 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.humanoids = {--[[a set rather than a list]]}
   self.objects = {--[[a set rather than a list]]}
   
-  if not self.room_info.objects_needed_new then
-    self.room_info.objects_needed_new = {}
-    for i = 1, #self.room_info.objects_needed do
-      self.room_info.objects_needed_new[self.room_info.objects_needed[i]] = 1
-    end
-  end
-  
   -- TODO
 end
 

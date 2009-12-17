@@ -22,9 +22,9 @@ local room = {}
 room.name = _S(14, 7)
 room.id = "ward"
 room.class = "WardRoom"
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bed" }
-room.objects_needed = { "desk", "bed" }
 room.build_cost = 2000
+room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bed" }
+room.objects_needed = { desk = 1, bed = 1 }
 room.build_preview_animation = 910
 room.categories = {
   treatment = 2,

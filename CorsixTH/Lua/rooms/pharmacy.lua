@@ -24,7 +24,7 @@ room.id = "pharmacy"
 room.class = "PharmacyRoom"
 room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "pharmacy_cabinet" }
+room.objects_needed = { pharmacy_cabinet = 1 }
 room.build_preview_animation = 5088
 room.categories = {
   treatment = 3,

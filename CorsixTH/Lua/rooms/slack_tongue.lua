@@ -24,7 +24,7 @@ room.id = "slack_tongue"
 room.class = "SlackTongueRoom"
 room.build_cost = 3000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "slicer" }
+room.objects_needed = { slicer = 1 }
 room.build_preview_animation = 932
 room.categories = {
   clinics = 1,

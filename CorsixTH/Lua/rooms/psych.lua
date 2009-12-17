@@ -24,7 +24,7 @@ room.id = "psych"
 room.class = "PsychRoom"
 room.build_cost = 2500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bookcase", "skeleton" }
-room.objects_needed = { "screen", "couch", "comfortable_chair" }
+room.objects_needed = { screen = 1, couch = 1, comfortable_chair = 1 }
 room.build_preview_animation = 924
 room.categories = {
   treatment = 1,

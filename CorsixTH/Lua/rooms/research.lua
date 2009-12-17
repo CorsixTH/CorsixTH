@@ -21,9 +21,9 @@ SOFTWARE. --]]
 local room = {}
 room.name = _S(14, 26)
 room.id = "research"
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "computer", "desk", "cabinet", "analyser" }
-room.objects_needed = { "desk", "cabinet", "autopsy" }
 room.build_cost = 5000
+room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "computer", "desk", "cabinet", "analyser" }
+room.objects_needed = { desk = 1, cabinet = 1, autopsy = 1 }
 room.build_preview_animation = 5102
 room.categories = {
   facilities = 2,

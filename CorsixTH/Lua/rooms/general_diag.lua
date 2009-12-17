@@ -23,7 +23,7 @@ room.name = _S(14, 25)
 room.id = "general_diag"
 room.build_cost = 1000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "screen", "crash_trolley" }
+room.objects_needed = { screen = 1, crash_trolley = 1 }
 room.build_preview_animation = 916
 room.categories = {
   diagnosis = 2,

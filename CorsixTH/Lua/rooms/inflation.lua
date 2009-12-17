@@ -24,7 +24,7 @@ room.id = "inflation"
 room.class = "InflationRoom"
 room.build_cost = 4000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
-room.objects_needed = { "inflator" }
+room.objects_needed = { inflator = 1 }
 room.build_preview_animation = 908
 room.categories = {
   clinics = 1,
