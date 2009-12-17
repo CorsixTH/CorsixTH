@@ -136,6 +136,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   self:onMouseMove(self.ui:getCursorPosition(self))
 end
 
+-- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
   if pay_for and object.object.build_cost then
     self.ui.hospital:receiveMoney(object.object.build_cost, _S(8, 27) .. ": " .. object.object.name)
@@ -154,7 +155,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
         return
       end
     end
-    local idx = self.active_index -- TODO: fix things here
+    local idx = self.active_index
     table.remove(self.objects, idx)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
     self:setActiveIndex(1)
@@ -175,8 +176,12 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
 end
 
 function UIPlaceObjects:removeAllObjects(pay_for)
+  -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
+  self.active_index = 1
   for i = 1, #self.objects do
-    self:removeObject(self.objects[1], true, pay_for)
+    for j = 1, self.objects[1].qty do
+      self:removeObject(self.objects[1], true, pay_for)
+    end
   end
 end
 

@@ -386,7 +386,7 @@ function UIEditRoom:returnToDoorPhase()
   -- backup list of objects
   self.objects_backup = {}
   for k, o in pairs(self.objects) do
-    self.objects_backup[k] = o
+    self.objects_backup[k] = { object = o.object, qty = o.qty }
   end
   
   UIPlaceObjects.removeAllObjects(self, true)
@@ -557,11 +557,16 @@ function UIEditRoom:enterObjectsPhase()
   if #self.room.room_info.objects_additional > 0 then
     self.purchase_button:enable(true)
   end
-  local object_list = {} -- transform set to list
-  for o, num in pairs(self.room.room_info.objects_needed) do
-    object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
+  
+  if self.objects_backup then
+    self:addObjects(self.objects_backup, true)
+  else
+    local object_list = {} -- transform set to list
+    for o, num in pairs(self.room.room_info.objects_needed) do
+      object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
+    end
+    self:addObjects(object_list, true)
   end
-  self:addObjects(object_list, true)
 end
 
 function UIEditRoom:draw(canvas)
