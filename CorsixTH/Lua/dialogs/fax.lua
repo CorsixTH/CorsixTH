@@ -43,21 +43,23 @@ function UIFax:UIFax(ui)
   
   self:addPanel(0, 168, 348):makeButton(0, 0, 43, 10, 1, self.correct) -- Correction button
   
-  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10, 2,  function() self:appendNumber("1") end) -- Button 1
-  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10, 3,  function() self:appendNumber("2") end) -- Button 2
-  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10, 4,  function() self:appendNumber("3") end) -- Button 3
+  local function button(char) return function() self:appendNumber(char) end end
   
-  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10, 5,  function() self:appendNumber("4") end) -- Button 4
-  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10, 6,  function() self:appendNumber("5") end) -- Button 5
-  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10, 7,  function() self:appendNumber("6") end) -- Button 6
+  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button "1") -- Button 1
+  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button "2") -- Button 2
+  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button "3") -- Button 3
   
-  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11, 8,  function() self:appendNumber("7") end) -- Button 7
-  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11, 9,  function() self:appendNumber("8") end) -- Button 8
-  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, function() self:appendNumber("9") end) -- Button 9
+  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button "4") -- Button 4
+  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button "5") -- Button 5
+  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button "6") -- Button 6
   
-  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, function() self:appendNumber("*") end) -- Button *
-  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, function() self:appendNumber("0") end) -- Button 0
-  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, function() self:appendNumber("#") end) -- Button #
+  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button "7") -- Button 7
+  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button "8") -- Button 8
+  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button "9") -- Button 9
+  
+  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button "*") -- Button *
+  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button "0") -- Button 0
+  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button "#") -- Button #
 end
 
 function UIFax:draw(canvas)
@@ -76,14 +78,32 @@ function UIFax:correct()
 end
 
 function UIFax:validate()
-  --TODO: Validate code
-  if self.code == "24328" then
-    print("Congratulations, you have unlocked cheats!")
-    self.code = ""
-  elseif self.code ~= "" then
-    print("Code typed on fax:", self.code)
-    self.code = ""
+  if self.code == "" then
+    return
   end
+  local code = self.code
+  self.code = ""
+  -- Original game cheat code
+  if code == "24328" then
+    print("Congratulations, you have unlocked cheats!")
+    return
+  end
+  -- Bloaty head patient cheat
+  -- Anyone with a 'large' head should be able to spot the required code
+  local code_n = (tonumber(code) or 0) / 10^5
+  local x = math.abs((code_n ^ 5.00001 - code_n ^ 5) * 10^5 - code_n ^ 5)
+  if 0.0006422 < x and x < 0.0006423 then
+    local diseases = self.ui.app.world.available_diseases
+    diseases[1] = diseases.bloaty_head
+    for i = #diseases, 2, -1 do
+      diseases[diseases[i].id] = nil
+      diseases[i] = nil
+    end
+    diseases.bloaty_head = diseases[1]
+    return
+  end
+  -- TODO: Other cheats (preferably with slight obfuscation, as above)
+  print("Code typed on fax:", code)
 end
 
 function UIFax:appendNumber(number)

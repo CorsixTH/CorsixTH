@@ -561,6 +561,26 @@ function UIEditRoom:draw(canvas)
   UIPlaceObjects.draw(self, canvas)
 end
 
+function UIEditRoom:hitTest(x, y)
+  if not self.visible then
+    return false
+  end
+  if self.phase == "objects" and #self.objects == 0 then
+    -- After all objects have been placed, we want the user to be able to pick
+    -- up objects to re-position them. Hence we return a negative hit-test
+    -- result if there is a suitable object under the cursor.
+    local ui = self.ui
+    local world_x = ui.screen_offset_x + self.x + x
+    local world_y = ui.screen_offset_y + self.y + y
+    local entity = ui.app.map.th:hitTestObjects(world_x, world_y)
+    local room = self.room
+    if entity and class.is(entity, Object) and entity:getRoom() == room and entity ~= room.door then
+      return false
+    end
+  end
+  return true
+end
+
 function UIEditRoom:onMouseDown(button, x, y)
   if button == "left" then
     if self.phase == "walls" then
