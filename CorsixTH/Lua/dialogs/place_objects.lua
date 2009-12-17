@@ -71,7 +71,13 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
 end
 
 function UIPlaceObjects:addObjects(object_list, pay_for)
-  if not object_list or #object_list == 0 then
+  self.visible = true -- even if no objects are to be placed, make the window visible again
+
+  if not object_list then
+    object_list = {}
+  end
+  
+  if #object_list == 0 and #self.objects == 0 then
     return
   end
   
@@ -104,7 +110,6 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
     new_index = new_index + 1
   end
 
-  self.visible = true       -- Visibility of dialog
   self.place_objects = true -- When adding objects guess we want to place objects
 
   self.object_anim = TH.animation()
