@@ -154,10 +154,10 @@ function Object:onClick(ui, button)
     -- NB: the object has to be destroyed before updating/creating the window,
     -- or the blueprint will be wrong
     if not window then
-      window = UIPlaceObjects(ui, object_list)
+      window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else
-      window:addObjects(object_list)
+      window:addObjects(object_list, false) -- don't pay for
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
     window:setOrientation(direction)

@@ -137,11 +137,11 @@ function UIFurnishCorridor:confirm()
   end
   if #to_purchase == 0 or self.edit_dialog then
     if self.edit_dialog and #to_purchase ~= 0 then
-      self.edit_dialog:addObjects(to_purchase) -- Add Objects to Edit Dialog (We are building a room)
+      self.edit_dialog:addObjects(to_purchase, true) -- Add Objects to Edit Dialog (We are building a room)
     end
     self:close()
   else
-    self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase))
+    self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase, true))
   end
 end
 

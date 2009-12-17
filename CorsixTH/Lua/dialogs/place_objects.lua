@@ -29,7 +29,7 @@ local ATTACH_BLUEPRINT_TO_TILE = false
 
 class "UIPlaceObjects" (Window)
 
-function UIPlaceObjects:UIPlaceObjects(ui, object_list)
+function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:Window()
   
   object_list = object_list or {} -- Default argument
@@ -67,10 +67,10 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list)
   self.objects = {}
   self.object_footprint = {}
   
-  self:addObjects(object_list)
+  self:addObjects(object_list, pay_for)
 end
 
-function UIPlaceObjects:addObjects(object_list)
+function UIPlaceObjects:addObjects(object_list, pay_for)
   if not object_list or #object_list == 0 then
     return
   end
@@ -93,6 +93,9 @@ function UIPlaceObjects:addObjects(object_list)
     for index, object in ipairs(self.objects) do
       if new_object.qty > 0 and new_object.object.thob == object.object.thob then
         object.qty = object.qty + new_object.qty
+        if pay_for then
+          self.ui.hospital:spendMoney(new_object.qty * new_object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
+        end
         table.remove(object_list, new_index)
         new_index = new_index - 1
         break
@@ -124,13 +127,20 @@ function UIPlaceObjects:addObjects(object_list)
     :preservePanel()
   for _, object in pairs(object_list) do
     self.objects[#self.objects + 1] = object
+    if pay_for then
+      self.ui.hospital:spendMoney(object.qty * object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
+    end
   end
   self.active_index = 0 -- avoid case of index changing from 1 to 1
   self:setActiveIndex(1)
   self:onMouseMove(self.ui:getCursorPosition(self))
 end
 
-function UIPlaceObjects:removeObject(object, dont_close_if_empty)
+function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
+  if pay_for and object.object.build_cost then
+    self.ui.hospital:receiveMoney(object.object.build_cost, _S(8, 27) .. ": " .. object_type.name)
+  end
+
   object.qty = object.qty - 1
   if object.qty == 0 then
     if #self.objects == 1 then
@@ -164,9 +174,9 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty)
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
-function UIPlaceObjects:removeAllObjects()
+function UIPlaceObjects:removeAllObjects(pay_for)
   for i = 1, #self.objects do
-    self:removeObject(self.objects[1], true)
+    self:removeObject(self.objects[1], true, pay_for)
   end
 end
 
@@ -278,7 +288,6 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   
-  self.ui.hospital:spendMoney(object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
   self.ui:playSound "place_r.wav"
 
   self:removeObject(object, dont_close_if_empty)
@@ -381,7 +390,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
               break
             end
           end
-          for o, num in pairs(world.rooms[roomId].room_info.objects_needed_new) do
+          for o, num in pairs(world.rooms[roomId].room_info.objects_needed) do
             if TheApp.objects[o].thob == object.thob then
               is_object_allowed = true
               break

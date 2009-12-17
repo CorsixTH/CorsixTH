@@ -119,12 +119,9 @@ function UIEditRoom:confirm()
     self:finishRoom()
     self:enterObjectsPhase()
   else
-    -- Pay for room
+    -- Pay for room (full room cost; needed objects are included in this cost)
     local cost = self.room_type.build_cost
-    for obj, num in pairs(self.room.room_info.objects_needed_new) do
-      cost = cost - num * TheApp.objects[obj].build_cost
-    end
-    self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
+    self.ui.hospital:spendMoney(self.room_type.build_cost, _S(8, 5) .. ": " .. self.title_text)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
@@ -378,8 +375,6 @@ function UIEditRoom:returnToDoorPhase()
           break
         end
         self.world:destroyEntity(object)
-        local object_type = object.object_type
-        self.ui.hospital:receiveMoney(object_type.build_cost, _S(8, 27) .. ": " .. object_type.name)
       end
     end
   end
@@ -552,10 +547,10 @@ function UIEditRoom:enterObjectsPhase()
     self.purchase_button:enable(true)
   end
   local object_list = {} -- transform set to list
-  for o, num in pairs(self.room.room_info.objects_needed_new) do
+  for o, num in pairs(self.room.room_info.objects_needed) do
     object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
   end
-  self:addObjects(object_list)
+  self:addObjects(object_list) -- don't pay for the required objects, they are included in the room cost
 end
 
 function UIEditRoom:draw(canvas)
@@ -852,7 +847,7 @@ end
 -- also returns the new state of the confirm button
 function UIEditRoom:checkEnableConfirm()
   local needed = {} -- copy list of required objects
-  for k, v in pairs(self.room.room_info.objects_needed_new) do
+  for k, v in pairs(self.room.room_info.objects_needed) do
     needed[k] = v
   end
   
