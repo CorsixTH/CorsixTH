@@ -191,6 +191,7 @@ function UIPlaceObjects:removeAllObjects(pay_for)
 end
 
 function UIPlaceObjects:close()
+  self:removeAllObjects(true)
   self:clearBlueprint()
   return Window.close(self)
 end
