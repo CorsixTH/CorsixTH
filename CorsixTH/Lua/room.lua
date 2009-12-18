@@ -105,11 +105,18 @@ function Room:dealtWithPatient(patient)
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
       self.hospital:receiveMoneyForTreatment(patient)
-      -- TODO: If treatment was bad, have grim reaper kill patient, or patient
-      -- float up to heaven.
-      patient:setMood "happy"
-      patient:playSound "cheer.wav"
-      patient:setHospital(nil)
+      -- TODO: Add percentage that depends on illness and how effective the cure is.
+      -- Should level also make a difference?
+      if math.random(1, 100) < 6 then
+        patient:setMood "unhappy"
+        patient:playSound "boo.wav"
+        patient:queueAction{name = "meander", count = 1}
+        patient:queueAction{name = "die"}
+      else 
+        patient:setMood "happy"
+        patient:playSound "cheer.wav"
+        patient:setHospital(nil)
+      end
     end
   else
     patient:queueAction{name = "meander", count = 2}

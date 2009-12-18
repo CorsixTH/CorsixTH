@@ -63,6 +63,7 @@ CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/hospital.lua -text
 CorsixTH/Lua/humanoid.lua -text
+CorsixTH/Lua/humanoid_actions/die.lua -text
 CorsixTH/Lua/humanoid_actions/queue.lua -text
 CorsixTH/Lua/humanoid_actions/use_screen.lua -text
 CorsixTH/Lua/map.lua -text

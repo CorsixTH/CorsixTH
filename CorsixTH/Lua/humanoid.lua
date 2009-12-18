@@ -24,6 +24,8 @@ local TH = require "TH"
 
 local walk_animations = {}
 local door_animations = {}
+local die_animations = {}
+
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE)
   walk_animations[name] = {
     walk_east = walkE,
@@ -36,6 +38,16 @@ local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, kno
     leaving = doorL,
     knock_north = knockN,
     knock_east = knockE,
+  }
+end
+
+local function die_anims(name, fall, rise, wings, hands, fly)
+  die_animations[name] = {
+    fall_east = fall,
+    rise_east = rise,
+    wings_east = wings,
+    hands_east = hands,
+    fly_east = fly,
   }
 end
 
@@ -62,6 +74,12 @@ anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288)
 anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
 anims("VIP",                        266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
+
+--  |Name                           |FallE|RiseE|WingsE|HandsE|FlyE| Notes
+----+-------------------------------+-----+-----+-----+-----+------+
+die_anims("Standard Male Patient",    1682, 2434, 2438, 2446,  2450) -- Always facing east or south
+die_anims("Standard Female Patient",  3116, 3208, 3212, 3216,  3220)
+
 
 function Humanoid:Humanoid(...)
   self:Entity(...)
@@ -220,6 +238,10 @@ function Humanoid:setType(humanoid_class)
   assert(walk_animations[humanoid_class], "Invalid humanoid class: " .. tostring(humanoid_class))
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
+  -- Only two types can die: Standard Male/Female Patients
+  if humanoid_class == "Standard Female Patient" or humanoid_class == "Standard Male Patient" then
+    self.die_anims  = die_animations[humanoid_class]
+  end
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}
