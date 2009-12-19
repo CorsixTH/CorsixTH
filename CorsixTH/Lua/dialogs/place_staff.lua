@@ -52,6 +52,10 @@ function UIPlaceStaff:close()
   if self.staff then
     self.staff.action_queue[1].window = nil
     self.staff:setNextAction{name = "meander"}
+  elseif self.profile then
+    -- Return the profile to the available staff list
+    local staff_pool = self.world.available_staff[self.profile.humanoid_class]
+    staff_pool[#staff_pool + 1] = self.profile
   end
   self.ui:playSound "plac_st2.wav"
   Window.close(self)
@@ -87,6 +91,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       else
         local entity = self.world:newEntity("Staff", 2)
         entity:setProfile(self.profile)
+        self.profile = nil
         entity:setTile(self.tile_x, self.tile_y)
         entity:setNextAction{name = "meander"}
         local room = entity:getRoom()
