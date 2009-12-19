@@ -22,11 +22,25 @@ dofile "dialogs/fullscreen"
 
 class "UIFax" (UIFullscreen)
 
-function UIFax:UIFax(ui)
+function UIFax:UIFax(ui, message)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Fax01V", 640, 480)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, gfx:loadPalette("QData", "Fax01V.pal"))
+  self.fax_font = gfx:loadFont("QData", "Font50V")
+  
+  if message then
+    self.message = message
+  else
+    self.message = {
+      {offset = 0, text = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!"},
+      {offset = 30, text = "This is the playable beta 1 of CorsixTH. A number of rooms, diseases and features have already been implemented, but there is also a lot still missing."},
+      {offset = 80, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
+      {offset = 120, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Then, various treatment rooms will be needed to cure the different diseases."},
+      {offset = 200, text = "PS: can you find the easter eggs we included in this release?"},
+      {offset = 250, text = "(press escape to close this window)"}
+    }
+  end
   
   self.code = ""
   
@@ -64,6 +78,12 @@ end
 
 function UIFax:draw(canvas)
   self.background:draw(canvas, self.x, self.y)
+  
+  if self.message then
+    for i = 1, #self.message do
+      self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 180, self.y + 40 + self.message[i].offset, 380)
+    end
+  end
   return UIFullscreen.draw(self, canvas)
 end
 

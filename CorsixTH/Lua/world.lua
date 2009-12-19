@@ -278,6 +278,9 @@ function World:onTick()
     if self.hour >= 24 then
       self.hour = self.hour - 24
       self.day = self.day + 1
+      if self.month == 1 and self.day == 2 then
+        self.ui.bottom_panel:queueMessage("information")
+      end
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
         self:onEndMonth()
