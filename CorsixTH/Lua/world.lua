@@ -140,6 +140,12 @@ function World:spawnPatient(hospital)
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
   patient:setHospital(hospital)
+  -- Alien patients can only come via helicopter, and therefore have no drink animation
+  if patient.humanoid_class ~= "Alien Patient" then
+    patient.thirst = 0
+  else
+    patient.thirst = nil
+  end
   return patient
 end
 
@@ -587,8 +593,9 @@ end
 function World:callForStaff(room)
   local sound = room.room_info.call_sound
   
-  if sound then
+  if sound and not room.sound_played then
     self.ui:playSound(sound)
+    room.sound_played = true
   end
   
   local missing = room:getMissingStaff(room:getRequiredStaffCriteria())

@@ -46,7 +46,21 @@ function UIPatient:UIPatient(ui, patient)
   self:addPanel(324,   0, 254) -- View circle bottom
   self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close)
   
+  -- If the patient has been diagnosed the "guess cure" button is not visible and
+  -- if the patient is going home it is not possible to kick him/her anymore.
+  -- The "book" is always available though
   self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue)
+  self:addPanel(329, 14 + 117, 61 + 107):makeButton(0, 0, 38, 38, 330, self.viewDiseases)
+  if patient.going_home then
+    self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
+  else
+    self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome)
+  end
+  if patient.diagnosed or patient.going_home then
+    self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
+  else
+    self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease)
+  end
 end
 
 function UIPatient:draw(canvas)
@@ -75,6 +89,38 @@ function UIPatient:draw(canvas)
   px, py = self.ui.limitPointToDiamond(px, py, self.visible_diamond, true)
   self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
   Window.draw(self, canvas)
+  
+  -- The patients happiness. Each bar is by default half way if the actual value 
+  -- cannot be found.
+  local happiness_bar_width = 22
+  if patient.happiness then
+    happiness_bar_width = math_floor((1 - patient.happiness) * 40 + 0.5)
+  end
+  if happiness_bar_width ~= 0 then
+    for dx = 0, happiness_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 348, x + 58 + dx, y + 126)
+    end
+  end
+  -- The patients thirst level
+  local thirst_bar_width = 22
+  if patient.thirst then
+    thirst_bar_width = math_floor((1 - patient.thirst) * 40 + 0.5)
+  end
+  if thirst_bar_width ~= 0 then
+    for dx = 0, thirst_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 351, x + 58 + dx, y + 154)
+    end
+  end
+  -- How warm the patient feels
+  local warmth_bar_width = 22
+  if patient.warmth then
+    warmth_bar_width = math_floor(patient.warmth * 40 + 0.5)
+  end
+  if warmth_bar_width ~= 0 then
+    for dx = 0, warmth_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 349, x + 58 + dx, y + 183)
+    end
+  end
 end
 
 function UIPatient:onMouseUp(button, x, y)
@@ -101,4 +147,18 @@ function UIPatient:viewQueue()
     end
   end
   self.ui:playSound "wrong2.wav"
+end
+
+function UIPatient:goHome()
+  self:close()
+  self.patient:playSound "sack.wav"
+  self.patient:goHome()
+end
+
+function UIPatient:viewDiseases()
+  -- TODO
+end
+
+function UIPatient:guessDisease()
+  -- TODO
 end

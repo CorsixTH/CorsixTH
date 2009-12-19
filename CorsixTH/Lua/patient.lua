@@ -51,3 +51,21 @@ function Patient:setHospital(hospital)
     hospital:addPatient(self)
   end
 end
+
+function Patient:goHome(cured)
+  if self.going_home then
+    return
+  end
+  if cured then
+    self:setMood "happy"
+    self:playSound "cheer.wav"
+  else
+    self:setMood "exit"
+  end
+  
+  self.going_home = true
+  self:setHospital(nil)
+  self.happiness = nil
+  self.thirst = nil
+  self.warmth = nil
+end

@@ -425,8 +425,15 @@ function UIMenuBar:makeMenu(app)
         end,
         ""
     end
+    local function playing(item)
+      if item.checked then
+        app.audio:playBackgroundTrack(app.audio:findIndexOfCurrentTrack())
+      else
+        app.audio:stopBackgroundTrack()
+      end
+    end
     options
-    :appendCheckItem(_S(3, 3), true) -- Music
+    :appendCheckItem(_S(3, 3), true, playing) -- Music
     :appendMenu(_S(3, 6), UIMenu() -- Music Volume
       :appendCheckItem(_S(9, 1), vol(1.0)) -- 100%
       :appendCheckItem(_S(9, 2), vol(0.9))

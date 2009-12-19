@@ -36,6 +36,7 @@ function Staff:fire()
   end
   
   self:playSound "sack.wav"
+  self:setMood "exit"
   self.fired = true
   self:setHospital(nil)
   self.hover_cursor = nil

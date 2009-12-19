@@ -75,7 +75,7 @@ function UIStaff:UIStaff(ui, staff)
     if profile.humanoid_class ~= "Doctor" then
       self:addColourPanel(32, 141, 171, 39, 85, 202, 219)  -- Hides Skills
     end
-    self:addPanel(307, 106, 226):makeButton(0, 0, 37, 50, 308, self.fireStaff)
+    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff)
     self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.placeStaff)
   end
 

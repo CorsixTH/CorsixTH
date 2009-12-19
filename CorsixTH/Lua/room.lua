@@ -110,12 +110,12 @@ function Room:dealtWithPatient(patient)
       if math.random(1, 100) < 6 then
         patient:setMood "unhappy"
         patient:playSound "boo.wav"
+        -- Funny... Removes the go home button
+        patient.going_home = true
         patient:queueAction{name = "meander", count = 1}
         patient:queueAction{name = "die"}
       else 
-        patient:setMood "happy"
-        patient:playSound "cheer.wav"
-        patient:setHospital(nil)
+        patient:goHome(true)
       end
     end
   else
@@ -227,7 +227,9 @@ function Room:onHumanoidEnter(humanoid)
 end
 
 function Room:commandEnteringStaff(humanoid)
-  -- To be implemented in derived classes
+  -- To be extended in derived classes
+  -- This variable is used to avoid multiple calls for staff (sound played only)
+  self.sound_played = nil
 end
 
 function Room:commandEnteringPatient(humanoid)

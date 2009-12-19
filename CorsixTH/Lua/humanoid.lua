@@ -86,6 +86,7 @@ function Humanoid:Humanoid(...)
   self.action_queue = {
   }
   self.last_move_direction = "east"
+  self.warmth = 0.6
 end
 
 function Humanoid:onClick(ui, button)
@@ -116,7 +117,7 @@ function Humanoid:setMood(mood)
   local moods = {
     bored = 4054,
     cantfind = 4050,
-    cofee = 3986,
+    coffee = 3986,
     cold = 3994,
     emergency = 3914,
     epidemy1 = 4566, epidemy2 = 4570, epidemy3 = 4572, epidemy4 = 4574,

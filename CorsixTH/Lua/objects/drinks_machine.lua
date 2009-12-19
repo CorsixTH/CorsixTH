@@ -32,18 +32,86 @@ object.idle_animations = {
   north = 174,
   east  = 176,
 }
-object.orientations = {
-  north = {
-    footprint = { {0, 0}, {0, -1, only_passable = true} }
+--local function copy_west_to_north(t)
+--  t.north = t.west
+--  return t
+--end
+object.usage_animations = {
+--  copy_north_to_south { 
+--    north = {
+--      in_use = {
+--        ["Standard Male Patient"     ] =  ,
+--        ["Standard Female Patient"   ] =  ,
+--        ["Transparent Male Patient"  ] = ,
+--        ["Slack Male Patient"        ] = ,
+--        ["Invisible Patient"         ] = ,
+--        ["Alternate Male Patient"    ] = ,
+--        ["Transparent Female Patient"] = ,
+--        ["Chewbacca Patient"         ] = ,
+--        ["Elvis Patient"             ] =  ,
+--      },
+--    },
+--  },
+  south = {
+    in_use = {
+      ["Standard Male Patient"     ] =  190,
+      ["Standard Female Patient"   ] =  250,
+      ["Transparent Male Patient"  ] = 1112,
+      ["Slack Male Patient"        ] = 1532,
+      ["Invisible Patient"         ] = 1804,
+      ["Alternate Male Patient"    ] = 2756,
+      ["Transparent Female Patient"] = 3060, -- 426
+      ["Chewbacca Patient"         ] = 3768,
+      ["Elvis Patient"             ] =  198,
+    },
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} }
-  },
-  south = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} }
+    in_use = {
+      ["Standard Male Patient"     ] =  196,
+      ["Standard Female Patient"   ] =  256,
+      ["Transparent Male Patient"  ] = 1118,
+      ["Slack Male Patient"        ] = 1538,
+      ["Invisible Patient"         ] = 1810,
+      ["Alternate Male Patient"    ] = 2762,
+      ["Transparent Female Patient"] = 3066,
+      ["Chewbacca Patient"         ] = 3774,
+      ["Elvis Patient"             ] =  204,
+    },
   },
   west = {
-    footprint = { {0, 0}, {-1, 0, only_passable = true} }
+    in_use = {
+      ["Standard Male Patient"     ] =  192,
+      ["Standard Female Patient"   ] =  252,
+      ["Transparent Male Patient"  ] = 1114,
+      ["Slack Male Patient"        ] = 1534,
+      ["Invisible Patient"         ] = 1806,
+      ["Alternate Male Patient"    ] = 2758,
+      ["Transparent Female Patient"] = 3062,
+      ["Chewbacca Patient"         ] = 3770,
+      ["Elvis Patient"             ] =  200,
+    },
+  },
+}
+object.orientations = {
+  north = {
+    footprint = { {0, 0}, {0, -1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+  },
+  east = {
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+  },
+  south = {
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+  },
+  west = {
+    footprint = { {0, 0}, {-1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
   },
 }
 
