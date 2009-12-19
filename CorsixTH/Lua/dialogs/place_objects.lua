@@ -64,10 +64,73 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:addPanel(121, 134, 100):makeButton(0, 8, 43, 42, 122, self.confirm)
     :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
   
+  self.list_header = self:addPanel(123, 0, 146) -- Object list header
+  self.list_header.visible = false
+  
   self.objects = {}
   self.object_footprint = {}
+  self.num_slots = 0
   
   self:addObjects(object_list, pay_for)
+end
+
+-- changes the window size and buttons to num_slots slots
+function UIPlaceObjects:resize(num_slots)
+  if self.num_slots == num_slots then
+    return
+  end
+  
+  if num_slots == 0 then
+    self.list_header.visible = false
+  else
+    self.list_header.visible = true
+  end
+  
+  local function idx(i)
+    return function(self)
+      if i == self.active_index then
+        self:nextOrientation()
+      else
+        self:setActiveIndex(i)
+      end
+    end
+  end
+  
+  if self.num_slots < num_slots then
+      -- change last panel
+    if self.num_slots > 0 then
+      local last_panel = self.panels[#self.panels - 1]
+      last_panel.y = last_panel.y + 4
+      last_panel.sprite_index = 124
+    end
+    
+    -- add new panels (save last one)
+    for i = self.num_slots + 1, num_slots - 1 do
+      self:addPanel(124, 0, 121 + i * 29)
+        :makeButton(15, 8, 130, 23, 125, idx(i))
+        :preservePanel()
+    end
+    -- add last new panel
+    self:addPanel(156, 0, 117 + num_slots * 29)
+      :makeButton(15, 12, 130, 23, 125, idx(num_slots))
+      :preservePanel()
+  else
+    -- remove buttons
+    for i = self.num_slots, num_slots + 1, -1 do
+      -- NB: Two panels per item, the latter being a dummy for the button
+      self.panels[#self.panels] = nil
+      self.panels[#self.panels] = nil
+      self.buttons[#self.buttons] = nil
+      if num_slots > 0 then
+        -- change appearance of last panel
+        local last_panel = self.panels[#self.panels - 1]
+        last_panel.y = last_panel.y - 4
+        last_panel.sprite_index = 156
+      end
+    end
+  end
+  self.num_slots = num_slots
+  self.height = 167 + (num_slots) * 29
 end
 
 function UIPlaceObjects:addObjects(object_list, pay_for)
@@ -114,22 +177,8 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 
   self.object_anim = TH.animation()
   local total_objects = #self.objects + #object_list
+  self:resize(total_objects)
   
-  self.height = 167 + (total_objects) * 29
-  
-  if not self.list_header then
-    self.list_header = self:addPanel(123, 0, 146) -- Object list header
-  end
-  
-  for i = #self.objects + 1, total_objects - 1 do
-    self:addPanel(124, 0, 121 + i * 29)
-      :makeButton(15, 8, 130, 23, 125, idx(i))
-      :preservePanel()
-  end
-  -- Last object list entry
-  self:addPanel(156, 0, 117 + total_objects * 29)
-    :makeButton(15, 12, 130, 23, 125, idx(total_objects))
-    :preservePanel()
   for _, object in pairs(object_list) do
     self.objects[#self.objects + 1] = object
     if pay_for then
@@ -162,19 +211,9 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
     end
     local idx = self.active_index
     table.remove(self.objects, idx)
+    self:resize(#self.objects)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
     self:setActiveIndex(1)
-    self.height = self.height - 29
-    -- NB: Two panels per item, the latter being a dummy for the button
-    self.panels[#self.panels] = nil
-    local spr_idx = self.panels[#self.panels].sprite_index
-    self.panels[#self.panels] = nil
-    self.buttons[#self.buttons] = nil
-    if #self.objects > 0 then
-      local last_panel = self.panels[#self.panels - 1]
-      last_panel.y = last_panel.y - 4
-      last_panel.sprite_index = spr_idx
-    end
   end
   -- Update blueprint
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
