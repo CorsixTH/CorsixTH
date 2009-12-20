@@ -29,6 +29,7 @@ function Patient:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIPatient(ui, self))
   end
+  Humanoid.onClick(self, ui, button)
 end
 
 function Patient:setDisease(disease)

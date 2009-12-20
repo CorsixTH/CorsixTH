@@ -52,14 +52,11 @@ function Staff:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
     -- temporary for debugging
-    print("Actions of ", self.profile.name, ": ")
-    for i = 1, #self.action_queue do
-      print(self.action_queue[i].name)
-    end
     print("Fatigue: ", self.fatigue)
   elseif button == "right" then
     self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
   end
+  Humanoid.onClick(self, ui, button)
 end
 
 function Staff:setProfile(profile)

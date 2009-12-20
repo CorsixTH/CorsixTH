@@ -90,6 +90,15 @@ function Humanoid:Humanoid(...)
 end
 
 function Humanoid:onClick(ui, button)
+  -- temporary for debugging
+  local name = "clicked humanoid"
+  if self.profile then
+    name = self.profile.name
+  end
+  print("Actions of ".. name ..": ")
+  for i = 1, #self.action_queue do
+    print(self.action_queue[i].name)
+  end
 end
 
 function Humanoid:setHospital(hospital)
