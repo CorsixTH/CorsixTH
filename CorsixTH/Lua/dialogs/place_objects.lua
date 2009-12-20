@@ -185,6 +185,16 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
       self.ui.hospital:spendMoney(object.qty * object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
     end
   end
+  
+  -- sort list by size of object (number of tiles in the first existing orienation (usually north))
+  table.sort(self.objects, function(o1, o2)
+    local orient1 = o1.object.orientations.north or o1.object.orientations.east
+                 or o1.object.orientations.south or o1.object.orientations.west
+    local orient2 = o2.object.orientations.north or o2.object.orientations.east
+                 or o2.object.orientations.south or o2.object.orientations.west
+    return #orient1.footprint > #orient2.footprint
+  end)
+  
   self.active_index = 0 -- avoid case of index changing from 1 to 1
   self:setActiveIndex(1)
   self:onMouseMove(self.ui:getCursorPosition(self))
