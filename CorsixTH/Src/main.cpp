@@ -252,11 +252,27 @@ int THMain_l_main(lua_State *L)
     lua_settable(L, -3);
     lua_pop(L, 2);
 
+    // Code to try several variations on finding CorsixTH.lua:
+    // CorsixTH/CorsixTH.lua
+    // CorsixTH.lua
+    // ../CorsixTH.lua
+    // ../../CorsixTH.lua
+    // ../../../CorsixTH.lua
+    // It is simpler to write this in Lua than in C.
+    const char sLuaCorsixTHLua[] =
+    "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)"
+    "code = loadfile(\"CorsixTH\"..sep..name)"
+    "if code then return code end "
+    "for i = 0, 3 do "
+    "  code = loadfile((\"..\"..sep):rep(i)..name)"
+    "  if code then return code end "
+    "end "
+    "return loadfile(name)";
+
     // return assert(loadfile"CorsixTH.lua")(...)
     lua_getglobal(L, "assert");
-    lua_getglobal(L, "loadfile");
-    lua_pushliteral(L, "CorsixTH.lua");
-    lua_call(L, 1, 2);
+    luaL_loadstring(L, sLuaCorsixTHLua);
+    lua_call(L, 0, 2);
     lua_call(L, 2, 1);
     lua_insert(L, 1);
 #ifndef CORSIX_TH_MAP_EDITOR

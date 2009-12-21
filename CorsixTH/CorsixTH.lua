@@ -30,7 +30,8 @@ _MAP_EDITOR = _MAP_EDITOR or false
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)
-local code_dir = "Lua" .. pathsep
+local base_dir = debug.getinfo(1, "S").source:sub(2, -13)
+local code_dir = base_dir .. "Lua" .. pathsep
 for _, arg in ipairs{...} do
   local dir = arg:match"^%-%-lua%-dir=(.*)$"
   if dir then
@@ -60,6 +61,12 @@ dofile "app"
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
-TheApp:setCommandLine(...)
+TheApp:setCommandLine(
+  "--bitmap-dir="..base_dir.."Bitmap",
+  "--config-file="..base_dir.."config.txt",
+  -- If a command line option is given twice, the later one is used, hence
+  -- if the user gave one of the above, that will be used instead.
+  ...
+)
 assert(TheApp:init())
 return TheApp:run()
