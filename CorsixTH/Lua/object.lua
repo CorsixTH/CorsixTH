@@ -170,6 +170,12 @@ function Object:onDestroy()
   if room then
     room.objects[self] = nil
   end
+  if self.user then
+    self.user:handleRemovedObject(self)
+  end
+  if self.reserved_for then
+    self.reserved_for:handleRemovedObject(self)
+  end
   Entity.onDestroy(self)
 end
 

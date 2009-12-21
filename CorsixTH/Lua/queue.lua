@@ -184,3 +184,12 @@ function Queue:removeValue(value)
   end
   return false
 end
+
+-- Called when reception desk is destroyed. May be extended later to handle removed rooms, too.
+function Queue:rerouteAllPatients(action)
+  for i, humanoid in ipairs(self) do
+    -- slight delay so the desk is really destroyed before rerouting
+    humanoid:setNextAction({name = "idle", count = 1})
+    humanoid:queueAction(action)
+  end
+end

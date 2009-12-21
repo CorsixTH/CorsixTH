@@ -273,3 +273,30 @@ end
 
 function Humanoid:wake(amount)
 end
+
+function Humanoid:handleRemovedObject(object)
+  local replacement_action
+  if self.humanoid_class and self.humanoid_class == "Receptionist" then
+    replacement_action = {name = "meander"}
+  elseif object.object_type.id == "bench" then
+    replacement_action = {name = "idle", must_happen = true}
+  end
+
+  for i, action in ipairs(self.action_queue) do
+    if (action.name == "use_object" or action.name == "staff_reception") and action.object == object then
+      if replacement_action then
+        print("replacement_action")
+        self:queueAction(replacement_action, i)
+      end
+      if i == 1 then
+        print("i == 1")
+        print(self.associated_desk)
+        action:on_interrupt(self, true)
+      else
+        print("i ~= 1")
+        table.remove(self.action_queue, i)
+        self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
+      end
+    end
+  end
+end

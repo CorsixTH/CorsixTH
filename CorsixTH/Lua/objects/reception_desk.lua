@@ -132,4 +132,12 @@ function ReceptionDesk:setTile(x, y)
   return self
 end
 
+function ReceptionDesk:onDestroy()
+  if self.receptionist then
+    self.receptionist:handleRemovedObject(self)
+  end
+  self.queue:rerouteAllPatients({name = "seek_reception"})
+  return Object.onDestroy(self)
+end
+
 return object
