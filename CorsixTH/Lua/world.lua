@@ -484,7 +484,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
         local q = r.door.queue:reportedSize() + r.door.queue.expected_count + r:getPatientCount() - r.maximum_patients
         this_score = this_score + q * tile_factor
         if r:testStaffCriteria(r:getRequiredStaffCriteria()) then
-          this_score = this_score + readiness_bonus
+          this_score = this_score - readiness_bonus
         end
       end
       if not score or this_score < score then
