@@ -107,7 +107,7 @@ function Room:dealtWithPatient(patient)
       self.hospital:receiveMoneyForTreatment(patient)
       -- TODO: Add percentage that depends on illness and how effective the cure is.
       -- Should level also make a difference?
-      if math.random(1, 100) < 6 then
+      if patient.die_anims and math.random(1, 100) < 6 then
         patient:setMood "unhappy"
         patient:playSound "boo.wav"
         -- Funny... Removes the go home button

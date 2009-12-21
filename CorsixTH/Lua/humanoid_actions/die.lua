@@ -53,6 +53,7 @@ local function action_die_start(action, humanoid)
   end
   local direction = humanoid.last_move_direction
   local anims = humanoid.die_anims
+  assert(anims, "Error: no death animation for humanoid ".. humanoid.humanoid_class)
   action.must_happen = true
   -- TODO: Right now the angle version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
