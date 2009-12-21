@@ -32,26 +32,7 @@ object.idle_animations = {
   north = 174,
   east  = 176,
 }
---local function copy_west_to_north(t)
---  t.north = t.west
---  return t
---end
 object.usage_animations = {
---  copy_north_to_south { 
---    north = {
---      in_use = {
---        ["Standard Male Patient"     ] =  ,
---        ["Standard Female Patient"   ] =  ,
---        ["Transparent Male Patient"  ] = ,
---        ["Slack Male Patient"        ] = ,
---        ["Invisible Patient"         ] = ,
---        ["Alternate Male Patient"    ] = ,
---        ["Transparent Female Patient"] = ,
---        ["Chewbacca Patient"         ] = ,
---        ["Elvis Patient"             ] =  ,
---      },
---    },
---  },
   south = {
     in_use = {
       ["Standard Male Patient"     ] =  190,
@@ -60,7 +41,7 @@ object.usage_animations = {
       ["Slack Male Patient"        ] = 1532,
       ["Invisible Patient"         ] = 1804,
       ["Alternate Male Patient"    ] = 2756,
-      ["Transparent Female Patient"] = 3060, -- 426
+      ["Transparent Female Patient"] = 3060, -- is 426 an initial try at this?
       ["Chewbacca Patient"         ] = 3768,
       ["Elvis Patient"             ] =  198,
     },
@@ -96,7 +77,6 @@ object.orientations = {
   north = {
     footprint = { {0, 0}, {0, -1, only_passable = true} },
     use_position = "passable",
-    use_animate_from_use_position = true,
   },
   east = {
     footprint = { {0, 0}, {1, 0, only_passable = true} },
@@ -111,7 +91,6 @@ object.orientations = {
   west = {
     footprint = { {0, 0}, {-1, 0, only_passable = true} },
     use_position = "passable",
-    use_animate_from_use_position = true,
   },
 }
 

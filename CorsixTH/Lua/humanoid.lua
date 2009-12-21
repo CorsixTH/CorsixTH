@@ -87,6 +87,7 @@ function Humanoid:Humanoid(...)
   }
   self.last_move_direction = "east"
   self.warmth = 0.6
+  self.happiness = 1
 end
 
 function Humanoid:onClick(ui, button)

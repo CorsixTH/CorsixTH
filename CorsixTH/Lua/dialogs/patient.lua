@@ -94,7 +94,7 @@ function UIPatient:draw(canvas)
   -- cannot be found.
   local happiness_bar_width = 22
   if patient.happiness then
-    happiness_bar_width = math_floor((1 - patient.happiness) * 40 + 0.5)
+    happiness_bar_width = math_floor(patient.happiness * 40 + 0.5)
   end
   if happiness_bar_width ~= 0 then
     for dx = 0, happiness_bar_width - 1 do

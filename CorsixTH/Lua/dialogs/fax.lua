@@ -28,7 +28,7 @@ function UIFax:UIFax(ui, message)
   self.background = gfx:loadRaw("Fax01V", 640, 480)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, gfx:loadPalette("QData", "Fax01V.pal"))
   self.fax_font = gfx:loadFont("QData", "Font50V")
-  
+  ui:playSound "fax_in.wav"
   if message then
     self.message = message
   else
