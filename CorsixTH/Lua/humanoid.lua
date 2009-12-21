@@ -285,15 +285,11 @@ function Humanoid:handleRemovedObject(object)
   for i, action in ipairs(self.action_queue) do
     if (action.name == "use_object" or action.name == "staff_reception") and action.object == object then
       if replacement_action then
-        print("replacement_action")
         self:queueAction(replacement_action, i)
       end
       if i == 1 then
-        print("i == 1")
-        print(self.associated_desk)
         action:on_interrupt(self, true)
       else
-        print("i ~= 1")
         table.remove(self.action_queue, i)
         self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
       end
