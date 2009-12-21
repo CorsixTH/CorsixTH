@@ -23,7 +23,6 @@ SOFTWARE.
 #include "config.h"
 #include "th_pathfind.h"
 #include "lua.hpp"
-#include <malloc.h>
 #include <stdlib.h>
 #include <queue>
 #include <math.h>
