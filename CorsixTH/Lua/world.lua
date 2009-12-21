@@ -47,6 +47,7 @@ function World:World(app)
   self.ticks_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
+  self.year = 1
   self.month = 1 -- January
   self.day = 1
   self.hour = 0
@@ -284,7 +285,7 @@ function World:onTick()
     if self.hour >= 24 then
       self.hour = self.hour - 24
       self.day = self.day + 1
-      if self.month == 1 and self.day == 2 then
+      if self.year == 1 and self.month == 1 and self.day == 2 then
         self.ui.bottom_panel:queueMessage("information")
       end
       if self.day > month_length[self.month] then
@@ -298,6 +299,7 @@ function World:onTick()
         if self.month > 12 then
           self.month = 12
           self:onEndYear()
+          self.year = self.year + 1
           self.month = 1
         end
       end
