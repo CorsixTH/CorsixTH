@@ -64,6 +64,7 @@ public: // External API
     THPalette();
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
 
 public: // Internal (this rendering engine only) API
     inline static uint32_t packARGB(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)

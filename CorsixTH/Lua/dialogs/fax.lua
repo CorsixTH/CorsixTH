@@ -26,25 +26,31 @@ function UIFax:UIFax(ui, message)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Fax01V", 640, 480)
-  self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, gfx:loadPalette("QData", "Fax01V.pal"))
-  self.fax_font = gfx:loadFont("QData", "Font50V")
+  local palette = gfx:loadPalette("QData", "Fax01V.pal")
+  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+  self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
+  self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
   ui:playSound "fax_in.wav"
   if message then
     self.message = message
   else
     self.message = {
       {offset = 0, text = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!"},
-      {offset = 30, text = "This is the playable beta 1 of CorsixTH. A number of rooms, diseases and features have already been implemented, but there is also a lot still missing."},
-      {offset = 80, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
-      {offset = 120, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Then, various treatment rooms will be needed to cure the different diseases."},
-      {offset = 200, text = "PS: can you find the easter eggs we included in this release?"},
-      {offset = 250, text = "(press escape to close this window)"}
+      {offset = 36, text = "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing."},
+      {offset = 86, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
+      {offset = 134, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed."},
+      {offset = 210, text = "-- The CorsixTH team, th.corsix.org"},
+      {offset = 232, text = "PS: can you find the easter eggs we included?"},
+      {offset = 256, text = "(press escape to close this window)"}
     }
   end
   
   self.code = ""
   
-  if false then
+  -- Some faxes can be dismissed by pressing the close button, while others
+  -- need to be dismissed by making a choice. For now, just display the close
+  -- button.
+  if true then
     -- Close button
     self:addPanel(0, 598, 440):makeButton(0, 0, 26, 26, 16, self.close)
   else
@@ -59,21 +65,21 @@ function UIFax:UIFax(ui, message)
   
   local function button(char) return function() self:appendNumber(char) end end
   
-  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button "1") -- Button 1
-  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button "2") -- Button 2
-  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button "3") -- Button 3
+  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button"1"):setSound"Fax_1.wav"
+  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button"2"):setSound"Fax_2.wav"
+  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button"3"):setSound"Fax_3.wav"
   
-  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button "4") -- Button 4
-  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button "5") -- Button 5
-  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button "6") -- Button 6
+  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button"4"):setSound"Fax_4.wav"
+  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button"5"):setSound"Fax_5.wav"
+  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button"6"):setSound"Fax_6.wav"
   
-  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button "7") -- Button 7
-  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button "8") -- Button 8
-  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button "9") -- Button 9
+  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button"7"):setSound"Fax_7.wav"
+  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button"8"):setSound"Fax_8.wav"
+  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button"9"):setSound"Fax_9.wav"
   
-  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button "*") -- Button *
-  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button "0") -- Button 0
-  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button "#") -- Button #
+  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button"*")
+  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button"0"):setSound"Fax_0.wav"
+  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button"#")
 end
 
 function UIFax:draw(canvas)
@@ -81,7 +87,7 @@ function UIFax:draw(canvas)
   
   if self.message then
     for i = 1, #self.message do
-      self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 180, self.y + 40 + self.message[i].offset, 380)
+      self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, self.y + 40 + self.message[i].offset, 380)
     end
   end
   return UIFullscreen.draw(self, canvas)

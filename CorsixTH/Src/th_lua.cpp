@@ -604,6 +604,17 @@ static int l_palette_load(lua_State *L)
     return 1;
 }
 
+static int l_palette_set_entry(lua_State *L)
+{
+    THPalette* pPalette = luaT_testuserdata<THPalette>(L);
+    lua_pushboolean(L, pPalette->setEntry(luaL_checkint(L, 2),
+        static_cast<uint8_t>(luaL_checkinteger(L, 3)),
+        static_cast<uint8_t>(luaL_checkinteger(L, 4)),
+        static_cast<uint8_t>(luaL_checkinteger(L, 5)))
+        ? 1 : 0);
+    return 1;
+}
+
 static int l_rawbitmap_new(lua_State *L)
 {
     THRawBitmap* pBitmap = luaT_stdnew<THRawBitmap>(L, LUA_ENVIRONINDEX, true);
@@ -1771,6 +1782,7 @@ int luaopen_th(lua_State *L)
     // Palette
     luaT_class(THPalette, l_palette_new, "palette", iPaletteMT);
     luaT_setfunction(l_palette_load, "load");
+    luaT_setfunction(l_palette_set_entry, "setEntry");
     luaT_endclass();
 
     // Raw bitmap

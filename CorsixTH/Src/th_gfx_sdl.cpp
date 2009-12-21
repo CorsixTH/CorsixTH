@@ -159,6 +159,19 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     return true;
 }
 
+bool THPalette::setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    if(iEntry < 0 || iEntry >= m_iNumColours)
+        return false;
+    colour_t* pColour = m_aColours + iEntry;
+    pColour->r = iR;
+    pColour->g = iG;
+    pColour->b = iB;
+    if(iR == 0xFF && iG == 0 && iB == 0xFF)
+        m_iTransparentIndex = iEntry;
+    return true;
+}
+
 void THPalette::_assign(THRenderTarget* pTarget) const
 {
     _assign(pTarget->getRawSurface());

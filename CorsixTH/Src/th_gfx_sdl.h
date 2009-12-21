@@ -108,6 +108,7 @@ public:
     THPalette();
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
 
 protected:
     friend class THSpriteSheet;

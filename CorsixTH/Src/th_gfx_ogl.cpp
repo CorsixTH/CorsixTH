@@ -504,6 +504,18 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     return true;
 }
 
+bool THPalette::setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    if(iEntry < 0 || iEntry >= m_iNumColours)
+        return false;
+    uint32_t iColour = packARGB(0xFF, iR, iG, iB);
+    // Remap magenta to transparent
+    if(iColour == packARGB(0xFF, 0xFF, 0x00, 0xFF))
+        iColour = packARGB(0x00, 0x00, 0x00, 0x00);
+    m_aColoursARGB[iEntry] = iColour;
+    return true;
+}
+
 int THPalette::getColourCount() const
 {
     return m_iNumColours;
