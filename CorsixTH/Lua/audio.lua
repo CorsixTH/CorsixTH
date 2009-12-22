@@ -198,15 +198,19 @@ end
 function Audio:playSound(name, where)
   local sound_fx = self.sound_fx
   if sound_fx then
+    local _, warning
     if where then
       local x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
       local dx, dy = where.th:getPosition()
       local ui = self.app.ui
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
-      sound_fx:play(name, x, y)
+      _, warning = sound_fx:play(name, x, y)
     else
-      sound_fx:play(name)
+      _, warning = sound_fx:play(name)
+    end
+    if warning then
+      print("Audio:playSound - Warning: " .. warning)
     end
   end
 end

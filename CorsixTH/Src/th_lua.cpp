@@ -1491,9 +1491,11 @@ static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchi
         size_t iIndex = (size_t)lua_tonumber(L, iArg);
         if(iIndex >= pArchive->getSoundCount())
         {
-            luaL_argerror(L, iArg, lua_pushfstring(L, "Sound index out of "
+            lua_pushnil(L);
+            lua_pushfstring(L, "Sound index out of "
                 "bounds (%f is not in range [0, %d])", lua_tonumber(L, iArg),
-                static_cast<int>(pArchive->getSoundCount()) - 1));
+                static_cast<int>(pArchive->getSoundCount()) - 1);
+            return pArchive->getSoundCount();
         }
         return iIndex;
     }
@@ -1521,24 +1523,30 @@ static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchi
             return i;
         }
     }
+    lua_pushnil(L);
     lua_pushliteral(L, "File not found in sound archive: ");
     lua_pushvalue(L, iArg);
     lua_concat(L, 2);
-    luaL_argerror(L, iArg, lua_tostring(L, -1));
-    return 0; // Never happens
+    return pArchive->getSoundCount();
 }
 
 static int l_soundarc_filename(lua_State *L)
 {
     THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
-    lua_pushstring(L, pArchive->getSoundFilename(l_soundarc_checkidx(L, 2, pArchive)));
+    size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(iIndex == pArchive->getSoundCount())
+        return 2;
+    lua_pushstring(L, pArchive->getSoundFilename(iIndex));
     return 1;
 }
 
 static int l_soundarc_duration(lua_State *L)
 {
     THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
-    size_t iDuration = pArchive->getSoundDuration(l_soundarc_checkidx(L, 2, pArchive));
+    size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(iIndex == pArchive->getSoundCount())
+        return 2;
+    size_t iDuration = pArchive->getSoundDuration(iIndex);
     lua_pushnumber(L, static_cast<lua_Number>(iDuration) / static_cast<lua_Number>(1000));
     return 1;
 }
@@ -1547,6 +1555,8 @@ static int l_soundarc_filedata(lua_State *L)
 {
     THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(iIndex == pArchive->getSoundCount())
+        return 2;
     SDL_RWops *pRWops = pArchive->loadSound(iIndex);
     if(!pRWops)
         return 0;
@@ -1593,6 +1603,8 @@ static int l_soundfx_play(lua_State *L)
     // l_soundarc_checkidx requires the archive at the bottom of the stack
     lua_replace(L, 1);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(iIndex == pArchive->getSoundCount())
+        return 2;
     if(lua_isnil(L, 3))
     {
         pEffects->playSound(iIndex);
@@ -1601,7 +1613,8 @@ static int l_soundfx_play(lua_State *L)
     {
         pEffects->playSoundAt(iIndex, luaL_checkint(L, 3), luaL_checkint(L, 4));
     }
-    return 0;
+    lua_pushboolean(L, 1);
+    return 1;
 }
 
 static int l_soundfx_set_camera(lua_State *L)
