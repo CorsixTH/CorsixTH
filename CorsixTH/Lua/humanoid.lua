@@ -297,3 +297,64 @@ function Humanoid:handleRemovedObject(object)
     end
   end
 end
+
+-- Function stub to alter a patient's thirst level
+function Humanoid:changeThirst(amount)
+end
+
+-- Function to increase and decrease happiness of the humanoid
+function Humanoid:changeHappiness(amount)
+  if self.happiness then
+    self.happiness = self.happiness + amount
+    if self.happiness > 1 then
+      self.happiness = 1
+    elseif self.happiness < 0 then
+      self.happiness = 0
+    end
+  end
+end
+
+-- Function to increase and decrease warmth of the humanoid
+function Humanoid:changeWarmth(amount)
+  if self.warmth then
+    self.warmth = self.warmth + amount
+    if self.warmth > 1 then
+      self.warmth = 1
+    elseif self.warmth < 0 then
+      self.warmth = 0
+    end
+  end
+end
+
+-- Check if it is cold or hot around the humanoid and increase/decrease the
+-- feeling of warmth accordingly. 
+function Humanoid:checkRadiatorPresence()
+-- No use doing anything if we're going home or are outside the hospital
+  local flag_cache = {}
+  self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+  if self.going_home or not flag_cache.hospital then
+    return false
+  end
+  -- TODO: Distance should depend on the heating setting of the radiators
+  -- and most importantly balance the values
+  local radiator, lx, ly = self.world:findObjectNear(self, "radiator", 5)
+  if radiator then
+    local radiator_distance = ((lx - self.tile_x)^2 + (ly - self.tile_y)^2)^0.5
+    self:changeWarmth((6 - radiator_distance)*0.002)
+  else
+    self:changeWarmth(-0.01)
+  end
+  
+  -- If it is too hot or too cold, start to decrease happiness and 
+  -- show the corresponding icon. Otherwise we could get happier instead.
+  if self.warmth < 0.1 then
+    self:changeHappiness(-0.02)
+    self:setMood("cold")
+  elseif self.warmth > 0.9 then
+    self:changeHappiness(-0.02)
+    self:setMood("hot")
+  else
+    self:changeHappiness(0.005)
+  end
+  return true
+end

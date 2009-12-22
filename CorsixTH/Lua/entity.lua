@@ -136,3 +136,10 @@ function Entity:onDestroy()
     print("Entity " .. tostring(self) .. " has been garbage collected.")
   end --]]
 end
+
+-- Function stubs to be able to call these from the world if it is a humanoid
+function Entity:checkRadiatorPresence()
+end
+
+function Entity:notifyNewObject(id)
+end

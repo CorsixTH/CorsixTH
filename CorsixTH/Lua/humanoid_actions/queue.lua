@@ -218,6 +218,48 @@ local function action_queue_on_leave(action, humanoid)
   error "Queue action not in action_queue"
 end
 
+-- While queueing one could get thirsty.
+local function action_queue_get_soda(action, humanoid, machine, mx, my)
+  local num_actions_prior
+  if action:isStanding() then
+    num_actions_prior = action_queue_finish_standing(action, humanoid)
+  else
+    num_actions_prior = action_queue_leave_bench(action, humanoid)
+  end
+  
+  -- Callback function used after the drinks machine has been used.
+  local function after_use()
+    humanoid:changeThirst(-0.8)
+    humanoid.going_to_drinks_machine = nil
+    humanoid:setMood(nil)
+    humanoid.hospital:receiveMoney(15, _S(8, 14))
+    -- Insert an idle action so that change_position can do its work.
+    humanoid:queueAction({
+      name = "idle", 
+      direction = machine.direction,
+      must_happen = true,
+    }, 1)
+    
+    action_queue_on_change_position(action, humanoid)
+  end
+  
+  -- Walk to the machine and then use it.
+  humanoid:queueAction({
+    name = "walk",
+    x = mx,
+    y = my,
+    must_happen = true,
+  }, num_actions_prior)
+  humanoid:queueAction({
+    name = "use_object",
+    object = machine,
+    after_use = after_use,
+    must_happen = true,
+  }, num_actions_prior + 1)
+  -- Make sure noone thinks we're sitting down anymore.
+  action.current_bench_distance = nil
+end
+
 local function action_queue_interrupt(action, humanoid)
   if action.is_in_queue then
     action.queue:removeValue(humanoid)
@@ -241,6 +283,7 @@ local function action_queue_start(action, humanoid)
   action.on_interrupt = action_queue_interrupt
   action.onChangeQueuePosition = action_queue_on_change_position
   action.onLeaveQueue = action_queue_on_leave
+  action.onGetSoda = action_queue_get_soda
   action.isStanding = action_queue_is_standing
   
   humanoid:queueAction({

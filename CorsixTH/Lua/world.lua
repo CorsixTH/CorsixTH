@@ -307,6 +307,13 @@ function World:onTick()
           self.month = 1
         end
       end
+      for _, entity in ipairs(self.entities) do
+        if class.is(entity, Humanoid) then
+          entity:checkRadiatorPresence()
+          -- TODO: Do other regular things, such as checking if any room needs
+          -- staff at the moment and making plants need water.
+        end
+      end
     end
     for i = 1, self.ticks_per_tick do
       for _, hospital in ipairs(self.hospitals) do
@@ -528,6 +535,17 @@ function World:newObject(id, ...)
     entity = Object(self, object_type, ...)
   end
   self.entities[#self.entities + 1] = entity
+  -- If it is a bench we're placing, notify queueing patients in the vicinity
+  if id == "bench" and entity.tile_x and entity.tile_y then
+    for _, patient in ipairs(self.entities) do
+      if class.is(patient, Patient) then
+        if math.abs(patient.tile_x - entity.tile_x) < 7 and 
+          math.abs(patient.tile_y - entity.tile_y) < 7 then
+          patient:notifyNewObject(id)
+        end
+      end
+    end
+  end
   return entity
 end
 
