@@ -138,7 +138,7 @@ function Entity:onDestroy()
 end
 
 -- Function stubs to be able to call these from the world if it is a humanoid
-function Entity:checkRadiatorPresence()
+function Entity:tickDay()
 end
 
 function Entity:notifyNewObject(id)

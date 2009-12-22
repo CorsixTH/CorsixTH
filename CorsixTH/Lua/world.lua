@@ -309,7 +309,7 @@ function World:onTick()
       end
       for _, entity in ipairs(self.entities) do
         if class.is(entity, Humanoid) then
-          entity:checkRadiatorPresence()
+          entity:tickDay()
           -- TODO: Do other regular things, such as checking if any room needs
           -- staff at the moment and making plants need water.
         end

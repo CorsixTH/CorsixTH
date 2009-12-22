@@ -21,8 +21,8 @@ SOFTWARE. --]]
 local function action_walk_interrupt(action, humanoid, high_priority)
   -- Truncate the remainder of the path
   for j = #action.path_x, action.path_index + 1, -1 do
-    action.path_x[j+1] = nil
-    action.path_y[j+1] = nil
+    action.path_x[j] = nil
+    action.path_y[j] = nil
   end
   -- Unreserve any door which we had reserved
   local door = action.reserve_on_resume

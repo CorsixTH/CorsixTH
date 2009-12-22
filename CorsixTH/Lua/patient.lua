@@ -88,10 +88,10 @@ end
 
 -- If thirst gets over a certain level (now: 0.8),
 -- try to find a drinks machine.
-function Patient:checkRadiatorPresence()
+function Patient:tickDay()
   -- Start by calling the parent function - it checks
   -- if we're outside the hospital or on our way home.
-  if not Humanoid.checkRadiatorPresence(self) then
+  if not Humanoid.tickDay(self) then
     return
   end
   self:changeThirst(self.warmth*0.05)

@@ -233,12 +233,6 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
     humanoid.going_to_drinks_machine = nil
     humanoid:setMood(nil)
     humanoid.hospital:receiveMoney(15, _S(8, 14))
-    -- Insert an idle action so that change_position can do its work.
-    humanoid:queueAction({
-      name = "idle", 
-      direction = machine.direction,
-      must_happen = true,
-    }, 1)
     
     action_queue_on_change_position(action, humanoid)
   end
@@ -256,6 +250,12 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
     after_use = after_use,
     must_happen = true,
   }, num_actions_prior + 1)
+  -- Insert an idle action so that change_position can do its work.
+  humanoid:queueAction({
+      name = "idle", 
+      direction = machine.direction,
+      must_happen = true,
+    }, num_actions_prior + 2)
   -- Make sure noone thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end

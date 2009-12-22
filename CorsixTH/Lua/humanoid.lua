@@ -25,6 +25,7 @@ local TH = require "TH"
 local walk_animations = {}
 local door_animations = {}
 local die_animations = {}
+local flag_cache = {} -- Used in tickDay
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE)
   walk_animations[name] = {
@@ -328,19 +329,20 @@ end
 
 -- Check if it is cold or hot around the humanoid and increase/decrease the
 -- feeling of warmth accordingly. 
-function Humanoid:checkRadiatorPresence()
+function Humanoid:tickDay()
 -- No use doing anything if we're going home or are outside the hospital
-  local flag_cache = {}
   self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
   if self.going_home or not flag_cache.hospital then
     return false
   end
   -- TODO: Distance should depend on the heating setting of the radiators
-  -- and most importantly balance the values
+  -- and most importantly, values need balancing. Multiple radiators
+  -- should also make a difference.
   local radiator, lx, ly = self.world:findObjectNear(self, "radiator", 5)
   if radiator then
     local radiator_distance = ((lx - self.tile_x)^2 + (ly - self.tile_y)^2)^0.5
-    self:changeWarmth((6 - radiator_distance)*0.002)
+    local change = math.floor(6 - radiator_distance)*0.002*(0.8 - self.warmth)
+    self:changeWarmth(math.abs(change))
   else
     self:changeWarmth(-0.01)
   end
