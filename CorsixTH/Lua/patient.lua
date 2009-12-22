@@ -193,6 +193,7 @@ function Patient:notifyNewObject(id)
       local callbacks = action.queue.callbacks[self]
       if callbacks and action:isStanding() then
         callbacks:onChangeQueuePosition(self)
+        break
       end
     end
   end
