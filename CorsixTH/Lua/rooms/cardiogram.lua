@@ -117,4 +117,11 @@ function CardiogramRoom:commandEnteringPatient(patient)
   }
 end
 
+function CardiogramRoom:onHumanoidLeave(humanoid)
+  if self.staff_member == humanoid then
+    self.staff_member = nil
+  end
+  Room.onHumanoidLeave(self, humanoid)
+end
+
 return room

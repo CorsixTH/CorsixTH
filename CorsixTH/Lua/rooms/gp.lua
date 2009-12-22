@@ -68,7 +68,10 @@ function GPRoom:doStaffUseCycle(humanoid)
   }
 end
 
-GPRoom.commandEnteringStaff = GPRoom.doStaffUseCycle
+function GPRoom:commandEnteringStaff(humanoid)
+  self.staff_member = humanoid
+  self:doStaffUseCycle(humanoid)
+end
 
 function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
@@ -82,19 +85,36 @@ function GPRoom:dealtWithPatient(patient)
   patient:setNextAction(self:createLeaveAction())
   if patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
-    -- TODO: Variate progress with respect to disease and staff skill, etc.
-    patient.diagnosis_progress = patient.diagnosis_progress + 1.0
-    if patient.diagnosis_progress >= 1.0 then
+    
+    -- Base: 0 .. 1 depending on difficulty of disease
+    local diagnosis_base = 1 - patient.disease.diagnosis_difficulty
+    if diagnosis_base < 0 then
+      diagnosis_base = 0
+    end
+    -- Bonus: 0.3 .. 0.5 (random) for perfectly skilled doctor. Less for less skilled doctors.
+    local diagnosis_bonus = (0.3 + 0.2 * math.random()) * self.staff_member.profile.skill
+    
+    patient.diagnosis_progress = patient.diagnosis_progress + diagnosis_base + diagnosis_bonus
+    if patient.diagnosis_progress >= 1.0 or #patient.available_diagnosis_rooms == 0 then
       patient.diagnosed = true
       patient.diagnosis_progress = 1.0
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
     else
-      -- TODO: Choose next diagnosis room
+      local next_room = math.random(1, #patient.available_diagnosis_rooms)
+      patient:queueAction{name = "seek_room", room_type = patient.available_diagnosis_rooms[next_room]}
+      table.remove(patient.available_diagnosis_rooms, next_room)
     end
   else
     patient:queueAction{name = "meander", count = 2}
     patient:queueAction{name = "idle"}
   end
+end
+
+function GPRoom:onHumanoidLeave(humanoid)
+  if self.staff_member == humanoid then
+    self.staff_member = nil
+  end
+  Room.onHumanoidLeave(self, humanoid)
 end
 
 return room

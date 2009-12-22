@@ -37,7 +37,7 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
-  "general_diag",
+--  "general_diag",     not yet implemented
   "cardiogram",
   -- TODO
 }
@@ -46,5 +46,7 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "inflation",
 }
+-- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
+disease.diagnosis_difficulty = 0.4
 
 return disease

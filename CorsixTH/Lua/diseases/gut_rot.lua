@@ -51,5 +51,7 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "pharmacy",
 }
+-- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
+disease.diagnosis_difficulty = 0
 
 return disease

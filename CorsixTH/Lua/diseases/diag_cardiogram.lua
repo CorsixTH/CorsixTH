@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Peter "Corsix" Cawley
+--[[ Copyright (c) 2009 Manuel "Roujin" Wolf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,33 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 5)
-disease.id = "king_complex"
-disease.cause = _S(44, 68)
-disease.symptoms = _S(44, 69)
-disease.cure = _S(44, 70)
-disease.cure_price = 1600 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
-disease.initPatient = function(patient)
-  patient:setType("Elvis Patient")
-  patient:setLayer(0, 0)
-  patient:setLayer(1, 0)
-  patient:setLayer(2, 0)
-  patient:setLayer(3, 0)
-  patient:setLayer(4, 0)
-end
--- Diagnosis rooms are the rooms other than the GPs office which can be visited
--- to aid in diagnosis. The need not be visited, and if they are visited, the
--- order in which they are visited is not fixed.
-disease.diagnosis_rooms = {
-  "psych",
-  -- TODO
-}
--- Treatment rooms are the rooms which must be visited, in the given order, to
--- cure the disease.
-disease.treatment_rooms = {
-  "psych",
-}
--- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
-disease.diagnosis_difficulty = 0.4
+disease.name = _S(4, 39)
+disease.id = "diag_cardiogram"
+disease.cure_price = 150 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.pseudo = true
 
 return disease

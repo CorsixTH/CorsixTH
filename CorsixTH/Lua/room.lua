@@ -89,8 +89,19 @@ function Room:dealtWithPatient(patient)
   if patient.disease and not patient.diagnosed then
     -- Patient not yet diagnosed, hence just been in a diagnosis room.
     -- Increment diagnosis_progress, and send patient back to GP.
-    -- TODO: Variate progress with respect to room type and staff skill, etc.
-    patient.diagnosis_progress = patient.diagnosis_progress + 0.4
+
+    -- Base: 0 .. 0.4 depending on difficulty of disease
+    local diagnosis_base = 0.4 * (1 - patient.disease.diagnosis_difficulty)
+    if diagnosis_base < 0 then
+      diagnosis_base = 0
+    end
+    -- Bonus: 0.2 .. 0.4 (random) for perfectly skilled doctor. Less for less skilled doctors.
+    local diagnosis_bonus = 0
+    if self.staff_member then
+      diagnosis_bonus = (0.2 + 0.2 * math.random()) * self.staff_member.profile.skill
+    end
+    
+    patient.diagnosis_progress = patient.diagnosis_progress + diagnosis_base + diagnosis_bonus
     if patient.diagnosis_progress >= 1.0 then
       patient.diagnosis_progress = 1.0
     end

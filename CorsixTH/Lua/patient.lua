@@ -38,6 +38,11 @@ function Patient:setDisease(disease)
   self.diagnosed = false
   self.diagnosis_progress = 0
   self.cure_rooms_visited = 0
+  -- copy list of diagnosis rooms
+  self.available_diagnosis_rooms = {}
+  for i, room in ipairs(self.disease.diagnosis_rooms) do
+    self.available_diagnosis_rooms[i] = room
+  end
 end
 
 function Patient:setHospital(hospital)
