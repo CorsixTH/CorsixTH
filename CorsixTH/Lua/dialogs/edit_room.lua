@@ -733,20 +733,32 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   self.blueprint_door.valid = true
   local flags
+  local x2, y2 = x, y
   if wall == "west" then
     flags = 1
+    x2 = x2 - 1
     -- Check for a wall to the west, and prevent placing a door on top of an
     -- existing wall.
     if map:getCell(x, y, 3) % 0x100 ~= 0 then
-      flags = flags + 16
       self.blueprint_door.valid = false
     end
   else--if wall == "north" then
     flags = 0
+    y2 = y2 - 1
     if map:getCell(x, y, 2) % 0x100 ~= 0 then
-      flags = flags + 16
       self.blueprint_door.valid = false
     end
+  end
+  if self.blueprint_door.valid then
+    -- Ensure that the door isn't being built on top of an object
+    local flags = {}
+    if not map:getCellFlags(x , y , flags).buildable
+    or not map:getCellFlags(x2, y2, flags).buildable then
+      self.blueprint_door.valid = false
+    end
+  end
+  if not self.blueprint_door.valid then
+    flags = flags + 16 -- Use red palette rather than normal palette
   end
   anim:setAnimation(self.anims, 126, flags)
   if self.blueprint_door.valid then
