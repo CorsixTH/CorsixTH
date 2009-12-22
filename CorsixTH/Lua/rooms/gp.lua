@@ -71,6 +71,7 @@ end
 function GPRoom:commandEnteringStaff(humanoid)
   self.staff_member = humanoid
   self:doStaffUseCycle(humanoid)
+  return Room.commandEnteringStaff(self, humanoid)
 end
 
 function GPRoom:commandEnteringPatient(humanoid)

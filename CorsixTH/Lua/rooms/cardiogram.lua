@@ -47,6 +47,7 @@ end
 function CardiogramRoom:commandEnteringStaff(staff)
   self.staff_member = staff
   staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
 end
 
 function CardiogramRoom:commandEnteringPatient(patient)
@@ -115,6 +116,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
       }
     end,
   }
+  return Room.commandEnteringPatient(self, patient)
 end
 
 function CardiogramRoom:onHumanoidLeave(humanoid)

@@ -64,6 +64,7 @@ function PsychRoom:commandEnteringStaff(staff)
       end
     }
   end
+  return Room.commandEnteringStaff(self, staff)
 end
 
 function PsychRoom:commandEnteringPatient(patient)

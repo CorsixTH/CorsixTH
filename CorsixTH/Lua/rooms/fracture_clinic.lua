@@ -47,6 +47,7 @@ end
 function FractureRoom:commandEnteringStaff(staff)
   self.staff_member = staff
   staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
 end
 
 function FractureRoom:commandEnteringPatient(patient)

@@ -47,6 +47,7 @@ end
 function SlackTongueRoom:commandEnteringStaff(staff)
   self.staff_member = staff
   staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
 end
 
 function SlackTongueRoom:commandEnteringPatient(patient)
