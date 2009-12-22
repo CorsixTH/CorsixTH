@@ -103,22 +103,42 @@ function UIFax:correct()
   end
 end
 
+local announcements = {
+  "rand001.wav", "rand002.wav", "rand003.wav",
+  "rand005.wav", "rand006.wav",                "rand008.wav",
+  "rand009.wav", "rand010.wav",                "rand012.wav",
+  "rand013.wav",                               "rand016.wav",
+  "rand017.wav", "rand018.wav", "rand019.wav",
+  "rand021.wav", "rand022.wav",                "rand024.wav",
+  "rand025.wav", "rand026.wav", "rand027.wav", "rand028.wav",
+  "rand029.wav", "rand030.wav", "rand031.wav", "rand032.wav",
+  "rand033.wav", "rand034.wav", "rand035.wav", "rand036.wav",
+  "rand037.wav", "rand038.wav", "rand039.wav", "rand040.wav",
+  "rand041.wav",                               "rand044.wav",
+  "rand045.wav", "rand046.wav",
+  }
+
 function UIFax:validate()
   if self.code == "" then
     return
   end
   local code = self.code
   self.code = ""
-  -- Original game cheat code
-  if code == "24328" then
-    print("Congratulations, you have unlocked cheats!")
-    return
-  end
-  -- Bloaty head patient cheat
-  -- Anyone with a 'large' head should be able to spot the required code
   local code_n = (tonumber(code) or 0) / 10^5
   local x = math.abs((code_n ^ 5.00001 - code_n ^ 5) * 10^5 - code_n ^ 5)
-  if 0.0006422 < x and x < 0.0006423 then
+  print("Code typed on fax:", code)
+  if code == "24328" then
+    -- Original game cheat code
+    print("Congratulations, you have unlocked cheats! .. or you would have, if this were the original game. Try something else.")
+  elseif code == "112" then
+    -- simple, unobfuscated cheat for everyone :)
+    print("Random announcement cheat activated!")
+    self.ui:playSound(announcements[math.random(1, #announcements)])
+  elseif 0.0006422 < x and x < 0.0006423 then
+    -- Bloaty head patient cheat
+    -- Anyone with a 'large' head should be able to spot the required code
+    print("Bloaty Head cheat activated!")
+    self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
     local diseases = self.ui.app.world.available_diseases
     diseases[1] = diseases.bloaty_head
     for i = #diseases, 2, -1 do
@@ -126,10 +146,35 @@ function UIFax:validate()
       diseases[i] = nil
     end
     diseases.bloaty_head = diseases[1]
+  elseif 0.006602 < x and x < 0.006603 then
+    -- Hairyitis cheat
+    print("Hairyitis cheat activated!")
+    self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
+    local diseases = self.ui.app.world.available_diseases
+    diseases[1] = diseases.hairyitis
+    for i = #diseases, 2, -1 do
+      diseases[diseases[i].id] = nil
+      diseases[i] = nil
+    end
+    diseases.bloaty_head = diseases[1]
+  elseif 27868.3 < x and x < 27868.4 then
+    -- Roujin's challenge cheat
+    local hosp = self.ui.app.world:getLocalPlayerHospital()
+    if not hosp.spawn_rate_cheat then
+      print("Roujin's challenge activated! Good luck...")
+      hosp.spawn_rate_cheat = true
+    else
+      print("Roujin's challenge deactivated.")
+      hosp.spawn_rate_cheat = nil
+    end
+  else
+    -- no valid cheat entered
+    self.ui:playSound("fax_no.wav")
     return
   end
+  self.ui:playSound("fax_yes.wav")
+  
   -- TODO: Other cheats (preferably with slight obfuscation, as above)
-  print("Code typed on fax:", code)
 end
 
 function UIFax:appendNumber(number)

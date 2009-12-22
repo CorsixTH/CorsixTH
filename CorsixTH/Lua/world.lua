@@ -52,14 +52,7 @@ function World:World(app)
   self.day = 1
   self.hour = 0
   self.idle_cache = {}
-  self.available_diseases = {}
-  for i, disease in ipairs(app.diseases) do
-    -- TODO: Also skip disease if not enabled in level config
-    if not disease.pseudo then
-      self.available_diseases[#self.available_diseases + 1] = disease
-      self.available_diseases[disease.id] = disease
-    end
-  end
+  self:initDiseases(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.hospitals = {}
   
@@ -97,6 +90,17 @@ function World:World(app)
   end
   self:makeAvailableStaff()
   self:calculateSpawnTiles()
+end
+
+function World:initDiseases(app)
+  self.available_diseases = {}
+  for i, disease in ipairs(app.diseases) do
+    -- TODO: Also skip disease if not enabled in level config
+    if not disease.pseudo then
+      self.available_diseases[#self.available_diseases + 1] = disease
+      self.available_diseases[disease.id] = disease
+    end
+  end
 end
 
 function World:getLocalPlayerHospital()

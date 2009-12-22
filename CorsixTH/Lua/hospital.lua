@@ -53,6 +53,10 @@ function Hospital:tick()
   -- Vary spawn rate +/- 150 based on reputation
   spawn_rate = spawn_rate - (self.reputation / 500 - 1) * 150
   -- TODO: Variate spawn rate based on level, etc.
+  if self.spawn_rate_cheat then
+    -- Roujin's challenge cheat: constant high spawn rate
+    spawn_rate = 40
+  end
   if math.random(1, spawn_rate) == 1 then
     self:spawnPatient()
   end
