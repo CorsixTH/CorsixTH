@@ -106,7 +106,6 @@ function Patient:checkRadiatorPresence()
     -- Don't check for a drinks machine too often
     if self.timeout and self.timeout > 0 then
       self.timeout = self.timeout - 1
-      print(self.timeout)
       return
     end
     -- The only allowed situations to grab a soda is when queueing
