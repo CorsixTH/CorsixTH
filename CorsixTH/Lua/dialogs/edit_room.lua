@@ -328,6 +328,7 @@ function UIEditRoom:finishRoom()
       end
       anim:setTile(nil)
     end
+    self.blueprint_wall_anims[x] = nil
   end
   self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door)
 end
