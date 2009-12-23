@@ -200,6 +200,7 @@ static int l_map_updateblueprint(lua_State *L)
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[3] = 0;
             pNode->iFlags |= (pNode->iFlags & THMN_PassableIfNotForBlueprint) >> THMN_PassableIfNotForBlueprint_ShiftDelta;
+            pNode->iFlags &= ~THMN_PassableIfNotForBlueprint;
         }
     }
 
