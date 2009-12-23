@@ -220,7 +220,6 @@ static int l_map_updateblueprint(lua_State *L)
                 valid = false;
             }
             pNode->iFlags |= (pNode->iFlags & THMN_Passable) << THMN_PassableIfNotForBlueprint_ShiftDelta;
-            pNode->iFlags &= ~THMN_Passable;
         }
     }
 
