@@ -407,7 +407,10 @@ function UIMenuBar:makeMenu(app)
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
-      app:loadLevel(("LEVEL.L%i"):format(L))
+      local status, err = pcall(app.loadLevel, app, ("LEVEL.L%i"):format(L))
+      if not status then
+        print("Error while loading level: " .. err)
+      end
     end)
   end
 

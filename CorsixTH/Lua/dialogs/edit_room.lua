@@ -328,6 +328,7 @@ function UIEditRoom:finishRoom()
       end
       anim:setTile(nil)
     end
+    self.blueprint_wall_anims[x] = nil
   end
   self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door)
 end
@@ -344,14 +345,16 @@ function UIEditRoom:purchaseItems()
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
-function UIEditRoom:returnToWallPhase()
-  self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
-  self.confirm_button:enable(true)
-  for k, obj in pairs(self.blueprint_wall_anims) do
-    for _, anim in pairs(obj) do
-      anim:setTile(nil)
+function UIEditRoom:returnToWallPhase(early)
+  if not early then
+    self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
+    self.confirm_button:enable(true)
+    for k, obj in pairs(self.blueprint_wall_anims) do
+      for _, anim in pairs(obj) do
+        anim:setTile(nil)
+      end
+      self.blueprint_wall_anims[k] = nil
     end
-    self.blueprint_wall_anims[k] = nil
   end
   local rect = self.blueprint_rect
   local x, y, w, h = rect.x, rect.y, rect.w, rect.h
@@ -518,7 +521,77 @@ function UIEditRoom:screenToWall(x, y)
   end
 end
 
+-- Function to check if the tiles adjacent to the room are still reachable from each other.
+-- NB: the passable flags of the room have to be set to false already before calling this function
+function UIEditRoom:checkReachability()
+  local map = self.ui.app.map.th
+  local world = self.ui.app.world
+  
+  local rect = self.blueprint_rect
+  local prev_x, prev_y
+  local x, y = rect.x, rect.y - 1
+  
+  while x < rect.x + rect.w do
+    if map:getCellFlags(x, y).passable then
+      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
+        return false
+      end
+      prev_x, prev_y = x, y
+    end
+    x = x + 1
+  end
+  y = y + 1
+  while y < rect.y + rect.h do
+    if map:getCellFlags(x, y).passable then
+      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
+        return false
+      end
+      prev_x, prev_y = x, y
+    end
+    y = y + 1
+  end
+  x = x - 1
+  while x >= rect.x do
+    if map:getCellFlags(x, y).passable then
+      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
+        return false
+      end
+      prev_x, prev_y = x, y
+    end
+    x = x - 1
+  end
+  y = y - 1
+  while y >= rect.y do
+    if map:getCellFlags(x, y).passable then
+      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
+        return false
+      end
+      prev_x, prev_y = x, y
+    end
+    y = y - 1
+  end
+  
+  return true
+end
+
 function UIEditRoom:enterDoorPhase()
+  -- make tiles impassable
+  for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
+    for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
+      self.ui.app.map:setCellFlags(x, y, {passable = false})
+    end
+  end
+  
+  -- check if all adjacent tiles of the rooms are still connected
+  if not self:checkReachability() then
+    -- undo passable flags and go back to walls phase
+    self.phase = "walls"
+    self:returnToWallPhase(true)
+    self.ui:playSound("wrong2.wav")
+    -- TODO: make adviser talk (unfortunately, no appropriate string seems to exist)
+    return
+  end
+  
   self.desc_text = _S(3, 12) -- Place the door
   self.confirm_button:enable(false) -- Confirmation is via placing door
   
