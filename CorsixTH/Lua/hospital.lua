@@ -43,6 +43,7 @@ function Hospital:Hospital(world)
       fatalities = 0,
       turned_away = 0,
       disease = disease,
+      discovered = false,
     }
     self.disease_casebook[disease.id] = info
   end

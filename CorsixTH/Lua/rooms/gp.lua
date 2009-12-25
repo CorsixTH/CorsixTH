@@ -100,6 +100,19 @@ function GPRoom:dealtWithPatient(patient)
       patient.diagnosed = true
       patient.diagnosis_progress = 1.0
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+      
+      -- Check if this disease has just been discovered
+      if not self.hospital.disease_casebook[patient.disease.id].discovered then
+        -- Generate a message about the discovery
+        local message = {
+          {text = string.format(_S(44, 61), patient.disease.name)},
+          {text = patient.disease.cause, offset = 8},
+          {text = patient.disease.symptoms},
+          {text = patient.disease.cure}
+        }
+        self.world.ui.bottom_panel:queueMessage("disease", message)
+        self.hospital.disease_casebook[patient.disease.id].discovered = true
+      end
     else
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
       patient:queueAction{name = "seek_room", room_type = patient.available_diagnosis_rooms[next_room]}

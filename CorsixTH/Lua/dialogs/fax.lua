@@ -35,13 +35,12 @@ function UIFax:UIFax(ui, message)
     self.message = message
   else
     self.message = {
-      {offset = 0, text = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!"},
-      {offset = 36, text = "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing."},
-      {offset = 86, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
-      {offset = 134, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed."},
-      {offset = 210, text = "-- The CorsixTH team, th.corsix.org"},
-      {offset = 232, text = "PS: can you find the easter eggs we included?"},
-      {offset = 256, text = "(press escape to close this window)"}
+      {text = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!"},
+      {offset = 8, text = "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing."},
+      {offset = 8, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
+      {offset = 8, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed."},
+      {offset = 16, text = "-- The CorsixTH team, th.corsix.org"},
+      {offset = 8, text = "PS: can you find the easter eggs we included?"},
     }
   end
   
@@ -86,8 +85,9 @@ function UIFax:draw(canvas)
   self.background:draw(canvas, self.x, self.y)
   
   if self.message then
+    local last_y = self.y + 40
     for i = 1, #self.message do
-      self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, self.y + 40 + self.message[i].offset, 380)
+      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, last_y + (self.message[i].offset or 0), 380)
     end
   end
   return UIFullscreen.draw(self, canvas)

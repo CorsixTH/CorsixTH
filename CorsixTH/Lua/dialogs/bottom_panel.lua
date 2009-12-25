@@ -86,8 +86,8 @@ function UIBottomPanel:hitTest(x, y)
   return x >= 0 and y >= 0 and x < self.width and y < self.height
 end
 
-function UIBottomPanel:queueMessage(type)
-  self.message_queue[#self.message_queue + 1] = {type = type} -- Queue a message
+function UIBottomPanel:queueMessage(type, message)
+  self.message_queue[#self.message_queue + 1] = {type = type, message = message} -- Queue a message
 end
 
 function UIBottomPanel:showMessage()
@@ -122,7 +122,7 @@ function UIBottomPanel:createMessageWindow()
   
   local message_windows = self.message_windows
   local message_type = self.message_queue[#self.message_queue].type
-  local alert_window = UIMessage(self.ui, self.x + 175, self.x + 1 + #message_windows * 30, onClose, message_type) -- Create the message window
+  local alert_window = UIMessage(self.ui, self.x + 175, self.x + 1 + #message_windows * 30, onClose, message_type, self.message_queue[#self.message_queue].message) -- Create the message window
   message_windows[#message_windows + 1] = alert_window
   self.ui:addWindow(alert_window)
   self.factory_direction = 1

@@ -821,9 +821,10 @@ static int l_font_draw_wrapped(lua_State *L)
     int iY = luaL_checkint(L, 5);
     int iW = luaL_checkint(L, 6);
 
-    pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY, iW);
+	lua_settop(L, 1);
 
-    lua_settop(L, 1);
+    lua_pushinteger(L, pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY, iW));
+
     return 1;
 }
 
