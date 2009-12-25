@@ -23,6 +23,13 @@ class "Patient" (Humanoid)
 function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
+  
+  -- Alien patients can only come via helicopter, and therefore have no drink animation
+  if self.humanoid_class ~= "Alien Patient" then
+    self.thirst = 0
+  else
+    self.thirst = nil
+  end
 end
 
 function Patient:onClick(ui, button)
@@ -94,9 +101,9 @@ function Patient:tickDay()
   if not Humanoid.tickDay(self) then
     return
   end
-  self:changeThirst(self.warmth*0.05)
+  self:changeThirst(self.warmth*0.05+0.002)
   -- If thirsty enough a soda would be nice
-  if self.thirst > 0.8 then
+  if self.thirst and self.thirst > 0.8 then
     self:changeHappiness(-0.02)
     self:setMood("coffee")
     -- If there's already an action to buy a drink in the action queue, do nothing

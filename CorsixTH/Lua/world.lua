@@ -145,12 +145,7 @@ function World:spawnPatient(hospital)
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
   patient:setHospital(hospital)
-  -- Alien patients can only come via helicopter, and therefore have no drink animation
-  if patient.humanoid_class ~= "Alien Patient" then
-    patient.thirst = 0
-  else
-    patient.thirst = nil
-  end
+  
   return patient
 end
 
