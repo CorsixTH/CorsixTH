@@ -294,7 +294,29 @@ function App:run()
     print "A stack trace is included below, and the handler has been disconnected."
     print(debug.traceback(co, e, 0))
     print ""
+    if self.last_dispatch_type == "timer" and self.world.current_tick_entity then
+      -- Disconnecting the tick handler is quite a drastic measure, so give
+      -- the option of just disconnecting the offending entity and attemping
+      -- to continue.
+      local handler = self.eventHandlers[self.last_dispatch_type]
+      local entity = self.world.current_tick_entity
+      self.world.current_tick_entity = nil
+      self.ui:addWindow(UIInformation(self.ui,
+        "An error has occured while running the timer handler - see the log "..
+        "window for details. Would you like to attempt a recovery?",
+        function()
+          entity.ticks = false
+          self.eventHandlers.timer = handler
+        end
+      ))
+    end
     self.eventHandlers[self.last_dispatch_type] = nil
+    if self.last_dispatch_type ~= "frame" then
+      -- If it wasn't the drawing code which failed, then it would be useful
+      -- to ensure that a draw happens, as with events disconnected, a frame
+      -- might not otherwise be drawn for a while.
+      pcall(self.drawFrame, self)
+    end
     return self:run()
   end
 end

@@ -303,12 +303,14 @@ function World:onTick()
         end
       end
       for _, entity in ipairs(self.entities) do
-        if class.is(entity, Humanoid) then
+        if entity.ticks and class.is(entity, Humanoid) then
+          self.current_tick_entity = entity
           entity:tickDay()
-          -- TODO: Do other regular things, such as checking if any room needs
-          -- staff at the moment and making plants need water.
         end
       end
+      self.current_tick_entity = nil
+      -- TODO: Do other regular things, such as checking if any room needs
+      -- staff at the moment and making plants need water.
     end
     for i = 1, self.ticks_per_tick do
       for _, hospital in ipairs(self.hospitals) do
@@ -316,9 +318,11 @@ function World:onTick()
       end
       for _, entity in ipairs(self.entities) do
         if entity.ticks then
+          self.current_tick_entity = entity
           entity:tick()
         end
       end
+      self.current_tick_entity = nil
       self.map:onTick()
       if self.ui then
         self.ui:onWorldTick()
