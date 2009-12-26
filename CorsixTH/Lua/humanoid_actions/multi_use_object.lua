@@ -194,6 +194,15 @@ end
 
 local function action_multi_use_object_start(action, humanoid)
   local use_with = action.use_with
+  if action.must_happen then
+    -- Setting must_happen is slightly dangerous (though required in some
+    -- situations), as the multi-usage cannot be sure to happen until the
+    -- secondary user is present (at which point, must_happen is always set).
+    if action.todo_interrupt then
+      humanoid:finishAction(action)
+      return
+    end
+  end
   if use_with.action_queue[1].name ~= "idle" then
     humanoid:queueAction({name = "idle", count = 2}, 0)
     return

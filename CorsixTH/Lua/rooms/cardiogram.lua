@@ -81,7 +81,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         name = "multi_use_object",
         object = cardio,
         use_with = staff,
-        must_happen = true,
+        must_happen = true, -- set so that the second use_screen always happens
         prolonged_usage = true,
         loop_callback = function(action)
           if not action.on_interrupt then
