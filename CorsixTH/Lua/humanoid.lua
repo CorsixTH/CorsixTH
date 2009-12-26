@@ -81,6 +81,13 @@ anims("Grim Reaper",                994,  996, 1002, 1004)
 die_anims("Standard Male Patient",    1682, 2434, 2438, 2446,  2450) -- Always facing east or south
 die_anims("Standard Female Patient",  3116, 3208, 3212, 3216,  3220)
 
+local anim_mgr = TheApp.animation_manager
+for anim in values(door_animations, "*.entering") do
+  anim_mgr:setMarker(anim, 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
+end
+for anim in values(door_animations, "*.leaving") do
+  anim_mgr:setMarker(anim, 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
+end
 
 function Humanoid:Humanoid(...)
   self:Entity(...)
@@ -149,8 +156,10 @@ function Humanoid:setMood(mood)
   }
   if not self.mood_info then
     self.mood_info = TH.animation()
+    self.mood_info:setPosition(-1, -96)
   end
   self.mood_info:setAnimation(self.world.anims, moods[mood])
+  self.mood_info:setParent(self.th)
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)

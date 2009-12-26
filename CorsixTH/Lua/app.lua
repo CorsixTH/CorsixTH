@@ -148,6 +148,8 @@ function App:init()
   dofile "map"
   
   -- Load additional Lua before world
+  self.anims = self.gfx:loadAnimations("Data", "V")
+  self.animation_manager = AnimationManager(self.anims)
   self.walls = self:loadLuaFolder"walls"
   dofile "object"
   self.objects = self:loadLuaFolder"objects"
@@ -161,7 +163,6 @@ function App:init()
   
   -- Load world before UI
   dofile "world"
-  self.anims = self.gfx:loadAnimations("Data", "V")
   
   -- Load UI
   dofile "ui"

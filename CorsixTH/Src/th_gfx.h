@@ -290,6 +290,11 @@ public:
 
     bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
 
+    bool setFrameMarker(unsigned int iFrame, int iX, int iY);
+    bool setFrameSecondaryMarker(unsigned int iFrame, int iX, int iY);
+    bool getFrameMarker(unsigned int iFrame, int* pX, int* pY);
+    bool getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY);
+
 protected:
 #pragma pack(push)
 #pragma pack(1)
@@ -340,6 +345,13 @@ protected:
         int iBoundingRight;
         int iBoundingTop;
         int iBoundingBottom;
+        // Markers are used to know where humanoids are on an frame. The
+        // positions are pixels offsets from the centre of the frame's base
+        // tile to the centre of the humanoid's feet.
+        int iMarkerX;
+        int iMarkerY;
+        int iSecondaryMarkerX;
+        int iSecondaryMarkerY;
     };
 
     struct element_t
@@ -370,18 +382,23 @@ public:
 
     void removeFromTile();
     void attachToTile(THLinkList *pMapNode);
+    void setParent(THAnimation *pParent);
 
     void tick();
     void draw(THRenderTarget* pCanvas, int iDestX, int iDestY);
     bool hitTest(int iDestX, int iDestY, int iTestX, int iTestY);
     void drawMorph(THRenderTarget* pCanvas, int iDestX, int iDestY);
     bool hitTestMorph(int iDestX, int iDestY, int iTestX, int iTestY);
+    void drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY);
+    bool hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return this->pPrev;}
     unsigned long getFlags() {return this->iFlags;}
     unsigned int getAnimation() {return m_iAnimation;}
     int getX() {return m_iX;}
     int getY() {return m_iY;}
+    bool getMarker(int* pX, int* pY);
+    bool getSecondaryMarker(int* pX, int* pY);
 
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget);
@@ -394,16 +411,23 @@ public:
 protected:
     THAnimationManager *m_pManager;
     THAnimation* m_pMorphTarget;
+    THAnimation* m_pParent;
     unsigned int m_iAnimation;
     unsigned int m_iFrame;
     //! X position on tile (not tile x-index)
     int m_iX;
     //! Y position on tile (not tile y-index)
     int m_iY;
-    //! Amount to change m_iX per tick
-    int m_iSpeedX;
-    //! Amount to change m_iY per tick
-    int m_iSpeedY;
+    union { struct {
+        //! Amount to change m_iX per tick
+        int m_iSpeedX;
+        //! Amount to change m_iY per tick
+        int m_iSpeedY;
+    };
+        //! Some animations are tied to the marker of another animation and
+        //! hence have a parent rather than a speed.
+        THAnimation* m_pParent;
+    };
 
     int m_iLastX;
     int m_iLastY;

@@ -265,3 +265,120 @@ function Graphics:updateTarget(target)
     end
   end
 end
+
+class "AnimationManager"
+
+function AnimationManager:AnimationManager(anims)
+  self.anim_length_cache = {}
+  self.anims = anims
+end
+
+function AnimationManager:getAnimLength(anim)
+  local anims = self.anims
+  if not self.anim_length_cache[anim] then
+    local length = 0
+    local seen = {}
+    local frame = anims:getFirstFrame(anim)
+    while not seen[frame] do
+      seen[frame] = true
+      length = length + 1
+      frame = anims:getNextFrame(frame)
+    end
+    self.anim_length_cache[anim] = length
+  end
+  return self.anim_length_cache[anim]
+end
+
+--[[ Markers can be set using a variety of different arguments:
+  setMarker(anim_number, position)
+  setMarker(anim_number, start_position, end_position)
+  setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+  
+  position should be a table; {x, y} for a tile position, {x, y, "px"} for a
+  pixel position, with (0, 0) being the origin in both cases.
+  
+  The first variant of setMarker sets the same marker for each frame.
+  The second variant does linear interpolation of the two positions between
+  the first frame and the last frame.
+  The third variant does linear interpolation between keyframes, and then the
+  final position for frames after the last keyframe. The keyframe arguments
+  should be 0-based integers, as in the animation viewer.
+--]]
+
+function AnimationManager:setMarker(anim, ...)
+  return self:setMarkerRaw(anim, "setFrameMarker", ...)
+end
+
+function AnimationManager:setSecondaryMarker(anim, ...)
+  return self:setMarkerRaw(anim, "setFrameSecondaryMarker", ...)
+end
+
+local function TableToPixels(t)
+  if t[3] == "px" then
+    return t[1], t[2]
+  else
+    return Map:WorldToScreen(t[1] + 1, t[2] + 1)
+  end
+end
+
+function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
+  local type = type(arg1)
+  local anim_length = self:getAnimLength(anim)
+  local anims = self.anims
+  local frame = anims:getFirstFrame(anim)
+  if type == "table" then
+    if arg2 then
+      -- Linear-interpolation positions
+      local x1, y1 = TableToPixels(arg1)
+      local x2, y2 = TableToPixels(arg2)
+      for i = 0, anim_length - 1 do
+        local n = i / (anim_length - 1)
+        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+        frame = anims:getNextFrame(frame)
+      end
+    else
+      -- Static position
+      local x, y = TableToPixels(arg1)
+      for i = 1, anim_length do
+        anims[fn](anims, frame, x, y)
+        frame = anims:getNextFrame(frame)
+      end
+    end
+  elseif type == "number" then
+    -- Keyframe positions
+    local f1, x1, y1 = 0, 0, 0
+    local args
+    if arg1 == 0 then
+      x1, y1 = TableToPixels(arg2)
+      args = {...}
+    else
+      args = {arg1, arg2, ...}
+    end
+    local f2, x2, y2
+    local args_i = 1
+    for f = 0, anim_length - 1 do
+      if f2 and f == f2 then
+        f1, x1, y1 = f2, x2, y2
+        f2, x2, y2 = nil
+      end
+      if not f2 then
+        f2 = args[args_i]
+        if f2 then
+          x2, y2 = TableToPixels(args[args_i + 1])
+          args_i = args_i + 2
+        end
+      end
+      if f2 then
+        local n = (f - f1) / (f2 - f1)
+        anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
+      else
+        anims[fn](anims, frame, x1, y1)
+      end
+      frame = anims:getNextFrame(frame)
+    end
+  elseif type == "string" then
+    assert "TODO"
+  else
+    assert "Invalid arguments to setMarker"
+  end
+end

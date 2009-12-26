@@ -85,14 +85,14 @@ end
 function UIStaff:getStaffPosition(dx, dy)
   local staff = self.staff
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
-  local px, py = staff.th:getPosition()
+  local px, py = staff.th:getMarker()
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
 function UIStaff:draw(canvas)
   local x, y = self.x, self.y
 
-  local px, py = self:getStaffPosition(37, 45)
+  local px, py = self:getStaffPosition(37, 61)
   self.ui.app.map:draw(canvas, px, py, 75, 75, x + 17, y + self.height - 93)
   Window.draw(self, canvas)
   

@@ -53,6 +53,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_SPINCTRL(wxID_ANY, frmMain::_onGhostIndexChange)
   EVT_TEXT(ID_ANIM_INDEX, frmMain::_onAnimChar)
   EVT_TIMER(ID_TIMER_ANIMATE, frmMain::_onTimer)
+  EVT_CHECKBOX(ID_DRAW_MOOD, frmMain::_onToggleDrawMood)
 END_EVENT_TABLE()
 
 frmMain::frmMain()
@@ -176,6 +177,18 @@ frmMain::frmMain()
     pLayer12->Add(new wxCheckBox(this, ID(12, 2), L"2 (Smoke)"), 0, wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer12, 0, wxEXPAND | wxALL, 0);
 
+    wxStaticBoxSizer *pMoodOverlay = new wxStaticBoxSizer(wxVERTICAL, this, L"Mood");
+    pMoodOverlay->Add(new wxCheckBox(this, ID_DRAW_MOOD, L"Draw mood overlay"), 0, wxEXPAND | wxALL, 1);
+    wxBoxSizer *pMoodRow = new wxBoxSizer(wxHORIZONTAL);
+    pMoodRow->Add(new wxStaticText(this, wxID_ANY, L"Marker position (click to move it):"), 0, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 2);
+    pMoodRow->Add(m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"), 1, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 1);
+    pMoodRow->Add(m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"), 1, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+    pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
+    pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
+    m_bDrawMood = false;
+    m_iMoodDrawX = 0;
+    m_iMoodDrawY = 0;
+
     for(int iLayer = 0; iLayer < 13; ++iLayer)
     {
         wxCheckBox *pCheck = wxDynamicCast(FindWindow(ID(iLayer, 0)), wxCheckBox);
@@ -228,6 +241,7 @@ frmMain::frmMain()
 
     pRightHandSizer->Add(m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0, wxEXPAND | wxALL, 2);
     m_panFrame->Connect(wxEVT_PAINT, (wxObjectEventFunction)&frmMain::_onPanelPaint, NULL, this);
+    m_panFrame->Connect(wxEVT_LEFT_UP, (wxObjectEventFunction)&frmMain::_onPanelClick, NULL, this);
     m_panFrame->SetMinSize(m_panFrame->ClientToWindowSize(wxSize(402, 402)));
 
     pRightHandSizer->AddSpacer(1);
@@ -450,7 +464,10 @@ void frmMain::_onPrevFrame(wxCommandEvent& evt)
     if(m_oAnims.getAnimationCount() == 0)
         return;
 
-    m_iCurrentFrame = (m_iCurrentFrame - 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
+    if(m_iCurrentFrame == 0)
+        m_iCurrentFrame = m_oAnims.getFrameCount(m_iCurrentAnim) - 1;
+    else
+        m_iCurrentFrame = (m_iCurrentFrame - 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
     m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
     m_panFrame->Refresh(false);
 }
@@ -478,6 +495,12 @@ void frmMain::_onTimer(wxTimerEvent& evt)
     }
 }
 
+void frmMain::_onToggleDrawMood(wxCommandEvent& evt)
+{
+    m_bDrawMood = evt.IsChecked();
+    m_panFrame->Refresh(false);
+}
+
 void frmMain::_onPanelPaint(wxPaintEvent& evt)
 {
     wxPaintDC DC(m_panFrame);
@@ -489,6 +512,10 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     }
     wxSize oSize;
     m_oAnims.drawFrame(imgCanvas, m_iCurrentAnim, m_iCurrentFrame, &m_mskLayers, oSize);
+    if(m_bDrawMood)
+    {
+        m_oAnims.drawFrame(imgCanvas, 4048, 0, &m_mskLayers, oSize, m_iMoodDrawX - 1, m_iMoodDrawY - 80);
+    }
     uint16_t iFlags = m_oAnims.getFrameFlags(m_iCurrentAnim, m_iCurrentFrame);
     int iFlags1 = (int)(iFlags & 0xFF);
     int iFlags2 = (int)(iFlags >> 8);
@@ -500,6 +527,25 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     wxBitmap bmpCanvas(imgCanvas);
 
     DC.DrawBitmap(bmpCanvas, 1, 1);
+}
+
+void frmMain::_onPanelClick(wxMouseEvent& evt)
+{
+    m_iMoodDrawX = evt.GetX() - 143;
+    m_iMoodDrawY = evt.GetY() - 203;
+    {
+        double fX = (double)m_iMoodDrawX;
+        double fY = (double)m_iMoodDrawY;
+        fY = fY / 32.0;
+        fX = fX / 64.0;
+        fY -= fX;
+        fX *= 2.0;
+        fX += fY;
+        m_txtMoodPosition[0]->SetValue(wxString::Format(L"{%.2f, %.2f}", fX, fY));
+    }
+    m_txtMoodPosition[1]->SetValue(wxString::Format(L"{%i, %i, \"px\"}", m_iMoodDrawX, m_iMoodDrawY));
+    if(m_bDrawMood)
+        m_panFrame->Refresh(false);
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt)

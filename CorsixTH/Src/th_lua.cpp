@@ -933,6 +933,22 @@ static int l_anims_set_alt_pal(lua_State *L)
     return 1;
 }
 
+static int l_anims_set_marker(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    lua_pushboolean(L, pAnims->setFrameMarker((unsigned int)luaL_checkinteger(L, 2),
+        luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
+    return 1;
+}
+
+static int l_anims_set_secondary_marker(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    lua_pushboolean(L, pAnims->setFrameSecondaryMarker((unsigned int)luaL_checkinteger(L, 2),
+        luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
+    return 1;
+}
+
 static int l_anims_draw(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
@@ -1167,6 +1183,15 @@ static int l_anim_get_tile(lua_State *L)
     return 3; // map, x, y
 }
 
+static int l_anim_set_parent(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    THAnimation* pParent = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX, false);
+    pAnimation->setParent(pParent);
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_anim_set_flag(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
@@ -1273,6 +1298,28 @@ static int l_anim_get_tag(lua_State *L)
     lua_getfenv(L, 1);
     lua_getfield(L, 2, "tag");
     return 1;
+}
+
+static int l_anim_get_marker(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    int iX = 0;
+    int iY = 0;
+    pAnimation->getMarker(&iX, &iY);
+    lua_pushinteger(L, iX);
+    lua_pushinteger(L, iY);
+    return 2;
+}
+
+static int l_anim_get_secondary_marker(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    int iX = 0;
+    int iY = 0;
+    pAnimation->getSecondaryMarker(&iX, &iY);
+    lua_pushinteger(L, iX);
+    lua_pushinteger(L, iY);
+    return 2;
 }
 
 static int l_anim_tick(lua_State *L)
@@ -1838,6 +1885,8 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
     luaT_setfunction(l_anims_getnext, "getNextFrame");
     luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
+    luaT_setfunction(l_anims_set_marker, "setFrameMarker");
+    luaT_setfunction(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     luaT_setfunction(l_anims_draw, "draw", iSurfaceMT, iLayersMT);
     luaT_endclass();
 
@@ -1857,6 +1906,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_anim_get_anim, "getAnimation");
     luaT_setfunction(l_anim_set_tile, "setTile", iMapMT);
     luaT_setfunction(l_anim_get_tile, "getTile");
+    luaT_setfunction(l_anim_set_parent, "setParent");
     luaT_setfunction(l_anim_set_flag, "setFlag");
     luaT_setfunction(l_anim_set_flag_partial, "setPartialFlag");
     luaT_setfunction(l_anim_get_flag, "getFlag");
@@ -1869,6 +1919,8 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_anim_set_speed, "setSpeed");
     luaT_setfunction(l_anim_set_layer, "setLayer");
     luaT_setfunction(l_anim_set_hitresult, "setHitTestResult");
+    luaT_setfunction(l_anim_get_marker, "getMarker");
+    luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");
     luaT_setfunction(l_anim_tick, "tick");
     luaT_setfunction(l_anim_draw, "draw", iSurfaceMT);
     luaT_endclass();

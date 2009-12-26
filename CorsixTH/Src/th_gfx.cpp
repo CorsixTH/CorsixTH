@@ -242,6 +242,10 @@ bool THAnimationManager::loadFromTHFile(
         m_pFrames[i].iSound = pFrame->sound;
         m_pFrames[i].iFlags = pFrame->flags;
         // Bounding box fields initialised later
+        m_pFrames[i].iMarkerX = 0;
+        m_pFrames[i].iMarkerY = 0;
+        m_pFrames[i].iSecondaryMarkerX = 0;
+        m_pFrames[i].iSecondaryMarkerY = 0;
     }
 
     memcpy(m_pElementList, pListData, iListCount * 2);
@@ -341,6 +345,42 @@ void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, cons
         }
         iFrame = m_pFrames[iFrame].iNextFrame;
     } while(iFrame != iFirstFrame);
+}
+
+bool THAnimationManager::setFrameMarker(unsigned int iFrame, int iX, int iY)
+{
+    if(iFrame >= m_iFrameCount)
+        return false;
+    m_pFrames[iFrame].iMarkerX = iX;
+    m_pFrames[iFrame].iMarkerY = iY;
+    return true;
+}
+
+bool THAnimationManager::setFrameSecondaryMarker(unsigned int iFrame, int iX, int iY)
+{
+    if(iFrame >= m_iFrameCount)
+        return false;
+    m_pFrames[iFrame].iSecondaryMarkerX = iX;
+    m_pFrames[iFrame].iSecondaryMarkerY = iY;
+    return true;
+}
+
+bool THAnimationManager::getFrameMarker(unsigned int iFrame, int* pX, int* pY)
+{
+    if(iFrame >= m_iFrameCount)
+        return false;
+    *pX = m_pFrames[iFrame].iMarkerX;
+    *pY = m_pFrames[iFrame].iMarkerY;
+    return true;
+}
+
+bool THAnimationManager::getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY)
+{
+    if(iFrame >= m_iFrameCount)
+        return false;
+    *pX = m_pFrames[iFrame].iSecondaryMarkerX;
+    *pY = m_pFrames[iFrame].iSecondaryMarkerY;
+    return true;
 }
 
 bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const
@@ -673,31 +713,6 @@ void THChunkRenderer::decodeChunks(const unsigned char* data, int datalen, bool 
     chunkFinish(0xFF);
 }
 
-void THAnimation::tick()
-{
-    m_iFrame = m_pManager->getNextFrame(m_iFrame);
-    m_iX += m_iSpeedX;
-    m_iY += m_iSpeedY;
-    if(m_pMorphTarget)
-    {
-        m_pMorphTarget->m_iY += m_pMorphTarget->m_iSpeedY;
-        if(m_pMorphTarget->m_iY < m_pMorphTarget->m_iX)
-            m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
-    }
-
-    if(m_iLastX != INT_MAX)
-    {
-        unsigned int iSound = m_pManager->getFrameSound(m_iFrame);
-        if(iSound)
-        {
-            THSoundEffects *pSounds = THSoundEffects::getSingleton();
-            if(pSounds)
-                pSounds->playSoundAt(iSound, m_iLastX, m_iLastY);
-        }
-        m_iLastX = INT_MAX;
-    }
-}
-
 void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
     if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
@@ -707,6 +722,29 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
     m_iLastY = m_iY + iDestY;
     if(m_pManager)
         m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX, m_iY + iDestY, iFlags);
+}
+
+void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
+{
+    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+        return;
+    if((m_pParent->iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+        return;
+    if(!m_pParent->getMarker(&m_iLastX, &m_iLastY))
+    {
+        m_iLastX = 0;
+        m_iLastY = 0;
+    }
+    m_iLastX += m_iX + iDestX;
+    m_iLastY += m_iY + iDestY;
+    if(m_pManager)
+        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iLastX, m_iLastY, iFlags);
+}
+
+bool THAnimation::hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY)
+{
+    // TODO
+    return false;
 }
 
 static void CalculateMorphRect(const THClipRect& rcOriginal, THClipRect& rcMorph, int iYLow, int iYHigh)
@@ -765,6 +803,16 @@ bool THAnimation::hitTestMorph(int iDestX, int iDestY, int iTestX, int iTestY)
         iDestX, iDestY, iTestX, iTestY);
 }
 
+static bool THAnimation_HitTestChild(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
+{
+    return reinterpret_cast<THAnimation*>(pSelf)->hitTestChild(iDestX, iDestY, iTestX, iTestY);
+}
+
+static void THAnimation_DrawChild(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY)
+{
+    reinterpret_cast<THAnimation*>(pSelf)->drawChild(pCanvas, iDestX, iDestY);
+}
+
 static bool THAnimation_HitTestMorph(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
     return reinterpret_cast<THAnimation*>(pSelf)->hitTestMorph(iDestX, iDestY, iTestX, iTestY);
@@ -804,6 +852,34 @@ THAnimation::THAnimation()
         m_oLayers.iLayerContents[i] = 0;
 }
 
+void THAnimation::tick()
+{
+    m_iFrame = m_pManager->getNextFrame(m_iFrame);
+    if(fnDraw != THAnimation_DrawChild)
+    {
+        m_iX += m_iSpeedX;
+        m_iY += m_iSpeedY;
+    }
+    if(m_pMorphTarget)
+    {
+        m_pMorphTarget->m_iY += m_pMorphTarget->m_iSpeedY;
+        if(m_pMorphTarget->m_iY < m_pMorphTarget->m_iX)
+            m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
+    }
+
+    if(m_iLastX != INT_MAX)
+    {
+        unsigned int iSound = m_pManager->getFrameSound(m_iFrame);
+        if(iSound)
+        {
+            THSoundEffects *pSounds = THSoundEffects::getSingleton();
+            if(pSounds)
+                pSounds->playSoundAt(iSound, m_iLastX, m_iLastY);
+        }
+        m_iLastX = INT_MAX;
+    }
+}
+
 void THAnimation::removeFromTile()
 {
     THLinkList::removeFromList();
@@ -831,7 +907,29 @@ void THAnimation::attachToTile(THLinkList *pMapNode)
         pNext = NULL;
     }
     pMapNode->pNext = this;
+}
 
+void THAnimation::setParent(THAnimation *pParent)
+{
+    removeFromTile();
+    if(pParent == NULL)
+    {
+        fnDraw = THAnimation_Draw;
+        fnHitTest = THAnimation_HitTest;
+        m_iSpeedX = 0;
+        m_iSpeedY = 0;
+    }
+    else
+    {
+        fnDraw = THAnimation_DrawChild;
+        fnHitTest = THAnimation_HitTestChild;
+        m_pParent = pParent;
+        pNext = m_pParent->pNext;
+        if(pNext)
+            pNext->pPrev = this;
+        pPrev = m_pParent;
+        m_pParent->pNext = this;
+    }
 }
 
 void THAnimation::setAnimation(THAnimationManager* pManager, unsigned int iAnimation)
@@ -845,6 +943,28 @@ void THAnimation::setAnimation(THAnimationManager* pManager, unsigned int iAnima
         fnDraw = THAnimation_Draw;
         fnHitTest = THAnimation_HitTest;
     }
+}
+
+bool THAnimation::getMarker(int* pX, int* pY)
+{
+    if(!m_pManager || !m_pManager->getFrameMarker(m_iFrame, pX, pY))
+        return false;
+    if(iFlags & THDF_FlipHorizontal)
+        *pX = -*pX;
+    *pX += m_iX;
+    *pY += m_iY + 16;
+    return true;
+}
+
+bool THAnimation::getSecondaryMarker(int* pX, int* pY)
+{
+    if(!m_pManager || !m_pManager->getFrameSecondaryMarker(m_iFrame, pX, pY))
+        return false;
+    if(iFlags & THDF_FlipHorizontal)
+        *pX = -*pX;
+    *pX += m_iX;
+    *pY += m_iY + 16;
+    return true;
 }
 
 static int GetAnimationDurationAndExtent(THAnimationManager *pManager,

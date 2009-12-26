@@ -54,7 +54,7 @@ function Entity:setTile(x, y)
   -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
   self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
-    self.mood_info:setTile(x and self.world.map.th, x, y)
+    self.mood_info:setParent(self.th)
   end
   return self
 end
@@ -65,17 +65,11 @@ end
 
 function Entity:setPosition(x, y)
   self.th:setPosition(x, y)
-  if self.mood_info then
-    self.mood_info:setPosition(x, y - 76)
-  end
   return self
 end
 
 function Entity:setSpeed(x, y)
   self.th:setSpeed(x, y)
-  if self.mood_info then
-    self.mood_info:setSpeed(x, y)
-  end
   return self
 end
 

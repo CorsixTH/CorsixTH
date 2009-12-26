@@ -79,9 +79,9 @@ function UIPatient:draw(canvas)
     return
   end
   local px, py = map:WorldToScreen(patient.tile_x, patient.tile_y)
-  local dx, dy = patient.th:getPosition()
+  local dx, dy = patient.th:getMarker()
   px = px + dx - 37
-  py = py + dy - 45
+  py = py + dy - 61
   -- If the patient is spawning or despawning, or just on the map edge, then
   -- the rendering point needs adjustment to keep the rendered region entirely
   -- within the map (this situation doesn't occur very often, but we need to

@@ -48,6 +48,9 @@ function dofile(name)
   return do_file(code_dir .. name .. ".lua")
 end
 
+-- Load standard library extensions
+dofile "utility"
+
 -- Enable strict mode
 dofile "strict"
 require = destrict(require)
