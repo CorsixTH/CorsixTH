@@ -681,6 +681,8 @@ function UIEditRoom:onMouseDown(button, x, y)
         if self.move_rect then
           self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
           self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
+        elseif self.resize_rect then
+          -- nothing to do
         else
           self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
         end
@@ -927,12 +929,33 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
   if self.phase == "walls" then
     local rect = self.blueprint_rect
     if not self.mouse_down_x then
-      if wx >= rect.x and wx < rect.x + rect.w and wy >= rect.y and wy < rect.y + rect.h then
+      if wx > rect.x and wx < rect.x + rect.w - 1 and wy > rect.y and wy < rect.y + rect.h - 1 then
+        -- inside blueprint, non-border -> move blueprint
         ui:setCursor(ui.app.gfx:loadMainCursor(8))
         self.move_rect = true
-      else
+        self.resize_rect = false
+      elseif wx < rect.x or wx >= rect.x + rect.w or wy < rect.y or wy >= rect.y + rect.h then
+        -- outside blueprint
         ui:setCursor(ui.default_cursor)
         self.move_rect = false
+        self.resize_rect = false
+      else
+        -- inside blueprint, at border -> resize blueprint
+        self.move_rect = false
+        self.resize_rect = {
+          n = (wy == rect.y),
+          s = (wy == rect.y + rect.h - 1) and not (wy == rect.y),
+          w = (wx == rect.x),
+          e = (wx == rect.x + rect.w - 1) and not (wx == rect.x),
+        }
+        
+        if (self.resize_rect.w or self.resize_rect.e) and (self.resize_rect.n or self.resize_rect.s) then
+          ui:setCursor(ui.app.gfx:loadMainCursor(7)) -- nswe arrow
+        elseif self.resize_rect.w or self.resize_rect.e then
+          ui:setCursor(ui.app.gfx:loadMainCursor(6)) -- we arrow
+        else
+          ui:setCursor(ui.app.gfx:loadMainCursor(5)) -- ns arrow
+        end
       end
     end
   else
@@ -947,6 +970,29 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
   if self.mouse_down_x and self.move_rect then
     local rect = self.blueprint_rect
     self:setBlueprintRect(wx - self.move_rect_x, wy - self.move_rect_y, rect.w, rect.h)
+  elseif self.mouse_down_x and self.resize_rect then
+    local rect = self.blueprint_rect
+    local x1, y1, x2, y2 = rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1
+    if self.resize_rect.w then
+      x1 = wx
+    elseif self.resize_rect.e then
+      x2 = wx
+    end
+    if self.resize_rect.n then
+      y1 = wy
+    elseif self.resize_rect.s then
+      y2 = wy
+    end
+
+    if x1 > x2 then
+      x1, x2 = x2, x1
+      self.resize_rect.w, self.resize_rect.e = self.resize_rect.e, self.resize_rect.w
+    end
+    if y1 > y2 then
+      y1, y2 = y2, y1
+      self.resize_rect.n, self.resize_rect.s = self.resize_rect.s, self.resize_rect.n
+    end
+    self:setBlueprintRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
   elseif self.mouse_down_x then
     local x1, x2 = self.mouse_down_x, wx
     local y1, y2 = self.mouse_down_y, wy
