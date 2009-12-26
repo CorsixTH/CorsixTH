@@ -147,6 +147,25 @@ function Hospital:removePatient(patient)
   RemoveByValue(self.patients, patient)
 end
 
+function Hospital:setCrazyDoctors(crazy)
+  self.crazy_doctors = crazy
+  for i, staff in ipairs(self.staff) do
+    if staff.humanoid_class == "Doctor" then
+      if crazy then
+        staff:setLayer(5, staff.layers[5] + 4)
+        staff.profile.temp_skill = staff.profile.skill
+        staff.profile.skill = 0
+      else
+        if not staff.layers[5] < 5 then -- If sane doctors were hired in between
+          staff:setLayer(5, staff.layers[5] - 4)
+        end
+        staff.profile.skill = staff.profile.temp_skill
+        staff.profile.temp_skill = nil
+      end
+    end
+  end
+end
+
 class "AIHospital" (Hospital)
 
 function AIHospital:AIHospital(...)

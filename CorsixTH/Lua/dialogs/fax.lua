@@ -167,6 +167,16 @@ function UIFax:validate()
       print("Roujin's challenge deactivated.")
       hosp.spawn_rate_cheat = nil
     end
+  elseif 7.8768e-11 < x and x < 7.8769e-11 then
+    -- Crazy doctors enabled
+    local hosp = self.ui.app.world:getLocalPlayerHospital()
+    if not hosp.crazy_doctors then
+      print("Oh no! All doctors have gone crazy!")
+      hosp:setCrazyDoctors(true)
+    else
+      print("Phew... the doctors regained their sanity.")
+      hosp:setCrazyDoctors(nil)
+    end
   else
     -- no valid cheat entered
     self.ui:playSound("fax_no.wav")

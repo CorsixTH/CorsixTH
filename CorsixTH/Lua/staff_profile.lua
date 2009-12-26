@@ -94,12 +94,12 @@ function StaffProfile:randomise()
       self.hair_index = math.random(5, 9)
       self.face_index = math.random(5, 9)
       self.chin_index = math.random(5, 9)
-      self.layer5 = 4 + math.random(0, 1) * 4
+      self.layer5 = 4
     else
       self.hair_index = math.random(0, 4)
       self.face_index = math.random(0, 4)
       self.chin_index = math.random(0, 4)
-      self.layer5 = 2 + math.random(0, 1) * 4
+      self.layer5 = 2
     end
   elseif self.humanoid_class == "Nurse" then
     self.hair_index = math.random(10, 12)

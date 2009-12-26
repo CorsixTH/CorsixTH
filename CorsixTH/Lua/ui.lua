@@ -381,7 +381,8 @@ function UI:onMouseDown(code, x, y)
   if not button then
     return
   end
-  if self.cursor_entity == nil and self.down_count == 0 then
+  if self.cursor_entity == nil and self.down_count == 0 and 
+    self.cursor == self.default_cursor then
     self:setCursor(self.down_cursor)
     repaint = true
   end
@@ -403,7 +404,7 @@ function UI:onMouseUp(code, x, y)
   end
   self.down_count = self.down_count - 1
   if self.down_count <= 0 then
-    if self.cursor_entity == nil then
+    if self.cursor_entity == nil and self.cursor == self.down_cursor then
       self:setCursor(self.default_cursor)
       repaint = true
     end
