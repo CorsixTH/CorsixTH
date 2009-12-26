@@ -11,9 +11,16 @@ IF(UNIX)
 ELSE()
   IF(WIN32)
     # Win32 specific
-    
-    # We want to bind against the very latest versions of the MSVC runtimes
-    add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
+    IF(MSVC)
+      # We want to bind against the very latest versions of the MSVC runtimes
+      add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
+    ELSE(MSVC)
+      IF(MSYS)
+        # MSYS stuff
+      ELSE(MSYS)
+        # What's left? MINGW? CYGWIN? BORLAND?
+      ENDIF(MSYS)
+    ENDIF(MSVC)
   ELSE(WIN32)
     # other OS (not UNIX, not 32/64 bit Windows)
   ENDIF(WIN32)
