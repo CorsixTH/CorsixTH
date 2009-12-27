@@ -50,7 +50,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff)
   self:addPanel(15, 364, 0) -- Staff management button
   self:addPanel(17, 407, 0) -- Town map button
-  self:addPanel(19, 445, 0) -- Drug casebook button
+  self:addPanel(19, 445, 0):makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
   self:addPanel(21, 483, 0) -- Research button
   self:addPanel(23, 521, 0) -- Status button
   self:addPanel(25, 559, 0) -- Charts button
@@ -162,5 +162,10 @@ end
 
 function UIBottomPanel:dialogHireStaff()
   local dlg = UIHireStaff(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogDrugCasebook()
+  local dlg = UICasebook(self.ui)
   self.ui:addWindow(dlg)
 end

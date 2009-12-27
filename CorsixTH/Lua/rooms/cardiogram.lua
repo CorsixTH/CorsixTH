@@ -58,7 +58,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
     object = screen,
     after_use = function()
       local staff = self.staff_member
-      if not staff then
+      if not staff or patient.going_home then
         -- If, by some fluke, the staff member left the room while the
         -- patient used the screen, then the patient should get changed
         -- again (they will already have been instructed to leave by the

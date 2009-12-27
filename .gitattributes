@@ -32,6 +32,7 @@ CorsixTH/Lua/class.lua -text
 CorsixTH/Lua/dialogs/adviser.lua -text
 CorsixTH/Lua/dialogs/bottom_panel.lua -text
 CorsixTH/Lua/dialogs/build_room.lua -text
+CorsixTH/Lua/dialogs/drug_casebook.lua -text
 CorsixTH/Lua/dialogs/edit_room.lua -text
 CorsixTH/Lua/dialogs/fax.lua -text
 CorsixTH/Lua/dialogs/fullscreen.lua -text

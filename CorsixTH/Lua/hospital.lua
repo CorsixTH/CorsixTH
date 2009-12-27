@@ -36,14 +36,23 @@ function Hospital:Hospital(world)
   local diseases = TheApp.diseases
   for i, disease in ipairs(diseases) do
     local info = {
-      reputation = (not disease.pseudo) and 500 or nil,
+      reputation = 500,
       price = 1.0, -- user-set multiplier between 0.5 and 2.0
       money_earned = 0,
       recoveries = 0,
       fatalities = 0,
       turned_away = 0,
       disease = disease,
-      discovered = false,
+      discovered = (disease.pseudo and true or false),
+      concentrate_research = false,
+      cure_effectiveness = 100,
+      -- This will only work as long as there's only one treatment room.
+      drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil,
+      psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,
+      machine = disease.requires_machine,
+      surgeon = disease.requires_surgeon, -- TODO: Fix when operating theatre is in.
+      researcher = disease.requires_researcher, -- TODO: Fix when aliens are in the game.
+      pseudo = disease.pseudo, -- Diagnosis is pseudo
     }
     self.disease_casebook[disease.id] = info
   end
