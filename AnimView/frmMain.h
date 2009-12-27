@@ -58,6 +58,7 @@ public:
         ID_GHOST_3,
         ID_LOAD,
         ID_BROWSE,
+        ID_DRAW_MOOD,
         ID_LAYER_CHECKS, // Must be last ID
     };
 
@@ -73,6 +74,7 @@ protected:
     void _onNextFrame(wxCommandEvent& evt);
     void _onPlayPause(wxCommandEvent& evt);
     void _onToggleMask(wxCommandEvent& evt);
+    void _onToggleDrawMood(wxCommandEvent& evt);
     void _onSearchLayerId(wxCommandEvent& evt);
     void _onSearchFrame(wxCommandEvent& evt);
     void _onSearchSoundIndex(wxCommandEvent& evt);
@@ -81,6 +83,7 @@ protected:
     void _onGhostFileChange(wxCommandEvent& evt);
     void _onGhostIndexChange(wxSpinEvent& evt);
     void _onPanelPaint(wxPaintEvent& evt);
+    void _onPanelClick(wxMouseEvent& evt);
     void _onTimer(wxTimerEvent& evt);
 
     void _onAnimChange(size_t iIndex);
@@ -93,7 +96,10 @@ protected:
     size_t m_iCurrentFrame;
     int m_iGhostFile;
     int m_iGhostIndex;
+    int m_iMoodDrawX;
+    int m_iMoodDrawY;
     bool m_bPlayingAnimation;
+    bool m_bDrawMood;
 
     wxButton* m_btnPlayPause;
     wxTextCtrl* m_txtTHPath;
@@ -102,6 +108,7 @@ protected:
     wxTextCtrl* m_txtFrameIndex;
     wxTextCtrl* m_txtFrameCount;
     wxTextCtrl* m_txtFrameFlags[2];
+    wxTextCtrl* m_txtMoodPosition[2];
     wxCheckBox* m_chkFrameFlags[16];
     wxListBox* m_lstSearchResults;
     wxPanel* m_panFrame;

@@ -470,7 +470,7 @@ uint16_t THAnimations::getFrameFlags(size_t iAnimation, size_t iFrame)
     return m_pFrames[iFrameIndex].flags;
 }
 
-void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size)
+void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset, int iYOffset)
 {
     if(iAnimation >= m_iAnimCount)
         return;
@@ -497,7 +497,7 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFram
             iFarY = iBottom;
         if(pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
             continue;
-        getSpriteBitmap(iSpriteIndex)->blit(imgCanvas, pElement->offx, pElement->offy, m_pGhostMaps + m_iGhostMapOffset, m_pColours, pElement->flags & 0xF);
+        getSpriteBitmap(iSpriteIndex)->blit(imgCanvas, pElement->offx + iXOffset, pElement->offy + iYOffset, m_pGhostMaps + m_iGhostMapOffset, m_pColours, pElement->flags & 0xF);
     }
     size.x = iFarX;
     size.y = iFarY;

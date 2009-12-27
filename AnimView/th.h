@@ -178,7 +178,7 @@ public:
     th_colour_t* getPalette() {return m_pColours;}
 
     void setGhost(int iFile, int iIndex);
-    void drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size);
+    void drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset = 0, int iYOffset = 0);
 
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
 protected:
