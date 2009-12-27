@@ -25,6 +25,7 @@ local TH = require "TH"
 local walk_animations = {}
 local door_animations = {}
 local die_animations = {}
+local mood_icons = {}
 local flag_cache = {} -- Used in tickDay
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE)
@@ -52,7 +53,12 @@ local function die_anims(name, fall, rise, wings, hands, fly)
   }
 end
 
---   |Name                       |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE| Notes
+local function moods(name, iconNo, prio, alwaysOn)
+  mood_icons[name] = {icon = iconNo, priority = prio, on_hover = alwaysOn}
+end
+
+--   | Walk animations           |
+--   | Name                      |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE| Notes
 -----+---------------------------+-----+-----+-----+-----+-----+-----+------+------+
 anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288) -- 0-16, ABC
 anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
@@ -76,10 +82,46 @@ anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door
 anims("VIP",                        266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
 
---  |Name                           |FallE|RiseE|WingsE|HandsE|FlyE| Notes
+--  | Die Animations                |
+--  | Name                          |FallE|RiseE|WingsE|HandsE|FlyE| Notes
 ----+-------------------------------+-----+-----+-----+-----+------+
 die_anims("Standard Male Patient",    1682, 2434, 2438, 2446,  2450) -- Always facing east or south
 die_anims("Standard Female Patient",  3116, 3208, 3212, 3216,  3220)
+
+--   | Available Moods |
+--   | Name            |Icon|Priority|Show Always| Notes
+-----+-----------------+----+--------+-----------+
+moods("reflexion",      4020,       5)            -- Some icons should only appear when the player
+moods("cantfind",       4050,       3)            -- hover over the humanoid
+moods("idea1",          2464,      10)            -- Higher priority is more important.
+moods("idea2",          2466,      11)
+moods("idea3",          4044,      12)
+moods("staff_wait",     4054,      20)
+moods("tired",          3990,      30)
+moods("pay_rise",       4576,      40)
+moods("thirsty",        3986,       4)
+moods("cold",           3994,       0,       true) -- These have no priority since
+moods("hot",            3988,       0,       true) -- they will be shown when hovering
+moods("queue",          4568,       0,       true) -- no matter what other priorities.
+moods("poo",            3996,       5)
+moods("money",          4018,      30)
+moods("patient_wait",   5006,      40)
+moods("epidemy1",       4566,      38)
+moods("epidemy2",       4570,      40)
+moods("epidemy3",       4572,      40)
+moods("epidemy4",       4574,      40)
+moods("sad1",           3992,      40)
+moods("sad2",           4000,      40)
+moods("sad3",           4002,      40)
+moods("sad4",           4004,      40)
+moods("sad5",           4006,      40)
+moods("sad6",           4008,      40)
+moods("sad7",           4578,      40)
+moods("dead",           4046,      50)
+moods("cured",          4048,      60)
+moods("emergency",      3914,      60)
+moods("exit",           4052,      60)
+--moods("repairing",        4564, 100) -- Only for machinery
 
 local anim_mgr = TheApp.animation_manager
 for anim in values(door_animations, "*.entering") do
@@ -96,6 +138,7 @@ function Humanoid:Humanoid(...)
   self.last_move_direction = "east"
   self.warmth = 0.6
   self.happiness = 1
+  self.active_moods = {}
 end
 
 function Humanoid:onClick(ui, button)
@@ -123,43 +166,36 @@ function Humanoid:setHospital(hospital)
   end
 end
 
-function Humanoid:setMood(mood)
-  self.mood = mood
-  if mood == nil then
-    if self.mood_info then
-      self.mood_info:setTile(nil)
+-- Function to activate/deactivate moods of a humanoid.
+-- If mood_name is nil it is considered a refresh only. 
+function Humanoid:setMood(mood_name, activate)
+  if mood_name then 
+    if activate then
+      if self.active_moods[mood_name] then
+        return -- No use doing anything if it already exists.
+      end
+      self.active_moods[mood_name] = mood_icons[mood_name]
+    else
+      if not self.active_moods[mood_name] then
+        return -- No use doing anything if the mood isn't there anyway.
+      end
+      self.active_moods[mood_name] = nil
     end
-    self.mood_info = false
-    return
   end
-  local moods = {
-    bored = 4054,
-    cantfind = 4050,
-    coffee = 3986,
-    cold = 3994,
-    emergency = 3914,
-    epidemy1 = 4566, epidemy2 = 4570, epidemy3 = 4572, epidemy4 = 4574,
-    exit = 4052,
-    happy = 4048,
-    hot = 3988,
-    idea1 = 2464, idea2 = 2466, idea3 = 4044,
-    money = 4018,
-    poo = 3996,
-    queue = 4568,
-    reflexion = 4020,
-    repairing = 4564,     
-    rise = 4576,
-    sad1 = 3992, sad2 = 4000, sad3 = 4002, sad4 = 4004, sad5 = 4006, sad6 = 4008, sad7 = 4578,
-    tired = 3990,
-    unhappy = 4046,
-    wait = 5006,
-  }
-  if not self.mood_info then
-    self.mood_info = TH.animation()
-    self.mood_info:setPosition(-1, -96)
+  local new_mood = nil
+  -- TODO: Make equal priorities cycle, or make all moods unique
+  for key, value in pairs(self.active_moods) do
+    if new_mood then -- There is a mood, check priorities.
+      if new_mood.priority < value.priority then
+        new_mood = value
+      end
+    else
+      if not value.on_hover then
+        new_mood = value
+      end
+    end
   end
-  self.mood_info:setAnimation(self.world.anims, moods[mood])
-  self.mood_info:setParent(self.th)
+  self:setMoodInfo(new_mood)
 end
 
 function Humanoid.getIdleAnimation(humanoid_class)
@@ -360,12 +396,14 @@ function Humanoid:tickDay()
   -- show the corresponding icon. Otherwise we could get happier instead.
   if self.warmth < 0.1 then
     self:changeHappiness(-0.02)
-    self:setMood("cold")
+    self:setMood("cold", true)
   elseif self.warmth > 0.9 then
     self:changeHappiness(-0.02)
-    self:setMood("hot")
+    self:setMood("hot", true)
   else
     self:changeHappiness(0.005)
+    self:setMood("cold", nil)
+    self:setMood("hot", nil)
   end
   return true
 end

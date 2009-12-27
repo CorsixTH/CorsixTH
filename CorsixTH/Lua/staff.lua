@@ -36,7 +36,7 @@ function Staff:fire()
   end
   
   self:playSound "sack.wav"
-  self:setMood "exit"
+  self:setMood("exit", true)
   self.fired = true
   self:setHospital(nil)
   self.hover_cursor = nil
@@ -93,7 +93,7 @@ end
 -- Check if fatigue is over a certain level (now: 0.8, later: configurable), and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   if self.fatigue and self.fatigue >= 0.8 and not class.is(self:getRoom(), StaffRoom) then
-    self:setMood("tired")
+    self:setMood("tired", true)
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
     if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
       return

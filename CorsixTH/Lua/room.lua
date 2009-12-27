@@ -119,7 +119,7 @@ function Room:dealtWithPatient(patient)
       -- TODO: Add percentage that depends on illness and how effective the cure is.
       -- Should level also make a difference?
       if patient.die_anims and math.random(1, 100) < 6 then
-        patient:setMood "unhappy"
+        patient:setMood("dead", true)
         patient:playSound "boo.wav"
         -- Funny... Removes the go home button
         patient.going_home = true
@@ -246,6 +246,14 @@ end
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
+  -- Staff is no longer waiting
+  for humanoid in pairs(self.humanoids) do -- Staff is now waiting
+    if class.is(humanoid, Staff) then
+      if humanoid.humanoid_class ~= "Handyman" then
+        humanoid:setMood("staff_wait", nil)
+      end
+    end
+  end
 end
 
 function Room:tryAdvanceQueue()
@@ -253,6 +261,13 @@ function Room:tryAdvanceQueue()
     local front = self.door.queue:front()
     if self.humanoids[front] or self:canHumanoidEnter(front) then
       self.door.queue:pop()
+      for humanoid in pairs(self.humanoids) do -- Staff is now waiting
+        if class.is(humanoid, Staff) then
+          if humanoid.humanoid_class ~= "Handyman" then
+            humanoid:setMood("staff_wait", true)
+          end
+        end
+      end
     end
   end
 end
@@ -273,6 +288,8 @@ function Room:onHumanoidLeave(humanoid)
         end
       end
     end
+    -- Remove any unwanted moods the staff member might have
+    humanoid:setMood("staff_wait", nil)
   end
 end
 

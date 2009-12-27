@@ -70,10 +70,10 @@ function Patient:goHome(cured)
     return
   end
   if cured then
-    self:setMood "happy"
+    self:setMood("cured", true)
     self:playSound "cheer.wav"
   else
-    self:setMood "exit"
+    self:setMood("exit", true)
   end
   
   self.going_home = true
@@ -105,7 +105,7 @@ function Patient:tickDay()
   -- If thirsty enough a soda would be nice
   if self.thirst and self.thirst > 0.8 then
     self:changeHappiness(-0.02)
-    self:setMood("coffee")
+    self:setMood("thirsty", true)
     -- If there's already an action to buy a drink in the action queue, do nothing
     if self.going_to_drinks_machine then
       return
@@ -122,18 +122,18 @@ function Patient:tickDay()
           findObjectNear(self, "drinks_machine", 8)
 
       -- If no machine can be found, resume previous action and wait a 
-      -- while before trying again. TODO: (Is this needed?)
-      if not machine then
+      -- while before trying again. TODO: (Is waiting needed?)
+      if not machine or not lx or not ly then
         self.timeout = 3
         return
       end
       self.going_to_drinks_machine = true
       
       -- Callback function when the machine has been used
-      local function after_use(old_action)
+      local function after_use()
         self:changeThirst(-0.8)
         self.going_to_drinks_machine = nil
-        self:setMood(nil)
+        self:setMood("thirsty", nil)
         self.hospital:receiveMoney(15, _S(8, 14))
       end
         
@@ -151,7 +151,7 @@ function Patient:tickDay()
       -- Or, if walking or idling insert the needed actions in 
       -- the beginning of the queue
       local current = self.action_queue[1]
-      if current.name == "walk" or current.name == "idle" then
+      if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
         -- Go to the machine, use it, and then continue with 
         -- whatever he/she was doing.
         self:queueAction({
@@ -159,6 +159,7 @@ function Patient:tickDay()
           x = lx, 
           y = ly,
           must_happen = true,
+          no_truncate = true,
         }, 1)
         self:queueAction({
           name = "use_object", 
@@ -166,23 +167,32 @@ function Patient:tickDay()
           after_use = after_use,
           must_happen = true,
         }, 2)
-        -- Insert the old action again
-        self:queueAction({
-          name = current.name,
-          x = current.x,
-          y = current.y,
-          must_happen = current.must_happen,
-          is_entering = current.is_entering,
-        }, 3)
-        -- If we were idling, go away a little before continuing with
-        -- that important action.
-        if current.name == "idle" then
+        -- Insert the old action again, a little differently depending on 
+        -- what the previous action was.
+        if current.name == "idle" or current.name == "walk" then
           self:queueAction({
-            name = "meander", 
-            count = 1,
+            name = current.name,
+            x = current.x,
+            y = current.y,
+            must_happen = current.must_happen,
+            is_entering = current.is_entering,
+          }, 3)
+          -- If we were idling, also go away a little before continuing with
+          -- that important action.
+          if current.name == "idle" then
+            self:queueAction({
+              name = "meander", 
+              count = 1,
+            }, 3)
+          end
+        else -- We were seeking a room, start that action from the beginning
+             -- i.e. do not set the must_happen flag.
+          self:queueAction({
+            name = current.name,
+            room_type = current.room_type,
           }, 3)
         end
-        current.on_interrupt(current, self, nil)
+        current.on_interrupt(current, self, true)
       end
     end
   end

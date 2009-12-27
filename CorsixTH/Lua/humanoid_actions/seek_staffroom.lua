@@ -23,9 +23,7 @@ local function seek_staffroom_action_start(action, humanoid)
   -- interrupted (due to entering the staff room, being picked up, etc.)
   if action.todo_interrupt then
     humanoid.going_to_staffroom = nil
-    if humanoid.mood == "tired" then
-      humanoid:setMood(nil)
-    end
+    humanoid:setMood("tired", nil)
     humanoid:finishAction()
     return
   end

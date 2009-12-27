@@ -156,11 +156,11 @@ function Hospital:setCrazyDoctors(crazy)
         staff.profile.temp_skill = staff.profile.skill
         staff.profile.skill = 0
       else
-        if not staff.layers[5] < 5 then -- If sane doctors were hired in between
+        if not (staff.layers[5] < 5) then -- If sane doctors were hired in between
           staff:setLayer(5, staff.layers[5] - 4)
+          staff.profile.skill = staff.profile.temp_skill
+          staff.profile.temp_skill = nil
         end
-        staff.profile.skill = staff.profile.temp_skill
-        staff.profile.temp_skill = nil
       end
     end
   end

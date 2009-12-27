@@ -179,24 +179,7 @@ function UI:debugMakePatients()
       "Elvis Patient",
       "Invisible Patient",
     }
-    local moods = { "idea1", "idea2" , "idea3",
-                   "emergency",
-                   "cofee",
-                   "hot",
-                   "tired",
-                   "sad1", "sad2", "sad3", "sad4", "sad5", "sad6", "sad7",
-                   "cold",
-                   "poo",
-                   "money",
-                   "reflexion", "cantfind",
-                   "unhappy", "happy",
-                   "exit",
-                   "bored",
-                   "repairing",
-                   "epidemy1", "epidemy2", "epidemy3", "epidemy4",
-                   "queue",
-                   "rise",
-                   "wait" }
+
     entity:setType(types[math.random(1, #types)])
     entity:setTile(63 + (i - 1) % 2, 63 + math.floor(i / 3))
     entity:setLayer(0, math.random(1, 4) * 2)
@@ -204,7 +187,7 @@ function UI:debugMakePatients()
     entity:setLayer(2, math.random(0, 2) * 2)
     entity:setLayer(3, math.random(0, 5) * 2)
     entity:setLayer(4, math.random(0, 5) * 2)
-    --entity:setMood(moods[math.random(1, 31)])
+    --entity:setMood(moods[math.random(1, 31)]) -- Will not work anymore!
     patients[#patients + 1] = entity
   end
 end
@@ -455,10 +438,23 @@ function UI:onCursorWorldPositionChange()
     entity = self.app.map.th:hitTestObjects(x, y)
   end
   if entity ~= self.cursor_entity then
+    -- Stop displaying hoverable moods for the old entity
+    if self.cursor_entity then
+      self.cursor_entity:setMood(nil)
+    end
     self.cursor_entity = entity
     local cursor = entity and entity.hover_cursor or
       (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
     self:setCursor(cursor)
+  end
+  -- Any hoverable mood should be displayed on the new entity
+  if class.is(entity, Humanoid) then
+    for key, value in pairs(entity.active_moods) do
+      if value.on_hover then
+        entity:setMoodInfo(value)
+        break
+      end
+    end
   end
 end
 

@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 class "Entity"
 
+local TH = require "TH"
+
 function Entity:Entity(animation)
   self.th = animation
   self.layers = {}
@@ -120,6 +122,23 @@ function Entity:setTimer(tick_count, f)
   self.timer_function = f
 end
 
+-- Used to set a mood icon over the entity.
+function Entity:setMoodInfo(new_mood)
+  if new_mood then
+    if not self.mood_info then
+      self.mood_info = TH.animation()
+      self.mood_info:setPosition(-1, -96)
+    end
+    self.mood_info:setAnimation(self.world.anims, new_mood.icon)
+    self.mood_info:setParent(self.th)
+  else
+    if self.mood_info then
+      self.mood_info:setTile(nil)
+    end
+    self.mood_info = false
+  end
+end
+
 function Entity:onDestroy()
   self:setTile(nil)
   -- Debug aid to check that there are no hanging references after the entity
@@ -131,9 +150,12 @@ function Entity:onDestroy()
   end --]]
 end
 
--- Function stubs to be able to call these from the world if it is a humanoid
+-- Function stubs to be able to call these from the world/ui if it is a humanoid
 function Entity:tickDay()
 end
 
 function Entity:notifyNewObject(id)
+end
+
+function Entity:setMood(mood_name, activate)
 end

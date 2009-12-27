@@ -231,7 +231,7 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
   local function after_use()
     humanoid:changeThirst(-0.8)
     humanoid.going_to_drinks_machine = nil
-    humanoid:setMood(nil)
+    humanoid:setMood("thirsty", nil)
     humanoid.hospital:receiveMoney(15, _S(8, 14))
     
     action_queue_on_change_position(action, humanoid)

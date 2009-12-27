@@ -19,9 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local function action_seek_room_interrupt(action, humanoid)
-  if humanoid.mood == "wait" then
-    humanoid:setMood(nil)
-  end
+  humanoid:setMood("patient_wait", nil)
   humanoid.world:unregisterRoomBuildCallback(action.build_callback)
   humanoid:finishAction()
 end
@@ -38,7 +36,7 @@ local function action_seek_room_start(action, humanoid)
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
     if not action.done_init then
       action.done_init = true
-      humanoid:setMood "wait"
+      humanoid:setMood("patient_wait", true)
       action.must_happen = true
       action.build_callback = function(room)
         if room.room_info.id == action.room_type then
