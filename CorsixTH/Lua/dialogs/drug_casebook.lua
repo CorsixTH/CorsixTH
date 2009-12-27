@@ -33,7 +33,7 @@ function UICasebook:UICasebook(ui, message)
   self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
   self.drug_font = gfx:loadFont("QData", "Font24V", false, palette)
   
-  self.hospital = ui.app.world:getLocalPlayerHospital()
+  self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   -- A sorted list of known diseases and pseudo diseases.
   -- Used to be able to list the diseases in, believe it or not,
@@ -41,7 +41,7 @@ function UICasebook:UICasebook(ui, message)
   self.names_sorted = {}
   for n,value in pairs(self.casebook) do 
     if value.discovered then
-      table.insert(self.names_sorted, n) 
+      self.names_sorted[#self.names_sorted + 1] = n
       self.selected_disease = n
     end
   end
@@ -98,24 +98,17 @@ function UICasebook:draw(canvas)
   else
     titles:draw(canvas, _S(29, 7), x + 245, y + 398)
   end
-  local width = self.title_font.sizeOf(self.title_font, book[disease].reputation)
-  titles:draw(canvas, book[disease].reputation, x + 305 - width/2, y + 92) -- Reputation
-  width = self.title_font.sizeOf(self.title_font, book[disease].price)
-  titles:draw(canvas, book[disease].price * 100 .. "%", x + 295 - width/2, y + 137) -- Treatment Charge
-  width = self.title_font.sizeOf(self.title_font, book[disease].money_earned)
-  titles:draw(canvas, "$" .. book[disease].money_earned, x + 300 - width/2, y + 181) -- Money Earned
-  width = self.title_font.sizeOf(self.title_font, book[disease].recoveries)
-  titles:draw(canvas, book[disease].recoveries, x + 305 - width/2, y + 225) -- Recoveries
-  width = self.title_font.sizeOf(self.title_font, book[disease].fatalities)
-  titles:draw(canvas, book[disease].fatalities, x + 305 - width/2, y + 269) -- Fatalities
-  width = self.title_font.sizeOf(self.title_font, book[disease].turned_away)
-  titles:draw(canvas, book[disease].turned_away, x + 305 - width/2, y + 313) -- Turned away
+  titles:draw(canvas, book[disease].reputation, x + 248, y + 92, 114, 0) -- Reputation
+  titles:draw(canvas, ("%.0f%%"):format(book[disease].price * 100), x + 262, y + 137, 90, 0) -- Treatment Charge
+  titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
+  titles:draw(canvas, book[disease].recoveries, x + 248, y + 225, 114, 0) -- Recoveries
+  titles:draw(canvas, book[disease].fatalities, x + 248, y + 269, 114, 0) -- Fatalities
+  titles:draw(canvas, book[disease].turned_away, x + 248, y + 313, 114, 0) -- Turned away
   
   -- Icons in the lower part of the screen
   if book[disease].drug then
     self.drug.visible = true
-    width = self.drug_font.sizeOf(self.drug_font, book[disease].cure_effectiveness)
-    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 320 - width/2, y + 364)
+    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 310, y + 364, 19, 0)
   else
     self.drug.visible = false
   end
@@ -139,13 +132,13 @@ function UICasebook:draw(canvas)
   -- Right-hand side list of diseases (and pseudo diseases)
   local index = 1
   while selected - index > 0 and index <= 7 do
-    titles:draw(canvas, string.upper(self.names_sorted[selected - index]), x + 409, y + 203 - index*18)
+    titles:draw(canvas, self.names_sorted[selected - index]:upper(), x + 409, y + 203 - index*18)
     index = index + 1
   end
-  self.selected_title_font:draw(canvas, string.upper(disease), x + 409, y + 227)
+  self.selected_title_font:draw(canvas, disease:upper(), x + 409, y + 227)
   index = 1
   while index + selected <= #self.names_sorted and index <= 7 do
-    titles:draw(canvas, string.upper(self.names_sorted[index + selected]), x + 409, y + 251 + index*18)
+    titles:draw(canvas, self.names_sorted[index + selected]:upper(), x + 409, y + 251 + index*18)
     index = index + 1
   end
 end
@@ -166,14 +159,30 @@ end
 
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
-  if price < 2 then
-    self.casebook[self.selected_disease].price = price + 0.01
+  local amount = 0.01
+  if self.buttons_down.ctrl then
+    amount = amount * 25
+  elseif self.buttons_down.shift then
+    amount = amount * 5
   end
+  price = price + amount
+  if price > 2 then
+    price = 2
+  end
+  self.casebook[self.selected_disease].price = price
 end
 
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
-  if price > 0.5 then
-    self.casebook[self.selected_disease].price = price - 0.01
+  local amount = 0.01
+  if self.buttons_down.ctrl then
+    amount = amount * 25
+  elseif self.buttons_down.shift then
+    amount = amount * 5
   end
+  price = price - amount
+  if price < 0.5 then
+    price = 0.5
+  end
+  self.casebook[self.selected_disease].price = price
 end

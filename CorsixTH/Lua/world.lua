@@ -104,6 +104,7 @@ function World:initDiseases(app)
 end
 
 function World:getLocalPlayerHospital()
+  -- NB: UI code can get the hospital to use via ui.hospital
   return self.hospitals[1]
 end
 

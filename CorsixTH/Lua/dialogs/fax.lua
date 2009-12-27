@@ -159,7 +159,7 @@ function UIFax:validate()
     diseases.bloaty_head = diseases[1]
   elseif 27868.3 < x and x < 27868.4 then
     -- Roujin's challenge cheat
-    local hosp = self.ui.app.world:getLocalPlayerHospital()
+    local hosp = self.ui.hospital
     if not hosp.spawn_rate_cheat then
       print("Roujin's challenge activated! Good luck...")
       hosp.spawn_rate_cheat = true
@@ -169,7 +169,7 @@ function UIFax:validate()
     end
   elseif 7.8768e-11 < x and x < 7.8769e-11 then
     -- Crazy doctors enabled
-    local hosp = self.ui.app.world:getLocalPlayerHospital()
+    local hosp = self.ui.hospital
     if not hosp.crazy_doctors then
       print("Oh no! All doctors have gone crazy!")
       hosp:setCrazyDoctors(true)
