@@ -395,6 +395,36 @@ function World:getFreeBench(x, y, distance)
   return bench, rx, ry, bench_distance
 end
 
+-- This helper function checks if the given tile is part of a nearby object (walkable tiles count as part of the object)
+function World:isTilePartOfNearbyObject(x, y, distance)
+  for o in pairs(self:findAllObjectsNear(x, y, distance)) do
+    for _, xy in ipairs(o:getWalkableTiles()) do
+      if xy[1] == x and xy[2] == y then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- returns a set of all objects near the given position
+function World:findAllObjectsNear(x, y, distance)
+  if not distance then
+    -- Note that regardless of distance, only the room which the humanoid is in
+    -- is searched (or the corridor if the humanoid is not in a room).
+    distance = 20
+  end
+  local objects = {}
+  local callback = function(x, y, d)
+    local obj = self:getObject(x, y)
+    if obj then
+      objects[obj] = true
+    end
+  end
+  self.pathfinder:findObject(x, y, 0, distance, callback)
+  return objects
+end
+
 function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not distance then
     -- Note that regardless of distance, only the room which the humanoid is in

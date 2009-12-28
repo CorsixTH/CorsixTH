@@ -307,7 +307,7 @@ bool THPathfinder::findIdleTile(const THMap *pMap, int iStartX, int iStartY, int
 
 bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
                                 THObjectType eTHOB, int iMaxDistance,
-                                lua_State *L, int iVisitFunction)
+                                lua_State *L, int iVisitFunction, bool anyObjectType)
 {
     if(pMap == NULL)
         pMap = m_pDefaultMap;
@@ -330,7 +330,7 @@ bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
 #define TryNode(n, d) \
         node_t *pNeighbour = n; \
         uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
-        if((iNFlags & 0xFF000000) == iTHOB) \
+        if(anyObjectType || ((iNFlags & 0xFF000000) == iTHOB)) \
         { \
             /* call the given Lua function, passing four arguments: */ \
             /* The x and y position of the object (Lua tile co-ords) */ \

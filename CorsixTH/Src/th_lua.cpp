@@ -1047,7 +1047,7 @@ static int l_path_visit(lua_State *L)
     luaL_checktype(L, 6, LUA_TFUNCTION);
     lua_pushboolean(L, pPathfinder->visitObjects(NULL, luaL_checkint(L, 2) - 1,
         luaL_checkint(L, 3) - 1, static_cast<THObjectType>(luaL_checkint(L, 4)),
-        luaL_checkint(L, 5), L, 6) ? 1 : 0);
+		luaL_checkint(L, 5), L, 6, luaL_checkint(L, 4) == 0 ? true : false) ? 1 : 0);
     return 1;
 }
 

@@ -55,7 +55,7 @@ public:
     bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
     bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
                       THObjectType eTHOB, int iMaxDistance, lua_State *L,
-                      int iVisitFunction);
+                      int iVisitFunction, bool anyObjectType);
 
     int getPathLength() const;
     bool getPathEnd(int* pX, int* pY) const;

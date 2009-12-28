@@ -95,6 +95,16 @@ function EntranceDoor:setTile(x, y)
   self.world.map.th:updateShadows()
 end
 
+function EntranceDoor:getWalkableTiles()
+  local x, y = self.tile_x, self.tile_y
+  if self.direction == "west" then
+    x = x - 1
+  else
+    y = y - 1
+  end  
+  return { {self.tile_x, self.tile_y}, {x, y} }
+end
+
 function EntranceDoor:tick()
   local target_index = self.is_open and #self.anim_frames or 1
   if self.frame_index == target_index then

@@ -95,16 +95,40 @@ function Object:getSecondaryUsageTile()
   return x, y
 end
 
+-- This function returns a list of all "only_passable" tiles belonging to an object.
+-- It must be overridden by objects which do not have a footprint, but walkable tiles (e.g. doors of any kind)
+function Object:getWalkableTiles()
+  local tiles = {}
+  for _, xy in ipairs(self.footprint) do
+    if xy.only_passable then
+      tiles[#tiles + 1] = { self.tile_x + xy[1], self.tile_y + xy[2] }
+    end
+  end
+  return tiles
+end
+
 function Object:setTile(x, y)
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
     if self.footprint then
       local map = self.world.map.th
       for _, xy in ipairs(self.footprint) do
-        map:setCellFlags(self.tile_x + xy[1], self.tile_y + xy[2], {
-          buildable = true,
-          passable = true,
-        })
+        local x, y = self.tile_x + xy[1], self.tile_y + xy[2]
+        
+        if not map:getCellFlags(x, y).passable then
+          map:setCellFlags(x, y, {
+            buildable = true,
+            passable = true,
+          })
+        else
+          -- passable tiles can "belong" to multiple objects, so we have to check that
+          if not self.world:isTilePartOfNearbyObject(x, y, 10) then
+            -- assumption: no object defines a passable tile further than 10 tiles away from its origin
+            map:setCellFlags(x, y, {
+              buildable = true,
+            })
+          end
+        end
       end
     end
   end

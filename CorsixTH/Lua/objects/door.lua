@@ -95,6 +95,16 @@ function Door:setTile(x, y)
   return self
 end
 
+function Door:getWalkableTiles()
+  local x, y = self.tile_x, self.tile_y
+  if self.direction == "west" then
+    x = x - 1
+  else
+    y = y - 1
+  end  
+  return { {self.tile_x, self.tile_y}, {x, y} }
+end
+
 local flag_early_list = 1024
 local flag_list_bottom = 2048
 
