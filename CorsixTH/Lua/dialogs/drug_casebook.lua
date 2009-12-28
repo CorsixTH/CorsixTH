@@ -38,25 +38,28 @@ function UICasebook:UICasebook(ui, message)
   -- A sorted list of known diseases and pseudo diseases.
   -- Used to be able to list the diseases in, believe it or not,
   -- alphabetical order.
+  -- TODO: update if disease is discovered while window is open
   self.names_sorted = {}
-  for n,value in pairs(self.casebook) do 
+  for n, value in pairs(self.casebook) do
     if value.discovered then
       self.names_sorted[#self.names_sorted + 1] = n
-      self.selected_disease = n
     end
   end
-  table.sort(self.names_sorted)
-
-  for i,n in ipairs(self.names_sorted) do 
-    if n == self.selected_disease then
-      self.selected_index = i
+  table.sort(self.names_sorted, function(d1, d2)
+    local c1, c2 = self.casebook[d1], self.casebook[d2]
+    if c1.pseudo ~= c2.pseudo then
+      return c1.pseudo
     end
-  end
+    return c1.disease.name:upper() < c2.disease.name:upper()
+  end)
+  
+  self.selected_index = #self.names_sorted
+  self.selected_disease = self.names_sorted[self.selected_index]
   
   -- Buttons
   self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close)
-  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp) -- Scroll up button
-  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown) -- Scroll down button
+  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setSound"pagetur2.wav" -- Scroll up button
+  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setSound"pagetur2.wav" -- Scroll down button
   self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay) -- payment up button
   self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay) -- payment down button
   
@@ -132,13 +135,13 @@ function UICasebook:draw(canvas)
   -- Right-hand side list of diseases (and pseudo diseases)
   local index = 1
   while selected - index > 0 and index <= 7 do
-    titles:draw(canvas, self.names_sorted[selected - index]:upper(), x + 409, y + 203 - index*18)
+    titles:draw(canvas, book[self.names_sorted[selected - index]].disease.name:upper(), x + 409, y + 203 - index*18)
     index = index + 1
   end
-  self.selected_title_font:draw(canvas, disease:upper(), x + 409, y + 227)
+  self.selected_title_font:draw(canvas, book[disease].disease.name:upper(), x + 409, y + 227)
   index = 1
   while index + selected <= #self.names_sorted and index <= 7 do
-    titles:draw(canvas, self.names_sorted[index + selected]:upper(), x + 409, y + 251 + index*18)
+    titles:draw(canvas, book[self.names_sorted[index + selected]].disease.name:upper(), x + 409, y + 251 + index*18)
     index = index + 1
   end
 end
