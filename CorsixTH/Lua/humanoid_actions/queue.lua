@@ -297,7 +297,7 @@ local function action_queue_start(action, humanoid)
   
   action:onChangeQueuePosition(humanoid)
   
-  if queue:size() == 1 and queue.same_room_priority then
+  if queue.same_room_priority then
     queue.same_room_priority:getRoom():tryAdvanceQueue()
   end
 end

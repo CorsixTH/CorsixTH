@@ -655,12 +655,31 @@ function World:callForStaff(room)
   local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
   
   for attribute, count in pairs(missing) do
-    for i, e in ipairs(self.entities) do
-      if count > 0 and class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
-        count = count - 1
-        e:setNextAction(room:createEnterAction())
-      end
+    self:selectNearestStaffForRoom(room, attribute, count)
+  end
+end
+
+-- Sends nearest staff members with the required attributes to the given room.
+-- TODO take into account the tiredness of the staff etc. when deciding who to pick?
+function World:selectNearestStaffForRoom(room, attribute, count)
+  local door_x, door_y = room:getEntranceXY()
+  local candidates = {}
+  for _, e in ipairs(self.entities) do
+    if class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
+      candidates[#candidates + 1] = {
+        entity = e,
+        dist = self:getPathDistance(e.tile_x, e.tile_y, door_x, door_y),
+      }
     end
   end
-  
+
+  table.sort(candidates, function (c1, c2) return c1.dist < c2.dist end)
+  for _, cand in ipairs(candidates) do
+    if count <= 0 then
+      break
+    end
+    count = count - 1
+    cand.entity:setNextAction(room:createEnterAction())
+  end
 end
+

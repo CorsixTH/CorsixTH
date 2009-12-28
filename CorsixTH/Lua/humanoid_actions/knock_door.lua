@@ -22,6 +22,7 @@ local function action_knock_door_tick(humanoid)
   local door = humanoid.user_of
   door:setUser(nil)
   humanoid.user_of = nil
+  door:getRoom():tryAdvanceQueue()
   humanoid:finishAction()
 end
 
