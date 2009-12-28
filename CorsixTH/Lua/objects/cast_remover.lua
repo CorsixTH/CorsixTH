@@ -63,8 +63,8 @@ object.orientations = {
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
                   {-1, 0}, {0, 0, only_passable = true},
                   {-1, 1, only_passable = true} },
-    early_list = true,
     list_bottom = true,
+    render_attach_position = {-1, 1},
   },
   east = {
     use_position = {0, 0},

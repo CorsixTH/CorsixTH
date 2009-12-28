@@ -83,6 +83,7 @@ object.orientations = {
     footprint = { {0, 0}, {1, 0, only_passable = true} },
     use_position = "passable",
     use_animate_from_use_position = true,
+    early_list_while_in_use = true,
     animation_offset = {-1, 0},
   },
   south = {
