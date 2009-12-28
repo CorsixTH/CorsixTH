@@ -411,7 +411,6 @@ public:
 protected:
     THAnimationManager *m_pManager;
     THAnimation* m_pMorphTarget;
-    THAnimation* m_pParent;
     unsigned int m_iAnimation;
     unsigned int m_iFrame;
     //! X position on tile (not tile x-index)
