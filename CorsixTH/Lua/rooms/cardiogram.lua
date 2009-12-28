@@ -86,6 +86,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         loop_callback = function(action)
           if not action.on_interrupt then
             action.prolonged_usage = false
+            patient.num_animation_ticks = 1
             return
           end
           timer = timer - 1
