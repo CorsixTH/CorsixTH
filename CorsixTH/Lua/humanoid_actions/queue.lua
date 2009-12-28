@@ -230,7 +230,6 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
   -- Callback function used after the drinks machine has been used.
   local function after_use()
     humanoid:changeThirst(-0.8)
-    humanoid.going_to_drinks_machine = nil
     humanoid:setMood("thirsty", nil)
     humanoid.hospital:receiveMoney(15, _S(8, 14))
     
@@ -250,6 +249,7 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
     after_use = after_use,
     must_happen = true,
   }, num_actions_prior + 1)
+  machine:addReservedUser(humanoid)
   -- Insert an idle action so that change_position can do its work.
   humanoid:queueAction({
       name = "idle", 

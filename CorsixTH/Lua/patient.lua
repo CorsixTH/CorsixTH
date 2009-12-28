@@ -107,7 +107,7 @@ function Patient:tickDay()
     self:changeHappiness(-0.02)
     self:setMood("thirsty", true)
     -- If there's already an action to buy a drink in the action queue, do nothing
-    if self.going_to_drinks_machine then
+    if self:goingToDrink() then
       return
     end
     -- Don't check for a drinks machine too often
@@ -127,12 +127,10 @@ function Patient:tickDay()
         self.timeout = 3
         return
       end
-      self.going_to_drinks_machine = true
       
       -- Callback function when the machine has been used
       local function after_use()
         self:changeThirst(-0.8)
-        self.going_to_drinks_machine = nil
         self:setMood("thirsty", nil)
         self.hospital:receiveMoney(15, _S(8, 14))
       end
@@ -167,6 +165,7 @@ function Patient:tickDay()
           after_use = after_use,
           must_happen = true,
         }, 2)
+        machine:addReservedUser(self)
         -- Insert the old action again, a little differently depending on 
         -- what the previous action was.
         if current.name == "idle" or current.name == "walk" then

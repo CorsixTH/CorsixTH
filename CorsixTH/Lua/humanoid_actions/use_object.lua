@@ -149,7 +149,7 @@ action_use_object_tick = function(humanoid)
     action:loop_callback()
   end
   if oldphase <= 3 and phase > 3 then
-    object:setUser(nil)
+    object:removeUser(humanoid)
     humanoid.user_of = nil
   end
   if phase == 100 then
@@ -168,10 +168,10 @@ local function action_use_object_interrupt(action, humanoid, high_priority)
   if high_priority then
     local object = action.object
     if humanoid.user_of then
-      object:setUser(nil)
+      object:removeUser(humanoid)
       humanoid.user_of = nil
-    elseif object.reserved_for == humanoid then
-      object.reserved_for = nil
+    elseif object:isReservedFor(humanoid) then
+      object:removeReservedUser(humanoid)
     end
     humanoid:setTimer(nil)
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)

@@ -156,11 +156,92 @@ end
 function Object:setUser(user)
   self.user = user or false
   if user then
+    if self.multiple_users_allowed then
+      if not self.user_list then
+        self.user_list = {}
+      end
+      self.user_list[#self.user_list + 1] = user
+    end
     self.th:makeInvisible()
     self.reserved_for = nil
   else
     self.th:makeVisible()
   end
+end
+
+-- The functions below works in the same way as using the variables "reserved_for"
+-- and "user" as long as the flag multiple_users_allowed isn't set.
+function Object:removeUser(user)
+  self.user = nil
+  if self.multiple_users_allowed then
+    if not user or not self.user_list then
+      -- No user specified, empty the list; or the list didn't exist
+      self.user_list = {}
+    end
+    for i, users in ipairs(self.user_list) do
+      if users == user then
+        table.remove(self.user_list, i)
+      end
+    end
+    if #self.user_list == 0 then
+      self.th:makeVisible()
+    end
+  else 
+    self.th:makeVisible()
+  end
+end
+
+-- Removes the user specified from this object's list of reserved users (if one exists).
+-- If the argument is nil it is assumed that the list should be emptied.
+function Object:removeReservedUser(user)
+  self.reserved_for = nil
+  if self.multiple_users_allowed then
+    -- No user specified, delete the whole list; or no list found, make it.
+    if not user or not self.reserved_for_list then
+      self.reserved_for_list = {}
+    end
+    for i, users in ipairs(self.reserved_for_list) do
+      if users == user then
+        table.remove(self.reserved_for_list, i)
+      end
+    end
+  end
+end
+
+-- If multiple_users_allowed is not set this will remove any previously reserved users
+-- from the object.
+function Object:addReservedUser(user)
+  assert(user, "Expected a user, got nil") -- It makes no sense to add a nil value
+  if self.multiple_users_allowed then
+    if not self.reserved_for_list then
+      self.reserved_for_list = {}
+    end
+    self.reserved_for_list[#self.reserved_for_list + 1] = user
+  else
+    self.user = user
+  end
+end
+
+-- Checks whether the object is reserved for the specified user.
+-- If the argument is nil a check for any reserved user is done.
+function Object:isReservedFor(user)
+  if not user then
+    return #self.reserved_for_list > 0 or self.reserved_for
+  end
+  if self.user == user then -- "Normal" use
+    return true
+  end
+  if self.ultiple_users_allowed then
+    if not self.reserved_for_list then
+      self.reserved_for_list = {}
+    end
+    for i, users in ipairs(self.reserved_for_list) do
+      if users == user then
+        return true
+      end
+    end
+  end
+  return false
 end
 
 function Object:onClick(ui, button)
@@ -197,8 +278,18 @@ function Object:onDestroy()
   if self.user then
     self.user:handleRemovedObject(self)
   end
+  if self.user_list then
+    for i, user in ipairs(self.user_list) do
+      user:handleRemovedObject(self)
+    end
+  end
   if self.reserved_for then
     self.reserved_for:handleRemovedObject(self)
+  end
+  if self.reserved_for_list then
+    for i, reserver in ipairs(self.reserved_for_list) do
+      reserver:handleRemovedObject(self)
+    end
   end
   Entity.onDestroy(self)
 end

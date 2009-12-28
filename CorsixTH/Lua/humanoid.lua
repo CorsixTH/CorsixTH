@@ -243,8 +243,8 @@ function Humanoid:setNextAction(action, high_priority)
       removed.until_leave_queue:removeValue(self)
       done_set[removed.until_leave_queue] = true
     end
-    if removed.object and removed.object.reserved_for == self then
-      removed.object.reserved_for = nil
+    if removed.object and removed.object:isReservedFor(self) then
+      removed.object:removeReservedUser(self)
     end
   end
   
@@ -406,4 +406,14 @@ function Humanoid:tickDay()
     self:setMood("hot", nil)
   end
   return true
+end
+
+-- Helper function that finds out if there is an action queued to drink
+function Humanoid:goingToDrink()
+  for i, action in ipairs(self.action_queue) do
+    if action.object and action.object.object_type.id == "drinks_machine" then
+      return true
+    end
+  end
+  return false
 end
