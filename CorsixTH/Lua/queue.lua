@@ -148,6 +148,7 @@ function Queue:pop()
   if callbacks then
     callbacks:onLeaveQueue(oldfront)
   end
+  self.callbacks[oldfront] = nil
   for _, humanoid in ipairs(self) do
     local callbacks = self.callbacks[humanoid]
     if callbacks then
@@ -166,6 +167,7 @@ function Queue:remove(index)
     self.reported_size = self.reported_size - 1
   end
   table.remove(self, index)
+  self.callbacks[value] = nil
   for i = #self, index, -1 do
     local humanoid = self[i]
     if humanoid.onAdvanceQueue then

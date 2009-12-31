@@ -207,9 +207,12 @@ function Patient:notifyNewObject(id)
   for i, action in ipairs(self.action_queue) do
     if action.name == "queue" then
       local callbacks = action.queue.callbacks[self]
-      if callbacks and action:isStanding() then
-        callbacks:onChangeQueuePosition(self)
-        break
+      if callbacks then
+        assert(action.done_init, "Queue action was not yet initialized")
+        if action:isStanding() then
+          callbacks:onChangeQueuePosition(self)
+          break
+        end
       end
     end
   end
