@@ -48,7 +48,16 @@ CorsixTH/Lua/dialogs/place_staff.lua -text
 CorsixTH/Lua/dialogs/queue_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/dialogs/watch.lua -text
+CorsixTH/Lua/diseases/broken_wind.lua -text
+CorsixTH/Lua/diseases/chronic_nosehair.lua -text
+CorsixTH/Lua/diseases/corrugated_ankles.lua -text
 CorsixTH/Lua/diseases/diag_gp.lua -text
+CorsixTH/Lua/diseases/discrete_itching.lua -text
+CorsixTH/Lua/diseases/gastric_ejections.lua -text
+CorsixTH/Lua/diseases/heaped_piles.lua -text
+CorsixTH/Lua/diseases/sleeping_illness.lua -text
+CorsixTH/Lua/diseases/the_squits.lua -text
+CorsixTH/Lua/diseases/uncommon_cold.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
 CorsixTH/Lua/hospital.lua -text

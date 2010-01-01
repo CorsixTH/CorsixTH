@@ -683,3 +683,26 @@ function World:selectNearestStaffForRoom(room, attribute, count)
   end
 end
 
+-- Get the nearest room which is in need of the given staff member.
+-- That is, the room is currently empty and there is at least
+-- one patient in the queue.
+function World:getNearestRoomNeedingStaff(humanoid)
+  local candidates = {}
+  for _, room in ipairs(self.rooms) do
+    if room.door.queue:reportedSize() >= 1 and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+      local door_x, door_y = room:getEntranceXY()
+      candidates[#candidates + 1] = {
+        room = room,
+        distance = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, door_x, door_y)
+      }
+    end
+  end
+
+  if #candidates == 0 then
+    return nil
+  end
+
+  table.sort(candidates, function (c1, c2) return c1.distance < c2.distance end)
+  return candidates[1].room
+end
+

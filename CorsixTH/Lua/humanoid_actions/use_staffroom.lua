@@ -106,8 +106,13 @@ local function use_staffroom_action_start(action, humanoid)
         if humanoid.fatigue == 0 then
           humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
           local room = humanoid.last_room
+          local new_room = humanoid.world:getNearestRoomNeedingStaff(humanoid)
+          -- Send back to the last room if that room is still empty.
           if room and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
             humanoid:queueAction(room:createEnterAction())
+          -- Send to the nearest empty room needing staff if there exists one.
+          elseif new_room then
+            humanoid:queueAction(new_room:createEnterAction())
           else
             humanoid:queueAction{name = "meander"}
           end
