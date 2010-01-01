@@ -214,7 +214,7 @@ function Patient:tickDay()
         if current.on_interrupt then
           current.on_interrupt(current, self, true)
         else
-          humanoid:finishAction()
+          self:finishAction()
         end
       end
     end
