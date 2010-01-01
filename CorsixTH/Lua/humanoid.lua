@@ -136,8 +136,9 @@ function Humanoid:Humanoid(...)
   self.action_queue = {
   }
   self.last_move_direction = "east"
-  self.warmth = 0.6
-  self.happiness = 1
+  self.attributes = {}
+  self.attributes["warmth"] = 0.6
+  self.attributes["happiness"] = 1
   self.active_moods = {}
 end
 
@@ -344,36 +345,22 @@ function Humanoid:handleRemovedObject(object)
   end
 end
 
--- Function stub to alter a patient's thirst level
-function Humanoid:changeThirst(amount)
-end
-
--- Function to increase and decrease happiness of the humanoid
-function Humanoid:changeHappiness(amount)
-  if self.happiness then
-    self.happiness = self.happiness + amount
-    if self.happiness > 1 then
-      self.happiness = 1
-    elseif self.happiness < 0 then
-      self.happiness = 0
-    end
-  end
-end
-
--- Function to increase and decrease warmth of the humanoid
-function Humanoid:changeWarmth(amount)
-  if self.warmth then
-    self.warmth = self.warmth + amount
-    if self.warmth > 1 then
-      self.warmth = 1
-    elseif self.warmth < 0 then
-      self.warmth = 0
+-- Function to alter one of a humanoids's different attributes.
+-- Currently available attributes are happiness, thirst, toilet_need and warmth.
+function Humanoid:changeAttribute(attribute, amount)
+  assert(amount <= 1 and amount >= -1, "Amount must me between -1 and 1")
+  if self.attributes[attribute] then
+    self.attributes[attribute] = self.attributes[attribute] + amount
+    if self.attributes[attribute] > 1 then
+      self.attributes[attribute] = 1
+    elseif self.attributes[attribute] < 0 then
+      self.attributes[attribute] = 0
     end
   end
 end
 
 -- Check if it is cold or hot around the humanoid and increase/decrease the
--- feeling of warmth accordingly. 
+-- feeling of warmth accordingly. Returns whether the calling function should proceed.
 function Humanoid:tickDay()
 -- No use doing anything if we're going home or are outside the hospital
   self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
@@ -386,32 +373,34 @@ function Humanoid:tickDay()
   local radiator, lx, ly = self.world:findObjectNear(self, "radiator", 5)
   if radiator then
     local radiator_distance = ((lx - self.tile_x)^2 + (ly - self.tile_y)^2)^0.5
-    local change = math.floor(6 - radiator_distance)*0.002*(0.8 - self.warmth)
-    self:changeWarmth(math.abs(change))
+    local change = math.floor(6 - radiator_distance)*0.002*(0.8 - self.attributes["warmth"])
+    self:changeAttribute("warmth", math.abs(change))
   else
-    self:changeWarmth(-0.01)
+    self:changeAttribute("warmth", -0.01)
   end
   
   -- If it is too hot or too cold, start to decrease happiness and 
   -- show the corresponding icon. Otherwise we could get happier instead.
-  if self.warmth < 0.1 then
-    self:changeHappiness(-0.02)
-    self:setMood("cold", true)
-  elseif self.warmth > 0.9 then
-    self:changeHappiness(-0.02)
-    self:setMood("hot", true)
-  else
-    self:changeHappiness(0.005)
-    self:setMood("cold", nil)
-    self:setMood("hot", nil)
+  if self.attributes["warmth"] then
+    if self.attributes["warmth"] < 0.1 then
+      self:changeAttribute("happiness", -0.02)
+      self:setMood("cold", true)
+    elseif self.attributes["warmth"] > 0.9 then
+      self:changeAttribute("happiness", -0.02)
+      self:setMood("hot", true)
+    else
+      self:changeAttribute("happiness", 0.005)
+      self:setMood("cold", nil)
+      self:setMood("hot", nil)
+    end
   end
   return true
 end
 
--- Helper function that finds out if there is an action queued to drink
-function Humanoid:goingToDrink()
+-- Helper function that finds out if there is an action queued to use the specified object
+function Humanoid:goingToUseObject(object_type)
   for i, action in ipairs(self.action_queue) do
-    if action.object and action.object.object_type.id == "drinks_machine" then
+    if action.object and action.object.object_type.id == object_type then
       return true
     end
   end

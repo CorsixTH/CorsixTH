@@ -27,7 +27,7 @@ disease.cure = _S(44, 73)
 disease.cure_price = 1400 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
   patient:setType("Invisible Patient")
-  patient:setLayer(0, math.random(0, 1) * 2)
+  patient:setLayer(0, 2)
   patient:setLayer(1, 0)
   patient:setLayer(2, 0)
   patient:setLayer(3, 0)
@@ -35,7 +35,7 @@ disease.initPatient = function(patient)
   patient.cured_layers = {
     [0] = math.random(1, 5) * 2,
     [1] = math.random(0, 3) * 2,
-    [2] = patient.layers[0] == 2 and 4 or (math.random(0, 1) * 2), -- Preserve hat
+    [2] = 4,
   }
 end
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited

@@ -24,11 +24,11 @@ function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   
+  -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients can only come via helicopter, and therefore have no drink animation
   if self.humanoid_class ~= "Alien Patient" then
-    self.thirst = 0
-  else
-    self.thirst = nil
+    self.attributes["thirst"] = math.random(0, 0.2)
+    self.attributes["toilet_need"] = math.random(0, 0.1)
   end
 end
 
@@ -80,34 +80,53 @@ function Patient:goHome(cured)
   self:setHospital(nil)
 end
 
--- Calls to this function increases/decreases thirst. Thirst can 
--- be between 0 and 1, so amounts here should be appropriately small comma values.
-function Patient:changeThirst(amount)
-  if self.thirst then
-    self.thirst = self.thirst + amount
-    if self.thirst > 1 then
-      self.thirst = 1
-    elseif self.thirst < 0 then
-      self.thirst = 0
-    end
-  end
-end
-
--- If thirst gets over a certain level (now: 0.8),
--- try to find a drinks machine.
+-- This function handles changing of the different attributes of the patient.
+-- For example if thirst gets over a certain level (now: 0.8), the patient
+-- tries to find a drinks machine nearby.
 function Patient:tickDay()
   -- Start by calling the parent function - it checks
   -- if we're outside the hospital or on our way home.
   if not Humanoid.tickDay(self) then
     return
   end
-  self:changeThirst(self.warmth*0.05+0.002)
+  
+  -- Each tick both thirst, warmth and toilet_need changes.
+  self:changeAttribute("thirst", self.attributes["warmth"]*0.05+0.002)
+  self:changeAttribute("toilet_need", 0.001)
+  
+  -- Maybe it's time to visit the loo?
+  if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.7 then
+    if not self.going_to_toilet then
+      self:setMood("poo", true)
+      -- Check if any room exists.
+      if not self.world:findRoomNear(self, "toilets") then
+        self.going_to_toilet = true
+        local callback
+        callback = function(room)
+          if room.room_info.id == "toilets" then
+            self.going_to_toilet = false
+            self.world:unregisterRoomBuildCallback(callback)
+          end
+        end
+        self.world:registerRoomBuildCallback(callback)
+        -- Otherwise we can queue the action, but only if not in any rooms right now.
+      elseif not self:getRoom() then
+        self:setNextAction{
+          name = "seek_toilets",
+          must_happen = true,
+          }
+        self.going_to_toilet = true
+      end
+    end
+  end
+  
   -- If thirsty enough a soda would be nice
-  if self.thirst and self.thirst > 0.8 then
-    self:changeHappiness(-0.02)
+  if self.attributes["thirst"] and self.attributes["thirst"] > 0.8 then
+    self:changeAttribute("happiness", -0.02)
     self:setMood("thirsty", true)
-    -- If there's already an action to buy a drink in the action queue, do nothing
-    if self:goingToDrink() then
+    -- If there's already an action to buy a drink in the action queue, or
+    -- if we're going to the loo, do nothing
+    if self:goingToUseObject("drinks_machine") or self.going_to_toilet then
       return
     end
     -- Don't check for a drinks machine too often
@@ -130,7 +149,8 @@ function Patient:tickDay()
       
       -- Callback function when the machine has been used
       local function after_use()
-        self:changeThirst(-0.8)
+        self:changeAttribute("thirst", -0.8)
+        self:changeAttribute("toilet_need", 0.3)
         self:setMood("thirsty", nil)
         self.hospital:receiveMoney(15, _S(8, 14))
       end
@@ -191,7 +211,11 @@ function Patient:tickDay()
             room_type = current.room_type,
           }, 3)
         end
-        current.on_interrupt(current, self, true)
+        if current.on_interrupt then
+          current.on_interrupt(current, self, true)
+        else
+          humanoid:finishAction()
+        end
       end
     end
   end

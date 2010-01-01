@@ -28,6 +28,7 @@ local function action_seek_room_start(action, humanoid)
   local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "advanced")
   if room then
     humanoid:setNextAction(room:createEnterAction())
+    humanoid.next_room_to_visit = room.room_info.id
     room.door.queue:expect(humanoid)
     if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
       humanoid.world:callForStaff(room)
@@ -41,6 +42,7 @@ local function action_seek_room_start(action, humanoid)
       action.build_callback = function(room)
         if room.room_info.id == action.room_type then
           humanoid:setNextAction(room:createEnterAction())
+          humanoid.next_room_to_visit = room.room_info.id
         end
       end
       humanoid.world:registerRoomBuildCallback(action.build_callback)

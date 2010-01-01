@@ -120,8 +120,17 @@ local function action_use_phase(action, humanoid, phase)
     else
       tx, ty = object:getRenderAttachTile()
     end
+    local added_offset = nil
+    if offset.added_animation_offset_while_in_use then
+      added_offset = offset.added_animation_offset_while_in_use
+    end
     offset = offset.animation_offset
-    humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
+    if added_offset then
+      humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1], 
+        offset[2] + added_offset[2])
+    else
+      humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
+    end 
   else
     humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
   end

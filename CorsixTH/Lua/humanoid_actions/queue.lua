@@ -63,7 +63,7 @@ local function action_queue_leave_bench(action, humanoid)
     local current_action = humanoid.action_queue[index]
     assert(current_action ~= action)
     if current_action.name == "use_object" then
-      assert(humanoid.action_queue[index + 1] == action)
+      assert(humanoid.action_queue[index + 1] == action, "Wrong object: " .. current_action.object.object_type.id)
       interrupt_head(humanoid, index)
       break
     end
@@ -229,7 +229,8 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
   
   -- Callback function used after the drinks machine has been used.
   local function after_use()
-    humanoid:changeThirst(-0.8)
+    humanoid:changeAttribute("thirst", -0.8)
+    self:changeAttribute("toilet_need", 0.3)
     humanoid:setMood("thirsty", nil)
     humanoid.hospital:receiveMoney(15, _S(8, 14))
     

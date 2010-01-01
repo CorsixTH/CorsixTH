@@ -22,6 +22,14 @@ local function action_idle_interrupt(action, humanoid)
   humanoid:setTimer(1, humanoid.finishAction)
 end
 
+local function action_timer(humanoid)
+  local action = humanoid.action_queue[1]
+  if action.after_use then
+    action.after_use()
+  end
+  humanoid:finishAction()
+end
+
 local function action_idle_start(action, humanoid)
   local direction = action.direction or humanoid.last_move_direction
   local anims = humanoid.walk_anims
@@ -37,7 +45,7 @@ local function action_idle_start(action, humanoid)
   humanoid.th:setTile(humanoid.th:getTile())
   humanoid:setSpeed(0, 0)
   if action.count then
-    humanoid:setTimer(action.count, humanoid.finishAction)
+    humanoid:setTimer(action.count, action_timer)
     action.must_happen = true
   end
   if action.must_happen then

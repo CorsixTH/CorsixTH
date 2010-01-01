@@ -106,8 +106,8 @@ function UIStaff:draw(canvas)
       font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
   
-  if self.staff.happiness then
-    local happiness_bar_width = math_floor(self.staff.happiness * 40 + 0.5)
+  if self.staff.attributes["happiness"] then
+    local happiness_bar_width = math_floor(self.staff.attributes["happiness"] * 40 + 0.5)
     if happiness_bar_width ~= 0 then
       for dx = 0, happiness_bar_width - 1 do
         self.panel_sprites:draw(canvas, 348, x + 139 + dx, y + 56)

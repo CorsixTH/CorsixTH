@@ -228,6 +228,7 @@ end
 
 function World:markRoomAsBuilt(room)
   room.built = true
+  room:roomFinished()
   for callback in pairs(self.room_build_callbacks) do
     callback(room)
   end

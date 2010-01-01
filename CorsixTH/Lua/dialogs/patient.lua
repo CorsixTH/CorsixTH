@@ -93,8 +93,8 @@ function UIPatient:draw(canvas)
   -- The patients happiness. Each bar is by default half way if the actual value 
   -- cannot be found.
   local happiness_bar_width = 22
-  if patient.happiness then
-    happiness_bar_width = math_floor(patient.happiness * 40 + 0.5)
+  if patient.attributes["happiness"] then
+    happiness_bar_width = math_floor(patient.attributes["happiness"] * 40 + 0.5)
   end
   if happiness_bar_width ~= 0 then
     for dx = 0, happiness_bar_width - 1 do
@@ -103,8 +103,8 @@ function UIPatient:draw(canvas)
   end
   -- The patients thirst level
   local thirst_bar_width = 22
-  if patient.thirst then
-    thirst_bar_width = math_floor((1 - patient.thirst) * 40 + 0.5)
+  if patient.attributes["thirst"] then
+    thirst_bar_width = math_floor((1 - patient.attributes["thirst"]) * 40 + 0.5)
   end
   if thirst_bar_width ~= 0 then
     for dx = 0, thirst_bar_width - 1 do
@@ -113,8 +113,8 @@ function UIPatient:draw(canvas)
   end
   -- How warm the patient feels
   local warmth_bar_width = 22
-  if patient.warmth then
-    warmth_bar_width = math_floor(patient.warmth * 40 + 0.5)
+  if patient.attributes["warmth"] then
+    warmth_bar_width = math_floor(patient.attributes["warmth"] * 40 + 0.5)
   end
   if warmth_bar_width ~= 0 then
     for dx = 0, warmth_bar_width - 1 do

@@ -306,3 +306,8 @@ function Room:canHumanoidEnter(humanoid)
   -- By default, other classes of humanoids cannot enter
   return false
 end
+
+-- Function stub for rooms to implement. Called when the final confirm
+-- button has been pressed when building/editing a room.
+function Room:roomFinished()
+end

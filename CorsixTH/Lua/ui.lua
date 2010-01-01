@@ -187,7 +187,7 @@ function UI:debugMakePatients()
     entity:setLayer(2, math.random(0, 2) * 2)
     entity:setLayer(3, math.random(0, 5) * 2)
     entity:setLayer(4, math.random(0, 5) * 2)
-    --entity:setMood(moods[math.random(1, 31)]) -- Will not work anymore!
+    entity:setMood("cured", true)
     patients[#patients + 1] = entity
   end
 end

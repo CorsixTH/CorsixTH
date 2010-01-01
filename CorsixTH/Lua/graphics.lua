@@ -303,6 +303,9 @@ end
   The third variant does linear interpolation between keyframes, and then the
   final position for frames after the last keyframe. The keyframe arguments
   should be 0-based integers, as in the animation viewer.
+  
+  In turn the function setMultipleMarkers expects a list of anim_numbers 
+  and sets the same marker for each anim_number.
 --]]
 
 function AnimationManager:setMarker(anim, ...)
@@ -311,6 +314,12 @@ end
 
 function AnimationManager:setSecondaryMarker(anim, ...)
   return self:setMarkerRaw(anim, "setFrameSecondaryMarker", ...)
+end
+
+function AnimationManager:setMultipleMarkers(anim, ...)
+  for i, number in ipairs(anim) do
+    self:setMarker(anim[i], ...)
+  end
 end
 
 local function TableToPixels(t)

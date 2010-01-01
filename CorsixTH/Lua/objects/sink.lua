@@ -25,16 +25,48 @@ object.name = _S(2, 33)
 object.ticks = false
 object.build_cost = 30
 object.build_preview_animation = 5082
-object.idle_animations = {
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
   north = 1748,
-  south = 1748,
 }
+object.usage_animations = copy_north_to_south {
+  north = {
+    begin_use = {
+      ["Standard Male Patient"] = 1776,
+      ["Standard Female Patient"] = 3160,
+    },
+    in_use = {
+      ["Standard Male Patient"] = 1780,
+      ["Standard Female Patient"] = 3164,
+    },
+    finish_use = {
+      ["Standard Male Patient"] = 1784,
+      ["Standard Female Patient"] = 3168,
+    },
+  },
+}
+local anim_mgr = TheApp.animation_manager
+local kf1, kf2 = {0, 0}, {0, -0.7}
+anim_mgr:setMultipleMarkers({1776, 3160},   0, kf1, 4, kf2)
+kf1 = {0, -0.7}
+anim_mgr:setMultipleMarkers({1780, 3164}, kf1)
+kf1, kf2 = {0, -0.7}, {0, 0}
+anim_mgr:setMultipleMarkers({1784, 3168}, 0, kf1, 34, kf1, 39, kf2)
+  
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, 1, only_passable = false} }
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = false} }
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true,
+    early_list_while_in_use = true,
   },
 }
 
