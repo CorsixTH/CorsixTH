@@ -230,7 +230,7 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
   -- Callback function used after the drinks machine has been used.
   local function after_use()
     humanoid:changeAttribute("thirst", -0.8)
-    self:changeAttribute("toilet_need", 0.3)
+    humanoid:changeAttribute("toilet_need", 0.3)
     humanoid:setMood("thirsty", nil)
     humanoid.hospital:receiveMoney(15, _S(8, 14))
     
