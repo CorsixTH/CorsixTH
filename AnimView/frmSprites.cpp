@@ -24,10 +24,15 @@ SOFTWARE.
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/msgdlg.h>
+#include <wx/dirdlg.h>
+#include <wx/filedlg.h>
 #include <wx/dcclient.h>
 
 BEGIN_EVENT_TABLE(frmSprites, wxFrame)
   EVT_BUTTON(ID_LOAD, frmSprites::_onLoad)
+  EVT_BUTTON(ID_BROWSE_TABLE, frmSprites::_onBrowseTable)
+  EVT_BUTTON(ID_BROWSE_DATA, frmSprites::_onBrowseData)
+  EVT_BUTTON(ID_BROWSE_PALETTE, frmSprites::_onBrowsePalette)
   EVT_BUTTON(ID_LOAD_COMPLEX, frmSprites::_onLoadComplex)
   EVT_BUTTON(ID_NEXT, frmSprites::_onNext)
 END_EVENT_TABLE()
@@ -42,13 +47,13 @@ frmSprites::frmSprites()
     pFilesGrid->AddGrowableCol(1, 1);
     pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Table:"), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(m_txtTable = new wxTextCtrl(this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\QData\\Font00V.tab"), 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-    pFilesGrid->Add(new wxButton(this, wxID_ANY, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
+    pFilesGrid->Add(new wxButton(this, ID_BROWSE_TABLE, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
     pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Data:"), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(m_txtData = new wxTextCtrl(this, wxID_ANY, L""), 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-    pFilesGrid->Add(new wxButton(this, wxID_ANY, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
+    pFilesGrid->Add(new wxButton(this, ID_BROWSE_DATA, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
     pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Palette:"), 0, wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(m_txtPalette = new wxTextCtrl(this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\Data\\MPalette.dat"), 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
-    pFilesGrid->Add(new wxButton(this, wxID_ANY, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
+    pFilesGrid->Add(new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL);
     pFiles->Add(pFilesGrid, 0, wxEXPAND | wxALL, 1);
     wxButton *pTmp;
     pFiles->Add(pTmp = new wxButton(this, ID_LOAD, L"Load Simple"), 0, wxALIGN_CENTER | wxALL, 1);
@@ -171,4 +176,21 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt)
         iTallest = wxMax(iTallest, iHeight);
         iX += iWidth + 2;
     }
+}
+
+void frmSprites::_onBrowseTable(wxCommandEvent& WXUNUSED(evt))
+{
+    m_txtTable->SetValue(::wxFileSelector(L"Select location of Font00V.tab (DATA)",
+        m_txtTable->GetValue(),L"Font00V.tab",L"tab",L"Tab files (*.tab)|*.tab"
+		,0, this));
+}
+void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt))
+{
+    m_txtData->SetValue(::wxFileSelector(L"Choose Theme Hospital data file",
+        m_txtData->GetValue(),L"",L"dat",L"Dat files (*.dat)|*.dat", 0, this));
+}
+void frmSprites::_onBrowsePalette(wxCommandEvent& WXUNUSED(evt))
+{
+    m_txtPalette->SetValue(::wxFileSelector(L"Select location of MPalette.dat (QDATA)",
+        m_txtPalette->GetValue(),L"MPalette.dat",L"dat",L"Dat files (*.dat)|*.dat", 0, this));
 }

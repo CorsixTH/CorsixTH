@@ -29,6 +29,7 @@ SOFTWARE.
 #include <wx/panel.h>
 #include <wx/timer.h>
 #include <wx/listbox.h>
+#include <wx/dcclient.h>
 #include "th.h"
 
 class frmMain : public wxFrame
@@ -59,6 +60,7 @@ public:
         ID_LOAD,
         ID_BROWSE,
         ID_DRAW_MOOD,
+        ID_DRAW_COORDINATES,
         ID_LAYER_CHECKS, // Must be last ID
     };
 
@@ -75,6 +77,7 @@ protected:
     void _onPlayPause(wxCommandEvent& evt);
     void _onToggleMask(wxCommandEvent& evt);
     void _onToggleDrawMood(wxCommandEvent& evt);
+    void _onToggleDrawCoordinates(wxCommandEvent& evt);
     void _onSearchLayerId(wxCommandEvent& evt);
     void _onSearchFrame(wxCommandEvent& evt);
     void _onSearchSoundIndex(wxCommandEvent& evt);
@@ -88,6 +91,8 @@ protected:
 
     void _onAnimChange(size_t iIndex);
 
+    void m_drawCoordinates(wxPaintDC& DC, int i, int j);
+
     THAnimations m_oAnims;
     THLayerMask m_mskLayers;
     wxImage m_imgBackground;
@@ -100,6 +105,7 @@ protected:
     int m_iMoodDrawY;
     bool m_bPlayingAnimation;
     bool m_bDrawMood;
+    bool m_bDrawCoordinates;
 
     wxButton* m_btnPlayPause;
     wxTextCtrl* m_txtTHPath;

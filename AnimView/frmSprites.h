@@ -41,6 +41,9 @@ public:
     enum
     {
         ID_LOAD = wxID_HIGHEST + 1,
+		ID_BROWSE_TABLE,
+		ID_BROWSE_DATA,
+		ID_BROWSE_PALETTE,
         ID_LOAD_COMPLEX,
         ID_NEXT,
     };
@@ -57,6 +60,9 @@ protected:
     void _onLoad(wxCommandEvent& evt);
     void _onLoadComplex(wxCommandEvent& evt);
     void _onPanelPaint(wxPaintEvent& evt);
+	void _onBrowseData(wxCommandEvent& evt);
+	void _onBrowsePalette(wxCommandEvent& evt);
+	void _onBrowseTable(wxCommandEvent& evt);
 
     std::vector<_sprite_t> m_vSprites;
     THAnimations m_oAnims;

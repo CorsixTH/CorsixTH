@@ -54,6 +54,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_TEXT(ID_ANIM_INDEX, frmMain::_onAnimChar)
   EVT_TIMER(ID_TIMER_ANIMATE, frmMain::_onTimer)
   EVT_CHECKBOX(ID_DRAW_MOOD, frmMain::_onToggleDrawMood)
+  EVT_CHECKBOX(ID_DRAW_COORDINATES, frmMain::_onToggleDrawCoordinates)
 END_EVENT_TABLE()
 
 frmMain::frmMain()
@@ -185,7 +186,9 @@ frmMain::frmMain()
     pMoodRow->Add(m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"), 1, wxEXPAND | wxALIGN_CENTER_VERTICAL);
     pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
     pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
+    pSidebarSizer->Add(new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"), 0, wxEXPAND | wxALL, 0);
     m_bDrawMood = false;
+    m_bDrawCoordinates = false;
     m_iMoodDrawX = 0;
     m_iMoodDrawY = 0;
 
@@ -501,6 +504,12 @@ void frmMain::_onToggleDrawMood(wxCommandEvent& evt)
     m_panFrame->Refresh(false);
 }
 
+void frmMain::_onToggleDrawCoordinates(wxCommandEvent& evt)
+{
+    m_bDrawCoordinates = evt.IsChecked();
+    m_panFrame->Refresh(false);
+}
+
 void frmMain::_onPanelPaint(wxPaintEvent& evt)
 {
     wxPaintDC DC(m_panFrame);
@@ -527,6 +536,15 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     wxBitmap bmpCanvas(imgCanvas);
 
     DC.DrawBitmap(bmpCanvas, 1, 1);
+
+    // Draw relative tile coordinates
+    if (m_bDrawCoordinates) {
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+                m_drawCoordinates(DC, i, j);
+            }
+        }
+    }
 }
 
 void frmMain::_onPanelClick(wxMouseEvent& evt)
@@ -622,3 +640,13 @@ void frmMain::_onGotoSearchResult(wxCommandEvent& evt)
     evt.GetString().ToLong(&iAnim);
     _onAnimChange(iAnim);
 }
+
+void frmMain::m_drawCoordinates(wxPaintDC& DC, int i, int j)
+{
+    int x = 122; //! tile (0, 0) text start x-coordinate
+    int y = 226; //! tile (0, 0) text start y-coordinate
+    wxString s;
+    s.Printf(_T("(%2d,%2d)"), i, j);
+    DC.DrawText(s, 32 * (i - j) + x, 16 * (i + j - 2) + y);
+}
+
