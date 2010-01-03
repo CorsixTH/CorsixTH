@@ -22,9 +22,9 @@ SOFTWARE. --]]
 local disease = {}
 disease.name = _S(4, 17)
 disease.id = "uncommon_cold"
-disease.cause = _S(44, 110)
-disease.symptoms = _S(44, 111)
-disease.cure = _S(44, 112)
+disease.cause = _S(44, 104)
+disease.symptoms = _S(44, 105)
+disease.cure = _S(44, 106)
 disease.cure_price = 300 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
