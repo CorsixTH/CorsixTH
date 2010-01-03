@@ -27,8 +27,8 @@ function Patient:Patient(...)
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients can only come via helicopter, and therefore have no drink animation
   if self.humanoid_class ~= "Alien Patient" then
-    self.attributes["thirst"] = math.random(0, 0.2)
-    self.attributes["toilet_need"] = math.random(0, 0.1)
+    self.attributes["thirst"] = math.random()*0.2
+    self.attributes["toilet_need"] = math.random()*0.2
   end
 end
 

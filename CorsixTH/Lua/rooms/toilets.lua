@@ -79,7 +79,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
         use_time = use_time - 1
         if use_time <= 0 then
           humanoid:setMood("poo", nil)
-          humanoid:changeAttribute("toilet_need", -math.random(0.85, 1))
+          humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
           humanoid.going_to_toilet = nil
         -- There are only animations for standard patients to use the sinks.
           if humanoid.humanoid_class == "Standard Female Patient" or
