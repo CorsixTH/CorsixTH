@@ -52,6 +52,11 @@ local key_codes = invert {
   F10 = 291,
   F11 = 292,
   F12 = 293,
+  _1 = 49,
+  _2 = 50,
+  _3 = 51,
+  _4 = 52,
+  _5 = 53,
   S = 115,
   Enter = 13,
   shift = {303, 304},
@@ -292,6 +297,16 @@ function UI:onKeyDown(code)
     self:debugMakeAdviserTalk()
   elseif key == "F12" then -- Show watch
     self:addWindow(UIWatch(self))
+  elseif key == "_1" then -- Set game speed to Slowest
+    self.app.world:setTickRate("Slowest")
+  elseif key == "_2" then -- Set game speed to Slower
+    self.app.world:setTickRate("Slower")
+  elseif key == "_3" then -- Set game speed to Normal
+    self.app.world:setTickRate("Normal")
+  elseif key == "_4" then -- Set game speed to Max speed
+    self.app.world:setTickRate("Max speed")
+  elseif key == "_5" then -- Set game speed to And then some more
+    self.app.world:setTickRate("And then some more")
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
     local modes = self.app.modes
     

@@ -153,6 +153,11 @@ function UIMenuBar:drawMenu(menu, canvas)
   x = menu.x
   y = menu.y + 4
   for i, item in ipairs(menu.items) do
+    -- Update the checkbox status if necessary before drawing
+    if item.is_check_item and item.condition then
+      item.checked = item.condition()
+    end
+
     local font = self.white_font
     if i == menu.hover_index then
       font = self.blue_font
@@ -385,13 +390,14 @@ function UIMenu:appendItem(text, callback)
   }
 end
 
-function UIMenu:appendCheckItem(text, checked, callback, group)
+function UIMenu:appendCheckItem(text, checked, callback, group, condition)
   return self:appendBase {
     is_check_item = true,
     title = text,
     checked = not not checked,
     handler = callback,
     group = group,
+    condition = condition
   }
 end
 
@@ -451,17 +457,21 @@ function UIMenuBar:makeMenu(app)
     )
     :appendItem(_S(3, -1), function() self.ui:addWindow(UIJukebox(app)) end) -- Jukebox
   end
-  local function rate(num, denom)
-    return num == 1 and denom == 3, function()
-      app.world:setTickRate(num, denom)
-    end, ""
+
+  local function rate(speed)
+    return speed == "Normal", function()
+      app.world:setTickRate(speed)
+    end, "", function()
+      return app.world:isCurrentTickRate(speed)
+    end
   end
+
   options:appendMenu(_S(3, 8), UIMenu() -- Game speed
-    :appendCheckItem(_S(12, 1), rate(1, 9)) -- Slowest
-    :appendCheckItem(_S(12, 2), rate(1, 5)) -- Slower
-    :appendCheckItem(_S(12, 3), rate(1, 3)) -- Normal (default)
-    :appendCheckItem(_S(12, 4), rate(1, 1)) -- Max speed
-    :appendCheckItem(_S(12, 5), rate(3, 1)) -- And then some more
+    :appendCheckItem(_S(12, 1), rate("Slowest"))
+    :appendCheckItem(_S(12, 2), rate("Slower"))
+    :appendCheckItem(_S(12, 3), rate("Normal")) -- (default)
+    :appendCheckItem(_S(12, 4), rate("Max speed"))
+    :appendCheckItem(_S(12, 5), rate("And then some more"))
   )
   self:addMenu(_S(1, 2), options) -- Options
   self:addMenu(_S(1, 4), UIMenu() -- Charts

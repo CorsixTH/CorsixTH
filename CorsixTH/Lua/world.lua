@@ -269,7 +269,21 @@ function World:getDate()
   return self.month, self.day
 end
 
-function World:setTickRate(numerator, denominator)
+local tick_rates = {
+  ["Slowest"]            = {1, 9},
+  ["Slower"]             = {1, 5},
+  ["Normal"]             = {1, 3},
+  ["Max speed"]          = {1, 1},
+  ["And then some more"] = {3, 1},
+}
+
+function World:isCurrentTickRate(speed)
+  local numerator, denominator = unpack(tick_rates[speed])
+  return self.ticks_per_tick == numerator and self.tick_rate == denominator
+end
+
+function World:setTickRate(speed)
+  local numerator, denominator = unpack(tick_rates[speed])
   self.ticks_per_tick = numerator
   self.tick_rate = denominator
 end
