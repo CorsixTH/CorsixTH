@@ -115,12 +115,13 @@ function UIStaff:draw(canvas)
     end
   end
   
+  local fatigue_bar_width = 40.5
   if self.staff.fatigue then
-    local fatigue_bar_width = math_floor((1 - self.staff.fatigue) * 40 + 0.5)
-    if fatigue_bar_width ~= 0 then
-      for dx = 0, fatigue_bar_width - 1 do
-        self.panel_sprites:draw(canvas, 349, x + 139 + dx, y + 89)
-      end
+    fatigue_bar_width = math_floor((1 - self.staff.fatigue) * 40 + 0.5)
+  end
+  if fatigue_bar_width ~= 0 then
+    for dx = 0, fatigue_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 349, x + 139 + dx, y + 89)
     end
   end
   

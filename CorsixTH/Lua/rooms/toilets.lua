@@ -37,6 +37,7 @@ class "ToiletRoom" (Room)
 
 function ToiletRoom:ToiletRoom(...)
   self:Room(...)
+  self.door.queue:setBenchThreshold(3)
 end
 
 function ToiletRoom:roomFinished()
@@ -55,7 +56,7 @@ function ToiletRoom:dealtWithPatient(patient)
 -- Continue to the previous room
   patient:setNextAction(self:createLeaveAction())
   if patient.next_room_to_visit then
-    patient:queueAction{name = "seek_room", room_type = patient.next_room_to_visit}
+    patient:queueAction{name = "seek_room", room_type = patient.next_room_to_visit.room_info.id}
   else
     patient:queueAction{name = "seek_reception"}
   end

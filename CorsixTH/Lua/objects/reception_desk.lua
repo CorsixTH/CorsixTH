@@ -86,6 +86,7 @@ function ReceptionDesk:tick()
         reset_timer = true
         queue_front:queueAction{name = "seek_room", room_type = "gp"}
         self.queue:pop()
+        self.queue.visitor_count = self.queue.visitor_count + 1
       end
     end
   end

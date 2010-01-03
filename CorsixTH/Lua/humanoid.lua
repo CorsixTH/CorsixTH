@@ -86,6 +86,7 @@ anims("Grim Reaper",                994,  996, 1002, 1004)
 --  | Name                          |FallE|RiseE|WingsE|HandsE|FlyE| Notes
 ----+-------------------------------+-----+-----+-----+-----+------+
 die_anims("Standard Male Patient",    1682, 2434, 2438, 2446,  2450) -- Always facing east or south
+die_anims("Alternate Male Patient",   1682, 2434, 2438, 2446,  2450)
 die_anims("Standard Female Patient",  3116, 3208, 3212, 3216,  3220)
 
 --   | Available Moods |

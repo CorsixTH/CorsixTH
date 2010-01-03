@@ -224,7 +224,12 @@ function UIEditRoom:onTick()
       local y1 = rect.y
       local y2 = rect.y + rect.h - 1
       for humanoid in pairs(self.humanoids_to_watch) do
-        if x1 > humanoid.tile_x or humanoid.tile_x > x2 or y1 > humanoid.tile_y or humanoid.tile_y > y2 then
+        -- The person might be dying
+        if humanoid.action_queue[1].name == "die" then
+          if not humanoid.hospital then
+            self.humanoids_to_watch[humanoid] = nil
+          end
+        elseif x1 > humanoid.tile_x or humanoid.tile_x > x2 or y1 > humanoid.tile_y or humanoid.tile_y > y2 then
           self.humanoids_to_watch[humanoid] = nil
         end
       end

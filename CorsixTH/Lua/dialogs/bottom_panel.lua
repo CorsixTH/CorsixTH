@@ -79,7 +79,18 @@ function UIBottomPanel:draw(canvas)
     if self.factory_counter == 22 then
       self.panel_sprites:draw(canvas, 42, x + 201, y + 1)
     end
+
+    self:drawReputationMeter(canvas, x + 55, y + 35)
   end
+end
+
+-- Draws the hospital reputation meter on canvas.
+-- x_left is the leftmost x-coordinate of the reputation meter
+-- y is the y-coordinate of the reputation meter
+function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
+  local width = 65 -- Reputation meter width
+  local step = width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min)
+  self.panel_sprites:draw(canvas, 36, x_left + step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min), y)
 end
 
 function UIBottomPanel:hitTest(x, y)

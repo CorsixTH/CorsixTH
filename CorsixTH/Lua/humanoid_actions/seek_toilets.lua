@@ -35,6 +35,10 @@ local function seek_toilets_action_start(action, humanoid)
     local task = room:createEnterAction()
     task.must_happen = true
     humanoid:setNextAction(task)
+    -- Unexpect the patient from a possible destination room.
+    if humanoid.next_room_to_visit then
+      humanoid.next_room_to_visit.door.queue:unexpect(humanoid)
+    end
     humanoid:finishAction()
   else
     -- This should happen only in rare cases, e.g. if the target toilet room was removed while heading there and none other exists

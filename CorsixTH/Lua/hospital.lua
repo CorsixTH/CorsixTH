@@ -25,6 +25,8 @@ function Hospital:Hospital(world)
   -- TODO: Variate initial balance and reputation based on level
   self.balance = 40000
   self.reputation = 500
+  self.reputation_min = 0
+  self.reputation_max = 1000
   self.num_deaths = 0
   self.is_in_world = true
   self.transactions = {}
@@ -154,6 +156,18 @@ end
 
 function Hospital:removePatient(patient)
   RemoveByValue(self.patients, patient)
+end
+
+function Hospital:reputationChange(reason)
+  assert(reason, "No reason supplied for the reputation change")
+  -- TODO: This should depend on difficulty and level
+  if reason == "death" then
+    self.reputation = self.reputation - 4
+  elseif reason == "cured" then
+    self.reputation = self.reputation + 1
+  elseif reason == "kicked" then
+    self.reputation = self.reputation - 3
+  end
 end
 
 function Hospital:setCrazyDoctors(crazy)

@@ -38,6 +38,7 @@ function Staff:fire()
   self:playSound "sack.wav"
   self:setMood("exit", true)
   self.fired = true
+  self.hospital:reputationChange("kicked")
   self:setHospital(nil)
   self.hover_cursor = nil
   self.fatigue = nil

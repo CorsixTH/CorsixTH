@@ -125,6 +125,7 @@ function Room:dealtWithPatient(patient)
         patient.going_home = true
         patient:queueAction{name = "meander", count = 1}
         patient:queueAction{name = "die"}
+        self.hospital:reputationChange("death")
       else 
         patient:goHome(true)
       end

@@ -72,8 +72,10 @@ function Patient:goHome(cured)
   if cured then
     self:setMood("cured", true)
     self:playSound "cheer.wav"
+    self.hospital:reputationChange("cured")
   else
     self:setMood("exit", true)
+    self.hospital:reputationChange("kicked")
   end
   
   self.going_home = true
@@ -141,9 +143,10 @@ function Patient:tickDay()
           findObjectNear(self, "drinks_machine", 8)
 
       -- If no machine can be found, resume previous action and wait a 
-      -- while before trying again. TODO: (Is waiting needed?)
-      if not machine or not lx or not ly then
-        self.timeout = 3
+      -- while before trying again. To get a little randomness into the picture
+      -- it's not certain we go for it right now.
+      if not machine or not lx or not ly or math.random(1,10) < 3 then
+        self.timeout = math.random(2,4)
         return
       end
       
