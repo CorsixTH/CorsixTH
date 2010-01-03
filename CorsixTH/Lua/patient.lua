@@ -23,6 +23,7 @@ class "Patient" (Humanoid)
 function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
+  self.should_knock_on_doors = true
   
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients can only come via helicopter, and therefore have no drink animation

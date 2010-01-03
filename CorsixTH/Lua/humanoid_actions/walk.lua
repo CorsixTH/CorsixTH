@@ -201,7 +201,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     humanoid:setTilePositionSpeed(x1, y1)
     local action_index = 0
     if is_entering_room and queue:size() == 0 and not room:getPatient()
-    and not door.user and not door.reserved_for and class.is(humanoid, Patient) 
+    and not door.user and not door.reserved_for and humanoid.should_knock_on_doors 
     and room.required_staff then
       humanoid:queueAction({
         name = "knock_door",
@@ -224,7 +224,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   if action.reserve_on_resume then
     assert(action.reserve_on_resume == door)
     action.reserve_on_resume = nil
-  elseif is_entering_room and not action.done_knock and class.is(humanoid, Patient) 
+  elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors  
   and room.required_staff then
     humanoid:setTilePositionSpeed(x1, y1)
     humanoid:queueAction({

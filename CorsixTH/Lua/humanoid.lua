@@ -134,13 +134,13 @@ end
 
 function Humanoid:Humanoid(...)
   self:Entity(...)
-  self.action_queue = {
-  }
+  self.action_queue = {}
   self.last_move_direction = "east"
   self.attributes = {}
   self.attributes["warmth"] = 0.6
   self.attributes["happiness"] = 1
   self.active_moods = {}
+  self.should_knock_on_doors = false
 end
 
 function Humanoid:onClick(ui, button)

@@ -48,6 +48,7 @@ CorsixTH/Lua/dialogs/place_staff.lua -text
 CorsixTH/Lua/dialogs/queue_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_dialog.lua -text
 CorsixTH/Lua/dialogs/watch.lua -text
+CorsixTH/Lua/diseases/baldness.lua -text
 CorsixTH/Lua/diseases/broken_wind.lua -text
 CorsixTH/Lua/diseases/chronic_nosehair.lua -text
 CorsixTH/Lua/diseases/corrugated_ankles.lua -text
@@ -88,6 +89,7 @@ CorsixTH/Lua/objects/electrolyser.lua -text
 CorsixTH/Lua/objects/entrance_left_door.lua -text
 CorsixTH/Lua/objects/entrance_right_door.lua -text
 CorsixTH/Lua/objects/fire_extinguisher.lua -text
+CorsixTH/Lua/objects/hair_restorer.lua -text
 CorsixTH/Lua/objects/inflator.lua -text
 CorsixTH/Lua/objects/loo.lua -text
 CorsixTH/Lua/objects/pharmacy_cabinet.lua -text
@@ -104,6 +106,7 @@ CorsixTH/Lua/objects/video_game.lua -text
 CorsixTH/Lua/queue.lua -text
 CorsixTH/Lua/rooms/electrolysis.lua -text
 CorsixTH/Lua/rooms/fracture_clinic.lua -text
+CorsixTH/Lua/rooms/hair_restoration.lua -text
 CorsixTH/Lua/rooms/inflation.lua -text
 CorsixTH/Lua/rooms/pharmacy.lua -text
 CorsixTH/Lua/rooms/slack_tongue.lua -text
