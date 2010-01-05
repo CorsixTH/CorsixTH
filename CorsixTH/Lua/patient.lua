@@ -24,6 +24,7 @@ function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   self.should_knock_on_doors = true
+  self.treatment_history = {}
   
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients can only come via helicopter, and therefore have no drink animation
@@ -74,6 +75,7 @@ function Patient:goHome(cured)
     self:setMood("cured", true)
     self:playSound "cheer.wav"
     self.hospital:reputationChange("cured")
+    self.treatment_history[#self.treatment_history + 1] = _S(59, 9) -- "Cured"
   else
     self:setMood("exit", true)
     self.hospital:reputationChange("kicked")
@@ -243,5 +245,19 @@ function Patient:notifyNewObject(id)
         end
       end
     end
+  end
+end
+
+function Patient:addToTreatmentHistory(room)
+  local should_add = true
+  -- Do not add facility rooms such as toilets to the treatment history.
+  for i, _ in pairs(room.categories) do
+    if i == "facilities" then
+      should_add = false
+      break
+    end
+  end
+  if should_add then
+    self.treatment_history[#self.treatment_history + 1] = room.name
   end
 end

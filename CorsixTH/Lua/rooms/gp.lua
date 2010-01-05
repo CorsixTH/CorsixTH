@@ -84,6 +84,8 @@ end
 function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
+  patient:addToTreatmentHistory(self.room_info)
+
   if patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
     

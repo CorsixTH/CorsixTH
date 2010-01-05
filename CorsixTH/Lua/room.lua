@@ -86,6 +86,8 @@ end
 function Room:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
+  patient:addToTreatmentHistory(self.room_info)
+
   if patient.disease and not patient.diagnosed then
     -- Patient not yet diagnosed, hence just been in a diagnosis room.
     -- Increment diagnosis_progress, and send patient back to GP.

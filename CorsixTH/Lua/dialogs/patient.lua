@@ -36,11 +36,19 @@ function UIPatient:UIPatient(ui, patient)
   self.x = app.config.width - self.width - 20
   self.y = 30
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
+  self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
   self.visible_diamond = ui.makeVisibleDiamond(75, 76)
   
   self:addPanel(320,  15,   0) -- Graph top
   self:addPanel(321,  15,  61) -- Graph bottom
+
+  self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
+  self.history_panel:makeButton(0, 0, 99, 88, nil, function()
+    self.history_panel.visible = not self.history_panel.visible
+  end) -- Treatment history toggle
+  self.history_panel.visible = false -- Hide the treatment history at start
+
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
   self:addPanel(323,   0, 201) -- View circle top
   self:addPanel(324,   0, 254) -- View circle bottom
@@ -125,6 +133,16 @@ function UIPatient:draw(canvas)
     for dx = 0, warmth_bar_width - 1 do
       self.panel_sprites:draw(canvas, 349, x + 58 + dx, y + 183)
     end
+  end
+
+  if self.history_panel.visible then
+    self:drawTreatmentHistory(canvas, x + 40, y + 25)
+  end
+end
+
+function UIPatient:drawTreatmentHistory(canvas, x, y)
+  for _, room in ipairs(self.patient.treatment_history) do
+    y = self.font:drawWrapped(canvas, room, x, y, 95)
   end
 end
 
