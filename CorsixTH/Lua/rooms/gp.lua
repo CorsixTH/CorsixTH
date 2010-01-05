@@ -117,7 +117,7 @@ function GPRoom:dealtWithPatient(patient)
         self.hospital.disease_casebook[patient.disease.id].discovered = true
       end
     else
-      self.staff_member:setMood("reflexion", true)
+      self.staff_member:setMood("reflexion", true) -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
       patient:queueAction{name = "seek_room", room_type = patient.available_diagnosis_rooms[next_room]}
       table.remove(patient.available_diagnosis_rooms, next_room)
@@ -129,8 +129,9 @@ function GPRoom:dealtWithPatient(patient)
 end
 
 function GPRoom:onHumanoidLeave(humanoid)
-  self.staff_member:setMood("idea3", nil) -- reset mood when the patient or the doctor leaves
-  self.staff_member:setMood("reflexion", nil) -- reset mood when the patient or the doctor
+  -- Reset moods when either the patient or the doctor leaves the room.
+  self.staff_member:setMood("idea3", nil)
+  self.staff_member:setMood("reflexion", nil)
   if self.staff_member == humanoid then
     self.staff_member = nil
   end
