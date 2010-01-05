@@ -110,6 +110,7 @@ function UI:UI(app, local_hospital)
   self.down_count = 0
   self.default_cursor = app.gfx:loadMainCursor("default")
   self.down_cursor = app.gfx:loadMainCursor("clicked")
+  self.grab_cursor = app.gfx:loadMainCursor("grab")
   
   app:loadLuaFolder("dialogs", true)
   

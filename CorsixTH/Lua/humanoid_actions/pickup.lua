@@ -30,6 +30,7 @@ local function action_pickup_interrupt(action, humanoid)
     humanoid:onPlaceInCorridor()
   end
   humanoid:finishAction()
+  action.ui:setDefaultCursor(nil)
 end
 
 local function action_pickup_dont_interrupt(action, humanoid)
@@ -64,6 +65,7 @@ local function action_pickup_start(action, humanoid)
   action.window = UIPlaceStaff(ui, humanoid, ui.cursor_x, ui.cursor_y)
   ui:addWindow(action.window)
   ui:playSound "pickup.wav"
+  ui:setDefaultCursor(ui.grab_cursor)
 end
 
 return action_pickup_start
