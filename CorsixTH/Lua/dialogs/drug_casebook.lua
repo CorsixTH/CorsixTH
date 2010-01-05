@@ -22,7 +22,7 @@ dofile "dialogs/fullscreen"
 
 class "UICasebook" (UIFullscreen)
 
-function UICasebook:UICasebook(ui, message)
+function UICasebook:UICasebook(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("DrugN01V", 640, 480)
@@ -53,8 +53,12 @@ function UICasebook:UICasebook(ui, message)
     return c1.disease.name:upper() < c2.disease.name:upper()
   end)
   
-  self.selected_index = #self.names_sorted
-  self.selected_disease = self.names_sorted[self.selected_index]
+  if disease_selection then
+    self:selectDisease(disease_selection)
+  else
+    self.selected_index = #self.names_sorted
+    self.selected_disease = self.names_sorted[self.selected_index]
+  end
   
   -- Buttons
   self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close)
@@ -74,6 +78,16 @@ function UICasebook:UICasebook(ui, message)
   -- TODO: Add situations when a disease is known but cannot be cured
   self.not_curable = self:addPanel(12, 335, 352)
   self.not_curable.visible = false
+end
+
+function UICasebook:selectDisease(disease)
+  for i = 1, #self.names_sorted do
+    if disease == self.names_sorted[i] then
+      self.selected_index = i
+      self.selected_disease = self.names_sorted[self.selected_index]
+      break
+    end
+  end
 end
 
 function UICasebook:draw(canvas)

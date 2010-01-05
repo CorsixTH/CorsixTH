@@ -48,9 +48,14 @@ function UIPatient:UIPatient(ui, patient)
   
   -- If the patient has been diagnosed the "guess cure" button is not visible and
   -- if the patient is going home it is not possible to kick him/her anymore.
-  -- The "book" is always available though
   self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue)
-  self:addPanel(329, 14 + 117, 61 + 107):makeButton(0, 0, 38, 38, 330, self.viewDiseases)
+
+  -- Show the drug casebook only after the disease has been diagnosed.
+  if patient.diagnosed then
+    self:addPanel(329, 14 + 117, 61 + 107):makeButton(0, 0, 38, 38, 330, self.viewDiseases)
+  else
+    self:addColourPanel(14 + 115, 61 + 105, 45, 45, 113, 117, 170)
+  end
   if patient.going_home then
     self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
   else
@@ -156,7 +161,8 @@ function UIPatient:goHome()
 end
 
 function UIPatient:viewDiseases()
-  -- TODO
+  local dlg = UICasebook(self.ui, self.patient.diagnosed and self.patient.disease.id or nil)
+  self.ui:addWindow(dlg)
 end
 
 function UIPatient:guessDisease()
