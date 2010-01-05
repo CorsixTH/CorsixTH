@@ -102,7 +102,8 @@ function GPRoom:dealtWithPatient(patient)
       patient.diagnosed = true
       patient.diagnosis_progress = 1.0
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
-      
+
+      self.staff_member:setMood("idea3", true) -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         -- Generate a message about the discovery
@@ -116,6 +117,7 @@ function GPRoom:dealtWithPatient(patient)
         self.hospital.disease_casebook[patient.disease.id].discovered = true
       end
     else
+      self.staff_member:setMood("reflexion", true)
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
       patient:queueAction{name = "seek_room", room_type = patient.available_diagnosis_rooms[next_room]}
       table.remove(patient.available_diagnosis_rooms, next_room)
@@ -127,6 +129,8 @@ function GPRoom:dealtWithPatient(patient)
 end
 
 function GPRoom:onHumanoidLeave(humanoid)
+  self.staff_member:setMood("idea3", nil) -- reset mood when the patient or the doctor leaves
+  self.staff_member:setMood("reflexion", nil) -- reset mood when the patient or the doctor
   if self.staff_member == humanoid then
     self.staff_member = nil
   end
