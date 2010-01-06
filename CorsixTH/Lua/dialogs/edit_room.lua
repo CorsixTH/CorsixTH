@@ -155,10 +155,12 @@ function UIEditRoom:clearArea()
           if action.name ~= "walk" then
             break -- continue
           end
-          local next_x = action.path_x[action.path_index]
-          local next_y = action.path_y[action.path_index]
-          if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
-            break -- continue
+          if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
+            local next_x = action.path_x[action.path_index]
+            local next_y = action.path_y[action.path_index]
+            if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
+              break -- continue
+            end
           end
         end
         
