@@ -249,8 +249,8 @@ end
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
-  -- Staff is no longer waiting
-  for humanoid in pairs(self.humanoids) do -- Staff is now waiting
+  
+  for humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
     if class.is(humanoid, Staff) then
       if humanoid.humanoid_class ~= "Handyman" then
         humanoid:setMood("staff_wait", nil)
@@ -264,10 +264,12 @@ function Room:tryAdvanceQueue()
     local front = self.door.queue:front()
     if self.humanoids[front] or self:canHumanoidEnter(front) then
       self.door.queue:pop()
-      for humanoid in pairs(self.humanoids) do -- Staff is now waiting
-        if class.is(humanoid, Staff) then
-          if humanoid.humanoid_class ~= "Handyman" then
-            humanoid:setMood("staff_wait", true)
+      if self.room_info.id ~= "staff_room" then -- Do nothing if it is the staff_room
+        for humanoid in pairs(self.humanoids) do -- Staff is now waiting
+          if class.is(humanoid, Staff) then
+            if humanoid.humanoid_class ~= "Handyman" then
+              humanoid:setMood("staff_wait", true)
+            end
           end
         end
       end
