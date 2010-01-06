@@ -195,3 +195,9 @@ function Staff:isIdle()
   end
   return false
 end
+
+function Staff:increaseWage(amount)
+  self.profile.wage = self.profile.wage + amount
+  -- TODO increase moral
+  -- TODO cash sound
+end

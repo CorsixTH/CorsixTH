@@ -26,6 +26,7 @@ function StaffProfile:StaffProfile(humanoid_class)
   self.wage = 0
   self.skill = 0 -- [0.0, 1.0]
   self.layer5 = 2
+  self.attention_to_detail = 0.5 -- [0.0, 1.0] TODO currently not used
 end
 
 local name_parts = {TheApp.strings[9], TheApp.strings[10]}
