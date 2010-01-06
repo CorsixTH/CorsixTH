@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.name = _S(14, 12)
 room.id = "ultrascan"
+room.class = "UltrascanRoom"
 room.build_cost = 8000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { ultrascanner = 1 }
@@ -31,5 +32,44 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "yellow"
 room.floor_tile = 19
+room.required_staff = {
+  Doctor = 1,
+}
+room.maximum_staff = room.required_staff
 room.call_sound = "reqd007.wav"
+
+class "UltrascanRoom" (Room)
+
+function UltrascanRoom:UltrascanRoom(...)
+  self:Room(...)
+end
+
+function UltrascanRoom:commandEnteringStaff(staff)
+  self.staff_member = staff
+  staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
+end
+
+function UltrascanRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local ultrascan, pat_x, pat_y = self.world:findObjectNear(patient, "ultrascanner")
+  local orientation = ultrascan.object_type.orientations[ultrascan.direction]
+  local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
+  
+  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
+  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:queueAction{
+    name = "multi_use_object",
+    object = ultrascan,
+    use_with = staff,
+    after_use = function()
+      staff:setNextAction{name = "meander"}
+      self:dealtWithPatient(patient)
+    end,
+  }
+  
+  return Room.commandEnteringPatient(self, patient)
+end
+
 return room

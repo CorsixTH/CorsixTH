@@ -25,20 +25,51 @@ object.name = _S(2, 23)
 object.ticks = false
 object.build_cost = 6000
 object.build_preview_animation = 5068
-object.idle_animations = {
+
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+
+object.idle_animations = copy_north_to_south {
   north = 1556, --1556 or 3844?
-  south = 1556,
 }
+
+object.multi_usage_animations = {
+  ["Standard Male Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use     = 1560, -- Patient climbs to the bed
+      begin_use_2   = 1568, -- Doctor takes the instrument
+      in_use        = 1614, -- Doctor examines the patient
+      finish_use    = 1574, -- Doctor puts away the instrument
+      finish_use_2  = 1610, -- Patient climbs out of the bed
+    },
+  },
+  ["Standard Female Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use     = 3084, -- Patient climbs to the bed
+      begin_use_2   = 3092, -- Doctor takes the instrument
+      in_use        = 3096, -- Doctor examines the patient
+      finish_use    = 3100, -- Doctor puts away the instrument
+      finish_use_2  = 1618, -- Patient climbs out of the bed
+    },
+  },
+}
+
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
                   {-1, 0, only_passable =true}, {0, 0}, {1, 0},
-                  {-1, 1}, {0, 1} }
+                  {-1, 1}, {0, 1} },
+    use_position = {-1, 0},
+    use_position_secondary = {1, -1},
   },
   east = {
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1},
                   {-1, 0}, {0, 0}, {1, 0},
-                  {-1, 1, only_passable = true}, {0, 1} }
+                  {-1, 1, only_passable = true}, {0, 1} },
+    use_position = {0, -1},
+    use_position_secondary = {-1, 1},
   },
 }
 

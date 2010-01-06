@@ -44,6 +44,7 @@ end
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
   "cardiogram",
+  "ultrascan",
   -- TODO
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
