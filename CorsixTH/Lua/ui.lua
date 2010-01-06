@@ -256,6 +256,12 @@ function UI:onKeyDown(code)
     return
   end
   if key == "esc" then
+    -- Close the topmost window first
+    local first = self.windows[1]
+    if first.on_top and first.esc_closes then
+      first:close()
+      return true
+    end
     for i = #self.windows, 1, -1 do
       local window = self.windows[i]
       if window.esc_closes then
