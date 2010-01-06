@@ -168,7 +168,8 @@ function UIPatient:onMouseUp(button, x, y)
     repaint = true
   elseif button == "right" then
     --TODO: Right clicking on patient view should go to the next patient
-  end  return repaint
+  end
+  return repaint
 end
 
 function UIPatient:viewQueue()
