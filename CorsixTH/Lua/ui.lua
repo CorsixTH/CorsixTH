@@ -266,7 +266,7 @@ local scroll_keys = {
 
 -- Adds a key handler for a window. Code = keycode, callback = which function to call.
 function UI:addKeyHandler(code, window, callback, ...)
-  if not keyHandlers[code] then											-- No handlers for this code? Create a new table.
+  if not keyHandlers[code] then -- No handlers for this code? Create a new table.
     keyHandlers[code] = {}
   end
   table.insert( keyHandlers[code], {window = window, callback = callback, parameters = ...} )
@@ -278,9 +278,9 @@ function UI:removeKeyHandler(code, window)
     for index,callback in pairs(keyHandlers[code]) do
       if callback.window == window then
         table.remove(keyHandlers[code], index)
-	  end
+      end
     end
-    if not next(keyHandlers[code]) then								-- If last entry in keyHandlers[code] was removed, delete the (now empty) list
+    if not next(keyHandlers[code]) then -- If last entry in keyHandlers[code] was removed, delete the (now empty) list
       keyHandlers[code] = nil
     end
   end
@@ -289,8 +289,8 @@ end
 function UI:onKeyDown(code)
   -- Are there any window-specified keyHandlers that want this code?
   if keyHandlers[code] then
-  	local callback = keyHandlers[code][ #keyHandlers[code] ]		-- Convenience variable.
-    callback.callback(callback.window, callback.parameters)			-- Call only the latest (last) handler for this code.
+    local callback = keyHandlers[code][ #keyHandlers[code] ] -- Convenience variable.
+    callback.callback(callback.window, callback.parameters)  -- Call only the latest (last) handler for this code.
   end
   
   local key = key_codes[code]

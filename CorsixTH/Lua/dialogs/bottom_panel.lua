@@ -56,7 +56,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel(25, 559, 0) -- Charts button
   self:addPanel(27, 597, 0) -- Policy button
 
-  ui:addKeyHandler(109, self, self.openFirstMessage)		-- 109 is "m" 
+  ui:addKeyHandler(109, self, self.openFirstMessage) -- 109 is "m"
 end
 
 function UIBottomPanel:draw(canvas)
@@ -119,9 +119,9 @@ end
 
 -- Opens the first available message in the list of message_windows.
 function UIBottomPanel:openFirstMessage()
-	if #self.message_windows > 0 then
-		self.message_windows[1].openMessage(self.message_windows[1], false)
-	end
+  if #self.message_windows > 0 then
+    self.message_windows[1].openMessage(self.message_windows[1], false)
+  end
 end
 
 function UIBottomPanel:createMessageWindow()

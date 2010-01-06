@@ -78,7 +78,7 @@ function UIPatient:UIPatient(ui, patient)
   -- 104 = H. Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
-  ui:addKeyHandler(104, self, self.goHome)		  
+  ui:addKeyHandler(104, self, self.goHome)
 end
 
 function UIPatient:close()
@@ -184,7 +184,7 @@ end
 
 function UIPatient:goHome()
   if self.going_home then
-  	return
+    return
   end
   self:close()
   self.patient:playSound "sack.wav"
