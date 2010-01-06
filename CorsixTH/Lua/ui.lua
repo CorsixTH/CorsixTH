@@ -74,21 +74,6 @@ local button_codes = invert {
   right = 3,
 }
 
--- Temporary code
-local patients
-local function get_patient()
-  local n = patients.n
-  if not n then
-    return
-  end
-  if n == #patients then
-    patients.n = 1
-  else
-    patients.n = n + 1
-  end
-  return patients[n]
-end
-
 function UI:UI(app, local_hospital)
   self:Window()
   self.app = app
@@ -145,9 +130,6 @@ function UI:UI(app, local_hospital)
     self.in_visible_diamond = true
     self.limit_to_visible_diamond = not _MAP_EDITOR
   end
-  
-  -- Temporary code
-  patients = {}
 end
 
 function UI:playSound(name)
@@ -168,38 +150,6 @@ function UI.makeVisibleDiamond(scr_w, scr_h)
     w = 32 * map_h - scr_h - scr_w / 2,
     h = 16 * map_h - scr_h / 2 - scr_w / 4,
   }
-end
-
-function UI:debugMakePatients()
-  if patients.n == 1 or patients.n == nil then
-    patients.n = #patients + 1
-  end
-  for i = 1, 4 do
-    local entity = self.app.world:newEntity("Patient", 2)
-    local types = {
-      -- Types with variations doubled up to make them more likely:
-      "Standard Male Patient", "Standard Male Patient",
-      "Alternate Male Patient", "Alternate Male Patient",
-      "Slack Male Patient", "Slack Male Patient",
-      "Transparent Male Patient", "Transparent Male Patient",
-      "Standard Female Patient", "Standard Female Patient",
-      "Transparent Female Patient", "Transparent Female Patient",
-      -- Types with no variation:
-      "Chewbacca Patient",
-      "Elvis Patient",
-      "Invisible Patient",
-    }
-
-    entity:setType(types[math.random(1, #types)])
-    entity:setTile(63 + (i - 1) % 2, 63 + math.floor(i / 3))
-    entity:setLayer(0, math.random(1, 4) * 2)
-    entity:setLayer(1, math.random(0, 3) * 2)
-    entity:setLayer(2, math.random(0, 2) * 2)
-    entity:setLayer(3, math.random(0, 5) * 2)
-    entity:setLayer(4, math.random(0, 5) * 2)
-    entity:setMood("cured", true)
-    patients[#patients + 1] = entity
-  end
 end
 
 function UI:debugMakeAdviserTalk()
@@ -322,6 +272,8 @@ function UI:onKeyDown(code)
     local types = invert({ emergency = 0, epidemy = 1, strike = 2, personnality = 3, information = 4, disease = 5, report = 6 })
     local random = math.random(0, 6)
     self.bottom_panel:queueMessage(types[random])
+  elseif key == "F9" then -- Make debug patient
+    self.app.world:makeDebugPatient()
   elseif key == "F10" then -- Restart
     debug.getregistry()._RESTART = true
     TheApp.running = false
@@ -453,7 +405,7 @@ function UI:onMouseUp(code, x, y)
   end
   
   if button == "right" and not _MAP_EDITOR and highlight_x then
-    local patient = get_patient()
+    local patient = self.hospital:getDebugPatient()
     if patient then
       patient:walkTo(highlight_x, highlight_y)
       patient:queueAction{name = "idle"}

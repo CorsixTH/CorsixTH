@@ -515,7 +515,7 @@ function UIMenuBar:makeMenu(app)
   self:addMenu(_S(1, 5), UIMenu() -- Debug
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
-    :appendItem(_"Make Patients", function() self.ui:debugMakePatients() end)
+    :appendItem(_"Make Debug Patient", function() self.ui.app.world:makeDebugPatient() end)
     :appendItem(_"Spawn Patient", function() self.ui.app.world:spawnPatient() end)
     :appendItem(_"Make Adviser Talk", function() self.ui:debugMakeAdviserTalk() end)
     :appendItem(_"Show watch", function() self.ui:addWindow(UIWatch(self.ui)) end)

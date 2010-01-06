@@ -32,6 +32,7 @@ function Hospital:Hospital(world)
   self.transactions = {}
   self.staff = {}
   self.patients = {}
+  self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   -- TODO: Take disease list from the world's available diseases and available
   -- rooms (for diagnosis psuedo-piseases)
@@ -87,6 +88,29 @@ end
 
 function Hospital:spawnPatient()
   self.world:spawnPatient(self)
+end
+
+function Hospital:makeDebugPatient()
+  self.world:makeDebugPatient(self)
+end
+
+function Hospital:removeDebugPatient(patient)
+  for i, p in ipairs(self.debug_patients) do
+    if p == patient then
+      table.remove(self.debug_patients, i)
+      return
+    end
+  end
+end
+
+local debug_n
+function Hospital:getDebugPatient()
+  if not debug_n or debug_n >= #self.debug_patients then
+    debug_n = 1
+  else
+    debug_n = debug_n + 1
+  end
+  return self.debug_patients[debug_n]
 end
 
 function Hospital:spendMoney(amount, reason)

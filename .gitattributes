@@ -40,7 +40,6 @@ CorsixTH/Lua/dialogs/furnish_corridor.lua -text
 CorsixTH/Lua/dialogs/hire_staff.lua -text
 CorsixTH/Lua/dialogs/information.lua -text
 CorsixTH/Lua/dialogs/jukebox.lua -text
-CorsixTH/Lua/dialogs/menu.lua -text
 CorsixTH/Lua/dialogs/message.lua -text
 CorsixTH/Lua/dialogs/patient.lua -text
 CorsixTH/Lua/dialogs/place_objects.lua -text
@@ -114,7 +113,6 @@ CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/sprite_viewer.lua -text
 CorsixTH/Lua/staff_profile.lua -text
 CorsixTH/Lua/strict.lua -text
-CorsixTH/Lua/ui.lua -text
 CorsixTH/Lua/utility.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text
@@ -122,7 +120,6 @@ CorsixTH/Lua/walls/green.lua -text
 CorsixTH/Lua/walls/white.lua -text
 CorsixTH/Lua/walls/yellow.lua -text
 CorsixTH/Lua/window.lua -text
-CorsixTH/Lua/world.lua -text
 CorsixTH/Src/lua.hpp -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text

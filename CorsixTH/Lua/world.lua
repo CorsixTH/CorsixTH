@@ -140,11 +140,51 @@ function World:calculateSpawnTiles()
 end
 
 function World:spawnPatient(hospital)
+  if not hospital then
+    hospital = self:getLocalPlayerHospital()
+  end
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local patient = self:newEntity("Patient", 2)
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  patient:setHospital(hospital)
+  
+  return patient
+end
+
+function World:makeDebugPatient(hospital)
+  if not hospital then
+    hospital = self:getLocalPlayerHospital()
+  end
+
+  local patient = self:newEntity("Patient", 2)
+  patient.is_debug = true
+  table.insert(hospital.debug_patients, patient)
+--  local disease = -- should they have one? hmm... no, for now not. May cause some errors if sent into rooms with staff.
+  
+  local types = {
+    -- Types with variations doubled up to make them more likely:
+    "Standard Male Patient", "Standard Male Patient",
+    "Alternate Male Patient", "Alternate Male Patient",
+    "Slack Male Patient", "Slack Male Patient",
+    "Transparent Male Patient", "Transparent Male Patient",
+    "Standard Female Patient", "Standard Female Patient",
+    "Transparent Female Patient", "Transparent Female Patient",
+    -- Types with no variation:
+    "Chewbacca Patient",
+    "Elvis Patient",
+    "Invisible Patient",
+  }
+  
+  patient:setType(types[math.random(1, #types)])
+  patient:setTile(64, 64) -- center of map
+  patient:setLayer(0, math.random(1, 4) * 2)
+  patient:setLayer(1, math.random(0, 3) * 2)
+  patient:setLayer(2, math.random(0, 2) * 2)
+  patient:setLayer(3, math.random(0, 5) * 2)
+  patient:setLayer(4, math.random(0, 5) * 2)
+  patient:setMood("emergency", true) -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(hospital)
   
   return patient

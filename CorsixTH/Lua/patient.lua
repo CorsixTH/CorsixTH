@@ -60,7 +60,7 @@ function Patient:setHospital(hospital)
   end
   Humanoid.setHospital(self, hospital)
   if hospital then
-    if hospital.is_in_world then
+    if hospital.is_in_world and not self.is_debug then
       self:setNextAction{name = "seek_reception", hospital = hospital}
     end
     hospital:addPatient(self)
@@ -79,6 +79,10 @@ function Patient:goHome(cured)
   else
     self:setMood("exit", true)
     self.hospital:changeReputation("kicked")
+  end
+  
+  if self.is_debug then
+    self.hospital:removeDebugPatient(self)
   end
   
   self.going_home = true
