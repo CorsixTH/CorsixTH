@@ -158,15 +158,19 @@ function Hospital:removePatient(patient)
   RemoveByValue(self.patients, patient)
 end
 
-function Hospital:reputationChange(reason)
-  assert(reason, "No reason supplied for the reputation change")
-  -- TODO: This should depend on difficulty and level
-  if reason == "death" then
-    self.reputation = self.reputation - 4
-  elseif reason == "cured" then
-    self.reputation = self.reputation + 1
-  elseif reason == "kicked" then
-    self.reputation = self.reputation - 3
+-- TODO: This should depend on difficulty and level
+ local reputation_changes = {
+  ["cured"]  =  1, -- a patient was successfully treated
+  ["death"]  = -4, -- a patient died due to bad treatment or waiting too long
+  ["kicked"] = -3, -- firing a staff member OR sending a patient home
+}
+
+function Hospital:changeReputation(reason)
+  self.reputation = self.reputation + reputation_changes[reason]
+  if self.reputation < self.reputation_min then
+    self.reputation = self.reputation_min
+  elseif self.reputation > self.reputation_max then
+    self.reputation = self.reputation_max
   end
 end
 

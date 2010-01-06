@@ -74,11 +74,11 @@ function Patient:goHome(cured)
   if cured then
     self:setMood("cured", true)
     self:playSound "cheer.wav"
-    self.hospital:reputationChange("cured")
+    self.hospital:changeReputation("cured")
     self.treatment_history[#self.treatment_history + 1] = _S(59, 9) -- "Cured"
   else
     self:setMood("exit", true)
-    self.hospital:reputationChange("kicked")
+    self.hospital:changeReputation("kicked")
   end
   
   self.going_home = true

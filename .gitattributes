@@ -61,7 +61,6 @@ CorsixTH/Lua/diseases/the_squits.lua -text
 CorsixTH/Lua/diseases/uncommon_cold.lua -text
 CorsixTH/Lua/entity.lua -text
 CorsixTH/Lua/graphics.lua -text
-CorsixTH/Lua/hospital.lua -text
 CorsixTH/Lua/humanoid.lua -text
 CorsixTH/Lua/humanoid_actions/die.lua -text
 CorsixTH/Lua/humanoid_actions/queue.lua -text
@@ -113,7 +112,6 @@ CorsixTH/Lua/rooms/slack_tongue.lua -text
 CorsixTH/Lua/rooms/staff_room.lua -text
 CorsixTH/Lua/rooms/toilets.lua -text
 CorsixTH/Lua/sprite_viewer.lua -text
-CorsixTH/Lua/staff.lua -text
 CorsixTH/Lua/staff_profile.lua -text
 CorsixTH/Lua/strict.lua -text
 CorsixTH/Lua/ui.lua -text
