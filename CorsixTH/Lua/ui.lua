@@ -64,6 +64,10 @@ local key_codes = invert {
   alt = {307, 308, 313},
 }
 
+-- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
+local keyHandlers = {
+}
+
 local button_codes = invert {
   left = 1,
   middle = 2,
@@ -260,7 +264,35 @@ local scroll_keys = {
   left  = {x = -10, y =   0},
 }
 
+-- Adds a key handler for a window. Code = keycode, callback = which function to call.
+function UI:addKeyHandler(code, window, callback, ...)
+  if not keyHandlers[code] then											-- No handlers for this code? Create a new table.
+    keyHandlers[code] = {}
+  end
+  table.insert( keyHandlers[code], {window = window, callback = callback, parameters = ...} )
+end
+
+-- Remove the key handler for this code.
+function UI:removeKeyHandler(code, window)
+  if keyHandlers[code] then
+    for index,callback in pairs(keyHandlers[code]) do
+      if callback.window == window then
+        table.remove(keyHandlers[code], index)
+	  end
+    end
+    if not next(keyHandlers[code]) then								-- If last entry in keyHandlers[code] was removed, delete the (now empty) list
+      keyHandlers[code] = nil
+    end
+  end
+end
+
 function UI:onKeyDown(code)
+  -- Are there any window-specified keyHandlers that want this code?
+  if keyHandlers[code] then
+  	local callback = keyHandlers[code][ #keyHandlers[code] ]		-- Convenience variable.
+    callback.callback(callback.window, callback.parameters)			-- Call only the latest (last) handler for this code.
+  end
+  
   local key = key_codes[code]
   if not key then
     return
