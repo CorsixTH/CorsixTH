@@ -90,6 +90,17 @@ function World:World(app)
   end
   self:makeAvailableStaff()
   self:calculateSpawnTiles()
+  
+end
+
+function World:setUI(ui)
+  self.ui = ui
+  self.ui:addKeyHandler(112, self, self.setTickRate, "Pause")             -- Key: P
+  self.ui:addKeyHandler(49, self, self.setTickRate, "Slowest")            -- Key: 1
+  self.ui:addKeyHandler(50, self, self.setTickRate, "Slower")             -- Key: 2
+  self.ui:addKeyHandler(51, self, self.setTickRate, "Normal")             -- Key: 3
+  self.ui:addKeyHandler(52, self, self.setTickRate, "Max speed")          -- Key: 4
+  self.ui:addKeyHandler(53, self, self.setTickRate, "And then some more") -- Key: 5
 end
 
 function World:initDiseases(app)
@@ -310,6 +321,7 @@ function World:getDate()
 end
 
 local tick_rates = {
+  ["Pause"]              = {0, 1},
   ["Slowest"]            = {1, 9},
   ["Slower"]             = {1, 5},
   ["Normal"]             = {1, 3},

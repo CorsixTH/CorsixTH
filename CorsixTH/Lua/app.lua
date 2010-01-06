@@ -194,7 +194,7 @@ function App:loadLevel(filename)
   
   -- Load UI
   self.ui = UI(self, self.world:getLocalPlayerHospital())
-  self.world.ui = self.ui
+  self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 end
 
 -- This is a useful debug and devlopment aid
