@@ -460,13 +460,14 @@ function UIMenuBar:makeMenu(app)
 
   local function rate(speed)
     return speed == "Normal", function()
-      app.world:setTickRate(speed)
+      app.world:setSpeed(speed)
     end, "", function()
-      return app.world:isCurrentTickRate(speed)
+      return app.world:isCurrentSpeed(speed)
     end
   end
 
   options:appendMenu(_S(3, 8), UIMenu() -- Game speed
+    :appendCheckItem("  PAUSE  ", rate("Pause")) -- TODO: custom string
     :appendCheckItem(_S(12, 1), rate("Slowest"))
     :appendCheckItem(_S(12, 2), rate("Slower"))
     :appendCheckItem(_S(12, 3), rate("Normal")) -- (default)

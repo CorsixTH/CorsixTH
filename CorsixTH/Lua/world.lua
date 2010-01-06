@@ -95,12 +95,12 @@ end
 
 function World:setUI(ui)
   self.ui = ui
-  self.ui:addKeyHandler(112, self, self.setTickRate, "Pause")             -- Key: P
-  self.ui:addKeyHandler(49, self, self.setTickRate, "Slowest")            -- Key: 1
-  self.ui:addKeyHandler(50, self, self.setTickRate, "Slower")             -- Key: 2
-  self.ui:addKeyHandler(51, self, self.setTickRate, "Normal")             -- Key: 3
-  self.ui:addKeyHandler(52, self, self.setTickRate, "Max speed")          -- Key: 4
-  self.ui:addKeyHandler(53, self, self.setTickRate, "And then some more") -- Key: 5
+  self.ui:addKeyHandler(112, self, self.pauseOrUnpause, "Pause")       -- Key: P
+  self.ui:addKeyHandler(49, self, self.setSpeed, "Slowest")            -- Key: 1
+  self.ui:addKeyHandler(50, self, self.setSpeed, "Slower")             -- Key: 2
+  self.ui:addKeyHandler(51, self, self.setSpeed, "Normal")             -- Key: 3
+  self.ui:addKeyHandler(52, self, self.setSpeed, "Max speed")          -- Key: 4
+  self.ui:addKeyHandler(53, self, self.setSpeed, "And then some more") -- Key: 5
 end
 
 function World:initDiseases(app)
@@ -329,15 +329,37 @@ local tick_rates = {
   ["And then some more"] = {3, 1},
 }
 
-function World:isCurrentTickRate(speed)
+function World:isCurrentSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
   return self.ticks_per_tick == numerator and self.tick_rate == denominator
 end
 
-function World:setTickRate(speed)
+function World:getCurrentSpeed()
+  for name, rate in pairs(tick_rates) do
+    if rate[1] == self.ticks_per_tick and rate[2] == self.tick_rate then
+      return name
+    end
+  end
+end
+
+local prev_speed
+function World:setSpeed(speed)
+  if self:isCurrentSpeed(speed) then
+    return
+  end
+  prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
   self.ticks_per_tick = numerator
   self.tick_rate = denominator
+end
+
+-- Dedicated function to allow unpausing by pressing 'p' again
+function World:pauseOrUnpause()
+  if not self:isCurrentSpeed("Pause") then
+    self:setSpeed("Pause")
+  elseif prev_speed then
+    self:setSpeed(prev_speed)
+  end
 end
 
 function World:onTick()
