@@ -144,9 +144,6 @@ function Staff:setHospital(hospital)
     self.hospital:removeStaff(self)
   end
   Humanoid.setHospital(self, hospital)
-  if hospital then
-    hospital:addStaff(self)
-  end
 end
 
 local profile_attributes = {
