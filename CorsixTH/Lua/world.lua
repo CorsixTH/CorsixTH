@@ -740,11 +740,12 @@ function World:callForStaff(room)
     self.ui:playSound(sound)
     room.sound_played = true
   end
-  
-  local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
-  
-  for attribute, count in pairs(missing) do
-    self:selectNearestStaffForRoom(room, attribute, count)
+  if room.hospital.policies["staff_allowed_to_move"] then
+    local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
+    
+    for attribute, count in pairs(missing) do
+      self:selectNearestStaffForRoom(room, attribute, count)
+    end
   end
 end
 

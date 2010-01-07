@@ -34,6 +34,12 @@ function Hospital:Hospital(world)
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
+  self.policies = {}
+  self.policies["staff_allowed_to_move"] = true
+  self.policies["send_home"] = 0.1
+  self.policies["guess_cure"] = 0.9
+  self.policies["stop_procedure"] = 0 -- Note that this is between 0 and 1 ( = 100% - 200%)
+  self.policies["goto_staffroom"] = 0.6
   -- TODO: Take disease list from the world's available diseases and available
   -- rooms (for diagnosis psuedo-piseases)
   local diseases = TheApp.diseases

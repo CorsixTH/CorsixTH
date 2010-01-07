@@ -98,9 +98,10 @@ function GPRoom:dealtWithPatient(patient)
     local diagnosis_bonus = (0.3 + 0.2 * math.random()) * self.staff_member.profile.skill
     
     patient.diagnosis_progress = patient.diagnosis_progress + diagnosis_base + diagnosis_bonus
-    if patient.diagnosis_progress >= 1.0 or #patient.available_diagnosis_rooms == 0 then
+    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] + 1  
+    or #patient.available_diagnosis_rooms == 0 then
       patient.diagnosed = true
-      patient.diagnosis_progress = 1.0
+      patient.diagnosis_progress = self.hospital.policies["stop_procedure"] + 1
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
 
       self.staff_member:setMood("idea3", true) -- Show the light bulb over the doctor

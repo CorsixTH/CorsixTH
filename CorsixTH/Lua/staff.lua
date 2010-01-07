@@ -27,7 +27,9 @@ end
 
 function Staff:tick()
   Entity.tick(self)
-  self:checkIfNeedRest()
+  if not self.fired then
+    self:checkIfNeedRest()
+  end
 end
 
 function Staff:fire()
@@ -91,9 +93,11 @@ function Staff:wake(amount)
   end
 end
 
--- Check if fatigue is over a certain level (now: 0.8, later: configurable), and go to the StaffRoom if it is.
+-- Check if fatigue is over a certain level (decided by the hospital policy), 
+-- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
-  if self.fatigue and self.fatigue >= 0.8 and not class.is(self:getRoom(), StaffRoom) then
+  if self.fatigue and self.fatigue >= self.hospital.policies["goto_staffroom"] 
+  and not class.is(self:getRoom(), StaffRoom) then
     self:setMood("tired", true)
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
     if self.going_to_staffroom or self.action_queue[1].name == "pickup" then

@@ -58,11 +58,13 @@ local panel_mt = {
   }
 }
 
-function Window:addPanel(sprite_index, x, y)
+function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
     window = self,
     x = x,
     y = y,
+    w = w,
+    h = h,
     sprite_index = sprite_index,
     visible = true,
   }, panel_mt)

@@ -54,7 +54,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel(21, 483, 0) -- Research button
   self:addPanel(23, 521, 0) -- Status button
   self:addPanel(25, 559, 0) -- Charts button
-  self:addPanel(27, 597, 0) -- Policy button
+  self:addPanel(27, 597, 0):makeButton(1, 6, 35, 36, 28, self.dialogPolicy)
 
   ui:addKeyHandler(109, self, self.openFirstMessage) -- 109 is "m"
 end
@@ -187,5 +187,10 @@ end
 
 function UIBottomPanel:dialogDrugCasebook()
   local dlg = UICasebook(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogPolicy()
+  local dlg = UIPolicy(self.ui)
   self.ui:addWindow(dlg)
 end
