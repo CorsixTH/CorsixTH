@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 class "Staff" (Humanoid)
 
+local debug_disable_request_for_raise = false -- Disable staff's request for raise
+
 function Staff:Staff(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
@@ -29,6 +31,11 @@ function Staff:tick()
   Entity.tick(self)
   if not self.fired then
     self:checkIfNeedRest()
+  end
+
+  -- Make staff members request a raise if they are very unhappy
+  if not debug_disable_request_for_raise and self.attributes["happiness"] < 0.1 then
+    self:requestRaise()
   end
 end
 
@@ -205,8 +212,20 @@ function Staff:isIdle()
   return false
 end
 
+-- Makes the staff member request a raise of random amount. Shows a request raise dialog.
+function Staff:requestRaise()
+  -- Check whether there is already a request for raise.
+  if not self:isMoodActive("pay_rise") then
+    self:setMood("pay_rise", true)
+    local amount = math.random(10, 150) -- [10-150] $
+    self.world.ui:addWindow(UIStaffRise(self.world.ui, self, amount))
+  end
+end
+
+-- Increases the wage of the staff member, increases happiness and clears any request raise dialogs.
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
-  -- TODO increase moral
+  self:changeAttribute("happiness", 0.99)
+  self:setMood("pay_rise", false)
   -- TODO cash sound
 end

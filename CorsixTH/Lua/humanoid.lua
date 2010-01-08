@@ -200,6 +200,16 @@ function Humanoid:setMood(mood_name, activate)
   self:setMoodInfo(new_mood)
 end
 
+-- Is the given mood in the list of active moods.
+function Humanoid:isMoodActive(mood)
+  for i, _ in pairs(self.active_moods) do
+    if i == mood then
+      return true
+    end
+  end
+  return false
+end
+
 function Humanoid.getIdleAnimation(humanoid_class)
   return assert(walk_animations[humanoid_class], "Invalid humanoid class").idle_east
 end

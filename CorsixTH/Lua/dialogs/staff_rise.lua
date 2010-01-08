@@ -42,7 +42,6 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self.esc_closes = false -- Do not allow closing the dialog with esc
   self.staff = staff
   self.ui = ui
-  self.modal_class = "humanoid_info"
   self.rise_amount = rise_amount
 
   local final_wage = self.staff.profile.wage + rise_amount
