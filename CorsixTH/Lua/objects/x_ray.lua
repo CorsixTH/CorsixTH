@@ -25,18 +25,55 @@ object.name = _S(2, 28)
 object.ticks = false
 object.build_cost = 4000
 object.build_preview_animation = 5076
-object.idle_animations = {
+
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+
+object.idle_animations = copy_north_to_south {
   north = 1988,
-  south = 1988,
 }
+
+object.usage_animations = copy_north_to_south {
+  north = {
+    begin_use = { -- Patient walks into X-ray
+      ["Standard Male Patient"] = 1964,
+      ["Standard Female Patient"] = 2948,
+      ["Slack Male Patient"] = 5178,
+      ["Elvis Patient"] = 5120,
+      ["Chewbacca Patient"] = 5132,
+      ["Invisible Patient"] = 614,
+    },
+    in_use = { -- Radiation
+      ["Standard Male Patient"] = 1960,
+      ["Standard Female Patient"] = 2952,
+      ["Slack Male Patient"] = 5174,
+      ["Elvis Patient"] = 5128,
+      ["Chewbacca Patient"] = 610,
+      ["Invisible Patient"] = 5140,
+    },
+    finish_use = { -- Patient walks away
+      ["Standard Male Patient"] = 1992,
+      ["Standard Female Patient"] = 2956,
+      ["Slack Male Patient"] = 5182,
+      ["Elvis Patient"] = 5124,
+      ["Chewbacca Patient"] = 5136, -- or 5138?
+      ["Invisible Patient"] = 618,
+    },
+  },
+}
+
 object.orientations = {
   north = {
+    use_position = {1, -1},
     render_attach_position = {-1, -1},
     footprint = { {-2, -2}, {-1, -2},
                   {-2, -1}, {-1, -1}, {0, -1}, {1, -1, only_passable = true},
                   {-2, 0}, {-1, 0}, {0, 0} }
   },
   east = {
+    use_position = {-1, 1},
     render_attach_position = {-1, -1},
     footprint = { {-2, -2}, {-1, -2}, {0, -2},
                   {-2, -1}, {-1, -1}, {0, -1},

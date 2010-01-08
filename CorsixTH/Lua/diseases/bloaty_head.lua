@@ -38,6 +38,7 @@ end
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
 --  "general_diag",     not yet implemented
+  "x_ray",
   "cardiogram",
   -- TODO
 }
