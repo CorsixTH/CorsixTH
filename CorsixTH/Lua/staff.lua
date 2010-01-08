@@ -181,13 +181,18 @@ end
 function Staff:isIdle()
   local room = self:getRoom()
   if room then
+    -- if policy is set to not allow leaving rooms, don't allow it
+    if not self.hospital.policies["staff_allowed_to_move"] then
+      return false
+    end
+    
     -- in special rooms, never
     if room.room_info.id == "staff_room" or room.room_info.id == "research" then -- TODO training room
       return false
     end
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- TODO: There's a short moment where a patient is in neither of the three: when he is called to enter the room, until he enters the room.
-    --       Solve this by only removing patients from the queue in the moment they are actually entering.
+    --       See issue #76.
     if room:getPatientCount() == 0 and room.door.queue:reportedSize() == 0 and room.door.queue.expected_count == 0 then
       return true
     end
