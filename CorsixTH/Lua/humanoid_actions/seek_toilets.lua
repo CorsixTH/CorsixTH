@@ -30,7 +30,7 @@ local function seek_toilets_action_start(action, humanoid)
   action.must_happen = true
   
   -- Go to the nearest toilet, if any is found.
-  local room = humanoid.world:findRoomNear(humanoid, "toilets")
+  local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
     local task = room:createEnterAction()
     task.must_happen = true
