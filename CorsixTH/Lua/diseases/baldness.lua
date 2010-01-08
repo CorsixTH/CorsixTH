@@ -23,7 +23,7 @@ disease.name = _S(4, 11)
 disease.id = "baldness"
 disease.symptoms = _S(44, 87)
 disease.cure = _S(44, 88)
-disease.cause = _S(44, 89)
+disease.cause = _S(44, 86)
 disease.cure_price = 950 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.initPatient = function(patient)
   patient:setType("Slack Male Patient")
