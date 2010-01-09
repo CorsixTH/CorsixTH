@@ -51,6 +51,7 @@ function World:World(app)
   self.month = 1 -- January
   self.day = 1
   self.hour = 0
+  self.debug_disable_salary_raise = false
   self.idle_cache = {}
   self:initDiseases(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
@@ -199,6 +200,11 @@ function World:makeDebugPatient(hospital)
   patient:setHospital(hospital)
   
   return patient
+end
+
+function World:debugToggleSalaryRaise()
+  self.debug_disable_salary_raise = not self.debug_disable_salary_raise
+  print("test: ", self.debug_disable_salary_raise)
 end
 
 function World:makeAvailableStaff()

@@ -20,8 +20,6 @@ SOFTWARE. --]]
 
 class "Staff" (Humanoid)
 
-local debug_disable_request_for_raise = false -- Disable staff's request for raise
-
 function Staff:Staff(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
@@ -34,7 +32,7 @@ function Staff:tick()
   end
 
   -- Make staff members request a raise if they are very unhappy
-  if not debug_disable_request_for_raise and self.attributes["happiness"] < 0.1 then
+  if not self.world.debug_disable_salary_raise and self.attributes["happiness"] < 0.1 then
     self:requestRaise()
   end
 end

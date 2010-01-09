@@ -542,6 +542,7 @@ function UIMenuBar:makeMenu(app)
   self:addMenu(_S(1, 5), UIMenu() -- Debug
     :appendCheckItem(_"Transparent walls", false, transparent_walls)
     :appendCheckItem(_"Limit camera", true, limit_camera)
+    :appendCheckItem(_"Disable salary raise", false, function() self.ui.app.world:debugToggleSalaryRaise() end )
     :appendItem(_"Make Debug Patient", function() self.ui.app.world:makeDebugPatient() end)
     :appendItem(_"Spawn Patient", function() self.ui.app.world:spawnPatient() end)
     :appendItem(_"Make Adviser Talk", function() self.ui:debugMakeAdviserTalk() end)

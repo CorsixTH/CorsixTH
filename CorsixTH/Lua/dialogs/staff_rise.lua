@@ -156,6 +156,10 @@ end
 
 function UIStaffRise:fireStaff()
   self.staff:fire()
+  local staff_window = self.ui:getWindow(UIStaff)
+  if staff_window and staff_window.staff == self.staff then
+    staff_window:close()
+  end
   self:close()
 end
 
