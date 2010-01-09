@@ -204,7 +204,6 @@ end
 
 function World:debugToggleSalaryRaise()
   self.debug_disable_salary_raise = not self.debug_disable_salary_raise
-  print("test: ", self.debug_disable_salary_raise)
 end
 
 function World:makeAvailableStaff()
