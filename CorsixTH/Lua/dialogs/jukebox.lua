@@ -45,9 +45,7 @@ function UIJukebox:UIJukebox(app)
   
   self.play_btn =
   self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause)
-  if self.audio.background_music and not self.audio.background_paused then
-    self.play_btn:toggle()
-  end
+  self:updatePlayButton()
   self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio)
   self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio)
   self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack)
@@ -77,36 +75,27 @@ function UIJukebox:UIJukebox(app)
   self:addPanel(408, self.width - 61, y)
 end
 
+-- makes the play button consistent with the current status of the background music
+-- running -> toggled
+-- stopped -> not toggled
+-- paused  -> not toggled
+function UIJukebox:updatePlayButton()
+  local status = not not self.audio.background_music and not self.audio.background_paused
+  if status ~= self.play_btn.toggled then
+    self.play_btn:toggle()
+  end
+end
+
 function UIJukebox:togglePlayPause()
   if not self.audio.background_music then
     self.audio:playRandomBackgroundTrack()
   else
-    -- NB: Explicit false check, as old C side returned nil in all cases
-    if  self.audio:pauseBackgroundTrack() == false then
-      -- SDL doesn't seeem to support pausing/resuming for this format/driver,
-      -- so just stop the music instead.
-      self.audio:stopBackgroundTrack()
-    else
-      -- SDL can also be odd and report music as paused even though it is still
-      -- playing. If it really is paused, then there is no harm in muting it.
-      -- If it wasn't really paused, then muting it is the next best thing that
-      -- we can do (even though it'll continue playing).
-      if self.play_btn.toggled then
-        self.audio:setBackgroundVolume(self.audio.old_bg_music_volume)
-        self.audio.old_bg_music_volume = nil
-      else
-        self.audio.old_bg_music_volume = self.audio.bg_music_volume
-        self.audio:setBackgroundVolume(0)
-      end
-    end
+    self.audio:pauseBackgroundTrack()
   end
 end
 
 function UIJukebox:stopBackgroundTrack()
   self.audio:stopBackgroundTrack()
-  if self.play_btn.toggled then
-    self.play_btn:toggle()
-  end
 end
 
 function UIJukebox:toggleTrack(index, info, on)

@@ -278,6 +278,7 @@ function Audio:playPreviousBackgroundTrack()
 end
 
 function Audio:pauseBackgroundTrack()
+  assert(self.background_music, "Trying to pause music while music is stopped")
   local status
   if self.background_paused then
     self.background_paused = nil
@@ -286,12 +287,40 @@ function Audio:pauseBackgroundTrack()
     status = SDL.audio.pauseMusic()
     self.background_paused = true
   end
-  return status
+  
+  -- NB: Explicit false check, as old C side returned nil in all cases
+  if status == false then
+    -- SDL doesn't seeem to support pausing/resuming for this format/driver,
+    -- so just stop the music instead.
+    self:stopBackgroundTrack()
+  else
+    -- SDL can also be odd and report music as paused even though it is still
+    -- playing. If it really is paused, then there is no harm in muting it.
+    -- If it wasn't really paused, then muting it is the next best thing that
+    -- we can do (even though it'll continue playing).
+    if self.background_paused then
+      self.old_bg_music_volume = self.bg_music_volume
+      self.bg_music_volume = 0
+      SDL.audio.setMusicVolume(0)
+    else
+      self.bg_music_volume = self.old_bg_music_volume
+      SDL.audio.setMusicVolume(self.old_bg_music_volume)
+      self.old_bg_music_volume = nil
+    end
+  end
+
+  self:notifyJukebox()
 end
 
 function Audio:stopBackgroundTrack()
+  if self.background_paused then
+    -- unpause first in order to clear the backupped volume
+    self:pauseBackgroundTrack()
+  end
   SDL.audio.stopMusic()
   self.background_music = nil
+
+  self:notifyJukebox()
 end
 
 function Audio:playBackgroundTrack(index)
@@ -330,6 +359,8 @@ function Audio:playBackgroundTrack(index)
   SDL.audio.setMusicVolume(self.bg_music_volume)
   assert(SDL.audio.playMusic(music))
   self.background_music = music
+  
+  self:notifyJukebox()
 end
 
 function Audio:onMusicOver()
@@ -340,8 +371,12 @@ function Audio:onMusicOver()
 end
 
 function Audio:setBackgroundVolume(volume)
-  self.bg_music_volume = volume
-  SDL.audio.setMusicVolume(volume)
+  if self.background_paused then
+    self.old_bg_music_volume = volume
+  else
+    self.bg_music_volume = volume
+    SDL.audio.setMusicVolume(volume)
+  end
 end
 
 function Audio:setSoundVolume(volume)
@@ -363,4 +398,12 @@ end
 
 function Audio:setAnnouncementVolume(volume)
   self.announcement_volume = volume
+end
+
+-- search for jukebox and notify it to update its play button
+function Audio:notifyJukebox()
+  local jukebox = self.app.ui:getWindow(UIJukebox)
+  if jukebox then
+    jukebox:updatePlayButton()
+  end
 end

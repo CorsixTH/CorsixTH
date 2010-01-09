@@ -455,11 +455,14 @@ function UIMenuBar:makeMenu(app)
       app.audio.play_announcements = item.checked
     end
     local function playMusic(item)
-      if item.checked then
-        app.audio:playBackgroundTrack(app.audio:findIndexOfCurrentTrack())
+      if not app.audio.background_music then
+        app.audio:playRandomBackgroundTrack() -- play
       else
-        app.audio:stopBackgroundTrack()
+        app.audio:pauseBackgroundTrack() -- pause or unpause
       end
+    end
+    local function musicStatus(item)
+      return not not app.audio.background_music and not app.audio.background_paused
     end
     local function appendVolume(setting)
       return UIMenu() -- The three Volume menus
@@ -477,7 +480,7 @@ function UIMenuBar:makeMenu(app)
     options
     :appendCheckItem(_S(3, 1), true, playSounds) -- Sound
     :appendCheckItem(_S(3, 2), true, playAnno) -- Announcements
-    :appendCheckItem(_S(3, 3), true, playMusic) -- Music
+    :appendCheckItem(_S(3, 3), true, playMusic, nil, musicStatus) -- Music
     :appendMenu(_S(3, 4), appendVolume("sound")) -- Sound Volume
     :appendMenu(_S(3, 5), appendVolume("announcement")) -- Announcement volume
     :appendMenu(_S(3, 6), appendVolume("music")) -- Music Volume
