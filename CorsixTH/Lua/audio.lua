@@ -36,6 +36,10 @@ function Audio:Audio(app)
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
   self.bg_music_volume = 0.5
+  self.announcement_volume = 0.5
+  self.sound_volume = 0.5
+  self.play_sounds = true
+  self.play_announcements = true
 end
 
 local function linepairs(filename)
@@ -195,19 +199,20 @@ function Audio:dumpSoundArchive(out_dir)
   info:close()
 end
 
-function Audio:playSound(name, where)
+function Audio:playSound(name, where, is_announcement)
   local sound_fx = self.sound_fx
   if sound_fx then
     local _, warning
+    local volume = is_announcement and self.announcement_volume or self.sound_volume
     if where then
       local x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
       local dx, dy = where.th:getPosition()
       local ui = self.app.ui
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
-      _, warning = sound_fx:play(name, x, y)
+      _, warning = sound_fx:play(name, volume, x, y)
     else
-      _, warning = sound_fx:play(name)
+      _, warning = sound_fx:play(name, volume)
     end
     if warning then
       print("Audio:playSound - Warning: " .. warning)
@@ -337,4 +342,25 @@ end
 function Audio:setBackgroundVolume(volume)
   self.bg_music_volume = volume
   SDL.audio.setMusicVolume(volume)
+end
+
+function Audio:setSoundVolume(volume)
+  self.sound_volume = volume
+  if self.sound_fx then
+    -- Since some sounds are played automatically (using computers etc)
+    -- we need to set a value on C level too.
+    self.sound_fx:setSoundVolume(volume)
+  end
+end
+
+function Audio:playSoundEffects(play_effects)
+  self.play_sounds = play_effects
+  if self.sound_fx then
+    -- As above.
+    self.sound_fx:setSoundEffectsOn(play_effects)
+  end
+end
+
+function Audio:setAnnouncementVolume(volume)
+  self.announcement_volume = volume
 end

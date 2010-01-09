@@ -168,6 +168,7 @@ THSoundEffects::THSoundEffects()
     m_iCameraY = 0;
     m_fCameraRadius = 1.0;
     m_fMasterVolume = 1.0;
+	m_fSoundEffectsVolume = 0.5;
     m_iPostionlessVolume = MIX_MAX_VOLUME;
 
 #define NUM_CHANNELS 32
@@ -231,15 +232,23 @@ void THSoundEffects::setSoundArchive(THSoundArchive *pArchive)
     }
 }
 
-void THSoundEffects::playSound(size_t iIndex)
+void THSoundEffects::playSound(size_t iIndex, double dVolume)
 {
     if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
         return;
 
-    _playRaw(iIndex, m_iPostionlessVolume);
+    _playRaw(iIndex, (int)(m_iPostionlessVolume*dVolume));
 }
 
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
+{
+	if (m_iSoundEffects)
+	{
+		playSoundAt(iIndex, m_fSoundEffectsVolume, iX, iY);
+	}
+}
+
+void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY)
 {
     if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
         return;
@@ -251,9 +260,19 @@ void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
         return;
     fDistance = fDistance / m_fCameraRadius;
 
-    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME;
+    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME * dVolume;
 
     _playRaw(iIndex, (int)(fVolume + 0.5));
+}
+
+void THSoundEffects::setSoundEffectsVolume(double dVolume)
+{
+	m_fSoundEffectsVolume = dVolume;
+}
+
+void THSoundEffects::setSoundEffectsOn(int iOn)
+{
+	m_iSoundEffects = iOn;
 }
 
 void THSoundEffects::_playRaw(size_t iIndex, int iVolume)

@@ -34,7 +34,9 @@ function Entity:playSound(name)
   -- if the entity is off-screen, and the volume will be quieter the further
   -- the entity is from the center of the screen. If this is not what you want
   -- then use UI:playSound instead.
-  TheApp.audio:playSound(name, self)
+  if TheApp.audio.play_sounds then
+    TheApp.audio:playSound(name, self)
+  end
 end
 
 function Entity:setAnimation(animation, flags)

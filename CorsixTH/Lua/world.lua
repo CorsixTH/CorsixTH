@@ -737,7 +737,7 @@ function World:callForStaff(room)
   local sound = room.room_info.call_sound
   
   if sound and not room.sound_played then
-    self.ui:playSound(sound)
+    self.ui:playAnnouncement(sound)
     room.sound_played = true
   end
   local missing = room:getMissingStaff(room:getRequiredStaffCriteria())

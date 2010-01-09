@@ -1636,14 +1636,28 @@ static int l_soundfx_set_archive(lua_State *L)
     return 1;
 }
 
+static int l_soundfx_set_sound_volume(lua_State *L)
+{
+	THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+	pEffects->setSoundEffectsVolume(luaL_checknumber(L, 2));
+	return 1;
+}
+
+static int l_soundfx_set_sound_effects_on(lua_State *L)
+{
+	THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+	pEffects->setSoundEffectsOn(lua_toboolean(L, 2));
+	return 1;
+}
+
 static int l_soundfx_play(lua_State *L)
 {
     THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-    lua_settop(L, 4);
+    lua_settop(L, 5);
     lua_getfenv(L, 1);
     lua_pushliteral(L, "archive");
-    lua_rawget(L, 5);
-    THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 6);
+    lua_rawget(L, 6);
+    THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 7);
     if(pArchive == NULL)
     {
         return 0;
@@ -1653,13 +1667,13 @@ static int l_soundfx_play(lua_State *L)
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
     if(iIndex == pArchive->getSoundCount())
         return 2;
-    if(lua_isnil(L, 3))
+    if(lua_isnil(L, 4))
     {
-        pEffects->playSound(iIndex);
+        pEffects->playSound(iIndex, luaL_checknumber(L, 3));
     }
     else
     {
-        pEffects->playSoundAt(iIndex, luaL_checkint(L, 3), luaL_checkint(L, 4));
+        pEffects->playSoundAt(iIndex, luaL_checknumber(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5));
     }
     lua_pushboolean(L, 1);
     return 1;
@@ -1966,6 +1980,8 @@ int luaopen_th(lua_State *L)
     luaT_class(THSoundEffects, l_soundfx_new, "soundEffects", iSoundFxMT);
     luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", iSoundArcMT);
     luaT_setfunction(l_soundfx_play, "play");
+	luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
+	luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     luaT_setfunction(l_soundfx_set_camera, "setCamera");
     luaT_endclass();
 

@@ -427,34 +427,60 @@ function UIMenuBar:makeMenu(app)
   )
   local options = UIMenu()
   if app.audio.has_bg_music then
-    local function vol(level)
-      return level == app.audio.bg_music_volume,
-        function()
-          app.audio:setBackgroundVolume(level)
-        end,
-        ""
+    local function vol(level, setting)
+      if setting == "music" then
+        return level == app.audio.bg_music_volume,
+          function()
+            app.audio:setBackgroundVolume(level)
+          end,
+          ""
+      elseif setting == "sound" then
+        return level == app.audio.sound_volume,
+          function()
+            app.audio:setSoundVolume(level)
+          end,
+          ""
+      else
+        return level == app.audio.announcement_volume,
+          function()
+            app.audio:setAnnouncementVolume(level)
+          end,
+          ""
+      end
     end
-    local function playing(item)
+    local function playSounds(item)
+      app.audio:playSoundEffects(item.checked)
+    end
+    local function playAnno(item)
+      app.audio.play_announcements = item.checked
+    end
+    local function playMusic(item)
       if item.checked then
         app.audio:playBackgroundTrack(app.audio:findIndexOfCurrentTrack())
       else
         app.audio:stopBackgroundTrack()
       end
     end
+    local function appendVolume(setting)
+      return UIMenu() -- The three Volume menus
+        :appendCheckItem(_S(9, 1), vol(1.0, setting)) -- 100%
+        :appendCheckItem(_S(9, 2), vol(0.9, setting))
+        :appendCheckItem(_S(9, 3), vol(0.8, setting))
+        :appendCheckItem(_S(9, 4), vol(0.7, setting))
+        :appendCheckItem(_S(9, 5), vol(0.6, setting))
+        :appendCheckItem(_S(9, 6), vol(0.5, setting))
+        :appendCheckItem(_S(9, 7), vol(0.4, setting))
+        :appendCheckItem(_S(9, 8), vol(0.3, setting))
+        :appendCheckItem(_S(9, 9), vol(0.2, setting))
+        :appendCheckItem(_S(9,10), vol(0.1, setting)) -- 10%
+    end
     options
-    :appendCheckItem(_S(3, 3), true, playing) -- Music
-    :appendMenu(_S(3, 6), UIMenu() -- Music Volume
-      :appendCheckItem(_S(9, 1), vol(1.0)) -- 100%
-      :appendCheckItem(_S(9, 2), vol(0.9))
-      :appendCheckItem(_S(9, 3), vol(0.8))
-      :appendCheckItem(_S(9, 4), vol(0.7))
-      :appendCheckItem(_S(9, 5), vol(0.6))
-      :appendCheckItem(_S(9, 6), vol(0.5))
-      :appendCheckItem(_S(9, 7), vol(0.4))
-      :appendCheckItem(_S(9, 8), vol(0.3))
-      :appendCheckItem(_S(9, 9), vol(0.2))
-      :appendCheckItem(_S(9,10), vol(0.1)) -- 10%
-    )
+    :appendCheckItem(_S(3, 1), true, playSounds) -- Sound
+    :appendCheckItem(_S(3, 2), true, playAnno) -- Announcements
+    :appendCheckItem(_S(3, 3), true, playMusic) -- Music
+    :appendMenu(_S(3, 4), appendVolume("sound")) -- Sound Volume
+    :appendMenu(_S(3, 5), appendVolume("announcement")) -- Announcement volume
+    :appendMenu(_S(3, 6), appendVolume("music")) -- Music Volume
     :appendItem(_S(3, -1), function() self.ui:addWindow(UIJukebox(app)) end) -- Jukebox
   end
 

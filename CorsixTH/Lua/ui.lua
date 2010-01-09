@@ -127,8 +127,18 @@ function UI:UI(app, local_hospital)
   end
 end
 
+-- Used for everything except music and announcements
 function UI:playSound(name)
-  self.app.audio:playSound(name)
+  if self.app.audio.play_sounds then
+    self.app.audio:playSound(name)
+  end
+end
+
+-- Used for announcements only
+function UI:playAnnouncement(name)
+  if self.app.audio.play_announcements then
+    self.app.audio:playSound(name, nil, true)
+  end
 end
 
 function UI.makeVisibleDiamond(scr_w, scr_h)
