@@ -28,6 +28,7 @@ function UIJukebox:UIJukebox(app)
   self.modal_class = "jukebox"
   self.esc_closes = true
   self.audio = app.audio
+  self.ui = app.ui
   self.x = 26
   self.y = 26
   self.width = 259
@@ -44,12 +45,12 @@ function UIJukebox:UIJukebox(app)
   self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close)
   
   self.play_btn =
-  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause)
+  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause):setSound("selectx.wav")
   self:updatePlayButton()
-  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio)
-  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio)
-  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack)
-  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack)
+  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio):setSound("selectx.wav")
+  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav")
+  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav")
+  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav")
   
   -- Track list
   self.track_buttons = {}
@@ -59,7 +60,7 @@ function UIJukebox:UIJukebox(app)
     for x = 30, self.width - 61, 24 do
       self:addPanel(403, x, y)
     end
-    self.track_buttons[i] = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405)
+    self.track_buttons[i] = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405):setSound("selectx.wav")
     if not info.enabled then
       self.track_buttons[i]:toggle()
     end
@@ -144,7 +145,11 @@ function UIJukebox:draw(canvas)
     if info.music == playing then
       font = self.blue_font
     end
-    font:draw(canvas, info.title, x + 24, y + 11)
+    local str = info.title
+    while font:sizeOf(str, font) > 185 do
+      str = string.sub(str, 1, string.len(str) - 5) .. "..."
+    end
+    font:draw(canvas, str, x + 24, y + 11)
     if info.music == playing then
       font:draw(canvas, info.title, x + 24, self.y + 27)
     end

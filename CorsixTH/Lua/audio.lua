@@ -89,35 +89,73 @@ function Audio:init()
     print "Notice: No background music as no SOUND/MIDI directory found"
   else
     local midi_dir = sound_dir .. subdirs.MIDI .. pathsep
-    local midis = {}
-    local function midi(filename)
-      local t = midis[filename:upper()]
+    local musicArray = {}
+    local function musicFileTable(filename)
+      local t = musicArray[filename:upper()]
       if t == nil then
         t = {}
-        midis[filename:upper()] = t
+        musicArray[filename:upper()] = t
       end
       return t
     end
-    for item in lfs.dir(midi_dir) do
-      if item:upper():match"%.XMI$" then
-        midi(item).filename = midi_dir .. item
-        midi(item).filename_mp3 = mp3 and mp3:format(item:match"(.-)%.XMI")
-      elseif item:upper():match"^MIDI.*%.TXT$" then
-        for filename, title in linepairs(midi_dir .. item) do
-          midi(filename).title = title
+    
+    
+    --[[
+      Find the music files on disk.
+      -----------------------------
+        
+      - Will search through all the files in midi_dir.
+      - Adds xmi and mp3 files.
+      - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
+      - Uses titles from MIDI.TXT if found, else the filename.
+    --]]
+    local midi_txt = ''      -- File name of midi.txt file, if any.
+    local mp3 = true         -- Yes, do load mp3 files.
+    
+    for foundFile in lfs.dir(midi_dir) do
+      -- Extract only the base name of the file ("ATLANTIS" instead of "ATLANTIS.XMI")
+      local foundFile_filenameBase = foundFile:sub( 0, foundFile:find(".", 1, true)-1 )
+      -- Make one version uppercase
+      local foundFile_filenameBase_upper = foundFile_filenameBase:upper()
+      -- Music file found (mp3/xmi).
+      if (mp3 and foundFile:upper():match"%.MP3$") or (foundFile:upper():match"%.XMI$") then
+        if (foundFile:upper():match"%.MP3$") then
+           musicFileTable(foundFile_filenameBase_upper).filename_mp3 = midi_dir .. foundFile
+           -- Remove the xmi version of this file, if found.
+           if musicFileTable(foundFile_filenameBase_upper).filename then
+             musicFileTable(foundFile_filenameBase_upper).filename = nil
+           end
+           -- If the mp3 version exists
+        elseif foundFile:upper():match"%.XMI$" and 
+          not musicFileTable(foundFile_filenameBase_upper).filename_mp3 then
+          musicFileTable(foundFile_filenameBase_upper).filename = midi_dir .. foundFile -- ignore this file
         end
+        -- This title might be replaced later by the midi_txt.
+        musicFileTable(foundFile_filenameBase_upper).title = foundFile_filenameBase
+      elseif foundFile:upper():match"^MIDI.*%.TXT$" then -- Looks like the midi.txt.
+        -- Remember it for later.
+        midi_txt = foundFile                                    
       end
     end
-    for short_name, info in pairs(midis) do
-      if not info.filename then
-        print(('Notice: Background track "%s" named in list file, but it '..
-          'does not exist'):format(short_name))
-      else
-        if not info.title then
-          info.title = short_name:sub(1, 1) .. short_name:match".(.*)%.":lower()
+      
+    -- Enable music files and add them to the playlist.
+    for filename, musicData in pairs(musicArray) do
+      musicData.enabled = true
+      self.background_playlist[#self.background_playlist + 1] = musicData
+    end
+      
+    -- This is later. If we found a midi.txt, go through it and add the titles to the files we know
+    if midi_txt:len() > 0 then
+      for name, title in linepairs(midi_dir .. midi_txt) do
+        local filename = name:sub( 0, name:find(".", 1, true)-1 )
+        if next(musicFileTable(filename:upper())) ~= nil then
+           musicFileTable(filename:upper()).title = title
+        else
+          print(" ")
+          print(('Notice: Background track "%s" named in list file, but it '..
+            'does not exist. '):format(filename))
+          print(" ")
         end
-        info.enabled = true
-        self.background_playlist[#self.background_playlist + 1] = info
       end
     end
     if #self.background_playlist == 0 then
@@ -158,7 +196,8 @@ function Audio:init()
     
     archive_name = find_sound_file(data_dir, sound_file)
     
-    --If sound file not found and language choosen is not English, maybe we can have more chance loading English sounds
+    -- If sound file not found and language choosen is not English, 
+    -- maybe we can have more chance loading English sounds
     if not archive_name and self.app.config.language ~= "0" then
       print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. sound_file .. " file found")        
       archive_name = find_sound_file(data_dir, "SOUND-0.DAT")
