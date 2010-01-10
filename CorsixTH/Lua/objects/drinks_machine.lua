@@ -27,6 +27,7 @@ object.corridor_object = 3
 object.build_cost = 500
 object.build_preview_animation = 906
 object.multiple_users_allowed = true
+object.dynamic_info = true
 object.idle_animations = {
   south = 170,
   west  = 172,

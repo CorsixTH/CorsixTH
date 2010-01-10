@@ -208,10 +208,15 @@ end
 
 function World:makeAvailableStaff()
   self.available_staff = {}
-  for _, class in ipairs{"Doctor", "Nurse", "Handyman", "Receptionist"} do
+  for class, local_string in pairs {
+    Doctor = _S(1, 2),
+    Nurse = _S(1, 1),
+    Handyman = _S(1, 3),
+    Receptionist = _S(1, 4),
+    } do
     local group = {}
     for i = 1, math.random(3, 12) do
-      group[i] = StaffProfile(class)
+      group[i] = StaffProfile(class, local_string)
       group[i]:randomise()
     end
     self.available_staff[class] = group

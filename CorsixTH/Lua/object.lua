@@ -47,7 +47,8 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self.world = world
   self.direction = direction
   self.user = false
-
+  self.times_used = -1 -- Incremented in the call on the next line
+  self:updateDynamicInfo()
   local flags = self.init_anim_flags or 0
   local anim = object_type.idle_animations[direction]
   if not anim then
@@ -82,6 +83,21 @@ function Object:getRenderAttachTile()
     y = y + offset[2]
   end
   return x, y
+end
+
+function Object:updateDynamicInfo()
+  self.times_used = self.times_used + 1
+  local object = self.object_type
+  if object.dynamic_info then
+    self:setDynamicInfo("text", {object.name, "", _S(59, 32):format(self.times_used)})
+  elseif object.machine then
+      -- TODO: Strenght of machinery is not implemented yet 
+      self:setDynamicInfo("text", {
+        object.name, 
+        _S(59, 32):format(self.times_used), 
+        _S(59, 31):format(10) -- Strength 10
+      })
+  end
 end
 
 function Object:getSecondaryUsageTile()

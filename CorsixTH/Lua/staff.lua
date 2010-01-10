@@ -74,6 +74,44 @@ function Staff:setProfile(profile)
     self.fatigue = 0
   end
   self:setLayer(5, profile.layer5)
+  if profile.humanoid_class == "Doctor" then
+    local professions = ""
+    local number = 0
+    if profile.is_junior then
+      professions = _S(34, 4) .. " "
+      number = 1
+    elseif profile.is_consultant then
+      professions = _S(34, 8) .. " "
+      number = 1
+    end
+    if profile.is_researcher then
+      professions = professions .. _S(34, 9) .. " "
+      number = number + 1
+    end
+    if profile.is_surgeon then
+      if professions then
+        professions = professions .. _S(34, 6) .. " "
+      else
+        professions = _S(34, 6)
+      end
+      number = number + 1
+    end
+    if profile.is_psychiatrist then
+      if number < 3 then
+        if professions then
+          professions = professions .. _S(34, 7)
+        else
+          professions = _S(34, 7)
+        end
+      else
+        professions = professions .. _S(59, 27)
+      end
+    end
+    
+    if professions ~= "" then
+      self.profile.profession = professions
+    end
+  end
 end
 
 -- Function for increasing fatigue. Fatigue can be between 0 and 1,
@@ -154,7 +192,7 @@ function Staff:setHospital(hospital)
   if self.hospital then
     self.hospital:removeStaff(self)
   end
-  -- This makes the divider be there from the very beginning.
+  -- This makes the divider in the fatigue bar be there from the very beginning.
   if hospital then
     self:setDynamicInfo('dividers', {hospital.policies["goto_staffroom"]})
   end
@@ -235,7 +273,11 @@ function Staff:increaseWage(amount)
 end
 
 function Staff:updateDynamicInfo()
-  self:setDynamicInfo('text', {self.humanoid_class, "", "Fatigue:"})
+  local fatigue_text = _S(59, 29)
+  if not self.fatigue then
+    fatigue_text = nil
+  end
+  self:setDynamicInfo('text', {self.profile.profession, "", fatigue_text})
   self:setDynamicInfo('progress', self.fatigue)
   if self.hospital then
     self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})

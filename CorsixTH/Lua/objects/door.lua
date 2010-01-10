@@ -49,11 +49,13 @@ function Door:getRoom()
 end
 
 function Door:updateDynamicInfo()
-  self:setDynamicInfo('text', {
-    self.room.room_info.name, 
-    _S(59, 33):format(self.queue:reportedSize()), 
-    _S(59, 34):format(self.queue.expected_count)
-  })
+  if self.room then
+    self:setDynamicInfo('text', {
+      self.room.room_info.name, 
+      _S(59, 33):format(self.queue:reportedSize()), 
+      _S(59, 34):format(self.queue.expected_count)
+    })
+  end
 end
 
 function Door:onClick(ui, button)

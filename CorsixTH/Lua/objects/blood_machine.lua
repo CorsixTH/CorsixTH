@@ -25,6 +25,7 @@ object.name = _S(2, 43)
 object.ticks = false
 object.build_cost = 3000
 object.build_preview_animation = 5094
+object.machine = true
 object.idle_animations = {
   north = 2228,
   south = 2228,

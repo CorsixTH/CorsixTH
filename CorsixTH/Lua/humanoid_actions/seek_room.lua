@@ -29,6 +29,7 @@ local function action_seek_room_start(action, humanoid)
   if room then
     humanoid:setNextAction(room:createEnterAction())
     humanoid.next_room_to_visit = room
+    humanoid:updateDynamicInfo()
     room.door.queue:expect(humanoid)
     room.door:updateDynamicInfo()
     if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
@@ -36,6 +37,7 @@ local function action_seek_room_start(action, humanoid)
     end
   else
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
+    humanoid:updateDynamicInfo(_S(59, 6))
     if not action.done_init then
       action.done_init = true
       humanoid:setMood("patient_wait", true)
@@ -44,6 +46,7 @@ local function action_seek_room_start(action, humanoid)
         if room.room_info.id == action.room_type then
           humanoid:setNextAction(room:createEnterAction())
           humanoid.next_room_to_visit = room
+          humanoid:updateDynamicInfo()
         end
       end
       humanoid.world:registerRoomBuildCallback(action.build_callback)

@@ -223,6 +223,9 @@ local function action_use_object_start(action, humanoid)
     object:setUser(humanoid)
     humanoid.user_of = object
   end
+  if object:getDynamicInfo() then
+    object:updateDynamicInfo()
+  end
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end
 

@@ -25,6 +25,7 @@ object.name = _S(2, 47)
 object.ticks = false
 object.build_cost = 3500
 object.build_preview_animation = 930
+object.machine = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

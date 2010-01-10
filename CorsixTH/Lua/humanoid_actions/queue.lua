@@ -287,18 +287,18 @@ local function action_queue_start(action, humanoid)
   action.onGetSoda = action_queue_get_soda
   action.isStanding = action_queue_is_standing
   
-  humanoid:queueAction({
-    name = "idle",
-    must_happen = true,
-  }, 0)
-  
   action.is_in_queue = true
   queue:unexpect(humanoid)
   queue:push(humanoid, action)
   local door = humanoid.world:getObject(humanoid.tile_x, humanoid.tile_y, "door")
   if door then
     door:updateDynamicInfo()
+    humanoid:updateDynamicInfo(door)
   end
+  humanoid:queueAction({
+    name = "idle",
+    must_happen = true,
+  }, 0)
   action:onChangeQueuePosition(humanoid)
   
   if queue.same_room_priority then

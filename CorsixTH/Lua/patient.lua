@@ -32,6 +32,7 @@ function Patient:Patient(...)
     self.attributes["thirst"] = math.random()*0.2
     self.attributes["toilet_need"] = math.random()*0.2
   end
+  self.action_string = ""
 end
 
 function Patient:onClick(ui, button)
@@ -52,6 +53,27 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
+  self:updateDynamicInfo()
+end
+
+function Patient:setDiagnosed(diagnosed)
+  self.diagnosed = diagnosed
+  self:updateDynamicInfo()
+end
+
+-- Sets the value of the diagnosis progress.
+function Patient:setDiagnosisProgress(progress)
+  self.diagnosis_progress = progress
+  self:updateDynamicInfo()
+end
+
+-- Modifies the diagnosis progress of a patient.
+-- incrementValue can be either positive or negative.
+function Patient:modifyDiagnosisProgress(incrementValue)
+  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"], 
+    self.diagnosis_progress + incrementValue)
+  self.diagnosis_progress = math.max(0.0, self.diagnosis_progress)
+  self:updateDynamicInfo()
 end
 
 function Patient:setHospital(hospital)
@@ -263,5 +285,31 @@ function Patient:addToTreatmentHistory(room)
   end
   if should_add then
     self.treatment_history[#self.treatment_history + 1] = room.name
+  end
+end
+
+function Patient:updateDynamicInfo(helper_object)
+  local action = self.action_queue[1]
+  
+  -- TODO: Is this the best place to update like this? There are also more situations.
+  if self:getRoom() then
+    self.action_string = ""
+  elseif action.name == "walk" and action.is_entering and self.next_room_to_visit then
+    self.action_string = _S(59, 8):format(self.next_room_to_visit.room_info.name)
+  elseif action.name == "seek_reception" then
+    self.action_string = _S(59, 8):format(helper_object.object_type.name)
+  elseif action.name == "queue" then
+    self.action_string = _S(59, 7):format(helper_object.room.room_info.name)
+  elseif action.name == "seek_toilets" then
+    self.action_string = ""
+  elseif action.name == "seek_room" then
+    self.action_string = helper_object
+  end
+  if self.diagnosed then
+    self:setDynamicInfo('text', {self.action_string, "", _S(59, 13):format(self.disease.name)})
+    self:setDynamicInfo('progress', nil)
+  else
+    self:setDynamicInfo('text', {self.action_string, "", _S(59, 15)})
+    self:setDynamicInfo('progress', self.diagnosis_progress)
   end
 end

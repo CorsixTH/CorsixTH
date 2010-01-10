@@ -41,6 +41,7 @@ local function action_seek_reception_start(action, humanoid)
     end
     x = x + orientation.use_position[1]
     y = y + orientation.use_position[2]
+    humanoid:updateDynamicInfo(desk)
     
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue

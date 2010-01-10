@@ -254,6 +254,7 @@ end
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
+  humanoid:updateDynamicInfo()
   
   for humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
     if class.is(humanoid, Staff) then

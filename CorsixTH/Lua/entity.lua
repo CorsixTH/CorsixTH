@@ -65,7 +65,11 @@ function Entity:setTile(x, y)
 end
 
 function Entity:getRoom()
-  return self.world:getRoom(self.tile_x, self.tile_y)
+  if self.tile_x and self.tile_y then
+    return self.world:getRoom(self.tile_x, self.tile_y)
+  else
+    return nil
+  end
 end
 
 function Entity:setPosition(x, y)
