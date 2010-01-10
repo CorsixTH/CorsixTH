@@ -30,6 +30,7 @@ local function action_seek_room_start(action, humanoid)
     humanoid:setNextAction(room:createEnterAction())
     humanoid.next_room_to_visit = room
     room.door.queue:expect(humanoid)
+    room.door:updateDynamicInfo()
     if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
       humanoid.world:callForStaff(room)
     end

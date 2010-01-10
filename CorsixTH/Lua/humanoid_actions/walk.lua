@@ -30,6 +30,7 @@ local function action_walk_interrupt(action, humanoid, high_priority)
     door.reserved_for = nil
     if door.queue:size() > 0 then
       door.queue:pop()
+      door:updateDynamicInfo()
     end
   end
   -- Terminate immediately if high-priority
@@ -186,6 +187,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   
   local door = humanoid.world:getObject(dx, dy, "door")
   door.queue:unexpect(humanoid)
+  door:updateDynamicInfo()
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
   if (door.user)
@@ -196,6 +198,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
       door.reserved_for = nil
       if queue:size() > 0 then
         queue:pop()
+        door:updateDynamicInfo()
       end
     end
     humanoid:setTilePositionSpeed(x1, y1)

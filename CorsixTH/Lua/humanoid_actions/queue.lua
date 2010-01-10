@@ -295,7 +295,10 @@ local function action_queue_start(action, humanoid)
   action.is_in_queue = true
   queue:unexpect(humanoid)
   queue:push(humanoid, action)
-  
+  local door = humanoid.world:getObject(humanoid.tile_x, humanoid.tile_y, "door")
+  if door then
+    door:updateDynamicInfo()
+  end
   action:onChangeQueuePosition(humanoid)
   
   if queue.same_room_priority then

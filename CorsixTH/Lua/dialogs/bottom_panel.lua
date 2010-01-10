@@ -39,6 +39,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.money_font = app.gfx:loadFont("QData", "Font05V")
   self.date_font = app.gfx:loadFont("QData", "Font16V")
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   self.default_button_sound = "selectx.wav"
   
@@ -46,16 +47,31 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
-  self:addPanel( 8, 285, 0) -- Edit rooms / items button
   self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff)
-  self:addPanel(15, 364, 0) -- Staff management button
-  self:addPanel(17, 407, 0) -- Town map button
-  self:addPanel(19, 445, 0):makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
-  self:addPanel(21, 483, 0) -- Research button
-  self:addPanel(23, 521, 0) -- Status button
-  self:addPanel(25, 559, 0) -- Charts button
-  self:addPanel(27, 597, 0):makeButton(1, 6, 35, 36, 28, self.dialogPolicy)
-
+  self:addPanel( 8, 285, 0) -- Edit rooms / items button
+  -- The dynamic info bar
+  self:addPanel(12, 364, 0)
+  for x = 377, 630, 10 do
+    self:addPanel(13, x, 0)
+  end
+  self:addPanel(14, 627, 0)
+  
+  -- Buttons that are shown instead of the dynamic info bar when hovering over it.
+  local buttons = {}
+  
+  buttons[1] = self:addPanel(15, 364, 0) -- Staff management button
+  buttons[2] = self:addPanel(17, 407, 0) -- Town map button
+  buttons[3] = self:addPanel(19, 445, 0)
+  buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
+  buttons[4] = self:addPanel(21, 483, 0) -- Research button
+  buttons[5] = self:addPanel(23, 521, 0) -- Status button
+  buttons[6] = self:addPanel(25, 559, 0) -- Charts button
+  buttons[7] = self:addPanel(27, 597, 0)
+  buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy)
+  self.additional_buttons = buttons
+  for _, buttons in ipairs(buttons) do
+    buttons.visible = false
+  end
   ui:addKeyHandler(109, self, self.openFirstMessage) -- 109 is "m"
 end
 
@@ -66,6 +82,11 @@ function UIBottomPanel:draw(canvas)
   self.money_font:draw(canvas, ("%7i"):format(self.ui.hospital.balance), x + 44, y + 9)
   local month, day = self.world:getDate()
   self.date_font:draw(canvas, day .. " " .. _S(6, month), x + 140, y + 20, 60, 0)
+  
+  -- Draw possible information in the dynamic info bar
+  if not self.additional_buttons[1].visible then
+    self:drawDynamicInfo(canvas, x + 364, y)
+  end
   
   if self.show_animation then
     if self.factory_counter >= 1 then
@@ -95,8 +116,60 @@ function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
   self.panel_sprites:draw(canvas, 36, x_left + step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min), y)
 end
 
-function UIBottomPanel:hitTest(x, y)
-  return x >= 0 and y >= 0 and x < self.width and y < self.height
+function UIBottomPanel:drawDynamicInfo(canvas, x, y)
+  if self.dynamic_info then
+    local info = self.dynamic_info
+    local font = self.white_font
+    for i, text in ipairs(info["text"]) do
+      font:draw(canvas, text, x + 20, y + 10*i)
+      if i == #info["text"] and info["progress"] then
+        local white = canvas:mapRGB(255, 255, 255)
+        local black = canvas:mapRGB(0, 0, 0)
+        local orange = canvas:mapRGB(221, 83, 0)
+        canvas:drawRect(white, x + 165, y + 10*i, 100, 10)
+        canvas:drawRect(black, x + 166, y + 1 + 10*i, 98, 8)
+        canvas:drawRect(orange, x + 166, y + 1 + 10*i, 98*info["progress"], 8)
+        if info["dividers"] then
+          for k, value in ipairs(info["dividers"]) do
+            canvas:drawRect(white, x + 165 + value*100, y + 10*i, 1, 10)
+          end
+        end
+      end
+    end
+  end
+end
+
+function UIBottomPanel:setDynamicInfo(info)
+  self.dynamic_info = info
+end
+
+function UIBottomPanel:onMouseMove(x, y, dx, dy)
+  local repaint = Window.onMouseMove(self, x, y, dx, dy)
+  if self:showAdditionalButtons(x, y) then
+    repaint = true
+  end
+  return repaint
+end
+
+function UIBottomPanel:showAdditionalButtons(x, y)
+  local buttons = self.additional_buttons
+  if self:hitTest(x, y, 364) then -- Inside the rectangle
+    if not buttons[1].visible then -- Are the buttons already shown?
+      for _, btn in ipairs(buttons) do
+        btn.visible = true
+      end
+    end
+  else -- Outside the rectangle
+    if buttons[1].visible then -- Are the buttons already invisible?
+      for _, btn in ipairs(buttons) do
+        btn.visible = false
+      end
+    end
+  end
+end
+
+function UIBottomPanel:hitTest(x, y, x_offset)
+  return x >= (x_offset and x_offset or 0) and y >= 0 and x < self.width and y < self.height
 end
 
 function UIBottomPanel:queueMessage(type, message)

@@ -32,6 +32,11 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.maximum_patients = 1 -- A good default for most rooms
   door.room = self
   self.door = door
+  door:setDynamicInfo('text', {
+    self.room_info.name, 
+    _S(59, 33):format(0), 
+    _S(59, 34):format(0)
+  })
   self.built = false
   
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
@@ -264,6 +269,7 @@ function Room:tryAdvanceQueue()
     local front = self.door.queue:front()
     if self.humanoids[front] or self:canHumanoidEnter(front) then
       self.door.queue:pop()
+      self.door:updateDynamicInfo()
       if self.room_info.id ~= "staff_room" then -- Do nothing if it is the staff_room
         for humanoid in pairs(self.humanoids) do -- Staff is now waiting
           if class.is(humanoid, Staff) then

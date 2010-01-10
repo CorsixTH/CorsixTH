@@ -447,6 +447,7 @@ function UI:onCursorWorldPositionChange()
     local cursor = entity and entity.hover_cursor or
       (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
     self:setCursor(cursor)
+    self.bottom_panel:setDynamicInfo(nil)
   end
   -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
@@ -456,6 +457,10 @@ function UI:onCursorWorldPositionChange()
         break
       end
     end
+  end
+  -- Dynamic info
+  if entity then
+    self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
   end
 end
 

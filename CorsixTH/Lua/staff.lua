@@ -85,6 +85,7 @@ function Staff:tire(amount)
       self.fatigue = 1
     end
   end
+  self:updateDynamicInfo()
 end
 
 -- Function for decreasing fatigue. Fatigue can be between 0 and 1,
@@ -96,6 +97,7 @@ function Staff:wake(amount)
       self.fatigue = 0
     end
   end
+  self:updateDynamicInfo()
 end
 
 -- Check if fatigue is over a certain level (decided by the hospital policy), 
@@ -151,6 +153,10 @@ end
 function Staff:setHospital(hospital)
   if self.hospital then
     self.hospital:removeStaff(self)
+  end
+  -- This makes the divider be there from the very beginning.
+  if hospital then
+    self:setDynamicInfo('dividers', {hospital.policies["goto_staffroom"]})
   end
   Humanoid.setHospital(self, hospital)
 end
@@ -226,4 +232,12 @@ function Staff:increaseWage(amount)
   self:changeAttribute("happiness", 0.99)
   self:setMood("pay_rise", false)
   -- TODO cash sound
+end
+
+function Staff:updateDynamicInfo()
+  self:setDynamicInfo('text', {self.humanoid_class, "", "Fatigue:"})
+  self:setDynamicInfo('progress', self.fatigue)
+  if self.hospital then
+    self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})
+  end
 end

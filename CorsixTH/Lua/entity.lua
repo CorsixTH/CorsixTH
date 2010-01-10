@@ -27,6 +27,7 @@ function Entity:Entity(animation)
   self.layers = {}
   animation:setHitTestResult(self)
   self.ticks = true
+  self.dynamicInfo = nil;
 end
 
 function Entity:playSound(name)
@@ -160,4 +161,27 @@ function Entity:notifyNewObject(id)
 end
 
 function Entity:setMood(mood_name, activate)
+end
+
+-- Returns a table of hover info about an object.
+function Entity:getDynamicInfo()
+  return self.dynamicInfo
+end
+
+-- Sets a piece of DynamicInfo.
+-- type could be 'text', 'progress' or 'dividers'
+function Entity:setDynamicInfo(type, value)
+  if not self.dynamicInfo then
+    self.dynamicInfo = {
+      text = nil,
+      progress = nil,
+      dividers = nil,
+    }
+  end
+  self.dynamicInfo[type] = value
+end
+
+-- Completely clears the dynamic info.
+function Entity:clearDynamicInfo()
+  self.dynamicInfo = nil
 end
