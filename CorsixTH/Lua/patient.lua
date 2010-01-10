@@ -70,7 +70,7 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"], 
+  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"] + 1, 
     self.diagnosis_progress + incrementValue)
   self.diagnosis_progress = math.max(0.0, self.diagnosis_progress)
   self:updateDynamicInfo()

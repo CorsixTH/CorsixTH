@@ -140,7 +140,12 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
 end
 
 function UIBottomPanel:setDynamicInfo(info)
-  self.dynamic_info = info
+  if not info then
+    self.countdown = 15
+  else
+    self.countdown = nil
+    self.dynamic_info = info
+  end
 end
 
 function UIBottomPanel:onMouseMove(x, y, dx, dy)
@@ -166,6 +171,17 @@ function UIBottomPanel:showAdditionalButtons(x, y)
       end
     end
   end
+end
+
+function UIBottomPanel:onWorldTick()
+  if self.countdown then
+    if self.countdown < 1 then
+      self.dynamic_info = nil
+    else
+      self.countdown = self.countdown - 1
+    end
+  end
+  Window.onWorldTick(self)
 end
 
 function UIBottomPanel:hitTest(x, y, x_offset)
