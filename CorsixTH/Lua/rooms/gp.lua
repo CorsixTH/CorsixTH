@@ -100,8 +100,8 @@ function GPRoom:dealtWithPatient(patient)
     patient.diagnosis_progress = patient.diagnosis_progress + diagnosis_base + diagnosis_bonus
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] + 1  
     or #patient.available_diagnosis_rooms == 0 then
-      patient.diagnosed = true
-      patient.diagnosis_progress = self.hospital.policies["stop_procedure"] + 1
+      patient:setDiagnosed(true)
+      patient:setDiagnosisProgress(self.hospital.policies["stop_procedure"] + 1)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
 
       self.staff_member:setMood("idea3", true) -- Show the light bulb over the doctor

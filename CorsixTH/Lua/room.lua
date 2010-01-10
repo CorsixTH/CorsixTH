@@ -108,10 +108,7 @@ function Room:dealtWithPatient(patient)
       diagnosis_bonus = (0.2 + 0.2 * math.random()) * self.staff_member.profile.skill
     end
     
-    patient.diagnosis_progress = patient.diagnosis_progress + diagnosis_base + diagnosis_bonus
-    if patient.diagnosis_progress >= 1.0 then
-      patient.diagnosis_progress = 1.0
-    end
+    patient:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
     patient:queueAction{name = "seek_room", room_type = "gp"}
     self.hospital:receiveMoneyForTreatment(patient)
   elseif patient.disease and patient.diagnosed then
