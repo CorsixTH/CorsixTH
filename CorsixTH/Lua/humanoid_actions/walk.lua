@@ -264,7 +264,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   -- has entered / left, but we want to do this AFTER the humanoid has gone
   -- through the door (so that their tile position reflects the room which they
   -- are now in).
-  local function on_next_tile_set()
+  local --[[persistable:action_walk_on_next_tile_set]] function on_next_tile_set()
     if action.on_next_tile_set == on_next_tile_set then
       action.on_next_tile_set = nil
     end
