@@ -90,7 +90,9 @@ local function MakePermanentObjectsTable(inverted, ensure_safe)
   
   -- C/class/library methods
   for name, lib in pairs(package.loaded) do
-    permanent[lib] = name
+    if not name:find(".", 1, true) then
+      permanent[lib] = name
+    end
     for k, v in pairs(lib) do
       local type = type(v)
       if type == "function" or type == "table" or type == "userdata" then
