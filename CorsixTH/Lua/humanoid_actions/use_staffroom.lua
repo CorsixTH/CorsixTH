@@ -22,7 +22,7 @@ SOFTWARE. --]]
 -- returns target_obj, ox, oy, new_type
 -- the function will always return a value for new_type, depending on what type was chosen,
 -- but target_obj, ox and oy will be nil, if no object of the chosen target was found
-local function decide_next_target(action, humanoid)
+local decide_next_target = permanent"use_staffroom_action_decide_next_target"( function(action, humanoid)
   assert(action.name == "use_staffroom", "decide_next_target only works with the use_staffroom action")
   local cur_type = action.target_type
   assert(class.is(humanoid, Staff), "decide_next_target called for non-staff humanoid")
@@ -48,10 +48,10 @@ local function decide_next_target(action, humanoid)
   -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
   local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near")
   return obj, ox, oy, new_type
-end
+end)
 
 -- randomly generate the use time for a given source of relaxation
-local function generate_use_time(type)
+local generate_use_time = permanent"use_staffroom_action_generate_use_time"( function(type)
   if type == "sofa" then
     return math.random(50, 80)
   elseif type == "pool_table" then
@@ -59,7 +59,7 @@ local function generate_use_time(type)
   elseif type == "video_game" then
     return math.random(2, 15)
   end
-end
+end)
 
 -- table of how much relaxation an object gives per tick
 local relaxation = {
