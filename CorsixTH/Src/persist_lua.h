@@ -77,15 +77,15 @@ public:
     template <class T>
     void writeVInt(T tValue)
     {
-        LuaPersistVInt<T>::T tValueToWrite;
+        typename LuaPersistVInt<T>::T tValueToWrite;
         if(tValue >= 0)
         {
-            tValueToWrite = (LuaPersistVInt<T>::T)tValue;
+            tValueToWrite = (typename LuaPersistVInt<T>::T)tValue;
             tValueToWrite <<= 1;
         }
         else
         {
-            tValueToWrite = (LuaPersistVInt<T>::T)(-(tValue + 1));
+            tValueToWrite = (typename LuaPersistVInt<T>::T)(-(tValue + 1));
             tValueToWrite <<= 1;
             tValueToWrite |= 1;
         }
@@ -138,7 +138,7 @@ public:
     template <class T>
     bool readVInt(T& tValue)
     {
-        LuaPersistVInt<T>::T tWrittenValue;
+        typename LuaPersistVInt<T>::T tWrittenValue;
         if(!readVUInt(tWrittenValue))
             return false;
         if(tWrittenValue & 1)
