@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "persist_lua.h"
 #include <string.h>
+#include <errno.h>
 #include <math.h>
 #ifdef _MSC_VER
 #pragma warning(disable: 4996) // Disable "strcpy unsafe" warnings under MSVC
