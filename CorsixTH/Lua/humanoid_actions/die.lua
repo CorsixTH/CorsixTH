@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_die_tick(humanoid)
+local action_die_tick; action_die_tick = permanent"action_die_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local phase = action.phase
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
@@ -43,7 +43,7 @@ local function action_die_tick(humanoid)
     humanoid:setHospital(nil)
     humanoid.world:destroyEntity(humanoid)
   end
-end
+end)
 
 local function action_die_start(action, humanoid)
   if math.random(0, 1) == 1 then
@@ -55,7 +55,7 @@ local function action_die_start(action, humanoid)
   local anims = humanoid.die_anims
   assert(anims, "Error: no death animation for humanoid ".. humanoid.humanoid_class)
   action.must_happen = true
-  -- TODO: Right now the angle version of death is the only possibility
+  -- TODO: Right now the angel version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
   if direction == "east" then
     humanoid:setAnimation(anims.fall_east, 0)

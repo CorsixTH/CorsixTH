@@ -141,7 +141,7 @@ local function copy_layers(dest, src)
   end
 end
 
-action_multi_use_object_tick = function(humanoid)
+action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local use_with = action.use_with
   local object = action.object
@@ -184,13 +184,13 @@ action_multi_use_object_tick = function(humanoid)
   else
     action_multi_use_phase(action, humanoid, phase)
   end
-end
+end)
 
-local function action_multi_use_object_interrupt(action, humanoid)
+local action_multi_use_object_interrupt = permanent"action_multi_use_object_interrupt"( function(action, humanoid)
   if not action.loop_callback then
     action.prolonged_usage = false
   end
-end
+end)
 
 local function action_multi_use_object_start(action, humanoid)
   local use_with = action.use_with
@@ -215,7 +215,7 @@ local function action_multi_use_object_start(action, humanoid)
   action.must_happen = true
   if action.prolonged_usage then
     action.on_interrupt = action_multi_use_object_interrupt
-    use_with.action_queue[1].on_interrupt = function()
+    use_with.action_queue[1].on_interrupt = --[[persistable:action_multi_use_object_use_with_interrupt]] function()
       action:on_interrupt()
       action.on_interrupt = nil
     end

@@ -252,6 +252,9 @@ public:
         y = y / (T)32 - x_ / (T)64;
     }
 
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
+
 protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;

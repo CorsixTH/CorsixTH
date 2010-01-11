@@ -29,4 +29,23 @@ extern "C" {
 #include <lualib.h>
 }
 
+#if LUA_VERSION_NUM >= 502
+// Quick preprocessor fixes to improve compatibility with Lua 5.2
+// These definitions will already have been made if Lua 5.2 was compiled
+// with LUA_COMPAT_ALL defined, but we have no control over this.
+
+#ifndef lua_objlen
+#define lua_objlen(L, i) lua_rawlen(L, (i))
+#endif
+
+#ifndef luaL_typerror
+#define luaL_typerror luaL_typeerror
+#endif
+
+#ifndef lua_equal
+#define lua_equal(L, idx1, idx2) lua_compare(L, (idx1), (idx2), LUA_OPEQ)
+#endif
+
+#endif // LUA_VERSION_NUM >= 502
+
 #endif // CORSIX_TH_LUA_HPP_

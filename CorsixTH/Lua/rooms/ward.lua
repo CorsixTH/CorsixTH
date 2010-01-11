@@ -57,7 +57,7 @@ function WardRoom:doStaffUseCycle(humanoid)
   humanoid:queueAction{name = "walk", x = ox, y = oy}
   humanoid:queueAction{name = "use_object",
     object = obj,
-    loop_callback = function()
+    loop_callback = --[[persistable:ward_desk_loop_callback]] function()
       desk_use_time = desk_use_time - 1
       if desk_use_time == 0 then
         self:doStaffUseCycle(humanoid)

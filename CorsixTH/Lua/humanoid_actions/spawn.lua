@@ -25,12 +25,12 @@ local orient_opposite = {
   south = "north",
 }
 
-local function action_spawn_despawn(humanoid)
+local action_spawn_despawn = permanent"action_spawn_despawn"( function(humanoid)
   if humanoid.hospital then
     humanoid:setHospital(nil)
   end
   humanoid.world:destroyEntity(humanoid)
-end
+end)
 
 local function action_spawn_start(action, humanoid)
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)

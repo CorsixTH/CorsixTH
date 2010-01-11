@@ -26,6 +26,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_sound.h"
 #include "th_pathfind.h"
+#include "persist_lua.h"
 #include <new>
 #include <SDL.h>
 #include <string.h>
@@ -43,6 +44,14 @@ void luaT_setenvfield(lua_State *L, int index, const char *k)
     lua_pushvalue(L, -3);
     lua_settable(L, -3);
     lua_pop(L, 2);
+}
+
+//! Get a field from the environment table of an object
+void luaT_getenvfield(lua_State *L, int index, const char *k)
+{
+    lua_getfenv(L, index);
+    lua_getfield(L, -1, k);
+    lua_replace(L, -2);
 }
 
 //! Push a C closure as a callable table
@@ -102,6 +111,29 @@ static int l_map_set_sheet(lua_State *L)
     pMap->setBlockSheet(pSheet);
     luaT_setenvfield(L, 1, "sprites");
     return 1;
+}
+
+static int l_map_persist(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    pMap->persist((LuaPersistWriter*)lua_touserdata(L, 1));
+    return 0;
+}
+
+static int l_map_depersist(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+
+    pMap->depersist(pReader);
+    luaT_getenvfield(L, 2, "sprites");
+    pMap->setBlockSheet((THSpriteSheet*)lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    return 0;
 }
 
 static void l_map_load_obj_cb(void *pL, int iX, int iY, THObjectType eTHOB, uint8_t iFlags)
@@ -857,6 +889,50 @@ static int l_layers_set(lua_State *L)
     return 0;
 }
 
+static int l_layers_persist(lua_State *L)
+{
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+
+    int iNumLayers = 13;
+    for( ; iNumLayers >= 1; --iNumLayers)
+    {
+        if(pLayers->iLayerContents[iNumLayers - 1] != 0)
+            break;
+    }
+    pWriter->writeVUInt(iNumLayers);
+    pWriter->writeByteStream(pLayers->iLayerContents, iNumLayers);
+    return 0;
+}
+
+static int l_layers_depersist(lua_State *L)
+{
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+
+    memset(pLayers->iLayerContents, 0, sizeof(pLayers->iLayerContents));
+    int iNumLayers;
+    if(!pReader->readVUInt(iNumLayers))
+        return 0;
+    if(iNumLayers > 13)
+    {
+        if(!pReader->readByteStream(pLayers->iLayerContents, 13))
+            return 0;
+        if(!pReader->readByteStream(NULL, iNumLayers - 13))
+            return 0;
+    }
+    else
+    {
+        if(!pReader->readByteStream(pLayers->iLayerContents, iNumLayers))
+            return 0;
+    }
+    return 0;
+}
+
 static int l_anims_new(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_stdnew<THAnimationManager>(L, LUA_ENVIRONINDEX, true);
@@ -982,6 +1058,28 @@ static int l_path_set_map(lua_State *L)
     return 1;
 }
 
+static int l_path_persist(lua_State *L)
+{
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    pPathfinder->persist((LuaPersistWriter*)lua_touserdata(L, 1));
+    return 0;
+}
+
+static int l_path_depersist(lua_State *L)
+{
+    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+
+    pPathfinder->depersist(pReader);
+    luaT_getenvfield(L, 2, "map");
+    pPathfinder->setDefaultMap(reinterpret_cast<THMap*>(lua_touserdata(L, -1)));
+    return 0;
+}
+
 static int l_path_is_reachable_from_hospital(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
@@ -1054,7 +1152,52 @@ static int l_path_visit(lua_State *L)
 static int l_anim_new(lua_State *L)
 {
     THAnimation* pAnimation = luaT_stdnew<THAnimation>(L, LUA_ENVIRONINDEX, true);
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_pushlightuserdata(L, pAnimation);
+    lua_pushvalue(L, -3);
+    lua_rawset(L, -3);
+    lua_pop(L, 1);
     return 1;
+}
+
+static int l_anim_persist(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+
+    pAnimation->persist(pWriter);
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    lua_pushlightuserdata(L, pAnimation);
+    lua_gettable(L, -2);
+    pWriter->writeStackObject(-1);
+    lua_pop(L, 2);
+    return 0;
+}
+
+static int l_anim_depersist(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+
+    new (pAnimation) THAnimation; // Call constructor
+
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_pushlightuserdata(L, pAnimation);
+    lua_pushvalue(L, 2);
+    lua_settable(L, -3);
+    lua_pop(L, 1);
+    pAnimation->depersist(pReader);
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    lua_pushlightuserdata(L, pAnimation);
+    if(!pReader->readStackObject())
+        return 0;
+    lua_settable(L, -3);
+    lua_pop(L, 1);
+    return 0;
 }
 
 static int l_anim_set_hitresult(lua_State *L)
@@ -1714,6 +1857,39 @@ static int l_load_strings(lua_State *L)
     return 1;
 }
 
+template <typename T>
+static int l_persist_loaderfn(lua_State *L)
+{
+    // Nothing to do - the loader function will have been persisted
+    // automatically when the environment table was persisted.
+    return 0;
+}
+
+template <typename T>
+static int l_depersist_loaderfn(lua_State *L)
+{
+    if(lua_gettop(L) == 2)
+    {
+        // First pass - make the userdata valid
+        T *pUserdata = luaT_testuserdata<T>(L);
+        new (pUserdata) T; // Call the default constructor
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+    else
+    {
+        // Second pass - make the userdata correct
+        lua_getfenv(L, 1);
+        lua_getfield(L, -1, "depersist");
+        if(!lua_isnil(L, -1))
+        {
+            lua_pushvalue(L, 1);
+            lua_call(L, 1, 0);
+        }
+        return 0;
+    }
+}
+
 static int get_api_version()
 {
 #include "../Lua/api_version.lua"
@@ -1785,17 +1961,17 @@ int luaopen_th(lua_State *L)
     lua_settop(L, 0);
 
     // Create metatables
-    const int iMapMT     = 1; lua_createtable(L, 0, 2);
-    const int iPaletteMT = 2; lua_createtable(L, 0, 2);
-    const int iSheetMT   = 3; lua_createtable(L, 0, 3);
-    const int iFontMT    = 4; lua_createtable(L, 0, 2);
-    const int iLayersMT  = 5; lua_createtable(L, 0, 3);
-    const int iAnimsMT   = 6; lua_createtable(L, 0, 2);
-    const int iAnimMT    = 7; lua_createtable(L, 0, 2);
-    const int iPathMT    = 8; lua_createtable(L, 0, 2);
+    const int iMapMT     = 1; lua_createtable(L, 0, 4);
+    const int iPaletteMT = 2; lua_createtable(L, 0, 4);
+    const int iSheetMT   = 3; lua_createtable(L, 0, 5);
+    const int iFontMT    = 4; lua_createtable(L, 0, 4);
+    const int iLayersMT  = 5; lua_createtable(L, 0, 5);
+    const int iAnimsMT   = 6; lua_createtable(L, 0, 4);
+    const int iAnimMT    = 7; lua_createtable(L, 0, 4);
+    const int iPathMT    = 8; lua_createtable(L, 0, 4);
     const int iSurfaceMT = 9; lua_createtable(L, 0, 2);
-    const int iBitmapMT  =10; lua_createtable(L, 0, 2);
-    const int iCursorMT  =11; lua_createtable(L, 0, 2);
+    const int iBitmapMT  =10; lua_createtable(L, 0, 4);
+    const int iCursorMT  =11; lua_createtable(L, 0, 4);
     const int iSoundArcMT=12; lua_createtable(L, 0, 3);
     const int iSoundFxMT =13; lua_createtable(L, 0, 2);
 
@@ -1814,6 +1990,9 @@ int luaopen_th(lua_State *L)
     /* Set the __gc metamethod to C++ destructor */ \
     lua_pushcclosure(L, luaT_stdgc<typnam, LUA_ENVIRONINDEX>, 0); \
     lua_setfield(L, mt_idx, "__gc"); \
+    /* Set the depersist size */ \
+    lua_pushinteger(L, sizeof(typnam)); \
+    lua_setfield(L, mt_idx, "__depersist_size"); \
     /* Create the methods table; call it -> new instance */ \
     luaT_pushcclosuretable(L, new_fn, 0); \
     /* Set __index to the methods table */ \
@@ -1838,6 +2017,8 @@ int luaopen_th(lua_State *L)
 
     // Map
     luaT_class(THMap, l_map_new, "map", iMapMT);
+    luaT_setmetamethod(l_map_persist, "persist", iAnimMT);
+    luaT_setmetamethod(l_map_depersist, "depersist", iAnimMT);
     luaT_setfunction(l_map_load, "load");
     luaT_setfunction(l_map_getsize, "size");
     luaT_setfunction(l_map_getcell, "getCell");
@@ -1856,12 +2037,16 @@ int luaopen_th(lua_State *L)
 
     // Palette
     luaT_class(THPalette, l_palette_new, "palette", iPaletteMT);
+    luaT_setmetamethod(l_persist_loaderfn<THPalette>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THPalette>, "depersist");
     luaT_setfunction(l_palette_load, "load");
     luaT_setfunction(l_palette_set_entry, "setEntry");
     luaT_endclass();
 
     // Raw bitmap
     luaT_class(THRawBitmap, l_rawbitmap_new, "bitmap", iBitmapMT);
+    luaT_setmetamethod(l_persist_loaderfn<THRawBitmap>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THRawBitmap>, "depersist");
     luaT_setfunction(l_rawbitmap_load, "load", iSurfaceMT);
     luaT_setfunction(l_rawbitmap_set_pal, "setPalette", iPaletteMT);
     luaT_setfunction(l_rawbitmap_draw, "draw", iSurfaceMT);
@@ -1870,6 +2055,8 @@ int luaopen_th(lua_State *L)
     // Sprite sheet
     luaT_class(THSpriteSheet, l_spritesheet_new, "sheet", iSheetMT);
     luaT_setmetamethod(l_spritesheet_count, "len");
+    luaT_setmetamethod(l_persist_loaderfn<THSpriteSheet>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THSpriteSheet>, "depersist");
     luaT_setfunction(l_spritesheet_load, "load", iSurfaceMT);
     luaT_setfunction(l_spritesheet_set_pal, "setPalette", iPaletteMT);
     luaT_setfunction(l_spritesheet_size, "size");
@@ -1879,6 +2066,8 @@ int luaopen_th(lua_State *L)
 
     // Font
     luaT_class(THFont, l_font_new, "font", iFontMT);
+    luaT_setmetamethod(l_persist_loaderfn<THFont>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THFont>, "depersist");
     luaT_setfunction(l_font_get_size, "sizeOf");
     luaT_setfunction(l_font_set_spritesheet, "setSheet", iSheetMT);
     luaT_setfunction(l_font_set_sep, "setSeparation");
@@ -1890,10 +2079,14 @@ int luaopen_th(lua_State *L)
     luaT_class(THLayers_t, l_layers_new, "layers", iLayersMT);
     luaT_setmetamethod(l_layers_get, "index");
     luaT_setmetamethod(l_layers_set, "newindex");
+    luaT_setmetamethod(l_layers_persist, "persist");
+    luaT_setmetamethod(l_layers_depersist, "depersist");
     luaT_endclass();
 
     // Anims
     luaT_class(THAnimationManager, l_anims_new, "anims", iAnimsMT);
+    luaT_setmetamethod(l_persist_loaderfn<THAnimationManager>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THAnimationManager>, "depersist");
     luaT_setfunction(l_anims_load, "load");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", iSheetMT);
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
@@ -1905,6 +2098,7 @@ int luaopen_th(lua_State *L)
     luaT_endclass();
 
     // Weak table at AnimMetatable[1] for light UD -> object lookup
+    // For hitTest / setHitTestResult
     lua_newtable(L);
     lua_createtable(L, 0, 1);
     lua_pushliteral(L, "v");
@@ -1912,8 +2106,19 @@ int luaopen_th(lua_State *L)
     lua_setmetatable(L, -2);
     lua_rawseti(L, iAnimMT, 1);
 
+    // Weak table at AnimMetatable[2] for light UD -> full UD lookup
+    // For persisting Map
+    lua_newtable(L);
+    lua_createtable(L, 0, 1);
+    lua_pushliteral(L, "v");
+    lua_setfield(L, -2, "__mode");
+    lua_setmetatable(L, -2);
+    lua_rawseti(L, iAnimMT, 2);
+
     // Anim
     luaT_class(THAnimation, l_anim_new, "animation", iAnimMT);
+    luaT_setmetamethod(l_anim_persist, "persist");
+    luaT_setmetamethod(l_anim_depersist, "depersist");
     luaT_setfunction(l_anim_set_anim, "setAnimation", iAnimsMT);
     luaT_setfunction(l_anim_set_morph, "setMorph");
     luaT_setfunction(l_anim_set_frame, "setFrame");
@@ -1941,6 +2146,8 @@ int luaopen_th(lua_State *L)
 
     // Path
     luaT_class(THPathfinder, l_path_new, "pathfinder", iPathMT);
+    luaT_setmetamethod(l_path_persist, "persist");
+    luaT_setmetamethod(l_path_depersist, "depersist");
     luaT_setfunction(l_path_distance, "findDistance");
     luaT_setfunction(l_path_is_reachable_from_hospital, "isReachableFromHospital");
     luaT_setfunction(l_path_path, "findPath");
@@ -1951,6 +2158,8 @@ int luaopen_th(lua_State *L)
 
     // Cursor
     luaT_class(THCursor, l_cursor_new, "cursor", iCursorMT);
+    luaT_setmetamethod(l_persist_loaderfn<THCursor>, "persist");
+    luaT_setmetamethod(l_depersist_loaderfn<THCursor>, "depersist");
     luaT_setfunction(l_cursor_load, "load", iSheetMT);
     luaT_setfunction(l_cursor_use, "use", iSurfaceMT);
     luaT_setfunction(l_cursor_position, "setPosition", iSurfaceMT);

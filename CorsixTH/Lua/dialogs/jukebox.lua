@@ -64,7 +64,9 @@ function UIJukebox:UIJukebox(app)
     if not info.enabled then
       self.track_buttons[i]:toggle()
     end
-    self.track_buttons[i].on_click = function(self, off) self:toggleTrack(i, info, not off) end
+    self.track_buttons[i].on_click = --[[persistable:jukebox_toggle_track]] function(self, off)
+      self:toggleTrack(i, info, not off)
+    end
   end
   
   -- Dialog footer

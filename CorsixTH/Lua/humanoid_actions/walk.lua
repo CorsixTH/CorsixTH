@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_walk_interrupt(action, humanoid, high_priority)
+local action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
   -- Truncate the remainder of the path
   for j = #action.path_x, action.path_index + 1, -1 do
     action.path_x[j] = nil
@@ -39,7 +39,7 @@ local function action_walk_interrupt(action, humanoid, high_priority)
     humanoid:setTimer(nil)
     timer_function(humanoid)
   end
-end
+end)
 
 local flag_list_bottom = 2048
 local flag_early_list = 1024
@@ -105,7 +105,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
 end
 
 local flags_here, flags_there = {}, {}
-local function action_walk_tick(humanoid)
+local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local path_x = action.path_x
   local path_y = action.path_y
@@ -158,19 +158,19 @@ local function action_walk_tick(humanoid)
   if on_next_tile_set then
     on_next_tile_set()
   end
-end
+end)
 
 -- This is a slight hack, but is the easiest way to make walk functionality
 -- available to other actions which want to do low-level walk operations.
 strict_declare_global "HumanoidRawWalk"
 HumanoidRawWalk = action_walk_raw
 
-local function action_walk_tick_door(humanoid)
+local action_walk_tick_door = permanent"action_walk_tick_door"( function(humanoid)
   local door = humanoid.user_of
   door:setUser(nil)
   humanoid.user_of = nil
   return action_walk_tick(humanoid)
-end
+end)
 
 navigateDoor = function(humanoid, x1, y1, dir)
   local action = humanoid.action_queue[1]

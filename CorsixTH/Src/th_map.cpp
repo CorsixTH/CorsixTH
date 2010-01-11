@@ -741,3 +741,90 @@ void THMap::updateShadows()
 
 #undef IsWall
 }
+
+void THMap::persist(LuaPersistWriter *pWriter) const
+{
+    lua_State *L = pWriter->getStack();
+
+    pWriter->writeVUInt(m_iWidth);
+    pWriter->writeVUInt(m_iHeight);
+    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        pWriter->writeVUInt(pNode->iBlock[0]);
+        pWriter->writeVUInt(pNode->iBlock[1]);
+        pWriter->writeVUInt(pNode->iBlock[2]);
+        pWriter->writeVUInt(pNode->iBlock[3]);
+        pWriter->writeVUInt(pNode->iParcelId);
+        pWriter->writeVUInt(pNode->iRoomId);
+        pWriter->writeVUInt(pNode->iFlags);
+
+        lua_rawgeti(L, lua_upvalueindex(1), 2);
+        lua_pushlightuserdata(L, pNode->pNext);
+        lua_rawget(L, -2);
+        pWriter->writeStackObject(-1);
+        lua_pop(L, 1);
+        lua_pushlightuserdata(L, pNode->oEarlyEntities.pNext);
+        lua_rawget(L, -2);
+        pWriter->writeStackObject(-1);
+        lua_pop(L, 2);
+    }
+    for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        pWriter->writeVUInt(pNode->iBlock[0]);
+        pWriter->writeVUInt(pNode->iBlock[1]);
+        pWriter->writeVUInt(pNode->iBlock[2]);
+        pWriter->writeVUInt(pNode->iParcelId);
+        pWriter->writeVUInt(pNode->iFlags);
+    }
+}
+
+void THMap::depersist(LuaPersistReader *pReader)
+{
+    new (this) THMap; // Call constructor
+
+    lua_State *L = pReader->getStack();
+    int iWidth, iHeight;
+
+    if(!pReader->readVUInt(iWidth) || !pReader->readVUInt(iHeight))
+        return;
+    if(!setSize(iWidth, iHeight))
+    {
+        pReader->setError("Unable to set size while depersisting map");
+        return;
+    }
+    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        if(!pReader->readVUInt(pNode->iBlock[0])) return;
+        if(!pReader->readVUInt(pNode->iBlock[1])) return;
+        if(!pReader->readVUInt(pNode->iBlock[2])) return;
+        if(!pReader->readVUInt(pNode->iBlock[3])) return;
+        if(!pReader->readVUInt(pNode->iParcelId)) return;
+        if(!pReader->readVUInt(pNode->iRoomId)) return;
+        if(!pReader->readVUInt(pNode->iFlags)) return;
+
+        if(!pReader->readStackObject())
+            return;
+        pNode->pNext = (THLinkList*)lua_touserdata(L, -1);
+        if(pNode->pNext)
+            pNode->pNext->pPrev = pNode;
+        lua_pop(L, 1);
+        if(!pReader->readStackObject())
+            return;
+        pNode->oEarlyEntities.pNext = (THLinkList*)lua_touserdata(L, -1);
+        if(pNode->oEarlyEntities.pNext)
+            pNode->oEarlyEntities.pNext->pPrev = &pNode->oEarlyEntities;
+        lua_pop(L, 1);
+    }
+    for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        if(!pReader->readVUInt(pNode->iBlock[0])) return;
+        if(!pReader->readVUInt(pNode->iBlock[1])) return;
+        if(!pReader->readVUInt(pNode->iBlock[2])) return;
+        if(!pReader->readVUInt(pNode->iParcelId)) return;
+        if(!pReader->readVUInt(pNode->iFlags)) return;
+    }
+}

@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_pickup_interrupt(action, humanoid)
+local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(action, humanoid)
   if action.window then
     action.window:close()
   end
@@ -31,11 +31,11 @@ local function action_pickup_interrupt(action, humanoid)
   end
   humanoid:finishAction()
   action.ui:setDefaultCursor(nil)
-end
+end)
 
-local function action_pickup_dont_interrupt(action, humanoid)
+local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( function(action, humanoid)
   action.on_interrupt = action_pickup_interrupt
-end
+end)
 
 local function action_pickup_start(action, humanoid)
   if action.todo_close then

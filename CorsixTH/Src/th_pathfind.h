@@ -23,8 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_PATHFIND_H_
 #define CORSIX_TH_TH_PATHFIND_H_
 #include "th_map.h"
-
-struct lua_State;
+#include "persist_lua.h"
 
 //! Finds paths through maps
 /*!
@@ -60,6 +59,9 @@ public:
     int getPathLength() const;
     bool getPathEnd(int* pX, int* pY) const;
     void pushResult(lua_State *L) const;
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
 
 protected:
     struct node_t

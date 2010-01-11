@@ -35,7 +35,7 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   local hosp = ui.hospital
   self.hospital = hosp
   
-  local function allowStaff(name, state, btn)
+  local --[[persistable:hospital_policy_allow_staff]] function allowStaff(name, state, btn)
     if name == "Allow" then
       if self.prohibit_button.toggled then -- Changing setting from prohibit to allow
         hosp.policies["staff_allowed_to_move"] = true

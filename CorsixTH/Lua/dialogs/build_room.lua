@@ -40,13 +40,17 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.default_button_sound = "selectx.wav"
   
   local function cat(n)
-    return function(self) return self:setCategory(n) end
+    return --[[persistable:build_room_set_category]] function(self)
+      return self:setCategory(n)
+    end
   end
   local room_n = 1
   local function rm()
     local n = room_n
     room_n = room_n + 1
-    return function(self) return self:buildRoom(n) end
+    return --[[persistable:build_room_build_room]] function(self)
+      return self:buildRoom(n)
+    end
   end
   
   self:addPanel(210,   0,   0):makeButton(9, 9, 129, 32, 211, cat(1)) -- Diagnosis
@@ -69,7 +73,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   -- The close button has no sprite for when pressed, so it has to be custom drawn
   local build_room_dialog_close = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close)
-  .panel_for_sprite.custom_draw = function(panel, canvas, x, y)
+  .panel_for_sprite.custom_draw = --[[persistable:build_room_draw_close_button]] function(panel, canvas, x, y)
     x = x + panel.x
     y = y + panel.y
     panel.window.panel_sprites:draw(canvas, panel.sprite_index, x, y)

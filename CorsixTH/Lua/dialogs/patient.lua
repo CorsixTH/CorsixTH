@@ -44,7 +44,7 @@ function UIPatient:UIPatient(ui, patient)
   self:addPanel(321,  15,  61) -- Graph bottom
 
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
-  self.history_panel:makeButton(0, 0, 99, 88, nil, function()
+  self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
   end) -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start

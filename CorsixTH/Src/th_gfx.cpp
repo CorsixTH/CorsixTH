@@ -852,6 +852,160 @@ THAnimation::THAnimation()
         m_oLayers.iLayerContents[i] = 0;
 }
 
+void THAnimation::persist(LuaPersistWriter *pWriter) const
+{
+    lua_State *L = pWriter->getStack();
+
+    // Write the next chained thing
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_pushlightuserdata(L, pNext);
+    lua_rawget(L, -2);
+    pWriter->writeStackObject(-1);
+    lua_pop(L, 2);
+
+    // Write the THDrawable fields
+    pWriter->writeVUInt(iFlags);
+    if(fnDraw == THAnimation_Draw && fnHitTest == THAnimation_HitTest)
+        pWriter->writeVUInt(1);
+    else if(fnDraw == THAnimation_DrawChild && fnHitTest == THAnimation_HitTestChild)
+        pWriter->writeVUInt(2);
+    else if(fnDraw == THAnimation_DrawMorph && fnHitTest == THAnimation_HitTestMorph)
+        pWriter->writeVUInt(3);
+    else
+        pWriter->writeVUInt(0);
+
+    // Write the simple fields
+    pWriter->writeVUInt(m_iAnimation);
+    pWriter->writeVUInt(m_iFrame);
+    pWriter->writeVInt(m_iX);
+    pWriter->writeVInt(m_iY);
+    pWriter->writeVInt(m_iLastX);
+    pWriter->writeVInt(m_iLastY);
+
+    // Write the unioned fields
+    if(fnDraw != THAnimation_DrawChild)
+    {
+        pWriter->writeVInt(m_iSpeedX);
+        pWriter->writeVInt(m_iSpeedY);
+    }
+    else
+    {
+        lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+        lua_pushlightuserdata(L, m_pParent);
+        lua_rawget(L, -2);
+        pWriter->writeStackObject(-1);
+        lua_pop(L, 2);
+    }
+
+    // Write the layers
+    int iNumLayers = 13;
+    for( ; iNumLayers >= 1; --iNumLayers)
+    {
+        if(m_oLayers.iLayerContents[iNumLayers - 1] != 0)
+            break;
+    }
+    pWriter->writeVUInt(iNumLayers);
+    pWriter->writeByteStream(m_oLayers.iLayerContents, iNumLayers);
+}
+
+void THAnimation::depersist(LuaPersistReader *pReader)
+{
+    lua_State *L = pReader->getStack();
+
+    do
+    {
+        // Read the chain
+        if(!pReader->readStackObject())
+            break;
+        pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
+        if(pNext)
+            pNext->pPrev = this;
+        lua_pop(L, 1);
+
+        // Read THDrawable fields
+        if(!pReader->readVUInt(iFlags))
+            break;
+        int iFunctionSet;
+        if(!pReader->readVUInt(iFunctionSet))
+            break;
+        switch(iFunctionSet)
+        {
+        case 1:
+            fnDraw = THAnimation_Draw;
+            fnHitTest = THAnimation_HitTest;
+            break;
+        case 2:
+            fnDraw = THAnimation_DrawChild;
+            fnHitTest = THAnimation_HitTestChild;
+            break;
+        case 3:
+            fnDraw = THAnimation_DrawMorph;
+            fnHitTest = THAnimation_HitTestMorph;
+            break;
+        default:
+            pReader->setError(lua_pushfstring(L, "Unknown animation function set #%i", iFunctionSet));
+            return;
+        }
+
+        // Read the simple fields
+        if(!pReader->readVUInt(m_iAnimation))
+            break;
+        if(!pReader->readVUInt(m_iFrame))
+            break;
+        if(!pReader->readVInt(m_iX))
+            break;
+        if(!pReader->readVInt(m_iY))
+            break;
+        if(!pReader->readVInt(m_iLastX))
+            break;
+        if(!pReader->readVInt(m_iLastY))
+            break;
+
+        // Read the unioned fields
+        if(fnDraw != THAnimation_DrawChild)
+        {
+            if(!pReader->readVInt(m_iSpeedX))
+                break;
+            if(!pReader->readVInt(m_iSpeedY))
+                break;
+        }
+        else
+        {
+            if(!pReader->readStackObject())
+                break;
+            m_pParent = (THAnimation*)lua_touserdata(L, -1);
+            lua_pop(L, 1);
+        }
+
+        // Read the layers
+        memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
+        int iNumLayers;
+        if(!pReader->readVUInt(iNumLayers))
+            break;
+        if(iNumLayers > 13)
+        {
+            if(!pReader->readByteStream(m_oLayers.iLayerContents, 13))
+                break;
+            if(!pReader->readByteStream(NULL, iNumLayers - 13))
+                break;
+        }
+        else
+        {
+            if(!pReader->readByteStream(m_oLayers.iLayerContents, iNumLayers))
+                break;
+        }
+
+        // Fix the m_pAnimator field
+        luaT_getenvfield(L, 2, "animator");
+        m_pManager = (THAnimationManager*)lua_touserdata(L, -1);
+        lua_pop(L, 1);
+
+        return;
+    } while(false);
+
+    pReader->setError("Cannot depersist THAnimation instance");
+}
+
 void THAnimation::tick()
 {
     m_iFrame = m_pManager->getNextFrame(m_iFrame);

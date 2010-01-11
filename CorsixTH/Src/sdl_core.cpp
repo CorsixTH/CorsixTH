@@ -164,7 +164,14 @@ static int l_mainloop(lua_State *L)
                 nargs = 1;
                 break;
             case SDL_USEREVENT_CPCALL:
+#ifdef LUA_RIDX_CPCALL
+                lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_CPCALL);
+                lua_pushlightuserdata(L, &e.user.data1);
+                lua_pushlightuserdata(L, e.user.data2);
+                if(lua_pcall(L, 2, 0, 0))
+#else
                 if(lua_cpcall(L, (lua_CFunction)e.user.data1, e.user.data2))
+#endif
                 {
                     SDL_RemoveTimer(timer);
                     lua_pushliteral(L, "callback");
@@ -269,11 +276,14 @@ static int l_get_ticks(lua_State *L)
 
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
+    {"getTicks", l_get_ticks},
+    {NULL, NULL}
+};
+static const struct luaL_reg sdllib_with_upvalue[] = {
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
     {"limitFPS", l_limit_fps},
-    {"getTicks", l_get_ticks},
     {NULL, NULL}
 };
 
@@ -284,7 +294,14 @@ int luaopen_sdl(lua_State *L)
 {
     fps_ctrl* ctrl = (fps_ctrl*)lua_newuserdata(L, sizeof(fps_ctrl));
     ctrl->init();
-    luaL_openlib(L, "sdl", sdllib, 1);
+    luaL_register(L, "sdl", sdllib);
+    const luaL_Reg *pUpvaluedFunctions = sdllib_with_upvalue;
+    for(; pUpvaluedFunctions->name; ++pUpvaluedFunctions)
+    {
+        lua_pushvalue(L, -2);
+        lua_pushcclosure(L, pUpvaluedFunctions->func, 1);
+        lua_setfield(L, -2, pUpvaluedFunctions->name);
+    }
 
     lua_pushcfunction(L, luaopen_sdl_audio);
     lua_call(L, 0, 1);

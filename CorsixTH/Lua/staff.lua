@@ -152,7 +152,7 @@ function Staff:checkIfNeedRest()
     if not self.world:findRoomNear(self, "staff_room") then
       self.going_to_staffroom = true
       local callback
-      callback = function(room)
+      callback = --[[persistable:staff_build_staff_room_callback]] function(room)
         if room.room_info.id == "staff_room" then
           self.going_to_staffroom = false
           self.world:unregisterRoomBuildCallback(callback)

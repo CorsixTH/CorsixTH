@@ -63,7 +63,7 @@ function FractureRoom:commandEnteringPatient(patient)
     name = "multi_use_object",
     object = cast,
     use_with = staff,
-    after_use = function()
+    after_use = --[[persistable:fracture_clinic_after_use]] function()
       patient:setLayer(2, 0) -- Remove casts
       patient:setLayer(3, 0)
       patient:setLayer(4, 0)

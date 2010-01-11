@@ -133,7 +133,7 @@ function Patient:tickDay()
       if not self.world:findRoomNear(self, "toilets") then
         self.going_to_toilet = true
         local callback
-        callback = function(room)
+        callback = --[[persistable:patient_toilet_build_callback]] function(room)
           if room.room_info.id == "toilets" then
             self.going_to_toilet = false
             self.world:unregisterRoomBuildCallback(callback)
@@ -180,7 +180,7 @@ function Patient:tickDay()
       end
       
       -- Callback function when the machine has been used
-      local function after_use()
+      local --[[persistable:patient_drinks_machine_after_use]] function after_use()
         self:changeAttribute("thirst", -0.8)
         self:changeAttribute("toilet_need", 0.3)
         self:setMood("thirsty", nil)

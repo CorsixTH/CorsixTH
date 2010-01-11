@@ -143,7 +143,7 @@ local function action_use_phase(action, humanoid, phase)
   end
 end
 
-action_use_object_tick = function(humanoid)
+action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local object = action.object
   local phase = action.phase
@@ -171,9 +171,9 @@ action_use_object_tick = function(humanoid)
   else
     action_use_phase(action, humanoid, phase)
   end
-end
+end)
 
-local function action_use_object_interrupt(action, humanoid, high_priority)
+local action_use_object_interrupt = permanent"action_use_object_interrupt"( function(action, humanoid, high_priority)
   if high_priority then
     local object = action.object
     if humanoid.user_of then
@@ -188,7 +188,7 @@ local function action_use_object_interrupt(action, humanoid, high_priority)
   elseif not humanoid.timer_function then
     humanoid:setTimer(1, action_use_object_tick)
   end
-end
+end)
 
 local function action_use_object_start(action, humanoid)
   action.old_tile_x = humanoid.tile_x

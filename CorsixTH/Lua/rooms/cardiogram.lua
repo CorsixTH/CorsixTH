@@ -56,7 +56,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
   patient:queueAction{
     name = "use_screen",
     object = screen,
-    after_use = function()
+    after_use = --[[persistable:cardiogram_screen_after_use1]] function()
       local staff = self.staff_member
       if not staff or patient.going_home then
         -- If, by some fluke, the staff member left the room while the
@@ -83,7 +83,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         use_with = staff,
         must_happen = true, -- set so that the second use_screen always happens
         prolonged_usage = true,
-        loop_callback = function(action)
+        loop_callback = --[[persistable:cardiogram_cardio_loop_callback]] function(action)
           if not action.on_interrupt then
             action.prolonged_usage = false
             patient.num_animation_ticks = 1
@@ -102,7 +102,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
             action.secondary_anim = 1030
           end
         end,
-        after_use = function()
+        after_use = --[[persistable:cardiogram_cardio_after_use]] function()
           if #staff.action_queue == 1 then
             staff:setNextAction{name = "meander"}
           else
@@ -121,7 +121,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         name = "use_screen",
         object = screen,
         must_happen = true,
-        after_use = function()
+        after_use = --[[persistable:cardiogram_screen_after_use2]] function()
           if #patient.action_queue == 1 then
             self:dealtWithPatient(patient)
           end

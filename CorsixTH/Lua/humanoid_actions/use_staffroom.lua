@@ -99,7 +99,7 @@ local function use_staffroom_action_start(action, humanoid)
     name = "use_object",
     prolonged_usage = true,
     object = action.target_obj,
-    loop_callback = function()
+    loop_callback = --[[persistable:use_staffroom_action_loop_callback]] function()
       humanoid:wake(relaxation[action.target_type])
       obj_use_time = obj_use_time - 1
       if obj_use_time == 0 then

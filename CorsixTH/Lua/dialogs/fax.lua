@@ -62,7 +62,9 @@ function UIFax:UIFax(ui, message)
   
   self:addPanel(0, 168, 348):makeButton(0, 0, 43, 10, 1, self.correct) -- Correction button
   
-  local function button(char) return function() self:appendNumber(char) end end
+  local function button(char)
+    return --[[persistable:fax_button]] function() self:appendNumber(char) end
+  end
   
   self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button"1"):setSound"Fax_1.wav"
   self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button"2"):setSound"Fax_2.wav"

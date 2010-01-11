@@ -214,7 +214,7 @@ function UIBottomPanel:openFirstMessage()
 end
 
 function UIBottomPanel:createMessageWindow()
-  local function onClose(window, out_of_time)
+  local --[[persistable:bottom_panel_message_window_close]] function onClose(window, out_of_time)
     local message_windows = self.message_windows
     local index_to_remove
     for i = 1, #message_windows do

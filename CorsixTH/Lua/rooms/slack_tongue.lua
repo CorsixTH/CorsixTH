@@ -63,7 +63,7 @@ function SlackTongueRoom:commandEnteringPatient(patient)
     name = "multi_use_object",
     object = slicer,
     use_with = staff,
-    after_use = function()
+    after_use = --[[persistable:slack_tongue_after_use]] function()
       if patient.humanoid_class == "Slack Male Patient" then
         patient:setType "Standard Male Patient" -- Change to normal head
       else

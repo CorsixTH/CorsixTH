@@ -532,3 +532,53 @@ THPathfinder::node_t* THPathfinder::_openHeapPop()
     pNode->open_idx = min;
     return pResult;
 }
+
+void THPathfinder::persist(LuaPersistWriter *pWriter) const
+{
+    if(m_pDestination == NULL)
+    {
+        pWriter->writeVUInt(0);
+        return;
+    }
+    pWriter->writeVUInt(getPathLength() + 1);
+    pWriter->writeVUInt(m_iNodeCacheWidth);
+    pWriter->writeVUInt(m_iNodeCacheHeight);
+    for(const node_t* pNode = m_pDestination; pNode; pNode = pNode->prev)
+    {
+        pWriter->writeVUInt(pNode->x);
+        pWriter->writeVUInt(pNode->y);
+    }
+}
+
+void THPathfinder::depersist(LuaPersistReader *pReader)
+{
+    new (this) THPathfinder; // Call constructor
+
+    int iLength;
+    if(!pReader->readVUInt(iLength))
+        return;
+    if(iLength == 0)
+        return;
+    int iWidth, iHeight;
+    if(!pReader->readVUInt(iWidth) || !pReader->readVUInt(iHeight))
+        return;
+    _allocNodeCache(iWidth, iHeight);
+    int iX, iY;
+    if(!pReader->readVUInt(iX) || !pReader->readVUInt(iY))
+        return;
+    node_t *pNode = m_pNodes + iY * iWidth + iX;
+    m_pDestination = pNode;
+    for(int i = 0; i <= iLength - 2; ++i)
+    {
+        if(!pReader->readVUInt(iX) || !pReader->readVUInt(iY))
+            return;
+        node_t *pPrevNode = m_pNodes + iY * iWidth + iX;
+        pNode->distance = iLength - 1 - i;
+        pNode->prev = pPrevNode;
+        m_ppDirtyList[m_iDirtyCount++] = pNode;
+        pNode = pPrevNode;
+    }
+    pNode->distance = 0;
+    pNode->prev = NULL;
+    m_ppDirtyList[m_iDirtyCount++] = pNode;
+}

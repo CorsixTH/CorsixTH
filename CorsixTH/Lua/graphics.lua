@@ -89,14 +89,16 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
     cursor = TH.cursor()
     if not cursor:load(sheet, index, hot_x, hot_y) then
       cursor = {
-        draw = function(canvas, x, y)
+        draw = --[[persistable:graphics_lua_cursor]] function(canvas, x, y)
           sheet:draw(canvas, index, x - hot_x, y - hot_y)
         end,
       }
     else
-      self.reload_functions_cursors[cursor] = function(res)
+      local --[[persistable:graphics_reload_cursor]] function reloader(res)
         assert(res:load(sheet, index, hot_x, hot_y))
       end
+      self.reload_functions_cursors[cursor] = reloader
+      debug.getfenv(cursor).depersist = reloader
     end
     sheet_cache[index] = cursor
   end
@@ -143,6 +145,9 @@ function Graphics:loadPalette(dir, name)
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
+  debug.getfenv(palette).depersist = --[[persistable:graphics_reload_palette]] function(palette)
+    palette:load(self.app:readDataFile(dir or "Data", name))
+  end
   self.cache.palette_greyscale_ghost[name] = self:makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
   return palette, self.cache.palette_greyscale_ghost[name]
@@ -169,15 +174,22 @@ function Graphics:loadRaw(name, width, height, paldir, pal)
   data = data:sub(1, width * height)
   
   local bitmap = TH.bitmap()
+  local palette 
   if pal and paldir then
-    bitmap:setPalette(self:loadPalette(paldir, pal))
+    palette = self:loadPalette(paldir, pal)
   else
-    bitmap:setPalette(self:loadPalette("QData", name .. ".pal"))
+    palette = self:loadPalette("QData", name .. ".pal")
   end
+  bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
-  self.reload_functions[bitmap] = function(res)
-    assert(res:load(data, width, self.target))
+  local --[[persistable:graphics_reload_bitmap]] function reloader(bitmap)
+    bitmap:setPalette(palette)
+    local data = self.app:readDataFile("QData", name .. ".dat")
+    data = data:sub(1, width * height)
+    assert(bitmap:load(data, width, self.target))
   end
+  self.reload_functions[bitmap] = reloader
+  debug.getfenv(bitmap).depersist = reloader
   
   self.cache.raw[name] = bitmap
   return bitmap
@@ -204,8 +216,12 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   end
   
   local font = TH.font()
-  font:setSheet(sprite_table)
-  font:setSeparation(x_sep or 0, y_sep or 0)
+  local --[[persistable:graphics_reload_font]] function reloader(font)
+    font:setSheet(sprite_table)
+    font:setSeparation(x_sep or 0, y_sep or 0)
+  end
+  debug.getfenv(font).depersist = reloader
+  reloader(font)
   return font
 end
 
@@ -237,21 +253,23 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
   
   local sheet = TH.sheet()
-  sheet:setPalette(palette or self:loadPalette())
-  local data_tab, data_dat
-  if dir == "Bitmap" then
-    data_tab = self.app:readBitmapDataFile(name .. ".tab")
-    data_dat = self.app:readBitmapDataFile(name .. ".dat")
-  else
-    data_tab = self.app:readDataFile(dir, name .. ".tab")
-    data_dat = self.app:readDataFile(dir, name .. ".dat")
+  local --[[persistable:graphics_reload_sprites]] function reloader(sheet)
+    sheet:setPalette(palette or self:loadPalette())
+    local data_tab, data_dat
+    if dir == "Bitmap" then
+      data_tab = self.app:readBitmapDataFile(name .. ".tab")
+      data_dat = self.app:readBitmapDataFile(name .. ".dat")
+    else
+      data_tab = self.app:readDataFile(dir, name .. ".tab")
+      data_dat = self.app:readDataFile(dir, name .. ".dat")
+    end
+    if not sheet:load(data_tab, data_dat, complex, self.target) then
+      error("Cannot load sprite sheet " .. dir .. ":" .. name)
+    end
   end
-  if not sheet:load(data_tab, data_dat, complex, self.target) then
-    error("Cannot load sprite sheet " .. dir .. ":" .. name)
-  end
-  self.reload_functions[sheet] = function(res)
-    assert(res:load(data_tab, data_dat, complex, self.target))
-  end
+  debug.getfenv(sheet).depersist = reloader
+  self.reload_functions[sheet] = reloader
+  reloader(sheet)
   
   self.cache.tabled[name] = sheet
   return sheet

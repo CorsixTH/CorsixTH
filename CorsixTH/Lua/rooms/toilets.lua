@@ -75,7 +75,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
     humanoid:queueAction{
       name = "use_object",
       object = loo,
-      loop_callback = function()
+      loop_callback = --[[persistable:toilets_loop_callback]] function()
         use_time = use_time - 1
         if use_time <= 0 then
           humanoid:setMood("poo", nil)
@@ -84,7 +84,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
         -- There are only animations for standard patients to use the sinks.
           if humanoid.humanoid_class == "Standard Female Patient" or
             humanoid.humanoid_class == "Standard Male Patient" then
-            local function after_use()
+            local --[[persistable:toilets_find_sink]] function after_use()
               local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
               if sink then
                 humanoid:walkTo(sx, sy)
@@ -92,7 +92,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                   name = "use_object",
                   object = sink,
                   prolonged_usage = false,
-                  after_use = function()
+                  after_use = --[[persistable:toilets_after_use_sink]] function()
                     self:dealtWithPatient(humanoid)
                   end,
                 }

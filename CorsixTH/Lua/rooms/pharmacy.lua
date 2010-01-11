@@ -76,7 +76,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
     object = cabinet,
     use_with = patient,
     layer3 = layer3,
-    after_use = function()
+    after_use = --[[persistable:pharmacy_after_use]] function()
       staff:setNextAction{name = "meander"}
       if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
         patient:setType "Standard Male Patient"

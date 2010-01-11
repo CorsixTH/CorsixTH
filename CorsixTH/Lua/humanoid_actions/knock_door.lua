@@ -18,13 +18,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_knock_door_tick(humanoid)
+local action_knock_door_tick = permanent"action_knock_door_tick"( function(humanoid)
   local door = humanoid.user_of
   door:setUser(nil)
   humanoid.user_of = nil
   door:getRoom():tryAdvanceQueue()
   humanoid:finishAction()
-end
+end)
 
 local function action_knock_door_start(action, humanoid)
   local direction = action.direction

@@ -104,7 +104,7 @@ local function action_queue_finish_standing(action, humanoid)
   error "Queue action not in action_queue"
 end
 
-local function action_queue_on_change_position(action, humanoid)
+local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
   -- Find out if we have to be standing up
   local must_stand = class.is(humanoid, Staff)
   local queue = action.queue
@@ -198,13 +198,13 @@ local function action_queue_on_change_position(action, humanoid)
       must_happen = true,
     }, num_actions_prior + 1)
   end
-end
+end)
 
-local function action_queue_is_standing(action)
+local action_queue_is_standing = permanent"action_queue_is_standing"( function(action)
   return action.current_bench_distance == nil
-end
+end)
 
-local function action_queue_on_leave(action, humanoid)
+local action_queue_on_leave = permanent"action_queue_on_leave"( function(action, humanoid)
   action.is_in_queue = false
   if action.reserve_when_done then
     action.reserve_when_done.reserved_for = humanoid
@@ -216,10 +216,10 @@ local function action_queue_on_leave(action, humanoid)
     end
   end
   error "Queue action not in action_queue"
-end
+end)
 
 -- While queueing one could get thirsty.
-local function action_queue_get_soda(action, humanoid, machine, mx, my)
+local action_queue_get_soda = permanent"action_queue_get_soda"( function(action, humanoid, machine, mx, my)
   local num_actions_prior
   if action:isStanding() then
     num_actions_prior = action_queue_finish_standing(action, humanoid)
@@ -228,7 +228,7 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
   end
   
   -- Callback function used after the drinks machine has been used.
-  local function after_use()
+  local --[[persistable:action_queue_get_soda_after_use]] function after_use()
     humanoid:changeAttribute("thirst", -0.8)
     humanoid:changeAttribute("toilet_need", 0.3)
     humanoid:setMood("thirsty", nil)
@@ -259,9 +259,9 @@ local function action_queue_get_soda(action, humanoid, machine, mx, my)
     }, num_actions_prior + 2)
   -- Make sure noone thinks we're sitting down anymore.
   action.current_bench_distance = nil
-end
+end)
 
-local function action_queue_interrupt(action, humanoid)
+local action_queue_interrupt = permanent"action_queue_interrupt"( function(action, humanoid)
   if action.is_in_queue then
     action.queue:removeValue(humanoid)
   end
@@ -271,7 +271,7 @@ local function action_queue_interrupt(action, humanoid)
     end
   end
   humanoid:finishAction()
-end
+end)
 
 local function action_queue_start(action, humanoid)
   local x, y, queue = action.x, action.y, action.queue

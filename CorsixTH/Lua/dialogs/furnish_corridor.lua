@@ -87,7 +87,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm)
   local i = 1
   local function item_callback(index, qty)
-    return function(self)
+    return --[[persistable:furnish_corridor_item_callback]] function(self)
       if self:purchaseItem(index, qty) == 0 then
         self.ui:playSound "wrong2.wav"
       elseif qty > 0 then

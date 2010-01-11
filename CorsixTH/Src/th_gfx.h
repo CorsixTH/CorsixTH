@@ -26,6 +26,7 @@ SOFTWARE.
 #include "th_gfx_dx9.h"
 #include "th_gfx_ogl.h"
 #include "th_gfx_sdl.h"
+#include "persist_lua.h"
 #include <stddef.h>
 
 #ifndef CORSIX_TH_HAS_RENDERING_ENGINE
@@ -407,6 +408,9 @@ public:
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setLayer(int iLayer, int iId);
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
 
 protected:
     THAnimationManager *m_pManager;

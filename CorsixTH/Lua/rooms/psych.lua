@@ -56,7 +56,7 @@ function PsychRoom:commandEnteringStaff(staff)
     local num_meanders = math.random(2, 8)
     staff:queueAction{
       name = "meander",
-      loop_callback = function(action)
+      loop_callback = --[[persistable:psych_meander_loop_callback]] function(action)
         num_meanders = num_meanders - 1
         if num_meanders == 0 then
           self:commandEnteringStaff(staff)
@@ -76,7 +76,7 @@ function PsychRoom:commandEnteringPatient(patient)
   
   local duration = math.random(16, 72)
   local bookcase, bx, by
-  local function loop_callback()
+  local --[[persistable:psych_loop_callback]] function loop_callback()
     if bookcase == nil then
       bookcase, bx, by = self.world:findObjectNear(staff, "bookcase")
     end
@@ -91,7 +91,9 @@ function PsychRoom:commandEnteringPatient(patient)
         patient:queueAction{
           name = "use_screen",
           object = obj,
-          after_use = function() self:dealtWithPatient(patient) end,
+          after_use = --[[persistable:psych_screen_after_use]] function()
+            self:dealtWithPatient(patient)
+          end,
         }
       else
         self:dealtWithPatient(patient)

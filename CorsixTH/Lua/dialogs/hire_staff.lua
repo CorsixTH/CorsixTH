@@ -39,7 +39,7 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(255, 0, 241)
   
   -- Left hand side tabs
-  local function category(name, state, btn)
+  local --[[persistable:hire_staff_category]] function category(name, state, btn)
     if #self.world.available_staff[name] == 0 then
       self.ui:playSound "wrong2.wav"
       if state then

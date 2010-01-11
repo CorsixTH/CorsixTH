@@ -63,7 +63,7 @@ function InflationRoom:commandEnteringPatient(patient)
     name = "multi_use_object",
     object = inflator,
     use_with = staff,
-    after_use = function()
+    after_use = --[[persistable:inflation_after_use]] function()
       patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
       staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)

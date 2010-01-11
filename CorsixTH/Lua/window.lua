@@ -47,7 +47,7 @@ function Window:close()
   self.parent:removeWindow(self)
 end
 
-local panel_mt = {
+local panel_mt = permanent("Window.<panel_mt>", {
   __index = {
     makeButton = function(...)
       return (...).window:makeButtonOnPanel(...)
@@ -56,7 +56,7 @@ local panel_mt = {
       return (...).window:makeButtonOnPanel(...):makeToggle()
     end,
   }
-}
+})
 
 function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
@@ -132,7 +132,7 @@ function Window:getWindow(window_class)
   end
 end
 
-local button_mt = {
+local button_mt = permanent("Window.<button_mt>", {
   __index = {
     setDisabledSprite = function(self, index)
       self.sprite_index_disabled = index
@@ -176,7 +176,7 @@ local button_mt = {
       return self
     end,
   }
-}
+})
 
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x

@@ -9,7 +9,12 @@ if (package and package.preload and package.preload.TH) == nil then
   error "This file must be invoked by the CorsixTH executable"
 end
 if _VERSION ~= "Lua 5.1" then
-  error "Please recompile CorsixTH and link against Lua version 5.1"
+  if _VERSION == "Lua 5.2" then
+    print "Notice: Lua 5.2 is not officially supported at the moment"
+    unpack = table.unpack
+  else
+    error "Please recompile CorsixTH and link against Lua version 5.1"
+  end
 end
 
 -- If being debugged in Decoda, turn off JIT compilation (as it cannot debug
@@ -39,13 +44,31 @@ for _, arg in ipairs{...} do
   end
 end
 local done_files = {}
-local do_file = dofile
+local persist = require "persist"
+local save_results
+if table.pack then
+  -- Lua 5.2
+  save_results = function(t, k, ...)
+    t[k] = table.pack(...)
+    return ...
+  end
+else
+  -- Lua 5.1
+  save_results = function(t, k, ...)
+    t[k] = {n = select('#', ...), ...}
+    return ...
+  end
+end
 function dofile(name)
+  if pathsep ~= "/" then
+    name = name:gsub("/", pathsep)
+  end
   if done_files[name] then
-    return
+    local results = done_files[name]
+    return unpack(results, 1, results.n)
   end
   done_files[name] = true
-  return do_file(code_dir .. name .. ".lua")
+  return save_results(done_files, name, persist.dofile(code_dir .. name .. ".lua"))
 end
 
 -- Load standard library extensions

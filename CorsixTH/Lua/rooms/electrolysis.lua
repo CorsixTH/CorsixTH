@@ -55,7 +55,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   local electrolyser, pat_x, pat_y = self.world:findObjectNear(patient, "electrolyser")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
   
-  local function loop_callback()
+  local --[[persistable:electrolysis_shared_loop_callback]] function loop_callback()
     -- If the other humanoid has already started to idle we move on
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
       -- Skilled doctors require less electrocutions
@@ -73,7 +73,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
       patient:setNextAction{
         name = "use_object",
         object = electrolyser,
-        loop_callback = function(action)
+        loop_callback = --[[persistable:electrolysis_loop_callback]] function(action)
           num_electrocutions = num_electrocutions - 1
           if num_electrocutions <= 0 then
             -- Tired doctors can continue electrocuting for a bit too long...
@@ -86,7 +86,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
             end
           end
         end,
-        after_use = function()
+        after_use = --[[persistable:electrolysis_after_use]] function()
           self:dealtWithPatient(patient)
           staff:setNextAction{name = "meander"}
         end,

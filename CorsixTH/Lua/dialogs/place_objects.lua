@@ -87,7 +87,7 @@ function UIPlaceObjects:resize(num_slots)
   end
   
   local function idx(i)
-    return function(self)
+    return --[[persistable:place_objects_idx1]] function(self)
       if i == self.active_index then
         self:nextOrientation()
       else
@@ -145,7 +145,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   end
   
   local function idx(i)
-    return function(self)
+    return --[[persistable:place_objects_idx2]] function(self)
       if i == self.active_index then
         self:nextOrientation()
       else

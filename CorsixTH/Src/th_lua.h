@@ -51,6 +51,7 @@ void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
 const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
 
 void luaT_setenvfield(lua_State *L, int index, const char *k);
+void luaT_getenvfield(lua_State *L, int index, const char *k);
 
 template <class T>
 inline T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = false)

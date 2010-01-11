@@ -55,15 +55,15 @@ function HairRestorationRoom:commandEnteringPatient(patient)
   local hair_restorer, pat_x, pat_y = self.world:findObjectNear(patient, "hair_restorer")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
 
-  local function loop_callback()
+  local --[[persistable:hair_restoration_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
       patient:setNextAction{
         name = "use_object",
         object = hair_restorer,
-        loop_callback = function(action)
+        loop_callback = --[[persistable:hair_restoration_loop_callback]] function(action)
           action.prolonged_usage = false
         end,
-        after_use = function()
+        after_use = --[[persistable:hair_restoration_after_use]] function()
           patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
           staff:setNextAction{name = "meander"}
           self:dealtWithPatient(patient)

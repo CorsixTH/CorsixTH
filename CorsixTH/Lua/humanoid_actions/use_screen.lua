@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function finish(humanoid)
+local finish = permanent"action_use_screen_finish"( function(humanoid)
   local screen = humanoid.user_of
   humanoid.user_of = nil
   screen:setUser(nil)
@@ -29,19 +29,19 @@ local function finish(humanoid)
     after_use()
   end
   humanoid:finishAction()
-end
+end)
 
-local function patient_clothes_state(humanoid)
+local patient_clothes_state = permanent"action_use_screen_patient_clothes_state"( function(humanoid)
   humanoid.user_of:setAnimation(1204)
   humanoid.user_of:setLayer(1, humanoid.layers[1])
   return finish(humanoid)
-end
+end)
 
-local function normal_state(humanoid)
+local normal_state = permanent"action_use_screen_normal_state"( function(humanoid)
   humanoid.user_of:setAnimation(1022)
   humanoid.user_of:setLayer(1, 0)
   return finish(humanoid)
-end
+end)
 
 local function action_use_screen_start(action, humanoid)
   local screen = action.object

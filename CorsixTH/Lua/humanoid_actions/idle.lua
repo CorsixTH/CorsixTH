@@ -18,17 +18,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_idle_interrupt(action, humanoid)
+local action_idle_interrupt = permanent"action_idle_interrupt"( function(action, humanoid)
   humanoid:setTimer(1, humanoid.finishAction)
-end
+end)
 
-local function action_timer(humanoid)
+local action_timer = permanent"action_idle_timer"( function(humanoid)
   local action = humanoid.action_queue[1]
   if action.after_use then
     action.after_use()
   end
   humanoid:finishAction()
-end
+end)
 
 local function action_idle_start(action, humanoid)
   local direction = action.direction or humanoid.last_move_direction

@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_staff_reception_interrupt(action, humanoid, high_priority)
+local action_staff_reception_interrupt = permanent"action_staff_reception_interrupt"( function(action, humanoid, high_priority)
   local object = action.object
   object.receptionist = nil
   object:checkForNearbyStaff()
@@ -33,9 +33,9 @@ local function action_staff_reception_interrupt(action, humanoid, high_priority)
       humanoid:finishAction()
     end)
   end
-end
+end)
 
-local function action_staff_reception_idle_phase(humanoid)
+local action_staff_reception_idle_phase = permanent"action_staff_reception_idle_phase"( function(humanoid)
   local action = humanoid.action_queue[1]
   local direction = humanoid.last_move_direction
   local anims = humanoid.walk_anims
@@ -62,9 +62,9 @@ local function action_staff_reception_idle_phase(humanoid)
   else
     action_staff_reception_interrupt(action, humanoid)
   end
-end
+end)
 
-local function action_staff_reception_interrupt_early(action, humanoid, high_priority)
+local action_staff_reception_interrupt_early = permanent"action_staff_reception_interrupt_early"( function(action, humanoid, high_priority)
   if high_priority then
     action.object.reserved_for = nil
     humanoid.associated_desk:checkForNearbyStaff()
@@ -73,7 +73,7 @@ local function action_staff_reception_interrupt_early(action, humanoid, high_pri
     humanoid:setTilePositionSpeed(action.object:getSecondaryUsageTile())
     humanoid:finishAction()
   end
-end
+end)
 
 local function action_staff_reception_start(action, humanoid)
   if action.todo_interrupt then

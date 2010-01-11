@@ -18,11 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_seek_room_interrupt(action, humanoid)
+local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
   humanoid:setMood("patient_wait", nil)
   humanoid.world:unregisterRoomBuildCallback(action.build_callback)
   humanoid:finishAction()
-end
+end)
 
 local function action_seek_room_start(action, humanoid)
   local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "advanced")
@@ -42,7 +42,7 @@ local function action_seek_room_start(action, humanoid)
       action.done_init = true
       humanoid:setMood("patient_wait", true)
       action.must_happen = true
-      action.build_callback = function(room)
+      action.build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
         if room.room_info.id == action.room_type then
           humanoid:setNextAction(room:createEnterAction())
           humanoid.next_room_to_visit = room

@@ -66,7 +66,13 @@ function App:init()
   -- App initialisation 1st goal: Get the loading screen up
   
   -- Prereq 1: Config file (for screen width / height / TH folder)
-  setfenv(assert(loadfile(self.command_line["config-file"] or "config.txt")), self.config)()
+  if rawget(_G, "loadin") then
+    -- setfenv is deprecated in Lua 5.2, loadin is provided instead
+    local filename = self.command_line["config-file"] or "config.txt"
+    assert(loadin(self.config, io.open(filename, "r"):read"*a", "@"..filename, "t"))()
+  else
+    setfenv(assert(loadfile(self.command_line["config-file"] or "config.txt")), self.config)()
+  end
   self:fixConfig()
   self:checkInstallFolder()
   self:checkLanguageFile()
@@ -114,6 +120,7 @@ function App:init()
   SDL.wm.setIconWin32()
   
   -- Prereq 2: Load and initialise the graphics subsystem
+  dofile "persistance"
   dofile "graphics"
   self.gfx = Graphics(self)
   
@@ -305,7 +312,7 @@ function App:run()
       self.ui:addWindow(UIInformation(self.ui,
         "An error has occured while running the timer handler - see the log "..
         "window for details. Would you like to attempt a recovery?",
-        function()
+        --[[persistable:app_attempt_recovery]] function()
           entity.ticks = false
           self.eventHandlers.timer = handler
         end
@@ -517,26 +524,24 @@ function App:loadLuaFolder(dir, no_results)
   local results = no_results and "" or {}
   for file in lfs.dir(path) do
     if file:match"%.lua$" then
-      local chunk, e = loadfile(path .. file)
-      if e then
-        print("Error loading " .. dir .. file .. ":\n" .. tostring(e))
+      local status, result = pcall(dofile, dir .. file:sub(1, -5))
+      if not status then
+        print("Error loading " .. dir ..  file .. ":\n" .. tostring(result))
       else
-        local status, result = pcall(chunk, self)
-        if not status then
-          print("Runtime error loading " .. dir ..  file .. ":\n" .. tostring(result))
-        else
-          if result == nil then
-            if not no_results then
-              print("Warning: " .. dir .. file .. " returned no value")
-            end
-          else
-            if type(result) == "table" and result.id then
-              results[result.id] = result
-            elseif type(result) == "function" then
-              results[file:match"(.*)%."] = result
-            end
-            results[#results + 1] = result
+        if result == nil then
+          if not no_results then
+            print("Warning: " .. dir .. file .. " returned no value")
           end
+        else
+          if no_results then
+            print("Warning: " .. dir .. file .. " returned a value:", result)
+          end
+          if type(result) == "table" and result.id then
+            results[result.id] = result
+          elseif type(result) == "function" then
+            results[file:match"(.*)%."] = result
+          end
+          results[#results + 1] = result
         end
       end
     end
@@ -549,7 +554,7 @@ function App:loadLuaFolder(dir, no_results)
 end
 
 function App:quit()
-  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), function()
+  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), --[[persistable:app_confirm_quit]] function()
     self.running = false
   end))
 end

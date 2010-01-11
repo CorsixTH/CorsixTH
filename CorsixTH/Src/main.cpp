@@ -30,6 +30,7 @@ int luaopen_random(lua_State *L);
 #include "th_lua.h"
 #include "lua_sdl.h"
 #include "jit_opt.h"
+#include "persist_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #endif
@@ -182,7 +183,14 @@ int THMain_l_main(lua_State *L)
     lua_setfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
 
     // math.random* = Mersenne twister variant
+#ifdef LUA_RIDX_CPCALL
+    lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_CPCALL);
+    lua_CFunction fnCPCall = luaopen_random;
+    lua_pushlightuserdata(L, &fnCPCall);
+    lua_pcall(L, 1, 0, 0);
+#else
     lua_cpcall(L, luaopen_random, NULL);
+#endif
 
     // package.preload["jit.opt"] = load(jit_opt_lua)
     // package.preload["jit.opt_inline"] = load(jit_opt_inline_lua)
@@ -246,11 +254,21 @@ int THMain_l_main(lua_State *L)
     lua_pushcfunction(L, luaopen_th);
     lua_settable(L, -3);
 
+    // package.preload.persist = luaopen_persist
+    lua_pushliteral(L, "persist");
+    lua_pushcfunction(L, luaopen_persist);
+    lua_settable(L, -3);
+
     // package.preload.sdl = luaopen_sdl
     lua_pushliteral(L, "sdl");
     lua_pushcfunction(L, luaopen_sdl);
     lua_settable(L, -3);
     lua_pop(L, 2);
+
+    // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatbility)
+    lua_getglobal(L, "require");
+    lua_pushliteral(L, "debug");
+    lua_call(L, 1, 0);
 
     // Code to try several variations on finding CorsixTH.lua:
     // CorsixTH/CorsixTH.lua

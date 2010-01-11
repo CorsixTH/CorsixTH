@@ -69,6 +69,8 @@ local button_codes = invert {
   right = 3,
 }
 
+local LOADED_DIALOGS = false
+
 function UI:UI(app, local_hospital)
   self:Window()
   self.app = app
@@ -96,7 +98,10 @@ function UI:UI(app, local_hospital)
   self.down_cursor = app.gfx:loadMainCursor("clicked")
   self.grab_cursor = app.gfx:loadMainCursor("grab")
   
-  app:loadLuaFolder("dialogs", true)
+  if not LOADED_DIALOGS then
+    app:loadLuaFolder("dialogs", true)
+    LOADED_DIALOGS = true
+  end
   
   if _MAP_EDITOR then
     self.setCursor = function() end

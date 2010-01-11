@@ -113,12 +113,13 @@ function Audio:init()
     local mp3 = true         -- Yes, do load mp3 files.
     
     for foundFile in lfs.dir(midi_dir) do
-      -- Extract only the base name of the file ("ATLANTIS" instead of "ATLANTIS.XMI")
-      local foundFile_filenameBase = foundFile:sub( 0, foundFile:find(".", 1, true)-1 )
-      -- Make one version uppercase
-      local foundFile_filenameBase_upper = foundFile_filenameBase:upper()
       -- Music file found (mp3/xmi).
       if (mp3 and foundFile:upper():match"%.MP3$") or (foundFile:upper():match"%.XMI$") then
+        -- Extract only the base name of the file ("ATLANTIS" instead of "ATLANTIS.XMI")
+        local foundFile_filenameBase = foundFile:sub( 0, foundFile:find(".", 1, true)-1 )
+        -- Make one version uppercase
+        local foundFile_filenameBase_upper = foundFile_filenameBase:upper()
+      
         if (foundFile:upper():match"%.MP3$") then
            musicFileTable(foundFile_filenameBase_upper).filename_mp3 = midi_dir .. foundFile
            -- Remove the xmi version of this file, if found.

@@ -66,6 +66,7 @@ local function define_class(name, super)
     methods_mt.__index = super
   end
   methods_mt.__call = new_class
+  methods_mt.__class_name = name
   
   _G[name] = methods
 end
