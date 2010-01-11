@@ -70,7 +70,7 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"] + 1, 
+  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"], 
     self.diagnosis_progress + incrementValue)
   self.diagnosis_progress = math.max(0.0, self.diagnosis_progress)
   self:updateDynamicInfo()
@@ -181,10 +181,13 @@ function Patient:tickDay()
       
       -- Callback function when the machine has been used
       local --[[persistable:patient_drinks_machine_after_use]] function after_use()
-        self:changeAttribute("thirst", -0.8)
-        self:changeAttribute("toilet_need", 0.3)
+        self:changeAttribute("thirst", -0.7 + math.random()*0.2)
+        self:changeAttribute("toilet_need", 0.1 + math.random()*0.3)
         self:setMood("thirsty", nil)
-        self.hospital:receiveMoney(15, _S(8, 14))
+        -- The patient might be kicked while buying a drink
+        if not self.going_home then
+          self.hospital:receiveMoneyForProduct(self, 15, _S(8, 14))
+        end
       end
         
       -- If we are queueing, let the queue handle the situation.
@@ -192,7 +195,7 @@ function Patient:tickDay()
         if current_action.name == "queue" then
           local callbacks = current_action.queue.callbacks[self]
           if callbacks then
-            callbacks:onGetSoda(self, machine, lx, ly)
+            callbacks:onGetSoda(self, machine, lx, ly, after_use)
             return
           end
         end
@@ -310,6 +313,12 @@ function Patient:updateDynamicInfo(helper_object)
     self:setDynamicInfo('progress', nil)
   else
     self:setDynamicInfo('text', {self.action_string, "", _S(59, 15)})
-    self:setDynamicInfo('progress', self.diagnosis_progress)
+    -- TODO: If the policy is changed this info will not be changed until the next
+    -- diagnosis facility has been visited.
+    local divider = 1
+    if self.hospital then
+      divider = self.hospital.policies["stop_procedure"]
+    end
+    self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
   end
 end

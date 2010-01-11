@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local math_floor
     = math.floor
 local TH = require "TH"
-dofile "staff"
+dofile "entities/staff"
 
 class "UIPlaceStaff" (Window)
 

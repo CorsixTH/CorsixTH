@@ -67,7 +67,7 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   -- Slider positions
   local guess = 129 + hosp.policies["guess_cure"]*299
   local home = 129 + hosp.policies["send_home"]*299
-  local stop = 124 + hosp.policies["stop_procedure"]*299
+  local stop = 124 + (hosp.policies["stop_procedure"] - 1)*299
   local staffroom = 149 + hosp.policies["goto_staffroom"]*250
   
   -- Sliders
@@ -77,13 +77,15 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["stop_procedure"] = self:addPanel(3, stop, 210, 92, 28)
   self.sliders["goto_staffroom"] = self:addPanel(3, staffroom, 285, 92, 28)
   self.sliders["guess_cure"].min_x = home
-  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set
+  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set when 
+  -- windows is closed.
   self.sliders["guess_cure"].max_x = 428
   self.sliders["send_home"].min_x = 129
   self.sliders["send_home"].max_x = guess
   self.sliders["send_home"].total_max_x = 428
   self.sliders["stop_procedure"].min_x = 124
   self.sliders["stop_procedure"].max_x = 423
+  self.sliders["stop_procedure"].addition = true -- This value goes from 1 to 2.
   self.sliders["goto_staffroom"].min_x = 149
   self.sliders["goto_staffroom"].max_x = 399
 end
@@ -174,7 +176,8 @@ end
 function UIPolicy:close()
   for key, s in pairs(self.sliders) do
     local divider = (s.total_max_x or s.max_x) - (s.total_min_x or s.min_x)
-    self.hospital.policies[key] = (s.x - (s.total_min_x or s.min_x))/divider
+    local number = (s.addition and 1 or 0)
+    self.hospital.policies[key] = number + (s.x - (s.total_min_x or s.min_x))/divider
   end
   Window.close(self)
 end

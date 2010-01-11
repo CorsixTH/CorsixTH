@@ -24,9 +24,9 @@ local ipairs, _G, table_remove
 
 dofile "entity"
 dofile "room"
-dofile "object"
-dofile "humanoid"
-dofile "patient"
+dofile "entities/object"
+dofile "entities/humanoid"
+dofile "entities/patient"
 dofile "staff_profile"
 dofile "hospital"
 

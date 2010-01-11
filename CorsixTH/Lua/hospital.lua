@@ -38,7 +38,7 @@ function Hospital:Hospital(world)
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
-  self.policies["stop_procedure"] = 0 -- Note that this is between 0 and 1 ( = 100% - 200%)
+  self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
   -- TODO: Take disease list from the world's available diseases and available
   -- rooms (for diagnosis psuedo-piseases)
@@ -150,6 +150,10 @@ function Hospital:receiveMoneyForTreatment(patient)
   self:receiveMoney(amount, reason)
 end
 
+function Hospital:receiveMoneyForProduct(patient, amount, reason)
+  self:receiveMoney(amount, reason)
+end
+
 function Hospital:logTransaction(transaction)
   transaction.balance = self.balance
   transaction.day = self.world.day
@@ -237,3 +241,4 @@ end
 function AIHospital:logTransaction()
   -- AI doesn't need a log of transactions, as it is only used for UI purposes
 end
+

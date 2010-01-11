@@ -158,7 +158,7 @@ function App:init()
   self.anims = self.gfx:loadAnimations("Data", "V")
   self.animation_manager = AnimationManager(self.anims)
   self.walls = self:loadLuaFolder"walls"
-  dofile "object"
+  dofile "entities/object"
   self.objects = self:loadLuaFolder"objects"
   for _, v in ipairs(self.objects) do
     Object.processTypeDefinition(v)
@@ -167,6 +167,7 @@ function App:init()
   self.rooms = self:loadLuaFolder"rooms"
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
   self.diseases = self:loadLuaFolder"diseases"
+  for i, dis in ipairs(self:loadLuaFolder"diagnosis") do table.insert(self.diseases, dis) end
   
   -- Load world before UI
   dofile "world"

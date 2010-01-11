@@ -26,10 +26,10 @@ CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
+CorsixTH/Lua/diagnosis/diag_ultrascan.lua -text
+CorsixTH/Lua/diagnosis/diag_x_ray.lua -text
 CorsixTH/Lua/dialogs/hospital_policy.lua -text
 CorsixTH/Lua/dialogs/staff_rise.lua -text
-CorsixTH/Lua/diseases/diag_ultrascan.lua -text
-CorsixTH/Lua/diseases/diag_x_ray.lua -text
 CorsixTH/Lua/persistance.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text
