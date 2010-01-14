@@ -192,11 +192,8 @@ function Staff:setHospital(hospital)
   if self.hospital then
     self.hospital:removeStaff(self)
   end
-  -- This makes the divider in the fatigue bar be there from the very beginning.
-  if hospital then
-    self:setDynamicInfo('dividers', {hospital.policies["goto_staffroom"]})
-  end
   Humanoid.setHospital(self, hospital)
+  self:updateDynamicInfo()
 end
 
 local profile_attributes = {
