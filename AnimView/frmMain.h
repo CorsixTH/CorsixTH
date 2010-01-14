@@ -91,7 +91,7 @@ protected:
 
     void _onAnimChange(size_t iIndex);
 
-    void m_drawCoordinates(wxPaintDC& DC, int i, int j);
+    void _drawCoordinates(wxPaintDC& DC, int i, int j);
 
     THAnimations m_oAnims;
     THLayerMask m_mskLayers;

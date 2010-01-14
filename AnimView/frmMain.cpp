@@ -178,15 +178,15 @@ frmMain::frmMain()
     pLayer12->Add(new wxCheckBox(this, ID(12, 2), L"2 (Smoke)"), 0, wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer12, 0, wxEXPAND | wxALL, 0);
 
-    wxStaticBoxSizer *pMoodOverlay = new wxStaticBoxSizer(wxVERTICAL, this, L"Mood");
+    wxStaticBoxSizer *pMoodOverlay = new wxStaticBoxSizer(wxVERTICAL, this, L"Overlays");
     pMoodOverlay->Add(new wxCheckBox(this, ID_DRAW_MOOD, L"Draw mood overlay"), 0, wxEXPAND | wxALL, 1);
     wxBoxSizer *pMoodRow = new wxBoxSizer(wxHORIZONTAL);
     pMoodRow->Add(new wxStaticText(this, wxID_ANY, L"Marker position (click to move it):"), 0, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 2);
     pMoodRow->Add(m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"), 1, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 1);
     pMoodRow->Add(m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"), 1, wxEXPAND | wxALIGN_CENTER_VERTICAL);
     pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
+    pMoodOverlay->Add(new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"), 0, wxEXPAND | wxALL, 0);
     pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
-    pSidebarSizer->Add(new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"), 0, wxEXPAND | wxALL, 0);
     m_bDrawMood = false;
     m_bDrawCoordinates = false;
     m_iMoodDrawX = 0;
@@ -519,6 +519,10 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     {
         memcpy(imgCanvas.GetData(), m_imgBackground.GetData(), 400 * 400 * 3);
     }
+    else
+    {
+        memset(imgCanvas.GetData(), 0xFF, 400 * 400 * 3);
+    }
     wxSize oSize;
     m_oAnims.drawFrame(imgCanvas, m_iCurrentAnim, m_iCurrentFrame, &m_mskLayers, oSize);
     if(m_bDrawMood)
@@ -541,7 +545,7 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     if (m_bDrawCoordinates) {
         for (int i = -1; i <= 1; ++i) {
             for (int j = -1; j <= 1; ++j) {
-                m_drawCoordinates(DC, i, j);
+                _drawCoordinates(DC, i, j);
             }
         }
     }
@@ -641,10 +645,10 @@ void frmMain::_onGotoSearchResult(wxCommandEvent& evt)
     _onAnimChange(iAnim);
 }
 
-void frmMain::m_drawCoordinates(wxPaintDC& DC, int i, int j)
+void frmMain::_drawCoordinates(wxPaintDC& DC, int i, int j)
 {
-    int x = 122; //! tile (0, 0) text start x-coordinate
-    int y = 226; //! tile (0, 0) text start y-coordinate
+    int x = 122; // tile (0, 0) text start x-coordinate
+    int y = 226; // tile (0, 0) text start y-coordinate
     wxString s;
     s.Printf(_T("(%2d,%2d)"), i, j);
     DC.DrawText(s, 32 * (i - j) + x, 16 * (i + j - 2) + y);

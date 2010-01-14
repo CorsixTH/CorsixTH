@@ -916,7 +916,7 @@ public:
                         lua_getmetatable(L, -1);
                         lua_replace(L, -2);
                         lua_pushvalue(L, -2);
-                        lua_rawseti(L, -2, lua_objlen(L, -2) + 1);
+                        lua_rawseti(L, -2, (int)lua_objlen(L, -2) + 1);
                     }
                     lua_pop(L, 1);
                 }
@@ -1032,7 +1032,7 @@ public:
         lua_pop(L, 1);
 
         // Call all the __depersist functions which need a 2nd call
-        int iNumCalls = lua_objlen(L, 1);
+        int iNumCalls = (int)lua_objlen(L, 1);
         for(int i = 1; i <= iNumCalls; ++i)
         {
             lua_rawgeti(L, 1, i);
