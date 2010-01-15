@@ -67,6 +67,7 @@ SOFTWARE.
 /** Standard includes **/
 #include <stddef.h>
 #cmakedefine CORSIX_TH_HAS_STDINT_H
+#cmakedefine CORSIX_TH_HAS_MALLOC_H
 #ifdef CORSIX_TH_HAS_STDINT_H
 #include <stdint.h>
 #else

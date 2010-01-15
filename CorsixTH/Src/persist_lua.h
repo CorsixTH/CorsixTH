@@ -25,7 +25,7 @@ SOFTWARE.
 #include "th_lua.h"
 #include "config.h"
 #include <stdlib.h>
-#ifdef _MSC_VER
+#ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif
 

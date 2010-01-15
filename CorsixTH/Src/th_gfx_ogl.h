@@ -34,7 +34,13 @@ SOFTWARE.
 #endif
 #include <windows.h>
 #endif
+#if defined(__MACOSX__)
+#include <OpenGL/gl.h>
+#elif defined(__MACOS__)
+#include <gl.h>
+#else
 #include <GL/gl.h>
+#endif
 #include <SDL.h>
 
 class THCursor;

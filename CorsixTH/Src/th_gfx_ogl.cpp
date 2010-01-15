@@ -198,7 +198,7 @@ void THRenderTarget::_drawVerts(size_t iFirst, size_t iLast)
 {
     glInterleavedArrays(GL_T2F_C4UB_V3F, sizeof(THOGL_Vertex),
         m_pVerticies + iFirst);
-    glDrawArrays(GL_QUADS, 0, iLast - iFirst);
+    glDrawArrays(GL_QUADS, 0, static_cast<GLsizei>(iLast - iFirst));
 }
 
 bool THRenderTarget::fillBlack()

@@ -26,66 +26,82 @@ ELSE()
   ENDIF(WIN32)
 ENDIF(UNIX)
 
-# Finding libraries
-
-# Find SDL
-FIND_PACKAGE(SDL REQUIRED)
-INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
-IF(WIN32)
-LINK_LIBRARIES (
-  # The builtin SDL_main is used on Win32
-  ${SDL_LIBRARY}
-)
-ELSE()
-LINK_LIBRARIES (
-  SDLmain # Not included in SDL_LIBRARY variable
-  ${SDL_LIBRARY}
-)
-ENDIF(WIN32)
-
-# Find SDL_mixer
-IF(CORSIX_TH_USE_SDL_MIXER)
-  FIND_PACKAGE(SDL_mixer REQUIRED)
-  LINK_LIBRARIES(${SDLMIXER_LIBRARY})
-  INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
-ENDIF(CORSIX_TH_USE_SDL_MIXER)
-
-# Find OpenGL
-IF(CORSIX_TH_USE_OGL_RENDERER)
-FIND_PACKAGE(OpenGL REQUIRED)
-LINK_LIBRARIES(${OPENGL_gl_LIBRARY})
-INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
-ENDIF(CORSIX_TH_USE_OGL_RENDERER)
-
-# Find Lua
-FIND_PACKAGE(Lua51 REQUIRED)
-LINK_LIBRARIES(${LUA_LIBRARY})
-INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-
 # Modify the config.h based upon our selection of options
-IF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
-# CMake 2.8 seems to interpret both <in-file> and <out-file> as relative to
-# this directory.
-CONFIGURE_FILE(Src/config.h.in Src/config.h)
-ELSE()
-# CMake 2.6 seems to interpret <in-file> as relative to this directory, but
-# <out-file> as relative to the top-level directory.
-CONFIGURE_FILE(Src/config.h.in CorsixTH/Src/config.h)
-ENDIF("${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}" GREATER 2.6)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Generate source files list
 # Note: Done after generating config.h
 FILE(GLOB_RECURSE corsixth_source_files
-    Src/*.cpp
-    Src/*.c
-    Src/*.h
-    Lua/api_version.lua
-    CorsixTH.rc
-    ../LFS/lfs.c
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
+  ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
+  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
+  ${CMAKE_SOURCE_DIR}/LFS/lfs.c
 )
 
 # Declaration of the executable
-add_executable( CorsixTH ${corsixth_source_files} )
+add_executable(CorsixTH ${corsixth_source_files})
+
+# Finding libraries
+
+# Find SDL
+FIND_PACKAGE(SDL REQUIRED)
+IF(SDL_FOUND)
+  INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+  IF(SDLMAIN_LIBRARY STREQUAL "")
+    IF(WIN32)
+      # SDLmain not being found is not fatal, as the win32 SDLmain.c is distributed with CorsixTH
+    ELSE(WIN32)
+      message(FATAL_ERROR "Error: SDL was found but SDLmain was not")
+      message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
+    ENDIF(WIN32)
+  ENDIF(SDLMAIN_LIBRARY STREQUAL "")
+  # No need to specify sdlmain seperately, the FindSDL.cmake file will take care of that. If not we get an error about it
+  TARGET_LINK_LIBRARIES(CorsixTH ${SDL_LIBRARY})
+  message("  SDL found")
+ELSE(SDL_FOUND)
+  message(FATAL_ERROR "Error: SDL library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
+ENDIF(SDL_FOUND)
+
+# Find Lua
+FIND_PACKAGE(Lua51 REQUIRED)
+IF(LUA51_FOUND)
+  TARGET_LINK_LIBRARIES(CorsixTH ${LUA_LIBRARY})
+  INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
+  message("  Lua 5.1 found")
+ELSE(LUA51_FOUND)
+  message(FATAL_ERROR "Error: Lua library not found, it is required to build")
+ENDIF(LUA51_FOUND)
+
+# Find SDL_mixer
+IF(CORSIX_TH_USE_SDL_MIXER)
+  FIND_PACKAGE(SDL_mixer REQUIRED)
+  IF(SDLMIXER_FOUND)
+    TARGET_LINK_LIBRARIES(CorsixTH ${SDLMIXER_LIBRARY})
+    INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
+    message("  SDL_mixer found")
+  ELSE(SDLMIXER_FOUND)
+    message("Error: SDL_mixer library not found, even though it was selected to be included")
+  ENDIF(SDLMIXER_FOUND)
+ENDIF(CORSIX_TH_USE_SDL_MIXER)
+
+# Find OpenGL
+IF(CORSIX_TH_USE_OGL_RENDERER)
+  FIND_PACKAGE(OpenGL REQUIRED)
+  IF(OPENGL_FOUND)
+    LINK_LIBRARIES(${OPENGL_gl_LIBRARY})
+    INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+    message("  OpenGL found")
+  ELSE(OPENGL_FOUND)
+    message(FATAL_ERROR "Error: OpenGL library not found, it is required to build (consider changing choice of renderer)")
+  ENDIF(OPENGL_FOUND)
+ENDIF(CORSIX_TH_USE_OGL_RENDERER)
+
+# Declaration of the install process
 install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
 install(DIRECTORY Lua DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
 install(DIRECTORY Bitmap DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
