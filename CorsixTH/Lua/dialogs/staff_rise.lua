@@ -135,13 +135,13 @@ function UIStaffRise:drawDoctorAttributes(canvas)
   self.panel_sprites:draw(canvas, 296, marker_x, y + 230)
 
   -- Ability markers
-  if profile.is_surgeon then
+  if profile.is_surgeon and profile.is_surgeon == 1.0 then
     self.panel_sprites:draw(canvas, 292, x + 74, y + 133)
   end
-  if profile.is_psychiatrist then
+  if profile.is_psychiatrist and profile.is_psychiatrist == 1.0 then
     self.panel_sprites:draw(canvas, 293, x + 90, y + 139)
   end
-  if profile.is_researcher then
+  if profile.is_researcher and profile.is_researcher == 1.0 then
     self.panel_sprites:draw(canvas, 294, x + 120, y + 138)
   end
 

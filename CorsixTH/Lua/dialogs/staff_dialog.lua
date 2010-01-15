@@ -142,13 +142,13 @@ function UIStaff:draw(canvas)
       self.panel_sprites:draw(canvas, 347, x + 60, y + 173)
     end
     -- Ability markers
-    if profile.is_surgeon then
+    if profile.is_surgeon and profile.is_surgeon == 1.0 then
       self.panel_sprites:draw(canvas, 344, x + 144, y + 148)
     end
-    if profile.is_psychiatrist then
+    if profile.is_psychiatrist and profile.is_psychiatrist == 1.0 then
       self.panel_sprites:draw(canvas, 345, x + 155, y + 154)
     end
-    if profile.is_researcher then
+    if profile.is_researcher and profile.is_researcher == 1.0 then
       self.panel_sprites:draw(canvas, 346, x + 178, y + 153)
     end
   end

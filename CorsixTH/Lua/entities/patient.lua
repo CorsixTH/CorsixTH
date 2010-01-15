@@ -319,6 +319,8 @@ function Patient:updateDynamicInfo(helper_object)
     if self.hospital then
       divider = self.hospital.policies["stop_procedure"]
     end
-    self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
+    if self.diagnosis_progress then
+      self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
+    end
   end
 end

@@ -27,7 +27,7 @@ end
 
 function Staff:tick()
   Entity.tick(self)
-  if not self.fired then
+  if not self.fired and self.hospital then
     self:checkIfNeedRest()
   end
 
@@ -84,11 +84,11 @@ function Staff:setProfile(profile)
       professions = _S(34, 8) .. " "
       number = 1
     end
-    if profile.is_researcher then
+    if profile.is_researcher and profile.is_researcher == 1.0 then
       professions = professions .. _S(34, 9) .. " "
       number = number + 1
     end
-    if profile.is_surgeon then
+    if profile.is_surgeon and profile.is_surgeon == 1.0 then
       if professions then
         professions = professions .. _S(34, 6) .. " "
       else
@@ -96,7 +96,7 @@ function Staff:setProfile(profile)
       end
       number = number + 1
     end
-    if profile.is_psychiatrist then
+    if profile.is_psychiatrist and profile.is_psychiatrist == 1.0 then
       if number < 3 then
         if professions then
           professions = professions .. _S(34, 7)
@@ -202,7 +202,8 @@ local profile_attributes = {
   Researcher = "is_researcher",
 }
 
--- Helper function to decide if Staff fulfills a criterium (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon" and "Researcher")
+-- Helper function to decide if Staff fulfills a criterium 
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
 function Staff:fulfillsCriterium(criterium)
   local class = self.humanoid_class
   if criterium == "Doctor" then
@@ -217,6 +218,10 @@ function Staff:fulfillsCriterium(criterium)
     if self.profile and self.profile[profile_attributes[criterium]] == 1.0 then
       return true
     end
+  elseif criterium == "Handyman" then
+    if class == "Handyman" then
+      return true
+    end
   else
     error("Unknown criterium " .. criterium)
   end
@@ -225,6 +230,10 @@ end
 
 -- Function to decide if staff currently has nothing to do and can be called to a room where he's needed
 function Staff:isIdle()
+  -- Staff that has been fired should never be idle
+  if self.fired then
+    return false
+  end
   local room = self:getRoom()
   if room then
     -- if policy is set to not allow leaving rooms, don't allow it
