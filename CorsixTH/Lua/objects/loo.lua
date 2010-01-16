@@ -93,23 +93,13 @@ object.usage_animations = copy_north_to_south {
 }
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2 = {0, 0}, {-0.1, -0.9}
-anim_mgr:setMultipleMarkers({
-  1712, 3132, 4388, 4292, 4256, 4520, 4432, 4158, 950}, 
-  1, kf1, 6, kf2)
+anim_mgr:setMarker(object.usage_animations.north.begin_use, 1, kf1, 6, kf2)
 kf1 = {-0.1, -0.9}
-anim_mgr:setMultipleMarkers({
-  1716, 3136, 4392, 4296, 4260, 4524, 4436, 4162, 954},
-  kf1)
-anim_mgr:setMultipleMarkers({
-  1728, 1732, 3144, 4400, 4308, 4272, 4528, 4440, 4170, 962},
-  kf1)
-anim_mgr:setMultipleMarkers({
-  1740, 3152, 4404, 4316, 4280, 4536, 4444, 4174, 966},
-  kf1)
+anim_mgr:setMarker(object.usage_animations.north.begin_use_2, kf1)
+anim_mgr:setMarker(object.usage_animations.north.in_use, kf1)
+anim_mgr:setMarker(object.usage_animations.north.finish_use, kf1)
 kf1, kf2 = {-0.1, -0.9}, {0, 0}
-anim_mgr:setMultipleMarkers({
-  1744, 3156, 4408, 4320, 4284, 4540, 4448, 4740, 1158},
-  0, kf1, 1, kf1, 6, kf2)
+anim_mgr:setMarker(object.usage_animations.north.finish_use_2, 0, kf1, 1, kf1, 6, kf2)
 
 object.orientations = {
   north = {

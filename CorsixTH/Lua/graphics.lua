@@ -21,8 +21,8 @@ SOFTWARE. --]]
 local TH = require "TH"
 local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
-local assert, string_char, table_concat, unpack
-    = assert, string.char, table.concat, unpack
+local assert, string_char, table_concat, unpack, type, pairs, ipairs
+    = assert, string.char, table.concat, unpack, type, pairs, ipairs
 
 -- The Graphics class handles loading and caching of graphics resources.
 -- It can adapt as the API to C changes, and hide these changes from most of
@@ -322,8 +322,10 @@ end
   final position for frames after the last keyframe. The keyframe arguments
   should be 0-based integers, as in the animation viewer.
   
-  In turn the function setMultipleMarkers expects a list of anim_numbers 
-  and sets the same marker for each anim_number.
+  To set the markers for multiple animations at once, the anim_number argument
+  can be a table, in which case the marker is set for all values in the table.
+  Alternatively, the values function (defined in utility.lua) can be used in
+  conjection with a for loop to set markers for multiple things.
 --]]
 
 function AnimationManager:setMarker(anim, ...)
@@ -332,12 +334,6 @@ end
 
 function AnimationManager:setSecondaryMarker(anim, ...)
   return self:setMarkerRaw(anim, "setFrameSecondaryMarker", ...)
-end
-
-function AnimationManager:setMultipleMarkers(anim, ...)
-  for i, number in ipairs(anim) do
-    self:setMarker(anim[i], ...)
-  end
 end
 
 local function TableToPixels(t)
@@ -349,6 +345,12 @@ local function TableToPixels(t)
 end
 
 function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
+  if type(anim) == "table" then
+    for _, val in pairs(anim) do
+      self:setMarkerRaw(val, fn, arg1, arg2, ...)
+    end
+    return
+  end
   local type = type(arg1)
   local anim_length = self:getAnimLength(anim)
   local anims = self.anims
@@ -404,8 +406,8 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       frame = anims:getNextFrame(frame)
     end
   elseif type == "string" then
-    assert "TODO"
+    error "TODO"
   else
-    assert "Invalid arguments to setMarker"
+    error("Invalid arguments to setMarker", 2)
   end
 end
