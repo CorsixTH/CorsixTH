@@ -230,8 +230,8 @@ end
 
 -- Function to decide if staff currently has nothing to do and can be called to a room where he's needed
 function Staff:isIdle()
-  -- Staff that has been fired should never be idle
-  if self.fired then
+  -- Make sure we're not in an undesired state
+  if not self.hospital or self.fired then
     return false
   end
   local room = self:getRoom()

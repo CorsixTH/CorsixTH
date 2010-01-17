@@ -141,7 +141,7 @@ end
 
 function UIBottomPanel:setDynamicInfo(info)
   if not info then
-    self.countdown = 15
+    self.countdown = 25
   else
     self.countdown = nil
     self.dynamic_info = info
@@ -171,17 +171,6 @@ function UIBottomPanel:showAdditionalButtons(x, y)
       end
     end
   end
-end
-
-function UIBottomPanel:onWorldTick()
-  if self.countdown then
-    if self.countdown < 1 then
-      self.dynamic_info = nil
-    else
-      self.countdown = self.countdown - 1
-    end
-  end
-  Window.onWorldTick(self)
 end
 
 function UIBottomPanel:hitTest(x, y, x_offset)
@@ -251,6 +240,14 @@ function UIBottomPanel:onTick()
         self:createMessageWindow()          -- Animation ends so we can now show the message
       end
       self.factory_counter = self.factory_counter - 1
+    end
+  end
+  -- The dynamic info bar is there a while longer when hovering an entity has stopped
+  if self.countdown then
+    if self.countdown < 1 then
+      self.dynamic_info = nil
+    else
+      self.countdown = self.countdown - 1
     end
   end
   
