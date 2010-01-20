@@ -25,16 +25,44 @@ object.name = _S(2, 21)
 object.ticks = false
 object.build_cost = 250
 object.build_preview_animation = 916
-object.idle_animations = {
-  north = 1134,
-  south = 1134, -- there's also a back view (1132), but animation is missing for that
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
+  north = 3838 --1134, there's also a back view (1132), but animation is missing for that
+}
+object.multi_usage_animations = {
+  ["Stripped Male Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3740, 3736, 3818}, 
+      -- Also possibly 548, 556 and 560 for a more smooth animation?
+      in_use      = {540, 544, 552},
+      finish_use  = {3802, 3806, 3826},
+    },
+  },
+  ["Stripped Female Patient - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3732, 3728, 3822}, -- 532
+      in_use      = {524, 528, 536},
+      finish_use  = {3810, 3814, 3830},
+    },
+  },
 }
 object.orientations = {
   north = {
-    footprint = { {0, -1}, {0, 0, only_passable = true}, {1, -1, only_passable = true}, {1, 0} }
+    render_attach_position = {0, -1},
+    footprint = { {-1, 0}, {-1, 1, only_passable = true}, 
+      {0, 0, only_passable = true}, {0, 1, only_passable = true} },
+    use_position = {-1, 1},
+    use_position_secondary = {0, 0},
   },
   east = {
-    footprint = { {-1, 0}, {-1, 1, only_passable = true}, {0, 0, only_passable = true}, {0, 1} }
+    render_attach_position = {-1, 0},
+    footprint = { {0, -1}, {0, 0, only_passable = true}, 
+      {1, -1, only_passable = true}, {1, 0, only_passable = true} },
+    use_position = {-1, 1},
+    use_position_secondary = {0, 0},
   },
 }
 

@@ -37,6 +37,7 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd014.wav"
+room.handyman_call_sound = "maint013.wav"
 
 class "InflationRoom" (Room)
 

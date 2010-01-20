@@ -25,7 +25,8 @@ object.name = _S(2, 26)
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 5074
-object.machine = true
+object.default_strength = 8
+object.crashed_animation = 5116
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -43,7 +44,8 @@ object.usage_animations = copy_north_to_south {
       ["Slack Male Patient"] = 2078
     },
     in_use = { -- Use animation
-      ["Slack Male Patient"] = 2082
+      ["Slack Male Patient"] = 2082,
+      ["Handyman"]           = 568
     },
     finish_use = { -- Hair cap goes up and patient stands up
       ["Slack Male Patient"] = 2086
@@ -54,16 +56,22 @@ object.usage_animations = copy_north_to_south {
 object.orientations = {
   north = {
     use_position = {0, 1},
+    handyman_position = {0, -1},
+    added_handyman_animate_offset_while_in_use = {0, 2},
     finish_use_position = {0, 1},
-    footprint = { {0, -1}, {0, 0}, {0, 1, only_passable = true} },
+    footprint = { {0, -1, only_passable = true}, {0, 0}, {0, 1, only_passable = true} },
     use_animate_from_use_position = true,
   },
   east = {
     use_position = {1, 0},
+    handyman_position = {-1, 0},
+    added_handyman_animate_offset_while_in_use = {2, 0},
     finish_use_position = {1, 0},
-    footprint = { {-1, 0}, {0, 0}, {1, 0, only_passable = true} },
+    footprint = { {-1, 0, only_passable = true}, {0, 0}, {1, 0, only_passable = true} },
     use_animate_from_use_position = true,
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-1.0, -1.1})
 
 return object

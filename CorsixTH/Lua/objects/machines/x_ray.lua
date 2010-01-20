@@ -25,7 +25,8 @@ object.name = _S(2, 28)
 object.ticks = false
 object.build_cost = 4000
 object.build_preview_animation = 5076
-object.machine = true
+object.default_strength = 12
+object.crashed_animation = 3384
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -44,6 +45,7 @@ object.usage_animations = copy_north_to_south {
       ["Elvis Patient"] = 5120,
       ["Chewbacca Patient"] = 5132,
       ["Invisible Patient"] = 614,
+      ["Handyman"] = 3558,
     },
     in_use = { -- Radiation
       ["Standard Male Patient"] = 1960,
@@ -52,6 +54,7 @@ object.usage_animations = copy_north_to_south {
       ["Elvis Patient"] = 5128,
       ["Chewbacca Patient"] = 610,
       ["Invisible Patient"] = 5140,
+      ["Handyman"] = 3562,
     },
     finish_use = { -- Patient walks away
       ["Standard Male Patient"] = 1992,
@@ -60,6 +63,7 @@ object.usage_animations = copy_north_to_south {
       ["Elvis Patient"] = 5124,
       ["Chewbacca Patient"] = 5136, -- or 5138?
       ["Invisible Patient"] = 618,
+      ["Handyman"] = 3562, -- TODO: Another glitch in the original. This sprite is missing.
     },
   },
 }
@@ -81,5 +85,7 @@ object.orientations = {
                   {-1, 1, only_passable = true} }
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-2, -2})
 
 return object

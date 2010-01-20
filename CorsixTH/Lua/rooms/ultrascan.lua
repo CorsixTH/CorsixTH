@@ -37,6 +37,7 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd007.wav"
+room.handyman_call_sound = "maint016.wav"
 
 class "UltrascanRoom" (Room)
 

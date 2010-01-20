@@ -19,26 +19,42 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local object = {}
-object.id = "scanner"
-object.thob = 14
-object.name = _S(2, 15)
+object.id = "blood_machine"
+object.thob = 42
+object.name = _S(2, 43)
 object.ticks = false
-object.build_cost = 5000
-object.build_preview_animation = 920
-object.machine = true
-object.idle_animations = {
-  north = 1398,
-  south = 1398,
+object.build_cost = 3000
+object.build_preview_animation = 5094
+object.default_strength = 12
+object.crashed_animation = 3372
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+object.idle_animations = copy_north_to_south {
+  north = 2228,
+}
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      ["Handyman"] = {3484, 3498},
+    },
+  },
 }
 object.orientations = {
   north = {
-    footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0},  {0, 0, only_passable = true} },
-    render_attach_position = {0, -1},
+    footprint = { {-1, -1}, {0, -1, only_passable = true},
+                  {-2, 0}, {-1, 0}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 1} }
   },
   east = {
-    footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
-    render_attach_position = {-1, 0},
+    footprint = { {0, -2},
+                  {-1, -1}, {0, -1}, {1, -1},
+                  {-1, 0, only_passable = true}, {0, 0},
+                  {0, 1, only_passable = true} }
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-1.5, -0.8})
 
 return object

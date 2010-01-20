@@ -25,7 +25,8 @@ object.name = _S(2, 47)
 object.ticks = false
 object.build_cost = 3500
 object.build_preview_animation = 930
-object.machine = true
+object.default_strength = 10
+object.crashed_animation = 3300
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -38,14 +39,17 @@ object.usage_animations = copy_north_to_south {
     begin_use    = { -- Patient invited onto machine
       ["Standard Female Patient"] = 1266,
       ["Standard Male Patient"  ] = 1266,
+      ["Handyman"               ] = 3546,
     },
     in_use       = { -- Patient gets electrocuted
       ["Standard Female Patient"] = 1274,
       ["Standard Male Patient"  ] = 1274,
+      ["Handyman"               ] = 3550,
     },
     finish_use   = { -- Patient sparks
       ["Standard Female Patient"] = 1278,
       ["Standard Male Patient"  ] = 1278,
+      ["Handyman"               ] = 3554,
     }, 
     finish_use_2 = { -- Hair falls off 
       ["Standard Female Patient"] = 2940,
@@ -76,5 +80,7 @@ object.orientations = {
     use_position = "passable"
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-1.3, -1.2})
 
 return object

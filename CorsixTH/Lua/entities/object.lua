@@ -90,13 +90,6 @@ function Object:updateDynamicInfo()
   local object = self.object_type
   if object.dynamic_info then
     self:setDynamicInfo("text", {object.name, "", _S(59, 32):format(self.times_used)})
-  elseif object.machine then
-      -- TODO: Strenght of machinery is not implemented yet 
-      self:setDynamicInfo("text", {
-        object.name, 
-        _S(59, 32):format(self.times_used), 
-        _S(59, 31):format(10) -- Strength 10
-      })
   end
 end
 
@@ -333,6 +326,10 @@ function Object.processTypeDefinition(object_type)
         end
       elseif not details.use_position then
         details.use_position = {0, 0}
+      end
+      -- Set handyman repair tile 
+      if object_type.default_strength and not details.handyman_position then
+        details.handyman_position = details.use_position
       end
       -- Find the nearest solid tile in the footprint to the usage position
       local use_position = details.use_position

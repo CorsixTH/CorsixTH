@@ -74,6 +74,17 @@ local function action_multi_use_phase(action, humanoid, phase)
     anim_name = "finish_use_2"
   end
   local anim = action.anims[anim_name]
+  if type(anim) == "table" then
+    -- If an animation list is provided rather than a single animation, then
+    -- choose an animation from the list at random, or according to the previous
+    -- phase. Look at general diagnosis for usage example.
+    if action.random_anim then
+      anim = anim[action.random_anim]
+    else
+      action.random_anim = math.random(1, #anim)
+      anim = anim[action.random_anim]
+    end
+  end
   humanoid:setAnimation(anim, action.mirror_flags)
   
   local offset = object.object_type.orientations
@@ -179,6 +190,9 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
     use_with:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
     if action.after_use then
       action.after_use()
+    end
+    if object.strength then
+      object:machineUsed(humanoid:getRoom())
     end
     humanoid:finishAction(action)
   else

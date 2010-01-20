@@ -25,13 +25,21 @@ object.name = _S(2, 25)
 object.ticks = false
 object.build_cost = 2000
 object.build_preview_animation = 5072
-object.machine = true
+-- object.default_strength = 10 Commented until the handyman's use_position is correctly 
+-- checked to be accessible when placing the object.
+object.crashed_animation = 3388
 local function copy_north_to_south(t)
   t.south = t.north
   return t
 end
 object.idle_animations = copy_north_to_south {
   north = 2492,
+}
+object.walk_in_to_use = true -- This is only considered by use_object, not multi_use_object. 
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use  = {["Handyman"] = 3514},
+  },
 }
 object.multi_usage_animations = {
   ["Alternate Male Patient - Nurse"] = copy_north_to_south {
@@ -59,6 +67,8 @@ object.multi_usage_animations = {
 object.orientations = {
   north = {
     use_position = {0, 0},
+    handyman_position = {-1, -1}, -- There are two possible origins {-2, 0}, one of them
+    -- must be accessible
     use_position_secondary = {0, -1},
     finish_use_position_secondary = {1, -1},
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
@@ -69,6 +79,7 @@ object.orientations = {
   },
   east = {
     use_position = {0, 0},
+    handyman_position = {-1, -1},
     use_position_secondary = {-1, 0},
     finish_use_position_secondary = {-1, 1},
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
@@ -78,5 +89,7 @@ object.orientations = {
     list_bottom = true,
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-1.6, -0.8})
 
 return object

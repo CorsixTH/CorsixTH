@@ -19,29 +19,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local object = {}
-object.id = "blood_machine"
-object.thob = 42
-object.name = _S(2, 43)
+object.id = "scanner"
+object.thob = 14
+object.name = _S(2, 15)
 object.ticks = false
-object.build_cost = 3000
-object.build_preview_animation = 5094
-object.machine = true
+object.build_cost = 5000
+object.build_preview_animation = 920
+object.default_strength = 12
+object.crashed_animation = 3316
 object.idle_animations = {
-  north = 2228,
-  south = 2228,
+  north = 1398,
+  south = 1398,
+}
+object.usage_animations = { -- Very incomplete!
+  north = {
+    in_use = {
+      ["Handyman"] = 564,
+    },
+  },
 }
 object.orientations = {
   north = {
-    footprint = { {-1, -1}, {0, -1, only_passable = true},
-                  {-2, 0}, {-1, 0}, {0, 0}, {1, 0, only_passable = true},
-                  {-1, 1} }
+    footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0},  {0, 0, only_passable = true} },
+    render_attach_position = {0, -1},
   },
   east = {
-    footprint = { {0, -2},
-                  {-1, -1}, {0, -1}, {1, -1},
-                  {-1, 0, only_passable = true}, {0, 0},
-                  {0, 1, only_passable = true} }
+    footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
+    render_attach_position = {-1, 0},
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-1.1, -1.1})
 
 return object

@@ -36,5 +36,6 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd006.wav"
+room.handyman_call_sound = "maint015.wav"
 
 return room

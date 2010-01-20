@@ -104,10 +104,18 @@ local function action_use_phase(action, humanoid, phase)
     is_list = true
     anim = anim[math.random(1, #anim)]
   end
+  
   if not anim then
-    error("No animation for " .. humanoid.humanoid_class .. " using " ..
-      object.object_type.id .. " facing " .. object.direction .. " phase " ..
-      phase)
+    -- Handymen have their own number of animations.
+    if humanoid.humanoid_class == "Handyman" then
+      --action_use_phase(action, humanoid, action_use_next_phase(action, phase))
+      action_use_object_tick(humanoid)
+      return
+    else
+      error("No animation for " .. humanoid.humanoid_class .. " using " ..
+        object.object_type.id .. " facing " .. object.direction .. " phase " ..
+        phase)
+    end
   end
   humanoid:setAnimation(anim, action.mirror_flags)
   
@@ -119,6 +127,11 @@ local function action_use_phase(action, humanoid, phase)
       tx, ty = action.old_tile_x, action.old_tile_y
     else
       tx, ty = object:getRenderAttachTile()
+    end
+    if humanoid.humanoid_class == "Handyman" and 
+      offset.added_handyman_animate_offset_while_in_use then
+      tx = tx + offset.added_handyman_animate_offset_while_in_use[1]
+      ty = ty + offset.added_handyman_animate_offset_while_in_use[2]
     end
     local added_offset = nil
     if offset.added_animation_offset_while_in_use then
@@ -166,6 +179,13 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     if action.after_use then
       action.after_use()
     end
+    if object.strength then
+      if humanoid.humanoid_class ~= "Handyman"  then
+        object:machineUsed(humanoid:getRoom())
+      end
+    elseif object:getDynamicInfo() then
+      object:updateDynamicInfo()
+    end
     humanoid:finishAction(action)
     
   else
@@ -207,14 +227,16 @@ local function action_use_object_start(action, humanoid)
   if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
     flags = flags + 1024
   end
-  if spec.finish_use_position then
+  -- The handyman has his own place to be in
+  if spec.finish_use_position and humanoid.humanoid_class ~= "Handyman" then
     action.old_tile_x = object.tile_x + spec.finish_use_position[1]
     action.old_tile_y = object.tile_y + spec.finish_use_position[2]
   end
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags
-  if action.prolonged_usage == nil and anims.begin_use and anims.in_use and anims.finish_use then
+  if action.prolonged_usage == nil and anims.begin_use and 
+    anims.in_use and anims.finish_use then
     action.prolonged_usage = true
   end
   if object.object_type.walk_in_to_use then
@@ -222,9 +244,6 @@ local function action_use_object_start(action, humanoid)
   else
     object:setUser(humanoid)
     humanoid.user_of = object
-  end
-  if object:getDynamicInfo() then
-    object:updateDynamicInfo()
   end
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end

@@ -37,6 +37,7 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd013.wav"
+room.handyman_call_sound = "maint005.wav"
 
 class "XRayRoom" (Room)
 
@@ -57,11 +58,16 @@ function XRayRoom:commandEnteringPatient(patient)
 
   local --[[persistable:x_ray_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+     
+    local length = math.random(2, 4) * (2 - staff.profile.skill)
       patient:setNextAction{
         name = "use_object",
         object = x_ray,
         loop_callback = --[[persistable:x_ray_loop_callback]] function(action)
-          action.prolonged_usage = false
+          if length <= 0 then
+            action.prolonged_usage = false
+          end
+          length = length - 1
         end,
         after_use = --[[persistable:x_ray_after_use]] function()
           staff:setNextAction{name = "meander"}

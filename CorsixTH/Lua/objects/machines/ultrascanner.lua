@@ -25,7 +25,8 @@ object.name = _S(2, 23)
 object.ticks = false
 object.build_cost = 6000
 object.build_preview_animation = 5068
-object.machine = true
+object.default_strength = 12
+object.crashed_animation = 3376 -- TODO: This is most likely wrong, but where is the correct one?
 local function copy_north_to_south(t)
   t.south = t.north
   return t
@@ -35,6 +36,13 @@ object.idle_animations = copy_north_to_south {
   north = 1556, --1556 or 3844?
 }
 
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      ["Handyman"] = 664,
+    },
+  },
+}
 object.multi_usage_animations = {
   ["Standard Male Patient - Doctor"] = copy_north_to_south {
     north = {
@@ -59,18 +67,22 @@ object.multi_usage_animations = {
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
-                  {-1, 0, only_passable =true}, {0, 0}, {1, 0},
-                  {-1, 1}, {0, 1} },
+                  {-1, 0, only_passable =true}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {-1, 0},
     use_position_secondary = {1, -1},
+    handyman_position = {2, 0},
   },
   east = {
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1},
-                  {-1, 0}, {0, 0}, {1, 0},
-                  {-1, 1, only_passable = true}, {0, 1} },
+                  {-1, 0, only_passable = true}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 1, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {0, -1},
     use_position_secondary = {-1, 1},
+    handyman_position = {0, 2},
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-0.9, -0.9})
 
 return object

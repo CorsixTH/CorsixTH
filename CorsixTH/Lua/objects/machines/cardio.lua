@@ -25,13 +25,24 @@ object.name = _S(2, 14)
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 918
-object.machine = true
+object.default_strength = 12
+object.crashed_animation = 3308
 local function copy_north_to_south(t)
   t.south = t.north
   return t
 end
 object.idle_animations = copy_north_to_south {
   north = 648,
+}
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      ["Handyman"] = 890
+    },
+    finish_use = {
+      ["Handyman"] = 894
+    },
+  },
 }
 object.multi_usage_animations = {
   ["Stripped Male Patient - Doctor"] = copy_north_to_south {
@@ -59,20 +70,23 @@ object.multi_usage_animations = {
     },
   },
 }
-
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {-1, 0}, {1, -1, only_passable = true}, {0, -1}, {0, 0, only_passable = true} },
     render_attach_position = {-1, 0},
     use_position = {1, -1},
     use_position_secondary = {0, 0},
+    added_handyman_animate_offset_while_in_use = {1, -1},
   },
   east = {
     footprint = { {-1, -1}, {-1, 0}, {0, -1}, {0, 0, only_passable = true}, {-1, 1, only_passable = true} },
     render_attach_position = {0, -1},
     use_position = {-1, 1},
     use_position_secondary = {0, 0},
+    added_handyman_animate_offset_while_in_use = {-1, 1},
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.idle_animations.north, {-0.9, -0.9})
 
 return object

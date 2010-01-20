@@ -37,6 +37,7 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd001.wav"
+room.handyman_call_sound = "maint010.wav"
 
 class "CardiogramRoom" (Room)
 
@@ -45,7 +46,6 @@ function CardiogramRoom:CardiogramRoom(...)
 end
 
 function CardiogramRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
   staff:setNextAction{name = "meander"}
   return Room.commandEnteringStaff(self, staff)
 end

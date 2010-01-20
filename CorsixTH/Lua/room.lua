@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require "TH" 
+
 class "Room"
 
 function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
@@ -119,7 +121,8 @@ function Room:dealtWithPatient(patient)
     if next_room then
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
-      self.hospital:receiveMoneyForTreatment(patient)
+      local hospital = self.hospital
+      hospital:receiveMoneyForTreatment(patient)
       -- TODO: Add percentage that depends on illness and how effective the cure is.
       -- Should level also make a difference?
       if patient.die_anims and math.random(1, 100) < 6 then
@@ -129,7 +132,8 @@ function Room:dealtWithPatient(patient)
         patient.going_home = true
         patient:queueAction{name = "meander", count = 1}
         patient:queueAction{name = "die"}
-        self.hospital:changeReputation("death")
+        hospital:changeReputation("death")
+        self.hospital.num_deaths = hospital.num_deaths + 1
       else 
         patient:goHome(true)
       end
@@ -224,6 +228,7 @@ function Room:onHumanoidEnter(humanoid)
       humanoid:queueAction{name = "meander"}
     else
       self.humanoids[humanoid] = true
+      self.staff_member = humanoid
       self:commandEnteringStaff(humanoid)
     end
     self:tryAdvanceQueue()
@@ -309,7 +314,7 @@ function Room:canHumanoidEnter(humanoid)
   end
   -- By default, patients can only enter if there are sufficient staff and not
   -- too many patients.
-  if class.is(humanoid, Patient) then
+  if class.is(humanoid, Patient) and not self.needs_repair then
     return self:testStaffCriteria(self:getRequiredStaffCriteria()) and self:getPatientCount() < self.maximum_patients
   end
   -- By default, other classes of humanoids cannot enter
@@ -319,4 +324,61 @@ end
 -- Function stub for rooms to implement. Called when the final confirm
 -- button has been pressed when building/editing a room.
 function Room:roomFinished()
+end
+
+function Room:crashRoom()
+  self.door:closeDoor()
+  
+  -- Remove all humanoids in the room
+  for humanoid, _ in pairs(self.humanoids) do
+    humanoid:queueAction({name = "idle"}, 1)
+    humanoid.user_of = nil
+    self.world:destroyEntity(humanoid)
+  end
+  
+  -- Remove all objects in the room
+  local fx, fy = self:getEntranceXY(true)
+  for object, _ in pairs(self.world:findAllObjectsNear(fx, fy)) do
+    if object.object_type.id ~= "door" and not object.strength then
+      object.user = nil
+      object.user_list = nil
+      object.reserved_for = nil
+      object.reserved_for_list = nil
+      self.world:destroyEntity(object)
+    end
+  end
+  
+  local map = self.world.map.th
+  -- TODO: Explosion, animations: 4612, 3280
+  
+  -- Make every floor tile have soot on them
+  for x = self.x, self.x + self.width - 1 do
+    for y = self.y, self.y + self.height - 1 do
+      local soot = self.world:newObject("litter", x, y)
+      soot:setLitterType("soot_floor")
+    end
+  end
+  -- Make walls have soot on them too
+  local ty = self.y
+  local soot_type, soot, block
+  for x = self.x, self.x + self.width - 1 do
+    block = map:getCell(x, ty, 2)
+    soot_type = "soot_wall"
+    if self.world:getWallSetFromBlockId(block) == "window_tiles" then
+      soot_type = "soot_window"
+    end
+    soot = self.world:newObject("litter", x, ty)
+    soot:setLitterType(soot_type, true)
+  end
+  local x = self.x
+  for y = self.y, self.y + self.height - 1 do
+    block = map:getCell(x, y, 3)
+    soot_type = "soot_wall"
+    if self.world:getWallSetFromBlockId(block) == "window_tiles" then
+      soot_type = "soot_window"
+    end
+    soot = self.world:newObject("litter", x, y)
+    soot:setLitterType(soot_type)
+  end
+  -- TODO: This room should no longer be editable - when that feature is added
 end

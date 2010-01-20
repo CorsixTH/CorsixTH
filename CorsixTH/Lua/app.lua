@@ -159,15 +159,17 @@ function App:init()
   self.animation_manager = AnimationManager(self.anims)
   self.walls = self:loadLuaFolder"walls"
   dofile "entities/object"
-  self.objects = self:loadLuaFolder"objects"
+
+  local objects = self:loadLuaFolder"objects"
+  self.objects = self:loadLuaFolder("objects/machines", nil, objects)
   for _, v in ipairs(self.objects) do
     Object.processTypeDefinition(v)
   end
   dofile "room"
   self.rooms = self:loadLuaFolder"rooms"
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
-  self.diseases = self:loadLuaFolder"diseases"
-  for i, dis in ipairs(self:loadLuaFolder"diagnosis") do table.insert(self.diseases, dis) end
+  local diseases = self:loadLuaFolder"diseases"
+  self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
   
   -- Load world before UI
   dofile "world"
@@ -518,11 +520,11 @@ function App:readDataFile(dir, filename)
   return data
 end
 
-function App:loadLuaFolder(dir, no_results)
+function App:loadLuaFolder(dir, no_results, append_to)
   local ourpath = debug.getinfo(1, "S").source:sub(2, -8)
   dir = dir .. pathsep
   local path = ourpath .. dir
-  local results = no_results and "" or {}
+  local results = no_results and "" or (append_to or {})
   for file in lfs.dir(path) do
     if file:match"%.lua$" then
       local status, result = pcall(dofile, dir .. file:sub(1, -5))

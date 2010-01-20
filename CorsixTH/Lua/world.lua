@@ -27,6 +27,7 @@ dofile "room"
 dofile "entities/object"
 dofile "entities/humanoid"
 dofile "entities/patient"
+dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
 
@@ -613,7 +614,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     distance = 2^30
   end
   for _, r in ipairs(self.rooms) do repeat
-    if r.built and (not room_type_id or r.room_info.id == room_type_id) then
+    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.door.queue then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
       if d > distance then
@@ -660,6 +661,8 @@ function World:newObject(id, ...)
   local entity
   if object_type.class then
     entity = _G[object_type.class](self, object_type, ...)
+  elseif object_type.default_strength then
+    entity = Machine(self, object_type, ...)
   else
     entity = Object(self, object_type, ...)
   end
@@ -743,17 +746,58 @@ function World:getRoom(x, y)
 end
 
 -- Search for available staff to meet the requirements for the room. Also notify the player with a sound.
-function World:callForStaff(room)
-  local sound = room.room_info.call_sound
-  
-  if sound and not room.sound_played then
-    self.ui:playAnnouncement(sound)
-    room.sound_played = true
-  end
-  local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
-    
-  for attribute, count in pairs(missing) do
-    self:selectNearestStaffForRoom(room, attribute, count)
+function World:callForStaff(room, repair_object, urgent)
+  if repair_object then
+    if urgent then
+      local sound = room.room_info.handyman_call_sound
+      if sound then
+        self.ui:playAnnouncement(sound)
+        self.ui:playSound "machwarn.wav"
+      end
+    end
+    local handyman = self:selectNearestStaffForRoom(room, "Handyman", 1)
+    if handyman then
+      room.needs_repair = handyman
+      repair_object:setRepairing(true)
+      local --[[persistable:handyman_repair_after_use]] function after_use()
+        repair_object:machineRepaired(room)
+      end
+      local orientation = repair_object.object_type.orientations[repair_object.direction]
+      local x = repair_object.tile_x + orientation.handyman_position[1]
+      local y = repair_object.tile_y + orientation.handyman_position[2]
+      handyman:queueAction{
+        name = "walk",
+        x = x,
+        y = y,
+      }
+      local action_use
+      action_use = {
+        name = "use_object",
+        object = repair_object,
+        must_happen = true,
+        prolonged_usage = false,
+        loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
+          action_use.prolonged_usage = false
+        end,
+        after_use = after_use,
+      }
+      handyman:queueAction(action_use)
+      handyman:queueAction(room:createLeaveAction())
+      handyman:queueAction{name = "meander"}
+    else
+      self.ui.adviser:say(_S(28, 34))
+    end
+  else
+    local sound = room.room_info.call_sound
+    if sound and not room.sound_played then
+      self.ui:playAnnouncement(sound)
+      room.sound_played = true
+    end
+    local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
+      
+    for attribute, count in pairs(missing) do
+      self:selectNearestStaffForRoom(room, attribute, count)
+    end
   end
 end
 
@@ -778,6 +822,7 @@ function World:selectNearestStaffForRoom(room, attribute, count)
     end
     count = count - 1
     cand.entity:setNextAction(room:createEnterAction())
+    return cand.entity
   end
 end
 

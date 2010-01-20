@@ -60,7 +60,7 @@ end
 
 function Door:onClick(ui, button)
   -- For consistency with reception desk, only open queue from a left click
-  if button == "left" then
+  if button == "left" and self.queue then
     local queue_window = UIQueue(ui, self.queue)
     ui:addWindow(queue_window)
   end
@@ -124,6 +124,13 @@ function Door:setAnimation(animation, flags)
     flags = flags + flag_early_list
   end
   return Object.setAnimation(self, animation, flags)
+end
+
+function Door:closeDoor()
+  self.queue:rerouteAllPatients({name = "seek_room", room_type = self:getRoom().room_info.id})
+  self:clearDynamicInfo(nil)
+  self.queue = nil
+  self.hover_cursor = nil
 end
 
 return object
