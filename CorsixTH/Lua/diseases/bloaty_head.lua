@@ -40,6 +40,7 @@ disease.diagnosis_rooms = {
 --  "general_diag",     not yet implemented
   "x_ray",
   "cardiogram",
+  "general_diag",
   -- TODO
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to

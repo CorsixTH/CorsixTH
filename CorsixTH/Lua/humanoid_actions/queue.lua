@@ -219,7 +219,8 @@ local action_queue_on_leave = permanent"action_queue_on_leave"( function(action,
 end)
 
 -- While queueing one could get thirsty.
-local action_queue_get_soda = permanent"action_queue_get_soda"( function(action, humanoid, machine, mx, my)
+local action_queue_get_soda = permanent"action_queue_get_soda"( 
+function(action, humanoid, machine, mx, my, fun_after_use)
   local num_actions_prior
   if action:isStanding() then
     num_actions_prior = action_queue_finish_standing(action, humanoid)
@@ -229,11 +230,7 @@ local action_queue_get_soda = permanent"action_queue_get_soda"( function(action,
   
   -- Callback function used after the drinks machine has been used.
   local --[[persistable:action_queue_get_soda_after_use]] function after_use()
-    humanoid:changeAttribute("thirst", -0.8)
-    humanoid:changeAttribute("toilet_need", 0.3)
-    humanoid:setMood("thirsty", nil)
-    humanoid.hospital:receiveMoney(15, _S(8, 14))
-    
+    fun_after_use() -- Defined in patient:tickDay
     action_queue_on_change_position(action, humanoid)
   end
   

@@ -95,7 +95,6 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid:walkTo(ox, oy)
         self:doStaffUseCycle(humanoid)
       else
-            print("person out")
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction{name = "meander"}
       end

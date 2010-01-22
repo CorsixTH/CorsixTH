@@ -78,6 +78,7 @@ function Staff:updateSkill(consultant, trait, amount)
 
   self.profile[trait] = self.profile[trait] + amount
   if self.profile[trait] >= 1.0 then
+    self.profile[trait] = 1.0
     if trait == "is_surgeon" then
       self.world.ui.adviser:say(_S(11, 69):format(_S(34, 6)))
     elseif trait == "is_psychiatrist" then
