@@ -119,8 +119,12 @@ function GPRoom:dealtWithPatient(patient)
     else
       self.staff_member:setMood("reflexion", true) -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
-      patient:queueAction{name = "seek_room", room_type = patient.available_diagnosis_rooms[next_room]}
-      table.remove(patient.available_diagnosis_rooms, next_room)
+      patient:queueAction{
+        name = "seek_room", 
+        room_type = patient.available_diagnosis_rooms[next_room],
+        diagnosis_room = next_room,
+        next_to_try = math.random(1, #patient.available_diagnosis_rooms),
+      }
     end
   else
     patient:queueAction{name = "meander", count = 2}

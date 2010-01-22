@@ -26,7 +26,28 @@ end)
 
 local function action_seek_room_start(action, humanoid)
   local room = humanoid.world:findRoomNear(humanoid, action.room_type, nil, "advanced")
-  if room then
+  if not room and action.diagnosis_room then
+    -- Go through the diagnosis rooms, maybe there's one of another type?
+    if not action.tried_rooms then
+      action.tried_rooms = {}
+    end
+    action.tried_rooms[action.diagnosis_room] = true
+    if #action.tried_rooms >= #humanoid.available_diagnosis_rooms then
+      -- No room could be found, we will have to wait.
+      humanoid:setNextAction{
+        name = "seek_room", 
+        room_type = humanoid.available_diagnosis_rooms[1],
+      }
+    else
+      while action.tried_rooms[action.next_to_try] do
+        -- TODO: Not good, this could theoretically take forever
+        action.next_to_try = math.random(1, #humanoid.available_diagnosis_rooms)
+      end
+      action.room_type = humanoid.available_diagnosis_rooms[action.next_to_try]
+      action.diagnosis_room = action.next_to_try
+      humanoid:setNextAction(action)
+    end
+  elseif room then
     humanoid:setNextAction(room:createEnterAction())
     humanoid.next_room_to_visit = room
     humanoid:updateDynamicInfo()
@@ -34,6 +55,10 @@ local function action_seek_room_start(action, humanoid)
     room.door:updateDynamicInfo()
     if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
       humanoid.world:callForStaff(room)
+    end
+    if action.diagnosis_room then
+      -- The diagnosis room was found, remove it from the list
+      table.remove(humanoid.available_diagnosis_rooms, action.diagnosis_room)
     end
   else
     -- TODO: Give user option of "wait in hospital" / "send home" / etc.
@@ -43,11 +68,12 @@ local function action_seek_room_start(action, humanoid)
       humanoid:setMood("patient_wait", true)
       action.must_happen = true
       action.build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
-        if room.room_info.id == action.room_type then
-          humanoid:setNextAction(room:createEnterAction())
-          humanoid.next_room_to_visit = room
-          humanoid:updateDynamicInfo()
-        end
+        -- A new room was built, search through if it was one of those the patient
+        -- can go to
+        action.tried_rooms = {}
+        action.room_type = room.room_info.id
+        humanoid:queueAction(action, 1)
+        humanoid:finishAction()
       end
       humanoid.world:registerRoomBuildCallback(action.build_callback)
       action.on_interrupt = action_seek_room_interrupt

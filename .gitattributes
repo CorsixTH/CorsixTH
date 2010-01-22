@@ -26,6 +26,7 @@ CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
+CorsixTH/Lua/diagnosis/diag_general_diag.lua -text
 CorsixTH/Lua/diagnosis/diag_ultrascan.lua -text
 CorsixTH/Lua/diagnosis/diag_x_ray.lua -text
 CorsixTH/Lua/dialogs/hospital_policy.lua -text
