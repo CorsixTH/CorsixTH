@@ -300,8 +300,11 @@ THSoundEffects::THSoundEffects() {}
 THSoundEffects::~THSoundEffects() {}
 THSoundEffects* THSoundEffects::getSingleton() {return NULL;}
 void THSoundEffects::setSoundArchive(THSoundArchive *pArchive) {}
-void THSoundEffects::playSound(size_t iIndex) {}
+void THSoundEffects::playSound(size_t iIndex, double dVolume) {}
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY) {}
+void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY) {}
 void THSoundEffects::setCamera(int iX, int iY, int iRadius) {}
+void THSoundEffects::setSoundEffectsVolume(double dVolume) {}
+void THSoundEffects::setSoundEffectsOn(int iOn) {}
 
 #endif // CORSIX_TH_USE_SDL_MIXER
