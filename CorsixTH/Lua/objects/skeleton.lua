@@ -25,16 +25,29 @@ object.name = _S(2, 61)
 object.ticks = false
 object.build_cost = 450
 object.build_preview_animation = 5108
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
 object.idle_animations = {
   north = 2402,
   south = 2402,
 }
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = { Doctor = 2614 },
+  },
+}
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} }
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true
   },
   east = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} }
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    use_position = "passable",
+    use_animate_from_use_position = true
   },
 }
 

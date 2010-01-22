@@ -228,7 +228,6 @@ function Room:onHumanoidEnter(humanoid)
       humanoid:queueAction{name = "meander"}
     else
       self.humanoids[humanoid] = true
-      self.staff_member = humanoid
       self:commandEnteringStaff(humanoid)
     end
     self:tryAdvanceQueue()

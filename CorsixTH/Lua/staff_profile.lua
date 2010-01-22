@@ -62,9 +62,9 @@ function StaffProfile:randomise()
   if self.humanoid_class == "Doctor" then
     -- 65% chance to have at least one ability
     --  1% chance to have all three abilities
-    self.is_surgeon      = math.random() < 0.20 and 1.0 or nil
-    self.is_psychiatrist = math.random() < 0.25 and 1.0 or nil
-    self.is_researcher   = math.random() < 0.20 and 1.0 or nil
+    self.is_surgeon      = math.random() < 0.20 and 1.0 or 0
+    self.is_psychiatrist = math.random() < 0.25 and 1.0 or 0
+    self.is_researcher   = math.random() < 0.20 and 1.0 or 0
   end
   self.wage = self:getFairWage()
   -- Vary wage by +/- 15%

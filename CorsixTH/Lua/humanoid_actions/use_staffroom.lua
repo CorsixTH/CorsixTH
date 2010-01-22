@@ -103,7 +103,7 @@ local function use_staffroom_action_start(action, humanoid)
       humanoid:wake(relaxation[action.target_type])
       obj_use_time = obj_use_time - 1
       if obj_use_time == 0 then
-        if humanoid.fatigue == 0 then
+        if humanoid.attributes["fatigue"] == 0 then
           humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
           local room = humanoid.last_room
           local new_room = humanoid.world:getNearestRoomNeedingStaff(humanoid)

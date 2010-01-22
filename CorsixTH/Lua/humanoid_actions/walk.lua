@@ -96,12 +96,6 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
     end
   end
   humanoid:setTimer(8, timer_fn)
-  -- temporary, later it should be much much lower, or no fatigue at all just for walking around
-  -- for now, no fatigue is gained while in staff room
-  local room = humanoid:getRoom()
-  if not room or room.room_info.id ~= "staff_room" then
-    humanoid:tire(0.005)
-  end
 end
 
 local flags_here, flags_there = {}, {}

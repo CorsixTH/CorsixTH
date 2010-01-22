@@ -122,7 +122,6 @@ moods("dead",           4046,      50)
 moods("cured",          4048,      60)
 moods("emergency",      3914,      60)
 moods("exit",           4052,      60)
---moods("repairing",        4564, 100) -- Only for machinery
 
 local anim_mgr = TheApp.animation_manager
 for anim in values(door_animations, "*.entering") do
@@ -149,10 +148,33 @@ function Humanoid:onClick(ui, button)
   if self.profile then
     name = self.profile.name
   end
-  print("Actions of ".. name ..": ")
-  for i = 1, #self.action_queue do
-    print(self.action_queue[i].name)
+  -- temporary for debugging
+  print("-----------------------------------")
+  print("Clicked on ".. name)
+  print("Class: ", self.humanoid_class)
+  if self.humanoid_class == "Doctor" then
+    print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
+      self.profile.skill or 0,
+      self.profile.is_surgeon or 0,
+      self.profile.is_psychiatrist or 0,
+      self.profile.is_researcher or 0))
   end
+  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
+    self.attributes["warmth"] or 0,
+    self.attributes["happiness"] or 0,
+    self.attributes["fatigue"] or 0))
+  print("")
+  print("Actions:")
+  for i = 1, #self.action_queue do
+    if self.action_queue[i].room_type then
+      print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
+    elseif self.action_queue[i].object then
+      print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
+    else
+      print(self.action_queue[i].name)
+    end
+  end
+  print("-----------------------------------")
 end
 
 function Humanoid:setHospital(hospital)
@@ -360,6 +382,13 @@ end
 -- Currently available attributes are happiness, thirst, toilet_need and warmth.
 function Humanoid:changeAttribute(attribute, amount)
   assert(amount <= 1 and amount >= -1, "Amount must me between -1 and 1")
+
+  -- Receptionist is always 100% happy
+  if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
+    self.attributes[attribute] = 1;
+    return true
+  end
+
   if self.attributes[attribute] then
     self.attributes[attribute] = self.attributes[attribute] + amount
     if self.attributes[attribute] > 1 then

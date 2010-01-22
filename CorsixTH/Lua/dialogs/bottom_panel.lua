@@ -158,7 +158,7 @@ end
 
 function UIBottomPanel:showAdditionalButtons(x, y)
   local buttons = self.additional_buttons
-  if self:hitTest(x, y, 364) then -- Inside the rectangle
+  if self:hitTest(x, y) then -- Inside the panel
     if not buttons[1].visible then -- Are the buttons already shown?
       for _, btn in ipairs(buttons) do
         btn.visible = true

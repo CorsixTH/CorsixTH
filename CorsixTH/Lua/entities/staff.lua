@@ -31,9 +31,72 @@ function Staff:tick()
     self:checkIfNeedRest()
   end
 
+  local room = self:getRoom()
+  if not room or room.room_info.id ~= "staff_room" then
+    if self.action_queue[1].name ~= "pickup" then
+      self:tire(0.000115)
+    end
+  end
+  -- is this a doctor in the training room with a consultant?
+  local room = self:getRoom()
+  if room and room.room_info.id == "training" and room.staff_member and self.humanoid_class == "Doctor" then
+    -- tick event for consultant?
+    if room.staff_member == self then
+      -- TODO: Should the consultant's skills increase at all?
+    else
+      -- increase skills based upon what the consultant knows
+      -- NB: need to figure out the optimum increase amount. possibly
+      -- adjust based upon consultant's skill level? multiply by
+      -- random factor to avoid all skills increasing equally?
+      if room.staff_member.profile.is_surgeon >= 1.0 then
+        self:updateSkill(room.staff_member, "is_surgeon", 0.00001)
+      end
+      if room.staff_member.profile.is_psychiatrist >= 1.0 then
+        self:updateSkill(room.staff_member, "is_psychiatrist", 0.00001)
+      end
+      if room.staff_member.profile.is_researcher >= 1.0 then
+        self:updateSkill(room.staff_member, "is_researcher", 0.00001)
+      end
+
+      self:updateSkill(room.staff_member, "skill", 0.000005)
+    end
+  end
+
   -- Make staff members request a raise if they are very unhappy
   if not self.world.debug_disable_salary_raise and self.attributes["happiness"] < 0.1 then
     self:requestRaise()
+  end
+end
+
+function Staff:updateSkill(consultant, trait, amount)
+  local old_profile = { is_junior = self.profile.is_junior, is_consultant = self.profile.is_consultant }
+
+  -- don't push further when they are already at 100%+
+  if self.profile[trait] >= 1.0 then
+    return
+  end
+
+  self.profile[trait] = self.profile[trait] + amount
+  if self.profile[trait] >= 1.0 then
+    if trait == "is_surgeon" then
+      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 6)))
+    elseif trait == "is_psychiatrist" then
+      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 7)))
+    elseif trait == "is_researcher" then
+      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 9)))
+    end
+  end
+
+  if trait == "skill" then
+    self.profile:parseSkillLevel()
+
+    if old_profile.is_junior and not self.profile.is_junior then
+      self.world.ui.adviser:say(_S(11, 23))
+    elseif not old_profile.is_consultant and self.profile.is_consultant then
+      self.world.ui.adviser:say(_S(11, 138))
+      self:setNextAction(self:getRoom():createLeaveAction())
+      self:queueAction{name = "meander"}
+    end
   end
 end
 
@@ -48,7 +111,7 @@ function Staff:fire()
   self.hospital:changeReputation("kicked")
   self:setHospital(nil)
   self.hover_cursor = nil
-  self.fatigue = nil
+  self.attributes["fatigue"] = nil
   -- TODO: Remove from world/hospital staff list
 end
 
@@ -60,7 +123,7 @@ function Staff:onClick(ui, button)
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
     -- temporary for debugging
-    print("Fatigue: ", self.fatigue)
+    print("Fatigue: ", self.attributes["fatigue"])
   elseif button == "right" then
     self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
   end
@@ -71,7 +134,7 @@ function Staff:setProfile(profile)
   self.profile = profile
   self:setType(profile.humanoid_class)
   if self.humanoid_class ~= "Receptionist" then
-    self.fatigue = 0
+    self.attributes["fatigue"] = 0
   end
   self:setLayer(5, profile.layer5)
   if profile.humanoid_class == "Doctor" then
@@ -84,11 +147,11 @@ function Staff:setProfile(profile)
       professions = _S(34, 8) .. " "
       number = 1
     end
-    if profile.is_researcher and profile.is_researcher == 1.0 then
+    if profile.is_researcher >= 1.0 then
       professions = professions .. _S(34, 9) .. " "
       number = number + 1
     end
-    if profile.is_surgeon and profile.is_surgeon == 1.0 then
+    if profile.is_surgeon >= 1.0 then
       if professions then
         professions = professions .. _S(34, 6) .. " "
       else
@@ -96,7 +159,7 @@ function Staff:setProfile(profile)
       end
       number = number + 1
     end
-    if profile.is_psychiatrist and profile.is_psychiatrist == 1.0 then
+    if profile.is_psychiatrist >= 1.0 then
       if number < 3 then
         if professions then
           professions = professions .. _S(34, 7)
@@ -117,31 +180,21 @@ end
 -- Function for increasing fatigue. Fatigue can be between 0 and 1,
 -- so amounts here should be appropriately small comma values.
 function Staff:tire(amount)
-  if self.fatigue then
-    self.fatigue = self.fatigue + amount
-    if self.fatigue > 1 then
-      self.fatigue = 1
-    end
-  end
+  self:changeAttribute("fatigue", amount)
   self:updateDynamicInfo()
 end
 
 -- Function for decreasing fatigue. Fatigue can be between 0 and 1,
 -- so amounts here should be appropriately small comma values.
 function Staff:wake(amount)
-  if self.fatigue then
-    self.fatigue = self.fatigue - amount
-    if self.fatigue < 0 then
-      self.fatigue = 0
-    end
-  end
+  self:changeAttribute("fatigue", -amount)
   self:updateDynamicInfo()
 end
 
 -- Check if fatigue is over a certain level (decided by the hospital policy), 
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
-  if self.fatigue and self.fatigue >= self.hospital.policies["goto_staffroom"] 
+  if self.attributes["fatigue"] and self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
   and not class.is(self:getRoom(), StaffRoom) then
     self:setMood("tired", true)
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
@@ -280,11 +333,11 @@ end
 
 function Staff:updateDynamicInfo()
   local fatigue_text = _S(59, 29)
-  if not self.fatigue then
+  if not self.attributes["fatigue"] then
     fatigue_text = nil
   end
   self:setDynamicInfo('text', {self.profile.profession, "", fatigue_text})
-  self:setDynamicInfo('progress', self.fatigue)
+  self:setDynamicInfo('progress', self.attributes["fatigue"])
   if self.hospital then
     self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})
   end

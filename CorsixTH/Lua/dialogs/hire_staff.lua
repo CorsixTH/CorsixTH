@@ -145,13 +145,13 @@ function UIHireStaff:draw(canvas)
       local px, py = self.ability_bg_panel.x, self.ability_bg_panel.y
       px = px + x
       py = py + y
-      if profile.is_surgeon then
+      if profile.is_surgeon >= 1.0 then
         self.panel_sprites:draw(canvas, 292, px +  65, py + 22)
       end
-      if profile.is_psychiatrist then
+      if profile.is_psychiatrist >= 1.0 then
         self.panel_sprites:draw(canvas, 293, px +  82, py + 28)
       end
-      if profile.is_researcher then
+      if profile.is_researcher >= 1.0 then
         self.panel_sprites:draw(canvas, 294, px + 109, py + 27)
       end
     end
