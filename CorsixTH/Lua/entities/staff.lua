@@ -123,8 +123,10 @@ function Staff:onClick(ui, button)
   
   if button == "left" then
     ui:addWindow(UIStaff(ui, self))
-    -- temporary for debugging
-    print("Fatigue: ", self.attributes["fatigue"])
+    if TheApp.config.debug then
+      -- for debugging
+      print("Fatigue: ", self.attributes["fatigue"])
+    end
   elseif button == "right" then
     self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
   end

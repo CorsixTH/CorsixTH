@@ -143,38 +143,39 @@ function Humanoid:Humanoid(...)
 end
 
 function Humanoid:onClick(ui, button)
-  -- temporary for debugging
-  local name = "clicked humanoid"
-  if self.profile then
-    name = self.profile.name
-  end
-  -- temporary for debugging
-  print("-----------------------------------")
-  print("Clicked on ".. name)
-  print("Class: ", self.humanoid_class)
-  if self.humanoid_class == "Doctor" then
-    print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
-      self.profile.skill or 0,
-      self.profile.is_surgeon or 0,
-      self.profile.is_psychiatrist or 0,
-      self.profile.is_researcher or 0))
-  end
-  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
-    self.attributes["warmth"] or 0,
-    self.attributes["happiness"] or 0,
-    self.attributes["fatigue"] or 0))
-  print("")
-  print("Actions:")
-  for i = 1, #self.action_queue do
-    if self.action_queue[i].room_type then
-      print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
-    elseif self.action_queue[i].object then
-      print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
-    else
-      print(self.action_queue[i].name)
+  if TheApp.config.debug then
+    -- for debugging
+    local name = "clicked humanoid"
+    if self.profile then
+      name = self.profile.name
     end
+    print("-----------------------------------")
+    print("Clicked on ".. name)
+    print("Class: ", self.humanoid_class)
+    if self.humanoid_class == "Doctor" then
+      print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
+        self.profile.skill or 0,
+        self.profile.is_surgeon or 0,
+        self.profile.is_psychiatrist or 0,
+        self.profile.is_researcher or 0))
+    end
+    print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
+      self.attributes["warmth"] or 0,
+      self.attributes["happiness"] or 0,
+      self.attributes["fatigue"] or 0))
+    print("")
+    print("Actions:")
+    for i = 1, #self.action_queue do
+      if self.action_queue[i].room_type then
+        print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
+      elseif self.action_queue[i].object then
+        print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
+      else
+        print(self.action_queue[i].name)
+      end
+    end
+    print("-----------------------------------")
   end
-  print("-----------------------------------")
 end
 
 function Humanoid:setHospital(hospital)

@@ -42,6 +42,13 @@ audio = true
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+-- Debug mode. 
+-- If set to true more detailed information will be printed in the terminal
+-- and a debug menu will be visible.
+debug = true
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 -- Audio playback settings.
 -- These can be commented out to use the default values from the game binary.
 -- Note: On some platforms, these settings may not effect MIDI playback - only
