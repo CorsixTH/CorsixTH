@@ -121,22 +121,8 @@ function Room:dealtWithPatient(patient)
     if next_room then
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
-      local hospital = self.hospital
-      hospital:receiveMoneyForTreatment(patient)
-      -- TODO: Add percentage that depends on illness and how effective the cure is.
-      -- Should level also make a difference?
-      if patient.die_anims and math.random(1, 100) < 6 then
-        patient:setMood("dead", true)
-        patient:playSound "boo.wav"
-        -- Funny... Removes the go home button
-        patient.going_home = true
-        patient:queueAction{name = "meander", count = 1}
-        patient:queueAction{name = "die"}
-        hospital:changeReputation("death")
-        self.hospital.num_deaths = hospital.num_deaths + 1
-      else 
-        patient:goHome(true)
-      end
+      -- Patient is "done" at the hospital
+      patient:treated()
     end
   else
     patient:queueAction{name = "meander", count = 2}

@@ -28,6 +28,7 @@ function Hospital:Hospital(world)
   self.reputation_min = 0
   self.reputation_max = 1000
   self.num_deaths = 0
+  self.num_cured = 0
   self.is_in_world = true
   self.transactions = {}
   self.staff = {}
@@ -172,6 +173,21 @@ end
 
 function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
+end
+
+function Hospital:hasStaffOfCategory(category)
+  for i, staff in ipairs(self.staff) do
+    if staff.humanoid_class == category then
+      return true
+    elseif staff.humanoid_class == "Doctor" then
+      if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or 
+          (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or 
+          (category == "Researcher" and staff.profile.is_researcher >= 1.0) then
+        return true
+      end
+    end
+  end
+  return false
 end
 
 local function RemoveByValue(t, value)

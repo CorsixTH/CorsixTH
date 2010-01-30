@@ -198,7 +198,7 @@ public:
         breaks like \r and \n in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
     */
-    int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth) const;
+    int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance) const;
 
 protected:
     THSpriteSheet* m_pSpriteSheet;

@@ -190,6 +190,7 @@ function UIPatient:goHome()
   self:close()
   self.patient:playSound "sack.wav"
   self.patient:goHome()
+  self.patient:updateDynamicInfo(_S(59, 11))
 end
 
 function UIPatient:viewDiseases()

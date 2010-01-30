@@ -102,7 +102,7 @@ void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMes
     pCanvas->finishNonOverlapping();
 }
 
-int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth) const
+int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance) const
 {
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
@@ -144,7 +144,7 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 --iMessageLength;
                 ++sMessage;
             }
-            iY += (int)iTallest + m_iLineSep;
+            iY += (int)iTallest + m_iLineSep + iAddedRowDistance;
         }
     }
 	return iY;

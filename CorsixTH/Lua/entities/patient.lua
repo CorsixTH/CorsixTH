@@ -89,16 +89,45 @@ function Patient:setHospital(hospital)
   end
 end
 
+function Patient:treated()
+  local hospital = self.hospital
+  hospital:receiveMoneyForTreatment(self)
+  -- Either the patient is no longer sick, or he/she dies.
+  -- TODO: Add percentage that depends on illness and how effective the cure is.
+  -- Should level also make a difference?
+  if self.die_anims and math.random(1, 100) < 6 then
+    if hospital.num_deaths < 1 then
+      self.world.ui.adviser:say(_S(11,72))
+    end
+    self.hospital.num_deaths = hospital.num_deaths + 1
+    
+    self:setMood("dead", true)
+    self:playSound "boo.wav"
+    self.going_home = true
+    self:queueAction{name = "meander", count = 1}
+    self:queueAction{name = "die"}
+    hospital:changeReputation("death")
+    self:updateDynamicInfo(_S(59, 5))
+  else 
+    if hospital.num_cured < 1 then
+      self.world.ui.adviser:say(_S(11,83))
+    end
+    self.hospital.num_cured = hospital.num_cured + 1
+    
+    self:setMood("cured", true)
+    self:playSound "cheer.wav"
+    hospital:changeReputation("cured")
+    self.treatment_history[#self.treatment_history + 1] = _S(59, 9) -- "Cured"
+    self:goHome(true)
+    self:updateDynamicInfo(_S(59, 9))
+  end
+end
+
 function Patient:goHome(cured)
   if self.going_home then
     return
   end
-  if cured then
-    self:setMood("cured", true)
-    self:playSound "cheer.wav"
-    self.hospital:changeReputation("cured")
-    self.treatment_history[#self.treatment_history + 1] = _S(59, 9) -- "Cured"
-  else
+  if not cured then
     self:setMood("exit", true)
     self.hospital:changeReputation("kicked")
   end
@@ -119,6 +148,20 @@ function Patient:tickDay()
   -- if we're outside the hospital or on our way home.
   if not Humanoid.tickDay(self) then
     return
+  end
+  
+  if self.waiting then
+    self.waiting = self.waiting - 1
+    if self.waiting == 0 then
+      self:goHome()
+      if self.diagnosed then
+        -- No treatment rooms
+        self:updateDynamicInfo(_S(59, 17))
+      else
+        -- No diagnosis rooms
+        self:updateDynamicInfo(_S(59, 16))
+      end
+    end
   end
   
   -- Each tick both thirst, warmth and toilet_need changes.
@@ -293,7 +336,12 @@ end
 
 function Patient:updateDynamicInfo(helper_object)
   local action = self.action_queue[1]
-  
+  if self.going_home then
+    -- We were sent home/are pissed for some reason
+    self:setDynamicInfo('text', {helper_object})
+    self:setDynamicInfo('progress', nil)
+    return
+  end
   -- TODO: Is this the best place to update like this? There are also more situations.
   if self:getRoom() then
     self.action_string = ""
@@ -309,7 +357,12 @@ function Patient:updateDynamicInfo(helper_object)
     self.action_string = helper_object
   end
   if self.diagnosed then
-    self:setDynamicInfo('text', {self.action_string, "", _S(59, 13):format(self.disease.name)})
+    if self.diagnosis_progress < 1.0 then
+      -- The cure was guessed
+      self:setDynamicInfo('text', {self.action_string, "", _S(59, 14):format(self.disease.name)})
+    else
+      self:setDynamicInfo('text', {self.action_string, "", _S(59, 13):format(self.disease.name)})
+    end
     self:setDynamicInfo('progress', nil)
   else
     self:setDynamicInfo('text', {self.action_string, "", _S(59, 15)})

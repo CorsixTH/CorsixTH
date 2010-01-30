@@ -121,7 +121,7 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
     local info = self.dynamic_info
     local font = self.white_font
     for i, text in ipairs(info["text"]) do
-      font:draw(canvas, text, x + 20, y + 10*i)
+      font:drawWrapped(canvas, text, x + 20, y + 10*i, 240, -2)
       if i == #info["text"] and info["progress"] then
         local white = canvas:mapRGB(255, 255, 255)
         local black = canvas:mapRGB(0, 0, 0)

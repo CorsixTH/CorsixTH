@@ -61,24 +61,122 @@ local function action_seek_room_start(action, humanoid)
       table.remove(humanoid.available_diagnosis_rooms, action.diagnosis_room)
     end
   else
-    -- TODO: Give user option of "wait in hospital" / "send home" / etc.
-    humanoid:updateDynamicInfo(_S(59, 6))
     if not action.done_init then
       action.done_init = true
       humanoid:setMood("patient_wait", true)
       action.must_happen = true
       action.build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
-        -- A new room was built, search through if it was one of those the patient
-        -- can go to
-        action.tried_rooms = {}
-        action.room_type = room.room_info.id
-        humanoid:queueAction(action, 1)
-        humanoid:finishAction()
+        local found = false
+        if room.room_info.id == action.room_type then
+          found = true
+        end
+        if not humanoid.diagnosed then
+        -- Waiting for a diagnosis room, we need to go through the list
+          for i = 1, #humanoid.available_diagnosis_rooms do
+            if humanoid.available_diagnosis_rooms[i].id == room.room_info.id then
+              found = true
+            end
+          end
+        end
+        if found then 
+          humanoid:setNextAction(room:createEnterAction())
+          humanoid.next_room_to_visit = room
+          humanoid:updateDynamicInfo()
+        end
       end
       humanoid.world:registerRoomBuildCallback(action.build_callback)
       action.on_interrupt = action_seek_room_interrupt
     end
-    if not action.done_walk then
+    if not action.done_walk and not action.got_answer then
+      -- Make a message about that something needs to be done about this patient
+      -- TODO: Going to the toilet or buying a soda should not trigger another message
+      if humanoid.diagnosed then
+        -- The patient is diagnosed, a treatment room is missing
+        -- Wait two months before going home anyway.
+        humanoid.waiting = 60
+        local room_name, required_staff, staff_name
+        for _, room in ipairs(TheApp.rooms) do
+          if room.id == action.room_type then
+            room_name = room.name
+            required_staff = room.required_staff
+          end
+        end
+        for key, _ in pairs(required_staff) do
+          staff_name = key
+        end
+        local output_text = _S(44, 59):format(room_name)
+        if not humanoid.hospital:hasStaffOfCategory(staff_name) then
+          if staff_name == "Nurse" then
+            staff_name = _S(34, 3)
+          elseif staff_name == "Psychiatrist" then
+            staff_name = _S(34, 7)
+          elseif staff_name == "Researcher" then
+            staff_name = _S(34, 9)
+          elseif staff_name == "Surgeon" then
+            staff_name = _S(34, 6)
+          end
+          output_text = _S(44, 47):format(room_name, staff_name)
+        end
+        -- TODO: In the future the treatment room might be unavailable
+        local message = {
+          {text = _S(44,51):format(humanoid.disease.name)},
+          {text = output_text},
+          {text = _S(44, 52)},
+          choices = {
+            {text = _S(44, 43), choice = "send_home", offset = 50},
+            {text = _S(44, 44), choice = "wait", offset = 40},
+            {text = _S(44, 45), choice = "disabled", offset = 40}, -- TODO: research
+          },
+          owner = humanoid,
+        }
+        TheApp.ui.bottom_panel:queueMessage("information", message)
+        humanoid:updateDynamicInfo(_S(59, 6))
+        -- Only one message should appear.
+        action.got_answer = true
+      else
+        -- No more diagnosis rooms can be found
+        -- Depending on hospital policy three things can happen:
+        if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
+          -- Send home automatically
+          humanoid:goHome()
+          humanoid:updateDynamicInfo(_S(59, 16))
+        elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
+          -- Ask the player
+          -- Wait two months before going home anyway.
+          humanoid.waiting = 60
+          local middle_choice = "disabled"
+          local more_text = ""
+          if humanoid.diagnosis_progress > 0.7 then -- TODO: What value here?
+            middle_choice = "guess_cure"
+            more_text = _S(44, 218):format(humanoid.diagnosis_progress*100, humanoid.disease.name)
+          end
+          local message = {
+            {text = _S(44,216)},
+            {text = _S(44, 217)},
+            choices = {
+              {text = _S(44, 212), choice = "send_home", offset = 50},
+              {text = _S(44, 213), choice = middle_choice, offset = 40},
+              {text = _S(44, 214), choice = "wait", offset = 40},
+            },
+            owner = humanoid,
+          }
+          if more_text ~= "" then
+            table.insert(message, 2, {text = more_text})
+          end
+          TheApp.ui.bottom_panel:queueMessage("information", message)
+          humanoid:updateDynamicInfo(_S(59, 6))
+          -- Only one message should appear.
+          action.got_answer = true
+        else
+          -- Guess "type of disease" automatically
+          humanoid:setDiagnosed(true)
+          humanoid:queueAction({
+            name = "seek_room", 
+            room_type = humanoid.disease.treatment_rooms[1]
+          }, 1)
+          humanoid:finishAction()
+        end
+      end
       humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
       action.done_walk = true
       return

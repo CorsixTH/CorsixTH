@@ -1,0 +1,26 @@
+-----------------------------------------
+Version Beta 2 - released 2010-0?-??
+-----------------------------------------
+
+* Feature: Save/Load functionality
+* Feature: Patients and staff now have a need for heat in order to stay happy. 
+  In addition patients get thirsty and will need a bathroom sooner or later.
+* Feature: Machines will need repair now and then. A dialog that shows
+  necessarry information is displayed when the machine is clicked.
+* Feature: Dynamic Information Bar in the bottom right corner of the UI added.
+  It shows information about entities beneath the mouse cursor.
+* Feature: The training room can now be built, where doctors can increase
+  their skill and get additional traits if a consultant is present.
+* Feature: When a patient cannot be cured or a room is missing a fax will 
+  arrive and ask the player what to do.
+
+* Addition: More diseases and treatment rooms.
+* Addition: More diagnosis rooms.
+
+Also, a number of bugs have been squashed.
+
+-----------------------------------------
+Version Beta 1 - released 2009-12-24
+-----------------------------------------
+
+Initial release

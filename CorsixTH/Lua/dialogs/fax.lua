@@ -46,15 +46,38 @@ function UIFax:UIFax(ui, message)
   
   self.code = ""
   
+  -- There may be an owner of the message
+  if self.message["owner"] then
+    self.owner = self.message["owner"]
+  end
+  
+  -- Add choice buttons
+  local choices = false
+  local last_y = self.y
+  if self.message["choices"] then
+    choices = true
+    for k = 1, #self.message["choices"] do
+      if self.message["choices"][k].choice ~= "disabled" then
+        local --[[persistable:fax_choice_button]] function callback()
+          self:choice(self.message["choices"][k].choice)
+        end
+        self:addPanel(17, self.x + 170, last_y):makeButton(0, 0, 43, 43, 18, callback)
+      else
+        self:addPanel(19, self.x + 170, last_y)
+      end
+      last_y = last_y + 60
+    end
+  end
+  
   -- Some faxes can be dismissed by pressing the close button, while others
   -- need to be dismissed by making a choice. For now, just display the close
   -- button.
-  if true then
-    -- Close button
-    self:addPanel(0, 598, 440):makeButton(0, 0, 26, 26, 16, self.close)
-  else
+  if choices then
     -- Blanker over close button
     self:addPanel(20, 596, 435)
+  else
+    -- Close button
+    self:addPanel(0, 598, 440):makeButton(0, 0, 26, 26, 16, self.close)
   end
   
   self:addPanel(0, 471, 349):makeButton(0, 0, 87, 20, 14, self.cancel) -- Cancel code button
@@ -89,10 +112,56 @@ function UIFax:draw(canvas)
   if self.message then
     local last_y = self.y + 40
     for i = 1, #self.message do
-      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, last_y + (self.message[i].offset or 0), 380)
+      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, 
+          last_y + (self.message[i].offset or 0), 380)
+    end
+    if self.message["choices"] then
+      last_y = self.y + 100
+      for k = 1, #self.message["choices"] do
+        last_y = self.fax_font:drawWrapped(canvas, self.message["choices"][k].text, 
+            self.x + 190, last_y + (self.message["choices"][k].offset or 0), 280)
+      end
     end
   end
   return UIFullscreen.draw(self, canvas)
+end
+
+function UIFax:choice(choice)
+  local owner = self.owner
+  if owner then
+    -- A choice was made, the patient is no longer waiting for a decision
+    owner:setMood("patient_wait", nil)
+    if choice == "send_home" then
+      owner:goHome()
+      if owner.diagnosed then
+        -- No treatment rooms
+        owner:updateDynamicInfo(_S(59, 17))
+      else
+        -- No diagnosis rooms
+        owner:updateDynamicInfo(_S(59, 16))
+      end
+    elseif choice == "wait" then
+      -- Wait two months before going home
+      owner.waiting = 60
+      if owner.diagnosed then
+        -- Waiting for treatment room
+        owner:updateDynamicInfo(_S(59, 19))
+      else
+        -- Waiting for diagnosis room
+        owner:updateDynamicInfo(_S(59, 18))
+      end
+    elseif choice == "guess_cure" then
+      owner.diagnosed = true
+      owner:setNextAction{
+        name = "seek_room",
+        room_type = owner.disease.treatment_rooms[1],
+      }
+      owner:updateDynamicInfo()
+    elseif choice == "research" then
+      -- TODO
+    end
+  end
+  self:close()
 end
 
 function UIFax:cancel()

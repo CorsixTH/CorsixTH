@@ -785,7 +785,12 @@ function World:callForStaff(room, repair_object, urgent)
       handyman:queueAction(room:createLeaveAction())
       handyman:queueAction{name = "meander"}
     else
-      self.ui.adviser:say(_S(28, 34))
+      -- Different messages depending on if any handyman has been hired yet or not.
+      if self.hospitals[1]:hasStaffOfCategory("Handyman") then
+        self.ui.adviser:say(_S(11, 4))
+      else
+        self.ui.adviser:say(_S(28, 34))
+      end
     end
   else
     local sound = room.room_info.call_sound

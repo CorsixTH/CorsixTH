@@ -44,6 +44,7 @@ CorsixTH/Lua/walls/green.lua -text
 CorsixTH/Lua/walls/white.lua -text
 CorsixTH/Lua/walls/yellow.lua -text
 CorsixTH/Src/lua.hpp -text
+CorsixTH/changelog.txt -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text
