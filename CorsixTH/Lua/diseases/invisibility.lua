@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 6)
 disease.id = "invisibility"
-disease.cause = _S(44, 71)
-disease.symptoms = _S(44, 72)
-disease.cure = _S(44, 73)
-disease.cure_price = 1400 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.invisibility.name
+disease.cause = _S.diseases.invisibility.cause
+disease.symptoms = _S.diseases.invisibility.symptoms
+disease.cure = _S.diseases.invisibility.cure
+disease.cure_price = 1400
 disease.initPatient = function(patient)
   patient:setType("Invisible Patient")
   patient:setLayer(0, 2)

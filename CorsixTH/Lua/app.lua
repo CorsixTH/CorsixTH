@@ -66,16 +66,10 @@ function App:init()
   -- App initialisation 1st goal: Get the loading screen up
   
   -- Prereq 1: Config file (for screen width / height / TH folder)
-  if rawget(_G, "loadin") then
-    -- setfenv is deprecated in Lua 5.2, loadin is provided instead
-    local filename = self.command_line["config-file"] or "config.txt"
-    assert(loadin(self.config, io.open(filename, "r"):read"*a", "@"..filename, "t"))()
-  else
-    setfenv(assert(loadfile(self.command_line["config-file"] or "config.txt")), self.config)()
-  end
+  assert(loadfile_envcall(self.command_line["config-file"] or "config.txt"))(self.config)
   self:fixConfig()
   self:checkInstallFolder()
-  self:checkLanguageFile()
+--  self:checkLanguageFile()
   
   -- Create the window
   if not SDL.init("audio", "video", "timer") then
@@ -135,21 +129,28 @@ function App:init()
   math.randomseed(os.time() + SDL.getTicks())
   
   -- Load strings before UI and before additional Lua
-  self.strings = assert(TH.LoadStrings(self:readDataFile("Lang-" .. self.config.language .. ".dat")), "Cannot load strings")
-  --self:dumpStrings"debug-strings.txt"
+  dofile "strings"
+  self.strings = Strings(self)
+  self.strings:init()
+  local strings, speech_file = self.strings:load(self.config.language)
   strict_declare_global "_S"
-  _S = function(sec, str, ...)
-    str = self.strings[sec][str]
+  _S = strings
+  -- For immediate compatibility:
+  getmetatable(_S).__call = function(_S, sec, str, ...)
+    assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
+    
+    str = _S.deprecated[sec][str]
     if ... then
       str = str:format(...)
     end
     return str
   end
+  --self:dumpStrings"debug-strings.txt"
   
   -- Load audio
   dofile "audio"
   self.audio = Audio(self)
-  self.audio:init()
+  self.audio:init(speech_file)
   
   -- Load map before world
   dofile "map"
@@ -207,10 +208,10 @@ function App:loadLevel(filename)
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 end
 
--- This is a useful debug and devlopment aid
+-- This is a useful debug and development aid
 function App:dumpStrings(filename)
   local fi = assert(io.open(filename, "wt"))
-  for i, sec in ipairs(self.strings) do
+  for i, sec in ipairs(_S.deprecated) do
     for j, str in ipairs(sec) do
       fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(str))
     end
@@ -219,27 +220,16 @@ function App:dumpStrings(filename)
   fi:close()
 end
 
-local function invert_lang_table(t)
-  local name_to_filename = {}
-  local number_to_name = {}
-  for language_file, names in pairs(t) do
-    for _, name in ipairs(names) do
-      name_to_filename[name] = language_file
-    end
-    number_to_name[tonumber(language_file:match"[0-9]+")] = names[1]
-  end
-  return name_to_filename, number_to_name
-end
-
-local languages, languages_by_num = invert_lang_table {
-  -- Language name (in english) along with ISO 639 codes for it
+--[[
+List of languages:
+  Language name (in english) along with ISO 639 codes for it
   ["0"] = {"english", "en", "eng"},
   ["1"] = {"french" , "fr", "fre", "fra"},
   ["2"] = {"german" , "de", "ger", "deu"},
   ["3"] = {"italian", "it", "ita"},
   ["4"] = {"spanish", "es", "spa"},
   ["5"] = {"swedish", "sv", "swe"},
-}
+]]--
 
 function App:fixConfig()
   for key, value in pairs(self.config) do
@@ -251,9 +241,9 @@ function App:fixConfig()
       end
     end
     
-    -- For language, replace language name with filename
+    -- For language, make language name lower case
     if key == "language" and type(value) == "string" then
-      self.config[key] = languages[value:lower()] or value
+      self.config[key] = value:lower()
     end
     
     -- For resolution, check that resolution is at least 640x480
@@ -452,6 +442,8 @@ function App:checkInstallFolder()
   end
 end
 
+-- TODO: is it okay to remove this without replacement?
+--[[
 function App:checkLanguageFile()
   -- Some TH installs are trimmed down to a single language file, rather than
   -- providing every language file. If the user has selected a language which
@@ -486,7 +478,7 @@ function App:checkLanguageFile()
     print " (none)"
   end
   error(err)
-end
+end]]
 
 function App:readBitmapDataFile(filename)
   filename = (self.command_line["bitmap-dir"] or "Bitmap") .. pathsep .. filename

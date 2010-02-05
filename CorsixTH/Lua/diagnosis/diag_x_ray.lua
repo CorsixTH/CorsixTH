@@ -19,9 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 40)
 disease.id = "diag_x_ray"
-disease.cure_price = 200 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.diag_x_ray.name
+disease.cure_price = 200
 disease.pseudo = true
 
 return disease

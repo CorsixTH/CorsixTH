@@ -65,3 +65,71 @@ function values(root_table, wildcard)
   end
   return f
 end
+
+-- Helper function to print the contents of a table. Child tables are printed recursively.
+function print_table(obj, level)
+  assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
+  level = level or 0
+--  if level > 0 then
+--    return
+--  end
+  local spacer = ""
+  for i = 1, level do
+    spacer = spacer .. " "
+  end
+  for k, v in pairs(obj) do
+    print(spacer .. k, v)
+    if type(v) == "table" then
+      print_table(v, level + 1)
+    end
+  end
+end
+
+-- Variation on loadfile() which allows for the loaded file to have global
+-- references resolved in supplied tables. On failure, returns nil and an
+-- error. On success, returns the file as a function just like loadfile() does
+-- with the difference that the first argument to this function should be a
+-- table in which globals are looked up and written to.
+function loadfile_envcall(filename)
+  if rawget(_G, "loadin") then
+    -- Lua 5.2 lacks setfenv(), but does provide loadin()
+    -- Unfortunately, loadin() doesn't work with filenames, so the file needs
+    -- to be loaded first.
+    local f, err = io.open(filename)
+    if not f then
+      return nil, err
+    end
+    local result = f:read"*l" or ""
+    if result:sub(1, 1) == "#" then
+      result = "\n" .. f:read"*a"
+    else
+      result = result .. "\n" .. f:read"*a"
+    end
+    f:close()
+    -- loadin() still only allows a chunk to have an environment set once, so
+    -- we give it an empty environment and use __[new]index metamethods on it
+    -- to allow the same effect as changing the actual environment.
+    local env_mt = {}
+    result, err = loadin(setmetatable({}, env_mt), result, "@".. filename)
+    if result then
+      return function(env, ...)
+        env_mt.__index = env
+        env_mt.__newindex = env
+        return result(...)
+      end
+    else
+      return result, err
+    end
+  else
+    -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
+    local result, err = loadfile(filename)
+    if result then
+      return function(env, ...)
+        setfenv(result, env)
+        return result(...)
+      end
+    else
+      return result, err
+    end
+  end
+end

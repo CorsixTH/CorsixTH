@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 5)
 disease.id = "king_complex"
-disease.cause = _S(44, 68)
-disease.symptoms = _S(44, 69)
-disease.cure = _S(44, 70)
-disease.cure_price = 1600 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.king_complex.name
+disease.cause = _S.diseases.king_complex.cause
+disease.symptoms = _S.diseases.king_complex.symptoms
+disease.cure = _S.diseases.king_complex.cure
+disease.cure_price = 1600
 disease.initPatient = function(patient)
   patient:setType("Elvis Patient")
   patient:setLayer(0, 0)

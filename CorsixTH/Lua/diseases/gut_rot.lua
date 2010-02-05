@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 34)
 disease.id = "gut_rot"
-disease.cause = _S(44, 155)
-disease.symptoms = _S(44, 156)
-disease.cure = _S(44, 157)
-disease.cure_price = 350 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.gut_rot.name
+disease.cause = _S.diseases.gut_rot.cause
+disease.symptoms = _S.diseases.gut_rot.symptoms
+disease.cure = _S.diseases.gut_rot.cure
+disease.cure_price = 350
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

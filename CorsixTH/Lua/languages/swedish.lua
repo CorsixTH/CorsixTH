@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,10 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local disease = {}
-disease.id = "diag_psych"
-disease.name = _S.diseases.diag_psych.name
-disease.cure_price = 200 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
-disease.pseudo = true
+Language("swedish", "sv", "swe")
+Inherit("english")
+Inherit("original_strings", 5)
 
-return disease
+-- override
+-- TODO? Any original strings that are off in swedish translation?
+
+-- new strings
+-- TODO

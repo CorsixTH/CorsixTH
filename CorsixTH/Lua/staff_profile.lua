@@ -30,12 +30,7 @@ function StaffProfile:StaffProfile(humanoid_class, local_string)
   self.profession = local_string
 end
 
-local name_parts = {TheApp.strings[9], TheApp.strings[10]}
-local desc_texts = {
-  misc = TheApp.strings[46],
-  good = TheApp.strings[47],
-  bad  = TheApp.strings[48],
-}
+local name_parts = {_S.humanoid_name_starts, _S.humanoid_name_ends}
 
 local function shuffle(t)
   local r = {}
@@ -54,7 +49,7 @@ end
 function StaffProfile:randomise()
   self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
-    self.name = self.name .. part_table[math.random(1, #part_table)]
+    self.name = self.name .. part_table.__random
   end
   self.skill = math.random()
   self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
@@ -71,18 +66,18 @@ function StaffProfile:randomise()
   self.wage = math.floor(self.wage * (math.random(850, 1150) / 1000) + 0.5)
   local desc_table1, desc_table2
   if self.skill < 0.33 then
-    desc_table1 = desc_texts.bad
-    desc_table2 = desc_texts.bad
+    desc_table1 = _S.staff_descriptions.bad
+    desc_table2 = _S.staff_descriptions.bad
   elseif self.skill < 0.66 then
-    desc_table1 = desc_texts.good
-    desc_table2 = desc_texts.bad
+    desc_table1 = _S.staff_descriptions.good
+    desc_table2 = _S.staff_descriptions.bad
   else
-    desc_table1 = desc_texts.good
-    desc_table2 = desc_texts.good
+    desc_table1 = _S.staff_descriptions.good
+    desc_table2 = _S.staff_descriptions.good
   end
-  local descs = {desc_texts.misc[math.random(1, #desc_texts.misc - 1)],
-                 desc_table1[math.random(1, #desc_table1 - 1)],
-                 desc_table2[math.random(1, #desc_table2 - 1)]}
+  local descs = {_S.staff_descriptions.misc.__random,
+                 desc_table1.__random,
+                 desc_table2.__random}
   if descs[2] == descs[3] then
     descs[3] = nil
   end

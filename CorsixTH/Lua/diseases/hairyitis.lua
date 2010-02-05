@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 4)
 disease.id = "hairyitis"
-disease.cause = _S(44, 65)
-disease.symptoms = _S(44, 66)
-disease.cure = _S(44, 67)
-disease.cure_price = 1150 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.hairyitis.name
+disease.cause = _S.diseases.hairyitis.cause
+disease.symptoms = _S.diseases.hairyitis.symptoms
+disease.cure = _S.diseases.hairyitis.cure
+disease.cure_price = 1150
 disease.initPatient = function(patient)
   patient:setType("Chewbacca Patient")
   -- NB: Layers have no effect on the appearance until cured, at which point

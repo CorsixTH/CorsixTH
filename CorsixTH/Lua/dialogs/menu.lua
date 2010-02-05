@@ -21,35 +21,6 @@ SOFTWARE. --]]
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
 
--- Menu strings are organised an extra level beyond normal strings
-local _M = {{}}
-do
-  local i = 2
-  local section = 1
-  while true do
-    local s = _S(23, i)
-    if s == "." then
-      section = section + 1
-      _M[section] = {}
-    elseif s == ".." then
-      break
-    else
-      --print(section, #_M[section] + 1, s)
-      _M[section][#_M[section] + 1] = s
-    end
-    i = i + 1
-  end
-end
-
-local function _S(section, index)
-  section = _M[section]
-  if index < 0 then
-    return section[#section + 1 + index]
-  else
-    return section[index]
-  end
-end
-
 class "UIMenuBar" (Window)
 
 function UIMenuBar:UIMenuBar(ui)
@@ -257,6 +228,15 @@ function UIMenuBar:onMouseDown(button, x, y)
   if button ~= "left" or not self.visible then
     return
   end
+  -- test
+  if self.ui.app.config.debug then
+    print("testing language overrides")
+    print("table menu_options_game_speed:")
+    print_table(_S.menu_options_game_speed, 1)
+    print("original string override test:")
+    print(_S.testing.original_override)
+  end
+  -- /test
   local repaint = false
   while self.active_menu do
     local menu = self.active_menu
@@ -421,9 +401,9 @@ function UIMenuBar:makeMenu(app)
   end
 
   
-  self:addMenu(_S(1, 1), UIMenu() -- File
-    :appendMenu(_S(2, 1), levels_menu) -- Load
-    :appendItem(_S(2, -1), function() app:quit() end) -- Quit
+  self:addMenu(_S.menu.file, UIMenu()
+    :appendMenu(_S.menu_file.load, levels_menu)
+    :appendItem(_S.menu_file.quit, function() app:quit() end)
   )
   local options = UIMenu()
   if app.audio.has_bg_music then
@@ -465,26 +445,20 @@ function UIMenuBar:makeMenu(app)
       return not not app.audio.background_music and not app.audio.background_paused
     end
     local function appendVolume(setting)
-      return UIMenu() -- The three Volume menus
-        :appendCheckItem(_S(9, 1), vol(1.0, setting)) -- 100%
-        :appendCheckItem(_S(9, 2), vol(0.9, setting))
-        :appendCheckItem(_S(9, 3), vol(0.8, setting))
-        :appendCheckItem(_S(9, 4), vol(0.7, setting))
-        :appendCheckItem(_S(9, 5), vol(0.6, setting))
-        :appendCheckItem(_S(9, 6), vol(0.5, setting))
-        :appendCheckItem(_S(9, 7), vol(0.4, setting))
-        :appendCheckItem(_S(9, 8), vol(0.3, setting))
-        :appendCheckItem(_S(9, 9), vol(0.2, setting))
-        :appendCheckItem(_S(9,10), vol(0.1, setting)) -- 10%
+      local menu = UIMenu() -- The three Volume menus
+      for level = 10, 100, 10 do
+        menu:appendCheckItem(_S.menu_options_volume[level],  vol(level / 100, setting))
+      end
+      return menu
     end
     options
-    :appendCheckItem(_S(3, 1), true, playSounds) -- Sound
-    :appendCheckItem(_S(3, 2), true, playAnno) -- Announcements
-    :appendCheckItem(_S(3, 3), true, playMusic, nil, musicStatus) -- Music
-    :appendMenu(_S(3, 4), appendVolume("sound")) -- Sound Volume
-    :appendMenu(_S(3, 5), appendVolume("announcement")) -- Announcement volume
-    :appendMenu(_S(3, 6), appendVolume("music")) -- Music Volume
-    :appendItem(_S(3, -1), function() self.ui:addWindow(UIJukebox(app)) end) -- Jukebox
+    :appendCheckItem(_S.menu_options.sound,         true, playSounds)
+    :appendCheckItem(_S.menu_options.announcements, true, playAnno)
+    :appendCheckItem(_S.menu_options.music,         true, playMusic, nil, musicStatus)
+    :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
+    :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
+    :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
+    :appendItem(_S.menu_options.jukebox, function() self.ui:addWindow(UIJukebox(app)) end)
   end
 
   local function rate(speed)
@@ -495,24 +469,24 @@ function UIMenuBar:makeMenu(app)
     end
   end
 
-  options:appendMenu(_S(3, 8), UIMenu() -- Game speed
-    :appendCheckItem("  PAUSE  ", rate("Pause")) -- TODO: custom string
-    :appendCheckItem(_S(12, 1), rate("Slowest"))
-    :appendCheckItem(_S(12, 2), rate("Slower"))
-    :appendCheckItem(_S(12, 3), rate("Normal")) -- (default)
-    :appendCheckItem(_S(12, 4), rate("Max speed"))
-    :appendCheckItem(_S(12, 5), rate("And then some more"))
+  options:appendMenu(_S.menu_options.game_speed, UIMenu()
+    :appendCheckItem(_S.menu_options_game_speed.pause,              rate("Pause"))
+    :appendCheckItem(_S.menu_options_game_speed.slowest,            rate("Slowest"))
+    :appendCheckItem(_S.menu_options_game_speed.slower,             rate("Slower"))
+    :appendCheckItem(_S.menu_options_game_speed.normal,             rate("Normal")) -- (default)
+    :appendCheckItem(_S.menu_options_game_speed.max_speed,          rate("Max speed"))
+    :appendCheckItem(_S.menu_options_game_speed.and_then_some_more, rate("And then some more"))
   )
-  self:addMenu(_S(1, 2), options) -- Options
-  self:addMenu(_S(1, 4), UIMenu() -- Charts
-    :appendItem(_S(5, 1)) -- Statement
-    :appendItem(_S(5, 2)) -- Casebook
-    :appendItem(_S(5, 3)) -- Policy
-    :appendItem(_S(5, 4)) -- Research
-    :appendItem(_S(5, 5)) -- Graphs
-    :appendItem(_S(5, 6)) -- Staff listing
-    :appendItem(_S(5, 7)) -- Bank manager
-    :appendItem(_S(5, 8)) -- Status
+  self:addMenu(_S.menu.options, options)
+  self:addMenu(_S.menu.charts, UIMenu()
+    :appendItem(_S.menu_charts.statement)
+    :appendItem(_S.menu_charts.casebook)
+    :appendItem(_S.menu_charts.policy)
+    :appendItem(_S.menu_charts.research)
+    :appendItem(_S.menu_charts.graphs)
+    :appendItem(_S.menu_charts.staff_listing)
+    :appendItem(_S.menu_charts.bank_manager)
+    :appendItem(_S.menu_charts.status)
   )
   local function _(s) return "  " .. s:upper() .. "  " end
   local function transparent_walls(item)
@@ -543,28 +517,28 @@ function UIMenuBar:makeMenu(app)
     app.ui:scrollMap(0, 0)
   end
   if self.ui.app.config.debug then
-    self:addMenu(_S(1, 5), UIMenu() -- Debug
-      :appendCheckItem(_"Transparent walls", false, transparent_walls)
-      :appendCheckItem(_"Limit camera", true, limit_camera)
-      :appendCheckItem(_"Disable salary raise", false, function() self.ui.app.world:debugToggleSalaryRaise() end )
-      :appendItem(_"Make Debug Patient", function() self.ui.app.world:makeDebugPatient() end)
-      :appendItem(_"Spawn Patient", function() self.ui.app.world:spawnPatient() end)
-      :appendItem(_"Make Adviser Talk", function() self.ui:debugMakeAdviserTalk() end)
-      :appendItem(_"Show watch", function() self.ui:addWindow(UIWatch(self.ui)) end)
-      :appendItem(_"Place Objects", place_objs)
-      :appendMenu(_"Map overlay", UIMenu()
-        :appendCheckItem(_"None", true, overlay(), "")
-        :appendCheckItem(_"Flags", false, overlay"flags", "")
-        :appendCheckItem(_"Byte 0 & 1", false, overlay(35, 8, 0, 1, false), "")
-        :appendCheckItem(_"Byte Floor", false, overlay(35, 8, 2, 2, false), "")
-        :appendCheckItem(_"Byte N Wall", false, overlay(35, 8, 3, 3, false), "")
-        :appendCheckItem(_"Byte W Wall", false, overlay(35, 8, 4, 4, false), "")
-        :appendCheckItem(_"Byte 5", false, overlay(35, 8, 5, 5, true), "")
-        :appendCheckItem(_"Byte 6", false, overlay(35, 8, 6, 6, true), "")
-        :appendCheckItem(_"Byte 7", false, overlay(35, 8, 7, 7, true), "")
-        :appendCheckItem(_"Parcel", false, overlay(131107, 2, 0, 0, false), "")
+    self:addMenu(_S.menu.debug, UIMenu() -- Debug
+      :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls)
+      :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera)
+      :appendCheckItem(_S.menu_debug.disable_salary_raise, false, function() self.ui.app.world:debugToggleSalaryRaise() end )
+      :appendItem(_S.menu_debug.make_debug_patient, function() self.ui.app.world:makeDebugPatient() end)
+      :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
+      :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)
+      :appendItem(_S.menu_debug.show_watch,         function() self.ui:addWindow(UIWatch(self.ui)) end)
+      :appendItem(_S.menu_debug.place_objects,      place_objs)
+      :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
+        :appendCheckItem(_S.menu_debug_overlay.none,         true, overlay(), "")
+        :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay"flags", "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(35, 8, 0, 1, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(35, 8, 2, 2, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(35, 8, 3, 3, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_w_wall, false, overlay(35, 8, 4, 4, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(35, 8, 5, 5, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(35, 8, 6, 6, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
+        :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay(131107, 2, 0, 0, false), "")
       )
-      :appendItem(_"Sprite viewer", function() dofile "sprite_viewer" end)
+      :appendItem(_S.menu_debug.sprite_viewer, function() dofile "sprite_viewer" end)
       :appendItem(_"Save", function()
         local data = SaveGame()
         local f = io.open([[ThemeHospitalSave.dat]], "wb")

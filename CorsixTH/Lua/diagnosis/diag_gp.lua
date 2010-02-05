@@ -19,8 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 2)
 disease.id = "diag_gp"
+disease.name = _S.diseases.general_practice.name
 disease.cure_price = 100
 disease.pseudo = true
 

@@ -19,12 +19,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.name = _S(4, 11)
 disease.id = "baldness"
-disease.symptoms = _S(44, 87)
-disease.cure = _S(44, 88)
-disease.cause = _S(44, 86)
-disease.cure_price = 950 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
+disease.name = _S.diseases.baldness.name
+disease.cause = _S.diseases.baldness.cause
+disease.symptoms = _S.diseases.baldness.symptoms
+disease.cure = _S.diseases.baldness.cure
+disease.cure_price = 950
 disease.initPatient = function(patient)
   patient:setType("Slack Male Patient")
   patient:setLayer(0, 12)

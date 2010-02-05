@@ -60,7 +60,7 @@ local function linepairs(filename)
   return iterator
 end
 
-function Audio:init()
+function Audio:init(speech_file)
   if self.not_loaded then
     return
   end
@@ -185,7 +185,6 @@ function Audio:init()
     print "Notice: No sound effects as no SOUND/DATA directory found"
   else
     local data_dir = sound_dir .. subdirs.DATA .. pathsep
-    local sound_file = "SOUND-" .. self.app.config.language .. ".DAT"
     local archive_name
     local function find_sound_file(dir, file)
       for item in lfs.dir(dir) do
@@ -195,17 +194,20 @@ function Audio:init()
       end
     end
     
-    archive_name = find_sound_file(data_dir, sound_file)
+    if speech_file then
+      speech_file = speech_file:upper()
+      archive_name = find_sound_file(data_dir, speech_file)
+    end
     
     -- If sound file not found and language choosen is not English, 
     -- maybe we can have more chance loading English sounds
-    if not archive_name and self.app.config.language ~= "0" then
-      print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. sound_file .. " file found")        
+    if not archive_name and speech_file ~= "SOUND-0.DAT" then
+      print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. speech_file .. " file found")        
       archive_name = find_sound_file(data_dir, "SOUND-0.DAT")
     end
     
     if not archive_name then
-      print("Notice: No sound effects as no SOUND/DATA/" .. sound_file .. " file found")
+      print("Notice: No sound effects as no SOUND/DATA/" .. speech_file .. " file found")
     else
       local file = assert(io.open(data_dir .. archive_name, "rb"))
       local data = file:read"*a"
@@ -215,7 +217,7 @@ function Audio:init()
       end
       self.sound_archive = TH.soundArchive()
       if not self.sound_archive:load(data) then
-        print("Notice: No sound effects as SOUND/DATA/" .. sound_file .. " could not be loaded")
+        print("Notice: No sound effects as SOUND/DATA/" .. speech_file .. " could not be loaded")
       else
         self.sound_fx = TH.soundEffects()
         self.sound_fx:setSoundArchive(self.sound_archive)
