@@ -53,7 +53,7 @@ function UIFax:UIFax(ui, message)
   
   -- Add choice buttons
   local choices = false
-  local last_y = self.y
+  local last_y = 140
   if self.message["choices"] then
     choices = true
     for k = 1, #self.message["choices"] do
@@ -61,9 +61,9 @@ function UIFax:UIFax(ui, message)
         local --[[persistable:fax_choice_button]] function callback()
           self:choice(self.message["choices"][k].choice)
         end
-        self:addPanel(17, self.x + 170, last_y):makeButton(0, 0, 43, 43, 18, callback)
+        self:addPanel(17, 500, last_y):makeButton(0, 0, 43, 43, 18, callback)
       else
-        self:addPanel(19, self.x + 170, last_y)
+        self:addPanel(19, 500, last_y)
       end
       last_y = last_y + 60
     end
