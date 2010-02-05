@@ -188,13 +188,6 @@ menu_options_game_speed = {
   max_speed           = M[12][4],
   and_then_some_more  = M[12][5],
 }
---[[
-menu_options_game_speed.slowest             = M[12][1]
-menu_options_game_speed.slower              = M[12][2]
-menu_options_game_speed.normal              = M[12][3]
-menu_options_game_speed.max_speed           = M[12][4]
-menu_options_game_speed.and_then_some_more  = M[12][5]
-]]--
 
 menu_display = {
   high_res            = M[4][1],
@@ -260,7 +253,7 @@ local function D(name_str, cause_str)
 end
 
 diseases = {
-  -- none                  D( 1), -- not used/needed?
+  -- none                = D( 1), -- not used/needed?
   general_practice       = D( 2),
   bloaty_head            = D( 3,  62),
   hairyitis              = D( 4,  65),
@@ -314,5 +307,4 @@ staff_descriptions.misc = S[46]
 staff_descriptions.good = S[47]
 staff_descriptions.bad  = S[48]
 
--- TEST
-testing.original_override = "TEST: not overridden (ORIG)"
+-- ...

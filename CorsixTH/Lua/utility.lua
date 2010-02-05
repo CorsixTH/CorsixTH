@@ -70,9 +70,6 @@ end
 function print_table(obj, level)
   assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
   level = level or 0
---  if level > 0 then
---    return
---  end
   local spacer = ""
   for i = 1, level do
     spacer = spacer .. " "

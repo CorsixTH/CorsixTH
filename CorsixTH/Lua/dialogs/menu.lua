@@ -228,15 +228,6 @@ function UIMenuBar:onMouseDown(button, x, y)
   if button ~= "left" or not self.visible then
     return
   end
-  -- test
-  if self.ui.app.config.debug then
-    print("testing language overrides")
-    print("table menu_options_game_speed:")
-    print_table(_S.menu_options_game_speed, 1)
-    print("original string override test:")
-    print(_S.testing.original_override)
-  end
-  -- /test
   local repaint = false
   while self.active_menu do
     local menu = self.active_menu

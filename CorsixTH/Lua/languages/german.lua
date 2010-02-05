@@ -38,9 +38,7 @@ diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-The
 
 -- new strings
 
-diseases.broken_wind.cure_desc = " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt fÅr Windstille." -- original string mentioned inflation, which is plain wrong.
-
-menu_options_game_speed.pause        = "  PAUSE (DE)"
+menu_options_game_speed.pause        = "  PAUSE"
 
 menu_debug = {
   transparent_walls       = "  DURCHSICHTIGE WéNDE",
@@ -68,6 +66,3 @@ menu_debug_overlay = {
 }
 
 adviser.room_forbidden_non_reachable_parts = "Sie kînnen den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wÑren."
-
--- TEST
-testing.original_override = "TEST: overridden (DE)"

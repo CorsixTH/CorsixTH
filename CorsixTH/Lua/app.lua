@@ -220,17 +220,6 @@ function App:dumpStrings(filename)
   fi:close()
 end
 
---[[
-List of languages:
-  Language name (in english) along with ISO 639 codes for it
-  ["0"] = {"english", "en", "eng"},
-  ["1"] = {"french" , "fr", "fre", "fra"},
-  ["2"] = {"german" , "de", "ger", "deu"},
-  ["3"] = {"italian", "it", "ita"},
-  ["4"] = {"spanish", "es", "spa"},
-  ["5"] = {"swedish", "sv", "swe"},
-]]--
-
 function App:fixConfig()
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be

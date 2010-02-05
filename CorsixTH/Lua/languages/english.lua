@@ -25,7 +25,7 @@ Inherit("original_strings", 0)
 -- (currently none)
 
 -- new strings
-menu_options_game_speed.pause = "  PAUSE (EN)"
+menu_options_game_speed.pause = "  PAUSE"
 
 menu_debug = {
   transparent_walls           = "  TRANSPARENT WALLS",
@@ -52,6 +52,3 @@ menu_debug_overlay = {
   parcel                      = "  PARCEL",
 }
 adviser.room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable."
-
--- TEST
-testing.original_override = "TEST: overridden (EN)"
