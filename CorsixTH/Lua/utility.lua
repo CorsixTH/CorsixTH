@@ -87,22 +87,32 @@ end
 -- error. On success, returns the file as a function just like loadfile() does
 -- with the difference that the first argument to this function should be a
 -- table in which globals are looked up and written to.
+-- Note: Unlike normal loadfile, this version also accepts files which start
+-- with the UTF-8 byte order marker
 function loadfile_envcall(filename)
+  -- Read file contents
+  local f, err = io.open(filename)
+  if not f then
+    return nil, err
+  end
+  local result = f:read(4)
+  if result == "\239\187\191#" then
+    -- UTF-8 BOM plus Unix Shebang
+    result = f:read"*a":gsub("^[^\r\n]*", "", 1)
+  elseif result:sub(1, 3) == "\239\187\191" then
+    -- UTF-8 BOM
+    result = result:sub(4,4) .. f:read"*a"
+  elseif result:sub(1, 1) == "#" then
+    -- Unix Shebang
+    result = (result .. f:read"*a"):gsub("^[^\r\n]*", "", 1)
+  else
+    -- Normal
+    result = result .. f:read"*a"
+  end
+  f:close()
+    
   if rawget(_G, "loadin") then
     -- Lua 5.2 lacks setfenv(), but does provide loadin()
-    -- Unfortunately, loadin() doesn't work with filenames, so the file needs
-    -- to be loaded first.
-    local f, err = io.open(filename)
-    if not f then
-      return nil, err
-    end
-    local result = f:read"*l" or ""
-    if result:sub(1, 1) == "#" then
-      result = "\n" .. f:read"*a"
-    else
-      result = result .. "\n" .. f:read"*a"
-    end
-    f:close()
     -- loadin() still only allows a chunk to have an environment set once, so
     -- we give it an empty environment and use __[new]index metamethods on it
     -- to allow the same effect as changing the actual environment.
@@ -119,7 +129,7 @@ function loadfile_envcall(filename)
     end
   else
     -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
-    local result, err = loadfile(filename)
+    result, err = loadstring(result, "@".. filename)
     if result then
       return function(env, ...)
         setfenv(result, env)

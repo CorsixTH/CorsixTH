@@ -18,22 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+-- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
+
 Language("german", "de", "ger", "deu")
 Inherit("english")
 Inherit("original_strings", 2)
 
--- NB: umlauts can be written with some special characters:
--- ‰ = Ñ
--- ˆ = î
--- ¸ = Å
--- ƒ = é
--- ÷ = ô
--- ‹ = ö
--- ﬂ = ·
-
 -- override
 
-diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt fÅr Windstille." -- original string mentioned inflation, which is plain wrong.
+diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt f√ºr Windstille." -- original string mentioned inflation, which is plain wrong.
 -- TODO: diseases.corrugated_ankles.cure -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
 
 -- new strings
@@ -41,9 +34,9 @@ diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-The
 menu_options_game_speed.pause        = "  PAUSE"
 
 menu_debug = {
-  transparent_walls       = "  DURCHSICHTIGE WéNDE",
+  transparent_walls   =utf8 "  DURCHSICHTIGE W√ÑNDE",
   limit_camera            = "  KAMERA BEGRENZEN",
-  disable_salary_raise    = "  KEINE GEHALTSERHôHUNGEN",
+  disable_salary_raise=utf8 "  KEINE GEHALTSERH√ñHUNGEN",
   make_debug_patient      = "  DEBUG-PATIENTEN ERSTELLEN",
   spawn_patient           = "  PATIENTEN ERZEUGEN",
   make_adviser_talk       = "  BERATER REDEN LASSEN",
@@ -62,7 +55,7 @@ menu_debug_overlay = {
   byte_5                  = "  BYTE 5",
   byte_6                  = "  BYTE 6",
   byte_7                  = "  BYTE 7",
-  parcel                  = "  GRUNDSTöCK"
+  parcel              =utf8 "  GRUNDST√úCK"
 }
 
-adviser.room_forbidden_non_reachable_parts = "Sie kînnen den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wÑren."
+adviser.room_forbidden_non_reachable_parts = utf8 "Sie k√∂nnen den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar w√§ren."
