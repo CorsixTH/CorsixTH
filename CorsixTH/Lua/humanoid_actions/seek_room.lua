@@ -104,7 +104,7 @@ local function action_seek_room_start(action, humanoid)
         for key, _ in pairs(required_staff) do
           staff_name = key
         end
-        local output_text = _S(44, 59):format(room_name)
+        local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)
         if not humanoid.hospital:hasStaffOfCategory(staff_name) then
           if staff_name == "Nurse" then
             staff_name = _S(34, 3)
@@ -115,17 +115,17 @@ local function action_seek_room_start(action, humanoid)
           elseif staff_name == "Surgeon" then
             staff_name = _S(34, 6)
           end
-          output_text = _S(44, 47):format(room_name, staff_name)
+          output_text = _S.fax.disease_discovered_patient_choice.need_to_build_and_employ:format(room_name, staff_name)
         end
         -- TODO: In the future the treatment room might be unavailable
         local message = {
-          {text = _S(44,51):format(humanoid.disease.name)},
+          {text = _S.fax.disease_discovered_patient_choice.disease_name:format(humanoid.disease.name)},
           {text = output_text},
-          {text = _S(44, 52)},
+          {text = _S.fax.disease_discovered_patient_choice.what_to_do_question},
           choices = {
-            {text = _S(44, 43), choice = "send_home", offset = 50},
-            {text = _S(44, 44), choice = "wait", offset = 40},
-            {text = _S(44, 45), choice = "disabled", offset = 40}, -- TODO: research
+            {text = _S.fax.disease_discovered_patient_choice.choices.send_home, choice = "send_home", offset = 50},
+            {text = _S.fax.disease_discovered_patient_choice.choices.wait,      choice = "wait",      offset = 40},
+            {text = _S.fax.disease_discovered_patient_choice.choices.research,  choice = "disabled",  offset = 40}, -- TODO: research
           },
           owner = humanoid,
         }
@@ -148,15 +148,15 @@ local function action_seek_room_start(action, humanoid)
           local more_text = ""
           if humanoid.diagnosis_progress > 0.7 then -- TODO: What value here?
             middle_choice = "guess_cure"
-            more_text = _S(44, 218):format(humanoid.diagnosis_progress*100, humanoid.disease.name)
+            more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name:format(humanoid.diagnosis_progress*100, humanoid.disease.name)
           end
           local message = {
-            {text = _S(44,216)},
-            {text = _S(44, 217)},
+            {text = _S.fax.diagnosis_failed.situation},
+            {text = _S.fax.diagnosis_failed.what_to_do_question},
             choices = {
-              {text = _S(44, 212), choice = "send_home", offset = 50},
-              {text = _S(44, 213), choice = middle_choice, offset = 40},
-              {text = _S(44, 214), choice = "wait", offset = 40},
+              {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home",   offset = 50},
+              {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice, offset = 40},
+              {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait",        offset = 40},
             },
             owner = humanoid,
           }

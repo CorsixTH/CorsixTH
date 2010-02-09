@@ -24,6 +24,24 @@ Language("original_strings")
 SetSpeechFile("Sound-".. ... ..".dat")
 local S = LoadStrings("Lang-".. ... ..".dat")
 
+-- Fix inconsistency/bug in german lang file.
+-- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
+-- replaced with a single string [44][168] with %s and %d in german.
+-- Due to this, the remaining strings in section 44 were also off by one.
+-- Solve it by splitting the string into two.
+local function fixGermanStrings(lang_num)
+  if lang_num ~= 2 then
+    return
+  end
+  for str = 218, 169, -1 do
+    S[44][str+1] = S[44][str]
+  end
+  S[44][169] = strsub(S[44][168], 46)
+  S[44][168] = strsub(S[44][168], 1, 45)
+end
+
+fixGermanStrings(...)
+
 deprecated = S -- For compatibility
 
 staff_class = {
@@ -299,6 +317,163 @@ diseases = {
   diag_psych             = D(44),
   autopsy                = D(45),
   -- mixer               = D(46), -- not used/needed?
+}
+
+fax = {
+  emergency = {
+    choices = {
+      accept = S[44][15],
+      refuse = S[44][16],
+    },
+
+    location = S[44][18],
+    num_disease = S[44][19],
+    cure_possible_drug_name_efficiency = S[44][20],
+    cure_possible = S[44][21],
+    cure_not_possible_build_and_employ = S[44][22],
+    cure_not_possible_build            = S[44][23],
+    cure_not_possible_employ           = S[44][24],
+    cure_not_possible                  = S[44][25],
+    bonus                              = S[44][26],
+    
+    locations = {
+      S[44][27],
+      S[44][28],
+      S[44][29],
+      S[44][30],
+      S[44][31],
+      S[44][32],
+      S[44][33],
+      S[44][34],
+      S[44][35],
+    },
+  },
+
+  emergency_result = {
+    close_text = S[44][38],
+
+    earned_money = S[44][40],
+    saved_people = S[44][41],
+  },  
+  
+  disease_discovered_patient_choice = {
+    choices = {
+      send_home = S[44][43],
+      wait      = S[44][44],
+      research  = S[44][45],
+    },
+    
+    need_to_build_and_employ = S[44][47],
+    need_to_build            = S[44][48],
+    need_to_employ           = S[44][49],
+    can_not_cure             = S[44][50],
+    
+    disease_name             = S[44][51],
+    what_to_do_question      = S[44][52],
+    guessed_percentage_name  = S[44][53],
+  },
+  
+  disease_discovered = {
+    close_text = S[44][55],
+    
+    can_cure = S[44][57],
+    need_to_build_and_employ = S[44][58],
+    need_to_build            = S[44][59],
+    need_to_employ           = S[44][60],
+    
+    discovered_name          = S[44][61],
+    -- After this come cause, symptoms and cure of disease
+  },
+  
+  epidemic = {
+    choices = {
+      declare  = S[44][165],
+      cover_up = S[44][166],
+    },
+    
+    disease_name             = S[44][168],
+    declare_explanation_fine = S[44][169],
+    cover_up_explanation_1   = S[44][170],
+    cover_up_explanation_2   = S[44][171],
+  },
+  
+  epidemic_result = {
+    close_text = S[44][173],
+    
+    failed = {
+      part_1_name = S[44][175],
+      part_2      = S[44][176],
+    },
+    succeeded = {
+      part_1_name = S[44][177],
+      part_2      = S[44][178],
+    },
+    
+    compensation_amount  = S[44][179],
+    fine_amount          = S[44][180],
+    rep_loss_fine_amount = S[44][181],
+    hospital_evacuated   = S[44][182],
+  },
+  
+  vip_visit_query = {
+    choices = {
+      invite = S[44][184],
+      refuse = S[44][185],
+    },
+    
+    vip_name = S[44][187],
+  },
+  
+  vip_visit_result = {
+    close_text = S[44][189],
+    
+    telegram          = S[44][191],
+    vip_remarked_name = S[44][192],
+    
+    cash_grant = S[44][193],
+    rep_boost  = S[44][194],
+    rep_loss   = S[44][195],
+    
+    remarks = {
+      super = {
+        S[44][196],
+        S[44][197],
+        S[44][198],
+      },
+      good = {
+        S[44][199],
+        S[44][200],
+        S[44][201],
+      },
+      mediocre = {
+        S[44][202],
+        S[44][203],
+        S[44][204],
+      },
+      bad = {
+        S[44][205],
+        S[44][206],
+        S[44][207],
+      },
+      very_bad = {
+        S[44][208],
+        S[44][209],
+        S[44][210],
+      },
+    },
+  },
+  
+  diagnosis_failed = {
+    choices = {
+      send_home   = S[44][212],
+      take_chance = S[44][213],
+      wait        = S[44][214],
+    },
+    
+    situation           = S[44][216],
+    what_to_do_question = S[44][217],
+    partial_diagnosis_percentage_name = S[44][218],
+  },
 }
 
 -- ...

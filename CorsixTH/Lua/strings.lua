@@ -75,6 +75,7 @@ function Strings:init()
     local good_error_marker = {}
     local env = setmetatable({
       utf8 = utf8conv,
+      strsub = string.sub,
       Language = function(...)
         -- Associate every passed name with this file, case-independently
         for _, name in pairs{...} do
@@ -140,6 +141,7 @@ function Strings:load(language)
   local speech_file
   local functions = {
     utf8 = utf8conv,
+    strsub = string.sub,
     -- Calling the Langauage() function should have no effect any more
     Language = function() end,
     -- Inherit() should evaluate the named language in the current environment
