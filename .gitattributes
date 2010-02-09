@@ -33,9 +33,6 @@ CorsixTH/Lua/dialogs/hospital_policy.lua -text
 CorsixTH/Lua/dialogs/machine_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_rise.lua -text
 CorsixTH/Lua/entities/machine.lua -text
-CorsixTH/Lua/objects/lecture_chair.lua -text
-CorsixTH/Lua/objects/litter.lua -text
-CorsixTH/Lua/objects/projector.lua -text
 CorsixTH/Lua/persistance.lua -text
 CorsixTH/Lua/rooms/training.lua -text
 CorsixTH/Lua/walls/blue.lua -text

@@ -23,7 +23,7 @@ local TH = require "TH"
 local object = {}
 object.id = "litter"
 object.thob = 62 -- previously unused
-object.name = "Litter" -- Should never be shown anywhere, TODO: Custom strings
+object.name = _S.object.litter -- Should never be shown anywhere
 object.ticks = false
 object.class = "Litter"
 

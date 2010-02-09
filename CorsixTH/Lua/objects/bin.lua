@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "bin"
 object.thob = 50
-object.name = _S(2, 51)
+object.name = _S.object.bin
 object.ticks = false
 object.build_cost = 5
 object.build_preview_animation = 5096

@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "inflator"
 object.thob = 9
-object.name = _S(2, 10)
+object.name = _S.object.inflator
 object.ticks = false
 object.build_cost = 2500
 object.build_preview_animation = 908

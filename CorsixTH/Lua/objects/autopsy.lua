@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "autopsy"
 object.thob = 55
-object.name = _S(2, 56)
+object.name = _S.object.auto_autopsy
 object.ticks = true
 object.build_cost = 4000
 object.build_preview_animation = 5102

@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "screen"
 object.thob = 16
-object.name = _S(2, 17)
+object.name = _S.object.screen
 object.ticks = false
 object.build_cost = 30
 object.build_preview_animation = 926

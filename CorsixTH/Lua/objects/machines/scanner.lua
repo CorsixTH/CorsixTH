@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "scanner"
 object.thob = 14
-object.name = _S(2, 15)
+object.name = _S.object.scanner
 object.ticks = false
 object.build_cost = 5000
 object.build_preview_animation = 920

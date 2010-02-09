@@ -210,10 +210,10 @@ end
 function World:makeAvailableStaff()
   self.available_staff = {}
   for class, local_string in pairs {
-    Doctor = _S(1, 2),
-    Nurse = _S(1, 1),
-    Handyman = _S(1, 3),
-    Receptionist = _S(1, 4),
+    Doctor = _S.staff_class.doctor,
+    Nurse = _S.staff_class.nurse,
+    Handyman = _S.staff_class.handyman,
+    Receptionist = _S.staff_class.receptionist,
     } do
     local group = {}
     for i = 1, math.random(3, 12) do

@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "plant"
 object.thob = 45
-object.name = _S(2, 46)
+object.name = _S.object.plant
 object.ticks = false
 object.corridor_object = 6
 object.build_cost = 5

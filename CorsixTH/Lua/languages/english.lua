@@ -25,6 +25,8 @@ Inherit("original_strings", 0)
 -- (currently none)
 
 -- new strings
+object.litter = "Litter"
+
 menu_options_game_speed.pause = "  PAUSE"
 
 menu_debug = {

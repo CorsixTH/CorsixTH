@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "analyser"
 object.thob = 41
-object.name = _S(2, 42)
+object.name = _S.object.atom_analyser
 object.ticks = false
 object.build_cost = 10000
 object.build_preview_animation = 5092

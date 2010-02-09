@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "door"
 object.thob = 3
+object.name = _S.object.door
 object.class = "Door"
 object.ticks = false
 object.idle_animations = {

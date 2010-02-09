@@ -26,6 +26,8 @@ Inherit("original_strings", 2)
 
 -- override
 
+object.litter = utf8 "Müll"
+
 diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 -- TODO: diseases.corrugated_ankles.cure -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
 -- TODO: fax.vip_visit_result.remarks.super[1] -- storming should not be translated with 'turbulent' here

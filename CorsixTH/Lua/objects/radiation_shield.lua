@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "radiation_shield"
 object.thob = 28
-object.name = _S(2, 29)
+object.name = _S.object.radiation_shield
 object.ticks = true
 object.build_cost = 5000
 object.build_preview_animation = 922

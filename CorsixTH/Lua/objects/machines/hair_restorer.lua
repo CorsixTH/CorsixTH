@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "hair_restorer"
 object.thob = 25
-object.name = _S(2, 26)
+object.name = _S.object.hair_restorer
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 5074

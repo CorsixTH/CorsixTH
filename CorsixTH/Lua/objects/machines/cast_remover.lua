@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "cast_remover"
 object.thob = 24
-object.name = _S(2, 25)
+object.name = _S.object.cast_remover
 object.ticks = false
 object.build_cost = 2000
 object.build_preview_animation = 5072
