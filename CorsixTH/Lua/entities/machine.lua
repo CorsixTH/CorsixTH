@@ -85,6 +85,6 @@ function Machine:onClick(ui, button)
     local room = self.world:getRoom(self.tile_x, self.tile_y)
     ui:addWindow(UIMachine(ui, self, room))
   else
-    Object.onClick(ui, button)
+    Object.onClick(self, ui, button)
   end
 end
