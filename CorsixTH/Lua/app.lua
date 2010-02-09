@@ -145,7 +145,11 @@ function App:init()
     end
     return str
   end
-  --self:dumpStrings"debug-strings.txt"
+  if (self.command_line.dump or ""):match"strings" then
+    -- Specify --dump=strings on the command line to dump strings
+    -- (or insert "true or" after the "if" in the above)
+    self:dumpStrings "debug-strings.txt"
+  end
   
   -- Load audio
   dofile "audio"

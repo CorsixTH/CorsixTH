@@ -129,6 +129,12 @@ local strings_metatable = {
   __newindex = function(t, k, v)
     error("String tables are read-only", 2)
   end,
+  __pairs = function(t)
+    return pairs(shadows[t])
+  end,
+  __ipairs = function(t)
+    return ipairs(shadows[t])
+  end,
 }
 
 function Strings:load(language)
@@ -192,8 +198,9 @@ function Strings:load(language)
   setmetatable(env, metatable)
   self:_loadPrivate(language, env)
   -- Change the metamethods on every string table to match strings_metatable
-  metatable.__index = strings_metatable.__index
-  metatable.__newindex = strings_metatable.__newindex
+  for k, v in pairs(strings_metatable) do
+    metatable[k] = v
+  end
   return env, speech_file
 end
 

@@ -140,3 +140,34 @@ function loadfile_envcall(filename)
     end
   end
 end
+
+-- Make pairs() and ipairs() respect metamethods (they already do in Lua 5.2)
+do
+  local metamethod_called = false
+  pairs(setmetatable({}, {__pairs = function() metamethod_called = true end}))
+  if not metamethod_called then
+    local next = next
+    local getmetatable = getmetatable
+    pairs = function(t)
+      local mt = getmetatable(t)
+      if mt then
+        local __pairs = mt.__pairs
+        if __pairs then
+          return __pairs(t)
+        end
+      end
+      return next, t
+    end
+    local ipairs_orig = ipairs
+    ipairs = function(t)
+      local mt = getmetatable(t)
+      if mt then
+        local __ipairs = mt.__ipairs
+        if __ipairs then
+          return __ipairs(t)
+        end
+      end
+      return ipairs_orig(t)
+    end
+  end
+end
