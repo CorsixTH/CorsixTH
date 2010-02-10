@@ -272,6 +272,7 @@ function Object:onClick(ui, button)
       ui:addWindow(window)
     else
       window:addObjects(object_list, false) -- don't pay for
+      window:selectObjectType(self.object_type)
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
     window:setOrientation(direction)

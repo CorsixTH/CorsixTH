@@ -370,6 +370,12 @@ function UIEditRoom:purchaseItems()
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
+function UIEditRoom:pickupItems()
+  self.place_objects = false
+  self.active_index = 0
+  self:clearBlueprint()
+end
+
 function UIEditRoom:returnToWallPhase(early)
   if not early then
     self.desc_text = _S(3, 11) -- Drag out the blueprint until you're happy with its size
@@ -394,6 +400,7 @@ function UIEditRoom:returnToDoorPhase()
   local room = self.room
   
   self.purchase_button:enable(false)
+  self.pickup_button:enable(false)
   self.world.rooms[room.id] = nil
   
   -- Remove any placed objects (add them to list again)
@@ -655,6 +662,7 @@ function UIEditRoom:enterObjectsPhase()
   if #self.room.room_info.objects_additional > 0 then
     self.purchase_button:enable(true)
   end
+  self.pickup_button:enable(true)
   
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
@@ -679,7 +687,7 @@ function UIEditRoom:hitTest(x, y)
   if not self.visible then
     return false
   end
-  if self.phase == "objects" and #self.objects == 0 then
+  if self.phase == "objects" and not self.place_objects then
     -- After all objects have been placed, we want the user to be able to pick
     -- up objects to re-position them. Hence we return a negative hit-test
     -- result if there is a suitable object under the cursor.

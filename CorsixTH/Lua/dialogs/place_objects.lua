@@ -59,7 +59,9 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(9, 8, 41, 42, 118, self.purchaseItems) -- Disabled purchase items button
     :setDisabledSprite(127):enable(false)
-  self:addPanel(128,  92, 100) -- Disabled pick up items button
+  self.pickup_button =
+  self:addPanel(119,  92, 100):makeButton(9, 8, 41, 42, 120, self.pickupItems) -- Disabled pick up items button
+    :setDisabledSprite(128):enable(false)
   self.confirm_button = 
   self:addPanel(121, 134, 100):makeButton(0, 8, 43, 42, 122, self.confirm)
     :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
@@ -91,6 +93,7 @@ function UIPlaceObjects:resize(num_slots)
       if i == self.active_index then
         self:nextOrientation()
       else
+        self.place_objects = true
         self:setActiveIndex(i)
       end
     end
@@ -563,4 +566,13 @@ function UIPlaceObjects:onMouseMove(x, y, ...)
   end
   
   return repaint
+end
+
+function UIPlaceObjects:selectObjectType(object_type)
+  for i, o in ipairs(self.objects) do
+    if o.object.id == object_type.id then
+      self:setActiveIndex(i)
+      return
+    end
+  end
 end
