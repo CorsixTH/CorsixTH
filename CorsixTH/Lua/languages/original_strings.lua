@@ -120,6 +120,48 @@ object = {
 
 -- ...
 
+transactions = {
+  --null               = S[8][ 1], -- not needed
+  wages                = S[8][ 2],
+  hire_staff           = S[8][ 3],
+  buy_object           = S[8][ 4],
+  build_room           = S[8][ 5],
+  cure                 = S[8][ 6],
+  buy_land             = S[8][ 7],
+  treat_colon          = S[8][ 8],
+  final_treat_colon    = S[8][ 9],
+  cure_colon           = S[8][10],
+  deposit              = S[8][11],
+  advance_colon        = S[8][12],
+  research             = S[8][13],
+  drinks               = S[8][14],
+  jukebox              = S[8][15], -- unused
+  cheat                = S[8][16],
+  heating              = S[8][17],
+  insurance_colon      = S[8][18],
+  bank_loan            = S[8][19],
+  loan_repayment       = S[8][20],
+  loan_interest        = S[8][21],
+  research_bonus       = S[8][22],
+  drug_cost            = S[8][23],
+  overdraft            = S[8][24],
+  severance            = S[8][25],
+  general_bonus        = S[8][26],
+  sell_object          = S[8][27],
+  personal_bonus       = S[8][28],
+  emergency_bonus      = S[8][29],
+  vaccination          = S[8][30],
+  epidemy_coverup_fine = S[8][31],
+  compensation         = S[8][32],
+  vip_award            = S[8][33],
+  epidemy_fine         = S[8][34],
+  eoy_bonus_penalty    = S[8][35],
+  eoy_trophy_bonus     = S[8][36],
+  machine_replacement  = S[8][37],
+}
+
+-- ...
+
 humanoid_name_starts = S[9]
 humanoid_name_ends = S[10]
 

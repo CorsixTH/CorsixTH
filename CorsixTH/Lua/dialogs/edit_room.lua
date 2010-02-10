@@ -124,7 +124,7 @@ function UIEditRoom:confirm()
     for obj, num in pairs(self.room.room_info.objects_needed) do
       cost = cost - num * TheApp.objects[obj].build_cost
     end
-    self.ui.hospital:spendMoney(cost, _S(8, 5) .. ": " .. self.title_text)
+    self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
@@ -346,7 +346,25 @@ function UIEditRoom:purchaseItems()
 
   local object_list = {} -- transform set to list
   for i, o in ipairs(self.room.room_info.objects_additional) do
-    object_list[i] = { object = TheApp.objects[o], qty = 0 }
+    -- look up current quantity
+    local cur_qty = 0
+    for j, p in ipairs(self.objects) do
+      if p.object.id == o then
+        cur_qty = p.qty
+      end
+    end
+    
+    -- look up minimum quantity (required objects list)
+    local min_qty = self.room.room_info.objects_needed[o] or 0
+    
+    -- subtract number of objects in room from minimum quantity
+    for obj, _ in pairs(self.room.objects) do
+      if min_qty == 0 then break end
+      if obj.object_type.id == o then
+        min_qty = min_qty - 1
+      end
+    end
+    object_list[i] = { object = TheApp.objects[o], qty = cur_qty, min_qty = min_qty }
   end
   
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
@@ -1046,7 +1064,6 @@ end
 function UIEditRoom:placeObject()
   local obj = UIPlaceObjects.placeObject(self, true)
   if obj then
-    self.room.objects[obj] = true
     self:checkEnableConfirm()
   end
 end

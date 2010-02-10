@@ -89,7 +89,7 @@ function Hospital:onEndMonth()
     wages = wages + staff.profile.wage
   end
   if wages ~= 0 then
-    self:spendMoney(wages, _S(8, 2))
+    self:spendMoney(wages, _S.transactions.wages)
   end
 end
 
@@ -135,11 +135,11 @@ function Hospital:receiveMoneyForTreatment(patient)
   local reason
   if patient.diagnosed then
     disease_id = patient.disease.id
-    reason = _S(8, 10) .. " " .. patient.disease.name
+    reason = _S.transactions.cure_colon .. " " .. patient.disease.name
   else
     local room_info = patient:getRoom().room_info
     disease_id = "diag_" .. room_info.id
-    reason = _S(8, 8) .. " " .. room_info.name
+    reason = _S.transactions.treat_colon .. " " .. room_info.name
   end
   local casebook = self.disease_casebook[disease_id]
   local amount = casebook.disease.cure_price
@@ -168,7 +168,7 @@ end
 function Hospital:addStaff(staff)
   self.staff[#self.staff + 1] = staff
   -- Cost of hiring staff:
-  self:spendMoney(staff.profile.wage, _S(8, 3) .. ": " .. staff.profile.name)
+  self:spendMoney(staff.profile.wage, _S.transactions.hire_staff .. ": " .. staff.profile.name)
 end
 
 function Hospital:addPatient(patient)

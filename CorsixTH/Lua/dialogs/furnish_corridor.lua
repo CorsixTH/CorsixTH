@@ -57,12 +57,12 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   }
   if objects then
     for _, object in pairs(objects) do
-      self.objects[#self.objects + 1] = {object = object.object, qty = 0} -- Had to make a copy of objects list. Otherwise, we will modify the original variable (Opening dialog twice keeps memory of previously choosen quantities)
+      self.objects[#self.objects + 1] = {object = object.object, start_qty = object.qty, qty = object.qty, min_qty = object.min_qty} -- Had to make a copy of objects list. Otherwise, we will modify the original variable (Opening dialog twice keeps memory of previously choosen quantities)
     end
   else
     for _, object in ipairs(app.objects) do
       if object.corridor_object then
-        self.objects[#self.objects + 1] = {object = object, qty = 0}
+        self.objects[#self.objects + 1] = {object = object, start_qty = 0, qty = 0, min_qty = 0}
       end
     end
     table.sort(self.objects, function(o1, o2)
@@ -117,8 +117,8 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
     quantity = quantity * 5
   end
   quantity = quantity + o.qty
-  if quantity < 0 then
-    quantity = 0
+  if quantity < o.min_qty then
+    quantity = o.min_qty
   elseif quantity > 99 then
     quantity = 99
   end
@@ -130,18 +130,29 @@ end
 
 function UIFurnishCorridor:confirm()
   local to_purchase = {}
+  local to_sell = {}
   for i, o in ipairs(self.objects) do
-    if o.qty > 0 then
-      to_purchase[#to_purchase + 1] = o
+    if o.qty - o.start_qty > 0 then
+      local diff_qty = o.qty - o.start_qty
+      to_purchase[#to_purchase + 1] = { object = o.object, qty = diff_qty }
+      self.ui.hospital:spendMoney(o.object.build_cost * diff_qty, _S.transactions.buy_object .. ": " .. o.object.name)
+    elseif o.qty - o.start_qty < 0 then
+      local diff_qty = o.start_qty - o.qty
+      to_sell[#to_sell + 1] = { object = o.object, qty = diff_qty }
+      self.ui.hospital:receiveMoney(o.object.build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name)
     end
   end
-  if #to_purchase == 0 or self.edit_dialog then
-    if self.edit_dialog then
-      self.edit_dialog:addObjects(to_purchase, true) -- Add Objects to Edit Dialog (We are building a room)
-    end
+
+  if self.edit_dialog then
+    self.edit_dialog:addObjects(to_purchase, false) -- payment already handled here
+    self.edit_dialog:removeObjects(to_sell, false) -- payment already handled here
     self:close()
   else
-    self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase, true))
+    if #to_purchase == 0 then
+      self:close()
+    else
+      self.ui:addWindow(UIPlaceObjects(self.ui, to_purchase))
+    end
   end
 end
 

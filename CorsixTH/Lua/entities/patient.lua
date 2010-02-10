@@ -229,7 +229,7 @@ function Patient:tickDay()
         self:setMood("thirsty", nil)
         -- The patient might be kicked while buying a drink
         if not self.going_home then
-          self.hospital:receiveMoneyForProduct(self, 15, _S(8, 14))
+          self.hospital:receiveMoneyForProduct(self, 15, _S.transactions.drinks)
         end
       end
         

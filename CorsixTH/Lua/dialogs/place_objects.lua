@@ -163,7 +163,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
       if new_object.qty > 0 and new_object.object.thob == object.object.thob then
         object.qty = object.qty + new_object.qty
         if pay_for then
-          self.ui.hospital:spendMoney(new_object.qty * new_object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
+          self.ui.hospital:spendMoney(new_object.qty * new_object.object.build_cost, _S.transactions.buy_object .. ": " .. object.object.name)
         end
         table.remove(object_list, new_index)
         new_index = new_index - 1
@@ -182,7 +182,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   for _, object in pairs(object_list) do
     self.objects[#self.objects + 1] = object
     if pay_for then
-      self.ui.hospital:spendMoney(object.qty * object.object.build_cost, _S(8, 4) .. ": " .. object.object.name)
+      self.ui.hospital:spendMoney(object.qty * object.object.build_cost, _S.transactions.buy_object .. ": " .. object.object.name)
     end
   end
   
@@ -201,9 +201,9 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 end
 
 -- precondition: self.active_index has to correspond to the object to be removed
-function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
-  if pay_for and object.object.build_cost then
-    self.ui.hospital:receiveMoney(object.object.build_cost, _S(8, 27) .. ": " .. object.object.name)
+function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
+  if refund and object.object.build_cost then
+    self.ui.hospital:receiveMoney(object.object.build_cost, _S.transactions.sell_object .. ": " .. object.object.name)
   end
 
   object.qty = object.qty - 1
@@ -229,12 +229,30 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, pay_for)
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
-function UIPlaceObjects:removeAllObjects(pay_for)
+function UIPlaceObjects:removeAllObjects(refund)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
   self.active_index = 1
   for i = 1, #self.objects do
     for j = 1, self.objects[1].qty do
-      self:removeObject(self.objects[1], true, pay_for)
+      self:removeObject(self.objects[1], true, refund)
+    end
+  end
+end
+
+function UIPlaceObjects:removeObjects(object_list, refund)
+  -- rewrite at some point..
+  if not object_list then
+    object_list = {}
+  end
+  
+  for i, o in ipairs(object_list) do
+    for j, p in ipairs(self.objects) do
+      if o.object.id == p.object.id then
+        self.active_index = j
+        for k = 1, o.qty do
+          self:removeObject(p, true, refund)
+        end
+      end
     end
   end
 end
@@ -348,6 +366,11 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   
+  local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
+  if room then
+    room.objects[real_obj] = true
+  end
+
   self.ui:playSound "place_r.wav"
 
   self:removeObject(object, dont_close_if_empty)
