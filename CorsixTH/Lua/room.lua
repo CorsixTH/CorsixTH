@@ -309,6 +309,11 @@ end
 -- Function stub for rooms to implement. Called when the final confirm
 -- button has been pressed when building/editing a room.
 function Room:roomFinished()
+  -- True once the room has been finished after initial construction, and then
+  -- as long as the user doesn't edit it and go back beyond the first phase (place objects)
+  self.built = true
+  -- Only true when not editing the room at all.
+  self.is_active = true -- TODO: Have in mind when adding editing of rooms.
 end
 
 function Room:crashRoom()
@@ -365,5 +370,7 @@ function Room:crashRoom()
     soot = self.world:newObject("litter", x, y)
     soot:setLitterType(soot_type)
   end
+  
+  self.is_active = false
   -- TODO: This room should no longer be editable - when that feature is added
 end

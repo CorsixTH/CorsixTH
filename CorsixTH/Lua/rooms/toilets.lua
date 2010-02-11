@@ -50,6 +50,7 @@ function ToiletRoom:roomFinished()
     end
   end
   self.maximum_patients = number
+  Room.roomFinished(self)
 end
 
 function ToiletRoom:dealtWithPatient(patient)

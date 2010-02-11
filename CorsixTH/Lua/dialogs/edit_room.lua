@@ -725,7 +725,7 @@ function UIEditRoom:onMouseDown(button, x, y)
         self.ui:playSound "buildclk.wav"
         self:confirm()
       else
-        self.ui.adviser:say(_S(11, 54))
+        self.ui.adviser:say(_S.adviser.build_advice.door_in_invalid_position)
       end
     elseif self.phase == "windows" then
       self:placeWindowBlueprint()
@@ -770,11 +770,11 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
 
   if self.phase ~= "closed" then
     if too_small then
-      self.ui.adviser:say(_S(11, 62))
+      self.ui.adviser:say(_S.adviser.build_advice.room_too_small)
     elseif not is_valid then
-      self.ui.adviser:say(_S(11, 52))
+      self.ui.adviser:say(_S.adviser.build_advice.blueprint_overlap)
     else
-      self.ui.adviser:say(_S(11, 57))
+      self.ui.adviser:say(_S.adviser.build_advice.blueprint_big_enough)
     end
   end
   
@@ -880,7 +880,7 @@ function UIEditRoom:placeWindowBlueprint()
     self.blueprint_window = {}
     self.ui:playSound "buildclk.wav"
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
-    self.ui.adviser:say(_S(11, 55))
+    self.ui.adviser:say(_S.adviser.build_advice.window_in_invalid_position)
   end
 end
 

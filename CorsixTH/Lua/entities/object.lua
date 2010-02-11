@@ -256,7 +256,7 @@ end
 function Object:onClick(ui, button)
   if button == "right" then
     local object_list = {{object = self.object_type, qty = 1}}
-    local room = self.world:getRoom(self.tile_x, self.tile_y)
+    local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
     local direction = self.direction
     

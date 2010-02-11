@@ -162,6 +162,43 @@ transactions = {
 
 -- ...
 
+adviser = {
+  tutorial = {
+  
+  },
+  staff_advice = {
+    need_doctors                  = S[11][ 8],
+    too_many_doctors              = S[11][ 9],
+  },
+  build_advice = {
+    blueprint_overlap             = S[11][52],
+    door_in_invalid_position      = S[11][54],
+    window_in_invalid_position    = S[11][55],
+    blueprint_big_enough          = S[11][57],
+    room_too_small                = S[11][62],
+    
+  },
+  warnings = {
+    bankruptcy_imminent           = S[11][ 3],
+    machines_falling_apart        = S[11][ 4],
+    no_patients_last_month        = S[11][10],
+    nobody_cured_last_month       = S[11][11],
+    queues_too_long               = S[11][12],
+  },
+  goals = {
+  
+  },
+  research = {
+  
+  },
+  competitors = {
+    land_purchased                = S[11][ 7], -- %s
+    
+  },
+}
+
+-- ...
+
 humanoid_name_starts = S[9]
 humanoid_name_ends = S[10]
 
@@ -515,6 +552,30 @@ fax = {
     situation           = S[44][216],
     what_to_do_question = S[44][217],
     partial_diagnosis_percentage_name = S[44][218],
+  },
+}
+
+-- ...
+
+dynamic_info = {
+  patient_actions = {
+    dying                       = S[59][ 5],
+    awaiting_decision           = S[59][ 6],
+    queueing_for                = S[59][ 7], -- %s
+    on_my_way_to                = S[59][ 8], -- %s
+    cured                       = S[59][ 9],
+    fed_up                      = S[59][10],
+    sent_home                   = S[59][11],
+    diagnosed                   = S[59][13], -- %s
+    guessed_diagnosis           = S[59][14], -- %s
+    diagnosis_progress          = S[59][15],
+    no_diagnoses_available      = S[59][16],
+    no_treatment_available      = S[59][17],
+    waiting_for_diagnosis_rooms = S[59][18],
+    waiting_for_treatment_rooms = S[59][19],
+  },
+  staff_actions = {
+  
   },
 }
 

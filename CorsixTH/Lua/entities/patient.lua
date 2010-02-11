@@ -107,7 +107,7 @@ function Patient:treated()
     self:queueAction{name = "meander", count = 1}
     self:queueAction{name = "die"}
     hospital:changeReputation("death")
-    self:updateDynamicInfo(_S(59, 5))
+    self:updateDynamicInfo(_S.dynamic_info.patient_actions.dying)
   else 
     if hospital.num_cured < 1 then
       self.world.ui.adviser:say(_S(11,83))
@@ -117,9 +117,9 @@ function Patient:treated()
     self:setMood("cured", true)
     self:playSound "cheer.wav"
     hospital:changeReputation("cured")
-    self.treatment_history[#self.treatment_history + 1] = _S(59, 9) -- "Cured"
+    self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient_actions.cured
     self:goHome(true)
-    self:updateDynamicInfo(_S(59, 9))
+    self:updateDynamicInfo(_S.dynamic_info.patient_actions.cured)
   end
 end
 
@@ -156,10 +156,10 @@ function Patient:tickDay()
       self:goHome()
       if self.diagnosed then
         -- No treatment rooms
-        self:updateDynamicInfo(_S(59, 17))
+        self:updateDynamicInfo(_S.dynamic_info.patient_actions.no_treatment_available)
       else
         -- No diagnosis rooms
-        self:updateDynamicInfo(_S(59, 16))
+        self:updateDynamicInfo(_S.dynamic_info.patient_actions.no_diagnoses_available)
       end
     end
   end
@@ -346,11 +346,14 @@ function Patient:updateDynamicInfo(helper_object)
   if self:getRoom() then
     self.action_string = ""
   elseif action.name == "walk" and action.is_entering and self.next_room_to_visit then
-    self.action_string = _S(59, 8):format(self.next_room_to_visit.room_info.name)
+    self.action_string = _S.dynamic_info.patient_actions.on_my_way_to
+      :format(self.next_room_to_visit.room_info.name)
   elseif action.name == "seek_reception" then
-    self.action_string = _S(59, 8):format(helper_object.object_type.name)
+    self.action_string = _S.dynamic_info.patient_actions.on_my_way_to
+      :format(helper_object.object_type.name)
   elseif action.name == "queue" then
-    self.action_string = _S(59, 7):format(helper_object.room.room_info.name)
+    self.action_string = _S.dynamic_info.patient_actions.queueing_for
+      :format(helper_object.room.room_info.name)
   elseif action.name == "seek_toilets" then
     self.action_string = ""
   elseif action.name == "seek_room" then
@@ -359,13 +362,18 @@ function Patient:updateDynamicInfo(helper_object)
   if self.diagnosed then
     if self.diagnosis_progress < 1.0 then
       -- The cure was guessed
-      self:setDynamicInfo('text', {self.action_string, "", _S(59, 14):format(self.disease.name)})
+      self:setDynamicInfo('text', {self.action_string, "", 
+        _S.dynamic_info.patient_actions.guessed_diagnosis:format(self.disease.name)})
     else
-      self:setDynamicInfo('text', {self.action_string, "", _S(59, 13):format(self.disease.name)})
+      self:setDynamicInfo('text', {self.action_string, "", 
+        _S.dynamic_info.patient_actions.diagnosed:format(self.disease.name)})
     end
     self:setDynamicInfo('progress', nil)
   else
-    self:setDynamicInfo('text', {self.action_string, "", _S(59, 15)})
+    self:setDynamicInfo('text', {
+      self.action_string, "", 
+      _S.dynamic_info.patient_actions.diagnosis_progress
+    })
     -- TODO: If the policy is changed this info will not be changed until the next
     -- diagnosis facility has been visited.
     local divider = 1
