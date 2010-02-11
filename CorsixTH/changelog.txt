@@ -2,8 +2,8 @@
 Version Beta 2 - released 2010-0?-??
 -----------------------------------------
 
-* Feature: Save/Load functionality
-* Feature: Patients and staff now have a need for heat in order to stay happy. 
+* Feature: Save/Load functionality (WIP)
+* Feature: Patients and staff now have a need for heat in order to stay happy.
   In addition patients get thirsty and will need a bathroom sooner or later.
 * Feature: Machines will need repair now and then. A dialog that shows
   necessarry information is displayed when the machine is clicked.
@@ -13,9 +13,12 @@ Version Beta 2 - released 2010-0?-??
   their skill and get additional traits if a consultant is present.
 * Feature: When a patient cannot be cured or a room is missing a fax will 
   arrive and ask the player what to do.
+* Feature: A new string system that allows us to add new (translatable) text
+  to the game, correct mistakes in existing languages and add new languages.
 
 * Addition: More diseases and treatment rooms.
 * Addition: More diagnosis rooms.
+* Addition: Norwegian (bokmal) translation.
 
 Also, a number of bugs have been squashed.
 
