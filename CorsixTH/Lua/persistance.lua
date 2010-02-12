@@ -34,32 +34,12 @@ function permanent(name, ...)
   return value
 end
 
-local function MakePermanentObjectsTable(inverted, ensure_safe)
-  local return_val = {}
-  local permanent
-  if ensure_safe then
-    permanent = {}
-    if inverted then
-      setmetatable(permanent, {__newindex = function(t, k, v)
-        assert(return_val[v] == nil)
-        assert(type(v) == "string")
-        assert(type(k) ~= "string")
-        rawset(return_val, v, k)
-      end})
-    else
-      setmetatable(permanent, {__newindex = function(t, v, k)
-        assert(return_val[k] == nil)
-        assert(type(k) == "string")
-        assert(type(v) ~= "string")
-        rawset(return_val, v, k)
-      end})
-    end
-  else
-    permanent = return_val
-    if inverted then
-      setmetatable(permanent, {__newindex = function(t, k, v)
-        rawset(t, v, k)
-      end})
+local function MakePermanentObjectsTable(inverted)
+  local return_val = setmetatable({}, {})
+  local permanent = return_val
+  if inverted then
+    getmetatable(permanent).__newindex = function(t, k, v)
+      rawset(t, v, k)
     end
   end
   
@@ -107,7 +87,7 @@ local function MakePermanentObjectsTable(inverted, ensure_safe)
   
   -- Bits of the app
   permanent[TheApp] = "TheApp"
-  for _, key in ipairs{"config", "modes", "video", "strings", "audio"} do
+  for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx"} do
     permanent[TheApp[key]] = "TheApp.".. key
   end
   for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do
@@ -119,9 +99,21 @@ local function MakePermanentObjectsTable(inverted, ensure_safe)
   end
   permanent[TheApp.ui.menu_bar] = "TheApp.ui.menu_bar"
   
-  -- Graphics bits which are *always* loaded
-  permanent[TheApp.gfx.cache.anims.V] = "TheApp.gfx.cache.anims.V"
-  permanent[TheApp.gfx.cache.tabled["VBlk-0"]] = "TheApp.gfx.cache.tabled.VBlk-0"
+  -- Graphics bits are persisted as instructions to reload them or re-use if already loaded
+  if inverted then
+    -- as the object was persisted as a table, we need to add some magic to
+    -- the __index metamethod to interpret this table as a function call
+    getmetatable(return_val).__index = function(t, k)
+      if type(k) == "table" then
+        return k[1](unpack(k, 2))
+      end
+    end
+  else
+    -- load_info is a table containing a method and parameters to load obj
+    for obj, load_info in pairs(TheApp.gfx.load_info) do
+      permanent[obj] = load_info
+    end
+  end
   
   -- Things requested to be permanent by other bits of code
   for name, value in pairs(saved_permanents) do
@@ -189,11 +181,10 @@ function SaveGame()
     ui = TheApp.ui,
     world = TheApp.world,
     map = TheApp.map,
-    gfx = TheApp.gfx,
     random = math.randomdump(),
   }
   --local status, res = xpcall(function()
-  local result, err, obj = persist.dump(state, MakePermanentObjectsTable(false, true))
+  local result, err, obj = persist.dump(state, MakePermanentObjectsTable(false))
   if not result then
     print(obj, NameOf(obj)) -- for debugging
     error(err)
@@ -205,11 +196,14 @@ end
 
 function LoadGame(data)
   --local status, res = xpcall(function()
-  local state = assert(persist.load(data, MakePermanentObjectsTable(true, true)))
+  local state = assert(persist.load(data, MakePermanentObjectsTable(true)))
   TheApp.ui = state.ui
   TheApp.world = state.world
   TheApp.map = state.map
-  TheApp.gfx = state.gfx
   math.randomseed(state.random)
+  
+  local cursor = TheApp.ui.cursor
+  TheApp.ui.cursor = nil
+  TheApp.ui:setCursor(cursor)
   --end, persist.errcatch)
 end

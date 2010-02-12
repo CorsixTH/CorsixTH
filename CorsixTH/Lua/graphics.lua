@@ -29,29 +29,32 @@ local assert, string_char, table_concat, unpack, type, pairs, ipairs
 -- the other Lua code.
 class "Graphics"
 
-local cursors_name = { default = 1,
-                       clicked = 2,
-                       resize_room = 3,
-                       edit_room = 4,
-                       ns_arrow = 5,
-                       we_arrow = 6,
-                       nswe_arrow = 7,
-                       move_room = 8,
-                       sleep = 9,
-                       kill_rat = 10,
-                       kill_rat_hover = 11,
-                       epidemic_hover = 12,
-                       epidemic = 13,
-                       grab = 14,
-                       quit = 15,
-                       staff = 16,
-                       repair = 17,
-                       patient = 18,
-                       queue = 19 }
+local cursors_name = { 
+  default = 1,
+  clicked = 2,
+  resize_room = 3,
+  edit_room = 4,
+  ns_arrow = 5,
+  we_arrow = 6,
+  nswe_arrow = 7,
+  move_room = 8,
+  sleep = 9,
+  kill_rat = 10,
+  kill_rat_hover = 11,
+  epidemic_hover = 12,
+  epidemic = 13,
+  grab = 14,
+  quit = 15,
+  staff = 16,
+  repair = 17,
+  patient = 18,
+  queue = 19,
+}
 
 function Graphics:Graphics(app)
   self.app = app
   self.target = self.app.video
+  -- The cache is used to avoid reloading an object if it is already loaded
   self.cache = {
     raw = {},
     tabled = {},
@@ -61,8 +64,15 @@ function Graphics:Graphics(app)
     anims = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+  -- The load info table records how objects were loaded, and is used to
+  -- persist objects as instructions on how to load them.
+  self.load_info = setmetatable({}, {__mode = "k"})
   -- If the video target changes then resources will need to be reloaded
-  -- (at least with some rendering engines).
+  -- (at least with some rendering engines). Note that reloading is different
+  -- to loading (as in load_info), as reloading is done while the application
+  -- is running, upon objects which are already loaded, whereas loading might
+  -- be done with a different graphics engine, or might only need to grab an
+  -- object from the cache.
   self.reload_functions = setmetatable({}, {__mode = "k"})
   -- Cursors need to be reloaded after sprite sheets, as they are created
   -- from a sprite sheet.
@@ -89,18 +99,18 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
     cursor = TH.cursor()
     if not cursor:load(sheet, index, hot_x, hot_y) then
       cursor = {
-        draw = --[[persistable:graphics_lua_cursor]] function(canvas, x, y)
+        draw = function(canvas, x, y)
           sheet:draw(canvas, index, x - hot_x, y - hot_y)
         end,
       }
     else
-      local --[[persistable:graphics_reload_cursor]] function reloader(res)
+      local function reloader(res)
         assert(res:load(sheet, index, hot_x, hot_y))
       end
       self.reload_functions_cursors[cursor] = reloader
-      debug.getfenv(cursor).depersist = reloader
     end
     sheet_cache[index] = cursor
+    self.load_info[cursor] = {self.loadCursor, self, sheet, index, hot_x, hot_y}
   end
   return cursor
 end
@@ -145,11 +155,9 @@ function Graphics:loadPalette(dir, name)
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
-  debug.getfenv(palette).depersist = --[[persistable:graphics_reload_palette]] function(palette)
-    palette:load(self.app:readDataFile(dir or "Data", name))
-  end
   self.cache.palette_greyscale_ghost[name] = self:makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
+  self.load_info[palette] = {self.loadPalette, self, dir, name}
   return palette, self.cache.palette_greyscale_ghost[name]
 end
 
@@ -182,16 +190,16 @@ function Graphics:loadRaw(name, width, height, paldir, pal)
   end
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
-  local --[[persistable:graphics_reload_bitmap]] function reloader(bitmap)
+  local function reloader(bitmap)
     bitmap:setPalette(palette)
     local data = self.app:readDataFile("QData", name .. ".dat")
     data = data:sub(1, width * height)
     assert(bitmap:load(data, width, self.target))
   end
   self.reload_functions[bitmap] = reloader
-  debug.getfenv(bitmap).depersist = reloader
   
   self.cache.raw[name] = bitmap
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, paldir, pal}
   return bitmap
 end
 
@@ -216,12 +224,9 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   end
   
   local font = TH.font()
-  local --[[persistable:graphics_reload_font]] function reloader(font)
-    font:setSheet(sprite_table)
-    font:setSeparation(x_sep or 0, y_sep or 0)
-  end
-  debug.getfenv(font).depersist = reloader
-  reloader(font)
+  font:setSheet(sprite_table)
+  font:setSeparation(x_sep or 0, y_sep or 0)
+  self.load_info[font] = {self.loadFont, self, sprite_table, x_sep, y_sep, ...}
   return font
 end
 
@@ -243,6 +248,7 @@ function Graphics:loadAnimations(dir, prefix)
   end
   
   self.cache.anims[prefix] = anims
+  self.load_info[anims] = {self.loadAnimations, self, dir, prefix}
   return anims
 end
 
@@ -253,7 +259,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
   
   local sheet = TH.sheet()
-  local --[[persistable:graphics_reload_sprites]] function reloader(sheet)
+  local function reloader(sheet)
     sheet:setPalette(palette or self:loadPalette())
     local data_tab, data_dat
     if dir == "Bitmap" then
@@ -267,11 +273,11 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
     end
   end
-  debug.getfenv(sheet).depersist = reloader
   self.reload_functions[sheet] = reloader
   reloader(sheet)
   
   self.cache.tabled[name] = sheet
+  self.load_info[sheet] = {self.loadSpriteTable, self, dir, name, complex, palette}
   return sheet
 end
 

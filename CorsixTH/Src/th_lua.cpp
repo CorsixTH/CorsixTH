@@ -2042,16 +2042,12 @@ int luaopen_th(lua_State *L)
 
     // Palette
     luaT_class(THPalette, l_palette_new, "palette", iPaletteMT);
-    luaT_setmetamethod(l_persist_loaderfn<THPalette>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THPalette>, "depersist");
     luaT_setfunction(l_palette_load, "load");
     luaT_setfunction(l_palette_set_entry, "setEntry");
     luaT_endclass();
 
     // Raw bitmap
     luaT_class(THRawBitmap, l_rawbitmap_new, "bitmap", iBitmapMT);
-    luaT_setmetamethod(l_persist_loaderfn<THRawBitmap>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THRawBitmap>, "depersist");
     luaT_setfunction(l_rawbitmap_load, "load", iSurfaceMT);
     luaT_setfunction(l_rawbitmap_set_pal, "setPalette", iPaletteMT);
     luaT_setfunction(l_rawbitmap_draw, "draw", iSurfaceMT);
@@ -2060,8 +2056,6 @@ int luaopen_th(lua_State *L)
     // Sprite sheet
     luaT_class(THSpriteSheet, l_spritesheet_new, "sheet", iSheetMT);
     luaT_setmetamethod(l_spritesheet_count, "len");
-    luaT_setmetamethod(l_persist_loaderfn<THSpriteSheet>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THSpriteSheet>, "depersist");
     luaT_setfunction(l_spritesheet_load, "load", iSurfaceMT);
     luaT_setfunction(l_spritesheet_set_pal, "setPalette", iPaletteMT);
     luaT_setfunction(l_spritesheet_size, "size");
@@ -2071,8 +2065,6 @@ int luaopen_th(lua_State *L)
 
     // Font
     luaT_class(THFont, l_font_new, "font", iFontMT);
-    luaT_setmetamethod(l_persist_loaderfn<THFont>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THFont>, "depersist");
     luaT_setfunction(l_font_get_size, "sizeOf");
     luaT_setfunction(l_font_set_spritesheet, "setSheet", iSheetMT);
     luaT_setfunction(l_font_set_sep, "setSeparation");
@@ -2090,8 +2082,6 @@ int luaopen_th(lua_State *L)
 
     // Anims
     luaT_class(THAnimationManager, l_anims_new, "anims", iAnimsMT);
-    luaT_setmetamethod(l_persist_loaderfn<THAnimationManager>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THAnimationManager>, "depersist");
     luaT_setfunction(l_anims_load, "load");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", iSheetMT);
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
@@ -2163,8 +2153,6 @@ int luaopen_th(lua_State *L)
 
     // Cursor
     luaT_class(THCursor, l_cursor_new, "cursor", iCursorMT);
-    luaT_setmetamethod(l_persist_loaderfn<THCursor>, "persist");
-    luaT_setmetamethod(l_depersist_loaderfn<THCursor>, "depersist");
     luaT_setfunction(l_cursor_load, "load", iSheetMT);
     luaT_setfunction(l_cursor_use, "use", iSurfaceMT);
     luaT_setfunction(l_cursor_position, "setPosition", iSurfaceMT);
