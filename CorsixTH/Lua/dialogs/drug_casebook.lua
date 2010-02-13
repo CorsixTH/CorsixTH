@@ -89,13 +89,13 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.not_curable.visible = false
 end
 
-function Window:close()
+function UICasebook:close()
   self.ui:removeKeyHandler(273, self)	-- Up
   self.ui:removeKeyHandler(274, self)	-- Down
   self.ui:removeKeyHandler(275, self)	-- Left
   self.ui:removeKeyHandler(276, self)	-- Right
   self.ui:disableKeyboardRepeat()
-  self.parent:removeWindow(self)
+  Window.close(self)
 end
 
 function UICasebook:selectDisease(disease)

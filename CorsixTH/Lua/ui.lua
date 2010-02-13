@@ -24,6 +24,7 @@ class "UI" (Window)
 
 local TH = require "TH"
 local WM = require "sdl".wm
+local SDL = require "sdl"
 local lfs = require "lfs"
 local pathsep = package.config:sub(1, 1)
 
@@ -256,20 +257,20 @@ function UI:enableKeyboardRepeat(delay, interval)
   if not interval then
    interval = -1
   end
-  self.SDL.modifyKeyboardRepeat(delay, interval)
+  SDL.modifyKeyboardRepeat(delay, interval)
 end
 
 -- Disables the keyboard repeat.
 function UI:disableKeyboardRepeat()
-  self.SDL.modifyKeyboardRepeat(0, 0)
+  SDL.modifyKeyboardRepeat(0, 0)
 end
 
 function UI:onKeyDown(code)
   -- Are there any window-specified keyHandlers that want this code?
   if keyHandlers[code] then
-    local callback = keyHandlers[code][ #keyHandlers[code] ]	-- Convenience variable.
-    callback.callback(callback.window, callback.parameters)		-- Call only the latest (last) handler for this code.
-    return														-- Because sometimes even cursor keys are taken over.
+    local callback = keyHandlers[code][ #keyHandlers[code] ]    -- Convenience variable.
+    callback.callback(callback.window, callback.parameters)     -- Call only the latest (last) handler for this code.
+    return                                                      -- Because sometimes even cursor keys are taken over.
   end
   
   local key = key_codes[code]
