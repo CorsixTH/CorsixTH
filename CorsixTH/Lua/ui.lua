@@ -246,11 +246,30 @@ function UI:removeKeyHandler(code, window)
   end
 end
 
+-- Enables a keyboard repeat.
+-- Default is 500 delay, interval 30
+function UI:enableKeyboardRepeat(delay, interval)
+  -- -1 is for default values. 0 will disable repeat.
+  if not delay then
+    delay = -1
+  end
+  if not interval then
+   interval = -1
+  end
+  self.SDL.modifyKeyboardRepeat(delay, interval)
+end
+
+-- Disables the keyboard repeat.
+function UI:disableKeyboardRepeat()
+  self.SDL.modifyKeyboardRepeat(0, 0)
+end
+
 function UI:onKeyDown(code)
   -- Are there any window-specified keyHandlers that want this code?
   if keyHandlers[code] then
-    local callback = keyHandlers[code][ #keyHandlers[code] ] -- Convenience variable.
-    callback.callback(callback.window, callback.parameters)  -- Call only the latest (last) handler for this code.
+    local callback = keyHandlers[code][ #keyHandlers[code] ]	-- Convenience variable.
+    callback.callback(callback.window, callback.parameters)		-- Call only the latest (last) handler for this code.
+    return														-- Because sometimes even cursor keys are taken over.
   end
   
   local key = key_codes[code]
@@ -350,6 +369,10 @@ function UI:onKeyDown(code)
 end
 
 function UI:onKeyUp(code)
+  if keyHandlers[code] then
+    return
+  end
+
   local key = key_codes[code]
   if not key then
     return
