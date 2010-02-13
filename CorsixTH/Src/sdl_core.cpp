@@ -274,9 +274,33 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
+/**
+	Enable or disable the keyboard modifier.
+	
+	Takes two parameters: delay and interval.
+	
+	If the delay == -1, then defaults are assumed.
+	If the delay == 0, keyboard repeat is disabled.
+*/
+static int l_modify_keyboardrepeat(lua_State *L)
+{
+	int delay = (int)lua_tointeger(L, -1);
+	lua_pop(L, 1);
+	int interval = (int)lua_tointeger(L, -1);
+	
+	// Should we assume default values?
+	if (interval == -1)
+		interval = SDL_DEFAULT_REPEAT_INTERVAL; 
+	if (delay == -1)
+		delay  = SDL_DEFAULT_REPEAT_DELAY; 
+	
+    SDL_EnableKeyRepeat(delay, interval);
+}
+
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
+    {"modifyKeyboardRepeat", l_modify_keyboardrepeat},
     {NULL, NULL}
 };
 static const struct luaL_reg sdllib_with_upvalue[] = {

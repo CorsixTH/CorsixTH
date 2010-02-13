@@ -69,6 +69,13 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay) -- payment up button
   self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay) -- payment down button
   
+  -- Hotkeys
+  self.ui:addKeyHandler(273, self, self.scrollUp)		-- Up
+  self.ui:addKeyHandler(274, self, self.scrollDown)		-- Down
+  self.ui:addKeyHandler(275, self, self.increasePay)	-- Left
+  self.ui:addKeyHandler(276, self, self.decreasePay)	-- Right
+  self.ui:enableKeyboardRepeat()						-- To quickly change values
+  
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352)
   self.machinery.visible = false
@@ -80,6 +87,15 @@ function UICasebook:UICasebook(ui, disease_selection)
   -- TODO: Add situations when a disease is known but cannot be cured
   self.not_curable = self:addPanel(12, 335, 352)
   self.not_curable.visible = false
+end
+
+function Window:close()
+  self.ui:removeKeyHandler(273, self)	-- Up
+  self.ui:removeKeyHandler(274, self)	-- Down
+  self.ui:removeKeyHandler(275, self)	-- Left
+  self.ui:removeKeyHandler(276, self)	-- Right
+  self.ui:disableKeyboardRepeat()
+  self.parent:removeWindow(self)
 end
 
 function UICasebook:selectDisease(disease)

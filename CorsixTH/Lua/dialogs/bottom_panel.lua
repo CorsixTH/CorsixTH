@@ -72,7 +72,9 @@ function UIBottomPanel:UIBottomPanel(ui)
   for _, buttons in ipairs(buttons) do
     buttons.visible = false
   end
-  ui:addKeyHandler(109, self, self.openFirstMessage) -- 109 is "m"
+
+  ui:addKeyHandler(109, self, self.openFirstMessage)	-- 109 is "m"
+  ui:addKeyHandler(99, self, self.dialogDrugCasebook)	-- 99 = c for casebook
 end
 
 function UIBottomPanel:draw(canvas)
