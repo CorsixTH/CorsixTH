@@ -22,8 +22,12 @@ class "Hospital"
 
 function Hospital:Hospital(world)
   self.world = world
-  -- TODO: Variate initial balance and reputation based on level
+  -- TODO: Variate initial balance, reputation etc based on level
   self.balance = 40000
+  self.loan = 0
+  self.value = 32495 -- TODO: How is this calculated?
+  self.interest_rate = 0.01 -- Should these be worldwide?
+  self.inflation_rate = 0.045
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
@@ -41,6 +45,18 @@ function Hospital:Hospital(world)
   self.policies["guess_cure"] = 0.9
   self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
+  -- Randomly select three insurance companies to use, only different by name right now.
+  -- The first ones are more likely to come
+  self.insurance = {}
+  for no, local_name in ipairs(_S.insurance_companies) do
+    -- NOTE: Will not work if more companies are added
+    if math.random(1, 11) < 4 or 11 - no < #self.insurance + 3 then
+      self.insurance[#self.insurance + 1] = local_name
+    end
+    if #self.insurance > 2 then
+      break
+    end
+  end
   -- TODO: Take disease list from the world's available diseases and available
   -- rooms (for diagnosis psuedo-piseases)
   local diseases = TheApp.diseases
@@ -90,6 +106,12 @@ function Hospital:onEndMonth()
   end
   if wages ~= 0 then
     self:spendMoney(wages, _S.transactions.wages)
+  end
+  -- Pay interest on loans, TODO: It should not be possible to return loans
+  -- at the end of the month to avoid paying interest
+  if self.loan > 0 then
+    local pay_this = math.floor(self.loan*self.interest_rate/12)
+    self:spendMoney(pay_this, _S.transactions.loan_interest)
   end
 end
 

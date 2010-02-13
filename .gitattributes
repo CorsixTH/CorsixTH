@@ -29,6 +29,7 @@ CorsixTH/CorsixTH.rc -text
 CorsixTH/Lua/diagnosis/diag_general_diag.lua -text
 CorsixTH/Lua/diagnosis/diag_ultrascan.lua -text
 CorsixTH/Lua/diagnosis/diag_x_ray.lua -text
+CorsixTH/Lua/dialogs/bank_manager.lua -text
 CorsixTH/Lua/dialogs/hospital_policy.lua -text
 CorsixTH/Lua/dialogs/machine_dialog.lua -text
 CorsixTH/Lua/dialogs/staff_rise.lua -text

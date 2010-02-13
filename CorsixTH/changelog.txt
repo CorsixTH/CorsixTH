@@ -16,11 +16,16 @@ Version Beta 2 - released 2010-0?-??
 * Feature: A new string system that allows us to add new (translatable) text
   to the game, correct mistakes in existing languages and add new languages.
 
-* Addition: More diseases and treatment rooms.
-* Addition: More diagnosis rooms.
-* Addition: Norwegian (bokmal) translation.
+* New Dialogs: Hospital Policy, Drugbook, Bank Manager
 
-Also, a number of bugs have been squashed.
+* 10 new diseases.
+* New treatment room: Hair Restorer
+* Additional functional diagnosis rooms: General Diagnosis, ultrascan, X-Ray
+
+* Translation: Norwegian (bokmal).
+
+A lot of other small improvements.
+Also, a great number of bugs have been squashed.
 
 -----------------------------------------
 Version Beta 1 - released 2009-12-24

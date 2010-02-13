@@ -33,6 +33,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.selected_title_font = gfx:loadFont("QData", "Font26V", false, palette)
   self.drug_font = gfx:loadFont("QData", "Font24V", false, palette)
   
+  self.default_button_sound = "selectx.wav"
+  
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   -- A sorted list of known diseases and pseudo diseases.

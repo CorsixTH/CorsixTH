@@ -43,7 +43,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   self.default_button_sound = "selectx.wav"
   
-  self:addPanel( 1,   0, 0) -- $ button
+  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
@@ -254,6 +254,11 @@ function UIBottomPanel:onTick()
   if #self.message_windows < 5 and #self.message_queue > 0 then
     self:showMessage() -- Proceed queue
   end
+end
+
+function UIBottomPanel:dialogBankManager()
+  local dlg = UIBankManager(self.ui)
+  self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogBuildRoom()

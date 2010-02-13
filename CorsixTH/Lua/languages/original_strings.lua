@@ -118,6 +118,21 @@ object = {
   comfortable_chair     = S[2][62],
 }
 
+months = {
+  S[6][ 1],
+  S[6][ 2],
+  S[6][ 3],
+  S[6][ 4],
+  S[6][ 5],
+  S[6][ 6],
+  S[6][ 7],
+  S[6][ 8],
+  S[6][ 9],
+  S[6][10],
+  S[6][11],
+  S[6][12],
+}
+
 -- ...
 
 transactions = {
@@ -552,6 +567,40 @@ fax = {
     situation           = S[44][216],
     what_to_do_question = S[44][217],
     partial_diagnosis_percentage_name = S[44][218],
+  },
+}
+
+-- These are better of in a list with numbers
+insurance_companies = {
+  out_of_business   = S[20][ 1],
+  S[20][ 2],
+  S[20][ 3],
+  S[20][ 4],
+  S[20][ 5],
+  S[20][ 6],
+  S[20][ 7],
+  S[20][ 8],
+  S[20][ 9],
+  S[20][10],
+  S[20][11],
+  S[20][12],
+}
+
+bank_manager = {
+  hospital_value    = S[36][1],
+  balance           = S[36][2],
+  current_loan      = S[36][3],
+  interest_payment  = S[36][4],
+  insurance_owed    = S[36][5],
+  inflation_rate    = S[36][6],
+  interest_rate     = S[36][7],
+  statistics_page = {
+    date            = S[37][1],
+    details         = S[37][2],
+    money_out       = S[37][3],
+    money_in        = S[37][4],
+    balance         = S[37][5],
+    current_balance = S[37][6],
   },
 }
 
