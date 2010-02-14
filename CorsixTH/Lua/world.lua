@@ -386,7 +386,15 @@ function World:onTick()
       self.hour = self.hour - 24
       self.day = self.day + 1
       if self.year == 1 and self.month == 1 and self.day == 2 then
-        self.ui.bottom_panel:queueMessage("information")
+        local message = {
+          {             text = _S.fax.welcome.beta1[1]},
+          {offset =  8, text = _S.fax.welcome.beta1[2]},
+          {offset =  8, text = _S.fax.welcome.beta1[3]},
+          {offset =  8, text = _S.fax.welcome.beta1[4]},
+          {offset = 16, text = _S.fax.welcome.beta1[5]},
+          {offset =  8, text = _S.fax.welcome.beta1[6]},
+        }
+        self.ui.bottom_panel:queueMessage("information", message)
       end
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]

@@ -54,3 +54,16 @@ menu_debug_overlay = {
   parcel                      = "  PARCEL",
 }
 adviser.room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable."
+
+fax = {
+  welcome = {
+    beta1 = {
+      "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
+      "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing.",
+      "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself.",
+      "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed.",
+      "-- The CorsixTH team, th.corsix.org",
+      "PS: Can you find the easter eggs we included?",
+    }
+  }
+}

@@ -22,7 +22,7 @@ dofile "dialogs/fullscreen"
 
 class "UIFax" (UIFullscreen)
 
-function UIFax:UIFax(ui, message)
+function UIFax:UIFax(ui, message, owner)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Fax01V", 640, 480)
@@ -31,25 +31,10 @@ function UIFax:UIFax(ui, message)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
   self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
   ui:playSound "fax_in.wav"
-  if message then
-    self.message = message
-  else
-    self.message = {
-      {text = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!"},
-      {offset = 8, text = "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing."},
-      {offset = 8, text = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself."},
-      {offset = 8, text = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed."},
-      {offset = 16, text = "-- The CorsixTH team, th.corsix.org"},
-      {offset = 8, text = "PS: can you find the easter eggs we included?"},
-    }
-  end
+  self.message = message or {}
+  self.owner = owner
   
   self.code = ""
-  
-  -- There may be an owner of the message
-  if self.message["owner"] then
-    self.owner = self.message["owner"]
-  end
   
   -- Add choice buttons
   local choices = false

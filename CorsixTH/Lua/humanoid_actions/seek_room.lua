@@ -127,9 +127,8 @@ local function action_seek_room_start(action, humanoid)
             {text = _S.fax.disease_discovered_patient_choice.choices.wait,      choice = "wait",      offset = 40},
             {text = _S.fax.disease_discovered_patient_choice.choices.research,  choice = "disabled",  offset = 40}, -- TODO: research
           },
-          owner = humanoid,
         }
-        TheApp.ui.bottom_panel:queueMessage("information", message)
+        TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
         humanoid:updateDynamicInfo(_S(59, 6))
         -- Only one message should appear.
         action.got_answer = true
@@ -158,12 +157,11 @@ local function action_seek_room_start(action, humanoid)
               {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice, offset = 40},
               {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait",        offset = 40},
             },
-            owner = humanoid,
           }
           if more_text ~= "" then
             table.insert(message, 2, {text = more_text})
           end
-          TheApp.ui.bottom_panel:queueMessage("information", message)
+          TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
           humanoid:updateDynamicInfo(_S(59, 6))
           -- Only one message should appear.
           action.got_answer = true

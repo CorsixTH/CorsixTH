@@ -312,18 +312,7 @@ function UI:onKeyDown(code)
     if key == "F8" then -- Open an alert window
       local types = invert({ emergency = 0, epidemy = 1, strike = 2, personnality = 3, information = 4, disease = 5, report = 6 })
       local random = math.random(0, 6)
-      local message = {
-          {text = _S(44,51)},
-          {text = " "},
-          {text = _S(44, 52)},
-          choices = {
-            {text = _S(44, 43), choice = "send_home", offset = 50},
-            {text = _S(44, 44), choice = "wait", offset = 40},
-            {text = _S(44, 45), choice = "disabled", offset = 40}, -- TODO: research
-          },
-          --owner = humanoid,
-        }
-      self.bottom_panel:queueMessage(types[random], message)
+      self.bottom_panel:queueMessage(types[random])
     elseif key == "F9" then -- Make debug patient
       self.app.world:makeDebugPatient()
     

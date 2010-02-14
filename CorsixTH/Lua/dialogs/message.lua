@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 class "UIMessage" (Window)
 
-function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message)
+function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self:Window()
   
   local app = ui.app
@@ -31,6 +31,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message)
   self.timer = 25 * 24 -- Time to wait before considering to choose an automatic response
   self.ui = ui
   self.message = message
+  self.owner = owner
   self.width = 30
   self.height = 28
   self.stop_x = stop_x
@@ -51,7 +52,7 @@ end
 
 function UIMessage:openMessage(out_of_time)
   if not out_of_time then
-    self.ui:addWindow(UIFax(self.ui, self.message))
+    self.ui:addWindow(UIFax(self.ui, self.message, self.owner))
   end
   self:close()
   self:onClose(out_of_time or false)
