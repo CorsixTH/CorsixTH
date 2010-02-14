@@ -653,7 +653,7 @@ insurance_companies = {
 -- BANK MANAGER
 -- override
 bank_manager = {
-  hospital_value    = utf8 "Gjeldende verdi på sykehuset",
+  hospital_value    = "Sykehusets verdi",
   balance           = "Din balanse",
   current_loan      = utf8 "Nåværende lån",
   interest_payment  = utf8 "Rentekostnader",
@@ -710,10 +710,10 @@ fax = {
     beta1 = {
       utf8 "Velkommen til CorsixTH, en klone av klassikeren Theme Hospital (Bullfrog) i åpen kildekode!",
       "Dette er en spillbar beta 1 av CorsixTH. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
-      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, hjelpe med oversettelsen, eller begynne å programmere noe selv.",
-      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (Diagnoserom). Ulike behandlingsrom og klinikker blir også nödvendig.",
+      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
+      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (diagnoserom). Ulike behandlingsrom blir også nödvendig.",
       "-- CorsixTH teamet, th.corsix.org",
-      utf8 "PS: Kan du finne de sjulte påskeeggene vi har inkludert?",
+      utf8 "PS: Kan du finne de sjulte påskeeggene?",
     }
   }
 }
