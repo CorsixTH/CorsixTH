@@ -108,6 +108,22 @@ object = {
 }
 -- ...
 
+-- MONTHS
+-- override
+months = {
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mai",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+}
 
 -- TRANSACTIONS
 -- override
@@ -615,6 +631,45 @@ fax = {
     partial_diagnosis_percentage_name = "Det er %d prosent sikkert at vi vet hvilken type %s pasienten har.",
   },
 }
+-- ...
+
+-- INSURANCE COMPANIES
+-- These are better of in a list with numbers
+insurance_companies = {
+  out_of_business   = "IKKE I DRIFT",
+  "SwanLeaf Ltd.", -- TODO
+  "Norfolk Onion", -- TODO
+  "Mutual Wavekrest", -- TODO
+  "Beagle Scar Ltd.", -- TODO
+  "Swim Bladder Ltd.", -- TODO
+  "Terry Honest plc.", -- TODO
+  "Sir Chubby Holdings", -- TODO
+  "Leon Katz Corp.", -- TODO
+  "Prigg and Bong Ltd.", -- TODO
+  "Glade Forsikringer ASHappy Insurance Co.", -- TODO
+  "Syndicate Insurance", -- TODO
+}
+
+-- BANK MANAGER
+-- override
+bank_manager = {
+  hospital_value    = utf8 "Gjeldende verdi på sykehuset",
+  balance           = "Din balanse",
+  current_loan      = utf8 "Nåværende lån",
+  interest_payment  = utf8 "Rentekostnader",
+  insurance_owed    = "Forsikringsgjeld",
+  inflation_rate    = "Inflasjon",
+  interest_rate     = "Rentesats",
+  statistics_page = {
+    date            = "Dato",
+    details         = "Detaljer",
+    money_out       = "Utgifter",
+    money_in        = "Inntekter",
+    balance         = "Saldo",
+    current_balance = "Balanse",
+  },
+}
+
 -- ...
 
 -- new strings
