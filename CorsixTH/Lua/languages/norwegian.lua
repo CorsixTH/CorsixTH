@@ -663,8 +663,8 @@ bank_manager = {
   statistics_page = {
     date            = "Dato",
     details         = "Detaljer",
-    money_out       = "Utgifter",
-    money_in        = "Inntekter",
+    money_out       = "Utg.",
+    money_in        = "Innt.",
     balance         = "Saldo",
     current_balance = "Balanse",
   },
