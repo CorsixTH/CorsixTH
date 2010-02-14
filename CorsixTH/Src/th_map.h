@@ -328,10 +328,10 @@ protected:
     // to the top-most corner of an isometric cell)
     // If set too low, things will disappear when near the screen edge
     // If set too high, rendering will slow down
-    static const int ms_iMarginTop = 32;
-    static const int ms_iMarginLeft = 56;
-    static const int ms_iMarginRight = 56;
-    static const int ms_iMarginBottom = 70;
+    static const int ms_iMarginTop = 150;
+    static const int ms_iMarginLeft = 110;
+    static const int ms_iMarginRight = 110;
+    static const int ms_iMarginBottom = 150;
 
     friend class THMapScanlineIterator;
 
