@@ -27,31 +27,31 @@ Inherit("original_strings", 0)
 -- new strings
 object.litter = "Litter"
 
-menu_options_game_speed.pause = "  PAUSE"
+menu_options_game_speed.pause = "  PAUSE  "
 
 menu_debug = {
-  transparent_walls           = "  TRANSPARENT WALLS",
-  limit_camera                = "  LIMIT CAMERA",
-  disable_salary_raise        = "  DISABLE SALARY RAISE",
-  make_debug_patient          = "  MAKE DEBUG PATIENT",
-  spawn_patient               = "  SPAWN PATIENT",
-  make_adviser_talk           = "  MAKE ADVISER TALK",
-  show_watch                  = "  SHOW WATCH",
-  place_objects               = "  PLACE OBJECTS",
-  map_overlay                 = "  MAP OVERLAY",
-  sprite_viewer               = "  SPRITE VIEWER",
+  transparent_walls           = "  TRANSPARENT WALLS  ",
+  limit_camera                = "  LIMIT CAMERA  ",
+  disable_salary_raise        = "  DISABLE SALARY RAISE  ",
+  make_debug_patient          = "  MAKE DEBUG PATIENT  ",
+  spawn_patient               = "  SPAWN PATIENT  ",
+  make_adviser_talk           = "  MAKE ADVISER TALK  ",
+  show_watch                  = "  SHOW WATCH  ",
+  place_objects               = "  PLACE OBJECTS  ",
+  map_overlay                 = "  MAP OVERLAY  ",
+  sprite_viewer               = "  SPRITE VIEWER  ",
 }
 menu_debug_overlay = {
-  none                        = "  NONE",
-  flags                       = "  FLAGS",
-  byte_0_1                    = "  BYTE 0 & 1",
-  byte_floor                  = "  BYTE FLOOR",
-  byte_n_wall                 = "  BYTE N WALL",
-  byte_w_wall                 = "  BYTE W WALL",
-  byte_5                      = "  BYTE 5",
-  byte_6                      = "  BYTE 6",
-  byte_7                      = "  BYTE 7",
-  parcel                      = "  PARCEL",
+  none                        = "  NONE  ",
+  flags                       = "  FLAGS  ",
+  byte_0_1                    = "  BYTE 0 & 1  ",
+  byte_floor                  = "  BYTE FLOOR  ",
+  byte_n_wall                 = "  BYTE N WALL  ",
+  byte_w_wall                 = "  BYTE W WALL  ",
+  byte_5                      = "  BYTE 5  ",
+  byte_6                      = "  BYTE 6  ",
+  byte_7                      = "  BYTE 7  ",
+  parcel                      = "  PARCEL  ",
 }
 adviser.room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable."
 

@@ -72,8 +72,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   -- Hotkeys
   self:addKeyHandler("up", self.scrollUp)
   self:addKeyHandler("down", self.scrollDown)
-  self:addKeyHandler("left", self.increasePay)
-  self:addKeyHandler("right", self.decreasePay)
+  self:addKeyHandler("right", self.increasePay)
+  self:addKeyHandler("left", self.decreasePay)
   self.ui:enableKeyboardRepeat() -- To quickly change values
   
   -- Icons representing cure effectiveness and other important information.
