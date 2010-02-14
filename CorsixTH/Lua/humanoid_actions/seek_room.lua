@@ -63,7 +63,6 @@ local function action_seek_room_start(action, humanoid)
   else
     if not action.done_init then
       action.done_init = true
-      humanoid:setMood("patient_wait", true)
       action.must_happen = true
       action.build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
         local found = false
@@ -89,7 +88,6 @@ local function action_seek_room_start(action, humanoid)
     end
     if not action.done_walk and not action.got_answer then
       -- Make a message about that something needs to be done about this patient
-      -- TODO: Going to the toilet or buying a soda should not trigger another message
       if humanoid.diagnosed then
         -- The patient is diagnosed, a treatment room is missing
         -- Wait two months before going home anyway.
@@ -129,6 +127,7 @@ local function action_seek_room_start(action, humanoid)
           },
         }
         TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
+        humanoid:setMood("patient_wait", true)
         humanoid:updateDynamicInfo(_S(59, 6))
         -- Only one message should appear.
         action.got_answer = true
@@ -142,6 +141,7 @@ local function action_seek_room_start(action, humanoid)
         elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
           -- Ask the player
           -- Wait two months before going home anyway.
+          humanoid:setMood("patient_wait", true)
           humanoid.waiting = 60
           local middle_choice = "disabled"
           local more_text = ""
@@ -173,6 +173,7 @@ local function action_seek_room_start(action, humanoid)
             room_type = humanoid.disease.treatment_rooms[1]
           }, 1)
           humanoid:finishAction()
+          return
         end
       end
       humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
