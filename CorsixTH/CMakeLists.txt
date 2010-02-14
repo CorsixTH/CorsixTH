@@ -5,6 +5,7 @@ PROJECT(CorsixTH)
 IF(UNIX)
   IF(APPLE)
     # fruit goes here
+    add_subdirectory(SDLMain)
   ELSE(APPLE)
     # regular unix/linux
   ENDIF(APPLE)
@@ -45,6 +46,11 @@ FILE(GLOB_RECURSE corsixth_source_files
 
 # Declaration of the executable
 add_executable(CorsixTH ${corsixth_source_files})
+
+IF(APPLE)
+  target_link_libraries(CorsixTH SDLmain)
+  INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
+ENDIF(APPLE)
 
 # Finding libraries
 

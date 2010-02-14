@@ -41,7 +41,10 @@ CorsixTH/Lua/walls/external.lua -text
 CorsixTH/Lua/walls/green.lua -text
 CorsixTH/Lua/walls/white.lua -text
 CorsixTH/Lua/walls/yellow.lua -text
+CorsixTH/SDLMain/CMakeLists.txt -text
+CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/Src/lua.hpp -text
+CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 CorsixTH/changelog.txt -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
