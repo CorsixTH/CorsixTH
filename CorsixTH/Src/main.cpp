@@ -279,10 +279,11 @@ int THMain_l_main(lua_State *L)
     // It is simpler to write this in Lua than in C.
     const char sLuaCorsixTHLua[] =
     "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)"
-    "code = loadfile(\"CorsixTH\"..sep..name)"
+    "local root = (...):match(\"^(.*[\"..sep..\"])\")"
+    "code = loadfile(root..\"CorsixTH\"..sep..name)"
     "if code then return code end "
     "for i = 0, 3 do "
-    "  code = loadfile((\"..\"..sep):rep(i)..name)"
+    "  code = loadfile(root..(\"..\"..sep):rep(i)..name)"
     "  if code then return code end "
     "end "
     "return loadfile(name)";
@@ -290,7 +291,8 @@ int THMain_l_main(lua_State *L)
     // return assert(loadfile"CorsixTH.lua")(...)
     lua_getglobal(L, "assert");
     luaL_loadstring(L, sLuaCorsixTHLua);
-    lua_call(L, 0, 2);
+    lua_pushvalue(L, 1);
+    lua_call(L, 1, 2);
     lua_call(L, 2, 1);
     lua_insert(L, 1);
 #ifndef CORSIX_TH_MAP_EDITOR
