@@ -75,15 +75,10 @@ function UIPatient:UIPatient(ui, patient)
     self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease)
   end
 
-  -- 104 = H. Always add this because of a race condition if the user clicks a patient
+  -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
-  ui:addKeyHandler(104, self, self.goHome)
-end
-
-function UIPatient:close()
-  self.ui:removeKeyHandler(104, self)
-  self.parent:removeWindow(self)
+  self:addKeyHandler("H", self.goHome)
 end
 
 function UIPatient:draw(canvas)

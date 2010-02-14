@@ -97,12 +97,12 @@ end
 
 function World:setUI(ui)
   self.ui = ui
-  self.ui:addKeyHandler(112, self, self.pauseOrUnpause, "Pause")       -- Key: P
-  self.ui:addKeyHandler(49, self, self.setSpeed, "Slowest")            -- Key: 1
-  self.ui:addKeyHandler(50, self, self.setSpeed, "Slower")             -- Key: 2
-  self.ui:addKeyHandler(51, self, self.setSpeed, "Normal")             -- Key: 3
-  self.ui:addKeyHandler(52, self, self.setSpeed, "Max speed")          -- Key: 4
-  self.ui:addKeyHandler(53, self, self.setSpeed, "And then some more") -- Key: 5
+  self.ui:addKeyHandler("P", self, self.pauseOrUnpause, "Pause")
+  self.ui:addKeyHandler("1", self, self.setSpeed, "Slowest")
+  self.ui:addKeyHandler("2", self, self.setSpeed, "Slower")
+  self.ui:addKeyHandler("3", self, self.setSpeed, "Normal")
+  self.ui:addKeyHandler("4", self, self.setSpeed, "Max speed")
+  self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
 end
 
 function World:initDiseases(app)

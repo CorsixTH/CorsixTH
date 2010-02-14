@@ -43,7 +43,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   self.default_button_sound = "selectx.wav"
   
-  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager)
+  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
@@ -73,8 +73,8 @@ function UIBottomPanel:UIBottomPanel(ui)
     buttons.visible = false
   end
 
-  ui:addKeyHandler(109, self, self.openFirstMessage)	-- 109 is "m"
-  ui:addKeyHandler(99, self, self.dialogDrugCasebook)	-- 99 = c for casebook
+  ui:addKeyHandler("M", self, self.openFirstMessage)	-- M for message
+  ui:addKeyHandler("C", self, self.dialogDrugCasebook)	-- C for casebook
 end
 
 function UIBottomPanel:draw(canvas)
@@ -260,6 +260,12 @@ end
 
 function UIBottomPanel:dialogBankManager()
   local dlg = UIBankManager(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogBankStats()
+  local dlg = UIBankManager(self.ui)
+  dlg:showStatistics()
   self.ui:addWindow(dlg)
 end
 

@@ -266,4 +266,122 @@ protected:
     int m_iHeight;
 };
 
+enum eTHMapScanlineIteratorDirection
+{
+    ScanlineForward = 2,
+    ScanlineBackward = 0,
+};
+
+//! Utility class for iterating over map nodes within a screen rectangle
+/*!
+    To easily iterate over the map nodes which might draw something within a
+    certain rectangle of screen space, an instance of this class can be used.
+
+    By default, it iterates by scanline, top-to-bottom, and then left-to-right
+    within each scanline. Alternatively, by passing ScanlineBackward to the
+    constructor, it will iterate bottom-to-top. Within a scanline, to visit
+    nodes right-to-left, wait until isLastOnScanline() returns true, then use
+    an instance of THMapScanlineIterator.
+*/
+class THMapNodeIterator
+{
+public:
+    /*!
+        @arg pMap The map whose nodes should be iterated
+        @arg iScreenX The X co-ordinate of the top-left corner of the
+            screen-space rectangle to iterate.
+        @arg iScreenY The Y co-ordinate of the top-left corner of the
+            screen-space rectangle to iterate.
+        @arg iWidth The width of the screen-space rectangle to iterate.
+        @arg iHeight The width of the screen-space rectangle to iterate.
+        @arg eScanlineDirection The direction in which to iterate scanlines;
+            ScanlineForward for top-to-bottom, ScanlineBackward for bottom-to-top.
+    */
+    THMapNodeIterator(const THMap *pMap, int iScreenX, int iScreenY,
+                      int iWidth, int iHeight,
+                      eTHMapScanlineIteratorDirection eScanlineDirection = ScanlineForward);
+
+    //! Returns false iff the iterator has exhausted its nodes
+    inline operator bool () const {return m_pNode != NULL;}
+
+    //! Advances the iterator to the next node
+    inline THMapNodeIterator& operator ++ ();
+
+    //! Accessor for the current node
+    inline const THMapNode* operator -> () const {return m_pNode;}
+
+    //! Get the X position of the node relative to the top-left corner of the screen-space rectangle
+    inline int x() const {return m_iXs;}
+
+    //! Get the Y position of the node relative to the top-left corner of the screen-space rectangle
+    inline int y() const {return m_iYs;}
+
+    //! Returns true iff the next node will be on a different scanline
+    /*!
+        To visit a scanline in right-to-left order, or to revisit a scanline,
+        wait until this method returns true, then use a THMapScanlineIterator.
+    */
+    inline bool isLastOnScanline() const;
+  
+protected:
+    // Maximum extents of the visible parts of a node (pixel distances relative
+    // to the top-most corner of an isometric cell)
+    // If set too low, things will disappear when near the screen edge
+    // If set too high, rendering will slow down
+    static const int ms_iMarginTop = 32;
+    static const int ms_iMarginLeft = 56;
+    static const int ms_iMarginRight = 56;
+    static const int ms_iMarginBottom = 70;
+
+    friend class THMapScanlineIterator;
+
+    const THMapNode* m_pNode;
+    const THMap* m_pMap;
+    int m_iXs;
+    int m_iYs;
+    const int m_iScreenX;
+    const int m_iScreenY;
+    const int m_iScreenWidth;
+    const int m_iScreenHeight;
+    int m_iBaseX;
+    int m_iBaseY;
+    int m_iX;
+    int m_iY;
+    int m_iScanlineCount;
+    eTHMapScanlineIteratorDirection m_eDirection;
+
+    void _advanceUntilVisible();
+};
+
+//! Utility class for re-iterating a scanline visited by a THMapNodeIterator
+class THMapScanlineIterator
+{
+public:
+    /*!
+        @arg itrNodes A node iterator which has reached the end of a scanline
+        @arg eDirection The direction in which to iterate the scanline;
+            ScanlineForward for left-to-right, ScanlineBackward for right-to-left.
+        @arg iXOffset If given, values returned by x() will be offset by this.
+        @arg iYOffset If given, values returned by y() will be offset by this.
+    */
+    THMapScanlineIterator(const THMapNodeIterator& itrNodes,
+                          eTHMapScanlineIteratorDirection eDirection,
+                          int iXOffset = 0, int iYOffset = 0);
+
+    inline operator bool () const {return m_pNode != m_pNodeEnd;}
+    inline THMapScanlineIterator& operator ++ ();
+
+    inline const THMapNode* operator -> () const {return m_pNode;}
+    inline int x() const {return m_iXs;}
+    inline int y() const {return m_iYs;}
+
+protected:
+    const THMapNode* m_pNode;
+    const THMapNode* m_pNodeEnd;
+    const int m_iNodeStep;
+    const int m_iXStep;
+    int m_iXs;
+    int m_iYs;
+};
+
 #endif // CORSIX_TH_TH_MAP_H_

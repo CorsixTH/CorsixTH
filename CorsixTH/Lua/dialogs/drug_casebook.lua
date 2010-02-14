@@ -70,11 +70,11 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay) -- payment down button
   
   -- Hotkeys
-  self.ui:addKeyHandler(273, self, self.scrollUp)		-- Up
-  self.ui:addKeyHandler(274, self, self.scrollDown)		-- Down
-  self.ui:addKeyHandler(275, self, self.increasePay)	-- Left
-  self.ui:addKeyHandler(276, self, self.decreasePay)	-- Right
-  self.ui:enableKeyboardRepeat()						-- To quickly change values
+  self:addKeyHandler("up", self.scrollUp)
+  self:addKeyHandler("down", self.scrollDown)
+  self:addKeyHandler("left", self.increasePay)
+  self:addKeyHandler("right", self.decreasePay)
+  self.ui:enableKeyboardRepeat() -- To quickly change values
   
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352)
@@ -90,10 +90,6 @@ function UICasebook:UICasebook(ui, disease_selection)
 end
 
 function UICasebook:close()
-  self.ui:removeKeyHandler(273, self)	-- Up
-  self.ui:removeKeyHandler(274, self)	-- Down
-  self.ui:removeKeyHandler(275, self)	-- Left
-  self.ui:removeKeyHandler(276, self)	-- Right
   self.ui:disableKeyboardRepeat()
   Window.close(self)
 end

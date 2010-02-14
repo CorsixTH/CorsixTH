@@ -37,6 +37,7 @@ local function invert(t)
       end
     else
       r[v] = k
+      r[k] = v
     end
   end
   return r
@@ -53,15 +54,20 @@ local key_codes = invert {
   F10 = 291,
   F11 = 292,
   F12 = 293,
+  ["1"] = 49,
+  ["2"] = 50,
+  ["3"] = 51,
+  ["4"] = 52,
+  ["5"] = 53,
+  C = 99,
+  H = 104,
+  M = 109,
+  P = 112,
   S = 115,
   Enter = 13,
   shift = {303, 304},
   ctrl = {305, 306},
   alt = {307, 308, 313},
-}
-
--- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
-local keyHandlers = {
 }
 
 local button_codes = invert {
@@ -93,7 +99,10 @@ function UI:UI(app, local_hospital)
   self.modal_windows = {
     -- [class_name] -> window,
   }
+  -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
+  self.key_handlers = {}
   
+  self.keyboard_repeat_enable_count = 0
   self.down_count = 0
   self.default_cursor = app.gfx:loadMainCursor("default")
   self.down_cursor = app.gfx:loadMainCursor("clicked")
@@ -227,22 +236,25 @@ local scroll_keys = {
 
 -- Adds a key handler for a window. Code = keycode, callback = which function to call.
 function UI:addKeyHandler(code, window, callback, ...)
-  if not keyHandlers[code] then -- No handlers for this code? Create a new table.
-    keyHandlers[code] = {}
+  code = key_codes[code] or code
+  if not self.key_handlers[code] then -- No handlers for this code? Create a new table.
+    self.key_handlers[code] = {}
   end
-  table.insert( keyHandlers[code], {window = window, callback = callback, parameters = ...} )
+  table.insert(self.key_handlers[code], {window = window, callback = callback, ...})
 end
 
 -- Remove the key handler for this code.
 function UI:removeKeyHandler(code, window)
-  if keyHandlers[code] then
-    for index,callback in pairs(keyHandlers[code]) do
+  code = key_codes[code] or code
+  if self.key_handlers[code] then
+    for index,callback in pairs(self.key_handlers[code]) do
       if callback.window == window then
-        table.remove(keyHandlers[code], index)
+        table.remove(self.key_handlers[code], index)
       end
     end
-    if not next(keyHandlers[code]) then -- If last entry in keyHandlers[code] was removed, delete the (now empty) list
-      keyHandlers[code] = nil
+    -- If last entry in keyHandlers[code] was removed, delete the (now empty) list
+    if #self.key_handlers[code] == 0 then
+      self.key_handlers[code] = nil
     end
   end
 end
@@ -250,26 +262,26 @@ end
 -- Enables a keyboard repeat.
 -- Default is 500 delay, interval 30
 function UI:enableKeyboardRepeat(delay, interval)
-  -- -1 is for default values. 0 will disable repeat.
-  if not delay then
-    delay = -1
-  end
-  if not interval then
-   interval = -1
-  end
-  SDL.modifyKeyboardRepeat(delay, interval)
+  self.keyboard_repeat_enable_count = self.keyboard_repeat_enable_count + 1
+  SDL.modifyKeyboardRepeat(delay or nil, interval or nil)
 end
 
 -- Disables the keyboard repeat.
 function UI:disableKeyboardRepeat()
-  SDL.modifyKeyboardRepeat(0, 0)
+  if self.keyboard_repeat_enable_count <= 1 then
+    self.keyboard_repeat_enable_count = 0
+    SDL.modifyKeyboardRepeat(0, 0)
+  else
+    self.keyboard_repeat_enable_count = self.keyboard_repeat_enable_count - 1
+  end
 end
 
 function UI:onKeyDown(code)
   -- Are there any window-specified keyHandlers that want this code?
+  local keyHandlers = self.key_handlers
   if keyHandlers[code] then
     local callback = keyHandlers[code][ #keyHandlers[code] ]    -- Convenience variable.
-    callback.callback(callback.window, callback.parameters)     -- Call only the latest (last) handler for this code.
+    callback.callback(callback.window, unpack(callback))        -- Call only the latest (last) handler for this code.
     return                                                      -- Because sometimes even cursor keys are taken over.
   end
   
@@ -359,7 +371,7 @@ function UI:onKeyDown(code)
 end
 
 function UI:onKeyUp(code)
-  if keyHandlers[code] then
+  if self.key_handlers[code] then
     return
   end
 

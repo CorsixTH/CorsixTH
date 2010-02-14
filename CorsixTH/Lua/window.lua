@@ -37,6 +37,7 @@ function Window:Window()
   }
   self.buttons = {
   }
+  self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
   self.panel_sprites = false
@@ -45,6 +46,14 @@ end
 
 function Window:close()
   self.parent:removeWindow(self)
+  for key in pairs(self.key_handlers) do
+    self.ui:removeKeyHandler(key, self)
+  end
+end
+
+function Window:addKeyHandler(key, handler)
+  self.ui:addKeyHandler(key, self, handler)
+  self.key_handlers[key] = true
 end
 
 local panel_mt = permanent("Window.<panel_mt>", {

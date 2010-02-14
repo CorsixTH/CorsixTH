@@ -355,191 +355,91 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     int iBaseX = iStartX;
     int iBaseY = iStartY;
 
-// 32 for basic floor tiles etc.
-// extra bit for wide objects like entrance doors
-#define TILE_X_OVERLAP /* plus/minus */ 56
-
     // 1st pass
     pCanvas->startNonOverlapping();
-    while(true)
+    for(THMapNodeIterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight); itrNode1; ++itrNode1)
     {
-        int iX = iBaseX;
-        int iY = iBaseY;
-        int iXs = iX, iYs = iY;
-        worldToScreen(iXs, iYs);
-        iXs -= iScreenX;
-        iYs -= iScreenY;
-        if(iYs >= iHeight + 70)
-            break;
-        else if(iYs > -32)
-        {
-            const THMapNode *pLastNode = NULL;
-
-            do
-            {
-                if(iXs < -TILE_X_OVERLAP)
-                {
-                    // Nothing to do
-                }
-                else if(iXs < iWidth + TILE_X_OVERLAP)
-                {
-                    pLastNode = getNodeUnchecked(iX, iY);
-
-                    unsigned int iH = 32;
-                    unsigned int iBlock = pLastNode->iBlock[0];
-                    m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
-                    m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
-                        iXs + iCanvasX - 32,
-                        iYs + iCanvasY - iH + 32, iBlock >> 8);
-                    // Shadow for floor done in 2nd pass as it overlaps with
-                    // the floor.
-                }
-                else
-                    break;
-                --iY;
-                ++iX;
-                iXs += 64;
-            } while (iY >= 0 && iX < m_iWidth);
-        }
-        if(iBaseY == m_iHeight - 1)
-        {
-            if(++iBaseX == m_iWidth)
-                break;
-        }
-        else
-            ++iBaseY;
+        unsigned int iH = 32;
+        unsigned int iBlock = itrNode1->iBlock[0];
+        m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
+        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
+            itrNode1.x() + iCanvasX - 32,
+            itrNode1.y() + iCanvasY - iH + 32, iBlock >> 8);
     }
     pCanvas->finishNonOverlapping();
 
     // 2nd pass
-    iBaseX = iStartX;
-    iBaseY = iStartY;
-    int iNodeStep = 1 - m_iWidth;
-    while(true)
+    for(THMapNodeIterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight); itrNode2; ++itrNode2)
     {
-        int iX = iBaseX;
-        int iY = iBaseY;
-        int iXs = iX, iYs = iY;
-        worldToScreen(iXs, iYs);
-        iXs -= iScreenX;
-        iYs -= iScreenY;
-        if(iYs >= iHeight + 70)
-            break;
-        else if(iYs > -32)
+        if(itrNode2->iFlags & THMN_ShadowFull)
         {
-            const THMapNode *pLastNode = NULL;
-            int iNodeCount = 0;
+            m_pBlocks->drawSprite(pCanvas, 74, itrNode2.x() + iCanvasX - 32,
+                itrNode2.y() + iCanvasY, THDF_Alpha75);
+        }
+        else if(itrNode2->iFlags & THMN_ShadowHalf)
+        {
+            m_pBlocks->drawSprite(pCanvas, 75, itrNode2.x() + iCanvasX - 32,
+                itrNode2.y() + iCanvasY, THDF_Alpha75);
+        }
 
-            do
+        if(!itrNode2.isLastOnScanline())
+            continue;
+        
+        for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward, iCanvasX, iCanvasY); itrNode; ++itrNode)
+        {
+            unsigned int iH;
+            unsigned int iBlock = itrNode->iBlock[1];
+            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                NULL, &iH) && iH > 0)
             {
-                if(iXs < -TILE_X_OVERLAP)
+                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                    itrNode.y() - iH + 32, iBlock >> 8);
+                if(itrNode->iFlags & THMN_ShadowWall)
                 {
-                    // Nothing to do
-                }
-                else if(iXs < iWidth + TILE_X_OVERLAP)
-                {
-                    pLastNode = getNodeUnchecked(iX, iY);
-                    ++iNodeCount;
-
-                    if(pLastNode->iFlags & THMN_ShadowFull)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, 74, iXs + iCanvasX - 32,
-                            iYs + iCanvasY, THDF_Alpha75);
-                    }
-                    else if(pLastNode->iFlags & THMN_ShadowHalf)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, 75, iXs + iCanvasX - 32,
-                            iYs + iCanvasY, THDF_Alpha75);
-                    }
-                }
-                else
-                    break;
-                --iY;
-                ++iX;
-                iXs += 64;
-            } while (iY >= 0 && iX < m_iWidth);
-
-            if(iNodeCount != 0)
-            {
-                iXs += iCanvasX;
-                iYs += iCanvasY;
-                iXs -= 64;
-                const THMapNode *pNode = pLastNode;
-                int iNodeIndex = 0;
-                for(; iNodeIndex < iNodeCount; ++iNodeIndex,
-                    pNode -= iNodeStep, iXs -= 64)
-                {
-                    unsigned int iH;
-                    unsigned int iBlock = pNode->iBlock[1];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                        NULL, &iH) && iH > 0)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
-                            iYs - iH + 32, iBlock >> 8);
-                        if(pNode->iFlags & THMN_ShadowWall)
-                        {
-                            THClipRect rcOldClip, rcNewClip;
-                            pCanvas->getClipRect(&rcOldClip);
-                            rcNewClip.x = static_cast<THClipRect::xy_t>(iXs - 32);
-                            rcNewClip.y = static_cast<THClipRect::xy_t>(iYs - iH + 32 + 4);
-                            rcNewClip.w = static_cast<THClipRect::wh_t>(64);
-                            rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
-                            IntersectClipRect(rcNewClip, rcOldClip);
-                            pCanvas->setClipRect(&rcNewClip);
-                            m_pBlocks->drawSprite(pCanvas, 156, iXs - 32,
-                                iYs - 56, THDF_Alpha75);
-                            pCanvas->setClipRect(&rcOldClip);
-                        }
-                    }
-                    if(pNode->oEarlyEntities.pNext != NULL)
-                    {
-                        THDrawable *pItem = (THDrawable*)
-                            (pNode->oEarlyEntities.pNext);
-                        do
-                        {
-                            pItem->fnDraw(pItem, pCanvas, iXs, iYs);
-                            pItem = (THDrawable*)(pItem->pNext);
-                        } while(pItem);
-                    }
-                }
-                pNode += iNodeStep;
-                iXs += 64;
-                for(; iNodeCount; --iNodeCount, pNode += iNodeStep, iXs += 64)
-                {
-                    unsigned int iH;
-                    unsigned int iBlock = pNode->iBlock[2];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                        NULL, &iH) && iH > 0)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
-                            iYs - iH + 32, iBlock >> 8);
-                    }
-                    iBlock = pNode->iBlock[3];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                        NULL, &iH) && iH > 0)
-                    {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, iXs - 32,
-                            iYs - iH + 32, iBlock >> 8);
-                    }
-                    if(pNode->pNext != NULL)
-                    {
-                        THDrawable *pItem = (THDrawable*)(pNode->pNext);
-                        do
-                        {
-                            pItem->fnDraw(pItem, pCanvas, iXs, iYs);
-                            pItem = (THDrawable*)(pItem->pNext);
-                        } while(pItem);
-                    }
+                    THClipRect rcOldClip, rcNewClip;
+                    pCanvas->getClipRect(&rcOldClip);
+                    rcNewClip.x = static_cast<THClipRect::xy_t>(itrNode.x() - 32);
+                    rcNewClip.y = static_cast<THClipRect::xy_t>(itrNode.y() - iH + 32 + 4);
+                    rcNewClip.w = static_cast<THClipRect::wh_t>(64);
+                    rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
+                    IntersectClipRect(rcNewClip, rcOldClip);
+                    pCanvas->setClipRect(&rcNewClip);
+                    m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 32,
+                        itrNode.y() - 56, THDF_Alpha75);
+                    pCanvas->setClipRect(&rcOldClip);
                 }
             }
+            THDrawable *pItem = (THDrawable*)(itrNode->oEarlyEntities.pNext);
+            while(pItem)
+            {
+                pItem->fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
+                pItem = (THDrawable*)(pItem->pNext);
+            }
         }
-        if(iBaseY == m_iHeight - 1)
+        for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY); itrNode; ++itrNode)
         {
-            if(++iBaseX == m_iWidth)
-                break;
+            unsigned int iH;
+            unsigned int iBlock = itrNode->iBlock[2];
+            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                NULL, &iH) && iH > 0)
+            {
+                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                    itrNode.y() - iH + 32, iBlock >> 8);
+            }
+            iBlock = itrNode->iBlock[3];
+            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                NULL, &iH) && iH > 0)
+            {
+                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                    itrNode.y() - iH + 32, iBlock >> 8);
+            }
+            THDrawable *pItem = (THDrawable*)(itrNode->pNext);
+            while(pItem)
+            {
+                pItem->fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
+                pItem = (THDrawable*)(pItem->pNext);
+            }
         }
-        else
-            ++iBaseY;
     }
 
     pCanvas->setClipRect(NULL);
@@ -553,92 +453,34 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
     if(m_pBlocks == NULL || m_pCells == NULL)
         return NULL;
 
-    int iScreenX = iTestX - 64;
-    int iScreenY = iTestY - 64;
-    int iWidth = 128;
-    int iHeight = 128;
-    iTestX = 64;
-    iTestY = 64;
-    int iBaseX = m_iWidth - 1;
-    int iBaseY = m_iHeight - 1;
-    int iNodeStep = 1 - m_iWidth;
-
-    while(true)
+    for(THMapNodeIterator itrNode2(this, iTestX, iTestY, 1, 1, ScanlineBackward); itrNode2; ++itrNode2)
     {
-        int iX = iBaseX;
-        int iY = iBaseY;
-        int iXs = iX, iYs = iY;
-        worldToScreen(iXs, iYs);
-        iXs -= iScreenX;
-        iYs -= iScreenY;
-        if(iYs < 0)
-            break;
-        else if(iYs < iHeight + 70)
+        if(!itrNode2.isLastOnScanline())
+            continue;
+        
+        for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward); itrNode; ++itrNode)
         {
-            const THMapNode *pLastNode = NULL;
-            int iNodeCount = 0;
-
-            do
+            if(itrNode->pNext != NULL)
             {
-                if(iXs < -TILE_X_OVERLAP)
-                {
-                    // Nothing to do
-                }
-                else if(iXs < iWidth + TILE_X_OVERLAP)
-                {
-                    pLastNode = getNodeUnchecked(iX, iY);
-                    ++iNodeCount;
-                }
-                else
-                    break;
-                --iY;
-                ++iX;
-                iXs += 64;
-            } while (iY >= 0 && iX < m_iWidth);
-
-            if(iNodeCount != 0)
-            {
-                iXs -= 64;
-                const THMapNode *pNode = pLastNode;
-                int iNodeIndex = 0;
-                for(; iNodeIndex < iNodeCount; ++iNodeIndex,
-                    pNode -= iNodeStep, iXs -= 64)
-                {
-                    if(pNode->pNext != NULL)
-                    {
-                        THDrawable* pResult = _hitTestDrawables(pNode->pNext,
-                            iXs, iYs, iTestX, iTestY);
-                        if(pResult)
-                            return pResult;
-                    }
-                }
-                pNode += iNodeStep;
-                iXs += 64;
-                for(; iNodeCount; --iNodeCount, pNode += iNodeStep, iXs += 64)
-                {
-                    if(pNode->oEarlyEntities.pNext != NULL)
-                    {
-                        THDrawable* pResult = _hitTestDrawables(
-                            pNode->oEarlyEntities.pNext, iXs, iYs, iTestX, iTestY);
-                        if(pResult)
-                            return pResult;
-                    }
-                }
+                THDrawable* pResult = _hitTestDrawables(itrNode->pNext,
+                    itrNode.x(), itrNode.y(), 0, 0);
+                if(pResult)
+                    return pResult;
             }
         }
-        if(iBaseX == 0)
+        for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward); itrNode; ++itrNode)
         {
-            if(iBaseY == 0)
-                break;
-            else
-                --iBaseY;
+            if(itrNode->oEarlyEntities.pNext != NULL)
+            {
+                THDrawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.pNext,
+                    itrNode.x(), itrNode.y(), 0, 0);
+                if(pResult)
+                    return pResult;
+            }
         }
-        else
-            --iBaseX;
     }
-    return NULL;
 
-    #undef TILE_X_OVERLAP
+    return NULL;
 }
 
 THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
@@ -827,4 +669,149 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(!pReader->readVUInt(pNode->iParcelId)) return;
         if(!pReader->readVUInt(pNode->iFlags)) return;
     }
+}
+
+THMapNodeIterator::THMapNodeIterator(const THMap *pMap, int iScreenX, int iScreenY,
+                                     int iWidth, int iHeight,
+                                     eTHMapScanlineIteratorDirection eScanlineDirection)
+    : m_pMap(pMap)
+    , m_iScreenX(iScreenX)
+    , m_iScreenY(iScreenY)
+    , m_iScreenWidth(iWidth)
+    , m_iScreenHeight(iHeight)
+    , m_iScanlineCount(0)
+    , m_eDirection(eScanlineDirection)
+{
+    if(m_eDirection == ScanlineForward)
+    {
+        m_iBaseX = 0;
+        m_iBaseY = (iScreenY - 32) / 16;
+        if(m_iBaseY < 0)
+            m_iBaseY = 0;
+        else if(m_iBaseY >= m_pMap->getHeight())
+        {
+            m_iBaseX = m_iBaseY - m_pMap->getHeight() + 1;
+            m_iBaseY = m_pMap->getHeight() - 1;
+            if(m_iBaseX >= m_pMap->getWidth())
+                m_iBaseX = m_pMap->getWidth() - 1;
+        }
+    }
+    else
+    {
+        m_iBaseX = m_pMap->getWidth() - 1;
+        m_iBaseY = m_pMap->getHeight() - 1;
+    }
+    m_iX = m_iBaseX;
+    m_iY = m_iBaseY;
+    _advanceUntilVisible();
+}
+
+THMapNodeIterator& THMapNodeIterator::operator ++ ()
+{
+    --m_iY;
+    ++m_iX;
+    _advanceUntilVisible();
+    return *this;
+}
+
+void THMapNodeIterator::_advanceUntilVisible()
+{
+    m_pNode = NULL;
+    
+    while(true)
+    {
+        m_iXs = m_iX;
+        m_iYs = m_iY;
+        m_pMap->worldToScreen(m_iXs, m_iYs);
+        m_iXs -= m_iScreenX;
+        m_iYs -= m_iScreenY;
+        if(m_eDirection == ScanlineForward ?
+            m_iYs >= m_iScreenHeight + ms_iMarginBottom :
+            m_iYs < -ms_iMarginTop)
+        {
+                return;
+        }
+        if(m_eDirection == ScanlineForward ?
+            (m_iYs > -ms_iMarginTop) :
+            (m_iYs < m_iScreenHeight + ms_iMarginBottom))
+        {
+            while(m_iY >= 0 && m_iX < m_pMap->getWidth())
+            {
+                if(m_iXs < -ms_iMarginLeft)
+                {
+                    // Nothing to do
+                }
+                else if(m_iXs < m_iScreenWidth + ms_iMarginRight)
+                {
+                    ++m_iScanlineCount;
+                    m_pNode = m_pMap->getNodeUnchecked(m_iX, m_iY);
+                    return;
+                }
+                else
+                    break;
+                --m_iY;
+                ++m_iX;
+                m_iXs += 64;
+            }
+        }
+        m_iScanlineCount = 0;
+        if(m_eDirection == ScanlineForward)
+        {
+            if(m_iBaseY == m_pMap->getHeight() - 1)
+            {
+                if(++m_iBaseX == m_pMap->getWidth())
+                    break;
+            }
+            else
+                ++m_iBaseY;
+        }
+        else
+        {
+            if(m_iBaseX == 0)
+            {
+                if(m_iBaseY == 0)
+                    break;
+                else
+                    --m_iBaseY;
+            }
+            else
+                --m_iBaseX;
+        }
+        m_iX = m_iBaseX;
+        m_iY = m_iBaseY;
+    }
+}
+
+bool THMapNodeIterator::isLastOnScanline() const
+{
+    return m_iY <= 0 || m_iX + 1 >= m_pMap->getWidth() ||
+        m_iXs + 64 >= m_iScreenWidth + ms_iMarginRight;
+}
+
+THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
+                                             eTHMapScanlineIteratorDirection eDirection,
+                                             int iXOffset, int iYOffset)
+    : m_iNodeStep((static_cast<int>(eDirection) - 1) * (1 - itrNodes.m_pMap->getWidth()))
+    , m_iXStep((static_cast<int>(eDirection) - 1) * 64)
+{
+    if(eDirection == ScanlineBackward)
+    {
+        m_pNode = itrNodes.m_pNode;
+        m_iXs = itrNodes.x();
+    }
+    else
+    {
+        m_pNode = itrNodes.m_pNode - m_iNodeStep * (itrNodes.m_iScanlineCount - 1);
+        m_iXs = itrNodes.x() - m_iXStep * (itrNodes.m_iScanlineCount - 1);
+    }
+    m_iXs += iXOffset;
+    m_iYs = itrNodes.y() + iYOffset;
+    m_pNodeEnd = m_pNode + m_iNodeStep * itrNodes.m_iScanlineCount;
+}
+
+THMapScanlineIterator& THMapScanlineIterator::operator ++ ()
+{
+    m_pNode += m_iNodeStep;
+    m_iXs += m_iXStep;
+    return *this;
 }
