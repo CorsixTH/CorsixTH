@@ -649,3 +649,16 @@ menu_debug_overlay = {
 }
 
 adviser.room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig."
+
+fax = {
+  welcome = {
+    beta1 = {
+      utf8 "Velkommen til CorsixTH, en klone av klassikeren Theme Hospital (Bullfrog) i åpen kildekode!",
+      "Dette er en spillbar beta 1 av CorsixTH. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
+      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, hjelpe med oversettelsen, eller begynne å programmere noe selv.",
+      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (Diagnoserom). Ulike behandlingsrom og klinikker blir også nödvendig.",
+      "-- CorsixTH teamet, th.corsix.org",
+      utf8 "PS: Kan du finne de sjulte påskeeggene vi har inkludert?",
+    }
+  }
+}
