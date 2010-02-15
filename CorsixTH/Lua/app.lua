@@ -213,14 +213,55 @@ function App:loadLevel(filename)
 end
 
 -- This is a useful debug and development aid
-function App:dumpStrings(filename)
-  local fi = assert(io.open(filename, "wt"))
+function App:dumpStrings()
+  local fi = assert(io.open("debug-strings-orig.txt", "wt"))
   for i, sec in ipairs(_S.deprecated) do
     for j, str in ipairs(sec) do
       fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(str))
     end
     fi:write"\n"
   end
+  fi:close()
+  
+  local function dump_by_line(file, obj, prefix)
+    prefix = (prefix == "") and "" or (prefix .. ".")
+    for n, o in pairs(obj) do
+      if n ~= "deprecated" then
+        if type(o) == "table" then
+          dump_by_line(file, o, prefix .. n)
+        else
+          if type(n) == "number" then
+            n = "[" .. n .. "]"
+          end
+          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"\n")
+        end
+      end
+    end
+  end
+  
+  local function dump_grouped(file, obj, prefix)
+    for n, o in pairs(obj) do
+      if n ~= "deprecated" then
+        if type(o) == "table" then
+          file:write(prefix .. n .. " = {\n")
+          dump_grouped(file, o, prefix .. "  ")
+          file:write(prefix .. "}\n")
+        else
+          if type(n) == "number" then
+            n = "[" .. n .. "]"
+          end
+          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"\n")
+        end
+      end
+    end
+  end
+  
+  fi = assert(io.open("debug-strings-new-lines.txt", "wt"))
+  dump_by_line(fi, _S, "")
+  fi:close()
+
+  fi = assert(io.open("debug-strings-new-grouped.txt", "wt"))
+  dump_grouped(fi, _S, "")
   fi:close()
 end
 

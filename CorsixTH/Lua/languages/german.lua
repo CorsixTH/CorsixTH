@@ -36,6 +36,7 @@ dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong ve
 -- TODO: adviser.research.drug_fully_researched
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: staff_title.researcher
+-- TODO: bank_manager.insurance_owed -- too long
 
 -- new strings
 
@@ -50,6 +51,7 @@ menu_debug = {
   make_adviser_talk       = "  BERATER REDEN LASSEN",
   show_watch              = "  UHR ANZEIGEN",
   place_objects           = "  OBJEKTE PLATZIEREN",
+  dump_strings            = "  TEXTE ABSPEICHERN  ",
   map_overlay             = "  KARTEN-OVERLAY",
   sprite_viewer           = "  SPRITE-BETRACHTER",
 }

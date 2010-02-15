@@ -40,6 +40,7 @@ menu_debug = {
   make_adviser_talk           = "  MAKE ADVISER TALK  ",
   show_watch                  = "  SHOW WATCH  ",
   place_objects               = "  PLACE OBJECTS  ",
+  dump_strings                = "  DUMP STRINGS  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
