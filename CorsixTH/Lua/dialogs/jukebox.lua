@@ -153,7 +153,7 @@ function UIJukebox:draw(canvas)
     end
     font:draw(canvas, str, x + 24, y + 11)
     if info.music == playing then
-      font:draw(canvas, info.title, x + 24, self.y + 27)
+      font:draw(canvas, str, x + 24, self.y + 27)
     end
   end
 end

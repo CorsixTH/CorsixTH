@@ -85,10 +85,19 @@ function Audio:init(speech_file)
       subdirs[item:upper()] = item
     end
   end
-  if subdirs.MIDI == false then
+  local music_dir
+  if mp3 then
+    music_dir = mp3
+    if music_dir:sub(music_dir:len()) ~= "\\" and 
+      music_dir:sub(music_dir:len()) ~= "/" then
+      music_dir = music_dir .. pathsep
+    end
+  elseif subdirs.MIDI ~= false then
+    music_dir = sound_dir .. subdirs.MIDI .. pathsep
+  end
+  if not music_dir then
     print "Notice: No background music as no SOUND/MIDI directory found"
   else
-    local midi_dir = sound_dir .. subdirs.MIDI .. pathsep
     local musicArray = {}
     local function musicFileTable(filename)
       local t = musicArray[filename:upper()]
@@ -104,24 +113,23 @@ function Audio:init(speech_file)
       Find the music files on disk.
       -----------------------------
         
-      - Will search through all the files in midi_dir.
+      - Will search through all the files in music_dir.
       - Adds xmi and mp3 files.
       - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
       - Uses titles from MIDI.TXT if found, else the filename.
     --]]
     local midi_txt = ''      -- File name of midi.txt file, if any.
-    local mp3 = true         -- Yes, do load mp3 files.
     
-    for foundFile in lfs.dir(midi_dir) do
+    for foundFile in lfs.dir(music_dir) do
       -- Music file found (mp3/xmi).
-      if (mp3 and foundFile:upper():match"%.MP3$") or (foundFile:upper():match"%.XMI$") then
+      if foundFile:upper():match"%.MP3$" or (foundFile:upper():match"%.XMI$") then
         -- Extract only the base name of the file ("ATLANTIS" instead of "ATLANTIS.XMI")
         local foundFile_filenameBase = foundFile:sub( 0, foundFile:find(".", 1, true)-1 )
         -- Make one version uppercase
         local foundFile_filenameBase_upper = foundFile_filenameBase:upper()
       
         if (foundFile:upper():match"%.MP3$") then
-           musicFileTable(foundFile_filenameBase_upper).filename_mp3 = midi_dir .. foundFile
+           musicFileTable(foundFile_filenameBase_upper).filename_mp3 = music_dir .. foundFile
            -- Remove the xmi version of this file, if found.
            if musicFileTable(foundFile_filenameBase_upper).filename then
              musicFileTable(foundFile_filenameBase_upper).filename = nil
@@ -129,11 +137,12 @@ function Audio:init(speech_file)
            -- If the mp3 version exists
         elseif foundFile:upper():match"%.XMI$" and 
           not musicFileTable(foundFile_filenameBase_upper).filename_mp3 then
-          musicFileTable(foundFile_filenameBase_upper).filename = midi_dir .. foundFile -- ignore this file
+          musicFileTable(foundFile_filenameBase_upper).filename = music_dir .. foundFile -- ignore this file
         end
         -- This title might be replaced later by the midi_txt.
         musicFileTable(foundFile_filenameBase_upper).title = foundFile_filenameBase
-      elseif foundFile:upper():match"^MIDI.*%.TXT$" then -- Looks like the midi.txt.
+      elseif foundFile:upper():match"^MIDI.*%.TXT$" or 
+        foundFile:upper():match"^NAMES.*%.TXT$" then -- Looks like the midi.txt or equiv.
         -- Remember it for later.
         midi_txt = foundFile                                    
       end
@@ -147,7 +156,7 @@ function Audio:init(speech_file)
       
     -- This is later. If we found a midi.txt, go through it and add the titles to the files we know
     if midi_txt:len() > 0 then
-      for name, title in linepairs(midi_dir .. midi_txt) do
+      for name, title in linepairs(music_dir .. midi_txt) do
         local filename = name:sub( 0, name:find(".", 1, true)-1 )
         if next(musicFileTable(filename:upper())) ~= nil then
            musicFileTable(filename:upper()).title = title
