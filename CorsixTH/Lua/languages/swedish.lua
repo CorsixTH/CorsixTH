@@ -39,6 +39,7 @@ menu_debug = {
   make_adviser_talk           = utf8 "  LÅT RÅDGIVAREN PRATA  ",
   show_watch                  = "  VISA KLOCKA  ",
   place_objects               = "  PLACERA OBJEKT  ",
+  dump_strings                = "  SKAPA TEXTFILER  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }

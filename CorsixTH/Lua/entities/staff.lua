@@ -199,7 +199,11 @@ end
 function Staff:checkIfNeedRest()
   if self.attributes["fatigue"] and self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
   and not class.is(self:getRoom(), StaffRoom) then
-    self:setMood("tired", true)
+    -- Only when the staff member is very tired should the icon emerge.
+    -- TODO: Staff speed should be affected here.
+    if self.attributes["fatigue"] >= 0.9 then
+      self:setMood("tired", true)
+    end
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
     if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
       return
@@ -217,8 +221,18 @@ function Staff:checkIfNeedRest()
       self.world:registerRoomBuildCallback(callback)
       return
     end
-    -- Else, seek a staff room now
-    self:setNextAction{name = "seek_staffroom", must_happen = true}
+    -- Else, if doing something important (e.g. seeing a patient)
+    -- finish that first
+    if (self:getRoom() and self:getRoom():getPatient()) or 
+      (self.humanoid_class == "Handyman" and 
+      (self.action_queue[1].is_entering or self:getRoom())) then
+      self.staffroom_needed = true
+    else
+      -- Finally, seek a staff room now
+      self:setNextAction{name = "seek_staffroom", must_happen = true}
+    end
+    -- No matter if the action has been set or staffroom_needed was set it will be
+    -- handled - don't check in this function anymore.
     self.going_to_staffroom = true
     -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
     -- Exception: if no staff room exists, it is also set to true until one is built

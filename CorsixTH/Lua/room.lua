@@ -274,7 +274,23 @@ end
 function Room:onHumanoidLeave(humanoid)
   assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
   self.humanoids[humanoid] = nil
-  self:tryAdvanceQueue()
+  local staff_leaving = false
+  if class.is(humanoid, Patient) then
+    -- Some staff member in the room might be waiting to get to the staffroom.
+    for humanoid in pairs(self.humanoids) do
+      -- In a rare case a handyman that just decided he wants to go to the staffroom
+      -- could be in the room at the same time as a patient leaves.
+      if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
+        if humanoid.staffroom_needed then
+          humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
+          staff_leaving = true
+        end
+      end
+    end
+  end
+  if not staff_leaving then
+    self:tryAdvanceQueue()
+  end
   if class.is(humanoid, Staff) then
     -- Make patients leave the room if there are no longer enough staff
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
@@ -286,6 +302,11 @@ function Room:onHumanoidLeave(humanoid)
           end
         end
       end
+    end
+    -- The handyman is now finished doing something important, he might want to go
+    -- to the staffroom
+    if humanoid.staffroom_needed and humanoid.humanoid_class == "Handyman" then
+      humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
     end
     -- Remove any unwanted moods the staff member might have
     humanoid:setMood("staff_wait", nil)

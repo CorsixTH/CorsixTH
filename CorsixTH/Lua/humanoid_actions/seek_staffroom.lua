@@ -28,7 +28,7 @@ local function seek_staffroom_action_start(action, humanoid)
     return
   end
   action.must_happen = true
-  
+  humanoid.staffroom_needed = false
   -- Go to the nearest staff room, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "staff_room")
   if room then
