@@ -47,7 +47,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
-  self.title_text = _S.rooms.corridor_objects
+  self.title_text = _S.rooms_short.corridor_objects
   self.desc_text = _S.place_objects_window.place_objects_in_corridor
   
   self:addPanel(112, 0, 0) -- Dialog header

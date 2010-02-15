@@ -48,7 +48,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.room_type = room_type
   self.title_text = room_type.name
-  self.desc_text = _S.adviser.build_advice.drag_blueprint
+  self.desc_text = _S.place_objects_window.drag_blueprint
   self.blueprint_wall_anims = {
   }
   self.blueprint_door = {
@@ -378,7 +378,7 @@ end
 
 function UIEditRoom:returnToWallPhase(early)
   if not early then
-    self.desc_text = _S.adviser.build_advice.drag_blueprint
+    self.desc_text = _S.place_objects_window.drag_blueprint
     self.confirm_button:enable(true)
     for k, obj in pairs(self.blueprint_wall_anims) do
       for _, anim in pairs(obj) do
@@ -624,7 +624,7 @@ function UIEditRoom:enterDoorPhase()
     return
   end
   
-  self.desc_text = _S.adviser.build_advice.place_door
+  self.desc_text = _S.place_objects_window.place_door
   self.confirm_button:enable(false) -- Confirmation is via placing door
   
   -- Change the floor tiles to opaque blue
@@ -648,7 +648,7 @@ function UIEditRoom:enterDoorPhase()
 end
 
 function UIEditRoom:enterWindowsPhase()
-  self.desc_text = _S.adviser.build_advice.place_windows
+  self.desc_text = _S.place_objects_window.place_windows
   self.confirm_button:enable(true)
 end
 
@@ -658,7 +658,7 @@ function UIEditRoom:enterObjectsPhase()
     self:confirm()
     return
   end
-  self.desc_text = _S.adviser.build_advice.confirm_or_buy_objects
+  self.desc_text = _S.place_objects_window.confirm_or_buy_objects
   if #self.room.room_info.objects_additional > 0 then
     self.purchase_button:enable(true)
   end
