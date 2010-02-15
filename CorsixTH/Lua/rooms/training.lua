@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S(14, 20)
+room.name = _S.rooms_short.training_room
 room.id = "training"
 room.class = "TrainingRoom"
 room.build_cost = 2000
@@ -113,7 +113,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
     end
   else
     -- TODO: allow Handyman to water plants
-    self.world.ui.adviser:say(_S(11, 130):format(_S(53, 20)))
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(_S.rooms_long.training_room))
     humanoid:setNextAction(self:createLeaveAction())
     humanoid:queueAction{name = "meander"}
     return

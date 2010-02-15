@@ -86,7 +86,7 @@ end
 function UIMachine:replaceMachine()
   local machine = self.machine
   self.ui:addWindow(UIInformation(self.ui,
-    _S(35, 3):format(machine.object_type.name, machine.object_type.build_cost),
+    _S.confirmation.replace_machine:format(machine.object_type.name, machine.object_type.build_cost),
     function()
       self.ui.hospital:spendMoney(machine.object_type.build_cost, _S.transactions.machine_replacement)
       machine.total_usage = 0

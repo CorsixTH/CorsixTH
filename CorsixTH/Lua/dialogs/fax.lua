@@ -120,20 +120,20 @@ function UIFax:choice(choice)
       owner:goHome()
       if owner.diagnosed then
         -- No treatment rooms
-        owner:updateDynamicInfo(_S.dynamic_info.patient_actions.no_treatment_available)
+        owner:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)
       else
         -- No diagnosis rooms
-        owner:updateDynamicInfo(_S.dynamic_info.patient_actions.no_diagnoses_available)
+        owner:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
       end
     elseif choice == "wait" then
       -- Wait two months before going home
       owner.waiting = 60
       if owner.diagnosed then
         -- Waiting for treatment room
-        owner:updateDynamicInfo(_S.dynamic_info.patient_actions.waiting_for_treatment_rooms)
+        owner:updateDynamicInfo(_S.dynamic_info.patient.actions.waiting_for_treatment_rooms)
       else
         -- Waiting for diagnosis room
-        owner:updateDynamicInfo(_S.dynamic_info.patient_actions.waiting_for_diagnosis_rooms)
+        owner:updateDynamicInfo(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
       end
     elseif choice == "guess_cure" then
       owner.diagnosed = true

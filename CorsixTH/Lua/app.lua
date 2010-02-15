@@ -542,7 +542,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
 end
 
 function App:quit()
-  self.ui:addWindow(UIInformation(self.ui, _S(35, 1), --[[persistable:app_confirm_quit]] function()
+  self.ui:addWindow(UIInformation(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()
     self.running = false
   end))
 end

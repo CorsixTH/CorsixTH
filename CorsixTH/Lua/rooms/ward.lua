@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S(14, 7)
+room.name = _S.rooms_short.ward
 room.id = "ward"
 room.class = "WardRoom"
 room.build_cost = 2000

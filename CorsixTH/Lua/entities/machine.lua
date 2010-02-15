@@ -106,8 +106,8 @@ function Machine:updateDynamicInfo(only_update)
   if self.strength then
     self:setDynamicInfo("text", {
       self.object_type.name, 
-      _S(59, 31):format(self.strength),
-      _S(59, 32):format(self.times_used),
+      _S.dynamic_info.object.strength:format(self.strength),
+      _S.dynamic_info.object.times_used:format(self.times_used),
     })
   end
 end

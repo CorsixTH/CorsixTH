@@ -83,14 +83,14 @@ function UIBuildRoom:UIBuildRoom(ui)
     end
   end
   
-  self.list_title = _S(16, 2) -- Pick Department
-  self.cost_box = _S(16, 5) .. "0"
+  self.list_title = _S.build_room_window.pick_department
+  self.cost_box = _S.build_room_window.cost .. "0"
   self.list = {}
   self.category_titles = {
-    _S(19, 4), -- Diagnosis
-    _S(19, 5), -- Treatment
-    _S(19, 6), -- Clinics
-    _S(19, 7), -- Facilities
+    _S.room_classes.diagnosis,
+    _S.room_classes.treatment,
+    _S.room_classes.clinics,
+    _S.room_classes.facilities
   }
   self.category_rooms = {
   }
@@ -132,7 +132,7 @@ end
 
 function UIBuildRoom:setCategory(index)
   self.category_index = index
-  self.list_title = _S(16, 3) -- Pick Room Type
+  self.list_title = _S.build_room_window.pick_room_type
   self.list = self.category_rooms[index]
   
   local last = #self.list + 5
@@ -163,10 +163,10 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   if hover_idx ~= self.list_hover_index then
     self.ui:playSound "HLightP2.wav"
     if hover_idx == 0 then
-      self.cost_box = _S(16, 5) .. "0"
+      self.cost_box = _S.build_room_window.cost .. "0"
       self.preview_anim = false
     else
-      self.cost_box = _S(16, 5) .. self.list[hover_idx].build_cost
+      self.cost_box = _S.build_room_window.cost .. self.list[hover_idx].build_cost
       self.preview_anim = TH.animation()
       self.preview_anim:setAnimation(self.ui.app.anims, self.list[hover_idx].build_preview_animation)
     end

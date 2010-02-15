@@ -795,7 +795,7 @@ function World:callForStaff(room, repair_object, urgent)
     else
       -- Different messages depending on if any handyman has been hired yet or not.
       if self.hospitals[1]:hasStaffOfCategory("Handyman") then
-        self.ui.adviser:say(_S(11, 4))
+        self.ui.adviser:say(_S.adviser.warnings.machines_falling_apart)
       else
         self.ui.adviser:say(_S(28, 34))
       end

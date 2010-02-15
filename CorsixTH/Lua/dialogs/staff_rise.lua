@@ -21,17 +21,6 @@ SOFTWARE. --]]
 local math_floor
     = math.floor
 
--- Different complaint strings. All of them contain the rise amount.
--- In addition to that, some contain the final wage after the rise.
-local texts = {
-  _S(3, 4), -- "I'm totally frazzled. I need a good rest, plus a rise of  %d  if you don't want to see me jack in this poxy job."
-  _S(3, 5), -- "I'm very tired. I need a rest and a salary boost of %d, putting me on %d. Do it now, you tyrant."
-  _S(3, 6), -- "Come on. I'm working like a dog here. Give me a bonus of %d and I'll stay in your hospital."
-  _S(3, 7), -- "I'm very unhappy. I demand a raise of %d, making my wages %d, otherwise I'm out of here."
-  _S(3, 8), -- "My parents told me that the medical profession paid well. So give me a raise of %d or I'll become a computer games producer."
-  _S(3, 9), -- "I'm fed up. Pay me a decent wage. I reckon a raise of %d should do the trick."
-}
-
 class "UIStaffRise" (Window)
 
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
@@ -45,7 +34,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self.rise_amount = rise_amount
 
   local final_wage = self.staff.profile.wage + rise_amount
-  self.text = string.format(texts[math.random(1, #texts)], rise_amount, final_wage) -- Random complaint text
+  self.text = string.format(_S.pay_rise.regular.__random, rise_amount, final_wage) -- Random complaint text
 
   self.width = 366
   self.height = 275

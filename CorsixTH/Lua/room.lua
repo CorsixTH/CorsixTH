@@ -36,8 +36,8 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.door = door
   door:setDynamicInfo('text', {
     self.room_info.name, 
-    _S(59, 33):format(0), 
-    _S(59, 34):format(0)
+    _S.dynamic_info.object.queue_size:format(0), 
+    _S.dynamic_info.object.queue_expected:format(0)
   })
   self.built = false
   

@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S(14, 18)
+room.name = _S.rooms_short.tongue_clinic
 room.id = "slack_tongue"
 room.class = "SlackTongueRoom"
 room.build_cost = 3000

@@ -105,13 +105,13 @@ local function action_seek_room_start(action, humanoid)
         local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)
         if not humanoid.hospital:hasStaffOfCategory(staff_name) then
           if staff_name == "Nurse" then
-            staff_name = _S(34, 3)
+            staff_name = _S.staff_title.nurse
           elseif staff_name == "Psychiatrist" then
-            staff_name = _S(34, 7)
+            staff_name = _S.staff_title.psychiatrist
           elseif staff_name == "Researcher" then
-            staff_name = _S(34, 9)
+            staff_name = _S.staff_title.researcher
           elseif staff_name == "Surgeon" then
-            staff_name = _S(34, 6)
+            staff_name = _S.staff_title.surgeon
           end
           output_text = _S.fax.disease_discovered_patient_choice.need_to_build_and_employ:format(room_name, staff_name)
         end
@@ -128,7 +128,7 @@ local function action_seek_room_start(action, humanoid)
         }
         TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
         humanoid:setMood("patient_wait", true)
-        humanoid:updateDynamicInfo(_S(59, 6))
+        humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
         -- Only one message should appear.
         action.got_answer = true
       else
@@ -137,7 +137,7 @@ local function action_seek_room_start(action, humanoid)
         if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
           -- Send home automatically
           humanoid:goHome()
-          humanoid:updateDynamicInfo(_S(59, 16))
+          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
         elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
           -- Ask the player
           -- Wait two months before going home anyway.
@@ -162,7 +162,7 @@ local function action_seek_room_start(action, humanoid)
             table.insert(message, 2, {text = more_text})
           end
           TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
-          humanoid:updateDynamicInfo(_S(59, 6))
+          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
           -- Only one message should appear.
           action.got_answer = true
         else

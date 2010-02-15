@@ -47,8 +47,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
-  self.title_text = _S(14, 29) -- Corridor Objects
-  self.desc_text = _S(3, 17) -- Place the objects down in a corridor
+  self.title_text = _S.rooms.corridor_objects
+  self.desc_text = _S.place_objects_window.place_objects_in_corridor
   
   self:addPanel(112, 0, 0) -- Dialog header
   for y = 48, 83, 7 do
@@ -352,7 +352,8 @@ function UIPlaceObjects:onMouseUp(button, x, y)
         self:placeObject()
         repaint = true
       elseif self.object_cell_x and self.object_cell_y and not self.object_blueprint_good then
-        self.ui.adviser:say(_S(11,56))
+        -- TODO: activate once tutorial is implemented
+        -- self.ui.adviser:say(_S.adviser.tutorial.object_in_invalid_position)
       end
     end
   end

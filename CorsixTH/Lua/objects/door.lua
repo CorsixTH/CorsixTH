@@ -53,8 +53,8 @@ function Door:updateDynamicInfo()
   if self.room then
     self:setDynamicInfo('text', {
       self.room.room_info.name, 
-      _S(59, 33):format(self.queue:reportedSize()), 
-      _S(59, 34):format(self.queue.expected_count)
+      _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()), 
+      _S.dynamic_info.object.queue_expected:format(self.queue.expected_count)
     })
   end
 end

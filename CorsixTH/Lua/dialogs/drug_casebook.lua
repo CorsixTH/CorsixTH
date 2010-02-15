@@ -115,19 +115,19 @@ function UICasebook:draw(canvas)
   local selected = self.selected_index
   
   -- All titles
-  titles:draw(canvas, _S(29, 1), x + 278, y + 68) -- Reputation
-  titles:draw(canvas, _S(29, 2), x + 260, y + 113) -- Treatment Charge
-  titles:draw(canvas, _S(29, 3), x + 265, y + 157) -- Money Earned
-  titles:draw(canvas, _S(29, 4), x + 276, y + 201) -- Recoveries
-  titles:draw(canvas, _S(29, 5), x + 279, y + 245) -- Fatalities
-  titles:draw(canvas, _S(29, 6), x + 270, y + 289) -- Turned away
-  titles:draw(canvas, _S(29, 8), x + 255, y + 354) -- Cure
+  titles:draw(canvas, _S.casebook.reputation,       x + 278, y + 68)
+  titles:draw(canvas, _S.casebook.treatment_charge, x + 260, y + 113)
+  titles:draw(canvas, _S.casebook.earned_money,     x + 265, y + 157)
+  titles:draw(canvas, _S.casebook.cured,            x + 276, y + 201)
+  titles:draw(canvas, _S.casebook.deaths,           x + 279, y + 245)
+  titles:draw(canvas, _S.casebook.sent_home,        x + 270, y + 289)
+  titles:draw(canvas, _S.casebook.cure,             x + 255, y + 354)
   
   -- Specific disease information
   if book[disease].concentrate_research then  -- Concentrate research
-    self.selected_title_font:draw(canvas, _S(29, 7), x + 245, y + 398)
+    self.selected_title_font:draw(canvas, _S.casebook.research, x + 245, y + 398)
   else
-    titles:draw(canvas, _S(29, 7), x + 245, y + 398)
+    titles:draw(canvas, _S.casebook.research, x + 245, y + 398)
   end
   titles:draw(canvas, book[disease].reputation, x + 248, y + 92, 114, 0) -- Reputation
   titles:draw(canvas, ("%.0f%%"):format(book[disease].price * 100), x + 262, y + 137, 90, 0) -- Treatment Charge

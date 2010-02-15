@@ -100,20 +100,20 @@ function UIPolicy:draw(canvas)
 
   -- Labels on the panels
   local added_x, added_y = self.sliders["send_home"].x, self.sliders["send_home"].y
-  label:draw(canvas, _S(18, 7), x + added_x, y + added_y + 2, 82, 0) -- SEND HOME
+  label:draw(canvas, _S.policy.sliders.send_home, x + added_x, y + added_y + 2, 82, 0)
   added_x, added_y = self.sliders["guess_cure"].x, self.sliders["guess_cure"].y
-  label:draw(canvas, _S(18, 6), x + added_x, y + added_y + 2, 82, 0) -- GUESS AT CURE
+  label:draw(canvas, _S.policy.sliders.guess, x + added_x, y + added_y + 2, 82, 0)
   added_x, added_y = self.sliders["stop_procedure"].x, self.sliders["stop_procedure"].y
-  label:draw(canvas, _S(18, 8), x + added_x, y + added_y + 2, 92, 0) -- STOP PROCEDURE
+  label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
   added_x, added_y = self.sliders["goto_staffroom"].x, self.sliders["goto_staffroom"].y
-  label:draw(canvas, _S(18, 9), x + added_x, y + added_y + 2, 92, 0) -- GO TO STAFF ROOM
+  label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
   
   -- All other text
-  text:draw(canvas, _S(18, 1), x + 160, y + 78, 300, 0) -- Hospital Policy
-  text:draw(canvas, _S(18, 2), x + 161, y + 100) -- diagnosis procedure
-  text:draw(canvas, _S(18, 3), x + 161, y + 181) -- diagnosis termination
-  text:draw(canvas, _S(18, 4), x + 161, y + 262) -- send staff to rest
-  text:draw(canvas, _S(18, 5), x + 161, y + 374) -- staff leave rooms
+  text:draw(canvas, _S.policy.header,            x + 160, y + 78, 300, 0)
+  text:draw(canvas, _S.policy.diag_procedure,    x + 161, y + 100)
+  text:draw(canvas, _S.policy.diag_termination,  x + 161, y + 181)
+  text:draw(canvas, _S.policy.staff_rest,        x + 161, y + 262)
+  text:draw(canvas, _S.policy.staff_leave_rooms, x + 161, y + 374)
 
 end
 

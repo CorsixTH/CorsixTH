@@ -74,16 +74,16 @@ function UIQueue:draw(canvas)
   Window.draw(self, canvas)
 
   local num_patients = queue:reportedSize()
-  font:draw(canvas, _S(49, 1), x + 22, y + 22) -- Queue Size
+  font:draw(canvas, _S.queue_window.num_in_queue, x + 22, y + 22)
   font:draw(canvas, num_patients, x + 140, y + 22)
     
-  font:draw(canvas, _S(49, 2), x + 22, y + 45) -- Expected
+  font:draw(canvas, _S.queue_window.num_expected, x + 22, y + 45)
   font:draw(canvas, queue.expected_count, x + 140, y + 45)
     
-  font:draw(canvas, _S(49, 3), x + 22, y + 68) -- Visitor Count
+  font:draw(canvas, _S.queue_window.num_entered, x + 22, y + 68)
   font:draw(canvas, queue.visitor_count, x + 140, y + 68)
   
-  font:draw(canvas, _S(49, 4), x + 22, y + 93) -- Max Size
+  font:draw(canvas, _S.queue_window.max_queue_size, x + 22, y + 93)
   font:draw(canvas, queue.max_size, x + 119, y + 93)
   
   local dx = 0

@@ -89,7 +89,7 @@ function Object:updateDynamicInfo()
   self.times_used = self.times_used + 1
   local object = self.object_type
   if object.dynamic_info then
-    self:setDynamicInfo("text", {object.name, "", _S(59, 32):format(self.times_used)})
+    self:setDynamicInfo("text", {object.name, "", _S.dynamic_info.object.times_used:format(self.times_used)})
   end
 end
 

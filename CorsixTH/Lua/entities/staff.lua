@@ -80,11 +80,11 @@ function Staff:updateSkill(consultant, trait, amount)
   if self.profile[trait] >= 1.0 then
     self.profile[trait] = 1.0
     if trait == "is_surgeon" then
-      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 6)))
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.surgeon))
     elseif trait == "is_psychiatrist" then
-      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 7)))
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.psychiatrist))
     elseif trait == "is_researcher" then
-      self.world.ui.adviser:say(_S(11, 69):format(_S(34, 9)))
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.researcher))
     end
   end
 
@@ -92,9 +92,9 @@ function Staff:updateSkill(consultant, trait, amount)
     self.profile:parseSkillLevel()
 
     if old_profile.is_junior and not self.profile.is_junior then
-      self.world.ui.adviser:say(_S(11, 23))
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_doctor)
     elseif not old_profile.is_consultant and self.profile.is_consultant then
-      self.world.ui.adviser:say(_S(11, 138))
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_consultant)
       self:setNextAction(self:getRoom():createLeaveAction())
       self:queueAction{name = "meander"}
     end
@@ -144,33 +144,33 @@ function Staff:setProfile(profile)
     local professions = ""
     local number = 0
     if profile.is_junior then
-      professions = _S(34, 4) .. " "
+      professions = _S.staff_title.junior .. " "
       number = 1
     elseif profile.is_consultant then
-      professions = _S(34, 8) .. " "
+      professions = _S.staff_title.consultant .. " "
       number = 1
     end
     if profile.is_researcher >= 1.0 then
-      professions = professions .. _S(34, 9) .. " "
+      professions = professions .. _S.staff_title.researcher .. " "
       number = number + 1
     end
     if profile.is_surgeon >= 1.0 then
       if professions then
-        professions = professions .. _S(34, 6) .. " "
+        professions = professions .. _S.staff_title.surgeon .. " "
       else
-        professions = _S(34, 6)
+        professions = _S.staff_title.surgeon -- is this case actually needed?
       end
       number = number + 1
     end
     if profile.is_psychiatrist >= 1.0 then
       if number < 3 then
         if professions then
-          professions = professions .. _S(34, 7)
+          professions = professions .. _S.staff_title.psychiatrist
         else
-          professions = _S(34, 7)
+          professions = _S.staff_title.psychiatrist -- is this case actually needed?
         end
       else
-        professions = professions .. _S(59, 27)
+        professions = professions .. _S.dynamic_info.staff.psychiatrist_abbrev
       end
     end
     
@@ -335,7 +335,7 @@ function Staff:increaseWage(amount)
 end
 
 function Staff:updateDynamicInfo()
-  local fatigue_text = _S(59, 29)
+  local fatigue_text = _S.dynamic_info.staff.tiredness
   if not self.attributes["fatigue"] then
     fatigue_text = nil
   end

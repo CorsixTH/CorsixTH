@@ -133,20 +133,31 @@ object = {
 }
 
 --  S[3][1]: unused
---  S[3][2]: what's this for?
+--  S[3][2]: what's this for? Apparently some command line option of original TH
+--           let you start a specific level directly - on difficult and named HORZA.
 
 pay_rise = {
-  S[3][ 3],
-  S[3][ 4], -- %d (rise)
-  S[3][ 5], -- %d (rise) %d (new total)
-  S[3][ 6], -- %d (rise)
-  S[3][ 7], -- %d (rise) %d (new total)
-  S[3][ 8], -- %d (rise)
-  S[3][ 9], -- %d (rise)
-  S[3][10], -- %d (new total) %s (competitor)
+  definite_quit = S[3][3],
+  regular = {
+    S[3][ 4], -- %d (rise)
+    S[3][ 5], -- %d (rise) %d (new total)
+    S[3][ 6], -- %d (rise)
+    S[3][ 7], -- %d (rise) %d (new total)
+    S[3][ 8], -- %d (rise)
+    S[3][ 9], -- %d (rise)
+  },
+  poached = S[3][10], -- %d (new total) %s (competitor)
 }
 
--- S[3][11] through S[3][17]: see below (adviser)
+place_objects_window = {
+  drag_blueprint                = S[3][11],
+  place_door                    = S[3][12],
+  place_windows                 = S[3][13],
+  place_objects                 = S[3][14],
+  confirm_or_buy_objects        = S[3][15],
+  pick_up_object                = S[3][16],
+  place_objects_in_corridor     = S[3][17],
+}
 
 -- Category of strings that fit nowhere else or we are not sure where they belong.
 -- If you think a string of these fits somewhere else, please move it there.
@@ -422,14 +433,6 @@ adviser = {
   },
   
   build_advice = {
-    drag_blueprint                = S[3][11],
-    place_door                    = S[3][12],
-    place_windows                 = S[3][13],
-    place_objects                 = S[3][14],
-    confirm_or_buy_objects        = S[3][15],
-    pick_up_object                = S[3][16],
-    place_objects_in_corridor     = S[3][17],
-    
     blueprint_invalid             = S[21][5],
     blueprint_would_block         = S[21][6],
     door_not_reachable            = S[21][7],
@@ -652,7 +655,7 @@ town_map = {
 
 -- NB: includes some special "rooms"
 -- reception, destroyed room and "corridor objects"
-rooms = {
+rooms_short = {
   -- S[14][1] -- unused
   -- S[14][3] -- unused
   reception         = S[14][ 2],
@@ -683,6 +686,38 @@ rooms = {
   research_room     = S[14][26],
   toilets           = S[14][27],
   decontamination   = S[14][28],
+}
+
+rooms_long = {
+  -- S[53][1] -- unused
+  general           = S[53][2], -- unused?
+  emergency         = S[53][3],
+  corridors         = S[53][29],
+  
+  gps_office        = S[53][ 5],
+  psychiatric       = S[53][ 6],
+  ward              = S[53][ 7],
+  operating_theatre = S[53][ 8],
+  pharmacy          = S[53][ 9],
+  cardiogram        = S[53][10],
+  scanner           = S[53][11],
+  ultrascan         = S[53][12],
+  blood_machine     = S[53][13],
+  x_ray             = S[53][14],
+  inflation         = S[53][15],
+  dna_fixer         = S[53][16],
+  hair_restoration  = S[53][17],
+  tongue_clinic     = S[53][18],
+  fracture_clinic   = S[53][19],
+  training_room     = S[53][20],
+  electrolysis      = S[53][21],
+  jelly_vat         = S[53][22],
+  staffroom         = S[53][23],
+  -- rehabilitation = S[53][24], -- unused
+  general_diag      = S[53][25],
+  research_room     = S[53][26],
+  toilets           = S[53][27],
+  decontamination   = S[53][28],
 }
 
 -- TODO where is this used?
@@ -1765,24 +1800,48 @@ queue_window = {
 -- ...
 
 dynamic_info = {
-  patient_actions = {
-    dying                       = S[59][ 5],
-    awaiting_decision           = S[59][ 6],
-    queueing_for                = S[59][ 7], -- %s
-    on_my_way_to                = S[59][ 8], -- %s
-    cured                       = S[59][ 9],
-    fed_up                      = S[59][10],
-    sent_home                   = S[59][11],
+  patient = {
+    actions = {
+      dying                       = S[59][ 5],
+      awaiting_decision           = S[59][ 6],
+      queueing_for                = S[59][ 7], -- %s
+      on_my_way_to                = S[59][ 8], -- %s
+      cured                       = S[59][ 9],
+      fed_up                      = S[59][10],
+      sent_home                   = S[59][11],
+      sent_to_other_hospital      = S[59][12],
+      no_diagnoses_available      = S[59][16],
+      no_treatment_available      = S[59][17],
+      waiting_for_diagnosis_rooms = S[59][18],
+      waiting_for_treatment_rooms = S[59][19],
+      prices_too_high             = S[59][20],
+      epidemic_sent_home          = S[59][25],
+      epidemic_contagious         = S[59][26],
+    },
     diagnosed                   = S[59][13], -- %s
     guessed_diagnosis           = S[59][14], -- %s
     diagnosis_progress          = S[59][15],
-    no_diagnoses_available      = S[59][16],
-    no_treatment_available      = S[59][17],
-    waiting_for_diagnosis_rooms = S[59][18],
-    waiting_for_treatment_rooms = S[59][19],
+    emergency                   = S[59][23], -- %s (disease name)
   },
-  staff_actions = {
+  vip                           = S[59][21],
+  health_inspector              = S[59][22],
   
+  staff = {
+    psychiatrist_abbrev         = S[59][27],
+    actions = {
+      waiting_for_patient         = S[59][24],
+      wandering                   = S[59][28],
+      going_to_repair             = S[59][35], -- %s (name of machine)
+    },
+    tiredness                   = S[59][29],
+    ability                     = S[59][30], -- unused?
+  },
+  
+  object = {
+    strength                    = S[59][31], -- %d (max. uses)
+    times_used                  = S[59][32], -- %d (times used)
+    queue_size                  = S[59][33], -- %d (num of patients)
+    queue_expected              = S[59][34], -- %d (num of patients)
   },
 }
 
