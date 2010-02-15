@@ -725,7 +725,8 @@ function UIEditRoom:onMouseDown(button, x, y)
         self.ui:playSound "buildclk.wav"
         self:confirm()
       else
-        self.ui.adviser:say(_S.adviser.build_advice.door_in_invalid_position)
+        -- TODO: activate once tutorial is implemented
+        -- self.ui.adviser:say(_S.adviser.tutorial.door_in_invalid_position)
       end
     elseif self.phase == "windows" then
       self:placeWindowBlueprint()
@@ -769,13 +770,18 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
     x, y, w, h, self.blueprint_wall_anims, self.anims, too_small)
 
   if self.phase ~= "closed" then
-    if too_small then
-      self.ui.adviser:say(_S.adviser.build_advice.room_too_small)
+    -- TODO: activate once tutorial is implemented
+    --[[
+    if too_small and not is_valid then
+      self.ui.adviser:say(_S.adviser.tutorial.room_too_small_and_invalid)
+    elseif too_small then
+      self.ui.adviser:say(_S.adviser.tutorial.room_too_small)
     elseif not is_valid then
-      self.ui.adviser:say(_S.adviser.build_advice.blueprint_overlap)
+      self.ui.adviser:say(_S.adviser.tutorial.room_in_invalid_position)
     else
-      self.ui.adviser:say(_S.adviser.build_advice.blueprint_big_enough)
+      self.ui.adviser:say(_S.adviser.tutorial.room_big_enough)
     end
+    ]]
   end
   
   self.confirm_button:enable(is_valid)
@@ -880,7 +886,8 @@ function UIEditRoom:placeWindowBlueprint()
     self.blueprint_window = {}
     self.ui:playSound "buildclk.wav"
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
-    self.ui.adviser:say(_S.adviser.build_advice.window_in_invalid_position)
+    -- TODO: activate once tutorial is implemented
+    -- self.ui.adviser:say(_S.adviser.tutorial.window_in_invalid_position)
   end
 end
 

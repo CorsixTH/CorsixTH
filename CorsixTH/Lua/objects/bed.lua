@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "bed"
 object.thob = 8
-object.name = _S.object.bed1
+object.name = _S.object.bed
 object.ticks = false
 object.build_cost = 200
 object.build_preview_animation = 910

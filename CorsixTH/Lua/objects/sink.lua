@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "sink"
 object.thob = 32
-object.name = _S.object.sink1
+object.name = _S.object.toilet_sink
 object.ticks = false
 object.build_cost = 30
 object.build_preview_animation = 5082
