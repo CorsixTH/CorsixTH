@@ -47,3 +47,9 @@ LDocGen/main.lua -text
 LFS/lfs.def -text
 MapEdit/CMakeLists.txt -text
 MapEdit/FindwxWidgets_svn.cmake -text
+WindowsInstaller/LanguageStrings.nsh -text
+WindowsInstaller/ReplaceInFile.nsh -text
+WindowsInstaller/StrRep.nsh -text
+WindowsInstaller/Win32Script.nsi -text
+WindowsInstaller/config_template.txt -text
+WindowsInstaller/readme.txt -text
