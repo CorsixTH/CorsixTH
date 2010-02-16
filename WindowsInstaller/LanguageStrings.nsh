@@ -33,11 +33,11 @@ LangString confirm_removal    ${LANG_FRENCH} "Are you sure you want to completel
 LangString files_left         ${LANG_FRENCH} "Some files could not be removed."
 
 LangString install_language   ${LANG_GERMAN} "German"
-LangString original_text      ${LANG_GERMAN} "In order to play the game an installation of the original game is required. Specify that location here."
-LangString original_folder    ${LANG_GERMAN} "Theme Hospital Folder"
-LangString successful_removal ${LANG_GERMAN} "$(^Name) was successfully removed from your computer."
-LangString confirm_removal    ${LANG_GERMAN} "Are you sure you want to completely remove $(^Name) and all of its components?"
-LangString files_left         ${LANG_GERMAN} "Some files could not be removed."
+LangString original_text      ${LANG_GERMAN} "Um das Spiel zu spielen wird das Originalspiel benötigt. Bitte das Verzeichnis des Originalspiels angeben."
+LangString original_folder    ${LANG_GERMAN} "Theme Hospital-Verzeichnis"
+LangString successful_removal ${LANG_GERMAN} "$(^Name) wurde erfolgreich vom Computer entfernt."
+LangString confirm_removal    ${LANG_GERMAN} "Sind Sie sicher, dass Sie $(^Name) und alle seiner Komponenten entfernen möchten?"
+LangString files_left         ${LANG_GERMAN} "Einige Dateien konnten nicht entfernt werden."
 
 LangString install_language   ${LANG_ITALIAN} "Italian"
 LangString original_text      ${LANG_ITALIAN} "In order to play the game an installation of the original game is required. Specify that location here."
