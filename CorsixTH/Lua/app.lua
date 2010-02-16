@@ -250,7 +250,7 @@ function App:dumpStrings()
           if type(n) == "number" then
             n = "[" .. n .. "]"
           end
-          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"\n")
+          file:write(prefix .. n .. " = " .. "\"" .. o .. "\",\n")
         end
       end
     end
