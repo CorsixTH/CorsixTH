@@ -377,7 +377,7 @@ drug_companies = {
   -- S[15][1], -- unused
   "Medisiner-For-Deg",
   "Kur R Oss",
-  "Runde Små Piller Co.",
+  utf8 "Runde Små Piller Co.",
   "Dyremedisin AS",
   "Alle Piller Co.",
 }
@@ -557,11 +557,11 @@ high_score = {
   
   categories = {
     money             = "RIKEST",
-    salary            = "HÖYESTE LÖNN",
+    salary            = utf8 "HÖYESTE LÖNN",
     clean             = "RENSLIGHET",
     cures             = "ANTALL KURERT",
-    deaths            = "ANTALL DÖDSFALL",
-    cure_death_ratio  = "ANTALL BEHANDLINGSDÖDSFALL",
+    deaths            = utf8 "ANTALL DÖDSFALL",
+    cure_death_ratio  = utf8 "ANTALL BEHANDLINGSDÖDSFALL",
     patient_happiness = "TILFREDSTILLHET PASIENTER",
     staff_happiness   = "TILFREDSTILLHET PERSONALE",
     staff_number      = "MEST PERSONALE",
@@ -703,7 +703,7 @@ tooltip = {
   toolbar = {
     bank_button        = utf8 "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
     balance            = "Din Balanse",
-    reputation         = "Ditt rykte (omdömme)",
+    reputation         = utf8 "Ditt rykte (omdömme)",
     date               = "Dato",
     rooms              = "Bygg rom",
     objects            = utf8 "Kjöp gjenstander",
@@ -881,7 +881,7 @@ tooltip = {
   
   place_objects_window = {
     cancel             = "Avbryt",
-    buy_sell           = "Kjöp/Selg gjenstander",
+    buy_sell           = utf8 "Kjöp/Selg gjenstander",
     pick_up            = "Plukk opp en gjenstand",
     confirm            = "Bekreft",
   },
@@ -925,11 +925,11 @@ tooltip = {
   
   research = {
     close              = utf8 "Gå ut av forskningsavdelingen",
-    cure_dec           = "Senk prioritering av forskning på behandlingsutstyr",
-    diagnosis_dec      = "Senk prioritering av forskning på diagnoseutstyr",
-    drugs_dec          = "Senk prioritering av forskning på medisiner",
-    improvements_dec   = "Senk prioritering av forskning på forbedringer",
-    specialisation_dec = "Senk prioritering av forskning på spesialiseringer",
+    cure_dec           = utf8 "Senk prioritering av forskning på behandlingsutstyr",
+    diagnosis_dec      = utf8 "Senk prioritering av forskning på diagnoseutstyr",
+    drugs_dec          = utf8 "Senk prioritering av forskning på medisiner",
+    improvements_dec   = utf8 "Senk prioritering av forskning på forbedringer",
+    specialisation_dec = utf8 "Senk prioritering av forskning på spesialiseringer",
     cure_inc           = utf8 "Ök prioritering av forskning på behandlingsutstyr",
     diagnosis_inc      = utf8 "Ök prioritering av forskning på diagnoseutstyr",
     drugs_inc          = utf8 "Ök prioritering av forskning på medisiner",
@@ -1002,7 +1002,7 @@ tooltip = {
     population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
     happiness          = utf8 "Gjennomsnittlig humör på personene på ditt sykehus",
     thirst             = utf8 "Gjennomsnittlig törste på personene på ditt sykehus",
-    warmth             = "Gjennomsnittlig temperatur på personene på ditt sykehus",
+    warmth             = utf8 "Gjennomsnittlig temperatur på personene på ditt sykehus",
     close              = "Lukk oversikten",
   },
   
@@ -1060,7 +1060,7 @@ tooltip = {
     desk                 = "Pult: en Lege kan bruke pulten til PC'en sin.",
     cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
     door                 = utf8 "Dör: personer åpner og lukker disse en del.",
-    bench                = "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabelt.",
+    bench                = utf8 "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabelt.",
     table1               = S[40][ 6], -- unused
     chair                = "Stol: Pasienter sitter her og diskuterer sine problemer.",
     drinks_machine       = utf8 "Brusautomat: hindrer pasientene å bli törste og genererer inntekter.",
@@ -1643,7 +1643,7 @@ menu_debug = {
   make_adviser_talk           = utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
   show_watch                  = "  VIS KLOKKE  ",
   place_objects               = "  PLASSER OBJEKTER  ",
-  dump_strings                = "  DUMP SPRÅKSTRENG  ",
+  dump_strings                = utf8 "  DUMP SPRÅKSTRENG  ",
   map_overlay                 = "  KARTOVERLEGG  ",
   sprite_viewer               = "  SPRITEVISNING  ",
 }
