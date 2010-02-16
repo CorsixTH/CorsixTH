@@ -16,20 +16,124 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. --]]
+SOFTWARE.
 
+-------------------------------------------------------------------------------
+   READ BEFORE DOING ANY CHANGES
+-------------------------------------------------------------------------------
 
--- READ FIRST!
--- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
--- For the norwegian letters ø and Ø, you must use the old-style ö and Ö instead. 
--- Thats because the letters ø and Ø is not included in the original ingame-font.
+Since the norwegian language isn't in the original Theme Hospital game, this 
+file is split in two sections (A and B). The first section contains all the new 
+language strings, made by the Corsix-TH team, and the second section contains 
+the override translation of all the original english strings.
 
+FORMATING AND NORWEGIAN LETTERS
+This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the 
+norwegian letters ø and Ø, you must use the old-style ö and Ö instead. That is 
+because the letters ø and Ø is not included in the original ingame-font.
+
+DISCUSSIONS
+To keep the translation as good as possible, you should allways stay updated 
+at the forum where the Norwegian translation is discussed:
+
+[Link to forum section]
+
+-------------------------------------------------------------------------------
+    Table of Contents
+-------------------------------------------------------------------------------
+ 
+ -- SECTION A - NEW STRINGS
+
+ 1: Global settings
+ 2: Faxes
+ 3: Objects
+ 4: Menu
+ 5: Adviser
+ 
+ -- SECTION B - OLD STRINGS (OVERRIDE)
+ 
+ Huge section with all original strings, translated from english.
+
+-------------------------------------------------------------------------------
+-----------------------------------------------------------------------------]]
+
+-------------------------------------------------------------------------------
+--   SECTION A - NEW STRINGS
+-------------------------------------------------------------------------------
+
+-- 1: Global setings (do not edit!)
+-- 
 Language("norwegian", "nb", "nob")
 Inherit("english")
--- ..
 
 
--- STAFF
+-- 2: Faxes
+-- 
+fax = {
+  welcome = {
+    beta1 = {
+      utf8 "Velkommen til CorsixTH, en klone av klassikeren Theme Hospital (Bullfrog) i åpen kildekode!",
+      utf8 "Dette er en spillbar beta 1 av CorsixTH. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
+      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
+      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (diagnoserom). Ulike behandlingsrom blir også nödvendig.",
+      utf8 "-- CorsixTH teamet, th.corsix.org",
+      utf8 "PS: Kan du finne de sjulte påskeeggene?",
+    }
+  }
+}
+
+
+-- 3: Objects
+-- 
+object = {
+	litter 				  = utf8 "Söppel",
+}
+
+
+-- 4: Menu 
+-- 
+menu_options_game_speed.pause = "  PAUSE  "
+
+menu_debug = {
+  transparent_walls           = "  GJENNOMSIKTIGE VEGGER  ",
+  limit_camera                = "  BEGRENS KAMERA  ",
+  disable_salary_raise        = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
+  make_debug_patient          = "  LAG DEBUG-PASIENT  ",
+  spawn_patient               = "  SPAWN PASIENT  ",
+  make_adviser_talk           = utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
+  show_watch                  = "  VIS KLOKKE  ",
+  place_objects               = "  PLASSER OBJEKTER  ",
+  dump_strings                = utf8 "  DUMP SPRÅKSTRENG  ",
+  map_overlay                 = "  KARTOVERLEGG  ",
+  sprite_viewer               = "  SPRITEVISNING  ",
+}
+
+menu_debug_overlay = {
+  none                        = "  INGEN  ",
+  flags                       = "  FLAGG  ",
+  byte_0_1                    = "  BYTE 0 & 1  ",
+  byte_floor                  = "  BYTE GULV  ",
+  byte_n_wall                 = "  BYTE N VEGG  ",
+  byte_w_wall                 = "  BYTE W VEGG  ",
+  byte_5                      = "  BYTE 5  ",
+  byte_6                      = "  BYTE 6  ",
+  byte_7                      = "  BYTE 7  ",
+  parcel                      = "  PAKKE  ",
+}
+
+-- 5: Adviser
+--
+adviser = {
+	room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig.",
+}
+
+
+
+-------------------------------------------------------------------------------
+--   SECTION B - OLD STRINGS (OVERRIDE)
+-------------------------------------------------------------------------------
+
+-- Staff class
 -- each of these corresponds to a sprite
 staff_class = {
   nurse                 = "Sykepleier",
@@ -37,9 +141,9 @@ staff_class = {
   handyman              = "Vaktmester",
   receptionist          = "Resepsjonist",
   surgeon               = "Kirurg",
-  -- S[1][6] unused
 }
 
+-- Staff titles
 -- these are titles used e.g. in the dynamic info bar
 staff_title = {
   receptionist          = "Resepsjonist",
@@ -53,9 +157,106 @@ staff_title = {
   researcher            = "Forsker",
 }
 
+-- Pay rises
+pay_rise = {
+  definite_quit = utf8 "Du kan ikke gjöre noe for å beholde meg lenger. Jeg er ferdig her!",
+  regular = {
+    utf8 "Jeg er helt utslitt. Jeg trenger en god pause, pluss en lnnsökning på %d om du ikke vil se meg gå rundt å sutre i korridorene.", -- %d (rise)
+    utf8 "Jeg er veldig trött. Jeg trenger hvile og en lönnskning på %d, totalt %d. Fiks det nå, din tyrann!", -- %d (rise) %d (new total)
+    utf8 "Kom igjen. Jeg jobber som en hund her. Gi meg en bonus på %d og jeg blir på sykehuset ditt.", -- %d (rise)
+    utf8 "Jeg er så deppa. Jeg krever en lönnskning på %d, som blir totalt %d, ellers er jeg ferdig her.", -- %d (rise) %d (new total)
+    utf8 "Foreldrene mine sa at medisinyrket ville gi meg mye penger. Så gi meg en lönnskning på %d, ellers blir jeg spillutvikler istedenfor.", -- %d (rise)
+    utf8 "Nå er jeg sint. Gi meg en anstendig lönn. Jeg tror en ökning på %d skal gjöre susen.", -- %d (rise)
+  },
+  poached = utf8 "Jeg er blitt tilbudt %d av %s. Om ikke du gir meg det samme, så stikker jeg.", -- %d (new total) %s (competitor)
+}
 
--- OBJECTS
--- override
+-- Staff descriptions
+staff_descriptions = {
+  good = {
+    [1] = "Veldig rask og flittig arbeider. ",
+    [2] = "Veldig pliktoppfyllende. Meget omsorgsfull. ",
+    [3] = "Er meget allsidig. ",
+    [4] = utf8 "Vennlig og alltid i godt humör. ",
+    [5] = "Ekstremt utholden. Jobber dag og natt. ",
+    [6] = utf8 "Utrolig höflig og har gode manerer. ",
+    [7] = "Utrolig talentfull og dyktig. ",
+    [8] = utf8 "Er meget opptatt av å prestere på jobben. ",
+    [9] = "Er en perfeksjonist som aldri gir opp. ",
+    [10] = "Hjelper alltid mennesker med et smil. ",
+    [11] = utf8 "Sjarmerende, höflig og hjelpsom. ",
+    [12] = "Godt motivert og dediktert til jobben. ",
+    [13] = "Snill av natur og meget hardt arbeidende. ",
+    [14] = "Lojal og vennlig. ",
+    [15] = utf8 "Omtenksom og til å stole på i akutte situasjoner. ",
+  },
+  misc = {
+    [1] = "Spiller golf. ",
+    [2] = "Dykker etter kamskjell. ",
+    [3] = "Lager is-skulpturer. ",
+    [4] = "Drikker vin. ",
+    [5] = utf8 "Kjörer rally. ",
+    [6] = utf8 "Gjör strikkhopp. ",
+    [7] = utf8 "Samler på ölbrikker. ",
+    [8] = utf8 "Liker å stage-dive. ",
+    [9] = "Enjoys fart-surfing. ",
+    [10] = utf8 "Liker å utvide elver. ",
+    [11] = "Destillerer whisky. ",
+    [12] = utf8 "Gjör-det-selv ekspert. ",
+    [13] = "Liker franske kunstfilmer. ",
+    [14] = "Spiller mye Theme Park. ",
+    [15] = "Har sertifikat klasse C. ",
+    [16] = "Deltar i motorsykkelrace. ",
+    [17] = "Spiller klassisk fiolin og cello. ",
+    [18] = "Entusiastisk tog-vraker. ",
+    [19] = "Hundeelsker. ",
+    [20] = utf8 "Hörer på radio. ",
+    [21] = "Bader ofte. ",
+    [22] = utf8 "Instruktör i bambusfletting. ",
+    [23] = utf8 "Lager såpeholdere av grönnsaker. ",
+    [24] = "Deltids minerydder. ",
+    [25] = "Quizvert. ",
+    [26] = utf8 "Samler på splinter fra 2.verdenskrig. ",
+    [27] = utf8 "Liker å ommöblere. ",
+    [28] = utf8 "Hörer på rave og trip-hop musikk. ",
+    [29] = "Dreper insekter med deodorantspray. ",
+    [30] = utf8 "Piper ut dårlige standupartiser. ",
+    [31] = utf8 "Gjör innkjöp for sykehusrådet. ",
+    [32] = "Hemmelighetsfull gartner. ",
+    [33] = "Smugler uekte klokker. ",
+    [34] = "Vokalist i et rock'n'roll-band. ",
+    [35] = utf8 "Forguder tv-titting på dagtid. ",
+    [36] = utf8 "Fisker etter örret. ",
+    [37] = utf8 "Lurer turister på museum. ",
+  },
+  bad = {
+    [1] = "Langsom og masete. ",
+    [2] = "Lat og lite motivert. ",
+    [3] = utf8 "Dårlig trent og ubrukelig. ",
+    [4] = "Dum og slitsom. Er en reserve. ",
+    [5] = utf8 "Lav utholdenhet. Har en dårlig holdning. ",
+    [6] = utf8 "Döv som et papir. Lukter kål. ",
+    [7] = "Skitner til jobben. Tar lite ansvar. ",
+    [8] = "Konsentrasjonsvansker og lett distrahert. ",
+    [9] = utf8 "Stresset og gjör mye feil. ",
+    [10] = "Lett antennelig. Sitter inne med mye hat. ",
+    [11] = "Uforsiktig og uheldig. ",
+    [12] = "Bryr seg ikke om jobben. Inaktiv. ",
+    [13] = "Dumdristig og bryr seg lite. ",
+    [14] = "Slu, utspekulert og baksnakker andre. ",
+    [15] = utf8 "Arrogant og ovenpå. ",
+    [16] = ".",
+  },
+} 
+
+staff_list = {
+  morale       = "MORAL",
+  tiredness    = "TRETTHET",
+  skill        = "FERDIGHETER",
+  total_wages  = utf8 "TOTAL LÖNN",
+}
+
+-- Objects
 object = {
   desk                  = "Kontorpult",
   cabinet               = "Arkivskap",
@@ -120,20 +321,7 @@ object = {
   comfortable_chair     = "Komfortabel stol",
 }
 
--- STAFF COMPLAINTS
-pay_rise = {
-  definite_quit = utf8 "Du kan ikke gjöre noe for å beholde meg lenger. Jeg er ferdig her!",
-  regular = {
-    utf8 "Jeg er helt utslitt. Jeg trenger en god pause, pluss en lnnsökning på %d om du ikke vil se meg gå rundt å sutre i korridorene.", -- %d (rise)
-    utf8 "Jeg er veldig trött. Jeg trenger hvile og en lönnskning på %d, totalt %d. Fiks det nå, din tyrann!", -- %d (rise) %d (new total)
-    utf8 "Kom igjen. Jeg jobber som en hund her. Gi meg en bonus på %d og jeg blir på sykehuset ditt.", -- %d (rise)
-    utf8 "Jeg er så deppa. Jeg krever en lönnskning på %d, som blir totalt %d, ellers er jeg ferdig her.", -- %d (rise) %d (new total)
-    utf8 "Foreldrene mine sa at medisinyrket ville gi meg mye penger. Så gi meg en lönnskning på %d, ellers blir jeg spillutvikler istedenfor.", -- %d (rise)
-    utf8 "Nå er jeg sint. Gi meg en anstendig lönn. Jeg tror en ökning på %d skal gjöre susen.", -- %d (rise)
-  },
-  poached = utf8 "Jeg er blitt tilbudt %d av %s. Om ikke du gir meg det samme, så stikker jeg.", -- %d (new total) %s (competitor)
-}
-
+-- Place objects window
 place_objects_window = {
   drag_blueprint                = utf8 "Juster blåkopien til du er fornöyd med störrelsen",
   place_door                    = utf8 "Velg hvor dören skal være",
@@ -144,35 +332,7 @@ place_objects_window = {
   place_objects_in_corridor     = "Plasser objektene i korridoren",
 }
 
--- Category of strings that fit nowhere else or we are not sure where they belong.
--- If you think a string of these fits somewhere else, please move it there.
--- Don't forget to change all references in the code and other language files.
-misc = {
-  grade_adverb = {
-    mildly     = "mild",
-    moderately = "moderat",
-    extremely  = "ekstrem",
-  },
-  done  = "Ferdig",
-  pause = "Pause",
-  
-  send_message     = "Send beskjed til spiller %d", -- %d (player number)
-  send_message_all = "Send beskjed til alle spillere",
-  
-  save_success = "Spill lagret",
-  save_failed  = "FEIL: Kunne ikke lagre spill",
-  
-  hospital_open = utf8 "Sykehus åpent",
-  out_of_sync   = utf8 "Spillet ute av synk",
-  
-  load_failed  = "Kunne ikke laste tidligere spill",
-  low_res      = "Lav oppl.",
-  balance      = "Balansefil:",
-  
-  mouse        = "Mus",
-  force        = "Styrke",
-}
-
+-- Competitor names
 competitor_names = {
   "ORAC",
   "HAL",
@@ -196,8 +356,8 @@ competitor_names = {
   "OLIVAW",
   "NIC",
 }
--- MONTHS
--- override
+
+-- Months
 months = {
   "Jan",
   "Feb",
@@ -212,10 +372,8 @@ months = {
   "Nov",
   "Des",
 }
--- S[7][ 1], -- not needed?
--- S[7][ 2], -- unused(?)
--- S[7][ 3], -- unused(?)
 
+-- Graphs
 graphs = {
   money_in   = "Inntekter",
   money_out  = "Utgifter",
@@ -232,8 +390,8 @@ graphs = {
     utf8 "48 år",
   }
 }
--- TRANSACTIONS
--- override
+
+-- Transactions
 transactions = {
   --null               = S[8][ 1], -- not needed
   wages                = utf8 "Lönninger",
@@ -273,10 +431,10 @@ transactions = {
   eoy_trophy_bonus     = utf8 "Årets trofé bonus",
   machine_replacement  = "Utskiftning av maskiner",
 }
---...
 
+
+-- Level names
 level_names = {
-  -- S[12][ 1] -- unused
   "ToxiCity",
   "Sleepy Hollow",
   "Largechester",
@@ -294,8 +452,9 @@ level_names = {
   "Bury Bury",
 }
 
+
+-- Town map
 town_map = {
-  -- S[13][ 1] -- unused
   chat         = "Town Detail Chat",
   for_sale     = "Til salgs",
   not_for_sale = "Ikke til salgs",
@@ -305,11 +464,11 @@ town_map = {
   price        = "Tomt pris",
 }
 
+
+-- Rooms short
 -- NB: includes some special "rooms"
 -- reception, destroyed room and "corridor objects"
 rooms_short = {
-  -- S[14][1] -- unused
-  -- S[14][3] -- unused
   reception         = "Resepsjon",
   destroyed         = utf8 "Ödelagt",
   corridor_objects  = "Korridor objekter",
@@ -340,8 +499,8 @@ rooms_short = {
   decontamination   = "Saneringsklinikk",
 }
 
+-- Rooms long
 rooms_long = {
-  -- S[53][1] -- unused
   general           = "Generell", -- unused?
   emergency         = utf8 "Nödstilfelle",
   corridors         = "Korridorer",
@@ -372,8 +531,8 @@ rooms_long = {
   decontamination   = "Saneringsklinikk",
 }
 
+-- Drug companies
 drug_companies = {
-  -- S[15][1], -- unused
   "Medisiner-For-Deg",
   "Kur R Oss",
   utf8 "Runde Små Piller Co.",
@@ -381,6 +540,7 @@ drug_companies = {
   "Alle Piller Co.",
 }
 
+-- Build rooms
 build_room_window = {
   -- S[16][1], -- unused
   pick_department   = "Velg avdeling",
@@ -388,12 +548,14 @@ build_room_window = {
   cost              = "Pris: ",
 }
 
+-- Build objects
 buy_objects_window = {
   choose_items      = "Velg objekter",
   price             = "Pris:",
   total             = "Sum:",
 }
 
+-- Research
 research = {
   categories = {
     cure            = "Behandlingsutstyr",
@@ -407,6 +569,7 @@ research = {
   allocated_amount  = utf8 "Tildelt belöp",
 }
 
+-- Policy screen
 policy = {
   header            = "SYKEHUSPOLICY",
   diag_procedure    = "diagnoserutiner",
@@ -422,18 +585,16 @@ policy = {
   }
 }
 
+-- Rooms
 room_classes = {
-  -- S[19][1] -- unused
   -- S[19][2] -- "corridors" - unused for now
-  -- S[19][3] -- unused
   diagnosis  = "Diagnose",
   treatment  = "Behandling",
   clinics    = "Klinikker",
   facilities = "Fasiliteter",
 }
 
--- INSURANCE COMPANIES
--- These are better of in a list with numbers
+-- Insurance companies
 insurance_companies = {
   out_of_business   = "IKKE I DRIFT",
   utf8 "Nykjöpt Lök",
@@ -449,8 +610,8 @@ insurance_companies = {
   "Mafia Forsikringer",
 }
 
--- MENU STRINGS
--- override
+-- Menu strings
+-- Keep 2 spaces as prefix and suffix
 menu = {
   file                	= "  FIL  ",
   options             	= "  INNSTILLINGER  ",
@@ -535,97 +696,7 @@ menu_debug = {
   },
 }
 
--- ...
-
-
-staff_descriptions = {
-  good = {
-    [1] = "Veldig rask og flittig arbeider. ",
-    [2] = "Veldig pliktoppfyllende. Meget omsorgsfull. ",
-    [3] = "Er meget allsidig. ",
-    [4] = utf8 "Vennlig og alltid i godt humör. ",
-    [5] = "Ekstremt utholden. Jobber dag og natt. ",
-    [6] = utf8 "Utrolig höflig og har gode manerer. ",
-    [7] = "Utrolig talentfull og dyktig. ",
-    [8] = utf8 "Er meget opptatt av å prestere på jobben. ",
-    [9] = "Er en perfeksjonist som aldri gir opp. ",
-    [10] = "Hjelper alltid mennesker med et smil. ",
-    [11] = utf8 "Sjarmerende, höflig og hjelpsom. ",
-    [12] = "Godt motivert og dediktert til jobben. ",
-    [13] = "Snill av natur og meget hardt arbeidende. ",
-    [14] = "Lojal og vennlig. ",
-    [15] = utf8 "Omtenksom og til å stole på i akutte situasjoner. ",
-  },
-  misc = {
-    [1] = "Spiller golf. ",
-    [2] = "Dykker etter kamskjell. ",
-    [3] = "Lager is-skulpturer. ",
-    [4] = "Drikker vin. ",
-    [5] = utf8 "Kjörer rally. ",
-    [6] = utf8 "Gjör strikkhopp. ",
-    [7] = utf8 "Samler på ölbrikker. ",
-    [8] = utf8 "Liker å stage-dive. ",
-    [9] = "Enjoys fart-surfing. ",
-    [10] = utf8 "Liker å utvide elver. ",
-    [11] = "Destillerer whisky. ",
-    [12] = utf8 "Gjör-det-selv ekspert. ",
-    [13] = "Liker franske kunstfilmer. ",
-    [14] = "Spiller mye Theme Park. ",
-    [15] = "Har sertifikat klasse C. ",
-    [16] = "Deltar i motorsykkelrace. ",
-    [17] = "Spiller klassisk fiolin og cello. ",
-    [18] = "Entusiastisk tog-vraker. ",
-    [19] = "Hundeelsker. ",
-    [20] = utf8 "Hörer på radio. ",
-    [21] = "Bader ofte. ",
-    [22] = utf8 "Instruktör i bambusfletting. ",
-    [23] = utf8 "Lager såpeholdere av grönnsaker. ",
-    [24] = "Deltids minerydder. ",
-    [25] = "Quizvert. ",
-    [26] = utf8 "Samler på splinter fra 2.verdenskrig. ",
-    [27] = utf8 "Liker å ommöblere. ",
-    [28] = utf8 "Hörer på rave og trip-hop musikk. ",
-    [29] = "Dreper insekter med deodorantspray. ",
-    [30] = utf8 "Piper ut dårlige standupartiser. ",
-    [31] = utf8 "Gjör innkjöp for sykehusrådet. ",
-    [32] = "Hemmelighetsfull gartner. ",
-    [33] = "Smugler uekte klokker. ",
-    [34] = "Vokalist i et rock'n'roll-band. ",
-    [35] = utf8 "Forguder tv-titting på dagtid. ",
-    [36] = utf8 "Fisker etter örret. ",
-    [37] = utf8 "Lurer turister på museum. ",
-  },
-  bad = {
-    [1] = "Langsom og masete. ",
-    [2] = "Lat og lite motivert. ",
-    [3] = utf8 "Dårlig trent og ubrukelig. ",
-    [4] = "Dum og slitsom. Er en reserve. ",
-    [5] = utf8 "Lav utholdenhet. Har en dårlig holdning. ",
-    [6] = utf8 "Döv som et papir. Lukter kål. ",
-    [7] = "Skitner til jobben. Tar lite ansvar. ",
-    [8] = "Konsentrasjonsvansker og lett distrahert. ",
-    [9] = utf8 "Stresset og gjör mye feil. ",
-    [10] = "Lett antennelig. Sitter inne med mye hat. ",
-    [11] = "Uforsiktig og uheldig. ",
-    [12] = "Bryr seg ikke om jobben. Inaktiv. ",
-    [13] = "Dumdristig og bryr seg lite. ",
-    [14] = "Slu, utspekulert og baksnakker andre. ",
-    [15] = utf8 "Arrogant og ovenpå. ",
-    [16] = ".",
-  },
-} 
-
-
-
-staff_list = {
-  -- S[24][1] unused
-  -- S[24][2] -- I have no idea what this is.
-  morale       = "MORAL",
-  tiredness    = "TRETTHET",
-  skill        = "FERDIGHETER",
-  total_wages  = utf8 "TOTAL LÖNN",
-}
-
+-- High score screen
 high_score = {
   -- S[25][1] unused
   pos          = "POS",
@@ -650,6 +721,7 @@ high_score = {
   },
 }
 
+-- Trophy room
 trophy_room = {
   -- S[27][1] unused
   many_cured = {
@@ -744,6 +816,8 @@ trophy_room = {
   },
 }
 
+
+-- Casebook screen
 casebook = {
   reputation           = utf8 "omdömme",
   treatment_charge     = "behandlingspris",
@@ -766,7 +840,7 @@ casebook = {
   },
 }
 
--- TOOLTIPS
+-- Tooltips
 tooltip = {
   -- S[32][1] unused
   build_room_window = {
@@ -1201,6 +1275,7 @@ tooltip = {
   },
 }
 
+-- Adviser
 adviser = {
   tutorial = {
   	build_reception 				= utf8 "Heisann. Först, trenger sykehuset ditt en Resepsjon. Velg en fra Inventarmenyen.",
@@ -1413,8 +1488,7 @@ adviser = {
   },
 }
 
--- 34: staff titles, inserted further above
-
+-- Confirmation
 confirmation = {
   quit                 = utf8 "Du har valgt å avslutte. Er du sikker på at du vil forlate spillet?",
   return_to_blueprint  = utf8 "Er du sikker på at du vil returnere til Blåkopi-modus?",
@@ -1425,8 +1499,7 @@ confirmation = {
   restart_level        = utf8 "Er du sikker på at du vil starte dette nivået på nytt?",
 }
 
--- BANK MANAGER
--- override
+-- Bank manager
 bank_manager = {
   hospital_value    = "Sykehusets verdi",
   balance           = "Din balanse",
@@ -1446,7 +1519,7 @@ bank_manager = {
 }
 
 
--- TODO
+-- Newspaper headlines
 newspaper = {
   -- Seven categories of funny headlines. I think each category is related
   -- to one criterium you can lose to. TODO: categorize
@@ -1459,6 +1532,7 @@ newspaper = {
   { "DOC FEELS AT LOOSE END", "SURGEON 'OPERATES' HIMSELF", "BOG BISHOP-BASHING", "DOCTOR'S HANDLE SCANDAL", "MEDIC MAKES A MESS" },
 }
 
+-- VIP names
 vip_names = {
   health_minister = "Helseministeren",
   utf8 "Ordföreren i Greater Trumpton", -- the rest is better organized in an array.
@@ -1474,9 +1548,7 @@ vip_names = {
 }
 
 -- DESEASES
--- override
 diseases = {
-  -- none                = D( 1), -- not used/needed?
   general_practice       = { 
   	name 		= "Allmennpraksis", 
   },
@@ -1693,13 +1765,10 @@ diseases = {
   diag_ward              = { name = "Diag Sengeavd.", },
   diag_psych             = { name = "Diag Psykiatri", },
   autopsy                = { name = "Obduksjon", },
-  -- mixer               = D(46), -- not used/needed?
 }
--- ...
 
 
--- FAXES
--- override
+-- Faxes
 fax = {
  debug_fax = {
     -- never seen this, must be a debug option of original TH
@@ -1863,8 +1932,8 @@ fax = {
     partial_diagnosis_percentage_name = "Det er %d prosent sikkert at vi vet hvilken type %s pasienten har.",
   },
 }
--- ...
 
+-- Queue window
 queue_window = {
   num_in_queue       = utf8 "Kölengde",
   num_expected       = "Ventet",
@@ -1872,7 +1941,7 @@ queue_window = {
   max_queue_size     = "Maks str.",
 }
 
-
+-- Dynamic info
 dynamic_info = {
   patient = {
     actions = {
@@ -1919,50 +1988,32 @@ dynamic_info = {
   },
 }
 
-
--- new strings
-object.litter 				  = utf8 "Söppel"
-
-menu_options_game_speed.pause = "  PAUSE  "
-
-menu_debug = {
-  transparent_walls           = "  GJENNOMSIKTIGE VEGGER  ",
-  limit_camera                = "  BEGRENS KAMERA  ",
-  disable_salary_raise        = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
-  make_debug_patient          = "  LAG DEBUG-PASIENT  ",
-  spawn_patient               = "  SPAWN PASIENT  ",
-  make_adviser_talk           = utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
-  show_watch                  = "  VIS KLOKKE  ",
-  place_objects               = "  PLASSER OBJEKTER  ",
-  dump_strings                = utf8 "  DUMP SPRÅKSTRENG  ",
-  map_overlay                 = "  KARTOVERLEGG  ",
-  sprite_viewer               = "  SPRITEVISNING  ",
-}
-
-menu_debug_overlay = {
-  none                        = "  INGEN  ",
-  flags                       = "  FLAGG  ",
-  byte_0_1                    = "  BYTE 0 & 1  ",
-  byte_floor                  = "  BYTE GULV  ",
-  byte_n_wall                 = "  BYTE N VEGG  ",
-  byte_w_wall                 = "  BYTE W VEGG  ",
-  byte_5                      = "  BYTE 5  ",
-  byte_6                      = "  BYTE 6  ",
-  byte_7                      = "  BYTE 7  ",
-  parcel                      = "  PAKKE  ",
-}
-
-adviser.room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig."
-
-fax = {
-  welcome = {
-    beta1 = {
-      utf8 "Velkommen til CorsixTH, en klone av klassikeren Theme Hospital (Bullfrog) i åpen kildekode!",
-      "Dette er en spillbar beta 1 av CorsixTH. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
-      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
-      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (diagnoserom). Ulike behandlingsrom blir også nödvendig.",
-      "-- CorsixTH teamet, th.corsix.org",
-      utf8 "PS: Kan du finne de sjulte påskeeggene?",
-    }
-  }
+-- Miscellangelous
+-- Category of strings that fit nowhere else or we are not sure where they belong.
+-- If you think a string of these fits somewhere else, please move it there.
+-- Don't forget to change all references in the code and other language files.
+misc = {
+  grade_adverb = {
+    mildly     = "mild",
+    moderately = "moderat",
+    extremely  = "ekstrem",
+  },
+  done  = "Ferdig",
+  pause = "Pause",
+  
+  send_message     = "Send beskjed til spiller %d", -- %d (player number)
+  send_message_all = "Send beskjed til alle spillere",
+  
+  save_success = "Spill lagret",
+  save_failed  = "FEIL: Kunne ikke lagre spill",
+  
+  hospital_open = utf8 "Sykehus åpent",
+  out_of_sync   = utf8 "Spillet ute av synk",
+  
+  load_failed  = "Kunne ikke laste tidligere spill",
+  low_res      = "Lav oppl.",
+  balance      = "Balansefil:",
+  
+  mouse        = "Mus",
+  force        = "Styrke",
 }
