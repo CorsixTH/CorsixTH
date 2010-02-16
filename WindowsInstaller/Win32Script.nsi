@@ -124,14 +124,10 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
   ${If} ${RunningX64}
-    File "x64\${PRODUCT_NAME}_DirectX9.exe"
-    File "x64\${PRODUCT_NAME}_OpenGL.exe"
-    File "x64\${PRODUCT_NAME}_SDL.exe"
+    File /r /x .svn x64\*.*
     Goto continued
   ${EndIf}
-  File "x86\${PRODUCT_NAME}_DirectX9.exe"
-  File "x86\${PRODUCT_NAME}_OpenGL.exe"
-  File "x86\${PRODUCT_NAME}_SDL.exe"
+  File /r /x .svn x86\*.*
   
   continued:
   File config_template.txt
@@ -146,8 +142,6 @@ Section "MainSection" SEC01
   !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "true"
   Rename config_template.txt config.txt
   Delete config_t*
-  File dll\*.dll
-  File ..\CorsixTH\*.manifest
   File ..\CorsixTH\*.lua
   
   SetOutPath "$INSTDIR\Lua"
