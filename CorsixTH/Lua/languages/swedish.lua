@@ -40,6 +40,7 @@ menu_debug = {
   show_watch                  = "  VISA KLOCKA  ",
   place_objects               = "  PLACERA OBJEKT  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
+  tutorial                    = "  HANDLEDNING  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }
@@ -58,13 +59,15 @@ menu_debug_overlay = {
 
 adviser.room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga."
 
+dynamic_info.patient.actions.no_gp_available = utf8 "Väntar på att du ska bygga en allmänpraktik"
+
 fax = {
   welcome = {
     beta1 = {
       utf8 "Välkommen till CorsixTH, en klon i öppen källkod av det klassiska spelet Theme Hospital av Bullfrog!",
       utf8 "Detta är den första spelbara betan av CorsixTH. Även om många rum, sjukdomar och funktioner implementerats saknas fortfarande mycket.",
       utf8 "Om du gillar projektet kanske du vill hjälpa oss? Till exempel genom att rapportera buggar eller rentav börja koda något själv.",
-      utf8 "Hur som helst, börja med att njuta av spelet! Här är några starttips: Bygg en reception (från föremålsmenyn) och en allmänpraktik (diagnosrum). Diverse kliniker kommer också att behövas.",
+      utf8 "Hur som helst, börja med att njuta av spelet! Här är några starttips: Bygg en reception (korridorsutrustning) och en allmänpraktik (diagnosrum). Diverse kliniker kommer också att behövas.",
       "-- Gruppen bakom CorsixTH, th.corsix.org",
       utf8 "PS: Kan du hitta påskäggen?",
     }

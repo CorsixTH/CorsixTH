@@ -70,10 +70,12 @@ local function action_seek_room_start(action, humanoid)
           found = true
         end
         if not humanoid.diagnosed then
-        -- Waiting for a diagnosis room, we need to go through the list
-          for i = 1, #humanoid.available_diagnosis_rooms do
-            if humanoid.available_diagnosis_rooms[i].id == room.room_info.id then
-              found = true
+          -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
+          if action.room_type ~= "gp" then 
+            for i = 1, #humanoid.available_diagnosis_rooms do
+              if humanoid.available_diagnosis_rooms[i].id == room.room_info.id then
+                found = true
+              end
             end
           end
         end
@@ -133,47 +135,53 @@ local function action_seek_room_start(action, humanoid)
         action.got_answer = true
       else
         -- No more diagnosis rooms can be found
-        -- Depending on hospital policy three things can happen:
-        if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
-          -- Send home automatically
-          humanoid:goHome()
-          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
-        elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
-          -- Ask the player
-          -- Wait two months before going home anyway.
+        -- The GP's office is a special case. TODO: Make a custom message anyway?
+        if action.room_type == "gp" then
           humanoid:setMood("patient_wait", true)
-          humanoid.waiting = 60
-          local middle_choice = "disabled"
-          local more_text = ""
-          if humanoid.diagnosis_progress > 0.7 then -- TODO: What value here?
-            middle_choice = "guess_cure"
-            more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name:format(humanoid.diagnosis_progress*100, humanoid.disease.name)
-          end
-          local message = {
-            {text = _S.fax.diagnosis_failed.situation},
-            {text = _S.fax.diagnosis_failed.what_to_do_question},
-            choices = {
-              {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home",   offset = 50},
-              {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice, offset = 40},
-              {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait",        offset = 40},
-            },
-          }
-          if more_text ~= "" then
-            table.insert(message, 2, {text = more_text})
-          end
-          TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
-          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
-          -- Only one message should appear.
-          action.got_answer = true
+          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
         else
-          -- Guess "type of disease" automatically
-          humanoid:setDiagnosed(true)
-          humanoid:queueAction({
-            name = "seek_room", 
-            room_type = humanoid.disease.treatment_rooms[1]
-          }, 1)
-          humanoid:finishAction()
-          return
+          -- Now, depending on hospital policy three things can happen:
+          if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
+            -- Send home automatically
+            humanoid:goHome()
+            humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
+          elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
+            -- Ask the player
+            -- Wait two months before going home anyway.
+            humanoid:setMood("patient_wait", true)
+            humanoid.waiting = 60
+            local middle_choice = "disabled"
+            local more_text = ""
+            if humanoid.diagnosis_progress > 0.7 then -- TODO: What value here?
+              middle_choice = "guess_cure"
+              more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name:format(humanoid.diagnosis_progress*100, humanoid.disease.name)
+            end
+            local message = {
+              {text = _S.fax.diagnosis_failed.situation},
+              {text = _S.fax.diagnosis_failed.what_to_do_question},
+              choices = {
+                {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home",   offset = 50},
+                {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice, offset = 40},
+                {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait",        offset = 40},
+              },
+            }
+            if more_text ~= "" then
+              table.insert(message, 2, {text = more_text})
+            end
+            TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
+            humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
+            -- Only one message should appear.
+            action.got_answer = true
+          else
+            -- Guess "type of disease" automatically
+            humanoid:setDiagnosed(true)
+            humanoid:queueAction({
+              name = "seek_room", 
+              room_type = humanoid.disease.treatment_rooms[1]
+            }, 1)
+            humanoid:finishAction()
+            return
+          end
         end
       end
       humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
