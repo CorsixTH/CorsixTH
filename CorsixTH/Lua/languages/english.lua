@@ -41,6 +41,7 @@ menu_debug = {
   show_watch                  = "  SHOW WATCH  ",
   place_objects               = "  PLACE OBJECTS  ",
   dump_strings                = "  DUMP STRINGS  ",
+  tutorial                    = "  TUTORIAL  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }

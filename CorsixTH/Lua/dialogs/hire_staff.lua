@@ -89,6 +89,9 @@ function UIHireStaff:onMouseUp(button, x, y)
 end
 
 function UIHireStaff:hire()
+  self.ui:tutorialStep(2, 3, 6)
+  self.ui:tutorialStep(2, 4, 6)
+  self.ui:tutorialStep(2, 5, 6)
   local profile
   if self.category and self.current_index then
     profile = self.world.available_staff[self.category]
@@ -160,9 +163,11 @@ end
 
 function UIHireStaff:movePrevious()
   self:moveBy(-1)
+  self.ui:tutorialStep(2, 4, 5)
 end
 
 function UIHireStaff:moveNext()
+  self.ui:tutorialStep(2, 3, 4)
   self:moveBy(1)
 end
 
@@ -184,6 +189,13 @@ function UIHireStaff:moveBy(n)
 end
 
 function UIHireStaff:setCategory(name)
+  if name == "Receptionist" then
+    self.ui:tutorialStep(2, 2, 3)
+  else
+    self.ui:tutorialStep(2, 3, 2)
+    self.ui:tutorialStep(2, 4, 2)
+    self.ui:tutorialStep(2, 5, 2)
+  end
   self.complete_blanker.visible = not name
   self.abilities_blanker.visible = name ~= "Doctor"
   self.category = name
@@ -194,4 +206,12 @@ function UIHireStaff:setCategory(name)
     end
   end
   self.current_index = 1
+end
+
+function UIHireStaff:close()
+  self.ui:tutorialStep(2, 2, 1)
+  self.ui:tutorialStep(2, 3, 1)
+  self.ui:tutorialStep(2, 4, 1)
+  self.ui:tutorialStep(2, 5, 1)
+  return Window.close(self)
 end

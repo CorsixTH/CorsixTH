@@ -711,3 +711,109 @@ function UI:getCursorPosition(window)
   end
   return x, y
 end
+
+local tutorial_strings = {
+  {
+    -- 1) build reception
+    _S.adviser.tutorial.build_reception,               -- 1
+    _S.adviser.tutorial.order_one_reception,           -- 2
+    _S.adviser.tutorial.accept_purchase,               -- 3
+    _S.adviser.tutorial.rotate_and_place_reception,    -- 4
+    _S.adviser.tutorial.reception_invalid_position,    -- 5
+                                                       -- 6: object other than reception selected. currently no text for this phase.
+  },
+  
+  {
+    -- 2) hire receptionist
+    _S.adviser.tutorial.hire_receptionist,             -- 1
+    _S.adviser.tutorial.select_receptionists,          -- 2
+    _S.adviser.tutorial.next_receptionist,             -- 3
+    _S.adviser.tutorial.prev_receptionist,             -- 4
+    _S.adviser.tutorial.choose_receptionist,           -- 5
+    _S.adviser.tutorial.place_receptionist,            -- 6
+    _S.adviser.tutorial.receptionist_invalid_position, -- 7
+  },
+  
+  {
+    -- 3) build GP's office
+    -- 3.1) room window
+    " TODO: continue implementing tutorial!",
+    _S.adviser.tutorial.build_gps_office,              -- 1
+    _S.adviser.tutorial.select_diagnosis_rooms,        -- 2
+    _S.adviser.tutorial.click_gps_office,              -- 3
+    
+    -- 3.2) blueprint
+    -- [11][58] was maybe planned to be used in this place, but is not needed.
+    _S.adviser.tutorial.click_and_drag_to_build,       -- 4
+    _S.adviser.tutorial.room_in_invalid_position,      -- 5
+    _S.adviser.tutorial.room_too_small,                -- 6
+    _S.adviser.tutorial.room_too_small_and_invalid,    -- 7
+    _S.adviser.tutorial.room_big_enough,               -- 8
+    
+    -- 3.3) door and windows
+    _S.adviser.tutorial.place_door,                    -- 9
+    _S.adviser.tutorial.door_in_invalid_position,      -- 10
+    _S.adviser.tutorial.place_windows,                 -- 11
+    _S.adviser.tutorial.window_in_invalid_position,    -- 12
+    
+    -- 3.4) objects
+    _S.adviser.tutorial.place_objects,                 -- 13
+    _S.adviser.tutorial.object_in_invalid_position,    -- 14
+    _S.adviser.tutorial.confirm_room,                  -- 15
+  },
+  
+  {
+    -- 4) hire doctor
+    _S.adviser.tutorial.hire_doctor,                   -- 1
+    _S.adviser.tutorial.select_doctors,                -- 2
+    _S.adviser.tutorial.choose_doctor,                 -- 3
+    _S.adviser.tutorial.place_doctor,                  -- 4
+    _S.adviser.tutorial.doctor_in_invalid_position,    -- 5
+  },
+  
+  -- apparently unused tutorial strings:
+  -- [11][63]
+  -- [11][64]
+  -- [11][65]
+}
+
+-- Called to trigger step to another part of the tutorial.
+-- chapter:    Individual parts of the tutorial. Step will only happen if it's the current chapter.
+-- phase_from: Phase we need to be in for this step to happen.
+-- phase_to:   Phase we want to step to or "end" to go to next chapter.
+function UI:tutorialStep(chapter, phase_from, phase_to)
+  if not self.tutorial then
+--    print("tutorial not running. return.")
+    return
+  end
+  
+  if self.tutorial.chapter ~= chapter then
+--    print("wrong chapter. return.")
+    return
+  end
+  if self.tutorial.phase ~= phase_from then
+--    print("wrong phase_from. return.")
+    return
+  end
+  
+  if phase_to == "end" then
+    self.tutorial.chapter = self.tutorial.chapter + 1
+    self.tutorial.phase = 1
+  else
+    self.tutorial.phase = phase_to
+  end
+  
+  print("now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase)
+  local str = tutorial_strings[self.tutorial.chapter][self.tutorial.phase]
+  if str then
+    self.adviser:say(str)
+  end
+end
+
+function UI:startTutorial()
+  self.tutorial = {
+    chapter = 1,
+    phase = 0,
+  }
+  self:tutorialStep(1, 0, 1)
+end

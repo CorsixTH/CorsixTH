@@ -125,10 +125,19 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   quantity = quantity - o.qty
   o.qty = o.qty + quantity
   self.total_price = self.total_price + quantity * o.object.build_cost
+  if o.object.id == "reception_desk" then
+    if o.qty > 0 then
+      self.ui:tutorialStep(1, 2, 3)
+    else
+      self.ui:tutorialStep(1, 3, 2)
+    end
+  end
   return quantity
 end
 
 function UIFurnishCorridor:confirm()
+  self.ui:tutorialStep(1, 3, 4)
+  
   local to_purchase = {}
   local to_sell = {}
   for i, o in ipairs(self.objects) do
@@ -142,7 +151,7 @@ function UIFurnishCorridor:confirm()
       self.ui.hospital:receiveMoney(o.object.build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name)
     end
   end
-
+  
   if self.edit_dialog then
     self.edit_dialog:addObjects(to_purchase, false) -- payment already handled here
     self.edit_dialog:removeObjects(to_sell, false) -- payment already handled here
@@ -157,6 +166,8 @@ function UIFurnishCorridor:confirm()
 end
 
 function UIFurnishCorridor:close()
+  self.ui:tutorialStep(1, 2, 1)
+  self.ui:tutorialStep(1, 3, 1)
   if self.edit_dialog then
     self.edit_dialog:addObjects() -- No objects added. Call the function anyway to handle visibility etc.
   end

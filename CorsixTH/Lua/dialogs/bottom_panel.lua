@@ -275,11 +275,13 @@ function UIBottomPanel:dialogBuildRoom()
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
+  self.ui:tutorialStep(1, 1, 2)
   local dlg = UIFurnishCorridor(self.ui)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogHireStaff()
+  self.ui:tutorialStep(2, 1, 2)
   local dlg = UIHireStaff(self.ui)
   self.ui:addWindow(dlg)
 end

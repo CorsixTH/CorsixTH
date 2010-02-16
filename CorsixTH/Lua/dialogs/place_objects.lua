@@ -261,6 +261,8 @@ function UIPlaceObjects:removeObjects(object_list, refund)
 end
 
 function UIPlaceObjects:close()
+  self.ui:tutorialStep(1, 4, 1)
+  self.ui:tutorialStep(1, 5, 1)
   self:removeAllObjects(true)
   self:clearBlueprint()
   return Window.close(self)
@@ -277,6 +279,12 @@ function UIPlaceObjects:setActiveIndex(index)
   self.active_index = index
   
   local object = self.objects[self.active_index].object
+  if object.id == "reception_desk" then
+    self.ui:tutorialStep(1, 6, 4)
+  else
+    self.ui:tutorialStep(1, 4, 6)
+    self.ui:tutorialStep(1, 5, 6)
+  end
   local anims = self.anims
   local _, ghost = self.ui.app.gfx:loadPalette()
   for _, anim in pairs(object.idle_animations) do
@@ -367,6 +375,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   end
 
   local object = self.objects[self.active_index]
+  if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "end") end
   local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   
@@ -537,6 +546,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       end
       self.object_anim:setPartialFlag(flag_altpal, not allgood)
       self.object_blueprint_good = allgood
+      self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
     end
   else
     self.object_footprint = {}
