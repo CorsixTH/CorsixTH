@@ -33,13 +33,15 @@ diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
 fax.epidemic.declare_explanation_fine = utf8 "Wenn Sie die Epidemie melden, zahlen Sie eine Strafe von %d und Ihr Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
 dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
--- TODO: adviser.research.drug_fully_researched
--- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
--- TODO: staff_title.researcher
--- TODO: bank_manager.insurance_owed -- too long
+adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
+tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- this tooltip talks about hospital value. Actually it should say reputation.
+staff_title.researcher = "Forscher" -- one of the most annoying (since prominent) wrong strings in original
+bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
+insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered to &)
 
 -- new strings
 
+menu_options.lock_windows = "  FENSTER FESTHALTEN  "
 menu_options_game_speed.pause        = "  PAUSE"
 
 menu_debug = {
