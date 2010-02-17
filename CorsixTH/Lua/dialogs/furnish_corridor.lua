@@ -166,8 +166,7 @@ function UIFurnishCorridor:confirm()
 end
 
 function UIFurnishCorridor:close()
-  self.ui:tutorialStep(1, 2, 1)
-  self.ui:tutorialStep(1, 3, 1)
+  self.ui:tutorialStep(1, {2, 3}, 1)
   if self.edit_dialog then
     self.edit_dialog:addObjects() -- No objects added. Call the function anyway to handle visibility etc.
   end

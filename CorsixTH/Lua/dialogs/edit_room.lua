@@ -83,6 +83,7 @@ function UIEditRoom:close(...)
   end
   self.phase = "closed"
   self:setBlueprintRect(1, 1, 0, 0)
+  self.ui:tutorialStep(3, {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}, 1) -- not all of these links may be needed, but to be safe...
   return UIPlaceObjects.close(self, ...)
 end
 
@@ -128,6 +129,7 @@ function UIEditRoom:confirm()
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
+    self.ui:tutorialStep(3, 15, "next")
     self:close()
   end
 end
@@ -377,6 +379,7 @@ function UIEditRoom:pickupItems()
 end
 
 function UIEditRoom:returnToWallPhase(early)
+  self.ui:tutorialStep(3, {9, 10, 11, 12}, 4)
   if not early then
     self.desc_text = _S.place_objects_window.drag_blueprint
     self.confirm_button:enable(true)
@@ -395,6 +398,7 @@ function UIEditRoom:returnToWallPhase(early)
 end
 
 function UIEditRoom:returnToDoorPhase()
+  self.ui:tutorialStep(3, {13, 14, 15}, 9)
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local room = self.room
@@ -607,6 +611,7 @@ function UIEditRoom:checkReachability()
 end
 
 function UIEditRoom:enterDoorPhase()
+  self.ui:tutorialStep(3, 8, 9)
   -- make tiles impassable
   for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
     for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
@@ -648,11 +653,13 @@ function UIEditRoom:enterDoorPhase()
 end
 
 function UIEditRoom:enterWindowsPhase()
+  self.ui:tutorialStep(3, {9, 10}, 11)
   self.desc_text = _S.place_objects_window.place_windows
   self.confirm_button:enable(true)
 end
 
 function UIEditRoom:enterObjectsPhase()
+  self.ui:tutorialStep(3, {11, 12}, 13)
   local confirm = self:checkEnableConfirm()
   if #self.room.room_info.objects_additional == 0 and confirm then
     self:confirm()
@@ -725,8 +732,7 @@ function UIEditRoom:onMouseDown(button, x, y)
         self.ui:playSound "buildclk.wav"
         self:confirm()
       else
-        -- TODO: activate once tutorial is implemented
-        -- self.ui.adviser:say(_S.adviser.tutorial.door_in_invalid_position)
+        self.ui:tutorialStep(3, 9, 10)
       end
     elseif self.phase == "windows" then
       self:placeWindowBlueprint()
@@ -769,19 +775,17 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   local is_valid = map.th:updateRoomBlueprint(rect.x, rect.y, rect.w, rect.h,
     x, y, w, h, self.blueprint_wall_anims, self.anims, too_small)
 
+  -- NB: due to the unflexibility, tutorial step "too small AND invalid position" (3.7)
+  --     is currently unusable, as it's not possible to determine if the position would
+  --     have been invalid even if it weren't too small.
   if self.phase ~= "closed" then
-    -- TODO: activate once tutorial is implemented
-    --[[
-    if too_small and not is_valid then
-      self.ui.adviser:say(_S.adviser.tutorial.room_too_small_and_invalid)
-    elseif too_small then
-      self.ui.adviser:say(_S.adviser.tutorial.room_too_small)
+    if too_small then
+      self.ui:tutorialStep(3, {4, 5, 8}, 6)
     elseif not is_valid then
-      self.ui.adviser:say(_S.adviser.tutorial.room_in_invalid_position)
+      self.ui:tutorialStep(3, {4, 6, 8}, 5)
     else
-      self.ui.adviser:say(_S.adviser.tutorial.room_big_enough)
+      self.ui:tutorialStep(3, {4, 5, 6}, 8)
     end
-    ]]
   end
   
   self.confirm_button:enable(is_valid)
@@ -886,8 +890,7 @@ function UIEditRoom:placeWindowBlueprint()
     self.blueprint_window = {}
     self.ui:playSound "buildclk.wav"
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
-    -- TODO: activate once tutorial is implemented
-    -- self.ui.adviser:say(_S.adviser.tutorial.window_in_invalid_position)
+    self.ui:tutorialStep(3, 11, 12)
   end
 end
 
@@ -1071,6 +1074,12 @@ function UIEditRoom:checkEnableConfirm()
   
   -- disable if there are not fulfilled requirements
   local confirm = not next(needed)
+  
+  if confirm then
+    self.ui:tutorialStep(3, {13, 14}, 15)
+  else
+    self.ui:tutorialStep(3, {14, 15}, 13)
+  end
   
   self.confirm_button:enable(confirm)
   return confirm

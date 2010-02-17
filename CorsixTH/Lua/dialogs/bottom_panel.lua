@@ -272,6 +272,7 @@ end
 function UIBottomPanel:dialogBuildRoom()
   local dlg = UIBuildRoom(self.ui)
   self.ui:addWindow(dlg)
+  self.ui:tutorialStep(3, 1, 2)
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
@@ -284,6 +285,7 @@ function UIBottomPanel:dialogHireStaff()
   local dlg = UIHireStaff(self.ui)
   self.ui:addWindow(dlg)
   self.ui:tutorialStep(2, 1, 2)
+  self.ui:tutorialStep(4, 1, 2)
 end
 
 function UIBottomPanel:dialogDrugCasebook()

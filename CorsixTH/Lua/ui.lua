@@ -108,6 +108,8 @@ function UI:UI(app, local_hospital)
   self.down_cursor = app.gfx:loadMainCursor("clicked")
   self.grab_cursor = app.gfx:loadMainCursor("grab")
   
+  self.tutorial = { chapter = 0, phase = 0 }
+  
   if not LOADED_DIALOGS then
     app:loadLuaFolder("dialogs", true)
     LOADED_DIALOGS = true
@@ -737,7 +739,6 @@ local tutorial_strings = {
   {
     -- 3) build GP's office
     -- 3.1) room window
-    " TODO: continue implementing tutorial!",
     _S.adviser.tutorial.build_gps_office,              -- 1
     _S.adviser.tutorial.select_diagnosis_rooms,        -- 2
     _S.adviser.tutorial.click_gps_office,              -- 3
@@ -770,50 +771,59 @@ local tutorial_strings = {
     _S.adviser.tutorial.place_doctor,                  -- 4
     _S.adviser.tutorial.doctor_in_invalid_position,    -- 5
   },
-  
   -- apparently unused tutorial strings:
   -- [11][63]
   -- [11][64]
   -- [11][65]
+  -- original TH continues here with three boxes displaying some more text:
+  -- [54][94] to [54][96]
+  -- [54][97] to [54][99]
+  -- [54][101] to [54][103]
 }
 
 -- Called to trigger step to another part of the tutorial.
 -- chapter:    Individual parts of the tutorial. Step will only happen if it's the current chapter.
--- phase_from: Phase we need to be in for this step to happen.
--- phase_to:   Phase we want to step to or "end" to go to next chapter.
+-- phase_from: Phase we need to be in for this step to happen. Multiple phases can be given here in an array.
+-- phase_to:   Phase we want to step to or "next" to go to next chapter or "end" to end tutorial.
 function UI:tutorialStep(chapter, phase_from, phase_to)
-  if not self.tutorial then
---    print("tutorial not running. return.")
-    return
-  end
-  
   if self.tutorial.chapter ~= chapter then
---    print("wrong chapter. return.")
     return
   end
-  if self.tutorial.phase ~= phase_from then
---    print("wrong phase_from. return.")
-    return
+  if type(phase_from) == "table" then
+    local contains_current = false
+    for _, phase in ipairs(phase_from) do
+      if phase == self.tutorial.phase then
+        contains_current = true
+        break
+      end
+    end
+    if not contains_current then return end
+  else
+    if self.tutorial.phase ~= phase_from then return end
   end
   
   if phase_to == "end" then
+    self.tutorial.chapter = 0
+    self.tutorial.phase = 0
+    return
+  elseif phase_to == "next" then
     self.tutorial.chapter = self.tutorial.chapter + 1
     self.tutorial.phase = 1
   else
     self.tutorial.phase = phase_to
   end
   
-  print("now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase)
+  if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
   local str = tutorial_strings[self.tutorial.chapter][self.tutorial.phase]
   if str then
     self.adviser:say(str)
   end
 end
 
-function UI:startTutorial()
-  self.tutorial = {
-    chapter = 1,
-    phase = 0,
-  }
-  self:tutorialStep(1, 0, 1)
+function UI:startTutorial(chapter)
+  chapter = chapter or 1
+  self.tutorial.chapter = chapter
+  self.tutorial.phase = 0
+
+  self:tutorialStep(chapter, 0, 1)
 end

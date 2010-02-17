@@ -261,8 +261,7 @@ function UIPlaceObjects:removeObjects(object_list, refund)
 end
 
 function UIPlaceObjects:close()
-  self.ui:tutorialStep(1, 4, 1)
-  self.ui:tutorialStep(1, 5, 1)
+  self.ui:tutorialStep(1, {4, 5}, 1)
   self:removeAllObjects(true)
   self:clearBlueprint()
   return Window.close(self)
@@ -282,8 +281,7 @@ function UIPlaceObjects:setActiveIndex(index)
   if object.id == "reception_desk" then
     self.ui:tutorialStep(1, 6, 4)
   else
-    self.ui:tutorialStep(1, 4, 6)
-    self.ui:tutorialStep(1, 5, 6)
+    self.ui:tutorialStep(1, {4, 5}, 6)
   end
   local anims = self.anims
   local _, ghost = self.ui.app.gfx:loadPalette()
@@ -360,8 +358,7 @@ function UIPlaceObjects:onMouseUp(button, x, y)
         self:placeObject()
         repaint = true
       elseif self.object_cell_x and self.object_cell_y and not self.object_blueprint_good then
-        -- TODO: activate once tutorial is implemented
-        -- self.ui.adviser:say(_S.adviser.tutorial.object_in_invalid_position)
+        self.ui:tutorialStep(3, {13, 15}, 14)
       end
     end
   end
@@ -375,7 +372,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   end
 
   local object = self.objects[self.active_index]
-  if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "end") end
+  if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "next") end
   local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   

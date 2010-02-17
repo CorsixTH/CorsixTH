@@ -53,8 +53,8 @@ function UIPlaceStaff:close()
     self.staff.action_queue[1].window = nil
     self.staff:setNextAction{name = "meander"}
   elseif self.profile then
-    self.ui:tutorialStep(2, 6, 1)
-    self.ui:tutorialStep(2, 7, 1)
+    self.ui:tutorialStep(2, {6, 7}, 1)
+    self.ui:tutorialStep(4, {4, 5}, 1)
     -- Return the profile to the available staff list
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
@@ -78,12 +78,11 @@ function UIPlaceStaff:draw(canvas)
   self.anim:setFlag(valid and 0 or flag_altpal)
   self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
   self.ui:tutorialStep(2, valid and 7 or 6, valid and 6 or 7)
+  self.ui:tutorialStep(4, valid and 5 or 4, valid and 4 or 5)
 end
 
 function UIPlaceStaff:onMouseUp(button, x, y)
   if button == "right" then
-    self.ui:tutorialStep(2, 6, 1)
-    self.ui:tutorialStep(2, 7, 1)
     self:close()
     return true
   elseif button == "left" then
@@ -107,7 +106,8 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         end
         self.ui.hospital:addStaff(entity)
         entity:setHospital(self.ui.hospital)
-        self.ui:tutorialStep(2, 6, "end")
+        self.ui:tutorialStep(2, 6, "next")
+        self.ui:tutorialStep(4, 4, "end")
       end
       self:close()
       return true

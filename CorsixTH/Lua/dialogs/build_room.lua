@@ -131,6 +131,11 @@ function UIBuildRoom:draw(canvas)
 end
 
 function UIBuildRoom:setCategory(index)
+  if index == 1 then
+    self.ui:tutorialStep(3, 2, 3)
+  else
+    self.ui:tutorialStep(3, 3, 2)
+  end
   self.category_index = index
   self.list_title = _S.build_room_window.pick_room_type
   self.list = self.category_rooms[index]
@@ -142,6 +147,7 @@ function UIBuildRoom:setCategory(index)
 end
 
 function UIBuildRoom:buildRoom(index)
+  if index == 1 then self.ui:tutorialStep(3, 3, 4) end
   local edit_dlg = UIEditRoom(self.ui, self.list[index])
   self.ui:addWindow(edit_dlg)
 end
@@ -175,4 +181,9 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   end
   
   return repaint
+end
+
+function UIBuildRoom:close()
+  self.ui:tutorialStep(3, {2, 3}, 1)
+  return Window.close(self)
 end
