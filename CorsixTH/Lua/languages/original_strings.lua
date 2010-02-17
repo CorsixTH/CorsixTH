@@ -1567,11 +1567,12 @@ do
   local i = 1
   local section = 1
   while true do
-    local s = S[38][i]
+    local s = S[39][i]
     if s == "." then
       section = section + 1
       L[section] = {}
     elseif s == ".." then
+      L[section] = nil
       break
     else
       L[section][#L[section] + 1] = s

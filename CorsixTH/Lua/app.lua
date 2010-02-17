@@ -149,7 +149,7 @@ function App:init()
   if (self.command_line.dump or ""):match"strings" then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
-    self:dumpStrings "debug-strings.txt"
+    self:dumpStrings()
   end
   
   -- Load audio
@@ -225,16 +225,18 @@ function App:dumpStrings()
   fi:close()
   
   local function dump_by_line(file, obj, prefix)
-    prefix = (prefix == "") and "" or (prefix .. ".")
     for n, o in pairs(obj) do
       if n ~= "deprecated" then
-        if type(o) == "table" then
-          dump_by_line(file, o, prefix .. n)
+        local new_prefix
+        if type(n) == "number" then
+          new_prefix = prefix .. "[" .. n .. "]"
         else
-          if type(n) == "number" then
-            n = "[" .. n .. "]"
-          end
-          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"\n")
+          new_prefix = (prefix == "") and n or (prefix .. "." .. n)
+        end
+        if type(o) == "table" then
+          dump_by_line(file, o, new_prefix)
+        else
+          file:write(new_prefix .. " = " .. "\"" .. o .. "\"\n")
         end
       end
     end
@@ -243,14 +245,14 @@ function App:dumpStrings()
   local function dump_grouped(file, obj, prefix)
     for n, o in pairs(obj) do
       if n ~= "deprecated" then
+        if type(n) == "number" then
+          n = "[" .. n .. "]"
+        end
         if type(o) == "table" then
           file:write(prefix .. n .. " = {\n")
           dump_grouped(file, o, prefix .. "  ")
           file:write(prefix .. "}\n")
         else
-          if type(n) == "number" then
-            n = "[" .. n .. "]"
-          end
           file:write(prefix .. n .. " = " .. "\"" .. o .. "\",\n")
         end
       end
