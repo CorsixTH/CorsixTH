@@ -87,6 +87,7 @@ object = {
 
 -- 4. Menu 
 menu_options_game_speed.pause 	= "  PAUSE  "
+menu_options.lock_windows 		= utf8 "  LÅS VINDUER  "
 
 menu_debug = {
   transparent_walls           	= "  GJENNOMSIKTIGE VEGGER  ",
