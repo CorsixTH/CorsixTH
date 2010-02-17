@@ -156,11 +156,11 @@ staff_title = {
 pay_rise = {
   definite_quit = utf8 "Du kan ikke gjöre noe for å beholde meg lenger. Jeg er ferdig her!",
   regular = {
-    utf8 "Jeg er helt utslitt. Jeg trenger en god pause, pluss en lnnsökning på %d om du ikke vil se meg gå rundt å sutre i korridorene.", -- %d (rise)
+    utf8 "Jeg er helt utslitt. Jeg trenger en god pause, pluss en lönnsökning på %d om du ikke vil se meg gå rundt å sutre i korridorene.", -- %d (rise)
     utf8 "Jeg er veldig trött. Jeg trenger hvile og en lönnsökning på %d, totalt %d. Fiks det nå, din tyrann!", -- %d (rise) %d (new total)
     utf8 "Kom igjen. Jeg jobber som en hund her. Gi meg en bonus på %d og jeg blir på sykehuset ditt.", -- %d (rise)
-    utf8 "Jeg er så deppa. Jeg krever en lönnskning på %d, som blir totalt %d, ellers er jeg ferdig her.", -- %d (rise) %d (new total)
-    utf8 "Foreldrene mine sa at medisinyrket ville gi meg mye penger. Så gi meg en lönnskning på %d, ellers blir jeg spillutvikler istedenfor.", -- %d (rise)
+    utf8 "Jeg er så deppa. Jeg krever en lönnsökning på %d, som blir totalt %d, ellers er jeg ferdig her.", -- %d (rise) %d (new total)
+    utf8 "Foreldrene mine sa at medisinyrket ville gi meg mye penger. Så gi meg en lönnsökning på %d, ellers blir jeg spillutvikler istedenfor.", -- %d (rise)
     utf8 "Nå er jeg sint. Gi meg en anstendig lönn. Jeg tror en ökning på %d skal gjöre susen.", -- %d (rise)
   },
   poached = utf8 "Jeg er blitt tilbudt %d av %s. Om ikke du gir meg det samme, så stikker jeg.", -- %d (new total) %s (competitor)
