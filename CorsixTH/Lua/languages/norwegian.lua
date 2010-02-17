@@ -96,11 +96,12 @@ menu_debug = {
   make_debug_patient          	= "  LAG DEBUG-PASIENT  ",
   spawn_patient               	= "  SPAWN PASIENT  ",
   make_adviser_talk           	= utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
-  show_watch                  	= "  VIS KLOKKE  ",
-  place_objects               	= "  PLASSER OBJEKTER  ",
-  dump_strings                	= utf8 "  DUMP SPRÅKSTRENG  ",
+  show_watch                  	= "  VIS STOPPEKLOKKE  ",
+  place_objects               	= "  PLASSER GJENSTANDER  ",
+  dump_strings                	= utf8 "  DUMP SPRÅKSTRENGER  ",
+  tutorial                    	= utf8 "  INNFÖRING  ",
   map_overlay                 	= "  KARTOVERLEGG  ",
-  sprite_viewer               	= "  SPRITEVISNING  ",
+  sprite_viewer               	= "  SPRITE-VISNING  ",
 }
 
 menu_debug_overlay = {
@@ -156,7 +157,7 @@ pay_rise = {
   definite_quit = utf8 "Du kan ikke gjöre noe for å beholde meg lenger. Jeg er ferdig her!",
   regular = {
     utf8 "Jeg er helt utslitt. Jeg trenger en god pause, pluss en lnnsökning på %d om du ikke vil se meg gå rundt å sutre i korridorene.", -- %d (rise)
-    utf8 "Jeg er veldig trött. Jeg trenger hvile og en lönnskning på %d, totalt %d. Fiks det nå, din tyrann!", -- %d (rise) %d (new total)
+    utf8 "Jeg er veldig trött. Jeg trenger hvile og en lönnsökning på %d, totalt %d. Fiks det nå, din tyrann!", -- %d (rise) %d (new total)
     utf8 "Kom igjen. Jeg jobber som en hund her. Gi meg en bonus på %d og jeg blir på sykehuset ditt.", -- %d (rise)
     utf8 "Jeg er så deppa. Jeg krever en lönnskning på %d, som blir totalt %d, ellers er jeg ferdig her.", -- %d (rise) %d (new total)
     utf8 "Foreldrene mine sa at medisinyrket ville gi meg mye penger. Så gi meg en lönnskning på %d, ellers blir jeg spillutvikler istedenfor.", -- %d (rise)
@@ -320,10 +321,10 @@ place_objects_window = {
   drag_blueprint                = utf8 "Juster blåkopien til du er fornöyd med störrelsen",
   place_door                    = utf8 "Velg hvor dören skal være",
   place_windows                 = utf8 "Lag noen vinduer om du vil. Bekreft når du er ferdig",
-  place_objects                 = utf8 "Plasser objektene. Bekreft når du er fornöyd",
-  confirm_or_buy_objects        = utf8 "Du kan ferdigstille rommet, evt. fortsette å kjöpe eller flytte objekter",
-  pick_up_object                = utf8 "Klikk på objekter for å plukke de opp, eller gjör et annet valg fra boksen",
-  place_objects_in_corridor     = "Plasser objektene i korridoren",
+  place_objects                 = utf8 "Plasser gjenstandene. Bekreft når du er fornöyd",
+  confirm_or_buy_objects        = utf8 "Du kan ferdigstille rommet, evt. fortsette å kjöpe eller flytte gjenstander",
+  pick_up_object                = utf8 "Klikk på gjenstander for å plukke de opp, eller gjör et annet valg fra boksen",
+  place_objects_in_corridor     = "Plasser gjenstander i korridoren",
 }
 
 -- Competitor names
@@ -465,7 +466,7 @@ town_map = {
 rooms_short = {
   reception         = "Resepsjon",
   destroyed         = utf8 "Ödelagt",
-  corridor_objects  = "Korridor objekter",
+  corridor_objects  = "Korridorgjenstander",
   
   gps_office        = "Allmennpraksis",
   psychiatric       = "Psykiatri",
@@ -543,7 +544,7 @@ build_room_window = {
 
 -- Build objects
 buy_objects_window = {
-  choose_items      = "Velg objekter",
+  choose_items      = "Velg gjenstander",
   price             = "Pris:",
   total             = "Sum:",
 }
@@ -568,7 +569,7 @@ policy = {
   diag_procedure    = "diagnoserutiner",
   diag_termination  = "diagnosering",
   staff_rest        = utf8 "pauserutiner",
-  staff_leave_rooms = "personale forlater rom",
+  staff_leave_rooms = "forlate rom",
   
   sliders = {
     guess           = "GJETT KUR", -- belongs to diag_procedure
@@ -609,7 +610,7 @@ menu = {
   file                	= "  FIL  ",
   options             	= "  INNSTILLINGER  ",
   display             	= "  VIS  ",
-  charts              	= "  LISTER  ",
+  charts              	= "  OVERSIKTER  ",
   debug               	= "  DEBUG  ",
 }
 
@@ -670,7 +671,7 @@ menu_debug = {
   keep_clear_cells    = "  KEEP CLEAR CELLS    ",
   nav_bits            = "  NAV BITS            ",
   remove_walls        = "  FJERN VEGGER        ",
-  remove_objects      = "  FJERN OBJEKTER      ",
+  remove_objects      = "  FJERN GJENSTANDERER ",
   display_pager       = "  VIS PAGER           ",
   mapwho_checking     = "  MAPWHO SJEKK        ",
   plant_pagers        = "  PLANT PAGERS        ",
@@ -1358,7 +1359,7 @@ adviser = {
   multiplayer = {
     objective_completed 			= utf8 "Du har fullfört utfordringene for dette nivået. Gratulerer!",
     everyone_failed 				= utf8 "Ingen klarte de forrige utfordringene. Så alle får spille videre !",
-    players_failed 					= utf8 "Følgende spiller(e) klarte ikke den forrige utfordringen : ",
+    players_failed 					= utf8 "Fölgende spiller(e) klarte ikke den forrige utfordringen : ",
     
     poaching = {
       in_progress 					= utf8 "Jeg skal si ifra om denne personen vil komme å jobbe for deg.",
@@ -1843,7 +1844,7 @@ diseases = {
   	name 		= utf8 "Krydrede oppstöt", 
   	cause 		= utf8 "Årsak - Sterkt krydret meksikansk eller indisk mat har skylden.", 
   	symptoms 	= "Symptomer - Gulper karrikylling og tacolefser.", 
-  	cure 		= utf8 "Behandling - En sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt..",
+  	cure 		= utf8 "Behandling - En sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt.",
   },
   the_squits             = { 
   	name 		= utf8 "Lös mage", 
@@ -1965,7 +1966,7 @@ fax = {
     need_to_build            = utf8 "Du må bygge %s for å håndtere dette.",
     need_to_employ           = utf8 "Ansett en %s for å hjelpe pasienten.",
     can_not_cure             = "Du kan ikke behandle denne sykdommen.",
-    disease_name             = "Dine ansatte har oppdaget et tilfelle av %s",
+    disease_name             = utf8 "Dine ansatte har stött på et tilfelle av %s.",
     what_to_do_question      = utf8 "Hva vil du gjöre med pasienten?",
     guessed_percentage_name  = "Teamet ditt mener de vet hva som feiler pasienten. Det er %d prosent sannsynlighet for at det er %s",
   },
@@ -1976,7 +1977,7 @@ fax = {
     need_to_build_and_employ = utf8 "Om du bygger %s og ansetter en %s kan du håndtere dette.",
     need_to_build            = utf8 "Du må bygge %s for å håndtere dette.",
     need_to_employ           = utf8 "Ansett en %s for å behandle pasienter med denne sykdommen.",
-    discovered_name          = "Ditt team har oppdaget et tilfelle av %s",
+    discovered_name          = "Ditt team har oppdaget et tilfelle av %s.",
   },
   
   -- Epidemic
