@@ -48,6 +48,7 @@ local function action_seek_room_start(action, humanoid)
       humanoid:setNextAction(action)
     end
   elseif room then
+    humanoid.waiting = nil
     humanoid:setNextAction(room:createEnterAction())
     humanoid.next_room_to_visit = room
     humanoid:updateDynamicInfo()
@@ -80,6 +81,7 @@ local function action_seek_room_start(action, humanoid)
           end
         end
         if found then 
+          humanoid.waiting = nil
           humanoid:setNextAction(room:createEnterAction())
           humanoid.next_room_to_visit = room
           humanoid:updateDynamicInfo()

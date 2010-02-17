@@ -31,8 +31,6 @@
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "CorsixTHInstaller.exe"
 InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
-UninstallIcon "..\CorsixTH\corsixTH.ico"
-Icon "..\CorsixTH\corsixTH.ico"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
@@ -83,6 +81,10 @@ var ICONS_GROUP
 
 ; Uninstaller pages
 !insertmacro MUI_UNPAGE_INSTFILES
+
+; Icons used by the installer and uninstaller
+UninstallIcon "..\CorsixTH\corsixTH.ico"
+Icon "..\CorsixTH\corsixTH.ico"
 
 
 ; ------------------------------- Languages supported by the installer ---------------------------
