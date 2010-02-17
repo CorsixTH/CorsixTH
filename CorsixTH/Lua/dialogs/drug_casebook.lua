@@ -104,11 +104,11 @@ function UICasebook:selectDisease(disease)
   end
 end
 
-function UICasebook:draw(canvas)
-  self.background:draw(canvas, self.x, self.y)
-  UIFullscreen.draw(self, canvas)
+function UICasebook:draw(canvas, x, y)
+  self.background:draw(canvas, self.x + x, self.y + y)
+  UIFullscreen.draw(self, canvas, x, y)
   
-  local x, y = self.x, self.y
+  x, y = self.x + x, self.y + y
   local titles = self.title_font
   local book = self.casebook
   local disease = self.selected_disease

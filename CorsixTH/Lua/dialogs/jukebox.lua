@@ -29,9 +29,9 @@ function UIJukebox:UIJukebox(app)
   self.esc_closes = true
   self.audio = app.audio
   self.ui = app.ui
-  self.x = 26
-  self.y = 26
   self.width = 259
+  self.height = 74 + 30 * #self.audio.background_playlist + 18
+  self:setDefaultPosition(26, 26)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req13V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
@@ -136,11 +136,11 @@ function UIJukebox:loopTrack()
   end
 end
 
-function UIJukebox:draw(canvas)
-  Window.draw(self, canvas)
+function UIJukebox:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
   
   local playing = self.audio.background_music or ""
-  local x, y = self.x, self.y
   for i, info in ipairs(self.audio.background_playlist) do
     local y = y + 47 + i * 30
     local font = self.white_font

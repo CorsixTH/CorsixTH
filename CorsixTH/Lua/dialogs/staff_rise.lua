@@ -40,8 +40,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self.height = 275
 
   -- Center the dialog
-  self.x = app.config.width / 2 - self.width / 2
-  self.y = app.config.height / 2 - self.height / 2
+  self:setDefaultPosition(0.5, 0.5)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -87,10 +86,10 @@ function UIStaffRise:getStaffPosition(dx, dy)
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
-function UIStaffRise:draw(canvas)
-  Window.draw(self, canvas)
+function UIStaffRise:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
   local profile = self.staff.profile
-  local x, y = self.x, self.y
+  x, y = self.x + x, self.y + y
   local px, py = self:getStaffPosition(37, 61)
   local font = self.white_font
 

@@ -388,7 +388,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   return real_obj
 end
 
-function UIPlaceObjects:draw(canvas)
+function UIPlaceObjects:draw(canvas, x, y)
   if not self.visible then
     return -- Do nothing if dialog is not visible
   end
@@ -397,9 +397,9 @@ function UIPlaceObjects:draw(canvas)
     self.object_anim:draw(canvas, self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y))
   end
   
-  Window.draw(self, canvas)
+  Window.draw(self, canvas, x, y)
   
-  local x, y = self.x, self.y
+  x, y = x + self.x, y + self.y
   self.white_font:draw(canvas, self.title_text, x + 17, y + 21, 153, 0)
   self.white_font:drawWrapped(canvas, self.desc_text, x + 20, y + 46, 147)
   
@@ -504,39 +504,57 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     if self.object_anim then
       if allgood then
         -- Check that pathfinding still works, i.e. that placing the object
-        -- wouldn't disconnect one part of the hospital from another
-        local flags_to_set = {passable = false}
-        for _, xy in ipairs(object_footprint) do
-          local x = x + xy[1]
-          local y = y + xy[2]
-          if not xy.only_passable then
-            map:setCellFlags(x, y, flags_to_set)
+        -- wouldn't disconnect one part of the hospital from another. To do
+        -- this, we provisionally mark the footprint as unpassable (as it will
+        -- become when the object is placed), and then check that the cells
+        -- surrounding the footprint have not had their connectedness changed.
+        local function setPassable(passable)
+          local flags_to_set = {passable = passable}
+          for _, xy in ipairs(object_footprint) do
+            local x = x + xy[1]
+            local y = y + xy[2]
+            if not xy.only_passable then
+              map:setCellFlags(x, y, flags_to_set)
+            end
           end
         end
+        local function isIsolated(x, y)
+          setPassable(true)
+          local result = not world.pathfinder:isReachableFromHospital(x, y)
+          setPassable(false)
+          return result
+        end
+        setPassable(false)
         local prev_x, prev_y
         for _, xy in ipairs(object.orientations[self.object_orientation].adjacent_to_solid_footprint) do
-          local _x, _y = x, y
           local x = x + xy[1]
           local y = y + xy[2]
           if map:getCellFlags(x, y, flags).roomId == roomId and flags.passable then
             if prev_x then
               if not world.pathfinder:findDistance(x, y, prev_x, prev_y) then
-                allgood = false
-                break
+                -- There is no route between the two map nodes. In most cases,
+                -- this means that connectedness has changed, though there is
+                -- one rare situation where the above test is insufficient. If
+                -- (x, y) is a passable but isolated node outside the hospital
+                -- and (prev_x, prev_y) is in the corridor, then the two will
+                -- not be connected now, but critically, neither were they
+                -- connected before.
+                if isIsolated(x, y) then
+                  if isIsolated(prev_x, prev_y) then
+                    allgood = false
+                    break
+                  end
+                else
+                  x = prev_x
+                  y = prev_y
+                end
               end
             end
             prev_x = x
             prev_y = y
           end
         end
-        flags_to_set.passable = true
-        for _, xy in ipairs(object_footprint) do
-          local x = x + xy[1]
-          local y = y + xy[2]
-          if not xy.only_passable then
-            map:setCellFlags(x, y, flags_to_set)
-          end
-        end
+        setPassable(true)
       end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)

@@ -90,11 +90,11 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["goto_staffroom"].max_x = 399
 end
 
-function UIPolicy:draw(canvas)
-  self.background:draw(canvas, self.x, self.y)
-  UIFullscreen.draw(self, canvas)
+function UIPolicy:draw(canvas, x, y)
+  self.background:draw(canvas, self.x + x, self.y + y)
+  UIFullscreen.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
   
-  local x, y = self.x, self.y
   local text = self.text_font
   local label = self.label_font
 
@@ -118,7 +118,7 @@ function UIPolicy:draw(canvas)
 end
 
 function UIPolicy:onMouseMove(x, y, dx, dy)
-  local repaint = Window.onMouseMove(self, x, y, dx, dy)
+  local repaint = UIFullscreen.onMouseMove(self, x, y, dx, dy)
   if self.moving_panel then -- A slider is being moved.
     local p = self.moving_panel
     self.moved_x = self.moved_x + dx
@@ -150,7 +150,7 @@ function UIPolicy:onMouseDown(code, x, y)
       self.position_x = self.moving_panel.x
     end
   end
-  return Window.onMouseDown(self, code, x, y)
+  return UIFullscreen.onMouseDown(self, code, x, y)
 end
 
 function UIPolicy:onMouseUp(code, x, y)
@@ -162,7 +162,7 @@ function UIPolicy:onMouseUp(code, x, y)
     end
   end
   self.moving_panel = nil
-  return Window.onMouseUp(self, code, x, y)
+  return UIFullscreen.onMouseUp(self, code, x, y)
 end
 
 function UIPolicy:panelHit(x, y)
@@ -179,6 +179,6 @@ function UIPolicy:close()
     local number = (s.addition and 1 or 0)
     self.hospital.policies[key] = number + (s.x - (s.total_min_x or s.min_x))/divider
   end
-  Window.close(self)
+  UIFullscreen.close(self)
 end
 

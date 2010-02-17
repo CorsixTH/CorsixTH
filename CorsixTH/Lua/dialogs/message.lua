@@ -35,19 +35,15 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.width = 30
   self.height = 28
   self.stop_x = stop_x
-  self.stop_y = app.config.height - 72
+  self.stop_y = -24
   self.x = x
-  self.y = app.config.height - 44
+  self.y = 4
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   
   local types = { emergency = 43, epidemy = 45, strike = 47, personnality = 49, information = 51, disease = 53, report = 55 }
   local type = types[type]
   
   self:addPanel(type, 0, 0):makeButton(0, 0, 30, 28, type + 1, self.openMessage)
-end
-
-function UIMessage:draw(canvas)
-  Window.draw(self, canvas)
 end
 
 function UIMessage:openMessage(out_of_time)

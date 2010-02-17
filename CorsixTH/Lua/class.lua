@@ -84,6 +84,15 @@ class = destrict(function(_, name)
 end)
 class = setmetatable({}, {__call = class})
 
+-- class.is - Tests if a given class object (first parameter) is an instance
+-- of (something derived from) a given type (second parameter).
+-- For example:
+-- class "something" (base)
+-- class "something_else"
+-- variable = something()
+-- class.is(variable, something) --> true
+-- class.is(variable, base) --> true
+-- class.is(variable, something_else) --> false
 function class.is(instance, class)
   local methods = instance
   while methods do
@@ -93,4 +102,21 @@ function class.is(instance, class)
     methods = getmetatable(methods).__index
   end
   return false
+end
+
+-- class.type - Get the typename of a class instance
+-- For example:
+-- class "something" (base)
+-- variable = something()
+-- class.type(variable) --> "something"
+function class.type(instance)
+  local mt = getmetatable(instance)
+  if not mt then
+    return nil
+  end
+  local methods_mt = getmetatable(mt.__index)
+  if not methods_mt then
+    return nil
+  end
+  return methods_mt.__class_name
 end

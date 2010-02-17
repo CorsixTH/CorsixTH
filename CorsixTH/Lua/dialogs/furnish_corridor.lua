@@ -38,9 +38,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.ui = ui
   self.anims = app.anims
   self.width = 360
-  self.height = 248
-  self.x = (app.config.width - self.width) / 2
-  self.y = (app.config.height - self.height - 48) / 2
+  self.height = 274
+  self:setDefaultPosition(0.5, 0.4)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req10V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
@@ -173,10 +172,10 @@ function UIFurnishCorridor:close()
   Window.close(self)
 end
 
-function UIFurnishCorridor:draw(canvas)
-  Window.draw(self, canvas)
+function UIFurnishCorridor:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
   
-  local x, y = self.x, self.y
+  x, y = x + self.x, y + self.y
   self.white_font:draw(canvas, self.title_text, x + 163, y + 18)
   self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24, y + 173)
   self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24, y + 202)

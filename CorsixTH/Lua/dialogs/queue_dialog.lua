@@ -37,8 +37,7 @@ function UIQueue:UIQueue(ui, queue)
   self.modal_class = "main"
   self.width = 604
   self.height = 122
-  self.x = (app.config.width - self.width) / 2
-  self.y = (app.config.height - self.height) / 2
+  self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
@@ -66,12 +65,12 @@ function UIQueue:increaseMaxSize()
   self.queue:increaseMaxSize()
 end
 
-function UIQueue:draw(canvas)
-  local x, y = self.x, self.y
+function UIQueue:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
+  
   local font = self.white_font
   local queue = self.queue  
-    
-  Window.draw(self, canvas)
 
   local num_patients = queue:reportedSize()
   font:draw(canvas, _S.queue_window.num_in_queue, x + 22, y + 22)

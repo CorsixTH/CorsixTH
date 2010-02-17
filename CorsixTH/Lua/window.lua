@@ -44,6 +44,56 @@ function Window:Window()
   self.visible = true
 end
 
+-- Sets the window's onscreen position. Each of x and y can be:
+-- Integers >= 0 - Absolute pixel positions of top/left edge of window relative
+--                 to top/left edge of screen
+-- Integers < 0 - Absolute pixel positions of right/bottom edge of window
+--                relative to right/bottom edge of screen. Use -0.1 to mean -0.
+-- Reals in [0, 1) - 
+function Window:setPosition(x, y)
+  -- Save values to recalculate x and y on screen resolution change
+  self.x_original = x
+  self.y_original = y
+  -- Convert x and y to absolute pixel positions with regard to top/left
+  local w, h = TheApp.config.width, TheApp.config.height
+  if x < 0 then
+    x = math.ceil(w - self.width + x)
+  elseif x < 1 then
+    x = math.floor((w - self.width) * x + 0.5)
+  end
+  if y < 0 then
+    y = math.ceil(h - self.height + y)
+  elseif y < 1 then
+    y = math.floor((h - self.height) * y + 0.5)
+  end
+  self.x = x
+  self.y = y
+end
+
+-- Sets the window's default onscreen position and onscreen position.
+-- The given x and y are interpreted as for setPosition(x, y), and are the
+-- default position for the window. If the user has previously repositioned a
+-- window of the same type, then setDefaultPosition() will set the window to
+-- that previous position, otherwise it sets it to the default position.
+function Window:setDefaultPosition(x, y)
+  if self.ui then
+    local config = self.ui.app.runtime_config.window_position
+    if config then
+      config = config[self:getSavedWindowPositionName()]
+      if config then
+        return self:setPosition(config.x, config.y)
+      end
+    end
+  end
+  return self:setPosition(x, y)
+end
+
+function Window:onChangeResolution()
+  if self.x_original and self.y_original then
+    self:setPosition(self.x_original, self.y_original)
+  end
+end
+
 function Window:close()
   self.parent:removeWindow(self)
   for key in pairs(self.key_handlers) do
@@ -81,7 +131,7 @@ function Window:addPanel(sprite_index, x, y, w, h)
   return panel
 end
 
-local function panel_colour_draw(panel, canvas, x, y)
+local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
 end
 
@@ -214,8 +264,8 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
   return button
 end
 
-function Window:draw(canvas)
-  local x, y = self.x, self.y
+function Window:draw(canvas, x, y)
+  x, y = x + self.x, y + self.y
   if self.panels[1] then
     local panel_sprites = self.panel_sprites
     local panel_sprites_draw = panel_sprites.draw
@@ -233,7 +283,7 @@ function Window:draw(canvas)
     local windows = self.windows
     for i = #windows, 1, -1 do
       if windows[i].visible then
-        windows[i]:draw(canvas)
+        windows[i]:draw(canvas, x, y)
       end
     end
   end
@@ -295,11 +345,36 @@ function Window:onMouseDown(button, x, y)
       end
     end
   end
+  if button == "left" and not repaint and Window.hitTest(self, x, y) then
+    return self:beginDrag(x, y)
+  end
   return repaint
+end
+
+function Window:getSavedWindowPositionName()
+  return class.type(self)
 end
 
 function Window:onMouseUp(button, x, y)
   local repaint = false
+  
+  if self.dragging then
+    self.ui.drag_mouse_move = nil
+    self.dragging = false
+    local config = self.ui.app.runtime_config
+    if not config.window_position then
+      config.window_position = {}
+    end
+    config = config.window_position
+    local name = self:getSavedWindowPositionName()
+    if not config[name] then
+      config[name] = {}
+    end
+    config = config[name]
+    config.x = self.x_original
+    config.y = self.y_original
+    return false
+  end
 
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -345,6 +420,71 @@ function Window:onMouseUp(button, x, y)
   end
   
   return repaint
+end
+
+local --[[persistable:window_drag_round]] function round(value, amount)
+  return amount * math.floor(value / amount + 0.5)
+end
+
+local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, size, dim_size)
+  if size == dim_size then
+    return 0.5
+  end
+  
+  local left_rel = pos
+  local right_rel = pos + size - dim_size
+  local rel = pos / (dim_size - size)
+  if 0.15 < rel and rel < 0.85 then
+    return rel
+  end
+  if left_rel <= 0 then
+    return 0
+  end
+  if right_rel >= 0 then
+    return -0.1
+  end
+  if left_rel <= -right_rel then
+    return left_rel
+  else
+    return right_rel
+  end
+end
+
+function Window:beginDrag(x, y)
+  if not self.width or not self.height or not self.ui
+  or self.ui.app.runtime_config.lock_windows then
+    -- Need width, height and UI to do a drag
+    return false
+  end
+  
+  self.dragging = true
+  self.ui.drag_mouse_move = --[[persistable:window_drag_mouse_move]] function (sx, sy)
+    -- sx and sy are cursor screen co-ords. Convert to window's new abs co-ords
+    sx = sx - x
+    sy = sy - y
+    -- Calculate best positioning
+    local w, h = TheApp.config.width, TheApp.config.height
+    if self.buttons_down.ctrl then
+      local px = round(sx / (w - self.width), 0.1)
+      local py = round(sy / (h - self.height), 0.1)
+      if px >= 1 then
+        px = -0.1
+      elseif px < 0 then
+        px = 0
+      end
+      if py >= 1 then
+        py = -0.1
+      elseif py < 0 then
+        py = 0
+      end
+      self:setPosition(px, py)
+    else
+      local px = getNicestPositionRepresentation(sx, self.width , w)
+      local py = getNicestPositionRepresentation(sy, self.height, h)
+      self:setPosition(px, py)
+    end
+  end
+  return true
 end
 
 function Window:onMouseMove(x, y, dx, dy)

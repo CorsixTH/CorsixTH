@@ -26,8 +26,9 @@ function UIHireStaff:UIHireStaff(ui)
   self.esc_closes = true
   self.world = ui.app.world
   self.ui = ui
-  self.x = 100
-  self.y = 100
+  self.width = 242
+  self.height = 323
+  self:setDefaultPosition(100, 100)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
@@ -105,9 +106,10 @@ function UIHireStaff:hire()
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
 
-function UIHireStaff:draw(canvas)
-  local x, y = self.x, self.y
-  Window.draw(self, canvas)
+function UIHireStaff:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
+  
   local font = self.white_font
   local staff = self.world.available_staff
   font:draw(canvas, #staff.Doctor      , x + 16, y +  58, 26, 0)

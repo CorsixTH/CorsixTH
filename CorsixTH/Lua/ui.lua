@@ -123,7 +123,7 @@ function UI:UI(app, local_hospital)
     self.adviser = UIAdviser(self)
     self.bottom_panel = UIBottomPanel(self)
     self.menu_bar = UIMenuBar(self)
-    self:addWindow(self.adviser)
+    self.bottom_panel:addWindow(self.adviser)
     self:addWindow(self.bottom_panel)
     self:addWindow(self.menu_bar)
   end
@@ -223,7 +223,7 @@ function UI:draw(canvas)
     canvas:draw(self.background)
   end
   app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
-  Window.draw(self, canvas)
+  Window.draw(self, canvas, 0, 0)
   if self.simulated_cursor then
     self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
   end
@@ -275,6 +275,12 @@ function UI:disableKeyboardRepeat()
     SDL.modifyKeyboardRepeat(0, 0)
   else
     self.keyboard_repeat_enable_count = self.keyboard_repeat_enable_count - 1
+  end
+end
+
+function UI:onChangeResolution()
+  for _, window in ipairs(self.windows) do
+    window:onChangeResolution()
   end
 end
 
@@ -523,6 +529,11 @@ function UI:onMouseMove(x, y, dx, dy)
   if self.buttons_down.middle then
     self:scrollMap(-dx, -dy)
     repaint = true
+  end
+  
+  if self.drag_mouse_move then
+    self.drag_mouse_move(x, y)
+    return true
   end
   
   if x < 3 or y < 3 or x >= self.app.config.width - 3 or y >= self.app.config.height - 3 then

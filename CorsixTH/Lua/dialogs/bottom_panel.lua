@@ -29,8 +29,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.world = app.world
   self.width = 640
   self.height = 48
-  self.x = (app.config.width - self.width) / 2
-  self.y = app.config.height - self.height
+  self:setDefaultPosition(0.5, -0.1)
   self.show_animation = true
   self.factory_counter = 22
   self.factory_direction = 0
@@ -77,10 +76,10 @@ function UIBottomPanel:UIBottomPanel(ui)
   ui:addKeyHandler("C", self, self.dialogDrugCasebook)	-- C for casebook
 end
 
-function UIBottomPanel:draw(canvas)
-  Window.draw(self, canvas)
+function UIBottomPanel:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
 
-  local x, y = self.x, self.y
+  x, y = x + self.x, y + self.y
   self.money_font:draw(canvas, ("%7i"):format(self.ui.hospital.balance), x + 44, y + 9)
   local month, day = self.world:getDate()
   self.date_font:draw(canvas, day .. " " .. _S.months[month], x + 140, y + 20, 60, 0)
@@ -222,9 +221,9 @@ function UIBottomPanel:createMessageWindow()
   
   local message_windows = self.message_windows
   local message_type = self.message_queue[#self.message_queue].type
-  local alert_window = UIMessage(self.ui, self.x + 175, self.x + 1 + #message_windows * 30, onClose, message_type, self.message_queue[#self.message_queue].message, self.message_queue[#self.message_queue].owner) -- Create the message window
+  local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30, onClose, message_type, self.message_queue[#self.message_queue].message, self.message_queue[#self.message_queue].owner) -- Create the message window
   message_windows[#message_windows + 1] = alert_window
-  self.ui:addWindow(alert_window)
+  self:addWindow(alert_window)
   self.factory_direction = 1
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
@@ -256,6 +255,7 @@ function UIBottomPanel:onTick()
   if #self.message_windows < 5 and #self.message_queue > 0 then
     self:showMessage() -- Proceed queue
   end
+  Window.onTick(self)
 end
 
 function UIBottomPanel:dialogBankManager()

@@ -29,8 +29,9 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.ui = ui
   self.modal_class = "main"
   self.esc_closes = true
-  self.x = (app.config.width - 300) / 2
-  self.y = (app.config.height - 300) / 2
+  self.width = 297
+  self.height = 294
+  self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req09V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
@@ -108,10 +109,10 @@ end
 
 local cat_label_y = {21, 53, 84, 116}
 
-function UIBuildRoom:draw(canvas)
-  Window.draw(self, canvas)
+function UIBuildRoom:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
   
-  local x, y = self.x, self.y
+  x, y = self.x + x, self.y + y
   self.white_font:draw(canvas, self.list_title, x + 163, y + 18)
   for i = 1, 4 do
     (i == self.category_index and self.blue_font or self.white_font)

@@ -29,6 +29,7 @@ adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in Ge
 -- new strings
 object.litter = "Litter"
 
+menu_options.lock_windows = "  LOCK WINDOWS  "
 menu_options_game_speed.pause = "  PAUSE  "
 
 menu_debug = {

@@ -33,8 +33,7 @@ function UIPatient:UIPatient(ui, patient)
   self.modal_class = "humanoid_info"
   self.width = 191
   self.height = 310
-  self.x = app.config.width - self.width - 20
-  self.y = 30
+  self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
   self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
@@ -81,8 +80,8 @@ function UIPatient:UIPatient(ui, patient)
   self:addKeyHandler("H", self.goHome)
 end
 
-function UIPatient:draw(canvas)
-  local x, y = self.x, self.y
+function UIPatient:draw(canvas, x_, y_)
+  local x, y = self.x + x_, self.y + y_
   local map = self.ui.app.map
   local patient = self.patient
   -- If the patient has just despawned, then it will have no tile, hence
@@ -106,7 +105,7 @@ function UIPatient:draw(canvas)
   -- handle it properly when it does occur).
   px, py = self.ui.limitPointToDiamond(px, py, self.visible_diamond, true)
   self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
-  Window.draw(self, canvas)
+  Window.draw(self, canvas, x_, y_)
   
   -- The patients happiness. Each bar is by default half way if the actual value 
   -- cannot be found.

@@ -30,8 +30,30 @@ function UIFullscreen:UIFullscreen(ui)
   self.on_top = true
   self.width = 640
   self.height = 480
+  
+  self:onChangeResolution()
+end
+
+function UIFullscreen:getSavedWindowPositionName()
+  return "UIFullscreen"
+end
+
+function UIFullscreen:onChangeResolution()
+  local app = self.ui.app
   if app.config.width > self.width or app.config.height > self.height then
-    self.border_sprites = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+    if not self.border_sprites then
+      self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+    end
+  else
+    self.border_sprites = nil
+  end
+  
+  local config = self.ui.app.runtime_config.window_position
+  if config then
+    config = config[self:getSavedWindowPositionName()]
+    if config then
+      return self:setPosition(config.x, config.y)
+    end
   end
   
   self.x = (app.config.width - self.width) / 2
@@ -44,15 +66,14 @@ function UIFullscreen:UIFullscreen(ui)
   else
     self.y = (app.config.height - self.height) / 2
   end
-
 end
 
-function UIFullscreen:draw(canvas)
+function UIFullscreen:draw(canvas, x, y)
   local sprites = self.border_sprites
   if sprites then
     local draw = sprites.draw
-    local x = self.x
-    local y = self.y
+    local x = self.x + x
+    local y = self.y + y
     canvas:nonOverlapping(true)
     draw(sprites, canvas, 10, x - 9, y - 9)
     draw(sprites, canvas, 12, x + 600, y - 9)
@@ -68,7 +89,16 @@ function UIFullscreen:draw(canvas)
     end
     canvas:nonOverlapping(false)
   end
-  return Window.draw(self, canvas)
+  return Window.draw(self, canvas, x, y)
+end
+
+function UIFullscreen:onMouseDown(button, x, y)
+  local repaint = Window.onMouseDown(self, button, x, y)
+  if button == "left" and not repaint and not (x >= 0 and y >= 0 and
+  x < self.width and y < self.height) and self:hitTest(x, y) then
+    return self:beginDrag(x, y)
+  end
+  return repaint
 end
 
 function UIFullscreen:hitTest(x, y)

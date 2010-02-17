@@ -40,8 +40,8 @@ function UIAdviser:UIAdviser(ui)
   self.ui = ui
   self.width = 200
   self.height = 64
-  self.x = (app.config.width - 640) / 2 + 365
-  self.y = app.config.height - self.height
+  self.x = 378
+  self.y = -16
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.black_font = app.gfx:loadFont("QData", "Font50V")
   
@@ -107,10 +107,10 @@ function UIAdviser:say(speech)
   self.is_talking = true
 end
 
-function UIAdviser:draw(canvas)
-  local x, y = self.x, self.y
-
-  Window.draw(self, canvas)
+function UIAdviser:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  
+  x, y = x + self.x, y + self.y
   self.th:draw(canvas, x + 200, y)
   if self.is_talking == true then
     -- Draw ballon

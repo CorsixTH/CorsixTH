@@ -70,15 +70,15 @@ function UIBankManager:UIBankManager(ui)
   -- TODO: Add the insurance companies "for real" and draw graphs
 end
 
-function UIBankManager:draw(canvas)
-  local x, y = self.x, self.y
+function UIBankManager:draw(canvas, x, y)
   local hospital = self.ui.hospital
-    
+  
   -- Either draw the statistics page or the normal bank page
   if self.showingStatistics then
     local font = self.stat_font
-    self.stat_background:draw(canvas, self.x, self.y)
-    UIFullscreen.draw(self, canvas)
+    self.stat_background:draw(canvas, self.x + x, self.y + y)
+    UIFullscreen.draw(self, canvas, x, y)
+    x, y = self.x + x, self.y + y
     
     -- Titles
     font:draw(canvas, _S.bank_manager.statistics_page.date, x + 44, y + 37, 65, 0)
@@ -107,8 +107,9 @@ function UIBankManager:draw(canvas)
     font:draw(canvas, "$ " .. hospital.balance, x + 526, y + 421, 70, 0)
   else
     local font = self.font
-    self.background:draw(canvas, self.x, self.y)
-    UIFullscreen.draw(self, canvas)
+    self.background:draw(canvas, self.x + x, self.y + y)
+    UIFullscreen.draw(self, canvas, x, y)
+    x, y = self.x + x, self.y + y
     
     -- The left side
     font:draw(canvas, _S.bank_manager.hospital_value, x + 60, y + 109, 143, 0)

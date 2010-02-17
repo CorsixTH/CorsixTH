@@ -205,5 +205,6 @@ function LoadGame(data)
   local cursor = TheApp.ui.cursor
   TheApp.ui.cursor = nil
   TheApp.ui:setCursor(cursor)
+  TheApp.ui:onChangeResolution()
   --end, persist.errcatch)
 end

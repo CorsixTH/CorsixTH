@@ -566,44 +566,35 @@ function UIEditRoom:checkReachability()
   local rect = self.blueprint_rect
   local prev_x, prev_y
   local x, y = rect.x, rect.y - 1
+  local flags = {}
   
-  while x < rect.x + rect.w do
-    if map:getCellFlags(x, y).passable then
+  local function check(flag)
+    if map:getCellFlags(x, y, flags).passable and flags[flag] then
       if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
         return false
       end
       prev_x, prev_y = x, y
     end
+    return true
+  end
+  
+  while x < rect.x + rect.w do
+    if not check"travelSouth" then return false end
     x = x + 1
   end
   y = y + 1
   while y < rect.y + rect.h do
-    if map:getCellFlags(x, y).passable then
-      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
-        return false
-      end
-      prev_x, prev_y = x, y
-    end
+    if not check"travelWest" then return false end
     y = y + 1
   end
   x = x - 1
   while x >= rect.x do
-    if map:getCellFlags(x, y).passable then
-      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
-        return false
-      end
-      prev_x, prev_y = x, y
-    end
+    if not check"travelNorth" then return false end
     x = x - 1
   end
   y = y - 1
   while y >= rect.y do
-    if map:getCellFlags(x, y).passable then
-      if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
-        return false
-      end
-      prev_x, prev_y = x, y
-    end
+    if not check"travelEast" then return false end
     y = y - 1
   end
   
@@ -682,12 +673,12 @@ function UIEditRoom:enterObjectsPhase()
   end
 end
 
-function UIEditRoom:draw(canvas)
+function UIEditRoom:draw(canvas, ...)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
   
-  UIPlaceObjects.draw(self, canvas)
+  UIPlaceObjects.draw(self, canvas, ...)
 end
 
 function UIEditRoom:hitTest(x, y)

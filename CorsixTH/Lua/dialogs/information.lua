@@ -30,8 +30,7 @@ function UIInformation:UIInformation(ui, text, callback)
   self.ui = ui
   self.width = 183
   self.height = 199
-  self.x = (app.config.width - self.width) / 2
-  self.y = (app.config.height - self.height) / 2
+  self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.text = text
@@ -51,9 +50,9 @@ function UIInformation:ok()
   self.callback()
 end
 
-function UIInformation:draw(canvas)
-  Window.draw(self, canvas)
+function UIInformation:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
   
-  local x, y = self.x, self.y
+  x, y = x + self.x, y + self.y
   self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153, 0, 149)
 end

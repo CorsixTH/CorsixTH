@@ -31,8 +31,7 @@ function UIMachine:UIMachine(ui, machine, room)
   self.modal_class = "humanoid_info"
   self.width = 188
   self.height = 206
-  self.x = app.config.width - self.width - 20
-  self.y = 30
+  self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req03V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
@@ -55,11 +54,10 @@ function UIMachine:UIMachine(ui, machine, room)
   self:addPanel(337, 146,  18):makeButton(0, 0, 24, 24, 338, self.close)
 end
 
-function UIMachine:draw(canvas)
-  local x, y = self.x, self.y
+function UIMachine:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
   local mach = self.machine
-  
-  Window.draw(self, canvas)
   
   local font = self.white_font
   local output

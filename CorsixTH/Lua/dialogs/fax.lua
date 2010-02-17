@@ -91,24 +91,25 @@ function UIFax:UIFax(ui, message, owner)
   self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button"#")
 end
 
-function UIFax:draw(canvas)
-  self.background:draw(canvas, self.x, self.y)
+function UIFax:draw(canvas, x, y)
+  self.background:draw(canvas, self.x + x, self.y + y)
+  UIFullscreen.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
   
   if self.message then
-    local last_y = self.y + 40
+    local last_y = y + 40
     for i = 1, #self.message do
-      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, self.x + 170, 
+      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, x + 170, 
           last_y + (self.message[i].offset or 0), 380)
     end
     if self.message["choices"] then
-      last_y = self.y + 100
+      last_y = y + 100
       for k = 1, #self.message["choices"] do
         last_y = self.fax_font:drawWrapped(canvas, self.message["choices"][k].text, 
-            self.x + 190, last_y + (self.message["choices"][k].offset or 0), 280)
+            x + 190, last_y + (self.message["choices"][k].offset or 0), 280)
       end
     end
   end
-  return UIFullscreen.draw(self, canvas)
 end
 
 function UIFax:choice(choice)

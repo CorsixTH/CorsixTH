@@ -36,6 +36,7 @@ class "App"
 function App:App()
   self.command_line = {}
   self.config = {}
+  self.runtime_config = {}
   self.running = false
   self.gfx = {}
   self.last_dispatch_type = ""

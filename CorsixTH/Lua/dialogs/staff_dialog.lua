@@ -39,8 +39,7 @@ function UIStaff:UIStaff(ui, staff)
   else
     self.height = 304
   end
-  self.x = app.config.width - self.width - 20
-  self.y = 30
+  self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
@@ -89,12 +88,12 @@ function UIStaff:getStaffPosition(dx, dy)
   return x + px - (dx or 0), y + py - (dy or 0)
 end
 
-function UIStaff:draw(canvas)
-  local x, y = self.x, self.y
+function UIStaff:draw(canvas, x_, y_)
+  local x, y = self.x + x_, self.y + y_
 
   local px, py = self:getStaffPosition(37, 61)
   self.ui.app.map:draw(canvas, px, py, 75, 75, x + 17, y + self.height - 93)
-  Window.draw(self, canvas)
+  Window.draw(self, canvas, x_, y_)
   
   local profile = self.staff.profile
   local font = self.white_font

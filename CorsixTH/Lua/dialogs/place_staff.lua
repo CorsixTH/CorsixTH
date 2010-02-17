@@ -64,7 +64,7 @@ function UIPlaceStaff:close()
 end
 
 function UIPlaceStaff:onMouseMove(x, y)
-  x, y = self.ui:ScreenToWorld(x, y)
+  x, y = self.ui:ScreenToWorld(x, y + 14)
   self.tile_x = math_floor(x)
   self.tile_y = math_floor(y)
 end
