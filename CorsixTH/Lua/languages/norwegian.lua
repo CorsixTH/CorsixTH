@@ -32,11 +32,7 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the
 norwegian letters ø and Ø, you must use the old-style ö and Ö instead. That is 
 because the letters ø and Ø is not included in the original ingame-font.
 
-DISCUSSIONS
-To keep the translation as good as possible, you should allways stay updated 
-at the forum where the Norwegian translation is discussed:
 
-[Link to forum section]
 
 -------------------------------------------------------------------------------
     Table of Contents
@@ -44,85 +40,82 @@ at the forum where the Norwegian translation is discussed:
  
  -- SECTION A - NEW STRINGS
 
- 1: Global settings
- 2: Faxes
- 3: Objects
- 4: Menu
- 5: Adviser
+ 	1. Global settings
+ 	2. Faxes
+ 	3. Objects
+ 	4. Menu
+ 	5. Adviser
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
- Huge section with all original strings, translated from english.
+ 	Huge section with all original strings, translated from english.
 
--------------------------------------------------------------------------------
+
+
 -----------------------------------------------------------------------------]]
+
 
 -------------------------------------------------------------------------------
 --   SECTION A - NEW STRINGS
 -------------------------------------------------------------------------------
 
--- 1: Global setings (do not edit!)
--- 
+-- 1. Global setings (do not edit!)
 Language("norwegian", "nb", "nob")
 Inherit("english")
 
 
--- 2: Faxes
--- 
+-- 2. Faxes
 fax = {
   welcome = {
     beta1 = {
-      utf8 "Velkommen til CorsixTH, en klone av klassikeren Theme Hospital (Bullfrog) i åpen kildekode!",
-      utf8 "Dette er en spillbar beta 1 av CorsixTH. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
-      utf8 "Om du liker dette prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
-      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en resepsjon (fra inventarmenyen) og en Allmennpraksis (diagnoserom). Ulike behandlingsrom blir også nödvendig.",
-      utf8 "-- CorsixTH teamet, th.corsix.org",
+      utf8 "Velkommen til CorsixTH, en remake av klassikeren Theme Hospital i åpen kildekode!",
+      utf8 "Dette er en spillbar beta 1. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
+      utf8 "Om du liker prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
+      utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en Resepsjon (inventarmenyen) og en Allmennpraksis (diagnoserom). Du trenger også behandlingsrom.",
+      utf8 "-- CorsixTH-teamet, th.corsix.org.",
       utf8 "PS: Kan du finne de sjulte påskeeggene?",
     }
   }
 }
 
 
--- 3: Objects
--- 
+-- 3. Objects
 object = {
-	litter 				  = utf8 "Söppel",
+	litter 				  		= utf8 "Söppel",
 }
 
 
--- 4: Menu 
--- 
-menu_options_game_speed.pause = "  PAUSE  "
+-- 4. Menu 
+menu_options_game_speed.pause 	= "  PAUSE  "
 
 menu_debug = {
-  transparent_walls           = "  GJENNOMSIKTIGE VEGGER  ",
-  limit_camera                = "  BEGRENS KAMERA  ",
-  disable_salary_raise        = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
-  make_debug_patient          = "  LAG DEBUG-PASIENT  ",
-  spawn_patient               = "  SPAWN PASIENT  ",
-  make_adviser_talk           = utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
-  show_watch                  = "  VIS KLOKKE  ",
-  place_objects               = "  PLASSER OBJEKTER  ",
-  dump_strings                = utf8 "  DUMP SPRÅKSTRENG  ",
-  map_overlay                 = "  KARTOVERLEGG  ",
-  sprite_viewer               = "  SPRITEVISNING  ",
+  transparent_walls           	= "  GJENNOMSIKTIGE VEGGER  ",
+  limit_camera                	= "  BEGRENS KAMERA  ",
+  disable_salary_raise        	= utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
+  make_debug_patient          	= "  LAG DEBUG-PASIENT  ",
+  spawn_patient               	= "  SPAWN PASIENT  ",
+  make_adviser_talk           	= utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
+  show_watch                  	= "  VIS KLOKKE  ",
+  place_objects               	= "  PLASSER OBJEKTER  ",
+  dump_strings                	= utf8 "  DUMP SPRÅKSTRENG  ",
+  map_overlay                 	= "  KARTOVERLEGG  ",
+  sprite_viewer               	= "  SPRITEVISNING  ",
 }
 
 menu_debug_overlay = {
-  none                        = "  INGEN  ",
-  flags                       = "  FLAGG  ",
-  byte_0_1                    = "  BYTE 0 & 1  ",
-  byte_floor                  = "  BYTE GULV  ",
-  byte_n_wall                 = "  BYTE N VEGG  ",
-  byte_w_wall                 = "  BYTE W VEGG  ",
-  byte_5                      = "  BYTE 5  ",
-  byte_6                      = "  BYTE 6  ",
-  byte_7                      = "  BYTE 7  ",
-  parcel                      = "  PAKKE  ",
+  none                        	= "  INGEN  ",
+  flags                       	= "  FLAGG  ",
+  byte_0_1                    	= "  BYTE 0 & 1  ",
+  byte_floor                  	= "  BYTE GULV  ",
+  byte_n_wall                 	= "  BYTE N VEGG  ",
+  byte_w_wall                 	= "  BYTE W VEGG  ",
+  byte_5                      	= "  BYTE 5  ",
+  byte_6                      	= "  BYTE 6  ",
+  byte_7                      	= "  BYTE 7  ",
+  parcel                      	= "  PAKKE  ",
 }
 
--- 5: Adviser
---
+-- 5. Adviser
 adviser = {
 	room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig.",
 }
@@ -245,10 +238,10 @@ staff_descriptions = {
     [13] = "Dumdristig og bryr seg lite. ",
     [14] = "Slu, utspekulert og baksnakker andre. ",
     [15] = utf8 "Arrogant og ovenpå. ",
-    [16] = ".",
   },
 } 
 
+-- Staff list
 staff_list = {
   morale       = "MORAL",
   tiredness    = "TRETTHET",
@@ -542,7 +535,6 @@ drug_companies = {
 
 -- Build rooms
 build_room_window = {
-  -- S[16][1], -- unused
   pick_department   = "Velg avdeling",
   pick_room_type    = "Velg romtype",
   cost              = "Pris: ",
@@ -610,7 +602,7 @@ insurance_companies = {
   "Mafia Forsikringer",
 }
 
--- Menu strings
+-- Menu root
 -- Keep 2 spaces as prefix and suffix
 menu = {
   file                	= "  FIL  ",
@@ -620,6 +612,7 @@ menu = {
   debug               	= "  DEBUG  ",
 }
 
+-- Menu File
 menu_file = {
   load                	= "  LAST INN  ",
   save                	= "  LAGRE  ",
@@ -627,6 +620,7 @@ menu_file = {
   quit                	= "  AVSLUTT  ",
 }
 
+-- Menu Options
 menu_options = {
   sound               = "  LYD  ",
   announcements       = "  SPEAKER  ",
@@ -639,6 +633,7 @@ menu_options = {
   jukebox             = "  JUKEBOX  ",
 }
 
+-- Menu Options Game Speed
 menu_options_game_speed = {
   slowest             = "  TREGEST  ",
   slower              = "  TREGERE  ",
@@ -647,12 +642,14 @@ menu_options_game_speed = {
   and_then_some_more  = "  OG LITT RASKERE  ",
 }
 
+-- Menu Display
 menu_display = {
   high_res            = utf8 "  HÖY OPPLÖSNING  ",
   mcga_lo_res         = "  MCGA LAV OPPL.  ",
   shadows             = "  SKYGGER  ",
 }
 
+-- Menu Charts
 menu_charts = {
   statement           = "  KONTOUTSKRIFT  ",
   casebook            = "  MEDISINBOK  ",
@@ -665,6 +662,7 @@ menu_charts = {
   briefing            = "  BRIEFING  ",
 }
 
+-- Menu Debug
 menu_debug = {
   object_cells        = "  OBJEKTCELLER        ",
   entry_cells         = "  INNGANGSCELLER      ",
@@ -698,7 +696,6 @@ menu_debug = {
 
 -- High score screen
 high_score = {
-  -- S[25][1] unused
   pos          = "POS",
   player       = "SPILLER",
   score        = "POENG",
@@ -723,7 +720,6 @@ high_score = {
 
 -- Trophy room
 trophy_room = {
-  -- S[27][1] unused
   many_cured = {
     awards = {
       utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
@@ -842,7 +838,8 @@ casebook = {
 
 -- Tooltips
 tooltip = {
-  -- S[32][1] unused
+  
+  -- Build room window
   build_room_window = {
     room_classes = {
       diagnosis        = "Velg diagnoserom",
@@ -854,6 +851,7 @@ tooltip = {
     close              = "Avbryt prosessen og returner til spillet",
   },
   
+  -- Toolbar
   toolbar = {
     bank_button        = utf8 "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
     balance            = "Din Balanse",
@@ -872,6 +870,7 @@ tooltip = {
     policy             = "Sykehuspolicy",
   },
   
+  -- Hire staff window
   hire_staff_window = {
     doctors            = utf8 "Vis Leger tilgjengelig på arbeidsmarkedet",
     nurses             = utf8 "Vis Sykepleiere tilgjengelig på arbeidsmarkedet",
@@ -890,6 +889,7 @@ tooltip = {
     researcher         = "Forsker",
   },
   
+  -- Buy objects window
   buy_objects_window = {
     price              = utf8 "Pris på gjenstand",
     total_value        = utf8 "Total verdi på kjöpte gjenstander",
@@ -899,6 +899,7 @@ tooltip = {
     decrease           = utf8 "Kjöp en mindre av denne gjenstanden",
   },
   
+  -- Staff list
   staff_list = {
     doctors            = "Se en oversikt over dine leger",
     nurses             = "Se en oversikt over dine sykepleiere",
@@ -938,6 +939,7 @@ tooltip = {
     skills             = "Ekstra evner",
   },
   
+  -- Queue window
   queue_window = {
     num_in_queue       = utf8 "Antall pasienter i köen",
     num_expected       = utf8 "Antall pasienter resepsjonisten forventer i köen innen kort tid",
@@ -958,6 +960,7 @@ tooltip = {
     },
   },
   
+  -- Main menu
   main_menu = {
     new_game           = "Start et nytt spill",
     load_game          = "Last inn et tidligere spill",
@@ -969,13 +972,13 @@ tooltip = {
       empty_slot       = S[41][  2],
     },
   },
-  
+  -- Window general
   window_general = {
     cancel             = "Avbryt",
     confirm            = "Bekreft",
     close_window       = "Lukk vindu",
   },
-  
+  -- Patient window
   patient_window = {
     graph              = utf8 "Klikk for å veksle mellom graf med personens helse og personens behandlingshistorikk",
     happiness          = utf8 "Personens humör",
@@ -987,7 +990,7 @@ tooltip = {
     abort_diagnosis    = utf8 "Send personen til behandling istedenfor å vente til diagnosen er ferdigstilt",
     queue              = utf8 "Se köen pasienten befinner seg i",
   },
-  
+  -- window
   staff_window = {
     name               = "Den ansattes navn",
     close              = "Lukk vindu",
@@ -1005,7 +1008,7 @@ tooltip = {
     sack               = "Si opp",
     pick_up            = "Plukk opp",
   },
-  
+  -- Machine window
   machine_window = {
     name               = "Navn",
     close              = "Lukk vindu",
@@ -1015,6 +1018,8 @@ tooltip = {
     replace            = "Erstatt maskin",
   },
   
+  
+  -- Handyman window
   -- Spparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
@@ -1033,6 +1038,7 @@ tooltip = {
     pick_up            = "Plukk opp",
   },
   
+  -- Place objects window
   place_objects_window = {
     cancel             = "Avbryt",
     buy_sell           = utf8 "Kjöp/Selg gjenstander",
@@ -1040,6 +1046,7 @@ tooltip = {
     confirm            = "Bekreft",
   },
   
+  -- Casebook
   casebook = {
     up                 = "Rull oppover",
     down               = "Rull nedover",
@@ -1060,6 +1067,7 @@ tooltip = {
       operation        = "Denne sykdommen krever en operasjon",
       machine          = "Denne sykdommen krever en maskin for behandling",
     },
+    
     cure_requirement = {
       possible         = utf8 "Du kan gjennomföre behandling",
       research_machine = utf8 "Du må forske på maskiner for å gjennomföre behandlingen",
@@ -1073,10 +1081,12 @@ tooltip = {
     },
   },
   
+  -- Statement
   statement = {
     close              = "Lukk kontoutskriften",
   },
   
+  -- Research
   research = {
     close              = utf8 "Gå ut av forskningsavdelingen",
     cure_dec           = utf8 "Senk prioritering av forskning på behandlingsutstyr",
@@ -1089,11 +1099,10 @@ tooltip = {
     drugs_inc          = utf8 "Ök prioritering av forskning på medisiner",
     improvements_inc   = utf8 "Ök prioritering av forskning på forbedringer",
     specialisation_inc = utf8 "Ök prioritering av forskning på spesialiseringer",
-
-    -- S[32][174] unused
     allocated_amount   = "Penger satt av til forskning",
   },
   
+  -- Graphs
   graphs = {
     close              = utf8 "Gå ut av diagramvinduet",
     scale              = utf8 "Skala på diagram",
@@ -1106,9 +1115,8 @@ tooltip = {
     deaths             = utf8 "Vis/skjul Dödsfall",
     reputation         = utf8 "Vis/skjul Omdömme",
   },
-  
-  -- S[32][186] through S[32][190] inserted further above
-  
+
+  -- Town map
   town_map = {
     people             = "Vis/Skjul mennesker",
     plants             = "Vis/Skjul planter",
@@ -1123,7 +1131,7 @@ tooltip = {
     close              = utf8 "Lukk områdekart",
   },
   
-  -- S[32][202] unused.
+  -- Jukebox.
   jukebox = {
     current_title      = "Jukebox",
     close              = "Lukk jukebox",
@@ -1134,6 +1142,7 @@ tooltip = {
     loop               = "Repeter jukebox",
   },
   
+  -- Bank Manager
   bank_manager = {
     hospital_value     = utf8 "Nåværende verdi på sykehuset ditt",
     balance            = "Din balanse i banken",
@@ -1150,6 +1159,7 @@ tooltip = {
     graph_return       = "Returner til forrige visning",
   },
   
+  -- Status
   status = {
     win_progress_own   = utf8 "Vis progresjon i forhold til kravene for dette nivået",
     win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
@@ -1160,6 +1170,7 @@ tooltip = {
     close              = "Lukk oversikten",
   },
   
+  -- Policy
   policy = {
     close              = "Lukk sykehuspolicy",
     staff_leave        = utf8 "Klikk her for å få personale som ikke er opptatt til å hjelpe kollegaer som trenger det",
@@ -1169,19 +1180,21 @@ tooltip = {
     staff_rest         = utf8 "Hvor trött personale må være för de kan hvile",
   },
   
+  -- Pay rise window
   pay_rise_window = {
     accept             = utf8 "Imötekom kravene",
     decline            = "Ikke godta kravene - Si opp istedenfor",
   },
   
+  -- Watch
   watch = {
     hospital_opening   = utf8 "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE knappen vil åpne sykehuset umiddelbart.",
     emergency          = utf8 "Nödstilfelle: Tid som gjenstår til å behandle alle akutte pasienter.",
     epidemic           = utf8 "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en sykepleier til å vaksinere de.",
   },
   
+  -- Rooms
   rooms = {
-    -- S[33][1] through S[33][7] unused.
     gps_office         = utf8 "Pasientene får sin förste konsultasjon og tilhörende resultater på Allmennpraksisen",
     psychiatry         = utf8 "Psykiatrien kurerer gale pasienter og hjelper til med diagnosering av andre pasienter, men trenger en Lege med spesialisering innenfor Psykiatri",
     ward               = utf8 "Sengeavdelinger er nyttige for både diagnosering og behandling. Pasienter blir sendt hit for observasjon men også for overvåkning etter operasjoner. Sengeavdelingen krever en Sykepleier",
@@ -1208,8 +1221,8 @@ tooltip = {
     decontamination    = utf8 "En Lege bruker Saneringsdusjen for å behandle pasienter med Alvorlig Stråling",
   },
   
+  -- Objects
   objects = {
-    -- S[40][1] unused.
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
     desk                 = "Pult: en Lege kan bruke pulten til PC'en sin.",
     cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
@@ -1275,8 +1288,10 @@ tooltip = {
   },
 }
 
--- Adviser
+-- 32. Adviser
 adviser = {
+  
+  -- Tutorial
   tutorial = {
   	build_reception 				= utf8 "Heisann. Först, trenger sykehuset ditt en Resepsjon. Velg en fra Inventarmenyen.",
   	order_one_reception 			= utf8 "Klikk en gang på den blinkende linjen med venstre museknapp for å kjöpe en Resepsjon.",
@@ -1289,7 +1304,7 @@ adviser = {
     prev_receptionist 				= utf8 "Venstreklikk på det blinkende ikonet for å se på forrige person.",
     choose_receptionist 			= utf8 "Avgjör hvilken resepsjonist som har gode evner og akseptable lönnskrav, og venstreklikk på det blinkende ikonet for å ansette henne.",
     place_receptionist 				= utf8 "Flytt resepsjonisten og plasser henne hvor som helst. Hun klarer å finne veien til resepsjonen selv.",
-    receptionist_invalid_position 	= "Du kan ikke plassere henne der.",
+    receptionist_invalid_position 	= utf8 "Du kan ikke plassere henne der.",
     window_in_invalid_position 		= utf8 "Dette vinduet kan ikke være her. Pröv å plassere det en annen plass på veggen, er du snill.",
     choose_doctor 					= utf8 "Se nöye gjennom evnene til hver enkelt Lege för du bestemmer deg for hvem du vil ansette.",
     click_and_drag_to_build		 	= utf8 "For å bygge en Allmennpraksis, må du först avgjöre hvor stor den skal være. Klikk og hold inne venstre museknapp for å justere rommets störrelse.",
@@ -1302,7 +1317,7 @@ adviser = {
     place_windows 					= utf8 "Plasser vinduer på samme måten som du plasserte dören. Du trenger ikke vinduer, men de ansatte setter veldig pris på det, og blir blidere når de har noe å se ut gjennom.",
     place_doctor 					= utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart noen trenger å diagnoseres.",
     room_in_invalid_position 		= utf8 "Oj! Denne blåkopien er ikke gyldig - det röde området indikerer hvor du har overlappet et annet rom eller sykehusets vegger.",
-    doctor_in_invalid_position 		= "Hei! Du kan ikke slippe Legen her.",
+    doctor_in_invalid_position 		= utf8 "Hei! Du kan ikke slippe Legen her.",
     place_objects 					= utf8 "Höyreklikk for å rotere gjenstander, og venstreklikk for å plassere dem.",
     room_too_small 					= utf8 "Denne blåkopien er röd fordi den er for liten. Strekk den ut for å gjöre den större.",
     click_gps_office 				= utf8 "Venstreklikk på den blinkende linjen for å velge en Allmennpraksis.",
@@ -1312,11 +1327,15 @@ adviser = {
     place_door 						= utf8 "Flytt musen rundt om kring på blåkopiens vegger for å plassere dören der du vil ha den.",
     room_big_enough 				= utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
   },
+  
+  -- Epidemic
   epidemic = {
     hurry_up 				= utf8 "Om du ikke tar deg av epidemien nå, får du store problemer. Fort deg!",
     serious_warning 		= utf8 "Den smittsomme sykdomen begynner å bli et seriöst problem. Du må gjöre noe snart!",
     multiple_epidemies 		= utf8 "Det ser ut som at du har mer enn en epidemi gående samtidig. Dette kan bli en enorm katastrofe, så fort deg.",
   },
+  
+  -- Staff advice
   staff_advice = {
     need_handyman_machines 	= utf8 "Du må ansette Vaktmestre om du vil holde maskinene dine ved like.",
     need_doctors 			= utf8 "Du trenger flere Leger. Pröv å plassere dine beste leger i rommene med lengst kö.",
@@ -1324,33 +1343,43 @@ adviser = {
     need_handyman_litter 	= utf8 "Folk har begynt å forsöple sykehuset ditt. Ansett en Vaktmester for å rydde opp etter pasientene dine.",
     need_nurses 			= utf8 "Du trenger flere Sykepleiere. Sengeavdelinger og Apotek kan bare driftes av Sykepleiere.",
     too_many_doctors 		= utf8 "Du har for mange Leger. Noen av dem har ingenting å gjöre.",
-    too_many_nurses 		= "Jeg tror du har for mange Sykepleiere.",
+    too_many_nurses 		= utf8 "Jeg tror du har for mange Sykepleiere.",
   },
+  
+  -- Earthquake
   earthquake = {
-    damage 	= utf8 "Det jordskjelvet skadet %d maskiner og %d pasienter på sykehuset.", -- %d (count machines), &d (count patients)
-    alert 	= utf8 "Jordskjelv-varsel. Under et jordskjelv blir maskinene dine skadet. De kan bli ödelagt om de er dårlig vedlikeholdt.",
-    ended 	= utf8 "Puh. Jeg trodde det var et stort skjelv - Det målte %d på Richters skala.",
+    damage 		= utf8 "Det jordskjelvet skadet %d maskiner og %d pasienter på sykehuset.", -- %d (count machines), &d (count patients)
+    alert 		= utf8 "Jordskjelv-varsel. Under et jordskjelv blir maskinene dine skadet. De kan bli ödelagt om de er dårlig vedlikeholdt.",
+    ended 		= utf8 "Puh. Jeg trodde det var et stort skjelv - Det målte %d på Richters skala.",
   },
+  
+  -- Multiplayer
   multiplayer = {
-    objective_completed 	= utf8 "Du har fullfört utfordringene for dette nivået. Gratulerer!",
-    everyone_failed 		= utf8 "Ingen klarte de forrige utfordringene. Så alle får spille videre !",
-    players_failed 			= "Følgende spiller(e) klarte ikke den forrige utfordringen : ",
+    objective_completed 			= utf8 "Du har fullfört utfordringene for dette nivået. Gratulerer!",
+    everyone_failed 				= utf8 "Ingen klarte de forrige utfordringene. Så alle får spille videre !",
+    players_failed 					= utf8 "Følgende spiller(e) klarte ikke den forrige utfordringen : ",
     
     poaching = {
       in_progress 					= utf8 "Jeg skal si ifra om denne personen vil komme å jobbe for deg.",
       not_interested 				= utf8 "Ha! De er ikke interessert i å jobbe for deg - de har det bra der de er.",
       already_poached_by_someone 	= utf8 "Ikke snakk om! Noen pröver allerede å overtale personen.",
     },
-    objective_failed = utf8 "Du har ikke lykkes i å fullföre utfordringene.",
+    objective_failed 				= utf8 "Du har ikke lykkes i å fullföre utfordringene.",
   },
+  
+  -- Surgery requirements
   surgery_requirements = {
     need_surgeons_ward_op 	= utf8 "Du trenger to Kirurger og en Sengeavdeling i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
     need_surgeon_ward 		= utf8 "Du trenger en til Kirurg og en Sengeavdeling for å gjöre kirurgiske inngrep.",
   },
+  
+  -- Vomit wave
   vomit_wave = {
     started 	= utf8 "Ser ut som du har et magevirus på sykehuset ditt. Om du hadde holdt det renere ville ikke dette skjedd. Kanskje du burde hatt flere Vaktmestre.",
     ended 		= utf8 "Puh! Ser ut som viruset som forårsaket bölgen med oppkast er så godt som borte. Hold sykehuset ditt rent i fremtiden.",
   },
+  
+  -- Level progress
   level_progress = {
     nearly_won 			= utf8 "Du har nesten fullfört dette nivået nå.",
     three_quarters_lost = utf8 "Du er nå tre fjerdedeler på vei til å tape dette nivået.",
@@ -1359,35 +1388,45 @@ adviser = {
     nearly_lost 		= utf8 "Det er like för du taper dette nivået nå.",
     three_quarters_won 	= utf8 "Du er nå tre fjerdedeler på vei til å fullföre dette nivået.",
   },
+  
+  -- Staff place advice
   staff_place_advice = {
-    receptionists_only_at_desk 	= "Resepsjonister kan kun jobbe i Resepsjoner.",
-    only_psychiatrists 			= "Leger kan bare jobbe i Psykiatri dersom de er kvalifiserte Psykologer.",
-    only_surgeons 				= "Leger kan bare jobbe i Operasjonssalen dersom de er kvalifiserte Kirurger.",
-    only_nurses_in_room 		= utf8 "Det er kun Sykepleiere som kan jobbe på %s",
-    only_doctors_in_room 		= utf8 "%s kan kun håndteres av Leger",
-    only_researchers 			= "Leger kan bare jobbe på Forskningsavdelingen dersom de er kvalifiserte Forskere.",
-    nurses_cannot_work_in_room 	= utf8 "%s kan ikke håndteres av Sykepleiere",
-    doctors_cannot_work_in_room = utf8 "%s kan ikke håndteres av Leger",
+    receptionists_only_at_desk 		= utf8 "Resepsjonister kan kun jobbe i Resepsjoner.",
+    only_psychiatrists 				= utf8 "Leger kan bare jobbe i Psykiatri dersom de er kvalifiserte Psykologer.",
+    only_surgeons 					= utf8 "Leger kan bare jobbe i Operasjonssalen dersom de er kvalifiserte Kirurger.",
+    only_nurses_in_room 			= utf8 "Det er kun Sykepleiere som kan jobbe på %s",
+    only_doctors_in_room 			= utf8 "%s kan kun håndteres av Leger",
+    only_researchers 				= utf8 "Leger kan bare jobbe på Forskningsavdelingen dersom de er kvalifiserte Forskere.",
+    nurses_cannot_work_in_room 		= utf8 "%s kan ikke håndteres av Sykepleiere",
+    doctors_cannot_work_in_room 	= utf8 "%s kan ikke håndteres av Leger",
   },
+  
+  -- Research
   research = {
-    machine_improved 			= utf8 "%s er forbedret av Forskningsavdelingen.",
-    autopsy_discovered_rep_loss = "Din Automatiske Obduseringsmaskin er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
-    drug_fully_researched 		= utf8 "Du har utforsket %s til 100%.",
-    new_machine_researched 		= utf8 "En ny %s er akkurat utviklet.",
-    drug_improved 				= utf8 "%s medisinen er forbedret av Forskningsavdelingen din.",
-    new_available 				= utf8 "En ny %s er tilgjengelig.",
-    new_drug_researched 		= utf8 "En ny medisin for å kurere %s er utviklet.",
+    machine_improved 				= utf8 "%s er forbedret av Forskningsavdelingen.",
+    autopsy_discovered_rep_loss 	= utf8 "Din Automatiske Obduseringsmaskin er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
+    drug_fully_researched 			= utf8 "Du har utforsket %s til 100%.",
+    new_machine_researched 			= utf8 "En ny %s er akkurat utviklet.",
+    drug_improved 					= utf8 "%s medisinen er forbedret av Forskningsavdelingen din.",
+    new_available 					= utf8 "En ny %s er tilgjengelig.",
+    new_drug_researched 			= utf8 "En ny medisin for å kurere %s er utviklet.",
   },
+  
+  -- Boiler issue
   boiler_issue = {
     minimum_heat 	= utf8 "Å, der er du. Sentralovnen i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
     maximum_heat 	= utf8 "Sentralovnen i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
     resolved 		= utf8 "Gode nyheter. Sentralvarmen fungerer slik som de skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
   },
+  
+  -- Competitors
   competitors = {
-    staff_poached 	= utf8 "En av dine ansatte har fått seg jobb på et annet sykehus.",
-    hospital_opened = utf8 "Et konkurrerende sykehus er åpnet i området av %s.",
-    land_purchased 	= utf8 "%s har akkurat kjöpt en tomt.",
+    staff_poached 		= utf8 "En av dine ansatte har fått seg jobb på et annet sykehus.",
+    hospital_opened 	= utf8 "Et konkurrerende sykehus er åpnet i området av %s.",
+    land_purchased 		= utf8 "%s har akkurat kjöpt en tomt.",
   },
+  
+  -- Room requirements
   room_requirements = {
     research_room_need_researcher 	= utf8 "Du må ansette en Lege med spesialisering innenfor Forskning for å kunne ta i bruk Forskningsavdelingen.",
     op_need_another_surgeon 		= utf8 "Du trenger fremdeles en Kirurg til, for å kunne ta i bruk Operasjonssalen.",
@@ -1400,6 +1439,8 @@ adviser = {
     training_room_need_consultant 	= utf8 "Du må ansette en Konsulent som kan undervise i Klasserommet.",
     gps_office_need_doctor 			= utf8 "Du må ansette en Lege som kan jobbe på Allmennpraksisen.",
   },
+  
+  -- Goals
   goals = {
     win = {
       money 		= utf8 "Du trenger %d til for å oppnå de finansielle kriteriene på dette nivået.",
@@ -1408,15 +1449,17 @@ adviser = {
       value 		= utf8 "Sykehuset ditt må ha en verdi på over %d for at du skal kunne fullföre dette nivået",
     },
     lose = {
-      kill = "Drep %d pasienter til for å tape dette nivået !",
+      kill 			= utf8 "Drep %d pasienter til for å tape dette nivået !",
     },
   },
+  
+  -- Warnings
   warnings = {
     charges_too_low 			= utf8 "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre pr. pasient.",
     charges_too_high 			= utf8 "Dine priser er for höye. Dette gir deg god profitt på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
     plants_thirsty 				= utf8 "Du må huske på plantene dine. De er törste.",
     staff_overworked 			= utf8 "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når di er trötte.",
-    queue_too_long_at_reception = "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en resepsjonist til.",
+    queue_too_long_at_reception = utf8 "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en resepsjonist til.",
     queue_too_long_send_doctor 	= utf8 "Köen til %s er for lang. Sörg for at det er en Lege i rommet.",
     handymen_tired 				= utf8 "Dine Vaktmestere er veldig trött. Gi dem hvile nå.",
     money_low 					= utf8 "Du begynner å gå tom for penger!",
@@ -1440,27 +1483,33 @@ adviser = {
     many_killed 				= utf8 "Du har nå drept %d mennesker. Poenget er liksom å gjöre de friske, vet du.",
     need_staffroom 				= utf8 "Bygg et Personalrom slik at dine ansatte kan slappe av.",
     staff_too_hot 				= utf8 "Dine ansatte holder på å smelte bort. Skru ned temperaturen eller fjern noen ovner fra rommene deres.",
-    patients_unhappy 			= "Pasientene misliker sykehuset ditt. Du burde gjöre noe for å forbedre miljöet på sykehuset.",
+    patients_unhappy 			= utf8 "Pasientene misliker sykehuset ditt. Du burde gjöre noe for å forbedre miljöet på sykehuset.",
   },
+  
+  -- Placement info
   placement_info = {
     door_can_place 			= utf8 "Du kan plassere dören her, om du vil.",
     window_can_place 		= utf8 "Du kan plassere vinduet her. Det går fint.",
     door_cannot_place 		= utf8 "Beklager, men du kan ikke plassere dören her.",
-    object_can_place 		= "Du kan plassere gjenstanden her.",
-    reception_can_place 	= "Du kan plassere Resepsjonen her.",
-    staff_cannot_place 		= "Du kan ikke plassere den ansatte her. Beklager.",
-    staff_can_place 		= "Du kan plassere den ansatte her. ",
-    object_cannot_place 	= "Hallo, du kan ikke plassere gjenstanden her.",
-    room_cannot_place 		= "Du kan ikke plassere rommet her.",
-    room_cannot_place_2 	= "Du kan ikke bygge rommet her.",
-    window_cannot_place 	= "Ah. Du kan faktisk ikke plassere vinduet her.",
-    reception_cannot_place 	= "Du kan ikke plassere Resepsjonen her.",
+    object_can_place 		= utf8 "Du kan plassere gjenstanden her.",
+    reception_can_place 	= utf8 "Du kan plassere Resepsjonen her.",
+    staff_cannot_place 		= utf8 "Du kan ikke plassere den ansatte her. Beklager.",
+    staff_can_place 		= utf8 "Du kan plassere den ansatte her. ",
+    object_cannot_place 	= utf8 "Hallo, du kan ikke plassere gjenstanden her.",
+    room_cannot_place 		= utf8 "Du kan ikke plassere rommet her.",
+    room_cannot_place_2 	= utf8 "Du kan ikke bygge rommet her.",
+    window_cannot_place 	= utf8 "Ah. Du kan faktisk ikke plassere vinduet her.",
+    reception_cannot_place 	= utf8 "Du kan ikke plassere Resepsjonen her.",
   },
+  
+  -- Praise
   praise = {
     many_benches 	= utf8 "Pasientene har nok sitteplasser nå. Fint.",
     many_plants 	= utf8 "Flott. Du har mange planter. Pasientene vil sette pris på det.",
-    patients_cured 	= "%d pasienter kurert.",
+    patients_cured 	= utf8 "%d pasienter kurert.",
   },
+  
+  -- Information
   information = {
     larger_rooms 					= utf8 "Större rom gjör at de ansatte föler seg viktigere, og det forbedrer deres prestasjoner.",
     extra_items 					= utf8 "Ekstra gjenstander i rommene får de ansatte til å föle seg mer komfortabel og prestasjonene blir bedre.",
@@ -1471,7 +1520,7 @@ adviser = {
     first_cure 						= utf8 "Bra jobbet! Du har akkurat kurert din förste pasient.",
     promotion_to_consultant 		= utf8 "En av dine DOKTORER er nå blitt KONSULENT.",
     handyman_adjust 				= utf8 "Du kan gjöre Vaktmesterene mer effektiv ved å justere deres prioriteringer.",
-    promotion_to_specialist 		= "En av dine Leger er blitt forfremmet til %s.",
+    promotion_to_specialist 		= utf8 "En av dine Leger er blitt forfremmet til %s.",
     patient_leaving_too_expensive 	= utf8 "En pasient forlater sykehuset ditt uten å gjöre opp for seg ved %s. Det er for dyrt.",
     vip_arrived 					= utf8 "Pass på! - %s har akkurat ankommet sykehuset ditt! La alt gå på skinner nå, for å tilfredstille han.",
     epidemic_health_inspector 		= utf8 "Helseministeren har nå fått med seg nyhetene om epidemien din. Du må forberede deg på et besök av ministeren ganske snart.",
@@ -1480,11 +1529,13 @@ adviser = {
     place_windows 					= utf8 "Vinduer gjör rommene lysere og öker arbeidslysten til dine ansatte.",
     fax_received 					= utf8 "Ikonet som akkurat poppet opp nede i venstre hjörne av skjermen, varsler deg om viktig informasjon og beslutninger du må ta.",
   },
+  
+  -- Build advice
   build_advice = {
-    placing_object_blocks_door 	= utf8 "Om du plasserer gjenstander der, kommer ikke folk seg til dören.",
-    blueprint_would_block 		= utf8 "Den blåkopien kommer til å blokkere andre rom. Pröv å endre rommets störrelse, eller flytt det en annen plass!",
-    door_not_reachable 			= utf8 "Folk kommer ikke til å komme seg til den dören. Tenk litt.",
-    blueprint_invalid 			= utf8 "Det er ikke en gyldig blåkopi.",
+    placing_object_blocks_door 		= utf8 "Om du plasserer gjenstander der, kommer ikke folk seg til dören.",
+    blueprint_would_block 			= utf8 "Den blåkopien kommer til å blokkere andre rom. Pröv å endre rommets störrelse, eller flytt det en annen plass!",
+    door_not_reachable 				= utf8 "Folk kommer ikke til å komme seg til den dören. Tenk litt.",
+    blueprint_invalid 				= utf8 "Det er ikke en gyldig blåkopi.",
   },
 }
 
@@ -1504,7 +1555,7 @@ bank_manager = {
   hospital_value    = "Sykehusets verdi",
   balance           = "Din balanse",
   current_loan      = utf8 "Nåværende lån",
-  interest_payment  = utf8 "Rentekostnader",
+  interest_payment  = "Rentekostnader",
   insurance_owed    = "Forsikringsgjeld",
   inflation_rate    = "Inflasjon",
   interest_rate     = "Rentesats",
@@ -1523,14 +1574,93 @@ bank_manager = {
 newspaper = {
   -- Seven categories of funny headlines. I think each category is related
   -- to one criterium you can lose to. TODO: categorize
-  { "DOC SHOCK HORROR", "CREEPY GP PLAYS GOD", "PRANKENSTEIN SHOCK", "WHAT WAS ON LAB SLAB?", "RAID HALTS RISKY RESEARCH" },
-  { "DR-UNK AS A SKUNK", "SMASHED SURGEON", "CAROUSING CONSULTANT", "SURGICAL SNIFTER", "SURGEON SWILLS IT", "SURGICAL SPIRITS" },
-  { "SURGIN' SURGEON", "DOCTOR PANTSDOWN", "DOCTOR GOING DOWN", "INSATIABLE SURGEON" },
-  { "DOCTOR-ING THE FIGURES", "ORGAN-ISED CRIME", "BANK BYPASS OPERATION", "FUND HOLDING GP" },
-  { "MEDICAL BOFFIN RAIDS COFFIN", "DOC EMPTIES GRAVES", "CAUGHT WITH CORPSE", "DR DEATH'S DAY OF RECKONING", "TERMINAL MALPRACTICE", "DOCTOR'S DIG DENOUNCED" },
-  { "DOC STITCHED UP!", "SLACK QUACK", "DAMNING DIAGNOSIS", "CLUMSY CONSULTANT", },
-  { "DOC FEELS AT LOOSE END", "SURGEON 'OPERATES' HIMSELF", "BOG BISHOP-BASHING", "DOCTOR'S HANDLE SCANDAL", "MEDIC MAKES A MESS" },
+  { "DR SKREKK OG GRU", "SKUMMEL LEGE LEKER GUD", "DR ACULA SJOKKERER", "HVEM FALT FOR KNIVEN?", "FARLIG FORSKNING STOPPET ETTER RAZZIA" },
+  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KJÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OPP", "KIRURGISK SPIRIT" },
+  { "LEKENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
+  { "LEGE TUKLER MED BALANSEN", "ORGAN-ISERT KRIMINALITET", "BANKMESSIG BYPASS-OPERASJON", "LEGE MED KONTANTBEHOLDNING" },
+  { "MEDISINSK RAID AV KISTER", utf8 "DOKTOR TÖMMER GRAVPLASS", "LIK I GARDEROBEN", utf8 "FIN DAG FOR DR DÖD", "SISTE FEILBEHANDLING", "GRAVENDE DOKTOR OPPDAGET" },
+  { "LEGE SPIST OPP!", "SLACK QUACK", "LIVSFARLIG DIAGNOSE", "UFORSIKTIG KONSULENT", },
+  { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
 }
+
+-- Letter headlines
+letter = {
+  { "DR SKREKK OG GRU", "SKUMMEL LEGE LEKER GUD", "DR ACULA SJOKKERER", "HVEM FALT FOR KNIVEN?", "FARLIG FORSKNING STOPPET ETTER RAZZIA" },
+  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KJÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OPP", "KIRURGISK SPIRIT" },
+  { "LEKENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
+  { "LEGE TUKLER MED BALANSEN", "ORGAN-ISERT KRIMINALITET", "BANKMESSIG BYPASS-OPERASJON", "LEGE MED KONTANTBEHOLDNING" },
+  { "MEDISINSK RAID AV KISTER", utf8 "DOKTOR TÖMMER GRAVPLASS", "LIK I GARDEROBEN", utf8 "FIN DAG FOR DR DÖD", "SISTE FEILBEHANDLING", "GRAVENDE DOKTOR OPPDAGET" },
+  { "LEGE SPIST OPP!", "SLACK QUACK", "LIVSFARLIG DIAGNOSE", "UFORSIKTIG KONSULENT", },
+  { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
+}
+
+-- Humanoid start of names
+humanoid_name_starts = {
+  [1] = "GOLD",
+  [2] = "HIGH",
+  [3] = "AND",
+  [4] = "BEN",
+  [5] = "BAN",
+  [6] = "BILL",
+  [7] = "WY",
+  [8] = "WAT",
+  [9] = "POD",
+  [10] = "KING",
+  [11] = "BAR",
+  [12] = "PET",
+  [13] = "MAN",
+  [14] = "BOY",
+  [15] = "WAR",
+  [16] = "JACK",
+  [17] = "CRAB",
+  [18] = "FISH",
+  [19] = "WATER",
+  [20] = "MIL",
+  [21] = "BY",
+  [22] = "FEN",
+  [23] = "RICH",
+  [24] = "SCOT",
+  [25] = "BUR",
+  [26] = "PIKE",
+  [27] = "CUR",
+  [28] = "WHIT",
+  [29] = "BINN",
+  [30] = "BONN",
+  [31] = "POG",
+  [32] = "WRIGHT",
+  [33] = "KER",
+}
+
+-- Humanoid end of names
+humanoid_name_ends = {
+  [1] = "SMITH",
+  [2] = "WICK",
+  [3] = "CLIFFE",
+  [4] = "SON",
+  [5] = "INGTON",
+  [6] = "BURY",
+  [7] = "TON",
+  [8] = "SON",
+  [9] = "LEY",
+  [10] = "BERRY",
+  [11] = "BAUM",
+  [12] = "LAN",
+  [13] = "HAM",
+  [14] = "SILL",
+  [15] = "WIN",
+  [16] = "LET",
+  [17] = "ERS",
+  [18] = "TON",
+  [19] = "MOND",
+  [20] = "MAN",
+  [21] = "ELTON",
+  [22] = "E",
+  [23] = "MORE",
+  [24] = "MOOR",
+  [25] = "LET",
+  [26] = "LIN",
+}
+
 
 -- VIP names
 vip_names = {
@@ -1547,7 +1677,7 @@ vip_names = {
   "L. F. Probst, III",
 }
 
--- DESEASES
+-- Deseases
 diseases = {
   general_practice       = { 
   	name 		= "Allmennpraksis", 
@@ -1770,7 +1900,8 @@ diseases = {
 
 -- Faxes
 fax = {
- debug_fax = {
+  -- Debug fax
+  debug_fax = {
     -- never seen this, must be a debug option of original TH
     -- TODO: make this nicer if we ever want to make use of it
     close_text = "Yes, yes, yes!",
@@ -1787,6 +1918,7 @@ fax = {
     text11     = "PEOPLE THIS MONTH %d", -- %d
   },
   
+  -- Emergency
   emergency = {
     choices = {
       accept = utf8 "Ja, jeg er klar til å håndtere dette", 
@@ -1821,6 +1953,7 @@ fax = {
     saved_people 	= "Du reddet %d mennesker av totalt %d.",
   },  
   
+  -- Deseace discovered
   disease_discovered_patient_choice = {
     choices = {
       send_home = "Send pasienten hjem.",
@@ -1845,6 +1978,7 @@ fax = {
     discovered_name          = "Ditt team har oppdaget et tilfelle av %s",
   },
   
+  -- Epidemic
   epidemic = {
     choices = {
       declare  = utf8 "Offentliggjör epidemi, betal boten og godta at ryktet ditt blir svekket.",
@@ -1857,6 +1991,7 @@ fax = {
     cover_up_explanation_2   = utf8 "Om en helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
   },
   
+  -- Epidemic result
   epidemic_result = {
     close_text = "Hurra!",
     
@@ -1875,6 +2010,7 @@ fax = {
     hospital_evacuated   = utf8 "Helserådet har ikke annet valg enn å evakuere sykehuset ditt.",
   },
   
+  -- VIP visit query
   vip_visit_query = {
     choices = {
       invite = "Send offisiell invitasjon til V.I.P.",
@@ -1884,6 +2020,7 @@ fax = {
     vip_name = utf8 "%s har ytret et önske om å få besöke sykehuset ditt",
   },
   
+  -- VIP visit result
   vip_visit_result = {
     close_text = utf8 "Takk for at du besökte sykehuset.",
     telegram          = "Telegram!",
@@ -1921,6 +2058,7 @@ fax = {
     },
   },
   
+  -- Diagnosis failed
   diagnosis_failed = {
     choices = {
       send_home   = "Send pasienten hjem",
