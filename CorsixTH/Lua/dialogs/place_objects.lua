@@ -539,8 +539,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
                 -- and (prev_x, prev_y) is in the corridor, then the two will
                 -- not be connected now, but critically, neither were they
                 -- connected before.
-                if isIsolated(x, y) then
-                  if isIsolated(prev_x, prev_y) then
+                if not isIsolated(x, y) then
+                  if not isIsolated(prev_x, prev_y) then
                     allgood = false
                     break
                   end
