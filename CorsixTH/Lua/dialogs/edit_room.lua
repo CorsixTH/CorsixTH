@@ -219,6 +219,7 @@ function UIEditRoom:clearArea()
 end
 
 function UIEditRoom:onTick()
+  UIFurnishCorridor.onTick(self)
   if self.check_for_clear_area_timer then
     self.check_for_clear_area_timer = self.check_for_clear_area_timer - 1
     if self.check_for_clear_area_timer == 0 then

@@ -40,6 +40,8 @@ function Window:Window()
   self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
+  self.blinking_button = false
+  self.blink_counter = 0
   self.panel_sprites = false
   self.visible = true
 end
@@ -499,7 +501,7 @@ function Window:onMouseMove(x, y, dx, dy)
   
   if self.active_button then
     local btn = self.active_button
-    local index = btn.sprite_index_normal
+    local index = btn.sprite_index_blink or btn.sprite_index_normal
     if btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
       index = btn.sprite_index_active
       self.active_button.active = true
@@ -525,6 +527,17 @@ function Window:onMouseMove(x, y, dx, dy)
 end
 
 function Window:onTick()
+  if self.blinking_button then
+    self.blink_counter = self.blink_counter + 1
+    if self.blink_counter == 20 then
+      self.blink_counter = 0
+      local btn = self.buttons[self.blinking_button]
+      btn.sprite_index_blink = btn.sprite_index_blink == btn.sprite_index_active and btn.sprite_index_normal or btn.sprite_index_active
+      if btn.enabled and not btn.active then
+        btn.panel_for_sprite.sprite_index = btn.sprite_index_blink
+      end
+    end
+  end
   if self.windows then
     for _, window in ipairs(self.windows) do
       window:onTick()
@@ -554,4 +567,20 @@ function Window:sendToTop(window)
     table.remove(self.windows, window_index) -- Remove the window from the list
     table.insert(self.windows, 1, window)    -- And reinsert it at start of the table
   end
+end
+
+function Window:startButtonBlinking(button_index)
+  
+  self.blinking_button = button_index
+  self.blink_counter = 0
+  local btn = self.buttons[button_index]
+  btn.sprite_index_blink = btn.sprite_index_normal
+end
+
+function Window:stopButtonBlinking()
+  local btn = self.buttons[self.blinking_button]
+  btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
+  btn.sprite_index_blink = nil
+  self.blinking_button = false
+  self.blink_counter = 0
 end

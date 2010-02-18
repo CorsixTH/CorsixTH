@@ -570,11 +570,11 @@ end
 
 function UIPlaceObjects:onMouseMove(x, y, ...)
   local repaint = Window.onMouseMove(self, x, y, ...)
-  repaint = true
-  
   if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
-    return
+    return repaint
   end
+  
+  repaint = true
   
   local ui = self.ui
   local wx, wy

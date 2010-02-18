@@ -725,12 +725,18 @@ function UI:getCursorPosition(window)
   return x, y
 end
 
-local tutorial_strings = {
+local tutorial_phases = {
   {
     -- 1) build reception
-    _S.adviser.tutorial.build_reception,               -- 1
-    _S.adviser.tutorial.order_one_reception,           -- 2
-    _S.adviser.tutorial.accept_purchase,               -- 3
+    { text = _S.adviser.tutorial.build_reception,      -- 1
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(3) end,
+      end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.order_one_reception,  -- 2
+      begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(3) end,
+      end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(3) end, },
+    { text = _S.adviser.tutorial.accept_purchase,      -- 3
+      begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(2) end,
+      end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(2) end, },
     _S.adviser.tutorial.rotate_and_place_reception,    -- 4
     _S.adviser.tutorial.reception_invalid_position,    -- 5
                                                        -- 6: object other than reception selected. currently no text for this phase.
@@ -738,11 +744,21 @@ local tutorial_strings = {
   
   {
     -- 2) hire receptionist
-    _S.adviser.tutorial.hire_receptionist,             -- 1
-    _S.adviser.tutorial.select_receptionists,          -- 2
-    _S.adviser.tutorial.next_receptionist,             -- 3
-    _S.adviser.tutorial.prev_receptionist,             -- 4
-    _S.adviser.tutorial.choose_receptionist,           -- 5
+    { text = _S.adviser.tutorial.hire_receptionist,             -- 1
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.select_receptionists,          -- 2
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.next_receptionist,             -- 3
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(8) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.prev_receptionist,             -- 4
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(5) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.choose_receptionist,           -- 5
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(6) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
     _S.adviser.tutorial.place_receptionist,            -- 6
     _S.adviser.tutorial.receptionist_invalid_position, -- 7
   },
@@ -750,9 +766,15 @@ local tutorial_strings = {
   {
     -- 3) build GP's office
     -- 3.1) room window
-    _S.adviser.tutorial.build_gps_office,              -- 1
-    _S.adviser.tutorial.select_diagnosis_rooms,        -- 2
-    _S.adviser.tutorial.click_gps_office,              -- 3
+    { text = _S.adviser.tutorial.build_gps_office,              -- 1
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(2) end,
+      end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.select_diagnosis_rooms,        -- 2
+      begin_callback = function() TheApp.ui:getWindow(UIBuildRoom):startButtonBlinking(1) end,
+      end_callback = function() TheApp.ui:getWindow(UIBuildRoom):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.click_gps_office,              -- 3
+      begin_callback = function() TheApp.ui:getWindow(UIBuildRoom):startButtonBlinking(5) end,
+      end_callback = function() TheApp.ui:getWindow(UIBuildRoom):stopButtonBlinking() end, },
     
     -- 3.2) blueprint
     -- [11][58] was maybe planned to be used in this place, but is not needed.
@@ -760,25 +782,39 @@ local tutorial_strings = {
     _S.adviser.tutorial.room_in_invalid_position,      -- 5
     _S.adviser.tutorial.room_too_small,                -- 6
     _S.adviser.tutorial.room_too_small_and_invalid,    -- 7
-    _S.adviser.tutorial.room_big_enough,               -- 8
+    { text = _S.adviser.tutorial.room_big_enough,               -- 8
+      begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
     
     -- 3.3) door and windows
     _S.adviser.tutorial.place_door,                    -- 9
     _S.adviser.tutorial.door_in_invalid_position,      -- 10
-    _S.adviser.tutorial.place_windows,                 -- 11
-    _S.adviser.tutorial.window_in_invalid_position,    -- 12
+    { text = _S.adviser.tutorial.place_windows,                 -- 11
+      begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.window_in_invalid_position,    -- 12
+      begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
     
     -- 3.4) objects
     _S.adviser.tutorial.place_objects,                 -- 13
     _S.adviser.tutorial.object_in_invalid_position,    -- 14
-    _S.adviser.tutorial.confirm_room,                  -- 15
+    { text = _S.adviser.tutorial.confirm_room,                  -- 15
+      begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
   },
   
   {
     -- 4) hire doctor
-    _S.adviser.tutorial.hire_doctor,                   -- 1
-    _S.adviser.tutorial.select_doctors,                -- 2
-    _S.adviser.tutorial.choose_doctor,                 -- 3
+    { text = _S.adviser.tutorial.hire_doctor,                   -- 1
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(4) end,
+      end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.select_doctors,                -- 2
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(1) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.choose_doctor,                 -- 3
+      begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(6) end,
+      end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
     _S.adviser.tutorial.place_doctor,                  -- 4
     _S.adviser.tutorial.doctor_in_invalid_position,    -- 5
   },
@@ -796,9 +832,10 @@ local tutorial_strings = {
 -- chapter:    Individual parts of the tutorial. Step will only happen if it's the current chapter.
 -- phase_from: Phase we need to be in for this step to happen. Multiple phases can be given here in an array.
 -- phase_to:   Phase we want to step to or "next" to go to next chapter or "end" to end tutorial.
-function UI:tutorialStep(chapter, phase_from, phase_to)
+-- returns true if we changed phase, false if we didn't
+function UI:tutorialStep(chapter, phase_from, phase_to, ...)
   if self.tutorial.chapter ~= chapter then
-    return
+    return false
   end
   if type(phase_from) == "table" then
     local contains_current = false
@@ -808,15 +845,20 @@ function UI:tutorialStep(chapter, phase_from, phase_to)
         break
       end
     end
-    if not contains_current then return end
+    if not contains_current then return false end
   else
-    if self.tutorial.phase ~= phase_from then return end
+    if self.tutorial.phase ~= phase_from then return false end
+  end
+  
+  local old_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
+  if old_phase and old_phase.end_callback then
+    old_phase.end_callback(...)
   end
   
   if phase_to == "end" then
     self.tutorial.chapter = 0
     self.tutorial.phase = 0
-    return
+    return true
   elseif phase_to == "next" then
     self.tutorial.chapter = self.tutorial.chapter + 1
     self.tutorial.phase = 1
@@ -825,16 +867,29 @@ function UI:tutorialStep(chapter, phase_from, phase_to)
   end
   
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
-  local str = tutorial_strings[self.tutorial.chapter][self.tutorial.phase]
+  local new_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
+  local str
+  local callback
+  if type(new_phase) == "table" then
+    str = new_phase.text
+    callback = new_phase.begin_callback
+  else
+    str = new_phase
+  end
+    
   if str then
     self.adviser:say(str)
   end
+  if callback then
+    callback(...)
+  end
+  return true
 end
 
 function UI:startTutorial(chapter)
   chapter = chapter or 1
   self.tutorial.chapter = chapter
   self.tutorial.phase = 0
-
+  
   self:tutorialStep(chapter, 0, 1)
 end
