@@ -28,9 +28,17 @@ local c_files = {
 local lua_files = {
 }
 
+dofile "../CorsixTH/Lua/strict.lua"
+dofile "../CorsixTH/Lua/class.lua"
+require = destrict(require)
+
 local lfs = require "lfs"
 require "helpers"
 require "c_tokenise"
+require "lua_tokenise"
+require "lua_code_model"
+require "lua_scan"
+require "template"
 
 -- Identify source files
 for _, dir_path in ipairs(directories) do
@@ -50,6 +58,18 @@ for _, dir_path in ipairs(directories) do
   end
 end
 
+local globals = MakeLuaCodeModel(lua_files)
+io.open("output/class_hierarchy.html", "w"):write(template "lua_class_hierarchy" {globals = globals})
+for name, var in globals:pairs() do
+  if class.is(var, LuaClass) then
+    io.open("output/".. var:getId() .. ".html", "w"):write(template "class" {class = var})
+  end
+end
+
+do return end
+-- Old code, to be integrated into new code at later date:
+
+tokens_gfind_mode "C"
 for _, c_filename in ipairs(c_files) do
   local toks = TokeniseC(io.open(c_filename):read"*a")
 

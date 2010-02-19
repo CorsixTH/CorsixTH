@@ -1,0 +1,41 @@
+<h1><!= class:getName() !></h1>
+<div class="method_list">
+  <h2>Method Index</h2>
+  <! if class:getSuperClass() then !>
+    <ul>
+      <! for name, member in class:pairs() do !>
+        <! if member.type == "function" then !>
+          <li><!= name !>
+            <! if member:getParent() ~= class then !>
+              (inherited from <a href="<!= member:getParent():getId() !>.html"><!= member:getParent():getName() !></a>)
+            <! elseif class:getSuperClass():get(name) then local existing = class:getSuperClass():get(name)!>
+              (overrides <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !>:<!= name !></a>)
+            <! end !>
+          </li>
+        <! end !>
+      <! end !>
+    </ul>
+  <! else !>
+    <ul>
+      <! for name, member in class:pairs() do !>
+        <! if member.type == "function" then !>
+          <li><!= name !></li>
+        <! end !>
+      <! end !>
+    </ul>
+  <! end !>
+</div>
+<div class="member_list">
+  <h2>Member Index</h2>
+  <ul>
+    <! for name, member in class:pairs() do !>
+      <! if member.type ~= "function" then !>
+        <li><!= name !>
+          <! if member:getParent() ~= class then !>
+            (only used in superclass methods)
+          <! end !>
+        </li>
+      <! end !>
+    <! end !>
+  </ul>
+</div>

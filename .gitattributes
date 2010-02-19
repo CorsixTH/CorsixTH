@@ -44,6 +44,9 @@ CorsixTH/changelog.txt -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text
+LDocGen/templates/class.htlua -text
+LDocGen/templates/lua_class_hierarchy.htlua -text
+LDocGen/templates/lua_class_tree.htlua -text
 LFS/lfs.def -text
 MapEdit/CMakeLists.txt -text
 MapEdit/FindwxWidgets_svn.cmake -text

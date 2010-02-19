@@ -18,7 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local auto_tokens = {
+local auto_tokens
+local auto_tokens_c = {
   [","]  = {"operator", ","},
   ["="]  = {"operator", "="},
   ["<"]  = {"operator", "<"},
@@ -28,6 +29,26 @@ local auto_tokens = {
   ["("]  = {"("},
   [")"]  = {")"},
 }
+local auto_tokens_lua = {
+  ["function"] = {"keyword", "function"},
+}
+
+function tokens_gfind_mode(mode)
+  if mode == "C" then
+    auto_tokens = auto_tokens_c
+  elseif mode == "Lua" then
+    auto_tokens = auto_tokens_lua
+  else
+    error "Invalid mode"
+  end
+end
+
+function tokens_next(tokens, i)
+  repeat
+    i = i + 1
+  until (not tokens[i]) or (tokens[i][2] ~= "whitespace")
+  return i, tokens[i]
+end
 
 function tokens_gfind(tokens, ...)
   local pattern = {...}

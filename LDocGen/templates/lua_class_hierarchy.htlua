@@ -1,0 +1,7 @@
+<ul class="class_hierarchy">
+  <! for name, var in globals:pairs() do !>
+    <! if class.is(var, LuaClass) and not var:getSuperClass() then !>
+      <!= template "lua_class_tree" {class = var} !>
+    <! end !>
+  <! end !>
+</ul>

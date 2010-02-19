@@ -1,0 +1,10 @@
+<li>
+  <a href="<!= class:getId() !>.html" class="class"><!= class:getName() !></a>
+  <! if class:hasSubclasses() then !>
+    <ul class="subclass_hierarchy">
+      <! for name, class in class:subclassPairs() do !>
+        <!= template "lua_class_tree" {class = class} !>
+      <! end !>
+    </ul>
+  <! end !>
+</li>
