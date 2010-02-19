@@ -374,6 +374,26 @@ end
 
 function World:onTick()
   if self.tick_timer == 0 then
+    if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
+      local message = {
+        {             text = _S.fax.welcome.beta1[1]},
+        {offset =  8, text = _S.fax.welcome.beta1[2]},
+        {offset =  8, text = _S.fax.welcome.beta1[3]},
+        {offset =  8, text = _S.fax.welcome.beta1[4]},
+        {offset = 16, text = _S.fax.welcome.beta1[5]},
+        {offset =  8, text = _S.fax.welcome.beta1[6]},
+      }
+      self.ui.bottom_panel:queueMessage("information", message)
+      message = {
+        {             text = _S.fax.tutorial[1]},
+        {offset =  8, text = _S.fax.tutorial[2]},
+        choices = {
+          {offset =  50, text = _S.fax.tutorial[3], choice = "tutorial"},
+          {offset =  40, text = _S.fax.tutorial[4], choice = "no_tutorial"},
+        },
+      }
+      self.ui.bottom_panel:queueMessage("information", message)
+    end
     self.tick_timer = self.tick_rate
     self.hour = self.hour + self.ticks_per_tick
     -- There doesn't need to be 24 hours in a day. Whatever value gives the
@@ -384,17 +404,6 @@ function World:onTick()
     if self.hour >= 24 then
       self.hour = self.hour - 24
       self.day = self.day + 1
-      if self.year == 1 and self.month == 1 and self.day == 2 then
-        local message = {
-          {             text = _S.fax.welcome.beta1[1]},
-          {offset =  8, text = _S.fax.welcome.beta1[2]},
-          {offset =  8, text = _S.fax.welcome.beta1[3]},
-          {offset =  8, text = _S.fax.welcome.beta1[4]},
-          {offset = 16, text = _S.fax.welcome.beta1[5]},
-          {offset =  8, text = _S.fax.welcome.beta1[6]},
-        }
-        self.ui.bottom_panel:queueMessage("information", message)
-      end
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
         self:onEndMonth()

@@ -828,11 +828,13 @@ local tutorial_phases = {
   -- apparently unused tutorial strings:
   -- [11][63]
   -- [11][64]
-  -- [11][65]
   -- original TH continues here with three boxes displaying some more text:
   -- [54][94] to [54][96]
   -- [54][97] to [54][99]
   -- [54][101] to [54][103]
+  {
+    _S.adviser.tutorial.build_pharmacy,
+  },
 }
 
 -- Called to trigger step to another part of the tutorial.

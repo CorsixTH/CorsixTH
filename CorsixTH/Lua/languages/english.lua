@@ -42,7 +42,6 @@ menu_debug = {
   show_watch                  = "  SHOW WATCH  ",
   place_objects               = "  PLACE OBJECTS  ",
   dump_strings                = "  DUMP STRINGS  ",
-  tutorial                    = "  TUTORIAL  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
@@ -71,6 +70,12 @@ fax = {
       "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed.",
       "-- The CorsixTH team, th.corsix.org",
       "PS: Can you find the easter eggs we included?",
-    }
-  }
+    },
+  },
+  tutorial = {
+    "Welcome to your first Hospital!",
+    "Would you like a short tutorial?",
+    "Yes, please show me the ropes.",
+    "Nope, I already know how to do this.",
+  },
 }

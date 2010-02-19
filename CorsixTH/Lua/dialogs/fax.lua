@@ -147,6 +147,9 @@ function UIFax:choice(choice)
       -- TODO
     end
   end
+  if choice == "tutorial" then
+    self.ui:startTutorial()
+  end
   self:close()
 end
 

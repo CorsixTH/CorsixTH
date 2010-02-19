@@ -107,7 +107,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         self.ui.hospital:addStaff(entity)
         entity:setHospital(self.ui.hospital)
         self.ui:tutorialStep(2, 6, "next")
-        self.ui:tutorialStep(4, 4, "end")
+        self.ui:tutorialStep(4, 4, "next")
       end
       self:close()
       return true

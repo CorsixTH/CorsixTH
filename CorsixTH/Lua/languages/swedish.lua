@@ -40,7 +40,6 @@ menu_debug = {
   show_watch                  = "  VISA KLOCKA  ",
   place_objects               = "  PLACERA OBJEKT  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
-  tutorial                    = "  HANDLEDNING  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }

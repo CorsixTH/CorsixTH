@@ -81,6 +81,12 @@ fax = {
       utf8 "Jetzt wünschen wir aber erstmal viel Spaß mit dem Spiel! Falls du Theme Hospital nicht kennst: Baue eine Rezeption (aus dem Objekte-Menü) und eine Allgemeinmedizin (Diagnoseraum), dann diverse Behandlungsräume.",
       "-- Das CorsixTH-Team, th.corsix.org",
       "PS: Kannst du die Geheimnisse finden, die wir eingebaut haben?",
-    }
-  }
+    },
+  },
+  tutorial = {
+    "Willkommen in Ihrem ersten Krankenhaus!",
+    utf8 "Möchten Sie eine kurze Einführung?",
+    utf8 "Ja, bitte führen Sie mich herum.",
+    utf8 "Nö, ich weiß schon wie hier alles abläuft.",
+  },
 }

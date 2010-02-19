@@ -406,7 +406,9 @@ adviser = {
     -- apparently unused tutorial strings:
     -- [11][63]
     -- [11][64]
-    -- [11][65]
+    
+    -- 5) Pharmacy / end of tutorial
+    build_pharmacy                = S[11][65],
   },
   
   staff_advice = {

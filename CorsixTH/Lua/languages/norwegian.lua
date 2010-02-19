@@ -99,7 +99,6 @@ menu_debug = {
   show_watch                  	= "  VIS STOPPEKLOKKE  ",
   place_objects               	= "  PLASSER GJENSTANDER  ",
   dump_strings                	= utf8 "  DUMP SPRÅKSTRENGER  ",
-  tutorial                    	= utf8 "  INNFÖRING  ",
   map_overlay                 	= "  KARTOVERLEGG  ",
   sprite_viewer               	= "  SPRITE-VISNING  ",
 }
