@@ -279,6 +279,13 @@ function UI:disableKeyboardRepeat()
 end
 
 function UI:onChangeResolution()
+  -- Recalculate scrolling bounds
+  local scr_w = self.app.config.width
+  local scr_h = self.app.config.height
+  self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
+  self:scrollMap(0, 0)
+  
+  -- Inform windows of resolution change
   for _, window in ipairs(self.windows) do
     window:onChangeResolution()
   end

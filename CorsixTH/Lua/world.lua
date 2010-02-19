@@ -353,12 +353,11 @@ function World:getCurrentSpeed()
   end
 end
 
-local prev_speed
 function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
-  prev_speed = self:getCurrentSpeed()
+  self.prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
   self.ticks_per_tick = numerator
   self.tick_rate = denominator
@@ -368,8 +367,8 @@ end
 function World:pauseOrUnpause()
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
-  elseif prev_speed then
-    self:setSpeed(prev_speed)
+  elseif self.prev_speed then
+    self:setSpeed(self.prev_speed)
   end
 end
 

@@ -26,32 +26,54 @@ SOFTWARE. --]]
 local rawset, error, tostring
     = rawset, error, tostring
 local strict_mt = {}
+local allowed_globals = setmetatable({}, {__mode = "k"})
 
 local function newindex(t, k, v)
-  error("assign to undeclared variable \'" .. tostring(k) .. "\'", 2)
-end
-
-local function index(t, k)
-  error("use of undeclared variable \'" .. tostring(k) .. "\'", 2)
-end
-
-local function restrict(...)
-  strict_mt.__newindex = newindex
-  strict_mt.__index = index
-  return ...
-end
-restrict()
-
-function destrict(fn)
-  return function(...)
-    strict_mt.__newindex = nil
-    strict_mt.__index = nil
-    return restrict(fn(...))
+  if allowed_globals[k] then
+    rawset(t, k, v)
+  else
+    error("assign to undeclared variable \'" .. tostring(k) .. "\'", 2)
   end
 end
 
+local function index(t, k)
+  if allowed_globals[k] then
+    return nil
+  else
+    error("use of undeclared variable \'" .. tostring(k) .. "\'", 2)
+  end
+end
+
+local function restrict(ni, i, ...)
+  strict_mt.__newindex = ni
+  strict_mt.__index = i
+  return ...
+end
+restrict(newindex, index)
+
+--!! Wrap a function so that it is freely able to set global variables
+--[[ Some existing functions (for example, `require`) should be allowed to read
+     and write global variables without having to worry about declaring them
+     with `strict_declare_global`.
+    !param fn The function which should be able to freely set globals
+    !return A new function which acts just as `fn` and is free to set globals
+    !example
+     require = destrict(require) ]]
+function destrict(fn)
+  return function(...)
+    local ni, i = strict_mt.__newindex, strict_mt.__index
+    strict_mt.__newindex, strict_mt.__index = nil
+    return restrict(ni, i, fn(...))
+  end
+end
+
+--!! Declare a global variable so that it can later be used
+--[[!param name The name of the global to declare
+    !example
+     strict_declare_global "some_var"
+     some_var = 42 ]]
 function strict_declare_global(name)
-  rawset(_G, name, false)
+  allowed_globals[name] = true
 end
 
 setmetatable(_G, strict_mt)
