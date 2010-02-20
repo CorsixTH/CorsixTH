@@ -74,8 +74,14 @@ fax = {
       utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en Resepsjon (inventarmenyen) og en Allmennpraksis (diagnoserom). Du trenger også behandlingsrom.",
       utf8 "-- CorsixTH-teamet, th.corsix.org.",
       utf8 "PS: Kan du finne de sjulte påskeeggene?",
-    }
-  }
+    },
+  },
+  tutorial = {
+    utf8 "Velkommen til ditt förste sykehus!",
+    utf8 "Vil du ha en kort innföring?",
+    "Ja, vis meg det grunnleggende.",
+    "Niks, jeg kan dette.",
+  },
 }
 
 
@@ -1327,6 +1333,7 @@ adviser = {
     object_in_invalid_position 		= utf8 "Denne gjenstanden er ugyldig plassert. Vær vennlig å plasser den et annet sted, eller roter den for å få den til å passe.",
     place_door 						= utf8 "Flytt musen rundt om kring på blåkopiens vegger for å plassere dören der du vil ha den.",
     room_big_enough 				= utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
+    build_pharmacy 					= utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en sykepleier for å ha et fungerende sykehus.",
   },
   
   -- Epidemic
