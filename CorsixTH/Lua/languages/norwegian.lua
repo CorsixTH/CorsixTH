@@ -1591,16 +1591,87 @@ newspaper = {
   { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
 }
 
--- Letter headlines
+-- Letters
+-- TODO
 letter = {
-  { "DR SKREKK OG GRU", "SKUMMEL LEGE LEKER GUD", "DR ACULA SJOKKERER", "HVEM FALT FOR KNIVEN?", "FARLIG FORSKNING STOPPET ETTER RAZZIA" },
-  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KJÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OPP", "KIRURGISK SPIRIT" },
-  { "LEKENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
-  { "LEGE TUKLER MED BALANSEN", "ORGAN-ISERT KRIMINALITET", "BANKMESSIG BYPASS-OPERASJON", "LEGE MED KONTANTBEHOLDNING" },
-  { "MEDISINSK RAID AV KISTER", utf8 "DOKTOR TÖMMER GRAVPLASS", "LIK I GARDEROBEN", utf8 "FIN DAG FOR DR DÖD", "SISTE FEILBEHANDLING", "GRAVENDE DOKTOR OPPDAGET" },
-  { "LEGE SPIST OPP!", "SLAKK KVAKK", "LIVSFARLIG DIAGNOSE", "UFORSIKTIG KONSULENT", },
-  { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
+  [1] = {
+    [1] = "Dear %s//",
+    [2] = "Marvellous! You have handled the running of this hospital superbly. Us bigwigs at the Ministry of ",
+    [3] = "Health would like to know if you'd be interested in taking on a larger project. There's a job we think ",
+    [4] = "you'd be perfect for. The salary would be $%d. Give it some thought.//",
+    [5] = "Are you interested in a job at %s Hospital?",
+  }
+  [2] = {
+    [1] = "Dear %s//",
+    [2] = "Jolly good! You have made excellent progress at your hospital. We have found somewhere else for ",
+    [3] = "you to run, if you fancy a change of scenery and a fresh set of challenges. You don't have to accept, ",
+    [4] = "but it might be worthwhile if you do. The salary is $%d//",
+    [5] = "Do you want a job at %s Hospital?",
+  }
+  [3] = {
+    [1] = "Dear %s//",
+    [2] = "You have been vastly successful during your tenure at this hospital. To this end, we predict great ",
+    [3] = "things for you, and would like to offer you a position elsewhere. The salary would be $%d, and we ",
+    [4] = "think you'd love the new challenge it would pose.//",
+    [5] = "Would you like a position at %s Hospital?		  ",
+  }
+  [4] = {
+    [1] = "Dear %s//",
+    [2] = "Congratulations! We at the Ministry are very impressed by your hospital-running abilities. You are ",
+    [3] = "certainly a golden boy in the Health Department. We think you'd prefer a slightly tougher job, though. ",
+    [4] = "You'd be paid a salary of $%d, but the decision is up to you.//",
+    [5] = "Are you interested in working at %s Hospital?",
+  }
+  [5] = {
+    [1] = "Dear %s//",
+    [2] = "Hello again. We respect your wishes not to move from this charming hospital, but would urge you to ",
+    [3] = "reconsider. We will offer you the great salary of $%d if you are prepared to move to another hospital ",
+    [4] = "and get it running as smoothly.//",
+    [5] = "Would you like to move to %s Hospital now?",
+  }
+  [6] = {
+    [1] = "Dear %s//",
+    [2] = "Greetings. We know how happy you've been at this lovely and well-run institution, but we think you ",
+    [3] = "should consider furthering your career now. You will of course command a salary of $%d if you do ",
+    [4] = "decide to move. It's worth thinking about.//",
+    [5] = "Do you wish to take up a position at %s Hospital?",
+  }
+  [7] = {
+    [1] = "Dear %s//",
+    [2] = "Good day! The Ministry of Health would like to know whether you would reconsider your decision to ",
+    [3] = "stay at your current hospital. We appreciate that you have a lovely hospital, but feel that you would do ",
+    [4] = "very well to accept a more challenging post, and a salary of $%d.//",
+    [5] = "Would you accept a position at %s Hospital?",
+  }
+  [8] = {
+    [1] = "Dear %s//",
+    [2] = "Hello once more. You responded in the negative to our last letter, offering you a supreme position with ",
+    [3] = "a new hospital, and an increased salary of $%d. We feel, however, that you should reconsider this ",
+    [4] = "decision. We've got the perfect job for you, you see.//",
+    [5] = "Will you take a post at %s Hospital? Please?",
+  }
+  [9] = {
+    [1] = "Dear %s//",
+    [2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the post of Supreme Chief of All Hospitals. This is an honorary job, and comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//",
+    [3] = "Thank you for all you have done. May you enjoy a long semi-retirement.//",
+  }
+  [10] = {
+    [1] = "Dear %s//",
+    [2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, plus a limousine, and all we ask is that you travel from city to city, meeting your adoring public and promoting the work of all hospitals everywhere.//",
+    [3] = "We are all proud of you. There isn't one among us who doesn't feel grateful for your hard work saving lives.//",
+  }
+  [11] = {
+    [1] = "Dear %s//",
+    [2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals and doing so well in every job. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//",
+    [3] = "You are an example to every right-thinking person, and without exception, everybody in the world regards you as a supreme asset.//",
+  }
+  [12] = {
+    [1] = "Dear %s//",
+    [2] = "Your successful career as the best hospital administrator since Moses is nearing an end. However, such has been your impact on the cosy world of medicine, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships and doing chat shows. The whole world is clamouring for you, and it would be great PR for us all!//",
+    [3] = "Please accept this position. If won't be hard work, and we will provide you with a car and police escort wherever you go.//",
+  }
 }
+
 
 -- Humanoid start of names
 humanoid_name_starts = {
