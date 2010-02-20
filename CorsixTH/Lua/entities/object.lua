@@ -240,7 +240,7 @@ function Object:isReservedFor(user)
   if self.user == user then -- "Normal" use
     return true
   end
-  if self.ultiple_users_allowed then
+  if self.multiple_users_allowed then
     if not self.reserved_for_list then
       self.reserved_for_list = {}
     end
