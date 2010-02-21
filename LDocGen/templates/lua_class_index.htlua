@@ -1,0 +1,67 @@
+<!
+  local letters = {}
+  local letters_total_size = 0
+  for name, var in globals:pairs() do
+    if class.is(var, LuaClass) then
+      local letter = var:getName():sub(1, 1):upper()
+      if not letters[letter] then
+        letters[letter] = {letter = letter}
+        letters[#letters + 1] = letters[letter]
+        letters_total_size = letters_total_size + 1
+      end
+      letter = letters[letter]
+      letter[#letter + 1] = var
+      letters_total_size = letters_total_size + 1
+    end
+  end
+  table.sort(letters, function(a, b) return a.letter < b.letter end)
+  for _, classes in ipairs(letters) do
+    table.sort(classes, function(a, b) return a:getName() < b:getName() end)
+  end
+  local function percentile(pc)
+    local target = 1 + (letters_total_size - 1) * pc
+    local sum = 0
+    for i, list in ipairs(letters) do
+      local oldsum = sum
+      sum = sum + 1 + #list
+      if sum > target then
+        if math.abs(target - oldsum) <= math.abs(sum - target) then
+          return i
+        else
+          return i + 1
+        end
+      end
+    end
+    return #letters + 1
+  end
+  local function extract_range(t, i, j)
+    local r = {}
+    for x = math.max(1, i), math.min(#t, j) do
+      r[#r + 1] = t[x]
+    end
+    return r
+  end
+  local columns = {}
+  local n_cols = 5
+  for i = 1, n_cols do
+    columns[i] = extract_range(letters, percentile((i - 1) / n_cols), percentile(i / n_cols) - 1)
+  end
+!>
+<ul class="index_letters">
+  <! for i, classes in ipairs(letters) do !>
+    <li<!= letters[i+1] and "" or ' class="last"'!>><a href="#<!= classes.letter !>"><!= classes.letter !></a></li>
+  <! end !>
+</ul>
+<! for _, letters in ipairs(columns) do !>
+  <ul class="class_index">
+    <! for _, classes in ipairs(letters) do !>
+      <li><a name="<!= classes.letter !>"><span><!= classes.letter !></span>
+        <ul>
+          <! for _, class in ipairs(classes) do !>
+            <li><a href="<!= class:getId() !>.html"><!= class:getName() !></a></li>
+          <! end !>
+        </ul>
+      </a></li>
+    <! end !>
+  </ul>
+<! end !>

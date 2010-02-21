@@ -18,12 +18,61 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local function ParseComments(tokens, i, object)
+  -- Collect the comments prior to the given token
+  local comment_parts = {}
+  local was_short = false
+  while i > 1 do
+    i = i - 1
+    local tok = tokens[i]
+    if tok[2] ~= "comment" then
+      if tok[2] ~= "whitespace" then
+        break
+      end
+    -- Ignore Unix Shebang and License comments
+    elseif tok[1]:sub(1, 1) ~= "#" and not tok[1]:find[[THE SOFTWARE IS PROVIDED "AS IS"]] then
+      local part = tok[1]:sub(3, -1)
+      local mkr = part:match"^%[(=*)%["
+      if mkr then
+        part = part:sub(3 + #mkr, -3 - #mkr)
+      end
+      part = part:trim()
+      if (not mkr) and was_short and comment_parts[1]:sub(1, 1) ~= "!" then
+        -- Merge multiple short comments into a single comment part
+        comment_parts[1] = part .. "\n" .. comment_parts[1]
+      else
+        table.insert(comment_parts, 1, part)
+      end
+      was_short = not mkr
+    end
+  end
+  -- Parse each command
+  for _, part in ipairs(comment_parts) do
+    for command in (" "..part):gmatch"([^!]+)" do
+      local operation = command:match"(%S*)"
+      local operand = command:sub(1 + #operation, -1):trim()
+      if operation == "" then
+        if operand ~= "" then
+          if object:getShortDesc() then
+            object:setLongDesc(operand)
+          else
+            object:setShortDesc(operand)
+          end
+        end
+      else
+        error("Unknown documentation command: " .. operation)
+      end
+    end
+  end
+end
+
 local function IdentifyClasses(tokens, globals)
-  for tokens, _, i in tokens_gfind(tokens,
+  for tokens, j, i in tokens_gfind(tokens,
     "class", {"string", ".*"}
   )do
     local name = loadstring("return " .. tokens[i][1])()
     local class = LuaClass():setName(name):setParent(globals)
+    ParseComments(tokens, j, class)
     local ib1, b1 = tokens_next(tokens, i)
     if b1 and b1[1] == "(" then
       local is, s = tokens_next(tokens, ib1)

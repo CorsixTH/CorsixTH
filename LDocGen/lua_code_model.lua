@@ -18,23 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-class "LuaVariable"
+class "LuaNode"
+class "LuaVariable" (LuaNode)
 class "LuaFunction" (LuaVariable)
 class "LuaTable" (LuaVariable)
 class "LuaClass" (LuaTable)
+class "LuaFile" (LuaNode)
+class "LuaDirectory" (LuaNode)
 
-function LuaVariable:LuaVariable()
-  self.type = nil
+function LuaNode:LuaNode()
   self.name = nil
   self.parent = nil
+  self.short_desc = nil
+  self.long_desc = nil
 end
 
-function LuaVariable:setName(name)
+function LuaVariable:LuaVariable()
+  self:LuaNode()
+  self.type = nil
+end
+
+function LuaNode:setName(name)
   self.name = name
   return self
 end
 
-function LuaVariable:getName(name)
+function LuaNode:getName(name)
   return self.name
 end
 
@@ -51,6 +60,24 @@ function LuaVariable:getId()
   return id
 end
 
+function LuaNode:setShortDesc(desc)
+  self.short_desc = desc
+  return self
+end
+
+function LuaNode:getShortDesc()
+  return self.short_desc
+end
+
+function LuaNode:setLongDesc(desc)
+  self.long_desc = desc
+  return self
+end
+
+function LuaNode:getLongDesc()
+  return self.long_desc
+end
+
 function LuaVariable:setParent(parent)
   assert(self.parent == nil)
   if class.is(parent, LuaTable) then
@@ -62,7 +89,7 @@ function LuaVariable:setParent(parent)
   return self
 end
 
-function LuaVariable:getParent()
+function LuaNode:getParent()
   return self.parent
 end
 
@@ -218,4 +245,12 @@ function LuaClass:subclassPairs()
       end
     until not member
   end
+end
+
+function LuaFile:LuaFile()
+  self:LuaNode()
+end
+
+function LuaDirectory:LuaDirectory()
+  self:LuaNode()
 end

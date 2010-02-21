@@ -40,6 +40,11 @@ require "lua_code_model"
 require "lua_scan"
 require "template"
 
+function string.trim(s, what)
+  what = what or "%s"
+  return s:gsub("^[".. what .."]*(.-)[".. what .."]*$", "%1")
+end
+
 -- Identify source files
 for _, dir_path in ipairs(directories) do
   for item in lfs.dir(dir_path) do
@@ -58,13 +63,53 @@ for _, dir_path in ipairs(directories) do
   end
 end
 
+local function WriteHTML(name, content)
+  local f = assert(io.open("output/".. name ..".html", "w"))
+  f:write((content:gsub("([\r\n])%s*[\r\n]","%1"):gsub("   *"," ")))
+  f:close()
+end
+
 local globals = MakeLuaCodeModel(lua_files)
-io.open("output/class_hierarchy.html", "w"):write(template "lua_class_hierarchy" {globals = globals})
+WriteHTML("class_hierarchy", template "page" {
+  title = "Class Hierarchy",
+  tab = "classes",
+  section = "hierarchy",
+  content = template "lua_class_hierarchy" {globals = globals},
+})
+WriteHTML("class_list", template "page" {
+  title = "Class List",
+  tab = "classes",
+  section = "list",
+  content = template "lua_class_list" {globals = globals},
+})
+WriteHTML("class_index", template "page" {
+  title = "Class Index",
+  tab = "classes",
+  section = "index",
+  content = template "lua_class_index" {globals = globals},
+})
 for name, var in globals:pairs() do
   if class.is(var, LuaClass) then
-    io.open("output/".. var:getId() .. ".html", "w"):write(template "class" {class = var})
+    WriteHTML(var:getId(), template "page" {
+      title = var:getName() .." Class",
+      tab = "classes",
+      section = "",
+      content = template "class" {class = var},
+    })
   end
 end
+WriteHTML("file_hierarchy", template "page" {
+  title = "File Hierarchy",
+  tab = "files",
+  section = "hierarchy",
+  content = "TODO",
+})
+WriteHTML("file_globals", template "page" {
+  title = "Globals",
+  tab = "files",
+  section = "globals",
+  content = "TODO",
+})
 
 do return end
 -- Old code, to be integrated into new code at later date:

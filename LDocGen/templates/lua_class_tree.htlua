@@ -1,5 +1,5 @@
 <li>
-  <a href="<!= class:getId() !>.html" class="class"><!= class:getName() !></a>
+  <span><a href="<!= class:getId() !>.html" class="class"><!= class:getName() !></a><!= class:getShortDesc() and (" - ") .. class:getShortDesc() or "" !></span>
   <! if class:hasSubclasses() then !>
     <ul class="subclass_hierarchy">
       <! for name, class in class:subclassPairs() do !>

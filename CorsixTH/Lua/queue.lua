@@ -18,8 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-class "Queue"
--- A queue stores a list of humanoids waiting to use an object.
+--! Manages a list of `Humanoid`s which are waiting to use an `Object`.
+--! A queue stores a list of humanoids waiting to use an object.
 -- For a reception desk, this is as expected.
 -- For a room, the queue is for the door, not the room. Hence the queue stores
 -- the list of patients waiting to enter (the traditional queue for the room),
@@ -28,6 +28,7 @@ class "Queue"
 -- being in use).
 -- Queues are currently implemented as normal Lua arrays, but you should access
 -- a queue via its methods rather than directly.
+class "Queue"
 
 function Queue:Queue()
   self.reported_size = 0

@@ -24,7 +24,8 @@ local pathsep = package.config:sub(1, 1)
 local assert, string_char, table_concat, unpack, type, pairs, ipairs
     = assert, string.char, table.concat, unpack, type, pairs, ipairs
 
--- The Graphics class handles loading and caching of graphics resources.
+--! Layer for loading (and subsequently caching) graphical resources.
+--! The Graphics class handles loading and caching of graphics resources.
 -- It can adapt as the API to C changes, and hide these changes from most of
 -- the other Lua code.
 class "Graphics"

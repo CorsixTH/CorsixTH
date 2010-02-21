@@ -1,4 +1,19 @@
-<h1><!= class:getName() !></h1>
+<h2><!= class:getName() !> Class</h2>
+<! if class:getSuperClass() then !>
+  <div class="inheritance">
+    Inheritance: <!= template "class_inheritance" {class = class} !>
+  </div>
+<! end !>
+<! if class:hasSubclasses() then !>
+  <div class="subclasses">
+    Subclasses:
+    <ul>
+      <! for name, subclass in class:subclassPairs() do !>
+        <li><a href="<!= subclass:getId() !>.html"><!= name !></a></li>
+      <! end !>
+    </ul>
+  </div>
+<! end !>
 <div class="method_list">
   <h2>Method Index</h2>
   <! if class:getSuperClass() then !>

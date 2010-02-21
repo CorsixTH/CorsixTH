@@ -18,6 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 class "UIInformation" (Window)
 
 function UIInformation:UIInformation(ui, text, callback)

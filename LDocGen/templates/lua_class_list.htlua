@@ -1,0 +1,11 @@
+The following table gives all classes present in the source code, in alphabetical order, along with short descriptions.
+<table class="class_list">
+  <! for name, var in globals:pairs() do !>
+    <! if class.is(var, LuaClass) then !>
+      <tr>
+        <td><a href="<!= var:getId() !>.html"><!= var:getName() !></a></td>
+        <td><!= var:getShortDesc() or "" !></td>
+      </tr>
+    <! end !>
+  <! end !>
+</table>

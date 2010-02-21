@@ -1,0 +1,35 @@
+<!="<!"!>DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Language" content="en-gb" />
+    <title><!= title !> - CorsixTH Lua Documentation</title>
+    <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+  </head>
+  <body>
+    <h1>CorsixTH Lua Documentation</h1>
+    <ul class="tabs">
+      <li<!=tab=="home"and' class="active"'or""!>><a href="#">Documentation Home</a></li>
+      <li<!=tab=="classes"and' class="active"'or""!>><a href="class_list.html">Classes</a></li>
+      <li<!=tab=="files"and' class="active"'or""!>><a href="file_hierarchy.html">Files</a></li>
+      <li<!=tab=="misc"and' class="active"'or""!>><a href="#">Miscellaneous</a></li>
+    </ul>
+    <! if tab == "classes" then !>
+      <ul class="sections">
+        <li<!=section=="list"and' class="active"'or""!>><a href="class_list.html">List</a></li>
+        <li<!=section=="hierarchy"and' class="active"'or""!>><a href="class_hierarchy.html">Hierarchy</a></li>
+        <li class="last<!=section=="index"and" active"or""!>"><a href="class_index.html">Index</a></li>
+      </ul>
+    <! elseif tab == "files" then !>
+      <ul class="sections">
+        <li<!=section=="hierarchy"and' class="active"'or""!>><a href="file_hierarchy.html">Hierarchy</a></li>
+        <li class="last<!=section=="globals"and" active"or""!>"><a href="file_globals.html">Globals</a></li>
+      </ul>
+    <! end !>
+    <div class="content">
+      <!= content !>
+    </div>
+    <span class="footer">Page generated on <!= os.date"!%a %b %d, %Y at %H:%M:%S" !> by LDocGen.</span>
+  </body>
+</html>

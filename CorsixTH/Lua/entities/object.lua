@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local TH = require "TH"
 dofile "entity"
 
+--! An `Entity` which occupies at least a single map tile and does not move.
 class "Object" (Entity)
 
 local orient_mirror = {
