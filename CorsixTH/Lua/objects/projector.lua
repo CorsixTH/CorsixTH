@@ -44,6 +44,14 @@ object.usage_animations = copy_north_to_south {
     finish_use_3 = { Doctor = 2684 },
   },
 }
+local anim_mgr = TheApp.animation_manager
+local kf1, kf2 = {0, 0}, {-0.4, 0.5}
+anim_mgr:setMarker(object.usage_animations.north.begin_use_2, kf2)
+anim_mgr:setMarker(object.usage_animations.north.begin_use_3, kf2)
+anim_mgr:setMarker(object.usage_animations.north.in_use, kf2)
+anim_mgr:setMarker(object.usage_animations.north.finish_use, kf2)
+anim_mgr:setMarker(object.usage_animations.north.finish_use_2, 0, kf2, 11, kf2, 16, kf1)
+
 object.orientations = {
   north = {
     footprint = { {0, 0, only_passable = true}, {0, 1}, {-1, 0}, {-1, 1} },

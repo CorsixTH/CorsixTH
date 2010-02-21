@@ -28,6 +28,8 @@ object.reception_desk = "Reception"
 
 -- new strings
 object.litter = utf8 "Skräp"
+
+menu_options.lock_windows = utf8 "  LÅS FÖNSTER  "
 menu_options_game_speed.pause = "  PAUSA  "
 
 menu_debug = {
@@ -70,5 +72,11 @@ fax = {
       "-- Gruppen bakom CorsixTH, th.corsix.org",
       utf8 "PS: Kan du hitta påskäggen?",
     }
-  }
+  },
+  tutorial = {
+    utf8 "Välkommen till ditt första Sjukhus!",
+    utf8 "Vill du ha hjälp att komma igång?",
+    utf8 "Ja, det behövs.",
+    utf8 "Det är lugnt, jag kan sånt här.",
+  },
 }

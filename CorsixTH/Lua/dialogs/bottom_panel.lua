@@ -59,6 +59,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   local buttons = {}
   
   buttons[1] = self:addPanel(15, 364, 0) -- Staff management button
+  buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement)
   buttons[2] = self:addPanel(17, 407, 0) -- Town map button
   buttons[3] = self:addPanel(19, 445, 0)
   buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
@@ -290,6 +291,11 @@ end
 
 function UIBottomPanel:dialogDrugCasebook()
   local dlg = UICasebook(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogStaffManagement()
+  local dlg = UIStaffManagement(self.ui)
   self.ui:addWindow(dlg)
 end
 
