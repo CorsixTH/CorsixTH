@@ -64,7 +64,13 @@ function Staff:tick()
 
   -- Make staff members request a raise if they are very unhappy
   if not self.world.debug_disable_salary_raise and self.attributes["happiness"] < 0.1 then
-    self:requestRaise()
+    if not self.timer_until_raise then
+      self.timer_until_raise = 200
+    end
+    self.timer_until_raise = self.timer_until_raise - 1
+    if self.timer_until_raise < 0 then
+      self:requestRaise()
+    end
   end
 end
 
@@ -330,12 +336,12 @@ function Staff:isIdle()
   return false
 end
 
--- Makes the staff member request a raise of random amount. Shows a request raise dialog.
+-- Makes the staff member request a raise of fair wage + 10% of current. Shows a request raise dialog.
 function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
     self:setMood("pay_rise", true)
-    local amount = math.random(10, 150) -- [10-150] $
+    local amount = math.floor(self.profile:getFairWage() + self.profile.wage*0.1 - self.profile.wage)
     self.world.ui:addWindow(UIStaffRise(self.world.ui, self, amount))
   end
 end
@@ -345,7 +351,6 @@ function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
   self:changeAttribute("happiness", 0.99)
   self:setMood("pay_rise", false)
-  -- TODO cash sound
 end
 
 function Staff:updateDynamicInfo()

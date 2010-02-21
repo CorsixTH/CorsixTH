@@ -153,7 +153,7 @@ function UIStaffManagement:draw(canvas, x, y)
     
     self.row_blankers[i].visible = false
     titles:draw(canvas, i,                         x + 58, y + 63 + i*27)
-    titles:draw(canvas, staff.profile.name,        x + 80, y + 63 + i*27, 105, 0)
+    titles:draw(canvas, staff.profile.name,        x + 88, y + 63 + i*27)
     titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + i*27, 80, 0)
     
     -- Morale, tiredness and skill
@@ -337,16 +337,21 @@ end
 function UIStaffManagement:increaseSalary()
   if self.selected_staff then
     local staff = self.staff_members[self.category][self.selected_staff]
-    staff.profile.wage = staff.profile.wage + math_floor(staff.profile.wage*0.1)
-    staff:changeAttribute("Happiness", 0.4)
+    staff:increaseWage(math_floor(staff.profile.wage*0.1))
   end
 end
 
 function UIStaffManagement:fire()
   if self.selected_staff then
-    self.staff_members[self.category][self.selected_staff]:fire()
+    local current_category = self.staff_members[self.category]
+    current_category[self.selected_staff]:fire()
+    -- Close the staff window if open
+    local staff_window = self.ui:getWindow(UIStaff)
+    if staff_window and staff_window.staff == current_category[self.selected_staff] then
+      staff_window:close()
+    end
     -- Update the staff list
-    table.remove(self.staff_members[self.category], self.selected_staff)
+    table.remove(current_category, self.selected_staff)
     self.selected_staff = nil
   end
 end

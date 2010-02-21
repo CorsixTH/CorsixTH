@@ -69,8 +69,8 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:addPanel(286, 180, 132)
   self:addPanel(286, 180, 160)
   self:addPanel(287, 180, 188)
-  self:addPanel(288, 180, 233):makeButton(0, 0, 90, 45, 289, self.increaseSalary) -- Increase salary button
-  self:addPanel(290, 270, 233):makeButton(0, 0, 90, 45, 291, self.fireStaff) -- Fire button
+  self:addPanel(288, 180, 233):makeButton(0, 0, 90, 45, 289, self.increaseSalary):setSound"cashreg.wav"
+  self:addPanel(290, 270, 233):makeButton(0, 0, 90, 45, 291, self.fireStaff)
 
   -- Hide doctor specific information
   if self.staff.profile.humanoid_class ~= "Doctor" then
