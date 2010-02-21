@@ -67,7 +67,19 @@ function App:init()
   -- App initialisation 1st goal: Get the loading screen up
   
   -- Prereq 1: Config file (for screen width / height / TH folder)
-  assert(loadfile_envcall(self.command_line["config-file"] or "config.txt"))(self.config)
+  -- Note: These errors cannot be translated, as the config file specifies the language
+  local conf_chunk, conf_err = loadfile_envcall(self.command_line["config-file"] or "config.txt")
+  if not conf_chunk then
+    print("Unable to load the config file, will try sample config file instead.")
+    print("If you do not have a config.txt, please create it by copying config.sample.txt")
+    print("The error loading the config file was:")
+    print(conf_err)
+  end
+  if not conf_chunk then
+    local conf_base = debug.getinfo(2, "S").source:match"@?(.*)[Cc][Oo][Rr][Ss][Ii][Xx][Tt][Hh]%.[Ll][Uu][Aa]$" or ""
+    conf_chunk = assert(loadfile_envcall(conf_base .. "config.sample.txt"))
+  end
+  conf_chunk(self.config)
   self:fixConfig()
   self:checkInstallFolder()
 --  self:checkLanguageFile()

@@ -11,7 +11,7 @@
 -- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
-theme_hospital_install = [[X:\ThemeHospital\CVR\]]
+theme_hospital_install = [[F:\ThemeHospital\hospital]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ theme_hospital_install = [[X:\ThemeHospital\CVR\]]
 --  Norwegian / nb / nob
 --  Spanish   / es / spa
 --  Swedish   / sv / swe
-language = [[English]]
+language = [[En]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ audio = true
 -- Debug mode. 
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
-debug = true
+debug = false
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
