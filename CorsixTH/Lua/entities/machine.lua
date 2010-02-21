@@ -29,11 +29,7 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   self:Object(world, object_type, x, y, direction, etc)
   -- We actually don't want any dynamic info just yet
   self:clearDynamicInfo()
-  -- TODO: Smoke, 3424 ->
-  if object_type.smoke then
-    self.smoke = world:newEntity("Smoke", object_type.smoke)
-    self.smoke:setSmokeType(object_type.smoke, direction ~= "north" and true or false, x, y)
-  end
+  -- TODO: Smoke, 3424
   -- Change hover cursor once the room has been finished.
   local callback
   callback = --[[persistable:machine_build_callback]] function(room)
@@ -55,9 +51,6 @@ function Machine:machineUsed(room)
     self.world:callForStaff(room, self, true)
     -- TODO: 3428 is smoke, add it when additional objects can be made
   elseif threshold > 0.35 then
-    if threshold > 0.45 and self.smoke then
-      self.smoke:addSmoke()
-    end
     self.world:callForStaff(room, self) 
   end
 end
@@ -70,9 +63,6 @@ function Machine:machineRepaired(room)
   end
   self.times_used = 0
   self:setRepairing(false)
-  if self.smoke then
-    self.smoke:removeSmoke()
-  end
   self:updateDynamicInfo(true)
 end
 
@@ -124,8 +114,5 @@ function Machine:onClick(ui, button)
 end
 
 function Machine:onDestroy()
-  if self.smoke then
-    self.world:destroyEntity(self.smoke)
-  end
   Object.onDestroy(self)
 end

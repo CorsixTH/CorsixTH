@@ -39,6 +39,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.x = x
   self.y = 4
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
+  self.type = type
   
   local types = { emergency = 43, epidemy = 45, strike = 47, personnality = 49, information = 51, disease = 53, report = 55 }
   local type = types[type]
@@ -48,7 +49,11 @@ end
 
 function UIMessage:openMessage(out_of_time)
   if not out_of_time then
-    self.ui:addWindow(UIFax(self.ui, self.message, self.owner))
+    if self.type == "strike" then
+      self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
+    else
+      self.ui:addWindow(UIFax(self.ui, self.message, self.owner))
+    end
   end
   self:close()
   self:onClose(out_of_time or false)

@@ -412,6 +412,7 @@ function Humanoid:tickDay()
   -- TODO: Distance should depend on the heating setting of the radiators
   -- and most importantly, values need balancing. Multiple radiators
   -- should also make a difference.
+  -- Preferably each tile should have a heat value associated with it - computed in C?
   local radiator, lx, ly = self.world:findObjectNear(self, "radiator", 5)
   if radiator then
     local radiator_distance = ((lx - self.tile_x)^2 + (ly - self.tile_y)^2)^0.5

@@ -29,6 +29,13 @@ function Staff:tick()
   Entity.tick(self)
   if not self.fired and self.hospital then
     self:checkIfNeedRest()
+    if self.quitting_in then
+      print(self.quitting_in)
+      self.quitting_in = self.quitting_in - 1
+      if self.quitting_in < 0 then
+        self:fire() -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
+      end
+    end
   end
 
   local room = self:getRoom()
@@ -92,6 +99,7 @@ function Staff:updateSkill(consultant, trait, amount)
     elseif trait == "is_researcher" then
       self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.researcher))
     end
+    self:updateStaffTitle()
   end
 
   if trait == "skill" then
@@ -146,6 +154,11 @@ function Staff:setProfile(profile)
     self.attributes["fatigue"] = 0
   end
   self:setLayer(5, profile.layer5)
+  self:updateStaffTitle()
+end
+
+function Staff:updateStaffTitle()
+  local profile = self.profile
   if profile.humanoid_class == "Doctor" then
     local professions = ""
     local number = 0
@@ -340,9 +353,10 @@ end
 function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
+    self.quitting_in = 25*30 -- Time until the staff members quits anyway
     self:setMood("pay_rise", true)
     local amount = math.floor(self.profile:getFairWage() + self.profile.wage*0.1 - self.profile.wage)
-    self.world.ui:addWindow(UIStaffRise(self.world.ui, self, amount))
+    self.world.ui.bottom_panel:queueMessage("strike", amount, self)
   end
 end
 
