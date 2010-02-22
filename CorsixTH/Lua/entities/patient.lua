@@ -37,7 +37,11 @@ end
 
 function Patient:onClick(ui, button)
   if button == "left" then
-    ui:addWindow(UIPatient(ui, self))
+    if self.message_callback then
+      self:message_callback()
+    else
+      ui:addWindow(UIPatient(ui, self))
+    end
   end
   Humanoid.onClick(self, ui, button)
 end

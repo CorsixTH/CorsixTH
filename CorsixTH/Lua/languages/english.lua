@@ -60,6 +60,7 @@ menu_debug_overlay = {
 adviser.room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable."
 
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
+dynamic_info.staff.actions.heading_for = "Heading for %s"
 
 fax = {
   welcome = {

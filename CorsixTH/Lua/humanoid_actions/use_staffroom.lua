@@ -110,9 +110,13 @@ local function use_staffroom_action_start(action, humanoid)
           -- Send back to the last room if that room is still empty.
           if room and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
             humanoid:queueAction(room:createEnterAction())
+            humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+            humanoid:updateDynamicInfo()
           -- Send to the nearest empty room needing staff if there exists one.
           elseif new_room then
             humanoid:queueAction(new_room:createEnterAction())
+            humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+            humanoid:updateDynamicInfo()
           else
             humanoid:queueAction{name = "meander"}
           end

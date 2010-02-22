@@ -148,6 +148,7 @@ function UIPolicy:onMouseDown(code, x, y)
       self.offset = x - (self.moving_panel.x + self.moving_panel.w / 2)
       self.moved_x = 0
       self.position_x = self.moving_panel.x
+      return true
     end
   end
   return UIFullscreen.onMouseDown(self, code, x, y)

@@ -301,7 +301,7 @@ function UIStaffManagement:onMouseDown(code, x, y)
           self.selected_staff = math_floor((y - 81)/27) + 1
         end
       end
-    elseif x > 497 and x < 580 and y > 373 and y < 455 then
+    elseif x > 497 and x < 580 and y > 373 and y < 455 and self.selected_staff then
       -- Hit in the view of the staff
       local ui = self.ui
       ui:scrollMapTo(self:getStaffPosition())

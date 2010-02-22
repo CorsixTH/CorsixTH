@@ -143,6 +143,7 @@ function UIStaffRise:drawDoctorAttributes(canvas)
 end
 
 function UIStaffRise:fireStaff()
+  self.staff.message_callback = nil
   self.staff:fire()
   local staff_window = self.ui:getWindow(UIStaff)
   if staff_window and staff_window.staff == self.staff then
@@ -152,6 +153,7 @@ function UIStaffRise:fireStaff()
 end
 
 function UIStaffRise:increaseSalary()
+  self.staff.message_callback = nil
   self.staff:increaseWage(self.rise_amount)
   self.staff.quitting_in = nil
   self:close()

@@ -61,6 +61,7 @@ menu_debug_overlay = {
 adviser.room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga."
 
 dynamic_info.patient.actions.no_gp_available = utf8 "Väntar på att du ska bygga en allmänpraktik"
+dynamic_info.staff.actions.heading_for = utf8 "På väg till %s"
 
 fax = {
   welcome = {

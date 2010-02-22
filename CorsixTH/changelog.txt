@@ -4,7 +4,8 @@ Version Beta 2 - released 2010-0?-??
 
 * Feature: Save/Load functionality (WIP)
 * Feature: Patients and staff now have a need for heat in order to stay happy.
-  In addition patients get thirsty and will need a bathroom sooner or later.
+  Patients will also get thirsty and will need a bathroom sooner or later, and
+  Staff will ask for a raise when angry.
 * Feature: Machines will need repair now and then. A dialog that shows
   necessarry information is displayed when the machine is clicked.
 * Feature: Dynamic Information Bar in the bottom right corner of the UI added.
@@ -16,13 +17,13 @@ Version Beta 2 - released 2010-0?-??
 * Feature: A new string system that allows us to add new (translatable) text
   to the game, correct mistakes in existing languages and add new languages.
 
-* New Dialogs: Hospital Policy, Drugbook, Bank Manager
+* New Dialogs: Hospital Policy, Drugbook, Bank Manager, Staff Management
 
 * 10 new diseases.
 * New treatment room: Hair Restorer
-* Additional functional diagnosis rooms: General Diagnosis, ultrascan, X-Ray
+* Additional functional diagnosis rooms: General Diagnosis, Ultrascan, X-Ray
 
-* Translation: Norwegian (bokmal).
+* Translation: Norwegian (bokmål).
 
 A lot of other small improvements.
 Also, a great number of bugs have been squashed.

@@ -19,6 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local function meander_action_start(action, humanoid)
+  -- Just wandering around
+  if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
+    if not humanoid:getRoom() then
+      humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
+      humanoid:updateDynamicInfo()
+    end
+  end
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
     humanoid.tile_y, math.random(1, 24))
   if x == humanoid.tile_x and y == humanoid.tile_y then

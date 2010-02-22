@@ -135,7 +135,11 @@ function Staff:onClick(ui, button)
   end
   
   if button == "left" then
-    ui:addWindow(UIStaff(ui, self))
+    if self.message_callback then
+      self:message_callback()
+    else
+      ui:addWindow(UIStaff(ui, self))
+    end
     if TheApp.config.debug then
       -- for debugging
       print("Fatigue: ", self.attributes["fatigue"])
@@ -366,12 +370,20 @@ function Staff:increaseWage(amount)
   self:setMood("pay_rise", false)
 end
 
+function Staff:setDynamicInfoText(text)
+  self.dynamic_text = text
+end
+
 function Staff:updateDynamicInfo()
   local fatigue_text = _S.dynamic_info.staff.tiredness
   if not self.attributes["fatigue"] then
     fatigue_text = nil
   end
-  self:setDynamicInfo('text', {self.profile.profession, "", fatigue_text})
+  self:setDynamicInfo('text', {
+    self.profile.profession, 
+    self.dynamic_text and self.dynamic_text or "", 
+    fatigue_text,
+  })
   self:setDynamicInfo('progress', self.attributes["fatigue"])
   if self.hospital then
     self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})

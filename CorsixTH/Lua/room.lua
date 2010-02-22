@@ -247,6 +247,8 @@ function Room:commandEnteringPatient(humanoid)
     if class.is(humanoid, Staff) then
       if humanoid.humanoid_class ~= "Handyman" then
         humanoid:setMood("staff_wait", nil)
+        humanoid:setDynamicInfoText("")
+        humanoid:updateDynamicInfo()
       end
     end
   end
@@ -263,6 +265,8 @@ function Room:tryAdvanceQueue()
           if class.is(humanoid, Staff) then
             if humanoid.humanoid_class ~= "Handyman" then
               humanoid:setMood("staff_wait", true)
+              humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
+              humanoid:updateDynamicInfo()
             end
           end
         end

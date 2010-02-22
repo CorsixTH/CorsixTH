@@ -31,7 +31,15 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.timer = 25 * 24 -- Time to wait before considering to choose an automatic response
   self.ui = ui
   self.message = message
-  self.owner = owner
+  if owner then
+    self.owner = owner
+    owner.message_callback = --[[persistable:owner_of_message_callback]] function()
+      -- Don't do anything if the window is already open.
+      if not ui:getWindow(UIStaffRise) and not ui:getWindow(UIFax) then
+        self:openMessage()
+      end
+    end
+  end
   self.width = 30
   self.height = 28
   self.stop_x = stop_x
