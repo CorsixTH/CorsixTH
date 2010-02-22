@@ -109,6 +109,11 @@ function UIBottomPanel:draw(canvas, x, y)
   end
 end
 
+function UIBottomPanel:setPosition(x, y)
+  -- Lock to bottom of screen
+  return Window.setPosition(self, x, -0.1)
+end
+
 -- Draws the hospital reputation meter on canvas.
 -- x_left is the leftmost x-coordinate of the reputation meter
 -- y is the y-coordinate of the reputation meter
@@ -209,7 +214,7 @@ function UIBottomPanel:createMessageWindow()
     local message_windows = self.message_windows
     local index_to_remove
     for i = 1, #message_windows do
-      if index_to_remove ~= nil and message_windows[i].x > self.x then
+      if index_to_remove ~= nil and message_windows[i].x > 0 then
         message_windows[i]:moveLeft()   -- This windows are to the right of the window closed, so move them left
       end
       
