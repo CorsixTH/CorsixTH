@@ -45,6 +45,7 @@ because the letters ø and Ø is not included in the original ingame-font.
  	3. Objects
  	4. Menu
  	5. Adviser
+ 	6. Dynamic info
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -127,7 +128,11 @@ adviser = {
 	room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig.",
 }
 
-
+-- 6. Dynamic info
+dynamic_info {
+	patient.actions.no_gp_available = utf8 "Venter på at du skal bygge Allmennpraksis",
+	staff.actions.heading_for = utf8 "På vei til %s",
+}
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
