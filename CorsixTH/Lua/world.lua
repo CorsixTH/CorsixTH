@@ -289,7 +289,6 @@ function World:newRoom(x, y, w, h, room_info, ...)
 end
 
 function World:markRoomAsBuilt(room)
-  room.built = true
   room:roomFinished()
   for callback in pairs(self.room_build_callbacks) do
     callback(room)
@@ -800,6 +799,9 @@ function World:callForStaff(room, repair_object, urgent)
       handyman:queueAction(action_use)
       handyman:queueAction(room:createLeaveAction())
       handyman:queueAction{name = "meander"}
+      handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
+        :format(repair_object.object_type.name))
+      handyman:updateDynamicInfo()
     else
       -- Different messages depending on if any handyman has been hired yet or not.
       if self.hospitals[1]:hasStaffOfCategory("Handyman") then
@@ -843,6 +845,8 @@ function World:selectNearestStaffForRoom(room, attribute, count)
     end
     count = count - 1
     cand.entity:setNextAction(room:createEnterAction())
+    cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+    cand.entity:updateDynamicInfo()
     return cand.entity
   end
 end
