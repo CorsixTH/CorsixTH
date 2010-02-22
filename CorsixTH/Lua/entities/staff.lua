@@ -30,7 +30,6 @@ function Staff:tick()
   if not self.fired and self.hospital then
     self:checkIfNeedRest()
     if self.quitting_in then
-      print(self.quitting_in)
       self.quitting_in = self.quitting_in - 1
       if self.quitting_in < 0 then
         self:fire() -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?

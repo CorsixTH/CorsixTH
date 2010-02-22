@@ -153,6 +153,7 @@ end
 
 function UIStaffRise:increaseSalary()
   self.staff:increaseWage(self.rise_amount)
+  self.staff.quitting_in = nil
   self:close()
 end
 
