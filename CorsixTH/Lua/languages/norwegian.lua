@@ -45,7 +45,7 @@ because the letters ø and Ø is not included in the original ingame-font.
  	3. Objects
  	4. Menu
  	5. Adviser
- 	6. Dynamic infoc
+ 	6. Dynamic info
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -100,7 +100,7 @@ menu_debug = {
   transparent_walls           	= "  GJENNOMSIKTIGE VEGGER  ",
   limit_camera                	= "  BEGRENS KAMERA  ",
   disable_salary_raise        	= utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
-  make_debug_patient          	= "  LAG DEBUG-PASIENT  ",
+  make_debug_patient          	= "  LAG TESTPASIENT  ",
   spawn_patient               	= "  SPAWN PASIENT  ",
   make_adviser_talk           	= utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
   show_watch                  	= "  VIS STOPPEKLOKKE  ",
@@ -337,27 +337,27 @@ place_objects_window = {
 
 -- Competitor names
 competitor_names = {
-  "ORAC",
-  "HAL",
-  "COLOSSUS",
-  "MULTIVAC",
-  "HOLLY",
-  "DEEP THOUGHT",
-  "ZEN",
-  "LEON",
-  "AKIRA",
-  "SAM",
-  "CHARLIE",
-  "JAYNE",
-  "ARTHUR",
-  "MAGNUS",
-  "MOTHER",
-  "SAL",
-  "MARVIN",
-  "JOSHUA",
-  "DANEEL",
-  "OLIVAW",
-  "NIC",
+  [1] = "ORAKEL",
+  [2] = "HALL",
+  [3] = "KOLOSS",
+  [4] = "SLAMSUGER",
+  [5] = "HELLIG",
+  [6] = "DYPE TANKER",
+  [7] = "ZEN",
+  [8] = "LEO",
+  [9] = "AKIRA",
+  [10] = "SAM",
+  [11] = "CHARLIE",
+  [12] = "JANNE",
+  [13] = "ARTUR",
+  [14] = "MAGNUS",
+  [15] = "MAMMA",
+  [16] = "STEFAN",
+  [17] = "MATS",
+  [18] = "JONAS",
+  [19] = "DANIEL",
+  [20] = "OLIVIA",
+  [21] = "NILS",
 }
 
 -- Months
@@ -438,27 +438,27 @@ transactions = {
 
 -- Level names
 level_names = {
-  "ToxiCity",
-  "Sleepy Hollow",
-  "Largechester",
-  "Frimpton-on-Sea",
-  "Simpleton",
-  "Festering-on-the-Wold",
-  "Greenpool",
-  "Manquay",
-  "Eastville",
-  "Eggsenham",
-  "Croaking",
-  "Battenburg",
-  "Chumleigh",
-  "Little Drubbing",
-  "Bury Bury",
+  "Giftigby",
+  "Soveby",
+  "Storestad",
+  utf8 "Frimpton-på-Sjöen",
+  utf8 "Lettåker",
+  "Varberget",
+  "Langtbort",
+  "Halvestrad",
+  "Austby",
+  "Eggtorp",
+  "Kvekkestad",
+  "Snylteby",
+  "Polartorp",
+  "Lille Riseby",
+  "Gravland",
 }
 
 
 -- Town map
 town_map = {
-  chat         = "Town Detail Chat",
+  chat         = "Bykart Chat",
   for_sale     = "Til salgs",
   not_for_sale = "Ikke til salgs",
   number       = "Tomt nummer", 
@@ -629,6 +629,16 @@ menu_file = {
   restart             	= utf8 "  START PÅ NYTT  ",
   quit                	= "  AVSLUTT  ",
 }
+menu_file_load = {
+  [1] = "  SPILL 1  ",
+  [2] = "  SPILL 2  ",
+  [3] = "  SPILL 3  ",
+  [4] = "  SPILL 4  ",
+  [5] = "  SPILL 5  ",
+  [6] = "  SPILL 6  ",
+  [7] = "  SPILL 7  ",
+  [8] = "  SPILL 8  ",
+}
 
 -- Menu Options
 menu_options = {
@@ -676,7 +686,7 @@ menu_charts = {
 menu_debug = {
   object_cells        = "  OBJEKTCELLER        ",
   entry_cells         = "  INNGANGSCELLER      ",
-  keep_clear_cells    = "  KEEP CLEAR CELLS    ",
+  keep_clear_cells    = "  KEEP-CLEAR CELLER   ",
   nav_bits            = "  NAV BITS            ",
   remove_walls        = "  FJERN VEGGER        ",
   remove_objects      = "  FJERN GJENSTANDERER ",
@@ -978,8 +988,8 @@ tooltip = {
     network            = "Start nettverksspill",
     quit               = "Avslutt",
     load_menu = {
-      load_slot        = S[41][  1], -- NB: no %d! Append " [slotnumber]".
-      empty_slot       = S[41][  2],
+      load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
+      empty_slot       = "  TOM  ",
     },
   },
   -- Window general
@@ -1237,14 +1247,14 @@ tooltip = {
     desk                 = "Pult: en Lege kan bruke pulten til PC'en sin.",
     cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
     door                 = utf8 "Dör: personer åpner og lukker disse en del.",
-    bench                = utf8 "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabelt.",
+    bench                = utf8 "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabel.",
     table1               = S[40][ 6], -- unused
     chair                = "Stol: Pasienter sitter her og diskuterer sine problemer.",
     drinks_machine       = utf8 "Brusautomat: hindrer pasientene å bli törste og genererer inntekter.",
     bed                  = "Seng: virkelig syke pasienter ligger i disse.",
     inflator             = "Pumpe: Kurerer pasienter med Ballonghode.",
     pool_table           = utf8 "Biljardbord: Hjelper personalet ditt med å slappe av.",
-    reception_desk       = "Resepsjon: trenger en Resepsjonist som kan henvise pasienter til dine Leger.",
+    reception_desk       = "Resepsjon: trenger en Resepsjonist som kan henvise pasienter videre.",
     table2               = S[40][13], -- unused & duplicate
     cardio               = S[40][14], -- no description
     scanner              = S[40][15], -- no description
