@@ -45,7 +45,7 @@ because the letters ø and Ø is not included in the original ingame-font.
  	3. Objects
  	4. Menu
  	5. Adviser
- 	6. Dynamic info
+ 	6. Dynamic infoc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -129,10 +129,8 @@ adviser = {
 }
 
 -- 6. Dynamic info
-dynamic_info {
-	patient.actions.no_gp_available = utf8 "Venter på at du skal bygge Allmennpraksis",
-	staff.actions.heading_for = utf8 "På vei til %s",
-}
+dynamic_info.patient.actions.no_gp_available = utf8 "Venter på at du skal bygge Allmennpraksis"
+dynamic_info.staff.actions.heading_for 		= utf8 "På vei til %s"
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
@@ -1598,82 +1596,83 @@ newspaper = {
 
 -- Letters
 -- TODO
-letter = {--original line-ends:						 5						     4							 2    3
+letter = {
+		--original line-ends:						 5					4							 2    3
   [1] = {
-    [1] = "Kjære %s//",
-    [2] = "Fantastisk! Dette sykehuset har du driftet helt utmerket. Vi i helseministerens stab vite om du er ",
-    [3] = "interessert i å gå lös på et större prosjekt. Vi har en jobbstilling vi tror du ville passe perfekt i. ",
-    [4] = "Vi kan friste deg med en lönn på $%d. Tenk litt på det.//",
-    [5] = "Are you interested in a job at %s Hospital?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Fantastisk! Dette sykehuset har du driftet helt utmerket. Vi i departementet vil vite om du er ",
+    [3] = utf8 "interessert i å gå lös på et större prosjekt. Vi har en jobbstilling vi tror du ville passet perfekt ",
+    [4] = utf8 "i. Vi kan friste deg med en lönn på $%d. Tenk litt på det.//",
+    [5] = utf8 "Er du interessert i å jobbe på sykehuset %s?",
   },
   [2] = {
-    [1] = "Dear %s//",
-    [2] = "Jolly good! You have made excellent progress at your hospital. We have found somewhere else for ",
-    [3] = "you to run, if you fancy a change of scenery and a fresh set of challenges. You don't have to accept, ",
-    [4] = "but it might be worthwhile if you do. The salary is $%d//",
-    [5] = "Do you want a job at %s Hospital?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Veldig bra! Sykehuset ditt har hatt en fantastisk utvikling. Vi har en annen institusjon vi vil du ",
+    [3] = utf8 "skal ta over, om du er klar for forandringer. Du MÅ ikke ta utfordringen, men det vil nok lönne seg. ",
+    [4] = utf8 "Lönnen er $%d//",
+    [5] = utf8 "Vil du jobbe på sykehuset %s?",
   },
   [3] = {
-    [1] = "Dear %s//",
-    [2] = "You have been vastly successful during your tenure at this hospital. To this end, we predict great ",
-    [3] = "things for you, and would like to offer you a position elsewhere. The salary would be $%d, and we ",
-    [4] = "think you'd love the new challenge it would pose.//",
-    [5] = "Would you like a position at %s Hospital?		  ",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Din tid på dette sykehuset har vært enormt vellykket. Vi spår en stor fremtid for deg, og önsker å ",
+    [3] = utf8 "tilby deg en stilling et annet sted. Lönnen vil være $%d, og vi tror du vil elske de nye utfordringene ",
+    [4] = utf8 "stillingen förer med seg.//",
+    [5] = utf8 "Vil du ha stillingen på sykehuset %s?",
   },
   [4] = {
-    [1] = "Dear %s//",
-    [2] = "Congratulations! We at the Ministry are very impressed by your hospital-running abilities. You are ",
-    [3] = "certainly a golden boy in the Health Department. We think you'd prefer a slightly tougher job, though. ",
-    [4] = "You'd be paid a salary of $%d, but the decision is up to you.//",
-    [5] = "Are you interested in working at %s Hospital?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Gratulerer! Vi i departementet er meget imponert over dine evner til å drifte sykehus. Du er definitivt ",
+    [3] = utf8 "en gullgutt i Helsedepartementet. Vi tror derimot at du foretrekker en litt töffere jobb. Du får ",
+    [4] = utf8 "en lönn på $%d, men det er din beslutning.//",
+    [5] = utf8 "Er du interessert i å jobbe på sykehuset %s?",
   },
   [5] = {
-    [1] = "Dear %s//",
-    [2] = "Hello again. We respect your wishes not to move from this charming hospital, but would urge you to ",
-    [3] = "reconsider. We will offer you the great salary of $%d if you are prepared to move to another hospital ",
-    [4] = "and get it running as smoothly.//",
-    [5] = "Would you like to move to %s Hospital now?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Hei igjen. Vi respekterer dine önsker om å ikke forlate dette sjarmerende sykehuset, men vi ber deg om ",
+    [3] = utf8 "å ta en ny vurdering. Vi vil tilby deg en god lönn på $%d om du er klar for å flytte til et annet ",
+    [4] = utf8 "sykehus, og får opp driften til et respektabelt nivå.//",
+    [5] = utf8 "Er du interessert i å flytte til sykehuset %s nå?",
   },
   [6] = {
-    [1] = "Dear %s//",
-    [2] = "Greetings. We know how happy you've been at this lovely and well-run institution, but we think you ",
-    [3] = "should consider furthering your career now. You will of course command a salary of $%d if you do ",
-    [4] = "decide to move. It's worth thinking about.//",
-    [5] = "Do you wish to take up a position at %s Hospital?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Departementet hilser deg. Vi vet hvor glad du er blitt i denne nydelige, velorganiserte institusjonen, ",
+    [3] = utf8 "men vi tror du bör vurdere å fremme karrieren din nå. Du vil få en respektabel lederlönn på $%d om du ",
+    [4] = utf8 "bestemmer deg for å flytte. Det er verdt å tenke på det i hvertfall.//",
+    [5] = utf8 "Vil du ta imot stillingen på sykehuset %s?",
   },
   [7] = {
-    [1] = "Dear %s//",
-    [2] = "Good day! The Ministry of Health would like to know whether you would reconsider your decision to ",
-    [3] = "stay at your current hospital. We appreciate that you have a lovely hospital, but feel that you would do ",
-    [4] = "very well to accept a more challenging post, and a salary of $%d.//",
-    [5] = "Would you accept a position at %s Hospital?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "God dag! Helseministeren lurer på om du vil revurdere din stilling på ditt nåværende sykehus. Vi setter ",
+    [3] = utf8 "pris på ditt nydelige sykehus, men vi tror du vil gjöre mye for en litt mer utfordrende stilling, ",
+    [4] = utf8 "og en lönn på $%d.//",
+    [5] = utf8 "Tar du utfordringen på sykehuset %s?",
   },
   [8] = {
-    [1] = "Dear %s//",
-    [2] = "Hello once more. You responded in the negative to our last letter, offering you a supreme position with ",
-    [3] = "a new hospital, and an increased salary of $%d. We feel, however, that you should reconsider this ",
-    [4] = "decision. We've got the perfect job for you, you see.//",
-    [5] = "Will you take a post at %s Hospital? Please?",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Hallo igjen. Du tok ikke vår forrige utfordring, der vi tilbydte deg en alle tiders stilling på et nytt ",
+    [3] = utf8 "sykehus, og en ökt lönn på $%d. Vi mener, derimot, at du bör revurdere beslutningen din. Vi har ",
+    [4] = utf8 "den perfekte jobben for deg, skjönner du.//",
+    [5] = utf8 "Tar du imot stillingen på sykehuset %s? Vær så snill?",
   },
   [9] = {
-    [1] = "Dear %s//",
-    [2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the post of Supreme Chief of All Hospitals. This is an honorary job, and comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//",
-    [3] = "Thank you for all you have done. May you enjoy a long semi-retirement.//",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Du har nok en gang bevist at du er den beste innen helseadministrasjon. Ingen tvil! En slik betydningsfull prestasjon må belönnes, så vi önsker å tilby deg stillingen som Administrerende Direktör for Alle Sykehus. Dette er en ærefull stilling, og gir deg en lönn på hele $%d. Du får din egen Ticker-Tape parade, og folk kommer til å vise sin takknemlighet ovenfor deg, hvor enn du går.//",
+    [3] = utf8 "Takk for alt du har gjort. Vi önsker deg en lang og trivelig pensjonstid.//",
   },
   [10] = {
-    [1] = "Dear %s//",
-    [2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, plus a limousine, and all we ask is that you travel from city to city, meeting your adoring public and promoting the work of all hospitals everywhere.//",
-    [3] = "We are all proud of you. There isn't one among us who doesn't feel grateful for your hard work saving lives.//",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Gratulerer! Du har driftet alle sykehus vi har gitt deg på en utmerket måte. En slik prestasjon kvalifiserer deg for friheten til å reise rundt i verden. Du blir belönnet med en pensjon på $%d, pluss en limousin, og alt vi ber om er at du reiser fra by til by, möter dine lidenskaplige fans, og promoterer sykehusets arbeid hvor enn du måtte befinne deg.//",
+    [3] = utf8 "Vi er alle stolte av deg. Det er ikke en av oss som ikke er takknemlig for ditt harde arbeid som livredder.//",
   },
   [11] = {
-    [1] = "Dear %s//",
-    [2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals and doing so well in every job. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//",
-    [3] = "You are an example to every right-thinking person, and without exception, everybody in the world regards you as a supreme asset.//",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Din karriere har vært eksemplarisk, og du er en stor inspirasjon for oss alle. Takk for at du har driftet så mange sykehus, og gjort det så bra i alle jobbene. Vi önsker å gi deg en livslang lönn på $%d, og alt vi ber deg om er å reise offisielt med kabriolet fra by til by, og fortelle folk hvordan du tjente så mye penger så fort.//",
+    [3] = utf8 "Du er et prakteksempel for alle höyre-politiske mennesker, og alle i verden, uten unntak, er dine kjæreste eiendeler.//",
   },
   [12] = {
-    [1] = "Dear %s//",
-    [2] = "Your successful career as the best hospital administrator since Moses is nearing an end. However, such has been your impact on the cosy world of medicine, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships and doing chat shows. The whole world is clamouring for you, and it would be great PR for us all!//",
-    [3] = "Please accept this position. If won't be hard work, and we will provide you with a car and police escort wherever you go.//",
+    [1] = utf8 "Kjære %s//",
+    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisin-verdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
+    [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
   },
 }
 
