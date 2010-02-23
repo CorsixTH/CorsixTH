@@ -263,10 +263,14 @@ function App:dumpStrings()
         if type(o) == "table" then
           file:write(prefix .. n .. " = {\n")
           dump_grouped(file, o, prefix .. "  ")
-          file:write(prefix .. "}\n")
+          file:write(prefix .. "}")
         else
-          file:write(prefix .. n .. " = " .. "\"" .. o .. "\",\n")
+          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"")
         end
+        if prefix ~= "" then
+          file:write(",")
+        end
+        file:write("\n")
       end
     end
   end
