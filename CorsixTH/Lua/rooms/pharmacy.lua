@@ -19,9 +19,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local room = {}
-room.name = _S.rooms_short.pharmacy
 room.id = "pharmacy"
 room.class = "PharmacyRoom"
+room.name = _S.rooms_short.pharmacy
+room.tooltip = _S.tooltip.rooms.pharmacy
 room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { pharmacy_cabinet = 1 }

@@ -54,12 +54,12 @@ function UIBuildRoom:UIBuildRoom(ui)
     end
   end
   
-  self:addPanel(210,   0,   0):makeButton(9, 9, 129, 32, 211, cat(1)) -- Diagnosis
-  self:addPanel(212,   0,  41):makeButton(9, 0, 129, 31, 213, cat(2)) -- Treatment
+  self:addPanel(210,   0,   0):makeButton(9, 9, 129, 32, 211, cat(1)):setTooltip(_S.tooltip.build_room_window.room_classes.diagnosis)
+  self:addPanel(212,   0,  41):makeButton(9, 0, 129, 31, 213, cat(2)):setTooltip(_S.tooltip.build_room_window.room_classes.treatment)
   -- Clinics should really be at y=73, but TH skips a pixel here
   -- so that the left and right columns are the same height
-  self:addPanel(214,   0,  72):makeButton(9, 0, 129, 32, 215, cat(3)) -- Clinics
-  self:addPanel(216,   0, 104):makeButton(9, 0, 129, 32, 217, cat(4)) -- Facilities
+  self:addPanel(214,   0,  72):makeButton(9, 0, 129, 32, 215, cat(3)):setTooltip(_S.tooltip.build_room_window.room_classes.clinic)
+  self:addPanel(216,   0, 104):makeButton(9, 0, 129, 32, 217, cat(4)):setTooltip(_S.tooltip.build_room_window.room_classes.facilities)
   self:addPanel(218,   0, 146) -- Grid top
   for y = 179, 249, 10 do
     self:addPanel(219,   0,   y) -- Grid body
@@ -73,7 +73,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   
   -- The close button has no sprite for when pressed, so it has to be custom drawn
   local build_room_dialog_close = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close)
+  self:addPanel(224, 146, 224):makeButton(8, 34, 134, 27, 224, self.close):setTooltip(_S.tooltip.build_room_window.close)
   .panel_for_sprite.custom_draw = --[[persistable:build_room_draw_close_button]] function(panel, canvas, x, y)
     x = x + panel.x
     y = y + panel.y
@@ -131,6 +131,14 @@ function UIBuildRoom:draw(canvas, x, y)
   end
 end
 
+function UIBuildRoom:getTooltipAt(x, y)
+  -- cost
+  if x >= 160 and x <= 282 and y >= 228 and y <= 242 then
+    return { text = _S.tooltip.build_room_window.cost, x = self.x + 221, y = self.y + 228 }
+  end
+  return Window.getTooltipAt(self, x, y)
+end
+
 function UIBuildRoom:setCategory(index)
   if index == 1 then
     self.ui:tutorialStep(3, 2, 3)
@@ -144,6 +152,11 @@ function UIBuildRoom:setCategory(index)
   local last = #self.list + 5
   for i = 5, 14 do
     self.buttons[i].enabled = i < last
+    if i < last then
+      self.buttons[i]:setTooltip(self.list[i - 4].tooltip)
+    else
+      self.buttons[i]:setTooltip()
+    end
   end
 end
 
