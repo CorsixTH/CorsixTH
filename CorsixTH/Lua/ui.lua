@@ -223,14 +223,19 @@ function UI:drawTooltip(canvas)
   if not self.tooltip then
     return
   end
---  local text = "Tooltip test"
---  local text = "Slightly longer tooltip test"
-  local text = "Very long tooltip test that requires a line break"
-
-
-  local x, y = self:getCursorPosition()
   
-  self.tooltip_font:drawTooltip(canvas, text, x, y)
+  if self.tooltip_counter > 0 then
+    self.tooltip_counter = self.tooltip_counter - 1
+    return
+  end
+  
+  local x, y = self.tooltip.x, self.tooltip.y
+  if not self.tooltip.x then
+    -- default to cursor position for (lower left corner of) tooltip
+    x, y = self:getCursorPosition()
+  end
+  
+  self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
 end
 
 function UI:draw(canvas) 

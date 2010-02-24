@@ -285,6 +285,11 @@ function Button:setSound(name)
   return self
 end
 
+function Button:setTooltip(tooltip)
+  self.tooltip = tooltip
+  return self
+end
+
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x
   y = y + panel.y
@@ -567,6 +572,20 @@ function Window:onMouseMove(x, y, dx, dy)
       btn.panel_for_sprite.sprite_index = index
       repaint = true
     end
+  else
+    if self.ui and Window.hitTest(self, x, y) then
+      -- TODO: handle the case if no window (except UI) is hit. In some cases the tooltip
+      --       currently stays instead of disappearing.
+      local tooltip = self:getTooltipAt(x, y)
+      if tooltip then
+        -- NB: Do not set counter if tooltip changes here. This allows quick tooltip reading of adjacent buttons.
+        self.ui.tooltip = tooltip
+      else
+        -- Not hovering over any button with tooltip -> reset
+        self.ui.tooltip = nil
+        self.ui.tooltip_counter = 50
+      end
+    end
   end
   
   return repaint
@@ -629,4 +648,15 @@ function Window:stopButtonBlinking()
   btn.sprite_index_blink = nil
   self.blinking_button = false
   self.blink_counter = 0
+end
+
+-- Override/Extend in window classes for additional (non-button) tooltips.
+-- return tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
+-- x, y are optional - if not specified, cursor position will be used for tooltip.
+function Window:getTooltipAt(x, y)
+  for _, btn in ipairs(self.buttons) do
+    if btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+      return { text = btn.tooltip, x = self.x + round((btn.x + btn.r) / 2, 1), y = self.y + btn.y }
+    end
+  end
 end

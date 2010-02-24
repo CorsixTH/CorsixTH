@@ -42,11 +42,11 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   self.default_button_sound = "selectx.wav"
   
-  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats)
+  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
-  self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom)
-  self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor)
-  self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff)
+  self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
+  self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
+  self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
   self:addPanel( 8, 285, 0) -- Edit rooms / items button
   -- The dynamic info bar
   self:addPanel(12, 364, 0)
@@ -59,16 +59,16 @@ function UIBottomPanel:UIBottomPanel(ui)
   local buttons = {}
   
   buttons[1] = self:addPanel(15, 364, 0) -- Staff management button
-  buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement)
+  buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
   buttons[2] = self:addPanel(17, 407, 0) -- Town map button
-  buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap)
+  buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
   buttons[3] = self:addPanel(19, 445, 0)
-  buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
+  buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
   buttons[4] = self:addPanel(21, 483, 0) -- Research button
   buttons[5] = self:addPanel(23, 521, 0) -- Status button
   buttons[6] = self:addPanel(25, 559, 0) -- Charts button
   buttons[7] = self:addPanel(27, 597, 0)
-  buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy)
+  buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
   self.additional_buttons = buttons
   for _, buttons in ipairs(buttons) do
     buttons.visible = false
@@ -109,6 +109,23 @@ function UIBottomPanel:draw(canvas, x, y)
 
     self:drawReputationMeter(canvas, x + 55, y + 35)
   end
+end
+
+function UIBottomPanel:getTooltipAt(x, y)
+  -- balance
+  if x >= 41 and x <= 137 and y >= 5 and y <= 28 then
+    return { text = _S.tooltip.toolbar.balance, x = self.x + 90, y = self.y + 5 }
+  end
+  -- reputation bar
+  if x >= 41 and x <= 137 and y >= 30 and y <= 42 then
+    return { text = _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")", x = self.x + 90, y = self.y + 30 }
+  end
+  -- date
+  if x >= 140 and x <= 200 and y >= 5 and y <= 42 then
+    return { text = _S.tooltip.toolbar.date, x = self.x + 170, y = self.y + 5 }
+  end
+  
+  return Window.getTooltipAt(self, x, y)
 end
 
 function UIBottomPanel:setPosition(x, y)
