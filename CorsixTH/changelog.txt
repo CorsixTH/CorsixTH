@@ -16,8 +16,10 @@ Version Beta 2 - released 2010-0?-??
   arrive and ask the player what to do.
 * Feature: A new string system that allows us to add new (translatable) text
   to the game, correct mistakes in existing languages and add new languages.
+* Feature: A tutorial is offered to the player at the start of the game.
+* Feature: Tooltips are displayed when hovering over buttons for some time.
 
-* New Dialogs: Hospital Policy, Drugbook, Bank Manager, Staff Management
+* New Dialogs: Hospital Policy, Drugbook, Bank Manager, Staff Management, Town Map (WIP)
 
 * 10 new diseases.
 * New treatment room: Hair Restorer
