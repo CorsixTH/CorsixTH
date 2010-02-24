@@ -220,12 +220,7 @@ function UI:setCursor(cursor)
 end
 
 function UI:drawTooltip(canvas)
-  if not self.tooltip then
-    return
-  end
-  
-  if self.tooltip_counter > 0 then
-    self.tooltip_counter = self.tooltip_counter - 1
+  if not self.tooltip or self.tooltip_counter > 0 then
     return
   end
   
@@ -596,6 +591,16 @@ function UI:onMouseMove(x, y, dx, dy)
   if Window.onMouseMove(self, x, y, dx, dy) then
     repaint = true
   end
+
+  local tooltip = self:getTooltipAt(x, y)
+  if tooltip then
+    -- NB: Do not set counter if tooltip changes here. This allows quick tooltip reading of adjacent buttons.
+    self.tooltip = tooltip
+  else
+    -- Not hovering over any button with tooltip -> reset
+    self.tooltip = nil
+    self.tooltip_counter = 50
+  end
   
   local map = self.app.map
   local wx, wy = map:ScreenToWorld(self.screen_offset_x + x, self.screen_offset_y + y)
@@ -619,6 +624,10 @@ end
 function UI:onTick()
   Window.onTick(self)
   local repaint = false
+  if self.tooltip_counter > 0 then
+    self.tooltip_counter = self.tooltip_counter - 1
+    repaint = (self.tooltip_counter == 0)
+  end
   if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
     -- The scroll amount per tick gradually increases as the duration of the
     -- scroll increases due to this multiplier.
