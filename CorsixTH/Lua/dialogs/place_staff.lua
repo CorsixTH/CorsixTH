@@ -23,6 +23,7 @@ local math_floor
 local TH = require "TH"
 dofile "entities/staff"
 
+--! Invisible window which handles placing a `Staff` member in the world.
 class "UIPlaceStaff" (Window)
 
 function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)

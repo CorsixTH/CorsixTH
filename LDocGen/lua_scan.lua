@@ -22,6 +22,7 @@ local function ParseComments(tokens, i, object)
   -- Collect the comments prior to the given token
   local comment_parts = {}
   local was_short = false
+  local decl_i = i
   while i > 1 do
     i = i - 1
     local tok = tokens[i]
@@ -44,8 +45,11 @@ local function ParseComments(tokens, i, object)
         table.insert(comment_parts, 1, part)
       end
       was_short = not mkr
+      decl_i = i
     end
   end
+  -- Set filename and line
+  object:setFile(tokens.__file, decl_i == 1 and 1 or tokens[decl_i - 1].line)
   -- Parse each command
   for _, part in ipairs(comment_parts) do
     for command in (" "..part):gmatch"([^!]+)" do
@@ -158,7 +162,17 @@ local function IdentifyMethods(tokens, globals)
         method:setName(name_parts[#name_parts]):setIsMethod(is_method)
       end
       local endi = ScanToEndToken(tokens, i + 1)
+      local param_state = method and "before" --> "in" --> "after"
       while i < endi do
+        if param_state == "before" and tokens[i][2] == "(" then
+          param_state = "in"
+        elseif param_state == "in" and tokens[i][2] == "identifier" then
+          method:addParameter(LuaVariable():setName(tokens[i][1]))
+        elseif param_state == "in" and tokens[i][2] == "vararg" then
+          method:setIsVararg(true)
+        elseif param_state == "in" and tokens[i][2] == ")" then
+          param_state = "after"
+        end
         if is_method and tokens[i][1] == "self" and tokens[i][2] == "identifier" then
           i = tokens_next(tokens, i)
           if tokens[i][2] == "." or tokens[i][2] == ":" then
@@ -205,6 +219,7 @@ function MakeLuaCodeModel(lua_file_names)
   for _, filename in ipairs(lua_file_names) do
     local f = assert(io.open(filename))
     lua_file_tokens[filename] = TokeniseLua(f:read "*a")
+    lua_file_tokens[filename].__file = filename:match"^%.%./CorsixTH/(.*)$"
     f:close()
   end
   local globals = LuaTable()

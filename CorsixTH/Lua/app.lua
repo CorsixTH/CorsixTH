@@ -219,6 +219,8 @@ function App:loadLevel(filename)
   -- Load world
   self.world = World(self)
   self.world:createMapObjects(map_objects)
+  self.world.level_number = tonumber(filename:gsub("[^0-9]",""))
+  self.world.level_name = _S.level_names[self.world.level_number]:upper()
   
   -- Load UI
   self.ui = UI(self, self.world:getLocalPlayerHospital())

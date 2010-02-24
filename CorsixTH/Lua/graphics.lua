@@ -291,6 +291,7 @@ function Graphics:updateTarget(target)
   end
 end
 
+--! Utility class for setting animation markers and querying animation length.
 class "AnimationManager"
 
 function AnimationManager:AnimationManager(anims)

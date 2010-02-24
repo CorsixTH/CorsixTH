@@ -216,12 +216,65 @@ ul.class_index li {
 
 /* Content - class pages */
 
-div.method_list {
-  float: left;
+h2.class {
+  margin: 0;
+  padding: 0;
+  padding-top: 0.5em;
 }
 
-div.member_list {
+h3.class {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+}
+
+div.class_info {
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+div.method_list, div.member_list {
   float: left;
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
+}
+
+div.method_list a, div.member_list a {
+  text-decoration: none;
+}
+
+div.method_list a:hover, div.member_list a:hover {
+  text-decoration: underline;
+}
+
+div.method_list {
+  margin-right: 1em;
+}
+
+div.method_list h4, div.member_list h4 {
+  margin: 0;
+  padding: 3px;
+  display: block;
+  border-bottom: 1px #aaa solid;
+  background-color: #C3D9FF;
+}
+
+div.method_list ul, div.member_list ul {
+  margin: 0;
+  padding: 3px;
+  list-style-type: none;
+}
+
+div.method_list ul li.self {
+  font-weight: bold;
+}
+
+div.method_list span.p, div.member_list span.p {
+  font-family: monospace;
+  font-weight: normal;
 }
 
 /* Footer */

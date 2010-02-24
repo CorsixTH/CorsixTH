@@ -96,15 +96,16 @@ local tokens = P { "tokens";
   float = Ct(C(P"."^-1 * R"09" * R("09","..")^0)* Cc"float"),
 
   -- Any token
-  token = V"comment" +
-          V"identifier" +
-          V"whitespace" +
-          V"string" +
-          V"long_string" +
-          V"char" +
-          V"operator" +
-          V"float" +
-          V"int",
+  token = ((V"comment" +
+            V"identifier" +
+            V"whitespace" +
+            V"string" +
+            V"long_string" +
+            V"float" +
+            V"vararg" +
+            V"operator" +
+            V"char" +
+            V"int") * Carg(1)) / function(t, s) t.line = s.line return t end,
   
   -- Error for when nothing else matches
   error = (Cp() * C(P(1) ^ -8) * Carg(1)) / function(pos, where, state)
@@ -139,6 +140,7 @@ local Lua_to_HTML_names = {
   string = "s",
   float = "n",
   integer = "n",
+  vararg = "v"
 }
 
 function Lua_to_HTML(str)

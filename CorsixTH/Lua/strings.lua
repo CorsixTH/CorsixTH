@@ -25,6 +25,7 @@ local type, loadfile, pcall, tostring, setfenv, setmetatable, math_random
 local rawset, rawget
     = rawset, rawget
 
+--! Layer which handles the loading of localised text.
 class "Strings"
 
 function Strings:Strings(app)

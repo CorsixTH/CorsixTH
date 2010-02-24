@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 dofile "dialogs/fullscreen"
 
+--! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
 
 function UICasebook:UICasebook(ui, disease_selection)

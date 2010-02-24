@@ -31,6 +31,7 @@ function Hospital:Hospital(world)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.radiator_heat = 0.5
   self.num_deaths = 0
   self.num_cured = 0
   self.is_in_world = true
@@ -96,6 +97,10 @@ function Hospital:tick()
   if math.random(1, spawn_rate) == 1 then
     self:spawnPatient()
   end
+end
+
+function Hospital:isInHospital(x, y)
+  return self.world.map.th:getCellFlags(x, y).hospital
 end
 
 function Hospital:onEndMonth()

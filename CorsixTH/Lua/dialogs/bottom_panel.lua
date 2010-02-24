@@ -61,6 +61,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[1] = self:addPanel(15, 364, 0) -- Staff management button
   buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement)
   buttons[2] = self:addPanel(17, 407, 0) -- Town map button
+  buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap)
   buttons[3] = self:addPanel(19, 445, 0)
   buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook)
   buttons[4] = self:addPanel(21, 483, 0) -- Research button
@@ -73,7 +74,8 @@ function UIBottomPanel:UIBottomPanel(ui)
     buttons.visible = false
   end
 
-  ui:addKeyHandler("M", self, self.openFirstMessage)	-- M for message
+  ui:addKeyHandler("M", self, self.openFirstMessage)	  -- M for message
+  ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
   ui:addKeyHandler("C", self, self.dialogDrugCasebook)	-- C for casebook
 end
 
@@ -292,6 +294,11 @@ function UIBottomPanel:dialogHireStaff()
   self.ui:addWindow(dlg)
   self.ui:tutorialStep(2, 1, 2)
   self.ui:tutorialStep(4, 1, 2)
+end
+
+function UIBottomPanel:dialogTownMap()
+  local dlg = UITownMap(self.ui)
+  self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogDrugCasebook()

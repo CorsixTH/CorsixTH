@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 dofile "dialogs/fullscreen"
 
+--! Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).
 class "UIPolicy" (UIFullscreen)
 
 function UIPolicy:UIPolicy(ui, disease_selection)

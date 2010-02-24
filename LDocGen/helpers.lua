@@ -116,3 +116,8 @@ function set(t)
   end
   return s
 end
+
+function src_ref(obj)
+  return [[<a href="http://code.google.com/p/corsix-th/source/browse/trunk/CorsixTH/]]..
+    obj:getFile() .."#".. obj:getLine() ..[[">line ]].. obj:getLine() .." of ".. obj:getFile() .."</a>"
+end

@@ -1,56 +1,52 @@
-<h2><!= class:getName() !> Class</h2>
-<! if class:getSuperClass() then !>
-  <div class="inheritance">
-    Inheritance: <!= template "class_inheritance" {class = class} !>
-  </div>
-<! end !>
-<! if class:hasSubclasses() then !>
-  <div class="subclasses">
-    Subclasses:
-    <ul>
-      <! for name, subclass in class:subclassPairs() do !>
-        <li><a href="<!= subclass:getId() !>.html"><!= name !></a></li>
-      <! end !>
-    </ul>
-  </div>
-<! end !>
+<h2 class="class"><!= class:getName() !> Class</h2>
+<! if class:getShortDesc() then !><h3 class="class"><!= class:getShortDesc() !></h3> <! end !>
+<div class="class_info">
+  <strong>Declared on:</strong> <!= src_ref(class) !>.
+  <! if class:getSuperClass() then !><br/><strong>Inheritance:</strong> <!= template "class_inheritance" {class = class} !> <! end !>
+  <! if class:hasSubclasses() then !><br/><strong>Subclasses:</strong><!
+    local s = " "
+    for name, subclass in class:subclassPairs() do
+      !><!= s !><a href="<!= subclass:getId() !>.html"><!= name !></a><!
+      s = ", "
+    end end !>
+  <! if class:getLongDesc() then !><br/><strong>Full description:</strong><br/> <!= class:getLongDesc() !> <! end !>
+</div>
 <div class="method_list">
-  <h2>Method Index</h2>
-  <! if class:getSuperClass() then !>
+  <h4>Method Index</h4>
+  <! do local super = class:getSuperClass() !>
     <ul>
       <! for name, member in class:pairs() do !>
-        <! if member.type == "function" then !>
-          <li><!= name !>
+        <! if member.type == "function" and name ~= member:getParent():getName() then !>
+          <li class="<!= member:getParent() == class and "self" or "inherited"!>">
+            <a href="<!= member:getParent():getId() !>.html#<!= member:getId() !>"><!= name !></a>(<!
+            local s = "" for name, param in member:parameterPairs() do
+              !><!= s !><span class="p"><!= name !></span><! s = ", " !><!
+            end !>)
             <! if member:getParent() ~= class then !>
               (inherited from <a href="<!= member:getParent():getId() !>.html"><!= member:getParent():getName() !></a>)
-            <! elseif class:getSuperClass():get(name) then local existing = class:getSuperClass():get(name)!>
+            <! elseif super and super:get(name) then local existing = super:get(name)!>
               (overrides <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !>:<!= name !></a>)
             <! end !>
           </li>
         <! end !>
       <! end !>
     </ul>
-  <! else !>
-    <ul>
-      <! for name, member in class:pairs() do !>
-        <! if member.type == "function" then !>
-          <li><!= name !></li>
-        <! end !>
-      <! end !>
-    </ul>
   <! end !>
 </div>
 <div class="member_list">
-  <h2>Member Index</h2>
+  <h4>Member Index</h4>
   <ul>
-    <! for name, member in class:pairs() do !>
+    <! local any_super = false; for name, member in class:pairs() do !>
       <! if member.type ~= "function" then !>
-        <li><!= name !>
-          <! if member:getParent() ~= class then !>
-            (only used in superclass methods)
+        <li><span class="p"><!= name !></span>
+          <! if member:getParent() ~= class then any_super = true !>
+            (*)
           <! end !>
         </li>
       <! end !>
     <! end !>
   </ul>
+  <! if any_super then !>
+    (*) only used in superclass methods
+  <! end !>
 </div>

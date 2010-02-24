@@ -22,6 +22,7 @@ local TH = require "TH"
 local math_floor
     = math.floor
 
+--! Dialog for purchasing `Object`s (for the corridor or for rooms).
 class "UIFurnishCorridor" (Window)
 
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)

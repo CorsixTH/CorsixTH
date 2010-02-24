@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 dofile "window"
 
+--! Top-level container for all other user-interface components.
 class "UI" (Window)
 
 local TH = require "TH"

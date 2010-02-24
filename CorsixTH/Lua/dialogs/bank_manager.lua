@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 dofile "dialogs/fullscreen"
 
+--! Bank manager (for loans / insurance companies) and bank statement fullscreen windows.
 class "UIBankManager" (UIFullscreen)
 
 function UIBankManager:UIBankManager(ui)

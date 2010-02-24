@@ -109,16 +109,36 @@ function Window:addKeyHandler(key, handler)
   self.key_handlers[key] = true
 end
 
-local panel_mt = permanent("Window.<panel_mt>", {
-  __index = {
-    makeButton = function(...)
-      return (...).window:makeButtonOnPanel(...)
-    end,
-    makeToggleButton = function(...)
-      return (...).window:makeButtonOnPanel(...):makeToggle()
-    end,
-  }
-})
+--! The basic component which makes up most `Window`s.
+--! The visual parts of most ingame dialogs are sprites from a sprite sheet.
+-- A `Panel` is an instance of a particular sprite, consisting of a sprite
+-- index and a position. It is advantageous to construct dialogs out of panels
+-- (using `Window:addPanel`) as the common operations on panels (like drawing
+-- them and hit-testing against them) are implemented in the `Window` class,
+-- thus reducing the amount of work that each individual dialog has to do.
+class "Panel"
+
+-- !dummy
+function Panel:Panel()
+  self.window = nil
+  self.x = nil
+  self.y = nil
+  self.w = nil
+  self.h = nil
+  self.colour = nil
+  self.custom_draw = nil
+  self.visible = nil
+end
+
+local panel_mt = permanent("Window.<panel_mt>", getmetatable(Panel()))
+
+function Panel:makeButton(...)
+  return self.window:makeButtonOnPanel(self, ...)
+end
+
+function Panel:makeToggleButton(...)
+  return self.window:makeButtonOnPanel(self, ...):makeToggle()
+end
 
 function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
@@ -194,51 +214,76 @@ function Window:getWindow(window_class)
   end
 end
 
-local button_mt = permanent("Window.<button_mt>", {
-  __index = {
-    setDisabledSprite = function(self, index)
-      self.sprite_index_disabled = index
-      return self
-    end,
-    
-    enable = function(self, enable)
-      if enable then
-        self.enabled = true
-        self.panel_for_sprite.sprite_index = self.sprite_index_normal
-      else
-        self.enabled = false
-        self.panel_for_sprite.sprite_index = self.sprite_index_disabled
-      end
-      return self
-    end,
-    
-    makeToggle = function(self)
-      self.is_toggle = true
-      self.toggled = false
-      return self
-    end,
-    
-    toggle = function(self)
-      self.sprite_index_normal, self.sprite_index_active =
-        self.sprite_index_active, self.sprite_index_normal
-      self.panel_for_sprite.sprite_index = self.sprite_index_normal
-      self.toggled = not self.toggled
-      return self.toggled
-    end,
-    
-    preservePanel = function(self)
-      local window = self.panel_for_sprite.window
-      self.panel_for_sprite = window:addPanel(0, self.x, self.y)
-      self.sprite_index_normal = 0
-      return self
-    end,
-    
-    setSound = function(self, name)
-      self.sound = name
-      return self
-    end,
-  }
-})
+--! A region of a `Panel` which causes some action when clicked.
+class "Button"
+
+--!dummy
+function Button:Button()
+  self.is_toggle = nil
+  self.x = nil
+  self.y = nil
+  self.r = nil
+  self.b = nil
+  self.panel_for_sprite = nil
+  self.sprite_index_normal = nil
+  self.sprite_index_disabled = nil
+  self.sprite_index_active = nil
+  self.on_click = nil
+  self.on_click_self = nil
+  self.on_rightclick = nil
+  self.enabled = nil
+end
+
+local button_mt = permanent("Window.<button_mt>", getmetatable(Button()))
+
+function Button:setDisabledSprite(index)
+  self.sprite_index_disabled = index
+  return self
+end
+
+function Button:enable(enable)
+  if enable then
+    self.enabled = true
+    self.panel_for_sprite.sprite_index = self.sprite_index_normal
+  else
+    self.enabled = false
+    self.panel_for_sprite.sprite_index = self.sprite_index_disabled
+  end
+  return self
+end
+
+function Button:makeToggle()
+  self.is_toggle = true
+  self.toggled = false
+  return self
+end
+
+function Button:toggle()
+  self.sprite_index_normal, self.sprite_index_active =
+    self.sprite_index_active, self.sprite_index_normal
+  self.panel_for_sprite.sprite_index = self.sprite_index_normal
+  self.toggled = not self.toggled
+  return self.toggled
+end
+
+function Button:setToggleState(state)
+  if self.toggled ~= state then
+    self:toggle()
+  end
+  return self
+end
+
+function Button:preservePanel()
+  local window = self.panel_for_sprite.window
+  self.panel_for_sprite = window:addPanel(0, self.x, self.y)
+  self.sprite_index_normal = 0
+  return self
+end
+
+function Button:setSound(name)
+  self.sound = name
+  return self
+end
 
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x

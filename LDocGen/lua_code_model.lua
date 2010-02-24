@@ -31,11 +31,27 @@ function LuaNode:LuaNode()
   self.parent = nil
   self.short_desc = nil
   self.long_desc = nil
+  self.file = nil
+  self.line = nil
 end
 
 function LuaVariable:LuaVariable()
   self:LuaNode()
   self.type = nil
+end
+
+function LuaNode:setFile(file, line)
+  self.file = file
+  self.line = line
+  return self
+end
+
+function LuaNode:getFile()
+  return self.file
+end
+
+function LuaNode:getLine()
+  return self.line
 end
 
 function LuaNode:setName(name)
@@ -104,11 +120,38 @@ function LuaFunction:LuaFunction()
   self.examples = {}
   self.is_method = false
   self.is_vararg = false
+  self.vararg_parameter = nil
 end
 
 function LuaFunction:setIsMethod(is)
   self.is_method = is
   return self
+end
+
+function LuaFunction:setIsVararg(is)
+  self.is_vararg = is
+  return self
+end
+
+function LuaFunction:addParameter(p)
+  p.parent = self
+  self.parameters[#self.parameters + 1] = p
+  return self
+end
+
+function LuaFunction:parameterPairs()
+  local i = 0
+  return function()
+    i = i + 1
+    local p = self.parameters[i]
+    if not p then
+      if self.is_vararg and i - 1 == #self.parameters then
+        return "...", self.vararg_parameter
+      end
+      return
+    end
+    return p:getName(), p
+  end
 end
 
 function LuaTable:LuaTable()

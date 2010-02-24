@@ -26,6 +26,7 @@ local TH = require "TH"
 local ipairs
     = ipairs
 
+--! Layer which handles the Lua-facing side of loading and playing audio.
 class "Audio"
 
 function Audio:Audio(app)

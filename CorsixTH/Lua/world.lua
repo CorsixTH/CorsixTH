@@ -739,9 +739,13 @@ function World:addObjectToTile(object, x, y)
   return true
 end
 
-function World:getObject(x, y, id)
+function World:getObjects(x, y)
   local index = (y - 1) * self.map.width + x
-  local objects = self.objects[index]
+  return self.objects[index]
+end
+
+function World:getObject(x, y, id)
+  local objects = self:getObjects(x, y)
   if objects then
     if not id then
       return objects[1]
