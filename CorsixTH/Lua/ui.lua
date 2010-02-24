@@ -88,6 +88,11 @@ function UI:UI(app, local_hospital)
   self.cursor_x = 0
   self.cursor_y = 0
   self.cursor_entity = nil
+  -- through trial and error, this palette seems to give the desired result (white background, black text)
+  local palette = app.gfx:loadPalette("QData", "REP01V.PAL")
+  self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+  self.tooltip = nil
+  self.tooltip_counter = 0
   self.background = false
   -- tick_scroll_amount will either hold a table containing x and y values, at
   -- at least one of which being non-zero. If both x and y are zero, then the
@@ -213,6 +218,20 @@ function UI:setCursor(cursor)
   end
 end
 
+function UI:drawTooltip(canvas)
+  if not self.tooltip then
+    return
+  end
+--  local text = "Tooltip test"
+--  local text = "Slightly longer tooltip test"
+  local text = "Very long tooltip test that requires a line break"
+
+
+  local x, y = self:getCursorPosition()
+  
+  self.tooltip_font:drawTooltip(canvas, text, x, y)
+end
+
 function UI:draw(canvas) 
   local app = self.app
   local config = app.config
@@ -224,6 +243,7 @@ function UI:draw(canvas)
   end
   app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
   Window.draw(self, canvas, 0, 0)
+  self:drawTooltip(canvas)
   if self.simulated_cursor then
     self.simulated_cursor.draw(canvas, self.cursor_x, self.cursor_y)
   end

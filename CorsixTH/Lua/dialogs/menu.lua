@@ -518,6 +518,7 @@ function UIMenuBar:makeMenu(app)
       :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, function() self.ui.app.world:debugToggleSalaryRaise() end )
+      :appendCheckItem("  TOOLTIP TEST  ",                 false, function() self.ui.tooltip = not self.ui.tooltip end) -- TEMPORARY, no translated strings necessary
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui.app.world:makeDebugPatient() end)
       :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
       :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)

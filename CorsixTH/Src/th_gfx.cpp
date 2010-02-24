@@ -102,8 +102,9 @@ void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMes
     pCanvas->finishNonOverlapping();
 }
 
-int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance) const
+int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance, int *iResultingWidth, bool bOnlyTest) const
 {
+    int iResultingWidthTemp = 0;
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
@@ -126,7 +127,10 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 }
                 iMsgWidth += m_iCharSep + iCharWidth;
                 if(iChar == ' ')
+                {
                     sLastGoodBreakPosition = sMessage + i;
+                    if (iMsgWidth > iResultingWidthTemp) iResultingWidthTemp = iMsgWidth;
+                }
                 if(iMsgWidth > iWidth)
                 {
                     sBreakPosition = sLastGoodBreakPosition;
@@ -134,9 +138,11 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 }
                 if(iCharHeight > iTallest)
                     iTallest = iCharHeight;
+                if (i == iMessageLength - 1)
+                    if (iMsgWidth > iResultingWidthTemp) iResultingWidthTemp = iMsgWidth;
             }
 
-            drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX, iY);
+            if (!bOnlyTest) drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX, iY);
             iMessageLength += sMessage - sBreakPosition;
             sMessage = sBreakPosition;
             if(iMessageLength > 0)
@@ -147,7 +153,8 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
             iY += (int)iTallest + m_iLineSep + iAddedRowDistance;
         }
     }
-	return iY;
+    if (iResultingWidth != NULL) *iResultingWidth = iResultingWidthTemp;
+    return iY;
 }
 
 THAnimationManager::THAnimationManager()

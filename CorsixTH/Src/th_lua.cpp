@@ -27,6 +27,7 @@ SOFTWARE.
 #include "th_sound.h"
 #include "th_pathfind.h"
 #include "persist_lua.h"
+#include "assert.h"
 #include <new>
 #include <SDL.h>
 #include <string.h>
@@ -861,6 +862,34 @@ static int l_font_draw_wrapped(lua_State *L)
 	lua_settop(L, 1);
 
     lua_pushinteger(L, pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY, iW, iH));
+
+    return 1;
+}
+
+static int l_font_draw_tooltip(lua_State *L)
+{
+    THFont* pFont = luaT_testuserdata<THFont>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    size_t iMsgLen;
+    const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
+    int iX = luaL_checkint(L, 4);
+    int iY = luaL_checkint(L, 5);
+
+    int iW = 200; // (for now) hardcoded width of tooltips
+    int iH = 0;
+
+    lua_settop(L, 1);
+
+    int iRealW;
+    int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, 0, &iRealW, true);
+
+    pCanvas->fillRect(pCanvas->mapColour(0, 0, 0), iX, iY + iY - iLastY - 1, iRealW + 3, iLastY - iY + 2);
+    pCanvas->fillRect(pCanvas->mapColour(255, 255, 255), iX + 1, iY + iY - iLastY, iRealW + 1, iLastY - iY);
+
+    int iLastY_new = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + iY - iLastY, iW - 4, 0);
+    assert(iLastY_new == iLastY); // actual execution should result in same length
+
+    lua_pushinteger(L, iLastY);
 
     return 1;
 }
@@ -2070,6 +2099,7 @@ int luaopen_th(lua_State *L)
     luaT_setfunction(l_font_set_sep, "setSeparation");
     luaT_setfunction(l_font_draw, "draw", iSurfaceMT);
     luaT_setfunction(l_font_draw_wrapped, "drawWrapped", iSurfaceMT);
+	luaT_setfunction(l_font_draw_tooltip, "drawTooltip", iSurfaceMT);
     luaT_endclass();
 
     // Layers
