@@ -22,6 +22,7 @@ local object = {}
 object.id = "entrance_left_door"
 object.thob = 58
 object.name = _S.object.entrance_left
+object.tooltip = _S.tooltip.objects.entrance_left
 object.class = "EntranceDoor"
 object.ticks = false
 object.idle_animations = {

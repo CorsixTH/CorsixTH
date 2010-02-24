@@ -22,6 +22,7 @@ local object = {}
 object.id = "extinguisher"
 object.thob = 43
 object.name = _S.object.fire_extinguisher
+object.tooltip = _S.tooltip.objects.fire_extinguisher
 object.ticks = false
 object.corridor_object = 4
 object.build_cost = 25

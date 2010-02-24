@@ -80,11 +80,11 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:addPanel(233, 0, 215) -- Cost / total bottom
   self:addPanel(234, 0, 248) -- Close button background
   self:addPanel(234, 0, 252) -- Close button background extension
-  self:addPanel(242, 9, 237):makeButton(0, 0, 129, 28, 243, self.close)
+  self:addPanel(242, 9, 237):makeButton(0, 0, 129, 28, 243, self.close):setTooltip(_S.tooltip.buy_objects_window.cancel)
   
   self:addPanel(235, 146, 0) -- List top
   self:addPanel(236, 146, 223) -- List bottom
-  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm)
+  self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
   local i = 1
   local function item_callback(index, qty)
     return --[[persistable:furnish_corridor_item_callback]] function(self)
@@ -101,9 +101,9 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
     local x = 146
     self:addPanel(239, x, y) -- List body
     if i <= #self.objects then
-      self:addPanel(240, x + 12, y):makeButton(0, 0, 125, 19, 241, item_callback(i, 1), nil, item_callback(i, -1))
-      self:addPanel(244, x + 139, y + 1):makeButton(0, 0, 17, 17, 245, item_callback(i, -1))
-      self:addPanel(246, x + 183, y + 1):makeButton(0, 0, 17, 17, 247, item_callback(i, 1))
+      self:addPanel(240, x + 12, y):makeButton(0, 0, 125, 19, 241, item_callback(i, 1), nil, item_callback(i, -1)):setTooltip(self.objects[i].object.tooltip)
+      self:addPanel(244, x + 139, y + 1):makeButton(0, 0, 17, 17, 245, item_callback(i, -1)):setTooltip(_S.tooltip.buy_objects_window.decrease)
+      self:addPanel(246, x + 183, y + 1):makeButton(0, 0, 17, 17, 247, item_callback(i, 1)):setTooltip(_S.tooltip.buy_objects_window.increase)
     end
     i = i + 1
   end
@@ -191,6 +191,18 @@ function UIFurnishCorridor:draw(canvas, x, y)
   end
   
   self.preview_anim:draw(canvas, x + 72, y + 57)
+end
+
+function UIFurnishCorridor:getTooltipAt(x, y)
+  -- price
+  if x >= 20 and x <= 126 and y >= 168 and y <= 186 then
+    return { text = _S.tooltip.buy_objects_window.price, x = self.x + 73, y = self.y + 168 }
+  end
+  -- total value
+  if x >= 20 and x <= 126 and y >= 196 and y <= 214 then
+    return { text = _S.tooltip.buy_objects_window.total_value, x = self.x + 73, y = self.y + 196 }
+  end
+  return Window.getTooltipAt(self, x, y)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)

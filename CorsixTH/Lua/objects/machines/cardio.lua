@@ -22,6 +22,7 @@ local object = {}
 object.id = "cardio"
 object.thob = 12
 object.name = _S.object.cardio
+object.tooltip = _S.tooltip.objects.cardio
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 918

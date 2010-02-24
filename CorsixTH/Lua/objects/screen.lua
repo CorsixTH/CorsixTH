@@ -22,6 +22,7 @@ local object = {}
 object.id = "screen"
 object.thob = 16
 object.name = _S.object.screen
+object.tooltip = _S.tooltip.objects.screen
 object.ticks = false
 object.build_cost = 30
 object.build_preview_animation = 926

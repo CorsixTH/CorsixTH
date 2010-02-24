@@ -22,6 +22,7 @@ local object = {}
 object.id = "drinks_machine"
 object.thob = 7
 object.name = _S.object.drinks_machine
+object.tooltip = _S.tooltip.objects.drinks_machine
 object.ticks = false
 object.corridor_object = 3
 object.build_cost = 500

@@ -23,7 +23,8 @@ local TH = require "TH"
 local object = {}
 object.id = "litter"
 object.thob = 62 -- previously unused
-object.name = _S.object.litter -- Should never be shown anywhere
+object.name = _S.object.litter -- currently not shown anywhere
+object.tooltip = _S.tooltip.objects.litter -- currently not shown anywhere
 object.ticks = false
 object.class = "Litter"
 

@@ -22,6 +22,7 @@ local object = {}
 object.id = "comfortable_chair"
 object.thob = 61
 object.name = _S.object.comfortable_chair
+object.tooltip = _S.tooltip.objects.comfortable_chair
 object.ticks = false
 object.build_cost = 100
 object.build_preview_animation = 5110

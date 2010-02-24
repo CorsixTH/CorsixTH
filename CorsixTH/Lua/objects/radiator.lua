@@ -22,6 +22,7 @@ local object = {}
 object.id = "radiator"
 object.thob = 44
 object.name = _S.object.radiator
+object.tooltip = _S.tooltip.objects.radiator
 object.ticks = false
 object.corridor_object = 5
 object.build_cost = 20

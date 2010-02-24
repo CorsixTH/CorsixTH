@@ -22,6 +22,7 @@ local object = {}
 object.id = "ultrascanner"
 object.thob = 22
 object.name = _S.object.ultrascanner
+object.tooltip = _S.tooltip.objects.ultrascanner
 object.ticks = false
 object.build_cost = 6000
 object.build_preview_animation = 5068

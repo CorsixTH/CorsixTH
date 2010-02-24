@@ -22,6 +22,7 @@ local object = {}
 object.id = "pool_table"
 object.thob = 10
 object.name = _S.object.pool_table
+object.tooltip = _S.tooltip.objects.pool_table
 object.ticks = false
 object.build_cost = 550
 object.build_preview_animation = 5058

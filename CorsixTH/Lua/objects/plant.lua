@@ -22,6 +22,7 @@ local object = {}
 object.id = "plant"
 object.thob = 45
 object.name = _S.object.plant
+object.tooltip = _S.tooltip.objects.plant
 object.ticks = false
 object.corridor_object = 6
 object.build_cost = 5

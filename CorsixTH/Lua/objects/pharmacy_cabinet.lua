@@ -22,6 +22,7 @@ local object = {}
 object.id = "pharmacy_cabinet"
 object.thob = 39
 object.name = _S.object.pharmacy_cabinet
+object.tooltip = _S.tooltip.objects.pharmacy_cabinet
 object.ticks = false
 object.build_cost = 1000
 object.build_preview_animation = 5088

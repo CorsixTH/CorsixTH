@@ -23,6 +23,7 @@ object.id = "reception_desk"
 object.thob = 11
 object.class = "ReceptionDesk"
 object.name = _S.object.reception_desk
+object.tooltip = _S.tooltip.objects.reception_desk
 object.ticks = true
 object.corridor_object = 1
 object.build_cost = 150

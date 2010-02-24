@@ -22,6 +22,7 @@ local object = {}
 object.id = "blood_machine"
 object.thob = 42
 object.name = _S.object.blood_machine
+object.tooltip = _S.tooltip.objects.blood_machine
 object.ticks = false
 object.build_cost = 3000
 object.build_preview_animation = 5094

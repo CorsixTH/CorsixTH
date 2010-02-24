@@ -22,6 +22,7 @@ local object = {}
 object.id = "electrolyser"
 object.thob = 46
 object.name = _S.object.electrolyser
+object.tooltip = _S.tooltip.objects.electrolyser
 object.ticks = false
 object.build_cost = 3500
 object.build_preview_animation = 930

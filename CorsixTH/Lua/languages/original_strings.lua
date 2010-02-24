@@ -1140,8 +1140,8 @@ tooltip = {
     total_value        = S[32][ 39],
     confirm            = S[32][ 40],
     cancel             = S[32][ 41],
-    increase           = S[32][ 42],
-    decrease           = S[32][ 43],
+    decrease           = S[32][ 42],
+    increase           = S[32][ 43],
   },
   
   staff_list = {

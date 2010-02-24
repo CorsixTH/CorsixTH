@@ -22,6 +22,7 @@ local object = {}
 object.id = "sink"
 object.thob = 32
 object.name = _S.object.toilet_sink
+object.tooltip = _S.tooltip.objects.toilet_sink
 object.ticks = false
 object.build_cost = 30
 object.build_preview_animation = 5082
