@@ -28,7 +28,7 @@ adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in Ge
 
 -- new strings
 object.litter = "Litter"
-tooltip.objects.litter = "Left on the floor by a patient because he did not find a bin to throw it in."
+tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
 menu_options.lock_windows = "  LOCK WINDOWS  "
 menu_options_game_speed.pause = "  PAUSE  "

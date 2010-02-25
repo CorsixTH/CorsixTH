@@ -26,8 +26,6 @@ Inherit("original_strings", 2)
 
 -- override
 
-object.litter = utf8 "Müll"
-
 diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
@@ -38,8 +36,12 @@ tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- this tooltip talks abo
 staff_title.researcher = "Forscher" -- one of the most annoying (since prominent) wrong strings in original
 bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
 insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered to &)
+object.skeleton = "Skelett" -- second most annoying mistake in german translation
 
 -- new strings
+
+object.litter = utf8 "Müll"
+tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
 menu_options.lock_windows = "  FENSTER FESTHALTEN  "
 menu_options_game_speed.pause        = "  PAUSE"
