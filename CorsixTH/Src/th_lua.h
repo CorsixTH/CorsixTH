@@ -50,6 +50,9 @@ void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
 */
 const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
 
+//! Push a C closure as a callable table
+void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n);
+
 void luaT_setenvfield(lua_State *L, int index, const char *k);
 void luaT_getenvfield(lua_State *L, int index, const char *k);
 
