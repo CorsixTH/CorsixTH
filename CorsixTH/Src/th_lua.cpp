@@ -171,13 +171,17 @@ static int l_get_compile_options(lua_State *L)
 }
 
 void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
-                     eTHLuaMetatable iUpIndex1, ...)
+                     eTHLuaMetatable eMetatable1, ...)
 {
     int iUpCount = 0;
     va_list args;
-    va_start(args, iUpIndex1);
-    for(; iUpIndex1 != MT_Count; iUpIndex1 = va_arg(args, eTHLuaMetatable), ++iUpCount)
-        lua_pushvalue(pState->L, pState->aiMetatables[iUpIndex1]);
+    for(va_start(args, eMetatable1);
+        eMetatable1 != MT_Count;
+        eMetatable1 = static_cast<eTHLuaMetatable>(va_arg(args, int)))
+    {
+        lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
+        ++iUpCount;
+    }
     va_end(args);
     lua_pushcclosure(pState->L, fn, iUpCount);
 }
