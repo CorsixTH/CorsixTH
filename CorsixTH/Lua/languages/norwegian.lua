@@ -46,6 +46,7 @@ because the letters ø and Ø is not included in the original ingame-font.
  	4. Menu
  	5. Adviser
  	6. Dynamic info
+ 	7. Tooltip
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -129,8 +130,11 @@ adviser = {
 }
 
 -- 6. Dynamic info
-dynamic_info.patient.actions.no_gp_available = utf8 "Venter på at du skal bygge Allmennpraksis"
-dynamic_info.staff.actions.heading_for 		= utf8 "På vei til %s"
+dynamic_info.patient.actions.no_gp_available 	= utf8 "Venter på at du skal bygge Allmennpraksis"
+dynamic_info.staff.actions.heading_for 			= utf8 "På vei til %s"
+
+-- 7. Tooltip
+tooltip.objects.litter = utf8 "Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
