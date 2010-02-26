@@ -80,7 +80,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       loop_callback = --[[persistable:toilets_loop_callback]] function()
         use_time = use_time - 1
         if use_time <= 0 then
-          humanoid:setMood("poo", nil)
+          humanoid:setMood("poo", "deactivate")
           humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
           humanoid.going_to_toilet = nil
         -- There are only animations for standard patients to use the sinks.

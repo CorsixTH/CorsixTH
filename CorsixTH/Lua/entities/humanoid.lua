@@ -196,7 +196,7 @@ end
 -- If mood_name is nil it is considered a refresh only. 
 function Humanoid:setMood(mood_name, activate)
   if mood_name then 
-    if activate then
+    if activate and activate ~= "deactivate" then
       if self.active_moods[mood_name] then
         return -- No use doing anything if it already exists.
       end
@@ -427,14 +427,14 @@ function Humanoid:tickDay()
   if self.attributes["warmth"] then
     if self.attributes["warmth"] < 0.1 then
       self:changeAttribute("happiness", -0.02)
-      self:setMood("cold", true)
+      self:setMood("cold", "activate")
     elseif self.attributes["warmth"] > 0.9 then
       self:changeAttribute("happiness", -0.02)
-      self:setMood("hot", true)
+      self:setMood("hot", "activate")
     else
       self:changeAttribute("happiness", 0.005)
-      self:setMood("cold", nil)
-      self:setMood("hot", nil)
+      self:setMood("cold", "deactivate")
+      self:setMood("hot", "deactivate")
     end
   end
   return true

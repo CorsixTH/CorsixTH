@@ -51,17 +51,21 @@ function GPRoom:doStaffUseCycle(humanoid)
   humanoid:queueAction{name = "use_object", object = obj}
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
   humanoid:queueAction{name = "walk", x = ox, y = oy}
-  local desk_use_time = math.random(8, 20)
+  local desk_use_time = math.random(7, 14)
   humanoid:queueAction{name = "use_object",
     object = obj,
     loop_callback = --[[persistable:gp_loop_callback]] function()
       desk_use_time = desk_use_time - 1
       if desk_use_time == 0 then
         self:doStaffUseCycle(humanoid)
-        if math.random() <= (0.5 + 0.5 * humanoid.profile.skill) then
-          local patient = self:getPatient()
-          if patient and patient.user_of then
-            self:dealtWithPatient(patient)
+        local patient = self:getPatient()
+        if patient then
+          if math.random() <= (0.6 + 0.4 * humanoid.profile.skill) or self.max_times <= 0 then
+            if patient.user_of then
+              self:dealtWithPatient(patient)
+            end
+          else
+            self.max_times = self.max_times - 1
           end
         end
       end
@@ -79,6 +83,7 @@ function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
   humanoid:queueAction{name = "use_object", object = obj}
+  self.max_times = 3
   return Room.commandEnteringPatient(self, humanoid)
 end
 
@@ -104,7 +109,7 @@ function GPRoom:dealtWithPatient(patient)
       patient:setDiagnosed(true)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
 
-      self.staff_member:setMood("idea3", true) -- Show the light bulb over the doctor
+      self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         -- Generate a message about the discovery
@@ -118,7 +123,7 @@ function GPRoom:dealtWithPatient(patient)
         self.hospital.disease_casebook[patient.disease.id].discovered = true
       end
     else
-      self.staff_member:setMood("reflexion", true) -- Show the uncertainty mood over the doctor
+      self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
       patient:queueAction{
         name = "seek_room", 
@@ -136,8 +141,8 @@ end
 function GPRoom:onHumanoidLeave(humanoid)
   -- Reset moods when either the patient or the doctor leaves the room.
   if self.staff_member then
-    self.staff_member:setMood("idea3", nil)
-    self.staff_member:setMood("reflexion", nil)
+    self.staff_member:setMood("idea3", "deactivate")
+    self.staff_member:setMood("reflexion", "deactivate")
   end
   if self.staff_member == humanoid then
     self.staff_member = nil

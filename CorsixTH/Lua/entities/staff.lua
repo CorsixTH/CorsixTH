@@ -121,7 +121,7 @@ function Staff:fire()
   end
   
   self:playSound "sack.wav"
-  self:setMood("exit", true)
+  self:setMood("exit", "activate")
   self.fired = true
   self.hospital:changeReputation("kicked")
   self:setHospital(nil)
@@ -225,7 +225,7 @@ function Staff:checkIfNeedRest()
     -- Only when the staff member is very tired should the icon emerge.
     -- TODO: Staff speed should be affected here.
     if self.attributes["fatigue"] >= 0.9 then
-      self:setMood("tired", true)
+      self:setMood("tired", "activate")
     end
     -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
     if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
@@ -358,7 +358,7 @@ function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
     self.quitting_in = 25*30 -- Time until the staff members quits anyway
-    self:setMood("pay_rise", true)
+    self:setMood("pay_rise", "activate")
     local amount = math.floor(self.profile:getFairWage() + self.profile.wage*0.1 - self.profile.wage)
     self.world.ui.bottom_panel:queueMessage("strike", amount, self)
   end
@@ -368,7 +368,7 @@ end
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
   self:changeAttribute("happiness", 0.99)
-  self:setMood("pay_rise", false)
+  self:setMood("pay_rise", "deactivate")
 end
 
 function Staff:setDynamicInfoText(text)

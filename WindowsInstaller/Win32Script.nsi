@@ -145,6 +145,8 @@ Section "MainSection" SEC01
   Rename config_template.txt config.txt
   Delete config_t*
   File ..\CorsixTH\*.lua
+  File ..\CorsixTH\changelog.txt
+  File ..\CorsixTH\LICENSE.txt
   
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*

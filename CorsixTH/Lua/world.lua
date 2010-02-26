@@ -197,7 +197,7 @@ function World:makeDebugPatient(hospital)
   patient:setLayer(2, math.random(0, 2) * 2)
   patient:setLayer(3, math.random(0, 5) * 2)
   patient:setLayer(4, math.random(0, 5) * 2)
-  patient:setMood("emergency", true) -- temporary, to make debug patients distinguishable from normal ones
+  patient:setMood("emergency", "activate") -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(hospital)
   
   return patient

@@ -246,7 +246,7 @@ function Room:commandEnteringPatient(humanoid)
   for humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
     if class.is(humanoid, Staff) then
       if humanoid.humanoid_class ~= "Handyman" then
-        humanoid:setMood("staff_wait", nil)
+        humanoid:setMood("staff_wait", "deactivate")
         humanoid:setDynamicInfoText("")
         humanoid:updateDynamicInfo()
       end
@@ -264,7 +264,7 @@ function Room:tryAdvanceQueue()
         for humanoid in pairs(self.humanoids) do -- Staff is now waiting
           if class.is(humanoid, Staff) then
             if humanoid.humanoid_class ~= "Handyman" then
-              humanoid:setMood("staff_wait", true)
+              humanoid:setMood("staff_wait", "activate")
               humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
               humanoid:updateDynamicInfo()
             end
@@ -313,7 +313,7 @@ function Room:onHumanoidLeave(humanoid)
       humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
     end
     -- Remove any unwanted moods the staff member might have
-    humanoid:setMood("staff_wait", nil)
+    humanoid:setMood("staff_wait", "deactivate")
   end
 end
 

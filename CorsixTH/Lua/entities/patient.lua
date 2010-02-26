@@ -106,7 +106,7 @@ function Patient:treated()
     end
     self.hospital.num_deaths = hospital.num_deaths + 1
     
-    self:setMood("dead", true)
+    self:setMood("dead", "activate")
     self:playSound "boo.wav"
     self.going_home = true
     self:queueAction{name = "meander", count = 1}
@@ -119,7 +119,7 @@ function Patient:treated()
     end
     self.hospital.num_cured = hospital.num_cured + 1
     
-    self:setMood("cured", true)
+    self:setMood("cured", "activate")
     self:playSound "cheer.wav"
     hospital:changeReputation("cured")
     self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
@@ -133,7 +133,7 @@ function Patient:goHome(cured)
     return
   end
   if not cured then
-    self:setMood("exit", true)
+    self:setMood("exit", "activate")
     self.hospital:changeReputation("kicked")
   end
   
@@ -176,7 +176,7 @@ function Patient:tickDay()
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.7 then
     if not self.going_to_toilet then
-      self:setMood("poo", true)
+      self:setMood("poo", "activate")
       -- Check if any room exists.
       if not self.world:findRoomNear(self, "toilets") then
         self.going_to_toilet = true
@@ -202,7 +202,7 @@ function Patient:tickDay()
   -- If thirsty enough a soda would be nice
   if self.attributes["thirst"] and self.attributes["thirst"] > 0.8 then
     self:changeAttribute("happiness", -0.02)
-    self:setMood("thirsty", true)
+    self:setMood("thirsty", "activate")
     -- If there's already an action to buy a drink in the action queue, or
     -- if we're going to the loo, do nothing
     if self:goingToUseObject("drinks_machine") or self.going_to_toilet then
@@ -231,7 +231,7 @@ function Patient:tickDay()
       local --[[persistable:patient_drinks_machine_after_use]] function after_use()
         self:changeAttribute("thirst", -0.7 + math.random()*0.2)
         self:changeAttribute("toilet_need", 0.1 + math.random()*0.3)
-        self:setMood("thirsty", nil)
+        self:setMood("thirsty", "deactivate")
         -- The patient might be kicked while buying a drink
         if not self.going_home then
           self.hospital:receiveMoneyForProduct(self, 15, _S.transactions.drinks)

@@ -116,7 +116,7 @@ function UIFax:choice(choice)
   local owner = self.owner
   if owner then
     -- A choice was made, the patient is no longer waiting for a decision
-    owner:setMood("patient_wait", nil)
+    owner:setMood("patient_wait", "deactivate")
     owner.message_callback = nil
     if choice == "send_home" then
       owner:goHome()
