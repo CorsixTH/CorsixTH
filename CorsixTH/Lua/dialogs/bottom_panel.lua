@@ -228,6 +228,17 @@ function UIBottomPanel:openFirstMessage()
   end
 end
 
+-- Removes a message from the mesasge queue (for example if a room is built before the player
+-- says what to do with the patient.
+function UIBottomPanel:removeMessage(owner)
+  for i, window in ipairs(self.message_windows) do
+    if window.owner == owner then
+      window.openMessage(window, true)
+      break
+    end
+  end
+end
+
 function UIBottomPanel:createMessageWindow()
   local --[[persistable:bottom_panel_message_window_close]] function onClose(window, out_of_time)
     local message_windows = self.message_windows
