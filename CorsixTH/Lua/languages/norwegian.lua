@@ -134,7 +134,7 @@ dynamic_info.patient.actions.no_gp_available 	= utf8 "Venter på at du skal bygg
 dynamic_info.staff.actions.heading_for 			= utf8 "På vei til %s"
 
 -- 7. Tooltip
-tooltip.objects.litter = utf8 "Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
+tooltip.objects.litter = utf8 "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
