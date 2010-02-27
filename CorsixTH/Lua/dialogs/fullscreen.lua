@@ -52,7 +52,7 @@ function UIFullscreen:onChangeResolution()
   local config = self.ui.app.runtime_config.window_position
   if config then
     config = config[self:getSavedWindowPositionName()]
-    if config then
+    if config and config.x and config.y then
       return self:setPosition(config.x, config.y)
     end
   end

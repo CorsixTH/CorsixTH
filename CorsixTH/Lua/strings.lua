@@ -119,7 +119,7 @@ local strings_metatable = {
       return v
     end
     if k ~= "__random" then
-      error("Non-existant string: " .. k, 2)
+      error("Non-existant string: " .. tostring(k), 2)
     end
     local candidates = {}
     for k, v in pairs(t) do
