@@ -54,6 +54,15 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   local type = types[type]
   
   self:addPanel(type, 0, 0):makeButton(0, 0, 30, 28, type + 1, self.openMessage)
+  -- The emergency has a rotating siren
+  if type == 43 then
+    self.rotator = {}
+    for i = 57, 60 do
+      self.rotator[i] = self:addPanel(i, 10, 8)
+      self.rotator[i].visible = false
+    end
+    self.active = 57
+  end
 end
 
 function UIMessage:openMessage(out_of_time)
@@ -78,7 +87,6 @@ function UIMessage:onTick()
     self.ui:sendToTop(self)
     self.on_top = true
   end
-  
   if self.y > self.stop_y then
     local y = self.y - 8
     if y > self.stop_y then
@@ -101,5 +109,14 @@ function UIMessage:onWorldTick()
     self.timer = self.timer - 1
   else
     self:openMessage(true)
+  end
+  if self.active then
+    self.rotator[self.active].visible = false
+    if self.active == 60 then
+      self.active = 57
+    else
+      self.active = self.active + 1
+    end
+    self.rotator[self.active].visible = true
   end
 end

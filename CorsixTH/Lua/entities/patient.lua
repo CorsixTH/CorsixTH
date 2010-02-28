@@ -87,7 +87,7 @@ function Patient:setHospital(hospital)
   end
   Humanoid.setHospital(self, hospital)
   if hospital then
-    if hospital.is_in_world and not self.is_debug then
+    if hospital.is_in_world and not self.is_debug and not self.is_emergency then
       self:setNextAction{name = "seek_reception", hospital = hospital}
     end
     hospital:addPatient(self)
@@ -101,18 +101,7 @@ function Patient:treated()
   -- TODO: Add percentage that depends on illness and how effective the cure is.
   -- Should level also make a difference?
   if self.die_anims and math.random(1, 100) < 6 then
-    if hospital.num_deaths < 1 then
-      self.world.ui.adviser:say(_S.adviser.information.first_death)
-    end
-    self.hospital.num_deaths = hospital.num_deaths + 1
-    
-    self:setMood("dead", "activate")
-    self:playSound "boo.wav"
-    self.going_home = true
-    self:queueAction{name = "meander", count = 1}
-    self:queueAction{name = "die"}
-    hospital:changeReputation("death")
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
+    patient:die()
   else 
     if hospital.num_cured < 1 then
       self.world.ui.adviser:say(_S.adviser.information.first_cure)
@@ -126,6 +115,21 @@ function Patient:treated()
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
   end
+end
+
+function Patient:die()
+  if self.hospital.num_deaths < 1 then
+    self.world.ui.adviser:say(_S.adviser.information.first_death)
+  end
+  self.hospital.num_deaths = self.hospital.num_deaths + 1
+  
+  self:setMood("dead", "activate")
+  self:playSound "boo.wav"
+  self.going_home = true
+  self:setNextAction{name = "meander", count = 1}
+  self:queueAction{name = "die"}
+  self.hospital:changeReputation("death")
+  self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
 function Patient:goHome(cured)

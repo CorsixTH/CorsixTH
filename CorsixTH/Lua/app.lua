@@ -357,7 +357,7 @@ function App:run()
       local handler = self.eventHandlers[self.last_dispatch_type]
       local entity = self.world.current_tick_entity
       self.world.current_tick_entity = nil
-      self.ui:addWindow(UIInformation(self.ui,
+      self.ui:addWindow(UIConfirmDialog(self.ui,
         "An error has occured while running the timer handler - see the log "..
         "window for details. Would you like to attempt a recovery?",
         --[[persistable:app_attempt_recovery]] function()
@@ -604,7 +604,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
 end
 
 function App:quit()
-  self.ui:addWindow(UIInformation(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()
+  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()
     self.running = false
   end))
 end

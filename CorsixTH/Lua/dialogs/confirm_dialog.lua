@@ -19,9 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
-class "UIInformation" (Window)
+class "UIConfirmDialog" (Window)
 
-function UIInformation:UIInformation(ui, text, callback)
+function UIConfirmDialog:UIConfirmDialog(ui, text, callback)
   self:Window()
   
   local app = ui.app
@@ -46,12 +46,12 @@ function UIInformation:UIInformation(ui, text, callback)
   self:addPanel(362, 90, 146):makeButton(8, 10, 82, 34, 363, self.ok)  -- OK button
 end
 
-function UIInformation:ok()
+function UIConfirmDialog:ok()
   self:close()
   self.callback()
 end
 
-function UIInformation:draw(canvas, x, y)
+function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
