@@ -27,7 +27,7 @@ disease.cure = _S.diseases.king_complex.cure
 disease.cure_price = 1600
 disease.initPatient = function(patient)
   patient:setType("Elvis Patient")
-  patient:setLayer(0, 0)
+  patient:setLayer(0, math.random(1, 3)*2)
   patient:setLayer(1, 0)
   patient:setLayer(2, 0)
   patient:setLayer(3, 0)

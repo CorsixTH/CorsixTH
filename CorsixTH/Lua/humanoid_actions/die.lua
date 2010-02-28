@@ -24,18 +24,27 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
   if phase == 0 then
     action.phase = 1
-    humanoid:setTimer(11, action_die_tick)
-    humanoid:setAnimation(humanoid.die_anims.rise_east, mirror)
+    if humanoid.die_anims.extra_east ~= nil and 
+      humanoid.humanoid_class ~= "Standard Female Patient" then
+      humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.extra_east), action_die_tick)
+      humanoid:setAnimation(humanoid.die_anims.extra_east, mirror)
+    else
+      action_die_tick(humanoid)
+    end
   elseif phase == 1 then
     action.phase = 2
     humanoid:setTimer(11, action_die_tick)
-    humanoid:setAnimation(humanoid.die_anims.wings_east, mirror)
+    humanoid:setAnimation(humanoid.die_anims.rise_east, mirror)
   elseif phase == 2 then
     action.phase = 3
-    humanoid:setTimer(15, action_die_tick)
-    humanoid:setAnimation(humanoid.die_anims.hands_east, mirror)
+    humanoid:setTimer(11, action_die_tick)
+    humanoid:setAnimation(humanoid.die_anims.wings_east, mirror)
   elseif phase == 3 then
     action.phase = 4
+    humanoid:setTimer(15, action_die_tick)
+    humanoid:setAnimation(humanoid.die_anims.hands_east, mirror)
+  elseif phase == 4 then
+    action.phase = 5
     humanoid:setTimer(30, action_die_tick)
     humanoid:setAnimation(humanoid.die_anims.fly_east, mirror)
     humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y, nil, nil, 0, -4)
@@ -57,13 +66,20 @@ local function action_die_start(action, humanoid)
   action.must_happen = true
   -- TODO: Right now the angel version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
+  local fall = anims.fall_east
+  -- A special case for the female slack tongue patient. The fall is split into different animations
+  if humanoid.humanoid_class == "Standard Female Patient" and humanoid.disease.id == "slack_tongue" and
+    humanoid.hospital then
+    fall = anims.extra_east
+    humanoid:setLayer(0, humanoid.layers[0] - 8)
+  end
   if direction == "east" then
     humanoid:setAnimation(anims.fall_east, 0)
   elseif direction == "south" then
     humanoid:setAnimation(anims.fall_east, 1)
   end
   action.phase = 0
-  humanoid:setTimer(15, action_die_tick)
+  humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
 end
 
 return action_die_start

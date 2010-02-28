@@ -44,13 +44,14 @@ local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, kno
   }
 end
 
-local function die_anims(name, fall, rise, wings, hands, fly)
+local function die_anims(name, fall, rise, wings, hands, fly, extra)
   die_animations[name] = {
     fall_east = fall,
     rise_east = rise,
     wings_east = wings,
     hands_east = hands,
     fly_east = fly,
+    extra_east = extra,
   }
 end
 
@@ -83,12 +84,21 @@ anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door
 anims("VIP",                        266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
 
---  | Die Animations                |
---  | Name                          |FallE|RiseE|WingsE|HandsE|FlyE| Notes
-----+-------------------------------+-----+-----+-----+-----+------+
-die_anims("Standard Male Patient",    1682, 2434, 2438, 2446,  2450) -- Always facing east or south
-die_anims("Alternate Male Patient",   1682, 2434, 2438, 2446,  2450)
-die_anims("Standard Female Patient",  3116, 3208, 3212, 3216,  3220)
+--  | Die Animations                 |
+--  | Name                           |FallE|RiseE|WingsE|HandsE|FlyE|ExtraE| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+die_anims("Standard Male Patient",     1682, 2434, 2438, 2446,  2450) -- Always facing east or south
+die_anims("Alternate Male Patient",    1682, 2434, 2438, 2446,  2450)
+die_anims("Slack Male Patient",        1682, 2434, 2438, 2446,  2450)
+-- TODO: Where is slack male transformation? Uses alternate male for now.
+die_anims("Transparent Male Patient",  4412, 2434, 2438, 2446,  2450,  4416) -- Extra = Transformation
+die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220,  4288) -- Extra = Slack tongue
+die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- Extra = Transformation
+die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222)
+die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
+die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
+die_anims("Alien Patient",             4882, 2434, 2438, 2446,  2450)
+
 
 --   | Available Moods |
 --   | Name            |Icon|Priority|Show Always| Notes
@@ -331,10 +341,7 @@ function Humanoid:setType(humanoid_class)
   assert(walk_animations[humanoid_class], "Invalid humanoid class: " .. tostring(humanoid_class))
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
-  -- Only two types can die: Standard Male/Female Patients
-  if humanoid_class == "Standard Female Patient" or humanoid_class == "Standard Male Patient" then
-    self.die_anims  = die_animations[humanoid_class]
-  end
+  self.die_anims  = die_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}

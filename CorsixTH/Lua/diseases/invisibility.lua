@@ -29,7 +29,7 @@ disease.initPatient = function(patient)
   patient:setType("Invisible Patient")
   patient:setLayer(0, 2)
   patient:setLayer(1, 0)
-  patient:setLayer(2, 0)
+  patient:setLayer(2, 4)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
   patient.cured_layers = {

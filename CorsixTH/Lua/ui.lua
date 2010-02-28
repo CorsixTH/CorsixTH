@@ -197,7 +197,7 @@ function UI:showBeta1Info()
     {offset = 16, text = _S.fax.welcome.beta1[5]},
     {offset =  8, text = _S.fax.welcome.beta1[6]},
   }
-  self.ui.bottom_panel:queueMessage("information", message)
+  self.bottom_panel:queueMessage("information", message)
 end
 
 function UI:setDefaultCursor(cursor)
