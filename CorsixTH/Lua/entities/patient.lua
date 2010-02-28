@@ -101,7 +101,7 @@ function Patient:treated()
   -- TODO: Add percentage that depends on illness and how effective the cure is.
   -- Should level also make a difference?
   if self.die_anims and math.random(1, 100) < 6 then
-    patient:die()
+    self:die()
   else 
     if hospital.num_cured < 1 then
       self.world.ui.adviser:say(_S.adviser.information.first_cure)
