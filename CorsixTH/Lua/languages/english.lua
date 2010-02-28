@@ -26,6 +26,10 @@ adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in Ge
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
 
+-- The originals of these two contain one space too much
+fax.emergency.cure_not_possible_build = "You will need to build a %s"
+fax.emergency.cure_not_possible_build_and_employ = "You will need to build a %s and employ a %s"
+
 -- new strings
 object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
@@ -40,7 +44,9 @@ menu_debug = {
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   spawn_patient               = "  SPAWN PATIENT  ",
   make_adviser_talk           = "  MAKE ADVISER TALK  ",
+  show_beta1_info             = "  SHOW BETA1 INFO  ",
   show_watch                  = "  SHOW WATCH  ",
+  create_emergency            = "  CREATE EMERGENCY  ",
   place_objects               = "  PLACE OBJECTS  ",
   dump_strings                = "  DUMP STRINGS  ",
   map_overlay                 = "  MAP OVERLAY  ",
@@ -72,6 +78,12 @@ fax = {
       "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed.",
       "-- The CorsixTH team, th.corsix.org",
       "PS: Can you find the easter eggs we included?",
+    },
+    beta2 = {
+      "Welcome to the second beta of CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
+      "A lot of new features have been implemented since the last release. Have a look at the changelog for an incomplete list.",
+      "But first, let's play! It seems there's a message waiting for you. Close this window and click on the question mark above the bottom panel.",
+      "-- The CorsixTH team, th.corsix.org",
     },
   },
   tutorial = {

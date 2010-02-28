@@ -150,6 +150,37 @@ function World:calculateSpawnTiles()
       self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
     end
   end
+  -- Algorithm to find the helipad on the map.
+  -- TODO: Should be incorporated into the above loop.
+  local found = false
+  local thData = self.map.thData
+  for x = 1, w-5 do
+    for y = 1, h-5 do
+      local xy = (y - 1) * w + x - 1
+      local offset = 35 + xy * 8 + 2
+      local tile = thData:byte(offset, offset)
+      -- Combinations are: (14,3), (14, 4) and (4, 3)
+      if tile == 14 or tile == 4 then -- 4 and 14 is the Helipad darker grey
+        offset = offset + 8 -- One step in the x direction
+        local tile2 = thData:byte(offset, offset)
+        if tile2 == 3 or (tile ~= 4 and tile2 == 4) then -- 3 is the lighter grey
+          offset = offset + 8 -- One step in the x direction
+          local tile3 = thData:byte(offset, offset)
+          if tile3 == 14 or tile3 == 4 then
+            offset = offset - 8 + w*8 -- One step in the y direction, one back in x
+            local tile4 = thData:byte(offset, offset)
+            if tile4 == 14 or tile4 == 4 then
+              self.helipad_spawn_point = {x = x+1, y = y-2}
+              break
+            end
+          end
+        end
+      end
+    end
+    if found then
+      break
+    end
+  end
 end
 
 function World:spawnPatient(hospital)
@@ -375,14 +406,12 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
       local message = {
-        {             text = _S.fax.welcome.beta1[1]},
-        {offset =  8, text = _S.fax.welcome.beta1[2]},
-        {offset =  8, text = _S.fax.welcome.beta1[3]},
-        {offset =  8, text = _S.fax.welcome.beta1[4]},
-        {offset = 16, text = _S.fax.welcome.beta1[5]},
-        {offset =  8, text = _S.fax.welcome.beta1[6]},
+        _S.fax.welcome.beta2[1],
+        _S.fax.welcome.beta2[2],
+        _S.fax.welcome.beta2[3],
+        _S.fax.welcome.beta2[4],
       }
-      self.ui.bottom_panel:queueMessage("information", message)
+      self.ui:addWindow(UIInformation(self.ui,message))
       message = {
         {             text = _S.fax.tutorial[1]},
         {offset =  8, text = _S.fax.tutorial[2]},
@@ -762,6 +791,33 @@ end
 
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
+end
+
+--! Returns localized name of the room, internal required staff name
+-- and localized name of staff required.
+function World:getRoomNameAndRequiredStaffName(room_id)
+  local room_name, required_staff, staff_name
+  for _, room in ipairs(TheApp.rooms) do
+    if room.id == room_id then
+      room_name = room.name
+      required_staff = room.required_staff
+    end
+  end
+  for key, _ in pairs(required_staff) do
+    staff_name = key
+  end
+  if staff_name == "Nurse" then
+    staff_name = _S.staff_title.nurse
+  elseif staff_name == "Psychiatrist" then
+    staff_name = _S.staff_title.psychiatrist
+  elseif staff_name == "Researcher" then
+    staff_name = _S.staff_title.researcher
+  elseif staff_name == "Surgeon" then
+    staff_name = _S.staff_title.surgeon
+  elseif staff_name == "Doctor" then
+    staff_name = _S.staff_title.doctor
+  end
+  return room_name, required_staff, staff_name
 end
 
 -- Search for available staff to meet the requirements for the room. Also notify the player with a sound.

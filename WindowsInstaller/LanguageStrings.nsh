@@ -61,8 +61,8 @@ LangString confirm_removal    ${LANG_SWEDISH} "Är du säker på att du vill ta bor
 LangString files_left         ${LANG_SWEDISH} "Några filer kunde inte tas bort."
 
 LangString install_language   ${LANG_NORWEGIAN} "Norwegian"
-LangString original_text      ${LANG_NORWEGIAN} "In order to play the game an installation of the original game is required. Please specify that location here."
-LangString original_folder    ${LANG_NORWEGIAN} "Theme Hospital Folder"
-LangString successful_removal ${LANG_NORWEGIAN} "$(^Name) was successfully removed from your computer."
-LangString confirm_removal    ${LANG_NORWEGIAN} "Are you sure you want to completely remove $(^Name) and all of its components?"
-LangString files_left         ${LANG_NORWEGIAN} "Some files could not be removed."
+LangString original_text      ${LANG_NORWEGIAN} "For å kunne spille dette spillet, må du ha det originale Theme Hospital installert. Spesifiser hvor det ligger."
+LangString original_folder    ${LANG_NORWEGIAN} "Mappen med Theme Hospital"
+LangString successful_removal ${LANG_NORWEGIAN} "$(^Name) er nå fjernet fra datamaskinen."
+LangString confirm_removal    ${LANG_NORWEGIAN} "Er du sikker på at du vil fjerne $(^Name) og alle dens komponenter?"
+LangString files_left         ${LANG_NORWEGIAN} "Noen filer kunne ikke fjernes."

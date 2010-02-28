@@ -70,27 +70,9 @@ end)
 local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- Wait two months before going home anyway.
   humanoid.waiting = 60
-  local room_name, required_staff, staff_name
-  for _, room in ipairs(TheApp.rooms) do
-    if room.id == room_type then
-      room_name = room.name
-      required_staff = room.required_staff
-    end
-  end
-  for key, _ in pairs(required_staff) do
-    staff_name = key
-  end
+  local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
   local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)
-  if not humanoid.hospital:hasStaffOfCategory(staff_name) then
-    if staff_name == "Nurse" then
-      staff_name = _S.staff_title.nurse
-    elseif staff_name == "Psychiatrist" then
-      staff_name = _S.staff_title.psychiatrist
-    elseif staff_name == "Researcher" then
-      staff_name = _S.staff_title.researcher
-    elseif staff_name == "Surgeon" then
-      staff_name = _S.staff_title.surgeon
-    end
+  if not humanoid.hospital:hasStaffOfCategory(required_staff) then
     output_text = _S.fax.disease_discovered_patient_choice.need_to_build_and_employ:format(room_name, staff_name)
   end
   -- TODO: In the future the treatment room might be unavailable

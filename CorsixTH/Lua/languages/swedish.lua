@@ -40,6 +40,7 @@ menu_debug = {
   spawn_patient               = "  GENERERA VANLIG PATIENT  ",
   make_adviser_talk           = utf8 "  LÅT RÅDGIVAREN PRATA  ",
   show_watch                  = "  VISA KLOCKA  ",
+  create_emergency            = "  SKAPA AKUTFALL  ",
   place_objects               = "  PLACERA OBJEKT  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
