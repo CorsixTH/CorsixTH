@@ -32,6 +32,7 @@ CorsixTH/Lua/diagnosis/diag_x_ray.lua -text
 CorsixTH/Lua/dialogs/bank_manager.lua -text
 CorsixTH/Lua/dialogs/information.lua -text
 CorsixTH/Lua/dialogs/staff_management.lua -text
+CorsixTH/Lua/objects/helicopter.lua -text
 CorsixTH/Lua/persistance.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text

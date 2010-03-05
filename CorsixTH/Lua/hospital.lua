@@ -120,6 +120,81 @@ function Hospital:onEndMonth()
   end
 end
 
+function Hospital:createEmergency()
+  if self.world.helipad_spawn_point then
+    local victims = math.random(4,6) -- TODO: Should depend on disease (e.g. operating theatre is harder)
+    local emergency = {
+      disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)],
+      victims = victims,
+      bonus = 1000 * victims,
+    }
+    self.emergency = emergency
+    local room_name, required_staff, staff_name = 
+      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[1])
+    
+    local staff_available = self:hasStaffOfCategory(required_staff)
+    for _, room in ipairs(self.world.rooms) do
+      if room.room_info.name == emergency.disease.treatment_rooms[1] then
+        room_name = nil
+        break
+      end
+    end
+    local added_info = _S.fax.emergency.cure_possible
+    -- TODO: Differentiate if a drug is needed, add drug effectiveness. Add undiscovered diseases.
+    -- added_info = _S.fax.emergency.cure_not_possible
+    if room_name then
+      if staff_available then
+        added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
+      else
+        added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, staff_name) .. "."
+      end
+    elseif staff_required then
+      added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
+    end
+    local message = {
+      {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
+      {text = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)},
+      {text = added_info},
+      {text = _S.fax.emergency.bonus:format(emergency.bonus)},
+      choices = {
+        {text = _S.fax.emergency.choices.accept, choice = "accept_emergency", offset = 50},
+        {text = _S.fax.emergency.choices.refuse, choice = "refuse", offset = 40},
+      },
+    }
+    self.world.ui.bottom_panel:queueMessage("emergency", message)
+  end
+  self.killed_emergency_patients = 0
+end
+
+function Hospital:resolveEmergency()
+  local killed_patients = self.killed_emergency_patients
+  for i, patient in ipairs(self.emergency_patients) do
+    if patient and patient.hospital and not patient:getRoom() then
+      killed_patients = killed_patients + 1
+      patient:die(true)
+    end
+  end
+  local total = self.emergency.victims
+  local max_bonus = self.emergency.bonus
+  local earned = math.floor((killed_patients/total < 0.25 and 
+    (total - killed_patients)/total or 0)*10)*max_bonus/10
+  local message = {
+    {text = _S.fax.emergency_result.saved_people
+      :format(total - killed_patients, self.emergency.victims)},
+    {text = _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
+    choices = {
+      {text = _S.fax.emergency_result.close_text, choice = "close", offset = 50},
+    },
+  }
+  self.world.ui.bottom_panel:queueMessage("report", message)
+  if earned > 0 then -- Reputation increased
+    self:changeReputation("emergency_success")
+    self:receiveMoney(earned, _S.transactions.emergency_bonus)
+  else -- Too few rescued, reputation hit
+    self:changeReputation("emergency_failed")
+  end
+end
+
 function Hospital:spawnPatient()
   self.world:spawnPatient(self)
 end
@@ -240,6 +315,8 @@ end
   ["cured"]  =  1, -- a patient was successfully treated
   ["death"]  = -4, -- a patient died due to bad treatment or waiting too long
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
+  ["emergency_success"] = 15,
+  ["emergency_failed"] = -20,
 }
 
 function Hospital:changeReputation(reason)

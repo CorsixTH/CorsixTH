@@ -51,18 +51,25 @@ local function action_spawn_start(action, humanoid)
   if action.mode == "spawn" then
     walk_dir = orient_opposite[walk_dir]
   end
-  
-  local anim, flag, speed_x, speed_y
-  if walk_dir == "east" then
-    anim, flag, speed_x, speed_y = anims.walk_east , 0,  4,  2
-  elseif walk_dir == "west" then
-    anim, flag, speed_x, speed_y = anims.walk_north, 1, -4, -2
-  elseif walk_dir == "south" then
-    anim, flag, speed_x, speed_y = anims.walk_east , 1, -4,  2
-  else--if walk_dir == "north" then
-    anim, flag, speed_x, speed_y = anims.walk_north, 0,  4, -2
+  -- These two values specifies how many tiles away the patient should start walking before actually
+  -- spawning in the destination tile. Default is 2, and it should not be set to 0.
+  local offset_x = 2
+  local offset_y = 2
+  if action.offset then
+    offset_x = action.offset.x and action.offset.x or 2
+    offset_y = action.offset.y and action.offset.y or 2
   end
-  local duration = 20
+  assert(offset_x > 0 and offset_y > 0, "Spawning needs to be done from an adjacent tile.")
+  local anim, flag, speed_x, speed_y, duration
+  if walk_dir == "east" then
+    anim, flag, speed_x, speed_y, duration = anims.walk_east , 0,  4,  2, 10*offset_x
+  elseif walk_dir == "west" then
+    anim, flag, speed_x, speed_y, duration = anims.walk_north, 1, -4, -2, 10*offset_x
+  elseif walk_dir == "south" then
+    anim, flag, speed_x, speed_y, duration = anims.walk_east , 1, -4,  2, 10*offset_y
+  else--if walk_dir == "north" then
+    anim, flag, speed_x, speed_y, duration = anims.walk_north, 0,  4, -2, 10*offset_y
+  end
   humanoid.last_move_direction = walk_dir
   humanoid:setAnimation(anim, flag)
   local pos_x, pos_y = 0, 0

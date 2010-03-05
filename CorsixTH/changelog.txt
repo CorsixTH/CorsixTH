@@ -18,6 +18,7 @@ Version Beta 2 - released 2010-0?-??
   to the game, correct mistakes in existing languages and add new languages.
 * Feature: A tutorial is offered to the player at the start of the game.
 * Feature: Tooltips are displayed when hovering over buttons for some time.
+* Feature: Emergencies may happen every now and then.
 
 * New Dialogs: Hospital Policy, Drugbook, Bank Manager, Staff Management, Town Map (WIP)
 

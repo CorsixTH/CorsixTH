@@ -150,36 +150,15 @@ function World:calculateSpawnTiles()
       self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
     end
   end
-  -- Algorithm to find the helipad on the map.
-  -- TODO: Should be incorporated into the above loop.
-  local found = false
-  local thData = self.map.thData
-  for x = 1, w-5 do
-    for y = 1, h-5 do
-      local xy = (y - 1) * w + x - 1
-      local offset = 35 + xy * 8 + 2
-      local tile = thData:byte(offset, offset)
-      -- Combinations are: (14,3), (14, 4) and (4, 3)
-      if tile == 14 or tile == 4 then -- 4 and 14 is the Helipad darker grey
-        offset = offset + 8 -- One step in the x direction
-        local tile2 = thData:byte(offset, offset)
-        if tile2 == 3 or (tile ~= 4 and tile2 == 4) then -- 3 is the lighter grey
-          offset = offset + 8 -- One step in the x direction
-          local tile3 = thData:byte(offset, offset)
-          if tile3 == 14 or tile3 == 4 then
-            offset = offset - 8 + w*8 -- One step in the y direction, one back in x
-            local tile4 = thData:byte(offset, offset)
-            if tile4 == 14 or tile4 == 4 then
-              self.helipad_spawn_point = {x = x+1, y = y-2}
-              break
-            end
-          end
-        end
-      end
-    end
-    if found then
-      break
-    end
+  -- Extract the position of the helipad from the level data file.
+  local x, y = self.map.thData:byte(163885, 163886)
+  x, y = (y * 256 + x) % 128 + 1, math.floor((y * 256 + x) / 128) + 2
+  -- Level 2 does not have any helipad.
+  if self.map.th:getCellFlags(x, y-1).passable then
+    self.helipad_spawn_point = {x = x, y = y}
+    self.helipad_patient_spawn_point = {x = x, y = y-1}
+  else
+    self.helipad_spawn_point = nil
   end
 end
 
@@ -454,6 +433,18 @@ function World:onTick()
         end
       end
       self.current_tick_entity = nil
+      -- Emergencies may arrive now and then - though not too often.
+      local last_emergency  = (self.time_since_emergency and self.time_since_emergency or 0) + 1
+      if last_emergency > 180 then
+        -- More and more likely as time goes on, TODO: balance...
+        -- Avoid making a new emergency if one is already underway or any other watch-related
+        -- scenario is active.
+        if not self.ui:getWindow(UIWatch) and math.random(1, last_emergency) > 150 then
+          self.hospitals[1]:createEmergency()
+          last_emergency = 0
+        end
+      end
+      self.time_since_emergency = last_emergency
       -- TODO: Do other regular things, such as checking if any room needs
       -- staff at the moment and making plants need water.
     end

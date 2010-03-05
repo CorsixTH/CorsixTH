@@ -38,7 +38,7 @@ function UIFax:UIFax(ui, message, owner)
   
   -- Add choice buttons
   local choices = false
-  local last_y = 140
+  local last_y = self.owner and 140 or 180 -- Very ugly temp way of lowering the buttons for emergencies
   if self.message["choices"] then
     choices = true
     for k = 1, #self.message["choices"] do
@@ -103,7 +103,7 @@ function UIFax:draw(canvas, x, y)
           last_y + (self.message[i].offset or 0), 380)
     end
     if self.message["choices"] then
-      last_y = y + 100
+      last_y = y + (self.owner and 100 or 140)
       for k = 1, #self.message["choices"] do
         last_y = self.fax_font:drawWrapped(canvas, self.message["choices"][k].text, 
             x + 190, last_y + (self.message["choices"][k].offset or 0), 280)
@@ -150,6 +150,11 @@ function UIFax:choice(choice)
   end
   if choice == "tutorial" then
     self.ui:startTutorial()
+  elseif choice == "accept_emergency" then
+    self.ui.app.world:newObject("helicopter", self.ui.app.world.helipad_spawn_point.x, 
+      self.ui.app.world.helipad_spawn_point.y, "north")
+    self.ui:addWindow(UIWatch(self.ui, "emergency"))
+    self.ui.adviser:say(_S.adviser.information.emergency)
   end
   self:close()
 end

@@ -126,7 +126,14 @@ function Patient:die()
   self:setMood("dead", "activate")
   self:playSound "boo.wav"
   self.going_home = true
-  self:setNextAction{name = "meander", count = 1}
+  if self:getRoom() then
+    self:queueAction{name = "meander", count = 1}
+  else
+    self:setNextAction{name = "meander", count = 1}
+  end  
+  if self.is_emergency then
+    self.hospital.killed_emergency_patients = self.hospital.killed_emergency_patients + 1
+  end
   self:queueAction{name = "die"}
   self.hospital:changeReputation("death")
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)

@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 class "UIWatch" (Window)
 
-function UIWatch:UIWatch(ui)
+function UIWatch:UIWatch(ui, count_type)
   self:Window()
   
   local app = ui.app
@@ -31,37 +31,48 @@ function UIWatch:UIWatch(ui)
   self.tick_timer = self.tick_rate  -- Initialize tick timer
   self.open_timer = 12
   self.ui = ui
+  self.hospital = ui.hospital
   self.width = 39
   self.height = 79
   self:setDefaultPosition(20, -100)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
+  self.count_type = count_type
   
-  local end_sprite = self.epidemic and 14 or 16
-  self.end_button = self:addPanel(end_sprite, 4, 0)
-    :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
+  local end_sprite = (count_type == "epidemic") and 14 or 16
+  
+  if count_type ~= "emergency" then
+    self.end_button = self:addPanel(end_sprite, 4, 0)
+      :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
+  end
   self:addPanel(13, 0, 28)
   self:addPanel(1, 2, 47)
 end
 
 function UIWatch:onCountdownEnd()
   self:close()
-  --TODO: Hospital has to be set to "Open" at this moment
+  if self.count_type == "emergency" then
+    self.ui.hospital:resolveEmergency()
+  elseif self.count_type == "initial_opening" then
+    --TODO: Hospital has to be set to "Open" at this moment
+  end
 end
 
 function UIWatch:onWorldTick()
-  if self.tick_timer == 0 and self.open_timer > 0 then -- Used for making a smooth animation
+  if self.tick_timer == 0 and self.open_timer >= 0 then -- Used for making a smooth animation
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1
     if self.open_timer == 11 then
       self:addPanel(2, 2, 47)
-    elseif self.open_timer < 11 then
+    elseif self.open_timer == 0 then
+      self.panels[#self.panels].sprite_index = 0
+    elseif self.open_timer < 11 and self.open_timer > 0 then
       self.panels[#self.panels].sprite_index = 13 - self.open_timer
       if self.open_timer == 5 then
         table.remove(self.panels, #self.panels - 1)
       end
     end
-  elseif self.open_timer == 0 then
+  elseif self.open_timer == -1 then -- the timer is at 0 when it is completely red.
     self:onCountdownEnd() -- Countdown terminated, so we open the hospital or ends the epidemic panic
   else
     self.tick_timer = self.tick_timer - 1
