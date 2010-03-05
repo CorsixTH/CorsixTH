@@ -294,7 +294,6 @@ static int l_font_draw_tooltip(lua_State *L)
     pCanvas->fillRect(pCanvas->mapColour(255, 255, 255), iX + 1, iY + iY - iLastY, iRealW + 1, iLastY - iY);
 
     int iLastY_new = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + iY - iLastY, iW - 4, 0);
-    assert(iLastY_new == iLastY); // actual execution should result in same length
 
     lua_pushinteger(L, iLastY);
 
