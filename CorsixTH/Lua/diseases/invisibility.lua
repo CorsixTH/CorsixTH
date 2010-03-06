@@ -25,6 +25,7 @@ disease.cause = _S.diseases.invisibility.cause
 disease.symptoms = _S.diseases.invisibility.symptoms
 disease.cure = _S.diseases.invisibility.cure
 disease.cure_price = 1400
+disease.emergency_sound = "emerg006.wav"
 disease.initPatient = function(patient)
   patient:setType("Invisible Patient")
   patient:setLayer(0, 2)

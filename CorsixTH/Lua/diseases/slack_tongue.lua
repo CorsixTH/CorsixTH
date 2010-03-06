@@ -25,6 +25,7 @@ disease.cause = _S.diseases.slack_tongue.cause
 disease.symptoms = _S.diseases.slack_tongue.symptoms
 disease.cure = _S.diseases.slack_tongue.cure
 disease.cure_price = 900
+disease.emergency_sound = "emerg011.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 1 then
     patient:setType("Standard Female Patient")

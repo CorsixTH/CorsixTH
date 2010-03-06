@@ -26,6 +26,7 @@ disease.cause = _S.diseases.broken_wind.cause
 disease.symptoms = _S.diseases.broken_wind.symptoms
 disease.cure = _S.diseases.broken_wind.cure
 disease.cure_price = 1300
+disease.emergency_sound = "emerg016.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

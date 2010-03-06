@@ -134,7 +134,7 @@ function Hospital:createEmergency()
     
     local staff_available = self:hasStaffOfCategory(required_staff)
     for _, room in ipairs(self.world.rooms) do
-      if room.room_info.name == emergency.disease.treatment_rooms[1] then
+      if room.room_info.id == emergency.disease.treatment_rooms[1] then
         room_name = nil
         break
       end
@@ -148,7 +148,7 @@ function Hospital:createEmergency()
       else
         added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, staff_name) .. "."
       end
-    elseif staff_required then
+    elseif not staff_available then
       added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
     end
     local message = {
@@ -163,11 +163,12 @@ function Hospital:createEmergency()
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message)
   end
-  self.killed_emergency_patients = 0
+  self.emergency.killed_emergency_patients = 0
+  self.emergency.cured_emergency_patients = 0
 end
 
 function Hospital:resolveEmergency()
-  local killed_patients = self.killed_emergency_patients
+  local killed_patients = self.emergency.killed_emergency_patients
   for i, patient in ipairs(self.emergency_patients) do
     if patient and patient.hospital and not patient:getRoom() then
       killed_patients = killed_patients + 1

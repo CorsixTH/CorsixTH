@@ -40,6 +40,7 @@ function Helicopter:Helicopter(world, object_type, x, y, direction, etc)
   self.th:makeInvisible()
   self:setPosition(0, -600)
   self.phase = -60
+  -- TODO: Shadow: 3918
   self.world.hospitals[1].emergency_patients = {}
 end
 

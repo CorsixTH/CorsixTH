@@ -797,6 +797,7 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   for key, _ in pairs(required_staff) do
     staff_name = key
   end
+  required_staff = staff_name -- This is the "programmatic" name of the staff.
   if staff_name == "Nurse" then
     staff_name = _S.staff_title.nurse
   elseif staff_name == "Psychiatrist" then

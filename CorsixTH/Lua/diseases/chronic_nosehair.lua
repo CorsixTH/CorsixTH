@@ -26,6 +26,7 @@ disease.cause = _S.diseases.chronic_nosehair.cause
 disease.symptoms = _S.diseases.chronic_nosehair.symptoms
 disease.cure = _S.diseases.chronic_nosehair.cure
 disease.cure_price = 800
+disease.emergency_sound = "emerg029.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

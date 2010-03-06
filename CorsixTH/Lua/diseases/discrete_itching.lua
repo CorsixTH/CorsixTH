@@ -26,6 +26,7 @@ disease.cause = _S.diseases.discrete_itching.cause
 disease.symptoms = _S.diseases.discrete_itching.symptoms
 disease.cure = _S.diseases.discrete_itching.cure
 disease.cure_price = 700
+disease.emergency_sound = "emerg013.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

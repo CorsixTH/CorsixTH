@@ -154,6 +154,7 @@ function UIFax:choice(choice)
     self.ui.app.world:newObject("helicopter", self.ui.app.world.helipad_spawn_point.x, 
       self.ui.app.world.helipad_spawn_point.y, "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
+    self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
     self.ui.adviser:say(_S.adviser.information.emergency)
   end
   self:close()

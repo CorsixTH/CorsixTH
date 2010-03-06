@@ -25,6 +25,7 @@ disease.cause = _S.diseases.gut_rot.cause
 disease.symptoms = _S.diseases.gut_rot.symptoms
 disease.cure = _S.diseases.gut_rot.cure
 disease.cure_price = 350
+disease.emergency_sound = "emerg019.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

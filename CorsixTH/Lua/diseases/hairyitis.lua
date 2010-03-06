@@ -25,6 +25,7 @@ disease.cause = _S.diseases.hairyitis.cause
 disease.symptoms = _S.diseases.hairyitis.symptoms
 disease.cure = _S.diseases.hairyitis.cure
 disease.cure_price = 1150
+disease.emergency_sound = "emerg008.wav"
 disease.initPatient = function(patient)
   patient:setType("Chewbacca Patient")
   -- NB: Layers have no effect on the appearance until cured, at which point

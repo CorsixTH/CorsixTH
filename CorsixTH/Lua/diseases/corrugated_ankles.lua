@@ -26,6 +26,7 @@ disease.cause = _S.diseases.corrugated_ankles.cause
 disease.symptoms = _S.diseases.corrugated_ankles.symptoms
 disease.cure = _S.diseases.corrugated_ankles.cure
 disease.cure_price = 800
+disease.emergency_sound = "emerg028.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

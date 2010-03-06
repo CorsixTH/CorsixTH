@@ -107,13 +107,22 @@ function Patient:treated()
       self.world.ui.adviser:say(_S.adviser.information.first_cure)
     end
     self.hospital.num_cured = hospital.num_cured + 1
-    
+    if self.is_emergency then
+      self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
+    end
     self:setMood("cured", "activate")
     self:playSound "cheer.wav"
     hospital:changeReputation("cured")
     self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+  end
+  if self.is_emergency then
+    local killed = hospital.emergency.killed_emergency_patients
+    local cured = hospital.emergency.cured_emergency_patients
+    if killed + cured >= hospital.emergency.victims then
+      hospital.world.ui:getWindow(UIWatch):onCountdownEnd()
+    end
   end
 end
 
@@ -132,7 +141,7 @@ function Patient:die()
     self:setNextAction{name = "meander", count = 1}
   end  
   if self.is_emergency then
-    self.hospital.killed_emergency_patients = self.hospital.killed_emergency_patients + 1
+    self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction{name = "die"}
   self.hospital:changeReputation("death")

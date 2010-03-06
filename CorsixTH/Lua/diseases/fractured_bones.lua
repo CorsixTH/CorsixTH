@@ -25,6 +25,7 @@ disease.cause = _S.diseases.fractured_bones.cause
 disease.symptoms = _S.diseases.fractured_bones.symptoms
 disease.cure = _S.diseases.fractured_bones.cure
 disease.cure_price = 450
+disease.emergency_sound = "emerg005.wav"
 disease.initPatient = function(patient)
   if 1 == 2 then -- Right now the female animation in the cast remover is bad
     patient:setType("Standard Female Patient")
