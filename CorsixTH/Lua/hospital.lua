@@ -168,20 +168,19 @@ function Hospital:createEmergency()
 end
 
 function Hospital:resolveEmergency()
-  local killed_patients = self.emergency.killed_emergency_patients
+  local rescued_patients = self.emergency.cured_emergency_patients
   for i, patient in ipairs(self.emergency_patients) do
     if patient and patient.hospital and not patient:getRoom() then
-      killed_patients = killed_patients + 1
       patient:die(true)
     end
   end
   local total = self.emergency.victims
   local max_bonus = self.emergency.bonus
-  local earned = math.floor((killed_patients/total < 0.25 and 
-    (total - killed_patients)/total or 0)*10)*max_bonus/10
+  local earned = math.floor((rescued_patients/total > 0.75 and 
+    rescued_patients/total or 0)*10)*max_bonus/10
   local message = {
     {text = _S.fax.emergency_result.saved_people
-      :format(total - killed_patients, self.emergency.victims)},
+      :format(rescued_patients, self.emergency.victims)},
     {text = _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
     choices = {
       {text = _S.fax.emergency_result.close_text, choice = "close", offset = 50},
