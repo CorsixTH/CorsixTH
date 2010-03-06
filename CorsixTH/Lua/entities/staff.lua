@@ -127,6 +127,11 @@ function Staff:fire()
   self:setHospital(nil)
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
+  -- Remove any message related to the staff member.
+  if self.message_callback then
+    self:message_callback(true)
+    self.message_callback = nil
+  end
   -- TODO: Remove from world/hospital staff list
 end
 

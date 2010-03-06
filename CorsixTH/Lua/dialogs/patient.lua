@@ -57,23 +57,22 @@ function UIPatient:UIPatient(ui, patient)
   -- if the patient is going home it is not possible to kick him/her anymore.
   self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue)
 
+  -- Initialize all buttons and blankers, then call the update function which decides what to show.
   -- Show the drug casebook only after the disease has been diagnosed.
-  if patient.diagnosed then
-    self:addPanel(329, 14 + 117, 61 + 107):makeButton(0, 0, 38, 38, 330, self.viewDiseases)
-  else
-    self:addColourPanel(14 + 115, 61 + 105, 45, 45, 113, 117, 170)
-  end
-  if patient.going_home then
-    self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
-  else
-    self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome)
-  end
-  if patient.diagnosed or patient.going_home then
-    self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
-  else
-    self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease)
-  end
+  self.disease_button = self:addPanel(329, 14 + 117, 61 + 107)
+    :makeButton(0, 0, 38, 38, 330, self.viewDiseases)
+  self.disease_blanker = self:addColourPanel(14 + 115, 61 + 105, 45, 45, 113, 117, 170)
+  self.disease_blanker.visible = false
 
+  self.home_button = self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome)
+  self.home_blanker = self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
+  self.home_blanker.visible = false
+
+  self.guess_button = self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease)
+  self.guess_blanker = self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
+  self.guess_blanker.visible = false
+  self:updateInformation()
+  
   -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
@@ -166,6 +165,31 @@ function UIPatient:onMouseUp(button, x, y)
   return repaint
 end
 
+function UIPatient:updateInformation()
+  local patient = self.patient
+  if patient.diagnosed then
+    self.disease_button.enabled = true
+    self.disease_blanker.visible = false
+  else
+    self.disease_button.enabled = false
+    self.disease_blanker.visible = true
+  end
+  if patient.going_home then
+    self.home_button.enabled = false
+    self.home_blanker.visible = true
+  else
+    self.home_button.enabled = true
+    self.home_blanker.visible = false
+  end
+  if patient.diagnosed or patient.going_home then
+    self.guess_button.enabled = false
+    self.guess_blanker.visible = true
+  else
+    self.guess_button.enabled = true
+    self.guess_blanker.visible = false
+  end
+end
+
 function UIPatient:viewQueue()
   for i, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
@@ -193,5 +217,12 @@ function UIPatient:viewDiseases()
 end
 
 function UIPatient:guessDisease()
-  -- TODO
+  local patient = self.patient
+  if not patient:getRoom() and patient.hospital.disease_casebook[patient.disease.id].discovered then
+    patient:setDiagnosed(true)
+    patient:setNextAction({
+      name = "seek_room", 
+      room_type = patient.disease.treatment_rooms[1]
+    }, 1)
+  end
 end

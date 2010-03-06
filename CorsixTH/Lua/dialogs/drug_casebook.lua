@@ -38,23 +38,7 @@ function UICasebook:UICasebook(ui, disease_selection)
   
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
-  -- A sorted list of known diseases and pseudo diseases.
-  -- Used to be able to list the diseases in, believe it or not,
-  -- alphabetical order.
-  -- TODO: update if disease is discovered while window is open
-  self.names_sorted = {}
-  for n, value in pairs(self.casebook) do
-    if value.discovered then
-      self.names_sorted[#self.names_sorted + 1] = n
-    end
-  end
-  table.sort(self.names_sorted, function(d1, d2)
-    local c1, c2 = self.casebook[d1], self.casebook[d2]
-    if c1.pseudo ~= c2.pseudo then
-      return c1.pseudo
-    end
-    return c1.disease.name:upper() < c2.disease.name:upper()
-  end)
+  self:updateDiseaseList()
   
   if disease_selection then
     self:selectDisease(disease_selection)
@@ -93,6 +77,25 @@ end
 function UICasebook:close()
   self.ui:disableKeyboardRepeat()
   Window.close(self)
+end
+
+function UICasebook:updateDiseaseList()
+  -- A sorted list of known diseases and pseudo diseases.
+  -- Used to be able to list the diseases in, believe it or not,
+  -- alphabetical order.
+  self.names_sorted = {}
+  for n, value in pairs(self.casebook) do
+    if value.discovered then
+      self.names_sorted[#self.names_sorted + 1] = n
+    end
+  end
+  table.sort(self.names_sorted, function(d1, d2)
+    local c1, c2 = self.casebook[d1], self.casebook[d2]
+    if c1.pseudo ~= c2.pseudo then
+      return c1.pseudo
+    end
+    return c1.disease.name:upper() < c2.disease.name:upper()
+  end)
 end
 
 function UICasebook:selectDisease(disease)

@@ -34,10 +34,10 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.message = message
   if owner then
     self.owner = owner
-    owner.message_callback = --[[persistable:owner_of_message_callback]] function()
+    owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, out_of_time)
       -- Don't do anything if the window is already open.
       if not ui:getWindow(UIStaffRise) and not ui:getWindow(UIFax) then
-        self:openMessage()
+        self:openMessage(out_of_time)
       end
     end
   end
@@ -75,7 +75,6 @@ function UIMessage:openMessage(out_of_time)
   end
   self:close()
   self:onClose(out_of_time or false)
-  --TODO
 end
 
 function UIMessage:moveLeft()

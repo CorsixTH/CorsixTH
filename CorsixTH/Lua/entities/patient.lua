@@ -63,6 +63,10 @@ end
 
 function Patient:setDiagnosed(diagnosed)
   self.diagnosed = diagnosed
+  local window = self.world.ui:getWindow(UIPatient)
+  if window and window.patient == self then
+    window:updateInformation()
+  end
   self:updateDynamicInfo()
 end
 
@@ -159,6 +163,11 @@ function Patient:goHome(cured)
   
   if self.is_debug then
     self.hospital:removeDebugPatient(self)
+  end
+  -- Remove any message related to the patient.
+  if self.message_callback then
+    self:message_callback(true)
+    self.message_callback = nil
   end
   
   self.going_home = true

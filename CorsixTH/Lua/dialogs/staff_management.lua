@@ -78,7 +78,7 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.arrow.visible = false
   
   -- Scroll bar dot
-  self.scroll_dot = self:addPanel(11, 21, 242)
+  self.scroll_dot = self:addPanel(11, 21, 168)
   self.scroll_dot.visible = false
   
   -- Doctors' skills or progress towards them
@@ -126,6 +126,13 @@ function UIStaffManagement:setCategory(name)
     end
   end
   self.selected_staff = nil
+  self.page = 1
+  if #self.staff_members[self.category] > 10 then
+    self.scroll_dot.visible = true
+    self.scroll_dot.y = 168
+  else
+    self.scroll_dot.visible = false
+  end
 end
 
 function UIStaffManagement:draw(canvas, x, y)
@@ -150,20 +157,13 @@ function UIStaffManagement:draw(canvas, x, y)
   local total_skill = 0
   -- Draw each listing
   for i, staff in ipairs(self.staff_members[self.category]) do
-    
-    self.row_blankers[i].visible = false
-    titles:draw(canvas, i,                         x + 58, y + 63 + i*27)
-    titles:draw(canvas, staff.profile.name,        x + 88, y + 63 + i*27)
-    titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + i*27, 80, 0)
-    
-    -- Morale, tiredness and skill
+    if not staff then
+      break
+    end
+    -- Morale, tiredness and skill, used to draw the average at the end too.
+    local happiness_bar_width = 0
     if staff.attributes["happiness"] then
-      local happiness_bar_width = math_floor(staff.attributes["happiness"] * 40 + 0.5)
-      if happiness_bar_width ~= 0 then
-        for dx = 0, happiness_bar_width - 1 do
-          self.panel_sprites:draw(canvas, 16, x + 351 + dx, y + 65 + i*27)
-        end
-      end
+      happiness_bar_width = math_floor(staff.attributes["happiness"] * 40 + 0.5)
       total_happiness = total_happiness + staff.attributes["happiness"]
     end
     local fatigue_bar_width = 40.5
@@ -171,21 +171,36 @@ function UIStaffManagement:draw(canvas, x, y)
       total_fatigue = total_fatigue + staff.attributes["fatigue"]
       fatigue_bar_width = math_floor((1 - staff.attributes["fatigue"]) * 40 + 0.5)
     end
-    if fatigue_bar_width ~= 0 then
-      for dx = 0, fatigue_bar_width - 1 do
-        self.panel_sprites:draw(canvas, 15, x + 456 + dx, y + 65 + i*27)
-      end
-    end
     local skill_bar_width = math_floor(staff.profile.skill * 40 + 0.5)
     total_skill = total_skill + staff.profile.skill
-    if skill_bar_width ~= 0 then
-      for dx = 0, skill_bar_width - 1 do
-        self.panel_sprites:draw(canvas, 14, x + 559 + dx, y + 65 + i*27)
+    -- Is this staff member on the visible page? Then draw him/her
+    if i > (self.page-1)*10 and i <= self.page*10 then
+      local row_no = i - (self.page-1)*10
+      self.row_blankers[row_no].visible = false
+      titles:draw(canvas, row_no + 10*(self.page-1), x + 58, y + 63 + row_no*27)
+      titles:draw(canvas, staff.profile.name,        x + 88, y + 63 + row_no*27)
+      titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + row_no*27, 80, 0)
+    
+      -- Draw the morale, tiredness and skill for this staff member
+      if happiness_bar_width ~= 0 then
+        for dx = 0, happiness_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 16, x + 351 + dx, y + 65 + row_no*27)
+        end
+      end
+      if fatigue_bar_width ~= 0 then
+        for dx = 0, fatigue_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 15, x + 456 + dx, y + 65 + row_no*27)
+        end
+      end
+      if skill_bar_width ~= 0 then
+        for dx = 0, skill_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 14, x + 559 + dx, y + 65 + row_no*27)
+        end
       end
     end
   end
   -- Make sure the other ones are not visible
-  for i = #self.staff_members[self.category] + 1, 10 do
+  for i = #self.staff_members[self.category] + 1 - (self.page-1)*10, 10 do
     self.row_blankers[i].visible = true
   end
   -- Draw the average morale, tiredness and skill
@@ -222,10 +237,11 @@ function UIStaffManagement:draw(canvas, x, y)
     local profile = self.staff_members[self.category][self.selected_staff].profile
     -- Draw the red rectangle TODO: Make a neater function in C?
     local red = canvas:mapRGB(221, 83, 0)
-    canvas:drawRect(red, x + 49, y + self.selected_staff*27 + 54, 581, 1)
-    canvas:drawRect(red, x + 49, y + self.selected_staff*27 + 81, 581, 1)
-    canvas:drawRect(red, x + 49, y + self.selected_staff*27 + 54, 1, 28)
-    canvas:drawRect(red, x + 630, y + self.selected_staff*27 + 54, 1, 28)
+    local y_pos = self.selected_staff - (self.page - 1)*10
+    canvas:drawRect(red, x + 49, y + y_pos*27 + 54, 581, 1)
+    canvas:drawRect(red, x + 49, y + y_pos*27 + 81, 581, 1)
+    canvas:drawRect(red, x + 49, y + y_pos*27 + 54, 1, 28)
+    canvas:drawRect(red, x + 630, y + y_pos*27 + 54, 1, 28)
 
     -- Current position in the game world
     local px, py = self:getStaffPosition(37, 61)
@@ -297,8 +313,8 @@ function UIStaffManagement:onMouseDown(code, x, y)
   if code == "left" then
     if x > 50 and x < 490 then
       if y > 82 and y < 351 then
-        if #self.staff_members[self.category] > math_floor((y - 81)/27) then
-          self.selected_staff = math_floor((y - 81)/27) + 1
+        if #self.staff_members[self.category] - (self.page - 1)*10 > math_floor((y - 81)/27) then
+          self.selected_staff = math_floor((y - 81)/27) + 1 + (self.page - 1)*10
         end
       end
     elseif x > 497 and x < 580 and y > 373 and y < 455 and self.selected_staff then
@@ -318,12 +334,19 @@ function UIFullscreen:getStaffPosition(dx, dy)
 end
 
 function UIStaffManagement:scrollUp()
-  -- TODO: How do we want this to work? Vanilla TH says it scrolls to the next person, but it actually
-  -- just goes to the next page and unselects anything selected. What do we want it to do?
+  if self.scroll_dot.visible and self.page > 1 then
+    self.selected_staff = nil
+    self.page = self.page - 1
+    self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
+  end
 end
 
 function UIStaffManagement:scrollDown()
-  -- Dito
+  if self.scroll_dot.visible and self.page*10 < #self.staff_members[self.category] then
+    self.selected_staff = nil
+    self.page = self.page + 1
+    self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
+  end
 end
 
 function UIStaffManagement:payBonus()

@@ -98,14 +98,16 @@ local function action_seek_room_no_diagnosis_room_found(humanoid)
     -- Send home automatically
     humanoid:goHome()
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
-  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] then
+  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] 
+    or not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
+    -- If the disease hasn't been discovered yet it cannot be guessed, go here instead.
     -- Ask the player
     -- Wait two months before going home anyway.
     humanoid:setMood("patient_wait", "activate")
     humanoid.waiting = 60
     local middle_choice = "disabled"
     local more_text = ""
-    if humanoid.diagnosis_progress > 0.7 then -- TODO: What value here?
+    if humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
       middle_choice = "guess_cure"
       more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
         :format(humanoid.diagnosis_progress*100, humanoid.disease.name)
@@ -127,7 +129,9 @@ local function action_seek_room_no_diagnosis_room_found(humanoid)
     -- This seek_room action will be reused, return that it's valid.
     return true
   else
-    -- Guess "type of disease" automatically
+    -- Guess "type of disease" automatically.
+    -- A patient with an undiscovered disease should never get here.
+    assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
     humanoid:setDiagnosed(true)
     humanoid:queueAction({
       name = "seek_room", 
