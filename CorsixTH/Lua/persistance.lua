@@ -183,6 +183,7 @@ function SaveGame()
     map = TheApp.map,
     random = math.randomdump(),
   }
+  state.map:prepareForSave()
   --local status, res = xpcall(function()
   local result, err, obj = persist.dump(state, MakePermanentObjectsTable(false))
   if not result then
@@ -206,5 +207,8 @@ function LoadGame(data)
   TheApp.ui.cursor = nil
   TheApp.ui:setCursor(cursor)
   TheApp.ui:onChangeResolution()
+  -- The menu bar is a permanent object, so its ui field needs updating to
+  -- the depersisted ui value.
+  TheApp.ui.menu_bar.ui = TheApp.ui
   --end, persist.errcatch)
 end

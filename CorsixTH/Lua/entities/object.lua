@@ -362,29 +362,31 @@ function Object.processTypeDefinition(object_type)
         end
       end
       -- Adjust the footprint to make this tile the origin
-      local x, y = unpack(solid_near_use_position)
       local solid_points = {}
-      for _, point in pairs(details.footprint) do
-        point[1] = point[1] - x
-        point[2] = point[2] - y
-        if not point.only_passable then
-          solid_points[point[1] * 100 + point[2]] = point
+      if solid_near_use_position then
+        local x, y = unpack(solid_near_use_position)
+        for _, point in pairs(details.footprint) do
+          point[1] = point[1] - x
+          point[2] = point[2] - y
+          if not point.only_passable then
+            solid_points[point[1] * 100 + point[2]] = point
+          end
         end
-      end
-      for _, key in ipairs{"use_position_secondary", "finish_use_position", "finish_use_position_secondary"} do
-        if details[key] then
-          details[key][1] = details[key][1] - x
-          details[key][2] = details[key][2] - y
+        for _, key in ipairs{"use_position_secondary", "finish_use_position", "finish_use_position_secondary"} do
+          if details[key] then
+            details[key][1] = details[key][1] - x
+            details[key][2] = details[key][2] - y
+          end
         end
+        use_position[1] = use_position[1] - x
+        use_position[2] = use_position[2] - y
+        local rx, ry = unpack(details.render_attach_position)
+        details.render_attach_position[1] = rx - x
+        details.render_attach_position[2] = ry - y
+        x, y = Map:WorldToScreen(rx + 1, ry + 1)
+        details.animation_offset[1] = details.animation_offset[1] - x
+        details.animation_offset[2] = details.animation_offset[2] - y
       end
-      use_position[1] = use_position[1] - x
-      use_position[2] = use_position[2] - y
-      local rx, ry = unpack(details.render_attach_position)
-      details.render_attach_position[1] = rx - x
-      details.render_attach_position[2] = ry - y
-      x, y = Map:WorldToScreen(rx + 1, ry + 1)
-      details.animation_offset[1] = details.animation_offset[1] - x
-      details.animation_offset[2] = details.animation_offset[2] - y
       -- Find the region around the solid part of the footprint
       local adjacent_set = {}
       local adjacent_list = {}

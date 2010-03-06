@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef PERSIST_LUA_H_
-#define PERSIST_LUA_H_
+#ifndef CORSIX_TH_PERSIST_LUA_H_
+#define CORSIX_TH_PERSIST_LUA_H_
 #include "th_lua.h"
 #include "config.h"
 #include <stdlib.h>
@@ -151,4 +151,4 @@ public:
 
 int luaopen_persist(lua_State *L);
 
-#endif // PERSIST_LUA_H_
+#endif // CORSIX_TH_PERSIST_LUA_H_

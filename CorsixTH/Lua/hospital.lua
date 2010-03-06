@@ -99,6 +99,28 @@ function Hospital:tick()
   end
 end
 
+function Hospital:getPlayerIndex()
+  -- TODO: In multiplayer, return 2 or 3 or 4
+  return 1
+end
+
+function Hospital:getHeliportPosition()
+  local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
+  -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
+  -- the specified tile is suitable by checking the adjacent spawn tile for
+  -- passability.
+  if y > 1 and self.world.map:getCellFlag(x, y - 1, "passable") then
+    return x, y
+  end
+end
+
+function Hospital:getHeliportSpawnPosition()
+  local x, y = self:getHeliportPosition()
+  if x and y then
+    return x, y - 1
+  end
+end
+
 function Hospital:isInHospital(x, y)
   return self.world.map.th:getCellFlags(x, y).hospital
 end
@@ -121,7 +143,8 @@ function Hospital:onEndMonth()
 end
 
 function Hospital:createEmergency()
-  if self.world.helipad_spawn_point then
+  local created_one = false
+  if self:getHeliportSpawnPosition() then
     local victims = math.random(4,6) -- TODO: Should depend on disease (e.g. operating theatre is harder)
     local emergency = {
       disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)],
@@ -162,9 +185,11 @@ function Hospital:createEmergency()
       },
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message)
+    created_one = true
   end
   self.emergency.killed_emergency_patients = 0
   self.emergency.cured_emergency_patients = 0
+  return created_one
 end
 
 function Hospital:resolveEmergency()

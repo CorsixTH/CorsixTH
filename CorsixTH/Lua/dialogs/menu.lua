@@ -384,13 +384,14 @@ function UIMenuBar:makeMenu(app)
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
-      local status, err = pcall(app.loadLevel, app, ("LEVEL.L%i"):format(L))
+      local status, err = pcall(app.loadLevel, app, L)
       if not status then
-        print("Error while loading level: " .. err)
+        err = "Error while loading level: " .. err
+        print(err)
+        self.ui:addWindow(UIInformation(self.ui, {err}))
       end
     end)
   end
-
   
   self:addMenu(_S.menu.file, UIMenu()
     :appendMenu(_S.menu_file.load, levels_menu)
@@ -513,6 +514,11 @@ function UIMenuBar:makeMenu(app)
     app.ui.limit_to_visible_diamond = item.checked
     app.ui:scrollMap(0, 0)
   end
+  local function make_emergency()
+    if not self.ui.hospital:createEmergency() then
+      self.ui:addWindow(UIInformation(self.ui, {"No heliport on map"}))
+    end
+  end
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls)
@@ -522,7 +528,7 @@ function UIMenuBar:makeMenu(app)
       :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
       :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)
       :appendItem(_S.menu_debug.show_watch,         function() self.ui:addWindow(UIWatch(self.ui)) end)
-      :appendItem(_S.menu_debug.create_emergency,   function() self.ui.hospital:createEmergency() end)
+      :appendItem(_S.menu_debug.create_emergency,   make_emergency)
       :appendItem(_S.menu_debug.show_beta1_info,    function() self.ui:showBeta1Info() end)
       :appendItem(_S.menu_debug.place_objects,      place_objs)
       :appendItem(_S.menu_debug.dump_strings,       function() self.ui.app:dumpStrings() end)

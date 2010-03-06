@@ -41,6 +41,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   self.default_button_sound = "selectx.wav"
+  self.countdown = 0
   
   self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
@@ -283,6 +284,16 @@ function UIBottomPanel:onTick()
   if self.countdown then
     if self.countdown < 1 then
       self.dynamic_info = nil
+      -- If there is no info to display, and the app is tracking FPS, show that
+      local fps = self.ui.app:getFPS()
+      if fps then
+        self.dynamic_info = {text = {
+          ("FPS: %i"):format(fps),
+          ("Lua GC: %.1f Kb"):format(collectgarbage"count"),
+          ("Entities: %i"):format(#self.ui.app.world.entities),
+        }}
+        self.countdown = 1
+      end
     else
       self.countdown = self.countdown - 1
     end

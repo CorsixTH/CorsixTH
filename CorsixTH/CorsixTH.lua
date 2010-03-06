@@ -1,4 +1,4 @@
-----  CorsixTH bootstrap code -------------------------------------------------
+---- CorsixTH bootstrap code -------------------------------------------------
 -- This is not a configuration file and should not be edited. See config.txt
 -- for CorsixTH configuration options.
 
@@ -96,3 +96,7 @@ TheApp:setCommandLine(
 )
 assert(TheApp:init())
 return TheApp:run()
+
+--[[!file
+! Application bootstrap code
+]]

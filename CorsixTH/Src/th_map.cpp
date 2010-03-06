@@ -25,6 +25,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include <SDL.h>
 #include <new>
+#include "run_length_encoder.h"
 
 THMapNode::THMapNode()
 {
@@ -41,15 +42,18 @@ THMap::THMap()
 {
     m_iWidth = 0;
     m_iHeight = 0;
+    m_iPlayerCount = 0;
     m_pCells = NULL;
     m_pOriginalCells = NULL;
     m_pBlocks = NULL;
+    m_pPlotOwner = NULL;
 }
 
 THMap::~THMap()
 {
     delete[] m_pCells;
     delete[] m_pOriginalCells;
+    delete[] m_pPlotOwner;
 }
 
 bool THMap::setSize(int iWidth, int iHeight)
@@ -107,12 +111,32 @@ static const unsigned char gs_iTHMapBlockLUT[256] = {
     0x00, 0x00, 0x00, 0x00
 };
 
+void THMap::_readTileIndex(const unsigned char* pData, int& iX, int &iY) const
+{
+    unsigned int iIndex = static_cast<unsigned int>(pData[1]);
+    iIndex = iIndex * 0x100 + static_cast<unsigned int>(pData[0]);
+    iX = iIndex % m_iWidth;
+    iY = iIndex / m_iWidth;
+}
+
 bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                            THMapLoadObjectCallback_t fnObjectCallback,
                            void* pCallbackToken)
 {
     if(iDataLength < 163948 || !setSize(128, 128))
         return false;
+
+    m_iPlayerCount = pData[0];
+    for(int i = 0; i < m_iPlayerCount; ++i)
+    {
+        _readTileIndex(pData + 163876 + (i % 4) * 2,
+            m_aiInitialCameraX[i], m_aiInitialCameraY[i]);
+        _readTileIndex(pData + 163884 + (i % 4) * 2,
+            m_aiHeliportX[i], m_aiHeliportY[i]);
+    }
+    m_iPlotCount = 0;
+    delete[] m_pPlotOwner;
+    m_pPlotOwner = NULL;
 
     THMapNode *pNode = m_pCells;
     THMapNode *pOriginalNode = m_pOriginalCells;
@@ -170,6 +194,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
 
             pNode->iRoomId = 0;
             pNode->iParcelId = *pParcel;
+            if(*pParcel >= m_iPlotCount)
+                m_iPlotCount = *pParcel + 1;
 
             if(!(pData[5] & 1))
             {
@@ -184,20 +210,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
 
             *pOriginalNode = *pNode;
 
-            /*
-            // This code now done from map file data rather than tile numbers,
-            // but kept here incase it is required to do it by tile again.
-            switch(iBaseTile)
-            {
-            case 0x10: case 0x11: case 0x12: case 0x13: case 0x14:
-            case 0x15: case 0x16: case 0x17: case 0x42: case 0x4C:
-                pNode->iFlags |= THMN_Hospital | THMN_Buildable;
-                // fall-through
-            case 0x0F: case 0x04: case 0x05: case 0x32: case 0x3A:
-                pNode->iFlags |= THMN_Passable;
-                break;
-            }
-            */
+            // TODO: If plot number > player count, replace with grass
+            // (then copy data back from original node when purchased)
 
             if(pData[1] != 0 && fnObjectCallback != NULL)
             {
@@ -205,8 +219,39 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
             }
         }
     }
+    m_pPlotOwner = new int[m_iPlotCount];
+    m_pPlotOwner[0] = 0;
+    for(int i = 1; i < m_iPlotCount; ++i)
+        m_pPlotOwner[i] = 1;
+    // TODO: Assign plots 1 - N to players 1 - N, others to 0
 
     updateShadows();
+    return true;
+}
+
+bool THMap::getPlayerCameraTile(int iPlayer, int* pX, int* pY) const
+{
+    if(iPlayer < 0 || iPlayer >= getPlayerCount())
+    {
+        if(pX) *pX = 0;
+        if(pY) *pY = 0;
+        return false;
+    }
+    if(pX) *pX = m_aiInitialCameraX[iPlayer];
+    if(pY) *pY = m_aiInitialCameraY[iPlayer];
+    return true;
+}
+
+bool THMap::getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const
+{
+    if(iPlayer < 0 || iPlayer >= getPlayerCount())
+    {
+        if(pX) *pX = 0;
+        if(pY) *pY = 0;
+        return false;
+    }
+    if(pX) *pX = m_aiHeliportX[iPlayer];
+    if(pY) *pY = m_aiHeliportY[iPlayer];
     return true;
 }
 
@@ -587,18 +632,37 @@ void THMap::updateShadows()
 void THMap::persist(LuaPersistWriter *pWriter) const
 {
     lua_State *L = pWriter->getStack();
+    IntegerRunLengthEncoder oEncoder;
 
+    uint32_t iVersion = 2;
+    pWriter->writeVUInt(iVersion);
+    pWriter->writeVUInt(m_iPlayerCount);
+    for(int i = 0; i < m_iPlayerCount; ++i)
+    {
+        pWriter->writeVUInt(m_aiInitialCameraX[i]);
+        pWriter->writeVUInt(m_aiInitialCameraY[i]);
+        pWriter->writeVUInt(m_aiHeliportX[i]);
+        pWriter->writeVUInt(m_aiHeliportY[i]);
+    }
+    pWriter->writeVUInt(m_iPlotCount);
+    for(int i = 0; i < m_iPlotCount; ++i)
+    {
+        pWriter->writeVUInt(m_pPlotOwner[i]);
+    }
     pWriter->writeVUInt(m_iWidth);
     pWriter->writeVUInt(m_iHeight);
+    oEncoder.initialise(6);
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        pWriter->writeVUInt(pNode->iBlock[0]);
-        pWriter->writeVUInt(pNode->iBlock[1]);
-        pWriter->writeVUInt(pNode->iBlock[2]);
-        pWriter->writeVUInt(pNode->iBlock[3]);
-        pWriter->writeVUInt(pNode->iParcelId);
-        pWriter->writeVUInt(pNode->iRoomId);
+        oEncoder.write(pNode->iBlock[0]);
+        oEncoder.write(pNode->iBlock[1]);
+        oEncoder.write(pNode->iBlock[2]);
+        oEncoder.write(pNode->iBlock[3]);
+        oEncoder.write(pNode->iParcelId);
+        oEncoder.write(pNode->iRoomId);
+        // Flags include THOB values, and other things which do not work
+        // well with run-length encoding.
         pWriter->writeVUInt(pNode->iFlags);
 
         lua_rawgeti(L, lua_upvalueindex(1), 2);
@@ -611,15 +675,21 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         pWriter->writeStackObject(-1);
         lua_pop(L, 2);
     }
+    oEncoder.finish();
+    oEncoder.pumpOutput(pWriter);
+
+    oEncoder.initialise(5);
     for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        pWriter->writeVUInt(pNode->iBlock[0]);
-        pWriter->writeVUInt(pNode->iBlock[1]);
-        pWriter->writeVUInt(pNode->iBlock[2]);
-        pWriter->writeVUInt(pNode->iParcelId);
-        pWriter->writeVUInt(pNode->iFlags);
+        oEncoder.write(pNode->iBlock[0]);
+        oEncoder.write(pNode->iBlock[1]);
+        oEncoder.write(pNode->iBlock[2]);
+        oEncoder.write(pNode->iParcelId);
+        oEncoder.write(pNode->iFlags);
     }
+    oEncoder.finish();
+    oEncoder.pumpOutput(pWriter);
 }
 
 void THMap::depersist(LuaPersistReader *pReader)
@@ -628,6 +698,37 @@ void THMap::depersist(LuaPersistReader *pReader)
 
     lua_State *L = pReader->getStack();
     int iWidth, iHeight;
+    IntegerRunLengthDecoder oDecoder;
+
+    uint32_t iVersion;
+    if(!pReader->readVUInt(iVersion)) return;
+    if(iVersion != 2)
+    {
+        if(iVersion < 2 || iVersion == 128)
+        {
+            luaL_error(L, "TODO: Write code to load map data from earlier "
+                "savegame versions (if really neccessary).");
+        }
+        else
+        {
+            luaL_error(L, "Cannot load savegame from a newer version.");
+        }
+    }
+    if(!pReader->readVUInt(m_iPlayerCount)) return;
+    for(int i = 0; i < m_iPlayerCount; ++i)
+    {
+        if(!pReader->readVUInt(m_aiInitialCameraX[i])) return;
+        if(!pReader->readVUInt(m_aiInitialCameraY[i])) return;
+        if(!pReader->readVUInt(m_aiHeliportX[i])) return;
+        if(!pReader->readVUInt(m_aiHeliportY[i])) return;
+    }
+    if(!pReader->readVUInt(m_iPlotCount)) return;
+    delete[] m_pPlotOwner;
+    m_pPlotOwner = new int[m_iPlotCount];
+    for(int i = 0; i < m_iPlotCount; ++i)
+    {
+        if(!pReader->readVUInt(m_pPlotOwner[i])) return;
+    }
 
     if(!pReader->readVUInt(iWidth) || !pReader->readVUInt(iHeight))
         return;
@@ -639,12 +740,6 @@ void THMap::depersist(LuaPersistReader *pReader)
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        if(!pReader->readVUInt(pNode->iBlock[0])) return;
-        if(!pReader->readVUInt(pNode->iBlock[1])) return;
-        if(!pReader->readVUInt(pNode->iBlock[2])) return;
-        if(!pReader->readVUInt(pNode->iBlock[3])) return;
-        if(!pReader->readVUInt(pNode->iParcelId)) return;
-        if(!pReader->readVUInt(pNode->iRoomId)) return;
         if(!pReader->readVUInt(pNode->iFlags)) return;
 
         if(!pReader->readStackObject())
@@ -660,14 +755,26 @@ void THMap::depersist(LuaPersistReader *pReader)
             pNode->oEarlyEntities.pNext->pPrev = &pNode->oEarlyEntities;
         lua_pop(L, 1);
     }
+    oDecoder.initialise(6, pReader);
+    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        pNode->iBlock[0] = oDecoder.read();
+        pNode->iBlock[1] = oDecoder.read();
+        pNode->iBlock[2] = oDecoder.read();
+        pNode->iBlock[3] = oDecoder.read();
+        pNode->iParcelId = oDecoder.read();
+        pNode->iRoomId = oDecoder.read();
+    }
+    oDecoder.initialise(5, pReader);
     for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        if(!pReader->readVUInt(pNode->iBlock[0])) return;
-        if(!pReader->readVUInt(pNode->iBlock[1])) return;
-        if(!pReader->readVUInt(pNode->iBlock[2])) return;
-        if(!pReader->readVUInt(pNode->iParcelId)) return;
-        if(!pReader->readVUInt(pNode->iFlags)) return;
+        pNode->iBlock[0] = oDecoder.read();
+        pNode->iBlock[1] = oDecoder.read();
+        pNode->iBlock[2] = oDecoder.read();
+        pNode->iParcelId = oDecoder.read();
+        pNode->iFlags = oDecoder.read();
     }
 }
 

@@ -204,6 +204,10 @@ public:
     //! Get the map height (in tiles)
     inline int getHeight() const {return m_iHeight;}
 
+    inline int getPlayerCount() const {return m_iPlayerCount;}
+    bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
+    bool getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const;
+
     //! Draw the map (and any attached animations)
     /*!
         Draws the world pixel rectangle (iScreenX, iScreenY, iWidth, iHeight)
@@ -258,12 +262,20 @@ public:
 protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
+    void _readTileIndex(const unsigned char* pData, int& iX, int &iY) const;
 
     THMapNode* m_pCells;
     THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
     THSpriteSheet* m_pBlocks;
+    int* m_pPlotOwner; // 0 for unowned, 1 for player 1, etc.
     int m_iWidth;
     int m_iHeight;
+    int m_iPlayerCount;
+    int m_aiInitialCameraX[4];
+    int m_aiInitialCameraY[4];
+    int m_aiHeliportX[4];
+    int m_aiHeliportY[4];
+    int m_iPlotCount;
 };
 
 enum eTHMapScanlineIteratorDirection

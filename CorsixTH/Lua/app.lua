@@ -26,7 +26,7 @@ local SDL = require "sdl"
 local assert, io, type, dofile, loadfile, pcall, tonumber, print
     = assert, io, type, dofile, loadfile, pcall, tonumber, print
 
--- Change to true to show FPS and Lua memory usage in the window title.
+-- Change to true to show FPS, Lua memory usage, entity count in bottom bar.
 -- Note that this also turns off the FPS limiter, causing the engine to render
 -- frames even when it doesn't need to.
 local TRACK_FPS = false
@@ -196,14 +196,15 @@ function App:init()
   dofile "ui"
   
   -- Load level (which creates the map, world, and UI)
-  self:loadLevel "Level.L1"
+  self:loadLevel(1)
  
   return true
 end
 
-function App:loadLevel(filename)
+function App:loadLevel(level_number)
   -- Check that we can load the data before unloading current map
-  local data = self:readDataFile("Levels", filename)
+  local new_map = Map(self)
+  local map_objects = new_map:load(level_number)
   
   -- Unload ui, world and map
   self.ui = nil
@@ -211,16 +212,13 @@ function App:loadLevel(filename)
   self.map = nil
   
   -- Load map
-  self.map = Map()
-  local map_objects = self.map:load(data)
+  self.map = new_map
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
   self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
   
   -- Load world
   self.world = World(self)
   self.world:createMapObjects(map_objects)
-  self.world.level_number = tonumber((filename:gsub("[^0-9]","")))
-  self.world.level_name = _S.level_names[self.world.level_number]:upper()
   
   -- Load UI
   self.ui = UI(self, self.world:getLocalPlayerHospital())
@@ -414,7 +412,12 @@ function App:drawFrame()
     fps_history[fps_next] = SDL.getFPS()
     fps_sum = fps_sum + fps_history[fps_next]
     fps_next = (fps_next % #fps_history) + 1
-    SDL.wm.setCaption(self.caption .. (" - %i FPS, %.1f Kb Lua memory"):format(fps_sum / #fps_history, collectgarbage"count"))
+  end
+end
+
+function App:getFPS()
+  if TRACK_FPS then
+    return fps_sum / #fps_history
   end
 end
 

@@ -24,14 +24,20 @@ local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
 local thMap = require"TH".map
 
-function Map:Map()
+function Map:Map(app)
   self.width = false
   self.height = false
   self.th = thMap()
+  self.app = app
   self.debug_text = false
   self.debug_flags = false
   self.debug_font = false
   self.debug_tick_timer = 1
+end
+
+local flag_cache = {}
+function Map:getCellFlag(x, y, flag)
+  return self.th:getCellFlags(x, y, flag_cache)[flag]
 end
 
 function Map:getRoomId(x, y)
@@ -79,16 +85,29 @@ local function bits(n)
   end
 end
 
-function Map:load(thData)
-  local _, objects = assert(self.th:load(thData))
-  self.thData = thData
+function Map:load(level_number)
+  self.level_number = level_number
+  local _, objects = assert(self.th:load(self:getRawData()))
+  self.level_name = _S.level_names[level_number]:upper()
   self.width, self.height = self.th:size()
   return objects
+end
+
+function Map:prepareForSave()
+  self:clearDebugText()
+  self.thData = nil
 end
 
 function Map:clearDebugText()
   self.debug_text = false
   self.debug_flags = false
+end
+
+function Map:getRawData()
+  if not self.thData then
+    self.thData = self.app:readDataFile("Levels", "Level.L".. self.level_number)
+  end
+  return self.thData
 end
 
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
@@ -104,7 +123,7 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
     end
     return
   end
-  local thData = self.thData
+  local thData = self:getRawData()
   for x = 1, self.width do
     for y = 1, self.height do
       local xy = (y - 1) * self.width + x - 1
@@ -162,7 +181,7 @@ function Map:setDebugText(x, y, msg, ...)
   else
     text = msg ~= 0 and msg or nil
   end
-  self.debug_text[(y - 1) * self.width + x - 1] = text
+  self.debug_text[(y - 1) * self.width + x - 1] = x .. "," .. y --text
 end
 
 --[[!

@@ -45,8 +45,12 @@ enum eTHLuaMetatable
     MT_Cursor,
     MT_SoundArc,
     MT_SoundFx,
+    MT_String,
+    MT_WindowBase,
 
     MT_Count,
+
+    MT_DummyString,
 };
 
 struct THLuaRegisterState_t

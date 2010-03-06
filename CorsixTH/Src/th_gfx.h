@@ -376,13 +376,14 @@ protected:
     unsigned int m_iElementCount;
 };
 
+struct THMapNode;
 class THAnimation : protected THDrawable
 {
 public:
     THAnimation();
 
     void removeFromTile();
-    void attachToTile(THLinkList *pMapNode);
+    void attachToTile(THMapNode *pMapNode);
     void setParent(THAnimation *pParent);
 
     void tick();

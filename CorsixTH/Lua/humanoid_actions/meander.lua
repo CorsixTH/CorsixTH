@@ -30,7 +30,7 @@ local function meander_action_start(action, humanoid)
     humanoid.tile_y, math.random(1, 24))
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
-    if #humanoid.humanoid_actions == 1 then
+    if #humanoid.action_queue == 1 then
       humanoid:queueAction{name = "idle"}
     end
     humanoid:finishAction()

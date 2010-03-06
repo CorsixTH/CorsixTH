@@ -90,7 +90,9 @@ function UI:UI(app, local_hospital)
   self.cursor_y = 0
   self.cursor_entity = nil
   -- through trial and error, this palette seems to give the desired result (white background, black text)
-  local palette = app.gfx:loadPalette("QData", "REP01V.PAL")
+  -- NB: Need a palette present in both the full game and in the demo data
+  local palette = app.gfx:loadPalette("QData", "PREF01V.PAL")
+  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
   self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
   self.tooltip = nil
   self.tooltip_counter = 0
@@ -143,9 +145,9 @@ function UI:UI(app, local_hospital)
       -- region of 3276x2457 in order to be too large.
       error "Screen size too large for the map"
     end
-    self.screen_offset_x = self.visible_diamond.x
-    self.screen_offset_y = self.visible_diamond.y
-    self.in_visible_diamond = true
+    self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
+      app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
+    self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
     self.limit_to_visible_diamond = not _MAP_EDITOR
   end
 end
@@ -242,7 +244,9 @@ function UI:drawTooltip(canvas)
     x, y = self:getCursorPosition()
   end
   
-  self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
+  if self.tooltip_font then
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
+  end
 end
 
 function UI:draw(canvas) 
@@ -636,7 +640,7 @@ end
 function UI:onTick()
   Window.onTick(self)
   local repaint = false
-  if self.tooltip_counter > 0 then
+  if self.tooltip_counter and self.tooltip_counter > 0 then
     self.tooltip_counter = self.tooltip_counter - 1
     repaint = (self.tooltip_counter == 0)
   end

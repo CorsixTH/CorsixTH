@@ -150,16 +150,6 @@ function World:calculateSpawnTiles()
       self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
     end
   end
-  -- Extract the position of the helipad from the level data file.
-  local x, y = self.map.thData:byte(163885, 163886)
-  x, y = (y * 256 + x) % 128 + 1, math.floor((y * 256 + x) / 128) + 2
-  -- Level 2 does not have any helipad.
-  if self.map.th:getCellFlags(x, y-1).passable then
-    self.helipad_spawn_point = {x = x, y = y}
-    self.helipad_patient_spawn_point = {x = x, y = y-1}
-  else
-    self.helipad_spawn_point = nil
-  end
 end
 
 function World:spawnPatient(hospital)

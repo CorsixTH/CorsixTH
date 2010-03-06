@@ -1046,28 +1046,29 @@ void THAnimation::removeFromTile()
     THLinkList::removeFromList();
 }
 
-void THAnimation::attachToTile(THLinkList *pMapNode)
+void THAnimation::attachToTile(THMapNode *pMapNode)
 {
     removeFromTile();
 
+    THLinkList *pList;
     if(iFlags & THDF_EarlyList)
-    {
-        pMapNode = &reinterpret_cast<THMapNode*>(pMapNode)->oEarlyEntities;
-    }
-    while(pMapNode->pNext && reinterpret_cast<THDrawable*>(pMapNode->pNext)->iFlags & THDF_ListBottom)
-        pMapNode = pMapNode->pNext;
+        pList = &pMapNode->oEarlyEntities;
+    else
+        pList = pMapNode;
+    while(pList->pNext && reinterpret_cast<THDrawable*>(pList->pNext)->iFlags & THDF_ListBottom)
+        pList = pList->pNext;
 
-    pPrev = pMapNode;
-    if(pMapNode->pNext != NULL)
+    pPrev = pList;
+    if(pList->pNext != NULL)
     {
-        pNext = pMapNode->pNext;
+        pNext = pList->pNext;
         pNext->pPrev = this;
     }
     else
     {
         pNext = NULL;
     }
-    pMapNode->pNext = this;
+    pList->pNext = this;
 }
 
 void THAnimation::setParent(THAnimation *pParent)

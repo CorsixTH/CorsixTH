@@ -29,19 +29,22 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {-1, -1}, {-1, 0}, {-1, 1}, {0, 0}, {1, -1}, {1, 0}, {1, 1}, {2, -1}, {2, 0} }
+    -- Helicopter is outside the hospital, so does not need a footprint
+    footprint = {}
   },
 }
 
 class "Helicopter" (Object)
 
-function Helicopter:Helicopter(world, object_type, x, y, direction, etc)
+function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
+  local x, y = hospital:getHeliportPosition()
   self:Object(world, object_type, x, y, direction, etc)
   self.th:makeInvisible()
   self:setPosition(0, -600)
   self.phase = -60
+  self.hospital = hospital
   -- TODO: Shadow: 3918
-  self.world.hospitals[1].emergency_patients = {}
+  hospital.emergency_patients = {}
 end
 
 function Helicopter:tick()
@@ -53,7 +56,7 @@ function Helicopter:tick()
     self:setSpeed(0, 0)
     self.spawned_patients = 0
   elseif phase == 80 then
-    if self.spawned_patients < self.world.hospitals[1].emergency.victims then
+    if self.spawned_patients < self.hospital.emergency.victims then
       self:spawnPatient()
       phase = 60
     end
@@ -67,18 +70,19 @@ function Helicopter:tick()
 end
 
 function Helicopter:spawnPatient()
-  local hospital = self.world.hospitals[1]
+  local hospital = self.hospital
   self.spawned_patients = self.spawned_patients + 1
   local patient = self.world:newEntity("Patient", 2)
   patient:setDisease(hospital.emergency.disease)
   patient:setDiagnosed(true)
   patient:setMood("emergency", "activate")
   patient.is_emergency = true
-  self.world.hospitals[1].emergency_patients[#hospital.emergency_patients + 1] = patient
+  hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
+  local x, y = hospital:getHeliportSpawnPosition()
   patient:setNextAction{
     name = "spawn", 
-    mode = "spawn", 
-    point = self.world.helipad_patient_spawn_point,
+    mode = "spawn",
+    point = {x = x, y = y},
     offset = {y = 1},
   }
   patient:setHospital(hospital)

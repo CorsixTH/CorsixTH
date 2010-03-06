@@ -279,6 +279,40 @@ static int l_map_getsize(lua_State *L)
     return 2;
 }
 
+static int l_map_get_player_count(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_pushinteger(L, pMap->getPlayerCount());
+    return 1;
+}
+
+static int l_map_get_player_camera(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX, iY;
+    int iPlayer = luaL_optint(L, 2, 1);
+    bool bGood = pMap->getPlayerCameraTile(iPlayer - 1, &iX, &iY);
+    if(!bGood)
+        return luaL_error(L, "Player index out of range: %i", iPlayer);
+    lua_pushinteger(L, iX + 1);
+    lua_pushinteger(L, iY + 1);
+    return 2;
+}
+
+static int l_map_get_player_heliport(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX, iY;
+    int iPlayer = luaL_optint(L, 2, 1);
+    bool bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
+    bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
+    if(!bGood)
+        return luaL_error(L, "Player index out of range: %i", iPlayer);
+    lua_pushinteger(L, iX + 1);
+    lua_pushinteger(L, iY + 1);
+    return 2;
+}
+
 static int l_map_getcell(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -286,7 +320,10 @@ static int l_map_getcell(lua_State *L)
     int iY = luaL_checkint(L, 3) - 1; // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == NULL)
-        return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    {
+        return luaL_argerror(L, 2, lua_pushfstring(L, "Map co-ordinates out "
+        "of bounds (%d, %d)", iX + 1, iY + 1));
+    }
     if(lua_isnoneornil(L, 4))
     {
         lua_pushinteger(L, pNode->iBlock[0]);
@@ -662,6 +699,9 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_map_depersist, "depersist", MT_Anim);
     luaT_setfunction(l_map_load, "load");
     luaT_setfunction(l_map_getsize, "size");
+    luaT_setfunction(l_map_get_player_count, "getPlayerCount");
+    luaT_setfunction(l_map_get_player_camera, "getCameraTile");
+    luaT_setfunction(l_map_get_player_heliport, "getHeliportTile");
     luaT_setfunction(l_map_getcell, "getCell");
     luaT_setfunction(l_map_getcellflags, "getCellFlags");
     luaT_setfunction(l_map_setcellflags, "setCellFlags");

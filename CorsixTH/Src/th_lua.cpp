@@ -26,6 +26,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
 void THLuaRegisterMap(const THLuaRegisterState_t *pState);
 void THLuaRegisterSound(const THLuaRegisterState_t *pState);
+void THLuaRegisterUI(const THLuaRegisterState_t *pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -179,7 +180,10 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
         eMetatable1 != MT_Count;
         eMetatable1 = static_cast<eTHLuaMetatable>(va_arg(args, int)))
     {
-        lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
+        if(eMetatable1 == MT_DummyString)
+            lua_pushstring(pState->L, va_arg(args, char*));
+        else
+            lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
         ++iUpCount;
     }
     va_end(args);
@@ -213,6 +217,7 @@ int luaopen_th(lua_State *L)
     THLuaRegisterGfx(pState);
     THLuaRegisterAnims(pState);
     THLuaRegisterSound(pState);
+    THLuaRegisterUI(pState);
 
     lua_settop(L, oState.iMainTable);
     return 1;

@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 dofile "dialogs/fullscreen"
+local TH = require "TH"
 
 --! Town map fullscreen window (purchase land, set radiator levels, map overview).
 class "UITownMap" (UIFullscreen)
@@ -69,7 +70,7 @@ function UITownMap:UITownMap(ui)
   -- makeButton( x, y, w, h, imgid, callback[, callback_self[, right_callback])
   -- it looks like the image you give to addPanel is the default image; the
   -- image given to makeButton is the override image.
-  self:addPanel(9, 30,  420):makeButton(0, 0, 200, 50, 0, self.bankManager,
+  self:addPanel(0, 30,  420):makeButton(0, 0, 200, 50, 0, self.bankManager,
   -- right click on this $ sign closes the dialog
     nil, self.close)
   self:addPanel(0, 594, 437):makeButton(0, 0, 26, 26, 8, self.close)
@@ -98,7 +99,7 @@ end
 -- TODO add this as a property in the item itself (is_object_in_town_map?)
 local known_ids = { "cabinet", "chair", "desk", "extinguisher", "bin",
                     "radiator", "plant", "bench", "entrance_left_door",
-                    "entrance_right_door" }
+                    "entrance_right_door", "door" }
 function UITownMap:is_unknown_id(id)
   for i = 1, #known_ids do
     if( id == known_ids[i] ) then
@@ -150,9 +151,9 @@ function UITownMap:draw(canvas, x, y)
   -- TODO: we probably want to limit this to just check all corridor and room
   -- objects, that should be traversable in a much quicker and more efficient
   -- way.
-  for x = 0, world.map.width-1 do
-    for y = 0, world.map.height-1 do
-      local l_objects = world:getObjects(x, y)
+  for xi = 1, world.map.width do
+    for yi = 1, world.map.height do
+      local l_objects = world:getObjects(xi, yi)
       if l_objects ~= nil then
         for i = 1, #l_objects do
           local object_type = l_objects[i]["object_type"].id
@@ -173,10 +174,10 @@ function UITownMap:draw(canvas, x, y)
             for key, value in pairs(l_objects[i]) do
               if key == "object_type" then
                 for key2, value2 in pairs(value) do
-                  print(x, y, i, key, key2, value2)
+                  print(xi, yi, i, key, key2, value2)
                 end
               else
-                print(x, y, i, key, value)
+                print(xi, yi, i, key, value)
               end
             end
           end
@@ -204,10 +205,71 @@ function UITownMap:draw(canvas, x, y)
   end
 
   -- city name
-  self.city_font:draw(canvas, world.level_name, x + 390, y + 45)
+  self.city_font:draw(canvas, world.map.level_name, x + 300, y + 43, 260, 15)
 
   -- plots
-  self.city_font:draw(canvas, "Plots are TODO!", x + 380, y + 200)
+  -- TODO maybe this can be cached! a lot of this stuff is unlikely to change,
+  -- only people actually move.
+  --[[
+  local color_myhosp  = canvas:mapRGB(0, 0, 70) -- darkish blue
+  local color_buyhosp = canvas:mapRGB(255, 0, 0) -- bright red
+  local color_wall    = canvas:mapRGB(255, 255, 255) -- white
+  local color_door    = canvas:mapRGB(200, 200, 200) -- grayish
+  local map_xstart    = x + 227
+  local map_ystart    = y + 25
+  local flag_cache = {}
+  local th_map = world.map.th
+  local height = world.map.height
+  local drawRect = canvas.drawRect
+  for xi = 1, world.map.width do
+    for yi = 1, height do
+      local l_objects = world:getObjects(xi, yi)
+      local flags     = th_map:getCellFlags(xi, yi, flag_cache)
+      local _, north_layer, west_layer = th_map:getCell(xi, yi)
+      north_layer = north_layer % 0x100
+      west_layer = west_layer % 0x100
+
+      -- first, paint blue-ish if hospital=true (we don't know whether it's
+      -- our area yet, but currently we assume it is)
+      if flags.hospital then
+        drawRect(canvas, color_myhosp, map_xstart + (3*xi), map_ystart + (3*yi),
+          3, 3)
+      end
+
+      -- then, paint the walls and doors, if we're in the hospital
+      -- TODO: there's no drawLine, so we take drawRect with width 1
+      if 82 <= north_layer and north_layer <= 164 then -- north wall present
+        drawRect(canvas, color_wall, map_xstart + (3*xi),
+          map_ystart + (3*yi), 3, 1)
+      end
+      if 82 <= west_layer and west_layer <= 164 then -- west wall present
+        drawRect(canvas, color_wall, map_xstart + (3*xi),
+          map_ystart + (3*yi), 1, 3)
+      end
+
+      -- paint objects
+      if flags.doorNorth then
+        drawRect(canvas, color_door, map_xstart + (3*xi),
+          map_ystart - 2 + (3*yi), 2, 3)
+      end
+      if flags.doorEast then
+        drawRect(canvas, color_door, map_xstart + 3 + (3*xi),
+          map_ystart + (3*yi), 3, 2)
+      end
+      if flags.doorSouth then
+        drawRect(canvas, color_door, map_xstart + (3*xi),
+          map_ystart + 3 + (3*yi), 2, 3)
+      end
+      if flags.doorWest then
+        drawRect(canvas, color_door, map_xstart - 2 + (3*xi),
+          map_ystart + (3*yi), 3, 2)
+      end
+
+      -- paint people
+    end
+  end
+  --]]
+  TH.windowHelpers.townMapDraw(self, world.map.th, canvas, x + 227, y + 25) 
 
   -- plot number, owner, area and price
   self.city_font:draw(canvas, "Plot Number", x + 227, y + 435)
