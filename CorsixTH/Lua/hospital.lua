@@ -150,6 +150,8 @@ function Hospital:createEmergency()
       disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)],
       victims = victims,
       bonus = 1000 * victims,
+      killed_emergency_patients = 0,
+      cured_emergency_patients = 0,
     }
     self.emergency = emergency
     local room_name, required_staff, staff_name = 
@@ -187,8 +189,6 @@ function Hospital:createEmergency()
     self.world.ui.bottom_panel:queueMessage("emergency", message)
     created_one = true
   end
-  self.emergency.killed_emergency_patients = 0
-  self.emergency.cured_emergency_patients = 0
   return created_one
 end
 

@@ -818,6 +818,7 @@ function World:callForStaff(room, repair_object, urgent)
       repair_object:setRepairing(true)
       local --[[persistable:handyman_repair_after_use]] function after_use()
         repair_object:machineRepaired(room)
+        handyman:setDynamicInfoText("")
       end
       local orientation = repair_object.object_type.orientations[repair_object.direction]
       local x = repair_object.tile_x + orientation.handyman_position[1]
