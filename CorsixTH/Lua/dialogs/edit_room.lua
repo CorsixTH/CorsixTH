@@ -38,7 +38,8 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   -- NB: UIEditRoom:onMouseMove is called by the UIPlaceObjects constructor,
   -- hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
-  
+  self:addKeyHandler("Enter", self.confirm) -- UIPlaceObjects does not need this
+
   local app = ui.app
   -- Set alt palette on wall blueprint to make it red
   self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
@@ -64,7 +65,7 @@ end
 function UIEditRoom:close(...)
   if self.phase == "objects" and self.confirm_button.enabled then
     if not self.closed_cleanly then
-      self:confirm()
+      self:confirm(true)
     end
   else
     while self.phase ~= "walls" do
@@ -91,7 +92,6 @@ function UIEditRoom:cancel()
   if self.phase == "walls" then
     self:close()
   elseif self.phase == "objects" then
-    self.phase = "door"
     self:returnToDoorPhase()
   else
     if self.phase == "clear_area" then
@@ -104,8 +104,17 @@ function UIEditRoom:cancel()
   end
 end
 
-function UIEditRoom:confirm()
+function UIEditRoom:confirm(force)
+  -- double check if confirm is allowed (for being called e.g. by hotkey)
+  if not force and not self.confirm_button.enabled then
+    return
+  end
   if self.phase == "walls" then
+    self.mouse_down_x = false
+    self.mouse_down_y = false
+    self.move_rect_x = false
+    self.move_rect_y = false
+    self.ui:setCursor(self.ui.default_cursor)
     self.phase = "door"
     self:enterDoorPhase()
   elseif self.phase == "door" then
@@ -209,7 +218,7 @@ function UIEditRoom:clearArea()
   
   if next(humanoids_to_watch) == nil then
     -- No humanoids within the area, so continue with the room placement
-    self:confirm()
+    self:confirm(true)
     return
   end
   
@@ -243,7 +252,7 @@ function UIEditRoom:onTick()
       else
         self.check_for_clear_area_timer = nil
         self.humanoids_to_watch = nil
-        self:confirm()
+        self:confirm(true)
       end
     end
   end
@@ -406,7 +415,6 @@ function UIEditRoom:returnToDoorPhase()
   
   self.purchase_button:enable(false)
   self.pickup_button:enable(false)
-  self.world.rooms[room.id] = nil
   
   -- Remove any placed objects (add them to list again)
   for x = room.x, room.x + room.width - 1 do
@@ -430,6 +438,7 @@ function UIEditRoom:returnToDoorPhase()
   end
   
   UIPlaceObjects.removeAllObjects(self, true)
+  self.world.rooms[room.id] = nil
   
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
@@ -470,6 +479,7 @@ function UIEditRoom:returnToDoorPhase()
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
   
   -- We've gone all the way back to wall phase, so step forward to door phase
+  self.phase = "door"
   self:enterDoorPhase()
 end
 
@@ -654,7 +664,7 @@ function UIEditRoom:enterObjectsPhase()
   self.ui:tutorialStep(3, {11, 12}, 13)
   local confirm = self:checkEnableConfirm()
   if #self.room.room_info.objects_additional == 0 and confirm then
-    self:confirm()
+    self:confirm(true)
     return
   end
   self.desc_text = _S.place_objects_window.confirm_or_buy_objects
@@ -722,7 +732,7 @@ function UIEditRoom:onMouseDown(button, x, y)
     elseif self.phase == "door" then
       if self.blueprint_door.valid then
         self.ui:playSound "buildclk.wav"
-        self:confirm()
+        self:confirm(true)
       else
         self.ui:tutorialStep(3, 9, 10)
       end

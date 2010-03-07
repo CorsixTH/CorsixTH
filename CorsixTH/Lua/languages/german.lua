@@ -30,6 +30,7 @@ diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharm
 diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
 fax.epidemic.declare_explanation_fine = utf8 "Wenn Sie die Epidemie melden, zahlen Sie eine Strafe von %d und Ihr Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
+fax.emergency_result.saved_people = "Sie haben %d der %d Notfall-Patienten gerettet." -- swapped %d's
 dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
 adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
 tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- this tooltip talks about hospital value. Actually it should say reputation.

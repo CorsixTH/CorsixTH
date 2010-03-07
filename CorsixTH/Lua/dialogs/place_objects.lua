@@ -56,6 +56,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
   self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav"
+  self:addKeyHandler("esc", self.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(9, 8, 41, 42, 118, self.purchaseItems) -- Disabled purchase items button
     :setDisabledSprite(127):enable(false)

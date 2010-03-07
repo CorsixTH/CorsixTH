@@ -52,10 +52,10 @@ function UIHireStaff:UIHireStaff(ui)
     end
   end
   self.tabs = {
-    self:addPanel(264, 8,   8):makeToggleButton(0, 0, 40, 69, 265, category, "Doctor"),
-    self:addPanel(266, 8,  87):makeToggleButton(0, 0, 40, 69, 267, category, "Nurse"),
-    self:addPanel(268, 8, 166):makeToggleButton(0, 0, 40, 69, 269, category, "Handyman"),
-    self:addPanel(270, 8, 245):makeToggleButton(0, 0, 40, 69, 271, category, "Receptionist"),
+    self:addPanel(264, 8,   8):makeToggleButton(0, 0, 40, 69, 265, category, "Doctor"):setTooltip(_S.tooltip.hire_staff_window.doctors),
+    self:addPanel(266, 8,  87):makeToggleButton(0, 0, 40, 69, 267, category, "Nurse"):setTooltip(_S.tooltip.hire_staff_window.nurses),
+    self:addPanel(268, 8, 166):makeToggleButton(0, 0, 40, 69, 269, category, "Handyman"):setTooltip(_S.tooltip.hire_staff_window.handymen),
+    self:addPanel(270, 8, 245):makeToggleButton(0, 0, 40, 69, 271, category, "Receptionist"):setTooltip(_S.tooltip.hire_staff_window.receptionists),
   }
   
   -- Right hand side
@@ -66,7 +66,8 @@ function UIHireStaff:UIHireStaff(ui)
   self.ability_bg_panel = 
   self:addPanel(260,  55, 114) -- Abilities background
   self.skill_bg_panel = 
-  self:addPanel(259,  68,  95) -- Skill background
+  self:addPanel(259,  68,  95):setTooltip(_S.tooltip.hire_staff_window.staff_ability, 109, 95) -- Skill background
+  self.skill_bg_panel.visible = false
   self:addPanel(261,  55, 160) -- Wage background
   self.abilities_blanker =
   self:addColourPanel(73, 133, 156, 34, 60, 174, 203) -- Hides abilities list
@@ -77,10 +78,10 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(263,  56, 263) -- Dialog midpiece
   self.complete_blanker =
   self:addColourPanel(68, 15, 161, 257, 60, 174, 203) -- Hides all staff info
-  self:addPanel(272,  56, 277):makeButton(8, 10, 43, 27, 273, self.movePrevious)
-  self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire)
-  self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close)
-  self:addPanel(278, 190, 277):makeButton(0, 10, 44, 27, 279, self.moveNext)
+  self:addPanel(272,  56, 277):makeButton(8, 10, 43, 27, 273, self.movePrevious):setTooltip(_S.tooltip.hire_staff_window.prev_person)
+  self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire):setTooltip(_S.tooltip.hire_staff_window.hire)
+  self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close):setTooltip(_S.tooltip.hire_staff_window.cancel)
+  self:addPanel(278, 190, 277):makeButton(0, 10, 44, 27, 279, self.moveNext):setTooltip(_S.tooltip.hire_staff_window.next_person)
 end
 
 function UIHireStaff:onMouseUp(button, x, y)
@@ -126,13 +127,16 @@ function UIHireStaff:draw(canvas, x, y)
     profile:drawFace(canvas, x + 158, y + 48, self.face_parts)
     font:draw(canvas, "$" .. profile.wage, x + 116, y + 179)
     font:drawWrapped(canvas, profile.desc, x + 74, y + 205, 149)
-    local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
-    if skill_bar_width ~= 0 then
-      local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
-      px = px + x
-      py = py + y
-      for x = 0, skill_bar_width - 1 do
-        self.panel_sprites:draw(canvas, 3, px + 22 + x, py + 9)
+    -- Skill bar
+    if self.skill_bg_panel.visible then
+      local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
+      if skill_bar_width ~= 0 then
+        local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
+        px = px + x
+        py = py + y
+        for x = 0, skill_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 3, px + 22 + x, py + 9)
+        end
       end
     end
     if self.category == "Doctor" then
@@ -160,6 +164,42 @@ function UIHireStaff:draw(canvas, x, y)
       end
     end
   end
+end
+
+function UIHireStaff:getTooltipAt(x, y)
+  if self.category == "Doctor" then
+    -- doctor seniority
+    if x >= 68 and x <= 150 and y >= 44 and y <= 94 then
+      return { text = _S.tooltip.hire_staff_window.doctor_seniority, x = self.x + 109, y = self.y + 44 }
+    end
+    -- qualifications
+    if x >= 68 and x <= 106 and y >= 134 and y <= 166 then
+      return { text = _S.tooltip.hire_staff_window.qualifications, x = self.x + 87, y = self.y + 134 }
+    end
+    if self.current_index then
+      local profile = self.world.available_staff[self.category]
+      profile = profile and profile[self.current_index]
+      if profile then
+        local px, py = x - self.ability_bg_panel.x, y - self.ability_bg_panel.y
+        if profile.is_surgeon >= 1.0 and px >= 65 and px <= 81 and py >= 22 and py <= 52 then
+          return { text = _S.tooltip.hire_staff_window.surgeon, x = self.x + self.ability_bg_panel.x + 73, y = self.y + self.ability_bg_panel.y + 22 }
+        end
+        if profile.is_psychiatrist >= 1.0 and px >= 82 and px <= 108 and py >= 22 and py <= 52 then
+          return { text = _S.tooltip.hire_staff_window.psychiatrist, x = self.x + self.ability_bg_panel.x + 95, y = self.y + self.ability_bg_panel.y + 22 }
+        end
+        if profile.is_researcher >= 1.0 and px >= 109 and px <= 135 and py >= 22 and py <= 52 then
+          return { text = _S.tooltip.hire_staff_window.researcher, x = self.x + self.ability_bg_panel.x + 122, y = self.y + self.ability_bg_panel.y + 22 }
+        end
+      end
+    end
+  end
+  
+  -- salary
+  if self.category and x >= 68 and x <= 226 and y >= 173 and y <= 193 then
+    return { text = _S.tooltip.hire_staff_window.salary, x = self.x + 147, y = self.y + 173 }
+  end
+
+  return Window.getTooltipAt(self, x, y)
 end
 
 function UIHireStaff:movePrevious()
@@ -200,6 +240,7 @@ function UIHireStaff:setCategory(name)
   else
     self.ui:tutorialStep(4, 3, 2)
   end
+  self.skill_bg_panel.visible = not not name
   self.complete_blanker.visible = not name
   self.abilities_blanker.visible = name ~= "Doctor"
   self.category = name

@@ -140,6 +140,16 @@ function Panel:makeToggleButton(...)
   return self.window:makeButtonOnPanel(self, ...):makeToggle()
 end
 
+-- Specify a tooltip to be displayed when hovering this panel.
+-- x and y are optional position of bottom left of the tooltip.
+-- If not specified, will default to mouse position.
+function Panel:setTooltip(tooltip, x, y)
+  self.tooltip = tooltip
+  self.tooltip_x = x
+  self.tooltip_y = y
+  return self
+end
+
 function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
     window = self,
@@ -285,8 +295,13 @@ function Button:setSound(name)
   return self
 end
 
-function Button:setTooltip(tooltip)
+-- Specify a tooltip to be displayed when hovering this button.
+-- x and y are optional position of bottom left of the tooltip.
+-- If not specified, will default to top center of button.
+function Button:setTooltip(tooltip, x, y)
   self.tooltip = tooltip
+  self.tooltip_x = x
+  self.tooltip_y = y
   return self
 end
 
@@ -342,31 +357,34 @@ function Window:draw(canvas, x, y)
   end
 end
 
+function Window:hitTestPanel(x, y, panel)
+  local panel_sprites = self.panel_sprites
+  local panel_sprites_hittest = panel_sprites.hitTest
+  local x, y = x - panel.x, y - panel.y
+  if panel.visible and x >= 0 and y >= 0 then
+    if panel.w and panel.h then 
+      if x <= panel.w and y <= panel.h then
+        return true
+      end
+    else
+      if panel_sprites_hittest(self.panel_sprites, panel.sprite_index, x, y) then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function Window:hitTest(x, y)
   if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
     return false
   end
   if self.panels[1] then
-    local panel_sprites = self.panel_sprites
-    local panel_sprites_hittest = panel_sprites.hitTest
-    for _, panel in ipairs(self.panels) do repeat
-      if not panel.visible then
-        break -- continue
+    for _, panel in ipairs(self.panels) do
+      if self:hitTestPanel(x, y, panel) then
+        return true
       end
-      local x, y = x - panel.x, y - panel.y
-      if x < 0 or y < 0 then
-        break -- continue
-      end
-      if panel.w and panel.h then
-        if x <= panel.w and y <= panel.h then
-          return true
-        end
-      else
-        if panel_sprites_hittest(panel_sprites, panel.sprite_index, x, y) then
-          return true
-        end
-      end
-    until true end
+    end
   end
   if self.windows then
     for _, child in ipairs(self.windows) do
@@ -653,7 +671,18 @@ function Window:getTooltipAt(x, y)
   end
   for _, btn in ipairs(self.buttons) do
     if btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
-      return { text = btn.tooltip, x = self.x + round((btn.x + btn.r) / 2, 1), y = self.y + btn.y }
+      local x, y = btn.tooltip_x or round((btn.x + btn.r) / 2, 1), btn.tooltip_y or btn.y
+      x = x + self.x
+      y = y + self.y
+      return { text = btn.tooltip, x = x, y = y }
+    end
+  end
+  for _, pnl in ipairs(self.panels) do
+    if pnl.tooltip and self:hitTestPanel(x, y, pnl) then
+      local x, y = pnl.tooltip_x, pnl.tooltip_y
+      if x then x = x + self.x end
+      if y then y = y + self.y end
+      return { text = pnl.tooltip, x = x, y = y }
     end
   end
 end
