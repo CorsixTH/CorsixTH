@@ -85,6 +85,12 @@ fax = {
       "-- Das CorsixTH-Team, th.corsix.org",
       "PS: Kannst du die Geheimnisse finden, die wir eingebaut haben?",
     },
+    beta2 = {
+      "Willkommen zur zweiten Beta von CorsixTH, einem Open-Source-Klon von Bullfrogs Spieleklassiker Theme Hospital!",
+      utf8 "Viele neue Funktionen wurden seit der vorherigen Version implementiert. Eine unvollständige Auflistung findet sich im Changelog.",
+      utf8 "Jetzt wird aber erstmal gespielt! Anscheinend wartet eine Nachricht auf dich. Schließe dieses Fenster und klicke auf das Fragezeichen links unten über der Leiste.",
+      "-- Das CorsixTH-Team, th.corsix.org",
+    },
   },
   tutorial = {
     "Willkommen in Ihrem ersten Krankenhaus!",
@@ -93,3 +99,5 @@ fax = {
     utf8 "Nö, ich weiß schon wie hier alles abläuft.",
   },
 }
+
+misc.not_yet_implemented = "(noch nicht implementiert)"

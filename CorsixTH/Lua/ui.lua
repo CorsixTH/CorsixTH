@@ -803,7 +803,7 @@ local tutorial_phases = {
   {
     -- 2) hire receptionist
     { text = _S.adviser.tutorial.hire_receptionist,             -- 1
-      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(4) end,
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
     { text = _S.adviser.tutorial.select_receptionists,          -- 2
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(4) end,
@@ -865,7 +865,7 @@ local tutorial_phases = {
   {
     -- 4) hire doctor
     { text = _S.adviser.tutorial.hire_doctor,                   -- 1
-      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(4) end,
+      begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
     { text = _S.adviser.tutorial.select_doctors,                -- 2
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(1) end,

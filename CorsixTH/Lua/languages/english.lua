@@ -93,3 +93,5 @@ fax = {
     "Nope, I already know how to do this.",
   },
 }
+
+misc.not_yet_implemented = "(not yet implemented)"

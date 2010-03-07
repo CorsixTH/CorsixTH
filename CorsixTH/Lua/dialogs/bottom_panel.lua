@@ -47,8 +47,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
+  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9):setTooltip(_S.tooltip.toolbar.edit .. " " .. _S.misc.not_yet_implemented).enabled = false
   self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
-  self:addPanel( 8, 285, 0) -- Edit rooms / items button
   -- The dynamic info bar
   self:addPanel(12, 364, 0)
   for x = 377, 630, 10 do
@@ -63,12 +63,15 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
   buttons[2] = self:addPanel(17, 407, 0) -- Town map button
   buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
-  buttons[3] = self:addPanel(19, 445, 0)
+  buttons[3] = self:addPanel(19, 445, 0) -- Casebook button
   buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
-  buttons[4] = self:addPanel(21, 483, 0) -- Research button
-  buttons[5] = self:addPanel(23, 521, 0) -- Status button
-  buttons[6] = self:addPanel(25, 559, 0) -- Charts button
-  buttons[7] = self:addPanel(27, 597, 0)
+  buttons[4] = self:addPanel(21, 483, 0) -- Research button (not yet implemented)
+  buttons[4]:makeButton(1, 6, 35, 36, 22):setTooltip(_S.tooltip.toolbar.research .. " " .. _S.misc.not_yet_implemented).enabled = false
+  buttons[5] = self:addPanel(23, 521, 0) -- Status button (not yet implemented)
+  buttons[5]:makeButton(1, 6, 35, 36, 24):setTooltip(_S.tooltip.toolbar.status .. " " .. _S.misc.not_yet_implemented).enabled = false
+  buttons[6] = self:addPanel(25, 559, 0) -- Charts button (not yet implemented)
+  buttons[6]:makeButton(1, 6, 35, 36, 26):setTooltip(_S.tooltip.toolbar.charts .. " " .. _S.misc.not_yet_implemented).enabled = false
+  buttons[7] = self:addPanel(27, 597, 0) -- Policy button
   buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
   self.additional_buttons = buttons
   for _, buttons in ipairs(buttons) do
