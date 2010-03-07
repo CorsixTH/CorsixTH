@@ -55,16 +55,16 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     self:addPanel(113, 0, y) -- Desc text box
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav"
+  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
   self:addKeyHandler("esc", self.cancel)
   self.purchase_button =
-  self:addPanel(117,  50, 100):makeButton(9, 8, 41, 42, 118, self.purchaseItems) -- Disabled purchase items button
-    :setDisabledSprite(127):enable(false)
+  self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
+    :setDisabledSprite(127):enable(false) -- Disabled purchase items button
   self.pickup_button =
-  self:addPanel(119,  92, 100):makeButton(9, 8, 41, 42, 120, self.pickupItems) -- Disabled pick up items button
-    :setDisabledSprite(128):enable(false)
+  self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
+    :setDisabledSprite(128):enable(false) -- Disabled pick up items button
   self.confirm_button = 
-  self:addPanel(121, 134, 100):makeButton(0, 8, 43, 42, 122, self.confirm)
+  self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
     :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
   
   self.list_header = self:addPanel(123, 0, 146) -- Object list header
