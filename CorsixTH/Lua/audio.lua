@@ -44,15 +44,15 @@ function Audio:Audio(app)
 end
 
 local function linepairs(filename)
-  local lines = io.lines(filename)
+  local lines, state = io.lines(filename)
   local iterator
   iterator = function()
     local first, second
     repeat
-      first = lines()
+      first = lines(state)
       if not first then return end
       first = first:gsub("[\r\n]", "")
-      second = lines()
+      second = lines(state)
       if not second then return end
       second = second:gsub("[\r\n]", "")
     until #first > 2 and #second > 2
