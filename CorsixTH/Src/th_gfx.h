@@ -297,15 +297,17 @@ public:
     bool getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY);
 
 protected:
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
+#endif
     struct th_anim_t
     {
         uint16_t frame;
         // It could be that frame is a uint32_t rather than a uint16_t, which
         // would resolve the following unknown (which seems to always be zero).
         uint16_t unknown;
-    };
+    } CORSIX_TH_PACKED_FLAGS;
 
     struct th_frame_t
     {
@@ -319,7 +321,7 @@ protected:
         // Combination of zero or more THFrameFlags values
         uint8_t flags;
         uint16_t next;
-    };
+    } CORSIX_TH_PACKED_FLAGS;
 
     struct th_element_t
     {
@@ -331,8 +333,10 @@ protected:
         uint8_t flags;
         // The layer option / layer id
         uint8_t layerid;
-    };
+    } CORSIX_TH_PACKED_FLAGS;
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
+#endif
 
     struct frame_t
     {

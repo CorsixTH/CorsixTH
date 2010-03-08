@@ -44,8 +44,10 @@ struct THClipRect
     wh_t w, h;
 };
 
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
+#endif
 struct THDX9_Vertex
 {
     float x, y, z;
@@ -54,8 +56,10 @@ struct THDX9_Vertex
     // The texture is not part of the FVF, but is included with the vertex data
     // to make it simpler to sort verticies by texture.
     IDirect3DTexture9 *tex;
-};
+} CORSIX_TH_PACKED_FLAGS;
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
+#endif
 
 enum eTHDX9DeviceChangeType
 {
@@ -212,15 +216,19 @@ public: // Internal (this rendering engine only) API
 
 protected:
     friend class THCursor;
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
+#endif
     struct th_sprite_t
     {
         uint32_t position;
         unsigned char width;
         unsigned char height;
-    };
+    } CORSIX_TH_PACKED_FLAGS;
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
+#endif
 
     struct sprite_t
     {

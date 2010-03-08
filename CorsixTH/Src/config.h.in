@@ -64,6 +64,14 @@ SOFTWARE.
 #define CORSIX_TH_64BIT
 #endif
 
+#ifdef _MSC_VER
+#define CORSIX_TH_USE_PACK_PRAGMAS 1
+#define CORSIX_TH_PACKED_FLAGS
+#else
+#define CORSIX_TH_USE_PACK_PRAGMAS 0
+#define CORSIX_TH_PACKED_FLAGS __attribute__((__packed__))
+#endif
+
 /** Standard includes **/
 #include <stddef.h>
 #cmakedefine CORSIX_TH_HAS_STDINT_H

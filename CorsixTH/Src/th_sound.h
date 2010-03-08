@@ -53,8 +53,10 @@ public:
     SDL_RWops* loadSound(size_t iIndex);
 
 protected:
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
+#endif
     struct th_header_t
     {
         uint8_t  unknown1[50];
@@ -66,7 +68,7 @@ protected:
         uint32_t table_position3;
         uint32_t table_length2;
         uint8_t  unknown4[48];
-    };
+    } CORSIX_TH_PACKED_FLAGS;
 
     struct th_fileinfo_t
     {
@@ -75,8 +77,10 @@ protected:
         uint32_t unknown1;
         uint32_t length;
         uint16_t unknown2;
-    };
+    } CORSIX_TH_PACKED_FLAGS;
+#if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
+#endif
 
     th_header_t m_oHeader;
     th_fileinfo_t* m_pFiles;

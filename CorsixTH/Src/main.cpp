@@ -36,6 +36,12 @@ int luaopen_random(lua_State *L);
 #endif
 #include <stack>
 
+// Config file checking
+#ifndef CORSIX_TH_USE_PACK_PRAGMAS
+#error "config.h is out of date - please rerun CMake"
+#endif
+// End of config file checking
+
 #ifndef CORSIX_TH_MAP_EDITOR
 static int l_main(lua_State *L);
 static int l_stacktrace(lua_State *L);
