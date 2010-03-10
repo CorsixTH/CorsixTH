@@ -285,7 +285,7 @@ int THMain_l_main(lua_State *L)
     // It is simpler to write this in Lua than in C.
     const char sLuaCorsixTHLua[] =
     "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)"
-    "local root = (...):match(\"^(.*[\"..sep..\"])\")"
+    "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\""
     "code = loadfile(root..\"CorsixTH\"..sep..name)"
     "if code then return code end "
     "for i = 0, 3 do "

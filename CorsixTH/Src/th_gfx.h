@@ -57,6 +57,8 @@ enum THDrawFlags
     THDF_EarlyList      = 1 << 10,
     //! Keep this sprite at the bottom of the attached list
     THDF_ListBottom     = 1 << 11,
+    //! Hit-test using bounding-box precision rather than pixel-perfect
+    THDF_BoundBoxHitTest= 1 << 12,
 };
 
 //! Bitflags for animation frames

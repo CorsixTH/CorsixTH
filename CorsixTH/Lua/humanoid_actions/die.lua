@@ -68,8 +68,8 @@ local function action_die_start(action, humanoid)
   -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
   -- A special case for the female slack tongue patient. The fall is split into different animations
-  if humanoid.humanoid_class == "Standard Female Patient" and humanoid.disease.id == "slack_tongue" and
-    humanoid.hospital then
+  if humanoid.humanoid_class == "Standard Female Patient" and humanoid.disease
+  and humanoid.disease.id == "slack_tongue" and humanoid.hospital then
     fall = anims.extra_east
     humanoid:setLayer(0, humanoid.layers[0] - 8)
   end

@@ -171,3 +171,7 @@ do
     end
   end
 end
+
+-- Various constants
+DrawFlags = {}
+DrawFlags.BoundBoxHitTest = 4096

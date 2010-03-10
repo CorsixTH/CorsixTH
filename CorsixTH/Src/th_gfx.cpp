@@ -415,6 +415,9 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
             return false;
     }
 
+    if(iFlags & THDF_BoundBoxHitTest)
+        return true;
+
     unsigned int iListIndex = pFrame->iListIndex;
     unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     for(; ; ++iListIndex)

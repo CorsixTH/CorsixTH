@@ -189,6 +189,17 @@ function Humanoid:onClick(ui, button)
   end
 end
 
+function Humanoid:onDestroy()
+  local x, y = self.tile_x, self.tile_y
+  if x and y then
+    local notify_object = self.world:getObjectToNotifyOfOccupants(x, y)
+    if notify_object then
+      notify_object:onOccupantChange(-1)
+    end
+  end
+  return Entity.onDestroy(self)
+end
+
 function Humanoid:setHospital(hospital)
   self.hospital = hospital
   if not hospital or not hospital.is_in_world then
@@ -346,6 +357,15 @@ function Humanoid:setType(humanoid_class)
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}
   end
+  
+  self.th:setPartialFlag(self.permanent_flags or 0, false)
+  if humanoid_class == "Invisible Patient" then
+    -- Invisible patients do not have very many pixels to hit, box works better
+    self.permanent_flags = DrawFlags.BoundBoxHitTest
+  else
+    self.permanent_flags = nil
+  end
+  self.th:setPartialFlag(self.permanent_flags or 0)
 end
 
 function Humanoid:walkTo(tile_x, tile_y)

@@ -746,13 +746,21 @@ void THMap::depersist(LuaPersistReader *pReader)
             return;
         pNode->pNext = (THLinkList*)lua_touserdata(L, -1);
         if(pNode->pNext)
+        {
+            if(pNode->pNext->pPrev != NULL)
+                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->pNext->pPrev = pNode;
+        }
         lua_pop(L, 1);
         if(!pReader->readStackObject())
             return;
         pNode->oEarlyEntities.pNext = (THLinkList*)lua_touserdata(L, -1);
         if(pNode->oEarlyEntities.pNext)
+        {
+            if(pNode->oEarlyEntities.pNext->pPrev != NULL)
+                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.pNext->pPrev = &pNode->oEarlyEntities;
+        }
         lua_pop(L, 1);
     }
     oDecoder.initialise(6, pReader);

@@ -44,7 +44,7 @@ local function invert(t)
   return r
 end
 
-local key_codes = invert {
+local key_codes = {
   esc = 27,
   up = 273,
   down = 274,
@@ -55,21 +55,21 @@ local key_codes = invert {
   F10 = 291,
   F11 = 292,
   F12 = 293,
-  ["1"] = 49,
-  ["2"] = 50,
-  ["3"] = 51,
-  ["4"] = 52,
-  ["5"] = 53,
-  C = 99,
-  H = 104,
-  M = 109,
-  P = 112,
-  S = 115,
   Enter = 13,
   shift = {303, 304},
   ctrl = {305, 306},
   alt = {307, 308, 313},
 }
+-- Add "A" through "Z"
+for i = string.byte"a", string.byte"z" do
+  key_codes[string.char(i):lower()] = i
+  key_codes[string.char(i):upper()] = i
+end
+-- Add "0" through "9"
+for i = string.byte"0", string.byte"9" do
+  key_codes[string.char(i)] = i
+end
+key_codes = invert(key_codes)
 
 local button_codes = invert {
   left = 1,

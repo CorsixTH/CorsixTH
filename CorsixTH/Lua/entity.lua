@@ -43,6 +43,9 @@ end
 
 function Entity:setAnimation(animation, flags)
   flags = flags or 0
+  if self.permanent_flags then
+    flags = flags + self.permanent_flags
+  end
   if animation ~= self.animation_idx or flags ~= self.animation_flags then
     self.animation_idx = animation
     self.animation_flags = flags
