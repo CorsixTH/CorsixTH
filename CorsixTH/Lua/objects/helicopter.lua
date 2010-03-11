@@ -74,6 +74,7 @@ function Helicopter:spawnPatient()
   self.spawned_patients = self.spawned_patients + 1
   local patient = self.world:newEntity("Patient", 2)
   patient:setDisease(hospital.emergency.disease)
+  patient.diagnosis_progress = 1
   patient:setDiagnosed(true)
   patient:setMood("emergency", "activate")
   patient.is_emergency = true
