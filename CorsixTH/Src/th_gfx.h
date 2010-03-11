@@ -33,6 +33,8 @@ SOFTWARE.
 #error No rendering engine enabled in config file
 #endif
 
+void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
+
 //! Bitflags for drawing operations
 enum THDrawFlags
 {
@@ -59,6 +61,8 @@ enum THDrawFlags
     THDF_ListBottom     = 1 << 11,
     //! Hit-test using bounding-box precision rather than pixel-perfect
     THDF_BoundBoxHitTest= 1 << 12,
+    //! Apply a cropping operation prior to drawing
+    THDF_Crop           = 1 << 13,
 };
 
 //! Bitflags for animation frames
@@ -415,6 +419,7 @@ public:
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setLayer(int iLayer, int iId);
+    void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 
     void persist(LuaPersistWriter *pWriter) const;
     void depersist(LuaPersistReader *pReader);
@@ -441,6 +446,7 @@ protected:
 
     int m_iLastX;
     int m_iLastY;
+    int m_iCropColumn;
 
     THLayers_t m_oLayers;
 };

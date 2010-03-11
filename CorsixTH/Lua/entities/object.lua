@@ -64,6 +64,20 @@ function Object:Object(world, object_type, x, y, direction, etc)
   if footprint and footprint.list_bottom then
     flags = flags + 2048
   end
+  local rap = footprint and footprint.render_attach_position
+  if rap and rap[1] and type(rap[1]) == "table" then
+    self.split_anims = {self.th}
+    self.split_anim_positions = rap
+    self.th:setCrop(rap[1][1] - rap[1][2])
+    for i = 2, #rap do
+      local point = rap[i]
+      local th = TH.animation()
+      th:setCrop(point[1] - point[2])
+      th:setHitTestResult(self)
+      th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
+      self.split_anims[i] = th
+    end
+  end
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
   end
@@ -75,11 +89,34 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self:setTile(x, y)
 end
 
+function Object:setAnimation(animation, flags)
+  if self.split_anims then
+    flags = (flags or 0) + DrawFlags.Crop
+    if self.permanent_flags then
+      flags = flags + self.permanent_flags
+    end
+    if animation ~= self.animation_idx or flags ~= self.animation_flags then
+      self.animation_idx = animation
+      self.animation_flags = flags
+      local anims = self.world.anims
+      for _, th in ipairs(self.split_anims) do
+        th:setAnimation(anims, animation, flags)
+      end
+    end
+    return self
+  else
+    return Entity.setAnimation(self, animation, flags)
+  end
+end
+
 function Object:getRenderAttachTile()
   local x, y = self.tile_x, self.tile_y
   local offset = self.object_type.orientations
   if offset then
     offset = offset[self.direction].render_attach_position
+    if self.split_anims then
+      offset = offset[1]
+    end
     x = x + offset[1]
     y = y + offset[2]
   end
@@ -156,8 +193,20 @@ function Object:setTile(x, y)
         })
       end
     end
+    if self.split_anims then
+      local map = self.world.map.th
+      local pos = self.split_anim_positions
+      for i = 2, #self.split_anims do
+        self.split_anims[i]:setTile(map, x + pos[i][1], y + pos[i][2])
+      end
+    end
   else
     self.th:setTile(nil)
+    if self.split_anims then
+      for i = 2, #self.split_anims do
+        self.split_anims[i]:setTile(nil)
+      end
+    end
   end
   self.world:clearCaches()
   return self
@@ -381,8 +430,16 @@ function Object.processTypeDefinition(object_type)
         use_position[1] = use_position[1] - x
         use_position[2] = use_position[2] - y
         local rx, ry = unpack(details.render_attach_position)
-        details.render_attach_position[1] = rx - x
-        details.render_attach_position[2] = ry - y
+        if type(rx) == "table" then
+          for _, point in ipairs(details.render_attach_position) do
+            point[1] = point[1] - x
+            point[2] = point[2] - y
+          end
+          rx, ry = unpack(details.render_attach_position[1])
+        else
+          details.render_attach_position[1] = rx - x
+          details.render_attach_position[2] = ry - y
+        end
         x, y = Map:WorldToScreen(rx + 1, ry + 1)
         details.animation_offset[1] = details.animation_offset[1] - x
         details.animation_offset[2] = details.animation_offset[2] - y

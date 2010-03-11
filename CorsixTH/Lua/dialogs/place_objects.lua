@@ -323,6 +323,9 @@ function UIPlaceObjects:setOrientation(orient)
   end
   self.object_anim:setAnimation(self.anims, anim, flag)
   local px, py = unpack(object.orientations[orient].render_attach_position)
+  if type(px) == "table" then
+    px, py = unpack(px)
+  end
   px, py = Map:WorldToScreen(px + 1, py + 1)
   px = object.orientations[orient].animation_offset[1] + px
   py = object.orientations[orient].animation_offset[2] + py

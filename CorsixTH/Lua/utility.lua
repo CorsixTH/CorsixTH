@@ -174,4 +174,5 @@ end
 
 -- Various constants
 DrawFlags = {}
-DrawFlags.BoundBoxHitTest = 4096
+DrawFlags.BoundBoxHitTest = 2^12
+DrawFlags.Crop = 2^13

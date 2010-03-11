@@ -296,7 +296,8 @@ int THMain_l_main(lua_State *L)
 
     // return assert(loadfile"CorsixTH.lua")(...)
     lua_getglobal(L, "assert");
-    luaL_loadstring(L, sLuaCorsixTHLua);
+    luaL_loadbuffer(L, sLuaCorsixTHLua, strlen(sLuaCorsixTHLua),
+        "@main.cpp (l_main bootstrap)");
     lua_pushvalue(L, 1);
     lua_call(L, 1, 2);
     lua_call(L, 2, 1);

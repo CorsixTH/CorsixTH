@@ -203,6 +203,14 @@ static int l_anim_set_frame(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_crop(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    pAnimation->setCropColumn(luaL_checkint(L, 2));
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_anim_set_anim(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
@@ -502,6 +510,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_anim_persist, "persist");
     luaT_setmetamethod(l_anim_depersist, "depersist");
     luaT_setfunction(l_anim_set_anim, "setAnimation", MT_Anims);
+    luaT_setfunction(l_anim_set_crop, "setCrop");
     luaT_setfunction(l_anim_set_morph, "setMorph");
     luaT_setfunction(l_anim_set_frame, "setFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");

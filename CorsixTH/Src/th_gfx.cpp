@@ -731,7 +731,38 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
     m_iLastX = m_iX + iDestX;
     m_iLastY = m_iY + iDestY;
     if(m_pManager)
-        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX, m_iY + iDestY, iFlags);
+    {
+        if(iFlags & THDF_Crop)
+        {
+            THClipRect rcOld, rcNew;
+            pCanvas->getClipRect(&rcOld);
+            rcNew.y = rcOld.y;
+            rcNew.h = rcOld.h;
+            if(m_iCropColumn == 0)
+            {
+                rcNew.x = m_iX + iDestX - 32;
+                rcNew.w = 64;
+            }
+            else if(m_iCropColumn > 0)
+            {
+                rcNew.x = m_iX + iDestX + m_iCropColumn * 32;
+                rcNew.w = 32;
+            }
+            else
+            {
+                rcNew.x = m_iX + iDestX + (m_iCropColumn - 1) * 32;
+                rcNew.w = 32;
+            }
+            IntersectTHClipRect(rcNew, rcOld);
+            pCanvas->setClipRect(&rcNew);
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
+                                  m_iY + iDestY, iFlags);
+            pCanvas->setClipRect(&rcOld);
+        }
+        else
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
+                                  m_iY + iDestY, iFlags);
+    }
 }
 
 void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
@@ -854,6 +885,7 @@ THAnimation::THAnimation()
     m_iFrame = 0;
     m_iX = 0;
     m_iY = 0;
+    m_iCropColumn = 0;
     m_iSpeedX = 0;
     m_iSpeedY = 0;
     m_iLastX = INT_MAX;
@@ -891,6 +923,8 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVInt(m_iY);
     pWriter->writeVInt(m_iLastX);
     pWriter->writeVInt(m_iLastY);
+    if(iFlags & THDF_Crop)
+        pWriter->writeVInt(m_iCropColumn);
 
     // Write the unioned fields
     if(fnDraw != THAnimation_DrawChild)
@@ -970,6 +1004,13 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             break;
         if(!pReader->readVInt(m_iLastY))
             break;
+        if(iFlags & THDF_Crop)
+        {
+            if(!pReader->readVInt(m_iCropColumn))
+                break;
+        }
+        else
+            m_iCropColumn = 0;
 
         // Read the unioned fields
         if(fnDraw != THAnimation_DrawChild)

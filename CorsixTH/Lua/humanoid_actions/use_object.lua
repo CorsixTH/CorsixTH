@@ -117,7 +117,13 @@ local function action_use_phase(action, humanoid, phase)
         phase)
     end
   end
-  humanoid:setAnimation(anim, action.mirror_flags)
+  local flags = action.mirror_flags
+  if object.split_anims then
+    -- Major TODO: Split the humanoid over several tiles (current implementation
+    -- works for benches, but nothing else)
+    flags = flags + DrawFlags.Crop
+  end
+  humanoid:setAnimation(anim, flags)
   
   local offset = object.object_type.orientations
   if offset then

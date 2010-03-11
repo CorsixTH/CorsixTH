@@ -107,6 +107,7 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
+    render_attach_position = { {0, 0}, {-1, 0}, {0, -1} },
     footprint = { {0, 0}, {0, -1, only_passable = true} },
     use_position = "passable",
   },

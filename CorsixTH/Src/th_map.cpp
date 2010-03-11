@@ -310,7 +310,7 @@ void THMap::setAllWallDrawFlags(unsigned char iFlags)
     }
 }
 
-static void IntersectClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
+void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
 {
     if(rcClip.x < rcIntersect.x)
     {
@@ -447,7 +447,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     rcNewClip.y = static_cast<THClipRect::xy_t>(itrNode.y() - iH + 32 + 4);
                     rcNewClip.w = static_cast<THClipRect::wh_t>(64);
                     rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
-                    IntersectClipRect(rcNewClip, rcOldClip);
+                    IntersectTHClipRect(rcNewClip, rcOldClip);
                     pCanvas->setClipRect(&rcNewClip);
                     m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 32,
                         itrNode.y() - 56, THDF_Alpha75);
