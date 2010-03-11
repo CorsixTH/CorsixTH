@@ -216,11 +216,25 @@ static int l_anim_set_frame(lua_State *L)
     return 1;
 }
 
+static int l_anim_get_frame(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    lua_pushinteger(L, pAnimation->getFrame());
+    return 1;
+}
+
 static int l_anim_set_crop(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     pAnimation->setCropColumn(luaL_checkint(L, 2));
     lua_settop(L, 1);
+    return 1;
+}
+
+static int l_anim_get_crop(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    lua_pushinteger(L, pAnimation->getCropColumn());
     return 1;
 }
 
@@ -430,6 +444,17 @@ static int l_anim_set_layer(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_layers_from(lua_State *L)
+{
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    const THAnimation* pAnimationSrc = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX);
+
+    pAnimation->setLayersFrom(pAnimationSrc);
+
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_anim_set_tag(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
@@ -525,8 +550,10 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_anim_depersist, "depersist");
     luaT_setfunction(l_anim_set_anim, "setAnimation", MT_Anims);
     luaT_setfunction(l_anim_set_crop, "setCrop");
+    luaT_setfunction(l_anim_get_crop, "getCrop");
     luaT_setfunction(l_anim_set_morph, "setMorph");
     luaT_setfunction(l_anim_set_frame, "setFrame");
+    luaT_setfunction(l_anim_get_frame, "getFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");
     luaT_setfunction(l_anim_set_tile, "setTile", MT_Map);
     luaT_setfunction(l_anim_get_tile, "getTile");
@@ -542,6 +569,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anim_get_position, "getPosition");
     luaT_setfunction(l_anim_set_speed, "setSpeed");
     luaT_setfunction(l_anim_set_layer, "setLayer");
+    luaT_setfunction(l_anim_set_layers_from, "setLayersFrom");
     luaT_setfunction(l_anim_set_hitresult, "setHitTestResult");
     luaT_setfunction(l_anim_get_marker, "getMarker");
     luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");

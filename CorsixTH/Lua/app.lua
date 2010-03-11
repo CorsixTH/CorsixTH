@@ -26,11 +26,6 @@ local SDL = require "sdl"
 local assert, io, type, dofile, loadfile, pcall, tonumber, print
     = assert, io, type, dofile, loadfile, pcall, tonumber, print
 
--- Change to true to show FPS, Lua memory usage, entity count in bottom bar.
--- Note that this also turns off the FPS limiter, causing the engine to render
--- frames even when it doesn't need to.
-local TRACK_FPS = false
-
 class "App"
 
 function App:App()
@@ -119,7 +114,7 @@ function App:init()
     self.fullscreen = true
     modes[#modes + 1] = "fullscreen"
   end
-  if TRACK_FPS then
+  if self.config.track_fps then
     modes[#modes + 1] = "present immediate"
   end
   self.modes = modes
@@ -327,7 +322,7 @@ function App:run()
     end
   end)
   
-  if TRACK_FPS then
+  if self.config.track_fps then
     SDL.trackFPS(true)
     SDL.limitFPS(false)
   end
@@ -407,7 +402,7 @@ function App:drawFrame()
   self.ui:draw(self.video)
   self.video:endFrame()
   
-  if TRACK_FPS then
+  if self.config.track_fps then
     fps_sum = fps_sum - fps_history[fps_next]
     fps_history[fps_next] = SDL.getFPS()
     fps_sum = fps_sum + fps_history[fps_next]
@@ -416,7 +411,7 @@ function App:drawFrame()
 end
 
 function App:getFPS()
-  if TRACK_FPS then
+  if self.config.track_fps then
     return fps_sum / #fps_history
   end
 end

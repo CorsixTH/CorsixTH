@@ -738,21 +738,8 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
             pCanvas->getClipRect(&rcOld);
             rcNew.y = rcOld.y;
             rcNew.h = rcOld.h;
-            if(m_iCropColumn == 0)
-            {
-                rcNew.x = m_iX + iDestX - 32;
-                rcNew.w = 64;
-            }
-            else if(m_iCropColumn > 0)
-            {
-                rcNew.x = m_iX + iDestX + m_iCropColumn * 32;
-                rcNew.w = 32;
-            }
-            else
-            {
-                rcNew.x = m_iX + iDestX + (m_iCropColumn - 1) * 32;
-                rcNew.w = 32;
-            }
+            rcNew.x = m_iX + iDestX + (m_iCropColumn - 1) * 32;
+            rcNew.w = 64;
             IntersectTHClipRect(rcNew, rcOld);
             pCanvas->setClipRect(&rcNew);
             m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,

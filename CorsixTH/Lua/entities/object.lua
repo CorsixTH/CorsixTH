@@ -68,11 +68,11 @@ function Object:Object(world, object_type, x, y, direction, etc)
   if rap and rap[1] and type(rap[1]) == "table" then
     self.split_anims = {self.th}
     self.split_anim_positions = rap
-    self.th:setCrop(rap[1][1] - rap[1][2])
+    self.th:setCrop(rap[1].column)
     for i = 2, #rap do
       local point = rap[i]
       local th = TH.animation()
-      th:setCrop(point[1] - point[2])
+      th:setCrop(point.column)
       th:setHitTestResult(self)
       th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
       self.split_anims[i] = th
@@ -87,6 +87,40 @@ function Object:Object(world, object_type, x, y, direction, etc)
   end
   self:setAnimation(anim, flags)
   self:setTile(x, y)
+end
+
+function Object:tick()
+  if self.split_anims then
+    if self.num_animation_ticks then
+      for i = 2, #self.split_anims do
+        local th = self.split_anims[i]
+        for i = 1, self.num_animation_ticks do
+          th:tick()
+        end
+      end
+    else
+      for i = 2, #self.split_anims do
+        self.split_anims[i]:tick()
+      end
+    end
+  end
+  return Entity.tick(self)
+end
+
+function Object:setPosition(x, y)
+  if self.split_anims then
+    -- The given position is for the primary tile, so position non-primary
+    -- animations relative to the primary one.
+    local bx, by = unpack(self.split_anim_positions[1])
+    for i, th in ipairs(self.split_anims) do
+      local point = self.split_anim_positions[i]
+      local dx, dy = Map:WorldToScreen(1-point[1]+bx, 1-point[2]+by)
+      th:setPosition(x + dx, y + dy)
+    end
+  else
+    self.th:setPosition(x, y)
+  end
+  return self
 end
 
 function Object:setAnimation(animation, flags)
@@ -109,6 +143,12 @@ function Object:setAnimation(animation, flags)
   end
 end
 
+--! Get the primary tile which the object is attached to for rendering
+--[[! For objects which attach to a single tile for rendering, this method will
+return the X and Y Lua world co-ordinates of that tile. For objects which split
+their rendering over multiple tiles, one of them is arbitrarily designated as
+the primary tile, and its co-ordinates are returned.
+]]
 function Object:getRenderAttachTile()
   local x, y = self.tile_x, self.tile_y
   local offset = self.object_type.orientations
@@ -431,11 +471,12 @@ function Object.processTypeDefinition(object_type)
         use_position[2] = use_position[2] - y
         local rx, ry = unpack(details.render_attach_position)
         if type(rx) == "table" then
+          rx, ry = unpack(details.render_attach_position[1])
           for _, point in ipairs(details.render_attach_position) do
+            point.column = point[1] - point[2]
             point[1] = point[1] - x
             point[2] = point[2] - y
           end
-          rx, ry = unpack(details.render_attach_position[1])
         else
           details.render_attach_position[1] = rx - x
           details.render_attach_position[2] = ry - y

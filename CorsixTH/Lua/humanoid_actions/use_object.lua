@@ -119,9 +119,12 @@ local function action_use_phase(action, humanoid, phase)
   end
   local flags = action.mirror_flags
   if object.split_anims then
-    -- Major TODO: Split the humanoid over several tiles (current implementation
-    -- works for benches, but nothing else)
     flags = flags + DrawFlags.Crop
+    local anims = humanoid.world.anims
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setAnimation(anims, anim, flags)
+    end
   end
   humanoid:setAnimation(anim, flags)
   
@@ -162,6 +165,17 @@ local function action_use_phase(action, humanoid, phase)
   end
 end
 
+local function init_split_anims(object, humanoid)
+  if object.split_anims then
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setLayersFrom(humanoid.th)
+      th:setHitTestResult(humanoid)
+    end
+    object.ticks = true
+  end
+end
+
 action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local object = action.object
@@ -170,6 +184,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   if oldphase == -4 then
     object:setUser(humanoid)
     humanoid.user_of = object
+    init_split_anims(object, humanoid)
   end
   if phase ~= 0 or not action.prolonged_usage or not action.on_interrupt then
     phase = action_use_next_phase(action, phase)
@@ -179,6 +194,18 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   if oldphase <= 3 and phase > 3 then
     object:removeUser(humanoid)
     humanoid.user_of = nil
+    if object.split_anims then
+      local anims, anim, frame, flags = humanoid.world.anims,
+        object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
+      for i = 2, #object.split_anims do
+        local th = object.split_anims[i]
+        th:setLayersFrom(object.th)
+        th:setHitTestResult(object)
+        th:setAnimation(anims, anim, flags)
+        th:setFrame(frame)
+      end
+      object.ticks = object.object_type.ticks
+    end
   end
   if phase == 100 then
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
@@ -250,6 +277,7 @@ local function action_use_object_start(action, humanoid)
   else
     object:setUser(humanoid)
     humanoid.user_of = object
+    init_split_anims(object, humanoid)
   end
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end

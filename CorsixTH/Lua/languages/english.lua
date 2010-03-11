@@ -55,6 +55,7 @@ menu_debug = {
 menu_debug_overlay = {
   none                        = "  NONE  ",
   flags                       = "  FLAGS  ",
+  positions                   = "  POSITIONS  ",
   byte_0_1                    = "  BYTE 0 & 1  ",
   byte_floor                  = "  BYTE FLOOR  ",
   byte_n_wall                 = "  BYTE N WALL  ",

@@ -105,8 +105,8 @@ object.orientations = {
     use_position = "passable",
   },
   south = {
+    render_attach_position = { {0, 0}, {-1, 1} },
     footprint = { {-1, 0}, {0, 0}, {-1, 1, only_passable = true} },
-    early_list = true,
     use_position = "passable",
   },
   west = {

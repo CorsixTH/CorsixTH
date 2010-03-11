@@ -405,12 +405,14 @@ public:
     bool hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return this->pPrev;}
-    unsigned long getFlags() {return this->iFlags;}
-    unsigned int getAnimation() {return m_iAnimation;}
-    int getX() {return m_iX;}
-    int getY() {return m_iY;}
+    unsigned long getFlags() const {return this->iFlags;}
+    unsigned int getAnimation() const {return m_iAnimation;}
+    int getX() const {return m_iX;}
+    int getY() const {return m_iY;}
     bool getMarker(int* pX, int* pY);
     bool getSecondaryMarker(int* pX, int* pY);
+    unsigned int getFrame() const {return m_iFrame;}
+    int getCropColumn() const {return m_iCropColumn;}
 
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget);
@@ -419,6 +421,7 @@ public:
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setLayer(int iLayer, int iId);
+    void setLayersFrom(const THAnimation *pSrc) {m_oLayers = pSrc->m_oLayers;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 
     void persist(LuaPersistWriter *pWriter) const;

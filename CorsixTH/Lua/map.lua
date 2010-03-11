@@ -121,17 +121,25 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
         self.debug_flags[xy] = self.th:getCellFlags(x, y)
       end
     end
-    return
-  end
-  local thData = self:getRawData()
-  for x = 1, self.width do
-    for y = 1, self.height do
-      local xy = (y - 1) * self.width + x - 1
-      local offset = base_offset + xy * xy_offset
-      if bits_ then
-        self:setDebugText(x, y, bits(thData:byte(offset + first, offset + last)))
-      else
-        self:setDebugText(x, y, thData:byte(offset + first, offset + last))
+  elseif base_offset == "positions" then
+    self.debug_text = {}
+    for x = 1, self.width do
+      for y = 1, self.height do
+        local xy = (y - 1) * self.width + x - 1
+        self.debug_text[xy] = x .. "," .. y
+      end
+    end
+  else
+    local thData = self:getRawData()
+    for x = 1, self.width do
+      for y = 1, self.height do
+        local xy = (y - 1) * self.width + x - 1
+        local offset = base_offset + xy * xy_offset
+        if bits_ then
+          self:setDebugText(x, y, bits(thData:byte(offset + first, offset + last)))
+        else
+          self:setDebugText(x, y, thData:byte(offset + first, offset + last))
+        end
       end
     end
   end
@@ -181,7 +189,7 @@ function Map:setDebugText(x, y, msg, ...)
   else
     text = msg ~= 0 and msg or nil
   end
-  self.debug_text[(y - 1) * self.width + x - 1] = x .. "," .. y --text
+  self.debug_text[(y - 1) * self.width + x - 1] = text
 end
 
 --[[!
