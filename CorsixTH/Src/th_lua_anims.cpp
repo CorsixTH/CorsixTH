@@ -159,14 +159,27 @@ static int l_anim_persist(lua_State *L)
     return 0;
 }
 
+static int l_anim_pre_depersist(lua_State *L)
+{
+    // Note that anims and the map have nice reference cycles between them
+    // and hence we cannot be sure which is depersisted first. To ensure that
+    // things work nicely, we initialise all the fields of a THAnimation as
+    // soon as possible, thus preventing issues like an anim -> map -> anim
+    // reference chain whereby l_anim_depersist is called after l_map_depersist
+    // (as anim references map in its environment table) causing the pPrev
+    // field to be set during map depersistence, then cleared to NULL by the
+    // constructor during l_anim_depersist.
+    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    new (pAnimation) THAnimation; // Call constructor
+    return 0;
+}
+
 static int l_anim_depersist(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
     LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
-
-    new (pAnimation) THAnimation; // Call constructor
 
     lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
     lua_pushlightuserdata(L, pAnimation);
@@ -508,6 +521,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     // Anim
     luaT_class(THAnimation, l_anim_new, "animation", MT_Anim);
     luaT_setmetamethod(l_anim_persist, "persist");
+    luaT_setmetamethod(l_anim_pre_depersist, "pre_depersist");
     luaT_setmetamethod(l_anim_depersist, "depersist");
     luaT_setfunction(l_anim_set_anim, "setAnimation", MT_Anims);
     luaT_setfunction(l_anim_set_crop, "setCrop");

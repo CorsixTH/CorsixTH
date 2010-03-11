@@ -894,13 +894,22 @@ public:
                 m_iNextIndex = iOldIndex;
                 saveStackObject();
                 m_iNextIndex = iNewIndex;
+                // Set metatable and perform immediate initialisation
+                lua_pushvalue(L, -2);
+                lua_setmetatable(L, -2);
+                lua_getfield(L, -2, "__pre_depersist");
+                if(lua_isnil(L, -1))
+                    lua_pop(L, 1);
+                else
+                {
+                    lua_pushvalue(L, -2);
+                    lua_call(L, 1, 0);
+                }
                 // Read environment
                 if(!readStackObject())
                     return false;
                 lua_setfenv(L, -2);
-                // Set metatable and read the raw data
-                lua_pushvalue(L, -2);
-                lua_setmetatable(L, -2);
+                // Read the raw data
                 lua_getfield(L, -2, "__depersist");
                 if(lua_isnil(L, -1))
                     lua_pop(L, 1);
