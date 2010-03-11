@@ -69,6 +69,11 @@ end)
 
 local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- Wait two months before going home anyway.
+  -- Emergency patients also don't need to ask what to do, they'll just wait for the player
+  -- to build the neccessary room.
+  if humanoid.is_emergency then
+    return
+  end
   humanoid.waiting = 60
   local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
   local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)
@@ -78,12 +83,13 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- TODO: In the future the treatment room might be unavailable
   local message = {
     {text = _S.fax.disease_discovered_patient_choice.disease_name:format(humanoid.disease.name)},
+    {text = " "},
     {text = output_text},
     {text = _S.fax.disease_discovered_patient_choice.what_to_do_question},
     choices = {
-      {text = _S.fax.disease_discovered_patient_choice.choices.send_home, choice = "send_home", offset = 50},
-      {text = _S.fax.disease_discovered_patient_choice.choices.wait,      choice = "wait",      offset = 40},
-      {text = _S.fax.disease_discovered_patient_choice.choices.research,  choice = "disabled",  offset = 40}, -- TODO: research
+      {text = _S.fax.disease_discovered_patient_choice.choices.send_home, choice = "send_home"},
+      {text = _S.fax.disease_discovered_patient_choice.choices.wait,      choice = "wait"},
+      {text = _S.fax.disease_discovered_patient_choice.choices.research,  choice = "disabled"}, -- TODO: research
     },
   }
   -- Ok, send the message in all channels.
@@ -114,15 +120,16 @@ local function action_seek_room_no_diagnosis_room_found(humanoid)
     end
     local message = {
       {text = _S.fax.diagnosis_failed.situation},
+      {text = " "},
       {text = _S.fax.diagnosis_failed.what_to_do_question},
       choices = {
-        {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home",   offset = 50},
-        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice, offset = 40},
-        {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait",        offset = 40},
+        {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home"},
+        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice},
+        {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait"},
       },
     }
     if more_text ~= "" then
-      table.insert(message, 2, {text = more_text})
+      table.insert(message, 3, {text = more_text})
     end
     TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)

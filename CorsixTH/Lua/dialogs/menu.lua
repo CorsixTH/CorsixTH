@@ -516,7 +516,7 @@ function UIMenuBar:makeMenu(app)
   end
   local function make_emergency()
     if not self.ui.hospital:createEmergency() then
-      self.ui:addWindow(UIInformation(self.ui, {"No heliport on map"}))
+      self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
     end
   end
   if self.ui.app.config.debug then
@@ -529,7 +529,6 @@ function UIMenuBar:makeMenu(app)
       :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)
       :appendItem(_S.menu_debug.show_watch,         function() self.ui:addWindow(UIWatch(self.ui)) end)
       :appendItem(_S.menu_debug.create_emergency,   make_emergency)
-      :appendItem(_S.menu_debug.show_beta1_info,    function() self.ui:showBeta1Info() end)
       :appendItem(_S.menu_debug.place_objects,      place_objs)
       :appendItem(_S.menu_debug.dump_strings,       function() self.ui.app:dumpStrings() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()

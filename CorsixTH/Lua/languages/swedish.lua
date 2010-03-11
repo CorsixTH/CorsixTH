@@ -28,6 +28,7 @@ object.reception_desk = "Reception"
 
 -- new strings
 object.litter = utf8 "Skräp"
+tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
 menu_options.lock_windows = utf8 "  LÅS FÖNSTER  "
 menu_options_game_speed.pause = "  PAUSA  "
@@ -49,6 +50,7 @@ menu_debug = {
 menu_debug_overlay = {
   none                        = "  INGET  ",
   flags                       = "  FLAGGOR  ",
+  positions                   = "  KOORDINATER  ",
   byte_0_1                    = "  BYTE 0 & 1  ",
   byte_floor                  = "  BYTE GOLV  ",
   byte_n_wall                 = utf8 "  BYTE N VÄGG  ",
@@ -82,3 +84,6 @@ fax = {
     utf8 "Det är lugnt, jag kan sånt här.",
   },
 }
+
+misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
+misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."

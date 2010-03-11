@@ -38,19 +38,20 @@ function UIFax:UIFax(ui, message, owner)
   
   -- Add choice buttons
   local choices = false
-  local last_y = self.owner and 140 or 180 -- Very ugly temp way of lowering the buttons for emergencies
+  local orig_y = 175
   if self.message["choices"] then
     choices = true
-    for k = 1, #self.message["choices"] do
-      if self.message["choices"][k].choice ~= "disabled" then
+    local last_y
+    for k = 3, 3 - #self.message["choices"] + 1, -1 do
+      last_y = orig_y + (k-1)*48
+      if self.message["choices"][k - (3 - #self.message["choices"])].choice ~= "disabled" then
         local --[[persistable:fax_choice_button]] function callback()
-          self:choice(self.message["choices"][k].choice)
+          self:choice(self.message["choices"][k - (3 - #self.message["choices"])].choice)
         end
-        self:addPanel(17, 500, last_y):makeButton(0, 0, 43, 43, 18, callback)
+        self:addPanel(17, 492, last_y):makeButton(0, 0, 43, 43, 18, callback)
       else
-        self:addPanel(19, 500, last_y)
+        self:addPanel(19, 492, last_y)
       end
-      last_y = last_y + 60
     end
   end
   
@@ -99,14 +100,15 @@ function UIFax:draw(canvas, x, y)
   if self.message then
     local last_y = y + 40
     for i = 1, #self.message do
-      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, x + 170, 
-          last_y + (self.message[i].offset or 0), 380)
+      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, x + 190, 
+          last_y + (self.message[i].offset or 0), 330)
     end
     if self.message["choices"] then
-      last_y = y + (self.owner and 100 or 140)
-      for k = 1, #self.message["choices"] do
-        last_y = self.fax_font:drawWrapped(canvas, self.message["choices"][k].text, 
-            x + 190, last_y + (self.message["choices"][k].offset or 0), 280)
+      local orig_y = y + 190
+      for k = 3, 3 - #self.message["choices"] + 1, -1 do
+        last_y = orig_y + (k-1)*47
+        self.fax_font:drawWrapped(canvas, self.message["choices"][k - (3 - #self.message["choices"])].text, 
+            x + 190, last_y + (self.message["choices"][k - (3 - #self.message["choices"])].offset or 0), 300)
       end
     end
   end

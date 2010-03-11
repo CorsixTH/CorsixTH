@@ -33,14 +33,13 @@ function UIInformation:UIInformation(ui, text)
   self.black_font = app.gfx:loadFont("QData", "Font00V")
   self.text = text
   
-  -- Make an estimate of the size needed. TODO: Make it more sophisticated, how?
-  local rows = 1
+  local rows = 0
   for i, text in ipairs(text) do
-    rows = rows + string.len(text)*7 / 140
+    rows = rows + math.floor(self.black_font:sizeOf(text) / 230 + 0.5)
     rows = rows + 1
   end
   self.width = 40 + 300 + 40 
-  self.height = 40 + rows*5 + 40 
+  self.height = 20 + rows*12 + 20 
   self:setDefaultPosition(0.5, 0.5)
   
   for x = 4, self.width - 4, 4 do

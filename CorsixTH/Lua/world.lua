@@ -385,8 +385,8 @@ function World:onTick()
         {             text = _S.fax.tutorial[1]},
         {offset =  8, text = _S.fax.tutorial[2]},
         choices = {
-          {offset =  50, text = _S.fax.tutorial[3], choice = "tutorial"},
-          {offset =  40, text = _S.fax.tutorial[4], choice = "no_tutorial"},
+          {text = _S.fax.tutorial[3], choice = "tutorial"},
+          {text = _S.fax.tutorial[4], choice = "no_tutorial"},
         },
       }
       self.ui.bottom_panel:queueMessage("information", message)

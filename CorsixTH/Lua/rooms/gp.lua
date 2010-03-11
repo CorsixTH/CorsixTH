@@ -121,6 +121,7 @@ function GPRoom:dealtWithPatient(patient)
         }
         self.world.ui.bottom_panel:queueMessage("disease", message)
         self.hospital.disease_casebook[patient.disease.id].discovered = true
+        self.hospital.discovered_diseases[#self.hospital.discovered_diseases + 1] = patient.disease.id
         -- If the drug casebook is open, update it.
         local window = self.world.ui:getWindow(UICasebook)
         if window then

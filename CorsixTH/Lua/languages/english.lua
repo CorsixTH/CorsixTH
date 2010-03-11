@@ -44,7 +44,6 @@ menu_debug = {
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   spawn_patient               = "  SPAWN PATIENT  ",
   make_adviser_talk           = "  MAKE ADVISER TALK  ",
-  show_beta1_info             = "  SHOW BETA1 INFO  ",
   show_watch                  = "  SHOW WATCH  ",
   create_emergency            = "  CREATE EMERGENCY  ",
   place_objects               = "  PLACE OBJECTS  ",
@@ -96,3 +95,4 @@ fax = {
 }
 
 misc.not_yet_implemented = "(not yet implemented)"
+misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map."

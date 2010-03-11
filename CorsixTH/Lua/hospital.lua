@@ -41,6 +41,7 @@ function Hospital:Hospital(world)
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   self.policies = {}
+  self.discovered_diseases = {}
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
@@ -144,10 +145,11 @@ end
 
 function Hospital:createEmergency()
   local created_one = false
-  if self:getHeliportSpawnPosition() then
+  if self:getHeliportSpawnPosition() and #self.discovered_diseases > 0 then
+    local random_disease = self.discovered_diseases[math.random(1, #self.discovered_diseases)]
     local victims = math.random(4,6) -- TODO: Should depend on disease (e.g. operating theatre is harder)
     local emergency = {
-      disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)],
+      disease = self.world.available_diseases[random_disease],
       victims = victims,
       bonus = 1000 * victims,
       killed_emergency_patients = 0,
@@ -165,7 +167,7 @@ function Hospital:createEmergency()
       end
     end
     local added_info = _S.fax.emergency.cure_possible
-    -- TODO: Differentiate if a drug is needed, add drug effectiveness. Add undiscovered diseases.
+    -- TODO: Differentiate if a drug is needed, add drug effectiveness. Add undiscovered treatment.
     -- added_info = _S.fax.emergency.cure_not_possible
     if room_name then
       if staff_available then
@@ -182,8 +184,8 @@ function Hospital:createEmergency()
       {text = added_info},
       {text = _S.fax.emergency.bonus:format(emergency.bonus)},
       choices = {
-        {text = _S.fax.emergency.choices.accept, choice = "accept_emergency", offset = 50},
-        {text = _S.fax.emergency.choices.refuse, choice = "refuse", offset = 40},
+        {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
+        {text = _S.fax.emergency.choices.refuse, choice = "refuse"},
       },
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message)

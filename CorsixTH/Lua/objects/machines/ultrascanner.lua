@@ -75,8 +75,8 @@ object.orientations = {
     handyman_position = {2, 0},
   },
   east = {
-    footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1},
-                  {-1, 0, only_passable = true}, {0, 0}, {1, 0, only_passable = true},
+    footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
+                  {-1, 0}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {0, -1},
     use_position_secondary = {-1, 1},
