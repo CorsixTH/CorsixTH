@@ -27,7 +27,7 @@ end
 local bmp = ...
 local ext = string.find(bmp, ".bmp")
 if not ext then
-  print("Error: Extention must must be .bmp")
+  print("Error: Extension must must be .bmp")
   return
 end
 local dat, pal = string.gsub(bmp, ".bmp", ".dat"), string.gsub(bmp, ".bmp", ".pal")
@@ -110,3 +110,5 @@ for y = height, 1, -1 do
   bmp:seek("cur", skip)
 end
 dat:write(table.concat(rows))
+
+assert(bmp:seek() == bmp:seek("end"))
