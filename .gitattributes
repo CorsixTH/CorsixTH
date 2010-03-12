@@ -20,6 +20,7 @@ CorsixTH/Bitmap/fullscreen_border_top.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
+CorsixTH/Bitmap/mkraw.lua -text
 CorsixTH/Bitmap/mksheet.lua -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
