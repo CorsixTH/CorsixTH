@@ -236,7 +236,14 @@ navigateDoor = function(humanoid, x1, y1, dir)
   
   local to_x, to_y
   local anims = humanoid.door_anims
-  assert(anims.leaving and anims.entering, "Humanoid without door animations trying to walk through door")
+  if not anims.leaving or not anims.entering then
+    local from_rm, to_rm = room.room_info.id, "corridor"
+    if is_entering_room then
+      from_rm, to_rm = to_rm, from_rm
+    end
+    error(("Humanoid (%s) without door animations trying to walk through "..
+      "door (from %s to %s)"):format(humanoid.humanoid_class, from_rm, to_rm))
+  end
   humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)

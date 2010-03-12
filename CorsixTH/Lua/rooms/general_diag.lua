@@ -75,7 +75,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       staff:walkTo(trolley:getSecondaryUsageTile())
       local staff_idle = {name = "idle"}
       staff:queueAction(staff_idle)
-      patient:walkTo(cx, cy)
+      patient:walkTo(cx, cy, true)
       patient:queueAction{
         name = "multi_use_object",
         object = trolley,

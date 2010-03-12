@@ -85,6 +85,13 @@ local function action_multi_use_phase(action, humanoid, phase)
       anim = anim[action.random_anim]
     end
   end
+  if object.split_anims then
+    local anims = humanoid.world.anims
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setAnimation(anims, anim, action.mirror_flags)
+    end
+  end
   humanoid:setAnimation(anim, action.mirror_flags)
   
   local offset = object.object_type.orientations
@@ -173,6 +180,18 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
   if oldphase <= 2 and phase > 2 then
     object:setUser(nil)
     humanoid.user_of = nil
+    if object.split_anims then
+      local anims, anim, frame, flags = humanoid.world.anims,
+        object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
+      for i = 2, #object.split_anims do
+        local th = object.split_anims[i]
+        th:setLayersFrom(object.th)
+        th:setHitTestResult(object)
+        th:setAnimation(anims, anim, flags)
+        th:setFrame(frame)
+      end
+      object.ticks = object.object_type.ticks
+    end
   end
   if phase == 100 then
     if action.layer3 then
@@ -242,6 +261,9 @@ local function action_multi_use_object_start(action, humanoid)
     orient = orient_mirror[orient]
     flags = flags + 1
   end
+  if object.split_anims then
+    flags = flags + DrawFlags.Crop
+  end
   local spec = object.object_type.orientations[object.direction]
   -- early_list_while_in_use (if defined) will take precedence over early_list
   if spec.early_list_while_in_use or (spec.early_list_while_in_use == nil and spec.early_list) then
@@ -259,6 +281,14 @@ local function action_multi_use_object_start(action, humanoid)
     action.old_layer3_use_with = use_with.layers[3]
     humanoid:setLayer(3, action.layer3)
     use_with:setLayer(3, action.layer3)
+  end
+  if object.split_anims then
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setLayersFrom(humanoid.th)
+      th:setHitTestResult(humanoid)
+    end
+    object.ticks = true
   end
   
   action_multi_use_phase(action, humanoid, action_multi_use_next_phase(action, -100))

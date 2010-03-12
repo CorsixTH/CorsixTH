@@ -176,6 +176,23 @@ local function init_split_anims(object, humanoid)
   end
 end
 
+local function finish_using(object, humanoid)
+  object:removeUser(humanoid)
+  humanoid.user_of = nil
+  if object.split_anims then
+    local anims, anim, frame, flags = humanoid.world.anims,
+      object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setLayersFrom(object.th)
+      th:setHitTestResult(object)
+      th:setAnimation(anims, anim, flags)
+      th:setFrame(frame)
+    end
+    object.ticks = object.object_type.ticks
+  end
+end
+
 action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local object = action.object
@@ -192,20 +209,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     action:loop_callback()
   end
   if oldphase <= 3 and phase > 3 then
-    object:removeUser(humanoid)
-    humanoid.user_of = nil
-    if object.split_anims then
-      local anims, anim, frame, flags = humanoid.world.anims,
-        object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
-      for i = 2, #object.split_anims do
-        local th = object.split_anims[i]
-        th:setLayersFrom(object.th)
-        th:setHitTestResult(object)
-        th:setAnimation(anims, anim, flags)
-        th:setFrame(frame)
-      end
-      object.ticks = object.object_type.ticks
-    end
+    finish_using(object, humanoid)
   end
   if phase == 100 then
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
@@ -230,8 +234,7 @@ local action_use_object_interrupt = permanent"action_use_object_interrupt"( func
   if high_priority then
     local object = action.object
     if humanoid.user_of then
-      object:removeUser(humanoid)
-      humanoid.user_of = nil
+      finish_using(object, humanoid)
     elseif object:isReservedFor(humanoid) then
       object:removeReservedUser(humanoid)
     end

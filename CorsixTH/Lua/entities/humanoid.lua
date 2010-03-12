@@ -368,11 +368,12 @@ function Humanoid:setType(humanoid_class)
   self.th:setPartialFlag(self.permanent_flags or 0)
 end
 
-function Humanoid:walkTo(tile_x, tile_y)
+function Humanoid:walkTo(tile_x, tile_y, must_happen)
   self:setNextAction {
     name = "walk",
     x = tile_x,
     y = tile_y,
+    must_happen = must_happen,
   }
 end
 

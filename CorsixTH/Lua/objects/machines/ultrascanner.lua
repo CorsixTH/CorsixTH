@@ -75,12 +75,14 @@ object.orientations = {
     handyman_position = {2, 0},
   },
   east = {
+    render_attach_position = { {0, 0}, {1, 0}, {-1, 1} },
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
                   {-1, 0}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {0, -1},
     use_position_secondary = {-1, 1},
     handyman_position = {0, 2},
+    list_bottom = true,
   },
 }
 local anim_mgr = TheApp.animation_manager
