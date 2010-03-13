@@ -55,6 +55,8 @@ LDocGen/templates/lua_class_hierarchy.htlua -text
 LDocGen/templates/lua_class_index.htlua -text
 LDocGen/templates/lua_class_list.htlua -text
 LDocGen/templates/lua_class_tree.htlua -text
+LDocGen/templates/lua_file_hierarchy.htlua -text
+LDocGen/templates/lua_file_tree.htlua -text
 LDocGen/templates/page.htlua -text
 LFS/lfs.def -text
 MapEdit/CMakeLists.txt -text

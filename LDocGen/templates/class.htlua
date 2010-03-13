@@ -25,7 +25,7 @@
             <! if member:getParent() ~= class then !>
               (inherited from <a href="<!= member:getParent():getId() !>.html"><!= member:getParent():getName() !></a>)
             <! elseif super and super:get(name) then local existing = super:get(name)!>
-              (overrides <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !>:<!= name !></a>)
+              (overrides <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !><!= member:isMethod() and ":" or "." !><!= name !></a>)
             <! end !>
           </li>
         <! end !>
@@ -48,5 +48,41 @@
   </ul>
   <! if any_super then !>
     (*) only used in superclass methods
+  <! end !>
+</div>
+<div class="methods">
+  <! local super = class:getSuperClass() !>
+  <! for name, member in class:pairs() do !>
+    <! if member.type == "function" and member:getParent() == class then !>
+      <div class="method">
+        <h5><a name="<!= member:getId() !>">function <!= class:getName() .. (member:isMethod() and ":" or ".") .. name !>(<!
+          local s = ""; for name, param in member:parameterPairs() do
+            !><!= s !><span class="p"><!= name !></span><! s = ", " !><!
+          end
+        !>)</a></h5>
+        <p>
+          <! if member:getShortDesc() then !><!= member:getShortDesc() !><br/><br/><! end !>
+          <! if member:getLongDesc() then !><!= member:getLongDesc() !><br/><br/><! end !>
+          <! if not isIteratorEmpty(member:parameterPairs()) then !>
+            <strong>Parameters:</strong>
+            <table class="params">
+              <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+              <! for name, param in member:parameterPairs() do !>
+                <tr>
+                  <td class="n"><!= name !></td>
+                  <td class="t">?</td>
+                  <td class="d">?</td>
+                </tr>
+              <! end !>
+            </table></p><p>
+          <! end !>
+          <! if super and super:get(name) then local existing = super:get(name) !>
+            <strong>Overrides:</strong> <a href="<!= existing:getParent():getId() !>.html#<!= existing:getId() !>"><!= existing:getParent():getName() !><!= member:isMethod() and ":" or "." !><!= name !></a>.<br/>
+          <! end !>
+          <strong>Declared on:</strong> <!= src_ref(member) !>.
+          <! if not member:isMethod() then !><br/><strong>Note:</strong> Is a function rather than a method. <! end !>
+        </p>
+      </div>
+    <! end !>
   <! end !>
 </div>

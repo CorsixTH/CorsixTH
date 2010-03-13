@@ -63,8 +63,17 @@ local function ParseComments(tokens, i, object)
             object:setShortDesc(operand)
           end
         end
+      elseif operation == "dummy" then
+        object:setIsDummy(true)
+      elseif operation == "param" then
+        -- TODO
+      elseif operation == "return" then
+        -- TODO
+      elseif operation == "example" then
+        -- TODO
       else
-        error("Unknown documentation command: " .. operation)
+        error("Unknown documentation command: " .. operation .." ("..
+          tokens.__file .." near line ".. tokens[decl_i - 1].line ..")")
       end
     end
   end
@@ -160,6 +169,7 @@ local function IdentifyMethods(tokens, globals)
           end
         end
         method:setName(name_parts[#name_parts]):setIsMethod(is_method)
+        ParseComments(tokens, i, method)
       end
       local endi = ScanToEndToken(tokens, i + 1)
       local param_state = method and "before" --> "in" --> "after"
@@ -213,7 +223,30 @@ local function FixClassTree(class)
   end
 end
 
+local function IdentifyFile(tokens, project)
+  local dir = project.files
+  local name_parts = {}
+  for part in tokens.__file:gmatch"[^/]+" do
+    name_parts[#name_parts + 1] = part
+  end
+  for i = 1, #name_parts - 1 do
+    local part = name_parts[i]
+    local next_dir = dir:get(part)
+    if not next_dir then
+      next_dir = LuaDirectory():setName(part):setParent(dir)
+    end
+    dir = next_dir
+  end
+  local part = name_parts[#name_parts]
+  local file = dir:get(part)
+  if not file then
+    file = LuaFile():setName(part):setParent(dir)
+  end
+end
+
 function MakeLuaCodeModel(lua_file_names)
+  local project = LuaProject()
+  
   tokens_gfind_mode "Lua"
   local lua_file_tokens = {}
   for _, filename in ipairs(lua_file_names) do
@@ -221,8 +254,9 @@ function MakeLuaCodeModel(lua_file_names)
     lua_file_tokens[filename] = TokeniseLua(f:read "*a")
     lua_file_tokens[filename].__file = filename:match"^%.%./CorsixTH/(.*)$"
     f:close()
+    IdentifyFile(lua_file_tokens[filename], project)
   end
-  local globals = LuaTable()
+  local globals = project.globals
   for filename, tokens in pairs(lua_file_tokens) do
     IdentifyClasses(tokens, globals)
   end
@@ -235,5 +269,5 @@ function MakeLuaCodeModel(lua_file_names)
       FixClassTree(var)
     end
   end
-  return globals
+  return project
 end

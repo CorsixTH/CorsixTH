@@ -100,22 +100,22 @@ ul.sections li.last {
 
 /* Content - hierarchy lists */
 
-ul.class_hierarchy, ul.subclass_hierarchy {
+ul.class_hierarchy, ul.subclass_hierarchy, ul.file_hierarchy {
   list-style-type: none;
   padding: 0;
   margin: 0;
   margin-left: 1.6em;
 }
 
-ul.class_hierarchy {
+ul.class_hierarchy, ul.file_hierarchy.toplevel {
   margin-left: 2px;
 }
 
-ul.class_hierarchy li, ul.subclass_hierarchy li {
+ul.class_hierarchy li, ul.subclass_hierarchy li, ul.file_hierarchy li {
   border-left: 1px #aaa solid;
 }
 
-ul.class_hierarchy li span, ul.subclass_hierarchy li span {
+ul.class_hierarchy li span, ul.subclass_hierarchy li span, ul.file_hierarchy li span {
   border: 1px #aaa solid;
   border-left: none;
   background-color: #E5ECF9;
@@ -123,6 +123,14 @@ ul.class_hierarchy li span, ul.subclass_hierarchy li span {
   display: block;
   padding: 2px;
   padding-left: 8px;
+}
+
+ul.file_hierarchy li.dir span {
+  background-color: #C3D9FF;
+}
+
+ul.file_hierarchy li.file span {
+  background-color: #E5ECF9;
 }
 
 /* Content - linear lists */
@@ -272,9 +280,54 @@ div.method_list ul li.self {
   font-weight: bold;
 }
 
-div.method_list span.p, div.member_list span.p {
+div.method_list span.p, div.member_list span.p, div.methods table.params td.n {
   font-family: monospace;
   font-weight: normal;
+}
+
+div.methods {
+  clear: both;
+}
+
+div.methods div.method {
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.5em;
+}
+
+div.methods h5 {
+  background-color: #C3D9FF;
+  padding: 3px;
+  margin: 0;
+  border-bottom: 1px #aaa solid;
+}
+
+div.methods p {
+  padding: 3px;
+  margin: 0;
+}
+
+div.methods h5 a {
+  color: #000;
+  font-size: 120%;
+}
+
+div.methods h5 a:target {
+  color: #040;
+  font-size: 130%;
+}
+
+div.methods table.params th, div.methods table.params td {
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  padding-left: 4px;
+}
+
+div.methods table.params .n {
+  padding-left: 20px;
 }
 
 /* Footer */

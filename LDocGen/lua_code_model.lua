@@ -25,6 +25,13 @@ class "LuaTable" (LuaVariable)
 class "LuaClass" (LuaTable)
 class "LuaFile" (LuaNode)
 class "LuaDirectory" (LuaNode)
+class "LuaProject" (LuaNode)
+
+function LuaProject:LuaProject()
+  self:LuaNode()
+  self.globals = LuaTable()
+  self.files = LuaDirectory()
+end
 
 function LuaNode:LuaNode()
   self.name = nil
@@ -121,11 +128,21 @@ function LuaFunction:LuaFunction()
   self.is_method = false
   self.is_vararg = false
   self.vararg_parameter = nil
+  self.is_dummy = false
+end
+
+function LuaFunction:setIsDummy(is)
+  self.is_dummy = is
+  return self
 end
 
 function LuaFunction:setIsMethod(is)
   self.is_method = is
   return self
+end
+
+function LuaFunction:isMethod()
+  return self.is_method
 end
 
 function LuaFunction:setIsVararg(is)
@@ -296,4 +313,80 @@ end
 
 function LuaDirectory:LuaDirectory()
   self:LuaNode()
+  self.children = {}
+  self.children_sorted = true
+end
+
+function LuaDirectory:getId()
+  local id
+  if self.name then
+    id = self.name:gsub("_","__"):gsub("[A-Z]", function(c) return "_" .. c:lower() end)
+  else
+    id = "_2"
+  end
+  if self.parent then
+    id = self.parent:getId() .."_1".. id
+  end
+  return id
+end
+
+function LuaFile:getId()
+  local id = self.name:gsub("_","__"):gsub("[A-Z]", function(c) return "_" .. c:lower() end)
+  id = self.parent:getId() .."_1".. id
+  return id
+end
+
+function LuaDirectory:get(name)
+  for _, member in ipairs(self.children) do
+    if member.name == name then
+      return member
+    end
+  end
+end
+
+function LuaDirectory:addMember(child)
+  self.children[#self.children + 1] = child
+  self.children_sorted = false
+  return self
+end
+
+function LuaDirectory:setParent(parent)
+  assert(self.parent == nil)
+  if class.is(parent, LuaDirectory) then
+    parent:addMember(self)
+  else
+    error "Unknown parent type"
+  end
+  self.parent = parent
+  return self
+end
+
+function LuaDirectory:pairs()
+  if not self.children_sorted then
+    table.sort(self.children, function(m1, m2)
+      return m1.name < m2.name
+    end)
+    self.children_sorted = true
+  end
+  local n = 0
+  return function()
+    repeat
+      n = n + 1
+      local member = self.children[n]
+      if member and member.name then
+        return member.name, member
+      end
+    until not member
+  end
+end
+
+function LuaFile:setParent(parent)
+  assert(self.parent == nil)
+  if class.is(parent, LuaDirectory) then
+    parent:addMember(self)
+  else
+    error "Unknown parent type"
+  end
+  self.parent = parent
+  return self
 end

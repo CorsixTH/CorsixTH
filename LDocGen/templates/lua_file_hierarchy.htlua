@@ -1,0 +1,5 @@
+<ul class="toplevel file_hierarchy">
+  <! for name, item in project.files:pairs() do !>
+    <!= template "lua_file_tree" {item = item} !>
+  <! end !>
+</ul>

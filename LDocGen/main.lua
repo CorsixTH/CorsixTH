@@ -26,6 +26,7 @@ local directories = {
 local c_files = {
 }
 local lua_files = {
+  "../CorsixTH/CorsixTH.lua"
 }
 
 dofile "../CorsixTH/Lua/strict.lua"
@@ -69,7 +70,8 @@ local function WriteHTML(name, content)
   f:close()
 end
 
-local globals = MakeLuaCodeModel(lua_files)
+local project = MakeLuaCodeModel(lua_files)
+local globals = project.globals
 WriteHTML("class_hierarchy", template "page" {
   title = "Class Hierarchy",
   tab = "classes",
@@ -102,7 +104,7 @@ WriteHTML("file_hierarchy", template "page" {
   title = "File Hierarchy",
   tab = "files",
   section = "hierarchy",
-  content = "TODO",
+  content = template "lua_file_hierarchy" {project = project},
 })
 WriteHTML("file_globals", template "page" {
   title = "Globals",

@@ -1,0 +1,10 @@
+<li class="<!= class.is(item, LuaDirectory) and "dir" or "file" !>">
+  <span><a href="<!= item:getId() !>.html" class="item"><!= item:getName() !></a><!= item:getShortDesc() and (" - ") .. item:getShortDesc() or "" !></span>
+  <! if class.is(item, LuaDirectory) then !>
+    <ul class="file_hierarchy">
+      <! for name, item in item:pairs() do !>
+        <!= template "lua_file_tree" {item = item} !>
+      <! end !>
+    </ul>
+  <! end !>
+</li>
