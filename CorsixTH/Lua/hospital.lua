@@ -122,7 +122,12 @@ function Hospital:getHeliportSpawnPosition()
   end
 end
 
+--[[ Test if a given map tile is part of the hospital.
+!param x (integer) The 1-based X co-ordinate of the tile to test.
+!param y (integer) The 1-based Y co-ordinate of the tile to test.
+]]
 function Hospital:isInHospital(x, y)
+  -- TODO: Fix to work when there are multiple hospitals.
   return self.world.map.th:getCellFlags(x, y).hospital
 end
 
@@ -284,6 +289,10 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
+--[[ Add a transaction to the hospital's transaction log.
+!param transation (table) A table containing a string field called `desc`, and
+at least one of the following integer fields: `spend`, `receive`.
+]]
 function Hospital:logTransaction(transaction)
   transaction.balance = self.balance
   transaction.day = self.world.day

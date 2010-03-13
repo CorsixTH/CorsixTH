@@ -23,10 +23,10 @@ class "Humanoid" (Entity)
 
 local TH = require "TH"
 
-local walk_animations = {}
-local door_animations = {}
-local die_animations = {}
-local mood_icons = {}
+local walk_animations = permanent"humanoid_walk_animations"({})
+local door_animations = permanent"humanoid_door_animations"({})
+local die_animations = permanent"humanoid_die_animations"({})
+local mood_icons = permanent"humanoid_mood_icons"({})
 local flag_cache = {} -- Used in tickDay
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE)

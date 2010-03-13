@@ -91,12 +91,14 @@ function Window:setDefaultPosition(x, y)
   return self:setPosition(x, y)
 end
 
+-- Called after the resolution of the game window changes
 function Window:onChangeResolution()
   if self.x_original and self.y_original then
     self:setPosition(self.x_original, self.y_original)
   end
 end
 
+-- Called before the window is closed
 function Window:close()
   self.parent:removeWindow(self)
   for key in pairs(self.key_handlers) do
@@ -150,6 +152,21 @@ function Panel:setTooltip(tooltip, x, y)
   return self
 end
 
+--[[ Add a `Panel` to the window.
+! Panels form the basic building blocks of most windows. A panel is a small
+bitmap coupled with a position, and by combining several panels, a window can
+be made. By using panels to construct windows, all of the common tasks like
+drawing and hit-testing are provided for you by the base class methods, thus
+reducing the amount of code required elsewhere.
+!param sprite_index (integer) Index into the window's sprite table of the
+bitmap to be displayed.
+!param x (integer) The X pixel position to display the bitmap at.
+!param y (integer) The Y pixel position to display the bitmap at.
+!param w (integer, nil) If the panel is totally opaque, and the width of the
+panel (in pixels) is known, it should be specified here to speed up hit-tests.
+!param h (integer, nil) If the panel is totally opaque, and the height of the
+panel (in pixels) is known, it should be specified here to speed up hit-tests.
+]]
 function Window:addPanel(sprite_index, x, y, w, h)
   local panel = setmetatable({
     window = self,
@@ -168,6 +185,17 @@ local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(pan
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
 end
 
+--[[ Add a solid-colour `Panel` to the window.
+! A solid-colour panel is like a normal panel, expect it displays a solid
+colour rather than a bitmap.
+!param x (integer) The X pixel position to start the panel at.
+!param y (integer) The Y pixel position to start the panel at.
+!param w (integer) The width of the panel, in pixels.
+!param h (integer) The height of the panel, in pixels.
+!param r (integer) Value in [0, 255] giving the red component of the colour.
+!param g (integer) Value in [0, 255] giving the green component of the colour.
+!param b (integer) Value in [0, 255] giving the blue component of the colour.
+]]
 function Window:addColourPanel(x, y, w, h, r, g, b)
   local panel = setmetatable({
     window = self,
@@ -213,7 +241,9 @@ function Window:removeWindow(window)
   return false
 end
 
--- searches in child windows for window of given class, and returns it (or nil)
+-- Searches (direct) child windows for window of the given class, and returns
+-- one (or nil if there wheren't any at all).
+-- !param window_class (class) The class of window to search for.
 function Window:getWindow(window_class)
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -305,6 +335,22 @@ function Button:setTooltip(tooltip, x, y)
   return self
 end
 
+--[[ Convert a static panel into a clickable button.
+!param panel (Panel) The panel to convert into a button.
+!param x (integer) The X co-ordinate of the clickable rectangle on the panel.
+!param y (integer) The Y co-ordinate of the clickable rectangle on the panel.
+!param w (integer) The width of the clickable rectangle on the panel.
+!param h (integer) The height of the clickable rectangle on the panel.
+!param sprite (integer) An index into the window's sprite sheet. The panel will
+display this sprite when the button is being pressed.
+!param on_click (function) The function to be run when the user left-clicks the
+button. Takes three arguments: `on_click_self`, the toggle state (nil for
+normal buttons, true/false for toggle buttons), the button itself.
+!param on_click_self (function, nil) The first value to pass to `on_click`. If
+nil or not given, then the window is passed as the first argument.
+!param on_rightclick (function, nil) The function to be called when the user
+right-clicks the button.
+]]
 function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_self, on_rightclick)
   x = x + panel.x
   y = y + panel.y
@@ -358,8 +404,6 @@ function Window:draw(canvas, x, y)
 end
 
 function Window:hitTestPanel(x, y, panel)
-  local panel_sprites = self.panel_sprites
-  local panel_sprites_hittest = panel_sprites.hitTest
   local x, y = x - panel.x, y - panel.y
   if panel.visible and x >= 0 and y >= 0 then
     if panel.w and panel.h then 
@@ -367,7 +411,7 @@ function Window:hitTestPanel(x, y, panel)
         return true
       end
     else
-      if panel_sprites_hittest(self.panel_sprites, panel.sprite_index, x, y) then
+      if self.panel_sprites:hitTest(panel.sprite_index, x, y) then
         return true
       end
     end
@@ -375,6 +419,12 @@ function Window:hitTestPanel(x, y, panel)
   return false
 end
 
+--[[ Used to test if the window has a (non-transparent) pixel at the given position.
+!param x (integer) The X co-ordinate of the pixel to test, relative to the
+top-left corner of the window.
+!param y (integer) The Y co-ordinate of the pixel to test, relative to the
+top-left corner of the window.
+]]
 function Window:hitTest(x, y)
   if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
     return false
@@ -422,6 +472,12 @@ function Window:onMouseDown(button, x, y)
   return repaint
 end
 
+--[[ Get the name of the saved window position group.
+! When the user drags a window, the new position of the window is saved, and
+then when any windows in the same group are opened in the future, the position
+of the new window is set to the saved position. By default, each window class
+is its own group, but by overriding this method, that can be changed.
+]]
 function Window:getSavedWindowPositionName()
   return class.type(self)
 end
@@ -521,6 +577,10 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
   end
 end
 
+--[[ Initiate dragging of the window.
+!param x The X position of the cursor in window co-ordinatees.
+!param y The Y position of the cursor in window co-ordinatees.
+]]
 function Window:beginDrag(x, y)
   if not self.width or not self.height or not self.ui
   or self.ui.app.runtime_config.lock_windows then
@@ -558,6 +618,14 @@ function Window:beginDrag(x, y)
   return true
 end
 
+--[[ Called when the user moves the mouse.
+!param x (integer) The new X co-ordinate of the cursor, relative to the top-left
+corner of the window.
+!param y (integer) The new Y co-ordinate of the cursor, relative to the top-left
+corner of the window.
+!param dx (integer) The number of pixels which the cursor moved horizontally.
+!param dy (integer) The number of pixels which the cursor moved vertically.
+]]
 function Window:onMouseMove(x, y, dx, dy)
   local repaint = false
   if self.windows then
@@ -595,6 +663,7 @@ function Window:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
+-- Called regularly at a rate independent of the game speed.
 function Window:onTick()
   if self.blinking_button then
     self.blink_counter = self.blink_counter + 1
@@ -614,6 +683,7 @@ function Window:onTick()
   end
 end
 
+-- Called regularly at the same rate that entities are ticked.
 function Window:onWorldTick()
   if self.windows then
     for _, window in ipairs(self.windows) do
@@ -654,9 +724,11 @@ function Window:stopButtonBlinking()
   self.blink_counter = 0
 end
 
--- Override/Extend in window classes for additional (non-button) tooltips.
--- return tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
--- x, y are optional - if not specified, cursor position will be used for tooltip.
+--! Query the window for tooltip text to display for a particular position.
+--! Override/extend in window classes for additional (non-button) tooltips.
+-- Return tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
+--!param x (integer) The X co-ordinate relative to the top-left corner.
+--!param y (integer) The Y co-ordinate relative to the top-left corner.
 function Window:getTooltipAt(x, y)
   if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
     return

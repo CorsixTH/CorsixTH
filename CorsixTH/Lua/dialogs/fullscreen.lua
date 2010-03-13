@@ -35,6 +35,7 @@ function UIFullscreen:UIFullscreen(ui)
   self:onChangeResolution()
 end
 
+-- Cause all fullscreen windows to share a common saved window position.
 function UIFullscreen:getSavedWindowPositionName()
   return "UIFullscreen"
 end

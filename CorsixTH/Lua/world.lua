@@ -121,6 +121,7 @@ function World:getLocalPlayerHospital()
   return self.hospitals[1]
 end
 
+-- Identify the tiles on the map suitable for spawning `Humanoid`s from.
 function World:calculateSpawnTiles()
   self.spawn_points = {}
   local w, h = self.map.width, self.map.height
@@ -224,6 +225,15 @@ function World:makeAvailableStaff()
   end
 end
 
+--[[ Register a callback for when `Humanoid`s enter or leave a given tile.
+! Note that only one callback may be registered to each tile.
+!param x (integer) The 1-based X co-ordinate of the tile to monitor.
+!param y (integer) The 1-based Y co-ordinate of the tile to monitor.
+!param object (Object) Something with an `onOccupantChange` method, which will
+be called whenever a `Humanoid` enters or leaves the given tile. The method
+will recieve one argument (after `self`), which will be `1` for an enter event
+and `-1` for a leave event.
+]]
 function World:notifyObjectOfOccupants(x, y, object)
   local idx = (y - 1) * self.map.width + x
   self.objects_notify_occupants[idx] =  object or nil
@@ -266,10 +276,15 @@ function World:getAnimLength(anim)
   return self.anim_length_cache[anim]
 end
 
+-- Register a function to be called whenever a room is built.
+--!param callback (function) A function taking one argument: a `Room`.
 function World:registerRoomBuildCallback(callback)
   self.room_build_callbacks[callback] = true
 end
 
+-- Unregister a function from being called whenever a room is built.
+--!param callback (function) A function previously passed to
+-- `registerRoomBuildCallback`.
 function World:unregisterRoomBuildCallback(callback)
   self.room_build_callbacks[callback] = nil
 end
@@ -352,6 +367,9 @@ function World:getCurrentSpeed()
   end
 end
 
+-- Set the (approximate) number of seconds per tick.
+--!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
+-- "Max speed", or "And then some more".
 function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
@@ -458,10 +476,12 @@ function World:onTick()
   self.tick_timer = self.tick_timer - 1
 end
 
+-- Called immediately prior to the ingame month changing.
 function World:onEndMonth()
   self:makeAvailableStaff()
 end
 
+-- Called immediately prior to the ingame year changing.
 function World:onEndYear()
 end
 

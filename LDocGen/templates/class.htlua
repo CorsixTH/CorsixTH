@@ -70,8 +70,8 @@
               <! for name, param in member:parameterPairs() do !>
                 <tr>
                   <td class="n"><!= name !></td>
-                  <td class="t">?</td>
-                  <td class="d">?</td>
+                  <td class="t"><!= param and param.type and param.type[1] and table.concat(param.type, "&nbsp;or&nbsp;") or "?" !></td>
+                  <td class="d"><!= (param and param:getLongDesc()) or (param and param:getShortDesc()) or "?" !></td>
                 </tr>
               <! end !>
             </table></p><p>

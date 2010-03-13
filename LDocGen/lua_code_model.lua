@@ -171,6 +171,14 @@ function LuaFunction:parameterPairs()
   end
 end
 
+function LuaFunction:getParameter(name)
+  for _, param in ipairs(self.parameters) do
+    if param:getName() == name then
+      return param
+    end
+  end
+end
+
 function LuaTable:LuaTable()
   self:LuaVariable()
   self.type = "table"

@@ -36,11 +36,22 @@ function Entity:playSound(name)
   -- if the entity is off-screen, and the volume will be quieter the further
   -- the entity is from the center of the screen. If this is not what you want
   -- then use UI:playSound instead.
+  -- !param name (string, integer) The filename or ordinal of the sound to play.
   if TheApp.audio.play_sounds then
     TheApp.audio:playSound(name, self)
   end
 end
 
+--[[ Set which animation is used to give the entity a visual appearance.
+! Until an entity is given an animation, it is invisible to the player. Note
+that some "animations" consist of a single frame, and hence the term animation
+is used both to mean things which are animated and things which are static.
+
+!param animation (integer) The ordinal into the main animation set
+!param flags (integer) A combination of zero or more drawing flags to control
+the use of alternative palettes, transparency, and other similar settings. See
+`THDF_` values in `th_gfx.h` for the possible bit values.
+]]
 function Entity:setAnimation(animation, flags)
   flags = flags or 0
   if self.permanent_flags then
@@ -54,6 +65,10 @@ function Entity:setAnimation(animation, flags)
   return self
 end
 
+--[[ Set the map tile which the entity is on.
+!param x (integer) The 1-based X co-ordinate of the tile.
+!param y (integer) The 1-based Y co-ordinate of the tile.
+]]
 function Entity:setTile(x, y)
   if self.user_of then
     print("Warning: Entity tile changed while marked as using an object")
@@ -76,16 +91,32 @@ function Entity:getRoom()
   end
 end
 
+--[[ Set the pixel posisition of the entity within the current tile.
+!param x (integer) The 0-based X pixel offset from the default position.
+!param y (integer) The 0-based Y pixel offset from the default position.
+]]
 function Entity:setPosition(x, y)
   self.th:setPosition(x, y)
   return self
 end
 
+--[[ Set the rate at which the entity pixel position changes
+!param x (integer) The X component of the speed in pixels per tick.
+!param y (integer) The Y component of the speed in pixels per tick.
+]]
 function Entity:setSpeed(x, y)
   self.th:setSpeed(x, y)
   return self
 end
 
+--[[ Combined form of `setTile`, `setPosition`, and `setSpeed`
+!param tx (integer) The 1-based X co-ordinate of the tile.
+!param ty (integer) The 1-based Y co-ordinate of the tile.
+!param px (integer) The 0-based X pixel offset from the default position.
+!param py (integer) The 0-based Y pixel offset from the default position.
+!param sx (integer) The X component of the speed in pixels per tick.
+!param sy (integer) The Y component of the speed in pixels per tick.
+]]
 function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
   self:setTile(tx, ty)
   self:setPosition(px or 0, py or 0)
@@ -93,6 +124,9 @@ function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
   return self
 end
 
+-- Function which is called once every tick, where a tick is the smallest unit
+-- of time in the game engine. Typically used to advance animations and similar
+-- recurring or long-duration tasks.
 function Entity:tick()
   if self.num_animation_ticks then
     for i = 1, self.num_animation_ticks do
@@ -122,12 +156,28 @@ function Entity:tick()
   end
 end
 
+--[[ Set which parts of the animation to be displayed.
+! Each animation is made up of 13 layers, and generally has several different
+options for each layer. In the animation viewer tool, multiple options can be
+toggled on for each layer, however here only one option may be selected per
+layer.
+!param layer (integer) The layer to set (1 through 13).
+!param id (integer) The option to display for the given layer.
+]]
 function Entity:setLayer(layer, id)
   self.th:setLayer(layer, id)
   self.layers[layer] = id
   return self
 end
 
+--[[ Register a function (related to the entity) to be called at a later time.
+! Each `Entity` can have a single timer associated with it, and due to this
+limit of one, it is almost always the case that the currently active humanoid
+action is the only thing wich calls `setTimer`.
+!param tick_count (integer) If 0, then `f` will be called during the entity's
+next `tick`. If 1, then `f` will be called one tick after that, and so on.
+!param f (function) Function which takes a single argument (the entity).
+]]
 function Entity:setTimer(tick_count, f)
   self.timer_time = tick_count
   self.timer_function = f

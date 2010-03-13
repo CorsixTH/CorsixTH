@@ -66,7 +66,18 @@ local function ParseComments(tokens, i, object)
       elseif operation == "dummy" then
         object:setIsDummy(true)
       elseif operation == "param" then
-        -- TODO
+        local pname, pdesc = operand:match"^%s*([a-zA-Z_][a-zA-Z0-9_]*)%s*(.*)$"
+        local param = object:getParameter(pname)
+        local options, extra = pdesc:match"^%(([^)]*)%)%w*(.*)$"
+        if extra then
+          pdesc = extra
+          local types = {}
+          for opt in options:gmatch"([a-zA-Z0-9_]+)" do
+            types[#types + 1] = opt
+          end
+          param.type = types
+        end
+        param:setShortDesc(pdesc)
       elseif operation == "return" then
         -- TODO
       elseif operation == "example" then
@@ -153,7 +164,7 @@ local function IdentifyMethods(tokens, globals)
   while i <= #tokens do
     if tokens[i][1] == "function" and tokens[i][2] == "keyword" then
       local name_parts, is_method, is_local = GetFunctionName(tokens, i)
-      local method, class
+      local method, class, starting_i
       if not is_local and (#name_parts == 2 or #name_parts == 1) then
         if #name_parts == 1 then
           method = LuaFunction():setParent(globals)
@@ -169,7 +180,7 @@ local function IdentifyMethods(tokens, globals)
           end
         end
         method:setName(name_parts[#name_parts]):setIsMethod(is_method)
-        ParseComments(tokens, i, method)
+        starting_i = i
       end
       local endi = ScanToEndToken(tokens, i + 1)
       local param_state = method and "before" --> "in" --> "after"
@@ -196,6 +207,9 @@ local function IdentifyMethods(tokens, globals)
           end
         end
         i = i + 1
+      end
+      if starting_i then
+        ParseComments(tokens, starting_i, method)
       end
     end
     i = i + 1
