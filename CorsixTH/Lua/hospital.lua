@@ -290,7 +290,7 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
 end
 
 --[[ Add a transaction to the hospital's transaction log.
-!param transation (table) A table containing a string field called `desc`, and
+!param transaction (table) A table containing a string field called `desc`, and
 at least one of the following integer fields: `spend`, `receive`.
 ]]
 function Hospital:logTransaction(transaction)

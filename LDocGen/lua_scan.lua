@@ -68,6 +68,10 @@ local function ParseComments(tokens, i, object)
       elseif operation == "param" then
         local pname, pdesc = operand:match"^%s*([a-zA-Z_][a-zA-Z0-9_]*)%s*(.*)$"
         local param = object:getParameter(pname)
+        if not param then
+          error("Unknown parameter: ".. pname .." (".. tokens.__file
+            .." near line ".. tokens[decl_i - 1].line ..")")
+        end
         local options, extra = pdesc:match"^%(([^)]*)%)%w*(.*)$"
         if extra then
           pdesc = extra
