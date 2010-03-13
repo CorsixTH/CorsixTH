@@ -125,7 +125,10 @@ function Patient:treated()
     local killed = hospital.emergency.killed_emergency_patients
     local cured = hospital.emergency.cured_emergency_patients
     if killed + cured >= hospital.emergency.victims then
-      hospital.world.ui:getWindow(UIWatch):onCountdownEnd()
+      local window = hospital.world.ui:getWindow(UIWatch)
+      if window then
+        window:onCountdownEnd()
+      end
     end
   end
 end
