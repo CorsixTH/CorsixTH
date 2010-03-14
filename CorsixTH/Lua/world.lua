@@ -650,8 +650,6 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   -- If mode == "advanced", prefer a near room, but also few patients and fulfilled staff criteria
   local room
   local score
-  local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue
-  local readiness_bonus = 50 -- how many tiles further are we willing to walk if the room has all the required staff
   if not mode then
     mode = "nearest" -- default mode
   end
@@ -667,11 +665,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
       end
       local this_score = d
       if mode == "advanced" then
-        local q = r.door.queue:reportedSize() + r.door.queue.expected_count + r:getPatientCount() - r.maximum_patients
-        this_score = this_score + q * tile_factor
-        if r:testStaffCriteria(r:getRequiredStaffCriteria()) then
-          this_score = this_score - readiness_bonus
-        end
+        this_score = this_score + r:getUsageScore()
       end
       if not score or this_score < score then
         score = this_score

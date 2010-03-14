@@ -234,6 +234,7 @@ end
 
 function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
+  self:tryToFindNearbyPatients()
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
 end
@@ -291,6 +292,10 @@ function Room:onHumanoidLeave(humanoid)
         end
       end
     end
+    -- There might be other similar rooms with patients queueing
+    if self.door.queue and self.door.queue:reportedSize() == 0 then
+      self:tryToFindNearbyPatients()
+    end
   end
   if not staff_leaving then
     self:tryAdvanceQueue()
@@ -317,6 +322,18 @@ function Room:onHumanoidLeave(humanoid)
   end
 end
 
+local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue
+local readiness_bonus = 50 -- how many tiles further are we willing to walk if the room has all the required staff
+function Room:getUsageScore()
+  local queue = self.door.queue
+  local score = queue:reportedSize() + queue.expected_count + self:getPatientCount() - self.maximum_patients
+  score = score * tile_factor
+  if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
+    score = score - readiness_bonus
+  end
+  return score
+end
+
 function Room:canHumanoidEnter(humanoid)
   -- By default, staff can always enter
   if class.is(humanoid, Staff) then
@@ -339,6 +356,61 @@ function Room:roomFinished()
   self.built = true
   -- Only true when not editing the room at all.
   self.is_active = true -- TODO: Have in mind when adding editing of rooms.
+  
+  self:tryToFindNearbyPatients()
+end
+
+function Room:tryToFindNearbyPatients()
+  if not self.door.queue then
+    return
+  end
+  local world = self.world
+  local our_score = self:getUsageScore()
+  local our_x, our_y = self:getEntranceXY(true)
+  for _, room in ipairs(self.world.rooms) do
+    if room.hospital == self.hospital and room.room_info == self.room_info
+    and room.door.queue and room.door.queue:reportedSize() >= 2 then
+      local other_score = room:getUsageScore()
+      local other_x, other_y = room:getEntranceXY(true)
+      local queue = room.door.queue
+      while queue:reportedSize() > 1 do
+        local patient = queue:back()
+        local px, py = patient.tile_x, patient.tile_y
+        if world:getPathDistance(px, py, our_x, our_y) + our_score <
+        world:getPathDistance(px, py, other_x, other_y) + other_score then
+          -- Update the queues
+          queue:removeValue(patient)
+          patient.next_room_to_visit = self
+          self.door.queue:expect(patient)
+          self.door:updateDynamicInfo()
+          
+          -- Update our cached values
+          our_score = self:getUsageScore()
+          other_score = room:getUsageScore()
+          
+          -- Rewrite the action queue
+          for i, action in ipairs(patient.action_queue) do
+            if i ~= 1 then
+              action.todo_interrupt = true
+            end
+            if action.name == "walk" and action.x == other_x and action.y == other_y then
+              local action = self:createEnterAction()
+              patient:queueAction(action, i)
+              break
+            end
+          end
+          local interrupted = patient.action_queue[1]
+          local on_interrupt = interrupted.on_interrupt
+          if on_interrupt then
+            interrupted.on_interrupt = nil
+            on_interrupt(interrupted, patient, false)
+          end
+        else
+          break
+        end
+      end
+    end
+  end
 end
 
 function Room:crashRoom()

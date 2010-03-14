@@ -139,6 +139,10 @@ function Queue:front()
   return self[1]
 end
 
+function Queue:back()
+  return self[#self]
+end
+
 function Queue:pop()
   if self.reported_size == #self then
     self.reported_size = self.reported_size - 1

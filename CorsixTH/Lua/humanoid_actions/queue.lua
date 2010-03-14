@@ -81,13 +81,20 @@ local function action_queue_leave_bench(action, humanoid)
 end
 
 local function action_queue_find_idle(action, humanoid)
+  local found_any = false
   for i, current_action in ipairs(humanoid.action_queue) do
     if current_action.name == "idle" then
-      assert(humanoid.action_queue[i + 1] == action)
-      return i
+      found_any = true
+      if humanoid.action_queue[i + 1] == action then
+        return i
+      end
     end
   end
-  error "Idle not in action_queue"
+  if found_any then
+    error "Proper idle not in action_queue"
+  else
+    error "Idle not in action_queue"
+  end
 end
 
 local function action_queue_finish_standing(action, humanoid)
@@ -114,6 +121,9 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         must_stand = true
         break
       end
+    end
+    if not must_stand then
+      must_stand = humanoid:goingToUseObject("drinks_machine")
     end
   end
   
@@ -201,7 +211,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
 end)
 
 local action_queue_is_standing = permanent"action_queue_is_standing"( function(action)
-  return action.current_bench_distance == nil
+  return not action.current_bench_distance
 end)
 
 local action_queue_on_leave = permanent"action_queue_on_leave"( function(action, humanoid)
