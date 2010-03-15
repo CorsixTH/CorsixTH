@@ -67,6 +67,7 @@ void THPathfinder::setDefaultMap(const THMap *pMap)
 
 #define Pathing_Init() \
     int iWidth = pMap->getWidth(); \
+    m_pDestination = NULL; \
     _allocNodeCache(iWidth, pMap->getHeight()); \
     node_t *pNode = m_pNodes + iStartY * iWidth + iStartX; \
     pNode->prev = NULL; \
