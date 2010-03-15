@@ -199,4 +199,9 @@ function Queue:rerouteAllPatients(action)
     humanoid:setNextAction({name = "idle", count = 1})
     humanoid:queueAction(action)
   end
+  for humanoid in pairs(self.expected) do
+    humanoid:setNextAction({name = "idle", count = 1})
+    humanoid:queueAction(action)
+    self:unexpect(humanoid)
+  end
 end
