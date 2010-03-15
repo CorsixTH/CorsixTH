@@ -38,7 +38,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.money_font = app.gfx:loadFont("QData", "Font05V")
   self.date_font = app.gfx:loadFont("QData", "Font16V")
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
   
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
@@ -151,7 +151,7 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
     local info = self.dynamic_info
     local font = self.white_font
     for i, text in ipairs(info["text"]) do
-      font:drawWrapped(canvas, text, x + 20, y + 10*i, 240, -2)
+      font:drawWrapped(canvas, text, x + 20, y + 10*i, 240)
       if i == #info["text"] and info["progress"] then
         local white = canvas:mapRGB(255, 255, 255)
         local black = canvas:mapRGB(0, 0, 0)

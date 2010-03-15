@@ -55,5 +55,5 @@ function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   
   x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153, 0, 149)
+  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153)
 end

@@ -57,6 +57,7 @@ function World:World(app)
   self:initDiseases(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.hospitals = {}
+  self.floating_dollars = {}
   
   self.hospitals[1] = Hospital(self) -- Player's hospital
   -- TODO: Add AI and/or multiplayer hospitals
@@ -473,6 +474,15 @@ function World:onTick()
       end
     end
   end
+  if self.ticks_per_tick > 0 and self.floating_dollars then
+    for obj in pairs(self.floating_dollars) do
+      obj:tick()
+      if obj:isDead() then
+        obj:setTile(nil)
+        self.floating_dollars[obj] = nil
+      end
+    end
+  end
   self.tick_timer = self.tick_timer - 1
 end
 
@@ -674,6 +684,28 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     end
   until true end
   return room
+end
+
+function World:newFloatingDollarSign(patient, amount)
+  if not self.floating_dollars then
+    self.floating_dollars = {}
+  end
+  
+  local spritelist = TH.spriteList()
+  spritelist:setPosition(-17, -60)
+  spritelist:setSpeed(0, -1):setLifetime(100)
+  spritelist:setSheet(TheApp.gfx:loadSpriteTable("Data", "Money01V"))
+  spritelist:append(1, 0, 0)
+  local len = #("%i"):format(amount)
+  local xbase = math.floor(10.5 + (20 - 5 * len) / 2)
+  for i = 1, len do
+    local digit = amount % 10
+    amount = (amount - digit) / 10
+    spritelist:append(2 + digit, xbase + 5 * (len - i), 5)
+  end
+  spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y)
+  
+  self.floating_dollars[spritelist] = true
 end
 
 function World:newEntity(class, animation)

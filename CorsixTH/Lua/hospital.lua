@@ -280,12 +280,13 @@ function Hospital:receiveMoneyForTreatment(patient)
   amount = amount * (casebook.reputation or self.reputation) / 500
   amount = amount * casebook.price
   casebook.money_earned = casebook.money_earned + amount
-  -- TODO: Display dollar sign above patient for a short time
+  patient.world:newFloatingDollarSign(patient, amount)
   -- TODO: Optionally delay payment through an insurance company
   self:receiveMoney(amount, reason)
 end
 
 function Hospital:receiveMoneyForProduct(patient, amount, reason)
+  patient.world:newFloatingDollarSign(patient, amount)
   self:receiveMoney(amount, reason)
 end
 

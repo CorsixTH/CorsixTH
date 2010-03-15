@@ -454,11 +454,11 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     pCanvas->setClipRect(&rcOldClip);
                 }
             }
-            THDrawable *pItem = (THDrawable*)(itrNode->oEarlyEntities.pNext);
+            THDrawable *pItem = (THDrawable*)(itrNode->oEarlyEntities.m_pNext);
             while(pItem)
             {
-                pItem->fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
-                pItem = (THDrawable*)(pItem->pNext);
+                pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
+                pItem = (THDrawable*)(pItem->m_pNext);
             }
         }
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY); itrNode; ++itrNode)
@@ -478,11 +478,11 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
-            THDrawable *pItem = (THDrawable*)(itrNode->pNext);
+            THDrawable *pItem = (THDrawable*)(itrNode->m_pNext);
             while(pItem)
             {
-                pItem->fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
-                pItem = (THDrawable*)(pItem->pNext);
+                pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
+                pItem = (THDrawable*)(pItem->m_pNext);
             }
         }
     }
@@ -505,9 +505,9 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward); itrNode; ++itrNode)
         {
-            if(itrNode->pNext != NULL)
+            if(itrNode->m_pNext != NULL)
             {
-                THDrawable* pResult = _hitTestDrawables(itrNode->pNext,
+                THDrawable* pResult = _hitTestDrawables(itrNode->m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -515,9 +515,9 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         }
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward); itrNode; ++itrNode)
         {
-            if(itrNode->oEarlyEntities.pNext != NULL)
+            if(itrNode->oEarlyEntities.m_pNext != NULL)
             {
-                THDrawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.pNext,
+                THDrawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -532,19 +532,19 @@ THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                      int iTestX, int iTestY) const
 {
     THLinkList* pListEnd = pListStart;
-    while(pListEnd->pNext)
-        pListEnd = pListEnd->pNext;
+    while(pListEnd->m_pNext)
+        pListEnd = pListEnd->m_pNext;
     THDrawable* pList = (THDrawable*)pListEnd;
 
     while(true)
     {
-        if(pList->fnHitTest(pList, iXs, iYs, iTestX, iTestY))
+        if(pList->m_fnHitTest(pList, iXs, iYs, iTestX, iTestY))
             return pList;
 
         if(pList == pListStart)
             return NULL;
         else
-            pList = (THDrawable*)pList->pPrev;
+            pList = (THDrawable*)pList->m_pPrev;
     }
 }
 
@@ -666,11 +666,11 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         pWriter->writeVUInt(pNode->iFlags);
 
         lua_rawgeti(L, lua_upvalueindex(1), 2);
-        lua_pushlightuserdata(L, pNode->pNext);
+        lua_pushlightuserdata(L, pNode->m_pNext);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);
         lua_pop(L, 1);
-        lua_pushlightuserdata(L, pNode->oEarlyEntities.pNext);
+        lua_pushlightuserdata(L, pNode->oEarlyEntities.m_pNext);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);
         lua_pop(L, 2);
@@ -744,22 +744,22 @@ void THMap::depersist(LuaPersistReader *pReader)
 
         if(!pReader->readStackObject())
             return;
-        pNode->pNext = (THLinkList*)lua_touserdata(L, -1);
-        if(pNode->pNext)
+        pNode->m_pNext = (THLinkList*)lua_touserdata(L, -1);
+        if(pNode->m_pNext)
         {
-            if(pNode->pNext->pPrev != NULL)
+            if(pNode->m_pNext->m_pPrev != NULL)
                 fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
-            pNode->pNext->pPrev = pNode;
+            pNode->m_pNext->m_pPrev = pNode;
         }
         lua_pop(L, 1);
         if(!pReader->readStackObject())
             return;
-        pNode->oEarlyEntities.pNext = (THLinkList*)lua_touserdata(L, -1);
-        if(pNode->oEarlyEntities.pNext)
+        pNode->oEarlyEntities.m_pNext = (THLinkList*)lua_touserdata(L, -1);
+        if(pNode->oEarlyEntities.m_pNext)
         {
-            if(pNode->oEarlyEntities.pNext->pPrev != NULL)
+            if(pNode->oEarlyEntities.m_pNext->m_pPrev != NULL)
                 fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
-            pNode->oEarlyEntities.pNext->pPrev = &pNode->oEarlyEntities;
+            pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
         lua_pop(L, 1);
     }

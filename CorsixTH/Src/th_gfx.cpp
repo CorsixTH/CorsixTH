@@ -25,6 +25,7 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_sound.h"
 #include <new>
+#include <algorithm>
 #include <memory.h>
 #include <limits.h>
 
@@ -102,9 +103,11 @@ void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMes
     pCanvas->finishNonOverlapping();
 }
 
-int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance, int *iResultingWidth, bool bOnlyTest) const
+int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                        size_t iMessageLength, int iX, int iY, int iWidth,
+                        int *pResultingWidth, eTHAlign eAlign) const
 {
-    int iResultingWidthTemp = 0;
+    int iResultingWidth = 0;
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
@@ -115,9 +118,11 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
             const char* sBreakPosition = sMessage + iMessageLength;
             const char* sLastGoodBreakPosition = sBreakPosition;
             int iMsgWidth = -m_iCharSep;
+            int iMsgBreakWidth = iMsgWidth;
             unsigned int iTallest = 0;
+            size_t i;
 
-            for(size_t i = 0; i < iMessageLength; ++i)
+            for(i = 0; i < iMessageLength; ++i)
             {
                 unsigned int iChar = (unsigned char)sMessage[i];
                 unsigned int iCharWidth = 0, iCharHeight = 0;
@@ -129,7 +134,7 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 if(iChar == ' ')
                 {
                     sLastGoodBreakPosition = sMessage + i;
-                    if (iMsgWidth > iResultingWidthTemp) iResultingWidthTemp = iMsgWidth;
+                    iMsgBreakWidth = iMsgWidth - iCharWidth;
                 }
                 if(iMsgWidth > iWidth)
                 {
@@ -138,11 +143,19 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 }
                 if(iCharHeight > iTallest)
                     iTallest = iCharHeight;
-                if (i == iMessageLength - 1)
-                    if (iMsgWidth > iResultingWidthTemp) iResultingWidthTemp = iMsgWidth;
             }
 
-            if (!bOnlyTest) drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX, iY);
+            if(i == iMessageLength)
+                iMsgBreakWidth = iMsgWidth;
+            if(iMsgBreakWidth > iResultingWidth)
+                iResultingWidth = iMsgBreakWidth;
+            if(pCanvas)
+            {
+                int iXOffset = 0;
+                if(iMsgBreakWidth < iWidth)
+                    iXOffset = (iWidth - iMsgBreakWidth) * static_cast<int>(eAlign) / 2;
+                drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset, iY);
+            }
             iMessageLength += sMessage - sBreakPosition;
             sMessage = sBreakPosition;
             if(iMessageLength > 0)
@@ -150,10 +163,11 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_
                 --iMessageLength;
                 ++sMessage;
             }
-            iY += (int)iTallest + m_iLineSep + iAddedRowDistance;
+            iY += static_cast<int>(iTallest) + m_iLineSep;
         }
     }
-    if (iResultingWidth != NULL) *iResultingWidth = iResultingWidthTemp;
+    if(pResultingWidth != NULL)
+        *pResultingWidth = iResultingWidth;
     return iY;
 }
 
@@ -723,16 +737,18 @@ void THChunkRenderer::decodeChunks(const unsigned char* data, int datalen, bool 
     chunkFinish(0xFF);
 }
 
+#define AreFlagsSet(val, flags) (((val) & (flags)) == (flags))
+
 void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
-    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
 
     m_iLastX = m_iX + iDestX;
     m_iLastY = m_iY + iDestY;
     if(m_pManager)
     {
-        if(iFlags & THDF_Crop)
+        if(m_iFlags & THDF_Crop)
         {
             THClipRect rcOld, rcNew;
             pCanvas->getClipRect(&rcOld);
@@ -743,20 +759,20 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
             IntersectTHClipRect(rcNew, rcOld);
             pCanvas->setClipRect(&rcNew);
             m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
-                                  m_iY + iDestY, iFlags);
+                                  m_iY + iDestY, m_iFlags);
             pCanvas->setClipRect(&rcOld);
         }
         else
             m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
-                                  m_iY + iDestY, iFlags);
+                                  m_iY + iDestY, m_iFlags);
     }
 }
 
 void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
-    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
-    if((m_pParent->iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_pParent->m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
     if(!m_pParent->getMarker(&m_iLastX, &m_iLastY))
     {
@@ -766,7 +782,7 @@ void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
     m_iLastX += m_iX + iDestX;
     m_iLastY += m_iY + iDestY;
     if(m_pManager)
-        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iLastX, m_iLastY, iFlags);
+        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iLastX, m_iLastY, m_iFlags);
 }
 
 bool THAnimation::hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY)
@@ -791,45 +807,55 @@ static void CalculateMorphRect(const THClipRect& rcOriginal, THClipRect& rcMorph
 
 void THAnimation::drawMorph(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
-    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
 
     if(!m_pManager)
         return;
 
+    iDestX += m_iX;
+    iDestY += m_iY;
+
     THClipRect oClipRect;
     pCanvas->getClipRect(&oClipRect);
     THClipRect oMorphRect;
-    CalculateMorphRect(oClipRect, oMorphRect, m_iY + iDestY + m_pMorphTarget->m_iX, m_iY + iDestY + m_pMorphTarget->m_iY + 1);
+    CalculateMorphRect(oClipRect, oMorphRect, iDestY + m_pMorphTarget->m_iX,
+                       iDestY + m_pMorphTarget->m_iY + 1);
     pCanvas->setClipRect(&oMorphRect);
-    m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX, m_iY + iDestY, iFlags);
-    CalculateMorphRect(oClipRect, oMorphRect, m_iY + iDestY + m_pMorphTarget->m_iY, m_iY + iDestY + m_pMorphTarget->m_iSpeedX);
+    m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
+                          m_iFlags);
+    CalculateMorphRect(oClipRect, oMorphRect, iDestY + m_pMorphTarget->m_iY,
+                       iDestY + m_pMorphTarget->m_iSpeedX);
     pCanvas->setClipRect(&oMorphRect);
-    m_pManager->drawFrame(pCanvas, m_pMorphTarget->m_iFrame, m_pMorphTarget->m_oLayers, m_iX + iDestX, m_iY + iDestY, m_pMorphTarget->iFlags);
+    m_pManager->drawFrame(pCanvas, m_pMorphTarget->m_iFrame,
+                          m_pMorphTarget->m_oLayers, iDestX,
+                          iDestY, m_pMorphTarget->m_iFlags);
     pCanvas->setClipRect(&oClipRect);
 }
 
 
 bool THAnimation::hitTest(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return false;
     if(m_pManager == NULL)
         return false;
     return m_pManager->hitTest(m_iFrame, m_oLayers, m_iX + iDestX,
-        m_iY + iDestY, iFlags, iTestX, iTestY);
+        m_iY + iDestY, m_iFlags, iTestX, iTestY);
 }
 
 bool THAnimation::hitTestMorph(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if((iFlags & (THDF_Alpha50 | THDF_Alpha75)) == (THDF_Alpha50 | THDF_Alpha75))
+    if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return false;
     if(m_pManager == NULL)
         return false;
     return m_pManager->hitTest(m_iFrame, m_oLayers, m_iX + iDestX,
-        m_iY + iDestY, iFlags, iTestX, iTestY) || m_pMorphTarget->hitTest(
+        m_iY + iDestY, m_iFlags, iTestX, iTestY) || m_pMorphTarget->hitTest(
         iDestX, iDestY, iTestX, iTestY);
 }
+
+#undef AreFlagsSet
 
 static bool THAnimation_HitTestChild(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
@@ -861,24 +887,28 @@ static void THAnimation_Draw(THDrawable* pSelf, THRenderTarget* pCanvas, int iDe
     reinterpret_cast<THAnimation*>(pSelf)->draw(pCanvas, iDestX, iDestY);
 }
 
-THAnimation::THAnimation()
+THAnimationBase::THAnimationBase()
 {
-    fnDraw = THAnimation_Draw;
-    fnHitTest = THAnimation_HitTest;
-    m_pManager = NULL;
-    m_pMorphTarget = NULL;
-    iFlags = 0;
-    m_iAnimation = 0;
-    m_iFrame = 0;
     m_iX = 0;
     m_iY = 0;
+    for(int i = 0; i < 13; ++i)
+        m_oLayers.iLayerContents[i] = 0;
+    m_iFlags = 0;
+}
+
+THAnimation::THAnimation()
+{
+    m_fnDraw = THAnimation_Draw;
+    m_fnHitTest = THAnimation_HitTest;
+    m_pManager = NULL;
+    m_pMorphTarget = NULL;
+    m_iAnimation = 0;
+    m_iFrame = 0;
     m_iCropColumn = 0;
     m_iSpeedX = 0;
     m_iSpeedY = 0;
     m_iLastX = INT_MAX;
     m_iLastY = INT_MAX;
-    for(int i = 0; i < 13; ++i)
-        m_oLayers.iLayerContents[i] = 0;
 }
 
 void THAnimation::persist(LuaPersistWriter *pWriter) const
@@ -887,21 +917,26 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
 
     // Write the next chained thing
     lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
-    lua_pushlightuserdata(L, pNext);
+    lua_pushlightuserdata(L, m_pNext);
     lua_rawget(L, -2);
     pWriter->writeStackObject(-1);
     lua_pop(L, 2);
 
     // Write the THDrawable fields
-    pWriter->writeVUInt(iFlags);
-    if(fnDraw == THAnimation_Draw && fnHitTest == THAnimation_HitTest)
+    pWriter->writeVUInt(m_iFlags);
+#define IsUsingFunctionSet(d, ht) m_fnDraw == (THAnimation_ ## d) \
+                            && m_fnHitTest == (THAnimation_ ## ht)
+
+    if(IsUsingFunctionSet(Draw, HitTest))
         pWriter->writeVUInt(1);
-    else if(fnDraw == THAnimation_DrawChild && fnHitTest == THAnimation_HitTestChild)
+    else if(IsUsingFunctionSet(DrawChild, HitTestChild))
         pWriter->writeVUInt(2);
-    else if(fnDraw == THAnimation_DrawMorph && fnHitTest == THAnimation_HitTestMorph)
+    else if(IsUsingFunctionSet(DrawMorph, HitTestMorph))
         pWriter->writeVUInt(3);
     else
         pWriter->writeVUInt(0);
+
+#undef IsUsingFunctionSet
 
     // Write the simple fields
     pWriter->writeVUInt(m_iAnimation);
@@ -910,11 +945,11 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVInt(m_iY);
     pWriter->writeVInt(m_iLastX);
     pWriter->writeVInt(m_iLastY);
-    if(iFlags & THDF_Crop)
+    if(m_iFlags & THDF_Crop)
         pWriter->writeVInt(m_iCropColumn);
 
     // Write the unioned fields
-    if(fnDraw != THAnimation_DrawChild)
+    if(m_fnDraw != THAnimation_DrawChild)
     {
         pWriter->writeVInt(m_iSpeedX);
         pWriter->writeVInt(m_iSpeedY);
@@ -948,13 +983,13 @@ void THAnimation::depersist(LuaPersistReader *pReader)
         // Read the chain
         if(!pReader->readStackObject())
             break;
-        pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
-        if(pNext)
-            pNext->pPrev = this;
+        m_pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
+        if(m_pNext)
+            m_pNext->m_pPrev = this;
         lua_pop(L, 1);
 
         // Read THDrawable fields
-        if(!pReader->readVUInt(iFlags))
+        if(!pReader->readVUInt(m_iFlags))
             break;
         int iFunctionSet;
         if(!pReader->readVUInt(iFunctionSet))
@@ -962,16 +997,16 @@ void THAnimation::depersist(LuaPersistReader *pReader)
         switch(iFunctionSet)
         {
         case 1:
-            fnDraw = THAnimation_Draw;
-            fnHitTest = THAnimation_HitTest;
+            m_fnDraw = THAnimation_Draw;
+            m_fnHitTest = THAnimation_HitTest;
             break;
         case 2:
-            fnDraw = THAnimation_DrawChild;
-            fnHitTest = THAnimation_HitTestChild;
+            m_fnDraw = THAnimation_DrawChild;
+            m_fnHitTest = THAnimation_HitTestChild;
             break;
         case 3:
-            fnDraw = THAnimation_DrawMorph;
-            fnHitTest = THAnimation_HitTestMorph;
+            m_fnDraw = THAnimation_DrawMorph;
+            m_fnHitTest = THAnimation_HitTestMorph;
             break;
         default:
             pReader->setError(lua_pushfstring(L, "Unknown animation function set #%i", iFunctionSet));
@@ -991,7 +1026,7 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             break;
         if(!pReader->readVInt(m_iLastY))
             break;
-        if(iFlags & THDF_Crop)
+        if(m_iFlags & THDF_Crop)
         {
             if(!pReader->readVInt(m_iCropColumn))
                 break;
@@ -1000,7 +1035,7 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             m_iCropColumn = 0;
 
         // Read the unioned fields
-        if(fnDraw != THAnimation_DrawChild)
+        if(m_fnDraw != THAnimation_DrawChild)
         {
             if(!pReader->readVInt(m_iSpeedX))
                 break;
@@ -1047,7 +1082,7 @@ void THAnimation::depersist(LuaPersistReader *pReader)
 void THAnimation::tick()
 {
     m_iFrame = m_pManager->getNextFrame(m_iFrame);
-    if(fnDraw != THAnimation_DrawChild)
+    if(m_fnDraw != THAnimation_DrawChild)
     {
         m_iX += m_iSpeedX;
         m_iY += m_iSpeedY;
@@ -1072,34 +1107,36 @@ void THAnimation::tick()
     }
 }
 
-void THAnimation::removeFromTile()
+void THAnimationBase::removeFromTile()
 {
     THLinkList::removeFromList();
 }
 
-void THAnimation::attachToTile(THMapNode *pMapNode)
+void THAnimationBase::attachToTile(THMapNode *pMapNode)
 {
     removeFromTile();
 
     THLinkList *pList;
-    if(iFlags & THDF_EarlyList)
+    if(m_iFlags & THDF_EarlyList)
         pList = &pMapNode->oEarlyEntities;
     else
         pList = pMapNode;
-    while(pList->pNext && reinterpret_cast<THDrawable*>(pList->pNext)->iFlags & THDF_ListBottom)
-        pList = pList->pNext;
+#define GetFlags(x) (reinterpret_cast<THDrawable*>(x)->m_iFlags)
+    while(pList->m_pNext && (GetFlags(pList->m_pNext) & THDF_ListBottom))
+        pList = pList->m_pNext;
+#undef GetFlags
 
-    pPrev = pList;
-    if(pList->pNext != NULL)
+    m_pPrev = pList;
+    if(pList->m_pNext != NULL)
     {
-        pNext = pList->pNext;
-        pNext->pPrev = this;
+        m_pNext = pList->m_pNext;
+        m_pNext->m_pPrev = this;
     }
     else
     {
-        pNext = NULL;
+        m_pNext = NULL;
     }
-    pList->pNext = this;
+    pList->m_pNext = this;
 }
 
 void THAnimation::setParent(THAnimation *pParent)
@@ -1107,21 +1144,21 @@ void THAnimation::setParent(THAnimation *pParent)
     removeFromTile();
     if(pParent == NULL)
     {
-        fnDraw = THAnimation_Draw;
-        fnHitTest = THAnimation_HitTest;
+        m_fnDraw = THAnimation_Draw;
+        m_fnHitTest = THAnimation_HitTest;
         m_iSpeedX = 0;
         m_iSpeedY = 0;
     }
     else
     {
-        fnDraw = THAnimation_DrawChild;
-        fnHitTest = THAnimation_HitTestChild;
+        m_fnDraw = THAnimation_DrawChild;
+        m_fnHitTest = THAnimation_HitTestChild;
         m_pParent = pParent;
-        pNext = m_pParent->pNext;
-        if(pNext)
-            pNext->pPrev = this;
-        pPrev = m_pParent;
-        m_pParent->pNext = this;
+        m_pNext = m_pParent->m_pNext;
+        if(m_pNext)
+            m_pNext->m_pPrev = this;
+        m_pPrev = m_pParent;
+        m_pParent->m_pNext = this;
     }
 }
 
@@ -1133,8 +1170,8 @@ void THAnimation::setAnimation(THAnimationManager* pManager, unsigned int iAnima
     if(m_pMorphTarget)
     {
         m_pMorphTarget = NULL;
-        fnDraw = THAnimation_Draw;
-        fnHitTest = THAnimation_HitTest;
+        m_fnDraw = THAnimation_Draw;
+        m_fnHitTest = THAnimation_HitTest;
     }
 }
 
@@ -1142,7 +1179,7 @@ bool THAnimation::getMarker(int* pX, int* pY)
 {
     if(!m_pManager || !m_pManager->getFrameMarker(m_iFrame, pX, pY))
         return false;
-    if(iFlags & THDF_FlipHorizontal)
+    if(m_iFlags & THDF_FlipHorizontal)
         *pX = -*pX;
     *pX += m_iX;
     *pY += m_iY + 16;
@@ -1153,7 +1190,7 @@ bool THAnimation::getSecondaryMarker(int* pX, int* pY)
 {
     if(!m_pManager || !m_pManager->getFrameSecondaryMarker(m_iFrame, pX, pY))
         return false;
-    if(iFlags & THDF_FlipHorizontal)
+    if(m_iFlags & THDF_FlipHorizontal)
         *pX = -*pX;
     *pX += m_iX;
     *pY += m_iY + 16;
@@ -1192,8 +1229,8 @@ static int GetAnimationDurationAndExtent(THAnimationManager *pManager,
 void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
 {
     m_pMorphTarget = pMorphTarget;
-    fnDraw = THAnimation_DrawMorph;
-    fnHitTest = THAnimation_HitTestMorph;
+    m_fnDraw = THAnimation_DrawMorph;
+    m_fnHitTest = THAnimation_HitTestMorph;
 
     /* Morphing is the process by which two animations are combined to give a
     single animation of one animation turning into another. At the moment,
@@ -1215,12 +1252,16 @@ void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
     int iOrigMinY, iOrigMaxY;
     int iMorphMinY, iMorphMaxY;
 
-    int iOriginalDuration = GetAnimationDurationAndExtent(m_pManager,
-        m_iFrame, m_oLayers, &iOrigMinY, &iOrigMaxY, iFlags);
-    int iMorphDuration = GetAnimationDurationAndExtent(m_pMorphTarget->m_pManager,
-        m_pMorphTarget->m_iFrame, m_pMorphTarget->m_oLayers, &iMorphMinY, &iMorphMaxY, m_pMorphTarget->iFlags);
+#define GADEA GetAnimationDurationAndExtent
+    int iOriginalDuration = GADEA(m_pManager, m_iFrame, m_oLayers, &iOrigMinY,
+                                  &iOrigMaxY, m_iFlags);
+    int iMorphDuration = GADEA(m_pMorphTarget->m_pManager,
+                               m_pMorphTarget->m_iFrame,
+                               m_pMorphTarget->m_oLayers, &iMorphMinY,
+                               &iMorphMaxY, m_pMorphTarget->m_iFlags);
     if(iMorphDuration > iOriginalDuration)
         iMorphDuration = iOriginalDuration;
+#undef GADEA
 
     if(iOrigMinY < iMorphMinY)
         m_pMorphTarget->m_iX = iOrigMinY;
@@ -1232,7 +1273,8 @@ void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
     else
         m_pMorphTarget->m_iSpeedX = iMorphMaxY;
 
-    m_pMorphTarget->m_iSpeedY = (m_pMorphTarget->m_iX - m_pMorphTarget->m_iSpeedX - iMorphDuration + 1) / iMorphDuration;
+    int iDist = m_pMorphTarget->m_iX - m_pMorphTarget->m_iSpeedX;
+    m_pMorphTarget->m_iSpeedY = (iDist - iMorphDuration + 1) / iMorphDuration;
     m_pMorphTarget->m_iY = m_pMorphTarget->m_iSpeedX;
 }
 
@@ -1241,10 +1283,205 @@ void THAnimation::setFrame(unsigned int iFrame)
     m_iFrame = iFrame;
 }
 
-void THAnimation::setLayer(int iLayer, int iId)
+void THAnimationBase::setLayer(int iLayer, int iId)
 {
     if(0 <= iLayer && iLayer <= 12)
     {
         m_oLayers.iLayerContents[iLayer] = (unsigned char)iId;
     }
+}
+
+static bool THSpriteRenderList_HitTest(THDrawable* pSelf, int iDestX,
+                                       int iDestY, int iTestX, int iTestY)
+{
+    return reinterpret_cast<THSpriteRenderList*>(pSelf)->
+        hitTest(iDestX, iDestY, iTestX, iTestY);
+}
+
+static void THSpriteRenderList_Draw(THDrawable* pSelf, THRenderTarget* pCanvas,
+                                    int iDestX, int iDestY)
+{
+    reinterpret_cast<THSpriteRenderList*>(pSelf)->
+        draw(pCanvas, iDestX, iDestY);
+}
+
+THSpriteRenderList::THSpriteRenderList()
+{
+    m_fnDraw = THSpriteRenderList_Draw;
+    m_fnHitTest = THSpriteRenderList_HitTest;
+    m_iBufferSize = 0;
+    m_iNumSprites = 0;
+    m_pSpriteSheet = NULL;
+    m_pSprites = NULL;
+    m_iSpeedX = 0;
+    m_iSpeedY = 0;
+    m_iLifetime = -1;
+}
+
+THSpriteRenderList::~THSpriteRenderList()
+{
+    delete[] m_pSprites;
+}
+
+void THSpriteRenderList::tick()
+{
+    m_iX += m_iSpeedX;
+    m_iY += m_iSpeedY;
+    if(m_iLifetime > 0)
+        --m_iLifetime;
+}
+
+void THSpriteRenderList::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
+{
+    if(!m_pSpriteSheet)
+        return;
+
+    iDestX += m_iX;
+    iDestY += m_iY;
+    for(_sprite_t *pSprite = m_pSprites, *pLast = m_pSprites + m_iNumSprites;
+        pSprite != pLast; ++pSprite)
+    {
+        m_pSpriteSheet->drawSprite(pCanvas, pSprite->iSprite,
+            iDestX + pSprite->iX, iDestY + pSprite->iY, m_iFlags);
+    }
+}
+
+bool THSpriteRenderList::hitTest(int iDestX, int iDestY, int iTestX, int iTestY)
+{
+    // TODO
+    return false;
+}
+
+void THSpriteRenderList::setLifetime(int iLifetime)
+{
+    if(iLifetime < 0)
+        iLifetime = -1;
+    m_iLifetime = iLifetime;
+}
+
+void THSpriteRenderList::appendSprite(unsigned int iSprite, int iX, int iY)
+{
+    if(m_iBufferSize == m_iNumSprites)
+    {
+        int iNewSize = m_iBufferSize * 2;
+        if(iNewSize == 0)
+            iNewSize = 4;
+        _sprite_t* pNewSprites = new _sprite_t[iNewSize];
+#ifdef _MSC_VER
+#pragma warning(disable: 4996)
+#endif
+        std::copy(m_pSprites, m_pSprites + m_iNumSprites, pNewSprites);
+#ifdef _MSC_VER
+#pragma warning(default: 4996)
+#endif
+        delete[] m_pSprites;
+        m_pSprites = pNewSprites;
+        m_iBufferSize = iNewSize;
+    }
+    m_pSprites[m_iNumSprites].iSprite = iSprite;
+    m_pSprites[m_iNumSprites].iX = iX;
+    m_pSprites[m_iNumSprites].iY = iY;
+    ++m_iNumSprites;
+}
+
+void THSpriteRenderList::persist(LuaPersistWriter *pWriter) const
+{
+    lua_State *L = pWriter->getStack();
+
+    pWriter->writeVUInt(m_iNumSprites);
+    pWriter->writeVUInt(m_iFlags);
+    pWriter->writeVInt(m_iX);
+    pWriter->writeVInt(m_iY);
+    pWriter->writeVInt(m_iSpeedX);
+    pWriter->writeVInt(m_iSpeedY);
+    pWriter->writeVInt(m_iLifetime);
+    for(_sprite_t *pSprite = m_pSprites, *pLast = m_pSprites + m_iNumSprites;
+        pSprite != pLast; ++pSprite)
+    {
+        pWriter->writeVUInt(pSprite->iSprite);
+        pWriter->writeVInt(pSprite->iX);
+        pWriter->writeVInt(pSprite->iY);
+    }
+
+    // Write the layers
+    int iNumLayers = 13;
+    for( ; iNumLayers >= 1; --iNumLayers)
+    {
+        if(m_oLayers.iLayerContents[iNumLayers - 1] != 0)
+            break;
+    }
+    pWriter->writeVUInt(iNumLayers);
+    pWriter->writeByteStream(m_oLayers.iLayerContents, iNumLayers);
+
+    // Write the next chained thing
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_pushlightuserdata(L, m_pNext);
+    lua_rawget(L, -2);
+    pWriter->writeStackObject(-1);
+    lua_pop(L, 2);
+}
+
+void THSpriteRenderList::depersist(LuaPersistReader *pReader)
+{
+    lua_State *L = pReader->getStack();
+
+    if(!pReader->readVUInt(m_iNumSprites))
+        return;
+    m_iBufferSize = m_iNumSprites;
+    delete[] m_pSprites;
+    m_pSprites = new _sprite_t[m_iBufferSize];
+
+    if(!pReader->readVUInt(m_iFlags))
+        return;
+    if(!pReader->readVInt(m_iX))
+        return;
+    if(!pReader->readVInt(m_iY))
+        return;
+    if(!pReader->readVInt(m_iSpeedX))
+        return;
+    if(!pReader->readVInt(m_iSpeedY))
+        return;
+    if(!pReader->readVInt(m_iLifetime))
+        return;
+    for(_sprite_t *pSprite = m_pSprites, *pLast = m_pSprites + m_iNumSprites;
+        pSprite != pLast; ++pSprite)
+    {
+        if(!pReader->readVUInt(pSprite->iSprite))
+            return;
+        if(!pReader->readVInt(pSprite->iX))
+            return;
+        if(!pReader->readVInt(pSprite->iY))
+            return;
+    }
+
+    // Read the layers
+    memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
+    int iNumLayers;
+    if(!pReader->readVUInt(iNumLayers))
+        return;
+    if(iNumLayers > 13)
+    {
+        if(!pReader->readByteStream(m_oLayers.iLayerContents, 13))
+            return;
+        if(!pReader->readByteStream(NULL, iNumLayers - 13))
+            return;
+    }
+    else
+    {
+        if(!pReader->readByteStream(m_oLayers.iLayerContents, iNumLayers))
+            return;
+    }
+
+    // Read the chain
+    if(!pReader->readStackObject())
+        return;
+    m_pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
+    if(m_pNext)
+        m_pNext->m_pPrev = this;
+    lua_pop(L, 1);
+
+    // Fix the m_pSpriteSheet field
+    luaT_getenvfield(L, 2, "sheet");
+    m_pSpriteSheet = (THSpriteSheet*)lua_touserdata(L, -1);
+    lua_pop(L, 1);
 }

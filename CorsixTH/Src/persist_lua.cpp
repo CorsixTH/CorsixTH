@@ -876,6 +876,7 @@ public:
                 m_iNextIndex = iNewIndex;
                 break; }
             case LUA_TUSERDATA: {
+                bool bHasSetMetatable = false;
                 uint64_t iOldIndex = m_iNextIndex;
                 ++m_iNextIndex; // Temporary marker
                 // Read metatable
@@ -894,14 +895,21 @@ public:
                 m_iNextIndex = iOldIndex;
                 saveStackObject();
                 m_iNextIndex = iNewIndex;
-                // Set metatable and perform immediate initialisation
-                lua_pushvalue(L, -2);
-                lua_setmetatable(L, -2);
+                // Perform immediate initialisation
                 lua_getfield(L, -2, "__pre_depersist");
                 if(lua_isnil(L, -1))
                     lua_pop(L, 1);
                 else
                 {
+                    // Set metatable now, as pre-depersister may expect it
+                    // NB: Setting metatable if there isn't a pre-depersister
+                    // is not a good idea, as if there is an error while the
+                    // environment table is being de-persisted, then the __gc
+                    // handler of the userdata will eventually be called with
+                    // the userdata's contents still being uninitialised.
+                    lua_pushvalue(L, -3);
+                    lua_setmetatable(L, -3);
+                    bHasSetMetatable = true;
                     lua_pushvalue(L, -2);
                     lua_call(L, 1, 0);
                 }
@@ -909,7 +917,12 @@ public:
                 if(!readStackObject())
                     return false;
                 lua_setfenv(L, -2);
-                // Read the raw data
+                // Set metatable and read the raw data
+                if(!bHasSetMetatable)
+                {
+                    lua_pushvalue(L, -2);
+                    lua_setmetatable(L, -2);
+                }
                 lua_getfield(L, -2, "__depersist");
                 if(lua_isnil(L, -1))
                     lua_pop(L, 1);

@@ -93,17 +93,17 @@ struct THRenderTargetCreationParams
 struct THDrawable : public THLinkList
 {
     //! Draw the object at a specific point on a render target
-    void (*fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
+    void (*m_fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
 
     //! Perform a hit test against the object
     /*!
         Should return true if when the object is drawn at (iDestX, iDestY) on a canvas,
         the point (iTestX, iTestY) is within / on the object.
     */
-    bool (*fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
+    bool (*m_fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
 
     //! Drawing flags (zero or more list flags from THDrawFlags)
-    unsigned long iFlags;
+    unsigned long m_iFlags;
 };
 
 /*!
@@ -169,6 +169,13 @@ protected:
     bool m_skip_eol;
 };
 
+enum eTHAlign
+{
+    Align_Left = 0,
+    Align_Center = 1,
+    Align_Right = 2,
+};
+
 /*!
     Utility class for using a sprite sheet as a font.
 */
@@ -193,18 +200,36 @@ public:
     void setSeparation(int iCharSep, int iLineSep);
 
     //! Get the size of a single line of text
-    void getTextSize(const char* sMessage, size_t iMessageLength, int* pX, int* pY) const;
+    void getTextSize(const char* sMessage, size_t iMessageLength, int* pX,
+                     int* pY) const;
 
     //! Draw a single line of text
-    void drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const;
+    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+                  size_t iMessageLength, int iX, int iY) const;
 
     //! Draw a single line of text, splitting it at word boundaries
     /*!
         This function still only draws a single line of text (i.e. any line
         breaks like \r and \n in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
+        @param pCanvas The canvas on which to draw. Can be NULL, in which case
+          nothing is drawn, but other calculations are still made.
+        @param sMessage The line of text to draw, encoded in CP437.
+        @param iMessageLength The length (in bytes) of sMessage.
+        @param iX The X position to start drawing on the canvas.
+        @param iY The Y position to start drawing on the canvas.
+        @param iWidth The maximum width of each line of text.
+        @param pResultingWidth If not NULL, the maximum width of a line will
+          be stored here (the resulting value should be similar to iWidth,
+          but a bit smaller).
+        @param eAlign How to align each line of text if the width of the line
+          of text is smaller than iWidth.
+        @return iY plus the height (in pixels) of the resulting text.
     */
-    int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY, int iWidth, int iAddedRowDistance, int *iResultingWidth = NULL, bool bOnlyTest = false) const;
+    int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                        size_t iMessageLength, int iX, int iY, int iWidth,
+                        int *pResultingWidth = NULL,
+                        eTHAlign eAlign = Align_Left) const;
 
 protected:
     THSpriteSheet* m_pSpriteSheet;
@@ -387,13 +412,39 @@ protected:
 };
 
 struct THMapNode;
-class THAnimation : protected THDrawable
+class THAnimationBase : protected THDrawable
+{
+public:
+    THAnimationBase();
+
+    void removeFromTile();
+    void attachToTile(THMapNode *pMapNode);
+
+    unsigned long getFlags() const {return m_iFlags;}
+    int getX() const {return m_iX;}
+    int getY() const {return m_iY;}
+
+    void setFlags(unsigned long iFlags) {m_iFlags = iFlags;}
+    void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
+    void setLayer(int iLayer, int iId);
+    void setLayersFrom(const THAnimationBase *pSrc) {m_oLayers = pSrc->m_oLayers;}
+
+protected:
+    void _clear();
+
+    //! X position on tile (not tile x-index)
+    int m_iX;
+    //! Y position on tile (not tile y-index)
+    int m_iY;
+
+    THLayers_t m_oLayers;
+};
+
+class THAnimation : public THAnimationBase
 {
 public:
     THAnimation();
 
-    void removeFromTile();
-    void attachToTile(THMapNode *pMapNode);
     void setParent(THAnimation *pParent);
 
     void tick();
@@ -404,11 +455,8 @@ public:
     void drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY);
     bool hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY);
 
-    THLinkList* getPrevious() {return this->pPrev;}
-    unsigned long getFlags() const {return this->iFlags;}
+    THLinkList* getPrevious() {return m_pPrev;}
     unsigned int getAnimation() const {return m_iAnimation;}
-    int getX() const {return m_iX;}
-    int getY() const {return m_iY;}
     bool getMarker(int* pX, int* pY);
     bool getSecondaryMarker(int* pX, int* pY);
     unsigned int getFrame() const {return m_iFrame;}
@@ -417,11 +465,8 @@ public:
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget);
     void setFrame(unsigned int iFrame);
-    void setFlags(unsigned long iFlags) {this->iFlags = iFlags;}
-    void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
+    
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
-    void setLayer(int iLayer, int iId);
-    void setLayersFrom(const THAnimation *pSrc) {m_oLayers = pSrc->m_oLayers;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 
     void persist(LuaPersistWriter *pWriter) const;
@@ -432,10 +477,6 @@ protected:
     THAnimation* m_pMorphTarget;
     unsigned int m_iAnimation;
     unsigned int m_iFrame;
-    //! X position on tile (not tile x-index)
-    int m_iX;
-    //! Y position on tile (not tile y-index)
-    int m_iY;
     union { struct {
         //! Amount to change m_iX per tick
         int m_iSpeedX;
@@ -450,8 +491,46 @@ protected:
     int m_iLastX;
     int m_iLastY;
     int m_iCropColumn;
+};
 
-    THLayers_t m_oLayers;
+class THSpriteRenderList : public THAnimationBase
+{
+public:
+    THSpriteRenderList();
+    ~THSpriteRenderList();
+
+    void tick();
+    void draw(THRenderTarget* pCanvas, int iDestX, int iDestY);
+    bool hitTest(int iDestX, int iDestY, int iTestX, int iTestY);
+
+    void setSheet(THSpriteSheet* pSheet) {m_pSpriteSheet = pSheet;}
+    void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
+    void setLifetime(int iLifetime);
+    void appendSprite(unsigned int iSprite, int iX, int iY);
+    bool isDead() const {return m_iLifetime == 0;}
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
+
+protected:
+    struct _sprite_t
+    {
+        unsigned int iSprite;
+        int iX;
+        int iY;
+    };
+
+    THSpriteSheet* m_pSpriteSheet;
+    _sprite_t* m_pSprites;
+    int m_iNumSprites;
+    int m_iBufferSize;
+
+    //! Amount to change m_iX per tick
+    int m_iSpeedX;
+    //! Amount to change m_iY per tick
+    int m_iSpeedY;
+    //! Number of ticks until reports as dead (-1 = never dies)
+    int m_iLifetime;
 };
 
 #endif // CORSIX_TH_TH_GFX_H_

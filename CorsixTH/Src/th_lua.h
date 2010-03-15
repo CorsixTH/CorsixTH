@@ -147,6 +147,11 @@ template <> struct luaT_classinfo<THWindowBase_t> {
     static inline const char* name() {return "WindowBase";}
 };
 
+class THSpriteRenderList;
+template <> struct luaT_classinfo<THSpriteRenderList> {
+    static inline const char* name() {return "SpriteRenderList";}
+};
+
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {

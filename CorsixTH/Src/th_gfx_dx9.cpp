@@ -72,10 +72,10 @@ THRenderTarget::~THRenderTarget()
     }
     if(m_pDevice != NULL)
     {
-        while(pNext)
+        while(m_pNext)
         {
             THDX9_DeviceResource* pResource =
-                reinterpret_cast<THDX9_DeviceResource*>(pNext);
+                reinterpret_cast<THDX9_DeviceResource*>(m_pNext);
             pResource->fnOnDeviceChange(pResource, THDX9DCT_DeviceDestroyed);
         }
         D3DDEVICE_CREATION_PARAMETERS oParams;
@@ -101,11 +101,11 @@ void THRenderTarget::onDeviceChange(eTHDX9DeviceChangeType eChangeType)
 IDirect3DDevice9* THRenderTarget::getRawDevice(THDX9_DeviceResource* pUser)
 {
     pUser->removeFromList();
-    pUser->pPrev = this;
-    pUser->pNext = pNext;
-    if(pNext)
-        pNext->pPrev = pUser;
-    pNext = pUser;
+    pUser->m_pPrev = this;
+    pUser->m_pNext = m_pNext;
+    if(m_pNext)
+        m_pNext->m_pPrev = pUser;
+    m_pNext = pUser;
     return getRawDevice();
 }
 
@@ -1304,10 +1304,10 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
         return false;
     }
 
-    pPrev = pSheet->pPrev;
-    pNext = pSheet;
-    pPrev->pNext = this;
-    pNext->pPrev = this;
+    m_pPrev = pSheet->m_pPrev;
+    m_pNext = pSheet;
+    m_pPrev->m_pNext = this;
+    m_pNext->m_pPrev = this;
 
     // Hardware cursors must be size 32x32
     unsigned int iSize = 32;

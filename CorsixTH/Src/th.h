@@ -29,8 +29,8 @@ struct THLinkList
     THLinkList();
     ~THLinkList();
 
-    THLinkList* pPrev;
-    THLinkList* pNext;
+    THLinkList* m_pPrev;
+    THLinkList* m_pNext;
 
     void removeFromList();
 };

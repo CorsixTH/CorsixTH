@@ -99,16 +99,19 @@ function UIFax:draw(canvas, x, y)
   
   if self.message then
     local last_y = y + 40
-    for i = 1, #self.message do
-      last_y = self.fax_font:drawWrapped(canvas, self.message[i].text, x + 190, 
-          last_y + (self.message[i].offset or 0), 330)
+    for i, message in ipairs(self.message) do
+      last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190, 
+                                         last_y + (message.offset or 0), 330,
+                                         "center")
     end
-    if self.message["choices"] then
+    local choices = self.message["choices"]
+    if choices then
       local orig_y = y + 190
-      for k = 3, 3 - #self.message["choices"] + 1, -1 do
-        last_y = orig_y + (k-1)*47
-        self.fax_font:drawWrapped(canvas, self.message["choices"][k - (3 - #self.message["choices"])].text, 
-            x + 190, last_y + (self.message["choices"][k - (3 - #self.message["choices"])].offset or 0), 300)
+      for k = 3, 3 - #choices + 1, -1 do
+        local choice = choices[k - (3 - #choices)]
+        last_y = orig_y + (k - 1) * 47
+        self.fax_font:drawWrapped(canvas, choice.text, x + 190,
+                                  last_y + (choice.offset or 0), 300)
       end
     end
   end

@@ -260,15 +260,26 @@ static int l_font_draw_wrapped(lua_State *L)
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
     int iW = luaL_checkint(L, 6);
-	int iH = 0;
-	if (!lua_isnoneornil(L, 7))
-	{
-		iH = luaL_checkint(L, 7);
-	}
+    eTHAlign eAlign = Align_Left;
+    if(!lua_isnoneornil(L, 7))
+    {
+        const char* sAlign = luaL_checkstring(L, 7);
+        if(strcmp(sAlign, "right") == 0)
+            eAlign = Align_Right;
+        else if(strcmp(sAlign, "left") == 0)
+            eAlign = Align_Left;
+        else if(strcmp(sAlign, "center") == 0
+             || strcmp(sAlign, "centre") == 0
+             || strcmp(sAlign, "middle") == 0)
+        {
+            eAlign = Align_Center;
+        }
+        else
+            return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+    }
 
-	lua_settop(L, 1);
-
-    lua_pushinteger(L, pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY, iW, iH));
+    lua_pushinteger(L, pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
+                                              iW, NULL, eAlign));
 
     return 1;
 }
@@ -284,16 +295,15 @@ static int l_font_draw_tooltip(lua_State *L)
 
     int iW = 200; // (for now) hardcoded width of tooltips
     int iH = 0;
-
-    lua_settop(L, 1);
-
     int iRealW;
-    int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, 0, &iRealW, true);
+    uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
+    uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
+    int iLastY = pFont->drawTextWrapped(NULL, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
 
-    pCanvas->fillRect(pCanvas->mapColour(0, 0, 0), iX, iY + iY - iLastY - 1, iRealW + 3, iLastY - iY + 2);
-    pCanvas->fillRect(pCanvas->mapColour(255, 255, 255), iX + 1, iY + iY - iLastY, iRealW + 1, iLastY - iY);
+    pCanvas->fillRect(iBlack, iX, iY + iY - iLastY - 1, iRealW + 3, iLastY - iY + 2);
+    pCanvas->fillRect(iWhite, iX + 1, iY + iY - iLastY, iRealW + 1, iLastY - iY);
 
-    int iLastY_new = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + iY - iLastY, iW - 4, 0);
+    pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + iY - iLastY, iW - 4);
 
     lua_pushinteger(L, iLastY);
 

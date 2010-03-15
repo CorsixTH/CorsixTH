@@ -132,9 +132,10 @@ static int l_anims_draw(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_new(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_stdnew<THAnimation>(L, LUA_ENVIRONINDEX, true);
+    T* pAnimation = luaT_stdnew<T>(L, LUA_ENVIRONINDEX, true);
     lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
     lua_pushlightuserdata(L, pAnimation);
     lua_pushvalue(L, -3);
@@ -143,9 +144,10 @@ static int l_anim_new(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_persist(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
     LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
@@ -159,6 +161,7 @@ static int l_anim_persist(lua_State *L)
     return 0;
 }
 
+template <typename T>
 static int l_anim_pre_depersist(lua_State *L)
 {
     // Note that anims and the map have nice reference cycles between them
@@ -169,14 +172,15 @@ static int l_anim_pre_depersist(lua_State *L)
     // (as anim references map in its environment table) causing the pPrev
     // field to be set during map depersistence, then cleared to NULL by the
     // constructor during l_anim_depersist.
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    new (pAnimation) THAnimation; // Call constructor
+    T* pAnimation = luaT_testuserdata<T>(L);
+    new (pAnimation) T; // Call constructor
     return 0;
 }
 
+template <typename T>
 static int l_anim_depersist(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
     LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
@@ -280,9 +284,10 @@ static int l_anim_get_anim(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_set_tile(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     if(lua_isnoneornil(L, 2))
     {
         pAnimation->removeFromTile();
@@ -323,9 +328,9 @@ static int l_anim_get_tile(lua_State *L)
     }
     THMap* pMap = (THMap*)lua_touserdata(L, 2);
     const THLinkList* pListNode = pAnimation->getPrevious();
-    while(pListNode->pPrev)
+    while(pListNode->m_pPrev)
     {
-        pListNode = pListNode->pPrev;
+        pListNode = pListNode->m_pPrev;
     }
     // Casting pListNode to a THMapNode* is slightly dubious, but it should
     // work. If on the normal list, then pListNode will be a THMapNode*, and
@@ -353,18 +358,20 @@ static int l_anim_set_parent(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_set_flag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->setFlags(luaL_checkint(L, 2));
 
     lua_settop(L, 1);
     return 1;
 }
 
+template <typename T>
 static int l_anim_set_flag_partial(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     int iFlags = luaL_checkint(L, 2);
     if(lua_isnone(L, 3) || lua_toboolean(L, 3))
     {
@@ -378,35 +385,39 @@ static int l_anim_set_flag_partial(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_make_visible(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->setFlags(pAnimation->getFlags() & ~(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
     return 1;
 }
 
+template <typename T>
 static int l_anim_make_invisible(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->setFlags(pAnimation->getFlags() | THDF_Alpha50 | THDF_Alpha75);
 
     lua_settop(L, 1);
     return 1;
 }
 
+template <typename T>
 static int l_anim_get_flag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     lua_pushinteger(L, pAnimation->getFlags());
 
     return 1;
 }
 
+template <typename T>
 static int l_anim_set_position(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
 
     pAnimation->setPosition(luaL_checkint(L, 2), luaL_checkint(L, 3));
 
@@ -424,9 +435,10 @@ static int l_anim_get_position(lua_State *L)
     return 2;
 }
 
+template <typename T>
 static int l_anim_set_speed(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
 
     pAnimation->setSpeed(luaL_optint(L, 2, 0), luaL_optint(L, 3, 0));
 
@@ -434,9 +446,10 @@ static int l_anim_set_speed(lua_State *L)
     return 1;
 }
 
+template <typename T>
 static int l_anim_set_layer(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
 
     pAnimation->setLayer(luaL_checkint(L, 2), luaL_optint(L, 3, 0));
 
@@ -494,20 +507,57 @@ static int l_anim_get_secondary_marker(lua_State *L)
     return 2;
 }
 
+template <typename T>
 static int l_anim_tick(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->tick();
     lua_settop(L, 1);
     return 1;
 }
 
+template <typename T>
 static int l_anim_draw(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    T* pAnimation = luaT_testuserdata<T>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     pAnimation->draw(pCanvas, luaL_checkint(L, 3), luaL_checkint(L, 4));
     lua_settop(L, 1);
+    return 1;
+}
+
+static int l_srl_set_sheet(lua_State *L)
+{
+    THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
+    THSpriteSheet *pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
+    pSrl->setSheet(pSheet);
+
+    lua_settop(L, 2);
+    luaT_setenvfield(L, 1, "sheet");
+    return 1;
+}
+
+static int l_srl_append(lua_State *L)
+{
+    THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
+    pSrl->appendSprite((unsigned int)luaL_checkint(L, 2),
+                       luaL_checkint(L, 3), luaL_checkint(L, 4));
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_srl_set_lifetime(lua_State *L)
+{
+    THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
+    pSrl->setLifetime(luaL_checkint(L, 2));
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_srl_is_dead(lua_State *L)
+{
+    THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
+    lua_pushboolean(L, pSrl->isDead() ? 1 : 0);
     return 1;
 }
 
@@ -544,10 +594,10 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     lua_rawseti(pState->L, pState->aiMetatables[MT_Anim], 2);
 
     // Anim
-    luaT_class(THAnimation, l_anim_new, "animation", MT_Anim);
-    luaT_setmetamethod(l_anim_persist, "persist");
-    luaT_setmetamethod(l_anim_pre_depersist, "pre_depersist");
-    luaT_setmetamethod(l_anim_depersist, "depersist");
+    luaT_class(THAnimation, l_anim_new<THAnimation>, "animation", MT_Anim);
+    luaT_setmetamethod(l_anim_persist<THAnimation>, "persist");
+    luaT_setmetamethod(l_anim_pre_depersist<THAnimation>, "pre_depersist");
+    luaT_setmetamethod(l_anim_depersist<THAnimation>, "depersist");
     luaT_setfunction(l_anim_set_anim, "setAnimation", MT_Anims);
     luaT_setfunction(l_anim_set_crop, "setCrop");
     luaT_setfunction(l_anim_get_crop, "getCrop");
@@ -555,25 +605,53 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anim_set_frame, "setFrame");
     luaT_setfunction(l_anim_get_frame, "getFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");
-    luaT_setfunction(l_anim_set_tile, "setTile", MT_Map);
+    luaT_setfunction(l_anim_set_tile<THAnimation>, "setTile", MT_Map);
     luaT_setfunction(l_anim_get_tile, "getTile");
     luaT_setfunction(l_anim_set_parent, "setParent");
-    luaT_setfunction(l_anim_set_flag, "setFlag");
-    luaT_setfunction(l_anim_set_flag_partial, "setPartialFlag");
-    luaT_setfunction(l_anim_get_flag, "getFlag");
-    luaT_setfunction(l_anim_make_visible, "makeVisible");
-    luaT_setfunction(l_anim_make_invisible, "makeInvisible");
+    luaT_setfunction(l_anim_set_flag<THAnimation>, "setFlag");
+    luaT_setfunction(l_anim_set_flag_partial<THAnimation>, "setPartialFlag");
+    luaT_setfunction(l_anim_get_flag<THAnimation>, "getFlag");
+    luaT_setfunction(l_anim_make_visible<THAnimation>, "makeVisible");
+    luaT_setfunction(l_anim_make_invisible<THAnimation>, "makeInvisible");
     luaT_setfunction(l_anim_set_tag, "setTag");
     luaT_setfunction(l_anim_get_tag, "getTag");
-    luaT_setfunction(l_anim_set_position, "setPosition");
+    luaT_setfunction(l_anim_set_position<THAnimation>, "setPosition");
     luaT_setfunction(l_anim_get_position, "getPosition");
-    luaT_setfunction(l_anim_set_speed, "setSpeed");
-    luaT_setfunction(l_anim_set_layer, "setLayer");
+    luaT_setfunction(l_anim_set_speed<THAnimation>, "setSpeed");
+    luaT_setfunction(l_anim_set_layer<THAnimation>, "setLayer");
     luaT_setfunction(l_anim_set_layers_from, "setLayersFrom");
     luaT_setfunction(l_anim_set_hitresult, "setHitTestResult");
     luaT_setfunction(l_anim_get_marker, "getMarker");
     luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");
-    luaT_setfunction(l_anim_tick, "tick");
-    luaT_setfunction(l_anim_draw, "draw", MT_Surface);
+    luaT_setfunction(l_anim_tick<THAnimation>, "tick");
+    luaT_setfunction(l_anim_draw<THAnimation>, "draw", MT_Surface);
+    luaT_endclass();
+
+    // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
+    lua_rawgeti(pState->L, pState->aiMetatables[MT_Anim], 1);
+    lua_rawseti(pState->L, pState->aiMetatables[MT_SpriteList], 1);
+    lua_rawgeti(pState->L, pState->aiMetatables[MT_Anim], 2);
+    lua_rawseti(pState->L, pState->aiMetatables[MT_SpriteList], 2);
+
+    // SpriteList
+    luaT_class(THSpriteRenderList, l_anim_new<THSpriteRenderList>, "spriteList", MT_SpriteList);
+    luaT_setmetamethod(l_anim_persist<THSpriteRenderList>, "persist");
+    luaT_setmetamethod(l_anim_pre_depersist<THSpriteRenderList>, "pre_depersist");
+    luaT_setmetamethod(l_anim_depersist<THSpriteRenderList>, "depersist");
+    luaT_setfunction(l_srl_set_sheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_srl_append, "append");
+    luaT_setfunction(l_srl_set_lifetime, "setLifetime");
+    luaT_setfunction(l_srl_is_dead, "isDead");
+    luaT_setfunction(l_anim_set_tile<THSpriteRenderList>, "setTile", MT_Map);
+    luaT_setfunction(l_anim_set_flag<THSpriteRenderList>, "setFlag");
+    luaT_setfunction(l_anim_set_flag_partial<THSpriteRenderList>, "setPartialFlag");
+    luaT_setfunction(l_anim_get_flag<THSpriteRenderList>, "getFlag");
+    luaT_setfunction(l_anim_make_visible<THSpriteRenderList>, "makeVisible");
+    luaT_setfunction(l_anim_make_invisible<THSpriteRenderList>, "makeInvisible");
+    luaT_setfunction(l_anim_set_position<THSpriteRenderList>, "setPosition");
+    luaT_setfunction(l_anim_set_speed<THSpriteRenderList>, "setSpeed");
+    luaT_setfunction(l_anim_set_layer<THSpriteRenderList>, "setLayer");
+    luaT_setfunction(l_anim_tick<THSpriteRenderList>, "tick");
+    luaT_setfunction(l_anim_draw<THSpriteRenderList>, "draw", MT_Surface);
     luaT_endclass();
 }

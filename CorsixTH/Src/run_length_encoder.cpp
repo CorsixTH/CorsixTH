@@ -171,7 +171,7 @@ bool IntegerRunLengthEncoder::_areRangesEqual(size_t iObjIdx1, size_t iObjIdx2,
 {
     iObjIdx1 = m_iBufferOffset + iOffset * m_iRecordSize + iObjIdx1 * iObjSize;
     iObjIdx2 = m_iBufferOffset + iOffset * m_iRecordSize + iObjIdx2 * iObjSize;
-    for(int i = 0; i < iObjSize; ++i)
+    for(size_t i = 0; i < iObjSize; ++i)
     {
         if(m_pBuffer[(iObjIdx1 + i) % m_iBufferSize]
         != m_pBuffer[(iObjIdx2 + i) % m_iBufferSize])

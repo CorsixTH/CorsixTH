@@ -28,8 +28,8 @@ SOFTWARE.
 
 THLinkList::THLinkList()
 {
-    pPrev = NULL;
-    pNext = NULL;
+    m_pPrev = NULL;
+    m_pNext = NULL;
 }
 
 THLinkList::~THLinkList()
@@ -39,16 +39,16 @@ THLinkList::~THLinkList()
 
 void THLinkList::removeFromList()
 {
-    if(pPrev != NULL)
+    if(m_pPrev != NULL)
     {
-        pPrev->pNext = pNext;
+        m_pPrev->m_pNext = m_pNext;
     }
-    if(pNext != NULL)
+    if(m_pNext != NULL)
     {
-        pNext->pPrev = pPrev;
-        pNext = NULL;
+        m_pNext->m_pPrev = m_pPrev;
+        m_pNext = NULL;
     }
-    pPrev = NULL;
+    m_pPrev = NULL;
 }
 
 THStringList::THStringList()

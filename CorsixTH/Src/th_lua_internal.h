@@ -47,6 +47,7 @@ enum eTHLuaMetatable
     MT_SoundFx,
     MT_String,
     MT_WindowBase,
+    MT_SpriteList,
 
     MT_Count,
 
