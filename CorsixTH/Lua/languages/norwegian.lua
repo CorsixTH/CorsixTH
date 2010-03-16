@@ -77,7 +77,14 @@ fax = {
       utf8 "-- CorsixTH-teamet, th.corsix.org.",
       utf8 "PS: Kan du finne de sjulte påskeeggene?",
     },
+    beta2 = {
+      utf8 "Velkommen til den andre betaversjonen av CorsixTH, en remake av klassikeren Theme Hospital i åpen kildekode!",
+      utf8 "Mange nye ting er implementert siden forrige beta. Ta en titt i changelog'en for en ufullstendig liste.",
+      utf8 "Men först, la oss spille! Det ser ut som du har fått en ny faks. Lukk dette vinduet og trykk på spörsmåltegnet over bunnpanelet.",
+      utf8 "-- CorsixTH-teamet, th.corsix.org",
+    },
   },
+  
   tutorial = {
     utf8 "Velkommen til ditt förste sykehus!",
     utf8 "Vil du ha en kort innföring?",
@@ -114,6 +121,7 @@ menu_debug = {
 menu_debug_overlay = {
   none                        	= "  INGEN  ",
   flags                       	= "  FLAGG  ",
+  positions                   	= "  POSISJONER  ",
   byte_0_1                    	= "  BYTE 0 & 1  ",
   byte_floor                  	= "  BYTE GULV  ",
   byte_n_wall                 	= "  BYTE N VEGG  ",
@@ -134,7 +142,10 @@ dynamic_info.patient.actions.no_gp_available 	= utf8 "Venter på at du skal bygg
 dynamic_info.staff.actions.heading_for 			= utf8 "På vei til %s"
 
 -- 7. Tooltip
-tooltip.objects.litter = utf8 "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
+tooltip.objects.litter 		= utf8 "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
+
+misc.not_yet_implemented 	= "(ikke implementert enda)"
+misc.no_heliport 			= utf8 "Enten er ingen sykdommer utforsket enda, eller så er det ingen heliport ved dette sykehuset."
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
