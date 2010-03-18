@@ -99,7 +99,8 @@ function UIBuildRoom:UIBuildRoom(ui)
     local rooms = {}
     self.category_rooms[i] = rooms
     for _, room in ipairs(app.rooms) do
-      if room.categories[category] then
+      -- NB: Unimplemented rooms are hidden unless in debug mode
+      if (app.config.debug or room.class) and room.categories[category] then
         rooms[#rooms + 1] = room
       end
     end

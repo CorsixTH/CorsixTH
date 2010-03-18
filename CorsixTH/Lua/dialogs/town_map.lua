@@ -170,7 +170,7 @@ function UITownMap:draw(canvas, x, y)
 
           -- TODO remove once we "know" all object ID's, or can detect whether
           -- an item is an object in the town map (@see is_unknown_id())
-          if self:is_unknown_id(object_type) then
+          if app.config.debug and self:is_unknown_id(object_type) then
             for key, value in pairs(l_objects[i]) do
               if key == "object_type" then
                 for key2, value2 in pairs(value) do
