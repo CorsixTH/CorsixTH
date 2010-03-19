@@ -50,6 +50,9 @@ void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
 */
 const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
 
+//! Check that a Lua argument is a string or a proxied string
+const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength);
+
 //! Push a C closure as a callable table
 void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n);
 
@@ -150,6 +153,11 @@ template <> struct luaT_classinfo<THWindowBase_t> {
 class THSpriteRenderList;
 template <> struct luaT_classinfo<THSpriteRenderList> {
     static inline const char* name() {return "SpriteRenderList";}
+};
+
+struct THStringProxy_t;
+template <> struct luaT_classinfo<THStringProxy_t> {
+    static inline const char* name() {return "StringProxy";}
 };
 
 template <class T>

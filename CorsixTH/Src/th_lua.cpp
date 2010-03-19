@@ -26,6 +26,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
 void THLuaRegisterMap(const THLuaRegisterState_t *pState);
 void THLuaRegisterSound(const THLuaRegisterState_t *pState);
+void THLuaRegisterStrings(const THLuaRegisterState_t *pState);
 void THLuaRegisterUI(const THLuaRegisterState_t *pState);
 
 //! Set a field on the environment table of an object
@@ -217,6 +218,7 @@ int luaopen_th(lua_State *L)
     THLuaRegisterGfx(pState);
     THLuaRegisterAnims(pState);
     THLuaRegisterSound(pState);
+    THLuaRegisterStrings(pState);
     THLuaRegisterUI(pState);
 
     lua_settop(L, oState.iMainTable);

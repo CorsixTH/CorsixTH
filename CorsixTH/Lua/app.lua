@@ -153,6 +153,7 @@ function App:init()
     end
     return str
   end
+  _S = permanent("_S", TH.stringProxy(_S))
   if (self.command_line.dump or ""):match"strings" then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
@@ -222,10 +223,26 @@ end
 
 -- This is a useful debug and development aid
 function App:dumpStrings()
+  -- Accessors to reach through the userdata proxies on strings
+  local function val(o)
+    if type(o) == "userdata" then
+      return getmetatable(o)[1][o]
+    else
+      return o
+    end
+  end
+  local function is_table(o)
+    local t = type(o)
+    if t == "userdata" then
+      t = type(getmetatable(o)[1][o])
+    end
+    return t == "table"
+  end
+  
   local fi = assert(io.open("debug-strings-orig.txt", "wt"))
   for i, sec in ipairs(_S.deprecated) do
     for j, str in ipairs(sec) do
-      fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(str))
+      fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(val(str)))
     end
     fi:write"\n"
   end
@@ -240,10 +257,10 @@ function App:dumpStrings()
         else
           new_prefix = (prefix == "") and n or (prefix .. "." .. n)
         end
-        if type(o) == "table" then
+        if is_table(o) then
           dump_by_line(file, o, new_prefix)
         else
-          file:write(new_prefix .. " = " .. "\"" .. o .. "\"\n")
+          file:write(new_prefix .. " = " .. "\"" .. val(o) .. "\"\n")
         end
       end
     end
@@ -255,12 +272,12 @@ function App:dumpStrings()
         if type(n) == "number" then
           n = "[" .. n .. "]"
         end
-        if type(o) == "table" then
+        if is_table(o) then
           file:write(prefix .. n .. " = {\n")
           dump_grouped(file, o, prefix .. "  ")
           file:write(prefix .. "}")
         else
-          file:write(prefix .. n .. " = " .. "\"" .. o .. "\"")
+          file:write(prefix .. n .. " = " .. "\"" .. val(o) .. "\"")
         end
         if prefix ~= "" then
           file:write(",")

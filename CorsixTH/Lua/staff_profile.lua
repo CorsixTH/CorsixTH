@@ -46,6 +46,15 @@ local function shuffle(t)
   return r
 end
 
+local function our_concat(t)
+  -- The standard table.concat function doesn't like our userdata strings :(
+  local result = ""
+  for _, s in ipairs(t) do
+    result = result .. s
+  end
+  return result
+end
+
 function StaffProfile:randomise()
   self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
@@ -81,10 +90,10 @@ function StaffProfile:randomise()
   if descs[2] == descs[3] then
     descs[3] = nil
   end
-  while #table.concat(descs) > 96 do
+  while #our_concat(descs) > 96 do
     descs[#descs] = nil
   end
-  self.desc = table.concat(shuffle(descs))
+  self.desc = our_concat(shuffle(descs))
   if self.humanoid_class == "Doctor" then
     self.is_black = math.random(0, 1) == 0
     if self.is_black then

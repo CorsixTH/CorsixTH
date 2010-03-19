@@ -216,7 +216,7 @@ static int l_font_get_size(lua_State *L)
 {
     THFont* pFont = luaT_testuserdata<THFont>(L);
     size_t iMsgLen;
-    const char* sMsg = luaL_checklstring(L, 2, &iMsgLen);
+    const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
     int iWidth, iHeight;
     pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
@@ -231,7 +231,7 @@ static int l_font_draw(lua_State *L)
     THFont* pFont = luaT_testuserdata<THFont>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
-    const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
+    const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
     if(!lua_isnoneornil(L, 7))
@@ -256,7 +256,7 @@ static int l_font_draw_wrapped(lua_State *L)
     THFont* pFont = luaT_testuserdata<THFont>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
-    const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
+    const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
     int iW = luaL_checkint(L, 6);
@@ -289,7 +289,7 @@ static int l_font_draw_tooltip(lua_State *L)
     THFont* pFont = luaT_testuserdata<THFont>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
-    const char* sMsg = luaL_checklstring(L, 3, &iMsgLen);
+    const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
 

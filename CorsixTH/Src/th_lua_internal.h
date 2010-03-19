@@ -48,6 +48,7 @@ enum eTHLuaMetatable
     MT_String,
     MT_WindowBase,
     MT_SpriteList,
+    MT_StringProxy,
 
     MT_Count,
 
