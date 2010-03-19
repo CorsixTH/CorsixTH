@@ -155,7 +155,7 @@ static int l_str_index(lua_State *L)
     {
         lua_rawgeti(L, LUA_ENVIRONINDEX, 4);
         lua_pushvalue(L, 2);
-        lua_gettable(L, 4);
+        lua_gettable(L, 5);
         return 1;
     }
 
@@ -460,7 +460,7 @@ static int l_str_depersist(lua_State *L)
         // The instructions are a table of values; unpack them and replace
         // proxies with their values.
         bool bIsIndexOperation = false;
-        int iCount = lua_objlen(L, 3);
+        int iCount = (int)lua_objlen(L, 3);
         lua_checkstack(L, iCount + 1);
         for(int i = 1; i <= iCount; ++i)
         {
