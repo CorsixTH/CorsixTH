@@ -149,6 +149,10 @@ function Strings:load(language)
   local functions = {
     utf8 = utf8conv,
     strsub = string.sub,
+    ipairs = ipairs,
+    pairs = pairs,
+    strfind = string.find,
+    strgsub = string.gsub,
     -- Calling the Langauage() function should have no effect any more
     Language = function() end,
     -- Inherit() should evaluate the named language in the current environment

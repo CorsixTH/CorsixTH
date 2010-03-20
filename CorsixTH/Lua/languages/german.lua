@@ -75,6 +75,9 @@ menu_debug_overlay = {
 
 adviser.room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären."
 
+dynamic_info.patient.actions.no_gp_available = "Wartet darauf, dass Sie eine Allgemeinmedizin bauen"
+dynamic_info.staff.actions.heading_for = "Geht zu: %s"
+
 fax = {
   welcome = {
     beta1 = {
@@ -101,3 +104,4 @@ fax = {
 }
 
 misc.not_yet_implemented = "(noch nicht implementiert)"
+misc.no_heliport = "Entweder wurden noch keine Krankheiten entdeckt, oder es existiert kein Heliport auf dieser Karte."

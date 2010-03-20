@@ -24,12 +24,12 @@ Language("original_strings")
 SetSpeechFile("Sound-".. ... ..".dat")
 local S = LoadStrings("Lang-".. ... ..".dat")
 
--- Fix inconsistency/bug in german lang file.
--- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
--- replaced with a single string [44][168] with %s and %d in german.
--- Due to this, the remaining strings in section 44 were also off by one.
--- Solve it by splitting the string into two.
+-- Fix inconsistencies/bugs in german lang file.
 local function fixGermanStrings(lang_num)
+  -- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
+  -- replaced with a single string [44][168] with %s and %d in german.
+  -- Due to this, the remaining strings in section 44 were also off by one.
+  -- Solve it by splitting the string into two.
   if lang_num ~= 2 then
     return
   end
@@ -38,6 +38,44 @@ local function fixGermanStrings(lang_num)
   end
   S[44][169] = strsub(S[44][168], 46)
   S[44][168] = strsub(S[44][168], 1, 45)
+  
+  -- German spelling reform: eszett changed to double s in a number of words.
+  -- Mass-apply this change here, so we don't have to override all those strings.
+  local repl = {
+    ["daá"] = "dass",
+    ["muá"] = "muss", -- includes occurrences of mußte, mußten
+    ["l„át"] = "l„sst", -- includes occurrences of verläßt
+    ["Engpaá"] = "Engpass",
+    ["biáchen"] = "bisschen",
+    ["Streá"] = "Stress",
+    ["Biá"] = "Biss",
+    ["Freápaket"] = "Fresspaket",
+    ["Paát"] = "Passt",
+    ["L„át"] = "L„sst",
+    ["verantwortungsbewuát"] = "verantwortungsbewusst",
+    ["verl„álich"] = "verl„sslich",
+    ["Schluálicht"] = "Schlusslicht",
+    ["unerl„álich"] = "unerl„sslich",
+  }
+  
+  for c, cat in ipairs(S) do
+    for s, str in ipairs(cat) do
+      for from, to in pairs(repl) do
+        while strfind(str, from) do
+          str = strgsub(str, from, to)
+        end
+      end
+      S[c][s] = str
+    end
+  end
+  
+  -- good and bad (but not misc) staff description strings are missing space at the end
+  for s, _ in ipairs(S[47]) do
+    S[47][s] = S[47][s] .. " "
+  end
+  for s, _ in ipairs(S[48]) do
+    S[48][s] = S[48][s] .. " "
+  end
 end
 
 fixGermanStrings(...)
@@ -1791,6 +1829,11 @@ fax = {
 staff_descriptions.misc = S[46]
 staff_descriptions.good = S[47]
 staff_descriptions.bad  = S[48]
+
+-- remove last string from each category (".")
+staff_descriptions.misc[38] = nil
+staff_descriptions.good[16] = nil
+staff_descriptions.bad[16] = nil
 
 queue_window = {
   num_in_queue       = S[49][1],
