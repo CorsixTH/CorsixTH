@@ -228,6 +228,7 @@ function UI:draw(canvas)
   local app = self.app
   local config = app.config
   if self.background then
+    canvas:fillBlack()
     self.background:draw(canvas, (app.config.width - self.background_width) / 2, (app.config.height - self.background_height) / 2)
   end
   Window.draw(self, canvas, 0, 0)
