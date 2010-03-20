@@ -69,3 +69,15 @@ audio_buffer_size = 2048
 --     ingame name on the next row.
 -- audio_mp3 = [[X:\ThemeHospital\Music\]]
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Debug settings.
+-- If set to true more detailed information will be printed in the terminal
+-- and a debug menu will be visible.
+debug = false
+-- If set to true, the FPS, Lua memory usage, and entity count will be shown
+-- in the dynamic information bar. Note that setting this to true also turns
+-- off the FPS limiter, causing much higher CPU utilisation, but resulting in
+-- more useful FPS values, as they are not artificially capped.
+track_fps = false
+-------------------------------------------------------------------------------

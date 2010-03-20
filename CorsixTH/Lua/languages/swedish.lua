@@ -75,7 +75,13 @@ fax = {
       utf8 "Hur som helst, börja med att njuta av spelet! Här är några starttips: Bygg en reception (korridorsutrustning) och en allmänpraktik (diagnosrum). Diverse kliniker kommer också att behövas.",
       "-- Gruppen bakom CorsixTH, th.corsix.org",
       utf8 "PS: Kan du hitta påskäggen?",
-    }
+    },
+    beta2 = {
+      utf8 "Välkommen till den andra betan av CorsixTH, det klassiska spelet Theme Hospital av Bullfrog i ny förpackning!",
+      utf8 "Många funktioner har lagts till sen förra betan. Kolla in ändringsloggen för en nästan komplett lista.",
+      utf8 "Men innan dess är det dags att spela! Det verkar som att ett meddelande väntar. Stäng detta fönster och klicka på frågetecknet nere till vänster.",
+      "-- Gruppen bakom CorsixTH, th.corsix.org",
+    },
   },
   tutorial = {
     utf8 "Välkommen till ditt första Sjukhus!",
@@ -87,3 +93,19 @@ fax = {
 
 misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
 misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."
+
+main_menu = {
+  new_game = "Nytt spel",
+  custom_level = utf8 "Specialnivå",
+  load_game = "Ladda spel",
+  options = "Alternativ",
+  exit = "Avsluta",
+}
+
+tooltip.main_menu = {
+  new_game = utf8 "Starta ett helt nytt spel från början",
+  custom_level = utf8 "Bygg ditt sjukhus i en specialnivå",
+  load_game = "Ladda ett sparat spel",
+  options = utf8 "Fixa till dina inställningar",
+  exit = utf8 "Nej! Du vill väl inte sluta redan?",
+}
