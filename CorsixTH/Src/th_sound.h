@@ -102,7 +102,7 @@ public:
 	void playSoundAt(size_t iIndex, int iX, int iY);
     void playSoundAt(size_t iIndex, double dVolume, int iX, int iY);
 	void setSoundEffectsVolume(double dVolume);
-	void setSoundEffectsOn(int iOn);
+	void setSoundEffectsOn(bool bOn);
     void setCamera(int iX, int iY, int iRadius);
 
 protected:
@@ -121,7 +121,7 @@ protected:
     double m_fMasterVolume;
 	double m_fSoundEffectsVolume;
     int m_iPostionlessVolume;
-	int m_iSoundEffects;
+	bool m_bSoundEffectsOn;
 #endif // CORSIX_TH_USE_SDL_MIXER
 };
 

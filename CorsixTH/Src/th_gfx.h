@@ -93,6 +93,9 @@ struct THRenderTargetCreationParams
 struct THDrawable : public THLinkList
 {
     //! Draw the object at a specific point on a render target
+    /*!
+        Can also "draw" the object to the speakers, i.e. play sounds.
+    */
     void (*m_fnDraw)(THDrawable* pSelf, THRenderTarget* pCanvas, int iDestX, int iDestY);
 
     //! Perform a hit test against the object
@@ -488,8 +491,7 @@ protected:
         THAnimation* m_pParent;
     };
 
-    int m_iLastX;
-    int m_iLastY;
+    unsigned int m_iSoundToPlay;
     int m_iCropColumn;
 };
 

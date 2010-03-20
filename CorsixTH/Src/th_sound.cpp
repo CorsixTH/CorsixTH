@@ -242,10 +242,8 @@ void THSoundEffects::playSound(size_t iIndex, double dVolume)
 
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
 {
-	if (m_iSoundEffects)
-	{
+	if(m_bSoundEffectsOn)
 		playSoundAt(iIndex, m_fSoundEffectsVolume, iX, iY);
-	}
 }
 
 void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY)
@@ -270,13 +268,14 @@ void THSoundEffects::setSoundEffectsVolume(double dVolume)
 	m_fSoundEffectsVolume = dVolume;
 }
 
-void THSoundEffects::setSoundEffectsOn(int iOn)
+void THSoundEffects::setSoundEffectsOn(bool bOn)
 {
-	m_iSoundEffects = iOn;
+	m_bSoundEffectsOn = bOn;
 }
 
 void THSoundEffects::_playRaw(size_t iIndex, int iVolume)
 {
+    // NB: Callers ensure that m_iChannelStatus != 0
     int iChannel = 0;
     for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
     m_iChannelStatus &=~ (1 << iChannel);

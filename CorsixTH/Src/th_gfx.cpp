@@ -744,8 +744,15 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
     if(AreFlagsSet(m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
 
-    m_iLastX = m_iX + iDestX;
-    m_iLastY = m_iY + iDestY;
+    iDestX += m_iX;
+    iDestY += m_iY;
+    if(m_iSoundToPlay)
+    {
+        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        if(pSounds)
+            pSounds->playSoundAt(m_iSoundToPlay, iDestX, iDestY);
+        m_iSoundToPlay = 0;
+    }
     if(m_pManager)
     {
         if(m_iFlags & THDF_Crop)
@@ -754,17 +761,17 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
             pCanvas->getClipRect(&rcOld);
             rcNew.y = rcOld.y;
             rcNew.h = rcOld.h;
-            rcNew.x = m_iX + iDestX + (m_iCropColumn - 1) * 32;
+            rcNew.x = iDestX + (m_iCropColumn - 1) * 32;
             rcNew.w = 64;
             IntersectTHClipRect(rcNew, rcOld);
             pCanvas->setClipRect(&rcNew);
-            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
-                                  m_iY + iDestY, m_iFlags);
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
+                                  m_iFlags);
             pCanvas->setClipRect(&rcOld);
         }
         else
-            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX + iDestX,
-                                  m_iY + iDestY, m_iFlags);
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
+                                  m_iFlags);
     }
 }
 
@@ -774,15 +781,19 @@ void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
         return;
     if(AreFlagsSet(m_pParent->m_iFlags, THDF_Alpha50 | THDF_Alpha75))
         return;
-    if(!m_pParent->getMarker(&m_iLastX, &m_iLastY))
+    int iX = 0, iY = 0;
+    m_pParent->getMarker(&iX, &iY);
+    iX += m_iX + iDestX;
+    iY += m_iY + iDestY;
+    if(m_iSoundToPlay)
     {
-        m_iLastX = 0;
-        m_iLastY = 0;
+        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        if(pSounds)
+            pSounds->playSoundAt(m_iSoundToPlay, iX, iY);
+        m_iSoundToPlay = 0;
     }
-    m_iLastX += m_iX + iDestX;
-    m_iLastY += m_iY + iDestY;
     if(m_pManager)
-        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iLastX, m_iLastY, m_iFlags);
+        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX, m_iY, m_iFlags);
 }
 
 bool THAnimation::hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY)
@@ -815,6 +826,13 @@ void THAnimation::drawMorph(THRenderTarget* pCanvas, int iDestX, int iDestY)
 
     iDestX += m_iX;
     iDestY += m_iY;
+    if(m_iSoundToPlay)
+    {
+        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        if(pSounds)
+            pSounds->playSoundAt(m_iSoundToPlay, iDestX, iDestY);
+        m_iSoundToPlay = 0;
+    }
 
     THClipRect oClipRect;
     pCanvas->getClipRect(&oClipRect);
@@ -907,8 +925,7 @@ THAnimation::THAnimation()
     m_iCropColumn = 0;
     m_iSpeedX = 0;
     m_iSpeedY = 0;
-    m_iLastX = INT_MAX;
-    m_iLastY = INT_MAX;
+    m_iSoundToPlay = 0;
 }
 
 void THAnimation::persist(LuaPersistWriter *pWriter) const
@@ -943,8 +960,8 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVUInt(m_iFrame);
     pWriter->writeVInt(m_iX);
     pWriter->writeVInt(m_iY);
-    pWriter->writeVInt(m_iLastX);
-    pWriter->writeVInt(m_iLastY);
+    pWriter->writeVInt((int)m_iSoundToPlay); // Not a VUInt, for compatibility
+    pWriter->writeVInt(0); // For compatibility
     if(m_iFlags & THDF_Crop)
         pWriter->writeVInt(m_iCropColumn);
 
@@ -1022,9 +1039,12 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             break;
         if(!pReader->readVInt(m_iY))
             break;
-        if(!pReader->readVInt(m_iLastX))
+        int iDummy;
+        if(!pReader->readVInt(iDummy))
             break;
-        if(!pReader->readVInt(m_iLastY))
+        if(iDummy >= 0)
+            m_iSoundToPlay = (unsigned int)iDummy;
+        if(!pReader->readVInt(iDummy))
             break;
         if(m_iFlags & THDF_Crop)
         {
@@ -1094,17 +1114,7 @@ void THAnimation::tick()
             m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
     }
 
-    if(m_iLastX != INT_MAX)
-    {
-        unsigned int iSound = m_pManager->getFrameSound(m_iFrame);
-        if(iSound)
-        {
-            THSoundEffects *pSounds = THSoundEffects::getSingleton();
-            if(pSounds)
-                pSounds->playSoundAt(iSound, m_iLastX, m_iLastY);
-        }
-        m_iLastX = INT_MAX;
-    }
+    m_iSoundToPlay = m_pManager->getFrameSound(m_iFrame);
 }
 
 void THAnimationBase::removeFromTile()
