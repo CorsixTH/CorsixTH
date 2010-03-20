@@ -371,46 +371,30 @@ function Patient:addToTreatmentHistory(room)
   end
 end
 
-function Patient:updateDynamicInfo(helper_object)
-  local action = self.action_queue[1]
+function Patient:updateDynamicInfo(action_string)
+  -- Retain the old text if only an update is wanted, i.e. no new string is supplied.
+  if action_string == nil then
+    if self.action_string then
+      action_string = self.action_string
+    else
+      action_string = ""
+    end
+  else
+    self.action_string = action_string
+  end
+  local info = ""
   if self.going_home then
-    -- We were sent home/are pissed for some reason
-    self:setDynamicInfo('text', {helper_object})
     self:setDynamicInfo('progress', nil)
-    return
-  end
-  -- TODO: Is this the best place to update like this? There are also more situations.
-  if self:getRoom() then
-    self.action_string = ""
-  elseif action.name == "walk" and action.is_entering and self.next_room_to_visit then
-    self.action_string = _S.dynamic_info.patient.actions.on_my_way_to
-      :format(self.next_room_to_visit.room_info.name)
-  elseif action.name == "seek_reception" then
-    self.action_string = _S.dynamic_info.patient.actions.on_my_way_to
-      :format(helper_object.object_type.name)
-  elseif action.name == "queue" then
-    self.action_string = _S.dynamic_info.patient.actions.queueing_for
-      :format(helper_object.room.room_info.name)
-  elseif action.name == "seek_toilets" then
-    self.action_string = ""
-  elseif action.name == "seek_room" then
-    self.action_string = helper_object
-  end
-  if self.diagnosed then
+  elseif self.diagnosed then
     if self.diagnosis_progress < 1.0 then
       -- The cure was guessed
-      self:setDynamicInfo('text', {self.action_string, "", 
-        _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)})
+      info = _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)
     else
-      self:setDynamicInfo('text', {self.action_string, "", 
-        _S.dynamic_info.patient.diagnosed:format(self.disease.name)})
+      info = _S.dynamic_info.patient.diagnosed:format(self.disease.name)
     end
     self:setDynamicInfo('progress', nil)
   else
-    self:setDynamicInfo('text', {
-      self.action_string, "", 
-      _S.dynamic_info.patient.diagnosis_progress
-    })
+    info = _S.dynamic_info.patient.diagnosis_progress
     -- TODO: If the policy is changed this info will not be changed until the next
     -- diagnosis facility has been visited.
     local divider = 1
@@ -421,4 +405,5 @@ function Patient:updateDynamicInfo(helper_object)
       self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
     end
   end
+  self:setDynamicInfo('text', {action_string, "", info})
 end

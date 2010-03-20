@@ -115,9 +115,9 @@ function GPRoom:dealtWithPatient(patient)
         -- Generate a message about the discovery
         local message = {
           {text = _S.fax.disease_discovered.discovered_name:format(patient.disease.name)},
-          {text = patient.disease.cause, offset = 8},
-          {text = patient.disease.symptoms},
-          {text = patient.disease.cure}
+          {text = patient.disease.cause, offset = 12},
+          {text = patient.disease.symptoms, offset = 12},
+          {text = patient.disease.cure, offset = 12}
         }
         self.world.ui.bottom_panel:queueMessage("disease", message)
         self.hospital.disease_casebook[patient.disease.id].discovered = true

@@ -55,7 +55,8 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   humanoid.waiting = nil
   humanoid:setNextAction(room:createEnterAction())
   humanoid.next_room_to_visit = room
-  humanoid:updateDynamicInfo()
+  humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
+    :format(room.room_info.name))
   room.door.queue:expect(humanoid)
   room.door:updateDynamicInfo()
   if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
@@ -68,12 +69,12 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
 end)
 
 local function action_seek_room_no_treatment_room_found(room_type, humanoid)
-  -- Wait two months before going home anyway.
   -- Emergency patients also don't need to ask what to do, they'll just wait for the player
   -- to build the neccessary room.
   if humanoid.is_emergency then
     return
   end
+  -- Wait two months before going home anyway.
   humanoid.waiting = 60
   local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
   local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)

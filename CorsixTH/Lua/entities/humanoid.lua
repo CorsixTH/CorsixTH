@@ -259,6 +259,12 @@ function Humanoid.getIdleAnimation(humanoid_class)
   return assert(walk_animations[humanoid_class], "Invalid humanoid class").idle_east
 end
 
+function Humanoid:getCurrentMood()
+  if self.mood_info then
+    return self.mood_info
+  end
+end
+
 local function Humanoid_startAction(self)
   local action = self.action_queue[1]
   assert(action, "Empty action queue")

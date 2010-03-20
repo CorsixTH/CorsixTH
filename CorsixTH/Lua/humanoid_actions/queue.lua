@@ -297,10 +297,10 @@ local function action_queue_start(action, humanoid)
   action.is_in_queue = true
   queue:unexpect(humanoid)
   queue:push(humanoid, action)
-  local door = humanoid.world:getObject(humanoid.tile_x, humanoid.tile_y, "door")
+  local door = action.reserve_when_done
   if door then
     door:updateDynamicInfo()
-    humanoid:updateDynamicInfo(door)
+    humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
   end
   humanoid:queueAction({
     name = "idle",

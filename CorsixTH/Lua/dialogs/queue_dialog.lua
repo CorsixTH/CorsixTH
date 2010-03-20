@@ -26,7 +26,6 @@ class "UIQueue" (Window)
 
 --TODO: interact with patients in the queue
 --TODO: max_size doesn't do anything
---TODO: implement "expected" patients
 
 function UIQueue:UIQueue(ui, queue)
   self:Window()
@@ -102,6 +101,11 @@ function UIQueue:draw(canvas, x, y)
     for layer, id in pairs(patient.layers) do
       anim:setLayer(layer, id)
     end
-    anim:draw(canvas, x + 239 + dx * (index - 1), y + 72)
+    anim:draw(canvas, x + 239 + dx * (index - 1), y + 75)
+    -- Also draw the mood of the patient, if any.
+    local mood = patient:getCurrentMood()
+    if mood then
+      mood:draw(canvas, x + 239 + dx * (index - 1), y + 99)
+    end
   end
 end

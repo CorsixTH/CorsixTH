@@ -235,6 +235,7 @@ end
 function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
+  humanoid:updateDynamicInfo("")
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
 end
@@ -242,7 +243,7 @@ end
 function Room:commandEnteringPatient(humanoid)
   -- To be extended in derived classes
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
-  humanoid:updateDynamicInfo()
+  humanoid:updateDynamicInfo("")
   
   for humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
     if class.is(humanoid, Staff) then
