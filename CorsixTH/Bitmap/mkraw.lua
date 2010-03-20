@@ -112,3 +112,7 @@ end
 dat:write(table.concat(rows))
 
 assert(bmp:seek() == bmp:seek("end"))
+
+if pal_size ~= 256 then
+  print("Warning: palette size is " .. pal_size .. ". Currently only palettes of size 256 will work in CorsixTH.")
+end

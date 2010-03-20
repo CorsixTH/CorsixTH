@@ -105,3 +105,19 @@ fax = {
 
 misc.not_yet_implemented = "(noch nicht implementiert)"
 misc.no_heliport = "Entweder wurden noch keine Krankheiten entdeckt, oder es existiert kein Heliport auf dieser Karte."
+
+main_menu = {
+  new_game = "Neues Spiel",
+  custom_level = "Eigenes Level",
+  load_game = "Spiel Laden",
+  options = "Optionen",
+  exit = "Verlassen",
+}
+
+tooltip.main_menu = {
+  new_game = "Ein komplett neues Spiel anfangen",
+  custom_level = "Ein Krankenhaus in einem eigenen Level errichten",
+  load_game = "Ein zuvor gespeichertes Spiel fortsetzen",
+  options = utf8 "Diverse Einstellungen verändern",
+  exit = "Bitte geh nicht fort!",
+}

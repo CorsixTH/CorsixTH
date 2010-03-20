@@ -44,7 +44,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
+  self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   -- Left hand side
   self:addPanel(280, 0, 0)

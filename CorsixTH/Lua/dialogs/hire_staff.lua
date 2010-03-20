@@ -31,7 +31,7 @@ function UIHireStaff:UIHireStaff(ui)
   self:setDefaultPosition(100, 100)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
-  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
+  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)

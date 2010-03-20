@@ -190,11 +190,37 @@ function App:init()
   
   -- Load UI
   dofile "ui"
+  dofile "game_ui"
   
-  -- Load level (which creates the map, world, and UI)
-  self:loadLevel(1)
- 
+  -- Load main menu (which creates UI)
+  self:loadMainMenu()
   return true
+end
+
+local menu_bg_sizes = {
+  {1280, 960},
+  {1024, 768},
+  {800, 600},
+  {640, 480},
+}
+
+function App:loadMainMenu()
+  self.ui = UI(self)
+  self.ui:addWindow(UIMainMenu(self.ui))
+  
+  local bg_size
+  for _, size in ipairs(menu_bg_sizes) do
+    if size[1] <= self.config.width and size[2] <= self.config.height then
+      bg_size = size
+      break
+    end
+  end
+  
+  if bg_size then
+    self.ui.background = self.gfx:loadRaw("mainmenu" .. bg_size[1], bg_size[1], bg_size[2], "Bitmap")
+    self.ui.background_width = bg_size[1]
+    self.ui.background_height = bg_size[2]
+  end
 end
 
 function App:loadLevel(level_number)
@@ -217,7 +243,7 @@ function App:loadLevel(level_number)
   self.world:createMapObjects(map_objects)
   
   -- Load UI
-  self.ui = UI(self, self.world:getLocalPlayerHospital())
+  self.ui = GameUI(self, self.world:getLocalPlayerHospital())
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 end
 
@@ -360,7 +386,7 @@ function App:run()
     print "A stack trace is included below, and the handler has been disconnected."
     print(debug.traceback(co, e, 0))
     print ""
-    if self.last_dispatch_type == "timer" and self.world.current_tick_entity then
+    if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
       -- Disconnecting the tick handler is quite a drastic measure, so give
       -- the option of just disconnecting the offending entity and attemping
       -- to continue.
@@ -404,7 +430,9 @@ function App:dispatch(evt_type, ...)
 end
 
 function App:onTick(...)
-  self.world:onTick(...)
+  if self.world then
+    self.world:onTick(...)
+  end
   self.ui:onTick(...)
   return true -- tick events always result in a repaint
 end
@@ -572,6 +600,9 @@ function App:getDataFilename(dir, filename)
 end
 
 function App:readDataFile(dir, filename)
+  if dir == "Bitmap" then
+    return self:readBitmapDataFile(filename)
+  end
   filename = self:getDataFilename(dir, filename)
   local file = assert(io.open(filename, "rb"))
   local data = file:read"*a"
@@ -618,8 +649,14 @@ function App:loadLuaFolder(dir, no_results, append_to)
   end
 end
 
+--! Quits the running game and returns to main menu (offers confirmation window first)
 function App:quit()
   self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()
-    self.running = false
+    self:loadMainMenu()
   end))
+end
+
+--! Exits the game completely (no confirmation window)
+function App:exit()
+  self.running = false
 end

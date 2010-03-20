@@ -172,14 +172,15 @@ function Graphics:loadGhost(dir, name, index)
   return cached:sub(index * 256 + 1, index * 256 + 256)
 end
 
-function Graphics:loadRaw(name, width, height, paldir, pal)
+function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
   
   width = width or 640
   height = height or 480
-  local data = self.app:readDataFile("QData", name .. ".dat")
+  dir = dir or "QData"
+  local data = self.app:readDataFile(dir, name .. ".dat")
   data = data:sub(1, width * height)
   
   local bitmap = TH.bitmap()
@@ -187,20 +188,20 @@ function Graphics:loadRaw(name, width, height, paldir, pal)
   if pal and paldir then
     palette = self:loadPalette(paldir, pal)
   else
-    palette = self:loadPalette("QData", name .. ".pal")
+    palette = self:loadPalette(dir, name .. ".pal")
   end
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
   local function reloader(bitmap)
     bitmap:setPalette(palette)
-    local data = self.app:readDataFile("QData", name .. ".dat")
+    local data = self.app:readDataFile(dir, name .. ".dat")
     data = data:sub(1, width * height)
     assert(bitmap:load(data, width, self.target))
   end
   self.reload_functions[bitmap] = reloader
   
   self.cache.raw[name] = bitmap
-  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, paldir, pal}
+  self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal}
   return bitmap
 end
 

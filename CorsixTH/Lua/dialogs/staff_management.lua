@@ -32,7 +32,7 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
   self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
   self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
-  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, "Data", "MPalette.dat")
+  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   
   local hosp = ui.hospital
   self.ui = ui
