@@ -392,6 +392,13 @@ end
 
 function World:onTick()
   if self.tick_timer == 0 then
+    if self.autosave_next_tick then
+      self.autosave_next_tick = nil
+      local status, err = pcall(SaveGameFile, "CorsixTH-Auto.sav")
+      if not status then
+        print("Error while autosaving game: " .. err)
+      end
+    end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
       local message = {
         _S.fax.welcome.beta2[1],
@@ -489,6 +496,7 @@ end
 -- Called immediately prior to the ingame month changing.
 function World:onEndMonth()
   self:makeAvailableStaff()
+  self.autosave_next_tick = true
 end
 
 -- Called immediately prior to the ingame year changing.

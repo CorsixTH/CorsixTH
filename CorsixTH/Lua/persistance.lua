@@ -174,7 +174,9 @@ local function NameOf(obj) -- Debug aid
 end
 
 strict_declare_global "SaveGame"
+strict_declare_global "SaveGameFile"
 strict_declare_global "LoadGame"
+strict_declare_global "LoadGameFile"
 
 function SaveGame()
   local state = {
@@ -195,6 +197,25 @@ function SaveGame()
   --end, persist.errcatch)
 end
 
+function SaveGameFile(filename)
+  local data = SaveGame()
+  local f = assert(io.open(filename, "wb"))
+  f:write(data)
+  f:close()
+  
+  -- Update UI
+  if TheApp and TheApp.ui and TheApp.ui.menu_bar then
+    for _, list in ipairs{"load_menu", "save_menu"} do
+      for _, item in ipairs(TheApp.ui.menu_bar[list].items) do
+        if item.filename == filename then
+          item.checked = true
+          break
+        end
+      end
+    end
+  end
+end
+
 function LoadGame(data)
   --local status, res = xpcall(function()
   local state = assert(persist.load(data, MakePermanentObjectsTable(true)))
@@ -211,4 +232,11 @@ function LoadGame(data)
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
   --end, persist.errcatch)
+end
+
+function LoadGameFile(filename)
+  local f = assert(io.open(filename, "rb"))
+  local data = f:read"*a"
+  f:close()
+  LoadGame(data)
 end
