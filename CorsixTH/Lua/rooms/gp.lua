@@ -114,7 +114,7 @@ function GPRoom:dealtWithPatient(patient)
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         -- Generate a message about the discovery
         local message = {
-          {text = string.format(_S.fax.disease_discovered.discovered_name, patient.disease.name)},
+          {text = _S.fax.disease_discovered.discovered_name:format(patient.disease.name)},
           {text = patient.disease.cause, offset = 8},
           {text = patient.disease.symptoms},
           {text = patient.disease.cure}

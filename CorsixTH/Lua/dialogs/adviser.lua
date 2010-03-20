@@ -90,12 +90,9 @@ function UIAdviser:say(speech)
   
   -- Calculate number of lines needed for the text. Each "/" at end of string indicates a blank line
   local number_lines = 3
-  for i=1, 2 do
-    if speech:sub(-1) == "/" then
-      number_lines = number_lines - 1
-      speech = speech:sub(0, -2)
-    end
-  end
+  local speech_trimmed = speech:gsub("/*$", "")
+  number_lines = number_lines - (#speech - #speech_trimmed)
+  speech = speech_trimmed
   
   -- Calculate balloon width from string len
   self.balloon_width = math.floor(#speech / number_lines) * 7

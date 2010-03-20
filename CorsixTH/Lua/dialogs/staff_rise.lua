@@ -34,7 +34,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self.rise_amount = rise_amount
 
   local final_wage = self.staff.profile.wage + rise_amount
-  self.text = string.format(_S.pay_rise.regular.__random, rise_amount, final_wage) -- Random complaint text
+  self.text = _S.pay_rise.regular.__random:format(rise_amount, final_wage) -- Random complaint text
 
   self.width = 366
   self.height = 275

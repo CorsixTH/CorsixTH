@@ -159,7 +159,7 @@ end
 
 function UI:debugMakeAdviserTalk()
   local id = 2
-  while _S(54, id) == "." do
+  while #_S(54, id):gsub("^%.$", "") == 0 do
     id = math.floor(math.random(3, 115))
   end
   self.adviser:say(_S(54, id))

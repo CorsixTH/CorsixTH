@@ -144,7 +144,7 @@ function App:init()
   strict_declare_global "_S"
   _S = strings
   -- For immediate compatibility:
-  getmetatable(_S).__call = function(_S, sec, str, ...)
+  getmetatable(_S).__call = function(_, sec, str, ...)
     assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
     
     str = _S.deprecated[sec][str]
