@@ -793,7 +793,7 @@ void THAnimation::drawChild(THRenderTarget* pCanvas, int iDestX, int iDestY)
         m_iSoundToPlay = 0;
     }
     if(m_pManager)
-        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, m_iX, m_iY, m_iFlags);
+        m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iX, iY, m_iFlags);
 }
 
 bool THAnimation::hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY)
