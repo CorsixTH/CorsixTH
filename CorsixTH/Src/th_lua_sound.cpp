@@ -163,7 +163,7 @@ static int l_soundfx_set_sound_volume(lua_State *L)
 static int l_soundfx_set_sound_effects_on(lua_State *L)
 {
     THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-    pEffects->setSoundEffectsOn(lua_toboolean(L, 2));
+    pEffects->setSoundEffectsOn(lua_toboolean(L, 2) != 0);
     return 1;
 }
 

@@ -34,6 +34,14 @@ function permanent(name, ...)
   return value
 end
 
+local --[[persistable:persistance_global_fetch]] function global_fetch(...)
+  local val = _G
+  for _, k in ipairs{...} do
+    val = val[k]
+  end
+  return val
+end
+
 local function MakePermanentObjectsTable(inverted)
   local return_val = setmetatable({}, {})
   local permanent = return_val
@@ -88,12 +96,12 @@ local function MakePermanentObjectsTable(inverted)
   -- Bits of the app
   permanent[TheApp] = "TheApp"
   for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx"} do
-    permanent[TheApp[key]] = "TheApp.".. key
+    permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
   end
   for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do
     for k, v in pairs(TheApp[collection]) do
       if type(k) == "string" then
-        permanent[v] = "TheApp.".. collection ..".".. k
+        permanent[v] = inverted and "TheApp.".. collection ..".".. k or {global_fetch, "TheApp", collection, k}
       end
     end
   end

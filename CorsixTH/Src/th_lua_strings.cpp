@@ -457,6 +457,13 @@ static int l_str_depersist(lua_State *L)
     }
     else
     {
+        // Save the instructions incase we are persisted again
+        lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+        lua_pushvalue(L, 2);
+        lua_pushvalue(L, 3);
+        lua_rawset(L, 6);
+        lua_settop(L, 5);
+
         // The instructions are a table of values; unpack them and replace
         // proxies with their values.
         bool bIsIndexOperation = false;
