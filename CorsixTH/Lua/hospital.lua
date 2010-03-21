@@ -271,7 +271,13 @@ function Hospital:receiveMoneyForTreatment(patient)
     disease_id = patient.disease.id
     reason = _S.transactions.cure_colon .. " " .. patient.disease.name
   else
-    local room_info = patient:getRoom().room_info
+    local room_info = patient:getRoom()
+    if not room_info then
+      print("Warning: Trying to receieve money for treated patient who is "..
+            "not in a room")
+      return
+    end
+    room_info = room_info.room_info
     disease_id = "diag_" .. room_info.id
     reason = _S.transactions.treat_colon .. " " .. room_info.name
   end
