@@ -135,4 +135,23 @@ function Door:closeDoor()
   self.hover_cursor = nil
 end
 
+function Door:checkForDeadlock()
+  -- In an ideal world, deadlocks should not occur, as they indicate errors in
+  -- some logic elsewhere. From a practical point of view, we should check for
+  -- deadlocks from time to time and attempt to fix them.
+  if self.queue and self.reserved_for then
+    -- If the door is reserved for someone, then that person should either be
+    -- at the front of the queue, or not in any queues at all.
+    for _, action in ipairs(self.reserved_for.action_queue) do
+      if action.name == "queue" then
+        if action.queue ~= self.queue or self.queue[1] ~= self.reserved_for then
+          self.reserved_for = nil
+          self:getRoom():tryAdvanceQueue()
+        end
+        break
+      end
+    end
+  end
+end
+
 return object

@@ -497,6 +497,13 @@ end
 function World:onEndMonth()
   self:makeAvailableStaff()
   self.autosave_next_tick = true
+  for _, entity in ipairs(self.entities) do
+    if entity.checkForDeadlock then
+      self.current_tick_entity = entity
+      entity:checkForDeadlock()
+    end
+  end
+  self.current_tick_entity = nil
 end
 
 -- Called immediately prior to the ingame year changing.
