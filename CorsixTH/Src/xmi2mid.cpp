@@ -195,7 +195,7 @@ protected:
     static T _byteSwap(T value)
     {
         T swapped = 0;
-        for(int i = 0; i < sizeof(T) * 8; i += 8)
+        for(int i = 0; i < static_cast<int>(sizeof(T)) * 8; i += 8)
         {
             swapped |= ((value >> i) & 0xFF) << (sizeof(T) * 8 - 8 - i);
         }

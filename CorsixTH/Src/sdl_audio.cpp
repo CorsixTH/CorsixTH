@@ -110,8 +110,6 @@ static int l_load_music_async_callback(lua_State *L)
     // Get CB state and function
     lua_pushvalue(L, 1);
     lua_gettable(L, LUA_REGISTRYINDEX);
-    int size = lua_gettop(L);
-    int top = lua_type(L, -1);
     lua_rawgeti(L, -1, 1);
     lua_State *cbL = lua_tothread(L, -1);
     // NB: cbL may equal L, or it may not

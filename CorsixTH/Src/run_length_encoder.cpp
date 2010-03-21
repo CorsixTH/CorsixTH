@@ -284,7 +284,7 @@ uint32_t IntegerRunLengthDecoder::read()
 {
     if(m_iRepeatCount == 0)
     {
-        uint32_t iHeader;
+        uint32_t iHeader = 0;
         if(m_pReader)
         {
             m_pReader->readVUInt(iHeader);

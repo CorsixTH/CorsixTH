@@ -386,20 +386,6 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     rcClip.h = static_cast<THClipRect::wh_t>(iHeight);
     pCanvas->setClipRect(&rcClip);
 
-    int iStartX = 0;
-    int iStartY = (iScreenY - 32) / 16;
-    if(iStartY < 0)
-        iStartY = 0;
-    else if(iStartY >= m_iHeight)
-    {
-        iStartX = iStartY - m_iHeight + 1;
-        iStartY = m_iHeight - 1;
-        if(iStartX >= m_iWidth)
-            iStartX = m_iWidth - 1;
-    }
-    int iBaseX = iStartX;
-    int iBaseY = iStartY;
-
     // 1st pass
     pCanvas->startNonOverlapping();
     for(THMapNodeIterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight); itrNode1; ++itrNode1)

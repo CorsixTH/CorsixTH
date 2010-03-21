@@ -27,7 +27,7 @@ SOFTWARE.
 
 static int l_palette_new(lua_State *L)
 {
-    THPalette* pPalette = luaT_stdnew<THPalette>(L);
+    luaT_stdnew<THPalette>(L);
     return 1;
 }
 
@@ -57,7 +57,7 @@ static int l_palette_set_entry(lua_State *L)
 
 static int l_rawbitmap_new(lua_State *L)
 {
-    THRawBitmap* pBitmap = luaT_stdnew<THRawBitmap>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THRawBitmap>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -108,7 +108,7 @@ static int l_rawbitmap_draw(lua_State *L)
 
 static int l_spritesheet_new(lua_State *L)
 {
-    THSpriteSheet* pSheet = luaT_stdnew<THSpriteSheet>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THSpriteSheet>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -187,7 +187,7 @@ static int l_spritesheet_hittest(lua_State *L)
 
 static int l_font_new(lua_State *L)
 {
-    THFont* pFont = luaT_stdnew<THFont>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THFont>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -294,7 +294,6 @@ static int l_font_draw_tooltip(lua_State *L)
     int iY = luaL_checkint(L, 5);
 
     int iW = 200; // (for now) hardcoded width of tooltips
-    int iH = 0;
     int iRealW;
     uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
@@ -385,7 +384,7 @@ static int l_layers_depersist(lua_State *L)
 
 static int l_cursor_new(lua_State *L)
 {
-    THCursor* pCursor = luaT_stdnew<THCursor>(L, LUA_ENVIRONINDEX, false);
+    luaT_stdnew<THCursor>(L, LUA_ENVIRONINDEX, false);
     return 1;
 }
 

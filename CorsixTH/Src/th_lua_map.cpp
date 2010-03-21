@@ -27,7 +27,7 @@ SOFTWARE.
 
 static int l_map_new(lua_State *L)
 {
-    THMap* pMap = luaT_stdnew<THMap>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THMap>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -585,7 +585,7 @@ static int l_map_hittest(lua_State *L)
 
 static int l_path_new(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_stdnew<THPathfinder>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THPathfinder>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 

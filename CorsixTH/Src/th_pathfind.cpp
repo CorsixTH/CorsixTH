@@ -511,7 +511,7 @@ THPathfinder::node_t* THPathfinder::_openHeapPop()
         min = i;
         const int right = (i + 1) * 2;
         int minvalue = value;
-        node_t *pSwap;
+        node_t *pSwap = NULL;
         node_t *pTest = m_ppOpenHeap[left];
         if(pTest->value() < minvalue)
             min = left, minvalue = pTest->value(), pSwap = pTest;

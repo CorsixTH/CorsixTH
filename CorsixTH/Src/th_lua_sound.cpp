@@ -25,7 +25,7 @@ SOFTWARE.
 
 static int l_soundarc_new(lua_State *L)
 {
-    THSoundArchive* pArchive = luaT_stdnew<THSoundArchive>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THSoundArchive>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -139,7 +139,7 @@ static int l_soundarc_filedata(lua_State *L)
 
 static int l_soundfx_new(lua_State *L)
 {
-    THSoundEffects* pEffects = luaT_stdnew<THSoundEffects>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THSoundEffects>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 

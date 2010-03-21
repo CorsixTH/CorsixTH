@@ -26,7 +26,7 @@ SOFTWARE.
 
 static int l_anims_new(lua_State *L)
 {
-    THAnimationManager* pAnims = luaT_stdnew<THAnimationManager>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THAnimationManager>(L, LUA_ENVIRONINDEX, true);
     return 1;
 }
 
@@ -470,7 +470,7 @@ static int l_anim_set_layers_from(lua_State *L)
 
 static int l_anim_set_tag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 2);
     luaT_setenvfield(L, 1, "tag");
     return 1;
@@ -478,7 +478,7 @@ static int l_anim_set_tag(lua_State *L)
 
 static int l_anim_get_tag(lua_State *L)
 {
-    THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
+    luaT_testuserdata<THAnimation>(L);
     lua_settop(L, 1);
     lua_getfenv(L, 1);
     lua_getfield(L, 2, "tag");
