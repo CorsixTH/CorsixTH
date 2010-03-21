@@ -877,30 +877,13 @@ function World:callForStaff(room, repair_object, urgent)
     if handyman then
       room.needs_repair = handyman
       repair_object:setRepairing(true)
-      local --[[persistable:handyman_repair_after_use]] function after_use()
-        repair_object:machineRepaired(room)
-        handyman:setDynamicInfoText("")
-      end
-      local orientation = repair_object.object_type.orientations[repair_object.direction]
-      local x = repair_object.tile_x + orientation.handyman_position[1]
-      local y = repair_object.tile_y + orientation.handyman_position[2]
+      local x, y = repair_object:getRepairTile()
       handyman:queueAction{
         name = "walk",
         x = x,
         y = y,
       }
-      local action_use
-      action_use = {
-        name = "use_object",
-        object = repair_object,
-        must_happen = true,
-        prolonged_usage = false,
-        loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
-          action_use.prolonged_usage = false
-        end,
-        after_use = after_use,
-      }
-      handyman:queueAction(action_use)
+      handyman:queueAction(repair_object:createRepairAction(handyman))
       handyman:queueAction(room:createLeaveAction())
       handyman:queueAction{name = "meander"}
       handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair

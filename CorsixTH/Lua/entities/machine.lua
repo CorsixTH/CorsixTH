@@ -56,6 +56,30 @@ function Machine:machineUsed(room)
   end
 end
 
+function Machine:getRepairTile()
+  local orientation = self.object_type.orientations[self.direction]
+  local x = self.tile_x + orientation.handyman_position[1]
+  local y = self.tile_y + orientation.handyman_position[2]
+  return x, y
+end
+
+function Machine:createRepairAction(handyman)
+  local --[[persistable:handyman_repair_after_use]] function after_use()
+    self:machineRepaired(self:getRoom())
+    handyman:setDynamicInfoText("")
+  end
+  return {
+    name = "use_object",
+    object = self,
+    must_happen = true,
+    prolonged_usage = false,
+    loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
+      action_use.prolonged_usage = false
+    end,
+    after_use = after_use,
+  }
+end
+
 function Machine:machineRepaired(room)
   room.needs_repair = nil
   local str = self.strength

@@ -202,6 +202,33 @@ function Room:onHumanoidEnter(humanoid)
   if humanoid.humanoid_class == "Handyman" then
     -- Handymen can always enter a room (to repair stuff, water plants, etc.)
     self.humanoids[humanoid] = true
+    -- Check for machines which need repair
+    local machine
+    for object in pairs(self.world:findAllObjectsNear(self:getEntranceXY(true))) do
+      if class.is(object, Machine) and object.times_used ~= 0 then
+        machine = object
+      end
+    end
+    if machine then
+      for _, action in ipairs(humanoid.action_queue) do
+        if action.object == machine then
+          -- Already on the way to repair the machine
+          machine = nil
+          break
+        end
+      end
+      if machine then
+        machine:setRepairing(true)
+        local x, y = machine:getRepairTile()
+        humanoid:queueAction({
+          name = "walk",
+          x = x,
+          y = y,
+        }, 1)
+        humanoid:queueAction(machine:createRepairAction(humanoid), 2)
+        humanoid:queueAction(self:createLeaveAction(), 3)
+      end
+    end
     return
   end
   if class.is(humanoid, Staff) then
