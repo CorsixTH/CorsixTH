@@ -417,8 +417,8 @@ static int l_cursor_use(lua_State *L)
 static int l_cursor_position(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 1, lua_upvalueindex(1));
-    THCursor::setPosition(pCanvas, luaL_checkint(L, 2), luaL_checkint(L, 3));
-    return 0;
+    lua_pushboolean(L, THCursor::setPosition(pCanvas, luaL_checkint(L, 2), luaL_checkint(L, 3)) ? 1 : 0);
+    return 1;
 }
 
 static int l_surface_new(lua_State *L)
