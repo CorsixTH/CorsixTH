@@ -76,7 +76,12 @@ function Staff:tick()
     end
     self.timer_until_raise = self.timer_until_raise - 1
     if self.timer_until_raise < 0 then
-      self:requestRaise()
+      if self.timer_until_raise == 0 and math.random(1, 5) ~= 1 then
+        -- At least for now, staff are timid, and only ask for raises 1/5th of the time
+        self.timer_until_raise = nil
+      else
+        self:requestRaise()
+      end
     end
   end
 end
@@ -362,9 +367,13 @@ end
 function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
+    local amount = math.floor(self.profile:getFairWage() + self.profile.wage * 0.1 - self.profile.wage)
+    if amount <= 0 then
+      self.timer_until_raise = nil
+      return
+    end
     self.quitting_in = 25*30 -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
-    local amount = math.floor(self.profile:getFairWage() + self.profile.wage*0.1 - self.profile.wage)
     self.world.ui.bottom_panel:queueMessage("strike", amount, self)
   end
 end
