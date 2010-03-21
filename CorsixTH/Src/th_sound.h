@@ -99,10 +99,10 @@ public:
     void setSoundArchive(THSoundArchive *pArchive);
 
     void playSound(size_t iIndex, double dVolume);
-	void playSoundAt(size_t iIndex, int iX, int iY);
+    void playSoundAt(size_t iIndex, int iX, int iY);
     void playSoundAt(size_t iIndex, double dVolume, int iX, int iY);
-	void setSoundEffectsVolume(double dVolume);
-	void setSoundEffectsOn(bool bOn);
+    void setSoundEffectsVolume(double dVolume);
+    void setSoundEffectsOn(bool bOn);
     void setCamera(int iX, int iY, int iRadius);
 
 protected:
@@ -119,9 +119,9 @@ protected:
     int m_iCameraY;
     double m_fCameraRadius;
     double m_fMasterVolume;
-	double m_fSoundEffectsVolume;
+    double m_fSoundEffectsVolume;
     int m_iPostionlessVolume;
-	bool m_bSoundEffectsOn;
+    bool m_bSoundEffectsOn;
 #endif // CORSIX_TH_USE_SDL_MIXER
 };
 

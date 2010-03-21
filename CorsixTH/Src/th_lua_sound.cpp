@@ -155,16 +155,16 @@ static int l_soundfx_set_archive(lua_State *L)
 
 static int l_soundfx_set_sound_volume(lua_State *L)
 {
-	THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-	pEffects->setSoundEffectsVolume(luaL_checknumber(L, 2));
-	return 1;
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    pEffects->setSoundEffectsVolume(luaL_checknumber(L, 2));
+    return 1;
 }
 
 static int l_soundfx_set_sound_effects_on(lua_State *L)
 {
-	THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-	pEffects->setSoundEffectsOn(lua_toboolean(L, 2));
-	return 1;
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    pEffects->setSoundEffectsOn(lua_toboolean(L, 2));
+    return 1;
 }
 
 static int l_soundfx_play(lua_State *L)
@@ -218,8 +218,8 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState)
     luaT_class(THSoundEffects, l_soundfx_new, "soundEffects", MT_SoundFx);
     luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", MT_SoundArc);
     luaT_setfunction(l_soundfx_play, "play");
-	luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
-	luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
+    luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
+    luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     luaT_setfunction(l_soundfx_set_camera, "setCamera");
     luaT_endclass();
 }

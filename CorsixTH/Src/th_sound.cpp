@@ -168,8 +168,9 @@ THSoundEffects::THSoundEffects()
     m_iCameraY = 0;
     m_fCameraRadius = 1.0;
     m_fMasterVolume = 1.0;
-	m_fSoundEffectsVolume = 0.5;
+    m_fSoundEffectsVolume = 0.5;
     m_iPostionlessVolume = MIX_MAX_VOLUME;
+    m_bSoundEffectsOn = true;
 
 #define NUM_CHANNELS 32
 #if NUM_CHANNELS >= 32
@@ -242,8 +243,8 @@ void THSoundEffects::playSound(size_t iIndex, double dVolume)
 
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
 {
-	if(m_bSoundEffectsOn)
-		playSoundAt(iIndex, m_fSoundEffectsVolume, iX, iY);
+    if(m_bSoundEffectsOn)
+        playSoundAt(iIndex, m_fSoundEffectsVolume, iX, iY);
 }
 
 void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY)
@@ -265,12 +266,12 @@ void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY)
 
 void THSoundEffects::setSoundEffectsVolume(double dVolume)
 {
-	m_fSoundEffectsVolume = dVolume;
+    m_fSoundEffectsVolume = dVolume;
 }
 
 void THSoundEffects::setSoundEffectsOn(bool bOn)
 {
-	m_bSoundEffectsOn = bOn;
+    m_bSoundEffectsOn = bOn;
 }
 
 void THSoundEffects::_playRaw(size_t iIndex, int iVolume)

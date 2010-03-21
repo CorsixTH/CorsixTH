@@ -582,7 +582,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_font_set_sep, "setSeparation");
     luaT_setfunction(l_font_draw, "draw", MT_Surface);
     luaT_setfunction(l_font_draw_wrapped, "drawWrapped", MT_Surface);
-	luaT_setfunction(l_font_draw_tooltip, "drawTooltip", MT_Surface);
+    luaT_setfunction(l_font_draw_tooltip, "drawTooltip", MT_Surface);
     luaT_endclass();
 
     // Layers
