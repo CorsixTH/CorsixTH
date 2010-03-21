@@ -112,3 +112,9 @@ tooltip.main_menu = {
   options = "Tweak various settings",
   exit = "No, no, please don't leave!",
 }
+
+errors = {
+  dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
+  save_prefix = "Error while saving game: ",
+  load_prefix = "Error while loading game: ",
+}

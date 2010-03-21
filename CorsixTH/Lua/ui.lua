@@ -518,6 +518,9 @@ end
 
 
 function UI:addWindow(window)
+  if window.closed then
+    return
+  end
   if window.modal_class then
     if self.modal_windows[window.modal_class] then
       self.modal_windows[window.modal_class]:close()

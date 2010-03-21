@@ -408,7 +408,7 @@ function UIMenuBar:makeMenu(app)
         handler = function()
           local status, err = pcall(handler, filename)
           if not status then
-            err = "Error while ".. what .."ing game: " .. err
+            err = _S.errors[what .."_prefix"] .. err
             print(err)
             self.ui:addWindow(UIInformation(self.ui, {err}))
           end

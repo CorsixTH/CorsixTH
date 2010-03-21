@@ -27,12 +27,18 @@ class "UIStaffManagement" (UIFullscreen)
 function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  self.background = gfx:loadRaw("Staff01V", 640, 480)
-  local palette = gfx:loadPalette("QData", "Staff01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
-  self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
-  self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
+  if not pcall(function()
+    self.background = gfx:loadRaw("Staff01V", 640, 480)
+    local palette = gfx:loadPalette("QData", "Staff01V.pal")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Staff02V", true, palette)
+    self.title_font = gfx:loadFont("QData", "Font01V", false, palette)
+    self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
+  end) then
+    ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
+    self:close()
+    return
+  end
   
   local hosp = ui.hospital
   self.ui = ui

@@ -100,10 +100,13 @@ end
 
 -- Called before the window is closed
 function Window:close()
-  self.parent:removeWindow(self)
+  if self.parent then
+    self.parent:removeWindow(self)
+  end
   for key in pairs(self.key_handlers) do
     self.ui:removeKeyHandler(key, self)
   end
+  self.closed = true
 end
 
 function Window:addKeyHandler(key, handler)
@@ -212,6 +215,9 @@ function Window:addColourPanel(x, y, w, h, r, g, b)
 end
 
 function Window:addWindow(window)
+  if window.closed then
+    return
+  end
   if not self.windows then
     self.windows = {}
   end

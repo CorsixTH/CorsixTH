@@ -26,17 +26,23 @@ class "UIBankManager" (UIFullscreen)
 function UIBankManager:UIBankManager(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  self.background = gfx:loadRaw("Bank01V", 640, 480)
-  self.stat_background = gfx:loadRaw("Stat01V", 640, 480)
-  local palette = gfx:loadPalette("QData", "Bank01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
-  self.font = gfx:loadFont("QData", "Font36V", false, palette)
+  if not pcall(function()
+    self.background = gfx:loadRaw("Bank01V", 640, 480)
+    self.stat_background = gfx:loadRaw("Stat01V", 640, 480)
+    local palette = gfx:loadPalette("QData", "Bank01V.pal")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
+    self.font = gfx:loadFont("QData", "Font36V", false, palette)
   
-  -- The statistics font 
-  palette = gfx:loadPalette("QData", "Stat01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  self.stat_font = gfx:loadFont("QData", "Font37V", false, palette)
+    -- The statistics font 
+    palette = gfx:loadPalette("QData", "Stat01V.pal")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.stat_font = gfx:loadFont("QData", "Font37V", false, palette)
+  end) then
+    ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
+    self:close()
+    return
+  end
   
   self.default_button_sound = "selectx.wav"
   
@@ -143,6 +149,9 @@ function UIBankManager:draw(canvas, x, y)
 end
 
 function UIBankManager:showStatistics()
+  if self.closed then
+    return
+  end
   self.showingStatistics = true
   self.return_from_stat_button.enabled = true
   self.stat_button.enabled = false

@@ -31,14 +31,20 @@ function UITownMap:UITownMap(ui)
   local hospital = self.ui.hospital
   local gfx      = app.gfx
 
-  local palette   = gfx:loadPalette("QData", "Town01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+  if not pcall(function()
+    local palette   = gfx:loadPalette("QData", "Town01V.pal")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
 
-  self.background = gfx:loadRaw("Town01V", 640, 480)
-  self.info_font  = gfx:loadFont("QData", "Font34V", false, palette)
-  self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
-  self.money_font = gfx:loadFont("QData", "Font05V")
-  self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
+    self.background = gfx:loadRaw("Town01V", 640, 480)
+    self.info_font  = gfx:loadFont("QData", "Font34V", false, palette)
+    self.city_font = gfx:loadFont("QData", "Font31V", false, palette)
+    self.money_font = gfx:loadFont("QData", "Font05V")
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Town02V", true, palette)
+  end) then
+    ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
+    self:close()
+    return
+  end
   
   self.default_button_sound = "selectx.wav"
   self.default_buy_sound    = "buy.wav"

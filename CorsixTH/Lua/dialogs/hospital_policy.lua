@@ -26,12 +26,18 @@ class "UIPolicy" (UIFullscreen)
 function UIPolicy:UIPolicy(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  self.background = gfx:loadRaw("Pol01V", 640, 480)
-  local palette = gfx:loadPalette("QData", "Pol01V.pal")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
-  self.label_font = gfx:loadFont("QData", "Font74V", false, palette)
-  self.text_font = gfx:loadFont("QData", "Font105V", false, palette)
+  if not pcall(function()
+    self.background = gfx:loadRaw("Pol01V", 640, 480)
+    local palette = gfx:loadPalette("QData", "Pol01V.pal")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.panel_sprites = gfx:loadSpriteTable("QData", "Pol02V", true, palette)
+    self.label_font = gfx:loadFont("QData", "Font74V", false, palette)
+    self.text_font = gfx:loadFont("QData", "Font105V", false, palette)
+  end) then
+    ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
+    self:close()
+    return
+  end
   
   local hosp = ui.hospital
   self.hospital = hosp
@@ -176,7 +182,7 @@ function UIPolicy:panelHit(x, y)
 end
 
 function UIPolicy:close()
-  for key, s in pairs(self.sliders) do
+  for key, s in pairs(self.sliders or {}) do
     local divider = (s.total_max_x or s.max_x) - (s.total_min_x or s.min_x)
     local number = (s.addition and 1 or 0)
     self.hospital.policies[key] = number + (s.x - (s.total_min_x or s.min_x))/divider
