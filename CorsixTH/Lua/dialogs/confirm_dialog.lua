@@ -42,8 +42,8 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback)
     self:addPanel(358, 0, y)  -- Dialog background
   end
   self:addPanel(359, 0, 136)  -- Dialog footer
-  self:addPanel(360, 0, 146):makeButton(8, 10, 82, 34, 361, self.close)  -- Cancel button
-  self:addPanel(362, 90, 146):makeButton(8, 10, 82, 34, 363, self.ok)  -- OK button
+  self:addPanel(360, 0, 146):makeButton(8, 10, 82, 34, 361, self.close):setSound"No4.wav"
+  self:addPanel(362, 90, 146):makeButton(8, 10, 82, 34, 363, self.ok):setSound"YesX.wav"
 end
 
 function UIConfirmDialog:ok()

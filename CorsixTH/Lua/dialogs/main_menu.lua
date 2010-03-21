@@ -39,6 +39,7 @@ function UIMainMenu:UIMainMenu(ui)
   self:addPanel(2, 0, 160) -- bottom part of window
   
   -- individual buttons
+  self.default_button_sound = "selectx.wav"
   self:addPanel(3, 18, 18):makeButton(0, 0, 164, 44, 4, self.buttonNewGame):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.new_game)
   self:addPanel(3, 18, 66):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
   self:addPanel(3, 18, 114):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.load_game .. " " .. _S.misc.not_yet_implemented):enable(false)
