@@ -138,3 +138,27 @@ errors = {
   save_prefix = "Fehler beim Speichern: ",
   load_prefix = "Fehler beim Laden: ",
 }
+
+totd_window = {
+  tips = {
+    utf8 "Zu Beginn benötigt jedes Krankenhaus eine Rezeption und eine Allgemeinmedizin. Danach kommt es darauf an, was für Patienten im Krankenhaus auftauchen. Eine Pharma-Theke ist aber immer eine gute Wahl.",
+    utf8 "Maschinen wie die Entlüftung müssen gewartet werden. Stelle ein paar Handlanger ein, oder die Patienten und das Personal könnte verletzt werden.",
+    utf8 "Nach einer Weile wird das Personal müde. Baue unbedingt einen Personalraum, damit es sich ausruhen kann.",
+    utf8 "Platziere genug Heizkörper, um das Personal und die Patienten warm zu halten, sonst werden sie unglücklich.",
+    utf8 "Der Fähigkeits-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
+    utf8 "AIPler und Ärzte können ihre Fähigkeiten verbessern, indem sie in der Ausbildung von Beratern lernen. Wenn der Berater eine zusätzliche Qualifikation (Chirurg, Psychiater oder Forscher) besitzt, gibt er dieses Wissen ebenfalls weiter.",
+    utf8 "Hast du schon versucht, die Europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Mach vorher den Sound an!!",
+    utf8 "Das Options-Menü ist noch nicht verfügbar, aber es können einige Einstellungen wie die Auflösung oder die Sprache verändert werden, indem man die config.txt im Spielverzeichnis editiert.",
+    utf8 "Du hast eine andere Sprache als Englisch ausgewählt, aber es erscheinen Englische Texte? Hilf uns die Übersetzung zu vervollständigen, indem du fehlende Texte in deine Sprache Übersetzt!",
+    utf8 "Das CorsixTH-Team sucht Verstärkung! Hast du Interesse, beim Programmieren, Übersetzen oder Grafiken erstellen zu helfen? Kontaktiere uns in unserem Forum, der Mailing List oder unserem IRC-Channel (corsix-th im quakenet).",
+    utf8 "Wenn du einen Bug findest, bitte melde ihn in unserem Bug-Tracker: http://code.google.com/p/corsix-th/issues/entry",
+    utf8 "CorsixTH wurde am 24.Juli 2009 erstmals öffentlich vorgestellt. Der erste Release war die spielbare Beta 1 am 24.Dezember 2009. Nach drei weiteren Monaten sind wir nun stolz, Beta 2 präsentieren zu dürfen (am 24.März 2010 veröffentlicht).",
+  },
+  previous = "Vorheriger Tipp",
+  next = utf8 "Nächster Tipp",
+}
+
+tooltip.totd_window = {
+  previous = "Den vorherigen Tipp anzeigen",
+  next = utf8 "Den nächsten Tipp anzeigen",
+}

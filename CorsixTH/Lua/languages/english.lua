@@ -128,3 +128,27 @@ errors = {
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
 }
+
+totd_window = {
+  tips = {
+    "Every hospital needs a reception desk and a GP's office to get going. After that, it depends on what kind of patients are visiting your hospital. A pharmacy is always a good choice, though.",
+    "Machines such as the Inflation need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
+    "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
+    "Place enough radiators to keep your staff and patients warm, or they will become unhappy.",
+    "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
+    "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist or researcher), he will also pass on this knowledge to his pupil(s).",
+    "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
+    "The options menu is not yet implemented, but you can adjust some settings such as the resolution and language by editing the config.txt in your game directory.",
+    "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
+    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at quakenet).",
+    "If you find a bug, please report it at our bugtracker: http://code.google.com/p/corsix-th/issues/entry",
+    "CorsixTH was first made public on July 24th, 2009. The first release was playable beta 1 on December 24th, 2009. After three more months, we are proud to present beta 2 (released March 24th, 2010).",
+  },
+  previous = "Previous Tip",
+  next = "Next Tip",
+}
+
+tooltip.totd_window = {
+  previous = "Display the previous tip",
+  next = "Display the next tip",
+}

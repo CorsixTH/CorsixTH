@@ -212,6 +212,7 @@ function App:loadMainMenu()
 
   self.ui = UI(self)
   self.ui:addWindow(UIMainMenu(self.ui))
+  self.ui:addWindow(UITipOfTheDay(self.ui))
   
   local bg_size
   for _, size in ipairs(menu_bg_sizes) do
