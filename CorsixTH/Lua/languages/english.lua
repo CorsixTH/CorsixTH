@@ -141,7 +141,7 @@ totd_window = {
     "The options menu is not yet implemented, but you can adjust some settings such as the resolution and language by editing the config.txt in your game directory.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
     "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at quakenet).",
-    "If you find a bug, please report it at our bugtracker: http://code.google.com/p/corsix-th/issues/entry",
+    "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
     "CorsixTH was first made public on July 24th, 2009. The first release was playable beta 1 on December 24th, 2009. After three more months, we are proud to present beta 2 (released March 24th, 2010).",
   },
   previous = "Previous Tip",
