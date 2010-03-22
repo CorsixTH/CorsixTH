@@ -2,10 +2,11 @@
 Version Beta 2 - released 2010-03-24
 -----------------------------------------
 
-* Feature: Save/Load functionality
-* Feature: Patients and staff now have a need for heat in order to stay happy.
-  Patients will also get thirsty and will need a bathroom sooner or later, and
-  Staff will ask for a raise when angry.
+* Feature: Save / Load functionality.
+* Feature: Patients and staff now have a need for heat (from radiators) in
+  order to stay happy. Patients will also get thirsty (build drinks machines)
+  and will need a bathroom sooner or later, and staff will ask for a salary
+  raise when unhappy.
 * Feature: Machines will need repair now and then. A dialog that shows
   necessarry information is displayed when the machine is clicked.
 * Feature: Dynamic Information Bar in the bottom right corner of the UI added.
@@ -19,17 +20,28 @@ Version Beta 2 - released 2010-03-24
 * Feature: A tutorial is offered to the player at the start of the game.
 * Feature: Tooltips are displayed when hovering over buttons for some time.
 * Feature: Emergencies may happen every now and then.
+* Feature: Hospital reputation system.
+* Feature: Humurous disease description faxes are now shown when a disease is
+  first diagnosed.
+* Feature: Room blueprints can be resized during the build process.
 
-* New Dialogs: Hospital Policy, Drugbook, Bank Manager, Staff Management, Town Map (WIP), Main Menu
+* New Dialogs: Hospital Policy, Drug Casebook, Bank Manager, Staff Management,
+  Town Map (work in progress), Main Menu
+* Many new key shortcuts (see Hotkeys wiki page for full list).
+* Dialogs can now be re-positioned by dragging them to where they are wanted.
+* Added floating money signs to better indicate where money is coming from.
+* Added comments from the advisor in more situations.
 
 * 10 new diseases.
 * New treatment room: Hair Restorer
 * Additional functional diagnosis rooms: General Diagnosis, Ultrascan, X-Ray
+* Room queues should now re-balance themselves when new rooms are built.
 
 * Translation: Norwegian (bokmål).
 
 A lot of other small improvements.
-Also, a great number of bugs have been squashed.
+Also, a great number of bugs have been squashed. Most remaining bugs are no
+longer fatal, and can be continued from.
 
 -----------------------------------------
 Version Beta 1 - released 2009-12-24
