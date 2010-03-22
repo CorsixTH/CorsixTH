@@ -205,6 +205,11 @@ local menu_bg_sizes = {
 }
 
 function App:loadMainMenu()
+  -- Unload ui, world and map
+  self.ui = nil
+  self.world = nil
+  self.map = nil
+
   self.ui = UI(self)
   self.ui:addWindow(UIMainMenu(self.ui))
   
