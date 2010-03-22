@@ -113,6 +113,16 @@ tooltip.main_menu = {
   exit = "No, no, please don't leave!",
 }
 
+load_game_window = {
+  back = "Back",
+}
+
+tooltip.load_game_window = {
+  load_game_number = "Load game %d",
+  load_autosave = "Load autosave",
+  back = "Close the load game window",
+}
+
 errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",

@@ -33,10 +33,10 @@ fax.epidemic.declare_explanation_fine = utf8 "Wenn Sie die Epidemie melden, zahl
 fax.emergency_result.saved_people = "Sie haben %d der %d Notfall-Patienten gerettet." -- swapped %d's
 dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
 adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
-tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- this tooltip talks about hospital value. Actually it should say reputation.
+tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- original mentioned hospital value, while it's actually reputation.
 staff_title.researcher = "Forscher" -- one of the most annoying (since prominent) wrong strings in original
 bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
-insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered to &)
+insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered as &)
 object.skeleton = "Skelett" -- second most annoying mistake in german translation
 
 -- new strings
@@ -48,29 +48,30 @@ menu_options.lock_windows = "  FENSTER FESTHALTEN  "
 menu_options_game_speed.pause        = "  PAUSE"
 
 menu_debug = {
-  transparent_walls   =utf8 "  DURCHSICHTIGE WÄNDE",
-  limit_camera            = "  KAMERA BEGRENZEN",
-  disable_salary_raise=utf8 "  KEINE GEHALTSERHÖHUNGEN",
-  make_debug_patient      = "  DEBUG-PATIENTEN ERSTELLEN",
-  spawn_patient           = "  PATIENTEN ERZEUGEN",
-  make_adviser_talk       = "  BERATER REDEN LASSEN",
-  show_watch              = "  UHR ANZEIGEN",
-  place_objects           = "  OBJEKTE PLATZIEREN",
-  dump_strings            = "  TEXTE ABSPEICHERN  ",
-  map_overlay             = "  KARTEN-OVERLAY",
-  sprite_viewer           = "  SPRITE-BETRACHTER",
+  transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE",
+  limit_camera              = "  KAMERA BEGRENZEN",
+  disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN",
+  make_debug_patient        = "  DEBUG-PATIENTEN ERSTELLEN",
+  spawn_patient             = "  PATIENTEN ERZEUGEN",
+  make_adviser_talk         = "  BERATER REDEN LASSEN",
+  show_watch                = "  UHR ANZEIGEN",
+  create_emergency          = "  NOTFALL ERZEUGEN  ",
+  place_objects             = "  OBJEKTE PLATZIEREN",
+  dump_strings              = "  TEXTE ABSPEICHERN  ",
+  map_overlay               = "  KARTEN-OVERLAY",
+  sprite_viewer             = "  SPRITE-BETRACHTER",
 }
 menu_debug_overlay = {
-  none                    = "  KEIN",
-  flags                   = "  FLAGS",
-  byte_0_1                = "  BYTE 0 & 1",
-  byte_floor              = "  BYTE BODEN",
-  byte_n_wall             = "  BYTE N WAND",
-  byte_w_wall             = "  BYTE W WAND",
-  byte_5                  = "  BYTE 5",
-  byte_6                  = "  BYTE 6",
-  byte_7                  = "  BYTE 7",
-  parcel              =utf8 "  GRUNDSTÜCK"
+  none                      = "  KEIN",
+  flags                     = "  FLAGS",
+  byte_0_1                  = "  BYTE 0 & 1",
+  byte_floor                = "  BYTE BODEN",
+  byte_n_wall               = "  BYTE N WAND",
+  byte_w_wall               = "  BYTE W WAND",
+  byte_5                    = "  BYTE 5",
+  byte_6                    = "  BYTE 6",
+  byte_7                    = "  BYTE 7",
+  parcel               = utf8 "  GRUNDSTÜCK"
 }
 
 adviser.room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären."
@@ -120,4 +121,20 @@ tooltip.main_menu = {
   load_game = "Ein zuvor gespeichertes Spiel fortsetzen",
   options = utf8 "Diverse Einstellungen verändern",
   exit = "Bitte geh nicht fort!",
+}
+
+load_game_window = {
+  back = utf8 "Zurück",
+}
+
+tooltip.load_game_window = {
+  load_game_number = "Spiel %d laden",
+  load_autosave = "Automatisch gespeichertes Spiel laden",
+  back = utf8 "Das Ladefenster schließen",
+}
+
+errors = {
+  dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
+  save_prefix = "Fehler beim Speichern: ",
+  load_prefix = "Fehler beim Laden: ",
 }

@@ -388,7 +388,7 @@ function Window:draw(canvas, x, y)
   x, y = x + self.x, y + self.y
   if self.panels[1] then
     local panel_sprites = self.panel_sprites
-    local panel_sprites_draw = panel_sprites.draw
+    local panel_sprites_draw = panel_sprites and panel_sprites.draw
     for _, panel in ipairs(self.panels) do
       if panel.visible then
         if panel.custom_draw then

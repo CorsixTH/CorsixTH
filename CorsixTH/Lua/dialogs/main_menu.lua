@@ -31,6 +31,7 @@ function UIMainMenu:UIMainMenu(ui)
   self.on_top = true
   self.width = 200
   self.height = 280
+  self:setDefaultPosition(0.5, 0.5)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "main_menu", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -42,7 +43,7 @@ function UIMainMenu:UIMainMenu(ui)
   self.default_button_sound = "selectx.wav"
   self:addPanel(3, 18, 18):makeButton(0, 0, 164, 44, 4, self.buttonNewGame):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.new_game)
   self:addPanel(3, 18, 66):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
-  self:addPanel(3, 18, 114):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.load_game .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addPanel(3, 18, 114):makeButton(0, 0, 164, 44, 4, self.buttonLoadGame):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.load_game)
   self:addPanel(3, 18, 162):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
   self:addPanel(3, 18, 222):makeButton(0, 0, 164, 44, 4, self.buttonExit):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.exit)
   
@@ -56,19 +57,8 @@ function UIMainMenu:UIMainMenu(ui)
   self:onChangeResolution()
 end
 
-function UIMainMenu:onChangeResolution()
-  local app = self.ui.app
-  
-  local config = app.runtime_config.window_position
-  if config then
-    config = config[self:getSavedWindowPositionName()]
-    if config and config.x and config.y then
-      return self:setPosition(config.x, config.y)
-    end
-  end
-  
-  self.x = (app.config.width - self.width) / 2
-  self.y = (app.config.height - self.height) / 2
+function UIMainMenu:getSavedWindowPositionName()
+  return "main_menu_group"
 end
 
 local label_y = { 27, 75, 123, 171, 231 }
@@ -136,6 +126,12 @@ end
 
 function UIMainMenu:buttonNewGame()
   self.ui.app:loadLevel(1)
+end
+
+function UIMainMenu:buttonLoadGame()
+  local window = UILoadGame(self.ui, "menu")
+  self.ui:addWindow(window)
+  self:close()
 end
 
 function UIMainMenu:buttonExit()
