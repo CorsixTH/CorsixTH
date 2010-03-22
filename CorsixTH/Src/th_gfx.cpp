@@ -936,7 +936,7 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
     lua_pushlightuserdata(L, m_pNext);
     lua_rawget(L, -2);
-    pWriter->writeStackObject(-1);
+    pWriter->fastWriteStackObject(-1);
     lua_pop(L, 2);
 
     // Write the THDrawable fields
@@ -1427,7 +1427,7 @@ void THSpriteRenderList::persist(LuaPersistWriter *pWriter) const
     lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
     lua_pushlightuserdata(L, m_pNext);
     lua_rawget(L, -2);
-    pWriter->writeStackObject(-1);
+    pWriter->fastWriteStackObject(-1);
     lua_pop(L, 2);
 }
 

@@ -47,6 +47,12 @@ public:
     virtual void writeByteStream(const uint8_t *pBytes, size_t iCount) = 0;
     virtual void setError(const char *sError) = 0;
 
+    // writeStackObject for userdata without growing the Lua call stack
+    // The given index should be a userdata whose __persist metamethod supports
+    // fast persistance (being called with extra arguments and the wrong
+    // environment / upvalues).
+    virtual void fastWriteStackObject(int iIndex) = 0;
+
     // Writes an unsigned integer as a variable number of bytes
     // Endian independant and underlying type size independant
     template <class T>

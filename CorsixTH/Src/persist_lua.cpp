@@ -116,6 +116,7 @@ struct LoadMultiBuffer_t
       err - an object which could not be persisted
     self environment:
       <object> - <index of object in already written data>
+      [1] - permanents table
     self environment metatable:
       __index - writeObjectRaw (via l_writer_mt_index)
         upvalue 1 - permanents table
@@ -144,7 +145,9 @@ public:
     void init()
     {
         lua_State *L = m_L;
-        lua_createtable(L, 0, 8); // Environment
+        lua_createtable(L, 1, 8); // Environment
+        lua_pushvalue(L, 2); // Permanent objects
+        lua_rawseti(L, -2, 1);
         lua_createtable(L, 1, 0); // Environment metatable
         lua_pushvalue(L, 2); // Permanent objects
         lua_pushvalue(L, 1); // self
@@ -180,6 +183,71 @@ public:
             lua_pushlstring(m_L, (const char*)m_pData, m_iDataLength);
             return 1;
         }
+    }
+
+    virtual void fastWriteStackObject(int iIndex)
+    {
+        lua_State *L = m_L;
+
+        if(lua_type(L, iIndex) != LUA_TUSERDATA)
+        {
+            writeStackObject(iIndex);
+            return;
+        }
+
+        // Convert index from relative to absolute
+        if(iIndex < 0 && iIndex > LUA_REGISTRYINDEX)
+            iIndex = lua_gettop(L) + 1 + iIndex;
+
+        // Check for no cycle
+        lua_getfenv(L, 1);
+        lua_pushvalue(L, iIndex);
+        lua_rawget(L, -2);
+        lua_rawgeti(L, -2, 1);
+        lua_pushvalue(L, iIndex);
+        lua_gettable(L, -2);
+        lua_replace(L, -2);
+        if(!lua_isnil(L, -1) || !lua_isnil(L, -2))
+        {
+            lua_pop(L, 3);
+            writeStackObject(iIndex);
+            return;
+        }
+        lua_pop(L, 2);
+
+        // Save the index to the cache
+        lua_pushvalue(L, iIndex);
+        lua_pushnumber(L, (lua_Number)(m_iNextIndex++));
+        lua_settable(L, -3);
+
+        if(!_checkThatUserdataCanBeDepersisted(iIndex))
+            return;
+
+        // Write type, metatable, and then environment
+        uint8_t iType = LUA_TUSERDATA;
+        writeByteStream(&iType, 1);
+        writeStackObject(-1);
+        lua_getfenv(L, iIndex);
+        writeStackObject(-1);
+        lua_pop(L, 1);
+
+        // Write the raw data
+        if(lua_type(L, -1) == LUA_TTABLE)
+        {
+            lua_getfield(L, -1, "__persist");
+            if(lua_isnil(L, -1))
+                lua_pop(L, 1);
+            else
+            {
+                lua_pushvalue(L, iIndex);
+                lua_checkstack(L, 20);
+                lua_CFunction fn = lua_tocfunction(L, -2);
+                fn(L);
+                lua_pop(L, 2);
+            }
+        }
+        writeVUInt((uint64_t)0x42); // sync marker
+        lua_pop(L, 1);
     }
 
     virtual void writeStackObject(int iIndex)
@@ -293,13 +361,19 @@ public:
                 writeByteStream(reinterpret_cast<const uint8_t*>(sString), iLength);
                 break; }
 
-            case LUA_TTABLE:
+            case LUA_TTABLE: {
                 // Replace self's environment with self (for calls to writeStackObject)
                 lua_pushvalue(L, lua_upvalueindex(2));
                 lua_replace(L, 1);
 
+                // Save env and insert prior to table
+                lua_getfenv(L, 1);
+                lua_insert(L, 2);
+
+                int iTable = 3; table_reentry:
+
                 // Handle the metatable
-                if(lua_getmetatable(L, 2))
+                if(lua_getmetatable(L, iTable))
                 {
                     iType = PERSIST_TTABLE_WITH_META;
                     writeByteStream(&iType, 1);
@@ -314,10 +388,38 @@ public:
 
                 // Write the children as key, value pairs
                 lua_pushnil(L);
-                while(lua_next(L, 2))
+                while(lua_next(L, iTable))
                 {
                     writeStackObject(-2);
-                    writeStackObject(-1);
+                    // The naive thing to do now would be writeStackObject(-1)
+                    // but this can easily lead to Lua's C call stack limit
+                    // being hit. To reduce the likelyhood of this happening,
+                    // we check to see if about to write another table.
+                    if(lua_type(L, -1) == LUA_TTABLE)
+                    {
+                        lua_pushvalue(L, -1);
+                        lua_rawget(L, 2);
+                        lua_pushvalue(L, -2);
+                        lua_gettable(L, lua_upvalueindex(1));
+                        if(lua_isnil(L, -1) && lua_isnil(L, -2))
+                        {
+                            lua_pop(L, 2);
+                            lua_checkstack(L, 10);
+                            iTable += 2;
+                            lua_pushvalue(L, iTable);
+                            lua_pushnumber(L, (lua_Number)(m_iNextIndex++));
+                            lua_settable(L, 2);
+                            goto table_reentry; table_resume:
+                            iTable -= 2;
+                        }
+                        else
+                        {
+                            lua_pop(L, 2);
+                            writeStackObject(-1);
+                        }
+                    }
+                    else
+                        writeStackObject(-1);
                     lua_pop(L, 1);
                 }
 
@@ -325,7 +427,9 @@ public:
                 // only value which cannot be used as a key in a table).
                 iType = LUA_TNIL;
                 writeByteStream(&iType, 1);
-                break;
+                if(iTable != 3)
+                    goto table_resume;
+                break; }
 
             case LUA_TFUNCTION:
                 if(lua_iscfunction(L, 2))
@@ -377,55 +481,8 @@ public:
                 break;
 
             case LUA_TUSERDATA:
-                // Check that the userdata can be depersisted
-                if(lua_getmetatable(L, 2))
-                {
-                    lua_getfield(L, -1, "__depersist_size");
-                    if(lua_isnumber(L, -1))
-                    {
-                        if(static_cast<int>(lua_tointeger(L, -1))
-                            != static_cast<int>(lua_objlen(L, 2)))
-                        {
-                            setError(lua_pushfstring(L, "__depersist_size is "
-                                "incorrect (%d vs. %d)", (int)lua_objlen(L, 2),
-                                (int)lua_tointeger(L, -1)));
-                            break;
-                        }
-                        if(lua_objlen(L, 2) != 0)
-                        {
-                            lua_getfield(L, -2, "__persist");
-                            lua_getfield(L, -3, "__depersist");
-                            if(lua_isnil(L, -1) || lua_isnil(L, -2))
-                            {
-                                setError("Can only persist non-empty userdata"
-                                    " if they have __persist and __depersist "
-                                    "metamethods");
-                                break;
-                            }
-                            lua_pop(L, 2);
-                        }
-                    }
-                    else
-                    {
-                        if(lua_objlen(L, 2) != 0)
-                        {
-                            setError("Can only persist non-empty userdata if "
-                                "they have a __depersist_size metafield");
-                            break;
-                        }
-                    }
-                    lua_pop(L, 1);
-                }
-                else
-                {
-                    if(lua_objlen(L, 2) != 0)
-                    {
-                        setError("Can only persist userdata without a metatable"
-                            " if their size is zero");
-                        break;
-                    }
-                    lua_pushnil(L);
-                }
+                if(!_checkThatUserdataCanBeDepersisted(2))
+                    break;
 
                 // Replace self's environment with self (for calls to writeStackObject)
                 lua_pushvalue(L, lua_upvalueindex(2));
@@ -462,6 +519,61 @@ public:
         }
         lua_pushnumber(L, 0);
         return 1;
+    }
+
+    bool _checkThatUserdataCanBeDepersisted(int iIndex)
+    {
+        lua_State *L = m_L;
+
+        if(lua_getmetatable(L, iIndex))
+        {
+            lua_getfield(L, -1, "__depersist_size");
+            if(lua_isnumber(L, -1))
+            {
+                if(static_cast<int>(lua_tointeger(L, -1))
+                    != static_cast<int>(lua_objlen(L, iIndex)))
+                {
+                    setError(lua_pushfstring(L, "__depersist_size is "
+                        "incorrect (%d vs. %d)", (int)lua_objlen(L, iIndex),
+                        (int)lua_tointeger(L, -1)));
+                    return false;
+                }
+                if(lua_objlen(L, iIndex) != 0)
+                {
+                    lua_getfield(L, -2, "__persist");
+                    lua_getfield(L, -3, "__depersist");
+                    if(lua_isnil(L, -1) || lua_isnil(L, -2))
+                    {
+                        setError("Can only persist non-empty userdata"
+                            " if they have __persist and __depersist "
+                            "metamethods");
+                        return false;
+                    }
+                    lua_pop(L, 2);
+                }
+            }
+            else
+            {
+                if(lua_objlen(L, iIndex) != 0)
+                {
+                    setError("Can only persist non-empty userdata if "
+                        "they have a __depersist_size metafield");
+                    return false;
+                }
+            }
+            lua_pop(L, 1);
+        }
+        else
+        {
+            if(lua_objlen(L, iIndex) != 0)
+            {
+                setError("Can only persist userdata without a metatable"
+                    " if their size is zero");
+                return false;
+            }
+            lua_pushnil(L);
+        }
+        return true;
     }
 
     void writePrototype(lua_Debug *pProtoInfo, int iInstanceIndex)

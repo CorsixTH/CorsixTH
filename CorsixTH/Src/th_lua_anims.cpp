@@ -147,9 +147,17 @@ static int l_anim_new(lua_State *L)
 template <typename T>
 static int l_anim_persist(lua_State *L)
 {
-    T* pAnimation = luaT_testuserdata<T>(L);
-    lua_settop(L, 2);
-    lua_insert(L, 1);
+    T* pAnimation;
+    if(lua_gettop(L) == 2)
+    {
+        pAnimation = luaT_testuserdata<T>(L, 1, LUA_ENVIRONINDEX, false);
+        lua_insert(L, 1);
+    }
+    else
+    {
+        // Fast __persist call
+        pAnimation = (T*)lua_touserdata(L, -1);
+    }
     LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
 
     pAnimation->persist(pWriter);
