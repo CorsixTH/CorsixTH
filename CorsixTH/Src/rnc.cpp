@@ -97,7 +97,7 @@ struct huf_table
 /*
  * Calculate a CRC, the RNC way.
  */
-static long rnc_crc(const unsigned char* data, long len)
+static unsigned long rnc_crc(const unsigned char* data, long len)
 {
     unsigned short val = 0;
 
@@ -121,19 +121,6 @@ static unsigned long blong (const unsigned char *p)
     n = (n << 8) + p[1];
     n = (n << 8) + p[2];
     n = (n << 8) + p[3];
-    return n;
-}
-
-/*
- * Return the little-endian longword at p.
- */
-static unsigned long llong (const unsigned char *p)
-{
-    unsigned long n;
-    n = p[3];
-    n = (n << 8) + p[2];
-    n = (n << 8) + p[1];
-    n = (n << 8) + p[0];
     return n;
 }
 
@@ -322,7 +309,7 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
     huf_table raw, dist, len;
     unsigned long ch_count;
     unsigned long ret_len;
-    unsigned out_crc;
+    unsigned long out_crc;
     if(blong(input) != RNC_SIGNATURE)
     {
         return RNC_FILE_IS_NOT_RNC;

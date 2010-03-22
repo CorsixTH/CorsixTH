@@ -383,7 +383,8 @@ public:
                     lua_getfield(L, -1, "__depersist_size");
                     if(lua_isnumber(L, -1))
                     {
-                        if(lua_tointeger(L, -1) != lua_objlen(L, 2))
+                        if(static_cast<int>(lua_tointeger(L, -1))
+                            != static_cast<int>(lua_objlen(L, 2)))
                         {
                             setError(lua_pushfstring(L, "__depersist_size is "
                                 "incorrect (%d vs. %d)", (int)lua_objlen(L, 2),

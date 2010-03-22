@@ -34,14 +34,9 @@ SOFTWARE.
 #endif
 #include <windows.h>
 #endif
-#if defined(__MACOSX__)
-#include <OpenGL/gl.h>
-#elif defined(__MACOS__)
-#include <gl.h>
-#else
-#include <GL/gl.h>
-#endif
 #include <SDL.h>
+#define NO_SDL_GLEXT
+#include <SDL_opengl.h>
 
 class THCursor;
 struct THRenderTargetCreationParams;
