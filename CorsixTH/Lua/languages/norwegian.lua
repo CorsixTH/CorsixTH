@@ -147,6 +147,39 @@ tooltip.objects.litter 		= utf8 "Söppel: Slengt på gulvet av en pasient, fordi
 misc.not_yet_implemented 	= "(ikke implementert enda)"
 misc.no_heliport 			= utf8 "Enten er ingen sykdommer utforsket enda, eller så er det ingen heliport ved dette sykehuset."
 
+main_menu = {
+  new_game 		= "Nytt spill",
+  custom_level 	= utf8 "Valgfritt brett",
+  load_game 	= "Last inn",
+  options 		= "Innstillinger",
+  exit 			= "Avslutt",
+}
+
+tooltip.main_menu = {
+  new_game 		= "Start et nytt spill fra begynnelsen",
+  custom_level 	= utf8 "Bygg sykehuset ditt på et valgfritt område",
+  load_game 	= "Last inn et tidligere spill",
+  options 		= "Endre diverse instillinger",
+  exit 			= utf8 "Nei, nei, vær så snill å ikke stikk!",
+}
+
+load_game_window = {
+  back = "Tilbake",
+}
+
+tooltip.load_game_window = {
+  load_game_number 	= "Last spill %d",
+  load_autosave 	= "Last autolagring",
+  back 				= "Lukk dette vinduet",
+}
+
+errors = {
+  dialog_missing_graphics 	= "Beklager, datafilene i demoen tillater ikke denne dialogen.",
+  save_prefix 				= "Feil under lagring av spill: ",
+  load_prefix 				= "Feil under lasting av spill: ",
+}
+
+
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
 -------------------------------------------------------------------------------
