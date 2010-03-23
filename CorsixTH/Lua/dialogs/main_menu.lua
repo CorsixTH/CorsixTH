@@ -31,7 +31,7 @@ function UIMainMenu:UIMainMenu(ui)
   self.on_top = true
   self.width = 200
   self.height = 280
-  self:setDefaultPosition(0.5, 0.5)
+  self:setDefaultPosition(0.5, 0.25)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "main_menu", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")

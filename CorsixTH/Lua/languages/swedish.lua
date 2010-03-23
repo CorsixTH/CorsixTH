@@ -137,7 +137,7 @@ totd_window = {
     utf8 "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
     utf8 "Alternativmenyn är inte implementerad än men det går ändå att ändra en del inställningar i filen config.txt i mappen där spelet ligger.",
     utf8 "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at quakenet).",
-    utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen http:))code.google.com)p)corsix-th)issues)entry där intelligenstestet att byta ut alla parenteser mot snedstreck först måste genomföras. ",
+    utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org där intelligenstestet att byta ut alla parenteser mot snedstreck först måste genomföras. ",
     utf8 "CorsixTH offentliggjordes den 24 juli 2009. Den första versionen kallad beta 1 släpptes den 24 december samma år. Ett kvartal senare är vi stolta att presentera beta 2 (släppt den 24 mars 2010).",
   },
   previous = utf8 "Föregående tips",

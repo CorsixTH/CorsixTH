@@ -379,5 +379,5 @@ utf8conv = function(s)
   -- [\192-\253] picks up the first byte of a utf-8 character (technically
   --   only 194 through 244 should be used)
   -- [\128-\191] picks up the remaining bytes of a utf-8 character
-  return s:gsub("[\1-\127]?[\192-\253][\128-\191]*", utf8char)
+  return (s:gsub("[\1-\127]?[\192-\253][\128-\191]*", utf8char))
 end
