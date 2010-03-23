@@ -109,3 +109,42 @@ tooltip.main_menu = {
   options = utf8 "Fixa till dina inställningar",
   exit = utf8 "Nej! Du vill väl inte sluta redan?",
 }
+
+load_game_window = {
+  back = "Tillbaka",
+}
+
+tooltip.load_game_window = {
+  load_game_number = "Ladda spel %d",
+  load_autosave = "Ladda autosparningen",
+  back = utf8 "Stäng detta fönster",
+}
+
+errors = {
+  dialog_missing_graphics = "Tyvärr innehåller demon inte den här dialogrutan.",
+  save_prefix = utf8 "Fel när spelet skulle sparas: ",
+  load_prefix = utf8 "Fel när spelet skulle laddas: ",
+}
+
+totd_window = {
+  tips = {
+    utf8 "Alla sjukhus behöver en reception och en allmänpraktik för att fungera. Sedan beror allt på vad det är för patienter som besöker sjukhuset. Ett hett tips är att börja med ett apotek.",
+    utf8 "Maskiner som till exempel pumpen behöver underhåll då och då. Anställ en vaktmästare eller två för att reparera dem, annars riskeras personalens och patienternas hälsa.",
+    utf8 "Efter ett tag kommer din personal att bli trött. Se till att göra ett personalrum så att de kan slappna av lite.",
+    utf8 "För att inte dina anställda och alla patienter ska bli arga gäller det att ha tillräckligt med element utplacerade lite här och där.",
+    utf8 "En läkares kompetensnivå påverkar kvaliteten och hastigheten på hans diagnoser ganska mycket. Sätt en riktigt kompetent läkare i allmänpraktiken så behövs det inte så många andra diagnosrum.",
+    utf8 "Juniorer och läkare kan höja sin kompetensnivå genom att gå i träning hos en konsult i utbildningsrummet. Om konsulten har någon färdighet (kirurg, psykiater eller forskare) kommer han också att lära ut detta till sina elever.",
+    utf8 "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
+    utf8 "Alternativmenyn är inte implementerad än men det går ändå att ändra en del inställningar i filen config.txt i mappen där spelet ligger.",
+    utf8 "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at quakenet).",
+    utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen http:))code.google.com)p)corsix-th)issues)entry där intelligenstestet att byta ut alla parenteser mot snedstreck först måste genomföras. ",
+    utf8 "CorsixTH offentliggjordes den 24 juli 2009. Den första versionen kallad beta 1 släpptes den 24 december samma år. Ett kvartal senare är vi stolta att presentera beta 2 (släppt den 24 mars 2010).",
+  },
+  previous = utf8 "Föregående tips",
+  next = utf8 "Nästa tips",
+}
+
+tooltip.totd_window = {
+  previous = utf8 "Visa föregående tips",
+  next = utf8 "Visa nästa tips",
+}

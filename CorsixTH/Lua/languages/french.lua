@@ -41,6 +41,7 @@ menu_debug = {
   spawn_patient               = "  FAIRE ARRIVER DES PATIENTS  ",
   make_adviser_talk           = "  FAIRE PARLER LE CONSEILLER  ",
   show_watch                  = "  AFFICHER LE COMPTE A REBOUR  ",
+  create_emergency            = "  CREER UNE URGENCE  ",
   place_objects               = "  PLACER DES OBJETS  ",
   dump_strings                = "  DUMP STRINGS  ",
   map_overlay                 = "  MAP OVERLAY  ",
@@ -49,6 +50,7 @@ menu_debug = {
 menu_debug_overlay = {
   none                        = "  AUCUN  ",
   flags                       = "  DRAPEAUX  ",
+  positions                   = "  POSITIONS  ",
   byte_0_1                    = "  OCTETS 0 & 1  ",
   byte_floor                  = "  OCTET SOL  ",
   byte_n_wall                 = "  OCTET MUR N  ",
@@ -73,6 +75,12 @@ fax = {
       utf8 "-- L'équipe de CorsixTH, th.corsix.org",
       utf8 "PS: Trouverez-vous les surprises cachées ?",
     },
+    beta2 = {
+      "Bienvenue dans la seconde beta de CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog!",
+      utf8 "Beaucoup de nouvelles fonctionnalités ont été implémentées depuis la dernière publication. Regardez le changelog pour une liste non exhaustive.",
+      utf8 "Mais d'abord, jouons! Il semble qu'un message vous attend. Fermez cette fenêtre et cliquez sur le point d'interrogation au dessus du tableau de bord.",
+      utf8 "-- L'équipe de CorsixTH, th.corsix.org",
+    },
   },
   tutorial = {
     utf8 "Bienvenue dans votre premier hôpital!",
@@ -81,3 +89,40 @@ fax = {
     utf8 "Non, je sais déjà comment faire.",
   },
 }
+
+misc.not_yet_implemented = "(pas encore implémenté)"
+misc.no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte."
+
+main_menu = {
+  new_game = "Nouvelle Partie",
+  custom_level = utf8 "Niveau Personnalisé",
+  load_game = "Charger une Partie",
+  options = "Options",
+  exit = "Quitter",
+}
+
+tooltip.main_menu = {
+  new_game = "Commencer une partie totalement nouvelle",
+  custom_level = utf8 "Construire votre hôpital dans un niveau personnalisé",
+  load_game = utf8 "Charger une partie sauvegardée",
+  options = utf8 "Modifier quelques paramètres",
+  exit = "Non, non, SVP, ne quittez pas!",
+}
+
+load_game_window = {
+  back = utf8 "Précédent",
+}
+
+tooltip.load_game_window = {
+  load_game_number = "Charger la partie %d",
+  load_autosave = utf8 "Charger la sauvegarde automatique",
+  back = utf8 "Fermer la fenêtre de chargement de parties",
+}
+
+errors = {
+  dialog_missing_graphics = utf8 "Désolé, les données de démo ne contiennent pas ce dialogue.",
+  save_prefix = "Erreur lors de la sauvegarde de la partie: ",
+  load_prefix = "Erreur lors du chargement de la partie: ",
+}
+
+
