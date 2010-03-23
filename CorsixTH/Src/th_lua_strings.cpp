@@ -44,17 +44,30 @@ SOFTWARE.
     cannot be held in the userdata's environment table, so instead the idiom
     of inside-out objects needs to be used. The principle idea of inside-out
     objects is that environment(obj).field becomes metatable(obj).field[obj]
-    The Value, ReconstructInfo, and Cache weak tables for inside-out objects
-    are at MT_StringProxy[1], MT_StringProxy[2], and MT_StringProxy[3].
+    with the field table having weak values. Unfortunately, this causes weak
+    table cycles, which are not handled well in Lua 5.1 (L5.2 uses ephemeron
+    tables which fix this). Hence the Value and Cache weak tables are stored
+    in the registry table, and the ReconstructInfo is stored as the userdata
+    environment.
 */
 
 struct THStringProxy_t {};
+
+// We need 2 lightuserdata keys for naming the weak tables in the registry,
+// which we get by having 2 bytes of dummy global variables.
+unsigned char g_aStringDummyGlobals[2] = {0};
+
+static inline void aux_push_weak_table(lua_State *L, int iIndex)
+{
+    lua_pushlightuserdata(L, &g_aStringDummyGlobals[iIndex]);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+}
 
 // Replace the value at the top of the stack with a userdata proxy
 static int l_str_new_aux(lua_State *L)
 {
     luaT_stdnew<THStringProxy_t>(L);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, -2);
     lua_pushvalue(L, -4);
     lua_rawset(L, -3);
@@ -69,7 +82,10 @@ static int l_str_new(lua_State *L)
     lua_remove(L, 1); // Value inserted by __call
     luaL_checkany(L, 1); // Value to be proxied
     lua_settop(L, 1);
-    return l_str_new_aux(L);
+    l_str_new_aux(L);
+    lua_newtable(L);
+    lua_setfenv(L, -2);
+    return 1;
 }
 
 // Helper function to make an array in Lua
@@ -134,7 +150,7 @@ static void aux_push_random_key(lua_State *L)
 static int l_str_index(lua_State *L)
 {
     // Look up cached value, and return it if present
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 3);
+    aux_push_weak_table(L, 1);
     lua_pushvalue(L, 1);
     lua_gettable(L, 3);
     lua_replace(L, 3);
@@ -145,7 +161,7 @@ static int l_str_index(lua_State *L)
     lua_pop(L, 1);
 
     // Fetch the proxied value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
     lua_rawget(L, 4);
     lua_replace(L, 4);
@@ -180,11 +196,8 @@ static int l_str_index(lua_State *L)
 
     // Create new userdata proxy
     l_str_new_aux(L);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
-    lua_pushvalue(L, 4);
     aux_mk_table(L, 0, 2, 1, 2);
-    lua_rawset(L, 5);
-    lua_settop(L, 4);
+    lua_setfenv(L, 4);
 
     // Save to cache and return
     lua_pushvalue(L, 2);
@@ -209,7 +222,7 @@ static int l_str_func(lua_State *L)
     int iUserdataCount = 0;
 
     // Construct the resulting value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     for(int i = 1; i <= iArgCount; ++i)
     {
         lua_pushvalue(L, i);
@@ -232,8 +245,6 @@ static int l_str_func(lua_State *L)
     l_str_new_aux(L);
 
     // Create and save reconstruction information
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
-    lua_pushvalue(L, -2);
     lua_createtable(L, iArgCount + 1, 0);
     lua_pushvalue(L, lua_upvalueindex(1));
     lua_rawseti(L, -2, 1);
@@ -242,8 +253,7 @@ static int l_str_func(lua_State *L)
         lua_pushvalue(L, i);
         lua_rawseti(L, -2, i + 1);
     }
-    lua_rawset(L, -3);
-    lua_pop(L, 1);
+    lua_setfenv(L, -2);
 
     return 1;
 }
@@ -288,7 +298,7 @@ static int l_str_next(lua_State *L)
     lua_settop(L, 2);
 
     // Fetch proxied value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
     lua_rawget(L, 3);
 
@@ -317,7 +327,7 @@ static int l_str_len(lua_State *L)
     luaL_checktype(L, 1, LUA_TUSERDATA);
 
     // Fetch proxied value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
     lua_gettable(L, -2);
 
@@ -379,7 +389,7 @@ static int l_str_call(lua_State *L)
     luaL_checkany(L, 1);
     
     // Fetch the proxied value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
     lua_rawget(L, -2);
 
@@ -399,7 +409,7 @@ static int l_str_lt(lua_State *L)
     luaL_checkany(L, 1);
     luaL_checkany(L, 2);
     lua_settop(L, 2);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
     lua_rawget(L, 3);
     lua_pushvalue(L, 2);
@@ -415,18 +425,18 @@ static int l_str_persist(lua_State *L)
     lua_insert(L, 1);
     LuaPersistWriter *pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
 
-    // Write the instructions for re-creating the value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
-    lua_pushvalue(L, 2);
-    lua_rawget(L, 3);
-    pWriter->writeStackObject(4);
+    // Recreation instructions are stored in the environment, which is written
+    // automatically. For compatibility, we write a simple boolean.
+    lua_pushboolean(L, 1);
+    pWriter->writeStackObject(3);
+    lua_getfenv(L, 2);
 
     // If there were no instructions (i.e. for the root object) then write the
     // value as well.
-    if(lua_isnil(L, -1))
+    if(lua_objlen(L, -1) == 0)
     {
         lua_pop(L, 2);
-        lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+        aux_push_weak_table(L, 0);
         lua_pushvalue(L, 2);
         lua_rawget(L, 3);
         pWriter->writeStackObject(4);
@@ -444,12 +454,33 @@ static int l_str_depersist(lua_State *L)
     // Read the instructions for re-creating the value
     if(!pReader->readStackObject())
         return 0;
+    if(lua_type(L, 3) == LUA_TBOOLEAN && lua_toboolean(L, 3) == 1)
+    {
+        // The current code uses a boolean marker to indicate that the
+        // instructions were stored in the environment. Replace the marker
+        // with them.
+        lua_getfenv(L, 2);
+        lua_replace(L, 3);
+    }
+    else
+    {
+        // Older versions of the code wrote the instructions here, or nil for
+        // no instructions. Convert nil to the empty table, and store the
+        // instructions as the userdata's environment.
+        if(lua_type(L, 3) == LUA_TNIL)
+        {
+            lua_newtable(L);
+            lua_replace(L, 3);
+        }
+        lua_pushvalue(L, 3);
+        lua_setfenv(L, 2);
+    }
 
     // Prepare t, k for saving the value
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    aux_push_weak_table(L, 0);
     lua_pushvalue(L, 2);
 
-    if(lua_isnil(L, 3))
+    if(lua_objlen(L, 3) == 0)
     {
         // No instructions provided, so read the value itself
         if(!pReader->readStackObject())
@@ -457,13 +488,6 @@ static int l_str_depersist(lua_State *L)
     }
     else
     {
-        // Save the instructions incase we are persisted again
-        lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
-        lua_pushvalue(L, 2);
-        lua_pushvalue(L, 3);
-        lua_rawset(L, 6);
-        lua_settop(L, 5);
-
         // The instructions are a table of values; unpack them and replace
         // proxies with their values.
         bool bIsIndexOperation = false;
@@ -504,18 +528,14 @@ static int l_str_depersist(lua_State *L)
 
 const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength)
 {
-    // NB: Cannot use LUA_ENVIRONINDEX, so use userdata metatable
-    if(lua_isuserdata(L, idx) && lua_getmetatable(L, idx))
+    if(lua_isuserdata(L, idx))
     {
-        lua_rawgeti(L, -1, 1);
-        if(!lua_isnil(L, -1))
-        {
-            bool bRel = (0 > idx && idx > LUA_REGISTRYINDEX);
-            lua_pushvalue(L, bRel ? (idx - 2) : idx);
-            lua_rawget(L, -2);
-            lua_replace(L, bRel ? (idx - 3) : idx);
-        }
-        lua_pop(L, 2);
+        aux_push_weak_table(L, 0);
+        bool bRel = (0 > idx && idx > LUA_REGISTRYINDEX);
+        lua_pushvalue(L, bRel ? (idx - 1) : idx);
+        lua_rawget(L, -2);
+        lua_replace(L, bRel ? (idx - 2) : idx);
+        lua_pop(L, 1);
     }
     return luaL_checklstring(L, idx, pLength);
 }
@@ -535,16 +555,16 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
 {
     lua_State *L = pState->L;
 
-    // Create Value, ReconstructInfo, and Cache weak tables for inside-out
-    // objects at MT_StringProxy[1], MT_StringProxy[2], and MT_StringProxy[3]
-    for(int i = 1; i <= 3; ++i)
+    // Create Value, and Cache weak tables for inside-out objects.
+    for(int i = 0; i <= 1; ++i)
     {
+        lua_pushlightuserdata(L, &g_aStringDummyGlobals[i]);
         lua_newtable(L);
         lua_createtable(L, 0, 1);
         lua_pushliteral(L, "__mode");
         lua_pushliteral(L, "k");
         lua_rawset(L, -3);
-        if(i == 3)
+        if(i == 1)
         {
             // Have the cache weak table automatically create caches on demand
             lua_pushliteral(L, "__index");
@@ -556,8 +576,13 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
             lua_rawset(L, -3);
         }
         lua_setmetatable(L, -2);
-        lua_rawseti(L, pState->aiMetatables[MT_StringProxy], i);
+        lua_rawset(L, LUA_REGISTRYINDEX);
     }
+    // Give the Value weak table a friendly name for Lua code to use
+    lua_pushliteral(L, "StringProxyValues");
+    lua_pushlightuserdata(L, &g_aStringDummyGlobals[0]);
+    lua_rawget(L, LUA_REGISTRYINDEX);
+    lua_rawset(L, LUA_REGISTRYINDEX);
 
     luaT_class(THStringProxy_t, l_str_new, "stringProxy", MT_StringProxy);
     // As we overwrite __index, move methods to MT_StringProxy[4]

@@ -256,19 +256,16 @@ end
 -- This is a useful debug and development aid
 function App:dumpStrings()
   -- Accessors to reach through the userdata proxies on strings
+  local LUT = debug.getregistry().StringProxyValues
   local function val(o)
     if type(o) == "userdata" then
-      return getmetatable(o)[1][o]
+      return LUT[o]
     else
       return o
     end
   end
   local function is_table(o)
-    local t = type(o)
-    if t == "userdata" then
-      t = type(getmetatable(o)[1][o])
-    end
-    return t == "table"
+    return type(val(o)) == "table"
   end
   
   local fi = assert(io.open("debug-strings-orig.txt", "wt"))
