@@ -52,7 +52,8 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
     Receptionist = {},
   }
   for _, staff in ipairs(hosp.staff) do
-    staff_members[staff.humanoid_class][#staff_members[staff.humanoid_class] + 1] = staff
+    local list = staff_members[staff.humanoid_class]
+    list[#list + 1] = staff
   end
   self.staff_members = staff_members
   
@@ -162,7 +163,8 @@ function UIStaffManagement:draw(canvas, x, y)
   local total_fatigue = 0
   local total_skill = 0
   -- Draw each listing
-  for i, staff in ipairs(self.staff_members[self.category]) do
+  local staff_list = self.staff_members[self.category]
+  for i, staff in ipairs(staff_list) do
     if not staff then
       break
     end
@@ -206,27 +208,29 @@ function UIStaffManagement:draw(canvas, x, y)
     end
   end
   -- Make sure the other ones are not visible
-  for i = #self.staff_members[self.category] + 1 - (self.page-1)*10, 10 do
+  for i = #staff_list + 1 - (self.page-1)*10, 10 do
     self.row_blankers[i].visible = true
   end
   -- Draw the average morale, tiredness and skill
-  local happiness_bar_width = math_floor((total_happiness/#self.staff_members[self.category]) * 40 + 0.5)
-  if happiness_bar_width ~= 0 then
-    for dx = 0, happiness_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 16, x + 351 + dx, y + 59)
+  if #staff_list ~= 0 then
+    local happiness_bar_width = math_floor((total_happiness/#staff_list) * 40 + 0.5)
+    if happiness_bar_width ~= 0 then
+      for dx = 0, happiness_bar_width - 1 do
+        self.panel_sprites:draw(canvas, 16, x + 351 + dx, y + 59)
+      end
     end
-  end
-  
-  local fatigue_bar_width = math_floor((1 - (total_fatigue/#self.staff_members[self.category])) * 40 + 0.5)
-  if fatigue_bar_width ~= 0 then
-    for dx = 0, fatigue_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 15, x + 456 + dx, y + 59)
+    
+    local fatigue_bar_width = math_floor((1 - (total_fatigue/#staff_list)) * 40 + 0.5)
+    if fatigue_bar_width ~= 0 then
+      for dx = 0, fatigue_bar_width - 1 do
+        self.panel_sprites:draw(canvas, 15, x + 456 + dx, y + 59)
+      end
     end
-  end
-  local skill_bar_width = math_floor((total_skill/#self.staff_members[self.category]) * 40 + 0.5)
-  if skill_bar_width ~= 0 then
-    for dx = 0, skill_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 14, x + 559 + dx, y + 59)
+    local skill_bar_width = math_floor((total_skill/#staff_list) * 40 + 0.5)
+    if skill_bar_width ~= 0 then
+      for dx = 0, skill_bar_width - 1 do
+        self.panel_sprites:draw(canvas, 14, x + 559 + dx, y + 59)
+      end
     end
   end
   -- Reset
