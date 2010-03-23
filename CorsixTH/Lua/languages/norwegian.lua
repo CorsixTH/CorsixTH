@@ -144,9 +144,11 @@ dynamic_info.staff.actions.heading_for 			= utf8 "På vei til %s"
 -- 7. Tooltip
 tooltip.objects.litter 		= utf8 "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
 
+-- Misc
 misc.not_yet_implemented 	= "(ikke implementert enda)"
 misc.no_heliport 			= utf8 "Enten er ingen sykdommer utforsket enda, eller så er det ingen heliport ved dette sykehuset."
 
+-- Main menu
 main_menu = {
   new_game 		= "Nytt spill",
   custom_level 	= utf8 "Valgfritt brett",
@@ -177,6 +179,31 @@ errors = {
   dialog_missing_graphics 	= "Beklager, datafilene i demoen tillater ikke denne dialogen.",
   save_prefix 				= "Feil under lagring av spill: ",
   load_prefix 				= "Feil under lasting av spill: ",
+}
+
+-- Tips
+totd_window = {
+  tips = {
+    utf8 "Ethvert sykehus trenger en resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
+    utf8 "Maskiner som f.eks pumpen i Pumperommet trenger vedlikehold. Ansett en vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
+    utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
+    utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd.",
+    utf8 "En lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
+    utf8 "Turnusleger og doktorer kan utvikle sine evner av å bli undervist av en konsulent i Klasserommet. Om konsulenten har spesielle kvalifikasjoner (kirurg, psykolog eller forsker) vil han også lære sine elever dette.",
+    utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
+    utf8 "Menyvalget Innstillinger er enda ikke implementert, men du kan justere noen innstillinger som opplösning og språk ved å endre config.txt filen i katalogen der spillet ligger.",
+    utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
+    utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på quakenet).",
+    utf8 "Om du finner feil eller mangler, vær snill å rapportere det i vår feilmeldingstjeneste: th-issues.corsix.org",
+    utf8 "CorsixTH ble for förste gang hjort tilgjengelig 24.juli 2009. Den förste utgivelsen var Spillbar Beta 1 (utgitt 24.desember, 2009). Etter tre måneder er vi stolt av å kunne presentere vår Spillbar Beta 2 (utgitt 24.mars, 2010).",
+  },
+  previous = "Forrige tips",
+  next = "Neste tips",
+}
+
+tooltip.totd_window = {
+  previous = "Vis forrige tips",
+  next = "Vis neste tips",
 }
 
 
