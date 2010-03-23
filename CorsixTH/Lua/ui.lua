@@ -47,6 +47,7 @@ end
 function UI:initKeyAndButtonCodes()
   self.key_codes = {
     esc = 27,
+    [" "] = 32,
     up = 273,
     down = 274,
     right = 275,

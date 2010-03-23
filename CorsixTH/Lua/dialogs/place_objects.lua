@@ -75,6 +75,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.num_slots = 0
   
   self:addObjects(object_list, pay_for)
+  self:addKeyHandler(" ", self.tryNextOrientation)
 end
 
 -- changes the window size and buttons to num_slots slots
@@ -343,6 +344,13 @@ function UIPlaceObjects:nextOrientation()
     orient = orient_next[orient]
   until object.orientations[orient]
   self:setOrientation(orient)
+end
+
+function UIPlaceObjects:tryNextOrientation()
+  if #self.objects > 0 then
+    self.ui:playSound "swoosh.wav"
+    self:nextOrientation()
+  end
 end
 
 function UIPlaceObjects:onMouseUp(button, x, y)
