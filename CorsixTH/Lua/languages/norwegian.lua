@@ -193,7 +193,7 @@ totd_window = {
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
     utf8 "Menyvalget Innstillinger er enda ikke implementert, men du kan justere noen innstillinger som opplösning og språk ved å endre config.txt filen i katalogen der spillet ligger.",
     utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
-    utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på quakenet).",
+    utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på freenode).",
     utf8 "Om du finner feil eller mangler, vær snill å rapportere det i vår feilmeldingstjeneste: th-issues.corsix.org",
     utf8 "CorsixTH ble for förste gang hjort tilgjengelig 24.juli 2009. Den förste utgivelsen var Spillbar Beta 1 (utgitt 24.desember, 2009). Etter tre måneder er vi stolt av å kunne presentere vår Spillbar Beta 2 (utgitt 24.mars, 2010).",
   },
