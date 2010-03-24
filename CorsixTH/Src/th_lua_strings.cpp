@@ -371,11 +371,23 @@ static int l_str_inext(lua_State *L)
 // tostring() metamethod handler for debugging / diagnostics
 static int l_str_tostring(lua_State *L)
 {
-    // Convert the proxy to a string
-    luaT_checkstring(L, 1, NULL);
+    // Convert the proxy to a string, recursively calling tostring()
+    lua_settop(L, 1);
+    aux_push_weak_table(L, 0);
+    lua_pushvalue(L, 1);
+    lua_rawget(L, 2);
+    if(lua_isnil(L, 3))
+        lua_pop(L, 2);
+    else
+    {
+        lua_replace(L, 1);
+        lua_pop(L, 1);
+    }
+    lua_getglobal(L, "tostring");
+    lua_insert(L, 1);
+    lua_call(L, 1, 1);
 
     // Prepend a nice message indicating that proxying is being done
-    lua_settop(L, 1);
     lua_pushliteral(L, "<LocalisedString> Current value:");
     lua_insert(L, 1);
     lua_concat(L, 2);
@@ -395,6 +407,7 @@ static int l_str_call(lua_State *L)
 
     // Forward the call onto the proxied value
     lua_replace(L, 1);
+    lua_pop(L, 1);
     lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
     return lua_gettop(L);
 }
