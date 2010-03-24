@@ -155,6 +155,7 @@ Section "MainSection" SEC01
   File /r /x .svn ..\CorsixTH\Bitmap\*.*
 
 ; Shortcuts
+  SetOutPath "$INSTDIR"
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
