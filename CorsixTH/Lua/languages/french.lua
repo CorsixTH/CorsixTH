@@ -131,7 +131,7 @@ totd_window = {
     utf8 "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     utf8 "Le menu d'options n'est pas encore implémenté, mais vous pouvez ajuster les paramètres tels que la résolution ou la langue en éditant le fichier config.txt dans le dossier du jeu.",
     utf8 "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue!",
-    utf8 "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur quakenet).",
+    utf8 "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
     utf8 "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs: th-issues.corsix.org.",
     utf8 "Le saviez-vous ? CorsixTH a été rendu public pour la première fois le 24 juillet 2009. La première publication a été la beta 1 jouable le 24 décembre 2009. Après trois mois de plus, nous sommes fiers de vous présenter la beta 2 (publiée le 24 mars 2010).",
   },
