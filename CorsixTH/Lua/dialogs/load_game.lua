@@ -42,7 +42,7 @@ function UILoadGame:UILoadGame(ui, mode)
   self.mode = mode
   self.modal_class = "main menu"
   self.resizable = false
-  self:setDefaultPosition(0.5, 0.5)
+  self:setDefaultPosition(0.5, 0.25)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "main_menu", true)
   
