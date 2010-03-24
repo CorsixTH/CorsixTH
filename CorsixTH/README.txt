@@ -25,11 +25,11 @@ Briefly:
    http://code.google.com/p/corsix-th/wiki/FrequentlyAskedQuestions
    http://code.google.com/p/corsix-th/wiki/HowToCompile#Common_errors
    http://groups.google.com/group/corsix-th-dev
-   #corsix-th on Quakenet (IRC)
+   #corsix-th on FreeNode (IRC)
 
 ------------------------------------------------------------------------------
 -- Contact Details
 ------------------------------------------------------------------------------
 Homepage: http://th.corsix.org/
 Mailing list: http://groups.google.com/group/corsix-th-dev
-IRC: #corsix-th on Quakenet
+IRC: #corsix-th on FreeNode
