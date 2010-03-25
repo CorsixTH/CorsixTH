@@ -26,18 +26,22 @@ local S = LoadStrings("Lang-".. ... ..".dat")
 
 -- Fix inconsistencies/bugs in german lang file.
 local function fixGermanStrings(lang_num)
-  -- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
-  -- replaced with a single string [44][168] with %s and %d in german.
-  -- Due to this, the remaining strings in section 44 were also off by one.
-  -- Solve it by splitting the string into two.
   if lang_num ~= 2 then
     return
   end
-  for str = 218, 169, -1 do
-    S[44][str+1] = S[44][str]
+  
+  -- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
+  -- replaced with a single string [44][168] with %s and %d in german full version.
+  -- Due to this, the remaining strings in section 44 were also off by one.
+  -- Solve it by splitting the string into two.
+  -- NB: ONLY in full version, in demo this is NOT broken (thus do length check)
+  if strlen(S[44][168]) == 108 then
+    for str = 218, 169, -1 do
+      S[44][str+1] = S[44][str]
+    end
+    S[44][169] = strsub(S[44][168], 46)
+    S[44][168] = strsub(S[44][168], 1, 45)
   end
-  S[44][169] = strsub(S[44][168], 46)
-  S[44][168] = strsub(S[44][168], 1, 45)
   
   -- German spelling reform: eszett changed to double s in a number of words.
   -- Mass-apply this change here, so we don't have to override all those strings.

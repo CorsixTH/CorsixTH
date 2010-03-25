@@ -153,6 +153,7 @@ function Strings:load(language)
     pairs = pairs,
     strfind = string.find,
     strgsub = string.gsub,
+    strlen = string.len,
     -- Calling the Langauage() function should have no effect any more
     Language = function() end,
     -- Inherit() should evaluate the named language in the current environment
