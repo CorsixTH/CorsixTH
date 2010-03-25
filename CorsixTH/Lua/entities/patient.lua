@@ -324,6 +324,7 @@ function Patient:tickDay()
           self:queueAction({
             name = current.name,
             room_type = current.room_type,
+            message_sent = true,
           }, 3)
         end
         if current.on_interrupt then

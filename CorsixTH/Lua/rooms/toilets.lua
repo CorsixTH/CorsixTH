@@ -67,55 +67,62 @@ end
 function ToiletRoom:onHumanoidEnter(humanoid)
   if class.is(humanoid, Patient) then
     local loo, lx, ly = self.world:findFreeObjectNearToUse(humanoid, "loo")
-    humanoid:walkTo(lx, ly)
-    loo.reserved_for = humanoid
-    local use_time = math.random(0, 2)
-    -- One class only have a 1 tick long usage animation
-    if humanoid.humanoid_class == "Transparent Female Patient" then
-      use_time = math.random(15, 40)
-    end
-    humanoid:queueAction{
-      name = "use_object",
-      object = loo,
-      loop_callback = --[[persistable:toilets_loop_callback]] function()
-        use_time = use_time - 1
-        if use_time <= 0 then
-          humanoid:setMood("poo", "deactivate")
-          humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
-          humanoid.going_to_toilet = nil
-        -- There are only animations for standard patients to use the sinks.
-          if humanoid.humanoid_class == "Standard Female Patient" or
-            humanoid.humanoid_class == "Standard Male Patient" then
-            local --[[persistable:toilets_find_sink]] function after_use()
-              local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
-              if sink then
-                humanoid:walkTo(sx, sy)
-                humanoid:queueAction{
-                  name = "use_object",
-                  object = sink,
-                  prolonged_usage = false,
-                  after_use = --[[persistable:toilets_after_use_sink]] function()
-                    self:dealtWithPatient(humanoid)
-                  end,
-                }
-                sink.reserved_for = humanoid
-              else
-                -- Wait for a while before trying again.
-                humanoid:setNextAction{
-                  name = "idle", 
-                  count = 5,
-                  after_use = after_use,
-                  direction = loo.direction == "north" and "south" or "east",
+    if loo and lx and ly then
+      humanoid:walkTo(lx, ly)
+      loo.reserved_for = humanoid
+      local use_time = math.random(0, 2)
+      -- One class only have a 1 tick long usage animation
+      if humanoid.humanoid_class == "Transparent Female Patient" then
+        use_time = math.random(15, 40)
+      end
+      humanoid:queueAction{
+        name = "use_object",
+        object = loo,
+        loop_callback = --[[persistable:toilets_loop_callback]] function()
+          use_time = use_time - 1
+          if use_time <= 0 then
+            humanoid:setMood("poo", "deactivate")
+            humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
+            humanoid.going_to_toilet = nil
+          -- There are only animations for standard patients to use the sinks.
+            if humanoid.humanoid_class == "Standard Female Patient" or
+              humanoid.humanoid_class == "Standard Male Patient" then
+              local --[[persistable:toilets_find_sink]] function after_use()
+                local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
+                if sink then
+                  humanoid:walkTo(sx, sy)
+                  humanoid:queueAction{
+                    name = "use_object",
+                    object = sink,
+                    prolonged_usage = false,
+                    after_use = --[[persistable:toilets_after_use_sink]] function()
+                      self:dealtWithPatient(humanoid)
+                    end,
                   }
+                  sink.reserved_for = humanoid
+                else
+                  -- Wait for a while before trying again.
+                  humanoid:setNextAction{
+                    name = "idle", 
+                    count = 5,
+                    after_use = after_use,
+                    direction = loo.direction == "north" and "south" or "east",
+                    }
+                end
               end
+              after_use()
+            else
+              self:dealtWithPatient(humanoid)
             end
-            after_use()
-          else
-            self:dealtWithPatient(humanoid)
           end
         end
-      end
-    }
+      }
+    else
+      -- If no loo is found, go out again and start over. TODO: This should never happen - 
+      -- when does it?
+      humanoid:setNextAction(self:createLeaveAction())
+      humanoid:queueAction(self:createEnterAction())
+    end
   end
   return Room.onHumanoidEnter(self, humanoid)
 end

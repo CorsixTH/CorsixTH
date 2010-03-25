@@ -200,18 +200,20 @@ local function action_seek_room_start(action, humanoid)
     -- done = nothing more to do right now.
     if not action.done_walk then
       local action_still_valid = true
-      -- Make a message about that something needs to be done about this patient
-      if humanoid.diagnosed then
-        -- The patient is diagnosed, a treatment room is missing.
-        action_seek_room_no_treatment_room_found(action.room_type, humanoid)
-      else
-        -- No more diagnosis rooms can be found
-        -- The GP's office is a special case. TODO: Make a custom message anyway?
-        if action.room_type == "gp" then
-          humanoid:setMood("patient_wait", "activate")
-          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
+      if not action.message_sent then
+        -- Make a message about that something needs to be done about this patient
+        if humanoid.diagnosed then
+          -- The patient is diagnosed, a treatment room is missing.
+          action_seek_room_no_treatment_room_found(action.room_type, humanoid)
         else
-          action_still_valid = action_seek_room_no_diagnosis_room_found(humanoid)
+          -- No more diagnosis rooms can be found
+          -- The GP's office is a special case. TODO: Make a custom message anyway?
+          if action.room_type == "gp" then
+            humanoid:setMood("patient_wait", "activate")
+            humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
+          else
+            action_still_valid = action_seek_room_no_diagnosis_room_found(humanoid)
+          end
         end
       end
       if action_still_valid then
