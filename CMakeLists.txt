@@ -12,6 +12,7 @@
 PROJECT(CorsixTH_Top_Level)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 INCLUDE(CheckIncludeFiles)
+SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
 # Define our options
 OPTION(WITH_OPENGL "Activate OpenGL Renderer" OFF)

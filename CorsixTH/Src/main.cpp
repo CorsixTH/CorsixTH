@@ -46,6 +46,7 @@ int luaopen_random(lua_State *L);
 static int l_main(lua_State *L);
 static int l_stacktrace(lua_State *L);
 static int l_panic(lua_State *L);
+int l_bootstrap_error_report(lua_State *L);
 
 template <typename T1, typename T2>
 struct types_equal{ enum{
@@ -107,22 +108,12 @@ int main(int argc, char** argv)
                 fprintf(stderr, "An error has occured in CorsixTH:\n"
                     "Uncaught non-string Lua error\n");
             }
-            lua_close(L);
-#ifndef _DEBUG
-#ifdef CORSIX_TH_USE_WIN32_SDK
-            // As a Win32 command line application, the command prompt will
-            // disappear when the application terminates (unless launched from
-            // the command line, which is rare in Windows). Hence a message box
-            // is thrown up to keep the command prompt open and make sure the
-            // user is aware of what happened.
-            // (Debug builds don't have this message box as they are only made
-            // by developers, and developers know what a command prompt is)
-            MessageBox(NULL, "CorsixTH encountered an error during startup - "
-                "consult the log window for details.", "CorsixTH",
-                MB_ICONERROR);
-#endif
-#endif
-            return -1;
+            lua_pushcfunction(L, l_bootstrap_error_report);
+            lua_insert(L, -2);
+            if(lua_pcall(L, 1, 0, 0) != 0)
+            {
+                fprintf(stderr, "%s\n", lua_tostring(L, -1));
+            }
         }
 
         lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");

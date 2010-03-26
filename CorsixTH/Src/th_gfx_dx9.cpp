@@ -56,6 +56,7 @@ THRenderTarget::THRenderTarget()
     m_iVertexLength = 0;
     m_iNonOverlappingStart = 0;
     m_iNonOverlapping = 0;
+    m_bHasCursor = false;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -80,7 +81,7 @@ THRenderTarget::~THRenderTarget()
         }
         D3DDEVICE_CREATION_PARAMETERS oParams;
         m_pDevice->GetCreationParameters(&oParams);
-        if(m_pDevice == (IDirect3DDevice9*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
+        if(this == (THRenderTarget*)GetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA))
             SetWindowLongPtr(oParams.hFocusWindow, GWLP_USERDATA, 0);
         assert(m_pDevice->Release() == 0);
         m_pDevice = NULL;
@@ -114,16 +115,19 @@ LRESULT CALLBACK WindowProcIntercept(HWND hWnd, UINT iMessage, WPARAM wParam, LP
 {
     if(iMessage == WM_SETCURSOR)
     {
-        SetCursor(NULL);
-        IDirect3DDevice9* pDevice = (IDirect3DDevice9*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        if(pDevice)
-            pDevice->ShowCursor(TRUE);
-        return TRUE;
+        THRenderTarget* pTarget = reinterpret_cast<THRenderTarget*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        if(pTarget && pTarget->hasCursor())
+        {
+            IDirect3DDevice9* pDevice = pTarget->getRawDevice();
+            if(pDevice)
+            {
+                SetCursor(NULL);
+                pDevice->ShowCursor(TRUE);
+                return TRUE;
+            }
+        }
     }
-    else
-    {
-        return CallWindowProc(g_fnSDLWindowProc, hWnd, iMessage, wParam, lParam);
-    }
+    return CallWindowProc(g_fnSDLWindowProc, hWnd, iMessage, wParam, lParam);
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -157,7 +161,9 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     if(g_fnSDLWindowProc == NULL)
         g_fnSDLWindowProc = (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC);
     if(g_fnSDLWindowProc == (WNDPROC)GetWindowLongPtr(hWindow, GWLP_WNDPROC))
+    {
         SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)WindowProcIntercept);
+    }
     
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if(m_pD3D == NULL)
@@ -309,7 +315,7 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-    SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)m_pDevice);
+    SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)this);
     return true;
 }
 
@@ -1372,6 +1378,7 @@ void THRenderTarget::setCursor(THCursor* pCursor)
     m_pDevice->SetCursorProperties(pCursor->m_iHotspotX,
         pCursor->m_iHotspotY, pCursor->m_pBitmap);
     m_pDevice->ShowCursor(TRUE);
+    m_bHasCursor = true;
     m_bIsCursorInHardware = m_bIsWindowed || (m_bIsHardwareCursorSupported &&
         pCursor->m_bHardwareCompatible);
 }

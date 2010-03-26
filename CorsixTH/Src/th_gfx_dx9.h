@@ -113,6 +113,7 @@ public: // Internal (this rendering engine only) API
         unsigned int iWidth2, unsigned int iHeight2, unsigned int iTexX,
         unsigned int iTexY);
     void flushSprites();
+    bool hasCursor() const {return m_bHasCursor;}
 
 protected:
     IDirect3D9 *m_pD3D;
@@ -128,6 +129,7 @@ protected:
     bool m_bIsWindowed;
     bool m_bIsHardwareCursorSupported;
     bool m_bIsCursorInHardware;
+    bool m_bHasCursor;
     uint16_t m_aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
 
     void _drawVerts(size_t iFirst, size_t iLast);

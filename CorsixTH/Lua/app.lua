@@ -121,6 +121,7 @@ function App:init()
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   SDL.wm.setIconWin32()
   
+  
   -- Prereq 2: Load and initialise the graphics subsystem
   dofile "persistance"
   dofile "graphics"

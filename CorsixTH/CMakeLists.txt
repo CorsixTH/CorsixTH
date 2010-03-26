@@ -1,3 +1,9 @@
+# Sanity check
+IF(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
+ELSE(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
+message(FATAL_ERROR "Please run cmake on the top-level directory, not this one.")
+ENDIF(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
+
 # Project Declaration
 PROJECT(CorsixTH)
 

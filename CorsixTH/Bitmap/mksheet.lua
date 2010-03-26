@@ -24,6 +24,12 @@ if not ... then
   return
 end
 
+package.path = (debug.getinfo(1, "S").source:match("@(.*[" .. package.config
+               :sub(1, 1) .. "])") or "") .. "lib_" .. package.config:sub(5, 5)
+               .. ".lua" .. package.config:sub(3, 3) .. package.path
+require "bmp"
+require "spritesheet"
+
 local specfile = ...
 specfile = assert(loadfile(specfile))
 local spec = {}
@@ -52,144 +58,25 @@ for field, options in pairs(required_fields) do
   end
 end
 
-local function encode_complex(width, height, data)
-  local result = {}
-  local run_start = 1
-  local run_byte = false
-  local prev = false
-  local function flush_run(i)
-    if run_byte == false then
-      while i - run_start > 63 do
-        result[#result + 1] = "\63"
-        result[#result + 1] = data:sub(run_start, run_start + 62)
-        run_start = run_start + 63
-      end
-      if i ~= run_start then
-        result[#result + 1] = string.char(i - run_start)
-        result[#result + 1] = data:sub(run_start, i - 1)
-      end
-    else
-      if run_byte == 0xFF then
-        while i - run_start >= 63 do
-          result[#result + 1] = "\191"
-          run_start = run_start + 63
-        end
-        if i ~= run_start then
-          result[#result + 1] = string.char(i - run_start + 128)
-        end
-      else
-        while i - run_start >= 255 do
-          result[#result + 1] = "\255\255"
-          result[#result + 1] = string.char(run_byte)
-          run_start = run_start + 255
-        end
-        if i ~= run_start then
-          local d = i - run_start
-          if 4 <= d and d <= 67 then
-            result[#result + 1] = string.char(d + 60)
-            result[#result + 1] = string.char(run_byte)
-          elseif 68 <= d and d <= 130 then
-            result[#result + 1] = string.char(d + 124)
-            result[#result + 1] = string.char(run_byte)
-          else
-            result[#result + 1] = "\255"
-            result[#result + 1] = string.char(d)
-            result[#result + 1] = string.char(run_byte)
-          end
-        end
-      end
-      run_byte = false
-    end
-    run_start = i
-  end
-  for i = 2, #data, 1 do
-    local byte = data:byte(i)
-    if run_byte then
-      if byte ~= run_byte then
-        flush_run(i)
-      end
-    elseif byte == prev and i - run_start >= 4 and data:byte(i - 3) == byte and data:byte(i - 2) == byte then
-      flush_run(i - 3)
-      run_byte = byte
-    end
-    prev = byte
-  end
-  flush_run(#data + 1)
-  return table.concat(result)
-end
-local encode = spec.complex and encode_complex or encode_simple
-
--- Convert a little endian byte string into an integer
-local function LE(s)
-  local value = 0
-  for n, i in ipairs{s:byte(1, #s)} do
-    value = value + i * 256 ^ (n - 1)
-  end
-  return value
-end
-
--- Convert an integer into a little endian byte string
-local function uint4(value)
-  local b0, b1, b2, b3
-  b0 = value % 0x100
-  value = (value - b0) / 0x100
-  b1 = value % 0x100
-  value = (value - b1) / 0x100
-  b2 = value % 0x100
-  value = (value - b2) / 0x100
-  return string.char(b0, b1, b2, value)
-end
-
-local tab = assert(io.open(spec.output_tab, "wb"))
-local dat = assert(io.open(spec.output_dat, "wb"))
+local ss = spritesheet.open(spec.output_tab, spec.output_dat, spec.complex)
 
 for i = 0, table.maxn(spec.sprites) do
-  local bitmap = spec.sprites[i]
-  if not bitmap then
-    tab:write"\0\0\0\0\0\0"
+  local filename = spec.sprites[i]
+  if not filename then
+    ss:writeDummy()
   else
-    local data = assert(io.open(bitmap, "rb"))
     local function err(msg, ...)
-      error("Error processing " .. bitmap .. ":\n" .. msg:format(...))
+      error("Error processing " .. filename .. ":\n" .. msg:format(...))
     end
-    if data:read(2) ~= "BM" or not data:seek("cur", 8) then
-      err "Invalid header"
+    local bitmap, e = bmp.open(filename)
+    if not bitmap then
+      err(e)
     end
-    local bits_offset, header_size = LE(data:read(4)), LE(data:read(4))
-    if header_size ~= 40 then
-      err "Expected BITMAPINFOHEADER"
-    end
-    local width, height = LE(data:read(4)), LE(data:read(4))
+    local width, height = bitmap.width, bitmap.height
     if width > 0xFF or height > 0xFF then
       err "Image too big (maximum size is 255x255)"
     end
-    tab:write(uint4(dat:seek()))
-    tab:write(string.char(width, height))
-    local planes, bpp = LE(data:read(2)), LE(data:read(2))
-    if planes ~= 1 then
-      err "Expected single colour plane"
-    end
-    if bpp ~= 8 then
-      err "Expected 8 bit paletted image"
-    end
-    local compression = LE(data:read(4))
-    if compression ~= 0 then
-      err "Expected uncompressed image"
-    end
-    data:seek("cur", 12)
-    local pal_size = LE(data:read(4))
-    if pal_size == 0 then
-      pal_size = 2 ^ bpp
-    end
-    if not data:seek("set", bits_offset) then
-      err "Invalid data offset"
-    end
-    local rows = {}
-    local skip = (4 - (width % 4)) % 4
-    for y = height, 1, -1 do
-      rows[y] = data:read(width)
-      data:seek("cur", skip)
-    end
-    dat:write(encode(width, height, table.concat(rows)))
+    ss:write(width, height, bitmap:getPixels())
   end
 end
+ss:close()

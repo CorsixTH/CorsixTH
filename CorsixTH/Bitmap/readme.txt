@@ -5,6 +5,8 @@ build_room_dialog_close.bmp : this sprite is missing from the game's REQ09V.DAT
 map_cell_outline.bmp : there is no nice outline tile in the game's VBLK-0.DAT
 flag_*.bmp : used as debug overlays
 fullscreen_border_*.bmp : used as borders as 640x480 "fullscreen" backgrounds
+bootstrap_font.bmp : a homemade bitmap font which can be used for drawing text
+                     before the original data files are loaded.
 
 aux_ui sprite sheet (main palette)
 #01 - build_room_dialog_close.bmp

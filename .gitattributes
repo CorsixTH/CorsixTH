@@ -3,6 +3,10 @@ AnimView/CMakeLists.txt -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
+CorsixTH/Bitmap/bootstrap_font.bmp -text
+CorsixTH/Bitmap/bootstrap_font.dat -text svneol=unset#application/octet-stream
+CorsixTH/Bitmap/bootstrap_font.pal -text
+CorsixTH/Bitmap/bootstrap_font.tab -text
 CorsixTH/Bitmap/build_room_dialog_close.bmp -text
 CorsixTH/Bitmap/flag_buildable.bmp -text
 CorsixTH/Bitmap/flag_hospital.bmp -text
@@ -19,6 +23,8 @@ CorsixTH/Bitmap/fullscreen_border_right.bmp -text
 CorsixTH/Bitmap/fullscreen_border_top.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
+CorsixTH/Bitmap/lib_bmp.lua -text
+CorsixTH/Bitmap/lib_spritesheet.lua -text
 CorsixTH/Bitmap/main_menu.dat -text
 CorsixTH/Bitmap/main_menu.spec -text
 CorsixTH/Bitmap/main_menu.tab -text
@@ -40,6 +46,8 @@ CorsixTH/Bitmap/mainmenu_button_active.bmp -text
 CorsixTH/Bitmap/mainmenu_button_disabled.bmp -text
 CorsixTH/Bitmap/mainmenu_top.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
+CorsixTH/Bitmap/mkbootstrap.lua -text
+CorsixTH/Bitmap/mkfont.lua -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.ico -text
