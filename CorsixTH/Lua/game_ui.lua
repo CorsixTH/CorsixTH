@@ -112,8 +112,8 @@ function GameUI:onKeyDown(code)
   end
   if TheApp.config.debug then -- Debug commands
     if key == "F8" then -- Open an alert window
-      local types = invert({ emergency = 0, epidemy = 1, strike = 2, personnality = 3, information = 4, disease = 5, report = 6 })
-      local random = math.random(0, 6)
+      local types = {"emergency", "epidemy", "strike", "personnality", "information", "disease", "report"}
+      local random = math.random(1, 7)
       self.bottom_panel:queueMessage(types[random])
     elseif key == "F9" then -- Make debug patient
       self.app.world:makeDebugPatient()

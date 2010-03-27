@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "blood_machine"
+room.class = "BloodMachineRoom"
 room.name = _S.rooms_short.blood_machine
 room.tooltip = _S.tooltip.rooms.blood_machine
 room.build_cost = 6000
@@ -38,5 +39,49 @@ room.required_staff = {
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd006.wav"
 room.handyman_call_sound = "maint015.wav"
+
+class "BloodMachineRoom" (Room)
+
+function BloodMachineRoom:BloodMachineRoom(...)
+  self:Room(...)
+end
+
+function BloodMachineRoom:commandEnteringStaff(staff)
+  self.staff_member = staff
+  staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
+end
+
+function BloodMachineRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")
+  local orientation = machine.object_type.orientations[machine.direction]
+  local pat_x, pat_y = machine:getSecondaryUsageTile()
+  
+  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:queueAction{name = "idle", direction = machine.direction == "north" and "west" or "north"}
+  local length = math.random(2, 4)
+  local action
+  staff:queueAction{
+    name = "multi_use_object",
+    object = machine,
+    use_with = patient,
+    prolonged_usage = true,
+    invisible_phase_span = {-3, 3},
+    loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
+      if length <= 0 then
+        action.prolonged_usage = false
+      end
+      length = length - 1
+    end, 
+    after_use = --[[persistable:blood_machine_after_use]] function()
+      staff:setNextAction{name = "meander"}
+      self:dealtWithPatient(patient)
+    end,
+  }
+  
+  return Room.commandEnteringPatient(self, patient)
+end
 
 return room

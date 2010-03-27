@@ -70,10 +70,11 @@ end
 
 function Room:createEnterAction(humanoid_entering)
   local x, y = self:getEntranceXY(true)
-  if humanoid_entering and class.is(humanoid_entering, Staff) then
+  if humanoid_entering and class.is(humanoid_entering, Staff) and self.approaching_staff then
     self.approaching_staff[humanoid_entering] = true
   end
-  return {name = "walk", x = x, y = y, is_entering = humanoid_entering and self or "true"}
+  return {name = "walk", x = x, y = y, 
+    is_entering = (humanoid_entering and self.approaching_staff) and self or true}
 end
 
 function Room:getPatient()
@@ -277,7 +278,9 @@ function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
-  self.approaching_staff[humanoid] = nil
+  if self.approaching_staff then
+    self.approaching_staff[humanoid] = nil
+  end
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
 end

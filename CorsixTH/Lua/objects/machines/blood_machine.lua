@@ -35,22 +35,74 @@ end
 object.idle_animations = copy_north_to_south {
   north = 2228,
 }
-object.usage_animations = copy_north_to_south {
-  north = {
-    in_use = {
-      ["Handyman"] = {3484, 3498},
+-- Note that for this particular machine the staff is the primary user, not the patient
+-- This was done in order to be able to let the patient be visible a while longer.
+object.multi_usage_animations = {
+  ["Doctor - Standard Male Patient"] = copy_north_to_south {
+    north = {
+      begin_use    = 2232, -- empty door opened
+      begin_use_2  = 2236, -- empty chair goes out
+      begin_use_3  = 2554, -- Patient invited onto machine
+      begin_use_4  = 2220, -- The chair goes in
+      begin_use_5  = 2224, -- door closes
+      in_use       = 2566, -- The machine does its work TODO: 2562, 2574
+      finish_use   = 2252, -- The door is opened
+      finish_use_2 = 2256, -- Patient comes out again
+      finish_use_3 = 2558, -- Stands up
+      finish_use_4 = 2204, -- empty chair in
+      finish_use_5 = 2274, -- empty door closed
+    },
+  },
+  ["Doctor - Standard Female Patient"] = copy_north_to_south {
+    north = {
+      begin_use    = 2232, -- empty door opened
+      begin_use_2  = 2236, -- empty chair goes out
+      begin_use_3  = 4614, -- Patient invited onto machine 3224
+      begin_use_4 = 3232, -- The chair goes in
+      begin_use_5  = 3236, -- door closes
+      in_use       = 2566, -- The machine does its work TODO: 2562, 2574
+      finish_use   = 1172, -- The door is opened
+      finish_use_2 = 4738, -- Patient comes out again, 4734 with shadow
+      finish_use_3 = 4618, -- Stands up 3228
+      finish_use_4 = 2204, -- empty chair in
+      finish_use_5 = 2274, -- empty door closed
+    },
+  },
+  ["Doctor - Slack Male Patient"] = copy_north_to_south { -- Only for baldness
+    north = {
+      begin_use    = 2232, -- empty door opened
+      begin_use_2  = 2236, -- empty chair goes out
+      begin_use_3  = 5146, -- Patient invited onto machine
+      begin_use_4  = 5150, -- The chair goes in
+      begin_use_5  = 2224, -- door closes
+      in_use       = 2566, -- The machine does its work TODO: 2562, 2574
+      finish_use   = 2252, -- The door is opened
+      finish_use_2 = 5154, -- Patient comes out again
+      finish_use_3 = 622, -- Stands up
+      finish_use_4 = 2204, -- empty chair in
+      finish_use_5 = 2274, -- empty door closed
     },
   },
 }
+object.usage_animations = copy_north_to_south {
+  north = {in_use = {["Handyman"] = 3498}} -- 3484 too...
+}
+
 object.orientations = {
   north = {
-    footprint = { {-1, -1}, {0, -1, only_passable = true},
+    handyman_position = {0, -1},
+    use_position_secondary = {1, 0},
+    use_position = {0, -1},
+    footprint = { {-1, -1, only_passable = true}, {0, -1, only_passable = true},
                   {-2, 0}, {-1, 0}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1} }
   },
   east = {
+    handyman_position = {-1, 0},
+    use_position_secondary = {0, 1},
+    use_position = {-1, 0},
     footprint = { {0, -2},
-                  {-1, -1}, {0, -1}, {1, -1},
+                  {-1, -1, only_passable = true}, {0, -1}, {1, -1},
                   {-1, 0, only_passable = true}, {0, 0},
                   {0, 1, only_passable = true} }
   },

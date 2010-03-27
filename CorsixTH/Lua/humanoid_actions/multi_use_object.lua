@@ -28,16 +28,22 @@ local orient_mirror = {
 
 local function action_multi_use_next_phase(action, phase)
   phase = phase + 1
-  if phase < -3 then
-    phase = -3
+  if phase < -5 then
+    phase = -5
   end
-  if phase == -3 and not action.anims.begin_use then
+  if phase == -5 and not action.anims.begin_use then
     phase = phase + 1
   end
-  if phase == -2 and not action.anims.begin_use_2 then
+  if phase == -4 and not action.anims.begin_use_2 then
     phase = phase + 1
   end
-  if phase == -1 and not action.anims.begin_use_3 then
+  if phase == -3 and not action.anims.begin_use_3 then
+    phase = phase + 1
+  end
+  if phase == -2 and not action.anims.begin_use_4 then
+    phase = phase + 1
+  end
+  if phase == -1 and not action.anims.begin_use_5 then
     phase = phase + 1
   end
   if phase == 0 and not action.anims.in_use then
@@ -49,7 +55,16 @@ local function action_multi_use_next_phase(action, phase)
   if phase == 2 and not action.anims.finish_use_2 then
     phase = phase + 1
   end
-  if phase > 2 then
+  if phase == 3 and not action.anims.finish_use_3 then
+    phase = phase + 1
+  end
+  if phase == 4 and not action.anims.finish_use_4 then
+    phase = phase + 1
+  end
+  if phase == 5 and not action.anims.finish_use_5 then
+    phase = phase + 1
+  end
+  if phase > 5 then
     phase = 100
   end
   return phase
@@ -62,16 +77,26 @@ local function action_multi_use_phase(action, humanoid, phase)
   humanoid.user_of = nil -- Temporary to avoid tile change warning
   action.phase = phase
   local anim_name = "in_use"
-  if phase == -3 then
+  if phase == -5 then
     anim_name = "begin_use"
-  elseif phase == -2 then
+  elseif phase == -4 then
     anim_name = "begin_use_2"
-  elseif phase == -1 then
+  elseif phase == -3 then
     anim_name = "begin_use_3"
+  elseif phase == -2 then
+    anim_name = "begin_use_4"
+  elseif phase == -1 then
+    anim_name = "begin_use_5"
   elseif phase == 1 then
     anim_name = "finish_use"
   elseif phase == 2 then
     anim_name = "finish_use_2"
+  elseif phase == 3 then
+    anim_name = "finish_use_3"
+  elseif phase == 4 then
+    anim_name = "finish_use_4"
+  elseif phase == 5 then
+    anim_name = "finish_use_5"
   end
   local anim = action.anims[anim_name]
   if type(anim) == "table" then
@@ -142,7 +167,16 @@ local function action_multi_use_phase(action, humanoid, phase)
       length = secondary_length
     end
   else
-    use_with.th:makeInvisible()
+    local span = action.invisible_phase_span
+    if span then
+      if span[1] <= phase and span[2] >= phase then
+        use_with.th:makeInvisible()
+      else
+        use_with.th:makeVisible()
+      end
+    else
+      use_with.th:makeInvisible()
+    end
   end
   humanoid:setTimer(length, action_multi_use_object_tick)
 end
@@ -177,7 +211,7 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
     action.change_secondary_layers = nil
     copy_layers(humanoid, use_with)
   end
-  if oldphase <= 2 and phase > 2 then
+  if oldphase <= 5 and phase > 5 then
     object:setUser(nil)
     humanoid.user_of = nil
     if object.split_anims then

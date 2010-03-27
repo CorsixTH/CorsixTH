@@ -201,7 +201,6 @@ function Queue:rerouteAllPatients(action)
     -- Don't queue the same action table, but clone it for each patient.
     local clone = {} 
     for k, v in pairs(action) do clone[k] = v end
-    print("cloned")
     humanoid:queueAction(clone)
   end
   for humanoid in pairs(self.expected) do
