@@ -131,7 +131,6 @@ end
 function Door:closeDoor()
   self.queue:rerouteAllPatients({name = "seek_room", room_type = self:getRoom().room_info.id})
   self:clearDynamicInfo(nil)
-  self.queue = nil
   self.hover_cursor = nil
 end
 

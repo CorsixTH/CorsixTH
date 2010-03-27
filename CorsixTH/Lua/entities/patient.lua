@@ -181,12 +181,7 @@ end
 -- For example if thirst gets over a certain level (now: 0.8), the patient
 -- tries to find a drinks machine nearby.
 function Patient:tickDay()
-  -- Start by calling the parent function - it checks
-  -- if we're outside the hospital or on our way home.
-  if not Humanoid.tickDay(self) then
-    return
-  end
-  
+  -- First of all it may happen that this patient is tired of waiting and goes home.
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
@@ -201,12 +196,18 @@ function Patient:tickDay()
     end
   end
   
+  -- Now call the parent function - it checks
+  -- if we're outside the hospital or on our way home.
+  if not Humanoid.tickDay(self) then
+    return
+  end
+  
   -- Each tick both thirst, warmth and toilet_need changes.
-  self:changeAttribute("thirst", self.attributes["warmth"]*0.05+0.002)
-  self:changeAttribute("toilet_need", 0.001)
+  self:changeAttribute("thirst", self.attributes["warmth"]*0.005+0.002*math.random() + 0.002)
+  self:changeAttribute("toilet_need", 0.003*math.random() + 0.001)
   
   -- Maybe it's time to visit the loo?
-  if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.7 then
+  if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.8 then
     if not self.going_to_toilet then
       self:setMood("poo", "activate")
       -- Check if any room exists.
@@ -233,7 +234,7 @@ function Patient:tickDay()
   
   -- If thirsty enough a soda would be nice
   if self.attributes["thirst"] and self.attributes["thirst"] > 0.8 then
-    self:changeAttribute("happiness", -0.02)
+    self:changeAttribute("happiness", -0.002)
     self:setMood("thirsty", "activate")
     -- If there's already an action to buy a drink in the action queue, or
     -- if we're going to the loo, do nothing
@@ -247,7 +248,8 @@ function Patient:tickDay()
     end
     -- The only allowed situations to grab a soda is when queueing
     -- or idling/walking in the corridors
-    if not self:getRoom() then
+    -- Also make sure the walk action when leaving a room has a chance to finish.
+    if not self:getRoom() and not self.action_queue[1].is_leaving then
       local machine, lx, ly = self.world:
           findObjectNear(self, "drinks_machine", 8)
 
@@ -261,8 +263,8 @@ function Patient:tickDay()
       
       -- Callback function when the machine has been used
       local --[[persistable:patient_drinks_machine_after_use]] function after_use()
-        self:changeAttribute("thirst", -0.7 + math.random()*0.2)
-        self:changeAttribute("toilet_need", 0.1 + math.random()*0.3)
+        self:changeAttribute("thirst", -(0.7 + math.random()*0.3))
+        self:changeAttribute("toilet_need", 0.05 + math.random()*0.05)
         self:setMood("thirsty", "deactivate")
         -- The patient might be kicked while buying a drink
         if not self.going_home then
@@ -287,6 +289,7 @@ function Patient:tickDay()
       if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
         -- Go to the machine, use it, and then continue with 
         -- whatever he/she was doing.
+        current.keep_reserved = true
         self:queueAction({
           name = "walk", 
           x = lx, 
@@ -328,7 +331,7 @@ function Patient:tickDay()
           }, 3)
         end
         if current.on_interrupt then
-          current.on_interrupt(current, self, true)
+          current.on_interrupt(current, self)
         else
           self:finishAction()
         end

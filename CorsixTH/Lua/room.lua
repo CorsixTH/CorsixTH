@@ -262,7 +262,7 @@ end
 function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
-  humanoid:updateDynamicInfo("")
+  humanoid:setDynamicInfoText("")
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
 end
@@ -448,6 +448,20 @@ function Room:crashRoom()
   for humanoid, _ in pairs(self.humanoids) do
     humanoid:queueAction({name = "idle"}, 1)
     humanoid.user_of = nil
+    -- Make sure any emergency list is not messed up.
+    -- Note that these humanoids might just have been kicked. (No hospital set)
+    if humanoid.is_emergency then
+      table.remove(self.world:getLocalPlayerHospital().emergency_patients, humanoid.is_emergency)
+    end
+    -- Staff members need to be removed from the staff list.
+    if class.is(humanoid, Staff) then
+      self.world:getLocalPlayerHospital():removeStaff(humanoid)
+      -- Update the staff management screen (if present) accordingly
+      local window = self.world.ui:getWindow(UIStaffManagement)
+      if window then
+        window:updateStaffList(humanoid)
+      end
+    end
     self.world:destroyEntity(humanoid)
   end
   

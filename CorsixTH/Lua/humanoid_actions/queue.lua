@@ -58,16 +58,16 @@ local function interrupt_head(humanoid, n)
 end
 
 local function action_queue_leave_bench(action, humanoid)
-  local index = 1
-  while true do
-    local current_action = humanoid.action_queue[index]
+  local index
+  for i, current_action in ipairs(humanoid.action_queue) do
     assert(current_action ~= action)
     if current_action.name == "use_object" then
-      assert(humanoid.action_queue[index + 1] == action, "Wrong object: " .. current_action.object.object_type.id)
-      interrupt_head(humanoid, index)
-      break
+      if humanoid.action_queue[i + 1] == action then
+        interrupt_head(humanoid, i)
+        index = i
+        break
+      end
     end
-    index = index + 1
   end
   index = index + 1
   while true do
@@ -121,9 +121,6 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         must_stand = true
         break
       end
-    end
-    if not must_stand then
-      must_stand = humanoid:goingToUseObject("drinks_machine")
     end
   end
   

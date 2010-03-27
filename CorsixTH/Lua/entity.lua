@@ -91,7 +91,7 @@ function Entity:getRoom()
   end
 end
 
---[[ Set the pixel posisition of the entity within the current tile.
+--[[ Set the pixel position of the entity within the current tile.
 !param x (integer) The 0-based X pixel offset from the default position.
 !param y (integer) The 0-based Y pixel offset from the default position.
 ]]

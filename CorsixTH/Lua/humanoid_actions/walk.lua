@@ -24,14 +24,19 @@ local action_walk_interrupt = permanent"action_walk_interrupt"( function(action,
     action.path_x[j] = nil
     action.path_y[j] = nil
   end
-  -- Unreserve any door which we had reserved
-  local door = action.reserve_on_resume
-  if door and door.reserved_for == humanoid then
-    door.reserved_for = nil
-    if door.queue:size() > 0 then
-      door.queue:pop()
-      door:updateDynamicInfo()
+  -- Unreserve any door which we had reserved unless specifically told not to.
+  if not action.keep_reserved then
+    local door = action.reserve_on_resume
+    if door and door.reserved_for == humanoid then
+      door.reserved_for = nil
+      if door.queue:size() > 0 then
+        door.queue:pop()
+        door:updateDynamicInfo()
+      end
     end
+  else
+    -- This flag can be used only once at a time.
+    action.keep_reserved = nil
   end
   -- Terminate immediately if high-priority
   if high_priority then

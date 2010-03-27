@@ -34,6 +34,7 @@ object.orientations = {
   },
 }
 
+--! An `Object` which drops of emergency patients.
 class "Helicopter" (Object)
 
 function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
@@ -69,6 +70,7 @@ function Helicopter:tick()
   Object.tick(self)
 end
 
+--! When the helicopter has landed this method is called each time a patient should spawn from it.
 function Helicopter:spawnPatient()
   local hospital = self.hospital
   self.spawned_patients = self.spawned_patients + 1
@@ -77,7 +79,7 @@ function Helicopter:spawnPatient()
   patient.diagnosis_progress = 1
   patient:setDiagnosed(true)
   patient:setMood("emergency", "activate")
-  patient.is_emergency = true
+  patient.is_emergency = self.spawned_patients
   hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
   local x, y = hospital:getHeliportSpawnPosition()
   patient:setNextAction{

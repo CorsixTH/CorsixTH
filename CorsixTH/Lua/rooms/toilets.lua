@@ -100,6 +100,8 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                     end,
                   }
                   sink.reserved_for = humanoid
+                  -- Make sure that the mood waiting is no longer active.
+                  humanoid:setMood("patient_wait", "deactivate")
                 else
                   -- Wait for a while before trying again.
                   humanoid:setNextAction{
@@ -108,6 +110,9 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                     after_use = after_use,
                     direction = loo.direction == "north" and "south" or "east",
                     }
+                  -- For now, activate the wait icon to show the player that the patient hasn't
+                  -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
+                  humanoid:setMood("patient_wait", "activate")
                 end
               end
               after_use()

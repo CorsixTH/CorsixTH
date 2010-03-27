@@ -682,7 +682,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     distance = 2^30
   end
   for _, r in ipairs(self.rooms) do repeat
-    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.door.queue then
+    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.is_active then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
       if d > distance then

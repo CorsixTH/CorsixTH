@@ -53,6 +53,7 @@ end
 
 local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( function(room, humanoid, diagnosis_room)
   humanoid.waiting = nil
+  humanoid.message_callback = nil
   humanoid:setNextAction(room:createEnterAction())
   humanoid.next_room_to_visit = room
   humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
@@ -152,10 +153,10 @@ end
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
   humanoid:setMood("patient_wait", "deactivate")
   humanoid.world:unregisterRoomBuildCallback(action.build_callback)
-  humanoid:finishAction()
   -- Just in case we are somehow started again:
   action.build_callback = nil
   action.done_init = false
+  humanoid:finishAction()
 end)
 
 local function action_seek_room_start(action, humanoid)
