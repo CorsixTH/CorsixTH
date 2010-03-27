@@ -85,7 +85,7 @@ function UIMachine:replaceMachine()
   local machine = self.machine
   self.ui:addWindow(UIConfirmDialog(self.ui,
     _S.confirmation.replace_machine:format(machine.object_type.name, machine.object_type.build_cost),
-    function()
+    --[[persistable:replace_machine_confirm_dialog]]function()
       self.ui.hospital:spendMoney(machine.object_type.build_cost, _S.transactions.machine_replacement)
       machine.total_usage = 0
       machine.times_used = 0
@@ -95,7 +95,7 @@ function UIMachine:replaceMachine()
       local handyman = self.room.needs_repair
       if handyman then
         machine:setRepairing(false)
-        machine.needs_repair = nil
+        self.room.needs_repair = nil
         if handyman:getRoom() then
           handyman:setNextAction(handyman:getRoom():createLeaveAction())
           handyman:queueAction{name = "meander"}
@@ -104,6 +104,8 @@ function UIMachine:replaceMachine()
         end
         machine:updateDynamicInfo(true)
       end
+      -- Start the queue again
+      self.room:tryAdvanceQueue()
     end
   ))
 end
