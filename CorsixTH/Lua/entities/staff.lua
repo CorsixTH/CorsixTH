@@ -37,13 +37,30 @@ function Staff:tick()
       end
     end
   end
-
+  
+  -- Decide whether the staff member should be tiring.
+  local tiring = true
+  
   local room = self:getRoom()
-  if not room or room.room_info.id ~= "staff_room" then
-    if self.action_queue[1].name ~= "pickup" then
-      self:tire(0.000115)
+  if not room then  -- Not being in a room isn't tiring.
+    if self.humanoid_class ~= "Handyman" then  -- The exception is handymen: they tire wandering around, waiting for things to break.
+      tiring = false;
+    end
+  else
+    if room.room_info.id == "staff_room" then  -- Being in a staff room is actually quite refreshing.
+      tiring = false
     end
   end
+
+  -- Picking staff members up doesn't tire them, it just tires the player.
+  if self.action_queue[1].name == "pickup" then
+    tiring = false
+  end
+  
+  if tiring then -- Finally: tire the humanoid.
+    self:tire(0.000115)
+  end
+  
   -- is this a doctor in the training room with a consultant?
   local room = self:getRoom()
   if room and room.room_info.id == "training" and room.staff_member and self.humanoid_class == "Doctor" then

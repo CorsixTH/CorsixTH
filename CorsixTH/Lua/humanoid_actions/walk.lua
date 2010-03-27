@@ -41,6 +41,8 @@ local action_walk_interrupt = permanent"action_walk_interrupt"( function(action,
   -- If the staff was heading for a room, remove that staff from the approaching list.
   if action.is_entering and action.is_entering ~= "true" then
     action.is_entering.approaching_staff[humanoid] = nil
+    -- Make a new check. If there is still need for staff in the room someone else could go.
+    humanoid.world:callForStaff(action.is_entering)
   end
   -- Terminate immediately if high-priority
   if high_priority then

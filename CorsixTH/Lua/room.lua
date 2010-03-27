@@ -342,6 +342,12 @@ function Room:onHumanoidLeave(humanoid)
   end
   if not staff_leaving then
     self:tryAdvanceQueue()
+  else
+    -- Staff is leaving. If there is still a need for this room (people are in the queue) then call
+    -- someone new.
+    if #self.door.queue > 0 then
+      self.world:callForStaff(self)
+    end
   end
   if class.is(humanoid, Staff) then
     -- Make patients leave the room if there are no longer enough staff
