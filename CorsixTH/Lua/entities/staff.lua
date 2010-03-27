@@ -74,15 +74,13 @@ function Staff:tick()
     if not self.timer_until_raise then
       self.timer_until_raise = 200
     end
-    self.timer_until_raise = self.timer_until_raise - 1
-    if self.timer_until_raise < 0 then
-      if self.timer_until_raise == 0 and math.random(1, 5) ~= 1 then
-        -- At least for now, staff are timid, and only ask for raises 1/5th of the time
-        self.timer_until_raise = nil
-      else
-        self:requestRaise()
-      end
+    if self.timer_until_raise == 0 then
+      self:requestRaise()
+    else
+      self.timer_until_raise = self.timer_until_raise - 1
     end
+  else
+    self.timer_until_raise = nil
   end
 end
 
@@ -363,12 +361,13 @@ function Staff:isIdle()
   return false
 end
 
--- Makes the staff member request a raise of fair wage + 10% of current. Shows a request raise dialog.
+-- Makes the staff member request a raise of 10%, or a wage exactly inbetween their current and a fair one, whichever is more.
 function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
-    local amount = math.floor(self.profile:getFairWage() + self.profile.wage * 0.1 - self.profile.wage)
-    if amount <= 0 then
+    local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
+    -- At least for now, staff are timid, and only ask for raises 1/5th of the time
+    if math.random(1, 5) ~= 1 or amount <= 0 then
       self.timer_until_raise = nil
       return
     end
