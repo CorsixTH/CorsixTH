@@ -903,7 +903,7 @@ function World:callForStaff(room, repair_object, urgent)
       self.ui:playAnnouncement(sound)
       room.sound_played = true
     end
-    local missing = room:getMissingStaff(room:getRequiredStaffCriteria())
+    local missing = room:getMissingStaff(room:getRequiredStaffCriteria(), true)
       
     for attribute, count in pairs(missing) do
       self:selectNearestStaffForRoom(room, attribute, count)
@@ -931,7 +931,7 @@ function World:selectNearestStaffForRoom(room, attribute, count)
       break
     end
     count = count - 1
-    cand.entity:setNextAction(room:createEnterAction())
+    cand.entity:setNextAction(room:createEnterAction(cand.entity))
     cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
     cand.entity:updateDynamicInfo()
     return cand.entity

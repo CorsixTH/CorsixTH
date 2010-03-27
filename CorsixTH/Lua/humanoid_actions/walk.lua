@@ -38,6 +38,10 @@ local action_walk_interrupt = permanent"action_walk_interrupt"( function(action,
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
+  -- If the staff was heading for a room, remove that staff from the approaching list.
+  if action.is_entering and action.is_entering ~= "true" then
+    action.is_entering.approaching_staff[humanoid] = nil
+  end
   -- Terminate immediately if high-priority
   if high_priority then
     local timer_function = humanoid.timer_function

@@ -41,6 +41,9 @@ local function action_pickup_start(action, humanoid)
   if action.todo_close then
     action.todo_close:close()
   end
+  if class.is(humanoid, Staff) then
+    humanoid:setDynamicInfoText("")
+  end
   humanoid:setSpeed(0, 0)
   humanoid.th:makeInvisible()
   local room = humanoid:getRoom()

@@ -45,17 +45,7 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.hospital = hosp
   
   -- Order the staff
-  local staff_members = {
-    Doctor = {},
-    Nurse = {},
-    Handyman = {},
-    Receptionist = {},
-  }
-  for _, staff in ipairs(hosp.staff) do
-    local list = staff_members[staff.humanoid_class]
-    list[#list + 1] = staff
-  end
-  self.staff_members = staff_members
+  self:updateStaffList()
   
   self.default_button_sound = "selectx.wav"
   
@@ -119,6 +109,36 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.skill_blanker = self:addColourPanel(142, 406, 168, 54, 57, 166, 198)
   
   self:setCategory("Doctor")
+end
+
+function UIStaffManagement:updateStaffList(staff_member_removed)
+  local selected_staff
+  if staff_member_removed then
+    -- The update was issued because someone was removed from the list, we need to handle this.
+    selected_staff = self.staff_members[self.category][self.selected_staff]
+    if self.staff_members[self.category][self.selected_staff] == staff_member_removed then
+      self.selected_staff = nil
+      selected_staff = nil
+    end
+  end
+  
+  local hosp = self.hospital
+  local staff_members = {
+    Doctor = {},
+    Nurse = {},
+    Handyman = {},
+    Receptionist = {},
+  }
+  for _, staff in ipairs(hosp.staff) do
+    local list = staff_members[staff.humanoid_class]
+    list[#list + 1] = staff
+    -- The selected staff might have been moved because someone else was removed from the list.
+    if selected_staff == staff then
+      self.selected_staff = #list
+    end
+  end
+  self.staff_members = staff_members
+  
 end
 
 function UIStaffManagement:setCategory(name)

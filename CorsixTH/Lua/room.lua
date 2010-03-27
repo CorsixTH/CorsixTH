@@ -44,6 +44,7 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
   
   self.humanoids = {--[[a set rather than a list]]}
+  self.approaching_staff = {--[[a set rather than a list]]}
   self.objects = {--[[a set rather than a list]]}
   
   -- TODO
@@ -67,9 +68,12 @@ function Room:createLeaveAction()
   return {name = "walk", x = x, y = y, is_leaving = true}
 end
 
-function Room:createEnterAction()
+function Room:createEnterAction(humanoid_entering)
   local x, y = self:getEntranceXY(true)
-  return {name = "walk", x = x, y = y, is_entering = true}
+  if humanoid_entering and class.is(humanoid_entering, Staff) then
+    self.approaching_staff[humanoid_entering] = true
+  end
+  return {name = "walk", x = x, y = y, is_entering = humanoid_entering and self or "true"}
 end
 
 function Room:getPatient()
@@ -137,12 +141,21 @@ local profile_attributes = {
 }
 
 -- Given any type of staff criteria (required/maximum), subtract the staff in the room and return the result
-function Room:getMissingStaff(criteria)
+function Room:getMissingStaff(criteria, extended_search)
   local result = {}
   for attribute, count in pairs(criteria) do
     for humanoid in pairs(self.humanoids) do
       if class.is(humanoid, Staff) and humanoid:fulfillsCriterium(attribute) and not humanoid.action_queue[1].is_leaving then
         count = count - 1
+      end
+    end
+    -- (Backwards compatibility)
+    if self.approaching_staff and extended_search then
+      -- Also check for staff currently heading for this room
+      for humanoid in pairs(self.approaching_staff) do
+        if humanoid:fulfillsCriterium(attribute) then
+          count = count - 1
+        end
       end
     end
     if count <= 0 then
@@ -153,13 +166,14 @@ function Room:getMissingStaff(criteria)
   return result
 end
 
-function Room:testStaffCriteria(criteria, extra_humanoid)
+function Room:testStaffCriteria(criteria, extra_humanoid, extended_search)
   -- criteria should be required_staff or maximum_staff table.
   -- if extra_humanoid is nil, then returns true if the humanoids in the room
   -- meet the given criteria, and false otherwise.
   -- if extra_humanoid is not nil, then returns true if the given humanoid
   -- would assist in satisfying the given criteria, and false if they would not.
-  local missing = self:getMissingStaff(criteria)
+  -- If extended_search is true staff heading for the room are also considered.
+  local missing = self:getMissingStaff(criteria, extended_search)
   
   if extra_humanoid then
     local class = extra_humanoid.humanoid_class
@@ -263,6 +277,7 @@ function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
+  self.approaching_staff[humanoid] = nil
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
 end

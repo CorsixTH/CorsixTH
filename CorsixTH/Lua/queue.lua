@@ -193,11 +193,16 @@ function Queue:removeValue(value)
 end
 
 -- Called when reception desk is destroyed. May be extended later to handle removed rooms, too.
+-- Update: Now also used when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
   for i, humanoid in ipairs(self) do
     -- slight delay so the desk is really destroyed before rerouting
     humanoid:setNextAction({name = "idle", count = 1})
-    humanoid:queueAction(action)
+    -- Don't queue the same action table, but clone it for each patient.
+    local clone = {} 
+    for k, v in pairs(action) do clone[k] = v end
+    print("cloned")
+    humanoid:queueAction(clone)
   end
   for humanoid in pairs(self.expected) do
     humanoid:setNextAction({name = "idle", count = 1})
