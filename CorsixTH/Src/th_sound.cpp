@@ -305,6 +305,6 @@ void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY) {}
 void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY) {}
 void THSoundEffects::setCamera(int iX, int iY, int iRadius) {}
 void THSoundEffects::setSoundEffectsVolume(double dVolume) {}
-void THSoundEffects::setSoundEffectsOn(int iOn) {}
+void THSoundEffects::setSoundEffectsOn(bool iOn) {}
 
 #endif // CORSIX_TH_USE_SDL_MIXER
