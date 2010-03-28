@@ -31,6 +31,7 @@ int luaopen_random(lua_State *L);
 #include "lua_sdl.h"
 #include "jit_opt.h"
 #include "persist_lua.h"
+#include "iso_fs.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #endif
@@ -249,6 +250,11 @@ int THMain_l_main(lua_State *L)
     // package.preload.TH = luaopen_th
     lua_pushliteral(L, "TH");
     lua_pushcfunction(L, luaopen_th);
+    lua_settable(L, -3);
+
+    // package.preload.ISO_FS = luaopen_iso_fs
+    lua_pushliteral(L, "ISO_FS");
+    lua_pushcfunction(L, luaopen_iso_fs);
     lua_settable(L, -3);
 
     // package.preload.persist = luaopen_persist

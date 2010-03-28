@@ -95,7 +95,7 @@ local function MakePermanentObjectsTable(inverted)
   
   -- Bits of the app
   permanent[TheApp] = "TheApp"
-  for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx"} do
+  for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx", "fs"} do
     permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
   end
   for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do

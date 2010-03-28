@@ -76,6 +76,7 @@ function App:init()
   end
   conf_chunk(self.config)
   self:fixConfig()
+  dofile "filesystem"
   self:checkInstallFolder()
 --  self:checkLanguageFile()
   
@@ -490,55 +491,35 @@ function App:onMusicOver(...)
 end
 
 function App:checkInstallFolder()
-  -- Check that it is actually a folder
-  local install_folder = self.config.theme_hospital_install
-  if install_folder:sub(-1) == pathsep then
-    -- Trim off the trailing separator (lfs doesn't like querying the mode of a
-    -- directory with a trailing slash on win32)
-    install_folder = install_folder:sub(1, -2)
+  self.fs = FileSystem()
+  local status, err = self.fs:setRoot(self.config.theme_hospital_install)
+  local message = "Please ensure that the theme_hospital_install setting in"..
+    " config.txt points to a copy of the data files from the original game,"..
+    " as said files are required for graphics and sounds."
+  if not status then
+    error("Invalid Theme Hospital install folder specified in config file: "..
+          tostring(err) ..".\n".. message)
   end
   
-  if lfs.attributes(install_folder, "mode") ~= "directory" then
-    error(("Theme Hospital folder specified in config file ('%s') is not a directory."):format(install_folder))
-  end
-  
-  -- Put a path separator back on the folder
-  install_folder = install_folder .. pathsep
-  self.config.theme_hospital_install = install_folder
-  
-  -- *nix is case sensitive, so discover the case of various required directories.
-  -- At the same time, check that the expected directories actually exist.
-  local required = true
-  local optional = false
-  local dir_map = {
-    ANIMS  = optional,
-    DATA   = required,
-    DATAM  = optional,
-    INTRO  = optional,
-    LEVELS = required,
-    QDATA  = required,
-    QDATAM = optional,
-    SOUND  = optional,
-  }
-  for item in lfs.dir(install_folder) do
-    if dir_map[item:upper()] ~= nil then
-      dir_map[item:upper()] = item
+  -- Check that a few core files are present
+  local missing = {}
+  local function check(path)
+    if not self.fs:readContents(path) then
+      missing[#missing + 1] = path
     end
   end
-  for dir, name in pairs(dir_map) do
-    if name == required then
-      error(("Directory '%s' not present in specified Theme Hospital folder ('%s')"):format(dir, install_folder))
-    elseif name == optional then
-      print(("Notice: Directory \'%s\' not present in specified Theme Hospital folder."):format(dir))
-      dir_map[dir] = nil
-    end
+  check("Data".. pathsep .."VBlk-0.tab")
+  check("Levels".. pathsep .."Level.L1")
+  check("QData".. pathsep .."SPointer.dat")
+  if #missing ~= 0 then
+    missing = table.concat(missing, ", ")
+    error("Invalid Theme Hospital install folder specified in config file, "..
+          "as at least the following files are missing: ".. missing ..".\n"..
+          message)
   end
-  self.data_dir_map = dir_map
-  
+    
   -- Check for demo version
-  local demo = io.open(self:getDataFilename("DataM", "Demo.dat"), "rb")
-  if demo then
-    demo:close()
+  if self.fs:readContents("DataM", "Demo.dat") then
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end
@@ -593,24 +574,14 @@ function App:readBitmapDataFile(filename)
   return data
 end
 
-function App:getDataFilename(dir, filename)
-  if filename == nil then
-    filename = dir
-    dir = "DATA"
-  end
-  dir = dir:upper()
-  dir = self.data_dir_map[dir] or dir
-  return self.config.theme_hospital_install .. dir .. pathsep .. filename:upper()
-end
-
 function App:readDataFile(dir, filename)
   if dir == "Bitmap" then
     return self:readBitmapDataFile(filename)
   end
-  filename = self:getDataFilename(dir, filename)
-  local file = assert(io.open(filename, "rb"))
-  local data = file:read"*a"
-  file:close()
+  if filename == nil then
+    dir, filename = "Data", dir
+  end
+  local data = assert(self.fs:readContents(dir .. pathsep .. filename))
   if data:sub(1, 3) == "RNC" then
     data = assert(rnc.decompress(data))
   end

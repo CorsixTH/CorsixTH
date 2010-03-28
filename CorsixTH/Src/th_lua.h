@@ -160,6 +160,15 @@ template <> struct luaT_classinfo<THStringProxy_t> {
     static inline const char* name() {return "StringProxy";}
 };
 
+class IsoFilesystem;
+template <> struct luaT_classinfo<IsoFilesystem> {
+    static inline const char* name() {return "ISO Filesystem";}
+};
+
+template <> struct luaT_classinfo<FILE*> {
+    static inline const char* name() {return "file";}
+};
+
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {

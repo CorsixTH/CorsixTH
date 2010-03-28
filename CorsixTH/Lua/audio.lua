@@ -43,140 +43,116 @@ function Audio:Audio(app)
   self.play_announcements = true
 end
 
-local function linepairs(filename)
-  local lines, state = io.lines(filename)
-  local iterator
-  iterator = function()
-    local first, second
-    repeat
-      first = lines(state)
-      if not first then return end
-      first = first:gsub("[\r\n]", "")
-      second = lines(state)
-      if not second then return end
-      second = second:gsub("[\r\n]", "")
-    until #first > 2 and #second > 2
-    return first, second
+local function GetFileData(path)
+  local f, e = io.open(path, "rb")
+  if not f then
+    return f, e
   end
-  return iterator
+  e = f:read"*a"
+  f:close()
+  return e
 end
 
 function Audio:init(speech_file)
   if self.not_loaded then
     return
   end
-  local sound_dir = self.app.data_dir_map.SOUND
-  if not sound_dir or not SDL.audio.loaded then
-    if not sound_dir then
-      print "Notice: Audio system not loaded as no SOUND directory found"
-    else
-      print "Notice: Audio system not loaded as CorsixTH compiled without it"
-    end
+  if not SDL.audio.loaded then
+    print "Notice: Audio system not loaded as CorsixTH compiled without it"
     self.not_loaded = true
     return
   end
-  sound_dir = self.app.config.theme_hospital_install .. sound_dir .. pathsep
   local mp3 = self.app.config.audio_mp3
-  local subdirs = {
-    DATA = false,
-    MIDI = false,
-  }
-  for item in lfs.dir(sound_dir) do
-    if subdirs[item:upper()] ~= nil then
-      subdirs[item:upper()] = item
-    end
-  end
   local music_dir
   if mp3 then
     music_dir = mp3
-    if music_dir:sub(music_dir:len()) ~= "\\" and 
-      music_dir:sub(music_dir:len()) ~= "/" then
+    if music_dir:sub(-1) ~= pathsep then
       music_dir = music_dir .. pathsep
     end
-  elseif subdirs.MIDI ~= false then
-    music_dir = sound_dir .. subdirs.MIDI .. pathsep
   end
-  if not music_dir then
-    print "Notice: No background music as no SOUND/MIDI directory found"
+
+  local music_array = {}
+  local function musicFileTable(filename)
+    filename = filename:upper()
+    local t = music_array[filename]
+    if t == nil then
+      t = {}
+      music_array[filename] = t
+    end
+    return t
+  end
+    
+  --[[
+    Find the music files on disk.
+    -----------------------------
+      
+    - Will search through all the files in music_dir.
+    - Adds xmi and mp3 files.
+    - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
+    - Uses titles from MIDI.TXT if found, else the filename.
+  --]]
+  local midi_txt -- File name of midi.txt file, if any.
+  
+  local _f, _s, _v
+  if music_dir then
+    _f, _s, _v = lfs.dir(music_dir)
   else
-    local musicArray = {}
-    local function musicFileTable(filename)
-      local t = musicArray[filename:upper()]
-      if t == nil then
-        t = {}
-        musicArray[filename:upper()] = t
+    _f, _s, _v = pairs(self.app.fs:listFiles("Sound", "Midi"))
+  end
+  for file in _f, _s, _v do
+    local filename, ext = file:match"^(.*)%.([^.]+)$"
+    ext = ext and ext:upper()
+    -- Music file found (mp3/xmi).
+    if ext == "MP3" or ext == "XMI" then  
+      local info = musicFileTable(filename)
+      if ext == "MP3" then
+         info.filename_mp3 = music_dir .. file
+         -- Remove the xmi version of this file, if found.
+         info.filename = nil
+      elseif ext == "XMI" and not info.filename_mp3 then
+        -- NB: If the mp3 version exists, this file is ignored
+        info.filename = table.concat({"Sound", "Midi", file}, pathsep)
       end
-      return t
+      -- This title might be replaced later by the midi_txt.
+      info.title = filename
+    elseif ext == "TXT" and (file:sub(1, 4):upper() == "MIDI" or
+                             file:sub(1, 5):upper() == "NAMES") then
+      -- If it Looks like the midi.txt or equiv, then remember it for later.
+      midi_txt = file                                    
     end
+  end
     
+  -- Enable music files and add them to the playlist.
+  for _, info in pairs(music_array) do
+    info.enabled = true
+    self.background_playlist[#self.background_playlist + 1] = info
+  end
     
-    --[[
-      Find the music files on disk.
-      -----------------------------
-        
-      - Will search through all the files in music_dir.
-      - Adds xmi and mp3 files.
-      - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
-      - Uses titles from MIDI.TXT if found, else the filename.
-    --]]
-    local midi_txt = ''      -- File name of midi.txt file, if any.
-    
-    for foundFile in lfs.dir(music_dir) do
-      -- Music file found (mp3/xmi).
-      if foundFile:upper():match"%.MP3$" or (foundFile:upper():match"%.XMI$") then
-        -- Extract only the base name of the file ("ATLANTIS" instead of "ATLANTIS.XMI")
-        local foundFile_filenameBase = foundFile:sub( 0, foundFile:find(".", 1, true)-1 )
-        -- Make one version uppercase
-        local foundFile_filenameBase_upper = foundFile_filenameBase:upper()
-      
-        if (foundFile:upper():match"%.MP3$") then
-           musicFileTable(foundFile_filenameBase_upper).filename_mp3 = music_dir .. foundFile
-           -- Remove the xmi version of this file, if found.
-           if musicFileTable(foundFile_filenameBase_upper).filename then
-             musicFileTable(foundFile_filenameBase_upper).filename = nil
-           end
-           -- If the mp3 version exists
-        elseif foundFile:upper():match"%.XMI$" and 
-          not musicFileTable(foundFile_filenameBase_upper).filename_mp3 then
-          musicFileTable(foundFile_filenameBase_upper).filename = music_dir .. foundFile -- ignore this file
-        end
-        -- This title might be replaced later by the midi_txt.
-        musicFileTable(foundFile_filenameBase_upper).title = foundFile_filenameBase
-      elseif foundFile:upper():match"^MIDI.*%.TXT$" or 
-        foundFile:upper():match"^NAMES.*%.TXT$" then -- Looks like the midi.txt or equiv.
-        -- Remember it for later.
-        midi_txt = foundFile                                    
-      end
-    end
-      
-    -- Enable music files and add them to the playlist.
-    for filename, musicData in pairs(musicArray) do
-      musicData.enabled = true
-      self.background_playlist[#self.background_playlist + 1] = musicData
-    end
-      
-    -- This is later. If we found a midi.txt, go through it and add the titles to the files we know
-    if midi_txt:len() > 0 then
-      for name, title in linepairs(music_dir .. midi_txt) do
-        local filename = name:sub( 0, name:find(".", 1, true)-1 )
-        if next(musicFileTable(filename:upper())) ~= nil then
-           musicFileTable(filename:upper()).title = title
-        else
-          print(" ")
-          print(('Notice: Background track "%s" named in list file, but it '..
-            'does not exist. '):format(filename))
-          print(" ")
-        end
-      end
-    end
-    if #self.background_playlist == 0 then
-      print "Notice: Audio system loaded, but found no background MIDI tracks"
+  -- This is later. If we found a midi.txt, go through it and add the titles to the files we know
+  if midi_txt then
+    local data
+    if music_dir then
+      data = assert(GetFileData(music_dir .. midi_txt))
     else
-      table.sort(self.background_playlist, function(left, right)
-        return left.title:lower() < right.title:lower()
-      end)
-      self.has_bg_music = true
+      data = assert(self.app.fs:readContents("Sound", "Midi", midi_txt))
     end
+    for file, title in data:gmatch"([^\r\n\26]+).-([^\r\n\26]+)" do
+      local info = musicFileTable(file:match"^(.*)%." or file)
+      if next(info) ~= nil then
+        info.title = title
+      else
+        print('Notice: Background track "'.. file ..'" named in list file, '..
+              'but it does not exist.')
+      end
+    end
+  end
+  if #self.background_playlist == 0 then
+    print "Notice: Audio system loaded, but found no background tracks"
+  else
+    table.sort(self.background_playlist, function(left, right)
+      return left.title:upper() < right.title:upper()
+    end)
+    self.has_bg_music = true
   end
   
   local status, err = SDL.audio.init(self.app.config.audio_frequency,
@@ -191,50 +167,39 @@ function Audio:init(speech_file)
     return
   end
   
-  if subdirs.DATA == false then
-    print "Notice: No sound effects as no SOUND/DATA directory found"
+  local function load_sound_file(file)
+    return self.app.fs:readContents("Sound", "Data", file)
+  end
+
+  speech_file = speech_file or "Sound-0.dat"
+  local archive_data, err = load_sound_file(speech_file)
+  
+  -- If sound file not found and language choosen is not English, 
+  -- maybe we can have more chance loading English sounds
+  if not archive_data and speech_file ~= "Sound-0.dat" then
+    print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. speech_file .. " file found")        
+    archive_data = load_sound_file("Sound-0.dat")
+  end
+  
+  if not archive_data then
+    print("Notice: No sound effects as no SOUND/DATA/".. speech_file ..
+          " file could be found / opened. The reported error was:\n".. err)
   else
-    local data_dir = sound_dir .. subdirs.DATA .. pathsep
-    local archive_name
-    local function find_sound_file(dir, file)
-      for item in lfs.dir(dir) do
-        if item:upper() == file then
-          return item
-        end
+    if archive_data:sub(1, 3) == "RNC" then
+      archive_data = assert(rnc.decompress(archive_data))
+    end
+    self.sound_archive = TH.soundArchive()
+    if not self.sound_archive:load(archive_data) then
+      print("Notice: No sound effects as SOUND/DATA/" .. speech_file .. " could not be loaded")
+      if #self.background_playlist == 0 then 
+        self.not_loaded = true
       end
-    end
-    
-    if speech_file then
-      speech_file = speech_file:upper()
-      archive_name = find_sound_file(data_dir, speech_file)
-    end
-    
-    -- If sound file not found and language choosen is not English, 
-    -- maybe we can have more chance loading English sounds
-    if not archive_name and speech_file ~= "SOUND-0.DAT" then
-      print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. speech_file .. " file found")        
-      archive_name = find_sound_file(data_dir, "SOUND-0.DAT")
-    end
-    
-    if not archive_name then
-      print("Notice: No sound effects as no SOUND/DATA/" .. speech_file .. " file found")
     else
-      local file = assert(io.open(data_dir .. archive_name, "rb"))
-      local data = file:read"*a"
-      file:close()
-      if data:sub(1, 3) == "RNC" then
-        data = assert(rnc.decompress(data))
-      end
-      self.sound_archive = TH.soundArchive()
-      if not self.sound_archive:load(data) then
-        print("Notice: No sound effects as SOUND/DATA/" .. speech_file .. " could not be loaded")
-      else
-        self.sound_fx = TH.soundEffects()
-        self.sound_fx:setSoundArchive(self.sound_archive)
-        local w, h = self.app.config.width / 2, self.app.config.height / 2
-        self.sound_fx:setCamera(w, h, (w^2 + h^2)^0.5)
-        --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
-      end
+      self.sound_fx = TH.soundEffects()
+      self.sound_fx:setSoundArchive(self.sound_archive)
+      local w, h = self.app.config.width / 2, self.app.config.height / 2
+      self.sound_fx:setCamera(w, h, (w^2 + h^2)^0.5)
+      --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
     end
   end
 end
@@ -380,9 +345,12 @@ function Audio:playBackgroundTrack(index)
   assert(info, "Index not valid")
   local music = info.music
   if not music then
-    local file = assert(io.open(info.filename_mp3 or info.filename, "rb"))
-    local data = file:read"*a"
-    file:close()
+    local data
+    if info.filename_mp3 then
+      data = assert(GetFileData(info.filename_mp3))
+    else
+      data = assert(self.app.fs:readContents(info.filename))
+    end
     if data:sub(1, 3) == "RNC" then
       data = assert(rnc.decompress(data))
     end
