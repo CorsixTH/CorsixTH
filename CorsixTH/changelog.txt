@@ -1,4 +1,15 @@
 -----------------------------------------
+Version Beta 3 - released 2010-0?-??
+-----------------------------------------
+
+* Feature: Swing doors, used by the new diagnosis room the ward.
+
+* Additional functional diagnosis rooms: Blood Machine, Ward.
+
+Again a lot of bugs have been terminated, though there are surely new ones 
+introduced by the new features.
+
+-----------------------------------------
 Version Beta 2 - released 2010-03-24
 -----------------------------------------
 

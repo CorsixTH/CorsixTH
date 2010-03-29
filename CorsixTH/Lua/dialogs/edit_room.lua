@@ -52,8 +52,11 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.desc_text = _S.place_objects_window.drag_blueprint
   self.blueprint_wall_anims = {
   }
-  self.blueprint_door = {
-  }
+  if room_type.swing_doors then
+    self.blueprint_door = {anim = {}, old_anim = {}, old_flags = {}}
+  else
+    self.blueprint_door = {}
+  end
   self.blueprint_window = {
   }
   self.mouse_down_x = false
@@ -264,7 +267,7 @@ function UIEditRoom:finishRoom()
   local world = self.ui.app.world
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
-  local door
+  local door, door2
   local function check_external_window(x, y, layer)
     -- If a wall is built which is normal to an external window, then said
     -- window needs to be removed, otherwise it looks odd (see issue #59).
@@ -314,6 +317,10 @@ function UIEditRoom:finishRoom()
       else
         repeat
           local tiles = "outside_tiles"
+          local tag = anim:getTag()
+          if tag == "nothing" or tag == "swing_slave" then
+            tiles = "swing_outside_tiles"
+          end
           local dir = (anim:getFlag() % 2 == 1) and "west" or "north"
           local layer = dir == "north" and 2 or 3
           if world:getWallIdFromBlockId(map:getCell(x, y, layer)) == "external" then
@@ -330,16 +337,28 @@ function UIEditRoom:finishRoom()
           end
           local existing = world:getWallSetFromBlockId(map:getCell(x, y, layer))
           if rect.x <= x and x < rect.x + rect.w and rect.y <= y and y < rect.y + rect.h then
-            tiles = "inside_tiles"
+            if tag == "nothing" or tag == "swing_slave" then
+              tiles = "swing_inside_tiles"
+            else
+              tiles = "inside_tiles"
+            end
           elseif existing then
             break
           end
-          local tag = anim:getTag()
           if tag == "window" or existing == "window_tiles" then
             tiles = "window_tiles"
           end
+          local suffixes = {"_left", "_right"}
+          local num = dir == "north" and 1 or 0
           if tag == "door" then
             door = world:newObject("door", x, y, dir)
+          elseif tag == "swing_master" then
+            door = world:newObject("swing_door_right", x, y, dir)
+          elseif tag == "swing_slave" then
+            door2 = world:newObject("swing_door_left", x, y, dir)
+            map:setCell(x, y, layer, wall_type[tiles][dir .. suffixes[2 - num]])
+          elseif tag == "nothing" then
+            map:setCell(x, y, layer, wall_type[tiles][dir .. suffixes[num + 1]])
           else
             map:setCell(x, y, layer, wall_type[tiles][dir])
           end
@@ -349,7 +368,7 @@ function UIEditRoom:finishRoom()
     end
     self.blueprint_wall_anims[x] = nil
   end
-  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door)
+  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door, door2)
 end
 
 function UIEditRoom:purchaseItems()
@@ -404,7 +423,11 @@ function UIEditRoom:returnToWallPhase(early)
   local x, y, w, h = rect.x, rect.y, rect.w, rect.h
   self:setBlueprintRect(1, 1, 0, 0)
   self:setBlueprintRect(x, y, w, h)
-  self.blueprint_door = {}
+  if self.room_type.swing_doors then
+    self.blueprint_door = {anim = {}, old_anim = {}, old_flags = {}}
+  else
+    self.blueprint_door = {}
+  end
 end
 
 function UIEditRoom:returnToDoorPhase()
@@ -421,7 +444,7 @@ function UIEditRoom:returnToDoorPhase()
     for y = room.y, room.y + room.height - 1 do
       while true do
         local obj = self.world:getObject(x, y)
-        if not obj or obj == room.door then
+        if not obj or obj == room.door or class.is(obj, SwingDoor) then
           break
         end
         self:addObjects({{object = TheApp.objects[obj.object_type.id], qty = 1}})
@@ -430,6 +453,9 @@ function UIEditRoom:returnToDoorPhase()
     end
   end
   self.world:destroyEntity(self.room.door)
+  if self.room.door2 then
+    self.world:destroyEntity(self.room.door2)
+  end
   
   -- backup list of objects
   self.objects_backup = {}
@@ -499,13 +525,20 @@ function UIEditRoom:screenToWall(x, y)
   -- are never returned, and the nearest non-corner wall is returned instead. If they
   -- could be placed on corner tiles, then you would have to consider the interaction of
   -- wall shadows with windows and doors, amonst other things.
+  -- Swing doors are allowed to be adjacent everywhere except the top corner.
+  local modifier = 0
+  local swinging = false
+  if self.room_type.swing_doors and self.phase == "door" then
+    modifier = 1
+    swinging = true
+  end
   if cellx == rect.x and celly == rect.y then
     -- top corner
     local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
-      return cellx + 1, celly, "north"
+      return cellx + 1 + modifier, celly, "north"
     else
-      return cellx, celly + 1, "west"
+      return cellx, celly + 1 + modifier, "west"
     end
   elseif cellx == rect.x + rect.w - 1 and celly == rect.y + rect.h - 1 then
     -- bottom corner
@@ -538,6 +571,9 @@ function UIEditRoom:screenToWall(x, y)
     elseif celly == rect.y + rect.h - 1 then
       celly = rect.y + rect.h - 2
     end
+    if swinging and celly <= rect.y + 1 then
+      celly = celly + 1
+    end
     return rect.x, celly, "west"
   elseif (celly == rect.y - 1 or celly == rect.y) and rect.x <= cellx and cellx < rect.x + rect.w then
     -- north edge
@@ -545,6 +581,9 @@ function UIEditRoom:screenToWall(x, y)
       cellx = rect.x + 1
     elseif cellx == rect.x + rect.w - 1 then
       cellx = rect.x + rect.w - 2
+    end
+    if swinging and cellx <= rect.x + 1 then
+      cellx = cellx + 1
     end
     return cellx, rect.y, "north"
   elseif (cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1)
@@ -817,22 +856,44 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   local orig_y = y
   local orig_wall = wall
   
+  -- Used to get the adjacent tiles when placing swing doors.
+  local x_mod
+  local y_mod
   if wall == "south" then
     y = y + 1
     wall = "north"
+    x_mod = 2
   elseif wall == "east" then
     x = x + 1
     wall = "west"
+    y_mod = 2
+  elseif wall == "north" then
+    x_mod = 2
+  else
+    y_mod = 2
   end
-  
   local map = self.ui.app.map.th
   
   if self.blueprint_door.anim then
-    self.blueprint_door.anim:setAnimation(self.anims, self.blueprint_door.old_anim,
-      self.blueprint_door.old_flags)
+    if self.room_type.swing_doors then
+      if self.blueprint_door.anim[1] then
+        -- If we're dealing with swing doors the anim variable is actually a table with three
+        -- identical "doors".
+        for i, anim in ipairs(self.blueprint_door.anim) do
+          anim:setAnimation(self.anims, self.blueprint_door.old_anim[i],
+            self.blueprint_door.old_flags[i])
+          anim:setTag(nil)
+          self.blueprint_door.anim[i] = nil
+        end
+        map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 24)
+      end
+    else
+      self.blueprint_door.anim:setAnimation(self.anims, self.blueprint_door.old_anim,
+        self.blueprint_door.old_flags)
       self.blueprint_door.anim:setTag(nil)
-    self.blueprint_door.anim = nil
-    map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 24)
+      self.blueprint_door.anim = nil
+      map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 24)
+    end
   end
   self.blueprint_door.x = x
   self.blueprint_door.y = y
@@ -843,13 +904,28 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   if not wall then
     return
   end
-  
   local anim = self.blueprint_wall_anims[x][y]
-  if anim ~= self.blueprint_door.anim then
-    self.blueprint_door.anim = anim
-    self.blueprint_door.anim:setTag"door"
-    self.blueprint_door.old_anim = anim:getAnimation()
-    self.blueprint_door.old_flags = anim:getFlag()
+  if self.room_type.swing_doors then
+    anim = {}
+    local types = {"swing_slave", "swing_master", "nothing"}
+    for i = 1, 3 do
+      local x1 = x_mod and (x + (i - x_mod)) or x
+      local y1 = y_mod and (y + (i - y_mod)) or y
+      anim[i] = self.blueprint_wall_anims[x1][y1]
+      if anim[i] ~= self.blueprint_door.anim[i] then
+        self.blueprint_door.anim[i] = anim[i]
+        self.blueprint_door.anim[i]:setTag(types[i])
+        self.blueprint_door.old_anim[i] = anim[i]:getAnimation()
+        self.blueprint_door.old_flags[i] = anim[i]:getFlag()
+      end
+    end
+  else
+    if anim ~= self.blueprint_door.anim then
+      self.blueprint_door.anim = anim
+      self.blueprint_door.anim:setTag"door"
+      self.blueprint_door.old_anim = anim:getAnimation()
+      self.blueprint_door.old_flags = anim:getFlag()
+    end
   end
   self.blueprint_door.valid = true
   local flags
@@ -876,11 +952,28 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     or not map:getCellFlags(x2, y2, flags).buildable then
       self.blueprint_door.valid = false
     end
+    -- If we're making swing doors two more tiles need to be checked.
+    if self.room_type.swing_doors then
+      if not map:getCellFlags(x + (x_mod and 1 or 0) , y + (x_mod and 1 or 0) , flags).buildable
+      or not map:getCellFlags(x2 + (x_mod and 1 or 0) , y2 + (x_mod and 1 or 0) , flags).buildable then
+        self.blueprint_door.valid = false
+      end
+      if not map:getCellFlags(x , y , flags).buildable
+      or not map:getCellFlags(x2, y2, flags).buildable then
+        self.blueprint_door.valid = false
+      end
+    end
   end
   if not self.blueprint_door.valid then
     flags = flags + 16 -- Use red palette rather than normal palette
   end
-  anim:setAnimation(self.anims, 126, flags)
+  if self.room_type.swing_doors then
+    for i, anim in ipairs(anim) do
+      anim:setAnimation(self.anims, 126, flags)
+    end
+  else
+    anim:setAnimation(self.anims, 126, flags)
+  end
   if self.blueprint_door.valid then
     map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 
       door_floor_blueprint_markers[orig_wall])

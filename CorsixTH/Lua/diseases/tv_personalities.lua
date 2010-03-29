@@ -45,7 +45,7 @@ end
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
   "psych",
-  "cardiogram",
+  "ward",
   "x_ray",
   -- TODO
 }

@@ -191,7 +191,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
     end
   end
   
-  -- sort list by size of object (number of tiles in the first existing orienation (usually north))
+  -- sort list by size of object (number of tiles in the first existing orientation (usually north))
   table.sort(self.objects, function(o1, o2)
     local orient1 = o1.object.orientations.north or o1.object.orientations.east
                  or o1.object.orientations.south or o1.object.orientations.west

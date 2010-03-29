@@ -152,7 +152,6 @@ function Staff:fire()
     self:message_callback(true)
     self.message_callback = nil
   end
-  -- TODO: Remove from world/hospital staff list
 end
 
 function Staff:onClick(ui, button)

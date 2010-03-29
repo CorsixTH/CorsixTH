@@ -127,6 +127,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       -- when does it?
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction(self:createEnterAction())
+      print("Warning: A patient was called into the toilets even though there are no free loos.")
     end
   end
   return Room.onHumanoidEnter(self, humanoid)

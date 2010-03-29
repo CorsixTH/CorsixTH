@@ -34,6 +34,7 @@ room.categories = {
 room.minimum_size = 6
 room.wall_type = "white"
 room.floor_tile = 21
+room.swing_doors = true
 room.required_staff = {
   Nurse = 1,
 }
@@ -44,6 +45,25 @@ class "WardRoom" (Room)
 
 function WardRoom:WardRoom(...)
   self:Room(...)
+end
+
+function WardRoom:roomFinished()
+  local fx, fy = self:getEntranceXY(true)
+  local objects = self.world:findAllObjectsNear(fx, fy)
+  local number = 0
+  for object, value in pairs(objects) do
+    if object.object_type.id == "bed" then
+      number = number + 1
+    end
+  end
+  self.maximum_patients = number
+  Room.roomFinished(self)
+end
+
+function WardRoom:commandEnteringStaff(humanoid)
+  self.staff_member = humanoid
+  self:doStaffUseCycle(humanoid)
+  return Room.commandEnteringStaff(self, humanoid)
 end
 
 function WardRoom:doStaffUseCycle(humanoid)
@@ -67,6 +87,35 @@ function WardRoom:doStaffUseCycle(humanoid)
   }
 end
 
-WardRoom.commandEnteringStaff = WardRoom.doStaffUseCycle
+function WardRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
+  if not bed then
+    patient:setNextAction(self:createLeaveAction())
+    patient:queueAction(self:createEnterAction())
+    print("Warning: A patient was called into the ward even though there are no free beds.")
+  else
+    bed.reserved_for = patient
+    local length = math.random(90, 120) * (1.5 - staff.profile.skill)
+    local --[[persistable:ward_loop_callback]] function loop_callback(action)
+      if length <= 0 then
+        action.prolonged_usage = false
+      end
+      length = length - 1
+    end
+    local after_use = --[[persistable:ward_after_use]] function()
+      self:dealtWithPatient(patient)
+    end
+    patient:walkTo(pat_x, pat_y)
+    patient:queueAction{
+      name = "use_object", 
+      object = bed,
+      loop_callback = loop_callback,
+      after_use = after_use,
+    }
+  end
+
+  return Room.commandEnteringPatient(self, patient)
+end
 
 return room

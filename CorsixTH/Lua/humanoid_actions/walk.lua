@@ -139,7 +139,9 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   -- path since the route was calculated.
   if not recalc_route and flags_here.roomId ~= flags_there.roomId then
     local door = TheApp.objects.door.thob
-    if (flags_here.thob ~= door and flags_there.thob ~= door) and (not flags_there.room
+    local door2 = TheApp.objects.swing_door_right.thob
+    if ((flags_here.thob ~= door and flags_here.thob ~= door2) and (flags_there.thob ~= door 
+    and flags_there.thob ~= door2)) and (not flags_there.room 
     or map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId) then
       recalc_route = true
     end
@@ -172,7 +174,10 @@ HumanoidRawWalk = action_walk_raw
 
 local action_walk_tick_door = permanent"action_walk_tick_door"( function(humanoid)
   local door = humanoid.user_of
-  door:setUser(nil)
+  if not class.is(door, SwingDoor) then
+    -- The doors will need to finish swinging before another humanoid can walk through.
+    door:setUser(nil)
+  end
   humanoid.user_of = nil
   return action_walk_tick(humanoid)
 end)
@@ -189,8 +194,12 @@ navigateDoor = function(humanoid, x1, y1, dir)
     dy = dy + 1
     duration = 10
   end
-  
+  local swinging = false
   local door = humanoid.world:getObject(dx, dy, "door")
+  if not door then
+    swinging = true
+    door = humanoid.world:getObject(dx, dy, "swing_door_right")
+  end
   door.queue:unexpect(humanoid)
   door:updateDynamicInfo()
   local room = door:getRoom()
@@ -210,7 +219,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     local action_index = 0
     if is_entering_room and queue:size() == 0 and not room:getPatient()
     and not door.user and not door.reserved_for and humanoid.should_knock_on_doors 
-    and room.room_info.required_staff then
+    and room.room_info.required_staff and not swinging then
       humanoid:queueAction({
         name = "knock_door",
         door = door,
@@ -233,7 +242,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     assert(action.reserve_on_resume == door)
     action.reserve_on_resume = nil
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors  
-  and room.room_info.required_staff then
+  and room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
     humanoid:queueAction({
       name = "knock_door",
@@ -258,20 +267,37 @@ navigateDoor = function(humanoid, x1, y1, dir)
   humanoid:setTilePositionSpeed(dx, dy)
   humanoid.user_of = door
   door:setUser(humanoid)
+  local entering, leaving
+  if swinging then
+    entering = anims.entering_swing
+    leaving = anims.leaving_swing
+    duration = humanoid.world:getAnimLength(entering)
+  else
+    entering = anims.entering
+    leaving = anims.leaving
+  end
+  local direction = "in"
   if dir == "north" then
-    humanoid:setAnimation(anims.leaving, flag_list_bottom)
+    humanoid:setAnimation(leaving, flag_list_bottom)
     to_x, to_y = dx, dy - 1
+    duration = humanoid.world:getAnimLength(leaving)
   elseif dir == "west" then
-    humanoid:setAnimation(anims.leaving, flag_list_bottom + flag_early_list + flag_flip_h)
+    humanoid:setAnimation(leaving, flag_list_bottom + flag_early_list + flag_flip_h)
     to_x, to_y = dx - 1, dy
+    duration = humanoid.world:getAnimLength(leaving)
   elseif dir == "east" then
-    humanoid:setAnimation(anims.entering, flag_list_bottom + flag_early_list)
+    humanoid:setAnimation(entering, flag_list_bottom + flag_early_list)
     to_x, to_y = dx, dy
+    direction = "out"
   elseif dir == "south" then
-    humanoid:setAnimation(anims.entering, flag_list_bottom + flag_flip_h)
+    humanoid:setAnimation(entering, flag_list_bottom + flag_flip_h)
     to_x, to_y = dx, dy
+    direction = "out"
   end
   humanoid.last_move_direction = dir
+  if swinging then
+    door:swingDoors(direction, duration)
+  end
   
   -- We want to notify the rooms on either side of the door that the humanoid
   -- has entered / left, but we want to do this AFTER the humanoid has gone

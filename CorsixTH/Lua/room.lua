@@ -22,7 +22,7 @@ local TH = require "TH"
 
 class "Room"
 
-function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
+function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world
   self.hospital = hospital
@@ -34,6 +34,8 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door)
   self.maximum_patients = 1 -- A good default for most rooms
   door.room = self
   self.door = door
+  -- If it's a swing door we have two doors
+  self.door2 = door2
   door:setDynamicInfo('text', {
     self.room_info.name, 
     _S.dynamic_info.object.queue_size:format(0), 

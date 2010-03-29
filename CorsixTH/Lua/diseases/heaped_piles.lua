@@ -49,7 +49,7 @@ disease.diagnosis_rooms = {
   "ultrascan",
   "x_ray",
   "general_diag",
-  -- TODO
+  "ward",
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.

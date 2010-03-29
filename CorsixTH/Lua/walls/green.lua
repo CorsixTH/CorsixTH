@@ -32,4 +32,16 @@ wall.window_tiles = {
   north = 140,
   west = 141,
 }
+wall.swing_inside_tiles = {
+  north_left = 104,
+  west_left = 105,
+  north_right = 146,
+  west_right = 147,
+}
+wall.swing_outside_tiles = {
+  north_left = 112,
+  west_left = 113,
+  north_right = 154,
+  west_right = 155,
+}
 return wall

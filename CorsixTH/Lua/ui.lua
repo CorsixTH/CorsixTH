@@ -444,39 +444,6 @@ function UI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
 end
 
-function UI:onCursorWorldPositionChange()
-  local x = self.screen_offset_x + self.cursor_x
-  local y = self.screen_offset_y + self.cursor_y
-  local entity = nil
-  if not self:hitTest(self.cursor_x, self.cursor_y) then
-    entity = self.app.map.th:hitTestObjects(x, y)
-  end
-  if entity ~= self.cursor_entity then
-    -- Stop displaying hoverable moods for the old entity
-    if self.cursor_entity then
-      self.cursor_entity:setMood(nil)
-    end
-    self.cursor_entity = entity
-    local cursor = entity and entity.hover_cursor or
-      (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
-    self:setCursor(cursor)
-    self.bottom_panel:setDynamicInfo(nil)
-  end
-  -- Any hoverable mood should be displayed on the new entity
-  if class.is(entity, Humanoid) then
-    for key, value in pairs(entity.active_moods) do
-      if value.on_hover then
-        entity:setMoodInfo(value)
-        break
-      end
-    end
-  end
-  -- Dynamic info
-  if entity then
-    self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
-  end
-end
-
 local UpdateCursorPosition = TH.cursor.setPosition
 
 function UI:onMouseMove(x, y, dx, dy)
