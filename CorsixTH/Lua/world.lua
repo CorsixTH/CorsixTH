@@ -205,8 +205,8 @@ function World:makeDebugPatient(hospital)
   return patient
 end
 
-function World:debugToggleSalaryRaise()
-  self.debug_disable_salary_raise = not self.debug_disable_salary_raise
+function World:debugDisableSalaryRaise(mode)
+  self.debug_disable_salary_raise = mode
 end
 
 function World:makeAvailableStaff()

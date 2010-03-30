@@ -529,7 +529,13 @@ function UIMenuBar:makeMenu(app)
   )
   local function _(s) return "  " .. s:upper() .. "  " end
   local function transparent_walls(item)
-    app.map.th:setWallDrawFlags(item.checked and 4 or 0)
+    app.ui:makeWallsTransparent(item.checked)
+  end
+  local function limit_camera(item)
+    app.ui:limitCamera(item.checked)
+  end
+  local function disable_salary_raise(item)
+    app.world:debugDisableSalaryRaise(item.checked)
   end
   local function overlay(...)
     local args = {n = select('#', ...), ...}
@@ -551,10 +557,6 @@ function UIMenuBar:makeMenu(app)
       {object = TheApp.objects.extinguisher, qty = 5},
     }))
   end
-  local function limit_camera(item)
-    app.ui.limit_to_visible_diamond = item.checked
-    app.ui:scrollMap(0, 0)
-  end
   local function make_emergency()
     if not self.ui.hospital:createEmergency() then
       self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
@@ -562,9 +564,9 @@ function UIMenuBar:makeMenu(app)
   end
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
-      :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls)
-      :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera)
-      :appendCheckItem(_S.menu_debug.disable_salary_raise, false, function() self.ui.app.world:debugToggleSalaryRaise() end )
+      :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls, nil, function() return self.ui.transparent_walls end)
+      :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
+      :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui.app.world:makeDebugPatient() end)
       :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
       :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)

@@ -44,20 +44,19 @@ function GameUI:GameUI(app, local_hospital)
     self:addWindow(self.menu_bar)
   end
 
-  do
-    local scr_w = app.config.width
-    local scr_h = app.config.height
-    self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
-    if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
-      -- For a standard 128x128 map, screen size would have to be in the
-      -- region of 3276x2457 in order to be too large.
-      error "Screen size too large for the map"
-    end
-    self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
-      app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
-    self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
-    self.limit_to_visible_diamond = not _MAP_EDITOR
+  local scr_w = app.config.width
+  local scr_h = app.config.height
+  self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
+  if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
+    -- For a standard 128x128 map, screen size would have to be in the
+    -- region of 3276x2457 in order to be too large.
+    error "Screen size too large for the map"
   end
+  self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
+    app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
+  self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
+  self.limit_to_visible_diamond = not _MAP_EDITOR
+  self.transparent_walls = false
 end
 
 function GameUI:draw(canvas) 
@@ -122,6 +121,8 @@ function GameUI:onKeyDown(code)
       self:debugMakeAdviserTalk()
     elseif key == "F12" then -- Show watch
       self:addWindow(UIWatch(self))
+    elseif key == "X" then -- Toggle wall transparency
+      self:makeWallsTransparent(not self.transparent_walls)
     end
   end
 end
@@ -402,6 +403,16 @@ function GameUI:scrollMap(dx, dy)
   
   self.screen_offset_x = floor(dx + 0.5)
   self.screen_offset_y = floor(dy + 0.5)
+end
+
+function GameUI:limitCamera(mode)
+  self.limit_to_visible_diamond = mode
+  self:scrollMap(0, 0)
+end
+
+function GameUI:makeWallsTransparent(mode)
+  self.transparent_walls = mode
+  self.app.map.th:setWallDrawFlags(mode and 4 or 0)
 end
 
 local tutorial_phases = {
