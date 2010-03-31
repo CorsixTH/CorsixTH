@@ -152,6 +152,10 @@ function Staff:fire()
     self:message_callback(true)
     self.message_callback = nil
   end
+  local enter = self.action_queue[1].is_entering
+  if enter and enter ~= true then
+    self.world:callForStaff(enter)
+  end
 end
 
 function Staff:onClick(ui, button)

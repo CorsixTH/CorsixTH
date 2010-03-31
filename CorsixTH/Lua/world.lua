@@ -898,15 +898,14 @@ function World:callForStaff(room, repair_object, urgent)
       end
     end
   else
-    local sound = room.room_info.call_sound
-    if sound and not room.sound_played then
-      self.ui:playAnnouncement(sound)
-      room.sound_played = true
-    end
     local missing = room:getMissingStaff(room:getRequiredStaffCriteria(), true)
-      
+    local sound = room.room_info.call_sound
     for attribute, count in pairs(missing) do
       self:selectNearestStaffForRoom(room, attribute, count)
+      if sound and not room.sound_played and count > 0 then
+        self.ui:playAnnouncement(sound)
+        room.sound_played = true
+      end
     end
   end
 end
