@@ -50,8 +50,12 @@ function TrainingRoom:roomFinished()
     end
   end
   -- Total staff occupancy: number of lecture chairs plus projector
-  self.room_info.maximum_staff = { Doctor = number + 1 }
+  self.maximum_staff = { Doctor = number + 1 }
   Room.roomFinished(self)
+end
+
+function TrainingRoom:getMaximumStaffCriteria()
+  return self.maximum_staff
 end
 
 function TrainingRoom:doStaffUseCycle(humanoid)

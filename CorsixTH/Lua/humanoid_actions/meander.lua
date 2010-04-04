@@ -23,7 +23,6 @@ local function meander_action_start(action, humanoid)
   if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
     if not humanoid:getRoom() then
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
-      humanoid:updateDynamicInfo()
     end
   end
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,

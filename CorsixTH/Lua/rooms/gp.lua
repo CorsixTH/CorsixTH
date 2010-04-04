@@ -135,7 +135,6 @@ function GPRoom:dealtWithPatient(patient)
         name = "seek_room", 
         room_type = patient.available_diagnosis_rooms[next_room],
         diagnosis_room = next_room,
-        next_to_try = math.random(1, #patient.available_diagnosis_rooms),
       }
     end
   else

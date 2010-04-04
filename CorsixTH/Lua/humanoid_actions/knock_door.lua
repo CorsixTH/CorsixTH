@@ -31,18 +31,14 @@ local function action_knock_door_start(action, humanoid)
   local anims = humanoid.door_anims
   local door = action.door
   action.must_happen = true
-  local flag_mirror = 1
-  if direction == "north" then
-    humanoid:setAnimation(anims.knock_north, 0)
-  elseif direction == "east" then
-    humanoid:setAnimation(anims.knock_east, 0)
-  elseif direction == "south" then
-    humanoid:setAnimation(anims.knock_east, flag_mirror)
-  elseif direction == "west" then
-    humanoid:setAnimation(anims.knock_north, flag_mirror)
+  local anim = anims.knock_north
+  local flag_mirror = (direction == "west" or direction == "south") and 1 or 0
+  if direction == "east" or direction == "south" then
+    anim = anims.knock_east
   end
+  humanoid:setAnimation(anim, flag_mirror)
   humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y)
-  humanoid:setTimer(10, action_knock_door_tick)
+  humanoid:setTimer(humanoid.world:getAnimLength(anim), action_knock_door_tick)
   humanoid.user_of = door
   door:setUser(humanoid)
   door.th:makeVisible()

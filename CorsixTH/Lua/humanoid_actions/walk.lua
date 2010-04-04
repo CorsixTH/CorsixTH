@@ -204,6 +204,23 @@ navigateDoor = function(humanoid, x1, y1, dir)
   door:updateDynamicInfo()
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
+  if class.is(humanoid, Staff) and is_entering_room 
+  and humanoid.humanoid_class ~= "Handyman" then
+    -- A member of staff is entering, but is maybe no longer needed 
+    -- in this room?
+    if not room:staffNeededInRoom(humanoid) then
+      humanoid:queueAction({name = "idle"},0)
+      humanoid:setTilePositionSpeed(x1, y1)
+      humanoid:setNextAction({name = "idle", count = 10},0)
+      local room = humanoid.world:getNearestRoomNeedingStaff(humanoid)
+      if room then
+        humanoid:queueAction(room:createEnterAction())
+      else
+        humanoid:queueAction{name = "meander"}
+      end
+      return
+    end
+  end
   if (door.user)
   or (door.reserved_for and door.reserved_for ~= humanoid)
   or (is_entering_room and not room:canHumanoidEnter(humanoid)) then

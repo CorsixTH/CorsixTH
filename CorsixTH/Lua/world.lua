@@ -888,7 +888,6 @@ function World:callForStaff(room, repair_object, urgent)
       handyman:queueAction{name = "meander"}
       handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
         :format(repair_object.object_type.name))
-      handyman:updateDynamicInfo()
     else
       -- Different messages depending on if any handyman has been hired yet or not.
       if self.hospitals[1]:hasStaffOfCategory("Handyman") then
@@ -932,7 +931,6 @@ function World:selectNearestStaffForRoom(room, attribute, count)
     count = count - 1
     cand.entity:setNextAction(room:createEnterAction(cand.entity))
     cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-    cand.entity:updateDynamicInfo()
     return cand.entity
   end
 end

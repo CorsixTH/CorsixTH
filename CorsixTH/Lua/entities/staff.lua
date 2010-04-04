@@ -363,7 +363,8 @@ function Staff:isIdle()
     end
     
     -- in special rooms, never
-    if room.room_info.id == "staff_room" or room.room_info.id == "research" then -- TODO training room
+    if room.room_info.id == "staff_room" or room.room_info.id == "research"
+    or room.room_info.id == "training" then
       return false
     end
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
@@ -406,6 +407,7 @@ end
 
 function Staff:setDynamicInfoText(text)
   self.dynamic_text = text
+  self:updateDynamicInfo()
 end
 
 function Staff:updateDynamicInfo()

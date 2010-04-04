@@ -26,6 +26,7 @@ local action_timer = permanent"action_idle_timer"( function(humanoid)
   local action = humanoid.action_queue[1]
   if action.after_use then
     action.after_use()
+    action.must_happen = true
   end
   humanoid:finishAction()
 end)

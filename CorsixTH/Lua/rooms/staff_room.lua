@@ -43,13 +43,22 @@ end
 function StaffRoom:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
   self:tryAdvanceQueue()
-
+  humanoid:setDynamicInfoText("")
   if class.is(humanoid, Staff) then
     -- Receptionists cannot enter, so we do not have to worry about them
     humanoid:setNextAction({name = "use_staffroom"})
     self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   else
     -- Other humanoids shouldn't be entering, so don't worry about them
+  end
+end
+
+function StaffRoom:testStaffCriteria(criteria, extra_humanoid)
+  -- The staff room always accept more tired staff members.
+  if extra_humanoid then
+    return true
+  else
+    return false
   end
 end
 

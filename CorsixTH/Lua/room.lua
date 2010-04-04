@@ -251,8 +251,7 @@ function Room:onHumanoidEnter(humanoid)
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
-    local criteria = self:getMaximumStaffCriteria()
-    if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, humanoid) then
+    if not self:staffNeededInRoom(humanoid) then
       self.humanoids[humanoid] = true
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction{name = "meander"}
@@ -276,12 +275,32 @@ function Room:onHumanoidEnter(humanoid)
   end
 end
 
+function Room:staffNeededInRoom(staff)
+  local criteria = self:getMaximumStaffCriteria()
+  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff) then
+    return false
+  end
+  return true
+end
+
 function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
   if self.approaching_staff then
-    self.approaching_staff[humanoid] = nil
+    for staff, _ in pairs(self.approaching_staff) do
+      if staff == humanoid then
+        self.approaching_staff[humanoid] = nil
+      elseif not self:staffNeededInRoom(staff) then
+        -- Another member of staff just entered, reroute others going to this room.
+        local room = staff.world:getNearestRoomNeedingStaff(staff)
+        if room then
+          staff:setNextAction(room:createEnterAction())
+        else
+          staff:setNextAction{name = "meander"}
+        end
+      end
+    end
   end
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
@@ -297,7 +316,6 @@ function Room:commandEnteringPatient(humanoid)
       if humanoid.humanoid_class ~= "Handyman" then
         humanoid:setMood("staff_wait", "deactivate")
         humanoid:setDynamicInfoText("")
-        humanoid:updateDynamicInfo()
       end
     end
   end
@@ -315,7 +333,6 @@ function Room:tryAdvanceQueue()
             if humanoid.humanoid_class ~= "Handyman" then
               humanoid:setMood("staff_wait", "activate")
               humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
-              humanoid:updateDynamicInfo()
             end
           end
         end
