@@ -105,8 +105,15 @@ function Audio:init(speech_file)
     -- Music file found (mp3/xmi).
     if ext == "MP3" or ext == "XMI" then  
       local info = musicFileTable(filename)
+      info.title = filename
       if ext == "MP3" then
-         info.filename_mp3 = music_dir .. file
+        if music_dir then
+          info.filename_mp3 = music_dir .. file
+        else
+          print("Warning: CorsixTH only supports xmi if audio_mp3"
+            .. " is not defined in the config file.")
+            music_array[filename:upper()] = nil
+        end
          -- Remove the xmi version of this file, if found.
          info.filename = nil
       elseif ext == "XMI" and not info.filename_mp3 then
@@ -114,7 +121,6 @@ function Audio:init(speech_file)
         info.filename = table.concat({"Sound", "Midi", file}, pathsep)
       end
       -- This title might be replaced later by the midi_txt.
-      info.title = filename
     elseif ext == "TXT" and (file:sub(1, 4):upper() == "MIDI" or
                              file:sub(1, 5):upper() == "NAMES") then
       -- If it Looks like the midi.txt or equiv, then remember it for later.
