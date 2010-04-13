@@ -292,11 +292,6 @@ function UITownMap:draw(canvas, x, y)
   self.city_font:draw(canvas, "-",           x + 515, y + 450)
 end
 
-function UIBottomPanel:dialogBankManager()
-  local dlg = UIBankManager(self.ui)
-  self.ui:addWindow(dlg)
-end
-
 function UITownMap:decreaseHeat()
   local h = self.ui.hospital
   local heat = math.floor(h.radiator_heat * 10 + 0.5)

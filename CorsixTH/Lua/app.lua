@@ -178,6 +178,9 @@ function App:init()
 
   local objects = self:loadLuaFolder"objects"
   self.objects = self:loadLuaFolder("objects/machines", nil, objects)
+  -- Doors are in their own folder to ensure that the swing doors (which 
+  -- depend on the door) are loaded after the door object.
+  self.objects = self:loadLuaFolder("objects/doors", nil, objects)
   for _, v in ipairs(self.objects) do
     Object.processTypeDefinition(v)
   end
@@ -186,7 +189,6 @@ function App:init()
   self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
   local diseases = self:loadLuaFolder"diseases"
   self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
-  
   -- Load world before UI
   dofile "world"
   

@@ -50,15 +50,18 @@ function SwingDoor:SwingDoor(world, object_type, x, y, direction, etc)
   self.old_flags = self.th:getFlag()
 end
 
---! This function makes the door mimic its master when it comes to hover cursor and what happens
--- when you click on it.
+--[[ Makes the door mimic its master when it comes to hover cursor and what happens
+when the player clicks on it.
+
+!param swing_door (Door) The master door to mimic.
+]]
 function SwingDoor:setAsSlave(swing_door)
   self.master = swing_door
   -- TODO: Once the surgery is implemented, if the operating table blows up the hover cursor
   -- for half the door (the slave) will remain.
 end
 
--- Three overrides so that the correct function is called if this is a slave door.
+-- Depending on if this is a master or slave different onClick functions are called.
 function SwingDoor:onClick(ui, button)
   if self.is_master then
     Door.onClick(self, ui, button)
@@ -67,6 +70,7 @@ function SwingDoor:onClick(ui, button)
   end
 end
 
+-- Depending on if this is a master or slave update the correct information.
 function SwingDoor:updateDynamicInfo()
   if self.is_master then
     Door.updateDynamicInfo(self)
@@ -75,10 +79,16 @@ function SwingDoor:updateDynamicInfo()
   end
 end
 
+-- Depending on if this is a master or slave show the correct information.
 function SwingDoor:getDynamicInfo()
   return self.master and self.master.dynamicInfo or self.dynamicInfo
 end
 
+--[[ Tell the associated slave door to start swinging.
+
+!param direction (string) The direction in which to swing. Allowed values are
+"in" and "out".
+]]
 function SwingDoor:swingSlave(direction)
   local flags = (self.direction == "east" or self.direction == "west") and 1 or 0
   local anim = 2034
@@ -88,6 +98,12 @@ function SwingDoor:swingSlave(direction)
   self:swing(anim, flags)
 end
 
+--[[ Makes the pair of swing doors start swinging in the correct fashion.
+
+!param direction (string) The direction in which to swing. Allowed values are
+"in" and "out".
+!param length (integer) How long the swing animation is for the entering/leaving entity.
+]]
 function SwingDoor:swingDoors(direction, length)
   -- First tell the slave door to start swinging
   self.slave:swingSlave(direction)
@@ -104,6 +120,11 @@ function SwingDoor:swingDoors(direction, length)
   self.ticks = true
 end
 
+--[[ The actual swinging is done in this class.
+
+!param anim (integer) The animation to use.
+!param flags (integer) Flags, if any, associated with the animation.
+]]
 function SwingDoor:swing(anim, flags)
   self:setAnimation(anim, flags)
   self.ticks = true

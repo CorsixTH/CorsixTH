@@ -63,9 +63,9 @@ CorsixTH/Lua/dialogs/information.lua -text
 CorsixTH/Lua/dialogs/main_menu.lua -text
 CorsixTH/Lua/dialogs/staff_management.lua -text
 CorsixTH/Lua/filesystem.lua -text
+CorsixTH/Lua/objects/doors/swing_door_left.lua -text
+CorsixTH/Lua/objects/doors/swing_door_right.lua -text
 CorsixTH/Lua/objects/helicopter.lua -text
-CorsixTH/Lua/objects/swing_door_left.lua -text
-CorsixTH/Lua/objects/swing_door_right.lua -text
 CorsixTH/Lua/persistance.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text
