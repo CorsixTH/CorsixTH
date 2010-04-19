@@ -1,5 +1,4 @@
---[[ Copyright (c) 2009 Haico "brainball" van Roeden
-Based on gut_rot.lua by Edvin "Lego3" Linge
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,13 +19,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local disease = {}
-disease.id = "the_squits"
-disease.name = _S.diseases.the_squits.name
-disease.cause = _S.diseases.the_squits.cause
-disease.symptoms = _S.diseases.the_squits.symptoms
-disease.cure = _S.diseases.the_squits.cure
-disease.cure_price = 400
-disease.emergency_sound = "emerg002.wav"
+disease.id = "sweaty_palms"
+disease.name = _S.diseases.sweaty_palms.name
+disease.cause = _S.diseases.sweaty_palms.cause
+disease.symptoms = _S.diseases.sweaty_palms.symptoms
+disease.cure = _S.diseases.sweaty_palms.cure
+disease.cure_price = 600
+disease.emergency_sound = "emerg017.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")
@@ -45,17 +44,16 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
-  "cardiogram",
-  "ward",
-  "blood_machine",
   "general_diag",
+  "cardiogram",
+  "blood_machine",
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.
 disease.treatment_rooms = {
-  "pharmacy",
+  "psych",
 }
-disease.diagnosis_difficulty = 0.4
 -- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
+disease.diagnosis_difficulty = 0.6
 
 return disease

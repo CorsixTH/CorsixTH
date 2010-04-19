@@ -47,7 +47,7 @@ end
 disease.diagnosis_rooms = {
   "cardiogram",
   "ultrascan",
-  "x_ray",
+  "blood_machine",
   "general_diag",
   "ward",
 }
