@@ -27,7 +27,7 @@ object.ticks = false
 object.build_cost = 6000
 object.build_preview_animation = 5068
 object.default_strength = 12
-object.crashed_animation = 3376 -- TODO: This is most likely wrong, but where is the correct one?
+object.crashed_animation = 3396
 local function copy_north_to_south(t)
   t.south = t.north
   return t

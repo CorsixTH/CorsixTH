@@ -40,11 +40,11 @@ LangString confirm_removal    ${LANG_GERMAN} "Sind Sie sicher, dass Sie $(^Name)
 LangString files_left         ${LANG_GERMAN} "Einige Dateien konnten nicht entfernt werden."
 
 LangString install_language   ${LANG_ITALIAN} "Italian"
-LangString original_text      ${LANG_ITALIAN} "In order to play the game an installation of the original game is required. Specify that location here."
-LangString original_folder    ${LANG_ITALIAN} "Theme Hospital Folder"
-LangString successful_removal ${LANG_ITALIAN} "$(^Name) was successfully removed from your computer."
-LangString confirm_removal    ${LANG_ITALIAN} "Are you sure you want to completely remove $(^Name) and all of its components?"
-LangString files_left         ${LANG_ITALIAN} "Some files could not be removed."
+LangString original_text      ${LANG_ITALIAN} "Per poter installare il gioco è necessario aver installato Theme Hospital Originale. Specifica qui la posizione della cartella."
+LangString original_folder    ${LANG_ITALIAN} "Cartella di Theme Hospital"
+LangString successful_removal ${LANG_ITALIAN} "$(^Name) è stato rimosso con successo dal pc."
+LangString confirm_removal    ${LANG_ITALIAN} "Sei sicuro di voler rimuovere  $(^Name) e tutti i suoi componenti?"
+LangString files_left         ${LANG_ITALIAN} "Non è stato possibile rimuovere alcuni file."
 
 LangString install_language   ${LANG_SPANISH} "Spanish"
 LangString original_text      ${LANG_SPANISH} "In order to play the game an installation of the original game is required. Specify that location here."
