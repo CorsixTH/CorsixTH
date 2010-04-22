@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "scanner"
+room.class = "ScannerRoom"
 room.name = _S.rooms_short.scanner
 room.tooltip = _S.tooltip.rooms.scanner
 room.build_cost = 12000
@@ -37,5 +38,156 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd002.wav"
+-- Handyman is called to "diagnosis machine", all other diagnosis rooms have
+-- their own, more specific handyman call though
+--room.handyman_call_sound = "maint011.wav"
+
+class "ScannerRoom" (Room)
+
+function ScannerRoom:ScannerRoom(...)
+  self:Room(...)
+end
+
+function ScannerRoom:commandEnteringStaff(staff)
+  self.staff_member = staff
+  staff:setNextAction{name = "meander"}
+  return Room.commandEnteringStaff(self, staff)
+end
+
+function ScannerRoom:commandEnteringPatient(patient)
+  local staff = self.staff_member
+  local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
+  local scanner, pat_x, pat_y = self.world:findObjectNear(patient, "scanner")
+  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
+  local do_change = (patient.humanoid_class == "Standard Male Patient") or
+    (patient.humanoid_class == "Standard Female Patient")
+  
+  local --[[persistable:scanner_shared_loop_callback]] function loop_callback()
+    if staff.action_queue[1].scanner_ready and patient.action_queue[1].scanner_ready then
+      staff:finishAction()
+      patient:finishAction()
+    end
+  end
+  
+  staff:walkTo(stf_x, stf_y)
+  staff:queueAction{
+    name = "idle",
+    direction = console.direction == "north" and "west" or "north",
+    loop_callback = loop_callback,
+    scanner_ready = true,
+  }
+  staff:queueAction{
+    name = "use_object",
+    object = console,
+  }
+  
+  if do_change then
+    patient:walkTo(sx, sy)
+    patient:queueAction{
+      name = "use_screen",
+      object = screen,
+    }
+    patient:queueAction{
+      name = "walk",
+      x = pat_x,
+      y = pat_y,
+    }
+  else
+    patient:walkTo(pat_x, pat_y)
+  end
+  patient:queueAction{
+    name = "idle",
+    direction = scanner.direction == "north" and "east" or "south",
+    loop_callback = loop_callback,
+    scanner_ready = true,
+  }
+  local length = math.random(10, 20) * (2 - staff.profile.skill)
+  patient:queueAction{
+    name = "use_object",
+    object = scanner,
+    loop_callback = --[[persistable:scanner_loop_callback]] function(action)
+      if length <= 0 then
+        action.prolonged_usage = false
+      end
+      length = length - 1
+    end,
+    after_use = --[[persistable:scanner_after_use]] function()
+      if not self.staff_member or patient.going_home then
+        -- If we aborted somehow, don't do anything here.
+        -- The patient already has orders to change back if necessary and leave.
+        return
+      end
+      self.staff_member:setNextAction{name = "meander"}
+      self:dealtWithPatient(patient)
+    end,
+  }
+  return Room.commandEnteringPatient(self, patient)
+end
+
+function ScannerRoom:onHumanoidLeave(humanoid)
+  if self.staff_member == humanoid then
+    self.staff_member = nil
+  end
+  Room.onHumanoidLeave(self, humanoid)
+end
+
+function ScannerRoom:makePatientLeave(patient)
+  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
+  
+  print("ScannerRoom:makePatientLeave")
+  
+  if (patient.humanoid_class == "Stripped Male Patient" or
+    patient.humanoid_class == "Stripped Female Patient") and
+    not patient.action_queue[1].is_leaving then
+    
+    patient:setNextAction{
+      name = "walk",
+      x = sx,
+      y = sy,
+      must_happen = true,
+      no_truncate = true,
+      is_leaving = true,
+    }
+    patient:queueAction{
+      name = "use_screen",
+      object = screen,
+      must_happen = true,
+      is_leaving = true,
+    }
+    local leave = self:createLeaveAction()
+    leave.must_happen = true
+    patient:queueAction(leave)
+  else
+    local leave = self:createLeaveAction()
+    leave.must_happen = true
+    patient:setNextAction(leave)
+  end
+end
+
+function ScannerRoom:dealtWithPatient(patient)
+  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
+  if patient.humanoid_class == "Stripped Male Patient" or
+    patient.humanoid_class == "Stripped Female Patient" then
+    
+    patient:setNextAction{
+      name = "walk",
+      x = sx,
+      y = sy,
+      must_happen = true,
+      no_truncate = true,
+      is_leaving = true,
+    }
+    patient:queueAction{
+      name = "use_screen",
+      object = screen,
+      must_happen = true,
+      is_leaving = true,
+      after_use = --[[persistable:scanner_exit]] function() Room.dealtWithPatient(self, patient) end,
+    }
+    patient:queueAction(self:createLeaveAction())
+  else
+    Room.dealtWithPatient(self, patient)
+  end
+end
 
 return room

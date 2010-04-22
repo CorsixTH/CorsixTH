@@ -377,7 +377,7 @@ function Room:onHumanoidLeave(humanoid)
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) then
           if not humanoid.action_queue[1].is_leaving then
-            humanoid:setNextAction(self:createLeaveAction())
+            self:makePatientLeave(humanoid)
             humanoid:queueAction(self:createEnterAction())
           end
         end
@@ -555,4 +555,12 @@ function Room:crashRoom()
   
   self.is_active = false
   -- TODO: This room should no longer be editable - when that feature is added
+end
+
+-- Tells the patient to leave the room. This can be overridden for special
+-- handling, e.g. if the patient needs to change before leaving the room.
+function Room:makePatientLeave(patient)
+  local leave = self:createLeaveAction()
+  leave.must_happen = true
+  patient:setNextAction(leave)
 end

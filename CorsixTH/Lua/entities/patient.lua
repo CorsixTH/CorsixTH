@@ -174,6 +174,10 @@ function Patient:goHome(cured)
   end
   
   self.going_home = true
+  local room = self:getRoom()
+  if room then
+    room:makePatientLeave(self)
+  end
   self:setHospital(nil)
 end
 

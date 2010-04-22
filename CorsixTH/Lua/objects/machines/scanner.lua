@@ -28,23 +28,61 @@ object.build_cost = 5000
 object.build_preview_animation = 920
 object.default_strength = 12
 object.crashed_animation = 3316
-object.idle_animations = {
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+
+object.idle_animations = copy_north_to_south {
   north = 1398,
-  south = 1398,
 }
-object.usage_animations = { -- Very incomplete!
+object.usage_animations = copy_north_to_south { -- still incomplete
   north = {
-    in_use = {
+    begin_use = { -- goes down
+      ["Transparent Male Patient"] = 878,
+      ["Chewbacca Patient"] = 1180,
+      ["Stripped Male Patient"] = 1406,
+      ["Stripped Female Patient"] = 1446,
+      ["Elvis Patient"] = 4916,
+      ["Transparent Female Patient"] = 4930,
+      ["Invisible Patient"] = 4946,
+      ["Alternate Male Patient"] = 4962,
+      ["Slack Male Patient"] = 4978,
+      -- additional female sprites 5158+
+    },
+    in_use = { -- stays down
+      ["Transparent Male Patient"] = 886,
+      ["Chewbacca Patient"] = 1188,
+      ["Stripped Male Patient"] = 1410,
+      ["Stripped Female Patient"] = 1450,
+      ["Elvis Patient"] = 4924,
+      ["Transparent Female Patient"] = 4938,
+      ["Invisible Patient"] = 4954,
+      ["Alternate Male Patient"] = 4970,
+      ["Slack Male Patient"] = 4986,
       ["Handyman"] = 564,
+    },
+    finish_use = { -- goes up
+      ["Transparent Male Patient"] = 882,
+      ["Chewbacca Patient"] = 1184,
+      ["Stripped Male Patient"] = 1414,
+      ["Stripped Female Patient"] = 1454,
+      ["Elvis Patient"] = 4920,
+      ["Transparent Female Patient"] = 4934,
+      ["Invisible Patient"] = 4950,
+      ["Alternate Male Patient"] = 4966,
+      ["Slack Male Patient"] = 4982,
     },
   },
 }
 object.orientations = {
   north = {
+    use_position = {0, 0},
     footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0},  {0, 0, only_passable = true} },
     render_attach_position = {0, -1},
   },
   east = {
+    use_position = {0, 0},
     footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
     render_attach_position = {-1, 0},
   },

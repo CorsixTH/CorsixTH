@@ -40,7 +40,7 @@ end
 disease.diagnosis_rooms = {
   "psych",
   "x_ray",
-  -- TODO
+  "scanner",
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.

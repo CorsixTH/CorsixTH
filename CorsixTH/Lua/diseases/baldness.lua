@@ -43,7 +43,7 @@ end
 disease.diagnosis_rooms = {
   "x_ray",
   "blood_machine",
-  -- TODO
+  "scanner",
 }
 
 -- Treatment rooms are the rooms which must be visited, in the given order, to
