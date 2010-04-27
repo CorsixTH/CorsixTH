@@ -16,13 +16,14 @@ theme_hospital_install = [[F:\ThemeHospital\hospital]]
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
---  English   / en / eng
---  French    / fr / fre / fra
---  German    / de / ger / deu
---  Italian   / it / ita
---  Norwegian / nb / nob
---  Spanish   / es / spa
---  Swedish   / sv / swe
+--  English     / en / eng
+--  French      / fr / fre / fra
+--  German      / de / ger / deu
+--  Italian     / it / ita
+--  Norwegian   / nb / nob
+--  Spanish     / es / spa
+--  Swedish     / sv / swe
+--  Portuguese  / pt / por
 language = [[En]]
 -------------------------------------------------------------------------------
 

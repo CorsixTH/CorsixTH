@@ -98,6 +98,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "Swedish"
 !insertmacro MUI_LANGUAGE "Norwegian"
+!insertmacro MUI_LANGUAGE "Portuguese"
 
 ; MUI end ------
 
