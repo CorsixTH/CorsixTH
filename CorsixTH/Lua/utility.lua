@@ -67,7 +67,8 @@ function values(root_table, wildcard)
 end
 
 -- Helper function to print the contents of a table. Child tables are printed recursively.
-function print_table(obj, level)
+-- Call without specifying level, only obj and (if wished) max_level.
+function print_table(obj, max_level, level)
   assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
   level = level or 0
   local spacer = ""
@@ -76,8 +77,8 @@ function print_table(obj, level)
   end
   for k, v in pairs(obj) do
     print(spacer .. k, v)
-    if type(v) == "table" then
-      print_table(v, level + 1)
+    if type(v) == "table" and (not max_level or max_level > level) then
+      print_table(v, max_level, level + 1)
     end
   end
 end

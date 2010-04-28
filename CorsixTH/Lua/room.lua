@@ -289,15 +289,23 @@ function Room:commandEnteringStaff(humanoid)
   humanoid:setDynamicInfoText("")
   if self.approaching_staff then
     for staff, _ in pairs(self.approaching_staff) do
-      if staff == humanoid then
-        self.approaching_staff[humanoid] = nil
-      elseif not self:staffNeededInRoom(staff) then
-        -- Another member of staff just entered, reroute others going to this room.
-        local room = staff.world:getNearestRoomNeedingStaff(staff)
+      self.approaching_staff[humanoid] = nil
+      -- Another member of staff just entered, reroute others going to this room.
+      if staff ~= humanoid and not self:staffNeededInRoom(staff) then
+        local room = staff:getRoom()
         if room then
-          staff:setNextAction(room:createEnterAction())
+          -- just leave the room, then meander
+          -- could do with a better scheme... however don't just meander where you are
+          -- because that most likely breaks the room
+          staff:setNextAction(room:createLeaveAction())
+          staff:queueAction{name = "meander"}
         else
-          staff:setNextAction{name = "meander"}
+          room = staff.world:getNearestRoomNeedingStaff(staff)
+          if room then
+            staff:setNextAction(room:createEnterAction())
+          else
+            staff:setNextAction{name = "meander"}
+          end
         end
       end
     end

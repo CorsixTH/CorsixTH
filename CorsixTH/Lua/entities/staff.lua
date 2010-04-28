@@ -152,8 +152,10 @@ function Staff:fire()
     self:message_callback(true)
     self.message_callback = nil
   end
+  -- Check if the staff was being called to a room and look for a replacement
   local enter = self.action_queue[1].is_entering
   if enter and enter ~= true then
+    enter.approaching_staff[self] = nil
     self.world:callForStaff(enter)
   end
 end
@@ -424,4 +426,19 @@ function Staff:updateDynamicInfo()
   if self.hospital then
     self:setDynamicInfo('dividers', {self.hospital.policies["goto_staffroom"]})
   end
+end
+
+function Staff:onDestroy()
+  -- Remove any message related to the staff member.
+  if self.message_callback then
+    self:message_callback(true)
+    self.message_callback = nil
+  end
+  -- Check if the staff was being called to a room and look for a replacement
+  local enter = self.action_queue[1].is_entering
+  if enter and enter ~= true then
+    enter.approaching_staff[self] = nil
+    self.world:callForStaff(enter)
+  end
+  Humanoid.onDestroy(self)
 end

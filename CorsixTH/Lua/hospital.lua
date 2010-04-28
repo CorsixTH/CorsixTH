@@ -154,7 +154,7 @@ function Hospital:createEmergency()
     local random_disease = self.discovered_diseases[math.random(1, #self.discovered_diseases)]
     local victims = math.random(4,6) -- TODO: Should depend on disease (e.g. operating theatre is harder)
     local emergency = {
-      disease = self.world.available_diseases[random_disease],
+      disease = TheApp.diseases[random_disease],
       victims = victims,
       bonus = 1000 * victims,
       killed_emergency_patients = 0,

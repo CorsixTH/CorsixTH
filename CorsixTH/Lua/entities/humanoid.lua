@@ -164,7 +164,7 @@ end
 function Humanoid:onClick(ui, button)
   if TheApp.config.debug then
     -- for debugging
-    local name = "clicked humanoid"
+    local name = "humanoid"
     if self.profile then
       name = self.profile.name
     end

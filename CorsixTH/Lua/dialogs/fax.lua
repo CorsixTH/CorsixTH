@@ -207,26 +207,32 @@ function UIFax:validate()
   elseif 0.0006422 < x and x < 0.0006423 then
     -- Bloaty head patient cheat
     -- Anyone with a 'large' head should be able to spot the required code
-    print("Bloaty Head cheat activated!")
+    local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "bloaty_head"
     self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
-    local diseases = self.ui.app.world.available_diseases
-    diseases[1] = diseases.bloaty_head
-    for i = #diseases, 2, -1 do
-      diseases[diseases[i].id] = nil
-      diseases[i] = nil
+    if undo then
+      print("Bloaty Head cheat deactivated.")
+    else
+      print("Bloaty Head cheat activated!")
+      local disease = self.ui.app.world.available_diseases.bloaty_head
+      local diseases = {}
+      diseases[1] = disease
+      diseases[disease.id] = disease
+      self.ui.app.world.available_diseases = diseases
     end
-    diseases.bloaty_head = diseases[1]
   elseif 0.006602 < x and x < 0.006603 then
-    -- Hairyitis cheat
-    print("Hairyitis cheat activated!")
+    local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "hairyitis"
     self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
-    local diseases = self.ui.app.world.available_diseases
-    diseases[1] = diseases.hairyitis
-    for i = #diseases, 2, -1 do
-      diseases[diseases[i].id] = nil
-      diseases[i] = nil
+    if undo then
+      print("Hairyitis cheat deactivated.")
+    else
+      -- Hairyitis cheat
+      print("Hairyitis cheat activated!")
+      local disease = self.ui.app.world.available_diseases.hairyitis
+      local diseases = {}
+      diseases[1] = disease
+      diseases[disease.id] = disease
+      self.ui.app.world.available_diseases = diseases
     end
-    diseases.bloaty_head = diseases[1]
   elseif 27868.3 < x and x < 27868.4 then
     -- Roujin's challenge cheat
     local hosp = self.ui.hospital
