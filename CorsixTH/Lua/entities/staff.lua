@@ -187,6 +187,12 @@ function Staff:setProfile(profile)
   if self.humanoid_class ~= "Receptionist" then
     self.attributes["fatigue"] = 0
   end
+  -- The handyman has three additional attributes
+  if self.humanoid_class == "Handyman" then
+    self.attributes["cleaning"] = 0.333
+    self.attributes["watering"] = 0.333
+    self.attributes["repairing"] = 0.333
+  end
   self:setLayer(5, profile.layer5)
   self:updateStaffTitle()
 end

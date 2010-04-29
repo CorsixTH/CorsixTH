@@ -278,7 +278,7 @@ local action_queue_interrupt = permanent"action_queue_interrupt"( function(actio
 end)
 
 local function action_queue_start(action, humanoid)
-  local x, y, queue = action.x, action.y, action.queue
+  local queue = action.queue
   
   if action.done_init then
     return

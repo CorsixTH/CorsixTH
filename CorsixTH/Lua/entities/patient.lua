@@ -92,7 +92,7 @@ function Patient:setHospital(hospital)
   Humanoid.setHospital(self, hospital)
   if hospital then
     if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-      self:setNextAction{name = "seek_reception", hospital = hospital}
+      self:setNextAction{name = "seek_reception"}
     end
     hospital:addPatient(self)
   end

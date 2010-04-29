@@ -38,6 +38,10 @@ local action_walk_interrupt = permanent"action_walk_interrupt"( function(action,
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
+  -- Unreserve any plant that was reserved if this is a handyman
+  if action.is_job then
+    action.is_job.reserved_for = nil
+  end
   -- If the staff was heading for a room, remove that staff from the approaching list.
   if action.is_entering and action.is_entering ~= true then
     action.is_entering.approaching_staff[humanoid] = nil

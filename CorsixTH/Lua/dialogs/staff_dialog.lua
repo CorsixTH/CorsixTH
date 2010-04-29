@@ -100,9 +100,31 @@ function UIStaff:draw(canvas, x_, y_)
 
   font:draw(canvas, profile.name, x + 42, y + 28) -- Name
   if profile.humanoid_class == "Handyman" then
-      font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
+    font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
+    -- The concentration areas
+    local cleaning_width, watering_width, repairing_width = 0, 0, 0
+    if self.staff.attributes["cleaning"] then -- Backwards compatibility
+      cleaning_width = math_floor(self.staff.attributes["cleaning"] * 40 + 0.5)
+      watering_width = math_floor(self.staff.attributes["watering"] * 40 + 0.5)
+      repairing_width = math_floor(self.staff.attributes["repairing"] * 40 + 0.5)
+      if cleaning_width ~= 0 then
+        for dx = 0, cleaning_width - 1 do
+          self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
+        end
+      end
+      if watering_width ~= 0 then
+        for dx = 0, watering_width - 1 do
+          self.panel_sprites:draw(canvas, 351, x + 99 + dx, y + 200)
+        end
+      end
+      if repairing_width ~= 0 then
+        for dx = 0, repairing_width - 1 do
+          self.panel_sprites:draw(canvas, 351, x + 155 + dx, y + 200)
+        end
+      end
+    end
   else
-      font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
+    font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
   
   if self.staff.attributes["happiness"] then
@@ -191,14 +213,60 @@ function UIStaff:fireStaff()
   self.staff:fire()
 end
 
+local attributes = {"cleaning", "watering", "repairing"}
+
+function UIStaff:changeHandymanAttributes(increased)
+  self.staff:changeAttribute(increased, 0.1)
+  local extra_decrease = 0
+  for no, attr in ipairs(attributes) do
+    if attr ~= increased then
+      if self.staff.attributes[attr] < 0.05 then
+        extra_decrease = 0.05 - self.staff.attributes[attr]
+      end
+      self.staff:changeAttribute(attr, -0.05)
+    end
+  end
+  if extra_decrease ~= 0 then
+    for no, attr in ipairs(attributes) do
+    if attr ~= increased then
+      self.staff:changeAttribute(attr, -extra_decrease)
+    end
+  end
+  end
+end
+
 function UIStaff:doMoreCleaning()
-  -- TODO
+  if self.staff.attributes["cleaning"] then
+    if self.staff.attributes["cleaning"] < 0.9 then
+      self:changeHandymanAttributes("cleaning")
+    else
+      self.staff.attributes["cleaning"] = 1.0
+      self.staff.attributes["watering"] = 0.0
+      self.staff.attributes["repairing"] = 0.0
+    end
+  end
 end
 
 function UIStaff:doMoreWatering()
-  -- TODO
+  if self.staff.attributes["watering"] then
+    if self.staff.attributes["watering"] < 0.9 then
+      self:changeHandymanAttributes("watering")
+    else
+      self.staff.attributes["cleaning"] = 0.0
+      self.staff.attributes["watering"] = 1.0
+      self.staff.attributes["repairing"] = 0.0
+    end
+  end
 end
 
 function UIStaff:doMoreRepairing()
-  -- TODO
+  if self.staff.attributes["repairing"] then
+    if self.staff.attributes["repairing"] < 0.9 then
+      self:changeHandymanAttributes("repairing")
+    else
+      self.staff.attributes["cleaning"] = 0.0
+      self.staff.attributes["watering"] = 0.0
+      self.staff.attributes["repairing"] = 1.0
+    end
+  end
 end

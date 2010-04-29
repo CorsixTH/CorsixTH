@@ -105,6 +105,7 @@ function Hospital:getPlayerIndex()
   return 1
 end
 
+-- Returns the heliport x and y coordinates or nil if none exist.
 function Hospital:getHeliportPosition()
   local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
   -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
@@ -115,6 +116,7 @@ function Hospital:getHeliportPosition()
   end
 end
 
+-- Returns the tile on which patients should spawn when getting out of the helicopter.
 function Hospital:getHeliportSpawnPosition()
   local x, y = self:getHeliportPosition()
   if x and y then
@@ -131,6 +133,7 @@ function Hospital:isInHospital(x, y)
   return self.world.map.th:getCellFlags(x, y).hospital
 end
 
+-- Called at the end of each month.
 function Hospital:onEndMonth()
   -- Spend wages
   local wages = 0
@@ -148,6 +151,8 @@ function Hospital:onEndMonth()
   end
 end
 
+-- Creates complete emergency with patients, what disease they have, what's needed
+-- to cure them and the fax.
 function Hospital:createEmergency()
   local created_one = false
   if self:getHeliportSpawnPosition() and #self.discovered_diseases > 0 then
@@ -199,6 +204,7 @@ function Hospital:createEmergency()
   return created_one
 end
 
+-- Called when the timer runs out during an emergency or when all emergency patients are cured or dead.
 function Hospital:resolveEmergency()
   local rescued_patients = self.emergency.cured_emergency_patients
   for i, patient in ipairs(self.emergency_patients) do
@@ -254,16 +260,32 @@ function Hospital:getDebugPatient()
   return self.debug_patients[debug_n]
 end
 
+--[[ Lowers the player's money by the given amount and logs the transaction.
+
+!param amount (integer) The (positive) amount to spend.
+!param reason (string) A string that shows what happened. Should be one of the strings
+in _S.transactions.
+]]
 function Hospital:spendMoney(amount, reason)
   self.balance = self.balance - amount
   self:logTransaction{spend = amount, desc = reason}
 end
 
+--[[ Increases the player's money by the given amount and logs the transaction.
+
+!param amount (integer) The (positive) amount to receive.
+!param reason (string) A string that tells what happened. Should be one of the strings
+in _S.transactions.
+]]
 function Hospital:receiveMoney(amount, reason)
   self.balance = self.balance + amount
   self:logTransaction{receive = amount, desc = reason}
 end
 
+--[[ Determines how much the player should receive after a patient is treated in a room.
+
+!param patient (Patient) The patient that just got treated.
+]]
 function Hospital:receiveMoneyForTreatment(patient)
   local disease_id
   local reason

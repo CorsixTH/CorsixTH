@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require "TH"
+
 local orient_mirror = {
   north = "west",
   west = "north",
@@ -278,9 +280,18 @@ local function action_use_object_start(action, humanoid)
   if object.object_type.walk_in_to_use then
     action.do_walk = true
   else
-    object:setUser(humanoid)
+    -- When watering a plant the plant should still be visible
+    if not action.watering_plant then
+      object:setUser(humanoid)
+    else
+      object.reserved_for = nil
+    end
     humanoid.user_of = object
     init_split_anims(object, humanoid)
+  end
+  if action.watering_plant then
+    -- Tell the plant to start restoring itself
+    object:restoreToFullHealth()
   end
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end

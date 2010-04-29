@@ -446,6 +446,8 @@ function World:onTick()
         if entity.ticks and class.is(entity, Humanoid) then
           self.current_tick_entity = entity
           entity:tickDay()
+        elseif class.is(entity, Plant) then
+          entity:tickDay()
         end
       end
       self.current_tick_entity = nil
@@ -908,22 +910,38 @@ function World:callForStaff(room, repair_object, urgent)
     end
   end
 end
+-- Finds staff with the given attributes within 'distance' from the point (x,y).
+-- If 'mode' is set to one of the handyman's three concentration areas those
+-- will be accounted for when doing the sort. 
+function World:getSuitableStaffCandidates(x, y, attribute, distance, mode)
+  local candidates = {}
+  if not distance then
+    distance = 2^30
+  end
+  for _, e in ipairs(self.entities) do
+    if class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
+      local dist = self:getPathDistance(e.tile_x, e.tile_y, x, y)
+      if dist and dist < distance then
+        if mode and e.attributes[mode] then
+          dist = dist + (1 - e.attributes[mode]) * 10
+        end
+        candidates[#candidates + 1] = {
+          entity = e,
+          dist = dist,
+        }
+      end
+    end
+  end
+
+  table.sort(candidates, function (c1, c2) return c1.dist < c2.dist end)
+  return candidates
+end
 
 -- Sends nearest staff members with the required attributes to the given room.
 -- TODO take into account the tiredness of the staff etc. when deciding who to pick?
 function World:selectNearestStaffForRoom(room, attribute, count)
   local door_x, door_y = room:getEntranceXY()
-  local candidates = {}
-  for _, e in ipairs(self.entities) do
-    if class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
-      candidates[#candidates + 1] = {
-        entity = e,
-        dist = self:getPathDistance(e.tile_x, e.tile_y, door_x, door_y),
-      }
-    end
-  end
-
-  table.sort(candidates, function (c1, c2) return c1.dist < c2.dist end)
+  local candidates = self:getSuitableStaffCandidates(door_x, door_y, attribute)
   for _, cand in ipairs(candidates) do
     if count <= 0 then
       break
