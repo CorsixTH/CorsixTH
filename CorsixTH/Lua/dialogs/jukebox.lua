@@ -42,15 +42,15 @@ function UIJukebox:UIJukebox(app)
     self:addPanel(390, x, 0)
   end
   self:addPanel(391, self.width - 61, 0)
-  self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close)
+  self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close):setTooltip(_S.tooltip.jukebox.close)
   
   self.play_btn =
-  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause):setSound("selectx.wav")
+  self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.play)
   self:updatePlayButton()
-  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio):setSound("selectx.wav")
-  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav")
-  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav")
-  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav")
+  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.rewind)
+  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.fast_forward)
+  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.stop)
+  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.loop)
   
   -- Track list
   self.track_buttons = {}
@@ -76,6 +76,14 @@ function UIJukebox:UIJukebox(app)
     self:addPanel(407, x, y)
   end
   self:addPanel(408, self.width - 61, y)
+end
+
+function UIJukebox:getTooltipAt(x, y)
+  -- current song title
+  if x >= 17 and x <= 211 and y >= 17 and y <= 45 then
+    return { text = _S.tooltip.jukebox.current_title, x = self.x + 114, y = self.y + 17 }
+  end
+  return Window.getTooltipAt(self, x, y)
 end
 
 -- makes the play button consistent with the current status of the background music
