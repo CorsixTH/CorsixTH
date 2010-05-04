@@ -50,24 +50,24 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.default_button_sound = "selectx.wav"
   
   -- Close button
-  self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close)
+  self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close):setTooltip(_S.tooltip.staff_list.close)
   
   -- Top categories
   local --[[persistable:staff_management_category]] function category(name, state, btn)
     self:setCategory(name)
   end
   self.categories = {
-    self:addPanel(0, 53, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Doctor"),
-    self:addPanel(0, 119, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Nurse"),
-    self:addPanel(0, 185, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Handyman"),
-    self:addPanel(0, 251, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Receptionist"),
+    self:addPanel(0, 53, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Doctor"):setTooltip(_S.tooltip.staff_list.doctors),
+    self:addPanel(0, 119, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Nurse"):setTooltip(_S.tooltip.staff_list.nurses),
+    self:addPanel(0, 185, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Handyman"):setTooltip(_S.tooltip.staff_list.handymen),
+    self:addPanel(0, 251, 15):makeToggleButton(0, 0, 58, 58, 1, category, "Receptionist"):setTooltip(_S.tooltip.staff_list.receptionists),
   }
   -- Other buttons
-  self:addPanel(0, 12, 86):makeButton(0, 0, 31, 74, 2, self.scrollUp)
-  self:addPanel(0, 12, 274):makeButton(0, 0, 31, 74, 3, self.scrollDown)
-  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setSound"cashreg.wav"
-  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setSound"cashreg.wav"
-  self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire)
+  self:addPanel(0, 12, 86):makeButton(0, 0, 31, 74, 2, self.scrollUp):setTooltip(_S.tooltip.staff_list.prev_person)
+  self:addPanel(0, 12, 274):makeButton(0, 0, 31, 74, 3, self.scrollDown):setTooltip(_S.tooltip.staff_list.next_person)
+  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus):setSound"cashreg.wav"
+  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise):setSound"cashreg.wav"
+  self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire):setTooltip(_S.tooltip.staff_list.sack)
   
   -- "Arrow" to show title of doctors
   self.arrow = self:addPanel(12, 259, 397)
@@ -81,15 +81,15 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   -- Doctors' skills or progress towards them
   self.progress_surgeon = self:addPanel(17, 188, 408)
   self.progress_surgeon.visible = false
-  self.qualified_surgeon = self:addPanel(20, 188, 408)
+  self.qualified_surgeon = self:addPanel(20, 188, 408):setTooltip(_S.tooltip.staff_list.surgeon)
   self.qualified_surgeon.visible = false
   self.progress_psychiatrist = self:addPanel(18, 228, 408)
   self.progress_psychiatrist.visible = false
-  self.qualified_psychiatrist = self:addPanel(21, 228, 408)
+  self.qualified_psychiatrist = self:addPanel(21, 228, 408):setTooltip(_S.tooltip.staff_list.psychiatrist)
   self.qualified_psychiatrist.visible = false
   self.progress_researcher = self:addPanel(19, 268, 408)
   self.progress_researcher.visible = false
-  self.qualified_researcher = self:addPanel(22, 268, 408)
+  self.qualified_researcher = self:addPanel(22, 268, 408):setTooltip(_S.tooltip.staff_list.researcher)
   self.qualified_researcher.visible = false
   
   -- Blankers for each row
@@ -160,6 +160,64 @@ function UIStaffManagement:setCategory(name)
   else
     self.scroll_dot.visible = false
   end
+end
+
+function UIStaffManagement:getTooltipAt(x, y)
+  -- average happiness
+  if x >= 321 and x <= 420 and y >= 51 and y <= 74 then
+    return { text = _S.tooltip.staff_list.happiness, x = self.x + 370, y = self.y + 51 }
+  end
+  -- average tiredness
+  if x >= 426 and x <= 525 and y >= 51 and y <= 74 then
+    return { text = _S.tooltip.staff_list.tiredness, x = self.x + 475, y = self.y + 51 }
+  end
+  -- average ability
+  if x >= 530 and x <= 628 and y >= 51 and y <= 74 then
+    return { text = _S.tooltip.staff_list.ability, x = self.x + 579, y = self.y + 51 }
+  end
+  -- attention to detail
+  if x >= 146 and x <= 225 and y >= 367 and y <= 406 then
+    return { text = _S.tooltip.staff_list.detail, x = self.x + 185, y = self.y + 367 }
+  end
+  -- staff view
+  if x >= 495 and x <= 582 and y >= 371 and y <= 457 then
+    return { text = _S.tooltip.staff_list.view_staff, x = self.x + 539, y = self.y + 371 }
+  end
+  
+  -- per line
+  for line_num = 1, 10 do
+    if self.row_blankers[line_num].visible then break end
+    -- salary
+    if x >= 193 and x <= 312 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
+      return { text = _S.tooltip.staff_list.salary, x = self.x + 252, y = self.y + 84 + 27 * (line_num - 1) }
+    end
+    -- happiness
+    if x >= 321 and x <= 420 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
+      return { text = _S.tooltip.staff_list.happiness_2, x = self.x + 370, y = self.y + 84 + 27 * (line_num - 1) }
+    end
+    -- tiredness
+    if x >= 425 and x <= 524 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
+      return { text = _S.tooltip.staff_list.tiredness_2, x = self.x + 475, y = self.y + 84 + 27 * (line_num - 1) }
+    end
+    -- ability
+    if x >= 529 and x <= 627 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
+      return { text = _S.tooltip.staff_list.ability_2, x = self.x + 579, y = self.y + 84 + 27 * (line_num - 1) }
+    end
+  end
+  
+  -- doctor exclusive
+  if self.category == "Doctor" then
+    -- seniority
+    if x >= 230 and x <= 309 and y >= 367 and y <= 406 then
+      return { text = _S.tooltip.staff_list.doctor_seniority, x = self.x + 270, y = self.y + 367 }
+    end
+    -- skills
+    if x >= 146 and x <= 185 and y >= 406 and y <= 459 then
+      return { text = _S.tooltip.staff_list.skills, x = self.x + 165, y = self.y + 406 }
+    end
+  end
+  
+  return Window.getTooltipAt(self, x, y)
 end
 
 function UIStaffManagement:draw(canvas, x, y)
@@ -298,6 +356,7 @@ function UIStaffManagement:draw(canvas, x, y)
           self.qualified_surgeon.visible = true
         else
           self.progress_surgeon.visible = true
+          self.progress_surgeon:setTooltip(_S.tooltip.staff_list.surgeon_train:format(math_floor(profile.is_surgeon * 100)))
           local progress = math_floor(profile.is_surgeon * 23 + 0.5)
           for dx = 0, progress - 1 do
             self.panel_sprites:draw(canvas, 13, x + 196 + dx, y + 447)
@@ -309,6 +368,7 @@ function UIStaffManagement:draw(canvas, x, y)
           self.qualified_psychiatrist.visible = true
         else
           self.progress_psychiatrist.visible = true
+          self.progress_psychiatrist:setTooltip(_S.tooltip.staff_list.psychiatrist_train:format(math_floor(profile.is_psychiatrist * 100)))
           local progress = math_floor(profile.is_psychiatrist * 23 + 0.5)
           for dx = 0, progress - 1 do
             self.panel_sprites:draw(canvas, 13, x + 236 + dx, y + 447)
@@ -320,6 +380,7 @@ function UIStaffManagement:draw(canvas, x, y)
           self.qualified_researcher.visible = true
         else
           self.progress_researcher.visible = true
+          self.progress_researcher:setTooltip(_S.tooltip.staff_list.researcher_train:format(math_floor(profile.is_researcher * 100)))
           local progress = math_floor(profile.is_researcher * 23 + 0.5)
           for dx = 0, progress - 1 do
             self.panel_sprites:draw(canvas, 13, x + 276 + dx, y + 447)
