@@ -57,21 +57,45 @@ function UIBankManager:UIBankManager(ui)
   -- Buttons
   -- The close button needs to be movable
   self.close_panel = self:addPanel(0, 607, 448)
-  self.close_button = self.close_panel:makeButton(0, 0, 26, 26, 4, self.close)
+  self.close_button = self.close_panel:makeButton(0, 0, 26, 26, 4, self.close):setTooltip(_S.tooltip.bank_manager.close)
   
-  self:addPanel(0, 192, 265):makeButton(0, 0, 21, 21, 6, self.increaseLoan)
-  self:addPanel(0, 50, 265):makeButton(0, 0, 21, 21, 5, self.decreaseLoan)
+  self:addPanel(0, 192, 265):makeButton(0, 0, 21, 21, 6, self.increaseLoan):setTooltip(_S.tooltip.bank_manager.borrow_5000)
+  self:addPanel(0, 50, 265):makeButton(0, 0, 21, 21, 5, self.decreaseLoan):setTooltip(_S.tooltip.bank_manager.repay_5000)
   
-  self:addPanel(0, 547, 157):makeButton(0, 0, 42, 23, 3, self.showGraph1)
-  self:addPanel(0, 547, 217):makeButton(0, 0, 42, 23, 3, self.showGraph2)
-  self.third_graph_button = self:addPanel(0, 547, 277)
-    :makeButton(0, 0, 42, 23, 3, self.showGraph3)
+  self.graph_buttons = {
+    self:addPanel(0, 547, 157):makeButton(0, 0, 42, 23, 3, self.showGraph1):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[1])),
+    self:addPanel(0, 547, 217):makeButton(0, 0, 42, 23, 3, self.showGraph2):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[2])),
+    self:addPanel(0, 547, 277):makeButton(0, 0, 42, 23, 3, self.showGraph3):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[3]))
+  }
   
   self.graph = self:addPanel(1, 417, 150)
+  
   self.graph.visible = false
+  self.graph.enabled = false
   self.return_from_graph_button = self:addPanel(0, 547, 277)
-  self.return_from_graph_button:makeButton(0, 0, 42, 23, 2, self.returnFromGraph)
+  self.return_from_graph_button:makeButton(0, 0, 42, 23, 2, self.returnFromGraph):setTooltip(_S.tooltip.bank_manager.graph_return)
   self.return_from_graph_button.visible = false
+  self.return_from_graph_button.enabled = false
+  
+  self:makeTooltip(_S.tooltip.bank_manager.hospital_value,   60, 105, 203, 157)
+  self:makeTooltip(_S.tooltip.bank_manager.balance,          60, 170, 203, 222)
+  self:makeTooltip(_S.tooltip.bank_manager.current_loan,     60, 235, 203, 287)
+  self:makeTooltip(_S.tooltip.bank_manager.interest_payment, 60, 300, 203, 352)
+  
+  local --[[persistable:insurance_tooltip_template]] function insurance_tooltip(i)
+    return --[[persistable:insurance_tooltip]] function()
+      if not self.graph.visible then
+        return _S.tooltip.bank_manager.insurance_owed:format(self.ui.hospital.insurance[i])
+      end
+    end
+  end
+  
+  self:makeDynamicTooltip(insurance_tooltip(1), 430, 128, 589, 180)
+  self:makeDynamicTooltip(insurance_tooltip(2), 430, 188, 589, 240)
+  self:makeDynamicTooltip(insurance_tooltip(3), 430, 248, 589, 300)
+
+  self:makeTooltip(_S.tooltip.bank_manager.inflation_rate, 430, 308, 589, 331)
+  self:makeTooltip(_S.tooltip.bank_manager.interest_rate, 430, 337, 589, 360)
   
   -- TODO: The bank manager's eyes, eyebrows and mouth
   -- TODO: Add the insurance companies "for real" and draw graphs
@@ -178,31 +202,40 @@ function UIBankManager:hideStatistics()
 end
 
 function UIBankManager:showGraph()
+  self.graph:setTooltip(_S.tooltip.bank_manager.graph:format(self.ui.hospital.insurance[self.chosen_insurance]))
   self.graph.visible = true
   self.return_from_graph_button.visible = true
-  -- In order for the return button to function, disable the one behind it.
-  self.third_graph_button.enabled = false
+  self.return_from_graph_button.enabled = true
+
+  for i = 1, 3 do
+    self.graph_buttons[i].visible = false
+    self.graph_buttons[i].enabled = false
+  end
 end
 
 function UIBankManager:showGraph1()
-  self:showGraph()
   self.chosen_insurance = 1
+  self:showGraph()
 end
 
 function UIBankManager:showGraph2()
-  self:showGraph()
   self.chosen_insurance = 2
+  self:showGraph()
 end
 
 function UIBankManager:showGraph3()
-  self:showGraph()
   self.chosen_insurance = 3
+  self:showGraph()
 end
 
 function UIBankManager:returnFromGraph()
   self.graph.visible = false
   self.return_from_graph_button.visible = false
-  self.third_graph_button.enabled = true
+  self.return_from_graph_button.enabled = false
+  for i = 1, 3 do
+    self.graph_buttons[i].enabled = true
+    self.graph_buttons[i].visible = true
+  end
 end
 
 function UIBankManager:increaseLoan()

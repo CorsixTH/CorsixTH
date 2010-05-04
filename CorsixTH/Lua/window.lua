@@ -786,7 +786,7 @@ function Window:getTooltipAt(x, y)
     end
   end
   for _, btn in ipairs(self.buttons) do
-    if btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+    if btn.visible ~= false and btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
       local x, y = btn.tooltip_x or round((btn.x + btn.r) / 2, 1), btn.tooltip_y or btn.y
       x = x + self.x
       y = y + self.y
