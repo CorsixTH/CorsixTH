@@ -51,9 +51,18 @@ function UIQueue:UIQueue(ui, queue)
     self:addPanel(367, x, 0)
   end
   self:addPanel(368, 529, 0)  -- Left extremity of the panel
-  self:addPanel(369, 97,  self.height - 33):makeButton(0, 0, 17, 17, 370, self.decreaseMaxSize)
-  self:addPanel(371, 144, self.height - 33):makeButton(0, 0, 17, 17, 372, self.increaseMaxSize)
-  self:addPanel(373, self.width - 42, 17):makeButton(0, 0, 24, 24, 374, self.close) 
+  self:addPanel(369, 97,  self.height - 33):makeButton(0, 0, 17, 17, 370, self.decreaseMaxSize):setTooltip(_S.tooltip.queue_window.dec_queue_size .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addPanel(371, 144, self.height - 33):makeButton(0, 0, 17, 17, 372, self.increaseMaxSize):setTooltip(_S.tooltip.queue_window.inc_queue_size .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addPanel(373, self.width - 42, 17):makeButton(0, 0, 24, 24, 374, self.close):setTooltip(_S.tooltip.queue_window.close)
+  
+  self:makeTooltip(_S.tooltip.queue_window.num_in_queue, 15, 15, 163, 36)
+  self:makeTooltip(_S.tooltip.queue_window.num_expected, 15, 39, 163, 60)
+  self:makeTooltip(_S.tooltip.queue_window.num_entered,  15, 62, 163, 83)
+  self:makeTooltip(_S.tooltip.queue_window.max_queue_size .. " " .. _S.misc.not_yet_implemented, 15, 87, 163, 108)
+  
+  self:makeTooltip(_S.tooltip.queue_window.front_of_queue .. " " .. _S.misc.not_yet_implemented, 168, 25, 213, 105)
+  self:makeTooltip(_S.tooltip.queue_window.end_of_queue   .. " " .. _S.misc.not_yet_implemented, 543, 51, 586, 105)
+  self:makeTooltip(_S.tooltip.queue_window.patient        .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
 end
 
 function UIQueue:decreaseMaxSize()

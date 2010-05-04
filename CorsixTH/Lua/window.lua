@@ -38,6 +38,8 @@ function Window:Window()
   }
   self.buttons = {
   }
+  self.tooltip_regions = {
+  }
   self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
@@ -730,9 +732,45 @@ function Window:stopButtonBlinking()
   self.blink_counter = 0
 end
 
+--! Create a static (non-changeable) tooltip to be displayed in a certain region.
+--! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
+--!param text (string) The string to display.
+--!param x (integer) The X co-ordinate relative to the top-left corner.
+--!param y (integer) The Y co-ordinate relative to the top-left corner.
+--!param r (integer) The right (X + width) co-ordinate relative to the top-left corner.
+--!param b (integer) The bottom (Y + height) co-ordinate relative to the top-left corner.
+--!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
+--!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
+function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y)
+  self.tooltip_regions[#self.tooltip_regions + 1] = {
+    text = text, x = x, y = y, r = r, b = b,
+    tooltip_x = tooltip_x, -- optional
+    tooltip_y = tooltip_y, -- optional
+  }
+end
+
+--! Create a dynamic tooltip to be displayed in a certain region.
+--! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
+--!param callback (function) A function that returns the string to display.
+--!param x (integer) The X co-ordinate relative to the top-left corner.
+--!param y (integer) The Y co-ordinate relative to the top-left corner.
+--!param r (integer) The right (X + width) co-ordinate relative to the top-left corner.
+--!param b (integer) The bottom (Y + height) co-ordinate relative to the top-left corner.
+--!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
+--!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
+function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
+  self.tooltip_regions[#self.tooltip_regions + 1] = {
+    callback = callback, x = x, y = y, r = r, b = b,
+    tooltip_x = tooltip_x, -- optional
+    tooltip_y = tooltip_y, -- optional
+  }
+end
+
 --! Query the window for tooltip text to display for a particular position.
---! Override/extend in window classes for additional (non-button) tooltips.
--- Return tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
+--! Tooltips are either associated with buttons, panels, or a region.
+-- (see Button:setTooltip, Panel:setTooltip, Window:make[Dynamic]Tooltip)
+--! Button tooltips take precedence over region tooltips, which again take precedence over panels.
+-- Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
 --!param x (integer) The X co-ordinate relative to the top-left corner.
 --!param y (integer) The Y co-ordinate relative to the top-left corner.
 function Window:getTooltipAt(x, y)
@@ -753,6 +791,14 @@ function Window:getTooltipAt(x, y)
       x = x + self.x
       y = y + self.y
       return { text = btn.tooltip, x = x, y = y }
+    end
+  end
+  for _, region in ipairs(self.tooltip_regions) do
+    if region.x <= x and x < region.r and region.y <= y and y < region.b then
+      local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
+      x = x + self.x
+      y = y + self.y
+      return { text = region.callback and region:callback() or region.text, x = x, y = y }
     end
   end
   for _, pnl in ipairs(self.panels) do

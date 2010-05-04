@@ -38,6 +38,14 @@ staff_title.researcher = "Forscher" -- one of the most annoying (since prominent
 bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
 insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered as &)
 object.skeleton = "Skelett" -- second most annoying mistake in german translation
+tooltip.staff_list.detail = "Aufmerksamkeit" -- was translated as an imperative
+tooltip.staff_list.surgeon_train = "Wurde zu %d%% zum Chirurgen ausgebildet." -- the three strings made no sense grammatically
+tooltip.staff_list.psychiatrist_train = "Wurde zu %d%% zum Psychiater ausgebildet."
+tooltip.staff_list.researcher_train = "Wurde zu %d%% zum Forscher ausgebildet."
+-- TODO: tooltip.staff_list.next_person, prev_person is rather next/prev page (also in english)
+
+tooltip.queue_window.inc_queue_size = utf8 "Warteschlange vergrößern"
+tooltip.queue_window.dec_queue_size = "Warteschlange verkleinern"
 
 -- new strings
 

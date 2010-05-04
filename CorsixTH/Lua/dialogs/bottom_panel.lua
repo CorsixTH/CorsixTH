@@ -77,6 +77,12 @@ function UIBottomPanel:UIBottomPanel(ui)
   for _, buttons in ipairs(buttons) do
     buttons.visible = false
   end
+  
+  self:makeTooltip(_S.tooltip.toolbar.balance, 41, 5, 137, 28)
+  self:makeTooltip(_S.tooltip.toolbar.date, 140, 5, 200, 42)
+  self:makeDynamicTooltip(--[[persistable:reputation_tooltip]] function()
+    return _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")"
+  end, 41, 30, 137, 42)
 
   ui:addKeyHandler("M", self, self.openFirstMessage)	  -- M for message
   ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
@@ -113,23 +119,6 @@ function UIBottomPanel:draw(canvas, x, y)
 
     self:drawReputationMeter(canvas, x + 55, y + 35)
   end
-end
-
-function UIBottomPanel:getTooltipAt(x, y)
-  -- balance
-  if x >= 41 and x <= 137 and y >= 5 and y <= 28 then
-    return { text = _S.tooltip.toolbar.balance, x = self.x + 90, y = self.y + 5 }
-  end
-  -- reputation bar
-  if x >= 41 and x <= 137 and y >= 30 and y <= 42 then
-    return { text = _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")", x = self.x + 90, y = self.y + 30 }
-  end
-  -- date
-  if x >= 140 and x <= 200 and y >= 5 and y <= 42 then
-    return { text = _S.tooltip.toolbar.date, x = self.x + 170, y = self.y + 5 }
-  end
-  
-  return Window.getTooltipAt(self, x, y)
 end
 
 function UIBottomPanel:setPosition(x, y)
