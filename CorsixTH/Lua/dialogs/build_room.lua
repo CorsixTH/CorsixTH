@@ -106,6 +106,8 @@ function UIBuildRoom:UIBuildRoom(ui)
     end
     table.sort(rooms, function(r1, r2) return r1.categories[category] < r2.categories[category] end)
   end
+  
+  self:makeTooltip(_S.tooltip.build_room_window.cost, 160, 228, 282, 242)
 end
 
 local cat_label_y = {21, 53, 84, 116}
@@ -130,14 +132,6 @@ function UIBuildRoom:draw(canvas, x, y)
   if self.preview_anim then
     self.preview_anim:draw(canvas, x + 70, y + 200)
   end
-end
-
-function UIBuildRoom:getTooltipAt(x, y)
-  -- cost
-  if x >= 160 and x <= 282 and y >= 228 and y <= 242 then
-    return { text = _S.tooltip.build_room_window.cost, x = self.x + 221, y = self.y + 228 }
-  end
-  return Window.getTooltipAt(self, x, y)
 end
 
 function UIBuildRoom:setCategory(index)

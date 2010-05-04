@@ -751,7 +751,7 @@ end
 
 --! Create a dynamic tooltip to be displayed in a certain region.
 --! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
---!param callback (function) A function that returns the string to display.
+--!param callback (function) A function that returns the string to display or nil for no tooltip.
 --!param x (integer) The X co-ordinate relative to the top-left corner.
 --!param y (integer) The Y co-ordinate relative to the top-left corner.
 --!param r (integer) The right (X + width) co-ordinate relative to the top-left corner.
@@ -798,7 +798,15 @@ function Window:getTooltipAt(x, y)
       local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
       x = x + self.x
       y = y + self.y
-      return { text = region.callback and region:callback() or region.text, x = x, y = y }
+      local text
+      if region.callback then
+        text = region:callback()
+      else
+        text = region.text
+      end
+      if text then
+        return { text = text, x = x, y = y }
+      end
     end
   end
   for _, pnl in ipairs(self.panels) do
