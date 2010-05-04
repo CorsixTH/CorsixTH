@@ -3,8 +3,15 @@ Version Beta 3 - released 2010-0?-??
 -----------------------------------------
 
 * Feature: Swing doors, used by the new diagnosis room the ward.
+* Feature: Plants droop.
+* Feature: Handymen can have their priorities changed.
+* Feature: Rooms can be edited.
+* Fix: Staff needed in rooms is handled much better.
 
-* Additional functional diagnosis rooms: Blood Machine, Ward.
+* Translations: Italian (added new strings), Portuguese (WIP)
+
+* 4 new diseases
+* Additional functional diagnosis rooms: Blood Machine, Ward, Scanner.
 
 Again a lot of bugs have been terminated, though there are surely new ones 
 introduced by the new features.

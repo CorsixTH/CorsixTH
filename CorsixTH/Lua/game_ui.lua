@@ -185,9 +185,11 @@ function GameUI:onCursorWorldPositionChange()
       self.cursor_entity:setMood(nil)
     end
     self.cursor_entity = entity
-    local cursor = entity and entity.hover_cursor or
-      (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
-    self:setCursor(cursor)
+    if self.cursor ~= self.edit_room_cursor and self.cursor ~= self.waiting_cursor then
+      local cursor = entity and entity.hover_cursor or
+        (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+      self:setCursor(cursor)
+    end
     self.bottom_panel:setDynamicInfo(nil)
   end
   -- Any hoverable mood should be displayed on the new entity
@@ -292,6 +294,21 @@ function GameUI:onMouseUp(code, x, y)
     if patient then
       patient:walkTo(highlight_x, highlight_y)
       patient:queueAction{name = "idle"}
+    end
+  end
+  
+  if self.edit_room then
+    if button == "left" then
+      local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
+      if room then
+        room.is_active = false -- So that no more patients go to it.
+        self:setCursor(self.waiting_cursor)
+        room:tryToEdit()
+        self.edit_room = false
+      end
+    else
+      self:setCursor(self.default_cursor)
+      self.edit_room = false
     end
   end
   

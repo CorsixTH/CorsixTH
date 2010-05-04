@@ -330,7 +330,8 @@ function Room:commandEnteringPatient(humanoid)
 end
 
 function Room:tryAdvanceQueue()
-  if self.door.queue:size() > 0 and not self.door.user and not self.door.reserved_for then
+  if self.door.queue:size() > 0 and not self.door.user 
+  and not self.door.reserved_for and self.is_active then
     local front = self.door.queue:front()
     if self.humanoids[front] or self:canHumanoidEnter(front) then
       self.door.queue:pop()
@@ -399,6 +400,18 @@ function Room:onHumanoidLeave(humanoid)
     -- Remove any unwanted moods the staff member might have
     humanoid:setMood("staff_wait", "deactivate")
   end
+  -- The player might be waiting to edit this room
+  if not self.is_active then
+    local i = 0
+    for humanoid in pairs(self.humanoids) do
+      i = i + 1
+    end
+    if i == 0 then
+      local ui = self.world.ui
+      ui:addWindow(UIEditRoom(ui, self))
+      ui:setCursor(ui.default_cursor)
+    end
+  end
 end
 
 local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue
@@ -434,7 +447,7 @@ function Room:roomFinished()
   -- as long as the user doesn't edit it and go back beyond the first phase (place objects)
   self.built = true
   -- Only true when not editing the room at all.
-  self.is_active = true -- TODO: Have in mind when adding editing of rooms.
+  self.is_active = true
   
   self:tryToFindNearbyPatients()
 end
@@ -571,4 +584,27 @@ function Room:makePatientLeave(patient)
   local leave = self:createLeaveAction()
   leave.must_happen = true
   patient:setNextAction(leave)
+end
+
+function Room:tryToEdit()
+  local i = 0
+  -- Tell all humanoids that they should leave
+  for humanoid, _ in pairs(self.humanoids) do
+    if not humanoid.action_queue[1].is_leaving then
+      if class.is(humanoid, Patient) then
+        self:makePatientLeave(humanoid)
+        humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+      else
+        humanoid:setNextAction(self:createLeaveAction())
+        humanoid:queueAction({name = "meander"})
+      end
+    end
+    i = i + 1
+  end
+  -- If there were no people inside we're ready to edit the room
+  if i == 0 then
+  local ui = self.world.ui
+    ui:addWindow(UIEditRoom(ui, self))
+    ui:setCursor(ui.default_cursor)
+  end
 end

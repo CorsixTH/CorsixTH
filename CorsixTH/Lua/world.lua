@@ -867,6 +867,10 @@ end
 
 -- Search for available staff to meet the requirements for the room. Also notify the player with a sound.
 function World:callForStaff(room, repair_object, urgent)
+  -- Don't do anything if the room is being edited.
+  if not room.is_active then
+    return
+  end
   if repair_object then
     if urgent then
       local sound = room.room_info.handyman_call_sound
@@ -875,7 +879,7 @@ function World:callForStaff(room, repair_object, urgent)
         self.ui:playSound "machwarn.wav"
       end
     end
-    local handyman = self:selectNearestStaffForRoom(room, "Handyman", 1)
+    local handyman = self:selectNearestStaffForRoom(room, "Handyman", 1, "repairing")
     if handyman then
       room.needs_repair = handyman
       repair_object:setRepairing(true)
@@ -939,9 +943,11 @@ end
 
 -- Sends nearest staff members with the required attributes to the given room.
 -- TODO take into account the tiredness of the staff etc. when deciding who to pick?
-function World:selectNearestStaffForRoom(room, attribute, count)
+-- If 'mode' is set to one of the handyman's three concentration areas those
+-- will be accounted for when doing the sort. 
+function World:selectNearestStaffForRoom(room, attribute, count, mode)
   local door_x, door_y = room:getEntranceXY()
-  local candidates = self:getSuitableStaffCandidates(door_x, door_y, attribute)
+  local candidates = self:getSuitableStaffCandidates(door_x, door_y, attribute, nil, mode)
   for _, cand in ipairs(candidates) do
     if count <= 0 then
       break

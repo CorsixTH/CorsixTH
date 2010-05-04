@@ -118,6 +118,8 @@ function UI:UI(app)
   self.default_cursor = app.gfx:loadMainCursor("default")
   self.down_cursor = app.gfx:loadMainCursor("clicked")
   self.grab_cursor = app.gfx:loadMainCursor("grab")
+  self.edit_room_cursor = app.gfx:loadMainCursor("edit_room")
+  self.waiting_cursor = app.gfx:loadMainCursor("sleep")
   
   if not LOADED_DIALOGS then
     app:loadLuaFolder("dialogs", true)

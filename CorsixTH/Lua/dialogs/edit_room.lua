@@ -27,13 +27,6 @@ dofile "dialogs/place_objects"
 class "UIEditRoom" (UIPlaceObjects)
 
 function UIEditRoom:UIEditRoom(ui, room_type)
-  self.phase = "walls" --> "door" --> "windows" --> "clear_area" --> "objects" --> "closed"
-  self.blueprint_rect = {
-    x = 1,
-    y = 1,
-    w = 0,
-    h = 0,
-  }
 
   -- NB: UIEditRoom:onMouseMove is called by the UIPlaceObjects constructor,
   -- hence the initialisation of required fields prior to the call.
@@ -47,9 +40,32 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self.room_type = room_type
-  self.title_text = room_type.name
-  self.desc_text = _S.place_objects_window.drag_blueprint
+  if not room_type.room_info then
+    self.blueprint_rect = {
+      x = 1,
+      y = 1,
+      w = 0,
+      h = 0,
+    }
+    self.phase = "walls" --> "door" --> "windows" --> "clear_area" --> "objects" --> "closed"
+    self.room_type = room_type
+    self.title_text = room_type.name
+    self.desc_text = _S.place_objects_window.drag_blueprint
+  else
+    self.phase = "objects"
+    self.room_type = room_type.room_info
+    self.title_text = room_type.room_info.name
+    self.room = room_type
+    self.desc_text = _S.place_objects_window.confirm_or_buy_objects
+    self.payed = true
+    self.blueprint_rect = {
+    x = room_type.x,
+    y = room_type.y,
+    w = room_type.width,
+    h = room_type.height,
+  }
+    self:checkEnableConfirm()
+  end
   self.blueprint_wall_anims = {
   }
   if room_type.swing_doors then
@@ -93,7 +109,21 @@ end
 
 function UIEditRoom:cancel()
   if self.phase == "walls" then
-    self:close()
+    if self.payed then
+      -- Ask if the user really wish to sell this room
+      self.ui:addWindow(UIConfirmDialog(self.ui,
+        _S.confirmation.delete_room,
+        --[[persistable:delete_room_confirm_dialog]]function()
+          -- Return half the cost.
+          local cost = math.floor(self.room.room_info.build_cost/2)
+          -- TODO: Return also the cost for additional objects.
+          self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object)
+          self:close()
+        end
+      ))
+    else
+      self:close()
+    end
   elseif self.phase == "objects" then
     self:returnToDoorPhase()
   else
@@ -133,11 +163,14 @@ function UIEditRoom:confirm(force)
     self:enterObjectsPhase()
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
-    local cost = self.room_type.build_cost
-    for obj, num in pairs(self.room.room_info.objects_needed) do
-      cost = cost - num * TheApp.objects[obj].build_cost
+    if not self.payed then
+      local cost = self.room_type.build_cost
+      for obj, num in pairs(self.room.room_info.objects_needed) do
+        cost = cost - num * TheApp.objects[obj].build_cost
+      end
+      self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text)
+      self.payed = true
     end
-    self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
@@ -435,6 +468,10 @@ function UIEditRoom:returnToDoorPhase()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local room = self.room
+  room.built = false
+  if room.door and room.door.queue then
+    room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
+  end
   
   self.purchase_button:enable(false)
   self.pickup_button:enable(false)

@@ -78,7 +78,7 @@ object.orientations = {
 -- The states specify which frame to show
 local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
 
-local days_between_states = 100 -- TODO: Balance
+local days_between_states = 60 -- TODO: Balance
 
 --! An `Object` which needs watering now and then.
 class "Plant" (Object)
@@ -182,6 +182,8 @@ function Plant:callForWatering()
       local candidate = self.world:getSuitableStaffCandidates(lx, ly, "Handyman", 10, "watering")[1]
       if candidate then
         self:createHandymanActions(candidate.entity)
+      else
+        self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
       end
     end
   end
@@ -247,7 +249,7 @@ function Plant:tickDay()
   if self.days_left < 1 then
     self.days_left = days_between_states
     self:setNextState()
-  elseif self.days_left < 20 or self.current_state > 0 then -- TODO: Balance this number too
+  elseif self.days_left < 10 or self.current_state > 0 then -- TODO: Balance this number too
     self:callForWatering()
   end
 end

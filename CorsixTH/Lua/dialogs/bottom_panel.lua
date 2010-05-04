@@ -47,7 +47,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
-  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9):setTooltip(_S.tooltip.toolbar.edit .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9, self.editRoom):setTooltip(_S.tooltip.toolbar.edit)
   self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
   -- The dynamic info bar
   self:addPanel(12, 364, 0)
@@ -345,4 +345,16 @@ end
 function UIBottomPanel:dialogPolicy()
   local dlg = UIPolicy(self.ui)
   self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:editRoom()
+  local ui = self.ui
+  -- TODO: Make the room the cursor is over flash
+  if ui.edit_room then
+    ui:setCursor(self.ui.default_cursor)
+    ui.edit_room = false
+  else
+    ui:setCursor(ui.edit_room_cursor)
+    ui.edit_room = true
+  end
 end
