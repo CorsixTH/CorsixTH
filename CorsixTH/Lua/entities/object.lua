@@ -349,8 +349,9 @@ function Object:onClick(ui, button)
     local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
     local direction = self.direction
-    
-    if (not room and window) or (room and not (window and window.room == room)) or (not room and not self.object_type.corridor_object) then
+    if (not room and window) 
+    or (room and not (window and window.room == room) and not self.object_type.corridor_object)
+    or (not room and not self.object_type.corridor_object) then
       return
     end
 

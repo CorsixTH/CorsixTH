@@ -59,11 +59,13 @@ function UIEditRoom:UIEditRoom(ui, room_type)
     self.desc_text = _S.place_objects_window.confirm_or_buy_objects
     self.payed = true
     self.blueprint_rect = {
-    x = room_type.x,
-    y = room_type.y,
-    w = room_type.width,
-    h = room_type.height,
-  }
+      x = room_type.x,
+      y = room_type.y,
+      w = room_type.width,
+      h = room_type.height,
+    }
+    self.pickup_button:enable(true)
+    self.purchase_button:enable(true)
     self:checkEnableConfirm()
   end
   self.blueprint_wall_anims = {
