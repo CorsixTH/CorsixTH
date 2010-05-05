@@ -82,6 +82,30 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire):setTooltip(_S.tooltip.hire_staff_window.hire)
   self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close):setTooltip(_S.tooltip.hire_staff_window.cancel)
   self:addPanel(278, 190, 277):makeButton(0, 10, 44, 27, 279, self.moveNext):setTooltip(_S.tooltip.hire_staff_window.next_person)
+  
+  self:makeTooltip(_S.tooltip.hire_staff_window.salary, 68, 173, 227, 194)
+  self:makeTooltip(_S.tooltip.hire_staff_window.doctor_seniority, 68, 44, 151, 95)
+  self:makeTooltip(_S.tooltip.hire_staff_window.qualifications, 68, 134, 107, 167)
+
+  self:makeTooltip(_S.tooltip.hire_staff_window.surgeon, 120, 136, 137, 167)
+  self:makeTooltip(_S.tooltip.hire_staff_window.psychiatrist, 137, 136, 164, 167)
+  self:makeTooltip(_S.tooltip.hire_staff_window.researcher, 164, 136, 191, 167)
+  
+  self:updateTooltips()
+end
+
+function UIHireStaff:updateTooltips()
+  local cond = not not self.category
+  self.tooltip_regions[1].enabled = cond
+  
+  cond = cond and self.category == "Doctor"
+  self.tooltip_regions[2].enabled = cond
+  self.tooltip_regions[3].enabled = cond
+  cond = cond and self.current_index and self.world.available_staff[self.category]
+  cond = cond and cond[self.current_index]
+  self.tooltip_regions[4].enabled = cond and cond.is_surgeon >= 1.0
+  self.tooltip_regions[5].enabled = cond and cond.is_psychiatrist >= 1.0
+  self.tooltip_regions[6].enabled = cond and cond.is_researcher >= 1.0
 end
 
 function UIHireStaff:onMouseUp(button, x, y)
@@ -166,42 +190,6 @@ function UIHireStaff:draw(canvas, x, y)
   end
 end
 
-function UIHireStaff:getTooltipAt(x, y)
-  if self.category == "Doctor" then
-    -- doctor seniority
-    if x >= 68 and x <= 150 and y >= 44 and y <= 94 then
-      return { text = _S.tooltip.hire_staff_window.doctor_seniority, x = self.x + 109, y = self.y + 44 }
-    end
-    -- qualifications
-    if x >= 68 and x <= 106 and y >= 134 and y <= 166 then
-      return { text = _S.tooltip.hire_staff_window.qualifications, x = self.x + 87, y = self.y + 134 }
-    end
-    if self.current_index then
-      local profile = self.world.available_staff[self.category]
-      profile = profile and profile[self.current_index]
-      if profile then
-        local px, py = x - self.ability_bg_panel.x, y - self.ability_bg_panel.y
-        if profile.is_surgeon >= 1.0 and px >= 65 and px <= 81 and py >= 22 and py <= 52 then
-          return { text = _S.tooltip.hire_staff_window.surgeon, x = self.x + self.ability_bg_panel.x + 73, y = self.y + self.ability_bg_panel.y + 22 }
-        end
-        if profile.is_psychiatrist >= 1.0 and px >= 82 and px <= 108 and py >= 22 and py <= 52 then
-          return { text = _S.tooltip.hire_staff_window.psychiatrist, x = self.x + self.ability_bg_panel.x + 95, y = self.y + self.ability_bg_panel.y + 22 }
-        end
-        if profile.is_researcher >= 1.0 and px >= 109 and px <= 135 and py >= 22 and py <= 52 then
-          return { text = _S.tooltip.hire_staff_window.researcher, x = self.x + self.ability_bg_panel.x + 122, y = self.y + self.ability_bg_panel.y + 22 }
-        end
-      end
-    end
-  end
-  
-  -- salary
-  if self.category and x >= 68 and x <= 226 and y >= 173 and y <= 193 then
-    return { text = _S.tooltip.hire_staff_window.salary, x = self.x + 147, y = self.y + 173 }
-  end
-
-  return Window.getTooltipAt(self, x, y)
-end
-
 function UIHireStaff:movePrevious()
   self:moveBy(-1)
   self.ui:tutorialStep(2, 4, 5)
@@ -222,6 +210,7 @@ function UIHireStaff:moveBy(n)
       self.current_index = #category
     else
       self.ui:playSound "selectx.wav"
+      self:updateTooltips()
       return true
     end
   end
@@ -251,6 +240,7 @@ function UIHireStaff:setCategory(name)
     end
   end
   self.current_index = 1
+  self:updateTooltips()
 end
 
 function UIHireStaff:close()

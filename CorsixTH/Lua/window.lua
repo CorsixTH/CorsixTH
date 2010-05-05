@@ -742,11 +742,13 @@ end
 --!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
 --!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
 function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y)
-  self.tooltip_regions[#self.tooltip_regions + 1] = {
+  local region = {
     text = text, x = x, y = y, r = r, b = b,
     tooltip_x = tooltip_x, -- optional
     tooltip_y = tooltip_y, -- optional
   }
+  self.tooltip_regions[#self.tooltip_regions + 1] = region
+  return region
 end
 
 --! Create a dynamic tooltip to be displayed in a certain region.
@@ -759,11 +761,13 @@ end
 --!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
 --!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
 function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
-  self.tooltip_regions[#self.tooltip_regions + 1] = {
+  local region = {
     callback = callback, x = x, y = y, r = r, b = b,
     tooltip_x = tooltip_x, -- optional
     tooltip_y = tooltip_y, -- optional
   }
+  self.tooltip_regions[#self.tooltip_regions + 1] = region
+  return region
 end
 
 --! Query the window for tooltip text to display for a particular position.
@@ -794,7 +798,7 @@ function Window:getTooltipAt(x, y)
     end
   end
   for _, region in ipairs(self.tooltip_regions) do
-    if region.x <= x and x < region.r and region.y <= y and y < region.b then
+    if region.enabled ~= false and region.x <= x and x < region.r and region.y <= y and y < region.b then
       local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
       x = x + self.x
       y = y + self.y

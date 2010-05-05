@@ -76,14 +76,8 @@ function UIJukebox:UIJukebox(app)
     self:addPanel(407, x, y)
   end
   self:addPanel(408, self.width - 61, y)
-end
-
-function UIJukebox:getTooltipAt(x, y)
-  -- current song title
-  if x >= 17 and x <= 211 and y >= 17 and y <= 45 then
-    return { text = _S.tooltip.jukebox.current_title, x = self.x + 114, y = self.y + 17 }
-  end
-  return Window.getTooltipAt(self, x, y)
+  
+  self:makeTooltip(_S.tooltip.jukebox.current_title, 17, 17, 212, 46)
 end
 
 -- makes the play button consistent with the current status of the background music

@@ -107,6 +107,9 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
     end
     i = i + 1
   end
+  
+  self:makeTooltip(_S.tooltip.buy_objects_window.price,       20, 168, 127, 187)
+  self:makeTooltip(_S.tooltip.buy_objects_window.total_value, 20, 196, 127, 215)
 end
 
 function UIFurnishCorridor:purchaseItem(index, quantity)
@@ -191,18 +194,6 @@ function UIFurnishCorridor:draw(canvas, x, y)
   end
   
   self.preview_anim:draw(canvas, x + 72, y + 57)
-end
-
-function UIFurnishCorridor:getTooltipAt(x, y)
-  -- price
-  if x >= 20 and x <= 126 and y >= 168 and y <= 186 then
-    return { text = _S.tooltip.buy_objects_window.price, x = self.x + 73, y = self.y + 168 }
-  end
-  -- total value
-  if x >= 20 and x <= 126 and y >= 196 and y <= 214 then
-    return { text = _S.tooltip.buy_objects_window.total_value, x = self.x + 73, y = self.y + 196 }
-  end
-  return Window.getTooltipAt(self, x, y)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)

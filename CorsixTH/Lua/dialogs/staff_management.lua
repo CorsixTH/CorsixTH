@@ -108,7 +108,41 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.title_blanker = self:addColourPanel(225, 365, 90, 39, 57, 166, 198)
   self.skill_blanker = self:addColourPanel(142, 406, 168, 54, 57, 166, 198)
   
+  -- Tooltip regions
+  self:makeTooltip(_S.tooltip.staff_list.happiness,  321, 51, 421, 75)
+  self:makeTooltip(_S.tooltip.staff_list.tiredness,  426, 51, 526, 75)
+  self:makeTooltip(_S.tooltip.staff_list.ability,    530, 51, 629, 75)
+  self:makeTooltip(_S.tooltip.staff_list.detail,     146, 367, 226, 407)
+  self:makeTooltip(_S.tooltip.staff_list.view_staff, 495, 371, 583, 458)
+  
+  self.row_tooltips = {}
+  for line_num = 1, 10 do
+    self.row_tooltips[line_num] = {
+      self:makeTooltip(_S.tooltip.staff_list.salary,      193, 84 + 27 * (line_num - 1), 313, 108 + 27 * (line_num - 1)),
+      self:makeTooltip(_S.tooltip.staff_list.happiness_2, 321, 84 + 27 * (line_num - 1), 421, 108 + 27 * (line_num - 1)),
+      self:makeTooltip(_S.tooltip.staff_list.tiredness_2, 425, 84 + 27 * (line_num - 1), 525, 108 + 27 * (line_num - 1)),
+      self:makeTooltip(_S.tooltip.staff_list.ability_2,   529, 84 + 27 * (line_num - 1), 628, 108 + 27 * (line_num - 1)),
+    }
+  end
+  
+  self.seniority_tooltip =
+    self:makeTooltip(_S.tooltip.staff_list.doctor_seniority, 230, 367, 310, 407)
+  self.skills_tooltip =
+    self:makeTooltip(_S.tooltip.staff_list.skills, 146, 406, 186, 460)
+
   self:setCategory("Doctor")
+end
+
+function UIStaffManagement:updateTooltips()
+  self.seniority_tooltip.enabled = self.category == "Doctor"
+  self.skills_tooltip.enabled = self.category == "Doctor"
+
+  for i, tooltips in ipairs(self.row_tooltips) do
+    local state = 10 * (self.page - 1) + i <= #self.staff_members[self.category]
+    for _, tooltip in ipairs(tooltips) do
+      tooltip.enabled = state
+    end
+  end
 end
 
 function UIStaffManagement:updateStaffList(staff_member_removed)
@@ -138,7 +172,9 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
     end
   end
   self.staff_members = staff_members
-  
+  if staff_member_removed then
+    self:updateTooltips()
+  end
 end
 
 function UIStaffManagement:setCategory(name)
@@ -160,64 +196,8 @@ function UIStaffManagement:setCategory(name)
   else
     self.scroll_dot.visible = false
   end
-end
-
-function UIStaffManagement:getTooltipAt(x, y)
-  -- average happiness
-  if x >= 321 and x <= 420 and y >= 51 and y <= 74 then
-    return { text = _S.tooltip.staff_list.happiness, x = self.x + 370, y = self.y + 51 }
-  end
-  -- average tiredness
-  if x >= 426 and x <= 525 and y >= 51 and y <= 74 then
-    return { text = _S.tooltip.staff_list.tiredness, x = self.x + 475, y = self.y + 51 }
-  end
-  -- average ability
-  if x >= 530 and x <= 628 and y >= 51 and y <= 74 then
-    return { text = _S.tooltip.staff_list.ability, x = self.x + 579, y = self.y + 51 }
-  end
-  -- attention to detail
-  if x >= 146 and x <= 225 and y >= 367 and y <= 406 then
-    return { text = _S.tooltip.staff_list.detail, x = self.x + 185, y = self.y + 367 }
-  end
-  -- staff view
-  if x >= 495 and x <= 582 and y >= 371 and y <= 457 then
-    return { text = _S.tooltip.staff_list.view_staff, x = self.x + 539, y = self.y + 371 }
-  end
   
-  -- per line
-  for line_num = 1, 10 do
-    if self.row_blankers[line_num].visible then break end
-    -- salary
-    if x >= 193 and x <= 312 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
-      return { text = _S.tooltip.staff_list.salary, x = self.x + 252, y = self.y + 84 + 27 * (line_num - 1) }
-    end
-    -- happiness
-    if x >= 321 and x <= 420 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
-      return { text = _S.tooltip.staff_list.happiness_2, x = self.x + 370, y = self.y + 84 + 27 * (line_num - 1) }
-    end
-    -- tiredness
-    if x >= 425 and x <= 524 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
-      return { text = _S.tooltip.staff_list.tiredness_2, x = self.x + 475, y = self.y + 84 + 27 * (line_num - 1) }
-    end
-    -- ability
-    if x >= 529 and x <= 627 and y >= 84 + 27 * (line_num - 1) and y <= 107 + 27 * (line_num - 1) then
-      return { text = _S.tooltip.staff_list.ability_2, x = self.x + 579, y = self.y + 84 + 27 * (line_num - 1) }
-    end
-  end
-  
-  -- doctor exclusive
-  if self.category == "Doctor" then
-    -- seniority
-    if x >= 230 and x <= 309 and y >= 367 and y <= 406 then
-      return { text = _S.tooltip.staff_list.doctor_seniority, x = self.x + 270, y = self.y + 367 }
-    end
-    -- skills
-    if x >= 146 and x <= 185 and y >= 406 and y <= 459 then
-      return { text = _S.tooltip.staff_list.skills, x = self.x + 165, y = self.y + 406 }
-    end
-  end
-  
-  return Window.getTooltipAt(self, x, y)
+  self:updateTooltips()
 end
 
 function UIStaffManagement:draw(canvas, x, y)
@@ -430,6 +410,7 @@ function UIStaffManagement:scrollUp()
     self.page = self.page - 1
     self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
   end
+  self:updateTooltips()
 end
 
 function UIStaffManagement:scrollDown()
@@ -438,6 +419,7 @@ function UIStaffManagement:scrollDown()
     self.page = self.page + 1
     self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
   end
+  self:updateTooltips()
 end
 
 function UIStaffManagement:payBonus()
