@@ -290,7 +290,8 @@ end
 function GameUI:onMouseUp(code, x, y)
   local button = self.button_codes[code]
   if button == "right" and not _MAP_EDITOR and highlight_x then
-    local patient = self.hospital:getDebugPatient()
+    local window = self:getWindow(UIPatient)
+    local patient = (window and window.patient.is_debug and window.patient) or self.hospital:getDebugPatient()
     if patient then
       patient:walkTo(highlight_x, highlight_y)
       patient:queueAction{name = "idle"}

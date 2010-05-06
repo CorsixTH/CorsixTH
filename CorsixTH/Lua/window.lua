@@ -800,15 +800,15 @@ function Window:getTooltipAt(x, y)
   if not self.tooltip_regions then self.tooltip_regions = {} end -- TEMPORARY for compatibility of pre-r649 savegames. Remove when compatibility is broken anyway.
   for _, region in ipairs(self.tooltip_regions) do
     if region.enabled ~= false and region.x <= x and x < region.r and region.y <= y and y < region.b then
-      local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
-      x = x + self.x
-      y = y + self.y
       local text
       if region.callback then
-        text = region:callback()
+        text = region.callback(x, y)
       else
         text = region.text
       end
+      local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
+      x = x + self.x
+      y = y + self.y
       if text then
         return { text = text, x = x, y = y }
       end

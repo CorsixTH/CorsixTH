@@ -22,6 +22,12 @@ local TH = require "TH"
 local math_floor
     = math.floor
 
+-- Test for hit within the view circle
+local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
+  local circle_center_y = is_handyman and 276 or 248
+  return (x - 55)^2 + (y - circle_center_y)^2 < 38^2
+end
+
 class "UIStaff" (Window)
 
 function UIStaff:UIStaff(ui, staff)
@@ -51,7 +57,7 @@ function UIStaff:UIStaff(ui, staff)
   self:addPanel(299,  104,  50) -- Happiness
   self:addPanel(300,  105,  82) -- Tiredness
   self:addPanel(301,   15, 114) -- Skills/Abilities
-  self:addColourPanel(35, 51, 71, 81, 208, 252, 252) -- Portrait background
+  self:addColourPanel(35, 51, 71, 81, 208, 252, 252):setTooltip(_S.tooltip.staff_window.face) -- Portrait background
   
   if profile.humanoid_class == "Handyman" then
     self:addPanel(311,  15, 131) -- Tasks top
@@ -60,13 +66,13 @@ function UIStaff:UIStaff(ui, staff)
     end
     self:addPanel(302,   5, 205) -- View circle top/Wage
     self:addPanel(313,  15, 189) -- Tasks bottom
-    self:addPanel(314,  37, 145):makeButton(0, 0, 49, 48, 315, self.doMoreCleaning)
-    self:addPanel(316,  92, 145):makeButton(0, 0, 49, 48, 317, self.doMoreWatering)
-    self:addPanel(318, 148, 145):makeButton(0, 0, 49, 48, 319, self.doMoreRepairing)
+    self:addPanel(314,  37, 145):makeButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
+    self:addPanel(316,  92, 145):makeButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
+    self:addPanel(318, 148, 145):makeButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
     self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
-    self:addPanel(307, 106, 253):makeButton(0, 0, 37, 50, 308, self.fireStaff)
-    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.placeStaff)
+    self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
+    self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   else
     self:addPanel(302,   5, 178) -- View circle top/Wage
     self:addPanel(303,   0, 226) -- View circle midpiece
@@ -74,11 +80,50 @@ function UIStaff:UIStaff(ui, staff)
     if profile.humanoid_class ~= "Doctor" then
       self:addColourPanel(32, 141, 171, 39, 85, 202, 219)  -- Hides Skills
     end
-    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff)
-    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.placeStaff)
+    self:addPanel(307, 106, 226):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
+    self:addPanel(309, 164, 226):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
   end
 
-  self:addPanel(305, 178,  18):makeButton(0, 0, 24, 24, 306, self.close)
+  self:addPanel(305, 178,  18):makeButton(0, 0, 24, 24, 306, self.close):setTooltip(_S.tooltip.staff_window.close)
+  
+  self:makeTooltip(_S.tooltip.staff_window.name, 33, 19, 172, 42)
+  self:makeTooltip(_S.tooltip.staff_window.happiness, 113,  49, 204,  74)
+  self:makeTooltip(_S.tooltip.staff_window.tiredness, 113,  74, 204, 109)
+  self:makeTooltip(_S.tooltip.staff_window.ability,   113, 109, 204, 134)
+  
+  if profile.humanoid_class == "Doctor" then
+    self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 30, 141, 111, 182)
+    self:makeTooltip(_S.tooltip.staff_window.skills, 111, 146, 141, 179)
+    
+    local skill_to_string = {
+      is_surgeon = _S.tooltip.staff_window.surgeon,
+      is_psychiatrist = _S.tooltip.staff_window.psychiatrist,
+      is_researcher = _S.tooltip.staff_window.researcher,
+    }
+    local --[[persistable:staff_dialog_skill_tooltip_template]] function skill_tooltip(skill)
+      return --[[persistable:staff_dialog_skill_tooltip]] function()
+        if profile[skill] >= 1.0 then
+          return skill_to_string[skill]
+        end
+      end
+    end
+    
+    self:makeDynamicTooltip(skill_tooltip("is_surgeon"),      143, 148, 155, 177)
+    self:makeDynamicTooltip(skill_tooltip("is_psychiatrist"), 155, 148, 177, 177)
+    self:makeDynamicTooltip(skill_tooltip("is_researcher"),   177, 148, 202, 177)
+  end
+  
+  -- window for handyman is slightly different
+  local offset = profile.humanoid_class == "Handyman" and 27 or 0
+  
+  self:makeTooltip(_S.tooltip.staff_window.salary, 90, 191 + offset, 204, 214 + offset)
+  -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
+  self:makeDynamicTooltip(--[[persistable:staff_dialog_center_tooltip]]function(x, y)
+    if is_in_view_circle(x, y, profile.humanoid_class == "Handyman") then
+      return _S.tooltip.staff_window.center_view
+    end
+  end, 17, 211 + offset, 92, 286 + offset)
+  
 end
 
 function UIStaff:getStaffPosition(dx, dy)
@@ -189,7 +234,7 @@ function UIStaff:onMouseUp(button, x, y)
     circle_center_y = 248
   end
   -- Test for hit within the view circle
-  if button == "left" and (x - 55)^2 + (y - circle_center_y)^2 < 38^2 then
+  if button == "left" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
     local ui = self.ui
     ui:scrollMapTo(self:getStaffPosition())
     repaint = true

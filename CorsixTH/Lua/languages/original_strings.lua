@@ -1260,7 +1260,7 @@ tooltip = {
   window_general = {
     cancel             = S[32][ 86],
     confirm            = S[32][ 87],
-    close_window       = S[32][ 88],
+    close_window       = S[32][ 88], -- TODO: this actually seems to belong to patient_window
   },
   
   patient_window = {

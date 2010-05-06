@@ -22,6 +22,11 @@ local TH = require "TH"
 local math_floor
     = math.floor
 
+-- Test for hit within the view circle
+local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
+  return (x - 55)^2 + (y - 254)^2 < 38^2
+end
+
 class "UIPatient" (Window)
 
 function UIPatient:UIPatient(ui, patient)
@@ -45,33 +50,44 @@ function UIPatient:UIPatient(ui, patient)
   self.history_panel = self:addColourPanel(36, 22, 99, 88, 223, 223, 223) -- Treatment history background
   self.history_panel:makeButton(0, 0, 99, 88, nil, --[[persistable:patient_toggle_history]] function()
     self.history_panel.visible = not self.history_panel.visible
-  end) -- Treatment history toggle
+  end):setTooltip(_S.tooltip.patient_window.graph) -- Treatment history toggle
   self.history_panel.visible = false -- Hide the treatment history at start
 
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
   self:addPanel(323,   0, 201) -- View circle top
   self:addPanel(324,   0, 254) -- View circle bottom
-  self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close)
+  self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close):setTooltip(_S.tooltip.window_general.close_window)
   
   -- If the patient has been diagnosed the "guess cure" button is not visible and
   -- if the patient is going home it is not possible to kick him/her anymore.
-  self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue)
+  self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue):setTooltip(_S.tooltip.patient_window.queue)
 
   -- Initialize all buttons and blankers, then call the update function which decides what to show.
   -- Show the drug casebook only after the disease has been diagnosed.
   self.disease_button = self:addPanel(329, 14 + 117, 61 + 107)
-    :makeButton(0, 0, 38, 38, 330, self.viewDiseases)
+    :makeButton(0, 0, 38, 38, 330, self.viewDiseases):setTooltip(_S.tooltip.patient_window.casebook)
   self.disease_blanker = self:addColourPanel(14 + 115, 61 + 105, 45, 45, 113, 117, 170)
   self.disease_blanker.visible = false
 
-  self.home_button = self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome)
+  self.home_button = self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome):setTooltip(_S.tooltip.patient_window.send_home)
   self.home_blanker = self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
   self.home_blanker.visible = false
 
-  self.guess_button = self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease)
+  self.guess_button = self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease):setTooltip(_S.tooltip.patient_window.abort_diagnosis)
   self.guess_blanker = self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
   self.guess_blanker.visible = false
   self:updateInformation()
+  
+  self:makeTooltip(_S.tooltip.patient_window.happiness, 33, 117, 124, 141)
+  self:makeTooltip(_S.tooltip.patient_window.thirst,    33, 141, 124, 169)
+  self:makeTooltip(_S.tooltip.patient_window.warmth,    33, 169, 124, 203)
+  
+  -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
+  self:makeDynamicTooltip(--[[persistable:patient_window_center_tooltip]]function(x, y)
+    if is_in_view_circle(x, y) then
+      return _S.tooltip.patient_window.center_view
+    end
+  end, 17, 216, 92, 292)
   
   -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
@@ -151,8 +167,7 @@ end
 
 function UIPatient:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
-  -- Test for hit within the view circle
-  if button == "left" and (x - 55)^2 + (y - 254)^2 < 38^2 then
+  if button == "left" and is_in_view_circle(x, y) then
     local ui = self.ui
     local patient = self.patient
     local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
@@ -169,23 +184,29 @@ function UIPatient:updateInformation()
   local patient = self.patient
   if patient.diagnosed then
     self.disease_button.enabled = true
+    self.disease_button.visible = true
     self.disease_blanker.visible = false
   else
     self.disease_button.enabled = false
+    self.disease_button.visible = false
     self.disease_blanker.visible = true
   end
   if patient.going_home then
     self.home_button.enabled = false
+    self.home_button.visible = false
     self.home_blanker.visible = true
   else
     self.home_button.enabled = true
+    self.home_button.visible = true
     self.home_blanker.visible = false
   end
-  if patient.diagnosed or patient.going_home then
+  if patient.diagnosed or patient.going_home or patient.is_debug then
     self.guess_button.enabled = false
+    self.guess_button.visible = false
     self.guess_blanker.visible = true
   else
     self.guess_button.enabled = true
+    self.guess_button.visible = true
     self.guess_blanker.visible = false
   end
 end
