@@ -797,6 +797,7 @@ function Window:getTooltipAt(x, y)
       return { text = btn.tooltip, x = x, y = y }
     end
   end
+  if not self.tooltip_regions then self.tooltip_regions = {} end -- TEMPORARY for compatibility of pre-r649 savegames. Remove when compatibility is broken anyway.
   for _, region in ipairs(self.tooltip_regions) do
     if region.enabled ~= false and region.x <= x and x < region.r and region.y <= y and y < region.b then
       local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
