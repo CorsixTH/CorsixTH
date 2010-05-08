@@ -151,9 +151,20 @@ end
 -- x and y are optional position of bottom left of the tooltip.
 -- If not specified, will default to mouse position.
 function Panel:setTooltip(tooltip, x, y)
-  self.tooltip = tooltip
-  self.tooltip_x = x
-  self.tooltip_y = y
+  self.tooltip = {
+    text = tooltip,
+    tooltip_x = x,
+    tooltip_y = y,
+  }
+  return self
+end
+
+function Panel:setDynamicTooltip(callback, x, y)
+  self.tooltip = {
+    callback = callback,
+    tooltip_x = x,
+    tooltip_y = y,
+  }
   return self
 end
 
@@ -226,7 +237,7 @@ function Window:addWindow(window)
   window.parent = self
   if window.on_top then
     -- As self.windows array is ordered from top to bottom and drawn by the end, a "On Top" window has be added at start
-    table.insert(self.windows, 1, window) 
+    table.insert(self.windows, 1, window)
   else
     -- Normal windows, are added to the end
     self.windows[#self.windows + 1] = window
@@ -333,13 +344,28 @@ function Button:setSound(name)
   return self
 end
 
+local --[[persistable:window_drag_round]] function round(value, amount)
+  return amount * math.floor(value / amount + 0.5)
+end
+
 -- Specify a tooltip to be displayed when hovering this button.
 -- x and y are optional position of bottom left of the tooltip.
 -- If not specified, will default to top center of button.
 function Button:setTooltip(tooltip, x, y)
-  self.tooltip = tooltip
-  self.tooltip_x = x
-  self.tooltip_y = y
+  self.tooltip = {
+    text = tooltip,
+    tooltip_x = x or round((self.x + self.r) / 2, 1),
+    tooltip_y = y or self.y,
+  }
+  return self
+end
+
+function Button:setDynamicTooltip(callback, x, y)
+  self.tooltip =  {
+    callback = callback,
+    tooltip_x = x or round((self.x + self.r) / 2, 1),
+    tooltip_y = y or self.y,
+  }
   return self
 end
 
@@ -414,7 +440,7 @@ end
 function Window:hitTestPanel(x, y, panel)
   local x, y = x - panel.x, y - panel.y
   if panel.visible and x >= 0 and y >= 0 then
-    if panel.w and panel.h then 
+    if panel.w and panel.h then
       if x <= panel.w and y <= panel.h then
         return true
       end
@@ -555,10 +581,6 @@ function Window:onMouseUp(button, x, y)
   end
   
   return repaint
-end
-
-local --[[persistable:window_drag_round]] function round(value, amount)
-  return amount * math.floor(value / amount + 0.5)
 end
 
 local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, size, dim_size)
@@ -744,8 +766,8 @@ end
 function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     text = text, x = x, y = y, r = r, b = b,
-    tooltip_x = tooltip_x, -- optional
-    tooltip_y = tooltip_y, -- optional
+    tooltip_x = tooltip_x or round((x + r) / 2, 1), -- optional
+    tooltip_y = tooltip_y or y,                     -- optional
   }
   self.tooltip_regions[#self.tooltip_regions + 1] = region
   return region
@@ -763,11 +785,27 @@ end
 function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     callback = callback, x = x, y = y, r = r, b = b,
-    tooltip_x = tooltip_x, -- optional
-    tooltip_y = tooltip_y, -- optional
+    tooltip_x = tooltip_x or round((x + r) / 2, 1), -- optional
+    tooltip_y = tooltip_y or y,                     -- optional
   }
   self.tooltip_regions[#self.tooltip_regions + 1] = region
   return region
+end
+
+-- An 'element' can either be a panel, a button, or a tooltip region.
+function Window:getTooltipForElement(elem, x, y)
+  local text
+  if elem.callback then
+    text = elem.callback(x, y)
+  else
+    text = elem.text
+  end
+  local x, y = elem.tooltip_x, elem.tooltip_y
+  if x then x = x + self.x end -- NB: can be nil, then it means position at mouse cursor
+  if y then y = y + self.y end
+  if text then
+    return { text = text, x = x, y = y }
+  end
 end
 
 --! Query the window for tooltip text to display for a particular position.
@@ -791,35 +829,18 @@ function Window:getTooltipAt(x, y)
   end
   for _, btn in ipairs(self.buttons) do
     if btn.visible ~= false and btn.tooltip and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
-      local x, y = btn.tooltip_x or round((btn.x + btn.r) / 2, 1), btn.tooltip_y or btn.y
-      x = x + self.x
-      y = y + self.y
-      return { text = btn.tooltip, x = x, y = y }
+      return self:getTooltipForElement(btn.tooltip, x, y)
     end
   end
   if not self.tooltip_regions then self.tooltip_regions = {} end -- TEMPORARY for compatibility of pre-r649 savegames. Remove when compatibility is broken anyway.
   for _, region in ipairs(self.tooltip_regions) do
     if region.enabled ~= false and region.x <= x and x < region.r and region.y <= y and y < region.b then
-      local text
-      if region.callback then
-        text = region.callback(x, y)
-      else
-        text = region.text
-      end
-      local x, y = region.tooltip_x or round((region.x + region.r) / 2, 1), region.tooltip_y or region.y
-      x = x + self.x
-      y = y + self.y
-      if text then
-        return { text = text, x = x, y = y }
-      end
+      return self:getTooltipForElement(region, x, y)
     end
   end
   for _, pnl in ipairs(self.panels) do
     if pnl.tooltip and self:hitTestPanel(x, y, pnl) then
-      local x, y = pnl.tooltip_x, pnl.tooltip_y
-      if x then x = x + self.x end
-      if y then y = y + self.y end
-      return { text = pnl.tooltip, x = x, y = y }
+      return self:getTooltipForElement(pnl.tooltip, x, y)
     end
   end
 end

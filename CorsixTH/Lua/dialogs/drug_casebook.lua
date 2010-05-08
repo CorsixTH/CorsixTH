@@ -46,19 +46,13 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.casebook = self.hospital.disease_casebook
   self:updateDiseaseList()
   
-  if disease_selection then
-    self:selectDisease(disease_selection)
-  else
-    self.selected_index = #self.names_sorted
-    self.selected_disease = self.names_sorted[self.selected_index]
-  end
-  
   -- Buttons
-  self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close)
-  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setSound"pagetur2.wav" -- Scroll up button
-  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setSound"pagetur2.wav" -- Scroll down button
-  self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay) -- payment up button
-  self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay) -- payment down button
+  self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.casebook.close)
+  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up):setSound"pagetur2.wav"
+  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down):setSound"pagetur2.wav"
+  self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay):setTooltip(_S.tooltip.casebook.increase)
+  self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
+  -- TODO: concentrate research button;  :setTooltip(_S.tooltip.casebook.research)
   
   -- Hotkeys
   self:addKeyHandler("up", self.scrollUp)
@@ -68,16 +62,37 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.ui:enableKeyboardRepeat() -- To quickly change values
   
   -- Icons representing cure effectiveness and other important information.
-  self.machinery = self:addPanel(6, 306, 352)
+  self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
   self.machinery.visible = false
-  self.drug = self:addPanel(7, 306, 352)
+  self.drug = self:addPanel(7, 306, 352):setDynamicTooltip(--[[persistable:casebook_drug_tooltip]] function()
+    return _S.tooltip.casebook.cure_type.drug_percentage:format(self.casebook[self.selected_disease].price * 100)
+  end)
   self.drug.visible = false
-  self.surgery = self:addPanel(8, 306, 352)
+  self.surgery = self:addPanel(8, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.surgery)
+  self.surgery.visible = false
+  self.psychiatry = self:addPanel(10, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.psychiatrist)
+  self.psychiatry.visible = false
   
-  self.curable = self:addPanel(11, 335, 352)
+  self.curable = self:addPanel(11, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.possible)
+  self.curable.visible = false
   -- TODO: Add situations when a disease is known but cannot be cured
-  self.not_curable = self:addPanel(12, 335, 352)
+  self.not_curable = self:addPanel(12, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.not_possible) -- TODO: split up in more specific requirements
   self.not_curable.visible = false
+  
+  self:makeTooltip(_S.tooltip.casebook.reputation,       249,  72, 362, 117)
+  self:makeTooltip(_S.tooltip.casebook.treatment_charge, 249, 117, 362, 161)
+  self:makeTooltip(_S.tooltip.casebook.earned_money,     247, 161, 362, 205)
+  self:makeTooltip(_S.tooltip.casebook.cured,            247, 205, 362, 249)
+  self:makeTooltip(_S.tooltip.casebook.deaths,           247, 249, 362, 293)
+  self:makeTooltip(_S.tooltip.casebook.sent_home,        247, 293, 362, 337)
+  
+  if disease_selection then
+    self:selectDisease(disease_selection)
+  else
+    self.selected_index = #self.names_sorted
+    self.selected_disease = self.names_sorted[self.selected_index]
+    self:updateIcons()
+  end
 end
 
 function UICasebook:close()
@@ -112,6 +127,18 @@ function UICasebook:selectDisease(disease)
       break
     end
   end
+  self:updateIcons()
+end
+
+function UICasebook:updateIcons()
+  local disease = self.selected_disease
+  self.drug.visible = not not self.casebook[disease].drug
+  self.machinery.visible = not not self.casebook[disease].machine
+  self.psychiatry.visible = not not self.casebook[disease].psychiatrist
+  self.surgery.visible = not not self.casebook[disease].surgeon
+  self.curable.visible = not self.casebook[disease].pseudo
+  
+  self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
 end
 
 function UICasebook:draw(canvas, x, y)
@@ -146,30 +173,10 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, book[disease].fatalities, x + 248, y + 269, 114, 0) -- Fatalities
   titles:draw(canvas, book[disease].turned_away, x + 248, y + 313, 114, 0) -- Turned away
   
-  -- Icons in the lower part of the screen
-  if book[disease].drug then
-    self.drug.visible = true
+  -- Cure percentage
+  if self.drug.visible then
     self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 310, y + 364, 19, 0)
-  else
-    self.drug.visible = false
   end
-  if book[disease].machine or book[disease].psychiatrist then 
-    -- TODO: Differentiate psychiatrists and machines with tooltip texts
-    self.machinery.visible = true
-  else
-    self.machinery.visible = false
-  end
-  if book[disease].surgeon then
-    self.surgery.visible = true
-  else
-    self.surgery.visible = false
-  end
-  if book[disease].pseudo then
-    self.curable.visible = false
-  else
-    self.curable.visible = true
-  end
-  
   -- Right-hand side list of diseases (and pseudo diseases)
   local index = 1
   while selected - index > 0 and index <= 7 do
@@ -189,6 +196,7 @@ function UICasebook:scrollUp()
     self.selected_index = self.selected_index - 1
     self.selected_disease = self.names_sorted[self.selected_index]
   end
+  self:updateIcons()
 end
 
 function UICasebook:scrollDown()
@@ -196,6 +204,7 @@ function UICasebook:scrollDown()
     self.selected_index = self.selected_index + 1
     self.selected_disease = self.names_sorted[self.selected_index]
   end
+  self:updateIcons()
 end
 
 function UICasebook:increasePay()

@@ -59,7 +59,7 @@ function GameUI:GameUI(app, local_hospital)
   self.transparent_walls = false
 end
 
-function GameUI:draw(canvas) 
+function GameUI:draw(canvas)
   local app = self.app
   local config = app.config
   if not self.in_visible_diamond then
@@ -243,7 +243,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
     elseif y >= self.app.config.height - 3 then
       dy = 10
     end
-
+    
     if not self.tick_scroll_amount_mouse then
       self.tick_scroll_amount_mouse = {x = dx, y = dy}
     else
@@ -257,16 +257,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
   if Window.onMouseMove(self, x, y, dx, dy) then
     repaint = true
   end
-
-  local tooltip = self:getTooltipAt(x, y)
-  if tooltip then
-    -- NB: Do not set counter if tooltip changes here. This allows quick tooltip reading of adjacent buttons.
-    self.tooltip = tooltip
-  else
-    -- Not hovering over any button with tooltip -> reset
-    self.tooltip = nil
-    self.tooltip_counter = 50
-  end
+  
+  self:updateTooltip()
   
   local map = self.app.map
   local wx, wy = map:ScreenToWorld(self.screen_offset_x + x, self.screen_offset_y + y)

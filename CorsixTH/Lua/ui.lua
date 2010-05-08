@@ -212,7 +212,7 @@ function UI:setCursor(cursor)
 end
 
 function UI:drawTooltip(canvas)
-  if not self.tooltip or self.tooltip_counter > 0 then
+  if not self.tooltip or not self.tooltip_counter or self.tooltip_counter > 0 then
     return
   end
   
@@ -227,7 +227,7 @@ function UI:drawTooltip(canvas)
   end
 end
 
-function UI:draw(canvas) 
+function UI:draw(canvas)
   local app = self.app
   local config = app.config
   if self.background then
@@ -390,7 +390,7 @@ function UI:onMouseDown(code, x, y)
   if not button then
     return
   end
-  if self.cursor_entity == nil and self.down_count == 0 and 
+  if self.cursor_entity == nil and self.down_count == 0 and
     self.cursor == self.default_cursor then
     self:setCursor(self.down_cursor)
     repaint = true
@@ -400,6 +400,7 @@ function UI:onMouseDown(code, x, y)
     self.buttons_down[button] = true
   end
   
+  self:updateTooltip()
   return Window.onMouseDown(self, button, x, y) or repaint
 end
 
@@ -428,6 +429,7 @@ function UI:onMouseUp(code, x, y)
     end
   end
   
+  self:updateTooltip()
   return repaint
 end
 
@@ -444,6 +446,28 @@ end
 
 function UI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
+end
+
+local tooltip_ticks = 50 -- Amount of ticks until a tooltip is displayed
+
+function UI:updateTooltip()
+  if self.buttons_down["left"] then
+    -- Disable tooltips altogether while left button is pressed.
+    self.tooltip = nil
+    self.tooltip_counter = nil
+    return
+  elseif self.tooltip_counter == nil then
+    self.tooltip_counter = tooltip_ticks
+  end
+  local tooltip = self:getTooltipAt(self.cursor_x, self.cursor_y)
+  if tooltip then
+    -- NB: Do not set counter if tooltip changes here. This allows quick tooltip reading of adjacent buttons.
+    self.tooltip = tooltip
+  else
+    -- Not hovering over any button with tooltip -> reset
+    self.tooltip = nil
+    self.tooltip_counter = tooltip_ticks
+  end
 end
 
 local UpdateCursorPosition = TH.cursor.setPosition
@@ -463,15 +487,7 @@ function UI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
 
-  local tooltip = self:getTooltipAt(x, y)
-  if tooltip then
-    -- NB: Do not set counter if tooltip changes here. This allows quick tooltip reading of adjacent buttons.
-    self.tooltip = tooltip
-  else
-    -- Not hovering over any button with tooltip -> reset
-    self.tooltip = nil
-    self.tooltip_counter = 50
-  end
+  self:updateTooltip()
   
   return repaint
 end

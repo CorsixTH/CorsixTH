@@ -1159,7 +1159,7 @@ tooltip = {
       drug             = "Denne behandlingen krever medisin",
       drug_percentage  = "Denne behandlingen krever medisin - din er %d%% effektiv", -- %d (effectiveness percentage)
       psychiatrist     = "En psykolog kreves for behandling",
-      operation        = "Denne sykdommen krever en operasjon",
+      surgery          = "Denne sykdommen krever en operasjon",
       machine          = "Denne sykdommen krever en maskin for behandling",
     },
     

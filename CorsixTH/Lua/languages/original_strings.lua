@@ -1302,7 +1302,7 @@ tooltip = {
     replace            = S[32][118],
   },
   
-  -- Spparently handymen have their own set of strings (partly) containing "handyman".
+  -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
     name               = S[32][119], -- contains "handyman"
@@ -1344,7 +1344,7 @@ tooltip = {
       drug             = S[32][148],
       drug_percentage  = S[32][149], -- %d (effectiveness percentage)
       psychiatrist     = S[32][150],
-      operation        = S[32][151],
+      surgery          = S[32][151],
       machine          = S[32][152],
     },
     cure_requirement = {

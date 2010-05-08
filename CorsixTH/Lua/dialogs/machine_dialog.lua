@@ -45,13 +45,20 @@ function UIMachine:UIMachine(ui, machine, room)
   -- Call button
   self:addPanel(339, 20, 127)
     :makeButton(0, 0, 63, 60, 340, self.callHandyman)
+    :setTooltip(_S.tooltip.machine_window.repair)
     :setSound("selectx.wav")
   -- Replace button
   self:addPanel(341, 92, 127)
     :makeButton(0, 0, 45, 60, 342, self.replaceMachine)
+    :setTooltip(_S.tooltip.machine_window.replace)
     :setSound("selectx.wav")
   -- Close button
   self:addPanel(337, 146,  18):makeButton(0, 0, 24, 24, 338, self.close)
+    :setTooltip(_S.tooltip.machine_window.close)
+  
+  self:makeTooltip(_S.tooltip.machine_window.name, 18, 19, 139, 42)
+  self:makeTooltip(_S.tooltip.machine_window.times_used, 18, 49, 139, 77)
+  self:makeTooltip(_S.tooltip.machine_window.status, 24, 88, 128, 115)
 end
 
 function UIMachine:draw(canvas, x, y)
