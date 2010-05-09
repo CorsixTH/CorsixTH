@@ -26,7 +26,7 @@ function Hospital:Hospital(world)
   local level = world.map.level_number
   self.name = "PLAYER"
   -- TODO: Variate initial reputation etc based on level
-  self.balance = -20000--level_config.towns[level].StartCash
+  self.balance = level_config.towns[level].StartCash
   self.loan = 0
   self.value = 32495 -- TODO: How is this calculated?
   self.interest_rate = 0.01 -- Should these be worldwide?
