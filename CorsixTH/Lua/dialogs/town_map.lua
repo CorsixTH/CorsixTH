@@ -71,31 +71,29 @@ function UITownMap:UITownMap(ui)
   -- TODO make it possible to buy areas
   -- TODO multiplayer mode
   
-  -- Quit and image alter buttons
-  -- addPanel( imgid, x, y )
-  -- makeButton( x, y, w, h, imgid, callback[, callback_self[, right_callback])
-  -- it looks like the image you give to addPanel is the default image; the
-  -- image given to makeButton is the override image.
-  self:addPanel(0, 30,  420):makeButton(0, 0, 200, 50, 0, self.bankManager,
-  -- right click on this $ sign closes the dialog
-    nil, self.close)
-  self:addPanel(0, 594, 437):makeButton(0, 0, 26, 26, 8, self.close)
-  self:addPanel(0, 171, 315):makeButton(0, 0, 20, 20, 6, self.increaseHeat)
-  self:addPanel(0, 70,  314):makeButton(0, 0, 20, 20, 7, self.decreaseHeat)
+  -- NB: original TH closed the town map on right click of balance button.
+  -- This is likely a bug and we do not copy this behavior.
+  self:addPanel(0, 30,  420):makeButton(0, 0, 200, 50, 0, self.bankManager, nil, self.bankStats):setTooltip(_S.tooltip.town_map.balance)
+  self:addPanel(0, 594, 437):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.town_map.close)
+  self:addPanel(0, 171, 315):makeButton(0, 0, 20, 20, 6, self.increaseHeat):setTooltip(_S.tooltip.town_map.heat_inc)
+  self:addPanel(0, 70,  314):makeButton(0, 0, 20, 20, 7, self.decreaseHeat):setTooltip(_S.tooltip.town_map.heat_dec)
 
   -- add the toggle buttons
-  local function toggle_button(sprite, x, y, option)
+  local function toggle_button(sprite, x, y, option, str)
     local panel = self:addPanel(sprite, x, y)
     local btn = panel:makeToggleButton(0, 0, 46, 46, 0, --[[persistable:town_map_config_button]] function(state)
       app.runtime_config.town_dialog[option] = state
-    end)
+    end):setTooltip(str)
     btn:setToggleState(config[option])
   end
-  toggle_button(1, 140,  37, "people_enabled")
-  toggle_button(2, 140,  89, "plants_enabled")
-  toggle_button(3, 140, 141, "fire_ext_enabled")
-  toggle_button(4, 140, 193, "objects_enabled")
-  toggle_button(5, 140, 246, "radiators_enabled")
+  toggle_button(1, 140,  37, "people_enabled", _S.tooltip.town_map.people)
+  toggle_button(2, 140,  89, "plants_enabled", _S.tooltip.town_map.plants)
+  toggle_button(3, 140, 141, "fire_ext_enabled", _S.tooltip.town_map.fire_extinguishers)
+  toggle_button(4, 140, 193, "objects_enabled", _S.tooltip.town_map.objects)
+  toggle_button(5, 140, 246, "radiators_enabled", _S.tooltip.town_map.radiators)
+  
+  self:makeTooltip(_S.tooltip.town_map.heat_level, 94, 318, 167, 331)
+  self:makeTooltip(_S.tooltip.town_map.heating_bill, 72, 351, 167, 374)
 end
 
 -- temporary, remove later
@@ -134,10 +132,9 @@ function UITownMap:draw(canvas, x, y)
   
   -- We need to draw number of people, plants, fire extinguisers, other objects
   -- and radiators, heat level and radiator total costs, to the left.
-  -- The number of patients, for some reason, is always 1 too much in the
-  -- original game (it actually starts with 1). CorsixTH currently mimics this
-  -- behaviour, but this can be changed later.
-  local patientcount = 1
+  -- NB: original TH's patient count was always 1 too big (started counting at 1)
+  -- This is likely a bug and we do not copy this behavior.
+  local patientcount = 0
   local plants = 0
   local fireext = 0
   local objs = 0
@@ -310,4 +307,15 @@ function UITownMap:increaseHeat()
     heat = 10
   end
   h.radiator_heat = heat / 10
+end
+
+function UITownMap:bankManager()
+  local dlg = UIBankManager(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UITownMap:bankStats()
+  local dlg = UIBankManager(self.ui)
+  dlg:showStatistics()
+  self.ui:addWindow(dlg)
 end

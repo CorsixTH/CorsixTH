@@ -541,7 +541,7 @@ function Window:onMouseUp(button, x, y)
     for _, window in ipairs(self.windows) do
       if window:onMouseUp(button, x - window.x, y - window.y) then
         repaint = true
-        break			-- Click has been handled. No need to look any further.
+        break -- Click has been handled. No need to look any further.
       end
     end
   end
@@ -563,7 +563,7 @@ function Window:onMouseUp(button, x, y)
           end
           if btn.on_click == nil then
             print("Warning: No handler for button click")
-            btn.on_click = function() end
+            btn.on_click = --[[persistable:button_on_click_handler_stub]] function() end
           else
             btn.on_click(btn.on_click_self, arg, btn)
           end

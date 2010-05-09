@@ -56,7 +56,7 @@ function UIInformation:UIInformation(ui, text)
   self:addPanel(15, self.width-4, self.height-4)  -- Border bottom right corner
   
   -- Close button
-  self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.window_general.close_window)
+  self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.statement.close)
 end
 
 function UIInformation:draw(canvas, x, y)
