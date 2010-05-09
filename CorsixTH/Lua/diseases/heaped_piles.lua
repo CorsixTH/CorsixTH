@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "heaped_piles"
+disease.expertise_id = 32
+disease.non_visuals_id = 16
 disease.name = _S.diseases.heaped_piles.name
 disease.cause = _S.diseases.heaped_piles.cause
 disease.symptoms = _S.diseases.heaped_piles.symptoms

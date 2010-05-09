@@ -22,8 +22,11 @@ class "Hospital"
 
 function Hospital:Hospital(world)
   self.world = world
-  -- TODO: Variate initial balance, reputation etc based on level
-  self.balance = 40000
+  local level_config = world.map.level_config
+  local level = world.map.level_number
+  self.name = "PLAYER"
+  -- TODO: Variate initial reputation etc based on level
+  self.balance = -20000--level_config.towns[level].StartCash
   self.loan = 0
   self.value = 32495 -- TODO: How is this calculated?
   self.interest_rate = 0.01 -- Should these be worldwide?
@@ -34,6 +37,11 @@ function Hospital:Hospital(world)
   self.radiator_heat = 0.5
   self.num_deaths = 0
   self.num_cured = 0
+  self.not_cured = 0
+  self.percentage_cured = 0
+  self.percentage_killed = 0
+  self.population = 1 -- TODO: Percentage showing how much of the total population that goes
+  -- to the player's hospital, used for one of the goals. Change when competitors are there.
   self.is_in_world = true
   self.transactions = {}
   self.staff = {}
@@ -59,30 +67,31 @@ function Hospital:Hospital(world)
       break
     end
   end
-  -- TODO: Take disease list from the world's available diseases and available
-  -- rooms (for diagnosis psuedo-piseases)
   local diseases = TheApp.diseases
+  local expertise = self.world.map.level_config.expertise
   for i, disease in ipairs(diseases) do
-    local info = {
-      reputation = 500,
-      price = 1.0, -- user-set multiplier between 0.5 and 2.0
-      money_earned = 0,
-      recoveries = 0,
-      fatalities = 0,
-      turned_away = 0,
-      disease = disease,
-      discovered = (disease.pseudo and true or false),
-      concentrate_research = false,
-      cure_effectiveness = 100,
-      -- This will only work as long as there's only one treatment room.
-      drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil,
-      psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,
-      machine = disease.requires_machine,
-      surgeon = disease.requires_surgeon, -- TODO: Fix when operating theatre is in.
-      researcher = disease.requires_researcher, -- TODO: Fix when aliens are in the game.
-      pseudo = disease.pseudo, -- Diagnosis is pseudo
-    }
-    self.disease_casebook[disease.id] = info
+    if world.available_diseases[disease.id] or disease.pseudo then
+      local info = {
+        reputation = 500,
+        price = 1.0, -- user-set multiplier between 0.5 and 2.0
+        money_earned = 0,
+        recoveries = 0,
+        fatalities = 0,
+        turned_away = 0,
+        disease = disease,
+        discovered = expertise[disease.expertise_id].Known == 1 and true or false,
+        concentrate_research = false,
+        cure_effectiveness = 100,
+        -- This will only work as long as there's only one treatment room.
+        drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil,
+        psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,
+        machine = disease.requires_machine,
+        surgeon = disease.requires_surgeon, -- TODO: Fix when operating theatre is in.
+        researcher = disease.requires_researcher, -- TODO: Fix when aliens are in the game.
+        pseudo = disease.pseudo, -- Diagnosis is pseudo
+      }
+      self.disease_casebook[disease.id] = info
+    end
   end
 end
 
@@ -414,8 +423,24 @@ end
 
 class "AIHospital" (Hospital)
 
-function AIHospital:AIHospital(...)
+local competitors = {
+  "ORAC", 
+  "COLOSSUS", 
+  "HAL", 
+  "MULTIVAC", 
+  "HOLLY", 
+  "DEEP THOUGHT", 
+  "ZEN", 
+  "SKYNET",
+  "MARVIN",
+  "CEREBRO",
+  "MOTHER",
+  "JAYNE",
+}
+
+function AIHospital:AIHospital(competitor, ...)
   self:Hospital(...)
+  self.name = competitors[competitor]
   self.is_in_world = false
 end
 

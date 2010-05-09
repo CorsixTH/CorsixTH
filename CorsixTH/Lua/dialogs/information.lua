@@ -66,7 +66,7 @@ function UIInformation:draw(canvas, x, y)
   canvas:drawRect(white, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + 20
   for i, text in ipairs(self.text) do
-    last_y = self.black_font:drawWrapped(canvas, text, dx + 40, last_y, self.width - 80)
+    last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + 40, last_y, self.width - 80)
     last_y = self.black_font:drawWrapped(canvas, " ", dx + 40, last_y, self.width - 80)
   end
   

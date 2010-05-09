@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "bloaty_head"
+disease.expertise_id = 2
+disease.visuals_id = 0
 disease.name = _S.diseases.bloaty_head.name
 disease.cause = _S.diseases.bloaty_head.cause
 disease.symptoms = _S.diseases.bloaty_head.symptoms

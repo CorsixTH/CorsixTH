@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "king_complex"
+disease.expertise_id = 4
+disease.visuals_id = 2
 disease.name = _S.diseases.king_complex.name
 disease.cause = _S.diseases.king_complex.cause
 disease.symptoms = _S.diseases.king_complex.symptoms

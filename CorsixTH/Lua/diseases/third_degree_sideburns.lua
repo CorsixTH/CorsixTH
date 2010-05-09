@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "third_degree_sideburns"
+disease.expertise_id = 26
+disease.non_visuals_id = 10
 disease.name = _S.diseases.third_degree_sideburns.name
 disease.cause = _S.diseases.third_degree_sideburns.cause
 disease.symptoms = _S.diseases.third_degree_sideburns.symptoms

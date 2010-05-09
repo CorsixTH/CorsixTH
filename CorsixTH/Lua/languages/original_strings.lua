@@ -618,6 +618,8 @@ adviser = {
     drug_improved                 = S[11][ 26], -- %s (disease name)
     machine_improved              = S[11][ 27], -- %s (machine name)
     new_available                 = S[11][ 28], -- %s TODO What is this? Where to use this and where [11][24]?
+    -- ANSWER: It is used if research is not conducted in an area for very long. Some diagnosis equipment
+    -- becomes available anyway after some years. Then this message is displayed instead of [11][24]
     drug_fully_researched         = S[11][122], -- %s (drug(?) name)
     autopsy_discovered_rep_loss   = S[11][123],
   },
@@ -1445,6 +1447,15 @@ tooltip = {
     thirst             = S[32][227],
     warmth             = S[32][228],
     close              = S[32][229],
+    
+    -- Criteria to win
+    reputation         = S[64][  1],
+    balance            = S[64][  2],
+    population         = S[64][  3],
+    num_cured          = S[64][  4],
+    percentage_killed  = S[64][  5],
+    value              = S[64][  6],
+    percentage_cured   = S[64][  7],
   },
   
   policy = {
@@ -1849,6 +1860,24 @@ queue_window = {
 -- TODO: continue here with section 50
 -- ...
 
+-- 54:  Introduction texts to each level
+local T = {}
+local level_index = 0
+local text_index = 2
+while true do
+  local text = S[54][text_index]
+  if text == "." then
+    level_index = level_index + 1
+    T["level" .. level_index] = {}
+  elseif text == ".." then
+    break
+  else
+    T["level" .. level_index][#T["level" .. level_index] + 1] = text
+  end
+  text_index = text_index + 1
+end
+introduction_texts = T
+
 dynamic_info = {
   patient = {
     actions = {
@@ -1894,5 +1923,21 @@ dynamic_info = {
     queue_expected              = S[59][34], -- %d (num of patients)
   },
 }
+
+-- 60: The progress report window
+
+progress_report = {
+  header                = S[60][1],
+  very_unhappy          = S[60][2],
+  quite_unhappy         = S[60][3],
+  more_drinks_machines  = S[60][4],
+  too_hot               = S[60][5],
+  too_cold              = S[60][6],
+  percentage_pop        = S[60][7],
+  win_criteria          = S[60][8],
+}
+
+-- 64: Tooltip for the winning conditions
+-- These are inserted in the tooltip section under status.
 
 -- ...

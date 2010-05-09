@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "sweaty_palms"
+disease.expertise_id = 31
+disease.non_visuals_id = 15
 disease.name = _S.diseases.sweaty_palms.name
 disease.cause = _S.diseases.sweaty_palms.cause
 disease.symptoms = _S.diseases.sweaty_palms.symptoms

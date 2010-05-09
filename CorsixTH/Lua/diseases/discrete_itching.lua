@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "discrete_itching"
+disease.expertise_id = 11
+disease.visuals_id = 9
 disease.name = _S.diseases.discrete_itching.name
 disease.cause = _S.diseases.discrete_itching.cause
 disease.symptoms = _S.diseases.discrete_itching.symptoms

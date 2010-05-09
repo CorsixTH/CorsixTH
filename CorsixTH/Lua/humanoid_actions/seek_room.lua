@@ -18,8 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function action_seek_room_find_room(room_type, humanoid, is_diagnosis_room)
-  if is_diagnosis_room then
+local function action_seek_room_find_room(action, humanoid)
+  local room_type = action.room_type
+  if action.diagnosis_room then
     local tried_rooms = 0
     -- Make numbers for each available diagnosis room. A random index from this list will be chosen, 
     -- and then the corresponding room index is taken as next room. (The list decrease for each room
@@ -41,9 +42,18 @@ local function action_seek_room_find_room(room_type, humanoid, is_diagnosis_room
         tried_rooms = tried_rooms + 1
         -- Remove the index of this room from the list of indeces available in available_diagnosis_rooms
         table.remove(available_rooms, room_at_index)
+        -- If the room can be built, set the flag for it.
+        local diag = humanoid.world.available_rooms[room_type]
+        if diag and diag.discovered then
+          action.diagnosis_exists = room_type
+        end
       end
     end
-    -- No room found
+    -- No room found. If the last room to be checked was one that is not yet discovered
+    -- but another one exists that can be built, return to that one.
+    if not humanoid.world.available_rooms[room_type] and action.diagnosis_exists then
+      action.room_type = action.diagnosis_exists
+    end
     return nil
   else
     -- Treatment rooms etc either exist, or they don't.
@@ -100,9 +110,11 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
 end
 
-local function action_seek_room_no_diagnosis_room_found(humanoid)
-  -- Now, depending on hospital policy three things can happen:
-  if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
+local function action_seek_room_no_diagnosis_room_found(action, humanoid)
+  -- If none of the diagnosis rooms can be built yet, go home anyway.
+  -- Otherwise, depending on hospital policy three things can happen:
+  if not action.diagnosis_exists 
+  or humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
     humanoid:goHome()
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
@@ -161,7 +173,7 @@ end)
 
 local function action_seek_room_start(action, humanoid)
   -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
-  local room = action_seek_room_find_room(action.room_type, humanoid, action.diagnosis_room)
+  local room = action_seek_room_find_room(action, humanoid)
 
   if room then
     action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
@@ -213,7 +225,7 @@ local function action_seek_room_start(action, humanoid)
             humanoid:setMood("patient_wait", "activate")
             humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
           else
-            action_still_valid = action_seek_room_no_diagnosis_room_found(humanoid)
+            action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
           end
         end
       end

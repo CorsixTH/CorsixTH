@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "fractured_bones"
+disease.expertise_id = 9
+disease.visuals_id = 7
 disease.name = _S.diseases.fractured_bones.name
 disease.cause = _S.diseases.fractured_bones.cause
 disease.symptoms = _S.diseases.fractured_bones.symptoms

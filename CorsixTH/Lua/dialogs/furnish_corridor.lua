@@ -126,14 +126,18 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
     quantity = 99
   end
   quantity = quantity - o.qty
-  o.qty = o.qty + quantity
-  self.total_price = self.total_price + quantity * o.object.build_cost
-  if o.object.id == "reception_desk" then
-    if o.qty > 0 then
-      self.ui:tutorialStep(1, 2, 3)
-    else
-      self.ui:tutorialStep(1, 3, 2)
+  if self.ui.hospital.balance >= self.total_price + quantity * o.object.build_cost then
+    o.qty = o.qty + quantity
+    self.total_price = self.total_price + quantity * o.object.build_cost
+    if o.object.id == "reception_desk" then
+      if o.qty > 0 then
+        self.ui:tutorialStep(1, 2, 3)
+      else
+        self.ui:tutorialStep(1, 3, 2)
+      end
     end
+  else
+    quantity = 0
   end
   return quantity
 end

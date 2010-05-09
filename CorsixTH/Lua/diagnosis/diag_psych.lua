@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "diag_psych"
+disease.expertise_id = 43
 disease.name = _S.diseases.diag_psych.name
 disease.cure_price = 200 -- http://www.eudoxus.demon.co.uk/thc/tech.htm
 disease.pseudo = true

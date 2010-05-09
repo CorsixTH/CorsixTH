@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "gastric_ejections"
+disease.expertise_id = 28
+disease.non_visuals_id = 12
 disease.name = _S.diseases.gastric_ejections.name
 disease.cause = _S.diseases.gastric_ejections.cause
 disease.symptoms = _S.diseases.gastric_ejections.symptoms

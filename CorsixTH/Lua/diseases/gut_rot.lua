@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "gut_rot"
+disease.expertise_id = 33
+disease.non_visuals_id = 17
 disease.name = _S.diseases.gut_rot.name
 disease.cause = _S.diseases.gut_rot.cause
 disease.symptoms = _S.diseases.gut_rot.symptoms

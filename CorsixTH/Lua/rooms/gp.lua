@@ -108,6 +108,14 @@ function GPRoom:dealtWithPatient(patient)
     or #patient.available_diagnosis_rooms == 0 then
       patient:setDiagnosed(true)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+      -- TODO: Temporary, until research is in the game. This is just so that something happens...
+      for _, room in pairs(self.world.available_rooms) do
+        if not room.discovered and room.id == patient.disease.treatment_rooms[1] then
+          room.discovered = true
+          self.world.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
+          break
+        end
+      end
 
       self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered

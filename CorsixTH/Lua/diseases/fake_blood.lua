@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "fake_blood"
+disease.expertise_id = 27
+disease.non_visuals_id = 11
 disease.name = _S.diseases.fake_blood.name
 disease.cause = _S.diseases.fake_blood.cause
 disease.symptoms = _S.diseases.fake_blood.symptoms

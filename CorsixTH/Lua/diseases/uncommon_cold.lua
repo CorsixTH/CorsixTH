@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "uncommon_cold"
+disease.expertise_id = 16
+disease.non_visuals_id = 0
 disease.name = _S.diseases.uncommon_cold.name
 disease.cause = _S.diseases.uncommon_cold.cause
 disease.symptoms = _S.diseases.uncommon_cold.symptoms

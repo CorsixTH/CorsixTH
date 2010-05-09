@@ -89,8 +89,57 @@ function Map:load(level_number)
   self.level_number = level_number
   local _, objects = assert(self.th:load(self:getRawData()))
   self.level_name = _S.level_names[level_number]:upper()
+  -- Load base configuration for all levels
+  local base_config = self:loadMapConfig("FULL00.SAM", {})
+  local level = level_number
+  if level < 10 then
+    level = "0" .. level
+  end
+  -- Override with the specific configuration for this level
+  self.level_config = self:loadMapConfig("FULL" .. level .. ".SAM", base_config)
   self.width, self.height = self.th:size()
   return objects
+end
+
+function Map:loadMapConfig(filename, config)
+  -- TODO: Paths etc will need to be adjusted to enable custom levels
+  -- Currently the level number is used in many places (which is in the actual filename too.
+  -- How should this be done in the future?
+  for line in self.app.fs:readContents("Levels", filename):gmatch"[^\r\n]+" do
+    if line:sub(1, 1) == "#" then
+      local parts = {}
+      local nkeys = 0
+      for part in line:gmatch"%.?[-?a-zA-Z0-9%[_%]]+" do
+        if part:sub(1, 1) == "." and #parts == nkeys + 1 then
+          nkeys = nkeys + 1
+        end
+        parts[#parts + 1] = part
+      end
+      if nkeys == 0 then
+        parts[3] = parts[2]
+        parts[2] = ".Value"
+        nkeys = 1
+      end
+      for i = 2, nkeys + 1 do
+        local key = parts[1] .. parts[i]
+        local t, n
+        for name in key:gmatch"[^.%[%]]+" do
+          name = tonumber(name) or name
+          if t then
+            if not t[n] then
+              t[n] = {}
+            end
+            t = t[n]
+          else
+            t = config
+          end
+          n = name
+        end
+        t[n] = tonumber(parts[nkeys + i]) or parts[nkeys + i]
+      end
+    end
+  end
+  return config
 end
 
 function Map:prepareForSave()

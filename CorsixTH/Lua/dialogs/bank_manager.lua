@@ -248,8 +248,10 @@ end
 
 function UIBankManager:decreaseLoan()
   local hospital = self.ui.hospital
-  if hospital.loan > 0 and hospital.balance > 5000 then
+  if hospital.loan > 0 and hospital.balance >= 5000 then
     hospital.loan = hospital.loan - 5000
     hospital:spendMoney(5000, _S.transactions.loan_repayment)
+  else
+    hospital.ui:playSound("Wrong2.wav")
   end
 end

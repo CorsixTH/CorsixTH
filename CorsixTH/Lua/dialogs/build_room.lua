@@ -98,9 +98,9 @@ function UIBuildRoom:UIBuildRoom(ui)
   for i, category in ipairs{"diagnosis", "treatment", "clinics", "facilities"} do
     local rooms = {}
     self.category_rooms[i] = rooms
-    for _, room in ipairs(app.rooms) do
+    for _, room in ipairs(app.world.available_rooms) do
       -- NB: Unimplemented rooms are hidden unless in debug mode
-      if (app.config.debug or room.class) and room.categories[category] then
+      if (app.config.debug or room.class) and room.categories[category] and room.discovered then
         rooms[#rooms + 1] = room
       end
     end
@@ -157,8 +157,12 @@ end
 
 function UIBuildRoom:buildRoom(index)
   if index == 1 then self.ui:tutorialStep(3, 3, 4) end
-  local edit_dlg = UIEditRoom(self.ui, self.list[index])
-  self.ui:addWindow(edit_dlg)
+  if self.ui.hospital.balance >= self.list[index].build_cost then
+    local edit_dlg = UIEditRoom(self.ui, self.list[index])
+    self.ui:addWindow(edit_dlg)
+  else
+    self.ui:playSound("Wrong2.wav")
+  end
 end
 
 function UIBuildRoom:onMouseMove(x, y, dx, dy)

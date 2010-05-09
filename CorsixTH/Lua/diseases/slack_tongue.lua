@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "slack_tongue"
+disease.expertise_id = 7
+disease.visuals_id = 5
 disease.name = _S.diseases.slack_tongue.name
 disease.cause = _S.diseases.slack_tongue.cause
 disease.symptoms = _S.diseases.slack_tongue.symptoms

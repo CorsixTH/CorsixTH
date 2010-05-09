@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "broken_wind"
+disease.expertise_id = 17
+disease.non_visuals_id = 1
 disease.name = _S.diseases.broken_wind.name
 disease.cause = _S.diseases.broken_wind.cause
 disease.symptoms = _S.diseases.broken_wind.symptoms

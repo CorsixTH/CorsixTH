@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "hairyitis"
+disease.expertise_id = 3
+disease.visuals_id = 1
 disease.name = _S.diseases.hairyitis.name
 disease.cause = _S.diseases.hairyitis.cause
 disease.symptoms = _S.diseases.hairyitis.symptoms

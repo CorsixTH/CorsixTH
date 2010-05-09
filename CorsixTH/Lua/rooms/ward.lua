@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "ward"
+room.level_config_id = 8
 room.class = "WardRoom"
 room.name = _S.rooms_short.ward
 room.tooltip = _S.tooltip.rooms.ward

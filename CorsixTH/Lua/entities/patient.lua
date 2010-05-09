@@ -121,6 +121,7 @@ function Patient:treated()
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
   end
+  self.hospital.percentage_killed = hospital.num_deaths / (hospital.num_cured + hospital.num_deaths)
   if self.is_emergency then
     local killed = hospital.emergency.killed_emergency_patients
     local cured = hospital.emergency.cured_emergency_patients
@@ -159,13 +160,15 @@ function Patient:goHome(cured)
   if self.going_home then
     return
   end
+  local hosp = self.hospital
   if not cured then
     self:setMood("exit", "activate")
-    self.hospital:changeReputation("kicked")
+    hosp:changeReputation("kicked")
+    self.hospital.not_cured = hosp.not_cured + 1
   end
-  
+  self.hospital.percentage_cured = hosp.num_cured / (hosp.num_cured + hosp.not_cured + hosp.num_deaths)
   if self.is_debug then
-    self.hospital:removeDebugPatient(self)
+    hosp:removeDebugPatient(self)
   end
   -- Remove any message related to the patient.
   if self.message_callback then

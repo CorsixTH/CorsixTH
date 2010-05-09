@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "corrugated_ankles"
+disease.expertise_id = 24
+disease.non_visuals_id = 8
 disease.name = _S.diseases.corrugated_ankles.name
 disease.cause = _S.diseases.corrugated_ankles.cause
 disease.symptoms = _S.diseases.corrugated_ankles.symptoms

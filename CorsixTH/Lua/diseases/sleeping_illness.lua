@@ -21,6 +21,8 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "sleeping_illness"
+disease.expertise_id = 13
+disease.visuals_id = 11
 disease.name = _S.diseases.sleeping_illness.name
 disease.cause = _S.diseases.sleeping_illness.cause
 disease.symptoms = _S.diseases.sleeping_illness.symptoms

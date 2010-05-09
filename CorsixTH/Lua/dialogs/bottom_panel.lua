@@ -68,7 +68,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[4] = self:addPanel(21, 483, 0) -- Research button (not yet implemented)
   buttons[4]:makeButton(1, 6, 35, 36, 22):setTooltip(_S.tooltip.toolbar.research .. " " .. _S.misc.not_yet_implemented).enabled = false
   buttons[5] = self:addPanel(23, 521, 0) -- Status button (not yet implemented)
-  buttons[5]:makeButton(1, 6, 35, 36, 24):setTooltip(_S.tooltip.toolbar.status .. " " .. _S.misc.not_yet_implemented).enabled = false
+  buttons[5]:makeButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
   buttons[6] = self:addPanel(25, 559, 0) -- Charts button (not yet implemented)
   buttons[6]:makeButton(1, 6, 35, 36, 26):setTooltip(_S.tooltip.toolbar.charts .. " " .. _S.misc.not_yet_implemented).enabled = false
   buttons[7] = self:addPanel(27, 597, 0) -- Policy button
@@ -344,6 +344,11 @@ end
 
 function UIBottomPanel:dialogPolicy()
   local dlg = UIPolicy(self.ui)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogStatus()
+  local dlg = UIProgressReport(self.ui)
   self.ui:addWindow(dlg)
 end
 

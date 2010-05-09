@@ -54,13 +54,14 @@ function World:World(app)
   self.hour = 0
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
-  self:initDiseases(app)
+  self:initLevel(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.hospitals = {}
   self.floating_dollars = {}
   
   self.hospitals[1] = Hospital(self) -- Player's hospital
-  -- TODO: Add AI and/or multiplayer hospitals
+  self:initCompetitors()
+  -- TODO: Add (working) AI and/or multiplayer hospitals
   
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
@@ -106,13 +107,47 @@ function World:setUI(ui)
   self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
 end
 
-function World:initDiseases(app)
+function World:initLevel(app)
+  local level_config = self.map.level_config
+  -- Determine available diseases
   self.available_diseases = {}
+  local visual = level_config.visuals
+  local non_visual = level_config.non_visuals
   for i, disease in ipairs(app.diseases) do
-    -- TODO: Also skip disease if not enabled in level config
     if not disease.pseudo then
-      self.available_diseases[#self.available_diseases + 1] = disease
-      self.available_diseases[disease.id] = disease
+      local vis = disease.visuals_id and visual[disease.visuals_id].Value 
+      or non_visual[disease.non_visuals_id].Value
+      if vis ~= 0 then
+        self.available_diseases[#self.available_diseases + 1] = disease
+        self.available_diseases[disease.id] = disease
+      end
+    end
+  end
+  
+  -- Determine available rooms from their required objects
+  self.available_rooms = {}
+  local obj = level_config.objects
+  for i, room in ipairs(app.rooms) do
+    local avail = room.level_config_id and obj[room.level_config_id].AvailableForLevel or 1
+    if avail == 1 then
+      if room.level_config_id then
+        room.discovered = obj[room.level_config_id].StartAvail == 1 and true or false
+      else
+        room.discovered = true
+      end
+      self.available_rooms[#self.available_rooms + 1] = room
+      self.available_rooms[room.id] = room
+    end
+  end
+end
+
+function World:initCompetitors()
+  -- Add computer players
+  -- TODO: Right now they're only names
+  local level_config = self.map.level_config
+  for key, value in pairs(level_config.computer) do
+    if value.Playing == 1 then
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self)
     end
   end
 end
@@ -306,6 +341,10 @@ end
 
 function World:markRoomAsBuilt(room)
   room:roomFinished()
+  local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.room_info.id]
+  if diag_disease and not diag_disease.discovered then
+    self.hospitals[1].disease_casebook["diag_" .. room.room_info.id].discovered = true
+  end
   for callback in pairs(self.room_build_callbacks) do
     callback(room)
   end
@@ -400,14 +439,8 @@ function World:onTick()
       end
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
+      self.ui:addWindow(UIInformation(self.ui,_S.introduction_texts["level" .. self.map.level_number]))
       local message = {
-        _S.fax.welcome.beta2[1],
-        _S.fax.welcome.beta2[2],
-        _S.fax.welcome.beta2[3],
-        _S.fax.welcome.beta2[4],
-      }
-      self.ui:addWindow(UIInformation(self.ui,message))
-      message = {
         {             text = _S.fax.tutorial[1]},
         {offset =  8, text = _S.fax.tutorial[2]},
         choices = {
@@ -510,6 +543,14 @@ end
 
 -- Called immediately prior to the ingame year changing.
 function World:onEndYear()
+  -- TODO: Temporary, until research is in the game. This is just so that something happens...
+  for _, room in pairs(self.available_rooms) do
+    if not room.discovered then
+      room.discovered = true
+      self.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
+      break
+    end
+  end
 end
 
 function World:getPathDistance(x1, y1, x2, y2)

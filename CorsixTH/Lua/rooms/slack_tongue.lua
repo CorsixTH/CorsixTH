@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "slack_tongue"
+room.level_config_id = 26
 room.class = "SlackTongueRoom"
 room.name = _S.rooms_short.tongue_clinic
 room.tooltip = _S.tooltip.rooms.tongue_clinic

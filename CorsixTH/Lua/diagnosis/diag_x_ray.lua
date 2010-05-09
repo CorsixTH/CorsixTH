@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local disease = {}
 disease.id = "diag_x_ray"
+disease.expertise_id = 39
 disease.name = _S.diseases.diag_x_ray.name
 disease.cure_price = 200
 disease.pseudo = true

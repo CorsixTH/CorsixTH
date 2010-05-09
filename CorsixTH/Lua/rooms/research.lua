@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "research"
+room.level_config_id = 55
 room.name = _S.rooms_short.research_room
 room.tooltip = _S.tooltip.rooms.research_room
 room.build_cost = 5000
