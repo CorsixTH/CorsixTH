@@ -121,7 +121,7 @@ function Patient:treated()
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
   end
-  self.hospital.percentage_killed = hospital.num_deaths / (hospital.num_cured + hospital.num_deaths)
+  hospital.percentage_killed = hospital.num_deaths / (hospital.num_cured + hospital.num_deaths)
   if self.is_emergency then
     local killed = hospital.emergency.killed_emergency_patients
     local cured = hospital.emergency.cured_emergency_patients
