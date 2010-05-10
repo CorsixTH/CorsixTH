@@ -24,8 +24,8 @@ local TH = require "TH"
 --! Progress Report fullscreen window (check level goals, competitors and alerts).
 class "UIProgressReport" (UIFullscreen)
 
--- List of which criteria means which, and what number the corresponding icon has.
-local criterias = {
+-- List of which criterion means what, and what number the corresponding icon has.
+local criteria = {
   {name = "reputation",       icon = 10, formats = 2}, 
   {name = "balance",          icon = 11, formats = 2}, 
   {name = "percentage_cured", icon = 12, formats = 2}, 
@@ -67,39 +67,39 @@ function UIProgressReport:UIProgressReport(ui)
   for _, values in pairs(win) do
     if values.Criteria ~= 0 then
       total = total + 1
-      local criteria = criterias[values.Criteria].name
-      active[criteria] = {
+      local criterion = criteria[values.Criteria].name
+      active[criterion] = {
         win_value = values.Value, 
         boundary = values.Bound, 
-        criteria = values.Criteria,
+        criterion = values.Criteria,
         number = total,
       }
-      active[#active + 1] = active[criteria]
+      active[#active + 1] = active[criterion]
     end
   end
   for _, values in pairs(lose) do
     if values.Criteria ~= 0 then
-      local criteria = criterias[values.Criteria].name
-      if not active[criteria] then
-        active[criteria] = {number = #active + 1}
-        active[#active + 1] = active[criteria]
+      local criterion = criteria[values.Criteria].name
+      if not active[criterion] then
+        active[criterion] = {number = #active + 1}
+        active[#active + 1] = active[criterion]
       end
-      active[criteria].lose_value = values.Value
-      active[criteria].boundary = values.Bound
-      active[criteria].criteria = values.Criteria
-      active[active[criteria].number].lose_value = values.Value
-      active[active[criteria].number].boundary = values.Bound
-      active[active[criteria].number].criteria = values.Criteria
+      active[criterion].lose_value = values.Value
+      active[criterion].boundary = values.Bound
+      active[criterion].criterion = values.Criteria
+      active[active[criterion].number].lose_value = values.Value
+      active[active[criterion].number].boundary = values.Bound
+      active[active[criterion].number].criterion = values.Criteria
     end
   end
   
   -- Order the criteria (some icons can't be next to each other)
-  table.sort(active, function(a,b) return a.criteria < b.criteria end)
+  table.sort(active, function(a,b) return a.criterion < b.criterion end)
 
   -- Add the icons for the criteria
   local x = 263
   for i, tab in ipairs(active) do
-    local crit = criterias[i].name
+    local crit = criteria[tab.criterion].name
     local str = _S.tooltip.status[crit]
     local res_value = active[crit].win_value
     active[crit].visible = true
@@ -122,17 +122,17 @@ function UIProgressReport:UIProgressReport(ui)
       active[crit].visible = false
     end
     if res_value then
-      if criterias[tab.criteria].formats == 2 then
+      if criteria[tab.criterion].formats == 2 then
         str = _S.tooltip.status[crit]:format(res_value, hospital[crit])
       else
         str = _S.tooltip.status[crit]:format(res_value)
       end
-      self:addPanel(criterias[i].icon, x, 240)
+      self:addPanel(criteria[tab.criterion].icon, x, 240)
       self:makeTooltip(str, x, 180, x + 30, 180 + 90)
       x = x + 30
     end
   end
-  self.criterias = active
+  self.criteria = active
   
   self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close)
   
@@ -156,7 +156,7 @@ function UIProgressReport:draw(canvas, x, y)
   local app      = self.ui.app
   local hospital = self.ui.hospital
   local world    = hospital.world
-  local active = self.criterias
+  local active = self.criteria
   
   -- Names of the players playing
   local ly = 73
@@ -172,17 +172,17 @@ function UIProgressReport:draw(canvas, x, y)
   
   -- Draw the vertical bars for the winning conditions
   local lx = 270
-  for i, tab in ipairs(self.criterias) do
-    local criteria = criterias[i].name
-    if active[criteria].visible then
-      local sprite_offset = active[criteria].red and 2 or 0
+  for i, tab in ipairs(self.criteria) do
+    local criterion = criteria[tab.criterion].name
+    if active[criterion].visible then
+      local sprite_offset = active[criterion].red and 2 or 0
       local modifier = 0
-      local current = hospital[criteria]
-      if active[criteria].red then
-        local lose = active[criteria].lose_value
-        modifier = 49*(1 - ((current - lose)/(active[criteria].boundary - lose)))
+      local current = hospital[criterion]
+      if active[criterion].red then
+        local lose = active[criterion].lose_value
+        modifier = 49*(1 - ((current - lose)/(active[criterion].boundary - lose)))
       else
-        modifier = 49*(current/active[criteria].win_value)
+        modifier = 49*(current/active[criterion].win_value)
       end
       local height = 1 + modifier
       if height > 50 then height = 50 end
