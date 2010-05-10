@@ -248,8 +248,8 @@ local codepoints_to_cp437 = {
   [0xC9] = 0x90, -- majuscule e-acute
   [0xE6] = 0x91, -- minuscule ae
   [0xC6] = 0x91, -- majuscule ae (not in TH fonts - mapped to minuscule ae)
-  [0xF4] = 0x93, -- minuscule a-circumflex
-  [0xF6] = 0x94, -- minuscule a-umlaut
+  [0xF4] = 0x93, -- minuscule o-circumflex
+  [0xF6] = 0x94, -- minuscule o-umlaut
   [0xF2] = 0x95, -- minuscule o-grave
   [0xFB] = 0x96, -- minuscule u-circumflex
   [0xF9] = 0x97, -- minuscule u-grave
@@ -381,4 +381,33 @@ utf8conv = function(s)
   --   only 194 through 244 should be used)
   -- [\128-\191] picks up the remaining bytes of a utf-8 character
   return (s:gsub("[\1-\127]?[\192-\253][\128-\191]*", utf8char))
+end
+
+-- Fix string.upper and string.lower to work with CP437 rather than current locale
+local lower_to_upper, upper_to_lower, case_pattern = {}, {}, ""
+local function case(lower, upper)
+  lower = string.char(lower)
+  upper = string.char(upper)
+  lower_to_upper[lower] = upper
+  lower_to_upper[upper] = upper
+  upper_to_lower[lower] = lower
+  upper_to_lower[upper] = lower
+  case_pattern = case_pattern .. lower .. upper
+end
+for i = string.byte"a", string.byte"z" do
+  case(i, i + string.byte"A" - string.byte"a")
+end
+case(0x87, 0x80) -- c-cedilla
+case(0x81, 0x9A) -- u-umlaut
+case(0x82, 0x90) -- e-acute
+case(0x84, 0x8E) -- a-umlaut
+case(0x86, 0x8F) -- a-ring
+case(0x94, 0x99) -- o-umlaut
+case(0xA4, 0xA5) -- n-tilde
+case_pattern = "[" .. case_pattern .. "]"
+function string.upper(s)
+  return (s:gsub(case_pattern, lower_to_upper))
+end
+function string.lower(s)
+  return (s:gsub(case_pattern, upper_to_lower))
 end

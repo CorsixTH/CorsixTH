@@ -35,22 +35,23 @@ local is_complex = false
 local y_off
 local old_event_handlers
 
-for _, dir in pairs(app.data_dir_map) do
-  for item in lfs.dir(app.config.theme_hospital_install .. dir) do
+for _, dir in ipairs{"Data", "QData", "DataM", "QDataM"} do
+  for item in pairs(app.fs:listFiles(dir) or {}) do
     if item:match"%.TAB$" then
       sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
     end
   end
 end
+table.sort(sprite_table_paths, function(lhs, rhs)
+  return lhs[1] < rhs[1] or (lhs[1] == rhs[1] and lhs[2] < rhs[2])
+end)
 
 local function LoadTable(n, complex)
   sprite_table_index = n
   is_complex = complex
   local path = sprite_table_paths[n]
   local pal
-  local fi = io.open(app.config.theme_hospital_install .. path[1] .. package.config:sub(1, 1) .. path[2] .. ".PAL")
-  if fi then
-    fi:close()
+  if app.fs:readContents(path[1], path[2] .. ".PAL") then
     pal = gfx:loadPalette(path[1], path[2] .. ".PAL")
   end
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
@@ -121,7 +122,7 @@ local function DoFrame(app)
   local canvas = app.video
   canvas:startFrame()
   if need_draw then
-    need_draw = false
+    need_draw = app.config.track_fps
     canvas:fillBlack()
     Render(canvas)
   end
