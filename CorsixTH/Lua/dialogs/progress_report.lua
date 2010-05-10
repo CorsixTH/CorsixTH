@@ -59,6 +59,9 @@ function UIProgressReport:UIProgressReport(ui)
   
   self.default_button_sound = "selectx.wav"
   
+  -- Selected hospital number
+  self.selected = 1
+  
   -- Determine winning and losing conditions
   local win = world.map.level_config.win_criteria
   local lose = world.map.level_config.lose_criteria
@@ -134,14 +137,40 @@ function UIProgressReport:UIProgressReport(ui)
   end
   self.criteria = active
   
-  self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close)
+  self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.status.close)
+  
+  -- Own and competitor hospital buttons
+  local function btn_handler(num)
+    return --[[persistable:progress_report_hospital_button]] function()
+      self.selected = num
+    end
+  end
+  local function tooltip(num)
+    return (num == 1) and _S.tooltip.status.win_progress_own or
+      _S.tooltip.status.win_progress_other:format(world.hospitals[num].name) .. " " .. _S.misc.not_yet_implemented
+  end
+  local function make_hosp_button(num)
+    self:addPanel(0, 265, 71 + (num - 1) * 25)
+      :makeButton(0, 0, 147, 20, 9, btn_handler(num))
+      :setTooltip(tooltip(num))
+      :enable(num == 1)
+  end
+  
+  for i = 1, 4 do
+    make_hosp_button(i)
+  end
   
   -- Add the three markers
   self.happiness_marker = self:addPanel(5, 503, 193)
   self.thirst_marker = self:addPanel(5, 503, 223)
   self.heat_marker = self:addPanel(5, 503, 254)
-  -- TODO: 6 gray, 7 exclamation, 9 long bar
-
+  
+  self:makeTooltip(_S.tooltip.status.population_chart .. " " .. _S.misc.not_yet_implemented, 433, 64, 578, 179)
+  self:makeTooltip(_S.tooltip.status.happiness .. " " .. _S.misc.not_yet_implemented,        433, 179, 578, 209)
+  self:makeTooltip(_S.tooltip.status.thirst .. " " .. _S.misc.not_yet_implemented,           433, 209, 578, 239)
+  self:makeTooltip(_S.tooltip.status.warmth .. " " .. _S.misc.not_yet_implemented,           433, 239, 578, 270)
+  
+  -- TODO: 6 gray, 7 exclamation
 end
 
 function UIProgressReport:close()
@@ -160,13 +189,9 @@ function UIProgressReport:draw(canvas, x, y)
   
   -- Names of the players playing
   local ly = 73
-  for _, player in ipairs(world.hospitals) do
-    -- TODO: Make them clickable for real
-    if player.name == "PLAYER" then
-      self.red_font:draw(canvas, player.name, x + 272, y + ly)
-    else
-      self.normal_font:draw(canvas, player.name, x + 272, y + ly)
-    end
+  for pnum, player in ipairs(world.hospitals) do
+    local font = (pnum == self.selected) and self.red_font or self.normal_font
+    font:draw(canvas, player.name, x + 272, y + ly)
     ly = ly + 25
   end
   
