@@ -243,6 +243,8 @@ function UIBankManager:increaseLoan()
   if hospital.loan < 20000 then -- TODO: Variate this based on something?
     hospital.loan = hospital.loan + 5000
     hospital:receiveMoney(5000, _S.transactions.bank_loan)
+  else
+    self.ui:playSound("Wrong2.wav")
   end
 end
 
@@ -252,6 +254,6 @@ function UIBankManager:decreaseLoan()
     hospital.loan = hospital.loan - 5000
     hospital:spendMoney(5000, _S.transactions.loan_repayment)
   else
-    hospital.ui:playSound("Wrong2.wav")
+    self.ui:playSound("Wrong2.wav")
   end
 end
