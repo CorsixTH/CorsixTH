@@ -223,7 +223,7 @@ function UI:drawTooltip(canvas)
   end
   
   if self.tooltip_font then
-    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
+    self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y, self.app.config.width)
   end
 end
 

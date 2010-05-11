@@ -292,17 +292,23 @@ static int l_font_draw_tooltip(lua_State *L)
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
+    int iScreenWidth = luaL_checkint(L, 6);
 
     int iW = 200; // (for now) hardcoded width of tooltips
     int iRealW;
     uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
     int iLastY = pFont->drawTextWrapped(NULL, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
+    int iLastX = iX + iRealW + 3;
+    int iFirstY = iY - (iLastY - iY) - 1;
 
-    pCanvas->fillRect(iBlack, iX, iY + iY - iLastY - 1, iRealW + 3, iLastY - iY + 2);
-    pCanvas->fillRect(iWhite, iX + 1, iY + iY - iLastY, iRealW + 1, iLastY - iY);
+    int iXOffset = iLastX > iScreenWidth ? iScreenWidth - iLastX : 0;
+    int iYOffset = iFirstY < 0 ? -iFirstY : 0;
 
-    pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2, iY + iY - iLastY, iW - 4);
+    pCanvas->fillRect(iBlack, iX + iXOffset, iFirstY + iYOffset, iRealW + 3, iLastY - iY + 2);
+    pCanvas->fillRect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, iRealW + 1, iLastY - iY);
+
+    pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset, iFirstY + 1 + iYOffset, iW - 4);
 
     lua_pushinteger(L, iLastY);
 
