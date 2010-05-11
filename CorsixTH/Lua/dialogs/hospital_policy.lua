@@ -61,9 +61,9 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   end
   
   -- Buttons
-  self:addPanel(0, 607, 447):makeButton(0, 0, 26, 26, 6, self.close)
-  self.allow_button = self:addPanel(0, 348, 379):makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow") -- Allow staff to move
-  self.prohibit_button = self:addPanel(0, 395, 379):makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit") -- Prohibit staff to move
+  self:addPanel(0, 607, 447):makeButton(0, 0, 26, 26, 6, self.close):setTooltip(_S.tooltip.policy.close)
+  self.allow_button = self:addPanel(0, 348, 379):makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow"):setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
+  self.prohibit_button = self:addPanel(0, 395, 379):makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit"):setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
   
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
@@ -95,6 +95,11 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["stop_procedure"].addition = true -- This value goes from 1 to 2.
   self.sliders["goto_staffroom"].min_x = 149
   self.sliders["goto_staffroom"].max_x = 399
+  
+  -- Tooltips for slider bars
+  self:makeTooltip(_S.tooltip.policy.diag_procedure,   161, 119, 479, 174)
+  self:makeTooltip(_S.tooltip.policy.diag_termination, 161, 210, 479, 249)
+  self:makeTooltip(_S.tooltip.policy.staff_rest,       161, 285, 479, 324)
 end
 
 function UIPolicy:draw(canvas, x, y)

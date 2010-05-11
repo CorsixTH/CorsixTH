@@ -69,13 +69,32 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:addPanel(286, 180, 132)
   self:addPanel(286, 180, 160)
   self:addPanel(287, 180, 188)
-  self:addPanel(288, 180, 233):makeButton(0, 0, 90, 45, 289, self.increaseSalary):setSound"cashreg.wav"
-  self:addPanel(290, 270, 233):makeButton(0, 0, 90, 45, 291, self.fireStaff)
+  self:addPanel(288, 180, 233):makeButton(0, 0, 90, 45, 289, self.increaseSalary):setTooltip(_S.tooltip.pay_rise_window.accept):setSound"cashreg.wav"
+  self:addPanel(290, 270, 233):makeButton(0, 0, 90, 45, 291, self.fireStaff):setTooltip(_S.tooltip.pay_rise_window.decline)
 
-  -- Hide doctor specific information
-  if self.staff.profile.humanoid_class ~= "Doctor" then
+  self:makeTooltip(_S.tooltip.staff_window.name, 14, 15, 169, 38)
+  self:makeTooltip(_S.tooltip.staff_window.face, 96, 44, 168, 125)
+  self:makeTooltip(_S.tooltip.staff_window.salary, 14, 171, 168, 193)
+  self:makeTooltip(_S.tooltip.staff_window.ability, 12, 213, 89, 243)
+  
+  if profile.humanoid_class == "Doctor" then
+    self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 89, 197, 168, 243)
+    self:makeTooltip(_S.tooltip.staff_window.skills, 14, 132, 47, 166)
+    
+    -- NB: should be sufficient here to check only once, not make a dynamic tooltip
+    if profile.is_surgeon >= 1.0 then
+      self:makeTooltip(_S.tooltip.staff_window.surgeon, 72, 133, 87, 164)
+    end
+    if profile.is_psychiatrist >= 1.0 then
+      self:makeTooltip(_S.tooltip.staff_window.psychiatrist, 87, 133, 116, 164)
+    end
+    if profile.is_researcher >= 1.0 then
+      self:makeTooltip(_S.tooltip.staff_window.researcher, 116, 133, 146, 164)
+    end
+  else
+    -- Hide doctor specific information
     self:addColourPanel(10, 130, 160, 40, 60, 174, 203)
-    self:addColourPanel(10, 198, 160, 45, 60, 174, 203)
+    self:addColourPanel(89, 198, 81, 45, 60, 174, 203)
   end
 end
 
@@ -98,6 +117,17 @@ function UIStaffRise:draw(canvas, x, y)
 
   font:draw(canvas, profile.name, x + 20, y + 20) -- Name
   font:draw(canvas, "$" .. profile.wage, x + 60, y + 178) -- Wage
+
+  -- Ability
+  -- Note: The bar looks like "attention to detail", but actually ability level
+  -- is displayed here. This was the same in TH, and makes more sense.
+  -- However at some point we should fix the graphics to look like an ability bar.
+  local ability_bar_width = math.floor(profile.skill * 40 + 0.5)
+  if ability_bar_width ~= 0 then
+    for dx = 0, ability_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 295, x + 42 + dx, y + 230)
+    end
+  end
 
   if self.staff.profile.humanoid_class == "Doctor" then
     self:drawDoctorAttributes(canvas)
@@ -131,14 +161,6 @@ function UIStaffRise:drawDoctorAttributes(canvas)
   end
   if profile.is_researcher >= 1.0 then
     self.panel_sprites:draw(canvas, 294, x + 120, y + 138)
-  end
-
-  -- Attention to detail
-  local attention_bar_width = math.floor(profile.attention_to_detail * 40 + 0.5)
-  if attention_bar_width ~= 0 then
-    for dx = 0, attention_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 295, x + 42 + dx, y + 230)
-    end
   end
 end
 

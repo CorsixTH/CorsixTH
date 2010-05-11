@@ -41,11 +41,18 @@ function UIWatch:UIWatch(ui, count_type)
   
   local end_sprite = (count_type == "epidemic") and 14 or 16
   
+  local tooltips = {
+    ["initial_opening"] = _S.tooltip.watch.hospital_opening,
+    ["emergency"]       = _S.tooltip.watch.emergency,
+    ["epidemic"]        = _S.tooltip.watch.epidemic,
+  }
+  
   if count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
+      :setTooltip(tooltips[count_type])
   end
-  self:addPanel(13, 0, 28)
+  self:addPanel(13, 0, 28):setTooltip(tooltips[count_type])
   self:addPanel(1, 2, 47)
 end
 

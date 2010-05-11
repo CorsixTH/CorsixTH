@@ -1071,10 +1071,10 @@ tooltip = {
   window_general = {
     cancel             = "Avbryt",
     confirm            = "Bekreft",
-    close_window       = "Lukk vindu",
   },
   -- Patient window
   patient_window = {
+    close              = "Lukk vindu",
     graph              = utf8 "Klikk for å veksle mellom graf med personens helse og personens behandlingshistorikk",
     happiness          = utf8 "Personens humör",
     thirst             = utf8 "Personens törste",

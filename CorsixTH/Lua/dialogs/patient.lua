@@ -56,7 +56,7 @@ function UIPatient:UIPatient(ui, patient)
   self:addPanel(322,  15, 126) -- Happiness / thirst / temperature sliders
   self:addPanel(323,   0, 201) -- View circle top
   self:addPanel(324,   0, 254) -- View circle bottom
-  self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close):setTooltip(_S.tooltip.window_general.close_window)
+  self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close):setTooltip(_S.tooltip.patient_window.close)
   
   -- If the patient has been diagnosed the "guess cure" button is not visible and
   -- if the patient is going home it is not possible to kick him/her anymore.
