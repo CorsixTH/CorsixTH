@@ -108,19 +108,19 @@ object.usage_animations = {
 object.orientations = {
   north = {
     render_attach_position = { {0, 0}, {-1, 0}, {0, -1} },
-    footprint = { {0, 0}, {0, -1, only_passable = true} },
+    footprint = { {0, 0}, {0, -1, only_passable = true, invisible = true} },
     use_position = "passable",
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    footprint = { {0, 0}, {1, 0, only_passable = true, invisible = true} },
     use_position = "passable",
   },
   south = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    footprint = { {0, 0}, {0, 1, only_passable = true, invisible = true} },
     use_position = "passable",
   },
   west = {
-    footprint = { {0, 0}, {-1, 0, only_passable = true} },
+    footprint = { {0, 0}, {-1, 0, only_passable = true, invisible = true} },
     use_position = "passable",
   },
 }

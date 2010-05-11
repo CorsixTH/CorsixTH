@@ -460,15 +460,34 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         self.object_footprint[i] = {}
       end
     end
+    local optional_tiles = 0
+    for _, tile in ipairs(object_footprint) do
+      if tile.optional then
+        optional_tiles = optional_tiles + 1
+      end
+    end
     local flags = {}
     local allgood = true
+    local opt_tiles_blocked = 0
     local world = self.ui.app.world
     local roomId = self.room and self.room.id
+    
+    local function setAllGood(xy)
+      if xy.optional then
+        opt_tiles_blocked = opt_tiles_blocked + 1
+        if opt_tiles_blocked >= optional_tiles then
+          allgood = false
+        end
+      else
+        allgood = false
+      end
+    end
+    
     for i, xy in ipairs(object_footprint) do
       local x = x + xy[1]
       local y = y + xy[2]
       if x < 1 or x > w or y < 1 or y > h then
-        allgood = false
+        setAllGood(xy)
         x = 0
         y = 0
       else
@@ -503,11 +522,16 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           end
         end
         
+        
         if cell_flags and is_object_allowed then
-          map:setCell(x, y, 4, good_tile)
+          if not xy.invisible then
+            map:setCell(x, y, 4, good_tile)
+          end
         else
-          map:setCell(x, y, 4, bad_tile)
-          allgood = false
+          if not xy.invisible then
+            map:setCell(x, y, 4, bad_tile)
+          end
+          setAllGood(xy)
         end
       end
       self.object_footprint[i][1] = x

@@ -6,10 +6,13 @@ Version Beta 3 - released 2010-0?-??
 * Feature: Plants droop.
 * Feature: Handymen can have their priorities changed.
 * Feature: Rooms can be edited.
+* Feature: Each level has its own goals, shown at the beginning of the level and
+  in the new status dialog.
 * Fix: Staff needed in rooms is handled much better.
 
 * Translations: Italian (added new strings), Portuguese (WIP)
 
+* New dialog: Progress Report (Status) showing status of the current level's goals.
 * 4 new diseases
 * Additional functional diagnosis rooms: Blood Machine, Ward, Scanner.
 

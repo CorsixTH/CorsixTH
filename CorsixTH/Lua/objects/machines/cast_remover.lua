@@ -26,8 +26,7 @@ object.tooltip = _S.tooltip.objects.cast_remover
 object.ticks = false
 object.build_cost = 2000
 object.build_preview_animation = 5072
--- object.default_strength = 10 Commented until the handyman's use_position is correctly 
--- checked to be accessible when placing the object.
+object.default_strength = 10
 object.crashed_animation = 3388
 local function copy_north_to_south(t)
   t.south = t.north
@@ -68,24 +67,28 @@ object.multi_usage_animations = {
 object.orientations = {
   north = {
     use_position = {0, 0},
-    handyman_position = {-1, -1}, -- There are two possible origins {-2, 0}, one of them
-    -- must be accessible
+    handyman_position = {{0, -2}, {-1, -1}},
+    walk_in_tile = {0, -1},
     use_position_secondary = {0, -1},
     finish_use_position_secondary = {1, -1},
     footprint = { {-1, -1}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
-                  {-1, 0}, {0, 0, only_passable = true},
-                  {-1, 1, only_passable = true} },
+                  {-1, 0}, {0, 0, only_passable = true}, {-1, 1, only_passable = true}, 
+                  {-1, -2, only_passable = true, invisible = true, optional = true}, 
+                  {-2, -1, only_passable = true, invisible = true, optional = true} },
     list_bottom = true,
     render_attach_position = {-1, 1},
   },
   east = {
     use_position = {0, 0},
-    handyman_position = {-1, -1},
+    handyman_position = {{-1, -1}, {-2, 0}},
+    walk_in_tile = {-1, 0},
     use_position_secondary = {-1, 0},
     finish_use_position_secondary = {-1, 1},
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
                   {-1, 0, only_passable = true}, {0, 0, only_passable = true},
-                  {-1, 1, only_passable = true} },
+                  {-1, 1, only_passable = true},
+                  {-2, -1, only_passable = true, invisible = true, optional = true}, 
+                  {-1, -2, only_passable = true, invisible = true, optional = true} },
     early_list = true,
     list_bottom = true,
   },

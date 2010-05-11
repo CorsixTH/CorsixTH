@@ -39,6 +39,29 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
       self.world:unregisterRoomBuildCallback(callback)
     end
   end
+  local orientation = object_type.orientations[direction]
+  local handyman_position = orientation.handyman_position
+  if handyman_position then
+  -- If there are many possible handyman tiles, choose one that is accessible from the use_position.
+    if type(handyman_position[1]) == "table" then
+      for _, position in ipairs(handyman_position) do
+        local hx, hy = x + position[1], y + position[2]
+        local ux, uy = x + orientation.use_position[1], y + orientation.use_position[2]
+        if world.pathfinder:findDistance(hx, hy, ux, uy) then
+          -- Also make sure the tile is not in another room or in the corridor.
+          local room = world:getRoom(hx, hy)
+          if room and room == self:getRoom() then
+            self.handyman_position = {position[1], position[2]}
+            break
+          end
+        end
+      end
+    else
+      self.handyman_position = {handyman_position[1], handyman_position[2]}
+    end
+  else
+    self.handyman_position = {orientation.use_position[1], orientation.use_position[2]}
+  end
   self.world:registerRoomBuildCallback(callback)
 end
 
@@ -57,9 +80,8 @@ function Machine:machineUsed(room)
 end
 
 function Machine:getRepairTile()
-  local orientation = self.object_type.orientations[self.direction]
-  local x = self.tile_x + orientation.handyman_position[1]
-  local y = self.tile_y + orientation.handyman_position[2]
+  local x = self.tile_x + self.handyman_position[1]
+  local y = self.tile_y + self.handyman_position[2]
   return x, y
 end
 

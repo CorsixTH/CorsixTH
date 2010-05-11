@@ -71,15 +71,16 @@ local function action_use_phase(action, humanoid, phase)
   local object = action.object
   humanoid.user_of = nil -- Temporary to avoid tile change warning
   action.phase = phase
+
   if phase == -4 then
     HumanoidRawWalk(humanoid,
       action.old_tile_x, action.old_tile_y,
-      object.tile_x, object.tile_y,
+      action.new_tile_x, action.new_tile_y,
       nil, action_use_object_tick)
     return
   elseif phase == 4 then
     HumanoidRawWalk(humanoid,
-      object.tile_x, object.tile_y,
+      action.new_tile_x, action.new_tile_y,
       action.old_tile_x, action.old_tile_y,
       nil, action_use_object_tick)
     return
@@ -269,6 +270,13 @@ local function action_use_object_start(action, humanoid)
   if spec.finish_use_position and humanoid.humanoid_class ~= "Handyman" then
     action.old_tile_x = object.tile_x + spec.finish_use_position[1]
     action.old_tile_y = object.tile_y + spec.finish_use_position[2]
+  end
+  if spec.walk_in_tile then
+    action.new_tile_x = spec.walk_in_tile[1] + object.tile_x
+    action.new_tile_y = spec.walk_in_tile[2] + object.tile_y
+  else
+    action.new_tile_x = object.tile_x
+    action.new_tile_y = object.tile_y
   end
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
