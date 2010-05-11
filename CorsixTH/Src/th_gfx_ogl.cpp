@@ -43,6 +43,8 @@ THRenderTarget::THRenderTarget()
     m_iVertexLength = 0;
     m_iNonOverlappingStart = 0;
     m_iNonOverlapping = 0;
+    m_iWidth = 0;
+    m_iHeight = 0;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -96,6 +98,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     if(!pParams->bReuseContext)
         glViewport(0, 0, pParams->iWidth, pParams->iHeight);
+    m_iWidth = pParams->iWidth;
+    m_iHeight = pParams->iHeight;
     GLdouble fWidth = (GLdouble)pParams->iWidth;
     GLdouble fHeight = (GLdouble)pParams->iHeight;
     setGLProjection(fWidth, fHeight);
@@ -227,6 +231,16 @@ bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 void THRenderTarget::getClipRect(THClipRect* pRect) const
 {
     *pRect = m_rcClip;
+}
+
+int THRenderTarget::getWidth() const
+{
+    return m_iWidth;
+}
+
+int THRenderTarget::getHeight() const
+{
+    return m_iHeight;
 }
 
 void THRenderTarget::setClipRect(const THClipRect* pRect)

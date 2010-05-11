@@ -56,6 +56,8 @@ THRenderTarget::THRenderTarget()
     m_iVertexLength = 0;
     m_iNonOverlappingStart = 0;
     m_iNonOverlapping = 0;
+    m_iWidth = 0;
+    m_iHeight = 0;
     m_bHasCursor = false;
 }
 
@@ -290,6 +292,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
+    m_iWidth = pParams->iWidth;
+    m_iHeight = pParams->iHeight;
     float fWidth = (float)pParams->iWidth;
     float fHeight = (float)pParams->iHeight;
 
@@ -456,6 +460,16 @@ bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 void THRenderTarget::getClipRect(THClipRect* pRect) const
 {
     *pRect = m_rcClip;
+}
+
+int THRenderTarget::getWidth() const
+{
+    return m_iWidth;
+}
+
+int THRenderTarget::getHeight() const
+{
+    return m_iHeight;
 }
 
 void THRenderTarget::setClipRect(const THClipRect* pRect)

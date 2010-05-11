@@ -292,7 +292,7 @@ static int l_font_draw_tooltip(lua_State *L)
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
-    int iScreenWidth = luaL_checkint(L, 6);
+    int iScreenWidth = pCanvas->getWidth();
 
     int iW = 200; // (for now) hardcoded width of tooltips
     int iRealW;

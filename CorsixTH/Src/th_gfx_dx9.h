@@ -92,6 +92,8 @@ public: // External API
     uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
     bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
     void getClipRect(THClipRect* pRect) const;
+    int getWidth() const;
+    int getHeight() const;
     void setClipRect(const THClipRect* pRect);
     void startNonOverlapping();
     void finishNonOverlapping();
@@ -126,6 +128,8 @@ protected:
     size_t m_iVertexLength;
     size_t m_iNonOverlappingStart;
     int m_iNonOverlapping;
+    int m_iWidth;
+    int m_iHeight;
     bool m_bIsWindowed;
     bool m_bIsHardwareCursorSupported;
     bool m_bIsCursorInHardware;

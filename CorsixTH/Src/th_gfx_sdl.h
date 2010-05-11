@@ -68,6 +68,12 @@ public: // External API
     //! Get the current clip rectangle
     void getClipRect(THClipRect* pRect) const;
 
+    //! Get the width of the render target (in pixels)
+    int getWidth() const;
+
+    //! Get the height of the render target (in pixels)
+    int getHeight() const;
+
     //! Set the new clip rectangle
     void setClipRect(const THClipRect* pRect);
 

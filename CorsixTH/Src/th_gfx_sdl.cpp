@@ -89,6 +89,16 @@ void THRenderTarget::getClipRect(THClipRect* pRect) const
     SDL_GetClipRect(m_pSurface, reinterpret_cast<SDL_Rect*>(pRect));
 }
 
+int THRenderTarget::getWidth() const
+{
+    return static_cast<int>(m_pSurface->w);
+}
+
+int THRenderTarget::getHeight() const
+{
+    return static_cast<int>(m_pSurface->h);
+}
+
 void THRenderTarget::setClipRect(const THClipRect* pRect)
 {
     SDL_SetClipRect(m_pSurface, reinterpret_cast<const SDL_Rect*>(pRect));

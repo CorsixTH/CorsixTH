@@ -345,7 +345,7 @@ IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
         sNormedPath[i] = _normalise(sPath[i]);
 
     // Standard binary search over sorted list of files
-    int iLower = 0, iUpper = m_iNumFiles;
+    int iLower = 0, iUpper = static_cast<int>(m_iNumFiles);
     while(iLower != iUpper)
     {
         int iMid = (iLower + iUpper) / 2;
