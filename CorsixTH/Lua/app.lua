@@ -26,6 +26,10 @@ local SDL = require "sdl"
 local assert, io, type, dofile, loadfile, pcall, tonumber, print
     = assert, io, type, dofile, loadfile, pcall, tonumber, print
 
+-- Increment each time a savegame break would occur
+-- and add compatibility code in afterLoad functions
+local SAVEGAME_VERSION = 1
+
 class "App"
 
 function App:App()
@@ -46,6 +50,7 @@ function App:App()
     music_over = self.onMusicOver,
   }
   self.strings = {}
+  self.savegame_version = SAVEGAME_VERSION
 end
 
 function App:setCommandLine(...)
@@ -393,6 +398,11 @@ function App:run()
     print "A stack trace is included below, and the handler has been disconnected."
     print(debug.traceback(co, e, 0))
     print ""
+    if self.world then
+      self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
+      self.world:gameLog(debug.traceback(co, e, 0))
+      self.world:dumpGameLog()
+    end
     if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
       -- Disconnecting the tick handler is quite a drastic measure, so give
       -- the option of just disconnecting the offending entity and attemping
@@ -404,6 +414,7 @@ function App:run()
         "An error has occured while running the timer handler - see the log "..
         "window for details. Would you like to attempt a recovery?",
         --[[persistable:app_attempt_recovery]] function()
+          self.world:gameLog("Recovering from error in timer handler...")
           entity.ticks = false
           self.eventHandlers.timer = handler
         end
@@ -636,4 +647,23 @@ end
 --! Exits the game completely (no confirmation window)
 function App:exit()
   self.running = false
+end
+
+--! This function is automatically called after loading a game and serves for compatibility.
+function App:afterLoad()
+  local old = self.world.savegame_version
+  local new = self.savegame_version
+  
+  if new == old then
+    return
+  elseif new > old then
+    self.world:gameLog("Savegame version changed from " .. old .. " to " .. new .. ".")
+  else
+    -- TODO: This should maybe be forbidden completely.
+    self.world:gameLog("Warning: loaded savegame version " .. old .. " in older version " .. new .. ".")
+  end
+  self.world.savegame_version = new
+  
+  self.world:afterLoad(old, new)
+  self.ui:afterLoad(old, new)
 end

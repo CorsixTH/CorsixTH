@@ -240,6 +240,7 @@ function LoadGame(data)
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
   --end, persist.errcatch)
+  TheApp:afterLoad()
 end
 
 function LoadGameFile(filename)

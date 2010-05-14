@@ -608,3 +608,8 @@ function Room:tryToEdit()
     ui:setCursor(ui.default_cursor)
   end
 end
+
+-- !Stub to be extended in subclasses, if needed.
+function Room:afterLoad(old, new)
+end
+

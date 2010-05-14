@@ -68,7 +68,6 @@ CorsixTH/Lua/languages/portuguese.lua -text
 CorsixTH/Lua/objects/doors/swing_door_left.lua -text
 CorsixTH/Lua/objects/doors/swing_door_right.lua -text
 CorsixTH/Lua/objects/helicopter.lua -text
-CorsixTH/Lua/persistance.lua -text
 CorsixTH/Lua/walls/blue.lua -text
 CorsixTH/Lua/walls/external.lua -text
 CorsixTH/Lua/walls/green.lua -text

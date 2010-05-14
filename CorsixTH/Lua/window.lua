@@ -844,3 +844,12 @@ function Window:getTooltipAt(x, y)
     end
   end
 end
+
+-- !Stub to be extended in subclasses, if needed.
+function Window:afterLoad(old, new)
+  if self.windows then
+    for _, w in pairs(self.windows) do
+      w:afterLoad(old, new)
+    end
+  end
+end

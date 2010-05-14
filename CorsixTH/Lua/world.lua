@@ -58,6 +58,8 @@ function World:World(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.hospitals = {}
   self.floating_dollars = {}
+  self.game_log = {} -- saves list of useful debugging information
+  self.savegame_version = app.savegame_version
   
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
@@ -95,6 +97,7 @@ function World:World(app)
   self:makeAvailableStaff()
   self:calculateSpawnTiles()
   
+  self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
 function World:setUI(ui)
@@ -1023,3 +1026,28 @@ function World:getNearestRoomNeedingStaff(humanoid)
   return candidates[1].room
 end
 
+-- !Log a message in the game log.
+function World:gameLog(message)
+  self.game_log[#self.game_log + 1] = message
+end
+
+-- !Dump the contents of the game log into a file.
+-- This is automatically done on each error.
+function World:dumpGameLog()
+  local fi = assert(io.open("gamelog.txt", "wt"))
+  for _, str in ipairs(self.game_log) do
+    fi:write(str .. "\n")
+  end
+  fi:close()
+end
+
+function World:afterLoad(old, new)
+  for _, cat in pairs({self.entities, self.rooms}) do
+    for _, obj in pairs(cat) do
+      obj:afterLoad(old, new)
+    end
+  end
+  -- insert global compatibility code here
+  
+  self.savegame_version = new
+end
