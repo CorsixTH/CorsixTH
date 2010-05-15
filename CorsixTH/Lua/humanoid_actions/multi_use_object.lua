@@ -227,20 +227,32 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
       object.ticks = object.object_type.ticks
     end
   end
+  if phase == 0 then
+    -- Already now move the secondary user to his final position and orientation.
+    -- This is needed if some end phases have the secondary user visible (e.g. jelly moulder)
+    local spec = object.object_type.orientations[object.direction]
+    local pos = spec.finish_use_position_secondary or spec.use_position_secondary
+    local direction = spec.finish_use_orientation_secondary
+    use_with:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
+    if direction then
+      local anims = use_with.walk_anims
+      local anim  = (direction == "north" or direction == "west") and anims.idle_north or anims.idle_east
+      local flags = (direction == "north" or direction == "east") and 0 or 1
+      use_with:setAnimation(anim, flags)
+    end
+  end
   if phase == 100 then
     if action.layer3 then
       humanoid:setLayer(3, action.old_layer3_humanoid)
       use_with:setLayer(3, action.old_layer3_use_with)
     end
-  
+    
     use_with.th:makeVisible()
     use_with.action_queue[1].on_interrupt = action.idle_interrupt
     use_with.action_queue[1].must_happen = action.idle_must_happen
     local spec = object.object_type.orientations[object.direction]
     local pos = spec.finish_use_position or spec.use_position
     humanoid:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
-    pos = spec.finish_use_position_secondary or spec.use_position_secondary
-    use_with:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
     if action.after_use then
       action.after_use()
     end

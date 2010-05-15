@@ -135,8 +135,6 @@ end
 function ScannerRoom:makePatientLeave(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   
-  print("ScannerRoom:makePatientLeave")
-  
   if (patient.humanoid_class == "Stripped Male Patient" or
     patient.humanoid_class == "Stripped Female Patient") and
     not patient.action_queue[1].is_leaving then
