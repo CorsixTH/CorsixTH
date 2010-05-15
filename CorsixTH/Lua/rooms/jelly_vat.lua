@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "jelly_vat"
+room.level_config_id = 47
 room.class = "JellyVatRoom"
 room.name = _S.rooms_short.jelly_vat
 room.tooltip = _S.tooltip.rooms.jelly_vat
