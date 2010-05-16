@@ -13,7 +13,8 @@ Version Beta 3 - released 2010-0?-??
 * Translations: Italian (added new strings), Portuguese (WIP)
 
 * New dialog: Progress Report (Status) showing status of the current level's goals.
-* 4 new diseases
+* 5 new diseases
+* New treatment room: Jelly Vat
 * Additional functional diagnosis rooms: Blood Machine, Ward, Scanner.
 
 Again a lot of bugs have been terminated, though there are surely new ones 
