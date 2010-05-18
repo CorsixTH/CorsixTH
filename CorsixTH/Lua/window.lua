@@ -248,13 +248,23 @@ local function sanitize(colour)
   return colour
 end
 
-function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour)
-  if not highlight_colour then
-    highlight_colour = {red = sanitize(colour.red + 20), green = sanitize(colour.green + 20), blue = sanitize(colour.blue + 20)}
-  end
-  if not shadow_colour then
-    shadow_colour = {red = sanitize(colour.red - 20), green = sanitize(colour.green - 20), blue = sanitize(colour.blue - 20)}
-  end
+function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour)
+  highlight_colour = highlight_colour or {
+    red = sanitize(colour.red + 40),
+    green = sanitize(colour.green + 40),
+    blue = sanitize(colour.blue + 40),
+  }
+  shadow_colour = shadow_colour or {
+    red = sanitize(colour.red - 40),
+    green = sanitize(colour.green - 40),
+    blue = sanitize(colour.blue - 40),
+  }
+  disabled_colour = disabled_colour or {
+    red = sanitize(math.floor((colour.red + 100) / 2)),
+    green = sanitize(math.floor((colour.green + 100) / 2)),
+    blue = sanitize(math.floor((colour.blue + 100) / 2)),
+  }
+  
   local panel = setmetatable({
     window = self,
     x = x,
@@ -264,6 +274,7 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
     colour = TheApp.video:mapRGB(colour.red, colour.green, colour.blue),
     highlight_colour = TheApp.video:mapRGB(highlight_colour.red, highlight_colour.green, highlight_colour.blue),
     shadow_colour = TheApp.video:mapRGB(shadow_colour.red, shadow_colour.green, shadow_colour.blue),
+    disabled_colour = TheApp.video:mapRGB(disabled_colour.red, disabled_colour.green, disabled_colour.blue),
     custom_draw = panel_bevel_draw,
     visible = true,
     lowered = false,
@@ -351,9 +362,16 @@ function Button:enable(enable)
   if enable then
     self.enabled = true
     self.panel_for_sprite.sprite_index = self.sprite_index_normal
+    if self.panel_for_sprite.colour_backup then
+      self.panel_for_sprite.colour = self.panel_for_sprite.colour_backup
+    end
   else
     self.enabled = false
     self.panel_for_sprite.sprite_index = self.sprite_index_disabled
+    if self.panel_for_sprite.disabled_colour then
+      self.panel_for_sprite.colour_backup = self.panel_for_sprite.colour
+      self.panel_for_sprite.colour = self.panel_for_sprite.disabled_colour
+    end
   end
   return self
 end

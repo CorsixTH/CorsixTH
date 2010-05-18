@@ -651,8 +651,14 @@ end
 
 --! This function is automatically called after loading a game and serves for compatibility.
 function App:afterLoad()
-  local old = self.world.savegame_version
+  local old = self.world.savegame_version or 0
   local new = self.savegame_version
+  
+  if old == 0 then
+    -- Game log was not present before introduction of savegame versions, so create it now.
+    self.world.game_log = {}
+    self.world:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
+  end
   
   if new == old then
     return
