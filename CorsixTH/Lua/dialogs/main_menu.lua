@@ -38,23 +38,15 @@ function UIMainMenu:UIMainMenu(ui)
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   -- individual buttons
   self.default_button_sound = "selectx.wav"
-  self:addBevelPanel(20, 20, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
-  self:addBevelPanel(20, 65, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
-  self:addBevelPanel(20, 110, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
-  self:addBevelPanel(20, 155, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
-  self:addBevelPanel(20, 220, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
+  self:addBevelPanel(20, 20, 160, 40, col_bg):setLabel(_S.main_menu.new_game):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
+  self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.main_menu.custom_level):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addBevelPanel(20, 110, 160, 40, col_bg):setLabel(_S.main_menu.load_game):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
+  self:addBevelPanel(20, 155, 160, 40, col_bg):setLabel(_S.main_menu.options):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addBevelPanel(20, 220, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
   
-  self.button_labels = {
-    _S.main_menu.new_game,
-    _S.main_menu.custom_level,
-    _S.main_menu.load_game,
-    _S.main_menu.options,
-    _S.main_menu.exit,
-  }
   self:onChangeResolution()
 end
 
@@ -64,39 +56,8 @@ end
 
 local label_y = { 27, 75, 123, 171, 231 }
 
-function UIMainMenu:draw(canvas, x, y)
-  -- Draw border
-  local sprites = self.border_sprites
-  if sprites then
-    local draw = sprites.draw
-    local x = self.x + x
-    local y = self.y + y
-    canvas:nonOverlapping(true)
-    draw(sprites, canvas, 10, x - 9, y - 9)
-    draw(sprites, canvas, 12, x + 160, y - 9)
-    draw(sprites, canvas, 15, x - 9, y + 240)
-    draw(sprites, canvas, 17, x + 160, y + 240)
-    for x = x + 40, x + 120, 40 do
-      draw(sprites, canvas, 11, x, y - 9)
-      draw(sprites, canvas, 16, x, y + 280)
-    end
-    for y = y + 40, y + 200, 40 do
-      draw(sprites, canvas, 13, x - 9, y)
-      draw(sprites, canvas, 14, x + 200, y)
-    end
-    canvas:nonOverlapping(false)
-  end
-  -- Draw window components
-  Window.draw(self, canvas, x, y)
-  -- Draw labels
-  x, y = self.x + x, self.y + y
-  for i = 1, 5 do
-    self.white_font:draw(canvas, self.button_labels[i], x + self.panels[i + 1].x, y + self.panels[i + 1].y, self.panels[i + 1].w, self.panels[i + 1].h)
-  end
-end
-
 function UIMainMenu:onMouseDown(button, x, y)
-  local repaint = Window.onMouseDown(self, button, x, y)
+  local repaint = UIResizable.onMouseDown(self, button, x, y)
   if button == "left" and not repaint and not (x >= 0 and y >= 0 and
   x < self.width and y < self.height) and self:hitTest(x, y) then
     return self:beginDrag(x, y)

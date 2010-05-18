@@ -52,7 +52,6 @@ CorsixTH/Lua/diagnosis/diag_ward.lua -text
 CorsixTH/Lua/diagnosis/diag_x_ray.lua -text
 CorsixTH/Lua/dialogs/bank_manager.lua -text
 CorsixTH/Lua/dialogs/information.lua -text
-CorsixTH/Lua/dialogs/main_menu.lua -text
 CorsixTH/Lua/dialogs/progress_report.lua -text
 CorsixTH/Lua/dialogs/staff_management.lua -text
 CorsixTH/Lua/filesystem.lua -text

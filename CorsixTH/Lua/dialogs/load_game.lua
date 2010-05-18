@@ -37,7 +37,6 @@ function UILoadGame:UILoadGame(ui, mode)
   self.modal_class = "main menu"
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   local function load_button(filename, file)
     return --[[persistable:load_game_button]] function(self)
@@ -45,22 +44,23 @@ function UILoadGame:UILoadGame(ui, mode)
     end
   end
   
-  self.labels = {}
   for num = 1, 9 do
     local filename = (num == 9) and "CorsixTH-Auto.sav" or "CorsixTH-Slot".. num .. ".sav"
     local label = (num == 9) and _S.menu_options.autosave or _S.menu_file_load[num]
     local tooltip = (num == 9) and _S.tooltip.load_game_window.load_autosave or _S.tooltip.load_game_window.load_game_number:format(num)
     local panel = self:addBevelPanel(20, 20 * num, 160, 18, col_bg):setTooltip(tooltip)
+    local button = panel:makeButton(0, 0, 160, 18, nil, load_button(filename))
     local f = io.open(filename, "rb")
     if f then
-      panel:makeButton(0, 0, 160, 18, nil, load_button(filename))
-      self.labels[num] = label
+      panel:setLabel(label)
       f:close()
     else
-      self.labels[num] = _S.tooltip.main_menu.load_menu.empty_slot
+      panel:setLabel(_S.tooltip.main_menu.load_menu.empty_slot)
+      button:enable(false)
     end
   end
-  self:addBevelPanel(20, 220, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.load_game_window.back)
+  self:addBevelPanel(20, 220, 160, 40, col_bg):setLabel(_S.load_game_window.back)
+    :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.load_game_window.back)
 end
 
 function UILoadGame:getSavedWindowPositionName()
@@ -68,18 +68,6 @@ function UILoadGame:getSavedWindowPositionName()
     return "main_menu_group"
   end
   return UIResizable.getSavedWindowPositionName(self)
-end
-
-function UILoadGame:draw(canvas, x, y)
-  -- Draw window components
-  UIResizable.draw(self, canvas, x, y)
-  -- Draw labels
-  x, y = self.x + x, self.y + y
-  for i, label in ipairs(self.labels) do
-    self.white_font:draw(canvas, self.labels[i], x + 20, y + 20 * i, 160, 18)
-  end
-  
-  self.white_font:draw(canvas, _S.load_game_window.back, x + 20, y + 220, 160, 40)
 end
 
 function UILoadGame:buttonLoad(filename)

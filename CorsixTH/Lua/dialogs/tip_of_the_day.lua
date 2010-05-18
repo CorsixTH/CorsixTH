@@ -34,31 +34,27 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   
   local app = ui.app
   self.ui = ui
-  self.resizable = false
+  self.resizable = true
   self:setDefaultPosition(20, -20)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   self.num_tips = #_S.totd_window.tips
   self.tip_num = math.random(1, self.num_tips)
   
-  self:addBevelPanel(10, self.height - 30, self.width / 2 - 20, 20, col_bg):makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonPrev)
-    :setTooltip(_S.tooltip.totd_window.previous)
-  self:addBevelPanel(self.width / 2 + 10, self.height - 30, self.width / 2 - 20, 20, col_bg):makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonNext)
-    :setTooltip(_S.tooltip.totd_window.next)
+  self:addBevelPanel(10, self.height - 30, self.width / 2 - 20, 20, col_bg):setLabel(_S.totd_window.previous)
+    :makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonPrev):setTooltip(_S.tooltip.totd_window.previous)
+  self:addBevelPanel(self.width / 2 + 10, self.height - 30, self.width / 2 - 20, 20, col_bg):setLabel(_S.totd_window.next)
+    :makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonNext):setTooltip(_S.tooltip.totd_window.next)
 end
 
 function UITipOfTheDay:draw(canvas, x, y)
   -- Draw window components
   UIResizable.draw(self, canvas, x, y)
-  -- Draw labels
-  x, y = self.x + x, self.y + y
-  
-  local text = _S.totd_window.tips[self.tip_num]
 
+  -- Draw tip
+  x, y = self.x + x, self.y + y
+  local text = _S.totd_window.tips[self.tip_num]
   self.white_font:drawWrapped(canvas, text, x + 10, y + 10, self.width - 20)
-  
-  self.white_font:draw(canvas, _S.totd_window.previous, x + 10, y + self.height - 30, self.width / 2 - 20, 20)
-  self.white_font:draw(canvas, _S.totd_window.next, x + self.width / 2 + 10, y + self.height - 30, self.width / 2 - 20, 20)
 end
 
 function UITipOfTheDay:buttonPrev()

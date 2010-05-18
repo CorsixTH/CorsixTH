@@ -168,6 +168,16 @@ function Panel:setDynamicTooltip(callback, x, y)
   return self
 end
 
+--! Specify a label to be drawn on top of the label.
+-- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
+--!param label (string) The text to be drawn on top of the label.
+--!param font (font) [optional] The font to use. Default is Font01V in QData.
+function Panel:setLabel(label, font)
+  self.label = label
+  self.label_font = font or TheApp.gfx:loadFont("QData", "Font01V")
+  return self
+end
+
 --[[ Add a `Panel` to the window.
 ! Panels form the basic building blocks of most windows. A panel is a small
 bitmap coupled with a position, and by combining several panels, a window can
@@ -199,6 +209,9 @@ end
 
 local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
+  if panel.label then
+    panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
+  end
 end
 
 --[[ Add a solid-colour `Panel` to the window.
@@ -236,6 +249,9 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
     canvas:drawRect(panel.shadow_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 1, panel.h - 1)
     canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
     canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+  end
+  if panel.label then
+    panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
   end
 end
 
