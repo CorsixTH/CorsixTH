@@ -28,11 +28,6 @@ local col_bg = {
   green = math.random(20, 200),
   blue = math.random(20, 200),
 }
-local col_panels = {
-  red = col_bg.red - 20,
-  green = col_bg.green -20,
-  blue = col_bg.blue - 20,
-}
 
 function UITipOfTheDay:UITipOfTheDay(ui)
   self:UIResizable(ui, 380, 110, col_bg)
@@ -46,9 +41,9 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   self.num_tips = #_S.totd_window.tips
   self.tip_num = math.random(1, self.num_tips)
   
-  self:addColourPanel(10, self.height - 20, self.width / 2 - 20, 10, col_panels.red, col_panels.green, col_panels.blue):makeButton(0, 0, self.width / 2 - 20, 10, nil, self.buttonPrev)
+  self:addBevelPanel(10, self.height - 30, self.width / 2 - 20, 20, col_bg):makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonPrev)
     :setTooltip(_S.tooltip.totd_window.previous)
-  self:addColourPanel(self.width / 2 + 10, self.height - 20, self.width / 2 - 20, 10, col_panels.red, col_panels.green, col_panels.blue):makeButton(0, 0, self.width / 2 - 20, 10, nil, self.buttonNext)
+  self:addBevelPanel(self.width / 2 + 10, self.height - 30, self.width / 2 - 20, 20, col_bg):makeButton(0, 0, self.width / 2 - 20, 20, nil, self.buttonNext)
     :setTooltip(_S.tooltip.totd_window.next)
 end
 
@@ -62,8 +57,8 @@ function UITipOfTheDay:draw(canvas, x, y)
 
   self.white_font:drawWrapped(canvas, text, x + 10, y + 10, self.width - 20)
   
-  self.white_font:draw(canvas, _S.totd_window.previous, x + 10, y + self.height - 20, self.width / 2 - 20, 10)
-  self.white_font:draw(canvas, _S.totd_window.next, x + self.width / 2 + 10, y + self.height - 20, self.width / 2 - 20, 10)
+  self.white_font:draw(canvas, _S.totd_window.previous, x + 10, y + self.height - 30, self.width / 2 - 20, 20)
+  self.white_font:draw(canvas, _S.totd_window.next, x + self.width / 2 + 10, y + self.height - 30, self.width / 2 - 20, 20)
 end
 
 function UITipOfTheDay:buttonPrev()

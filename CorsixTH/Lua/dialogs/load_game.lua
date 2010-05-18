@@ -28,23 +28,16 @@ local col_bg = {
   green = 146,
   blue = 198,
 }
-local col_panels = {
-  red = 134,
-  green = 126,
-  blue = 178,
-}
 
 function UILoadGame:UILoadGame(ui, mode)
   self:UIResizable(ui, 200, 280, col_bg)
   
   local app = ui.app
-  self.ui = ui
   self.mode = mode
   self.modal_class = "main menu"
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "main_menu", true)
   
   local function load_button(filename, file)
     return --[[persistable:load_game_button]] function(self)
@@ -57,7 +50,7 @@ function UILoadGame:UILoadGame(ui, mode)
     local filename = (num == 9) and "CorsixTH-Auto.sav" or "CorsixTH-Slot".. num .. ".sav"
     local label = (num == 9) and _S.menu_options.autosave or _S.menu_file_load[num]
     local tooltip = (num == 9) and _S.tooltip.load_game_window.load_autosave or _S.tooltip.load_game_window.load_game_number:format(num)
-    local panel = self:addColourPanel(20, 20 * num, 160, 18, col_panels.red, col_panels.green, col_panels.blue):setTooltip(tooltip)
+    local panel = self:addBevelPanel(20, 20 * num, 160, 18, col_bg):setTooltip(tooltip)
     local f = io.open(filename, "rb")
     if f then
       panel:makeButton(0, 0, 160, 18, nil, load_button(filename))
@@ -67,7 +60,7 @@ function UILoadGame:UILoadGame(ui, mode)
       self.labels[num] = _S.tooltip.main_menu.load_menu.empty_slot
     end
   end
-  self:addPanel(3, 18, 222):makeButton(0, 0, 164, 44, 4, self.buttonBack):setDisabledSprite(5):setTooltip(_S.tooltip.load_game_window.back)
+  self:addBevelPanel(20, 220, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.load_game_window.back)
 end
 
 function UILoadGame:getSavedWindowPositionName()
@@ -86,7 +79,7 @@ function UILoadGame:draw(canvas, x, y)
     self.white_font:draw(canvas, self.labels[i], x + 20, y + 20 * i, 160, 18)
   end
   
-  self.white_font:draw(canvas, _S.load_game_window.back, x + 27, y + 231, 146, 26)
+  self.white_font:draw(canvas, _S.load_game_window.back, x + 20, y + 220, 160, 40)
 end
 
 function UILoadGame:buttonLoad(filename)

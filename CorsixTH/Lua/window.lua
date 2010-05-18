@@ -227,6 +227,51 @@ function Window:addColourPanel(x, y, w, h, r, g, b)
   return panel
 end
 
+local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel, canvas, x, y)
+  if panel.lowered then
+    canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w, panel.h)
+    canvas:drawRect(panel.shadow_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
+    canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+  else
+    canvas:drawRect(panel.shadow_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 1, panel.h - 1)
+    canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
+    canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+  end
+end
+
+local function sanitize(colour)
+  if colour > 255 then
+    colour = 255
+  elseif colour < 0 then
+    colour = 0
+  end
+  return colour
+end
+
+function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour)
+  if not highlight_colour then
+    highlight_colour = {red = sanitize(colour.red + 20), green = sanitize(colour.green + 20), blue = sanitize(colour.blue + 20)}
+  end
+  if not shadow_colour then
+    shadow_colour = {red = sanitize(colour.red - 20), green = sanitize(colour.green - 20), blue = sanitize(colour.blue - 20)}
+  end
+  local panel = setmetatable({
+    window = self,
+    x = x,
+    y = y,
+    w = w,
+    h = h,
+    colour = TheApp.video:mapRGB(colour.red, colour.green, colour.blue),
+    highlight_colour = TheApp.video:mapRGB(highlight_colour.red, highlight_colour.green, highlight_colour.blue),
+    shadow_colour = TheApp.video:mapRGB(shadow_colour.red, shadow_colour.green, shadow_colour.blue),
+    custom_draw = panel_bevel_draw,
+    visible = true,
+    lowered = false,
+  }, panel_mt)
+  self.panels[#self.panels + 1] = panel
+  return panel
+end
+
 function Window:addWindow(window)
   if window.closed then
     return
@@ -287,6 +332,8 @@ function Button:Button()
   self.sprite_index_normal = nil
   self.sprite_index_disabled = nil
   self.sprite_index_active = nil
+  self.panel_lowered_normal = nil
+  self.panel_lowered_active = nil
   self.on_click = nil
   self.on_click_self = nil
   self.on_rightclick = nil
@@ -320,7 +367,10 @@ end
 function Button:toggle()
   self.sprite_index_normal, self.sprite_index_active =
     self.sprite_index_active, self.sprite_index_normal
+  self.panel_lowered_active, self.panel_lowered_normal =
+    self.panel_lowered_normal, self.panel_lowered_active
   self.panel_for_sprite.sprite_index = self.sprite_index_normal
+  self.panel_for_sprite.lowered = self.panel_lowered_normal
   self.toggled = not self.toggled
   return self.toggled
 end
@@ -402,6 +452,8 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
     on_click_self = on_click_self or self,
     on_rightclick = on_rightclick,
     enabled = true,
+    panel_lowered_normal = false,
+    panel_lowered_active = true,
   }, button_mt)
   if self.ui and on_click == self.close then
     button.sound = "no4.wav"
@@ -495,6 +547,7 @@ function Window:onMouseDown(button, x, y)
         btn.panel_for_sprite.sprite_index = btn.sprite_index_active
         self.active_button = btn
         btn.active = true
+        btn.panel_for_sprite.lowered = btn.panel_lowered_active
         repaint = true
         break
       end
@@ -551,6 +604,7 @@ function Window:onMouseUp(button, x, y)
     if btn then
       btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
       btn.active = false
+      btn.panel_for_sprite.lowered = btn.panel_lowered_normal
       self.active_button = false
       if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
         local arg = nil
@@ -672,12 +726,15 @@ function Window:onMouseMove(x, y, dx, dy)
     if btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
       index = btn.sprite_index_active
       self.active_button.active = true
+      btn.panel_for_sprite.lowered = btn.panel_lowered_active
     else
       self.active_button.active = false
+      btn.panel_for_sprite.lowered = btn.panel_lowered_normal
       for _, btn in ipairs(self.buttons) do
         if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
           btn.panel_for_sprite.sprite_index = btn.sprite_index_active
           btn.active = true
+          btn.panel_for_sprite.lowered = btn.panel_lowered_active
           self.active_button = btn
           repaint = true
           break

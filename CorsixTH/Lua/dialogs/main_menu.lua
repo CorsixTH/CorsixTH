@@ -18,34 +18,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile("dialogs/resizable")
+
 --! Class for main menu window.
-class "UIMainMenu" (Window)
+class "UIMainMenu" (UIResizable)
+
+local col_bg = {
+  red = 154,
+  green = 146,
+  blue = 198,
+}
 
 function UIMainMenu:UIMainMenu(ui)
-  self:Window()
+  self:UIResizable(ui, 200, 280, col_bg)
   
   local app = ui.app
   self.esc_closes = false
-  self.ui = ui
   self.modal_class = "main menu"
   self.on_top = true
-  self.width = 200
-  self.height = 280
   self:setDefaultPosition(0.5, 0.25)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  self.panel_sprites = app.gfx:loadSpriteTable("Bitmap", "main_menu", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  
-  self:addPanel(1, 0, 0) -- top part of window
-  self:addPanel(2, 0, 160) -- bottom part of window
   
   -- individual buttons
   self.default_button_sound = "selectx.wav"
-  self:addPanel(3, 18, 18):makeButton(0, 0, 164, 44, 4, self.buttonNewGame):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.new_game)
-  self:addPanel(3, 18, 66):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
-  self:addPanel(3, 18, 114):makeButton(0, 0, 164, 44, 4, self.buttonLoadGame):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.load_game)
-  self:addPanel(3, 18, 162):makeButton(0, 0, 164, 44, 4, nil):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
-  self:addPanel(3, 18, 222):makeButton(0, 0, 164, 44, 4, self.buttonExit):setDisabledSprite(5):setTooltip(_S.tooltip.main_menu.exit)
+  self:addBevelPanel(20, 20, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
+  self:addBevelPanel(20, 65, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addBevelPanel(20, 110, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
+  self:addBevelPanel(20, 155, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addBevelPanel(20, 220, 160, 40, col_bg):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
   
   self.button_labels = {
     _S.main_menu.new_game,
@@ -89,8 +90,8 @@ function UIMainMenu:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   -- Draw labels
   x, y = self.x + x, self.y + y
-  for i, ly in ipairs(label_y) do
-    self.white_font:draw(canvas, self.button_labels[i], x + 27, y + ly, 146, 26)
+  for i = 1, 5 do
+    self.white_font:draw(canvas, self.button_labels[i], x + self.panels[i + 1].x, y + self.panels[i + 1].y, self.panels[i + 1].w, self.panels[i + 1].h)
   end
 end
 

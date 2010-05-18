@@ -25,9 +25,6 @@ CorsixTH/Bitmap/fullscreen_border_topleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
 CorsixTH/Bitmap/lib_bmp.lua -text
 CorsixTH/Bitmap/lib_spritesheet.lua -text
-CorsixTH/Bitmap/main_menu.dat -text
-CorsixTH/Bitmap/main_menu.spec -text
-CorsixTH/Bitmap/main_menu.tab -text
 CorsixTH/Bitmap/mainmenu1024.bmp -text
 CorsixTH/Bitmap/mainmenu1024.dat -text
 CorsixTH/Bitmap/mainmenu1024.pal -text
@@ -40,11 +37,6 @@ CorsixTH/Bitmap/mainmenu640.pal -text
 CorsixTH/Bitmap/mainmenu800.bmp -text
 CorsixTH/Bitmap/mainmenu800.dat -text
 CorsixTH/Bitmap/mainmenu800.pal -text
-CorsixTH/Bitmap/mainmenu_bottom.bmp -text
-CorsixTH/Bitmap/mainmenu_button.bmp -text
-CorsixTH/Bitmap/mainmenu_button_active.bmp -text
-CorsixTH/Bitmap/mainmenu_button_disabled.bmp -text
-CorsixTH/Bitmap/mainmenu_top.bmp -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mkbootstrap.lua -text
 CorsixTH/Bitmap/mkfont.lua -text
