@@ -116,14 +116,20 @@ load_game_window = {
 
 tooltip.load_game_window = {
   load_game_number = "Ladda spel %d",
+  load_game_with_name = "Ladda banan %s",
   load_autosave = "Ladda autosparningen",
   back = utf8 "Stäng detta fönster",
 }
 
 errors = {
-  dialog_missing_graphics = "Tyvärr innehåller demon inte den här dialogrutan.",
+  dialog_missing_graphics = utf8 "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = utf8 "Fel när spelet skulle sparas: ",
   load_prefix = utf8 "Fel när spelet skulle laddas: ",
+  map_file_missing = utf8 "Kunde inte hitta kartfilen till den här nivån!",
+}
+
+information = {
+  custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
 }
 
 totd_window = {

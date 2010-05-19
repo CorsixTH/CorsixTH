@@ -56,6 +56,7 @@ function World:World(app)
   self.idle_cache = {}
   self:initLevel(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
+  self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
@@ -116,24 +117,34 @@ function World:initLevel(app)
   self.available_diseases = {}
   local visual = level_config.visuals
   local non_visual = level_config.non_visuals
+  local added_diseases = 0
   for i, disease in ipairs(app.diseases) do
     if not disease.pseudo then
-      local vis = disease.visuals_id and visual[disease.visuals_id].Value 
-      or non_visual[disease.non_visuals_id].Value
+      local vis = 1
+      if visual and (visual[disease.visuals_id] or non_visual[disease.non_visuals_id]) then
+        vis = disease.visuals_id and visual[disease.visuals_id].Value 
+        or non_visual[disease.non_visuals_id].Value
+      end
       if vis ~= 0 then
         self.available_diseases[#self.available_diseases + 1] = disease
         self.available_diseases[disease.id] = disease
+        added_diseases = added_diseases + 1
       end
     end
   end
-  
+  if added_diseases == 0 then
+    print("Warning: This level does not contain any diseases")
+  end
   -- Determine available rooms from their required objects
   self.available_rooms = {}
   local obj = level_config.objects
   for i, room in ipairs(app.rooms) do
-    local avail = room.level_config_id and obj[room.level_config_id].AvailableForLevel or 1
+    local avail = 1
+    if obj and room.level_config_id and obj[room.level_config_id] then
+      avail = obj[room.level_config_id].AvailableForLevel
+    end
     if avail == 1 then
-      if room.level_config_id then
+      if obj and room.level_config_id and obj[room.level_config_id] then
         room.discovered = obj[room.level_config_id].StartAvail == 1 and true or false
       else
         room.discovered = true
@@ -193,6 +204,10 @@ function World:calculateSpawnTiles()
 end
 
 function World:spawnPatient(hospital)
+  -- The level might not contain any diseases
+  if #self.available_diseases < 1 then
+    return
+  end
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
@@ -442,7 +457,13 @@ function World:onTick()
       end
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
-      self.ui:addWindow(UIInformation(self.ui,_S.introduction_texts["level" .. self.map.level_number]))
+      if self.map.level_number then
+        local text = {_S.information.custom_game}
+        if type(self.map.level_number) == "number" then
+          text = _S.introduction_texts["level" .. self.map.level_number]
+        end
+        self.ui:addWindow(UIInformation(self.ui, text))
+      end
       local message = {
         {             text = _S.fax.tutorial[1]},
         {offset =  8, text = _S.fax.tutorial[2]},

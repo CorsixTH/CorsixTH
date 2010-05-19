@@ -24,10 +24,20 @@ local TH = require "TH"
 class "Machine" (Object)
 
 function Machine:Machine(world, object_type, x, y, direction, etc)
-  -- Initialize machines with strength values. (TODO: according to current research)
-  self.strength = object_type.default_strength
+  
   self.total_usage = -1 -- Incremented in the constructor of Object.
   self:Object(world, object_type, x, y, direction, etc)
+  
+  -- Initialize machines with strength values. (TODO: according to current research)
+  local config
+  local level = world.map.level_config
+  local id = self:getRoom().room_info.level_config_id
+  if level and id and level.objects[id]
+  and level.objects[id].StartStrength then
+    config = level.objects[id]
+  end
+  self.strength = config and config.StartStrength or object_type.default_strength
+  
   -- We actually don't want any dynamic info just yet
   self:clearDynamicInfo()
   -- TODO: Smoke, 3424

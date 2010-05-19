@@ -121,6 +121,7 @@ load_game_window = {
 
 tooltip.load_game_window = {
   load_game_number = "Load game %d",
+  load_game_with_name = "Load the level %s",
   load_autosave = "Load autosave",
   back = "Close the load game window",
 }
@@ -129,6 +130,11 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  map_file_missing = "Could not find the map file for this level!",
+}
+
+information = {
+  custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
 }
 
 totd_window = {

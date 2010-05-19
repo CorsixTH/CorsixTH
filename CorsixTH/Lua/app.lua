@@ -238,10 +238,13 @@ function App:loadMainMenu()
   end
 end
 
-function App:loadLevel(level_number)
+-- Loads the specified level. If a string is passed it looks for the file with the same name
+-- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
+-- the original game.
+function App:loadLevel(level, ...)
   -- Check that we can load the data before unloading current map
   local new_map = Map(self)
-  local map_objects = new_map:load(level_number)
+  local map_objects = new_map:load(level, ...)
   
   -- Unload ui, world and map
   self.ui = nil
@@ -590,6 +593,8 @@ end
 function App:readDataFile(dir, filename)
   if dir == "Bitmap" then
     return self:readBitmapDataFile(filename)
+  elseif dir == "Levels" then
+    return self:readLevelDataFile(filename)
   end
   if filename == nil then
     dir, filename = "Data", dir
@@ -597,6 +602,29 @@ function App:readDataFile(dir, filename)
   local data = assert(self.fs:readContents(dir .. pathsep .. filename))
   if data:sub(1, 3) == "RNC" then
     data = assert(rnc.decompress(data))
+  end
+  return data
+end
+
+function App:readLevelDataFile(filename)
+  filename = "Levels" .. pathsep .. filename
+  -- First look in the original install directory, if not found there
+  -- look in the CorsixTH directory "Levels".
+  local data = self.fs:readContents(filename)
+  if not data then
+    local file = io.open(debug.getinfo(1, "S").source:sub(2, -12) .. filename, "rb")
+    if file then
+      data = file:read"*a"
+      file:close()
+    end
+  end
+  if data then
+    if data:sub(1, 3) == "RNC" then
+      data = assert(rnc.decompress(data))
+    end
+  else
+    -- Could not find the file
+    return nil, _S.errors.map_file_missing
   end
   return data
 end

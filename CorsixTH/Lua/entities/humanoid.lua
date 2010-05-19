@@ -189,6 +189,8 @@ function Humanoid:onClick(ui, button)
         print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
       elseif self.action_queue[i].object then
         print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
+      elseif self.action_queue[i].name == "walk" then
+        print(self.action_queue[i].name .. " - going to " .. self.action_queue[i].x .. ":" .. self.action_queue[i].y)
       else
         print(self.action_queue[i].name)
       end

@@ -42,7 +42,7 @@ function UIMainMenu:UIMainMenu(ui)
   -- individual buttons
   self.default_button_sound = "selectx.wav"
   self:addBevelPanel(20, 20, 160, 40, col_bg):setLabel(_S.main_menu.new_game):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
-  self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.main_menu.custom_level):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.custom_level .. " " .. _S.misc.not_yet_implemented):enable(false)
+  self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.main_menu.custom_level):makeButton(0, 0, 160, 40, nil, self.buttonCustomGame):setTooltip(_S.tooltip.main_menu.custom_level)
   self:addBevelPanel(20, 110, 160, 40, col_bg):setLabel(_S.main_menu.load_game):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
   self:addBevelPanel(20, 155, 160, 40, col_bg):setLabel(_S.main_menu.options):makeButton(0, 0, 160, 40, nil):setTooltip(_S.tooltip.main_menu.options .. " " .. _S.misc.not_yet_implemented):enable(false)
   self:addBevelPanel(20, 220, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
@@ -88,6 +88,12 @@ end
 
 function UIMainMenu:buttonNewGame()
   self.ui.app:loadLevel(1)
+end
+
+function UIMainMenu:buttonCustomGame()
+  local window = UICustomGame(self.ui, "menu")
+  self.ui:addWindow(window)
+  self:close()
 end
 
 function UIMainMenu:buttonLoadGame()

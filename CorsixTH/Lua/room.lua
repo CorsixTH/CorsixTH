@@ -448,7 +448,11 @@ function Room:roomFinished()
   self.built = true
   -- Only true when not editing the room at all.
   self.is_active = true
-  
+  -- Show information about the room if not already shown.
+  if self.world.room_built and not self.world.room_built[self.room_info.id] then
+    self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
+    self.world.room_built[self.room_info.id] = true
+  end
   self:tryToFindNearbyPatients()
 end
 

@@ -24,9 +24,17 @@ function Hospital:Hospital(world)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
+  local balance = 40000
+  if level_config then
+    if level_config.towns and level_config.towns[level] then
+      balance = level_config.towns[level].StartCash
+    elseif level_config.town then
+      balance = level_config.town.StartCash
+    end
+  end
   self.name = "PLAYER"
   -- TODO: Variate initial reputation etc based on level
-  self.balance = level_config.towns[level].StartCash
+  self.balance = balance
   self.loan = 0
   self.value = 32495 -- TODO: How is this calculated?
   self.interest_rate = 0.01 -- Should these be worldwide?
@@ -70,6 +78,10 @@ function Hospital:Hospital(world)
   local diseases = TheApp.diseases
   local expertise = self.world.map.level_config.expertise
   for i, disease in ipairs(diseases) do
+    local disease_available = true
+    if expertise then
+      disease_available = expertise[disease.expertise_id].Known == 1 and true or false
+    end
     if world.available_diseases[disease.id] or disease.pseudo then
       local info = {
         reputation = 500,
@@ -79,7 +91,7 @@ function Hospital:Hospital(world)
         fatalities = 0,
         turned_away = 0,
         disease = disease,
-        discovered = expertise[disease.expertise_id].Known == 1 and true or false,
+        discovered = disease_available,
         concentrate_research = false,
         cure_effectiveness = 100,
         -- This will only work as long as there's only one treatment room.
@@ -436,11 +448,18 @@ local competitors = {
   "CEREBRO",
   "MOTHER",
   "JAYNE",
+  "CORSIX",
+  "WOLFMAN",
+  "LEGO3",
 }
 
 function AIHospital:AIHospital(competitor, ...)
   self:Hospital(...)
-  self.name = competitors[competitor]
+  if competitors[competitor] then
+    self.name = competitors[competitor]
+  else
+    self.name = "NONAME"
+  end
   self.is_in_world = false
 end
 

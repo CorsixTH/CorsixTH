@@ -378,12 +378,14 @@ function Staff:isIdle()
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- TODO: There's a short moment where a patient is in neither of the three: when he is called to enter the room, until he enters the room.
     --       See issue #76.
-    if room:getPatientCount() == 0 and room.door.queue:reportedSize() == 0 and room.door.queue.expected_count == 0 then
+    if room:getPatientCount() == 0 and room.door.queue:reportedSize() == 0 and room.door.queue.expected_count == 0 
+    and not (room.door.reserved_for and class.is(room.door.reserved_for, Patient) or false) then
       return true
     end
   else
-    -- on the corridor, if not heading to a room already
-    if not self.action_queue[1].is_entering then
+    -- on the corridor, if not heading to a room already, for handymen they also shouldn't be on their way to
+    -- for example water plants.
+    if not self.action_queue[1].is_entering and not self.action_queue[1].is_job then
       return true
     end
   end

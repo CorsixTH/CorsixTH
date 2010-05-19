@@ -1878,6 +1878,61 @@ while true do
 end
 introduction_texts = T
 
+-- 57: Information texts for the different rooms
+local R = {}
+-- Note that if an id of a room is changed this will need to be changed too.
+-- TODO: A better solution maybe?
+local ids = {
+  "gp", 
+  "psych", 
+  "ward", 
+  "operating_theatre", 
+  "pharmacy", 
+  "cardiogram", 
+  "scanner",
+  "ultrascan",
+  "blood_machine",
+  "x_ray",
+  "inflation",
+  "dna",
+  "hair_restoration",
+  "slack_tongue",
+  "fracture_clinic",
+  "training",
+  "electrolysis",
+  "jelly_vat",
+  "staff_room",
+  "tv_room",
+  "general_diag",
+  "research",
+  "toilets",
+  "decontamination",
+  "no_room",
+}
+local id_index = 0
+text_index = 14
+while true do
+  local text = S[57][text_index]
+  if text == "." then
+    id_index = id_index + 1
+    R[ids[id_index]] = {""}
+  elseif text == ".." then
+    break
+  else
+    R[ids[id_index]][#R[ids[id_index]]] = R[ids[id_index]][#R[ids[id_index]]] .. text
+    if R[ids[id_index]][#R[ids[id_index]]]:sub(-1) == "." then
+      R[ids[id_index]][#R[ids[id_index]]] = R[ids[id_index]][#R[ids[id_index]]] .. " "
+    end
+    if text:find("//") then
+      R[ids[id_index]][#R[ids[id_index]] + 1] = ""
+    end
+  end
+  text_index = text_index + 1
+end
+room_descriptions = R
+
+-- 59: The dynamic info bar
+
 dynamic_info = {
   patient = {
     actions = {

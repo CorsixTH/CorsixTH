@@ -85,61 +85,114 @@ local function bits(n)
   end
 end
 
-function Map:load(level_number)
-  self.level_number = level_number
-  local _, objects = assert(self.th:load(self:getRawData()))
-  self.level_name = _S.level_names[level_number]:upper()
+-- Loads the specified level. If a string is passed it looks for the file with the same name
+-- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
+-- the original game.
+function Map:load(level, level_name, level_file)
   -- Load base configuration for all levels
+  local objects, i
   local base_config = self:loadMapConfig("FULL00.SAM", {})
-  local level = level_number
-  if level < 10 then
-    level = "0" .. level
+  if type(level) == "number" then
+    self.level_number = level
+    local data, errors = self:getRawData(level_file)
+    if data then
+      i, objects = self.th:load(data)
+    else
+      return nil, errors
+    end
+    self.level_name = _S.level_names[level]:upper()
+    -- Check if the config exists, otherwise we're probably using the demo files.
+    if base_config then
+      local level_no = level
+      if level_no < 10 then
+        level_no = "0" .. level
+      end
+      -- Override with the specific configuration for this level
+      self.level_config = self:loadMapConfig("FULL" .. level_no .. ".SAM", base_config)
+    else
+      -- Try to load the standard full configuration level instead.
+      self.level_config = self:loadMapConfig("example1.level", {})
+      if not self.level_config then
+        -- Nothing worked so everything will be available - load a dummy config
+        self.level_config = {
+          win_criteria = {}, 
+          lose_criteria = {},
+          computer = {},
+        }
+        self.level_config.computer["13"] = {Playing = 1}
+        self.level_config.computer["14"] = {Playing = 1}
+        self.level_config.computer["15"] = {Playing = 1}
+      else
+        self.level_number = level_name
+      end
+    end
+  else
+    -- We're loading a custom level.
+    self.level_name = level_name
+    self.level_number = level_name
+    local data, errors = self:getRawData(level_file)
+    if data then
+      i, objects = self.th:load(data)
+    else
+      return nil, errors
+    end
+    if not base_config then
+      base_config = {}
+    end
+    self.level_config = self:loadMapConfig(level, base_config, true)
   end
-  -- Override with the specific configuration for this level
-  self.level_config = self:loadMapConfig("FULL" .. level .. ".SAM", base_config)
+
   self.width, self.height = self.th:size()
   return objects
 end
 
-function Map:loadMapConfig(filename, config)
-  -- TODO: Paths etc will need to be adjusted to enable custom levels
-  -- Currently the level number is used in many places (which is in the actual filename too.
-  -- How should this be done in the future?
-  for line in self.app.fs:readContents("Levels", filename):gmatch"[^\r\n]+" do
-    if line:sub(1, 1) == "#" then
-      local parts = {}
-      local nkeys = 0
-      for part in line:gmatch"%.?[-?a-zA-Z0-9%[_%]]+" do
-        if part:sub(1, 1) == "." and #parts == nkeys + 1 then
-          nkeys = nkeys + 1
-        end
-        parts[#parts + 1] = part
-      end
-      if nkeys == 0 then
-        parts[3] = parts[2]
-        parts[2] = ".Value"
-        nkeys = 1
-      end
-      for i = 2, nkeys + 1 do
-        local key = parts[1] .. parts[i]
-        local t, n
-        for name in key:gmatch"[^.%[%]]+" do
-          name = tonumber(name) or name
-          if t then
-            if not t[n] then
-              t[n] = {}
-            end
-            t = t[n]
-          else
-            t = config
-          end
-          n = name
-        end
-        t[n] = tonumber(parts[nkeys + i]) or parts[nkeys + i]
-      end
+function Map:loadMapConfig(filename, config, custom)
+  local function iterator()
+    if custom then
+      return io.lines(filename)
+    else
+      return self.app.fs:readContents("Levels", filename):gmatch"[^\r\n]+"
     end
   end
-  return config
+  if self.app.fs:readContents("Levels", filename) or io.open(filename) then
+    for line in iterator() do
+      if line:sub(1, 1) == "#" then
+        local parts = {}
+        local nkeys = 0
+        for part in line:gmatch"%.?[-?a-zA-Z0-9%[_%]]+" do
+          if part:sub(1, 1) == "." and #parts == nkeys + 1 then
+            nkeys = nkeys + 1
+          end
+          parts[#parts + 1] = part
+        end
+        if nkeys == 0 then
+          parts[3] = parts[2]
+          parts[2] = ".Value"
+          nkeys = 1
+        end
+        for i = 2, nkeys + 1 do
+          local key = parts[1] .. parts[i]
+          local t, n
+          for name in key:gmatch"[^.%[%]]+" do
+            name = tonumber(name) or name
+            if t then
+              if not t[n] then
+                t[n] = {}
+              end
+              t = t[n]
+            else
+              t = config
+            end
+            n = name
+          end
+          t[n] = tonumber(parts[nkeys + i]) or parts[nkeys + i]
+        end
+      end
+    end
+    return config
+  else
+    return nil
+  end
 end
 
 function Map:prepareForSave()
@@ -152,9 +205,19 @@ function Map:clearDebugText()
   self.debug_flags = false
 end
 
-function Map:getRawData()
+function Map:getRawData(level_file)
   if not self.thData then
-    self.thData = self.app:readDataFile("Levels", "Level.L".. self.level_number)
+    local data, errors
+    if not level_file then
+      data, errors = self.app:readDataFile("Levels", "Level.L".. self.level_number)
+    else
+      data, errors = self.app:readDataFile("Levels", level_file)
+    end
+    if data then
+      self.thData = data
+    else
+      return nil, errors
+    end
   end
   return self.thData
 end
