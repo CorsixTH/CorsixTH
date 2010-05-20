@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 1
+local SAVEGAME_VERSION = 2
 
 class "App"
 
@@ -663,6 +663,17 @@ function App:loadLuaFolder(dir, no_results, append_to)
   else
     return results
   end
+end
+
+function App:scanSavegames()
+  local path = debug.getinfo(1, "S").source:sub(2, -15) -- stripped ../Lua/app.lua
+  local saves = {}
+  for file in lfs.dir(path) do
+    if file:match"%.sav$" then
+      saves[#saves + 1] = file:sub(1, -5)
+    end
+  end
+  return saves
 end
 
 --! Quits the running game and returns to main menu (offers confirmation window first)

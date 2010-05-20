@@ -116,10 +116,12 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
+  caption = "Load Game",
   back = "Back",
 }
 
 tooltip.load_game_window = {
+  load_game = "Load game %s",
   load_game_number = "Load game %d",
   load_game_with_name = "Load the level %s",
   load_autosave = "Load autosave",

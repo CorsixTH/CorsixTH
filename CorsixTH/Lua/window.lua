@@ -40,6 +40,8 @@ function Window:Window()
   }
   self.tooltip_regions = {
   }
+  self.scrollbars = {
+  }
   self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
@@ -147,6 +149,10 @@ function Panel:makeToggleButton(...)
   return self.window:makeButtonOnPanel(self, ...):makeToggle()
 end
 
+function Panel:makeScrollbar(...)
+  return self.window:makeScrollbarOnPanel(self, ...)
+end
+
 -- Specify a tooltip to be displayed when hovering this panel.
 -- x and y are optional position of bottom left of the tooltip.
 -- If not specified, will default to mouse position.
@@ -173,7 +179,7 @@ end
 --!param label (string) The text to be drawn on top of the label.
 --!param font (font) [optional] The font to use. Default is Font01V in QData.
 function Panel:setLabel(label, font)
-  self.label = label
+  self.label = label or ""
   self.label_font = font or TheApp.gfx:loadFont("QData", "Font01V")
   return self
 end
@@ -264,6 +270,18 @@ local function sanitize(colour)
   return colour
 end
 
+--[[ Add a beveled `Panel` to the window.
+! A bevel panel is similar to a solid colour panel, except that it
+features a highlight and a shadow that makes it appear either lowered or raised.
+!param x (integer) The X pixel position to start the panel at.
+!param y (integer) The Y pixel position to start the panel at.
+!param w (integer) The width of the panel, in pixels.
+!param h (integer) The height of the panel, in pixels.
+!param colour (colour in form .red, .green and .blue) The colour for the panel.
+!param highlight_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the highlight.
+!param shadow_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the shadow.
+!param disabled_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the disabled panel.
+]]
 function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour)
   highlight_colour = highlight_colour or {
     red = sanitize(colour.red + 40),
@@ -498,6 +516,67 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
   return button
 end
 
+--! A window element used to scroll in lists
+class "Scrollbar"
+
+--!dummy
+function Scrollbar:Scrollbar()
+  self.base = nil
+  self.slider = nil
+  self.min_value = nil
+  self.max_value = nil
+  self.value = nil
+  self.page_size = nil
+  self.direction = nil
+  self.visible = nil
+end
+
+local scrollbar_mt = permanent("Window.<scrollbar_mt>", getmetatable(Scrollbar()))
+
+--[[ Convert a static panel into a scrollbar.
+! Scrollbars consist of a base panel (the panel given as a parameter)
+and an additional slider panel (automatically created BevelPanel).
+!param panel (panel) The panel that will serve as the scrollbar base.
+!param slider_colour (colour in form .red, .green and .blue) The colour for the slider.
+!param callback (function) Function that is called whenever the slider position changes.
+!param min_value (integer) The minimum value the scrollbar can represent.
+!param max_value (integer) The maximum value the scrollbar can represent.
+!param page_size (integer) The amount of objects represented on one page.
+!param value (integer, nil) The current value, or min_value if not specified.
+]]
+function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, max_value, page_size, value)
+  value = value or min_value
+  page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
+  local slider = self:addBevelPanel(panel.x + 1, panel.y + 1, panel.w - 2, panel.h - 2, slider_colour)
+  local scrollbar = setmetatable({
+    base = panel,
+    slider = slider,
+    min_value = min_value,
+    max_value = max_value,
+    page_size = page_size,
+    value = value,
+    direction = "y",
+    callback = callback,
+    visible = true,
+    enabled = true,
+  }, scrollbar_mt)
+  self.scrollbars[#self.scrollbars + 1] = scrollbar
+  
+  slider.min_x = slider.x
+  slider.min_y = slider.y
+  slider.max_w = slider.w
+  slider.max_h = slider.h
+  
+  slider.w = scrollbar.direction == "x" and ((value + page_size - 1) / max_value) * slider.w or slider.w
+  slider.h = scrollbar.direction == "y" and ((value + page_size - 1) / max_value) * slider.h or slider.h
+  
+  slider.max_x = slider.min_x + slider.max_w - slider.w
+  slider.max_y = slider.min_y + slider.max_h - slider.h
+  
+  return scrollbar
+end
+
+
 function Window:draw(canvas, x, y)
   x, y = x + self.x, y + self.y
   if self.panels[1] then
@@ -586,6 +665,16 @@ function Window:onMouseDown(button, x, y)
         break
       end
     end
+    for _, bar in ipairs(self.scrollbars) do
+      if bar.enabled and self:hitTestPanel(x, y, bar.slider) then
+        self.active_scrollbar = bar
+        bar.active = true
+        bar.down_x = x - bar.slider.x
+        bar.down_y = y - bar.slider.y
+        repaint = true
+        break
+      end
+    end
   end
   if button == "left" and not repaint and Window.hitTest(self, x, y) then
     return self:beginDrag(x, y)
@@ -665,6 +754,13 @@ function Window:onMouseUp(button, x, y)
         end
       end
       repaint = true
+    end
+    local bar = self.active_scrollbar
+    if bar then
+      self.active_scrollbar = nil
+      bar.active = false
+      bar.down_x = nil
+      bar.down_y = nil
     end
   end
   
@@ -778,6 +874,33 @@ function Window:onMouseMove(x, y, dx, dy)
     if btn.panel_for_sprite.sprite_index ~= index then
       btn.panel_for_sprite.sprite_index = index
       repaint = true
+    end
+  end
+  
+  if self.active_scrollbar then
+    local bar = self.active_scrollbar
+    x = x - bar.down_x
+    y = y - bar.down_y
+    local changed = false
+    if bar.direction == "x" then
+      x = math.max(bar.slider.min_x, x)
+      x = math.min(bar.slider.max_x, x)
+      repaint = repaint or bar.slider.y
+      bar.slider.x = x
+      local old_value = bar.value
+      bar.value = math.floor(((x - bar.slider.min_x) / (bar.slider.max_x - bar.slider.min_x + 1)) * (bar.max_value - bar.min_value - bar.page_size + 2)) + 1
+      changed = old_value ~= bar.value
+    elseif bar.direction == "y" then
+      y = math.max(bar.slider.min_y, y)
+      y = math.min(bar.slider.max_y, y)
+      repaint = repaint or bar.slider.y
+      bar.slider.y = y
+      local old_value = bar.value
+      bar.value = math.floor(((y - bar.slider.min_y) / (bar.slider.max_y - bar.slider.min_y + 1)) * (bar.max_value - bar.min_value - bar.page_size + 2)) + 1
+      changed = old_value ~= bar.value
+    end
+    if changed then
+      bar.callback()
     end
   end
   
@@ -938,6 +1061,11 @@ end
 
 -- !Stub to be extended in subclasses, if needed.
 function Window:afterLoad(old, new)
+  if old < 2 then
+    -- Scrollbars were added
+    self.scrollbars = {}
+  end
+
   if self.windows then
     for _, w in pairs(self.windows) do
       w:afterLoad(old, new)
