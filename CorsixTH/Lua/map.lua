@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 --! Lua extensions to the C++ THMap class
 class "Map"
+local pathsep = package.config:sub(1, 1)
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
 local thMap = require"TH".map
@@ -111,9 +112,12 @@ function Map:load(level, level_name, level_file)
       self.level_config = self:loadMapConfig("FULL" .. level_no .. ".SAM", base_config)
     else
       -- Try to load the standard full configuration level instead.
-      self.level_config = self:loadMapConfig("example1.level", {})
+      local path = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
+      self.level_config = self:loadMapConfig(path .. "example.level", {}, true)
       if not self.level_config then
         -- Nothing worked so everything will be available - load a dummy config
+        print("Warning: Could not find any level configuration to load. Please try " ..
+          "reinstalling the game.")
         self.level_config = {
           win_criteria = {}, 
           lose_criteria = {},

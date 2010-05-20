@@ -176,6 +176,10 @@ function UIBankManager:showStatistics()
   if self.closed then
     return
   end
+	-- close any open graphs
+	if self.graph.visible then
+		self:returnFromGraph()
+	end
   self.showingStatistics = true
   self.return_from_stat_button.enabled = true
   self.stat_button.enabled = false
