@@ -66,6 +66,7 @@ menu_debug = {
   create_emergency          = "  NOTFALL ERZEUGEN  ",
   place_objects             = "  OBJEKTE PLATZIEREN",
   dump_strings              = "  TEXTE ABSPEICHERN  ",
+  dump_gamelog              = "  SPIELPROTOKOLL ABSPEICHERN",
   map_overlay               = "  KARTEN-OVERLAY",
   sprite_viewer             = "  SPRITE-BETRACHTER",
 }
@@ -132,19 +133,39 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
+  caption = "Spiel Laden",
   back = utf8 "Zurück",
 }
 
 tooltip.load_game_window = {
+  load_game = "Spiel %s laden",
   load_game_number = "Spiel %d laden",
+  load_game_with_name = "Level %s starten",
   load_autosave = "Automatisch gespeichertes Spiel laden",
   back = utf8 "Das Ladefenster schließen",
+}
+
+save_game_window = {
+  caption = "Spiel Speichern",
+  new_save_game = "Neuer Spielstand",
+  back = utf8 "Zurück",
+}
+
+tooltip.save_game_window = {
+  save_game = utf8 "Spielstand %s überschreiben",
+  new_save_game = utf8 "Namen für einen neuen Spielstand eingeben",
+  back = utf8 "Das Speicherfenster schließen",
 }
 
 errors = {
   dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
   save_prefix = "Fehler beim Speichern: ",
   load_prefix = "Fehler beim Laden: ",
+  map_file_missing = utf8 "Konnte die Kartendatei für das Level nicht finden!",
+}
+
+information = {
+  custom_game = utf8 "Willkommen zu CorsixTH. Viel Spaß mit diesem eigenen Level!",
 }
 
 totd_window = {
