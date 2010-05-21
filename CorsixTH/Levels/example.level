@@ -31,7 +31,7 @@ and only some basic rooms are available. Note that if a player is using the demo
 on the contrary everything is available unless specified otherwise in the level file.
 
 %Name = "Example Town"
-%LevelFile = "LEVEL.L2"
+%LevelFile = "LEVEL.L1"
 
 | Town properties | Cash at the beginning | The actual amount |
 #town.StartCash 100000

@@ -134,34 +134,41 @@ tooltip.main_menu = {
 
 load_game_window = {
   caption = "Spiel Laden",
-  back = utf8 "Zurück",
 }
 
 tooltip.load_game_window = {
   load_game = "Spiel %s laden",
   load_game_number = "Spiel %d laden",
-  load_game_with_name = "Level %s starten",
   load_autosave = "Automatisch gespeichertes Spiel laden",
-  back = utf8 "Das Ladefenster schließen",
+}
+
+tooltip.custom_game_window = {
+  start_game_with_name = "Level %s starten",
 }
 
 save_game_window = {
   caption = "Spiel Speichern",
   new_save_game = "Neuer Spielstand",
-  back = utf8 "Zurück",
 }
 
 tooltip.save_game_window = {
   save_game = utf8 "Spielstand %s überschreiben",
   new_save_game = utf8 "Namen für einen neuen Spielstand eingeben",
-  back = utf8 "Das Speicherfenster schließen",
+}
+
+menu_list_window = {
+  back = utf8 "Zurück",
+}
+
+tooltip.menu_list_window = {
+  back = utf8 "Das Fenster schließen",
 }
 
 errors = {
   dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
   save_prefix = "Fehler beim Speichern: ",
   load_prefix = "Fehler beim Laden: ",
-  map_file_missing = utf8 "Konnte die Kartendatei für das Level nicht finden!",
+  map_file_missing = utf8 "Konnte die Kartendatei %s für das Level nicht finden!",
 }
 
 information = {

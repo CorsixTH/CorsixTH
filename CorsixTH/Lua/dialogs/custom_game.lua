@@ -18,42 +18,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-dofile("dialogs/resizable")
+dofile("dialogs/menu_list_dialog")
 
 local pathsep = package.config:sub(1, 1)
 
---! Load Game Window
-class "UICustomGame" (UIResizable)
-
-local col_bg = {
-  red = 154,
-  green = 146,
-  blue = 198,
-}
+--! Custom Game Window
+class "UICustomGame" (UIMenuList)
 
 function UICustomGame:UICustomGame(ui, mode)
-  self:UIResizable(ui, 200, 280, col_bg)
-  
-  local app = ui.app
-  local map = app.map
-  self.mode = mode
-  self.modal_class = "main menu"
-  self.resizable = false
-  self:setDefaultPosition(0.5, 0.25)
-  self.white_font = app.gfx:loadFont("QData", "Font01V")
-  
-  local function load_button(filename, level_name, level_file)
-    return --[[persistable:custom_game_button]] function(self)
-      self:buttonLoad(filename, level_name:sub(2, -2), level_file:sub(2, -2))
-    end
-  end
-  
-  --self.labels = {}
+
   local path = debug.getinfo(1, "S").source:sub(2, -28)
 
   path = path .. "Levels" .. pathsep
 
-  local num = 1
+  local items = {}
   for file in lfs.dir(path) do
     if file:match"%.level$" then
       local level_name, level_file
@@ -70,42 +48,24 @@ function UICustomGame:UICustomGame(ui, mode)
         end
       end
       if level_name and level_file then
-        local tooltip = _S.tooltip.load_game_window.load_game_with_name:format(level_name)
-        local panel = self:addBevelPanel(20, 20 * num, 160, 18, col_bg):setTooltip(tooltip)
-        panel:makeButton(0, 0, 160, 18, nil, load_button(path .. file, level_name, level_file))
-        panel:setLabel(level_name)
-        --self.labels[#self.labels + 1] = level_name
-        num = num + 1
+        items[#items + 1] = {
+          name = level_name, 
+          tooltip = _S.tooltip.custom_game_window.start_game_with_name:format(level_name),
+          level_file = level_file,
+          path = path .. file,
+        }
       end
     end
   end
-  self:addBevelPanel(20, 42 + num * 20, 160, 40, col_bg):setLabel(_S.load_game_window.back)
-    :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.load_game_window.back)
-  self:setSize(self.width, 20 * num + 100)
-  self.num_items = num
+  self:UIMenuList(ui, mode, _S.load_game_window.caption, items)
 end
-
-function UICustomGame:getSavedWindowPositionName()
-  if self.mode == "menu" then
-    return "main_menu_group"
-  end
-  return UIResizable.getSavedWindowPositionName(self)
-end
-
-function UICustomGame:draw(canvas, x, y)
-  -- Draw window components
-  UIResizable.draw(self, canvas, x, y)
-  -- Draw labels
-  x, y = self.x + x, self.y + y
-  --for i, label in ipairs(self.labels) do
-  --  self.white_font:draw(canvas, self.labels[i], x + 20, y + 20 * i, 160, 18)
-  --end
   
-  --self.white_font:draw(canvas, _S.load_game_window.back, x + 27, y + 51 + self.num_items * 20, 146, 26)
-end
-
-function UICustomGame:buttonLoad(filename, level_name, level_file)
+function UICustomGame:buttonClicked(num)
   local app = self.ui.app
+  local item = self.items[num]
+  local level_name = item.name:sub(2, -2)
+  local level_file = item.level_file:sub(2, -2)
+  local filename = item.path
   -- First make sure the map file exists.
   local _, errors = app:readLevelDataFile(level_file)
   if errors then
@@ -115,9 +75,3 @@ function UICustomGame:buttonLoad(filename, level_name, level_file)
   app:loadLevel(filename, level_name, level_file)
 end
 
-function UICustomGame:buttonBack()
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
-  self:close()
-end

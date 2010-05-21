@@ -111,13 +111,38 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  back = "Tillbaka",
+  caption = "Ladda spel",
 }
 
 tooltip.load_game_window = {
+  load_game = "Ladda %s",
   load_game_number = "Ladda spel %d",
-  load_game_with_name = "Ladda banan %s",
   load_autosave = "Ladda autosparningen",
+}
+
+custom_game_window = {
+  caption = "Specialbanor",
+}
+
+tooltip.custom_game_window = {
+  start_game_with_name = utf8 "Ladda banan %s",
+}
+
+save_game_window = {
+  caption = "Spara spel",
+  new_save_game = "Ny sparfil",
+}
+
+tooltip.save_game_window = {
+  save_game = utf8 "Skriv över %s",
+  new_save_game = utf8 "Skriv namnet på den nya filen",
+}
+
+menu_list_window = {
+  back = "Tillbaka",
+}
+
+tooltip.menu_list_window = {
   back = utf8 "Stäng detta fönster",
 }
 
@@ -125,7 +150,7 @@ errors = {
   dialog_missing_graphics = utf8 "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = utf8 "Fel när spelet skulle sparas: ",
   load_prefix = utf8 "Fel när spelet skulle laddas: ",
-  map_file_missing = utf8 "Kunde inte hitta kartfilen till den här nivån!",
+  map_file_missing = utf8 "Kunde inte hitta kartfilen %s till den här nivån!",
 }
 
 information = {

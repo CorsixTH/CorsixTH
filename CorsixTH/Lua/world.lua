@@ -1069,6 +1069,9 @@ function World:afterLoad(old, new)
     end
   end
   -- insert global compatibility code here
+  if old < 4 then
+    self.room_built = {}
+  end
   
   self.savegame_version = new
 end

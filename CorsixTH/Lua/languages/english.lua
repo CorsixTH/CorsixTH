@@ -117,34 +117,45 @@ tooltip.main_menu = {
 
 load_game_window = {
   caption = "Load Game",
-  back = "Back",
 }
 
 tooltip.load_game_window = {
   load_game = "Load game %s",
   load_game_number = "Load game %d",
-  load_game_with_name = "Load the level %s",
   load_autosave = "Load autosave",
-  back = "Close the load game window",
+}
+
+custom_game_window = {
+  caption = "Custom Game",
+}
+
+tooltip.custom_game_window = {
+  start_game_with_name = "Load the level %s",
 }
 
 save_game_window = {
   caption = "Save Game",
   new_save_game = "New Savegame",
-  back = "Back",
 }
 
 tooltip.save_game_window = {
   save_game = "Overwrite savegame %s",
   new_save_game = "Enter name for a new savegame",
-  back = "Close the save game window",
+}
+
+menu_list_window = {
+  back = "Back",
+}
+
+tooltip.menu_list_window = {
+  back = utf8 "Close this window",
 }
 
 errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
-  map_file_missing = "Could not find the map file for this level!",
+  map_file_missing = "Could not find the map file %s for this level!",
 }
 
 information = {

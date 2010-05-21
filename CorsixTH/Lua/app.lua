@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 3
+local SAVEGAME_VERSION = 4
 
 class "App"
 
@@ -607,12 +607,12 @@ function App:readDataFile(dir, filename)
 end
 
 function App:readLevelDataFile(filename)
-  filename = "Levels" .. pathsep .. filename
+  local dir = "Levels" .. pathsep .. filename
   -- First look in the original install directory, if not found there
   -- look in the CorsixTH directory "Levels".
-  local data = self.fs:readContents(filename)
+  local data = self.fs:readContents(dir)
   if not data then
-    local file = io.open(debug.getinfo(1, "S").source:sub(2, -12) .. filename, "rb")
+    local file = io.open(debug.getinfo(1, "S").source:sub(2, -12) .. dir, "rb")
     if file then
       data = file:read"*a"
       file:close()
@@ -624,7 +624,7 @@ function App:readLevelDataFile(filename)
     end
   else
     -- Could not find the file
-    return nil, _S.errors.map_file_missing
+    return nil, _S.errors.map_file_missing:format(filename)
   end
   return data
 end
@@ -666,7 +666,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
 end
 
 function App:scanSavegames()
-  local path = debug.getinfo(1, "S").source:sub(2, -15) -- stripped ../Lua/app.lua
+  local path = debug.getinfo(1, "S").source:sub(2, -13) -- stripped /Lua/app.lua
   local saves = {}
   for file in lfs.dir(path) do
     if file:match"%.sav$" then
