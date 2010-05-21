@@ -31,6 +31,7 @@ function UICustomGame:UICustomGame(ui, mode)
 
   path = path .. "Levels" .. pathsep
 
+  -- Supply the required list of items to UIMenuList
   local items = {}
   for file in lfs.dir(path) do
     if file:match"%.level$" then

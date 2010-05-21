@@ -86,9 +86,14 @@ local function bits(n)
   end
 end
 
--- Loads the specified level. If a string is passed it looks for the file with the same name
--- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
--- the original game.
+--[[! Loads the specified level. If a string is passed it looks for the file with the same name
+ in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
+ the original game.
+!param level The name (or number) of the level to load. If this is a number the game assumes
+the original game levels are considered.
+!param level_name The name of the actual map/area/hospital as written in the config file.
+!param level_file The path to the map file as supplied by the config file.
+]]
 function Map:load(level, level_name, level_file)
   -- Load base configuration for all levels
   local objects, i
@@ -150,6 +155,13 @@ function Map:load(level, level_name, level_file)
   return objects
 end
 
+--[[! Loads map configurations from files.
+!param filename
+!param config If a base config already exists and only some values should be overridden
+this is the base config
+!param custom If true The configuration file is searched for where filename points, otherwise
+it is assumed that we're looking in the theme_hospital_install path.
+]]
 function Map:loadMapConfig(filename, config, custom)
   local function iterator()
     if custom then

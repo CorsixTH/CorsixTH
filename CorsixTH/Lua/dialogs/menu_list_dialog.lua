@@ -35,6 +35,14 @@ local col_scrollbar = {
   blue = 208,
 }
 
+--[[ Constructs the menu list dialog.
+!param ui The active ui.
+!param mode either "menu" or "game" depending on which mode the game is in right now.
+!param title The desired title of the dialog.
+!param items A list of items to include in the list. Each listing should be a table with
+keys "name" and "tooltip" with the corresponding values.
+!param num_rows The number of rows displayed at a given time. Default is 10.
+]]
 function UIMenuList:UIMenuList(ui, mode, title, items, num_rows)
   self.col_bg = {
     red = 154,
@@ -89,10 +97,12 @@ function UIMenuList:getSavedWindowPositionName()
   return UIResizable.getSavedWindowPositionName(self)
 end
 
--- Function stub for dialogs to override
+-- Function stub for dialogs to override. This function is called each time a button is clicked.
+--!param num The number of the button pressed.
 function UIMenuList:buttonClicked(num)
 end
 
+-- Updates buttons when scrolling.
 function UIMenuList:updateButtons()
   for num = 1, self.num_rows do
     local panel = self.item_panels[num]
