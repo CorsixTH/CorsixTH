@@ -61,15 +61,15 @@ end
 
 --! Function called by clicking button of existing save #num
 function UISaveGame:buttonClicked(num)
-  local filename = self.saves[num + self.scrollbar.value - 1]
+  local filename = self.items[num + self.scrollbar.value - 1].name
   self:trySave(filename)
 end
 
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
   local found = false
-  for _, save in ipairs(self.saves) do
-    if save:lower() == filename:lower() then
+  for _, save in ipairs(self.items) do
+    if save.name:lower() == filename:lower() then
       found = true
       break
     end
