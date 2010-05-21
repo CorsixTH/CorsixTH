@@ -210,18 +210,6 @@ function SaveGameFile(filename)
   local f = assert(io.open(filename, "wb"))
   f:write(data)
   f:close()
-  
-  -- Update UI
-  if TheApp and TheApp.ui and TheApp.ui.menu_bar then
-    for _, list in ipairs{"load_menu", "save_menu"} do
-      for _, item in ipairs(TheApp.ui.menu_bar[list].items) do
-        if item.filename == filename then
-          item.checked = true
-          break
-        end
-      end
-    end
-  end
 end
 
 function LoadGame(data)

@@ -46,7 +46,8 @@ function UILoadGame:UILoadGame(ui, mode)
   
   local app = ui.app
   self.mode = mode
-  self.modal_class = "main menu"
+  self.modal_class = mode == "menu" and "main menu" or "saveload"
+  self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
   
@@ -106,7 +107,7 @@ function UILoadGame:getSavedWindowPositionName()
 end
 
 function UILoadGame:buttonLoad(num)
-  local filename = self.saves[num] .. ".sav"
+  local filename = self.saves[num + self.scrollbar.value - 1] .. ".sav"
   local app = self.ui.app
 
   app:loadLevel(1) -- hack

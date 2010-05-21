@@ -46,6 +46,7 @@ end
 
 function UI:initKeyAndButtonCodes()
   self.key_codes = {
+    backspace = 8,
     esc = 27,
     [" "] = 32,
     up = 273,
@@ -297,7 +298,30 @@ function UI:onChangeResolution()
   end
 end
 
+function UI:registerTextBox(box)
+  self.textboxes[#self.textboxes] = box
+end
+
+function UI:unregisterTextBox(box)
+  for num, b in pairs(self.textboxes) do
+    if b == box then
+      self.textboxes[num] = nil
+      break
+    end
+  end
+end
+
 function UI:onKeyDown(code)
+  -- Are there any text boxes expecting input?
+  for _, box in pairs(self.textboxes) do
+    if box.enabled and box.active then
+      local handled = box:input(code)
+      if handled then
+        return true
+      end
+    end
+  end
+
   -- Are there any window-specified keyHandlers that want this code?
   local keyHandlers = self.key_handlers
   if keyHandlers[code] then

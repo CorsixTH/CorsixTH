@@ -128,6 +128,18 @@ tooltip.load_game_window = {
   back = "Close the load game window",
 }
 
+save_game_window = {
+  caption = "Save Game",
+  new_save_game = "New Savegame",
+  back = "Back",
+}
+
+tooltip.save_game_window = {
+  save_game = "Overwrite savegame %s",
+  new_save_game = "Enter name for a new savegame",
+  back = "Close the save game window",
+}
+
 errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",

@@ -393,49 +393,10 @@ function UIMenuBar:makeMenu(app)
     end)
   end
   
-  local function makeSaveMenu(what)
-    local menu = UIMenu()
-    local names = _S.menu_file_load
-    local handler
-    if what == "save" then
-      handler = SaveGameFile
-    else
-      handler = LoadGameFile
-    end
-    local function append(filename, display_text)
-      local item = {
-        title = display_text,
-        handler = function()
-          local status, err = pcall(handler, filename)
-          if not status then
-            err = _S.errors[what .."_prefix"] .. err
-            print(err)
-            self.ui:addWindow(UIInformation(self.ui, {err}))
-          end
-        end,
-        filename = filename,
-      }
-      local f = io.open(filename, "rb")
-      if f then
-        item.checked = true
-        f:close()
-      end
-      menu:appendBase(item)
-    end
-    for slot = 1, 8 do
-      append("CorsixTH-Slot".. slot ..".sav", names[slot])
-    end
-    if what == "load" then
-      append("CorsixTH-Auto.sav", _S.menu_options.autosave)
-    end
-    self[what .. "_menu"] = menu
-    return _S.menu_file[what], menu
-  end
-  
   self:addMenu(_S.menu.file, UIMenu()
     :appendMenu("  ".. _S.main_menu.new_game:upper() .."  ", levels_menu)
-    :appendMenu(makeSaveMenu "load")
-    :appendMenu(makeSaveMenu "save")
+    :appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
+    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
     :appendItem(_S.menu_file.quit, function() app:quit() end)
   )
   local options = UIMenu()

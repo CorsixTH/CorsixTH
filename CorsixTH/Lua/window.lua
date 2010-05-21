@@ -42,6 +42,8 @@ function Window:Window()
   }
   self.scrollbars = {
   }
+  self.textboxes = {
+  }
   self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
@@ -110,11 +112,14 @@ function Window:close()
   for key in pairs(self.key_handlers) do
     self.ui:removeKeyHandler(key, self)
   end
+  for _, box in pairs(self.textboxes) do
+    self.ui:unregisterTextBox(box)
+  end
   self.closed = true
 end
 
-function Window:addKeyHandler(key, handler)
-  self.ui:addKeyHandler(key, self, handler)
+function Window:addKeyHandler(key, handler, ...)
+  self.ui:addKeyHandler(key, self, handler, ...)
   self.key_handlers[key] = true
 end
 
@@ -151,6 +156,10 @@ end
 
 function Panel:makeScrollbar(...)
   return self.window:makeScrollbarOnPanel(self, ...)
+end
+
+function Panel:makeTextbox(...)
+  return self.window:makeTextboxOnPanel(self, ...)
 end
 
 -- Specify a tooltip to be displayed when hovering this panel.
@@ -574,6 +583,122 @@ function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, 
   slider.max_y = slider.min_y + slider.max_h - slider.h
   
   return scrollbar
+end
+
+--! A window element used to enter text
+class "Textbox"
+
+--!dummy
+function Textbox:Textbox()
+  self.panel = nil
+  self.confirm_callback = nil
+  self.abort_callback = nil
+  self.button = nil
+  self.text = nil
+  self.visible = nil
+  self.enabled = nil
+  self.active = nil
+end
+
+local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
+
+function Textbox:clicked()
+  self.active = self.button.toggled
+  if self.active then
+    self.panel:setLabel(self.text)
+  else
+    if self.text == "" and self.abort_callback then
+      self.abort_callback()
+    elseif self.text ~= "" and self.confirm_callback then
+      self.confirm_callback()
+    end
+  end
+end
+
+function Textbox:input(code)
+  -- TODO: This currently assumes qwerty keyboard layout
+  if not self.active then
+    return false
+  end
+  -- Upper- and lowercase letters
+  for i = string.byte"a", string.byte"z" do
+    if code == i then
+      local char = string.char(i)
+      if self.panel.window.buttons_down.shift then
+        char = string.upper(char)
+      end
+      self.text = self.text .. char
+      self.panel:setLabel(self.text)
+      return true
+    end
+  end
+  -- Numbers
+  for i = string.byte"0", string.byte"9" do
+    if code == i then
+      self.text = self.text .. string.char(i)
+      self.panel:setLabel(self.text)
+      return true
+    end
+  end
+  -- Space and hyphen
+  if code == string.byte" " or
+    code == string.byte"-" then
+    self.text = self.text .. string.char(code)
+      self.panel:setLabel(self.text)
+    return true
+  end
+  -- Backspace (delete last char)
+  if code == 8 then
+    self.text = self.text:sub(1, -2)
+      self.panel:setLabel(self.text)
+    return true
+  end
+  -- Enter (confirm)
+  if code == 13 then
+    self.button:toggle()
+    self.active = false
+    if self.confirm_callback then
+      self.confirm_callback()
+    end
+    return true
+  end
+  -- Escape (abort)
+  if code == 27 then
+    self.button:toggle()
+    self.active = false
+    if self.abort_callback then
+      self.abort_callback()
+    end
+    return true
+  end
+  return false
+end
+
+--[[ Convert a static panel into a textbox.
+! Textboxes consist of the panel given as a parameter, which is made into a
+ToggleButton automatically, and handle keyboard input while active.
+!param panel (panel) The panel that will serve as the textbox base.
+!param confirm_callback (function) The function to call when text is confirmed.
+!param abort_callback (function) The function to call when entering is aborted.
+]]
+function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
+  local textbox = setmetatable({
+    panel = panel,
+    confirm_callback = confirm_callback,
+    abort_callback = abort_callback,
+    button = nil, -- placeholder
+    text = "",
+    visible = true,
+    enabled = true,
+    active = false,
+  }, textbox_mt)
+  
+  local button = panel:makeToggleButton(0, 0, panel.w, panel.h, nil, textbox.clicked, textbox)
+  textbox.button = button
+  
+  self.textboxes[#self.textboxes + 1] = textbox
+  self.ui:registerTextBox(textbox)
+  return textbox
 end
 
 
@@ -1064,6 +1189,10 @@ function Window:afterLoad(old, new)
   if old < 2 then
     -- Scrollbars were added
     self.scrollbars = {}
+  end
+  if old < 3 then
+    -- Textboxes were added
+    self.textboxes = {}
   end
 
   if self.windows then
