@@ -343,9 +343,18 @@ function Object:isReservedFor(user)
   return false
 end
 
-function Object:onClick(ui, button)
+--! Function stub to be overridden when an object needs to be restored after being moved.
+function Object:restoreObject(data)
+end
+
+--[[ Called when the object is clicked
+!param ui (UI) The active ui.
+!param button (string) Which button was clicked.
+!param data (table) If some data should be retained after moving an object it is in this table.
+]]
+function Object:onClick(ui, button, data)
   if button == "right" then
-    local object_list = {{object = self.object_type, qty = 1}}
+    local object_list = {{object = self.object_type, qty = 1, data = data}}
     local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
     local direction = self.direction

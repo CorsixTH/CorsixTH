@@ -27,8 +27,16 @@ local ipairs, math_floor
 -- be useful to attach it to a tile.
 local ATTACH_BLUEPRINT_TO_TILE = false
 
+--! The dialog shown when placing objects.
 class "UIPlaceObjects" (Window)
 
+--[[ Constructor for the class.
+!param ui (UI) The active ui.
+!param object_list (table) a list of tables with objects to place. One of the keys in each object table
+is "data". To get data back after moving an object this table can be used. The object should then
+override the restoreObject function. In particular the object's active frame can be specified by 
+setting the key "current_frame" in "data". Then that frame will be visible while moving the object.
+]]
 function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:Window()
   
@@ -312,7 +320,8 @@ local orient_next = {
 function UIPlaceObjects:setOrientation(orient)
   self.object_orientation = orient
   
-  local object = self.objects[self.active_index].object
+  local object_data = self.objects[self.active_index]
+  local object = object_data.object
   local anim = object.idle_animations[orient]
   local flag = 0
   if not anim then
@@ -323,6 +332,9 @@ function UIPlaceObjects:setOrientation(orient)
     flag = flag + 1024
   end
   self.object_anim:setAnimation(self.anims, anim, flag)
+  if object_data.data and object_data.data.current_frame then
+    self.object_anim:setFrame(self.objects[self.active_index].data.current_frame)
+  end
   local px, py = unpack(object.orientations[orient].render_attach_position)
   if type(px) == "table" then
     px, py = unpack(px)
@@ -387,7 +399,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "next") end
   local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
-  
+  real_obj:restoreObject(self.objects[self.active_index].data)
   local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if room then
     room.objects[real_obj] = true

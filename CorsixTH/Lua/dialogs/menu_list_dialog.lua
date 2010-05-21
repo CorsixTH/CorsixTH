@@ -36,12 +36,12 @@ local col_scrollbar = {
 }
 
 --[[ Constructs the menu list dialog.
-!param ui The active ui.
-!param mode either "menu" or "game" depending on which mode the game is in right now.
-!param title The desired title of the dialog.
-!param items A list of items to include in the list. Each listing should be a table with
+!param ui (UI) The active ui.
+!param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
+!param title (string) The desired title of the dialog.
+!param items (table) A list of items to include in the list. Each listing should be a table with
 keys "name" and "tooltip" with the corresponding values.
-!param num_rows The number of rows displayed at a given time. Default is 10.
+!param num_rows (integer) The number of rows displayed at a given time. Default is 10.
 ]]
 function UIMenuList:UIMenuList(ui, mode, title, items, num_rows)
   self.col_bg = {
@@ -98,7 +98,7 @@ function UIMenuList:getSavedWindowPositionName()
 end
 
 -- Function stub for dialogs to override. This function is called each time a button is clicked.
---!param num The number of the button pressed.
+--!param num (integer) Number of the button pressed.
 function UIMenuList:buttonClicked(num)
 end
 

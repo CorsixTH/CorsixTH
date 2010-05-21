@@ -92,6 +92,8 @@ function Plant:Plant(world, object_type, x, y, direction, etc)
   self.days_left = days_between_states
 end
 
+--! Goes one step forward (or backward) in the states of the plant.
+--!param restoring (boolean) If true the plant improves its health instead of drooping.
 function Plant:setNextState(restoring)
   local change = 0
   if restoring then
@@ -117,6 +119,7 @@ local plant_restoring; plant_restoring = permanent"plant_restoring"( function(pl
   end
 end)
 
+--! Restores the plant to its initial state. (i.e. healthy)
 function Plant:restoreToFullHealth()
   self.ticks = true
   self.phase = self.current_state
@@ -125,7 +128,7 @@ function Plant:restoreToFullHealth()
   self.days_left = days_between_states
 end
 
--- Overridden since the plant animates slowly over time
+--! Overridden since the plant animates slowly over time
 function Plant:tick()
   local timer = self.timer_time
   if timer then
@@ -141,6 +144,7 @@ function Plant:tick()
   end
 end
 
+--! Returns whether the plant is in need of watering right now.
 function Plant:needsWatering()
   if self.current_state == 0 then
     if self.days_left < 1 then
@@ -151,6 +155,7 @@ function Plant:needsWatering()
   end
 end
 
+--! When the plant needs water it preiodically calls for a nearby handyman.
 function Plant:callForWatering()
   -- Try to find a handyman nearby. If in a room, search just outside it.
   -- Note that only one of possibly many possible sides are chosen, prefering
@@ -189,6 +194,8 @@ function Plant:callForWatering()
   end
 end
 
+--! When a handyman is about to be summoned this function queues the actions necessary
+--!param handyman (Staff) The handyman that is about to get the actions.
 function Plant:createHandymanActions(handyman)
   local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
   local in_a_room = false
@@ -213,6 +220,9 @@ function Plant:createHandymanActions(handyman)
   handyman:queueAction{name = "meander"}
 end
 
+--! When a handyman should go to the plant he should approach it from the closest reachable tile.
+--!param from_x (integer) The x coordinate of tile to calculate from.
+--!param from_y (integer) The y coordinate of tile to calculate from.
 function Plant:getBestUsageTileXY(from_x, from_y)
   local lx, ly = self.tile_x, self.tile_y + 1
   local rx, ry = lx, ly
@@ -243,6 +253,7 @@ function Plant:getBestUsageTileXY(from_x, from_y)
   return rx, ry
 end
 
+--! Counts down to eventually let the plant droop.
 function Plant:tickDay()
   -- TODO: Take into account heat on the tile as soon as it is implemented properly.
   self.days_left = self.days_left - 1
@@ -251,6 +262,24 @@ function Plant:tickDay()
     self:setNextState()
   elseif self.days_left < 10 or self.current_state > 0 then -- TODO: Balance this number too
     self:callForWatering()
+  end
+end
+
+--! The plant needs to retain its state when being moved.
+function Plant:onClick(ui, button)
+  local data = {current_frame = self.base_frame + self.current_state, days_left = self.days_left}
+  Object.onClick(self, ui, button, data)
+end
+
+function Plant:restoreObject(data)
+  if data then
+    if data.current_frame then
+      self.current_state = data.current_frame - self.base_frame
+      self.th:setFrame(self.base_frame + self.current_state)
+    end
+    if data.days_left then
+      self.days_left = data.days_left
+    end
   end
 end
 
