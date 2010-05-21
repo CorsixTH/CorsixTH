@@ -244,6 +244,6 @@ function Entity:clearDynamicInfo()
   self.dynamicInfo = nil
 end
 
--- !Stub to be extended in subclasses, if needed.
+--! Stub to be extended in subclasses, if needed.
 function Entity:afterLoad(old, new)
 end

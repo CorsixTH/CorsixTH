@@ -1184,7 +1184,7 @@ function Window:getTooltipAt(x, y)
   end
 end
 
--- !Stub to be extended in subclasses, if needed.
+--! Stub to be extended in subclasses, if needed.
 function Window:afterLoad(old, new)
   if old < 2 then
     -- Scrollbars were added

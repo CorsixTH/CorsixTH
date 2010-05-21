@@ -613,7 +613,7 @@ function Room:tryToEdit()
   end
 end
 
--- !Stub to be extended in subclasses, if needed.
+--! Stub to be extended in subclasses, if needed.
 function Room:afterLoad(old, new)
 end
 

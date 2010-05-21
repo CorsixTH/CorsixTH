@@ -54,6 +54,7 @@ local tokens = P { "tokens";
   -- Comment of form --xyz or --[[ xyz ]] or #xyz (unix shebang)
   comment = Ct(C(P"--" * (V"long_string_body" + (1 - V"newline")^0))  * Cc"comment"),
   file_start = Ct(C(P"#" * (1 - S"\r\n")^0) * Cc"comment"),
+  utf8_bom = P"\239\187\191",
   
   -- Single platform independant line break which increments line number
   newline = (P"\r\n" + P"\n\r" + S"\r\n") * (Cp() * Carg(1)) / function(pos, state)
@@ -117,7 +118,7 @@ local tokens = P { "tokens";
   finish = -P(1) + V"error",
   
   -- Match stream of tokens into a table
-  tokens = Ct(V"file_start" ^ -1 * V"token" ^ 0) * V"finish",
+  tokens = V"utf8_bom"^-1 * Ct(V"file_start" ^ -1 * V"token" ^ 0) * V"finish",
 }
 
 function TokeniseLua(str)

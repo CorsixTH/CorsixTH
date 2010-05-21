@@ -1047,12 +1047,12 @@ function World:getNearestRoomNeedingStaff(humanoid)
   return candidates[1].room
 end
 
--- !Log a message in the game log.
+--! Log a message in the game log.
 function World:gameLog(message)
   self.game_log[#self.game_log + 1] = message
 end
 
--- !Dump the contents of the game log into a file.
+--! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
   local fi = assert(io.open("gamelog.txt", "wt"))
