@@ -158,7 +158,7 @@ public:
         lua_createtable(L, 1, 4); // Metatable
         lua_pushcclosure(L, l_crude_gc<LuaPersistBasicWriter>, 0);
         lua_setfield(L, -2, "__gc");
-        lua_pushvalue(L, lua_upvalueindex(1)); // Prototype persistance names
+        lua_pushvalue(L, luaT_upvalueindex(1)); // Prototype persistance names
         lua_rawseti(L, -2, 1);
         lua_setmetatable(L, 1);
 
@@ -325,7 +325,7 @@ public:
 
         // Lookup the object in the permanents table
         lua_pushvalue(L, 2);
-        lua_gettable(L, lua_upvalueindex(1));
+        lua_gettable(L, luaT_upvalueindex(1));
         if(lua_type(L, -1) != LUA_TNIL)
         {
             // Object is in the permanents table.
@@ -334,7 +334,7 @@ public:
             writeByteStream(&iType, 1);
 
             // Replace self's environment with self (for call to writeStackObject)
-            lua_pushvalue(L, lua_upvalueindex(2));
+            lua_pushvalue(L, luaT_upvalueindex(2));
             lua_replace(L, 1);
 
             // Write the key corresponding to the permanent object
@@ -363,7 +363,7 @@ public:
 
             case LUA_TTABLE: {
                 // Replace self's environment with self (for calls to writeStackObject)
-                lua_pushvalue(L, lua_upvalueindex(2));
+                lua_pushvalue(L, luaT_upvalueindex(2));
                 lua_replace(L, 1);
 
                 // Save env and insert prior to table
@@ -400,7 +400,7 @@ public:
                         lua_pushvalue(L, -1);
                         lua_rawget(L, 2);
                         lua_pushvalue(L, -2);
-                        lua_gettable(L, lua_upvalueindex(1));
+                        lua_gettable(L, luaT_upvalueindex(1));
                         if(lua_isnil(L, -1) && lua_isnil(L, -2))
                         {
                             lua_pop(L, 2);
@@ -443,7 +443,7 @@ public:
                     writeByteStream(&iType, 1);
 
                     // Replace self's environment with self (for calls to writeStackObject)
-                    lua_pushvalue(L, lua_upvalueindex(2));
+                    lua_pushvalue(L, luaT_upvalueindex(2));
                     lua_replace(L, 1);
 
                     // Write the prototype (the part of a function which is common across
@@ -485,7 +485,7 @@ public:
                     break;
 
                 // Replace self's environment with self (for calls to writeStackObject)
-                lua_pushvalue(L, lua_upvalueindex(2));
+                lua_pushvalue(L, luaT_upvalueindex(2));
                 lua_replace(L, 1);
 
                 // Write type, metatable, and then environment
@@ -505,7 +505,7 @@ public:
                     else
                     {
                         lua_pushvalue(L, 2);
-                        lua_pushvalue(L, lua_upvalueindex(2));
+                        lua_pushvalue(L, luaT_upvalueindex(2));
                         lua_call(L, 2, 0);
                     }
                 }
@@ -685,7 +685,7 @@ public:
         lua_State *L = m_L;
 
         lua_pushvalue(L, iStackObject);
-        lua_getmetatable(L, lua_upvalueindex(2));
+        lua_getmetatable(L, luaT_upvalueindex(2));
         lua_insert(L, -2);
         lua_setfield(L, -2, "err");
         lua_pop(L, 1);
@@ -711,7 +711,7 @@ protected:
 static int l_writer_mt_index(lua_State *L)
 {
     return reinterpret_cast<LuaPersistBasicWriter*>(
-        lua_touserdata(L, lua_upvalueindex(2)))->writeObjectRaw();
+        lua_touserdata(L, luaT_upvalueindex(2)))->writeObjectRaw();
 }
 
 //! Basic implementation of depersistance interface
@@ -771,9 +771,9 @@ public:
         lua_createtable(L, 32, 0); // Environment
         lua_pushvalue(L, 2);
         lua_rawseti(L, -2, 0);
-        lua_pushvalue(L, lua_upvalueindex(1));
+        lua_pushvalue(L, luaT_upvalueindex(1));
         lua_rawseti(L, -2, -1);
-        lua_pushvalue(L, lua_upvalueindex(2));
+        lua_pushvalue(L, luaT_upvalueindex(2));
         lua_rawseti(L, -2, -2);
         lua_pushvalue(L, 1);
         lua_rawseti(L, -2, -3);

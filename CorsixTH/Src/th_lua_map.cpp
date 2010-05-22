@@ -27,7 +27,7 @@ SOFTWARE.
 
 static int l_map_new(lua_State *L)
 {
-    luaT_stdnew<THMap>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THMap>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -105,7 +105,7 @@ THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     {
         lua_pop(L, 1);
         pAnim = luaT_new(L, THAnimation);
-        lua_pushvalue(L, lua_upvalueindex(2));
+        lua_pushvalue(L, luaT_upvalueindex(2));
         lua_setmetatable(L, -2);
         lua_createtable(L, 0, 2);
         lua_pushvalue(L, 1);
@@ -117,7 +117,7 @@ THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     }
     else
     {
-        pAnim = luaT_testuserdata<THAnimation>(L, -1, lua_upvalueindex(2));
+        pAnim = luaT_testuserdata<THAnimation>(L, -1, luaT_upvalueindex(2));
         lua_pop(L, 1);
     }
     ++iIndex;
@@ -144,7 +144,7 @@ static int l_map_updateblueprint(lua_State *L)
     int iNewW = luaL_checkint(L, 8);
     int iNewH = luaL_checkint(L, 9);
     luaL_checktype(L, 10, LUA_TTABLE); // Animation list
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 11, lua_upvalueindex(1));
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 11, luaT_upvalueindex(1));
     bool entire_invalid = lua_toboolean(L, 12) != 0;
     bool valid = !entire_invalid;
 
@@ -577,7 +577,7 @@ static int l_map_hittest(lua_State *L)
     THDrawable* pObject = pMap->hitTest(luaL_checkint(L, 2), luaL_checkint(L, 3));
     if(pObject == NULL)
         return 0;
-    lua_rawgeti(L, lua_upvalueindex(1), 1);
+    lua_rawgeti(L, luaT_upvalueindex(1), 1);
     lua_pushlightuserdata(L, pObject);
     lua_gettable(L, -2);
     return 1;
@@ -585,7 +585,7 @@ static int l_map_hittest(lua_State *L)
 
 static int l_path_new(lua_State *L)
 {
-    luaT_stdnew<THPathfinder>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THPathfinder>(L, luaT_environindex, true);
     return 1;
 }
 

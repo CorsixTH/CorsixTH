@@ -164,14 +164,7 @@ static int l_mainloop(lua_State *L)
                 nargs = 1;
                 break;
             case SDL_USEREVENT_CPCALL:
-#ifdef LUA_RIDX_CPCALL
-                lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_CPCALL);
-                lua_pushlightuserdata(L, &e.user.data1);
-                lua_pushlightuserdata(L, e.user.data2);
-                if(lua_pcall(L, 2, 0, 0))
-#else
-                if(lua_cpcall(L, (lua_CFunction)e.user.data1, e.user.data2))
-#endif
+                if(luaT_cpcall(L, (lua_CFunction)e.user.data1, e.user.data2))
                 {
                     SDL_RemoveTimer(timer);
                     lua_pushliteral(L, "callback");
@@ -319,13 +312,15 @@ int luaopen_sdl(lua_State *L)
         lua_setfield(L, -2, pUpvaluedFunctions->name);
     }
 
-    lua_pushcfunction(L, luaopen_sdl_audio);
-    lua_call(L, 0, 1);
-    lua_setfield(L, -2, "audio");
+#define LOAD_EXTRA(name, fn) \
+    luaT_pushcfunction(L, fn); \
+    lua_call(L, 0, 1); \
+    lua_setfield(L, -2, name)
 
-    lua_pushcfunction(L, luaopen_sdl_wm);
-    lua_call(L, 0, 1);
-    lua_setfield(L, -2, "wm");
+    LOAD_EXTRA("audio", luaopen_sdl_audio);
+    LOAD_EXTRA("wm", luaopen_sdl_wm);
+
+#undef LOAD_EXTRA
 
     return 1;
 }

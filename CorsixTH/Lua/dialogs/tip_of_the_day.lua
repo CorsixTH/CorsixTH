@@ -39,6 +39,13 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   self.num_tips = #_S.totd_window.tips
+  if self.num_tips == 0 then
+    -- NB: #_S.totd_window.tips == 0, which implies something went wrong with
+    -- the string localisation code, hence don't try to localise the following:
+    print("Warning: No tips for tip-of-the-day window")
+    self:close()
+    return
+  end
   self.tip_num = math.random(1, self.num_tips)
   
   self:addBevelPanel(10, self.height - 30, self.width / 2 - 20, 20, col_bg):setLabel(_S.totd_window.previous)

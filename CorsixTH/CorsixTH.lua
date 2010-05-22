@@ -8,10 +8,32 @@
 if (package and package.preload and package.preload.TH) == nil then
   error "This file must be invoked by the CorsixTH executable"
 end
+
+-- Check Lua version
 if _VERSION ~= "Lua 5.1" then
   if _VERSION == "Lua 5.2" then
     print "Notice: Lua 5.2 is not officially supported at the moment"
+    -- Compatibility: Keep the global unpack function
     unpack = table.unpack
+    -- Compatibility: Provide a replacement for deprecated ipairs()
+    -- NB: It might be wiser to migrate away from ipairs entirely, but the
+    -- following works as an immediate band-aid
+    local rawget, error, type = rawget, error, type
+    if not pcall(ipairs, {}) then
+      local function next_int(t, i)
+        i = i + 1
+        local v = rawget(t, i)
+        if v ~= nil then
+          return i, v
+        end
+      end
+      function ipairs(t)
+        if type(t) ~= "table" then
+          error("table expected, got " .. type(t))
+        end
+        return next_int, t, 0
+      end
+    end
   else
     error "Please recompile CorsixTH and link against Lua version 5.1"
   end

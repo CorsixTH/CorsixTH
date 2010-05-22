@@ -159,6 +159,10 @@ do
       end
       return next, t
     end
+  end
+  metamethod_called = false
+  ipairs(setmetatable({}, {__ipairs = function() metamethod_called = true end}))
+  if not metamethod_called then
     local ipairs_orig = ipairs
     ipairs = function(t)
       local mt = getmetatable(t)

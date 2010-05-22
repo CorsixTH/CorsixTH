@@ -1055,7 +1055,7 @@ end
 --! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
-  local fi = assert(io.open("gamelog.txt", "wt"))
+  local fi = assert(io.open("gamelog.txt", "w"))
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
   end

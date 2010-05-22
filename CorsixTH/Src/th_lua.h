@@ -28,6 +28,31 @@ SOFTWARE.
 
 int luaopen_th(lua_State *L);
 
+// Compatibility layer for removal of environments in 5.2
+#if LUA_VERSION_NUM >= 502
+#define luaT_environindex lua_upvalueindex(1)
+#define luaT_upvalueindex(i) lua_upvalueindex((i) + 1)
+void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
+#define luaT_register(L, n, p) (lua_pushglobaltable(L), luaL_openlib(L, n, p, 1))
+#else
+#define luaT_environindex LUA_ENVIRONINDEX
+#define luaT_upvalueindex lua_upvalueindex
+#define luaT_pushcclosure lua_pushcclosure
+#define luaT_register luaL_register
+#endif
+#define luaT_pushcfunction(L, f) luaT_pushcclosure(L, f, 0)
+
+// Compatibility layer for removal of cpcall in 5.2
+#if LUA_VERSION_NUM >= 502
+#define luaT_cpcall(L, f, u) (\
+    lua_checkstack(L, 2), \
+    lua_pushcfunction(L, f), \
+    lua_pushlightuserdata(L, u), \
+    lua_pcall(L, 1, 0, 0) )
+#else
+#define luaT_cpcall lua_cpcall
+#endif
+
 //! Version of operator new which allocates into a Lua userdata
 /*!
     If a specific constructor of T is required, then call like:
@@ -60,7 +85,7 @@ void luaT_setenvfield(lua_State *L, int index, const char *k);
 void luaT_getenvfield(lua_State *L, int index, const char *k);
 
 template <class T>
-inline T* luaT_stdnew(lua_State *L, int mt_idx = LUA_ENVIRONINDEX, bool env = false)
+inline T* luaT_stdnew(lua_State *L, int mt_idx = luaT_environindex, bool env = false)
 {
     T* p = luaT_new(L, T);
     lua_pushvalue(L, mt_idx);
@@ -194,9 +219,9 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx = 1)
 {
-    int iMetaIndex = LUA_ENVIRONINDEX;
+    int iMetaIndex = luaT_environindex;
     if(idx > 1)
-        iMetaIndex = lua_upvalueindex(idx - 1);
+        iMetaIndex = luaT_upvalueindex(idx - 1);
     return luaT_testuserdata<T>(L, idx, iMetaIndex);
 }
 

@@ -651,7 +651,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         // well with run-length encoding.
         pWriter->writeVUInt(pNode->iFlags);
 
-        lua_rawgeti(L, lua_upvalueindex(1), 2);
+        lua_rawgeti(L, luaT_upvalueindex(1), 2);
         lua_pushlightuserdata(L, pNode->m_pNext);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);

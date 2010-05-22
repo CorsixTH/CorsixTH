@@ -26,7 +26,7 @@ SOFTWARE.
 
 static int l_anims_new(lua_State *L)
 {
-    luaT_stdnew<THAnimationManager>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THAnimationManager>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -121,7 +121,7 @@ static int l_anims_draw(lua_State *L)
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     int iFrame = luaL_checkint(L, 3);
-    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L, 4, lua_upvalueindex(2));
+    THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L, 4, luaT_upvalueindex(2));
     int iX = luaL_checkint(L, 5);
     int iY = luaL_checkint(L, 6);
     int iFlags = luaL_optint(L, 7, 0);
@@ -135,8 +135,8 @@ static int l_anims_draw(lua_State *L)
 template <typename T>
 static int l_anim_new(lua_State *L)
 {
-    T* pAnimation = luaT_stdnew<T>(L, LUA_ENVIRONINDEX, true);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    T* pAnimation = luaT_stdnew<T>(L, luaT_environindex, true);
+    lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, pAnimation);
     lua_pushvalue(L, -3);
     lua_rawset(L, -3);
@@ -150,7 +150,7 @@ static int l_anim_persist(lua_State *L)
     T* pAnimation;
     if(lua_gettop(L) == 2)
     {
-        pAnimation = luaT_testuserdata<T>(L, 1, LUA_ENVIRONINDEX, false);
+        pAnimation = luaT_testuserdata<T>(L, 1, luaT_environindex, false);
         lua_insert(L, 1);
     }
     else
@@ -161,7 +161,7 @@ static int l_anim_persist(lua_State *L)
     LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
 
     pAnimation->persist(pWriter);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    lua_rawgeti(L, luaT_environindex, 1);
     lua_pushlightuserdata(L, pAnimation);
     lua_gettable(L, -2);
     pWriter->writeStackObject(-1);
@@ -193,13 +193,13 @@ static int l_anim_depersist(lua_State *L)
     lua_insert(L, 1);
     LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
 
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, pAnimation);
     lua_pushvalue(L, 2);
     lua_settable(L, -3);
     lua_pop(L, 1);
     pAnimation->depersist(pReader);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    lua_rawgeti(L, luaT_environindex, 1);
     lua_pushlightuserdata(L, pAnimation);
     if(!pReader->readStackObject())
         return 0;
@@ -212,7 +212,7 @@ static int l_anim_set_hitresult(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
     lua_settop(L, 2);
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    lua_rawgeti(L, luaT_environindex, 1);
     lua_pushlightuserdata(L, lua_touserdata(L, 1));
     lua_pushvalue(L, 2);
     lua_settable(L, 3);
@@ -275,7 +275,7 @@ static int l_anim_set_anim(lua_State *L)
 static int l_anim_set_morph(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    THAnimation* pMorphTarget = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX);
+    THAnimation* pMorphTarget = luaT_testuserdata<THAnimation>(L, 2, luaT_environindex);
 
     pAnimation->setMorphTarget(pMorphTarget);
     lua_settop(L, 2);
@@ -360,7 +360,7 @@ static int l_anim_get_tile(lua_State *L)
 static int l_anim_set_parent(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    THAnimation* pParent = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX, false);
+    THAnimation* pParent = luaT_testuserdata<THAnimation>(L, 2, luaT_environindex, false);
     pAnimation->setParent(pParent);
     lua_settop(L, 1);
     return 1;
@@ -468,7 +468,7 @@ static int l_anim_set_layer(lua_State *L)
 static int l_anim_set_layers_from(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    const THAnimation* pAnimationSrc = luaT_testuserdata<THAnimation>(L, 2, LUA_ENVIRONINDEX);
+    const THAnimation* pAnimationSrc = luaT_testuserdata<THAnimation>(L, 2, luaT_environindex);
 
     pAnimation->setLayersFrom(pAnimationSrc);
 

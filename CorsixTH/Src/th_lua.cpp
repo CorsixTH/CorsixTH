@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "th_lua_internal.h"
+#include <string.h>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
@@ -47,10 +48,101 @@ void luaT_getenvfield(lua_State *L, int index, const char *k)
     lua_replace(L, -2);
 }
 
+#if LUA_VERSION_NUM >= 502
+void luaT_getfenv52(lua_State *L, int iIndex)
+{
+    int iType = lua_type(L, iIndex);
+    switch(iType)
+    {
+    case LUA_TUSERDATA:
+        lua_getenv(L, iIndex);
+        break;
+    case LUA_TFUNCTION:
+        if(lua_iscfunction(L, iIndex))
+        {
+            // Our convention: upvalue at #1 is environment
+            if(lua_getupvalue(L, iIndex, 1) == NULL)
+                lua_pushglobaltable(L);
+        }
+        else
+        {
+            // Language convention: upvalue called _ENV is environment
+            const char* sUpName = NULL;
+            for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
+            {
+                if(strcmp(sUpName, "_ENV") == 0)
+                    return;
+                else
+                    lua_pop(L, 1);
+            }
+            lua_pushglobaltable(L);
+        }
+        break;
+    default:
+        luaL_error(L, "Unable to get environment of a %s in 5.2", lua_typename(L, iType));
+        break;
+    }
+}
+
+int luaT_setfenv52(lua_State *L, int iIndex)
+{
+    int iType = lua_type(L, iIndex);
+    switch(iType)
+    {
+    case LUA_TUSERDATA:
+        lua_setenv(L, iIndex);
+        return 1;
+    case LUA_TFUNCTION:
+        if(lua_iscfunction(L, iIndex))
+        {
+            // Our convention: upvalue at #1 is environment
+            if(lua_setupvalue(L, iIndex, 1) == NULL)
+            {
+                lua_pop(L, 1);
+                return 0;
+            }
+            return 1;
+        }
+        else
+        {
+            // Language convention: upvalue called _ENV is environment, which
+            // might be shared with other functions.
+            const char* sUpName = NULL;
+            for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
+            {
+                if(strcmp(sUpName, "_ENV") == 0)
+                {
+                    luaL_loadstring(L, "local upv = ... return function() return upv end");
+                    lua_insert(L, -2);
+                    lua_call(L, 1, 1);
+                    lua_upvaluejoin(L, iIndex, i, -1, 1);
+                    lua_pop(L, 1);
+                    return 1;
+                }
+                else
+                    lua_pop(L, 1);
+            }
+            return 0;
+        }
+    default:
+        return 0;
+    }
+}
+
+void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
+{
+    ++nups;
+    lua_pushvalue(L, luaT_environindex);
+    lua_insert(L, -nups);
+    lua_pushcclosure(L, f, nups);
+}
+
+#endif
+
 //! Push a C closure as a callable table
 void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
 {
-    lua_pushcclosure(L, fn, n); // .. fn <top
+    luaT_pushcclosure(L, fn, n); // .. fn <top
     lua_createtable(L, 0, 1); // .. fn mt <top
     lua_pushliteral(L, "__call"); // .. fn mt __call <top
     lua_pushvalue(L, -3); // .. fn mt __call fn <top
@@ -188,7 +280,7 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
         ++iUpCount;
     }
     va_end(args);
-    lua_pushcclosure(pState->L, fn, iUpCount);
+    luaT_pushcclosure(pState->L, fn, iUpCount);
 }
 
 int luaopen_th(lua_State *L)
@@ -224,3 +316,4 @@ int luaopen_th(lua_State *L)
     lua_settop(L, oState.iMainTable);
     return 1;
 }
+

@@ -204,7 +204,7 @@ static int l_load_music_async(lua_State *L)
     lua_rawseti(L, -2, 1);
     lua_pushvalue(L, 2);
     lua_rawseti(L, -2, 2);
-    luaT_stdnew<music_t>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<music_t>(L, luaT_environindex, true);
     lua_pushvalue(L, 1);
     luaT_setenvfield(L, -2, "data");
     lua_rawseti(L, -2, 3);
@@ -239,7 +239,7 @@ static int l_load_music(lua_State *L)
         lua_pushstring(L, Mix_GetError());
         return 2;
     }
-    music_t* pLMusic = luaT_stdnew<music_t>(L, LUA_ENVIRONINDEX, true);
+    music_t* pLMusic = luaT_stdnew<music_t>(L, luaT_environindex, true);
     pLMusic->pMusic = pMusic;
     pLMusic->pRWop = rwop;
     lua_pushvalue(L, 1);
@@ -337,13 +337,14 @@ int luaopen_sdl_audio(lua_State *L)
 
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, -1);
-    lua_replace(L, LUA_ENVIRONINDEX);
-    lua_pushcclosure(L, luaT_stdgc<music_t, LUA_ENVIRONINDEX>, 0);
+    lua_replace(L, luaT_environindex);
+    lua_pushvalue(L, luaT_environindex);
+    lua_pushcclosure(L, luaT_stdgc<music_t, luaT_environindex>, 1);
     lua_setfield(L, -2, "__gc");
     lua_pushvalue(L, 1);
     lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
-    luaL_register(L, NULL, sdl_musiclib);
+    luaT_register(L, NULL, sdl_musiclib);
 
     return 1;
 }

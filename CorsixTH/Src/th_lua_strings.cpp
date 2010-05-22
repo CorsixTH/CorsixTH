@@ -169,7 +169,7 @@ static int l_str_index(lua_State *L)
     // Handle string methods
     if(lua_type(L, 4) == LUA_TSTRING)
     {
-        lua_rawgeti(L, LUA_ENVIRONINDEX, 4);
+        lua_rawgeti(L, luaT_environindex, 4);
         lua_pushvalue(L, 2);
         lua_gettable(L, 5);
         return 1;
@@ -232,7 +232,7 @@ static int l_str_func(lua_State *L)
             ++iUserdataCount;
         }
     }
-    lua_pushvalue(L, lua_upvalueindex(1));
+    lua_pushvalue(L, luaT_upvalueindex(1));
     lua_gettable(L, iArgCount + 2);
     lua_replace(L, iArgCount + 1);
     lua_call(L, iArgCount, 1);
@@ -246,7 +246,7 @@ static int l_str_func(lua_State *L)
 
     // Create and save reconstruction information
     lua_createtable(L, iArgCount + 1, 0);
-    lua_pushvalue(L, lua_upvalueindex(1));
+    lua_pushvalue(L, luaT_upvalueindex(1));
     lua_rawseti(L, -2, 1);
     for(int i = 1; i <= iArgCount; ++i)
     {
@@ -275,7 +275,7 @@ static int l_str_concat(lua_State *L)
 static int l_str_pairs(lua_State *L)
 {
     lua_settop(L, 1);
-    lua_getfield(L, LUA_ENVIRONINDEX, "__next");
+    lua_getfield(L, luaT_environindex, "__next");
     lua_pushvalue(L, 1);
     lua_pushnil(L);
     return 3;
@@ -285,7 +285,7 @@ static int l_str_pairs(lua_State *L)
 static int l_str_ipairs(lua_State *L)
 {
     lua_settop(L, 1);
-    lua_getfield(L, LUA_ENVIRONINDEX, "__inext");
+    lua_getfield(L, luaT_environindex, "__inext");
     lua_pushvalue(L, 1);
     lua_pushinteger(L, 0);
     return 3;

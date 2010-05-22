@@ -440,7 +440,7 @@ void IsoFilesystem::_setError(const char* sFormat, ...)
 
 static int l_isofs_new(lua_State *L)
 {
-    luaT_stdnew<IsoFilesystem>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<IsoFilesystem>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -523,9 +523,9 @@ int luaopen_iso_fs(lua_State *L)
     // Metatable
     lua_createtable(L, 0, 2);
     lua_pushvalue(L, -1);
-    lua_replace(L, LUA_ENVIRONINDEX);
+    lua_replace(L, luaT_environindex);
 
-    lua_pushcclosure(L, luaT_stdgc<IsoFilesystem, LUA_ENVIRONINDEX>, 0);
+    lua_pushcclosure(L, luaT_stdgc<IsoFilesystem, luaT_environindex>, 0);
     lua_setfield(L, -2, "__gc");
 
     // Methods table
@@ -548,6 +548,13 @@ int luaopen_iso_fs(lua_State *L)
 
     lua_pushvalue(L, 1);
     lua_pushvalue(L, 2);
+#ifndef LUA_GLOBALSINDEX
+    lua_pushglobaltable(L);
+    lua_insert(L, -3);
+    lua_settable(L, -3);
+    lua_pop(L, 1);
+#else
     lua_settable(L, LUA_GLOBALSINDEX);
+#endif
     return 1;
 }

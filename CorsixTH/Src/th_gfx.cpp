@@ -933,7 +933,7 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     lua_State *L = pWriter->getStack();
 
     // Write the next chained thing
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, m_pNext);
     lua_rawget(L, -2);
     pWriter->fastWriteStackObject(-1);
@@ -973,7 +973,7 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     }
     else
     {
-        lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+        lua_rawgeti(L, luaT_environindex, 2);
         lua_pushlightuserdata(L, m_pParent);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);
@@ -1424,7 +1424,7 @@ void THSpriteRenderList::persist(LuaPersistWriter *pWriter) const
     pWriter->writeByteStream(m_oLayers.iLayerContents, iNumLayers);
 
     // Write the next chained thing
-    lua_rawgeti(L, LUA_ENVIRONINDEX, 2);
+    lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, m_pNext);
     lua_rawget(L, -2);
     pWriter->fastWriteStackObject(-1);

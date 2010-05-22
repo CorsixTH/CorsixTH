@@ -57,7 +57,7 @@ static int l_palette_set_entry(lua_State *L)
 
 static int l_rawbitmap_new(lua_State *L)
 {
-    luaT_stdnew<THRawBitmap>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THRawBitmap>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -78,7 +78,7 @@ static int l_rawbitmap_load(lua_State *L)
     size_t iDataLen;
     const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
     int iWidth = luaL_checkint(L, 3);
-    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 4, lua_upvalueindex(1), false);
+    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 4, luaT_upvalueindex(1), false);
 
     if(pBitmap->loadFromTHFile(pData, iDataLen, iWidth, pSurface))
         lua_pushboolean(L, 1);
@@ -108,7 +108,7 @@ static int l_rawbitmap_draw(lua_State *L)
 
 static int l_spritesheet_new(lua_State *L)
 {
-    luaT_stdnew<THSpriteSheet>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THSpriteSheet>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -130,7 +130,7 @@ static int l_spritesheet_load(lua_State *L)
     const unsigned char* pDataTable = luaT_checkfile(L, 2, &iDataLenTable);
     const unsigned char* pDataChunk = luaT_checkfile(L, 3, &iDataLenChunk);
     bool bComplex = lua_toboolean(L, 4) != 0;
-    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 5, lua_upvalueindex(1), false);
+    THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 5, luaT_upvalueindex(1), false);
 
     if(pSheet->loadFromTHFile(pDataTable, iDataLenTable, pDataChunk, iDataLenChunk, bComplex, pSurface))
         lua_pushboolean(L, 1);
@@ -187,7 +187,7 @@ static int l_spritesheet_hittest(lua_State *L)
 
 static int l_font_new(lua_State *L)
 {
-    luaT_stdnew<THFont>(L, LUA_ENVIRONINDEX, true);
+    luaT_stdnew<THFont>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -317,7 +317,7 @@ static int l_font_draw_tooltip(lua_State *L)
 
 static int l_layers_new(lua_State *L)
 {
-    THLayers_t* pLayers = luaT_stdnew<THLayers_t>(L, LUA_ENVIRONINDEX, false);
+    THLayers_t* pLayers = luaT_stdnew<THLayers_t>(L, luaT_environindex, false);
     for(int i = 0; i < 13; ++i)
         pLayers->iLayerContents[i] = 0;
     return 1;
@@ -390,7 +390,7 @@ static int l_layers_depersist(lua_State *L)
 
 static int l_cursor_new(lua_State *L)
 {
-    luaT_stdnew<THCursor>(L, LUA_ENVIRONINDEX, false);
+    luaT_stdnew<THCursor>(L, luaT_environindex, false);
     return 1;
 }
 
@@ -421,7 +421,7 @@ static int l_cursor_use(lua_State *L)
 
 static int l_cursor_position(lua_State *L)
 {
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 1, lua_upvalueindex(1));
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 1, luaT_upvalueindex(1));
     lua_pushboolean(L, THCursor::setPosition(pCanvas, luaL_checkint(L, 2), luaL_checkint(L, 3)) ? 1 : 0);
     return 1;
 }

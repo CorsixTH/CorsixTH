@@ -181,14 +181,7 @@ int THMain_l_main(lua_State *L)
     lua_setfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
 
     // math.random* = Mersenne twister variant
-#ifdef LUA_RIDX_CPCALL
-    lua_rawgeti(L, LUA_REGISTRYINDEX, LUA_RIDX_CPCALL);
-    lua_CFunction fnCPCall = luaopen_random;
-    lua_pushlightuserdata(L, &fnCPCall);
-    lua_pcall(L, 1, 0, 0);
-#else
-    lua_cpcall(L, luaopen_random, NULL);
-#endif
+    luaT_cpcall(L, luaopen_random, NULL);
 
     // package.preload["jit.opt"] = load(jit_opt_lua)
     // package.preload["jit.opt_inline"] = load(jit_opt_inline_lua)
@@ -238,34 +231,29 @@ int THMain_l_main(lua_State *L)
     // package.preload.lfs = luaopen_lfs
     lua_getglobal(L, "package");
     lua_getfield(L, -1, "preload");
-    lua_pushliteral(L, "lfs");
-    lua_pushcfunction(L, luaopen_lfs);
-    lua_settable(L, -3);
+
+#define PRELOAD(name, fn) \
+    lua_pushliteral(L, name); \
+    luaT_pushcfunction(L, fn); \
+    lua_settable(L, -3)
+
+    PRELOAD("lfs", luaopen_lfs);
 
     // package.preload.rnc = luaopen_rnc
-    lua_pushliteral(L, "rnc");
-    lua_pushcfunction(L, luaopen_rnc);
-    lua_settable(L, -3);
+    PRELOAD("rnc", luaopen_rnc);
 
     // package.preload.TH = luaopen_th
-    lua_pushliteral(L, "TH");
-    lua_pushcfunction(L, luaopen_th);
-    lua_settable(L, -3);
+    PRELOAD("TH", luaopen_th);
 
     // package.preload.ISO_FS = luaopen_iso_fs
-    lua_pushliteral(L, "ISO_FS");
-    lua_pushcfunction(L, luaopen_iso_fs);
-    lua_settable(L, -3);
+    PRELOAD("ISO_FS", luaopen_iso_fs);
 
     // package.preload.persist = luaopen_persist
-    lua_pushliteral(L, "persist");
-    lua_pushcfunction(L, luaopen_persist);
-    lua_settable(L, -3);
+    PRELOAD("persist", luaopen_persist);
 
     // package.preload.sdl = luaopen_sdl
-    lua_pushliteral(L, "sdl");
-    lua_pushcfunction(L, luaopen_sdl);
-    lua_settable(L, -3);
+    PRELOAD("sdl", luaopen_sdl);
+#undef PRELOAD
     lua_pop(L, 2);
 
     // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatbility)
