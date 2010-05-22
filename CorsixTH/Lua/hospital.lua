@@ -438,6 +438,14 @@ function Hospital:updatePercentages()
   self.percentage_cured = self.num_cured / (self.num_cured + self.not_cured + self.num_deaths) * 100
 end
 
+function Hospital:getAveragePatientAttribute(attribute)
+  local sum = 0
+  for _, patient in ipairs(self.patients) do
+    sum = sum + patient.attributes[attribute]
+  end
+  return sum / #self.patients
+end
+
 class "AIHospital" (Hospital)
 
 local competitors = {

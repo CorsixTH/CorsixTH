@@ -160,21 +160,29 @@ function UIProgressReport:UIProgressReport(ui)
     make_hosp_button(i)
   end
   
-  -- Add the three markers
-  self.happiness_marker = self:addPanel(5, 503, 193)
-  self.thirst_marker = self:addPanel(5, 503, 223)
-  self.heat_marker = self:addPanel(5, 503, 254)
-  
   self:makeTooltip(_S.tooltip.status.population_chart .. " " .. _S.misc.not_yet_implemented, 433, 64, 578, 179)
-  self:makeTooltip(_S.tooltip.status.happiness .. " " .. _S.misc.not_yet_implemented,        433, 179, 578, 209)
-  self:makeTooltip(_S.tooltip.status.thirst .. " " .. _S.misc.not_yet_implemented,           433, 209, 578, 239)
-  self:makeTooltip(_S.tooltip.status.warmth .. " " .. _S.misc.not_yet_implemented,           433, 239, 578, 270)
+  self:makeTooltip(_S.tooltip.status.happiness, 433, 179, 578, 209)
+  self:makeTooltip(_S.tooltip.status.thirst, 433, 209, 578, 239)
+  self:makeTooltip(_S.tooltip.status.warmth, 433, 239, 578, 270)
   
   -- TODO: 6 gray, 7 exclamation
 end
 
 function UIProgressReport:close()
   Window.close(self)
+end
+
+function UIProgressReport:drawMarkers(canvas, x, y)
+  local x_min = 455
+  local x_max = 551
+  local width = x_max - x_min
+  local happiness = self.ui.hospital:getAveragePatientAttribute("happiness")
+  local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst")
+  local warmth = self.ui.hospital:getAveragePatientAttribute("warmth")
+
+  self.panel_sprites:draw(canvas, 5, x + x_min + width * happiness, y + 193)
+  self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
+  self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)
 end
 
 function UIProgressReport:draw(canvas, x, y)
@@ -220,6 +228,8 @@ function UIProgressReport:draw(canvas, x, y)
       lx = lx + 30
     end
   end
+
+  self:drawMarkers(canvas, x, y)
       
   self.normal_font:draw(canvas, _S.progress_report.header .. " " 
   .. (world.year + 1999), x + 227, y + 40, 400, 0)
