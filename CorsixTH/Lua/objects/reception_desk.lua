@@ -136,7 +136,24 @@ end
 
 function ReceptionDesk:onDestroy()
   if self.receptionist then
+    local receptionist = self.receptionist
     self.receptionist:handleRemovedObject(self)
+    self.reserved_for = nil
+
+    -- Find a new reception desk for the receptionist
+    local world = receptionist.world
+    world:findObjectNear(receptionist, "reception_desk", nil, function(x, y)
+      local obj = world:getObject(x, y, "reception_desk")
+      -- Make sure we are not selecting the same desk again
+      if obj ~= self and not obj.receptionist and not obj.reserved_for then
+        obj.reserved_for = receptionist
+        receptionist.associated_desk = obj
+        local use_x, use_y = obj:getSecondaryUsageTile()
+        receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
+        receptionist:queueAction{name = "staff_reception", object = obj, must_happen = true}
+        return true
+      end
+    end)
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
   return Object.onDestroy(self)
