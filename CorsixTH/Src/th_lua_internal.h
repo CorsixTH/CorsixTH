@@ -74,7 +74,7 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
     lua_pushvalue(pState->L, iCurrentClassMT); \
     lua_replace(pState->L, luaT_environindex); \
     /* Set the __gc metamethod to C++ destructor */ \
-    luaT_pushcclosure(pState->L, luaT_stdgc<typnam, luaT_environindex>, 1); \
+    luaT_pushcclosure(pState->L, luaT_stdgc<typnam, luaT_environindex>, 0); \
     lua_setfield(pState->L, iCurrentClassMT, "__gc"); \
     /* Set the depersist size */ \
     lua_pushinteger(pState->L, sizeof(typnam)); \
