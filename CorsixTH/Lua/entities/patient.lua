@@ -121,7 +121,9 @@ function Patient:treated()
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
   end
-  hospital.percentage_killed = hospital.num_deaths / (hospital.num_cured + hospital.num_deaths)
+
+  hospital:updatePercentages()
+
   if self.is_emergency then
     local killed = hospital.emergency.killed_emergency_patients
     local cured = hospital.emergency.cured_emergency_patients
@@ -139,6 +141,7 @@ function Patient:die()
     self.world.ui.adviser:say(_S.adviser.information.first_death)
   end
   self.hospital.num_deaths = self.hospital.num_deaths + 1
+  self.hospital:updatePercentages()
   
   self:setMood("dead", "activate")
   self:playSound "boo.wav"
@@ -166,7 +169,9 @@ function Patient:goHome(cured)
     hosp:changeReputation("kicked")
     self.hospital.not_cured = hosp.not_cured + 1
   end
-  self.hospital.percentage_cured = hosp.num_cured / (hosp.num_cured + hosp.not_cured + hosp.num_deaths)
+
+  hosp:updatePercentages()
+
   if self.is_debug then
     hosp:removeDebugPatient(self)
   end

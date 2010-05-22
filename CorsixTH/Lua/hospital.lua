@@ -433,6 +433,11 @@ function Hospital:setCrazyDoctors(crazy)
   end
 end
 
+function Hospital:updatePercentages()
+  self.percentage_killed = self.num_deaths / (self.num_cured + self.num_deaths) * 100
+  self.percentage_cured = self.num_cured / (self.num_cured + self.not_cured + self.num_deaths) * 100
+end
+
 class "AIHospital" (Hospital)
 
 local competitors = {
