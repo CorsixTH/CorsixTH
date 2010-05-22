@@ -79,6 +79,10 @@ function Queue:size()
   return #self
 end
 
+function Queue:isFull()
+  return #self >= self.max_size
+end
+
 function Queue:reportedSize()
   return self.reported_size
 end
