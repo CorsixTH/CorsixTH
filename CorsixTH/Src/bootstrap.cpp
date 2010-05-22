@@ -47,11 +47,6 @@ const char* g_sBootstrapCode[] = {
     "SDL.wm.setCaption('CorsixTH - Error during startup')",
     "local w, h = 640, 480",
     "local modes = {'hardware', 'doublebuf'}",
-    "if TheApp and TheApp.config then", // Honour the user's window size
-    "  w = tonumber(TheApp.config.width) or w", // settings (if we got as far
-    "  h = tonumber(TheApp.config.height) or h", // as loading them).
-    "  if TheApp.config.fullscreen then modes[#modes+1] = 'fullscreen' end",
-    "end", // Initialise graphics:
     "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
     "local video = TheApp and TheApp.video or TH.surface(w, h, unpack(modes))",
     "local palette, sheet, font = TH.palette(), TH.sheet(), TH.font()",
@@ -87,7 +82,7 @@ const char* g_sBootstrapCode[] = {
     "   end",
     "  end",
     " end))",
-    " print(e)",
+    " if running then print(e) end",
     "until where ~= 'callback'",
     NULL
 };

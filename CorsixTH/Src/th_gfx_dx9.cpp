@@ -25,7 +25,6 @@ SOFTWARE.
 #ifndef CORSIX_TH_USE_WIN32_SDK
 #error Windows Platform SDK usage must be enabled to use DX9 renderer
 #endif
-#include <D3D9.h>
 #include "th_gfx.h"
 #include <new>
 #include <SDL.h>
@@ -58,7 +57,8 @@ THRenderTarget::THRenderTarget()
     m_iNonOverlapping = 0;
     m_iWidth = 0;
     m_iHeight = 0;
-    m_bHasCursor = false;
+    m_pCursor = NULL;
+    m_bHasLostDevice = false;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -181,16 +181,15 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-    D3DCAPS9 d3dCaps;
-    ZeroMemory(&d3dCaps, sizeof(d3dCaps));
+    ZeroMemory(&m_oDeviceCaps, sizeof(m_oDeviceCaps));
     D3DDEVTYPE eDeviceTypeToUse = D3DDEVTYPE_HAL;
-    if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
+    if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &m_oDeviceCaps) != D3D_OK)
     {
         eDeviceTypeToUse = D3DDEVTYPE_SW;
-        if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
+        if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &m_oDeviceCaps) != D3D_OK)
         {
             eDeviceTypeToUse = D3DDEVTYPE_REF;
-            if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &d3dCaps) != D3D_OK)
+            if(m_pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, eDeviceTypeToUse, &m_oDeviceCaps) != D3D_OK)
             {
                 m_sLastError = "Could not get DirectX device capabilities for HAL, SW or REF";
                 return false;
@@ -198,26 +197,26 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         }
     }
 
-    D3DPRESENT_PARAMETERS oPresentParams;
-    ZeroMemory(&oPresentParams, sizeof(oPresentParams));
-    oPresentParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    oPresentParams.EnableAutoDepthStencil = false;
-    oPresentParams.AutoDepthStencilFormat = D3DFMT_D16;
-    oPresentParams.hDeviceWindow = hWindow;
-    oPresentParams.BackBufferCount = 1;
-    oPresentParams.Windowed = pParams->bFullscreen ? FALSE : TRUE;
-    oPresentParams.BackBufferWidth = pParams->iWidth;
-    oPresentParams.BackBufferHeight = pParams->iHeight;
-    oPresentParams.BackBufferFormat = d3ddm.Format;
-    oPresentParams.PresentationInterval = pParams->bPresentImmediate ?
+    ZeroMemory(&m_oPresentParams, sizeof(m_oPresentParams));
+    m_oPresentParams.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    m_oPresentParams.EnableAutoDepthStencil = false;
+    m_oPresentParams.AutoDepthStencilFormat = D3DFMT_D16;
+    m_oPresentParams.hDeviceWindow = hWindow;
+    m_oPresentParams.BackBufferCount = 1;
+    m_oPresentParams.Windowed = pParams->bFullscreen ? FALSE : TRUE;
+    m_oPresentParams.BackBufferWidth = pParams->iWidth;
+    m_oPresentParams.BackBufferHeight = pParams->iHeight;
+    m_oPresentParams.BackBufferFormat = d3ddm.Format;
+    m_oPresentParams.PresentationInterval = pParams->bPresentImmediate ?
         D3DPRESENT_INTERVAL_IMMEDIATE : D3DPRESENT_INTERVAL_DEFAULT;
 
     DWORD dwBehaviour = D3DCREATE_FPU_PRESERVE; // For Lua
-    if(d3dCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
+    if(m_oDeviceCaps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT)
         dwBehaviour |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
     else
         dwBehaviour |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 
+    D3DPRESENT_PARAMETERS oPresentParams = m_oPresentParams;
     if(FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, eDeviceTypeToUse,
         hWindow, dwBehaviour, &oPresentParams, &m_pDevice)))
     {
@@ -226,7 +225,7 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     }
 
     m_bIsWindowed = !pParams->bFullscreen;
-    m_bIsHardwareCursorSupported = (d3dCaps.CursorCaps & (pParams->iHeight
+    m_bIsHardwareCursorSupported = (m_oDeviceCaps.CursorCaps & (pParams->iHeight
         < 400 ? D3DCURSORCAPS_LOWRES : D3DCURSORCAPS_COLOR)) != 0;
     m_iVertexCount = 0;
     m_iVertexLength = 768;
@@ -237,6 +236,26 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
     m_iNonOverlapping = 0;
+    m_iWidth = pParams->iWidth;
+    m_iHeight = pParams->iHeight;
+    if(!_initialiseDeviceSettings())
+        return false;
+
+    THDX9_FillIndexBuffer(m_aiVertexIndicies, 0, THDX9_INDEX_BUFFER_LENGTH);
+
+    if((m_pWhiteTexture = THDX9_CreateSolidTexture(1, 1,
+        D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF), m_pDevice)) == NULL)
+    {
+        m_sLastError = "Could not create reference texture";
+        return false;
+    }
+
+    SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)this);
+    return true;
+}
+
+bool THRenderTarget::_initialiseDeviceSettings()
+{
     if(m_pDevice->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1) != D3D_OK)
     {
         m_sLastError = "Could not set the DirectX fixed function vertex type";
@@ -246,7 +265,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     m_pDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
     m_pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
     m_pDevice->SetRenderState(D3DRS_CLIPPING, FALSE);
-    m_pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+    m_pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA
+        | D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
     m_pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     m_pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
     m_pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
@@ -261,16 +281,16 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     m_pDevice->SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
     m_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
     m_pDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC)
+    if(m_oDeviceCaps.TextureFilterCaps & D3DPTFILTERCAPS_MAGFANISOTROPIC)
         m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_ANISOTROPIC);
     else
         m_pDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-    m_pDevice->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, d3dCaps.MaxAnisotropy);
-    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFANISOTROPIC)
+    m_pDevice->SetSamplerState(0, D3DSAMP_MAXANISOTROPY, m_oDeviceCaps.MaxAnisotropy);
+    if(m_oDeviceCaps.TextureFilterCaps & D3DPTFILTERCAPS_MINFANISOTROPIC)
         m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_ANISOTROPIC);
     else
         m_pDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-    if(d3dCaps.TextureFilterCaps & D3DPTFILTERCAPS_MIPFLINEAR)
+    if(m_oDeviceCaps.TextureFilterCaps & D3DPTFILTERCAPS_MIPFLINEAR)
         m_pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
     else
         m_pDevice->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
@@ -292,10 +312,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-    m_iWidth = pParams->iWidth;
-    m_iHeight = pParams->iHeight;
-    float fWidth = (float)pParams->iWidth;
-    float fHeight = (float)pParams->iHeight;
+    float fWidth = (float)m_iWidth;
+    float fHeight = (float)m_iHeight;
 
     // Change the meaning of the identity matrix to the matrix required to make
     // world space identical to screen space.
@@ -310,16 +328,6 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-    THDX9_FillIndexBuffer(m_aiVertexIndicies, 0, THDX9_INDEX_BUFFER_LENGTH);
-
-    if((m_pWhiteTexture = THDX9_CreateSolidTexture(1, 1,
-        D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF), m_pDevice)) == NULL)
-    {
-        m_sLastError = "Could not create reference texture";
-        return false;
-    }
-
-    SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)this);
     return true;
 }
 
@@ -402,6 +410,21 @@ bool THRenderTarget::startFrame()
         m_sLastError = "No device";
         return false;
     }
+    if(m_bHasLostDevice)
+    {
+        if(m_pDevice->TestCooperativeLevel() != D3DERR_DEVICENOTRESET)
+            return false;
+        D3DPRESENT_PARAMETERS oPresentParams = m_oPresentParams;
+        if(m_pDevice->Reset(&oPresentParams) == D3D_OK)
+        {
+            m_bHasLostDevice = false;
+            _initialiseDeviceSettings();
+            if(hasCursor())
+                setCursor(m_pCursor);
+        }
+        else
+            return false;
+    }
     m_pDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
     m_pDevice->BeginScene();
     return true;
@@ -422,6 +445,7 @@ bool THRenderTarget::endFrame()
         return true;
     case D3DERR_DEVICELOST:
         m_sLastError = "Could not present (device lost)";
+        m_bHasLostDevice = true;
         break;
     default:
         m_sLastError = "Could not present";
@@ -770,7 +794,7 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
                                  size_t iPixelDataLength,
                                  int iWidth, THRenderTarget *pEventualCanvas)
 {
-    if(m_pPalette == NULL)
+    if(m_pPalette == NULL || pEventualCanvas == NULL)
         return false;
 
     if(m_pBitmap)
@@ -1392,7 +1416,7 @@ void THRenderTarget::setCursor(THCursor* pCursor)
     m_pDevice->SetCursorProperties(pCursor->m_iHotspotX,
         pCursor->m_iHotspotY, pCursor->m_pBitmap);
     m_pDevice->ShowCursor(TRUE);
-    m_bHasCursor = true;
+    m_pCursor = pCursor;
     m_bIsCursorInHardware = m_bIsWindowed || (m_bIsHardwareCursorSupported &&
         pCursor->m_bHardwareCompatible);
 }

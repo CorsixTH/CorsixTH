@@ -28,6 +28,7 @@ SOFTWARE.
 #error More than one rendering engine enabled in config file
 #endif
 #define CORSIX_TH_HAS_RENDERING_ENGINE
+#include <D3D9.h>
 
 struct IDirect3D9;
 struct IDirect3DDevice9;
@@ -115,7 +116,7 @@ public: // Internal (this rendering engine only) API
         unsigned int iWidth2, unsigned int iHeight2, unsigned int iTexX,
         unsigned int iTexY);
     void flushSprites();
-    bool hasCursor() const {return m_bHasCursor;}
+    bool hasCursor() const {return m_pCursor != NULL;}
 
 protected:
     IDirect3D9 *m_pD3D;
@@ -123,7 +124,10 @@ protected:
     THDX9_Vertex *m_pVerticies;
     IDirect3DTexture9 *m_pWhiteTexture;
     const char *m_sLastError;
+    THCursor* m_pCursor;
     THClipRect m_rcClip;
+    D3DPRESENT_PARAMETERS m_oPresentParams;
+    D3DCAPS9 m_oDeviceCaps;
     size_t m_iVertexCount;
     size_t m_iVertexLength;
     size_t m_iNonOverlappingStart;
@@ -133,9 +137,10 @@ protected:
     bool m_bIsWindowed;
     bool m_bIsHardwareCursorSupported;
     bool m_bIsCursorInHardware;
-    bool m_bHasCursor;
+    bool m_bHasLostDevice;
     uint16_t m_aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
 
+    bool _initialiseDeviceSettings();
     void _drawVerts(size_t iFirst, size_t iLast);
 };
 

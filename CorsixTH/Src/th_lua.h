@@ -33,7 +33,9 @@ int luaopen_th(lua_State *L);
 #define luaT_environindex lua_upvalueindex(1)
 #define luaT_upvalueindex(i) lua_upvalueindex((i) + 1)
 void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
-#define luaT_register(L, n, p) (lua_pushglobaltable(L), luaL_openlib(L, n, p, 1))
+#define luaT_register(L, n, p) (\
+    lua_pushvalue(L, luaT_enrivonindex), \
+    luaL_openlib(L, n, p, 1) )
 #else
 #define luaT_environindex LUA_ENVIRONINDEX
 #define luaT_upvalueindex lua_upvalueindex
