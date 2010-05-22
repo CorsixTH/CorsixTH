@@ -107,7 +107,7 @@ function ReceptionDesk:checkForNearbyStaff()
   local world = self.world
   local use_x, use_y = self:getSecondaryUsageTile()
   for _, entity in ipairs(self.world.entities) do
-    if entity.humanoid_class == "Receptionist" and not entity.associated_desk then
+    if entity.humanoid_class == "Receptionist" and not entity.associated_desk and not entity.fired then
       local distance = world.pathfinder:findDistance(entity.tile_x, entity.tile_y, use_x, use_y)
       if not nearest_d or distance < nearest_d then
         nearest_staff = entity
