@@ -43,8 +43,7 @@ function UILoadGame:buttonClicked(num)
 
   app:loadLevel(1) -- hack
 
-  local handler = LoadGameFile
-  local status, err = pcall(handler, filename)
+  local status, err = pcall(app.load, filename)
   if not status then
     err = _S.errors.load_prefix .. err
     print(err)

@@ -665,15 +665,24 @@ function App:loadLuaFolder(dir, no_results, append_to)
   end
 end
 
+local savegame_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Saves" .. pathsep
+
 function App:scanSavegames()
-  local path = debug.getinfo(1, "S").source:sub(2, -13) -- stripped /Lua/app.lua
   local saves = {}
-  for file in lfs.dir(path) do
+  for file in lfs.dir(savegame_dir) do
     if file:match"%.sav$" then
       saves[#saves + 1] = file:sub(1, -5)
     end
   end
   return saves
+end
+
+function App.save(filename)
+  return SaveGameFile(savegame_dir .. filename)
+end
+
+function App.load(filename)
+  return LoadGameFile(savegame_dir .. filename)
 end
 
 --! Quits the running game and returns to main menu (offers confirmation window first)

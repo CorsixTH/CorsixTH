@@ -23,6 +23,24 @@ dofile("dialogs/menu_list_dialog")
 --! Save Game Window
 class "UISaveGame" (UIMenuList)
 
+local col_textbox = {
+  red = 0,
+  green = 0,
+  blue = 0,
+}
+
+local col_highlight = {
+  red = 174,
+  green = 166,
+  blue = 218,
+}
+
+local col_shadow = {
+  red = 134,
+  green = 126,
+  blue = 178,
+}
+
 function UISaveGame:UISaveGame(ui)
   
   -- Scan for savegames
@@ -38,7 +56,7 @@ function UISaveGame:UISaveGame(ui)
   self:UIMenuList(ui, "game", _S.save_game_window.caption, items, 8)
   
   -- Textbox for entering new savegame name
-  self.new_savegame_textbox = self:addBevelPanel(20, 190, 160, 17, self.col_bg):setLabel(_S.save_game_window.new_save_game):setTooltip(_S.tooltip.save_game_window.new_save_game)
+  self.new_savegame_textbox = self:addBevelPanel(20, 190, 160, 17, col_textbox, col_highlight, col_shadow):setLabel(_S.save_game_window.new_save_game):setTooltip(_S.tooltip.save_game_window.new_save_game)
     :makeTextbox(--[[persistable:save_game_new_savegame_textbox_confirm_callback]] function() self:confirmName() end,
     --[[persistable:save_game_new_savegame_textbox_abort_callback]] function() self:abortName() end)
 end
@@ -85,9 +103,10 @@ end
 function UISaveGame:doSave(filename)
   filename = filename .. ".sav"
   local ui = self.ui
+  local app = ui.app
   self:close()
   
-  local status, err = pcall(SaveGameFile, filename)
+  local status, err = pcall(app.save, filename)
   if not status then
     err = _S.errors.save_prefix .. err
     print(err)
