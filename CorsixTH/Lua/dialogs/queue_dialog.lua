@@ -66,11 +66,23 @@ function UIQueue:UIQueue(ui, queue)
 end
 
 function UIQueue:decreaseMaxSize()
-  self.queue:decreaseMaxSize()
+  local amount = 1
+  if self.buttons_down.ctrl then
+    amount = amount * 10
+  elseif self.buttons_down.shift then
+    amount = amount * 5
+  end
+  self.queue:decreaseMaxSize(amount)
 end
 
 function UIQueue:increaseMaxSize()
-  self.queue:increaseMaxSize()
+  local amount = 1
+  if self.buttons_down.ctrl then
+    amount = amount * 10
+  elseif self.buttons_down.shift then
+    amount = amount * 5
+  end
+  self.queue:increaseMaxSize(amount)
 end
 
 function UIQueue:draw(canvas, x, y)

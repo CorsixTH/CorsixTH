@@ -54,16 +54,12 @@ function Queue:unexpect(humanoid)
   end
 end
 
-function Queue:decreaseMaxSize()
-  if self.max_size > 0 then
-    self.max_size = self.max_size - 1
-  end
+function Queue:decreaseMaxSize(amount)
+  self.max_size = math.max(0, self.max_size - amount)
 end
 
-function Queue:increaseMaxSize()
-  if self.max_size < 30 then
-    self.max_size = self.max_size + 1
-  end
+function Queue:increaseMaxSize(amount)
+  self.max_size = math.min(30, self.max_size + amount)
 end
 
 function Queue:setBenchThreshold(standing_count)
