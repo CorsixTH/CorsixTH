@@ -142,6 +142,10 @@ tooltip.load_game_window = {
   load_autosave = "Automatisch gespeichertes Spiel laden",
 }
 
+custom_game_window = {
+  caption = "Eigenes Level",
+}
+
 tooltip.custom_game_window = {
   start_game_with_name = "Level %s starten",
 }

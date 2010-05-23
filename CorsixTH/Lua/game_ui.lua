@@ -123,6 +123,8 @@ function GameUI:onKeyDown(code)
       self:addWindow(UIWatch(self))
     elseif key == "X" then -- Toggle wall transparency
       self:makeWallsTransparent(not self.transparent_walls)
+    elseif key == "D" and self.buttons_down.ctrl then
+      self.app.world:dumpGameLog()
     end
   end
 end

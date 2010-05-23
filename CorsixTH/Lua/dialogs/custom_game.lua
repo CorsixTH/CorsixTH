@@ -58,7 +58,7 @@ function UICustomGame:UICustomGame(ui, mode)
       end
     end
   end
-  self:UIMenuList(ui, mode, _S.load_game_window.caption, items)
+  self:UIMenuList(ui, mode, _S.custom_game_window.caption, items)
 end
   
 function UICustomGame:buttonClicked(num)

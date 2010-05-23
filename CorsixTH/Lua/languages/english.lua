@@ -148,7 +148,7 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  back = utf8 "Close this window",
+  back = "Close this window",
 }
 
 errors = {
