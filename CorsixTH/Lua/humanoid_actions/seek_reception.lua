@@ -31,7 +31,7 @@ local function action_seek_reception_start(action, humanoid)
   local found_desk = false
   world:findObjectNear(humanoid, "reception_desk", nil, function(x, y, d)
     local desk = world:getObject(x, y, "reception_desk")
-    if not desk.receptionist and not desk.reserved_for then
+    if (not desk.receptionist and not desk.reserved_for) or desk.queue:isFull() then
       return
     end
     
