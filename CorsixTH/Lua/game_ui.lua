@@ -293,7 +293,7 @@ function GameUI:onMouseUp(code, x, y)
   if self.edit_room then
     if button == "left" then
       local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
-      if room then
+      if room and not room.crashed then
         room.is_active = false -- So that no more patients go to it.
         self:setCursor(self.waiting_cursor)
         room:tryToEdit()

@@ -42,6 +42,7 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
     _S.dynamic_info.object.queue_expected:format(0)
   })
   self.built = false
+  self.crashed = false
   
   self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
   
@@ -579,7 +580,7 @@ function Room:crashRoom()
   end
   
   self.is_active = false
-  -- TODO: This room should no longer be editable - when that feature is added
+  self.crashed = true
 end
 
 -- Tells the patient to leave the room. This can be overridden for special
