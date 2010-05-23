@@ -119,7 +119,13 @@ function UIEditRoom:cancel()
           -- Return half the cost.
           local cost = math.floor(self.room.room_info.build_cost/2)
           -- TODO: Return also the cost for additional objects.
-          self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object)
+
+          -- Decrease the hospital value by the whole room build cost
+          local valueChange = self.room.room_info.build_cost
+          for obj, num in pairs(self.room.room_info.objects_needed) do
+            valueChange = valueChange - num * TheApp.objects[obj].build_cost
+          end
+          self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
           self:close()
         end
       ))
@@ -170,7 +176,7 @@ function UIEditRoom:confirm(force)
       for obj, num in pairs(self.room.room_info.objects_needed) do
         cost = cost - num * TheApp.objects[obj].build_cost
       end
-      self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text)
+      self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text, cost)
       self.payed = true
     end
     

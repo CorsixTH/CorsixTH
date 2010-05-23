@@ -36,7 +36,7 @@ function Hospital:Hospital(world)
   -- TODO: Variate initial reputation etc based on level
   self.balance = balance
   self.loan = 0
-  self.value = 32495 -- TODO: How is this calculated?
+  self.value = 0 -- The sum of all material values (rooms, objects)
   self.interest_rate = 0.01 -- Should these be worldwide?
   self.inflation_rate = 0.045
   self.reputation = 500
@@ -286,10 +286,14 @@ end
 !param amount (integer) The (positive) amount to spend.
 !param reason (string) A string that shows what happened. Should be one of the strings
 in _S.transactions.
+!param changeValue (integer) The (positive) amount the hospital value should be increased
 ]]
-function Hospital:spendMoney(amount, reason)
+function Hospital:spendMoney(amount, reason, changeValue)
   self.balance = self.balance - amount
   self:logTransaction{spend = amount, desc = reason}
+  if changeValue then
+    self.value = self.value + changeValue
+  end
 end
 
 --[[ Increases the player's money by the given amount and logs the transaction.
@@ -297,10 +301,14 @@ end
 !param amount (integer) The (positive) amount to receive.
 !param reason (string) A string that tells what happened. Should be one of the strings
 in _S.transactions.
+!param changeValue (integer) The (positive) amount the hospital value should be decreased
 ]]
-function Hospital:receiveMoney(amount, reason)
+function Hospital:receiveMoney(amount, reason, changeValue)
   self.balance = self.balance + amount
   self:logTransaction{receive = amount, desc = reason}
+  if changeValue then
+    self.value = self.value - changeValue
+  end
 end
 
 --[[ Determines how much the player should receive after a patient is treated in a room.

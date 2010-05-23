@@ -151,11 +151,11 @@ function UIFurnishCorridor:confirm()
     if o.qty - o.start_qty > 0 then
       local diff_qty = o.qty - o.start_qty
       to_purchase[#to_purchase + 1] = { object = o.object, qty = diff_qty }
-      self.ui.hospital:spendMoney(o.object.build_cost * diff_qty, _S.transactions.buy_object .. ": " .. o.object.name)
+      self.ui.hospital:spendMoney(o.object.build_cost * diff_qty, _S.transactions.buy_object .. ": " .. o.object.name, o.object.build_cost * diff_qty)
     elseif o.qty - o.start_qty < 0 then
       local diff_qty = o.start_qty - o.qty
       to_sell[#to_sell + 1] = { object = o.object, qty = diff_qty }
-      self.ui.hospital:receiveMoney(o.object.build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name)
+      self.ui.hospital:receiveMoney(o.object.build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name, o.object.build_cost * diff_qty)
     end
   end
   
