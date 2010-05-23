@@ -472,7 +472,7 @@ function UI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
 end
 
-local tooltip_ticks = 50 -- Amount of ticks until a tooltip is displayed
+local tooltip_ticks = 30 -- Amount of ticks until a tooltip is displayed
 
 function UI:updateTooltip()
   if self.buttons_down["left"] then
