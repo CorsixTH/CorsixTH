@@ -425,7 +425,7 @@ end
 function UIStaffManagement:payBonus()
   if self.selected_staff then
     local staff = self.staff_members[self.category][self.selected_staff]
-    staff:changeAttribute("Happiness", 0.3)
+    staff:changeAttribute("happiness", 0.5)
     self.hospital:spendMoney(math_floor(staff.profile.wage*0.1), _S.transactions.personal_bonus)
   end
 end
