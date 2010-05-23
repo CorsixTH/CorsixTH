@@ -486,7 +486,7 @@ function UIMenuBar:makeMenu(app)
     :appendItem(_S.menu_charts.graphs)
     :appendItem(_S.menu_charts.staff_listing, function() self.ui.bottom_panel:dialogStaffManagement() end)
     :appendItem(_S.menu_charts.bank_manager, function() self.ui.bottom_panel:dialogBankManager() end)
-    :appendItem(_S.menu_charts.status)
+    :appendItem(_S.menu_charts.status, function() self.ui.bottom_panel:dialogStatus() end)
   )
   local function _(s) return "  " .. s:upper() .. "  " end
   local function transparent_walls(item)
