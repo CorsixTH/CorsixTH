@@ -96,23 +96,6 @@ function UITownMap:UITownMap(ui)
   self:makeTooltip(_S.tooltip.town_map.heating_bill, 72, 351, 167, 374)
 end
 
--- temporary, remove later
--- because currently we don't know what ID's are objects, we have to print
--- every unknown object to decide whether it is counted as an object in the
--- town map or not.
--- TODO add this as a property in the item itself (is_object_in_town_map?)
-local known_ids = { "cabinet", "chair", "desk", "extinguisher", "bin",
-                    "radiator", "plant", "bench", "entrance_left_door",
-                    "entrance_right_door", "door" }
-function UITownMap:is_unknown_id(id)
-  for i = 1, #known_ids do
-    if( id == known_ids[i] ) then
-      return false
-    end
-  end
-  return true
-end
-
 function UITownMap:close()
   self.ui:disableKeyboardRepeat()
   Window.close(self)
@@ -159,29 +142,19 @@ function UITownMap:draw(canvas, x, y)
       local l_objects = world:getObjects(xi, yi)
       if l_objects ~= nil then
         for i = 1, #l_objects do
-          local object_type = l_objects[i]["object_type"].id
-
-          if object_type == "desk" then
-            objs = objs + 1
-          elseif object_type == "extinguisher" then
+          local object_type = l_objects[i].object_type.id
+          if object_type == "extinguisher" then
             fireext = fireext + 1
           elseif object_type == "radiator" then
             radiators = radiators + 1
           elseif object_type == "plant" then
             plants = plants + 1
-          end
-
-          -- TODO remove once we "know" all object ID's, or can detect whether
-          -- an item is an object in the town map (@see is_unknown_id())
-          if app.config.debug and self:is_unknown_id(object_type) then
-            for key, value in pairs(l_objects[i]) do
-              if key == "object_type" then
-                for key2, value2 in pairs(value) do
-                  print(xi, yi, i, key, key2, value2)
-                end
-              else
-                print(xi, yi, i, key, value)
-              end
+          else
+            -- Objects: All objects except corridor objects, bins, and all kinds of doors.
+            if not object_type.corridor_object
+              and object_type ~= "bin"
+              and not string.find(object_type, "door") then
+              objs = objs + 1
             end
           end
         end
