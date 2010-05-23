@@ -136,5 +136,5 @@ on the contrary everything is available unless specified otherwise in the level 
 
 | Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
 #computer[12].Playing 1 CORSIX
-#computer[13].Playing 1 WOLFMAN
+#computer[13].Playing 1 ROUJIN
 #computer[14].Playing 1 LEGO3

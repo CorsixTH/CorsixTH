@@ -470,7 +470,7 @@ local competitors = {
   "MOTHER",
   "JAYNE",
   "CORSIX",
-  "WOLFMAN",
+  "ROUJIN",
   "LEGO3",
 }
 

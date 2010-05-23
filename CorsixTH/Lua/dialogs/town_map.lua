@@ -142,18 +142,18 @@ function UITownMap:draw(canvas, x, y)
       local l_objects = world:getObjects(xi, yi)
       if l_objects ~= nil then
         for i = 1, #l_objects do
-          local object_type = l_objects[i].object_type.id
-          if object_type == "extinguisher" then
+          local object_type = l_objects[i].object_type
+          if object_type.id == "extinguisher" then
             fireext = fireext + 1
-          elseif object_type == "radiator" then
+          elseif object_type.id == "radiator" then
             radiators = radiators + 1
-          elseif object_type == "plant" then
+          elseif object_type.id == "plant" then
             plants = plants + 1
           else
             -- Objects: All objects except corridor objects, bins, and all kinds of doors.
             if not object_type.corridor_object
-              and object_type ~= "bin"
-              and not string.find(object_type, "door") then
+              and object_type.id ~= "bin"
+              and not string.find(object_type.id, "door") then
               objs = objs + 1
             end
           end
