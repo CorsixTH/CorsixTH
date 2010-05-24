@@ -597,3 +597,14 @@ function GameUI:startTutorial(chapter)
   
   self:tutorialStep(chapter, 0, 1)
 end
+
+function GameUI:setEditRoom(enabled)
+  -- TODO: Make the room the cursor is over flash
+  if enabled then
+    self:setCursor(self.edit_room_cursor)
+    self.edit_room = true
+  else
+    self:setCursor(self.default_cursor)
+    self.edit_room = false
+  end
+end

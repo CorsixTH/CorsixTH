@@ -121,6 +121,7 @@ function UI:UI(app)
   self.grab_cursor = app.gfx:loadMainCursor("grab")
   self.edit_room_cursor = app.gfx:loadMainCursor("edit_room")
   self.waiting_cursor = app.gfx:loadMainCursor("sleep")
+  self.editing_allowed = true
   
   if not LOADED_DIALOGS then
     app:loadLuaFolder("dialogs", true)
@@ -537,6 +538,9 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
+  if window.modal_class == "main" then
+    self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
+  end
   Window.addWindow(self, window)
 end
 
@@ -545,6 +549,9 @@ function UI:removeWindow(window)
     local class = window.modal_class
     if class and self.modal_windows[class] == window then
       self.modal_windows[class] = nil
+    end
+    if window.modal_class == "main" then
+      self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
     return true
   else

@@ -299,29 +299,34 @@ end
 
 function UIBottomPanel:dialogBankManager()
   local dlg = UIBankManager(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogBankStats()
   local dlg = UIBankManager(self.ui)
+  self.ui:setEditRoom(false)
   dlg:showStatistics()
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogBuildRoom()
   local dlg = UIBuildRoom(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
   self.ui:tutorialStep(3, 1, 2)
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
   local dlg = UIFurnishCorridor(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
   self.ui:tutorialStep(1, 1, 2)
 end
 
 function UIBottomPanel:dialogHireStaff()
   local dlg = UIHireStaff(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
   self.ui:tutorialStep(2, 1, 2)
   self.ui:tutorialStep(4, 1, 2)
@@ -329,37 +334,44 @@ end
 
 function UIBottomPanel:dialogTownMap()
   local dlg = UITownMap(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogDrugCasebook()
   local dlg = UICasebook(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogStaffManagement()
   local dlg = UIStaffManagement(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogPolicy()
   local dlg = UIPolicy(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:dialogStatus()
   local dlg = UIProgressReport(self.ui)
+  self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
 
 function UIBottomPanel:editRoom()
   local ui = self.ui
-  -- TODO: Make the room the cursor is over flash
+  if not ui.editing_allowed then
+    -- no editing is allowed when other dialogs are open
+    return
+  end
   if ui.edit_room then
-    ui:setCursor(self.ui.default_cursor)
-    ui.edit_room = false
+    ui:setEditRoom(false)
   else
-    ui:setCursor(ui.edit_room_cursor)
-    ui.edit_room = true
+    ui:setEditRoom(true)
   end
 end
+
