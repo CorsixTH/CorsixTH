@@ -151,6 +151,16 @@ tooltip.menu_list_window = {
   back = "Close this window",
 }
 
+options_window = {
+  fullscreen = "Fullscreen",
+  back = "Back",
+}
+
+tooltip.options_window = {
+  fullscreen_button = "Click to toggle fullscreen mode",
+  back = "Close the options window",
+}
+
 errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",

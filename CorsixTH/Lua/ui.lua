@@ -312,6 +312,33 @@ function UI:unregisterTextBox(box)
   end
 end
 
+function UI:toggleFullscreen()
+  local modes = self.app.modes
+  
+  -- Search in modes table if it contains a fullscreen value and keep the index
+  -- If not found, we will add an index at end of table
+  local index = #modes + 1
+  for i=1, #modes do
+    if modes[i] == "fullscreen" then
+      index = i
+      break
+    end
+  end
+  
+  -- Toggle Fullscreen mode
+  self.app.fullscreen = not self.app.fullscreen
+  if self.app.fullscreen then
+    modes[index] = "fullscreen"
+  else
+    modes[index] = ""
+  end
+  self.app.video:endFrame()
+  self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
+  self.app.gfx:updateTarget(self.app.video)
+  self.app.video:startFrame()
+  self.cursor:use(self.app.video) -- Redraw cursor
+end
+
 function UI:onKeyDown(code)
   -- Are there any text boxes expecting input?
   for _, box in pairs(self.textboxes) do
@@ -357,30 +384,7 @@ function UI:onKeyDown(code)
     TheApp.running = false
     return true
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
-    local modes = self.app.modes
-    
-    -- Search in modes table if it contains a fullscreen value and keep the index
-    -- If not found, we will add an index at end of table
-    local index = #modes + 1
-    for i=1, #modes do
-      if modes[i] == "fullscreen" then
-        index = i
-        break
-      end
-    end
-    
-    -- Toggle Fullscreen mode
-    self.app.fullscreen = not self.app.fullscreen
-    if self.app.fullscreen then
-      modes[index] = "fullscreen"
-    else
-      modes[index] = ""
-    end
-    self.app.video:endFrame()
-    self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
-    self.app.gfx:updateTarget(self.app.video)
-    self.app.video:startFrame()
-    self.cursor:use(self.app.video) -- Redraw cursor
+    self:toggleFullScreen()
     return true
   elseif key == "S" then -- Take a screenshot
      -- Find an index for screenshot which is not already used
