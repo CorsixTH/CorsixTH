@@ -121,8 +121,13 @@ function UIMenuList:updateButtons()
 end
 
 function UIMenuList:buttonBack()
+  self:close()
+end
+
+function UIMenuList:close()
+  UIResizable.close(self)
   if self.mode == "menu" then
     self.ui:addWindow(UIMainMenu(self.ui))
   end
-  self:close()
 end
+
