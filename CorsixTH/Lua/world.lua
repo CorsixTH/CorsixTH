@@ -1076,6 +1076,32 @@ function World:afterLoad(old, new)
   if old < 4 then
     self.room_built = {}
   end
+  if old < 6 then
+    -- Calculate hospital value
+
+    -- Initial value
+    local value = self.map.parcelTileCounts[self.hospitals[1]:getPlayerIndex()] * 25 + 20000
+
+    -- Add room values
+    for _, room in ipairs(self.rooms) do
+      local valueChange = room.room_info.build_cost
+
+      -- Subtract values of objects in rooms to avoid calculating those object values twice
+      for obj, num in pairs(room.room_info.objects_needed) do
+        valueChange = valueChange - num * TheApp.objects[obj].build_cost
+      end
+      value = value + valueChange
+    end
+
+    -- Add up all object values
+    for _, object in ipairs(self.entities) do
+        if class.is(object, Object) and object.object_type.build_cost then
+          value = value + object.object_type.build_cost
+        end
+    end
+
+    self.hospitals[1].value = value
+  end
   
   self.savegame_version = new
 end

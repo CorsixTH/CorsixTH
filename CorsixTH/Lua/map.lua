@@ -152,6 +152,12 @@ function Map:load(level, level_name, level_file)
   end
 
   self.width, self.height = self.th:size()
+
+  self.parcelTileCounts = {}
+  for plot = 1,self.th:getPlotCount() do
+    self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
+  end
+
   return objects
 end
 
@@ -408,6 +414,15 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
       else
         baseY = baseY + 1
       end
+    end
+  end
+end
+
+function Map:afterLoad(old, new)
+  if old < 6 then
+    self.parcelTileCounts = {}
+    for plot = 1,self.th:getPlotCount() do
+      self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
     end
   end
 end

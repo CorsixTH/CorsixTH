@@ -583,6 +583,22 @@ static int l_map_hittest(lua_State *L)
     return 1;
 }
 
+static int l_map_get_parcel_tilecount(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iParcel = luaL_checkint(L, 2);
+    int iCount = pMap->getParcelTileCount(iParcel);
+    lua_pushinteger(L, iCount);
+    return 1;
+}
+
+static int l_map_get_plot_count(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_pushinteger(L, pMap->getPlotCount());
+    return 1;
+}
+
 static int l_path_new(lua_State *L)
 {
     luaT_stdnew<THPathfinder>(L, luaT_environindex, true);
@@ -714,6 +730,8 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_set_sheet, "setSheet", MT_Sheet);
     luaT_setfunction(l_map_draw, "draw", MT_Surface);
     luaT_setfunction(l_map_hittest, "hitTestObjects", MT_Anim);
+    luaT_setfunction(l_map_get_parcel_tilecount, "getParcelTileCount");
+    luaT_setfunction(l_map_get_plot_count, "getPlotCount");
     luaT_endclass();
 
     // Pathfinder

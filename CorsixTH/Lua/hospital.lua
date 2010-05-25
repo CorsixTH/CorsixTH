@@ -36,7 +36,7 @@ function Hospital:Hospital(world)
   -- TODO: Variate initial reputation etc based on level
   self.balance = balance
   self.loan = 0
-  self.value = 0 -- The sum of all material values (rooms, objects)
+  self.value = world.map.parcelTileCounts[self:getPlayerIndex()] * 25 + 20000 -- The sum of all material values (tiles, rooms, objects). Initial value: hospital tile count * tile value + 20000
   self.interest_rate = 0.01 -- Should these be worldwide?
   self.inflation_rate = 0.045
   self.reputation = 500

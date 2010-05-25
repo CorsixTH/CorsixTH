@@ -204,9 +204,15 @@ public:
     //! Get the map height (in tiles)
     inline int getHeight() const {return m_iHeight;}
 
+    //! Get the number of plots in this map
+    inline int getPlotCount() const {return m_iPlotCount - 1;}
+
     inline int getPlayerCount() const {return m_iPlayerCount;}
     bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
     bool getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const;
+
+    //! Get the number of tiles inside a given parcel
+    int getParcelTileCount(int iParcelId) const;
 
     //! Draw the map (and any attached animations)
     /*!
@@ -263,6 +269,7 @@ protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
     void _readTileIndex(const unsigned char* pData, int& iX, int &iY) const;
+    int _getParcelTileCount(int iParcelId) const;
 
     THMapNode* m_pCells;
     THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
@@ -276,6 +283,7 @@ protected:
     int m_aiHeliportX[4];
     int m_aiHeliportY[4];
     int m_iPlotCount;
+    int* m_pParcelTileCounts;
 };
 
 enum eTHMapScanlineIteratorDirection

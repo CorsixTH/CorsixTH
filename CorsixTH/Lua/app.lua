@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 5
+local SAVEGAME_VERSION = 6
 
 class "App"
 
@@ -718,6 +718,7 @@ function App:afterLoad()
   end
   self.world.savegame_version = new
   
+  self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
 end

@@ -47,6 +47,7 @@ THMap::THMap()
     m_pOriginalCells = NULL;
     m_pBlocks = NULL;
     m_pPlotOwner = NULL;
+    m_pParcelTileCounts = NULL;
 }
 
 THMap::~THMap()
@@ -54,6 +55,7 @@ THMap::~THMap()
     delete[] m_pCells;
     delete[] m_pOriginalCells;
     delete[] m_pPlotOwner;
+    delete[] m_pParcelTileCounts;
 }
 
 bool THMap::setSize(int iWidth, int iHeight)
@@ -136,7 +138,9 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     }
     m_iPlotCount = 0;
     delete[] m_pPlotOwner;
+    delete[] m_pParcelTileCounts;
     m_pPlotOwner = NULL;
+    m_pParcelTileCounts = NULL;
 
     THMapNode *pNode = m_pCells;
     THMapNode *pOriginalNode = m_pOriginalCells;
@@ -226,6 +230,11 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     // TODO: Assign plots 1 - N to players 1 - N, others to 0
 
     updateShadows();
+
+    m_pParcelTileCounts = new int[m_iPlotCount];
+    for(int i = 1; i < m_iPlotCount; ++i)
+        m_pParcelTileCounts[i] = _getParcelTileCount(i);
+
     return true;
 }
 
@@ -253,6 +262,29 @@ bool THMap::getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const
     if(pX) *pX = m_aiHeliportX[iPlayer];
     if(pY) *pY = m_aiHeliportY[iPlayer];
     return true;
+}
+
+int THMap::getParcelTileCount(int iParcelId) const
+{
+    if(iParcelId < 1 || iParcelId >= m_iPlotCount)
+    {
+        return 0;
+    }
+    return m_pParcelTileCounts[iParcelId];
+}
+
+int THMap::_getParcelTileCount(int iParcelId) const
+{
+    int iTiles = 0;
+    for(int iY = 0; iY < m_iHeight; ++iY)
+    {
+        for(int iX = 0; iX < m_iWidth; ++iX)
+        {
+            const THMapNode* pNode = getNodeUnchecked(iX, iY);
+            if(pNode->iParcelId == iParcelId) iTiles++;
+        }
+    }
+    return iTiles;
 }
 
 THMapNode* THMap::getNode(int iX, int iY)
@@ -620,7 +652,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     lua_State *L = pWriter->getStack();
     IntegerRunLengthEncoder oEncoder;
 
-    uint32_t iVersion = 2;
+    uint32_t iVersion = 3;
     pWriter->writeVUInt(iVersion);
     pWriter->writeVUInt(m_iPlayerCount);
     for(int i = 0; i < m_iPlayerCount; ++i)
@@ -634,6 +666,10 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     for(int i = 0; i < m_iPlotCount; ++i)
     {
         pWriter->writeVUInt(m_pPlotOwner[i]);
+    }
+    for(int i = 0; i < m_iPlotCount; ++i)
+    {
+        pWriter->writeVUInt(m_pParcelTileCounts[i]);
     }
     pWriter->writeVUInt(m_iWidth);
     pWriter->writeVUInt(m_iHeight);
@@ -688,14 +724,14 @@ void THMap::depersist(LuaPersistReader *pReader)
 
     uint32_t iVersion;
     if(!pReader->readVUInt(iVersion)) return;
-    if(iVersion != 2)
+    if(iVersion != 3)
     {
         if(iVersion < 2 || iVersion == 128)
         {
             luaL_error(L, "TODO: Write code to load map data from earlier "
                 "savegame versions (if really neccessary).");
         }
-        else
+        else if(iVersion > 3)
         {
             luaL_error(L, "Cannot load savegame from a newer version.");
         }
@@ -714,6 +750,16 @@ void THMap::depersist(LuaPersistReader *pReader)
     for(int i = 0; i < m_iPlotCount; ++i)
     {
         if(!pReader->readVUInt(m_pPlotOwner[i])) return;
+    }
+    delete[] m_pParcelTileCounts;
+    m_pParcelTileCounts = new int[m_iPlotCount];
+
+    if(iVersion >= 3)
+    {
+        for(int i = 0; i < m_iPlotCount; ++i)
+        {
+            if(!pReader->readVUInt(m_pParcelTileCounts[i])) return;
+        }
     }
 
     if(!pReader->readVUInt(iWidth) || !pReader->readVUInt(iHeight))
@@ -769,6 +815,12 @@ void THMap::depersist(LuaPersistReader *pReader)
         pNode->iBlock[2] = oDecoder.read();
         pNode->iParcelId = oDecoder.read();
         pNode->iFlags = oDecoder.read();
+    }
+
+    if(iVersion < 3)
+    {
+        for(int i = 1; i < m_iPlotCount; ++i)
+            m_pParcelTileCounts[i] = _getParcelTileCount(i);
     }
 }
 
