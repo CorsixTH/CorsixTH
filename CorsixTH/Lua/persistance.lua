@@ -105,7 +105,13 @@ local function MakePermanentObjectsTable(inverted)
       end
     end
   end
-  permanent[TheApp.ui.menu_bar] = "TheApp.ui.menu_bar"
+  -- If loading a game from the main menu, there will be no menu bar, so make one
+  local menu_bar = TheApp.ui and TheApp.ui.menu_bar
+  if not menu_bar then
+    -- The menu bar wants a UI, but it is happy with just something naming an App
+    menu_bar = UIMenuBar({app = TheApp})
+  end
+  permanent[menu_bar] = "TheApp.ui.menu_bar"
   
   -- Graphics bits are persisted as instructions to reload them or re-use if already loaded
   if inverted then

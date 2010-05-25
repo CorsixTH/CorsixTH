@@ -41,8 +41,6 @@ function UILoadGame:buttonClicked(num)
   local filename = self.items[num + self.scrollbar.value - 1].name .. ".sav"
   local app = self.ui.app
 
-  app:loadLevel(1) -- hack
-
   local status, err = pcall(app.load, filename)
   if not status then
     err = _S.errors.load_prefix .. err
