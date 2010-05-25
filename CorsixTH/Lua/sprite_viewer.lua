@@ -32,6 +32,8 @@ local sprite_table_paths = {}
 local sprite_table_index
 local sprite_table
 local is_complex = false
+local wdown = false
+local sdown = false
 local y_off
 local old_event_handlers
 
@@ -73,16 +75,25 @@ local function DoKey(self, code)
       LoadTable(sprite_table_index + 1, is_complex)
     end
   elseif code == string.byte"w" then
-    y_off = y_off + 32
+    wdown = true
     need_draw = true
   elseif code == string.byte"s" then
-    y_off = y_off - 32
+    sdown = true
     need_draw = true
   elseif code == string.byte"q" then
     app.eventHandlers = old_event_handlers
     need_draw = false
   end
   return need_draw
+end
+
+local function DoKeyUp(self, code)
+    if code == string.byte"w" then
+        wdown = false
+    end
+    if code == string.byte"s" then
+        sdown = false
+    end
 end
 
 local function Render(canvas)
@@ -129,9 +140,22 @@ local function DoFrame(app)
   canvas:endFrame()
 end
 
+local function DoTimer(app)
+  if wdown then
+    y_off = y_off + 32
+    need_draw = true
+  end
+  if sdown then
+    y_off = y_off - 32
+    need_draw = true
+  end
+  return need_draw
+end
+
 old_event_handlers = app.eventHandlers
 app.eventHandlers = {
   frame = DoFrame,
   keydown = DoKey,
-  timer = function() return need_draw end,
+  keyup = DoKeyUp,
+  timer = DoTimer,
 }
