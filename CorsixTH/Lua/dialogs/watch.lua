@@ -18,9 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Timer / clock / watch / countdown dialog for emergencies / level start
 class "UIWatch" (Window)
 
---! Timer / clock / watch / countdown dialog for emergencies / level start
+--!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
 function UIWatch:UIWatch(ui, count_type)
   self:Window()
   

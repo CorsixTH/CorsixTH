@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
 
+--! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)
 
 function UIMenuBar:UIMenuBar(ui)

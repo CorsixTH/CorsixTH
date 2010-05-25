@@ -22,6 +22,7 @@ local TH = require "TH"
 local math_floor
     = math.floor
 
+--! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 
 --TODO: interact with patients in the queue

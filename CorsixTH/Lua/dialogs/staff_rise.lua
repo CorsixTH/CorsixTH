@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local math_floor
     = math.floor
 
+--! Dialog for staff member requesting a salaray raise.
 class "UIStaffRise" (Window)
 
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)

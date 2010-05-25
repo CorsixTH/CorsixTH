@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local TH = require "TH"
 
+--! The (ideally) helpful advisor who pops up from the bottom dialog during a game.
 class "UIAdviser" (Window)
 
 function UIAdviser:UIAdviser(ui)

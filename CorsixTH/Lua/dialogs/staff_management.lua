@@ -22,6 +22,7 @@ dofile "dialogs/fullscreen"
 
 local math_floor = math.floor
     
+--! Staff management screen
 class "UIStaffManagement" (UIFullscreen)
 
 function UIStaffManagement:UIStaffManagement(ui, disease_selection)

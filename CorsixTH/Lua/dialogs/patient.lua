@@ -27,6 +27,7 @@ local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_cir
   return (x - 55)^2 + (y - 254)^2 < 38^2
 end
 
+--! Individual patient information dialog
 class "UIPatient" (Window)
 
 function UIPatient:UIPatient(ui, patient)

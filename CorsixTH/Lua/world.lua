@@ -101,6 +101,7 @@ function World:World(app)
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
+--! Register key shortcuts for controling the world (game speed, etc.)
 function World:setUI(ui)
   self.ui = ui
   self.ui:addKeyHandler("P", self, self.pauseOrUnpause, "Pause")
@@ -368,6 +369,7 @@ function World:markRoomAsBuilt(room)
   end
 end
 
+--! Clear all internal caches which are dependant upon map state / object position
 function World:clearCaches()
   self.idle_cache = {}
 end
@@ -838,6 +840,11 @@ function World:newObject(id, ...)
   return entity
 end
 
+--! Notify the world of an object being removed from a tile
+--! See also `World:addObjectToTile`
+--!param object (Object) The object being removed.
+--!param x (integer) The X-coordinate of the tile which the object was on
+--!param y (integer) The Y-coordinate of the tile which the object was on
 function World:removeObjectFromTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
@@ -859,6 +866,11 @@ function World:removeObjectFromTile(object, x, y)
   return false
 end
 
+--! Notify the world of a new object being placed somewhere in the world
+--! See also `World:removeObjectFromTile`
+--!param object (Object) The object being placed
+--!param x (integer) The X-coordinate of the tile being placed upon
+--!param y (integer) The Y-coordinate of the tile being placed upon
 function World:addObjectToTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
@@ -1051,7 +1063,8 @@ function World:getNearestRoomNeedingStaff(humanoid)
   return candidates[1].room
 end
 
---! Log a message in the game log.
+--! Append a message to the game log.
+--!param message (string) The message to add.
 function World:gameLog(message)
   self.game_log[#self.game_log + 1] = message
 end
