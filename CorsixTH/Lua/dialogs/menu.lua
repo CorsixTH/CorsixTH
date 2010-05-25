@@ -446,11 +446,6 @@ function UIMenuBar:makeMenu(app)
       end
       return menu
     end
-    local function boolean_runtime_config(option)
-      return not not app.runtime_config[option], function(item)
-        app.runtime_config[option] = item.checked
-      end
-    end
     options
     :appendCheckItem(_S.menu_options.sound,         true, playSounds)
     :appendCheckItem(_S.menu_options.announcements, true, playAnno)
@@ -459,9 +454,15 @@ function UIMenuBar:makeMenu(app)
     :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
     :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
     :appendItem(_S.menu_options.jukebox, function() self.ui:addWindow(UIJukebox(app)) end)
-    :appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
   end
-
+  
+  local function boolean_runtime_config(option)
+    return not not app.runtime_config[option], function(item)
+      app.runtime_config[option] = item.checked
+    end
+  end
+  options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
+  
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)
@@ -469,7 +470,7 @@ function UIMenuBar:makeMenu(app)
       return app.world:isCurrentSpeed(speed)
     end
   end
-
+  
   options:appendMenu(_S.menu_options.game_speed, UIMenu()
     :appendCheckItem(_S.menu_options_game_speed.pause,              rate("Pause"))
     :appendCheckItem(_S.menu_options_game_speed.slowest,            rate("Slowest"))
