@@ -94,6 +94,18 @@ fax = {
     "Yes, please show me the ropes.",
     "Nope, I already know how to do this.",
   },
+  choices = {
+    return_to_main_menu = "Return to the main menu",
+    accept_new_level = "Move on to the next level",
+    decline_new_level = "Continue playing a while longer",
+  },
+}
+
+letter = {
+  dear_player = "Dear %s",
+  custom_level_completed = "Well done! You've completed all goals on this custom level!",
+  return_to_main_menu = "Would you like to return to the main menu or continue playing?",
+  level_lost = "Bummer! You failed the level. Better luck next time!",
 }
 
 misc.not_yet_implemented = "(not yet implemented)"
@@ -170,6 +182,11 @@ errors = {
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
+  cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+}
+
+tooltip.information = {
+  close = "Close the information dialog",
 }
 
 totd_window = {

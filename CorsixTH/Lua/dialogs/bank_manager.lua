@@ -190,6 +190,8 @@ function UIBankManager:showStatistics()
   local btn = self.close_button
   btn.x = btn.x - 6
   btn.y = btn.y - 6
+  -- Change tooltip to say that the statement screen is closed.
+  btn:setTooltip(_S.tooltip.statement.close)
 end
 
 function UIBankManager:hideStatistics()
@@ -203,6 +205,8 @@ function UIBankManager:hideStatistics()
   local btn = self.close_button
   btn.x = btn.x + 6
   btn.y = btn.y + 6
+  -- Change the tooltip back
+  btn:setTooltip(_S.tooltip.bank_manager.close)
 end
 
 function UIBankManager:showGraph()

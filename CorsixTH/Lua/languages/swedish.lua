@@ -89,6 +89,18 @@ fax = {
     utf8 "Ja, det behövs.",
     utf8 "Det är lugnt, jag kan sånt här.",
   },
+  choices = {
+    return_to_main_menu = utf8 "Gå till huvudmenyn",
+    accept_new_level = utf8 "Gå vidare till nästa bana",
+    decline_new_level = utf8 "Fortsätt spela ett tag till",
+  },
+}
+
+letter = {
+  dear_player = utf8 "Käre %s",
+  custom_level_completed = utf8 "Bra gjort! Du klarade alla mål på den här specialbanan!",
+  return_to_main_menu = utf8 "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
+  level_lost = utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
 }
 
 misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
@@ -146,6 +158,16 @@ tooltip.menu_list_window = {
   back = utf8 "Stäng detta fönster",
 }
 
+options_window = {
+  fullscreen = utf8 "Helskärm",
+  back = "Tillbaka",
+}
+
+tooltip.options_window = {
+  fullscreen_button = utf8 "Klicka för att gå mellan fönster och helskärm",
+  back = utf8 "Stäng alternativmenyn",
+}
+
 errors = {
   dialog_missing_graphics = utf8 "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = utf8 "Fel när spelet skulle sparas: ",
@@ -155,6 +177,11 @@ errors = {
 
 information = {
   custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
+  cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
+}
+
+tooltip.information = {
+  close = utf8 "Stäng informationsrutan",
 }
 
 totd_window = {

@@ -1617,7 +1617,7 @@ newspaper = {
 
 -- 39: letters
 -- Letters are organized in another level, just like menu strings.
-local L = {{}}
+local L = {{""}}
 do
   local i = 1
   local section = 1
@@ -1626,11 +1626,15 @@ do
     if s == "." then
       section = section + 1
       L[section] = {}
+      L[section][1] = ""
     elseif s == ".." then
       L[section] = nil
       break
     else
-      L[section][#L[section] + 1] = s
+      L[section][#L[section]] = L[section][#L[section]] .. s
+      if s:find("//") then
+        L[section][#L[section] + 1] = ""
+      end
     end
     i = i + 1
   end

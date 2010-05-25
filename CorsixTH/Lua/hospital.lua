@@ -471,7 +471,7 @@ local competitors = {
   "JAYNE",
   "CORSIX",
   "ROUJIN",
-  "LEGO3",
+  "EDVIN",
 }
 
 function AIHospital:AIHospital(competitor, ...)
