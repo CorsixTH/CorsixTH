@@ -338,6 +338,11 @@ function GameUI:onTick()
       dy = dy + self.tick_scroll_amount.y
     end
     
+    -- Faster scrolling with shift key
+    if self.buttons_down.shift then
+      mult = mult * 2
+    end
+
     self:scrollMap(dx * mult, dy * mult)
     repaint = true
   else
