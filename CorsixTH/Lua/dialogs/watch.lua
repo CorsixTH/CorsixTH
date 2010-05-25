@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 class "UIWatch" (Window)
 
+--! Timer / clock / watch / countdown dialog for emergencies / level start
 function UIWatch:UIWatch(ui, count_type)
   self:Window()
   
