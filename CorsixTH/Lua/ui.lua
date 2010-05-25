@@ -384,7 +384,7 @@ function UI:onKeyDown(code)
     TheApp.running = false
     return true
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
-    self:toggleFullScreen()
+    self:toggleFullscreen()
     return true
   elseif key == "S" then -- Take a screenshot
      -- Find an index for screenshot which is not already used
