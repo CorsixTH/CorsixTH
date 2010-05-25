@@ -244,9 +244,15 @@ end
 
 function UIBankManager:increaseLoan()
   local hospital = self.ui.hospital
-  if hospital.loan < 20000 then -- TODO: Variate this based on something?
-    hospital.loan = hospital.loan + 5000
-    hospital:receiveMoney(5000, _S.transactions.bank_loan)
+  local max_loan = 20000 -- TODO: Variate this based on something?
+  if hospital.loan < max_loan then
+    local amount = math.min(5000, max_loan - hospital.loan)
+    if self.buttons_down.ctrl then
+      -- Take maximum loan amount if ctrl is down
+      amount = max_loan - hospital.loan
+    end
+    hospital.loan = hospital.loan + amount
+    hospital:receiveMoney(amount, _S.transactions.bank_loan)
   else
     self.ui:playSound("Wrong2.wav")
   end
@@ -254,9 +260,16 @@ end
 
 function UIBankManager:decreaseLoan()
   local hospital = self.ui.hospital
-  if hospital.loan > 0 and hospital.balance >= 5000 then
-    hospital.loan = hospital.loan - 5000
-    hospital:spendMoney(5000, _S.transactions.loan_repayment)
+  local amount = 5000
+  if self.buttons_down.ctrl then
+    -- Repay as much as possible in increments of 5000
+    if hospital.balance > 5000 then
+      amount = math.min(hospital.loan, math.floor(hospital.balance / 5000) * 5000)
+    end
+  end
+  if hospital.loan > 0 and hospital.balance >= amount then
+    hospital.loan = hospital.loan - amount
+    hospital:spendMoney(amount, _S.transactions.loan_repayment)
   else
     self.ui:playSound("Wrong2.wav")
   end
