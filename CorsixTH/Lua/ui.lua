@@ -574,3 +574,11 @@ function UI:getCursorPosition(window)
   end
   return x, y
 end
+
+function UI:afterLoad(old, new)
+  if old < 5 then
+    self.editing_allowed = true
+  end
+
+  Window:afterLoad(old, new)
+end
