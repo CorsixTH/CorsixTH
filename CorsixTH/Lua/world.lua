@@ -166,7 +166,10 @@ function World:initLevel(app)
       self.available_rooms[room.id] = room
     end
   end
-  
+  self:determineWinningConditions()
+end
+
+function World:determineWinningConditions()
   -- Determine winning and losing conditions
   local win = self.map.level_config.win_criteria
   local lose = self.map.level_config.lose_criteria
@@ -1265,6 +1268,7 @@ function World:afterLoad(old, new)
   
   if old < 7 then
     self.level_criteria = local_criteria_variable
+    self:determineWinningConditions()
   end
   self.savegame_version = new
 end

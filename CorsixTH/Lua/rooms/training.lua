@@ -117,8 +117,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         humanoid:queueAction{name = "meander"}
       end
     end
-  else
-    -- TODO: allow Handyman to water plants
+  elseif humanoid.humanoid_class ~= "Handyman" then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(_S.rooms_long.training_room))
     humanoid:setNextAction(self:createLeaveAction())
     humanoid:queueAction{name = "meander"}
