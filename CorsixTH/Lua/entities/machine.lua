@@ -109,6 +109,7 @@ function Machine:createRepairAction(handyman)
       action_use.prolonged_usage = false
     end,
     after_use = after_use,
+    is_job = handyman,
   }
 end
 

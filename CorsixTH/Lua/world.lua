@@ -1115,13 +1115,22 @@ function World:callForStaff(room, repair_object, urgent)
       room.needs_repair = handyman
       repair_object:setRepairing(true)
       local x, y = repair_object:getRepairTile()
-      handyman:queueAction{
-        name = "walk",
-        x = x,
-        y = y,
-      }
+      -- Enter the room
+      local action1 = room:createEnterAction()
+      action1.is_job = handyman
+      -- There may be many tasks for the handyman that need attention almost at the same time, make sure
+      -- this handyman really is occupied.
+      handyman.action_queue[1].is_job = handyman
+      
+      handyman:setNextAction(action1)
+      -- Repair the object
+      handyman:queueAction{name = "walk", x = x, y = y, is_job = handyman}
       handyman:queueAction(repair_object:createRepairAction(handyman))
-      handyman:queueAction(room:createLeaveAction())
+      -- Leave the room
+      local action2 = room:createLeaveAction()
+      action2.is_job = handyman
+      handyman:queueAction(action2)
+      -- Resume idling
       handyman:queueAction{name = "meander"}
       handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
         :format(repair_object.object_type.name))

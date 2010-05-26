@@ -203,6 +203,10 @@ function Plant:createHandymanActions(handyman)
     in_a_room = true
   end
   self.reserved_for = handyman
+  -- Many plants in the vicinity may ask almost at the same time, make sure
+  -- this handyman is occupied
+  handyman.action_queue[1].is_job = handyman
+  
   handyman:setNextAction{name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
 
   handyman:queueAction{
@@ -212,10 +216,12 @@ function Plant:createHandymanActions(handyman)
     dx = ux - self.tile_x, 
     dy = uy - self.tile_y,
     must_happen = true,
+    is_job = self,
   }
   if in_a_room then
-    local rx, ry = self:getRoom():getEntranceXY()
-    handyman:queueAction{name = "walk", x = rx, y = ry, is_leaving = true}
+    local action = self:getRoom():createLeaveAction()
+    action.is_job = self
+    handyman:queueAction(action)
   end
   handyman:queueAction{name = "meander"}
 end
@@ -232,10 +238,15 @@ function Plant:getBestUsageTileXY(from_x, from_y)
   local res_dir = direction
   local function shortest(distance)
     if distance and distance < shortest_path then
-      shortest_path = distance
-      rx = lx
-      ry = ly
-      res_dir = direction
+      -- Only take this route if there is no wall between the plant and the tile.
+      local room_here = self:getRoom()
+      local room_there = self.world:getRoom(lx, ly)
+      if room_here == room_there or (not room_here and not room_there) then
+        shortest_path = distance
+        rx = lx
+        ry = ly
+        res_dir = direction
+      end
     end
   end
   shortest(world:getPathDistance(from_x, from_y, lx, ly))
