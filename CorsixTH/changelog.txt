@@ -7,7 +7,8 @@ Version Beta 3 - released 2010-0?-??
 * Feature: Handymen can have their priorities changed.
 * Feature: Rooms can be edited.
 * Feature: Each level has its own goals, shown at the beginning of the level and
-  in the new status dialog.
+  in the new status dialog. When the goals have been achieved the player may go on
+  to the next one.
 * Feature: Savegames are no longer limited to 8 slots + autosave. New dialogs for
   loading and saving were created to cope with arbitrary number of savegames.
 * Fix: Staff needed in rooms is handled much better.

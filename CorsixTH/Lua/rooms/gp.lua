@@ -149,6 +149,9 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction{name = "meander", count = 2}
     patient:queueAction{name = "idle"}
   end
+
+  -- Maybe the staff member can go somewhere else
+  self:findWorkForStaff()
 end
 
 function GPRoom:onHumanoidLeave(humanoid)

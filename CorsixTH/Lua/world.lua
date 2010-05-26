@@ -33,6 +33,16 @@ dofile "hospital"
 
 class "World"
 
+local local_criteria_variable = {
+  {name = "reputation",       icon = 10, formats = 2}, 
+  {name = "balance",          icon = 11, formats = 2}, 
+  {name = "percentage_cured", icon = 12, formats = 2}, 
+  {name = "num_cured" ,       icon = 13, formats = 2}, 
+  {name = "percentage_killed",icon = 14, formats = 2}, 
+  {name = "value",            icon = 15, formats = 2}, 
+  {name = "population",       icon = 11, formats = 1},
+}
+  
 function World:World(app)
   self.map = app.map
   self.wall_types = app.walls
@@ -54,6 +64,8 @@ function World:World(app)
   self.hour = 0
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
+  -- List of which goal criterion means what, and what number the corresponding icon has.
+  self.level_criteria = local_criteria_variable
   self:initLevel(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
@@ -154,6 +166,46 @@ function World:initLevel(app)
       self.available_rooms[room.id] = room
     end
   end
+  
+  -- Determine winning and losing conditions
+  local win = self.map.level_config.win_criteria
+  local lose = self.map.level_config.lose_criteria
+  local active = {}
+  local total = 0
+  local criteria = self.level_criteria
+  for _, values in pairs(win) do
+    if values.Criteria ~= 0 then
+      total = total + 1
+      local criterion = criteria[values.Criteria].name
+      active[criterion] = {
+        win_value = values.Value, 
+        boundary = values.Bound, 
+        criterion = values.Criteria,
+        number = total,
+      }
+      active[#active + 1] = active[criterion]
+    end
+  end
+  for _, values in pairs(lose) do
+    if values.Criteria ~= 0 then
+      local criterion = criteria[values.Criteria].name
+      if not active[criterion] then
+        active[criterion] = {number = #active + 1}
+        active[#active + 1] = active[criterion]
+      end
+      active[criterion].lose_value = values.Value
+      active[criterion].boundary = values.Bound
+      active[criterion].criterion = values.Criteria
+      active[active[criterion].number].lose_value = values.Value
+      active[active[criterion].number].boundary = values.Bound
+      active[active[criterion].number].criterion = values.Criteria
+    end
+  end
+  
+  -- Order the criteria (some icons in the progress report shouldn't be next to each other)
+  table.sort(active, function(a,b) return a.criterion < b.criterion end)
+  self.goals = active
+  self.winning_goals = total
 end
 
 function World:initCompetitors()
@@ -164,6 +216,13 @@ function World:initCompetitors()
     if value.Playing == 1 then
       self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self)
     end
+  end
+end
+
+--! Initializes variables carried from previous levels
+function World:initFromPreviousLevel(carry)
+  for key, value in pairs(carry) do
+    self[key] = value
   end
 end
 
@@ -463,18 +522,21 @@ function World:onTick()
         local text = {_S.information.custom_game}
         if type(self.map.level_number) == "number" then
           text = _S.introduction_texts["level" .. self.map.level_number]
+          if self.map.level_number == 1 then
+            -- Ask if the player wants a tutorial
+            local message = {
+              {             text = _S.fax.tutorial[1]},
+              {offset =  8, text = _S.fax.tutorial[2]},
+              choices = {
+                {text = _S.fax.tutorial[3], choice = "tutorial"},
+                {text = _S.fax.tutorial[4], choice = "no_tutorial"},
+              },
+            }
+            self.ui.bottom_panel:queueMessage("information", message)
+          end
         end
         self.ui:addWindow(UIInformation(self.ui, text))
       end
-      local message = {
-        {             text = _S.fax.tutorial[1]},
-        {offset =  8, text = _S.fax.tutorial[2]},
-        choices = {
-          {text = _S.fax.tutorial[3], choice = "tutorial"},
-          {text = _S.fax.tutorial[4], choice = "no_tutorial"},
-        },
-      }
-      self.ui.bottom_panel:queueMessage("information", message)
     end
     self.tick_timer = self.tick_rate
     self.hour = self.hour + self.ticks_per_tick
@@ -565,6 +627,91 @@ function World:onEndMonth()
     end
   end
   self.current_tick_entity = nil
+  
+  -- Check if a player has won the level.
+  for i = 1,4 do
+    local state = self:checkWinningConditions(i)
+    if state == "win" then
+      if i == 1 then -- Player won. TODO: Needs to be changed for multiplayer
+        local text = {}
+        local choice_text, choice
+        if tonumber(self.map.level_number) then
+          local no = tonumber(self.map.level_number)
+          for key, value in ipairs(_S.letter[self.map.level_number]) do
+            text[key] = value
+          end
+          text[1] = text[1]:format(self.hospitals[i].name)
+          text[2] = text[2]:format(10000) -- TODO: With the fame/shame screen and scoring comes salary.
+          text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
+          if no < 12 then
+            choice_text = _S.fax.choices.accept_new_level
+            choice = 1
+          else
+            choice_text = _S.fax.choices.return_to_main_menu
+            choice = 2
+          end
+        else
+          -- TODO: When custom levels can contain sentences this should be changed to something better.
+          text[1] = _S.letter.dear_player:format(self.hospitals[i].name)
+          text[2] = _S.letter.custom_level_completed
+          text[3] = _S.letter.return_to_main_menu
+          choice_text = _S.fax.choices.return_to_main_menu
+          choice = 2
+        end
+        local message = {
+          {text = text[1]},
+          {text = text[2]},
+          {text = text[3]},
+          choices = {
+            {text = choice_text,  choice = choice == 1 and "accept_new_level" or "return_to_main_menu"},
+            {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
+          },
+        }
+        self.ui.bottom_panel:queueMessage("information", message)
+      end
+    elseif state == "lose" then
+      if i == 1 then -- TODO: Multiplayer
+        self.ui.app:loadMainMenu(_S.letter.level_lost)
+      end
+    end
+  end
+end
+
+--! Checks if all goals have been achieved or if the player has lost. Returns "win" if
+-- all goals are completed, "lose" if the player is below any minimum value and "nothing"
+-- otherwise.
+--!param player_no The index of the player to check in the world's list of hospitals
+function World:checkWinningConditions(player_no)
+  local hosp = self.hospitals[player_no]
+  local criteria = self.level_criteria
+  local active = self.goals
+  -- Default is to win. As soon as a goals that doesn't support this is found it is changed.
+  local result = "win"
+  
+  -- Go through the goals
+  for i, tab in ipairs(self.goals) do
+    local criterion = criteria[tab.criterion].name
+    local modifier = 0
+    local current = hosp[criterion]
+    if active[criterion].lose_value then
+      local lose = active[criterion].lose_value
+      modifier = 1 - ((current - lose)/(active[criterion].boundary - lose))
+      -- Is this a minimum that has been passed?
+      if modifier > 1 then
+        result = "lose"
+        break
+      end
+    end
+    if active[criterion].win_value then
+      modifier = current/active[criterion].win_value
+      -- Is this goal not fulfilled yet?
+      if modifier < 1 then
+        result = "nothing"
+        break
+      end
+    end
+  end
+  return result
 end
 
 -- Called immediately prior to the ingame year changing.
@@ -1046,7 +1193,7 @@ end
 function World:getNearestRoomNeedingStaff(humanoid)
   local candidates = {}
   for _, room in ipairs(self.rooms) do
-    if room.door.queue:reportedSize() >= 1 and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+    if room:isWaitingToGetStaff(humanoid) then
       local door_x, door_y = room:getEntranceXY()
       candidates[#candidates + 1] = {
         room = room,
@@ -1116,5 +1263,8 @@ function World:afterLoad(old, new)
     self.hospitals[1].value = value
   end
   
+  if old < 7 then
+    self.level_criteria = local_criteria_variable
+  end
   self.savegame_version = new
 end

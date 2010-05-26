@@ -138,7 +138,8 @@ function Map:load(level, level_name, level_file)
   else
     -- We're loading a custom level.
     self.level_name = level_name
-    self.level_number = level_name
+    self.level_number = level
+    self.level_file = level_file
     local data, errors = self:getRawData(level_file)
     if data then
       i, objects = self.th:load(data)

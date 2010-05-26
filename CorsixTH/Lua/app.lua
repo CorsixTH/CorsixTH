@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 6
+local SAVEGAME_VERSION = 7
 
 class "App"
 
@@ -213,7 +213,7 @@ local menu_bg_sizes = {
   {640, 480},
 }
 
-function App:loadMainMenu()
+function App:loadMainMenu(message)
   -- Unload ui, world and map
   self.ui = nil
   self.world = nil
@@ -235,6 +235,11 @@ function App:loadMainMenu()
     self.ui.background = self.gfx:loadRaw("mainmenu" .. bg_size[1], bg_size[1], bg_size[2], "Bitmap")
     self.ui.background_width = bg_size[1]
     self.ui.background_height = bg_size[2]
+  end
+  
+  -- If a message was supplied, show it
+  if message then
+    self.ui:addWindow(UIInformation(self.ui, {message}))
   end
 end
 

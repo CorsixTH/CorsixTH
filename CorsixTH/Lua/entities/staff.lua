@@ -376,9 +376,8 @@ function Staff:isIdle()
       return false
     end
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
-    -- TODO: There's a short moment where a patient is in neither of the three: when he is called to enter the room, until he enters the room.
-    --       See issue #76.
-    if self.humanoid_class ~= "Handyman" and room:getPatientCount() == 0 and room.door.queue:reportedSize() == 0 and room.door.queue.expected_count == 0 
+
+    if self.humanoid_class ~= "Handyman" and room:getPatientCount() == 0 and room.door.queue:patientSize() == 0
     and not (room.door.reserved_for and class.is(room.door.reserved_for, Patient) or false) then
       return true
     end

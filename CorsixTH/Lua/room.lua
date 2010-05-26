@@ -136,6 +136,25 @@ function Room:dealtWithPatient(patient)
     patient:queueAction{name = "meander", count = 2}
     patient:queueAction{name = "idle"}
   end
+
+  -- The staff member(s) might be needed somewhere else.
+  self:findWorkForStaff()
+end
+
+--! Checks if the room still needs the staff in it and otherwise 
+-- sends them away if they're needed somewhere else.
+function Room:findWorkForStaff()
+  -- It the the staff member is idle we can send him/her somewhere else
+  for humanoid in pairs(self.humanoids) do
+    -- Don't check handymen
+    if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" and humanoid:isIdle() then
+      local room = self.world:getNearestRoomNeedingStaff(humanoid)
+      if room then
+        humanoid:setNextAction(self:createLeaveAction())
+        humanoid:queueAction(room:createEnterAction())
+      end
+    end
+  end
 end
 
 local profile_attributes = {
@@ -157,7 +176,7 @@ function Room:getMissingStaff(criteria, extended_search)
     if self.approaching_staff and extended_search then
       -- Also check for staff currently heading for this room
       for humanoid in pairs(self.approaching_staff) do
-        if humanoid:fulfillsCriterium(attribute) then
+        if humanoid:fulfillsCriterium(attribute) and humanoid ~= extended_search then
           count = count - 1
         end
       end
@@ -177,7 +196,8 @@ function Room:testStaffCriteria(criteria, extra_humanoid, extended_search)
   -- if extra_humanoid is not nil, then returns true if the given humanoid
   -- would assist in satisfying the given criteria, and false if they would not.
   -- If extended_search is true staff heading for the room are also considered.
-  local missing = self:getMissingStaff(criteria, extended_search)
+  -- If extended_search is a humanoid that single humanoid will not count.
+  local missing = self:getMissingStaff(criteria, extended_search and extra_humanoid or nil)
   
   if extra_humanoid then
     local class = extra_humanoid.humanoid_class
@@ -252,7 +272,7 @@ function Room:onHumanoidEnter(humanoid)
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
-    if not self:staffNeededInRoom(humanoid) then
+    if not self:staffFitsInRoom(humanoid) then
       self.humanoids[humanoid] = true
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction{name = "meander"}
@@ -276,12 +296,23 @@ function Room:onHumanoidEnter(humanoid)
   end
 end
 
-function Room:staffNeededInRoom(staff)
+-- Returns false if the room is already full of staff or if the given member of staff cannot help out.
+-- Otherwise returns true.
+function Room:staffFitsInRoom(staff)
   local criteria = self:getMaximumStaffCriteria()
-  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff) then
+  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff, true) then
     return false
   end
   return true
+end
+
+-- Tests whether this room is awaiting more staff to be able to do business
+function Room:isWaitingToGetStaff(staff)
+  if self.door.queue:patientSize() == 0 
+  and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false) then
+    return false
+  end
+  return self:staffFitsInRoom(staff)
 end
 
 function Room:commandEnteringStaff(humanoid)
@@ -292,7 +323,7 @@ function Room:commandEnteringStaff(humanoid)
     for staff, _ in pairs(self.approaching_staff) do
       self.approaching_staff[humanoid] = nil
       -- Another member of staff just entered, reroute others going to this room.
-      if staff ~= humanoid and not self:staffNeededInRoom(staff) then
+      if staff ~= humanoid and not self:staffFitsInRoom(staff) then
         local room = staff:getRoom()
         if room then
           -- just leave the room, then meander
@@ -377,7 +408,7 @@ function Room:onHumanoidLeave(humanoid)
   else
     -- Staff is leaving. If there is still a need for this room (people are in the queue) then call
     -- someone new.
-    if #self.door.queue > 0 then
+    if self.door.queue:patientSize() > 0 then
       self.world:callForStaff(self)
     end
   end
@@ -419,7 +450,7 @@ local tile_factor = 10     -- how many tiles further are we willing to walk for 
 local readiness_bonus = 50 -- how many tiles further are we willing to walk if the room has all the required staff
 function Room:getUsageScore()
   local queue = self.door.queue
-  local score = queue:reportedSize() + queue.expected_count + self:getPatientCount() - self.maximum_patients
+  local score = queue:patientSize() + self:getPatientCount() - self.maximum_patients
   score = score * tile_factor
   if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
     score = score - readiness_bonus

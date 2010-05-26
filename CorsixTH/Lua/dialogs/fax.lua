@@ -159,6 +159,16 @@ function UIFax:choice(choice)
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
     self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
     self.ui.adviser:say(_S.adviser.information.emergency)
+  elseif choice == "accept_new_level" then
+    if tonumber(self.ui.app.world.map.level_number) then
+      local carry_to_next_level = {room_built = self.ui.app.world.room_built}
+      self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1)
+      TheApp.world:initFromPreviousLevel(carry_to_next_level)
+    else
+      -- TODO: Allow some kind of custom campaign with custom levels
+    end
+  elseif choice == "return_to_main_menu" then
+    self.ui.app:quit()
   end
   self:close()
 end

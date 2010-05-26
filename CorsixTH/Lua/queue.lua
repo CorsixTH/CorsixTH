@@ -83,6 +83,16 @@ function Queue:reportedSize()
   return self.reported_size
 end
 
+function Queue:expectedSize()
+  return self.expected_count
+end
+
+-- Returns how many patients are queued or expected
+function Queue:patientSize()
+  return self.reported_size + self.expected_count
+end
+
+
 function Queue:reportedHumanoid(index)
   return self[#self - self.reported_size + index]
 end
@@ -120,6 +130,15 @@ function Queue:push(humanoid, callbacks_on)
       index = index - 1
     end
     increment_reported_size = false
+  end
+  if humanoid.is_emergency then -- Emergencies get put before all the other patients, but AFTER currently queued emergencies.
+    while index > 1 do
+      local before = self[index - 1]
+      if before.is_emergency then
+        break
+      end
+      index = index - 1
+    end
   end
   if increment_reported_size then
     self.reported_size = self.reported_size + 1

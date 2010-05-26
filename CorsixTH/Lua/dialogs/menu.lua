@@ -393,13 +393,34 @@ function UIMenuBar:makeMenu(app)
       end
     end)
   end
-  
-  self:addMenu(_S.menu.file, UIMenu()
-    :appendMenu("  ".. _S.main_menu.new_game:upper() .."  ", levels_menu)
-    :appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
+  local function restart()
+    local level = self.ui.app.map.level_number
+    local name, file
+    if not tonumber(level) then
+      name = self.ui.app.map.level_name
+      file = self.ui.app.map.level_file
+    end
+    if level and name and not file then
+      self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
+      return
+    end
+    local status, err = pcall(app.loadLevel, app, level, name, file)
+    if not status then
+      err = "Error while loading level: " .. err
+      print(err)
+      self.ui:addWindow(UIInformation(self.ui, {err}))
+    end
+  end
+  local menu = UIMenu()
+  if self.ui.app.config.debug then
+    menu:appendMenu("  ".. _S.main_menu.new_game:upper() .."  ", levels_menu)
+  end
+  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
+    :appendItem(_S.menu_file.restart, restart)
     :appendItem(_S.menu_file.quit, function() app:quit() end)
-  )
+  self:addMenu(_S.menu.file, menu)
+  
   local options = UIMenu()
   if app.audio.has_bg_music then
     local function vol(level, setting)

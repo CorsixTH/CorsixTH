@@ -24,17 +24,6 @@ local TH = require "TH"
 --! Progress Report fullscreen window (check level goals, competitors and alerts).
 class "UIProgressReport" (UIFullscreen)
 
--- List of which criterion means what, and what number the corresponding icon has.
-local criteria = {
-  {name = "reputation",       icon = 10, formats = 2}, 
-  {name = "balance",          icon = 11, formats = 2}, 
-  {name = "percentage_cured", icon = 12, formats = 2}, 
-  {name = "num_cured" ,       icon = 13, formats = 2}, 
-  {name = "percentage_killed",icon = 14, formats = 2}, 
-  {name = "value",            icon = 15, formats = 2}, 
-  {name = "population",       icon = 11, formats = 1},
-}
-
 function UIProgressReport:UIProgressReport(ui)
   self:UIFullscreen(ui)
 
@@ -62,45 +51,13 @@ function UIProgressReport:UIProgressReport(ui)
   -- Selected hospital number
   self.selected = 1
   
-  -- Determine winning and losing conditions
-  local win = world.map.level_config.win_criteria
-  local lose = world.map.level_config.lose_criteria
-  local active = {}
-  local total = 0
-  for _, values in pairs(win) do
-    if values.Criteria ~= 0 then
-      total = total + 1
-      local criterion = criteria[values.Criteria].name
-      active[criterion] = {
-        win_value = values.Value, 
-        boundary = values.Bound, 
-        criterion = values.Criteria,
-        number = total,
-      }
-      active[#active + 1] = active[criterion]
-    end
-  end
-  for _, values in pairs(lose) do
-    if values.Criteria ~= 0 then
-      local criterion = criteria[values.Criteria].name
-      if not active[criterion] then
-        active[criterion] = {number = #active + 1}
-        active[#active + 1] = active[criterion]
-      end
-      active[criterion].lose_value = values.Value
-      active[criterion].boundary = values.Bound
-      active[criterion].criterion = values.Criteria
-      active[active[criterion].number].lose_value = values.Value
-      active[active[criterion].number].boundary = values.Bound
-      active[active[criterion].number].criterion = values.Criteria
-    end
-  end
-  
-  -- Order the criteria (some icons can't be next to each other)
-  table.sort(active, function(a,b) return a.criterion < b.criterion end)
+  -- Get goals
+  local active = world.goals
+  local total = world.winning_goals
 
   -- Add the icons for the criteria
   local x = 263
+  local criteria = world.level_criteria
   for i, tab in ipairs(active) do
     local crit = criteria[tab.criterion].name
     local str = _S.tooltip.status[crit]
@@ -194,6 +151,7 @@ function UIProgressReport:draw(canvas, x, y)
   local hospital = self.ui.hospital
   local world    = hospital.world
   local active = self.criteria
+  local criteria = world.level_criteria
   
   -- Names of the players playing
   local ly = 73

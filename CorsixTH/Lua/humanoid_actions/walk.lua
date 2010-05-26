@@ -212,7 +212,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   and humanoid.humanoid_class ~= "Handyman" then
     -- A member of staff is entering, but is maybe no longer needed 
     -- in this room?
-    if not room:staffNeededInRoom(humanoid) then
+    if not room:staffFitsInRoom(humanoid) then
       humanoid:queueAction({name = "idle"},0)
       humanoid:setTilePositionSpeed(x1, y1)
       humanoid:setNextAction({name = "idle", count = 10},0)
