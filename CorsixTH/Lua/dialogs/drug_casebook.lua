@@ -40,16 +40,14 @@ function UICasebook:UICasebook(ui, disease_selection)
     return
   end
   
-  self.default_button_sound = "selectx.wav"
-  
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   self:updateDiseaseList()
   
   -- Buttons
   self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.casebook.close)
-  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up):setSound"pagetur2.wav"
-  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down):setSound"pagetur2.wav"
+  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up)
+  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down)
   self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay):setTooltip(_S.tooltip.casebook.increase)
   self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
   -- TODO: concentrate research button;  :setTooltip(_S.tooltip.casebook.research)
@@ -195,6 +193,9 @@ function UICasebook:scrollUp()
   if self.selected_index > 1 then
     self.selected_index = self.selected_index - 1
     self.selected_disease = self.names_sorted[self.selected_index]
+    self.ui:playSound("pagetur2.wav")
+  else
+    self.ui:playSound("Wrong2.wav")
   end
   self:updateIcons()
 end
@@ -203,6 +204,9 @@ function UICasebook:scrollDown()
   if self.selected_index < #self.names_sorted then
     self.selected_index = self.selected_index + 1
     self.selected_disease = self.names_sorted[self.selected_index]
+    self.ui:playSound("pagetur2.wav")
+  else
+    self.ui:playSound("Wrong2.wav")
   end
   self:updateIcons()
 end
@@ -218,6 +222,9 @@ function UICasebook:increasePay()
   price = price + amount
   if price > 2 then
     price = 2
+    self.ui:playSound("Wrong2.wav")
+  else
+    self.ui:playSound("selectx.wav")
   end
   self.casebook[self.selected_disease].price = price
 end
@@ -233,6 +240,9 @@ function UICasebook:decreasePay()
   price = price - amount
   if price < 0.5 then
     price = 0.5
+    self.ui:playSound("Wrong2.wav")
+  else
+    self.ui:playSound("selectx.wav")
   end
   self.casebook[self.selected_disease].price = price
 end
