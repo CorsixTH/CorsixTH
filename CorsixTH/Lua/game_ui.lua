@@ -194,6 +194,27 @@ function GameUI:onCursorWorldPositionChange()
     end
     self.bottom_panel:setDynamicInfo(nil)
   end
+
+  -- Queueing icons over patients
+  local room = self.app.world:getRoom(self:ScreenToWorld(self.cursor_x, self.cursor_y))
+  if room ~= self.cursor_room then
+    -- Unset queue mood for patients queueing the old room
+    if self.cursor_room then
+      local queue = self.cursor_room.door.queue
+      for _, humanoid in ipairs(queue) do
+        humanoid:setMood("queue", "deactivate")
+      end
+    end
+    -- Set queue mood for patients queueing the new room
+    if room then
+      local queue = room.door.queue
+      for _, humanoid in ipairs(queue) do
+        humanoid:setMood("queue", "activate")
+      end
+    end
+    self.cursor_room = room
+  end
+
   -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
     for key, value in pairs(entity.active_moods) do
