@@ -149,6 +149,7 @@ function Queue:pop()
   end
   local oldfront = self[1]
   table.remove(self, 1)
+  oldfront:setMood("queue", "deactivate")
   local callbacks = self.callbacks[oldfront]
   if callbacks then
     callbacks:onLeaveQueue(oldfront)
@@ -171,6 +172,7 @@ function Queue:remove(index)
   if index > #self - self.reported_size then
     self.reported_size = self.reported_size - 1
   end
+  value:setMood("queue", "deactivate")
   table.remove(self, index)
   self.callbacks[value] = nil
   for i = #self, index, -1 do
