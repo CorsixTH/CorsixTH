@@ -336,7 +336,10 @@ function UI:toggleFullscreen()
   self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
   self.app.gfx:updateTarget(self.app.video)
   self.app.video:startFrame()
-  self.cursor:use(self.app.video) -- Redraw cursor
+  -- Redraw cursor
+  local cursor = self.cursor
+  self.cursor = nil
+  self:setCursor(cursor)
 end
 
 function UI:onKeyDown(code)
