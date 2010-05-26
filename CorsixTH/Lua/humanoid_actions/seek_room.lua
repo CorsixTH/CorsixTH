@@ -44,7 +44,7 @@ local function action_seek_room_find_room(action, humanoid)
         table.remove(available_rooms, room_at_index)
         -- If the room can be built, set the flag for it.
         local diag = humanoid.world.available_rooms[room_type]
-        if diag and diag.discovered then
+        if diag and humanoid.hospital.discovered_rooms[diag] then
           action.diagnosis_exists = room_type
         end
       end

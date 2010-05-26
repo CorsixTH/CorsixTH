@@ -57,7 +57,8 @@ function Hospital:Hospital(world)
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   self.policies = {}
-  self.discovered_diseases = {}
+  self.discovered_diseases = {} -- a list
+  self.discovered_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are true or nil
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
@@ -103,6 +104,17 @@ function Hospital:Hospital(world)
         pseudo = disease.pseudo, -- Diagnosis is pseudo
       }
       self.disease_casebook[disease.id] = info
+    end
+  end
+end
+
+function Hospital:afterLoad(old, new)
+  if old < 8 then
+    -- The list of discovered rooms was not saved. The best we can do is make everything
+    -- discovered which is available for the level.
+    self.discovered_rooms = {}
+    for _, room in ipairs(self.world.available_rooms) do
+      self.discovered_rooms[room] = true
     end
   end
 end

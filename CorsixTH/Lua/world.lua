@@ -76,6 +76,9 @@ function World:World(app)
   
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
+  for _, hospital in ipairs(self.hospitals) do
+    self:initDiscoveredRooms(hospital)
+  end
   -- TODO: Add (working) AI and/or multiplayer hospitals
   
   self.wall_id_by_block_id = {}
@@ -157,11 +160,6 @@ function World:initLevel(app)
       avail = obj[room.level_config_id].AvailableForLevel
     end
     if avail == 1 then
-      if obj and room.level_config_id and obj[room.level_config_id] then
-        room.discovered = obj[room.level_config_id].StartAvail == 1 and true or false
-      else
-        room.discovered = true
-      end
       self.available_rooms[#self.available_rooms + 1] = room
       self.available_rooms[room.id] = room
     end
@@ -209,6 +207,19 @@ function World:determineWinningConditions()
   table.sort(active, function(a,b) return a.criterion < b.criterion end)
   self.goals = active
   self.winning_goals = total
+end
+
+function World:initDiscoveredRooms(hospital)
+  local obj = self.map.level_config.objects
+  for _, room in ipairs(self.available_rooms) do
+    local is_discovered = true
+    if obj and room.level_config_id and obj[room.level_config_id] then
+      is_discovered = obj[room.level_config_id].StartAvail == 1
+    end
+    if is_discovered then
+      hospital.discovered_rooms[room] = true
+    end
+  end
 end
 
 function World:initCompetitors()
@@ -720,11 +731,15 @@ end
 -- Called immediately prior to the ingame year changing.
 function World:onEndYear()
   -- TODO: Temporary, until research is in the game. This is just so that something happens...
-  for _, room in pairs(self.available_rooms) do
-    if not room.discovered then
-      room.discovered = true
-      self.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
-      break
+  for _, hospital in ipairs(self.hospitals) do
+    for _, room in pairs(self.available_rooms) do
+      if not hospital.discovered_rooms[room] then
+        hospital.discovered_rooms[room] = true
+        if hospital == self.ui.hospital then
+          self.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
+        end
+        break
+      end
     end
   end
 end
@@ -1239,7 +1254,7 @@ function World:dumpGameLog()
 end
 
 function World:afterLoad(old, new)
-  for _, cat in pairs({self.entities, self.rooms}) do
+  for _, cat in pairs({self.entities, self.rooms, self.hospitals}) do
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
