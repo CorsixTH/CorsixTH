@@ -45,8 +45,6 @@ function UIResizable:UIResizable(ui, width, height, colour)
   
   self:setSize(width, height)
   self:setColour(colour)
-  
-  self:onChangeResolution()
 end
 
 function UIResizable:setSize(width, height)
