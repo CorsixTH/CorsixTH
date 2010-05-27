@@ -595,6 +595,7 @@ function Textbox:Textbox()
   self.abort_callback = nil
   self.button = nil
   self.text = nil
+  self.allowed_input = nil
   self.visible = nil
   self.enabled = nil
   self.active = nil
@@ -605,6 +606,14 @@ local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
 function Textbox:clicked()
   self.active = self.button.toggled
   if self.active then
+    -- Unselect any other textbox
+    for _, textbox in ipairs(self.panel.window.textboxes) do
+      if textbox ~= self and textbox.active then
+        textbox.button:toggle()
+        textbox:clicked()
+      end
+    end
+    -- Update text
     self.panel:setLabel(self.text)
   else
     if self.text == "" and self.abort_callback then
@@ -621,31 +630,37 @@ function Textbox:input(code)
     return false
   end
   -- Upper- and lowercase letters
-  for i = string.byte"a", string.byte"z" do
-    if code == i then
-      local char = string.char(i)
-      if self.panel.window.buttons_down.shift then
-        char = string.upper(char)
+  if self.allowed_input.alpha then
+    for i = string.byte"a", string.byte"z" do
+      if code == i then
+        local char = string.char(i)
+        if self.panel.window.buttons_down.shift then
+          char = string.upper(char)
+        end
+        self.text = self.text .. char
+        self.panel:setLabel(self.text)
+        return true
       end
-      self.text = self.text .. char
-      self.panel:setLabel(self.text)
-      return true
     end
   end
   -- Numbers
-  for i = string.byte"0", string.byte"9" do
-    if code == i then
-      self.text = self.text .. string.char(i)
-      self.panel:setLabel(self.text)
-      return true
+  if self.allowed_input.numbers then
+    for i = string.byte"0", string.byte"9" do
+      if code == i then
+        self.text = self.text .. string.char(i)
+        self.panel:setLabel(self.text)
+        return true
+      end
     end
   end
   -- Space and hyphen
-  if code == string.byte" " or
-    code == string.byte"-" then
-    self.text = self.text .. string.char(code)
-      self.panel:setLabel(self.text)
-    return true
+  if self.allowed_input.misc then
+    if code == string.byte" " or
+      code == string.byte"-" then
+      self.text = self.text .. string.char(code)
+        self.panel:setLabel(self.text)
+      return true
+    end
   end
   -- Backspace (delete last char)
   if code == 8 then
@@ -674,6 +689,22 @@ function Textbox:input(code)
   return false
 end
 
+--[[ Limit input handled by textbox to specific classes of characters
+!param types (string or table) One of, or an table of any number of input types
+! valid input types are:
+!  "alpha": Letters (lower and uppercase)
+!  "numbers": 0-9
+!  "misc": other characters, currently space and hyphen
+]]
+function Textbox:allowedInput(types)
+  if type(types) ~= "table" then types = {types} end
+  self.allowed_input = {}
+  for _, t in ipairs(types) do
+    self.allowed_input[t] = true
+  end
+  return self
+end
+
 --[[ Convert a static panel into a textbox.
 ! Textboxes consist of the panel given as a parameter, which is made into a
 ToggleButton automatically, and handle keyboard input while active.
@@ -688,6 +719,7 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
     abort_callback = abort_callback,
     button = nil, -- placeholder
     text = "",
+    allowed_input = {"alpha", "numbers", "misc"},
     visible = true,
     enabled = true,
     active = false,

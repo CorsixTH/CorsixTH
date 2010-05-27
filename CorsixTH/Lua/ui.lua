@@ -300,7 +300,7 @@ function UI:onChangeResolution()
 end
 
 function UI:registerTextBox(box)
-  self.textboxes[#self.textboxes] = box
+  self.textboxes[#self.textboxes + 1] = box
 end
 
 function UI:unregisterTextBox(box)
@@ -389,7 +389,7 @@ function UI:onKeyDown(code)
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
     self:toggleFullscreen()
     return true
-  elseif key == "S" then -- Take a screenshot
+  elseif self.buttons_down.ctrl and key == "S" then -- Ctrl + S: Take a screenshot
      -- Find an index for screenshot which is not already used
     local i = 0
     local filename
