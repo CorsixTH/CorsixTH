@@ -44,8 +44,6 @@ function UIBankManager:UIBankManager(ui)
     return
   end
   
-  self.default_button_sound = "selectx.wav"
-  
   -- Button so that the user can click in the middle and get the statistics page and
   -- vice versa
   self.stat_button = self:addPanel(0, 230, 100)
@@ -176,10 +174,11 @@ function UIBankManager:showStatistics()
   if self.closed then
     return
   end
-	-- close any open graphs
-	if self.graph.visible then
-		self:returnFromGraph()
-	end
+  self.ui:playSound("selectx.wav")
+  -- close any open graphs
+  if self.graph.visible then
+    self:returnFromGraph()
+  end
   self.showingStatistics = true
   self.return_from_stat_button.enabled = true
   self.stat_button.enabled = false
@@ -195,6 +194,7 @@ function UIBankManager:showStatistics()
 end
 
 function UIBankManager:hideStatistics()
+  self.ui:playSound("selectx.wav")
   self.showingStatistics = false
   self.return_from_stat_button.enabled = false
   self.stat_button.enabled = true
@@ -210,6 +210,7 @@ function UIBankManager:hideStatistics()
 end
 
 function UIBankManager:showGraph()
+  self.ui:playSound("selectx.wav")
   self.graph:setTooltip(_S.tooltip.bank_manager.graph:format(self.ui.hospital.insurance[self.chosen_insurance]))
   self.graph.visible = true
   self.return_from_graph_button.visible = true
@@ -237,6 +238,7 @@ function UIBankManager:showGraph3()
 end
 
 function UIBankManager:returnFromGraph()
+  self.ui:playSound("selectx.wav")
   self.graph.visible = false
   self.return_from_graph_button.visible = false
   self.return_from_graph_button.enabled = false
@@ -257,6 +259,7 @@ function UIBankManager:increaseLoan()
     end
     hospital.loan = hospital.loan + amount
     hospital:receiveMoney(amount, _S.transactions.bank_loan)
+    self.ui:playSound("selectx.wav")
   else
     self.ui:playSound("Wrong2.wav")
   end
@@ -274,6 +277,7 @@ function UIBankManager:decreaseLoan()
   if hospital.loan > 0 and hospital.balance >= amount then
     hospital.loan = hospital.loan - amount
     hospital:spendMoney(amount, _S.transactions.loan_repayment)
+    self.ui:playSound("selectx.wav")
   else
     self.ui:playSound("Wrong2.wav")
   end
