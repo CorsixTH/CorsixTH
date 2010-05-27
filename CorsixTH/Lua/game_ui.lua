@@ -196,7 +196,13 @@ function GameUI:onCursorWorldPositionChange()
   end
 
   -- Queueing icons over patients
-  local room = self.app.world:getRoom(self:ScreenToWorld(self.cursor_x, self.cursor_y))
+  local wx, wy = self:ScreenToWorld(self.cursor_x, self.cursor_y)
+  wx = math.floor(wx)
+  wy = math.floor(wy)
+  local room
+  if wx > 0 and wx > 0 and wx < self.app.map.width and wy < self.app.map.height then
+    room = self.app.world:getRoom(wx, wy)
+  end
   if room ~= self.cursor_room then
     -- Unset queue mood for patients queueing the old room
     if self.cursor_room then
