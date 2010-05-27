@@ -719,7 +719,11 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
     abort_callback = abort_callback,
     button = nil, -- placeholder
     text = "",
-    allowed_input = {"alpha", "numbers", "misc"},
+    allowed_input = {
+      alpha = true,
+      numbers = true,
+      misc = true,
+    },
     visible = true,
     enabled = true,
     active = false,
