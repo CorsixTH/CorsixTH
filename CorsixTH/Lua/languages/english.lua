@@ -36,6 +36,7 @@ object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
 menu_options.lock_windows = "  LOCK WINDOWS  "
+menu_options.settings = "  SETTINGS  "
 menu_options_game_speed.pause = "  PAUSE  "
 
 -- The demo does not contain this string

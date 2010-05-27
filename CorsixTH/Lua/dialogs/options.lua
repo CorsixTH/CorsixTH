@@ -53,11 +53,12 @@ local col_shadow = {
   blue = 178,
 }
 
-function UIOptions:UIOptions(ui)
+function UIOptions:UIOptions(ui, mode)
   self:UIResizable(ui, 320, 240, col_bg)
 
   local app = ui.app
-  self.modal_class = "main menu"
+  self.mode = mode
+  self.modal_class = mode == "menu" and "main menu" or "options"
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
@@ -116,5 +117,7 @@ end
 
 function UIOptions:close()
   UIResizable.close(self)
-  self.ui:addWindow(UIMainMenu(self.ui))
+  if self.mode == "menu" then
+    self.ui:addWindow(UIMainMenu(self.ui))
+  end
 end

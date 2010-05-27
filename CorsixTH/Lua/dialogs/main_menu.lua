@@ -89,7 +89,7 @@ function UIMainMenu:buttonNewGame()
 end
 
 function UIMainMenu:buttonCustomGame()
-  local window = UICustomGame(self.ui, "menu")
+  local window = UICustomGame(self.ui)
   self.ui:addWindow(window)
 end
 
@@ -99,7 +99,7 @@ function UIMainMenu:buttonLoadGame()
 end
 
 function UIMainMenu:buttonOptions()
-  local window = UIOptions(self.ui)
+  local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
 end
 

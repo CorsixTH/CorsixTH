@@ -25,7 +25,7 @@ local pathsep = package.config:sub(1, 1)
 --! Custom Game Window
 class "UICustomGame" (UIMenuList)
 
-function UICustomGame:UICustomGame(ui, mode)
+function UICustomGame:UICustomGame(ui)
 
   local path = debug.getinfo(1, "S").source:sub(2, -28)
 
@@ -58,7 +58,7 @@ function UICustomGame:UICustomGame(ui, mode)
       end
     end
   end
-  self:UIMenuList(ui, mode, _S.custom_game_window.caption, items)
+  self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items)
 end
   
 function UICustomGame:buttonClicked(num)
