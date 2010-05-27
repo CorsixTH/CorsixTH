@@ -292,7 +292,34 @@ function UI:disableKeyboardRepeat()
   end
 end
 
+local menu_bg_sizes = { -- Available menu background sizes
+  {1280, 960},
+  {1024, 768},
+  {800, 600},
+  {640, 480},
+}
+
+function UI:setMenuBackground()
+  local bg_size
+  for _, size in ipairs(menu_bg_sizes) do
+    if size[1] <= self.app.config.width and size[2] <= self.app.config.height then
+      bg_size = size
+      break
+    end
+  end
+  
+  if bg_size then
+    self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[1], bg_size[1], bg_size[2], "Bitmap")
+    self.background_width = bg_size[1]
+    self.background_height = bg_size[2]
+  end
+end
+
 function UI:onChangeResolution()
+  -- If we are in the main menu (== no world), reselect the background
+  if not self.app.world then
+    self:setMenuBackground()
+  end
   -- Inform windows of resolution change
   for _, window in ipairs(self.windows) do
     window:onChangeResolution()
@@ -310,6 +337,25 @@ function UI:unregisterTextBox(box)
       break
     end
   end
+end
+
+function UI:changeResolution(width, height)
+  self.app.video:endFrame()
+  self.app.config.width = width
+  self.app.config.height = height
+  local video = TH.surface(width, height, unpack(self.app.modes))
+  if not video then
+    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ".")
+  end
+  self.app.video = video
+  self.app.gfx:updateTarget(self.app.video)
+  self.app.video:startFrame()
+  -- Redraw cursor
+  local cursor = self.cursor
+  self.cursor = nil
+  self:setCursor(cursor)
+  
+  self:onChangeResolution()
 end
 
 function UI:toggleFullscreen()

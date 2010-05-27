@@ -168,11 +168,17 @@ tooltip.menu_list_window = {
 
 options_window = {
   fullscreen = "Fullscreen",
+  width = "Width",
+  height = "Height",
+  change_resolution = "Change resolution",
   back = "Back",
 }
 
 tooltip.options_window = {
   fullscreen_button = "Click to toggle fullscreen mode",
+  width = "Enter desired screen width",
+  height = "Enter desired screen height",
+  change_resolution = "Change the window resolution to the dimensions entered on the left",
   back = "Close the options window",
 }
 
@@ -181,6 +187,7 @@ errors = {
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
   map_file_missing = "Could not find the map file %s for this level!",
+  minimum_screen_size = "Please enter a screen size of at least 640x480.",
 }
 
 information = {

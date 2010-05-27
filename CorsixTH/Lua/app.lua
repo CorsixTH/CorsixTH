@@ -206,13 +206,6 @@ function App:init()
   return true
 end
 
-local menu_bg_sizes = {
-  {1280, 960},
-  {1024, 768},
-  {800, 600},
-  {640, 480},
-}
-
 function App:loadMainMenu(message)
   -- Unload ui, world and map
   self.ui = nil
@@ -220,22 +213,9 @@ function App:loadMainMenu(message)
   self.map = nil
 
   self.ui = UI(self)
+  self.ui:setMenuBackground()
   self.ui:addWindow(UIMainMenu(self.ui))
   self.ui:addWindow(UITipOfTheDay(self.ui))
-  
-  local bg_size
-  for _, size in ipairs(menu_bg_sizes) do
-    if size[1] <= self.config.width and size[2] <= self.config.height then
-      bg_size = size
-      break
-    end
-  end
-  
-  if bg_size then
-    self.ui.background = self.gfx:loadRaw("mainmenu" .. bg_size[1], bg_size[1], bg_size[2], "Bitmap")
-    self.ui.background_width = bg_size[1]
-    self.ui.background_height = bg_size[2]
-  end
   
   -- If a message was supplied, show it
   if message then

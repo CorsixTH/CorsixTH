@@ -35,6 +35,24 @@ local col_button = {
   blue = 84,
 }
 
+local col_textbox = {
+  red = 0,
+  green = 0,
+  blue = 0,
+}
+
+local col_highlight = {
+  red = 174,
+  green = 166,
+  blue = 218,
+}
+
+local col_shadow = {
+  red = 134,
+  green = 126,
+  blue = 178,
+}
+
 function UIOptions:UIOptions(ui)
   self:UIResizable(ui, 320, 240, col_bg)
 
@@ -46,20 +64,50 @@ function UIOptions:UIOptions(ui)
   
   -- Window parts definition
   
+  -- Fullscreen
   self.fullscreen_button =
     self:addBevelPanel(20, 20, 20, 20, col_button):makeToggleButton(0, 0, 20, 20, nil, self.buttonFullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
   if app.fullscreen then
     self.fullscreen_button:toggle()
   end
-  
   self:addBevelPanel(50, 20, 250, 20, col_bg):setLabel(_S.options_window.fullscreen).lowered = true
   
+  -- Screen resolution
+  local --[[persistable:options_width_textbox_reset]] function width_textbox_reset()
+    if self.width_textbox.text == "" then
+      self.width_textbox.panel:setLabel(_S.options_window.width)
+    end
+  end
+  local --[[persistable:options_height_textbox_reset]] function height_textbox_reset()
+    if self.height_textbox.text == "" then
+      self.height_textbox.panel:setLabel(_S.options_window.height)
+    end
+  end
+  self.width_textbox = self:addBevelPanel(20, 50, 50, 20, col_textbox, col_highlight, col_shadow):setLabel(_S.options_window.width):setTooltip(_S.tooltip.options_window.width)
+    :makeTextbox(width_textbox_reset, width_textbox_reset):allowedInput("numbers")
+  self.height_textbox = self:addBevelPanel(80, 50, 50, 20, col_textbox, col_highlight, col_shadow):setLabel(_S.options_window.height):setTooltip(_S.tooltip.options_window.height)
+    :makeTextbox(height_textbox_reset, height_textbox_reset):allowedInput("numbers")
+  self.resolution_button =
+    self:addBevelPanel(140, 50, 160, 20, col_bg):setLabel(_S.options_window.change_resolution)
+    :makeButton(0, 0, 160, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.change_resolution)
+  
+  -- "Back" button
   self:addBevelPanel(20, 180, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
 function UIOptions:buttonFullscreen(checked)
   self.ui:toggleFullscreen()
+end
+
+function UIOptions:buttonResolution()
+  local width, height = tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0
+  if width < 640 or height < 480 then
+    local err = {_S.errors.minimum_screen_size}
+    self.ui:addWindow(UIInformation(self.ui, err))
+  else
+    self.ui:changeResolution(width, height)
+  end
 end
 
 function UIOptions:buttonBack()
