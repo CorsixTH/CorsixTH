@@ -34,7 +34,7 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   
   local app = ui.app
   self.ui = ui
-  self.resizable = true
+  self.resizable = false
   self:setDefaultPosition(20, -20)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
