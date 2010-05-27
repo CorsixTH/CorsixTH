@@ -232,6 +232,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     updateShadows();
 
     m_pParcelTileCounts = new int[m_iPlotCount];
+    m_pParcelTileCounts[0] = 0;
     for(int i = 1; i < m_iPlotCount; ++i)
         m_pParcelTileCounts[i] = _getParcelTileCount(i);
 
@@ -753,6 +754,7 @@ void THMap::depersist(LuaPersistReader *pReader)
     }
     delete[] m_pParcelTileCounts;
     m_pParcelTileCounts = new int[m_iPlotCount];
+    m_pParcelTileCounts[0] = 0;
 
     if(iVersion >= 3)
     {
