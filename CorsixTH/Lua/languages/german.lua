@@ -53,7 +53,11 @@ object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
 menu_options.lock_windows = "  FENSTER FESTHALTEN  "
+menu_options.settings = "  EINSTELLUNGEN  "
 menu_options_game_speed.pause        = "  PAUSE"
+
+-- The demo does not contain this string
+menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
   transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE",
@@ -111,6 +115,18 @@ fax = {
     utf8 "Ja, bitte führen Sie mich herum.",
     utf8 "Nö, ich weiß schon wie hier alles abläuft.",
   },
+  choices = {
+    return_to_main_menu = utf8 "Ins Hauptmenü zurückkehren",
+    accept_new_level = utf8 "Zum nächsten Level wechseln",
+    decline_new_level = "Noch ein wenig im aktuellen Level weiterspielen",
+  },
+}
+
+letter = {
+  dear_player = "Hallo %s",
+  custom_level_completed = "Gut gemacht! Sie haben alle Ziele dieses eigenen Levels erreicht!",
+  return_to_main_menu = utf8 "Möchten Sie ins Hauptmenü zurückkehren, oder weiterspielen?",
+  level_lost = utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
 }
 
 misc.not_yet_implemented = "(noch nicht implementiert)"
@@ -168,15 +184,37 @@ tooltip.menu_list_window = {
   back = utf8 "Das Fenster schließen",
 }
 
+options_window = {
+  fullscreen = "Vollbild",
+  width = "Breite",
+  height = utf8 "Höhe",
+  change_resolution = utf8 "Auflösung ändern",
+  back = utf8 "Zurück",
+}
+
+tooltip.options_window = {
+  fullscreen_button = "Klicken, um zwischen Vollbild- und Fenstermodus zu wechseln",
+  width = utf8 "Gewünschte Bildschirmbreite eingeben",
+  height = utf8 "Gewünschte Bildschirmhöhe eingeben",
+  change_resolution = utf8 "Die Fensterauflösung auf die links eingegebenen Werte ändern",
+  back = utf8 "Das Optionsfenster schließen",
+}
+
 errors = {
   dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
   save_prefix = "Fehler beim Speichern: ",
   load_prefix = "Fehler beim Laden: ",
   map_file_missing = utf8 "Konnte die Kartendatei %s für das Level nicht finden!",
+  minimum_screen_size = utf8 "Bitte eine Auflösung von mindestens 640x480 eingeben.",
 }
 
 information = {
   custom_game = utf8 "Willkommen zu CorsixTH. Viel Spaß mit diesem eigenen Level!",
+  cannot_restart = "Leider wurde dieses eigene Level vor Implementierung des Neustart-Features gespeichert.",
+}
+
+tooltip.information = {
+  close = utf8 "Das Informationsfenster schließen",
 }
 
 totd_window = {
