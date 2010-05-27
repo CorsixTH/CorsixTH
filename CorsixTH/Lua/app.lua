@@ -249,8 +249,10 @@ end
 function App:loadLevel(level, ...)
   -- Check that we can load the data before unloading current map
   local new_map = Map(self)
-  local map_objects = new_map:load(level, ...)
-  
+  local map_objects, errors = new_map:load(level, ...)
+  if not map_objects then
+    error(errors)
+  end
   -- Unload ui, world and map
   self.ui = nil
   self.world = nil

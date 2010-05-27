@@ -131,8 +131,6 @@ function Map:load(level, level_name, level_file)
         self.level_config.computer["13"] = {Playing = 1}
         self.level_config.computer["14"] = {Playing = 1}
         self.level_config.computer["15"] = {Playing = 1}
-      else
-        self.level_number = level_name
       end
     end
   else

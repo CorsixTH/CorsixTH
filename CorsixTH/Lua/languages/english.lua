@@ -38,6 +38,9 @@ tooltip.objects.litter = "Litter: Left on the floor by a patient because he did 
 menu_options.lock_windows = "  LOCK WINDOWS  "
 menu_options_game_speed.pause = "  PAUSE  "
 
+-- The demo does not contain this string
+menu_file.restart = "  RESTART  "
+
 menu_debug = {
   transparent_walls           = "  TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",

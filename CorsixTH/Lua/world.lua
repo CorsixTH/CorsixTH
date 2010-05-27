@@ -174,32 +174,40 @@ function World:determineWinningConditions()
   local active = {}
   local total = 0
   local criteria = self.level_criteria
-  for _, values in pairs(win) do
-    if values.Criteria ~= 0 then
-      total = total + 1
-      local criterion = criteria[values.Criteria].name
-      active[criterion] = {
-        win_value = values.Value, 
-        boundary = values.Bound, 
-        criterion = values.Criteria,
-        number = total,
-      }
-      active[#active + 1] = active[criterion]
-    end
-  end
-  for _, values in pairs(lose) do
-    if values.Criteria ~= 0 then
-      local criterion = criteria[values.Criteria].name
-      if not active[criterion] then
-        active[criterion] = {number = #active + 1}
+  -- There might be no winning criteria (i.e. the demo), then
+  -- we don't have to worry about the progress report dialog
+  -- since it doesn't exist anyway.
+  if win then
+    for _, values in pairs(win) do
+      if values.Criteria ~= 0 then
+        total = total + 1
+        local criterion = criteria[values.Criteria].name
+        active[criterion] = {
+          win_value = values.Value, 
+          boundary = values.Bound, 
+          criterion = values.Criteria,
+          number = total,
+        }
         active[#active + 1] = active[criterion]
       end
-      active[criterion].lose_value = values.Value
-      active[criterion].boundary = values.Bound
-      active[criterion].criterion = values.Criteria
-      active[active[criterion].number].lose_value = values.Value
-      active[active[criterion].number].boundary = values.Bound
-      active[active[criterion].number].criterion = values.Criteria
+    end
+  end
+  -- Likewise there might be no losing criteria (i.e. the demo)
+  if lose then
+    for _, values in pairs(lose) do
+      if values.Criteria ~= 0 then
+        local criterion = criteria[values.Criteria].name
+        if not active[criterion] then
+          active[criterion] = {number = #active + 1}
+          active[#active + 1] = active[criterion]
+        end
+        active[criterion].lose_value = values.Value
+        active[criterion].boundary = values.Bound
+        active[criterion].criterion = values.Criteria
+        active[active[criterion].number].lose_value = values.Value
+        active[active[criterion].number].boundary = values.Bound
+        active[active[criterion].number].criterion = values.Criteria
+      end
     end
   end
   

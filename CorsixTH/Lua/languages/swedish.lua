@@ -33,6 +33,8 @@ tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten 
 menu_options.lock_windows = utf8 "  LÅS FÖNSTER  "
 menu_options_game_speed.pause = "  PAUSA  "
 
+menu_file.restart = "  STARTA OM  "
+
 menu_debug = {
   transparent_walls           = utf8 "  TRANSPARENTA VÄGGAR  ",
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",

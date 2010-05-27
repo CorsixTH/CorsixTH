@@ -387,7 +387,7 @@ function UIMenuBar:makeMenu(app)
     levels_menu:appendItem(("  L%i  "):format(L), function()
       local status, err = pcall(app.loadLevel, app, L)
       if not status then
-        err = "Error while loading level: " .. err
+        err = _S.errors.load_prefix .. err
         print(err)
         self.ui:addWindow(UIInformation(self.ui, {err}))
       end
