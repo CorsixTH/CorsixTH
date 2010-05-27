@@ -51,6 +51,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows)
   }
   self:UIResizable(ui, 200, 280, self.col_bg)
 
+  self.default_button_sound = "selectx.wav"
   self.items = items
   self.num_rows = num_rows and num_rows or 10
   

@@ -64,6 +64,7 @@ function UIOptions:UIOptions(ui, mode)
   self:setDefaultPosition(0.5, 0.25)
   
   -- Window parts definition
+  self.default_button_sound = "selectx.wav"
   
   -- Fullscreen
   self.fullscreen_button =
