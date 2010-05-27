@@ -709,7 +709,8 @@ function World:checkWinningConditions(player_no)
   local active = self.goals
   -- Default is to win. As soon as a goals that doesn't support this is found it is changed.
   local result = "win"
-  
+  -- If there are no goals at all, don't prompt the player each month that he/she has won.
+  local sandbox = true
   -- Go through the goals
   for i, tab in ipairs(self.goals) do
     local criterion = criteria[tab.criterion].name
@@ -725,6 +726,7 @@ function World:checkWinningConditions(player_no)
       end
     end
     if active[criterion].win_value then
+      sandbox = false
       modifier = current/active[criterion].win_value
       -- Is this goal not fulfilled yet?
       if modifier < 1 then
@@ -733,7 +735,11 @@ function World:checkWinningConditions(player_no)
       end
     end
   end
-  return result
+  if sandbox then
+    return "nothing"
+  else
+    return result
+  end
 end
 
 -- Called immediately prior to the ingame year changing.
