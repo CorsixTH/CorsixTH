@@ -596,6 +596,7 @@ function Textbox:Textbox()
   self.button = nil
   self.text = nil
   self.allowed_input = nil
+  self.char_limit = nil
   self.visible = nil
   self.enabled = nil
   self.active = nil
@@ -629,37 +630,39 @@ function Textbox:input(code)
   if not self.active then
     return false
   end
-  -- Upper- and lowercase letters
-  if self.allowed_input.alpha then
-    for i = string.byte"a", string.byte"z" do
-      if code == i then
-        local char = string.char(i)
-        if self.panel.window.buttons_down.shift then
-          char = string.upper(char)
+  if not self.char_limit or string.len(self.text) < self.char_limit then
+    -- Upper- and lowercase letters
+    if self.allowed_input.alpha then
+      for i = string.byte"a", string.byte"z" do
+        if code == i then
+          local char = string.char(i)
+          if self.panel.window.buttons_down.shift then
+            char = string.upper(char)
+          end
+          self.text = self.text .. char
+          self.panel:setLabel(self.text)
+          return true
         end
-        self.text = self.text .. char
-        self.panel:setLabel(self.text)
-        return true
       end
     end
-  end
-  -- Numbers
-  if self.allowed_input.numbers then
-    for i = string.byte"0", string.byte"9" do
-      if code == i then
-        self.text = self.text .. string.char(i)
-        self.panel:setLabel(self.text)
-        return true
+    -- Numbers
+    if self.allowed_input.numbers then
+      for i = string.byte"0", string.byte"9" do
+        if code == i then
+          self.text = self.text .. string.char(i)
+          self.panel:setLabel(self.text)
+          return true
+        end
       end
     end
-  end
-  -- Space and hyphen
-  if self.allowed_input.misc then
-    if code == string.byte" " or
-      code == string.byte"-" then
-      self.text = self.text .. string.char(code)
-        self.panel:setLabel(self.text)
-      return true
+    -- Space and hyphen
+    if self.allowed_input.misc then
+      if code == string.byte" " or
+        code == string.byte"-" then
+        self.text = self.text .. string.char(code)
+          self.panel:setLabel(self.text)
+        return true
+      end
     end
   end
   -- Backspace (delete last char)
@@ -705,6 +708,14 @@ function Textbox:allowedInput(types)
   return self
 end
 
+--[[ Limit input to a maximum of [limit] characters.
+!param limit (integer or nil) Number of characters until the textbox will stop accepting input, or nil to deactivate limit.
+]]
+function Textbox:characterLimit(limit)
+  self.char_limit = limit
+  return self
+end
+
 --[[ Convert a static panel into a textbox.
 ! Textboxes consist of the panel given as a parameter, which is made into a
 ToggleButton automatically, and handle keyboard input while active.
@@ -724,6 +735,7 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
       numbers = true,
       misc = true,
     },
+    char_limit = nil,
     visible = true,
     enabled = true,
     active = false,

@@ -86,9 +86,9 @@ function UIOptions:UIOptions(ui, mode)
     end
   end
   self.width_textbox = self:addBevelPanel(20, 50, 50, 20, col_textbox, col_highlight, col_shadow):setLabel(_S.options_window.width):setTooltip(_S.tooltip.options_window.width)
-    :makeTextbox(width_textbox_reset, width_textbox_reset):allowedInput("numbers")
+    :makeTextbox(width_textbox_reset, width_textbox_reset):allowedInput("numbers"):characterLimit(4)
   self.height_textbox = self:addBevelPanel(80, 50, 50, 20, col_textbox, col_highlight, col_shadow):setLabel(_S.options_window.height):setTooltip(_S.tooltip.options_window.height)
-    :makeTextbox(height_textbox_reset, height_textbox_reset):allowedInput("numbers")
+    :makeTextbox(height_textbox_reset, height_textbox_reset):allowedInput("numbers"):characterLimit(4)
   self.resolution_button =
     self:addBevelPanel(140, 50, 160, 20, col_bg):setLabel(_S.options_window.change_resolution)
     :makeButton(0, 0, 160, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.change_resolution)
