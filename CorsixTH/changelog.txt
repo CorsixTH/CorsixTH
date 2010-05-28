@@ -2,26 +2,35 @@
 Version Beta 3 - released 2010-0?-??
 -----------------------------------------
 
-* Feature: Swing doors, used by the new diagnosis room the ward.
-* Feature: Plants droop.
-* Feature: Handymen can have their priorities changed.
-* Feature: Rooms can be edited.
+-- Gameplay --
+* Feature: Swing doors (used by new diagnosis room ward).
+* Feature: Plants will now droop unless they are watered by a handyman.
+* Feature: Adjustable handyman priorities.
+* Feature: Existing rooms can now be edited and deleted.
 * Feature: Each level has its own goals, shown at the beginning of the level and
   in the new status dialog. When the goals have been achieved the player may go on
   to the next one.
-* Feature: Savegames are no longer limited to 8 slots + autosave. New dialogs for
-  loading and saving were created to cope with arbitrary number of savegames.
+* Feature: Not all implemented rooms and diseases appear anymore in each level, but
+  only those defined by the level script.
+* Feature: Support for custom levels with their own maps and level scripts.
 * Fix: Staff needed in rooms is handled much better.
+* Added 6 new diseases
+* Added treatment rooms: Jelly Vat, Decontamination
+* Added diagnosis rooms: Blood Machine, Ward, Scanner
 
+-- User Interface --
+* Feature: Savegames are no longer limited to 8 slots + autosave.
+* Feature: Fullscreen mode and screen resolution can be changed ingame.
+* Feature: Hovering the mouse over a room will mark all patients in queue for this room.
+* New dialogs: Load Game, Save Game, Custom Level to cope with arbitrary number of
+  savegames/levels.
+* New dialog: Options
+* New dialog: Progress Report (Status) showing status of the current level's goals.
+
+-- Misc --
 * Translations: Italian (added new strings), Portuguese (WIP)
 
-* New dialog: Progress Report (Status) showing status of the current level's goals.
-* 5 new diseases
-* New treatment room: Jelly Vat
-* Additional functional diagnosis rooms: Blood Machine, Ward, Scanner.
-
-Again a lot of bugs have been terminated, though there are surely new ones 
-introduced by the new features.
+And of course again a lot of bugs have been terminated.
 
 -----------------------------------------
 Version Beta 2 - released 2010-03-24
