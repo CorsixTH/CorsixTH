@@ -540,24 +540,18 @@ function World:onTick()
       end
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
-      if self.map.level_number then
-        local text = {_S.information.custom_game}
-        if type(self.map.level_number) == "number" then
-          text = _S.introduction_texts["level" .. self.map.level_number]
-          if self.map.level_number == 1 then
-            -- Ask if the player wants a tutorial
-            local message = {
-              {             text = _S.fax.tutorial[1]},
-              {offset =  8, text = _S.fax.tutorial[2]},
-              choices = {
-                {text = _S.fax.tutorial[3], choice = "tutorial"},
-                {text = _S.fax.tutorial[4], choice = "no_tutorial"},
-              },
-            }
-            self.ui.bottom_panel:queueMessage("information", message)
-          end
-        end
-        self.ui:addWindow(UIInformation(self.ui, text))
+      self.ui:showBriefing()
+      if self.map.level_number == 1 then
+        -- Ask if the player wants a tutorial
+        local message = {
+          {             text = _S.fax.tutorial[1]},
+          {offset =  8, text = _S.fax.tutorial[2]},
+          choices = {
+            {text = _S.fax.tutorial[3], choice = "tutorial"},
+            {text = _S.fax.tutorial[4], choice = "no_tutorial"},
+          },
+        }
+        self.ui.bottom_panel:queueMessage("information", message)
       end
     end
     self.tick_timer = self.tick_rate

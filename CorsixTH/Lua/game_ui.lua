@@ -640,3 +640,9 @@ function GameUI:setEditRoom(enabled)
     self.edit_room = false
   end
 end
+
+function GameUI:showBriefing()
+  local level = self.app.world.map.level_number
+  local text = type(level) == "number" and _S.introduction_texts["level" .. level] or {_S.information.custom_game}
+  self:addWindow(UIInformation(self, text))
+end
