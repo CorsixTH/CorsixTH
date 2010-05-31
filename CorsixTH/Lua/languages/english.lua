@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("english", "en", "eng")
+Language("English", "en", "eng")
 Inherit("original_strings", 0)
 
 -- override
@@ -180,6 +180,7 @@ tooltip.options_window = {
   width = "Enter desired screen width",
   height = "Enter desired screen height",
   change_resolution = "Change the window resolution to the dimensions entered on the left",
+  language = "Select %s as language",
   back = "Close the options window",
 }
 
@@ -189,6 +190,10 @@ errors = {
   load_prefix = "Error while loading game: ",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
+}
+
+confirmation = {
+  needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?"
 }
 
 information = {

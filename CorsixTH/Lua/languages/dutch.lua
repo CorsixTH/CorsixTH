@@ -57,7 +57,7 @@ dezelfde volgorde als het debug-strings-new-grouped.txt-bestand blijft staan!
 -------------------------------------------------------------------------------
 
 -- 1. Global settings (do not edit!)
-Language("Dutch", "nl", "dut", "nld")
+Language("Nederlands", "Dutch", "nl", "dut", "nld")
 Inherit("English")
 
 -- 2. Misc

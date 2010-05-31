@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
-Language("german", "de", "ger", "deu")
+Language("Deutsch", "German", "de", "ger", "deu")
 Inherit("english")
 Inherit("original_strings", 2)
 
@@ -197,6 +197,7 @@ tooltip.options_window = {
   width = utf8 "Gewünschte Bildschirmbreite eingeben",
   height = utf8 "Gewünschte Bildschirmhöhe eingeben",
   change_resolution = utf8 "Die Fensterauflösung auf die links eingegebenen Werte ändern",
+  language = utf8 "%s als Sprache auswählen",
   back = utf8 "Das Optionsfenster schließen",
 }
 
@@ -206,6 +207,10 @@ errors = {
   load_prefix = "Fehler beim Laden: ",
   map_file_missing = utf8 "Konnte die Kartendatei %s für das Level nicht finden!",
   minimum_screen_size = utf8 "Bitte eine Auflösung von mindestens 640x480 eingeben.",
+}
+
+confirmation = {
+  needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?"
 }
 
 information = {

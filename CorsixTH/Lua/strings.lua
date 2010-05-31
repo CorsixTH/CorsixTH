@@ -56,7 +56,9 @@ function Strings:init()
   -- Every file in the languages folder should have a call to Language() near
   -- the start of the file which gives the names for the language. These names
   -- are used to link the user's choice of language to a file, and to link the
-  -- names given to Inherit() to a file.
+  -- names given to Inherit() to a file. The first name is used as the official
+  -- name for this language, the others may be abbreviations or such.
+  self.languages = {}
   self.language_to_chunk = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
@@ -77,8 +79,13 @@ function Strings:init()
     local env = setmetatable({
       utf8 = utf8conv,
       Language = function(...)
+        local names = {...}
+        -- Use the first name for display purposes (case-dependent!).
+        if names[1] ~= "original_strings" then
+          self.languages[#self.languages + 1] = names[1]
+        end
         -- Associate every passed name with this file, case-independently
-        for _, name in pairs{...} do
+        for _, name in pairs(names) do
           self.language_to_chunk[name:lower()] = chunk
         end
         error(good_error_marker)

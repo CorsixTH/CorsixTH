@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
-Language("chinese", "zh", "chi", "zho")
+Language("Chinese", "zh", "chi", "zho")
 Inherit("english")
 Inherit("original_strings", 0)
 

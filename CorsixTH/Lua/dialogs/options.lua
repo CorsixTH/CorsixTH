@@ -93,8 +93,28 @@ function UIOptions:UIOptions(ui, mode)
     self:addBevelPanel(140, 50, 160, 20, col_bg):setLabel(_S.options_window.change_resolution)
     :makeButton(0, 0, 160, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.change_resolution)
   
+  -- Language
+  local y = 80
+  for _, lang in ipairs(app.strings.languages) do
+    self:addBevelPanel(20, y, 280, 20, col_bg):setLabel(lang):makeButton(0, 0, 280, 20, nil, --[[persistable:options_window_language_button]] function()
+      self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.needs_restart, --[[persistable:options_window_language_confirm]] function()
+        app.config.language = lang
+        app:saveConfig()
+        debug.getregistry()._RESTART = true
+        TheApp.running = false
+      end))
+    end):setTooltip(_S.tooltip.options_window.language:format(lang))
+    y = y + 20
+  end
+  
+  -- Adjust size
+  y = y + 70
+  if y > self.height then
+    self:setSize(self.width, y)
+  end
+  
   -- "Back" button
-  self:addBevelPanel(20, 180, 280, 40, col_bg):setLabel(_S.options_window.back)
+  self:addBevelPanel(20, self.height - 60, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 

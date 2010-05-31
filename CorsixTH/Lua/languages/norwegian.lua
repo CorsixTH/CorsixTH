@@ -62,7 +62,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 -------------------------------------------------------------------------------
 
 -- 1. Global setings (do not edit!)
-Language("norwegian", "nb", "nob")
+Language("Norsk", "Norwegian", "nb", "nob")
 Inherit("english")
 
 

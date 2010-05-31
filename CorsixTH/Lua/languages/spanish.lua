@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("spanish", "es", "spa")
+Language(utf8 "Español", "Spanish", "es", "spa")
 Inherit("english")
 Inherit("original_strings", 4)
 
