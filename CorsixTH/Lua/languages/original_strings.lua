@@ -35,12 +35,12 @@ local function fixGermanStrings(lang_num)
   -- Due to this, the remaining strings in section 44 were also off by one.
   -- Solve it by splitting the string into two.
   -- NB: ONLY in full version, in demo this is NOT broken (thus do length check)
-  if strlen(S[44][168]) == 108 then
+  if #S[44][168] == 108 then
     for str = 218, 169, -1 do
       S[44][str+1] = S[44][str]
     end
-    S[44][169] = strsub(S[44][168], 46)
-    S[44][168] = strsub(S[44][168], 1, 45)
+    S[44][169] = S[44][168]:sub(46)
+    S[44][168] = S[44][168]:sub(1, 45)
   end
   
   -- German spelling reform: eszett changed to double s in a number of words.
@@ -65,8 +65,8 @@ local function fixGermanStrings(lang_num)
   for c, cat in ipairs(S) do
     for s, str in ipairs(cat) do
       for from, to in pairs(repl) do
-        while strfind(str, from) do
-          str = strgsub(str, from, to)
+        while str:find(from) do
+          str = str:gsub(from, to)
         end
       end
       S[c][s] = str
