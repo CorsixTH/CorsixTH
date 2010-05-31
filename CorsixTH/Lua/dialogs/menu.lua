@@ -43,6 +43,10 @@ function UIMenuBar:UIMenuBar(ui)
   self:makeMenu(app)
 end
 
+function UIMenuBar:onChangeResolution()
+  self.width = self.ui.app.config.width
+end
+
 function UIMenuBar:addMenu(title, menu)
   local menu = {
     title = title,
