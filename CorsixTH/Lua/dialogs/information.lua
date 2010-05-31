@@ -33,14 +33,23 @@ function UIInformation:UIInformation(ui, text)
   self.black_font = app.gfx:loadFont("QData", "Font00V")
   self.text = text
   
+  self:onChangeLanguage()
+  
+  -- Enter closes the window
+  self:addKeyHandler("Enter", self.close)
+end
+
+function UIInformation:onChangeLanguage()
   local rows = 0
-  for i, text in ipairs(text) do
+  for i, text in ipairs(self.text) do
     rows = rows + math.floor(self.black_font:sizeOf(text) / 230 + 0.5)
     rows = rows + 1
   end
   self.width = 40 + 300 + 40 
   self.height = 20 + rows*12 + 20 
   self:setDefaultPosition(0.5, 0.5)
+  
+  self:removeAllPanels()
   
   for x = 4, self.width - 4, 4 do
     self:addPanel(12, x, 0)  -- Dialog top and bottom borders
@@ -57,9 +66,6 @@ function UIInformation:UIInformation(ui, text)
   
   -- Close button
   self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
-  
-  -- Enter closes the window
-  self:addKeyHandler("Enter", self.close)
 end
 
 function UIInformation:draw(canvas, x, y)

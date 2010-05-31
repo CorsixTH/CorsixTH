@@ -222,6 +222,11 @@ function Window:addPanel(sprite_index, x, y, w, h)
   return panel
 end
 
+function Window:removeAllPanels()
+  self.panels = {}
+  self.buttons = {} -- Buttons cannot live without a panel
+end
+
 local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
   if panel.label then
@@ -771,6 +776,14 @@ function Window:draw(canvas, x, y)
       if windows[i].visible then
         windows[i]:draw(canvas, x, y)
       end
+    end
+  end
+end
+
+function Window:onChangeLanguage()
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      window:onChangeLanguage()
     end
   end
 end

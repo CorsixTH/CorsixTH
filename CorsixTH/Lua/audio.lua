@@ -53,7 +53,7 @@ local function GetFileData(path)
   return e
 end
 
-function Audio:init(speech_file)
+function Audio:init()
   if self.not_loaded then
     return
   end
@@ -172,19 +172,32 @@ function Audio:init(speech_file)
     self.background_playlist = {}
     return
   end
+end
+
+function Audio:initSpeech(speech_file)
+  if self.not_loaded then
+    return
+  end
   
   local function load_sound_file(file)
     return self.app.fs:readContents("Sound", "Data", file)
   end
 
   speech_file = speech_file or "Sound-0.dat"
+  if self.speech_file_name == speech_file then
+    return
+  end
   local archive_data, err = load_sound_file(speech_file)
   
   -- If sound file not found and language choosen is not English, 
   -- maybe we can have more chance loading English sounds
   if not archive_data and speech_file ~= "Sound-0.dat" then
-    print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. speech_file .. " file found")        
-    archive_data = load_sound_file("Sound-0.dat")
+    if self.speech_file_name == "Sound-0.dat" then
+      return
+    end
+    print("Notice: Attempt to load English sounds as no SOUND/DATA/" .. speech_file .. " file found")
+    speech_file = "Sound-0.dat"
+    archive_data = load_sound_file(speech_file)
   end
   
   if not archive_data then
@@ -201,6 +214,7 @@ function Audio:init(speech_file)
         self.not_loaded = true
       end
     else
+      self.speech_file_name = speech_file
       self.sound_fx = TH.soundEffects()
       self.sound_fx:setSoundArchive(self.sound_archive)
       local w, h = self.app.config.width / 2, self.app.config.height / 2

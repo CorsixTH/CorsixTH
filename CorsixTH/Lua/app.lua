@@ -143,34 +143,21 @@ function App:init()
   
   math.randomseed(os.time() + SDL.getTicks())
   
+  -- Load audio
+  dofile "audio"
+  self.audio = Audio(self)
+  self.audio:init()
+  
   -- Load strings before UI and before additional Lua
   dofile "strings"
   self.strings = Strings(self)
   self.strings:init()
-  local strings, speech_file = self.strings:load(self.config.language)
-  strict_declare_global "_S"
-  _S = strings
-  -- For immediate compatibility:
-  getmetatable(_S).__call = function(_, sec, str, ...)
-    assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
-    
-    str = _S.deprecated[sec][str]
-    if ... then
-      str = str:format(...)
-    end
-    return str
-  end
-  _S = permanent("_S", TH.stringProxy(_S))
+  self:initLanguage()
   if (self.command_line.dump or ""):match"strings" then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
     self:dumpStrings()
   end
-  
-  -- Load audio
-  dofile "audio"
-  self.audio = Audio(self)
-  self.audio:init(speech_file)
   
   -- Load map before world
   dofile "map"
@@ -208,6 +195,32 @@ function App:init()
     self.load(self.command_line.load)
   end
   return true
+end
+
+function App:initLanguage()
+  local strings, speech_file = self.strings:load(self.config.language)
+  strict_declare_global "_S"
+  local old_S = _S
+  _S = strings
+  -- For immediate compatibility:
+  getmetatable(_S).__call = function(_, sec, str, ...)
+    assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
+    
+    str = _S.deprecated[sec][str]
+    if ... then
+      str = str:format(...)
+    end
+    return str
+  end
+  if old_S then
+    unpermanent "_S"
+    TH.stringProxy.reload(strings)
+  end
+  _S = permanent("_S", TH.stringProxy(_S))
+  if self.ui then
+    self.ui:onChangeLanguage()
+  end
+  self.audio:initSpeech(speech_file)
 end
 
 function App:loadMainMenu(message)

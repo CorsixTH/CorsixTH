@@ -22,6 +22,7 @@ local persist = require "persist"
 local saved_permanents = {}
 
 strict_declare_global "permanent"
+strict_declare_global "unpermanent"
 
 function permanent(name, ...)
   if select('#', ...) == 0 then
@@ -32,6 +33,11 @@ function permanent(name, ...)
   assert(saved_permanents[name] == nil)
   saved_permanents[name] = value
   return value
+end
+
+function unpermanent(name)
+  assert(saved_permanents[name] ~= nil)
+  saved_permanents[name] = nil
 end
 
 local --[[persistable:persistance_global_fetch]] function global_fetch(...)
@@ -233,6 +239,7 @@ function LoadGame(data)
   -- The menu bar is a permanent object, so its ui field needs updating to
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
+  TheApp.ui.menu_bar:onLanguageChange()
   --end, persist.errcatch)
   TheApp:afterLoad()
 end

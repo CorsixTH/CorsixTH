@@ -102,6 +102,7 @@ function Strings:init()
       print("Error evaluating " .. filename .. ":\n" .. tostring(err))
     end
   end
+  table.sort(self.languages)
 end
 
 -- String tables are shadowed so that all access to a string table goes

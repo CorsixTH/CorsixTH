@@ -553,6 +553,111 @@ const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength)
     return luaL_checklstring(L, idx, pLength);
 }
 
+static int l_str_reload_actual(lua_State *L)
+{
+    // Reload a single string proxy
+    // Stack: reload_cache proxy_to_reload <top
+
+    // Mark string as reloaded
+    lua_pushvalue(L, 2);
+    lua_pushvalue(L, 2);
+    lua_settable(L, 1);
+
+    // Pull instructions out of the environment and remake value
+    lua_getfenv(L, 2);
+    bool bIsIndexOperation = false;
+    int iCount = (int)lua_objlen(L, 3);
+    aux_push_weak_table(L, 0);
+    lua_pushvalue(L, 2);
+    if(iCount != 0)
+    {
+        // Fetch reconstruction information, reloading any de-proxying any
+        // string proxies which we come across.
+        lua_checkstack(L, iCount + 1);
+        for(int i = 1; i <= iCount; ++i)
+        {
+            lua_rawgeti(L, 3, i);
+            if(lua_type(L, -1) == LUA_TUSERDATA)
+            {
+                if(i == 1)
+                    bIsIndexOperation = true;
+                lua_gettable(L, 1); // reload
+                lua_rawget(L, 4); // de-proxy
+            }
+        }
+
+        if(iCount == 2 && bIsIndexOperation)
+        {
+            // If there were two values, and the first was a proxy, then the
+            // instruction is to perform a table lookup.
+            lua_gettable(L, -2);
+            lua_replace(L, -2);
+        }
+        else
+        {
+            // Otherwise, the first value was a method name.
+            lua_pushvalue(L, 6);
+            lua_gettable(L, 7);
+            lua_replace(L, 6);
+            lua_call(L, iCount - 1, 1);
+        }
+    }
+    else
+    {
+        // Root object - update with new root
+        lua_pushvalue(L, lua_upvalueindex(1));
+    }
+    // Update value
+    lua_rawset(L, -3);
+    lua_pop(L, 2);
+    return 1;
+}
+
+static int l_str_reload(lua_State *L)
+{
+    // The first argument should be the new root object
+    luaL_checkany(L, 1);
+
+    // Create caching table to track what has been reloaded
+    // (i.e. things are added to this table as they are reloaded, and
+    // __index will perform the reloading as required).
+    lua_newtable(L);
+    lua_createtable(L, 0, 1);
+    lua_pushvalue(L, 1);
+    lua_pushcclosure(L, l_str_reload_actual, 1);
+    lua_setfield(L, -2, "__index");
+    lua_setmetatable(L, -2);
+    lua_replace(L, 1);
+    lua_settop(L, 1);
+
+    // Do the actual reloading
+    // NB: Due to table weakness and garbage collection, traverse the list
+    // of string proxies repeatedly, until a traversal does nothing.
+    aux_push_weak_table(L, 0);
+    bool bDoneSome = true;
+    while(bDoneSome)
+    {
+        bDoneSome = false;
+        lua_pushnil(L);
+        while(lua_next(L, -2))
+        {
+            lua_pop(L, 1);
+            lua_pushvalue(L, -1);
+            lua_rawget(L, 1);
+            if(lua_isnil(L, -1))
+            {
+                lua_pop(L, 1);
+                bDoneSome = true;
+                lua_gettable(L, 1);
+            }
+            else
+                lua_pop(L, 1);
+        }
+    }
+
+    return 0;
+}
+
 static int l_mk_cache(lua_State *L)
 {
     lua_newtable(L);
@@ -620,5 +725,6 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_str_func, "rep"    , MT_DummyString, "rep");
     luaT_setfunction(l_str_func, "reverse", MT_DummyString, "reverse");
     luaT_setfunction(l_str_func, "upper"  , MT_DummyString, "upper");
+    luaT_setfunction(l_str_reload, "reload");
     luaT_endclass();
 }

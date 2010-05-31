@@ -47,6 +47,20 @@ function UIMenuBar:onChangeResolution()
   self.width = self.ui.app.config.width
 end
 
+function UIMenuBar:onChangeLanguage()
+  local function check_size(menu)
+    menu.has_size = false
+    for _, item in ipairs(menu.items) do
+      if item.submenu then
+        check_size(item.submenu)
+      end
+    end
+  end
+  for _, menu in ipairs(self.menus) do
+    check_size(menu.menu)
+  end
+end
+
 function UIMenuBar:addMenu(title, menu)
   local menu = {
     title = title,
