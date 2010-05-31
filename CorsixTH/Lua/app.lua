@@ -203,6 +203,10 @@ function App:init()
   
   -- Load main menu (which creates UI)
   self:loadMainMenu()
+  -- If a savegame was specified, load it
+  if self.command_line.load then
+    self.load(self.command_line.load)
+  end
   return true
 end
 
