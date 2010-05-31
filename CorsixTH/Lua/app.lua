@@ -388,7 +388,7 @@ function App:saveConfig()
           
           -- If identifier also exists in runtime options, compare their values and
           -- replace the line, if needed
-          if self.config[identifier] then
+          if self.config[identifier] ~= nil then
             handled_ids[identifier] = true
             if value ~= tostring(self.config[identifier]) then
               local new_value = self.config[identifier]
@@ -415,6 +415,10 @@ function App:saveConfig()
       end
       lines[#lines + 1] = string.format("%s = %s", identifier, value)
     end
+  end
+  -- Trim trailing newlines
+  while lines[#lines] == "" do
+    lines[#lines] = nil
   end
 
   fi = io.open(self.command_line["config-file"] or "config.txt", "w")
