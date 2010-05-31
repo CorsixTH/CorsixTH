@@ -7,6 +7,7 @@ Version Beta 3 - released 2010-0?-??
 * Feature: Plants will now droop unless they are watered by a handyman.
 * Feature: Adjustable handyman priorities.
 * Feature: Existing rooms can now be edited and deleted.
+* Feature: Watch for initial opening of hospital at start of each level.
 * Feature: Each level has its own goals, shown at the beginning of the level and
   in the new status dialog. When the goals have been achieved the player may go on
   to the next one.
@@ -20,12 +21,14 @@ Version Beta 3 - released 2010-0?-??
 
 -- User Interface --
 * Feature: Savegames are no longer limited to 8 slots + autosave.
-* Feature: Fullscreen mode and screen resolution can be changed ingame.
+* Feature: Fullscreen mode, screen resolution and interface language can be changed
+  ingame. The changes are saved in the config file and preserved.
 * Feature: Hovering the mouse over a room will mark all patients in queue for this room.
 * New dialogs: Load Game, Save Game, Custom Level to cope with arbitrary number of
   savegames/levels.
 * New dialog: Options
 * New dialog: Progress Report (Status) showing status of the current level's goals.
+* Added all tooltips that were still missing.
 
 -- Misc --
 * Translations: Italian (added new strings), Portuguese (WIP)
