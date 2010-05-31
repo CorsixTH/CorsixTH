@@ -350,6 +350,63 @@ function App:fixConfig()
   end
 end
 
+function App:saveConfig()
+  -- Load lines from config file
+  local fi = io.open(self.command_line["config-file"] or "config.txt", "r")
+  local lines = {}
+  local handled_ids = {}
+  if fi then
+    for line in fi:lines() do
+      lines[#lines + 1] = line
+      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
+        -- Look for identifiers we want to save
+        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
+        if identifier then
+          -- Trim possible trailing comment from value
+          local _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
+          value = temp or value
+          -- Remove enclosing [[]], if necessary
+          local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          value = temp or value
+          
+          -- If identifier also exists in runtime options, compare their values and
+          -- replace the line, if needed
+          if self.config[identifier] then
+            handled_ids[identifier] = true
+            if value ~= tostring(self.config[identifier]) then
+              local new_value = self.config[identifier]
+              if type(new_value) == "string" then
+                new_value = string.format("[[%s]]", new_value)
+              else
+                new_value = tostring(new_value)
+              end
+              lines[#lines] = string.format("%s = %s", identifier, new_value)
+            end
+          end
+        end
+      end
+    end
+    fi:close()
+  end
+  -- Append options that were not found
+  for identifier, value in pairs(self.config) do
+    if not handled_ids[identifier] then
+      if type(value) == "string" then
+        value = string.format("[[%s]]", value)
+      else
+        value = tostring(value)
+      end
+      lines[#lines + 1] = string.format("%s = %s", identifier, value)
+    end
+  end
+
+  fi = io.open(self.command_line["config-file"] or "config.txt", "w")
+  for _, line in ipairs(lines) do
+    fi:write(line .. "\n")
+  end
+  fi:close()
+end
+
 function App:run()
   -- The application "main loop" is an SDL event loop written in C, which calls
   -- a coroutine whenver an event occurs. Initially it may seem odd to involve
@@ -681,6 +738,8 @@ end
 
 --! Exits the game completely (no confirmation window)
 function App:exit()
+  -- Save config before exiting
+  self:saveConfig()
   self.running = false
 end
 

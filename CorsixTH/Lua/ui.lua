@@ -355,6 +355,9 @@ function UI:changeResolution(width, height)
   self.cursor = nil
   self:setCursor(cursor)
   
+  -- Save new setting in config
+  self.app:saveConfig()
+  
   self:onChangeResolution()
 end
 
@@ -386,6 +389,10 @@ function UI:toggleFullscreen()
   local cursor = self.cursor
   self.cursor = nil
   self:setCursor(cursor)
+  
+  -- Save new setting in config
+  self.app.config.fullscreen = self.app.fullscreen
+  self.app:saveConfig()
 end
 
 function UI:onKeyDown(code)

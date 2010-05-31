@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 dofile("dialogs/resizable")
 
---! A menu list with a scrollbar. Used by load_game, save_game and custom_game.
+--! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 
 local col_bg = {
