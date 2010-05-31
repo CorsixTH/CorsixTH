@@ -51,6 +51,7 @@ function Hospital:Hospital(world)
   self.population = 1 -- TODO: Percentage showing how much of the total population that goes
   -- to the player's hospital, used for one of the goals. Change when competitors are there.
   self.is_in_world = true
+  self.opened = false
   self.transactions = {}
   self.staff = {}
   self.patients = {}
@@ -117,19 +118,25 @@ function Hospital:afterLoad(old, new)
       self.discovered_rooms[room] = true
     end
   end
+  if old < 9 then
+    -- Initial opening added
+    self.opened = true
+  end
 end
 
 function Hospital:tick()
-  local spawn_rate = 200
-  -- Vary spawn rate +/- 150 based on reputation
-  spawn_rate = spawn_rate - (self.reputation / 500 - 1) * 150
-  -- TODO: Variate spawn rate based on level, etc.
-  if self.spawn_rate_cheat then
-    -- Roujin's challenge cheat: constant high spawn rate
-    spawn_rate = 40
-  end
-  if math.random(1, spawn_rate) == 1 then
-    self:spawnPatient()
+  if self.opened then
+    local spawn_rate = 200
+    -- Vary spawn rate +/- 150 based on reputation
+    spawn_rate = spawn_rate - (self.reputation / 500 - 1) * 150
+    -- TODO: Variate spawn rate based on level, etc.
+    if self.spawn_rate_cheat then
+      -- Roujin's challenge cheat: constant high spawn rate
+      spawn_rate = 40
+    end
+    if math.random(1, spawn_rate) == 1 then
+      self:spawnPatient()
+    end
   end
 end
 

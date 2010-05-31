@@ -63,7 +63,8 @@ function UIWatch:onCountdownEnd()
   if self.count_type == "emergency" then
     self.ui.hospital:resolveEmergency()
   elseif self.count_type == "initial_opening" then
-    --TODO: Hospital has to be set to "Open" at this moment
+    self.ui.hospital.opened = true
+    self.ui:playSound("fanfare.wav")
   end
 end
 

@@ -540,6 +540,7 @@ function World:onTick()
       end
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
+      self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
       self.ui:showBriefing()
       if self.map.level_number == 1 then
         -- Ask if the player wants a tutorial
