@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010 Nicolas "MeV" Elie
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,9 +23,11 @@ Inherit("english")
 Inherit("original_strings", 1)
 
 -- new strings
-object.litter = "Déchet"
+object.litter = utf8 "Déchet"
+tooltip.objects.litter = utf8 "Déchet: Laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
 
 menu_options.lock_windows = "  FIGER LES FENETRES  "
+menu_options.settings = "  PARAMETRES  "
 menu_options_game_speed.pause = "  PAUSE  "
 
 menu_debug = {
@@ -39,7 +41,8 @@ menu_debug = {
   create_emergency            = "  CREER UNE URGENCE  ",
   place_objects               = "  PLACER DES OBJETS  ",
   dump_strings                = "  EXTRAIRE LES TEXTES  ",
-  map_overlay                 = "  MAP OVERLAY  ",
+  dump_gamelog                = "  EXTRAIRE LE JOURNAL DE JEU  ",
+  map_overlay                 = "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = "  VISIONNEUSE DE SPRITES  ",
 }
 menu_debug_overlay = {
@@ -83,6 +86,18 @@ fax = {
     "Oui, montrez-moi les bases SVP.",
     utf8 "Non, je sais déjà comment faire.",
   },
+  choices = {
+    return_to_main_menu = "Retourner au menu principal",
+    accept_new_level = "Aller au niveau suivant",
+    decline_new_level = utf8 "Continuer la partie encore un peu",
+  },
+}
+
+letter = {
+  dear_player = "Cher %s",
+  custom_level_completed = utf8 "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
+  return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
+  level_lost = "Quelle poisse ! Vous avez raté le niveau. Vosu ferez mieux la prochaine fois !",
 }
 
 misc.not_yet_implemented = utf8 "(pas encore implémenté)"
@@ -90,7 +105,7 @@ misc.no_heliport = utf8 "Aucune maladie n'a été découverte pour l'instant, ou
 
 main_menu = {
   new_game = "Nouvelle Partie",
-  custom_level = utf8 "Niveau Personnalisé",
+  custom_level = utf8 "Niveau personnalisé",
   load_game = "Charger une Partie",
   options = "Options",
   exit = "Quitter",
@@ -105,19 +120,77 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  back = utf8 "Précédent",
+  caption = "Charger une partie",
 }
 
 tooltip.load_game_window = {
-  load_game_number = "Charger la partie %d",
-  load_autosave = utf8 "Charger la sauvegarde automatique",
-  back = utf8 "Fermer la fenêtre de chargement de parties",
+  load_game = utf8 "Charger la partie %s",
+  load_game_number = utf8 "Charger la partie %d",
+  load_autosave = "Charger la sauvegarde automatique",
+}
+
+custom_game_window = {
+  caption = "Niveau personnalisé",
+}
+
+tooltip.custom_game_window = {
+  start_game_with_name = utf8 "Charger le niveau %s",
+}
+
+save_game_window = {
+  caption = "Enregistrer la partie",
+  new_save_game = "Nouvelle sauvegarde",
+}
+
+tooltip.save_game_window = {
+  save_game = utf8 "Écraser la sauvegarde %s",
+  new_save_game = "Entrez un nom pour la sauvegarde",
+}
+
+menu_list_window = {
+  back = utf8 "Précédent",
+}
+
+tooltip.menu_list_window = {
+  back = utf8 "Fermer cette fenêtre",
+}
+
+options_window = {
+  fullscreen = utf8 "Plein écran",
+  width = "Largeur",
+  height = "Hauteur",
+  change_resolution = utf8 "Changer la résolution",
+  back = utf8 "Précédent",
+}
+
+tooltip.options_window = {
+  fullscreen_button = utf8 "Basculer en mode plein écran/fenêtré",
+  width = utf8 "Entrez la largeur désirée",
+  height = utf8 "Entrez la hauteur désirée",
+  change_resolution = utf8 "Changer la résolution pour les dimensions entrées à gauche",
+  language = utf8 "Sélectionner %s comme langue",
+  back = utf8 "Fermer la fenêtre des options",
 }
 
 errors = {
   dialog_missing_graphics = utf8 "Désolé, les données de démo ne contiennent pas ce dialogue.",
   save_prefix = "Erreur lors de la sauvegarde de la partie: ",
   load_prefix = "Erreur lors du chargement de la partie: ",
+  map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
+  minimum_screen_size = utf8 "Veuillez entrer une résolution d'au moins 640x480.",
+}
+
+confirmation = {
+  needs_restart = utf8 "Changer ce paramètre requiert un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?"
+}
+
+information = {
+  custom_game = utf8 "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
+  cannot_restart = utf8 "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
+}
+
+tooltip.information = {
+  close = utf8 "Fermer cette boîte de dialogue d'information",
 }
 
 totd_window = {
@@ -135,8 +208,8 @@ totd_window = {
     utf8 "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs: th-issues.corsix.org.",
     utf8 "Le saviez-vous ? CorsixTH a été rendu public pour la première fois le 24 juillet 2009. La première publication a été la beta 1 jouable le 24 décembre 2009. Après trois mois de plus, nous sommes fiers de vous présenter la beta 2 (publiée le 24 mars 2010).",
   },
-  previous = utf8 "Astuce Précédente",
-  next = "Astuce Suivante",
+  previous = utf8 "Astuce précédente",
+  next = "Astuce suivante",
 }
 
 tooltip.totd_window = {
