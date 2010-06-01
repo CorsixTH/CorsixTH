@@ -18,19 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("Svensk", "Swedish", "sv", "swe")
+Language("Svenska", "Swedish", "sv", "swe")
 Inherit("english")
 Inherit("original_strings", 5)
 
 -- override
 object.reception_desk = "Reception"
--- TODO? Any more original strings that are off in swedish translation?
+
+-- "Psyket" means something entirely different than "Psykiatrin"
+rooms_long.psychiatric = "Den psykiatriska avdelningen"
+rooms_short.psychiatric = "Psykiatri"
+tooltip.rooms.psychiatry = utf8 "I den psykiatriska avdelningen kureras galningar och man hjälper också till med diagnoser av andra patienter. Här behövs en läkare med psykiatrisk kompetens"
+adviser.staff_place_advice.only_psychiatrists = utf8 "Läkare utan psykiatrisk examen kan inte arbeta inom psykiatrin."
+adviser.room_requirements.psychiatry_need_psychiatrist = utf8 "Nu när du byggt en psykiatrisk avdelning måste du också anställa en psykiater."
+room_descriptions.psych = {
+  "Den psykiatriska avdelningen//",
+  utf8 "Patienter som får diagnosen psykisk sjukdom måste uppsöka den psykiatriska avdelningen för att få behandling. Psykiatriker kan också ställa diagnoser, ta reda på vilken typ av sjukdom patienterna har och, i det fall det är mentalt behandla dem på den pålitliga gamla britsen.//",
+  utf8 "Här behövs en läkare utbildad i psykiatri. "
+}
+introduction_texts.level1[4] = utf8 "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
 
 -- new strings
 object.litter = utf8 "Skräp"
 tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
 menu_options.lock_windows = utf8 "  LÅS FÖNSTER  "
+menu_options.settings = utf8 "  INSTÄLLNINGAR  "
 menu_options_game_speed.pause = "  PAUSA  "
 
 menu_file.restart = "  STARTA OM  "
@@ -46,6 +59,7 @@ menu_debug = {
   create_emergency            = "  SKAPA AKUTFALL  ",
   place_objects               = "  PLACERA OBJEKT  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
+  dump_gamelog                = "  DUMPA SPELLOGG  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }
@@ -162,11 +176,18 @@ tooltip.menu_list_window = {
 
 options_window = {
   fullscreen = utf8 "Helskärm",
+  width = "Bredd",
+  height = utf8 "Höjd",
+  change_resolution = utf8 "Ändra upplösning",
   back = "Tillbaka",
 }
 
 tooltip.options_window = {
   fullscreen_button = utf8 "Klicka för att gå mellan fönster och helskärm",
+  width = utf8 "Fyll i önskad skärmbredd",
+  height = utf8 "Fyll i önskad skärmhöjd",
+  change_resolution = utf8 "Ändra upplösning till de dimensioner ifyllda till vänster",
+  language = utf8 "Ändra till %s som språk",
   back = utf8 "Stäng alternativmenyn",
 }
 
@@ -175,6 +196,7 @@ errors = {
   save_prefix = utf8 "Fel när spelet skulle sparas: ",
   load_prefix = utf8 "Fel när spelet skulle laddas: ",
   map_file_missing = utf8 "Kunde inte hitta kartfilen %s till den här nivån!",
+  minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
 }
 
 information = {

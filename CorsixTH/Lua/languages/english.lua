@@ -53,7 +53,7 @@ menu_debug = {
   create_emergency            = "  CREATE EMERGENCY  ",
   place_objects               = "  PLACE OBJECTS  ",
   dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  DUMP GAME LOG",
+  dump_gamelog                = "  DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }

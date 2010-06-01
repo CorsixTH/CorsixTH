@@ -298,9 +298,10 @@ end
 
 -- Returns false if the room is already full of staff or if the given member of staff cannot help out.
 -- Otherwise returns true.
-function Room:staffFitsInRoom(staff)
+-- If extended_search is true approaching staff is also considered.
+function Room:staffFitsInRoom(staff, extended_search)
   local criteria = self:getMaximumStaffCriteria()
-  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff, true) then
+  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff, extended_search) then
     return false
   end
   return true
@@ -312,7 +313,7 @@ function Room:isWaitingToGetStaff(staff)
   and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false) then
     return false
   end
-  return self:staffFitsInRoom(staff)
+  return self:staffFitsInRoom(staff, true)
 end
 
 function Room:commandEnteringStaff(humanoid)

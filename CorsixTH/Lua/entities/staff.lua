@@ -42,14 +42,8 @@ function Staff:tick()
   local tiring = true
   
   local room = self:getRoom()
-  if not room then  -- Not being in a room isn't tiring.
-    if self.humanoid_class ~= "Handyman" then  -- The exception is handymen: they tire wandering around, waiting for things to break.
-      tiring = false;
-    end
-  else
-    if room.room_info.id == "staff_room" then  -- Being in a staff room is actually quite refreshing.
-      tiring = false
-    end
+  if room and room.room_info.id == "staff_room" then  -- Being in a staff room is actually quite refreshing.
+    tiring = false
   end
 
   -- Picking staff members up doesn't tire them, it just tires the player.

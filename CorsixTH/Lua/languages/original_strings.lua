@@ -571,6 +571,25 @@ adviser = {
     
     vip_arrived                   = S[21][  9], -- %s (name of VIP)
     epidemic_health_inspector     = S[21][ 10],
+    
+    initial_general_advice = {
+      research_now_available      = S[62][02],
+      research_symbol             = S[62][03],
+      surgeon_symbol              = S[62][04],
+      psychiatric_symbol          = S[62][05],
+      rats_have_arrived           = S[62][06],
+      autopsy_available           = S[62][07],
+      first_epidemic              = S[62][08],
+      first_VIP                   = S[62][09],
+      taking_your_staff           = S[62][10],
+      machine_needs_repair        = S[62][11],
+      epidemic_spreading          = S[62][12],
+      increase_heating            = S[62][13],
+      place_radiators             = S[62][14],
+      decrease_heating            = S[62][15],
+      first_patients_thirsty      = S[62][16],
+      first_emergency             = S[62][17],
+    },
   },
   
   earthquake = {
@@ -1898,7 +1917,7 @@ local ids = {
   "blood_machine",
   "x_ray",
   "inflation",
-  "dna",
+  "dna_fixer",
   "hair_restoration",
   "slack_tongue",
   "fracture_clinic",
@@ -1995,6 +2014,8 @@ progress_report = {
   percentage_pop        = S[60][7],
   win_criteria          = S[60][8],
 }
+
+-- 62: Some initial advice from the adviser. These are under the adviser variable above.
 
 -- 64: Tooltip for the winning conditions
 -- These are inserted in the tooltip section under status.
