@@ -239,7 +239,7 @@ function LoadGame(data)
   -- The menu bar is a permanent object, so its ui field needs updating to
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
-  TheApp.ui.menu_bar:onLanguageChange()
+  TheApp.ui.menu_bar:onChangeLanguage()
   --end, persist.errcatch)
   TheApp:afterLoad()
 end

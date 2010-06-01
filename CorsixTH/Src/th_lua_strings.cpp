@@ -572,7 +572,8 @@ static int l_str_reload_actual(lua_State *L)
     if(iCount != 0)
     {
         // Fetch reconstruction information, reloading any de-proxying any
-        // string proxies which we come across.
+        // string proxies which we come across. Also replace any references
+        // to the root with the new root.
         lua_checkstack(L, iCount + 1);
         for(int i = 1; i <= iCount; ++i)
         {
@@ -581,7 +582,9 @@ static int l_str_reload_actual(lua_State *L)
             {
                 if(i == 1)
                     bIsIndexOperation = true;
-                lua_gettable(L, 1); // reload
+                lua_gettable(L, 1); // reload / change root
+                lua_pushvalue(L, -1);
+                lua_rawseti(L, 3, i);
                 lua_rawget(L, 4); // de-proxy
             }
         }
@@ -604,8 +607,9 @@ static int l_str_reload_actual(lua_State *L)
     }
     else
     {
-        // Root object - update with new root
-        lua_pushvalue(L, lua_upvalueindex(1));
+        // Root object
+        lua_settop(L, 2);
+        return 1;
     }
     // Update value
     lua_rawset(L, -3);
@@ -615,20 +619,22 @@ static int l_str_reload_actual(lua_State *L)
 
 static int l_str_reload(lua_State *L)
 {
-    // The first argument should be the new root object
-    luaL_checkany(L, 1);
+    // The first argument should be the old root object, second argument the
+    // new one.
+    luaL_checktype(L, 1, LUA_TUSERDATA);
+    luaL_checktype(L, 2, LUA_TUSERDATA);
 
     // Create caching table to track what has been reloaded
     // (i.e. things are added to this table as they are reloaded, and
     // __index will perform the reloading as required).
     lua_newtable(L);
+    lua_insert(L, 1);
+    lua_settop(L, 3);
+    lua_rawset(L, 1);
     lua_createtable(L, 0, 1);
-    lua_pushvalue(L, 1);
-    lua_pushcclosure(L, l_str_reload_actual, 1);
+    lua_pushcfunction(L, l_str_reload_actual);
     lua_setfield(L, -2, "__index");
     lua_setmetatable(L, -2);
-    lua_replace(L, 1);
-    lua_settop(L, 1);
 
     // Do the actual reloading
     // NB: Due to table weakness and garbage collection, traverse the list

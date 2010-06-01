@@ -214,9 +214,11 @@ function App:initLanguage()
   end
   if old_S then
     unpermanent "_S"
-    TH.stringProxy.reload(strings)
   end
   _S = permanent("_S", TH.stringProxy(_S))
+  if old_S then
+    TH.stringProxy.reload(old_S, _S)
+  end
   if self.ui then
     self.ui:onChangeLanguage()
   end
