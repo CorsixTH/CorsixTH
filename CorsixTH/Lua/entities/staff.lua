@@ -42,7 +42,8 @@ function Staff:tick()
   local tiring = true
   
   local room = self:getRoom()
-  if room and room.room_info.id == "staff_room" then  -- Being in a staff room is actually quite refreshing.
+  -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
+  if room and room.room_info.id == "staff_room" and not self.action_queue[1].is_job then
     tiring = false
   end
 

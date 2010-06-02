@@ -47,7 +47,7 @@ function StaffRoom:onHumanoidEnter(humanoid)
   if class.is(humanoid, Staff) then
     -- Receptionists cannot enter, so we do not have to worry about them
     -- If it is a handyman and he is here to do a job, let him pass
-    if humanoid.humanoid_class ~= "Handyman" and not humanoid.action_queue[1].is_job then
+    if not humanoid.action_queue[1].is_job then
       humanoid:setNextAction({name = "use_staffroom"})
       self.door.queue.visitor_count = self.door.queue.visitor_count + 1
     end
