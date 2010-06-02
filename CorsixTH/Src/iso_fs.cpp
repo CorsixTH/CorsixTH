@@ -27,6 +27,9 @@ SOFTWARE.
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif
+#ifdef CORSIX_TH_HAS_ALLOCA_H
+#include <alloca.h>
+#endif
 #include <algorithm>
 
 IsoFilesystem::IsoFilesystem()

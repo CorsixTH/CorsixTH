@@ -28,6 +28,9 @@ SOFTWARE.
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif
+#ifdef CORSIX_TH_HAS_ALLOCA_H
+#include <alloca.h>
+#endif
 
 template <class T> struct LuaPersistVInt {};
 template <> struct LuaPersistVInt<int> {typedef unsigned int T;};
