@@ -83,6 +83,16 @@ function Machine:machineUsed(room)
     self:setAnimation(self.object_type.crashed_animation)
     self.hover_cursor = nil
     self:clearDynamicInfo()
+    local window = self.world.ui:getWindow(UIMachine)
+    if window and window.machine == self then
+      window:close()
+    end
+    if self.handyman_to_repair then
+      local hand = self.handyman_to_repair
+      hand:setNextAction{name = "meander"}
+      hand:setDynamicInfoText("")
+      self:setRepairing(false)
+    end
     return true
   elseif threshold > 0.65 then
     self.world:callForStaff(room, self, true)
@@ -127,10 +137,13 @@ function Machine:machineRepaired(room)
   self:updateDynamicInfo(true)
 end
 
-function Machine:setRepairing(activate)
+--! Tells the machine to start showing the icon that it needs repair.
+--!param repairer The handyman set to do the task
+function Machine:setRepairing(repairer)
+  self.handyman_to_repair = repairer
   local anim = {icon = 4564} -- The only icon for machinery
-  self:setMoodInfo(activate and anim or nil)
-  if activate then
+  self:setMoodInfo(repairer and anim or nil)
+  if repairer then
     self.ticks = true
   else
     self.ticks = self.object_type.ticks

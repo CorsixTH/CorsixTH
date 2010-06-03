@@ -1137,7 +1137,7 @@ function World:callForStaff(room, repair_object, urgent)
     local handyman = self:selectNearestStaffForRoom(room, "Handyman", 1, "repairing")
     if handyman then
       room.needs_repair = handyman
-      repair_object:setRepairing(true)
+      repair_object:setRepairing(handyman)
       local x, y = repair_object:getRepairTile()
       -- Enter the room
       local action1 = room:createEnterAction()

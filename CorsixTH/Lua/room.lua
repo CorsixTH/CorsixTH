@@ -256,7 +256,7 @@ function Room:onHumanoidEnter(humanoid)
         end
       end
       if machine then
-        machine:setRepairing(true)
+        machine:setRepairing(humanoid)
         local x, y = machine:getRepairTile()
         humanoid:queueAction({
           name = "walk",
@@ -569,6 +569,25 @@ function Room:crashRoom()
       humanoid:die()
     end
     self.world:destroyEntity(humanoid)
+  end
+  -- There might also be someone using the door, even if that person is just about to exit
+  -- he/she is killed too.
+  local walker = self.door.user
+  if walker then
+    walker.user_of = nil
+    self.door:setUser(nil)
+    if class.is(walker, Staff) then
+      self.world:getLocalPlayerHospital():removeStaff(walker)
+      -- Update the staff management screen (if present) accordingly
+      local window = self.world.ui:getWindow(UIStaffManagement)
+      if window then
+        window:updateStaffList(walker)
+      end
+      self.hospital.num_deaths = self.hospital.num_deaths + 1
+    else
+      walker:die()
+    end
+    self.world:destroyEntity(walker)
   end
   -- Update percentages
   self.hospital:updatePercentages()
