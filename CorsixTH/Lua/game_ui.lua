@@ -207,15 +207,19 @@ function GameUI:onCursorWorldPositionChange()
     -- Unset queue mood for patients queueing the old room
     if self.cursor_room then
       local queue = self.cursor_room.door.queue
-      for _, humanoid in ipairs(queue) do
-        humanoid:setMood("queue", "deactivate")
+      if queue then
+        for _, humanoid in ipairs(queue) do
+          humanoid:setMood("queue", "deactivate")
+        end
       end
     end
     -- Set queue mood for patients queueing the new room
     if room then
       local queue = room.door.queue
-      for _, humanoid in ipairs(queue) do
-        humanoid:setMood("queue", "activate")
+      if queue then
+        for _, humanoid in ipairs(queue) do
+          humanoid:setMood("queue", "activate")
+        end
       end
     end
     self.cursor_room = room

@@ -555,6 +555,7 @@ function Room:crashRoom()
       table.remove(self.world:getLocalPlayerHospital().emergency_patients, humanoid.is_emergency)
     end
     -- Staff members need to be removed from the staff list.
+    -- In this case also staff affects the num_deaths variable of the hospital.
     if class.is(humanoid, Staff) then
       self.world:getLocalPlayerHospital():removeStaff(humanoid)
       -- Update the staff management screen (if present) accordingly
@@ -562,13 +563,20 @@ function Room:crashRoom()
       if window then
         window:updateStaffList(humanoid)
       end
+      self.hospital.num_deaths = self.hospital.num_deaths + 1
+    else
+      -- Not staff, then it must be a patient
+      humanoid:die()
     end
     self.world:destroyEntity(humanoid)
   end
+  -- Update percentages
+  self.hospital:updatePercentages()
   
   -- Remove all objects in the room
   local fx, fy = self:getEntranceXY(true)
   for object, _ in pairs(self.world:findAllObjectsNear(fx, fy)) do
+    -- Machines (i.e. objects with strength) are already done.
     if object.object_type.id ~= "door" and not object.strength then
       object.user = nil
       object.user_list = nil

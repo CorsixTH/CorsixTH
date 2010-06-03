@@ -253,13 +253,18 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
     local spec = object.object_type.orientations[object.direction]
     local pos = spec.finish_use_position or spec.use_position
     humanoid:setTilePositionSpeed(object.tile_x + pos[1], object.tile_y + pos[2])
-    if action.after_use then
-      action.after_use()
-    end
+    -- Check if the room is about to be destroyed
+    local room_destroyed = false
     if object.strength then
-      object:machineUsed(humanoid:getRoom())
+      room_destroyed = object:machineUsed(humanoid:getRoom())
     end
-    humanoid:finishAction(action)
+    if not room_destroyed then
+    -- Now call the after_use function if appropriate
+      if action.after_use then
+        action.after_use()
+      end
+      humanoid:finishAction(action)
+    end
   else
     action_multi_use_phase(action, humanoid, phase)
   end

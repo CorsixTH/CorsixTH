@@ -81,6 +81,9 @@ function Machine:machineUsed(room)
   if threshold > 0.85 then
     room:crashRoom()
     self:setAnimation(self.object_type.crashed_animation)
+    self.hover_cursor = nil
+    self:clearDynamicInfo()
+    return true
   elseif threshold > 0.65 then
     self.world:callForStaff(room, self, true)
     -- TODO: 3428 is smoke, add it when additional objects can be made
@@ -161,11 +164,10 @@ function Machine:updateDynamicInfo(only_update)
 end
 
 function Machine:onClick(ui, button)
-  if button == "left" and self.strength then
-    local room = self:getRoom()
-    if room.is_active then
-      ui:addWindow(UIMachine(ui, self, room))
-    end
+  local room = self:getRoom()
+  if button == "left" and room.is_active then
+    -- If the room is crashed is_active is false.
+    ui:addWindow(UIMachine(ui, self, room))
   else
     Object.onClick(self, ui, button)
   end

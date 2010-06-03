@@ -81,7 +81,7 @@ end
 
 -- Depending on if this is a master or slave show the correct information.
 function SwingDoor:getDynamicInfo()
-  return self.master and self.master.dynamicInfo or self.dynamicInfo
+  return self.master and self.master.dynamic_info or self.dynamic_info
 end
 
 --[[ Tell the associated slave door to start swinging.

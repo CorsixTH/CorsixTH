@@ -216,18 +216,25 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   end
   if phase == 100 then
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
-    if action.after_use then
-      action.after_use()
-    end
+    
+    -- Check if the room is about to be destroyed
+    local room_destroyed = false
     if object.strength then
       if humanoid.humanoid_class ~= "Handyman"  then
-        object:machineUsed(humanoid:getRoom())
+        room_destroyed = object:machineUsed(humanoid:getRoom())
       end
     elseif object:getDynamicInfo() then
       object:updateDynamicInfo()
     end
-    humanoid:finishAction(action)
-    
+    if not room_destroyed then
+      -- Note that after_use is not called if the room has been destroyed!
+      -- In that case both the patient, staff member(s) and
+      -- the actual object are already dead.
+      if action.after_use then
+        action.after_use()
+      end
+      humanoid:finishAction(action)
+    end
   else
     action_use_phase(action, humanoid, phase)
   end

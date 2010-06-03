@@ -74,8 +74,10 @@ local flag_cache = {}
 local flag_altpal = 16
 function UIPlaceStaff:draw(canvas)
   self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+  local room = self.world:getRoom(self.tile_x, self.tile_y)
   local valid = flag_cache.hospital and flag_cache.passable and
-    (self.allow_in_rooms or flag_cache.roomId == 0)
+    (self.allow_in_rooms or flag_cache.roomId == 0) and 
+    (not room and true or not room.crashed)
   self.anim:setFlag(valid and 0 or flag_altpal)
   self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
   self.ui:tutorialStep(2, valid and 7 or 6, valid and 6 or 7)
@@ -89,8 +91,10 @@ function UIPlaceStaff:onMouseUp(button, x, y)
   elseif button == "left" then
     self:onMouseMove(x, y)
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+    local room = self.world:getRoom(self.tile_x, self.tile_y)
     if flag_cache.hospital and flag_cache.passable
-    and (self.allow_in_rooms or flag_cache.roomId == 0) then
+    and (self.allow_in_rooms or flag_cache.roomId == 0) 
+    and (not room and true or not room.crashed) then
       if self.staff then
         self.staff:setTile(self.tile_x, self.tile_y)
       else
