@@ -1,4 +1,4 @@
-ï»¿--[[ Copyright (c) 2010 RAS
+--[[ Copyright (c) 2010 RAS; FlyingBastard;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,7 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-
 -------------------------------------------------------------------------------
    READ BEFORE DOING ANY CHANGES
 
@@ -33,55 +32,59 @@ in de debug-mode hebt gestart. Onderstaande strings staan in dezelfde volgorde
 als in dit bestand, echter met nog veel gaten ertussen. Zorg dat alles in de
 dezelfde volgorde als het debug-strings-new-grouped.txt-bestand blijft staan!
 
+-------------------------------------------------------------------------------]]
 
-
-
--------------------------------------------------------------------------------
-   TABLE OF CONTENTS
-
-   INHOUDSOPGAVE
--------------------------------------------------------------------------------
-
-
-   SECTION A - NEW STRINGS
-
-   1. Global settings
-   2. Misc
-   3. 
------------------------------------------------------------------------------]]
-
-
-
--------------------------------------------------------------------------------
---   SECTION A - NEW STRINGS - NIEUWE STRINGS
--------------------------------------------------------------------------------
-
--- 1. Global settings (do not edit!)
+--   Global settings (do not edit!)
 Language("Nederlands", "Dutch", "nl", "dut", "nld")
 Inherit("English")
 
--- 2. Misc
-misc = {
-  hospital_open = "Ziekenhuis open",
-  save_success = "Spel succesvol opgeslagen",
-  save_failed = "ERROR: Opslaan mislukt",
-  low_res = "Lage resolutie",
-  no_heliport = "Er zijn nog geen ziektebeelden ontdekt, of er is geen helikopter-landingsplaats op deze kaart.",
-  grade_adverb = {
-    extremely = "extreem",
-    mildly = "eenvoudig",
-    moderately = "normaal",
-  },
-  not_yet_implemented = utf8 "(nog niet geÃ¯mplementeerd)",
-  send_message = "Stuur bericht naar speler %d",
-  out_of_sync = "Het spel loopt niet meer synchroon",
-  balance = "Balans Bestand:",
-  load_failed = "Spel laden mislukt",
-  mouse = "Muis",
-  done = "Gereed",
-  force = "Force",
-  pause = "Pauze",
-  send_message_all = "Stuur een bericht naar alle spelers",
+
+--[[ SLEUTELWOORDEN
+Ziektebeelden: Zie onderaan het bestand
+Staf: We hebben Chirurgen, Onderzoekers en Psychiaters. Assistenten, Basisartsen en Specialisten. Artsen, Zusters, Congiërges en Receptionistes.
+--]]
+
+main_menu = {
+  exit = "Afsluiten",
+  custom_level = "Zelf gemaakt Level",
+  new_game = "Nieuw spel",
+  load_game = "Laad spel",
+  options = "Opties",
+}
+
+menu_file = {
+  quit = "  AFSLUITEN  ",
+  save = "  OPSLAAN  ",
+  load = "  LADEN  ",
+  -- TODO: restart = "  (no string) restart  ",
+}
+
+menu_options = {
+  game_speed = "  SNELHEID  ",
+  sound_vol = "  GELUIDEN VOLUME  ",
+  announcements = "  MEDEDELINGEN   ",
+  lock_windows = "  LOCK WINDOWS  ",
+  music_vol = "  MUZIEK VOLUME  ",
+  sound = "  GELUIDEN   ",
+  announcements_vol = "  MEDEDELINGEN VOLUME  ",
+  music = "  MUZIEK   ",
+  autosave = "  AUTOSAVE  ",
+  jukebox = "  JUKEBOX  ",
+}
+menu_options_game_speed = {
+  normal = "  NORMAAL  ",
+  slower = "  LANGZAAM  ",
+  pause = "  PAUZE  ",
+  max_speed = "  MAX SNELHEID ",
+  slowest = "  LANGZAAMST  ",
+  and_then_some_more = "  NOG NET IETS MEER ",
+}
+menu = {
+  debug = "  DEBUG  ",
+  display = "  BEELD  ",
+  file = "  BESTAND  ",
+  options = "  OPTIES  ",
+  charts = "  INFORMATIE  ",
 }
 
 menu_charts = {
@@ -94,6 +97,49 @@ menu_charts = {
   staff_listing = "  PERSONEEL  ",
   research = "  ONDERZOEK  ",
   status = "  STATUS  ",
+}
+
+menu_debug = {
+  sprite_viewer = "  SPRITE VIEWER  ",
+  lose_game_anim = {
+    [1] = "  VERLIES SPEL 1 ANIM     ",
+    [2] = "  VERLIES SPEL 2 ANIM     ",
+    [3] = "  VERLIES SPEL 3 ANIM     ",
+    [4] = "  VERLIES SPEL 4 ANIM     ",
+    [5] = "  VERLIES SPEL 5 ANIM     ",
+    [6] = "  VERLIES SPEL 6 ANIM     ",
+    [7] = "  VERLIES SPEL 7 ANIM     ",
+  },
+  show_watch              = "  TOON KLOK  ",
+  disable_salary_raise    = "  INACTIVEER SALARIS VERHOGING  ",
+  object_cells            = "  OBJECT CELLEN  ",
+  create_emergency        = utf8 "  CREËER NOODGEVAL  ",
+  make_adviser_talk       = "  LAAT ADVISEUR SPREKEN  ",
+  dump_strings            = "  DUMP STRINGS  ",
+  limit_camera            = "  LIMITEER CAMERA  ",
+  machine_pagers          = "  MACHINE PAGERS  ",
+  remove_walls            = "  VERWIJDER MUREN  ",
+  place_objects           = "  PLAATS OBJECTEN  ",
+  enter_nav_debug         = "  ENTER NAV DEBUG  ",
+  remove_objects          = "  VERWIJDER OBJECTEN  ",
+  display_pager           = "  TOON PAGER  ",
+  map_overlay             = "  MAP OVERLAY  ",
+  spawn_patient           = utf8 "  CREëER PATIENT  ",
+  pixbuf_cells            = "  PIXBUF CELLEN  ",
+  win_game_anim           = "  WIN SPEL ANIM  ",
+  transparent_walls       = "  TRANSPARANTE MUREN  ",
+  show_help_hotspot       = "  TOON HELP HOTSPOTS  ",
+  entry_cells             = "  INGANG CELLEN  ",
+  nav_bits                = "  NAV BITS  ",
+  display_big_cells       = "  TOON GROTE CELLEN  ",
+  win_level_anim          = "  WIN LEVEL ANIM  ",
+  make_debug_patient      = utf8 "  MAAK DEBUG PATIËNT  ",
+  porter_pagers           = "  PORTER PAGERS  ",
+  keep_clear_cells        = "  HOU CELLEN VRIJ  ",
+  show_nav_cells          = "  TOON NAV CELLEN  ",
+  display_room_status     = "  TOON KAMER STATUS  ",
+  mapwho_checking         = "  MAPWHO CONTROLE  ",
+  plant_pagers            = "  PLAATS PAGERS  ",
 }
 
 menu_debug_overlay = {
@@ -147,7 +193,7 @@ dynamic_info = {
     ability = "Kwaliteiten",
     psychiatrist_abbrev = "Psych.",
     actions = {
-      waiting_for_patient = utf8 "wachtend op patiÃ«nt",
+      waiting_for_patient = utf8 "wachtend op patiënt",
       wandering = "Gewoon wat rondbanjeren",
       going_to_repair = "Op weg voor reparatie van %s",
       heading_for = "Op weg naar %s",
@@ -156,73 +202,27 @@ dynamic_info = {
   },
 }
 
-main_menu = {
-  exit = "Afsluiten",
-  custom_level = "Zelf gemaakt Level",
-  new_game = "Nieuw spel",
-  load_game = "Laad spel",
-  options = "Opties",
-}
-
-menu_file_load = {
-  [1] = "  SPEL 1  ",
-  [2] = "  SPEL 2  ",
-  [3] = "  SPEL 3  ",
-  [4] = "  SPEL 4  ",
-  [5] = "  SPEL 5  ",
-  [6] = "  SPEL 6  ",
-  [7] = "  SPEL 7  ",
-  [8] = "  SPEL 8  ",
-}
-
-menu_file = {
-  quit = "  AFSLUITEN  ",
-  save = "  OPSLAAN  ",
-  load = "  LADEN  ",
-  restart = "(no string) restart",
-}
-
-menu_debug = {
-  sprite_viewer = "  SPRITE VIEWER  ",
-  lose_game_anim = {
-    [1] = "  VERLIES SPEL 1 ANIM     ",
-    [2] = "  VERLIES SPEL 2 ANIM     ",
-    [3] = "  VERLIES SPEL 3 ANIM     ",
-    [4] = "  VERLIES SPEL 4 ANIM     ",
-    [5] = "  VERLIES SPEL 5 ANIM     ",
-    [6] = "  VERLIES SPEL 6 ANIM     ",
-    [7] = "  VERLIES SPEL 7 ANIM     ",
+misc = {
+  hospital_open = "Ziekenhuis open",
+  save_success = "Spel succesvol opgeslagen",
+  save_failed = "FOUT: Opslaan mislukt",
+  low_res = "Lage resolutie",
+  no_heliport = "Er zijn nog geen ziektes ontdekt of er is geen helipad aanwezig",
+  grade_adverb = {
+    extremely = "zeer",
+    mildly = "mild",
+    moderately = "vrij",
   },
-  show_watch = "  TOON KLOK  ",
-  disable_salary_raise = "  INACTIVEER SALARIS VERHOGING  ",
-  object_cells = "  OBJECT CELLEN         ",
-  create_emergency = utf8 "  CREÃ‹ER NOODGEVAL  ",
-  make_adviser_talk = "  LAAT ADVISEUR SPREKEN  ",
-  dump_strings = "  DUMP STRINGS  ",
-  limit_camera = "  LIMITEER CAMERA  ",
-  machine_pagers = "  MACHINE PAGERS       ",
-  remove_walls = "  VERWIJDER MUREN         ",
-  place_objects = "  PLAATS OBJECTEN  ",
-  enter_nav_debug = "  ENTER NAV DEBUG      ",
-  remove_objects = "  VERWIJDER OBJECTEN       ",
-  display_pager = "  TOON PAGER        ",
-  map_overlay = "  MAP OVERLAY  ",
-  spawn_patient = utf8 "  CREÃ«ER PATIENT  ",
-  pixbuf_cells = "  PIXBUF CELLEN         ",
-  win_game_anim = "  WIN SPEL ANIM        ",
-  transparent_walls = "  TRANSPARANTE MUREN  ",
-  show_help_hotspot = "  TOON HELP HOTSPOTS   ",
-  entry_cells = "  INGANG CELLEN          ",
-  nav_bits = "  NAV BITS             ",
-  display_big_cells = "  TOON GROTE CELLEN    ",
-  win_level_anim = "  WIN LEVEL ANIM       ",
-  make_debug_patient = utf8 "  MAAK DEBUG PATIÃ‹NT  ",
-  porter_pagers = "  PORTER PAGERS        ",
-  keep_clear_cells = "  HOU CELLEN VRIJ     ",
-  show_nav_cells = "  TOON NAV CELLEN       ",
-  display_room_status = "  TOON KAMER STATUS  ",
-  mapwho_checking = "  MAPWHO CONTROLE      ",
-  plant_pagers = "  PLAATS PAGERS       ",
+  not_yet_implemented = "(nog niet geïmplementeerd)",
+  send_message = "Bericht sturen naar speler %d",
+  out_of_sync = "Spel uit sync",
+  balance = "Balans bestand:",
+  load_failed = "Laden mislukt",
+  mouse = "Muis",
+  done = "Klaar",
+  force = "Forceer",
+  pause = "Pauze",
+  send_message_all = "Bericht sturen naar alle spelers",
 }
 
 months = {
@@ -240,40 +240,745 @@ months = {
   [12] = "Dec",
 }
 
-menu_options = {
-  game_speed = "  SNELHEID  ",
-  sound_vol = "  GELUIDEN VOLUME  ",
-  announcements = "  MEDEDELINGEN   ",
-  lock_windows = "  LOCK WINDOWS  ",
-  music_vol = "  MUZIEK VOLUME  ",
-  sound = "  GELUIDEN   ",
-  announcements_vol = "  MEDEDELINGEN VOLUME  ",
-  music = "  MUZIEK   ",
-  autosave = "  AUTOSAVE  ",
-  jukebox = "  JUKEBOX  ",
+staff_descriptions = {
+  good = {
+    [1] = "Een snelle en ijverige werker. ",
+    [2] = "Erg grondig. Geeft veel om mensen. ",
+    [3] = "Zeer competent. ",
+    [4] = "Erg vriendelijk en goedlachs. ",
+    [5] = "Een echte doorzetter. Gaat maar door. ",
+    [6] = "Zeer beleefd en goedgemanierd. ",
+    [7] = "Ongelofelijk getalenteerd en kundig. ",
+    [8] = "Geeft veel om het werk dat hij aflevert. ",
+    [9] = "Een pietje precies die maar niet opgeeft. ",
+    [10] = "Toegewijd om mensen te helpen met een glimlach. ",
+    [11] = "Charmant, beleefd en behulpzaam. ",
+    [12] = "Gemotiveerd en toegewijd. ",
+    [13] = "Zachtaardig en een harde werker. ",
+    [14] = "Trouw en vriendelijk. ",
+    [15] = "Voorzichtig en betrouwbaar in een noodsituatie. ",
+  },
+  misc = {
+    [1] = "Speelt golf. ",
+    [2] = "Houdt van duiken. ",
+    [3] = "Maakt ijssculpturen. ",
+    [4] = "Drinkt wijn. ",
+    [5] = "Rijdt in rallyraces. ",
+    [6] = "Doet aan bungee jumpen. ",
+    [7] = "Verzamelt bierviltjes. ",
+    [8] = "Houdt van stage-diving. ",
+    [9] = "Houdt van ruftsurfen. ",
+    [10] = "Graaft graag rivieren uit. ",
+    [11] = "Stookt whisky. ",
+    [12] = "Een goede klusser. ",
+    [13] = "Houdt van artistieke Franse films. ",
+    [14] = "Speelt vaak Theme Park. ",
+    [15] = "Heeft rijbewijs CE. ",
+    [16] = "Doet aan motorracen. ",
+    [17] = "Speelt de viool en cello. ",
+    [18] = "Gepassioneerde treinsloper. ",
+    [19] = "Gek op honden. ",
+    [20] = "Luistert graag naar de radio. ",
+    [21] = "Neemt vaak een bad. ",
+    [22] = "Leraar vlechtwerkjes. ",
+    [23] = "Gebruikt uitgeholde groenten als zeepbakjes. ",
+    [24] = "Part-time Surveillant. ",
+    [25] = "Presenteerde een televisiequiz. ",
+    [26] = "Verzamelt granaatscherven uit de Tweede Wereldoorlog. ",
+    [27] = "Richt kamers in. ",
+    [29] = "Pest insecten met deodorant. ",
+    [28] = "Luistert naar rave en trip-hop muziek. ",
+    [30] = "Hekelt slechte comedians. ",
+    [31] = "Spioneert voor de raad. ",
+    [32] = "Tuiniert stiekem. ",
+    [33] = "Smokkelt nephorloges. ",
+    [34] = "Zingt in een rock-'n-roll band. ",
+    [35] = "Aanbidt middagtelevisie. ",
+    [36] = "Kietelt karpers. ",
+    [37] = "Verpatst troep aan museumbezoekers. ",
+  },
+  bad = {
+    [1] = "Langzaam en verstrooid. ",
+    [2] = "Lui en ongemotiveerd. ",
+    [3] = "Slecht opgeleid en lusteloos. ",
+    [4] = "Grof en opdringerig. Irriteert mensen. ",
+    [5] = "Geeft snel op - kan zich niet gedragen. ",
+    [6] = "Doof als een kwartel. Stinkt naar bloemkool. ",
+    [7] = "Slecht in zijn werk. Risicofactor. ",
+    [8] = "Verstrooid en snel afgeleid. ",
+    [9] = "Gespannen en maakt snel fouten. ",
+    [10] = "Labiel en wrokkig - wordt verteerd door haat. ",
+    [11] = "Slordig en onhandig. ",
+    [12] = "Geeft niet om zijn werk. Luiaard. ",
+    [13] = "Neemt, volledig apathisch, onnodig risico. ",
+    [14] = "Sluw, geniepig en tegendraads. ",
+    [15] = "Verwaand en zelfingenomen. ",
+  },
 }
-menu_options_game_speed = {
-  normal = "  NORMAAL  ",
-  slower = "  LANGZAAM  ",
-  pause = "  PAUZE  ",
-  max_speed = "  MAX SNELHEID ",
-  slowest = "  LANGZAAMST  ",
-  and_then_some_more = "  NOG NET IETS MEER ",
+staff_list = {
+  morale = "MORAAL",
+  tiredness = "VERMOEIDHEID",
+  skill = "BEKWAAMHEID",
+  total_wages = "SALARIS",
 }
-menu = {
-  debug = "  DEBUG  ",
-  display = "  BEELD  ",
-  file = "  BESTAND  ",
-  options = "  OPTIES  ",
-  charts = "  INFORMATIE  ",
+research = {
+  allocated_amount = "Totale hoeveelheid",
+  funds_allocation = "Totaal budget",
+  categories = {
+    improvements = "Verbeteringen",
+    drugs = "Geneesmiddelen",
+    diagnosis = "Diagnostische Apparatuur",
+    cure = "Behandelmethoden",
+    specialisation = "Specialisatie",
+  },
+}
+room_classes = {
+  diagnosis = "Diagnose",
+  clinics = "Klinieken",
+  facilities = "Faciliteiten",
+  treatment = "Behandeling",
+}
+buy_objects_window = {
+  price = "Prijs: ",
+  choose_items = "Kies voorwerpen",
+  total = "Totaal: ",
+}
+place_objects_window = {
+  pick_up_object = "Klik op het voorwerp dat je wil verplaatsen of kies een andere optie.",
+  place_objects_in_corridor = "Plaats de voorwerpen in een hal.",
+  place_windows = "Plaats, indien gewenst, ramen en klik op Bevestigen.",
+  confirm_or_buy_objects = "Je kunt nu de kamer bevestigen of voorwerpen kopen of verplaatsen",
+  drag_blueprint = "Sleep de blauwdruk tot je de gewenste grootte hebt bereikt.",
+  place_door = "Plaats de deur.",
+  place_objects = "Plaats de voorwerpen naar tevredenheid. Klik tenslotte op Bevestigen.",
+}
+totd_window = {
+  previous = "Vorige tip",
+  tips = {
+    [1] = "Elk ziekenhuis begint met een receptie en een Praktijk. Daarna ligt het er helemaal aan wat voor pati\137nten er langskomen. Een Apotheek is altijd een goede keuze.",
+    [2] = "Machines zoals de Compressor in Inflatie hebben onderhoud nodig. Huur een of twee Conci\137rges om je machines te repareren, anders loop je het risico je staf en je pati\137nten te verwonden.",
+    [3] = "Op een gegeven moment wordt je staf moe. Bouw een Stafkamer zodat ze zich kunnen ontspannen.",
+    [4] = "Plaats genoeg radiatoren om je staf en je pati\137nten warm - en daarmee tevreden - te houden.",
+    [5] = "De bekwaamheid van een arts bepaalt hoe snel en hoe goed zijn diagnoses zijn. Als je een goede arts in de Praktijk plaatst, heb je ook niet zoveel diagnostische kamers nodig.",
+    [6] = "Assistenten en Basisartsen kunnen zich laten opleiden door een Specialist in het Klaslokaal. Als de Specialist een specifieke kwalificatie heeft (Chirurg, Psychiater of Onderzoeker), zal hij deze kennis overdragen aan zijn leerling(en).",
+    [7] = "Heb je al geprobeerd het alarmnummer te bellen op de faxmachine? Zet wel je geluid eerst aan!",
+    [8] = "Het Optiesmenu is nog niet ge\139mplementeerd, maar je kunt sommige instellingen, zoals de resolutie en de taal, instellen door config.txt in de installatiemap aan te passen.",
+    [9] = "Zie je nog overal Engels ondanks dat je een andere taal hebt gekozen? Help dan de teksten te vertalen!",
+    [10] = "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum, onze mailing list of ons IRC kanaal (corsix-th op freenode).",
+    [11] = "Als je een bug vindt zouden we het op prijs stellen als je het meldt via onze bugtracker: th-issues.corsix.org",
+    [12] = "CorsixTH werd aangekondigd op 24 juli 2009. De eerste release was op 24 december 2009; toen werd de speelbare Beta 1 uitgebracht. Drie maanden later, op 24 maart 2010, presenteerden wij vol trots de speelbare Beta 2.",
+  },
+  next = "Volgende tip",
+}
+rooms_long = {
+  ultrascan = "Ultrascan",
+  research_room = "Laboratorium",
+  general = "Algemeen",
+  gps_office = "Praktijk",
+  inflation = "Inflatie",
+  staffroom = "Stafkamer",
+  jelly_vat = "Gelatinetank",
+  scanner = "Scanner",
+  emergency = "Noodsituatie",
+  decontamination = "Ontsmetting",
+  corridors = "Gangen",
+  cardiogram = "Cardiogram",
+  ward = "Slaapzaal",
+  training_room = "Klaslokaal",
+  psychiatric = "Psychiatrie",
+  operating_theatre = "Operatiekamer",
+  dna_fixer = "DNA Reparatie",
+  tongue_clinic = "Lamme Tongkliniek",
+  hair_restoration = "Haarrestaurateur",
+  general_diag = "Algemene Diagnose",
+  pharmacy = "Apotheek",
+  fracture_clinic = "Breukkliniek",
+  toilets = "Toilet",
+  electrolysis = "Elektrolysekliniek",
+  x_ray = "R\153ntgenkamer",
+  blood_machine = "Bloedmachinekamer",
+}
+load_game_window = {
+  back = "Terug",
+}
+queue_window = {
+  num_in_queue = "Rijlengte",
+  num_entered = "Bezoekers",
+  max_queue_size = "Max Grootte",
+  num_expected = "Verwacht",
+}
+staff_class = {
+  doctor = "Arts",
+  handyman = "Conci\137rge",
+  receptionist = "Receptioniste",
+  nurse = "Zuster",
+  surgeon = "Chirurg",
+}
+staff_title = {
+  junior = "Assistent",
+  psychiatrist = "Psychiater",
+  consultant = "Specialist",
+  surgeon = "Chirurg",
+  doctor = "Basisarts",
+  researcher = "Onderzoeker",
+  nurse = "Zuster",
+  receptionist = "Receptioniste",
+  general = "Algemeen",
+}
+tooltip = {
+  hire_staff_window = {
+    prev_person = "Vorige persoon bekijken",
+    cancel = "Annuleren",
+    psychiatrist = "Psychiater",
+    salary = "Salaris",
+    next_person = "Volgende persoon bekijken",
+    nurses = "Beschikbare zusters bekijken",
+    surgeon = "Chirurg",
+    handymen = "Beschikbare Conci\137rges bekijken",
+    doctors = "Beschikbare artsen bekijken",
+    doctor_seniority = "Niveau arts (Assistent, Basisarts, Specialist)",
+    hire = "Huren",
+    researcher = "Onderzoeker",
+    qualifications = "Extra kwalificaties",
+    receptionists = "Beschikbare receptionistes bekijken",
+    staff_ability = "Bekwaamheid",
+	},
+  casebook = {
+    sent_home = "Aantal afgewezen pati\137nten",
+    cure_requirement = {
+      possible = "Je kunt deze behandeling uitvoeren",
+      not_possible = "Je kunt deze behandeling nog niet uitvoeren",
+      ward_hire_nurse = "Je hebt een Zuster en een Slaapzaal nodig om deze behandeling uit te voeren",
+      build_ward = "Je hebt een slaapzaal nodig om deze behandeling uit te voeren",
+      research_machine = "De benodigde apparatuur is nog niet uitgevonden",
+      hire_staff = "Je hebt een %s nodig om deze behandeling uit te voeren",
+      build_room = "Je mist de relevante kamer om deze behandeling uit te voeren",
+      hire_surgeon = "Je hebt een tweede Chirurg nodig om een operatie uit te voeren",
+      hire_surgeons = "Je hebt twee Chirurgen nodig om operaties uit te voeren",
+    },
+    increase = "Verhogen",
+    up = "Naar boven",
+    reputation = "Reputatie",
+    research = "Klik hier om de Specialitietak van je laboratorium hierop te laten concentreren",
+    close = "Rapport sluiten",
+    earned_money = "Tot nu toe verdiend",
+    cure_type = {
+      psychiatrist = "Een Psychiater voert deze behandeling uit",
+      drug_percentage = "Deze behandeling gebruikt medicijnen. Die van jou zijn %d%% effectief.",
+      drug = "Deze behandeling maakt gebruik van medicijnen",
+      machine = "Deze behandeling maakt gebruik van apparatuur",
+      operation = "Deze behandeling maakt gebruik van operaties",
+    },
+    decrease = "Verlagen",
+    deaths = "Aantal sterfgevallen",
+    cured = "Aantal genezingen",
+    down = "Naar beneden",
+    treatment_charge = "Prijs",
+  },   
+  handyman_window = {
+    close = "Annuleren",
+    ability = "Bekwaamheid",
+    face = "Foto",
+    prio_machines = "Hogere prioriteit geven aan reparaties",
+    prio_litter = "Hogere prioriteit geven aan schoonmaken",
+    happiness = "Tevredenheid",
+    prio_plants = "Hogere prioriteit geven aan de planten",
+    name = "Naam van de Conci\137rge",
+    tiredness = "Moeheid",
+    center_view = "Naar Conci\137rge springen",
+    salary = "Salaris",
+    sack = "Ontslaan",
+    pick_up = "Oppakken",
+  },
+  staff_list = {
+    ability_2 = "Bekwaamheid",
+    next_person = "Volgende persoon in de lijst selecteren",
+    detail = "Precisie",
+    happiness = "Tevredenheid",
+    researcher_train = "%d%% van de opleiding tot onderzoeker voltooid",
+    handymen = "Lijst van Conci\137rges bekijken",
+    tiredness = "Laat zien hoe moe de werknemers zijn",
+    researcher = "Gekwalificeerde Onderzoeker",
+    happiness_2 = "Moraal",
+    pay_rise = "Salaris met 10% verhogen",
+    bonus = "Een bonus van 10% geven",
+    prev_person = "Vorige persoon in de lijst selecteren",
+    nurses = "Lijst van Zusters bekijken",
+    psychiatrist = "Gekwalificeerde Psychiater",
+    salary = "Huidig salaris van deze werknemer",
+    ability = "Bekwaamheid van deze werknemers",
+    close = "Terugkeren naar het spel",
+    sack = "Deze werknemer ontslaan",
+    surgeon = "Gekwalificeerde Chirurg",
+    tiredness_2 = "Moeheid werknemer",
+    doctors = "Lijst van artsen bekijken",
+    doctor_seniority = "Niveau van arts",
+    view_staff = "Bekijk dit persoon",
+    surgeon_train = "%d%% van de opleiding tot Chirurg voltooid",
+    skills = "Extra bekwaamheden",
+    receptionists = "Lijst van Receptionistes bekijken",
+    psychiatrist_train = "%d%% van de opleiding tot Psychiater voltooid",
+  },
+  rooms = {
+    ultrascan = "Een arts gebruikt de Ultrascan om diagnoses te stellen",
+    research_room = "Artsen die een kwalificatie hebben als onderzoeker kunnen nieuwe medijnen en machines uitvinden in het laboratorium",
+    fracture_clinic = "Een Zuster gebruikt de Breukkliniek om Gebroken Botten te verhelpen",
+    gps_office = "Pati\137nten krijgen hun eerste consult en resultaten in de Praktijk.",
+    inflation = "Een Arts gebruikt de Inflatiekamer om pati\137nten met Plofkop te genezen",
+    staffroom = "Artsen en Zusters ontspannen in de Stafkamer en raken zo hun moeheid kwijt",
+    jelly_vat = "Een Arts gebruikt de Gelatinetank om Gelatinis genezen",
+    scanner = "Een Arts gebruikt de Scannerkamer om een diagnose te stellen",
+    decontamination = "Een Arts gebruikt de Ontsmettingscabine om Radioactiviteit te genezen",
+    pharmacy = "Een Zuster geeft medicijnen uit een Apotheek aan pati\137nten om hen te genezen van verschillende kwalen.",
+    cardiogram = "Een Arts gebruikt de Cardiogramkamer om een diagnose te stellen",
+    ward = "Slaapzalen worden door Zusters gebruikt om diagnoses te stellen en pati\137nten te behandelen. Pati\137nten worden hiernaartoe gestuurd ter observatie en rusten hier uit indien ze een operatie moeten ondergaan",
+    training_room = "Een Klaslokaal met een Specialist kan worden gebruikt om andere Artsen op te leiden",
+    operating_theatre = "De operatiekamer heeft twee gekwalificeerde Chirurgen nodig",
+    psychiatry = "De Psychiatrie geneest geesteszieke pati\137nten en helpt het diagnostisch proces. Het vereist echter wel een gekwalificeerde Psychiater",
+    hair_restoration = "Een Arts gebruikt de Haarrestaurateur om Kaalheid te genezen",
+    tongue_clinic = "Een Arts gebruikt de Snijmachine om Lamme Tong te genezen",
+    dna_fixer = "Een Arts gebruikt DNA-reparatie om pati\137nten met Buitenaards DNA te genezen",
+    general_diag = "Een Arts gebruikt de Praktijk om een basisdiagnose voor zijn pati\137nten te stellen. Goedkoop en vaak zeer effectief",
+    toilets = "Bouw Toiletten zodat mensen geen zooi maken van je ziekenhuis!",
+    electrolysis = "Een Arts gebruikt de Electrolysekamer om Pilitis te genezen",
+    x_ray = "Een Arts gebruikt de R\153ntgenkamer om een diagnose te stellen",
+    blood_machine = "Een Arts gebruikt de Bloedmachinekamer om een diagnose te stellen", 
+	},
+  bank_manager = {
+    graph = "Verwachte betalingen van %s",
+    close = "Kasboek sluiten",
+    hospital_value = "Huidge waarde van je ziekenhuis",
+    graph_return = "Terug naar vorig venster",
+    current_loan = "Nog uitstaande leningen",
+    borrow_5000 = "$5000 lenen van de bank",
+    balance = "Je huidige saldo",
+    interest_payment = "Maandelijkse rente",
+    inflation_rate = "Jaarlijkse inflatie",
+    interest_rate = "Jaarlijkse rentepercentage",
+    repay_5000 = "$5000 aflossen",
+    show_graph = "Toon grafiek met verwachte betalingen van %s",
+    insurance_owed = "Nog tegoed van %s",
+  },
+  buy_objects_window = {
+    confirm = "Voorwerp(en) kopen",
+    cancel = "Annuleren",
+    increase = "Koop nog een exemplaar van dit voorwerp",
+    total_value = "Totale aankoopswaarde",
+    price = "Stuksprijs",
+    decrease = "Koop een exemplaar minder van dit voorwerp",
+  },
+  patient_window = {
+    send_home = "Pati\137nt ontslaan",
+    casebook = "Details bekijken van de ziekte van deze pati\137nt",
+    queue = "Bekijk de rij waarin deze persoon staat",
+    happiness = "Tevredenheid van deze pati\137nt",
+    warmth = "Hoe warm dit persoon het heeft",
+    center_view = "Dit persoon bekijken",
+    thirst = "Hoe dorstig dit persoon is",
+    graph = "Klik om te schakelen tussen de gezondheid en de geschiedenis van dit persoon",
+    abort_diagnosis = "Behandel deze pati\137nt nu, zonder een complete diagnose",
+  },
+  totd_window = {
+    previous = "Vorige tip",
+    next = "Volgende tip",
+  },
+  status = {
+    happiness = "Algemene tevredenheid van de mensen in je ziekenhuis",
+    warmth = "Algemene warmte van de mensen in je ziekenhuis",
+    thirst = "Algemene dorst van de mensen in je ziekenhuis",
+    close = "Overzicht sluiten",
+    population_chart = "Dit diagram geeft aan welk deel van de zieken naar welk ziekenhuis gaat",
+    win_progress_own = "Laat vooruitgang zien tot je ziekenhuis aan de eisen voldoet",
+    win_progress_other = "Laat vooruitgang zien tot het ziekenhuis van %s aan de eisen voldoet",
+  },
+  jukebox = {
+    rewind = "Herstarten",
+    loop = "Herhalen",
+    stop = "Stop",
+    close = "Sluiten",
+    current_title = "Jukebox",
+    play = "Afspelen",
+    fast_forward = "Volgende track",
+  },
+  load_game_window = {
+    load_game_number = "Spel %d laden",
+    load_autosave = "Autosave laden",
+    back = "Laadscherm sluiten",
+  },
+  main_menu = {
+    exit = "Nee! Nee! Verlaat ons niet!",
+    custom_level = "Bouw je ziekenhuis in een eigen level",
+    network = "Start een netwerkspel",
+    quit = "Afsluiten",
+    continue = "Doorgaan met vorig spel",
+    options = "Verschillende instellingen aanpassen",
+    load_menu = {
+      load_slot = "SPEL LADEN",
+      empty_slot = "LEEG",
+    },
+    new_game = "Begin met een compleet nieuw spel",
+    load_game = "Een opgeslagen spel laden",
+  },
+  watch = {
+    emergency = "Noodgeval: tijd over om alle pati\137nten te genezen.",
+    hospital_opening = "Bouwtijd: dit is hoelang het nog duurt voor je ziekenhuis opengaat. Klik op de START knop om je ziekenhuis nu te openen.",
+    epidemic = "Epidemie: tijd over om de epidemie te verbergen. Als de tijd op is OF een besmettelijke pati\137nt je ziekenhuis verlaat, komt er een Inspecteur langs. De knop zet vaccinatiemodus aan en uit. Klik ermee op een pati\137nt om hem of haar te laten inenten door een Zuster.",
+  },
+  window_general = {
+    confirm = "Bevestigen",
+    cancel = "Annuleren",
+    close_window = "Sluiten",
+  },
+  graphs = {
+    deaths = "Doden",
+    close = "Scherm sluiten",
+    scale = "Schaal",
+    money_out = "Uitgaven",
+    visitors = "Bezoekers",
+    wages = "Salarissen",
+    balance = "Saldo",
+    money_in = "Inkomsten",
+    cures = "Genezingen",
+    reputation = "Waarde",
+  },
+  machine_window = {
+    repair = "Een congi\137rge sturen om deze machine te repareren",
+    name = "Naam",
+    close = "Sluiten",
+    times_used = "Aantal keren gebruikt",
+    status = "Status machine",
+    replace = "Machine vervangen",
+  },
+  toolbar = {
+    reputation = "Je reputatie",
+    casebook = "Behandelingen",
+    edit = "Kamers/Voorwerpen aanpassen",
+    staff_list = "HR",
+    policy = "Beleid",
+	date = "Datum",
+    charts = "Grafieken",
+    objects = "Gangartikelen",
+    balance = "Je saldo",
+    research = "Onderzoek",
+    hire = "Staf huren",
+    status = "Status",
+    town_map = "Kaart",
+    rooms = "Build rooms",
+    bank_button = "Klik voor het kasboek. Klik met rechts voor Left Click for Bank Manager, Right Click voor bankafschriften",
+  },
+  place_objects_window = {
+    confirm = "Bevestigen",
+    cancel = "Annuleren",
+    pick_up = "Oppakken",
+    buy_sell = "Voorwerpen kopen/verkopen",
+  },
+  objects = {
+    chair = "Stoel: pati\137nten zitten hierop als ze over hun ziekte praten.",
+    litter = "Vuilnis: Op de grond gegooid door een pati\137nt omdat hij geen vuilnisbak kon vinden.",
+    sofa = "Bankstel: Werknemers rusten uit op een bankstel tenzij ze een betere manier vinden om zich te ontspannen.",
+    operating_table = "30 OB_OP_TABLE",
+    bed2 = "unused",
+    bench = "Bank: Hier kunnen wachtende pati\137nten in comfort wachten op hun beurt.",
+    scanner = "14 OB_SCANNER",
+    couch = "18 OB_COUCH",
+    blood_machine = "42 OB_BLOOD_MC",
+    table1 = "Table (REMOVED): holds collection of magazines to keep waiting patients happy.",
+    video_game = "Videospelletje: Laat je staf zich ontspannen met Hi-Octane.",
+    lamp = "Lamp: shines light and enables staff member to see.",
+    op_sink2 = "34 OB_OP_SINK_2",
+    door = "Deur: Mensen openen deze vaak. Ook doen ze ze wel eens dicht.",
+    auto_autopsy = "Autopsie: Een grote hulp in het ontdekken van nieuwe behandelingen",
+    reception_desk = "Receptie: Een Receptioniste stuurt mensen vanaf hier door naar Artsen.",
+    hair_restorer = "25 OB_HAIR_RESTORER",
+    projector = "37 OB_PROJECTOR",
+    crash_trolley = "20 OB_CRASH",
+    tv = "TV: Nu hoeft je staf hun favoriete programma niet meer te missen.",
+    ultrascanner = "22 OB_ULTRASCAN",
+    surgeon_screen = "35 OB_SURGEON_SCREEN",
+    litter_bomb = "Afvalbom: Saboteer het ziekenhuis van je tegenstander",
+    inflator = "Compressor: Geneest mensen met Plofkop.",
+    table2 = "12 OB_BTABLE",
+    desk = "Bureau: essentieel voor een Arts om zijn computer op te zetten.",
+    pool_table = "Biljarttafel: helpt je staf zich te ontspannen.",
+    x_ray_viewer = "29 OB_XRAY_VIEWER",
+    radiation_shield = "28 OB_RAD_SHIELD",
+    bed = "Bed: Erg zieke mensen liggen hierop.",
+    swing_door2 = "53 OB_DOUBLE_DOOR2",
+    console = "15 OB_SCANNER_CONSOLE",
+    op_sink1 = "33 OB_OP_SINK_1",
+    bookcase = "Boekenkast: Referentiemateriaal voor Artsen.",
+    drinks_machine = "Frisdrankautomaat: Lest de dorst van pati\137nten en zorgt voor inkomsten.",
+    comfortable_chair = "61 OB_COMFY_CHAIR",
+    skeleton = "Geraamte: Gebruikt voor opleidingen en Halloween.",
+    computer = "Computer: Belangrijk voor onderzoek",
+    bin = "Vuilnisbak: Hier gooien pati\137nten hun vuilnis in.",
+    pharmacy_cabinet = "Apotheek: Waar de medicijnen worden bewaard.",
+    radiator = "Radiator: Zo wordt het ziekenhuis niet koud.",
+    cast_remover = "24 OB_CAST_REMOVE",
+    atom_analyser = "Pulsmixer: Wordt geplaatst in het Laboratorium. Versnelt het onderzoeksproces.",
+    plant = "Plant: Houdt pati\137nten tevreden en zuivert de lucht.",
+    jelly_moulder = "47 OB_JELLY_VAT",
+    cardio = "13 OB_CARDIO",
+    toilet = "Loo: Pati\137nten, eh, gebruiken dit.",
+    electrolyser = "46 OB_ELECTRO",
+    fire_extinguisher = "Blusser: Verkleint het gevaar van defecte apparatuur.",
+    bed3 = "unused",
+    swing_door1 = "52 OB_DOUBLE_DOOR1",
+    lecture_chair = "Schoolbank: Je studerende Artsen zitten hier om aantekeningen te maken, zich dood te vervelen en doelloos poppetjes te tekenen. Hoe meer schoolbanken je plaatst, des te groter je klas kan zijn.",
+    screen = "16 OB_SCREEN",
+    toilet_sink = "Wasbak: De pati\137nten die zich wat meer bewust zijn van hygi\137ne kunnen hier hun vieze handen in wassen. Als er niet genoeg wasbakken zijn, raken pati\137nten nukkig.",
+    shower = "54 OB_DECON_SHOWER",
+    gates_of_hell = "48 OB_HELL",
+    entrance_right = "59 OB_ENT_RDOOR",
+    entrance_left = "58 OB_ENT_LDOOR",
+    slicer = "26 OB_SLICER",
+    dna_fixer = "23 OB_DNA_FIXER",
+    x_ray = "27 OB_XRAY",
+    cabinet = "Dossierkast: Bevat dossiers van pati\137nten, aantekeningen en rapportages.",
+  },
 }
 
-
-
-
--------------------------------------------------------------------------------
---   SECTION B - OLD STRINGS (OVERRIDE) - OUDE STRINGS (OVERSCHRIJVEN)
--------------------------------------------------------------------------------
-
--- Empty for now
-
+ 
+ --[[ LET OP! HIER MIST EEN HEEL STUK. WAT VOLGT IS DE VERTALING VAN ZIEKTES, BERICHTEN, ETC.
+	Dit zodat we weten hoe deze worden genoemd. Goed als referentie.
+	De volgende ziektebeelden zijn nog niet vertaald:
+	- 3rd Degree Sideburns (een woordspeling op derdegraads brandwonden en bakkebaarden)
+	- Heaped Piles (Piles is zowel "aambeien" als "stapels". Heaped betekend "gestapeld". Ook een woordspeling dus.)
+	--]]
+	
+diseases = {
+  diag_ward = {
+    name = "Diag Slaapzaal",
+  },
+  diag_ultrascan = {
+    name = "Diag Ultrascan",
+  },
+  autopsy = {
+    name = "Autopsie",
+  },
+  third_degree_sideburns = {
+    cause = "Cause - wistful longing for the 1970s",
+    cure = "Cure - The Psychiatry staff must, using up-to-date techniques, convince the patient that these hairy accoutrements are rubbish.",
+    name = "3rd Degree Sideburns",
+    symptoms = "Symptoms - big hair, flares, platforms and glitter make-up.",
+  },
+  discrete_itching = {
+    cause = "Oorzaak - Kleine insecten met scherpe tandjes.",
+    cure = "Behandeling - Pati\137nt drinkt een pharmaceutische klodder anti-jeuksiroop.",
+    name = "Onregelmatige Jeuk",
+    symptoms = "Symptomen - Krabben met lokale ontstekingen tot gevolg.",
+  },
+  the_squits = {
+    cause = "Oorzaak - het eten van pizza dat aan de binnenkant van de oven zat geplakt.",
+    cure = "Behandeling - een plakkerige mix van draderige chemicali\137n drinken om de binnenkant van de pati\137nt weer wat te laten stollen.",
+    name = "Sproeipoep",
+    symptoms = "Symptoms - ugh. Dat kun je vast zelf wel bedenken.",
+  },
+  spare_ribs = {
+    cause = "Oorzaak - Op koude stenen vloeren zitten.",
+    cure = "Cure - Het stukje rib wordt verwijderd door twee Chirurgen en aan de pati\137nt in een zakje meegegeven.",
+    name = "Ribstuk",
+    symptoms = "Symptoms - Een iets te grote borstkas.",
+  },
+  diag_blood_machine = {
+    name = "Diag Bloedmachine",
+  },
+  king_complex = {
+    cause = "Oorzaak - De geest van de King neemt bezit van de pati\137nt.",
+    cure = "Behandeling - Een Psychiater vertelt de pati\137nt hoe belachelijk hij of zij eruit ziet.",
+    name = "King Complex",
+    symptoms = "Symptomen - Een dieet van cheeseburgers en felgekleurd suede schoeisel.",
+  },
+  diag_x_ray = {
+    name = "Diag R\148ntgen",
+  },
+  pregnancy = {
+    cause = "Oorzaak - Stroomuitval in steden.",
+    cure = "Behandeling - De baby wordt verwijderd in de Operatiekamer en aan de pati\137nt gegeven.",
+    name = "Zwanger",
+    symptoms = "Symptomen - Vet eten met bierbuik tot gevolg.",
+  },
+  fake_blood = {
+    cause = "Oorzaak - Patient is het slachtoffer van een flauwe grap.",
+    cure = "Behandeling - De kalmerende stem van een Psychiater is het enige dat dit kan oplossen.",
+    name = "Nepbloed",
+    symptoms = "Symptomen - Rode vloeistof in aderen die oplost bij contact met kleding fluid in veins which evaporates on contact with clothing.",
+  },
+  diag_psych = {
+    name = "Diag Psychiater",
+  },
+  invisibility = {
+    cause = "Oorzaak - Gebeten worden door een radioactieve (en onzichtbare) mier.",
+    cure = "Behandeling - Een felle drank uit de Apotheek toont weer de ware kleuren van de pati\137nt.",
+    name = "Onzichtbaarheid",
+    symptoms = "Symptomen - Pati\137nten lijden er niet onder. Sommigen maken misbruik van de situatie door grapjes uit te halen met hun familie.",
+  },
+  golf_stones = {
+    cause = "Oorzaak - Blootstelling aan giftig gas uit golfballen.",
+    cure = "Behandeling - Verwijdering via operatie door twee Chirurgen.",
+    name = "Golfstenen",
+    symptoms = "Symptomen - IJlen en grote schaamte.",
+  },
+  diag_general_diag = {
+    name = "Diag Algemeen",
+  },
+  infectious_laughter = {
+    cause = "Oorzaak - Klassieke sitcoms.",
+    cure = "Behandeling - Een gekwalificeerde Psychiater vertelt de pati\137nt hoe verschrikkelijk zijn ziekte wel niet is.",
+    name = "Aanstekelijke Lach",
+    symptoms = "Symptomen - Constant gegniffel en het herhalen van flauwe catchphrases.",
+  },
+  general_practice = {
+    name = "Praktijkbezoek",
+  },
+  baldness = {
+    cause = "Oorzaak - Liegen en verhalen verzinnen om populair te zijn.",
+    cure = "Behandeling - Haar wordt naadloos vastgesmolten in het hoofd van de pati\137nt met deze pijnlijke machine.",
+    name = "Kaalheid",
+    symptoms = "Symptomen - Een glimmend hoofd en schaamte.",
+  },
+  heaped_piles = {
+    cause = "Oorzaak - Rondhangen bij koffieautomaten.",
+    cure = "Behandeling - Een prettig, krachtig drankje waarvan de hoge zuurgraad de aambeien van binnenuit oplossen.",
+    name = "Heaped Piles",
+    symptoms = "Symptoms - Patient feels like he/she is sitting on a bag of marbles.",
+  },
+  unexpected_swelling = {
+    cause = "Oorzaak - Iets onverwachts.",
+    cure = "Behandeling - De zwelling kan alleen worden doorgeprikt door twee Chirurgen.",
+    name = "Onverwachte zwelling",
+    symptoms = "Symptomen - Zwelling.",
+  },
+  jellyitis = {
+    cause = "Oorzaak - Gelatinerijk dieet en teveel beweging.",
+    cure = "Behandeling - De pati\137nt wordt in een Gelatinetank gegoten om daar een beetje te stollen.",
+    name = "Gelatinis",
+    symptoms = "Symptomen - Uitzonderlijke drillerigheid en vallen.",
+  },
+  hairyitis = {
+    cause = "Oorzaak - Overmatige blootstelling aan de maan.",
+    cure = "Behandeling - Een electrolysemachine verwijdert het haar en dicht de pori\137n.",
+    name = "Pilitis",
+    symptoms = "Symptomen - De zieke ervaart een betere reukzin.",
+  },
+  alien_dna = {
+    cause = "Oorzaak - Gezichtzuigers met het bloed van intelligente aliens.",
+    cure = "Behandeling - De DNA wordt machinaal verwijderd, de buitenaardse elementen worden gefilterd en snel weer teruggepompt.",
+    name = "Buitenaards DNA",
+    symptoms = "Symptomen - Langzame monsterachtige metamorfose en een drang tot het vernietigen van onze steden.",
+  },
+  bloaty_head = {
+    cause = "Oorzaak - Opsnuiven van kaas en het drinken van ongezuiverd regenwater.",
+    cure = "Cure - Het opgezwollen hoofd wordt doorgeprikt en weer opgeblazen met een handige machine.",
+    name = "Plofkop",
+    symptoms = "Symptomen - Zeer ongemakkelijk voor de zieke.",
+  },
+  gastric_ejections = {
+    cause = "Oorzaak - Pittig Mexicaans of Indiaas eten.",
+    cure = "Behandeling - Een speciaal bindend drankje zorgt ervoor dat er niets meer uit wordt geworpen.",
+    name = "Gastrische Uitwerpingen",
+    symptoms = "Symptomen - Halfverteerd voedsel wordt in willekeurige clusters uit de pati\137nt gestoten.",
+  },
+  uncommon_cold = {
+    cause = "Oorzaak - Deeltjes snot in de lucht.",
+    cure = "Behandeling - Een grote slok speciale hoestdrank uit de Apotheek, gemaakt van speciale ingredi\137nten.",
+    name = "Verguurheid",
+    symptoms = "Symptomen - Loopneus, niezen en verkleurde longen.",
+  },
+  corrugated_ankles = {
+    cause = "Oorzaak - Het rijden over infrastructurele aanpassingen die het verkeer behoren te vertragen.",
+    cure = "Behandeling - Het drinken van een licht bijtend kruidenmengsel zou de enkels recht moeten trekken.",
+    name = "Geribbelde Enkels",
+    symptoms = "Symptomen - Schoeisel zit niet zo lekker.",
+  },
+  sleeping_illness = {
+    cause = "Oorzaak - Overactieve slaapklier in het gehemelte.",
+    cure = "Cure - Een hoge dosis oppepmiddel wordt door een Zuster toegediend.",
+    name = "Slaapkwaal",
+    symptoms = "Symptomen - Een onbedwingbare zin om gewoon ergens in slaap te vallen.",
+  },
+  sweaty_palms = {
+    cause = "Oorzaak - Angst voor sollicitaties.",
+    cure = "Cure - Een Psychiater moet de pati\137nt overtuigen dat dit geen echte ziekte is.",
+    name = "Zweterige Handpalmen",
+    symptoms = "Symptomen - De hand van de pati\137nt voelt aan als een natte spons.",
+  },
+  serious_radiation = {
+    cause = "Oorzaak - Plutoniumisotopen verwarren met kauwgom.",
+    cure = "Behandeling - De pati\137nt wordt voor grondige reiniging in een Ontsmettingscabine geplaatst.",
+    name = "Zware Straling",
+    symptoms = "Symptomen - Pati\137nten met deze aandoening voelen zich heel, heel ziek.",
+  },
+  diag_cardiogram = {
+    name = "Diag Cardio",
+  },
+  diag_scanner = {
+    name = "Diag Scanner",
+  },
+  gut_rot = {
+    cause = "Oorzaak - Tante Triens Vrolijke Whiskey Hoestsiroop.",
+    cure = "Behandeling - Een Zuster dient een selectie opgeloste chemicali\137n toe om het buikje vanbinnen te bekleden.",
+    name = "Buikrot",
+    symptoms = "Symptomen - Geen hoest, maar ook geen maagwand.",
+  },
+  iron_lungs = {
+    cause = "Oorzaak - Smog van de binnenstad vermengd met kebabrestjes.",
+    cure = "Behandeling - Twee Chirurgen verwijderen de massieve longen in een Operatiekamer.",
+    name = "IJzeren Longen",
+    symptoms = "Symptomen - Vuurspuwen en luid onder water kunnen schreeuwen.",
+  },
+  broken_wind = {
+    cause = "Oorzaak - Een loopband gebruiken net na de maaltijd.",
+    cure = "Behandeling - In de Apotheek wordt er snel een zware mix van speciale waterige atomen gedronken.",
+    name = "Wind Tegen",
+    symptoms = "Symptomen - Mensen direct achter de pati\137nt raken vaak overstuur.",
+  },
+  kidney_beans = {
+    cause = "Oorzaak - Kauwen op ijsklontjes uit drankjes.",
+    cure = "Behandeling - Twee Chirurgen verwijderen de bessen zonder gevoelige lichaamsdelen aan te raken.",
+    name = "Kruisbessen",
+    symptoms = "Symptomen - Pijn en regelmatig naar het toilet.",
+  },
+  transparency = {
+    cause = "Oorzaak - Het aflikken van bladfolie lipjes van vers geopende zuivelproducten.",
+    cure = "Behandeling - Een drankje uit de Apotheek, gemaakt van speciaal gekoeld en gekleurd water, verhelpt deze ziekte.",
+    name = "Doorzichtigheid",
+    symptoms = "Symptomen - Organen worden doorzichtig en zien er ranzig uit.",
+  },
+  broken_heart = {
+    cause = "Oorzaak - Iemand die rijker, jonger en slanker is dat de pati\137nt.",
+    cure = "Behandeling - Twee Chirurgen openen de borstkas en herstellen ademloos en liefdevol het hart.",
+    name = "Gebroken Hart",
+    symptoms = "Symptomem - Huilen en RSI door het constante verscheuren van vakantiefoto's.",
+  },
+  slack_tongue = {
+    cause = "Oorzaak - Chronische geklets over soaps.",
+    cure = "Behandeling - De tong wordt in de Snijmachine geplaatst en snel, effici\137nt en pijnlijk verwijderd.",
+    name = "Lamme Tong",
+    symptoms = "Symptomen - Tong zwelt op tot vijf maal de normale lengte.",
+  },
+  tv_personalities = {
+    cause = "Cause - Dagtelevisie.",
+    cure = "Behandeling - Een getrainde Psychiater moet de pati\137nt overtuigen zijn televisie te verkopen en een radio aan te schaffen.",
+    name = "TV Persoonlijkheid",
+    symptoms = "Symptomen - De pati\137nt denkt dat hij of zij een kookprogramma kan presenteren.",
+  },
+  ruptured_nodules = {
+    cause = "Oorzaal - Bungeejumpen in de kou.",
+    cure = "Behandeling - Twee gekwalificeerde Chirurgen verwijderen de knobbels met vaste hand.",
+    name = "Gebarsten Knobbels",
+    symptoms = "Symptomen - Niet lekker kunnen zitten.",
+  },
+  fractured_bones = {
+    cause = "Oorzaak - Van hoge dingen afvallen en op cement landen.",
+    cure = "Behandeling - Er wordt gips gezet en vervolgens verwijderd met een lasergestuurde machine.",
+    name = "Botfractuur",
+    symptoms = "Symptomen - Luid gekraak en betreffend ledemaat niet meer kunnen gebruiken.",
+  },
+  chronic_nosehair = {
+    cause = "Oorzaak - Het ophalen van de neus in verachting voor mensen die slechter af zijn dan de pati\137nt.",
+    cure = "Behandeling - Een smerig, haarverwijderend drankje wordt door een Zuster in de Apotheek klaargemaakt en wordt door de pati\137nt gedronken.",
+    name = "Chronisch Neushaar",
+    symptoms = "Symptomen - Neushaar waarin een marter zou kunnen nestelen.",
+  },
+}
