@@ -40,6 +40,10 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 # Generate source files list
 # Note: Done after generating config.h
 FILE(GLOB_RECURSE corsixth_source_files
+  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.cpp
+  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.c
+  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.h
+  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.hpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
@@ -48,6 +52,7 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
   ${CMAKE_SOURCE_DIR}/LFS/lfs.c
+  ${CMAKE_SOURCE_DIR}/LPEG/lpeg.c
 )
 
 # Declaration of the executable

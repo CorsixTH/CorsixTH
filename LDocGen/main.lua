@@ -29,11 +29,15 @@ local lua_files = {
   "../CorsixTH/CorsixTH.lua"
 }
 
+local lfs = require "lfs"
+local our_dir = debug.getinfo(1).source
+our_dir = our_dir:match("@(.*)"..package.config:sub(1, 1)) or "."
+lfs.chdir(our_dir)
+
 dofile "../CorsixTH/Lua/strict.lua"
 dofile "../CorsixTH/Lua/class.lua"
 require = destrict(require)
 
-local lfs = require "lfs"
 require "helpers"
 require "c_tokenise"
 require "lua_tokenise"

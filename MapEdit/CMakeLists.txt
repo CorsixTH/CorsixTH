@@ -11,8 +11,8 @@ FILE(GLOB_RECURSE mapedit_source_files
   ../CorsixTH/Src/*.c
   ../CorsixTH/Src/*.cpp
   ../LFS/lfs.c
+  ../LPEG/lpeg.c
 )
-add_definitions(-DCORSIX_TH_MAP_EDITOR)
 
 # Declaration of the executable
 add_executable(MapEdit 
@@ -51,12 +51,7 @@ ENDIF(UNIX)
 FIND_PACKAGE(SDL REQUIRED)
 IF(SDL_FOUND)
   INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
-  IF(SDLMAIN_LIBRARY STREQUAL "")
-    message( FATAL_ERROR "error: SDL was found but sdlmain was not" )
-    message( "Make sure the path is correctly defined or set the envirnomental variable SDLDIR to the correct location" )
-  ENDIF(SDLMAIN_LIBRARY STREQUAL "")
-  #No need to specify sdlmain seperately, the FindSDL.cmake file will take care of that. If not we get an error about it
-  TARGET_LINK_LIBRARIES( MapEdit ${SDL_LIBRARY} )
+  TARGET_LINK_LIBRARIES(MapEdit ${SDL_LIBRARY})
   message( "  SDL found" )
 ELSE(SDL_FOUND)
   message( FATAL_ERROR "error: SDL library not found, it is required to build")

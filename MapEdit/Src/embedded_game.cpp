@@ -20,8 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "frmMain.h"
-int THMain_l_main(lua_State *L);
-int THMain_l_stacktrace(lua_State *L);
+#include "../../CorsixTH/Src/main.h"
 
 BEGIN_EVENT_TABLE(EmbeddedGamePanel, wxGLCanvas)
   EVT_MOTION(EmbeddedGamePanel::_onMouseMove)
@@ -81,9 +80,12 @@ bool EmbeddedGamePanel::loadLua()
     lua_pushcfunction(m_L, _l_print);
     lua_setglobal(m_L, "print");
     lua_settop(m_L, 0);
-    lua_pushcfunction(m_L, THMain_l_stacktrace);
-    lua_pushcfunction(m_L, THMain_l_main);
-    if(lua_pcall(m_L, 0, 1, 1))
+    lua_pushcfunction(m_L, CorsixTH_lua_stacktrace);
+    lua_pushcfunction(m_L, CorsixTH_lua_main_no_eval);
+    lua_checkstack(m_L, wxTheApp->argc);
+    for(int i = 0; i < wxTheApp->argc; ++ i)
+        lua_pushstring(m_L, wxTheApp->argv[i]);
+    if(lua_pcall(m_L, wxTheApp->argc, 1, 1))
     {
         if(m_pPrintTarget)
         {
@@ -295,12 +297,17 @@ void EmbeddedGamePanel::_onPaint(wxPaintEvent& evt)
     if(m_L)
     {
         lua_getglobal(m_L, "TheApp");
-        lua_getfield(m_L, -1, "config");
-        lua_pushinteger(m_L, szClient.x);
-        lua_setfield(m_L, -2, "width");
-        lua_pushinteger(m_L, szClient.y);
-        lua_setfield(m_L, -2, "height");
-        lua_pop(m_L, 2);
+        if(lua_isnil(m_L, -1))
+            lua_pop(m_L, 1);
+        else
+        {
+            lua_getfield(m_L, -1, "config");
+            lua_pushinteger(m_L, szClient.x);
+            lua_setfield(m_L, -2, "width");
+            lua_pushinteger(m_L, szClient.y);
+            lua_setfield(m_L, -2, "height");
+            lua_pop(m_L, 2);
+        }
     }
 
     // Do the actual painting

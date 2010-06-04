@@ -24,6 +24,7 @@ SOFTWARE.
 #include "lua.hpp"
 extern "C" {
 #include "../../LFS/lfs.h"
+int luaopen_lpeg(lua_State *L);
 int luaopen_random(lua_State *L);
 }
 #include "rnc.h"
@@ -32,10 +33,6 @@ int luaopen_random(lua_State *L);
 #include "jit_opt.h"
 #include "persist_lua.h"
 #include "iso_fs.h"
-#ifdef CORSIX_TH_USE_WIN32_SDK
-#include <windows.h>
-#endif
-#include <stack>
 
 // Config file checking
 #ifndef CORSIX_TH_USE_PACK_PRAGMAS
@@ -43,125 +40,7 @@ int luaopen_random(lua_State *L);
 #endif
 // End of config file checking
 
-#ifndef CORSIX_TH_MAP_EDITOR
-static int l_main(lua_State *L);
-static int l_stacktrace(lua_State *L);
-static int l_panic(lua_State *L);
-int l_bootstrap_error_report(lua_State *L);
-
-template <typename T1, typename T2>
-struct types_equal{ enum{
-    result = -1,
-}; };
-
-template <typename T1>
-struct types_equal<T1, T1>{ enum{
-    result = 1,
-}; };
-
-//! Program entry point
-/*!
-    Prepares a Lua state for, and catches errors from, l_main(). By executing
-    in Lua mode as soon as possible, errors can be nicely caught sooner, hence
-    this function does as little as possible and leaves the rest for l_main().
-*/
-int main(int argc, char** argv)
-{
-    struct compile_time_lua_check
-    {
-        // Lua 5.1, not 5.0, is required
-        int lua_5_point_1_required[LUA_VERSION_NUM >= 501 ? 1 : -1];
-
-        // Lua numbers must be doubles so that the mantissa has at least
-        // 32 bits (floats only have 24 bits)
-        int number_is_double[types_equal<lua_Number, double>::result];
-    };
-
-    bool bRun = true;
-
-    while(bRun)
-    {
-        lua_State *L = NULL;
-
-        L = luaL_newstate();
-        lua_atpanic(L, l_panic);
-        luaL_openlibs(L);
-        lua_settop(L, 0);
-        lua_pushcfunction(L, l_stacktrace);
-        lua_pushcfunction(L, l_main);
-
-        // Move command line parameters onto the Lua stack
-        lua_checkstack(L, argc);
-        for(int i = 0; i < argc; ++i)
-        {
-            lua_pushstring(L, argv[i]);
-        }
-
-        if(lua_pcall(L, argc, 0, 1) != 0)
-        {
-            const char* err = lua_tostring(L, -1);
-            if(err != NULL)
-            {
-                fprintf(stderr, "%s\n", err);
-            }
-            else
-            {
-                fprintf(stderr, "An error has occured in CorsixTH:\n"
-                    "Uncaught non-string Lua error\n");
-            }
-            lua_pushcfunction(L, l_bootstrap_error_report);
-            lua_insert(L, -2);
-            if(lua_pcall(L, 1, 0, 0) != 0)
-            {
-                fprintf(stderr, "%s\n", lua_tostring(L, -1));
-            }
-        }
-
-        lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
-        bRun = lua_toboolean(L, -1) != 0;
-
-        // Get cleanup functions out of the Lua state (but don't run them yet)
-        std::stack<void(*)(void)> stkCleanup;
-        lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
-        if(lua_type(L, -1) == LUA_TTABLE)
-        {
-            for(unsigned int i = 1; i <= lua_objlen(L, -1); ++i)
-            {
-                lua_rawgeti(L, -1, (int)i);
-                stkCleanup.push((void(*)(void))lua_touserdata(L, -1));
-                lua_pop(L, 1);
-            }
-        }
-
-        lua_close(L);
-
-        // The cleanup functions are executed _after_ the Lua state is fully
-        // closed, and in reserve order to that in which they were registered.
-        while(!stkCleanup.empty())
-        {
-            if(stkCleanup.top() != NULL)
-                stkCleanup.top()();
-            stkCleanup.pop();
-        }
-
-        if(bRun)
-        {
-            printf("Restarting...\n");
-        }
-    }
-    return 0;
-}
-
-//! Lua mode entry point
-/*!
-    Performs the Lua initialisation tasks which have to be done in C, and then
-    transfers control to CorsixTH.lua as soon as possible (so that as little as
-    possible behaviour is hardcoded into C rather than Lua).
-*/
-static int l_main(lua_State *L)
-#else // CORSIX_TH_MAP_EDITOR
-int THMain_l_main(lua_State *L)
-#endif // CORSIX_TH_MAP_EDITOR
+int CorsixTH_lua_main_no_eval(lua_State *L)
 {
     // assert(_VERSION == LUA_VERSION)
     size_t iLength;
@@ -238,21 +117,13 @@ int THMain_l_main(lua_State *L)
     lua_settable(L, -3)
 
     PRELOAD("lfs", luaopen_lfs);
-
-    // package.preload.rnc = luaopen_rnc
+    PRELOAD("lpeg", luaopen_lpeg);
     PRELOAD("rnc", luaopen_rnc);
-
-    // package.preload.TH = luaopen_th
     PRELOAD("TH", luaopen_th);
-
-    // package.preload.ISO_FS = luaopen_iso_fs
     PRELOAD("ISO_FS", luaopen_iso_fs);
-
-    // package.preload.persist = luaopen_persist
     PRELOAD("persist", luaopen_persist);
-
-    // package.preload.sdl = luaopen_sdl
     PRELOAD("sdl", luaopen_sdl);
+    
 #undef PRELOAD
     lua_pop(L, 2);
 
@@ -260,6 +131,26 @@ int THMain_l_main(lua_State *L)
     lua_getglobal(L, "require");
     lua_pushliteral(L, "debug");
     lua_call(L, 1, 0);
+
+    // Check for --interpreter and run that instead of CorsixTH.lua
+    bool bGotScriptFile = false;
+    int iNArgs = lua_gettop(L);
+    for(int i = 1; i <= iNArgs; ++i)
+    {
+        if(lua_type(L, i) == LUA_TSTRING)
+        {
+            size_t iLen;
+            const char* sCmd = lua_tolstring(L, i, &iLen);
+            if(iLen > 14 && memcmp(sCmd, "--interpreter=", 14) == 0)
+            {
+                lua_getglobal(L, "assert");
+                lua_getglobal(L, "loadfile");
+                lua_pushlstring(L, sCmd + 14, iLen - 14);
+                bGotScriptFile = true;
+                break;
+            }
+        }
+    }
 
     // Code to try several variations on finding CorsixTH.lua:
     // CorsixTH/CorsixTH.lua
@@ -269,43 +160,40 @@ int THMain_l_main(lua_State *L)
     // ../../../CorsixTH.lua
     // It is simpler to write this in Lua than in C.
     const char sLuaCorsixTHLua[] =
-    "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)"
-    "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\""
-    "code = loadfile(root..\"CorsixTH\"..sep..name)"
-    "if code then return code end "
-    "for i = 0, 3 do "
-    "  code = loadfile(root..(\"..\"..sep):rep(i)..name)"
-    "  if code then return code end "
-    "end "
+    "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)\n"
+    "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\"\n"
+    "code = loadfile(root..\"CorsixTH\"..sep..name)\n"
+    "if code then return code end \n"
+    "for i = 0, 3 do \n"
+    "  code = loadfile(root..(\"..\"..sep):rep(i)..name)\n"
+    "  if code then return code end \n"
+    "end \n"
     "return loadfile(name)";
 
     // return assert(loadfile"CorsixTH.lua")(...)
-    lua_getglobal(L, "assert");
-    luaL_loadbuffer(L, sLuaCorsixTHLua, strlen(sLuaCorsixTHLua),
-        "@main.cpp (l_main bootstrap)");
-    lua_pushvalue(L, 1);
+    if(!bGotScriptFile)
+    {
+        lua_getglobal(L, "assert");
+        luaL_loadbuffer(L, sLuaCorsixTHLua, strlen(sLuaCorsixTHLua),
+            "@main.cpp (l_main bootstrap)");
+        if(lua_gettop(L) == 2)
+            lua_pushnil(L);
+        else
+            lua_pushvalue(L, 1);
+    }
     lua_call(L, 1, 2);
     lua_call(L, 2, 1);
     lua_insert(L, 1);
-#ifndef CORSIX_TH_MAP_EDITOR
-    lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
-#endif
-
+    return lua_gettop(L);
+}
+    
+int CorsixTH_lua_main(lua_State *L)
+{
+    lua_call(L, CorsixTH_lua_main_no_eval(L) - 1, LUA_MULTRET);
     return lua_gettop(L);
 }
 
-//! Process a caught error before returning it to main
-/*!
-    Processing of the error message is done here so that a stack trace can be
-    added before the stack is unwound, and so that if an error occurs while
-    processing the error, main() receives LUA_ERRERR rather than panicking
-    while processing it itself.
-*/
-#ifdef CORSIX_TH_MAP_EDITOR
-int THMain_l_stacktrace(lua_State *L)
-#else
-static int l_stacktrace(lua_State *L)
-#endif
+int CorsixTH_lua_stacktrace(lua_State *L)
 {
     // err = tostring(err)
     lua_settop(L, 1);
@@ -328,13 +216,7 @@ static int l_stacktrace(lua_State *L)
     return 1;
 }
 
-//! Process an uncaught Lua error before aborting
-/*!
-    Lua errors shouldn't occur outside of protected mode, and there isn't much
-    which can be done when they do, but at least the user should be informed,
-    and the error message printed.
-*/
-static int l_panic(lua_State *L)
+int CorsixTH_lua_panic(lua_State *L)
 {
     fprintf(stderr, "A Lua error has occured in CorsixTH outside of protected "
         "mode!!\n");

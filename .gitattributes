@@ -66,6 +66,8 @@ LDocGen/templates/lua_file_hierarchy.htlua -text
 LDocGen/templates/lua_file_tree.htlua -text
 LDocGen/templates/page.htlua -text
 LFS/lfs.def -text
+LPEG/lpeg-128.gif -text
+LPEG/lpeg.html -text
 MapEdit/CMakeLists.txt -text
 MapEdit/FindwxWidgets_svn.cmake -text
 WindowsInstaller/LanguageStrings.nsh -text
