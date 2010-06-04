@@ -407,6 +407,15 @@ end
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
 
 function Object.processTypeDefinition(object_type)
+  if object_type.id == "extinguisher"
+  or object_type.id == "radiator"
+  or object_type.id == "plant" then
+    object_type.count_category = object_type.id
+  elseif object_type.id ~= "bin"
+  and not object_type.corridor_object
+  and not object_type.id:find("door") then
+    object_type.count_category = "general"
+  end
   if object_type.orientations then
     for direction, details in pairs(object_type.orientations) do
       -- Set default values

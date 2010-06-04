@@ -53,6 +53,12 @@ function World:World(app)
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
   self.objects = {}
+  self.object_counts = {
+    extinguisher = 0,
+    radiator = 0,
+    plant = 0,
+    general = 0,
+  }
   self.objects_notify_occupants = {}
   self.rooms = {}
   self.ticks_per_tick = 1
@@ -1033,6 +1039,10 @@ function World:removeObjectFromTile(object, x, y)
             self.map.th:setCellFlags(x, y, {thob = 0})
           end
         end
+        local count_cat = object.object_type.count_category
+        if count_cat then
+          self.object_counts[count_cat] = self.object_counts[count_cat] - 1
+        end
         return true
       end
     end
@@ -1063,6 +1073,10 @@ function World:addObjectToTile(object, x, y)
     objects = {object}
     self.objects[index] = objects
     self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
+  end
+  local count_cat = object.object_type.count_category
+  if count_cat then
+    self.object_counts[count_cat] = self.object_counts[count_cat] + 1
   end
   return true
 end
@@ -1302,6 +1316,22 @@ function World:afterLoad(old, new)
   if old < 7 then
     self.level_criteria = local_criteria_variable
     self:determineWinningConditions()
+  end
+  if old < 10 then
+    self.object_counts = {
+      extinguisher = 0,
+      radiator = 0,
+      plant = 0,
+      general = 0,
+    }
+    for position, obj_list in pairs(self.objects) do
+      for _, obj in ipairs(obj_list) do
+        local count_cat = obj.object_type.count_category
+        if count_cat then
+          self.object_counts[count_cat] = self.object_counts[count_cat] + 1
+        end
+      end
+    end
   end
   self.savegame_version = new
 end

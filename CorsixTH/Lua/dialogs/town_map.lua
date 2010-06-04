@@ -118,10 +118,10 @@ function UITownMap:draw(canvas, x, y)
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
   local patientcount = 0
-  local plants = 0
-  local fireext = 0
-  local objs = 0
-  local radiators = 0
+  local plants = world.object_counts.plant
+  local fireext = world.object_counts.extinguisher
+  local objs = world.object_counts.general
+  local radiators = world.object_counts.radiator
 
   -- Even though it says "people", staff and guests like VIPS aren't included.
   -- TH counts someone as a patient the moment he walks into the hospital; when
@@ -130,35 +130,6 @@ function UITownMap:draw(canvas, x, y)
     -- only count patients that are in the hospital
     if hospital:isInHospital(patient.tile_x, patient.tile_y) then
       patientcount = patientcount + 1
-    end
-  end
-
-  -- a silly loop that checks every tile in the map for countable objects.
-  -- TODO: we probably want to limit this to just check all corridor and room
-  -- objects, that should be traversable in a much quicker and more efficient
-  -- way.
-  for xi = 1, world.map.width do
-    for yi = 1, world.map.height do
-      local l_objects = world:getObjects(xi, yi)
-      if l_objects ~= nil then
-        for i = 1, #l_objects do
-          local object_type = l_objects[i].object_type
-          if object_type.id == "extinguisher" then
-            fireext = fireext + 1
-          elseif object_type.id == "radiator" then
-            radiators = radiators + 1
-          elseif object_type.id == "plant" then
-            plants = plants + 1
-          else
-            -- Objects: All objects except corridor objects, bins, and all kinds of doors.
-            if not object_type.corridor_object
-              and object_type.id ~= "bin"
-              and not string.find(object_type.id, "door") then
-              objs = objs + 1
-            end
-          end
-        end
-      end
     end
   end
 
