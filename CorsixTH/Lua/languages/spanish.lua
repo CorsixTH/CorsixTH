@@ -18,17 +18,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("Spanish", utf8 "Español", "esp", "Castellano", "es", "spa")
+Language("Castellano", "Spanish", "es", "spa", "esp")
 Inherit("english")
 Inherit("original_strings", 4)
 
 -- override
--- TODO? Any original strings that are off in spanish translation?
+misc = {
+  hospital_open = "Hospital abierto",
+  save_success = "Partida guardada correctamente",
+  save_failed = "ERROR: No se ha podido guardar la partida",
+}
+
+fax = {
+  vip_visit_result = {
+      very_bad = {
+        [1] = utf8 "¡Vaya tugurio! Voy a intentar clausurarlo.",
+      },
+  },
+  emergency = {
+    num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente.",
+  },
+}
+tooltip = {
+  handyman_window = {
+    close = "Cerrar ventana",
+  },
+}
 
 
 -- new strings
 object.litter = "Basura"
-tooltip.objects.litter = "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
+tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
 
 menu_options.lock_windows = "  BLOQUEAR VENTANAS  "
 menu_options.settings = utf8 "  CONFIGURACIÓN  "
@@ -53,7 +73,7 @@ menu_debug = {
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
 }
 menu_debug_overlay = {
-  none                        = "  NINGUNO/A  ",
+  none                        = utf8 "  NINGUNO/A  ",
   flags                       = "  BANDERAS  ",
   positions                   = "  POSICIONES  ",
   byte_0_1                    = "  BYTE 0 Y 1  ",
@@ -67,7 +87,7 @@ menu_debug_overlay = {
 }
 adviser.room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles."
 
-dynamic_info.patient.actions.no_gp_available = "Esperando a que construyas una consulta"
+dynamic_info.patient.actions.no_gp_available = utf8 "Esperando a que construyas una consulta"
 dynamic_info.staff.actions.heading_for = utf8 "Dirigiéndose a %s"
 
 fax = {
@@ -95,33 +115,33 @@ fax = {
   },
   choices = {
     return_to_main_menu = utf8 "Volver al menú principal",
-    accept_new_level = "Continuar al siguiente nivel",
+    accept_new_level = utf8 "Continuar al siguiente nivel",
     decline_new_level = utf8 "Seguir jugando un poco más",
   },
 }
 
 letter = {
-  dear_player = "Estimado %s",
+  dear_player = utf8 "Estimado %s",
   custom_level_completed = utf8 "¡Bien hecho! ¡Has completado todos los objetivos de este nivel personalizado!",
   return_to_main_menu = utf8 "¿Quieres volver al menú principal o seguir jugando?",
   level_lost = utf8 "¡Qué pena! Has fallado este nivel. ¡Mejor suerte la próxima vez!",
 }
 
 misc.not_yet_implemented = utf8"(aún no implementado)"
-misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel."
+misc.no_heliport = utf8 "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel."
 
 main_menu = {
-  new_game = "Nueva partida",
-  custom_level = "Nivel personalizado",
-  load_game = "Cargar partida",
-  options = "Opciones",
-  exit = "Salir",
+  new_game = utf8 "Nueva partida",
+  custom_level = utf8 "Nivel personalizado",
+  load_game = utf8 "Cargar partida",
+  options = utf8 "Opciones",
+  exit = utf8 "Salir",
 }
 
 tooltip.main_menu = {
-  new_game = "Empezar una partida completamente nueva desde el principio",
-  custom_level = "Construir tu hospital en un nivel personalizado",
-  load_game = "Cargar una partida guardada",
+  new_game = utf8 "Empezar una partida completamente nueva desde el principio",
+  custom_level = utf8 "Construir tu hospital en un nivel personalizado",
+  load_game = utf8 "Cargar una partida guardada",
   options = utf8 "Ajustar la configuración",
   exit = utf8 "¡No, no, por favor, no te vayas!",
 }
@@ -171,18 +191,18 @@ options_window = {
 }
 
 tooltip.options_window = {
-  fullscreen_button = "Pulsa para activar el modo de pantalla completa",
-  width = "Introduce el ancho de pantalla deseado",
-  height = "Introduce el alto de pantalla deseado",
+  fullscreen_button = utf8 "Pulsa para activar el modo de pantalla completa",
+  width = utf8 "Introduce el ancho de pantalla deseado",
+  height = utf8 "Introduce el alto de pantalla deseado",
   change_resolution = utf8 "Cambia la resolución de la ventana a las dimensiones indicadas a la izquierda",
-  language = "Seleccionar el idioma %s",
-  back = "Cerrar la ventana de opciones",
+  language = utf8 "Seleccionar el idioma %s",
+  back = utf8 "Cerrar la ventana de opciones",
 }
 
 errors = {
-  dialog_missing_graphics = "Los archivos de datos de la demo no contienen esta ventana.",
-  save_prefix = "Error al guardar la partida: ",
-  load_prefix = "Error al cargar la partida: ",
+  dialog_missing_graphics = utf8 "Los archivos de datos de la demo no contienen esta ventana.",
+  save_prefix = utf8 "Error al guardar la partida: ",
+  load_prefix = utf8 "Error al cargar la partida: ",
 }
 
 confirmation = {
@@ -213,11 +233,11 @@ totd_window = {
     utf8 "Si encuentras un fallo, infórmalo en nuestro registro de fallos: th-issues.corsix.org",
     utf8 "CorsixTH fue hecho público por primera vez el 24 de julio de 2009. La primera versión fue la beta jugable 1 publicada el 24 de diciembre de 2009. Tres meses más tarde, estamos orgullosos de mostrar la beta 2 (publicada el 24 de marzo de 2010).",
   },
-  previous = "Siguiente consejo",
-  next = "Consejo anterior",
+  previous = utf8 "Siguiente consejo",
+  next = utf8 "Consejo anterior",
 }
 
 tooltip.totd_window = {
-  previous = "Mostrar el consejo anterior",
-  next = "Mostrar el consejo siguiente",
+  previous = utf8 "Mostrar el consejo anterior",
+  next = utf8 "Mostrar el consejo siguiente",
 }
