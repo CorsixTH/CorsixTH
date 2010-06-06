@@ -139,6 +139,7 @@ end
 function UIQueue:onMouseUp(button, x, y)
   local queue = self.queue
   local num_patients = queue:reportedSize()
+  local width = 276
 
   if not self.dragged then
     return Window.onMouseUp(self, button, x, y)
@@ -158,17 +159,19 @@ function UIQueue:onMouseUp(button, x, y)
     return
   end
 
-  -- Inside door bounding box
-  if x > 170 and x < 210 and y > 25 and y < 100 then
+  if x > 170 and x < 210 and y > 25 and y < 105 then -- Inside door bounding box
     queue:move(index, 1) -- move to front
-  end
-
-  -- Inside exit sign bounding box
-  if x > 542 and x < 585 and y > 50 and y < 100 then
+  elseif x > 542 and x < 585 and y > 50 and y < 105 then -- Inside exit sign bounding box
     queue:move(index, num_patients) -- move to back
+  elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
+    local dx = 1
+    if num_patients ~= 1 then
+      dx = width / (num_patients - 1)
+    end
+    queue:move(index, math.floor((x - 220) / dx) + 1) -- move to dropped position
+    self:onMouseMove(x, y, 0, 0)
   end
 
-  -- TODO dropping patient between other patients
   -- TODO dropping patient to another room
 
   self.dragged = nil
