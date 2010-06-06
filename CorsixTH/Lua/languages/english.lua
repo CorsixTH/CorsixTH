@@ -35,8 +35,11 @@ fax.emergency.cure_not_possible_build_and_employ = "You will need to build a %s 
 object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
-menu_options.lock_windows = "  LOCK WINDOWS  "
-menu_options.settings = "  SETTINGS  "
+menu_options = {
+  lock_windows = "  LOCK WINDOWS  ",
+  edge_scrolling = "  EDGE SCROLLING  ",
+  settings = "  SETTINGS  ",
+}
 menu_options_game_speed.pause = "  PAUSE  "
 
 -- The demo does not contain this string

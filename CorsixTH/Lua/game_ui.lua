@@ -57,6 +57,7 @@ function GameUI:GameUI(app, local_hospital)
   self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
+  self.prevent_edge_scrolling = false
 end
 
 function GameUI:draw(canvas)
@@ -263,7 +264,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     return true
   end
   
-  if x < 3 or y < 3 or x >= self.app.config.width - 3 or y >= self.app.config.height - 3 then
+  if not self.prevent_edge_scrolling and (x < 3 or y < 3
+  or x >= self.app.config.width - 3 or y >= self.app.config.height - 3) then
     local dx = 0
     local dy = 0
     if x < 3 then

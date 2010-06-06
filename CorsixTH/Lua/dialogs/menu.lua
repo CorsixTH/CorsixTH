@@ -501,6 +501,11 @@ function UIMenuBar:makeMenu(app)
     end
   end
   options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
+  options:appendCheckItem(_S.menu_options.edge_scrolling,
+    not self.ui.prevent_edge_scrolling,
+    function(item) self.ui.prevent_edge_scrolling = not item.checked end,
+    nil,
+    function() return not self.ui.prevent_edge_scrolling end)
   
   local function rate(speed)
     return speed == "Normal", function()
