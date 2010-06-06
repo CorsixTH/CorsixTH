@@ -150,6 +150,13 @@ struct THMapNode : public THLinkList
     // Rooms have an ID, with room #0 being the corridor (and the outside).
     uint16_t iRoomId;
 
+    // A value between 0 (extreme cold) and 65535 (extreme heat) representing
+    // the temperature of the tile. To allow efficent calculation of a tile's
+    // heat based on the previous tick's heat of the surrounding tiles, the
+    // previous temperature is also stored, with the array indicies switching
+    // every tick.
+    uint16_t aiTemperature[2];
+
     // Flags for information (lower 24 bits) and object type (top 8 bits)
     // See THMapNodeFlags for lower 24 bits, and THObjectType for top 8.
     // The point of storing the object type here is to allow pathfinding code
@@ -197,6 +204,8 @@ public:
 
     void updatePathfinding();
     void updateShadows();
+    void updateTemperatures(uint16_t iAirTemperature,
+                            uint16_t iRadiatorTemperature);
 
     //! Get the map width (in tiles)
     inline int getWidth()  const {return m_iWidth;}
@@ -244,6 +253,8 @@ public:
     const THMapNode* getNodeUnchecked(int iX, int iY) const;
     const THMapNode* getOriginalNodeUnchecked(int iX, int iY) const;
 
+    uint16_t getNodeTemperature(const THMapNode* pNode) const;
+
     //! Convert world (tile) co-ordinates to absolute screen co-ordinates
     template <typename T>
     static inline void worldToScreen(T& x, T& y)
@@ -283,6 +294,7 @@ protected:
     int m_aiHeliportX[4];
     int m_aiHeliportY[4];
     int m_iPlotCount;
+    int m_iCurrentTemperatureIndex;
     int* m_pParcelTileCounts;
 };
 

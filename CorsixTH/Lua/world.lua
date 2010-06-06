@@ -536,6 +536,23 @@ function World:pauseOrUnpause()
   end
 end
 
+-- Outside (air) temperatures based on climate data for Oxford, taken from
+-- Wikipedia. For scaling, 0 degrees C becomes 0 and 50 degrees C becomes 1
+local outside_temperatures = {
+   4.1  / 50, -- January
+   4.4  / 50, -- February
+   6.3  / 50, -- March
+   8.65 / 50, -- April
+  11.95 / 50, -- May
+  15    / 50, -- June
+  16.95 / 50, -- July
+  16.55 / 50, -- August
+  14.15 / 50, -- September
+  10.5  / 50, -- October
+   6.8  / 50, -- November
+   4.75 / 50, -- December
+}
+
 function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
@@ -622,6 +639,8 @@ function World:onTick()
       end
       self.current_tick_entity = nil
       self.map:onTick()
+      self.map.th:updateTemperatures(outside_temperatures[self.month],
+        0.25 + self.hospitals[1].radiator_heat * 0.3)
       if self.ui then
         self.ui:onWorldTick()
       end

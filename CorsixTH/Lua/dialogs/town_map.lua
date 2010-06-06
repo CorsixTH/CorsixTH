@@ -81,7 +81,7 @@ function UITownMap:UITownMap(ui)
   -- add the toggle buttons
   local function toggle_button(sprite, x, y, option, str)
     local panel = self:addPanel(sprite, x, y)
-    local btn = panel:makeToggleButton(0, 0, 46, 46, 0, --[[persistable:town_map_config_button]] function(state)
+    local btn = panel:makeToggleButton(0, 0, 46, 46, 0, --[[persistable:town_map_config_button]] function(_, state)
       app.runtime_config.town_dialog[option] = state
     end):setTooltip(str)
     btn:setToggleState(config[option])
@@ -216,7 +216,8 @@ function UITownMap:draw(canvas, x, y)
     end
   end
   --]]
-  TH.windowHelpers.townMapDraw(self, world.map.th, canvas, x + 227, y + 25) 
+  TH.windowHelpers.townMapDraw(self, world.map.th, canvas,
+    x + 227, y + 25, config.radiators_enabled)
 
   -- plot number, owner, area and price
   self.city_font:draw(canvas, _S.town_map.number, x + 227, y + 435)

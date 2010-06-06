@@ -35,6 +35,7 @@ THMapNode::THMapNode()
     iBlock[3] = 0;
     iParcelId = 0;
     iRoomId = 0;
+    aiTemperature[0] = aiTemperature[1] = 8192;
     iFlags = 0;
 }
 
@@ -43,6 +44,7 @@ THMap::THMap()
     m_iWidth = 0;
     m_iHeight = 0;
     m_iPlayerCount = 0;
+    m_iCurrentTemperatureIndex = 0;
     m_pCells = NULL;
     m_pOriginalCells = NULL;
     m_pBlocks = NULL;
@@ -567,6 +569,77 @@ THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
     }
 }
 
+uint16_t THMap::getNodeTemperature(const THMapNode* pNode) const
+{
+    return pNode->aiTemperature[m_iCurrentTemperatureIndex];
+}
+
+void THMap::updateTemperatures(uint16_t iAirTemperature,
+                               uint16_t iRadiatorTemperature)
+{
+    if(iRadiatorTemperature < iAirTemperature)
+        iRadiatorTemperature = iAirTemperature;
+    const int iPrevTemp = m_iCurrentTemperatureIndex;
+    m_iCurrentTemperatureIndex ^= 1;
+    const int iNewTemp = m_iCurrentTemperatureIndex;
+
+    THMapNode* pLastNode = m_pCells + m_iWidth * m_iHeight;
+    for(THMapNode *pNode = m_pCells; pNode != pLastNode; ++pNode)
+    {
+        // Get average temperature of neighbour cells
+        uint32_t iNeighbourSum = 0;
+        uint32_t iNeighbourCount = 0;
+#define NEIGHBOUR(flag, idx) \
+        if(pNode->iFlags & flag) \
+        { \
+                iNeighbourCount += 4; \
+                iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
+        } \
+        else if(m_pCells <= pNode + (idx) && pNode + (idx) < pLastNode) \
+        { \
+            iNeighbourCount += 1; \
+            iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
+        }
+
+        NEIGHBOUR(THMN_CanTravelN, -m_iWidth);
+        NEIGHBOUR(THMN_CanTravelS,  m_iWidth);
+        NEIGHBOUR(THMN_CanTravelE,  1);
+        NEIGHBOUR(THMN_CanTravelW, -1);
+
+#undef NEIGHBOUR
+#define MERGE2(src, other, ratio) (src) = static_cast<uint16_t>( \
+    (static_cast<uint32_t>(src) * ((ratio) - 1) + (other)) / (ratio))
+#define MERGE(other, ratio) \
+    MERGE2(pNode->aiTemperature[iNewTemp], other, ratio)
+
+        // Diffuse 25% with neighbours
+        pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
+        if(iNeighbourCount != 0)
+            MERGE(iNeighbourSum / iNeighbourCount, 4);
+
+        // Merge 1% against air temperature
+        // or 50% against radiator temperature
+        // or generally dissipate 0.1% of temperature.
+        uint32_t iMergeTemp = 0;
+        uint32_t iMergeRatio = 100;
+        if(pNode->iFlags & THMN_Hospital)
+        {
+            if((pNode->iFlags >> 24) == THOB_Radiator)
+            {
+                iMergeTemp = iRadiatorTemperature;
+                iMergeRatio = 2;
+            }
+            else
+                iMergeRatio = 1000;
+        }
+        else
+            iMergeTemp = iAirTemperature;
+        MERGE(iMergeTemp, iMergeRatio);
+#undef MERGE
+#undef MERGE2
+    }
+}
+
 void THMap::updatePathfinding()
 {
     THMapNode *pNode = m_pCells;
@@ -653,7 +726,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     lua_State *L = pWriter->getStack();
     IntegerRunLengthEncoder oEncoder;
 
-    uint32_t iVersion = 3;
+    uint32_t iVersion = 4;
     pWriter->writeVUInt(iVersion);
     pWriter->writeVUInt(m_iPlayerCount);
     for(int i = 0; i < m_iPlayerCount; ++i)
@@ -674,6 +747,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     }
     pWriter->writeVUInt(m_iWidth);
     pWriter->writeVUInt(m_iHeight);
+    pWriter->writeVUInt(m_iCurrentTemperatureIndex);
     oEncoder.initialise(6);
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
@@ -687,6 +761,8 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         // Flags include THOB values, and other things which do not work
         // well with run-length encoding.
         pWriter->writeVUInt(pNode->iFlags);
+        pWriter->writeVUInt(pNode->aiTemperature[0]);
+        pWriter->writeVUInt(pNode->aiTemperature[1]);
 
         lua_rawgeti(L, luaT_upvalueindex(1), 2);
         lua_pushlightuserdata(L, pNode->m_pNext);
@@ -725,14 +801,14 @@ void THMap::depersist(LuaPersistReader *pReader)
 
     uint32_t iVersion;
     if(!pReader->readVUInt(iVersion)) return;
-    if(iVersion != 3)
+    if(iVersion != 4)
     {
         if(iVersion < 2 || iVersion == 128)
         {
             luaL_error(L, "TODO: Write code to load map data from earlier "
                 "savegame versions (if really neccessary).");
         }
-        else if(iVersion > 3)
+        else if(iVersion > 4)
         {
             luaL_error(L, "Cannot load savegame from a newer version.");
         }
@@ -771,11 +847,20 @@ void THMap::depersist(LuaPersistReader *pReader)
         pReader->setError("Unable to set size while depersisting map");
         return;
     }
+    if(iVersion >= 4)
+    {
+        if(!pReader->readVUInt(m_iCurrentTemperatureIndex))
+            return;
+    }
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
         if(!pReader->readVUInt(pNode->iFlags)) return;
-
+        if(iVersion >= 4)
+        {
+            if(!pReader->readVUInt(pNode->aiTemperature[0])
+            || !pReader->readVUInt(pNode->aiTemperature[1])) return;
+        }
         if(!pReader->readStackObject())
             return;
         pNode->m_pNext = (THLinkList*)lua_touserdata(L, -1);

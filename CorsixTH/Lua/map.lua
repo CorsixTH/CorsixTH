@@ -224,6 +224,7 @@ end
 function Map:clearDebugText()
   self.debug_text = false
   self.debug_flags = false
+  self.updateDebugOverlay = nil
 end
 
 function Map:getRawData(level_file)
@@ -243,17 +244,38 @@ function Map:getRawData(level_file)
   return self.thData
 end
 
+function Map:updateDebugOverlayFlags()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.th:getCellFlags(x, y, self.debug_flags[xy])
+    end
+  end
+end
+
+function Map:updateDebugOverlayHeat()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ("%02.1f"):format(self.th:getCellTemperature(x, y) * 50)
+    end
+  end
+end
+
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
+  self.updateDebugOverlay = nil
   if base_offset == "flags" then
     self.debug_flags = {}
     for x = 1, self.width do
       for y = 1, self.height do
         local xy = (y - 1) * self.width + x - 1
-        self.debug_flags[xy] = self.th:getCellFlags(x, y)
+        self.debug_flags[xy] = {}
       end
     end
+    self.updateDebugOverlay = self.updateDebugOverlayFlags
+    self:updateDebugOverlay()
   elseif base_offset == "positions" then
     self.debug_text = {}
     for x = 1, self.width do
@@ -262,6 +284,10 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
         self.debug_text[xy] = x .. "," .. y
       end
     end
+  elseif base_offset == "heat" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayHeat
+    self:updateDebugOverlay()
   else
     local thData = self:getRawData()
     for x = 1, self.width do
@@ -280,13 +306,8 @@ end
 
 function Map:onTick()
   if self.debug_tick_timer == 1 then
-    if self.debug_flags then
-      for x = 1, self.width do
-        for y = 1, self.height do
-          local xy = (y - 1) * self.width + x - 1
-          self.th:getCellFlags(x, y, self.debug_flags[xy])
-        end
-      end
+    if self.updateDebugOverlay then
+      self:updateDebugOverlay()
     end
     self.debug_tick_timer = 10
   else
@@ -331,8 +352,10 @@ end
   Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
+  -- All the heavy work is done by C code:
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
   
+  -- Draw any debug overlays
   if self.debug_font and (self.debug_text or self.debug_flags) then
     local startX = 0
     local startY = math_floor((sy - 32) / 16)

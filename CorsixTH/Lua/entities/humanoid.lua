@@ -27,7 +27,6 @@ local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
 local mood_icons = permanent"humanoid_mood_icons"({})
-local flag_cache = {} -- Used in tickDay
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
   walk_animations[name] = {
@@ -155,7 +154,7 @@ function Humanoid:Humanoid(...)
   self.action_queue = {}
   self.last_move_direction = "east"
   self.attributes = {}
-  self.attributes["warmth"] = 0.6
+  self.attributes["warmth"] = 0.29
   self.attributes["happiness"] = 1
   self.active_moods = {}
   self.should_knock_on_doors = false
@@ -427,7 +426,7 @@ end
 -- Function to alter one of a humanoids's different attributes.
 -- Currently available attributes are happiness, thirst, toilet_need and warmth.
 function Humanoid:changeAttribute(attribute, amount)
-  assert(amount <= 1 and amount >= -1, "Amount must me between -1 and 1")
+  assert(amount <= 1 and amount >= -1, "Amount must be between -1 and 1")
 
   -- Receptionist is always 100% happy
   if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
@@ -448,33 +447,26 @@ end
 -- Check if it is cold or hot around the humanoid and increase/decrease the
 -- feeling of warmth accordingly. Returns whether the calling function should proceed.
 function Humanoid:tickDay()
--- No use doing anything if we're going home or are outside the hospital
-  self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-  if self.going_home or not flag_cache.hospital then
+  -- No use doing anything if we're going home
+  if self.going_home then
     return false
   end
-  -- TODO: Distance should depend on the heating setting of the radiators
-  -- and most importantly, values need balancing. Multiple radiators
-  -- should also make a difference.
-  -- Preferably each tile should have a heat value associated with it - computed in C?
-  local radiator, lx, ly = self.world:findObjectNear(self, "radiator", 5)
-  if radiator then
-    local radiator_distance = ((lx - self.tile_x)^2 + (ly - self.tile_y)^2)^0.5
-    local change = math.floor(6 - radiator_distance)*0.002*(0.8 - self.attributes["warmth"])
-    self:changeAttribute("warmth", math.abs(change))
-  else
-    self:changeAttribute("warmth", -0.01)
-  end
+  
+  local temperature = self.world.map.th:getCellTemperature(self.tile_x, self.tile_y)
+  self.attributes.warmth = self.attributes.warmth * 0.75 + temperature * 0.25
   
   -- If it is too hot or too cold, start to decrease happiness and 
   -- show the corresponding icon. Otherwise we could get happier instead.
   if self.attributes["warmth"] then
-    if self.attributes["warmth"] < 0.1 then
-      self:changeAttribute("happiness", -0.02)
+    -- Cold: less than 11 degrees C
+    if self.attributes["warmth"] < 0.22 then
+      self:changeAttribute("happiness", -0.02 * (0.22 - self.attributes["warmth"]) / 0.14)
       self:setMood("cold", "activate")
-    elseif self.attributes["warmth"] > 0.9 then
-      self:changeAttribute("happiness", -0.02)
+    -- Hot: More than 18 degrees C
+    elseif self.attributes["warmth"] > 0.36 then
+      self:changeAttribute("happiness", -0.02 * (self.attributes["warmth"] - 0.36) / 0.14)
       self:setMood("hot", "activate")
+    -- Ideal: Between 11 and 18
     else
       self:changeAttribute("happiness", 0.005)
       self:setMood("cold", "deactivate")

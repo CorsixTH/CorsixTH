@@ -39,6 +39,7 @@ static int l_town_map_draw(lua_State *L)
     THRenderTarget *pCanvas = luaT_testuserdata<THRenderTarget>(L, 3);
     int iCanvasXBase = luaL_checkint(L, 4);
     int iCanvasYBase = luaL_checkint(L, 5);
+    bool bShowHeat = lua_toboolean(L, 6) != 0;
 
     uint32_t iColourMyHosp = pCanvas->mapColour(0, 0, 70);
     uint32_t iColourWall = pCanvas->mapColour(255, 255, 255);
@@ -52,7 +53,21 @@ static int l_town_map_draw(lua_State *L)
         for(int iX = 0; iX < pMap->getWidth(); ++iX, ++pNode, iCanvasX += 3)
         {
             if(pNode->iFlags & THMN_Hospital)
-                pCanvas->fillRect(iColourMyHosp, iCanvasX, iCanvasY, 3, 3);
+            {
+                uint32_t iColour = iColourMyHosp;
+                if(bShowHeat)
+                {
+                    uint16_t iTemp = pMap->getNodeTemperature(pNode);
+                    if(iTemp < 5200) // Less than 4 degrees
+                        iTemp = 0;
+                    else if(iTemp > 32767) // More than 25 degrees
+                        iTemp = 255;
+                    else // NB: 108 == (32767 - 5200) / 255
+                        iTemp = (iTemp - 5200) / 108;
+                    iColour = pCanvas->mapColour(static_cast<uint8_t>(iTemp), 0, 70);
+                }
+                pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
+            }
             int iNorth = pNode->iBlock[1] & 0xFF;
             if(82 <= iNorth && iNorth <= 164)
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 3, 1);

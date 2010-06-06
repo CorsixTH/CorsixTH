@@ -124,6 +124,35 @@ THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     return pAnim;
 }
 
+static uint16_t l_check_temp(lua_State *L, int iArg)
+{
+    lua_Number n = luaL_checknumber(L, iArg);
+    if(n < static_cast<lua_Number>(0) || static_cast<lua_Number>(1) < n)
+        luaL_argerror(L, iArg, "temperature (number in [0,1])");
+    return static_cast<uint16_t>(n * static_cast<lua_Number>(65535));
+}
+
+static int l_map_updatetemperature(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    uint16_t iAir = l_check_temp(L, 2);
+    uint16_t iRadiator = l_check_temp(L, 3);
+    pMap->updateTemperatures(iAir, iRadiator);
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_map_gettemperature(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX = luaL_checkint(L, 2) - 1;
+    int iY = luaL_checkint(L, 3) - 1;
+    const THMapNode* pNode = pMap->getNode(iX, iY);
+    uint16_t iTemp = pMap->getNodeTemperature(pNode);
+    lua_pushnumber(L, static_cast<lua_Number>(iTemp) / static_cast<lua_Number>(65535));
+    return 1;
+}
+
 static int l_map_updateblueprint(lua_State *L)
 {
     // NB: This function can be implemented in Lua, but is implemented in C for
@@ -719,10 +748,12 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_get_player_camera, "getCameraTile");
     luaT_setfunction(l_map_get_player_heliport, "getHeliportTile");
     luaT_setfunction(l_map_getcell, "getCell");
+    luaT_setfunction(l_map_gettemperature, "getCellTemperature");
     luaT_setfunction(l_map_getcellflags, "getCellFlags");
     luaT_setfunction(l_map_setcellflags, "setCellFlags");
     luaT_setfunction(l_map_setcell, "setCell");
     luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
+    luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", MT_Anims, MT_Anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
     luaT_setfunction(l_map_mark_room, "markRoom");

@@ -146,8 +146,16 @@ function UIPatient:draw(canvas, x_, y_)
   end
   -- How warm the patient feels
   local warmth_bar_width = 22
-  if patient.attributes["warmth"] then
-    warmth_bar_width = math_floor(patient.attributes["warmth"] * 40 + 0.5)
+  local warmth = patient.attributes["warmth"]
+  if warmth then
+    if warmth < 0.08 then
+      warmth = 0
+    elseif warmth > 0.50 then
+      warmth = 1
+    else
+      warmth = (warmth - 0.08) / (0.50 - 0.08)
+    end
+    warmth_bar_width = math_floor(warmth * 40 + 0.5)
   end
   if warmth_bar_width ~= 0 then
     for dx = 0, warmth_bar_width - 1 do
