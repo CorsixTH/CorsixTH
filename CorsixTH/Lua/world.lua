@@ -930,7 +930,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   if not distance then
     distance = 2^30
   end
-  for _, r in ipairs(self.rooms) do repeat
+  for _, r in pairs(self.rooms) do repeat
     if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.is_active then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
@@ -1242,7 +1242,7 @@ end
 -- one patient in the queue.
 function World:getNearestRoomNeedingStaff(humanoid)
   local candidates = {}
-  for _, room in ipairs(self.rooms) do
+  for _, room in pairs(self.rooms) do
     if room:isWaitingToGetStaff(humanoid) then
       local door_x, door_y = room:getEntranceXY()
       candidates[#candidates + 1] = {
@@ -1293,7 +1293,7 @@ function World:afterLoad(old, new)
     local value = self.map.parcelTileCounts[self.hospitals[1]:getPlayerIndex()] * 25 + 20000
 
     -- Add room values
-    for _, room in ipairs(self.rooms) do
+    for _, room in pairs(self.rooms) do
       local valueChange = room.room_info.build_cost
 
       -- Subtract values of objects in rooms to avoid calculating those object values twice
