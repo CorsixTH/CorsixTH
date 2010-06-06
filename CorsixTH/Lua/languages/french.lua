@@ -22,6 +22,24 @@ Language(utf8 "Français", "French" , "fr", "fre", "fra")
 Inherit("english")
 Inherit("original_strings", 1)
 
+-- override
+adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MEDECIN." -- Fix the famous "Level 5 bug"
+
+-- The originals of these two contain one space too much
+trophy_room.sold_drinks.trophies[2] = utf8 "Vous recevez le prix Bubulles du Syndicat des Vendeurs de Limonade pour récompenser la quantité de sodas vendus dans votre hôpital au cours de l'année écoulée. "
+fax.epidemic.declare_explanation_fine = utf8 "Si vous déclarez l'épidémie, vous aurez une amende de %d, un changement de réputation et tous les patients seront vaccinés automatiquement."
+fax.diagnosis_failed.partial_diagnosis_percentage_name = utf8 "Il y a %d pour cent de chances que la maladie soit %s."
+tooltip.status.percentage_cured = utf8 "Vous devez soigner %d%% des visiteurs de l'hôpital. Actuellement, vous en avez soigné %d%%"
+tooltip.status.num_cured = utf8 "L'objectif est de soigner %d personnes. Pour le moment, vous en avez soigné %d"
+dynamic_info.staff.actions.going_to_repair = utf8 "Pour réparer %s"
+adviser.staff_place_advice.only_doctors_in_room = utf8 "Seuls les médecins peuvent travailler en %s"
+adviser.staff_place_advice.nurses_cannot_work_in_room = utf8 "Les infermières ne peuvent travailler en %s"
+room_descriptions.gp[2] = utf8 "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour une autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait.//"
+room_descriptions.pharmacy[2] = utf8 "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard.//"
+room_descriptions.general_diag[3] = utf8 "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
+pay_rise.definite_quit = utf8 "Rien ne me fera rester ici. J'en ai assez. "
+place_objects_window.confirm_or_buy_objects = utf8 "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
+
 -- new strings
 object.litter = utf8 "Déchet"
 tooltip.objects.litter = utf8 "Déchet: Laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
@@ -29,6 +47,9 @@ tooltip.objects.litter = utf8 "Déchet: Laissé sur le sol par un patient car il
 menu_options.lock_windows = "  FIGER LES FENETRES  "
 menu_options.settings = "  PARAMETRES  "
 menu_options_game_speed.pause = "  PAUSE  "
+
+-- The demo does not contain this string
+menu_file.restart = "  RELANCER  "
 
 menu_debug = {
   transparent_walls           = "  MURS TRANSPARENTS  ",
@@ -60,13 +81,13 @@ menu_debug_overlay = {
 }
 adviser.room_forbidden_non_reachable_parts = utf8 "Placer la salle à cet endroit va empêcher des parties de l'hôpital d'être atteintes."
 
-dynamic_info.patient.actions.no_gp_available = utf8 "Attente d'un bureau de généraliste"
+dynamic_info.patient.actions.no_gp_available = utf8 "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = "Va vers %s"
 
 fax = {
   welcome = {
     beta1 = {
-      "Bienvenue dans CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog!",
+      "Bienvenue dans CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog !",
       utf8 "Ceci est la beta 1 jouable de CorsixTH. Beaucoup de salles, maladies et fonctionnalités ont été implémentées, mais beaucoup de choses manquent",
       utf8 "Si vous aimez ce projet, vous pouvez nous aider, par ex. en rapportant des bogues ou en codant quelque-chose par vous-même.",
       utf8 "Mais maintenant, amusez-vous ! Pour ceux qui ne sont pas familier avec Theme Hospital : Commencez par construire un bureau de réception (menu objets) et un bureau de généraliste (salle de diagnostic). Des salles de traitement seront aussi nécessaires.",
@@ -74,14 +95,14 @@ fax = {
       utf8 "PS: Trouverez-vous les surprises cachées ?",
     },
     beta2 = {
-      "Bienvenue dans la seconde beta de CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog!",
+      "Bienvenue dans la seconde beta de CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog !",
       utf8 "Beaucoup de nouvelles fonctionnalités ont été implémentées depuis la dernière publication. Regardez le changelog pour une liste non exhaustive.",
       utf8 "Mais d'abord, jouons! Il semble qu'un message vous attend. Fermez cette fenêtre et cliquez sur le point d'interrogation au dessus du tableau de bord.",
       utf8 "-- L'équipe de CorsixTH, th.corsix.org",
     },
   },
   tutorial = {
-    utf8 "Bienvenue dans votre premier hôpital!",
+    utf8 "Bienvenue dans votre premier hôpital !",
     "Souhaitez-vous un petit tutoriel ?",
     "Oui, montrez-moi les bases SVP.",
     utf8 "Non, je sais déjà comment faire.",
@@ -116,7 +137,7 @@ tooltip.main_menu = {
   custom_level = utf8 "Construire votre hôpital dans un niveau personnalisé",
   load_game = utf8 "Charger une partie sauvegardée",
   options = utf8 "Modifier quelques paramètres",
-  exit = "Non, non, SVP, ne quittez pas!",
+  exit = "Non, non, SVP, ne quittez pas !",
 }
 
 load_game_window = {
@@ -190,12 +211,12 @@ information = {
 }
 
 tooltip.information = {
-  close = utf8 "Fermer cette boîte de dialogue d'information",
+  close = utf8 "Fermer cette boîte de dialogue.",
 }
 
 totd_window = {
   tips = {
-    utf8 "Chaque hôpital a besoin d'un bureau de réception et d'un bureau de généraliste. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
+    utf8 "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
     utf8 "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
     utf8 "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
     utf8 "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents.",
@@ -203,7 +224,7 @@ totd_window = {
     utf8 "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications pariculières (chirurgien, psyschiatre ou chercheur), il transférera ses connaissances à ses élèves.",
     utf8 "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     utf8 "Le menu d'options n'est pas encore implémenté, mais vous pouvez ajuster les paramètres tels que la résolution ou la langue en éditant le fichier config.txt dans le dossier du jeu.",
-    utf8 "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue!",
+    utf8 "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
     utf8 "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
     utf8 "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs: th-issues.corsix.org.",
     utf8 "Le saviez-vous ? CorsixTH a été rendu public pour la première fois le 24 juillet 2009. La première publication a été la beta 1 jouable le 24 décembre 2009. Après trois mois de plus, nous sommes fiers de vous présenter la beta 2 (publiée le 24 mars 2010).",
