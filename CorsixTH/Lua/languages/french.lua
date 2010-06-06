@@ -43,9 +43,12 @@ place_objects_window.confirm_or_buy_objects = utf8 "Vous pouvez valider ainsi ou
 -- new strings
 object.litter = utf8 "Déchet"
 tooltip.objects.litter = utf8 "Déchet: Laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
-
-menu_options.lock_windows = "  FIGER LES FENETRES  "
-menu_options.settings = "  PARAMETRES  "
+  
+menu_options = {
+  lock_windows = "  FIGER LES FENETRES  ",
+  edge_scrolling = "  DEFILEMENT PAR BORD  ",
+  settings = "  PARAMETRES  ",
+}
 menu_options_game_speed.pause = "  PAUSE  "
 
 -- The demo does not contain this string

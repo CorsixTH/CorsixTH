@@ -170,6 +170,16 @@ function UIBankManager:draw(canvas, x, y)
   end
 end
 
+function UIBankManager:onMouseMove(x, y, ...)
+    local ui = self.ui
+    --x, y = self.x + x, self.y + y
+    if x > 0 and x < 640 and y > 0 and y < 480 then
+      ui:setCursor(ui.app.gfx:loadMainCursor("bank"))
+    else
+      ui:setCursor(ui.default_cursor)
+    end
+end
+
 function UIBankManager:showStatistics()
   if self.closed then
     return

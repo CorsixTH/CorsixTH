@@ -50,6 +50,7 @@ local cursors_name = {
   repair = 17,
   patient = 18,
   queue = 19,
+  bank = 36,
 }
 
 function Graphics:Graphics(app)
@@ -82,9 +83,13 @@ end
 
 function Graphics:loadMainCursor(id)
   if type(id) ~= "number" then
-      id = cursors_name[id]
+    id = cursors_name[id]
   end
-  return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
+  if id > 20 then -- SPointer cursors
+    return self:loadCursor(self:loadSpriteTable("QData", "SPointer"), id - 20)
+  else
+    return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
+  end
 end
 
 function Graphics:loadCursor(sheet, index, hot_x, hot_y)

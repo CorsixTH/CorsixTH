@@ -1114,7 +1114,7 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
     if not self.mouse_down_x then
       if wx > rect.x and wx < rect.x + rect.w - 1 and wy > rect.y and wy < rect.y + rect.h - 1 then
         -- inside blueprint, non-border -> move blueprint
-        ui:setCursor(ui.app.gfx:loadMainCursor(8))
+        ui:setCursor(ui.app.gfx:loadMainCursor("move_room"))
         self.move_rect = true
         self.resize_rect = false
       elseif wx < rect.x or wx >= rect.x + rect.w or wy < rect.y or wy >= rect.y + rect.h then
@@ -1133,11 +1133,11 @@ function UIEditRoom:onMouseMove(x, y, dx, dy)
         }
         
         if (self.resize_rect.w or self.resize_rect.e) and (self.resize_rect.n or self.resize_rect.s) then
-          ui:setCursor(ui.app.gfx:loadMainCursor(7)) -- nswe arrow
+          ui:setCursor(ui.app.gfx:loadMainCursor("nswe_arrow"))
         elseif self.resize_rect.w or self.resize_rect.e then
-          ui:setCursor(ui.app.gfx:loadMainCursor(6)) -- we arrow
+          ui:setCursor(ui.app.gfx:loadMainCursor("we_arrow"))
         else
-          ui:setCursor(ui.app.gfx:loadMainCursor(5)) -- ns arrow
+          ui:setCursor(ui.app.gfx:loadMainCursor("ns_arrow"))
         end
       end
     end
