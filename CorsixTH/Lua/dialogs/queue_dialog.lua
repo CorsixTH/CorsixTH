@@ -58,8 +58,8 @@ function UIQueue:UIQueue(ui, queue)
   self:makeTooltip(_S.tooltip.queue_window.num_entered,  15, 62, 163, 83)
   self:makeTooltip(_S.tooltip.queue_window.max_queue_size, 15, 87, 163, 108)
   
-  self:makeTooltip(_S.tooltip.queue_window.front_of_queue .. " " .. _S.misc.not_yet_implemented, 168, 25, 213, 105)
-  self:makeTooltip(_S.tooltip.queue_window.end_of_queue   .. " " .. _S.misc.not_yet_implemented, 543, 51, 586, 105)
+  self:makeTooltip(_S.tooltip.queue_window.front_of_queue, 168, 25, 213, 105)
+  self:makeTooltip(_S.tooltip.queue_window.end_of_queue, 543, 51, 586, 105)
   self:makeTooltip(_S.tooltip.queue_window.patient        .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
 end
 
