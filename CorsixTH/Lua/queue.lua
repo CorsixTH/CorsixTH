@@ -213,6 +213,26 @@ function Queue:removeValue(value)
   return false
 end
 
+function Queue:move(index, new_index)
+  if self[index] == nil or self[new_index] == nil or index == new_index then
+    return
+  end
+
+  local i
+  if new_index < index then
+    i = -1
+  else
+    i = 1
+  end
+
+  while new_index ~= index do
+    local temp = self[index + i]
+    self[index + i] = self[index]
+    self[index] = temp
+    index = index + i
+  end
+end
+
 -- Called when reception desk is destroyed. May be extended later to handle removed rooms, too.
 -- Update: Now also used when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)

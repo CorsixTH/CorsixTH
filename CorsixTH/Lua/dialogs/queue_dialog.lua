@@ -25,9 +25,6 @@ local math_floor
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 
---TODO: interact with patients in the queue
---TODO: max_size doesn't do anything
-
 function UIQueue:UIQueue(ui, queue)
   self:Window()
   
@@ -92,8 +89,8 @@ function UIQueue:draw(canvas, x, y)
   
   local font = self.white_font
   local queue = self.queue  
-
   local num_patients = queue:reportedSize()
+
   font:draw(canvas, _S.queue_window.num_in_queue, x + 22, y + 22)
   font:draw(canvas, num_patients, x + 140, y + 22)
     
@@ -106,28 +103,183 @@ function UIQueue:draw(canvas, x, y)
   font:draw(canvas, _S.queue_window.max_queue_size, x + 22, y + 93)
   font:draw(canvas, queue.max_size, x + 119, y + 93)
   
-  local dx = 0
-  if num_patients ~= 1 then
-    local width_to_use = 276
-    if num_patients < 8 then
-      dx = width_to_use / num_patients
-    else
-      dx = width_to_use / (num_patients - 1)
+  self:drawPatients(canvas, x, y)
+
+  -- Draw dragged patient in the cursor location
+  if self.dragged then
+    self:drawPatient(canvas, self.dragged.x, self.dragged.y, self.dragged.patient)
+  end
+end
+
+function UIQueue:isInsideQueueBoundingBox(x, y)
+  local x_min = 219
+  local x_max = 534
+  local y_min = 15
+  local y_max = 105
+  return not (x < x_min or x > x_max or y < y_min or y > y_max)
+end
+
+function UIQueue:onMouseDown(button, x, y)
+  -- Allow normal window operations if the mouse is outside the listing of patients
+  if not self:isInsideQueueBoundingBox(x, y) then
+    return Window.onMouseDown(self, button, x, y)
+  end
+
+  -- Select patient to drag
+  local x_min = 219
+  local y_min = 15
+  self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
+  self.dragged = self.hovered
+  if self.dragged then
+    self.dragged.x = x + self.x
+    self.dragged.y = y + self.y
+  end
+end
+
+function UIQueue:onMouseUp(button, x, y)
+  local queue = self.queue
+  local num_patients = queue:reportedSize()
+
+  if not self.dragged then
+    return Window.onMouseUp(self, button, x, y)
+  end
+
+  -- Check whether the dragged patient is still in the queue
+  local index = -1
+  for i = 1, num_patients do
+    if self.dragged.patient == queue:reportedHumanoid(i) then
+      index = i
+      break
     end
   end
+
+  if index == -1 then
+    self.dragged = nil
+    return
+  end
+
+  -- Inside door bounding box
+  if x > 170 and x < 210 and y > 25 and y < 100 then
+    queue:move(index, 1) -- move to front
+  end
+
+  -- Inside exit sign bounding box
+  if x > 542 and x < 585 and y > 50 and y < 100 then
+    queue:move(index, num_patients) -- move to back
+  end
+
+  -- TODO dropping patient between other patients
+  -- TODO dropping patient to another room
+
+  self.dragged = nil
+end
+
+function UIQueue:onMouseMove(x, y, dx, dy)
+  local x_min = 219
+  local y_min = 15
+  if self.dragged then
+    self.dragged.x = x + self.x
+    self.dragged.y = y + self.y
+  end
+  if not self:isInsideQueueBoundingBox(x, y) then
+    Window:onMouseMove(x, y, dx, dy)
+    return
+  end
+
+  -- Update hovered patient
+  self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
+  Window:onMouseMove(x, y, dx, dy)
+end
+
+function UIQueue:getHoveredPatient(x, y)
+  local queue = self.queue
+  local num_patients = queue:reportedSize()
+  local width = 276
+  local gap = 10
+  x = x - 15 -- sprite offset
+
+  local dx = 0
+  if num_patients ~= 1 then
+    dx = width / (num_patients - 1)
+  end
+
+  local offset = 0
+  local closest = nil
+
+  -- Find the closest patient to the given x-coordinate
   for index = 1, num_patients do
     local patient = queue:reportedHumanoid(index)
-    local anim = TH.animation()
-    local idle_anim = patient.getIdleAnimation(patient.humanoid_class)
-    anim:setAnimation(self.ui.app.world.anims, idle_anim, 1) --flag 1 is for having patients in west position (looking the door in the dialog)
-    for layer, id in pairs(patient.layers) do
-      anim:setLayer(layer, id)
+    local patient_x = (index - 1) * dx + offset
+    local diff = math.abs(patient_x - x)
+
+    -- Take into account the gap between the hovered patient and other patients
+    if self.hovered and patient == self.hovered.patient then
+      offset = gap * 2
+      diff = diff + gap
     end
-    anim:draw(canvas, x + 239 + dx * (index - 1), y + 75)
-    -- Also draw the mood of the patient, if any.
-    local mood = patient:getCurrentMood()
-    if mood then
-      mood:draw(canvas, x + 239 + dx * (index - 1), y + 99)
+
+    if not closest or diff < closest.diff then
+      closest = {patient = patient, diff = diff, x = x}
+    end
+  end
+
+  -- The closest patient must be close enough (i.e. almost over the patient sprite)
+  if not closest or closest.diff > 25 then
+    return nil
+  end
+
+  return {patient = closest.patient, x = closest.x}
+end
+
+function UIQueue:drawPatients(canvas, x, y)
+  local queue = self.queue
+  local num_patients = queue:reportedSize()
+  local width = 276
+  local gap = 10
+  local dx = 0
+
+  if not self.hovered then
+    if num_patients ~= 1 then
+      dx = width / (num_patients - 1)
+    end
+
+    for index = 1, num_patients do
+      local patient = queue:reportedHumanoid(index)
+      self:drawPatient(canvas, x + 239 + dx * (index - 1), y + 75, patient)
+    end
+  else
+    if num_patients ~= 1 then
+      dx = (width - 2 * gap) / (num_patients - 1)
+    end
+
+    x = x + 239
+    y = y + 75
+    for index = 1, num_patients do
+      local patient = queue:reportedHumanoid(index)
+      if patient == self.hovered.patient then
+        x = x + gap
+        self:drawPatient(canvas, x, y - 10, patient)
+        x = x + gap + dx
+      else
+        self:drawPatient(canvas, x, y, patient)
+        x = x + dx
+      end
     end
   end
 end
+
+function UIQueue:drawPatient(canvas, x, y, patient)
+  local anim = TH.animation()
+  local idle_anim = patient.getIdleAnimation(patient.humanoid_class)
+  anim:setAnimation(self.ui.app.world.anims, idle_anim, 1) -- flag 1 is for having patients in west position (looking the door in the dialog)
+  for layer, id in pairs(patient.layers) do
+    anim:setLayer(layer, id)
+  end
+  anim:draw(canvas, x, y)
+  -- Also draw the mood of the patient, if any.
+  local mood = patient:getCurrentMood()
+  if mood then
+    mood:draw(canvas, x, y + 24)
+  end
+end
+
