@@ -182,6 +182,7 @@ function UIQueue:onMouseMove(x, y, dx, dy)
     self.dragged.y = y + self.y
   end
   if not self:isInsideQueueBoundingBox(x, y) then
+    self.hovered = nil
     Window:onMouseMove(x, y, dx, dy)
     return
   end
