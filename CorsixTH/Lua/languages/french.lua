@@ -70,6 +70,7 @@ menu_debug_overlay = {
   none                        = "  AUCUN  ",
   flags                       = "  DRAPEAUX  ",
   positions                   = "  POSITIONS  ",
+  heat                        = "  TEMPERATURE  ",
   byte_0_1                    = "  OCTETS 0 & 1  ",
   byte_floor                  = "  OCTET SOL  ",
   byte_n_wall                 = "  OCTET MUR N  ",
