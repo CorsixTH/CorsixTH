@@ -208,6 +208,7 @@ function SaveGame()
   state.map:prepareForSave()
   --local status, res = xpcall(function()
   local result, err, obj = persist.dump(state, MakePermanentObjectsTable(false))
+  state.map:afterSave()
   if not result then
     print(obj, NameOf(obj)) -- for debugging
     error(err)

@@ -216,9 +216,33 @@ function Map:loadMapConfig(filename, config, custom)
   end
 end
 
+local temp_debug_text
+local temp_debug_flags
+local temp_updateDebugOverlay
+local temp_thData
+
+-- Keep debug information in temporary local vars, do not save them
 function Map:prepareForSave()
-  self:clearDebugText()
+  temp_debug_text = self.debug_text
+  self.debug_text = false
+  temp_debug_flags = self.debug_flags
+  self.debug_flags = false
+  temp_updateDebugOverlay = self.updateDebugOverlay
+  self.updateDebugOverlay = nil
+  temp_thData = self.thData
   self.thData = nil
+end
+
+-- Restore the temporarily stored debug information after saving
+function Map:afterSave()
+  self.debug_text = temp_debug_text
+  temp_debug_text = nil
+  self.debug_flags = temp_debug_flags
+  temp_debug_flags = nil
+  self.updateDebugOverlay = temp_updateDebugOverlay
+  temp_updateDebugOverlay = nil
+  self.thData = temp_thData
+  temp_thData = nil
 end
 
 function Map:clearDebugText()
