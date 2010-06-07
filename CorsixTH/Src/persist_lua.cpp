@@ -277,9 +277,11 @@ public:
         else if(iType == LUA_TNUMBER)
         {
             double fValue = lua_tonumber(L, iIndex);
-            if(floor(fValue) == fValue && 0.0 <= fValue && 16383.0)
+            if(floor(fValue) == fValue && 0.0 <= fValue && fValue <= 16383.0)
             {
                 // Small integers are written as just a few bytes
+                // NB: 16383 = 2^14-1, which is the maximum value which
+                // can fit into two bytes of VUInt.
                 uint8_t iByte = PERSIST_TINTEGER;
                 writeByteStream(&iByte, 1);
                 uint16_t iValue = (uint16_t)fValue;
