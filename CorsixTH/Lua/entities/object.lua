@@ -46,10 +46,19 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self.ticks = object_type.ticks
   self.object_type = object_type
   self.world = world
-  self.direction = direction
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
   self:updateDynamicInfo()
+  self:initOrientation(direction)
+  self:setTile(x, y)
+end
+
+--! Initializes the footprint, finds out what to draw and checks for
+--  split animations.
+--!param direction The orientation in which the object is facing.
+function Object:initOrientation(direction)
+  self.direction = direction
+  local object_type = self.object_type
   local flags = self.init_anim_flags or 0
   local anim = object_type.idle_animations[direction]
   if not anim then
@@ -77,6 +86,11 @@ function Object:Object(world, object_type, x, y, direction, etc)
       th:setPosition(Map:WorldToScreen(1-point[1], 1-point[2]))
       self.split_anims[i] = th
     end
+  else
+    -- Make sure these variables aren't left behind. The object
+    -- might just have been moved and rotated.
+    self.split_anims = nil
+    self.split_anim_positions = nil
   end
   if footprint and footprint.animation_offset then
     self:setPosition(unpack(footprint.animation_offset))
@@ -84,9 +98,10 @@ function Object:Object(world, object_type, x, y, direction, etc)
   footprint = footprint and footprint.footprint
   if footprint then
     self.footprint = footprint
+  else
+    self.footprint = nil
   end
   self:setAnimation(anim, flags)
-  self:setTile(x, y)
 end
 
 function Object:tick()
@@ -343,10 +358,6 @@ function Object:isReservedFor(user)
   return false
 end
 
---! Function stub to be overridden when an object needs to be restored after being moved.
-function Object:restoreObject(data)
-end
-
 --[[ Called when the object is clicked
 !param ui (UI) The active ui.
 !param button (string) Which button was clicked.
@@ -354,7 +365,10 @@ end
 ]]
 function Object:onClick(ui, button, data)
   if button == "right" then
-    local object_list = {{object = self.object_type, qty = 1, data = data}}
+    -- This flag can be used if for example some things should only happen as long as the
+    -- object is not picked up. How lovely when it is so logical. :-)
+    self.picked_up = true
+    local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
     local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
     local direction = self.direction

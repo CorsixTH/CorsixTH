@@ -32,10 +32,11 @@ class "UIPlaceObjects" (Window)
 
 --[[ Constructor for the class.
 !param ui (UI) The active ui.
-!param object_list (table) a list of tables with objects to place. One of the keys in each object table
-is "data". To get data back after moving an object this table can be used. The object should then
-override the restoreObject function. In particular the object's active frame can be specified by 
-setting the key "current_frame" in "data". Then that frame will be visible while moving the object.
+!param object_list (table) a list of tables with objects to place. Keys are "object", "qty" and
+"existing_object". The first is the object_type of the object, the second how many, and if the key 
+"existing_object" is set it should be an already existing object that is about to be moved.
+In particular, if that object has a variable called current_frame then that frame will be used 
+when drawing the object as it is being moved.
 ]]
 function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self:Window()
@@ -178,6 +179,16 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
         if pay_for then
           self.ui.hospital:spendMoney(new_object.qty * new_object.object.build_cost, _S.transactions.buy_object .. ": " .. object.object.name, new_object.qty * new_object.object.build_cost)
         end
+        -- If this is an object that has been created in the world already, add it to the
+        -- associated list of objects to re-place.
+        if new_object.existing_object then
+          if not object.existing_objects then
+            object.existing_objects = {}
+          end
+          -- Insert the new object in the beginning of the list so that that this object
+          -- is the one to be placed first. (LIFO)
+          table.insert(object.existing_objects, 1, new_object.existing_object)
+        end
         table.remove(object_list, new_index)
         new_index = new_index - 1
         break
@@ -193,6 +204,9 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   self:resize(total_objects)
   
   for _, object in pairs(object_list) do
+    if object.existing_object then
+      object.existing_objects = {object.existing_object}
+    end
     self.objects[#self.objects + 1] = object
     if pay_for then
       self.ui.hospital:spendMoney(object.qty * object.object.build_cost, _S.transactions.buy_object .. ": " .. object.object.name, object.qty * object.object.build_cost)
@@ -220,6 +234,14 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
   end
 
   object.qty = object.qty - 1
+  -- Prefer to remove objects not yet placed
+  local existing_no = object.existing_objects and #object.existing_objects or 0
+  if existing_no > 0 then
+    if object.qty < #object.existing_objects then
+      -- The object is already as good as destroyed. It is only known in this list.
+      table.remove(object.existing_objects, 1)
+    end
+  end
   if object.qty == 0 then
     if #self.objects == 1 then
       self:clearBlueprint()
@@ -237,6 +259,9 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
     self:resize(#self.objects)
     self.active_index = 0 -- avoid case of index changing from 1 to 1
     self:setActiveIndex(1)
+  else
+    -- Make sure the correct frame is shown for the next object
+    self:setOrientation(self.object_orientation)
   end
   -- Update blueprint
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
@@ -332,8 +357,12 @@ function UIPlaceObjects:setOrientation(orient)
     flag = flag + 1024
   end
   self.object_anim:setAnimation(self.anims, anim, flag)
-  if object_data.data and object_data.data.current_frame then
-    self.object_anim:setFrame(self.objects[self.active_index].data.current_frame)
+  local present_object
+  if object_data.existing_objects and #object_data.existing_objects > 0 then
+    present_object = object_data.existing_objects[1]
+  end
+  if present_object and present_object.current_frame then
+    self.object_anim:setFrame(present_object.current_frame)
   end
   local px, py = unpack(object.orientations[orient].render_attach_position)
   if type(px) == "table" then
@@ -397,9 +426,23 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
 
   local object = self.objects[self.active_index]
   if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "next") end
-  local real_obj =  self.world:newObject(object.object.id, self.object_cell_x,
+  local real_obj
+  -- There might be an existing object that has been picked up.
+  if object.existing_objects and #object.existing_objects > 0 then
+    real_obj = object.existing_objects[1]
+    table.remove(object.existing_objects, 1)
+  end
+  if real_obj then
+    -- If there is such an object then we don't want to make a new one, but move this one instead.
+    real_obj:initOrientation(self.object_orientation)
+    real_obj:setTile(self.object_cell_x, self.object_cell_y)
+    self.world:objectPlaced(real_obj)
+    -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
+    real_obj.picked_up = false
+  else
+    real_obj = self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
-  real_obj:restoreObject(self.objects[self.active_index].data)
+  end
   local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if room then
     room.objects[real_obj] = true

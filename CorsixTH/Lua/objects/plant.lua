@@ -28,13 +28,12 @@ object.ticks = false
 object.corridor_object = 6
 object.build_cost = 5
 object.build_preview_animation = 934
-local function copy_north_to_south(t)
-  t.south = t.north
-  return t
-end
-object.idle_animations = copy_north_to_south {
+
+object.idle_animations = {
   north = 1950,
+  south = 1950,
   east = 1950,
+  west = 1950,
 }
 object.usage_animations = {
   north = {
@@ -78,7 +77,7 @@ object.orientations = {
 -- The states specify which frame to show
 local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
 
-local days_between_states = 60 -- TODO: Balance
+local days_between_states = 75
 
 --! An `Object` which needs watering now and then.
 class "Plant" (Object)
@@ -266,32 +265,26 @@ end
 
 --! Counts down to eventually let the plant droop.
 function Plant:tickDay()
-  -- TODO: Take into account heat on the tile as soon as it is implemented properly.
-  self.days_left = self.days_left - 1
-  if self.days_left < 1 then
-    self.days_left = days_between_states
-    self:setNextState()
-  elseif self.days_left < 10 or self.current_state > 0 then -- TODO: Balance this number too
-    self:callForWatering()
+  if not self.picked_up then
+    -- The plant will need water a little more often if it is hot where it is.
+    local temp = self.world.map.th:getCellTemperature(self.tile_x, self.tile_y)
+    self.days_left = self.days_left - (1 + temp)
+    if self.days_left < 1 then
+      self.days_left = days_between_states
+      self:setNextState()
+    elseif self.days_left < 7 or self.current_state > 0 then
+      self:callForWatering()
+    end
   end
 end
 
---! The plant needs to retain its state when being moved.
+--! The plant needs to retain its animation when being moved.
 function Plant:onClick(ui, button)
-  local data = {current_frame = self.base_frame + self.current_state, days_left = self.days_left}
-  Object.onClick(self, ui, button, data)
-end
-
-function Plant:restoreObject(data)
-  if data then
-    if data.current_frame then
-      self.current_state = data.current_frame - self.base_frame
-      self.th:setFrame(self.base_frame + self.current_state)
-    end
-    if data.days_left then
-      self.days_left = data.days_left
-    end
+  if button == "right" then
+    self.picked_up = true
+    self.current_frame = self.base_frame + self.current_state
   end
+  Object.onClick(self, ui, button)
 end
 
 return object

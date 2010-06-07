@@ -1014,6 +1014,10 @@ function World:destroyEntity(entity)
   entity:onDestroy()
 end
 
+--! Creates a new object by finding the object_type from the "id" variable and 
+--  calls its class constructor.
+--!param id (string) The unique id of the object to be created.
+--!return The created object.
 function World:newObject(id, ...)
   local object_type = self.object_types[id]
   local entity
@@ -1024,6 +1028,15 @@ function World:newObject(id, ...)
   else
     entity = Object(self, object_type, ...)
   end
+  self:objectPlaced(entity, id)
+  return entity
+end
+
+--! Notifies the world that an object has been placed, notifying 
+--  interested entities in the vicinity of the new arrival.
+--!param entity (Entity) The entity that was just placed.
+--!param id (string) That entity's id.
+function World:objectPlaced(entity, id)
   self.entities[#self.entities + 1] = entity
   -- If it is a bench we're placing, notify queueing patients in the vicinity
   if id == "bench" and entity.tile_x and entity.tile_y then
@@ -1036,7 +1049,6 @@ function World:newObject(id, ...)
       end
     end
   end
-  return entity
 end
 
 --! Notify the world of an object being removed from a tile
