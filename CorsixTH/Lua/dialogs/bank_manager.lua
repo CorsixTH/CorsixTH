@@ -172,12 +172,17 @@ end
 
 function UIBankManager:onMouseMove(x, y, ...)
     local ui = self.ui
-    --x, y = self.x + x, self.y + y
     if x > 0 and x < 640 and y > 0 and y < 480 then
-      ui:setCursor(ui.app.gfx:loadMainCursor("bank"))
+      ui:setCursor(ui.app.gfx:loadMainCursor("bank")) -- Set dollar cursor
     else
-      ui:setCursor(ui.default_cursor)
+      ui:setCursor(ui.default_cursor) -- Return to default cursor
     end
+end
+
+function UIBankManager:close()
+    local ui = self.ui
+    ui:setCursor(ui.default_cursor) -- Return to default cursor
+    UIFullscreen.close(self)
 end
 
 function UIBankManager:showStatistics()
