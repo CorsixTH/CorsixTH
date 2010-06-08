@@ -36,7 +36,7 @@ Version Beta 3 - to be released 2010-06-24
 * Added all tooltips that were still missing.
 
 -- Misc --
-* Translations: Italian and Spanish: added new strings not available in vanilla TH, 
+* Translations: Italian, Spanish and French: added new strings not available in vanilla TH, 
   Portuguese (WIP) and Dutch (WIP)
 
 And of course again a lot of bugs have been terminated.
