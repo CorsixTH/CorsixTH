@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 "mccunyao"
+--[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -23,11 +23,9 @@ Inherit("english")
 Inherit("original_strings", 4)
 
 -- override
-misc = {
-  hospital_open = "Hospital abierto",
-  save_success = "Partida guardada correctamente",
-  save_failed = "ERROR: No se ha podido guardar la partida",
-}
+misc.hospital_open = "Hospital abierto"
+misc.save_success = "Partida guardada correctamente"
+misc.save_failed = "ERROR: No se ha podido guardar la partida"
 
 fax = {
   vip_visit_result = {
@@ -35,23 +33,32 @@ fax = {
         [1] = utf8 "¡Vaya tugurio! Voy a intentar clausurarlo.",
       },
   },
-  emergency = {
-    num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente.",
-  },
 }
-tooltip = {
-  handyman_window = {
-    close = "Cerrar ventana",
-  },
-}
+fax.emergency.num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente."
 
+tooltip.handyman_window.close = "Cerrar ventana"
+tooltip.machine_window.close = "Cerrar ventana"
+tooltip.queue_window.close = "Cerrar ventana"
+tooltip.jukebox.rewind = utf8 "Rebobinar reproductor de música"
+tooltip.jukebox.loop = utf8 "Funcionamiento contínuo del reproductor de música"
+tooltip.jukebox.stop = utf8 "Parar reproductor de música"
+tooltip.jukebox.close = utf8 "Cerrar reproductor de música"
+tooltip.jukebox.current_title = utf8 "Reproductor de música"
+tooltip.jukebox.play = utf8 "Encender reproductor de música"
+tooltip.jukebox.fast_forward = utf8 "Avance rápido del reproductor de música"
+tooltip.patient_window.close = "Cerrar ventana"
+tooltip.staff_window.close = "Cerrar ventana"
+tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 
 -- new strings
 object.litter = "Basura"
 tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
 
-menu_options.lock_windows = "  BLOQUEAR VENTANAS  "
-menu_options.settings = utf8 "  CONFIGURACIÓN  "
+menu_options = {
+  lock_windows = "  BLOQUEAR VENTANAS  ",
+  edge_scrolling = "  DESPLAZAR POR BORDES  ",
+  settings = utf8 "  CONFIGURACIÓN  ",
+}
 menu_options_game_speed.pause = "  PAUSA  "
 
 -- The demo does not contain this string
@@ -76,6 +83,7 @@ menu_debug_overlay = {
   none                        = utf8 "  NINGUNO/A  ",
   flags                       = "  BANDERAS  ",
   positions                   = "  POSICIONES  ",
+  heat                        = "  TEMPERATURA  ",
   byte_0_1                    = "  BYTE 0 Y 1  ",
   byte_floor                  = "  BYTE SUELO  ",
   byte_n_wall                 = "  BYTE PARED NORTE  ",
@@ -131,11 +139,11 @@ misc.not_yet_implemented = utf8"(aún no implementado)"
 misc.no_heliport = utf8 "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel."
 
 main_menu = {
-  new_game = utf8 "Nueva partida",
-  custom_level = utf8 "Nivel personalizado",
-  load_game = utf8 "Cargar partida",
-  options = utf8 "Opciones",
-  exit = utf8 "Salir",
+  new_game = "Nueva partida",
+  custom_level = "Nivel personalizado",
+  load_game = "Cargar partida",
+  options = "Opciones",
+  exit = "Salir",
 }
 
 tooltip.main_menu = {
@@ -203,6 +211,8 @@ errors = {
   dialog_missing_graphics = utf8 "Los archivos de datos de la demo no contienen esta ventana.",
   save_prefix = utf8 "Error al guardar la partida: ",
   load_prefix = utf8 "Error al cargar la partida: ",
+  map_file_missing = utf8 "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
+  minimum_screen_size = utf8 "Introduce un tamaño de pantalla como mínimo de 640x480.",
 }
 
 confirmation = {
@@ -228,7 +238,7 @@ totd_window = {
     utf8 "Los doctores pueden mejorar sus habilidades aprendiendo de un asesor en la sala de entrenamiento. Si el asesor tiene una calificación especial (cirujano, psiquiatra o investigador), también pasará sus conocimientos a sus pupilos.",
     utf8 "¿Has probado a meter el número de emergencias (112) en el fax? ¡Asegúrate de tener el sonido activado!",
     utf8 "El menú de opciones todavía no está implementado, pero puedes ajustar algunos parámetros como la resolución y el idioma editando el archivo config.txt en la carpeta raíz de CorsixTH.",
-    utf8 "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés por todas partes? ¡Ayúdanos traduciendo los textos que faltan al Castellano",
+    utf8 "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés por todas partes? ¡Ayúdanos avisando de las líneas de texto que estén en Inglés para que podamos traducirlas!",
     utf8 "¡El equipo de CorsixTH busca refuerzos! ¿Te interesa programar, traducir o crear gráficos para CorsixTH? Contáctanos en nuestro foro, lista de correo o canal IRC (corsix-th en freenode).",
     utf8 "Si encuentras un fallo, infórmalo en nuestro registro de fallos: th-issues.corsix.org",
     utf8 "CorsixTH fue hecho público por primera vez el 24 de julio de 2009. La primera versión fue la beta jugable 1 publicada el 24 de diciembre de 2009. Tres meses más tarde, estamos orgullosos de mostrar la beta 2 (publicada el 24 de marzo de 2010).",
