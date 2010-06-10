@@ -228,10 +228,6 @@ totd_window = {
   next = "Next Tip",
 }
 
-testing = {
-  test_of_automated_notifier = "Testing 1 2 3",
-}
-
 tooltip.totd_window = {
   previous = "Display the previous tip",
   next = "Display the next tip",
