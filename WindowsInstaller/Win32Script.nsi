@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "beta 2"
+!define PRODUCT_VERSION "beta 3"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -61,10 +61,12 @@ RequestExecutionLevel admin
 !insertmacro MUI_PAGE_DIRECTORY
 ; Another directory page to choose where the original game is
 Var ORIGINALPATH
-!define MUI_DIRECTORYPAGE_TEXT_TOP $(original_text)
-!define MUI_DIRECTORYPAGE_VARIABLE $OriginalPath
-!define MUI_DIRECTORYPAGE_TEXT_DESTINATION $(original_folder)
-!insertmacro MUI_PAGE_DIRECTORY
+Var CONFIGAPPDATA
+;!define MUI_DIRECTORYPAGE_TEXT_TOP $(original_text)
+;!define MUI_DIRECTORYPAGE_VARIABLE $OriginalPath
+;!define MUI_DIRECTORYPAGE_TEXT_DESTINATION $(original_folder)
+;!insertmacro MUI_PAGE_DIRECTORY
+Page Custom OptionsPage OptionsPageLeave
 ; Start menu page
 var ICONS_GROUP
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "${PRODUCT_NAME}"
@@ -99,6 +101,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 !insertmacro MUI_LANGUAGE "Swedish"
 !insertmacro MUI_LANGUAGE "Norwegian"
 !insertmacro MUI_LANGUAGE "Portuguese"
+!insertmacro MUI_LANGUAGE "Dutch"
 
 ; MUI end ------
 
@@ -119,6 +122,27 @@ FunctionEnd
 
 !include LanguageStrings.nsh
 
+; ----------------------------- Functions for the custom options page ----------------------------
+
+Function OptionsPage
+
+  ReserveFile "OptionsPage.ini"
+  !insertmacro MUI_HEADER_TEXT $(options_title) $(options_subtitle)
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "OptionsPage.ini"
+  ; The ini file is actually static. Set strings so that they are localized.
+  WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 1" "Text" $(save_in_appdata)
+  WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 3" "Text" $(original_folder)
+  WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 4" "Text" $(original_text)
+  
+  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "OptionsPage.ini"
+FunctionEnd
+ 
+Function OptionsPageLeave
+  ; Get install path and where to put configuration files and saved games.
+  !insertmacro MUI_INSTALLOPTIONS_READ $ORIGINALPATH "OptionsPage.ini" "Field 2" "State"
+  !insertmacro MUI_INSTALLOPTIONS_READ $CONFIGAPPDATA "OptionsPage.ini" "Field 1" "State"
+FunctionEnd
+
 
 ; -------------------------- Define which files to include in the package ------------------------
 
@@ -133,6 +157,13 @@ Section "MainSection" SEC01
   File /r /x .svn x86\*.*
   
   continued:
+  ; Time to make the configuration file and Saves folder at the correct location
+  ${If} $CONFIGAPPDATA == 1
+    SetOutPath "$APPDATA\CorsixTH"
+    CreateDirectory "$APPDATA\CorsixTH\Saves"
+  ${Else}
+    CreateDirectory "$INSTDIR\Saves"
+  ${EndIf}
   File config_template.txt
   
   ; Change settings in the config file.
@@ -143,22 +174,34 @@ Section "MainSection" SEC01
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_WIDTH "$0"
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_HEIGHT "$1"
   !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "true"
+  ${If} $CONFIGAPPDATA == 1
+    !insertmacro ReplaceInFile config_template.txt SAVE_GAMES_IN_APPDATA "true"
+  ${Else}
+    !insertmacro ReplaceInFile config_template.txt SAVE_GAMES_IN_APPDATA "false"
+  ${EndIf}
   Rename config_template.txt config.txt
   Delete config_t*
-  File ..\CorsixTH\*.lua
-  File ..\CorsixTH\changelog.txt
-  File ..\CorsixTH\LICENSE.txt
   
+  
+  ; The three other needed folders
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*
   
   SetOutPath "$INSTDIR\Bitmap"
   File /r /x .svn ..\CorsixTH\Bitmap\*.*
+  
+  SetOutPath "$INSTDIR\Levels"
+  File /r /x .svn ..\CorsixTH\Levels\*.*
 
-; Shortcuts
+; Shortcuts and final files
   SetOutPath "$INSTDIR"
+  File ..\CorsixTH\*.lua
+  File ..\CorsixTH\changelog.txt
+  File ..\CorsixTH\LICENSE.txt
+  
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
+  
 SectionEnd
 
 
@@ -168,7 +211,9 @@ SectionEnd
 Section -AdditionalIcons
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\CorsixTH_SDL.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk" "$INSTDIR\CorsixTH_SDL.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX9.lnk" "$INSTDIR\CorsixTH_DirectX9.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
@@ -202,6 +247,7 @@ Section Uninstall
 
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
+  RMDir /r "$INSTDIR\Levels"
 
   Delete "$INSTDIR\*.*"
   RMDir "$INSTDIR"
@@ -210,6 +256,12 @@ Section Uninstall
 
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
   
+  ${If} $CONFIGAPPDATA == 1
+    RMDir /r "$APPDATA\CorsixTH\Saves"
+    RMDir /r "$APPDATA\CorsixTH"
+  ${Else}
+    RMDir /r "$INSTDIR\Saves"
+  ${EndIf}
   
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
 

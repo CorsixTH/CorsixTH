@@ -71,6 +71,7 @@ LPEG/lpeg.html -text
 MapEdit/CMakeLists.txt -text
 MapEdit/FindwxWidgets_svn.cmake -text
 WindowsInstaller/LanguageStrings.nsh -text
+WindowsInstaller/OptionsPage.ini -text
 WindowsInstaller/ReplaceInFile.nsh -text
 WindowsInstaller/StrRep.nsh -text
 WindowsInstaller/Win32Script.nsi -text
