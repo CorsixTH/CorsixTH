@@ -119,4 +119,49 @@ function WardRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
+function WardRoom:afterLoad(old, new)
+  if old < 11 then
+    -- Make sure all three tiles outside of the door are unbuildable.
+    local door = self.door
+    local x = door.tile_x
+    local y = door.tile_y
+    local dir = door.direction
+    local map = self.world.map.th
+    local flags = {}
+
+    local function checkLocation(x, y)
+      if self.world:getRoom(x, y) 
+      or not map:getCellFlags(x, y, flags).passable then
+        local message = "Warning: An update has resolved a problem concerning "
+        .. "swing doors, but not all tiles adjacent to them could be fixed."
+        self.world.ui:addWindow(UIInformation(self.world.ui, {message}))
+        return false
+      end
+      return true
+    end
+    if dir == "west" then -- In west or east wall
+      if self.world:getRoom(x, y) == self then -- In west wall
+        if checkLocation(x - 1, y + 1) then
+          map:setCellFlags(x - 1, y + 1, {buildable = false})
+        end
+      else -- East wall
+        if checkLocation(x, y + 1) then
+          map:setCellFlags(x, y + 1, {buildable = false})
+        end
+      end
+    else -- if dir == "north", North or south wall
+      if self.world:getRoom(x, y) == self then -- In north wall
+        if checkLocation(x + 1, y - 1) then
+          map:setCellFlags(x + 1, y - 1, {buildable = false})
+        end
+      else -- South wall
+        if checkLocation(x + 1, y) then
+          map:setCellFlags(x + 1, y, {buildable = false})
+        end
+      end
+    end
+  end
+  Room.afterLoad(self, old, new)
+end
+
 return room
