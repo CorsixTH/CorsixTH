@@ -3,6 +3,7 @@ Version Beta 3 - to be released 2010-06-24
 -----------------------------------------
 
 -- Gameplay --
+
 * Feature: Swing doors (used by new diagnosis room ward).
 * Feature: Plants will now droop unless they are watered by a handyman.
 * Feature: Adjustable handyman priorities.
@@ -16,13 +17,18 @@ Version Beta 3 - to be released 2010-06-24
 * Feature: Support for custom levels with their own maps and level scripts.
 * Feature: A heating system that depends on outside temperature, adjacent tiles 
   and radiators among other things.
-* Fix: Staff needed in rooms is handled much better.
-* Fix: Objects retain their statistics when moved.
+
 * Added 6 new diseases
 * Added treatment rooms: Jelly Vat, Decontamination
 * Added diagnosis rooms: Blood Machine, Ward, Scanner
 
+* Fix: Staff needed in rooms is handled much better.
+* Fix: Objects retain their statistics when moved.
+* Fix: A horde of other bugs have also been fixed.
+
+
 -- User Interface --
+
 * Feature: Savegames are no longer limited to 8 slots + autosave.
 * Feature: Fullscreen mode, screen resolution and interface language can be changed
   ingame. The changes are saved in the config file and preserved.
@@ -35,11 +41,12 @@ Version Beta 3 - to be released 2010-06-24
 * New dialog: Progress Report (Status) showing status of the current level's goals.
 * Added all tooltips that were still missing.
 
+
 -- Misc --
+
 * Translations: Italian, Spanish and French: added new strings not available in vanilla TH, 
   Portuguese (WIP) and Dutch (WIP)
 
-And of course again a lot of bugs have been terminated.
 
 -----------------------------------------
 Version Beta 2 - released 2010-03-24
@@ -85,6 +92,7 @@ Version Beta 2 - released 2010-03-24
 A lot of other small improvements.
 Also, a great number of bugs have been squashed. Most remaining bugs are no
 longer fatal, and can be continued from.
+
 
 -----------------------------------------
 Version Beta 1 - released 2009-12-24
