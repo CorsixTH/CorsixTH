@@ -84,6 +84,18 @@ function GameUI:onChangeResolution()
   UI.onChangeResolution(self)
 end
 
+--! Update UI state after the UI has been depersisted
+--! When an UI object is depersisted, its state will reflect how the UI was at
+-- the moment of persistence, which may be different to the keyboard / mouse
+-- state at the moment of depersistence.
+--!param ui (GameUI) The previously existing UI object, from which values
+-- should be taken.
+function GameUI:resync(ui)
+  self.tick_scroll_amount = ui.tick_scroll_amount
+  self.down_count = ui.down_count
+  self.limit_to_visible_diamond = ui.limit_to_visible_diamond
+end
+
 local scroll_keys = {
   up    = {x =   0, y = -10},
   right = {x =  10, y =   0},

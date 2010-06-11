@@ -21,7 +21,7 @@ SOFTWARE. --]]
 --! Base class for user-interface dialogs.
 class "Window"
 
-Window.buttons_down = {
+Window.buttons_down = permanent"Window.buttons_down" {
   left = false,
   middle = false,
   right = false,

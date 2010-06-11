@@ -228,6 +228,7 @@ end
 function LoadGame(data)
   --local status, res = xpcall(function()
   local state = assert(persist.load(data, MakePermanentObjectsTable(true)))
+  state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world
   TheApp.map = state.map
