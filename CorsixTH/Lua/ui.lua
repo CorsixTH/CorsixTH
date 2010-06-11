@@ -53,6 +53,7 @@ function UI:initKeyAndButtonCodes()
     down = 274,
     right = 275,
     left = 276,
+    F4 = 285,
     F8 = 289,
     F9 = 290,
     F10 = 291,
@@ -439,6 +440,12 @@ function UI:onKeyDown(code)
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
+  elseif self.buttons_down.alt and key == "F4" then
+    if self.hospital then
+      self.app:quit()
+    else
+      self.app:exit()
+    end
   elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
     self:toggleFullscreen()
     return true

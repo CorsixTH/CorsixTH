@@ -112,6 +112,7 @@ function GameUI:onKeyDown(code)
   if not key then
     return
   end
+  self.menu_bar:onKeyDown(key)
   if scroll_keys[key] then
     local dx, dy = scroll_keys[key].x, scroll_keys[key].y
     if self.tick_scroll_amount then

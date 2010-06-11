@@ -43,6 +43,18 @@ function UIMenuBar:UIMenuBar(ui)
   self:makeMenu(app)
 end
 
+function UIMenuBar:onTick()
+  if self.disappear_counter then
+    if self.disappear_counter == 0 then
+      self.visible = false
+      self.disappear_counter = nil
+    else
+      self.disappear_counter = self.disappear_counter - 1
+    end
+  end
+  Window.onTick(self)
+end
+
 function UIMenuBar:onChangeResolution()
   self.width = self.ui.app.config.width
 end
@@ -237,10 +249,32 @@ function UIMenuBar:onMouseMove(x, y)
     end
   end
   if visible ~= self.visible then
-    self.visible = visible
+    if visible == false then
+      self:disappear()
+    else
+      self:appear()
+    end
     return true
   end
   return newactive
+end
+
+function UIMenuBar:appear()
+  self.disappear_counter = nil
+  self.visible = true
+end
+
+function UIMenuBar:disappear()
+  if not self.disappear_counter then
+    self.disappear_counter = 100
+  end
+end
+
+function UIMenuBar:onKeyDown(key)
+  if key == "esc" then
+    self:appear()
+    return true
+  end
 end
 
 function UIMenuBar:onMouseDown(button, x, y)
@@ -310,7 +344,7 @@ function UIMenuBar:onMouseUp(button, x, y)
           item.handler(item, self.active_menu)
         end
         if y > 22 then
-          self.visible = false
+          self:disappear()
         end
         self.active_menu = false
       end
