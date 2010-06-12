@@ -99,6 +99,7 @@ function UIOptions:UIOptions(ui, mode)
     self:addBevelPanel(20, y, 280, 20, col_bg):setLabel(lang):makeButton(0, 0, 280, 20, nil, --[[persistable:options_window_language_button]] function()
       app.config.language = lang
       app:initLanguage()
+      app:saveConfig()
     end):setTooltip(_S.tooltip.options_window.language:format(lang))
     y = y + 20
   end
