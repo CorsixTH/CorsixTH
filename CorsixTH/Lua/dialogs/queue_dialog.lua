@@ -140,6 +140,7 @@ function UIQueue:onMouseUp(button, x, y)
   local queue = self.queue
   local num_patients = queue:reportedSize()
   local width = 276
+  self.ui:setCursor(self.ui.default_cursor) -- reset cursor
 
   if not self.dragged then
     return Window.onMouseUp(self, button, x, y)
@@ -172,7 +173,26 @@ function UIQueue:onMouseUp(button, x, y)
     self:onMouseMove(x, y, 0, 0)
   end
 
-  -- TODO dropping patient to another room
+  -- Try to drop to another room
+  local room
+  local wx, wy = self.ui:ScreenToWorld(x + self.x, y + self.y)
+  wx = math.floor(wx)
+  wy = math.floor(wy)
+  if wx > 0 and wx > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
+    room = self.ui.app.world:getRoom(wx, wy)
+  end
+
+  -- The new room must be of the same class as the current one
+  local this_room = self.dragged.patient.next_room_to_visit
+  if this_room and room and room ~= this_room and room.room_info.id == this_room.room_info.id then
+    -- Move to another room
+    local patient = self.dragged.patient
+    patient:setNextAction(room:createEnterAction())
+    patient.next_room_to_visit = room
+    patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
+    room.door.queue:expect(patient)
+    room.door:updateDynamicInfo()
+  end
 
   self.dragged = nil
 end
@@ -183,6 +203,13 @@ function UIQueue:onMouseMove(x, y, dx, dy)
   if self.dragged then
     self.dragged.x = x + self.x
     self.dragged.y = y + self.y
+
+    -- Change cursor when outside queue dialog
+    if x > 0 and x < 605 and y > 0 and y < 120 then
+      self.ui:setCursor(self.ui.default_cursor)
+    else
+      self.ui:setCursor(self.ui.app.gfx:loadMainCursor("queue_drag"))
+    end
   end
   if not self:isInsideQueueBoundingBox(x, y) then
     self.hovered = nil

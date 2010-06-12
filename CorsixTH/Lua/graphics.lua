@@ -50,6 +50,7 @@ local cursors_name = {
   repair = 17,
   patient = 18,
   queue = 19,
+  queue_drag = 20,
   bank = 36,
 }
 
