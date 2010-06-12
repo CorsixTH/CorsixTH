@@ -39,13 +39,38 @@ function UIMenuBar:UIMenuBar(ui)
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
   self.menus = {}
   self.active_menu = false
+  self.open_menus = {}
   
   self:makeMenu(app)
 end
 
 function UIMenuBar:onTick()
+  if #self.open_menus > 0 then
+    -- If the deepest menu has no need to be open, close it after a short time
+    local deepest = self.open_menus[#self.open_menus]
+    local parent = deepest.parent
+    if deepest == self.active_menu or (parent and parent == self.active_menu
+    and parent.items[parent.hover_index]
+    and parent.items[parent.hover_index].submenu == deepest) then
+      self.menu_disappear_counter = nil
+    else
+      if self.menu_disappear_counter == 0 then
+        self.menu_disappear_counter = nil
+        local close_to = self.active_menu and self.active_menu.level or 0
+        for i = #self.open_menus, close_to + 1, -1 do
+          self.open_menus[i] = nil
+        end
+      else
+        self.menu_disappear_counter = (self.menu_disappear_counter or 26) - 1
+      end
+    end
+  end
   if self.disappear_counter then
     if self.disappear_counter == 0 then
+      for i = #self.open_menus, 1, -1 do
+        self.open_menus[i] = nil
+      end
+      self.active_menu = false
       self.visible = false
       self.disappear_counter = nil
     else
@@ -73,7 +98,17 @@ function UIMenuBar:onChangeLanguage()
   end
 end
 
+local function assign_menu_levels(menu, level)
+  menu.level = level
+  for _, item in ipairs(menu.items) do
+    if item.submenu then
+      assign_menu_levels(item.submenu, level + 1)
+    end
+  end
+end
+
 function UIMenuBar:addMenu(title, menu)
+  assign_menu_levels(menu, 1)
   local menu = {
     title = title,
     menu = menu,
@@ -116,16 +151,12 @@ function UIMenuBar:draw(canvas)
   for _, menu in ipairs(self.menus) do
     self.white_font:draw(canvas, menu.title, menu.x, menu.y, 0, menu.height)
   end
-  if self.active_menu then
-    self:drawMenu(self.active_menu, canvas)
+  for _, menu in ipairs(self.open_menus) do
+    self:drawMenu(menu, canvas)
   end
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
-  if menu.parent then
-    self:drawMenu(menu.parent, canvas)
-  end
-  local child = nil
   local panel_sprites = self.panel_sprites
   local panel_sprites_draw = panel_sprites.draw
   local x, y, w, h = menu.x, menu.y, menu.width, menu.height
@@ -163,7 +194,6 @@ function UIMenuBar:drawMenu(menu, canvas)
     local font = self.white_font
     if i == menu.hover_index then
       font = self.blue_font
-      child = item.submenu
     end
     font:draw(canvas, item.title, x, y)
     if item.submenu then
@@ -172,12 +202,6 @@ function UIMenuBar:drawMenu(menu, canvas)
       panel_sprites_draw(panel_sprites, canvas, 10, x, y)
     end
     y = y + 14
-  end
-  
-  if child and child.x then
-    child.hover_index = 0
-    child.parent = nil
-    self:drawMenu(child, canvas)
   end
 end
 
@@ -199,8 +223,21 @@ end
 
 function UIMenuBar:onMouseMove(x, y)
   local padding = 6
+  if self.ui.down_count ~= 0 then
+    -- If any mouse buttons are pressed, be more relaxed
+    padding = 36
+  end
   local visible = y < self.height + padding
   local newactive = false
+  if not self.active_menu then
+    for i = #self.open_menus, 1, -1 do
+      if self.open_menus[i]:hitTest(x, y, padding) then
+        self.active_menu = self.open_menus[i]
+        newactive = true
+        break
+      end
+    end
+  end
   if self.active_menu then
     local menu = self.active_menu
     while true do
@@ -223,6 +260,10 @@ function UIMenuBar:onMouseMove(x, y)
           child.x = menu.x + menu.width - 10
           child.y = menu.y + menu.hover_index * 14 - 14
           self:calculateMenuSize(child)
+          self.open_menus[child.level] = child
+          for i = #self.open_menus, child.level + 1, -1 do
+            self.open_menus[i] = nil
+          end
           if child:hitTest(x, y, 0) then
             menu.hover_index = 0
             self.active_menu = child
@@ -248,13 +289,11 @@ function UIMenuBar:onMouseMove(x, y)
       end
     end
   end
-  if visible ~= self.visible then
-    if visible == false then
-      self:disappear()
-    else
-      self:appear()
-    end
-    return true
+  newactive = newactive or (visible and not self.visible)
+  if visible then
+    self:appear()
+  else
+    self:disappear()
   end
   return newactive
 end
@@ -284,17 +323,21 @@ function UIMenuBar:onMouseDown(button, x, y)
   local repaint = false
   while self.active_menu do
     local menu = self.active_menu
-    if menu.x <= x and x < menu.x + menu.width and menu.y <= y and y < menu.y + menu.height then
+    if menu:hitTest(x, y, 0) then
       if repaint then
         self:onMouseMove(x, y)
       end
       return repaint
+    end
+    for i = #self.open_menus, self.active_menu.level, -1 do
+      self.open_menus[i] = nil
     end
     self.active_menu = menu.parent
     repaint = true
   end
   local new_active = self:hitTestBar(x, y)
   if new_active ~= self.active_menu then
+    self.open_menus = {new_active}
     self.active_menu = new_active
     repaint = true
     self.ui:playSound "selectx.wav"
@@ -306,20 +349,21 @@ function UIMenuBar:onMouseUp(button, x, y)
   if button ~= "left" or not self.visible then
     return
   end
+  local repaint = false
   while self.active_menu do
     local index = self.active_menu:hitTest(x, y, 0)
     if index == false then
       if not self.active_menu.parent and y < 16 then
-        return
+        break
       else
         self.active_menu = self.active_menu.parent
       end
     elseif index == true then
-      return
+      break
     else
       local item = self.active_menu.items[index]
       if item.submenu then
-        return
+        break
       elseif item.is_check_item then
         if item.group then
           if not item.checked then
@@ -349,9 +393,14 @@ function UIMenuBar:onMouseUp(button, x, y)
         self.active_menu = false
       end
       self.ui:playSound "selectx.wav"
-      return true
+      repaint = true
+      break
     end
   end
+  for i = #self.open_menus, (self.active_menu and self.active_menu.level or 0) + 1, -1 do
+    self.open_menus[i] = nil
+  end
+  return repaint
 end
 
 function UIMenuBar:calculateMenuSize(menu)
