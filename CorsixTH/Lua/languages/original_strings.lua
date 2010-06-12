@@ -613,7 +613,7 @@ adviser = {
     win = {
       money                       = S[11][ 21], -- %d (remaining amount)
       reputation                  = S[11][ 67], -- %d (required amount)
-      value                       = S[11][ 67], -- %d (required amount)
+      value                       = S[11][ 68], -- %d (required amount)
       cure                        = S[11][137], -- %d (remaining amount)
     },
     lose = {

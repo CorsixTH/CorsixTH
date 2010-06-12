@@ -30,6 +30,8 @@ adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in Ge
 -- The originals of these two contain one space too much
 fax.emergency.cure_not_possible_build = "You will need to build a %s"
 fax.emergency.cure_not_possible_build_and_employ = "You will need to build a %s and employ a %s"
+fax.emergency.num_disease = "There are %d people with %s and they require immediate attention."
+adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 
 -- new strings
 object.litter = "Litter"
