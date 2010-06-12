@@ -496,7 +496,7 @@ function Room:tryToFindNearbyPatients()
   local world = self.world
   local our_score = self:getUsageScore()
   local our_x, our_y = self:getEntranceXY(true)
-  for _, room in ipairs(self.world.rooms) do
+  for _, room in pairs(self.world.rooms) do
     if room.hospital == self.hospital and room.room_info == self.room_info
     and room.door.queue and room.door.queue:reportedSize() >= 2 then
       local other_score = room:getUsageScore()

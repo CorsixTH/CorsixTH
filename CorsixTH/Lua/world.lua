@@ -60,7 +60,7 @@ function World:World(app)
     general = 0,
   }
   self.objects_notify_occupants = {}
-  self.rooms = {}
+  self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.ticks_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
@@ -158,7 +158,7 @@ function World:initLevel(app)
     print("Warning: This level does not contain any diseases")
   end
   -- Determine available rooms from their required objects
-  self.available_rooms = {}
+  self.available_rooms = {} -- Combination of set and list. Use ipairs to iterate through all available rooms.
   local obj = level_config.objects
   for i, room in ipairs(app.rooms) do
     local avail = 1
@@ -766,7 +766,7 @@ end
 function World:onEndYear()
   -- TODO: Temporary, until research is in the game. This is just so that something happens...
   for _, hospital in ipairs(self.hospitals) do
-    for _, room in pairs(self.available_rooms) do
+    for _, room in ipairs(self.available_rooms) do
       if not hospital.discovered_rooms[room] then
         hospital.discovered_rooms[room] = true
         if hospital == self.ui.hospital then

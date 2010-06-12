@@ -210,7 +210,7 @@ function Hospital:createEmergency()
       self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[1])
     
     local staff_available = self:hasStaffOfCategory(required_staff)
-    for _, room in ipairs(self.world.rooms) do
+    for _, room in pairs(self.world.rooms) do
       if room.room_info.id == emergency.disease.treatment_rooms[1] then
         room_name = nil
         break
