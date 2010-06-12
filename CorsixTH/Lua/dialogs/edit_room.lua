@@ -400,16 +400,6 @@ function UIEditRoom:finishRoom()
             door = world:newObject("door", x, y, dir)
           elseif tag == "swing_master" then
             door = world:newObject("swing_door_right", x, y, dir)
-            -- Also make sure all three tiles outside of this door are unbuildable.
-            if x == rect.x then -- Door in west wall
-              map:setCellFlags(x - 1, y + 1, {buildable = false})
-            elseif y == rect.y then -- North
-              map:setCellFlags(x + 1, y - 1, {buildable = false})
-            elseif x == rect.x + rect.w then -- East
-              map:setCellFlags(x, y + 1, {buildable = false})
-            else -- South
-              map:setCellFlags(x + 1, y, {buildable = false})
-            end
           elseif tag == "swing_slave" then
             door2 = world:newObject("swing_door_left", x, y, dir)
             map:setCell(x, y, layer, wall_type[tiles][dir .. suffixes[2 - num]])
@@ -499,26 +489,6 @@ function UIEditRoom:returnToDoorPhase()
   self.purchase_button:enable(false)
   self.pickup_button:enable(false)
   
-  -- (Swing doors) Make the tile that was made unbuildable buildable again.
-  if self.room.door2 then
-    local x = self.room.door.tile_x
-    local y = self.room.door.tile_y
-    local dir = self.room.door.direction
-
-    if dir == "west" then -- In west or east wall
-      if self.world:getRoom(x, y) == self.room then -- In west wall
-        map:setCellFlags(x - 1, y + 1, {buildable = true})
-      else -- East wall
-        map:setCellFlags(x, y + 1, {buildable = true})
-      end
-    else -- if dir == "north", North or south wall
-      if self.world:getRoom(x, y) == self.room then -- In north wall
-        map:setCellFlags(x + 1, y - 1, {buildable = true})
-      else -- South wall
-        map:setCellFlags(x + 1, y, {buildable = true})
-      end
-    end
-  end
   -- Remove any placed objects (add them to list again)
   for x = room.x, room.x + room.width - 1 do
     for y = room.y, room.y + room.height - 1 do
@@ -1018,25 +988,11 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     if map:getCell(x, y, 3) % 0x100 ~= 0 then
       self.blueprint_door.valid = false
     end
-    -- If it is a swing door there are two more locations to check.
-    if self.room_type.swing_doors then
-      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 
-      or map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
-        self.blueprint_door.valid = false
-      end
-    end
   else--if wall == "north" then
     flags = 0
     y2 = y2 - 1
     if map:getCell(x, y, 2) % 0x100 ~= 0 then
       self.blueprint_door.valid = false
-    end
-    -- If it is a swing door there are two more locations to check.
-    if self.room_type.swing_doors then
-      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 
-      or map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
-        self.blueprint_door.valid = false
-      end
     end
   end
   if self.blueprint_door.valid then
