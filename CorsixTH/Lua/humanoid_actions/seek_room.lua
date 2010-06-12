@@ -172,6 +172,11 @@ local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( functi
 end)
 
 local function action_seek_room_start(action, humanoid)
+  if action.todo_interrupt then
+    humanoid:finishAction()
+    return
+  end
+
   -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
   local room = action_seek_room_find_room(action, humanoid)
 
