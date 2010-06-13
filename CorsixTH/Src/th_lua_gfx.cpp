@@ -555,6 +555,37 @@ static int l_surface_screenshot(lua_State *L)
     return 2;
 }
 
+static int l_surface_get_clip(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    THClipRect rcClip;
+    pCanvas->getClipRect(&rcClip);
+    lua_pushinteger(L, rcClip.x);
+    lua_pushinteger(L, rcClip.y);
+    lua_pushinteger(L, rcClip.w);
+    lua_pushinteger(L, rcClip.h);
+    return 4;
+}
+
+static int l_surface_set_clip(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    THClipRect rcClip;
+    rcClip.x = static_cast<THClipRect::xy_t>(luaL_checkint(L, 2));
+    rcClip.y = static_cast<THClipRect::xy_t>(luaL_checkint(L, 3));
+    rcClip.w = static_cast<THClipRect::wh_t>(luaL_checkint(L, 4));
+    rcClip.h = static_cast<THClipRect::wh_t>(luaL_checkint(L, 5));
+    if(lua_toboolean(L, 6) != 0)
+    {
+        THClipRect rcExistingClip;
+        pCanvas->getClipRect(&rcExistingClip);
+        IntersectTHClipRect(rcClip, rcExistingClip);
+    }
+    pCanvas->setClipRect(&rcClip);
+    lua_settop(L, 1);
+    return 1;
+}
+
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 {
     // Palette
@@ -613,6 +644,8 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_nonoverlapping, "nonOverlapping");
     luaT_setfunction(l_surface_map, "mapRGB");
     luaT_setfunction(l_surface_rect, "drawRect");
+    luaT_setfunction(l_surface_get_clip, "getClip");
+    luaT_setfunction(l_surface_set_clip, "setClip");
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
     luaT_endclass();
 }
