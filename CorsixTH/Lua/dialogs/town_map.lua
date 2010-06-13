@@ -128,7 +128,8 @@ function UITownMap:draw(canvas, x, y)
   -- he walks out to really go away, he isn't counted anymore.
   for _, patient in pairs(hospital.patients) do
     -- only count patients that are in the hospital
-    if hospital:isInHospital(patient.tile_x, patient.tile_y) then
+    local tx, ty = patient.tile_x, patient.tile_y
+    if tx and ty and hospital:isInHospital(tx, ty) then
       patientcount = patientcount + 1
     end
   end
