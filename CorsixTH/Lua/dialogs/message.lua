@@ -35,6 +35,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.message = message
   if owner then
     self.owner = owner
+    assert(owner.message_callback == nil)
     owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, out_of_time)
       -- Don't do anything if the window is already open.
       if not ui:getWindow(UIStaffRise) and not ui:getWindow(UIFax) then
@@ -66,6 +67,22 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   end
 end
 
+function UIMessage:draw(canvas, x, y)
+  if self.on_top then
+    Window.draw(self, canvas, x, y)
+  else
+    local x_, y_, w, h = canvas:getClip()
+    canvas:setClip(x_, y + self.stop_y, w, self.height, true)
+    Window.draw(self, canvas, x, y)
+    canvas:setClip(x_, y_, w, h)
+  end
+end
+
+function UIMessage:close(...)
+  assert(self.onClose == nil, "UIMessage closed improperly")
+  return Window.close(self, ...)
+end
+
 function UIMessage:openMessage(out_of_time)
   if not out_of_time then
     if self.type == "strike" then
@@ -74,17 +91,22 @@ function UIMessage:openMessage(out_of_time)
       self.ui:addWindow(UIFax(self.ui, self.message, self.owner))
     end
   end
-  self:close()
+  if self.owner then
+    self.owner.message_callback = nil
+  end
+  assert(self.onClose ~= nil, "UIMessage opened more than once")
   self:onClose(out_of_time or false)
+  self.onClose = nil
+  self:close()
 end
 
-function UIMessage:moveLeft()
-  self.stop_x = self.stop_x - self.width
+function UIMessage:setXLimit(stop_x)
+  assert(stop_x <= self.stop_x, "UIMessage moved in wrong direction")
+  self.stop_x = stop_x
 end
 
 function UIMessage:onTick()
   if self.on_top == false and self.y == self.stop_y then
-    self.ui:sendToTop(self)
     self.on_top = true
   end
   if self.y > self.stop_y then

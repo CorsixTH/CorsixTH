@@ -31,15 +31,17 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.width = 640
   self.height = 48
   self:setDefaultPosition(0.5, -0.1)
+  self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
+  self.money_font = app.gfx:loadFont("QData", "Font05V")
+  self.date_font = app.gfx:loadFont("QData", "Font16V")
+  self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
+  
+  -- State relating to fax notification messages
   self.show_animation = true
   self.factory_counter = 22
   self.factory_direction = 0
   self.message_windows = {}
   self.message_queue = {}
-  self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
-  self.money_font = app.gfx:loadFont("QData", "Font05V")
-  self.date_font = app.gfx:loadFont("QData", "Font16V")
-  self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
   
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
@@ -117,9 +119,9 @@ function UIBottomPanel:draw(canvas, x, y)
     if self.factory_counter == 22 then
       self.panel_sprites:draw(canvas, 42, x + 201, y + 1)
     end
-
-    self:drawReputationMeter(canvas, x + 55, y + 35)
   end
+  
+  self:drawReputationMeter(canvas, x + 55, y + 35)
 end
 
 function UIBottomPanel:setPosition(x, y)
@@ -197,18 +199,29 @@ function UIBottomPanel:hitTest(x, y, x_offset)
   return x >= (x_offset and x_offset or 0) and y >= 0 and x < self.width and y < self.height
 end
 
+--! Queue a fax notification message to appear.
+--! The arguments specify a message, which is added to a FIFO queue, and will
+-- appear on screen once there is space.
 function UIBottomPanel:queueMessage(type, message, owner)
-  self.message_queue[#self.message_queue + 1] = {type = type, message = message, owner = owner} -- Queue a message
+  self.message_queue[#self.message_queue + 1] = {
+    type = type,
+    message = message,
+    owner = owner,
+  }
 end
 
+--! Trigger a message to be moved from the queue into a actual window, after
+-- first performing the neccessary animation.
 function UIBottomPanel:showMessage()
   if self.factory_direction ~= -1 then
     self.factory_direction = -1 
     if self.factory_counter < 0 then
-      self.show_animation = false -- Factory is already opened so don't wait to show the message
+      -- Factory is already opened so don't wait to show the message
+      self.show_animation = false
       self.factory_counter = 9
     else
-      self.factory_direction = -1 -- Delay the apparition of the message to when the factory is opened
+      -- Delay the appearance of the message to when the factory is opened
+      self.factory_direction = -1
       self.factory_counter = 22
       self.show_animation = true
     end
@@ -218,61 +231,67 @@ end
 -- Opens the first available message in the list of message_windows.
 function UIBottomPanel:openFirstMessage()
   if #self.message_windows > 0 then
-    self.message_windows[1].openMessage(self.message_windows[1], false)
+    self.message_windows[1]:openMessage(false)
   end
 end
 
 -- Removes a message from the mesasge queue (for example if a room is built before the player
 -- says what to do with the patient.
 function UIBottomPanel:removeMessage(owner)
-  for i, window in ipairs(self.message_windows) do
+  for _, window in ipairs(self.message_windows) do
     if window.owner == owner then
-      window.openMessage(window, true)
-      break
+      window:openMessage(true)
+      return true
     end
   end
+  return false
 end
 
+--! Pop a message off the front of the message queue and turn it into an actual
+-- message window.
 function UIBottomPanel:createMessageWindow()
   local --[[persistable:bottom_panel_message_window_close]] function onClose(window, out_of_time)
-    local message_windows = self.message_windows
     local index_to_remove
-    for i = 1, #message_windows do
-      if index_to_remove ~= nil and message_windows[i].x > 0 then
-        message_windows[i]:moveLeft()   -- This windows are to the right of the window closed, so move them left
-      end
-      
-      if message_windows[i] == window then
-        index_to_remove = i             -- This is the window closed, so mark this index to be removed
+    for i, win in ipairs(self.message_windows) do
+      if index_to_remove ~= nil then
+        win:setXLimit(1 + (i - 2) * 30)
+      elseif win == window then
+        index_to_remove = i
       end
     end
-    table.remove(message_windows, index_to_remove)
+    table.remove(self.message_windows, index_to_remove)
   end
   
   local message_windows = self.message_windows
-  local message_type = self.message_queue[#self.message_queue].type
-  local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30, onClose, message_type, self.message_queue[#self.message_queue].message, self.message_queue[#self.message_queue].owner) -- Create the message window
+  local message_info = self.message_queue[1]
+  local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
+    onClose, message_info.type, message_info.message, message_info.owner)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
   self.factory_direction = 1
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
-  table.remove(self.message_queue)          -- Delete the last element of the queue
+  table.remove(self.message_queue, 1)          -- Delete the last element of the queue
 end
 
 function UIBottomPanel:onTick()
-  if self.factory_direction == 1 then       -- Close factory animation
+  -- Advance the animation on the message factory
+  if self.factory_direction == 1 then
+    -- Close factory animation
     if self.factory_counter < 22 then
       self.factory_counter = self.factory_counter + 1
     end
-  elseif self.factory_direction == -1 then  -- Open factory animation
+  elseif self.factory_direction == -1 then
+    -- Open factory animation
     if self.factory_counter >= 0 then
       if self.factory_counter == 0 then
-        self:createMessageWindow()          -- Animation ends so we can now show the message
+        -- Animation ends so we can now show the message
+        self:createMessageWindow()
       end
       self.factory_counter = self.factory_counter - 1
     end
   end
+  
   -- The dynamic info bar is there a while longer when hovering an entity has stopped
   if self.countdown then
     if self.countdown < 1 then
@@ -292,9 +311,11 @@ function UIBottomPanel:onTick()
     end
   end
   
+  -- Move an item out of the message queue if there is room
   if #self.message_windows < 5 and #self.message_queue > 0 then
-    self:showMessage() -- Proceed queue
+    self:showMessage()
   end
+  
   Window.onTick(self)
 end
 
