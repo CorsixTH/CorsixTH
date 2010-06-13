@@ -37,8 +37,13 @@ function UIMenuBar:UIMenuBar(ui)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PullDV", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
+  -- The list of top-level menus, from left to right
   self.menus = {}
+  -- The menu which the cursor was most recently over
+  -- This should be present in self.open_menus, else it wont be drawn
   self.active_menu = false
+  -- The list of menus which should be displayed
+  -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
   
   self:makeMenu(app)
@@ -47,6 +52,8 @@ end
 function UIMenuBar:onTick()
   if #self.open_menus > 0 then
     -- If the deepest menu has no need to be open, close it after a short time
+    -- It needs to be open if the cursor is over it, or the cursor is over the
+    -- item in its parent corresponding to it.
     local deepest = self.open_menus[#self.open_menus]
     local parent = deepest.parent
     if deepest == self.active_menu or (parent and parent == self.active_menu
@@ -223,10 +230,6 @@ end
 
 function UIMenuBar:onMouseMove(x, y)
   local padding = 6
-  if self.ui.down_count ~= 0 then
-    -- If any mouse buttons are pressed, be more relaxed
-    padding = 36
-  end
   local visible = y < self.height + padding
   local newactive = false
   if not self.active_menu then
@@ -282,11 +285,21 @@ function UIMenuBar:onMouseMove(x, y)
         menu.hover_index = 0
         menu = menu.parent
         if not menu then
-          self.active_menu = self:hitTestBar(x, y) or (visible and self.active_menu)
+          local bar_menu = self:hitTestBar(x, y)
+          if bar_menu then
+            self.open_menus = {bar_menu}
+          end
+          self.active_menu = bar_menu or (visible and self.active_menu)
           break
         end
         self.active_menu = menu
       end
+    end
+  elseif self.ui.down_count ~= 0 then
+    local bar_menu = self:hitTestBar(x, y)
+    if bar_menu then
+      self.open_menus = {bar_menu}
+      self.active_menu = bar_menu
     end
   end
   newactive = newactive or (visible and not self.visible)
