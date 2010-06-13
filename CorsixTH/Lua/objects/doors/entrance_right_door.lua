@@ -68,43 +68,64 @@ function EntranceDoor:onOccupantChange(count_delta)
   end
 end
 
+local additional_walkable_tiles = {
+  north = {
+    {0, -1},
+  },
+  west = {
+    {-1, 0},
+  },
+}
+
+local additional_walkable_tiles_master = {
+  north = {
+    {0, -1}, {1, 0}, {1, -1},
+  },
+  west = {
+    {-1, 0}, {0, 1}, {-1, 1},
+  },
+}
+
 function EntranceDoor:setTile(x, y)
-  local cx2, cy2 = self.tile_x or 0, self.tile_y or 0
-  local x2, y2 = x, y
-  local flag_name
-  if self.direction == "north" then
-    y2 = y2 - 1
-    cy2 = cy2 - 1
-    flag_name = "tallNorth"
-  else
-    x2 = x2 - 1
-    cx2 = cx2 - 1
-    flag_name = "tallWest"
-  end
+  local offsets = self.is_master and additional_walkable_tiles_master or additional_walkable_tiles
+  offsets = offsets[self.direction]
+  local flag_name = self.direction == "north" and "tallNorth" or "tallWest"
+  
   if self.tile_x then
     if self.is_master then
+      -- NB: only the tile of the door itself and the one additional tile from additional_walkable_tiles notify the door
       self.world:notifyObjectOfOccupants(self.tile_x, self.tile_y, nil)
-      self.world:notifyObjectOfOccupants(cx2, cy2, nil)
+      for _, offset in ipairs(additional_walkable_tiles[self.direction]) do
+        self.world:notifyObjectOfOccupants(self.tile_x + offset[1], self.tile_y + offset[2], nil)
+      end
     end
-    self.world.map:setCellFlags(self.tile_x, self.tile_y, {[flag_name] = false})
+    self.world.map:setCellFlags(self.tile_x, self.tile_y, {[flag_name] = false, buildable = true, doNotIdle = false})
+    for _, offset in ipairs(offsets) do
+      self.world.map:setCellFlags(self.tile_x + offset[1], self.tile_y + offset[2], {buildable = true, doNotIdle = false})
+    end
   end
   Object.setTile(self, x, y)
   if self.is_master then
     self.world:notifyObjectOfOccupants(x , y , self)
-    self.world:notifyObjectOfOccupants(x2, y2, self)
+    for _, offset in ipairs(additional_walkable_tiles[self.direction]) do
+      self.world:notifyObjectOfOccupants(x + offset[1], y + offset[2], self)
+    end
   end
-  self.world.map:setCellFlags(x, y, {[flag_name] = true})
+  self.world.map:setCellFlags(x, y, {[flag_name] = true, buildable = false, doNotIdle = true})
+  for _, offset in ipairs(offsets) do
+    self.world.map:setCellFlags(x + offset[1], y + offset[2], {buildable = false, doNotIdle = true})
+  end
   self.world.map.th:updateShadows()
 end
 
 function EntranceDoor:getWalkableTiles()
-  local x, y = self.tile_x, self.tile_y
-  if self.direction == "west" then
-    x = x - 1
-  else
-    y = y - 1
-  end  
-  return { {self.tile_x, self.tile_y}, {x, y} }
+  local result = {}
+  local offsets = self.is_master and additional_walkable_tiles_master or additional_walkable_tiles
+  result[1] = {self.tile_x, self.tile_y}
+  for _, offset in ipairs(offsets[self.direction]) do
+    result[#result + 1] = {self.tile_x + offset[1], self.tile_y + offset[2]}
+  end
+  return result
 end
 
 function EntranceDoor:tick()
