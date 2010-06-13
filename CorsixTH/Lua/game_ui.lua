@@ -91,6 +91,20 @@ end
 --!param ui (GameUI) The previously existing UI object, from which values
 -- should be taken.
 function GameUI:resync(ui)
+  if self.drag_mouse_move then
+    -- Check that a window is actually being dragged. If none is found, then
+    -- remove the drag handler.
+    local something_being_dragged = false
+    for _, window in ipairs(self.windows) do
+      if window.dragging then
+        something_being_dragged = true
+        break
+      end
+    end
+    if not something_being_dragged then
+      self.drag_mouse_move = nil
+    end
+  end
   self.tick_scroll_amount = ui.tick_scroll_amount
   self.down_count = ui.down_count
   self.limit_to_visible_diamond = ui.limit_to_visible_diamond

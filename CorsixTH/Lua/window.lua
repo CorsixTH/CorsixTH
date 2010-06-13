@@ -106,6 +106,10 @@ end
 
 -- Called before the window is closed
 function Window:close()
+  if self.dragging then
+    self.dragging = false
+    self.ui.drag_mouse_move = nil
+  end
   if self.parent then
     self.parent:removeWindow(self)
   end
