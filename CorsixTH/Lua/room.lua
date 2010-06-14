@@ -364,9 +364,9 @@ end
 
 function Room:tryAdvanceQueue()
   if self.door.queue:size() > 0 and not self.door.user 
-  and not self.door.reserved_for and self.is_active then
+  and not self.door.reserved_for then
     local front = self.door.queue:front()
-    if self.humanoids[front] or self:canHumanoidEnter(front) then
+    if self.humanoids[front] or (self:canHumanoidEnter(front) and self.is_active) then
       self.door.queue:pop()
       self.door:updateDynamicInfo()
       if self.room_info.id ~= "staff_room" then -- Do nothing if it is the staff_room

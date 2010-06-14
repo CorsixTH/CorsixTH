@@ -94,6 +94,10 @@ class = setmetatable({}, {__call = class})
 -- class.is(variable, base) --> true
 -- class.is(variable, something_else) --> false
 function class.is(instance, class)
+  if instance == true then
+    -- The value "true" is never a class
+    return false
+  end
   local methods = instance
   while methods do
     if methods == class then

@@ -126,6 +126,11 @@ function GameUI:onKeyDown(code)
   if not key then
     return
   end
+  --Maybe the player wants to abort an "about to edit room" action
+  if key == "esc" and self.edit_room then
+    self:setEditRoom(false)
+    return true
+  end
   self.menu_bar:onKeyDown(key)
   if scroll_keys[key] then
     local dx, dy = scroll_keys[key].x, scroll_keys[key].y
@@ -353,17 +358,23 @@ function GameUI:onMouseUp(code, x, y)
   end
   
   if self.edit_room then
-    if button == "left" then
-      local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
-      if room and not room.crashed then
-        room.is_active = false -- So that no more patients go to it.
-        self:setCursor(self.waiting_cursor)
-        room:tryToEdit()
-        self.edit_room = false
+    if class.is(self.edit_room, Room) then
+      if button == "right" and self.cursor == self.waiting_cursor then
+        -- Still waiting for people to leave the room, abort editing it.
+        self:setEditRoom(false)
       end
-    else
-      self:setCursor(self.default_cursor)
-      self.edit_room = false
+    else -- No room chosen yet, but about to edit one.
+      if button == "left" then -- Take the clicked one.
+        local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
+        if room and not room.crashed then
+          room.is_active = false -- So that no more patients go to it.
+          self:setCursor(self.waiting_cursor)
+          self.edit_room = room
+          room:tryToEdit()
+        end
+      else -- right click, we don't want to edit a room after all.
+        self:setEditRoom(false)
+      end
     end
   end
   
@@ -669,6 +680,11 @@ function GameUI:setEditRoom(enabled)
     self:setCursor(self.edit_room_cursor)
     self.edit_room = true
   else
+    -- If the actual editing hasn't started yet but is on its way,
+    -- activate the room again.
+    if class.is(self.edit_room, Room) and self.cursor == self.waiting_cursor then
+      self.edit_room.is_active = true
+    end
     self:setCursor(self.default_cursor)
     self.edit_room = false
   end
