@@ -45,8 +45,8 @@ SOFTWARE. --]]
 -- C code does not use this file, but does use the same syntax for creating a
 -- class instance and calling methods on it.
 
-local setmetatable, getmetatable
-    = setmetatable, getmetatable
+local setmetatable, getmetatable, type
+    = setmetatable, getmetatable, type
 
 local function define_class(name, super)
   local mt = {}
@@ -94,8 +94,8 @@ class = setmetatable({}, {__call = class})
 -- class.is(variable, base) --> true
 -- class.is(variable, something_else) --> false
 function class.is(instance, class)
-  if instance == true then
-    -- The value "true" is never a class
+  local typ = type(instance)
+  if typ ~= "table" and typ ~= "userdata" then
     return false
   end
   local methods = instance
@@ -103,7 +103,8 @@ function class.is(instance, class)
     if methods == class then
       return true
     end
-    methods = getmetatable(methods).__index
+    local mt = getmetatable(methods)
+    methods = mt and mt.__index
   end
   return false
 end
