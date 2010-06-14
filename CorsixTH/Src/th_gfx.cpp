@@ -949,7 +949,16 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     else if(IsUsingFunctionSet(DrawChild, HitTestChild))
         pWriter->writeVUInt(2);
     else if(IsUsingFunctionSet(DrawMorph, HitTestMorph))
-        pWriter->writeVUInt(3);
+    {
+        // NB: Prior version of code used the number 3 here, and forgot
+        // to persist the morph target.
+        pWriter->writeVUInt(4);
+        lua_rawgeti(L, luaT_environindex, 2);
+        lua_pushlightuserdata(L, m_pMorphTarget);
+        lua_rawget(L, -2);
+        pWriter->writeStackObject(-1);
+        lua_pop(L, 2);
+    }
     else
         pWriter->writeVUInt(0);
 
@@ -1013,6 +1022,10 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             break;
         switch(iFunctionSet)
         {
+        case 3:
+            // 3 should be the morph set, but the actual morph target is
+            // missing, so settle for a graphical bug rather than a segfault
+            // by reverting to the normal function set.
         case 1:
             m_fnDraw = THAnimation_Draw;
             m_fnHitTest = THAnimation_HitTest;
@@ -1021,9 +1034,12 @@ void THAnimation::depersist(LuaPersistReader *pReader)
             m_fnDraw = THAnimation_DrawChild;
             m_fnHitTest = THAnimation_HitTestChild;
             break;
-        case 3:
+        case 4:
             m_fnDraw = THAnimation_DrawMorph;
             m_fnHitTest = THAnimation_HitTestMorph;
+            pReader->readStackObject();
+            m_pMorphTarget = reinterpret_cast<THAnimation*>(lua_touserdata(L, -1));
+            lua_pop(L, 1);
             break;
         default:
             pReader->setError(lua_pushfstring(L, "Unknown animation function set #%i", iFunctionSet));
