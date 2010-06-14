@@ -988,11 +988,25 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     if map:getCell(x, y, 3) % 0x100 ~= 0 then
       self.blueprint_door.valid = false
     end
+    -- If it is a swing door there are two more locations to check.
+    if self.room_type.swing_doors then
+      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 
+      or map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
+        self.blueprint_door.valid = false
+      end
+    end
   else--if wall == "north" then
     flags = 0
     y2 = y2 - 1
     if map:getCell(x, y, 2) % 0x100 ~= 0 then
       self.blueprint_door.valid = false
+    end
+    -- If it is a swing door there are two more locations to check.
+    if self.room_type.swing_doors then
+      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 
+      or map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
+        self.blueprint_door.valid = false
+      end
     end
   end
   if self.blueprint_door.valid then
