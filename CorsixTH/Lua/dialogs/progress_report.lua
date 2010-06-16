@@ -113,7 +113,7 @@ function UIProgressReport:UIProgressReport(ui)
       :enable(num == 1)
   end
   
-  for i = 1, 4 do
+  for i = 1, math.min(#world.hospitals, 4) do
     make_hosp_button(i)
   end
   
