@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
-#include "main.h"
+#include "../Src/main.h"
 #include <stack>
 #include <SDL.h>
 int l_bootstrap_error_report(lua_State *L);
