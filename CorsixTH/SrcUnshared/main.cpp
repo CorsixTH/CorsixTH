@@ -22,9 +22,9 @@ SOFTWARE.
 
 #include "config.h"
 #include "../Src/main.h"
+#include "../Src/bootstrap.h"
 #include <stack>
 #include <SDL.h>
-int l_bootstrap_error_report(lua_State *L);
 
 // Template magic for checking type equality
 template <typename T1, typename T2>
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
                 fprintf(stderr, "An error has occured in CorsixTH:\n"
                     "Uncaught non-string Lua error\n");
             }
-            lua_pushcfunction(L, l_bootstrap_error_report);
+            lua_pushcfunction(L, Bootstrap_lua_error_report);
             lua_insert(L, -2);
             if(lua_pcall(L, 1, 0, 0) != 0)
             {

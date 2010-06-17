@@ -84,7 +84,7 @@ end
 
 local LOADED_DIALOGS = false
 
-function UI:UI(app)
+function UI:UI(app, minimal)
   self:Window()
   self:initKeyAndButtonCodes()
   self.app = app
@@ -96,9 +96,13 @@ function UI:UI(app)
   self.cursor_entity = nil
   -- through trial and error, this palette seems to give the desired result (white background, black text)
   -- NB: Need a palette present in both the full game and in the demo data
-  local palette = app.gfx:loadPalette("QData", "PREF01V.PAL")
-  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-  self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+  if minimal then
+    self.tooltip_font = app.gfx:loadBuiltinFont()
+  else
+    local palette = app.gfx:loadPalette("QData", "PREF01V.PAL")
+    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+  end
   self.tooltip = nil
   self.tooltip_counter = 0
   self.background = false
@@ -117,11 +121,13 @@ function UI:UI(app)
   
   self.keyboard_repeat_enable_count = 0
   self.down_count = 0
-  self.default_cursor = app.gfx:loadMainCursor("default")
-  self.down_cursor = app.gfx:loadMainCursor("clicked")
-  self.grab_cursor = app.gfx:loadMainCursor("grab")
-  self.edit_room_cursor = app.gfx:loadMainCursor("edit_room")
-  self.waiting_cursor = app.gfx:loadMainCursor("sleep")
+  if not minimal then
+    self.default_cursor = app.gfx:loadMainCursor("default")
+    self.down_cursor = app.gfx:loadMainCursor("clicked")
+    self.grab_cursor = app.gfx:loadMainCursor("grab")
+    self.edit_room_cursor = app.gfx:loadMainCursor("edit_room")
+    self.waiting_cursor = app.gfx:loadMainCursor("sleep")
+  end
   self.editing_allowed = true
   
   if not LOADED_DIALOGS then

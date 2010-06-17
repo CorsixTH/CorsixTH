@@ -286,16 +286,22 @@ static const char* read_bootstrap_line(lua_State *L, void *data, size_t *size)
     }
 }
 
-int l_bootstrap_error_report(lua_State *L)
+int Bootstrap_lua_resources(lua_State *L)
+{
+#define push(x) lua_pushlstring(L, reinterpret_cast<const char*>(x), sizeof(x))
+    push(g_aBootstrapFontDat);
+    push(g_aBootstrapFontTab);
+    push(g_aBootstrapFontPal);
+#undef push
+    return 3;
+}
+
+int Bootstrap_lua_error_report(lua_State *L)
 {
     int iLine = -g_iBootstrapCodeLineNumStart;
     if(lua_load(L, read_bootstrap_line, &iLine, "@bootstrap.cpp") == 0)
     {
-#define push(x) lua_pushlstring(L, reinterpret_cast<const char*>(x), sizeof(x))
-        push(g_aBootstrapFontDat);
-        push(g_aBootstrapFontTab);
-        push(g_aBootstrapFontPal);
-#undef push
+        Bootstrap_lua_resources(L);
         lua_pushvalue(L, 1);
         lua_call(L, 4, 0);
         return 0;

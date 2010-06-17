@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "th_lua_internal.h"
+#include "bootstrap.h"
 #include <string.h>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
@@ -304,6 +305,7 @@ int luaopen_th(lua_State *L)
     lua_settop(L, oState.iTop);
     luaT_setfunction(l_load_strings, "LoadStrings");
     luaT_setfunction(l_get_compile_options, "GetCompileOptions");
+    luaT_setfunction(Bootstrap_lua_resources, "GetBuiltinFont");
 
     // Classes
     THLuaRegisterMap(pState);

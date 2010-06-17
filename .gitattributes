@@ -40,6 +40,14 @@ CorsixTH/Bitmap/mainmenu800.pal -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mkbootstrap.lua -text
 CorsixTH/Bitmap/mkfont.lua -text
+CorsixTH/Bitmap/tree_collapsed.bmp -text
+CorsixTH/Bitmap/tree_ctrl.dat -text
+CorsixTH/Bitmap/tree_ctrl.pal -text
+CorsixTH/Bitmap/tree_ctrl.spec -text
+CorsixTH/Bitmap/tree_ctrl.tab -text
+CorsixTH/Bitmap/tree_expanded.bmp -text
+CorsixTH/Bitmap/tree_leaf.bmp -text
+CorsixTH/Bitmap/tree_level.bmp -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.ico -text

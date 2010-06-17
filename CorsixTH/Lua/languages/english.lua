@@ -118,6 +118,11 @@ letter = {
   level_lost = "Bummer! You failed the level. Better luck next time!",
 }
 
+install = {
+  title = "--------------------------------- CorsixTH Setup ---------------------------------",
+  th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
+}
+
 misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map."
 

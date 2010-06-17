@@ -211,6 +211,31 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   return bitmap
 end
 
+function Graphics:loadBuiltinFont()
+  local font = self.builtin_font
+  if not font then
+    local dat, tab, pal = TH.GetBuiltinFont()
+    local function dernc(x)
+      if x:sub(1, 3) == "RNC" then
+        return rnc.decompress(x)
+      else
+        return x
+      end
+    end
+    local palette = TH.palette()
+    palette:load(dernc(pal))
+    local sheet = TH.sheet()
+    sheet:setPalette(palette)
+    sheet:load(dernc(tab), dernc(dat), true, self.target)
+    font = TH.font()
+    font:setSheet(sheet)
+    font:setSeparation(1, 0)
+    self.load_info[font] = {self.loadBuiltinFont, self}
+    self.builtin_font = font
+  end
+  return font
+end
+
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   -- Allow (multiple) arguments for loading a sprite table in place of the
   -- sprite_table argument.

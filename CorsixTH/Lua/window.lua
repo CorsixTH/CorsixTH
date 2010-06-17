@@ -549,6 +549,34 @@ function Scrollbar:Scrollbar()
   self.visible = nil
 end
 
+function Scrollbar:setRange(min_value, max_value, page_size, value)
+  value = value or min_value
+  page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
+  
+  self.min_value = min_value
+  self.max_value = max_value
+  self.page_size = page_size
+  self.value = value
+  
+  local slider = self.slider
+  slider.w = slider.max_w
+  slider.h = slider.max_h
+  slider.max_x = slider.min_x + slider.max_w - slider.w
+  slider.max_y = slider.min_y + slider.max_h - slider.h
+  
+  if self.direction == "y" then
+    slider.h = math.ceil((page_size / (max_value - min_value + 1)) * slider.max_h)
+    slider.max_y = slider.min_y + slider.max_h - slider.h
+    slider.y = (value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_y - slider.min_y) + slider.min_y
+  else
+    slider.w = math.ceil((page_size / (max_value - min_value + 1)) * slider.max_w)
+    slider.max_x = slider.min_x + slider.max_w - slider.w
+    slider.x = (value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_x - slider.min_x) + slider.min_x
+  end
+  
+  return self
+end
+
 local scrollbar_mt = permanent("Window.<scrollbar_mt>", getmetatable(Scrollbar()))
 
 --[[ Convert a static panel into a scrollbar.
@@ -563,33 +591,21 @@ and an additional slider panel (automatically created BevelPanel).
 !param value (integer, nil) The current value, or min_value if not specified.
 ]]
 function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, max_value, page_size, value)
-  value = value or min_value
-  page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
   local slider = self:addBevelPanel(panel.x + 1, panel.y + 1, panel.w - 2, panel.h - 2, slider_colour)
   local scrollbar = setmetatable({
     base = panel,
     slider = slider,
-    min_value = min_value,
-    max_value = max_value,
-    page_size = page_size,
-    value = value,
     direction = "y",
     callback = callback,
     visible = true,
     enabled = true,
   }, scrollbar_mt)
-  self.scrollbars[#self.scrollbars + 1] = scrollbar
-  
   slider.min_x = slider.x
   slider.min_y = slider.y
   slider.max_w = slider.w
   slider.max_h = slider.h
-  
-  slider.w = scrollbar.direction == "x" and ((value + page_size - 1) / max_value) * slider.w or slider.w
-  slider.h = scrollbar.direction == "y" and ((value + page_size - 1) / max_value) * slider.h or slider.h
-  
-  slider.max_x = slider.min_x + slider.max_w - slider.w
-  slider.max_y = slider.min_y + slider.max_h - slider.h
+  scrollbar:setRange(min_value, max_value, page_size, value)
+  self.scrollbars[#self.scrollbars + 1] = scrollbar
   
   return scrollbar
 end

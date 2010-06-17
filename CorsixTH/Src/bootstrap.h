@@ -1,5 +1,6 @@
-#ifdef _ /* Copyright (c) 2009 Peter "Corsix" Cawley
---[[
+/*
+Copyright (c) 2010 Peter "Corsix" Cawley
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -17,19 +18,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+*/
 
-This file is used to ensure that the compiled binary being used by Lua is up
-to date. Without this system, if the binary was not recent enough, then the
-user would get a confusing error message along the lines of attemping to call
-a nil value (as new API functions are nil in older binaries).
+#ifndef CORSIX_TH_BOOTSTRAP_H_
+#define CORSIX_TH_BOOTSTRAP_H_
+#include "lua.hpp"
 
-When a new API call is added to the C++ source, the version number in this
-file should be incremented. Traditionally, the version number will be similar
-to the SVN revision number. Likewise, if an existing function is changed in a
-way incompatible with old Lua code, then the version number needs to change.
+//! Push onto the stack the bootstrap font data file, table file and palette.
+int Bootstrap_lua_resources(lua_State *L);
 
-Note: This file compiles as both Lua and C++. */
+//! Provide an onscreen report of the error message on the top of the stack.
+int Bootstrap_lua_error_report(lua_State *L);
 
-#endif /*]]--*/
-
-return 846;
+#endif // CORSIX_TH_BOOTSTRAP_H_

@@ -77,6 +77,8 @@ function FileSystem:listFiles(virtual_path, ...)
   end
   if self.provider then
     return self.provider:listFiles(virtual_path)
+  elseif not self.sub_dirs then
+    return nil, "Filesystem layer not initialised"
   end
   for part in virtual_path:gmatch(part_pattern) do
     local part_u = normalise(part)
@@ -100,6 +102,8 @@ function FileSystem:readContents(virtual_path, ...)
   end
   if self.provider then
     return self.provider:readContents(virtual_path)
+  elseif not self.sub_dirs then
+    return nil, "Filesystem layer not initialised"
   end
   local is_file = false
   for part in virtual_path:gmatch(part_pattern) do

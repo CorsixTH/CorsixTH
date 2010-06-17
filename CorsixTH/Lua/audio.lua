@@ -97,7 +97,7 @@ function Audio:init()
   if music_dir then
     _f, _s, _v = lfs.dir(music_dir)
   else
-    _f, _s, _v = pairs(self.app.fs:listFiles("Sound", "Midi"))
+    _f, _s, _v = pairs(self.app.fs:listFiles("Sound", "Midi") or {})
   end
   for file in _f, _s, _v do
     local filename, ext = file:match"^(.*)%.([^.]+)$"

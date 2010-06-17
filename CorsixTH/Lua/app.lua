@@ -82,7 +82,7 @@ function App:init()
   conf_chunk(self.config)
   self:fixConfig()
   dofile "filesystem"
-  self:checkInstallFolder()
+  local good_install_folder = self:checkInstallFolder()
 --  self:checkLanguageFile()
   
   -- Create the window
@@ -134,10 +134,12 @@ function App:init()
   self.gfx = Graphics(self)
   
   -- Put up the loading screen
-  self.video:startFrame()
-  self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
-    (self.config.width - 640) / 2, (self.config.height - 480) / 2)
-  self.video:endFrame()
+  if good_install_folder then
+    self.video:startFrame()
+    self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
+      (self.config.width - 640) / 2, (self.config.height - 480) / 2)
+    self.video:endFrame()
+  end
   
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
   
@@ -163,30 +165,39 @@ function App:init()
   dofile "map"
   
   -- Load additional Lua before world
-  self.anims = self.gfx:loadAnimations("Data", "V")
-  self.animation_manager = AnimationManager(self.anims)
-  self.walls = self:loadLuaFolder"walls"
-  dofile "entities/object"
+  if good_install_folder then
+    self.anims = self.gfx:loadAnimations("Data", "V")
+    self.animation_manager = AnimationManager(self.anims)
+    self.walls = self:loadLuaFolder"walls"
+    dofile "entities/object"
 
-  local objects = self:loadLuaFolder"objects"
-  self.objects = self:loadLuaFolder("objects/machines", nil, objects)
-  -- Doors are in their own folder to ensure that the swing doors (which 
-  -- depend on the door) are loaded after the door object.
-  self.objects = self:loadLuaFolder("objects/doors", nil, objects)
-  for _, v in ipairs(self.objects) do
-    Object.processTypeDefinition(v)
+    local objects = self:loadLuaFolder"objects"
+    self.objects = self:loadLuaFolder("objects/machines", nil, objects)
+    -- Doors are in their own folder to ensure that the swing doors (which 
+    -- depend on the door) are loaded after the door object.
+    self.objects = self:loadLuaFolder("objects/doors", nil, objects)
+    for _, v in ipairs(self.objects) do
+      Object.processTypeDefinition(v)
+    end
+    dofile "room"
+    self.rooms = self:loadLuaFolder"rooms"
+    self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
+    local diseases = self:loadLuaFolder"diseases"
+    self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
+    -- Load world before UI
+    dofile "world"
   end
-  dofile "room"
-  self.rooms = self:loadLuaFolder"rooms"
-  self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
-  local diseases = self:loadLuaFolder"diseases"
-  self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
-  -- Load world before UI
-  dofile "world"
   
   -- Load UI
   dofile "ui"
-  dofile "game_ui"
+  if good_install_folder then
+    dofile "game_ui"
+  else
+    self.ui = UI(self, true)
+    self.ui:setMenuBackground()
+    self.ui:addWindow(UIDirBrowser(self.ui))
+    return true
+  end
   
   -- Load main menu (which creates UI)
   self:loadMainMenu()
@@ -580,8 +591,10 @@ function App:checkInstallFolder()
     " config.txt points to a copy of the data files from the original game,"..
     " as said files are required for graphics and sounds."
   if not status then
-    error("Invalid Theme Hospital install folder specified in config file: "..
-          tostring(err) ..".\n".. message)
+    -- If the given directory didn't exist, then likely the config file hasn't
+    -- been changed at all from the default, so we continue to initialise the
+    -- app, and give the user a dialog asking for the correct directory.
+    return false
   end
   
   -- Check that a few core files are present
@@ -606,6 +619,7 @@ function App:checkInstallFolder()
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end
+  return true
 end
 
 -- TODO: is it okay to remove this without replacement?
