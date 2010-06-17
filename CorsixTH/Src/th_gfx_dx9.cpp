@@ -922,7 +922,7 @@ bool THSpriteSheet::loadFromTHFile(
             unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight];
             THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
-            if(iDataLen < 0)
+            if(iDataLen < 0 || iDataLen > static_cast<int>(iChunkDataLength))
                 iDataLen = 0;
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
             pSprite->pData = oRenderer.takeData();
