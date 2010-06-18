@@ -21,6 +21,7 @@ theme_hospital_install = [[F:\ThemeHospital\hospital]]
 --  German      / de / ger / deu
 --  Italian     / it / ita
 --  Norwegian   / nb / nob
+--  Dutch / Nederlands / nl / dut / nld
 --  Spanish     / es / spa
 --  Swedish     / sv / swe
 --  Portuguese  / pt / por
