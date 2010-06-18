@@ -463,6 +463,21 @@ static int l_surface_new(lua_State *L)
 
 #undef FLAG
 
+#ifndef CORSIX_TH_USE_DX9_RENDERER
+    if(SDL_WasInit(SDL_INIT_VIDEO))
+    {
+        char *sTitle, *sIcon;
+        SDL_WM_GetCaption(&sTitle, &sIcon);
+        if(sTitle) sTitle = strdup(sTitle);
+        if(sIcon) sIcon = strdup(sIcon);
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        SDL_InitSubSystem(SDL_INIT_VIDEO);
+        SDL_WM_SetCaption(sTitle, sIcon);
+        if(sTitle) free(sTitle);
+        if(sIcon) free(sIcon);
+    }
+#endif
+
     THRenderTarget* pCanvas = luaT_stdnew<THRenderTarget>(L);
     if(pCanvas->create(&oParams))
         return 1;

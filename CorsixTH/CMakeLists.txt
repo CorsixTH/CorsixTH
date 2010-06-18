@@ -51,8 +51,8 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
-  ${CMAKE_SOURCE_DIR}/LFS/lfs.c
-  ${CMAKE_SOURCE_DIR}/LPEG/lpeg.c
+  ${CMAKE_SOURCE_DIR}/LFS/*.c
+  ${CMAKE_SOURCE_DIR}/LPEG/*.c
 )
 
 # Declaration of the executable

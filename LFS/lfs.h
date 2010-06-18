@@ -15,3 +15,4 @@
 
 
 int luaopen_lfs (lua_State *L);
+int luaopen_lfs_ext (lua_State *L);

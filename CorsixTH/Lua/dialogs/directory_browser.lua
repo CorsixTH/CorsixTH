@@ -60,6 +60,7 @@ end
 function DirTreeNode:checkForChildren()
   if not self.has_looked_for_children then
     self.has_looked_for_children = true
+    if self.has_children == false then return end
     for item in lfs.dir(self.path) do
       local path = self.path .. pathsep .. item
       if item ~= "." and item ~= ".."
@@ -161,23 +162,16 @@ function UIDirBrowser:UIDirBrowser(ui)
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
   local root
-  if pathsep == "\\" then
-    local roots = {}
-    local letter = "A"
-    while letter <= "Z" do
-      if lfs.attributes(letter .. ":\\", "mode") then
-        roots[#roots + 1] = DirTreeNode(letter .. ":")
-      end
-      letter = string.char(letter:byte() + 1)
+  local roots = lfs.volumes()
+  if #roots > 1 then
+    for k, v in pairs(roots) do
+      roots[k] = DirTreeNode(v)
     end
     root = DummyRootNode(roots)
   else
-    root = DirTreeNode("/")
+    root = DirTreeNode(roots[1])
   end
-  
-  local function width_textbox_reset()
-  end
-  
+
   self:addWindow(TreeControl(root, 5, 55, 490, 340, self.col_bg, self.col_scrollbar)
     :setSelectCallback(function(node)
       if node.is_valid_directory then

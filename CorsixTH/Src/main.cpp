@@ -116,7 +116,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     luaT_pushcfunction(L, fn); \
     lua_settable(L, -3)
 
-    PRELOAD("lfs", luaopen_lfs);
+    PRELOAD("lfs", luaopen_lfs_ext);
     PRELOAD("lpeg", luaopen_lpeg);
     PRELOAD("rnc", luaopen_rnc);
     PRELOAD("TH", luaopen_th);

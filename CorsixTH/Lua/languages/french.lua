@@ -126,8 +126,8 @@ letter = {
 }
 
 install = {
-  title = "---------------------------- Installation de CorsixTH ----------------------------",
-  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital original (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  title = "----------------------------- Installation de CorsixTH -----------------------------",
+  th_directory = utf8 "CorsixTH nécessite une copie des données du jeu Theme Hospital original (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
 }
 
 misc.not_yet_implemented = utf8 "(pas encore implémenté)"
