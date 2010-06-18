@@ -125,6 +125,11 @@ letter = {
   level_lost = "Quelle poisse ! Vous avez raté le niveau. Vosu ferez mieux la prochaine fois !",
 }
 
+install = {
+  title = "---------------------------- Installation de CorsixTH ----------------------------",
+  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital original (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+}
+
 misc.not_yet_implemented = utf8 "(pas encore implémenté)"
 misc.no_heliport = utf8 "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte."
 
