@@ -78,6 +78,7 @@ function Strings:init()
     local good_error_marker = {}
     local env = setmetatable({
       utf8 = utf8conv,
+      pairs = pairs,
       Language = function(...)
         local names = {...}
         -- Use the first name for display purposes (case-dependent!).
@@ -172,6 +173,8 @@ function Strings:load(language)
     SetSpeechFile = function(...)
       speech_file = ...
     end,
+    _G = env,
+    type = type,
   }
   -- The metatable on the environment is set so that the above functions look
   -- like top-level level globals, so that the environment behaves like an
@@ -203,6 +206,7 @@ function Strings:load(language)
       end
     end,
   }
+  metatable.__pairs = strings_metatable.__pairs
   -- Evaluate the language file
   setmetatable(env, metatable)
   self:_loadPrivate(language, env)
