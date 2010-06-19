@@ -586,7 +586,10 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status, err = self.fs:setRoot(self.config.theme_hospital_install)
+  local status, err
+  if self.config.theme_hospital_install then
+    status, err = self.fs:setRoot(self.config.theme_hospital_install)
+  end
   local message = "Please ensure that the theme_hospital_install setting in"..
     " config.txt points to a copy of the data files from the original game,"..
     " as said files are required for graphics and sounds."
