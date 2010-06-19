@@ -52,8 +52,11 @@ tooltip.queue_window.dec_queue_size = "Warteschlange verkleinern"
 object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
-menu_options.lock_windows = "  FENSTER FESTHALTEN  "
-menu_options.settings = "  EINSTELLUNGEN  "
+menu_options = {
+  lock_windows   = "  FENSTER FESTHALTEN  ",
+  edge_scrolling = "  AM BILDSCHIRMRAND SCROLLEN  ",
+  settings       = "  EINSTELLUNGEN  ",
+}
 menu_options_game_speed.pause        = "  PAUSE"
 
 -- The demo does not contain this string
