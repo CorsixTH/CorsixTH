@@ -300,7 +300,10 @@ function UI:disableKeyboardRepeat()
 end
 
 local menu_bg_sizes = { -- Available menu background sizes
-  {1280, 960},
+  {1920, 1200},
+  {1680, 1050},
+  {1440, 900},
+  {1280, 800},
   {1024, 768},
   {800, 600},
   {640, 480},

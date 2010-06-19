@@ -31,6 +31,15 @@ CorsixTH/Bitmap/mainmenu1024.pal -text
 CorsixTH/Bitmap/mainmenu1280.bmp -text
 CorsixTH/Bitmap/mainmenu1280.dat -text
 CorsixTH/Bitmap/mainmenu1280.pal -text
+CorsixTH/Bitmap/mainmenu1440.bmp -text
+CorsixTH/Bitmap/mainmenu1440.dat -text
+CorsixTH/Bitmap/mainmenu1440.pal -text
+CorsixTH/Bitmap/mainmenu1680.bmp -text
+CorsixTH/Bitmap/mainmenu1680.dat -text
+CorsixTH/Bitmap/mainmenu1680.pal -text
+CorsixTH/Bitmap/mainmenu1920.bmp -text
+CorsixTH/Bitmap/mainmenu1920.dat -text
+CorsixTH/Bitmap/mainmenu1920.pal -text
 CorsixTH/Bitmap/mainmenu640.bmp -text
 CorsixTH/Bitmap/mainmenu640.dat -text
 CorsixTH/Bitmap/mainmenu640.pal -text
