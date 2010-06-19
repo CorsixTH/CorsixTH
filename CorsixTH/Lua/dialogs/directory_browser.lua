@@ -44,6 +44,10 @@ function DirTreeNode:hasChildren()
   if self.has_looked_for_children then
     return #self.children ~= 0
   elseif self.has_children == nil then
+    if self:getLevel() == 0 then
+      -- Assume root level things have children until we really need to check
+      return true
+    end
     self.has_children = false
     for item in lfs.dir(self.path) do
       local path = self.path .. pathsep .. item
@@ -60,7 +64,10 @@ end
 function DirTreeNode:checkForChildren()
   if not self.has_looked_for_children then
     self.has_looked_for_children = true
-    if self.has_children == false then return end
+    if self.has_children == false then
+      -- Already checked and found nothing
+      return
+    end
     for item in lfs.dir(self.path) do
       local path = self.path .. pathsep .. item
       if item ~= "." and item ~= ".."
@@ -82,7 +89,11 @@ function DirTreeNode:getHighlightColour(canvas)
   local highlight_colour = self.highlight_colour
   if highlight_colour == nil then
     highlight_colour = false
-    if self:getChildCount() >= 3 then
+    if self:getLevel() == 0 and not self.has_looked_for_children then
+      -- Assume root-level things are not TH directories, unless we've already
+      -- got a list of their children.
+      highlight_colour = nil
+    elseif self:getChildCount() >= 3 then
       local ngot = 0
       local things_to_check = {"data", "levels", "qdata"}
       local nxt = things_to_check[ngot + 1]

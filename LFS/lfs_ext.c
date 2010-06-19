@@ -45,14 +45,11 @@ static int l_volume_list(lua_State *L)
     {
         if(iDriveMask & (1 << (cDrive - 'A')))
         {
-            WIN32_FIND_DATAA oFindData;
-            char sName[5] = {cDrive, ':', '\\', '*', 0};
-            HANDLE hVolume = FindFirstFileA(sName, &oFindData);
-            if(hVolume != INVALID_HANDLE_VALUE)
+            char sName[4] = {cDrive, ':', '\\', 0};
+            if(GetDriveTypeA(sName) > DRIVE_NO_ROOT_DIR)
             {
                 lua_pushlstring(L, sName, 2);
                 lua_rawseti(L, 1, ++iNDrives);
-                FindClose(hVolume);
             }
         }
     }
