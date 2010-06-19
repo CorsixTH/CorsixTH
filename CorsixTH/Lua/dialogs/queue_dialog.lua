@@ -178,7 +178,7 @@ function UIQueue:onMouseUp(button, x, y)
   local wx, wy = self.ui:ScreenToWorld(x + self.x, y + self.y)
   wx = math.floor(wx)
   wy = math.floor(wy)
-  if wx > 0 and wx > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
+  if wx > 0 and wy > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
     room = self.ui.app.world:getRoom(wx, wy)
   end
 

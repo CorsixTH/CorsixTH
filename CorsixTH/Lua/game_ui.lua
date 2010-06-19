@@ -233,7 +233,7 @@ function GameUI:onCursorWorldPositionChange()
   wx = math.floor(wx)
   wy = math.floor(wy)
   local room
-  if wx > 0 and wx > 0 and wx < self.app.map.width and wy < self.app.map.height then
+  if wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
   if room ~= self.cursor_room then
