@@ -129,6 +129,11 @@ letter = {
   level_lost = utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
 }
 
+install = {
+  title = "----------------------------- CorsixTH Konfiguration -----------------------------",
+  th_directory = utf8 "CorsixTH benötigt einige Dateien des Originalspiels Theme Hospital (oder der Demo davon) um zu funktionieren. Bitte das Installationsverzeichnis von Theme Hospital auswählen.",
+}
+
 misc.not_yet_implemented = "(noch nicht implementiert)"
 misc.no_heliport = "Entweder wurden noch keine Krankheiten entdeckt, oder es existiert kein Heliport auf dieser Karte."
 
