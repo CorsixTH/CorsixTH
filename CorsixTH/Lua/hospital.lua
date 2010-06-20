@@ -95,7 +95,7 @@ function Hospital:Hospital(world)
         disease = disease,
         discovered = disease_available,
         concentrate_research = false,
-        cure_effectiveness = 100,
+        cure_effectiveness = 95,
         -- This will only work as long as there's only one treatment room.
         drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil,
         psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,

@@ -106,9 +106,9 @@ function Patient:treated()
   local hospital = self.hospital
   hospital:receiveMoneyForTreatment(self)
   -- Either the patient is no longer sick, or he/she dies.
-  -- TODO: Add percentage that depends on illness and how effective the cure is.
-  -- Should level also make a difference?
-  if self.die_anims and math.random(1, 100) < 6 then
+  local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
+  cure_chance = cure_chance * self.diagnosis_progress
+  if self.die_anims and math.random(1, 100) > cure_chance then
     self:die()
   else 
     if hospital.num_cured < 1 then

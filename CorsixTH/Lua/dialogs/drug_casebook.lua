@@ -63,7 +63,7 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
   self.machinery.visible = false
   self.drug = self:addPanel(7, 306, 352):setDynamicTooltip(--[[persistable:casebook_drug_tooltip]] function()
-    return _S.tooltip.casebook.cure_type.drug_percentage:format(self.casebook[self.selected_disease].price * 100)
+    return _S.tooltip.casebook.cure_type.drug_percentage:format(self.casebook[self.selected_disease].cure_effectiveness)
   end)
   self.drug.visible = false
   self.surgery = self:addPanel(8, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.surgery)
