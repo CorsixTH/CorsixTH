@@ -110,6 +110,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   
   self:makeTooltip(_S.tooltip.buy_objects_window.price,       20, 168, 127, 187)
   self:makeTooltip(_S.tooltip.buy_objects_window.total_value, 20, 196, 127, 215)
+
+  self:addKeyHandler("Enter", self.confirm)
 end
 
 function UIFurnishCorridor:purchaseItem(index, quantity)
