@@ -32,8 +32,7 @@ end
 -- Decide on a sensible place to put config.txt, etc.
 if pathsep == "\\" then
   -- Windows
-  print(ourpath)
-  config_path = --[[os.getenv("AppData") or]] ourpath
+  config_path = os.getenv("AppData") or ourpath
 else
   -- Linux, OS X, etc.
   config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
