@@ -45,6 +45,45 @@ local function invert(t)
 end
 
 function UI:initKeyAndButtonCodes()
+  local key_remaps = {}
+  local button_remaps = {}
+  local key_norms = setmetatable({
+    space = " ",
+    escape = "esc",
+    enter = "Enter",
+  }, {__index = function(t, k)
+    k = tostring(k)
+    if #k == 1 or k:match"^F%d+$" then
+      return k:upper()
+    end
+    k = k:lower()
+    return rawget(t, k) or k
+  end})
+  do
+    local ourpath = debug.getinfo(1, "S").source:sub(2, -7)
+    local result, err = loadfile_envcall(ourpath .. "key_mapping.lua")
+    if not result then
+      print("Cannot load key mapping:" .. err)
+    else
+      local env = {
+        key_remaps = function(t)
+          for k, v in pairs(t) do
+            key_remaps[key_norms[k]] = key_norms[v]
+          end
+        end,
+        button_remaps = function(t)
+          for k, v in pairs(t) do
+            button_remaps[key_norms[k]] = key_norms[v]
+          end
+        end,
+      }
+      setmetatable(env, {__index = function(t, k)
+        return k
+      end})
+      result(env)
+    end
+  end
+
   self.key_codes = {
     backspace = 8,
     esc = 27,
@@ -66,20 +105,78 @@ function UI:initKeyAndButtonCodes()
   }
   -- Add "A" through "Z"
   for i = string.byte"a", string.byte"z" do
-    self.key_codes[string.char(i):lower()] = i
     self.key_codes[string.char(i):upper()] = i
   end
   -- Add "0" through "9"
   for i = string.byte"0", string.byte"9" do
     self.key_codes[string.char(i)] = i
   end
-  self.key_codes = invert(self.key_codes)
+  
+  -- Apply key remaps
+  local original_codes = {}
+  for input_key, behave_as_key in pairs(key_remaps) do
+    -- Find codes for input key
+    local code = original_codes[input_key] or self.key_codes[input_key] or {}
+    if not original_codes[input_key] then
+      original_codes[input_key] = code
+      self.key_codes[input_key] = nil
+    end
+    -- Set to codes for behave as key
+    if not original_codes[behave_as_key] then
+      original_codes[behave_as_key] = self.key_codes[behave_as_key]
+    end
+    self.key_codes[behave_as_key] = code
+  end
 
-  self.button_codes = invert {
+  self.key_as_button_codes = {
+  }
+  self.button_codes = {
     left = 1,
     middle = 2,
     right = 3,
   }
+  
+  -- Apply button remaps
+  local original_button_codes = {}
+  for input, behave_as_button in pairs(button_remaps) do
+    if input == "left" or input == "middle" or input == "right" then
+      -- button -> button remap
+      local code = original_button_codes[input] or self.button_codes[input] or {}
+      if not original_button_codes[input] then
+        original_button_codes[input] = code
+        self.button_codes[input] = nil
+      end
+      if not original_button_codes[behave_as_button] then
+        original_button_codes[behave_as_button] = self.button_codes[behave_as_button]
+      end
+      self.button_codes[behave_as_button] = code
+    else
+      -- key -> button remap
+      local code = original_codes[input] or self.key_codes[input]
+      if type(code) ~= "table" then
+        code = {code}
+      end
+      if not original_codes[input] then
+        original_codes[input] = code
+        self.key_codes[input] = nil
+      end
+      local ncode = {}
+      for i, k in ipairs(code) do
+        self.key_as_button_codes[k] = true
+        ncode[i] = -k
+      end
+      if not original_button_codes[behave_as_button] then
+        original_button_codes[behave_as_button] = self.button_codes[behave_as_button]
+      end
+      self.button_codes[behave_as_button] = ncode
+    end
+  end
+  
+  if not next(self.key_as_button_codes) then
+    self.key_as_button_codes = nil
+  end
+  self.button_codes = invert(self.button_codes)
+  self.key_codes = invert(self.key_codes)
 end
 
 local LOADED_DIALOGS = false
@@ -406,6 +503,10 @@ function UI:toggleFullscreen()
 end
 
 function UI:onKeyDown(code)
+  if self.key_as_button_codes and self.key_as_button_codes[code] then
+    self:onMouseDown(-code, self.cursor_x, self.cursor_y)
+    return true
+  end
   -- Are there any text boxes expecting input?
   for _, box in pairs(self.textboxes) do
     if box.enabled and box.active then
@@ -472,6 +573,10 @@ function UI:onKeyDown(code)
 end
 
 function UI:onKeyUp(code)
+  if self.key_as_button_codes and self.key_as_button_codes[code] then
+    self:onMouseUp(-code, self.cursor_x, self.cursor_y)
+    return true
+  end
   if self.key_handlers[code] then
     return true
   end
