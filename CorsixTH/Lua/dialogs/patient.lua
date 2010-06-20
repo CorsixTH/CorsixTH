@@ -68,15 +68,14 @@ function UIPatient:UIPatient(ui, patient)
   self.disease_button = self:addPanel(329, 14 + 117, 61 + 107)
     :makeButton(0, 0, 38, 38, 330, self.viewDiseases):setTooltip(_S.tooltip.patient_window.casebook)
   self.disease_blanker = self:addColourPanel(14 + 115, 61 + 105, 45, 45, 113, 117, 170)
-  self.disease_blanker.visible = false
 
   self.home_button = self:addPanel(331, 14 + 95, 61 + 158):makeButton(0, 0, 60, 60, 332, self.goHome):setTooltip(_S.tooltip.patient_window.send_home)
   self.home_blanker = self:addColourPanel(14 + 93, 61 + 156, 67, 67, 113, 117, 170)
-  self.home_blanker.visible = false
 
   self.guess_button = self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease):setTooltip(_S.tooltip.patient_window.abort_diagnosis)
   self.guess_blanker = self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
-  self.guess_blanker.visible = false
+  
+  -- Set correct initial visibility/enabledness of the three buttons and their blankers
   self:updateInformation()
   
   self:makeTooltip(_S.tooltip.patient_window.happiness, 33, 117, 124, 141)
@@ -209,7 +208,7 @@ function UIPatient:updateInformation()
     self.home_button.visible = true
     self.home_blanker.visible = false
   end
-  if patient.diagnosed or patient.going_home or patient.is_debug then
+  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or patient.going_home then
     self.guess_button.enabled = false
     self.guess_button.visible = false
     self.guess_blanker.visible = true
@@ -248,11 +247,15 @@ end
 
 function UIPatient:guessDisease()
   local patient = self.patient
-  if not patient:getRoom() and patient.hospital.disease_casebook[patient.disease.id].discovered then
-    patient:setDiagnosed(true)
-    patient:setNextAction({
-      name = "seek_room", 
-      room_type = patient.disease.treatment_rooms[1]
-    }, 1)
+  -- NB: the first line of conditions should already be ruled out by button being disabled, but just in case
+  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or patient.going_home
+  or patient:getRoom() or not patient.hospital.disease_casebook[patient.disease.id].discovered then
+    self.ui:playSound("wrong2.wav")
+    return
   end
+  patient:setDiagnosed(true)
+  patient:setNextAction({
+    name = "seek_room", 
+    room_type = patient.disease.treatment_rooms[1]
+  }, 1)
 end

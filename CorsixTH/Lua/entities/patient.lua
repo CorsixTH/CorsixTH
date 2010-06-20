@@ -82,6 +82,10 @@ function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"], 
     self.diagnosis_progress + incrementValue)
   self.diagnosis_progress = math.max(0.0, self.diagnosis_progress)
+  local window = self.world.ui:getWindow(UIPatient)
+  if window and window.patient == self then
+    window:updateInformation()
+  end
   self:updateDynamicInfo()
 end
 
