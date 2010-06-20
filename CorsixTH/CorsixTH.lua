@@ -111,7 +111,7 @@ strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
   "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..base_dir.."config.txt",
+  "--config-file="..dofile"config_finder",
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...

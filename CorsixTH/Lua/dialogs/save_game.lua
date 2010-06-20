@@ -106,7 +106,7 @@ function UISaveGame:doSave(filename)
   local app = ui.app
   self:close()
   
-  local status, err = pcall(app.save, filename)
+  local status, err = pcall(app.save, app, filename)
   if not status then
     err = _S.errors.save_prefix .. err
     print(err)

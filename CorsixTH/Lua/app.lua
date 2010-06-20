@@ -68,22 +68,32 @@ function App:init()
   
   -- Prereq 1: Config file (for screen width / height / TH folder)
   -- Note: These errors cannot be translated, as the config file specifies the language
-  local conf_chunk, conf_err = loadfile_envcall(self.command_line["config-file"] or "config.txt")
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  local conf_chunk, conf_err = loadfile_envcall(conf_path)
   if not conf_chunk then
-    print("Unable to load the config file, will try sample config file instead.")
-    print("If you do not have a config.txt, please create it by copying config.sample.txt")
-    print("The error loading the config file was:")
-    print(conf_err)
+    error("Unable to load the config file. Please ensure that CorsixTH "..
+    "has permission to read/write ".. conf_path ..", or use the "..
+    "--config-file=filename command line option to specify a writable file. "..
+    "For reference, the error loading the config file was: " .. conf_err)
+  else
+    conf_chunk(self.config)
   end
-  if not conf_chunk then
-    local conf_base = debug.getinfo(2, "S").source:match"@?(.*)[Cc][Oo][Rr][Ss][Ii][Xx][Tt][Hh]%.[Ll][Uu][Aa]$" or ""
-    conf_chunk = assert(loadfile_envcall(conf_base .. "config.sample.txt"))
-  end
-  conf_chunk(self.config)
   self:fixConfig()
   dofile "filesystem"
   local good_install_folder = self:checkInstallFolder()
---  self:checkLanguageFile()
+  -- self:checkLanguageFile()
+  self.savegame_dir = self.config.savegames or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Saves"
+  if self.savegame_dir:sub(-1, -1) == pathsep then
+    self.savegame_dir = self.savegame_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.savegame_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.savegame_dir) then
+       print "Notice: Savegame directory does not exist and could not be created."
+    end
+  end
+  if self.savegame_dir:sub(-1, -1) ~= pathsep then
+    self.savegame_dir = self.savegame_dir .. pathsep
+  end
   
   -- Create the window
   if not SDL.init("audio", "video", "timer") then
@@ -355,6 +365,14 @@ function App:dumpStrings()
 end
 
 function App:fixConfig()
+  -- Fill in default values for things which dont exist
+  local _, config_defaults = dofile "config_finder"
+  for k, v in pairs(config_defaults) do
+    if self.config[k] == nil then
+      self.config[k] = v
+    end
+  end
+  
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -749,11 +767,9 @@ function App:loadLuaFolder(dir, no_results, append_to)
   end
 end
 
-local savegame_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Saves" .. pathsep
-
 function App:scanSavegames()
   local saves = {}
-  for file in lfs.dir(savegame_dir) do
+  for file in lfs.dir(self.savegame_dir) do
     if file:match"%.sav$" then
       saves[#saves + 1] = file:sub(1, -5)
     end
@@ -761,12 +777,12 @@ function App:scanSavegames()
   return saves
 end
 
-function App.save(filename)
-  return SaveGameFile(savegame_dir .. filename)
+function App:save(filename)
+  return SaveGameFile(self.savegame_dir .. filename)
 end
 
-function App.load(filename)
-  return LoadGameFile(savegame_dir .. filename)
+function App:load(filename)
+  return LoadGameFile(self.savegame_dir .. filename)
 end
 
 --! Quits the running game and returns to main menu (offers confirmation window first)
