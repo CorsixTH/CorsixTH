@@ -191,7 +191,12 @@ end
 
 function UICasebook:scrollUp()
   if self.selected_index > 1 then
-    self.selected_index = self.selected_index - 1
+    if self.buttons_down.ctrl then
+      self.selected_index = 1
+    else
+      self.selected_index = self.selected_index - 1
+    end
+
     self.selected_disease = self.names_sorted[self.selected_index]
     self.ui:playSound("pagetur2.wav")
   else
@@ -202,7 +207,12 @@ end
 
 function UICasebook:scrollDown()
   if self.selected_index < #self.names_sorted then
-    self.selected_index = self.selected_index + 1
+    if self.buttons_down.ctrl then
+      self.selected_index = #self.names_sorted
+    else
+      self.selected_index = self.selected_index + 1
+    end
+
     self.selected_disease = self.names_sorted[self.selected_index]
     self.ui:playSound("pagetur2.wav")
   else
@@ -246,3 +256,29 @@ function UICasebook:decreasePay()
   end
   self.casebook[self.selected_disease].price = price
 end
+
+function UICasebook:onMouseDown(button, x, y)
+  -- Normal window operations if outside the disease list
+  if x < 395 or x > 540 or y < 77 or y > 394 then
+    return UIFullscreen.onMouseDown(self, button, x, y)
+  end
+
+  local index_diff
+  if y < 203 then
+    index_diff = -7 + math.floor((y - 77) / 18)
+  elseif y > 269 then
+    index_diff = math.floor((y - 269) / 18) + 1
+  else
+    return
+  end
+
+  -- Clicking on a disease name scrolls to the disease
+  local new_index = self.selected_index + index_diff
+  if new_index >= 1 and new_index <= #self.names_sorted then
+    self.selected_index = new_index
+    self.selected_disease = self.names_sorted[self.selected_index]
+    self.ui:playSound("pagetur2.wav")
+    self:updateIcons()
+  end
+end
+
