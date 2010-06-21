@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -42,8 +42,12 @@ introduction_texts.level1[4] = utf8 "En bra ide vore att bygga en psykiatrisk av
 object.litter = utf8 "Skräp"
 tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
-menu_options.lock_windows = utf8 "  LÅS FÖNSTER  "
-menu_options.settings = utf8 "  INSTÄLLNINGAR  "
+menu_options = {
+  lock_windows = utf8 "  LÅS FÖNSTER  ",
+  edge_scrolling = "  KANTRULLNING  ",
+  settings = utf8 "  INSTÄLLNINGAR  ",
+}
+
 menu_options_game_speed.pause = "  PAUSA  "
 
 menu_file.restart = "  STARTA OM  "
@@ -67,6 +71,7 @@ menu_debug_overlay = {
   none                        = "  INGET  ",
   flags                       = "  FLAGGOR  ",
   positions                   = "  KOORDINATER  ",
+  heat                        = "  TEMPERATUR  ",
   byte_0_1                    = "  BYTE 0 & 1  ",
   byte_floor                  = "  BYTE GOLV  ",
   byte_n_wall                 = utf8 "  BYTE N VÄGG  ",
@@ -117,6 +122,11 @@ letter = {
   custom_level_completed = utf8 "Bra gjort! Du klarade alla mål på den här specialbanan!",
   return_to_main_menu = utf8 "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
   level_lost = utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
+}
+
+install = {
+  title = "--------------------------------- CorsixTH Setup ---------------------------------",
+  th_directory = utf8 "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att localisera mappen där Theme Hospital installerats.",
 }
 
 misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
@@ -199,6 +209,10 @@ errors = {
   minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
 }
 
+confirmation = {
+  needs_restart = utf8 "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?"
+}
+
 information = {
   custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
   cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
@@ -213,14 +227,22 @@ totd_window = {
     utf8 "Alla sjukhus behöver en reception och en allmänpraktik för att fungera. Sedan beror allt på vad det är för patienter som besöker sjukhuset. Ett hett tips är att börja med ett apotek.",
     utf8 "Maskiner som till exempel pumpen behöver underhåll då och då. Anställ en vaktmästare eller två för att reparera dem, annars riskeras personalens och patienternas hälsa.",
     utf8 "Efter ett tag kommer din personal att bli trött. Se till att göra ett personalrum så att de kan slappna av lite.",
-    utf8 "För att inte dina anställda och alla patienter ska bli arga gäller det att ha tillräckligt med element utplacerade lite här och där.",
+    utf8 "För att inte dina anställda och alla patienter ska bli arga gäller det att ha tillräckligt med element utplacerade lite här och där. Använd stadskartan för att hitta ställen som behöver mer värme.",
     utf8 "En läkares kompetensnivå påverkar kvaliteten och hastigheten på hans diagnoser ganska mycket. Sätt en riktigt kompetent läkare i allmänpraktiken så behövs det inte så många andra diagnosrum.",
     utf8 "Juniorer och läkare kan höja sin kompetensnivå genom att gå i träning hos en konsult i utbildningsrummet. Om konsulten har någon färdighet (kirurg, psykiater eller forskare) kommer han också att lära ut detta till sina elever.",
     utf8 "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
-    utf8 "Alternativmenyn är inte implementerad än men det går ändå att ändra en del inställningar i filen config.txt i mappen där spelet ligger.",
+    utf8 "Det går att göra vissa inställningar som till exempel upplösning och språk i alternativmenyn som finns både i huvudmenyn och inuti spelet.",
     utf8 "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at freenode).",
     utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org.",
-    utf8 "CorsixTH offentliggjordes den 24 juli 2009. Den första versionen kallad beta 1 släpptes den 24 december samma år. Ett kvartal senare är vi stolta att presentera beta 2 (släppt den 24 mars 2010).",
+    utf8 "Du spelar beta 3 av CorsixTH som släpptes den 24 juni 2010.",
+    utf8 "Varje bana har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",
+    utf8 "Om du vill ändra eller ta bort ett existerande rum kan du göra det med hjälp av ändra rum-knappen i panelen längst ner (saxen).",
+    utf8 "Om du ur högen av patienter vill ta reda på vilka som köar till ett visst rum är det bara att föra muspekaren över rummet.",
+    utf8 "Klicka på dörren till ett rum för att se kön till det. Sedan går det att genomföra finlir som att ändra ordning eller skicka en patient till ett annat likadant rum.",
+    utf8 "Olycklig personal frågar efter löneökning ofta. Se till att de jobbar i en behaglig miljö så händer det inte.",
+    utf8 "Patienter blir törstiga när de väntar på sin tur, ännu mer om du sätter upp värmen! Sätt ut läskautomater på strategiska platser för lite extra inkomst.",
+    utf8 "Det går att avbryta diagnosprocessen för en patient i förtid och gissa behandling om sjukdomen är känd. Notera att detta ökar risken för felbehandling - och dödsfall.",
+    utf8 "Akutfall kan vara ett smidigt sätt att få in lite extra stålar, såvida du har kapacitet att hantera alla patienter i tid vill säga.",
   },
   previous = utf8 "Föregående tips",
   next = utf8 "Nästa tips",
