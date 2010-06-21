@@ -28,7 +28,7 @@ local pathsep = package.config:sub(1, 1)
 
 function DirTreeNode:DirTreeNode(path)
   self:TreeNode()
-  if path:sub(-1) == pathsep then
+  if path:sub(-1) == pathsep and path ~= pathsep then
     path = path:sub(1, -2)
   end
   self.path = path
