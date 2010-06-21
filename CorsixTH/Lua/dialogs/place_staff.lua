@@ -102,7 +102,6 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         entity:setProfile(self.profile)
         self.profile = nil
         entity:setTile(self.tile_x, self.tile_y)
-        entity:setNextAction{name = "meander"}
         local room = entity:getRoom()
         if room then
           room:onHumanoidEnter(entity)

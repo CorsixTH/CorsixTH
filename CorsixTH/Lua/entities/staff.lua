@@ -304,8 +304,9 @@ function Staff:onPlaceInCorridor()
     notify_object:onOccupantChange(1)
   end
   
+  self:setNextAction{name = "meander"}
   if self.humanoid_class ~= "Receptionist" then
-    return
+    return true
   end
   
   world:findObjectNear(self, "reception_desk", nil, function(x, y)
