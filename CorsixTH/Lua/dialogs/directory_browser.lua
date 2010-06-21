@@ -149,7 +149,11 @@ function DirTreeNode:getLabel()
   if not label then
     local parent = self:getParent()
     if parent and parent.path then
-      label = self.path:sub(#parent.path + 2, -1)
+      if parent.path:sub(-1, -1) == pathsep then
+        label = self.path:sub(#parent.path + 1, -1)
+      else
+        label = self.path:sub(#parent.path + 2, -1)
+      end
     else
       label = self.path
     end
@@ -181,7 +185,7 @@ function UIDirBrowser:UIDirBrowser(ui)
   
   self.modal_class = "dir browser"
   self.resizable = false
-  self:setDefaultPosition(0.5, 0.5)
+  self:setDefaultPosition(0.05, 0.5)
   
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
