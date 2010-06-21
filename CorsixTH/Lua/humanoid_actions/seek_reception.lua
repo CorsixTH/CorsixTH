@@ -43,6 +43,7 @@ local function action_seek_reception_start(action, humanoid)
     y = y + orientation.use_position[2]
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(desk.object_type.name))
+    humanoid.waiting = nil
     
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
@@ -83,6 +84,10 @@ local function action_seek_reception_start(action, humanoid)
   local procrastination
   if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
     procrastination = {name = "meander", count = 1}
+    if not humanoid.waiting then
+      -- Eventually people are going to get bored and leave.
+      humanoid.waiting = 60
+    end
   else
     local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
     procrastination = {name = "walk", x = hosp_x, y = hosp_y}
