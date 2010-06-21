@@ -76,7 +76,11 @@ function print_table(obj, max_level, level)
     spacer = spacer .. " "
   end
   for k, v in pairs(obj) do
-    print(spacer .. k, v)
+    print(spacer .. tostring(k), v)
+    if type(k) == "table" then
+      -- a set, recurse further into k, instead of v
+      v = k
+    end
     if type(v) == "table" and (not max_level or max_level > level) then
       print_table(v, max_level, level + 1)
     end

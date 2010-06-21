@@ -148,10 +148,14 @@ function Staff:fire()
     self.message_callback = nil
   end
   -- Check if the staff was being called to a room and look for a replacement
-  local enter = self.action_queue[1].is_entering
-  if enter and enter ~= true then
-    enter.approaching_staff[self] = nil
-    self.world:callForStaff(enter)
+  for _, r in pairs(self.world.rooms) do
+    if r.approaching_staff[self] then
+      r.approaching_staff[self] = nil
+      if not next(r.approaching_staff) then
+        -- approaching_staff set is now empty, so look for a replacement
+        self.world:callForStaff(r)
+      end
+    end
   end
 end
 
@@ -437,10 +441,14 @@ function Staff:onDestroy()
     self.message_callback = nil
   end
   -- Check if the staff was being called to a room and look for a replacement
-  local enter = self.action_queue[1].is_entering
-  if enter and enter ~= true then
-    enter.approaching_staff[self] = nil
-    self.world:callForStaff(enter)
+  for _, r in pairs(self.world.rooms) do
+    if r.approaching_staff[self] then
+      r.approaching_staff[self] = nil
+      if not next(r.approaching_staff) then
+        -- approaching_staff set is now empty, so look for a replacement
+        self.world:callForStaff(r)
+      end
+    end
   end
   Humanoid.onDestroy(self)
 end
