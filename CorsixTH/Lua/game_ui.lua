@@ -296,19 +296,19 @@ function GameUI:onMouseMove(x, y, dx, dy)
     return true
   end
   
-  if not self.prevent_edge_scrolling and (x < 3 or y < 3
-  or x >= self.app.config.width - 3 or y >= self.app.config.height - 3) then
+  if not self.prevent_edge_scrolling and (x < 1 or y < 1
+  or x >= self.app.config.width - 1 or y >= self.app.config.height - 1) then
     local dx = 0
     local dy = 0
-    if x < 3 then
-      dx = -10
-    elseif x >= self.app.config.width - 3 then
-      dx = 10
+    if x < 1 then
+      dx = -5
+    elseif x >= self.app.config.width - 1 then
+      dx = 5
     end
-    if y < 3 then
-      dy = -10
-    elseif y >= self.app.config.height - 3 then
-      dy = 10
+    if y < 1 then
+      dy = -5
+    elseif y >= self.app.config.height - 1 then
+      dy = 5
     end
     
     if not self.tick_scroll_amount_mouse then
