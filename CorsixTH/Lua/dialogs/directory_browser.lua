@@ -40,6 +40,14 @@ local function sort_by_path(t1, t2)
   return t1.sort_key < t2.sort_key
 end
 
+function DirTreeNode:_childPath(item)
+  if self.path:sub(-1, -1) == pathsep then
+    return self.path .. item
+  else
+    return self.path .. pathsep .. item
+  end
+end
+
 function DirTreeNode:hasChildren()
   if self.has_looked_for_children then
     return #self.children ~= 0
@@ -49,12 +57,17 @@ function DirTreeNode:hasChildren()
       return true
     end
     self.has_children = false
-    for item in lfs.dir(self.path) do
-      local path = self.path .. pathsep .. item
-      if item ~= "." and item ~= ".."
-      and lfs.attributes(path, "mode") == "directory" then
-        self.has_children = true
-        break
+    local status, _f, _s, _v = pcall(lfs.dir, self.path)
+    if not status then
+      print("Error while fetching children for " .. self.path .. ": " .. _f)
+    else
+      for item in _f, _s, _v do
+        local path = self:_childPath(item)
+        if item ~= "." and item ~= ".."
+        and lfs.attributes(path, "mode") == "directory" then
+          self.has_children = true
+          break
+        end
       end
     end
   end
@@ -69,7 +82,7 @@ function DirTreeNode:checkForChildren()
       return
     end
     for item in lfs.dir(self.path) do
-      local path = self.path .. pathsep .. item
+      local path = self:_childPath(item)
       if item ~= "." and item ~= ".."
       and lfs.attributes(path, "mode") == "directory" then
         local node = DirTreeNode(path)
