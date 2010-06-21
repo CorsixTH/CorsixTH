@@ -213,7 +213,12 @@ function App:init()
   self:loadMainMenu()
   -- If a savegame was specified, load it
   if self.command_line.load then
-    self.load(self.command_line.load)
+    local status, err = pcall(self.load, self, self.command_line.load)
+    if not status then
+      err = _S.errors.load_prefix .. err
+      print(err)
+      self.ui:addWindow(UIInformation(self.ui, {err}))
+    end
   end
   return true
 end
