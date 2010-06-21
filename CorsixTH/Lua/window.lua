@@ -658,26 +658,25 @@ function Textbox:input(code)
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
-      for i = string.byte"a", string.byte"z" do
-        if code == i then
-          local char = string.char(i)
-          if self.panel.window.buttons_down.shift then
-            char = string.upper(char)
-          end
-          self.text = self.text .. char
-          self.panel:setLabel(self.text)
-          return true
+      if string.byte"a" <= code and code <= string.byte"z" then
+        local char = string.char(code)
+        if self.panel.window.buttons_down.shift then
+          char = string.upper(char)
         end
+        self.text = self.text .. char
+        self.panel:setLabel(self.text)
+        return true
       end
     end
     -- Numbers
     if self.allowed_input.numbers then
-      for i = string.byte"0", string.byte"9" do
-        if code == i then
-          self.text = self.text .. string.char(i)
-          self.panel:setLabel(self.text)
-          return true
-        end
+      if 256 <= code and code <= 265 then -- numeric keypad
+        code = code - 256 + string.byte"0"
+      end
+      if string.byte"0" <= code and code <= string.byte"9" then
+        self.text = self.text .. string.char(code)
+        self.panel:setLabel(self.text)
+        return true
       end
     end
     -- Space and hyphen
@@ -693,7 +692,7 @@ function Textbox:input(code)
   -- Backspace (delete last char)
   if code == 8 then
     self.text = self.text:sub(1, -2)
-      self.panel:setLabel(self.text)
+    self.panel:setLabel(self.text)
     return true
   end
   -- Enter (confirm)
