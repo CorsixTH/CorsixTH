@@ -298,11 +298,16 @@ function Staff:checkIfNeedRest()
 end
 
 function Staff:onPlaceInCorridor()
+  local world = self.world
+  local notify_object = world:getObjectToNotifyOfOccupants(self.tile_x, self.tile_y)
+  if notify_object then
+    notify_object:onOccupantChange(1)
+  end
+  
   if self.humanoid_class ~= "Receptionist" then
     return
   end
   
-  local world = self.world
   world:findObjectNear(self, "reception_desk", nil, function(x, y)
     local obj = world:getObject(x, y, "reception_desk")
     if not obj.receptionist and not obj.reserved_for then
