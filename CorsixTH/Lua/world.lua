@@ -1300,11 +1300,19 @@ end
 --! Dump the contents of the game log into a file.
 -- This is automatically done on each error.
 function World:dumpGameLog()
-  local fi = assert(io.open("gamelog.txt", "w"))
-  for _, str in ipairs(self.game_log) do
-    fi:write(str .. "\n")
+  local config_path = TheApp.command_line["config-file"] or ""
+  local pathsep = package.config:sub(1, 1)
+  config_path = config_path:match("^(.-)[^".. pathsep .."]*$")
+  local gamelog_path = config_path .. "gamelog.txt"
+  local fi, err = io.open(gamelog_path, "w")
+  if fi then
+    for _, str in ipairs(self.game_log) do
+      fi:write(str .. "\n")
+    end
+    fi:close()
+  else
+    print("Warning: Cannot dump game log: " .. tostring(err))
   end
-  fi:close()
 end
 
 function World:afterLoad(old, new)
