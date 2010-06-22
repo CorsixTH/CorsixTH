@@ -174,11 +174,7 @@ Section "MainSection" SEC01
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_WIDTH "$0"
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_HEIGHT "$1"
   !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "true"
-  ${If} $CONFIGAPPDATA == 1
-    !insertmacro ReplaceInFile config_template.txt SAVE_GAMES_IN_APPDATA "true"
-  ${Else}
-    !insertmacro ReplaceInFile config_template.txt SAVE_GAMES_IN_APPDATA "false"
-  ${EndIf}
+  ; TODO: Let the user choose if new music files exist and where they are in that case.
   Rename config_template.txt config.txt
   Delete config_t*
   
@@ -256,12 +252,11 @@ Section Uninstall
 
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
   
-  ${If} $CONFIGAPPDATA == 1
-    RMDir /r "$APPDATA\CorsixTH\Saves"
-    RMDir /r "$APPDATA\CorsixTH"
-  ${Else}
-    RMDir /r "$INSTDIR\Saves"
-  ${EndIf}
+  ; Try to remove everything in AppData too. Nothing happens if it doesn't exist.
+  ; TODO: Make an option to keep saves
+  RMDir /r "$APPDATA\CorsixTH\Saves"
+  RMDir /r "$APPDATA\CorsixTH"
+  RMDir /r "$INSTDIR\Saves"
   
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
 

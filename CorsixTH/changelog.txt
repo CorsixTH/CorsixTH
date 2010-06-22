@@ -46,6 +46,8 @@ Version Beta 3 - to be released 2010-06-24
 
 * Translations: Italian, Spanish and French: added new strings not available in vanilla TH, 
   Portuguese (WIP) and Dutch (WIP)
+* The configuration file and saved games can now, if desired, also be stored in the user's 
+  home directory or equivalent.
 
 
 -----------------------------------------
