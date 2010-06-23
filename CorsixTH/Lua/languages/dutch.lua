@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 RAS; FlyingBastard;
+--[[ Copyright (c) 2010 RAS; FlyingBastard, l_koni, Nossah et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -33,7 +33,7 @@ newspaper = {
     [2] = "ENGE ARTS SPEELT GOD",
     [3] = "DR FRANKENSTEIN GEVONDEN",
     [4] = "WAT ZAT ER OP LABJAS?",
-    [5] = "ONETISCH ONDERZOEK GESTOPT",
+    [5] = "ONETHISCH ONDERZOEK GESTOPT",
   },
   [2] = {
     [1] = "BEZOPEN ALS EEN VIS",
@@ -88,7 +88,7 @@ misc = {
     mildly = "mild",
     moderately = "vrij",
   },
-  not_yet_implemented = "(nog niet geïmplementeerd)",
+  not_yet_implemented = "(nog niet ge\137mplementeerd)",
   send_message = "Bericht sturen naar speler %d",
   out_of_sync = "Spel uit sync",
   balance = "Balans bestand:",
@@ -108,7 +108,7 @@ staff_descriptions = {
     [5] = "Een echte doorzetter. Gaat maar door. ",
     [6] = "Zeer beleefd en goedgemanierd. ",
     [7] = "Ongelofelijk getalenteerd en kundig. ",
-    [8] = "Geeft veel om het werk dat hij aflevert. ",
+    [8] = "Geeft veel om het afgeleverde werk. ",
     [9] = "Een pietje precies die maar niet opgeeft. ",
     [10] = "Toegewijd om mensen te helpen met een glimlach. ",
     [11] = "Charmant, beleefd en behulpzaam. ",
@@ -163,12 +163,12 @@ staff_descriptions = {
     [4] = "Grof en opdringerig. Irriteert mensen. ",
     [5] = "Geeft snel op - kan zich niet gedragen. ",
     [6] = "Doof als een kwartel. Stinkt naar bloemkool. ",
-    [7] = "Slecht in zijn werk. Risicofactor. ",
+    [7] = "Slecht in het vak. Risicofactor. ",
     [8] = "Verstrooid en snel afgeleid. ",
     [9] = "Gespannen en maakt snel fouten. ",
     [10] = "Labiel en wrokkig - wordt verteerd door haat. ",
     [11] = "Slordig en onhandig. ",
-    [12] = "Geeft niet om zijn werk. Luiaard. ",
+    [12] = "Geeft niets om het vak. Luiaard. ",
     [13] = "Neemt, volledig apathisch, onnodig risico. ",
     [14] = "Sluw, geniepig en tegendraads. ",
     [15] = "Verwaand en zelfingenomen. ",
@@ -208,7 +208,7 @@ buy_objects_window = {
 }
 place_objects_window = {
   pick_up_object = "Klik op het voorwerp dat je wil verplaatsen of kies een andere optie.",
-  place_objects_in_corridor = "Plaats de voorwerpen in een hal.",
+  place_objects_in_corridor = "Plaats de voorwerpen in je ziekenhuis.",
   place_windows = "Plaats, indien gewenst, ramen en klik op Bevestigen.",
   confirm_or_buy_objects = "Je kunt nu de kamer bevestigen of voorwerpen kopen of verplaatsen",
   drag_blueprint = "Sleep de blauwdruk tot je de gewenste grootte hebt bereikt.",
@@ -218,18 +218,26 @@ place_objects_window = {
 totd_window = {
   previous = "Vorige tip",
   tips = {
-    [1] = "Elk ziekenhuis begint met een receptie en een Praktijk. Daarna ligt het er helemaal aan wat voor pati\137nten er langskomen. Een Apotheek is altijd een goede keuze.",
-    [2] = "Machines zoals de Compressor in Inflatie hebben onderhoud nodig. Huur een of twee Conci\137rges om je machines te repareren, anders loop je het risico je staf en je pati\137nten te verwonden.",
+    [1] = "Elk ziekenhuis begint met een receptie en een Praktijk. Daarna ligt het er helemaal aan wat voor pati\137nten er langskomen. Een Apotheek is altijd een goede volgende keuze.",
+    [2] = "Machines zoals de Compressor in Inflatie hebben onderhoud nodig. Huur \130\130n of twee Conci\137rges in om je machines te repareren, anders loop je het risico je staf en je pati\137nten te verwonden.",
     [3] = "Op een gegeven moment wordt je staf moe. Bouw een Stafkamer zodat ze zich kunnen ontspannen.",
     [4] = "Plaats genoeg radiatoren om je staf en je pati\137nten warm - en daarmee tevreden - te houden.",
-    [5] = "De bekwaamheid van een arts bepaalt hoe snel en hoe goed zijn diagnoses zijn. Als je een goede arts in de Praktijk plaatst, heb je ook niet zoveel diagnostische kamers nodig.",
+    [5] = "De bekwaamheid van een Arts bepaalt hoe snel en hoe goed zijn diagnoses zijn. Als je een goede Arts in de Praktijk plaatst, heb je ook niet zoveel diagnostische kamers nodig.",
     [6] = "Assistenten en Basisartsen kunnen zich laten opleiden door een Specialist in het Klaslokaal. Als de Specialist een specifieke kwalificatie heeft (Chirurg, Psychiater of Onderzoeker), zal hij deze kennis overdragen aan zijn leerling(en).",
     [7] = "Heb je al geprobeerd het alarmnummer te bellen op de faxmachine? Zet wel je geluid eerst aan!",
     [8] = "Het Optiesmenu is nog niet ge\139mplementeerd, maar je kunt sommige instellingen, zoals de resolutie en de taal, instellen door config.txt in de installatiemap aan te passen.",
     [9] = "Zie je nog overal Engels ondanks dat je een andere taal hebt gekozen? Help dan de teksten te vertalen!",
     [10] = "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum, onze mailing list of ons IRC kanaal (corsix-th op freenode).",
     [11] = "Als je een bug vindt zouden we het op prijs stellen als je het meldt via onze bugtracker: th-issues.corsix.org",
-    [12] = "CorsixTH werd aangekondigd op 24 juli 2009. De eerste release was op 24 december 2009; toen werd de speelbare Beta 1 uitgebracht. Drie maanden later, op 24 maart 2010, presenteerden wij vol trots de speelbare Beta 2.",
+    [12] = "Je speelt Beta 3 van CorsixTH, gereleased op 24 juni 2010.",
+	[13] = "Bij elk level moet je aan bepaalde eisen voldoen voor je door kunt gaan naar de volgende. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
+	[14] = "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de Aanpassen-knop op de werkbalk.",
+	[15] = "Je kunt eenvoudig uitvissen welke pati\137nten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
+	[16] = "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zo ook wat aanpassingen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
+	[17] = "Ongelukkige werknemers zullen vaak om salarisverhoging vragen. Zorg voor een comfortabele werkomgeving om dit soort dingen te voorkomen.",
+	[18] = "Pati\137nten krijgen dorst van wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
+	[19] = "Je kunt het diagnostische proces voor een pati\137nt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de pati\137nt.",
+	[20] = "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra pati\137nten kunnen behapstukken om ze op tijd te kunnen genezen.",
   },
   next = "Volgende tip",
 }
@@ -389,7 +397,7 @@ fax = {
       part_1_name = "De Inspecteur heeft geruchten gehoord dat uw instituut gebukt ging onder zware gevallen van %s.",
       part_2 = "Hij heeft echter geen bewijzen gevonden ter bevestiging van deze geruchten.",
     },
-    compensation_amount = "De regering heeft derhalve behalve besloten u een schadevergoeding te geven ter waarde van %d ter compensatie voor de schade die uw goede naam heeft geleden door deze leugens.",
+    compensation_amount = "De regering heeft derhalve besloten u een schadevergoeding toe te kennen ter waarde van %d ter compensatie voor de schade die uw goede naam heeft geleden door deze leugens.",
     failed = {
       part_1_name = "Tijdens het verbergen van de uitbraak van %s",
       part_2 = "heeft je staf de ziekte verspreidt onder de bevolking.",
@@ -460,8 +468,8 @@ fax = {
     what_to_do_question = "Wat moeten we met de pati\137nt doen?",
     guessed_percentage_name = "Je team moest raden naar de conditie van de pati\137nt. De kans dat het %s is bedraagt %d",
     choices = {
-      send_home = "Stuur pati\137nt naar huis.",
-      research = "Stuur pati\137nt naar Laboratorium.",
+      send_home = "Stuur de pati\137nt naar huis.",
+      research = "Stuur de pati\137nt naar het Laboratorium.",
       wait = "Laat de pati\137nt even geduld hebben.",
     },
     disease_name = "Je team heeft een nieuwe ziekte ontdekt. Het is %s",
@@ -509,7 +517,7 @@ fax = {
   },
   tutorial = {
     [1] = "Welkom in je eerste ziekenhuis!",
-    [2] = "Wil je korte instructie?",
+    [2] = "Zou je wat korte instructies willen?",
     [3] = "Ja, graag. Leer me hoe het werkt.",
     [4] = "Nee, bedankt. Ik weet al hoe dit gaat.",
   },
@@ -534,7 +542,7 @@ fax = {
   },
   epidemic = {
     cover_up_explanation_1 = "Als je probeert dit te verbergen, heb je een beperkte tijd om alle ge\139nfecteerde pati\137nten te genezen voor de Inspectie erachter komt.",
-    cover_up_explanation_2 = "Als je bezoek krijgt van een Inspecteur als je nog bezig bent met de epidemie op te lossen, kan hij drastische maatregelen tegen je nemen.",
+    cover_up_explanation_2 = "Als je bezoek krijgt van een Inspecteur terwijl je nog bezig bent de epidemie op te lossen, kan hij drastische maatregelen tegen je nemen.",
     choices = {
       cover_up = "Alle ge\139nfecteerde pati\137nten proberen te genezen voor de tijd voorbij is of iemand je ziekenhuis verlaat.",
       declare = "Een epidemie afkondigen. Betaal de boete en je reputatie eronder laten lijden.",
@@ -558,8 +566,8 @@ bank_manager = {
   balance = "Saldo",
   interest_payment = "Maandelijkse rente",
   hospital_value = "Waarde van je ziekenhuis",
-  interest_rate = "Jaarlijkse rentepercentage",
-  insurance_owed = "Nog tegoed van verzekeringen",
+  interest_rate = "Rentevoet",
+  insurance_owed = "Deb. Verzekeringen",
   statistics_page = {
     balance = "Saldo",
     details = "Omschrijving",
@@ -568,7 +576,7 @@ bank_manager = {
     money_in = "Bij",
     money_out = "Af",
   },
-  inflation_rate = "Jaarlijkse inflatie",
+  inflation_rate = "Inflatie",
 }
 staff_title = {
   junior = "Assistent",
@@ -588,15 +596,15 @@ tooltip = {
     psychiatrist = "Psychiater",
     salary = "Salaris",
     next_person = "Volgende persoon bekijken",
-    nurses = "Beschikbare zusters bekijken",
+    nurses = "Beschikbare Zusters bekijken",
     surgeon = "Chirurg",
     handymen = "Beschikbare Conci\137rges bekijken",
-    doctors = "Beschikbare artsen bekijken",
-    doctor_seniority = "Niveau arts (Assistent, Basisarts, Specialist)",
-    hire = "Huren",
+    doctors = "Beschikbare Artsen bekijken",
+    doctor_seniority = "Niveau Arts (Assistent, Basisarts, Specialist)",
+    hire = "Aannemen",
     researcher = "Onderzoeker",
     qualifications = "Extra kwalificaties",
-    receptionists = "Beschikbare receptionistes bekijken",
+    receptionists = "Beschikbare Receptionistes bekijken",
     staff_ability = "Competentie",
   },
   handyman_window = {
@@ -635,9 +643,9 @@ tooltip = {
     sack = "Deze werknemer ontslaan",
     surgeon = "Gekwalificeerde Chirurg",
     tiredness_2 = "Moeheid werknemer",
-    doctors = "Lijst van artsen bekijken",
-    doctor_seniority = "Niveau van arts",
-    view_staff = "Bekijk dit persoon",
+    doctors = "Lijst van Artsen bekijken",
+    doctor_seniority = "Niveau van Arts",
+    view_staff = "Bekijk deze persoon",
     surgeon_train = "%d%% van de opleiding tot Chirurg voltooid",
     skills = "Extra bekwaamheden",
     receptionists = "Lijst van Receptionistes bekijken",
@@ -658,7 +666,7 @@ tooltip = {
     diagnosis_inc = "Budget voor Diagnostische apparatuur verhogen",
   },
   machine_window = {
-    repair = "Een congi\137rge sturen om deze machine te repareren",
+    repair = "Een Congi\137rge sturen om deze machine te repareren",
     name = "Naam",
     close = "Sluiten",
     times_used = "Aantal keren gebruikt",
@@ -681,7 +689,7 @@ tooltip = {
     load_game_number = "Laad spel %d",
   },
   queue_window = {
-    end_of_queue = "Sleep een pati\137nt hiernaartoe om hem achteraan de rij te zetten",
+    end_of_queue = "Sleep een pati\137nt hiernaartoe om hem of haar achteraan in de rij te zetten",
     num_entered = "Aantal pati\137nten die in deze kamer zijn behandeld",
     close = "Dit scherm sluiten",
     num_in_queue = "Aantal pati\137nten in de rij",
@@ -723,7 +731,7 @@ tooltip = {
   toolbar = {
     reputation = "Je reputatie",
     casebook = "Behandelingen",
-    edit = "Kamers/Voorwerpen aanpassen",
+    edit = "Aanpassen",
     staff_list = "HR",
     policy = "Beleid",
 	date = "Datum",
@@ -734,7 +742,7 @@ tooltip = {
     hire = "Staf huren",
     status = "Status",
     town_map = "Kaart",
-    rooms = "Build rooms",
+    rooms = "Bouwen",
     bank_button = "Klik voor het kasboek. Rechtsklikken voor bankafschriften",
   },
   pay_rise_window = {
@@ -774,7 +782,7 @@ tooltip = {
     up = "Naar boven",
     reputation = "Reputatie",
     research = "Klik hier om de Specialitietak van je laboratorium hierop te laten concentreren",
-    close = "Rapport sluiten",
+    close = "Scherm sluiten",
     earned_money = "Tot nu toe verdiend",
     cure_type = {
       psychiatrist = "Een Psychiater voert deze behandeling uit",
@@ -792,22 +800,22 @@ tooltip = {
   policy = {
     diag_termination = "Het diagnoseproces zal doorlopen worden tot Artsen zo zeker zijn als STOP PROCEDURE aangeeft, of tot alle diagnostische testen zijn uitgevoerd",
     close = "Sluit Beleidscherm",
-    staff_leave = "Klik hier om aan te geven of stafleden die niet bezig zijn andere stafleden, indien nodig, mogen helpen",
-    diag_procedure = "Als de diagnose van een Arts minder zeker is dan het STUUR WEG percentage, zal de pati\137nt naar huis gestuurd worden. Als de diagnose beter is dan PROBEER BEHANDELING aangeeft, zal de pati\137nt de betreffende behandeling ondergaan",
-    staff_rest = "Hoe moe staf moet zijn voor ze mogen uitrusten",
-    staff_stay = "Klik hier om Artsen en Zusters in de kamers te laten blijven waar je ze neerzet",
+    staff_leave = "Artsen en Zusters mogen bijspringen waar nodig",
+    diag_procedure = "Als de diagnose van een Arts minder zeker is dan het WEGSTUREN percentage, zal de pati\137nt naar huis gestuurd worden. Als de diagnose beter is dan GOKKEN aangeeft, zal de pati\137nt de betreffende behandeling ondergaan",
+    staff_rest = "Hoe moe stafleden moeten zijn voor ze mogen uitrusten",
+    staff_stay = "Artsen en Zusters blijven in de kamer waar je ze plaatst",
   },
   bank_manager = {
     graph = "Verwachte betalingen van %s",
     close = "Kasboek sluiten",
-    hospital_value = "Huidge waarde van je ziekenhuis",
+    hospital_value = "Waarde ziekenhuis",
     graph_return = "Terug naar vorig venster",
     current_loan = "Nog uitstaande leningen",
     borrow_5000 = "$5000 lenen van de bank",
     balance = "Je huidige saldo",
     interest_payment = "Maandelijkse rente",
-    inflation_rate = "Jaarlijkse inflatie",
-    interest_rate = "Jaarlijkse rentepercentage",
+    inflation_rate = "Inflatie",
+    interest_rate = "Rentevoet",
     repay_5000 = "$5000 aflossen",
     show_graph = "Toon grafiek met verwachte betalingen van %s",
     insurance_owed = "Nog tegoed van %s",
@@ -827,13 +835,13 @@ tooltip = {
     load_game = "Een opgeslagen spel laden",
   },
   patient_window = {
-    graph = "Klik om te schakelen tussen de gezondheid en de geschiedenis van dit persoon",
+    graph = "Klik om te schakelen tussen de gezondheid en de geschiedenis van deze persoon",
     casebook = "Details bekijken van de ziekte van deze pati\137nt",
     close = "Venster sluiten",
     queue = "Bekijk de rij waarin deze persoon staat",
     happiness = "Tevredenheid van deze pati\137nt",
-    warmth = "Hoe warm dit persoon het heeft",
-    center_view = "Dit persoon bekijken",
+    warmth = "Hoe warm deze persoon het heeft",
+    center_view = "Deze persoon bekijken",
     thirst = "Hoe dorstig deze pati\137nt is",
     send_home = "Uit ziekenhuis ontslaan",
     abort_diagnosis = "Behandel deze pati\137nt nu, zonder een complete diagnose",
@@ -854,7 +862,7 @@ tooltip = {
     close = "Informatievenster sluiten",
   },
   rooms = {
-ultrascan = "Een arts gebruikt de Ultrascan om diagnoses te stellen",
+ultrascan = "Een Arts gebruikt de Ultrascan om diagnoses te stellen",
     research_room = "Artsen die een kwalificatie hebben als onderzoeker kunnen nieuwe medijnen en machines uitvinden in het laboratorium",
     fracture_clinic = "Een Zuster gebruikt de Breukkliniek om Gebroken Botten te verhelpen",
     gps_office = "Pati\137nten krijgen hun eerste consult en resultaten in de Praktijk.",
@@ -936,7 +944,7 @@ ultrascan = "Een arts gebruikt de Ultrascan om diagnoses te stellen",
     scanner = "14 OB_SCANNER",
     couch = "18 OB_COUCH",
     blood_machine = "42 OB_BLOOD_MC",
-    table1 = "Table (REMOVED): holds collection of magazines to keep waiting patients happy.",
+    table1 = "Table (REMOVED): holds collection of magazines to keep waiting patients happy.", --[[ Schijnbaar hebben ze geen tafels in ziekenhuizen. --]]
     video_game = "Videospelletje: Laat je staf zich ontspannen met Hi-Octane.",
     lamp = "Lamp: shines light and enables staff member to see.",
     op_sink2 = "34 OB_OP_SINK_2",
@@ -973,7 +981,7 @@ ultrascan = "Een arts gebruikt de Ultrascan om diagnoses te stellen",
     plant = "Plant: Houdt pati\137nten tevreden en zuivert de lucht.",
     jelly_moulder = "47 OB_JELLY_VAT",
     cardio = "13 OB_CARDIO",
-    toilet = "Loo: Pati\137nten, eh, gebruiken dit.",
+    toilet = "Pot: Pati\137nten, eh, gebruiken dit.",
     electrolyser = "46 OB_ELECTRO",
     fire_extinguisher = "Blusser: Verkleint het gevaar van defecte apparatuur.",
     bed3 = "unused",
@@ -1082,10 +1090,10 @@ dynamic_info = {
     actions = {
       waiting_for_patient = "Wacht op pati\137nt",
       wandering = "Loopt wat rond",
-      going_to_repair = "Op weg naar %s voor reparatie",
+      going_to_repair = "Gaat %s repareren",
       heading_for = "Gaat naar %s",
     },
-    tiredness = "Tiredness",
+    tiredness = "Moeheid",
   },
 }
 adviser = {
@@ -1100,7 +1108,7 @@ adviser = {
     build_reception = "Hallo. Ten eerste moet je ziekenhuis een Receptie hebben. Klik op de Gangartikelenknop.",
     doctor_in_invalid_position = "Hee! Daar kun je de Arts niet plaatsen.",
     receptionist_invalid_position = "Daar kun je de Receptioniste niet neerzetten.",
-    room_too_small_and_invalid = "De blauwdruk is te klein en staat niet op een bouwbare plaats. Kom op.",
+    room_too_small_and_invalid = "De blauwdruk is te klein en staat niet op bebouwbare grond. Kom op.",
     window_in_invalid_position = "Dit raam bevindt zich op een onmogelijke positie. Probeer het eens ergens anders te plaatsen.",
     choose_doctor = "Kijk goed naar wat een Arts kan voor je er \130\130n aanneemt.",
     build_gps_office = "Om diagnoses te kunnen stellen moet je eerst een Praktijk bouwen.",
@@ -1148,7 +1156,7 @@ adviser = {
     players_failed = "De volgende speler(s) hebben het laatste doel niet gehaald: ",
     poaching = {
       in_progress = "Ik laat je nog wel weten of deze medewerker voor je wil werken.",
-      not_interested = "Ha! Ze zijn totaal niet ge\137nteresseerd in voor jou werken. Ze zijn tevreden met hun huidige baan.",
+      not_interested = "Ha! Ze zijn totaal niet ge\139nteresseerd in voor jou werken. Ze zijn tevreden met hun huidige baan.",
       already_poached_by_someone = "Dat gaat niet door! Iemand anders probeert deze medewerker al te stropen.",
     },
   },
@@ -1323,7 +1331,7 @@ room_descriptions = {
   },
   gp = {
     [1] = "Praktijk//",
-    [2] = "Dit is het fundament van alle diagnoses. Nieuwe pati\137nten komen hier langs zodat er gekeken kan worden wat er met hen aan de hand is. Vanaf hier worden ze doorverwezen naar andere diagnostische kamers of naar een kamer waar ze genezen kunnen worden. Als de eerste Praktijk te druk wordt, zul je er waarschijnlijk nog /130/130n willen bouwen. Hoe groter de kamer, hoe meer voorwerpen je erin kwijt kunt, en hoe hoger de prestige voor de Arts in functie zal zijn. Dit geldt trouwens voor alle kamers.//",
+    [2] = "Dit is het fundament van alle diagnoses. Nieuwe pati\137nten komen hier langs zodat er gekeken kan worden wat er met hen aan de hand is. Vanaf hier worden ze doorverwezen naar andere diagnostische kamers of naar een kamer waar ze genezen kunnen worden. Als de eerste Praktijk te druk wordt, zul je er waarschijnlijk nog \130\130n willen bouwen. Hoe groter de kamer, hoe meer voorwerpen je erin kwijt kunt, en hoe hoger de prestige voor de Arts in functie zal zijn. Dit geldt trouwens voor alle kamers.//",
     [3] = "De Praktijk wordt gebruikt door een Arts. ",
   },
   fracture_clinic = {
@@ -1446,10 +1454,10 @@ introduction_texts = {
     [1] = "Welkom bij je eerste ziekenhuis!//",
     [2] = "Zorg dat de boel op gang komt door een Receptie te plaatsen en een Praktijk te bouwen. Huur ook een Receptioniste en een Arts. ",
     [3] = "Wacht dan tot er mensen langskomen.",
-    [4] = "Het is een goed idee om een Psychiatrische Afdeling te bouwen e een Arts in te huren met de correcte kwalificaties. ",
+    [4] = "Het is een goed idee om een Psychiatrische Afdeling te bouwen en een Arts in te huren met de correcte kwalificaties. ",
     [5] = "Een Apotheek en een Zuster zijn essentieel voor het genezen van je pati\137nten. ",
     [6] = "Kijk uit voor voor ernstige gevallen van Plofkop. Een Inflatiekamer lost deze probleempjes op. ",
-    [7] = "Je wil om te beginnen 10 mensen genezen en zorgen dat je reputatie niet onder de 200-grens duikt.",
+    [7] = "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
   },
   level9 = {
     [1] = "Nu je de kas van het Ministerie flink hebt gespekt en de Minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat goed draait en om haar cli\137nten, die arme en zieke zielen, geeft. ",
@@ -1617,7 +1625,7 @@ humanoid_name_ends = {
   [14] = "PLAAT",
   [15] = "DIJK",
   [16] = "POORTE",
-  [17] = "MARSCH",
+  [17] = "MARS",
   [18] = "HEIDE",
   [19] = "MOND",
   [20] = "MAN",
@@ -1685,8 +1693,8 @@ transactions = {
 letter = {
   [1] = {
     [1] = "Beste %s//",
-    [2] = "Fantastisch! Je hebt dit ziekenhuis goed onder controle gehouden. Wij hoge pieten van het Ministerie van Gezondheid zouden graag willen weten of je ge\137nteresseerd bent in een groter project. Wij denken dat je een perfecte kandidaat bent voor een andere locatie. Het salaris is $%d. Denk er maar eens over na.//",
-    [3] = "Ben je ge\137nteresseerd in een baan in het %s-ziekenhuis?",
+    [2] = "Fantastisch! Je hebt dit ziekenhuis goed onder controle gehouden. Wij hoge pieten van het Ministerie van Gezondheid zouden graag willen weten of je ge\139nteresseerd bent in een groter project. Wij denken dat je een perfecte kandidaat bent voor een andere locatie. Het salaris is $%d. Denk er maar eens over na.//",
+    [3] = "Ben je ge\139nteresseerd in een baan in het %s-ziekenhuis?",
   },
   [2] = {
     [1] = "Beste %s//",
@@ -1701,7 +1709,7 @@ letter = {
   [4] = {
     [1] = "Beste %s//",
     [2] = "Gefeliciteerd! Wij van het Ministerie zijn erg onder de indruk van je kundigheid met ziekenhuizen. Je bent zeker weten een ster in de gezondheidszorg. Toch denken we dat je voorkeur uitgaat naar een iets moeilijkere positie. Je zou een salaris van $%d krijgen, maar de keuze is helemaal aan jou.//",
-    [3] = "Ben je ge\137nteresseerd in werken in het zieken huis bij %s?",
+    [3] = "Ben je ge\139nteresseerd in werken in het zieken huis bij %s?",
   },
   [5] = {
     [1] = "Beste %s//",
@@ -1764,7 +1772,7 @@ casebook = {
   research = "onderzoek specialiseren",
   cure = "behandeling",
   cured = "genezen",
-  earned_money = "geld verdiend",
+  earned_money = "omzet",
   cure_desc = {
     hire_psychiatrists = "Je moet Psychiaters aannemen.",
     improve_cure = "Behandeling verbeteren.",
@@ -1798,10 +1806,10 @@ diseases = {
   --[[3rd Degree Sideburns (een woordspeling op derdegraads brandwonden en bakkebaarden--]]
   
   third_degree_sideburns = {
-    cause = "Cause - wistful longing for the 1970s",
-    cure = "Cure - The Psychiatry staff must, using up-to-date techniques, convince the patient that these hairy accoutrements are rubbish.",
-    name = "3rd Degree Sideburns",
-    symptoms = "Symptoms - big hair, flares, platforms and glitter make-up.",
+    cause = "Oorzaak - Nostalgisch verlangen naar de seventies.",
+    cure = "Behandeling - De Psychiater probeert de pati\137nt er via moderne conversatietechnieken van te overtuigen dat die flamboyante stijlen echt niet meer kunnen.",
+    name = "Derdegraads Brandhaar",
+    symptoms = "Symptomen - Felgeverfd haar, bakkebaarden, plateauschoenen en glitter make-up.",
   },
   discrete_itching = {
     cause = "Oorzaak - Kleine insecten met scherpe tandjes.",
@@ -1810,16 +1818,16 @@ diseases = {
     symptoms = "Symptomen - Krabben met lokale ontstekingen tot gevolg.",
   },
   the_squits = {
-    cause = "Oorzaak - Het eten van pizza dat aan de binnenkant van de oven zat geplakt.",
+    cause = "Oorzaak - Het eten van aan de binnenkant van de oven aangebakken stukjes pizza.",
     cure = "Behandeling - Een plakkerige mix van draderige chemicali\137n drinken om de binnenkant van de pati\137nt weer wat te laten stollen.",
     name = "Sproeipoep",
-    symptoms = "Symptoms - Ugh. Dat kun je vast zelf wel bedenken.",
+    symptoms = "Symptomen - Ugh. Dat kun je vast zelf wel bedenken.",
   },
   spare_ribs = {
     cause = "Oorzaak - Op koude stenen vloeren zitten.",
     cure = "Behandeling - Het stukje rib wordt verwijderd door twee Chirurgen en aan de pati\137nt in een zakje meegegeven.",
     name = "Ribstuk",
-    symptoms = "Symptoms - Een iets te grote borstkas.",
+    symptoms = "Symptomen - Een iets te grote borstkas.",
   },
   diag_blood_machine = {
     name = "Diag Bloedmachine",
@@ -1882,14 +1890,14 @@ diseases = {
   --[[ Heaped Piles is een woordspeling. Heaped is opgestapeld, en Piles is zowel aambeien als stapels. Wat doen we hiermee? --]]
   heaped_piles = {
     cause = "Oorzaak - Rondhangen bij koffieautomaten.",
-    cure = "Behandeling - Een prettig, krachtig drankje waarvan de hoge zuurgraad de aambeien van binnenuit oplossen.",
-    name = "Heaped Piles",
-    symptoms = "Symptoms - Patient feels like he/she is sitting on a bag of marbles.",
+    cure = "Behandeling - Een prettig, krachtig drankje met een zuurgraad waarvan de aambeien van binnenuit oplossen.",
+    name = "Stapels Aambeien",
+    symptoms = "Symptomen - Het is voor de pati\137nt net alsof hij op een zak knikkers zit.",
   },
   unexpected_swelling = {
     cause = "Oorzaak - Iets onverwachts.",
     cure = "Behandeling - De zwelling kan alleen worden doorgeprikt door twee Chirurgen.",
-    name = "Onverwachte zwelling",
+    name = "Onverwachte Zwelling",
     symptoms = "Symptomen - Zwelling.",
   },
   jellyitis = {
@@ -1906,7 +1914,7 @@ diseases = {
   },
   alien_dna = {
     cause = "Oorzaak - Gezichtzuigers met het bloed van intelligente aliens.",
-    cure = "Behandeling - De DNA wordt machinaal verwijderd, de buitenaardse elementen worden gefilterd en snel weer teruggepompt.",
+    cure = "Behandeling - De DNA wordt machinaal verwijderd, de buitenaardse elementen worden gefilterd en het DNA snel weer teruggepompt.",
     name = "Buitenaards DNA",
     symptoms = "Symptomen - Langzame monsterachtige metamorfose en een drang tot het vernietigen van onze steden.",
   },
@@ -1989,7 +1997,7 @@ diseases = {
     symptoms = "Symptomen - Organen worden doorzichtig en zien er ranzig uit.",
   },
   broken_heart = {
-    cause = "Oorzaak - Iemand die rijker, jonger en slanker is dat de pati\137nt.",
+    cause = "Oorzaak - Iemand die rijker, jonger en slanker is dan de pati\137nt.",
     cure = "Behandeling - Twee Chirurgen openen de borstkas en herstellen ademloos en liefdevol het hart.",
     name = "Gebroken Hart",
     symptoms = "Symptomem - Huilen en RSI door het constante verscheuren van vakantiefoto's.",
@@ -2029,8 +2037,8 @@ policy = {
   header = "Ziekenhuisbeleid",
   diag_termination = "diagnose stoppen",
   sliders = {
-    guess = "PROBEER BEHANDELING",
-    send_home = "STUUR WEG",
+    guess = "GOKKEN",
+    send_home = "WEGSTUREN",
     stop = "STOP PROCEDURE",
     staff_room = "GA NAAR STAFKAMER",
   },
@@ -2073,9 +2081,9 @@ confirmation = {
   return_to_blueprint = "Weet je zeker dat je terug wil gaan naar blauwdrukmodus?",
   needs_restart = "Om deze instellingen toe te passen moet CorsixTH opnieuw opstarten. Onopgeslagen vooruitgang zal hierbij verloren gaan. Weet je zeker dat je dit wil doen?",
   overwrite_save = "Er is hier al een spel opgeslagen. Weet je zeker dat je het bestaande spel wil overschrijven?",
-  delete_room = "Weet je zeker dat je deze kamer wil verwijderDo you really wish to delete this room?",
+  delete_room = "Weet je zeker dat je deze kamer wil verwijderen?",
   sack_staff = "Weet je zeker dat je dit staflid wil ontslaan?",
-  replace_machine = "Weet je zeker dat je de %s wil vervangen voor de $%d?",
+  replace_machine = "Weet je zeker dat je de %s wil vervangen voor $%d?",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
@@ -2596,6 +2604,7 @@ menu_options = {
   music = "  MUZIEK   ",
   autosave = "  AUTOSAVE  ",
   jukebox = "  JUKEBOX  ",
+  edge_scrolling = "  RANDSCROLLEN  "
 }
 menu_options_game_speed = {
   pause = "  PAUZE  ",
