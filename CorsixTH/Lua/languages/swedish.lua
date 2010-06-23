@@ -126,7 +126,7 @@ letter = {
 
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = utf8 "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att localisera mappen där Theme Hospital installerats.",
+  th_directory = utf8 "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att lokalisera mappen där Theme Hospital installerats.",
 }
 
 misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"

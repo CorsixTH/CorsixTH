@@ -35,7 +35,14 @@ language = [[LANGUAGE_CHOSEN]]
 width = SCREEN_SIZE_WIDTH
 height = SCREEN_SIZE_HEIGHT
 fullscreen = SCREEN_FULLSCREEN
+-------------------------------------------------------------------------------
 
+-------------------------------------------------------------------------------
+-- Savegames. By default, the "Saves" directory alongside this config file will
+-- be used for storing saved games in. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+-- savegames = [[C:\CorsixTH\Savegames]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------

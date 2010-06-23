@@ -111,7 +111,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 
 Function .onInit
   ; Set default Theme Hospital vanilla install directory.
-  ; TODO: try to find the correct one in the registry from
+  ; TODO: try to find the correct one in the registry (or "AppData") from
   ; previous install of CorsixTH
   StrCpy $OriginalPath "$PROGRAMFILES\Bullfrog\Hospital\"
   ${If} ${RunningX64}
@@ -163,6 +163,10 @@ Section "MainSection" SEC01
     CreateDirectory "$APPDATA\CorsixTH\Saves"
   ${Else}
     CreateDirectory "$INSTDIR\Saves"
+    ; Tell the game that it should read the config file from the install dir
+    FileOpen $9 config.path.txt w
+    FileWrite $9 "$INSTDIR\$\r$\n"
+    FileClose $9
   ${EndIf}
   File config_template.txt
   
@@ -210,13 +214,14 @@ Section -AdditionalIcons
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk" "$INSTDIR\CorsixTH_SDL.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX9.lnk" "$INSTDIR\CorsixTH_DirectX9.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
 Section -Post
-  WriteUninstaller "$INSTDIR\uninstall.exe"
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninstall.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
 
 SectionEnd
@@ -244,7 +249,8 @@ Section Uninstall
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
   RMDir /r "$INSTDIR\Levels"
-
+  ; This directory might not exist, depending on installation preferences.
+  RMDir /r "$INSTDIR\Saves"
   Delete "$INSTDIR\*.*"
   RMDir "$INSTDIR"
 
@@ -256,7 +262,6 @@ Section Uninstall
   ; TODO: Make an option to keep saves
   RMDir /r "$APPDATA\CorsixTH\Saves"
   RMDir /r "$APPDATA\CorsixTH"
-  RMDir /r "$INSTDIR\Saves"
   
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
 
