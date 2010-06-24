@@ -188,7 +188,9 @@ Section "MainSection" SEC01
   File /r /x .svn ..\CorsixTH\Lua\*.*
   
   SetOutPath "$INSTDIR\Bitmap"
-  File /r /x .svn ..\CorsixTH\Bitmap\*.*
+  File /r /x .svn ..\CorsixTH\Bitmap\*.pal
+  File /r /x .svn ..\CorsixTH\Bitmap\*.dat
+  File /r /x .svn ..\CorsixTH\Bitmap\*.tab
   
   SetOutPath "$INSTDIR\Levels"
   File /r /x .svn ..\CorsixTH\Levels\*.*
