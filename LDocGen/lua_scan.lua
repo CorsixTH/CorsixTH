@@ -58,6 +58,9 @@ local function ParseComments(tokens, i, object)
       if operation == "" then
         if operand ~= "" then
           if object:getShortDesc() then
+            if object:getLongDesc() then
+              object:setShortDesc(object:getLongDesc())
+            end
             object:setLongDesc(operand)
           else
             object:setShortDesc(operand)
@@ -66,7 +69,7 @@ local function ParseComments(tokens, i, object)
       elseif operation == "dummy" then
         object:setIsDummy(true)
       elseif operation == "param" then
-        local pname, pdesc = operand:match"^%s*([a-zA-Z_][a-zA-Z0-9_]*)%s*(.*)$"
+        local pname, pdesc = operand:match"^%s*([a-zA-Z_.]%.?%.?[a-zA-Z0-9_]*)%s*(.*)$"
         local param = object:getParameter(pname)
         if not param then
           error("Unknown parameter: ".. pname .." (".. tokens.__file

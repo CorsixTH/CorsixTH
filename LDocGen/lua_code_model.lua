@@ -147,6 +147,11 @@ end
 
 function LuaFunction:setIsVararg(is)
   self.is_vararg = is
+  if is then
+    self.vararg_parameter = LuaVariable():setName("...")
+  else
+    self.vararg_parameter = nil
+  end
   return self
 end
 
@@ -176,6 +181,9 @@ function LuaFunction:getParameter(name)
     if param:getName() == name then
       return param
     end
+  end
+  if name == "..." then
+    return self.vararg_parameter
   end
 end
 
