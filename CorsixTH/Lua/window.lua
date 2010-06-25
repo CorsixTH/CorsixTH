@@ -856,7 +856,6 @@ function Window:onMouseDown(button, x, y)
     for _, window in ipairs(self.windows) do
       if window:onMouseDown(button, x - window.x, y - window.y) then
         repaint = true
-        break -- Click has been handled. No need to look any further.
       end
     end
   end
