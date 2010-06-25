@@ -31,6 +31,7 @@ dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
 
+--! Manages entities, rooms, and the date.
 class "World"
 
 local local_criteria_variable = {
@@ -778,6 +779,15 @@ function World:onEndYear()
   end
 end
 
+-- Calculate the distance of the shortest path (along passable tiles) between
+-- the two given map tiles. This operation is commutative (swapping (x1, y1)
+-- with (x2, y2) has no effect on the result) if both tiles are passable.
+--!param x1 (integer) X-cordinate of first tile's Lua tile co-ordinates.
+--!param y1 (integer) Y-cordinate of first tile's Lua tile co-ordinates.
+--!param x2 (integer) X-cordinate of second tile's Lua tile co-ordinates.
+--!param y2 (integer) Y-cordinate of second tile's Lua tile co-ordinates.
+--!return (integer, boolean) The distance of the shortest path, or false if
+-- there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
   return self.pathfinder:findDistance(x1, y1, x2, y2)
 end

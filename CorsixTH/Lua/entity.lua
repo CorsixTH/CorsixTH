@@ -31,12 +31,12 @@ function Entity:Entity(animation)
   self.dynamic_info = nil;
 end
 
+-- This plays a sound "at" the entity, meaning the sound will not be played
+-- if the entity is off-screen, and the volume will be quieter the further
+-- the entity is from the center of the screen. If this is not what you want
+-- then use UI:playSound instead.
+-- !param name (string, integer) The filename or ordinal of the sound to play.
 function Entity:playSound(name)
-  -- This plays a sound "at" the entity, meaning the sound will not be played
-  -- if the entity is off-screen, and the volume will be quieter the further
-  -- the entity is from the center of the screen. If this is not what you want
-  -- then use UI:playSound instead.
-  -- !param name (string, integer) The filename or ordinal of the sound to play.
   if TheApp.audio.play_sounds then
     TheApp.audio:playSound(name, self)
   end
@@ -200,6 +200,8 @@ function Entity:setMoodInfo(new_mood)
   end
 end
 
+-- Function which is called when the entity is to be permanently removed from
+-- the world.
 function Entity:onDestroy()
   self:setTile(nil)
   -- Debug aid to check that there are no hanging references after the entity
@@ -211,7 +213,9 @@ function Entity:onDestroy()
   end --]]
 end
 
--- Function stubs to be able to call these from the world/ui if it is a humanoid
+-- Function which is called at the end of each ingame day. Should be used to
+-- implement behaviours which happen regularly, but not as frequently as to
+-- need them in `tick`.
 function Entity:tickDay()
 end
 

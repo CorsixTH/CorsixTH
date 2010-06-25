@@ -21,6 +21,7 @@ SOFTWARE. --]]
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
 
+--!param ... Arguments to base class constructor.
 function Staff:Staff(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
@@ -97,7 +98,10 @@ function Staff:tick()
 end
 
 function Staff:updateSkill(consultant, trait, amount)
-  local old_profile = { is_junior = self.profile.is_junior, is_consultant = self.profile.is_consultant }
+  local old_profile = {
+    is_junior = self.profile.is_junior,
+    is_consultant = self.profile.is_consultant
+  }
 
   -- don't push further when they are already at 100%+
   if self.profile[trait] >= 1.0 then
@@ -107,12 +111,9 @@ function Staff:updateSkill(consultant, trait, amount)
   self.profile[trait] = self.profile[trait] + amount
   if self.profile[trait] >= 1.0 then
     self.profile[trait] = 1.0
-    if trait == "is_surgeon" then
-      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.surgeon))
-    elseif trait == "is_psychiatrist" then
-      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.psychiatrist))
-    elseif trait == "is_researcher" then
-      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title.researcher))
+    local is = trait:match"^is_(.*)"
+    if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
+      self.world.ui.adviser:say(_S.adviser.information.promotion_to_specialist:format(_S.staff_title[is]))
     end
     self:updateStaffTitle()
   end
@@ -130,6 +131,7 @@ function Staff:updateSkill(consultant, trait, amount)
   end
 end
 
+-- Immediately terminate the staff member's employment.
 function Staff:fire()
   if self.fired then
     return
@@ -159,6 +161,11 @@ function Staff:fire()
   end
 end
 
+-- Function which is called when the user clicks on the staff member.
+-- Responsible for opening a staff information dialog on left click and picking
+-- up the staff member on right click.
+--!param ui (GameUI) The UI which the user in question is using.
+--!param button (string) One of: "left", "middle", "right".
 function Staff:onClick(ui, button)
   if self.fired then
     return
@@ -412,7 +419,10 @@ function Staff:requestRaise()
   end
 end
 
--- Increases the wage of the staff member, increases happiness and clears any request raise dialogs.
+-- Increases the wage of the staff member. Also increases happiness and clears
+-- any request raise dialogs.
+--!param amount (integer) The amount, in game dollars per month, to increase
+-- the salary by.
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
   self:changeAttribute("happiness", 0.99)

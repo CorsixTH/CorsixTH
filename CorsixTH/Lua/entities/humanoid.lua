@@ -149,6 +149,7 @@ for anim in values(door_animations, "*.leaving_swing") do
   anim_mgr:setMarker(anim, 0, {0.1, 0}, 9, {0, -1})
 end
 
+--!param ... Arguments for base class constructor.
 function Humanoid:Humanoid(...)
   self:Entity(...)
   self.action_queue = {}
@@ -160,6 +161,9 @@ function Humanoid:Humanoid(...)
   self.should_knock_on_doors = false
 end
 
+-- Function which is called when the user clicks on the `Humanoid`.
+--!param ui (GameUI) The UI which the user in question is using.
+--!param button (string) One of: "left", "middle", "right".
 function Humanoid:onClick(ui, button)
   if TheApp.config.debug then
     -- for debugging
@@ -209,6 +213,11 @@ function Humanoid:onDestroy()
   return Entity.onDestroy(self)
 end
 
+-- Set the `Hospital` which is responsible for treating or employing the
+-- `Humanoid`. In single player games, this has little effect, but it is very
+-- important in multiplayer games.
+--!param hospital (Hospital, nil) The `Hospital` which should be responsible
+-- for the `Humanoid`. If nil, then the `Humanoid` is despawned.
 function Humanoid:setHospital(hospital)
   self.hospital = hospital
   if not hospital or not hospital.is_in_world then
@@ -383,6 +392,15 @@ function Humanoid:setType(humanoid_class)
   self.th:setPartialFlag(self.permanent_flags or 0)
 end
 
+-- Helper function for the common case of instructing a `Humanoid` to walk to
+-- a position on the map. Equivalent to calling `setNextAction` with a walk
+-- action.
+--!param tile_x (integer) The X-component of the Lua tile co-ordinates of the
+-- tile to walk to.
+--!param tile_y (integer) The Y-component of the Lua tile co-ordinates of the
+-- tile to walk to.
+--!param must_happen (boolean, nil) If true, then the walk action will not be
+-- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
   self:setNextAction {
     name = "walk",
@@ -423,8 +441,10 @@ function Humanoid:handleRemovedObject(object)
   end
 end
 
--- Function to alter one of a humanoids's different attributes.
--- Currently available attributes are happiness, thirst, toilet_need and warmth.
+-- Adjusts one of the `Humanoid`'s attributes.
+--!param attribute (string) One of: "happiness", "thirst", "toilet_need", "warmth".
+--!param amount (number) A value between -1 and +1. This amount is added to the
+--  existing value for the attribute, and is then capped to be between 0 and 1.
 function Humanoid:changeAttribute(attribute, amount)
   assert(amount <= 1 and amount >= -1, "Amount must be between -1 and 1")
 
