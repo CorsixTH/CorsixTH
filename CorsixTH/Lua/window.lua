@@ -657,7 +657,8 @@ function Textbox:input(char, rawchar, code)
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
-      if #rawchar == 1 and "a" <= rawchar and rawchar <= "z" then
+      if #rawchar == 1 and (("a" <= rawchar and rawchar <= "z")
+      or ("A" <= rawchar and rawchar <= "Z")) then
         self.text = self.text .. rawchar
         self.panel:setLabel(self.text)
         return true

@@ -482,6 +482,15 @@ end
 -- "\0"). This value is affected by shift/caps-lock keys, but is not affected
 -- by any key-remappings.
 function UI:onKeyDown(code, rawchar)
+  -- Workaround bad SDL implementations and/or old binaries
+  if rawchar == nil or rawchar == "\0" then
+    if code < 128 then
+      rawchar = string.char(code)
+      if self.buttons_down.shift then
+        rawchar = rawchar:upper()
+      end
+    end
+  end
   -- Remember the raw character associated with the code, as when the key is
   -- released, we only get given the code.
   self.key_code_to_rawchar[code] = rawchar
@@ -739,6 +748,9 @@ end
 function UI:afterLoad(old, new)
   if old < 5 then
     self.editing_allowed = true
+  end
+  if old < 13 then
+    self.key_code_to_rawchar = {}
   end
 
   Window:afterLoad(old, new)

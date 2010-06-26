@@ -121,6 +121,7 @@ function GameUI:onKeyDown(code, rawchar)
   if UI.onKeyDown(self, code, rawchar) then
     return true
   end
+  rawchar = self.key_code_to_rawchar[code] -- UI may have translated rawchar
   local key = self:_translateKeyCode(code, rawchar)
   
   --Maybe the player wants to abort an "about to edit room" action
