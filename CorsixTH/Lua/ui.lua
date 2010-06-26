@@ -38,7 +38,6 @@ local function invert(t)
       end
     else
       r[v] = k
-      r[k] = v
     end
   end
   return r
@@ -47,16 +46,12 @@ end
 function UI:initKeyAndButtonCodes()
   local key_remaps = {}
   local button_remaps = {}
+  local key_to_button_remaps = {}
   local key_norms = setmetatable({
     space = " ",
     escape = "esc",
-    enter = "Enter",
   }, {__index = function(t, k)
-    k = tostring(k)
-    if #k == 1 or k:match"^F%d+$" then
-      return k:upper()
-    end
-    k = k:lower()
+    k = tostring(k):lower()
     return rawget(t, k) or k
   end})
   do
@@ -73,7 +68,12 @@ function UI:initKeyAndButtonCodes()
         end,
         button_remaps = function(t)
           for k, v in pairs(t) do
-            button_remaps[key_norms[k]] = key_norms[v]
+            k = key_norms[k]
+            if k == "left" or k == "middle" or k == "right" then
+              button_remaps[k] = key_norms[v]
+            else
+              key_to_button_remaps[k] = key_norms[v]
+            end
           end
         end,
       }
@@ -87,96 +87,47 @@ function UI:initKeyAndButtonCodes()
   self.key_codes = {
     backspace = 8,
     esc = 27,
-    [" "] = 32,
     up = 273,
     down = 274,
     right = 275,
     left = 276,
-    F4 = 285,
-    F8 = 289,
-    F9 = 290,
-    F10 = 291,
-    F11 = 292,
-    F12 = 293,
-    Enter = 13,
+    f4 = 285,
+    f8 = 289,
+    f9 = 290,
+    f10 = 291,
+    f11 = 292,
+    f12 = 293,
+    enter = 13,
     shift = {303, 304},
     ctrl = {305, 306},
     alt = {307, 308, 313},
   }
-  -- Add "A" through "Z"
-  for i = string.byte"a", string.byte"z" do
-    self.key_codes[string.char(i):upper()] = i
-  end
-  -- Add "0" through "9"
-  for i = string.byte"0", string.byte"9" do
-    self.key_codes[string.char(i)] = i
-  end
+  self.key_remaps = key_remaps
+  self.key_to_button_remaps = key_to_button_remaps
+  self.key_codes = invert(self.key_codes)
   
-  -- Apply key remaps
-  local original_codes = {}
-  for input_key, behave_as_key in pairs(key_remaps) do
-    -- Find codes for input key
-    local code = original_codes[input_key] or self.key_codes[input_key] or {}
-    if not original_codes[input_key] then
-      original_codes[input_key] = code
-      self.key_codes[input_key] = nil
-    end
-    -- Set to codes for behave as key
-    if not original_codes[behave_as_key] then
-      original_codes[behave_as_key] = self.key_codes[behave_as_key]
-    end
-    self.key_codes[behave_as_key] = code
-  end
-
-  self.key_as_button_codes = {
-  }
   self.button_codes = {
     left = 1,
     middle = 2,
     right = 3,
   }
   
-  -- Apply button remaps
+  -- Apply button remaps directly to codes, as mouse button codes are reliable
+  -- (keyboard key codes are not).
   local original_button_codes = {}
-  for input, behave_as_button in pairs(button_remaps) do
-    if input == "left" or input == "middle" or input == "right" then
-      -- button -> button remap
-      local code = original_button_codes[input] or self.button_codes[input] or {}
-      if not original_button_codes[input] then
-        original_button_codes[input] = code
-        self.button_codes[input] = nil
-      end
-      if not original_button_codes[behave_as_button] then
-        original_button_codes[behave_as_button] = self.button_codes[behave_as_button]
-      end
-      self.button_codes[behave_as_button] = code
-    else
-      -- key -> button remap
-      local code = original_codes[input] or self.key_codes[input]
-      if type(code) ~= "table" then
-        code = {code}
-      end
-      if not original_codes[input] then
-        original_codes[input] = code
-        self.key_codes[input] = nil
-      end
-      local ncode = {}
-      for i, k in ipairs(code) do
-        self.key_as_button_codes[k] = true
-        ncode[i] = -k
-      end
-      if not original_button_codes[behave_as_button] then
-        original_button_codes[behave_as_button] = self.button_codes[behave_as_button]
-      end
-      self.button_codes[behave_as_button] = ncode
+  for input, behave_as in pairs(button_remaps) do
+    local code = original_button_codes[input] or self.button_codes[input] or {}
+    if not original_button_codes[input] then
+      original_button_codes[input] = code
+      self.button_codes[input] = nil
     end
+    if not original_button_codes[behave_as] then
+      original_button_codes[behave_as] = self.button_codes[behave_as]
+    end
+    self.button_codes[behave_as] = code
   end
   
-  if not next(self.key_as_button_codes) then
-    self.key_as_button_codes = nil
-  end
   self.button_codes = invert(self.button_codes)
-  self.key_codes = invert(self.key_codes)
 end
 
 local LOADED_DIALOGS = false
@@ -215,6 +166,7 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
+  self.key_code_to_rawchar = {}
   
   self.keyboard_repeat_enable_count = 0
   self.down_count = 0
@@ -354,27 +306,42 @@ local scroll_keys = {
   left  = {x = -10, y =   0},
 }
 
--- Adds a key handler for a window. Code = keycode, callback = which function to call.
-function UI:addKeyHandler(code, window, callback, ...)
-  code = self.key_codes[code] or code
-  if not self.key_handlers[code] then -- No handlers for this code? Create a new table.
-    self.key_handlers[code] = {}
+--! Register a key handler / hotkey for a window.
+--!param key (string) The keyboard key which should trigger the callback (for
+-- example, "left" or "z" or "F9").
+--!param window (Window) The UI window which should receive the callback.
+--!param callback (function) The method to be called on `window` when `key` is
+-- pressed.
+--!param ... Additional arguments to `callback`.
+function UI:addKeyHandler(key, window, callback, ...)
+  key = key:lower()
+  if not self.key_handlers[key] then
+    -- No handlers for this key? Create a new table.
+    self.key_handlers[key] = {}
   end
-  table.insert(self.key_handlers[code], {window = window, callback = callback, ...})
+  table.insert(self.key_handlers[key], {
+    window = window,
+    callback = callback,
+    ...
+  })
 end
 
--- Remove the key handler for this code.
-function UI:removeKeyHandler(code, window)
-  code = self.key_codes[code] or code
-  if self.key_handlers[code] then
-    for index,callback in pairs(self.key_handlers[code]) do
-      if callback.window == window then
-        table.remove(self.key_handlers[code], index)
+--! Unregister a key handler previously registered by `addKeyHandler`.
+--!param key (string) The key of a key / window pair previously passed to
+-- `addKeyHandler`.
+--!param window (Window) The window of a key / window pair previously passed
+-- to `addKeyHandler`.
+function UI:removeKeyHandler(key, window)
+  key = key:lower()
+  if self.key_handlers[key] then
+    for index, info in ipairs(self.key_handlers[key]) do
+      if info.window == window then
+        table.remove(self.key_handlers[key], index)
       end
     end
-    -- If last entry in keyHandlers[code] was removed, delete the (now empty) list
-    if #self.key_handlers[code] == 0 then
-      self.key_handlers[code] = nil
+    -- If last key handler was removed, delete the (now empty) list.
+    if #self.key_handlers[key] == 0 then
+      self.key_handlers[key] = nil
     end
   end
 end
@@ -502,36 +469,56 @@ function UI:toggleFullscreen()
   self.app:saveConfig()
 end
 
-function UI:onKeyDown(code)
-  if self.key_as_button_codes and self.key_as_button_codes[code] then
-    self:onMouseDown(-code, self.cursor_x, self.cursor_y)
-    return true
+function UI:_translateKeyCode(code, rawchar)
+  local key = self.key_codes[code] or rawchar:lower()
+  return self.key_remaps[key] or key
+end
+
+--! Called when the user presses a key on the keyboard
+--!param code (integer) The hardware key-code for the pressed key. Note that
+-- these codes only coincide with ASCII for certain keyboard layouts.
+--!param rawchar (string) The unicode character coresponding to the pressed
+-- key, encoded as UTF8 in a Lua string (for non-character keys, this value is
+-- "\0"). This value is affected by shift/caps-lock keys, but is not affected
+-- by any key-remappings.
+function UI:onKeyDown(code, rawchar)
+  -- Remember the raw character associated with the code, as when the key is
+  -- released, we only get given the code.
+  self.key_code_to_rawchar[code] = rawchar
+  
+  -- Apply key-remapping and normalisation
+  local key = self.key_codes[code] or rawchar:lower()
+  do
+    local mapped_button = self.key_to_button_remaps[key]
+    if mapped_button then
+      self:onMouseDown(mapped_button, self.cursor_x, self.cursor_y)
+      return true
+    end
+    key = self.key_remaps[key] or key
   end
-  -- Are there any text boxes expecting input?
+  
+  -- If there is one, the current textbox gets the key
   for _, box in pairs(self.textboxes) do
     if box.enabled and box.active then
-      local handled = box:input(code)
+      local handled = box:input(key, rawchar, code)
       if handled then
         return true
       end
     end
   end
 
-  -- Are there any window-specified keyHandlers that want this code?
-  local keyHandlers = self.key_handlers
-  if keyHandlers[code] then
-    local callback = keyHandlers[code][ #keyHandlers[code] ]    -- Convenience variable.
-    callback.callback(callback.window, unpack(callback))        -- Call only the latest (last) handler for this code.
-    return true                                                 -- Because sometimes even cursor keys are taken over.
+  -- Otherwise, if there is a key handler bound to the given key, then it gets
+  -- the key.
+  local keyHandlers = self.key_handlers[key]
+  if keyHandlers then
+    -- Call only the latest (last) handler for this code, because sometimes
+    -- even cursor keys are taken over.
+    local info = keyHandlers[#keyHandlers]
+    info.callback(info.window, unpack(info))
+    return true
   end
   
-  local key = self.key_codes[code]
-  if not key then
-    return
-  end
-  if self.buttons_down[key] == false then
-    self.buttons_down[key] = true
-  end
+  self.buttons_down[key] = true
   if key == "esc" then
     -- Close the topmost window first
     local first = self.windows[1]
@@ -546,20 +533,20 @@ function UI:onKeyDown(code)
         return true
       end
     end
-  elseif key == "F10" then -- Restart
+  elseif key == "f10" then -- Restart
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
-  elseif self.buttons_down.alt and key == "F4" then
+  elseif self.buttons_down.alt and key == "f4" then
     if self.hospital then
       self.app:quit()
     else
       self.app:exit()
     end
-  elseif self.buttons_down.alt and key == "Enter" then --Alt + Enter: Toggle Fullscreen
+  elseif self.buttons_down.alt and key == "enter" then --Alt + Enter: Toggle Fullscreen
     self:toggleFullscreen()
     return true
-  elseif self.buttons_down.ctrl and key == "S" then -- Ctrl + S: Take a screenshot
+  elseif self.buttons_down.ctrl and key == "s" then -- Ctrl + S: Take a screenshot
      -- Find an index for screenshot which is not already used
     local i = 0
     local filename
@@ -572,32 +559,32 @@ function UI:onKeyDown(code)
   end
 end
 
+--! Called when the user releases a key on the keyboard
+--!param code (integer) The hardware key-code for the pressed key. Note that
+-- these codes only coincide with ASCII for certain keyboard layouts.
 function UI:onKeyUp(code)
-  if self.key_as_button_codes and self.key_as_button_codes[code] then
-    self:onMouseUp(-code, self.cursor_x, self.cursor_y)
+  local rawchar = self.key_code_to_rawchar[code]
+  self.key_code_to_rawchar[code] = nil
+  local key = self.key_codes[code] or rawchar:lower()
+  do
+    local mapped_button = self.key_to_button_remaps[key]
+    if mapped_button then
+      self:onMouseUp(mapped_button, self.cursor_x, self.cursor_y)
+      return true
+    end
+    key = self.key_remaps[key] or key
+  end
+  if self.key_handlers[key] then
     return true
   end
-  if self.key_handlers[code] then
-    return true
-  end
-
-  local key = self.key_codes[code]
-  if not key then
-    return
-  end
-  if self.buttons_down[key] == true then
-    self.buttons_down[key] = false
-  end
+  self.buttons_down[key] = nil
 end
 
 function UI:onMouseDown(code, x, y)
   local repaint = false
-  local button = self.button_codes[code]
-  if not button then
-    return
-  end
-  if self.cursor_entity == nil and self.down_count == 0 and
-    self.cursor == self.default_cursor then
+  local button = self.button_codes[code] or code
+  if self.cursor_entity == nil and self.down_count == 0
+  and self.cursor == self.default_cursor then
     self:setCursor(self.down_cursor)
     repaint = true
   end
@@ -612,10 +599,7 @@ end
 
 function UI:onMouseUp(code, x, y)
   local repaint = false
-  local button = self.button_codes[code]
-  if not button then
-    return
-  end
+  local button = self.button_codes[code] or code
   self.down_count = self.down_count - 1
   if self.down_count <= 0 then
     if self.cursor_entity == nil and self.cursor == self.down_cursor then
@@ -624,7 +608,7 @@ function UI:onMouseUp(code, x, y)
     end
     self.down_count = 0
   end
-  self.buttons_down[button] = false
+  self.buttons_down[button] = nil
   
   if Window.onMouseUp(self, button, x, y) then
     repaint = true

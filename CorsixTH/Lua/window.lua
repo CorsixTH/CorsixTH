@@ -650,53 +650,48 @@ function Textbox:clicked()
   end
 end
 
-function Textbox:input(code)
-  -- TODO: This currently assumes qwerty keyboard layout
+function Textbox:input(char, rawchar, code)
   if not self.active then
     return false
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
-      if string.byte"a" <= code and code <= string.byte"z" then
-        local char = string.char(code)
-        if self.panel.window.buttons_down.shift then
-          char = string.upper(char)
-        end
-        self.text = self.text .. char
+      if #rawchar == 1 and "a" <= rawchar and rawchar <= "z" then
+        self.text = self.text .. rawchar
         self.panel:setLabel(self.text)
         return true
       end
     end
     -- Numbers
     if self.allowed_input.numbers then
-      if 256 <= code and code <= 265 then -- numeric keypad
-        code = code - 256 + string.byte"0"
+      if 256 <= code and code <= 265 then
+        -- Numeric keypad
+        rawchar = string.char(string.byte"0" + code - 256)
       end
-      if string.byte"0" <= code and code <= string.byte"9" then
-        self.text = self.text .. string.char(code)
+      if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
+        self.text = self.text .. rawchar
         self.panel:setLabel(self.text)
         return true
       end
     end
     -- Space and hyphen
     if self.allowed_input.misc then
-      if code == string.byte" " or
-        code == string.byte"-" then
-        self.text = self.text .. string.char(code)
-          self.panel:setLabel(self.text)
+      if rawchar == " " or rawchar == "-" then
+        self.text = self.text .. rawchar
+        self.panel:setLabel(self.text)
         return true
       end
     end
   end
   -- Backspace (delete last char)
-  if code == 8 then
+  if char == "backspace" then
     self.text = self.text:sub(1, -2)
     self.panel:setLabel(self.text)
     return true
   end
   -- Enter (confirm)
-  if code == 13 then
+  if char == "enter" then
     self.button:toggle()
     self.active = false
     if self.confirm_callback then
@@ -705,7 +700,7 @@ function Textbox:input(code)
     return true
   end
   -- Escape (abort)
-  if code == 27 then
+  if char == "esc" then
     self.button:toggle()
     self.active = false
     if self.abort_callback then

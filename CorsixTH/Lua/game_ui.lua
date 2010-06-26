@@ -117,21 +117,18 @@ local scroll_keys = {
   left  = {x = -10, y =   0},
 }
 
-function GameUI:onKeyDown(code)
-  if UI.onKeyDown(self, code) then
+function GameUI:onKeyDown(code, rawchar)
+  if UI.onKeyDown(self, code, rawchar) then
     return true
   end
+  local key = self:_translateKeyCode(code, rawchar)
   
-  local key = self.key_codes[code]
-  if not key then
-    return
-  end
   --Maybe the player wants to abort an "about to edit room" action
   if key == "esc" and self.edit_room then
     self:setEditRoom(false)
     return true
   end
-  self.menu_bar:onKeyDown(key)
+  self.menu_bar:onKeyDown(key, rawchar, code)
   if scroll_keys[key] then
     local dx, dy = scroll_keys[key].x, scroll_keys[key].y
     if self.tick_scroll_amount then
@@ -143,34 +140,32 @@ function GameUI:onKeyDown(code)
     return
   end
   if TheApp.config.debug then -- Debug commands
-    if key == "F8" then -- Open an alert window
+    if key == "f8" then -- Open an alert window
       -- Don't use "strike" type here, as these open a different window and must have an owner
       local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
       self.bottom_panel:queueMessage(types[math.random(1, #types)])
-    elseif key == "F9" then -- Make debug patient
+    elseif key == "f9" then -- Make debug patient
       self.app.world:makeDebugPatient()
     
-    elseif key == "F11" then -- Make Adviser say a random phrase
+    elseif key == "f11" then -- Make Adviser say a random phrase
       self:debugMakeAdviserTalk()
-    elseif key == "F12" then -- Show watch
+    elseif key == "f12" then -- Show watch
       self:addWindow(UIWatch(self))
-    elseif key == "X" then -- Toggle wall transparency
+    elseif key == "x" then -- Toggle wall transparency
       self:makeWallsTransparent(not self.transparent_walls)
-    elseif key == "D" and self.buttons_down.ctrl then
+    elseif key == "d" and self.buttons_down.ctrl then
       self.app.world:dumpGameLog()
     end
   end
 end
 
 function GameUI:onKeyUp(code)
+  local rawchar = self.key_code_to_rawchar[code]
   if UI.onKeyUp(self, code) then
     return true
   end
-
-  local key = self.key_codes[code]
-  if not key then
-    return
-  end
+  local key = self:_translateKeyCode(code, rawchar)
+  
   if scroll_keys[key] then
     local dx, dy = -scroll_keys[key].x, -scroll_keys[key].y
     if self.tick_scroll_amount then

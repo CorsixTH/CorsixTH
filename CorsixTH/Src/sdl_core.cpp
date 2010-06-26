@@ -54,6 +54,7 @@ static int l_init(lua_State *L)
         lua_pushboolean(L, 0);
         return 1;
     }
+    SDL_EnableUNICODE(1);
     luaT_addcleanup(L, SDL_Quit);
     lua_pushboolean(L, 1);
     return 1;
@@ -107,6 +108,36 @@ struct fps_ctrl
     }
 };
 
+static void l_push_utf8(lua_State *L, uint32_t iCodePoint)
+{
+    uint8_t aBytes[4];
+    size_t iNBytes = 1;
+    if(iCodePoint <= 0x7F)
+        aBytes[0] = static_cast<uint8_t>(iCodePoint);
+    else if(iCodePoint <= 0x7FF)
+    {
+        aBytes[0] = 0xC0 | static_cast<uint8_t>(iCodePoint >> 6);
+        aBytes[1] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
+        iNBytes = 2;
+    }
+    else if(iCodePoint <= 0xFFFF)
+    {
+        aBytes[0] = 0xE0 | static_cast<uint8_t>(iCodePoint >> 12);
+        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
+        aBytes[2] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
+        iNBytes = 3;
+    }
+    else
+    {
+        aBytes[0] = 0xF0 | static_cast<uint8_t>(iCodePoint >> 18);
+        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 12) & 0x3F);
+        aBytes[2] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
+        aBytes[3] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
+        iNBytes = 4;
+    }
+    lua_pushlstring(L, reinterpret_cast<char*>(aBytes), iNBytes);
+}
+
 static int l_mainloop(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTHREAD);
@@ -130,11 +161,13 @@ static int l_mainloop(lua_State *L)
             case SDL_KEYDOWN:
                 lua_pushliteral(dispatcher, "keydown");
                 lua_pushinteger(dispatcher, e.key.keysym.sym);
-                nargs = 2;
+                l_push_utf8(dispatcher, e.key.keysym.unicode);
+                nargs = 3;
                 break;
             case SDL_KEYUP:
                 lua_pushliteral(dispatcher, "keyup");
                 lua_pushinteger(dispatcher, e.key.keysym.sym);
+                // NB: No unicode translation done by SDL for keyup
                 nargs = 2;
                 break;
             case SDL_MOUSEBUTTONDOWN:
