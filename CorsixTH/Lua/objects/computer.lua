@@ -26,15 +26,31 @@ object.tooltip = _S.tooltip.objects.computer
 object.ticks = false
 object.build_cost = 5000
 object.build_preview_animation = 5090
-object.idle_animations = {
+
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+
+object.idle_animations = copy_north_to_south {
   north = 2094,
-  south = 2094,
+}
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      Doctor = 2098,
+    },
+  },
 }
 object.orientations = {
   north = {
+    use_position = "passable",
+    use_animate_from_use_position = true,
     footprint = { {0, 0}, {0, 1, only_passable = true} }
   },
   east = {
+    use_position = "passable",
+    use_animate_from_use_position = true,
     footprint = { {0, 0}, {1, 0, only_passable = true} }
   },
 }

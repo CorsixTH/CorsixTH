@@ -331,6 +331,11 @@ function AnimationManager:AnimationManager(anims)
   self.anims = anims
 end
 
+--! For overriding animations which have builtin repeats or excess frames
+function AnimationManager:setAnimLength(anim, length)
+  self.anim_length_cache[anim] = length
+end
+
 function AnimationManager:getAnimLength(anim)
   local anims = self.anims
   if not self.anim_length_cache[anim] then

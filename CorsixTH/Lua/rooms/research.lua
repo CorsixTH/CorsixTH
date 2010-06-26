@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "research"
 room.level_config_id = 55
+room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
 room.tooltip = _S.tooltip.rooms.research_room
 room.build_cost = 5000
@@ -33,6 +34,122 @@ room.categories = {
 room.minimum_size = 5
 room.wall_type = "green"
 room.floor_tile = 21
+room.required_staff = {
+  Researcher = 1,
+}
 room.call_sound = "reqd023.wav"
+
+class "ResearchRoom" (Room)
+
+function ResearchRoom:ResearchRoom(...)
+  self:Room(...)
+  self.staff_member_set = {}
+end
+
+local staff_usage_objects = {
+  desk = true,
+  cabinet = true,
+  computer = true,
+  -- Not autopsy: it should be free for when a patient arrives
+  -- Not atom analyser: there are no usage anims
+}
+
+function ResearchRoom:doStaffUseCycle(staff, previous_object)
+  local obj, ox, oy = self.world:findFreeObjectNearToUse(staff,
+    staff_usage_objects, nil, "near", previous_object)
+  
+  if obj then
+    obj.reserved_for = staff
+    staff:walkTo(ox, oy)
+    if obj.object_type.id == "desk" then
+      local desk_use_time = math.random(7, 14)
+      staff:queueAction {
+        name = "use_object",
+        object = obj,
+        loop_callback = --[[persistable:research_desk_loop_callback]] function()
+          desk_use_time = desk_use_time - 1
+          if desk_use_time == 0 then
+            self:doStaffUseCycle(staff, obj)
+          end
+        end
+      }
+    else
+      staff:queueAction {
+        name = "use_object",
+        object = obj,
+        after_use = --[[persistable:research_obj_after_use]] function()
+          self:doStaffUseCycle(staff, obj)
+        end,
+      }
+    end
+  end
+  
+  local num_meanders = math.random(2, 4)
+  staff:queueAction {
+    name = "meander",
+    loop_callback = --[[persistable:research_meander_loop_callback]] function(action)
+      num_meanders = num_meanders - 1
+      if num_meanders == 0 then
+        self:doStaffUseCycle(staff)
+      end
+    end
+  }
+end
+
+function ResearchRoom:roomFinished()
+  local fx, fy = self:getEntranceXY(true)
+  local objects = self.world:findAllObjectsNear(fx, fy)
+  local number = 0
+  for object, value in pairs(objects) do
+    if staff_usage_objects[object.object_type.id] then
+      number = number + 1
+    end
+  end
+  self.maximum_staff = {
+    Researcher = number,
+  }
+  return Room.roomFinished(self)
+end
+
+function ResearchRoom:getMaximumStaffCriteria()
+  return self.maximum_staff
+end
+
+function ResearchRoom:commandEnteringStaff(staff)
+  self.staff_member_set[staff] = true
+  self:doStaffUseCycle(staff)
+  return Room.commandEnteringStaff(self, staff)
+end
+
+function ResearchRoom:commandEnteringPatient(patient)
+  local staff = next(self.staff_member_set)
+  local autopsy, stf_x, stf_y = self.world:findObjectNear(patient, "autopsy")
+  local orientation = autopsy.object_type.orientations[autopsy.direction]
+  local pat_x, pat_y = autopsy:getSecondaryUsageTile()
+  patient:walkTo(pat_x, pat_y)
+  patient:queueAction{name = "idle", direction = "east"}
+  staff:walkTo(stf_x, stf_y)
+  staff:queueAction{
+    name = "multi_use_object",
+    object = autopsy,
+    use_with = patient,
+    after_use = --[[persistable:autopsy_after_use]] function()
+      self:commandEnteringStaff(staff)
+      -- Patient dies :(
+      self:onHumanoidLeave(patient)
+      if patient.hospital then
+        patient:setHospital(nil)
+      end
+      patient.world:destroyEntity(patient)
+    end,
+  }
+  return Room.commandEnteringPatient(self, patient)
+end
+
+
+function ResearchRoom:onHumanoidLeave(humanoid)
+  self.staff_member_set[humanoid] = nil
+  Room.onHumanoidLeave(self, humanoid)
+end
 
 return room

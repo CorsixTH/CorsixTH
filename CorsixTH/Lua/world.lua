@@ -49,7 +49,7 @@ function World:World(app)
   self.wall_types = app.walls
   self.object_types = app.objects
   self.anims = app.anims
-  self.anim_length_cache = {}
+  self.animation_manager = app.animation_manager
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
@@ -405,18 +405,7 @@ function World:createMapObjects(objects)
 end
 
 function World:getAnimLength(anim)
-  if not self.anim_length_cache[anim] then
-    local length = 0
-    local seen = {}
-    local frame = self.anims:getFirstFrame(anim)
-    while not seen[frame] do
-      seen[frame] = true
-      length = length + 1
-      frame = self.anims:getNextFrame(frame)
-    end
-    self.anim_length_cache[anim] = length
-  end
-  return self.anim_length_cache[anim]
+  return self.animation_manager:getAnimLength(anim)
 end
 
 -- Register a function to be called whenever a room is built.
@@ -901,8 +890,24 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
       return true
     end
   end
-  self.pathfinder:findObject(humanoid.tile_x, humanoid.tile_y,
-    self.object_types[object_type_name].thob, distance, callback)
+  local thob = 0
+  if type(object_type_name) == "table" then
+    local original_callback = callback
+    callback = function(x, y, ...)
+      local obj = self:getObject(x, y, object_type_name)
+      if obj then
+        return original_callback(x, y, ...)
+      end
+    end
+  elseif object_type_name ~= nil then
+    local obj_type = self.object_types[object_type_name]
+    if not obj_type then
+      error("Invalid object type name: " .. object_type_name)
+    end
+    thob = obj_type.thob
+  end
+  self.pathfinder:findObject(humanoid.tile_x, humanoid.tile_y, thob, distance,
+    callback)
   -- These return values are only relevent for the default callback - are nil
   -- for custom callbacks
   return obj, ox, oy
@@ -1132,6 +1137,12 @@ function World:getObject(x, y, id)
   if objects then
     if not id then
       return objects[1]
+    elseif type(id) == "table" then
+      for _, obj in ipairs(objects) do
+        if id[obj.object_type.id] then
+          return obj
+        end
+      end
     else
       for _, obj in ipairs(objects) do
         if obj.object_type.id == id then
@@ -1381,6 +1392,10 @@ function World:afterLoad(old, new)
         end
       end
     end
+  end
+  if old < 12 then
+    self.animation_manager = TheApp.animation_manager
+    self.anim_length_cache = nil
   end
   self.savegame_version = new
 end
