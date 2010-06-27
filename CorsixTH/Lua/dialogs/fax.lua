@@ -149,7 +149,11 @@ function UIFax:choice(choice)
         room_type = owner.disease.treatment_rooms[1],
       }
     elseif choice == "research" then
-      -- TODO
+      owner:setMood("idea", "activate")
+      owner:setNextAction {
+        name = "seek_room",
+        room_type = "research",
+      }
     end
   end
   if choice == "tutorial" then

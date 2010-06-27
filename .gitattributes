@@ -63,6 +63,7 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/example.level -text
+CorsixTH/Lua/dialogs/research_policy.lua -text
 CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text

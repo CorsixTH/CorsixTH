@@ -65,6 +65,7 @@ function Hospital:Hospital(world)
   self.policies["guess_cure"] = 0.9
   self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
+  self:_initResearch()
   -- Randomly select three insurance companies to use, only different by name right now.
   -- The first ones are more likely to come
   self.insurance = {}
@@ -109,6 +110,17 @@ function Hospital:Hospital(world)
   end
 end
 
+function Hospital:_initResearch() 
+  self.research = {
+    improvements = 20,
+    drugs = 20,
+    diagnosis = 20,
+    cure = 20,
+    specialisation = 20,
+    global = 100,
+  }
+end
+
 function Hospital:afterLoad(old, new)
   if old < 8 then
     -- The list of discovered rooms was not saved. The best we can do is make everything
@@ -121,6 +133,9 @@ function Hospital:afterLoad(old, new)
   if old < 9 then
     -- Initial opening added
     self.opened = true
+  end
+  if old < 14 then
+    self:_initResearch()
   end
 end
 

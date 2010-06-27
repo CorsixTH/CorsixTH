@@ -87,21 +87,26 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   end
   -- Wait two months before going home anyway.
   humanoid.waiting = 60
+  local strings = _S.fax.disease_discovered_patient_choice
   local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
-  local output_text = _S.fax.disease_discovered_patient_choice.need_to_build:format(room_name)
+  local output_text = strings.need_to_build:format(room_name)
   if not humanoid.hospital:hasStaffOfCategory(required_staff) then
-    output_text = _S.fax.disease_discovered_patient_choice.need_to_build_and_employ:format(room_name, staff_name)
+    output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
   end
   -- TODO: In the future the treatment room might be unavailable
+  local research_btn = "disabled"
+  if humanoid.world:findRoomNear(humanoid, "research") then
+    research_btn = "research"
+  end
   local message = {
-    {text = _S.fax.disease_discovered_patient_choice.disease_name:format(humanoid.disease.name)},
+    {text = strings.disease_name:format(humanoid.disease.name)},
     {text = " "},
     {text = output_text},
-    {text = _S.fax.disease_discovered_patient_choice.what_to_do_question},
+    {text = strings.what_to_do_question},
     choices = {
-      {text = _S.fax.disease_discovered_patient_choice.choices.send_home, choice = "send_home"},
-      {text = _S.fax.disease_discovered_patient_choice.choices.wait,      choice = "wait"},
-      {text = _S.fax.disease_discovered_patient_choice.choices.research,  choice = "disabled"}, -- TODO: research
+      {text = strings.choices.send_home, choice = "send_home"},
+      {text = strings.choices.wait,      choice = "wait"},
+      {text = strings.choices.research,  choice = research_btn},
     },
   }
   -- Ok, send the message in all channels.

@@ -66,10 +66,10 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
       staff:queueAction {
         name = "use_object",
         object = obj,
-        loop_callback = --[[persistable:research_desk_loop_callback]] function()
+        loop_callback = --[[persistable:research_desk_loop_callback]] function(action)
           desk_use_time = desk_use_time - 1
-          if desk_use_time == 0 then
-            self:doStaffUseCycle(staff, obj)
+          if action.todo_interrupt or desk_use_time == 0 then
+            action.prolonged_usage = false
           end
         end
       }
@@ -77,9 +77,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
       staff:queueAction {
         name = "use_object",
         object = obj,
-        after_use = --[[persistable:research_obj_after_use]] function()
-          self:doStaffUseCycle(staff, obj)
-        end,
+        after_use = --[[persistable:research_obj_after_use]] function() end,
       }
     end
   end

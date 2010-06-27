@@ -26,7 +26,6 @@ object.tooltip = _S.tooltip.objects.auto_autopsy
 object.ticks = true
 object.build_cost = 4000
 object.build_preview_animation = 5102
-object.default_strength = 100
 object.crashed_animation = 3380
 
 local function copy_north_to_south(t)

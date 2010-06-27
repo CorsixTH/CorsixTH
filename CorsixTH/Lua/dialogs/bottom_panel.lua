@@ -68,9 +68,9 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
   buttons[3] = self:addPanel(19, 445, 0) -- Casebook button
   buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
-  buttons[4] = self:addPanel(21, 483, 0) -- Research button (not yet implemented)
-  buttons[4]:makeButton(1, 6, 35, 36, 22):setTooltip(_S.tooltip.toolbar.research .. " " .. _S.misc.not_yet_implemented).enabled = false
-  buttons[5] = self:addPanel(23, 521, 0) -- Status button (not yet implemented)
+  buttons[4] = self:addPanel(21, 483, 0) -- Research button
+  buttons[4]:makeButton(1, 6, 35, 36, 22, self.dialogResearch ):setTooltip(_S.tooltip.toolbar.research)
+  buttons[5] = self:addPanel(23, 521, 0) -- Status button
   buttons[5]:makeButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
   buttons[6] = self:addPanel(25, 559, 0) -- Charts button (not yet implemented)
   buttons[6]:makeButton(1, 6, 35, 36, 26):setTooltip(_S.tooltip.toolbar.charts .. " " .. _S.misc.not_yet_implemented).enabled = false
@@ -87,9 +87,10 @@ function UIBottomPanel:UIBottomPanel(ui)
     return _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")"
   end, 41, 30, 137, 42)
 
-  ui:addKeyHandler("M", self, self.openFirstMessage)	  -- M for message
+  ui:addKeyHandler("R", self, self.dialogResearch)      -- R for research
+  ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
   ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
-  ui:addKeyHandler("C", self, self.dialogDrugCasebook)	-- C for casebook
+  ui:addKeyHandler("C", self, self.dialogDrugCasebook)  -- C for casebook
 end
 
 function UIBottomPanel:draw(canvas, x, y)
@@ -374,6 +375,12 @@ end
 
 function UIBottomPanel:dialogPolicy()
   local dlg = UIPolicy(self.ui)
+  self.ui:setEditRoom(false)
+  self.ui:addWindow(dlg)
+end
+
+function UIBottomPanel:dialogResearch()
+  local dlg = UIResearch(self.ui)
   self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)
 end
