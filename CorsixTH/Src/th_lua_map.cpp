@@ -418,6 +418,7 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_DoNotIdle, "doNotIdle")
 
     FlagInt(iRoomId, "roomId")
+    FlagInt(iParcelId, "parcelId");
     FlagInt(iFlags >> 24, "thob")
 
 #undef FlagInt
@@ -621,10 +622,33 @@ static int l_map_get_parcel_tilecount(lua_State *L)
     return 1;
 }
 
-static int l_map_get_plot_count(lua_State *L)
+static int l_map_get_parcel_count(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    lua_pushinteger(L, pMap->getPlotCount());
+    lua_pushinteger(L, pMap->getParcelCount());
+    return 1;
+}
+
+static int l_map_set_parcel_owner(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    pMap->setParcelOwner(luaL_checkint(L, 2), luaL_checkint(L, 3));
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_map_get_parcel_owner(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_pushinteger(L, pMap->getParcelOwner(luaL_checkint(L, 2)));
+    return 1;
+}
+
+static int l_map_is_parcel_purchasable(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    lua_pushboolean(L, pMap->isParcelPurchasable(luaL_checkint(L, 2),
+        luaL_checkint(L, 3)) ? 1 : 0);
     return 1;
 }
 
@@ -762,7 +786,10 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_draw, "draw", MT_Surface);
     luaT_setfunction(l_map_hittest, "hitTestObjects", MT_Anim);
     luaT_setfunction(l_map_get_parcel_tilecount, "getParcelTileCount");
-    luaT_setfunction(l_map_get_plot_count, "getPlotCount");
+    luaT_setfunction(l_map_get_parcel_count, "getPlotCount");
+    luaT_setfunction(l_map_set_parcel_owner, "setPlotOwner");
+    luaT_setfunction(l_map_get_parcel_owner, "getPlotOwner");
+    luaT_setfunction(l_map_is_parcel_purchasable, "isParcelPurchasable");
     luaT_endclass();
 
     // Pathfinder

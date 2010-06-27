@@ -44,18 +44,28 @@ static int l_town_map_draw(lua_State *L)
     uint32_t iColourMyHosp = pCanvas->mapColour(0, 0, 70);
     uint32_t iColourWall = pCanvas->mapColour(255, 255, 255);
     uint32_t iColourDoor = pCanvas->mapColour(200, 200, 200);
+    uint32_t iColourPurchasable = pCanvas->mapColour(255, 0, 0);
 
-    THMapNode *pNode = pMap->getNodeUnchecked(0, 0);
+    const THMapNode *pNode = pMap->getNodeUnchecked(0, 0);
+    const THMapNode *pOriginalNode = pMap->getOriginalNodeUnchecked(0, 0);
     int iCanvasY = iCanvasYBase + 3;
     for(int iY = 0; iY < pMap->getHeight(); ++iY, iCanvasY += 3)
     {
         int iCanvasX = iCanvasXBase;
-        for(int iX = 0; iX < pMap->getWidth(); ++iX, ++pNode, iCanvasX += 3)
+        for(int iX = 0; iX < pMap->getWidth(); ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3)
         {
-            if(pNode->iFlags & THMN_Hospital)
+            if(pOriginalNode->iFlags & THMN_Hospital)
             {
                 uint32_t iColour = iColourMyHosp;
-                if(bShowHeat)
+                if(!(pNode->iFlags & THMN_Hospital))
+                {
+                    // TODO: Replace 1 with player number
+                    if(pMap->isParcelPurchasable(pNode->iParcelId, 1))
+                        iColour = iColourPurchasable;
+                    else
+                        goto dont_paint_tile;
+                }
+                else if(bShowHeat)
                 {
                     uint16_t iTemp = pMap->getNodeTemperature(pNode);
                     if(iTemp < 5200) // Less than 4 degrees
@@ -68,12 +78,16 @@ static int l_town_map_draw(lua_State *L)
                 }
                 pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
             }
-            int iNorth = pNode->iBlock[1] & 0xFF;
-            if(82 <= iNorth && iNorth <= 164)
+            dont_paint_tile:
+#define IsWall(blk) ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164))
+#define IsWallDrawn(n) pMap->getNodeOwner(pNode) != 0 ? \
+    IsWall(pNode->iBlock[n]) : IsWall(pOriginalNode->iBlock[n])
+            if(IsWallDrawn(1))
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 3, 1);
-            int iWest = pNode->iBlock[2] & 0xFF;
-            if(82 <= iWest && iWest <= 164)
+            if(IsWallDrawn(2))
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 1, 3);
+#undef IsWallDrawn
+#undef IsWall
             if(pNode->iFlags & THMN_DoorNorth)
                 pCanvas->fillRect(iColourDoor, iCanvasX, iCanvasY - 2, 2, 3);
             if(pNode->iFlags & THMN_DoorWest)

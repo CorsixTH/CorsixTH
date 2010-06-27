@@ -101,6 +101,39 @@ function UITownMap:close()
   Window.close(self)
 end
 
+local flag_cache = {}
+function UITownMap:onMouseMove(x, y)
+  local tx = math.floor((x - 227) / 3)
+  local ty = math.floor((y - 25) / 3)
+  self.hover_plot = nil
+  if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
+    local map = self.ui.hospital.world.map.th
+    self.hover_plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
+  end
+  return UIFullscreen.onMouseMove(self, x, y)
+end
+
+function UITownMap:onMouseUp(button, x, y)
+  local redraw = false
+  if button == "left" then
+    local tx = math.floor((x - 227) / 3)
+    local ty = math.floor((y - 25) / 3)
+    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
+      local map = self.ui.hospital.world.map.th
+      local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
+      if plot ~= 0 then
+        if self.ui.hospital:purchasePlot(plot) then
+          self.ui:playSound("cashreg.wav")
+          redraw = true
+        else
+          self.ui:playSound("Wrong2.wav")
+        end
+      end
+    end
+  end
+  return UIFullscreen.onMouseUp(self, button, x, y) or redraw
+end
+
 function UITownMap:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
@@ -109,6 +142,7 @@ function UITownMap:draw(canvas, x, y)
   local app      = self.ui.app
   local hospital = self.ui.hospital
   local world    = hospital.world
+  local map      = world.map
   -- config is a *runtime* configuration list; re-instantiations of the dialog
   -- share the same values, but it's not saved across saves or sessions
   local config   = app.runtime_config.town_dialog
@@ -153,86 +187,43 @@ function UITownMap:draw(canvas, x, y)
   end
 
   -- city name
-  self.city_font:draw(canvas, world.map.level_name, x + 300, y + 43, 260, 15)
+  self.city_font:draw(canvas, map.level_name, x + 300, y + 43, 260, 15)
 
-  -- plots
-  -- TODO maybe this can be cached! a lot of this stuff is unlikely to change,
-  -- only people actually move.
-  --[[
-  local color_myhosp  = canvas:mapRGB(0, 0, 70) -- darkish blue
-  local color_buyhosp = canvas:mapRGB(255, 0, 0) -- bright red
-  local color_wall    = canvas:mapRGB(255, 255, 255) -- white
-  local color_door    = canvas:mapRGB(200, 200, 200) -- grayish
-  local map_xstart    = x + 227
-  local map_ystart    = y + 25
-  local flag_cache = {}
-  local th_map = world.map.th
-  local height = world.map.height
-  local drawRect = canvas.drawRect
-  for xi = 1, world.map.width do
-    for yi = 1, height do
-      local l_objects = world:getObjects(xi, yi)
-      local flags     = th_map:getCellFlags(xi, yi, flag_cache)
-      local _, north_layer, west_layer = th_map:getCell(xi, yi)
-      north_layer = north_layer % 0x100
-      west_layer = west_layer % 0x100
-
-      -- first, paint blue-ish if hospital=true (we don't know whether it's
-      -- our area yet, but currently we assume it is)
-      if flags.hospital then
-        drawRect(canvas, color_myhosp, map_xstart + (3*xi), map_ystart + (3*yi),
-          3, 3)
-      end
-
-      -- then, paint the walls and doors, if we're in the hospital
-      -- TODO: there's no drawLine, so we take drawRect with width 1
-      if 82 <= north_layer and north_layer <= 164 then -- north wall present
-        drawRect(canvas, color_wall, map_xstart + (3*xi),
-          map_ystart + (3*yi), 3, 1)
-      end
-      if 82 <= west_layer and west_layer <= 164 then -- west wall present
-        drawRect(canvas, color_wall, map_xstart + (3*xi),
-          map_ystart + (3*yi), 1, 3)
-      end
-
-      -- paint objects
-      if flags.doorNorth then
-        drawRect(canvas, color_door, map_xstart + (3*xi),
-          map_ystart - 2 + (3*yi), 2, 3)
-      end
-      if flags.doorEast then
-        drawRect(canvas, color_door, map_xstart + 3 + (3*xi),
-          map_ystart + (3*yi), 3, 2)
-      end
-      if flags.doorSouth then
-        drawRect(canvas, color_door, map_xstart + (3*xi),
-          map_ystart + 3 + (3*yi), 2, 3)
-      end
-      if flags.doorWest then
-        drawRect(canvas, color_door, map_xstart - 2 + (3*xi),
-          map_ystart + (3*yi), 3, 2)
-      end
-
-      -- paint people
-    end
-  end
-  --]]
-  TH.windowHelpers.townMapDraw(self, world.map.th, canvas,
-    x + 227, y + 25, config.radiators_enabled)
+  TH.windowHelpers.townMapDraw(self, map.th, canvas, x + 227, y + 25,
+    config.radiators_enabled)
 
   -- plot number, owner, area and price
+  local plot_num = "-"
+  local tile_count = "-"
+  local price = "-"
+  local owner = "-"
+  if self.hover_plot then
+    if self.hover_plot == 0 then
+      price = _S.town_map.not_for_sale
+    else
+      tile_count = map:getParcelTileCount(self.hover_plot)
+      local owner_num = map.th:getPlotOwner(self.hover_plot)
+      if owner_num == 0 then
+        owner = _S.town_map.for_sale
+        price = "$" .. map:getParcelPrice(self.hover_plot)
+      else
+        owner = world.hospitals[owner_num].name
+      end
+      plot_num = self.hover_plot
+    end
+  end
   self.city_font:draw(canvas, _S.town_map.number, x + 227, y + 435)
   self.city_font:draw(canvas, ":",                x + 300, y + 435)
-  self.city_font:draw(canvas, "-",                x + 315, y + 435)
+  self.city_font:draw(canvas, plot_num,           x + 315, y + 435)
   self.city_font:draw(canvas, _S.town_map.owner,  x + 227, y + 450)
   self.city_font:draw(canvas, ":",                x + 300, y + 450)
-  self.city_font:draw(canvas, "-",                x + 315, y + 450)
+  self.city_font:draw(canvas, owner,              x + 315, y + 450)
   self.city_font:draw(canvas, _S.town_map.area,   x + 432, y + 435)
   self.city_font:draw(canvas, ":",                x + 495, y + 435)
-  self.city_font:draw(canvas, "-",                x + 515, y + 435)
+  self.city_font:draw(canvas, tile_count,         x + 515, y + 435)
   self.city_font:draw(canvas, _S.town_map.price,  x + 432, y + 450)
   self.city_font:draw(canvas, ":",                x + 495, y + 450)
-  self.city_font:draw(canvas, "-",                x + 515, y + 450)
+  self.city_font:draw(canvas, price,              x + 515, y + 450)
 end
 
 function UITownMap:decreaseHeat()

@@ -36,7 +36,11 @@ function Hospital:Hospital(world)
   -- TODO: Variate initial reputation etc based on level
   self.balance = balance
   self.loan = 0
-  self.value = world.map.parcelTileCounts[self:getPlayerIndex()] * 25 + 20000 -- The sum of all material values (tiles, rooms, objects). Initial value: hospital tile count * tile value + 20000
+  
+  -- The sum of all material values (tiles, rooms, objects).
+  -- Initial value: hospital tile count * tile value + 20000
+  self.value = world.map:getParcelPrice(self:getPlayerIndex()) + 20000
+  
   self.interest_rate = 0.01 -- Should these be worldwide?
   self.inflation_rate = 0.045
   self.reputation = 500
@@ -153,6 +157,19 @@ function Hospital:tick()
       self:spawnPatient()
     end
   end
+end
+
+function Hospital:purchasePlot(plot_number)
+  local map = self.world.map
+  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) then
+    local cost = map:getParcelPrice(plot_number)
+    if cost <= self.balance then
+      map.th:setPlotOwner(plot_number, self:getPlayerIndex())
+      self:spendMoney(cost, _S.transactions.buy_land, cost)
+      return true
+    end
+  end
+  return false
 end
 
 function Hospital:getPlayerIndex()

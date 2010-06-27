@@ -213,8 +213,8 @@ public:
     //! Get the map height (in tiles)
     inline int getHeight() const {return m_iHeight;}
 
-    //! Get the number of plots in this map
-    inline int getPlotCount() const {return m_iPlotCount - 1;}
+    //! Get the number of plots of land in this map
+    inline int getParcelCount() const {return m_iParcelCount - 1;}
 
     inline int getPlayerCount() const {return m_iPlayerCount;}
     bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
@@ -222,6 +222,45 @@ public:
 
     //! Get the number of tiles inside a given parcel
     int getParcelTileCount(int iParcelId) const;
+
+    //! Change the owner of a particular parcel
+    /*!
+        \param iParcelId The parcel of land to change ownership of. Should be
+            an integer between 1 and getParcelCount() inclusive (parcel 0 is
+            the outside, and should never have its ownership changed).
+        \param iOwner The number of the player who should own the parcel, or
+            zero if no player should own the parcel.
+    */
+    void setParcelOwner(int iParcelId, int iOwner);
+
+    //! Get the owner of a particular parcel of land
+    /*!
+        \param iParcelId An integer between 0 and getParcelCount() inclusive.
+        \return 0 if the parcel is unowned, otherwise the number of the owning
+            player.
+    */
+    int getParcelOwner(int iParcelId) const;
+
+    //! Query if two parcels are directly connected
+    /*!
+        \param iParcel1 An integer between 0 and getParcelCount() inclusive.
+        \param iParcel2 An integer between 0 and getParcelCount() inclusive.
+        \return true if there is a path between the two parcels which does not
+            go into any other parcels. false otherwise.
+    */
+    bool areParcelsAdjacent(int iParcel1, int iParcel2);
+
+    //! Query if a given player is in a position to purchase a given parcel
+    /*!
+        \param iParcelId The parcel of land to query. Should be an integer
+            between 1 and getParcelCount() inclusive.
+        \param iPlayer The number of the player to perform the query on behalf
+            of. Should be a strictly positive integer.
+        \return true if the parcel has a door to the outside, or is directly
+            connected to a parcel already owned by the given player. false
+            otherwise.
+    */
+    bool isParcelPurchasable(int iParcelId, int iPlayer);
 
     //! Draw the map (and any attached animations)
     /*!
@@ -254,6 +293,7 @@ public:
     const THMapNode* getOriginalNodeUnchecked(int iX, int iY) const;
 
     uint16_t getNodeTemperature(const THMapNode* pNode) const;
+    int getNodeOwner(const THMapNode* pNode) const;
 
     //! Convert world (tile) co-ordinates to absolute screen co-ordinates
     template <typename T>
@@ -282,6 +322,15 @@ protected:
     void _readTileIndex(const unsigned char* pData, int& iX, int &iY) const;
     int _getParcelTileCount(int iParcelId) const;
 
+    //! Create the adjacency matrix if it doesn't already exist
+    void _makeAdjacencyMatrix();
+
+    //! Create the purchasability matrix if it doesn't already exist
+    void _makePurchaseMatrix();
+
+    //! If it exists, update the purchasability matrix.
+    void _updatePurchaseMatrix();
+
     THMapNode* m_pCells;
     THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
     THSpriteSheet* m_pBlocks;
@@ -293,9 +342,16 @@ protected:
     int m_aiInitialCameraY[4];
     int m_aiHeliportX[4];
     int m_aiHeliportY[4];
-    int m_iPlotCount;
+    int m_iParcelCount;
     int m_iCurrentTemperatureIndex;
     int* m_pParcelTileCounts;
+
+    // 2D symmetric array giving true if there is a path between two parcels
+    // which doesn't go into any other parcels.
+    bool* m_pParcelAdjacencyMatrix;
+
+    // 4 by N matrix giving true if player can purchase parcel.
+    bool* m_pPurchasableMatrix;
 };
 
 enum eTHMapScanlineIteratorDirection

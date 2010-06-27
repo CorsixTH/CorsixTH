@@ -45,11 +45,14 @@ THMap::THMap()
     m_iHeight = 0;
     m_iPlayerCount = 0;
     m_iCurrentTemperatureIndex = 0;
+    m_iParcelCount = 0;
     m_pCells = NULL;
     m_pOriginalCells = NULL;
     m_pBlocks = NULL;
     m_pPlotOwner = NULL;
     m_pParcelTileCounts = NULL;
+    m_pParcelAdjacencyMatrix = NULL;
+    m_pPurchasableMatrix = NULL;
 }
 
 THMap::~THMap()
@@ -58,6 +61,8 @@ THMap::~THMap()
     delete[] m_pOriginalCells;
     delete[] m_pPlotOwner;
     delete[] m_pParcelTileCounts;
+    delete[] m_pParcelAdjacencyMatrix;
+    delete[] m_pPurchasableMatrix;
 }
 
 bool THMap::setSize(int iWidth, int iHeight)
@@ -67,12 +72,16 @@ bool THMap::setSize(int iWidth, int iHeight)
 
     delete[] m_pCells;
     delete[] m_pOriginalCells;
+    delete[] m_pParcelAdjacencyMatrix;
+    delete[] m_pPurchasableMatrix;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
     m_pCells = NULL;
     m_pCells = new (std::nothrow) THMapNode[iWidth * iHeight];
     m_pOriginalCells = NULL;
     m_pOriginalCells = new (std::nothrow) THMapNode[iWidth * iHeight];
+    m_pParcelAdjacencyMatrix = NULL;
+    m_pPurchasableMatrix = NULL;
 
     if(m_pCells == NULL || m_pOriginalCells == NULL)
     {
@@ -138,7 +147,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
         _readTileIndex(pData + 163884 + (i % 4) * 2,
             m_aiHeliportX[i], m_aiHeliportY[i]);
     }
-    m_iPlotCount = 0;
+    m_iParcelCount = 0;
     delete[] m_pPlotOwner;
     delete[] m_pParcelTileCounts;
     m_pPlotOwner = NULL;
@@ -164,7 +173,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
             else if(iY == 127)
                 pNode->iFlags &= ~THMN_CanTravelS;
             pNode->iBlock[0] = iBaseTile;
-            if(pData[3] == 0 || pData[3] == /* Parcel divider wall */ 140)
+#define IsDividerWall(x) (((x) >> 1) == 70)
+            if(pData[3] == 0 || IsDividerWall(pData[3]))
             {
                 // Tiles 71, 72 and 73 (pond foliage) are used as floor tiles,
                 // but are too tall to be floor tiles, so move them to a wall,
@@ -186,7 +196,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                     pNode[-128].iFlags &= ~THMN_CanTravelS;
                 }
             }
-            if(pData[4] == 0 || pData[4] == /* Parcel divider wall */ 141)
+            if(pData[4] == 0 || IsDividerWall(pData[4]))
                 pNode->iBlock[2] = 0;
             else
             {
@@ -200,8 +210,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
 
             pNode->iRoomId = 0;
             pNode->iParcelId = *pParcel;
-            if(*pParcel >= m_iPlotCount)
-                m_iPlotCount = *pParcel + 1;
+            if(*pParcel >= m_iParcelCount)
+                m_iParcelCount = *pParcel + 1;
 
             if(!(pData[5] & 1))
             {
@@ -215,9 +225,12 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
             }
 
             *pOriginalNode = *pNode;
+            if(IsDividerWall(pData[3]))
+                pOriginalNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
+            if(IsDividerWall(pData[4]))
+                pOriginalNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
 
-            // TODO: If plot number > player count, replace with grass
-            // (then copy data back from original node when purchased)
+#undef IsDividerWall
 
             if(pData[1] != 0 && fnObjectCallback != NULL)
             {
@@ -225,20 +238,175 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
             }
         }
     }
-    m_pPlotOwner = new int[m_iPlotCount];
+    m_pPlotOwner = new int[m_iParcelCount];
     m_pPlotOwner[0] = 0;
-    for(int i = 1; i < m_iPlotCount; ++i)
+    for(int i = 1; i < m_iParcelCount; ++i)
         m_pPlotOwner[i] = 1;
-    // TODO: Assign plots 1 - N to players 1 - N, others to 0
 
     updateShadows();
 
-    m_pParcelTileCounts = new int[m_iPlotCount];
+    m_pParcelTileCounts = new int[m_iParcelCount];
     m_pParcelTileCounts[0] = 0;
-    for(int i = 1; i < m_iPlotCount; ++i)
+    for(int i = 1; i < m_iParcelCount; ++i)
         m_pParcelTileCounts[i] = _getParcelTileCount(i);
 
     return true;
+}
+
+void THMap::setParcelOwner(int iParcelId, int iOwner)
+{
+    if(iParcelId <= 0 || m_iParcelCount <= iParcelId || iOwner < 0)
+        return;
+    m_pPlotOwner[iParcelId] = iOwner;
+
+    THMapNode *pNode = m_pCells;
+    const THMapNode *pOriginalNode = m_pOriginalCells;
+    for(int iY = 0; iY < 128; ++iY)
+    {
+        for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
+        {
+            if(pNode->iParcelId == iParcelId)
+            {
+                if(iOwner != 0)
+                {
+                    pNode->iBlock[0] = pOriginalNode->iBlock[0];
+                    pNode->iBlock[1] = pOriginalNode->iBlock[1];
+                    pNode->iBlock[2] = pOriginalNode->iBlock[2];
+                    pNode->iFlags = pOriginalNode->iFlags;
+                }
+                else
+                {
+                    // Nicely mown grass pattern
+                    pNode->iBlock[0] = ((iX & 1) << 1) + 1;
+
+                    pNode->iBlock[1] = 0;
+                    pNode->iBlock[2] = 0;
+                    pNode->iFlags = 0;
+
+                    // Random decoration
+                    if(((iX | iY) & 0x7) == 0)
+                    {
+                        int iWhich = (iX ^ iY) % 9;
+                        pNode->iBlock[1] = 192 + iWhich;
+                    }
+                }
+            }
+
+#define IsDividerWall(x) (142 <= (x) && (x) <= 145)
+#define CheckDividers(xy, delta, block) \
+            if(xy > 0 && (pOriginalNode->iFlags & pOriginalNode[-delta].iFlags\
+            & THMN_Hospital) && pNode->iParcelId != pNode[-delta].iParcelId) \
+            { \
+                int iOwner = m_pPlotOwner[pNode->iParcelId]; \
+                int iOtherOwner = m_pPlotOwner[pNode[-delta].iParcelId]; \
+                if(iOwner != iOtherOwner) \
+                    pNode->iBlock[block] = block + (iOwner ? 143 : 141); \
+                else if(IsDividerWall(pNode->iBlock[block])) \
+                    pNode->iBlock[block] = 0; \
+            }
+            CheckDividers(iX,   1, 2);
+            CheckDividers(iY, 128, 1);
+#undef CheckDividers
+#undef IsDividerWall
+        }
+    }
+
+    updatePathfinding();
+    updateShadows();
+    _updatePurchaseMatrix();
+}
+
+void THMap::_makeAdjacencyMatrix()
+{
+    if(m_pParcelAdjacencyMatrix != NULL)
+        return;
+
+    m_pParcelAdjacencyMatrix = new bool[m_iParcelCount * m_iParcelCount];
+    for(int i = 0; i < m_iParcelCount; ++i)
+    {
+        for(int j = 0; j < m_iParcelCount; ++j)
+        {
+            m_pParcelAdjacencyMatrix[i * m_iParcelCount + j] = (i == j);
+        }
+    }
+
+    const THMapNode *pOriginalNode = m_pOriginalCells;
+    for(int iY = 0; iY < 128; ++iY)
+    {
+        for(int iX = 0; iX < 128; ++iX, ++pOriginalNode)
+        {
+#define TestAdj(xy, delta) if(xy > 0 && \
+            pOriginalNode->iParcelId != pOriginalNode[-delta].iParcelId &&  \
+            (pOriginalNode->iFlags & pOriginalNode[-delta].iFlags & THMN_Passable))\
+            m_pParcelAdjacencyMatrix[pOriginalNode->iParcelId * m_iParcelCount\
+            + pOriginalNode[-delta].iParcelId] = true, \
+            m_pParcelAdjacencyMatrix[pOriginalNode->iParcelId + \
+            pOriginalNode[-delta].iParcelId * m_iParcelCount] = true
+
+            TestAdj(iX, 1);
+            TestAdj(iY, 128);
+
+#undef TestAdj
+        }
+    }
+}
+
+void THMap::_makePurchaseMatrix()
+{
+    if(m_pPurchasableMatrix != NULL)
+        return; // Already made
+    m_pPurchasableMatrix = new bool[4 * m_iParcelCount];
+    _updatePurchaseMatrix();
+}
+
+void THMap::_updatePurchaseMatrix()
+{
+    if(m_pPurchasableMatrix == NULL)
+        return; // Nothing to update
+    for(int iPlayer = 1; iPlayer <= 4; ++iPlayer)
+    {
+        for(int iParcel = 0; iParcel < m_iParcelCount; ++iParcel)
+        {
+            bool bPurchasable = false;
+            if(iParcel != 0 && m_pPlotOwner[iParcel] == 0)
+            {
+                for(int iParcel2 = 0; iParcel2 < m_iParcelCount; ++iParcel2)
+                {
+                    if((m_pPlotOwner[iParcel2] == iPlayer) || (iParcel2 == 0))
+                    {
+                        if(areParcelsAdjacent(iParcel, iParcel2))
+                        {
+                            bPurchasable = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            m_pPurchasableMatrix[iParcel * 4 + iPlayer - 1] = bPurchasable;
+        }
+    }
+}
+
+bool THMap::areParcelsAdjacent(int iParcel1, int iParcel2)
+{
+    if(0 <= iParcel1 && iParcel1 < m_iParcelCount
+    && 0 <= iParcel2 && iParcel2 < m_iParcelCount)
+    {
+        _makeAdjacencyMatrix();
+        return m_pParcelAdjacencyMatrix[iParcel1 * m_iParcelCount + iParcel2];
+    }
+    return false;
+}
+
+bool THMap::isParcelPurchasable(int iParcelId, int iPlayer)
+{
+    if(0 <= iParcelId && iParcelId < m_iParcelCount
+    && 1 <= iPlayer && iPlayer <= 4)
+    {
+        _makePurchaseMatrix();
+        return m_pPurchasableMatrix[iParcelId * 4 + iPlayer - 1];
+    }
+    return false;
 }
 
 bool THMap::getPlayerCameraTile(int iPlayer, int* pX, int* pY) const
@@ -269,7 +437,7 @@ bool THMap::getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const
 
 int THMap::getParcelTileCount(int iParcelId) const
 {
-    if(iParcelId < 1 || iParcelId >= m_iPlotCount)
+    if(iParcelId < 1 || iParcelId >= m_iParcelCount)
     {
         return 0;
     }
@@ -569,6 +737,20 @@ THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
     }
 }
 
+int THMap::getNodeOwner(const THMapNode* pNode) const
+{
+    return m_pPlotOwner[pNode->iParcelId];
+}
+
+int THMap::getParcelOwner(int iParcel) const
+{
+    if(0 <= iParcel && iParcel < m_iParcelCount)
+        return m_pPlotOwner[iParcel];
+    else
+        return 0;
+}
+
+
 uint16_t THMap::getNodeTemperature(const THMapNode* pNode) const
 {
     return pNode->aiTemperature[m_iCurrentTemperatureIndex];
@@ -736,12 +918,12 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         pWriter->writeVUInt(m_aiHeliportX[i]);
         pWriter->writeVUInt(m_aiHeliportY[i]);
     }
-    pWriter->writeVUInt(m_iPlotCount);
-    for(int i = 0; i < m_iPlotCount; ++i)
+    pWriter->writeVUInt(m_iParcelCount);
+    for(int i = 0; i < m_iParcelCount; ++i)
     {
         pWriter->writeVUInt(m_pPlotOwner[i]);
     }
-    for(int i = 0; i < m_iPlotCount; ++i)
+    for(int i = 0; i < m_iParcelCount; ++i)
     {
         pWriter->writeVUInt(m_pParcelTileCounts[i]);
     }
@@ -821,20 +1003,20 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(!pReader->readVUInt(m_aiHeliportX[i])) return;
         if(!pReader->readVUInt(m_aiHeliportY[i])) return;
     }
-    if(!pReader->readVUInt(m_iPlotCount)) return;
+    if(!pReader->readVUInt(m_iParcelCount)) return;
     delete[] m_pPlotOwner;
-    m_pPlotOwner = new int[m_iPlotCount];
-    for(int i = 0; i < m_iPlotCount; ++i)
+    m_pPlotOwner = new int[m_iParcelCount];
+    for(int i = 0; i < m_iParcelCount; ++i)
     {
         if(!pReader->readVUInt(m_pPlotOwner[i])) return;
     }
     delete[] m_pParcelTileCounts;
-    m_pParcelTileCounts = new int[m_iPlotCount];
+    m_pParcelTileCounts = new int[m_iParcelCount];
     m_pParcelTileCounts[0] = 0;
 
     if(iVersion >= 3)
     {
-        for(int i = 0; i < m_iPlotCount; ++i)
+        for(int i = 0; i < m_iParcelCount; ++i)
         {
             if(!pReader->readVUInt(m_pParcelTileCounts[i])) return;
         }
@@ -906,7 +1088,7 @@ void THMap::depersist(LuaPersistReader *pReader)
 
     if(iVersion < 3)
     {
-        for(int i = 1; i < m_iPlotCount; ++i)
+        for(int i = 1; i < m_iParcelCount; ++i)
             m_pParcelTileCounts[i] = _getParcelTileCount(i);
     }
 }

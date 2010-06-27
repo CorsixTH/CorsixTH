@@ -153,8 +153,12 @@ function Map:load(level, level_name, level_file)
   self.width, self.height = self.th:size()
 
   self.parcelTileCounts = {}
-  for plot = 1,self.th:getPlotCount() do
+  for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
+    if plot > 1 then
+      -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
+      self.th:setPlotOwner(plot, 0)
+    end
   end
 
   return objects
@@ -462,6 +466,17 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
       end
     end
   end
+end
+
+function Map:getParcelPrice(parcel)
+  local conf = self.level_config
+  conf = conf and conf.gbv
+  conf = conf and conf.LandCostPerTile
+  return self:getParcelTileCount(parcel) * (conf or 25)
+end
+
+function Map:getParcelTileCount(parcel)
+  return self.parcelTileCounts[parcel] or 0
 end
 
 function Map:afterLoad(old, new)
