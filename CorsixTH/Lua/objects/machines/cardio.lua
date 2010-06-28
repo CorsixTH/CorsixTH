@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "cardio"
-object.thob = 12
+object.thob = 13
 object.name = _S.object.cardio
 object.tooltip = _S.tooltip.objects.cardio
 object.ticks = false

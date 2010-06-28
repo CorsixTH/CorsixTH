@@ -189,3 +189,15 @@ end
 function Machine:onDestroy()
   Object.onDestroy(self)
 end
+
+function Machine:afterLoad(old, new)
+  if old < 15 then
+    if self.object_type.id == "cardio" then
+      -- Fix THOB value being wrong
+      self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {
+        thob = self.object_type.thob
+      })
+    end
+  end
+  return Entity.afterLoad(self, old, new)
+end

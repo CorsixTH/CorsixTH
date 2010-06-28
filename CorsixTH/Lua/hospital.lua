@@ -32,7 +32,7 @@ function Hospital:Hospital(world)
       balance = level_config.town.StartCash
     end
   end
-  self.name = "PLAYER"
+  self.name = os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
   -- TODO: Variate initial reputation etc based on level
   self.balance = balance
   self.loan = 0
