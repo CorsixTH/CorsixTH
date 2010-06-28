@@ -387,7 +387,10 @@ function World:getObjectToNotifyOfOccupants(x, y)
   return self.objects_notify_occupants[idx]
 end
 
+local flag_cache = {}
 function World:createMapObjects(objects)
+  self.delayed_map_objects = {}
+  local map = self.map.th
   for _, object in ipairs(objects) do repeat
     local x, y, thob, flags = unpack(object)
     local object_id = self.object_id_by_thob[thob]
@@ -400,8 +403,27 @@ function World:createMapObjects(objects)
       print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
       break -- continue
     end
-    self:newObject(object_id, x, y, flags, "map object")
+    -- Delay making objects which are on plots which haven't been purchased yet
+    local parcel = map:getCellFlags(x, y, flag_cache).parcelId
+    if map:getPlotOwner(parcel) == 0 then
+      self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
+    else
+      self:newObject(object_id, x, y, flags, "map object")
+    end
   until true end
+end
+
+function World:setPlotOwner(parcel, owner)
+  self.map.th:setPlotOwner(parcel, owner)
+  if owner ~= 0 and self.delayed_map_objects then
+    for info, p in pairs(self.delayed_map_objects) do
+      if p == parcel then
+        self:newObject(unpack(info))
+        self.delayed_map_objects[info] = nil
+      end
+    end
+  end
+  self.map.th:updateShadows()
 end
 
 function World:getAnimLength(anim)
