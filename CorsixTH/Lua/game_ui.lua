@@ -108,6 +108,11 @@ function GameUI:resync(ui)
   self.tick_scroll_amount = ui.tick_scroll_amount
   self.down_count = ui.down_count
   self.limit_to_visible_diamond = ui.limit_to_visible_diamond
+
+  self.key_remaps = ui.key_remaps
+  self.key_to_button_remaps = ui.key_to_button_remaps
+  self.key_codes = ui.key_codes
+  self.key_code_to_rawchar = ui.key_code_to_rawchar
 end
 
 local scroll_keys = {
