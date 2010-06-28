@@ -28,7 +28,7 @@ room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { pharmacy_cabinet = 1 }
 room.build_preview_animation = 5088
 room.categories = {
-  treatment = 3,
+  treatment = 4,
 }
 room.minimum_size = 4
 room.wall_type = "white"

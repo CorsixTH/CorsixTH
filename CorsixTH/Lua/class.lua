@@ -109,6 +109,22 @@ function class.is(instance, class)
   return false
 end
 
+-- class.superclass - Get the name of a class
+-- For example:
+-- class "something"
+-- class.name(something) --> "something"
+function class.name(class)
+  return getmetatable(class).__class_name
+end
+
+-- class.superclass - Get the superclass of a class
+-- For example:
+-- class "something" (base)
+-- class.superclass(something) --> base
+function class.superclass(class)
+  return getmetatable(class).__index
+end
+
 -- class.type - Get the typename of a class instance
 -- For example:
 -- class "something" (base)

@@ -104,6 +104,83 @@ function Object:initOrientation(direction)
   self:setAnimation(anim, flags)
 end
 
+--! Add methods to a class for creating and controlling a slave object
+function Object.slaveMixinClass(class_method_table)
+  local name = class.name(class_method_table)
+  local super = class.superclass(class_method_table)
+  local super_constructor = super[class.name(super)]
+  
+  -- Constructor
+  class_method_table[name] = function(self, world, object_type, x, y, direction, ...)
+    super_constructor(self, world, object_type, x, y, direction, ...)
+    if object_type.slave_id then
+      local orientation = object_type.orientations
+      orientation = orientation and orientation[direction]
+      if orientation.slave_position then
+        x = x + orientation.slave_position[1]
+        y = y + orientation.slave_position[2]
+      end
+      self.slave = world:newObject(object_type.slave_id, x, y, direction, ...)
+      self.slave.master = self
+    end
+  end
+  
+  -- Slave -> Master redirects
+  local function slave_to_master(method)
+    local super_method = super[method]
+    class_method_table[method] = function(self, ...)
+      local master = self.master
+      if master then
+        return master[method](master, ...)
+      else
+        return super_method(self, ...)
+      end
+    end
+  end
+  slave_to_master("onClick")
+  slave_to_master("updateDynamicInfo")
+  slave_to_master("getDynamicInfo")
+  
+  -- Master -> Slave notifications
+  local function master_to_slave(method)
+    local super_method = super[method]
+    class_method_table[method] = function(self, ...)
+      local slave = self.slave
+      if slave then
+        slave[method](slave, ...)
+      end
+      return super_method(self, ...)
+    end
+  end
+  master_to_slave("initOrientation")
+  class_method_table.onDestroy = function(self, ...)
+    local slave = self.slave
+    if slave then
+      self.world:destroyEntity(slave)
+    end
+    return super.onDestroy(self, ...)
+  end
+  class_method_table.setTile = function(self, x, y)
+    if self.slave then
+      local dx, dy = 0, 0
+      local orientation = self.object_type.orientations
+      orientation = orientation and orientation[self.direction]
+      if orientation.slave_position then
+        dx = orientation.slave_position[1]
+        dy = orientation.slave_position[2]
+      end
+      if x then
+        self.slave:setTile(x + dx, y + dy)
+      else
+        self.slave:setTile(x, y)
+      end
+    end
+    return super.setTile(self, x, y)
+  end
+  
+  return slave_to_master, master_to_slave
+end
+
 function Object:tick()
   if self.split_anims then
     if self.num_animation_ticks then
@@ -502,6 +579,10 @@ function Object.processTypeDefinition(object_type)
         end
         use_position[1] = use_position[1] - x
         use_position[2] = use_position[2] - y
+        if details.slave_position then
+          details.slave_position[1] = details.slave_position[1] - x
+          details.slave_position[2] = details.slave_position[2] - y
+        end
         local rx, ry = unpack(details.render_attach_position)
         if type(rx) == "table" then
           rx, ry = unpack(details.render_attach_position[1])

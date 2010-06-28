@@ -64,6 +64,13 @@ CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Lua/dialogs/research_policy.lua -text
+CorsixTH/Lua/objects/machines/operating_table.lua -text
+CorsixTH/Lua/objects/machines/operating_table_b.lua -text
+CorsixTH/Lua/objects/op_sink1.lua -text
+CorsixTH/Lua/objects/op_sink2.lua -text
+CorsixTH/Lua/objects/surgeon_screen.lua -text
+CorsixTH/Lua/objects/x_ray_viewer.lua -text
+CorsixTH/Lua/rooms/operating_theatre.lua -text
 CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text

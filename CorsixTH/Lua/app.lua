@@ -180,6 +180,7 @@ function App:init()
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder"walls"
     dofile "entities/object"
+    dofile "entities/machine"
 
     local objects = self:loadLuaFolder"objects"
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
@@ -187,6 +188,10 @@ function App:init()
     -- depend on the door) are loaded after the door object.
     self.objects = self:loadLuaFolder("objects/doors", nil, objects)
     for _, v in ipairs(self.objects) do
+      if v.slave_id then
+        v.slave_type = self.objects[v.slave_id]
+        v.slave_type.master_type = v
+      end
       Object.processTypeDefinition(v)
     end
     dofile "room"

@@ -200,6 +200,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   self.place_objects = true -- When adding objects guess we want to place objects
 
   self.object_anim = TH.animation()
+  self.object_slave_anim = TH.animation()
   local total_objects = #self.objects + #object_list
   self:resize(total_objects)
   
@@ -323,9 +324,20 @@ function UIPlaceObjects:setActiveIndex(index)
   for _, anim in pairs(object.idle_animations) do
     anims:setAnimationGhostPalette(anim, ghost)
   end
+  if object.slave_type then
+    for _, anim in pairs(object.slave_type.idle_animations) do
+      anims:setAnimationGhostPalette(anim, ghost)
+    end
+  end
   
-  self.object_orientation = "west"
-  self:nextOrientation()
+  if object.locked_to_wall then
+    local wx, wy, wo = self:calculateBestPlacementPosition(0, 0)
+    self:setBlueprintCell(wx, wy)
+    self:setOrientation(wo)
+  else
+    self.object_orientation = "west"
+    self:nextOrientation()
+  end
 end
 
 local orient_mirror = {
@@ -357,6 +369,11 @@ function UIPlaceObjects:setOrientation(orient)
     flag = flag + 1024
   end
   self.object_anim:setAnimation(self.anims, anim, flag)
+  if object.slave_type then
+    local slave_anim = object.slave_type.idle_animations[(flag % 2) == 0 and
+      orient or orient_mirror[orient]]
+    self.object_slave_anim:setAnimation(self.anims, slave_anim, flag)
+  end
   local present_object
   if object_data.existing_objects and #object_data.existing_objects > 0 then
     present_object = object_data.existing_objects[1]
@@ -372,6 +389,21 @@ function UIPlaceObjects:setOrientation(orient)
   px = object.orientations[orient].animation_offset[1] + px
   py = object.orientations[orient].animation_offset[2] + py
   self.object_anim:setPosition(px, py)
+  if object.slave_type then
+    px, py = unpack(object.slave_type.orientations[orient].render_attach_position)
+    if type(px) == "table" then
+      px, py = unpack(px)
+    end
+    local offset = object.orientations[orient].slave_position
+    if offset then
+      px = px + offset[1]
+      py = py + offset[2]
+    end
+    px, py = Map:WorldToScreen(px + 1, py + 1)
+    px = object.slave_type.orientations[orient].animation_offset[1] + px
+    py = object.slave_type.orientations[orient].animation_offset[2] + py
+    self.object_slave_anim:setPosition(px, py)
+  end
   self:setBlueprintCell(self.object_cell_x, self.object_cell_y)
 end
 
@@ -380,6 +412,10 @@ function UIPlaceObjects:nextOrientation()
     return
   end
   local object = self.objects[self.active_index].object
+  if object.locked_to_wall then
+    -- Orientation is dictated by the nearest wall
+    return
+  end
   local orient = self.object_orientation
   repeat
     orient = orient_next[orient]
@@ -407,7 +443,9 @@ function UIPlaceObjects:onMouseUp(button, x, y)
       self:nextOrientation()
       repaint = true
     elseif button == "left" then
-      if self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
+      if 0 <= x and x < self.width and 0 <= y and y < self.height then
+        -- Click within window - do nothing
+      elseif self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
         self:placeObject()
         repaint = true
       elseif self.object_cell_x and self.object_cell_y and not self.object_blueprint_good then
@@ -437,6 +475,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     real_obj:initOrientation(self.object_orientation)
     real_obj:setTile(self.object_cell_x, self.object_cell_y)
     self.world:objectPlaced(real_obj)
+    if real_obj.slave then
+      self.world:objectPlaced(real_obj.slave)
+    end
     -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
     real_obj.picked_up = false
   else
@@ -461,7 +502,11 @@ function UIPlaceObjects:draw(canvas, x, y)
   end
 
   if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
-    self.object_anim:draw(canvas, self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y))
+    local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
+    self.object_anim:draw(canvas, x, y)
+    if self.objects[self.active_index].object.slave_type then
+      self.object_slave_anim:draw(canvas, x, y)
+    end
   end
   
   Window.draw(self, canvas, x, y)
@@ -489,6 +534,9 @@ function UIPlaceObjects:clearBlueprint()
   local map = self.map.th
   if self.object_anim then
     self.object_anim:setTile(nil)
+  end
+  if self.object_slave_anim then
+    self.object_slave_anim:setTile(nil)
   end
   for _, xy in ipairs(self.object_footprint) do
     if xy[1] ~= 0 then
@@ -651,12 +699,67 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         self.object_anim:setTile(map, x, y)
       end
       self.object_anim:setPartialFlag(flag_altpal, not allgood)
+      self.object_slave_anim:setPartialFlag(flag_altpal, not allgood)
       self.object_blueprint_good = allgood
       self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
     end
   else
     self.object_footprint = {}
   end
+end
+
+local function NearestPointOnLine(lx1, ly1, lx2, ly2, px, py)
+  -- Translate everything to make one line segment endpoint be on the origin
+  local lx = lx1 - lx2
+  local ly = ly1 - ly2
+  px = px - lx2
+  py = py - ly2
+  
+  -- Project point onto line (scale everything to make (lx, ly) be on the unit
+  -- circle, then dot product).
+  local d = (lx * px + ly * py) / (lx * lx + ly * ly)
+  
+  if d <= 0 then
+    return lx2, ly2
+  elseif d >= 1 then
+    return lx1, ly1
+  else
+    return d * lx1 + (1 - d) * lx2, d * ly1 + (1 - d) * ly2
+  end
+end
+
+function UIPlaceObjects:calculateBestPlacementPosition(x, y)
+  local object = self.objects[self.active_index].object
+  local room = self.room
+  local wx, wy = self.ui:ScreenToWorld(self.x + x, self.y + y)
+  local bestd
+  local bestx, besty = wx, wy
+  local besto = self.object_orientation
+  if room and object.locked_to_wall then
+    if object.locked_to_wall.north then
+      local px, py = NearestPointOnLine(room.x + 0.5, room.y + 0.5,
+        room.x + room.width - 0.5, room.y + 0.5, wx, wy)
+      local d = ((px - wx)^2 + (py - wy)^2)^0.5
+      if not bestd or d < bestd then
+        bestd, bestx, besty, besto = d, px, py, object.locked_to_wall.north
+      end
+    end
+    if object.locked_to_wall.west then
+      local px, py = NearestPointOnLine(room.x + 0.5, room.y + 0.5,
+        room.x + 0.5, room.y + room.height - 0.5, wx, wy)
+      local d = ((px - wx)^2 + (py - wy)^2)^0.5
+      if not bestd or d < bestd then
+        bestd, bestx, besty, besto = d, px, py, object.locked_to_wall.west
+      end
+    end
+    -- TODO: East, South
+  end
+  bestx, besty = math_floor(bestx), math_floor(besty)
+  if bestx < 1 or besty < 1
+  or bestx > self.map.width or besty > self.map.height then
+    bestx, besty = nil
+  end
+  return bestx, besty, besto
 end
 
 function UIPlaceObjects:onMouseMove(x, y, ...)
@@ -667,18 +770,13 @@ function UIPlaceObjects:onMouseMove(x, y, ...)
   
   repaint = true
   
-  local ui = self.ui
-  local wx, wy
-  if x < 0 or x >= self.width or y < 0 or y >= self.height then
-    wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
-    wx = math_floor(wx)
-    wy = math_floor(wy)
-    if wx < 1 or wy < 1 or wx > self.map.width or wy > self.map.height then
-      wx, wy = nil
-    end
-  end
+  local wx, wy, wo = self:calculateBestPlacementPosition(x, y)
   if wx ~= self.object_cell_x or wy ~= self.object_cell_y then
     self:setBlueprintCell(wx, wy)
+    repaint = true
+  end
+  if wo ~= self.object_orientation then
+    self:setOrientation(wo)
     repaint = true
   end
   

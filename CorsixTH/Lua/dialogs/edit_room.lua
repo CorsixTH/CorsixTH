@@ -204,7 +204,8 @@ function UIEditRoom:clearArea()
     local y1 = rect.y - 1
     local y2 = rect.y + rect.h
     for _, entity in ipairs(world.entities) do repeat
-      if x1 <= entity.tile_x and entity.tile_x <= x2 and y1 <= entity.tile_y and entity.tile_y <= y2 then
+      if entity.tile_x and x1 <= entity.tile_x and entity.tile_x <= x2
+      and y1 <= entity.tile_y and entity.tile_y <= y2 then
         if not class.is(entity, Humanoid) then
           -- We're only interested in humanoids.
           break -- continue
@@ -497,8 +498,13 @@ function UIEditRoom:returnToDoorPhase()
         if not obj or obj == room.door or class.is(obj, SwingDoor) then
           break
         end
-        self:addObjects({{object = TheApp.objects[obj.object_type.id], qty = 1}})
         self.world:destroyEntity(obj)
+        if not obj.master then
+          self:addObjects({{
+            object = TheApp.objects[obj.object_type.id],
+            qty = 1
+          }})
+        end
       end
     end
   end

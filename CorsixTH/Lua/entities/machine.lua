@@ -150,6 +150,12 @@ function Machine:setRepairing(repairer)
   end
 end
 
+function Machine.slaveMixinClass(class_method_table)
+  local slave_to_master, master_to_slave = Object.slaveMixinClass(class_method_table)
+  master_to_slave("finalize")
+  return slave_to_master, master_to_slave
+end
+
 -- Currently used to make the hover cursor of the machine be special
 -- only if the room is active at the moment (e.g. not being edited)
 function Machine:finalize(room)
