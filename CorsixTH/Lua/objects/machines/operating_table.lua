@@ -37,12 +37,50 @@ end
 object.idle_animations = copy_north_to_south {
   north = 2314,
 }
+object.multi_usage_animations = {
+  ["Surgeon - Gowned Male Patient"] = copy_north_to_south {
+    north = {
+      begin_use = 2318,
+      begin_use_2 = 2322,
+      in_use = 2348,
+      finish_use = 2346,
+      finish_use_2 = 2338,
+      secondary = {
+        begin_use = 416,
+        finish_use_2 = 416,
+      },
+    },
+  },
+  ["Surgeon - Gowned Female Patient"] = copy_north_to_south {
+    north = {
+      begin_use = 2318,
+      begin_use_2 = 2932,
+      in_use = 2938,
+      finish_use = 2936,
+      finish_use_2 = 2338,
+      secondary = {
+        begin_use = 2886,
+        finish_use_2 = 2886,
+      },
+    },
+  },
+}
+
+local anim_mgr = TheApp.animation_manager
+-- Slight hack: there seems to be no animation for a patient just lying on the
+-- table, so we take a duplicate of the animation for the patient leaving the
+-- table, and force its length to be 1, hence causing just the first frame to
+-- be used.
+anim_mgr:setAnimLength(2348, 1)
+anim_mgr:setAnimLength(2938, 1)
 
 object.orientations = {
   north = {
     use_position = {-1, -2},
+    use_position_secondary = {-2, -1},
     footprint = {
-      {-1, -1, only_passable = true}, {-1, -2, only_passable = true},
+      {-2, -1, only_passable = true},
+      {-1, -1}, {-1, -2, only_passable = true},
       {0, -1}, {0, -2},
       {1, 0}, {1, -2},  {1, -1, only_passable = true},
     },
@@ -51,8 +89,10 @@ object.orientations = {
   },
   east = {
     use_position = {-2, -1},
+    use_position_secondary = {-1, -2},
     footprint = {
-      {-1, -1, only_passable = true}, {-2, -1, only_passable = true},
+      {-1, -2, only_passable = true},
+      {-1, -1}, {-2, -1, only_passable = true},
       {-1, 0}, {-2, 0},
       {0, 1}, {-2, 1},  {-1, 1, only_passable = true},
     },
@@ -63,5 +103,13 @@ object.orientations = {
 
 class "OperatingTable" (Machine)
 OperatingTable:slaveMixinClass()
+
+function OperatingTable:machineUsed(...)
+  if self.master then
+    -- Is slave. Do nothing.
+  else
+    return Machine.machineUsed(self, ...)
+  end
+end
 
 return object

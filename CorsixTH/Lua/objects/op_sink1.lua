@@ -26,6 +26,7 @@ object.thob = 33
 object.name = _S.object.op_sink1
 object.tooltip = _S.tooltip.objects.op_sink1
 object.ticks = false
+object.walk_in_to_use = true
 object.build_cost = 100
 object.locked_to_wall = {
   -- permittable wall -> orientation
@@ -38,6 +39,9 @@ local function copy_north_to_south(t)
 end
 object.idle_animations = copy_north_to_south {
   north = 2354,
+}
+object.usage_animations = copy_north_to_south {
+  north = { in_use = { Surgeon = 2362 } },
 }
 
 object.orientations = {
@@ -58,9 +62,6 @@ object.orientations = {
     slave_position = {-1, 0},
   },
 }
-
--- 2374
--- 2362
 
 class "OperatingSink" (Object)
 OperatingSink:slaveMixinClass()

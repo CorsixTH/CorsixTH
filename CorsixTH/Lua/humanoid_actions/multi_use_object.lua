@@ -282,7 +282,7 @@ local function action_multi_use_object_start(action, humanoid)
     -- Setting must_happen is slightly dangerous (though required in some
     -- situations), as the multi-usage cannot be sure to happen until the
     -- secondary user is present (at which point, must_happen is always set).
-    if action.todo_interrupt then
+    if action.todo_interrupt and not action.no_truncate then
       humanoid:finishAction(action)
       return
     end

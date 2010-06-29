@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "surgeon_screen"
+object.class = "SurgeonScreen"
 object.thob = 35
 object.name = _S.object.surgeon_screen
 object.tooltip = _S.tooltip.objects.surgeon_screen
@@ -36,5 +37,12 @@ object.orientations = {
     use_position = "passable",
   },
 }
+
+class "SurgeonScreen" (Object)
+function SurgeonScreen:SurgeonScreen(...)
+  self:Object(...)
+  self.num_green_outfits = 2
+  self.num_white_outfits = 0
+end
 
 return object

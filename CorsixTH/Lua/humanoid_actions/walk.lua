@@ -18,7 +18,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
+local action_walk_interrupt
+action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
+  if action.truncate_only_on_high_priority and not high_priority then
+    action.on_interrupt = action_walk_interrupt
+    return
+  end
+  
   -- Truncate the remainder of the path
   for j = #action.path_x, action.path_index + 1, -1 do
     action.path_x[j] = nil

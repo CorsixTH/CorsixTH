@@ -43,11 +43,25 @@ local normal_state = permanent"action_use_screen_normal_state"( function(humanoi
   return finish(humanoid)
 end)
 
+local surgical_state = permanent"action_use_screen_surgical_state"( function(humanoid)
+  local screen = humanoid.user_of
+  if screen.num_green_outfits > 0 then
+    if screen.num_white_outfits > 0 then
+      screen:setAnimation(2776)
+    else
+      screen:setAnimation(2772)
+    end
+  else
+    screen:setAnimation(2774)
+  end
+  return finish(humanoid)
+end)
+
 local function action_use_screen_start(action, humanoid)
   local screen = action.object
   local class = humanoid.humanoid_class
   local anim, when_done
-  local is_surgical -- TODO
+  local is_surgical = not not screen.num_green_outfits
   if class == "Elvis Patient" then
     anim, when_done = 946, finish
     humanoid:setType "Standard Male Patient"
@@ -61,27 +75,55 @@ local function action_use_screen_start(action, humanoid)
     humanoid:setType "Standard Female Patient"
     anim, when_done = 2844, normal_state
   elseif class == "Gowned Male Patient" then
-    anim, when_done = 4768, gowned_male__standard_male -- TODO
+    humanoid:setType "Standard Male Patient"
+    anim, when_done = 4768, finish
   elseif class == "Gowned Female Patient" then
-    anim, when_done = 4770, gowned_female__standard_female -- TODO
+    humanoid:setType "Standard Female Patient"
+    anim, when_done = 4770, finish
   elseif class == "Standard Male Patient" then
     if is_surgical then
-      anim, when_done = 4760, standard_male__gowned_male -- TODO
+      humanoid:setType "Gowned Male Patient"
+      anim, when_done = 4760, finish
     else
       humanoid:setType "Stripped Male Patient"
       anim, when_done = 1048, patient_clothes_state
     end
   elseif class == "Standard Female Patient" then
     if is_surgical then
-      anim, when_done = 4762, standard_female__gowned_female -- TODO
+      humanoid:setType "Gowned Female Patient"
+      anim, when_done = 4762, finish
     else
       humanoid:setType "Stripped Female Patient"
       anim, when_done = 2848, patient_clothes_state
     end
   elseif class == "Doctor" then
-    -- TODO (2778, 2780, 2782, 2784)
+    humanoid:setType "Surgeon"
+    when_done = surgical_state
+    if screen.num_white_outfits > 0 then
+      if screen.num_green_outfits > 1 then
+        anim = 2780
+      else
+        anim = 2784
+      end
+    else
+      anim = 2782
+    end
+    screen.num_green_outfits = screen.num_green_outfits - 1
+    screen.num_white_outfits = screen.num_white_outfits + 1
   elseif class == "Surgeon" then
-    -- TODO (2790, 2792, 2794, 2796)
+    humanoid:setType "Doctor"
+    when_done = surgical_state
+    if screen.num_green_outfits > 0 then
+      if screen.num_white_outfits > 1 then
+        anim = 2796
+      else
+        anim = 2790
+      end
+    else
+      anim = 2792
+    end
+    screen.num_green_outfits = screen.num_green_outfits + 1
+    screen.num_white_outfits = screen.num_white_outfits - 1
   else
     error(class .. " trying to use screen")
   end
@@ -99,6 +141,11 @@ local function action_use_screen_start(action, humanoid)
   screen:setUser(humanoid)
   humanoid.user_of = screen
   action.must_happen = true
+  
+  if action.todo_interrupt == "high" then
+    humanoid:setTimer(nil)
+    when_done(humanoid)
+  end
 end
 
 return action_use_screen_start

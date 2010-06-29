@@ -35,8 +35,15 @@ end
 object.idle_animations = copy_north_to_south {
   north = 2310,
 }
-
--- 4890
+object.usage_animations = copy_north_to_south {
+  north = {
+    begin_use = { Surgeon = 2306 },
+    begin_use_2 = { Surgeon = 2330 },
+    in_use = { Surgeon = {4890, 2326} },
+    finish_use = { Surgeon = 2334 },
+    finish_use_2 = { Surgeon = 2342 },
+  }
+}
 
 object.orientations = {
   north = {

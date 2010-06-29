@@ -332,7 +332,7 @@ function UIPlaceObjects:setActiveIndex(index)
   
   if object.locked_to_wall then
     local wx, wy, wo = self:calculateBestPlacementPosition(0, 0)
-    self:setBlueprintCell(wx, wy)
+    self.object_cell_x, self.object_cell_y = wx, wy
     self:setOrientation(wo)
   else
     self.object_orientation = "west"
