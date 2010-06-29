@@ -29,13 +29,20 @@ object.ticks = false
 object.build_cost = 5000
 object.build_preview_animation = 5080
 object.default_strength = 8
-object.crashed_animation = 5116 -- TODO
+object.crashed_animation = 3392
 local function copy_north_to_south(t)
   t.south = t.north
   return t
 end
 object.idle_animations = copy_north_to_south {
   north = 2314,
+}
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      Handyman = 660,
+    },
+  },
 }
 object.multi_usage_animations = {
   ["Surgeon - Gowned Male Patient"] = copy_north_to_south {

@@ -75,12 +75,16 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   self.world:registerRoomBuildCallback(callback)
 end
 
+function Machine:setCrashedAnimation()
+  self:setAnimation(self.object_type.crashed_animation)
+end
+
 function Machine:machineUsed(room)
   self:updateDynamicInfo()
   local threshold = self.times_used/self.strength
   if threshold > 0.85 then
     room:crashRoom()
-    self:setAnimation(self.object_type.crashed_animation)
+    self:setCrashedAnimation()
     self.hover_cursor = nil
     self:clearDynamicInfo()
     local window = self.world.ui:getWindow(UIMachine)
@@ -153,6 +157,9 @@ end
 function Machine.slaveMixinClass(class_method_table)
   local slave_to_master, master_to_slave = Object.slaveMixinClass(class_method_table)
   master_to_slave("finalize")
+  master_to_slave("setCrashedAnimation")
+  slave_to_master("createRepairAction")
+  slave_to_master("getRepairTile")
   return slave_to_master, master_to_slave
 end
 

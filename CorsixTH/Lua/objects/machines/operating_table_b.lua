@@ -27,7 +27,7 @@ object.tooltip = _S.tooltip.objects.operating_table
 object.ticks = false
 object.build_cost = 0
 object.default_strength = 8
-object.crashed_animation = 5116 -- TODO
+object.crashed_animation = 0
 local function copy_north_to_south(t)
   t.south = t.north
   return t

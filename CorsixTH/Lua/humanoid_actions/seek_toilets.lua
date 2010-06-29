@@ -37,7 +37,10 @@ local function seek_toilets_action_start(action, humanoid)
     humanoid:setNextAction(task)
     -- Unexpect the patient from a possible destination room.
     if humanoid.next_room_to_visit then
-      humanoid.next_room_to_visit.door.queue:unexpect(humanoid)
+      local queue = humanoid.next_room_to_visit.door.queue
+      if queue then
+        queue:unexpect(humanoid)
+      end
       humanoid:updateDynamicInfo("")
     end
     humanoid:finishAction()
