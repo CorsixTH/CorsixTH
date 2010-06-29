@@ -64,6 +64,7 @@ function UIProgressReport:UIProgressReport(ui)
     local res_value = active[crit].win_value
     active[crit].visible = true
     if active[crit].lose_value then
+      active[crit].red = false
       if hospital[crit] < active[crit].boundary then
         active[crit].red = true
         res_value = active[crit].lose_value
