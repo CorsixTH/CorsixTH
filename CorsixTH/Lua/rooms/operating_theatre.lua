@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "operating_theatre"
-room.class = "OperatringTheatreRoom"
+room.class = "OperatingTheatreRoom"
 room.name = _S.rooms_short.operating_theatre
 room.tooltip = _S.tooltip.rooms.operating_theatre
 room.build_cost = 8000
@@ -43,14 +43,14 @@ room.required_staff = {
   Surgeon = 2,
 }
 
-class "OperatringTheatreRoom" (Room)
+class "OperatingTheatreRoom" (Room)
 
-function OperatringTheatreRoom:OperatringTheatreRoom(...)
+function OperatingTheatreRoom:OperatingTheatreRoom(...)
   self:Room(...)
   self.staff_member_set = {}
 end
 
-function OperatringTheatreRoom:roomFinished()
+function OperatingTheatreRoom:roomFinished()
   -- Find the X-ray viewer
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy, 2^30)
@@ -82,7 +82,7 @@ local function wait_for_object(humanoid, obj, must_happen)
   }
 end
 
-function OperatringTheatreRoom:commandEnteringStaff(staff)
+function OperatingTheatreRoom:commandEnteringStaff(staff)
   self.staff_member_set[staff] = true
   
   -- Put surgeon outfit on 
@@ -116,7 +116,7 @@ function OperatringTheatreRoom:commandEnteringStaff(staff)
   return Room.commandEnteringStaff(self, staff)
 end
 
-function OperatringTheatreRoom:commandEnteringPatient(patient)
+function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- Turn on x-ray viewer
   self.x_ray_viewer:setLayer(11, 2)
   
@@ -205,7 +205,7 @@ function OperatringTheatreRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
-function OperatringTheatreRoom:onHumanoidLeave(humanoid)
+function OperatingTheatreRoom:onHumanoidLeave(humanoid)
   self.staff_member_set[humanoid] = nil
   -- Turn off x-ray viewer
   if class.is(humanoid, Patient) then
@@ -214,7 +214,7 @@ function OperatringTheatreRoom:onHumanoidLeave(humanoid)
   return Room.onHumanoidLeave(self, humanoid)
 end
 
-function OperatringTheatreRoom:canHumanoidEnter(humanoid)
+function OperatingTheatreRoom:canHumanoidEnter(humanoid)
   local can = Room.canHumanoidEnter(self, humanoid)
   if can and class.is(humanoid, Patient) then
     -- Patients can only enter once all doctors are in surgeon clothes
