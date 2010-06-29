@@ -237,34 +237,52 @@ end
 
 function Room:onHumanoidEnter(humanoid)
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+  -- If this humanoid for some strange reason happens to enter a non-active room,
+  -- just leave.
+  if not self.is_active then
+    if class.is(humanoid, Patient) then
+        self:makePatientLeave(humanoid)
+        humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+      else
+        humanoid:setNextAction(self:createLeaveAction())
+        humanoid:queueAction({name = "meander"})
+      end
+  end
   if humanoid.humanoid_class == "Handyman" then
     -- Handymen can always enter a room (to repair stuff, water plants, etc.)
     self.humanoids[humanoid] = true
-    -- Check for machines which need repair
-    local machine
-    for object in pairs(self.world:findAllObjectsNear(self:getEntranceXY(true))) do
-      if class.is(object, Machine) and object.times_used ~= 0 then
-        machine = object
-      end
-    end
-    if machine then
-      for _, action in ipairs(humanoid.action_queue) do
-        if action.object == machine then
-          -- Already on the way to repair the machine
-          machine = nil
+    -- Check for machines which need repair or plants which need watering if
+    -- the handyman didn't arrive as a part of a job
+    if not humanoid.action_queue[1].is_job then
+      local machine, plant
+      
+      for object in pairs(self.world:findAllObjectsNear(self:getEntranceXY(true))) do
+        if class.is(object, Machine) and object.times_used ~= 0 then
+          machine = object
           break
+        elseif class.is(object, Plant) and object:needsWatering() then
+         plant = object
         end
       end
       if machine then
         machine:setRepairing(humanoid)
         local x, y = machine:getRepairTile()
-        humanoid:queueAction({
+        humanoid:setNextAction({
           name = "walk",
           x = x,
           y = y,
+          is_job = machine,
         }, 1)
-        humanoid:queueAction(machine:createRepairAction(humanoid), 2)
-        humanoid:queueAction(self:createLeaveAction(), 3)
+        humanoid:queueAction(machine:createRepairAction(humanoid))
+        local leave_action = self:createLeaveAction()
+        leave_action.is_job = machine
+        humanoid:queueAction(leave_action)
+        humanoid:queueAction{name = "meander"}
+      elseif plant then
+        plant:createHandymanActions(humanoid)
+      else -- Found nothing of interest in this room, so leave it.
+        humanoid:setNextAction(self:createLeaveAction())
+        humanoid:queueAction{name = "meander"}
       end
     end
     return
@@ -309,8 +327,8 @@ end
 
 -- Tests whether this room is awaiting more staff to be able to do business
 function Room:isWaitingToGetStaff(staff)
-  if self.door.queue:patientSize() == 0 
-  and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false) then
+  if not self.is_active or (self.door.queue:patientSize() == 0 
+  and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false)) then
     return false
   end
   return self:staffFitsInRoom(staff, true)
@@ -653,6 +671,10 @@ end
 function Room:tryToEdit()
   local i = 0
   -- Tell all humanoids that they should leave
+  -- If someone is entering the room right now they are also counted.
+  if self.door.user and self.door.user.action_queue[1].is_entering then
+    i = 1
+  end
   for humanoid, _ in pairs(self.humanoids) do
     if not humanoid.action_queue[1].is_leaving then
       if class.is(humanoid, Patient) then

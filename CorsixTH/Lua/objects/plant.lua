@@ -186,17 +186,25 @@ function Plant:callForWatering()
       local candidate = self.world:getSuitableStaffCandidates(lx, ly, "Handyman", 10, "watering")[1]
       if candidate then
         self:createHandymanActions(candidate.entity)
-      else
-        self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
       end
+    end
+    if self.current_state > 1 then
+      self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
     end
   end
 end
 
---! When a handyman is about to be summoned this function queues the actions necessary
+--! When a handyman is about to be summoned this function queues the complete set of actions necessary,
+--  including entering and leaving any room involved. It also queues a meander action at the end.
+--  Note that if there are more plants that need watering inside the room he will continue to water 
+--  those too before leaving.
 --!param handyman (Staff) The handyman that is about to get the actions.
 function Plant:createHandymanActions(handyman)
   local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
+  if not ux or not uy then
+    -- The plant cannot be reached, let it die.
+    return
+  end
   local in_a_room = false
   if self:getRoom() then
     in_a_room = true
@@ -204,25 +212,43 @@ function Plant:createHandymanActions(handyman)
   self.reserved_for = handyman
   -- Many plants in the vicinity may ask almost at the same time, make sure
   -- this handyman is occupied
-  handyman.action_queue[1].is_job = handyman
-  
-  handyman:setNextAction{name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
-
-  handyman:queueAction{
+  handyman.action_queue[1].is_job = self
+  print(ux .. " " .. uy)
+  local action = {name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
+  local water_action = {
     name = "use_object", 
     object = self, 
-    watering_plant = true, 
-    dx = ux - self.tile_x, 
-    dy = uy - self.tile_y,
+    watering_plant = true,
     must_happen = true,
     is_job = self,
+    after_use = --[[persistable:plant_more_plants]] function()
+      if in_a_room then
+        for object in pairs(self.world:findAllObjectsNear(self.tile_x, self.tile_y)) do
+          if object.object_type.id == "plant" then
+            if object:needsWatering() and not object.reserved_for then
+              object:createHandymanActions(handyman)
+              break
+            end
+          end
+        end
+      end
+    end,
   }
-  if in_a_room then
-    local action = self:getRoom():createLeaveAction()
-    action.is_job = self
-    handyman:queueAction(action)
+  if handyman.action_queue[1].object then
+    -- He's already using an object, he must be in a room!
+    handyman:queueAction(action, 1)
+    handyman:queueAction(water_action, 2)
+  else
+    handyman:setNextAction(action)
+    handyman:queueAction(water_action)
+    if in_a_room then
+      local action = self:getRoom():createLeaveAction()
+      action.is_job = self
+      handyman:queueAction(action)
+    end
+    handyman:queueAction{name = "meander"}
   end
-  handyman:queueAction{name = "meander"}
+  
 end
 
 --! When a handyman should go to the plant he should approach it from the closest reachable tile.
@@ -230,7 +256,7 @@ end
 --!param from_y (integer) The y coordinate of tile to calculate from.
 function Plant:getBestUsageTileXY(from_x, from_y)
   local lx, ly = self.tile_x, self.tile_y + 1
-  local rx, ry = lx, ly
+  local rx, ry
   local shortest_path = 1000
   local world = self.world
   local direction = "north"
@@ -272,7 +298,7 @@ function Plant:tickDay()
     if self.days_left < 1 then
       self.days_left = days_between_states
       self:setNextState()
-    elseif self.days_left < 7 or self.current_state > 0 then
+    elseif not self.reserved_for and (self.days_left < 7 or self.current_state > 0) then
       self:callForWatering()
     end
   end

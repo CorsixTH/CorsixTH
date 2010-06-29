@@ -113,9 +113,30 @@ function Machine:getRepairTile()
 end
 
 function Machine:createRepairAction(handyman)
+  if self.approaching_handyman then
+    local fixer = self.approaching_handyman
+    -- Remove the is_job flag for the other handyman to show
+    -- that someone else is on it.
+    fixer.action_queue[1].is_job = nil
+    if fixer:getRoom() then
+      fixer:setNextAction(fixer:getRoom():createLeaveAction())
+      fixer:queueAction{name = "meander"}
+    else
+      fixer:setNextAction{name = "meander"}
+    end
+    fixer:setDynamicInfoText("")
+  end
+  self.approaching_handyman = handyman
   local --[[persistable:handyman_repair_after_use]] function after_use()
     self:machineRepaired(self:getRoom())
     handyman:setDynamicInfoText("")
+    -- Let's check if any plants need watering in here.
+    for object in pairs(self.world:findAllObjectsNear(self.tile_x, self.tile_y)) do
+      if class.is(object, Plant) and object:needsWatering() and not object.reserved_for then
+        object:createHandymanActions(handyman)
+        break
+      end
+    end
   end
   return {
     name = "use_object",
@@ -132,6 +153,7 @@ end
 
 function Machine:machineRepaired(room)
   room.needs_repair = nil
+  self.approaching_handyman = nil
   local str = self.strength
   if self.times_used/str > 0.55 then
     self.strength = str - 1

@@ -486,11 +486,13 @@ function Object:onDestroy()
   end
   if self.reserved_for then
     self.reserved_for:handleRemovedObject(self)
+    self.reserved_for = nil
   end
   if self.reserved_for_list then
     for i, reserver in ipairs(self.reserved_for_list) do
       reserver:handleRemovedObject(self)
     end
+    self.reserved_for_list = {}
   end
   Entity.onDestroy(self)
 end

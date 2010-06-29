@@ -1229,23 +1229,24 @@ function World:callForStaff(room, repair_object, urgent)
       local x, y = repair_object:getRepairTile()
       -- Enter the room
       local action1 = room:createEnterAction()
-      action1.is_job = handyman
+      action1.is_job = repair_object
       -- There may be many tasks for the handyman that need attention almost at the same time, make sure
       -- this handyman really is occupied.
-      handyman.action_queue[1].is_job = handyman
+      handyman.action_queue[1].is_job = repair_object
       
       handyman:setNextAction(action1)
       -- Repair the object
-      handyman:queueAction{name = "walk", x = x, y = y, is_job = handyman}
+      handyman:queueAction{name = "walk", x = x, y = y, is_job = repair_object}
       handyman:queueAction(repair_object:createRepairAction(handyman))
       -- Leave the room
       local action2 = room:createLeaveAction()
-      action2.is_job = handyman
+      action2.is_job = repair_object
       handyman:queueAction(action2)
       -- Resume idling
       handyman:queueAction{name = "meander"}
       handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
         :format(repair_object.object_type.name))
+      return true
     else
       -- Different messages depending on if any handyman has been hired yet or not.
       if self.hospitals[1]:hasStaffOfCategory("Handyman") then
@@ -1253,6 +1254,10 @@ function World:callForStaff(room, repair_object, urgent)
       else
         self.ui.adviser:say(_S(28, 34))
       end
+      -- Activate the room again since no handymen could be found
+      repair_object:setRepairing(false)
+      room.needs_repair = nil
+      room:tryAdvanceQueue()
     end
   else
     local missing = room:getMissingStaff(room:getRequiredStaffCriteria(), true)
