@@ -27,7 +27,8 @@ SOFTWARE.
 #include <new>
 #ifdef _MSC_VER
 #pragma comment(lib, "OpenGL32")
-#else
+#endif
+#ifndef _WIN32
 struct RECT
 {
     long top, bottom, left, right;
