@@ -117,7 +117,7 @@ function World:World(app)
   for _, object_type in ipairs(self.object_types) do
     self.object_id_by_thob[object_type.thob] = object_type.id
   end
-  self:makeAvailableStaff()
+  self:makeAvailableStaff(0)
   self:calculateSpawnTiles()
   
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
@@ -351,20 +351,27 @@ function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
 
-function World:makeAvailableStaff()
+local staff_to_make = {
+  {class = "Doctor",       name = "doctor",       conf = "Doctors"      },
+  {class = "Nurse",        name = "nurse",        conf = "Nurses"       },
+  {class = "Handyman",     name = "handyman",     conf = "Handymen"     },
+  {class = "Receptionist", name = "receptionist", conf = "Receptionists"},
+}
+function World:makeAvailableStaff(month)
+  local conf_entry = 0
+  local conf = self.map.level_config.staff_levels
+  while conf[conf_entry + 1].Month and conf[conf_entry + 1].Month <= month do
+    conf_entry = conf_entry + 1
+  end
+  conf = conf[conf_entry]
   self.available_staff = {}
-  for class, local_string in pairs {
-    Doctor = _S.staff_class.doctor,
-    Nurse = _S.staff_class.nurse,
-    Handyman = _S.staff_class.handyman,
-    Receptionist = _S.staff_class.receptionist,
-    } do
+  for _, info in ipairs(staff_to_make) do
     local group = {}
-    for i = 1, math.random(3, 12) do
-      group[i] = StaffProfile(class, local_string)
-      group[i]:randomise()
+    for i = 1, conf[info.conf] do
+      group[i] = StaffProfile(info.class, _S.staff_class[info.name])
+      group[i]:randomise(self)
     end
-    self.available_staff[class] = group
+    self.available_staff[info.class] = group
   end
 end
 
@@ -672,7 +679,7 @@ end
 
 -- Called immediately prior to the ingame month changing.
 function World:onEndMonth()
-  self:makeAvailableStaff()
+  self:makeAvailableStaff((self.year - 1) * 12 + self.month)
   self.autosave_next_tick = true
   for _, entity in ipairs(self.entities) do
     if entity.checkForDeadlock then

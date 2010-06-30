@@ -55,7 +55,7 @@ local function our_concat(t)
   return result
 end
 
-function StaffProfile:randomise()
+function StaffProfile:randomise(world)
   self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
     self.name = self.name .. part_table.__random
@@ -70,7 +70,7 @@ function StaffProfile:randomise()
     self.is_psychiatrist = math.random() < 0.25 and 1.0 or 0
     self.is_researcher   = math.random() < 0.20 and 1.0 or 0
   end
-  self.wage = self:getFairWage()
+  self.wage = self:getFairWage(world)
   -- Vary wage by +/- 15%
   self.wage = math.floor(self.wage * (math.random(850, 1150) / 1000) + 0.5)
   local desc_table1, desc_table2
@@ -135,36 +135,35 @@ function StaffProfile:parseSkillLevel()
   self.is_consultant = self.skill >= consultant_skill and (self.skill - consultant_skill) / (1 - consultant_skill) or nil
 end
 
-local skill_multiplier = {
-  Handyman     = 100,
-  Receptionist = 150,
-  Nurse        = 200,
-  Doctor       = 300,
+local conf_id = {
+  Nurse = 0,
+  Doctor = 1,
+  Handyman = 2,
+  Receptionist = 3,
 }
 
-local ability_base = {
-  is_surgeon      = 30,
-  is_psychiatrist = 30,
-  is_researcher   = 30,
-  is_consultant   = 10,
+local ability_conf_id = {
+  is_junior       = 3,
+  is_doctor       = 4,
+  is_surgeon      = 5,
+  is_psychiatrist = 6,
+  is_consultant   = 7,
+  is_researcher   = 8,
 }
 
-local ability_multipler = {
-  is_surgeon      = 1.30, -- +30% for fully trained surgeon
-  is_psychiatrist = 1.25, -- +25% for fully trained psychiatrist
-  is_researcher   = 1.25, -- +25% for fully trained researcher
-  is_consultant   = 1.50, -- +50% for 100% skill (reducing linearlly to +0% at ~90% skill)
-  is_junior       = 0.90, -- -10% for   0% skill (reducing linearlly to -0% at ~40% skill)
-}
-
-function StaffProfile:getFairWage()
-  local wage = 20 + self.skill * skill_multiplier[self.humanoid_class]
-  local mult = 1
-  for name, multiplier in pairs(ability_multipler) do
-    if self[name] then
-      wage = wage + (ability_base[name] or 0)
-      mult = mult * ((multiplier - 1) * self[name] + 1)
+function StaffProfile:getFairWage(world)
+  local level_config = world.map.level_config
+  local wage = level_config.staff[conf_id[self.humanoid_class]].MinSalary
+  wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor
+  if self.humanoid_class == "Doctor" then
+    for name, id in pairs(ability_conf_id) do
+      if self[name] then
+        wage = wage + level_config.gbv.SalaryAdd[id]
+      end
+    end
+    if not self.is_junior and not self.is_consultant then
+      wage = wage + level_config.gbv.SalaryAdd[ability_conf_id.is_doctor]
     end
   end
-  return wage * mult
+  return wage
 end

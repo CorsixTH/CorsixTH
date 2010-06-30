@@ -407,7 +407,7 @@ end
 function Staff:requestRaise()
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
-    local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
+    local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
     -- At least for now, staff are timid, and only ask for raises 1/5th of the time
     if math.random(1, 5) ~= 1 or amount <= 0 then
       self.timer_until_raise = nil
