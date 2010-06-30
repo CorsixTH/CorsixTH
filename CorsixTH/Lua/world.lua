@@ -360,7 +360,7 @@ local staff_to_make = {
 function World:makeAvailableStaff(month)
   local conf_entry = 0
   local conf = self.map.level_config.staff_levels
-  while conf[conf_entry + 1].Month and conf[conf_entry + 1].Month <= month do
+  while conf[conf_entry + 1] and conf[conf_entry + 1].Month <= month do
     conf_entry = conf_entry + 1
   end
   conf = conf[conf_entry]
