@@ -164,6 +164,7 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
     Handyman = {},
     Receptionist = {},
   }
+  staff_members.Surgeon = staff_members.Doctor
   for _, staff in ipairs(hosp.staff) do
     local list = staff_members[staff.humanoid_class]
     list[#list + 1] = staff
