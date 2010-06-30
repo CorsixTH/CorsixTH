@@ -45,6 +45,12 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     return m_pSurface != NULL;
 }
 
+bool THRenderTarget::setScaleFactor(float fScale)
+{
+    // Unlikely to ever be implemented
+    return false;
+}
+
 const char* THRenderTarget::getLastError()
 {
     return SDL_GetError();

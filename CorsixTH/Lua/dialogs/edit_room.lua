@@ -782,7 +782,13 @@ end
 function UIEditRoom:draw(canvas, ...)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
+  local zoom = self.ui.zoom_factor
+  if canvas:scale(zoom) then
+    x = x / zoom
+    y = y / zoom
+  end
   self.cell_outline:draw(canvas, 2, x - 32, y)
+  canvas:scale(1)
   
   UIPlaceObjects.draw(self, canvas, ...)
 end

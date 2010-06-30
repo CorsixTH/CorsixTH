@@ -101,6 +101,7 @@ public: // External API
     void setCursor(THCursor* pCursor);
     bool setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
+    bool setScaleFactor(float fScale);
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.
@@ -123,6 +124,9 @@ protected:
     IDirect3DDevice9 *m_pDevice;
     THDX9_Vertex *m_pVerticies;
     IDirect3DTexture9 *m_pWhiteTexture;
+    IDirect3DTexture9 *m_pZoomRenderTexture;
+    IDirect3DSurface9 *m_pZoomRenderSurface;
+    IDirect3DSurface9 *m_pOriginalBackBuffer;
     const char *m_sLastError;
     THCursor* m_pCursor;
     THClipRect m_rcClip;
@@ -134,6 +138,8 @@ protected:
     int m_iNonOverlapping;
     int m_iWidth;
     int m_iHeight;
+    int m_iZoomTextureSize;
+    float m_fZoomScale;
     bool m_bIsWindowed;
     bool m_bIsHardwareCursorSupported;
     bool m_bIsCursorInHardware;
@@ -141,7 +147,9 @@ protected:
     uint16_t m_aiVertexIndicies[THDX9_INDEX_BUFFER_LENGTH];
 
     bool _initialiseDeviceSettings();
+    bool _setProjectionMatrix(int iWidth, int iHeight);
     void _drawVerts(size_t iFirst, size_t iLast);
+    void _flushZoomBuffer();
 };
 
 class THPalette

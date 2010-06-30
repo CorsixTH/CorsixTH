@@ -106,6 +106,7 @@ public: // External API
     void setCursor(THCursor* pCursor);
     void setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
+    bool setScaleFactor(float fScale);
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.

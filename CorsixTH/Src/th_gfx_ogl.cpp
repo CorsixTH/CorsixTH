@@ -130,6 +130,12 @@ void THRenderTarget::setGLProjection(GLdouble fWidth, GLdouble fHeight)
     glTranslated(0.5, 0.5, 0.0);
 }
 
+bool THRenderTarget::setScaleFactor(float fScale)
+{
+    // Not yet implemented
+    return false;
+}
+
 const char* THRenderTarget::getLastError()
 {
     return SDL_GetError();

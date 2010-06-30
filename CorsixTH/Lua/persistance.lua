@@ -237,13 +237,13 @@ function LoadGame(data)
   local cursor = TheApp.ui.cursor
   TheApp.ui.cursor = nil
   TheApp.ui:setCursor(cursor)
-  TheApp.ui:onChangeResolution()
   -- The menu bar is a permanent object, so its ui field needs updating to
   -- the depersisted ui value.
   TheApp.ui.menu_bar.ui = TheApp.ui
   TheApp.ui.menu_bar:onChangeLanguage()
   --end, persist.errcatch)
   TheApp:afterLoad()
+  TheApp.ui:onChangeResolution()
 end
 
 function LoadGameFile(filename)

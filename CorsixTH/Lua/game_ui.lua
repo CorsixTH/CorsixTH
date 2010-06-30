@@ -58,6 +58,32 @@ function GameUI:GameUI(app, local_hospital)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
   self.prevent_edge_scrolling = false
+  self.zoom_factor = 1
+end
+
+function GameUI:setZoom(factor)
+  if factor <= 0 then
+    return
+  end
+  local old_factor = self.zoom_factor
+  if not factor or math.abs(factor - 1) < 0.001 then
+    factor = 1
+  end
+  local scr_w = self.app.config.width
+  local scr_h = self.app.config.height
+  local refx, refy = self.cursor_x or scr_w / 2, self.cursor_y or scr_h / 2
+  local cx, cy = self:ScreenToWorld(refx, refy)
+  self.zoom_factor = factor
+  self.visible_diamond = self.makeVisibleDiamond(scr_w / factor, scr_h / factor)
+  if self.visible_diamond.w < 0 or self.visible_diamond.h < 0 then
+    self:setZoom(old_factor)
+    return false
+  else
+    cx, cy = self.app.map:WorldToScreen(cx, cy)
+    self:scrollMap(cx - self.screen_offset_x - refx / factor,
+                   cy - self.screen_offset_y - refy / factor)
+    return true
+  end
 end
 
 function GameUI:draw(canvas)
@@ -66,7 +92,14 @@ function GameUI:draw(canvas)
   if not self.in_visible_diamond then
     canvas:fillBlack()
   end
-  app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
+  local zoom = self.zoom_factor
+  if canvas:scale(zoom) then
+    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width / zoom, config.height / zoom, 0, 0)
+    canvas:scale(1)
+  else
+    self:setZoom(1)
+    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
+  end
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
   if self.simulated_cursor then
@@ -78,7 +111,7 @@ function GameUI:onChangeResolution()
   -- Recalculate scrolling bounds
   local scr_w = self.app.config.width
   local scr_h = self.app.config.height
-  self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
+  self.visible_diamond = self.makeVisibleDiamond(scr_w / self.zoom_factor, scr_h / self.zoom_factor)
   self:scrollMap(0, 0)
   
   UI.onChangeResolution(self)
@@ -194,14 +227,16 @@ function GameUI:onKeyUp(code)
 end
 
 function GameUI:ScreenToWorld(x, y)
-  return self.app.map:ScreenToWorld(self.screen_offset_x + x, self.screen_offset_y + y)
+  local zoom = self.zoom_factor
+  return self.app.map:ScreenToWorld(self.screen_offset_x + x / zoom, self.screen_offset_y + y / zoom)
 end
 
 function GameUI:WorldToScreen(x, y)
+  local zoom = self.zoom_factor
   x, y = self.app.map:WorldToScreen(x, y)
   x = x - self.screen_offset_x
   y = y - self.screen_offset_y
-  return x, y
+  return x * zoom, y * zoom
 end
 
 function GameUI:getScreenOffset()
@@ -209,8 +244,9 @@ function GameUI:getScreenOffset()
 end
 
 function GameUI:onCursorWorldPositionChange()
-  local x = self.screen_offset_x + self.cursor_x
-  local y = self.screen_offset_y + self.cursor_y
+  local zoom = self.zoom_factor
+  local x = self.screen_offset_x + self.cursor_x / zoom
+  local y = self.screen_offset_y + self.cursor_y / zoom
   local entity = nil
   if not self:hitTest(self.cursor_x, self.cursor_y) then
     entity = self.app.map.th:hitTestObjects(x, y)
@@ -288,7 +324,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     repaint = true
   end
   if self.buttons_down.middle then
-    self:scrollMap(-dx, -dy)
+    local zoom = self.zoom_factor
+    self:scrollMap(-dx / zoom, -dy / zoom)
     repaint = true
   end
   
@@ -359,6 +396,11 @@ function GameUI:onMouseMove(x, y, dx, dy)
 end
 
 function GameUI:onMouseUp(code, x, y)
+  if code == 4 or code == 5 then
+    -- Mouse wheel
+    self.app.world:adjustZoom(4.5 - code)
+  end
+  
   local button = self.button_codes[code]
   if button == "right" and not _MAP_EDITOR and highlight_x then
     local window = self:getWindow(UIPatient)
@@ -440,8 +482,10 @@ end
 local abs, sqrt_5, floor = math.abs, math.sqrt(1 / 5), math.floor
 
 function GameUI:scrollMapTo(x, y)
-  return self:scrollMap(x - self.screen_offset_x - self.app.config.width / 2,
-                        y - self.screen_offset_y - self.app.config.height / 2)
+  local zoom = 2 * self.zoom_factor
+  local config = self.app.config
+  return self:scrollMap(x - self.screen_offset_x - config.width / zoom,
+                        y - self.screen_offset_y - config.height / zoom)
 end
 
 function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
@@ -700,6 +744,14 @@ function GameUI:setEditRoom(enabled)
     self:setCursor(self.default_cursor)
     self.edit_room = false
   end
+end
+
+function GameUI:afterLoad(old, new)
+  if old < 16 then
+    self.zoom_factor = 1
+  end
+  
+  return UI:afterLoad(old, new)
 end
 
 function GameUI:showBriefing()

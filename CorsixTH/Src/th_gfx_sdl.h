@@ -92,6 +92,9 @@ public: // External API
     //! Take a screenshot and save it as a bitmap
     bool takeScreenshot(const char* sFile);
 
+    //! Set the amount by which future draw operations are scaled
+    bool setScaleFactor(float fScale);
+
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.

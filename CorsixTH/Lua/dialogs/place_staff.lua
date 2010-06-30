@@ -79,7 +79,14 @@ function UIPlaceStaff:draw(canvas)
     (self.allow_in_rooms or flag_cache.roomId == 0) and 
     (not room and true or not room.crashed)
   self.anim:setFlag(valid and 0 or flag_altpal)
-  self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
+  local zoom = self.ui.zoom_factor
+  if canvas:scale(zoom) then
+    local x, y = self.ui:WorldToScreen(self.tile_x, self.tile_y)
+    self.anim:draw(canvas, x / zoom, y / zoom)
+    canvas:scale(1)
+  else
+    self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
+  end
   self.ui:tutorialStep(2, valid and 7 or 6, valid and 6 or 7)
   self.ui:tutorialStep(4, valid and 5 or 4, valid and 4 or 5)
 end

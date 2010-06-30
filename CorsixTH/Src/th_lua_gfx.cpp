@@ -601,6 +601,14 @@ static int l_surface_set_clip(lua_State *L)
     return 1;
 }
 
+static int l_surface_scale(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_pushboolean(L, pCanvas->setScaleFactor(static_cast<float>(
+        luaL_checknumber(L, 2))) ? 1 : 0);
+    return 1;
+}
+
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 {
     // Palette
@@ -662,5 +670,6 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_get_clip, "getClip");
     luaT_setfunction(l_surface_set_clip, "setClip");
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
+    luaT_setfunction(l_surface_scale, "scale");
     luaT_endclass();
 }

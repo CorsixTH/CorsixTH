@@ -30,6 +30,7 @@ SOFTWARE.
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <assert.h>
+#include <math.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "D3D9")
 #pragma warning(disable: 4996) // Deprecated fopen
@@ -49,6 +50,9 @@ THRenderTarget::THRenderTarget()
     m_pDevice = NULL;
     m_pVerticies = NULL;
     m_pWhiteTexture = NULL;
+    m_pZoomRenderTexture = NULL;
+    m_pZoomRenderSurface = NULL;
+    m_pOriginalBackBuffer = NULL;
     m_sLastError = "";
     setClipRect(NULL);
     m_iVertexCount = 0;
@@ -57,12 +61,31 @@ THRenderTarget::THRenderTarget()
     m_iNonOverlapping = 0;
     m_iWidth = 0;
     m_iHeight = 0;
+    m_iZoomTextureSize = 0;
+    m_fZoomScale = 0.0f;
     m_pCursor = NULL;
     m_bHasLostDevice = false;
 }
 
 THRenderTarget::~THRenderTarget()
 {
+    if(m_pOriginalBackBuffer != NULL)
+    {
+        if(m_pDevice != NULL)
+            m_pDevice->SetRenderTarget(0, m_pOriginalBackBuffer);
+        m_pOriginalBackBuffer->Release();
+        m_pOriginalBackBuffer = NULL;
+    }
+    if(m_pZoomRenderSurface != NULL)
+    {
+        m_pZoomRenderSurface->Release();
+        m_pZoomRenderSurface = NULL;
+    }
+    if(m_pZoomRenderTexture != NULL)
+    {
+        m_pZoomRenderTexture->Release();
+        m_pZoomRenderTexture = NULL;
+    }
     if(m_pWhiteTexture != NULL)
     {
         m_pWhiteTexture->Release();
@@ -312,23 +335,138 @@ bool THRenderTarget::_initialiseDeviceSettings()
         return false;
     }
 
-    float fWidth = (float)m_iWidth;
-    float fHeight = (float)m_iHeight;
+    return _setProjectionMatrix(m_iWidth, m_iHeight);
+}
 
-    // Change the meaning of the identity matrix to the matrix required to make
-    // world space identical to screen space.
-    mtxIdentity.m[0][0] = 2.0f / fWidth;
-    mtxIdentity.m[1][1] = -2.0f / fHeight;
-    mtxIdentity.m[3][0] = -1.0f - (1.0f / fWidth);
-    mtxIdentity.m[3][1] =  1.0f + (1.0f / fHeight);
+bool THRenderTarget::_setProjectionMatrix(int iWidth, int iHeight)
+{
+    float fWidth = (float)iWidth;
+    float fHeight = (float)iHeight;
 
-    if(m_pDevice->SetTransform(D3DTS_PROJECTION, &mtxIdentity) != D3D_OK)
+    D3DMATRIX mtxWorldToScreen = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+
+    mtxWorldToScreen.m[0][0] = 2.0f / fWidth;
+    mtxWorldToScreen.m[1][1] = -2.0f / fHeight;
+    mtxWorldToScreen.m[3][0] = -1.0f - (1.0f / fWidth);
+    mtxWorldToScreen.m[3][1] =  1.0f + (1.0f / fHeight);
+
+    if(m_pDevice->SetTransform(D3DTS_PROJECTION, &mtxWorldToScreen) != D3D_OK)
     {
         m_sLastError = "Could not set DirectX projection transform matrix";
         return false;
     }
 
     return true;
+}
+
+void THRenderTarget::_flushZoomBuffer()
+{
+    if(m_pOriginalBackBuffer == NULL)
+    {
+        // No zoom buffer in use
+        return;
+    }
+
+    // Restore original render settings
+    m_pDevice->SetRenderTarget(0, m_pOriginalBackBuffer);
+    _setProjectionMatrix(m_iWidth, m_iHeight);
+    m_pOriginalBackBuffer->Release();
+    m_pOriginalBackBuffer = NULL;
+
+    // Draw zoom buffer onto screen (the scaling here performs the actual
+    // zooming).
+    float fFactor = m_fZoomScale * static_cast<float>(m_iZoomTextureSize);
+#define SetVertexData(n, x_, y_) \
+    pVerticies[n].x = (float)x_; \
+    pVerticies[n].y = (float)y_; \
+    pVerticies[n].z = 0.0f; \
+    pVerticies[n].colour = D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF); \
+    pVerticies[n].u = (float)x_ / fFactor; \
+    pVerticies[n].v = (float)y_ / fFactor
+
+    THDX9_Vertex *pVerticies = allocVerticies(4, m_pZoomRenderTexture);
+    SetVertexData(0, 0, 0);
+    SetVertexData(1, m_iWidth, 0);
+    SetVertexData(2, m_iWidth, m_iHeight);
+    SetVertexData(3, 0, m_iHeight);
+#undef SetVertexData
+    m_pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE2X);
+    flushSprites();
+    m_pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+}
+
+bool THRenderTarget::setScaleFactor(float fScale)
+{
+    flushSprites();
+    _flushZoomBuffer();
+
+    if(0.999 <= fScale && fScale <= 1.001)
+    {
+        // Effectively back to no scaling, so nothing more to do
+        return true;
+    }
+
+    // Calculate "virtual screen size" and round up to a power of 2 (as
+    // textures need to be powers of 2)
+    if(fScale <= 0.0f)
+        return false;
+    float fVirtualSize = static_cast<float>(max(m_iWidth, m_iHeight)) / fScale;
+    unsigned int iZoomTextureSize = 1 << static_cast<unsigned int>(
+        ceil(logf(fVirtualSize) / logf(2)));
+    if(iZoomTextureSize == 0) // Catch integer overflow
+        return false;
+
+    // Create the render texture
+    if(m_iZoomTextureSize != iZoomTextureSize)
+    {
+        if(m_pZoomRenderSurface)
+        {
+            m_pZoomRenderSurface->Release();
+            m_pZoomRenderSurface = NULL;
+        }
+        if(m_pZoomRenderTexture)
+        {
+            m_pZoomRenderTexture->Release();
+            m_pZoomRenderTexture = NULL;
+        }
+        m_iZoomTextureSize = 0;
+        if(m_pDevice->CreateTexture(iZoomTextureSize, iZoomTextureSize, 1,
+            D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8,
+            D3DPOOL_DEFAULT, &m_pZoomRenderTexture, NULL) != D3D_OK)
+        {
+            return false;
+        }
+        if(m_pZoomRenderTexture->GetSurfaceLevel(0, &m_pZoomRenderSurface)
+            != D3D_OK)
+        {
+            return false;
+        }
+        m_iZoomTextureSize = iZoomTextureSize;
+    }
+
+    // Set device to render to the zoom texture (for pixel-art like in TH, it
+    // looks much nicer to have all sprites rendered pixel-perfectly into the
+    // zoom texture, and then scale the zoom texture, as compared to zooming
+    // each sprite as it is drawn directly onto the screen).
+    if(m_pDevice->GetRenderTarget(0, &m_pOriginalBackBuffer) != D3D_OK)
+        return false;
+    if(m_pDevice->SetRenderTarget(0, m_pZoomRenderSurface) != D3D_OK)
+    {
+        m_pDevice->SetRenderTarget(0, m_pOriginalBackBuffer);
+        m_pOriginalBackBuffer->Release();
+        m_pOriginalBackBuffer = NULL;
+        return false;
+    }
+    m_pDevice->Clear(0, NULL, D3DCLEAR_TARGET,
+        D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00), 1.0f, 0);
+    m_fZoomScale = fScale;
+    m_iZoomTextureSize = iZoomTextureSize;
+
+    return _setProjectionMatrix(iZoomTextureSize, iZoomTextureSize);
 }
 
 const char* THRenderTarget::getLastError()
@@ -412,6 +550,17 @@ bool THRenderTarget::startFrame()
     }
     if(m_bHasLostDevice)
     {
+        if(m_pZoomRenderSurface)
+        {
+            m_pZoomRenderSurface->Release();
+            m_pZoomRenderSurface = NULL;
+        }
+        if(m_pZoomRenderTexture)
+        {
+            m_pZoomRenderTexture->Release();
+            m_pZoomRenderTexture = NULL;
+        }
+        m_iZoomTextureSize = 0;
         if(m_pDevice->TestCooperativeLevel() != D3DERR_DEVICENOTRESET)
             return false;
         D3DPRESENT_PARAMETERS oPresentParams = m_oPresentParams;
@@ -438,6 +587,7 @@ bool THRenderTarget::endFrame()
         return false;
     }
     flushSprites();
+    _flushZoomBuffer();
     m_pDevice->EndScene();
     switch(m_pDevice->Present(NULL, NULL, NULL, NULL))
     {

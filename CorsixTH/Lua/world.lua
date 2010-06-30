@@ -132,6 +132,19 @@ function World:setUI(ui)
   self.ui:addKeyHandler("3", self, self.setSpeed, "Normal")
   self.ui:addKeyHandler("4", self, self.setSpeed, "Max speed")
   self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
+  
+  self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
+end
+
+function World:adjustZoom(delta)
+  local scr_w = self.ui.app.config.width
+  local virtual_width = scr_w / (self.ui.zoom_factor or 1)
+  virtual_width = virtual_width - delta * 40
+  if virtual_width < 200 then
+    return false
+  end
+  return self.ui:setZoom(scr_w / virtual_width)
 end
 
 function World:initLevel(app)
@@ -1430,6 +1443,10 @@ function World:afterLoad(old, new)
   if old < 12 then
     self.animation_manager = TheApp.animation_manager
     self.anim_length_cache = nil
+  end
+  if old < 16 then
+    self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
+    self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
   end
   self.savegame_version = new
 end
