@@ -244,7 +244,7 @@ the primary tile, and its co-ordinates are returned.
 function Object:getRenderAttachTile()
   local x, y = self.tile_x, self.tile_y
   local offset = self.object_type.orientations
-  if offset then
+  if x and offset then
     offset = offset[self.direction].render_attach_position
     if self.split_anims then
       offset = offset[1]

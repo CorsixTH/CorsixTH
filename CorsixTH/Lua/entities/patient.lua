@@ -43,6 +43,10 @@ function Patient:onClick(ui, button)
     else
       ui:addWindow(UIPatient(ui, self))
     end
+  elseif self.user_of then
+    -- The object we're using is made invisible, as the animation contains both
+    -- the humanoid and the object. Hence send the click onto the object.
+    self.user_of:onClick(ui, button)
   end
   Humanoid.onClick(self, ui, button)
 end

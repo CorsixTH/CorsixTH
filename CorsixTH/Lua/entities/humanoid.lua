@@ -432,7 +432,11 @@ function Humanoid:handleRemovedObject(object)
         self:queueAction(replacement_action, i)
       end
       if i == 1 then
-        action:on_interrupt(self, true)
+        local on_interrupt = action.on_interrupt
+        action.on_interrupt = nil
+        if on_interrupt then
+          on_interrupt(action, self, true)
+        end
       else
         table.remove(self.action_queue, i)
         self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
