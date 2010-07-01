@@ -451,6 +451,8 @@ end
 function UIEditRoom:pickupItems()
   self.place_objects = false
   self.active_index = 0
+  self.object_cell_x = nil
+  self.object_cell_y = nil
   self:clearBlueprint()
 end
 
