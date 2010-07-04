@@ -35,6 +35,15 @@ SOFTWARE. --]]
 -- Creating a class instance:
 --  variable = Name(constructor_arguments)
 --
+-- Classes can also be made by "adopting" a table - taking an existing table
+-- and turning it into a class instance, rather than always creating a new
+-- table when the constructor is called. To enable this, put "{}" after the
+-- class declaration, as in:
+--  class "NameWhichAdopts" {}
+-- Then the first argument to the constructor is treated as a table to turn
+-- into an instance of the class, as in:
+--  variable = NameWhichAdopts{named_constructor_argument = 42, another = 43}
+--
 -- Using a class instance:
 --  variable:method(arguments)
 -- OR
@@ -48,15 +57,21 @@ SOFTWARE. --]]
 local setmetatable, getmetatable, type
     = setmetatable, getmetatable, type
 
-local function define_class(name, super)
+local function define_class(name, super, adopts_self)
   local mt = {}
   local methods = {}
   local methods_mt = {}
   
   local function new_class(methods, ...)
-    local self = setmetatable({}, mt)
     local constructor = methods[name]
-    constructor(self, ...)
+    local self
+    if adopts_self and ... then
+      self = setmetatable(..., mt)
+      constructor(...)
+    else
+      self = setmetatable({}, mt)
+      constructor(self, ...)
+    end
     return self
   end
   
@@ -74,13 +89,24 @@ end
 strict_declare_global "class"
 class = destrict(function(_, name)
   define_class(name)
+  local adopts_self = false
+  local super = nil
   
-  return function(super)
-    if super == nil then
-      error "Superclass not defined at subclass definition"
+  local function extend(arg)
+    if type(arg) == "table" and next(arg) == nil then
+      -- {} decorator
+      adopts_self = true
+    else
+      -- (Superclass) decorator
+      if arg == nil then
+        error "Superclass not defined at subclass definition"
+      end
+      super = arg
     end
-    define_class(name, super)
+    define_class(name, super, adopts_self)
+    return extend
   end
+  return extend
 end)
 class = setmetatable({}, {__call = class})
 
@@ -109,12 +135,13 @@ function class.is(instance, class)
   return false
 end
 
--- class.superclass - Get the name of a class
+-- class.name - Get the name of a class
 -- For example:
 -- class "something"
 -- class.name(something) --> "something"
 function class.name(class)
-  return getmetatable(class).__class_name
+  local mt = getmetatable(class)
+  return mt and mt.__class_name
 end
 
 -- class.superclass - Get the superclass of a class
