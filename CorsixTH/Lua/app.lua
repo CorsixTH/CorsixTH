@@ -492,8 +492,21 @@ function App:run()
   end
   
   self.running = true
+  do
+    local num_iterations = 0
+    self.resetInfiniteLoopChecker = function()
+      num_iterations = 0
+    end
+    debug.sethook(co, function()
+      num_iterations = num_iterations + 1
+      if num_iterations == 100 then
+        error("Suspected infinite loop", 2)
+      end
+    end, "", 1e7)
+  end
   coroutine.resume(co, self)
   local e, where = SDL.mainloop(co)
+  debug.sethook(co, nil)
   self.running = false
   if e ~= nil then
     if where then
@@ -519,6 +532,11 @@ function App:run()
       local handler = self.eventHandlers[self.last_dispatch_type]
       local entity = self.world.current_tick_entity
       self.world.current_tick_entity = nil
+      if class.is(entity, Patient) then
+        self.ui:addWindow(UIPatient(self.ui, entity))
+      elseif class.is(entity, Staff) then
+        self.ui:addWindow(UIStaff(self.ui, entity))
+      end
       self.ui:addWindow(UIConfirmDialog(self.ui,
         "An error has occured while running the timer handler - see the log "..
         "window for details. Would you like to attempt a recovery?",
@@ -545,6 +563,7 @@ local done_no_handler_warning = {}
 function App:dispatch(evt_type, ...)
   local handler = self.eventHandlers[evt_type]
   if handler then
+    self:resetInfiniteLoopChecker()
     self.last_dispatch_type = evt_type
     return handler(self, ...)
   else
@@ -759,13 +778,14 @@ function App:loadLuaFolder(dir, no_results, append_to)
         else
           if no_results then
             print("Warning: " .. dir .. file .. " returned a value:", result)
+          else
+            if type(result) == "table" and result.id then
+              results[result.id] = result
+            elseif type(result) == "function" then
+              results[file:match"(.*)%."] = result
+            end
+            results[#results + 1] = result
           end
-          if type(result) == "table" and result.id then
-            results[result.id] = result
-          elseif type(result) == "function" then
-            results[file:match"(.*)%."] = result
-          end
-          results[#results + 1] = result
         end
       end
     end
