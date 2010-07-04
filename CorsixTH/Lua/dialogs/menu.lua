@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
+local TH = require "TH"
 
 --! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)
@@ -168,22 +169,9 @@ function UIMenuBar:drawMenu(menu, canvas)
   local panel_sprites_draw = panel_sprites.draw
   local x, y, w, h = menu.x, menu.y, menu.width, menu.height
   canvas:nonOverlapping()
-  panel_sprites_draw(panel_sprites, canvas, 1, x, y)
-  for x = x + 10, x + w - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 2, x, y)
-  end
-  for y = y + 6, y + h - 6, 4 do
-    panel_sprites_draw(panel_sprites, canvas, 4, x, y)
-    for x = x + 10, x + w - 10, 10 do
-      panel_sprites_draw(panel_sprites, canvas, 5, x, y)
-    end
-  end
-  local btmy = y + h - 6
-  panel_sprites_draw(panel_sprites, canvas, 7, x, btmy)
-  for x = x + 10, x + w - 10, 10 do
-    panel_sprites_draw(panel_sprites, canvas, 8, x, btmy)
-  end
+  menu.render_list:draw(canvas, x, y)
   canvas:nonOverlapping(false)
+  local btmy = y + h - 6
   panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)  
   for y = y + 6, y + h - 6, 4 do
     panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
@@ -433,6 +421,26 @@ function UIMenuBar:calculateMenuSize(menu)
     menu.width = w
     menu.height = h
     menu.has_size = self
+    local render_list = TH.spriteList()
+    menu.render_list = render_list
+    render_list:setSheet(self.panel_sprites)
+    
+    render_list:append(1, 0, 0)
+    for x = 10, w - 10, 10 do
+      render_list:append(2, x, 0)
+    end
+    for y = 6, h - 6, 4 do
+      render_list:append(4, 0, y)
+      for x = 10, w - 10, 10 do
+        render_list:append(5, x, y)
+      end
+    end
+    local btmy = h - 6
+    render_list:append(7, 0, btmy)
+    for x = 10, w - 10, 10 do
+      render_list:append(8, x, btmy)
+    end    
+    
   end
 end
 
@@ -672,7 +680,7 @@ function UIMenuBar:makeMenu(app)
       :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls, nil, function() return self.ui.transparent_walls end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
-      :appendItem(_S.menu_debug.make_debug_patient, function() self.ui.app.world:makeDebugPatient() end)
+      :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
       :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)
       :appendItem(_S.menu_debug.show_watch,         function() self.ui:addWindow(UIWatch(self.ui)) end)
