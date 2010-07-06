@@ -105,6 +105,13 @@ local function IdentifyClasses(tokens, globals)
     local class = LuaClass():setName(name):setParent(globals)
     ParseComments(tokens, j, class)
     local ib1, b1 = tokens_next(tokens, i)
+    if b1 and b1[1] == "{" then
+      local i2, t = tokens_next(tokens, ib1)
+      if t and t[1] == "}" then
+        -- TODO: Mark as adopting
+        ib1, b1 = tokens_next(tokens, i2)
+      end
+    end
     if b1 and b1[1] == "(" then
       local is, s = tokens_next(tokens, ib1)
       if s and s[2] == "identifier" then
