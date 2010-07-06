@@ -93,7 +93,7 @@ class = destrict(function(_, name)
   local super = nil
   
   local function extend(arg)
-    if type(arg) == "table" and next(arg) == nil then
+    if type(arg) == "table" and next(arg) == nil and not getmetatable(arg) then
       -- {} decorator
       adopts_self = true
     else
