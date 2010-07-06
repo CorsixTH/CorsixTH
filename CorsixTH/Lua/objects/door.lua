@@ -129,7 +129,9 @@ function Door:setAnimation(animation, flags)
 end
 
 function Door:closeDoor()
-  self.queue:rerouteAllPatients({name = "seek_room", room_type = self:getRoom().room_info.id})
+  self.queue:rerouteAllPatients(SeekRoomAction{
+    room_type = self:getRoom().room_info.id,
+  })
   self:clearDynamicInfo(nil)
   self.hover_cursor = nil
   self.queue = nil
@@ -143,7 +145,7 @@ function Door:checkForDeadlock()
     -- If the door is reserved for someone, then that person should either be
     -- at the front of the queue, or not in any queues at all.
     for _, action in ipairs(self.reserved_for.action_queue) do
-      if action.name == "queue" then
+      if class.is(action, QueueAction) then
         if action.queue ~= self.queue or self.queue[1] ~= self.reserved_for then
           self.reserved_for = nil
           self:getRoom():tryAdvanceQueue()

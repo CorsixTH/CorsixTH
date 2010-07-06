@@ -18,19 +18,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local action_knock_door_tick = permanent"action_knock_door_tick"( function(humanoid)
-  local door = humanoid.user_of
-  door:setUser(nil)
-  humanoid.user_of = nil
-  door:getRoom():tryAdvanceQueue()
-  humanoid:finishAction()
-end)
+--! Have a `Humanoid` knock on a `Door`.
+class "KnockDoorAction" {} (Action)
 
-local function action_knock_door_start(action, humanoid)
-  local direction = action.direction
+--!param ... Arguments for the base class constructor.
+function KnockDoorAction:KnockDoorAction(...)
+  self:Action(...)
+end
+
+function KnockDoorAction:canRemoveFromQueue(is_high_priority)
+  return (not self.is_active or is_high_priority) and
+    Action.canRemoveFromQueue(self, is_high_priority)
+end
+
+function KnockDoorAction:truncate(is_high_priority)
+  if is_high_priority then
+    self.humanoid:callTimer()
+  end
+end
+
+function KnockDoorAction:onFinish()
+  local door = self.humanoid.user_of
+  door:setUser(nil)
+  self.humanoid.user_of = nil
+  door:getRoom():tryAdvanceQueue()
+  
+  Action.onFinish(self)
+end
+
+function KnockDoorAction:onStart()
+  Action.onStart(self)
+  
+  local humanoid = self.humanoid  
+  local direction = self.direction
   local anims = humanoid.door_anims
-  local door = action.door
-  action.must_happen = true
+  local door = self.door
   local anim = anims.knock_north
   local flag_mirror = (direction == "west" or direction == "south") and 1 or 0
   if direction == "east" or direction == "south" then
@@ -38,10 +60,13 @@ local function action_knock_door_start(action, humanoid)
   end
   humanoid:setAnimation(anim, flag_mirror)
   humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y)
-  humanoid:setTimer(humanoid.world:getAnimLength(anim), action_knock_door_tick)
+  humanoid:setTimer(humanoid.world:getAnimLength(anim), humanoid.finishAction)
   humanoid.user_of = door
   door:setUser(humanoid)
   door.th:makeVisible()
 end
 
-return action_knock_door_start
+-- For compatibility
+permanent"action_knock_door_tick"(function(humanoid)
+  humanoid:finishAction()
+end)

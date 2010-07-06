@@ -221,7 +221,7 @@ end
 
 function UIPatient:viewQueue()
   for i, action in ipairs(self.patient.action_queue) do
-    if action.name == "queue" then
+    if class.is(action, QueueAction) then
       self.ui:addWindow(UIQueue(self.ui, action.queue))
       self.ui:playSound "selectx.wav"
       return
@@ -254,8 +254,7 @@ function UIPatient:guessDisease()
     return
   end
   patient:setDiagnosed(true)
-  patient:setNextAction({
-    name = "seek_room", 
+  patient:setNextAction(SeekRoomAction{
     room_type = patient.disease.treatment_rooms[1]
-  }, 1)
+  }--[[, 1]]) -- TODO: WTF is this "1" ?
 end

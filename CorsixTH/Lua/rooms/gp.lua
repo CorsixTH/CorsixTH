@@ -48,11 +48,11 @@ end
 function GPRoom:doStaffUseCycle(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "cabinet")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction{object = obj})
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction{x = ox, y = oy})
   local desk_use_time = math.random(7, 14)
-  humanoid:queueAction{name = "use_object",
+  humanoid:queueAction(UseObjectAction{
     object = obj,
     loop_callback = --[[persistable:gp_loop_callback]] function()
       desk_use_time = desk_use_time - 1
@@ -70,7 +70,7 @@ function GPRoom:doStaffUseCycle(humanoid)
         end
       end
     end,
-  }
+  })
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
@@ -82,7 +82,7 @@ end
 function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction{object = obj})
   self.max_times = 3
   return Room.commandEnteringPatient(self, humanoid)
 end
@@ -107,7 +107,9 @@ function GPRoom:dealtWithPatient(patient)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
     or #patient.available_diagnosis_rooms == 0 then
       patient:setDiagnosed(true)
-      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+      patient:queueAction(SeekRoomAction{
+        room_type = patient.disease.treatment_rooms[1]
+      })
       -- TODO: Temporary, until research is in the game. This is just so that something happens...
       for _, room in pairs(self.world.available_rooms) do
         if not patient.hospital.discovered_rooms[room] and room.id == patient.disease.treatment_rooms[1] then
@@ -139,15 +141,14 @@ function GPRoom:dealtWithPatient(patient)
     else
       self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
-      patient:queueAction{
-        name = "seek_room", 
+      patient:queueAction(SeekRoomAction{
         room_type = patient.available_diagnosis_rooms[next_room],
         diagnosis_room = next_room,
-      }
+      })
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction(MeanderAction{count = 2})
+    patient:queueAction(IdleAction())
   end
 
   -- Maybe the staff member can go somewhere else

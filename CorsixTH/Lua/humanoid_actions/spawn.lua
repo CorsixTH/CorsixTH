@@ -18,6 +18,18 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Have a `Humanoid` walk onto or off the map.
+class "SpawnAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function SpawnAction:SpawnAction(...)
+  self:Action(...)
+end
+
+function SpawnAction:canRemoveFromQueue(is_high_priority)
+  return false
+end
+
 local orient_opposite = {
   north = "south",
   west = "east",
@@ -32,19 +44,21 @@ local action_spawn_despawn = permanent"action_spawn_despawn"( function(humanoid)
   humanoid.world:destroyEntity(humanoid)
 end)
 
-local function action_spawn_start(action, humanoid)
+function SpawnAction:onStart()
+  local action = self
+  local humanoid = self.humanoid
+  Action.onStart(self)
+  
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)
   local x, y =  action.point.x,  action.point.y
   if action.mode == "despawn" and (humanoid.tile_x ~= x or humanoid.tile_y ~= y) then
-    humanoid:queueAction({
-      name = "walk",
+    humanoid:queueAction(WalkAction{
       x = action.point.x,
       y = action.point.y,
-      must_happen = action.must_happen,
+      no_truncate = true,
     }, 0)
     return
   end
-  action.must_happen = true
   
   local anims = humanoid.walk_anims
   local walk_dir = action.point.direction
@@ -82,5 +96,3 @@ local function action_spawn_start(action, humanoid)
   end
   humanoid:setTilePositionSpeed(x, y, pos_x, pos_y, speed_x, speed_y)
 end
-
-return action_spawn_start

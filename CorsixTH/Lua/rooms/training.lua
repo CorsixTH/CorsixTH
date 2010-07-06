@@ -61,9 +61,9 @@ end
 
 function TrainingRoom:doStaffUseCycle(humanoid)
   local projector, ox, oy = self.world:findObjectNear(humanoid, "projector")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction{x = ox, y = oy})
   local projector_use_time = math.random(20, 30)
-  humanoid:queueAction{name = "use_object",
+  humanoid:queueAction(UseObjectAction{
     object = projector,
     loop_callback = --[[persistable:training_loop_callback]] function()
       projector_use_time = projector_use_time - 1
@@ -72,9 +72,9 @@ function TrainingRoom:doStaffUseCycle(humanoid)
         if skeleton then
           -- TODO: Make a little more random
           humanoid:walkTo(ox, oy)
-          humanoid:queueAction{name = "use_object", object = skeleton}
-          humanoid:queueAction{name = "use_object", object = skeleton}
-          humanoid:queueAction{name = "use_object", object = skeleton}
+          humanoid:queueAction(UseObjectAction{object = skeleton})
+          humanoid:queueAction(UseObjectAction{object = skeleton})
+          humanoid:queueAction(UseObjectAction{object = skeleton})
           self:doStaffUseCycle(humanoid)
         else
           -- Consultant will just use the projector indefinitely.
@@ -85,7 +85,7 @@ function TrainingRoom:doStaffUseCycle(humanoid)
         projector_use_time = 0
       end
     end,
-  }
+  })
 end
 
 function TrainingRoom:commandEnteringStaff(humanoid)
@@ -103,24 +103,24 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         self:doStaffUseCycle(humanoid)
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction)
       end
     else
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
       if obj then
         obj.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
-        humanoid:queueAction{name = "use_object", object = obj}
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(UseObjectAction{object = obj})
+        humanoid:queueAction(MeanderAction)
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction)
       end
     end
   elseif humanoid.humanoid_class ~= "Handyman" then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(_S.rooms_long.training_room))
     humanoid:setNextAction(self:createLeaveAction())
-    humanoid:queueAction{name = "meander"}
+    humanoid:queueAction(MeanderAction)
     return
   end
 

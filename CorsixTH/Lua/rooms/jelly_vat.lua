@@ -49,7 +49,7 @@ end
 
 function JellyVatRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
@@ -59,19 +59,17 @@ function JellyVatRoom:commandEnteringPatient(patient)
   local orientation = moulder.object_type.orientations[moulder.direction]
   local pat_x, pat_y = moulder:getSecondaryUsageTile()
   
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{
-    name = "multi_use_object",
+  staff:walkTo(stf_x, stf_y)
+  patient:walkTo(pat_x, pat_y)
+  patient:queueAction(staff:queueAction(MultiUseObjectAction{
     object = moulder,
-    use_with = patient,
     invisible_phase_span = {-3, 4},
     after_use = --[[persistable:jelly_vat_after_use]] function()
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = moulder.direction == "north" and "west" or "north"}
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

@@ -49,7 +49,7 @@ function Staff:tick()
   end
 
   -- Picking staff members up doesn't tire them, it just tires the player.
-  if self.action_queue[1].name == "pickup" then
+  if self.is_picked_up then
     tiring = false
   end
   
@@ -124,9 +124,11 @@ function Staff:updateSkill(consultant, trait, amount)
     if old_profile.is_junior and not self.profile.is_junior then
       self.world.ui.adviser:say(_S.adviser.information.promotion_to_doctor)
     elseif not old_profile.is_consultant and self.profile.is_consultant then
+      -- This change can only occur while in a staff room, at which point there
+      -- are now two consultants in the room, so this new one should leave.
       self.world.ui.adviser:say(_S.adviser.information.promotion_to_consultant)
       self:setNextAction(self:getRoom():createLeaveAction())
-      self:queueAction{name = "meander"}
+      self:queueAction(MeanderAction)
     end
   end
 end
@@ -182,7 +184,7 @@ function Staff:onClick(ui, button)
       print("Fatigue: ", self.attributes["fatigue"])
     end
   elseif button == "right" then
-    self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
+    self:setNextAction(PickupAction{ui = ui}, true)
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -269,8 +271,8 @@ function Staff:checkIfNeedRest()
     if self.attributes["fatigue"] >= 0.9 then
       self:setMood("tired", "activate")
     end
-    -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
-    if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
+    -- If there's already a SeekStaffroomAction in the action queue, or staff is currently picked up, do nothing
+    if self.going_to_staffroom or self.is_picked_up then
       return
     end
     -- If no staff room exists, prevent further checks until one is built
@@ -294,7 +296,7 @@ function Staff:checkIfNeedRest()
       self.staffroom_needed = true
     else
       -- Finally, seek a staff room now
-      self:setNextAction{name = "seek_staffroom", must_happen = true}
+      self:setNextAction(SeekStaffroomAction)
     end
     -- No matter if the action has been set or staffroom_needed was set it will be
     -- handled - don't check in this function anymore.
@@ -311,7 +313,7 @@ function Staff:onPlaceInCorridor()
     notify_object:onOccupantChange(1)
   end
   
-  self:setNextAction{name = "meander"}
+  self:setNextAction(MeanderAction)
   if self.humanoid_class ~= "Receptionist" then
     return true
   end
@@ -322,8 +324,8 @@ function Staff:onPlaceInCorridor()
       obj.reserved_for = self
       self.associated_desk = obj
       local use_x, use_y = obj:getSecondaryUsageTile()
-      self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-      self:queueAction{name = "staff_reception", object = obj, must_happen = true}
+      self:walkTo(use_x, use_y)
+      self:queueAction(StaffReceptionAction{object = obj})
       return true
     end
   end)

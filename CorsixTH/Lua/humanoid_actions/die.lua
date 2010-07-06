@@ -18,6 +18,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Remove a `Humanoid` from the world in an abrupt (and comical) way - turning
+-- into an angel, or being assaulted by the grim reaper, and subsequently going
+-- to heaven or hell.
+class "DieAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function DieAction:DieAction(...)
+  self:Action(...)
+end
+
+function DieAction:canRemoveFromQueue(is_high_priority)
+  if self.is_active then
+    return false
+  else
+    return Action.canRemoveFromQueue(self, is_high_priority)
+  end
+end
+
 local action_die_tick; action_die_tick = permanent"action_die_tick"( function(humanoid)
   local action = humanoid.action_queue[1]
   local phase = action.phase
@@ -54,7 +72,11 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   end
 end)
 
-local function action_die_start(action, humanoid)
+function DieAction:onStart()
+  Action.onStart(self)
+  local action = self
+  local humanoid = self.humanoid
+  
   if math.random(0, 1) == 1 then
     humanoid.last_move_direction = "east"
   else
@@ -63,7 +85,6 @@ local function action_die_start(action, humanoid)
   local direction = humanoid.last_move_direction
   local anims = humanoid.die_anims
   assert(anims, "Error: no death animation for humanoid ".. humanoid.humanoid_class)
-  action.must_happen = true
   -- TODO: Right now the angel version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
@@ -81,5 +102,3 @@ local function action_die_start(action, humanoid)
   action.phase = 0
   humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
 end
-
-return action_die_start

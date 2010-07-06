@@ -18,6 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Keep a `Humanoid` amused whilst they wait for a `Room` or `Object`
+-- to become available for use.
+class "QueueAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function QueueAction:QueueAction(...)
+  self:Action(...)
+end
+
 local function get_direction(x, y, facing_x, facing_y)
   if facing_y < y then
     return "north"
@@ -31,87 +40,48 @@ local function get_direction(x, y, facing_x, facing_y)
   end
 end
 
-local function interrupt_head(humanoid, n)
-  while n > 1 do
-    local action = humanoid.action_queue[n]
-    if action.name == "use_object" then
-      -- Pull object usages out of the queue
-      if action.object and action.object.reserved_for == humanoid then
-        action.object.reserved_for = nil
-      end
-      table.remove(humanoid.action_queue, n)
-    else
-      -- Mark other actions as needing interruption
-      assert(action.must_happen)
-      action.todo_interrupt = true
+function QueueAction:findIndexInQueue()
+  local index = 1
+  local queue = self.humanoid.action_queue
+  while queue[index] do
+    if queue[index] == self then
+      return index
     end
-    n = n - 1
-  end
-  
-  local action = humanoid.action_queue[n]
-  assert(action.must_happen)
-  local on_interrupt = action.on_interrupt
-  if on_interrupt then
-    action.on_interrupt = nil
-    on_interrupt(action, humanoid)
-  end
-end
-
-local function action_queue_leave_bench(action, humanoid)
-  local index
-  for i, current_action in ipairs(humanoid.action_queue) do
-    assert(current_action ~= action)
-    if current_action.name == "use_object" then
-      if humanoid.action_queue[i + 1] == action then
-        interrupt_head(humanoid, i)
-        index = i
-        break
-      end
-    end
-  end
-  index = index + 1
-  while true do
-    local current_action = humanoid.action_queue[index]
-    if current_action == action then
-      return index - 1
-    end
-    index = index - 1
+    index = index + 1
   end
   error "Queue action not in action_queue"
 end
 
-local function action_queue_find_idle(action, humanoid)
-  local found_any = false
-  for i, current_action in ipairs(humanoid.action_queue) do
-    if current_action.name == "idle" then
-      found_any = true
-      if humanoid.action_queue[i + 1] == action then
-        return i
-      end
-    end
-  end
-  if found_any then
-    error "Proper idle not in action_queue"
-  else
-    error "Idle not in action_queue"
+local function insert_into_queue(humanoid, index, action, ...)
+  if action then
+    humanoid:queueAction(action, index)
+    return insert_into_queue(humanoid, index + 1, ...)
   end
 end
 
-local function action_queue_finish_standing(action, humanoid)
-  local index = action_queue_find_idle(action, humanoid)
-  interrupt_head(humanoid, index)
-  index = index + 1
-  while true do
-    local current_action = humanoid.action_queue[index]
-    if current_action == action then
-      return index - 1
-    end
-    index = index - 1
-  end
-  error "Queue action not in action_queue"
+function QueueAction:setProcrastination(...)
+  local action_index = self:findIndexInQueue() - 1
+  -- This new procrastination will cancel any existing bench visit (unless it
+  -- is a bench visit, in which case current_bench_distance will be set by the
+  -- caller after this call).
+  self.current_bench_distance = nil
+  -- Insert new procrastination
+  insert_into_queue(self.humanoid, action_index, ...)
+  -- Cancel old procrastination
+  self.humanoid:cancelActions(1, action_index)
 end
 
-local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
+function QueueAction:nudge()
+  self:onChangeQueuePosition()
+end
+
+function QueueAction:onChangeQueuePosition()
+  local action = self
+  local humanoid = self.humanoid
+  if not self.is_in_queue or self.postponed then
+    return
+  end
+
   -- Find out if we have to be standing up
   local must_stand = class.is(humanoid, Staff)
   local queue = action.queue
@@ -128,30 +98,24 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
     -- Try to find a bench
     local bench_max_distance
     if action:isStanding() then
-      bench_max_distance = 10
+      bench_max_distance = 16
     else
       bench_max_distance = action.current_bench_distance / 2
     end
     local bench, bx, by, dist = humanoid.world:getFreeBench(action.x, action.y, bench_max_distance)
     if bench then
-      local num_actions_prior
-      if action:isStanding() then
-        num_actions_prior = action_queue_finish_standing(action, humanoid)
-      else
-        num_actions_prior = action_queue_leave_bench(action, humanoid)
-      end
-      action.current_bench_distance = dist
-      humanoid:queueAction({
-        name = "walk",
-        x = bx,
-        y = by,
-        must_happen = true,
-      }, num_actions_prior)
-      humanoid:queueAction({
-        name = "use_object",
-        object = bench,
-        must_happen = true,
-      }, num_actions_prior + 1)
+      self:setProcrastination(
+        WalkAction {
+          x = bx,
+          y = by,
+          postponable = false,
+        },
+        UseObjectAction {
+          object = bench,
+        }
+      )
+      self.current_bench_distance = dist
+      self.is_sitting = true
       bench.reserved_for = humanoid
       return
     elseif not action:isStanding() then
@@ -180,116 +144,78 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
     facing_x, facing_y = humanoid.world:getIdleTile(action.x, action.y, standing_index - 1)
   end
   assert(facing_x and facing_y)
-  local idle_direction = get_direction(ix, iy, facing_x, facing_y)
-  if action:isStanding() then
-    local idle_index = action_queue_find_idle(action, humanoid)
-    humanoid.action_queue[idle_index].direction = idle_direction
-    humanoid:queueAction({
-      name = "walk",
+  self:setProcrastination(
+    WalkAction {
       x = ix,
       y = iy,
-      must_happen = true,
-    }, idle_index - 1)
-  else
-    action.current_bench_distance = nil
-    local num_actions_prior = action_queue_leave_bench(action, humanoid)
-    humanoid:queueAction({
-      name = "walk",
-      x = ix,
-      y = iy,
-      must_happen = true,
-    }, num_actions_prior)
-    humanoid:queueAction({
-      name = "idle",
-      direction = idle_direction,
-      must_happen = true,
-    }, num_actions_prior + 1)
+      postponable = false,
+    },
+    IdleAction {
+      direction = get_direction(ix, iy, facing_x, facing_y),
+    }
+  )
+end
+
+function QueueAction:isStanding()
+  return not self.current_bench_distance
+end
+
+function QueueAction:onLeaveQueue()
+  local action = self
+  local humanoid = self.humanoid
+  if not action.is_in_queue then
+    return
   end
-end)
-
-local action_queue_is_standing = permanent"action_queue_is_standing"( function(action)
-  return not action.current_bench_distance
-end)
-
-local action_queue_on_leave = permanent"action_queue_on_leave"( function(action, humanoid)
   action.is_in_queue = false
   if action.reserve_when_done then
     action.reserve_when_done.reserved_for = humanoid
+    action.reserve_when_done = nil
   end
-  for i, current_action in ipairs(humanoid.action_queue) do
-    if current_action == action then
-      interrupt_head(humanoid, i)
-      return
-    end
-  end
-  error "Queue action not in action_queue"
-end)
+  humanoid:cancelActions(1, self:findIndexInQueue()) 
+end
 
 -- While queueing one could get thirsty.
-local action_queue_get_soda = permanent"action_queue_get_soda"( 
-function(action, humanoid, machine, mx, my, fun_after_use)
-  local num_actions_prior
-  if action:isStanding() then
-    num_actions_prior = action_queue_finish_standing(action, humanoid)
+function QueueAction:postponeFor(action, index_in_queue)
+  if self.is_in_queue then
+    self.postponed = true
+    self:setProcrastination(action)
+    --machine:addReservedUser(humanoid)
   else
-    num_actions_prior = action_queue_leave_bench(action, humanoid)
+    self.humanoid:queueAction(action, index_in_queue - 1)
   end
-  
-  -- Callback function used after the drinks machine has been used.
-  local --[[persistable:action_queue_get_soda_after_use]] function after_use()
-    fun_after_use() -- Defined in patient:tickDay
-    action_queue_on_change_position(action, humanoid)
-  end
-  
-  -- Walk to the machine and then use it.
-  humanoid:queueAction({
-    name = "walk",
-    x = mx,
-    y = my,
-    must_happen = true,
-  }, num_actions_prior)
-  humanoid:queueAction({
-    name = "use_object",
-    object = machine,
-    after_use = after_use,
-    must_happen = true,
-  }, num_actions_prior + 1)
-  machine:addReservedUser(humanoid)
-  -- Insert an idle action so that change_position can do its work.
-  humanoid:queueAction({
-      name = "idle", 
-      direction = machine.direction,
-      must_happen = true,
-    }, num_actions_prior + 2)
-  -- Make sure noone thinks we're sitting down anymore.
-  action.current_bench_distance = nil
-end)
+  return true
+end
 
-local action_queue_interrupt = permanent"action_queue_interrupt"( function(action, humanoid)
-  if action.is_in_queue then
-    action.queue:removeValue(humanoid)
-  end
+function QueueAction:onRemoveFromQueue()
+  local action = self
+  local humanoid = self.humanoid
+  
   if action.reserve_when_done then
     if action.reserve_when_done.reserved_for == humanoid then
       action.reserve_when_done.reserved_for = nil
     end
   end
-  humanoid:finishAction()
-end)
+  if action.is_in_queue then
+    action.is_in_queue = false
+    action.queue:removeValue(humanoid)
+  end
+  
+  Action.onRemoveFromQueue(self)
+end
 
-local function action_queue_start(action, humanoid)
+function QueueAction:onStart()
+  Action.onStart(self)
+  
+  local action = self
+  local humanoid = self.humanoid
   local queue = action.queue
   
+  self.postponed = false
   if action.done_init then
+    self:onChangeQueuePosition()
     return
   end
   action.done_init = true
-  action.must_happen = true
-  action.on_interrupt = action_queue_interrupt
-  action.onChangeQueuePosition = action_queue_on_change_position
-  action.onLeaveQueue = action_queue_on_leave
-  action.onGetSoda = action_queue_get_soda
-  action.isStanding = action_queue_is_standing
   
   action.is_in_queue = true
   queue:unexpect(humanoid)
@@ -302,15 +228,9 @@ local function action_queue_start(action, humanoid)
     -- Make another call for staff just in case.
     humanoid.world:callForStaff(door.room)
   end
-  humanoid:queueAction({
-    name = "idle",
-    must_happen = true,
-  }, 0)
-  action:onChangeQueuePosition(humanoid)
+  action:onChangeQueuePosition()
   
   if queue.same_room_priority then
     queue.same_room_priority:getRoom():tryAdvanceQueue()
   end
 end
-
-return action_queue_start

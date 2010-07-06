@@ -20,6 +20,14 @@ SOFTWARE. --]]
 
 local TH = require "TH"
 
+--! Have a single `Humanoid` use a single `Object`.
+class "UseObjectAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function UseObjectAction:UseObjectAction(...)
+  self:Action(...)
+end
+
 local orient_mirror = {
   north = "west",
   west = "north",
@@ -206,7 +214,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     humanoid.user_of = object
     init_split_anims(object, humanoid)
   end
-  if phase ~= 0 or not action.prolonged_usage or not action.on_interrupt then
+  if phase ~= 0 or not action.prolonged_usage then
     phase = action_use_next_phase(action, phase)
   elseif action.loop_callback then
     action:loop_callback()
@@ -230,37 +238,86 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       -- Note that after_use is not called if the room has been destroyed!
       -- In that case both the patient, staff member(s) and
       -- the actual object are already dead.
-      if action.after_use then
-        action.after_use()
+      local after_use = action.after_use
+      if after_use then
+        action.after_use = nil
+        after_use()
       end
-      humanoid:finishAction(action)
+      if action.is_active then
+        -- NB: after_use may have caused us to already finish
+        humanoid:finishAction(action)
+      end
     end
   else
     action_use_phase(action, humanoid, phase)
   end
 end)
 
-local action_use_object_interrupt = permanent"action_use_object_interrupt"( function(action, humanoid, high_priority)
-  if high_priority then
-    local object = action.object
+
+function UseObjectAction:onFinish()
+  if self.false_start then
+    self.false_start = nil
+  else
+    local object = self.object
+    local humanoid = self.humanoid
     if humanoid.user_of then
       finish_using(object, humanoid)
     elseif object:isReservedFor(humanoid) then
       object:removeReservedUser(humanoid)
     end
     humanoid:setTimer(nil)
-    humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
-    humanoid:finishAction()
-  elseif not humanoid.timer_function then
-    humanoid:setTimer(1, action_use_object_tick)
+    humanoid:setTilePositionSpeed(self.old_tile_x, self.old_tile_y)
   end
-end)
+  
+  Action.onFinish(self)
+end
 
-local function action_use_object_start(action, humanoid)
+function UseObjectAction:onRemoveFromQueue()
+  local object = self.object
+  local humanoid = self.humanoid
+  if object:isReservedFor(humanoid) then
+    object:removeReservedUser(humanoid)
+  end
+  Action.onRemoveFromQueue(self)
+end
+
+function UseObjectAction:canRemoveFromQueue(is_high_priority)
+  if self.must_happen
+  or (self.is_active and not is_high_priority) then
+    return false
+  end
+  return Action.canRemoveFromQueue(self, is_high_priority)
+end
+
+function UseObjectAction:truncate()
+  self.prolonged_usage = false
+  if self.is_active and not self.humanoid.timer_function
+  and not self.has_truncated then
+    self.has_truncated = true
+    action_use_object_tick(self.humanoid)
+  end
+end
+
+function UseObjectAction:onStart()
+  Action.onStart(self)
+  local action = self
+  local humanoid = self.humanoid
+  
+  if self.walk_to_object then
+    local x, y = self.object:getUsageTile()
+    if x ~= humanoid.tile_x or y ~= humanoid.tile_y then
+      self.false_start = true
+      humanoid:queueAction(WalkAction{
+        x = x,
+        y = y,
+        truncate_only_on_high_priority = self.must_happen,
+      }, 0)
+      return
+    end
+  end
+  
   action.old_tile_x = humanoid.tile_x
   action.old_tile_y = humanoid.tile_y
-  action.on_interrupt = action_use_object_interrupt
-  action.must_happen = true
   local object = action.object
   local orient = object.direction
   local flags = 0
@@ -311,4 +368,6 @@ local function action_use_object_start(action, humanoid)
   action_use_phase(action, humanoid, action_use_next_phase(action, -100))
 end
 
-return action_use_object_start
+function UseObjectAction:handleRemovedObject(index_in_queue)
+  self.humanoid:cancelActions(index_in_queue, index_in_queue)
+end

@@ -63,6 +63,7 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/example.level -text
+CorsixTH/Lua/action.lua -text
 CorsixTH/Lua/dialogs/research_policy.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text
@@ -71,6 +72,8 @@ CorsixTH/Lua/diseases/kidney_beans.lua -text
 CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text
+CorsixTH/Lua/humanoid_actions/logic.lua -text
+CorsixTH/Lua/humanoid_actions/sync.lua -text
 CorsixTH/Lua/objects/machines/operating_table.lua -text
 CorsixTH/Lua/objects/machines/operating_table_b.lua -text
 CorsixTH/Lua/objects/op_sink1.lua -text

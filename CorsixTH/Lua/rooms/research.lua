@@ -63,8 +63,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
     staff:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
       local desk_use_time = math.random(7, 14)
-      staff:queueAction {
-        name = "use_object",
+      staff:queueAction(UseObjectAction {
         object = obj,
         loop_callback = --[[persistable:research_desk_loop_callback]] function(action)
           desk_use_time = desk_use_time - 1
@@ -72,26 +71,24 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
             action.prolonged_usage = false
           end
         end
-      }
+      })
     else
-      staff:queueAction {
-        name = "use_object",
+      staff:queueAction(UseObjectAction {
         object = obj,
         after_use = --[[persistable:research_obj_after_use]] function() end,
-      }
+      })
     end
   end
   
   local num_meanders = math.random(2, 4)
-  staff:queueAction {
-    name = "meander",
+  staff:queueAction(MeanderAction {
     loop_callback = --[[persistable:research_meander_loop_callback]] function(action)
       num_meanders = num_meanders - 1
       if num_meanders == 0 then
         self:doStaffUseCycle(staff)
       end
     end
-  }
+  })
 end
 
 function ResearchRoom:roomFinished()
@@ -125,14 +122,10 @@ function ResearchRoom:commandEnteringPatient(patient)
   local orientation = autopsy.object_type.orientations[autopsy.direction]
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{name = "idle", direction = "east"}
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "multi_use_object",
+  patient:queueAction(staff:queueAction(MultiUseObjectAction {
     object = autopsy,
-    use_with = patient,
     after_use = --[[persistable:autopsy_after_use]] function()
-      self:commandEnteringStaff(staff)
       -- Patient dies :(
       self:onHumanoidLeave(patient)
       if patient.hospital then
@@ -140,7 +133,9 @@ function ResearchRoom:commandEnteringPatient(patient)
       end
       patient.world:destroyEntity(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(LogicAction{self.doStaffUseCycle, self, staff})
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   return Room.commandEnteringPatient(self, patient)
 end
 

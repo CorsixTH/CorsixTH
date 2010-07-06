@@ -65,18 +65,14 @@ function OperatingTheatreRoom:roomFinished()
   return Room.roomFinished(self)
 end
 
-local function wait_for_object(humanoid, obj, must_happen)
-  return {
-    name = "idle",
-    must_happen = must_happen,
+local function wait_for_object(obj)
+  return IdleAction {
     loop_callback = --[[persistable:operatring_theatre_wait]] function(action)
-      if action.todo_interrupt or not obj.user then
-        humanoid:finishAction(action)
+      if not obj.user then
+        action.humanoid:finishAction(action)
       else
-        humanoid:queueAction({
-          name = "idle",
+        action.humanoid:queueAction(IdleAction{
           count = 5,
-          must_happen = must_happen,
         }, 0)
       end
     end,
@@ -89,30 +85,20 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   -- Put surgeon outfit on 
   local obj, ox, oy = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(ox, oy)
-  staff:queueAction(wait_for_object(staff, obj))
-  staff:queueAction{
-    name = "use_screen",
+  staff:queueAction(wait_for_object(obj))
+  local screen_action = staff:queueAction(UseScreenAction{
     object = obj,
     after_use = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
       self.staff_member_set[staff] = "ready"
       self:tryAdvanceQueue()
     end,
-  }
+  })
   
   -- Wait around for patients
-  local meander = {name = "meander", must_happen = true}
-  staff:queueAction(meander)
+  staff:queueAction(MeanderAction)
   
   -- Ensure that surgeons turn back into doctors when they leave
-  staff:queueAction{
-    name = "walk",
-    x = ox,
-    y = oy,
-    must_happen = true,
-    truncate_only_on_high_priority = true,
-    is_leaving = true,
-  }
-  staff:queueAction{name = "use_screen", object = obj, must_happen = true, is_leaving = true}
+  staff:queueAction(screen_action:makeUndoAction())
   
   return Room.commandEnteringStaff(self, staff)
 end
@@ -128,40 +114,23 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   
   -- Patient changes into surgical gown
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
-  patient:walkTo(sx, sy)
-  patient:queueAction{name = "use_screen", object = screen}
+  local screen_action = patient:setNextAction(UseScreenAction{object = screen})
   
   -- Meanwhile, surgeons wash their hands
   local obj, ox, oy = self.world:findObjectNear(surgeon1, "op_sink1")
-  surgeon1:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 1)
-  surgeon2:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 1)
-  surgeon1:queueAction(wait_for_object(surgeon1, obj, true), 2)
-  surgeon1:queueAction({name = "use_object", object = obj, must_happen = true}, 3)
-  surgeon2:queueAction(wait_for_object(surgeon2, obj, true), 2)
-  surgeon2:queueAction({name = "use_object", object = obj, must_happen = true}, 3)
-  
-  -- Syncronisation logic
-  local num_ready = {0}
-  local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)
-    action.on_interrupt = nil
-    if not action.done_ready then
-      num_ready[1] = num_ready[1] + 1
-      action.done_ready = true
-    end
-    if num_ready[1] == 3 then
-      surgeon1:finishAction()
-      surgeon2:finishAction()
-    end
-  end
+  surgeon1:queueAction(WalkAction{x = ox, y = oy}, 1)
+  surgeon2:queueAction(WalkAction{x = ox, y = oy}, 1)
+  surgeon1:queueAction(wait_for_object(obj), 2)
+  surgeon1:queueAction(UseObjectAction{object = obj}, 3)
+  surgeon2:queueAction(wait_for_object(obj), 2)
+  surgeon2:queueAction(UseObjectAction{object = obj}, 3)
 
   -- Patient and first surgeon walk over to the operating table
   obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table")
-  surgeon1:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 4)
-  surgeon1:queueAction({name = "idle", loop_callback = wait_for_ready, must_happen = true}, 5)
-  local multi_use = {
-    name = "multi_use_object",
+  surgeon1:queueAction(WalkAction{x = ox, y = oy}, 4)
+  local sync = surgeon1:queueAction(SyncAction, 5)
+  local multi_use = sync:addDependantAction(MultiUseObjectAction{
     object = obj,
-    use_with = patient,
     prolonged_usage = true,
     loop_callback = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
       -- dirty hack to make the truncated animation work
@@ -169,23 +138,19 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     end,
     after_use = --[[persistable:operatring_theatre_after_multi_use]] function()
       self:dealtWithPatient(patient)
-      patient:finishAction()
     end,
-    must_happen = true,
-    no_truncate = true,
-  }
-  surgeon1:queueAction(multi_use, 6)
+  })
   ox, oy = obj:getSecondaryUsageTile()
-  patient:queueAction{name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}
-  patient:queueAction{name = "idle", loop_callback = wait_for_ready, must_happen = true}
+  patient:queueAction(WalkAction{x = ox, y = oy})
+  sync = patient:queueAction(sync:duplicate())
+  sync:addDependantAction(multi_use:createSecondaryUserAction())
   
   -- Meanwhile, second surgeon walks over to other side of operating table
   obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
-  surgeon2:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 4)
-  surgeon2:queueAction({name = "idle", loop_callback = wait_for_ready, must_happen = true}, 5)
+  surgeon2:queueAction(WalkAction{x = ox, y = oy}, 4)
+  sync = surgeon2:queueAction(sync:duplicate(), 5)
   local num_loops = math.random(2, 5)
-  surgeon2:queueAction({
-    name = "use_object",
+  sync:addDependantAction(UseObjectAction{
     object = obj,
     loop_callback = --[[persistable:operatring_theatre_use_callback]] function(action)
       num_loops = num_loops - 1
@@ -196,12 +161,11 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     after_use = --[[persistable:operatring_theatre_after_use]] function()
       multi_use.prolonged_usage = false
     end,
-    must_happen = true,
-  }, 6)
+  })
   
   -- Patient changes out of the gown
-  patient:queueAction{name = "walk", x = sx, y = sy, must_happen = true, no_truncate = true}
-  patient:queueAction{name = "use_screen", object = screen, must_happen = true}
+  patient:queueAction(screen_action:makeUndoAction())
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

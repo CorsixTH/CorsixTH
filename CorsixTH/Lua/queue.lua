@@ -192,12 +192,17 @@ function Queue:remove(index)
     self.reported_size = self.reported_size - 1
   end
   value:setMood("queue", "deactivate")
+  local callbacks = self.callbacks[value]
+  if callbacks then
+    callbacks:onLeaveQueue(value)
+  end
   table.remove(self, index)
   self.callbacks[value] = nil
   for i = #self, index, -1 do
     local humanoid = self[i]
-    if humanoid.onAdvanceQueue then
-      humanoid:onAdvanceQueue(self, i - 1)
+    local callbacks = self.callbacks[humanoid]
+    if callbacks then
+      callbacks:onChangeQueuePosition(humanoid)
     end
   end
   return value
@@ -236,17 +241,15 @@ end
 -- Called when reception desk is destroyed. May be extended later to handle removed rooms, too.
 -- Update: Now also used when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
+  if class.name(action) then action = action() end
   for i, humanoid in ipairs(self) do
     -- slight delay so the desk is really destroyed before rerouting
-    humanoid:setNextAction({name = "idle", count = 1})
-    -- Don't queue the same action table, but clone it for each patient.
-    local clone = {} 
-    for k, v in pairs(action) do clone[k] = v end
-    humanoid:queueAction(clone)
+    humanoid:setNextAction(IdleAction{count = 1})
+    humanoid:queueAction(action:clone())
   end
   for humanoid in pairs(self.expected) do
-    humanoid:setNextAction({name = "idle", count = 1})
-    humanoid:queueAction(action)
+    humanoid:setNextAction(IdleAction{count = 1})
+    humanoid:queueAction(action:clone())
     self:unexpect(humanoid)
   end
 end

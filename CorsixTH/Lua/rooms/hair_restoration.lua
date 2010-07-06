@@ -49,7 +49,7 @@ end
 
 function HairRestorationRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
@@ -57,40 +57,31 @@ function HairRestorationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local hair_restorer, pat_x, pat_y = self.world:findObjectNear(patient, "hair_restorer")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
-
-  local --[[persistable:hair_restoration_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
-      patient:setNextAction{
-        name = "use_object",
+  
+  patient:walkTo(pat_x, pat_y)
+  staff:walkTo(stf_x, stf_y)
+  local sync = staff:queueAction(SyncAction)
+  local staff_usage = sync:addDependantAction(UseObjectAction{
+    object = console,
+  })
+  patient:queueAction(SyncAction{
+    master = sync,
+    dependant_actions = {
+      UseObjectAction {
         object = hair_restorer,
         loop_callback = --[[persistable:hair_restoration_loop_callback]] function(action)
           action.prolonged_usage = false
         end,
         after_use = --[[persistable:hair_restoration_after_use]] function()
           patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
-          staff:setNextAction{name = "meander"}
+          staff_usage.prolonged_usage = false
           self:dealtWithPatient(patient)
         end,
       }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
-    end
-  end
-
-  patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle", 
-    direction = hair_restorer.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
-  staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle", 
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+    }
+  })
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
 
   return Room.commandEnteringPatient(self, patient)
 end

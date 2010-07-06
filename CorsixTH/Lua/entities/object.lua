@@ -263,10 +263,21 @@ function Object:updateDynamicInfo()
   end
 end
 
+function Object:getUsageTile()
+  local x, y = self.tile_x, self.tile_y
+  local offset = self.object_type.orientations
+  if x and offset then
+    offset = offset[self.direction].use_position
+    x = x + offset[1]
+    y = y + offset[2]
+  end
+  return x, y
+end
+
 function Object:getSecondaryUsageTile()
   local x, y = self.tile_x, self.tile_y
   local offset = self.object_type.orientations
-  if offset then
+  if x and offset then
     offset = offset[self.direction].use_position_secondary
     x = x + offset[1]
     y = y + offset[2]

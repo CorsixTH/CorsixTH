@@ -18,6 +18,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Direct a `Patient` toward a particular type of treatment or diagnosis room.
+class "SeekRoomAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function SeekRoomAction:SeekRoomAction(...)
+  self:Action(...)
+end
+
 local function action_seek_room_find_room(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
@@ -159,8 +167,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- A patient with an undiscovered disease should never get here.
     assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
     humanoid:setDiagnosed(true)
-    humanoid:queueAction({
-      name = "seek_room", 
+    humanoid:queueAction(SeekRoomAction{
       room_type = humanoid.disease.treatment_rooms[1]
     }, 1)
     humanoid:finishAction()
@@ -168,19 +175,27 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
 end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
-  humanoid:setMood("patient_wait", "deactivate")
-  humanoid.world:unregisterRoomBuildCallback(action.build_callback)
-  -- Just in case we are somehow started again:
-  action.build_callback = nil
-  action.done_init = false
   humanoid:finishAction()
 end)
 
-local function action_seek_room_start(action, humanoid)
-  if action.todo_interrupt then
-    humanoid:finishAction()
-    return
+function SeekRoomAction:onRemoveFromQueue()
+  local action = self
+  local humanoid = self.humanoid
+  humanoid:setMood("patient_wait", "deactivate")
+  if self.build_callback then
+    humanoid.world:unregisterRoomBuildCallback(self.build_callback)
+    action.build_callback = nil
   end
+  action.done_init = false
+  
+  Action.onRemoveFromQueue(self)
+end
+
+function SeekRoomAction:onStart()
+  Action.onStart(self)
+  
+  local action = self
+  local humanoid = self.humanoid
 
   -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
   local room = action_seek_room_find_room(action, humanoid)
@@ -190,7 +205,6 @@ local function action_seek_room_start(action, humanoid)
   else
     if not action.done_init then
       action.done_init = true
-      action.must_happen = true
       local build_callback
       build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
         local found = false
@@ -209,12 +223,10 @@ local function action_seek_room_start(action, humanoid)
         if found then 
           action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
-          humanoid.world:unregisterRoomBuildCallback(build_callback)
         end
       end -- End of build_callback function
       action.build_callback = build_callback
       humanoid.world:registerRoomBuildCallback(action.build_callback)
-      action.on_interrupt = action_seek_room_interrupt
     end
     
     -- Things needed to get the patient to the correct room in due time are done. Now it's
@@ -241,24 +253,24 @@ local function action_seek_room_start(action, humanoid)
       end
       if action_still_valid then
         action.done_walk = true
-        humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
+        self:nudge()
       end
     else
       -- Make sure the patient stands in a correct way as he/she is waiting.
-      local direction = humanoid.last_move_direction
-      local anims = humanoid.walk_anims
-      if direction == "north" then
-        humanoid:setAnimation(anims.idle_north, 0)
-      elseif direction == "east" then
-        humanoid:setAnimation(anims.idle_east, 0)
-      elseif direction == "south" then
-        humanoid:setAnimation(anims.idle_east, 1)
-      elseif direction == "west" then
-        humanoid:setAnimation(anims.idle_north, 1)
-      end
-      humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y)
+      IdleAction.setAnimation(self)
     end
   end
 end
 
-return action_seek_room_start
+function SeekRoomAction:nudge()
+  if self.is_active then
+    self.humanoid:queueAction(MeanderAction{count = 1}, 0)
+  end
+end
+
+function SeekRoomAction:postponeFor(action, index_in_queue)
+  if self.is_active then
+    self.humanoid:queueAction(action, index_in_queue - 1)
+    return true
+  end  
+end

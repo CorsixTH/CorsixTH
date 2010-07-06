@@ -317,7 +317,7 @@ function World:spawnPatient(hospital)
   local patient = self:newEntity("Patient", 2)
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   patient:setDisease(disease)
-  patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  patient:setNextAction(SpawnAction{mode = "spawn", point = spawn_point})
   patient:setHospital(hospital)
   
   return patient
@@ -1256,14 +1256,14 @@ function World:callForStaff(room, repair_object, urgent)
       
       handyman:setNextAction(action1)
       -- Repair the object
-      handyman:queueAction{name = "walk", x = x, y = y, is_job = repair_object}
+      handyman:queueAction(WalkAction{x = x, y = y, is_job = repair_object})
       handyman:queueAction(repair_object:createRepairAction(handyman))
       -- Leave the room
       local action2 = room:createLeaveAction()
       action2.is_job = repair_object
       handyman:queueAction(action2)
       -- Resume idling
-      handyman:queueAction{name = "meander"}
+      handyman:queueAction(MeanderAction)
       handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
         :format(repair_object.object_type.name))
       return true

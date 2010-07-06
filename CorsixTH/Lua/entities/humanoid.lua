@@ -187,16 +187,8 @@ function Humanoid:onClick(ui, button)
       self.attributes["fatigue"] or 0))
     print("")
     print("Actions:")
-    for i = 1, #self.action_queue do
-      if self.action_queue[i].room_type then
-        print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
-      elseif self.action_queue[i].object then
-        print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
-      elseif self.action_queue[i].name == "walk" then
-        print(self.action_queue[i].name .. " - going to " .. self.action_queue[i].x .. ":" .. self.action_queue[i].y)
-      else
-        print(self.action_queue[i].name)
-      end
+    for _, action in ipairs(self.action_queue) do
+      print(action:toString())
     end
     print("-----------------------------------")
   end
@@ -210,6 +202,15 @@ function Humanoid:onDestroy()
       notify_object:onOccupantChange(-1)
     end
   end
+  local queue = self.action_queue
+  if queue[1] then
+    queue[1]:onFinish()
+  end
+  for i = #queue, 1, -1 do
+    local action = queue[i]
+    queue[i] = nil
+    action:onRemoveFromQueue()
+  end
   return Entity.onDestroy(self)
 end
 
@@ -222,12 +223,11 @@ function Humanoid:setHospital(hospital)
   self.hospital = hospital
   if not hospital or not hospital.is_in_world then
     local spawn_points = self.world.spawn_points
-    self:setNextAction{
-      name = "spawn",
+    self:setNextAction(SpawnAction{
       mode = "despawn",
       point = spawn_points[math.random(1, #spawn_points)],
       must_happen = true,
-    }
+    })
   end
 end
 
@@ -283,93 +283,125 @@ function Humanoid:getCurrentMood()
   end
 end
 
-local function Humanoid_startAction(self)
-  local action = self.action_queue[1]
-  assert(action, "Empty action queue")
-  
-  -- Call the action start handler
-  TheApp.humanoid_actions[action.name](action, self)
-  
-  if action == self.action_queue[1] and action.todo_interrupt then
-    local high_priority = action.todo_interrupt == "high"
-    action.todo_interrupt = nil
-    local on_interrupt = action.on_interrupt
-    if on_interrupt then
-      action.on_interrupt = nil
-      on_interrupt(action, self, high_priority)
-    end
-  end
-end
-
-function Humanoid:setNextAction(action, high_priority)
-  -- Aim: Cleanly finish the current action (along with any subsequent actions
-  -- which must happen), then replace all the remaining actions with the given
-  -- one.
-  local i = 1
+--! Cancel (remove or truncate) actions at indicies `i` through `j` (inclusive)
+-- in the action queue.
+function Humanoid:cancelActions(i, j, is_high_priority)
   local queue = self.action_queue
-  local interrupted = false
-  
-  -- Skip over any actions which must happen
-  while queue[i] and queue[i].must_happen do
-    interrupted = true
-    i = i + 1
-  end
-  
-  -- Remove actions which are no longer going to happen
-  local done_set = {}
-  for j = #queue, i, -1 do
-    local removed = queue[j]
-    queue[j] = nil
-    if removed.until_leave_queue and not done_set[removed.until_leave_queue] then
-      removed.until_leave_queue:removeValue(self)
-      done_set[removed.until_leave_queue] = true
-    end
-    if removed.object and removed.object:isReservedFor(self) then
-      removed.object:removeReservedUser(self)
+  -- Traverse list in descending order to nicely handle actions which are
+  -- removed directly, or remove themselves.
+  for k = j, i, -1 do
+    local action = queue[k]
+    if action:canRemoveFromQueue(is_high_priority) then
+      if action.is_active then
+        self:finishAction(action)
+      else
+        table.remove(queue, k)
+        action:onRemoveFromQueue()
+      end
+    else
+      action:truncate(is_high_priority)
     end
   end
-  
-  -- Add the new action to the queue
-  queue[i] = action
-  
-  -- Interrupt the current action and queue other actions to be interrupted
-  -- when they start.
-  if interrupted then
-    interrupted = queue[1]
-    for j = 2, i - 1 do
-      queue[j].todo_interrupt = high_priority and "high" or true
-    end
-    local on_interrupt = interrupted.on_interrupt
-    if on_interrupt then
-      interrupted.on_interrupt = nil
-      on_interrupt(interrupted, self, high_priority or false)
-    end
-  else
-    -- Start the action if it has become the current action
-    Humanoid_startAction(self)
-  end
-  return self
 end
 
+--! Cancel all currently queued actions and queue a new action to start.
+function Humanoid:setNextAction(action, is_high_priority)
+  action = self:queueAction(action)
+  self:cancelActions(1, #self.action_queue - 1, is_high_priority)
+  return action
+end
+
+--! Insert an action at some point into the action queue.
 function Humanoid:queueAction(action, pos)
-  if pos then
-    table.insert(self.action_queue, pos + 1, action)
-    if pos == 0 then
-      Humanoid_startAction(self)
+  -- Handle action being a class name rather than a class instance
+  if class.name(action) then action = action() end
+  -- Check that old action system isn't still hanging around
+  assert(class.is(action, Action), "Can only queue proper actions")
+  
+  local queue = self.action_queue
+  pos = pos or #queue
+  action:onAddToQueue(self)
+  if pos == 0 then
+    -- Inserting to the head of the queue
+    local current = queue[1]
+    -- Increment the "dont_start" counter, so that "onFinish" doesn't cause
+    -- something else to start before us.
+    self.dont_start = (self.dont_start or 0) + 1
+    -- Note that current will only be nil when the humanoid has just been
+    -- created and not yet assigned a first action.
+    if current then
+      current:onFinish()
+    end
+    table.insert(queue, 1, action)
+    -- Decrement the "dont_start" counter, and possibly start the next action.
+    self.dont_start = self.dont_start - 1
+    if self.dont_start == 0 then
+      self.dont_start = nil
+      -- action is guaranteed to be queue[1], as we just inserted it there
+      action:onStart()
     end
   else
-    self.action_queue[#self.action_queue + 1] = action
+    table.insert(queue, pos + 1, action)
   end
-  return self
+  return action
 end
 
-
-function Humanoid:finishAction(action)
-  if action ~= nil then
-    assert(action == self.action_queue[1], "Can only finish current action")
+local function remove_by_value(t, v)
+  for k = #t, 1, -1 do
+    if t[k] == v then
+      table.remove(t, k)
+    end
   end
-  table.remove(self.action_queue, 1)
-  Humanoid_startAction(self)
+end
+
+--! Finish the action which is currently active.
+--! This should only be called "with permission" from the active action.
+function Humanoid:finishAction(action)
+  local queue = self.action_queue
+  -- Called with no action => finish the current action (which is the only
+  -- action which can ever be finished, but specifying one allows this to be
+  -- checked)
+  if action == nil then
+    action = queue[1]
+  else
+    assert(action == queue[1], "Can only finish current action")
+  end
+  
+  -- If we're already in the process of finishing the action, do nothing (as
+  -- dont_start gets set too, the only action which can finish is the one
+  -- finishing right now).
+  if self.dont_finish then
+    return
+  end
+  self.dont_finish = true
+  
+  -- Increment the "dont_start" counter, so that if "onRemoveFromQueue" or
+  -- "onFinish" mess with the action queue, we dont get confused and start
+  -- something twice.
+  self.dont_start = (self.dont_start or 0) + 1
+  
+  action:onFinish()
+  -- If "onFinish" messed with the queue, we might not be at the head any more.
+  if queue[1] == action then
+    table.remove(queue, 1)
+  else
+    remove_by_value(queue, action)
+  end
+  action:onRemoveFromQueue()
+  
+  -- If there are no more actions in the queue, then the humanoid will just
+  -- repeat the most recent animation for ever, which looks horrible and is
+  -- a sign of a logic error somewhere else.
+  assert(queue[1], "Action queue is empty")
+  
+  self.dont_finish = nil
+  
+  -- Decrement the "dont_start" counter, and possibly start the next action.
+  self.dont_start = self.dont_start - 1
+  if self.dont_start == 0 then
+    self.dont_start = nil
+    queue[1]:onStart()
+  end
 end
 
 function Humanoid:setType(humanoid_class)
@@ -379,7 +411,7 @@ function Humanoid:setType(humanoid_class)
   self.die_anims  = die_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
-    self:setNextAction {name = "idle"}
+    self:setNextAction(IdleAction())
   end
   
   self.th:setPartialFlag(self.permanent_flags or 0, false)
@@ -399,15 +431,11 @@ end
 -- tile to walk to.
 --!param tile_y (integer) The Y-component of the Lua tile co-ordinates of the
 -- tile to walk to.
---!param must_happen (boolean, nil) If true, then the walk action will not be
--- interrupted.
-function Humanoid:walkTo(tile_x, tile_y, must_happen)
-  self:setNextAction {
-    name = "walk",
+function Humanoid:walkTo(tile_x, tile_y)
+  self:setNextAction(WalkAction{
     x = tile_x,
     y = tile_y,
-    must_happen = must_happen,
-  }
+  })
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
@@ -419,28 +447,11 @@ function Humanoid:wake(amount)
 end
 
 function Humanoid:handleRemovedObject(object)
-  local replacement_action
-  if self.humanoid_class and self.humanoid_class == "Receptionist" then
-    replacement_action = {name = "meander"}
-  elseif object.object_type.id == "bench" then
-    replacement_action = {name = "idle", must_happen = true}
-  end
-
-  for i, action in ipairs(self.action_queue) do
-    if (action.name == "use_object" or action.name == "staff_reception") and action.object == object then
-      if replacement_action then
-        self:queueAction(replacement_action, i)
-      end
-      if i == 1 then
-        local on_interrupt = action.on_interrupt
-        action.on_interrupt = nil
-        if on_interrupt then
-          on_interrupt(action, self, true)
-        end
-      else
-        table.remove(self.action_queue, i)
-        self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
-      end
+  local queue = self.action_queue
+  for i = #queue, 1, -1 do
+    local action = queue[i]
+    if action.object == object and action.handleRemovedObject then
+      action:handleRemovedObject(i)
     end
   end
 end

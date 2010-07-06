@@ -18,12 +18,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Direct a `Staff` member to various objects within a staff room.
+class "UseStaffroomAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function UseStaffroomAction:UseStaffroomAction(...)
+  self:Action(...)
+end
+
 -- decide on the next source of relaxation the humanoid will go to
 -- returns target_obj, ox, oy, new_type
 -- the function will always return a value for new_type, depending on what type was chosen,
 -- but target_obj, ox and oy will be nil, if no object of the chosen target was found
 local decide_next_target = permanent"use_staffroom_action_decide_next_target"( function(action, humanoid)
-  assert(action.name == "use_staffroom", "decide_next_target only works with the use_staffroom action")
+  assert(class.is(action, UseStaffroomAction), "decide_next_target only works with the use_staffroom action")
   local cur_type = action.target_type
   assert(class.is(humanoid, Staff), "decide_next_target called for non-staff humanoid")
   local h_class = humanoid.humanoid_class
@@ -69,7 +77,11 @@ local relaxation = {
 }
 
 -- main function of the staffroom action
-local function use_staffroom_action_start(action, humanoid)
+function UseStaffroomAction:onStart()
+  Action.onStart(self)
+  local action = self
+  local humanoid = self.humanoid
+  
   assert(class.is(humanoid, Staff), "use_staffroom action called for non-staff humanoid")
   assert(humanoid.humanoid_class ~= "Receptionist", "use_staffroom action called for receptionist")
 
@@ -87,7 +99,7 @@ local function use_staffroom_action_start(action, humanoid)
   
   -- If no target was found, then walk around for a bit and try again later
   if not action.target_obj then
-    humanoid:queueAction({name = "meander", count = 2}, 0)
+    humanoid:queueAction(MeanderAction{count = 2}, 0)
     return
   end
   
@@ -95,8 +107,7 @@ local function use_staffroom_action_start(action, humanoid)
   -- Note: force prolonged_usage, because video_game wouldn't get it by default (because it has no begin and end animation)
   local object_action
   local obj_use_time = generate_use_time(action.target_type)
-  object_action = {
-    name = "use_object",
+  object_action = UseObjectAction{
     prolonged_usage = true,
     object = action.target_obj,
     loop_callback = --[[persistable:use_staffroom_action_loop_callback]] function()
@@ -116,7 +127,7 @@ local function use_staffroom_action_start(action, humanoid)
             humanoid:queueAction(new_room:createEnterAction(humanoid))
             humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(new_room.room_info.name))
           else
-            humanoid:queueAction{name = "meander"}
+            humanoid:queueAction(MeanderAction)
           end
           humanoid.last_room = nil
         else
@@ -134,8 +145,6 @@ local function use_staffroom_action_start(action, humanoid)
       end
     end
   }
-  humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
+  humanoid:queueAction(WalkAction{x = action.ox, y = action.oy}, 0)
   humanoid:queueAction(object_action, 1)
 end
-
-return use_staffroom_action_start

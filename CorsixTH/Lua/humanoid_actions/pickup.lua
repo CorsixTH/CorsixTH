@@ -18,7 +18,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(action, humanoid)
+--! Take a `Staff` member out of the world to allow the user to place them down
+-- somewhere else.
+class "PickupAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function PickupAction:PickupAction(...)
+  self:Action(...)
+end
+
+function PickupAction:onFinish()
+  local action = self
+  local humanoid = self.humanoid
+  
+  humanoid.is_picked_up = nil
   if action.window then
     action.window:close()
   end
@@ -29,15 +42,16 @@ local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(act
   else
     humanoid:onPlaceInCorridor()
   end
-  humanoid:finishAction()
   action.ui:setDefaultCursor(nil)
-end)
+  
+  Action.onFinish(self)
+end
 
-local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( function(action, humanoid)
-  action.on_interrupt = action_pickup_interrupt
-end)
-
-local function action_pickup_start(action, humanoid)
+function PickupAction:onStart()
+  local action = self
+  local humanoid = self.humanoid
+  Action.onStart(self)
+  
   if action.todo_close then
     action.todo_close:close()
   end
@@ -46,11 +60,12 @@ local function action_pickup_start(action, humanoid)
   end
   humanoid:setSpeed(0, 0)
   humanoid.th:makeInvisible()
+  humanoid.is_picked_up = true
   local room = humanoid:getRoom()
   if room then
     room:onHumanoidLeave(humanoid)
   end
-  action.must_happen = true
+  --[[
   if action.todo_interrupt and action.todo_interrupt ~= "high" then
     -- If you pick up a staff member as they walk through a door, then the walk
     -- action will be given a high priority interrupt, and hence immediately
@@ -64,11 +79,10 @@ local function action_pickup_start(action, humanoid)
   else
     action.on_interrupt = action_pickup_interrupt
   end
+  --]]
   local ui = action.ui
   action.window = UIPlaceStaff(ui, humanoid, ui.cursor_x, ui.cursor_y)
   ui:addWindow(action.window)
   ui:playSound "pickup.wav"
   ui:setDefaultCursor(ui.grab_cursor)
 end
-
-return action_pickup_start

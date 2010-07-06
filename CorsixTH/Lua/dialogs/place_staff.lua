@@ -52,7 +52,7 @@ end
 function UIPlaceStaff:close()
   if self.staff then
     self.staff.action_queue[1].window = nil
-    self.staff:setNextAction{name = "meander"}
+    self.staff:setNextAction(MeanderAction)
   elseif self.profile then
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)

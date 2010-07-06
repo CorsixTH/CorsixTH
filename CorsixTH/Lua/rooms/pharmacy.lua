@@ -47,17 +47,14 @@ end
 
 function PharmacyRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction())
   return Room.commandEnteringStaff(self, staff)
 end
 
 function PharmacyRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local cabinet, stf_x, stf_y = self.world:findObjectNear(patient, "pharmacy_cabinet")
-  local pat_x, pat_y
-  local orientation = cabinet.object_type.orientations[cabinet.direction]
-  pat_x = stf_x - orientation.use_position[1] + orientation.use_position_secondary[1]
-  pat_y = stf_y - orientation.use_position[2] + orientation.use_position_secondary[2]
+  local pat_x, pat_y = cabinet:getSecondaryUsageTile()
   
   local layer3
   local patient_class = patient.humanoid_class
@@ -69,16 +66,12 @@ function PharmacyRoom:commandEnteringPatient(patient)
     layer3 = math.random(0, 2) * 2
   end
   
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{
-    name = "multi_use_object",
+  patient:walkTo(pat_x, pat_y)
+  staff:walkTo(stf_x, stf_y)
+  patient:queueAction(staff:queueAction(MultiUseObjectAction{
     object = cabinet,
-    use_with = patient,
     layer3 = layer3,
     after_use = --[[persistable:pharmacy_after_use]] function()
-      staff:setNextAction{name = "meander"}
       if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
         patient:setType "Standard Male Patient"
       elseif patient_class == "Transparent Female Patient" then
@@ -86,7 +79,9 @@ function PharmacyRoom:commandEnteringPatient(patient)
       end
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

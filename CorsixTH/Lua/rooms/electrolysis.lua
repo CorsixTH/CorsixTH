@@ -49,8 +49,19 @@ end
 
 function ElectrolysisRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
+end
+
+function ElectrolysisRoom.choosePatientGender(patient)
+  if math.random(0, 1) == 1 then
+    patient:setType("Standard Male Patient") -- Other attributes already set
+  else
+    patient:setType("Standard Female Patient")
+    patient:setLayer(0, math.random(1, 4) * 2)
+    patient:setLayer(1, math.random(0, 3) * 2)
+    patient:setLayer(2, 0)
+  end
 end
 
 function ElectrolysisRoom:commandEnteringPatient(patient)
@@ -58,23 +69,18 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   local electrolyser, pat_x, pat_y = self.world:findObjectNear(patient, "electrolyser")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
   
-  local --[[persistable:electrolysis_shared_loop_callback]] function loop_callback()
-    -- If the other humanoid has already started to idle we move on
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
-      -- Skilled doctors require less electrocutions
-      local num_electrocutions = math.random(1, 5) * (2 - staff.profile.skill)
-      -- We need to change to another type before starting, to be able
-      -- to have different animations depending on gender.
-      if math.random(0, 1) == 1 then
-        patient:setType("Standard Male Patient") -- Other attributes already set
-      else
-        patient:setType("Standard Female Patient")
-        patient:setLayer(0, math.random(1, 4) * 2)
-        patient:setLayer(1, math.random(0, 3) * 2)
-        patient:setLayer(2, 0)
-      end
-      patient:setNextAction{
-        name = "use_object",
+  patient:walkTo(pat_x, pat_y)
+  staff:walkTo(stf_x, stf_y)
+  local num_electrocutions = math.random(1, 5) * (2 - staff.profile.skill)
+  local sync = staff:queueAction(SyncAction)
+  local staff_usage = sync:addDependantAction(UseObjectAction{
+    object = console,
+  })
+  patient:queueAction(SyncAction{
+    master = sync,
+    dependant_actions = {
+      LogicAction{ElectrolysisRoom.choosePatientGender, patient},
+      UseObjectAction{
         object = electrolyser,
         loop_callback = --[[persistable:electrolysis_loop_callback]] function(action)
           num_electrocutions = num_electrocutions - 1
@@ -91,29 +97,13 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
         end,
         after_use = --[[persistable:electrolysis_after_use]] function()
           self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
+          staff_usage.prolonged_usage = false
         end,
-      }
-    
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
-    end
-  end
-  -- As soon as one starts to idle the callback is called to see if the other one is already idling.
-  patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle", 
-    direction = electrolyser.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
-  staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle", 
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+      },
+    }
+  })
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

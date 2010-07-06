@@ -49,7 +49,7 @@ end
 
 function XRayRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
@@ -58,43 +58,32 @@ function XRayRoom:commandEnteringPatient(patient)
   local x_ray, pat_x, pat_y = self.world:findObjectNear(patient, "x_ray")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "radiation_shield")
 
-  local --[[persistable:x_ray_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
-     
-    local length = math.random(2, 4) * (2 - staff.profile.skill)
-      patient:setNextAction{
-        name = "use_object",
-        object = x_ray,
-        loop_callback = --[[persistable:x_ray_loop_callback]] function(action)
-          if length <= 0 then
-            action.prolonged_usage = false
-          end
-          length = length - 1
-        end,
-        after_use = --[[persistable:x_ray_after_use]] function()
-          staff:setNextAction{name = "meander"}
-          self:dealtWithPatient(patient)
-        end,
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
-    end
-  end
-
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle", 
-    direction = x_ray.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle", 
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  local length = math.random(2, 4) * (2 - staff.profile.skill)
+  local sync = staff:queueAction(SyncAction)
+  local staff_usage = sync:addDependantAction(UseObjectAction{
+    object = console,
+  })
+  patient:queueAction(SyncAction{
+    master = sync,
+    dependant_actions = UseObjectAction{
+      object = x_ray,
+      loop_callback = --[[persistable:x_ray_loop_callback]] function(action)
+        if length <= 0 then
+          action.prolonged_usage = false
+        end
+        length = length - 1
+      end,
+      after_use = --[[persistable:x_ray_after_use]] function()
+        staff_usage.prolonged_usage = false
+        self:dealtWithPatient(patient)
+      end,
+    }
+  })
+  
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
 
   return Room.commandEnteringPatient(self, patient)
 end

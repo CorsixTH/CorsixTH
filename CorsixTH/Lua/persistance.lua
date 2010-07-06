@@ -104,7 +104,7 @@ local function MakePermanentObjectsTable(inverted)
   for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx", "fs"} do
     permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
   end
-  for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do
+  for _, collection in ipairs{"walls", "objects", "rooms", "diseases"} do
     for k, v in pairs(TheApp[collection]) do
       if type(k) == "string" then
         permanent[v] = inverted and "TheApp.".. collection ..".".. k or {global_fetch, "TheApp", collection, k}
@@ -160,8 +160,10 @@ local function NameOf(obj) -- Debug aid
     if type(exploring) == "table" then
       for key, val in pairs(exploring) do
         if not explored[val] then
-          to_explore[val] = name .."."..tostring(key)
-          explored[val] = true
+          pcall(function()
+            to_explore[val] = name .."."..tostring(key)
+            explored[val] = true
+          end)
         end
       end
     elseif type(exploring) == "function" then

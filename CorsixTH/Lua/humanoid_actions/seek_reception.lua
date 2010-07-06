@@ -18,6 +18,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Direct a `Patient` toward of a reception desk.
+class "SeekReceptionAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function SeekReceptionAction:SeekReceptionAction(...)
+  self:Action(...)
+end
+
 local flag_cache = {}
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
   return humanoid.world.map.th:getCellFlags(x, y, flag_cache).hospital
@@ -25,41 +33,52 @@ local function can_join_queue_at(humanoid, x, y, use_x, use_y)
     and (x - use_x)^2 + (y - use_y)^2 < 12^2
 end
 
-local function action_seek_reception_start(action, humanoid)
+function SeekReceptionAction:onRemoveFromQueue()
+  self.humanoid.waiting = nil
+  Action.onRemoveFromQueue(self)
+end
+
+function SeekReceptionAction:onStart()
+  Action.onStart(self)
+  local humanoid = self.humanoid
   local world = humanoid.world
   
   local found_desk = false
   world:findObjectNear(humanoid, "reception_desk", nil, function(x, y, d)
     local desk = world:getObject(x, y, "reception_desk")
+    
+    -- Check that that desk is staffed and that there is room in the queue
     if (not desk.receptionist and not desk.reserved_for) or desk.queue:isFull() then
       return
     end
     
+    -- Check that the desk is approachable in the direction we've found it
+    -- from (if not, we'll likely find it again in the correct direction later
+    -- on, unless there is a nearer desk).
     local orientation = desk.object_type.orientations[desk.direction]
     if not orientation.pathfind_allowed_dirs[d] then
       return
     end
     x = x + orientation.use_position[1]
     y = y + orientation.use_position[2]
+    
+    -- Update patient state
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(desk.object_type.name))
-    humanoid.waiting = nil
     
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
       local face_x, face_y = desk:getSecondaryUsageTile()
-      humanoid:setNextAction{
-        name = "queue",
+      humanoid:setNextAction(QueueAction{
         x = x,
         y = y,
         queue = desk.queue,
         face_x = face_x,
         face_y = face_y,
-        must_happen = action.must_happen,
-      }
+      })
     else
-      local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
+      local walk = WalkAction{x = x, y = y}
       humanoid:queueAction(walk, 0)
       
       -- Trim the walk to finish once it is possible to join the queue
@@ -83,17 +102,14 @@ local function action_seek_reception_start(action, humanoid)
   -- the hospital, so either walk to the hospital, or walk around the hospital.
   local procrastination
   if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
-    procrastination = {name = "meander", count = 1}
+    procrastination = MeanderAction{count = 1}
     if not humanoid.waiting then
       -- Eventually people are going to get bored and leave.
       humanoid.waiting = 60
     end
   else
     local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-    procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+    procrastination = WalkAction{x = hosp_x, y = hosp_y}
   end
-  procrastination.must_happen = action.must_happen
   humanoid:queueAction(procrastination, 0)
 end
-
-return action_seek_reception_start

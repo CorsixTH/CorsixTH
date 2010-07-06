@@ -82,14 +82,16 @@ function Helicopter:spawnPatient()
   patient.is_emergency = self.spawned_patients
   hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
   local x, y = hospital:getHeliportSpawnPosition()
-  patient:setNextAction{
-    name = "spawn", 
+  patient:setNextAction(SpawnAction{
     mode = "spawn",
     point = {x = x, y = y},
     offset = {y = 1},
-  }
+  })
   patient:setHospital(hospital)
-  patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+  local treatment_rooms = patient.disease.treatment_rooms
+  patient:queueAction(SeekRoomAction{
+    room_type = treatment_rooms[#treatment_rooms],
+  })
 end
 
 return object

@@ -80,12 +80,12 @@ function ReceptionDesk:tick()
   local queue_front = self.queue:front()
   local reset_timer = true
   if self.receptionist and queue_front then
-    if queue_front.action_queue[1].name == "idle" then
+    if class.is(queue_front.action_queue[1], IdleAction) then
       self.queue_advance_timer = self.queue_advance_timer + 1
       reset_timer = false
       if self.queue_advance_timer >= 4 + 24 * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
-        queue_front:queueAction{name = "seek_room", room_type = "gp"}
+        queue_front:queueAction(SeekRoomAction{room_type = "gp"})
         self.queue:pop()
         self.queue.visitor_count = self.queue.visitor_count + 1
       end
@@ -98,7 +98,7 @@ function ReceptionDesk:tick()
 end
 
 function ReceptionDesk:checkForNearbyStaff()
-  if self.receptionist or self.reserved_for then
+  if self.receptionist or self.reserved_for or self.being_destroyed then
     -- Already got staff, or a staff member is on the way
     return true
   end
@@ -106,6 +106,9 @@ function ReceptionDesk:checkForNearbyStaff()
   local nearest_staff, nearest_d
   local world = self.world
   local use_x, use_y = self:getSecondaryUsageTile()
+  if not use_x then
+    return false
+  end
   for _, entity in ipairs(self.world.entities) do
     if entity.humanoid_class == "Receptionist" and not entity.associated_desk and not entity.fired then
       local distance = world.pathfinder:findDistance(entity.tile_x, entity.tile_y, use_x, use_y)
@@ -121,8 +124,8 @@ function ReceptionDesk:checkForNearbyStaff()
   
   self.reserved_for = nearest_staff
   nearest_staff.associated_desk = self
-  nearest_staff:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-  nearest_staff:queueAction{name = "staff_reception", object = self, must_happen = true}
+  nearest_staff:walkTo(use_x, use_y)
+  nearest_staff:queueAction(StaffReceptionAction{object = self})
   return true
 end
 
@@ -135,11 +138,10 @@ function ReceptionDesk:setTile(x, y)
 end
 
 function ReceptionDesk:onDestroy()
-  if self.receptionist then
-    local receptionist = self.receptionist
+  self.being_destroyed = true
+  local receptionist = self.receptionist
+  if receptionist then
     self.receptionist:handleRemovedObject(self)
-    self.reserved_for = nil
-
     -- Find a new reception desk for the receptionist
     local world = receptionist.world
     world:findObjectNear(receptionist, "reception_desk", nil, function(x, y)
@@ -149,14 +151,15 @@ function ReceptionDesk:onDestroy()
         obj.reserved_for = receptionist
         receptionist.associated_desk = obj
         local use_x, use_y = obj:getSecondaryUsageTile()
-        receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-        receptionist:queueAction{name = "staff_reception", object = obj, must_happen = true}
+        receptionist:walkTo(use_x, use_y)
+        receptionist:queueAction(StaffReceptionAction{object = obj})
         return true
       end
     end)
   end
-  self.queue:rerouteAllPatients({name = "seek_reception"})
-  return Object.onDestroy(self)
+  self.queue:rerouteAllPatients(SeekReceptionAction)
+  Object.onDestroy(self)
+  self.being_destroyed = nil
 end
 
 return object

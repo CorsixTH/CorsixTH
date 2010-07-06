@@ -135,6 +135,12 @@ function UIStaff:getStaffPosition(dx, dy)
 end
 
 function UIStaff:draw(canvas, x_, y_)
+  -- If the staff has died or despawned on us, then close the dialog.
+  if not self.staff.tile_x then
+    self:close()
+    return
+  end
+  
   local x, y = self.x + x_, self.y + y_
 
   local px, py = self:getStaffPosition(37, 61)
@@ -246,8 +252,7 @@ function UIStaff:onMouseUp(button, x, y)
 end
 
 function UIStaff:placeStaff()
-  self.staff:setNextAction({
-    name = "pickup",
+  self.staff:setNextAction(PickupAction{
     ui = self.ui,
     todo_close = self,
     must_happen = true,

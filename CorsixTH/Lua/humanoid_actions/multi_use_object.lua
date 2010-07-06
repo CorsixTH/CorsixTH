@@ -18,6 +18,30 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile "humanoid_actions/idle"
+
+--! Have two `Humanoid`s use an `Object` together.
+--! This action should be inserted into the queue of the primary user, and the
+-- result of createSecondaryUserAction() should be inserted into the queue of
+-- the secondary user. If the action is removed from either queue, then it will
+-- be removed from both (though perhaps not immediately).
+class "MultiUseObjectAction" {} (Action)
+
+--! Version of `MultiUseObjectAction` for the secondary user of an object.
+--! Instances of this class should not be created directly. Instead, they
+-- should be created with MultiUseObjectAction:createSecondaryUserAction().
+class "MultiUseSecondaryAction" {} (IdleAction)
+
+--!param ... Arguments for the base class constructor.
+function MultiUseObjectAction:MultiUseObjectAction(...)
+  self:Action(...)
+end
+
+--!param ... Arguments for the base class constructor.
+function MultiUseSecondaryAction:MultiUseSecondaryAction(...)
+  self:IdleAction(...)
+end
+
 local TH = require "TH"
 local orient_mirror = {
   north = "west",
@@ -270,14 +294,68 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
   end
 end)
 
-local action_multi_use_object_interrupt = permanent"action_multi_use_object_interrupt"( function(action, humanoid)
-  if not action.loop_callback then
-    action.prolonged_usage = false
-  end
-end)
+function MultiUseObjectAction:truncate()
+  self.prolonged_usage = false
+end
 
-local function action_multi_use_object_start(action, humanoid)
+function MultiUseSecondaryAction:onAddToQueue(humanoid)
+  IdleAction.onAddToQueue(self, humanoid)
+  self.pair.use_with = humanoid
+end
+
+function MultiUseSecondaryAction:onStart()
+  IdleAction.onStart(self)
+  if not self.pair.humanoid then
+    self.humanoid:finishAction()
+  elseif self.pair.humanoid.action_queue[1] == self.pair.wait_action then
+    self.pair.humanoid:cancelActions(1, 1)
+  end
+end
+
+function MultiUseSecondaryAction:canRemoveFromQueue(is_high_priority)
+  return self.pair:canRemoveFromQueue()
+end
+
+function MultiUseSecondaryAction:toString()
+  return "Secondary " .. self.pair:toString()
+end
+
+function MultiUseObjectAction:canRemoveFromQueue(is_high_priority)
+  if self.is_active then
+    return false
+  end
+  return Action.canRemoveFromQueue(self, is_high_priority)
+end
+
+function MultiUseObjectAction:onRemoveFromQueue()
+  if self.pair.is_active then
+    self.pair.humanoid:finishAction()
+  end
+  Action.onRemoveFromQueue(self)
+end
+
+function MultiUseObjectAction:createSecondaryUserAction()
+  local action = MultiUseSecondaryAction {
+    pair = self,
+  }
+  self.pair = action
+  return action
+end
+
+function MultiUseObjectAction:onFinish()
+  if self.pair.is_active then
+    self.use_with:finishAction(self.pair)
+  end
+  Action.onFinish(self)
+end
+
+function MultiUseObjectAction:onStart()
+  Action.onStart(self)
+  local action = self
+  local humanoid = self.humanoid
+  
   local use_with = action.use_with
+  --[[
   if action.must_happen then
     -- Setting must_happen is slightly dangerous (though required in some
     -- situations), as the multi-usage cannot be sure to happen until the
@@ -287,22 +365,24 @@ local function action_multi_use_object_start(action, humanoid)
       return
     end
   end
-  if use_with.action_queue[1].name ~= "idle" then
-    humanoid:queueAction({name = "idle", count = 2}, 0)
+  --]]
+  if not self.pair.is_active then
+    if self.pair.humanoid then
+      -- Wait for secondary user to become ready
+      self.wait_action = humanoid:queueAction(IdleAction{count = 10}, 0)
+    else
+      -- Secondary user cancelled the action
+      humanoid:finishAction()
+    end
     return
   else
+    self.wait_action = nil
+    --[[
     action.idle_interrupt = use_with.action_queue[1].on_interrupt
     action.idle_must_happen = use_with.action_queue[1].must_happen
     use_with.action_queue[1].on_interrupt = nil
     use_with.action_queue[1].must_happen = true
-  end
-  action.must_happen = true
-  if action.prolonged_usage then
-    action.on_interrupt = action_multi_use_object_interrupt
-    use_with.action_queue[1].on_interrupt = --[[persistable:action_multi_use_object_use_with_interrupt]] function()
-      action:on_interrupt()
-      action.on_interrupt = nil
-    end
+    --]]
   end
   local object = action.object
   local orient = object.direction
@@ -344,5 +424,3 @@ local function action_multi_use_object_start(action, humanoid)
   
   action_multi_use_phase(action, humanoid, action_multi_use_next_phase(action, -100))
 end
-
-return action_multi_use_object_start

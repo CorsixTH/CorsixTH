@@ -196,7 +196,9 @@ function App:init()
     end
     dofile "room"
     self.rooms = self:loadLuaFolder"rooms"
-    self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
+    dofile "action"
+    self:loadLuaFolder("humanoid_actions", true)
+    -- TODO: Hack self.humanoid_actions to load old stuff
     local diseases = self:loadLuaFolder"diseases"
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
     -- Load world before UI

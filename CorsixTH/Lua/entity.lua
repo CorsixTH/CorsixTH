@@ -146,13 +146,19 @@ function Entity:tick()
   if timer then
     timer = timer - 1
     if timer == 0 then
-      self.timer_time = nil
-      local timer_function = self.timer_function
-      self.timer_function = nil
-      timer_function(self)
+      self:callTimer()
     else
       self.timer_time = timer
     end
+  end
+end
+
+function Entity:callTimer()
+  self.timer_time = nil
+  local timer_function = self.timer_function
+  self.timer_function = nil
+  if timer_function then
+    timer_function(self)
   end
 end
 

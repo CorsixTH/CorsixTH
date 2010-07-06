@@ -47,76 +47,30 @@ end
 
 function GeneralDiagRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
 function GeneralDiagRoom:commandEnteringPatient(patient)
-  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-  patient:walkTo(sx, sy)
-  patient:queueAction{
-    name = "use_screen",
+  local screen = self.world:findObjectNear(patient, "screen")
+  local screen_action = patient:setNextAction(UseScreenAction{
     object = screen,
-    after_use = --[[persistable:general_diag_screen_after_use1]] function()
-      local staff = self.staff_member
-      if not staff or patient.going_home then
-        -- If, by some fluke, the staff member left the room while the
-        -- patient used the screen, then the patient should get changed
-        -- again (they will already have been instructed to leave by the
-        -- staff leaving).
-        patient:queueAction({
-          name = "use_screen",
-          object = screen,
-          must_happen = true,
-        }, 1)
-        return
-      end
-      local trolley, cx, cy = self.world:findObjectNear(patient, "crash_trolley")
-      staff:walkTo(trolley:getSecondaryUsageTile())
-      local staff_idle = {name = "idle"}
-      staff:queueAction(staff_idle)
-      patient:walkTo(cx, cy, true)
-      patient:queueAction{
-        name = "multi_use_object",
-        object = trolley,
-        use_with = staff,
-        must_happen = true, -- set so that the second use_screen always happens
-        prolonged_usage = false,
-        after_use = --[[persistable:general_diag_trolley_after_use]] function()
-          if #staff.action_queue == 1 then
-            staff:setNextAction{name = "meander"}
-          else
-            staff:finishAction(staff_idle)
-          end
-        end,
-      }
-      patient:queueAction{
-        name = "walk",
-        x = sx,
-        y = sy,
-        must_happen = true,
-        no_truncate = true,
-      }
-      patient:queueAction{
-        name = "use_screen",
-        object = screen,
-        must_happen = true,
-        after_use = --[[persistable:general_diag_screen_after_use2]] function()
-          if #patient.action_queue == 1 then
-            self:dealtWithPatient(patient)
-          end
-        end,
-      }
+  })
+  local staff = self.staff_member
+  local trolley, cx, cy = self.world:findObjectNear(patient, "crash_trolley")
+  staff:walkTo(trolley:getSecondaryUsageTile())
+  patient:queueAction(WalkAction{x = cx, y = cy})
+  staff:queueAction(patient:queueAction(MultiUseObjectAction{
+    object = trolley,
+    after_use = --[[persistable:general_diag_screen_after_use]] function()
+      self:dealtWithPatient(patient)
     end,
-  }
-  return Room.commandEnteringPatient(self, patient)
-end
+  }):createSecondaryUserAction())
+  patient:queueAction(screen_action:makeUndoAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
 
-function GeneralDiagRoom:onHumanoidLeave(humanoid)
-  if self.staff_member == humanoid then
-    self.staff_member = nil
-  end
-  Room.onHumanoidLeave(self, humanoid)
+  return Room.commandEnteringPatient(self, patient)
 end
 
 return room

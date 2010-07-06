@@ -213,7 +213,7 @@ function UIEditRoom:clearArea()
         if (x1 == entity.tile_x or x2 == entity.tile_x) and (y1 == entity.tile_y or y2 == entity.tile_y) then
           -- Humanoid not in the rectangle, but might be walking into it
           local action = entity.action_queue[1]
-          if action.name ~= "walk" then
+          if not class.is(action.name, WalkAction) then
             break -- continue
           end
           if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
@@ -228,39 +228,10 @@ function UIEditRoom:clearArea()
         humanoids_to_watch[entity] = true
         
         -- Try to make the humanoid leave the area
-        local meander = entity.action_queue[2]
-        if meander and meander.name == "meander" then
-          -- Interrupt the idle or walk, which will cause a new meander target
-          -- to be chosen, which will be outside the blueprint rectangle
-          meander.can_idle = false
-          local on_interrupt = entity.action_queue[1].on_interrupt
-          if on_interrupt then
-            entity.action_queue[1].on_interrupt = nil
-            on_interrupt(entity.action_queue[1], entity)
+        for _, action in ipairs(entity.action_queue) do
+          if action.nudge then
+            action:nudge()
           end
-        elseif entity.action_queue[1].name == "seek_room" or (meander and meander.name == "seek_room") then
-          -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
-          if entity.action_queue[1].name == "seek_room" then
-            entity:queueAction({name = "meander", count = 1, must_happen = true}, 0)
-          else
-            meander.done_walk = false
-          end
-        else
-          -- Look for a queue action and re-arrange the people in it, which
-          -- should cause anyone queueing within the blueprint to move
-          for i, action in ipairs(entity.action_queue) do
-            if action.name == "queue" then
-              for _, humanoid in ipairs(action.queue) do
-                local callbacks = action.queue.callbacks[humanoid]
-                if callbacks then
-                  callbacks:onChangeQueuePosition(humanoid)
-                end
-              end
-              break
-            end
-          end
-          -- TODO: Consider any other actions which might be causing the
-          -- humanoid to be staying within the rectangle for a long time.
         end
       end
     until true end
@@ -289,7 +260,7 @@ function UIEditRoom:onTick()
       local y2 = rect.y + rect.h - 1
       for humanoid in pairs(self.humanoids_to_watch) do
         -- The person might be dying
-        if humanoid.action_queue[1].name == "die" then
+        if class.is(humanoid.action_queue[1], DieAction) then
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end
@@ -486,7 +457,7 @@ function UIEditRoom:returnToDoorPhase()
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
-    room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
+    room.door.queue:rerouteAllPatients(SeekRoomAction{room_type = room.room_info.id})
   end
   
   self.purchase_button:enable(false)
@@ -712,9 +683,11 @@ end
 function UIEditRoom:enterDoorPhase()
   self.ui:tutorialStep(3, 8, 9)
   -- make tiles impassable
+  local map = self.ui.app.map.th
+  local flags_to_set = {passable = false}
   for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
     for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
-      self.ui.app.map:setCellFlags(x, y, {passable = false})
+      map:setCellFlags(x, y, flags_to_set)
     end
   end
   
@@ -732,7 +705,6 @@ function UIEditRoom:enterDoorPhase()
   self.confirm_button:enable(false) -- Confirmation is via placing door
   
   -- Change the floor tiles to opaque blue
-  local map = self.ui.app.map.th
   for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
     for x = self.blueprint_rect.x, self.blueprint_rect.x + self.blueprint_rect.w - 1 do
       map:setCell(x, y, 4, 24)

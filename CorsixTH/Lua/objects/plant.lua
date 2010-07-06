@@ -214,10 +214,9 @@ function Plant:createHandymanActions(handyman)
   -- this handyman is occupied
   handyman.action_queue[1].is_job = self
   print(ux .. " " .. uy)
-  local action = {name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
-  local water_action = {
-    name = "use_object", 
-    object = self, 
+  local action = WalkAction{x = ux, y = uy, is_job = self, is_entering = in_a_room}
+  local water_action = UseObjectAction {
+    object = self,
     watering_plant = true,
     must_happen = true,
     is_job = self,
@@ -246,7 +245,7 @@ function Plant:createHandymanActions(handyman)
       action.is_job = self
       handyman:queueAction(action)
     end
-    handyman:queueAction{name = "meander"}
+    handyman:queueAction(MeanderAction)
   end
   
 end

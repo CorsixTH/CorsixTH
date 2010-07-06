@@ -49,29 +49,28 @@ end
 
 function InflationRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
+
+-- TODO: Test
 
 function InflationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
-  local orientation = inflator.object_type.orientations[inflator.direction]
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
   
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{
-    name = "multi_use_object",
+  staff:walkTo(stf_x, stf_y)
+  patient:walkTo(pat_x, pat_y)
+  staff:queueAction(patient:queueAction(MultiUseObjectAction{
     object = inflator,
-    use_with = staff,
     after_use = --[[persistable:inflation_after_use]] function()
       patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

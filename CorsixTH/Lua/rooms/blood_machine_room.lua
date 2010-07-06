@@ -49,25 +49,21 @@ end
 
 function BloodMachineRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
 function BloodMachineRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")
-  local orientation = machine.object_type.orientations[machine.direction]
   local pat_x, pat_y = machine:getSecondaryUsageTile()
   
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = machine.direction == "north" and "west" or "north"}
+  staff:walkTo(stf_x, stf_y)
+  patient:walkTo(pat_x, pat_y)
   local length = math.random(2, 4)
   local action
-  staff:queueAction{
-    name = "multi_use_object",
+  patient:queueAction(staff:queueAction(MultiUseObjectAction{
     object = machine,
-    use_with = patient,
     prolonged_usage = true,
     invisible_phase_span = {-3, 3},
     loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
@@ -77,10 +73,11 @@ function BloodMachineRoom:commandEnteringPatient(patient)
       length = length - 1
     end, 
     after_use = --[[persistable:blood_machine_after_use]] function()
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

@@ -48,24 +48,27 @@ end
 
 function PsychRoom:commandEnteringStaff(staff)
   self.staff_member = staff
+  self:doStaffUseCycle(staff)
+  return Room.commandEnteringStaff(self, staff)
+end
+  
+function PsychRoom:doStaffUseCycle(staff)
   local obj, ox, oy = self.world:findFreeObjectNearToUse(staff, "bookcase", nil, "near")
   if not obj then
-    staff:setNextAction{name = "meander"}
+    staff:setNextAction(MeanderAction)
   else
     staff:walkTo(ox, oy)
-    staff:queueAction{name = "use_object", object = obj}
+    staff:queueAction(UseObjectAction{object = obj})
     local num_meanders = math.random(2, 8)
-    staff:queueAction{
-      name = "meander",
+    staff:queueAction(MeanderAction{
       loop_callback = --[[persistable:psych_meander_loop_callback]] function(action)
         num_meanders = num_meanders - 1
         if num_meanders == 0 then
-          self:commandEnteringStaff(staff)
+          self:doStaffUseCycle(staff)
         end
       end
-    }
+    })
   end
-  return Room.commandEnteringStaff(self, staff)
 end
 
 function PsychRoom:commandEnteringPatient(patient)
@@ -73,7 +76,8 @@ function PsychRoom:commandEnteringPatient(patient)
   
   local obj, ox, oy = self.world:findObjectNear(patient, "couch")
   patient:walkTo(ox, oy)
-  patient:queueAction{name = "use_object", object = obj}
+  local patient_use = patient:queueAction(UseObjectAction{object = obj})
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   local duration = math.random(16, 72)
   local bookcase, bx, by
@@ -81,46 +85,47 @@ function PsychRoom:commandEnteringPatient(patient)
     if bookcase == nil then
       bookcase, bx, by = self.world:findObjectNear(staff, "bookcase")
     end
-    if patient and patient.user_of then
+    if patient_use.is_active then
       duration = duration - 1
     end
+    if not patient_use.humanoid then
+      self:doStaffUseCycle(staff)
+      return
+    end
     if duration <= 0 then
-      if patient.diagnosed and patient.humanoid_class == "Elvis Patient" then
+      if --[[patient.diagnosed and]] patient.humanoid_class == "Elvis Patient" then
         -- Diagnosed patients (Elvis) need to change clothes
         obj, ox, oy = self.world:findObjectNear(patient, "screen")
         patient:walkTo(ox, oy)
-        patient:queueAction{
-          name = "use_screen",
+        patient:queueAction(UseScreenAction{
           object = obj,
           after_use = --[[persistable:psych_screen_after_use]] function()
             self:dealtWithPatient(patient)
           end,
-        }
+        })
       else
         self:dealtWithPatient(patient)
       end
-      self:commandEnteringStaff(staff)
+      self:doStaffUseCycle(staff)
       return
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then
       staff:walkTo(bx, by)
-      staff:queueAction{name = "use_object", object = bookcase}
-      staff:queueAction{name = "walk", x = ox, y = oy}
-      staff:queueAction{
-        name = "use_object",
+      staff:queueAction(UseObjectAction{object = bookcase})
+      staff:queueAction(WalkAction{x = ox, y = oy})
+      staff:queueAction(UseObjectAction{
         object = obj,
         loop_callback = loop_callback,
-      }
+      })
       duration = math.max(8, duration - 72)
     end
   end
   obj, ox, oy = self.world:findObjectNear(staff, "comfortable_chair")
   staff:walkTo(ox, oy)
-  staff:queueAction{
-    name = "use_object",
+  staff:queueAction(UseObjectAction{
     object = obj,
     loop_callback = loop_callback,
-  }
+  })
   
   return Room.commandEnteringPatient(self, patient)
 end

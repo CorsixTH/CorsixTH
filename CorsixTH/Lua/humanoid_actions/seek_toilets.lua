@@ -19,22 +19,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function seek_toilets_action_start(action, humanoid)
-  -- Mechanism for clearing the going_to_toilets flag when this action is
-  -- interrupted.
-  if action.todo_interrupt then
-    humanoid.going_to_toilet = nil
-    humanoid:finishAction()
-    return
-  end
-  action.must_happen = true
+--! Direct a `Patient` toward a bathroom.
+class "SeekToiletsAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function SeekToiletsAction:SeekToiletsAction(...)
+  self:Action(...)
+end
+
+function SeekToiletsAction:onRemoveFromQueue()
+  humanoid.going_to_toilet = nil
+  
+  Action.onRemoveFromQueue(self)
+end
+
+function SeekToiletsAction:onStart()
+  local action = self
+  local humanoid = self.humanoid
   
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
     local task = room:createEnterAction()
-    task.must_happen = true
+    -- TODO: Queue instead?
     humanoid:setNextAction(task)
+    -- TODO: next_room_to_visit??
+    --[[
     -- Unexpect the patient from a possible destination room.
     if humanoid.next_room_to_visit then
       local queue = humanoid.next_room_to_visit.door.queue
@@ -43,13 +53,13 @@ local function seek_toilets_action_start(action, humanoid)
       end
       humanoid:updateDynamicInfo("")
     end
-    humanoid:finishAction()
+    --]]
+    if self.is_active then
+      humanoid:finishAction()
+    end
   else
     -- This should happen only in rare cases, e.g. if the target toilet room was removed while heading there and none other exists
     print("No toilet found in seek_toilets action")
-    humanoid.going_to_toilet = nil
     humanoid:finishAction()
   end
 end
-
-return seek_toilets_action_start

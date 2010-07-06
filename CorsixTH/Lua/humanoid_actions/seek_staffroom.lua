@@ -18,23 +18,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function seek_staffroom_action_start(action, humanoid)
-  -- Mechanism for clearing the going_to_staffroom flag when this action is
-  -- interrupted (due to entering the staff room, being picked up, etc.)
-  if action.todo_interrupt then
-    humanoid.going_to_staffroom = nil
-    humanoid:setMood("tired", "deactivate")
-    humanoid:finishAction()
-    return
-  end
-  action.must_happen = true
+--! Direct a `Staff` member toward a staff-room for resting.
+class "SeekStaffroomAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function SeekStaffroomAction:SeekStaffroomAction(...)
+  self:Action(...)
+end
+
+function SeekStaffroomAction:onAddToQueue(humanoid)
+  Action.onAddToQueue(self, humanoid)
+  humanoid:setMood("tired", "activate")
+  -- TODO: Set humanoid.going_to_staffroom ?
+end
+
+function SeekStaffroomAction:onRemoveFromQueue()
+  humanoid.going_to_staffroom = nil
+  humanoid:setMood("tired", "deactivate")
+  
+  Action.onRemoveFromQueue(self)
+end
+
+function SeekStaffroomAction:onStart()
+  local action = self
+  local humanoid = self.humanoid
+  
   humanoid.staffroom_needed = false
   -- Go to the nearest staff room, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "staff_room")
   if room then
     humanoid.last_room = humanoid:getRoom()
     local task = room:createEnterAction()
-    task.must_happen = true
     task.is_leaving = true
     humanoid:queueAction(task, 0)
     humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
@@ -43,6 +57,5 @@ local function seek_staffroom_action_start(action, humanoid)
     print("No staff room found in seek_staffroom action")
     humanoid.going_to_staffroom = nil
   end
+  -- TODO: General cleanup (what is going on?)
 end
-
-return seek_staffroom_action_start

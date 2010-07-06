@@ -49,7 +49,7 @@ end
 
 function DecontaminationRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
@@ -57,34 +57,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local shower, pat_x, pat_y = self.world:findObjectNear(patient, "shower")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
-  
-  local --[[persistable:decontamination_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].shower_ready and patient.action_queue[1].shower_ready then
-      staff:finishAction()
-      patient:finishAction()
-    end
-  end
-  
-  staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "west" or "north",
-    loop_callback = loop_callback,
-    shower_ready = true,
-  }
-  staff:queueAction{
-    name = "use_object",
-    object = console,
-  }
-  
-  patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = shower.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-    shower_ready = true,
-  }
-  
+   
   local prolonged = true
   local length = math.random() * 3 - staff.profile.skill
   if length < 1 then
@@ -92,26 +65,40 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   else
     length = length - 1
   end
-  patient:queueAction{
-    name = "use_object",
-    object = shower,
-    prolonged_usage = prolonged,
-    loop_callback = --[[persistable:shower_loop_callback]] function(action)
-      length = length - 1
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-    end,
-    after_use = --[[persistable:shower_after_use]] function()
-      if not self.staff_member then
-        return
-      end
-      self.staff_member:setNextAction{name = "meander"}
-      if not patient.going_home then
-        self:dealtWithPatient(patient)
-      end
-    end,
-  }
+  
+  staff:walkTo(stf_x, stf_y)
+  patient:walkTo(pat_x, pat_y)
+  local sync = staff:queueAction(SyncAction{
+    direction = console.direction == "north" and "west" or "north",
+  })
+  local staff_usage = sync:addDependantAction(UseObjectAction{
+    object = console,
+  })
+  patient:queueAction(SyncAction{
+    direction = shower.direction == "north" and "north" or "west",
+    master = sync,
+    dependant_actions = UseObjectAction{
+      object = shower,
+      prolonged_usage = prolonged,
+      loop_callback = --[[persistable:shower_loop_callback]] function(action)
+        length = length - 1
+        if length <= 0 then
+          action.prolonged_usage = false
+        end
+      end,
+      after_use = --[[persistable:shower_after_use]] function()
+        if not self.staff_member then
+          return
+        end
+        staff_usage.prolonged_usage = false
+        if not patient.going_home then
+          self:dealtWithPatient(patient)
+        end
+      end,
+    }
+  })
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
+  staff:queueAction(MeanderAction)
   
   return Room.commandEnteringPatient(self, patient)
 end

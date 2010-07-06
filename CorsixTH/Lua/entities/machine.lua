@@ -93,7 +93,7 @@ function Machine:machineUsed(room)
     end
     if self.handyman_to_repair then
       local hand = self.handyman_to_repair
-      hand:setNextAction{name = "meander"}
+      hand:setNextAction(MeanderAction)
       hand:setDynamicInfoText("")
       self:setRepairing(false)
     end
@@ -120,9 +120,9 @@ function Machine:createRepairAction(handyman)
     fixer.action_queue[1].is_job = nil
     if fixer:getRoom() then
       fixer:setNextAction(fixer:getRoom():createLeaveAction())
-      fixer:queueAction{name = "meander"}
+      fixer:queueAction(MeanderAction)
     else
-      fixer:setNextAction{name = "meander"}
+      fixer:setNextAction(MeanderAction)
     end
     fixer:setDynamicInfoText("")
   end
@@ -138,10 +138,8 @@ function Machine:createRepairAction(handyman)
       end
     end
   end
-  return {
-    name = "use_object",
+  return UseObjectAction {
     object = self,
-    must_happen = true,
     prolonged_usage = false,
     loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
       action_use.prolonged_usage = false

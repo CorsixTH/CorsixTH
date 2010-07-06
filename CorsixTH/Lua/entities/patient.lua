@@ -100,7 +100,7 @@ function Patient:setHospital(hospital)
   Humanoid.setHospital(self, hospital)
   if hospital then
     if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-      self:setNextAction{name = "seek_reception"}
+      self:setNextAction(SeekReceptionAction)
     end
     hospital:addPatient(self)
   end
@@ -155,14 +155,14 @@ function Patient:die()
   self:playSound "boo.wav"
   self.going_home = true
   if self:getRoom() then
-    self:queueAction{name = "meander", count = 1}
+    self:queueAction(MeanderAction{count = 1})
   else
-    self:setNextAction{name = "meander", count = 1}
+    self:setNextAction(MeanderAction{count = 1})
   end  
   if self.is_emergency then
     self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
   end
-  self:queueAction{name = "die"}
+  self:queueAction(DieAction)
   self.hospital:changeReputation("death")
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
@@ -243,11 +243,12 @@ function Patient:tickDay()
         self.world:registerRoomBuildCallback(callback)
         -- Otherwise we can queue the action, but only if not in any rooms right now.
       elseif not self:getRoom() then
-        self:setNextAction{
-          name = "seek_toilets",
-          must_happen = true,
-          }
-        self.going_to_toilet = true
+        for i, action in ipairs(self.action_queue) do
+          if action:postponeFor(SeekToiletsAction, i) then
+            self.going_to_toilet = true
+            break
+          end
+        end
       end
     end
   end
@@ -258,7 +259,7 @@ function Patient:tickDay()
     self:setMood("thirsty", "activate")
     -- If there's already an action to buy a drink in the action queue, or
     -- if we're going to the loo, do nothing
-    if self:goingToUseObject("drinks_machine") or self.going_to_toilet then
+    if self.going_for_drink or self.going_to_toilet then
       return
     end
     -- Don't check for a drinks machine too often
@@ -270,13 +271,12 @@ function Patient:tickDay()
     -- or idling/walking in the corridors
     -- Also make sure the walk action when leaving a room has a chance to finish.
     if not self:getRoom() and not self.action_queue[1].is_leaving then
-      local machine, lx, ly = self.world:
-          findObjectNear(self, "drinks_machine", 8)
+      local machine = self.world:findObjectNear(self, "drinks_machine", 8)
 
       -- If no machine can be found, resume previous action and wait a 
       -- while before trying again. To get a little randomness into the picture
       -- it's not certain we go for it right now.
-      if not machine or not lx or not ly or math.random(1,10) < 3 then
+      if not machine or not machine.tile_x or math.random(1,10) < 3 then
         self.timeout = math.random(2,4)
         return
       end
@@ -291,69 +291,19 @@ function Patient:tickDay()
           self.hospital:receiveMoneyForProduct(self, 15, _S.transactions.drinks)
         end
       end
+      
+      local act = UseObjectAction {
+        object = machine,
+        after_use = after_use,
+        walk_to_object = true,
+        attr_while_in_queue = "going_for_drink",
+      }
         
       -- If we are queueing, let the queue handle the situation.
-      for i, current_action in ipairs(self.action_queue) do
-        if current_action.name == "queue" then
-          local callbacks = current_action.queue.callbacks[self]
-          if callbacks then
-            callbacks:onGetSoda(self, machine, lx, ly, after_use)
-            return
-          end
-        end
-      end
-      
-      -- Or, if walking or idling insert the needed actions in 
-      -- the beginning of the queue
-      local current = self.action_queue[1]
-      if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
-        -- Go to the machine, use it, and then continue with 
-        -- whatever he/she was doing.
-        current.keep_reserved = true
-        self:queueAction({
-          name = "walk", 
-          x = lx, 
-          y = ly,
-          must_happen = true,
-          no_truncate = true,
-        }, 1)
-        self:queueAction({
-          name = "use_object", 
-          object = machine, 
-          after_use = after_use,
-          must_happen = true,
-        }, 2)
-        machine:addReservedUser(self)
-        -- Insert the old action again, a little differently depending on 
-        -- what the previous action was.
-        if current.name == "idle" or current.name == "walk" then
-          self:queueAction({
-            name = current.name,
-            x = current.x,
-            y = current.y,
-            must_happen = current.must_happen,
-            is_entering = current.is_entering,
-          }, 3)
-          -- If we were idling, also go away a little before continuing with
-          -- that important action.
-          if current.name == "idle" then
-            self:queueAction({
-              name = "meander", 
-              count = 1,
-            }, 3)
-          end
-        else -- We were seeking a room, start that action from the beginning
-             -- i.e. do not set the must_happen flag.
-          self:queueAction({
-            name = current.name,
-            room_type = current.room_type,
-            message_sent = true,
-          }, 3)
-        end
-        if current.on_interrupt then
-          current.on_interrupt(current, self)
-        else
-          self:finishAction()
+      for i, action in ipairs(self.action_queue) do
+        if action:postponeFor(act, i) then
+          machine:addReservedUser(self)
+          break
         end
       end
     end
@@ -368,14 +318,9 @@ function Patient:notifyNewObject(id)
   -- Look for a queue action and tell this patient to look for a bench
   -- if currently standing up.
   for i, action in ipairs(self.action_queue) do
-    if action.name == "queue" then
-      local callbacks = action.queue.callbacks[self]
-      if callbacks then
-        assert(action.done_init, "Queue action was not yet initialized")
-        if action:isStanding() then
-          callbacks:onChangeQueuePosition(self)
-          break
-        end
+    if action.onChangeQueuePosition and action.is_in_queue then
+      if action:isStanding() then
+        action:onChangeQueuePosition()
       end
     end
   end

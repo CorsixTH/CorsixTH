@@ -49,31 +49,29 @@ end
 
 function FractureRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
 function FractureRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local cast, pat_x, pat_y = self.world:findObjectNear(patient, "cast_remover")
-  local orientation = cast.object_type.orientations[cast.direction]
   local stf_x, stf_y = cast:getSecondaryUsageTile()
   
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{name = "idle", direction = cast.direction == "north" and "west" or "north"}
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "multi_use_object",
+  
+  staff:queueAction(patient:queueAction(MultiUseObjectAction{
     object = cast,
-    use_with = staff,
     after_use = --[[persistable:fracture_clinic_after_use]] function()
       patient:setLayer(2, 0) -- Remove casts
       patient:setLayer(3, 0)
       patient:setLayer(4, 0)
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

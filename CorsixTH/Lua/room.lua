@@ -68,7 +68,7 @@ end
 
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return {name = "walk", x = x, y = y, is_leaving = true}
+  return WalkAction{x = x, y = y, is_leaving = true}
 end
 
 function Room:createEnterAction(humanoid_entering)
@@ -76,7 +76,7 @@ function Room:createEnterAction(humanoid_entering)
   if humanoid_entering and class.is(humanoid_entering, Staff) and self.approaching_staff then
     self.approaching_staff[humanoid_entering] = true
   end
-  return {name = "walk", x = x, y = y, 
+  return WalkAction{x = x, y = y, 
     is_entering = (humanoid_entering and self.approaching_staff) and self or true}
 end
 
@@ -119,7 +119,7 @@ function Room:dealtWithPatient(patient)
     end
     
     patient:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
-    patient:queueAction{name = "seek_room", room_type = "gp"}
+    patient:queueAction(SeekRoomAction{room_type = "gp"})
     self.hospital:receiveMoneyForTreatment(patient)
   elseif patient.disease and patient.diagnosed then
     -- Patient just been in a cure room, so either patient now cured, or needs
@@ -127,14 +127,14 @@ function Room:dealtWithPatient(patient)
     patient.cure_rooms_visited = patient.cure_rooms_visited + 1
     local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
     if next_room then
-      patient:queueAction{name = "seek_room", room_type = next_room}
+      patient:queueAction(SeekRoomAction{room_type = next_room})
     else
       -- Patient is "done" at the hospital
       patient:treated()
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction(MeanderAction{count = 2})
+    patient:queueAction(IdleAction())
   end
 
   -- The staff member(s) might be needed somewhere else.
@@ -242,10 +242,10 @@ function Room:onHumanoidEnter(humanoid)
   if not self.is_active then
     if class.is(humanoid, Patient) then
         self:makePatientLeave(humanoid)
-        humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+        humanoid:queueAction(SeekRoomAction{room_type = self.room_info.id})
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction({name = "meander"})
+        humanoid:queueAction(MeanderAction)
       end
   end
   if humanoid.humanoid_class == "Handyman" then
@@ -267,8 +267,7 @@ function Room:onHumanoidEnter(humanoid)
       if machine then
         machine:setRepairing(humanoid)
         local x, y = machine:getRepairTile()
-        humanoid:setNextAction({
-          name = "walk",
+        humanoid:setNextAction(WalkAction{
           x = x,
           y = y,
           is_job = machine,
@@ -277,12 +276,12 @@ function Room:onHumanoidEnter(humanoid)
         local leave_action = self:createLeaveAction()
         leave_action.is_job = machine
         humanoid:queueAction(leave_action)
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction)
       elseif plant then
         plant:createHandymanActions(humanoid)
       else -- Found nothing of interest in this room, so leave it.
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction)
       end
     end
     return
@@ -293,7 +292,7 @@ function Room:onHumanoidEnter(humanoid)
     if not self:staffFitsInRoom(humanoid) then
       self.humanoids[humanoid] = true
       humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction{name = "meander"}
+      humanoid:queueAction(MeanderAction)
     else
       self.humanoids[humanoid] = true
       self:commandEnteringStaff(humanoid)
@@ -349,13 +348,13 @@ function Room:commandEnteringStaff(humanoid)
           -- could do with a better scheme... however don't just meander where you are
           -- because that most likely breaks the room
           staff:setNextAction(room:createLeaveAction())
-          staff:queueAction{name = "meander"}
+          staff:queueAction(MeanderAction())
         else
           room = staff.world:getNearestRoomNeedingStaff(staff)
           if room then
             staff:setNextAction(room:createEnterAction())
           else
-            staff:setNextAction{name = "meander"}
+            staff:setNextAction(MeanderAction())
           end
         end
       end
@@ -401,6 +400,11 @@ function Room:tryAdvanceQueue()
   end
 end
 
+function Room:makePatientRejoinQueue(humanoid)
+  self:makePatientLeave(humanoid)
+  humanoid:queueAction(self:createEnterAction())
+end
+
 function Room:onHumanoidLeave(humanoid)
   assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
   self.humanoids[humanoid] = nil
@@ -412,7 +416,7 @@ function Room:onHumanoidLeave(humanoid)
       -- could be in the room at the same time as a patient leaves.
       if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
         if humanoid.staffroom_needed then
-          humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
+          humanoid:setNextAction(SeekStaffroomAction)
           staff_leaving = true
         end
       end
@@ -437,8 +441,7 @@ function Room:onHumanoidLeave(humanoid)
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) then
           if not humanoid.action_queue[1].is_leaving then
-            self:makePatientLeave(humanoid)
-            humanoid:queueAction(self:createEnterAction())
+            self:makePatientRejoinQueue(humanoid)
           end
         end
       end
@@ -446,7 +449,7 @@ function Room:onHumanoidLeave(humanoid)
     -- The handyman is now finished doing something important, he might want to go
     -- to the staffroom
     if humanoid.staffroom_needed and humanoid.humanoid_class == "Handyman" then
-      humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
+      humanoid:setNextAction(SeekStaffroomAction)
     end
     -- Remove any unwanted moods the staff member might have
     humanoid:setMood("staff_wait", "deactivate")
@@ -537,20 +540,10 @@ function Room:tryToFindNearbyPatients()
           
           -- Rewrite the action queue
           for i, action in ipairs(patient.action_queue) do
-            if i ~= 1 then
-              action.todo_interrupt = true
-            end
-            if action.name == "walk" and action.x == other_x and action.y == other_y then
-              local action = self:createEnterAction()
-              patient:queueAction(action, i)
+            if class.is(action, WalkAction) and action.x == other_x and action.y == other_y then
+              patient:setNextAction(self:createEnterAction())
               break
             end
-          end
-          local interrupted = patient.action_queue[1]
-          local on_interrupt = interrupted.on_interrupt
-          if on_interrupt then
-            interrupted.on_interrupt = nil
-            on_interrupt(interrupted, patient, false)
           end
         else
           break
@@ -565,7 +558,6 @@ function Room:crashRoom()
   
   -- Remove all humanoids in the room
   for humanoid, _ in pairs(self.humanoids) do
-    humanoid:queueAction({name = "idle"}, 1)
     humanoid.user_of = nil
     -- Make sure any emergency list is not messed up.
     -- Note that these humanoids might just have been kicked. (No hospital set)
@@ -664,7 +656,6 @@ end
 -- handling, e.g. if the patient needs to change before leaving the room.
 function Room:makePatientLeave(patient)
   local leave = self:createLeaveAction()
-  leave.must_happen = true
   patient:setNextAction(leave)
 end
 
@@ -679,10 +670,10 @@ function Room:tryToEdit()
     if not humanoid.action_queue[1].is_leaving then
       if class.is(humanoid, Patient) then
         self:makePatientLeave(humanoid)
-        humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+        humanoid:queueAction(SeekRoomAction{room_type = self.room_info.id})
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction({name = "meander"})
+        humanoid:queueAction(MeanderAction)
       end
     end
     i = i + 1

@@ -18,38 +18,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+--! Have a receptionist stand behind a reception desk and service `Patient`s.
+class "StaffReceptionAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function StaffReceptionAction:StaffReceptionAction(...)
+  self:Action(...)
+end
+
+function StaffReceptionAction:canRemoveFromQueue(is_high_priority)
+  return (is_high_priority or not self.is_active) and
+    Action.canRemoveFromQueue(self, is_high_priority)
+end
+
 local action_staff_reception_interrupt = permanent"action_staff_reception_interrupt"( function(action, humanoid, high_priority)
-  local object = action.object
-  object.receptionist = nil
-  object:checkForNearbyStaff()
-  humanoid.associated_desk = nil
-  local dx, dy = object:getSecondaryUsageTile()
+  local dx, dy = action.orig_x, action.orig_y
   if high_priority then
     humanoid:setTilePositionSpeed(dx, dy)
     humanoid:finishAction()
   else
-    HumanoidRawWalk(humanoid, humanoid.tile_x, humanoid.tile_y, dx, dy, nil, function()
+    action:cleanup()
+    HumanoidRawWalk(humanoid, humanoid.tile_x, humanoid.tile_y, dx, dy, nil,
+    --[[persistable:staff_reception_action_after_walk_out]] function()
       humanoid:setTilePositionSpeed(dx, dy)
       humanoid:finishAction()
     end)
   end
 end)
 
+function StaffReceptionAction:truncate(is_high_priority)
+  self.truncated = true
+  self.truncated_high_priority = self.truncated_high_priority or is_high_priority
+  if self.can_truncate_now then
+    self.can_truncate_now = nil
+    action_staff_reception_interrupt(self, self.humanoid, self.truncated_high_priority)
+  end
+end
+
 local action_staff_reception_idle_phase = permanent"action_staff_reception_idle_phase"( function(humanoid)
   local action = humanoid.action_queue[1]
+  local self = action
   local direction = humanoid.last_move_direction
-  local anims = humanoid.walk_anims
   local object = action.object
-  if direction == "north" then
-    humanoid:setAnimation(anims.idle_north, 0)
-  elseif direction == "east" then
-    humanoid:setAnimation(anims.idle_east, 0)
-  elseif direction == "south" then
-    humanoid:setAnimation(anims.idle_east, 1)
-  elseif direction == "west" then
-    humanoid:setAnimation(anims.idle_north, 1)
-  end
-  humanoid:setTilePositionSpeed(object.tile_x, object.tile_y)
+  IdleAction.setAnimation(self)
+  humanoid:setTilePositionSpeed(self.use_x, self.use_y)
   object.receptionist = humanoid
   object.reserved_for = nil
   object.th:makeVisible()
@@ -57,37 +69,52 @@ local action_staff_reception_idle_phase = permanent"action_staff_reception_idle_
     -- Place desk behind receptionist in render order (they are on the same tile)
     object.th:setTile(object.th:getTile())
   end
-  if action.on_interrupt then
-    action.on_interrupt = action_staff_reception_interrupt
+  if action.truncated then
+    action_staff_reception_interrupt(self, self.humanoid, self.truncated_high_priority)
   else
-    action_staff_reception_interrupt(action, humanoid)
+    action.can_truncate_now = true
   end
 end)
 
-local action_staff_reception_interrupt_early = permanent"action_staff_reception_interrupt_early"( function(action, humanoid, high_priority)
-  if high_priority then
-    action.object.reserved_for = nil
-    humanoid.associated_desk:checkForNearbyStaff()
-    humanoid.associated_desk = nil
-    humanoid:setTimer(nil)
-    humanoid:setTilePositionSpeed(action.object:getSecondaryUsageTile())
-    humanoid:finishAction()
+function StaffReceptionAction:handleRemovedObject(index_in_queue)
+  if index_in_queue == #self.humanoid.action_queue then
+    self.humanoid:queueAction(MeanderAction)
   end
-end)
-
-local function action_staff_reception_start(action, humanoid)
-  if action.todo_interrupt then
-    humanoid.associated_desk.reserved_for = nil
-    humanoid.associated_desk:checkForNearbyStaff()
-    humanoid.associated_desk = nil
-    humanoid:finishAction(action)
-    return
-  end
-  local object = action.object
-  HumanoidRawWalk(humanoid, humanoid.tile_x, humanoid.tile_y,
-    object.tile_x, object.tile_y, nil, action_staff_reception_idle_phase)
-  action.must_happen = true
-  action.on_interrupt = action_staff_reception_interrupt_early
+  self.humanoid:cancelActions(index_in_queue, index_in_queue)
 end
 
-return action_staff_reception_start
+function StaffReceptionAction:cleanup()
+  local humanoid = self.humanoid
+  local desk = self.object
+  
+  if desk.receptionist == humanoid then
+    desk.receptionist = nil
+  end
+  if desk.reserved_for == humanoid then
+    desk.reserved_for = nil
+  end
+  desk:checkForNearbyStaff()
+  if humanoid.associated_desk == desk then
+    humanoid.associated_desk = nil
+  end
+end
+
+function StaffReceptionAction:onRemoveFromQueue()
+  self:cleanup()
+  Action.onRemoveFromQueue(self)
+end
+
+function StaffReceptionAction:onStart()
+  local action = self
+  local humanoid = self.humanoid
+  local object = action.object
+  Action.onStart(self)
+  
+  -- Just in case the desk is picked up while the action is active, remember
+  -- the important tiles at this moment in time.
+  self.orig_x, self.orig_y = object:getSecondaryUsageTile()
+  self.use_x, self.use_y = object.tile_x, object.tile_y
+  
+  HumanoidRawWalk(humanoid, self.orig_x, self.orig_y, self.use_x, self.use_y,
+    nil, action_staff_reception_idle_phase)
+end

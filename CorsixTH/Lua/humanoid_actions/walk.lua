@@ -18,10 +18,101 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local action_walk_interrupt
-action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
-  if action.truncate_only_on_high_priority and not high_priority then
-    action.on_interrupt = action_walk_interrupt
+--! Have a `Humanoid` walk from one tile on the map to another tile on the map.
+class "WalkAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function WalkAction:WalkAction(...)
+  self:Action(...)
+end
+
+function WalkAction:canRemoveFromQueue(is_high_priority)
+  if self.is_active then
+    -- When active, can only remove when high priority, in order to allow 
+    -- animations to finish.
+    if self.no_truncate or not is_high_priority then
+      return false
+    end
+  else
+    -- When inactive, can remove unless truncation is not permitted.
+    if (self.truncate_only_on_high_priority and not is_high_priority)
+    or self.no_truncate then
+      return false
+    end
+  end
+  return Action.canRemoveFromQueue(self, is_high_priority)
+end
+
+local flag_cache = {}
+function WalkAction:postponeFor(action, index_in_queue)
+  if self.is_active then
+    local path_x = self.path_x
+    local path_y = self.path_y
+    local path_index = self.path_index
+    
+    if self.postponable == false
+    or self.todo_postpone
+    or self.reserve_on_resume
+    or self.path_index == #self.path_x then
+      return false
+    end
+    
+    local x1, y1 = path_x[path_index  ], path_y[path_index  ]
+    local x2, y2 = path_x[path_index+1], path_y[path_index+1]
+    local map = self.humanoid.world.map.th
+    if map:getCellFlags(x1, y1, flag_cache).roomId ~= 0
+    or map:getCellFlags(x2, y2, flag_cache).roomId ~= 0 then
+      return false
+    end
+    
+    self.todo_postpone = action
+    return true
+  else
+    if self.postponable == false then
+      return false
+    end
+    self.humanoid:queueAction(action, index_in_queue - 1)
+    return true
+  end
+end
+
+function WalkAction:onRemoveFromQueue()
+  local action = self
+  local humanoid = self.humanoid
+  
+  -- Check for objects that the handyman was going to attend to.
+  if humanoid.humanoid_class == "Handyman" and action.is_job then
+    local obj = action.is_job
+    if class.is(obj, Machine) then
+      -- This handyman is no longer going to the machine, try
+      -- to find another handyman to fix it instead.
+      obj.approaching_handyman = nil
+      humanoid.world:callForStaff(obj:getRoom(), obj)
+    end
+    action.is_job.reserved_for = nil
+  end
+  
+  -- If the staff was heading for a room, remove that staff from the approaching list.
+  if action.is_entering and action.is_entering ~= true then
+    action.is_entering.approaching_staff[humanoid] = nil
+    -- Make a new check. If there is still need for staff in the room someone else could go.
+    humanoid.world:callForStaff(action.is_entering)
+  end
+  
+  Action.onRemoveFromQueue(self)
+end
+
+function WalkAction:truncate(high_priority)
+  local action = self
+  local humanoid = self.humanoid
+
+  if (action.truncate_only_on_high_priority and not high_priority)
+  or action.no_truncate then
+    return
+  end
+  
+  if not action.path_x then
+    -- TODO: Flag for later truncation?
     return
   end
   
@@ -30,7 +121,10 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     action.path_x[j] = nil
     action.path_y[j] = nil
   end
+  
   -- Unreserve any door which we had reserved unless specifically told not to.
+  -- TODO: Logic
+  --[[
   if not action.keep_reserved then
     local door = action.reserve_on_resume
     if door and door.reserved_for == humanoid then
@@ -44,30 +138,8 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
-  -- Check for objects that the handyman was going to attend to.
-  if humanoid.humanoid_class == "Handyman" and action.is_job then
-    local obj = action.is_job
-    if class.is(obj, Machine) then
-      -- This handyman is no longer going to the machine, try
-      -- to find another handyman to fix it instead.
-      obj.approaching_handyman = nil
-      humanoid.world:callForStaff(obj:getRoom(), obj)
-    end
-    action.is_job.reserved_for = nil
-  end
-  -- If the staff was heading for a room, remove that staff from the approaching list.
-  if action.is_entering and action.is_entering ~= true then
-    action.is_entering.approaching_staff[humanoid] = nil
-    -- Make a new check. If there is still need for staff in the room someone else could go.
-    humanoid.world:callForStaff(action.is_entering)
-  end
-  -- Terminate immediately if high-priority
-  if high_priority then
-    local timer_function = humanoid.timer_function
-    humanoid:setTimer(nil)
-    timer_function(humanoid)
-  end
-end)
+  --]]
+end
 
 local flag_list_bottom = 2048
 local flag_early_list = 1024
@@ -88,7 +160,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
   end
   if x1 ~= x2 then
     if x1 < x2 then
-      if map and map:getCellFlags(x2, y2).doorWest then
+      if map and map:getCellFlags(x2, y2, flag_cache).doorWest then
         return navigateDoor(humanoid, x1, y1, "east")
       else
         humanoid.last_move_direction = "east"
@@ -96,7 +168,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
         humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4, 2)
       end
     else
-      if map and map:getCellFlags(x1, y1).doorWest then
+      if map and map:getCellFlags(x1, y1, flag_cache).doorWest then
         return navigateDoor(humanoid, x1, y1, "west")
       else
         humanoid.last_move_direction = "west"
@@ -106,7 +178,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
     end
   else
     if y1 < y2 then
-      if map and map:getCellFlags(x2, y2).doorNorth then
+      if map and map:getCellFlags(x2, y2, flag_cache).doorNorth then
         return navigateDoor(humanoid, x1, y1, "south")
       else
         humanoid.last_move_direction = "south"
@@ -114,7 +186,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
         humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4, 2)
       end
     else
-      if map and map:getCellFlags(x1, y1).doorNorth then
+      if map and map:getCellFlags(x1, y1, flag_cache).doorNorth then
         return navigateDoor(humanoid, x1, y1, "north")
       else
         humanoid.last_move_direction = "north"
@@ -142,7 +214,9 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
     if action.on_next_tile_set then
       action.on_next_tile_set()
     end
-    humanoid:finishAction(action)
+    if action.is_active then
+      humanoid:finishAction(action)
+    end
     return
   end
   
@@ -169,7 +243,7 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
       if action.on_next_tile_set then
         action.on_next_tile_set()
       end
-      return action:on_restart(humanoid)
+      return action:onRestart()
     end
   end
   
@@ -226,14 +300,12 @@ navigateDoor = function(humanoid, x1, y1, dir)
     -- A member of staff is entering, but is maybe no longer needed 
     -- in this room?
     if not room:staffFitsInRoom(humanoid) then
-      humanoid:queueAction({name = "idle"},0)
       humanoid:setTilePositionSpeed(x1, y1)
-      humanoid:setNextAction({name = "idle", count = 10},0)
       local room = humanoid.world:getNearestRoomNeedingStaff(humanoid)
       if room then
-        humanoid:queueAction(room:createEnterAction())
+        humanoid:setNextAction(room:createEnterAction())
       else
-        humanoid:queueAction{name = "meander"}
+        humanoid:setNextAction(MeanderAction())
       end
       return
     end
@@ -243,6 +315,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
   or (is_entering_room and not room:canHumanoidEnter(humanoid)) then
     local queue = door.queue
     if door.reserved_for == humanoid then
+      -- Door is somehow reserved for us, but we cannot use it, so give
+      -- someone else the opportunity to use it (if anyone is waiting).
       door.reserved_for = nil
       if queue:size() > 0 then
         queue:pop()
@@ -254,32 +328,32 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if is_entering_room and queue:size() == 0 and not room:getPatient()
     and not door.user and not door.reserved_for and humanoid.should_knock_on_doors 
     and room.room_info.required_staff and not swinging then
-      humanoid:queueAction({
-        name = "knock_door",
+      humanoid:queueAction(KnockDoorAction{
         door = door,
         direction = dir,
       }, action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction({
-      name = "queue",
+    humanoid:queueAction(QueueAction{
       x = x1,
       y = y1,
       queue = queue,
       reserve_when_done = door,
     }, action_index)
-    action.must_happen = action.saved_must_happen
+    -- If this walk action ever resumes, then we want to grab ownership of the
+    -- door.
     action.reserve_on_resume = door
     return
   end
   if action.reserve_on_resume then
+    -- We're about to become the user of the door, so no need to keep the door
+    -- reserved if we get restarted again.
     assert(action.reserve_on_resume == door)
     action.reserve_on_resume = nil
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors  
   and room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
-    humanoid:queueAction({
-      name = "knock_door",
+    humanoid:queueAction(KnockDoorAction{
       door = door,
       direction = dir,
     }, 0)
@@ -356,7 +430,30 @@ navigateDoor = function(humanoid, x1, y1, dir)
   humanoid:setTimer(duration, action_walk_tick_door)
 end
 
-local function action_walk_start(action, humanoid)
+function WalkAction:onFinish()
+  if self.reserve_on_resume then
+    -- We reseved a door, but never got around to using it.
+    local door = self.reserve_on_resume
+    if door.reserved_for == self.humanoid then
+      door.reserved_for = nil
+      if door.queue:size() > 0 then
+        door.queue:pop()
+        door:updateDynamicInfo()
+      end
+    end
+  end
+  self.humanoid.timer_function = nil
+  Action.onFinish(self)
+end
+
+function WalkAction:toString()
+  return ("Walk to (%i,%i)"):format(self.x, self.y)
+end
+
+function WalkAction:onRestart()
+  local action = self
+  local humanoid = self.humanoid
+  
   -- Possible future optimisation: when walking from somewhere inside the hospital
   -- to somewhere outside the hospital (or from one building to another?), do
   -- pathfinding in two steps, with the building door as a middle node
@@ -370,24 +467,23 @@ local function action_walk_start(action, humanoid)
     -- set the humanoid animation / position though, which is delegated to the
     -- idle action (if this wasn't done, then the previous animation would be
     -- used, which might involve an object).
-    TheApp.humanoid_actions.idle(action, humanoid)
+    IdleAction.setAnimation(self)
     humanoid:setTimer(1, humanoid.finishAction)
     return
   end
   action.path_x = path_x
   action.path_y = path_y
   action.path_index = 1
-  if not action.no_truncate then
-    action.on_interrupt = action_walk_interrupt
-  end
-  action.on_restart = action_walk_start
-  action.saved_must_happen = action.must_happen
-  action.must_happen = true
-  if action.reserve_on_resume and not action.todo_interrupt then
+  
+  -- TODO: Logic
+  if action.reserve_on_resume then
     action.reserve_on_resume.reserved_for = humanoid
   end
   
   return action_walk_tick(humanoid)
 end
 
-return action_walk_start
+function WalkAction:onStart()
+  Action.onStart(self)
+  self:onRestart()
+end

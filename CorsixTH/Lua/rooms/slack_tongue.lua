@@ -49,33 +49,30 @@ end
 
 function SlackTongueRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
 function SlackTongueRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local slicer, pat_x, pat_y = self.world:findObjectNear(patient, "slicer")
-  local orientation = slicer.object_type.orientations[slicer.direction]
   local stf_x, stf_y = slicer:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{name = "idle", direction = slicer.direction == "north" and "east" or "south"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{
-    name = "multi_use_object",
+  staff:walkTo(stf_x, stf_y)
+  patient:walkTo(pat_x, pat_y)
+  staff:queueAction(patient:queueAction(MultiUseObjectAction{
     object = slicer,
-    use_with = staff,
     after_use = --[[persistable:slack_tongue_after_use]] function()
       if patient.humanoid_class == "Slack Male Patient" then
         patient:setType "Standard Male Patient" -- Change to normal head
       else
         patient:setLayer(0, patient.layers[0] - 8) -- Change to normal head
       end
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
 
   return Room.commandEnteringPatient(self, patient)
 end

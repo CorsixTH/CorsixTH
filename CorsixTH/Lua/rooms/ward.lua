@@ -71,13 +71,12 @@ function WardRoom:doStaffUseCycle(humanoid)
   local meander_time = math.random(4, 10)
   local desk_use_time = math.random(8, 16)
   
-  humanoid:setNextAction{
-    name = "meander",
+  humanoid:setNextAction(MeanderAction{
     count = meander_time,
-  }
+  })
   local obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
-  humanoid:queueAction{name = "use_object",
+  humanoid:queueAction(WalkAction{x = ox, y = oy})
+  humanoid:queueAction(UseObjectAction{
     object = obj,
     loop_callback = --[[persistable:ward_desk_loop_callback]] function()
       desk_use_time = desk_use_time - 1
@@ -85,7 +84,7 @@ function WardRoom:doStaffUseCycle(humanoid)
         self:doStaffUseCycle(humanoid)
       end
     end,
-  }
+  })
 end
 
 function WardRoom:commandEnteringPatient(patient)
@@ -108,12 +107,11 @@ function WardRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end
     patient:walkTo(pat_x, pat_y)
-    patient:queueAction{
-      name = "use_object", 
+    patient:queueAction(UseObjectAction {
       object = bed,
       loop_callback = loop_callback,
       after_use = after_use,
-    }
+    })
   end
 
   return Room.commandEnteringPatient(self, patient)

@@ -144,16 +144,14 @@ function UIFax:choice(choice)
       end
     elseif choice == "guess_cure" then
       owner:setDiagnosed(true)
-      owner:setNextAction{
-        name = "seek_room",
+      owner:setNextAction(SeekRoomAction{
         room_type = owner.disease.treatment_rooms[1],
-      }
+      })
     elseif choice == "research" then
       owner:setMood("idea", "activate")
-      owner:setNextAction {
-        name = "seek_room",
+      owner:setNextAction(SeekRoomAction{
         room_type = "research",
-      }
+      })
     end
   end
   if choice == "tutorial" then

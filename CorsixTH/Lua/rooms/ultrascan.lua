@@ -49,28 +49,25 @@ end
 
 function UltrascanRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction)
   return Room.commandEnteringStaff(self, staff)
 end
 
 function UltrascanRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local ultrascan, pat_x, pat_y = self.world:findObjectNear(patient, "ultrascanner")
-  local orientation = ultrascan.object_type.orientations[ultrascan.direction]
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
   
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{
-    name = "multi_use_object",
+  patient:walkTo(pat_x, pat_y)
+  staff:walkTo(stf_x, stf_y)
+  staff:queueAction(patient:queueAction(MultiUseObjectAction{
     object = ultrascan,
-    use_with = staff,
     after_use = --[[persistable:ultrascan_after_use]] function()
-      staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
-  }
+  }):createSecondaryUserAction())
+  staff:queueAction(MeanderAction)
+  patient:queueAction(LogicAction{self.makePatientRejoinQueue, self, patient})
   
   return Room.commandEnteringPatient(self, patient)
 end

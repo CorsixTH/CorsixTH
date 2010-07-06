@@ -105,9 +105,9 @@ function UIMachine:replaceMachine()
         self.room.needs_repair = nil
         if handyman:getRoom() then
           handyman:setNextAction(handyman:getRoom():createLeaveAction())
-          handyman:queueAction{name = "meander"}
+          handyman:queueAction(MeanderAction)
         else
-          handyman:setNextAction{name = "meander"}
+          handyman:setNextAction(MeanderAction)
         end
         machine:updateDynamicInfo(true)
       end

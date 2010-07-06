@@ -18,9 +18,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local action_idle_interrupt = permanent"action_idle_interrupt"( function(action, humanoid)
-  humanoid:setTimer(1, humanoid.finishAction)
-end)
+--! Instruct a `Humanoid` to stand in one place and not do anything.
+class "IdleAction" {} (Action)
+
+--!param ... Arguments for the base class constructor.
+function IdleAction:IdleAction(...)
+  self:Action(...)
+end
 
 local action_timer = permanent"action_idle_timer"( function(humanoid)
   local action = humanoid.action_queue[1]
@@ -31,8 +35,20 @@ local action_timer = permanent"action_idle_timer"( function(humanoid)
   humanoid:finishAction()
 end)
 
-local function action_idle_start(action, humanoid)
-  local direction = action.direction or humanoid.last_move_direction
+function IdleAction:truncate(high_priority)
+  if not self.is_active then
+    self.count = 1
+  elseif self.count then
+    self.humanoid:callTimer()
+  else
+    action_timer(self.humanoid)
+  end
+end
+
+function IdleAction:setAnimation()
+  local humanoid = self.humanoid
+  
+  local direction = self.direction or humanoid.last_move_direction
   local anims = humanoid.walk_anims
   if direction == "north" then
     humanoid:setAnimation(anims.idle_north, 0)
@@ -45,16 +61,19 @@ local function action_idle_start(action, humanoid)
   end
   humanoid.th:setTile(humanoid.th:getTile())
   humanoid:setSpeed(0, 0)
+end
+
+function IdleAction:onStart()
+  Action.onStart(self)
+  
+  local humanoid = self.humanoid
+  local action = self
+  
+  self:setAnimation()
   if action.count then
     humanoid:setTimer(action.count, action_timer)
-    action.must_happen = true
-  end
-  if action.must_happen then
-    action.on_interrupt = action_idle_interrupt
   end
   if action.loop_callback then
     action:loop_callback()
   end
 end
-
-return action_idle_start
