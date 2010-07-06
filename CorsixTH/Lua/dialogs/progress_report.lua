@@ -138,6 +138,7 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst")
   local warmth = self.ui.hospital:getAveragePatientAttribute("warmth")
 
+  warmth = UIPatient.normaliseWarmth(warmth)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * happiness, y + 193)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)

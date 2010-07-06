@@ -95,6 +95,17 @@ function UIPatient:UIPatient(ui, patient)
   self:addKeyHandler("H", self.goHome)
 end
 
+function UIPatient.normaliseWarmth(warmth)
+  if warmth < 0.08 then
+    warmth = 0
+  elseif warmth > 0.50 then
+    warmth = 1
+  else
+    warmth = (warmth - 0.08) / (0.50 - 0.08)
+  end
+  return warmth
+end
+
 function UIPatient:draw(canvas, x_, y_)
   local x, y = self.x + x_, self.y + y_
   local map = self.ui.app.map
@@ -147,13 +158,7 @@ function UIPatient:draw(canvas, x_, y_)
   local warmth_bar_width = 22
   local warmth = patient.attributes["warmth"]
   if warmth then
-    if warmth < 0.08 then
-      warmth = 0
-    elseif warmth > 0.50 then
-      warmth = 1
-    else
-      warmth = (warmth - 0.08) / (0.50 - 0.08)
-    end
+    warmth = self.normaliseWarmth(warmth)
     warmth_bar_width = math_floor(warmth * 40 + 0.5)
   end
   if warmth_bar_width ~= 0 then

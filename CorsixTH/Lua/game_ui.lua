@@ -121,8 +121,8 @@ end
 --! When an UI object is depersisted, its state will reflect how the UI was at
 -- the moment of persistence, which may be different to the keyboard / mouse
 -- state at the moment of depersistence.
---!param ui (GameUI) The previously existing UI object, from which values
--- should be taken.
+--!param ui (UI) The previously existing UI object, from which values should be
+-- taken.
 function GameUI:resync(ui)
   if self.drag_mouse_move then
     -- Check that a window is actually being dragged. If none is found, then
@@ -140,7 +140,9 @@ function GameUI:resync(ui)
   end
   self.tick_scroll_amount = ui.tick_scroll_amount
   self.down_count = ui.down_count
-  self.limit_to_visible_diamond = ui.limit_to_visible_diamond
+  if ui.limit_to_visible_diamond ~= nil then
+    self.limit_to_visible_diamond = ui.limit_to_visible_diamond
+  end
 
   self.key_remaps = ui.key_remaps
   self.key_to_button_remaps = ui.key_to_button_remaps
