@@ -99,6 +99,12 @@ function StaffReceptionAction:cleanup()
   end
 end
 
+function StaffReceptionAction:onAddToQueue(humanoid)
+  Action.onAddToQueue(self, humanoid)
+  self.object.reserved_for = humanoid
+  humanoid.associated_desk = self.object
+end
+
 function StaffReceptionAction:onRemoveFromQueue()
   self:cleanup()
   Action.onRemoveFromQueue(self)

@@ -122,8 +122,6 @@ function ReceptionDesk:checkForNearbyStaff()
     return false
   end
   
-  self.reserved_for = nearest_staff
-  nearest_staff.associated_desk = self
   nearest_staff:walkTo(use_x, use_y)
   nearest_staff:queueAction(StaffReceptionAction{object = self})
   return true
@@ -148,10 +146,7 @@ function ReceptionDesk:onDestroy()
       local obj = world:getObject(x, y, "reception_desk")
       -- Make sure we are not selecting the same desk again
       if obj ~= self and not obj.receptionist and not obj.reserved_for then
-        obj.reserved_for = receptionist
-        receptionist.associated_desk = obj
-        local use_x, use_y = obj:getSecondaryUsageTile()
-        receptionist:walkTo(use_x, use_y)
+        receptionist:walkTo(obj:getSecondaryUsageTile())
         receptionist:queueAction(StaffReceptionAction{object = obj})
         return true
       end

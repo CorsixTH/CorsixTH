@@ -321,10 +321,7 @@ function Staff:onPlaceInCorridor()
   world:findObjectNear(self, "reception_desk", nil, function(x, y)
     local obj = world:getObject(x, y, "reception_desk")
     if not obj.receptionist and not obj.reserved_for then
-      obj.reserved_for = self
-      self.associated_desk = obj
-      local use_x, use_y = obj:getSecondaryUsageTile()
-      self:walkTo(use_x, use_y)
+      self:walkTo(obj:getSecondaryUsageTile())
       self:queueAction(StaffReceptionAction{object = obj})
       return true
     end
