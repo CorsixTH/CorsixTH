@@ -121,6 +121,7 @@ theme_hospital_install = [[]=].. config_defaults.theme_hospital_install ..[=[]]
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  English     / en / eng
+--  Finnish / Suomi / fi / fin
 --  French      / fr / fre / fra
 --  German      / de / ger / deu
 --  Italian     / it / ita
