@@ -91,8 +91,23 @@ fax = {
     "Ja, vis meg det grunnleggende.",
     "Niks, jeg kan dette.",
   },
+  choices = {
+  	return_to_main_menu = utf8 "Gå tilbake til hovedmenyen",
+  	accept_new_level = utf8 "Fortsett til neste nivå",
+  	decline_new_level = utf8 "Fortsett å spille litt til",
+  },
+}
+letter = {
+	dear_player = utf8 "Kjære %s",
+	custom_level_completed = utf8 "Bra gjort! Du har fullfört alle utfordringene på dette brukerdefinerte brettet.!",
+	return_to_main_menu = utf8 "Vil du returnere til hovedmenyen eller fortsette å spille?",
+	level_lost = "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
 }
 
+install = {
+	title = "--------------------------------- CorsixTH Setup ---------------------------------",
+	th_directory = "CorsixTH trenger en kopi av datafilene fra et ekte Theme Hospital spill (eller demo) for å kjöre. Vennligst velg plasseringen til originalspillet nedenfor.",
+}
 
 -- 3. Objects
 object = {
@@ -101,8 +116,16 @@ object = {
 
 
 -- 4. Menu 
+menu_options = {
+	lock_windows = utf8 "  LÅS VINDUER  ",
+	edge_scrolling = "  KANTSCROLLING  ",
+	settings = "  INNSTILLINGER  ",
+}
+
 menu_options_game_speed.pause 	= "  PAUSE  "
-menu_options.lock_windows 		= utf8 "  LÅS VINDUER  "
+
+-- The demo does not contain this string
+menu_file.restart = "  RESTART  "
 
 menu_debug = {
   transparent_walls           	= "  GJENNOMSIKTIGE VEGGER  ",
@@ -114,6 +137,7 @@ menu_debug = {
   show_watch                  	= "  VIS STOPPEKLOKKE  ",
   place_objects               	= "  PLASSER GJENSTANDER  ",
   dump_strings                	= utf8 "  DUMP SPRÅKSTRENGER  ",
+  dump_gamelog                	= "  DUMP SPILL-LOGGEN  ",
   map_overlay                 	= "  KARTOVERLEGG  ",
   sprite_viewer               	= "  SPRITE-VISNING  ",
 }
@@ -122,6 +146,7 @@ menu_debug_overlay = {
   none                        	= "  INGEN  ",
   flags                       	= "  FLAGG  ",
   positions                   	= "  POSISJONER  ",
+  heat                        	= "  TEMPERATUR  ",
   byte_0_1                    	= "  BYTE 0 & 1  ",
   byte_floor                  	= "  BYTE GULV  ",
   byte_n_wall                 	= "  BYTE N VEGG  ",
@@ -166,32 +191,90 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  back = "Tilbake",
+  caption = "Last inn spill",
 }
 
 tooltip.load_game_window = {
+  load_game = "Last spill %s",
   load_game_number 	= "Last spill %d",
   load_autosave 	= "Last autolagring",
-  back 				= "Lukk dette vinduet",
 }
 
+custom_game_window = {
+  caption = "Brukerdefinert spill",
+}
+
+tooltip.custom_game_window = {
+  start_game_with_name = utf8 "Last nivå %s",
+}
+save_game_window = {
+  caption = "Lagre spill",
+  new_save_game = "Nytt spill",
+}
+tooltip.save_game_window = {
+  save_game = "Overskriv spill %s",
+  new_save_game = utf8 "Skriv navn på nytt spill",
+}
+menu_list_window = {
+	back = "Tilbake",
+}
+tooltip.menu_list_window = {
+	back = utf8 "Lukk dette vinduet",
+}
+options_window = {
+	fullscreen = "Fullskjerm",
+	width = "Bredde",
+	height = utf8 "Höyde",
+	change_resolution = utf8 "Endre opplösning",
+	back = "Tilbake",
+}
+tooltip.options_window = {
+	fullscreen_button = "Klikk for å gå i fullskjermmodus",
+	width = utf8 "Skriv inn önsket skjermbredde",
+	height = utf8 "Skriv inn önsket skjermhöyde",
+	change_resolution = utf8 "Endre opplösningen til dimensjonene du har angitt til venstre.",
+	language = utf8 "Velg %s som språk",
+	back = "Lukk innstillinger vinduet",
+}
 errors = {
   dialog_missing_graphics 	= "Beklager, datafilene i demoen tillater ikke denne dialogen.",
   save_prefix 				= "Feil under lagring av spill: ",
   load_prefix 				= "Feil under lasting av spill: ",
+  map_file_missing 			= utf8 "Kunne ikke finne kartfilen %s for dette nivået!",
+  minimum_screen_size 		= utf8 "Vennligst sett opplösningen til minimum 640x480.",
 }
 
+confirmation = {
+	needs_restart = utf8 "Å forandre denne innstillingen krever en omstart av CorsixTH. Spill som ikke er lagret vil gå tapt. Er du sikker på at du vil endre innstillingen?"
+}
+
+information = {
+  custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
+  cannot_restart = "Dette spillet ble desverre lagret för restartfunksjonen ble implementert.",
+}
+tooltip.information = {
+	close = "Lukk dialogen med informasjon",
+}
 -- Tips
 totd_window = {
   tips = {
     utf8 "Ethvert sykehus trenger en resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
     utf8 "Maskiner som f.eks pumpen i Pumperommet trenger vedlikehold. Ansett en vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
-    utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd.",
+    utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
     utf8 "En lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
     utf8 "Turnusleger og doktorer kan utvikle sine evner av å bli undervist av en konsulent i Klasserommet. Om konsulenten har spesielle kvalifikasjoner (kirurg, psykolog eller forsker) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
-    utf8 "Menyvalget Innstillinger er enda ikke implementert, men du kan justere noen innstillinger som opplösning og språk ved å endre config.txt filen i katalogen der spillet ligger.",
+    utf8 "Du kan forandre noen innstillinger som opplösning og språk i innstillinger-vinduet som du finner på hovedmenyen eller på menyen inne i spillet.",
+    utf8 "Du spiller CorsixTH beta 3, lansert 24.juni, 2010.",
+    utf8 "Hvert nivå har en rekke utfordringer som må fullföres för du kan gå videre til neste nivå. Sjekk statusen på utfordringene for nivået i Statusvinduet.",
+    utf8 "Om du vil endre eller fjerne et rom, kan du gjöre det med å klikke på Endre Rom knappen på panelet i bunnen av skjermen.",
+    utf8 "Du kan alltids finne fort ut hvilke pasienter som venter på å slippe inn i de ulike rommene, ved å flytte musepekeren over rommet.",
+    utf8 "Klikk på dören til et rom for å se köen. Du kan gjöre nyttige finjusteringer her, som å organisere köen og sende pasienter til andre lignende rom.",
+    utf8 "Irritert personale vil spörre om lönnpålegg jevnlig. Sörg for at dine ansatte jobber i komfortable omgivelser for å hindre at det skjer.",
+    utf8 "Pasientene svetter av spenning når de venter på behandling, og gjerne enda mer om du fyrer opp varmen. Plasser noen brusautomater i strategiske punkter på sykehuset for å tjene noen ekstra lapper.",
+    utf8 "Du kan avbryte diagnose-prosessen ganske tidlig og gjette på riktig behandling, dersom du allerede har truffet på tilfeller av sykdommen. Vær oppmerksom på at dette öker sjangsen for feilbehandling. Du vil vel ikke avlive pasientene dine, vel?",
+    utf8 "Nödtilfeller kan gjöre deg rik, så sant du har kapasitet til å behandle pasientene i tide.",
     utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
     utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på freenode).",
     utf8 "Om du finner feil eller mangler, vær snill å rapportere det i vår feilmeldingstjeneste: th-issues.corsix.org",
