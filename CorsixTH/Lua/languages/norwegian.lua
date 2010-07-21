@@ -140,6 +140,7 @@ menu_debug = {
   dump_gamelog                	= "  DUMP SPILL-LOGGEN  ",
   map_overlay                 	= "  KARTOVERLEGG  ",
   sprite_viewer               	= "  SPRITE-VISNING  ",
+  create_emergency 				= utf8 "  LAG NÖDSTILFELLE  ",
 }
 
 menu_debug_overlay = {
@@ -175,7 +176,7 @@ misc.no_heliport 			= utf8 "Enten er ingen sykdommer utforsket enda, eller så e
 
 -- Main menu
 main_menu = {
-  new_game 		= "Nytt spill",
+  new_game 		= "Ny karriere",
   custom_level 	= utf8 "Valgfritt brett",
   load_game 	= "Last inn",
   options 		= "Innstillinger",
@@ -258,12 +259,12 @@ tooltip.information = {
 -- Tips
 totd_window = {
   tips = {
-    utf8 "Ethvert sykehus trenger en resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
-    utf8 "Maskiner som f.eks pumpen i Pumperommet trenger vedlikehold. Ansett en vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
+    utf8 "Ethvert sykehus trenger en Resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
+    utf8 "Maskiner som f.eks Pumpen i Pumperommet trenger vedlikehold. Ansett en Vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
     utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
-    utf8 "En lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
-    utf8 "Turnusleger og doktorer kan utvikle sine evner av å bli undervist av en konsulent i Klasserommet. Om konsulenten har spesielle kvalifikasjoner (kirurg, psykolog eller forsker) vil han også lære sine elever dette.",
+    utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
+    utf8 "Turnusleger og Doktorer kan utvikle sine evner av å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykologi eller Forskning) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
     utf8 "Du kan forandre noen innstillinger som opplösning og språk i innstillinger-vinduet som du finner på hovedmenyen eller på menyen inne i spillet.",
     utf8 "Du spiller CorsixTH beta 3, lansert 24.juni, 2010.",
@@ -473,7 +474,7 @@ object = {
   swing_door1           = utf8 "Svingdör",
   swing_door2           = utf8 "Svingdör",
   shower                = "Saneringsdusj",
-  auto_autopsy          = "Obduseringsmaskin",
+  auto_autopsy          = "Obdksjonsautomat",
   bookcase              = "Bokhylle",
   video_game            = "Videospill",
   entrance_left         = utf8 "Inngang venstre dör",
@@ -690,6 +691,128 @@ rooms_long = {
   research_room     = "Forskningsavd.",
   toilets           = "Toalett",
   decontamination   = "Saneringsklinikk",
+}
+
+room_descriptions = {
+  ultrascan = {
+    [1] = "Ultraskanner//",
+    [2] = utf8 "Ultraskanneren er virtuelt i toppklassen innenfor diagnoseutstyr. Den koster mye, men det lönner seg om du vil ha superb diagnosering på ditt sykehus.//",
+    [3] = utf8 "Ultraskanneren kan kun håndteres av ".. staff_class.doctor .."r. Den krever også vedlikehold. ",
+  },
+  gp = {
+    [1] = "Allmennpraksis//",
+    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler de. Videre blir de sendt enten til dypere diagnosering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er, og jo mer ekstragjenstander du plasserer i rommet, des bedre presterer legen. Dette gjelder også for alle andre rom.//",
+    [3] = "Allmennpraksisen kan kun benyttes av leger. ",
+  },
+  fracture_clinic = {
+    [1] = "Benbruddsklinikk//",
+    [2] = utf8 "Pasienter som uheldigvis har Benbrudd vil bli behandlet her. Gipsfjerneren bruker kraftig industrilaser for å kutte vekk gipsen, og forårsaker bare litt smerte for pasienten.//",
+    [3] = utf8 "Benbruddsklinikken kan kun benyttes av Sykepleiere. Den krever også vedlikehold. ",
+  },
+  tv_room = {
+    [1] = "TV ROOM NOT USED",
+  },
+  inflation = {
+    [1] = "Pumperom//",
+    [2] = utf8 "Pasienter med sitt smertefulle, men dog humoristiske Ballonghode, må behandles på Pumperommet. Her blir hodet stukket hull på, trykket forsvinner, og en lege pumper hodet opp til riktig trykknivå.//",
+    [3] = utf8 "Pumperommet kan kun benyttes av Leger. Regelmessig vedlikehold er også viktig. ",
+  },
+  jelly_vat = {
+    [1] = "Jelly Clinic//",
+    [2] = "Patients cursed with the risible illness Jellyitis must wobble their way to the Jelly Clinic, and be placed in the Jelly Vat. This cures them in a way still not fully understood by the medical profession.//",
+    [3] = "The Jelly Clinic requires any Doctor. It also needs a Handyman for maintenance. ",
+  },
+  scanner = {
+    [1] = "Scanner//",
+    [2] = "Patients are accurately diagnosed using the sophisticated Scanner. They then go and see a Doctor in the GP's Office for further treatment.//",
+    [3] = "The Scanner requires any Doctor. It also requires maintenance. ",
+  },
+  blood_machine = {
+    [1] = "Blood Machine//",
+    [2] = "The Blood Machine is a piece of diagnosis equipment which checks the cells in a patient's blood to find out what is wrong with them.//",
+    [3] = "The Blood Machine requires any Doctor. It also requires maintenance. ",
+  },
+  pharmacy = {
+    [1] = "Pharmacy//",
+    [2] = "Patients who have been diagnosed and whose treatment is a drug must visit the Pharmacy to take their medicine. As more and more drug cures are researched and become available, this room gets busier. You might want to build another Pharmacy later.//",
+    [3] = "The Pharmacy requires a Nurse. ",
+  },
+  cardiogram = {
+    [1] = "Cardio//",
+    [2] = "Patients are diagnosed and checked in here, before going back to a GP's Office to be assigned to a cure.//",
+    [3] = "The Cardio requires any Doctor. It also requires maintenance. ",
+  },
+  ward = {
+    [1] = "Ward//",
+    [2] = "Patients are kept here for observation by a Nurse during diagnosis. They remain here prior to having a operation.//",
+    [3] = "The Ward requires one Nurse. ",
+  },
+  psych = {
+    [1] = "Psychiatry//",
+    [2] = "Patients diagnosed with psychiatric illnesses must visit the Psychiatry Dept to receive counselling. Psychiatrists can also make diagnoses, finding out what type of illnesses the patients have and, if mental in origin, treating them using the trusty couch.//",
+    [3] = "The Psychiatry Dept. requires a Psychiatrically-trained Doctor. ",
+  },
+  staff_room = {
+    [1] = "Staff Room//",
+    [2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. ",
+  },
+  operating_theatre = {
+    [1] = "Operating Theatre//",
+    [2] = "This important installation is where a variety of conditions are treated. The Theatre has to be a good size, and must be filled with the correct equipment. It is a vital part of your hospital.//",
+    [3] = "The Operating Theatre requires two Doctors with Surgeon qualifications. ",
+  },
+  training = {
+    [1] = "Training Room//",
+    [2] = "Your Juniors and Doctors can gain valuable extra qualifications by studying in this room. A Consultant with Surgery, Research or Psychiatric skills will pass these on to any Doctors being trained. Doctors who already have these skills will find their ability to use them increases whilst here.//",
+    [3] = "The Training Room requires a Consultant. ",
+  },
+  dna_fixer = {
+    [1] = "DNA Clinic//",
+    [2] = "Patients who have been meddled with by aliens from another world must have their DNA replaced in this room. The DNA Fixer Machine is a very complex piece of equipment and it would be sensible to keep a fire extinguisher in the room with it, just in case.//",
+    [3] = "The DNA Fixer Machine will require periodic maintenance by a Handyman. It also requires a Doctor with Research qualifications to work it. ",
+  },
+  research = {
+    [1] = "Research Room//",
+    [2] = "New drugs and cures are invented or improved in the Research Room. It's a vital part of your hospital, and will do wonders for your cure percentages.//",
+    [3] = "The Research Room requires a Doctor with Research qualifications. ",
+  },
+  hair_restoration = {
+    [1] = "Hair Restoration Clinic//",
+    [2] = "Patients suffering from the extreme condition of Baldness will be directed towards the Hair Restorer Machine in this Clinic. A Doctor will operate the machine, and it will rapidly seed the patient's head with fresh hair.//",
+    [3] = "The Hair Restoration Clinic requires any Doctor. It also requires periodic maintenance. ",
+  },
+  general_diag = {
+    [1] = "General Diagnosis//",
+    [2] = "Patients who require further diagnosis are sent to be checked here. If a GP's Office doesn't find out what is wrong with them, General Diagnosis often will. From here they will be sent back to the GP's office for analysis of the results produced here.//",
+    [3] = "The General Diagnosis Room requires any Doctor. ",
+  },
+  electrolysis = {
+    [1] = "Electrolysis Room//",
+    [2] = "Patients with Hairyitis are directed to this room, where a special machine called the Electrolyser yanks out the hairs and seals the pores electrically using a compound not unlike grout.//",
+    [3] = "The Electrolysis Room requires any Doctor. It also needs maintenance by a Handyman. ",
+  },
+  slack_tongue = {
+    [1] = "Slack Tongue Clinic//",
+    [2] = "Patients diagnosed in the GP's Office with Slack Tongue will be sent to this clinic for treatment. The Doctor will use a piece of high-tech machinery to extend the tongue and snip it off, thus returning the patient to normal good health.//",
+    [3] = "The Slack Tongue Clinic requires any Doctor. It also needs maintenance every so often. ",
+  },
+  toilets = {
+    [1] = "Toilet//",
+    [2] = "Patients feeling a call of nature will need to unburden themselves in the comfort of your toilet facilities. You can build extra stalls and wash-basins if you expect a lot of visitors. In some cases, you might consider building further facilities elsewhere in the hospital. ",
+  },
+  no_room = {
+    [1] = "",
+  },
+  x_ray = {
+    [1] = "X-Ray//",
+    [2] = "The X-Ray machine photographs people's insides using special radiation to provide staff with a good idea of what is wrong with them.//",
+    [3] = "The X-Ray requires any Doctor. It also requires maintenance. ",
+  },
+  decontamination = {
+    [1] = "Decontamination Clinic//",
+    [2] = "Patients who have been exposed to Radiation are quickly shown to the Decontamination Clinic. This room contains a shower which cleanses them off all the horrid radioactivity and muck.//",
+    [3] = "The Decontamination Shower requires any Doctor. It also needs maintaining by a Handyman. ",
+  },
 }
 
 -- Drug companies
@@ -1140,7 +1263,7 @@ tooltip = {
   
   -- Main menu
   main_menu = {
-    new_game           = "Start et nytt spill",
+    new_game           = "Start en ny karriere",
     load_game          = "Last inn et tidligere spill",
     continue           = "Fortsett forrige spill",
     network            = "Start nettverksspill",
@@ -1339,13 +1462,20 @@ tooltip = {
   
   -- Status
   status = {
+  	percentage_cured   = utf8 "Du må kurere %d besökende på sykehuset ditt. Nå har du kurert %d",
+  	thirst             = utf8 "Gjennomsnittlig törste på personene på ditt sykehus",
+  	close              = "Lukk oversikten",
+  	population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
     win_progress_own   = utf8 "Vis progresjon i forhold til kravene for dette nivået",
-    win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
-    population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
-    happiness          = utf8 "Gjennomsnittlig humör på personene på ditt sykehus",
-    thirst             = utf8 "Gjennomsnittlig törste på personene på ditt sykehus",
+    reputation 		   = utf8 "Omdömmet ditt må være minst %d. Nå er det %d",
+    population 		   = utf8 "Du må ha %d%% av befolkningen til å bruke ditt sykehus",
     warmth             = utf8 "Gjennomsnittlig temperatur på personene på ditt sykehus",
-    close              = "Lukk oversikten",
+    percentage_killed  = utf8 "Kriteriet er blant annet å drepe ferre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
+    balance 		   = utf8 "Din bankbalanse må være på minst %d. Nå er den %d",
+    value 			   = utf8 "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
+    win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
+    num_cured 		   = utf8 "Kriteriet er blant annet å kurere &d mennesker. Så langt har du kurert %d",
+    happiness          = utf8 "Gjennomsnittlig humör på personene på ditt sykehus",
   },
   
   -- Policy
@@ -1456,7 +1586,7 @@ tooltip = {
     swing_door1          = S[40][53], -- no description
     swing_door2          = S[40][54], -- no description
     shower               = S[40][55], -- no description
-    auto_autopsy         = utf8 "Obduseringsmaskin: flott hjelpemiddel for å oppdage nye behandlingsmetoder.",
+    auto_autopsy         = utf8 "Obduksjonsautomat: flott hjelpemiddel for å oppdage nye behandlingsmetoder.",
     bookcase             = "Bokhylle: referansemateriell for Leger.",
     video_game           = "Videospill: la personalet ditt slappe av med Hi-Octane.",
     entrance_left        = S[40][59], -- no description
@@ -1567,6 +1697,17 @@ adviser = {
     nearly_lost 		= utf8 "Det er like för du taper dette nivået nå.",
     three_quarters_won 	= utf8 "Du er nå tre fjerdedeler på vei til å fullföre dette nivået.",
   },
+  progress_report = {
+	  quite_unhappy = utf8 "Folket ditt er i dårlig humör. ",
+	  header = "Progresjonsrapport",
+	  very_unhappy = utf8 "Folket ditt er i svært dårlig humör. ",
+	  more_drinks_machines = "Bygg flere Brusautomater. ",
+	  too_cold = utf8 "Det er alt for kaldt. Sett ut noen ovner. ",
+	  too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
+	  percentage_pop = utf8 "% befolkning",
+	  win_criteria = utf8 "KRITERIER FOR Å VINNE",
+  },
+
   
   -- Staff place advice
   staff_place_advice = {
@@ -1583,7 +1724,7 @@ adviser = {
   -- Research
   research = {
     machine_improved 				= utf8 "%s er forbedret av Forskningsavdelingen.",
-    autopsy_discovered_rep_loss 	= utf8 "Din Automatiske Obduseringsmaskin er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
+    autopsy_discovered_rep_loss 	= utf8 "Din Obdiseringsautomat er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
     drug_fully_researched 			= utf8 "Du har utforsket %s til 100%.",
     new_machine_researched 			= utf8 "En ny %s er akkurat utviklet.",
     drug_improved 					= utf8 "%s medisinen er forbedret av Forskningsavdelingen din.",
@@ -1707,7 +1848,27 @@ adviser = {
     pay_rise 						= utf8 "En av dine ansatte truer med å si opp. Velg om du vil gå med på lönnskravene eller om du vil sparke han/henne. Klikk på ikonet nede i venstre hjörne for å se hvem som truer med oppsigelse.",
     place_windows 					= utf8 "Vinduer gjör rommene lysere og öker arbeidslysten til dine ansatte.",
     fax_received 					= utf8 "Ikonet som akkurat poppet opp nede i venstre hjörne av skjermen, varsler deg om viktig informasjon og beslutninger du må ta.",
+    
+    initial_general_advice = {
+      rats_have_arrived = utf8 "Rotter har infisert sykehuset ditt. Pröv å skyt dem med musen din.",
+      autopsy_available = utf8 "Obduksjonsautomaten er nå ferdigutviklet. Med denne kan du kvitte deg med tröblete eller ikke-velkomne pasienter, og gjöre forskning ut av restene. Advarsel - Å benytte denne er svært kontroversielt.",
+      first_patients_thirsty = utf8 "Flere av pasientene dine begynner å bli dehydrert. De ville satt pris på en Brusautomat.",
+      research_now_available = utf8 "Du har bygd din förste Forskningsavdeling. Du har nå tilgang til Forskningsskjermen.",
+      psychiatric_symbol = utf8 "Leger med spesialisering innen Psykologi gjenkjennes med symbolet: |",
+      decrease_heating = utf8 "Folk på sykehuset ditt svetter. Skru ned sentralvarment. Dette gjöres på Områdekartet.",
+      surgeon_symbol = utf8 "Leger kan utföre kirurgiske inngrep om de har symbolet: {",
+      first_emergency = utf8 "Akutte pasienter har et blinkende blått lys over hodet. Behandle dem i tide, ellers dör de.",
+      first_epidemic = utf8 "Du har en epidemi på sykehuset ditt! Avgjör om du vil rydde opp, eller legge deg paddeflat.",
+      taking_your_staff = utf8 "Noen pröver å stjele personalet ditt. Du må kjempe for å beholde de.",
+      place_radiators = utf8 "Pasientene fryser - du kan plassere flere ovner ved å gå inn på oversikten med gjenstander.",
+      epidemic_spreading = utf8 "Det er smittefare på sykehuset. Kurer infiserte pasienter för de forlater sykehuset.",
+      research_symbol = "Forskere er leger med symbolet: }",
+      machine_needs_repair = utf8 "Du har utstyr som trenger reperasjon. Finn utstyret - det ryker av det - og klikk på den. Klikk deretter på Vaktmestersymbolet.",
+      increase_heating = utf8 "Folk fryser. Skru opp sentralvarmen på Områdekartet.",
+      first_VIP = utf8 "Du er i ferd med å ta imot ditt förste VIP-besök. Sörg for at VIP'er ikke ser noe uhygienisk eller pasienter som henger med hodet.",
+    },
   },
+  
   
   -- Build advice
   build_advice = {
@@ -1843,6 +2004,7 @@ letter = {
     [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
   },
 }
+
 
 
 -- Humanoid start of names
@@ -2376,6 +2538,132 @@ dynamic_info = {
     queue_expected              = utf8 "Forventet kölengde: %d", -- %d (num of patients)
   },
 }
+
+--todo
+introduction_texts = {
+  level17 = {
+    [1] = utf8 "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. ",
+    [2] = "If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level !//",
+    [3] = "You're on you own now. Good luck and all that.",
+  },
+  level1 = {
+    [1] = utf8 "Velkommen til ditt förste sykehus!//",
+    [2] = utf8 "Få stedet opp og gå ved å plassere en Resepsjon, bygge en Allmennpraksis, og ansette en Resepsjonist og en Lege. ",
+    [3] = utf8 "Vent deretter til ting begynner å skje.",
+    [4] = utf8 "Det er smart å bygge Psykiatri og ansette en Lege med spesialisering innenfor psykologi. ",
+    [5] = utf8 "Et Apotek og en Sykepleier er essensielt for å kurere pasientene dine. ",
+    [6] = utf8 "Se opp for mange tilfeller av Ballonghode - et Pumperom vil fort kunne være til stor hjelp. ",
+    [7] = utf8 "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
+  },
+  level9 = {
+    [1] = "Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy. ",
+    [2] = "You can expect a lot of different problems to crop up here.",
+    [3] = "If you have enough well-trained staff and rooms, you should have all the angles covered. ",
+    [4] = "Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank. ",
+    [5] = "Any less and you won't be able to finish the level.",
+  },
+  level2 = {
+    [1] = utf8 "Det er et större spekter av plager i dette området. ",
+    [2] = utf8 "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen ".. rooms_long.research_room .. ". ",
+    [3] = utf8 "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som ".. diseases.slack_tongue.name .. utf8 ", så du trenger en Tungeklinikk. ",
+    [4] = utf8 "Du kan også bygge ".. rooms_long.cardiogram .. utf8 " for å forbedre diagnoseringen. ",
+    [5] = utf8 "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk ".. tooltip.toolbar.town_map .. utf8 "et til dette. ",
+    [6] = utf8 "Streb etter et omdömme på 300 og en banksaldo på 10000, samt 40 kurerte pasienter. ",
+  },
+  level7 = {
+    [1] = "Here you'll be under close scrutiny from the Ministry of Health, so make sure that your accounts show that you're making a lot of cash, and that your reputation is riding high. ",
+    [2] = "We can't afford unnecessary deaths - they're bad for business. ",
+    [3] = "Make sure your staff are in tip-top form, and you've got all the equipment you need. ",
+    [4] = "Get a reputation of 600, plus $200,000 in the bank.",
+  },
+  level5 = {
+    [1] = "This will be a busy hospital, dealing with a wide variety of cases. ",
+    [2] = "Your Doctors are all fresh from med school, so it's going to be vital to build a training room and train them to acceptable levels. ",
+    [3] = "You only have three Consultants to help teach your inexperienced staff, so keep them happy. ",
+    [4] = "Note, too, that the hospital's foundations straddle the San Android geological fault. ",
+    [5] = "There's the ever-present risk of earthquakes. ",
+    [6] = "They will cause significant damage to your machines, and disrupt the smooth running of your hospital. ",
+    [7] = "Get your reputation up to the 400 mark, and bank a cool $50,000 to succeed. Also, cure 200 patients.",
+  },
+  level4 = {
+    [1] = "Keep all your patients happy, deal with them as efficiently as you can and keep deaths to an absolute minimum.",
+    [2] = "Your reputation is at stake, so make sure you get it as high as possible. ",
+    [3] = "Don't worry about money too much - that'll come as your vital reputation grows. ",
+    [4] = "You'll be able to train your Doctors to widen their abilities, too. ",
+    [5] = "They could well be dealing with patients who seem to be less opaque than most. ",
+    [6] = "Achieve a reputation of over 500.",
+  },
+  level14 = {
+    [1] = "There is yet one more challenge - the totally unexpected surprise hospital. ",
+    [2] = "If you make a success of this, you will be the winner above all other winners. ",
+    [3] = "Don't expect it to be a piece of cake, though, because it's the toughest assignment you'll ever face. ",
+    [4] = "Good luck!",
+  },
+  level15 = {
+    [1] = "Okay that's the basic mechanics of putting a hospital together.//",
+    [2] = "Your Doctors are going to need all the help they can get to diagnose some of these patients. You can assist them by ",
+    [3] = "building another diagnosis facility such as the General Diagnosis Room.",
+  },
+  level8 = {
+    [1] = "It's up to you to set up the most efficient and cost-effective hospital possible. ",
+    [2] = "The people around here are pretty well-off, so fleece them for as much dosh as you can. ",
+    [3] = "Remember, curing people is all very nice, but you really NEED the money it brings. ",
+    [4] = "Take these sick people to the cleaners. ",
+    [5] = "Amass a whopping $300,000 to complete this level.",
+  },
+  level13 = {
+    [1] = "Your incredible skill as a hospital administrator has come to the attention of the Special Secret Division of the Secret Special Service. ",
+    [2] = "They have a special bonus for you; there's a rat-infested hospital in need of an efficient Terminator. ",
+    [3] = "You must shoot as many rats as possible before the Handymen clean up all the rubbish. ",
+    [4] = "Think you're up to the task?",
+  },
+  level16 = {
+    [1] = "Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off ",
+    [2] = "with is the Pharmacy. You'll also need a Nurse to dispense the various drugs in the Pharmacy.",
+  },
+  level6 = {
+    [1] = "Use all your knowledge to set up a smooth, well-run hospital which makes a healthy profit and can deal with anything the sickly public can throw at it. ",
+    [2] = "You'll need to be aware that the atmosphere around here is particularly good at carrying germs and infections. ",
+    [3] = "Unless you keep your institution scrupulously clean you could be facing a series of epidemics amongst the patients. ",
+    [4] = "Make sure you earn yourself $150,000, and that your hospital is worth over $140,000.",
+  },
+  level12 = {
+    [1] = "You've got the mother of all challenges now. ",
+    [2] = "Impressed with your success, the Ministry has got the top job for you; they want someone to build another ultimate hospital, make a vast amount of dosh and have an incredible reputation. ",
+    [3] = "You'll also be expected to buy all the land you can, cure everything (and we mean everything) and win all the awards. ",
+    [4] = "Think you're up to it?",
+    [5] = "Earn $650,000, cure 750 people, and get a reputation of 800 to win this one.",
+  },
+  level3 = {
+    [1] = "You'll be setting up your hospital in an affluent area this time. ",
+    [2] = "The Ministry of Health is looking to you to secure a healthy profit here. ",
+    [3] = "You'll need to gain a good reputation to begin with, but once the hospital is ticking over, concentrate on earning as much cash as you can. ",
+    [4] = "There is also the chance of Emergencies occurring. ",
+    [5] = "These are when large numbers of people arrive at once, all with the same condition. ",
+    [6] = "Curing them all within a time limit earns you a better reputation and a big bonus. ",
+    [7] = "Diseases like The King Syndrome could occur, and you should budget for building an Operating Theatre with a Ward close by. ",
+    [8] = "Earn yourself $20,000 to make the grade.",
+  },
+  level10 = {
+    [1] = "As well as covering all the illnesses which crop up in this neck of the woods, the Ministry request that you spend some time concentrating on the efficiency of your drugs. ",
+    [2] = "There have been some complaints from Ofsick, the Health Watchdog, so in order to look good you must make sure all your drugs are extremely efficient. ",
+    [3] = "Also, make sure your hospital is above reproach as well. Keep those deaths down. ",
+    [4] = "As a hint, you might like to keep space free for a Jelly Vat. ",
+    [5] = "Develop all your drugs to at least 80 per cent efficiency, get a reputation of 650 and stash $500,000 in the bank to win. ",
+  },
+  level11 = {
+    [1] = "You've been given the chance to build the ultimate in hospitals. ",
+    [2] = "This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital. ",
+    [3] = "We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality. ",
+    [4] = "It's an important job, this. ",
+    [5] = "You'll have to be something special to pull it off. ",
+    [6] = "Note, too, that there have sightings of UFOs in the area. Make sure your staff are prepared for some unexpected visitors. ",
+    [7] = "Your hospital will need to be worth $240,000, you'll need $500,000 in the bank and your reputation will need to be 700.",
+  },
+  level18 = {
+  },
+}
+
 
 -- Miscellangelous
 -- Category of strings that fit nowhere else or we are not sure where they belong.
