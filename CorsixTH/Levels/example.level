@@ -30,11 +30,16 @@ Lines that begin with # defines all parameters for the level. By default there a
 and only some basic rooms are available. Note that if a player is using the demo files 
 on the contrary everything is available unless specified otherwise in the level file.
 
+
+---------------------- General Information -------------------------
 %Name = "Example Town"
 %LevelFile = "LEVEL.L1"
 
 | Town properties | Cash at the beginning | The actual amount |
 #town.StartCash 100000
+
+
+-------------------- Disease Configuration -------------------------
 
 | Available treatments and diagnoses (disease casebook) | Whether the treatment is known | Comment |
 #expertise[1].Known 1 GENERAL_PRACTICE
@@ -133,6 +138,36 @@ on the contrary everything is available unless specified otherwise in the level 
 #non_visuals[17] 1 I_GUT_ROT
 #non_visuals[18] 1 I_GOLF_STONES
 #non_visuals[19] 1 I_UNEXPECTED_SWELLING
+
+
+---------------------- Staff Configuration -------------------------
+
+Each entry states how many staff members of each category are available
+a given month. The number of entries is not fixed.
+| A list | Month it gets active (start at 0) | Each group |
+#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists 0 8 8 3 2
+#staff_levels[1].Month.Nurses.Doctors.Handymen.Receptionists 3 7 5 5 3
+#staff_levels[2].Month.Nurses.Doctors.Handymen.Receptionists 5 5 8 7 4
+
+The minimum salary for each staff type
+#staff[0].MinSalary 60 Nurse
+#staff[1].MinSalary 75 Doctor
+#staff[2].MinSalary 25 Handyman
+#staff[3].MinSalary 20 Receptionist
+
+Salary modifiers for different doctor attributes
+#gbv.SalaryAdd[3] -30 Junior
+#gbv.SalaryAdd[4] 30 Doctor
+#gbv.SalaryAdd[5] 40 Surgeon
+#gbv.SalaryAdd[6] 30 Shrink
+#gbv.SalaryAdd[7] 100 Consultant
+#gbv.SalaryAdd[8] 20 Research
+
+How much the skill of the doctor adds to the salary. skill * 1000 / divisor
+#gbv.SalaryAbilityDivisor 10
+
+
+--------------------- Competitor Information -----------------------
 
 | Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
 #computer[12].Playing 1 CORSIX

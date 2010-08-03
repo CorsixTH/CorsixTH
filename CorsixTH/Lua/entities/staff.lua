@@ -139,6 +139,7 @@ function Staff:fire()
   
   self:playSound "sack.wav"
   self:setMood("exit", "activate")
+  self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.hospital:changeReputation("kicked")
   self:setHospital(nil)

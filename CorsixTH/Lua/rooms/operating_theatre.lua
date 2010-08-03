@@ -43,6 +43,9 @@ room.swing_doors = true
 room.required_staff = {
   Surgeon = 2,
 }
+room.call_sound = "reqd010.wav" -- TODO: There is also an unused sound
+-- "Another surgeon needed [...]", reqd011.wav
+-- room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?
 
 class "OperatingTheatreRoom" (Room)
 

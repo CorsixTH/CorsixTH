@@ -80,6 +80,7 @@ adviser.room_forbidden_non_reachable_parts = "Placing the room in this location 
 
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
 dynamic_info.staff.actions.heading_for = "Heading for %s"
+dynamic_info.staff.actions.fired = "Fired"
 
 fax = {
   welcome = {
