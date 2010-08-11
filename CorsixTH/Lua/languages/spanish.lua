@@ -97,6 +97,7 @@ adviser.room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en est
 
 dynamic_info.patient.actions.no_gp_available = utf8 "Esperando a que construyas una consulta"
 dynamic_info.staff.actions.heading_for = utf8 "Dirigiéndose a %s"
+dynamic_info.staff.actions.fired = "Despedido"
 
 fax = {
   welcome = {
