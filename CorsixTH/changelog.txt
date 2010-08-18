@@ -1,5 +1,37 @@
 -----------------------------------------
-Version Beta 3 - to be released 2010-06-24
+Version Beta 4 - to be released
+-----------------------------------------
+
+-- Gameplay -- 
+
+* Feature: The Research Department and research policy dialog.
+* Feature: The Operating Theatre.
+* Feature: Not all parcels are owned by the player from the beginning, but
+  can now be bought from the Town Map dialog.
+* Feature: Calculate staff wages and properties for those for hire based
+  on the level files.
+  
+* Added 7 new diseases related to the operating theatre.
+* Added treatment room: Operating Theatre.
+  
+* Fix: The adviser no longer complains about watering of plants all the time.
+* Fix: Some crashes related to crashed rooms has been fixed.
+
+
+-- User Interface --
+
+* Feature: Zooming (only when using DirectX).
+* Fix: Solved issues with non-English keyboard layouts.
+
+
+-- Translations --
+
+* New language: Finnish
+* Fix: When playing the game in French it crashed upon completion of a level.
+
+
+-----------------------------------------
+Version Beta 3 - released 2010-06-24
 -----------------------------------------
 
 -- Gameplay --
