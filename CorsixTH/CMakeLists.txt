@@ -36,6 +36,7 @@ ENDIF(UNIX)
 # Modify the config.h based upon our selection of options
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/agg/include/)
 
 # Generate source files list
 # Note: Done after generating config.h
@@ -53,6 +54,7 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
   ${CMAKE_SOURCE_DIR}/LFS/*.c
   ${CMAKE_SOURCE_DIR}/LPEG/*.c
+  ${CMAKE_SOURCE_DIR}/agg/src/agg_image_filters.cpp
 )
 
 # Declaration of the executable

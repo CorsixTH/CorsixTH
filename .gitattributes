@@ -110,3 +110,10 @@ WindowsInstaller/StrRep.nsh -text
 WindowsInstaller/Win32Script.nsi -text
 WindowsInstaller/config_template.txt -text
 WindowsInstaller/readme.txt -text
+agg/authors -text
+agg/copying -text
+agg/news -text
+agg/src/authors -text
+agg/src/copying -text
+agg/src/install -text
+agg/src/news -text
