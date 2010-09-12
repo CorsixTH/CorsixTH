@@ -23,6 +23,15 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
+
+enum THScaledItems
+{
+    THSI_None = 0,
+    THSI_SpriteSheets = 1 << 0,
+    THSI_Bitmaps = 1 << 1,
+    THSI_All = 3,
+};
+
 #include "th_gfx_dx9.h"
 #include "th_gfx_ogl.h"
 #include "th_gfx_sdl.h"

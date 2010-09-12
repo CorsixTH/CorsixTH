@@ -34,6 +34,11 @@ SOFTWARE.
 #cmakedefine CORSIX_TH_USE_SDL_RENDERER
 #endif //CORSIX_TH_RENDERING_ENGINE_DEFINED
 
+// When OpenGL is used as the rendering engine, try to make use of the
+// extension which allows for rendering to a texture. This must be enabled to
+// allow the zooming feature to work.
+#define CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when
 // using the SDL rendering engine, the platform SDK is not used for anything

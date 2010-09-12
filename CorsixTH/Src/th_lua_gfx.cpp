@@ -604,8 +604,24 @@ static int l_surface_set_clip(lua_State *L)
 static int l_surface_scale(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    THScaledItems eToScale;
+    if(lua_isnoneornil(L, 3))
+    {
+        eToScale = THSI_All;
+    }
+    else
+    {
+        size_t iLength;
+        const char* sOption = lua_tolstring(L, 3, &iLength);
+        if(sOption && iLength >= 6 && memcmp(sOption, "bitmap", 6) == 0)
+        {
+            eToScale = THSI_Bitmaps;
+        }
+        else
+            luaL_error(L, "Expected \"bitmap\" as 2nd argument");
+    }
     lua_pushboolean(L, pCanvas->setScaleFactor(static_cast<float>(
-        luaL_checknumber(L, 2))) ? 1 : 0);
+        luaL_checknumber(L, 2)), eToScale) ? 1 : 0);
     return 1;
 }
 

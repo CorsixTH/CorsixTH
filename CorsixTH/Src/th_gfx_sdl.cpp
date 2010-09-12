@@ -24,12 +24,21 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_SDL_RENDERER
 #include "th_gfx.h"
 #include "th_map.h"
+#include "agg_rendering_buffer.h"
+#include "agg_pixfmt_rgb.h"
+#include "agg_renderer_base.h"
+#include "agg_span_interpolator_linear.h"
+#include "agg_span_image_filter_rgb.h"
+#include "agg_scanline_p.h"
+#include "agg_renderer_scanline.h"
+#include "agg_span_allocator.h"
 #include <new>
 
 THRenderTarget::THRenderTarget()
 {
     m_pSurface = NULL;
     m_pCursor = NULL;
+    m_bShouldScaleBitmaps = false;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -45,10 +54,30 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     return m_pSurface != NULL;
 }
 
-bool THRenderTarget::setScaleFactor(float fScale)
+bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
-    // Unlikely to ever be implemented
-    return false;
+    m_bShouldScaleBitmaps = false;
+    if(0.999 <= fScale && fScale <= 1.001)
+        return true;
+
+    if(eWhatToScale & ~THSI_Bitmaps)
+        return false;
+
+    if(((eWhatToScale & THSI_Bitmaps) != 0) && (fScale != 1.0))
+    {
+        m_bShouldScaleBitmaps = true;
+        m_fBitmapScaleFactor = fScale;
+    }
+    return true;
+}
+
+bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
+{
+    if(!m_bShouldScaleBitmaps)
+        return false;
+    if(pFactor)
+        *pFactor = m_fBitmapScaleFactor;
+    return true;
 }
 
 const char* THRenderTarget::getLastError()
@@ -209,6 +238,7 @@ void THPalette::_assign(SDL_Surface *pSurface) const
 THRawBitmap::THRawBitmap()
 {
     m_pBitmap = NULL;
+    m_pCachedScaledBitmap = NULL;
     m_pPalette = NULL;
     m_pData = NULL;
 }
@@ -216,6 +246,7 @@ THRawBitmap::THRawBitmap()
 THRawBitmap::~THRawBitmap()
 {
     SDL_FreeSurface(m_pBitmap);
+    SDL_FreeSurface(m_pCachedScaledBitmap);
     delete[] m_pData;
 }
 
@@ -223,6 +254,125 @@ void THRawBitmap::setPalette(const THPalette* pPalette)
 {
     m_pPalette = pPalette;
 }
+
+template <class PixFmt>
+class image_accessor_clip_rgb24_pal8
+{
+public:
+    typedef PixFmt   pixfmt_type;
+    typedef typename pixfmt_type::color_type color_type;
+    typedef typename pixfmt_type::order_type order_type;
+    typedef typename pixfmt_type::value_type value_type;
+    enum pix_width_e { pix_width = pixfmt_type::pix_width };
+
+    typedef agg::rendering_buffer palbuf_type;
+    typedef THPalette pal_type;
+    typedef pal_type::colour_t palcol_type;
+
+    image_accessor_clip_rgb24_pal8() {}
+    explicit image_accessor_clip_rgb24_pal8(const palbuf_type& buf,
+                                            const pal_type& pal,
+                                            const color_type& bk) : 
+        m_pixf(&buf), m_pal(&pal)
+    {
+        pixfmt_type::make_pix(m_bk_buf, bk);
+    }
+
+    void background_color(const color_type& bk)
+    {
+        pixfmt_type::make_pix(m_bk_buf, bk);
+    }
+
+private:
+    AGG_INLINE const agg::int8u* pixel()
+    {
+        if(m_y >= 0 && m_y < (int)m_pixf->height() &&
+        m_x >= 0 && m_x < (int)m_pixf->width())
+        {
+            palcol_type c = (*m_pal)[m_pixf->row_ptr(m_y)[m_x]];
+            m_fg_buf[order_type::R] = c.r;
+            m_fg_buf[order_type::G] = c.g;
+            m_fg_buf[order_type::B] = c.b;
+            return m_fg_buf;
+        }
+        return m_bk_buf;
+    }
+
+public:
+    AGG_INLINE const agg::int8u* span(int x, int y, unsigned len)
+    {
+        m_x = m_x0 = x;
+        m_y = y;
+        return pixel();
+    }
+
+    AGG_INLINE const agg::int8u* next_x()
+    {
+        ++m_x;
+        return pixel();
+    }
+
+    AGG_INLINE const agg::int8u* next_y()
+    {
+        ++m_y;
+        m_x = m_x0;
+        return pixel();
+    }
+
+private:
+    const palbuf_type* m_pixf;
+    const pal_type*    m_pal;
+    agg::int8u         m_bk_buf[4];
+    agg::int8u         m_fg_buf[4];
+    int                m_x, m_x0, m_y;
+};
+
+class rasterizer_scanline_rect
+{
+public:
+    rasterizer_scanline_rect(int x, int y, unsigned int width, unsigned int height)
+    {
+        m_x = x;
+        m_y = y;
+        m_width = width;
+        m_height = height;
+    }
+
+    bool rewind_scanlines()
+    {
+        if(m_width > 0 && m_height > 0)
+        {
+            m_ycurr = m_y - 1;
+            return true;
+        }
+        return false;
+    }
+
+    int min_x()
+    {
+        return m_x;
+    }
+
+    int max_x()
+    {
+        return m_x + m_width - 1;
+    }
+
+    template<class Scanline> bool sweep_scanline(Scanline& sl)
+    {
+        if(static_cast<unsigned int>(++m_ycurr) >= static_cast<unsigned int>(m_y + m_height))
+            return false;
+        sl.reset_spans();
+        sl.add_span(m_x, m_width, agg::cover_full);
+        sl.finalize(m_ycurr);
+        return true;
+    }
+
+protected:
+    int m_x, m_y;
+    unsigned int m_width, m_height;
+    int m_ycurr;
+};
 
 bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
                                  size_t iPixelDataLength,
@@ -242,11 +392,64 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
     memcpy(m_pData, pPixelData, iPixelDataLength);
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
+
     m_pBitmap = SDL_CreateRGBSurfaceFrom(m_pData, iWidth, iHeight, 8, iWidth, 0, 0, 0, 0);
     if(m_pBitmap == NULL)
         return false;
     m_pPalette->_assign(m_pBitmap);
 
+    return true;
+}
+
+bool THRawBitmap::_checkScaled(THRenderTarget* pCanvas, SDL_Rect& rcDest)
+{
+    float fFactor;
+    if(!pCanvas->shouldScaleBitmaps(&fFactor))
+        return false;
+    int iScaledWidth = (int)((float)m_pBitmap->w * fFactor);
+    if(!m_pCachedScaledBitmap || m_pCachedScaledBitmap->w != iScaledWidth)
+    {
+        SDL_FreeSurface(m_pCachedScaledBitmap);
+        Uint32 iRMask, iGMask, iBMask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        iRMask = 0xff000000;
+        iGMask = 0x00ff0000;
+        iBMask = 0x0000ff00;
+#else
+        iRMask = 0x000000ff;
+        iGMask = 0x0000ff00;
+        iBMask = 0x00ff0000;
+#endif
+
+        m_pCachedScaledBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, iScaledWidth, (int)((float)m_pBitmap->h * fFactor), 24, iRMask, iGMask, iBMask, 0);
+        SDL_LockSurface(m_pCachedScaledBitmap);
+        SDL_LockSurface(m_pBitmap);
+
+        typedef agg::pixfmt_rgb24_pre pixfmt_pre_t;
+        typedef agg::renderer_base<pixfmt_pre_t> renbase_pre_t;
+        typedef image_accessor_clip_rgb24_pal8<pixfmt_pre_t> imgsrc_t;
+        typedef agg::span_interpolator_linear<> interpolator_t;
+        typedef agg::span_image_filter_rgb_2x2<imgsrc_t, interpolator_t> span_gen_type;
+        agg::scanline_p8 sl;
+        agg::span_allocator<pixfmt_pre_t::color_type> sa;
+        agg::image_filter<agg::image_filter_bilinear> filter;
+        agg::trans_affine_scaling img_mtx(1.0 / fFactor);
+        agg::rendering_buffer rbuf_src(m_pData, m_pBitmap->w, m_pBitmap->h, m_pBitmap->pitch);
+        imgsrc_t img_src(rbuf_src, *m_pPalette, agg::rgba(0.0, 0.0, 0.0));
+        interpolator_t interpolator(img_mtx);
+        span_gen_type sg(img_src, interpolator, filter);
+        agg::rendering_buffer rbuf(reinterpret_cast<unsigned char*>(m_pCachedScaledBitmap->pixels), m_pCachedScaledBitmap->w, m_pCachedScaledBitmap->h, m_pCachedScaledBitmap->pitch);
+        pixfmt_pre_t pixf_pre(rbuf);
+        renbase_pre_t rbase_pre(pixf_pre);
+        rasterizer_scanline_rect ras(0, 0, rbuf.width(), rbuf.height());
+        rbase_pre.clear(agg::rgba(1.0,0,0,0));
+        agg::render_scanlines_aa(ras, sl, rbase_pre, sa, sg);
+
+        SDL_UnlockSurface(m_pBitmap);
+        SDL_UnlockSurface(m_pCachedScaledBitmap);
+    }
+    rcDest.x = (Sint16)((float)rcDest.x * fFactor);
+    rcDest.y = (Sint16)((float)rcDest.y * fFactor);
     return true;
 }
 
@@ -258,7 +461,8 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
     SDL_Rect rcDest;
     rcDest.x = iX;
     rcDest.y = iY;
-    SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+    SDL_BlitSurface(_checkScaled(pCanvas, rcDest) ? m_pCachedScaledBitmap :
+        m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, 
@@ -275,7 +479,8 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     SDL_Rect rcDest;
     rcDest.x = iX;
     rcDest.y = iY;
-    SDL_BlitSurface(m_pBitmap, &rcSrc, pCanvas->getRawSurface(), &rcDest);
+    SDL_BlitSurface(_checkScaled(pCanvas, rcDest) ? m_pCachedScaledBitmap :
+        m_pBitmap, &rcSrc, pCanvas->getRawSurface(), &rcDest);
 }
 
 THSpriteSheet::THSpriteSheet()

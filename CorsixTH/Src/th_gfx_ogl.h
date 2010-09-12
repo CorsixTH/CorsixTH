@@ -35,7 +35,11 @@ SOFTWARE.
 #include <windows.h>
 #endif
 #include <SDL.h>
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+#define GL_GLEXT_PROTOTYPES
+#else
 #define NO_SDL_GLEXT
+#endif
 #include <SDL_opengl.h>
 
 class THCursor;
@@ -106,7 +110,7 @@ public: // External API
     void setCursor(THCursor* pCursor);
     void setCursorPosition(int iX, int iY);
     bool takeScreenshot(const char* sFile);
-    bool setScaleFactor(float fScale);
+    bool setScaleFactor(float fScale, THScaledItems eWhatToScale);
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.
@@ -123,19 +127,36 @@ public: // Internal (this rendering engine only) API
     GLuint createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels);
     GLenum getGLError();
     static void setGLProjection(GLdouble fWidth, GLdouble fHeight);
+    bool shouldScaleBitmaps(float* pFactor);
 
 protected:
     SDL_Surface* m_pSurface;
     THOGL_Vertex *m_pVerticies;
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    PFNGLGENFRAMEBUFFERSEXTPROC m_glGenFramebuffersEXT;
+    PFNGLBINDFRAMEBUFFEREXTPROC m_glBindFramebufferEXT;
+    PFNGLFRAMEBUFFERTEXTURE2DEXTPROC m_glFramebufferTexture2DEXT;
+    PFNGLDELETEFRAMEBUFFERSEXTPROC m_glDeleteFramebuffersEXT;
+    PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC m_glCheckFramebufferStatusEXT;
+    float m_fZoomScale;
+    GLuint m_iZoomTexture;
+    GLuint m_iZoomFrameBuffer;
+    int m_iZoomTextureSize;
+    bool m_bUsingZoomBuffer;
+#endif
+
     THClipRect m_rcClip;
+    float m_fBitmapScaleFactor;
     size_t m_iVertexCount;
     size_t m_iVertexLength;
     size_t m_iNonOverlappingStart;
     int m_iNonOverlapping;
     int m_iWidth;
     int m_iHeight;
+    bool m_bShouldScaleBitmaps;
 
     void _drawVerts(size_t iFirst, size_t iLast);
+    void _flushZoomBuffer();
 };
 
 class THRawBitmap

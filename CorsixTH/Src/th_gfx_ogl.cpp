@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "th_gfx.h"
 #include <new>
+#include <math.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "OpenGL32")
 #endif
@@ -46,6 +47,18 @@ THRenderTarget::THRenderTarget()
     m_iNonOverlapping = 0;
     m_iWidth = 0;
     m_iHeight = 0;
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    m_glGenFramebuffersEXT = NULL;
+    m_glBindFramebufferEXT = NULL;
+    m_glFramebufferTexture2DEXT = NULL;
+    m_glDeleteFramebuffersEXT = NULL;
+    m_glCheckFramebufferStatusEXT = NULL;
+    m_iZoomTexture = 0;
+    m_iZoomFrameBuffer = 0;
+    m_iZoomTextureSize = 0;
+    m_bUsingZoomBuffer = false;
+#endif
+    m_bShouldScaleBitmaps = false;
 }
 
 THRenderTarget::~THRenderTarget()
@@ -55,6 +68,18 @@ THRenderTarget::~THRenderTarget()
         free(m_pVerticies);
         m_pVerticies = NULL;
     }
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    if(m_iZoomFrameBuffer != 0)
+    {
+        m_glDeleteFramebuffersEXT(1, &m_iZoomFrameBuffer);
+        m_iZoomFrameBuffer = 0;
+    }
+    if(m_iZoomTexture != 0)
+    {
+        glDeleteTextures(1, &m_iZoomTexture);
+        m_iZoomTexture = 0;
+    }
+#endif
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -113,6 +138,32 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    bool bFoundAll = true;
+#define FIND(name, typ) \
+    m_ ## name ## EXT = NULL; \
+    if(bFoundAll) \
+    { \
+        m_ ## name ## EXT = (typ) SDL_GL_GetProcAddress(#name "EXT"); \
+        if(!m_ ## name ## EXT) \
+        { \
+            m_ ## name ## EXT = (typ) SDL_GL_GetProcAddress(#name "ARB"); \
+            if(!m_ ## name ## EXT) \
+            { \
+                m_ ## name ## EXT = (typ) SDL_GL_GetProcAddress(#name); \
+                if(!m_ ## name ## EXT) \
+                    bFoundAll = false; \
+            } \
+        } \
+    }
+    FIND(glGenFramebuffers       , PFNGLGENFRAMEBUFFERSEXTPROC);
+    FIND(glBindFramebuffer       , PFNGLBINDFRAMEBUFFEREXTPROC);
+    FIND(glFramebufferTexture2D  , PFNGLFRAMEBUFFERTEXTURE2DEXTPROC);
+    FIND(glDeleteFramebuffers    , PFNGLDELETEFRAMEBUFFERSEXTPROC);
+    FIND(glCheckFramebufferStatus, PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC);
+#undef FIND
+#endif
+
     return true;
 }
 
@@ -130,10 +181,137 @@ void THRenderTarget::setGLProjection(GLdouble fWidth, GLdouble fHeight)
     glTranslated(0.5, 0.5, 0.0);
 }
 
-bool THRenderTarget::setScaleFactor(float fScale)
+bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
 {
-    // Not yet implemented
+    if(!m_bShouldScaleBitmaps)
+        return false;
+    if(pFactor)
+        *pFactor = m_fBitmapScaleFactor;
+    return true;
+}
+
+bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
+{
+    flushSprites();
+    _flushZoomBuffer();
+    m_bShouldScaleBitmaps = false;
+
+    if(eWhatToScale == THSI_None || (0.999 <= fScale && fScale <= 1.001))
+    {
+        // Effectively back to no scaling, so nothing more to do
+        return true;
+    }
+    if(eWhatToScale == THSI_Bitmaps)
+    {
+        m_bShouldScaleBitmaps = true;
+        m_fBitmapScaleFactor = fScale;
+        return true;
+    }
+
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    if(eWhatToScale == THSI_All && m_glCheckFramebufferStatusEXT)
+    {
+        if(fScale <= 0.0f)
+            return false;
+        float fVirtualSize = static_cast<float>(max(m_iWidth, m_iHeight)) / fScale;
+        unsigned int iZoomTextureSize = 1 << static_cast<unsigned int>(
+            ceil(logf(fVirtualSize) / logf(2)));
+        if(iZoomTextureSize == 0) // Catch integer overflow
+            return false;
+
+        // Create the render texture
+        if(m_iZoomTextureSize != iZoomTextureSize)
+        {
+            if(m_iZoomFrameBuffer != 0)
+            {
+                m_glDeleteFramebuffersEXT(1, &m_iZoomFrameBuffer);
+                m_iZoomFrameBuffer = 0;
+            }
+            if(m_iZoomTexture != 0)
+            {
+                glDeleteTextures(1, &m_iZoomTexture);
+                m_iZoomTexture = 0;
+            }
+
+            m_iZoomTextureSize = 0;
+
+            // Create texture
+            glGenTextures(1, &m_iZoomTexture);
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+            glBindTexture(GL_TEXTURE_2D, m_iZoomTexture);
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            float fMaximumAnistropy;
+            glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnistropy);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, fMaximumAnistropy);
+
+            glTexImage2D(GL_TEXTURE_2D, 0, 4, iZoomTextureSize, iZoomTextureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); 
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+
+            // Create and check frame buffer
+            m_glGenFramebuffersEXT(1, &m_iZoomFrameBuffer);
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+            m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_iZoomFrameBuffer);	
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+            m_glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_iZoomTexture, 0);
+            if(getGLError() != GL_NO_ERROR)
+                return false;
+            GLenum status = m_glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+            if(status != GL_FRAMEBUFFER_COMPLETE_EXT)
+                return false;
+            m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+            m_iZoomTextureSize = iZoomTextureSize;
+        }
+        m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_iZoomFrameBuffer);
+        glViewport(0,0,m_iZoomTextureSize, m_iZoomTextureSize);
+        setGLProjection(m_iZoomTextureSize, m_iZoomTextureSize);
+        m_bUsingZoomBuffer = true;
+        m_fZoomScale = fScale;
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        return true;
+    }
+#endif
     return false;
+}
+
+void THRenderTarget::_flushZoomBuffer()
+{
+#ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
+    if(!m_bUsingZoomBuffer)
+        return;
+    m_bUsingZoomBuffer = false;
+
+    m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glViewport(0,0,m_iWidth, m_iHeight);
+    setGLProjection(m_iWidth, m_iHeight);
+
+    float fFactor = m_fZoomScale * static_cast<float>(m_iZoomTextureSize);
+#define SetVertexData(n, x_, y_) \
+    pVerticies[n].x = (float)x_; \
+    pVerticies[n].y = (float)y_; \
+    pVerticies[n].z = 0.0f; \
+    pVerticies[n].colour = THPalette::packARGB(0xFF, 0xFF, 0xFF, 0xFF); \
+    pVerticies[n].u = (float)x_ / fFactor; \
+    pVerticies[n].v = 1.0f - (float)y_ / fFactor
+
+    THOGL_Vertex *pVerticies = allocVerticies(4, m_iZoomTexture);
+    SetVertexData(0, 0, 0);
+    SetVertexData(1, m_iWidth, 0);
+    SetVertexData(2, m_iWidth, m_iHeight);
+    SetVertexData(3, 0, m_iHeight);
+#undef SetVertexData
+    flushSprites();
+#endif
 }
 
 const char* THRenderTarget::getLastError()
@@ -150,6 +328,7 @@ bool THRenderTarget::endFrame()
 {
     if(!flushSprites())
         return false;
+    _flushZoomBuffer();
 
     if(m_pSurface)
         SDL_GL_SwapBuffers();
@@ -598,8 +777,23 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX,
     if(pCanvas == NULL || pCanvas != m_pTarget)
         return;
 
+    float fScaleFactor;
+    bool bShouldScale = pCanvas->shouldScaleBitmaps(&fScaleFactor);
+    if(bShouldScale)
+    {
+        pCanvas->flushSprites();
+        glMatrixMode(GL_MODELVIEW);
+        glScalef(fScaleFactor, fScaleFactor, 1.0f);
+    }
+
     pCanvas->draw(m_iTexture, iWidth, iHeight, iX, iY, 0, m_iWidth2,
         m_iHeight2, iSrcX, iSrcY);
+
+    if(bShouldScale)
+    {
+        pCanvas->flushSprites();
+        glLoadIdentity();
+    }
 }
 
 THSpriteSheet::THSpriteSheet()

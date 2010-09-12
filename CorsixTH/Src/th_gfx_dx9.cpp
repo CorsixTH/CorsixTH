@@ -399,15 +399,20 @@ void THRenderTarget::_flushZoomBuffer()
     m_pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 }
 
-bool THRenderTarget::setScaleFactor(float fScale)
+bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
     flushSprites();
     _flushZoomBuffer();
 
-    if(0.999 <= fScale && fScale <= 1.001)
+    if(eWhatToScale == THSI_None || (0.999 <= fScale && fScale <= 1.001))
     {
         // Effectively back to no scaling, so nothing more to do
         return true;
+    }
+    if(eWhatToScale != THSI_All)
+    {
+        // TODO: Implement selective scaling.
+        return false;
     }
 
     // Calculate "virtual screen size" and round up to a power of 2 (as

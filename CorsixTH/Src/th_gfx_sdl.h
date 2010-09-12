@@ -93,7 +93,7 @@ public: // External API
     bool takeScreenshot(const char* sFile);
 
     //! Set the amount by which future draw operations are scaled
-    bool setScaleFactor(float fScale);
+    bool setScaleFactor(float fScale, THScaledItems eWhatToScale);
 
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
@@ -103,21 +103,27 @@ public: // Internal (this rendering engine only) API
 
     SDL_Surface* getRawSurface() {return m_pSurface;}
     const SDL_Surface* getRawSurface() const {return m_pSurface;}
+    bool shouldScaleBitmaps(float* pFactor);
 
 protected:
     SDL_Surface* m_pSurface;
     THCursor* m_pCursor;
+    float m_fBitmapScaleFactor;
     int m_iCursorX;
     int m_iCursorY;
+    bool m_bShouldScaleBitmaps;
 };
 
 class THPalette
 {
 public:
     THPalette();
+    typedef SDL_Colour colour_t;
 
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
     bool setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
+
+    colour_t operator[] (uint8_t iIndex) const {return m_aColours[iIndex];}
 
 protected:
     friend class THSpriteSheet;
@@ -126,7 +132,6 @@ protected:
     void _assign(THRenderTarget* pTarget) const;
     void _assign(SDL_Surface* pSurface) const;
 
-    typedef SDL_Colour colour_t;
     colour_t m_aColours[256];
     int m_iNumColours;
     int m_iTransparentIndex;
@@ -148,7 +153,10 @@ public:
               int iWidth, int iHeight);
 
 protected:
+    bool _checkScaled(THRenderTarget* pCanvas, SDL_Rect& rcDest);
+
     SDL_Surface* m_pBitmap;
+    SDL_Surface* m_pCachedScaledBitmap;
     unsigned char* m_pData;
     const THPalette* m_pPalette;
 };
