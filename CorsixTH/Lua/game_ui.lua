@@ -742,6 +742,12 @@ function GameUI:setEditRoom(enabled)
     -- activate the room again.
     if class.is(self.edit_room, Room) and self.cursor == self.waiting_cursor then
       self.edit_room.is_active = true
+    else
+      local edit_window = self.app.ui:getWindow(UIEditRoom)
+      -- If we are currently editing a room, abort it.
+      if edit_window then
+        edit_window:abortRoom()
+      end
     end
     self:setCursor(self.default_cursor)
     self.edit_room = false

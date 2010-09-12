@@ -114,6 +114,26 @@ function UIEditRoom:close(...)
   return UIPlaceObjects.close(self, ...)
 end
 
+function UIEditRoom:abortRoom()
+  if self.payed then
+    -- Return half the cost.
+    local cost = math.floor(self.room.room_info.build_cost/2)
+    -- TODO: Return also the cost for additional objects.
+
+    -- Decrease the hospital value by the whole room build cost
+    local valueChange = self.room.room_info.build_cost
+    for obj, num in pairs(self.room.room_info.objects_needed) do
+      valueChange = valueChange - num * TheApp.objects[obj].build_cost
+    end
+    self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
+  end
+  if self.room then
+    -- Remove the room from the world list of rooms
+    self.world.rooms[self.room.id] = nil
+  end
+  self:close()
+end
+
 function UIEditRoom:cancel()
   if self.phase == "walls" then
     if self.payed then
@@ -121,17 +141,7 @@ function UIEditRoom:cancel()
       self.ui:addWindow(UIConfirmDialog(self.ui,
         _S.confirmation.delete_room,
         --[[persistable:delete_room_confirm_dialog]]function()
-          -- Return half the cost.
-          local cost = math.floor(self.room.room_info.build_cost/2)
-          -- TODO: Return also the cost for additional objects.
-
-          -- Decrease the hospital value by the whole room build cost
-          local valueChange = self.room.room_info.build_cost
-          for obj, num in pairs(self.room.room_info.objects_needed) do
-            valueChange = valueChange - num * TheApp.objects[obj].build_cost
-          end
-          self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
-          self:close()
+          self:abortRoom()
         end
       ))
     else
@@ -415,7 +425,12 @@ function UIEditRoom:finishRoom()
     end
     self.blueprint_wall_anims[x] = nil
   end
-  self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door, door2)
+  -- If there is already a room, e.g. it is being moved, don't make a new one.
+  if self.room then
+    self.room:initRoom(rect.x, rect.y, rect.w, rect.h, door, door2)
+  else
+    self.room = self.world:newRoom(rect.x, rect.y, rect.w, rect.h, room_type, door, door2)
+  end
 end
 
 function UIEditRoom:purchaseItems()
@@ -522,7 +537,6 @@ function UIEditRoom:returnToDoorPhase()
   end
   
   UIPlaceObjects.removeAllObjects(self, true)
-  self.world.rooms[room.id] = nil
   
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)

@@ -712,7 +712,7 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
-  if window.modal_class == "main" then
+  if window.modal_class == "main"  or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)

@@ -50,7 +50,7 @@ function UIResearch:UIResearch(ui)
   self.hospital = hosp
 
   local --[[persistable:research_policy_adjust]] function adjust(name, state, btn)
-    print("You want to : ", name)
+    -- print("You want to : ", name)
     local delta = name:sub(1, 4)
     local area = name:sub(5, -1)
     local amount = 1

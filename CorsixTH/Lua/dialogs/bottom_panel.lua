@@ -321,16 +321,12 @@ function UIBottomPanel:onTick()
 end
 
 function UIBottomPanel:dialogBankManager()
-  local dlg = UIBankManager(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UIBankManager(self.ui))
 end
 
 function UIBottomPanel:dialogBankStats()
   local dlg = UIBankManager(self.ui)
-  self.ui:setEditRoom(false)
-  dlg:showStatistics()
-  self.ui:addWindow(dlg)
+  self:addDialog(dlg, function() dlg:showStatistics() end)
 end
 
 function UIBottomPanel:dialogBuildRoom()
@@ -356,39 +352,51 @@ function UIBottomPanel:dialogHireStaff()
 end
 
 function UIBottomPanel:dialogTownMap()
-  local dlg = UITownMap(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UITownMap(self.ui))
 end
 
 function UIBottomPanel:dialogDrugCasebook()
-  local dlg = UICasebook(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UICasebook(self.ui))
 end
 
 function UIBottomPanel:dialogStaffManagement()
-  local dlg = UIStaffManagement(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UIStaffManagement(self.ui))
 end
 
 function UIBottomPanel:dialogPolicy()
-  local dlg = UIPolicy(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UIPolicy(self.ui))
 end
 
 function UIBottomPanel:dialogResearch()
-  local dlg = UIResearch(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UIResearch(self.ui))
 end
 
 function UIBottomPanel:dialogStatus()
-  local dlg = UIProgressReport(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
+  self:addDialog(UIProgressReport(self.ui))
+end
+
+function UIBottomPanel:addDialog(dialog, extra_function)
+  print(extra_function)
+  local edit_window = self.ui:getWindow(UIEditRoom)
+  -- If we are currently editing a room, ask for abortion before adding any dialog.
+  if edit_window then
+    self.ui:addWindow(UIConfirmDialog(self.ui,
+      _S.confirmation.abort_edit_room,
+      --[[persistable:abort_edit_room_confirm_dialog]]function()
+        self.ui:setEditRoom(false)
+        if extra_function then
+          extra_function()
+        end
+        self.ui:addWindow(dialog)
+      end
+    ))
+  else
+    self.ui:setEditRoom(false)
+    if extra_function then
+      extra_function()
+    end
+    self.ui:addWindow(dialog)
+  end
 end
 
 function UIBottomPanel:editRoom()

@@ -261,6 +261,7 @@ function UIPatient:guessDisease()
   patient:setDiagnosed(true)
   patient:setNextAction({
     name = "seek_room", 
-    room_type = patient.disease.treatment_rooms[1]
+    room_type = patient.disease.treatment_rooms[1],
+    treatment_room = true,
   }, 1)
 end

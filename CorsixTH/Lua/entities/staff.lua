@@ -123,10 +123,14 @@ function Staff:updateSkill(consultant, trait, amount)
 
     if old_profile.is_junior and not self.profile.is_junior then
       self.world.ui.adviser:say(_S.adviser.information.promotion_to_doctor)
+      self:updateStaffTitle()
     elseif not old_profile.is_consultant and self.profile.is_consultant then
       self.world.ui.adviser:say(_S.adviser.information.promotion_to_consultant)
-      self:setNextAction(self:getRoom():createLeaveAction())
-      self:queueAction{name = "meander"}
+      if self:getRoom().room_info.id == "training" then
+        self:setNextAction(self:getRoom():createLeaveAction())
+        self:queueAction{name = "meander"}
+      end
+      self:updateStaffTitle()
     end
   end
 end
@@ -389,10 +393,19 @@ function Staff:isIdle()
       return false
     end
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
-
-    if self.humanoid_class ~= "Handyman" and room:getPatientCount() == 0 and room.door.queue:patientSize() == 0
-    and not (room.door.reserved_for and class.is(room.door.reserved_for, Patient) or false) then
-      return true
+    -- or if the only one in sight is actually leaving.
+    if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and not self.action_queue[1].is_leaving
+    and not (room.door.reserved_for and class.is(room.door.reserved_for, Patient)) then
+      if room:getPatientCount() == 0 then
+        return true
+      else
+        -- It might still be the case that the patient is leaving
+        for _, action in ipairs(room:getPatient().action_queue) do
+          if action.is_leaving then
+            return true
+          end
+        end
+      end
     end
   else
     -- on the corridor, if not heading to a room already, for handymen they also shouldn't be on their way to

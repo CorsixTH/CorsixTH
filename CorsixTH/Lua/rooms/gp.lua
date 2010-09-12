@@ -107,10 +107,10 @@ function GPRoom:dealtWithPatient(patient)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
     or #patient.available_diagnosis_rooms == 0 then
       patient:setDiagnosed(true)
-      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
       -- TODO: Temporary, until research is in the game. This is just so that something happens...
       for _, room in pairs(self.world.available_rooms) do
-        if not patient.hospital.discovered_rooms[room] and room.id == patient.disease.treatment_rooms[1] then
+        if not patient.hospital.discovered_rooms[room] and room.id == patient.disease.treatment_rooms[#patient.disease.treatment_rooms] then
           patient.hospital.discovered_rooms[room] = true
           self.world.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
           break

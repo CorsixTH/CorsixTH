@@ -55,10 +55,18 @@ local function action_seek_room_find_room(action, humanoid)
       action.room_type = action.diagnosis_exists
     end
     return nil
-  else
+  elseif action.treatment_room then
     -- Treatment rooms etc either exist, or they don't.
-    return humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
+    -- However, if many rooms are needed to treat the patient they all need to be available.
+    -- Example: ward + operating theatre.
+    for _, rooms in pairs(humanoid.disease.treatment_rooms) do
+      if not humanoid.world:findRoomNear(humanoid, rooms, nil, "advanced") then
+        action.room_type_needed = rooms
+        return nil
+      end
+    end
   end
+  return humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
 end
 
 local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( function(room, humanoid, diagnosis_room)
@@ -161,7 +169,8 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     humanoid:setDiagnosed(true)
     humanoid:queueAction({
       name = "seek_room", 
-      room_type = humanoid.disease.treatment_rooms[1]
+      room_type = humanoid.disease.treatment_rooms[1],
+      treatment_room = true,
     }, 1)
     humanoid:finishAction()
   end
@@ -181,7 +190,12 @@ local function action_seek_room_start(action, humanoid)
     humanoid:finishAction()
     return
   end
-
+  -- Seeking for toilets is a special case with its own action.
+  if action.room_type == "toilets" then
+    humanoid:queueAction({name = "seek_toilets"}, 1)
+    humanoid:finishAction()
+    return
+  end
   -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
   local room = action_seek_room_find_room(action, humanoid)
 
@@ -196,6 +210,14 @@ local function action_seek_room_start(action, humanoid)
         local found = false
         if room.room_info.id == action.room_type then
           found = true
+        elseif room.room_info.id == action.room_type_needed then
+          -- So the room that we're going to is not actually the room we waited for to be built.
+          -- Example: Will go to ward, but is waiting for the operating theatre.
+          -- Clean up and start over to find the room we actually want to go to.
+          TheApp.ui.bottom_panel:removeMessage(humanoid)
+          humanoid.world:unregisterRoomBuildCallback(build_callback)
+          action.room_type_needed = nil
+          action_seek_room_start(action, humanoid)
         elseif not humanoid.diagnosed then
           -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
           if action.room_type ~= "gp" then 
@@ -227,7 +249,9 @@ local function action_seek_room_start(action, humanoid)
         -- Make a message about that something needs to be done about this patient
         if humanoid.diagnosed then
           -- The patient is diagnosed, a treatment room is missing.
-          action_seek_room_no_treatment_room_found(action.room_type, humanoid)
+          -- It may happen that it is another room in a series which is missing.
+          local room_to_find = action.room_type_needed and action.room_type_needed or action.room_type
+          action_seek_room_no_treatment_room_found(room_to_find, humanoid)
         else
           -- No more diagnosis rooms can be found
           -- The GP's office is a special case. TODO: Make a custom message anyway?

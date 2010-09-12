@@ -238,12 +238,17 @@ function Hospital:createEmergency()
       cured_emergency_patients = 0,
     }
     self.emergency = emergency
+    -- The last room in the list of treatment rooms is considered when checking for availability.
+    -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
+    -- TODO: Make it work for all kinds of lists of treatment rooms.
+    local no_rooms = #emergency.disease.treatment_rooms
     local room_name, required_staff, staff_name = 
-      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[1])
+      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
     
     local staff_available = self:hasStaffOfCategory(required_staff)
+    -- Check so that all rooms in the list are available
     for _, room in pairs(self.world.rooms) do
-      if room.room_info.id == emergency.disease.treatment_rooms[1] then
+      if room.room_info.id == emergency.disease.treatment_rooms[no_rooms] then
         room_name = nil
         break
       end

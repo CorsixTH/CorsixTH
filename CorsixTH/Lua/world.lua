@@ -622,10 +622,11 @@ function World:onTick()
       self.day = self.day + 1
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
-        self:onEndMonth()
         for _, hospital in ipairs(self.hospitals) do
           hospital:onEndMonth()
         end
+        -- Let the hospitals do what they need to do at end of month first.
+        self:onEndMonth()
         self.day = 1
         self.month = self.month + 1
         if self.month > 12 then
@@ -886,21 +887,34 @@ function World:isTilePartOfNearbyObject(x, y, distance)
   return false
 end
 
--- returns a set of all objects near the given position
-function World:findAllObjectsNear(x, y, distance)
+-- Returns a set of all objects near the given position but if supplied only of the given object type.
+--!param x The x-coordinate at which to originate the search
+--!param y The y-coordinate
+--!param distance The number of tiles away from the origin to search
+--!param object_type_name The name of the objects that are being searched for
+function World:findAllObjectsNear(x, y, distance, object_type_name)
   if not distance then
     -- Note that regardless of distance, only the room which the humanoid is in
     -- is searched (or the corridor if the humanoid is not in a room).
     distance = 20
   end
   local objects = {}
+  local thob = 0
+  if object_type_name then
+    local obj_type = self.object_types[object_type_name]
+    if not obj_type then
+      error("Invalid object type name: " .. object_type_name)
+    end
+    thob = obj_type.thob
+  end
+  
   local callback = function(x, y, d)
-    local obj = self:getObject(x, y)
+    local obj = self:getObject(x, y, object_type_name)
     if obj then
       objects[obj] = true
     end
   end
-  self.pathfinder:findObject(x, y, 0, distance, callback)
+  self.pathfinder:findObject(x, y, thob, distance, callback)
   return objects
 end
 

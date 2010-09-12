@@ -26,11 +26,16 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world
   self.hospital = hospital
+  
+  self.room_info = room_info
+  self:initRoom(x, y, w, h, door, door2)
+end
+
+function Room:initRoom(x, y, w, h, door, door2)
   self.x = x
   self.y = y
   self.width = w
   self.height = h
-  self.room_info = room_info
   self.maximum_patients = 1 -- A good default for most rooms
   door.room = self
   self.door = door
@@ -44,13 +49,11 @@ function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.built = false
   self.crashed = false
   
-  self.world.map.th:markRoom(x, y, w, h, room_info.floor_tile, id)
+  self.world.map.th:markRoom(x, y, w, h, self.room_info.floor_tile, self.id)
   
   self.humanoids = {--[[a set rather than a list]]}
   self.approaching_staff = {--[[a set rather than a list]]}
   self.objects = {--[[a set rather than a list]]}
-  
-  -- TODO
 end
 
 function Room:getEntranceXY(inside)
@@ -127,6 +130,7 @@ function Room:dealtWithPatient(patient)
     patient.cure_rooms_visited = patient.cure_rooms_visited + 1
     local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
     if next_room then
+      -- Do not say that it is a treatment room here, since that check should already have been made.
       patient:queueAction{name = "seek_room", room_type = next_room}
     else
       -- Patient is "done" at the hospital
@@ -384,7 +388,10 @@ function Room:tryAdvanceQueue()
   if self.door.queue:size() > 0 and not self.door.user 
   and not self.door.reserved_for then
     local front = self.door.queue:front()
-    if self.humanoids[front] or (self:canHumanoidEnter(front) and self.is_active) then
+    -- These two conditions differ by the waiting symbol
+    
+    if self:canHumanoidEnter(front) then
+      print(self.is_active)
       self.door.queue:pop()
       self.door:updateDynamicInfo()
       if self.room_info.id ~= "staff_room" then -- Do nothing if it is the staff_room
@@ -397,6 +404,9 @@ function Room:tryAdvanceQueue()
           end
         end
       end
+    elseif self.humanoids[front] then
+      self.door.queue:pop()
+      self.door:updateDynamicInfo()
     end
   end
 end
@@ -436,7 +446,14 @@ function Room:onHumanoidLeave(humanoid)
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) then
-          if not humanoid.action_queue[1].is_leaving then
+          local found_leaving_action = false
+          for _, action in ipairs(humanoid.action_queue) do
+            if action.is_leaving then
+              found_leaving_action = true
+              break
+            end
+          end
+          if not found_leaving_action then
             self:makePatientLeave(humanoid)
             humanoid:queueAction(self:createEnterAction())
           end
@@ -478,6 +495,10 @@ function Room:getUsageScore()
 end
 
 function Room:canHumanoidEnter(humanoid)
+  -- If the room is not active nobody can enter
+  if not self.is_active then
+    return false
+  end
   -- By default, staff can always enter
   if class.is(humanoid, Staff) then
     return true
@@ -505,6 +526,8 @@ function Room:roomFinished()
     self.world.room_built[self.room_info.id] = true
   end
   self:tryToFindNearbyPatients()
+  -- It may also happen that there are patients queueing for this room already (e.g after editing)
+  self:tryAdvanceQueue()
 end
 
 function Room:tryToFindNearbyPatients()
