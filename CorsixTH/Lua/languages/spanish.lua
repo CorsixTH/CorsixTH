@@ -222,7 +222,8 @@ errors = {
 }
 
 confirmation = {
-  needs_restart = utf8 "Cambiar este parámetro necesita que CorsixTH sea reiniciado. Se perdera todo el progreso que no hayas guardado. ¿Seguro que quieres hacer esto?"
+  needs_restart = utf8 "Cambiar este parámetro necesita que CorsixTH sea reiniciado. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres hacer esto?"
+  abort_edit_room = utf8 "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?"
 }
 
 information = {
