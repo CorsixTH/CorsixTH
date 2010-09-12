@@ -18,6 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local pathsep = package.config:sub(1, 1)
 local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
@@ -1461,6 +1462,24 @@ function World:afterLoad(old, new)
   if old < 16 then
     self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
     self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
+  end
+  if old < 17 then
+    -- Added another object
+    local _, shield = pcall(dofile, "objects" .. pathsep .. "radiation_shield")
+    local _, shield_b = pcall(dofile, "objects" .. pathsep .. "radiation_shield_b")
+    shield.slave_type = shield_b
+    shield.slave_type.master_type = shield
+    Object.processTypeDefinition(shield)
+    Object.processTypeDefinition(shield_b)
+
+    self.object_id_by_thob[shield.thob] = shield.id
+    self.object_id_by_thob[shield_b.thob] = shield_b.id
+    self.object_types[shield.id] = shield
+    self.object_types[shield_b.id] = shield_b
+    self.ui.app.objects[shield.id] = shield
+    self.ui.app.objects[shield_b.id] = shield_b
+    self.ui.app.objects[#self.ui.app.objects + 1] = shield
+    self.ui.app.objects[#self.ui.app.objects + 1] = shield_b
   end
   self.savegame_version = new
 end
