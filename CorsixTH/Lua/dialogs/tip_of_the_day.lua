@@ -35,7 +35,7 @@ function UITipOfTheDay:UITipOfTheDay(ui)
   local app = ui.app
   self.ui = ui
   self.resizable = false
-  self:setDefaultPosition(20, -20)
+  self:setDefaultPosition(-20, -20)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   
   self.num_tips = #_S.totd_window.tips

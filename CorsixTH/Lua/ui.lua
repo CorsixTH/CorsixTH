@@ -289,8 +289,16 @@ function UI:draw(canvas)
   local app = self.app
   local config = app.config
   if self.background then
-    canvas:fillBlack()
-    self.background:draw(canvas, (app.config.width - self.background_width) / 2, (app.config.height - self.background_height) / 2)
+    local bg_w, bg_h = self.background_width, self.background_height
+    local screen_w, screen_h = app.config.width, app.config.height
+    local factor = math.max(screen_w / bg_w, screen_h / bg_h)
+    if canvas:scale(factor, "bitmap") or canvas:scale(factor) then
+      self.background:draw(canvas, (screen_w / factor - bg_w) / 2, (screen_h / factor - bg_h) / 2)
+      canvas:scale(1)
+    else
+      canvas:fillBlack()
+      self.background:draw(canvas, (screen_w - bg_w) / 2, (screen_h - bg_h) / 2)
+    end
   end
   Window.draw(self, canvas, 0, 0)
   self:drawTooltip(canvas)
@@ -364,29 +372,14 @@ function UI:disableKeyboardRepeat()
 end
 
 local menu_bg_sizes = { -- Available menu background sizes
-  {1920, 1200},
-  {1680, 1050},
-  {1440, 900},
-  {1280, 800},
-  {1024, 768},
-  {800, 600},
-  {640, 480},
+  {1920, 1080},
 }
 
 function UI:setMenuBackground()
-  local bg_size
-  for _, size in ipairs(menu_bg_sizes) do
-    if size[1] <= self.app.config.width and size[2] <= self.app.config.height then
-      bg_size = size
-      break
-    end
-  end
-  
-  if bg_size then
-    self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[1], bg_size[1], bg_size[2], "Bitmap")
-    self.background_width = bg_size[1]
-    self.background_height = bg_size[2]
-  end
+  local bg_size = menu_bg_sizes[1]
+  self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[2], bg_size[1], bg_size[2], "Bitmap")
+  self.background_width = bg_size[1]
+  self.background_height = bg_size[2]
 end
 
 function UI:onChangeResolution()
