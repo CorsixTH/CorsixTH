@@ -176,6 +176,7 @@ function UIDirBrowser:UIDirBrowser(ui)
     green = 156,
     blue = 208,
   }
+  self.ui = ui
   self:Window()
   self.width = 500
   self.height = 400
@@ -186,6 +187,8 @@ function UIDirBrowser:UIDirBrowser(ui)
   self.modal_class = "dir browser"
   self.resizable = false
   self:setDefaultPosition(0.05, 0.5)
+  
+  self:addKeyHandler("esc", self.exit)
   
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
@@ -206,6 +209,10 @@ function UIDirBrowser:UIDirBrowser(ui)
         self:chooseDirectory(node.path)
       end
     end))
+end
+
+function UIDirBrowser:exit()
+  self.ui.app:exit()
 end
 
 function UIDirBrowser:chooseDirectory(path)

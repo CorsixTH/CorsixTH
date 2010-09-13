@@ -293,10 +293,13 @@ end
 
 function TreeControl:onMouseDown(button, x, y)
   local redraw = Window.onMouseDown(self, button, x, y)
-  self.mouse_down_in_self = false
-  if 0 <= x and 0 <= y and x < self.width and y < self.height then
-    self.mouse_down_in_self = true
-    redraw = true
+  if button ~= 4 and button ~= 5 then
+    -- NB: 4 and 5 are scrollwheel
+    self.mouse_down_in_self = false
+    if 0 <= x and 0 <= y and x < self.width and y < self.height then
+      self.mouse_down_in_self = true
+      redraw = true
+    end
   end
   return redraw
 end
@@ -308,21 +311,26 @@ end
 
 function TreeControl:onMouseUp(button, x, y)
   local redraw = Window.onMouseUp(self, button, x, y)
-  local node = self.mouse_down_in_self and self:hitTestTree(x, y)
-  if node then
-    if self.select_callback then
-      self.select_callback(node)
-    end
-    if node:hasChildren() then
-      if node:isExpanded() then
-        node:contract()
-      else
-        node:expand()
+  if button == 4 or button == 5 then
+    -- Scrollwheel
+    self.scrollbar:setXorY(self.scrollbar:getXorY() + (button - 4.5) * 8)
+  else
+    local node = self.mouse_down_in_self and self:hitTestTree(x, y)
+    if node then
+      if self.select_callback then
+        self.select_callback(node)
       end
-      redraw = true
+      if node:hasChildren() then
+        if node:isExpanded() then
+          node:contract()
+        else
+          node:expand()
+        end
+        redraw = true
+      end
     end
+    self.mouse_down_in_self = false
   end
-  self.mouse_down_in_self = false
   return redraw
 end
 

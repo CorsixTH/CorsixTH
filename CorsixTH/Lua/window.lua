@@ -577,6 +577,36 @@ function Scrollbar:setRange(min_value, max_value, page_size, value)
   return self
 end
 
+--! Get the pixel position of the slider in the axis which the slider can move
+function Scrollbar:getXorY()
+  return self.slider[self.direction]
+end
+
+--! Set the pixel position of the slider in the axis which the slider can move
+function Scrollbar:setXorY(xy)
+  local dir = self.direction
+  local min, max
+  if dir == "x" then
+    min = self.slider.min_x
+    max = self.slider.max_x
+  else
+    min = self.slider.min_y
+    max = self.slider.max_y
+  end
+  if xy < min then
+    xy = min
+  end
+  if xy > max then
+    xy = max
+  end
+  self.slider[dir] = xy
+  local old_value = self.value
+  self.value = math.floor(((xy - min) / (max - min + 1)) * (self.max_value - self.min_value - self.page_size + 2)) + 1
+  if old_value ~= self.value then
+    self.callback()
+  end
+end
+
 local scrollbar_mt = permanent("Window.<scrollbar_mt>", getmetatable(Scrollbar()))
 
 --[[ Convert a static panel into a scrollbar.
@@ -1080,28 +1110,10 @@ function Window:onMouseMove(x, y, dx, dy)
   
   if self.active_scrollbar then
     local bar = self.active_scrollbar
-    x = x - bar.down_x
-    y = y - bar.down_y
-    local changed = false
     if bar.direction == "x" then
-      x = math.max(bar.slider.min_x, x)
-      x = math.min(bar.slider.max_x, x)
-      repaint = repaint or bar.slider.y
-      bar.slider.x = x
-      local old_value = bar.value
-      bar.value = math.floor(((x - bar.slider.min_x) / (bar.slider.max_x - bar.slider.min_x + 1)) * (bar.max_value - bar.min_value - bar.page_size + 2)) + 1
-      changed = old_value ~= bar.value
+      bar:setXorY(x - bar.down_x)
     elseif bar.direction == "y" then
-      y = math.max(bar.slider.min_y, y)
-      y = math.min(bar.slider.max_y, y)
-      repaint = repaint or bar.slider.y
-      bar.slider.y = y
-      local old_value = bar.value
-      bar.value = math.floor(((y - bar.slider.min_y) / (bar.slider.max_y - bar.slider.min_y + 1)) * (bar.max_value - bar.min_value - bar.page_size + 2)) + 1
-      changed = old_value ~= bar.value
-    end
-    if changed then
-      bar.callback()
+      bar:setXorY(y - bar.down_y)
     end
   end
   
