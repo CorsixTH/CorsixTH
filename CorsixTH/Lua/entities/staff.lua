@@ -27,6 +27,15 @@ function Staff:Staff(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
 end
 
+function Staff:tickDay()
+  Humanoid.tickDay(self)
+  -- Pay too low  --> unhappy
+  -- Pay too high -->   happy
+  local fair_wage = self.profile:getFairWage(self.world)
+  local wage = self.profile.wage
+  self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / fair_wage)
+end
+
 function Staff:tick()
   Entity.tick(self)
   if not self.fired and self.hospital then
