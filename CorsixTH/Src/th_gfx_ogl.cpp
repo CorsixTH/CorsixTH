@@ -140,9 +140,12 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 
 #ifdef CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
     bool bFoundAll = true;
+    // TODO: SDL_GL_GetProcAddress doesn't work without a call to
+    // SDL_SetVideoMode, which isn't done when a context is being
+    // re-used.
 #define FIND(name, typ) \
     m_ ## name ## EXT = NULL; \
-    if(bFoundAll) \
+    if(bFoundAll && !pParams->bReuseContext) \
     { \
         m_ ## name ## EXT = (typ) SDL_GL_GetProcAddress(#name "EXT"); \
         if(!m_ ## name ## EXT) \

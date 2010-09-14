@@ -153,20 +153,24 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     }
 
     // Code to try several variations on finding CorsixTH.lua:
-    // CorsixTH/CorsixTH.lua
     // CorsixTH.lua
+    // CorsixTH/CorsixTH.lua
     // ../CorsixTH.lua
+    // ../CorsixTH/CorsixTH.lua
     // ../../CorsixTH.lua
+    // ../../CorsixTH/CorsixTH.lua
     // ../../../CorsixTH.lua
+    // ../../../CorsixTH/CorsixTH.lua
     // It is simpler to write this in Lua than in C.
     const char sLuaCorsixTHLua[] =
     "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)\n"
     "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\"\n"
-    "code = loadfile(root..\"CorsixTH\"..sep..name)\n"
-    "if code then return code end \n"
-    "for i = 0, 3 do \n"
-    "  code = loadfile(root..(\"..\"..sep):rep(i)..name)\n"
-    "  if code then return code end \n"
+    "for num_dotdot = 0, 3 do\n"
+    "  for num_dir = 0, 1 do\n"
+    "    code = loadfile(root..(\"..\"..sep):rep(num_dotdot)..\n"
+    "                    (\"CorsixTH\"..sep):rep(num_dir)..name)\n"
+    "    if code then return code end \n"
+    "  end \n"
     "end \n"
     "return loadfile(name)";
 
