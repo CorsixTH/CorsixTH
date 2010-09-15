@@ -34,6 +34,9 @@ struct RECT
 {
     long top, bottom, left, right;
 };
+#ifndef max
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#endif
 #endif
 
 THRenderTarget::THRenderTarget()
