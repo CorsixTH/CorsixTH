@@ -391,7 +391,6 @@ function Room:tryAdvanceQueue()
     -- These two conditions differ by the waiting symbol
     
     if self:canHumanoidEnter(front) then
-      print(self.is_active)
       self.door.queue:pop()
       self.door:updateDynamicInfo()
       if self.room_info.id ~= "staff_room" then -- Do nothing if it is the staff_room

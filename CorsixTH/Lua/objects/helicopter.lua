@@ -89,7 +89,9 @@ function Helicopter:spawnPatient()
     offset = {y = 1},
   }
   patient:setHospital(hospital)
-  patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1]}
+  -- TODO: If new combinated diseases are added this will not work correctly anymore.
+  local no_of_rooms = #patient.disease.treatment_rooms
+  patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[no_of_rooms]}
 end
 
 return object

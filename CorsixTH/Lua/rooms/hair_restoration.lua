@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "hair_restoration"
-room.level_config_id = 46
+room.level_config_id = 25
 room.class = "HairRestorationRoom"
 room.name = _S.rooms_short.hair_restoration
 room.tooltip = _S.tooltip.rooms.hair_restoration

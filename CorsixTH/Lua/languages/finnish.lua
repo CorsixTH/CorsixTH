@@ -49,7 +49,8 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
         11. Level introduction
         12. Tips
         13. Room descriptions
-        14. Misc
+        14. Confirmation
+        15. Misc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -151,8 +152,9 @@ room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäis
 }
 
 -- 6. Dynamic info
-dynamic_info.patient.actions.no_gp_available    = utf8 "Odotetaan, että rakennat yleislääkärin toimiston"
+dynamic_info.patient.actions.no_gp_available    = utf8 "Odottaa, että rakennat yleislääkärin toimiston"
 dynamic_info.staff.actions.heading_for          = utf8 "Matkalla kohteeseen: %s"
+dynamic_info.staff.actions.fired                = utf8 "Erotettu"
 
 -- 7. Main menu
 main_menu = {
@@ -533,7 +535,10 @@ room_descriptions = {
   },
 }
 
--- 14. Misc
+-- 14. Confirmation
+confirmation.abort_edit_room = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?"
+
+-- 15. Misc
 misc.not_yet_implemented        = utf8 "(ei toteutettu vielä)"
 misc.no_heliport                = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää"
 

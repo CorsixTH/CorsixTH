@@ -213,7 +213,7 @@ function Plant:createHandymanActions(handyman)
   -- Many plants in the vicinity may ask almost at the same time, make sure
   -- this handyman is occupied
   handyman.action_queue[1].is_job = self
-  print(ux .. " " .. uy)
+
   local action = {name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
   local water_action = {
     name = "use_object", 

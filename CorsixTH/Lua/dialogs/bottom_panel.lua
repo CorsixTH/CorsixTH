@@ -376,7 +376,6 @@ function UIBottomPanel:dialogStatus()
 end
 
 function UIBottomPanel:addDialog(dialog, extra_function)
-  print(extra_function)
   local edit_window = self.ui:getWindow(UIEditRoom)
   -- If we are currently editing a room, ask for abortion before adding any dialog.
   if edit_window then
