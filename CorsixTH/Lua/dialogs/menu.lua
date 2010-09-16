@@ -517,6 +517,7 @@ function UIMenuBar:makeMenu(app)
   end
   local function restart()
     local level = self.ui.app.map.level_number
+    local difficulty = self.ui.app.map.difficulty
     local name, file
     if not tonumber(level) then
       name = self.ui.app.map.level_name
@@ -526,7 +527,7 @@ function UIMenuBar:makeMenu(app)
       self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
       return
     end
-    local status, err = pcall(app.loadLevel, app, level, name, file)
+    local status, err = pcall(app.loadLevel, app, level, difficulty, name, file)
     if not status then
       err = "Error while loading level: " .. err
       print(err)

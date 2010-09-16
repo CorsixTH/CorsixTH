@@ -45,6 +45,7 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/example.level -text
+CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/dialogs/research_policy.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text

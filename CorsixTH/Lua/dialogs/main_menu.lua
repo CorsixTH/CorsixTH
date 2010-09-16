@@ -85,7 +85,9 @@ function UIMainMenu:hitTest(x, y)
 end
 
 function UIMainMenu:buttonNewGame()
-  self.ui.app:loadLevel(1)
+  local window = UINewGame(self.ui)
+  self.ui:addWindow(window)
+  
 end
 
 function UIMainMenu:buttonCustomGame()

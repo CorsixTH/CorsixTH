@@ -25,6 +25,7 @@ local TH = require "TH"
 class "UIProgressReport" (UIFullscreen)
 
 function UIProgressReport:UIProgressReport(ui)
+  -- TODO: Refactor this file!
   self:UIFullscreen(ui)
 
   local world = self.ui.app.world
@@ -63,9 +64,15 @@ function UIProgressReport:UIProgressReport(ui)
     local str = _S.tooltip.status[crit]
     local res_value = active[crit].win_value
     active[crit].visible = true
+    -- Special case for money, subtract loans
+    local current = hospital[crit]
+    if crit == "balance" then
+      current = current - hospital.loan
+    end
     if active[crit].lose_value then
       active[crit].red = false
-      if hospital[crit] < active[crit].boundary then
+      
+      if current < active[crit].boundary then
         active[crit].red = true
         res_value = active[crit].lose_value
         -- TODO: Make the ugly workaround for the special case "percentage_killed" better
@@ -84,7 +91,7 @@ function UIProgressReport:UIProgressReport(ui)
     end
     if res_value then
       if criteria[tab.criterion].formats == 2 then
-        str = _S.tooltip.status[crit]:format(res_value, hospital[crit])
+        str = _S.tooltip.status[crit]:format(res_value, current)
       else
         str = _S.tooltip.status[crit]:format(res_value)
       end
@@ -171,6 +178,10 @@ function UIProgressReport:draw(canvas, x, y)
       local sprite_offset = active[criterion].red and 2 or 0
       local modifier = 0
       local current = hospital[criterion]
+      -- Balance is special
+      if criterion == "balance" then
+        current = current - hospital.loan
+      end
       if active[criterion].red then
         local lose = active[criterion].lose_value
         modifier = 49*(1 - ((current - lose)/(active[criterion].boundary - lose)))

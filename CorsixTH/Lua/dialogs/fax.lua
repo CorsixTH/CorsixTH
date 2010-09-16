@@ -157,9 +157,7 @@ function UIFax:choice(choice)
       }
     end
   end
-  if choice == "tutorial" then
-    self.ui:startTutorial()
-  elseif choice == "accept_emergency" then
+  if choice == "accept_emergency" then
     self.ui.app.world:newObject("helicopter", self.ui.hospital, "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
     self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
@@ -167,7 +165,7 @@ function UIFax:choice(choice)
   elseif choice == "accept_new_level" then
     if tonumber(self.ui.app.world.map.level_number) then
       local carry_to_next_level = {room_built = self.ui.app.world.room_built}
-      self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1)
+      self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
       TheApp.world:initFromPreviousLevel(carry_to_next_level)
     else
       -- TODO: Allow some kind of custom campaign with custom levels

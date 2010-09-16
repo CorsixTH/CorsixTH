@@ -94,10 +94,14 @@ the original game levels are considered.
 !param level_name The name of the actual map/area/hospital as written in the config file.
 !param level_file The path to the map file as supplied by the config file.
 ]]
-function Map:load(level, level_name, level_file)
+function Map:load(level, difficulty, level_name, level_file)
   -- Load base configuration for all levels
   local objects, i
-  local base_config = self:loadMapConfig("FULL00.SAM", {})
+  if not difficulty then
+    difficulty = "full"
+  end
+  self.difficulty = difficulty
+  local base_config = self:loadMapConfig(difficulty .. "00.SAM", {})
   if type(level) == "number" then
     self.level_number = level
     local data, errors = self:getRawData(level_file)
@@ -114,7 +118,7 @@ function Map:load(level, level_name, level_file)
         level_no = "0" .. level
       end
       -- Override with the specific configuration for this level
-      self.level_config = self:loadMapConfig("FULL" .. level_no .. ".SAM", base_config)
+      self.level_config = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
     else
       -- Try to load the standard full configuration level instead.
       local path = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
@@ -485,5 +489,8 @@ function Map:afterLoad(old, new)
     for plot = 1,self.th:getPlotCount() do
       self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
     end
+  end
+  if old < 18 then
+    self.difficulty = "full"
   end
 end

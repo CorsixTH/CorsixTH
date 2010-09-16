@@ -73,6 +73,6 @@ function UICustomGame:buttonClicked(num)
     self.ui:addWindow(UIInformation(self.ui, {errors}))
     return
   end
-  app:loadLevel(filename, level_name, level_file)
+  app:loadLevel(filename, nil, level_name, level_file)
 end
 

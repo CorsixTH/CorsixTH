@@ -21,6 +21,10 @@ SOFTWARE. --]]
 --! Dialog that informs the player of for example what the goals for the level are.
 class "UIInformation" (Window)
 
+--! Constructor for the Information Dialog.
+--!param text The text to show, held in a table. All elements of the table will be written
+-- beneath each other. If instead a table within the table is supplied the texts
+-- will be shown in consecutive dialogs.
 function UIInformation:UIInformation(ui, text)
   self:Window()
   
@@ -31,7 +35,14 @@ function UIInformation:UIInformation(ui, text)
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
   self.black_font = app.gfx:loadFont("QData", "Font00V")
-  self.text = text
+  
+  if type(text[1]) == "table" then
+    self.text = text[1][1]
+    table.remove(text[1], 1)
+    self.additional_text = text
+  else
+    self.text = text
+  end
   
   self:onChangeLanguage()
   
@@ -80,4 +91,11 @@ function UIInformation:draw(canvas, x, y)
   end
   
   Window.draw(self, canvas, x, y)
+end
+
+function UIInformation:close()
+  Window.close(self)
+  if self.additional_text and #self.additional_text[1] > 0 then
+    self.ui:addWindow(UIInformation(self.ui, self.additional_text))
+  end
 end

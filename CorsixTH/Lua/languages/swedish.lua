@@ -202,6 +202,22 @@ tooltip.options_window = {
   back = utf8 "Stäng alternativmenyn",
 }
 
+new_game_window = {
+  easy = utf8 "Junior (Lätt)",
+  medium = utf8 "Läkare (Medel)",
+  hard = utf8 "Konsult (Svår)",
+  tutorial = utf8 "Starthjälp",
+  cancel = "Avbryt",
+}
+
+tooltip.new_game_window = {
+  easy = utf8 "Om du känner dig ny på denna typ av spel är detta läget för dig",
+  medium = utf8 "Detta är den gyllene medelvägen om du är osäker på vad du ska välja",
+  hard = utf8 "Känner du för en utmaning och är van vid den här typen av spel är det här rätt val",
+  tutorial = utf8 "Vill du ha lite hjälp på traven i början, tryck ner den här rutan",
+  cancel = "Oj, det var ju egentligen inte meningen att starta ett nytt spel!",
+}
+
 errors = {
   dialog_missing_graphics = utf8 "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = utf8 "Fel när spelet skulle sparas: ",

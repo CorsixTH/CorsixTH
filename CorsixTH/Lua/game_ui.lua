@@ -662,7 +662,16 @@ local tutorial_phases = {
   -- [54][97] to [54][99]
   -- [54][101] to [54][103]
   {
-    _S.adviser.tutorial.build_pharmacy,
+    { text = _S.adviser.tutorial.build_pharmacy,
+      begin_callback = function() 
+        TheApp.ui:addWindow(UIInformation(TheApp.ui, {{
+          _S.introduction_texts["level15"],
+          _S.introduction_texts["level16"],
+          _S.introduction_texts["level17"],
+          _S.introduction_texts["level1"],
+        }}))
+      end,
+    },
   },
 }
 

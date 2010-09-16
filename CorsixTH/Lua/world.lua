@@ -597,18 +597,8 @@ function World:onTick()
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
       self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
-      self.ui:showBriefing()
-      if self.map.level_number == 1 then
-        -- Ask if the player wants a tutorial
-        local message = {
-          {             text = _S.fax.tutorial[1]},
-          {offset =  8, text = _S.fax.tutorial[2]},
-          choices = {
-            {text = _S.fax.tutorial[3], choice = "tutorial"},
-            {text = _S.fax.tutorial[4], choice = "no_tutorial"},
-          },
-        }
-        self.ui.bottom_panel:queueMessage("information", message)
+      if not self.ui.start_tutorial then
+        self.ui:showBriefing()
       end
     end
     self.tick_timer = self.tick_rate
@@ -770,6 +760,10 @@ function World:checkWinningConditions(player_no)
     local criterion = criteria[tab.criterion].name
     local modifier = 0
     local current = hosp[criterion]
+    -- Right now special case for balance, subtract any loans!
+    if criterion == "balance" then
+      current = current - hosp.loan
+    end
     if active[criterion].lose_value then
       local lose = active[criterion].lose_value
       modifier = 1 - ((current - lose)/(active[criterion].boundary - lose))
