@@ -20,7 +20,6 @@ FILE(GLOB_RECURSE mapedit_source_files
 # Declaration of the executable
 add_executable(MapEdit 
   WIN32 
-  MACOSX_BUNDLE
   ${mapedit_source_files}
 )
 
