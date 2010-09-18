@@ -184,6 +184,7 @@ public:
     ~THMap();
 
     bool setSize(int iWidth, int iHeight);
+    bool loadBlank();
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
@@ -374,6 +375,8 @@ enum eTHMapScanlineIteratorDirection
 class THMapNodeIterator
 {
 public:
+    THMapNodeIterator();
+
     /*!
         @arg pMap The map whose nodes should be iterated
         @arg iScreenX The X co-ordinate of the top-left corner of the
@@ -445,6 +448,8 @@ protected:
 class THMapScanlineIterator
 {
 public:
+    THMapScanlineIterator();
+
     /*!
         @arg itrNodes A node iterator which has reached the end of a scanline
         @arg eDirection The direction in which to iterate the scanline;

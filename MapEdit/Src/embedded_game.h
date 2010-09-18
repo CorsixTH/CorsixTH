@@ -69,6 +69,7 @@ protected:
     void _onMouseMove(wxMouseEvent& evt);
     void _onLeftUp(wxMouseEvent& evt);
     void _onLeftDown(wxMouseEvent& evt);
+    void _onLeftDoubleClick(wxMouseEvent& evt);
     void _onRightUp(wxMouseEvent& evt);
     void _onRightDown(wxMouseEvent& evt);
     void _onMiddleUp(wxMouseEvent& evt);

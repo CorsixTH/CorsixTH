@@ -183,5 +183,6 @@ end
 
 -- Various constants
 DrawFlags = {}
+DrawFlags.Alpha50 = 2^2
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop = 2^13

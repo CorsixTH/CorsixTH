@@ -3,15 +3,18 @@ PROJECT(MapEdit)
 
 # Generate source files list
 # Note: Done after generating config.h
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/agg/include/)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 FILE(GLOB_RECURSE mapedit_source_files
-  Src/*.cpp
-  Src/*.c
-  Src/*.h
-  ../CorsixTH/Src/*.h
-  ../CorsixTH/Src/*.c
-  ../CorsixTH/Src/*.cpp
-  ../LFS/lfs.c
-  ../LPEG/lpeg.c
+  ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.cpp
+  ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.c
+  ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.h
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
+  ${CMAKE_SOURCE_DIR}/LFS/*.c
+  ${CMAKE_SOURCE_DIR}/LPEG/*.c
 )
 
 # Declaration of the executable

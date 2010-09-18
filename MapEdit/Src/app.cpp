@@ -27,6 +27,7 @@ IMPLEMENT_APP(ThemeHospitalMapEditApp)
 
 bool ThemeHospitalMapEditApp::OnInit()
 {
+    wxImage::AddHandler(new wxPNGHandler);
     wxTopLevelWindow *pForm = new frmMain;
 
     pForm->Show(true);

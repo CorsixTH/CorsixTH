@@ -20,22 +20,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "frmMain.h"
+#include <wx/file.h>
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR1, frmMain::_onFloorGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR2, frmMain::_onFloorGallery2Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL1, frmMain::_onWallGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL2, frmMain::_onWallGallery2Select)
+EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
+EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
+EVT_SIZE(frmMain::_onResize)
 END_EVENT_TABLE()
 
 frmMain::frmMain()
   : wxFrame(NULL, wxID_ANY, L"CorsixTH Map Editor",
             wxDefaultPosition, wxSize(640, 480))
 {
-    m_pRibbon = new wxRibbonBar(this);
-    wxRibbonPage* pHomePage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Home");
+    m_pRibbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRIBBON_BAR_FLOW_VERTICAL | wxRIBBON_BAR_SHOW_PAGE_LABELS);
+    m_pRibbon->SetTabCtrlMargins(0, 0);
+    m_pHomePage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Home");
+    /*
     wxRibbonPanel* pFilePanel = new wxRibbonPanel(pHomePage, wxID_ANY, L"File",
         wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_NO_AUTO_MINIMISE);
+    */
     wxRibbonPage* pFloorPage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Floors");
     wxRibbonPanel* pFloorSimplePanel = new wxRibbonPanel(pFloorPage, wxID_ANY, L"Simple Tiles");
     m_pFloorGallery1 = new RibbonBlockGallery(pFloorSimplePanel, ID_GALLERY_FLOOR1);
@@ -55,7 +62,7 @@ frmMain::frmMain()
     ptLogWindow.x += GetSize().GetWidth();
     m_pLogWindow->SetPosition(ptLogWindow);
 
-    wxSizer *pTopSizer = new wxBoxSizer(wxVERTICAL);
+    wxSizer *pTopSizer = new wxBoxSizer(wxHORIZONTAL);
     pTopSizer->Add(m_pRibbon, 0, wxEXPAND);
     pTopSizer->Add(m_pGamePanel, 1, wxEXPAND);
     SetSizer(pTopSizer);
@@ -64,6 +71,87 @@ frmMain::frmMain()
 frmMain::~frmMain()
 {
     m_pLogWindow->Close();
+}
+
+struct do_load_level_t
+{
+    const char* sData;
+    size_t iLength;
+};
+
+void frmMain::_onNew(wxRibbonButtonBarEvent& evt)
+{
+    do_load_level_t oParams = {NULL, 0};
+    lua_State* L = m_pGamePanel->getLua();
+    if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
+        lua_pop(L, 1);
+    m_pGamePanel->Refresh();
+}
+
+void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
+{
+    wxString sDirectory;
+    wxString sFilter = wxT("Theme Hospital maps (*.L[0-9]+)");
+    char cSep = '|';
+    for(int i = 0; i < 10; ++i)
+    {
+        sFilter += wxString::Format(L"%c*.L%i*", cSep, i);
+        cSep = ';';
+    }
+    sFilter += wxT("|All files (*.*)|*.*");
+    wxFileDialog oOpenDialog(this, wxFileSelectorPromptStr, sDirectory,
+        wxEmptyString, sFilter, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    if(oOpenDialog.ShowModal() != wxID_OK)
+        return;
+    wxFile fFile;
+    if(!fFile.Open(oOpenDialog.GetPath()))
+        return;
+    size_t iLength = static_cast<size_t>(fFile.Length());
+    char* sData = new (std::nothrow) char[iLength];
+    if(!sData)
+        return;
+    if(fFile.Read(sData, iLength) != iLength)
+    {
+        delete[] sData;
+        return;
+    }
+    do_load_level_t oParams = {sData, iLength};
+    lua_State* L = m_pGamePanel->getLua();
+    if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
+        lua_pop(L, 1);
+    delete[] sData;
+    m_pGamePanel->Refresh();
+}
+
+int frmMain::_l_do_load(lua_State *L)
+{
+    lua_getglobal(L, "TheApp");
+    lua_getfield(L, -1, "loadLevel");
+    lua_insert(L, -2);
+    do_load_level_t *pParams = reinterpret_cast<do_load_level_t*>(lua_touserdata(L, 1));
+    size_t iLength = pParams->iLength;
+    const char* sData = pParams->sData;
+    lua_pushlstring(L, sData, iLength);
+    if(iLength >= 3 && sData[0] == 'R' && sData[1] == 'N' && sData[2] == 'C')
+    {
+        lua_getglobal(L, "require");
+        lua_pushliteral(L, "rnc");
+        lua_call(L, 1, 1);
+        lua_getfield(L, -1, "decompress");
+        lua_insert(L, -3);
+        lua_call(L, 2, 1);
+    }
+    lua_call(L, 2, 0);
+    return 0;
+}
+
+void frmMain::_onResize(wxSizeEvent& evt)
+{
+    wxRect rcLogWindow = wxRect(GetPosition(), m_pLogWindow->GetSize());
+    rcLogWindow.x += evt.GetSize().GetWidth();
+    rcLogWindow.height = evt.GetSize().GetHeight();
+    m_pLogWindow->SetSize(rcLogWindow);
+    evt.Skip();
 }
 
 int frmMain::_l_init(lua_State *L)
@@ -78,6 +166,55 @@ int frmMain::_l_init(lua_State *L)
     lua_setglobal(L, "MapEditorSetBlocks");
     lua_pushcfunction(L, _l_set_block_brush);
     lua_setglobal(L, "MapEditorSetBlockBrush");
+
+    lua_pushcfunction(L, _l_init_with_lua_app);
+    lua_setglobal(L, "MapEditorInitWithLuaApp");
+
+    return 0;
+}
+
+class FullSizeButtonBar : public wxRibbonButtonBar
+{
+public:
+    FullSizeButtonBar(wxWindow* parent, wxWindowID id)
+        : wxRibbonButtonBar(parent, id)
+    {
+    }
+
+    virtual wxSize GetMinSize() const
+    {
+        return DoGetBestSize();
+    }
+
+protected:
+    virtual wxSize DoGetNextSmallerSize(wxOrientation direction,
+                                      wxSize relative_to) const
+    {
+        return relative_to;
+    }
+};
+
+int frmMain::_l_init_with_lua_app(lua_State *L)
+{
+    lua_rawgeti(L, LUA_ENVIRONINDEX, 1);
+    frmMain *pThis = reinterpret_cast<frmMain*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+
+    lua_getfield(L, 1, "getBitmapDir");
+    lua_pushvalue(L, 1);
+    lua_call(L, 1, 1);
+    wxString sBitmapDir = lua_tostring(L, -1);
+    lua_pop(L, 1);
+
+    wxRibbonPage* pHomePage = pThis->m_pHomePage;
+    wxRibbonPanel* pFilePanel = new wxRibbonPanel(pHomePage, wxID_ANY, wxT("File"));
+    wxRibbonButtonBar* pFileButtons = new FullSizeButtonBar(pFilePanel, wxID_ANY);
+#define BITMAP(name) wxBitmap(sBitmapDir + (wxT(name) wxT("32.png")), wxBITMAP_TYPE_PNG)
+    pFileButtons->AddButton(wxID_NEW, wxT("New"), BITMAP("new"));
+    pFileButtons->AddButton(wxID_OPEN, wxT("Load"), BITMAP("open"));
+    pFileButtons->AddHybridButton(wxID_SAVE, wxT("Save"), BITMAP("save"));
+#undef BITMAP
+    pThis->m_pRibbon->Realise();
 
     return 0;
 }

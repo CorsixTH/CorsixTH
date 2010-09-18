@@ -97,6 +97,17 @@ static int l_map_load(lua_State *L)
     return 2;
 }
 
+static int l_map_loadblank(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    if(pMap->loadBlank())
+        lua_pushboolean(L, 1);
+    else
+        lua_pushboolean(L, 0);
+    lua_newtable(L);
+    return 2;
+}
+
 THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 {
     THAnimation *pAnim;
@@ -322,7 +333,7 @@ static int l_map_get_player_camera(lua_State *L)
     int iPlayer = luaL_optint(L, 2, 1);
     bool bGood = pMap->getPlayerCameraTile(iPlayer - 1, &iX, &iY);
     if(!bGood)
-        return luaL_error(L, "Player index out of range: %i", iPlayer);
+        return luaL_error(L, "Player index out of range: %d", iPlayer);
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 1);
     return 2;
@@ -767,6 +778,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_map_persist, "persist", MT_Anim);
     luaT_setmetamethod(l_map_depersist, "depersist", MT_Anim);
     luaT_setfunction(l_map_load, "load");
+    luaT_setfunction(l_map_loadblank, "loadBlank");
     luaT_setfunction(l_map_getsize, "size");
     luaT_setfunction(l_map_get_player_count, "getPlayerCount");
     luaT_setfunction(l_map_get_player_camera, "getCameraTile");

@@ -132,6 +132,36 @@ void THMap::_readTileIndex(const unsigned char* pData, int& iX, int &iY) const
     iY = iIndex / m_iWidth;
 }
 
+bool THMap::loadBlank()
+{
+    if(!setSize(128, 128))
+        return false;
+
+    m_iPlayerCount = 1;
+    m_aiInitialCameraX[0] = m_aiInitialCameraY[0] = 63;
+    m_aiHeliportX[0] = m_aiHeliportY[0] = 0;
+    m_iParcelCount = 1;
+    delete[] m_pPlotOwner;
+    delete[] m_pParcelTileCounts;
+    m_pPlotOwner = NULL;
+    m_pParcelTileCounts = NULL;
+    THMapNode *pNode = m_pCells;
+    THMapNode *pOriginalNode = m_pOriginalCells;
+    for(int iY = 0; iY < 128; ++iY)
+    {
+        for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
+        {
+            pNode->iBlock[0] = 2 + (iX % 2);
+        }
+    }
+    m_pPlotOwner = new int[1];
+    m_pPlotOwner[0] = 0;
+    m_pParcelTileCounts = new int[1];
+    m_pParcelTileCounts[0] = 128 * 128;
+
+    return true;
+}
+
 bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                            THMapLoadObjectCallback_t fnObjectCallback,
                            void* pCallbackToken)
@@ -1093,6 +1123,16 @@ void THMap::depersist(LuaPersistReader *pReader)
     }
 }
 
+THMapNodeIterator::THMapNodeIterator()
+    : m_pMap(NULL)
+    , m_pNode(NULL)
+    , m_iScreenX(0)
+    , m_iScreenY(0)
+    , m_iScreenWidth(0)
+    , m_iScreenHeight(0)
+{
+}
+
 THMapNodeIterator::THMapNodeIterator(const THMap *pMap, int iScreenX, int iScreenY,
                                      int iWidth, int iHeight,
                                      eTHMapScanlineIteratorDirection eScanlineDirection)
@@ -1210,6 +1250,12 @@ bool THMapNodeIterator::isLastOnScanline() const
         m_iXs + 64 >= m_iScreenWidth + ms_iMarginRight;
 }
 
+THMapScanlineIterator::THMapScanlineIterator()
+    : m_iNodeStep(0)
+    , m_iXStep(0)
+{
+}
+
 THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
                                              eTHMapScanlineIteratorDirection eDirection,
                                              int iXOffset, int iYOffset)
@@ -1237,3 +1283,4 @@ THMapScanlineIterator& THMapScanlineIterator::operator ++ ()
     m_iXs += m_iXStep;
     return *this;
 }
+

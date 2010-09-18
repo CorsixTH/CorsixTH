@@ -50,7 +50,9 @@ function GameUI:GameUI(app, local_hospital)
   if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
-    error "Screen size too large for the map"
+    if not _MAP_EDITOR then
+      error "Screen size too large for the map"
+    end
   end
   self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
     app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
@@ -89,7 +91,7 @@ end
 function GameUI:draw(canvas)
   local app = self.app
   local config = app.config
-  if not self.in_visible_diamond then
+  if _MAP_EDITOR or not self.in_visible_diamond then
     canvas:fillBlack()
   end
   local zoom = self.zoom_factor
@@ -264,7 +266,9 @@ function GameUI:onCursorWorldPositionChange()
         (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
       self:setCursor(cursor)
     end
-    self.bottom_panel:setDynamicInfo(nil)
+    if self.bottom_panel then
+      self.bottom_panel:setDynamicInfo(nil)
+    end
   end
 
   -- Queueing icons over patients
@@ -307,7 +311,7 @@ function GameUI:onCursorWorldPositionChange()
     end
   end
   -- Dynamic info
-  if entity then
+  if entity and self.bottom_panel then
     self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
   end
 end

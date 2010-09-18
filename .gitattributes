@@ -31,6 +31,9 @@ CorsixTH/Bitmap/mainmenu1080.pal -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/mkbootstrap.lua -text
 CorsixTH/Bitmap/mkfont.lua -text
+CorsixTH/Bitmap/new32.png -text svneol=unset#image/png
+CorsixTH/Bitmap/open32.png -text svneol=unset#image/png
+CorsixTH/Bitmap/save32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/tree_collapsed.bmp -text
 CorsixTH/Bitmap/tree_ctrl.dat -text
 CorsixTH/Bitmap/tree_ctrl.pal -text
@@ -45,6 +48,7 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/example.level -text
+CorsixTH/Lua/dialogs/map_editor.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/dialogs/research_policy.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text

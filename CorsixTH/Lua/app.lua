@@ -123,6 +123,7 @@ function App:init()
   local modes = {"hardware", "doublebuf"}
   self.fullscreen = false
   if _MAP_EDITOR then
+    MapEditorInitWithLuaApp(self)
     modes[#modes + 1] = "reuse context"
     self.config.width = 640
     self.config.height = 480
@@ -215,7 +216,11 @@ function App:init()
   end
   
   -- Load main menu (which creates UI)
-  self:loadMainMenu()
+  if _MAP_EDITOR then
+    self:loadLevel("")
+  else
+    self:loadMainMenu()
+  end
   -- If a savegame was specified, load it
   if self.command_line.load then
     local status, err = pcall(self.load, self, self.command_line.load)
@@ -710,8 +715,12 @@ function App:checkLanguageFile()
   error(err)
 end]]
 
+function App:getBitmapDir()
+  return (self.command_line["bitmap-dir"] or "Bitmap") .. pathsep
+end
+
 function App:readBitmapDataFile(filename)
-  filename = (self.command_line["bitmap-dir"] or "Bitmap") .. pathsep .. filename
+  filename = self:getBitmapDir() .. filename
   local file = assert(io.open(filename, "rb"))
   local data = file:read"*a"
   file:close()

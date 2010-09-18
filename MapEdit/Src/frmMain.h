@@ -36,6 +36,7 @@ SOFTWARE.
 // ----------------------------
 #include "embedded_game.h"
 #include <wx/ribbon/bar.h>
+#include <wx/ribbon/buttonbar.h>
 #include "block_gallery.h"
 
 class frmMain : public wxFrame
@@ -54,6 +55,7 @@ public:
 
 protected:
     wxRibbonBar* m_pRibbon;
+    wxRibbonPage* m_pHomePage;
     frmLog* m_pLogWindow;
     EmbeddedGamePanel* m_pGamePanel;
     RibbonBlockGallery* m_pFloorGallery1;
@@ -65,9 +67,14 @@ protected:
     void _onFloorGallery2Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery1Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery2Select(wxRibbonGalleryEvent& evt);
+    void _onNew(wxRibbonButtonBarEvent& evt);
+    void _onOpen(wxRibbonButtonBarEvent& evt);
+    void _onResize(wxSizeEvent& evt);
     static int _l_init(lua_State *L);
+    static int _l_init_with_lua_app(lua_State *L);
     static int _l_set_blocks(lua_State *L);
     static int _l_set_block_brush(lua_State *L);
+    static int _l_do_load(lua_State *L);
     void _setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2);
 
     DECLARE_EVENT_TABLE();

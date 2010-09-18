@@ -35,10 +35,36 @@ SOFTWARE.
 #endif
 // ----------------------------
 #include "block_gallery.h"
+#include <map>
+
+BEGIN_EVENT_TABLE(RibbonBlockGallery, wxRibbonGallery)
+EVT_BUTTON(wxID_ANY, RibbonBlockGallery::OnExtButton)
+END_EVENT_TABLE()
 
 RibbonBlockGallery::RibbonBlockGallery(wxWindow* parent, wxWindowID id)
 : wxRibbonGallery(parent, id)
 {
+}
+
+RibbonBlockGallery::~RibbonBlockGallery()
+{
+    _clearCategories();
+}
+
+#define FOREACH(container_t, itr_name, container_name) \
+    for(container_t::iterator itr_name = container_name.begin(), \
+        itr_name##_end = container_name.end(); itr_name != itr_name##_end; \
+        ++itr_name)
+
+void RibbonBlockGallery::_clearCategories()
+{
+    FOREACH(categorylist_t, itr, m_vCategories)
+    {
+        Unbind(wxEVT_COMMAND_MENU_SELECTED,
+            &RibbonBlockGallery::OnToggleCategory, this, (**itr).iID);
+        delete *itr;
+    }
+    m_vCategories.clear();
 }
 
 void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
@@ -47,8 +73,10 @@ void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
                                   lua_State* L,
                                   int iInfoIndex)
 {
-    Clear();
     m_vBlocks.clear();
+    _clearCategories();
+    typedef std::map<wxString, category_t*> category_map_t;
+    category_map_t mapCategories;
 
     // Extract relevant block information from Lua
     if(LUA_REGISTRYINDEX < iInfoIndex && iInfoIndex < 0)
@@ -71,10 +99,23 @@ void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
                 block_t oBlock;
                 oBlock.iBlock = lua_tointeger(L, -2);
                 oBlock.iBaseBlock = 0;
-                oBlock.sCategory = L"Miscellaneous";
+                wxString sCategory(L"Miscellaneous");
                 lua_rawgeti(L, -1, 3);
                 if(lua_type(L, -1) == LUA_TSTRING)
-                    oBlock.sCategory = lua_tostring(L, -1);
+                    sCategory = lua_tostring(L, -1);
+                oBlock.pCategory = mapCategories[sCategory];
+                if(oBlock.pCategory == NULL)
+                {
+                    oBlock.pCategory = new category_t;
+                    oBlock.pCategory->bEnabled = true;
+                    oBlock.pCategory->sName = sCategory;
+                    oBlock.pCategory->iID = wxID_HIGHEST + 1 +
+                        mapCategories.size();
+                    Bind(wxEVT_COMMAND_MENU_SELECTED,
+                        &RibbonBlockGallery::OnToggleCategory, this,
+                        oBlock.pCategory->iID);
+                    mapCategories[sCategory] = oBlock.pCategory;
+                }
                 lua_pop(L, 1);
                 lua_getfield(L, -1, "base");
                 if(lua_type(L, -1) == LUA_TNUMBER)
@@ -87,9 +128,14 @@ void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
     }
     lua_pop(L, 2);
 
+    FOREACH(category_map_t, itr, mapCategories)
+    {
+        m_vCategories.push_back(itr->second);
+    }
+
     // Load block bitmaps
     wxSize szLargestBitmap(0, 0);
-    for(blocklist_t::iterator itr = m_vBlocks.begin(), itr_end = m_vBlocks.end(); itr != itr_end; ++itr)
+    FOREACH(blocklist_t, itr, m_vBlocks)
     {
         unsigned int iWidth, iHeight;
         if(!pBlocks->getSpriteSize(itr->iBlock, &iWidth, &iHeight))
@@ -109,7 +155,7 @@ void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
     }
 
     // Make block bitmaps equally sized
-    for(blocklist_t::iterator itr = m_vBlocks.begin(), itr_end = m_vBlocks.end(); itr != itr_end; ++itr)
+    FOREACH(blocklist_t, itr, m_vBlocks)
     {
         if(itr->bmpTrimmed.IsOk() && itr->bmpTrimmed.GetSize() != szLargestBitmap)
         {
@@ -120,11 +166,31 @@ void RibbonBlockGallery::Populate(THSpriteSheet *pBlocks,
     }
 
     // Add blocks to gallery
-    for(blocklist_t::iterator itr = m_vBlocks.begin(), itr_end = m_vBlocks.end(); itr != itr_end; ++itr)
+    _repopulate();
+}
+
+void RibbonBlockGallery::_repopulate()
+{
+    Clear();
+    FOREACH(blocklist_t, itr, m_vBlocks)
     {
-        if(itr->bmpTrimmed.IsOk())
+        if(itr->pCategory->bEnabled && itr->bmpTrimmed.IsOk())
         {
             Append(itr->bmpTrimmed, itr->iBlock, (void*)&*itr);
+        }
+    }
+    Realise();
+}
+
+void RibbonBlockGallery::OnToggleCategory(wxCommandEvent& evt)
+{
+    FOREACH(categorylist_t, itr, m_vCategories)
+    {
+        if((**itr).iID == evt.GetId())
+        {
+            (**itr).bEnabled = !(**itr).bEnabled;
+            _repopulate();
+            break;
         }
     }
 }
@@ -135,11 +201,21 @@ bool RibbonBlockGallery::SelectAndMakeVisible(int iBlock)
     for(unsigned int i = 0; i < iCount; ++i)
     {
         wxRibbonGalleryItem *pItem = GetItem(i);
-        if(reinterpret_cast<block_t*>(GetItemClientData(pItem))->iBlock == iBlock)
+        block_t *pBlock = reinterpret_cast<block_t*>(GetItemClientData(pItem));
+        if(pBlock->iBlock == iBlock)
         {
             SetSelection(pItem);
             EnsureVisible(pItem);
             return true;
+        }
+    }
+    FOREACH(blocklist_t, itr, m_vBlocks)
+    {
+        if(itr->iBlock == iBlock && !itr->pCategory->bEnabled)
+        {
+            itr->pCategory->bEnabled = true;
+            _repopulate();
+            return SelectAndMakeVisible(iBlock);
         }
     }
     return false;
@@ -210,4 +286,15 @@ void RibbonBlockGallery::_expandImage(wxImage& image, wxSize size)
         (size.GetWidth() - image.GetWidth()) / 2,
         size.GetHeight() - image.GetHeight()
     ));
+}
+
+void RibbonBlockGallery::OnExtButton(wxCommandEvent& evt)
+{
+    wxMenu mnCategories;
+    FOREACH(categorylist_t, itr, m_vCategories)
+    {
+        mnCategories.AppendCheckItem((**itr).iID, (**itr).sName)
+            ->Check((**itr).bEnabled);
+    }
+    PopupMenu(&mnCategories);
 }

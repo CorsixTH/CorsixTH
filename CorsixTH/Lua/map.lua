@@ -137,6 +137,20 @@ function Map:load(level, difficulty, level_name, level_file)
         self.level_config.computer["15"] = {Playing = 1}
       end
     end
+  elseif _MAP_EDITOR then
+    -- We're being fed data by the map editor.
+    self.level_name = "MAP EDITOR"
+    self.level_number = "MAP EDITOR"
+    if level == "" then
+      i, objects = self.th:loadBlank()
+    else
+      i, objects = self.th:load(level)
+    end
+    if not base_config then
+      base_config = {}
+    end
+    local example_config_path = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "example.level"
+    self.level_config = self:loadMapConfig(example_config_path, base_config, true)
   else
     -- We're loading a custom level.
     self.level_name = level_name
@@ -159,7 +173,7 @@ function Map:load(level, difficulty, level_name, level_file)
   self.parcelTileCounts = {}
   for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
-    if plot > 1 then
+    if plot > 1 and not _MAP_EDITOR then
       -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
       self.th:setPlotOwner(plot, 0)
     end

@@ -31,6 +31,7 @@ BEGIN_EVENT_TABLE(EmbeddedGamePanel, wxGLCanvas)
   EVT_MIDDLE_DOWN(EmbeddedGamePanel::_onMiddleDown)
   EVT_RIGHT_UP(EmbeddedGamePanel::_onRightUp)
   EVT_RIGHT_DOWN(EmbeddedGamePanel::_onRightDown)
+  EVT_LEFT_DCLICK(EmbeddedGamePanel::_onLeftDoubleClick)
 END_EVENT_TABLE()
 
 EmbeddedGamePanel::EmbeddedGamePanel(wxWindow *pParent)
@@ -222,6 +223,19 @@ void EmbeddedGamePanel::_onLeftDown(wxMouseEvent& evt)
     }
 }
 
+void EmbeddedGamePanel::_onLeftDoubleClick(wxMouseEvent& evt)
+{
+    if(m_Lthread)
+    {
+        lua_State *L = lua_tothread(m_Lthread, 1);
+        lua_pushliteral(L, "buttondown");
+        lua_pushliteral(L, "left_double");
+        lua_pushinteger(L, evt.GetX());
+        lua_pushinteger(L, evt.GetY());
+        _resume(L, 4, 0);
+    }
+}
+
 void EmbeddedGamePanel::_onRightUp(wxMouseEvent& evt)
 {
     if(m_Lthread)
@@ -314,6 +328,17 @@ void EmbeddedGamePanel::_onPaint(wxPaintEvent& evt)
     if(m_Lthread)
     {
         lua_State *L = lua_tothread(m_Lthread, 1);
+        if(L == NULL)
+        {
+            for(int i = 1; i <= lua_gettop(m_L); ++i)
+            {
+                wxPrintf("m_L stack %i: %s\n", i, lua_typename(m_L, lua_type(m_L, i)));
+            }
+            for(int i = 1; i <= lua_gettop(m_Lthread); ++i)
+            {
+                wxPrintf("m_Lthread stack %i: %s\n", i, lua_typename(m_Lthread, lua_type(m_Lthread, i)));
+            }
+        }
         lua_pushliteral(L, "frame");
         _resume(L, 1, 0);
     }

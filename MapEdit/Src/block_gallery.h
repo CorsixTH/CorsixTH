@@ -42,6 +42,7 @@ class RibbonBlockGallery : public wxRibbonGallery
 {
 public:
     RibbonBlockGallery(wxWindow* parent, wxWindowID id = wxID_ANY);
+    ~RibbonBlockGallery();
 
     void Populate(THSpriteSheet *pBlocks, const char* sCategory,
         const char* sSubCategory, lua_State* L, int iInfoIndex);
@@ -50,11 +51,20 @@ public:
 
     int GetBlock(wxRibbonGalleryItem* pItem, int* pBaseBlock);
 
+    void OnExtButton(wxCommandEvent& evt);
+    void OnToggleCategory(wxCommandEvent& evt);
+
 protected:
+    struct category_t
+    {
+        wxString sName;
+        bool bEnabled;
+        int iID;
+    };
     struct block_t
     {
         wxBitmap bmpTrimmed;
-        wxString sCategory;
+        category_t* pCategory;
         int iBlock;
         int iBaseBlock;
     };
@@ -62,9 +72,15 @@ protected:
     // wxWidgets encourages use of wxArray over std::vector, but this isn't in
     // wxWidgets core (and never will be), so it doesn't matter ^_^
     typedef std::vector<block_t> blocklist_t;
+    typedef std::vector<category_t*> categorylist_t;
 
     blocklist_t m_vBlocks;
+    categorylist_t m_vCategories;
 
     void _trimImage(wxImage& image);
     void _expandImage(wxImage& image, wxSize size);
+    void _clearCategories();
+    void _repopulate();
+
+    DECLARE_EVENT_TABLE();
 };
