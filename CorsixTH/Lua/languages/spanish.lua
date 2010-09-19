@@ -213,6 +213,22 @@ tooltip.options_window = {
   back = utf8 "Cerrar la ventana de opciones",
 }
 
+new_game_window = {
+  easy = utf8 "Novato (Fácil)",
+  medium = utf8 "Médico (Normal)",
+  hard = utf8 "Especialista (Dif�cil)",
+  tutorial = "Tutorial",
+  cancel = "Cancelar",
+}
+
+tooltip.new_game_window = {
+  easy = utf8 "Si acabas de conocer los juegos de simulación, esta dificultad es para ti.",
+  medium = utf8 "Esta es la dificultad intermedia, si no estás seguro de a dónde quieres ir.",
+  hard = utf8 "Si ya estás acostumbrado a este tipo de juegos y quieres un buen desaf�o, aqu� lo tendrás.",
+  tutorial = utf8 "¿Necesitas ayuda para entender cómo funciona el juego? Selecciona esta opción.",
+  cancel = utf8 "¡Perdón, yo no quer�a empezar una nueva partida!",
+}
+
 errors = {
   dialog_missing_graphics = utf8 "Los archivos de datos de la demo no contienen esta ventana.",
   save_prefix = utf8 "Error al guardar la partida: ",
