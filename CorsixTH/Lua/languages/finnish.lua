@@ -200,49 +200,69 @@ errors = {
   minimum_screen_size           = utf8 "Ole hyvä ja syötä resoluutio, joka on vähintään 640x480.",
 }
 
+new_game_window = {
+  hard          = utf8 "Konsultti (Vaikea)",
+  cancel        = utf8 "Peruuta",
+  tutorial      = utf8 "Esittely",
+  easy          = utf8 "Harjoittelija (Helppo)",
+  medium        = utf8 "Tohtori (Keskitaso)",
+}
+
 -- 8. Tooltip
-tooltip.objects.litter = utf8 "Roska: Potilas on jättänyt sen lattialle, koska ei löytänyt roskakoria, johon sen olisi voinut heittää"
+tooltip = {
+  objects = {
+    litter = utf8 "Roska: Potilas on jättänyt sen lattialle, koska ei löytänyt roskakoria, johon sen olisi voinut heittää",
+  },
 
-tooltip.totd_window = {
-  previous      = utf8 "Näytä edellinen vihje",
-  next          = utf8 "Näytä seuraava vihje",
-}
+  totd_window = {
+    previous      = utf8 "Näytä edellinen vihje",
+    next          = utf8 "Näytä seuraava vihje",
+  },
 
-tooltip.main_menu = {
-  new_game      = utf8 "Aloita uusi peli aivan alusta",
-  custom_level  = utf8 "Rakenna oma sairaala itse suunnittelemaasi rakennukseen",
-  load_game     = utf8 "Lataa aiemmin tallennettu peli",
-  options       = utf8 "Muuta pelin asetuksia",
-  exit          = utf8 "Ei, ei, ole kiltti äläkä lähde!",
-}
+  main_menu = {
+    new_game      = utf8 "Aloita uusi peli aivan alusta",
+    custom_level  = utf8 "Rakenna oma sairaala itse suunnittelemaasi rakennukseen",
+    load_game     = utf8 "Lataa aiemmin tallennettu peli",
+    options       = utf8 "Muuta pelin asetuksia",
+    exit          = utf8 "Ei, ei, ole kiltti äläkä lähde!",
+  },
 
-tooltip.load_game_window = {
-  load_game             = utf8 "Lataa peli %s",
-  load_game_number      = utf8 "Lataa peli numero %d",
-  load_autosave         = utf8 "Lataa viimeisin automaattitallennus",
-  back                  = utf8 "Sulje tämä ikkuna",
-}
+  load_game_window = {
+    load_game             = utf8 "Lataa peli %s",
+    load_game_number      = utf8 "Lataa peli numero %d",
+    load_autosave         = utf8 "Lataa viimeisin automaattitallennus",
+    back                  = utf8 "Sulje tämä ikkuna",
+  },
 
-tooltip.custom_game_window = {
-  start_game_with_name = utf8 "Lataa taso %s",
-}
+  custom_game_window = {
+    start_game_with_name = utf8 "Lataa taso %s",
+  },
 
-tooltip.save_game_window = {
-  save_game     = utf8 "Tallenna tallennuksen %s tilalle",
-  new_save_game = utf8 "Anna nimi uudelle tallennukselle",
-}
+  save_game_window = {
+    save_game     = utf8 "Tallenna tallennuksen %s tilalle",
+    new_save_game = utf8 "Anna nimi uudelle tallennukselle",
+  },
 
-tooltip.menu_list_window = {
-  back = utf8 "Sulje tämä ikkuna",
-}
+  menu_list_window = {
+    back = utf8 "Sulje tämä ikkuna",
+  },
 
-tooltip.options_window = {
-  fullscreen_button     = utf8 "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
-  width                 = utf8 "Syötä peli-ikkunan haluttu leveys",
-  height                = utf8 "Syötä peli-ikkunan haluttu korkeus",
-  change_resolution     = utf8 "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
-  language              = utf8 "Valitse kieleksi %s",
-  back                  = utf8 "Sulje tämä ikkuna",
+  options_window = {
+    fullscreen_button     = utf8 "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
+    width                 = utf8 "Syötä peli-ikkunan haluttu leveys",
+    height                = utf8 "Syötä peli-ikkunan haluttu korkeus",
+    change_resolution     = utf8 "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
+    language              = utf8 "Valitse kieleksi %s",
+    back                  = utf8 "Sulje tämä ikkuna",
+  },
+
+  new_game_window = {
+    hard          = utf8 "Jos olet pelannut tällaista peliä aiemminkin ja kaipaat haastetta, valitse tämä",
+    cancel        = utf8 "Hups, ei minun oikeasti pitänyt aloittaa uutta peliä!",
+    tutorial      = utf8 "Jos haluat vähän apua alkuun pääsemisessä, valitse tämä",
+    easy          = utf8 "Jos tämä on ensimmäinen kertasi tämän tyyppisen pelin parissa, tämä vaikeustaso on sinua varten",
+    medium        = utf8 "Tämä on kultainen keskitie, jos et ole varma, mitä valitsisit",
+  },
 }
 
 -- 9. Letter
@@ -376,7 +396,7 @@ introduction_texts = {
     [2] = utf8 "Apteekista on hyvä aloittaa. Toimiakseen se tarvitsee sairaanhoitajan annostelemaan lääkkeitä.",
   },
   level17 = {
-    [1] = utf8 "Viimeinen varoituksen sana: pidä tarkasti silmällä mainettasi, sillä se houkuttelee sairaalasi potilaita niin läheltä kuin kaukaa. ",
+    [1] = utf8 "Viimeinen varoituksen sana: pidä tarkasti silmällä mainettasi, sillä se houkuttelee sairaalaasi potilaita niin läheltä kuin kaukaa. ",
     [2] = utf8 "Jos potilaita ei kuole liikaa ja he pysyvät kohtuullisen tyytyväisinä, sinulla ei ole mitään hätää tällä tasolla!//",
     [3] = utf8 "Olet nyt omillasi. Onnea ja menestystä!.",
   },
@@ -1025,19 +1045,19 @@ insurance_companies = {
 -- Menu root
 -- Keep 2 spaces as prefix and suffix
 menu = {
-  file                = utf8 "  TIEDOSTO  ",
-  options        = utf8 "  VALINNAT  ",
-  display        = utf8 "  NÄYTÄ  ",
+  file          = utf8 "  TIEDOSTO  ",
+  options       = utf8 "  VALINNAT  ",
+  display       = utf8 "  NÄYTÄ  ",
   charts        = utf8 "  TILASTOT  ",
-  debug                = utf8 "  DEBUG  ",
+  debug         = utf8 "  DEBUG  ",
 }
 
 -- Menu File
 menu_file = {
-  load                = utf8 "  LATAA  ",
-  save                = utf8 "  TALLENNA  ",
-  restart        = utf8 "  ALOITA ALUSTA  ",
-  quit                = utf8 "  LOPETA  ",
+  load          = utf8 "  LATAA  ",
+  save          = utf8 "  TALLENNA  ",
+  restart       = utf8 "  ALOITA ALUSTA  ",
+  quit          = utf8 "  LOPETA  ",
 }
 menu_file_load = {
   [1] = utf8 "  PELI 1  ",

@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 RAS; FlyingBastard, l_koni, Nossah et al
+--[[ Copyright (c) 2010 RAS; FlyingBastard, L_konings, Nossah et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -134,7 +134,7 @@ staff_descriptions = {
     [14] = "Speelt vaak Theme Park. ",
     [15] = "Heeft rijbewijs CE. ",
     [16] = "Doet aan motorracen. ",
-    [17] = "Speelt de viool en cello. ",
+    [17] = "Speelt viool en cello. ",
     [18] = "Gepassioneerde treinsloper. ",
     [19] = "Gek op honden. ",
     [20] = "Luistert graag naar de radio. ",
@@ -230,12 +230,12 @@ totd_window = {
     [10] = "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum, onze mailing list of ons IRC kanaal (corsix-th op freenode).",
     [11] = "Als je een bug vindt zouden we het op prijs stellen als je het meldt via onze bugtracker: th-issues.corsix.org",
     [12] = "Je speelt Beta 3 van CorsixTH, gereleased op 24 juni 2010.",
-	[13] = "Bij elk level moet je aan bepaalde eisen voldoen voor je door kunt gaan naar de volgende. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
+	[13] = "Bij elk level moet je aan bepaalde eisen voldoen voordat je door kunt gaan naar het volgende level. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
 	[14] = "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de Aanpassen-knop op de werkbalk.",
 	[15] = "Je kunt eenvoudig uitvissen welke pati\137nten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
-	[16] = "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zo ook wat aanpassingen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
+	[16] = "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zou ook wat aanpassingen kunnen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
 	[17] = "Ongelukkige werknemers zullen vaak om salarisverhoging vragen. Zorg voor een comfortabele werkomgeving om dit soort dingen te voorkomen.",
-	[18] = "Pati\137nten krijgen dorst van wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
+	[18] = "Pati\137nten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
 	[19] = "Je kunt het diagnostische proces voor een pati\137nt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de pati\137nt.",
 	[20] = "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra pati\137nten kunnen behapstukken om ze op tijd te kunnen genezen.",
   },
@@ -479,7 +479,7 @@ fax = {
   emergency_result = {
     earned_money = "Van de maximum bonus van %d heb je %d verdiend.",
     close_text = "Sluiten.",
-    saved_people = "Je hebt %d van de %d pati\137nten gered.",
+    saved_people = "Je hebt %d van de %d pati\137nten genezen.",
   },
   disease_discovered = {
     discovered_name = "Je team heeft een nieuwe ziekte ontdekt. Het is %s",
@@ -802,7 +802,7 @@ tooltip = {
     close = "Sluit Beleidscherm",
     staff_leave = "Artsen en Zusters mogen bijspringen waar nodig",
     diag_procedure = "Als de diagnose van een Arts minder zeker is dan het WEGSTUREN percentage, zal de pati\137nt naar huis gestuurd worden. Als de diagnose beter is dan GOKKEN aangeeft, zal de pati\137nt de betreffende behandeling ondergaan",
-    staff_rest = "Hoe moe stafleden moeten zijn voor ze mogen uitrusten",
+    staff_rest = "Hoe moe stafleden moeten zijn voordat ze mogen uitrusten",
     staff_stay = "Artsen en Zusters blijven in de kamer waar je ze plaatst",
   },
   bank_manager = {
@@ -923,11 +923,11 @@ ultrascan = "Een Arts gebruikt de Ultrascan om diagnoses te stellen",
     reputation = "Je Reputatie moet tenminste %d bedragen. Momenteel bedraagt deze %d",
     population = "Je moet %d%% van de bevolking aantrekken.",
     warmth = "Algemene warmte van de mensen in je ziekenhuis",
-    percentage_killed = "Niet meer dan %d%% van je bezoekers mogen overlijden. Tot nu toe is er %d%% overleden",
+    percentage_killed = "Niet meer dan %d%% van je bezoekers mogen overlijden. Tot nu toe is %d%% overleden",
     balance = "Je saldo moet tenminste %d bedragen. Momenteel bedraagt deze %d",
     value = "Je ziekenhuis moet $%d waard zijn. Momenteel is deze $%d waard",
     win_progress_other = "Laat vooruitgang zien tot het ziekenhuis van %s aan de eisen voldoet",
-    num_cured = "Je doel is %d te genezen. Tot nu toe heb je er %d genezen",
+    num_cured = "Je doel is %d pati\137nten te genezen. Tot nu toe heb je er %d genezen",
     happiness = "Algemene tevredenheid van de mensen in je ziekenhuis",
   },
   window_general = {
@@ -1141,7 +1141,7 @@ adviser = {
     need_handyman_machines = "Je zult Congi\137rges moeten inhuren om je apparatuur te onderhouden.",
     need_doctors = "Je hebt meer Artsen nodig. Zet de beste Artsen in de kamers met de langste wachtrijen.",
     need_handyman_plants = "Je zult een Congi\137rge moeten huren om de planten water te geven.",
-    need_handyman_litter = "Mensen maken een troep in je ziekenhuis. Huur een Congi\137rge om op te ruimen.",
+    need_handyman_litter = "Mensen maken een troep in je ziekenhuis. Huur een Congi\137rge in om op te ruimen.",
     need_nurses = "Je moet Zusters inhuren. Slaapzalen en Apotheken hebben Zusters nodig.",
     too_many_doctors = "Je hebt teveel Artsen. Sommigen hebben nu niets te doen.",
     too_many_nurses = "Ik denk dat je teveel Zusters hebt aangenomen.",
@@ -1161,8 +1161,8 @@ adviser = {
     },
   },
   surgery_requirements = {
-    need_surgeons_ward_op = "Om operaties uit te kunnen voeren moet je twee Chirurgen, een Slaapzaal en een Operatiekamer bouwen.",
-    need_surgeon_ward = "Om operaties uit te kunnen voeren moet je nog een Chirurg, een Slaapzaal en een Operatiekamer bouwen.",
+    need_surgeons_ward_op = "Om operaties uit te kunnen voeren moet je twee Chirurgen inhuren, een Slaapzaal en een Operatiekamer bouwen.",
+    need_surgeon_ward = "Om operaties uit te kunnen voeren moet je nog een Chirurg inhuren, een Slaapzaal en een Operatiekamer bouwen.",
   },
   vomit_wave = {
     started = "Zo te zien waart er een kotsvirus rond in je ziekenhuis. Dit had je kunnen voorkomen door je ziekenhuis schoner te houden. Misschien moet je meer Congi\137rges aannemen.",
@@ -1178,7 +1178,7 @@ adviser = {
   },
   staff_place_advice = {
     receptionists_only_at_desk = "Receptionistes kunnen alleen op de Receptie werken.",
-    only_psychiatrists = "Artsen kunnen alleen in de Psychiatrie werken als ze Psychiater zijn.",
+    only_psychiatrists = "Artsen kunnen alleen in de Psychiatrie werken als ze gediplomeerd Psychiater zijn.",
     only_surgeons = "Artsen kunnen alleen in de Operatiekamer werken als ze Chirurg zijn.",
     only_nurses_in_room = "Alleen Zusters kunnen werken in de %s",
     only_doctors_in_room = "Alleen Artsen kunnen werken in de %s",
@@ -1313,7 +1313,7 @@ adviser = {
     epidemic_health_inspector = "Nieuws van je epidemie is aangekomen bij het Ministerie van Volksgezondheid. Verwacht een bezoekje van de Inspectie.",
     first_death = "Je hebt zojuist je eerste pati\137nt gedood. Hoe voelt het?",
     pay_rise = "Iemand van de staf dreigt op te stappen. Kies of je hun eis inwilligt of ze ontslaat. Klik op het bericht linksonderin om te zien welk staflid dreigt ontslag te nemen.",
-    place_windows = "Ramen plaatsen zorgt voor lichtere kamers Placing windows makes the rooms brighter and improves the spirits of your staff.",
+    place_windows = "Ramen plaatsen zorgt voor lichtere kamers en doet het moraal van je werknemers goed.",
     fax_received = "Het icoontje dat zojuist in de linkeronderhoek omhoog is gekomen betekent dat er een belangrijk stuk informatie te lezen valt of dat er een beslissing moet worden genomen.",
   },
   build_advice = {
@@ -1345,7 +1345,7 @@ room_descriptions = {
   inflation = {
     [1] = "Inflatiekliniek//",
     [2] = "Pati\137nten met de pijnlijke doch grappige Plofkop worden naar de Inflatie Kliniek gestuurd, waar het opgeblazen hoofd wordt doorgeprikt en meteen weer opgeblazen tot de juiste luchtdruk is bereikt.//",
-    [3] = "De Inflatie Kliniek heeft een Arts nodig. Het moet ook in de gaten worden gehouden door een Congi\137rge. ",
+    [3] = "De Inflatiekliniek heeft een Arts nodig. Het moet ook in de gaten worden gehouden door een Congi\137rge. ",
   },
   jelly_vat = {
     [1] = "Gelatinekliniek//",
@@ -1354,7 +1354,7 @@ room_descriptions = {
   },
   scanner = {
     [1] = "Scanner//",
-    [2] = "Er kan een nauwkeurig diagnose gesteld worden met de moderne Scanner. Hierna gaan ze weer naar de Praktijk voor verdere behandelingen..//",
+    [2] = "Met de moderne Scanner kan er een nauwkeurige diagnose gesteld worden. Wanneer de diagnose is afgerond gaat de pati\137nt weer naar de Praktijk voor verdere behandelingen.//",
     [3] = "De Scanner heeft zowel een Arts als onderhoud nodig. ",
   },
   blood_machine = {
@@ -1380,16 +1380,16 @@ room_descriptions = {
   psych = {
     [1] = "Psychiatrie//",
     [2] = "Pati\137nten die een psychisch probleem hebben worden naar de Psychiatrie gestuurd voor therapie. Psychiaters kunnen ook diagnoses stellen. Als er een pati\137nt langskomt die aan een geestelijk probleem lijdt, kunnen ze met behulp van de trouwe ligbank de pati\137nt helpen.//",
-    [3] = "De Psychiatrie heeft een Arts nodig die een diplome heeft voor Psychiater. ",
+    [3] = "De Psychiatrie heeft een Arts nodig die een diploma heeft voor Psychiater. ",
   },
   staff_room = {
     [1] = "Stafkamer//",
-    [2] = "Op den duur worden je stafleden moe en moeten ze uitrusten. Ze gaan dan naar deze kamer om zodat ze later weer met frisse moed aan de slag kunnen. Stafleden die moe zijn gaan langzamer werken, fouten maken, meer geld vragen en zullen uiteindelijk ontslag nemen. Een stafkamer met genoeg ruimte is dus het geld en de ruimte waard. Richt de kamer zo in dat er genoeg mensen tegelijk gebruik kunnen maken van de kamer. ",
+    [2] = "Op den duur worden je stafleden moe en moeten ze uitrusten. Ze gaan dan naar deze kamer toe zodat ze later weer met frisse moed en energie aan de slag kunnen. Stafleden die moe zijn gaan langzamer werken, fouten maken, meer geld vragen en zullen uiteindelijk ontslag nemen. Een stafkamer met genoeg ruimte is dus het geld en de ruimte waard. Richt de kamer zo in dat er genoeg mensen tegelijk gebruik kunnen maken van de kamer. ",
   },
   operating_theatre = {
     [1] = "Operatiekamer//",
-    [2] = "Deze belangrijke installatie is waar een meerdere ziektes worden behandeld. De Operatiekamer moet groot genoeg zijn en de juiste apparatuur moet aanwezig zijn. Het is van vitaal belang dat deze zaal in je ziekenhuis aanwezig is.//",
-    [3] = "Om de Operatiekamer te kunnen gebruiken moet je twee Chirurgen aannemen. ",
+    [2] = "De Operatiekamer is onmisbaar in een ziekenhuis. Patiënten met verschillende lichamelijke kwalen kunnen hier worden ge\148pereerd door twee chirurgen. Het is van belang dat de Operatiekamer groot genoeg is, en dat de juiste apparatuur aanwezig is.//",
+    [3] = "Om de Operatiekamer te kunnen gebruiken moet je twee Chirurgen inhuren. ",
   },
   training = {
     [1] = "Klaslokaal//",
@@ -1403,22 +1403,22 @@ room_descriptions = {
   },
   research = {
     [1] = "Laboratorium//",
-    [2] = "Hier vinden ze nieuwe medicijnen en behandelingen uit. Het is een belangrijk onderdeel van je ziekenhuis en zal wonderen doen voor het aantal pati\137nten dat je ziekenhuis gezond verlaat.//",
+    [2] = "Hier worden nieuwe medicijnen en behandelingen uitgevonden. Dit belangrijke onderdeel van je ziekenhuis zal je beter in staat stellen je pati\137nten te genezen met als resultaat dat er meer pati\137nten zijn die je ziekenhuis gezond zullen verlaten.//",
     [3] = "Het Laboratorium heeft een Arts met een Onderzoeksgraad nodig. ",
   },
   hair_restoration = {
-    [1] = "Haarrestauratie Kliniek//",
-    [2] = "Pati\137nten die last hebben van extreme Kaalheid worden naar de Haarrestaurateur in Patients suffering from the extreme condition of Baldness will be directed towards the Hair Restorer Machine in this Clinic. A Doctor will operate the machine, and it will rapidly seed the patient's head with fresh hair.//",
-    [3] = "The Hair Restoration Clinic requires any Doctor. It also requires periodic maintenance. ",
+    [1] = "Haarrestauratiekliniek//",
+    [2] = "Pati\137nten die last hebben van extreme Kaalheid worden naar de Haarrestaurateur gestuurd. Een Arts zal met deze machine het hoofd van de pati\137nt van een frisse, nieuwe coupe voorzien.//",
+    [3] = "De Haarrestauratie heeft een Arts nodig. Ook moet een Congi\137rge zo nu en dan wat onderhoud plegen. ",
   },
   general_diag = {
     [1] = "Algemene Diagnose//",
-    [2] = "Pati\137nten die een verdere diagnose moeten ondergaan worden hiernaartoe gestuurd voor controle. Als men er in de Praktijk niet achter komt wat er mis is, zal Algemene Diagnose dat wel lukken. Na deze kamer gaan ze terug naar de Praktijk om de resultaten te laten analyseren.//",
+    [2] = "Pati\137nten die een verdere diagnose moeten ondergaan worden hiernaartoe gestuurd voor controle. Als men er in de Praktijk niet achter komt wat er mis is, zal dit na de Algemene Diagnose vaak wel lukken. Na deze kamer gaan ze terug naar de Praktijk om de resultaten te laten analyseren.//",
     [3] = "Algemene Diagnose heeft alleen een Arts nodig. ",
   },
   electrolysis = {
     [1] = "Electrolyse//",
-    [2] = "Pati\137nts met with Pilitis worden naar deze kamer gestuurd waar een speciale machine, de Electrolyseerder, de haren uitrukt en de pori\137n electrisch sluit met een substantie die veel weg heeft van beton.//",
+    [2] = "Pati\137nten met Pilitis worden naar deze kamer gestuurd waar een speciale machine, de Electrolyseerder, de haren uitrukt en de pori\137n electrisch sluit met een substantie die veel weg heeft van beton.//",
     [3] = "De Electrolysekamer wordt gebruikt door een Arts en onderhouden door een Congi\137rge. ",
   },
   slack_tongue = {
@@ -1460,9 +1460,9 @@ introduction_texts = {
     [7] = "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
   },
   level9 = {
-    [1] = "Nu je de kas van het Ministerie flink hebt gespekt en de Minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat goed draait en om haar cli\137nten, die arme en zieke zielen, geeft. ",
+    [1] = "Nu je de kas van het Ministerie flink hebt gespekt en de Minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke cli\137nten geeft. ",
     [2] = "Verwacht dat er een boel problemen de kop opsteken.",
-    [3] = "Als je genoeg kamers en goed getrainde staf hebt, zul je die problemen makkelijk het hoofd moeten kunnen bieden. ",
+    [3] = "Als je genoeg kamers en een goed getrainde staf hebt, zul je die problemen makkelijk het hoofd moeten kunnen bieden. ",
     [4] = "Je ziekenhuis moet uiteindelijk $200,000 waard zijn. Verzamel ook een comfortabele $400.000 op je bankrekening. ",
     [5] = "Met minder dan dat kun je het level niet uitspelen.",
   },
@@ -1478,7 +1478,7 @@ introduction_texts = {
     [1] = "Je wordt in de gaten gehouden door het Ministerie van Gezondheid, dus zorg ervoor dat je flinke winst draait en dat je reputatie constant hoog blijft. ",
     [2] = "We kunnen ons geen doden veroorloven - dat is slecht voor zaken. ",
     [3] = "Zorg dat je staf in vorm is en dat je alle apparatuur hebt die nodig is. ",
-    [4] = "Zorg voor een reputatie van 600 en $200.000 in de bank.",
+    [4] = "Zorg voor een reputatie van 600 en een saldo $200.000.",
   },
   level5 = {
     [1] = "Dit wordt een druk ziekenhuis met een grote variatie aan ziektebeelden. ",
@@ -1487,10 +1487,10 @@ introduction_texts = {
     [4] = "Daarbij is je ziekenhuis gebouwd op de San Androide-breuk. ",
     [5] = "Aardbevingen kunnen dus elk moment toeslaan. ",
     [6] = "Deze zullen je machines beschadigen en je goedlopende ziekenhuis flink verstoren. ",
-    [7] = "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 in de bank. Zorg ook dat je 200 pati\137nten geneest.",
+    [7] = "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 op je bankrekening. Zorg ook dat je 200 pati\137nten geneest.",
   },
   level4 = {
-    [1] = "Hou al je pati\137nten tevreden en werk ze zo effici\137nt mogelijk af. Hou sterfgevallen tot een minimum.",
+    [1] = "Hou al je pati\137nten tevreden en werk ze zo effici\137nt mogelijk af. Voorkom sterfgevallen zoveel mogelijk.",
     [2] = "Je reputatie staat op het spel, dus hou die zo hoog mogelijk. ",
     [3] = "Maak je niet al teveel zorgen over geld - dat komt wel als die o zo belangrijke reputatie groeit. ",
     [4] = "Je kunt nu je ook Artsen trainen zodat ze beter gekwalificeerd zullen zijn. ",
@@ -1524,7 +1524,7 @@ introduction_texts = {
   level13 = {
     [1] = "Je fantastische werk als directeur is ondertussen bij de Speciale Geheime Divisie van de Geheime Speciale Dienst bekend. ",
     [2] = "Ze hebben een bonus voor je; er is een ziekenhuis ge\137nfecteerd met ratten en ze hebben een echte Terminator nodig. ",
-    [3] = "Schiet zoveel mogelijk ratten voor de Congi\137rges de boel hebben opgeruimd. ",
+    [3] = "Schiet zoveel mogelijk ratten voordat de Congi\137rges de boel hebben opgeruimd. ",
     [4] = "Denk je dat je die taak aankunt?",
   },
   level16 = {
@@ -1539,7 +1539,7 @@ introduction_texts = {
   },
   level12 = {
     [1] = "Dit is de moeder van alle uitdagingen. ",
-    [2] = "Het Ministerie is zo onder de indruk van je succes, dat ze je een hoogste positie hebben angeboden. Ze willen iemand hebben die nog een ultiem ziekenhuis kan bouwen, veel geld kan verdienen en een fantastische reputatie kan opbouwen. ",
+    [2] = "Het Ministerie is zo onder de indruk van je succes, dat ze je de hoogste positie hebben aangeboden. Ze willen iemand hebben die nog een ultiem ziekenhuis kan bouwen, veel geld kan verdienen en een fantastische reputatie kan opbouwen. ",
     [3] = "Je wordt verwacht alle, maar dan ook echt alle ziektes te kunnen genezen en alle prijzen in de wacht te slepen. ",
     [4] = "Denk je dat je dat aankunt?",
     [5] = "Verdien $650.000, genees 750 mensen en verdien krijg een reputatie van 800 om dit te winnen.",
@@ -1558,8 +1558,8 @@ introduction_texts = {
     [1] = "Het Ministerie vraagt nu niet alleen dat je alle ziektes in deze buurt aanpakt, maar ook dat je je concentreert op de effici\137ntie van je medicijnen. ",
     [2] = "Er zijn wat klachten binnengekomen van Ofziek, de Waakhond van de Gezondheidszorg, dus als je goed over wil komen, zorg je ervoor dat je medicijnen goed werken. ",
     [3] = "Zorg ook dat er niets te klagen valt over je ziekenhuis zelf. Hou die sterfgevallen zeldzaam. ",
-    [4] = "Hint: Hou wat ruimte vrij voor een As a hint, you might like to keep space free for een Gelatinetank. ",
-    [5] = "Ontwikkel al je medicijnen tot ze tenminste 80 procent effectiviteit, behaal een reputatie van 650 en pot $500.000 op in de bank om te winnen. ",
+    [4] = "Hint: Hou wat ruimte vrij voor een Gelatinetank. ",
+    [5] = "Ontwikkel al je medicijnen door tot ze tenminste 80 procent effectief zijn, behaal een reputatie van 650 en behaal een saldo van $500.000. ",
   },
   level11 = {
     [1] = "Je hebt de kans gekregen het ultieme ziekenhuis te bouwen. ",
@@ -1568,7 +1568,7 @@ introduction_texts = {
     [4] = "Dit is een belangrijke taak. ",
     [5] = "Je bent heel wat als je dit lukt. ",
     [6] = "Opmerkenswaardig is dat er UFO's in de omgeving gezien zijn. Zorg ervoor dat je staf klaar is voor onverwachte bezoekers. ",
-    [7] = "Je ziekenhuis moet $240.000 waard zijn en je moet $500.000 in de bank hebben. Ook moet je reputatie minimaal 700 bedragen.",
+    [7] = "Je ziekenhuis moet $240.000 waard zijn en je moet $500.000 op de bank hebben staan. Ook moet je reputatie minimaal 700 bedragen.",
   },
   level18 = {
   },
@@ -2000,7 +2000,7 @@ diseases = {
     cause = "Oorzaak - Iemand die rijker, jonger en slanker is dan de pati\137nt.",
     cure = "Behandeling - Twee Chirurgen openen de borstkas en herstellen ademloos en liefdevol het hart.",
     name = "Gebroken Hart",
-    symptoms = "Symptomem - Huilen en RSI door het constante verscheuren van vakantiefoto's.",
+    symptoms = "Symptomen - Huilen en RSI door het constante verscheuren van vakantiefoto's.",
   },
   slack_tongue = {
     cause = "Oorzaak - Chronische geklets over soaps.",
@@ -2009,13 +2009,13 @@ diseases = {
     symptoms = "Symptomen - Tong zwelt op tot vijf maal de normale lengte.",
   },
   tv_personalities = {
-    cause = "Cause - Dagtelevisie.",
+    cause = "Oorzaak - Dagtelevisie.",
     cure = "Behandeling - Een getrainde Psychiater moet de pati\137nt overtuigen zijn televisie te verkopen en een radio aan te schaffen.",
     name = "TV Persoonlijkheid",
     symptoms = "Symptomen - De pati\137nt denkt dat hij of zij een kookprogramma kan presenteren.",
   },
   ruptured_nodules = {
-    cause = "Oorzaal - Bungeejumpen in de kou.",
+    cause = "Oorzaak - Bungeejumpen in de kou.",
     cure = "Behandeling - Twee gekwalificeerde Chirurgen verwijderen de knobbels met vaste hand.",
     name = "Gebarsten Knobbels",
     symptoms = "Symptomen - Niet lekker kunnen zitten.",
@@ -2646,7 +2646,7 @@ rooms_short = {
   tongue_clinic = "Lamme Tongkliniek",
   toilets = "Toiletten",
   electrolysis = "Electrolyse",
-  x_ray = "R\153ntgenkamer",
+  x_ray = "R\148ntgenkamer",
   blood_machine = "Bloedmachine",
 }
 object = {
