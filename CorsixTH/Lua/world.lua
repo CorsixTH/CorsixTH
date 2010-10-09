@@ -622,6 +622,9 @@ function World:onTick()
         self.month = self.month + 1
         if self.month > 12 then
           self.month = 12
+          -- It is crucial that the annual report gets to initialize before onEndYear is called.
+          -- Yearly statistics are reset there.
+          self.ui:addWindow(UIAnnualReport(self.ui, self))
           self:onEndYear()
           self.year = self.year + 1
           self.month = 1
@@ -707,7 +710,7 @@ function World:onEndMonth()
             text[key] = value
           end
           text[1] = text[1]:format(self.hospitals[i].name)
-          text[2] = text[2]:format(10000) -- TODO: With the fame/shame screen and scoring comes salary.
+          text[2] = text[2]:format(self.hospitals[i].player_salary)
           text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
           if no < 12 then
             choice_text = _S.fax.choices.accept_new_level
@@ -792,17 +795,8 @@ end
 
 -- Called immediately prior to the ingame year changing.
 function World:onEndYear()
-  -- TODO: Temporary, until research is in the game. This is just so that something happens...
   for _, hospital in ipairs(self.hospitals) do
-    for _, room in ipairs(self.available_rooms) do
-      if not hospital.discovered_rooms[room] then
-        hospital.discovered_rooms[room] = true
-        if hospital == self.ui.hospital then
-          self.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
-        end
-        break
-      end
-    end
+    hospital:onEndYear()
   end
 end
 

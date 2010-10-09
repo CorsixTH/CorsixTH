@@ -10,24 +10,28 @@ Version Beta 4 - to be released
   can now be bought from the Town Map dialog.
 * Feature: Calculate staff wages and properties for those for hire based
   on the level files.
-  
+
 * Added 7 new diseases related to the operating theatre.
 * Added treatment room: Operating Theatre.
-  
+
 * Fix: The adviser no longer complains about watering of plants all the time.
 * Fix: Some crashes related to crashed rooms has been fixed.
 
 
 -- User Interface --
 
-* Feature: Zooming (only when using DirectX).
+* Feature: Possibility to choose difficulty level when starting a new game.
+* Feature: Zooming (only when using DirectX or OpenGL).
+* Feature: The Annual Report Dialog.
+
+* Graphics: Improved the main menu background.
 * Fix: Solved issues with non-English keyboard layouts.
 
 
 -- Translations --
 
-* New language: Finnish
-* Fix: When playing the game in French it crashed upon completion of a level.
+* New languages: Finnish and Danish
+* Fix: When playing the game in French it no longer crashes upon completion of a level.
 
 
 -----------------------------------------

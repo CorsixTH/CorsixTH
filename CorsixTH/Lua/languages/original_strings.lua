@@ -1121,6 +1121,9 @@ trophy_room = {
       S[27][28],
     },
   },
+  -- Strings used in the plaques to show what has been won
+  reputation = S[63][1],
+  cash       = S[63][2],
 }
 
 -- TODO section 28: more adviser strings (insert above)
@@ -2016,7 +2019,7 @@ progress_report = {
 }
 
 -- 62: Some initial advice from the adviser. These are under the adviser variable above.
-
+-- 63: Two strings inserted in trophy_room, used for trophies.
 -- 64: Tooltip for the winning conditions
 -- These are inserted in the tooltip section under status.
 

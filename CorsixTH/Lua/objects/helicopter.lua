@@ -90,6 +90,7 @@ function Helicopter:spawnPatient()
   }
   patient:setHospital(hospital)
   -- TODO: If new combinated diseases are added this will not work correctly anymore.
+  patient.cure_rooms_visited = #patient.disease.treatment_rooms - 1
   local no_of_rooms = #patient.disease.treatment_rooms
   patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[no_of_rooms]}
 end

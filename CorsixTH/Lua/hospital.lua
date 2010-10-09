@@ -31,6 +31,10 @@ function Hospital:Hospital(world)
     elseif level_config.town then
       balance = level_config.town.StartCash
     end
+    -- Check if awards are available
+    if level_config.awards_trophies then
+      self.win_awards = true
+    end
   end
   self.name = os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
   -- TODO: Variate initial reputation etc based on level
@@ -41,12 +45,17 @@ function Hospital:Hospital(world)
   -- Initial value: hospital tile count * tile value + 20000
   self.value = world.map:getParcelPrice(self:getPlayerIndex()) + 20000
   
+  -- TODO: With the fame/shame screen and scoring comes salary.
+  self.player_salary = 10000
+  
+  -- Initial values
   self.interest_rate = 0.01 -- Should these be worldwide?
   self.inflation_rate = 0.045
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
   self.radiator_heat = 0.5
+  self.num_visitors = 0
   self.num_deaths = 0
   self.num_cured = 0
   self.not_cured = 0
@@ -54,6 +63,11 @@ function Hospital:Hospital(world)
   self.percentage_killed = 0
   self.population = 1 -- TODO: Percentage showing how much of the total population that goes
   -- to the player's hospital, used for one of the goals. Change when competitors are there.
+  
+  -- Other statistics, back to zero each year
+  self.sodas_sold = 0
+  self.reputation_above_threshold = self.win_awards and level_config.awards_trophies.Reputation < self.reputation or false
+  
   self.is_in_world = true
   self.opened = false
   self.transactions = {}
@@ -105,7 +119,8 @@ function Hospital:Hospital(world)
         drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil,
         psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,
         machine = disease.requires_machine,
-        surgeon = disease.requires_surgeon, -- TODO: Fix when operating theatre is in.
+        -- This assumes we always have the ward then the operating_theatre as treatment rooms.
+        surgeon = disease.treatment_rooms and disease.treatment_rooms[2] == "operating_theatre" or nil,
         researcher = disease.requires_researcher, -- TODO: Fix when aliens are in the game.
         pseudo = disease.pseudo, -- Diagnosis is pseudo
       }
@@ -140,6 +155,15 @@ function Hospital:afterLoad(old, new)
   end
   if old < 14 then
     self:_initResearch()
+  end
+  if old < 19 then
+    -- The statistics on the current map will be wrong, but it's better than nothing.
+    self.num_visitors = 0
+    self.player_salary = 10000
+    self.sodas_sold = 0
+    if self.world.map.level_config and self.world.map.level_config.awards_trophies then
+      self.win_awards = true
+    end
   end
 end
 
@@ -221,6 +245,23 @@ function Hospital:onEndMonth()
     local pay_this = math.floor(self.loan*self.interest_rate/12)
     self:spendMoney(pay_this, _S.transactions.loan_interest)
   end
+end
+
+--! Called at the end of each year
+function Hospital:onEndYear()
+  -- TODO: Temporary, until research is in the game. This is just so that something happens...
+  for _, room in ipairs(self.world.available_rooms) do
+    if not self.discovered_rooms[room] then
+      self.discovered_rooms[room] = true
+      if self == self.world.ui.hospital then
+        self.world.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
+      end
+      break
+    end
+  end
+  self.sodas_sold = 0
+  self.reputation_above_threshold = self.win_awards 
+  and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
 end
 
 -- Creates complete emergency with patients, what disease they have, what's needed
@@ -425,6 +466,8 @@ end
 
 function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
+  -- Add to the hospital's visitor count
+  self.num_visitors = self.num_visitors + 1
 end
 
 function Hospital:hasStaffOfCategory(category)
@@ -475,6 +518,10 @@ function Hospital:changeReputation(reason)
     self.reputation = self.reputation_min
   elseif self.reputation > self.reputation_max then
     self.reputation = self.reputation_max
+  end
+  -- Check if criteria for trophy is still met
+  if self.reputation_above_threshold then
+    self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
   end
 end
 
