@@ -68,6 +68,7 @@ anims("Gowned Male Patient",        406,  408,  414,  416)                      
 anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
 anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
 anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
+anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
 anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1074) -- 0-16, ABC
 anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
 anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
@@ -95,10 +96,10 @@ die_anims("Slack Male Patient",        1682, 2434, 2438, 2446,  2450)
 die_anims("Transparent Male Patient",  4412, 2434, 2438, 2446,  2450,  4416) -- Extra = Transformation
 die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220,  4288) -- Extra = Slack tongue
 die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- Extra = Transformation
-die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222)
+die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222 is the Female)
 die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
 die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
-die_anims("Alien Patient",             4882, 2434, 2438, 2446,  2450)
+die_anims("Alien Patient",             4882, 2434, 2438, 2446,  2450) -- Again only males... (4886)
 
 
 --   | Available Moods |

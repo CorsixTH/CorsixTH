@@ -46,7 +46,7 @@ object.multi_usage_animations = {
       in_use = 1390, -- Patient gets the tongue drawn out
     },
   },
-  ["Standard Female Patient - Doctor"] = copy_north_to_south {
+  ["Slack Female Patient - Doctor"] = copy_north_to_south {
     north = {
       in_use = 1394, -- Patient gets the tongue drawn out
     },

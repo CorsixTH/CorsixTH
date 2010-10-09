@@ -230,14 +230,14 @@ totd_window = {
     [10] = "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum, onze mailing list of ons IRC kanaal (corsix-th op freenode).",
     [11] = "Als je een bug vindt zouden we het op prijs stellen als je het meldt via onze bugtracker: th-issues.corsix.org",
     [12] = "Je speelt Beta 3 van CorsixTH, gereleased op 24 juni 2010.",
-	[13] = "Bij elk level moet je aan bepaalde eisen voldoen voordat je door kunt gaan naar het volgende level. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
-	[14] = "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de Aanpassen-knop op de werkbalk.",
-	[15] = "Je kunt eenvoudig uitvissen welke pati\137nten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
-	[16] = "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zou ook wat aanpassingen kunnen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
-	[17] = "Ongelukkige werknemers zullen vaak om salarisverhoging vragen. Zorg voor een comfortabele werkomgeving om dit soort dingen te voorkomen.",
-	[18] = "Pati\137nten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
-	[19] = "Je kunt het diagnostische proces voor een pati\137nt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de pati\137nt.",
-	[20] = "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra pati\137nten kunnen behapstukken om ze op tijd te kunnen genezen.",
+    [13] = "Bij elk level moet je aan bepaalde eisen voldoen voordat je door kunt gaan naar het volgende level. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
+    [14] = "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de Aanpassen-knop op de werkbalk.",
+    [15] = "Je kunt eenvoudig uitvissen welke pati\137nten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
+    [16] = "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zou ook wat aanpassingen kunnen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
+    [17] = "Ongelukkige werknemers zullen vaak om salarisverhoging vragen. Zorg voor een comfortabele werkomgeving om dit soort dingen te voorkomen.",
+    [18] = "Pati\137nten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
+    [19] = "Je kunt het diagnostische proces voor een pati\137nt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de pati\137nt.",
+    [20] = "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra pati\137nten kunnen behapstukken om ze op tijd te kunnen genezen.",
   },
   next = "Volgende tip",
 }
@@ -490,7 +490,7 @@ fax = {
     can_cure = "Je kunt deze ziekte genezen.",
   },
   emergency = {
-    locations = {	
+    locations = {  
       [1] = "Bakker's Chemische Fabriek.",
       [2] = "Schamper Universiteit.",
       [3] = "het Paraquat Tuincentrum.",
@@ -734,7 +734,7 @@ tooltip = {
     edit = "Aanpassen",
     staff_list = "HR",
     policy = "Beleid",
-	date = "Datum",
+    date = "Datum",
     charts = "Grafieken",
     objects = "Gangartikelen",
     balance = "Je saldo",
@@ -1242,7 +1242,7 @@ adviser = {
     staff_unhappy = "Je staf is ongelukkig. Geef ze een bonus of beter nog, geef ze een Stafkamer! Je kunt ook je beleid aanpassen in het Beleidscherm.",
     no_patients_last_month = "Ik ben geschokt! Er is in de afgelopen maand geen enkele nieuwe pati\137nt binnengekomen.",
     queues_too_long = "Je wachtrijen zijn te lang.",
-	patient_stuck = "Er is iemand verdwaald. Plan je ziekenhuis beter uit.",
+    patient_stuck = "Er is iemand verdwaald. Plan je ziekenhuis beter uit.",
     patients_too_hot = "De pati\137nten krijgen het te heet. Verwijder wat radiators, zet de verwarming wat lager of plaats meer frisdrankautomaten.",
     doctors_tired = "Je Artsen zijn hartstikke moe. Laat ze onmiddelijk uitrusten.",
     need_toilets = "Pati\137nten hebben toiletten nodig. Bouw ze op een plek waar mensen snel bij kunnen komen.",
@@ -2145,8 +2145,8 @@ high_score = {
 
 --[[ Ik denk niet dat het belangrijk is om dit stukje te vertalen.
      Als iemand geen Engels spreekt, zou hij sowieso niet met debug
-	 tools moeten zitten klooien. ]]--
-	 
+     tools moeten zitten klooien. ]]--
+   
 menu_debug = {
   porter_pagers = "  PORTER PAGERS        ",  --[[ Wat? "portier biepers"? --]]
   show_watch = "  KLOK TONEN  ",

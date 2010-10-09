@@ -29,19 +29,25 @@ local orient_mirror = {
 
 local function action_use_next_phase(action, phase)
   phase = phase + 1
-  if phase < -4 then
-    phase = -4
+  if phase < -6 then
+    phase = -6
   end
-  if phase == -4 and not action.do_walk then
+  if phase == -6 and not action.do_walk then
     phase = phase + 1
   end
-  if phase == -3 and not action.anims.begin_use then
+  if phase == -5 and not action.anims.begin_use then
     phase = phase + 1
   end
-  if phase == -2 and not action.anims.begin_use_2 then
+  if phase == -4 and not action.anims.begin_use_2 then
     phase = phase + 1
   end
-  if phase == -1 and not action.anims.begin_use_3 then
+  if phase == -3 and not action.anims.begin_use_3 then
+    phase = phase + 1
+  end
+    if phase == -2 and not action.anims.begin_use_4 then
+    phase = phase + 1
+  end
+    if phase == -1 and not action.anims.begin_use_5 then
     phase = phase + 1
   end
   if phase == 0 and not action.anims.in_use then
@@ -56,10 +62,16 @@ local function action_use_next_phase(action, phase)
   if phase == 3 and not action.anims.finish_use_3 then
     phase = phase + 1
   end
-  if phase == 4 and not action.do_walk then
+    if phase == 4 and not action.anims.finish_use_4 then
     phase = phase + 1
   end
-  if phase > 4 then
+    if phase == 5 and not action.anims.finish_use_5 then
+    phase = phase + 1
+  end
+  if phase == 6 and not action.do_walk then
+    phase = phase + 1
+  end
+  if phase > 6 then
     phase = 100
   end
   return phase
@@ -72,13 +84,13 @@ local function action_use_phase(action, humanoid, phase)
   humanoid.user_of = nil -- Temporary to avoid tile change warning
   action.phase = phase
 
-  if phase == -4 then
+  if phase == -6 then
     HumanoidRawWalk(humanoid,
       action.old_tile_x, action.old_tile_y,
       action.new_tile_x, action.new_tile_y,
       nil, action_use_object_tick)
     return
-  elseif phase == 4 then
+  elseif phase == 6 then
     HumanoidRawWalk(humanoid,
       action.new_tile_x, action.new_tile_y,
       action.old_tile_x, action.old_tile_y,
@@ -86,18 +98,26 @@ local function action_use_phase(action, humanoid, phase)
     return
   end
   local anim_table = action.anims.in_use
-  if phase == -3 then
+  if phase == -5 then
     anim_table = action.anims.begin_use
-  elseif phase == -2 then
+  elseif phase == -4 then
     anim_table = action.anims.begin_use_2
-  elseif phase == -1 then
+  elseif phase == -3 then
     anim_table = action.anims.begin_use_3
+  elseif phase == -2 then
+    anim_table = action.anims.begin_use_4
+  elseif phase == -1 then
+    anim_table = action.anims.begin_use_5
   elseif phase == 1 then
     anim_table = action.anims.finish_use
   elseif phase == 2 then
     anim_table = action.anims.finish_use_2
   elseif phase == 3 then
     anim_table = action.anims.finish_use_3
+  elseif phase == 4 then
+    anim_table = action.anims.finish_use_4
+  elseif phase == 5 then
+    anim_table = action.anims.finish_use_5
   end
   local is_list = false
   local anim = anim_table[humanoid.humanoid_class]
@@ -201,7 +221,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   local object = action.object
   local phase = action.phase
   local oldphase = phase
-  if oldphase == -4 then
+  if oldphase == -6 then
     object:setUser(humanoid)
     humanoid.user_of = object
     init_split_anims(object, humanoid)
@@ -211,7 +231,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   elseif action.loop_callback then
     action:loop_callback()
   end
-  if oldphase <= 3 and phase > 3 then
+  if oldphase <= 5 and phase > 5 then
     finish_using(object, humanoid)
   end
   if phase == 100 then

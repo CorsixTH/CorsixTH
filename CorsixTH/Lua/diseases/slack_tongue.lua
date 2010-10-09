@@ -30,7 +30,7 @@ disease.cure_price = 900
 disease.emergency_sound = "emerg011.wav"
 disease.initPatient = function(patient)
   if math.random(0, 1) == 1 then
-    patient:setType("Standard Female Patient")
+    patient:setType("Slack Female Patient")
     patient:setLayer(0, math.random(5, 8) * 2)
   else
     patient:setType("Slack Male Patient")
