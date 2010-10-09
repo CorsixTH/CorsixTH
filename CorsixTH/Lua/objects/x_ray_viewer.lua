@@ -42,13 +42,13 @@ object.idle_animations = copy_north_to_south {
 object.orientations = {
   north = {
     footprint = {
-      {0, 0, only_passable = true},
+      {0, 0},
     },
     list_bottom = true,
   },
   east = {
     footprint = {
-      {0, 0, only_passable = true},
+      {0, 0},
     },
     list_bottom = true,
     early_list = true,
