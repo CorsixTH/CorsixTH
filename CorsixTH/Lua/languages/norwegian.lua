@@ -166,6 +166,7 @@ adviser = {
 -- 6. Dynamic info
 dynamic_info.patient.actions.no_gp_available   = utf8 "Venter på at du skal bygge Allmennpraksis"
 dynamic_info.staff.actions.heading_for       = utf8 "På vei til %s"
+dynamic_info.staff.actions.fired = "Sparket"
 
 -- 7. Tooltip
 tooltip.objects.litter     = utf8 "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
@@ -235,8 +236,25 @@ tooltip.options_window = {
   height = utf8 "Skriv inn önsket skjermhöyde",
   change_resolution = utf8 "Endre opplösningen til dimensjonene du har angitt til venstre.",
   language = utf8 "Velg %s som språk",
-  back = "Lukk innstillinger vinduet",
+  back = "Lukk vinduet med innstillinger",
 }
+
+new_game_window = {
+  easy = "Turnuslege (Lett)",
+  medium = "Lege (Medium)",
+  hard = "Konsulent (Vanskelig)",
+  tutorial = utf8 "Innföring",
+  cancel = "Avbryt",
+}
+
+tooltip.new_game_window = {
+  easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
+  medium = utf8 "Om du er usikker på hva du skal velge, så er dette mellomtingen",
+  hard = utf8 "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
+  tutorial = utf8 "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
+  cancel = utf8 "Hmm... det var ikke meningen å starte et nytt spill!",
+}
+
 errors = {
   dialog_missing_graphics   = "Beklager, datafilene i demoen tillater ikke denne dialogen.",
   save_prefix         = "Feil under lagring av spill: ",
@@ -246,7 +264,8 @@ errors = {
 }
 
 confirmation = {
-  needs_restart = utf8 "Å forandre denne innstillingen krever en omstart av CorsixTH. Spill som ikke er lagret vil gå tapt. Er du sikker på at du vil endre innstillingen?"
+  needs_restart = utf8 "Å forandre denne innstillingen krever en omstart av CorsixTH. Spill som ikke er lagret vil gå tapt. Er du sikker på at du vil endre innstillingen?",
+  abort_edit_room = utf8 "Du holder på å bygge eller endre et rom. Om alle obligatoriske gjenstander er plassert ut, ferdigstilles rommet. Om ikke, slettes rommet. Fortsette?"
 }
 
 information = {
@@ -2539,12 +2558,12 @@ dynamic_info = {
   },
 }
 
---todo
+
 introduction_texts = {
   level17 = {
     [1] = utf8 "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. ",
-    [2] = "If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level !//",
-    [3] = "You're on you own now. Good luck and all that.",
+    [2] = utf8 "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået !//",
+    [3] = utf8 "Nå må du klare deg selv. Lykke til med det.",
   },
   level1 = {
     [1] = utf8 "Velkommen til ditt förste sykehus!//",
@@ -2556,20 +2575,21 @@ introduction_texts = {
     [7] = utf8 "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
   },
   level9 = {
-    [1] = "Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy. ",
-    [2] = "You can expect a lot of different problems to crop up here.",
-    [3] = "If you have enough well-trained staff and rooms, you should have all the angles covered. ",
-    [4] = "Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank. ",
-    [5] = "Any less and you won't be able to finish the level.",
+    [1] = utf8 "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousine, kan du nå konsentrere deg om å lage et omsorgsfullt, velfungerende sykehus for de trengende. ",
+    [2] = utf8 "Du må forvente å stöte på en rekke problemer her.",
+    [3] = utf8 "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. ",
+    [4] = utf8 "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. ",
+    [5] = utf8 "Med noe mindre får du ikke fullfört dette nivået.",
   },
   level2 = {
     [1] = utf8 "Det er et större spekter av plager i dette området. ",
-    [2] = utf8 "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen ".. rooms_long.research_room .. ". ",
-    [3] = utf8 "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som ".. diseases.slack_tongue.name .. utf8 ", så du trenger en Tungeklinikk. ",
-    [4] = utf8 "Du kan også bygge ".. rooms_long.cardiogram .. utf8 " for å forbedre diagnoseringen. ",
-    [5] = utf8 "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk ".. tooltip.toolbar.town_map .. utf8 "et til dette. ",
+    [2] = utf8 "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen Forskningsavdeling. ",
+    [3] = utf8 "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som Lös tunge, så du trenger en Tungeklinikk. ",
+    [4] = utf8 "Du kan også bygge Kardiorom for å forbedre diagnoseringen. ",
+    [5] = utf8 "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk Områdekartet til dette. ",
     [6] = utf8 "Streb etter et omdömme på 300 og en banksaldo på 10000, samt 40 kurerte pasienter. ",
   },
+  --todo
   level7 = {
     [1] = "Here you'll be under close scrutiny from the Ministry of Health, so make sure that your accounts show that you're making a lot of cash, and that your reputation is riding high. ",
     [2] = "We can't afford unnecessary deaths - they're bad for business. ",
