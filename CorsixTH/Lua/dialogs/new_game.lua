@@ -44,13 +44,14 @@ function UINewGame:UINewGame(ui)
   self.modal_class = "main menu"
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
+  local palette = app.gfx:loadPalette("QData", "DrugN01V.pal")
+  self.panel_sprites = app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   
   -- individual buttons
   self.default_button_sound = "selectx.wav"
-  
   self:addBevelPanel(20, 25, 110, 20, col_bg):setLabel(_S.new_game_window.tutorial).lowered = true
-  self:addBevelPanel(150, 20, 30, 30, col_button):makeToggleButton(0, 0, 30, 30, nil, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
+  self:addPanel(12, 150, 20):makeToggleButton(0, 0, 29, 29, 11, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
   self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.new_game_window.easy):makeButton(0, 0, 160, 40, nil, self.buttonEasy):setTooltip(_S.tooltip.new_game_window.easy)
   self:addBevelPanel(20, 115, 160, 40, col_bg):setLabel(_S.new_game_window.medium):makeButton(0, 0, 160, 40, nil, self.buttonMedium):setTooltip(_S.tooltip.new_game_window.medium)
   self:addBevelPanel(20, 165, 160, 40, col_bg):setLabel(_S.new_game_window.hard):makeButton(0, 0, 160, 40, nil, self.buttonHard):setTooltip(_S.tooltip.new_game_window.hard)
