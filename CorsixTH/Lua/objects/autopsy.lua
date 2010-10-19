@@ -76,6 +76,7 @@ anim_set("Alternate Male Patient"    , 4544, 3334, 4548, 4552) -- Incomplete
 anim_set("Chewbacca Patient"         , 4118, 4126, 4130, 4134)
 anim_set("Elvis Patient"             , 4086, 4090, 4094, 4098)
 anim_set("Slack Male Patient"        , 4332, 4336, 4340, 4552)
+anim_set("Slack Female Patient"      , 3196, 3200, 3188, 3192) -- Incomplete
 anim_set("Transparent Male Patient"  , 4460, 4856, 4456, 4626)
 anim_set("Transparent Female Patient", 4860, 4804, 4796, 4800)
 anim_set("Invisible Patient"         , 4212, 4224, 4216, 4220)

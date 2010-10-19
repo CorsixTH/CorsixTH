@@ -34,6 +34,49 @@ function Staff:tickDay()
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / fair_wage)
+  -- If this is a researcher in the research department some research has 
+  -- been done during the day.
+  local room = self:getRoom()
+  if room and room.room_info.id == "research" and self.profile.is_researcher >= 1.0 
+  and self.hospital then
+    self.hospital:addResearchPoints(400 + 100*self.profile.skill) -- TODO: Balance value further somehow
+  end
+  -- Is this a doctor in the training room with a consultant?
+  local room = self:getRoom()
+  if room and room.room_info.id == "training" and room.staff_member and self.humanoid_class == "Doctor" then
+    -- tick event for consultant?
+    if room.staff_member == self then
+      -- TODO: Should the consultant's skills increase at all?
+    else
+      -- increase skills based upon what the consultant knows
+      -- TODO: possibly adjust based upon consultant's skill level? multiply by
+      -- random factor to avoid all skills increasing equally?
+      
+      -- Find values for how fast doctors learn the different professions
+      local level_config = self.world.map.level_config
+      local surg_thres = 1
+      local psych_thres = 1
+      local res_thres = 1
+      if level_config and level_config.gbv.AbilityThreshold then
+        surg_thres = level_config.gbv.AbilityThreshold[0]
+        psych_thres = level_config.gbv.AbilityThreshold[1]
+        res_thres = level_config.gbv.AbilityThreshold[2]
+      end
+      
+      local factor = room:getTrainingFactor()
+      if room.staff_member.profile.is_surgeon >= 1.0 then
+        self:updateSkill(room.staff_member, "is_surgeon", 0.05*factor/surg_thres)
+      end
+      if room.staff_member.profile.is_psychiatrist >= 1.0 then
+        self:updateSkill(room.staff_member, "is_psychiatrist", 0.05*factor/psych_thres)
+      end
+      if room.staff_member.profile.is_researcher >= 1.0 then
+        self:updateSkill(room.staff_member, "is_researcher", 0.05*factor/res_thres)
+      end
+
+      self:updateSkill(room.staff_member, "skill", 0.0002*factor)
+    end
+  end
 end
 
 function Staff:tick()
@@ -64,31 +107,6 @@ function Staff:tick()
   
   if tiring then -- Finally: tire the humanoid.
     self:tire(0.000115)
-  end
-  
-  -- is this a doctor in the training room with a consultant?
-  local room = self:getRoom()
-  if room and room.room_info.id == "training" and room.staff_member and self.humanoid_class == "Doctor" then
-    -- tick event for consultant?
-    if room.staff_member == self then
-      -- TODO: Should the consultant's skills increase at all?
-    else
-      -- increase skills based upon what the consultant knows
-      -- NB: need to figure out the optimum increase amount. possibly
-      -- adjust based upon consultant's skill level? multiply by
-      -- random factor to avoid all skills increasing equally?
-      if room.staff_member.profile.is_surgeon >= 1.0 then
-        self:updateSkill(room.staff_member, "is_surgeon", 0.00001)
-      end
-      if room.staff_member.profile.is_psychiatrist >= 1.0 then
-        self:updateSkill(room.staff_member, "is_psychiatrist", 0.00001)
-      end
-      if room.staff_member.profile.is_researcher >= 1.0 then
-        self:updateSkill(room.staff_member, "is_researcher", 0.00001)
-      end
-
-      self:updateSkill(room.staff_member, "skill", 0.000005)
-    end
   end
 
   -- Make staff members request a raise if they are very unhappy

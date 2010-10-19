@@ -482,7 +482,8 @@ function Humanoid:tickDay()
   
   -- If it is too hot or too cold, start to decrease happiness and 
   -- show the corresponding icon. Otherwise we could get happier instead.
-  if self.attributes["warmth"] then
+  -- Let the player get into the level first though, don't decrease happiness the first year.
+  if self.attributes["warmth"] and self.hospital and not self.hospital.initial_grace then
     -- Cold: less than 11 degrees C
     if self.attributes["warmth"] < 0.22 then
       self:changeAttribute("happiness", -0.02 * (0.22 - self.attributes["warmth"]) / 0.14)

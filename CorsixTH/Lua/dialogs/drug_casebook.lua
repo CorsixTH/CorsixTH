@@ -164,7 +164,8 @@ function UICasebook:draw(canvas, x, y)
   else
     titles:draw(canvas, _S.casebook.research, x + 245, y + 398)
   end
-  titles:draw(canvas, book[disease].reputation, x + 248, y + 92, 114, 0) -- Reputation
+  local rep = book[disease].reputation or self.hospital.reputation
+  titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
   titles:draw(canvas, ("%.0f%%"):format(book[disease].price * 100), x + 262, y + 137, 90, 0) -- Treatment Charge
   titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
   titles:draw(canvas, book[disease].recoveries, x + 248, y + 225, 114, 0) -- Recoveries
@@ -173,7 +174,7 @@ function UICasebook:draw(canvas, x, y)
   
   -- Cure percentage
   if self.drug.visible then
-    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 310, y + 364, 19, 0)
+    self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 313, y + 364, 16, 0)
   end
   -- Right-hand side list of diseases (and pseudo diseases)
   local index = 1

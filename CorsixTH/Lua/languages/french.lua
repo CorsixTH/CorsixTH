@@ -640,7 +640,6 @@ totd_window = {
     utf8 "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
     utf8 "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
     utf8 "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs : th-issues.corsix.org.",
-    utf8 "Vous utilisez actuellement la troisième version beta de CorsixTH, publiée le 24 juin 2010.",
     utf8 "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de status pour voir votre progression dans les objectifs du niveau.",
     utf8 "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outil en bas.",
     utf8 "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",

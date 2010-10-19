@@ -243,7 +243,6 @@ totd_window = {
     utf8 "Du hast eine andere Sprache als Englisch ausgewählt, aber es erscheinen Englische Texte? Hilf uns die Übersetzung zu vervollständigen, indem du fehlende Texte in deine Sprache Übersetzt!",
     utf8 "Das CorsixTH-Team sucht Verstärkung! Hast du Interesse, beim Programmieren, Übersetzen oder Grafiken erstellen zu helfen? Kontaktiere uns in unserem Forum, der Mailing List oder unserem IRC-Channel (corsix-th im freenode).",
     utf8 "Wenn du einen Bug findest, bitte melde ihn in unserem Bug-Tracker: th-issues.corsix.org",
-    utf8 "Du spielst gerade Beta 3 von CorsixTH, veröffentlicht am 24. Juni 2010.",
     utf8 "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum nächsten wechseln kann. Im Status-Fenster kannst du deinen Fortschritt bezüglich der Levelziele sehen.",
     utf8 "Um existierende Räume zu bearbeiten oder gar zu löschen kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
     utf8 "Um aus einer Horde wartender Patienten diejenigen zu finden die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",

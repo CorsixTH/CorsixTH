@@ -119,6 +119,8 @@ function Patient:treated()
       self.world.ui.adviser:say(_S.adviser.information.first_cure)
     end
     self.hospital.num_cured = hospital.num_cured + 1
+	local casebook = hospital.disease_casebook[self.disease.id]
+	casebook.recoveries = casebook.recoveries + 1
     if self.is_emergency then
       self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
     end
@@ -149,6 +151,8 @@ function Patient:die()
     self.world.ui.adviser:say(_S.adviser.information.first_death)
   end
   self.hospital.num_deaths = self.hospital.num_deaths + 1
+  local casebook = self.hospital.disease_casebook[self.disease.id]
+  casebook.fatalities = casebook.fatalities + 1
   self.hospital:updatePercentages()
   
   self:setMood("dead", "activate")
@@ -176,6 +180,8 @@ function Patient:goHome(cured)
     self:setMood("exit", "activate")
     hosp:changeReputation("kicked")
     self.hospital.not_cured = hosp.not_cured + 1
+	local casebook = self.hospital.disease_casebook[self.disease.id]
+	casebook.turned_away = casebook.turned_away + 1
   end
 
   hosp:updatePercentages()

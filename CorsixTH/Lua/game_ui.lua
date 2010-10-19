@@ -188,7 +188,7 @@ function GameUI:onKeyDown(code, rawchar)
       local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
       self.bottom_panel:queueMessage(types[math.random(1, #types)])
     elseif key == "f9" then -- Make debug patient
-      self.app.world:makeDebugPatient()
+      self:addWindow(UIMakeDebugPatient(self))
     
     elseif key == "f11" then -- Make Adviser say a random phrase
       self:debugMakeAdviserTalk()

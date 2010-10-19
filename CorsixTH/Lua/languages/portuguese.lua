@@ -143,7 +143,6 @@ totd_window = {
     utf8 "Seleccionaste outra linguagem além do Inglês, mas vês Inglês em todo o lado? Ajuda-nos a traduzir esse texto!",
     utf8 "A equipa do CorsixTH está à procura de reforços! Estás interessado em programar, traduzir ou criar arte gráfica para o CorsixTH? Contacta-nos no fórum, IRC (corsix-th no freenode) ou via Mailing List.",
     "Se encontrares um bug, diz-nos em: th-issues.corsix.org",
-    utf8 "O CorsixTH foi tornado público a 24 de Julho de 2009. A primeira beta jogável (beta 1) foi lançada a 24 de Dezembro de 2009. Após três meses, temos o orgulho de apresentar a beta 2 (24 de Março de 2010)!",
   },
   previous = "Dica anterior",
   next = utf8 "Próxima dica",

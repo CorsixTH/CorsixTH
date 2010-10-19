@@ -96,12 +96,15 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- Wait two months before going home anyway.
   humanoid.waiting = 60
   local strings = _S.fax.disease_discovered_patient_choice
-  local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
-  local output_text = strings.need_to_build:format(room_name)
-  if not humanoid.hospital:hasStaffOfCategory(required_staff) then
-    output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+  -- Can this room be built right now? What is then missing?
+  local output_text = strings.can_not_cure
+  if humanoid.hospital.discovered_rooms[room_type.id] then
+    local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
+    output_text = strings.need_to_build:format(room_name)
+    if not humanoid.hospital:hasStaffOfCategory(required_staff) then
+      output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+    end
   end
-  -- TODO: In the future the treatment room might be unavailable
   local research_btn = "disabled"
   if humanoid.world:findRoomNear(humanoid, "research") then
     research_btn = "research"

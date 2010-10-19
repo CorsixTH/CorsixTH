@@ -144,7 +144,6 @@ totd_window = {
     utf8 "Hai selezionato il tuo linguaggio, ma tutto è in inglese? Aiutaci a convertire il gioco in più linguaggi!",
     "Il team di CorsixTH sta cercando rinforzi! Sei interessato in programmare, tradurre o creare nuovi elementi grafici per CorsixTH? Contattaci nei forum, tramite mail o sul canale IRC (corsix-th su freenode).",
     "Trovato un bug? Vuoi segnalare un errore di qualsiasi genere? Inviaci un rapporto su ciò che hai trovato al nostro bug tracker: th-issues.corsix.org",
-    "CorsixTH è stato reso pubblico il 24 luglio 2009. La prima release è stata la beta 1 giocabile, il 24 dicembre 2009. Dopo tre mesi, il 24 marzo 2010, siamo fieri di presentare la versione beta 2.",
   },
   previous = "Suggerimento Precedente",
   next = "Suggerimento Successivo",

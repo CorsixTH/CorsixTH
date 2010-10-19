@@ -418,7 +418,6 @@ totd_window = {
     utf8 "Olet vaihtanut kielen suomeksi. Jos kuitenkin näet pelissä englannin kielistä tekstiä, voit auttaa suomentamalla puuttuvia tekstejä!",
     utf8 "CorsixTH-tiimi etsii aina vahvistuksia! Oletko kiinnostunut ohjelmoimaan, kääntämään tai laatimaan grafiikkaa CorsixTH:ta varten? Saat meihin yhteyden Foorumimme, Sähköpostilistamme tai IRC-kanavamme (corsix-th at freenode) kautta.",
     utf8 "Jos löydät pelistä bugin, ilmoitathan niistä buginseurantaamme: th-issues.corsix.org.",
-    utf8 "CorsixTH julkistettiin ensimmäisen kerran 24. kesäkuuta 2009. Pelaat nyt kolmatta beta-versiota, joka julkaistiin 24. kesäkuuta 2010.",
     utf8 "Jokaisella tasolla on joukko vaatimuksia, jotka sinun tulee täyttää ennen kuin pääset siirtymään seuraavalle tasolle. Voit tarkastella edistymistäsi tilanne-valikosta.",
     utf8 "Jos haluat muokata huonetta tai poistaa sen, voit tehdä niin ruudun alareunassa olevasta työkalupalkista löytyvän muokkaa huonetta -painikkeen avulla.",
     utf8 "Viemällä hiiren osoittimen huoneen päälle saat nopeasti tietää, ketkä ulkopuolella olevien potilaiden rykelmässä odottavat pääsyä kyseiseen huoneeseen.",

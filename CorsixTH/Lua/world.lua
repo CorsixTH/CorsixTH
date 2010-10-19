@@ -240,6 +240,9 @@ end
 
 function World:initDiscoveredRooms(hospital)
   local obj = self.map.level_config.objects
+  -- While at it, also determine what rooms will be next to research
+  local next_cure
+  local next_diag
   for _, room in ipairs(self.available_rooms) do
     local is_discovered = true
     if obj and room.level_config_id and obj[room.level_config_id] then
@@ -247,8 +250,18 @@ function World:initDiscoveredRooms(hospital)
     end
     if is_discovered then
       hospital.discovered_rooms[room] = true
+    else
+      -- Not discovered, let it be researched instead.
+      hospital.research_rooms[room] = 0
+      if room.categories.diagnosis then
+        next_diag = room
+      else
+        next_cure = room
+      end
     end
   end
+  -- Let the hospital initialize its research department
+  hospital:_initResearch(next_diag, next_cure)
 end
 
 function World:initCompetitors()
@@ -319,43 +332,6 @@ function World:spawnPatient(hospital)
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
-  patient:setHospital(hospital)
-  
-  return patient
-end
-
-function World:makeDebugPatient(hospital)
-  if not hospital then
-    hospital = self:getLocalPlayerHospital()
-  end
-
-  local patient = self:newEntity("Patient", 2)
-  patient.is_debug = true
-  table.insert(hospital.debug_patients, patient)
---  local disease = -- should they have one? hmm... no, for now not. May cause some errors if sent into rooms with staff.
-  
-  local types = {
-    -- Types with variations doubled up to make them more likely:
-    "Standard Male Patient", "Standard Male Patient",
-    "Alternate Male Patient", "Alternate Male Patient",
-    "Slack Male Patient", "Slack Male Patient",
-    "Transparent Male Patient", "Transparent Male Patient",
-    "Standard Female Patient", "Standard Female Patient",
-    "Transparent Female Patient", "Transparent Female Patient",
-    -- Types with no variation:
-    "Chewbacca Patient",
-    "Elvis Patient",
-    "Invisible Patient",
-  }
-  
-  patient:setType(types[math.random(1, #types)])
-  patient:setTile(64, 64) -- center of map
-  patient:setLayer(0, math.random(1, 4) * 2)
-  patient:setLayer(1, math.random(0, 3) * 2)
-  patient:setLayer(2, math.random(0, 2) * 2)
-  patient:setLayer(3, math.random(0, 5) * 2)
-  patient:setLayer(4, math.random(0, 5) * 2)
-  patient:setMood("emergency", "activate") -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(hospital)
   
   return patient
@@ -611,6 +587,9 @@ function World:onTick()
     if self.hour >= 24 then
       self.hour = self.hour - 24
       self.day = self.day + 1
+      for _, hospital in ipairs(self.hospitals) do
+        hospital:onEndDay()
+      end
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
         for _, hospital in ipairs(self.hospitals) do
@@ -622,6 +601,11 @@ function World:onTick()
         self.month = self.month + 1
         if self.month > 12 then
           self.month = 12
+          if self.year == 1 then
+            for _, hospital in ipairs(self.hospitals) do
+              hospital.initial_grace = false
+            end
+          end
           -- It is crucial that the annual report gets to initialize before onEndYear is called.
           -- Yearly statistics are reset there.
           self.ui:addWindow(UIAnnualReport(self.ui, self))

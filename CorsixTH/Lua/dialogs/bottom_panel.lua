@@ -368,7 +368,9 @@ function UIBottomPanel:dialogPolicy()
 end
 
 function UIBottomPanel:dialogResearch()
-  self:addDialog(UIResearch(self.ui))
+  if self.ui.hospital.research_dep_built then
+    self:addDialog(UIResearch(self.ui))
+  end
 end
 
 function UIBottomPanel:dialogStatus()

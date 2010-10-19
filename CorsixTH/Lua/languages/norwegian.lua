@@ -286,7 +286,6 @@ totd_window = {
     utf8 "Turnusleger og Doktorer kan utvikle sine evner av å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykologi eller Forskning) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
     utf8 "Du kan forandre noen innstillinger som opplösning og språk i innstillinger-vinduet som du finner på hovedmenyen eller på menyen inne i spillet.",
-    utf8 "Du spiller CorsixTH beta 3, lansert 24.juni, 2010.",
     utf8 "Hvert nivå har en rekke utfordringer som må fullföres för du kan gå videre til neste nivå. Sjekk statusen på utfordringene for nivået i Statusvinduet.",
     utf8 "Om du vil endre eller fjerne et rom, kan du gjöre det med å klikke på Endre Rom knappen på panelet i bunnen av skjermen.",
     utf8 "Du kan alltids finne fort ut hvilke pasienter som venter på å slippe inn i de ulike rommene, ved å flytte musepekeren over rommet.",

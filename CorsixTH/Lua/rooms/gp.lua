@@ -104,18 +104,9 @@ function GPRoom:dealtWithPatient(patient)
     local diagnosis_bonus = (0.3 + 0.2 * math.random()) * self.staff_member.profile.skill
     
     patient:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
-    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"]
-    or #patient.available_diagnosis_rooms == 0 then
+    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed(true)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
-      -- TODO: Temporary, until research is in the game. This is just so that something happens...
-      for _, room in pairs(self.world.available_rooms) do
-        if not patient.hospital.discovered_rooms[room] and room.id == patient.disease.treatment_rooms[#patient.disease.treatment_rooms] then
-          patient.hospital.discovered_rooms[room] = true
-          self.world.ui.adviser:say(_S.adviser.research.new_available:format(room.name))
-          break
-        end
-      end
 
       self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
@@ -136,6 +127,11 @@ function GPRoom:dealtWithPatient(patient)
           window:updateDiseaseList()
         end
       end
+    elseif #patient.available_diagnosis_rooms == 0 then
+      -- The very rare case where the patient has visited all his/her possible diagnosis rooms
+      -- There's not much to do then... Send home
+      patient:goHome()
+      patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
     else
       self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)

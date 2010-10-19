@@ -60,15 +60,15 @@ function UIResearch:UIResearch(ui)
       amount = amount * 5
     end
     if delta == "less" then
-      if hosp.research[area] > 0 then
-        hosp.research[area] = math.max(0, hosp.research[area] - amount)
+      if hosp.research[area].frac > 0 then
+        hosp.research[area].frac = math.max(0, hosp.research[area].frac - amount)
         self.ui:playSound("selectx.wav")
       else
         self.ui:playSound("Wrong2.wav")
       end
     elseif delta == "more" then
-      if hosp.research.global < 100 then
-        hosp.research[area] = hosp.research[area] +
+      if hosp.research.global < 100 and hosp.research[area].current then
+        hosp.research[area].frac = hosp.research[area].frac +
           math.min(amount, 100 - hosp.research.global)
         self.ui:playSound("selectx.wav")
       else
@@ -78,7 +78,7 @@ function UIResearch:UIResearch(ui)
 
     hosp.research.global = 0
     for _, category in ipairs(research_categories) do
-      hosp.research.global = hosp.research.global + hosp.research[category]
+      hosp.research.global = hosp.research.global + hosp.research[category].frac
     end
   end
 
@@ -140,7 +140,7 @@ function UIResearch:draw(canvas, x, y)
   for i, category in ipairs(research_categories) do
     local y = y + ytop + i * spacing
     lbl_font:draw(canvas, _S.research.categories[category], x + 170, y)
-    num_font:draw(canvas, self.hospital.research[category], x + 270, y, 300, 0)
+    num_font:draw(canvas, self.hospital.research[category].frac, x + 270, y, 300, 0)
   end
   
   num_font:draw(canvas, self.hospital.research.global, x + 270, y + 288, 300, 0)

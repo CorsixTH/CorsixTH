@@ -264,7 +264,6 @@ totd_window = {
     utf8 "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés por todas partes? ¡Ayúdanos avisando de las líneas de texto que estén en inglés para que podamos traducirlas!",
     utf8 "¡El equipo de CorsixTH busca refuerzos! ¿Te interesa programar, traducir o crear gráficos para CorsixTH? Contáctanos en nuestro foro, lista de correo o canal IRC (corsix-th en freenode).",
     utf8 "Si encuentras un fallo, infórmalo en nuestro registro de fallos: th-issues.corsix.org",
-    utf8 "Estás jugando a la beta 3 de CorsixTH, publicada el 24 de junio de 2010.",
     utf8 "Cada nivel tiene unos requisitos concretos que debes conseguir antes de poder continuar al siguiente nivel. Mira en la ventana de estado para ver como llevas los objetivos del nivel.",
     utf8 "Si quieres editar o quitar una habitación ya existente, puedes hacerlo con el botón de Editar habitación que verás en la barra de herramientas inferior.",
     utf8 "Cuando tengas muchos pacientes esperando, puedes averiguar rápidamente quienes están esperando para una habitación en concreto pasando el cursor del ratón por encima de la habitación.",

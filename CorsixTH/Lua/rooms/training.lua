@@ -45,14 +45,39 @@ function TrainingRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
   local number = 0
+  local skeletons = 0
+  local bookcases = 0
   for object, value in pairs(objects) do
     if object.object_type.id == "lecture_chair" then
       number = number + 1
+    elseif object.object_type.id == "skeleton" then
+      skeletons = skeletons + 1
+    elseif object.object_type.id == "bookcase" then
+      bookcases = bookcases + 1
     end
   end
   -- Total staff occupancy: number of lecture chairs plus projector
   self.maximum_staff = { Doctor = number + 1 }
+  -- Training rate based on objects in the room
+  -- TODO:  What should happen if there is no level configuration?
+  local level_config = self.world.map.level_config
+  local factor = 10 -- The projector is always available
+  -- Make use of at most 2 skeletons and/or bookcases for now.
+  -- TODO: Decide how much the two objects affect speed of training.
+  -- They don't do anything for now.
+  if level_config and level_config.gbv.TrainingRate then
+    local skel_fact = level_config.gbv.TrainingValue[1]
+    local book_fact = level_config.gbv.TrainingValue[2]
+    --factor = factor + (skeletons < 3 and skeletons or 2)*skel_fact
+    --factor = factor + (bookcases < 3 and bookcases or 2)*book_fact
+    factor = (factor + level_config.gbv.TrainingRate)/10
+  end
+  self.training_factor = factor
   Room.roomFinished(self)
+end
+
+function TrainingRoom:getTrainingFactor()
+  return self.training_factor
 end
 
 function TrainingRoom:getMaximumStaffCriteria()

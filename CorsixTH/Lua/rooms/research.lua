@@ -25,7 +25,15 @@ room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
 room.tooltip = _S.tooltip.rooms.research_room
 room.build_cost = 5000
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "computer", "desk", "cabinet", "analyser" }
+room.objects_additional = { 
+  "extinguisher", 
+  "radiator", 
+  "plant", 
+  "bin", 
+  "computer", 
+  "desk", 
+  "cabinet",} 
+  --"analyser" } -- No animations yet anyway
 room.objects_needed = { desk = 1, cabinet = 1, autopsy = 1 }
 room.build_preview_animation = 5102
 room.categories = {
@@ -71,13 +79,21 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
           if action.todo_interrupt or desk_use_time == 0 then
             action.prolonged_usage = false
           end
-        end
+        end,
+        after_use = --[[persistable:research_desk_after_use]] function() 
+          self.hospital:addResearchPoints(100)
+        end,
       }
     else
       staff:queueAction {
         name = "use_object",
         object = obj,
-        after_use = --[[persistable:research_obj_after_use]] function() end,
+        after_use = --[[persistable:research_obj_after_use]] function() 
+          if obj.object_type.id == "computer" then
+            self.hospital:addResearchPoints(500) 
+            -- TODO: Balance value, find it in level config?
+          end
+        end,
       }
     end
   end
@@ -106,6 +122,7 @@ function ResearchRoom:roomFinished()
   self.maximum_staff = {
     Researcher = number,
   }
+  self.hospital.research_dep_built = true
   return Room.roomFinished(self)
 end
 
@@ -135,6 +152,19 @@ function ResearchRoom:commandEnteringPatient(patient)
       self:commandEnteringStaff(staff)
       -- Patient dies :(
       self:onHumanoidLeave(patient)
+      -- Some research is done. :) Might trigger a loss of reputation though.
+      local hosp = self.hospital
+      hosp:addResearchPoints(8000, patient.disease.treatment_rooms[#patient.disease.treatment_rooms])
+      if hosp.discover_autopsy_risk > math.random(1, 100) and not hosp.autopsy_discovered then
+        -- Can only be discovered once.
+        hosp.autopsy_discovered = true
+        hosp:changeReputation("autopsy_discovered")
+        hosp.world.ui.adviser:say(_S.adviser.research.autopsy_discovered_rep_loss)
+      else
+        -- The risk increases after each use.
+        -- TODO: Should it ever become 100%?
+        self.hospital.discover_autopsy_risk = self.hospital.discover_autopsy_risk + 10
+      end
       if patient.hospital then
         patient:setHospital(nil)
       end
