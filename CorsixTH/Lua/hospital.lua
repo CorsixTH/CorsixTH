@@ -183,6 +183,7 @@ function Hospital:addResearchPoints(points, specific_destination)
         local normal_points = 0
         if self.research.cure.current.id == specific_destination then
           normal_points = self.research.cure.points
+        end
         if value + points/divisor + normal_points > required then
           self:discoverRoom(room, "cure")
         else
