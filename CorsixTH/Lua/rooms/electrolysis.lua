@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "electrolysis"
 room.level_config_id = 46
+room.level_config_research = 3
 room.class = "ElectrolysisRoom"
 room.name = _S.rooms_short.electrolysis
 room.tooltip = _S.tooltip.rooms.electrolysis

@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "cardiogram"
 room.level_config_id = 13
+room.level_config_research = 38
 room.class = "CardiogramRoom"
 room.name = _S.rooms_short.cardiogram
 room.tooltip = _S.tooltip.rooms.cardiogram

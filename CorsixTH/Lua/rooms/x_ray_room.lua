@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "x_ray"
 room.level_config_id = 27
+room.level_config_research = 39
 room.class = "XRayRoom"
 room.name = _S.rooms_short.x_ray
 room.tooltip = _S.tooltip.rooms.x_ray

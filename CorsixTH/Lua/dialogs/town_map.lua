@@ -173,9 +173,11 @@ function UITownMap:draw(canvas, x, y)
   self.info_font:draw(canvas, fireext,      x +  95, y + 157)
   self.info_font:draw(canvas, objs,         x +  95, y + 211)
   self.info_font:draw(canvas, radiators,    x +  95, y + 265)
-  -- TODO how is radiator cost computed?
-  self.info_font:draw(canvas, "0",          x + 100, y + 355)
   
+  -- Heating costs
+  local heating_costs = math.floor(((hospital.radiator_heat *10)* radiators)* 7.5)
+  self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
+
   -- draw money balance
   self.money_font:draw(canvas, ("%7i"):format(hospital.balance), x + 49, y + 431)
 

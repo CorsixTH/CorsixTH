@@ -178,7 +178,7 @@ function Hospital:addResearchPoints(points, specific_destination)
     for room, value in pairs(self.research_rooms) do
       if room.id == specific_destination then
         -- Maybe we have enough to discover the room?
-        local required = level_config.expertise[room.level_config_id].RschReqd
+        local required = level_config.expertise[room.level_config_research].RschReqd
         -- Is generic research also focusing on this room?
         local normal_points = 0
         if self.research.cure.current.id == specific_destination then
@@ -214,9 +214,8 @@ function Hospital:addResearchPoints(points, specific_destination)
     if areas.diagnosis.current then
       -- At this point we know that a level config exists, otherwise all rooms would be available
       local room = areas.diagnosis.current
-      -- Some extra points might have been added through for example the autopsy
       local added_points = self.research_rooms[room]
-      local req = config[room.level_config_id].RschReqd
+      local req = config[room.level_config_research].RschReqd
       if req < areas.diagnosis.points + added_points then
         areas.diagnosis.points = areas.diagnosis.points + added_points - req
         self:discoverRoom(room, "diagnosis")
@@ -224,9 +223,11 @@ function Hospital:addResearchPoints(points, specific_destination)
     end
     if areas.cure.current then
       local room = areas.cure.current
+      -- Some extra points might have been added through for example the autopsy
       local added_points = self.research_rooms[room]
-      if config[room.level_config_id].RschReqd < areas.cure.points + added_points then
-        areas.cure.points = areas.cure.points + added_points - config[room.level_config_id].RschReqd
+      local req = config[room.level_config_research].RschReqd
+      if req < areas.cure.points + added_points then
+        areas.cure.points = areas.cure.points + added_points - req
         self:discoverRoom(room, "cure")
       end
     end
@@ -430,13 +431,11 @@ function Hospital:onEndMonth()
     self:spendMoney(math.floor(self.acc_research_cost+0.5), _S.transactions.research)
     self.acc_research_cost = 0
   end
-  -- Show advice if any should be shown
-  -- for _, advice_table in pairs(self.queued_advice) do
-    -- self.ui.adviser:say(_S.adviser.advice_table[1].advice_table[2])
-    -- table.remove(self.queued_advice, 1)
-    -- self.queued_advice.advice_table[2] = nil
-    -- break
-  -- end
+  -- Pay heating costs
+  -- TODO: Should this also be on a per day basis "behind the scenes" as above?
+  local radiators = self.world.object_counts.radiator
+  local heating_costs = math.floor(((self.radiator_heat *10)* radiators)* 7.5)
+  self:spendMoney(heating_costs, _S.transactions.heating)
 end
 
 --! Called at the end of each year

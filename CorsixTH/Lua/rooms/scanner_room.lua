@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "scanner"
 room.level_config_id = 14
+room.level_config_research = 36
 room.class = "ScannerRoom"
 room.name = _S.rooms_short.scanner
 room.tooltip = _S.tooltip.rooms.scanner
