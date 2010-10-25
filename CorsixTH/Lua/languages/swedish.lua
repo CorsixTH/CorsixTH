@@ -38,6 +38,13 @@ room_descriptions.psych = {
 }
 introduction_texts.level1[4] = utf8 "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
 
+tooltip.staff_list.next_person = utf8 "Visa nästa sida"
+tooltip.staff_list.prev_person = utf8 "Visa föregående sida"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = utf8 "Vederbörandes ansikte - klicka för att öppna personalhanteraren"
+tooltip.staff_window.center_view = utf8 "Vänsterklicka för att komma till personen, högerklicka för att gå igenom personalen en och en"
+
 -- new strings
 object.litter = utf8 "Skräp"
 tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
@@ -53,6 +60,7 @@ menu_options_game_speed.pause = "  PAUSA  "
 menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
+  jump_to_level               = utf8 "  HOPPA TILL NIVÅ  ",
   transparent_walls           = utf8 "  TRANSPARENTA VÄGGAR  ",
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",

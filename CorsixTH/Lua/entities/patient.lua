@@ -106,9 +106,15 @@ function Patient:setHospital(hospital)
   end
 end
 
-function Patient:treated()
+function Patient:treated() -- If a drug was used we also need to pay for this
   local hospital = self.hospital
+  print(self.disease.drug_cost)
+  local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
   hospital:receiveMoneyForTreatment(self)
+  if amount ~= 0 then
+    hospital:spendMoney(amount, _S.transactions.drug_cost)
+  end
+
   -- Either the patient is no longer sick, or he/she dies.
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
@@ -119,14 +125,14 @@ function Patient:treated()
       self.world.ui.adviser:say(_S.adviser.information.first_cure)
     end
     self.hospital.num_cured = hospital.num_cured + 1
-	local casebook = hospital.disease_casebook[self.disease.id]
-	casebook.recoveries = casebook.recoveries + 1
+    local casebook = hospital.disease_casebook[self.disease.id]
+    casebook.recoveries = casebook.recoveries + 1
     if self.is_emergency then
       self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
     end
     self:setMood("cured", "activate")
     self:playSound "cheer.wav"
-    hospital:changeReputation("cured")
+    hospital:changeReputation("cured", self.disease)
     self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
@@ -167,7 +173,7 @@ function Patient:die()
     self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction{name = "die"}
-  self.hospital:changeReputation("death")
+  self.hospital:changeReputation("death", self.disease)
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
@@ -178,10 +184,10 @@ function Patient:goHome(cured)
   local hosp = self.hospital
   if not cured then
     self:setMood("exit", "activate")
-    hosp:changeReputation("kicked")
+    hosp:changeReputation("kicked", self.disease)
     self.hospital.not_cured = hosp.not_cured + 1
-	local casebook = self.hospital.disease_casebook[self.disease.id]
-	casebook.turned_away = casebook.turned_away + 1
+    local casebook = self.hospital.disease_casebook[self.disease.id]
+    casebook.turned_away = casebook.turned_away + 1
   end
 
   hosp:updatePercentages()

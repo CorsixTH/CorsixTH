@@ -103,14 +103,17 @@ function Hospital:Hospital(world)
   end
   local diseases = TheApp.diseases
   local expertise = self.world.map.level_config.expertise
+  local gbv = self.world.map.level_config.gbv
   for i, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95
     local drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil
+    local drug_cost = 100
     if expertise then
       disease_available = expertise[disease.expertise_id].Known == 1 and true or false
       -- This means that the config is available
-      drug_effectiveness = self.world.map.level_config.gbv.StartRating
+      drug_effectiveness = gbv.StartRating
+      drug_cost = gbv.StartCost
     end
     if world.available_diseases[disease.id] or disease.pseudo then
       local info = {
@@ -126,6 +129,7 @@ function Hospital:Hospital(world)
         cure_effectiveness = drug and drug_effectiveness or 100,
         -- This will only work as long as there's only one treatment room.
         drug = drug,
+        drug_cost = drug and drug_cost,
         psychiatrist = disease.treatment_rooms and disease.treatment_rooms[1] == "psych" or nil,
         machine = disease.requires_machine,
         -- This assumes we always have the ward then the operating_theatre as treatment rooms.
@@ -525,10 +529,10 @@ function Hospital:resolveEmergency()
   }
   self.world.ui.bottom_panel:queueMessage("report", message)
   if earned > 0 then -- Reputation increased
-    self:changeReputation("emergency_success")
+    self:changeReputation("emergency_success", self.emergency.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
   else -- Too few rescued, reputation hit
-    self:changeReputation("emergency_failed")
+    self:changeReputation("emergency_failed", self.emergency.disease)
   end
 end
 
@@ -681,17 +685,27 @@ function Hospital:removePatient(patient)
 end
 
 -- TODO: This should depend on difficulty and level
- local reputation_changes = {
+local reputation_changes = {
   ["cured"]  =  1, -- a patient was successfully treated
   ["death"]  = -4, -- a patient died due to bad treatment or waiting too long
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
   ["emergency_success"] = 15,
   ["emergency_failed"] = -20,
-  ["autopsy_discovered"] = -70,
 }
 
-function Hospital:changeReputation(reason)
-  self.reputation = self.reputation + reputation_changes[reason]
+function Hospital:changeReputation(reason, disease)
+  local amount
+  if reason == "autopsy_discovered" then
+    local config = self.world.map.level_config.gbv.AutopsyRepHitPercent
+    amount = config and -self.reputation*config/100 or -70
+  else
+    amount = reputation_changes[reason]
+  end
+  self.reputation = self.reputation + amount
+  if disease then
+    local casebook = self.disease_casebook[disease.id]
+    casebook.reputation = casebook.reputation + amount
+  end
   if self.reputation < self.reputation_min then
     self.reputation = self.reputation_min
   elseif self.reputation > self.reputation_max then

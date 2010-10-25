@@ -599,6 +599,18 @@ function World:onTick()
         self:onEndMonth()
         self.day = 1
         self.month = self.month + 1
+        -- A temporary solution to make players more aware of the need for radiators.
+        if self.month == 6 and self.year == 1 then
+          local warmth = 0
+          local no = 0
+          for _, staff in ipairs(self.hospitals[1].staff) do
+            warmth = warmth + staff.attributes["warmth"]
+            no = no + 1
+          end
+          if warmth / no < 0.5 then
+            self.ui.adviser:say(_S.adviser.information.initial_general_advice.place_radiators)
+          end
+        end
         if self.month > 12 then
           self.month = 12
           if self.year == 1 then

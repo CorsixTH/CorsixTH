@@ -136,11 +136,27 @@ function UIResearch:draw(canvas, x, y)
 
   local ytop = 28
   local spacing = 41
+  local config = self.hospital.world.map.level_config
+  local research = self.hospital.research
   
   for i, category in ipairs(research_categories) do
     local y = y + ytop + i * spacing
     lbl_font:draw(canvas, _S.research.categories[category], x + 170, y)
-    num_font:draw(canvas, self.hospital.research[category].frac, x + 270, y, 300, 0)
+    num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
+    -- Display research progress  - currently for rooms only.
+    if (i == 1 or i == 2) and config and research[category].current then
+      local ly = y + 26
+      local lx = x + 172
+      local required = config.expertise[research[category].current.level_config_research].RschReqd
+      local extra_points = self.hospital.research_rooms[research[category].current]
+      local available = research[category].points + extra_points
+      local length = 290*available/required
+      local dx = 0
+      while dx + 10 < length do
+        self.panel_sprites:draw(canvas, 3, lx + dx, ly)
+        dx = dx + 10
+      end
+    end
   end
   
   num_font:draw(canvas, self.hospital.research.global, x + 270, y + 288, 300, 0)
