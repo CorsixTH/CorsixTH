@@ -48,6 +48,7 @@ menu_options_game_speed.pause = "  PAUSE  "
 menu_file.restart = "  RESTART  "
 
 menu_debug = {
+  jump_to_level               = "  JUMP TO LEVEL  ",
   transparent_walls           = "  TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",

@@ -63,6 +63,7 @@ menu_options_game_speed.pause        = "  PAUSE"
 menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
+  jump_to_level             = "  SPRINGE ZU LEVEL  ",
   transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE",
   limit_camera              = "  KAMERA BEGRENZEN",
   disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN",
@@ -94,6 +95,7 @@ adviser.room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nic
 
 dynamic_info.patient.actions.no_gp_available = "Wartet darauf, dass Sie eine Allgemeinmedizin bauen"
 dynamic_info.staff.actions.heading_for = "Geht zu: %s"
+dynamic_info.staff.actions.fired = "Gefeuert"
 
 fax = {
   welcome = {
@@ -209,6 +211,22 @@ tooltip.options_window = {
   back = utf8 "Das Optionsfenster schließen",
 }
 
+new_game_window = {
+  easy = "AIP (Einfach)",
+  medium = "Arzt (Mittel)",
+  hard = "Berater (Schwer)",
+  tutorial = utf8 "Einführung",
+  cancel = "Abbrechen",
+}
+
+tooltip.new_game_window = {
+  easy = utf8 "Die richtige Option für Simulations-Neulinge",
+  medium = utf8 "Der Mittelweg - für diejenigen, die sich nicht entscheiden können",
+  hard = utf8 "Wer diese Art von Spielen schon gewöhnt ist und eine Herausforderung will, sollte hier klicken",
+  tutorial = utf8 "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
+  cancel = "Oh, eigentlich wollte ich gar kein neues Spiel starten!",
+}
+
 errors = {
   dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
   save_prefix = "Fehler beim Speichern: ",
@@ -218,7 +236,8 @@ errors = {
 }
 
 confirmation = {
-  needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?"
+  needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
+  abort_edit_room = "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
 }
 
 information = {

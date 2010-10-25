@@ -504,17 +504,6 @@ function UIMenu:appendMenu(text, menu)
 end
 
 function UIMenuBar:makeMenu(app)
-  local levels_menu = UIMenu()
-  for L = 1, 12 do
-    levels_menu:appendItem(("  L%i  "):format(L), function()
-      local status, err = pcall(app.loadLevel, app, L)
-      if not status then
-        err = _S.errors.load_prefix .. err
-        print(err)
-        self.ui:addWindow(UIInformation(self.ui, {err}))
-      end
-    end)
-  end
   local function restart()
     local level = self.ui.app.map.level_number
     local difficulty = self.ui.app.map.difficulty
@@ -535,9 +524,6 @@ function UIMenuBar:makeMenu(app)
     end
   end
   local menu = UIMenu()
-  if self.ui.app.config.debug then
-    menu:appendMenu("  ".. _S.main_menu.new_game:upper() .."  ", levels_menu)
-  end
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
     :appendItem(_S.menu_file.restart, restart)
@@ -676,8 +662,20 @@ function UIMenuBar:makeMenu(app)
       self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
     end
   end
+  local levels_menu = UIMenu()
+  for L = 1, 12 do
+    levels_menu:appendItem(("  L%i  "):format(L), function()
+      local status, err = pcall(app.loadLevel, app, L)
+      if not status then
+        err = _S.errors.load_prefix .. err
+        print(err)
+        self.ui:addWindow(UIInformation(self.ui, {err}))
+      end
+    end)
+  end
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
+      :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
       :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls, nil, function() return self.ui.transparent_walls end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)

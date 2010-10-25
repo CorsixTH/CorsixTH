@@ -795,7 +795,7 @@ diseases = {
     name     = utf8 "Lös tunge", 
     cause     = utf8 "Årsag - Kronisk overivrighed idiskusioner om sæbeopera.", 
     symptoms   = utf8 "Symptomer - Tungen hæver sig til det femdobbelte.", 
-    cure     = itf8 "Behandling - Tungen blir placeret i en tungeskære. Hævelsen fjernes deretter hurtig, effektivt og smertefuldt.",
+    cure     = utf8 "Behandling - Tungen blir placeret i en tungeskære. Hævelsen fjernes deretter hurtig, effektivt og smertefuldt.",
   },
   alien_dna              = { 
     name     = utf8 "Rumvæsen DNA", 
