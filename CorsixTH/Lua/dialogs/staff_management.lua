@@ -202,6 +202,25 @@ function UIStaffManagement:setCategory(name)
   self:updateTooltips()
 end
 
+-- Function to select given list index in the current category.
+-- Includes jumping to correct page.
+function UIStaffManagement:selectIndex(idx)
+  self.page = math.floor((idx - 1) / 10) + 1
+  self.selected_staff = idx
+end
+
+-- Function to select a given staff member.
+-- Includes switching to correct category and page.
+function UIStaffManagement:selectStaff(staff)
+  self:setCategory(staff.humanoid_class == "Surgeon" and "Doctor" or staff.humanoid_class)
+  for i, s in ipairs(self.staff_members[self.category]) do
+    if s == staff then
+      self:selectIndex(i)
+      break
+    end
+  end
+end
+
 function UIStaffManagement:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
@@ -394,6 +413,9 @@ function UIStaffManagement:onMouseDown(code, x, y)
       -- Hit in the view of the staff
       local ui = self.ui
       ui:scrollMapTo(self:getStaffPosition())
+      ui:addWindow(UIStaff(ui, self.staff_members[self.category][self.selected_staff]))
+      self:close()
+      return false
     end
   end
   return UIFullscreen.onMouseDown(self, code, x, y)

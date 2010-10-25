@@ -25,13 +25,20 @@ Inherit("original_strings", 0)
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
--- TODO: tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = "Show next page"
+tooltip.staff_list.prev_person = "Show previous page"
 
 -- The originals of these two contain one space too much
 fax.emergency.cure_not_possible_build = "You will need to build a %s"
 fax.emergency.cure_not_possible_build_and_employ = "You will need to build a %s and employ a %s"
 fax.emergency.num_disease = "There are %d people with %s and they require immediate attention."
 adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = "This person's face - click to open management screen"
+tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
 -- new strings
 object.litter = "Litter"

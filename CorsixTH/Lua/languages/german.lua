@@ -42,10 +42,16 @@ tooltip.staff_list.detail = "Aufmerksamkeit" -- was translated as an imperative
 tooltip.staff_list.surgeon_train = "Wurde zu %d%% zum Chirurgen ausgebildet." -- the three strings made no sense grammatically
 tooltip.staff_list.psychiatrist_train = "Wurde zu %d%% zum Psychiater ausgebildet."
 tooltip.staff_list.researcher_train = "Wurde zu %d%% zum Forscher ausgebildet."
--- TODO: tooltip.staff_list.next_person, prev_person is rather next/prev page (also in english)
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in english)
+tooltip.staff_list.next_person = utf8 "Zur nächsten Seite blättern"
+tooltip.staff_list.prev_person = utf8 "Zur vorherigen Seite blättern"
 
 tooltip.queue_window.inc_queue_size = utf8 "Warteschlange vergrößern"
 tooltip.queue_window.dec_queue_size = "Warteschlange verkleinern"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = utf8 "Gesicht dieser Person - klicken, um das Personal-Management zu öffnen"
+tooltip.staff_window.center_view = utf8 "Linksklick um zur Person zu springen, Rechtsklick um durch das Personal zu blättern"
 
 -- new strings
 
@@ -237,7 +243,7 @@ errors = {
 
 confirmation = {
   needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
-  abort_edit_room = "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
+  abort_edit_room = utf8 "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
 }
 
 information = {

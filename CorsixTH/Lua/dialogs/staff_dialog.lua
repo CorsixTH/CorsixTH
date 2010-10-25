@@ -58,7 +58,7 @@ function UIStaff:UIStaff(ui, staff)
   self:addPanel(299,  104,  50) -- Happiness
   self:addPanel(300,  105,  82) -- Tiredness
   self:addPanel(301,   15, 114) -- Skills/Abilities
-  self:addColourPanel(35, 51, 71, 81, 208, 252, 252):setTooltip(_S.tooltip.staff_window.face) -- Portrait background
+  self:addColourPanel(35, 51, 71, 81, 208, 252, 252):makeButton(0, 0, 71, 81, nil, self.openStaffManagement):setTooltip(_S.tooltip.staff_window.face) -- Portrait background
   
   if profile.humanoid_class == "Handyman" then
     self:addPanel(311,  15, 131) -- Tasks top
@@ -223,6 +223,11 @@ function UIStaff:draw(canvas, x_, y_)
   profile:drawFace(canvas, x + 38, y + 54, self.face_parts) -- Portrait
 end
 
+-- Helper function to faciliate humanoid_class comparison wrt. Surgeons
+local function surg_compat(class)
+  return class == "Surgeon" and "Doctor" or class
+end
+
 function UIStaff:onMouseUp(button, x, y)
   self.mouse_up_x = self.x + x
   self.mouse_up_y = self.y + y
@@ -235,12 +240,33 @@ function UIStaff:onMouseUp(button, x, y)
     circle_center_y = 248
   end
   -- Test for hit within the view circle
-  if button == "left" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
+  if is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
     local ui = self.ui
-    ui:scrollMapTo(self:getStaffPosition())
-    repaint = true
-  elseif button == "right" then
-    --TODO: Right clicking on staff view should go to the next staff
+    if button == "left" then
+      -- Left click centers on staff member
+      ui:scrollMapTo(self:getStaffPosition())
+      repaint = true
+    elseif button == "right" then
+      -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
+      local staff_index = nil
+      for i, staff in ipairs(ui.hospital.staff) do
+        if staff_index and surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+          ui:addWindow(UIStaff(ui, staff))
+          return false
+        end
+        if staff == self.staff then
+          staff_index = i
+        end
+      end
+      -- Try again from beginning of list until staff_index
+      for i = 1, staff_index - 1 do
+        local staff = ui.hospital.staff[i]
+        if surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+          ui:addWindow(UIStaff(ui, staff))
+          return false
+        end
+      end
+    end
   end
   return repaint
 end
@@ -315,4 +341,11 @@ function UIStaff:doMoreRepairing()
       self.staff.attributes["repairing"] = 1.0
     end
   end
+end
+
+function UIStaff:openStaffManagement()
+  local dlg = UIStaffManagement(self.ui)
+  dlg:selectStaff(self.staff)
+  self.ui:addWindow(dlg)
+  self:close()
 end
