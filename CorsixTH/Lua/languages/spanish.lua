@@ -65,6 +65,7 @@ menu_options_game_speed.pause = "  PAUSA  "
 menu_file.restart = "  REINICIAR  "
 
 menu_debug = {
+  jump_to_level               = "  CAMBIAR DE NIVEL  ",
   transparent_walls           = "  PAREDES TRANSPARENTES  ",
   limit_camera                = utf8 "  LIMITAR CÁMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
