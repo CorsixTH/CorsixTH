@@ -66,10 +66,14 @@ function values(root_table, wildcard)
   return f
 end
 
+-- Used to prevent infinite loops
+local pt_reflist = {}
+
 -- Helper function to print the contents of a table. Child tables are printed recursively.
 -- Call without specifying level, only obj and (if wished) max_level.
 function print_table(obj, max_level, level)
   assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
+  pt_reflist[#pt_reflist + 1] = obj
   level = level or 0
   local spacer = ""
   for i = 1, level do
@@ -82,9 +86,21 @@ function print_table(obj, max_level, level)
       v = k
     end
     if type(v) == "table" and (not max_level or max_level > level) then
-      print_table(v, max_level, level + 1)
+      -- check for reference loops
+      local found_ref = false
+      for _, ref in ipairs(pt_reflist) do
+        if ref == v then
+          found_ref = true
+        end
+      end
+      if found_ref then
+        print(spacer .. " " .. "<reference loop>")
+      else
+        print_table(v, max_level, level + 1)
+      end
     end
   end
+  pt_reflist[#pt_reflist] = nil
 end
 
 -- Variation on loadfile() which allows for the loaded file to have global
