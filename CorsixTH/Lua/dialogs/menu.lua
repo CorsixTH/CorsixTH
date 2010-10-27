@@ -702,6 +702,7 @@ function UIMenuBar:makeMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay(131107, 2, 0, 0, false), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() dofile "sprite_viewer" end)
+      :appendItem(_S.menu_debug.lua_console, function() self.ui:addWindow(UILuaConsole(self.ui)) end)
     )
   end
 end

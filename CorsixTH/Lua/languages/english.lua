@@ -69,6 +69,7 @@ menu_debug = {
   dump_gamelog                = "  DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
+  lua_console                 = "  LUA CONSOLE  ",
 }
 menu_debug_overlay = {
   none                        = "  NONE  ",
@@ -218,6 +219,17 @@ tooltip.new_game_window = {
   hard = "If you are used to this kind of game and want more of a challenge, pick this option",
   tutorial = "If you want some help to get started once in the game, tick this box",
   cancel = "Oh, I didn't really mean to start a new game!",
+}
+
+lua_console = {
+  execute_code = "Execute",
+  close = "Close",
+}
+
+tooltip.lua_console = {
+  textbox = "Enter Lua code to run here",
+  execute_code = "Run the code you have entered",
+  close = "Close the console",
 }
 
 errors = {

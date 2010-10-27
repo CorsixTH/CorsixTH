@@ -83,6 +83,7 @@ menu_debug = {
   dump_gamelog              = "  SPIELPROTOKOLL ABSPEICHERN",
   map_overlay               = "  KARTEN-OVERLAY",
   sprite_viewer             = "  SPRITE-BETRACHTER",
+  lua_console               = "  LUA-KONSOLE  ",
 }
 menu_debug_overlay = {
   none                      = "  KEIN",
@@ -231,6 +232,17 @@ tooltip.new_game_window = {
   hard = utf8 "Wer diese Art von Spielen schon gewöhnt ist und eine Herausforderung will, sollte hier klicken",
   tutorial = utf8 "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
   cancel = "Oh, eigentlich wollte ich gar kein neues Spiel starten!",
+}
+
+lua_console = {
+  execute_code = utf8 "Ausführen",
+  close = utf8 "Schließen",
+}
+
+tooltip.lua_console = {
+  textbox = utf8 "Hier Lua-Code zum Ausführen eingeben",
+  execute_code = utf8 "Den eingegebenen Code ausführen",
+  close = utf8 "Die Konsole schließen",
 }
 
 errors = {

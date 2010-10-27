@@ -467,6 +467,30 @@ function UI:_translateKeyCode(code, rawchar)
   return self.key_remaps[key] or key
 end
 
+--! Table with chars and corresponding chars when shift is pressed (qwerty keyboard layout)
+local workaround_shift = {
+  ["1"] = "!",
+  ["2"] = "@",
+  ["3"] = "#",
+  ["4"] = "$",
+  ["5"] = "%",
+  ["6"] = "^",
+  ["7"] = "&",
+  ["8"] = "*",
+  ["9"] = "(",
+  ["0"] = ")",
+  ["-"] = "_",
+  ["="] = "+",
+  ["["] = "{",
+  ["]"] = "}",
+  [";"] = ":",
+  ["'"] = "\"",
+  ["\\"] = "|",
+  [","] = "<",
+  ["."] = ">",
+  ["/"] = "?",
+}
+
 --! Called when the user presses a key on the keyboard
 --!param code (integer) The hardware key-code for the pressed key. Note that
 -- these codes only coincide with ASCII for certain keyboard layouts.
@@ -480,7 +504,11 @@ function UI:onKeyDown(code, rawchar)
     if code < 128 then
       rawchar = string.char(code)
       if self.buttons_down.shift then
-        rawchar = rawchar:upper()
+        if 97 <= code and code <= 122 then -- letters
+          rawchar = rawchar:upper()
+        else
+          rawchar = workaround_shift[rawchar] or rawchar
+        end
       end
     end
   end

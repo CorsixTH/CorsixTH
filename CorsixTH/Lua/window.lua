@@ -187,13 +187,13 @@ function Panel:setDynamicTooltip(callback, x, y)
   return self
 end
 
---! Specify a label to be drawn on top of the label.
+--! Specify a label to be drawn on top of the panel.
 -- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
 --!param label (string) The text to be drawn on top of the label.
 --!param font (font) [optional] The font to use. Default is Font01V in QData.
 function Panel:setLabel(label, font)
   self.label = label or ""
-  self.label_font = font or TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = self.label_font or font or TheApp.gfx:loadFont("QData", "Font01V")
   return self
 end
 
@@ -234,7 +234,14 @@ end
 local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
   if panel.label then
-    panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
+    if type(panel.label) == "table" then -- multiline label
+      local last_y = y + panel.y + 1
+      for _, line in ipairs(panel.label) do
+        last_y = panel.label_font:drawWrapped(canvas, line, x + panel.x + 2, last_y, panel.w - 4)
+      end
+    else
+      panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
+    end
   end
 end
 
@@ -275,7 +282,14 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
     canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
   end
   if panel.label then
-    panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
+    if type(panel.label) == "table" then -- multiline label
+      local last_y = y + panel.y + 1
+      for _, line in ipairs(panel.label) do
+        last_y = panel.label_font:drawWrapped(canvas, line, x + panel.x + 2, last_y, panel.w - 4)
+      end
+    else
+      panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
+    end
   end
 end
 
@@ -684,54 +698,64 @@ function Textbox:input(char, rawchar, code)
   if not self.active then
     return false
   end
-  if not self.char_limit or string.len(self.text) < self.char_limit then
+  local line = type(self.text) == "table" and self.text[#self.text] or self.text -- TODO continue
+  local handled = false
+  if not self.char_limit or string.len(line) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
       if #rawchar == 1 and (("a" <= rawchar and rawchar <= "z")
       or ("A" <= rawchar and rawchar <= "Z")) then
-        self.text = self.text .. rawchar
-        self.panel:setLabel(self.text)
-        return true
+        line = line .. rawchar
+        handled = true
       end
     end
     -- Numbers
-    if self.allowed_input.numbers then
+    if not handled and self.allowed_input.numbers then
       if 256 <= code and code <= 265 then
         -- Numeric keypad
         rawchar = string.char(string.byte"0" + code - 256)
       end
       if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
-        self.text = self.text .. rawchar
-        self.panel:setLabel(self.text)
-        return true
+        line = line .. rawchar
+        handled = true
       end
     end
     -- Space and hyphen
-    if self.allowed_input.misc then
+    if not handled and self.allowed_input.misc then
       if rawchar == " " or rawchar == "-" then
-        self.text = self.text .. rawchar
-        self.panel:setLabel(self.text)
-        return true
+        line = line .. rawchar
+        handled = true
       end
     end
   end
   -- Backspace (delete last char)
-  if char == "backspace" then
-    self.text = self.text:sub(1, -2)
-    self.panel:setLabel(self.text)
-    return true
+  if not handled and char == "backspace" then
+    if type(self.text) == "table" and line == "" then
+      if #self.text > 1 then
+        self.text[#self.text] = nil
+      end
+      return true
+    else
+      line = line:sub(1, -2)
+      handled = true
+    end
   end
   -- Enter (confirm)
-  if char == "enter" then
-    self.button:toggle()
-    self.active = false
-    if self.confirm_callback then
-      self.confirm_callback()
+  if not handled and char == "enter" then
+    if type(self.text) == "table" then
+      self.text[#self.text + 1] = ""
+      return true
+    else
+      self.button:toggle()
+      self.active = false
+      if self.confirm_callback then
+        self.confirm_callback()
+      end
+      return true
     end
-    return true
   end
   -- Escape (abort)
-  if char == "esc" then
+  if not handled and char == "esc" then
     self.button:toggle()
     self.active = false
     if self.abort_callback then
@@ -739,7 +763,22 @@ function Textbox:input(char, rawchar, code)
     end
     return true
   end
-  return false
+  if not self.char_limit or string.len(self.text) < self.char_limit then
+    -- Experimental "all" category
+    if not handled and self.allowed_input.all
+       and not (char == "shift" or char == "ctrl" or char == "alt")
+       and not (282 <= code and code <= 293) then -- F-Keys
+      line = line .. rawchar
+      handled = true
+    end
+  end
+  if type(self.text) == "table" then
+    self.text[#self.text] = line
+  else
+    self.text = line
+  end
+  self.panel:setLabel(self.text)
+  return handled
 end
 
 --[[ Limit input handled by textbox to specific classes of characters
@@ -748,6 +787,7 @@ end
 !  "alpha": Letters (lower and uppercase)
 !  "numbers": 0-9
 !  "misc": other characters, currently space and hyphen
+!  "all": experimental category that allows, theoretically, all input
 ]]
 function Textbox:allowedInput(types)
   if type(types) ~= "table" then types = {types} end
@@ -763,6 +803,16 @@ end
 ]]
 function Textbox:characterLimit(limit)
   self.char_limit = limit
+  return self
+end
+
+--[[ Set the text of the textbox to a given string or list of strings.
+! Use empty string to make textbox a single line textbox (default).
+! Use table with empty string {""} to make it a multiline textbox.
+!param text (string or table) The string or list of strings the textbox should contain.
+]]
+function Textbox:setText(text)
+  self.text = text
   return self
 end
 
