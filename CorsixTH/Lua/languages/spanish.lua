@@ -79,6 +79,7 @@ menu_debug = {
   dump_gamelog                = "  VOLCAR REGISTRO DEL JUEGO",
   map_overlay                 = "  SOBREPONER MAPA  ",
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
+  lua_console                 = "  CONSOLA LUA  ",
 }
 menu_debug_overlay = {
   none                        = utf8 "  NINGUNO/A  ",
@@ -228,6 +229,17 @@ tooltip.new_game_window = {
   hard = utf8 "Si ya estÃ¡s acostumbrado a este tipo de juegos y quieres un buen desafÃo, aquÃ lo tendrÃ¡s.",
   tutorial = utf8 "Â¿Necesitas ayuda para entender cÃ³mo funciona el juego? Selecciona esta opciÃ³n.",
   cancel = utf8 "Â¡PerdÃ³n, yo no querÃa empezar una nueva partida!",
+}
+
+lua_console = {
+  execute_code = "Ejecutar",
+  close = "Cerrar",
+}
+
+tooltip.lua_console = {
+  textbox = "Introduce aquí el código Lua que quieres ejecutar",
+  execute_code = "Ejecutar el código que has introducido",
+  close = "Cerrar la consola",
 }
 
 errors = {
