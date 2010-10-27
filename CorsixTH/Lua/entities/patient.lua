@@ -184,10 +184,12 @@ function Patient:goHome(cured)
   local hosp = self.hospital
   if not cured then
     self:setMood("exit", "activate")
-    hosp:changeReputation("kicked", self.disease)
-    self.hospital.not_cured = hosp.not_cured + 1
-    local casebook = self.hospital.disease_casebook[self.disease.id]
-    casebook.turned_away = casebook.turned_away + 1
+    if not self.is_debug then
+      hosp:changeReputation("kicked", self.disease)
+      self.hospital.not_cured = hosp.not_cured + 1
+      local casebook = self.hospital.disease_casebook[self.disease.id]
+      casebook.turned_away = casebook.turned_away + 1
+    end
   end
 
   hosp:updatePercentages()
