@@ -673,32 +673,47 @@ end
 
 local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
 
-function Textbox:clicked()
-  self.active = self.button.toggled
-  if self.active then
+function Textbox:setActive(active)
+  local ui = self.panel.window.ui
+  if active then
     -- Unselect any other textbox
     for _, textbox in ipairs(self.panel.window.textboxes) do
       if textbox ~= self and textbox.active then
-        textbox.button:toggle()
-        textbox:clicked()
+        textbox:setActive(false)
       end
     end
     -- Update text
     self.panel:setLabel(self.text)
+    -- Enable Keyboard repeat
+    ui:enableKeyboardRepeat()
   else
+    -- Run confirm or abort callback
     if self.text == "" and self.abort_callback then
       self.abort_callback()
     elseif self.text ~= "" and self.confirm_callback then
       self.confirm_callback()
     end
+    -- Disable Keyboard repeat
+    ui:disableKeyboardRepeat()
   end
+  
+  self.active = active
+  -- Update button if necessary
+  if self.button.toggled ~= active then
+    self.button:toggle()
+  end
+end
+
+function Textbox:clicked()
+  self:setActive(self.button.toggled)
 end
 
 function Textbox:input(char, rawchar, code)
   if not self.active then
     return false
   end
-  local line = type(self.text) == "table" and self.text[#self.text] or self.text -- TODO continue
+  local ui = self.panel.window.ui
+  local line = type(self.text) == "table" and self.text[#self.text] or self.text
   local handled = false
   if not self.char_limit or string.len(line) < self.char_limit then
     -- Upper- and lowercase letters
@@ -740,7 +755,7 @@ function Textbox:input(char, rawchar, code)
       handled = true
     end
   end
-  -- Enter (confirm)
+  -- Enter (newline or confirm)
   if not handled and char == "enter" then
     if type(self.text) == "table" then
       self.text[#self.text + 1] = ""
@@ -751,6 +766,7 @@ function Textbox:input(char, rawchar, code)
       if self.confirm_callback then
         self.confirm_callback()
       end
+      ui:disableKeyboardRepeat()
       return true
     end
   end
@@ -761,6 +777,7 @@ function Textbox:input(char, rawchar, code)
     if self.abort_callback then
       self.abort_callback()
     end
+    ui:disableKeyboardRepeat()
     return true
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then

@@ -404,6 +404,10 @@ function UI:unregisterTextBox(box)
       break
     end
   end
+  -- If the textbox was active at time of unregistering, disable keyboard repeat
+  if box.active then
+    self:disableKeyboardRepeat()
+  end
 end
 
 function UI:changeResolution(width, height)

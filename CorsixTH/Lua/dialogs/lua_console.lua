@@ -64,6 +64,8 @@ function UILuaConsole:UILuaConsole(ui)
     :setLabel("", app.gfx:loadBuiltinFont()):setTooltip(_S.tooltip.lua_console.textbox)
     :makeTextbox():allowedInput("all"):setText({""})
   
+  self.textbox:setActive(true) -- activated by default
+  
   -- "Execute" button
   self:addBevelPanel(20, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.execute_code)
     :makeButton(0, 0, 130, 40, nil, self.buttonExecute):setTooltip(_S.tooltip.lua_console.execute_code)
