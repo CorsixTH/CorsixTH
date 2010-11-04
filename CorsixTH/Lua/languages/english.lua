@@ -44,6 +44,10 @@ tooltip.staff_window.center_view = "Left click to zoom to staff, right click to 
 object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
+tooltip.fax.close = "Close this window without deleting the message"
+tooltip.message.button = "Left click to open message"
+tooltip.message.button_dismiss = "Left click to open message, right click to dismiss it"
+
 menu_options = {
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",

@@ -58,6 +58,10 @@ tooltip.staff_window.center_view = utf8 "Linksklick um zur Person zu springen, R
 object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
+tooltip.fax.close = utf8 "Das Fenster schließen, ohne die Nachricht zu löschen"
+tooltip.message.button = utf8 "Linksklick um die Nachricht zu öffnen"
+tooltip.message.button_dismiss = utf8 "Linksklick um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
+
 menu_options = {
   lock_windows   = "  FENSTER FESTHALTEN  ",
   edge_scrolling = "  AM BILDSCHIRMRAND SCROLLEN  ",
