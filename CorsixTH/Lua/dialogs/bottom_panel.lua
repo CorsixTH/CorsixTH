@@ -205,11 +205,18 @@ end
 --! Queue a fax notification message to appear.
 --! The arguments specify a message, which is added to a FIFO queue, and will
 -- appear on screen once there is space.
-function UIBottomPanel:queueMessage(type, message, owner)
+--!param type (string) The type of message, can be: "emergency", "epidemy", "personnality", "information", "disease", "report" or "strike"
+--!param message (table) A list of texts to display, including a "choices" table with choices. See below for structure.
+--!param owner (humanoid or nil) Some messages are related to one staff or patient. Otherwise this is nil.
+--!param timeout (number or nil) If given, the message will expire after that many world ticks and be removed.
+--!param default_choice (number or nil) If given, the choice with this number will be executed on expiration of the message.
+function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
   self.message_queue[#self.message_queue + 1] = {
     type = type,
     message = message,
     owner = owner,
+    timeout = timeout,
+    default_choice = default_choice,
   }
 end
 
@@ -234,7 +241,7 @@ end
 -- Opens the first available message in the list of message_windows.
 function UIBottomPanel:openFirstMessage()
   if #self.message_windows > 0 then
-    self.message_windows[1]:openMessage(false)
+    self.message_windows[1]:openMessage()
   end
 end
 
@@ -243,7 +250,7 @@ end
 function UIBottomPanel:removeMessage(owner)
   for _, window in ipairs(self.message_windows) do
     if window.owner == owner then
-      window:openMessage(true)
+      window:removeMessage()
       return true
     end
   end
@@ -268,7 +275,7 @@ function UIBottomPanel:createMessageWindow()
   local message_windows = self.message_windows
   local message_info = self.message_queue[1]
   local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
-    onClose, message_info.type, message_info.message, message_info.owner)
+    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
   self.factory_direction = 1

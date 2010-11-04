@@ -22,7 +22,7 @@ dofile "dialogs/fullscreen"
 
 class "UIFax" (UIFullscreen)
 
-function UIFax:UIFax(ui, message, owner)
+function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   self.background = gfx:loadRaw("Fax01V", 640, 480)
@@ -30,9 +30,9 @@ function UIFax:UIFax(ui, message, owner)
   palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
   self.panel_sprites = gfx:loadSpriteTable("QData", "Fax02V", true, palette)
   self.fax_font = gfx:loadFont("QData", "Font51V", false, palette)
-  ui:playSound "fax_in.wav"
-  self.message = message or {}
-  self.owner = owner
+  self.icon = icon
+  self.message = icon.message or {}
+  self.owner = icon.owner
   
   self.code = ""
   
@@ -55,16 +55,8 @@ function UIFax:UIFax(ui, message, owner)
     end
   end
   
-  -- Some faxes can be dismissed by pressing the close button, while others
-  -- need to be dismissed by making a choice. For now, just display the close
-  -- button.
-  if choices then
-    -- Blanker over close button
-    self:addPanel(20, 596, 435)
-  else
-    -- Close button
-    self:addPanel(0, 598, 440):makeButton(0, 0, 26, 26, 16, self.close)
-  end
+  -- Close button
+  self:addPanel(0, 598, 440):makeButton(0, 0, 26, 26, 16, self.close):setTooltip(_S.tooltip.fax.close)
   
   self:addPanel(0, 471, 349):makeButton(0, 0, 87, 20, 14, self.cancel) -- Cancel code button
   self:addPanel(0, 474, 372):makeButton(0, 0, 91, 27, 15, self.validate) -- Validate code button
@@ -173,6 +165,7 @@ function UIFax:choice(choice)
   elseif choice == "return_to_main_menu" then
     self.ui.app:quit()
   end
+  self.icon:removeMessage()
   self:close()
 end
 
@@ -278,4 +271,10 @@ end
 
 function UIFax:appendNumber(number)
   self.code = self.code .. number
+end
+
+function UIFax:close()
+  self.icon.fax = nil
+  self.icon:adjustToggle()
+  UIFullscreen.close(self)
 end

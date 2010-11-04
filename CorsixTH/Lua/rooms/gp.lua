@@ -116,9 +116,12 @@ function GPRoom:dealtWithPatient(patient)
           {text = _S.fax.disease_discovered.discovered_name:format(patient.disease.name)},
           {text = patient.disease.cause, offset = 12},
           {text = patient.disease.symptoms, offset = 12},
-          {text = patient.disease.cure, offset = 12}
+          {text = patient.disease.cure, offset = 12},
+          choices = {
+            {text = _S.fax.disease_discovered.close_text, choice = "close"},
+          },
         }
-        self.world.ui.bottom_panel:queueMessage("disease", message)
+        self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
         self.hospital.disease_casebook[patient.disease.id].discovered = true
         self.hospital.discovered_diseases[#self.hospital.discovered_diseases + 1] = patient.disease.id
         -- If the drug casebook is open, update it.

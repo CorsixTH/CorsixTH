@@ -501,7 +501,7 @@ function Hospital:createEmergency()
         {text = _S.fax.emergency.choices.refuse, choice = "refuse"},
       },
     }
-    self.world.ui.bottom_panel:queueMessage("emergency", message)
+    self.world.ui.bottom_panel:queueMessage("emergency", message, nil, 24*20, 2) -- automatically refuse after 20 days
     created_one = true
   end
   return created_one
@@ -524,10 +524,10 @@ function Hospital:resolveEmergency()
       :format(rescued_patients, self.emergency.victims)},
     {text = _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
     choices = {
-      {text = _S.fax.emergency_result.close_text, choice = "close", offset = 50},
+      {text = _S.fax.emergency_result.close_text, choice = "close"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("report", message)
+  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
   if earned > 0 then -- Reputation increased
     self:changeReputation("emergency_success", self.emergency.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)

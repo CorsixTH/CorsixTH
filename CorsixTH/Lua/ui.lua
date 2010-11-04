@@ -226,18 +226,6 @@ function UI:debugMakeAdviserTalk()
   self.adviser:say(_S(54, id))
 end
 
-function UI:showBeta1Info()
-  local message = {
-    {             text = _S.fax.welcome.beta1[1]},
-    {offset =  8, text = _S.fax.welcome.beta1[2]},
-    {offset =  8, text = _S.fax.welcome.beta1[3]},
-    {offset =  8, text = _S.fax.welcome.beta1[4]},
-    {offset = 16, text = _S.fax.welcome.beta1[5]},
-    {offset =  8, text = _S.fax.welcome.beta1[6]},
-  }
-  self.bottom_panel:queueMessage("information", message)
-end
-
 function UI:setDefaultCursor(cursor)
   if cursor == nil then
     cursor = "default"

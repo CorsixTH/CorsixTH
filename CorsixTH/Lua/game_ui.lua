@@ -185,8 +185,14 @@ function GameUI:onKeyDown(code, rawchar)
   if TheApp.config.debug then -- Debug commands
     if key == "f8" then -- Open an alert window
       -- Don't use "strike" type here, as these open a different window and must have an owner
+      local message = {
+        {text = "debug fax"}, -- no translation needed imo
+        choices = {
+            {text = "close debug fax", choice = "close"},
+        },
+      }
       local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
-      self.bottom_panel:queueMessage(types[math.random(1, #types)])
+      self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
     elseif key == "f9" then -- Make debug patient
       self:addWindow(UIMakeDebugPatient(self))
     

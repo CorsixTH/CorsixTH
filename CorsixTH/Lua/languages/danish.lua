@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 Language("Dansk", "Danish", "da", "dk")
+Inherit("english")
 Inherit("original_strings", 0)
 
 

@@ -71,7 +71,7 @@ LangString files_left         ${LANG_GERMAN} "Einige Dateien konnten nicht entfe
 LangString options_title      ${LANG_GERMAN} "Zusätzliche Einstellungen" 
 LangString options_subtitle   ${LANG_GERMAN} "Verzeichnis des Originalspiels angeben."
 LangString save_in_appdata    ${LANG_GERMAN} "Spieldaten und Einstellungen in %APPDATA% speichern (empfohlen)"
-LangString remove_saves       ${LANG_GERMAN} "Would you like to keep your saved games?"
+LangString remove_saves       ${LANG_GERMAN} "Möchten Sie gespeicherte Spielstände behalten?"
 
 LangString install_language   ${LANG_ITALIAN} "Italian"
 LangString original_text      ${LANG_ITALIAN} "Per poter installare il gioco è necessario aver installato Theme Hospital Originale. Specifica qui la posizione della cartella."

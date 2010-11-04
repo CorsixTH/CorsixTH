@@ -21,7 +21,7 @@ SOFTWARE. --]]
 --! Small fax notification window which sits on the bottom bar.
 class "UIMessage" (Window)
 
-function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
+function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice)
   self:Window()
   
   local app = ui.app
@@ -30,16 +30,18 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   self.esc_closes = false
   self.on_top = false
   self.onClose = onClose
-  self.timer = 25 * 24 -- Time to wait before considering to choose an automatic response
+  self.timer = timeout
+  self.default_choice = default_choice
   self.ui = ui
   self.message = message
   if owner then
     self.owner = owner
     assert(owner.message_callback == nil)
-    owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, out_of_time)
-      -- Don't do anything if the window is already open.
-      if not ui:getWindow(UIStaffRise) and not ui:getWindow(UIFax) then
-        self:openMessage(out_of_time)
+    owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, do_remove)
+      if do_remove then
+        self:removeMessage()
+      else
+        self:openMessage()
       end
     end
   end
@@ -55,7 +57,11 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner)
   local types = { emergency = 43, epidemy = 45, strike = 47, personnality = 49, information = 51, disease = 53, report = 55 }
   local type = types[type]
   
-  self:addPanel(type, 0, 0):makeButton(0, 0, 30, 28, type + 1, self.openMessage)
+  self.can_dismiss = self.message.choices and #self.message.choices == 1
+  
+  self.button = self:addPanel(type, 0, 0)
+    :setTooltip(self.can_dismiss and _S.tooltip.message.button_dismiss or _S.tooltip.message.button) -- FIXME: tooltip doesn't work very well here
+    :makeToggleButton(0, 0, 30, 28, type + 1, self.openMessage, nil, self.dismissMessage)
   -- The emergency has a rotating siren
   if type == 43 then
     self.rotator = {}
@@ -83,21 +89,60 @@ function UIMessage:close(...)
   return Window.close(self, ...)
 end
 
-function UIMessage:openMessage(out_of_time)
-  if not out_of_time then
-    if self.type == "strike" then
-      self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
+-- Adjust the toggle state to match if the message is open or not
+function UIMessage:adjustToggle()
+  if self.button.toggled and not self.fax
+  or not self.button.toggled and self.fax then
+    self.button:toggle()
+  end
+end
+
+function UIMessage:openMessage()
+  if self.type == "strike" then -- strikes are special cases, as they are not faxes
+    self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
+    self:removeMessage()
+  else
+    if self.fax then
+      self.fax:close()
     else
-      self.ui:addWindow(UIFax(self.ui, self.message, self.owner))
+      self.fax = UIFax(self.ui, self)
+      self.ui:addWindow(self.fax)
+      self.ui:playSound("fax_in.wav")
     end
+    -- Manual adjustion of toggle state is necessary if owner's message_callback was used
+    self:adjustToggle()
   end
-  if self.owner then
-    self.owner.message_callback = nil
+end
+
+-- Removes the Message, executing a choice if given, else just deletes it
+--!param choice (number) if given, removes the message by executing this choice.
+function UIMessage:removeMessage(choice_number)
+  if choice_number then
+    if not self.fax then
+      self.fax = UIFax(self.ui, self) -- NB: just create, don't add to ui
+    end
+    self.fax:choice(self.message.choices[choice_number].choice)
+  else
+    if self.fax then
+      self.fax:close()
+    end
+    if self.owner and self.owner.message_callback then
+      self.owner.message_callback = nil
+    end
+    self:onClose(false)
+    self.onClose = nil
+    self:close()
   end
-  assert(self.onClose ~= nil, "UIMessage opened more than once")
-  self:onClose(out_of_time or false)
-  self.onClose = nil
-  self:close()
+end
+
+-- Tries to dismiss the message. This is only possible if there is only one choice.
+function UIMessage:dismissMessage()
+  if self.can_dismiss then
+    self:removeMessage(1)
+  else
+    self.ui:playSound("wrong2.wav")
+    self:adjustToggle()
+  end
 end
 
 function UIMessage:setXLimit(stop_x)
@@ -127,10 +172,12 @@ function UIMessage:onTick()
 end
 
 function UIMessage:onWorldTick()
-  if self.timer > 0 then
+  if self.timer then
     self.timer = self.timer - 1
-  else
-    self:openMessage(true)
+    if self.timer <= 0 then
+      self.timer = nil
+      self:removeMessage(self.default_choice)
+    end
   end
   if self.active then
     self.rotator[self.active].visible = false

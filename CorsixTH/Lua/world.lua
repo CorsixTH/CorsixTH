@@ -732,7 +732,7 @@ function World:onEndMonth()
             {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
           },
         }
-        self.ui.bottom_panel:queueMessage("information", message)
+        self.ui.bottom_panel:queueMessage("information", message, nil, 28*24, 2)
       end
     elseif state == "lose" then
       if i == 1 then -- TODO: Multiplayer
