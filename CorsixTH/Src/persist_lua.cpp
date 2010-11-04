@@ -1367,6 +1367,7 @@ static int l_persist_dofile(lua_State *L)
     memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
     lua_insert(L, -2);
     lua_call(L, 0, LUA_MULTRET);
+    sFile = reinterpret_cast<char*>(lua_touserdata(L, lua_upvalueindex(1)));
     memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
     lua_remove(L, iBufferCopyIndex);
 
