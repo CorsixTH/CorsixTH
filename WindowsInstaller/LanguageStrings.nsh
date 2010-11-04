@@ -115,7 +115,7 @@ LangString files_left         ${LANG_SPANISH} "Algunos archivos no han podido se
 LangString options_title      ${LANG_SPANISH} "Opciones adicionales"
 LangString options_subtitle   ${LANG_SPANISH} "Especifica la carpeta donde está el juego original."
 LangString save_in_appdata    ${LANG_SPANISH} "Guardar la configuración y los datos del juego en %APPDATA% (Recomendado)"
-LangString remove_saves       ${LANG_SPANISH} "Would you like to keep your saved games?"
+LangString remove_saves       ${LANG_SPANISH} "¿Quieres conservar tus partidas guardadas?"
 
 LangString install_language   ${LANG_SWEDISH} "Swedish"
 LangString original_text      ${LANG_SWEDISH} "För att spela spelet krävs att Theme Hospital eller dess demoversion redan är installerat. Specificera här var det finns."

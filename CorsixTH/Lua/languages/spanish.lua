@@ -50,9 +50,17 @@ tooltip.patient_window.close = "Cerrar ventana"
 tooltip.staff_window.close = "Cerrar ventana"
 tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
+tooltip.staff_window.center_view = "Bot髇 izquierdo del rat髇 para enfocar al personal, bot髇 derecho del rat髇 para rotar entre los miembros del personal."
+
 -- new strings
 object.litter = "Basura"
 tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
+
+tooltip.fax.close = "Cierra esta ventana sin borrar el mensaje."
+tooltip.message.button = utf8 "Bot贸n izquierdo del rat贸n para abrir el mensaje."
+tooltip.message.button_dismiss = "Bot贸n izquierdo para abrir el mensaje, bot贸n derecho para rechazarlo."
 
 menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
