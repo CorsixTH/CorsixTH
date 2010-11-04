@@ -697,7 +697,7 @@ function Hospital:changeReputation(reason, disease)
   local amount
   if reason == "autopsy_discovered" then
     local config = self.world.map.level_config.gbv.AutopsyRepHitPercent
-    amount = config and -self.reputation*config/100 or -70
+    amount = config and math.floor(-self.reputation*config/100) or -70
   else
     amount = reputation_changes[reason]
   end

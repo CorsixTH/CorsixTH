@@ -50,7 +50,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
-  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9, self.editRoom):setTooltip(_S.tooltip.toolbar.edit)
+  self:addPanel( 8, 285, 0):makeButton(1, 6, 35, 36, 9, self.editRoom)
+    :setSound():setTooltip(_S.tooltip.toolbar.edit) -- Remove default sound for this button
   self:addPanel(10, 322, 0):makeButton(1, 6, 35, 36, 11, self.dialogHireStaff):setTooltip(_S.tooltip.toolbar.hire)
   -- The dynamic info bar
   self:addPanel(12, 364, 0)
@@ -69,7 +70,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[3] = self:addPanel(19, 445, 0) -- Casebook button
   buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
   buttons[4] = self:addPanel(21, 483, 0) -- Research button
-  buttons[4]:makeButton(1, 6, 35, 36, 22, self.dialogResearch ):setTooltip(_S.tooltip.toolbar.research)
+  buttons[4]:makeButton(1, 6, 35, 36, 22, self.dialogResearch)
+    :setSound():setTooltip(_S.tooltip.toolbar.research) -- Remove default sound for this button
   buttons[5] = self:addPanel(23, 521, 0) -- Status button
   buttons[5]:makeButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
   buttons[6] = self:addPanel(25, 559, 0) -- Charts button (not yet implemented)
@@ -370,6 +372,9 @@ end
 function UIBottomPanel:dialogResearch()
   if self.ui.hospital.research_dep_built then
     self:addDialog(UIResearch(self.ui))
+    self.ui:playSound("selectx.wav")
+  else
+    self.ui:playSound("wrong2.wav")
   end
 end
 
@@ -402,14 +407,16 @@ end
 
 function UIBottomPanel:editRoom()
   local ui = self.ui
-  if not ui.editing_allowed then
-    -- no editing is allowed when other dialogs are open
-    return
-  end
-  if ui.edit_room then
-    ui:setEditRoom(false)
+  if ui.editing_allowed then
+    self.ui:playSound("selectx.wav")
+    if ui.edit_room then
+      ui:setEditRoom(false)
+    else
+      ui:setEditRoom(true)
+    end
   else
-    ui:setEditRoom(true)
+    -- no editing is allowed when other dialogs are open
+    self.ui:playSound("wrong2.wav")
   end
 end
 

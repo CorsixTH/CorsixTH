@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "beta 3"
+!define PRODUCT_VERSION "beta 4"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -93,6 +93,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 
 
 ; Language files
+; !insertmacro MUI_LANGUAGE "Danish"
 !insertmacro MUI_LANGUAGE "Dutch"
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "Finnish"
@@ -126,7 +127,12 @@ FunctionEnd
 ; ----------------------------- Functions for the custom options page ----------------------------
 
 Function OptionsPage
-
+  ${If} ${FileExists} "$APPDATA\CorsixTH\config.txt" 
+    IntOp $CONFIGAPPDATA 1 * 1
+    Abort
+  ${ElseIf} ${FileExists} "$INSTDIR\config.txt"
+    Abort
+  ${EndIf}
   ReserveFile "OptionsPage.ini"
   !insertmacro MUI_HEADER_TEXT $(options_title) $(options_subtitle)
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "OptionsPage.ini"
@@ -161,13 +167,19 @@ Section "MainSection" SEC01
   ; Time to make the configuration file and Saves folder at the correct location
   ${If} $CONFIGAPPDATA == 1
     SetOutPath "$APPDATA\CorsixTH"
+    IfFileExists "$APPDATA\CorsixTH\Saves" saves
+    ; Don't overwrite previous installations though!
     CreateDirectory "$APPDATA\CorsixTH\Saves"
   ${Else}
-    CreateDirectory "$INSTDIR\Saves"
     ; Tell the game that it should read the config file from the install dir
+    ; Don't overwrite previous installations here either!
+    IfFileExists "$INSTDIR\config.path.txt" saves
     FileOpen $9 config.path.txt w
     FileWrite $9 "$INSTDIR\$\r$\n"
     FileClose $9
+    
+    IfFileExists "$INSTDIR\Saves" saves
+    CreateDirectory "$INSTDIR\Saves"
   ${EndIf}
   File config_template.txt
   
@@ -182,7 +194,8 @@ Section "MainSection" SEC01
   ; TODO: Let the user choose if new music files exist and where they are in that case.
   Rename config_template.txt config.txt
   Delete config_t*
-  
+  ; Continue here if the saves folder and config file was already present
+  saves:
   
   ; The three other needed folders
   SetOutPath "$INSTDIR\Lua"
@@ -252,20 +265,24 @@ Section Uninstall
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
   RMDir /r "$INSTDIR\Levels"
-  ; This directory might not exist, depending on installation preferences.
-  RMDir /r "$INSTDIR\Saves"
+  
   Delete "$INSTDIR\*.*"
-  RMDir "$INSTDIR"
 
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
 
   RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
-  
+
+  ; Maybe the user wants to keep saved games?
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(remove_saves)" IDYES afterSaves
   ; Try to remove everything in AppData too. Nothing happens if it doesn't exist.
-  ; TODO: Make an option to keep saves
   RMDir /r "$APPDATA\CorsixTH\Saves"
   RMDir /r "$APPDATA\CorsixTH"
-  
+  RMDir /r "$INSTDIR\Saves"
+
+  afterSaves:
+  ${Unless} ${FileExists} "$INSTDIR\Saves"
+    RMDir "$INSTDIR"
+  ${EndUnless}
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
 
   IfErrors error noerror

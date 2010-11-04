@@ -50,7 +50,8 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
         12. Tips
         13. Room descriptions
         14. Confirmation
-        15. Misc
+        15. Lua console
+        16. Misc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -116,6 +117,7 @@ menu_options_game_speed.pause   = utf8 "  TAUKO  "
 menu_options.lock_windows       = utf8 "  LUKITSE IKKUNAT  "
 
 menu_debug = {
+  jump_to_level         = utf8 "  SIIRRY TASOLLE  ",
   transparent_walls     = utf8 "  LÄPINÄKYVÄT SEINÄT  ",
   limit_camera          = utf8 "  RAJOITETTU KAMERA  ",
   disable_salary_raise  = utf8 "  ESTÄ PALKAN KOROTTAMINEN  ",
@@ -126,10 +128,10 @@ menu_debug = {
   create_emergency      = utf8 "  LUO HÄTÄTILANNE  ",
   place_objects         = utf8 "  ASETA KALUSTEITA  ",
   dump_strings          = utf8 "  DUMPPAA TEKSTIT  ",
-  dump_game_log         = utf8 "  DUMPPAA PELILOGI  ",
+  dump_gamelog          = utf8 "  DUMPPAA PELILOGI  ",
   map_overlay           = utf8 "  KARTTAKERROKSET  ",
   sprite_viewer         = utf8 "  SPRITE-KATSELIN  ",
-  
+  lua_console           = utf8 "  LUA-KOMENTORIVI  ",
 }
 
 menu_debug_overlay = {
@@ -152,9 +154,19 @@ room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäis
 }
 
 -- 6. Dynamic info
-dynamic_info.patient.actions.no_gp_available    = utf8 "Odottaa, että rakennat yleislääkärin toimiston"
-dynamic_info.staff.actions.heading_for          = utf8 "Matkalla kohteeseen: %s"
-dynamic_info.staff.actions.fired                = utf8 "Erotettu"
+dynamic_info = {
+  patient = {
+    actions = {
+      no_gp_available   = utf8 "Odottaa, että rakennat yleislääkärin toimiston",
+    },
+  },
+  staff = {
+    actions = {
+      heading_for       = utf8 "Matkalla kohteeseen: %s",
+      fired             = utf8 "Erotettu",
+    },
+  },
+}
 
 -- 7. Main menu
 main_menu = {
@@ -215,23 +227,23 @@ tooltip = {
   },
 
   totd_window = {
-    previous      = utf8 "Näytä edellinen vihje",
-    next          = utf8 "Näytä seuraava vihje",
+    previous    = utf8 "Näytä edellinen vihje",
+    next        = utf8 "Näytä seuraava vihje",
   },
 
   main_menu = {
-    new_game      = utf8 "Aloita uusi peli aivan alusta",
-    custom_level  = utf8 "Rakenna oma sairaala itse suunnittelemaasi rakennukseen",
-    load_game     = utf8 "Lataa aiemmin tallennettu peli",
-    options       = utf8 "Muuta pelin asetuksia",
-    exit          = utf8 "Ei, ei, ole kiltti äläkä lähde!",
+    new_game            = utf8 "Aloita uusi peli aivan alusta",
+    custom_level        = utf8 "Rakenna oma sairaala itse suunnittelemaasi rakennukseen",
+    load_game           = utf8 "Lataa aiemmin tallennettu peli",
+    options             = utf8 "Muuta pelin asetuksia",
+    exit                = utf8 "Ei, ei, ole kiltti äläkä lähde!",
   },
 
   load_game_window = {
-    load_game             = utf8 "Lataa peli %s",
-    load_game_number      = utf8 "Lataa peli numero %d",
-    load_autosave         = utf8 "Lataa viimeisin automaattitallennus",
-    back                  = utf8 "Sulje tämä ikkuna",
+    load_game           = utf8 "Lataa peli %s",
+    load_game_number    = utf8 "Lataa peli numero %d",
+    load_autosave       = utf8 "Lataa viimeisin automaattitallennus",
+    back                = utf8 "Sulje tämä ikkuna",
   },
 
   custom_game_window = {
@@ -262,6 +274,12 @@ tooltip = {
     tutorial      = utf8 "Jos haluat vähän apua alkuun pääsemisessä, valitse tämä",
     easy          = utf8 "Jos tämä on ensimmäinen kertasi tämän tyyppisen pelin parissa, tämä vaikeustaso on sinua varten",
     medium        = utf8 "Tämä on kultainen keskitie, jos et ole varma, mitä valitsisit",
+  },
+
+  lua_console = {
+    textbox             = utf8 "Syötä suoritettava Lua-koodi tähän",
+    execute_code        = utf8 "Suorita syöttämäsi koodi",
+    close               = utf8 "Sulje komentorivi",
   },
 }
 
@@ -557,9 +575,17 @@ room_descriptions = {
 -- 14. Confirmation
 confirmation.abort_edit_room = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?"
 
--- 15. Misc
-misc.not_yet_implemented        = utf8 "(ei toteutettu vielä)"
-misc.no_heliport                = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää"
+-- 15. Lua console
+lua_console = {
+  execute_code  = utf8 "Suorita",
+  close         = utf8 "Sulje",
+}
+
+-- 16. Misc
+misc = {
+  not_yet_implemented   = utf8 "(ei toteutettu vielä)",
+  no_heliport           = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää",
+}
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
@@ -1326,7 +1352,7 @@ tooltip = {
     doctors             = utf8 "Näytä työtä etsivät lääkärit",
     nurses              = utf8 "Näytä työtä etsivät sairaanhoitajat",
     handymen            = utf8 "Näytä työtä etsivät huoltomiehet",
-    receptionist        = utf8 "Näytä työtä etsivät vastaanottoapulaiset",
+    receptionists       = utf8 "Näytä työtä etsivät vastaanottoapulaiset",
     prev_person         = utf8 "Näytä edellinen",
     next_person         = utf8 "Näytä seuraava",
     hire                = utf8 "Palkkaa",
@@ -1366,8 +1392,8 @@ tooltip = {
     tiredness_2         = utf8 "Työntekijän väsymys",
     ability_2           = utf8 "Työntekijän kyvyt",
     
-    prev_person         = utf8 "Näytä edellinen henkilö",
-    next_person         = utf8 "Näytä seuraava henkilö",
+    prev_person         = utf8 "Näytä edellinen sivu",
+    next_person         = utf8 "Näytä seuraava sivu",
     
     bonus               = utf8 "Anna työntekijälle 10%:n bonus",
     sack                = utf8 "Anna työntekijälle potkut",
@@ -1450,7 +1476,7 @@ tooltip = {
   staff_window = {
     name                = utf8 "Työntekijän nimi",
     close               = utf8 "Sulje ikkuna",
-    face                = utf8 "Henkilön kasvokuva",
+    face                = utf8 "Työntekijän kuva - avaa henkilökuntaluettelo klikkaamalla",
     happiness           = utf8 "Tyytyväisyys",
     tiredness           = utf8 "Väsymys",
     ability             = utf8 "Kyvyt",
@@ -1460,7 +1486,7 @@ tooltip = {
     psychiatrist        = utf8 "Psykiatri",
     researcher          = utf8 "Tutkija",
     salary              = utf8 "Kuukausipalkka",
-    center_view         = utf8 "Keskitä näkymä työntekijään",
+    center_view         = utf8 "Keskitä näkymä työntekijään klikkaamalla vasemmalla, selaa työntekijöitä klikkaamalla oikealla",
     sack                = utf8 "Anna potkut",
     pick_up             = utf8 "Poimi työntekijä",
   },

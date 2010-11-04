@@ -572,8 +572,8 @@ function World:onTick()
       end
     end
     if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
-      self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
       if not self.ui.start_tutorial then
+        self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
         self.ui:showBriefing()
       end
     end

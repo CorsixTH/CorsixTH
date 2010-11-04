@@ -130,7 +130,9 @@ function UIProgressReport:UIProgressReport(ui)
   self:makeTooltip(_S.tooltip.status.thirst, 433, 209, 578, 239)
   self:makeTooltip(_S.tooltip.status.warmth, 433, 239, 578, 270)
   
-  -- TODO: 6 gray, 7 exclamation
+  self.warning = self:addPanel(7, 252, 295)
+  self.warning.visible = false
+  -- TODO: 6 gray
 end
 
 function UIProgressReport:close()
@@ -149,6 +151,14 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * happiness, y + 193)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)
+  
+  -- Possibly show warning that it's too cold in the hospital
+  if warmth < 0.3 then
+    self.warning.visible = true
+    self.normal_font:draw(canvas, _S.progress_report.too_cold, x + 284, y + 293, 276, 0)
+  else
+    self.warning.visible = false
+  end
 end
 
 function UIProgressReport:draw(canvas, x, y)

@@ -109,9 +109,26 @@ function UIEditRoom:close(...)
     self.blueprint_wall_anims[k] = nil
   end
   self.phase = "closed"
+  -- No longer editing a room
+  self.ui.edit_room = false
   self:setBlueprintRect(1, 1, 0, 0)
   self.ui:tutorialStep(3, {4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}, 1) -- not all of these links may be needed, but to be safe...
   return UIPlaceObjects.close(self, ...)
+end
+
+--[[ Called when building/editing of the room is about to stop because another
+     dialog is being opened. If the room is in the objects phase and all
+     required objects have been placed it will be completed. Otherwise
+     it is cancelled instead.
+--]]     
+function UIEditRoom:verifyOrAbortRoom()
+  if self.phase == "objects" and self.confirm_button.enabled then
+    -- The room can be finished
+    self:close()
+  else
+    -- The room will have to be cancelled
+    self:abortRoom()
+  end
 end
 
 function UIEditRoom:abortRoom()
@@ -127,11 +144,12 @@ function UIEditRoom:abortRoom()
     end
     self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
   end
+  -- Close the dialog
+  self:close()
+  -- Finally remove the room from the world (close() needs the reference)
   if self.room then
-    -- Remove the room from the world list of rooms
     self.world.rooms[self.room.id] = nil
   end
-  self:close()
 end
 
 function UIEditRoom:cancel()

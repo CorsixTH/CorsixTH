@@ -749,7 +749,7 @@ function UI:removeWindow(window)
     if class and self.modal_windows[class] == window then
       self.modal_windows[class] = nil
     end
-    if window.modal_class == "main" then
+    if window.modal_class == "main" or window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
     return true

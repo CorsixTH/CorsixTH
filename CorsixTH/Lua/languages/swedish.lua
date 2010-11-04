@@ -74,6 +74,7 @@ menu_debug = {
   dump_gamelog                = "  DUMPA SPELLOGG  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
+  lua_console                 = "  LUATERMINAL  ",
 }
 menu_debug_overlay = {
   none                        = "  INGET  ",
@@ -224,6 +225,17 @@ tooltip.new_game_window = {
   hard = utf8 "Känner du för en utmaning och är van vid den här typen av spel är det här rätt val",
   tutorial = utf8 "Vill du ha lite hjälp på traven i början, tryck ner den här rutan",
   cancel = "Oj, det var ju egentligen inte meningen att starta ett nytt spel!",
+}
+
+lua_console = {
+  execute_code = utf8 "Exekvera",
+  close = utf8 "Stäng",
+}
+
+tooltip.lua_console = {
+  textbox = utf8 "Skriv in Luakod att köra här",
+  execute_code = utf8 "Kör koden du skrivit",
+  close = utf8 "Stäng terminalen",
 }
 
 errors = {

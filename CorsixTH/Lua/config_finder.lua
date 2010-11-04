@@ -120,16 +120,17 @@ theme_hospital_install = [[]=].. config_defaults.theme_hospital_install ..[=[]]
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
+--  Danish      / da / dk
+--  Dutch       / Nederlands / nl / dut / nld
 --  English     / en / eng
---  Finnish / Suomi / fi / fin
+--  Finnish     / Suomi / fi / fin
 --  French      / fr / fre / fra
 --  German      / de / ger / deu
 --  Italian     / it / ita
 --  Norwegian   / nb / nob
---  Dutch / Nederlands / nl / dut / nld
+--  Portuguese  / pt / por
 --  Spanish     / es / spa
 --  Swedish     / sv / swe
---  Portuguese  / pt / por
 language = [[]=].. config_defaults.language ..[=[]]
 -------------------------------------------------------------------------------
 

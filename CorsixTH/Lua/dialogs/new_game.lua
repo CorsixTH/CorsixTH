@@ -44,10 +44,18 @@ function UINewGame:UINewGame(ui)
   self.modal_class = "main menu"
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
-  local palette = app.gfx:loadPalette("QData", "DrugN01V.pal")
-  self.panel_sprites = app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
-  self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  
+  if not pcall(function()
+    local palette = app.gfx:loadPalette("QData", "DrugN01V.pal")
+    self.panel_sprites = app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
+    self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  end) then
+    -- Couldn't find some files, which implies we're using the demo version of TH.
+    -- Load directly.
+    self:startGame("full")
+    self:close()
+    return
+  end
+
   -- individual buttons
   self.default_button_sound = "selectx.wav"
   self:addBevelPanel(20, 25, 110, 20, col_bg):setLabel(_S.new_game_window.tutorial).lowered = true

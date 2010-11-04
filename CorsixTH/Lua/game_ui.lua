@@ -674,6 +674,7 @@ local tutorial_phases = {
           _S.introduction_texts["level17"],
           _S.introduction_texts["level1"],
         }}))
+        TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
     },
   },
@@ -757,9 +758,9 @@ function GameUI:setEditRoom(enabled)
       self.edit_room.is_active = true
     else
       local edit_window = self.app.ui:getWindow(UIEditRoom)
-      -- If we are currently editing a room, abort it.
+      -- If we are currently editing a room it may happen that we need to abort it.
       if edit_window then
-        edit_window:abortRoom()
+        edit_window:verifyOrAbortRoom()
       end
     end
     self:setCursor(self.default_cursor)

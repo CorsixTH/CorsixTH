@@ -108,7 +108,7 @@ end
 
 function Patient:treated() -- If a drug was used we also need to pay for this
   local hospital = self.hospital
-  print(self.disease.drug_cost)
+
   local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
   hospital:receiveMoneyForTreatment(self)
   if amount ~= 0 then

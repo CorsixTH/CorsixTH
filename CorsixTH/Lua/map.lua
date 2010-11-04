@@ -100,8 +100,13 @@ function Map:load(level, difficulty, level_name, level_file)
   if not difficulty then
     difficulty = "full"
   end
-  self.difficulty = difficulty
   local base_config = self:loadMapConfig(difficulty .. "00.SAM", {})
+  -- Make another try with the "full" version unless already tried
+  if not base_config and difficulty ~= "full" then
+    base_config = self:loadMapConfig("full00.SAM", {})
+    difficulty = "full"
+  end
+  self.difficulty = difficulty
   if type(level) == "number" then
     self.level_number = level
     local data, errors = self:getRawData(level_file)
