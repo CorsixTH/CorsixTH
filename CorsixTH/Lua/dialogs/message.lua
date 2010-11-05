@@ -115,7 +115,7 @@ function UIMessage:openMessage()
 end
 
 -- Removes the Message, executing a choice if given, else just deletes it
---!param choice (number) if given, removes the message by executing this choice.
+--!param choice_number (number) if given, removes the message by executing this choice.
 function UIMessage:removeMessage(choice_number)
   if choice_number then
     if not self.fax then
