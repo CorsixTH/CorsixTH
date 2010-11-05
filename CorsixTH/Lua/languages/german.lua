@@ -255,6 +255,8 @@ errors = {
   load_prefix = "Fehler beim Laden: ",
   map_file_missing = utf8 "Konnte die Kartendatei %s für das Level nicht finden!",
   minimum_screen_size = utf8 "Bitte eine Auflösung von mindestens 640x480 eingeben.",
+  maximum_screen_size = utf8 "Bitte eine Auflösung von höchstens 3000x2000 eingeben.",
+  unavailable_screen_size = utf8 "Die gewünschte Auflösung ist im Vollbildmodus nicht verfügbar.",
 }
 
 confirmation = {

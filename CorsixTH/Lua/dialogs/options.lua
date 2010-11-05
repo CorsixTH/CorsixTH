@@ -116,7 +116,11 @@ function UIOptions:UIOptions(ui, mode)
 end
 
 function UIOptions:buttonFullscreen(checked)
-  self.ui:toggleFullscreen()
+  if not self.ui:toggleFullscreen() then
+      local err = {_S.errors.unavailable_screen_size}
+      self.ui:addWindow(UIInformation(self.ui, err))
+      self.fullscreen_button:toggle()
+  end
 end
 
 function UIOptions:buttonResolution()
@@ -124,8 +128,14 @@ function UIOptions:buttonResolution()
   if width < 640 or height < 480 then
     local err = {_S.errors.minimum_screen_size}
     self.ui:addWindow(UIInformation(self.ui, err))
+  elseif width > 3000 or height > 2000 then
+    local err = {_S.errors.maximum_screen_size}
+    self.ui:addWindow(UIInformation(self.ui, err))
   else
-    self.ui:changeResolution(width, height)
+    if not self.ui:changeResolution(width, height) then
+      local err = {_S.errors.unavailable_screen_size}
+      self.ui:addWindow(UIInformation(self.ui, err)) 
+    end
   end
 end
 

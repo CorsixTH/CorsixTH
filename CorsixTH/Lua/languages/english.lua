@@ -242,6 +242,8 @@ errors = {
   load_prefix = "Error while loading game: ",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
+  maximum_screen_size = "Please enter a screen size of at most 3000x2000.",
+  unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
 }
 
 confirmation = {

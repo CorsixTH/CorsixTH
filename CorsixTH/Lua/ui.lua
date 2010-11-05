@@ -399,12 +399,16 @@ function UI:unregisterTextBox(box)
 end
 
 function UI:changeResolution(width, height)
+  local old_width, old_height = self.app.config.width, self.app.config.height
   self.app.video:endFrame()
-  self.app.config.width = width
-  self.app.config.height = height
   local video = TH.surface(width, height, unpack(self.app.modes))
-  if not video then
-    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ".")
+  if video then
+    self.app.config.width = width
+    self.app.config.height = height
+  else
+    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ". Reverting to previous resolution.")
+    video = TH.surface(old_width, old_height, unpack(self.app.modes))
+    return false
   end
   self.app.video = video
   self.app.gfx:updateTarget(self.app.video)
@@ -413,15 +417,25 @@ function UI:changeResolution(width, height)
   local cursor = self.cursor
   self.cursor = nil
   self:setCursor(cursor)
-  
   -- Save new setting in config
   self.app:saveConfig()
   
   self:onChangeResolution()
+  
+  return true
 end
 
 function UI:toggleFullscreen()
   local modes = self.app.modes
+  
+  local function toggleMode(index)
+    self.app.fullscreen = not self.app.fullscreen
+    if self.app.fullscreen then
+      modes[index] = "fullscreen"
+    else
+      modes[index] = ""
+    end
+  end
   
   -- Search in modes table if it contains a fullscreen value and keep the index
   -- If not found, we will add an index at end of table
@@ -434,14 +448,21 @@ function UI:toggleFullscreen()
   end
   
   -- Toggle Fullscreen mode
-  self.app.fullscreen = not self.app.fullscreen
-  if self.app.fullscreen then
-    modes[index] = "fullscreen"
-  else
-    modes[index] = ""
-  end
+  toggleMode(index)
   self.app.video:endFrame()
-  self.app.video = assert(TH.surface(self.app.config.width, self.app.config.height, unpack(modes))) -- Apply changements
+  
+  local success = true
+  local video = TH.surface(self.app.config.width, self.app.config.height, unpack(modes))
+  if not video then
+    success = false
+    local mode_string = modes[index] or "windowed"
+    print("Warning: Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
+    -- Revert fullscreen mode modifications
+    toggleMode(index)
+    video = TH.surface(self.app.config.width, self.app.config.height, unpack(self.app.modes))
+  end
+  
+  self.app.video = video -- Apply changements
   self.app.gfx:updateTarget(self.app.video)
   self.app.video:startFrame()
   -- Redraw cursor
@@ -452,6 +473,8 @@ function UI:toggleFullscreen()
   -- Save new setting in config
   self.app.config.fullscreen = self.app.fullscreen
   self.app:saveConfig()
+  
+  return success
 end
 
 function UI:_translateKeyCode(code, rawchar)
