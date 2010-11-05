@@ -402,7 +402,7 @@ function World:createMapObjects(objects)
     end
     -- Delay making objects which are on plots which haven't been purchased yet
     local parcel = map:getCellFlags(x, y, flag_cache).parcelId
-    if map:getPlotOwner(parcel) == 0 then
+    if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
       self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
     else
       self:newObject(object_id, x, y, flags, "map object")
