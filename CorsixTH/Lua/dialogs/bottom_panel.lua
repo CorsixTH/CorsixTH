@@ -206,10 +206,20 @@ end
 --! The arguments specify a message, which is added to a FIFO queue, and will
 -- appear on screen once there is space.
 --!param type (string) The type of message, can be: "emergency", "epidemy", "personnality", "information", "disease", "report" or "strike"
---!param message (table) A list of texts to display, including a "choices" table with choices. See below for structure.
+--!param message (table or number) If type == "strike", the amount of pay rise. Else a list of texts to display, including a "choices" table with choices. See below for structure.
 --!param owner (humanoid or nil) Some messages are related to one staff or patient. Otherwise this is nil.
 --!param timeout (number or nil) If given, the message will expire after that many world ticks and be removed.
 --!param default_choice (number or nil) If given, the choice with this number will be executed on expiration of the message.
+--! Structure of message (except strike):
+-- message = {
+--   { text = "first line of text", offset (integer, optional) }
+--   { text = "second line of text", offset (integer, optional) }
+--   ...
+--   choices = {
+--     { text = "first choice", choice = "choice_type" }
+--     ...
+--   }
+-- }
 function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
   self.message_queue[#self.message_queue + 1] = {
     type = type,

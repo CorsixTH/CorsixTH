@@ -36,6 +36,9 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self.message = message
   if owner then
     self.owner = owner
+    if owner.message_callback then
+      owner:message_callback(true) -- There can be only one message per owner, just remove any existing one
+    end
     assert(owner.message_callback == nil)
     owner.message_callback = --[[persistable:owner_of_message_callback]] function(humanoid, do_remove)
       if do_remove then
@@ -57,7 +60,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   local types = { emergency = 43, epidemy = 45, strike = 47, personnality = 49, information = 51, disease = 53, report = 55 }
   local type = types[type]
   
-  self.can_dismiss = self.message.choices and #self.message.choices == 1
+  self.can_dismiss = self.type ~= "strike" and #self.message.choices == 1
   
   self.button = self:addPanel(type, 0, 0)
     :setTooltip(self.can_dismiss and _S.tooltip.message.button_dismiss or _S.tooltip.message.button) -- FIXME: tooltip doesn't work very well here
