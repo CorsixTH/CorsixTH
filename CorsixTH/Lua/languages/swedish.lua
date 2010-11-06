@@ -49,6 +49,10 @@ tooltip.staff_window.center_view = utf8 "Vänsterklicka för att komma till pers
 object.litter = utf8 "Skräp"
 tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
+tooltip.fax.close = utf8 "Stäng fönstret utan att ta bort meddelandet"
+tooltip.message.button = utf8 "Vänsterklicka för att öppna meddelandet"
+tooltip.message.button_dismiss = utf8 "Vänsterklicka för att öppna meddelandet, högerklicka för att ta bort det"
+
 menu_options = {
   lock_windows = utf8 "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",
@@ -243,7 +247,9 @@ errors = {
   save_prefix = utf8 "Fel när spelet skulle sparas: ",
   load_prefix = utf8 "Fel när spelet skulle laddas: ",
   map_file_missing = utf8 "Kunde inte hitta kartfilen %s till den här nivån!",
-  minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
+  minimum_screen_size = utf8 "Skärmupplösningen måste vara åtminstone 640x480.",
+  maximum_screen_size = utf8 "Skärmupplösningen kan inte vara större än 3000x2000.",
+  unavailable_screen_size = utf8 "Skärmupplösningen du valde finns inte i fullskärmsläge.",
 }
 
 confirmation = {

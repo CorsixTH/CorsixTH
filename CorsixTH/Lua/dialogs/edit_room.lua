@@ -520,6 +520,26 @@ function UIEditRoom:returnToDoorPhase()
   room.built = false
   if room.door and room.door.queue then
     room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
+    -- Also reroute any staff heading for the room
+    for staff, _ in pairs(room.approaching_staff) do
+      -- Try to find another room which needs this staff member.
+      local room = self.world:getNearestRoomNeedingStaff(staff)
+      if room then
+        if staff:getRoom() then
+          staff:setNextAction(staff:getRoom():createLeaveAction())
+          staff:queueAction(room:createEnterAction())
+        else
+          staff:setNextAction(room:createEnterAction())
+        end
+      else
+        if staff:getRoom() then
+          staff:getRoom():commandEnteringStaff(staff)
+        else
+          -- Otherwise meander
+          staff:setNextAction{name = "meander"}
+        end
+      end
+    end
   end
   
   self.purchase_button:enable(false)

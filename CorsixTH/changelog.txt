@@ -1,5 +1,5 @@
 -----------------------------------------
-Version Beta 4 - to be released
+Version Beta 4 - released 2010-11-12
 -----------------------------------------
 
 -- Gameplay -- 

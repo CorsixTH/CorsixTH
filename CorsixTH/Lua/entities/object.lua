@@ -318,11 +318,47 @@ function Object:setTile(x, y)
     self.world:addObjectToTile(self, x, y)
     if self.footprint then
       local map = self.world.map.th
+      local optional_found = false
+      local flags = {}
+      local room = self.world:getRoom(x, y)
+      local roomId = room and room.id
+
       for _, xy in ipairs(self.footprint) do
-        map:setCellFlags(x + xy[1], y + xy[2], {
-          buildable = false,
-          passable = not not xy.only_passable,
-        })
+        local change_flags = true
+        local lx = x + xy[1]
+        local ly = y + xy[2]
+
+        if xy.optional then
+          if optional_found then
+            -- An optional tile has been accepted, we don't need anymore such tiles.
+            change_flags = false
+          else
+            -- Check if this optional tile is acceptable
+            local flag = "buildable"
+            if xy.only_passable then
+              flag = "passable"
+            end
+            local cell_flags = map:getCellFlags(lx, ly, flags)[flag]
+            local is_object_allowed = true
+            if roomId and flags.roomId ~= roomId then
+              is_object_allowed = false
+            elseif xy.only_passable and not self.world.pathfinder:isReachableFromHospital(lx, ly) then
+              is_object_allowed = false
+            end
+            if is_object_allowed then
+              change_flags = true
+              optional_found = true
+            else
+              change_flags = false
+            end
+          end
+        end
+        if change_flags then
+          map:setCellFlags(lx, ly, {
+            buildable = false,
+            passable = not not xy.only_passable,
+          })
+        end
       end
     end
     if self.split_anims then
