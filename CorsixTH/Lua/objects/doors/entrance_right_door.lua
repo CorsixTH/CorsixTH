@@ -105,15 +105,17 @@ function EntranceDoor:setTile(x, y)
     end
   end
   Object.setTile(self, x, y)
-  if self.is_master then
-    self.world:notifyObjectOfOccupants(x , y , self)
-    for _, offset in ipairs(additional_walkable_tiles[self.direction]) do
-      self.world:notifyObjectOfOccupants(x + offset[1], y + offset[2], self)
+  if x then
+    if self.is_master then
+      self.world:notifyObjectOfOccupants(x, y, self)
+      for _, offset in ipairs(additional_walkable_tiles[self.direction]) do
+        self.world:notifyObjectOfOccupants(x + offset[1], y + offset[2], self)
+      end
     end
-  end
-  self.world.map:setCellFlags(x, y, {[flag_name] = true, buildable = false, doNotIdle = true})
-  for _, offset in ipairs(offsets) do
-    self.world.map:setCellFlags(x + offset[1], y + offset[2], {buildable = false, doNotIdle = true})
+    self.world.map:setCellFlags(x, y, {[flag_name] = true, buildable = false, doNotIdle = true})
+    for _, offset in ipairs(offsets) do
+      self.world.map:setCellFlags(x + offset[1], y + offset[2], {buildable = false, doNotIdle = true})
+    end
   end
   self.world.map.th:updateShadows()
 end

@@ -319,3 +319,41 @@ int luaopen_th(lua_State *L)
     return 1;
 }
 
+void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
+{
+    static const int iRegistryCacheIndex = 7;
+    lua_rawgeti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);
+    if(lua_isnil(L, -1))
+    {
+        // Cache not yet created - create it.
+        lua_pop(L, 1);
+        lua_getglobal(L, "setmetatable");
+        if(lua_isnil(L, -1))
+        {
+            // Base library not yet loaded - fallback to simple
+            // uncached loadstring
+            lua_pop(L, 1);
+            if(luaL_loadstring(L, sLuaString))
+                lua_error(L);
+        }
+        lua_pop(L, 1);
+        luaL_loadstring(L, "local assert, loadstring = assert, loadstring\n"
+            "return setmetatable({}, {__mode = [[v]], \n"
+            "__index = function(t, k)\n"
+                "local v = assert(loadstring(k))\n"
+                "t[k] = v\n"
+                "return v\n"
+            "end})");
+        lua_call(L, 0, 1);
+        lua_pushvalue(L, -1);
+        lua_rawseti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);
+    }
+    lua_getfield(L, -1, sLuaString);
+    lua_replace(L, -2);
+}
+
+void luaT_execute(lua_State *L, const char* sLuaString)
+{
+    luaT_execute_loadstring(L, sLuaString);
+    lua_call(L, 0, LUA_MULTRET);
+}

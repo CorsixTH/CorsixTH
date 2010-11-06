@@ -38,7 +38,31 @@ SOFTWARE.
 #include "game.h"
 #include "frmLog.h"
 
-class EmbeddedGamePanel : public wxGLCanvas
+class IEmbeddedGamePanel
+{
+public:
+    virtual ~IEmbeddedGamePanel();
+
+    virtual void setExtraLuaInitFunction(lua_CFunction fn, void* arg) = 0;
+    virtual void setLogWindow(frmLog *pLogWindow) = 0;
+    virtual bool loadLua() = 0;
+
+    virtual lua_State* getLua() = 0;
+    virtual THMap* getMap() = 0;
+};
+
+//! GUI component which acts as an instance of CorsixTH
+/*!
+    The component contains a Lua instance which executes the normal CorsixTH
+    Lua scripts. Mouse and keyboard events to the component are forwarded to
+    said Lua instance in the same way as they are for a standalone CorsixTH
+    instance, and the visual representation of the component is what would
+    normally get displayed in a standalone CorsixTH window.
+
+    Lua scripts can tell if they are being executed from within this, as the
+    global variable _MAP_EDITOR will be set to true.
+*/
+class EmbeddedGamePanel : public wxGLCanvas, public IEmbeddedGamePanel
 {
 public:
     EmbeddedGamePanel(wxWindow *pParent);
@@ -49,21 +73,33 @@ public:
     bool loadLua();
 
     lua_State* getLua() {return m_L;}
+    THMap* getMap();
 
 protected:
+    // OpenGL rendering stuff
     wxGLCanvas* m_pGLCanvas;
     wxGLContext* m_pGLContext;
+
+    //! A text control which is used for the output of print() calls
     wxTextCtrl* m_pPrintTarget;
+    //! The top-level Lua instance
     lua_State* m_L;
+    //! A substate of m_L which is used for executing the CorsixTH instance,
+    // as this allows the execution to yield and resume "asynchronously".
     lua_State* m_Lthread;
+    //! A user-supplied function to be called during Lua initialisation.
     lua_CFunction m_fnExtraLuaInit;
+    //! An argument to m_fnExtraLuaInit, delivered as a light userdata.
     void* m_pExtraLuaInitArg;
+    //! The last recorded position of the mouse cursor - used to calculate
+    // the difference in position each time the mouse is moved.
     wxPoint m_ptMouse;
 
     static int _l_print(lua_State *L);
     static int _l_panic(lua_State *L);
     static int _l_open_sdl(lua_State *L);
     static int _l_end_frame(lua_State *L);
+    static EmbeddedGamePanel* _getThis(lua_State *L);
 
     void _onPaint(wxPaintEvent& evt);
     void _onMouseMove(wxMouseEvent& evt);
@@ -74,6 +110,35 @@ protected:
     void _onRightDown(wxMouseEvent& evt);
     void _onMiddleUp(wxMouseEvent& evt);
     void _onMiddleDown(wxMouseEvent& evt);
+
+    template <typename T1, typename T2, typename T3>
+    void _dispatchEvent(const char* sName, T1 a1, T2 a2, T3 a3)
+    {
+        if(m_Lthread)
+        {
+            lua_State *L = lua_tothread(m_Lthread, 1);
+            lua_pushstring(L, sName);
+            luaT_push(L, a1);
+            luaT_push(L, a2);
+            luaT_push(L, a3);
+            _resume(L, 4, 0);
+        }
+    }
+
+    template <typename T1, typename T2, typename T3, typename T4>
+    void _dispatchEvent(const char* sName, T1 a1, T2 a2, T3 a3, T4 a4)
+    {
+        if(m_Lthread)
+        {
+            lua_State *L = lua_tothread(m_Lthread, 1);
+            lua_pushstring(L, sName);
+            luaT_push(L, a1);
+            luaT_push(L, a2);
+            luaT_push(L, a3);
+            luaT_push(L, a4);
+            _resume(L, 5, 0);
+        }
+    }
 
     bool _resume(lua_State *L, int iNArgs, int iNRes);
 

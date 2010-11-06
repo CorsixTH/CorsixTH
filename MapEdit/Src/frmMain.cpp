@@ -20,7 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "frmMain.h"
+#include "th_map_wrapper.h"
 #include <wx/file.h>
+#include <wx/filename.h>
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR1, frmMain::_onFloorGallery1Select)
@@ -29,6 +31,8 @@ EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL1, frmMain::_onWallGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL2, frmMain::_onWallGallery2Select)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
+EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, frmMain::_onSave)
+EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_SAVE, frmMain::_onSaveMenu)
 EVT_SIZE(frmMain::_onResize)
 END_EVENT_TABLE()
 
@@ -36,13 +40,12 @@ frmMain::frmMain()
   : wxFrame(NULL, wxID_ANY, L"CorsixTH Map Editor",
             wxDefaultPosition, wxSize(640, 480))
 {
+    m_sFrameCaption = wxFrame::GetTitle();
+    _setFilename(wxEmptyString);
+
     m_pRibbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRIBBON_BAR_FLOW_VERTICAL | wxRIBBON_BAR_SHOW_PAGE_LABELS);
     m_pRibbon->SetTabCtrlMargins(0, 0);
     m_pHomePage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Home");
-    /*
-    wxRibbonPanel* pFilePanel = new wxRibbonPanel(pHomePage, wxID_ANY, L"File",
-        wxNullBitmap, wxDefaultPosition, wxDefaultSize, wxRIBBON_PANEL_NO_AUTO_MINIMISE);
-    */
     wxRibbonPage* pFloorPage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Floors");
     wxRibbonPanel* pFloorSimplePanel = new wxRibbonPanel(pFloorPage, wxID_ANY, L"Simple Tiles");
     m_pFloorGallery1 = new RibbonBlockGallery(pFloorSimplePanel, ID_GALLERY_FLOOR1);
@@ -55,7 +58,7 @@ frmMain::frmMain()
     m_pWallGallery2 = new RibbonBlockGallery(pWallNorthPanel, ID_GALLERY_WALL2);
     m_pRibbon->Realize();
 
-    m_pGamePanel = new EmbeddedGamePanel(this);
+    m_pGamePanel = new ScrollableGamePanel(this);
     m_pGamePanel->setExtraLuaInitFunction(_l_init, this);
     m_pGamePanel->setLogWindow(m_pLogWindow = new frmLog);
     wxPoint ptLogWindow = GetPosition();
@@ -66,6 +69,16 @@ frmMain::frmMain()
     pTopSizer->Add(m_pRibbon, 0, wxEXPAND);
     pTopSizer->Add(m_pGamePanel, 1, wxEXPAND);
     SetSizer(pTopSizer);
+}
+
+void frmMain::_setFilename(const wxString& sFilename)
+{
+    m_sFilename = sFilename;
+    wxString sShortName("Untitled");
+    wxFileName oFilename(sFilename);
+    if(!oFilename.GetFullName().empty())
+        sShortName = oFilename.GetFullName();
+    SetTitle(m_sFrameCaption + wxT(" - ") + sShortName);
 }
 
 frmMain::~frmMain()
@@ -85,13 +98,20 @@ void frmMain::_onNew(wxRibbonButtonBarEvent& evt)
     lua_State* L = m_pGamePanel->getLua();
     if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
         lua_pop(L, 1);
+    _setFilename(wxEmptyString);
     m_pGamePanel->Refresh();
 }
 
-void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
+wxString frmMain::_getMapsDirectory()
 {
-    wxString sDirectory;
+    return wxEmptyString;
+}
+
+wxString frmMain::_getMapsFilter()
+{
     wxString sFilter = wxT("Theme Hospital maps (*.L[0-9]+)");
+    // *.L[0-9]* isn't quite the right filter, but it is as close as reasonably
+    // possible to *.L[0-9]+ which file filters can reasonably get
     char cSep = '|';
     for(int i = 0; i < 10; ++i)
     {
@@ -99,6 +119,13 @@ void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
         cSep = ';';
     }
     sFilter += wxT("|All files (*.*)|*.*");
+    return sFilter;
+}
+
+void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
+{
+    wxString sDirectory = _getMapsDirectory();
+    wxString sFilter = _getMapsFilter();
     wxFileDialog oOpenDialog(this, wxFileSelectorPromptStr, sDirectory,
         wxEmptyString, sFilter, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     if(oOpenDialog.ShowModal() != wxID_OK)
@@ -120,6 +147,7 @@ void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
     if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
         lua_pop(L, 1);
     delete[] sData;
+    _setFilename(oOpenDialog.GetPath());
     m_pGamePanel->Refresh();
 }
 
@@ -145,6 +173,67 @@ int frmMain::_l_do_load(lua_State *L)
     return 0;
 }
 
+void frmMain::_onSave(wxRibbonButtonBarEvent& evt)
+{
+    wxCommandEvent dummy;
+    _onSaveMenuSave(dummy);
+}
+
+void frmMain::_onSaveMenu(wxRibbonButtonBarEvent& evt)
+{
+    wxMenu mnuPopup;
+    mnuPopup.Append(wxID_SAVE, "Save");
+    mnuPopup.Append(wxID_SAVEAS, "Save As");
+    evt.PopupMenu(&mnuPopup);
+}
+
+struct map_save_t
+{
+    wxFile fFile;
+
+    static void writer(void* pThis_, const unsigned char* pData, size_t iLen)
+    {
+        map_save_t* pThis = reinterpret_cast<map_save_t*>(pThis_);
+        pThis->fFile.Write(reinterpret_cast<const void*>(pData), iLen);
+    }
+};
+
+void frmMain::_onSaveMenuSave(wxCommandEvent& evt)
+{
+    if(m_sFilename.empty())
+        _onSaveMenuSaveAs(evt);
+    map_save_t oSave;
+    if(oSave.fFile.Open(m_sFilename, wxFile::write))
+    {
+        lua_State* L = m_pGamePanel->getLua();
+        luaT_execute(L, "return TheApp.world.map.th");
+        THMap *pMap = reinterpret_cast<THMap*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        THMapWrapper::autoSetHelipad(pMap);
+        luaT_execute(L, "return TheApp.ui:ScreenToWorld(...)",
+            m_pGamePanel->GetSize().GetWidth() / 2,
+            m_pGamePanel->GetSize().GetHeight() / 2);
+        int iCameraX = (int)lua_tointeger(L, -2);
+        int iCameraY = (int)lua_tointeger(L, -1);
+        lua_pop(L, 2);
+        pMap->setPlayerCameraTile(0, iCameraX, iCameraY);
+        pMap->save(map_save_t::writer, reinterpret_cast<void*>(&oSave));
+        ::wxMessageBox(wxT("Map saved."), wxT("Save"), wxICON_INFORMATION | wxCENTER, this);
+    }
+}
+
+void frmMain::_onSaveMenuSaveAs(wxCommandEvent& evt)
+{
+    wxString sDirectory = _getMapsDirectory();
+    wxString sFilter = _getMapsFilter();
+    wxFileDialog oSaveDialog(this, wxFileSelectorPromptStr, sDirectory,
+        m_sFilename, sFilter, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    if(oSaveDialog.ShowModal() != wxID_OK)
+        return;
+    _setFilename(oSaveDialog.GetPath());
+    _onSaveMenuSave(evt);
+}
+
 void frmMain::_onResize(wxSizeEvent& evt)
 {
     wxRect rcLogWindow = wxRect(GetPosition(), m_pLogWindow->GetSize());
@@ -157,18 +246,21 @@ void frmMain::_onResize(wxSizeEvent& evt)
 int frmMain::_l_init(lua_State *L)
 {
     frmMain *pThis = reinterpret_cast<frmMain*>(lua_touserdata(L, 1));
+
+    THMapWrapper::wrap(L);
+
+    // Create a new environment table: {
+    //   [1] = <light userdata pThis>,
+    // }
     lua_newtable(L);
     lua_insert(L, 1);
     lua_rawseti(L, 1, 1);
     lua_replace(L, LUA_ENVIRONINDEX);
+    // NB: Following functions registered with above environment table
 
-    lua_pushcfunction(L, _l_set_blocks);
-    lua_setglobal(L, "MapEditorSetBlocks");
-    lua_pushcfunction(L, _l_set_block_brush);
-    lua_setglobal(L, "MapEditorSetBlockBrush");
-
-    lua_pushcfunction(L, _l_init_with_lua_app);
-    lua_setglobal(L, "MapEditorInitWithLuaApp");
+    luaT_execute(L, "MapEditorSetBlocks = ...", _l_set_blocks);
+    luaT_execute(L, "MapEditorSetBlockBrush = ...", _l_set_block_brush);
+    luaT_execute(L, "MapEditorInitWithLuaApp = ...", _l_init_with_lua_app);
 
     return 0;
 }
@@ -213,6 +305,13 @@ int frmMain::_l_init_with_lua_app(lua_State *L)
     pFileButtons->AddButton(wxID_NEW, wxT("New"), BITMAP("new"));
     pFileButtons->AddButton(wxID_OPEN, wxT("Load"), BITMAP("open"));
     pFileButtons->AddHybridButton(wxID_SAVE, wxT("Save"), BITMAP("save"));
+
+    /*
+    wxRibbonPanel* pViewPanel = new wxRibbonPanel(pHomePage, wxID_ANY, wxT("View"));
+    wxRibbonButtonBar* pViewButtons = new FullSizeButtonBar(pViewPanel, wxID_ANY);
+    pViewButtons->AddButton(wxID_ANY, wxT("Walls"), BITMAP("transparent_walls"));
+    */
+
 #undef BITMAP
     pThis->m_pRibbon->Realise();
 

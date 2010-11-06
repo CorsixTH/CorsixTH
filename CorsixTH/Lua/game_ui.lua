@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile "ui"
+
 --! Variant of UI for running games
 class "GameUI" (UI)
 
@@ -56,11 +58,11 @@ function GameUI:GameUI(app, local_hospital)
   end
   self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
     app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
+  self.zoom_factor = 1
   self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
   self.prevent_edge_scrolling = false
-  self.zoom_factor = 1
 end
 
 function GameUI:setZoom(factor)
@@ -194,7 +196,7 @@ function GameUI:onKeyDown(code, rawchar)
       local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
       self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
     elseif key == "f9" then -- Make debug patient
-      self:addWindow(UIMakeDebugPatient(self))
+      self.app.world:makeDebugPatient()
     
     elseif key == "f11" then -- Make Adviser say a random phrase
       self:debugMakeAdviserTalk()
@@ -571,7 +573,9 @@ function GameUI:makeWallsTransparent(mode)
   self.app.map.th:setWallDrawFlags(mode and 4 or 0)
 end
 
-local tutorial_phases = {
+local tutorial_phases
+local function make_tutorial_phases()
+tutorial_phases = {
   {
     -- 1) build reception
     { text = _S.adviser.tutorial.build_reception,      -- 1
@@ -685,6 +689,11 @@ local tutorial_phases = {
     },
   },
 }
+end
+tutorial_phases = setmetatable({}, {__index = function(t, k)
+  make_tutorial_phases()
+  return t[k]
+end})
 
 -- Called to trigger step to another part of the tutorial.
 -- chapter:    Individual parts of the tutorial. Step will only happen if it's the current chapter.

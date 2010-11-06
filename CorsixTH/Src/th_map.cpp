@@ -132,6 +132,13 @@ void THMap::_readTileIndex(const unsigned char* pData, int& iX, int &iY) const
     iY = iIndex / m_iWidth;
 }
 
+void THMap::_writeTileIndex(unsigned char* pData, int iX, int iY) const
+{
+    unsigned int iIndex = iY * m_iWidth + iX;
+    pData[0] = iIndex & 0xFF;
+    pData[1] = iIndex >> 8;
+}
+
 bool THMap::loadBlank()
 {
     if(!setSize(128, 128))
@@ -281,6 +288,88 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
         m_pParcelTileCounts[i] = _getParcelTileCount(i);
 
     return true;
+}
+
+void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
+              void* pToken)
+{
+    unsigned char aBuffer[256] = {0};
+    int iBufferNext = 0;
+
+    // Header
+    aBuffer[0] = (unsigned char)m_iPlayerCount;
+    // TODO: Determine correct contents for the next 33 bytes
+    fnWriter(pToken, aBuffer, 34);
+
+    unsigned char aReverseBlockLUT[256] = {0};
+    for(int i = 0; i < 256; ++i)
+    {
+        aReverseBlockLUT[gs_iTHMapBlockLUT[i]] = i;
+    }
+    aReverseBlockLUT[0] = 0;
+
+    for(THMapNode *pNode = m_pCells, *pLastNode = pNode + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        // TODO: Nicer system for saving object data
+        aBuffer[iBufferNext++] = 0;
+        aBuffer[iBufferNext++] = pNode->iFlags >> 24;
+
+        // Blocks
+        aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
+        aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[1] & 0xFF];
+        aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[2] & 0xFF];
+
+        // Flags (TODO: Set a few more flag bits?)
+        unsigned char iFlags = 3;
+        if(pNode->iFlags & THMN_Passable)
+            iFlags ^= 1;
+        if(pNode->iFlags & THMN_Buildable)
+            iFlags ^= 2;
+        aBuffer[iBufferNext++] = iFlags;
+        aBuffer[iBufferNext++] = 0;
+        iFlags = 16;
+        if(pNode->iFlags & THMN_Hospital)
+            iFlags ^= 16;
+        aBuffer[iBufferNext++] = iFlags;
+
+        if(iBufferNext == sizeof(aBuffer))
+        {
+            fnWriter(pToken, aBuffer, sizeof(aBuffer));
+            iBufferNext = 0;
+        }
+    }
+    for(THMapNode *pNode = m_pCells, *pLastNode = pNode + m_iWidth * m_iHeight;
+        pNode != pLastNode; ++pNode)
+    {
+        aBuffer[iBufferNext++] = pNode->iParcelId & 0xFF;
+        aBuffer[iBufferNext++] = pNode->iParcelId >> 8;
+        if(iBufferNext == sizeof(aBuffer))
+        {
+            fnWriter(pToken, aBuffer, sizeof(aBuffer));
+            iBufferNext = 0;
+        }
+    }
+
+    // TODO: What are these two bytes?
+    aBuffer[iBufferNext++] = 3;
+    aBuffer[iBufferNext++] = 0;
+    fnWriter(pToken, aBuffer, iBufferNext);
+    iBufferNext = 0;
+
+    memset(aBuffer, 0, 56);
+    for(int i = 0; i < m_iPlayerCount; ++i)
+    {
+        _writeTileIndex(aBuffer + iBufferNext,
+            m_aiInitialCameraX[i], m_aiInitialCameraY[i]);
+        _writeTileIndex(aBuffer + iBufferNext + 8,
+            m_aiHeliportX[i], m_aiHeliportY[i]);
+        iBufferNext += 2;
+    }
+    fnWriter(pToken, aBuffer, 16);
+    memset(aBuffer, 0, 16);
+    // TODO: What are these 56 bytes?
+    fnWriter(pToken, aBuffer, 56);
 }
 
 void THMap::setParcelOwner(int iParcelId, int iOwner)
@@ -463,6 +552,24 @@ bool THMap::getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const
     if(pX) *pX = m_aiHeliportX[iPlayer];
     if(pY) *pY = m_aiHeliportY[iPlayer];
     return true;
+}
+
+void THMap::setPlayerCameraTile(int iPlayer, int iX, int iY)
+{
+    if(0 <= iPlayer && iPlayer < getPlayerCount())
+    {
+        m_aiInitialCameraX[iPlayer] = iX;
+        m_aiInitialCameraY[iPlayer] = iY;
+    }
+}
+
+void THMap::setPlayerHeliportTile(int iPlayer, int iX, int iY)
+{
+    if(0 <= iPlayer && iPlayer < getPlayerCount())
+    {
+        m_aiHeliportX[iPlayer] = iX;
+        m_aiHeliportY[iPlayer] = iY;
+    }
 }
 
 int THMap::getParcelTileCount(int iParcelId) const

@@ -104,6 +104,7 @@ enum THMapNodeFlags
     THMN_CanTravelS = 1 <<  3, //!< Pathfinding: Can walk to the south
     THMN_CanTravelW = 1 <<  4, //!< Pathfinding: Can walk to the west
     THMN_Hospital   = 1 <<  5, //!< World: Tile is inside a hospital building
+    THMN_Hospital_Shift = 5,
     THMN_Buildable  = 1 <<  6, //!< Player: Can build on this tile
     //! Pathfinding: Normally can walk on this tile, but can't due to blueprint
     THMN_PassableIfNotForBlueprint = 1 << 7,
@@ -189,6 +190,9 @@ public:
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
 
+    void save(void (*fnWriter)(void*, const unsigned char*, size_t),
+              void* pToken);
+
     //! Set the sprite sheet to be used for drawing the map
     /*!
         The sprites for map floor tiles, wall tiles, and map decorators
@@ -220,6 +224,8 @@ public:
     inline int getPlayerCount() const {return m_iPlayerCount;}
     bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
     bool getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const;
+    void setPlayerCameraTile(int iPlayer, int iX, int iY);
+    void setPlayerHeliportTile(int iPlayer, int iX, int iY);
 
     //! Get the number of tiles inside a given parcel
     int getParcelTileCount(int iParcelId) const;
@@ -321,6 +327,7 @@ protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
     void _readTileIndex(const unsigned char* pData, int& iX, int &iY) const;
+    void _writeTileIndex(unsigned char* pData, int iX, int iY) const;
     int _getParcelTileCount(int iParcelId) const;
 
     //! Create the adjacency matrix if it doesn't already exist

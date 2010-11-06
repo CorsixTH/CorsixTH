@@ -34,7 +34,7 @@ SOFTWARE.
     #include "wx/wx.h"
 #endif
 // ----------------------------
-#include "embedded_game.h"
+#include "scrollable_game.h"
 #include <wx/ribbon/bar.h>
 #include <wx/ribbon/buttonbar.h>
 #include "block_gallery.h"
@@ -57,18 +57,27 @@ protected:
     wxRibbonBar* m_pRibbon;
     wxRibbonPage* m_pHomePage;
     frmLog* m_pLogWindow;
-    EmbeddedGamePanel* m_pGamePanel;
+    ScrollableGamePanel* m_pGamePanel;
     RibbonBlockGallery* m_pFloorGallery1;
     RibbonBlockGallery* m_pFloorGallery2;
     RibbonBlockGallery* m_pWallGallery1;
     RibbonBlockGallery* m_pWallGallery2;
+    wxString m_sFrameCaption;
+    wxString m_sFilename;
 
+    wxString _getMapsDirectory();
+    wxString _getMapsFilter();
+    void _setFilename(const wxString& sFilename);
     void _onFloorGallery1Select(wxRibbonGalleryEvent& evt);
     void _onFloorGallery2Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery1Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery2Select(wxRibbonGalleryEvent& evt);
     void _onNew(wxRibbonButtonBarEvent& evt);
     void _onOpen(wxRibbonButtonBarEvent& evt);
+    void _onSave(wxRibbonButtonBarEvent& evt);
+    void _onSaveMenu(wxRibbonButtonBarEvent& evt);
+    void _onSaveMenuSave(wxCommandEvent& evt);
+    void _onSaveMenuSaveAs(wxCommandEvent& evt);
     void _onResize(wxSizeEvent& evt);
     static int _l_init(lua_State *L);
     static int _l_init_with_lua_app(lua_State *L);

@@ -34,6 +34,10 @@ BEGIN_EVENT_TABLE(EmbeddedGamePanel, wxGLCanvas)
   EVT_LEFT_DCLICK(EmbeddedGamePanel::_onLeftDoubleClick)
 END_EVENT_TABLE()
 
+IEmbeddedGamePanel::~IEmbeddedGamePanel()
+{
+}
+
 EmbeddedGamePanel::EmbeddedGamePanel(wxWindow *pParent)
   : wxGLCanvas(pParent, wxID_ANY, NULL, wxDefaultPosition,
         wxDefaultSize, 0, wxGLCanvasName, wxNullPalette)
@@ -67,19 +71,45 @@ void EmbeddedGamePanel::setLogWindow(frmLog *pLogWindow)
     m_pPrintTarget = pLogWindow->getTextControl();
 }
 
+THMap* EmbeddedGamePanel::getMap()
+{
+    THMap *pMap = NULL;
+    int iTop = lua_gettop(m_L);
+    lua_checkstack(m_L, 5);
+    lua_getglobal(m_L, "TheApp");
+    if(!lua_isnil(m_L, -1))
+    {
+        lua_getfield(m_L, -1, "map");
+        if(!lua_isnil(m_L, -1))
+        {
+            lua_getfield(m_L, -1, "th");
+            pMap = reinterpret_cast<THMap*>(lua_touserdata(m_L, -1));
+        }
+    }
+    lua_settop(m_L, iTop);
+    return pMap;
+}
+
 bool EmbeddedGamePanel::loadLua()
 {
+    // Create state
     m_L = luaL_newstate();
+    lua_atpanic(m_L, _l_panic);
+
+    // Save a pointer to ourselves in the registry
     lua_pushliteral(m_L, "wxWindow");
     lua_pushlightuserdata(m_L, reinterpret_cast<wxWindow*>(this));
     lua_settable(m_L, LUA_REGISTRYINDEX);
-    lua_pushliteral(m_L, "_MAP_EDITOR");
-    lua_pushboolean(m_L, 1);
-    lua_settable(m_L, LUA_GLOBALSINDEX);
-    lua_atpanic(m_L, _l_panic);
+
+    // Open default libraries, and override appropriate bits
     luaL_openlibs(m_L);
-    lua_pushcfunction(m_L, _l_print);
-    lua_setglobal(m_L, "print");
+    luaT_execute(m_L, "print = ...", _l_print);
+
+    // Set _MAP_EDITOR to true, to allow scripts to notice that they are
+    // running inside this component, rather than standalone.
+    luaT_execute(m_L, "_MAP_EDITOR = true");
+
+    // Load CorsixTH.lua and perform other initialisation needed by it
     lua_settop(m_L, 0);
     lua_pushcfunction(m_L, CorsixTH_lua_stacktrace);
     lua_pushcfunction(m_L, CorsixTH_lua_main_no_eval);
@@ -96,17 +126,16 @@ bool EmbeddedGamePanel::loadLua()
         }
         return false;
     }
-    // NB: THMain_l_main will have loaded CorsixTH.lua but not yet run it
+    // NB: CorsixTH_lua_main_no_eval will have loaded CorsixTH.lua and left it
+    // as the top value on the stack, but will not have executed it.
+    // The stack will hence have two things on it: the stacktrace function,
+    // and the loaded CorsixTH.lua
 
-    // package.preload.sdl = _l_open_sdl
-    lua_getglobal(m_L, "package");
-    lua_getfield(m_L, -1, "preload");
-    lua_pushliteral(m_L, "sdl");
-    lua_pushcfunction(m_L, _l_open_sdl);
-    lua_settable(m_L, -3);
-    lua_pop(m_L, 2);
+    // Overwrite what CorsixTH_lua_main_no_eval registered for require("sdl")
+    // with our own function that uses wxWidgets to do what SDL would have.
+    luaT_execute(m_L, "package.preload.sdl = ...", _l_open_sdl);
 
-    // require"TH".surface.endFrame = _l_end_frame
+    // Replace the Surface:endFrame() function with our own
     lua_getglobal(m_L, "require");
     lua_pushliteral(m_L, "TH");
     lua_call(m_L, 1, 1);
@@ -134,158 +163,115 @@ bool EmbeddedGamePanel::loadLua()
     {
         if(m_pPrintTarget)
         {
-            lua_getglobal(L, "debug");
-            lua_getfield(L, -1, "traceback");
-            lua_replace(L, -2);
-            lua_pushthread(L);
-            lua_getglobal(L, "tostring");
-            lua_pushvalue(L, -4);
-            lua_call(L, 1, 1);
-            lua_pushinteger(L, 1);
-            lua_call(L, 3, 1);
+            // Push debug.traceback onto m_L
+            lua_getglobal(m_L, "debug");
+            lua_getfield(m_L, -1, "traceback");
+            lua_replace(m_L, -2);
+            // Push the thread onto m_L
+            lua_pushvalue(m_L, -2);
+            // Push tostring(errmsg) onto m_L
+            lua_getglobal(m_L, "tostring");
+            lua_xmove(L, m_L, 1);
+            lua_call(m_L, 1, 1);
+            // Push constant 1 onto m_L
+            lua_pushinteger(m_L, 1);
+            // Call debug.traceback(thread, tostring(err), 1)
+            lua_call(m_L, 3, 1);
+            // Display resulting string and pop it
             m_pPrintTarget->AppendText(L"Error initialising Lua: ");
-            m_pPrintTarget->AppendText(lua_tostring(L, -1));
+            m_pPrintTarget->AppendText(lua_tostring(m_L, -1));
             m_pPrintTarget->AppendText(L"\n");
+            lua_pop(m_L, 1);
         }
         return false;
     }
-    lua_settop(L, 1); // the event coroutine
+    lua_settop(L, 1);
     m_Lthread = L;
+
+    // The stack of the Lua states is now as follows:
+    // m_L: stacktrace function, m_Lthread <top
+    // m_Lthread: event dispatch coroutine <top
 
     return true;
 }
 
 bool EmbeddedGamePanel::_resume(lua_State *L, int iNArgs, int iNRes)
 {
+    // L will be an event handling coroutine.
+    // Start by sending the event to the coroutine by resuming it with the
+    // event arguments.
     bool bGood = true;
     if(lua_resume(L, iNArgs) != LUA_YIELD)
     {
+        // Error occured during event processing.
         bGood = false;
+        // Transfer the error details to m_Lthread
         int iNTransfer = lua_gettop(L);
         if(lua_status(L) >= LUA_ERRRUN)
             iNTransfer = 1;
         lua_checkstack(m_Lthread, iNTransfer);
         lua_xmove(L, m_Lthread, iNTransfer);
         lua_settop(L, 0);
-        lua_resume(m_Lthread, 1);
+        // Allow m_Lthread to respond to the error in an appropriate way
+        lua_resume(m_Lthread, iNTransfer);
     }
     else
     {
+        // Event processed without errors, and will have returned true if
+        // a redraw needs to occur.
         if(lua_toboolean(L, -1) != 0)
         {
             Refresh(false);
         }
     }
+    // Leave L with the desired number of return values.
     lua_settop(L, iNRes);
     return bGood;
 }
 
 void EmbeddedGamePanel::_onMouseMove(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "motion");
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        wxPoint ptNew = evt.GetPosition();
-        wxPoint ptDelta = ptNew - m_ptMouse;
-        m_ptMouse = ptNew;
-        lua_pushinteger(L, ptDelta.x);
-        lua_pushinteger(L, ptDelta.y);
-        _resume(L, 5, 0);
-    }
+    // Keep track of relative mouse movements as well as absolute
+    wxPoint ptNew = evt.GetPosition();
+    wxPoint ptDelta = ptNew - m_ptMouse;
+    m_ptMouse = ptNew;
+
+    _dispatchEvent("motion", ptNew.x, ptNew.y, ptDelta.x, ptDelta.y);
 }
 
 void EmbeddedGamePanel::_onLeftUp(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttonup");
-        lua_pushinteger(L, SDL_BUTTON_LEFT);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttonup", SDL_BUTTON_LEFT, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onLeftDown(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttondown");
-        lua_pushinteger(L, SDL_BUTTON_LEFT);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttondown", SDL_BUTTON_LEFT, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onLeftDoubleClick(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttondown");
-        lua_pushliteral(L, "left_double");
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttondown", "left_double", evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onRightUp(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttonup");
-        lua_pushinteger(L, SDL_BUTTON_RIGHT);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttonup", SDL_BUTTON_RIGHT, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onRightDown(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttondown");
-        lua_pushinteger(L, SDL_BUTTON_RIGHT);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttondown", SDL_BUTTON_RIGHT, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onMiddleUp(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttonup");
-        lua_pushinteger(L, SDL_BUTTON_MIDDLE);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttonup", SDL_BUTTON_MIDDLE, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onMiddleDown(wxMouseEvent& evt)
 {
-    if(m_Lthread)
-    {
-        lua_State *L = lua_tothread(m_Lthread, 1);
-        lua_pushliteral(L, "buttondown");
-        lua_pushinteger(L, SDL_BUTTON_MIDDLE);
-        lua_pushinteger(L, evt.GetX());
-        lua_pushinteger(L, evt.GetY());
-        _resume(L, 4, 0);
-    }
+    _dispatchEvent("buttondown", SDL_BUTTON_MIDDLE, evt.GetX(), evt.GetY());
 }
 
 void EmbeddedGamePanel::_onPaint(wxPaintEvent& evt)
@@ -344,13 +330,19 @@ void EmbeddedGamePanel::_onPaint(wxPaintEvent& evt)
     }
 }
 
-int EmbeddedGamePanel::_l_print(lua_State *L)
+EmbeddedGamePanel* EmbeddedGamePanel::_getThis(lua_State *L)
 {
     lua_pushliteral(L, "wxWindow");
     lua_gettable(L, LUA_REGISTRYINDEX);
     EmbeddedGamePanel *pThis = reinterpret_cast<EmbeddedGamePanel*>(
         reinterpret_cast<wxWindow*>(lua_touserdata(L, -1)));
     lua_pop(L, 1);
+    return pThis;
+}
+
+int EmbeddedGamePanel::_l_print(lua_State *L)
+{
+    EmbeddedGamePanel *pThis = _getThis(L);
     if(pThis->m_pPrintTarget)
     {
         int iCount = lua_gettop(L);
@@ -380,15 +372,16 @@ int EmbeddedGamePanel::_l_panic(lua_State *L)
 
 int EmbeddedGamePanel::_l_end_frame(lua_State *L)
 {
+    // Call the original Surface:endFrame() function
     lua_pushvalue(L, lua_upvalueindex(1));
     lua_insert(L, 1);
     lua_call(L, lua_gettop(L) - 1, LUA_MULTRET);
-    lua_pushliteral(L, "wxWindow");
-    lua_gettable(L, LUA_REGISTRYINDEX);
-    EmbeddedGamePanel *pThis = reinterpret_cast<EmbeddedGamePanel*>(
-        reinterpret_cast<wxWindow*>(lua_touserdata(L, -1)));
-    lua_pop(L, 1);
+
+    // Update the display
+    EmbeddedGamePanel *pThis = _getThis(L);
     pThis->m_pGLCanvas->SwapBuffers();
+
+    // Return whatever the original returned
     return lua_gettop(L);
 }
 

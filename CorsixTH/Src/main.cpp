@@ -107,15 +107,10 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
         lua_pop(L, 1);
     }
 
-    // package.preload.lfs = luaopen_lfs
-    lua_getglobal(L, "package");
-    lua_getfield(L, -1, "preload");
-
+    // Fill in package.preload table so that calls to require("X") from Lua
+    // will call the appropriate luaopen_X function in C.
 #define PRELOAD(name, fn) \
-    lua_pushliteral(L, name); \
-    luaT_pushcfunction(L, fn); \
-    lua_settable(L, -3)
-
+    luaT_execute(L, "package.preload." name " = ...", fn)
     PRELOAD("lfs", luaopen_lfs_ext);
     PRELOAD("lpeg", luaopen_lpeg);
     PRELOAD("rnc", luaopen_rnc);
@@ -123,14 +118,10 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     PRELOAD("ISO_FS", luaopen_iso_fs);
     PRELOAD("persist", luaopen_persist);
     PRELOAD("sdl", luaopen_sdl);
-    
 #undef PRELOAD
-    lua_pop(L, 2);
 
     // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatbility)
-    lua_getglobal(L, "require");
-    lua_pushliteral(L, "debug");
-    lua_call(L, 1, 0);
+    luaT_execute(L, "require \"debug\"");
 
     // Check for --interpreter and run that instead of CorsixTH.lua
     bool bGotScriptFile = false;

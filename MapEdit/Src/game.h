@@ -27,3 +27,4 @@ SOFTWARE.
 #endif
 #include "../../CorsixTH/Src/th_gfx.h"
 #include "../../CorsixTH/Src/th_lua.h"
+#include "../../CorsixTH/Src/th_map.h"
