@@ -256,6 +256,8 @@ errors = {
   load_prefix = utf8 "Error al cargar la partida: ",
   map_file_missing = utf8 "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
   minimum_screen_size = utf8 "Introduce un tamaño de pantalla como mínimo de 640x480.",
+  maximum_screen_size = utf8 "Introduce un tamaño de pantalla como máximo de 3000x2000.",
+  unavailable_screen_size = "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
 }
 
 confirmation = {
