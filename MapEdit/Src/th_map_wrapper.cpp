@@ -36,7 +36,7 @@ void THMapWrapper::autoSetHelipad(THMap *pMap)
         for(int iY = 2; iY < pMap->getHeight() - 2; ++iY)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
-            if(pNode->iBlock[1] | pNode->iBlock[2])
+            if((pNode->iBlock[1] | pNode->iBlock[2]) & 0xFF)
                 continue;
             uint16_t iFloor1 = pNode->iBlock[0] & 0xFF;
             uint16_t iFloor2 = pNode[-2].iBlock[0] & 0xFF;
@@ -51,10 +51,10 @@ void THMapWrapper::autoSetHelipad(THMap *pMap)
                     {
                         if((iDX | iDY) == 0)
                             continue;
-                        if(pNode->iBlock[1] | pNode->iBlock[2])
+                        if((pNode->iBlock[1] | pNode->iBlock[2]) & 0xFF)
                             goto next_xy;
                         if((pNode->iBlock[0] & 0xFF) !=
-                            (iDY == 0 ? iFloor1 : iFloor2))
+                            (iDX == 0 ? iFloor2 : iFloor1))
                         {
                             goto next_xy;
                         }

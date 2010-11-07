@@ -552,16 +552,16 @@ function UIMapEditor:sampleBlock(x, y)
   end
   local floor, wall1, wall2 = map.th:getCell(wx, wy)
   local set = {}
-  set[floor] = true
-  set[wall1] = true
-  set[wall2] = true
+  set[floor % 256] = true
+  set[wall1 % 256] = true
+  set[wall2 % 256] = true
   if wx < map.width then
     floor, wall1, wall2 = map.th:getCell(wx + 1, wy)
-    set[wall2] = true
+    set[wall2 % 256] = true
   end
   if wy < map.height then
     floor, wall1, wall2 = map.th:getCell(wx, wy + 1)
-    set[wall1] = true
+    set[wall1 % 256] = true
   end
   set[0] = nil
   local floor_list = {}

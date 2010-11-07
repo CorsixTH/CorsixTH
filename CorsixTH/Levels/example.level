@@ -33,7 +33,7 @@ on the contrary everything is available unless specified otherwise in the level 
 
 ---------------------- General Information -------------------------
 %Name = "Example Town"
-%LevelFile = "LEVEL.L1"
+%LevelFile = "Example.L99"
 
 | Town properties | Cash at the beginning | The actual amount |
 #town.StartCash 100000

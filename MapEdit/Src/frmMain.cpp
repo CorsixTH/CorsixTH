@@ -229,7 +229,11 @@ struct map_save_t
 void frmMain::_onSaveMenuSave(wxCommandEvent& evt)
 {
     if(m_sFilename.empty())
+    {
         _onSaveMenuSaveAs(evt);
+        return;
+    }
+
     map_save_t oSave;
     if(oSave.fFile.Open(m_sFilename, wxFile::write))
     {
