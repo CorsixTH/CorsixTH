@@ -137,7 +137,13 @@ bool THMapWrapper::_isPassable(int iTile)
 bool THMapWrapper::_isWall(int iTile)
 {
     iTile &= 0xFF;
-    return 82 <= iTile && iTile <= 164;
+    if(82 <= iTile && iTile <= 155)
+        return true;
+    // NB: 157 through 160 are walls, but not the purposes of defining
+    // hospital tiles.
+    if(161 <= iTile && iTile <= 164)
+        return true;
+    return false;
 }
 
 bool THMapWrapper::_isCertainlyHospital(THMap* pMap, int iX, int iY)
@@ -307,12 +313,12 @@ void THMapWrapper::_check_door_unbuildability(THMap* pMap, int iX, int iY)
             bool bIsNorthFacing = (pNode[-1].iFlags >> 24) == THOB_EntranceLeftDoor;
             if(bIsNorthFacing)
             {
-                if(iDY != 1)
+                if(iDY != -1)
                     bBuildable = false;
             }
             else
             {
-                if(iDX != 1)
+                if(iDX != -1)
                     bBuildable = false;
             }
         }
@@ -327,7 +333,7 @@ bool THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iD
 {
     bool bShouldHaveDoor = false;
     THMapNode *pNode = pMap->getNode(iX, iY);
-    if(pNode && pNode->iBlock[1] == 0 && pNode->iBlock[2] == 0)
+    if(pNode && !(pNode->iBlock[1] & 0xFF) && !(pNode->iBlock[2] & 0xFF))
     {
         THMapNode *pFarNode = pMap->getNode(iX - iDX, iY - iDY);
         THMapNode *pNearNode = pMap->getNode(iX + iDX, iY + iDY);
@@ -369,8 +375,8 @@ bool THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iD
         luaT_execute(L,
             "local world = TheApp.world\n"
             "local door = world:getObject(...)\n"
-            "world:destroyEntity(door.slave)\n"
-            "world:destroyEntity(door)\n",
+            "if door then world:destroyEntity(door)\n"
+            "if door.slave then world:destroyEntity(door.slave) end end\n",
             iX + 1,
             iY + 1);
     }

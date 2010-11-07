@@ -324,7 +324,7 @@ void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
         pNode != pLastNode; ++pNode)
     {
         // TODO: Nicer system for saving object data
-        aBuffer[iBufferNext++] = 0;
+        aBuffer[iBufferNext++] = (pNode->iFlags & THMN_TallWest) != 0 ? 1 : 0;
         aBuffer[iBufferNext++] = pNode->iFlags >> 24;
 
         // Blocks

@@ -22,6 +22,7 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_H_
 #define CORSIX_TH_TH_H_
+#include <stddef.h>
 
 //! Generic linked list class (for inheriting from)
 struct THLinkList

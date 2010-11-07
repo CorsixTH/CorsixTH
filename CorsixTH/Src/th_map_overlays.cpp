@@ -137,9 +137,9 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(m_pFont)
     {
         if(pNode->iFlags >> 24)
-            _drawText(pCanvas, iCanvasX, iCanvasY, "T%i", (int)(pNode->iFlags >> 24));
+            _drawText(pCanvas, iCanvasX, iCanvasY - 8, "T%i", (int)(pNode->iFlags >> 24));
         if(pNode->iRoomId)
-            _drawText(pCanvas, iCanvasX, iCanvasY + 16, "R%i", (int)pNode->iRoomId);
+            _drawText(pCanvas, iCanvasX, iCanvasY + 8, "R%i", (int)pNode->iRoomId);
     }
 }
 
