@@ -504,29 +504,10 @@ function UIMenu:appendMenu(text, menu)
 end
 
 function UIMenuBar:makeMenu(app)
-  local function restart()
-    local level = self.ui.app.map.level_number
-    local difficulty = self.ui.app.map.difficulty
-    local name, file
-    if not tonumber(level) then
-      name = self.ui.app.map.level_name
-      file = self.ui.app.map.level_file
-    end
-    if level and name and not file then
-      self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
-      return
-    end
-    local status, err = pcall(app.loadLevel, app, level, difficulty, name, file)
-    if not status then
-      err = "Error while loading level: " .. err
-      print(err)
-      self.ui:addWindow(UIInformation(self.ui, {err}))
-    end
-  end
   local menu = UIMenu()
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
-    :appendItem(_S.menu_file.restart, restart)
+    :appendItem(_S.menu_file.restart, function() app:restart() end)
     :appendItem(_S.menu_file.quit, function() app:quit() end)
   self:addMenu(_S.menu.file, menu)
   

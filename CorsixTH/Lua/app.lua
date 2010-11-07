@@ -824,6 +824,30 @@ function App:load(filename)
   return LoadGameFile(self.savegame_dir .. filename)
 end
 
+--! Restarts the current level (offers confirmation window first)
+function App:restart()
+  assert(self.map, "Trying to restart while no map is loaded.")
+  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart, --[[persistable:app_confirm_restart]] function()
+    local level = self.map.level_number
+    local difficulty = self.map.difficulty
+    local name, file
+    if not tonumber(level) then
+      name = self.map.level_name
+      file = self.map.level_file
+    end
+    if level and name and not file then
+      self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
+      return
+    end
+    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file)
+    if not status then
+      err = "Error while loading level: " .. err
+      print(err)
+      self.ui:addWindow(UIInformation(self.ui, {err}))
+    end
+  end))
+end
+
 --! Quits the running game and returns to main menu (offers confirmation window first)
 function App:quit()
   self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()

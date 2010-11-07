@@ -262,6 +262,7 @@ errors = {
 confirmation = {
   needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
   abort_edit_room = utf8 "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
+  restart = utf8 "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?",
 }
 
 information = {
