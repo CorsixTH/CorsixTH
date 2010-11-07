@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_map.h"
+#include "th_map_overlays.h"
 #include "th_gfx.h"
 #include <SDL.h>
 #include <new>
@@ -49,6 +50,8 @@ THMap::THMap()
     m_pCells = NULL;
     m_pOriginalCells = NULL;
     m_pBlocks = NULL;
+    m_pOverlay = NULL;
+    m_bOwnOverlay = false;
     m_pPlotOwner = NULL;
     m_pParcelTileCounts = NULL;
     m_pParcelAdjacencyMatrix = NULL;
@@ -57,12 +60,21 @@ THMap::THMap()
 
 THMap::~THMap()
 {
+    setOverlay(NULL, false);
     delete[] m_pCells;
     delete[] m_pOriginalCells;
     delete[] m_pPlotOwner;
     delete[] m_pParcelTileCounts;
     delete[] m_pParcelAdjacencyMatrix;
     delete[] m_pPurchasableMatrix;
+}
+
+void THMap::setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership)
+{
+    if(m_pOverlay && m_bOwnOverlay)
+        delete m_pOverlay;
+    m_pOverlay = pOverlay;
+    m_bOwnOverlay = bTakeOwnership;
 }
 
 bool THMap::setSize(int iWidth, int iHeight)
@@ -810,6 +822,15 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
                 pItem = (THDrawable*)(pItem->m_pNext);
             }
+        }
+    }
+
+    if(m_pOverlay)
+    {
+        for(THMapNodeIterator itrNode(this, iScreenX, iScreenY, iWidth, iHeight); itrNode; ++itrNode)
+        {
+            m_pOverlay->drawCell(pCanvas, itrNode.x() + iCanvasX - 32,
+                itrNode.y() + iCanvasY, this, itrNode.nodeX(), itrNode.nodeY());
         }
     }
 

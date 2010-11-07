@@ -25,6 +25,7 @@ SOFTWARE.
 #include <wx/filename.h>
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
+EVT_RIBBONBAR_PAGE_CHANGED(wxID_ANY, frmMain::_onRibbonPageChanged)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR1, frmMain::_onFloorGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR2, frmMain::_onFloorGallery2Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL1, frmMain::_onWallGallery1Select)
@@ -33,6 +34,9 @@ EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, frmMain::_onSave)
 EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_SAVE, frmMain::_onSaveMenu)
+EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_WALLS, frmMain::_onViewWalls)
+EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_FLAGS, frmMain::_onViewFlags)
+EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_PARCELS, frmMain::_onViewParcels)
 EVT_SIZE(frmMain::_onResize)
 END_EVENT_TABLE()
 
@@ -86,15 +90,29 @@ frmMain::~frmMain()
     m_pLogWindow->Close();
 }
 
+void frmMain::_onRibbonPageChanged(wxRibbonBarEvent& evt)
+{
+    switch(m_pRibbon->GetActivePage())
+    {
+    case 1:
+        _setLuaBlockBrushFloorTab();
+        break;
+    case 2:
+        _setLuaBlockBrushWallsTab();
+        break;
+    }
+}
+
 struct do_load_level_t
 {
     const char* sData;
     size_t iLength;
+    frmMain* pThis;
 };
 
 void frmMain::_onNew(wxRibbonButtonBarEvent& evt)
 {
-    do_load_level_t oParams = {NULL, 0};
+    do_load_level_t oParams = {NULL, 0, this};
     lua_State* L = m_pGamePanel->getLua();
     if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
         lua_pop(L, 1);
@@ -142,7 +160,7 @@ void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
         delete[] sData;
         return;
     }
-    do_load_level_t oParams = {sData, iLength};
+    do_load_level_t oParams = {sData, iLength, this};
     lua_State* L = m_pGamePanel->getLua();
     if(lua_cpcall(L, _l_do_load, reinterpret_cast<void*>(&oParams)) != 0)
         lua_pop(L, 1);
@@ -170,6 +188,10 @@ int frmMain::_l_do_load(lua_State *L)
         lua_call(L, 2, 1);
     }
     lua_call(L, 2, 0);
+
+    pParams->pThis->_applyViewWalls();
+    pParams->pThis->_applyViewOverlay();
+
     return 0;
 }
 
@@ -232,6 +254,27 @@ void frmMain::_onSaveMenuSaveAs(wxCommandEvent& evt)
         return;
     _setFilename(oSaveDialog.GetPath());
     _onSaveMenuSave(evt);
+}
+
+void frmMain::_onViewWalls(wxRibbonButtonBarEvent& evt)
+{
+    m_bViewWalls = evt.IsChecked();
+    _applyViewWalls();
+    m_pGamePanel->Refresh();
+}
+
+void frmMain::_onViewFlags(wxRibbonButtonBarEvent& evt)
+{
+    m_bViewFlags = evt.IsChecked();
+    _applyViewOverlay();
+    m_pGamePanel->Refresh();
+}
+
+void frmMain::_onViewParcels(wxRibbonButtonBarEvent& evt)
+{
+    m_bViewParcels = evt.IsChecked();
+    _applyViewOverlay();
+    m_pGamePanel->Refresh();
 }
 
 void frmMain::_onResize(wxSizeEvent& evt)
@@ -306,16 +349,59 @@ int frmMain::_l_init_with_lua_app(lua_State *L)
     pFileButtons->AddButton(wxID_OPEN, wxT("Load"), BITMAP("open"));
     pFileButtons->AddHybridButton(wxID_SAVE, wxT("Save"), BITMAP("save"));
 
-    /*
+    
     wxRibbonPanel* pViewPanel = new wxRibbonPanel(pHomePage, wxID_ANY, wxT("View"));
     wxRibbonButtonBar* pViewButtons = new FullSizeButtonBar(pViewPanel, wxID_ANY);
-    pViewButtons->AddButton(wxID_ANY, wxT("Walls"), BITMAP("transparent_walls"));
-    */
+    pViewButtons->AddToggleButton(ID_VIEW_WALLS, wxT("Walls"), BITMAP("transparent_walls"));
+    pViewButtons->ToggleButton(ID_VIEW_WALLS, pThis->m_bViewWalls = true);
+    pViewButtons->AddToggleButton(ID_VIEW_FLAGS, wxT("Flags"), BITMAP("flags"));
+    pViewButtons->ToggleButton(ID_VIEW_FLAGS, pThis->m_bViewFlags = false);
+    pViewButtons->AddToggleButton(ID_VIEW_PARCELS, wxT("Parcels"), BITMAP("parcels"));
+    pViewButtons->ToggleButton(ID_VIEW_PARCELS, pThis->m_bViewParcels = false);
+    
 
 #undef BITMAP
     pThis->m_pRibbon->Realise();
 
     return 0;
+}
+
+void frmMain::_applyViewWalls()
+{
+    m_pGamePanel->getMap()->setAllWallDrawFlags(m_bViewWalls ? 0 : THDF_Alpha50);
+}
+
+void frmMain::_applyViewOverlay()
+{
+    if(m_bViewFlags || m_bViewParcels)
+    {
+        lua_State *L = m_pGamePanel->getLua();
+        luaT_execute(L, "return TheApp.map.debug_font, TheApp.map.cell_outline");
+        THFont *pFont = reinterpret_cast<THFont*>(lua_touserdata(L, -2));
+        THSpriteSheet *pSprites = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
+        lua_pop(L, 2);
+
+        THMapTypicalOverlay *pFlags = NULL;
+        THMapTypicalOverlay *pParcels = NULL;
+        if(m_bViewFlags)
+        {
+            pFlags = new THMapFlagsOverlay;
+            pFlags->setFont(pFont, false);
+            pFlags->setSprites(pSprites, false);
+        }
+        if(m_bViewParcels)
+        {
+            pParcels = new THMapParcelsOverlay;
+            pParcels->setFont(pFont, false);
+            pParcels->setSprites(pSprites, false);
+        }
+        THMapOverlayPair *pOverlays = new THMapOverlayPair;
+        pOverlays->setFirst(pParcels, true);
+        pOverlays->setSecond(pFlags, true);
+        m_pGamePanel->getMap()->setOverlay(pOverlays, true);
+    }
+    else
+        m_pGamePanel->getMap()->setOverlay(NULL, false);
 }
 
 int frmMain::_l_set_blocks(lua_State *L)
@@ -326,6 +412,13 @@ int frmMain::_l_set_blocks(lua_State *L)
 
     luaL_checktype(L, 1, LUA_TUSERDATA);
     luaL_checktype(L, 2, LUA_TTABLE);
+
+    pThis->m_iFloorTabBrushF  = 0;
+    pThis->m_iFloorTabBrushW1 = 0;
+    pThis->m_iFloorTabBrushW2 = 0;
+    pThis->m_iWallsTabBrushF  = 0;
+    pThis->m_iWallsTabBrushW1 = 0;
+    pThis->m_iWallsTabBrushW2 = 0;
 
     THSpriteSheet *pSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, 1));
     pThis->m_pFloorGallery1->Populate(pSheet, "floor", "simple", L, 2);
@@ -399,9 +492,9 @@ void frmMain::_onFloorGallery1Select(wxRibbonGalleryEvent& evt)
         int iBaseBlock;
         int iBlock = m_pFloorGallery1->GetBlock(evt.GetGalleryItem(), &iBaseBlock);
         if(iBaseBlock != 0)
-            _setLuaBlockBrush(iBaseBlock, iBlock, 0);
+            _setLuaBlockBrushFloorTab(iBaseBlock, iBlock, 0);
         else
-            _setLuaBlockBrush(iBlock, 0, 0);
+            _setLuaBlockBrushFloorTab(iBlock, 0, 0);
     }
 }
 
@@ -413,9 +506,9 @@ void frmMain::_onFloorGallery2Select(wxRibbonGalleryEvent& evt)
         int iBaseBlock;
         int iBlock = m_pFloorGallery2->GetBlock(evt.GetGalleryItem(), &iBaseBlock);
         if(iBaseBlock != 0)
-            _setLuaBlockBrush(iBaseBlock, iBlock, 0);
+            _setLuaBlockBrushFloorTab(iBaseBlock, iBlock, 0);
         else
-            _setLuaBlockBrush(iBlock, 0, 0);
+            _setLuaBlockBrushFloorTab(iBlock, 0, 0);
     }
 }
 
@@ -425,7 +518,7 @@ void frmMain::_onWallGallery1Select(wxRibbonGalleryEvent& evt)
     {
         m_pWallGallery2->SetSelection(NULL);
         int iBlock = m_pWallGallery1->GetBlock(evt.GetGalleryItem(), NULL);
-        _setLuaBlockBrush(0, 0, iBlock);
+        _setLuaBlockBrushWallsTab(0, 0, iBlock);
     }
 }
 
@@ -435,20 +528,39 @@ void frmMain::_onWallGallery2Select(wxRibbonGalleryEvent& evt)
     {
         m_pWallGallery1->SetSelection(NULL);
         int iBlock = m_pWallGallery2->GetBlock(evt.GetGalleryItem(), NULL);
-        _setLuaBlockBrush(0, iBlock, 0);
+        _setLuaBlockBrushWallsTab(0, iBlock, 0);
     }
+}
+
+void frmMain::_setLuaBlockBrushFloorTab(int iBlockF, int iBlockW1, int iBlockW2)
+{
+    m_iFloorTabBrushF = iBlockF;
+    m_iFloorTabBrushW1 = iBlockW1;
+    m_iFloorTabBrushW2 = iBlockW2;
+    _setLuaBlockBrushFloorTab();
+}
+
+void frmMain::_setLuaBlockBrushWallsTab(int iBlockF, int iBlockW1, int iBlockW2)
+{
+    m_iWallsTabBrushF = iBlockF;
+    m_iWallsTabBrushW1 = iBlockW1;
+    m_iWallsTabBrushW2 = iBlockW2;
+    _setLuaBlockBrushWallsTab();
+}
+
+void frmMain::_setLuaBlockBrushFloorTab()
+{
+    _setLuaBlockBrush(m_iFloorTabBrushF, m_iFloorTabBrushW1, m_iFloorTabBrushW2);
+}
+
+void frmMain::_setLuaBlockBrushWallsTab()
+{
+    _setLuaBlockBrush(m_iWallsTabBrushF, m_iWallsTabBrushW1, m_iWallsTabBrushW2);
 }
 
 void frmMain::_setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2)
 {
     lua_State *L = m_pGamePanel->getLua();
-
-    // _MAP_EDITOR:setBlockBrush(iBlockF, iBlockW1, iBlockW2)
-    lua_getglobal(L, "_MAP_EDITOR");
-    lua_getfield(L, -1, "setBlockBrush");
-    lua_insert(L, -2);
-    lua_pushinteger(L, iBlockF);
-    lua_pushinteger(L, iBlockW1);
-    lua_pushinteger(L, iBlockW2);
-    lua_pcall(L, 4, 0, 0);
+    luaT_execute(L, "_MAP_EDITOR:setBlockBrush(...)",
+        iBlockF, iBlockW1, iBlockW2);
 }

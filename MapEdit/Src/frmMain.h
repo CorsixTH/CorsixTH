@@ -51,6 +51,9 @@ public:
         ID_GALLERY_FLOOR2,
         ID_GALLERY_WALL1,
         ID_GALLERY_WALL2,
+        ID_VIEW_WALLS,
+        ID_VIEW_FLAGS,
+        ID_VIEW_PARCELS,
     };
 
 protected:
@@ -64,7 +67,18 @@ protected:
     RibbonBlockGallery* m_pWallGallery2;
     wxString m_sFrameCaption;
     wxString m_sFilename;
+    bool m_bViewFlags;
+    bool m_bViewParcels;
+    bool m_bViewWalls;
+    int m_iFloorTabBrushF;
+    int m_iFloorTabBrushW1;
+    int m_iFloorTabBrushW2;
+    int m_iWallsTabBrushF;
+    int m_iWallsTabBrushW1;
+    int m_iWallsTabBrushW2;
 
+    void _applyViewWalls();
+    void _applyViewOverlay();
     wxString _getMapsDirectory();
     wxString _getMapsFilter();
     void _setFilename(const wxString& sFilename);
@@ -79,11 +93,19 @@ protected:
     void _onSaveMenuSave(wxCommandEvent& evt);
     void _onSaveMenuSaveAs(wxCommandEvent& evt);
     void _onResize(wxSizeEvent& evt);
+    void _onViewWalls(wxRibbonButtonBarEvent& evt);
+    void _onViewFlags(wxRibbonButtonBarEvent& evt);
+    void _onViewParcels(wxRibbonButtonBarEvent& evt);
+    void _onRibbonPageChanged(wxRibbonBarEvent& evt);
     static int _l_init(lua_State *L);
     static int _l_init_with_lua_app(lua_State *L);
     static int _l_set_blocks(lua_State *L);
     static int _l_set_block_brush(lua_State *L);
     static int _l_do_load(lua_State *L);
+    void _setLuaBlockBrushFloorTab(int iBlockF, int iBlockW1, int iBlockW2);
+    void _setLuaBlockBrushWallsTab(int iBlockF, int iBlockW1, int iBlockW2);
+    void _setLuaBlockBrushFloorTab();
+    void _setLuaBlockBrushWallsTab();
     void _setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2);
 
     DECLARE_EVENT_TABLE();

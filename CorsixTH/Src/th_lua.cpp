@@ -357,3 +357,18 @@ void luaT_execute(lua_State *L, const char* sLuaString)
     luaT_execute_loadstring(L, sLuaString);
     lua_call(L, 0, LUA_MULTRET);
 }
+
+void luaT_push(lua_State *L, lua_CFunction f)
+{
+    luaT_pushcfunction(L, f);
+}
+
+void luaT_push(lua_State *L, int i)
+{
+    lua_pushinteger(L, (lua_Integer)i);
+}
+
+void luaT_push(lua_State *L, const char* s)
+{
+    lua_pushstring(L, s);
+}

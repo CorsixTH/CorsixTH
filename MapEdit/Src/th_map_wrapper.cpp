@@ -177,7 +177,7 @@ void THMapWrapper::_do_set_cell(lua_State *L, THMap* pMap, int iX, int iY, uint1
         bShouldCheckHospitality = true;
         if(_isDoorframe(iOld) || _isDoorframe(iNew))
             bShouldCheckNeighbourDoors = true;
-        if((iOld != 0) != (iNew != 0))
+        if((iOld == 0) != (iNew == 0))
             bShouldCheckOwnDoor = true;
     }
 
@@ -196,7 +196,7 @@ void THMapWrapper::_do_set_cell(lua_State *L, THMap* pMap, int iX, int iY, uint1
 
     if(bShouldCheckOwnDoor)
     {
-        _check_door(L, pMap, iX, iY, 1, 0);
+        _check_door(L, pMap, iX, iY, 1, 0) ||
         _check_door(L, pMap, iX, iY, 0, 1);
     }
     if(bShouldCheckNeighbourDoors)
@@ -323,7 +323,7 @@ void THMapWrapper::_check_door_unbuildability(THMap* pMap, int iX, int iY)
         pNode->iFlags &=~ THMN_Buildable;
 }
 
-void THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iDX, int iDY)
+bool THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iDX, int iDY)
 {
     bool bShouldHaveDoor = false;
     THMapNode *pNode = pMap->getNode(iX, iY);
@@ -351,7 +351,7 @@ void THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iD
                     eNodeThob == THOB_EntranceRightDoor;
     if(bGotDoor == bShouldHaveDoor)
     {
-        return;
+        return false;
     }
     else if(bShouldHaveDoor)
     {
@@ -381,4 +381,5 @@ void THMapWrapper::_check_door(lua_State *L, THMap* pMap, int iX, int iY, int iD
             _check_door_unbuildability(pMap, iX + iDX, iY + iDY);
         }
     }
+    return bShouldHaveDoor;
 }

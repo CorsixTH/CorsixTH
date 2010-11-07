@@ -15,6 +15,7 @@ CorsixTH/Bitmap/flag_travel_east.bmp -text
 CorsixTH/Bitmap/flag_travel_north.bmp -text
 CorsixTH/Bitmap/flag_travel_south.bmp -text
 CorsixTH/Bitmap/flag_travel_west.bmp -text
+CorsixTH/Bitmap/flags32.png -text
 CorsixTH/Bitmap/fullscreen_border_bottom.bmp -text
 CorsixTH/Bitmap/fullscreen_border_bottomleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_bottomright.bmp -text
@@ -29,11 +30,17 @@ CorsixTH/Bitmap/mainmenu1080.bmp -text
 CorsixTH/Bitmap/mainmenu1080.dat -text
 CorsixTH/Bitmap/mainmenu1080.pal -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
+CorsixTH/Bitmap/map_cell_outline_east.bmp -text
+CorsixTH/Bitmap/map_cell_outline_north.bmp -text
+CorsixTH/Bitmap/map_cell_outline_south.bmp -text
+CorsixTH/Bitmap/map_cell_outline_west.bmp -text
 CorsixTH/Bitmap/mkbootstrap.lua -text
 CorsixTH/Bitmap/mkfont.lua -text
 CorsixTH/Bitmap/new32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/open32.png -text svneol=unset#image/png
+CorsixTH/Bitmap/parcels32.png -text
 CorsixTH/Bitmap/save32.png -text svneol=unset#image/png
+CorsixTH/Bitmap/transparent_walls32.png -text
 CorsixTH/Bitmap/tree_collapsed.bmp -text
 CorsixTH/Bitmap/tree_ctrl.dat -text
 CorsixTH/Bitmap/tree_ctrl.pal -text

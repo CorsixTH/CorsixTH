@@ -53,7 +53,7 @@ public:
 protected:
     static int _l_set_cell(lua_State *L);
     static void _do_set_cell(lua_State *L, THMap* pMap, int iX, int iY, uint16_t iNewBlocks[4]);
-    static void _check_door(lua_State *L, THMap* pMap, int iX, int iY, int iDX, int iDY);
+    static bool _check_door(lua_State *L, THMap* pMap, int iX, int iY, int iDX, int iDY);
     static void _check_door_unbuildability(THMap* pMap, int iX, int iY);
 
     static const int ms_iDoorframeWallFirst = 157;

@@ -178,6 +178,8 @@ class THSpriteSheet;
 */
 typedef void (*THMapLoadObjectCallback_t)(void*, int, int, THObjectType, uint8_t);
 
+class THMapOverlay;
+
 class THMap
 {
 public:
@@ -323,6 +325,8 @@ public:
     void persist(LuaPersistWriter *pWriter) const;
     void depersist(LuaPersistReader *pReader);
 
+    void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
+
 protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
@@ -342,6 +346,8 @@ protected:
     THMapNode* m_pCells;
     THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
     THSpriteSheet* m_pBlocks;
+    THMapOverlay* m_pOverlay;
+    bool m_bOwnOverlay;
     int* m_pPlotOwner; // 0 for unowned, 1 for player 1, etc.
     int m_iWidth;
     int m_iHeight;
@@ -413,6 +419,9 @@ public:
 
     //! Get the Y position of the node relative to the top-left corner of the screen-space rectangle
     inline int y() const {return m_iYs;}
+
+    inline int nodeX() const {return m_iX;}
+    inline int nodeY() const {return m_iY;}
 
     //! Returns true iff the next node will be on a different scanline
     /*!

@@ -250,22 +250,9 @@ static int luaT_stdgc(lua_State *L)
 void luaT_execute(lua_State *L, const char* sLuaString);
 void luaT_execute_loadstring(lua_State *L, const char* sLuaString);
 
-template <class T> static void luaT_push(lua_State *L, T arg);
-
-template <> static void luaT_push(lua_State *L, lua_CFunction f)
-{
-    luaT_pushcfunction(L, f);
-}
-
-template <> static void luaT_push(lua_State *L, int i)
-{
-    lua_pushinteger(L, (lua_Integer)i);
-}
-
-template <> static void luaT_push(lua_State *L, const char* s)
-{
-    lua_pushstring(L, s);
-}
+void luaT_push(lua_State *L, lua_CFunction f);
+void luaT_push(lua_State *L, int i);
+void luaT_push(lua_State *L, const char* s);
 
 template <class T>
 static void luaT_execute(lua_State *L, const char* sLuaString, T arg)
@@ -283,6 +270,17 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
     luaT_push(L, arg1);
     luaT_push(L, arg2);
     lua_call(L, 2, LUA_MULTRET);
+}
+
+template <class T1, class T2, class T3>
+static void luaT_execute(lua_State *L, const char* sLuaString,
+                         T1 arg1, T2 arg2, T3 arg3)
+{
+    luaT_execute_loadstring(L, sLuaString);
+    luaT_push(L, arg1);
+    luaT_push(L, arg2);
+    luaT_push(L, arg3);
+    lua_call(L, 3, LUA_MULTRET);
 }
 
 template <class T1, class T2, class T3, class T4>

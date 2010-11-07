@@ -17,6 +17,10 @@ sprites[14] = "fullscreen_border_right.bmp"
 sprites[15] = "fullscreen_border_bottomleft.bmp"
 sprites[16] = "fullscreen_border_bottom.bmp"
 sprites[17] = "fullscreen_border_bottomright.bmp"
+sprites[18] = "map_cell_outline_north.bmp"
+sprites[19] = "map_cell_outline_east.bmp"
+sprites[20] = "map_cell_outline_south.bmp"
+sprites[21] = "map_cell_outline_west.bmp"
 
 -- Palette options
 palette = "from bitmap"
