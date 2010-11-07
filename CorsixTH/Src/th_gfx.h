@@ -204,6 +204,8 @@ public:
     */
     void setSpriteSheet(THSpriteSheet* pSpriteSheet);
 
+    THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
+
     //! Set the seperation between characters and between lines
     /*!
         Generally, the sprite sheet glyphs will already include separation, and

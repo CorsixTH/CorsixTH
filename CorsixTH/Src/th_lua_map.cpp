@@ -478,6 +478,10 @@ static int l_map_setcellflags(lua_State *L)
                 pNode->iFlags &= 0x00FFFFFF;
                 pNode->iFlags |= static_cast<uint32_t>(lua_tointeger(L, 6)) << 24;
             }
+            else if(strcmp(field, "parcelId") == 0)
+            {
+                pNode->iParcelId = static_cast<uint16_t>(lua_tointeger(L, 6));
+            }
             else
             {
                 luaL_error(L, "Invalid flag \'%s\'", field);

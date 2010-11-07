@@ -51,9 +51,11 @@ public:
         ID_GALLERY_FLOOR2,
         ID_GALLERY_WALL1,
         ID_GALLERY_WALL2,
+        ID_GALLERY_PARCELS,
         ID_VIEW_WALLS,
         ID_VIEW_FLAGS,
         ID_VIEW_PARCELS,
+        ID_PARCEL_PANEL
     };
 
 protected:
@@ -76,6 +78,7 @@ protected:
     int m_iWallsTabBrushF;
     int m_iWallsTabBrushW1;
     int m_iWallsTabBrushW2;
+    int m_iParcelBrush;
 
     void _applyViewWalls();
     void _applyViewOverlay();
@@ -86,6 +89,7 @@ protected:
     void _onFloorGallery2Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery1Select(wxRibbonGalleryEvent& evt);
     void _onWallGallery2Select(wxRibbonGalleryEvent& evt);
+    void _onParcelGallerySelect(wxRibbonGalleryEvent& evt);
     void _onNew(wxRibbonButtonBarEvent& evt);
     void _onOpen(wxRibbonButtonBarEvent& evt);
     void _onSave(wxRibbonButtonBarEvent& evt);
@@ -97,6 +101,8 @@ protected:
     void _onViewFlags(wxRibbonButtonBarEvent& evt);
     void _onViewParcels(wxRibbonButtonBarEvent& evt);
     void _onRibbonPageChanged(wxRibbonBarEvent& evt);
+    void _populateParcelGallery(wxRibbonGallery* pGallery);
+    static wxBitmap _asBitmap(THSpriteSheet* pSheet, unsigned int iSprite);
     static int _l_init(lua_State *L);
     static int _l_init_with_lua_app(lua_State *L);
     static int _l_set_blocks(lua_State *L);
@@ -107,6 +113,7 @@ protected:
     void _setLuaBlockBrushFloorTab();
     void _setLuaBlockBrushWallsTab();
     void _setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2);
+    void _setLuaParcelBrush(int iParcel);
 
     DECLARE_EVENT_TABLE();
 };

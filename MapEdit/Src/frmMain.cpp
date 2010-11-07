@@ -30,6 +30,7 @@ EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR1, frmMain::_onFloorGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_FLOOR2, frmMain::_onFloorGallery2Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL1, frmMain::_onWallGallery1Select)
 EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_WALL2, frmMain::_onWallGallery2Select)
+EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_PARCELS, frmMain::_onParcelGallerySelect)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, frmMain::_onSave)
@@ -48,6 +49,7 @@ frmMain::frmMain()
     _setFilename(wxEmptyString);
 
     m_pRibbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRIBBON_BAR_FLOW_VERTICAL | wxRIBBON_BAR_SHOW_PAGE_LABELS);
+    m_pRibbon->SetArtProvider(new wxRibbonMSWArtProvider);
     m_pRibbon->SetTabCtrlMargins(0, 0);
     m_pHomePage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Home");
     wxRibbonPage* pFloorPage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Floors");
@@ -94,6 +96,10 @@ void frmMain::_onRibbonPageChanged(wxRibbonBarEvent& evt)
 {
     switch(m_pRibbon->GetActivePage())
     {
+    case 0:
+        if(m_bViewParcels)
+            _setLuaParcelBrush(m_iParcelBrush);
+        break;
     case 1:
         _setLuaBlockBrushFloorTab();
         break;
@@ -240,7 +246,8 @@ void frmMain::_onSaveMenuSave(wxCommandEvent& evt)
         lua_pop(L, 2);
         pMap->setPlayerCameraTile(0, iCameraX, iCameraY);
         pMap->save(map_save_t::writer, reinterpret_cast<void*>(&oSave));
-        ::wxMessageBox(wxT("Map saved."), wxT("Save"), wxICON_INFORMATION | wxCENTER, this);
+        ::wxMessageBox(wxT("Map saved."), wxT("Save"), wxOK | wxCENTER |
+            wxICON_INFORMATION, this);
     }
 }
 
@@ -275,6 +282,103 @@ void frmMain::_onViewParcels(wxRibbonButtonBarEvent& evt)
     m_bViewParcels = evt.IsChecked();
     _applyViewOverlay();
     m_pGamePanel->Refresh();
+
+    if(evt.IsChecked())
+    {
+        wxRibbonPanel* pParcelPanel = new wxRibbonPanel(m_pHomePage,
+            ID_PARCEL_PANEL, L"Parcels");
+        wxRibbonGallery* pParcelGallery = new wxRibbonGallery(pParcelPanel,
+            ID_GALLERY_PARCELS);
+        _populateParcelGallery(pParcelGallery);
+    }
+    else
+    {
+        wxWindow* pParcelPanel = m_pHomePage->FindItem(ID_PARCEL_PANEL);
+        if(pParcelPanel)
+            pParcelPanel->Destroy();
+    }
+    m_pRibbon->Realize();
+}
+
+wxBitmap frmMain::_asBitmap(THSpriteSheet* pSheet, unsigned int iSprite)
+{
+    unsigned int iWidth, iHeight;
+    pSheet->getSpriteSize(iSprite, &iWidth, &iHeight);
+    wxImage imgSprite;
+    imgSprite.Create(iWidth, iHeight);
+    if(!imgSprite.HasAlpha())
+        imgSprite.InitAlpha();
+    pSheet->wxDrawSprite(iSprite, imgSprite.GetData(), imgSprite.GetAlpha());
+    return wxBitmap(imgSprite);
+}
+
+void frmMain::_populateParcelGallery(wxRibbonGallery* pGallery)
+{
+    THSpriteSheet *pBlocksSheet;
+    THSpriteSheet *pOutlineSheet;
+    THSpriteSheet *pFontSheet;
+    {
+        lua_State *L = m_pGamePanel->getLua();
+        luaT_execute(L, "return TheApp.map.blocks");
+        pBlocksSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
+        luaT_execute(L, "return TheApp.map.cell_outline");
+        pOutlineSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
+        luaT_execute(L, "return TheApp.map.debug_font");
+        pFontSheet = reinterpret_cast<THFont*>(lua_touserdata(L, -1))
+            ->getSpriteSheet();
+        lua_pop(L, 3);
+    }
+
+    wxBitmap bmOutline(_asBitmap(pBlocksSheet, 74));
+    wxMemoryDC dcMem;
+    dcMem.SelectObject(bmOutline);
+    for(int i = 0; i < 4; ++i)
+    {
+        dcMem.DrawBitmap(_asBitmap(pOutlineSheet, 18 + i), 0, 0);
+    }
+    dcMem.SelectObject(wxNullBitmap);
+
+    wxBitmap bmNumbers[10];
+    for(int i = 0; i < 10; ++i)
+    {
+        bmNumbers[i] = _asBitmap(pFontSheet, '0' + i - 31);
+    }
+
+    for(int iParcel = 0; iParcel < 32; ++iParcel)
+    {
+        wxBitmap bmParcel(bmOutline);
+        dcMem.SelectObject(bmParcel);
+
+        char sMsg[8];
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#endif
+        sprintf(sMsg, "%i", iParcel);
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+        int iX = 0, iY = 0;
+        for(char* s = sMsg; *s; ++s)
+        {
+            wxBitmap& bm = bmNumbers[*s - '0'];
+            iX += bm.GetWidth();
+            iY = std::max(iY, bm.GetHeight());
+        }
+        iX = (bmParcel.GetWidth() - iX) / 2;
+        iY = (bmParcel.GetHeight() - iY) / 2;
+
+        for(char* s = sMsg; *s; ++s)
+        {
+            wxBitmap& bm = bmNumbers[*s - '0'];
+            dcMem.DrawBitmap(bm, iX, iY);
+            iX += bm.GetWidth();
+        }
+
+        dcMem.SelectObject(wxNullBitmap);
+        pGallery->SetItemClientData(pGallery->Append(bmParcel, iParcel),
+            reinterpret_cast<void*>(iParcel));
+    }
 }
 
 void frmMain::_onResize(wxSizeEvent& evt)
@@ -510,6 +614,22 @@ void frmMain::_onFloorGallery2Select(wxRibbonGalleryEvent& evt)
         else
             _setLuaBlockBrushFloorTab(iBlock, 0, 0);
     }
+}
+
+void frmMain::_onParcelGallerySelect(wxRibbonGalleryEvent& evt)
+{
+    if(evt.GetGalleryItem() != NULL)
+    {
+        _setLuaParcelBrush(reinterpret_cast<int>(evt.GetGallery()
+            ->GetItemClientData(evt.GetGalleryItem())));
+    }
+}
+
+void frmMain::_setLuaParcelBrush(int iParcel)
+{
+    m_iParcelBrush = iParcel;
+    lua_State *L = m_pGamePanel->getLua();
+    luaT_execute(L, "_MAP_EDITOR:setBlockBrushParcel(...)", iParcel);
 }
 
 void frmMain::_onWallGallery1Select(wxRibbonGalleryEvent& evt)

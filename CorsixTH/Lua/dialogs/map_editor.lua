@@ -365,6 +365,10 @@ function UIMapEditor:finishPaint(apply)
   -- Grab local copies of all the fields which we need
   local map = self.ui.app.map.th
   local brush_f = self.block_brush_f
+  local brush_parcel = self.block_brush_parcel
+  if brush_parcel then
+    brush_parcel = {parcelId = brush_parcel}
+  end
   local brush_w1 = self.block_brush_w1
   local brush_w1p = (self.block_info[brush_w1] or '').pair
   local brush_w2 = self.block_brush_w2
@@ -393,6 +397,7 @@ function UIMapEditor:finishPaint(apply)
       -- Grab and save the contents of the tile
       local f, w1, w2 = map:getCell(tx, ty)
       old_floors[combine_ints(tx, ty)] = f
+      local flags
       -- Change the contents according to what is being painted
       repeat
         -- If not painting, do not change anything (apart from UI layer).
@@ -407,6 +412,7 @@ function UIMapEditor:finishPaint(apply)
         if ((ty - step_base_y) % ystep) ~= 0 then
           break
         end
+        flags = brush_parcel
         -- If painting walls, only apply to the two edges which get painted.
         if is_wall == "north" and ty ~= y_first and ty ~= y_last then
           break
@@ -415,7 +421,7 @@ function UIMapEditor:finishPaint(apply)
           break
         end
         -- If painting a floor component, apply it.
-        if brush_f and brush_f ~= 0 then
+        if not brush_parcel and brush_f and brush_f ~= 0 then
           f = f - (f % 256) + brush_f
           -- If painting just a floor component, then remove any decoration
           -- and/or walls which get painted over.
@@ -440,6 +446,9 @@ function UIMapEditor:finishPaint(apply)
       until true
       -- Remove the UI layer and perform the adjustment of the other layers.
       map:setCell(tx, ty, f, w1, w2, 0)
+      if flags then
+        map:setCellFlags(tx, ty, flags)
+      end
     end
   end
   map:updateShadows()
@@ -589,7 +598,16 @@ function UIMapEditor:setBlockBrush(f, w1, w2)
     preview = w1
   end
   self.block_brush_preview = preview
+  self.block_brush_parcel = nil
   self.block_brush_f = f
   self.block_brush_w1 = w1
   self.block_brush_w2 = w2
+end
+
+function UIMapEditor:setBlockBrushParcel(parcel)
+  self.block_brush_preview = 24
+  self.block_brush_parcel = parcel
+  self.block_brush_f = self.block_brush_preview
+  self.block_brush_w1 = 0
+  self.block_brush_w2 = 0
 end
