@@ -37,7 +37,7 @@ function Staff:tickDay()
   -- If this is a researcher in the research department some research has 
   -- been done during the day.
   local room = self:getRoom()
-  if room and room.room_info.id == "research" and self.profile.is_researcher >= 1.0 
+  if room and room.room_info.id == "research" and self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 
   and self.hospital then
     self.hospital:addResearchPoints(400 + 100*self.profile.skill) -- TODO: Balance value further somehow
   end
