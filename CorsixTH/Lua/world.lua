@@ -324,6 +324,7 @@ function World:spawnPatient(hospital)
   if #self.available_diseases < 1 then
     return
   end
+  assert(#self.spawn_points > 0, "Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level.")
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end

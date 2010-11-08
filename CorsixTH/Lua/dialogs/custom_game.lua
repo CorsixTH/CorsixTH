@@ -63,7 +63,7 @@ end
   
 function UICustomGame:buttonClicked(num)
   local app = self.ui.app
-  local item = self.items[num]
+  local item = self.items[num + self.scrollbar.value - 1]
   local level_name = item.name:sub(2, -2)
   local level_file = item.level_file:sub(2, -2)
   local filename = item.path

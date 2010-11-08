@@ -97,7 +97,6 @@ function UITownMap:UITownMap(ui)
 end
 
 function UITownMap:close()
-  self.ui:disableKeyboardRepeat()
   Window.close(self)
 end
 
