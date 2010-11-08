@@ -133,16 +133,21 @@ wxString frmMain::_getMapsDirectory()
 
 wxString frmMain::_getMapsFilter()
 {
-    wxString sFilter = wxT("Theme Hospital maps (*.L[0-9]+)");
+    wxString sFilter = wxT("Theme Hospital maps (*.L[0-9]+)|");
     // *.L[0-9]* isn't quite the right filter, but it is as close as reasonably
     // possible to *.L[0-9]+ which file filters can reasonably get
-    char cSep = '|';
+    wxString sTHMapEndings = wxT("");
+    char cSep = ';';
     for(int i = 0; i < 10; ++i)
     {
-        sFilter += wxString::Format(L"%c*.L%i*", cSep, i);
-        cSep = ';';
+        if(i == 9) cSep = '|';
+        sTHMapEndings += wxString::Format(L"*.L%i*%c", i, cSep);
     }
-    sFilter += wxT("|All files (*.*)|*.*");
+    sFilter += sTHMapEndings;
+    sFilter += wxT("CorsixTH maps (*.map)|*.map|");
+    sFilter += wxT("All maps (*.map, *.L[0-9]+)|*.map;");
+    sFilter += sTHMapEndings;
+    sFilter += wxT("All files (*.*)|*.*");
     return sFilter;
 }
 
@@ -152,6 +157,7 @@ void frmMain::_onOpen(wxRibbonButtonBarEvent& evt)
     wxString sFilter = _getMapsFilter();
     wxFileDialog oOpenDialog(this, wxFileSelectorPromptStr, sDirectory,
         wxEmptyString, sFilter, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    oOpenDialog.SetFilterIndex(2);
     if(oOpenDialog.ShowModal() != wxID_OK)
         return;
     wxFile fFile;
@@ -261,6 +267,7 @@ void frmMain::_onSaveMenuSaveAs(wxCommandEvent& evt)
     wxString sFilter = _getMapsFilter();
     wxFileDialog oSaveDialog(this, wxFileSelectorPromptStr, sDirectory,
         m_sFilename, sFilter, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    oSaveDialog.SetFilterIndex(2);
     if(oSaveDialog.ShowModal() != wxID_OK)
         return;
     _setFilename(oSaveDialog.GetPath());

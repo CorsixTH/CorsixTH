@@ -33,7 +33,7 @@ on the contrary everything is available unless specified otherwise in the level 
 
 ---------------------- General Information -------------------------
 %Name = "Example Town"
-%LevelFile = "Example.L99"
+%LevelFile = "Example.map"
 
 | Town properties | Cash at the beginning | The actual amount |
 #town.StartCash 100000
@@ -101,6 +101,7 @@ RschReqd how much research is required to discover the treatment room for the di
 #objects[26].StartAvail.StartStrength.AvailableForLevel 1 10 1 Slicer for slack tongues
 #objects[27].StartAvail.StartStrength.AvailableForLevel 1 12 1 X-Ray
 #objects[30].StartAvail.StartStrength.AvailableForLevel 1 12 1 Operating Table
+#objects[37].StartAvail.StartStrength.AvailableForLevel 1 0 1 Projector
 #objects[42].StartAvail.StartStrength.AvailableForLevel 1 10 1 Blood Machine
 #objects[46].StartAvail.StartStrength.AvailableForLevel 1 8 1 Electrolysis Machine
 #objects[47].StartAvail.StartStrength.AvailableForLevel 1 7 1 Jellyitus Moulding Machine
