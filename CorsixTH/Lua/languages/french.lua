@@ -34,6 +34,14 @@ adviser.goals.win = { -- Why are this strings upcase?
 }
 adviser.warnings.handymen_tired = utf8 "Les agents de maintenance sont très fatigués. Laissez-les se reposer." -- Add a missing letter
 
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = "Voir la page suivante"
+tooltip.staff_list.prev_person = utf8 "Voir la page précédente"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = utf8 "Visage - cliquez pour ouvrir la fenêtre de gestion"
+tooltip.staff_window.center_view = "Clic gauche pour focaliser sur la personne, pour faire défiler les membres du personnel"
+
 -- Fix Winning texts
 letter = {
   [1] = { -- Level one: Fix issue 329
@@ -507,6 +515,7 @@ adviser.room_forbidden_non_reachable_parts = utf8 "Placer la pièce à cet endro
 -- Dynamic information
 dynamic_info.patient.actions.no_gp_available = utf8 "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = utf8 "Va vers %s"
+dynamic_info.staff.actions.fired = "Renvoyé"
 
 -- Misc
 misc.not_yet_implemented = utf8 "(pas encore implémenté)"
@@ -522,6 +531,7 @@ menu_options_game_speed.pause = utf8 "  PAUSE  "
 
 -- Debug menu
 menu_debug = {
+  jump_to_level               = utf8 "  ALLER AU NIVEAU  ",
   transparent_walls           = utf8 "  MURS TRANSPARENTS  ",
   limit_camera                = utf8 "  LIMITER LA CAMERA  ",
   disable_salary_raise        = utf8 "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
@@ -535,6 +545,7 @@ menu_debug = {
   dump_gamelog                = utf8 "  EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay                 = utf8 "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = utf8 "  VISIONNEUSE DE SPRITES  ",
+  lua_console                 = utf8 "  CONSOLE LUA  ",
 }
 menu_debug_overlay = {
   none                        = utf8 "  AUCUN  ",
@@ -553,9 +564,9 @@ menu_debug_overlay = {
 
 -- Main menu
 main_menu = {
-  new_game = utf8 "Nouvelle Partie",
+  new_game = utf8 "Nouvelle partie",
   custom_level = utf8 "Niveau personnalisé",
-  load_game = utf8 "Charger une Partie",
+  load_game = utf8 "Charger une partie",
   options = utf8 "Options",
   exit = utf8 "Quitter",
 }
@@ -566,6 +577,23 @@ tooltip.main_menu = {
   load_game = utf8 "Charger une partie sauvegardée",
   options = utf8 "Modifier quelques paramètres",
   exit = utf8 "Non, non, SVP, ne quittez pas !",
+}
+
+--- New game window
+new_game_window = {
+  easy = "Interne (Facile)",
+  medium = utf8 "Médecin (Moyen)",
+  hard = "Consultant (Difficile)",
+  tutorial = "Tutoriel",
+  cancel = "Annuler",
+}
+
+tooltip.new_game_window = {
+  easy = utf8 "Si vous jouez pour la première fois à un jeu de simulation, cette option est pour vous",
+  medium = utf8 "C'est la voie du milieu à prendre si vous ne savez pas quoi choisir",
+  hard = utf8 "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
+  tutorial = utf8 "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
+  cancel = utf8 "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
 }
 
 -- Load game window
@@ -632,7 +660,7 @@ totd_window = {
     utf8 "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
     utf8 "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
     utf8 "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
-    utf8 "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la  ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
+    utf8 "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
     utf8 "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostics.",
     utf8 "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications pariculières (chirurgien, psyschiatre ou chercheur), il transférera ses connaissances à ses élèves.",
     utf8 "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
@@ -654,13 +682,27 @@ totd_window = {
 }
 
 tooltip.totd_window = {
-  previous = utf8 "Affiche l'astuce précédente",
-  next = utf8 "Affiche l'astuce suivante",
+  previous = utf8 "Afficher l'astuce précédente",
+  next = utf8 "Afficher l'astuce suivante",
+}
+
+-- Lua Console
+lua_console = {
+  execute_code = utf8 "Éxécuter",
+  close = "Fermer",
+}
+
+tooltip.lua_console = {
+  textbox = utf8 "Entrez du code Lua à éxécuter ici",
+  execute_code = utf8 "Éxécuter le code que vous avez entré",
+  close = "Fermer la console",
 }
 
 -- Confirmation dialog
 confirmation = {
-  needs_restart = utf8 "Changer ce paramètre requiert un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?"
+  needs_restart = utf8 "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Etes-vous sûr de vouloir faire cela ?",
+  abort_edit_room = utf8 "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
+  restart = utf8 "Etes-vous sûr de vouloir recommencer ce niveau ?",
 }
 
 -- Information dialog
@@ -687,7 +729,7 @@ fax = {
     beta2 = {
       "Bienvenue dans la seconde beta de CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog !",
       utf8 "Beaucoup de nouvelles fonctionnalités ont été implémentées depuis la dernière publication. Regardez le changelog pour une liste non exhaustive.",
-      utf8 "Mais d'abord, jouons! Il semble qu'un message vous attend. Fermez cette fenêtre et cliquez sur le point d'interrogation au dessus du tableau de bord.",
+      utf8 "Mais d'abord, jouons ! Il semble qu'un message vous attend. Fermez cette fenêtre et cliquez sur le point d'interrogation au dessus du tableau de bord.",
       utf8 "-- L'équipe de CorsixTH, th.corsix.org",
     },
   },
@@ -703,6 +745,10 @@ fax = {
     decline_new_level = utf8 "Continuer la partie encore un peu",
   },
 }
+
+tooltip.fax.close = "Fermer cette fenêtre sans supprimer le message"
+tooltip.message.button = "Clic gauche pour ouvrir le message"
+tooltip.message.button_dismiss = "Clic gauche pour ouvrir le message, clic droit pour le rejeter"
 
 
 -- Winning texts
@@ -725,5 +771,7 @@ errors = {
   save_prefix = utf8 "Erreur lors de la sauvegarde de la partie : ",
   load_prefix = utf8 "Erreur lors du chargement de la partie : ",
   map_file_missing = utf8 "Impossible de trouver le fichier de carte %s pour ce niveau !",
-  minimum_screen_size = utf8 "Veuillez entrer une résolution d'au moins 640x480.",
+  minimum_screen_size = utf8 "Veuillez entrer une résolution supérieure à 640x480.",
+  maximum_screen_size = utf8 "Veuillez entrer une résolution inférieure à 3000x2000.",
+  unavailable_screen_size = utf8 "La résolution que vous avez demandé n'est pas disponible en plein écran.",
 }
