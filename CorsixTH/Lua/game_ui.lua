@@ -691,7 +691,7 @@ tutorial_phases = {
 end
 tutorial_phases = setmetatable({}, {__index = function(t, k)
   make_tutorial_phases()
-  return t[k]
+  return tutorial_phases[k]
 end})
 
 -- Called to trigger step to another part of the tutorial.
