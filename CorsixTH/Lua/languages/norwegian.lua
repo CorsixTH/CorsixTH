@@ -114,6 +114,9 @@ object = {
   litter               = utf8 "Söppel",
 }
 
+tooltip.fax.close = utf8 "Lukk dette vinduet uten å slette meldingen"
+tooltip.message.button = utf8 "Venstreklikk for å lese faksen"
+tooltip.message.button_dismiss = utf8 "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den"
 
 -- 4. Menu 
 menu_options = {
@@ -128,6 +131,7 @@ menu_options_game_speed.pause   = "  PAUSE  "
 menu_file.restart = "  RESTART  "
 
 menu_debug = {
+  jump_to_level               	= utf8 "  GÅ TIL NIVÅ  ",
   transparent_walls             = "  GJENNOMSIKTIGE VEGGER  ",
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
@@ -140,7 +144,8 @@ menu_debug = {
   dump_gamelog                  = "  DUMP SPILL-LOGGEN  ",
   map_overlay                   = "  KARTOVERLEGG  ",
   sprite_viewer                 = "  SPRITE-VISNING  ",
-  create_emergency         = utf8 "  LAG NÖDSTILFELLE  ",
+  create_emergency         		= utf8 "  LAG NÖDSTILFELLE  ",
+  lua_console					= "  LUA KONSOLL ",
 }
 
 menu_debug_overlay = {
@@ -255,17 +260,31 @@ tooltip.new_game_window = {
   cancel = utf8 "Hmm... det var ikke meningen å starte et nytt spill!",
 }
 
+lua_console = {
+  execute_code = utf8 "Kjör",
+  close = "Lukk",
+}
+
+tooltip.lua_console = {
+  textbox = utf8 "Skriv Lua-kode du vil kjöre her",
+  execute_code = utf8 "Kjör koden",
+  close = "Lukk konsollen",
+}
+
 errors = {
   dialog_missing_graphics   = "Beklager, datafilene i demoen tillater ikke denne dialogen.",
-  save_prefix         = "Feil under lagring av spill: ",
-  load_prefix         = "Feil under lasting av spill: ",
-  map_file_missing       = utf8 "Kunne ikke finne kartfilen %s for dette nivået!",
-  minimum_screen_size     = utf8 "Vennligst sett opplösningen til minimum 640x480.",
+  save_prefix = "Feil under lagring av spill: ",
+  load_prefix = "Feil under lasting av spill: ",
+  map_file_missing = utf8 "Kunne ikke finne kartfilen %s for dette nivået!",
+  minimum_screen_size = utf8 "Vennligst sett opplösningen til minimum 640x480.",
+  maximum_screen_size = utf8 "Vennligst velg en skjermopplösning på maksimalt 3000x2000.",
+  unavailable_screen_size = utf8 "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
 }
 
 confirmation = {
   needs_restart = utf8 "Å forandre denne innstillingen krever en omstart av CorsixTH. Spill som ikke er lagret vil gå tapt. Er du sikker på at du vil endre innstillingen?",
-  abort_edit_room = utf8 "Du holder på å bygge eller endre et rom. Om alle obligatoriske gjenstander er plassert ut, ferdigstilles rommet. Om ikke, slettes rommet. Fortsette?"
+  abort_edit_room = utf8 "Du holder på å bygge eller endre et rom. Om alle obligatoriske gjenstander er plassert ut, ferdigstilles rommet. Om ikke, slettes rommet. Fortsette?",
+  restart = utf8 "Er du sikker på at du vil pröve på nytt?",
 }
 
 information = {
@@ -1234,8 +1253,8 @@ tooltip = {
     tiredness_2        = utf8 "Den ansattes tretthetsnivå",
     ability_2          = "Den ansattes evner",
     
-    prev_person        = "Velg forrige person i listen",
-    next_person        = "Velg neste person i listen",
+    prev_person        = "Velg forrige side",
+    next_person        = "Velg neste side",
     
     bonus              = "Gi denne ansatte 10% bonus",
     sack               = "Si opp denne ansatte",
@@ -1313,7 +1332,7 @@ tooltip = {
   staff_window = {
     name               = "Den ansattes navn",
     close              = "Lukk vindu",
-    face               = "Denne personens ansikt",
+    face               = utf8 "Ansiktet til personen - Klikk for å administrere de ansatte",
     happiness          = utf8 "Humörnivå",
     tiredness          = utf8 "Tretthetsnivå",
     ability            = "Evner",
@@ -1323,7 +1342,7 @@ tooltip = {
     psychiatrist       = "Psykolog",
     researcher         = "Forsker",
     salary             = utf8 "Månedslönn",
-    center_view        = "Sentrer i skjermbildet",
+    center_view        = utf8 "Venstreklikk for å finne den ansatte, höyreklikk for å bla gjennom de ansatte.",
     sack               = "Si opp",
     pick_up            = "Plukk opp",
   },
