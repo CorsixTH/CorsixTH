@@ -38,26 +38,23 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
         1. Global settings
         2. Faxes
-        3. Objects
-        4. Menu
-        5. Adviser
-        6. Dynamic info
-        7. Main menu
-        8. Tooltip
-        9. Letter
-        10. Installation
-        11. Level introduction
-        12. Tips
-        13. Room descriptions
-        14. Confirmation
-        15. Lua console
-        16. Misc
+        3. Menu
+        4. Adviser
+        5. Main menu
+        6. Tooltip
+        7. Letter
+        8. Installation
+        9. Level introduction
+        10. Tips
+        11. Room descriptions
+        12. Lua console
+        13. Misc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
         Huge section with all original strings, translated from english.
-
-
+        New strings to existing string sets have been placed here instead of
+        section A to keep similar strings close to each other.
 
 -----------------------------------------------------------------------------]]
 
@@ -107,12 +104,7 @@ fax = {
   },
 }
 
--- 3. Objects
-object = {
-  litter = utf8 "Roska",
-}
-
--- 4. Menu 
+-- 3. Menu 
 menu_options_game_speed.pause   = utf8 "  TAUKO  "
 menu_options.lock_windows       = utf8 "  LUKITSE IKKUNAT  "
 
@@ -148,27 +140,12 @@ menu_debug_overlay = {
   parcel        = utf8 "  PAKETTI  ",
 }
 
--- 5. Adviser
+-- 4. Adviser
 adviser = {
-room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäisi pääsyn joihinkin sairaalan osiin.",
+  room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäisi pääsyn joihinkin sairaalan osiin.",
 }
 
--- 6. Dynamic info
-dynamic_info = {
-  patient = {
-    actions = {
-      no_gp_available   = utf8 "Odottaa, että rakennat yleislääkärin toimiston",
-    },
-  },
-  staff = {
-    actions = {
-      heading_for       = utf8 "Matkalla kohteeseen: %s",
-      fired             = utf8 "Erotettu",
-    },
-  },
-}
-
--- 7. Main menu
+-- 5. Main menu
 main_menu = {
   new_game      = utf8 "Uusi peli",
   custom_level  = utf8 "Luo oma sairaala",
@@ -210,6 +187,8 @@ errors = {
   load_prefix                   = utf8 "Virhe ladattaessa peliä: ",
   map_file_missing              = utf8 "Tasolle %s ei löydetty karttatiedostoa!",
   minimum_screen_size           = utf8 "Ole hyvä ja syötä resoluutio, joka on vähintään 640x480.",
+  maximum_screen_size           = utf8 "Ole hyvä ja syötä resoluutio, joka on enintään 3000x2000.",
+  unavailable_screen_size       = utf8 "Syöttämäsi resoluutio ei ole käytettävissä koko ruutu -tilassa.",
 }
 
 new_game_window = {
@@ -220,7 +199,7 @@ new_game_window = {
   medium        = utf8 "Tohtori (Keskitaso)",
 }
 
--- 8. Tooltip
+-- 6. Tooltip
 tooltip = {
   objects = {
     litter = utf8 "Roska: Potilas on jättänyt sen lattialle, koska ei löytänyt roskakoria, johon sen olisi voinut heittää",
@@ -251,8 +230,8 @@ tooltip = {
   },
 
   save_game_window = {
-    save_game     = utf8 "Tallenna tallennuksen %s tilalle",
-    new_save_game = utf8 "Anna nimi uudelle tallennukselle",
+    save_game           = utf8 "Tallenna tallennuksen %s tilalle",
+    new_save_game       = utf8 "Anna nimi uudelle tallennukselle",
   },
 
   menu_list_window = {
@@ -281,9 +260,18 @@ tooltip = {
     execute_code        = utf8 "Suorita syöttämäsi koodi",
     close               = utf8 "Sulje komentorivi",
   },
+
+  fax = {
+    close = utf8 "Sulje ikkuna poistamatta viestiä",
+  },
+
+  message = {
+    button              = utf8 "Avaa viesti klikkaamalla",
+    button_dismiss      = utf8 "Klikkaa vasemalla avataksesi viestin, klikkaa oikealla poistaaksesi sen",
+  },
 }
 
--- 9. Letter
+-- 7. Letter
 letter = {
   dear_player                   = utf8 "Hyvä %s", --%s (player's name)
   custom_level_completed        = utf8 "Hienoa! Olet suorittanut kaikki tämän itselaaditun tason tavoitteet!",
@@ -291,13 +279,13 @@ letter = {
   level_lost                    = utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
 }
 
--- 10. Installation
+-- 8. Installation
 install = {
   title         = utf8 "-------------------------------- CorsixTH asennus --------------------------------",
   th_directory  = utf8 "CorsixTH tarvitsee kopion alkuperäisen Theme Hospital -pelin (tai demon) tiedostoista toimiakseen. Ole hyvä ja käytä alla olevaa valitsinta Theme Hospital-pelin asennushakemiston etsimiseen.",
 }
 
--- 11. Level introductions
+-- 9. Level introductions
 introduction_texts = {
   level1 = {
     [1] = utf8 "Tervetuloa ensimmäiseen sairaalaasi!//",
@@ -422,7 +410,7 @@ introduction_texts = {
   },
 }
 
--- 12. Tips
+-- 10. Tips
 totd_window = {
   tips = {
     utf8 "Jokainen sairaala tarvitsee vastaanoton ja yleislääkärin toimiston. Tämän jälkeen kaikki riippuu siitä, mitä potilaasi tarvitsevat. Apteekki on kuitenkin yleensä hyvä alku.",
@@ -449,7 +437,7 @@ totd_window = {
   next          = utf8 "Seuraava vihje",
 }
 
--- 13. Room descriptions (These were not present with the old strings so I assume they are new then)
+-- 11. Room descriptions (These were not present with the old strings so I assume they are new then)
 room_descriptions = {
   blood_machine = {
     [1] = utf8 "Verikonehuone//",
@@ -572,16 +560,13 @@ room_descriptions = {
   },
 }
 
--- 14. Confirmation
-confirmation.abort_edit_room = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?"
-
--- 15. Lua console
+-- 12. Lua console
 lua_console = {
   execute_code  = utf8 "Suorita",
   close         = utf8 "Sulje",
 }
 
--- 16. Misc
+-- 13. Misc
 misc = {
   not_yet_implemented   = utf8 "(ei toteutettu vielä)",
   no_heliport           = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää",
@@ -777,6 +762,7 @@ object = {
   entrance_right        = utf8 "Sisäänkäynnin oikea ovi",
   skeleton              = utf8 "Luuranko",
   comfortable_chair     = utf8 "Mukava tuoli",
+  litter                = utf8 "Roska",
 }
 
 -- Place objects window
@@ -2030,6 +2016,7 @@ confirmation = {
   delete_room           = utf8 "Oletko varma, että haluat poistaa tämän huoneen?",
   sack_staff            = utf8 "Oletko varma, että haluat irtisanoa tämän työntekijän?",
   restart_level         = utf8 "Oletko varma, että haluat aloittaa tason alusta?",
+  abort_edit_room       = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?",
 }
 
 -- Bank manager
@@ -2635,6 +2622,7 @@ dynamic_info = {
       prices_too_high                   = utf8 "Hinnat ovat liian korkeat - Menen kotiin",
       epidemic_sent_home                = utf8 "Terveystarkastaja lähettänyt kotiin",
       epidemic_contagious               = utf8 "Tautini on tarttuva",
+      no_gp_available                   = utf8 "Odottaa, että rakennat yleislääkärin toimiston",
     },
     diagnosed           = utf8 "Diagnoosi: %s", -- %s
     guessed_diagnosis   = utf8 "Arvattu diagnoosi: %s", -- %s
@@ -2652,6 +2640,8 @@ dynamic_info = {
       waiting_for_patient       = utf8 "Odottaa potilasta",
       wandering                 = utf8 "Vaeltaa ympäriinsä",
       going_to_repair           = utf8 "Korjattava: %s", -- %s (name of machine)
+      heading_for               = utf8 "Matkalla kohteeseen: %s",
+      fired                     = utf8 "Erotettu",
     },
   },
   

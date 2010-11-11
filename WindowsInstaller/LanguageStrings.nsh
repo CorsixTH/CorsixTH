@@ -18,6 +18,17 @@
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
 
+LangString install_language   ${LANG_DANISH} "Danish"
+LangString original_text      ${LANG_DANISH} "For at kunne spille spillet en installation af det originale spil er påkrævet. Angiv denne placering her"
+LangString original_folder    ${LANG_DANISH} "Theme Hospital Mappe"
+LangString successful_removal ${LANG_DANISH} "$(^Name) var vellykket fjernet fra din computer."
+LangString confirm_removal    ${LANG_DANISH} "Er du sikker på du vil helt fjerne $(^Name) og alle dets komponenter?"
+LangString files_left         ${LANG_DANISH} "Nogle filer kunne ikke fjernes."
+LangString options_title      ${LANG_DANISH} "Yderligere indstillinger" 
+LangString options_subtitle   ${LANG_DANISH} "Angive hvor det originale spil er."
+LangString save_in_appdata    ${LANG_DANISH} "Gemme spil data og indstillinger i %APPDATA% (Anbefales)"
+LangString remove_saves       ${LANG_DANISH} "Vil du gerne beholde dine gemte spil?"
+
 LangString install_language   ${LANG_DUTCH} "Dutch"
 LangString original_text      ${LANG_DUTCH} "Om het spel te kunnen spelen moet u het origineel geïnstalleerd hebben. Kies de map waarin Theme Hospital zich bevindt."
 LangString original_folder    ${LANG_DUTCH} "Theme Hospital map"
@@ -49,7 +60,7 @@ LangString files_left         ${LANG_FINNISH} "Joitain tiedostoja ei voitu poist
 LangString options_title      ${LANG_FINNISH} "Lisäasetukset" 
 LangString options_subtitle   ${LANG_FINNISH} "Valitse alkuperäisen pelin asennushakemisto."
 LangString save_in_appdata    ${LANG_FINNISH} "Pelitietojen ja asetusten tallennushakemisto: %APPDATA% (Suositus)"
-LangString remove_saves       ${LANG_FINNISH} "Would you like to keep your saved games?"
+LangString remove_saves       ${LANG_FINNISH} "Haluatko säilyttää tallennetut pelit?"
 
 LangString install_language   ${LANG_FRENCH} "French"
 LangString original_text      ${LANG_FRENCH} "Pour pouvoir jouer, une installation du jeu original est nécessaire. Spécifiez cet emplacement ici."

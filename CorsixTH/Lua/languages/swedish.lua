@@ -254,7 +254,8 @@ errors = {
 
 confirmation = {
   needs_restart = utf8 "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
-  abort_edit_room = utf8 "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?"
+  abort_edit_room = utf8 "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
+  restart = utf8 "Är du säker på att du vill starta om nivån?"
 }
 
 information = {
