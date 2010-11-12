@@ -298,9 +298,11 @@ local function action_queue_start(action, humanoid)
   local door = action.reserve_when_done
   if door then
     door:updateDynamicInfo()
-    humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
-    -- Make another call for staff just in case.
-    humanoid.world:callForStaff(door.room)
+    if class.is(humanoid, Patient) then
+      humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
+      -- Make another call for staff just in case.
+      humanoid.world:callForStaff(door.room)
+    end
   end
   humanoid:queueAction({
     name = "idle",
