@@ -205,6 +205,7 @@ Section "MainSection" SEC01
   File /r /x .svn ..\CorsixTH\Bitmap\*.pal
   File /r /x .svn ..\CorsixTH\Bitmap\*.dat
   File /r /x .svn ..\CorsixTH\Bitmap\*.tab
+  File /r /x .svn ..\CorsixTH\Bitmap\*.png
   
   SetOutPath "$INSTDIR\Levels"
   File /r /x .svn ..\CorsixTH\Levels\*.*
