@@ -48,7 +48,8 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
         10. Tips
         11. Room descriptions
         12. Lua console
-        13. Misc
+        13. Information
+        14. Misc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -104,10 +105,7 @@ fax = {
   },
 }
 
--- 3. Menu 
-menu_options_game_speed.pause   = utf8 "  TAUKO  "
-menu_options.lock_windows       = utf8 "  LUKITSE IKKUNAT  "
-
+-- 3. Menu
 menu_debug = {
   jump_to_level         = utf8 "  SIIRRY TASOLLE  ",
   transparent_walls     = utf8 "  LÄPINÄKYVÄT SEINÄT  ",
@@ -130,6 +128,7 @@ menu_debug_overlay = {
   none          = utf8 "  TYHJÄ  ",
   flags         = utf8 "  LIPUT  ",
   positions     = utf8 "  SIJAINNIT  ",
+  heat          = utf8 "  LÄMPÖTILA  ",
   byte_0_1      = utf8 "  TAVU 0 & 1  ",
   byte_floor    = utf8 "  TAVU LATTIA  ",
   byte_n_wall   = utf8 "  TAVU N SEINÄ  ",
@@ -274,7 +273,7 @@ tooltip = {
 -- 7. Letter
 letter = {
   dear_player                   = utf8 "Hyvä %s", --%s (player's name)
-  custom_level_completed        = utf8 "Hienoa! Olet suorittanut kaikki tämän itselaaditun tason tavoitteet!",
+  custom_level_completed        = utf8 "Hienosti tehty! Olet suorittanut kaikki tämän itse laaditun tason tavoitteet!",
   return_to_main_menu           = utf8 "Haluatko palata takaisin päävalikkoon vai jatkaa pelaamista?",
   level_lost                    = utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
 }
@@ -566,7 +565,13 @@ lua_console = {
   close         = utf8 "Sulje",
 }
 
--- 13. Misc
+-- 13. Information
+information = {
+  custom_game           = utf8 "Tervetuloa pelaamaan CorsixTH:ta. Toivottavasti viihdyt tällä itse laaditulla kartalla!",
+  cannot_restart        = utf8 "Valitettavasti tämä peli on tallennettu ennen uudelleen käynnistämisen toteuttamista.",
+}
+
+-- 14. Misc
 misc = {
   not_yet_implemented   = utf8 "(ei toteutettu vielä)",
   no_heliport           = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää",
@@ -1083,69 +1088,71 @@ menu_file_load = {
 
 -- Menu Options
 menu_options = {
-  sound               = utf8 "  ÄÄNI  ",
-  announcements       = utf8 "  KUULUTUKSET  ",
-  music               = utf8 "  MUSIIKKI  ",
-  sound_vol           = utf8 "  ÄÄNENVOIMAKKUUS  ",
-  announcements_vol   = utf8 "  KUULUTUSTEN VOIMAKKUUS  ",
-  music_vol           = utf8 "  MUSIIKIN VOIMAKKUUS  ",
-  autosave            = utf8 "  AUTOMAATTITALLENNUS  ",
-  game_speed          = utf8 "  PELINOPEUS  ",
-  jukebox             = utf8 "  JUKEBOKSI  ",
-  edge_scrolling      = utf8 "  REUNAVIERITYS  ",
-  settings            = utf8 "  ASETUKSET  ",
+  sound                 = utf8 "  ÄÄNI  ",
+  announcements         = utf8 "  KUULUTUKSET  ",
+  music                 = utf8 "  MUSIIKKI  ",
+  sound_vol             = utf8 "  ÄÄNENVOIMAKKUUS  ",
+  announcements_vol     = utf8 "  KUULUTUSTEN VOIMAKKUUS  ",
+  music_vol             = utf8 "  MUSIIKIN VOIMAKKUUS  ",
+  autosave              = utf8 "  AUTOMAATTITALLENNUS  ",
+  game_speed            = utf8 "  PELINOPEUS  ",
+  jukebox               = utf8 "  JUKEBOKSI  ",
+  edge_scrolling        = utf8 "  REUNAVIERITYS  ",
+  settings              = utf8 "  ASETUKSET  ",
+  lock_windows          = utf8 "  LUKITSE IKKUNAT  "
 }
 
 -- Menu Options Game Speed
 menu_options_game_speed = {
-  slowest             = utf8 "  HITAIN  ",
-  slower              = utf8 "  HITAAMPI  ",
-  normal              = utf8 "  NORMAALI  ",
-  max_speed           = utf8 "  MAKSIMINOPEUS  ",
-  and_then_some_more  = utf8 "  JA VÄHÄN PÄÄLLE  ",
+  slowest               = utf8 "  HITAIN  ",
+  slower                = utf8 "  HITAAMPI  ",
+  normal                = utf8 "  NORMAALI  ",
+  max_speed             = utf8 "  MAKSIMINOPEUS  ",
+  and_then_some_more    = utf8 "  JA VÄHÄN PÄÄLLE  ",
+  pause                 = utf8 "  PYSÄYTÄ  "
 }
 
 -- Menu Display
 menu_display = {
-  high_res            = utf8 "  KORKEA RESOLUUTIO  ",
-  mcga_lo_res         = utf8 "  MCGA - MATALA RESOLUUTIO  ",
-  shadows             = utf8 "  VARJOT  ",
+  high_res      = utf8 "  KORKEA RESOLUUTIO  ",
+  mcga_lo_res   = utf8 "  MCGA - MATALA RESOLUUTIO  ",
+  shadows       = utf8 "  VARJOT  ",
 }
 
 -- Menu Charts
 menu_charts = {
-  statement           = utf8 "  TILIOTE  ",
-  casebook            = utf8 "  TAPAUSKIRJA  ",
-  policy              = utf8 "  KÄYTÄNNÖT  ",
-  research            = utf8 "  TUTKIMUS  ",
-  graphs              = utf8 "  GRAAFIT  ",
-  staff_listing       = utf8 "  TYÖNTEKIJÄT  ",
-  bank_manager        = utf8 "  PANKINJOHTAJA  ",
-  status              = utf8 "  TILANNE  ",
-  briefing            = utf8 "  TIIVISTELMÄ  ",
+  statement     = utf8 "  TILIOTE  ",
+  casebook      = utf8 "  TAPAUSKIRJA  ",
+  policy        = utf8 "  KÄYTÄNNÖT  ",
+  research      = utf8 "  TUTKIMUS  ",
+  graphs        = utf8 "  GRAAFIT  ",
+  staff_listing = utf8 "  TYÖNTEKIJÄT  ",
+  bank_manager  = utf8 "  PANKINJOHTAJA  ",
+  status        = utf8 "  TILANNE  ",
+  briefing      = utf8 "  TIIVISTELMÄ  ",
 }
 
 -- Menu Debug
 menu_debug = {
-  object_cells        = utf8 "  KALUSTESOLUT        ",
-  entry_cells         = utf8 "  SYÖTESOLUT          ",
-  keep_clear_cells    = utf8 "  PIDÄ TYHJÄNÄ -SOLUT ",
-  nav_bits            = utf8 "  NAVIGOINTIBITIT     ",
-  remove_walls        = utf8 "  POISTA SEINÄT       ",
-  remove_objects      = utf8 "  POISTA KALUSTEET    ",
-  display_pager       = utf8 "  NÄYTÄ VIESTIT       ",
-  mapwho_checking     = utf8 "  MAPWHO-TARKISTUS    ",
-  plant_pagers        = utf8 "  KASVIVIESTIT        ",
-  porter_pagers       = utf8 "  KANTOVIESTIT        ",
-  pixbuf_cells        = utf8 "  PIXBUF-SOLUT        ",
-  enter_nav_debug     = utf8 "  SYÖTÄ NAVIG. DEBUG  ",
-  show_nav_cells      = utf8 "  NÄYTÄ NAVIG. SOLUT  ",
-  machine_pagers      = utf8 "  LAITEVIESTIT        ",
-  display_room_status = utf8 "  NÄYTÄ HUONEEN TILA  ",
-  display_big_cells   = utf8 "  NÄYTÄ SUURET SOLUT  ",
-  show_help_hotspot   = utf8 "  NÄYTÄ APUPISTEET    ",
-  win_game_anim       = utf8 "  PELIN VOITTOANIM.   ",
-  win_level_anim      = utf8 "  KENTÄN VOITTOANIM.  ",
+  object_cells          = utf8 "  KALUSTESOLUT        ",
+  entry_cells           = utf8 "  SYÖTESOLUT          ",
+  keep_clear_cells      = utf8 "  PIDÄ TYHJÄNÄ -SOLUT ",
+  nav_bits              = utf8 "  NAVIGOINTIBITIT     ",
+  remove_walls          = utf8 "  POISTA SEINÄT       ",
+  remove_objects        = utf8 "  POISTA KALUSTEET    ",
+  display_pager         = utf8 "  NÄYTÄ VIESTIT       ",
+  mapwho_checking       = utf8 "  MAPWHO-TARKISTUS    ",
+  plant_pagers          = utf8 "  KASVIVIESTIT        ",
+  porter_pagers         = utf8 "  KANTOVIESTIT        ",
+  pixbuf_cells          = utf8 "  PIXBUF-SOLUT        ",
+  enter_nav_debug       = utf8 "  SYÖTÄ NAVIG. DEBUG  ",
+  show_nav_cells        = utf8 "  NÄYTÄ NAVIG. SOLUT  ",
+  machine_pagers        = utf8 "  LAITEVIESTIT        ",
+  display_room_status   = utf8 "  NÄYTÄ HUONEEN TILA  ",
+  display_big_cells     = utf8 "  NÄYTÄ SUURET SOLUT  ",
+  show_help_hotspot     = utf8 "  NÄYTÄ APUPISTEET    ",
+  win_game_anim         = utf8 "  PELIN VOITTOANIM.   ",
+  win_level_anim        = utf8 "  KENTÄN VOITTOANIM.  ",
   lose_game_anim = {
     [1]  = utf8 "  HÄVITTY PELI 1 ANIM  ",
     [2]  = utf8 "  HÄVITTY PELI 2 ANIM  ",
@@ -1159,25 +1166,25 @@ menu_debug = {
 
 -- High score screen
 high_score = {
-  pos          = utf8 "SIJOITUS",
-  player       = utf8 "PELAAJA",
-  score        = utf8 "PISTEITÄ",
-  best_scores  = utf8 "HALL OF FAME",
-  worst_scores = utf8 "HALL OF SHAME",
-  killed       = utf8 "Kuolleita", -- is this used?
+  pos           = utf8 "SIJOITUS",
+  player        = utf8 "PELAAJA",
+  score         = utf8 "PISTEITÄ",
+  best_scores   = utf8 "HALL OF FAME",
+  worst_scores  = utf8 "HALL OF SHAME",
+  killed        = utf8 "Kuolleita", -- is this used?
   
   categories = {
-    money             = utf8 "RIKKAIN",
-    salary            = utf8 "KORKEIN PALKKA",
-    clean             = utf8 "PUHTAIN",
-    cures             = utf8 "PARANTUNEIDEN MÄÄRÄ",
-    deaths            = utf8 "KUOLLEIDEN MÄÄRÄ",
-    cure_death_ratio  = utf8 "PARANTUNEET-KUOLLEET-SUHDE",
-    patient_happiness = utf8 "POTILAIDEN TYYTYVÄISYYS",
-    staff_happiness   = utf8 "HENKILÖSTÖN TYYTYVÄISYYS",
-    staff_number      = utf8 "ENITEN HENKILÖKUNTAA",
-    visitors          = utf8 "ENITEN POTILAITA",
-    total_value       = utf8 "KOKONAISARVO",
+    money               = utf8 "RIKKAIN",
+    salary              = utf8 "KORKEIN PALKKA",
+    clean               = utf8 "PUHTAIN",
+    cures               = utf8 "PARANTUNEIDEN MÄÄRÄ",
+    deaths              = utf8 "KUOLLEIDEN MÄÄRÄ",
+    cure_death_ratio    = utf8 "PARANTUNEET-KUOLLEET-SUHDE",
+    patient_happiness   = utf8 "POTILAIDEN TYYTYVÄISYYS",
+    staff_happiness     = utf8 "HENKILÖSTÖN TYYTYVÄISYYS",
+    staff_number        = utf8 "ENITEN HENKILÖKUNTAA",
+    visitors            = utf8 "ENITEN POTILAITA",
+    total_value         = utf8 "KOKONAISARVO",
   },
 }
 
@@ -1911,7 +1918,7 @@ adviser = {
   -- Goals
   goals = {
     win = {
-      money             = utf8 "Sinulta puuttuu %d$ rahaa saavuttaaksesi tämän tason taloudelliset vaatimukset.",
+      money             = utf8 "Sinulta puuttuu %d$ rahaa tämän tason taloudellisten tavoitteiden saavuttamiseksi.",
       cure              = utf8 "Sinun pitää parantaa vielä %d potilasta tämän tason vaatimusten täyttämiseksi.",
       reputation        = utf8 "Suosiosi pitää olla vähintään %d edetäksesi suraavalle tasolle.",
       value             = utf8 "Sairaalasi arvon tulee ylittää %d, jotta saat tämän tason suoritettua onnistuneesti.",
@@ -2016,6 +2023,8 @@ confirmation = {
   delete_room           = utf8 "Oletko varma, että haluat poistaa tämän huoneen?",
   sack_staff            = utf8 "Oletko varma, että haluat irtisanoa tämän työntekijän?",
   restart_level         = utf8 "Oletko varma, että haluat aloittaa tason alusta?",
+  needs_restart         = utf8 "Tämän asetuksen muuttaminen vaatii CorsixTH:n käynnistämisen uudelleen. Kaikki tallentamattomat muutokset menetetään. Oletko varma, että haluat jatkaa?",
+  restart               = utf8 "Oletko varma, että haluat aloittaa tason alusta?",
   abort_edit_room       = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?",
 }
 
