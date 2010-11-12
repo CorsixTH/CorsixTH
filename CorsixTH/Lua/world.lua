@@ -1325,15 +1325,19 @@ end
 function World:selectNearestStaffForRoom(room, attribute, count, mode)
   local door_x, door_y = room:getEntranceXY()
   local candidates = self:getSuitableStaffCandidates(door_x, door_y, attribute, nil, mode)
+  local sent = {}
   for _, cand in ipairs(candidates) do
-    if count <= 0 then
-      break
+    if cand.entity:getRoom() ~= room then
+      if count <= 0 then
+        break
+      end
+      count = count - 1
+      cand.entity:setNextAction(room:createEnterAction(cand.entity))
+      cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+      sent[#sent + 1] = cand.entity
     end
-    count = count - 1
-    cand.entity:setNextAction(room:createEnterAction(cand.entity))
-    cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-    return cand.entity
   end
+  return unpack(sent)
 end
 
 -- Get the nearest room which is in need of the given staff member.
