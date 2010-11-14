@@ -192,3 +192,14 @@ function UIMessage:onWorldTick()
     self.rotator[self.active].visible = true
   end
 end
+
+function UIMessage:afterLoad(old, new)
+  if old < 21 then
+    -- self.button added; however check for existence first
+    -- since the savegame bump was a couple of revisions later
+    if not self.button then
+      self.button = self.buttons[1]
+    end
+  end
+  Window.afterLoad(self, old, new)
+end

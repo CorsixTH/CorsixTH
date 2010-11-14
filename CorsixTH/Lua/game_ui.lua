@@ -785,7 +785,7 @@ function GameUI:afterLoad(old, new)
     self.zoom_factor = 1
   end
   
-  return UI:afterLoad(old, new)
+  return UI.afterLoad(self, old, new)
 end
 
 function GameUI:showBriefing()

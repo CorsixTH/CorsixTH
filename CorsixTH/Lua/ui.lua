@@ -784,5 +784,5 @@ function UI:afterLoad(old, new)
     self.key_code_to_rawchar = {}
   end
 
-  Window:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
 end
