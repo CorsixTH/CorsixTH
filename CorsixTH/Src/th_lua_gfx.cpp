@@ -254,7 +254,11 @@ static int l_font_draw(lua_State *L)
 static int l_font_draw_wrapped(lua_State *L)
 {
     THFont* pFont = luaT_testuserdata<THFont>(L);
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    THRenderTarget* pCanvas = NULL;
+    if(!lua_isnoneornil(L, 2))
+    {
+        pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    }
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
@@ -278,10 +282,13 @@ static int l_font_draw_wrapped(lua_State *L)
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
     }
 
-    lua_pushinteger(L, pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
-                                              iW, NULL, eAlign));
+    int iLastX;
+    int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
+                                              iW, NULL, &iLastX, eAlign);
+    lua_pushinteger(L, iLastY);
+    lua_pushinteger(L, iLastX);
 
-    return 1;
+    return 2;
 }
 
 static int l_font_draw_tooltip(lua_State *L)

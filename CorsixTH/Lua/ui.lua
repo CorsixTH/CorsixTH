@@ -295,13 +295,6 @@ function UI:draw(canvas)
   end
 end
 
-local scroll_keys = {
-  up    = {x =   0, y = -10},
-  right = {x =  10, y =   0},
-  down  = {x =   0, y =  10},
-  left  = {x = -10, y =   0},
-}
-
 --! Register a key handler / hotkey for a window.
 --!param key (string) The keyboard key which should trigger the callback (for
 -- example, "left" or "z" or "F9").
@@ -582,6 +575,8 @@ function UI:onKeyDown(code, rawchar)
     debug.getregistry()._RESTART = true
     TheApp.running = false
     return true
+  elseif key == "f12" and TheApp.config.debug then -- Show console
+    self:addWindow(UILuaConsole(self))
   elseif self.buttons_down.alt and key == "f4" then
     if self.hospital then
       self.app:quit()

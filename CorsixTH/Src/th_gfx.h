@@ -236,13 +236,15 @@ public:
         @param pResultingWidth If not NULL, the maximum width of a line will
           be stored here (the resulting value should be similar to iWidth,
           but a bit smaller).
+        @param pLastX If not NULL, iX plus the the width of the last printed
+          line will be stored here.
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
         @return iY plus the height (in pixels) of the resulting text.
     */
     int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                         size_t iMessageLength, int iX, int iY, int iWidth,
-                        int *pResultingWidth = NULL,
+                        int *pResultingWidth = NULL, int *pLastX = NULL,
                         eTHAlign eAlign = Align_Left) const;
 
 protected:

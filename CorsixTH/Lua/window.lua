@@ -199,6 +199,41 @@ function Panel:setLabel(label, font)
   return self
 end
 
+--! Draw function for the label on a panel
+--!param canvas The canvas to draw on (can be nil for test)
+--!param x x position to start drawing on
+--!param y y position to start drawing on
+--!param limit (nil or {int, int}) limit after which line and with character on that line to stop drawing
+--!return for single line panels nil, for multiline panels x and y end positions after drawing
+function Panel:drawLabel(canvas, x, y, limit)
+  if type(self.label) == "table" then -- multiline label
+    local width
+    local next_y = y + self.y + 1
+    for i, line in ipairs(self.label) do
+      if limit and limit[1] == i then
+        line = string.sub(line, 1, limit[2])
+      end
+      local last_y = next_y
+      next_y, width = self.label_font:drawWrapped(canvas, line, x + self.x + 2, next_y, self.w - 4)
+      if next_y == last_y then
+        -- Special handling for empty lines
+        local _, h = self.label_font:sizeOf("A")
+        next_y = next_y + h
+      end
+      if limit and limit[1] == i then
+        break
+      end
+    end
+    return x + self.x + 2 + width, next_y
+  else
+    local line = self.label
+    if limit then
+      line = string.sub(line, 1, limit[2])
+    end
+    self.label_font:draw(canvas, line, x + self.x, y + self.y, self.w, self.h)
+  end
+end
+
 --[[ Add a `Panel` to the window.
 ! Panels form the basic building blocks of most windows. A panel is a small
 bitmap coupled with a position, and by combining several panels, a window can
@@ -236,14 +271,7 @@ end
 local --[[persistable: window_panel_colour_draw]] function panel_colour_draw(panel, canvas, x, y)
   canvas:drawRect(panel.colour, x + panel.x, y + panel.y, panel.w, panel.h)
   if panel.label then
-    if type(panel.label) == "table" then -- multiline label
-      local last_y = y + panel.y + 1
-      for _, line in ipairs(panel.label) do
-        last_y = panel.label_font:drawWrapped(canvas, line, x + panel.x + 2, last_y, panel.w - 4)
-      end
-    else
-      panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
-    end
+    panel:drawLabel(canvas, x, y)
   end
 end
 
@@ -284,14 +312,7 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
     canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
   end
   if panel.label then
-    if type(panel.label) == "table" then -- multiline label
-      local last_y = y + panel.y + 1
-      for _, line in ipairs(panel.label) do
-        last_y = panel.label_font:drawWrapped(canvas, line, x + panel.x + 2, last_y, panel.w - 4)
-      end
-    else
-      panel.label_font:draw(canvas, panel.label, x + panel.x, y + panel.y, panel.w, panel.h)
-    end
+    panel:drawLabel(canvas, x, y)
   end
 end
 
@@ -671,24 +692,58 @@ function Textbox:Textbox()
   self.visible = nil
   self.enabled = nil
   self.active = nil
+  self.cursor_counter = nil
+  self.cursor_state = nil
+  self.cursor_pos = nil
 end
 
 local textbox_mt = permanent("Window.<textbox_mt>", getmetatable(Textbox()))
+
+function Textbox:onTick()
+  if self.active then
+    self.cursor_counter = self.cursor_counter + 1
+    if self.cursor_counter >= 40 then
+      self.cursor_state = true
+      self.cursor_counter = self.cursor_counter - 40
+    elseif self.cursor_counter >= 20 then
+      self.cursor_state = false
+    end
+  end
+end
+
+function Textbox:drawCursor(canvas, x, y)
+  if self.cursor_state and type(self.text) == "table" then -- TODO implement also for single line textboxes
+    local col = TheApp.video:mapRGB(255, 255, 255)
+    local cursor_x, cursor_y = self.panel:drawLabel(nil, x, y, self.cursor_pos)
+    local w, h = self.panel.label_font:sizeOf("A")
+    -- Add x separation, but only if there was actually some text in this line.
+    if self.text[self.cursor_pos[1]] ~= "" then
+      cursor_x = cursor_x + 1 -- TODO font:getSeparation?
+    end
+    cursor_y = cursor_y - 3 -- TODO maybe not hardcode this
+    canvas:drawRect(col, cursor_x, cursor_y, w, 2)
+  end
+end
 
 function Textbox:setActive(active)
   local ui = self.panel.window.ui
   if active then
     -- Unselect any other textbox
-    for _, textbox in ipairs(self.panel.window.textboxes) do
+    for _, textbox in ipairs(ui.textboxes) do
       if textbox ~= self and textbox.active then
         textbox:setActive(false)
       end
     end
+    self.cursor_counter = 0
+    self.cursor_state = true
+    self.cursor_pos[1] = type(self.text) == "table" and #self.text or 1
+    self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
     -- Update text
     self.panel:setLabel(self.text)
     -- Enable Keyboard repeat
     ui:enableKeyboardRepeat()
   else
+    self.cursor_state = false
     -- Run confirm or abort callback
     if self.text == "" and self.abort_callback then
       self.abort_callback()
@@ -750,6 +805,7 @@ function Textbox:input(char, rawchar, code)
     if type(self.text) == "table" and line == "" then
       if #self.text > 1 then
         self.text[#self.text] = nil
+        self.cursor_pos = {self.cursor_pos[1] - 1, string.len(self.text[#self.text])}
       end
       return true
     else
@@ -761,6 +817,7 @@ function Textbox:input(char, rawchar, code)
   if not handled and char == "enter" then
     if type(self.text) == "table" then
       self.text[#self.text + 1] = ""
+      self.cursor_pos = {#self.text, 1}
       return true
     else
       self.button:toggle()
@@ -782,6 +839,11 @@ function Textbox:input(char, rawchar, code)
     ui:disableKeyboardRepeat()
     return true
   end
+  -- Arrow keys, tab (reserved)
+  if not handled and (code >= 273 and code <= 276) -- arrow keys
+     or code == 9 then -- tab
+    return true
+  end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Experimental "all" category
     if not handled and self.allowed_input.all
@@ -797,6 +859,8 @@ function Textbox:input(char, rawchar, code)
     self.text = line
   end
   self.panel:setLabel(self.text)
+  self.cursor_pos[1] = type(self.text) == "table" and #self.text or 1
+  self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
   return handled
 end
 
@@ -858,6 +922,9 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
     visible = true,
     enabled = true,
     active = false,
+    cursor_counter = 0,
+    cursor_state = false,
+    cursor_pos = {1, 1},
   }, textbox_mt)
   
   local button = panel:makeToggleButton(0, 0, panel.w, panel.h, nil, textbox.clicked, textbox)
@@ -882,6 +949,11 @@ function Window:draw(canvas, x, y)
           panel_sprites_draw(panel_sprites, canvas, panel.sprite_index, x + panel.x, y + panel.y)
         end
       end
+    end
+  end
+  if not class.is(self, UI) then -- prevent UI (sub)class from handling the textboxes too
+    for _, box in ipairs(self.textboxes) do
+      box:drawCursor(canvas, x, y)
     end
   end
   if self.windows then
@@ -1201,6 +1273,9 @@ function Window:onTick()
         btn.panel_for_sprite.sprite_index = btn.sprite_index_blink
       end
     end
+  end
+  for _, box in ipairs(self.textboxes) do
+    box:onTick()
   end
   if self.windows then
     for _, window in ipairs(self.windows) do

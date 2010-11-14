@@ -105,9 +105,10 @@ void THFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMes
 
 int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                         size_t iMessageLength, int iX, int iY, int iWidth,
-                        int *pResultingWidth, eTHAlign eAlign) const
+                        int *pResultingWidth, int *pLastX, eTHAlign eAlign) const
 {
     int iResultingWidth = 0;
+    int iLastX = 0;
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
@@ -164,10 +165,13 @@ int THFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                 ++sMessage;
             }
             iY += static_cast<int>(iTallest) + m_iLineSep;
+            iLastX = iMsgWidth;
         }
     }
     if(pResultingWidth != NULL)
         *pResultingWidth = iResultingWidth;
+    if(pLastX != NULL)
+        *pLastX = iLastX;
     return iY;
 }
 

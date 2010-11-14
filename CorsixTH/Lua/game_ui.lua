@@ -199,8 +199,6 @@ function GameUI:onKeyDown(code, rawchar)
       self:addWindow(UIMakeDebugPatient(self))
     elseif key == "f11" then -- Make Adviser say a random phrase
       self:debugMakeAdviserTalk()
-    elseif key == "f12" then -- Show watch
-      self:addWindow(UIWatch(self))
     elseif key == "x" then -- Toggle wall transparency
       self:makeWallsTransparent(not self.transparent_walls)
     elseif key == "d" and self.buttons_down.ctrl then
