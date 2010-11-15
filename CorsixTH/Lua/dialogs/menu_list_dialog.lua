@@ -81,7 +81,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows)
   self.item_buttons = {}
   
   for num = 1, self.num_rows do
-    self.item_panels[num] = self:addBevelPanel(20, 40 + (num - 1) * 17, 130, 17, self.col_bg)
+    self.item_panels[num] = self:addBevelPanel(20, 40 + (num - 1) * 17, 130, 17, self.col_bg):setLabel(nil, nil, "left")
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 130, 17, nil, button_clicked(num))
   end
   

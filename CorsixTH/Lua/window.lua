@@ -193,9 +193,12 @@ end
 -- Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
 --!param label (string) The text to be drawn on top of the label.
 --!param font (font) [optional] The font to use. Default is Font01V in QData.
-function Panel:setLabel(label, font)
+--!param align (string) [optional] Alignment for non-multiline labels (multiline is always left)
+--!  can be either of "left", "center"/"centre"/"middle", "right"
+function Panel:setLabel(label, font, align)
   self.label = label or ""
-  self.label_font = self.label_font or font or TheApp.gfx:loadFont("QData", "Font01V")
+  self.label_font = font or self.label_font or TheApp.gfx:loadFont("QData", "Font01V")
+  self.align = align or self.align
   return self
 end
 
@@ -204,7 +207,7 @@ end
 --!param x x position to start drawing on
 --!param y y position to start drawing on
 --!param limit (nil or {int, int}) limit after which line and with character on that line to stop drawing
---!return for single line panels nil, for multiline panels x and y end positions after drawing
+--!return for single line panels x, for multiline panels x and y end positions after drawing
 function Panel:drawLabel(canvas, x, y, limit)
   if type(self.label) == "table" then -- multiline label
     local width
@@ -230,7 +233,7 @@ function Panel:drawLabel(canvas, x, y, limit)
     if limit then
       line = string.sub(line, 1, limit[2])
     end
-    self.label_font:draw(canvas, line, x + self.x, y + self.y, self.w, self.h)
+    return self.label_font:draw(canvas, line, x + self.x + 2, y + self.y, self.w - 4, self.h, self.align)
   end
 end
 
@@ -712,15 +715,15 @@ function Textbox:onTick()
 end
 
 function Textbox:drawCursor(canvas, x, y)
-  if self.cursor_state and type(self.text) == "table" then -- TODO implement also for single line textboxes
+  if self.cursor_state then
     local col = TheApp.video:mapRGB(255, 255, 255)
     local cursor_x, cursor_y = self.panel:drawLabel(nil, x, y, self.cursor_pos)
     local w, h = self.panel.label_font:sizeOf("A")
+    cursor_y = cursor_y and cursor_y - 3 or self.panel.y + y + h -- cursor_y not returned for single line labels
     -- Add x separation, but only if there was actually some text in this line.
     if self.text[self.cursor_pos[1]] ~= "" then
       cursor_x = cursor_x + 1 -- TODO font:getSeparation?
     end
-    cursor_y = cursor_y - 3 -- TODO maybe not hardcode this
     canvas:drawRect(col, cursor_x, cursor_y, w, 2)
   end
 end

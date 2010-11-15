@@ -56,7 +56,8 @@ function UISaveGame:UISaveGame(ui)
   self:UIMenuList(ui, "game", _S.save_game_window.caption, items, 8)
   
   -- Textbox for entering new savegame name
-  self.new_savegame_textbox = self:addBevelPanel(20, 190, 160, 17, col_textbox, col_highlight, col_shadow):setLabel(_S.save_game_window.new_save_game):setTooltip(_S.tooltip.save_game_window.new_save_game)
+  self.new_savegame_textbox = self:addBevelPanel(20, 190, 160, 17, col_textbox, col_highlight, col_shadow)
+    :setLabel(_S.save_game_window.new_save_game, nil, "left"):setTooltip(_S.tooltip.save_game_window.new_save_game)
     :makeTextbox(--[[persistable:save_game_new_savegame_textbox_confirm_callback]] function() self:confirmName() end,
     --[[persistable:save_game_new_savegame_textbox_abort_callback]] function() self:abortName() end)
 end

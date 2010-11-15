@@ -229,25 +229,49 @@ static int l_font_get_size(lua_State *L)
 static int l_font_draw(lua_State *L)
 {
     THFont* pFont = luaT_testuserdata<THFont>(L);
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    THRenderTarget* pCanvas = NULL;
+    if(!lua_isnoneornil(L, 2))
+    {
+        pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    }
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = luaL_checkint(L, 4);
     int iY = luaL_checkint(L, 5);
+    eTHAlign eAlign = Align_Center;
+    if(!lua_isnoneornil(L, 8))
+    {
+        const char* sAlign = luaL_checkstring(L, 8);
+        if(strcmp(sAlign, "right") == 0)
+            eAlign = Align_Right;
+        else if(strcmp(sAlign, "left") == 0)
+            eAlign = Align_Left;
+        else if(strcmp(sAlign, "center") == 0
+             || strcmp(sAlign, "centre") == 0
+             || strcmp(sAlign, "middle") == 0)
+        {
+            eAlign = Align_Center;
+        }
+        else
+            return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+    }
+    int iWidth, iHeight;
+    pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
     if(!lua_isnoneornil(L, 7))
     {
         int iW = luaL_checkint(L, 6);
         int iH = luaL_checkint(L, 7);
-        int iWidth, iHeight;
-        pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
-        if(iW > iWidth)
-            iX += (iW - iWidth) / 2;
+        if(iW > iWidth && eAlign != Align_Left)
+            iX += (iW - iWidth) / ((eAlign == Align_Center) ? 2 : 1);
         if(iH > iHeight)
             iY += (iH - iHeight) / 2;
     }
-    pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
+    if(pCanvas != NULL)
+    {
+        pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
+    }
+    lua_pushinteger(L, iX + iWidth);
 
-    lua_settop(L, 1);
     return 1;
 }
 
