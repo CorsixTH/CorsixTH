@@ -53,6 +53,7 @@ function Window:Window()
   self.blink_counter = 0
   self.panel_sprites = false
   self.visible = true
+  self.draggable = true
 end
 
 -- Sets the window's onscreen position. Each of x and y can be:
@@ -387,8 +388,16 @@ function Window:addWindow(window)
     -- As self.windows array is ordered from top to bottom and drawn by the end, a "On Top" window has be added at start
     table.insert(self.windows, 1, window)
   else
-    -- Normal windows, are added to the end
-    self.windows[#self.windows + 1] = window
+    -- Normal windows, are added in the first position after on_top windows
+    local pos = false
+    for i = 1, #self.windows do
+      if not self.windows[i].on_top then
+        pos = i
+        break
+      end
+    end
+    pos = pos or #self.windows + 1
+    table.insert(self.windows, pos, window)
   end
 end
 
@@ -409,7 +418,7 @@ function Window:removeWindow(window)
 end
 
 -- Searches (direct) child windows for window of the given class, and returns
--- one (or nil if there wheren't any at all).
+-- one (or nil if there weren't any at all).
 -- !param window_class (class) The class of window to search for.
 function Window:getWindow(window_class)
   if self.windows then
@@ -728,13 +737,33 @@ function Textbox:drawCursor(canvas, x, y)
   end
 end
 
+--! Set the box to not active and run confirm callback, if any
+function Textbox:confirm()
+  self:setActive(false)
+  if self.confirm_callback then
+    self.confirm_callback()
+  end
+end
+
+--! Set the box to not active and run abort callback, if any
+function Textbox:abort()
+  self:setActive(false)
+  if self.abort_callback then
+    self.abort_callback()
+  end
+end
+
+--! Set the textbox active status to true or false, taking care of any
+-- additional things that need to be done: deactivate any other textboxes,
+-- handle blinking cursor, keyboard repeat on/off, set button state accordingly
+--!param active (boolean) whether to activate (true) or deactivate (false) the box
 function Textbox:setActive(active)
   local ui = self.panel.window.ui
   if active then
     -- Unselect any other textbox
     for _, textbox in ipairs(ui.textboxes) do
       if textbox ~= self and textbox.active then
-        textbox:setActive(false)
+        textbox:abort()
       end
     end
     self.cursor_counter = 0
@@ -747,12 +776,6 @@ function Textbox:setActive(active)
     ui:enableKeyboardRepeat()
   else
     self.cursor_state = false
-    -- Run confirm or abort callback
-    if self.text == "" and self.abort_callback then
-      self.abort_callback()
-    elseif self.text ~= "" and self.confirm_callback then
-      self.confirm_callback()
-    end
     -- Disable Keyboard repeat
     ui:disableKeyboardRepeat()
   end
@@ -765,7 +788,16 @@ function Textbox:setActive(active)
 end
 
 function Textbox:clicked()
-  self:setActive(self.button.toggled)
+  local active = self.button.toggled
+  if active then
+    self:setActive(true)
+  else
+    if self.text == "" then
+      self:abort()
+    else
+      self:confirm()
+    end
+  end
 end
 
 function Textbox:input(char, rawchar, code)
@@ -823,23 +855,13 @@ function Textbox:input(char, rawchar, code)
       self.cursor_pos = {#self.text, 1}
       return true
     else
-      self.button:toggle()
-      self.active = false
-      if self.confirm_callback then
-        self.confirm_callback()
-      end
-      ui:disableKeyboardRepeat()
+      self:confirm()
       return true
     end
   end
   -- Escape (abort)
   if not handled and char == "esc" then
-    self.button:toggle()
-    self.active = false
-    if self.abort_callback then
-      self.abort_callback()
-    end
-    ui:disableKeyboardRepeat()
+    self:abort()
     return true
   end
   -- Arrow keys, tab (reserved)
@@ -1026,10 +1048,11 @@ function Window:onMouseDown(button, x, y)
     for _, window in ipairs(self.windows) do
       if window:onMouseDown(button, x - window.x, y - window.y) then
         repaint = true
+        break
       end
     end
   end
-  if button == "left" or button == "right" then
+  if not repaint and (button == "left" or button == "right") then
     for _, btn in ipairs(self.buttons) do
       if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b and (button == "left" or btn.on_rightclick ~= nil) then
         btn.panel_for_sprite.sprite_index = btn.sprite_index_active
@@ -1051,8 +1074,15 @@ function Window:onMouseDown(button, x, y)
       end
     end
   end
-  if button == "left" and not repaint and Window.hitTest(self, x, y) then
-    return self:beginDrag(x, y)
+  if self:hitTest(x, y) then
+    if button == "left" and not repaint then
+      self:beginDrag(x, y)
+    end
+    repaint = true
+  end
+  
+  if repaint then
+    self:bringToTop()
   end
   return repaint
 end
@@ -1172,7 +1202,7 @@ end
 ]]
 function Window:beginDrag(x, y)
   if not self.width or not self.height or not self.ui
-  or self.ui.app.runtime_config.lock_windows then
+  or self.ui.app.runtime_config.lock_windows or not self.draggable then
     -- Need width, height and UI to do a drag
     return false
   end
@@ -1296,6 +1326,14 @@ function Window:onWorldTick()
   end
 end
 
+-- Bring the window to the top of its parent
+function Window:bringToTop()
+  if self.parent then
+    self.parent:sendToTop(self)
+  end
+end
+
+-- Tell the window to bring the specified sub-window to its top
 function Window:sendToTop(window)
   local window_index
   if self.windows then
@@ -1307,8 +1345,21 @@ function Window:sendToTop(window)
   end
 
   if window_index ~= nil then
-    table.remove(self.windows, window_index) -- Remove the window from the list
-    table.insert(self.windows, 1, window)    -- And reinsert it at start of the table
+    local insert_pos
+    if window.on_top then
+      insert_pos = 1
+    else
+      -- First position after any on_top windows
+      for i = 1, #self.windows do
+        if not self.windows[i].on_top then
+          insert_pos = i
+          break
+        end
+      end
+      insert_pos = insert_pos or #self.windows + 1
+    end
+    table.remove(self.windows, window_index)       -- Remove the window from the list
+    table.insert(self.windows, insert_pos, window) -- And reinsert it at the before computed position
   end
 end
 
@@ -1428,6 +1479,9 @@ function Window:afterLoad(old, new)
   if old < 3 then
     -- Textboxes were added
     self.textboxes = {}
+  end
+  if old < 22 then
+    self.draggable = true
   end
 
   if self.windows then

@@ -93,6 +93,14 @@ function UIInformation:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 end
 
+function UIInformation:hitTest(x, y)
+  if x >= 0 and y >= 0 and x < self.width and y < self.height then
+    return true
+  else
+    return Window.hitTest(self, x, y)
+  end
+end
+
 function UIInformation:close()
   Window.close(self)
   if self.additional_text and #self.additional_text[1] > 0 then

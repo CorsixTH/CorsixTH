@@ -49,6 +49,8 @@ function UIFullscreen:onChangeResolution()
   else
     self.border_sprites = nil
   end
+  -- not draggable in actual fullscreen mode
+  self.draggable = not not self.border_sprites
   
   local config = self.ui.app.runtime_config.window_position
   if config then
@@ -122,4 +124,11 @@ function UIFullscreen:hitTest(x, y)
       or test(sprites, 12, x - 600, y + 9)
       or test(sprites, 15, x + 9, y - 440)
       or test(sprites, 17, x - 600, y - 440)
+end
+
+function UIFullscreen:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
+  if old < 22 then
+    self.draggable = not not self.border_sprites
+  end
 end

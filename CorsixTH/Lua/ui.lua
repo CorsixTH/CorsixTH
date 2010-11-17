@@ -169,6 +169,7 @@ function UI:UI(app, minimal)
   self.key_code_to_rawchar = {}
   
   self.keyboard_repeat_enable_count = 0
+  SDL.modifyKeyboardRepeat(0, 0)
   self.down_count = 0
   if not minimal then
     self.default_cursor = app.gfx:loadMainCursor("default")
@@ -783,6 +784,12 @@ function UI:afterLoad(old, new)
   if old < 13 then
     self.key_code_to_rawchar = {}
   end
+  
+  -- disable keyboardrepeat after loading a game just in case
+  -- (might be transferred from before loading, or broken savegame)
+  repeat
+    self:disableKeyboardRepeat()
+  until self.keyboard_repeat_enable_count == 0
 
   Window.afterLoad(self, old, new)
 end

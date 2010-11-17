@@ -30,6 +30,7 @@ function UIMenuBar:UIMenuBar(ui)
   
   local app = ui.app
   self.ui = ui
+  self.on_top = true
   self.x = 0
   self.y = 0
   self.width = app.config.width

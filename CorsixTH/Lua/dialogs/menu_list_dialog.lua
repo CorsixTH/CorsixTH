@@ -58,6 +58,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows)
   local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
+  self.on_top = mode == "menu"
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)

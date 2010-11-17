@@ -28,6 +28,7 @@ function UIBottomPanel:UIBottomPanel(ui)
 
   self.ui = ui
   self.world = app.world
+  self.on_top = true
   self.width = 640
   self.height = 48
   self:setDefaultPosition(0.5, -0.1)

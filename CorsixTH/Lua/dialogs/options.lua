@@ -59,6 +59,7 @@ function UIOptions:UIOptions(ui, mode)
   local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "options"
+  self.on_top = mode == "menu"
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
