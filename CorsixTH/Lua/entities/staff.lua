@@ -436,10 +436,13 @@ function Staff:isIdle()
     end
   else
     -- on the corridor, if not heading to a room already, for handymen they also shouldn't be on their way to
-    -- for example water plants.
-    if not self.action_queue[1].is_entering and not self.action_queue[1].is_job then
-      return true
+    -- for example water plants. Check all actions for a job
+    for _, action in ipairs(self.action_queue) do
+      if action.is_entering or action.is_job then
+        return false
+      end
     end
+    return true
   end
   return false
 end

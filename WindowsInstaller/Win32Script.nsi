@@ -231,6 +231,7 @@ Section -AdditionalIcons
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk" "$INSTDIR\CorsixTH_SDL.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX9.lnk" "$INSTDIR\CorsixTH_DirectX9.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Map Editor.lnk" "$INSTDIR\MapEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd

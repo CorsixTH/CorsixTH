@@ -210,9 +210,6 @@ function Plant:createHandymanActions(handyman)
     in_a_room = true
   end
   self.reserved_for = handyman
-  -- Many plants in the vicinity may ask almost at the same time, make sure
-  -- this handyman is occupied
-  handyman.action_queue[1].is_job = self
 
   local action = {name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
   local water_action = {
@@ -225,7 +222,7 @@ function Plant:createHandymanActions(handyman)
       if in_a_room then
         for object in pairs(self.world:findAllObjectsNear(self.tile_x, self.tile_y)) do
           if object.object_type.id == "plant" then
-            if object:needsWatering() and not object.reserved_for then
+            if object:needsWatering() and not object.reserved_for and not object.ticks then
               object:createHandymanActions(handyman)
               break
             end
@@ -298,7 +295,7 @@ function Plant:tickDay()
     if self.days_left < 1 then
       self.days_left = days_between_states
       self:setNextState()
-    elseif not self.reserved_for and (self.days_left < 7 or self.current_state > 0) then
+    elseif not self.reserved_for and self:needsWatering() then
       self:callForWatering()
     end
   end
