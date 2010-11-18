@@ -161,7 +161,7 @@ function Plant:callForWatering()
   -- speed to quality of search.
   -- If self.ticks is true it means that a handyman is currently watering the plant.
   if not self.ticks and not self.reserved_for then
-    local map = self.world.ui.app.map.th
+    local map = self.world.map.th
     local lx, ly = self.tile_x, self.tile_y
     
     if self:getRoom() then

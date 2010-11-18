@@ -597,7 +597,10 @@ function World:onTick()
           hospital:onEndMonth()
         end
         -- Let the hospitals do what they need to do at end of month first.
-        self:onEndMonth()
+        if self:onEndMonth() then
+          -- Bail out as the game has already been ended.
+          return
+        end
         self.day = 1
         self.month = self.month + 1
         -- A temporary solution to make players more aware of the need for radiators.
@@ -683,6 +686,7 @@ function World:onTick()
 end
 
 -- Called immediately prior to the ingame month changing.
+-- returns true if the game was killed due to the player losing
 function World:onEndMonth()
   self:makeAvailableStaff((self.year - 1) * 12 + self.month)
   self.autosave_next_tick = true
@@ -738,6 +742,7 @@ function World:onEndMonth()
     elseif state == "lose" then
       if i == 1 then -- TODO: Multiplayer
         self.ui.app:loadMainMenu(_S.letter.level_lost)
+        return true
       end
     end
   end
