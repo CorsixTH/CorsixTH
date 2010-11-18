@@ -63,6 +63,7 @@ function GameUI:GameUI(app, local_hospital)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
   self.prevent_edge_scrolling = false
+  self.do_world_hit_test = true
 end
 
 function GameUI:setZoom(factor)
@@ -252,12 +253,16 @@ function GameUI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
 end
 
+function GameUI:setWorldHitTest(mode)
+  self.do_world_hit_test = mode
+end
+
 function GameUI:onCursorWorldPositionChange()
   local zoom = self.zoom_factor
   local x = self.screen_offset_x + self.cursor_x / zoom
   local y = self.screen_offset_y + self.cursor_y / zoom
   local entity = nil
-  if not self:hitTest(self.cursor_x, self.cursor_y) then
+  if self.do_world_hit_test and not self:hitTest(self.cursor_x, self.cursor_y) then
     entity = self.app.map.th:hitTestObjects(x, y)
   end
   if entity ~= self.cursor_entity then
@@ -783,6 +788,9 @@ end
 function GameUI:afterLoad(old, new)
   if old < 16 then
     self.zoom_factor = 1
+  end
+  if old < 23 then
+    self.do_world_hit_test = not self:getWindow(UIPlaceObjects)
   end
   
   return UI.afterLoad(self, old, new)

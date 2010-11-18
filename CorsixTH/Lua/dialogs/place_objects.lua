@@ -85,6 +85,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   
   self:addObjects(object_list, pay_for)
   self:addKeyHandler(" ", self.tryNextOrientation)
+  
+  ui:setWorldHitTest(false)
 end
 
 -- changes the window size and buttons to num_slots slots
@@ -300,6 +302,7 @@ function UIPlaceObjects:close()
   self.ui:tutorialStep(1, {4, 5}, 1)
   self:removeAllObjects(true)
   self:clearBlueprint()
+  self.ui:setWorldHitTest(true)
   return Window.close(self)
 end
 
@@ -534,10 +537,6 @@ function UIPlaceObjects:draw(canvas, x, y)
     font:draw(canvas, o.object.name, x + 15, y, 130, 0)
     font:draw(canvas, o.qty, x + 151, y, 19, 0)
   end
-end
-
-function UIPlaceObjects:hitTest(x, y)
-  return self.visible
 end
 
 function UIPlaceObjects:clearBlueprint()
