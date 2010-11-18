@@ -164,7 +164,7 @@ function UIMapEditor:onMouseMove(x, y, dx, dy)
     self.mouse_cell_y = wy
     -- Right button down: sample the block under the cursor (unless left is
     -- held, as that indicates a paint in progress).
-    if self.buttons_down.right and not self.buttons_down.left then
+    if self.buttons_down.mouse_right and not self.buttons_down.mouse_left then
       self:sampleBlock(x, y)
     end
   end
@@ -172,7 +172,7 @@ function UIMapEditor:onMouseMove(x, y, dx, dy)
   -- Left button down: Expand / contract the rectangle which will be painted to
   -- include the original mouse down cell and the current cell, or clear the
   -- rectangle if the cursor is returned to where the mouse down position.
-  if self.buttons_down.left and self.paint_rect and 1 <= wx and 1 <= wy
+  if self.buttons_down.mouse_left and self.paint_rect and 1 <= wx and 1 <= wy
   and wx <= map.width and wy <= map.height then
     local p1x = math_floor(self.paint_start_wx)
     local p1y = math_floor(self.paint_start_wy)
@@ -218,7 +218,7 @@ end
 function UIMapEditor:onMouseDown(button, x, y)
   local repaint = false
   if button == "right" then
-    if self.buttons_down.left then
+    if self.buttons_down.mouse_left then
       -- Right click while left is down: set paint step size
       local wx, wy = self.ui:ScreenToWorld(x, y)
       local xstep = math.max(1, math.abs(math.floor(wx) - math.floor(self.paint_start_wx)))

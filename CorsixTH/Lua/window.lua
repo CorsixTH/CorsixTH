@@ -23,15 +23,9 @@ dofile "persistance"
 --! Base class for user-interface dialogs.
 class "Window"
 
-Window.buttons_down = permanent"Window.buttons_down" {
-  left = false,
-  middle = false,
-  right = false,
-  
-  alt = false,
-  ctrl = false,
-  shift = false,
-}
+-- NB: pressed mouse buttons are denoted with a "mouse_" prefix in buttons_down,
+-- i.e. mouse_left, mouse_middle, mouse_right
+Window.buttons_down = permanent"Window.buttons_down" {}
 
 function Window:Window()
   self.x = 0

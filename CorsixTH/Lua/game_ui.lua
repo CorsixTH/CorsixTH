@@ -162,6 +162,23 @@ local scroll_keys = {
   left  = {x = -10, y =   0},
 }
 
+function GameUI:updateKeyScroll()
+  local dx, dy = 0, 0
+  for key, scr in pairs(scroll_keys) do
+    if self.buttons_down[key] then
+      dx = dx + scr.x
+      dy = dy + scr.y
+    end
+  end
+  if dx ~= 0 or dy ~= 0 then
+    self.tick_scroll_amount = {x = dx, y = dy}
+    return true
+  else
+    self.tick_scroll_amount = false
+    return false
+  end
+end
+
 function GameUI:onKeyDown(code, rawchar)
   if UI.onKeyDown(self, code, rawchar) then
     return true
@@ -176,13 +193,7 @@ function GameUI:onKeyDown(code, rawchar)
   end
   self.menu_bar:onKeyDown(key, rawchar, code)
   if scroll_keys[key] then
-    local dx, dy = scroll_keys[key].x, scroll_keys[key].y
-    if self.tick_scroll_amount then
-      self.tick_scroll_amount.x = self.tick_scroll_amount.x + dx
-      self.tick_scroll_amount.y = self.tick_scroll_amount.y + dy
-    else
-      self.tick_scroll_amount = {x = dx, y = dy}
-    end
+    self:updateKeyScroll()
     return
   end
   if TheApp.config.debug then -- Debug commands
@@ -216,22 +227,7 @@ function GameUI:onKeyUp(code)
   local key = self:_translateKeyCode(code, rawchar)
   
   if scroll_keys[key] then
-    local dx, dy = -scroll_keys[key].x, -scroll_keys[key].y
-    if self.tick_scroll_amount then
-      dx = dx + self.tick_scroll_amount.x
-      dy = dy + self.tick_scroll_amount.y
-    else
-      -- NB: No current scroll (perhaps due to opposing keyboard buttons being
-      -- pressed prior), and dx ~= 0 or dy ~= 0, so we need a table ready for
-      -- the second branch of the next if.
-      self.tick_scroll_amount = {}
-    end
-    if dx == 0 and dy == 0 then
-      self.tick_scroll_amount = false
-    else
-      self.tick_scroll_amount.x = dx
-      self.tick_scroll_amount.y = dy
-    end
+    self:updateKeyScroll()
     return
   end
 end
@@ -339,7 +335,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
   if self:onCursorWorldPositionChange() or self.simulated_cursor then
     repaint = true
   end
-  if self.buttons_down.middle then
+  if self.buttons_down.mouse_middle then
     local zoom = self.zoom_factor
     self:scrollMap(-dx / zoom, -dy / zoom)
     repaint = true
@@ -470,7 +466,7 @@ function GameUI:onTick()
       -- If the middle mouse button is down, then the world is being dragged,
       -- and so the scroll direction due to the cursor being at the map edge
       -- should be opposite to normal to make it feel more natural.
-      if self.buttons_down.middle then
+      if self.buttons_down.mouse_middle then
         dx, dy = -dx, -dy
       end
     end

@@ -631,7 +631,7 @@ function UI:onMouseDown(code, x, y)
   end
   self.down_count = self.down_count + 1
   if x >= 3 and y >= 3 and x < self.app.config.width - 3 and y < self.app.config.height - 3 then
-    self.buttons_down[button] = true
+    self.buttons_down["mouse_"..button] = true
   end
   
   self:updateTooltip()
@@ -649,7 +649,7 @@ function UI:onMouseUp(code, x, y)
     end
     self.down_count = 0
   end
-  self.buttons_down[button] = nil
+  self.buttons_down["mouse_"..button] = nil
   
   if Window.onMouseUp(self, button, x, y) then
     repaint = true
@@ -682,7 +682,7 @@ end
 local tooltip_ticks = 30 -- Amount of ticks until a tooltip is displayed
 
 function UI:updateTooltip()
-  if self.buttons_down["left"] then
+  if self.buttons_down.mouse_left then
     -- Disable tooltips altogether while left button is pressed.
     self.tooltip = nil
     self.tooltip_counter = nil

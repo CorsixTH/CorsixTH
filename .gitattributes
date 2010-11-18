@@ -57,7 +57,6 @@ CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Lua/dialogs/annual_report.lua -text
-CorsixTH/Lua/dialogs/map_editor.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/dialogs/research_policy.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
