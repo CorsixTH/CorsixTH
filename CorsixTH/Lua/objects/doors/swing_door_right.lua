@@ -140,45 +140,23 @@ function SwingDoor:swing(anim, flags)
   self:setTimer(self.world:getAnimLength(anim), callback)
 end
 
-function SwingDoor:setTile(x, y)
-  if not self.is_master then
-    return Door.setTile(self, x, y)
-  end
-  
-  local map = self.world.map
-  if self.tile_x then
-    if self.direction == "west" then
-      map:setCellFlags(self.tile_x, self.tile_y + 1, {buildable = true, doNotIdle = false})
-      map:setCellFlags(self.tile_x - 1, self.tile_y + 1, {buildable = true, doNotIdle = false})
-    else
-      map:setCellFlags(self.tile_x + 1, self.tile_y, {buildable = true, doNotIdle = false})
-      map:setCellFlags(self.tile_x + 1, self.tile_y - 1, {buildable = true, doNotIdle = false})
-    end
-  end
-  Door.setTile(self, x, y)
-  if x then
-    if self.direction == "west" then
-      map:setCellFlags(x, y + 1, {buildable = false, doNotIdle = true})
-      map:setCellFlags(x - 1, y + 1, {buildable = false, doNotIdle = true})
-    else
-      map:setCellFlags(x + 1, y, {buildable = false, doNotIdle = true})
-      map:setCellFlags(x + 1, y - 1, {buildable = false, doNotIdle = true})
-    end
-  end
-  return self
-end
-
 function SwingDoor:getWalkableTiles()
-  local result = Door.getWalkableTiles(self)
+  if not self.is_master then
+    return {}
+  end
   local x, y = self.tile_x, self.tile_y
   if self.direction == "west" then
-    result[#result + 1] = {x, y + 1}
-    result[#result + 1] = {x - 1, y + 1}
+    return {
+      {x-1, y-1}, {x, y-1},
+      {x-1, y  }, {x, y  },
+      {x-1, y+1}, {x, y+1},
+    }
   else
-    result[#result + 1] = {x + 1, y}
-    result[#result + 1] = {x + 1, y - 1}
-  end  
-  return result
+    return {
+      {x-1, y-1}, {x, y-1}, {x+1, y-1},
+      {x-1, y  }, {x, y  }, {x+1, y  },
+    }
+  end
 end
 
 return object

@@ -1060,18 +1060,18 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
     local flags = {}
-    if not map:getCellFlags(x , y , flags).buildable
-    or not map:getCellFlags(x2, y2, flags).buildable then
+    if not (map:getCellFlags(x , y , flags).buildable or flags.passable)
+    or not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not map:getCellFlags(x + (x_mod and 1 or 0) , y + (x_mod and 1 or 0) , flags).buildable
-      or not map:getCellFlags(x2 + (x_mod and 1 or 0) , y2 + (x_mod and 1 or 0) , flags).buildable then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0) , y + (y_mod and 1 or 0) , flags).buildable or flags.passable)
+      or not (map:getCellFlags(x2 + (x_mod and 1 or 0) , y2 + (y_mod and 1 or 0) , flags).buildable or flags.passable) then
         self.blueprint_door.valid = false
       end
-      if not map:getCellFlags(x , y , flags).buildable
-      or not map:getCellFlags(x2, y2, flags).buildable then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0) , y - (y_mod and 1 or 0) , flags).buildable or flags.passable)
+      or not (map:getCellFlags(x2 - (x_mod and 1 or 0) , y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
         self.blueprint_door.valid = false
       end
     end

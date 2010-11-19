@@ -480,7 +480,6 @@ function Object:onClick(ui, button, data)
   if button == "right" then
     -- This flag can be used if for example some things should only happen as long as the
     -- object is not picked up. How lovely when it is so logical. :-)
-    self.picked_up = true
     local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
     local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
@@ -491,7 +490,8 @@ function Object:onClick(ui, button, data)
     or (not room and not self.object_type.corridor_object) then
       return
     end
-
+    
+    self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
     -- or the blueprint will be wrong

@@ -76,31 +76,36 @@ local door_flag_name = {
 function Door:setTile(x, y)
   local map = self.world.map
   local flag_names = door_flag_name[self.direction]
+  local todo_cleanup
   if self.tile_x then
+    -- NB: unsetting buildable flag has to be done AFTER removing the object
+    --     from its former tile in Object.setTile
+    todo_cleanup = self:getWalkableTiles()
     map:setCellFlags(self.tile_x, self.tile_y, {
       [flag_names[1]] = false,
       [flag_names[2]] = false,
-      buildable = true,
-      doNotIdle = false,
     })
-    if self.direction == "west" then
-      map:setCellFlags(self.tile_x - 1, self.tile_y, {buildable = true, doNotIdle = false})
-    else
-      map:setCellFlags(self.tile_x, self.tile_y - 1, {buildable = true, doNotIdle = false})
+    for _, xy in ipairs(self:getWalkableTiles()) do
+      map:setCellFlags(xy[1], xy[2], {doNotIdle = false})
     end
   end
   Object.setTile(self, x, y)
+  if todo_cleanup then
+    -- passable tiles can "belong" to multiple objects, so we have to check that
+    -- assumption: no object defines a passable tile further than 10 tiles away from its origin
+    for _, xy in ipairs(todo_cleanup) do
+      if not self.world:isTilePartOfNearbyObject(xy[1], xy[2], 10) then
+        map:setCellFlags(xy[1], xy[2], {buildable = true})
+      end
+    end
+  end
   if x then
     map:setCellFlags(x, y, {
       [flag_names[1]] = true,
       [flag_names[2]] = true,
-      buildable = false,
-      doNotIdle = true,
     })
-    if self.direction == "west" then
-      map:setCellFlags(x - 1, y, {buildable = false, doNotIdle = true})
-    else
-      map:setCellFlags(x, y - 1, {buildable = false, doNotIdle = true})
+    for _, xy in ipairs(self:getWalkableTiles()) do
+      map:setCellFlags(xy[1], xy[2], {buildable = false, doNotIdle = true})
     end
   end
   map.th:updateShadows()
