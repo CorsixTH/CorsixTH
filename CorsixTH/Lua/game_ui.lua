@@ -249,6 +249,9 @@ function GameUI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
 end
 
+--! Change if the World should be tested for entities under the cursor
+--!param mode (boolean or room) true to enable hit test (normal), false
+--! to disable, room to enable only for non-door objects in given room
 function GameUI:setWorldHitTest(mode)
   self.do_world_hit_test = mode
 end
@@ -260,6 +263,12 @@ function GameUI:onCursorWorldPositionChange()
   local entity = nil
   if self.do_world_hit_test and not self:hitTest(self.cursor_x, self.cursor_y) then
     entity = self.app.map.th:hitTestObjects(x, y)
+    if self.do_world_hit_test ~= true then
+      -- limit to non-door objects in room
+      local room = self.do_world_hit_test
+      entity = entity and class.is(entity, Object) and entity:getRoom() == room
+       and entity ~= room.door and entity
+    end
   end
   if entity ~= self.cursor_entity then
     -- Stop displaying hoverable moods for the old entity

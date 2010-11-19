@@ -484,6 +484,7 @@ function Object:onClick(ui, button, data)
     local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
     local room = self:getRoom()
     local window = ui:getWindow(UIEditRoom)
+    window = window and window.visible and window
     local direction = self.direction
     if (not room and window) 
     or (room and not (window and window.room == room) and not self.object_type.corridor_object)

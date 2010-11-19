@@ -74,6 +74,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
     else
       self.blueprint_door = {}
     end
+    self.ui:setWorldHitTest(self.room)
     self.pickup_button:enable(true)
     self.purchase_button:enable(true)
     self:checkEnableConfirm()
@@ -811,6 +812,7 @@ end
 
 function UIEditRoom:enterObjectsPhase()
   self.ui:tutorialStep(3, {11, 12}, 13)
+  self.ui:setWorldHitTest(self.room)
   local confirm = self:checkEnableConfirm()
   if #self.room.room_info.objects_additional == 0 and confirm then
     self:confirm(true)
