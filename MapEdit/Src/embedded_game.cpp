@@ -416,6 +416,7 @@ static const struct luaL_reg sdllib[] = {
     {"getFPS", l_get_fps},
     {"trackFPS", l_nop},
     {"limitFPS", l_nop},
+    {"modifyKeyboardRepeat", l_nop},
     {"getTicks", l_get_ticks},
     {NULL, NULL}
 };
