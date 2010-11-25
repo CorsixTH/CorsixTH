@@ -25,11 +25,14 @@ function Hospital:Hospital(world)
   local level_config = world.map.level_config
   local level = world.map.level_number
   local balance = 40000
+  local interest_rate = 0.01
   if level_config then
     if level_config.towns and level_config.towns[level] then
       balance = level_config.towns[level].StartCash
+      interest_rate = level_config.towns[level].InterestRate / 10000
     elseif level_config.town then
       balance = level_config.town.StartCash
+      interest_rate = level_config.town.InterestRate / 10000
     end
     -- Check if awards are available
     if level_config.awards_trophies then
@@ -51,10 +54,13 @@ function Hospital:Hospital(world)
   
   -- TODO: With the fame/shame screen and scoring comes salary.
   self.player_salary = 10000
+  self.salary_offer = 0
   
   -- Initial values
-  self.interest_rate = 0.01 -- Should these be worldwide?
+  self.interest_rate = interest_rate
   self.inflation_rate = 0.045
+  self.salary_incr = level_config.gbv.ScoreMaxInc or 300
+  self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
@@ -101,6 +107,12 @@ function Hospital:Hospital(world)
       break
     end
   end
+  -- Initialize any staff already present in the world
+  for _, staff in ipairs(world.initial_staff) do
+    self:addStaff(staff)
+    staff:setHospital(self)
+  end
+  -- Initialize diseases
   local diseases = TheApp.diseases
   local expertise = self.world.map.level_config.expertise
   local gbv = self.world.map.level_config.gbv
@@ -159,39 +171,39 @@ function Hospital:_initResearch(next_diag, next_cure)
 end
 
 --[[ Add some more research points to research progress. If 
-specific_destination is specified all points will go into that specific
-room. Otherwise they will be divided according to the research policy into
-the different research areas.
+autopsy_room is specified points are not used. Instead research
+progresses according to the level config for autopsies. 
+Otherwise they will be divided according to the research policy 
+into the different research areas.
 !param points (integer) The total amount of points (before applying
-any level specific divisors to add to research
-!param specific_destination (string) If a specific room should get these points,
-then this is the id of that room.
+any level specific divisors to add to research.
+!param autopsy_room (string) If a specific room should get points following
+an autopsy, then this is the id of that room.
 ]]
-function Hospital:addResearchPoints(points, specific_destination)
+function Hospital:addResearchPoints(points, autopsy_room)
   -- Fetch the level research divisor. Fallback is 5 (medium)
   local level_config = self.world.map.level_config
   local divisor = 5
-    if level_config and level_config.gbv then
-      divisor = level_config.gbv.ResearchPointsDivisor or 5
-    end
-  -- If a specific destination room has been specified, let it go there.
-  -- Example is after sending a patient into the autopsy.
-  -- Note that only treatment rooms can get this focus as it is now.
-  if specific_destination then
+  if level_config and level_config.gbv then
+    divisor = level_config.gbv.ResearchPointsDivisor or 5
+  end
+  -- If an autopsy_room has been specified, let research go there.
+  if autopsy_room then
     -- Currently only research of rooms is implemented
     for room, value in pairs(self.research_rooms) do
-      if room.id == specific_destination then
+      if room.id == autopsy_room then
         -- Maybe we have enough to discover the room?
         local required = level_config.expertise[room.level_config_research].RschReqd
+        local advance = level_config.gbv.AutopsyRschPercent / 100 * required
         -- Is generic research also focusing on this room?
         local normal_points = 0
-        if self.research.cure.current.id == specific_destination then
+        if self.research.cure.current.id == autopsy_room then
           normal_points = self.research.cure.points
         end
-        if value + points/divisor + normal_points > required then
+        if value + advance + normal_points > required then
           self:discoverRoom(room, "cure")
         else
-          self.research_rooms[room] = value + points/divisor
+          self.research_rooms[room] = value + advance
         end
       end
     end
@@ -345,6 +357,12 @@ function Hospital:afterLoad(old, new)
     }
     self.discover_autopsy_risk = 10
   end
+  if old < 24 then
+    -- New variables
+    self.salary_incr = 300
+    self.sal_min = 50
+    self.salary_offer = 0
+  end
 end
 
 function Hospital:tick()
@@ -435,6 +453,23 @@ function Hospital:onEndMonth()
     self:spendMoney(math.floor(self.acc_research_cost+0.5), _S.transactions.research)
     self.acc_research_cost = 0
   end
+  -- add to score each month
+  -- rate varies on some performance factors i.e. reputation above 500 increases the score
+  -- and the number of deaths will reduce the score. 
+  local sal_inc = self.salary_incr /10
+  local sal_mult = ((self.reputation)-500)/((self.num_deaths)+1) -- added 1 so that you don't multipy by 0
+  local month_incr = sal_inc + sal_mult
+  -- To ensure that you can't recieve less than 50 or 
+  -- more than 300 per month
+  if month_incr < self.sal_min then
+    month_incr = self.sal_min
+  elseif month_incr > self.salary_incr then
+    month_incr = self.salary_incr
+  else 
+    month_incr = month_incr
+  end
+  self.player_salary = self.player_salary + math.ceil(month_incr)
+  
   -- Pay heating costs
   -- TODO: Should this also be on a per day basis "behind the scenes" as above?
   local radiators = self.world.object_counts.radiator
@@ -447,6 +482,14 @@ function Hospital:onEndYear()
   self.sodas_sold = 0
   self.reputation_above_threshold = self.win_awards 
   and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
+  -- On third year of level 3 there is the large increase to salary
+  -- this will replicate that. I have still to check other levels above 5 to 
+  -- see if there are other large increases.
+  -- TODO Hall of fame and shame
+  if self.world.year == 3 and self.world.map.level_number == 3 then
+    -- adds the extra to salary in level 3 year 3
+    self.player_salary = self.player_salary + math.random(8000,20000)
+  end
 end
 
 -- Creates complete emergency with patients, what disease they have, what's needed

@@ -238,6 +238,7 @@ local function action_seek_room_start(action, humanoid)
         end
       end -- End of build_callback function
       action.build_callback = build_callback
+      humanoid.build_callback = build_callback
       humanoid.world:registerRoomBuildCallback(action.build_callback)
       action.on_interrupt = action_seek_room_interrupt
     end

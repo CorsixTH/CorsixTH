@@ -203,6 +203,7 @@ function Humanoid:onClick(ui, button)
   end
 end
 
+-- Called when the humanoid is about to be removed from the world.
 function Humanoid:onDestroy()
   local x, y = self.tile_x, self.tile_y
   if x and y then
@@ -211,6 +212,8 @@ function Humanoid:onDestroy()
       notify_object:onOccupantChange(-1)
     end
   end
+  -- Make absolutely sure there are no callbacks left on the humanoid.
+  self:unregisterCallbacks()
   return Entity.onDestroy(self)
 end
 
@@ -510,4 +513,21 @@ function Humanoid:goingToUseObject(object_type)
     end
   end
   return false
+end
+
+-- Function called when a humanoid is sent away from the hospital to prevent
+-- further actions taken as a result of a callback
+function Humanoid:unregisterCallbacks()
+  -- Remove callbacks for new rooms
+  if self.build_callback then
+    self.world:unregisterBuildCallback(self.build_callback)
+  end
+  if self.toilet_callback then
+    self.world:unregisterBuildCallback(self.toilet_callback)
+  end
+  -- Remove any message related to the humanoid.
+  if self.message_callback then
+    self:message_callback(true)
+    self.message_callback = nil
+  end
 end

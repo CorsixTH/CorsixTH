@@ -176,11 +176,9 @@ function Staff:fire()
   self:setHospital(nil)
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
-  -- Remove any message related to the staff member.
-  if self.message_callback then
-    self:message_callback(true)
-    self.message_callback = nil
-  end
+  
+  -- Unregister any build callbacks or messages.
+  self:unregisterCallbacks()
   -- Check if the staff was being called to a room and look for a replacement
   for _, r in pairs(self.world.rooms) do
     if r.approaching_staff[self] then
@@ -315,6 +313,7 @@ function Staff:checkIfNeedRest()
           self.world:unregisterRoomBuildCallback(callback)
         end
       end
+      self.build_callback = callback
       self.world:registerRoomBuildCallback(callback)
       return
     end

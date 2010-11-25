@@ -48,7 +48,7 @@ end
 
 function PsychRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  local obj, ox, oy = self.world:findFreeObjectNearToUse(staff, "bookcase", nil, "near")
+  local obj, ox, oy = self.world:findFreeObjectNearToUse(staff, "bookcase", "near")
   if not obj then
     staff:setNextAction{name = "meander"}
   else

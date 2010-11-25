@@ -30,6 +30,29 @@ function StaffProfile:StaffProfile(humanoid_class, local_string)
   self.profession = local_string
 end
 
+function StaffProfile:setDoctorAbilities(psychiatrist, surgeon, researcher, junior, consultant)
+  self.is_psychiatrist = psychiatrist
+  self.is_surgeon = surgeon
+  self.is_researcher = researcher
+  self.is_junior = junior
+  self.is_consultant = consultant 
+end
+
+function StaffProfile:initDoctor(psychiatrist, surgeon, researcher, junior, consultant, skill, world)
+  self:setDoctorAbilities(psychiatrist, surgeon, researcher, junior, consultant)
+  self:init(skill, world)
+end
+
+function StaffProfile:init(skill, world)
+  self:setSkill(skill)
+  self.wage = self:getFairWage(world)
+  self:randomiseOrganical()
+end
+
+function StaffProfile:setSkill(skill)
+	self.skill = skill
+end
+
 local name_parts = {_S.humanoid_name_starts, _S.humanoid_name_ends}
 
 local function shuffle(t)
@@ -56,23 +79,84 @@ local function our_concat(t)
 end
 
 function StaffProfile:randomise(world)
+  local level_config = world.map.level_config
+  
+  -- decide general skill for all staff
+  self.skill = math.random()
+  --self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
+  --self:parseSkillLevel()
+  
+  if self.humanoid_class == "Doctor" then
+    -- find the correct config line (based on month) for generation of the doctor
+    local i = 0
+    while i < #level_config.staff_levels and 
+    level_config.staff_levels[i+1].Month < world.month + (world.year - 1)*12 do 
+      i = i+1 
+    end
+  
+    local shrinkrate = 0
+    local surgrate = 0
+    local rschrate = 0
+    local jrRate = 0
+    local consRate = 0
+    
+  
+    if level_config.staff_levels[i].ShrkRate ~= 0 then
+      shrinkrate = 1 / level_config.staff_levels[i].ShrkRate
+    end
+    if level_config.staff_levels[i].SurgRate ~= 0 then
+      surgrate = 1 / level_config.staff_levels[i].SurgRate
+    end
+    if level_config.staff_levels[i].RschRate ~= 0 then
+      rschrate = 1 / level_config.staff_levels[i].RschRate
+    end
+    if level_config.staff_levels[i].JrRate ~= 0 then
+      jrRate = 1 / level_config.staff_levels[i].JrRate
+    end
+    if level_config.staff_levels[i].ConsRate ~= 0 then
+      consRate = 1 / level_config.staff_levels[i].ConsRate
+    end
+    -- FULL05.SAM contains the values 255, which means 0
+    --if shrinkrate > 1.0 then shrinkrate = 0 end
+    --if surgrate > 1.0 then surgrate = 0 end
+    --if rschrate > 1.0 then rschrate = 0 end
+  
+    self.is_surgeon      = math.random() < surgrate and 1.0 or 0
+    self.is_psychiatrist = math.random() < shrinkrate and 1.0 or 0
+    self.is_researcher   = math.random() < rschrate and 1.0 or 0
+    
+    
+    -- decide seniority
+    -- FULL05.SAM contains the values 255, which means 0
+    if jrRate > 1.0 then jrRate = 0 end
+    if consRate > 1.0 then consRate = 0 end
+    
+    self.is_junior = math.random() < jrRate and 1.0 or nil
+    if not self.is_junior then
+  	  self.is_consultant = math.random() < jrRate and 1.0 or nil
+    end
+  
+    local jr_limit = 0.4
+    local cons_limit = 0.9
+  
+    -- put the doctor in the right skill level box ( 0 .. 0.4 .. 0.9 .. 1 )
+    if self.is_junior then
+      self.skill = jr_limit * self.skill
+    elseif self.is_consultant then
+      self.skill = cons_limit + ((1 - cons_limit) * self.skill)
+    else
+      self.skill = jr_limit + ((cons_limit - jr_limit) * self.skill)
+    end
+  end
+  self.wage = self:getFairWage(world)
+  self:randomiseOrganical()
+end
+
+function StaffProfile:randomiseOrganical()
   self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
     self.name = self.name .. part_table.__random
   end
-  self.skill = math.random()
-  self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
-  self:parseSkillLevel()
-  if self.humanoid_class == "Doctor" then
-    -- 65% chance to have at least one ability
-    --  1% chance to have all three abilities
-    self.is_surgeon      = math.random() < 0.20 and 1.0 or 0
-    self.is_psychiatrist = math.random() < 0.25 and 1.0 or 0
-    self.is_researcher   = math.random() < 0.20 and 1.0 or 0
-  end
-  self.wage = self:getFairWage(world)
-  -- Vary wage by +/- 15%
-  self.wage = math.floor(self.wage * (math.random(850, 1150) / 1000) + 0.5)
   local desc_table1, desc_table2
   if self.skill < 0.33 then
     desc_table1 = _S.staff_descriptions.bad
@@ -128,12 +212,6 @@ function StaffProfile:drawFace(canvas, x, y, parts_bitmap)
   parts_bitmap:draw(canvas, x, y + 53, 0, 954 + self.chin_index * 22, 65, 22)
 end
 
-function StaffProfile:parseSkillLevel()
-  local junior_skill = 0.4 + self.skill_level_modifier
-  self.is_junior     = self.skill <= junior_skill and 1 - (self.skill / junior_skill) or nil
-  local consultant_skill = 0.9 + self.skill_level_modifier
-  self.is_consultant = self.skill >= consultant_skill and (self.skill - consultant_skill) / (1 - consultant_skill) or nil
-end
 
 local conf_id = {
   Nurse = 0,
@@ -165,5 +243,5 @@ function StaffProfile:getFairWage(world)
       wage = wage + level_config.gbv.SalaryAdd[ability_conf_id.is_doctor]
     end
   end
-  return wage
+  return math.floor(wage)
 end

@@ -35,8 +35,13 @@ on the contrary everything is available unless specified otherwise in the level 
 %Name = "Example Town"
 %LevelFile = "Example.map"
 
-| Town properties | Cash at the beginning | The actual amount |
-#town.StartCash 100000
+Note that the below introduction text at the moment must reside on a single line within this file!
+%LevelBriefing = "This is an example map that shows aspiring map makers what can be done when making new fantastic creations!"
+
+Town properties
+InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
+300 means 3 %
+#town.StartCash.InterestRate 100000 300
 
 -------------------- Disease Configuration -------------------------
 

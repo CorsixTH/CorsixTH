@@ -131,7 +131,7 @@ menu_options_game_speed.pause   = "  PAUSE  "
 menu_file.restart = "  RESTART  "
 
 menu_debug = {
-  jump_to_level               	= utf8 "  GÅ TIL NIVÅ  ",
+  jump_to_level                 = utf8 "  GÅ TIL NIVÅ  ",
   transparent_walls             = "  GJENNOMSIKTIGE VEGGER  ",
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
@@ -144,8 +144,8 @@ menu_debug = {
   dump_gamelog                  = "  DUMP SPILL-LOGGEN  ",
   map_overlay                   = "  KARTOVERLEGG  ",
   sprite_viewer                 = "  SPRITE-VISNING  ",
-  create_emergency         		= utf8 "  LAG NÖDSTILFELLE  ",
-  lua_console					= "  LUA KONSOLL ",
+  create_emergency              = utf8 "  LAG NÖDSTILFELLE  ",
+  lua_console                   = "  LUA KONSOLL ",
 }
 
 menu_debug_overlay = {

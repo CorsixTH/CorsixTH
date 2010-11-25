@@ -64,7 +64,7 @@ local staff_usage_objects = {
 
 function ResearchRoom:doStaffUseCycle(staff, previous_object)
   local obj, ox, oy = self.world:findFreeObjectNearToUse(staff,
-    staff_usage_objects, nil, "near", previous_object)
+    staff_usage_objects, "near", previous_object)
   
   if obj then
     obj.reserved_for = staff
@@ -154,7 +154,8 @@ function ResearchRoom:commandEnteringPatient(patient)
       self:onHumanoidLeave(patient)
       -- Some research is done. :) Might trigger a loss of reputation though.
       local hosp = self.hospital
-      hosp:addResearchPoints(8000, patient.disease.treatment_rooms[#patient.disease.treatment_rooms])
+      local room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
+      hosp:addResearchPoints("dummy", room)
       if hosp.discover_autopsy_risk > math.random(1, 100) and not hosp.autopsy_discovered then
         -- Can only be discovered once.
         hosp.autopsy_discovered = true

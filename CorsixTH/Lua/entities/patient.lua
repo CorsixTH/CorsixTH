@@ -197,11 +197,8 @@ function Patient:goHome(cured)
   if self.is_debug then
     hosp:removeDebugPatient(self)
   end
-  -- Remove any message related to the patient.
-  if self.message_callback then
-    self:message_callback(true)
-    self.message_callback = nil
-  end
+  -- Remove any messages and/or callbacks related to the patient.
+  self:unregisterCallbacks()
   
   self.going_home = true
   local room = self:getRoom()
@@ -254,6 +251,7 @@ function Patient:tickDay()
             self.world:unregisterRoomBuildCallback(callback)
           end
         end
+        self.toilet_callback = callback
         self.world:registerRoomBuildCallback(callback)
         -- Otherwise we can queue the action, but only if not in any rooms right now.
       elseif not self:getRoom() then

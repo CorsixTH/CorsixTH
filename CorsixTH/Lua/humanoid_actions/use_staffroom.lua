@@ -46,7 +46,7 @@ local decide_next_target = permanent"use_staffroom_action_decide_next_target"( f
   end
   
   -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
-  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, nil, "near")
+  local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, "near")
   return obj, ox, oy, new_type
 end)
 

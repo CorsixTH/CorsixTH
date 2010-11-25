@@ -50,7 +50,9 @@ function UINewGame:UINewGame(ui)
     self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   end) then
     -- Couldn't find some files, which implies we're using the demo version of TH.
-    -- Load directly.
+    -- Load directly and activate the tutorial. Those who use the demo files probably
+    -- want that anyway.
+    self.start_tutorial = true
     self:startGame("full")
     self:close()
     return

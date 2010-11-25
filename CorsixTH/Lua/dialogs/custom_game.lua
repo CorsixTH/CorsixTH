@@ -35,7 +35,7 @@ function UICustomGame:UICustomGame(ui)
   local items = {}
   for file in lfs.dir(path) do
     if file:match"%.level$" then
-      local level_name, level_file
+      local level_name, level_file, level_intro
       for line in io.lines(path .. pathsep .. file) do
         -- Get level name and name of the level file to load
         if line:sub(1, 1) == "%" then
@@ -44,6 +44,8 @@ function UICustomGame:UICustomGame(ui)
               level_name = text
             elseif line:find("LevelFile") then
               level_file = text
+            elseif line:find("LevelBriefing") then
+              level_intro = text
             end
           end
         end
@@ -54,6 +56,7 @@ function UICustomGame:UICustomGame(ui)
           tooltip = _S.tooltip.custom_game_window.start_game_with_name:format(level_name),
           level_file = level_file,
           path = path .. file,
+          intro = level_intro,
         }
       end
     end
@@ -66,6 +69,7 @@ function UICustomGame:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
   local level_name = item.name:sub(2, -2)
   local level_file = item.level_file:sub(2, -2)
+  local level_intro = item.intro and item.intro:sub(2, -2)
   local filename = item.path
   -- First make sure the map file exists.
   local _, errors = app:readLevelDataFile(level_file)
@@ -73,6 +77,6 @@ function UICustomGame:buttonClicked(num)
     self.ui:addWindow(UIInformation(self.ui, {errors}))
     return
   end
-  app:loadLevel(filename, nil, level_name, level_file)
+  app:loadLevel(filename, nil, level_name, level_file, level_intro)
 end
 

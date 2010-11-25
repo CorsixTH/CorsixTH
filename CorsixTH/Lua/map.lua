@@ -94,53 +94,60 @@ the original game levels are considered.
 !param level_name The name of the actual map/area/hospital as written in the config file.
 !param level_file The path to the map file as supplied by the config file.
 ]]
-function Map:load(level, difficulty, level_name, level_file)
-  -- Load base configuration for all levels
+function Map:load(level, difficulty, level_name, level_file, level_intro)
   local objects, i
   if not difficulty then
     difficulty = "full"
   end
-  local base_config = self:loadMapConfig(difficulty .. "00.SAM", {})
-  -- Make another try with the "full" version unless already tried
-  if not base_config and difficulty ~= "full" then
-    base_config = self:loadMapConfig("full00.SAM", {})
-    difficulty = "full"
-  end
-  self.difficulty = difficulty
+  -- Load CorsixTH base configuration for all levels.
+  -- We want to load the file a new each time.
+  local function file (filename)
+      local f = assert(loadfile(filename))
+      return f()
+    end
+  local path = debug.getinfo(1, "S").source:sub(2, -8)
+  local result = file(path .. "base_config.lua")
+
+  local base_config = result
+  local errors
   if type(level) == "number" then
+    -- Playing the original campaign.
+    -- Add TH's base config if possible, otherwise our own config 
+    -- roughly corresponds to "full".
+    errors, base_config = self:loadMapConfig(difficulty .. "00.SAM", base_config)
+    -- If it couldn't be loaded the new difficulty level is full no matter what.
+    if errors then
+      difficulty = "full"
+    end
+    self.difficulty = difficulty
     self.level_number = level
-    local data, errors = self:getRawData(level_file)
+    local data
+    data, errors = self:getRawData(level_file)
     if data then
       i, objects = self.th:load(data)
     else
       return nil, errors
     end
     self.level_name = _S.level_names[level]:upper()
-    -- Check if the config exists, otherwise we're probably using the demo files.
-    if base_config then
+    -- Check if we're using the demo files. If we are, that special config should be loaded.
+    if self.app.using_demo_files then
+      -- Try to load our own configuration file for the demo. 
+      errors, result = self:loadMapConfig("Levels" .. pathsep .. "demo.level", base_config, true)
+      if errors then
+        print("Warning: Could not find the demo configuration, try reinstalling the game")
+      end
+      self.level_config = result
+    else
       local level_no = level
       if level_no < 10 then
         level_no = "0" .. level
       end
       -- Override with the specific configuration for this level
-      self.level_config = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
-    else
-      -- Try to load the standard full configuration level instead.
-      local path = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
-      self.level_config = self:loadMapConfig(path .. "example.level", {}, true)
-      if not self.level_config then
-        -- Nothing worked so everything will be available - load a dummy config
-        print("Warning: Could not find any level configuration to load. Please try " ..
-          "reinstalling the game.")
-        self.level_config = {
-          win_criteria = {}, 
-          lose_criteria = {},
-          computer = {},
-        }
-        self.level_config.computer["13"] = {Playing = 1}
-        self.level_config.computer["14"] = {Playing = 1}
-        self.level_config.computer["15"] = {Playing = 1}
-      end
+      errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
+      -- Finally load additional CorsixTH config per level (currently only for level 5)
+      path = "Levels" .. pathsep .. "original" 
+      errors, result = self:loadMapConfig(path .. level_no .. ".level", result, true)
+      self.level_config = result
     end
   elseif _MAP_EDITOR then
     -- We're being fed data by the map editor.
@@ -151,14 +158,13 @@ function Map:load(level, difficulty, level_name, level_file)
     else
       i, objects = self.th:load(level)
     end
-    if not base_config then
-      base_config = {}
-    end
-    local example_config_path = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "example.level"
-    self.level_config = self:loadMapConfig(example_config_path, base_config, true)
+    assert(base_config, "No base config has been loaded!")
+
+    self.level_config = base_config
   else
     -- We're loading a custom level.
     self.level_name = level_name
+    self.level_intro = level_intro
     self.level_number = level
     self.level_file = level_file
     local data, errors = self:getRawData(level_file)
@@ -167,10 +173,9 @@ function Map:load(level, difficulty, level_name, level_file)
     else
       return nil, errors
     end
-    if not base_config then
-      base_config = {}
-    end
-    self.level_config = self:loadMapConfig(level, base_config, true)
+    assert(base_config, "No base config has been loaded!")
+    errors, result = self:loadMapConfig(level, base_config, true)
+    self.level_config = result
   end
 
   self.width, self.height = self.th:size()
@@ -187,7 +192,8 @@ function Map:load(level, difficulty, level_name, level_file)
   return objects
 end
 
---[[! Loads map configurations from files.
+--[[! Loads map configurations from files. Returns nil as first result
+if no configuration could be loaded and config as second result no matter what.
 !param filename
 !param config If a base config already exists and only some values should be overridden
 this is the base config
@@ -237,9 +243,9 @@ function Map:loadMapConfig(filename, config, custom)
         end
       end
     end
-    return config
+    return nil, config
   else
-    return nil
+    return "Error: Could not find the configuration file", config
   end
 end
 

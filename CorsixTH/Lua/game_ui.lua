@@ -803,6 +803,11 @@ end
 
 function GameUI:showBriefing()
   local level = self.app.world.map.level_number
-  local text = type(level) == "number" and _S.introduction_texts["level" .. level] or {_S.information.custom_game}
+  local text = {_S.information.custom_game}
+  if type(level) == "number" then
+    text = _S.introduction_texts["level" .. level]
+  elseif self.app.world.map.level_intro then
+    text = {self.app.world.map.level_intro}
+  end
   self:addWindow(UIInformation(self, text))
 end

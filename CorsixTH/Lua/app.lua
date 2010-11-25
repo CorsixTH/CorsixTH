@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 23
+local SAVEGAME_VERSION = 24
 
 class "App"
 
@@ -671,6 +671,7 @@ function App:checkInstallFolder()
     
   -- Check for demo version
   if self.fs:readContents("DataM", "Demo.dat") then
+    self.using_demo_files = true
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end

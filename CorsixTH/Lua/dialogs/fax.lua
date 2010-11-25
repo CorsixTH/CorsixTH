@@ -156,7 +156,11 @@ function UIFax:choice(choice)
     self.ui.adviser:say(_S.adviser.information.emergency)
   elseif choice == "accept_new_level" then
     if tonumber(self.ui.app.world.map.level_number) then
-      local carry_to_next_level = {room_built = self.ui.app.world.room_built}
+      local offer = self.ui.hospital.salary_offer
+      local carry_to_next_level = {
+        world = {room_built = self.ui.app.world.room_built},
+        hospital = {player_salary = offer},
+      }
       self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
       TheApp.world:initFromPreviousLevel(carry_to_next_level)
     else
@@ -179,21 +183,6 @@ function UIFax:correct()
   end
 end
 
-local announcements = {
-  "rand001.wav", "rand002.wav", "rand003.wav",
-  "rand005.wav", "rand006.wav",                "rand008.wav",
-  "rand009.wav", "rand010.wav",                "rand012.wav",
-  "rand013.wav",                               "rand016.wav",
-  "rand017.wav", "rand018.wav", "rand019.wav",
-  "rand021.wav", "rand022.wav",                "rand024.wav",
-  "rand025.wav", "rand026.wav", "rand027.wav", "rand028.wav",
-  "rand029.wav", "rand030.wav", "rand031.wav", "rand032.wav",
-  "rand033.wav", "rand034.wav", "rand035.wav", "rand036.wav",
-  "rand037.wav", "rand038.wav", "rand039.wav", "rand040.wav",
-  "rand041.wav",                               "rand044.wav",
-  "rand045.wav", "rand046.wav",
-  }
-
 function UIFax:validate()
   if self.code == "" then
     return
@@ -205,20 +194,22 @@ function UIFax:validate()
   print("Code typed on fax:", code)
   if code == "24328" then
     -- Original game cheat code
-    print("Congratulations, you have unlocked cheats! .. or you would have, if this were the original game. Try something else.")
+    self.ui.adviser:say(_S.adviser.cheats.th_cheat)
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
-    print("Random announcement cheat activated!")
-    self.ui:playSound(announcements[math.random(1, #announcements)])
+    local announcements = self.ui.app.world.random_announcements
+    if announcements then
+      self.ui:playSound(announcements[math.random(1, #announcements)])
+    end
   elseif 0.0006422 < x and x < 0.0006423 then
     -- Bloaty head patient cheat
     -- Anyone with a 'large' head should be able to spot the required code
     local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "bloaty_head"
     self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
     if undo then
-      print("Bloaty Head cheat deactivated.")
+      self.ui.adviser:say(_S.adviser.cheats.bloaty_off_cheat)
     else
-      print("Bloaty Head cheat activated!")
+      self.ui.adviser:say(_S.adviser.cheats.bloaty_cheat)
       local disease = self.ui.app.world.available_diseases.bloaty_head
       local diseases = {}
       diseases[1] = disease
@@ -229,10 +220,10 @@ function UIFax:validate()
     local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "hairyitis"
     self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
     if undo then
-      print("Hairyitis cheat deactivated.")
+      self.ui.adviser:say(_S.adviser.cheats.hairyitis_off_cheat)
     else
       -- Hairyitis cheat
-      print("Hairyitis cheat activated!")
+      self.ui.adviser:say(_S.adviser.cheats.hairyitis_cheat)
       local disease = self.ui.app.world.available_diseases.hairyitis
       local diseases = {}
       diseases[1] = disease
@@ -243,20 +234,20 @@ function UIFax:validate()
     -- Roujin's challenge cheat
     local hosp = self.ui.hospital
     if not hosp.spawn_rate_cheat then
-      print("Roujin's challenge activated! Good luck...")
+      self.ui.adviser:say(_S.adviser.cheats.roujin_on_cheat)
       hosp.spawn_rate_cheat = true
     else
-      print("Roujin's challenge deactivated.")
+      self.ui.adviser:say(_S.adviser.cheats.roujin_off_cheat)
       hosp.spawn_rate_cheat = nil
     end
   elseif 7.8768e-11 < x and x < 7.8769e-11 then
     -- Crazy doctors enabled
     local hosp = self.ui.hospital
     if not hosp.crazy_doctors then
-      print("Oh no! All doctors have gone crazy!")
+      self.ui.adviser:say(_S.adviser.cheats.crazy_on_cheat)
       hosp:setCrazyDoctors(true)
     else
-      print("Phew... the doctors regained their sanity.")
+      self.ui.adviser:say(_S.adviser.cheats.crazy_off_cheat)
       hosp:setCrazyDoctors(nil)
     end
   else

@@ -82,6 +82,8 @@ function World:World(app)
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
   
+  self.initial_staff = {}
+  self:initStaff()
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
   for _, hospital in ipairs(self.hospitals) do
@@ -120,6 +122,21 @@ function World:World(app)
   end
   self:makeAvailableStaff(0)
   self:calculateSpawnTiles()
+  
+  self.random_announcements = {
+  "rand001.wav", "rand002.wav", "rand003.wav",
+  "rand005.wav", "rand006.wav",                "rand008.wav",
+  "rand009.wav", "rand010.wav",                "rand012.wav",
+  "rand013.wav",                               "rand016.wav",
+  "rand017.wav", "rand018.wav", "rand019.wav",
+  "rand021.wav", "rand022.wav",                "rand024.wav",
+  "rand025.wav", "rand026.wav", "rand027.wav", "rand028.wav",
+  "rand029.wav", "rand030.wav", "rand031.wav", "rand032.wav",
+  "rand033.wav", "rand034.wav", "rand035.wav", "rand036.wav",
+  "rand037.wav", "rand038.wav", "rand039.wav", "rand040.wav",
+  "rand041.wav",                               "rand044.wav",
+  "rand045.wav", "rand046.wav",
+  }
   
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
@@ -186,6 +203,59 @@ function World:initLevel(app)
     end
   end
   self:determineWinningConditions()
+end
+
+function World:initStaff()
+  local level_config = self.map.level_config
+  
+  if level_config.start_staff then
+    local i = 0
+    for n, conf in ipairs(level_config.start_staff) do
+      local profile
+      local skill = 0
+      local added_staff = true
+      if conf.Skill then
+        skill = conf.Skill / 100
+      end
+      
+      if conf.Nurse == 1 then
+        profile = StaffProfile("Nurse", _S.staff_class["nurse"])
+        profile:init(skill, self)
+      elseif conf.Receptionist == 1 then
+        profile = StaffProfile("Receptionist", _S.staff_class["receptionist"])
+        profile:init(skill, self)
+      elseif conf.Handyman == 1 then
+        profile = StaffProfile("Handyman", _S.staff_class["handyman"])
+        profile:init(skill, self)      
+      elseif conf.Doctor == 1 then
+        profile = StaffProfile("Doctor", _S.staff_class["doctor"])
+        
+        local shrink = 0
+        local rsch = 0
+        local surg = 0
+        local jr, cons
+        
+        if conf.Shrink == 1 then shrink = 1 end
+        if conf.Surgeon == 1 then surg = 1 end
+        if conf.Researcher == 1 then rsch = 1 end
+        
+        if conf.Junior == 1 then jr = 1
+        elseif conf.Consultant == 1 then cons = 1
+        end
+        profile:initDoctor(shrink,surg,rsch,jr,cons,skill,self)
+      else
+        added_staff = false
+      end
+      if added_staff then
+        local staff = self:newEntity("Staff", 2)
+        staff:setProfile(profile)
+        -- TODO: Make a somewhat "nicer" placing algorithm.
+        staff:setTile(self.map.th:getCameraTile(1))
+        staff:onPlaceInCorridor()
+        self.initial_staff[#self.initial_staff + 1] = staff
+      end
+    end
+  end
 end
 
 function World:determineWinningConditions()
@@ -277,8 +347,16 @@ end
 
 --! Initializes variables carried from previous levels
 function World:initFromPreviousLevel(carry)
-  for key, value in pairs(carry) do
-    self[key] = value
+  for object, tab in pairs(carry) do
+    if object == "world" then
+      for key, value in pairs(tab) do
+        self[key] = value
+      end
+    elseif object == "hospital" then
+      for key, value in pairs(tab) do
+        self.hospitals[1][key] = value
+      end
+    end
   end
 end
 
@@ -705,13 +783,16 @@ function World:onEndMonth()
       if i == 1 then -- Player won. TODO: Needs to be changed for multiplayer
         local text = {}
         local choice_text, choice
+        local bonus_rate = math.random(4,9)
+        local with_bonus = (self.ui.hospital.player_salary * bonus_rate)/100  
+        self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
         if tonumber(self.map.level_number) then
           local no = tonumber(self.map.level_number)
           for key, value in ipairs(_S.letter[self.map.level_number]) do
             text[key] = value
           end
           text[1] = text[1]:format(self.hospitals[i].name)
-          text[2] = text[2]:format(self.hospitals[i].player_salary)
+          text[2] = text[2]:format(self.hospitals[i].salary_offer)
           text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
           if no < 12 then
             choice_text = _S.fax.choices.accept_new_level
@@ -960,7 +1041,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   return obj, ox, oy
 end
 
-function World:findFreeObjectNearToUse(humanoid, object_type_name, distance, which, current_object)
+function World:findFreeObjectNearToUse(humanoid, object_type_name, which, current_object)
   -- If which == nil or false, then the nearest object is taken.
   -- If which == "far", then the furthest object is taken.
   -- If which == "near", then the nearest object is taken with 50% probabilty, the second nearest with 25%, and so on
