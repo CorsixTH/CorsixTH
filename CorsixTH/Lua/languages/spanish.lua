@@ -52,7 +52,7 @@ tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
-tooltip.staff_window.center_view = "Bot�n izquierdo del rat�n para enfocar al personal, bot�n derecho del rat�n para rotar entre los miembros del personal."
+tooltip.staff_window.center_view = utf8 "Botón izquierdo del ratón para enfocar al personal, botón derecho del ratón para rotar entre los miembros del personal."
 
 -- new strings
 object.litter = "Basura"
@@ -60,7 +60,7 @@ tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque
 
 tooltip.fax.close = "Cierra esta ventana sin borrar el mensaje."
 tooltip.message.button = utf8 "Botón izquierdo del ratón para abrir el mensaje."
-tooltip.message.button_dismiss = "Botón izquierdo para abrir el mensaje, botón derecho para rechazarlo."
+tooltip.message.button_dismiss = utf8 "Botón izquierdo para abrir el mensaje, botón derecho para rechazarlo."
 
 menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
@@ -84,7 +84,7 @@ menu_debug = {
   create_emergency            = "  CREAR EMERGENCIA  ",
   place_objects               = "  COLOCAR OBJETOS  ",
   dump_strings                = "  VOLCAR TEXTOS DEL JUEGO  ",
-  dump_gamelog                = "  VOLCAR REGISTRO DEL JUEGO",
+  dump_gamelog                = "  VOLCAR REGISTRO DEL JUEGO  ",
   map_overlay                 = "  SOBREPONER MAPA  ",
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
   lua_console                 = "  CONSOLA LUA  ",
@@ -103,7 +103,27 @@ menu_debug_overlay = {
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCELA  ",
 }
-adviser.room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles."
+
+adviser = {
+  room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
+
+  warnings = {
+    pay_back_loan = utf8 "Tienes bastante dinero. ¿Por qué no pagas ese préstamo que tienes pendiente?",
+  },
+  cheats = {
+    cash_cheat = utf8 "¡Has activado el truco de dinero aleatorio!  Te gusta hacer trampas, ¿eh, majo? Pero ten cuidado, ¡si usas demasiado este truco, tu reputación caerá!",
+    cash_cheat_warn = utf8 "¡Te he avisado por hacer trampas, los tramposos no prosperan!  El público ha empezado a enterarse de tus trampas, ¡puedes estar seguro de que tu reputación se va a hundir!",
+    th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos! ...O eso hubieras hecho si estuvieras jugando al juego original. Prueba con otra cosa.",
+    crazy_on_cheat = utf8 "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
+    crazy_off_cheat = utf8 "Uff... los médicos han recuperado la cordura.",
+    roujin_on_cheat = utf8"¡Desafío de Roujin activado! Buena suerte...",
+    roujin_off_cheat = utf8 "Desafío de Roujin desactivado.",
+    hairyitis_cheat = utf8 "¡Truco de peludismo activado!",
+    hairyitis_off_cheat = utf8 "Truco de peludismo desactivado.",
+    bloaty_cheat = utf8 "¡Truco de cabezudos activado!",
+    bloaty_off_cheat = utf8 "Truco de cabezudos desactivado.",
+  },
+}
 
 dynamic_info.patient.actions.no_gp_available = utf8 "Esperando a que construyas una consulta"
 dynamic_info.staff.actions.heading_for = utf8 "Dirigiéndose a %s"
@@ -127,7 +147,7 @@ fax = {
     },
   },
   tutorial = {
-    utf8 "¡Bienvenido a tu primer Hospital!",
+    utf8 "¡Bienvenido a tu primer hospital!",
     utf8 "¿Quieres ver un corto tutorial?",
     utf8 "Sí, enséñame lo básico.",
     utf8 "No, ya me conozco todo esto.",
@@ -151,7 +171,7 @@ install = {
   th_directory = utf8 "CorsixTH necesita una copia de los archivos de datos del Theme Hospital original (o de la demo) para poder funcionar. Utiliza el selector de debajo para localizar la carpeta de instalación de Theme Hospital.",
 }
 
-misc.not_yet_implemented = utf8"(aún no implementado)"
+misc.not_yet_implemented = utf8 "(aún no implementado)"
 misc.no_heliport = utf8 "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel."
 
 main_menu = {
@@ -226,7 +246,7 @@ tooltip.options_window = {
 new_game_window = {
   easy = utf8 "Novato (Fácil)",
   medium = utf8 "Médico (Normal)",
-  hard = utf8 "Especialista (Dif�cil)",
+  hard = utf8 "Especialista (Difícil)",
   tutorial = "Tutorial",
   cancel = "Cancelar",
 }
@@ -234,9 +254,9 @@ new_game_window = {
 tooltip.new_game_window = {
   easy = utf8 "Si acabas de conocer los juegos de simulación, esta dificultad es para ti.",
   medium = utf8 "Esta es la dificultad intermedia, si no estás seguro de a dónde quieres ir.",
-  hard = utf8 "Si ya estás acostumbrado a este tipo de juegos y quieres un buen desaf�o, aqu� lo tendrás.",
+  hard = utf8 "Si ya estás acostumbrado a este tipo de juegos y quieres un buen desafío, aquí lo tendrás.",
   tutorial = utf8 "¿Necesitas ayuda para entender cómo funciona el juego? Selecciona esta opción.",
-  cancel = utf8 "¡Perdón, yo no quer�a empezar una nueva partida!",
+  cancel = utf8 "¡Perdón, yo no quería empezar una nueva partida!",
 }
 
 lua_console = {
@@ -245,8 +265,8 @@ lua_console = {
 }
 
 tooltip.lua_console = {
-  textbox = "Introduce aqu� el c�digo Lua que quieres ejecutar",
-  execute_code = "Ejecutar el c�digo que has introducido",
+  textbox = utf8 "Introduce aquí el código Lua que quieres ejecutar",
+  execute_code = utf8 "Ejecutar el códugo Lua que has introducido",
   close = "Cerrar la consola",
 }
 
@@ -257,12 +277,13 @@ errors = {
   map_file_missing = utf8 "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
   minimum_screen_size = utf8 "Introduce un tamaño de pantalla como mínimo de 640x480.",
   maximum_screen_size = utf8 "Introduce un tamaño de pantalla como máximo de 3000x2000.",
-  unavailable_screen_size = "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
+  unavailable_screen_size = utf8 "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Cambiar este parámetro necesita que CorsixTH sea reiniciado. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres hacer esto?",
-  abort_edit_room = utf8 "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?"
+  needs_restart = utf8 "Para cambiar este ajuste, antes debes reiniciar CorsixTHo. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
+  abort_edit_room = utf8 "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
+  restart = utf8 "¿Seguro que quieres reiniciar el nivel?",
 }
 
 information = {
@@ -283,8 +304,8 @@ totd_window = {
     utf8 "El nivel de habilidad de un doctor influye significativamente la calidad y la velocidad de sus diagnósticos. Coloca a un doctor habilidoso en tu consulta, y no necesitarás tantas salas de diagnóstico adicionales.",
     utf8 "Los doctores pueden mejorar sus habilidades aprendiendo de un asesor en la sala de entrenamiento. Si el asesor tiene una calificación especial (cirujano, psiquiatra o investigador), también pasará sus conocimientos a sus pupilos.",
     utf8 "¿Has probado a meter el número de emergencias (112) en el fax? ¡Asegúrate de tener el sonido activado!",
-    utf8 "Puedes ajustar algunos parámetros como la resolución y el idioma del juego en la ventana de Opciones que encontrarás tanto en el men� principal como dentro del juego.",
-    utf8 "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés por todas partes? ¡Ayúdanos avisando de las líneas de texto que estén en inglés para que podamos traducirlas!",
+    utf8 "Puedes ajustar algunos parámetros como la resolución y el idioma del juego en la ventana de Opciones que encontrarás tanto en el menú principal como dentro del juego.",
+    utf8 "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés en algún lugar? ¡Ayúdanos avisando de las líneas de texto que estén en inglés para que podamos traducirlas!",
     utf8 "¡El equipo de CorsixTH busca refuerzos! ¿Te interesa programar, traducir o crear gráficos para CorsixTH? Contáctanos en nuestro foro, lista de correo o canal IRC (corsix-th en freenode).",
     utf8 "Si encuentras un fallo, infórmalo en nuestro registro de fallos: th-issues.corsix.org",
     utf8 "Cada nivel tiene unos requisitos concretos que debes conseguir antes de poder continuar al siguiente nivel. Mira en la ventana de estado para ver como llevas los objetivos del nivel.",
