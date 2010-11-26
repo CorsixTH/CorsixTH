@@ -133,7 +133,7 @@ function StaffProfile:randomise(world)
     
     self.is_junior = math.random() < jrRate and 1.0 or nil
     if not self.is_junior then
-  	  self.is_consultant = math.random() < jrRate and 1.0 or nil
+  	  self.is_consultant = math.random() < consRate and 1.0 or nil
     end
   
     local jr_limit = 0.4
@@ -235,7 +235,7 @@ function StaffProfile:getFairWage(world)
   wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor
   if self.humanoid_class == "Doctor" then
     for name, id in pairs(ability_conf_id) do
-      if self[name] then
+      if self[name] == 1 then
         wage = wage + level_config.gbv.SalaryAdd[id]
       end
     end
@@ -243,5 +243,5 @@ function StaffProfile:getFairWage(world)
       wage = wage + level_config.gbv.SalaryAdd[ability_conf_id.is_doctor]
     end
   end
-  return math.floor(wage)
+  return math.max(math.floor(wage), level_config.staff[conf_id[self.humanoid_class]].MinSalary)
 end
