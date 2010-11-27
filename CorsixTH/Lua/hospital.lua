@@ -67,6 +67,7 @@ function Hospital:Hospital(world)
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
+  self.num_deaths_this_year = 0
   self.num_cured = 0
   self.not_cured = 0
   self.percentage_cured = 0
@@ -107,6 +108,12 @@ function Hospital:Hospital(world)
       break
     end
   end
+  -- A list of how much each insurance company owes you. The first entry for
+  -- each company is the current month's dept, the second the previous 
+  -- month and the third the month before that.
+  -- All payment that goes through an insurance company a given month is payed two
+  -- months later. For example diagnoses in April are payed the 1st of July
+  self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
   -- Initialize any staff already present in the world
   for _, staff in ipairs(world.initial_staff) do
     self:addStaff(staff)
@@ -363,6 +370,10 @@ function Hospital:afterLoad(old, new)
     self.sal_min = 50
     self.salary_offer = 0
   end
+  if old < 25 then
+    self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
+    self.num_deaths_this_year = 0
+  end
 end
 
 function Hospital:tick()
@@ -470,6 +481,19 @@ function Hospital:onEndMonth()
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
   
+  -- TODO: do you get interest on the balance owed?
+  for i, company in ipairs(self.insurance_balance) do
+    -- Get the amount that is about to be payed to the player
+    local payout_amount = company[3]
+    if payout_amount > 0 then
+      local str = _S.transactions.insurance_colon .. " " .. self.insurance[i]
+      self:receiveMoney(payout_amount, str)
+    end
+    -- Shift the amounts to the left
+    table.remove(company, 3)
+    table.insert(company, 1, 0) -- The new month have no payments yet
+  end
+
   -- Pay heating costs
   -- TODO: Should this also be on a per day basis "behind the scenes" as above?
   local radiators = self.world.object_counts.radiator
@@ -480,6 +504,7 @@ end
 --! Called at the end of each year
 function Hospital:onEndYear()
   self.sodas_sold = 0
+  self.num_deaths_this_year = 0
   self.reputation_above_threshold = self.win_awards 
   and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
   -- On third year of level 3 there is the large increase to salary
@@ -659,8 +684,17 @@ function Hospital:receiveMoneyForTreatment(patient)
   amount = math.ceil(amount * casebook.price)
   casebook.money_earned = casebook.money_earned + amount
   patient.world:newFloatingDollarSign(patient, amount)
-  -- TODO: Optionally delay payment through an insurance company
-  self:receiveMoney(amount, reason)
+  -- 25% of the payments now go through insurance
+  if patient.insurance_company then
+    self:addInsuranceMoney(patient.insurance_company, amount)
+  else
+    self:receiveMoney(amount, reason)  
+  end
+end
+
+function Hospital:addInsuranceMoney(company, amount)
+  local old_balance = self.insurance_balance[company][1]
+  self.insurance_balance[company][1] = old_balance + amount
 end
 
 function Hospital:receiveMoneyForProduct(patient, amount, reason)
@@ -692,6 +726,14 @@ function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
+end
+
+function Hospital:humanoidDeath(humanoid)
+  self.num_deaths = self.num_deaths + 1
+  self.num_deaths_this_year = self.num_deaths_this_year + 1
+  
+  self:changeReputation("death", humanoid.disease)
+  self:updatePercentages()
 end
 
 function Hospital:hasStaffOfCategory(category)

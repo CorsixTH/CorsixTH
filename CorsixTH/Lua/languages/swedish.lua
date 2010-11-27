@@ -95,7 +95,21 @@ menu_debug_overlay = {
   parcel                      = "  TOMT  ",
 }
 
-adviser.room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga."
+adviser = {
+  room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
+  
+  cheats = {
+    th_cheat = utf8 "Gratulerar, du har låst upp fusk! .. eller, du hade gjort det om detta varit originalspelet. Försök nåt annat.",
+    crazy_on_cheat = utf8 "Åh nej!! Alla läkare har blivit galna!",
+    crazy_off_cheat = utf8 "Vilken tur... läkarna har återfått förståndet.",
+    roujin_on_cheat = "Roujin's utmaning aktiverad! Lycka till...",
+    roujin_off_cheat = "Roujin's utmaning avaktiverad.",
+    hairyitis_cheat = "Pälssyndromsfusket aktiverat!",
+    hairyitis_off_cheat = "Pälssyndromsfusket avaktiverat.",
+    bloaty_cheat = "Pöshuvudsfusket aktiverat!",
+    bloaty_off_cheat = "Pöshuvudsfusket avaktiverat.",
+  },
+}
 
 dynamic_info.patient.actions.no_gp_available = utf8 "Väntar på att du ska bygga en allmänpraktik"
 dynamic_info.staff.actions.heading_for = utf8 "På väg till %s"

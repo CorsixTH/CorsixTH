@@ -520,10 +520,10 @@ end
 function Humanoid:unregisterCallbacks()
   -- Remove callbacks for new rooms
   if self.build_callback then
-    self.world:unregisterBuildCallback(self.build_callback)
+    self.world:unregisterRoomBuildCallback(self.build_callback)
   end
   if self.toilet_callback then
-    self.world:unregisterBuildCallback(self.toilet_callback)
+    self.world:unregisterRoomBuildCallback(self.toilet_callback)
   end
   -- Remove any message related to the humanoid.
   if self.message_callback then

@@ -505,7 +505,14 @@ adviser = {
   warnings = {
     money_low                     = S[11][  2],
     money_very_low_take_loan      = S[11][ 73],
+    cash_low_consider_loan        = S[28][ 16],
     bankruptcy_imminent           = S[11][  3],
+    financial_trouble             = S[28][ 29], -- %d amount left before level is lost
+    finanical_trouble2            = S[28][ 30], -- %d same as above
+    financial_trouble3            = S[28][ 31], -- %d same again
+    
+    pay_back_loan                 = S[28][ 57],
+    
     machines_falling_apart        = S[11][  4],
     no_patients_last_month        = S[11][ 10],
     nobody_cured_last_month       = S[11][ 11],
@@ -513,19 +520,48 @@ adviser = {
     patient_stuck                 = S[11][ 13],
     
     patients_unhappy              = S[11][ 15],
+    patient_leaving               = S[28][ 50],
+    patients_leaving              = S[28][ 51],
+    patients_really_thirsty       = S[28][ 52],
+    patients_annoyed              = S[28][  8],
+    
     patients_thirsty              = S[11][ 16],
+    patients_thirsty2             = S[28][  5],
+    patients_very_thirsty         = S[28][  6],
+    
     patients_too_hot              = S[11][ 18],
+    patients_getting_hot          = S[28][ 53],
+    patients_very_cold            = S[28][ 54],
+    people_freezing               = S[28][ 14],
+
     staff_overworked              = S[11][ 17],
+    staff_tired                   = S[28][  9],
+    
     staff_too_hot                 = S[11][ 19],
+    staff_very_cold               = S[28][ 55],
     staff_unhappy                 = S[11][ 89],
+    staff_unhappy2                = S[28][ 15],
     --doctor_crazy_overwork       = S[11][ 95], -- unused? could this be the answer to the crazy doctor sprite mystery?
+    
+    reduce_staff_rest_threshold   = S[28][ 45],
     nurses_tired                  = S[11][ 96],
     doctors_tired                 = S[11][ 97],
     handymen_tired                = S[11][ 98],
     receptionists_tired           = S[11][ 99],
     
+    nurses_tired2                 = S[28][ 46],
+    doctors_tired2                = S[28][ 47],
+    handymen_tired2               = S[28][ 48],
+    receptionists_tired2          = S[28][ 49], -- What?
+    
     need_toilets                  = S[11][ 20],
+    build_toilets                 = S[28][ 11],
+    build_toilet_now              = S[28][ 39],
+    more_toilets                  = S[28][ 12],
+    people_did_it_on_the_floor    = S[28][ 13],
+    
     need_staffroom                = S[11][ 74],
+    build_staffroom               = S[28][ 10],
     
     many_killed                   = S[11][ 77], -- %d (number of killed patients)
     
@@ -536,15 +572,50 @@ adviser = {
     charges_too_low               = S[11][120],
     
     machine_severely_damaged      = S[11][121], -- %s (name of machine)
+    machinery_slightly_damaged    = S[28][ 32],
+    machinery_damaged             = S[28][ 33],
+    machinery_damaged2            = S[28][ 34],
+    machinery_very_damaged        = S[28][ 35],
+    machinery_deteriorating       = S[28][ 36],
     
     queue_too_long_send_doctor    = S[11][132], -- %s (name of room)
     queue_too_long_at_reception   = S[11][133],
     reception_bottleneck          = S[11][134], -- TODO find out why there's 133 and 134.
+    
+    epidemic_getting_serious      = S[28][  2],
+    deal_with_epidemic_now        = S[28][  3],
+    many_epidemics                = S[28][  4],
+
+    hospital_is_rubbish           = S[28][  7],
+    
+    more_benches                  = S[28][ 25],
+    people_have_to_stand          = S[28][ 28],
+    
+    too_much_litter               = S[28][ 17],
+    litter_everywhere             = S[28][ 18],
+    litter_catastrophy            = S[28][ 19],
+    some_litter                   = S[28][ 20],
+    
+    place_plants_to_keep_people   = S[28][ 21],
+    place_plants2                 = S[28][ 22],
+    place_plants3                 = S[28][ 23],
+    place_plants4                 = S[28][ 24],
+    
+    desperate_need_for_watering   = S[28][ 40],
+    change_priorities_to_plants   = S[28][ 41],
+    plants_dying                  = S[28][ 42],
+
   },
   
   praise = {
     many_plants                   = S[11][75],
+    plants_are_well               = S[28][43],
+    plants_thriving               = S[28][44],
+    
     many_benches                  = S[11][76],
+    plenty_of_benches             = S[28][26],
+    few_have_to_stand             = S[28][27],
+    
     patients_cured                = S[11][82], -- %d (number of cured patients)
   },
   
@@ -628,6 +699,17 @@ adviser = {
     nearly_lost                   = S[11][115],
     three_quarters_lost           = S[11][116],
     halfway_lost                  = S[11][117],
+    
+    another_patient_cured         = S[28][37],
+    another_patient_killed        = S[28][38],
+    
+    financial_criteria_met        = S[28][56], -- %d money threshold for the level
+    cured_enough_patients         = S[28][58],
+    dont_kill_more_patients       = S[28][59],
+    reputation_good_enough        = S[28][60], -- %d rep threshold for the level
+    improve_reputation            = S[28][61], -- %d amount to improve by
+    hospital_value_enough         = S[28][62], -- %d keep it above this value
+    close_to_win_increase_value   = S[28][63],
     
   },
   
@@ -1126,7 +1208,7 @@ trophy_room = {
   cash       = S[63][2],
 }
 
--- TODO section 28: more adviser strings (insert above)
+-- Section 28: more adviser strings (see above)
 
 casebook = {
   reputation           = S[29][ 1],

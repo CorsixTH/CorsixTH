@@ -191,6 +191,17 @@ function Staff:fire()
   end
 end
 
+function Staff:die()
+  self:setHospital(nil)
+  -- Update the staff management screen (if present) accordingly
+  local window = self.world.ui:getWindow(UIStaffManagement)
+  if window then
+    window:updateStaffList(self)
+  end
+  -- It may be that the staff member was fired just before dying (then self.hospital = nil)
+  self.world.ui.hospital:humanoidDeath(self)
+end
+
 -- Function which is called when the user clicks on the staff member.
 -- Responsible for opening a staff information dialog on left click and picking
 -- up the staff member on right click.

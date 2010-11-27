@@ -95,7 +95,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   trophies[3] = self:addPanel(14, 466, 331)
   trophies[4] = trophies[1]:makeButton(0, 0, 61, 144, 12, self.reputationTrophy)
   trophies[5] = trophies[2]:makeButton(0, 0, 60, 144, 13, self.sodaTrophy)
-  --trophies[6] = trophies[3]:makeButton(0, 0, 72, 145, 14, self.)
+  trophies[6] = trophies[3]:makeButton(0, 0, 72, 145, 14, self.nodeathsTrophy)
   trophies.is_table = true
   self.trophies = trophies
   self:setActive(self.trophies, false)
@@ -110,6 +110,10 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     if hosp.reputation_above_threshold then
       self.rep_trophy_won = world.map.level_config.awards_trophies.TrophyReputationBonus
       won_amount = won_amount + self.rep_trophy_won
+    end
+    if hosp.num_deaths_this_year == 0 then
+      self.no_deaths_trophy_won = world.map.level_config.awards_trophies.TrophyDeathBonus
+      won_amount = won_amount + self.no_deaths_trophy_won
     end
     if won_amount > 0 then
       hosp:receiveMoney(won_amount, _S.transactions.eoy_trophy_bonus)
@@ -167,7 +171,14 @@ function UIAnnualReport:reputationTrophy()
   self.trophy_money = self.rep_trophy_won
   self:showMotivation(self.rep_trophy)
 end
-
+--! When the player clicks the no deaths trophy this function is called.
+function UIAnnualReport:nodeathsTrophy()
+  if not self.no_deaths_trophy then
+    self.no_deaths_trophy = _S.trophy_room.no_deaths.trophies[math.random(1, 2)]
+  end
+  self.trophy_money = self.no_deaths_trophy_won
+  self:showMotivation(self.no_deaths_trophy)
+end
 --! When the player clicks the soda trophy this function is called.
 function UIAnnualReport:sodaTrophy()
   if not self.soda_trophy then
@@ -243,6 +254,10 @@ function UIAnnualReport:changePage(page_no)
         self:setActive(self.trophies[1], true)
         self:setActive(self.trophies[4], true)
       end
+      if self.no_deaths_trophy_won then
+        self:setActive(self.trophies[3], true)
+        self:setActive(self.trophies[6], true)
+      end  
       if self.soda_trophy_won then
         self:setActive(self.trophies[2], true)
         self:setActive(self.trophies[5], true)

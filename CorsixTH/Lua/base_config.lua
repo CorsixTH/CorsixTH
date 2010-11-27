@@ -350,17 +350,19 @@ local configuration = {
   
     -- Trophy win conditions
     
-    -- Sell more than this number of cans to win the award MIN 0 MAX 255
+    -- Sell more than this number of cans to win the award MIN 0
     CansofCoke = 100, 
     -- If player's reputation is >x all through the year then win trophy MIN 0 MAX 1000
     Reputation = 400, 
 
     -- Trophy win bonuses
     
-    -- Bonus - MIN 0 MAX 65535 (MONEY BONUS)
-    CansofCokeBonus = 1000, 
-    -- Bonus - MIN 0 MAX 65535 (MONEY BONUS)
-    TrophyReputationBonus = 2000, 
+    -- Bonus - MIN 0 (MONEY BONUS)
+    CansofCokeBonus = 1000,
+    -- Bonus - MIN 0 (MONEY BONUS)
+    TrophyReputationBonus = 2000,
+    -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
+    TrophyDeathBonus = 10000,
   },
 }
 

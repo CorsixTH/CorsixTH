@@ -142,6 +142,18 @@ menu_debug_overlay = {
 -- 4. Adviser
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäisi pääsyn joihinkin sairaalan osiin.",
+
+  cheats = {
+    th_cheat            = utf8 "Onnittelut, olet saanut huijaukset käyttöösi! Tai olisit saanut, jos tämä olisi alkuperäinen peli. Kokeile jotain muuta.",
+    crazy_on_cheat      = utf8 "Voi ei! Kaikki lääkärit ovat tulleet hulluiksi!",
+    crazy_off_cheat     = utf8 "Huh... lääkärit ovat jälleen tulleet järkiinsä.",
+    roujin_on_cheat     = utf8 "Roujinin haaste otettu käyttöön! Onnea...",
+    roujin_off_cheat    = utf8 "Roujinin haaste poistettu käytöstä.",
+    hairyitis_cheat     = utf8 "Turkinkasvu-huijaus otettu käyttöön!",
+    hairyitis_off_cheat = utf8 "Turkinkasvu-huijaus poistettu käytöstä.",
+    bloaty_cheat        = utf8 "Pallopäisyys-huijaus otettu käyttöön!",
+    bloaty_off_cheat    = utf8 "Pallopäisyys-huijaus poistettu käytöstä.",
+  },
 }
 
 -- 5. Main menu
@@ -1574,7 +1586,7 @@ tooltip = {
     drugs_inc           = utf8 "Nosta lääketutkimuksen tärkeysastetta",
     improvements_inc    = utf8 "Nosta laitteistotutkimuksen tärkeysastetta",
     specialisation_inc  = utf8 "Nosta erikoistumistutkimuksen tärkeysastetta",
-    allocated_amount    = utf8 "Penger satt av til forskning",
+    allocated_amount    = utf8 "Tutkimukseen suunnattu rahoitus",
   },
   
   -- Graphs
@@ -1643,6 +1655,13 @@ tooltip = {
     thirst              = utf8 "Kaikkien sairaalassasi olevien keskimääräinen janoisuus",
     warmth              = utf8 "Kaikkien sairaalassasi olevien keskimääräinen lämpötila",
     close               = utf8 "Sulje tilanneikkuna",
+    reputation          = utf8 "Maineesi pitää olla vähintään %d. Tällä hetkellä se on %d", -- %d (target reputation) %d (current reputation)
+    balance             = utf8 "Sinulla tulee olla rahaa tililläsi vähintää %d$. Tällä hetkellä sitä on %d$", -- %d (target balance) %d (current balance)
+    population          = utf8 "%d%% alueen väestöstä pitää kuulua asiakaskuntaasi",
+    num_cured           = utf8 "Tavoitteenasi on parantaa %d ihmistä. Tähän mennessä olet parantanut %d",
+    percentage_killed   = utf8 "Tavoitteenasi on tappaa vähemmän kuin %d%% potilaistasi. Tähän mennessä olet tappanut %d%% heistä",
+    value               = utf8 "Sairaalasi arvon tulee olla vähintään $%d. Nyt se on $%d",
+    percentage_cured    = utf8 "Sinun pitää parantaa %d%% sairaalaasi saapuneista potilaista. Tähän mennessä olet parantanut %d%% heistä",
   },
   
   -- Policy
@@ -1959,6 +1978,7 @@ adviser = {
     need_staffroom              = utf8 "Rakenna henkilökunnan taukohuone viipymättä, jotta he pääsevät välillä lepäämäänkin.",
     staff_too_hot               = utf8 "Henkilökuntasi on sulamispisteessä. Laske sairaalasi lämpötilaa tai vähennä lämpöpattereita heidän huoneistaan.",
     patients_unhappy            = utf8 "Potilaasi ovat tyytymättömiä sairaalaasi. Sinun pitäisi tehdä jotakin saadaksesi sairaalasi mukavammaksi.",
+    pay_back_loan               = utf8 "Sinulla on runsaasti rahaa. Voisit harkita lainasi lyhentämistä.",
   },
   
   -- Placement info
@@ -2003,6 +2023,24 @@ adviser = {
     pay_rise                            = utf8 "Yksi työntekijöistäsi uhkaa irtisanoutua. Valitse haluatko suostua hänen palkkavaatimukseensa vai antaa hänelle potkut. Klikkaa vasemmalla alalaidassa olevaa ikonia nähdäksesi kenestä on kyse.",
     place_windows                       = utf8 "Ikkunat tekevät huoneista valoisampia ja parantavat työntekijöidesi mielialaa.",
     fax_received                        = utf8 "Vasempaan alanurkkaan ilmestyvät ikonit ilmoittavat sinulle tärkeistä tiedoista ja päätöksistä, joita voit tehdä.",
+    initial_general_advice = {
+      rats_have_arrived         = utf8 "Rotat ovat vallanneet sairaalasi. Yritä ampua niitä hiirelläsi.",
+      autopsy_available         = utf8 "Tutkijasi ovat keksineet ruumiinavauskoneen, jonka avulla voit hankkiutua eroon ei-toivotuista potilaista ja tehdä tutkimusta heidän jäänteillään. Koneen käyttämisen moraalinen hyväksyttävyys on kuitenkin erittäin kiistanalaista.",
+      first_patients_thirsty    = utf8 "Sairaalassasi on janoisia ihmisiä. Osta lisää juoma-automaatteja heidän käyttöönsä.",
+      research_now_available    = utf8 "Olet rakentanut ensimmäisen tutkimusosastosi. Nyt pääset käsiksi tutkimus-ikkunaan.",
+      psychiatric_symbol        = utf8 "Psykiatriaan erikoistuneet lääkärit on merkitty symbolilla: |",
+      decrease_heating          = utf8 "Ihmisillä on liian kuuma sairaalassasi. Säädä lämmitystäsi pienemälle kartta-ikkunasta.",
+      surgeon_symbol            = utf8 "Kirurgiaan erikoistuneet lääkärit on merkitty symbolilla: {",
+      first_emergency           = utf8 "Hätätilannepotilaiden pään päällä on sininen hälytysvalo. Paranna heidät ennen kuin he kuolevat tai aika loppuu kesken.",
+      first_epidemic            = utf8 "Sairaalassasi on havaittu epidemia! Päätä, haluatko salata sen vai tehdä lain vaatiman ilmoituksen.",
+      taking_your_staff         = utf8 "Joku yrittää houkutella henkilökuntaasi loikkaamaan palvelukseensa. Sinun täytyy taistella, jos et halua menettää heitä.",
+      place_radiators           = utf8 "Ihmisillä on liian kylmä sairaalassasi. Voit asentaa lisää lämpöpattereita ostamalla niitä kalusteet-valikosta.",
+      epidemic_spreading        = utf8 "Sairaalassasi on vakavaan tartuntatautiin sairastuneita. Yritä parantaa sairastuneet ennen kuin he lähtevät kotiin.",
+      research_symbol           = utf8 "Tutkimukseen erikoistuneet lääkärit on merkitty symbolilla: }",
+      machine_needs_repair      = utf8 "Sairaalassasi on kone joka täytyy korjata. Etsi rikkoutunut kone, joka epäilemättä jo savuaa, ja klikkaa sitä. Aukeavasta ruudusta saat käskettyä huoltomiehen korjaamaan sen.",
+      increase_heating          = utf8 "Ihmisillä on liian kylmä sairaalassasi. Säädä lämmitystäsi suuremmalle kartta-ikkunasta.",
+      first_VIP                 = utf8 "Sairaalaasi on saapumassa ensimmäinen VIP-potilas. Yritä varmistaa, ettei hän pääse näkemään mitään epähygienistä tai yhtään tyytymättömiä potilaita.",
+    },
   },
   
   -- Build advice
@@ -2636,7 +2674,7 @@ dynamic_info = {
     diagnosed           = utf8 "Diagnoosi: %s", -- %s
     guessed_diagnosis   = utf8 "Arvattu diagnoosi: %s", -- %s
     diagnosis_progress  = utf8 "Diagnosointiprosessi",
-    emergency           = utf8 "Hätätapaus: %s", -- %s (disease name)
+    emergency           = utf8 "Hätätilanne: %s", -- %s (disease name)
   },
   vip                   = utf8 "Vieraileva V.I.P.",
   health_inspector      = utf8 "Terveystarkastaja",

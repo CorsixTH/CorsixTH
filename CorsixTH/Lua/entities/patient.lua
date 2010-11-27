@@ -62,6 +62,12 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
+  -- Decide an insurance company, one out of four patients have one. 
+  -- TODO: May need some balancing, but it is roughly the same as in TH.
+  local company = math.random(1,12)
+  if company < 4 then
+    self.insurance_company = company
+  end
   self:updateDynamicInfo()
 end
 
@@ -156,11 +162,9 @@ function Patient:die()
   if self.hospital.num_deaths < 1 then
     self.world.ui.adviser:say(_S.adviser.information.first_death)
   end
-  self.hospital.num_deaths = self.hospital.num_deaths + 1
+  self.hospital:humanoidDeath(self)
   local casebook = self.hospital.disease_casebook[self.disease.id]
   casebook.fatalities = casebook.fatalities + 1
-  self.hospital:updatePercentages()
-  
   self:setMood("dead", "activate")
   self:playSound "boo.wav"
   self.going_home = true
@@ -173,7 +177,7 @@ function Patient:die()
     self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction{name = "die"}
-  self.hospital:changeReputation("death", self.disease)
+  
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 

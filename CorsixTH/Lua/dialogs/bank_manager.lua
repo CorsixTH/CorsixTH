@@ -100,6 +100,14 @@ function UIBankManager:UIBankManager(ui)
   -- TODO: Add the insurance companies "for real" and draw graphs
 end
 
+local function sum(t)
+  local sum = 0
+  for _, entry in ipairs(t) do 
+    sum = sum + entry
+  end
+  return sum
+end
+
 function UIBankManager:draw(canvas, x, y)
   local hospital = self.ui.hospital
   
@@ -158,11 +166,11 @@ function UIBankManager:draw(canvas, x, y)
       font:draw(canvas, hospital.insurance[self.chosen_insurance], x + 430, y + 132, 158, 0)
     else
       font:draw(canvas, hospital.insurance[1], x + 430, y + 132, 158, 0)
-      font:draw(canvas, "$ 0", x + 430, y + 162, 100, 0)
+      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[1]), x + 430, y + 162, 100, 0)
       font:draw(canvas, hospital.insurance[2], x + 430, y + 192, 158, 0)
-      font:draw(canvas, "$ 0", x + 430, y + 222, 100, 0)
+      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[2]), x + 430, y + 222, 100, 0)
       font:draw(canvas, hospital.insurance[3], x + 430, y + 252, 158, 0)
-      font:draw(canvas, "$ 0", x + 430, y + 282, 100, 0)
+      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[3]), x + 430, y + 282, 100, 0)
     end
     font:draw(canvas, _S.bank_manager.inflation_rate, x + 430, y + 312, 100, 0)
     font:draw(canvas, hospital.inflation_rate*100 .. " %", x + 550, y + 313, 38, 0)

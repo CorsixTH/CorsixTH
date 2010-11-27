@@ -92,12 +92,7 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
 
-  warnings = {
-    pay_back_loan = "You have got plenty of money. Why don't you think about paying off that loan?",
-  },
   cheats = {  
-    cash_cheat = "Random money cheat activated!  So, you like to cheat do you? Be warned though, your reputation will suffer if you overuse it!",
-    cash_cheat_warn = "I warned you about cheating too much; cheats don't prosper you know!  The general public have got to hear about it, so you can expect your reputation to go down!",
     th_cheat = "Congratulations, you have unlocked cheats! .. or you would have, if this were the original game. Try something else.",
     crazy_on_cheat = "Oh no! All doctors have gone crazy!",
     crazy_off_cheat = "Phew... the doctors regained their sanity.",
