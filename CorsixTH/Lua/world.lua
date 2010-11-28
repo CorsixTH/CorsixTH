@@ -81,16 +81,16 @@ function World:World(app)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
-  
-  self.initial_staff = {}
-  self:initStaff()
+
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
   for _, hospital in ipairs(self.hospitals) do
     self:initDiscoveredRooms(hospital)
   end
   -- TODO: Add (working) AI and/or multiplayer hospitals
-  
+  -- Initialize any staff already present in the (player) hospital
+  -- TODO: Needs to be changed for multiplayer support
+  self:initStaff()
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
@@ -207,7 +207,7 @@ end
 
 function World:initStaff()
   local level_config = self.map.level_config
-  
+  local hosp = self.hospitals[1]
   if level_config.start_staff then
     local i = 0
     for n, conf in ipairs(level_config.start_staff) do
@@ -252,7 +252,8 @@ function World:initStaff()
         -- TODO: Make a somewhat "nicer" placing algorithm.
         staff:setTile(self.map.th:getCameraTile(1))
         staff:onPlaceInCorridor()
-        self.initial_staff[#self.initial_staff + 1] = staff
+        hosp.staff[#hosp.staff + 1] = staff
+        staff:setHospital(hosp)
       end
     end
   end

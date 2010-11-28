@@ -114,11 +114,7 @@ function Hospital:Hospital(world)
   -- All payment that goes through an insurance company a given month is payed two
   -- months later. For example diagnoses in April are payed the 1st of July
   self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
-  -- Initialize any staff already present in the world
-  for _, staff in ipairs(world.initial_staff) do
-    self:addStaff(staff)
-    staff:setHospital(self)
-  end
+
   -- Initialize diseases
   local diseases = TheApp.diseases
   local expertise = self.world.map.level_config.expertise
