@@ -212,6 +212,12 @@ function StaffProfile:drawFace(canvas, x, y, parts_bitmap)
   parts_bitmap:draw(canvas, x, y + 53, 0, 954 + self.chin_index * 22, 65, 22)
 end
 
+function StaffProfile:parseSkillLevel()
+  local junior_skill = 0.4
+  self.is_junior     = self.skill <= junior_skill and 1 or nil
+  local consultant_skill = 0.9
+  self.is_consultant = self.skill >= consultant_skill and 1 or nil
+end
 
 local conf_id = {
   Nurse = 0,
