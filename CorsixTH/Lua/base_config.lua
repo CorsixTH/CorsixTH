@@ -325,8 +325,6 @@ local configuration = {
   staff_levels = {
     [0] = {Month = 0, Nurses = 8, Doctors = 8, Handymen = 3, Receptionists = 2, 
            ShrkRate = 10, SurgRate = 10, RschRate = 10, ConsRate = 10, JrRate = 5},
-    {Month = 3, Nurses = 7, Doctors = 5, Handymen = 5, Receptionists = 3, 
-           ShrkRate = 10, SurgRate = 10, RschRate = 10, ConsRate = 10, JrRate = 5},
   },
   
   emergency_control = {

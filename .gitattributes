@@ -58,7 +58,6 @@ CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/demo.level -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Levels/original05.level -text
-CorsixTH/Lua/base_config.lua -text
 CorsixTH/Lua/dialogs/annual_report.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/dialogs/research_policy.lua -text

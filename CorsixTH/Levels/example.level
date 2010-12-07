@@ -155,9 +155,9 @@ RschReqd how much research is required to discover the treatment room for the di
 Each entry states how many staff members of each category are available
 a given month. The number of entries is not fixed.
 | A list | Month it gets active (start at 0) | Each group |
-#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists 0 8 8 3 2
-#staff_levels[1].Month.Nurses.Doctors.Handymen.Receptionists 3 7 5 5 3
-#staff_levels[2].Month.Nurses.Doctors.Handymen.Receptionists 5 5 8 7 4
+#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 0 8 8 3 2 10 10 10 10 5
+#staff_levels[1].Month.Nurses.Doctors.Handymen.Receptionists                                            3 7 5 5 3
+#staff_levels[2].Month.Nurses.Doctors.Handymen.Receptionists                                            5 5 8 7 4
 
 The minimum salary for each staff type
 #staff[0].MinSalary 60 Nurse

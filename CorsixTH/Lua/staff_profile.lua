@@ -50,7 +50,7 @@ function StaffProfile:init(skill, world)
 end
 
 function StaffProfile:setSkill(skill)
-	self.skill = skill
+  self.skill = skill
 end
 
 local name_parts = {_S.humanoid_name_starts, _S.humanoid_name_ends}
@@ -78,7 +78,7 @@ local function our_concat(t)
   return result
 end
 
-function StaffProfile:randomise(world)
+function StaffProfile:randomise(world, month)
   local level_config = world.map.level_config
   
   -- decide general skill for all staff
@@ -90,55 +90,40 @@ function StaffProfile:randomise(world)
     -- find the correct config line (based on month) for generation of the doctor
     local i = 0
     while i < #level_config.staff_levels and 
-    level_config.staff_levels[i+1].Month < world.month + (world.year - 1)*12 do 
-      i = i+1 
+    level_config.staff_levels[i+1].Month <= month do
+      i = i+1
     end
-  
-    local shrinkrate = 0
-    local surgrate = 0
-    local rschrate = 0
-    local jrRate = 0
-    local consRate = 0
     
-  
-    if level_config.staff_levels[i].ShrkRate ~= 0 then
-      shrinkrate = 1 / level_config.staff_levels[i].ShrkRate
-    end
-    if level_config.staff_levels[i].SurgRate ~= 0 then
-      surgrate = 1 / level_config.staff_levels[i].SurgRate
-    end
-    if level_config.staff_levels[i].RschRate ~= 0 then
-      rschrate = 1 / level_config.staff_levels[i].RschRate
-    end
-    if level_config.staff_levels[i].JrRate ~= 0 then
-      jrRate = 1 / level_config.staff_levels[i].JrRate
-    end
-    if level_config.staff_levels[i].ConsRate ~= 0 then
-      consRate = 1 / level_config.staff_levels[i].ConsRate
-    end
-    -- FULL05.SAM contains the values 255, which means 0
-    --if shrinkrate > 1.0 then shrinkrate = 0 end
-    --if surgrate > 1.0 then surgrate = 0 end
-    --if rschrate > 1.0 then rschrate = 0 end
-  
-    self.is_surgeon      = math.random() < surgrate and 1.0 or 0
-    self.is_psychiatrist = math.random() < shrinkrate and 1.0 or 0
-    self.is_researcher   = math.random() < rschrate and 1.0 or 0
+    -- list of level_config values and the corresponding staff modifiers, plus the value set for "no"
+    local mods = {
+      {"ShrkRate", "is_psychiatrist", 0},
+      {"SurgRate", "is_surgeon",      0},
+      {"RschRate", "is_researcher",   0},
+      {"JrRate",   "is_junior",     nil},
+      {"ConsRate", "is_consultant", nil},
+    }
     
-    
-    -- decide seniority
-    -- FULL05.SAM contains the values 255, which means 0
-    if jrRate > 1.0 then jrRate = 0 end
-    if consRate > 1.0 then consRate = 0 end
-    
-    self.is_junior = math.random() < jrRate and 1.0 or nil
-    if not self.is_junior then
-  	  self.is_consultant = math.random() < consRate and 1.0 or nil
+    -- The following assumes ascending month order of the staff_levels table.
+    -- TODO don't assume this but sort when loading map config
+    for _, m in ipairs(mods) do
+      local rate
+      local ind = i
+      while not rate do
+        assert(ind >= 0, "Staff modifier " .. m[1] .. " not existent (should at least be given by base_config).")
+        rate = level_config.staff_levels[ind][m[1]]
+        ind = ind - 1
+      end
+      -- Both 0 and 255 mean none. Other values x mean "one in x"; thus 1 means "one in one" aka "all"
+      rate = (rate ~= 0 and rate ~= 255) and 1 / rate or 0
+      self[m[2]] = math.random() < rate and 1.0 or m[3]
     end
-  
+    
+    -- is_consultant is forced to nil if is_junior is already 1
+    self.is_consultant = not self.is_junior and self.is_consultant or nil
+    
     local jr_limit = 0.4
     local cons_limit = 0.9
-  
+    
     -- put the doctor in the right skill level box ( 0 .. 0.4 .. 0.9 .. 1 )
     if self.is_junior then
       self.skill = jr_limit * self.skill

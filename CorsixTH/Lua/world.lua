@@ -433,13 +433,19 @@ function World:makeAvailableStaff(month)
   while conf[conf_entry + 1] and conf[conf_entry + 1].Month <= month do
     conf_entry = conf_entry + 1
   end
-  conf = conf[conf_entry]
   self.available_staff = {}
   for _, info in ipairs(staff_to_make) do
+    local num
+    local ind = conf_entry
+    while not num do
+      assert(ind >= 0, "Staff amount " .. info.conf .. " not existent (should at least be given by base_config).")
+      num = conf[ind][info.conf]
+      ind = ind - 1
+    end
     local group = {}
-    for i = 1, conf[info.conf] do
+    for i = 1, num do
       group[i] = StaffProfile(info.class, _S.staff_class[info.name])
-      group[i]:randomise(self)
+      group[i]:randomise(self, month)
     end
     self.available_staff[info.class] = group
   end
