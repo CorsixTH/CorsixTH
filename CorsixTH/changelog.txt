@@ -1,8 +1,32 @@
 -----------------------------------------
+Version Beta 5 - to be released 201?-??-??
+-----------------------------------------
+
+-- Gameplay --
+
+Feature: Player's "salary" (read: score) now increases over your level progress.
+Feature: Level based interest rate.
+Feature: Level based "starting staff" (e.g. original level 5).
+Feature: "No deaths" trophy added.
+Fix: Error could occur when losing a game.
+Fix: Multiple handymen watering the same plant at the same time.
+Fix: Some placements of opposite doors/objects were wrongly forbidden.
+Fix: Error could occur when building a surgery.
+Fix: Autopsy now has an appropriate impact on research.
+Fix: Salaries for doctors were too high.
+
+-- User Interface --
+
+Fix: Weird scrolling behavior could occur after loading a game
+Fix: Error caused by some winning faxes in Norwegian
+* Some improvements to textboxes
+* Some improvements to windows
+
+-----------------------------------------
 Version Beta 4 - released 2010-11-12
 -----------------------------------------
 
--- Gameplay -- 
+-- Gameplay --
 
 * Feature: The Research Department and research policy dialog.
 * Feature: The Operating Theatre.
