@@ -102,7 +102,20 @@ menu_debug_overlay = {
   parcel               = utf8 "  GRUNDSTÜCK"
 }
 
-adviser.room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären."
+adviser = {
+  room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären.",
+  cheats = {
+    th_cheat = utf8 "Gratulation, Sie haben die Cheats aktiviert! .. würde ich jetzt sagen, wenn dies das Original-Spiel wäre. Versuchen Sie was anderes.",
+    crazy_on_cheat = utf8 "Oh nein! Alle Ärzte sind verrückt geworden!",
+    crazy_off_cheat = utf8 "Uff... die Ärzte haben ihre Vernunft zurückgewonnen.",
+    roujin_on_cheat = utf8 "Roujins Herausforderungs-Cheat aktiviert! Viel Glück...",
+    roujin_off_cheat = "Roujins Herausforderung deaktiviert.",
+    hairyitis_cheat = "Haarspalterei-Cheat aktiviert!",
+    hairyitis_off_cheat = "Haarspalterei-Cheat deaktiviert.",
+    bloaty_cheat = "Aufgeblasene-Cheat aktiviert!",
+    bloaty_off_cheat = "Aufgeblasene-Cheat deaktiviert.",
+  },
+}
 
 dynamic_info.patient.actions.no_gp_available = "Wartet darauf, dass Sie eine Allgemeinmedizin bauen"
 dynamic_info.staff.actions.heading_for = "Geht zu: %s"

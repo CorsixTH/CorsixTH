@@ -107,12 +107,7 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
 
-  warnings = {
-    pay_back_loan = utf8 "Tienes bastante dinero. ¿Por qué no pagas ese préstamo que tienes pendiente?",
-  },
   cheats = {
-    cash_cheat = utf8 "¡Has activado el truco de dinero aleatorio!  Te gusta hacer trampas, ¿eh, majo? Pero ten cuidado, ¡si usas demasiado este truco, tu reputación caerá!",
-    cash_cheat_warn = utf8 "¡Te he avisado por hacer trampas, los tramposos no prosperan!  El público ha empezado a enterarse de tus trampas, ¡puedes estar seguro de que tu reputación se va a hundir!",
     th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos! ...O eso hubieras hecho si estuvieras jugando al juego original. Prueba con otra cosa.",
     crazy_on_cheat = utf8 "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
     crazy_off_cheat = utf8 "Uff... los médicos han recuperado la cordura.",

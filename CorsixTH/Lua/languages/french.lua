@@ -513,12 +513,7 @@ tooltip.objects.litter = utf8 "Déchet : Laissé sur le sol par un patient car i
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
 
-  warnings = {
-    pay_back_loan = utf8 "Vous avez reçu beaucoup d'argent. Vous devriez penser à rembourser ce prêt ?",
-  },
-  cheats = {  
-    cash_cheat = utf8 "Triche d'argent aléatoire activée ! Alors, vous aimez tricher, n'est ce pas ? Soyez averti, cependant, votre réputation en souffrira si vous en abusez !",
-    cash_cheat_warn = utf8 "Je vous avais prévenu de ne pas tricher trop ; les fraudes ne prospèrent pas, vous savez ! Le grand public doit en entendre parler, donc vous pouvez vous attendre à ce que votre réputation baisse !",
+  cheats = {
     th_cheat = utf8 "Féliciations, vous avez débloquer les triches ! .. Ou ce serait le cas, si c'était le jeu original. Essayez quelque chose d'autre.",
     crazy_on_cheat = utf8 "Oh non ! Tous les médecins sont devenus fous !",
     crazy_off_cheat = utf8 "Ouf ... les médecins ont retrouvé leur santé mentale.",
