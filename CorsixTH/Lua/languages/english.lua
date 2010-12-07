@@ -60,20 +60,17 @@ menu_file.restart = "  RESTART  "
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
-  transparent_walls           = "  TRANSPARENT WALLS  ",
+  transparent_walls           = "  TRANSPARENT WALLS (x)  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
-  make_debug_patient          = "  MAKE DEBUG PATIENT  ",
-  spawn_patient               = "  SPAWN PATIENT  ",
-  make_adviser_talk           = "  MAKE ADVISER TALK  ",
-  show_watch                  = "  SHOW WATCH  ",
-  create_emergency            = "  CREATE EMERGENCY  ",
-  place_objects               = "  PLACE OBJECTS  ",
+  make_debug_fax              = "  MAKE DEBUG FAX (F8)  ",
+  make_debug_patient          = "  MAKE DEBUG PATIENT (F9)  ",
+  cheats                      = "  CHEATS (F11)  ",
+  lua_console                 = "  LUA CONSOLE (F12)  ",
   dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  DUMP GAME LOG  ",
+  dump_gamelog                = "  DUMP GAME LOG (CTRL+d)  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
-  lua_console                 = "  LUA CONSOLE  ",
 }
 menu_debug_overlay = {
   none                        = "  NONE  ",
@@ -304,4 +301,42 @@ totd_window = {
 tooltip.totd_window = {
   previous = "Display the previous tip",
   next = "Display the next tip",
+}
+
+debug_patient_window = {
+  caption = "Debug Patient",
+}
+
+cheats_window = {
+  caption = "Cheats",
+  warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
+  cheated = {
+    no = "Cheats used: No",
+    yes = "Cheats used: Yes",
+  },
+  cheats = {
+    money = "Money Cheat",
+    all_research = "All Research Cheat",
+    emergency = "Create Emergency",
+    create_patient = "Create Patient",
+    end_month = "End of Month",
+    end_year = "End of Year",
+    lose_level = "Lose Level",
+    win_level = "Win Level",
+  },
+  close = "Close",
+}
+
+tooltip.cheats_window = {
+  close = "Close the cheats dialog",
+  cheats = {
+    money = "Adds 10.000 to your bank balance.",
+    all_research = "Completes all research.",
+    emergency = "Creates an emergency.",
+    create_patient = "Creates a Patient at the map border.",
+    end_month = "Jumps to the end of the month.",
+    end_year = "Jumps to the end of the year.",
+    lose_level = "Lose the current level.",
+    win_level = "Win the current level.",
+  }
 }

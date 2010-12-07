@@ -4,6 +4,7 @@ Version Beta 5 - to be released 201?-??-??
 
 -- Gameplay --
 
+Feature: (Some) Cheats added. Type 24328 into the fax machine to get access to them.
 Feature: Player's "salary" (read: score) now increases over your level progress.
 Feature: Level based interest rate.
 Feature: Level based "starting staff" (e.g. original level 5).
@@ -17,6 +18,7 @@ Fix: Salaries for doctors were too high.
 
 -- User Interface --
 
+Fix: Wrong winning faxes shown for levels 5-11
 Fix: Weird scrolling behavior could occur after loading a game
 Fix: Error caused by some winning faxes in Norwegian
 * Some improvements to textboxes

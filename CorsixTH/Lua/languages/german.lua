@@ -74,20 +74,17 @@ menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
   jump_to_level             = "  SPRINGE ZU LEVEL  ",
-  transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE",
-  limit_camera              = "  KAMERA BEGRENZEN",
-  disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN",
-  make_debug_patient        = "  DEBUG-PATIENTEN ERSTELLEN",
-  spawn_patient             = "  PATIENTEN ERZEUGEN",
-  make_adviser_talk         = "  BERATER REDEN LASSEN",
-  show_watch                = "  UHR ANZEIGEN",
-  create_emergency          = "  NOTFALL ERZEUGEN  ",
-  place_objects             = "  OBJEKTE PLATZIEREN",
+  transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE (x)  ",
+  limit_camera              = "  KAMERA BEGRENZEN  ",
+  disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN  ",
+  make_debug_fax            = "  DEBUG-FAX ERSTELLEN (F8)  ",
+  make_debug_patient        = "  DEBUG-PATIENTEN ERSTELLEN (F9)  ",
+  cheats                    = "  CHEATS (F11)  ",
+  lua_console               = "  LUA-KONSOLE (F12)  ",
   dump_strings              = "  TEXTE ABSPEICHERN  ",
-  dump_gamelog              = "  SPIELPROTOKOLL ABSPEICHERN",
-  map_overlay               = "  KARTEN-OVERLAY",
-  sprite_viewer             = "  SPRITE-BETRACHTER",
-  lua_console               = "  LUA-KONSOLE  ",
+  dump_gamelog              = "  SPIELPROTOKOLL ABSPEICHERN (STRG+d)  ",
+  map_overlay               = "  KARTEN-OVERLAY  ",
+  sprite_viewer             = "  SPRITE-BETRACHTER  ",
 }
 menu_debug_overlay = {
   none                      = "  KEIN",
@@ -316,4 +313,42 @@ totd_window = {
 tooltip.totd_window = {
   previous = "Den vorherigen Tipp anzeigen",
   next = utf8 "Den nächsten Tipp anzeigen",
+}
+
+debug_patient_window = {
+  caption = "Debug-Patient",
+}
+
+cheats_window = {
+  caption = "Cheats",
+  warning = "Warnung: Cheater bekommen am Ende des Levels keine Bonus-Punkte!",
+  cheated = {
+    no = "Cheats benutzt: Nein",
+    yes = "Cheats benutzt: Ja",
+  },
+  cheats = {
+    money = "Geld-Cheat",
+    all_research = "Alle-Forschungen-Cheat",
+    emergency = "Notfall Erzeugen",
+    create_patient = "Patienten Erzeugen",
+    end_month = "Ende des Monats",
+    end_year = "Ende des Jahres",
+    lose_level = "Level Verlieren",
+    win_level = "Level Gewinnen",
+  },
+  close = utf8 "Schließen",
+}
+
+tooltip.cheats_window = {
+  close = utf8 "Das Cheats-Fenster schließen",
+  cheats = {
+    money = utf8 "10.000 zum Konto hinzufügen.",
+    all_research = utf8 "Alle Forschungen abschließen.",
+    emergency = "Einen Notfall erzeugen.",
+    create_patient = "Einen Patienten am Kartenrand erzeugen.",
+    end_month = "Zum Monatsende springen.",
+    end_year = "Zum Jahresende springen.",
+    lose_level = "Das aktuelle Level verlieren.",
+    win_level = "Das aktuelle Level gewinnen.",
+  }
 }

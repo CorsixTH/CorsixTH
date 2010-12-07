@@ -167,7 +167,7 @@ function UIFax:choice(choice)
       -- TODO: Allow some kind of custom campaign with custom levels
     end
   elseif choice == "return_to_main_menu" then
-    self.ui.app:quit()
+    self.ui.app:loadMainMenu()
   end
   self.icon:removeMessage()
   self:close()
@@ -195,6 +195,7 @@ function UIFax:validate()
   if code == "24328" then
     -- Original game cheat code
     self.ui.adviser:say(_S.adviser.cheats.th_cheat)
+    self.ui:addWindow(UICheats(self.ui))
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
     local announcements = self.ui.app.world.random_announcements

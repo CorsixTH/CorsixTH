@@ -197,20 +197,12 @@ function GameUI:onKeyDown(code, rawchar)
     return
   end
   if TheApp.config.debug then -- Debug commands
-    if key == "f8" then -- Open an alert window
-      -- Don't use "strike" type here, as these open a different window and must have an owner
-      local message = {
-        {text = "debug fax"}, -- no translation needed imo
-        choices = {
-            {text = "close debug fax", choice = "close"},
-        },
-      }
-      local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
-      self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
+    if key == "f8" then -- Make debug fax
+      self:makeDebugFax()
     elseif key == "f9" then -- Make debug patient
       self:addWindow(UIMakeDebugPatient(self))
-    elseif key == "f11" then -- Make Adviser say a random phrase
-      self:debugMakeAdviserTalk()
+    elseif key == "f11" then -- Open cheat window
+      self:addWindow(UICheats(self))
     elseif key == "x" then -- Toggle wall transparency
       self:makeWallsTransparent(not self.transparent_walls)
     elseif key == "d" and self.buttons_down.ctrl then
@@ -230,6 +222,16 @@ function GameUI:onKeyUp(code)
     self:updateKeyScroll()
     return
   end
+end
+
+function GameUI:makeDebugFax()
+  local message = {
+    {text = "debug fax"}, -- no translation needed imo
+    choices = {{text = "close debug fax", choice = "close"}},
+  }
+  -- Don't use "strike" type here, as these open a different window and must have an owner
+  local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
+  self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
 end
 
 function GameUI:ScreenToWorld(x, y)

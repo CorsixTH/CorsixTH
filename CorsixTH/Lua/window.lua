@@ -163,6 +163,17 @@ function Panel:makeTextbox(...)
   return self.window:makeTextboxOnPanel(self, ...)
 end
 
+--[[ Set the colour of a panel
+! Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
+!param col (table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
+]]
+function Panel:setColour(col)
+  if self.colour then
+    self.colour = TheApp.video:mapRGB(col.red, col.green, col.blue)
+  end
+  return self
+end
+
 -- Specify a tooltip to be displayed when hovering this panel.
 -- x and y are optional position of bottom left of the tooltip.
 -- If not specified, will default to mouse position.

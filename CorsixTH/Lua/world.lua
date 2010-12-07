@@ -88,7 +88,6 @@ function World:World(app)
     self:initDiscoveredRooms(hospital)
   end
   -- TODO: Add (working) AI and/or multiplayer hospitals
-  -- Initialize any staff already present in the (player) hospital
   -- TODO: Needs to be changed for multiplayer support
   self:initStaff()
   self.wall_id_by_block_id = {}
@@ -136,6 +135,10 @@ function World:World(app)
   "rand037.wav", "rand038.wav", "rand039.wav", "rand040.wav",
   "rand041.wav",                               "rand044.wav",
   "rand045.wav", "rand046.wav",
+  }
+  
+  self.cheat_announcements = {
+    "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }
   
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
@@ -770,6 +773,16 @@ function World:onTick()
   self.tick_timer = self.tick_timer - 1
 end
 
+function World:setEndMonth()
+  self.day = month_length[self.month]
+  self.hour = 23
+end
+
+function World:setEndYear()
+  self.month = 12
+  self:setEndMonth()
+end
+
 -- Called immediately prior to the ingame month changing.
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
@@ -787,49 +800,10 @@ function World:onEndMonth()
   for i = 1,4 do
     local state = self:checkWinningConditions(i)
     if state == "win" then
-      if i == 1 then -- Player won. TODO: Needs to be changed for multiplayer
-        local text = {}
-        local choice_text, choice
-        local bonus_rate = math.random(4,9)
-        local with_bonus = (self.ui.hospital.player_salary * bonus_rate)/100  
-        self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
-        if tonumber(self.map.level_number) then
-          local no = tonumber(self.map.level_number)
-          for key, value in ipairs(_S.letter[self.map.level_number]) do
-            text[key] = value
-          end
-          text[1] = text[1]:format(self.hospitals[i].name)
-          text[2] = text[2]:format(self.hospitals[i].salary_offer)
-          text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
-          if no < 12 then
-            choice_text = _S.fax.choices.accept_new_level
-            choice = 1
-          else
-            choice_text = _S.fax.choices.return_to_main_menu
-            choice = 2
-          end
-        else
-          -- TODO: When custom levels can contain sentences this should be changed to something better.
-          text[1] = _S.letter.dear_player:format(self.hospitals[i].name)
-          text[2] = _S.letter.custom_level_completed
-          text[3] = _S.letter.return_to_main_menu
-          choice_text = _S.fax.choices.return_to_main_menu
-          choice = 2
-        end
-        local message = {
-          {text = text[1]},
-          {text = text[2]},
-          {text = text[3]},
-          choices = {
-            {text = choice_text,  choice = choice == 1 and "accept_new_level" or "return_to_main_menu"},
-            {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
-          },
-        }
-        self.ui.bottom_panel:queueMessage("information", message, nil, 28*24, 2)
-      end
+      self:winGame(i)
     elseif state == "lose" then
-      if i == 1 then -- TODO: Multiplayer
-        self.ui.app:loadMainMenu(_S.letter.level_lost)
+      self:loseGame(i)
+      if i == 1 then
         return true
       end
     end
@@ -880,6 +854,61 @@ function World:checkWinningConditions(player_no)
     return "nothing"
   else
     return result
+  end
+end
+
+function World:winGame(player_no)
+  if player_no == 1 then -- Player won. TODO: Needs to be changed for multiplayer
+    local text = {}
+    local choice_text, choice
+    local bonus_rate = math.random(4,9)
+    local with_bonus = self.ui.hospital.cheated and 0 or (self.ui.hospital.player_salary * bonus_rate) / 100
+    self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
+    if tonumber(self.map.level_number) then
+      local no = tonumber(self.map.level_number)
+      local repeated_offer = false -- TODO whether player was asked previously to advance and declined
+      local has_next = no < 12
+      -- Letters 1-4  normal
+      -- Letters 5-8  repeated offer
+      -- Letters 9-12 last level
+      local letter_idx = math.random(1, 4) + (not has_next and 8 or repeated_offer and 4 or 0)
+      for key, value in ipairs(_S.letter[letter_idx]) do
+        text[key] = value
+      end
+      text[1] = text[1]:format(self.hospitals[player_no].name)
+      text[2] = text[2]:format(self.hospitals[player_no].salary_offer)
+      text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
+      if no < 12 then
+        choice_text = _S.fax.choices.accept_new_level
+        choice = 1
+      else
+        choice_text = _S.fax.choices.return_to_main_menu
+        choice = 2
+      end
+    else
+      -- TODO: When custom levels can contain sentences this should be changed to something better.
+      text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
+      text[2] = _S.letter.custom_level_completed
+      text[3] = _S.letter.return_to_main_menu
+      choice_text = _S.fax.choices.return_to_main_menu
+      choice = 2
+    end
+    local message = {
+      {text = text[1]},
+      {text = text[2]},
+      {text = text[3]},
+      choices = {
+        {text = choice_text,  choice = choice == 1 and "accept_new_level" or "return_to_main_menu"},
+        {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
+      },
+    }
+    self.ui.bottom_panel:queueMessage("information", message, nil, 28*24, 2)
+  end
+end
+
+function World:loseGame(player_no)
+  if player_no == 1 then -- TODO: Multiplayer
+    self.ui.app:loadMainMenu(_S.letter.level_lost)
   end
 end
 

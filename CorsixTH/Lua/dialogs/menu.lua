@@ -629,21 +629,6 @@ function UIMenuBar:makeMenu(app)
       end
     end
   end
-  local function place_objs()
-    self.ui:addWindow(UIPlaceObjects(self.ui, {
-      {object = TheApp.objects.radiator, qty = 5},
-      {object = TheApp.objects.plant, qty = 5},
-      {object = TheApp.objects.bench, qty = 5},
-      {object = TheApp.objects.drinks_machine, qty = 5},
-      {object = TheApp.objects.reception_desk, qty = 5},
-      {object = TheApp.objects.extinguisher, qty = 5},
-    }))
-  end
-  local function make_emergency()
-    if not self.ui.hospital:createEmergency() then
-      self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
-    end
-  end
   local levels_menu = UIMenu()
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
@@ -661,12 +646,10 @@ function UIMenuBar:makeMenu(app)
       :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls, nil, function() return self.ui.transparent_walls end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
+      :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
-      :appendItem(_S.menu_debug.spawn_patient,      function() self.ui.app.world:spawnPatient() end)
-      :appendItem(_S.menu_debug.make_adviser_talk,  function() self.ui:debugMakeAdviserTalk() end)
-      :appendItem(_S.menu_debug.show_watch,         function() self.ui:addWindow(UIWatch(self.ui)) end)
-      :appendItem(_S.menu_debug.create_emergency,   make_emergency)
-      :appendItem(_S.menu_debug.place_objects,      place_objs)
+      :appendItem(_S.menu_debug.cheats,             function() self.ui:addWindow(UICheats(self.ui)) end)
+      :appendItem(_S.menu_debug.lua_console,        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
       :appendItem(_S.menu_debug.dump_strings,       function() self.ui.app:dumpStrings() end)
       :appendItem(_S.menu_debug.dump_gamelog,       function() self.ui.app.world:dumpGameLog() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
@@ -684,7 +667,6 @@ function UIMenuBar:makeMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay(131107, 2, 0, 0, false), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() dofile "sprite_viewer" end)
-      :appendItem(_S.menu_debug.lua_console, function() self.ui:addWindow(UILuaConsole(self.ui)) end)
     )
   end
 end

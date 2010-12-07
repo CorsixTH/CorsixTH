@@ -33,7 +33,7 @@ function UIMakeDebugPatient:UIMakeDebugPatient(ui)
       }
     end
   end
-  self:UIMenuList(ui, "game", _S.menu_debug.make_debug_patient, items)
+  self:UIMenuList(ui, "game", _S.debug_patient_window.caption, items)
 end
 
 function UIMakeDebugPatient:buttonClicked(num)
