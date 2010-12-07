@@ -113,8 +113,8 @@ function StaffProfile:randomise(world, month)
         rate = level_config.staff_levels[ind][m[1]]
         ind = ind - 1
       end
-      -- Both 0 and 255 mean none. Other values x mean "one in x"; thus 1 means "one in one" aka "all"
-      rate = (rate ~= 0 and rate ~= 255) and 1 / rate or 0
+      -- 0 means none. Other values x mean "one in x"; thus 1 means "one in one" aka "all"
+      rate = (rate == 0) and 0 or 1 / rate
       self[m[2]] = math.random() < rate and 1.0 or m[3]
     end
     
