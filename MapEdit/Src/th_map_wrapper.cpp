@@ -213,10 +213,10 @@ void THMapWrapper::_do_set_cell(lua_State *L, THMap* pMap, int iX, int iY, uint1
         _check_door(L, pMap, iX    , iY + 1, 0, 1);
     }
 
-    std::stack<std::pair<int, int>> stkToCheckHospitality;
+    std::stack<std::pair<int, int> > stkToCheckHospitality;
     if(bWasCertainlyHospital && !_isCertainlyHospital(pMap, iX, iY))
     {
-        std::stack<std::pair<int, int>> stkToRemoveHospitality;
+        std::stack<std::pair<int, int> > stkToRemoveHospitality;
         stkToRemoveHospitality.push(std::make_pair(iX, iY));
         while(!stkToRemoveHospitality.empty())
         {

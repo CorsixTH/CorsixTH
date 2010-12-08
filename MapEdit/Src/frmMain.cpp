@@ -304,7 +304,7 @@ void frmMain::_onViewParcels(wxRibbonButtonBarEvent& evt)
     }
     else
     {
-        wxWindow* pParcelPanel = m_pHomePage->FindItem(ID_PARCEL_PANEL);
+        wxWindow* pParcelPanel = m_pHomePage->FindWindow(ID_PARCEL_PANEL);
         if(pParcelPanel)
             pParcelPanel->Destroy();
     }

@@ -22,9 +22,9 @@ SOFTWARE.
 #include "scrollable_game.h"
 
 BEGIN_EVENT_TABLE(ScrollableGamePanel, wxPanel)
-EVT_SIZE(_onResize)
-EVT_COMMAND_SCROLL(ID_X_SCROLL, _onScroll)
-EVT_COMMAND_SCROLL(ID_Y_SCROLL, _onScroll)
+EVT_SIZE(ScrollableGamePanel::_onResize)
+EVT_COMMAND_SCROLL(ID_X_SCROLL, ScrollableGamePanel::_onScroll)
+EVT_COMMAND_SCROLL(ID_Y_SCROLL, ScrollableGamePanel::_onScroll)
 END_EVENT_TABLE()
 
 ScrollableGamePanel::ScrollableGamePanel(wxWindow *pParent)
