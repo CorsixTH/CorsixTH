@@ -90,7 +90,7 @@ adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
 
   cheats = {  
-    th_cheat = "Congratulations, you have unlocked cheats! .. or you would have, if this were the original game. Try something else.",
+    th_cheat = "Congratulations, you have unlocked cheats!",
     crazy_on_cheat = "Oh no! All doctors have gone crazy!",
     crazy_off_cheat = "Phew... the doctors regained their sanity.",
     roujin_on_cheat = "Roujin's challenge activated! Good luck...",
