@@ -145,8 +145,8 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
       -- Override with the specific configuration for this level
       errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
       -- Finally load additional CorsixTH config per level (currently only for level 5)
-      path = "Levels" .. pathsep .. "original" 
-      errors, result = self:loadMapConfig(path .. level_no .. ".level", result, true)
+      local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
+      errors, result = self:loadMapConfig(p, result, true)
       self.level_config = result
     end
   elseif _MAP_EDITOR then

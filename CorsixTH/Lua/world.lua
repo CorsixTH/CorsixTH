@@ -329,9 +329,10 @@ function World:initDiscoveredRooms(hospital)
       hospital.research_rooms[room] = 0
       if room.categories.diagnosis then
         next_diag = room
-      else
+      elseif room.categories.treatment or room.categories.clinics then
         next_cure = room
       end
+      -- NB: cannot research facilities (that is, training room)
     end
   end
   -- Let the hospital initialize its research department
