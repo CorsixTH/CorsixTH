@@ -100,7 +100,6 @@ LFS/lfs.def -text
 LPEG/lpeg-128.gif -text
 LPEG/lpeg.html -text
 MapEdit/CMakeLists.txt -text
-MapEdit/FindwxWidgets_svn.cmake -text
 WindowsInstaller/LanguageStrings.nsh -text
 WindowsInstaller/OptionsPage.ini -text
 WindowsInstaller/ReplaceInFile.nsh -text

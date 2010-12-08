@@ -1,5 +1,7 @@
 # Project Declaration
 PROJECT(MapEdit)
+# 2.8.3 is required for the wxWidgets finder to know about ribbon
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 # Generate source files list
 # Note: Done after generating config.h
@@ -97,11 +99,13 @@ ENDIF(LUA51_FOUND)
 # Find WxWidgets
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
 SET(wxWidgets_USE_LIBS gl base core ribbon) # optionally: more than wx std libs
-FIND_PACKAGE(wxWidgets_svn REQUIRED)
+FIND_PACKAGE(wxWidgets REQUIRED)
 IF(wxWidgets_FOUND)
+  LINK_LIBRARIES(${wxWidgets_LIBRARIES})
   INCLUDE_DIRECTORIES(${wxWidgets_INCLUDE_DIRS})
+  INCLUDE(${wxWidgets_USE_FILE})
   TARGET_LINK_LIBRARIES(MapEdit ${wxWidgets_LIBRARIES})
-  message( "  wxWidgets found" )
+  message("  wxWidgets found")
 ELSE(wxWidgets_FOUND)
   message( FATAL_ERROR "error: wxWdigets library (or one of it's components) not found, it is required to build")
   message( "Make sure the path is correctly defined or set the envirnomental variable WXWIN to the correct location" )
