@@ -21,7 +21,7 @@ SOFTWARE.
 */
 #pragma once
 
-#include "../../CorsixTH/Src/config.h"
+#include "config.h"
 #ifndef CORSIX_TH_USE_OGL_RENDERER
 #error To compile the map editor, the OpenGL rendering engine must be used
 #endif
