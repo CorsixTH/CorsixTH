@@ -108,20 +108,17 @@ fax = {
 -- 3. Menu
 menu_debug = {
   jump_to_level         = utf8 "  SIIRRY TASOLLE  ",
-  transparent_walls     = utf8 "  LÄPINÄKYVÄT SEINÄT  ",
+  transparent_walls     = utf8 "  LÄPINÄKYVÄT SEINÄT (x)  ",
   limit_camera          = utf8 "  RAJOITETTU KAMERA  ",
   disable_salary_raise  = utf8 "  ESTÄ PALKAN KOROTTAMINEN  ",
-  make_debug_patient    = utf8 "  LISÄÄ DEBUG-POTILAS  ",
-  spawn_patient         = utf8 "  LISÄÄ POTILAS  ",
-  make_adviser_talk     = utf8 "  PUHUTA AVUSTAJAA  ",
-  show_watch            = utf8 "  NÄYTÄ AJANOTTO  ",
-  create_emergency      = utf8 "  LUO HÄTÄTILANNE  ",
-  place_objects         = utf8 "  ASETA KALUSTEITA  ",
+  make_debug_fax        = utf8 "  LUO DEBUG FAKSI (F8)  ",
+  make_debug_patient    = utf8 "  LISÄÄ DEBUG-POTILAS (F9)  ",
+  cheats                = utf8 "  HUIJAUKSET (F11)  ",
   dump_strings          = utf8 "  DUMPPAA TEKSTIT  ",
-  dump_gamelog          = utf8 "  DUMPPAA PELILOGI  ",
+  dump_gamelog          = utf8 "  DUMPPAA PELILOGI (CTRL+d)  ",
   map_overlay           = utf8 "  KARTTAKERROKSET  ",
   sprite_viewer         = utf8 "  SPRITE-KATSELIN  ",
-  lua_console           = utf8 "  LUA-KOMENTORIVI  ",
+  lua_console           = utf8 "  LUA-KOMENTORIVI (F12)  ",
 }
 
 menu_debug_overlay = {
@@ -142,7 +139,6 @@ menu_debug_overlay = {
 -- 4. Adviser
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Huoneen sijoittaminen tähän estäisi pääsyn joihinkin sairaalan osiin.",
-
   cheats = {
     th_cheat            = utf8 "Onnittelut, olet saanut huijaukset käyttöösi! Tai olisit saanut, jos tämä olisi alkuperäinen peli. Kokeile jotain muuta.",
     crazy_on_cheat      = utf8 "Voi ei! Kaikki lääkärit ovat tulleet hulluiksi!",
@@ -208,6 +204,30 @@ new_game_window = {
   tutorial      = utf8 "Esittely",
   easy          = utf8 "Harjoittelija (Helppo)",
   medium        = utf8 "Tohtori (Keskitaso)",
+}
+
+cheats_window = {
+  caption       = utf8 "Huijaukset",
+  warning       = utf8 "Varoitus: Et saa yhtään bonuspisteitä tason jälkeen, jos käytät huijauksia!",
+  close         = utf8 "Sulje",
+  cheated = {
+    no  = utf8 "Huijauksia käytetty: Ei",
+    yes = utf8 "Huijauksia käytetty: Kyllä",
+  },
+  cheats = {
+    money               = utf8 "Rahahuijaus",
+    all_research        = utf8 "Kaikki tutkimus -huijaus",
+    emergency           = utf8 "Luo hätätilanne",
+    create_patient      = utf8 "Luo potilas",
+    end_month           = utf8 "Siirry kuukauden loppuun",
+    end_year            = utf8 "Siirry vuoden loppuun",
+    lose_level          = utf8 "Häviä",
+    win_level           = utf8 "Voita",
+  },
+}
+
+debug_patient_window = {
+  caption = utf8 "Debug-potilas",
 }
 
 -- 6. Tooltip
@@ -279,6 +299,20 @@ tooltip = {
   message = {
     button              = utf8 "Avaa viesti klikkaamalla",
     button_dismiss      = utf8 "Klikkaa vasemalla avataksesi viestin, klikkaa oikealla poistaaksesi sen",
+  },
+
+  cheats_window = {
+    close = utf8 "Sulje huijaukset-ikkuna",
+    cheats = {
+      money             = utf8 "Lisää 10.000 pankkitilillesi.",
+      all_research      = utf8 "Saat kaiken tutkimuksen valmiiksi.",
+      emergency         = utf8 "Luo hätätilanteen.",
+      create_patient    = utf8 "Luo potilaan kartan reunalle.",
+      end_month         = utf8 "Siirtää aikaa eteenpäin kuukauden loppuun.",
+      end_year          = utf8 "Siirtää aikaa eteenpäin vuoden loppuun.",
+      lose_level        = utf8 "Häviät tämän tason.",
+      win_level         = utf8 "Voitat tämän tason.",
+    },
   },
 }
 
@@ -428,7 +462,7 @@ totd_window = {
     utf8 "Kaikki laitteet, kuten verikone, tarvitsevat huoltoa. Palkkaa huoltomies tai pari korjaamaan laitteitasi tai työntekijöillesi ja potilaillesi saattaa käydä hassusti.",
     utf8 "Työntekijäsi kaipaavat välillä taukoja. Muista rakentaa heille henkilökunnan huone, jossa he voivat käydä lepäämässä.",
     utf8 "Asenna sairaalaasi riittävästi lämpöpattereita, jotta henkilökunnalle ja asiakkaille ei tule kylmä.",
-    utf8 "Lääkärin taidot vaikuttavat paljon hänen tekemiensä diagnoosien laatuun ja nopeuteen. Palkkaamalla hyvä lääkäri yleislääkärin toimistoon tarvitset vähemmän muita diagnoosihuoneita.",
+    utf8 "Lääkärin taidot vaikuttavat paljon hänen tekemiensä diagnoosien laatuun ja nopeuteen. Palkkaamalla hyvän lääkärin yleislääkärin toimistoon tarvitset vähemmän muita diagnoosihuoneita.",
     utf8 "Tohtorit ja harjoittelijat voivat parantaa taitojaan oppimalla konsulteilta koulutushuoneessa. Jos konsultti on erikoistunut johonkin alaan (kirurgia, psykiatria tai tutkimus) hän siirtää tämän alan osaamisensa myös oppilailleen.",
     utf8 "Oletko kokeillut syöttää yleisen hätänumeron (112) faksiin? Varmista, että sinulla on äänet päällä!",
     utf8 "Asetukset-valikkoa ei ole vielä toteutettu, mutta voit muuttaa asetuksia kuten resoluutiota ja kieltä muokkaamalla config.txt-tiedostoa pelin asennushakemistossa.",
@@ -442,7 +476,7 @@ totd_window = {
     utf8 "Tyytymättömät työntekijät pyytävät useammin palkankorotuksia. Pidä huolta, että he työskentelevät mukavassa ympäristössä välttääksesi tätä.",
     utf8 "Potilaat tulevat janoisiksi odottaessaan sairaalassasi; erityisesti, jos nostat lämpötilaa! Aseta juoma-automaatteja strategisesti ympäri sairaalaasi saadaksesi vähän lisätuloja.",
     utf8 "Voit peruuttaa potilaan diagnosoinnin ennenaikaisesti ja arvata hoidon, jos olet törmännyt kyseiseen tautiin jo aiemmin. Muista kuitenkin, että tämä lisää väärästä hoidosta aiheutuvan kuoleman riskiä.",
-    utf8 "Hätätilanteet voivat olla hyvä ylimääräisen rahan lähde olettaen, että sairaalassasi on riittävästi kapasiteettia hätätila-potilaiden hoitamiseen ajoissa.",
+    utf8 "Hätätilanteet voivat olla hyvä ylimääräisen rahan lähde olettaen, että sairaalallasi on riittävästi kapasiteettia hätätilannepotilaiden hoitamiseen ajoissa.",
   },
   previous      = utf8 "Edellinen vihje",
   next          = utf8 "Seuraava vihje",
