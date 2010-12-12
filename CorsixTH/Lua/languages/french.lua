@@ -514,9 +514,9 @@ adviser = {
   room_forbidden_non_reachable_parts = utf8 "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
 
   cheats = {
-    th_cheat = utf8 "Féliciations, vous avez débloquer les triches ! .. Ou ce serait le cas, si c'était le jeu original. Essayez quelque chose d'autre.",
+    th_cheat = utf8 "Félicitations, vous avez débloquer les triches !",
     crazy_on_cheat = utf8 "Oh non ! Tous les médecins sont devenus fous !",
-    crazy_off_cheat = utf8 "Ouf ... les médecins ont retrouvé leur santé mentale.",
+    crazy_off_cheat = utf8 "Ouf... les médecins ont retrouvé leur santé mentale.",
     roujin_on_cheat = utf8 "Défi de Roujin activé ! Bonne chance...",
     roujin_off_cheat = utf8 "Défi de Roujin désactivé.",
     hairyitis_cheat = utf8 "Triche Pilose activée !",
@@ -547,20 +547,17 @@ menu_options_game_speed.pause = utf8 "  PAUSE  "
 -- Debug menu
 menu_debug = {
   jump_to_level               = utf8 "  ALLER AU NIVEAU  ",
-  transparent_walls           = utf8 "  MURS TRANSPARENTS  ",
+  transparent_walls           = utf8 "  MURS TRANSPARENTS (x)  ",
   limit_camera                = utf8 "  LIMITER LA CAMERA  ",
   disable_salary_raise        = utf8 "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
-  make_debug_patient          = utf8 "  CREER UN PATIENT DE TEST  ",
-  spawn_patient               = utf8 "  FAIRE ARRIVER DES PATIENTS  ",
-  make_adviser_talk           = utf8 "  FAIRE PARLER LE CONSEILLER  ",
-  show_watch                  = utf8 "  AFFICHER LE COMPTE A REBOUR  ",
-  create_emergency            = utf8 "  CREER UNE URGENCE  ",
-  place_objects               = utf8 "  PLACER DES OBJETS  ",
+  make_debug_fax              = utf8 "  CREER UN FAX DE TEST (F8)  ",
+  make_debug_patient          = utf8 "  CREER UN PATIENT DE TEST (F9)  ",
+  cheats                      = utf8 "  TRICHES (F11)  ",
+  lua_console                 = utf8 "  CONSOLE LUA (F12)  ",
   dump_strings                = utf8 "  EXTRAIRE LES TEXTES  ",
-  dump_gamelog                = utf8 "  EXTRAIRE LE JOURNAL DE JEU  ",
+  dump_gamelog                = utf8 "  EXTRAIRE LE JOURNAL DE JEU (CTRL+d)  ",
   map_overlay                 = utf8 "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = utf8 "  VISIONNEUSE DE SPRITES  ",
-  lua_console                 = utf8 "  CONSOLE LUA  ",
 }
 menu_debug_overlay = {
   none                        = utf8 "  AUCUN  ",
@@ -667,6 +664,46 @@ tooltip.options_window = {
   change_resolution = utf8 "Changer la résolution pour les dimensions entrées à gauche",
   language = utf8 "Utiliser la langue %s",
   back = utf8 "Fermer la fenêtre des options",
+}
+
+-- Debug patient window
+debug_patient_window = {
+  caption = "Patient de test",
+}
+
+-- Cheats window
+cheats_window = {
+  caption = "Triches",
+  warning = utf8 "Attention : Vous n'aurez aucun point de bonus à la fin du niveau si vous trichez !",
+  cheated = {
+    no = utf8 "Triches utilisées : Non",
+    yes = utf8 "Triches utilisées : Oui",
+  },
+  cheats = {
+    money = "Plus d'argent",
+    all_research = "Toutes les recherches",
+    emergency = utf8 "Créer une urgence",
+    create_patient = utf8 "Créer un patient",
+    end_month = "Fin du mois",
+    end_year = utf8 "Fin de l'année",
+    lose_level = "Perdre le niveau",
+    win_level = "Gagner le niveau",
+  },
+  close = "Fermer",
+}
+
+tooltip.cheats_window = {
+  close = "Fermer le dialogue de triches",
+  cheats = {
+    money = utf8 "Ajoute 10.000 à votre solde bancaire.",
+    all_research = "Termine toutes les recherches.",
+    emergency = utf8 "Crée une urgence.",
+    create_patient = utf8 "Crée un patient au bord de la carte.",
+    end_month = utf8 "Va directement à la fin du mois.",
+    end_year = utf8 "Va directement à la fin de l'année.",
+    lose_level = "Vous fait perdre le niveau actuel.",
+    win_level = "Vous fait gagner le niveau actuel.",
+  }
 }
 
 -- "Tip of the day" window
