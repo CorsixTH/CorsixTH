@@ -121,22 +121,7 @@ function World:World(app)
   end
   self:makeAvailableStaff(0)
   self:calculateSpawnTiles()
-  
-  self.random_announcements = {
-  "rand001.wav", "rand002.wav", "rand003.wav",
-  "rand005.wav", "rand006.wav",                "rand008.wav",
-  "rand009.wav", "rand010.wav",                "rand012.wav",
-  "rand013.wav",                               "rand016.wav",
-  "rand017.wav", "rand018.wav", "rand019.wav",
-  "rand021.wav", "rand022.wav",                "rand024.wav",
-  "rand025.wav", "rand026.wav", "rand027.wav", "rand028.wav",
-  "rand029.wav", "rand030.wav", "rand031.wav", "rand032.wav",
-  "rand033.wav", "rand034.wav", "rand035.wav", "rand036.wav",
-  "rand037.wav", "rand038.wav", "rand039.wav", "rand040.wav",
-  "rand041.wav",                               "rand044.wav",
-  "rand045.wav", "rand046.wav",
-  }
-  
+   
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }

@@ -236,9 +236,27 @@ function Audio:dumpSoundArchive(out_dir)
   info:close()
 end
 
+local wilcard_cache = permanent "audio_wildcard_cache" {}
+
 function Audio:playSound(name, where, is_announcement)
   local sound_fx = self.sound_fx
   if sound_fx then
+    if name:find("*") then
+      -- Resolve wildcard to one particular sound
+      local list = wilcard_cache[name]
+      if not list then
+        list = {}
+        wilcard_cache[name] = list
+        local pattern = ("^" .. name:gsub("%*",".*") .. "$"):upper()
+        for i = 1, #self.sound_archive - 1 do
+          local filename = self.sound_archive:getFilename(i):upper()
+          if filename:find(pattern) then
+            list[#list + 1] = filename
+          end
+        end
+      end
+      name = list[1] and list[math.random(1, #list)] or name
+    end
     local _, warning
     local volume = is_announcement and self.announcement_volume or self.sound_volume
     if where then
