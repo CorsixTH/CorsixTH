@@ -98,7 +98,7 @@ ENDIF(LUA51_FOUND)
 
 # Find WxWidgets
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-SET(wxWidgets_USE_LIBS gl base core ribbon) # optionally: more than wx std libs
+SET(wxWidgets_USE_LIBS gl ribbon core base) # optionally: more than wx std libs
 FIND_PACKAGE(wxWidgets REQUIRED)
 IF(wxWidgets_FOUND)
   LINK_LIBRARIES(${wxWidgets_LIBRARIES})

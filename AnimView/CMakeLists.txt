@@ -27,7 +27,7 @@ add_executable(
 # Finding libraries
 
 # Find WxWidgets
-SET(wxWidgets_USE_LIBS gl base core) # optionally: more than wx std libs
+SET(wxWidgets_USE_LIBS core base) # optionally: more than wx std libs
 FIND_PACKAGE(wxWidgets REQUIRED)
 IF(wxWidgets_FOUND)
   LINK_LIBRARIES(${wxWidgets_LIBRARIES})
