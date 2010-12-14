@@ -355,6 +355,11 @@ function Staff:onPlaceInCorridor()
   
   self:setNextAction{name = "meander"}
   if self.humanoid_class ~= "Receptionist" then
+    -- Maybe there's a room in need of this staff?
+    local room = self.world:getNearestRoomNeedingStaff(self)
+    if room then
+      self:setNextAction(room:createEnterAction())
+    end
     return true
   end
   

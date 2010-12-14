@@ -22,13 +22,6 @@ Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
 Inherit("original_strings", 0)
 
-
-menu_options = {
-  lock_windows = "  LOCK WINDOWS  ",
-  edge_scrolling = "  EDGE SCROLLING  ",
-  settings = "  SETTINGS  ",
-}
-
 menu_options_game_speed.pause = "  PAUSE  "
 
 menu_debug = {
@@ -103,7 +96,7 @@ misc.no_heliport = "Enten er der ikke blevet opdaget nogen sygdomme endnu, eller
 main_menu = {
   new_game = "Nyt spil",
   custom_level = "Special bane",
-  load_game = "Load spil",
+  load_game = "Indlaes spil",
   options = utf8 "Indstillinger",
   exit = "Afslut",
 }
@@ -117,13 +110,13 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  caption = "Load spil",
+  caption = "Indlaes spil",
 }
 
 tooltip.load_game_window = {
-  load_game = "Load spil %s",
-  load_game_number = "Load spil %d",
-  load_autosave = "Load autogem",
+  load_game = "Indlaes spil %s",
+  load_game_number = "Indlaes spil %d",
+  load_autosave = "Indlaes autogem",
 }
 
 custom_game_window = {
@@ -131,7 +124,7 @@ custom_game_window = {
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Load banen %s",
+  start_game_with_name = "Indlaes banen %s",
 }
 
 save_game_window = {
@@ -172,13 +165,13 @@ tooltip.options_window = {
 errors = {
   dialog_missing_graphics = "Undskyld, men demo data filerne har ikke en dialog.",
   save_prefix = "Fejl under gem af spil: ",
-  load_prefix = "Fejl under load af spil: ",
+  load_prefix = "Fejl under indlaesning af spil: ",
   map_file_missing = "Kunne ikke finde kort filen %s for denne bane!",
   minimum_screen_size = utf8 "Indtast venligst en oplösning på mindst 640x480.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Skiftning af denne indstilling kræver genstart af CorsixTH. Alle ugemte dataer går tabt. Er du sikker på du vil göre dette?"
+  needs_restart = utf8 "Skiftning af denne indstilling kræver genstart af CorsixTH. Alle ugemte datær går tabt. Er du sikker på du vil göre dette?"
 }
 
 information = {
@@ -189,35 +182,49 @@ information = {
 tooltip.information = {
   close = "Luk informations dialogen",
 }
-
+-- I translatet these tips that show up on the main menu screen //froksen
 totd_window = {
   tips = {
-    "Every hospital needs a reception desk and a GP's office to get going. After that, it depends on what kind of patients are visiting your hospital. A pharmacy is always a good choice, though.",
-    "Machines such as the Inflation need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
-    "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
-    "Place enough radiators to keep your staff and patients warm, or they will become unhappy. Use the town map to locate any spots in your hospital that need more heating.",
-    "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
-    "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist or researcher), he will also pass on this knowledge to his pupil(s).",
-    "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
-    "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
-    "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
-    "The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at freenode).",
-    "If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
-    "Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
-    "If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
-    "In a horde of waiting patients, you can quickly find out which ones are waiting for a particular room by hovering over that room with your mouse cursor.",
-    "Click on the door of a room to see its queue. You can do useful fine tuning here, such as reordering the queue or sending a patient to another room.",
-    "Unhappy staff will ask for salary rises frequently. Make sure your staff is working in a comfortable environment to keep that from happening.",
-    "Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
-    "You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
-    "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
-  },
-  previous = "Forige tip",
+    utf8 "I et hvert hospital er det nödvendigt have et receptions bord og lægens kontor for at komme i gang. Herefter er det alt efter hvilke patienter der kommer til dit hospital, dog er et apotek altid et fornuftigt valg.",
+    utf8 "Maskiner, som f.eks. inflation, har brugt for vedligeholdelse. Ansæt en handyman eller to til at vedligeholde dine maskiner, ellers kan du risikere at dine ansatte eller patienter kommer til skade",
+    utf8  "Med tiden bliver dine ansatte trætte. Husk at bygge et personale rum så de kan slappe af.",
+    utf8   "Placer radiatorer så dine patienter og ansatte kan holde varmen, ellers bliver de galde. Brug by kortet til at lokalisere steder på dit hospital som skal være varmere.",
+    utf8   "En læges kvalifikationsniveau betyder meget for kvaliteten og hastighedsen på hans diagnoser. Hvis du placer en meget kvalificeret læge pa lægens kontor behöver du ikke så mange ekstra diagonise rum.",
+    --Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist or researcher), he will also pass on this knowledge to his pupil(s).
+    utf8  "Juniorer og læger kan forbedre deres kvalifikationer ved at blive undervist af en konsulent i et træningsrum. Hvis konsulenten har specielle kvalifikationer (Kirug, psykiater eller forsker) vil han også give disse kvalifikationer videre til sine elever.",
+    -- "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
+    utf8   "Har du prövet at indtaste det europæriske alarm nummer (112) på fax maskinen? Husk at have lyd på!",
+    --"You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
+    utf8  "Du kan ændre nogle indstillinger, som skærm oplösning og sprog i indstillingsvinduet som kan findes både i hoved menuen og inde i spillet",
+    --"You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
+    utf8   "Du har valgt et andet sprog end engelsk, men der er alligevel engelsk over det hele? Hjælp os med at oversætte teksten til dit sprog",
+    --"The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at freenode).",
+    utf8   "Holdet bag CorsixTH er altid på udkig efter forskærkninger! Er du interesseret i kodning, oversættelse eller at lave grafik til CorsixTH? Kontakt os på vores forum, mailing liste eller IRC kanalen (corsix-th på freenode).",
+    --"If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
+    utf8  "Hvis du finder en fejl, så kan du rapportere den til os på vores bugtracker: th-issues.corsix.org",
+    --"Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
+    utf8  "I hver runde er der forskellige krav der skal være opfyldt för du kan gå videre til den næste. Check status vinduet for at se din progression mod rundens mål",
+    --"If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
+    utf8   "Hvis du vil ændre eller fjerne eksiterende rum, kan du göre det ved at trykke på rediger rum knappen som findes i væktöjslinjen i bunden.",
+     -- "In a horde of waiting patients, you can quickly find out which ones are waiting for a particular room by hovering over that room with your mouse cursor.",
+    utf8   "I en gruppe af ventende patienter kan du hurtigt finde ud af hvilke der er i kö til et specifikt rum ved at bevæge musen kursören over rummet",
+    --"Click on the door of a room to see its queue. You can do useful fine tuning here, such as reordering the queue or sending a patient to another room.",
+    utf8   "Klik dören til et rum for at se dens kö. Her kan du lave brugbar tilpasning, som f.eks. sotere i köen eller sende patienter til et andet rum.",
+    --"Unhappy staff will ask for salary rises frequently. Make sure your staff is working in a comfortable environment to keep that from happening.",
+    utf8   "Galde medarbejdere vil oftere spöge efter lönforhöjelse. Husk at lave et komfortablet arbejdsmiljö for at holde dem glade.",
+    --"Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
+    utf8   "Patienter bliver törstige når de venter på dit hospital, og endnu mere hvis du skruer op for varmen! Placer drikke automater på strategiske steder for at ekstra indtægt",
+    --"You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
+    utf8   "Du kan afbryde en patients diagnose proges för tid og gætte på en kur, hvis du allerede har mödt denne sygdom. Men pas på det kan betyde en forhöjet risiko for fejl diagonistiksering, som kan medföre en patients död.",
+    -- "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
+    utf8 "Akuttilfælde kan være en god møde at få ekstra penge på, sålænge du har kapaciteten til at håndtere patienter fra akuttilfældet inden tiden löber ud.",
+    },
+  previous = "Forrige tip",
   next = utf8 "Næste tip",
 }
 
 tooltip.totd_window = {
-  previous = "Vis det forige tip",
+  previous = "Vis det forrige tip",
   next = utf8 "Vis det næste tip",
 }
 
@@ -231,21 +238,21 @@ menu = {
 }
 
 menu_file = {
-  load                = "  LOAD  ",
+  load                = utf8 "  INDLAES  ",
   save                = "  GEM  ",
   restart             = "  START FORFRA  ",
   quit                = "  AFSLUT  ",
 }
 
 menu_file_load = {
-  [1]              = "  GEM 1  ",
-  [2]              = "  GEM 2  ",
-  [3]              = "  GEM 3  ",
-  [4]              = "  GEM 4  ",
-  [5]              = "  GEM 5  ",
-  [6]              = "  GEM 6  ",
-  [7]              = "  GEM 7  ",
-  [8]              = "  GEM 8  ",
+  [1]              = "  Gemt spil 1  ",
+  [2]              = "  Gemt spil 2  ",
+  [3]              = "  Gemt spil 3  ",
+  [4]              = "  Gemt spil 4  ",
+  [5]              = "  Gemt spil 5  ",
+  [6]              = "  Gemt spil 6  ",
+  [7]              = "  Gemt spil 7  ",
+  [8]              = "  Gemt spil 8  ",
 }
 menu_file_save = menu_file_load
 
@@ -263,9 +270,9 @@ menu_options = {
   settings            = "  INDSTILLINGER  ",
 }
 menu_options = {
-  lock_windows = "  LOCK WINDOWS  ",
+  lock_windows = "  FASTLAAS VINDUER  ",
   edge_scrolling = "  EDGE SCROLLING  ",
-  settings = "  SETTINGS  ",
+  settings = "  INDSTILLINGER  ",
 }
 menu_options_game_speed.pause = "  PAUSE  "
 
@@ -308,7 +315,7 @@ casebook = {
   cure_desc = {
     build_room         = "Jeg anbefalder du bygger %s", -- %s (room name)
     build_ward         = "Du mangler stadig at bygge en sygestue.",
-    hire_doctors       = "Du mangler at hyre nogle doctore.",
+    hire_doctors       = "Du mangler at hyre nogle laeger",
     hire_surgeons      = "Du mangler at hyre kiruger.",
     hire_psychiatrists = "Du har ikke en psykiatiker.",
     hire_nurses        = "Du skal hyre sygeplejesker.",
@@ -320,7 +327,7 @@ casebook = {
 
 staff_class = {
   nurse                 = "Sygeplejeske",
-  doctor                = "Doctor",
+  doctor                = "Laege",
   handyman              = "Handyman",
   receptionist          = "Receptionist",
   surgeon               = "Kirug",
@@ -332,7 +339,7 @@ staff_title = {
   general               = "Generel", -- unused?
   nurse                 = "Sygeplejeske",
   junior                = "Junior",
-  doctor                = "Doctor",
+  doctor                = "Laege",
   surgeon               = "Kirug",
   psychiatrist          = "Psykiater",
   consultant            = "Konsulent",
@@ -664,7 +671,7 @@ staff_list = {
   -- S[24][2] -- I have no idea what this is. Me neiter, seems like a early stupid way of doing the text overlay?
   morale       = "MORAL",
   tiredness    = "FRISKHED",
-  skill        = "EVNE",
+  skill        = "KVALIFIKATION",
   total_wages  = utf8 "TOTAL LÖN",
 }
 
@@ -811,158 +818,158 @@ diseases = {
     cure     = utf8 "Behandling - Gipsen bliver fjernet ved hjælp av en laserstyret gipsfjerner.", 
   },
   baldness               = { 
-    name     = "Flintskalle", 
-    cause     = utf8 "Årsak - Forteller lögner og dikter opp historier for å öke sin popularitet.", 
-    symptoms   = "Symptomer - Forlegen pasient med skinnende skalle.", 
-    cure     = utf8 "Behandling - Hår blir hurtig smeltet fast til pasientens hode med en smertefull hårmaskin.",
+    name     = "Hårtab", 
+    cause     = utf8 "Årsag - Fortæller lögne og opdigter historier for at forbedre sin popularitet.", 
+    symptoms   = "Symptomer - Forlegen patient med skinnede panne.", 
+    cure     = utf8 "Behandling - Håret bliver hurtigt smeltet fast til patients hoved med en smertefuld hårmaskin.",
   },
   discrete_itching       = { 
     name     = "Skrapesyke", 
-    cause     = utf8 "Årsak - Små insekter med skarpe tenner.", 
+    cause     = utf8 "Årsag - Små insekter med skarpe tenner.", 
     symptoms   = utf8 "Symptomer - Pasienten klör intenst, og huden flasser.", 
     cure     = utf8 "Behandling - En sykepleier gir pasienten en sirupaktig drikk som leger huden og hindrer videre klöe.",
   },
   jellyitis              = { 
     name     = utf8 "Gelésyndrom", 
-    cause     = utf8 "Årsak - Gelatinrik diett og for mye mosjon.", 
+    cause     = utf8 "Årsag - Gelatinrik diett og for mye mosjon.", 
     symptoms   = utf8 "Symptomer - Meget ustödig og faller mye.", 
     cure     = utf8 "Behandling - Pasienten blir presset ned i en gelétönne i et spesielt rom.",
   },
   sleeping_illness       = { 
-    name     = utf8 "Sövnsyke", 
-    cause     = utf8 "Forårsaket av overaktive sövnkjertler i munnens gane.", 
-    symptoms   = utf8 "Symptomer - Sterkt önske om å sove, hvor og når som helst.", 
-    cure     = "Behandling - En sterk dose stimulerende medisin blir delt ut av en sykepleier.",
+    name     = utf8 "Søvnsyge", 
+    cause     = utf8 "Årsag - Forsaget af overaktive søvnkitler i ganen.", 
+    symptoms   = utf8 "Symptomer - Stærkt önke om at sove, hvor og når som helst.", 
+    cure     = "Behandling - En stærk dose af stimulerende medicin uddelt af sygeplejsker.",
   },
   pregnancy              = { 
     name     = "Graviditet", 
-    cause     = utf8 "Forårsaket av strömbrudd i urbane strök.", 
-    symptoms   = utf8 "Symptomer - Lei av å spise med konstant ölmage.", 
-    cure     = "Behandling - Spedbarnet blir fjernet med keisersnitt, blir deretter vasket og presentert for sin nye mor.",
+    cause     = utf8 "Årsag - Forsaget af strömbrud i Forårsaket av strömbrudd i bebyggede områder", 
+    symptoms   = utf8 "Symptomer - Træt af at spise med en konstant ølmave.", 
+    cure     = "Behandling - Sprædbanet bliver fjernet ved kejsersnit og bliver derefter vasket og præsenteret for sin nye mor.",
   },   -- unused
   transparency           = { 
-    name     = "Gjennomsiktighet", 
-    cause     = utf8 "Årsak - Slikket folien på et gammelt yoghurtbeger.", 
-    symptoms   = "Symptomer - Kroppen blir gjennomsiktig og ekkel.", 
-    cure     = utf8 "Behandling - En kald og fargerik drikk fra apoteket gjör susen.",
+    name     = "Gennemsigtighed", 
+    cause     = utf8 "Årsag - Slikket på foliet på gamle yougurtkatoner.", 
+    symptoms   = "Symptomer - Kroppen bliver gennemsigtig og ækel.", 
+    cure     = utf8 "Behandling - En kölig, farverige drink fra apoteket gøre det trick.",
   },
   uncommon_cold          = { 
-    name     = utf8 "Forkjölelse",
-    cause     = utf8 "Årsak - Små snörrpartikler i luften.", 
-    symptoms   = "Symptomer - Rennende nese, hoste og misfarget slim fra lungene.", 
-    cure     = utf8 "Behandling - En real slurk hostesaft fra apoteket vil gjöre susen.", 
+    name     = utf8 "Forkölelse",
+    cause     = utf8 "Årsag - Små smörpartikler i luften.", 
+    symptoms   = "Symptomer - Rendselse af næse, hoste og misfarvet slim fra lungerne.", 
+    cure     = utf8 "Behandling - En rigtig stor mundfuld hostesaft fra apoteket kan gøre det trick.", 
   },
   broken_wind            = { 
     name     = "Forurensende gasser", 
-    cause     = utf8 "Årsak - Har löpt på 3d-mölle rett etter middag.", 
-    symptoms   = "Symptomer - Ubehag hos folk som befinner seg rett bak pasienten.", 
-    cure     = utf8 "Behandling - En sterk blanding av spesielle vannatomer må svelges hurtig.",
+    cause     = utf8 "Årsag - Har løbt på en 3D mølle lige efter middag.", 
+    symptoms   = "Symptomer - Ubehag hos folk som befinder sig lige bag patienten.", 
+    cure     = utf8 "Behandling - En stærk blandning af specielle vandatomer der drikkes hurtigt.",
   },
   spare_ribs             = { 
-    name     = "Juleribbe", 
-    cause     = utf8 "Årsak - Pasienten har sittet på kalde steingulv.", 
+    name     = "Spareribs", 
+    cause     = utf8 "Årsag - Patienten har siddet sig på det kolde gulv.", 
     symptoms   = utf8 "Symptomer - Ubehagelig fölelse i brystet.", 
-    cure     = "Behandling - Ribben fjernes av to kirurger, og leveres til pasienten i en doggybag.",
+    cure     = "Behandling - Ribenene fjernes af to kirurger, og leveres til patienten i en doggybag.",
   },
   kidney_beans           = { 
-    name     = "Kikkerter", 
-    cause     = utf8 "Årsak - Pasienten har spist isbiter.", 
-    symptoms   = utf8 "Symptomer - Smerte og hyppige turer til toalettet.", 
-    cure     = utf8 "Behandling - To kirurger fjerner de ertelignende parasittene, uten å beröre nyrene!",
+    name     = "Kikærter", 
+    cause     = utf8 "Årsag - patienten har spist isterninger.", 
+    symptoms   = utf8 "Symptomer - Smerte og hyppige turer til toilettet", 
+    cure     = utf8 "Behandling - To kirurger fjerner de ærteligende parasitter, uden at berører nyerne!",
   },
   broken_heart           = { 
     name     = "Knust hjerte",
-    cause     = utf8 "Årsak - Noen er rikere, yngre og slankere enn pasienten.", 
-    symptoms   = utf8 "Symptomer - Hysterisk gråtende. Blodsprengte fingertupper etter å ha revet opp feriebilder.", 
-    cure     = "Behandling - To kirurger spretter opp brystet og setter deretter hjertet forsiktig sammen, mens de holder pusten.", 
+    cause     = utf8 "Årsag - Nogen er rigere, yngere og slakere end patienten.", 
+    symptoms   = utf8 "Symptomer - Hysterisk grædende. Blodsprængte finderspidser efter at have revet feriebilleder istykker.", 
+    cure     = "Behandling - To kirurger sprætter brystet op og sætter deretter hjertet forsigtigt sammen, mens de holder pusten.", 
   },
   ruptured_nodules       = { 
-    name     = utf8 "Knekte nötter", 
-    cause     = utf8 "Årsak - Strikkhopp om vinteren.", 
-    symptoms   = utf8 "Symptomer - Umulig å sitte behagelig.", 
-    cure     = utf8 "Behandling - To kvalifiserte kirurger må fjerne nöttene med stödige hender.",
+    name     = utf8 "Oedelagte noedder", 
+    cause     = utf8 "Årsag - Skihop om vinteren.", 
+    symptoms   = utf8 "Symptomer - Umulig at sætte ned med vedbehag.", 
+    cure     = utf8 "Behandling - To kvalificerede kirurger må fjerne noedderne med forsigtige hænder.",
   },
   tv_personalities       = { 
     name     = "Programledersyndrom", 
-    cause     = utf8 "Årsak - TV-titting på dagtid.", 
-    symptoms   = utf8 "Symptomer - Forestiller seg at han/hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.", 
-    cure     = utf8 "Behandling - En psykolog må overtale pasienten til å selge fjernsynet og heller kjöpe radio.",
+    cause     = utf8 "Årsag - Ser TV i dagstimerne.", 
+    symptoms   = utf8 "Symptomer - Forestiller sig at han/hun er programleder på formiddagstv og elsker at introducere madseancen", 
+    cure     = utf8 "Behandling - En psykolog må overtale patienten til at koebe en radio og sælge fjernsynet.",
   },
   infectious_laughter    = { 
-    name     = "Smittsom latter", 
-    cause     = utf8 "Årsak - Klassisk situasjonskomedie på TV.", 
-    symptoms   = utf8 "Symptomer - Ler hjelpelöst hele tiden, og repeterer stadig dårlige poeng som absolutt ikke er morsomme.", 
-    cure     = utf8 "Behandling - En kvalifisert psykolog må minne pasienten på at dette faktisk er en alvorlig tilstand.",
+    name     = "Smidtsom latter", 
+    cause     = utf8 "Årsag - klassisk komedie på TV.", 
+    symptoms   = utf8 "Symptomer - Ler hjælpeloest hele tiden og gentager dårlige pasager som absolut ikke er morsomme.", 
+    cure     = utf8 "Behandling - En kvalificeret psykolog må minde paitenten om at det faktisk er en alvorlig tilstand.",
   },
   corrugated_ankles      = { 
-    name      = utf8 "Böyde ankler", 
-    cause     = utf8 "Årsak - Busskjöring over fartsdempere.", 
+    name      = utf8 "Boejde anḱler", 
+    cause     = utf8 "Årsag - Koert med bus over fartbump.", 
     symptoms   = "Symptomer - Skoene passer ikke.", 
-    cure     = utf8 "Behandling - En giftig blanding av urter og krydder må drikkes for å rette ut anklene.",
+    cure     = utf8 "Behandling - En giftig blanding af urter og kryderier må drikkes for at udrette anklerne.",
   },
   chronic_nosehair       = { 
-    name     = utf8 "Kronisk nesehår", 
-    cause     = utf8 "Årsak - Snöfter med forakt på folk med lavere inntekt.", 
-    symptoms   = utf8 "Symptomer - Så mye nesehår at en grevling kunne bodd der.", 
-    cure     = utf8 "Behandling - En ekkel hårfjernende drikk blir inntatt gjennom munnen. Fåes på apoteket.",
+    name     = utf8 "Kronisk næsehår", 
+    cause     = utf8 "Årsag - Snoefter med forakt på folk med lavere indlægt.", 
+    symptoms   = utf8 "Symptomer - Så mange næsehår at en grævling kunne bo der.", 
+    cure     = utf8 "Behandling - En ækel hårfjernende kur som skal drikkes. Fåes på apoteket.",
   },
   third_degree_sideburns = { 
     name     = "Tredjegrads koteletter", 
-    cause     = utf8 "Årsak - Lengter tilbake til 70-tallet.", 
-    symptoms   = utf8 "Symptomer - Stort hår, inntilsittende klær, langt skinnskjegg og glitter.", 
-    cure     = utf8 "Behandling - Psykologisk personell må, ved hjelp av nåtidens teknikker, overbevise pasienten om at parykk er noe tull.",
+    cause     = utf8 "Årsag - Længtes efter 70-erne.", 
+    symptoms   = utf8 "Symptomer - Stort hår, op-montering toej, lange bakkenbarter og glitter.", 
+    cure     = utf8 "Behandling - Psykologisk personel må, ved brug af moderne teknikker overbevise patienten om at parryk yt.",
   },
   fake_blood             = { 
     name     = "Teaterblod", 
-    cause     = utf8 "Årsak - Pasienten er ofte utsatt for narrestreker.", 
-    symptoms   = utf8 "Symptomer - Rödt blod som dunster ved kontakt med klær.", 
-    cure     = utf8 "Behandling - Eneste måten å behandle dette på, er å få en psykolog til å roe ned pasienten.",
+    cause     = utf8 "Årsag - Patienten er ofte udsat for naresteger.", 
+    symptoms   = utf8 "Symptomer - Roedt blod som fremkommer når der er kontakt med toej.", 
+    cure     = utf8 "Behandling - Eneste måde at behandle dette paa er at få en psykolog til at berolige patienten.",
   },
   gastric_ejections      = { 
-    name     = utf8 "Krydrede oppstöt", 
-    cause     = utf8 "Årsak - Sterkt krydret meksikansk eller indisk mat har skylden.", 
-    symptoms   = "Symptomer - Gulper karrikylling og tacolefser.", 
-    cure     = utf8 "Behandling - En sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt.",
+    name     = utf8 "Sure opstoed", 
+    cause     = utf8 "Årsag - Stærk krydret mexicansk eller indisk mad.", 
+    symptoms   = "Symptomer - Gylper karrykylling og tarcostykker op..", 
+    cure     = utf8 "Behandling - En sygeplejeske giver patienten speciel indisk komælk som forhindre sure opstød.",
   },
   the_squits             = { 
     name     = utf8 "Lös mage", 
-    cause     = utf8 "Årsak - Har spist pizzabiter som har falt bak komfyren.", 
+    cause     = utf8 "Årsag - Har spist pizzabiter som har falt bak komfyren.", 
     symptoms   = utf8 "Symptomer - æsj. Tipper du vet symptomene.", 
     cure     = utf8 "Behandling - En klebig blanding kjemikalier må drikkes for å stabilisere magen innvendig.",
   },
   iron_lungs             = { 
     name     = "Jernlunger", 
-    cause     = utf8 "Årsak - Forurenset byluft blandet med kebabrester.", 
+    cause     = utf8 "Årsag - Forurenset byluft blandet med kebabrester.", 
     symptoms   = utf8 "Symptomer - Kan puste flammer og bröle höyt under vann.", 
     cure     = "Behandling - To kirurger mykner de solide lungene i operasjonssalen.",
   },
   sweaty_palms           = { 
     name     = utf8 "Håndsvette", 
-    cause     = utf8 "Årsak - Er livredd jobbintervjuer.", 
+    cause     = utf8 "Årsag - Er livredd jobbintervjuer.", 
     symptoms   = utf8 "Symptomer - Å håndhilse på pasienten er som å ta tak i en våt svamp.", 
     cure     = utf8 "Behandling - En psykolog må snakke pasienten ut av denne oppdiktede lidelsen.",
   },
   heaped_piles           = { 
     name     = "Hemoroider", 
-    cause     = utf8 "Årsak - Står i nærheten av drikkevannskjölere.", 
+    cause     = utf8 "Årsag - Står i nærheten av drikkevannskjölere.", 
     symptoms   = utf8 "Symptomer - Pasienten föler han/hun sitter på en pose med stein.", 
     cure     = utf8 "Behandling - En behagelig, men meget syrlig drikk, lösner opp hemoroidene innenifra.",
   },
   gut_rot                = { 
     name     = utf8 "Mageråte", 
-    cause     = utf8 "Årsak - Onkel Georgs miks av hostesaft og whisky.", 
+    cause     = utf8 "Årsag - Onkel Georgs miks av hostesaft og whisky.", 
     symptoms   = "Symptomer - Ingen hoste, men ingen magesekk heller.", 
     cure     = "Behandling - En sykepleier skriver ut en rekke kjemikalier og gjenskaper veggen i magesekken.",
   },
   golf_stones            = { 
     name     = "Golfsteiner", 
-    cause     = utf8 "Årsak - Utsatt for giftige gasser fra golfballer.", 
+    cause     = utf8 "Årsag - Utsatt for giftige gasser fra golfballer.", 
     symptoms   = utf8 "Symptomer - Forvirring og kraftig skamfölelse.", 
     cure     = "Behandling - Steinene fjernes kjapt og effektivt av to kirurger.",
   },
   unexpected_swelling    = { 
     name     = "Uventet hevelse", 
-    cause     = utf8 "Årsak - Hva som helst uventet.", 
+    cause     = utf8 "Årsag - Hva som helst uventet.", 
     symptoms   = "Symptomer - Hevelse.", 
     cure     = utf8 "Behandling - Hevelsen må skjæres bort av to kirurger.",
   },
@@ -1023,15 +1030,23 @@ misc = {
   send_message_all = "Beskeden er sendt til alle",
   
   save_success = "Gemt med success",
-  save_failed  = "Gem fejlede",
+  save_failed  = "Mislykkedes at gemme",
   
   hospital_open = utf8 "Åbent hospital",
-  out_of_sync   = "Spillet er usyncroniseret",
+  out_of_sync   = "Spillet er ikke synkroniseret",
   
-  load_failed  = "Load fejlede",
+  load_failed  = "Indlaesning fejlede",
   low_res      = utf8 "Lav oplösning",
   balance      = "Balance fil: ",
   
   mouse        = "Mus",
   force        = "Tvang",
+}
+    
+new_game_window = {
+  easy = "Junior (Let)",
+  medium = "Laege (Mellem)",
+  hard = "Konsulent (Svaer)",
+  tutorial = "Gennemgang",
+  cancel = "Annuller",
 }

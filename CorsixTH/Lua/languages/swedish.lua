@@ -65,20 +65,17 @@ menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
   jump_to_level               = utf8 "  HOPPA TILL NIVÅ  ",
-  transparent_walls           = utf8 "  TRANSPARENTA VÄGGAR  ",
+  transparent_walls           = utf8 "  TRANSPARENTA VÄGGAR (x)  ",
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",
-  make_debug_patient          = "  SKAPA DEBUGPATIENT  ",
-  spawn_patient               = "  GENERERA VANLIG PATIENT  ",
-  make_adviser_talk           = utf8 "  LÅT RÅDGIVAREN PRATA  ",
-  show_watch                  = "  VISA KLOCKA  ",
-  create_emergency            = "  SKAPA AKUTFALL  ",
-  place_objects               = "  PLACERA OBJEKT  ",
+  make_debug_fax              = "  SKAPA DEBUGFAX (F8)  ",
+  make_debug_patient          = "  SKAPA DEBUGPATIENT (F9)  ",
+  cheats                      = "  FUSK (F11)  ",
+  lua_console                 = "  LUATERMINAL (F12)  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
-  dump_gamelog                = "  DUMPA SPELLOGG  ",
+  dump_gamelog                = "  DUMPA SPELLOGG (Ctrl+d)  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
-  lua_console                 = "  LUATERMINAL  ",
 }
 menu_debug_overlay = {
   none                        = "  INGET  ",
@@ -99,7 +96,7 @@ adviser = {
   room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
   
   cheats = {
-    th_cheat = utf8 "Gratulerar, du har låst upp fusk! .. eller, du hade gjort det om detta varit originalspelet. Försök nåt annat.",
+    th_cheat = utf8 "Ojoj, nån vill fuska sig till segern!",
     crazy_on_cheat = utf8 "Åh nej!! Alla läkare har blivit galna!",
     crazy_off_cheat = utf8 "Vilken tur... läkarna har återfått förståndet.",
     roujin_on_cheat = "Roujin's utmaning aktiverad! Lycka till...",
@@ -309,4 +306,42 @@ totd_window = {
 tooltip.totd_window = {
   previous = utf8 "Visa föregående tips",
   next = utf8 "Visa nästa tips",
+}
+
+debug_patient_window = {
+  caption = "Debug Patient",
+}
+
+cheats_window = {
+  caption = "Fusk",
+  warning = utf8 "Varning: Du kommer inte att få bonuspoäng på slutet av nivån om du fuskar!",
+  cheated = {
+    no = "Har fuskat: Nej",
+    yes = "Har fuskat: Ja",
+  },
+  cheats = {
+    money = "Pengar",
+    all_research = "All forskning",
+    emergency = "Skapa akutfall",
+    create_patient = "Skapa patient",
+    end_month = utf8 "Månadsslut",
+    end_year = utf8 "Hoppa till nyår",
+    lose_level = utf8 "Förlora nivå",
+    win_level = utf8 "Vinn nivå",
+  },
+  close = utf8 "Stäng",
+}
+
+tooltip.cheats_window = {
+  close = utf8 "Stäng fuskfönstret",
+  cheats = {
+    money = utf8 "Ökar din balans med 10 000.",
+    all_research = utf8 "Färdigställer all forskning.",
+    emergency = "Skapar ett akutfall.",
+    create_patient = "Skapar en patient vid kanten av kartan.",
+    end_month = utf8 "Hoppar till slutet av månaden.",
+    end_year = utf8 "Hoppar till slutet av året.",
+    lose_level = utf8 "Förlora nuvarande nivå.",
+    win_level = utf8 "Vinn nuvarande nivå.",
+  }
 }

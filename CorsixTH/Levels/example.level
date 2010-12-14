@@ -27,8 +27,7 @@ the level is called and where to find the map file. Available commands:
   original game will be searched, and then the Levels directory of CorsixTH.
   
 Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available. Note that if a player is using the demo files 
-on the contrary everything is available unless specified otherwise in the level file.
+and only some basic rooms are available.
 
 
 ---------------------- General Information -------------------------
