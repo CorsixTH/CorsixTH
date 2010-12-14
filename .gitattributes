@@ -81,6 +81,15 @@ CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 CorsixTH/changelog.txt -text
+DebianPackage/control -text
+DebianPackage/debian-binary -text
+DebianPackage/postinst -text
+DebianPackage/prerm -text
+DebianPackage/readme.txt -text
+DebianPackage/usr/games/CorsixTH -text
+DebianPackage/usr/share/applications/CorsixTH.desktop -text
+DebianPackage/usr/share/applications/MapEdit.desktop -text
+DebianPackage/usr/share/doc/corsix-th/copyright -text
 LDocGen/c_tokenise.lua -text
 LDocGen/helpers.lua -text
 LDocGen/main.lua -text

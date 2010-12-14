@@ -128,4 +128,5 @@ install(DIRECTORY Levels DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
 install(FILES config.txt DESTINATION CorsixTH )
 install(FILES CorsixTH.lua DESTINATION CorsixTH )
 install(FILES LICENSE.txt DESTINATION CorsixTH )
+install(FILES CorsixTH.ico DESTINATION CorsixTH )
 

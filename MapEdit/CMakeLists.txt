@@ -111,6 +111,5 @@ ELSE(wxWidgets_FOUND)
   message( "Make sure the path is correctly defined or set the envirnomental variable WXWIN to the correct location" )
 ENDIF(wxWidgets_FOUND)
 
-install(TARGETS MapEdit RUNTIME DESTINATION MapEdit)
-install(FILES LICENSE.txt DESTINATION MapEdit )
+install(TARGETS MapEdit RUNTIME DESTINATION CorsixTH)
 

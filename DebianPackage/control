@@ -1,0 +1,14 @@
+Package: corsix-th
+Version: 0.41-r1078
+Installed-Size: 13320
+Source: http://corsix-th.googlecode.com/svn
+Maintainer: CorsixTH developers <th@corsix.org>
+Homepage: http://code.google.com/p/corsix-th
+Priority: optional
+Architecture: i386
+Depends: timidity, liblua5.1-0, libsdl-mixer1.2, libsdl1.2debian
+Description: A clone of the classic Bullfrog game Theme Hospital
+ The game uses the original graphics and tries to mimic the original as closely as possible. Note that the game is still in beta, and all features are not yet present.
+
+
+

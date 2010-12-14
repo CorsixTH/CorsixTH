@@ -1,0 +1,5 @@
+#! /bin/bash -e
+
+ln -fs "/usr/games/CorsixTH/CorsixTH" "/usr/bin/CorsixTH"
+
+ln -fs "/usr/games/CorsixTH/MapEdit" "/usr/bin/MapEdit"
