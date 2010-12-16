@@ -355,7 +355,7 @@ void frmMain::_populateParcelGallery(wxRibbonGallery* pGallery)
         bmNumbers[i] = _asBitmap(pFontSheet, '0' + i - 31);
     }
 
-    for(int iParcel = 0; iParcel < 32; ++iParcel)
+    for(intptr_t iParcel = 0; iParcel < 32; ++iParcel)
     {
         wxBitmap bmParcel(bmOutline);
         dcMem.SelectObject(bmParcel);
@@ -631,8 +631,8 @@ void frmMain::_onParcelGallerySelect(wxRibbonGalleryEvent& evt)
 {
     if(evt.GetGalleryItem() != NULL)
     {
-        _setLuaParcelBrush(reinterpret_cast<int>(evt.GetGallery()
-            ->GetItemClientData(evt.GetGalleryItem())));
+        _setLuaParcelBrush(static_cast<int>(reinterpret_cast<intptr_t>(
+            evt.GetGallery()->GetItemClientData(evt.GetGalleryItem()))));
     }
 }
 
