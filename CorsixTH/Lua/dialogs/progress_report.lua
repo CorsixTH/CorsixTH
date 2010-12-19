@@ -155,7 +155,7 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   -- Possibly show warning that it's too cold in the hospital
   if warmth < 0.3 then
     self.warning.visible = true
-    self.normal_font:draw(canvas, _S.progress_report.too_cold, x + 284, y + 293, 276, 0)
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285, y + 285, 285)
   else
     self.warning.visible = false
   end

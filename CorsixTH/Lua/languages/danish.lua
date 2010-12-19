@@ -439,7 +439,7 @@ progress_report = {
   quite_unhappy         = "Dine folk er rimeligt galde",
   more_drinks_machines  = utf8 "Köb flere drikkevare automater",
   too_hot               = utf8 "Få fixet dit opvarmnings system. Det er alt for varmt!",
-  too_cold              = utf8 "Det er alt for koldt. Placer radiatore rundt omkring",
+  too_cold              = utf8 "Det er alt for koldt. Placer radiatore rundt omkring.",
   percentage_pop        = "% befolkningen",
   win_criteria          = "KRITERIA FOR SUCCESS",
 }
