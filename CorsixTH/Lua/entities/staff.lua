@@ -33,7 +33,7 @@ function Staff:tickDay()
   -- Pay too high -->   happy
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
-  self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / fair_wage)
+  self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
   -- If this is a researcher in the research department some research has 
   -- been done during the day.
   local room = self:getRoom()

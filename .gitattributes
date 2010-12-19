@@ -55,6 +55,8 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Levels/Example.map -text
+CorsixTH/Levels/avatar.level -text
+CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/demo.level -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Levels/original05.level -text
