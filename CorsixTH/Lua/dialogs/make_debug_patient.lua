@@ -44,6 +44,6 @@ function UIMakeDebugPatient:buttonClicked(num)
   item.disease.initPatient(patient)
   local x, y = self.ui:ScreenToWorld(self.x + self.width / 2, self.y + self.height + 100)
   patient:setTile(math.floor(x), math.floor(y))
-  patient:setMood("emergency", "activate") -- temporary, to make debug patients distinguishable from normal ones
+  patient:setMood("idea1", "activate") -- temporary, to make debug patients distinguishable from normal ones
   patient:setHospital(self.ui.hospital)
 end
