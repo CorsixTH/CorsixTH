@@ -46,42 +46,12 @@ function UIResearch:UIResearch(ui)
     return
   end
   
-  local hosp = ui.hospital
-  self.hospital = hosp
-
-  local --[[persistable:research_policy_adjust]] function adjust(name, state, btn)
-    -- print("You want to : ", name)
-    local delta = name:sub(1, 4)
-    local area = name:sub(5, -1)
-    local amount = 1
-    if self.buttons_down.ctrl then
-      amount = amount * 20
-    elseif self.buttons_down.shift then
-      amount = amount * 5
-    end
-    if delta == "less" then
-      if hosp.research[area].frac > 0 then
-        hosp.research[area].frac = math.max(0, hosp.research[area].frac - amount)
-        self.ui:playSound("selectx.wav")
-      else
-        self.ui:playSound("Wrong2.wav")
-      end
-    elseif delta == "more" then
-      if hosp.research.global < 100 and hosp.research[area].current then
-        hosp.research[area].frac = hosp.research[area].frac +
-          math.min(amount, 100 - hosp.research.global)
-        self.ui:playSound("selectx.wav")
-      else
-        self.ui:playSound("Wrong2.wav")
-      end
-    end
-
-    hosp.research.global = 0
-    for _, category in ipairs(research_categories) do
-      hosp.research.global = hosp.research.global + hosp.research[category].frac
-    end
+  self.hospital = ui.hospital
+  
+  -- stub for backwards compatibility
+  local --[[persistable:research_policy_adjust]] function adjust(name)
   end
-
+  
   -- Buttons
   local topy = 21
   local spacing = 41
@@ -90,15 +60,49 @@ function UIResearch:UIResearch(ui)
   local size = 40
   self:addPanel(0, 607, 447):makeButton(0, 0, size, size, 4, self.close):setTooltip(_S.tooltip.research.close)
   
+  self.adjust_buttons = {}
   for i, area in ipairs(research_categories) do
-    self:addPanel(0, c1, topy+i*spacing):makeButton(0, 0, size, size, 1, adjust, "less".. area)
-    self:addPanel(0, c2, topy+i*spacing):makeButton(0, 0, size, size, 2, adjust, "more".. area)
+    self.adjust_buttons[area] = {
+      less = self:addPanel(0, c1, topy+i*spacing):makeButton(0, 0, size, size, 1, function() end),
+      more = self:addPanel(0, c2, topy+i*spacing):makeButton(0, 0, size, size, 2, function() end),
+    }
   end
   
   self.waterclk = 0
   self.ratclk = 0
   self.waterpanel= self:addPanel(5, 2, 312)
   self.ratpanel= self:addPanel(13, 480, 365)
+end
+
+function UIResearch:adjustResearch(area, mode)
+  local hosp = self.hospital
+  local amount = 1
+  if self.buttons_down.ctrl then
+    amount = amount * 20
+  elseif self.buttons_down.shift then
+    amount = amount * 5
+  end
+  if mode == "less" then
+    if hosp.research[area].frac > 0 then
+      hosp.research[area].frac = math.max(0, hosp.research[area].frac - amount)
+      self.ui:playSound("selectx.wav")
+    else
+      self.ui:playSound("Wrong2.wav")
+    end
+  elseif mode == "more" then
+    if hosp.research.global < 100 and hosp.research[area].current then
+      hosp.research[area].frac = hosp.research[area].frac +
+        math.min(amount, 100 - hosp.research.global)
+      self.ui:playSound("selectx.wav")
+    else
+      self.ui:playSound("Wrong2.wav")
+    end
+  end
+  
+  hosp.research.global = 0
+  for _, category in ipairs(research_categories) do
+    hosp.research.global = hosp.research.global + hosp.research[category].frac
+  end
 end
 
 function UIResearch:onTick()
@@ -123,6 +127,15 @@ function UIResearch:onTick()
     if self.ratpanel.sprite_index > 20 then
       self.ratpanel.sprite_index = 13
     end  
+  end
+  
+  -- adjust research according to pressed button
+  for area, btns in pairs(self.adjust_buttons) do
+    for dir, btn in pairs(btns) do
+      if btn.active then
+        self:adjustResearch(area, dir)
+      end
+    end
   end
 end
 
@@ -160,4 +173,17 @@ function UIResearch:draw(canvas, x, y)
   end
   
   num_font:draw(canvas, self.hospital.research.global, x + 270, y + 288, 300, 0)
+end
+
+function UIResearch:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
+  if old < 26 then
+    self.adjust_buttons = {}
+    for i, area in ipairs(research_categories) do
+      self.adjust_buttons[area] = {
+        less = self.buttons[2*i],
+        more = self.buttons[2*i+1],
+      }
+    end
+  end
 end
