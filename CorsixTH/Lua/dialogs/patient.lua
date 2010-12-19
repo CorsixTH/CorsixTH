@@ -43,7 +43,7 @@ function UIPatient:UIPatient(ui, patient)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req02V", true)
   self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
-  self.visible_diamond = ui.makeVisibleDiamond(75, 76)
+  self.visible_diamond = ui:makeVisibleDiamond(75, 76)
   
   self:addPanel(320,  15,   0) -- Graph top
   self:addPanel(321,  15,  61) -- Graph bottom

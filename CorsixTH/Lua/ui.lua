@@ -203,22 +203,6 @@ function UI:playAnnouncement(name)
   end
 end
 
-function UI.makeVisibleDiamond(scr_w, scr_h)
-  local map_w = TheApp.map.width
-  local map_h = TheApp.map.height
-  assert(map_w == map_h, "UI limiter requires square map")
-  
-  -- The visible diamond is the region which the top-left corner of the screen
-  -- is limited to, and ensures that the map always covers all of the screen.
-  -- Its verticies are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
-  return {
-    x = - scr_w / 2,
-    y = 16 * map_h - scr_h / 2,
-    w = 32 * map_h - scr_h - scr_w / 2,
-    h = 16 * map_h - scr_h / 2 - scr_w / 4,
-  }
-end
-
 function UI:debugMakeAdviserTalk()
   local id = 2
   while #_S(54, id):gsub("^%.$", "") == 0 do
@@ -662,17 +646,6 @@ function UI:onMouseUp(code, x, y)
   
   self:updateTooltip()
   return repaint
-end
-
-function UI:ScreenToWorld(x, y)
-  return self.app.map:ScreenToWorld(self.screen_offset_x + x, self.screen_offset_y + y)
-end
-
-function UI:WorldToScreen(x, y)
-  x, y = self.app.map:WorldToScreen(x, y)
-  x = x - self.screen_offset_x
-  y = y - self.screen_offset_y
-  return x, y
 end
 
 function UI:getScreenOffset()

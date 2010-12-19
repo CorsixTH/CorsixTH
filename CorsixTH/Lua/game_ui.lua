@@ -48,7 +48,7 @@ function GameUI:GameUI(app, local_hospital)
 
   local scr_w = app.config.width
   local scr_h = app.config.height
-  self.visible_diamond = self.makeVisibleDiamond(scr_w, scr_h)
+  self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)
   if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
@@ -66,6 +66,22 @@ function GameUI:GameUI(app, local_hospital)
   self.do_world_hit_test = true
 end
 
+function GameUI:makeVisibleDiamond(scr_w, scr_h)
+  local map_w = self.app.map.width
+  local map_h = self.app.map.height
+  assert(map_w == map_h, "UI limiter requires square map")
+  
+  -- The visible diamond is the region which the top-left corner of the screen
+  -- is limited to, and ensures that the map always covers all of the screen.
+  -- Its verticies are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
+  return {
+    x = - scr_w / 2,
+    y = 16 * map_h - scr_h / 2,
+    w = 32 * map_h - scr_h - scr_w / 2,
+    h = 16 * map_h - scr_h / 2 - scr_w / 4,
+  }
+end
+
 function GameUI:setZoom(factor)
   if factor <= 0 then
     return
@@ -79,7 +95,7 @@ function GameUI:setZoom(factor)
   local refx, refy = self.cursor_x or scr_w / 2, self.cursor_y or scr_h / 2
   local cx, cy = self:ScreenToWorld(refx, refy)
   self.zoom_factor = factor
-  self.visible_diamond = self.makeVisibleDiamond(scr_w / factor, scr_h / factor)
+  self.visible_diamond = self:makeVisibleDiamond(scr_w / factor, scr_h / factor)
   if self.visible_diamond.w < 0 or self.visible_diamond.h < 0 then
     self:setZoom(old_factor)
     return false
@@ -116,7 +132,7 @@ function GameUI:onChangeResolution()
   -- Recalculate scrolling bounds
   local scr_w = self.app.config.width
   local scr_h = self.app.config.height
-  self.visible_diamond = self.makeVisibleDiamond(scr_w / self.zoom_factor, scr_h / self.zoom_factor)
+  self.visible_diamond = self:makeVisibleDiamond(scr_w / self.zoom_factor, scr_h / self.zoom_factor)
   self:scrollMap(0, 0)
   
   UI.onChangeResolution(self)
@@ -400,7 +416,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
   self:updateTooltip()
   
   local map = self.app.map
-  local wx, wy = map:ScreenToWorld(self.screen_offset_x + x, self.screen_offset_y + y)
+  local wx, wy = self:ScreenToWorld(x, y)
   wx = math.floor(wx)
   wy = math.floor(wy)
   if highlight_x then
