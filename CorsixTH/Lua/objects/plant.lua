@@ -189,7 +189,10 @@ function Plant:callForWatering()
       end
     end
     if self.current_state > 1 then
-      self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
+      if not self.plant_announced then
+        self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
+        self.plant_announced = true
+      end
     end
   end
 end

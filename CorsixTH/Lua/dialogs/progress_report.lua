@@ -176,7 +176,7 @@ function UIProgressReport:draw(canvas, x, y)
   local ly = 73
   for pnum, player in ipairs(world.hospitals) do
     local font = (pnum == self.selected) and self.red_font or self.normal_font
-    font:draw(canvas, player.name, x + 272, y + ly)
+    font:draw(canvas, player.name:upper(), x + 272, y + ly)
     ly = ly + 25
   end
   

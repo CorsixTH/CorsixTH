@@ -68,17 +68,25 @@ function UIAdviser:hide()
 end
 
 function UIAdviser:idle()
-  self.speech = nil
-  self.is_talking = false
-  self.timer = 150
+  if not self.stay_up then
+    self.speech = nil
+    self.is_talking = false
+    self.timer = 150
+  end
 end
 
-function UIAdviser:say(speech)
+-- Makes the adviser say something
+--!param speech The text string he should say.
+--!param talk_until_next_announce Whether he should stay up
+-- until the next say() call is made. Useful for the tutorial.
+function UIAdviser:say(speech, talk_until_next_announce)
   if speech ~= self.speech then
     self.speech = speech
   end
   
   self.timer = nil
+  
+  self.stay_up = talk_until_next_announce
 
   if self.visible == false then
     self:show()
@@ -146,7 +154,7 @@ function UIAdviser:onTick()
     self.th:makeInvisible()
   elseif self.visible == true and self.speech ~= nil and self.is_talking == false then
     -- Adviser not already talking and he has something to say so let's him speak
-    self:say(self.speech)
+    self:say(self.speech, self.stay_up)
   elseif self.visible == true and self.is_talking == true and self.frame == self.number_frames then
     -- Adviser finished to talk so make him idle
     self:idle()

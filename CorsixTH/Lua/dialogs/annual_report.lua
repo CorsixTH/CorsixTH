@@ -355,42 +355,42 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     -- index is the returned value of the sorted place for this player.
     -- However there might be many players with the same value, so each iteration a
     -- duplicate has been found, one additional row lower is the right place to be.
-    font:draw(canvas, name, x + 140, 
+    font:draw(canvas, name:upper(), x + 140, 
       y + row_y + row_dy*(index-1) + row_dy*(dup_money))
     font:draw(canvas, self.money[name], x + 240, 
       y + row_y + row_dy*(index-1) + row_dy*(dup_money), 70, 0, "right")
     
     -- Highest Salary
     local index, dup_s = getindex(self.salary_sort, self.salary[name])
-    font:draw(canvas, name, x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x, 
       y + row_y + row_dy*(index-1) + row_dy*(dup_salary))
     font:draw(canvas, self.salary[name], x + 240 + col_x, 
       y + row_y + row_dy*(index-1) + row_dy*(dup_salary), 70, 0, "right")
     
     -- Most Cures
     local index, dup_c = getindex(self.cures_sort, self.cures[name])
-    font:draw(canvas, name, x + 140, 
+    font:draw(canvas, name:upper(), x + 140, 
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures))
     font:draw(canvas, self.cures[name], x + 240, 
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures), 70, 0, "right")
     
     -- Most Deaths
     local index, dup_d = getindex(self.deaths_sort, self.deaths[name])
-    font:draw(canvas, name, x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x, 
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths))
     font:draw(canvas, self.deaths[name], x + 240 + col_x, 
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths), 70, 0, "right")
     
     -- Most Visitors
     local index, dup_v = getindex(self.visitors_sort, self.visitors[name])
-    font:draw(canvas, name, x + 140, 
+    font:draw(canvas, name:upper(), x + 140, 
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors))
     font:draw(canvas, self.visitors[name], x + 240, 
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors), 70, 0, "right")
     
     -- Highest Value
     local index, dup_v2 = getindex(self.value_sort, self.value[name])
-    font:draw(canvas, name, x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x, 
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value))
     font:draw(canvas, self.value[name], x + 240 + col_x, 
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value), 70, 0, "right")

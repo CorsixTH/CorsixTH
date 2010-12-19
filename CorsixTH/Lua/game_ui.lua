@@ -703,12 +703,18 @@ tutorial_phases = {
   {
     { text = _S.adviser.tutorial.build_pharmacy,
       begin_callback = function() 
-        TheApp.ui:addWindow(UIInformation(TheApp.ui, {{
+        local texts = {
           _S.introduction_texts["level15"],
-          _S.introduction_texts["level16"],
-          _S.introduction_texts["level17"],
           _S.introduction_texts["level1"],
-        }}))
+        }
+        -- The demo uses a single string for the post-tutorial info while
+        -- the real game uses three.
+        print(TheApp.using_demo_files)
+        if not TheApp.using_demo_files then
+          table.insert(texts, 2, _S.introduction_texts["level16"])
+          table.remove(texts, 3, _S.introduction_texts["level17"])
+        end
+        TheApp.ui:addWindow(UIInformation(TheApp.ui, {texts}))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
     },
@@ -770,7 +776,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
     
   if str then
-    self.adviser:say(str)
+    self.adviser:say(str, true)
   end
   if callback then
     callback(...)

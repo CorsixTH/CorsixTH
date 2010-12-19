@@ -51,8 +51,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.world = app.world
   self.width = 186
   self.height = 167 + #object_list * 29
-  self.x = app.config.width - self.width - 20
-  self.y = 20
+  self:setDefaultPosition(0.9, 0.1)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req05V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
