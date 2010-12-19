@@ -98,7 +98,14 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   local strings = _S.fax.disease_discovered_patient_choice
   -- Can this room be built right now? What is then missing?
   local output_text = strings.can_not_cure
-  if humanoid.hospital.discovered_rooms[room_type.id] then
+  local room_needed
+  for _, room in ipairs(TheApp.rooms) do
+    if room_type == room.id then
+      room_needed = room
+      break
+    end
+  end
+  if not room_needed or humanoid.hospital.discovered_rooms[room_needed] then
     local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
     output_text = strings.need_to_build:format(room_name)
     if not humanoid.hospital:hasStaffOfCategory(required_staff) then

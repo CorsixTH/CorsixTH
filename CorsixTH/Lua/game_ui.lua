@@ -709,7 +709,6 @@ tutorial_phases = {
         }
         -- The demo uses a single string for the post-tutorial info while
         -- the real game uses three.
-        print(TheApp.using_demo_files)
         if not TheApp.using_demo_files then
           table.insert(texts, 2, _S.introduction_texts["level16"])
           table.remove(texts, 3, _S.introduction_texts["level17"])
