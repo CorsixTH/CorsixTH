@@ -1,10 +1,11 @@
 -----------------------------------------
-Version Beta 5 - to be released 201?-??-??
+Version Beta 5 - released 2010-12-24
 -----------------------------------------
 
 -- Gameplay --
 
 Feature: (Some) Cheats added. Type 24328 into the fax machine to get access to them.
+Feature: Custom map "Avatar" added.
 Feature: Player's "salary" (read: score) now increases over your level progress.
 Feature: Level based interest rate.
 Feature: Level based "starting staff" (e.g. original level 5).
@@ -15,14 +16,23 @@ Fix: Some placements of opposite doors/objects were wrongly forbidden.
 Fix: Error could occur when building a surgery.
 Fix: Autopsy now has an appropriate impact on research.
 Fix: Salaries for doctors were too high.
+Fix: In some cases lose conditions were not triggered.
+Fix: Research room door could disappear after autopsy.
+... and various other bugs fixed.
 
 -- User Interface --
 
-Fix: Wrong winning faxes shown for levels 5-11
-Fix: Weird scrolling behavior could occur after loading a game
-Fix: Error caused by some winning faxes in Norwegian
-* Some improvements to textboxes
-* Some improvements to windows
+Feature: The player is now told the reason why he lost, when he loses, instead of being left in the dark.
+Fix: Wrong winning faxes shown for levels 5-11.
+Fix: Weird scrolling behavior could occur after loading a game.
+Fix: No tutorial when playing with demo files.
+Fix: Adviser disappeared too quickly during tutorial.
+Some improvements to textboxes.
+Some improvements to windows.
+... and various other small improvements and fixes.
+
+-- Translations --
+Fix: Error caused by some winning faxes in Norwegian.
 
 -----------------------------------------
 Version Beta 4 - released 2010-11-12
