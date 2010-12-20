@@ -67,27 +67,32 @@ menu_options = {
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
   settings = utf8 "  CONFIGURACIÓN  ",
 }
-menu_options_game_speed.pause = "  PAUSA  "
+
+menu_options_game_speed = {
+  pause               = "  (P) PAUSA  ",
+  slowest             = "  (1) MUY LENTA  ",
+  slower              = "  (2) LENTA  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = utf8 "  (4) VELOCIDAD MÁXIMA  ",
+  and_then_some_more  = "  (5) VELOCIDAD ABSURDA  ",
+}
 
 -- The demo does not contain this string
 menu_file.restart = "  REINICIAR  "
 
 menu_debug = {
   jump_to_level               = "  CAMBIAR DE NIVEL  ",
-  transparent_walls           = "  PAREDES TRANSPARENTES  ",
+  transparent_walls           = "  (X) PAREDES TRANSPARENTES  ",
   limit_camera                = utf8 "  LIMITAR CÁMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
-  make_debug_patient          = utf8 "  CREAR PACIENTE DE DEPURACIÓN  ",
-  spawn_patient               = "  CREAR PACIENTE  ",
-  make_adviser_talk           = "  HACER HABLAR AL CONSEJERO  ",
-  show_watch                  = "  MOSTRAR RELOJ  ",
-  create_emergency            = "  CREAR EMERGENCIA  ",
-  place_objects               = "  COLOCAR OBJETOS  ",
+  make_debug_fax              = utf8 "  (F8) CREAR FAX DE DEPURACIÓN  ",
+  make_debug_patient          = utf8 "  (F9) CREAR PACIENTE DE DEPURACIÓN  ",
+  cheats                      = "  (F11) TRUCOS  ",
+  lua_console                 = "  (F12) CONSOLA LUA  ",
   dump_strings                = "  VOLCAR TEXTOS DEL JUEGO  ",
-  dump_gamelog                = "  VOLCAR REGISTRO DEL JUEGO  ",
+  dump_gamelog                = "  (CTRL+D) VOLCAR REGISTRO DEL JUEGO  ",
   map_overlay                 = "  SOBREPONER MAPA  ",
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
-  lua_console                 = "  CONSOLA LUA  ",
 }
 menu_debug_overlay = {
   none                        = utf8 "  NINGUNO/A  ",
@@ -103,12 +108,11 @@ menu_debug_overlay = {
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCELA  ",
 }
-
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
 
   cheats = {
-    th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos! ...O eso hubieras hecho si estuvieras jugando al juego original. Prueba con otra cosa.",
+    th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos!",
     crazy_on_cheat = utf8 "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
     crazy_off_cheat = utf8 "Uff... los médicos han recuperado la cordura.",
     roujin_on_cheat = utf8"¡Desafío de Roujin activado! Buena suerte...",
@@ -284,7 +288,11 @@ information = {
   custom_game = utf8 "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
   cannot_restart = utf8 "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
   level_lost = {
-    utf8 "¡Qué pena! Has fallado este nivel. ¡Mejor suerte la próxima vez!",
+    utf8 "¡Qué pena! Has fallado este nivel. ¡Tendrás mejor suerte la próxima vez!",
+    utf8 "La razón por la que has perdido es:",
+    reputation = utf8 "Tu reputación ha caído por debajo de %d.",
+    balance = utf8 "Tu cuenta bancaria (descontando préstamos) ha llegado a tener menos de %d.",
+    percentage_killed = utf8 "Has matado a más de un %d por ciento de los pacientes.",
   },
 }
 
@@ -321,4 +329,42 @@ totd_window = {
 tooltip.totd_window = {
   previous = utf8 "Mostrar el consejo anterior",
   next = utf8 "Mostrar el consejo siguiente",
+}
+
+debug_patient_window = {
+  caption = utf8 "Paciente de depuración",
+}
+
+cheats_window = {
+  caption = "Trucos",
+  warning = utf8 "Advertencia: ¡No conseguirás bonificaciones al acabar este nivel si haces trampas!",
+  cheated = {
+    no = "Se han usado trucos: No",
+    yes = utf8 "Se han usado trucos: Sí",
+  },
+  cheats = {
+    money = "Truco de dinero",
+    all_research = "Truco de todo investigado",
+    emergency = "Crear una emergencia",
+    create_patient = "Crear un paciente",
+    end_month = "Fin de mes",
+    end_year = utf8 "Fin del año",
+    lose_level = "Perder el nivel",
+    win_level = "Ganar el nivel",
+  },
+  close = "Cerrar",
+}
+
+tooltip.cheats_window = {
+  close = "Cerrar la ventana de trucos",
+  cheats = {
+    money = utf8 "Añadir 10.000 dólares a tu cuenta bancaria.",
+    all_research = "Completar todas las investigaciones.",
+    emergency = "Crear una emergencia.",
+    create_patient = "Crear un paciente en el borde del mapa.",
+    end_month = "Avanza hasta el fin del mes actual.",
+    end_year = "Avanza hasta el final del año actual.",
+    lose_level = "Perder el nivel actual.",
+    win_level = "Ganar el nivel actual.",
+  }
 }
