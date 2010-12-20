@@ -831,16 +831,17 @@ function App:restart()
   self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart, --[[persistable:app_confirm_restart]] function()
     local level = self.map.level_number
     local difficulty = self.map.difficulty
-    local name, file
+    local name, file, intro
     if not tonumber(level) then
       name = self.map.level_name
       file = self.map.level_file
+      intro = self.map.level_intro
     end
     if level and name and not file then
       self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
       return
     end
-    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file)
+    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file, intro)
     if not status then
       err = "Error while loading level: " .. err
       print(err)
