@@ -46,12 +46,13 @@ object.orientations = {
   north = {
     use_position = "passable",
     use_animate_from_use_position = true,
-    footprint = { {0, 0}, {0, 1, only_passable = true} }
+    footprint = { {0, 0}, {0, 1, only_passable = true} },
   },
   east = {
     use_position = "passable",
     use_animate_from_use_position = true,
-    footprint = { {0, 0}, {1, 0, only_passable = true} }
+    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    early_list_while_in_use = true,
   },
 }
 
