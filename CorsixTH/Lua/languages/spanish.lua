@@ -158,7 +158,6 @@ letter = {
   dear_player = utf8 "Estimado %s",
   custom_level_completed = utf8 "¡Bien hecho! ¡Has completado todos los objetivos de este nivel personalizado!",
   return_to_main_menu = utf8 "¿Quieres volver al menú principal o seguir jugando?",
-  level_lost = utf8 "¡Qué pena! Has fallado este nivel. ¡Mejor suerte la próxima vez!",
 }
 
 install = {
@@ -284,6 +283,9 @@ confirmation = {
 information = {
   custom_game = utf8 "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
   cannot_restart = utf8 "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
+  level_lost = {
+    utf8 "¡Qué pena! Has fallado este nivel. ¡Mejor suerte la próxima vez!",
+  },
 }
 
 tooltip.information = {

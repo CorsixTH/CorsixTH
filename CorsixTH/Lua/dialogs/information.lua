@@ -44,6 +44,15 @@ function UIInformation:UIInformation(ui, text)
     self.text = text
   end
   
+  -- Window size parameters
+  self.text_width = 300
+  self.spacing = {
+    l = 40,
+    r = 40,
+    t = 20,
+    b = 20,
+  }
+  
   self:onChangeLanguage()
   
   -- Enter closes the window
@@ -53,11 +62,13 @@ end
 function UIInformation:onChangeLanguage()
   local rows = 0
   for i, text in ipairs(self.text) do
-    rows = rows + math.floor(self.black_font:sizeOf(text) / 230 + 0.5)
+    local old_rows = rows
+    rows = rows + math.floor(self.black_font:sizeOf(text) / 300 + 1)
     rows = rows + 1
   end
-  self.width = 40 + 300 + 40 
-  self.height = 20 + rows*12 + 20 
+  
+  self.width = self.spacing.l + self.text_width + self.spacing.r
+  self.height = self.spacing.t + rows*12 + self.spacing.b
   self:setDefaultPosition(0.5, 0.5)
   
   self:removeAllPanels()
@@ -80,14 +91,13 @@ function UIInformation:onChangeLanguage()
 end
 
 function UIInformation:draw(canvas, x, y)
- 
   local dx, dy = x + self.x, y + self.y
   local white = canvas:mapRGB(255, 255, 255)
   canvas:drawRect(white, dx + 4, dy + 4, self.width - 8, self.height - 8)
-  local last_y = dy + 20
+  local last_y = dy + self.spacing.t
   for i, text in ipairs(self.text) do
-    last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + 40, last_y, self.width - 80)
-    last_y = self.black_font:drawWrapped(canvas, " ", dx + 40, last_y, self.width - 80)
+    last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)
+    last_y = self.black_font:drawWrapped(canvas, " ",                 dx + self.spacing.l, last_y, self.text_width)
   end
   
   Window.draw(self, canvas, x, y)

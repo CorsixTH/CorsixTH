@@ -68,21 +68,29 @@ menu_options = {
   settings       = "  EINSTELLUNGEN  ",
 }
 menu_options_game_speed.pause        = "  PAUSE"
+menu_options_game_speed = {
+  pause               = "  (P) PAUSE  ",
+  slowest             = "  (1) AM LANGSAMSTEN  ",
+  slower              = "  (2) LANGSAM  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) MAXIMALE GESCHWINDIGKEIT  ",
+  and_then_some_more  = "  (5) UND NOCH MEHR  ",
+}
 
 -- The demo does not contain this string
 menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
   jump_to_level             = "  SPRINGE ZU LEVEL  ",
-  transparent_walls    = utf8 "  DURCHSICHTIGE WÄNDE (x)  ",
+  transparent_walls    = utf8 "  (X) DURCHSICHTIGE WÄNDE  ",
   limit_camera              = "  KAMERA BEGRENZEN  ",
   disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN  ",
-  make_debug_fax            = "  DEBUG-FAX ERSTELLEN (F8)  ",
-  make_debug_patient        = "  DEBUG-PATIENTEN ERSTELLEN (F9)  ",
-  cheats                    = "  CHEATS (F11)  ",
-  lua_console               = "  LUA-KONSOLE (F12)  ",
+  make_debug_fax            = "  (F8) DEBUG-FAX ERSTELLEN  ",
+  make_debug_patient        = "  (F9) DEBUG-PATIENTEN ERSTELLEN  ",
+  cheats                    = "  (F11) CHEATS  ",
+  lua_console               = "  (F12) LUA-KONSOLE  ",
   dump_strings              = "  TEXTE ABSPEICHERN  ",
-  dump_gamelog              = "  SPIELPROTOKOLL ABSPEICHERN (STRG+d)  ",
+  dump_gamelog              = "  (STRG+D) SPIELPROTOKOLL ABSPEICHERN  ",
   map_overlay               = "  KARTEN-OVERLAY  ",
   sprite_viewer             = "  SPRITE-BETRACHTER  ",
 }
@@ -152,7 +160,6 @@ letter = {
   dear_player = "Hallo %s",
   custom_level_completed = "Gut gemacht! Sie haben alle Ziele dieses eigenen Levels erreicht!",
   return_to_main_menu = utf8 "Möchten Sie ins Hauptmenü zurückkehren, oder weiterspielen?",
-  level_lost = utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
 }
 
 install = {
@@ -278,6 +285,15 @@ confirmation = {
 information = {
   custom_game = utf8 "Willkommen zu CorsixTH. Viel Spaß mit diesem eigenen Level!",
   cannot_restart = "Leider wurde dieses eigene Level vor Implementierung des Neustart-Features gespeichert.",
+  level_lost = {
+  },
+  level_lost = {
+    utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
+    "Der Grund warum Sie verloren haben:",
+    reputation = "Ihr Ruf ist unter %d gesunken.",
+    balance = "Ihr Kontostand (abzüglich Kredit) ist unter %d gesunken.",
+    percentage_killed = utf8 "Sie haben mehr als %d Prozent der Patienten getötet.",
+  },
 }
 
 tooltip.information = {

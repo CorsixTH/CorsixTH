@@ -547,15 +547,15 @@ menu_options_game_speed.pause = utf8 "  PAUSE  "
 -- Debug menu
 menu_debug = {
   jump_to_level               = utf8 "  ALLER AU NIVEAU  ",
-  transparent_walls           = utf8 "  MURS TRANSPARENTS (x)  ",
+  transparent_walls           = utf8 "  (X) MURS TRANSPARENTS  ",
   limit_camera                = utf8 "  LIMITER LA CAMERA  ",
   disable_salary_raise        = utf8 "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
-  make_debug_fax              = utf8 "  CREER UN FAX DE TEST (F8)  ",
-  make_debug_patient          = utf8 "  CREER UN PATIENT DE TEST (F9)  ",
-  cheats                      = utf8 "  TRICHES (F11)  ",
-  lua_console                 = utf8 "  CONSOLE LUA (F12)  ",
+  make_debug_fax              = utf8 "  (F8) CREER UN FAX DE TEST  ",
+  make_debug_patient          = utf8 "  (F9) CREER UN PATIENT DE TEST  ",
+  cheats                      = utf8 "  (F11) TRICHES  ",
+  lua_console                 = utf8 "  (F12) CONSOLE LUA  ",
   dump_strings                = utf8 "  EXTRAIRE LES TEXTES  ",
-  dump_gamelog                = utf8 "  EXTRAIRE LE JOURNAL DE JEU (CTRL+d)  ",
+  dump_gamelog                = utf8 "  (CTRL+D) EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay                 = utf8 "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = utf8 "  VISIONNEUSE DE SPRITES  ",
 }
@@ -761,6 +761,9 @@ confirmation = {
 information = {
   custom_game = utf8 "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
   cannot_restart = utf8 "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
+  level_lost = {
+    utf8 "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
+  },
 }
 
 tooltip.information = {
@@ -808,7 +811,6 @@ letter = {
   dear_player = utf8 "Cher %s",
   custom_level_completed = utf8 "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
   return_to_main_menu = utf8 "Voulez-vous retourner au menu principal ou continuer la partie ?",
-  level_lost = utf8 "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
 }
 
 -- Installation

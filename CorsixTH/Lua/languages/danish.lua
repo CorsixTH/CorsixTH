@@ -82,7 +82,6 @@ letter = {
   dear_player = utf8 "Kære %s",
   custom_level_completed = utf8 "Godt arbejde! Du har opfyldt alle mål på denne speical bane!",
   return_to_main_menu = utf8 "Vil du gå tilbage til hoved menuen eller fortsætte med at spille?",
-  level_lost = utf8 "Ej! Du har desvære tabt banen. Bedre held næste gang!",
 }
 
 install = {
@@ -177,6 +176,9 @@ confirmation = {
 information = {
   custom_game = "Velkommen til CorsixTH. Hav det sjovt med denne special bane!",
   cannot_restart = utf8 "Beklageligvis så er denne special bane lavet för at genstart funtionen blev implanteret.",
+  level_lost = {
+    utf8 "Ej! Du har desvære tabt banen. Bedre held næste gang!",
+  },
 }
 
 tooltip.information = {

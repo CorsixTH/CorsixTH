@@ -53,22 +53,30 @@ menu_options = {
   edge_scrolling = "  EDGE SCROLLING  ",
   settings = "  SETTINGS  ",
 }
-menu_options_game_speed.pause = "  PAUSE  "
+
+menu_options_game_speed = {
+  pause               = "  (P) PAUSE  ",
+  slowest             = "  (1) SLOWEST  ",
+  slower              = "  (2) SLOWER  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) MAX SPEED  ",
+  and_then_some_more  = "  (5) AND THEN SOME MORE  ",
+}
 
 -- The demo does not contain this string
 menu_file.restart = "  RESTART  "
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
-  transparent_walls           = "  TRANSPARENT WALLS (x)  ",
+  transparent_walls           = "  (X) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
-  make_debug_fax              = "  MAKE DEBUG FAX (F8)  ",
-  make_debug_patient          = "  MAKE DEBUG PATIENT (F9)  ",
-  cheats                      = "  CHEATS (F11)  ",
-  lua_console                 = "  LUA CONSOLE (F12)  ",
+  make_debug_fax              = "  (F8) MAKE DEBUG FAX  ",
+  make_debug_patient          = "  (F9) MAKE DEBUG PATIENT  ",
+  cheats                      = "  (F11) CHEATS  ",
+  lua_console                 = "  (F12) LUA CONSOLE  ",
   dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  DUMP GAME LOG (CTRL+d)  ",
+  dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
@@ -140,7 +148,6 @@ letter = {
   dear_player = "Dear %s",
   custom_level_completed = "Well done! You've completed all goals on this custom level!",
   return_to_main_menu = "Would you like to return to the main menu or continue playing?",
-  level_lost = "Bummer! You failed the level. Better luck next time!",
 }
 
 install = {
@@ -266,6 +273,13 @@ confirmation = {
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  level_lost = {
+    "Bummer! You failed the level. Better luck next time!",
+    "The reason you lost:",
+    reputation = "Your reputation fell below %d.",
+    balance = "Your bank balance (minus loan) fell below %d.",
+    percentage_killed = "You killed more than %d percent of the patients.",
+  },
 }
 
 tooltip.information = {

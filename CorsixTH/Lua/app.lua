@@ -274,7 +274,7 @@ function App:loadMainMenu(message)
   
   -- If a message was supplied, show it
   if message then
-    self.ui:addWindow(UIInformation(self.ui, {message}))
+    self.ui:addWindow(UIInformation(self.ui, message))
   end
 end
 

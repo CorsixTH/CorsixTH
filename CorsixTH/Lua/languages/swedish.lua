@@ -65,15 +65,15 @@ menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
   jump_to_level               = utf8 "  HOPPA TILL NIVÅ  ",
-  transparent_walls           = utf8 "  TRANSPARENTA VÄGGAR (x)  ",
+  transparent_walls           = utf8 "  (X) TRANSPARENTA VÄGGAR  ",
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",
-  make_debug_fax              = "  SKAPA DEBUGFAX (F8)  ",
-  make_debug_patient          = "  SKAPA DEBUGPATIENT (F9)  ",
-  cheats                      = "  FUSK (F11)  ",
-  lua_console                 = "  LUATERMINAL (F12)  ",
+  make_debug_fax              = "  (F8) SKAPA DEBUGFAX  ",
+  make_debug_patient          = "  (F9) SKAPA DEBUGPATIENT  ",
+  cheats                      = "  (F11) FUSK  ",
+  lua_console                 = "  (F12) LUATERMINAL  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
-  dump_gamelog                = "  DUMPA SPELLOGG (Ctrl+d)  ",
+  dump_gamelog                = "  (CTRL+D) DUMPA SPELLOGG  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }
@@ -146,7 +146,6 @@ letter = {
   dear_player = utf8 "Käre %s",
   custom_level_completed = utf8 "Bra gjort! Du klarade alla mål på den här specialbanan!",
   return_to_main_menu = utf8 "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
-  level_lost = utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
 }
 
 install = {
@@ -272,6 +271,9 @@ confirmation = {
 information = {
   custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
   cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
+  level_lost = {
+    utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
+  },
 }
 
 tooltip.information = {

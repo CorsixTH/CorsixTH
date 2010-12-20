@@ -108,17 +108,17 @@ fax = {
 -- 3. Menu
 menu_debug = {
   jump_to_level         = utf8 "  SIIRRY TASOLLE  ",
-  transparent_walls     = utf8 "  LÄPINÄKYVÄT SEINÄT (x)  ",
+  transparent_walls     = utf8 "  (X) LÄPINÄKYVÄT SEINÄT  ",
   limit_camera          = utf8 "  RAJOITETTU KAMERA  ",
   disable_salary_raise  = utf8 "  ESTÄ PALKAN KOROTTAMINEN  ",
-  make_debug_fax        = utf8 "  LUO DEBUG FAKSI (F8)  ",
-  make_debug_patient    = utf8 "  LISÄÄ DEBUG-POTILAS (F9)  ",
-  cheats                = utf8 "  HUIJAUKSET (F11)  ",
+  make_debug_fax        = utf8 "  (F8) LUO DEBUG FAKSI  ",
+  make_debug_patient    = utf8 "  (F9) LISÄÄ DEBUG-POTILAS  ",
+  cheats                = utf8 "  (F11) HUIJAUKSET  ",
   dump_strings          = utf8 "  DUMPPAA TEKSTIT  ",
-  dump_gamelog          = utf8 "  DUMPPAA PELILOGI (CTRL+d)  ",
+  dump_gamelog          = utf8 "  (CTRL+D) DUMPPAA PELILOGI  ",
   map_overlay           = utf8 "  KARTTAKERROKSET  ",
   sprite_viewer         = utf8 "  SPRITE-KATSELIN  ",
-  lua_console           = utf8 "  LUA-KOMENTORIVI (F12)  ",
+  lua_console           = utf8 "  (F12) LUA-KOMENTORIVI  ",
 }
 
 menu_debug_overlay = {
@@ -321,7 +321,6 @@ letter = {
   dear_player                   = utf8 "Hyvä %s", --%s (player's name)
   custom_level_completed        = utf8 "Hienosti tehty! Olet suorittanut kaikki tämän itse laaditun tason tavoitteet!",
   return_to_main_menu           = utf8 "Haluatko palata takaisin päävalikkoon vai jatkaa pelaamista?",
-  level_lost                    = utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
 }
 
 -- 8. Installation
@@ -615,6 +614,9 @@ lua_console = {
 information = {
   custom_game           = utf8 "Tervetuloa pelaamaan CorsixTH:ta. Toivottavasti viihdyt tällä itse laaditulla kartalla!",
   cannot_restart        = utf8 "Valitettavasti tämä peli on tallennettu ennen uudelleen käynnistämisen toteuttamista.",
+  level_lost            = {
+    utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
+  },
 }
 
 -- 14. Misc

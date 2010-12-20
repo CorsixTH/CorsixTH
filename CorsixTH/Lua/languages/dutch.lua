@@ -177,6 +177,9 @@ staff_descriptions = {
 information = {
   custom_game = "Welkom bij CorsixTH. Veel plezier met dit Eigen Level!",
   cannot_restart = "Dit Eigen Spel is opgeslagen voor de Herstart-functie was ge\137mplementeerd.",
+  level_lost = {
+    "Balen! Je hebt het level verloren. Volgende keer beter!",
+  },
 }
 staff_list = {
   morale = "MORAAL",
@@ -1754,7 +1757,6 @@ letter = {
     [3] = "Accepteer asjeblieft deze positie. Het werk is niet zwaar en we geven je een auto en een politie escorte waar je ook gaat.//",
     [4] = "",
   },
-  level_lost = "Balen! Je hebt het level verloren. Volgende keer beter!",
   dear_player = "Beste %s",
   custom_level_completed = "Goed werk! Je hebt alle doelen voor dit Eigen Level behaald!",
   return_to_main_menu = "Wil je teruggaan naar het hoofdmenu of wil je doorspelen?",

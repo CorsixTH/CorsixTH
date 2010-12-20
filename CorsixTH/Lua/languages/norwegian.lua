@@ -101,7 +101,6 @@ letter = {
   dear_player = utf8 "Kjære %s",
   custom_level_completed = utf8 "Bra gjort! Du har fullfört alle utfordringene på dette brukerdefinerte brettet.!",
   return_to_main_menu = utf8 "Vil du returnere til hovedmenyen eller fortsette å spille?",
-  level_lost = "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
 }
 
 install = {
@@ -290,6 +289,9 @@ confirmation = {
 information = {
   custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
   cannot_restart = "Dette spillet ble desverre lagret för restartfunksjonen ble implementert.",
+  level_lost = {
+    "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
+  },
 }
 tooltip.information = {
   close = "Lukk dialogen med informasjon",

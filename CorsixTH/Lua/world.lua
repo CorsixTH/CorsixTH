@@ -784,11 +784,11 @@ function World:onEndMonth()
   
   -- Check if a player has won the level.
   for i = 1,4 do
-    local state = self:checkWinningConditions(i)
-    if state == "win" then
+    local res = self:checkWinningConditions(i)
+    if res.state == "win" then
       self:winGame(i)
-    elseif state == "lose" then
-      self:loseGame(i)
+    elseif res.state == "lose" then
+      self:loseGame(i, res.reason, res.limit)
       if i == 1 then
         return true
       end
@@ -796,18 +796,22 @@ function World:onEndMonth()
   end
 end
 
---! Checks if all goals have been achieved or if the player has lost. Returns "win" if
--- all goals are completed, "lose" if the player is below any minimum value and "nothing"
--- otherwise.
+--! Checks if all goals have been achieved or if the player has lost.
+--! Returns a table that always contains a state string ("win", "lose" or "nothing").
+--! If the state is "lose", the table also contains a reason string, which corresponds to the
+--! criterion name the player lost to (reputation, balance, percentage_killed)
+--! and a number limit which corresponds to the limit the player passed.
 --!param player_no The index of the player to check in the world's list of hospitals
 function World:checkWinningConditions(player_no)
+  -- If there are no goals at all, don't prompt the player each month that he/she has won.
+  if #self.goals == 0 then
+    return {state = "nothing"}
+  end
   local hosp = self.hospitals[player_no]
   local criteria = self.level_criteria
   local active = self.goals
   -- Default is to win. As soon as a goals that doesn't support this is found it is changed.
-  local result = "win"
-  -- If there are no goals at all, don't prompt the player each month that he/she has won.
-  local sandbox = true
+  local result = {state = "win"}
   -- Go through the goals
   for i, tab in ipairs(self.goals) do
     local criterion = criteria[tab.criterion].name
@@ -819,28 +823,26 @@ function World:checkWinningConditions(player_no)
     end
     if active[criterion].lose_value then
       local lose = active[criterion].lose_value
+      -- TODO this seems to be a hack that misuses boundary to determine if it is a min 
+      -- or a max value to reach. Use MinMax property (not yet read from level file) instead.
       modifier = 1 - ((current - lose)/(active[criterion].boundary - lose))
       -- Is this a minimum that has been passed?
       if modifier > 1 then
-        result = "lose"
+        result.state = "lose"
+        result.reason = criterion
+        result.limit = lose
         break
       end
     end
     if active[criterion].win_value then
-      sandbox = false
       modifier = current/active[criterion].win_value
       -- Is this goal not fulfilled yet?
       if modifier < 1 then
-        result = "nothing"
-        break
+        result.state = "nothing"
       end
     end
   end
-  if sandbox then
-    return "nothing"
-  else
-    return result
-  end
+  return result
 end
 
 function World:winGame(player_no)
@@ -892,9 +894,18 @@ function World:winGame(player_no)
   end
 end
 
-function World:loseGame(player_no)
+--! Cause the player with the player number player_no to lose.
+--!param player_no (number) The number of the player which should lose.
+--!param reason (string) [optional] The name of the criterion the player lost to.
+--!param limit (number) [optional] The number the player went over/under which caused him to lose.
+function World:loseGame(player_no, reason, limit)
   if player_no == 1 then -- TODO: Multiplayer
-    self.ui.app:loadMainMenu(_S.letter.level_lost)
+    local message = {_S.information.level_lost[1]}
+    if reason then
+      message[2] = _S.information.level_lost[2]
+      message[3] = _S.information.level_lost[reason]:format(limit)
+    end
+    self.ui.app:loadMainMenu(message)
   end
 end
 

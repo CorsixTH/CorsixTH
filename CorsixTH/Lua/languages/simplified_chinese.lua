@@ -1697,6 +1697,9 @@ adviser = {
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  level_lost = {
+    "Bummer! You failed the level. Better luck next time!",
+  },
 }
 casebook = {
   sent_home = utf8 "转走",
@@ -2482,7 +2485,6 @@ letter = {
     [2] = utf8 "您的成就使您成为最好的医院管理者。卫生部将向您提供$%d作为奖励，并召开庆祝会。整个世界都在为您沸腾，太棒了！",
     [3] = utf8 "请接受我们的安排。如果您不再希望辛苦工作，我们将向您提供一辆轿车，且无论走到那里，都有警察为您开路。",
   },
-  level_lost = "Bummer! You failed the level. Better luck next time!",
   custom_level_completed = "Well done! You've completed all goals on this custom level!",
   return_to_main_menu = "Would you like to return to the main menu or continue playing?",
   dear_player = "Dear %s",
