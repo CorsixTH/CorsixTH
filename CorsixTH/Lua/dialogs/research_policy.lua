@@ -63,8 +63,8 @@ function UIResearch:UIResearch(ui)
   self.adjust_buttons = {}
   for i, area in ipairs(research_categories) do
     self.adjust_buttons[area] = {
-      less = self:addPanel(0, c1, topy+i*spacing):makeButton(0, 0, size, size, 1, function() end),
-      more = self:addPanel(0, c2, topy+i*spacing):makeButton(0, 0, size, size, 2, function() end),
+      less = self:addPanel(0, c1, topy+i*spacing):makeButton(0, 0, size, size, 1, --[[persistable:research_less_stub]] function() end),
+      more = self:addPanel(0, c2, topy+i*spacing):makeButton(0, 0, size, size, 2, --[[persistable:research_more_stub]] function() end),
     }
   end
   

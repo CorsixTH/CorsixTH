@@ -125,7 +125,7 @@ function Hospital:Hospital(world)
     local drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil
     local drug_cost = 100
     if expertise then
-      disease_available = expertise[disease.expertise_id].Known == 1 and true or false
+      disease_available = expertise[disease.expertise_id].Known == 1
       -- This means that the config is available
       drug_effectiveness = gbv.StartRating
       drug_cost = gbv.StartCost
@@ -153,6 +153,9 @@ function Hospital:Hospital(world)
         pseudo = disease.pseudo, -- Diagnosis is pseudo
       }
       self.disease_casebook[disease.id] = info
+      if disease_available and not disease.pseudo then
+        self.discovered_diseases[#self.discovered_diseases + 1] = disease.id
+      end
     end
   end
 end
