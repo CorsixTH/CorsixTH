@@ -111,14 +111,14 @@ menu_debug = {
   transparent_walls     = utf8 "  (X) LÄPINÄKYVÄT SEINÄT  ",
   limit_camera          = utf8 "  RAJOITETTU KAMERA  ",
   disable_salary_raise  = utf8 "  ESTÄ PALKAN KOROTTAMINEN  ",
-  make_debug_fax        = utf8 "  (F8) LUO DEBUG FAKSI  ",
+  make_debug_fax        = utf8 "  (F8) LUO DEBUG-FAKSI  ",
   make_debug_patient    = utf8 "  (F9) LISÄÄ DEBUG-POTILAS  ",
   cheats                = utf8 "  (F11) HUIJAUKSET  ",
+  lua_console           = utf8 "  (F12) LUA-KOMENTORIVI  ",
   dump_strings          = utf8 "  DUMPPAA TEKSTIT  ",
   dump_gamelog          = utf8 "  (CTRL+D) DUMPPAA PELILOGI  ",
   map_overlay           = utf8 "  KARTTAKERROKSET  ",
   sprite_viewer         = utf8 "  SPRITE-KATSELIN  ",
-  lua_console           = utf8 "  (F12) LUA-KOMENTORIVI  ",
 }
 
 menu_debug_overlay = {
@@ -134,6 +134,39 @@ menu_debug_overlay = {
   byte_6        = utf8 "  TAVU 6  ",
   byte_7        = utf8 "  TAVU 7  ",
   parcel        = utf8 "  PAKETTI  ",
+}
+
+menu_options_game_speed = {
+  slowest               = utf8 "  (1) HITAIN  ",
+  slower                = utf8 "  (2) HITAAMPI  ",
+  normal                = utf8 "  (3) NORMAALI  ",
+  max_speed             = utf8 "  (4) MAKSIMINOPEUS  ",
+  and_then_some_more    = utf8 "  (5) JA VÄHÄN PÄÄLLE  ",
+  pause                 = utf8 "  (P) PYSÄYTÄ  "
+}
+
+cheats_window = {
+  caption       = utf8 "Huijaukset",
+  warning       = utf8 "Varoitus: Et saa yhtään bonuspisteitä tason jälkeen, jos käytät huijauksia!",
+  close         = utf8 "Sulje",
+  cheated = {
+    no  = utf8 "Huijauksia käytetty: Ei",
+    yes = utf8 "Huijauksia käytetty: Kyllä",
+  },
+  cheats = {
+    money               = utf8 "Rahahuijaus",
+    all_research        = utf8 "Kaikki tutkimus -huijaus",
+    emergency           = utf8 "Luo hätätilanne",
+    create_patient      = utf8 "Luo potilas",
+    end_month           = utf8 "Siirry kuukauden loppuun",
+    end_year            = utf8 "Siirry vuoden loppuun",
+    lose_level          = utf8 "Häviä",
+    win_level           = utf8 "Voita",
+  },
+}
+
+debug_patient_window = {
+  caption = utf8 "Debug-potilas",
 }
 
 -- 4. Adviser
@@ -204,30 +237,6 @@ new_game_window = {
   tutorial      = utf8 "Esittely",
   easy          = utf8 "Harjoittelija (Helppo)",
   medium        = utf8 "Tohtori (Keskitaso)",
-}
-
-cheats_window = {
-  caption       = utf8 "Huijaukset",
-  warning       = utf8 "Varoitus: Et saa yhtään bonuspisteitä tason jälkeen, jos käytät huijauksia!",
-  close         = utf8 "Sulje",
-  cheated = {
-    no  = utf8 "Huijauksia käytetty: Ei",
-    yes = utf8 "Huijauksia käytetty: Kyllä",
-  },
-  cheats = {
-    money               = utf8 "Rahahuijaus",
-    all_research        = utf8 "Kaikki tutkimus -huijaus",
-    emergency           = utf8 "Luo hätätilanne",
-    create_patient      = utf8 "Luo potilas",
-    end_month           = utf8 "Siirry kuukauden loppuun",
-    end_year            = utf8 "Siirry vuoden loppuun",
-    lose_level          = utf8 "Häviä",
-    win_level           = utf8 "Voita",
-  },
-}
-
-debug_patient_window = {
-  caption = utf8 "Debug-potilas",
 }
 
 -- 6. Tooltip
@@ -616,6 +625,10 @@ information = {
   cannot_restart        = utf8 "Valitettavasti tämä peli on tallennettu ennen uudelleen käynnistämisen toteuttamista.",
   level_lost            = {
     utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
+    utf8 "Syy tappioosi oli:",
+    reputation          = utf8 "Maineesi putosi alle %d:n.",
+    balance             = utf8 "Pankkitilisi saldo (vähennettynä velalla) putosi alle %d$:n.",
+    percentage_killed   = utf8 "Olet tappanut yli %d prosenttia potilaista.",
   },
 }
 
@@ -1148,16 +1161,6 @@ menu_options = {
   edge_scrolling        = utf8 "  REUNAVIERITYS  ",
   settings              = utf8 "  ASETUKSET  ",
   lock_windows          = utf8 "  LUKITSE IKKUNAT  "
-}
-
--- Menu Options Game Speed
-menu_options_game_speed = {
-  slowest               = utf8 "  HITAIN  ",
-  slower                = utf8 "  HITAAMPI  ",
-  normal                = utf8 "  NORMAALI  ",
-  max_speed             = utf8 "  MAKSIMINOPEUS  ",
-  and_then_some_more    = utf8 "  JA VÄHÄN PÄÄLLE  ",
-  pause                 = utf8 "  PYSÄYTÄ  "
 }
 
 -- Menu Display
