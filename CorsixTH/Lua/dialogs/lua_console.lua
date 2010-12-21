@@ -52,7 +52,7 @@ function UILuaConsole:UILuaConsole(ui)
 
   local app = ui.app
   self.modal_class = "console"
-  self.esc_closes = false
+  self.esc_closes = true
   self.resizable = true
   self:setDefaultPosition(0.1, 0.1)
   

@@ -677,6 +677,9 @@ tutorial_phases = {
     { text = _S.adviser.tutorial.confirm_room,                  -- 15
       begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
+    { text = _S.adviser.tutorial.information_window,            -- 16
+      begin_callback = function() TheApp.ui:getWindow(UIInformation):startButtonBlinking(1) end,
+      end_callback = function() TheApp.ui:getWindow(UIInformation):stopButtonBlinking() end, },
   },
   
   {
@@ -693,16 +696,9 @@ tutorial_phases = {
     _S.adviser.tutorial.place_doctor,                  -- 4
     _S.adviser.tutorial.doctor_in_invalid_position,    -- 5
   },
-  -- apparently unused tutorial strings:
-  -- [11][63]
-  -- [11][64]
-  -- original TH continues here with three boxes displaying some more text:
-  -- [54][94] to [54][96]
-  -- [54][97] to [54][99]
-  -- [54][101] to [54][103]
   {
-    { text = _S.adviser.tutorial.build_pharmacy,
-      begin_callback = function() 
+    -- 5) end of tutorial
+    { begin_callback = function()
         local texts = {
           _S.introduction_texts["level15"],
           _S.introduction_texts["level1"],
@@ -711,7 +707,7 @@ tutorial_phases = {
         -- the real game uses three.
         if not TheApp.using_demo_files then
           table.insert(texts, 2, _S.introduction_texts["level16"])
-          table.remove(texts, 3, _S.introduction_texts["level17"])
+          table.insert(texts, 3, _S.introduction_texts["level17"])
         end
         TheApp.ui:addWindow(UIInformation(TheApp.ui, {texts}))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
@@ -765,8 +761,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
   local new_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
-  local str
-  local callback
+  local str, callback
   if type(new_phase) == "table" then
     str = new_phase.text
     callback = new_phase.begin_callback
@@ -775,7 +770,9 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
     
   if str then
-    self.adviser:say(str, true)
+    self.adviser:say(str)
+  else
+    self.adviser.stay_up = nil
   end
   if callback then
     callback(...)

@@ -437,6 +437,7 @@ adviser = {
     place_objects                 = S[11][51],
     object_in_invalid_position    = S[11][56],
     confirm_room                  = S[11][59],
+    information_window            = S[11][64],
     
     -- 4) hire doctor
     hire_doctor                   = S[11][32],
@@ -445,11 +446,8 @@ adviser = {
     place_doctor                  = S[11][40],
     doctor_in_invalid_position    = S[11][60],
     
-    -- apparently unused tutorial strings:
-    -- [11][63]
-    -- [11][64]
-    
-    -- 5) Pharmacy / end of tutorial
+    -- (currently) unused
+    start_tutorial                = S[11][63],
     build_pharmacy                = S[11][65],
   },
   

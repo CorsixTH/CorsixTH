@@ -112,6 +112,7 @@ function UIInformation:hitTest(x, y)
 end
 
 function UIInformation:close()
+  self.ui:tutorialStep(3, 16, "next")
   Window.close(self)
   if self.additional_text and #self.additional_text[1] > 0 then
     self.ui:addWindow(UIInformation(self.ui, self.additional_text))

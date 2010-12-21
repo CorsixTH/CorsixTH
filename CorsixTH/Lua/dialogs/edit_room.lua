@@ -216,7 +216,7 @@ function UIEditRoom:confirm(force)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
-    self.ui:tutorialStep(3, 15, "next")
+    self.ui:tutorialStep(3, 15, 16)
     self:close()
   end
 end
