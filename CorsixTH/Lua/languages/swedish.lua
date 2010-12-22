@@ -59,7 +59,14 @@ menu_options = {
   settings = utf8 "  INSTÄLLNINGAR  ",
 }
 
-menu_options_game_speed.pause = "  PAUSA  "
+menu_options_game_speed = {
+  pause               = "  (P) PAUSA  ",
+  slowest             = utf8 "  (1) LÅNGSAMMAST  ",
+  slower              = utf8 "  (2) LÅNGSAMMARE  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) MAXHASTIGHET  ",
+  and_then_some_more  = utf8 "  (5) OCH SÅ LITE TILL  ",
+}
 
 menu_file.restart = "  STARTA OM  "
 
@@ -72,6 +79,7 @@ menu_debug = {
   make_debug_patient          = "  (F9) SKAPA DEBUGPATIENT  ",
   cheats                      = "  (F11) FUSK  ",
   lua_console                 = "  (F12) LUATERMINAL  ",
+  calls_dispatcher            = "  ANROPSKLARERARE  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
   dump_gamelog                = "  (CTRL+D) DUMPA SPELLOGG  ",
   map_overlay                 = utf8 "  KARTÖVERSIKT  ",
@@ -273,6 +281,10 @@ information = {
   cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
   level_lost = {
     utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
+    utf8 "Anledning till att du förlorade:",
+    reputation = utf8 "Ditt anseende föll under %d.",
+    balance = utf8 "Din bankbalans sjönk till under %d.",
+    percentage_killed = utf8 "Du dödade mer än %d procent av dina patienter.",
   },
 }
 
@@ -346,4 +358,30 @@ tooltip.cheats_window = {
     lose_level = utf8 "Förlora nuvarande nivå.",
     win_level = utf8 "Vinn nuvarande nivå.",
   }
+}
+
+introduction_texts = {
+  demo = {
+    utf8 "Välkommen till demosjukhuset!",
+    utf8 "Tyvärr innehåller demon bara denna nivå (förutom specialnivåer). Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
+    utf8 "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
+    utf8 "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
+    utf8 "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",
+    "Lycka till!",
+  },
+}
+
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary = "%d anrop; %d tilldelade",
+  staff = "%s - %s",
+  watering = "Vattnar @ %d,%d",
+  repair = "Reparera %s",
+  close = utf8 "Stäng",
+}
+
+tooltip.calls_dispatcher = {
+  task = utf8 "Lista över uppgifter - klicka på en uppgift för att öppna tilldelad personals fönster och flytta vyn till det ställe där uppgiften finns.",
+  assigned = utf8 "Denna ruta är markerad om någon har fått uppgiften tilldelad till sig.",
+  close = utf8 "Stäng anropsklarerardialogen",
 }
