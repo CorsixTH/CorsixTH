@@ -132,7 +132,8 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     -- Check if we're using the demo files. If we are, that special config should be loaded.
     if self.app.using_demo_files then
       -- Try to load our own configuration file for the demo. 
-      errors, result = self:loadMapConfig("Levels" .. pathsep .. "demo.level", base_config, true)
+      local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "demo.level"
+      errors, result = self:loadMapConfig(p, base_config, true)
       if errors then
         print("Warning: Could not find the demo configuration, try reinstalling the game")
       end
