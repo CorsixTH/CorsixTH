@@ -89,6 +89,7 @@ menu_debug = {
   make_debug_patient          = utf8 "  (F9) CREAR PACIENTE DE DEPURACIÓN  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",
+  calls_dispatcher            = "  LLAMAR A CONTROLADOR  ",
   dump_strings                = "  VOLCAR TEXTOS DEL JUEGO  ",
   dump_gamelog                = "  (CTRL+D) VOLCAR REGISTRO DEL JUEGO  ",
   map_overlay                 = "  SOBREPONER MAPA  ",
@@ -367,4 +368,30 @@ tooltip.cheats_window = {
     lose_level = "Perder el nivel actual.",
     win_level = "Ganar el nivel actual.",
   }
+}
+
+introduction_texts = {
+  demo = {
+    utf8 "¡Bienvenido al hospital de demostración!",
+    utf8 "Por desgracia, la versión de demostración solo contiene este nivel (además de los niveles personalizados). Sin embargo, tienes más que suficiente para estar entretenido por un rato.",
+    utf8 "Te enfrentarás a varias enfermedades que necesitan de ciertas habitaciones para su cura. De vez en cuando pueden surgir emergencias. Y necesitarás investigar sobre las enfermedades construyendo un Departamento de investigación.",
+    utf8 "Tu objetivo es ganar 100.000 dólares, que el valor de tu hospital llegue hasta 70.000 dólares y tengas una reputación de 700, con un porcentaje de pacientes curados del 75%.",
+    utf8 "Procura que tu reputación no caiga por debajo de 300 y que no mates a más del 40% de tus pacientes, o fracasarás.",
+    utf8 "¡Buena suerte!",
+  },
+}
+
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary = "%d llamadas; %d asignadas",
+  staff = "%s - %s",
+  watering = "Regando @ %d,%d",
+  repair = "Reparar %s",
+  close = "Cerrar",
+}
+
+tooltip.calls_dispatcher = {
+  task = utf8 "Lista de tareas - puslsa en una tarea para abrir la ventana del personal asignado y desplázate hasta la posición de la tarea.",
+  assigned = utf8 "Esta opción está activada si alguien ha sido asignado a la tarea correspondiente.",
+  close = utf8 "Cerrar la ventana de llamadas de control.",
 }
