@@ -115,6 +115,7 @@ menu_debug = {
   make_debug_patient    = utf8 "  (F9) LISÄÄ DEBUG-POTILAS  ",
   cheats                = utf8 "  (F11) HUIJAUKSET  ",
   lua_console           = utf8 "  (F12) LUA-KOMENTORIVI  ",
+  calls_dispatcher      = utf8 "  TEHTÄVIEN VÄLITYS  ",
   dump_strings          = utf8 "  DUMPPAA TEKSTIT  ",
   dump_gamelog          = utf8 "  (CTRL+D) DUMPPAA PELILOGI  ",
   map_overlay           = utf8 "  KARTTAKERROKSET  ",
@@ -167,6 +168,15 @@ cheats_window = {
 
 debug_patient_window = {
   caption = utf8 "Debug-potilas",
+}
+
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary       = utf8 "%d tehtävää; %d välitetty",
+  staff         = utf8 "%s - %s",
+  watering      = utf8 "Kastellaan @ %d,%d",
+  repair        = utf8 "Korjaa %s",
+  close         = utf8 "Sulje",
 }
 
 -- 4. Adviser
@@ -313,15 +323,21 @@ tooltip = {
   cheats_window = {
     close = utf8 "Sulje huijaukset-ikkuna",
     cheats = {
-      money             = utf8 "Lisää 10.000 pankkitilillesi.",
-      all_research      = utf8 "Saat kaiken tutkimuksen valmiiksi.",
-      emergency         = utf8 "Luo hätätilanteen.",
-      create_patient    = utf8 "Luo potilaan kartan reunalle.",
-      end_month         = utf8 "Siirtää aikaa eteenpäin kuukauden loppuun.",
-      end_year          = utf8 "Siirtää aikaa eteenpäin vuoden loppuun.",
-      lose_level        = utf8 "Häviät tämän tason.",
-      win_level         = utf8 "Voitat tämän tason.",
+      money             = utf8 "Lisää 10.000 pankkitilillesi",
+      all_research      = utf8 "Saat kaiken tutkimuksen valmiiksi",
+      emergency         = utf8 "Luo hätätilanteen",
+      create_patient    = utf8 "Luo potilaan kartan reunalle",
+      end_month         = utf8 "Siirtää aikaa eteenpäin kuukauden loppuun",
+      end_year          = utf8 "Siirtää aikaa eteenpäin vuoden loppuun",
+      lose_level        = utf8 "Häviät tämän tason",
+      win_level         = utf8 "Voitat tämän tason",
     },
+  },
+
+  calls_dispatcher = {
+    task        = utf8 "Tehtävälista - klikkaa tehtävää avataksesi sitä suorittavan henkilökunnan jäsenen ikkunan ja keskittääksesi näkymän tehtävän kohteeseen",
+    assigned    = utf8 "Tässä on merkki, kun vastaava tehtävä on välitetty jonkun tehtäväksi",
+    close       = utf8 "Sulje tehtävien välitys -ikkuna",
   },
 }
 
@@ -340,6 +356,14 @@ install = {
 
 -- 9. Level introductions
 introduction_texts = {
+  demo = {
+    [1] = utf8 "Tervetuloa demosairaalaan!",
+    [2] = utf8 "Valitettavasti demoversio sisältää ainoastaan tämän tason (itse luotuja tasoja lukuun ottamatta). Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä!",
+    [3] = utf8 "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla.",
+    [4] = utf8 "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70,000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi.",
+    [5] = utf8 "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason.",
+    [6] = utf8 "Onnea!",
+  },
   level1 = {
     [1] = utf8 "Tervetuloa ensimmäiseen sairaalaasi!//",
     [2] = utf8 "Pääset alkuun rakentamalla vastaanottopöydän ja yleislääkärin toimiston sekä palkkaamalla vastaanottoapulaisen ja lääkärin. ",
@@ -1826,6 +1850,7 @@ adviser = {
   
   -- Tutorial
   tutorial = {
+    start_tutorial                      = utf8 "Lue tason kuvaus ja klikkaa hiiren vasemmalla painikkeella aloittaaksesi esittelyn.",
     build_reception                     = utf8 "Hei! Ensimmäisenä sairaalasi tarvitsee vastaanoton. Löydät sen osta kalusteita -valikosta.",
     order_one_reception                 = utf8 "Klikkaa hiiren vasemmalla painikkeella kerran vilkkuvaa aluetta valitaksesi yhden vastaanoton.",
     accept_purchase                     = utf8 "Klikkaa nyt vilkkuvaa aluetta ostaaksesi valitsemasi kalusteet.",
@@ -1859,6 +1884,7 @@ adviser = {
     place_door                          = utf8 "Siirrä hiiri pohjapiirrustuksen reunalle asettaaksesi ovi haluamaasi paikkaan.",
     room_big_enough                     = utf8 "Pohjapiirrustus on riittävän suuri. Kun päästät hiiren painikkeen, asetat sen paikalleen. Voit halutessasi jatkaa sen muokkaamista.",
     build_pharmacy                      = utf8 "Onnittelut! Seuraavaksi kannattaa rakentaa Apteekki ja palkata sairaanhoitaja, jotta sairaalasi on täysin toimintavalmis.",
+    information_window                  = utf8 "Tiedoteikkunassa kerrotaan lisätietoja juuri rakentamastasi yleislääkärin toimistosta.",
   },
   
   -- Epidemic
