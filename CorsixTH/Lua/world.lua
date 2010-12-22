@@ -855,7 +855,7 @@ function World:winGame(player_no)
     if tonumber(self.map.level_number) then
       local no = tonumber(self.map.level_number)
       local repeated_offer = false -- TODO whether player was asked previously to advance and declined
-      local has_next = no < 12
+      local has_next = no < 12 and not TheApp.using_demo_files
       -- Letters 1-4  normal
       -- Letters 5-8  repeated offer
       -- Letters 9-12 last level
