@@ -368,3 +368,14 @@ tooltip.cheats_window = {
     win_level = "Das aktuelle Level gewinnen.",
   }
 }
+
+introduction_texts = {
+  demo = {
+    "Willkommen im Demo-Krankenhaus!",
+    utf8 "Leider beinhaltet die Demo-Version nur dieses eine Level (abgesehen von eigenen Levels). Dafür gibt es hier aber mehr als genug zu tun um Sie eine Weile zu beschäftigen!",
+    utf8 "Sie werden diversen Krankheiten begegnen, die unterschiedliche Räume zur Behandlung benötigen. Ab und zu können auch Notfälle eintreffen. Und Sie werden mithilfe einer Forschungsabteilung neue Räume erforschen müssen.",
+    utf8 "Ihr Ziel ist es, 100.000 DM zu verdienen, einen Krankenhauswert von 70.000 DM und einen Ruf von 700 vorzuweisen, und gleichzeitig mindestens 75% der Patienten erfolgreich zu behandeln.",
+    utf8 "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren.",
+    utf8 "Viel Glück!",
+  },
+}

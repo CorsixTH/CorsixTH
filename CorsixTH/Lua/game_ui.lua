@@ -699,16 +699,17 @@ tutorial_phases = {
   {
     -- 5) end of tutorial
     { begin_callback = function()
-        local texts = {
-          _S.introduction_texts["level15"],
-          _S.introduction_texts["level1"],
-        }
         -- The demo uses a single string for the post-tutorial info while
         -- the real game uses three.
-        if not TheApp.using_demo_files then
-          table.insert(texts, 2, _S.introduction_texts["level16"])
-          table.insert(texts, 3, _S.introduction_texts["level17"])
-        end
+        local texts = TheApp.using_demo_files and {
+          _S.introduction_texts["level15"],
+          _S.introduction_texts["demo"],
+        } or {
+          _S.introduction_texts["level15"],
+          _S.introduction_texts["level16"],
+          _S.introduction_texts["level17"],
+          _S.introduction_texts["level1"],
+        }
         TheApp.ui:addWindow(UIInformation(TheApp.ui, {texts}))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
@@ -770,7 +771,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
     
   if str then
-    self.adviser:say(str)
+    self.adviser:say(str, true)
   else
     self.adviser.stay_up = nil
   end
@@ -825,7 +826,7 @@ function GameUI:showBriefing()
   local level = self.app.world.map.level_number
   local text = {_S.information.custom_game}
   if type(level) == "number" then
-    text = _S.introduction_texts["level" .. level]
+    text = _S.introduction_texts[TheApp.using_demo_files and "demo" or "level" .. level]
   elseif self.app.world.map.level_intro then
     text = {self.app.world.map.level_intro}
   end
