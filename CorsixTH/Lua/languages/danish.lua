@@ -33,11 +33,11 @@ calls_dispatcher = {
 
   menu_debug = {
   jump_to_level               = utf8 "  Gå til runde  ",
-  transparent_walls           = utf8 "  TRANSPERANTE VÆGE  ",
+  transparent_walls           = utf8 "  (K) TRANSPERANTE VÆGE  ",
   limit_camera                = utf8 "  BEGRÆNS KAMERAET  ",
   disable_salary_raise        = utf8 "  STOP LÖNFORHÖJELSER  ",
   make_debug_fax              = "  (F8) LAV FEJLFINDINGS FAX  ",
-  make_debug_patient          = utf8 "  LAV FEJLFINDINGS PATIENT  ",
+  make_debug_patient          = utf8 " (F9) LAV FEJLFINDINGS PATIENT  ",
   spawn_patient               = utf8 "  GENERER TILFÆLDIG PATIENT  ",
   make_adviser_talk           = utf8 "  FÄ RÄDGIVEREN TIL AT SNAKKE  ",
   show_watch                  = "  VIS URET ",
@@ -45,21 +45,21 @@ calls_dispatcher = {
   place_objects               = "  PLACER OBJEKTER  ",
   cheats                      = "  (F11) SNYD  ",
   lua_console                 = "  (F12) LUA KONSOLE  ",
-  calls_dispatcher            = utf8 "  KALD På DISPATCHER  ",
+  calls_dispatcher            = utf8 "  KALD På AFSENDER  ",
   dump_strings                = "  DUMP TEKT  ",
-  dump_gamelog                = "  DUMP SPILLOG  ",
+  dump_gamelog                = "  (CTRL + D) DUMP SPILLOG  ",
   map_overlay                 = "  KORTOVERSIGT  ",
   sprite_viewer               = "  SPRITE VISER  ",
 }
   
   tooltip.calls_dispatcher = {
-  task = utf8 "Liste over opgaver -  klik for at åbne det tildelte personales vindue og scroll til den oenskede opgave",
+  task = utf8 "Liste over opgaver -  klik for at åbne det tildelte personales vindue og scroll til den önskede opgave",
   assigned = utf8 "Dette valgfelt er markeret hvis nogen har fået tildelt den pågældende opgave opgave.",
   close = utf8 "Luk dialogen",
 }
 
 menu_options = {
-  lock_windows = "  FRYS VINDUER  ",
+  lock_windows = utf8 "  LÅS VINDUER  ",
   edge_scrolling = "  KANT SCROLLING  ",
   settings = "  INDSTILLINGER  ",
 }
@@ -229,9 +229,9 @@ information = {
   custom_game = "Velkommen til CorsixTH. Hav det sjovt med denne special bane!",
   cannot_restart = utf8 "Beklageligvis så er denne special bane lavet för at genstart funtionen blev implanteret.",
 level_lost = {
-    utf8 "æv! Du gennemfoerte ikke runden. Bedre held næste gang!",
+    utf8 "æv! Du gennemförte ikke runden. Bedre held næste gang!",
     "Grundene til du tabte:",
-    reputation = utf8 "Dit omdoemme var under %d.",
+    reputation = utf8 "Dit omdömme var under %d.",
     balance = utf8 "Din bankbalance (eks. lån) var under %d.",
     percentage_killed = utf8 "Du har dræbt mere end %d procent af patienterne.",
   },
@@ -328,18 +328,18 @@ menu_options = {
   settings            = "  INDSTILLINGER  ",
 }
 menu_options = {
-  lock_windows = "  FRYS VINDUER  ",
+  lock_windows = utf8 "  LÅS VINDUER  ",
   edge_scrolling = "  KANT SCROLLING  ",
   settings = "  INDSTILLINGER  ",
 }
   
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
-  slowest             = "  LANGSOMMEST  ",
-  slower              = "  LANGSOMMERE  ",
-  normal              = "  NORMAL  ",
-  max_speed           = "  HURTIGST  ",
-  and_then_some_more  = utf8 "  OGSÅ LIGE LIDT MERE  ",
+  slowest             = "  (1) LANGSOMMEST  ",
+  slower              = "  (2) LANGSOMMERE  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) HURTIGST  ",
+  and_then_some_more  = utf8 "  (5) OGSÅ LIGE LIDT MERE  ",
 }  
 
 menu_display = {
@@ -403,6 +403,83 @@ staff_title = {
   consultant            = "Konsulent",
   researcher            = "Forsker",
 }
+  
+-- Staff descriptions
+staff_descriptions = {
+  good = {
+    [1] = utf8 " Altid glad og en flittig arbejder.",
+    [2] = utf8 " Meget pligtopfyldende. Meget omsorgsfuld.",
+    [3] = utf8 " Er meget alsidig.",
+    [4] = utf8 " Er venlig og altid i godt humör.",
+    [5] = utf8 " Ekstremt udholdende. Löber en tur hver dag. ",
+    [6] = utf8 " Utrolig höflig og er godt opdraget.",
+    [7] = utf8 " Utrolig dygtig og talentfuld.",
+    [8] = utf8 " Er meget opsat på at vise hvem han er.",
+    [9] = utf8 " Er en perfektionist som aldrig giver op. ",
+    [10] = utf8 " Hjælper altid patienter med et smil.",
+    [11] = utf8 " Sjarmerende, höflig og hjælpsom.",
+    [12] = utf8 " Er motiveret og dedikeret.",
+    [13] = utf8 " Stille af natur, men arbejder meget.",
+    [14] = utf8 " Loyal og venlig.",
+    [15] = utf8 " Eftertænksom og er altid til at stole på i akutte tilfælde.",
+  },
+  misc = {
+    [1] = utf8 " Spiller golf. ",
+    [2] = utf8 " Dykker efter muslinger. ",
+    [3] = utf8 " Laver is-skulpturer. ",
+    [4] = utf8 " Drikker vin. ",
+    [5] = utf8 " Körer rally. ",
+    [6] = utf8 " Strikker i fritiden",
+    [7] = utf8 " Samler på frimærker. ",
+    [8] = utf8 " Elsker at stage-dive. ",
+    [9] = utf8 " Elsker at surfe. ",
+    [10] = utf8 " Elsker at undervise elever.",
+    [11] = utf8 " Destillerer whisky. ",
+    [12] = utf8 " Gör-det-selv ekspert. ",
+    [13] = utf8 " Elsker franske kunstfilm. ",
+    [14] = utf8 " Spiller meget Theme Park. ",
+    [15] = utf8 " Har certifikat klasse C. ",
+    [16] = utf8 " Deltager i motorcykelræs. ",
+    [17] = utf8 " Spiller klassisk violin og cello. ",
+    [18] = utf8 " Entusiastisk tog-förer. ",
+    [19] = utf8 " Hundeelsker. ",
+    [20] = utf8 " Hörer meget radio. ",
+    [21] = utf8 " Bader ofte. ",
+    [22] = utf8 " Instruktör i bambusfletning. ",
+    [23] = utf8 " Laver figurer af grönsager. ",
+    [24] = utf8 " Deltids minerydder. ",
+    [25] = utf8 " Quizvært. ",
+    [26] = utf8 " Samler på splinter fra 2.verdenskrig. ",
+    [27] = utf8 " Elsker at indrette. ",
+    [28] = utf8 " Hörer på rave og hip-hop musik. ",
+    [29] = utf8 " Dræber insekter med deodorantspray. ",
+    [30] = utf8 " Pifter af dårlige standupartister. ",
+    [31] = utf8 " Stillet op til sygehusrådet. ",
+    [32] = utf8 " Gartner med en hemmeligopskrift. ",
+    [33] = utf8 " Smugler uægte malerier. ",
+    [34] = utf8 " Vokalist i et rock'n'roll-band. ",
+    [35] = utf8 " Elsker at se fjernsyn i dagtimerne. ",
+    [36] = utf8 " Fisker efter örret. ",
+    [37] = utf8 " Lurer på turister på museum. ",
+  },
+  bad = {
+    [1] = utf8 " Langsom og anmasende. ",
+    [2] = utf8 " Træt og meget lidt motivert. ",
+    [3] = utf8 " Dårlig trænet og ubrugelig. ",
+    [4] = utf8 " Dum i arbejde. Er en reserve. ",
+    [5] = utf8 " Lav udholdenhed. Har en dårlig attitude. ",
+    [6] = utf8 " Meget döv. Lugter af kål. ",
+    [7] = utf8 " Er ligeglad med jobbet. Tager meget lidt ansvar. ",
+    [8] = utf8 " Konsentrationsvanskligheder og bliver let distrahert. ",
+    [9] = utf8 " Stresset og laver mange fejl. ",
+    [10] = utf8 " Let at provokere. Sidder meget på en stol. ",
+    [11] = utf8 " Uforsigtig og uheldig. ",
+    [12] = utf8 " Bryder sig ikke om jobbet. Inaktiv. ",
+    [13] = utf8 " Dumdristig og laver meget lidt. ",
+    [14] = utf8 " Snu, udspekulert og bagtaler andre. ",
+    [15] = utf8 " Arrogant og er en karl-smart. ",
+  },
+}   
 
 pay_rise = {
   definite_quit = "Ligemeget hvad end du gör så kan du ikke beholde mig her, jeg er træt af det her sted!",
@@ -438,12 +515,6 @@ vip_names = {
 
 -- Staff descriptions
 
-queue_window = {
-  num_in_queue       = utf8 "Kö störrelse",
-  num_expected       = "Forudset",
-  num_entered        = utf8 "Besögstal",
-  max_queue_size     = utf8 "Maksimal kö störrelse",
-}
 
 dynamic_info = {
   patient = {
@@ -652,7 +723,7 @@ rooms_short = {
   scanner           = "Scanner",
   ultrascan         = "Ultrascan",
   blood_machine     = "Blod maskine",
-  x_ray             = "Röntgen",
+  x_ray             = utf8 "Röntgen",
   inflation         = "Pumperum",
   dna_fixer         = "DNA Fixer",
   hair_restoration  = utf8 "Hår genskaber",
@@ -1113,6 +1184,35 @@ misc = {
   -- Tooltips
 tooltip = {
   
+  
+    -- Watch
+  watch = {
+    hospital_opening   = utf8 "Byggetid: Dette er tiden du har tilbage för hospitalet åbner. Klik på åben knappen for at åbne hospitalet med det samme.",
+    emergency          = utf8 "Akkuttilfælde: Tiden som står er den tid du har tilbage til at behandle akkutte patienter.",
+    epidemic           = utf8 "Epidemi: Tid til at fjerne epidemien. Når tiden er ude eller patienten forlader sygehuset, kommer der en sundhedsminister på besög. Knappen tænder og slukker for vaccinationstilstanden. Tryk på patienterne for at få en sygeplejeske til at vaccinere dem.",
+  },
+    
+  -- Queue window, that describe what the different things dös. 
+    queue_window = {
+    num_in_queue       = utf8 "Antal patienter i köen",
+    num_expected       = utf8 "Antal patienter som receptionen forventer der kommer i köen indenfor kort tiden",
+    num_entered        = utf8 "Antal patienter som er blevet behandlet i dette rum indtil videre",
+    max_queue_size     = utf8 "Den maksimale længde köen kan have",
+    dec_queue_size     = utf8 "Mindre makslængde",
+    inc_queue_size     = utf8 "Godkend makslængde",
+    front_of_queue     = utf8 "Træk i en patient for at stille ham/hende forest i köen",
+    end_of_queue       = utf8 "Træk i en patient for at stille ham/hende bagerst i köen",
+    close              = "Luk vinduet",
+    patient            = utf8 "Træk i en patient for at stille ham/hende i köen. Höjreklik på en patient for at sende patienten hjem eller til et konkurrende hospital",
+    patient_dropdown = {
+      reception        = "Send patienten til receptionen",
+      send_home        = "Send patienten hjem",
+      hospital_1       = "Henvis pasienten til et andet sygehus",
+      hospital_2       = "Henvis pasienten til et andet sygehus",
+      hospital_3       = "Henvis pasienten til et andet sygehus",
+    },
+  },
+ 
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -1144,23 +1244,63 @@ tooltip = {
     policy             = "Politik",
   },
   
+    -- Staff list
+  staff_list = {
+    doctors            = utf8 "Se en oversigt over dine læger",
+    nurses             = utf8 "Se en oversigt over dine sygeplejesker",
+    handymen           = utf8 "Se en oversigt over dine handymænd",
+    receptionists      = utf8 "Se en oversigt over dine receptionister",
+    
+    happiness          = utf8 "Viser hvordan humöret er på dine ansatte",
+    tiredness          = utf8 "Viser hvor træt dine ansatte er",
+    ability            = utf8 "Viser den ansattes evner",
+    salary             = utf8 "Den pågældendes lön",
+    
+    happiness_2        = utf8 "Den ansattes moral",
+    tiredness_2        = utf8 "Den ansattes træthedssniveau",
+    ability_2          = utf8 "Den ansattes evner",
+    
+    prev_person        = utf8 "Vælg den forrige side",
+    next_person        = utf8 "Vælg den næste side",
+    
+    bonus              = utf8 "Giv den ansatte 10% bonus",
+    sack               = utf8 "Giv den ansatte sparket",
+    pay_rise           = utf8 "Hæv den ansattes lön med 10%",
+    
+    close              = utf8 "Luk og vend tilbage til spillet",
+    
+    doctor_seniority   = utf8 "Lægens evner",
+    detail             = utf8 "Lægens Kvalifikation",
+    
+    view_staff         = utf8 "Vis den ansatte på jobbet",
+    
+    surgeon            = utf8 "Kvalificeret Kirurg",
+    psychiatrist       = utf8 "Kvalificeret Psykolog",
+    researcher         = utf8 "Kvalificeret Forsker",
+    surgeon_train      = utf8 "%d%% gennemfört uddannelse som kirurgi", -- %d (percentage trained)
+    psychiatrist_train = utf8 "%d%% gennemfört uddannelse som psykologi", -- %d (percentage trained)
+    researcher_train   = utf8 "%d%% gennemfört uddannelse som forskning", -- %d (percentage trained)
+    
+    skills             = "Ekstra evner",
+  },
+  
   -- Hire staff window
   hire_staff_window = {
     doctors            = utf8 "Vis læger som er tilgængelige på arbejdsmarkedet",
     nurses             = utf8 "Vis sygeplejesker som er tilgængelige på abejdsmarkedet",
     handymen           = utf8 "Vis handymænd som er tilgængelige på arbejdsmarket",
     receptionists      = utf8 "Vis receptionister som er tilgængelige på arbejdsmarkedet",
-    prev_person        = "Vis forrige person",
+    prev_person        = utf8 "Vis forrige person",
     next_person        = utf8 "Vis næste person",
-    hire               = "Ansæt person",
-    cancel             = "Afbryd",
-    doctor_seniority   = "Lægens erfaring (Praktikant, Doktor, Konsulent)",
-    staff_ability      = "Kvalifikation",
+    hire               = utf8 "Ansæt person",
+    cancel             = utf8 "Afbryd",
+    doctor_seniority   = utf8 "Lægens evner (Praktikant, Doktor, Konsulent)",
+    staff_ability      = utf8 "Kvalifikation",
     salary             = utf8 "Lön krav",
     qualifications     = utf8 "Lægens specialer",
-    surgeon            = "Kirurg",
-    psychiatrist       = "Psykolog",
-    researcher         = "Forsker",
+    surgeon            = utf8 "Kirurg",
+    psychiatrist       = utf8 "Psykolog",
+    researcher         = utf8 "Forsker",
   },
     -- Rooms
   rooms = {
@@ -1289,7 +1429,7 @@ tooltip = {
     [1] = utf8 "Du vil denne gang skulle bygge dit hospital i et velhavende kvarter. ",
     [2] = utf8 "Sundhedsministeriet holder öje med dig for at sikre at du skaber et overskud her. ",
     [3] = utf8 "Du vil starte med at have et godt omdömme, men så snart at hospitalet er åbent, skal du fokusere på at få tjent så mange penge som muligt. ",
-    [4] = utf8 "Der er også en sandsynlighed for at der sker akkuttilfælde. ",
+    [4] = utf8 "Der er også en sandsynlighed for at der sker akuttilfælde. ",
     [5] = utf8 "Disse indeholder et stort antal patienter, som kommer samtidigt og har alle den samme sygdom. ",
     [6] = utf8 "Helbrede dem indenfor tidsbegrænsningen giver dig et godt omdömme, samt en stor bonus. ",
     [7] = utf8 "Sygdomme som konge komplekset kan forekomme og du burde bygge en operationsstue samt en sygestue i nærheden af. ",
@@ -1313,10 +1453,11 @@ tooltip = {
   },
   level18 = {
   },     
-        -- Watch
-  watch = {
-    hospital_opening   = utf8 "Byggetid: Dette er tiden du har tilbage för hospitalet åbner. Klik på åben knappen for at åbne hospitalet med det samme.",
-    emergency          = utf8 "Akkuttilfælde: Tiden som står er den tid du har tilbage til at behandle akkutte patienter.",
-    epidemic           = utf8 "Epidemi: Tid til at fjerne epidemien. Når tiden er ude eller patienten forlader sygehuset, kommer der en sundhedsminister på besög. Knappen tænder og slukker for vaccinationstilstanden. Tryk på patienterne for at få en sygeplejeske til at vaccinere dem.",
-  }
+      }    
+     
+  queue_window = {
+  num_in_queue       = utf8 "Kölængde",
+  num_expected       = "Forventet",
+  num_entered        = utf8 "Antal besög",
+  max_queue_size     = "Maks str.",
 }
