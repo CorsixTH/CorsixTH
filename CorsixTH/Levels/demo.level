@@ -99,7 +99,7 @@ When a drug is researched, what effectiveness does it have
 #win_criteria[3].Criteria.MaxMin.Value.Group.Bound	6	1	70000	1	0
 
 #lose_criteria[0].Criteria.MaxMin.Value.Group.Bound	1	0	300	1	350
-#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	40	2	50
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	5	1	40	2	0
 
 --------------------- Competitor Information -----------------------
 
