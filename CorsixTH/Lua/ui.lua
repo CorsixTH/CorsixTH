@@ -766,3 +766,8 @@ function UI:afterLoad(old, new)
 
   Window.afterLoad(self, old, new)
 end
+
+-- Stub to allow the function to be called in e.g. the information
+-- dialog without having to worry about a GameUI being present
+function UI:tutorialStep(...)
+end
