@@ -61,6 +61,7 @@ CorsixTH/Levels/demo.level -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Levels/original05.level -text
 CorsixTH/Lua/dialogs/annual_report.lua -text
+CorsixTH/Lua/dialogs/calls_dispatcher.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text

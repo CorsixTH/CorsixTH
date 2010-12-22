@@ -51,6 +51,8 @@ end
 
 function UIPlaceStaff:close()
   if self.staff then
+    self.staff.pickup = false
+    self.staff.going_to_staffroom = nil
     self.staff.action_queue[1].window = nil
     self.staff:setNextAction{name = "meander"}
   elseif self.profile then

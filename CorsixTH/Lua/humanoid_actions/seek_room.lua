@@ -79,7 +79,7 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   room.door.queue:expect(humanoid)
   room.door:updateDynamicInfo()
   if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
-    humanoid.world:callForStaff(room)
+    humanoid.world.dispatcher:callForStaff(room)
   end
   if diagnosis_room then
     -- The diagnosis room was found, remove it from the list

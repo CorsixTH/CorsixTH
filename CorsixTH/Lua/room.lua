@@ -52,7 +52,6 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.world.map.th:markRoom(x, y, w, h, self.room_info.floor_tile, self.id)
   
   self.humanoids = {--[[a set rather than a list]]}
-  self.approaching_staff = {--[[a set rather than a list]]}
   self.objects = {--[[a set rather than a list]]}
 end
 
@@ -76,11 +75,8 @@ end
 
 function Room:createEnterAction(humanoid_entering)
   local x, y = self:getEntranceXY(true)
-  if humanoid_entering and class.is(humanoid_entering, Staff) and self.approaching_staff then
-    self.approaching_staff[humanoid_entering] = true
-  end
   return {name = "walk", x = x, y = y, 
-    is_entering = (humanoid_entering and self.approaching_staff) and self or true}
+    is_entering = humanoid_entering and self or true}
 end
 
 function Room:getPatient()
@@ -152,11 +148,7 @@ function Room:findWorkForStaff()
   for humanoid in pairs(self.humanoids) do
     -- Don't check handymen
     if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" and humanoid:isIdle() then
-      local room = self.world:getNearestRoomNeedingStaff(humanoid)
-      if room then
-        humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction(room:createEnterAction())
-      end
+      self.world.dispatcher:answerCall(humanoid)
     end
   end
 end
@@ -168,21 +160,12 @@ local profile_attributes = {
 }
 
 -- Given any type of staff criteria (required/maximum), subtract the staff in the room and return the result
-function Room:getMissingStaff(criteria, extended_search)
+function Room:getMissingStaff(criteria)
   local result = {}
   for attribute, count in pairs(criteria) do
     for humanoid in pairs(self.humanoids) do
-      if class.is(humanoid, Staff) and humanoid:fulfillsCriterium(attribute) and not humanoid.action_queue[1].is_leaving then
+      if class.is(humanoid, Staff) and humanoid:fulfillsCriterium(attribute) and not humanoid:isLeaving() then
         count = count - 1
-      end
-    end
-    -- (Backwards compatibility)
-    if self.approaching_staff and extended_search then
-      -- Also check for staff currently heading for this room
-      for humanoid in pairs(self.approaching_staff) do
-        if humanoid:fulfillsCriterium(attribute) and humanoid ~= extended_search then
-          count = count - 1
-        end
       end
     end
     if count <= 0 then
@@ -193,15 +176,13 @@ function Room:getMissingStaff(criteria, extended_search)
   return result
 end
 
-function Room:testStaffCriteria(criteria, extra_humanoid, extended_search)
+function Room:testStaffCriteria(criteria, extra_humanoid)
   -- criteria should be required_staff or maximum_staff table.
   -- if extra_humanoid is nil, then returns true if the humanoids in the room
   -- meet the given criteria, and false otherwise.
   -- if extra_humanoid is not nil, then returns true if the given humanoid
   -- would assist in satisfying the given criteria, and false if they would not.
-  -- If extended_search is true staff heading for the room are also considered.
-  -- If extended_search is a humanoid that single humanoid will not count.
-  local missing = self:getMissingStaff(criteria, extended_search and extra_humanoid or nil)
+  local missing = self:getMissingStaff(criteria)
   
   if extra_humanoid then
     local class = extra_humanoid.humanoid_class
@@ -241,6 +222,9 @@ end
 
 function Room:onHumanoidEnter(humanoid)
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+  humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
+  -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
+  
   -- If this humanoid for some strange reason happens to enter a non-active room,
   -- just leave.
   if not self.is_active then
@@ -257,37 +241,11 @@ function Room:onHumanoidEnter(humanoid)
     self.humanoids[humanoid] = true
     -- Check for machines which need repair or plants which need watering if
     -- the handyman didn't arrive as a part of a job
-    if not humanoid.action_queue[1].is_job then
-      local machine, plant
-      
-      for object in pairs(self.world:findAllObjectsNear(self:getEntranceXY(true))) do
-        if class.is(object, Machine) and object.times_used ~= 0 then
-          machine = object
-          break
-        elseif class.is(object, Plant) and object:needsWatering() then
-         plant = object
-        end
-      end
-      if machine then
-        machine:setRepairing(humanoid)
-        local x, y = machine:getRepairTile()
-        humanoid:setNextAction({
-          name = "walk",
-          x = x,
-          y = y,
-          is_job = machine,
-        }, 1)
-        humanoid:queueAction(machine:createRepairAction(humanoid))
-        local leave_action = self:createLeaveAction()
-        leave_action.is_job = machine
-        humanoid:queueAction(leave_action)
-        humanoid:queueAction{name = "meander"}
-      elseif plant then
-        plant:createHandymanActions(humanoid)
-      else -- Found nothing of interest in this room, so leave it.
-        humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
-      end
+    if humanoid.on_call then
+      assert(humanoid.on_call.object:getRoom() == self, "Handyman arrived is on call but not arriving to the designated room")
+    else      
+      -- If the handyman was not assigned for the job (e.g. drop by manual pickup), do answer a call
+      humanoid:setNextAction{name = "answer_call"}
     end
     return
   end
@@ -300,6 +258,7 @@ function Room:onHumanoidEnter(humanoid)
       humanoid:queueAction{name = "meander"}
     else
       self.humanoids[humanoid] = true
+      humanoid:setCallCompleted()
       self:commandEnteringStaff(humanoid)
     end
     self:tryAdvanceQueue()
@@ -320,10 +279,9 @@ end
 
 -- Returns false if the room is already full of staff or if the given member of staff cannot help out.
 -- Otherwise returns true.
--- If extended_search is true approaching staff is also considered.
-function Room:staffFitsInRoom(staff, extended_search)
+function Room:staffFitsInRoom(staff)
   local criteria = self:getMaximumStaffCriteria()
-  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff, extended_search) then
+  if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff) then
     return false
   end
   return true
@@ -342,31 +300,11 @@ function Room:commandEnteringStaff(humanoid)
   -- To be extended in derived classes
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
-  if self.approaching_staff then
-    for staff, _ in pairs(self.approaching_staff) do
-      self.approaching_staff[humanoid] = nil
-      -- Another member of staff just entered, reroute others going to this room.
-      if staff ~= humanoid and not self:staffFitsInRoom(staff) then
-        local room = staff:getRoom()
-        if room then
-          -- just leave the room, then meander
-          -- could do with a better scheme... however don't just meander where you are
-          -- because that most likely breaks the room
-          staff:setNextAction(room:createLeaveAction())
-          staff:queueAction{name = "meander"}
-        else
-          room = staff.world:getNearestRoomNeedingStaff(staff)
-          if room then
-            staff:setNextAction(room:createEnterAction())
-          else
-            staff:setNextAction{name = "meander"}
-          end
-        end
-      end
-    end
-  end
   -- This variable is used to avoid multiple calls for staff (sound played only)
   self.sound_played = nil
+  if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
+    self.world.dispatcher:dropFromQueue(self)
+  end
 end
 
 function Room:commandEnteringPatient(humanoid)
@@ -417,11 +355,13 @@ function Room:onHumanoidLeave(humanoid)
   if class.is(humanoid, Patient) then
     -- Some staff member in the room might be waiting to get to the staffroom.
     for humanoid in pairs(self.humanoids) do
+      -- A patient leaving allows doctors/nurses inside to go to staffroom, if needed
       -- In a rare case a handyman that just decided he wants to go to the staffroom
       -- could be in the room at the same time as a patient leaves.
       if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
         if humanoid.staffroom_needed then
-          humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
+          humanoid.staffroom_needed = nil
+          humanoid:goToStaffRoom()
           staff_leaving = true
         end
       end
@@ -437,32 +377,26 @@ function Room:onHumanoidLeave(humanoid)
     -- Staff is leaving. If there is still a need for this room (people are in the queue) then call
     -- someone new.
     if self.door.queue:patientSize() > 0 then
-      self.world:callForStaff(self)
+      -- This call might not be effective, if the doctor last action is 
+      -- walking/must_happen but is_leaving not set (psych likes to walk around in the room)
+      -- hence testStaffCriteria still pass.
+      -- This is guarded by onHumanoidLeave(Staff)
+      self.world.dispatcher:callForStaff(self)
     end
   end
   if class.is(humanoid, Staff) then
     -- Make patients leave the room if there are no longer enough staff
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
+      -- Call for staff if needed
+      if self.door.queue:patientSize() > 0 then
+        self.world.dispatcher:callForStaff(self)
+      end      
       for humanoid in pairs(self.humanoids) do
-        if class.is(humanoid, Patient) then
-          local found_leaving_action = false
-          for _, action in ipairs(humanoid.action_queue) do
-            if action.is_leaving then
-              found_leaving_action = true
-              break
-            end
-          end
-          if not found_leaving_action then
-            self:makePatientLeave(humanoid)
-            humanoid:queueAction(self:createEnterAction())
-          end
+        if class.is(humanoid, Patient) and not humanoid:hasLeavingAction() then
+          self:makePatientLeave(humanoid)
+          humanoid:queueAction(self:createEnterAction())
         end
       end
-    end
-    -- The handyman is now finished doing something important, he might want to go
-    -- to the staffroom
-    if humanoid.staffroom_needed and humanoid.humanoid_class == "Handyman" then
-      humanoid:setNextAction{name = "seek_staffroom", must_happen = true}
     end
     -- Remove any unwanted moods the staff member might have
     humanoid:setMood("staff_wait", "deactivate")
@@ -585,8 +519,7 @@ end
 function Room:crashRoom()
   self.door:closeDoor()
   
-  -- Remove all humanoids in the room
-  for humanoid, _ in pairs(self.humanoids) do
+  local remove_humanoid = function(humanoid)
     humanoid:queueAction({name = "idle"}, 1)
     humanoid.user_of = nil
     -- Make sure any emergency list is not messed up.
@@ -597,14 +530,17 @@ function Room:crashRoom()
     humanoid:die()
     self.world:destroyEntity(humanoid)
   end
+
+  -- Remove all humanoids in the room
+  for humanoid, _ in pairs(self.humanoids) do
+    remove_humanoid(humanoid)
+  end
   -- There might also be someone using the door, even if that person is just about to exit
   -- he/she is killed too.
   local walker = self.door.user
   if walker then
-    walker.user_of = nil
     self.door:setUser(nil)
-    walker:die()
-    self.world:destroyEntity(walker)
+    remove_humanoid(walker)
   end
   
   -- Remove all objects in the room
@@ -653,8 +589,8 @@ function Room:crashRoom()
     soot:setLitterType(soot_type)
   end
   
-  self.is_active = false
   self.crashed = true
+  self:deactivate()
 end
 
 -- Tells the patient to leave the room. This can be overridden for special
@@ -665,7 +601,13 @@ function Room:makePatientLeave(patient)
   patient:setNextAction(leave)
 end
 
+function Room:deactivate()
+  self.is_active = false -- So that no more patients go to it.
+  self.world.dispatcher:dropFromQueue(self)
+end
+
 function Room:tryToEdit()
+  self:deactivate()
   local i = 0
   -- Tell all humanoids that they should leave
   -- If someone is entering the room right now they are also counted.
@@ -673,7 +615,7 @@ function Room:tryToEdit()
     i = 1
   end
   for humanoid, _ in pairs(self.humanoids) do
-    if not humanoid.action_queue[1].is_leaving then
+    if not humanoid:isLeaving() then
       if class.is(humanoid, Patient) then
         self:makePatientLeave(humanoid)
         humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})

@@ -301,7 +301,7 @@ local function action_queue_start(action, humanoid)
     if class.is(humanoid, Patient) then
       humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
       -- Make another call for staff just in case.
-      humanoid.world:callForStaff(door.room)
+      humanoid.world.dispatcher:callForStaff(door.room)
     end
   end
   humanoid:queueAction({

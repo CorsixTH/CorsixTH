@@ -85,7 +85,7 @@ function UIMachine:draw(canvas, x, y)
 end
 
 function UIMachine:callHandyman()
-  self.ui.app.world:callForStaff(self.room, self.machine)
+  self.ui.app.world.dispatcher:callForRepair(self.machine, false, true)
 end
 
 function UIMachine:replaceMachine()
@@ -98,21 +98,7 @@ function UIMachine:replaceMachine()
       machine.times_used = 0
       -- TODO: Research should increase strength here
       self.machine.strength = machine.object_type.default_strength
-      -- Abort any handyman on his way
-      local handyman = self.room.needs_repair
-      if handyman then
-        machine:setRepairing(false)
-        self.room.needs_repair = nil
-        if handyman:getRoom() then
-          handyman:setNextAction(handyman:getRoom():createLeaveAction())
-          handyman:queueAction{name = "meander"}
-        else
-          handyman:setNextAction{name = "meander"}
-        end
-        machine:updateDynamicInfo(true)
-      end
-      -- Start the queue again
-      self.room:tryAdvanceQueue()
+      machine:setRepairing(nil)
     end
   ))
 end

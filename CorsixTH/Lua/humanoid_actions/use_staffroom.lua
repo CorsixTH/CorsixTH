@@ -106,17 +106,17 @@ local function use_staffroom_action_start(action, humanoid)
         if humanoid.attributes["fatigue"] == 0 then
           humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
           local room = humanoid.last_room
-          local new_room = humanoid.world:getNearestRoomNeedingStaff(humanoid)
           -- Send back to the last room if that room is still empty.
+          -- (applies to training and research only)
           -- Make sure that the room is still there though.
-          if room and room.is_active and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid, true) then
+          -- If not, just answer the call
+          if room and room.is_active and 
+          (room.room_info.id == "research" or room.room_info.id == "training")
+          and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
             humanoid:queueAction(room:createEnterAction(humanoid))
             humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-          -- Send to the nearest empty room needing staff if there exists one.
-          elseif new_room then
-            humanoid:queueAction(new_room:createEnterAction(humanoid))
-            humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(new_room.room_info.name))
           else
+            -- Send the staff out of the room
             humanoid:queueAction{name = "meander"}
           end
           humanoid.last_room = nil

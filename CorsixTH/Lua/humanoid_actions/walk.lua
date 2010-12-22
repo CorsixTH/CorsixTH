@@ -44,23 +44,6 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
-  -- Check for objects that the handyman was going to attend to.
-  if humanoid.humanoid_class == "Handyman" and action.is_job then
-    local obj = action.is_job
-    if class.is(obj, Machine) then
-      -- This handyman is no longer going to the machine, try
-      -- to find another handyman to fix it instead.
-      obj.approaching_handyman = nil
-      humanoid.world:callForStaff(obj:getRoom(), obj)
-    end
-    action.is_job.reserved_for = nil
-  end
-  -- If the staff was heading for a room, remove that staff from the approaching list.
-  if action.is_entering and action.is_entering ~= true then
-    action.is_entering.approaching_staff[humanoid] = nil
-    -- Make a new check. If there is still need for staff in the room someone else could go.
-    humanoid.world:callForStaff(action.is_entering)
-  end
   -- Terminate immediately if high-priority
   if high_priority then
     local timer_function = humanoid.timer_function
@@ -229,12 +212,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
       humanoid:queueAction({name = "idle"},0)
       humanoid:setTilePositionSpeed(x1, y1)
       humanoid:setNextAction({name = "idle", count = 10},0)
-      local room = humanoid.world:getNearestRoomNeedingStaff(humanoid)
-      if room then
-        humanoid:queueAction(room:createEnterAction())
-      else
-        humanoid:queueAction{name = "meander"}
-      end
+      humanoid:queueAction{name = "meander"}
       return
     end
   end

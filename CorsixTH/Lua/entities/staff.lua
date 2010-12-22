@@ -96,7 +96,7 @@ function Staff:tick()
   
   local room = self:getRoom()
   -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
-  if room and room.room_info.id == "staff_room" and not self.action_queue[1].is_job then
+  if room and room.room_info.id == "staff_room" and not self.on_call then
     tiring = false
   end
 
@@ -179,16 +179,6 @@ function Staff:fire()
   
   -- Unregister any build callbacks or messages.
   self:unregisterCallbacks()
-  -- Check if the staff was being called to a room and look for a replacement
-  for _, r in pairs(self.world.rooms) do
-    if r.approaching_staff[self] then
-      r.approaching_staff[self] = nil
-      if not next(r.approaching_staff) then
-        -- approaching_staff set is now empty, so look for a replacement
-        self.world:callForStaff(r)
-      end
-    end
-  end
 end
 
 function Staff:die()
@@ -218,14 +208,32 @@ function Staff:onClick(ui, button)
     else
       ui:addWindow(UIStaff(ui, self))
     end
-    if TheApp.config.debug then
-      -- for debugging
-      print("Fatigue: ", self.attributes["fatigue"])
-    end
   elseif button == "right" then
+    self.pickup = true
     self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
   end
   Humanoid.onClick(self, ui, button)
+end
+
+function Staff:dump()
+  print("-----------------------------------")
+  if self.on_call then
+    print("On call: ")
+    CallsDispatcher.dumpCall(self.on_call)
+  else 
+    print('On call: no')
+  end
+  print("Busy: ", (self:isIdle() and "idle" or "busy") .. (self.pickup and " and picked up" or ''))
+  if self.going_to_staffroom then print("Going to staffroom") end
+  if self.last_room then 
+      print("Last room: ", self.last_room.room_info.id .. '@' .. self.last_room.x ..','.. self.last_room.y)
+  end
+  if self.humanoid_class == "Handyman" then
+    print("Cleaning: " .. self.attributes["cleaning"],
+          "Watering: " .. self.attributes["watering"], 
+          "Repairing: " .. self.attributes["repairing"])
+  end
+  Humanoid.dump(self)
 end
 
 function Staff:setProfile(profile)
@@ -310,39 +318,46 @@ function Staff:checkIfNeedRest()
     if self.attributes["fatigue"] >= 0.9 then
       self:setMood("tired", "activate")
     end
-    -- If there's already a "seek_staffroom" action in the action queue, or staff is currently picked up, do nothing
-    if self.going_to_staffroom or self.action_queue[1].name == "pickup" then
+    -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
+    -- already going to staffroom or being picked up
+    if self.waiting_for_staffroom or self.staffroom_needed
+    or self.going_to_staffroom or self.pickup then
       return
     end
     -- If no staff room exists, prevent further checks until one is built
     if not self.world:findRoomNear(self, "staff_room") then
-      self.going_to_staffroom = true
+      self.waiting_for_staffroom = true
       local callback
       callback = --[[persistable:staff_build_staff_room_callback]] function(room)
         if room.room_info.id == "staff_room" then
-          self.going_to_staffroom = false
+          self.waiting_for_staffroom = nil
           self.world:unregisterRoomBuildCallback(callback)
+          self.build_callback = nil
         end
       end
       self.build_callback = callback
       self.world:registerRoomBuildCallback(callback)
       return
     end
-    -- Else, if doing something important (e.g. seeing a patient)
-    -- finish that first
-    if (self:getRoom() and self:getRoom():getPatient()) or 
-      (self.humanoid_class == "Handyman" and 
-      (self.action_queue[1].is_entering or self:getRoom())) then
+    local room = self:getRoom()
+    if room and room:getPatient() then
+      -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
-      -- Finally, seek a staff room now
-      self:setNextAction{name = "seek_staffroom", must_happen = true}
+      self:goToStaffRoom()
     end
-    -- No matter if the action has been set or staffroom_needed was set it will be
-    -- handled - don't check in this function anymore.
-    self.going_to_staffroom = true
-    -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
-    -- Exception: if no staff room exists, it is also set to true until one is built
+  end
+end
+
+function Staff:goToStaffRoom()
+  -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
+  self.going_to_staffroom = true
+  local room = self:getRoom()
+  if room then
+    self:setNextAction(room:createLeaveAction())
+    self:queueAction{name = "seek_staffroom", must_happen = true}
+  else
+    self:setNextAction{name = "seek_staffroom", must_happen = true}
   end
 end
 
@@ -354,26 +369,19 @@ function Staff:onPlaceInCorridor()
   end
   
   self:setNextAction{name = "meander"}
-  if self.humanoid_class ~= "Receptionist" then
-    -- Maybe there's a room in need of this staff?
-    local room = self.world:getNearestRoomNeedingStaff(self)
-    if room then
-      self:setNextAction(room:createEnterAction())
-    end
-    return true
+  if self.humanoid_class == "Receptionist" then
+    world:findObjectNear(self, "reception_desk", nil, function(x, y)
+      local obj = world:getObject(x, y, "reception_desk")
+      if not obj.receptionist and not obj.reserved_for then
+        obj.reserved_for = self
+        self.associated_desk = obj
+        local use_x, use_y = obj:getSecondaryUsageTile()
+        self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
+        self:queueAction{name = "staff_reception", object = obj, must_happen = true}
+        return
+      end
+    end)
   end
-  
-  world:findObjectNear(self, "reception_desk", nil, function(x, y)
-    local obj = world:getObject(x, y, "reception_desk")
-    if not obj.receptionist and not obj.reserved_for then
-      obj.reserved_for = self
-      self.associated_desk = obj
-      local use_x, use_y = obj:getSecondaryUsageTile()
-      self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-      self:queueAction{name = "staff_reception", object = obj, must_happen = true}
-      return true
-    end
-  end)
 end
 
 function Staff:setHospital(hospital)
@@ -422,18 +430,25 @@ function Staff:isIdle()
   if not self.hospital or self.fired then
     return false
   end
+
+  if self.on_call or self.pickup or self.going_to_staffroom or self.staffroom_needed then
+    return false
+  end
+
   local room = self:getRoom()
   if room then
-    -- if policy is set to not allow leaving rooms, don't allow it
-    if not self.hospital.policies["staff_allowed_to_move"] then
-      return false
-    end
-    
     -- in special rooms, never
     if room.room_info.id == "staff_room" or room.room_info.id == "research"
     or room.room_info.id == "training" then
       return false
     end
+
+    -- For handyman - just check the on_call flag
+    if self.humanoid_class == "Handyman" and not self.on_call then
+      return true
+    end
+    
+    -- For other staff...
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- or if the only one in sight is actually leaving.
     if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and not self.action_queue[1].is_leaving
@@ -450,13 +465,7 @@ function Staff:isIdle()
       end
     end
   else
-    -- on the corridor, if not heading to a room already, for handymen they also shouldn't be on their way to
-    -- for example water plants. Check all actions for a job
-    for _, action in ipairs(self.action_queue) do
-      if action.is_entering or action.is_job then
-        return false
-      end
-    end
+    -- on the corridor and not on_call (watering or going to room), the staff is free
     return true
   end
   return false
@@ -515,15 +524,13 @@ function Staff:onDestroy()
     self:message_callback(true)
     self.message_callback = nil
   end
-  -- Check if the staff was being called to a room and look for a replacement
-  for _, r in pairs(self.world.rooms) do
-    if r.approaching_staff[self] then
-      r.approaching_staff[self] = nil
-      if not next(r.approaching_staff) then
-        -- approaching_staff set is now empty, so look for a replacement
-        self.world:callForStaff(r)
-      end
-    end
-  end
   Humanoid.onDestroy(self)
+end
+
+function Staff:afterLoad(old, new)
+  -- Usage of going_to_staffroom flag changed slightly, so unset it.
+  -- (should be safe even if someone is actually going to staffroom)
+  if old < 27 then
+    self.going_to_staffroom = nil
+  end
 end

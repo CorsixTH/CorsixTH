@@ -167,40 +167,48 @@ end
 --!param button (string) One of: "left", "middle", "right".
 function Humanoid:onClick(ui, button)
   if TheApp.config.debug then
-    -- for debugging
-    local name = "humanoid"
-    if self.profile then
-      name = self.profile.name
-    end
-    print("-----------------------------------")
-    print("Clicked on ".. name)
-    print("Class: ", self.humanoid_class)
-    if self.humanoid_class == "Doctor" then
-      print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
-        self.profile.skill or 0,
-        self.profile.is_surgeon or 0,
-        self.profile.is_psychiatrist or 0,
-        self.profile.is_researcher or 0))
-    end
-    print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
-      self.attributes["warmth"] or 0,
-      self.attributes["happiness"] or 0,
-      self.attributes["fatigue"] or 0))
-    print("")
-    print("Actions:")
-    for i = 1, #self.action_queue do
-      if self.action_queue[i].room_type then
-        print(self.action_queue[i].name .. " - " .. self.action_queue[i].room_type)
-      elseif self.action_queue[i].object then
-        print(self.action_queue[i].name .. " - " .. self.action_queue[i].object.object_type.id)
-      elseif self.action_queue[i].name == "walk" then
-        print(self.action_queue[i].name .. " - going to " .. self.action_queue[i].x .. ":" .. self.action_queue[i].y)
-      else
-        print(self.action_queue[i].name)
-      end
-    end
-    print("-----------------------------------")
+    self:dump()
   end
+end
+
+function Humanoid:dump()
+  local name = "humanoid"
+  if self.profile then
+    name = self.profile.name
+  end
+
+  print("-----------------------------------")
+  print("Clicked on ".. name)
+  print("Class: ", self.humanoid_class)
+  if self.humanoid_class == "Doctor" then
+    print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
+      self.profile.skill or 0,
+      self.profile.is_surgeon or 0,
+      self.profile.is_psychiatrist or 0,
+      self.profile.is_researcher or 0))
+  end
+  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
+    self.attributes["warmth"] or 0,
+    self.attributes["happiness"] or 0,
+    self.attributes["fatigue"] or 0))
+  print("")
+  print("Actions:")
+  for i = 1, #self.action_queue do
+    local action = self.action_queue[i]
+    local flag = 
+      (action.must_happen and "  must_happen" or "  ") ..
+      (action.todo_interrupt and "  " or "  ")
+    if action.room_type then
+      print(action.name .. " - " .. action.room_type .. flag)
+    elseif action.object then
+      print(action.name .. " - " .. action.object.object_type.id .. flag)
+    elseif action.name == "walk" then
+      print(action.name .. " - going to " .. action.x .. ":" .. action.y .. flag)
+    else
+      print(action.name .. flag)
+    end
+  end
+  print("-----------------------------------")
 end
 
 -- Called when the humanoid is about to be removed from the world.
@@ -267,6 +275,12 @@ function Humanoid:setMood(mood_name, activate)
   self:setMoodInfo(new_mood)
 end
 
+function Humanoid:setCallCompleted()
+  if self.on_call then
+    CallsDispatcher.onCheckpointCompleted(self.on_call)    
+  end
+end
+
 -- Is the given mood in the list of active moods.
 function Humanoid:isMoodActive(mood)
   for i, _ in pairs(self.active_moods) do
@@ -324,12 +338,21 @@ function Humanoid:setNextAction(action, high_priority)
   for j = #queue, i, -1 do
     local removed = queue[j]
     queue[j] = nil
-    if removed.until_leave_queue and not done_set[removed.until_leave_queue] then
-      removed.until_leave_queue:removeValue(self)
-      done_set[removed.until_leave_queue] = true
-    end
-    if removed.object and removed.object:isReservedFor(self) then
-      removed.object:removeReservedUser(self)
+    if not removed then
+      -- A bug (rare) that removed could be nil.
+      --   but as it's being removed anyway...it could be ignored
+      print("Warning: Action to be removed was nil")
+    else
+      if removed.on_remove then
+        removed.on_remove(removed, self)
+      end
+      if removed.until_leave_queue and not done_set[removed.until_leave_queue] then
+        removed.until_leave_queue:removeValue(self)
+        done_set[removed.until_leave_queue] = true
+      end
+      if removed.object and removed.object:isReservedFor(self) then
+        removed.object:removeReservedUser(self)
+      end
     end
   end
   
@@ -340,7 +363,7 @@ function Humanoid:setNextAction(action, high_priority)
   -- when they start.
   if interrupted then
     interrupted = queue[1]
-    for j = 2, i - 1 do
+    for j = 1, i - 1 do
       queue[j].todo_interrupt = high_priority and "high" or true
     end
     local on_interrupt = interrupted.on_interrupt
@@ -374,6 +397,21 @@ function Humanoid:finishAction(action)
   end
   table.remove(self.action_queue, 1)
   Humanoid_startAction(self)
+end
+
+-- Check if the humanoid is running actions intended to leave the room, as indicated by the flag
+function Humanoid:isLeaving()
+  return self.action_queue[1].is_leaving
+end
+
+-- Check if there is "is_leaving" action in the action queue
+function Humanoid:hasLeavingAction()
+  for _, action in ipairs(self.action_queue) do
+    if action.is_leaving then
+      return true
+    end
+  end
+  return false
 end
 
 function Humanoid:setType(humanoid_class)

@@ -154,6 +154,36 @@ function Plant:needsWatering()
   end
 end
 
+function Plant:getWateringTile()
+  local map = self.world.map.th
+  local lx, ly = self.tile_x, self.tile_y
+
+  if not lx or self.picked_up then
+      -- The plant might be picked up
+      return nil, nil
+  end
+
+  if self:getRoom() then
+    lx, ly = self:getRoom():getEntranceXY()
+  else
+    ly = ly + 1
+    if not map:getCellFlags(lx, ly).passable then
+      ly = ly - 2
+      if not map:getCellFlags(lx, ly).passable then
+        ly = ly + 1
+        lx = lx + 1
+        if not map:getCellFlags(lx, ly).passable then
+          lx = lx - 2
+          if not map:getCellFlags(lx, ly).passable then
+            lx, ly = nil, nil
+          end
+        end
+      end
+    end
+  end
+  return lx, ly
+end
+
 --! When the plant needs water it preiodically calls for a nearby handyman.
 function Plant:callForWatering()
   -- Try to find a handyman nearby. If in a room, search just outside it.
@@ -161,34 +191,8 @@ function Plant:callForWatering()
   -- speed to quality of search.
   -- If self.ticks is true it means that a handyman is currently watering the plant.
   if not self.ticks and not self.reserved_for then
-    local map = self.world.map.th
-    local lx, ly = self.tile_x, self.tile_y
-    
-    if self:getRoom() then
-      lx, ly = self:getRoom():getEntranceXY()
-    else
-      ly = ly + 1
-      if not map:getCellFlags(lx, ly).passable then
-        ly = ly - 2
-        if not map:getCellFlags(lx, ly).passable then
-          ly = ly + 1
-          lx = lx + 1
-          if not map:getCellFlags(lx, ly).passable then
-            lx = lx - 2
-            if not map:getCellFlags(lx, ly).passable then
-              lx, ly = nil, nil
-            end
-          end
-        end
-      end
-    end
-    if lx and ly then
-      local candidate = self.world:getSuitableStaffCandidates(lx, ly, "Handyman", 10, "watering")[1]
-      if candidate then
-        self:createHandymanActions(candidate.entity)
-      end
-    end
-    if self.current_state > 1 then
+    local new_call = self.world.dispatcher:callForWatering(self)
+    if new_call and self.current_state > 1 then
       if not self.plant_announced then
         self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
         self.plant_announced = true
@@ -208,47 +212,25 @@ function Plant:createHandymanActions(handyman)
     -- The plant cannot be reached, let it die.
     return
   end
-  local in_a_room = false
-  if self:getRoom() then
-    in_a_room = true
-  end
+  local this_room = self:getRoom()
+  local handyman_room = handyman:getRoom()
   self.reserved_for = handyman
 
-  local action = {name = "walk", x = ux, y = uy, is_job = self, is_entering = in_a_room}
+  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
   local water_action = {
     name = "use_object", 
     object = self, 
     watering_plant = true,
-    must_happen = true,
-    is_job = self,
-    after_use = --[[persistable:plant_more_plants]] function()
-      if in_a_room then
-        for object in pairs(self.world:findAllObjectsNear(self.tile_x, self.tile_y)) do
-          if object.object_type.id == "plant" then
-            if object:needsWatering() and not object.reserved_for and not object.ticks then
-              object:createHandymanActions(handyman)
-              break
-            end
-          end
-        end
-      end
-    end,
   }
-  if handyman.action_queue[1].object then
-    -- He's already using an object, he must be in a room!
-    handyman:queueAction(action, 1)
-    handyman:queueAction(water_action, 2)
+  if handyman_room and handyman_room ~= this_room then
+    handyman:setNextAction(handyman_room:createLeaveAction())
+    handyman:queueAction(action)
   else
     handyman:setNextAction(action)
-    handyman:queueAction(water_action)
-    if in_a_room then
-      local action = self:getRoom():createLeaveAction()
-      action.is_job = self
-      handyman:queueAction(action)
-    end
-    handyman:queueAction{name = "meander"}
   end
-  
+  handyman:queueAction(water_action)
+  CallsDispatcher.queueCallCheckpointAction(handyman)
+  handyman:queueAction{name = "answer_call"}  
 end
 
 --! When a handyman should go to the plant he should approach it from the closest reachable tile.

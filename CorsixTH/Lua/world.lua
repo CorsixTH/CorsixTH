@@ -31,6 +31,7 @@ dofile "entities/patient"
 dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
+dofile "calls_dispatcher"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -54,6 +55,7 @@ function World:World(app)
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
   self.entities = {}
+  self.dispatcher = CallsDispatcher(self)
   self.objects = {}
   self.object_counts = {
     extinguisher = 0,
@@ -745,6 +747,7 @@ function World:onTick()
       if self.ui then
         self.ui:onWorldTick()
       end
+      self.dispatcher:onTick()
     end
   end
   if self.ticks_per_tick > 0 and self.floating_dollars then
@@ -1347,141 +1350,6 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   return room_name, required_staff, staff_name
 end
 
--- Search for available staff to meet the requirements for the room. Also notify the player with a sound.
-function World:callForStaff(room, repair_object, urgent)
-  -- Don't do anything if the room is being edited.
-  if not room.is_active then
-    return
-  end
-  if repair_object then
-    if urgent then
-      local sound = room.room_info.handyman_call_sound
-      if sound then
-        self.ui:playAnnouncement(sound)
-        self.ui:playSound "machwarn.wav"
-      end
-    end
-    local handyman = self:selectNearestStaffForRoom(room, "Handyman", 1, "repairing")
-    if handyman then
-      room.needs_repair = handyman
-      repair_object:setRepairing(handyman)
-      local x, y = repair_object:getRepairTile()
-      -- Enter the room
-      local action1 = room:createEnterAction()
-      action1.is_job = repair_object
-      -- There may be many tasks for the handyman that need attention almost at the same time, make sure
-      -- this handyman really is occupied.
-      handyman.action_queue[1].is_job = repair_object
-      
-      handyman:setNextAction(action1)
-      -- Repair the object
-      handyman:queueAction{name = "walk", x = x, y = y, is_job = repair_object}
-      handyman:queueAction(repair_object:createRepairAction(handyman))
-      -- Leave the room
-      local action2 = room:createLeaveAction()
-      action2.is_job = repair_object
-      handyman:queueAction(action2)
-      -- Resume idling
-      handyman:queueAction{name = "meander"}
-      handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
-        :format(repair_object.object_type.name))
-      return true
-    else
-      -- Different messages depending on if any handyman has been hired yet or not.
-      if self.hospitals[1]:hasStaffOfCategory("Handyman") then
-        self.ui.adviser:say(_S.adviser.warnings.machines_falling_apart)
-      else
-        self.ui.adviser:say(_S(28, 34))
-      end
-      -- Activate the room again since no handymen could be found
-      repair_object:setRepairing(false)
-      room.needs_repair = nil
-      room:tryAdvanceQueue()
-    end
-  else
-    local missing = room:getMissingStaff(room:getRequiredStaffCriteria(), true)
-    local sound = room.room_info.call_sound
-    for attribute, count in pairs(missing) do
-      self:selectNearestStaffForRoom(room, attribute, count)
-      if sound and not room.sound_played and count > 0 then
-        self.ui:playAnnouncement(sound)
-        room.sound_played = true
-      end
-    end
-  end
-end
--- Finds staff with the given attributes within 'distance' from the point (x,y).
--- If 'mode' is set to one of the handyman's three concentration areas those
--- will be accounted for when doing the sort. 
-function World:getSuitableStaffCandidates(x, y, attribute, distance, mode)
-  local candidates = {}
-  if not distance then
-    distance = 2^30
-  end
-  for _, e in ipairs(self.entities) do
-    if class.is(e, Staff) and e:fulfillsCriterium(attribute) and e:isIdle() then
-      local dist = self:getPathDistance(e.tile_x, e.tile_y, x, y)
-      if dist and dist < distance then
-        if mode and e.attributes[mode] then
-          dist = dist + (1 - e.attributes[mode]) * 10
-        end
-        candidates[#candidates + 1] = {
-          entity = e,
-          dist = dist,
-        }
-      end
-    end
-  end
-
-  table.sort(candidates, function (c1, c2) return c1.dist < c2.dist end)
-  return candidates
-end
-
--- Sends nearest staff members with the required attributes to the given room.
--- TODO take into account the tiredness of the staff etc. when deciding who to pick?
--- If 'mode' is set to one of the handyman's three concentration areas those
--- will be accounted for when doing the sort. 
-function World:selectNearestStaffForRoom(room, attribute, count, mode)
-  local door_x, door_y = room:getEntranceXY()
-  local candidates = self:getSuitableStaffCandidates(door_x, door_y, attribute, nil, mode)
-  local sent = {}
-  for _, cand in ipairs(candidates) do
-    if cand.entity:getRoom() ~= room then
-      if count <= 0 then
-        break
-      end
-      count = count - 1
-      cand.entity:setNextAction(room:createEnterAction(cand.entity))
-      cand.entity:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-      sent[#sent + 1] = cand.entity
-    end
-  end
-  return unpack(sent)
-end
-
--- Get the nearest room which is in need of the given staff member.
--- That is, the room is currently empty and there is at least
--- one patient in the queue.
-function World:getNearestRoomNeedingStaff(humanoid)
-  local candidates = {}
-  for _, room in pairs(self.rooms) do
-    if room:isWaitingToGetStaff(humanoid) then
-      local door_x, door_y = room:getEntranceXY()
-      candidates[#candidates + 1] = {
-        room = room,
-        distance = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, door_x, door_y)
-      }
-    end
-  end
-
-  if #candidates == 0 then
-    return nil
-  end
-
-  table.sort(candidates, function (c1, c2) return c1.distance < c2.distance end)
-  return candidates[1].room
-end
-
 --! Append a message to the game log.
 --!param message (string) The message to add.
 function World:gameLog(message)
@@ -1588,6 +1456,10 @@ function World:afterLoad(old, new)
     self.ui.app.objects[shield_b.id] = shield_b
     self.ui.app.objects[#self.ui.app.objects + 1] = shield
     self.ui.app.objects[#self.ui.app.objects + 1] = shield_b
+  end
+  if old < 27 then
+    -- Add callsDispatcher
+    self.dispatcher = CallsDispatcher(self)
   end
   self.savegame_version = new
 end

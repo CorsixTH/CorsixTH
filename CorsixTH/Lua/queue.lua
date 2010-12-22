@@ -87,6 +87,16 @@ function Queue:expectedSize()
   return self.expected_count
 end
 
+function Queue:hasEmergencyPatient()
+  local index = #self
+  for i, humanoid in ipairs(self) do
+    if humanoid.is_emergency then
+      return true
+    end
+  end
+  return false
+end
+
 -- Returns how many patients are queued or expected
 function Queue:patientSize()
   return self.reported_size + self.expected_count

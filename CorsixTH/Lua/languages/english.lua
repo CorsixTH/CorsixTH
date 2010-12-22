@@ -75,6 +75,7 @@ menu_debug = {
   make_debug_patient          = "  (F9) MAKE DEBUG PATIENT  ",
   cheats                      = "  (F11) CHEATS  ",
   lua_console                 = "  (F12) LUA CONSOLE  ",
+  calls_dispatcher            = "  CALLS DISPATCHER  ",
   dump_strings                = "  DUMP STRINGS  ",
   dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
@@ -364,4 +365,19 @@ introduction_texts = {
     "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",
     "Good luck!",
   },
+}
+
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary = "%d calls; %d assigned",
+  staff = "%s - %s",
+  watering = "Watering @ %d,%d",
+  repair = "Repair %s",
+  close = "Close",
+}
+
+tooltip.calls_dispatcher = {
+  task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
+  assigned = "This box is marked if someone is assigned to the corresponding task.",
+  close = "Close the calls dispatcher dialog",
 }

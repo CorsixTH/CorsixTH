@@ -19,9 +19,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local function meander_action_start(action, humanoid)
+  local room = humanoid:getRoom()
+  -- Answering call queue
+  if class.is(humanoid, Staff) and humanoid:isIdle() and not room then
+    -- If staff starts wandering around in Idle mode,
+    -- he's effectively not in any room and need not to comeback after 
+    -- staff room visit
+    humanoid.last_room = nil
+    if humanoid.world.dispatcher:answerCall(humanoid) then
+      if action.must_happen then 
+        humanoid:finishAction()
+      end
+      return
+    end
+  end
+
   -- Just wandering around
   if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
-    if not humanoid:getRoom() then
+    if not room then
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
     end
   end

@@ -91,18 +91,18 @@ function Machine:machineUsed(room)
     if window and window.machine == self then
       window:close()
     end
-    if self.handyman_to_repair then
-      local hand = self.handyman_to_repair
-      hand:setNextAction{name = "meander"}
-      hand:setDynamicInfoText("")
-      self:setRepairing(false)
-    end
+    self:setRepairing(nil)
     return true
   elseif threshold > 0.65 then
-    self.world:callForStaff(room, self, true)
     -- TODO: 3428 is smoke, add it when additional objects can be made
+    -- Urgent
+    self.world.dispatcher:callForRepair(self, true)
   elseif threshold > 0.35 then
-    self.world:callForStaff(room, self) 
+    -- Not urgent, not manual, lock room
+    self.world.dispatcher:callForRepair(self, false, false, true)
+  else
+    -- Not urgent, not manual, no lock room
+    self.world.dispatcher:callForRepair(self) 
   end
 end
 
@@ -112,67 +112,80 @@ function Machine:getRepairTile()
   return x, y
 end
 
-function Machine:createRepairAction(handyman)
-  if self.approaching_handyman then
-    local fixer = self.approaching_handyman
-    -- Remove the is_job flag for the other handyman to show
-    -- that someone else is on it.
-    fixer.action_queue[1].is_job = nil
-    if fixer:getRoom() then
-      fixer:setNextAction(fixer:getRoom():createLeaveAction())
-      fixer:queueAction{name = "meander"}
-    else
-      fixer:setNextAction{name = "meander"}
-    end
-    fixer:setDynamicInfoText("")
-  end
-  self.approaching_handyman = handyman
+function Machine:createHandymanActions(handyman)
+  local ux, uy = self:getRepairTile()
+  local this_room = self:getRoom()
+  local handyman_room = handyman:getRoom()
+  assert(this_room, "machine should always in a room")
+
+  self.repairing = handyman
+  self:setRepairingMode()
+
   local --[[persistable:handyman_repair_after_use]] function after_use()
+    handyman:setCallCompleted()
+    handyman:setDynamicInfoText("") 
     self:machineRepaired(self:getRoom())
-    handyman:setDynamicInfoText("")
-    -- Let's check if any plants need watering in here.
-    for object in pairs(self.world:findAllObjectsNear(self.tile_x, self.tile_y)) do
-      if class.is(object, Plant) and object:needsWatering() and not object.reserved_for then
-        object:createHandymanActions(handyman)
-        break
-      end
-    end
   end
-  return {
+  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
+  local repair_action = {
     name = "use_object",
     object = self,
-    must_happen = true,
     prolonged_usage = false,
     loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
       action_use.prolonged_usage = false
     end,
     after_use = after_use,
-    is_job = handyman,
   }
+  if handyman_room and handyman_room ~= this_room then
+    handyman:setNextAction(handyman_room:createLeaveAction())
+    handyman:queueAction(action)
+  else
+    handyman:setNextAction(action)
+  end
+  handyman:queueAction(repair_action)
+  CallsDispatcher.queueCallCheckpointAction(handyman)
+  handyman:queueAction{name = "answer_call"}
+  handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
+    :format(self.object_type.name))
 end
 
 function Machine:machineRepaired(room)
   room.needs_repair = nil
-  self.approaching_handyman = nil
   local str = self.strength
   if self.times_used/str > 0.55 then
     self.strength = str - 1
   end
   self.times_used = 0
-  self:setRepairing(false)
-  self:updateDynamicInfo(true)
+  self:setRepairing(nil)
 end
 
 --! Tells the machine to start showing the icon that it needs repair.
---!param repairer The handyman set to do the task
-function Machine:setRepairing(repairer)
-  self.handyman_to_repair = repairer
+--!   also lock the room from patient entering
+--!param handyman The handyman heading to this machine. nil if repairing is finished
+function Machine:setRepairing(handyman)
+  -- If mode is set to true manually through the dialog, boost the urgency despite of the strength
   local anim = {icon = 4564} -- The only icon for machinery
-  self:setMoodInfo(repairer and anim or nil)
-  if repairer then
+  local room = self:getRoom()
+  self:setMoodInfo(handyman and anim or nil)
+  room.needs_repair = handyman
+  if handyman then
     self.ticks = true
   else
     self.ticks = self.object_type.ticks
+    self.world.dispatcher:dropFromQueue(self)
+    if not room.crashed then
+      self:updateDynamicInfo(true)
+      self:getRoom():tryAdvanceQueue()
+    end
+  end
+end
+
+function Machine:setRepairingMode(lock_room)
+  if lock_room ~= nil then
+    self.repairing_lock_room = lock_room
+  end
+  if self.repairing and self.repairing_lock_room then
+    self:setRepairing(self.repairing)
   end
 end
 
@@ -222,6 +235,10 @@ function Machine:onClick(ui, button)
 end
 
 function Machine:onDestroy()
+  local room = self:getRoom()
+  if room then
+    room.needs_repair = nil
+  end
   Object.onDestroy(self)
 end
 

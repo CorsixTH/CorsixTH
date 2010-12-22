@@ -204,6 +204,7 @@ end
 -- the world.
 function Entity:onDestroy()
   self:setTile(nil)
+  self.world.dispatcher:dropFromQueue(self)
   -- Debug aid to check that there are no hanging references after the entity
   -- has been destroyed:
   --[[
