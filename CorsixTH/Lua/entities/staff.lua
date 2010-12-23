@@ -340,7 +340,7 @@ function Staff:checkIfNeedRest()
       return
     end
     local room = self:getRoom()
-    if room and room:getPatient() then
+    if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
       -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
@@ -532,5 +532,12 @@ function Staff:afterLoad(old, new)
   -- (should be safe even if someone is actually going to staffroom)
   if old < 27 then
     self.going_to_staffroom = nil
+  end
+  
+  if old < 29 then
+    -- Handymen could have "staffroom_needed" flag set due to a bug, unset it.
+    if self.humanoid_class == "Handyman" then
+      self.staffroom_needed = nil
+    end
   end
 end

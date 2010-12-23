@@ -358,8 +358,9 @@ end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
   if staff:isIdle() and staff:fulfillsCriterium(attribute) then
-    if not staff.hospital.policies["staff_allowed_to_move"] 
-    and staff:getRoom() ~= room then
+    local current_room = staff:getRoom()
+    if not staff.hospital.policies["staff_allowed_to_move"]
+    and current_room and current_room ~= room then
       return false
     end
     return true
@@ -422,10 +423,6 @@ end
 
 function CallsDispatcher.verifyStaffForRepair(object, staff)
   if staff:isIdle() and staff:fulfillsCriterium("Handyman") then
-    if not staff.hospital.policies["staff_allowed_to_move"] 
-    and staff:getRoom() ~= object:getRoom() then
-      return false
-    end
     return true
   end
   return false
@@ -466,10 +463,6 @@ end
 
 function CallsDispatcher.verifyStaffForWatering(plant, staff)
   if staff:isIdle() and staff:fulfillsCriterium("Handyman") then
-    if not staff.hospital.policies["staff_allowed_to_move"] 
-    and staff:getRoom() ~= plant:getRoom() then
-      return false
-    end
     return true
   end
   return false
