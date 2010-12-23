@@ -156,6 +156,11 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     const char sLuaCorsixTHLua[] =
     "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)\n"
     "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\"\n"
+#ifdef __APPLE__ // Darrell: Search inside the bundle first.
+                 // There's probably a better way of doing this.
+    "code = loadfile(\"CorsixTH.app/Contents/Resources/\"..name)\n"
+    "if code then return code end\n"
+#endif
     "for num_dotdot = 0, 3 do\n"
     "  for num_dir = 0, 1 do\n"
     "    code = loadfile(root..(\"..\"..sep):rep(num_dotdot)..\n"
