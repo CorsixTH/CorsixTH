@@ -588,7 +588,7 @@ end
 --!param code (integer) The hardware key-code for the pressed key. Note that
 -- these codes only coincide with ASCII for certain keyboard layouts.
 function UI:onKeyUp(code)
-  local rawchar = self.key_code_to_rawchar[code]
+  local rawchar = self.key_code_to_rawchar[code] or ""
   self.key_code_to_rawchar[code] = nil
   local key = self.key_codes[code] or rawchar:lower()
   do

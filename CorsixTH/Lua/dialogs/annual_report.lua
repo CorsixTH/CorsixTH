@@ -287,7 +287,7 @@ function UIAnnualReport:draw(canvas, x, y)
     local dy = 0
     --for i = 1, 10 do
       font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
-      font:draw(canvas, world.hospitals[1].name, x + 260, y + 160 + dy)
+      font:draw(canvas, world.hospitals[1].name:upper(), x + 260, y + 160 + dy)
       font:draw(canvas, "NA", x + 360, y + 160 + dy)
       dy = dy + 25
     --end

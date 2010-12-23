@@ -231,7 +231,7 @@ function GameUI:onKeyDown(code, rawchar)
 end
 
 function GameUI:onKeyUp(code)
-  local rawchar = self.key_code_to_rawchar[code]
+  local rawchar = self.key_code_to_rawchar[code] or ""
   if UI.onKeyUp(self, code) then
     return true
   end
