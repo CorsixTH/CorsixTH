@@ -390,9 +390,9 @@ function Room:onHumanoidLeave(humanoid)
       -- Call for staff if needed
       if self.door.queue:patientSize() > 0 then
         self.world.dispatcher:callForStaff(self)
-      end      
+      end
       for humanoid in pairs(self.humanoids) do
-        if class.is(humanoid, Patient) and not humanoid:hasLeavingAction() then
+        if class.is(humanoid, Patient) and self:shouldHavePatientReenter(humanoid) then
           self:makePatientLeave(humanoid)
           humanoid:queueAction(self:createEnterAction())
         end
@@ -413,6 +413,10 @@ function Room:onHumanoidLeave(humanoid)
       ui:setCursor(ui.default_cursor)
     end
   end
+end
+
+function Room:shouldHavePatientReenter(patient)
+  return not patient:hasLeavingAction()
 end
 
 local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue

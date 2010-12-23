@@ -98,6 +98,10 @@ function GPRoom:commandEnteringPatient(humanoid)
   return Room.commandEnteringPatient(self, humanoid)
 end
 
+function GPRoom:shouldHavePatientReenter(patient)
+  return not patient.diagnosed and Room.shouldHavePatientReenter(self, patient)
+end
+
 function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   patient:setNextAction(self:createLeaveAction())
