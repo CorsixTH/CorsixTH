@@ -222,6 +222,30 @@ function UIEditRoom:confirm(force)
   end
 end
 
+function UIEditRoom:isHumanoidObscuringArea(entity, x1, x2, y1, y2)
+  if entity.tile_x then
+    if x1 <= entity.tile_x and entity.tile_x <= x2
+    and y1 <= entity.tile_y and entity.tile_y <= y2 then
+      if (x1 == entity.tile_x or x2 == entity.tile_x) or (y1 == entity.tile_y or y2 == entity.tile_y) then
+        -- Humanoid not in the rectangle, but might be walking into it
+        local action = entity.action_queue[1]
+        if action.name ~= "walk" then
+          return false
+        end
+        if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
+          local next_x = action.path_x[action.path_index]
+          local next_y = action.path_y[action.path_index]
+          if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
+            return false
+          end
+        end
+      end
+      return true
+    end
+  end
+  return false
+end
+
 function UIEditRoom:clearArea()
   self.confirm_button:enable(false)
   local rect = self.blueprint_rect
@@ -233,28 +257,9 @@ function UIEditRoom:clearArea()
     local x2 = rect.x + rect.w
     local y1 = rect.y - 1
     local y2 = rect.y + rect.h
-    for _, entity in ipairs(world.entities) do repeat
-      if entity.tile_x and x1 <= entity.tile_x and entity.tile_x <= x2
-      and y1 <= entity.tile_y and entity.tile_y <= y2 then
-        if not class.is(entity, Humanoid) then
-          -- We're only interested in humanoids.
-          break -- continue
-        end
-        if (x1 == entity.tile_x or x2 == entity.tile_x) and (y1 == entity.tile_y or y2 == entity.tile_y) then
-          -- Humanoid not in the rectangle, but might be walking into it
-          local action = entity.action_queue[1]
-          if action.name ~= "walk" then
-            break -- continue
-          end
-          if action.path_x then -- in a (rare) special case, path_x is nil (see action_walk_start)
-            local next_x = action.path_x[action.path_index]
-            local next_y = action.path_y[action.path_index]
-            if x1 >= next_x or next_x >= x2 or y1 >= next_y or next_y >= y2 then
-              break -- continue
-            end
-          end
-        end
-        
+    for _, entity in ipairs(world.entities) do
+      if class.is(entity, Humanoid)
+      and self:isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
         
         -- Try to make the humanoid leave the area
@@ -293,7 +298,7 @@ function UIEditRoom:clearArea()
           -- humanoid to be staying within the rectangle for a long time.
         end
       end
-    until true end
+    end
   end
   
   if next(humanoids_to_watch) == nil then
@@ -313,17 +318,19 @@ function UIEditRoom:onTick()
     self.check_for_clear_area_timer = self.check_for_clear_area_timer - 1
     if self.check_for_clear_area_timer == 0 then
       local rect = self.blueprint_rect
-      local x1 = rect.x
-      local x2 = rect.x + rect.w - 1
-      local y1 = rect.y
-      local y2 = rect.y + rect.h - 1
+      local x1 = rect.x - 1
+      local x2 = rect.x + rect.w
+      local y1 = rect.y - 1
+      local y2 = rect.y + rect.h
       for humanoid in pairs(self.humanoids_to_watch) do
-        -- The person might be dying
+        -- The person might be dying (this check should probably be moved into
+        -- isHumanoidObscuringArea, but I don't want to change too much right
+        -- before a release).
         if humanoid.action_queue[1].name == "die" then
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end
-        elseif x1 > humanoid.tile_x or humanoid.tile_x > x2 or y1 > humanoid.tile_y or humanoid.tile_y > y2 then
+        elseif not self:isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
           self.humanoids_to_watch[humanoid] = nil
         end
       end
