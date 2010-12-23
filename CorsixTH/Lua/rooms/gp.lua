@@ -51,16 +51,27 @@ function GPRoom:doStaffUseCycle(humanoid)
   humanoid:queueAction{name = "use_object", object = obj}
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
   humanoid:queueAction{name = "walk", x = ox, y = oy}
-  local desk_use_time = math.random(7, 14)
+  -- A skilled doctor requires less time at the desk to diagnose the patient
+  local inv_skill = 1 - humanoid.profile.skill
+  local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),
+                                    math.ceil (8 + 10 * inv_skill))
   humanoid:queueAction{name = "use_object",
     object = obj,
     loop_callback = --[[persistable:gp_loop_callback]] function()
       desk_use_time = desk_use_time - 1
       if desk_use_time == 0 then
-        self:doStaffUseCycle(humanoid)
+        -- Consultants who aren't tired might not need to stretch their legs
+        -- to remain alert, so might just remain at the desk and deal with the
+        -- next patient quicker.
+        if humanoid.profile.is_consultant
+        and math.random() >= humanoid.attributes.fatigue then
+          desk_use_time = math.random(7, 14)
+        else
+          self:doStaffUseCycle(humanoid)
+        end
         local patient = self:getPatient()
         if patient then
-          if math.random() <= (0.6 + 0.4 * humanoid.profile.skill) or self.max_times <= 0 then
+          if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
             if patient.user_of then
               self:dealtWithPatient(patient)
             end

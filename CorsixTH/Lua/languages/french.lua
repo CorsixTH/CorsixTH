@@ -542,6 +542,15 @@ menu_options = {
   edge_scrolling = utf8 "  DEFILEMENT PAR BORD  ",
   settings = utf8 "  PARAMETRES  ",
 }
+
+menu_options_game_speed = {
+  pause               = "  (P) PAUSE  ",
+  slowest             = "  (1) AU PLUS LENT  ",
+  slower              = "  (2) PLUS LENT  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) VITESSE MAXI  ",
+  and_then_some_more  = "  (5) ET ENCORE PLUS  ",
+}
 menu_options_game_speed.pause = utf8 "  PAUSE  "
 
 -- Debug menu
@@ -554,6 +563,7 @@ menu_debug = {
   make_debug_patient          = utf8 "  (F9) CREER UN PATIENT DE TEST  ",
   cheats                      = utf8 "  (F11) TRICHES  ",
   lua_console                 = utf8 "  (F12) CONSOLE LUA  ",
+  calls_dispatcher            = utf8 "  REPARTITION DES TACHES  ",
   dump_strings                = utf8 "  EXTRAIRE LES TEXTES  ",
   dump_gamelog                = utf8 "  (CTRL+D) EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay                 = utf8 "  INCRUSTATIONS DE CARTE  ",
@@ -763,11 +773,43 @@ information = {
   cannot_restart = utf8 "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   level_lost = {
     utf8 "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
+    utf8 "Voilà pourquoi vous avez perdu :",
+    reputation = utf8 "Votre réputation est tombée en dessous de %d.",
+    balance = utf8 "Votre solde bancaire (moins les emprunts) est tombé en dessous %d.",
+    percentage_killed = utf8 "Vous avez tué plus de %d pourcents de vos patients.",
   },
 }
 
 tooltip.information = {
   close = utf8 "Fermer cette boîte de dialogue.",
+}
+
+-- Introduction Texts
+introduction_texts = {
+  demo = {
+    utf8 "Bienvenue dans l'hôpital de démonstration !",
+    utf8 "Malheureusement, la version démo ne contient que ce niveau (excepté les niveaux personnalisés). Malgré tout, il y a assez à faire ici pour vous occuper un moment !",
+    utf8 "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles.",
+    utf8 "Votre but est de gagner 100.000$, de faire monter la valeur de votre hôpital à 70.000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients.",
+    utf8 "Veillez à ce que votre réputation ne tombre pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.",
+    utf8 "Bonne chance !",
+  },
+}
+
+-- Calls Dispatcher Dialog
+calls_dispatcher = {
+  -- Dispatcher description message. Visible in Calls Dispatcher dialog
+  summary = utf8 "%d appels; %d assignés",
+  staff = "%s - %s",
+  watering = utf8 "Arrose @ %d,%d",
+  repair = utf8 "Répare %s",
+  close = "Fermer",
+}
+
+tooltip.calls_dispatcher = {
+  task = utf8 "Liste des tâches - cliquez sur une tâche pour ouvrir la fenêtre du membre du personnel à qui elle est assignée et aller jusqu'à l'endroit où a lieu la tâche.",
+  assigned = utf8 "Cette case est cochée si la tâche est assignée à quelqu'un.",
+  close = utf8 "Ferme la boîte de dialogue de répartitions des tâches",
 }
 
 -- Fax messages
