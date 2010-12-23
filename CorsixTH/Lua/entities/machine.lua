@@ -82,7 +82,7 @@ end
 function Machine:machineUsed(room)
   self:updateDynamicInfo()
   local threshold = self.times_used/self.strength
-  if threshold > 0.85 then
+  if threshold >= 1 then
     room:crashRoom()
     self:setCrashedAnimation()
     self.hover_cursor = nil
@@ -93,16 +93,13 @@ function Machine:machineUsed(room)
     end
     self:setRepairing(nil)
     return true
-  elseif threshold > 0.65 then
+  elseif threshold >= 0.75 then
     -- TODO: 3428 is smoke, add it when additional objects can be made
     -- Urgent
     self.world.dispatcher:callForRepair(self, true)
-  elseif threshold > 0.35 then
-    -- Not urgent, not manual, lock room
-    self.world.dispatcher:callForRepair(self, false, false, true)
-  else
-    -- Not urgent, not manual, no lock room
-    self.world.dispatcher:callForRepair(self) 
+  elseif threshold >= 0.25 then
+    -- Not urgent
+    self.world.dispatcher:callForRepair(self)
   end
 end
 

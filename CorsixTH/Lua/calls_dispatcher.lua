@@ -90,7 +90,7 @@ end
 --!param lock_room This is a minor maintence. Rooms needed not to be locked.
 --  If urgent or manual is specified, lock_room will be true automatically
 function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
-  lock_room = urgent or manual or lock_room
+  lock_room = manual or lock_room
   local new_call = self:enqueue(
     object,
     'repair',
@@ -107,23 +107,26 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   )
   
   object:setRepairingMode(lock_room and true or false)
+  local message
+  local ui = object.world.ui
   if new_call then
-    local ui = object.world.ui;
-    if object.world:getLocalPlayerHospital():hasStaffOfCategory("Handyman") then
-      if not manual and urgent then
-        local room = object:getRoom();
-        local sound = room.room_info.handyman_call_sound
-        if sound then
-          ui:playAnnouncement(sound)
-          ui:playSound "machwarn.wav"
-        end
-
-        ui.adviser:say(_S.adviser.warnings.machines_falling_apart)
-      end
-    else
+    if not object.world:getLocalPlayerHospital():hasStaffOfCategory("Handyman") then
       -- Advise about hiring Handyman
-      ui.adviser:say(_S(28, 34))
+      message = _S.adviser.warnings.machinery_damaged2
     end
+  end
+  
+  if not manual and urgent then
+    local room = object:getRoom();
+    local sound = room.room_info.handyman_call_sound
+    if sound then
+      ui:playAnnouncement(sound)
+      ui:playSound "machwarn.wav"
+    end
+    message = _S.adviser.warnings.machines_falling_apart
+  end
+  if message then
+    ui.adviser:say(message)
   end
 end
 

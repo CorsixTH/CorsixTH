@@ -85,7 +85,9 @@ function UIMachine:draw(canvas, x, y)
 end
 
 function UIMachine:callHandyman()
-  self.ui.app.world.dispatcher:callForRepair(self.machine, false, true)
+  if self.machine.times_used ~= 0 then
+    self.ui.app.world.dispatcher:callForRepair(self.machine, false, true)
+  end
 end
 
 function UIMachine:replaceMachine()
