@@ -198,7 +198,7 @@ function UIFax:validate()
     self.ui:addWindow(UICheats(self.ui))
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
-    self.ui:playSound("rand*.wav")
+    self.ui:playAnnouncement("rand*.wav")
   elseif 0.0006422 < x and x < 0.0006423 then
     -- Bloaty head patient cheat
     -- Anyone with a 'large' head should be able to spot the required code

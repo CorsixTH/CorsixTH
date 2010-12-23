@@ -64,6 +64,9 @@ function GameUI:GameUI(app, local_hospital)
   self.transparent_walls = false
   self.prevent_edge_scrolling = false
   self.do_world_hit_test = true
+  
+  self:setRandomAnnoucementTarget()
+  self.ticks_since_last_annoucement = 0
 end
 
 function GameUI:makeVisibleDiamond(scr_w, scr_h)
@@ -473,8 +476,27 @@ function GameUI:onMouseUp(code, x, y)
   return UI.onMouseUp(self, code, x, y)
 end
 
+function GameUI:setRandomAnnoucementTarget()
+  -- NB: Every tick is 30ms, so 2000 ticks is 1 minute
+  self.random_annoucement_ticks_target = math.random(8000, 12000)
+end
+
+function GameUI:playAnnouncement(name)
+  self.ticks_since_last_annoucement = 0
+  return UI.playAnnouncement(self, name)
+end
+
 function GameUI:onTick()
   local repaint = UI.onTick(self)
+  do
+    local ticks_since_last_annoucement = self.ticks_since_last_annoucement
+    if ticks_since_last_annoucement >= self.random_annoucement_ticks_target then
+      self:playAnnouncement("rand*.wav")
+      self:setRandomAnnoucementTarget()
+    else
+      self.ticks_since_last_annoucement = ticks_since_last_annoucement + 1
+    end
+  end
   if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
     -- The scroll amount per tick gradually increases as the duration of the
     -- scroll increases due to this multiplier.
@@ -816,6 +838,10 @@ function GameUI:afterLoad(old, new)
   end
   if old < 23 then
     self.do_world_hit_test = not self:getWindow(UIPlaceObjects)
+  end
+  if old < 28 then
+    self:setRandomAnnoucementTarget()
+    self.ticks_since_last_annoucement = 0
   end
   
   return UI.afterLoad(self, old, new)
