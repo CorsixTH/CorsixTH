@@ -70,7 +70,13 @@ end
 
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return {name = "walk", x = x, y = y, is_leaving = true}
+  return {
+    name = "walk",
+    x = x,
+    y = y,
+    is_leaving = true,
+    truncate_only_on_high_priority = true,
+  }
 end
 
 function Room:createEnterAction(humanoid_entering)
@@ -222,6 +228,7 @@ end
 
 function Room:onHumanoidEnter(humanoid)
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+  humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
   -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
   
@@ -349,7 +356,11 @@ function Room:tryAdvanceQueue()
 end
 
 function Room:onHumanoidLeave(humanoid)
-  assert(self.humanoids[humanoid], "Humanoid leaving a room that they are not in")
+  humanoid.in_room = nil
+  if not self.humanoids[humanoid] then
+    print("Warning: Humanoid leaving a room that they are not in")
+    return
+  end
   self.humanoids[humanoid] = nil
   local staff_leaving = false
   if class.is(humanoid, Patient) then

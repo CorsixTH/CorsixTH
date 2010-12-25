@@ -171,6 +171,10 @@ function Humanoid:onClick(ui, button)
   end
 end
 
+function Humanoid:getRoom()
+  return self.in_room or Entity.getRoom(self)
+end
+
 function Humanoid:dump()
   local name = "humanoid"
   if self.profile then

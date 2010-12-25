@@ -330,6 +330,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   action.on_next_tile_set = on_next_tile_set
   
+  if is_entering_room then
+    humanoid.in_room = room
+  end
+  
   action.path_index = action.path_index + 1
   humanoid:setTimer(duration, action_walk_tick_door)
 end

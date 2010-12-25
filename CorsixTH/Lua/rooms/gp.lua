@@ -72,7 +72,7 @@ function GPRoom:doStaffUseCycle(humanoid)
         local patient = self:getPatient()
         if patient then
           if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
-            if patient.user_of then
+            if patient.user_of and not class.is(patient.user_of, Door) then
               self:dealtWithPatient(patient)
             end
           else

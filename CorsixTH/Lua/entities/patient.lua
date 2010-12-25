@@ -243,7 +243,9 @@ function Patient:tickDay()
   
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.8 then
-    if not self.going_to_toilet then
+    -- If waiting for user response, do not send to toilets, as this messes
+    -- things up.
+    if not self.going_to_toilet and not self.waiting then
       self:setMood("poo", "activate")
       -- Check if any room exists.
       if not self.world:findRoomNear(self, "toilets") then
@@ -258,7 +260,7 @@ function Patient:tickDay()
         self.toilet_callback = callback
         self.world:registerRoomBuildCallback(callback)
         -- Otherwise we can queue the action, but only if not in any rooms right now.
-      elseif not self:getRoom() then
+      elseif not self:getRoom() and not self.action_queue[1].is_leaving then
         self:setNextAction{
           name = "seek_toilets",
           must_happen = true,
@@ -366,6 +368,8 @@ function Patient:tickDay()
             name = current.name,
             room_type = current.room_type,
             message_sent = true,
+            diagnosis_room = current.diagnosis_room,
+            treatment_room = current.treatment_room,
           }, 3)
         end
         if current.on_interrupt then
