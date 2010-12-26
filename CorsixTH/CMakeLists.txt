@@ -122,10 +122,9 @@ ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
 # Declaration of the install process
 install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
-install(DIRECTORY Lua DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
-install(DIRECTORY Bitmap DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
-install(DIRECTORY Levels DESTINATION CorsixTH PATTERN "*svn" EXCLUDE)
-install(FILES CorsixTH.lua DESTINATION CorsixTH )
-install(FILES LICENSE.txt DESTINATION CorsixTH )
-install(FILES CorsixTH.ico DESTINATION CorsixTH )
+install(DIRECTORY Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)
+install(DIRECTORY Bitmap DESTINATION CorsixTH
+        FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+        PATTERN "*.svn" EXCLUDE)
+install(FILES CorsixTH.lua LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
 
