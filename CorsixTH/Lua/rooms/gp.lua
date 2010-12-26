@@ -104,6 +104,18 @@ end
 
 function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
+  
+  -- If patients are slow to leave the chair, and staff are quick in their
+  -- usage cycle, then dealtWithPatient() might get called twice for the
+  -- same patient, in which case the second call must be ignored (otherwise
+  -- if the first call resulted in the patient being diagnosed, the following
+  -- logic would cause the patient to leave the room and stand indefinitely).
+  if patient == self.just_dealt_with then
+    return
+  else
+    self.just_dealt_with = patient
+  end
+  
   patient:setNextAction(self:createLeaveAction())
   patient:addToTreatmentHistory(self.room_info)
 
@@ -176,6 +188,9 @@ function GPRoom:onHumanoidLeave(humanoid)
   end
   if self.staff_member == humanoid then
     self.staff_member = nil
+  end
+  if self.just_dealt_with == humanoid then
+    self.just_dealt_with = nil
   end
   Room.onHumanoidLeave(self, humanoid)
 end

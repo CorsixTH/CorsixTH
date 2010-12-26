@@ -32,6 +32,7 @@ IF(UNIX)
   ELSE(APPLE)
     # regular unix/linux
   ENDIF(APPLE)
+ELSE(UNIX)
   IF(WIN32)
     # Win32 specific
     IF(MSVC)
