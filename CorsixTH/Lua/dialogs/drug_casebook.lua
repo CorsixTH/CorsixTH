@@ -73,7 +73,6 @@ function UICasebook:UICasebook(ui, disease_selection)
   
   self.curable = self:addPanel(11, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.possible)
   self.curable.visible = false
-  -- TODO: Add situations when a disease is known but cannot be cured
   self.not_curable = self:addPanel(12, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.not_possible) -- TODO: split up in more specific requirements
   self.not_curable.visible = false
   
@@ -130,15 +129,65 @@ function UICasebook:selectDisease(disease)
   self:updateIcons()
 end
 
+local staffclass_to_string = {
+  Nurse        = _S.staff_title.nurse,
+  Doctor       = _S.staff_title.doctor,
+  Surgeon      = _S.staff_title.surgeon,
+  Psychiatrist = _S.staff_title.psychiatrist,
+  Researcher   = _S.staff_title.researcher,
+}
+
 --! Function that is called when a new entry is selected in some way
 --! It updates all icons etc. that react to what is selected
 function UICasebook:updateIcons()
   local disease = self.selected_disease
+  local hosp = self.hospital
+  local world = hosp.world
+  
   self.drug.visible = not not self.casebook[disease].drug
   self.machinery.visible = not not self.casebook[disease].machine
   self.psychiatry.visible = not not self.casebook[disease].psychiatrist
   self.surgery.visible = not not self.casebook[disease].surgeon
-  self.curable.visible = not self.casebook[disease].pseudo
+  
+  -- Curable / not curable icons and their tooltip
+  if self.casebook[disease].pseudo then
+    self.curable.visible = false
+    self.not_curable.visible = false
+  else
+    local req = hosp:checkDiseaseRequirements(disease)
+    if not req then
+      self.curable.visible = true
+      self.not_curable.visible = false
+    else
+      self.curable.visible = false
+      self.not_curable.visible = true
+      
+      local research = false
+      local build = false
+      local staff = false
+      -- Room requirements
+      if #req.rooms > 0 then
+        for i, room_id in ipairs(req.rooms) do
+          -- Not researched yet?
+          if not hosp.discovered_rooms[world.available_rooms[room_id]] then
+            research = (research and (research .. ", ") or " (") .. TheApp.rooms[room_id].name
+          end
+          -- Researched, but not built. TODO: maybe make this an else clause to not oversize the tooltip that much
+          build = (build and (build .. ", ") or " (") .. TheApp.rooms[room_id].name
+        end
+      end
+      research = research and (_S.tooltip.casebook.cure_requirement.research_machine .. research .. "). ") or ""
+      build    = build    and (_S.tooltip.casebook.cure_requirement.build_room .. build .. "). ") or ""
+      
+      -- Staff requirements
+      for sclass, amount in pairs(req.staff) do
+        staff = (staff and (staff .. ", ") or " (") .. staffclass_to_string[sclass] .. ": " .. amount
+      end
+      staff = staff and (_S.tooltip.casebook.cure_requirement.hire_staff .. staff .. "). ") or ""
+      
+      self.not_curable:setTooltip(research .. build .. staff)
+    end
+  end
   
   self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
   self.percentage_counter = 50

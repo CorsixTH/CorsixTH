@@ -21,7 +21,7 @@ SOFTWARE. --]]
 Language("English", "en", "eng")
 Inherit("original_strings", 0)
 
--- override
+-------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
@@ -40,13 +40,16 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
--- new strings
+
+
+-------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
 tooltip.fax.close = "Close this window without deleting the message"
 tooltip.message.button = "Left click to open message"
 tooltip.message.button_dismiss = "Left click to open message, right click to dismiss it"
+tooltip.casebook.cure_requirement.hire_staff = "You need to employ staff to handle this treatment"
 
 menu_options = {
   lock_windows = "  LOCK WINDOWS  ",

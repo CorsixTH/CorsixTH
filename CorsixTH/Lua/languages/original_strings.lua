@@ -1454,13 +1454,13 @@ tooltip = {
     cure_requirement = {
       possible         = S[32][153],
       research_machine = S[32][154],
-      build_room       = S[32][155], -- NB: no %s!
-      hire_surgeons    = S[32][156],
-      hire_surgeon     = S[32][157],
-      hire_staff       = S[32][158], -- %s (staff type)
-      build_ward       = S[32][159],
-      ward_hire_nurse  = S[32][160],
-      not_possible     = S[32][161],
+      build_room       = S[32][155],
+      hire_surgeons    = S[32][156], -- unused
+      hire_surgeon     = S[32][157], -- unused
+      hire_staff_old   = S[32][158], -- %s (staff type), unused. Use hire_staff instead.
+      build_ward       = S[32][159], -- unused
+      ward_hire_nurse  = S[32][160], -- unused
+      not_possible     = S[32][161], -- unused
     },
   },
   

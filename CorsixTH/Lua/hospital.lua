@@ -534,6 +534,7 @@ function Hospital:createEmergency()
     -- The last room in the list of treatment rooms is considered when checking for availability.
     -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
     -- TODO: Make it work for all kinds of lists of treatment rooms.
+    -- TODO: Change to make use of Hospital:checkDiseaseRequirements
     local no_rooms = #emergency.disease.treatment_rooms
     local room_name, required_staff, staff_name = 
       self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
@@ -741,19 +742,24 @@ function Hospital:humanoidDeath(humanoid)
   self:updatePercentages()
 end
 
+--! Checks if the hospital employs staff of a given category.
+--!param category (string) A humanoid_class or one of the specialists, i.e.
+--! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist", "Surgeon" or "Researcher"
+--! returns false if none, else number of that type employed
 function Hospital:hasStaffOfCategory(category)
+  local result = false
   for i, staff in ipairs(self.staff) do
     if staff.humanoid_class == category then
-      return true
+      result = (result or 0) + 1
     elseif staff.humanoid_class == "Doctor" then
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or 
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or 
           (category == "Researcher" and staff.profile.is_researcher >= 1.0) then
-        return true
+        result = (result or 0) + 1
       end
     end
   end
-  return false
+  return result
 end
 
 local function RemoveByValue(t, value)
@@ -837,6 +843,46 @@ function Hospital:getAveragePatientAttribute(attribute)
     sum = sum + patient.attributes[attribute]
   end
   return sum / #self.patients
+end
+
+--! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.
+--!param disease (String) The disease to check the requirements for
+--! returns false if all requirements are met, else a table in the form
+--! { rooms = {[room1], [room2], ...}, staff = {[humanoid_class] = [amount_needed] or nil} }
+--! i.e. a list of rooms (ordered the same as disease.treatment_rooms), and a set of humanoid_classes with
+--! the needed amount of that class as the value
+function Hospital:checkDiseaseRequirements(disease)
+  -- Copy rooms list from disease but leave out the ones that are present in the hospital
+  -- Get required staff from all rooms required by the disease, if not already present in hospital
+  local rooms = {}
+  local staff = {}
+  local any = false
+  for i, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
+    local found = false
+    for _, room in ipairs(self.world.rooms) do
+      -- Check if room not yet present
+      print(room.hospital, room.room_info.id, "vs", self, room_id)
+      if room.hospital == self and room.room_info.id == room_id then
+        found = true
+      end
+    end
+    if not found then
+      rooms[#rooms + 1] = room_id
+      any = true
+    end
+    
+    -- Get staff for room
+    for staff_class, amount in pairs(TheApp.rooms[room_id].required_staff) do
+      local available = self:hasStaffOfCategory(staff_class) or 0
+      if available < amount then
+        -- Don't add up the staff requirements of different rooms, but take the maximum
+        staff[staff_class] = math.max(staff[staff_class] or 0, amount - available)
+        any = true
+      end
+    end
+  end
+  -- False if no rooms and no staff were added
+  return any and {rooms = rooms, staff = staff}
 end
 
 class "AIHospital" (Hospital)

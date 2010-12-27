@@ -97,6 +97,7 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   humanoid.waiting = 60
   local strings = _S.fax.disease_discovered_patient_choice
   -- Can this room be built right now? What is then missing?
+  -- TODO: Change to make use of Hospital:checkDiseaseRequirements
   local output_text = strings.can_not_cure
   local room_needed
   for _, room in ipairs(TheApp.rooms) do
