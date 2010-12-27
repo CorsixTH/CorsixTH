@@ -68,6 +68,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.drug.visible = false
   self.surgery = self:addPanel(8, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.surgery)
   self.surgery.visible = false
+  self.unknown = self:addPanel(9, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.unknown)
+  self.unknown.visible = false
   self.psychiatry = self:addPanel(10, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.psychiatrist)
   self.psychiatry.visible = false
   
@@ -144,11 +146,7 @@ function UICasebook:updateIcons()
   local hosp = self.hospital
   local world = hosp.world
   
-  self.drug.visible = not not self.casebook[disease].drug
-  self.machinery.visible = not not self.casebook[disease].machine
-  self.psychiatry.visible = not not self.casebook[disease].psychiatrist
-  self.surgery.visible = not not self.casebook[disease].surgeon
-  
+  local known = true
   -- Curable / not curable icons and their tooltip
   if self.casebook[disease].pseudo then
     self.curable.visible = false
@@ -162,6 +160,7 @@ function UICasebook:updateIcons()
       self.curable.visible = false
       self.not_curable.visible = true
       
+      -- Strings for the tooltip
       local research = false
       local build = false
       local staff = false
@@ -170,6 +169,7 @@ function UICasebook:updateIcons()
         for i, room_id in ipairs(req.rooms) do
           -- Not researched yet?
           if not hosp.discovered_rooms[world.available_rooms[room_id]] then
+            known = false
             research = (research and (research .. ", ") or " (") .. TheApp.rooms[room_id].name
           end
           -- Researched, but not built. TODO: maybe make this an else clause to not oversize the tooltip that much
@@ -188,6 +188,12 @@ function UICasebook:updateIcons()
       self.not_curable:setTooltip(research .. build .. staff)
     end
   end
+  
+  self.unknown.visible    = not known
+  self.drug.visible       = known and not not self.casebook[disease].drug
+  self.machinery.visible  = known and not not self.casebook[disease].machine
+  self.psychiatry.visible = known and not not self.casebook[disease].psychiatrist
+  self.surgery.visible    = known and not not self.casebook[disease].surgeon
   
   self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
   self.percentage_counter = 50
