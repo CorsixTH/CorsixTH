@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local room = {}
 room.id = "inflation"
 room.level_config_id = 9
+room.level_config_research = 2
 room.class = "InflationRoom"
 room.name = _S.rooms_short.inflation
 room.tooltip = _S.tooltip.rooms.inflation

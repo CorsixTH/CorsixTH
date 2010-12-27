@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "general_diag"
+room.level_config_id = 20
+room.level_config_research = 41
 room.class = "GeneralDiagRoom"
 room.name = _S.rooms_short.general_diag
 room.tooltip = _S.tooltip.rooms.general_diag

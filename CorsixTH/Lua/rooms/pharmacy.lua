@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "pharmacy"
+room.level_config_id = 39
+room.level_config_research = 16 -- uncommon cold. TODO: figure out how to do this better
 room.class = "PharmacyRoom"
 room.name = _S.rooms_short.pharmacy
 room.tooltip = _S.tooltip.rooms.pharmacy

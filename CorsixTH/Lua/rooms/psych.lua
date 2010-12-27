@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "psych"
+room.level_config_id = 18
+room.level_config_research = 43
 room.class = "PsychRoom"
 room.name = _S.rooms_short.psychiatric
 room.tooltip = _S.tooltip.rooms.psychiatry
