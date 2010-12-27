@@ -22,7 +22,7 @@ Language("Castellano", "Spanish", "es", "spa", "esp")
 Inherit("english")
 Inherit("original_strings", 4)
 
--- override
+-------------------------------  OVERRIDE  ----------------------------------
 misc.hospital_open = "Hospital abierto"
 misc.save_success = "Partida guardada correctamente"
 misc.save_failed = "ERROR: No se ha podido guardar la partida"
@@ -54,13 +54,15 @@ tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
 tooltip.staff_window.center_view = utf8 "Botón izquierdo del ratón para enfocar al personal, botón derecho del ratón para rotar entre los miembros del personal."
 
--- new strings
+-------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Basura"
 tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
 
 tooltip.fax.close = "Cierra esta ventana sin borrar el mensaje."
 tooltip.message.button = utf8 "Botón izquierdo del ratón para abrir el mensaje."
 tooltip.message.button_dismiss = utf8 "Botón izquierdo para abrir el mensaje, botón derecho para rechazarlo."
+tooltip.casebook.cure_requirement.hire_staff = utf8 "Necesitas contratar a empleados para realizar este tratamiento."
+tooltip.casebook.cure_type.unknown = utf8 "Todavía no conoces la forma de curar esta enfermedad."
 
 menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
