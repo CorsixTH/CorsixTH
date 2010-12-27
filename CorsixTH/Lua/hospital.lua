@@ -678,9 +678,7 @@ function Hospital:receiveMoneyForTreatment(patient)
     reason = _S.transactions.treat_colon .. " " .. room_info.name
   end
   local casebook = self.disease_casebook[disease_id]
-  local amount = casebook.disease.cure_price
-  amount = amount * (casebook.reputation or self.reputation) / 500
-  amount = math.ceil(amount * casebook.price)
+  local amount = self:getTreatmentPrice(disease_id)
   casebook.money_earned = casebook.money_earned + amount
   patient.world:newFloatingDollarSign(patient, amount)
   -- 25% of the payments now go through insurance
@@ -689,6 +687,14 @@ function Hospital:receiveMoneyForTreatment(patient)
   else
     self:receiveMoney(amount, reason)  
   end
+end
+
+--! Function to determine the price for a treatment, modified by reputation and percentage
+function Hospital:getTreatmentPrice(disease)
+  local reputation = self.disease_casebook[disease].reputation or self.reputation
+  local percentage = self.disease_casebook[disease].price
+  local raw_price  = self.disease_casebook[disease].disease.cure_price
+  return math.ceil(raw_price * (reputation / 500) * percentage)
 end
 
 function Hospital:addInsuranceMoney(company, amount)

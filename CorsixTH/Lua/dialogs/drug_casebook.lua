@@ -77,6 +77,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.not_curable = self:addPanel(12, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.not_possible) -- TODO: split up in more specific requirements
   self.not_curable.visible = false
   
+  self.percentage_counter = false -- Counter for displaying cure price percentage for a certain time before switching to price.
+  
   self:makeTooltip(_S.tooltip.casebook.reputation,       249,  72, 362, 117)
   self:makeTooltip(_S.tooltip.casebook.treatment_charge, 249, 117, 362, 161)
   self:makeTooltip(_S.tooltip.casebook.earned_money,     247, 161, 362, 205)
@@ -128,6 +130,8 @@ function UICasebook:selectDisease(disease)
   self:updateIcons()
 end
 
+--! Function that is called when a new entry is selected in some way
+--! It updates all icons etc. that react to what is selected
 function UICasebook:updateIcons()
   local disease = self.selected_disease
   self.drug.visible = not not self.casebook[disease].drug
@@ -137,6 +141,7 @@ function UICasebook:updateIcons()
   self.curable.visible = not self.casebook[disease].pseudo
   
   self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
+  self.percentage_counter = 50
 end
 
 function UICasebook:draw(canvas, x, y)
@@ -166,7 +171,12 @@ function UICasebook:draw(canvas, x, y)
   end
   local rep = book[disease].reputation or self.hospital.reputation
   titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
-  titles:draw(canvas, ("%.0f%%"):format(book[disease].price * 100), x + 262, y + 137, 90, 0) -- Treatment Charge
+
+  -- Treatment Charge is either displayed in percent, or normally
+  local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100)
+                      or "$" .. self.hospital:getTreatmentPrice(disease)
+  titles:draw(canvas, price_text, x + 262, y + 137, 90, 0) -- Treatment Charge
+  
   titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
   titles:draw(canvas, book[disease].recoveries, x + 248, y + 225, 114, 0) -- Recoveries
   titles:draw(canvas, book[disease].fatalities, x + 248, y + 269, 114, 0) -- Fatalities
@@ -238,6 +248,7 @@ function UICasebook:increasePay()
     self.ui:playSound("selectx.wav")
   end
   self.casebook[self.selected_disease].price = price
+  self.percentage_counter = 50
 end
 
 function UICasebook:decreasePay()
@@ -256,6 +267,7 @@ function UICasebook:decreasePay()
     self.ui:playSound("selectx.wav")
   end
   self.casebook[self.selected_disease].price = price
+  self.percentage_counter = 50
 end
 
 function UICasebook:onMouseDown(button, x, y)
@@ -283,3 +295,12 @@ function UICasebook:onMouseDown(button, x, y)
   end
 end
 
+function UICasebook:onTick()
+  -- Decrease counter for showing percentage of cure price, if applicable
+  if self.percentage_counter then
+    self.percentage_counter = self.percentage_counter - 1
+    if self.percentage_counter <= 0 then
+      self.percentage_counter = false
+    end
+  end
+end
