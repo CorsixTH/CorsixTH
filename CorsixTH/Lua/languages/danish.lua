@@ -30,7 +30,42 @@ calls_dispatcher = {
   repair = "Reparere %s",
   close = "Luk",
 }
+  
+cheats_window = {
+  caption = utf8 "Snyd",
+  warning = utf8 "Advarsel: Det vil ikke være muligt at få bonus point ved slutningen af runden hvis du snyder!",
+  cheated = {
+    no = utf8 "Brugt snyd: Nej",
+    yes = utf8 "Brugt snyd: Ja",
+  },
+  cheats = {
+    money = utf8 "Snyd med penge",
+    all_research = utf8 "Alt er forsket",
+    emergency = utf8 "Skab et akkuttilfælde",
+    create_patient = utf8 "Lav en patient",
+    end_month = utf8 "Afslut måneden",
+    end_year = utf8 "Afslut året",
+    lose_level = utf8 "Tab runden",
+    win_level = utf8 "Vind runden",
+  },
+  close = "Luk",
+}  
 
+    
+  tooltip.cheats_window = {
+  close = utf8 "Lukker dialogen",
+  cheats = {
+    money = utf8 "Giver dig 10.000 til din bank balance.",
+    all_research = utf8 "Du har forsket alt.",
+    emergency = utf8 "Skaber et akkuttilfælde.",
+    create_patient = utf8 "laver en patient ved kanten af kortet.",
+    end_month = utf8 "Hopper til slutningen af måneden.",
+    end_year = utf8 "Hopper til slutningen af året",
+    lose_level = utf8 "Du taber runden.",
+    win_level = utf8 "Du vinder runden.",
+  },
+ }
+    
   menu_debug = {
   jump_to_level               = utf8 "  Gå til runde  ",
   transparent_walls           = utf8 "  (K) TRANSPERANTE VÆGE  ",
@@ -86,9 +121,23 @@ menu_debug_overlay = {
 -- new strings
 object.litter = "Skrald"
 tooltip.objects.litter = "Skrald: Smidt af dine patienter da de ikke kunne finde en skraldespand"
+ 
+adviser = {
+  room_forbidden_non_reachable_parts = "Hvis du placerede rummet her ville det resultere at dele af dit hospital ikke ville være tilgængelige.",
 
-adviser.room_forbidden_non_reachable_parts = "Hvis du placerede rummet her ville det resultere at dele af dit hospital ikke ville være tilgængelige."
-
+  cheats = {  
+    th_cheat = utf8 "Tillyke, du har nu muligheden for at snyde",
+    crazy_on_cheat = utf8 "åh nej! Alle lægerne er blevet sköre!",
+    crazy_off_cheat = utf8 "Puha... Alle lægerne er blevet normale igen.",
+    roujin_on_cheat = utf8 "Roujin's udfordring er blevet aktiveret! Held og lykke...",
+    roujin_off_cheat = utf8 "Roujin's udfordring deaktivateret.",
+    hairyitis_cheat = utf8 "Skaldethed snydekoden er aktivateret!",
+    hairyitis_off_cheat = utf8 "Skaldethed snydekoden deaktivateret.",
+    bloaty_cheat = utf8 "Opsvulmet hoved snydekoden deaktivateret.!",
+    bloaty_off_cheat = utf8 "Opsvulmet hoved snydekoden deaktivateret.",
+  },
+}
+    
 dynamic_info.patient.actions.no_gp_available = utf8 "Venter på du bygger lægens kontor"
 dynamic_info.staff.actions.heading_for = "På vej til %s"
 dynamic_info.staff.actions.fired = "Fyret"
@@ -360,7 +409,8 @@ menu_charts = {
   briefing            = "  BRIEFING  ",
 }
 
-
+tooltip.casebook.cure_requirement.hire_staff = utf8 "Du skal hyre personale for at kunne håndtere denne sygdom"
+    
 casebook = {
   reputation           = utf8 "Omdömme",
   treatment_charge     = "Behandlingspris",
@@ -370,7 +420,7 @@ casebook = {
   sent_home            = "Sendt hjem",
   research             = "Koncentrer forskning",
   cure                 = "Kur",
-  cure_desc = {
+   cure_desc = {
     build_room         = "Jeg anbefalder du bygger %s", -- %s (room name)
     build_ward         = "Du mangler stadig at bygge en sygestue.",
     hire_doctors       = utf8 "Du mangler at hyre nogle læger",
@@ -905,7 +955,7 @@ diseases = {
     cure        = utf8 "Behandling - Der stikkes hul på det opsvulmede hoved, og ved hjælp af en genial maskine blir hovedet sat tilbage til den korekte PSI.", 
   },
   hairyitis              = { 
-    name      = "Hairyitis", 
+    name      = "Skaldethed", 
     cause     = utf8 "Årsag - Fuldmåne.", 
     symptoms  = "Symptomer - Forbedret lugtesans.", 
     cure      = utf8 "Behandling - En elektrolyse maskine fjerner håret og fortætter porene til deres normale stadie.", 
@@ -1183,7 +1233,6 @@ misc = {
 
   -- Tooltips
 tooltip = {
-  
   
     -- Watch
   watch = {
