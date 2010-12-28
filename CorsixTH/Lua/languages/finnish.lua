@@ -339,6 +339,15 @@ tooltip = {
     assigned    = utf8 "Tässä on merkki, kun vastaava tehtävä on välitetty jonkun tehtäväksi",
     close       = utf8 "Sulje tehtävien välitys -ikkuna",
   },
+
+  casebook = {
+    cure_requirement = {
+      hire_staff = utf8 "Sinun täytyy palkata lisää henkilökuntaa tämän taudin hoitamiseksi",
+    },
+    cure_type = {
+      unknown = utf8 "Et vielä tiedä, miten tätä tautia pitää hoitaa",
+    },
+  },
 }
 
 -- 7. Letter
@@ -1570,7 +1579,7 @@ tooltip = {
   
   
   -- Handyman window
-  -- Spparently handymen have their own set of strings (partly) containing "handyman".
+  -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
     name                = utf8 "Huoltomiehen nimi", -- contains "handyman"
@@ -1621,13 +1630,13 @@ tooltip = {
     cure_requirement = {
       possible          = utf8 "Voit hoitaa potilaan terveeksi",
       research_machine  = utf8 "Sinun täytyy kehittää erikoislaite hoitaaksesi sairautta",
-      build_room        = utf8 "Sinun täytyy rakentaa hoitohuone hoitaaksesi sairautta", -- NB: no %s!
-      hire_surgeons     = utf8 "Tarvitset kaksi kirurgia hoitaaksesi sairautta",
-      hire_surgeon      = utf8 "Tarvitset yhden kirurgin hoitaaksesi sairautta",
-      hire_staff        = utf8 "Sinun täytyy palkata %s hoitaaksesi sairautta", -- %s (staff type)
-      build_ward        = utf8 "Sinun täytyy rakentaa vuodeosasto hoitaaksesi sairautta",
-      ward_hire_nurse   = utf8 "Tarvitset sairaanhoitajan vuodeosastollesi hoitaaksesi sairautta",
-      not_possible      = utf8 "Et voi vielä hoitaa sairautta",
+      build_room        = utf8 "Sinun täytyy rakentaa hoitohuone hoitaaksesi sairautta",
+      hire_surgeons     = utf8 "Tarvitset kaksi kirurgia hoitaaksesi sairautta", -- unused
+      hire_surgeon      = utf8 "Tarvitset yhden kirurgin hoitaaksesi sairautta", -- unused
+      hire_staff_old    = utf8 "Sinun täytyy palkata %s hoitaaksesi sairautta", -- %s (staff type), unused. Use hire_staff instead.
+      build_ward        = utf8 "Sinun täytyy rakentaa vuodeosasto hoitaaksesi sairautta", -- unused
+      ward_hire_nurse   = utf8 "Tarvitset sairaanhoitajan vuodeosastollesi hoitaaksesi sairautta", -- unused
+      not_possible      = utf8 "Et voi vielä hoitaa sairautta", -- unused
     },
   },
   
