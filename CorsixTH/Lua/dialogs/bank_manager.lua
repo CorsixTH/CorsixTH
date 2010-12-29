@@ -274,13 +274,9 @@ end
 
 function UIBankManager:increaseLoan()
   local hospital = self.ui.hospital
-  local max_loan = ((hospital.value)*0.33) + 10000
-  if hospital.loan + 5000 < max_loan  then
-    local amount = math.min(5000, max_loan - hospital.loan)
-    if self.buttons_down.ctrl then
-      -- Take maximum loan amount if ctrl is down
-      amount = max_loan - hospital.loan
-    end
+  local max_loan = (math.floor((hospital.value * 0.33) / 5000) * 5000) + 10000
+  if hospital.loan + 5000 <= max_loan  then
+    local amount = self.buttons_down.ctrl and max_loan - hospital.loan or 5000
     hospital.loan = hospital.loan + amount
     hospital:receiveMoney(amount, _S.transactions.bank_loan)
     self.ui:playSound("selectx.wav")
