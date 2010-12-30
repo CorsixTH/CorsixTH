@@ -123,7 +123,9 @@ function World:World(app)
   end
   self:makeAvailableStaff(0)
   self:calculateSpawnTiles()
-   
+
+  self:nextEmergency()
+
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }
@@ -662,11 +664,12 @@ function World:onTick()
     -- With ~33 ticks/sec, reduced to 11 /sec at normal speed, 3 seconds -> 33
     -- ticks, which is 1 day and 9 hours.
     if self.hour >= 24 then
-      self.hour = self.hour - 24
-      self.day = self.day + 1
       for _, hospital in ipairs(self.hospitals) do
         hospital:onEndDay()
       end
+      self:onEndDay()
+      self.hour = self.hour - 24
+      self.day = self.day + 1
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
         for _, hospital in ipairs(self.hospitals) do
@@ -706,29 +709,6 @@ function World:onTick()
           self.month = 1
         end
       end
-      for _, entity in ipairs(self.entities) do
-        if entity.ticks and class.is(entity, Humanoid) then
-          self.current_tick_entity = entity
-          entity:tickDay()
-        elseif class.is(entity, Plant) then
-          entity:tickDay()
-        end
-      end
-      self.current_tick_entity = nil
-      -- Emergencies may arrive now and then - though not too often.
-      local last_emergency  = (self.time_since_emergency and self.time_since_emergency or 0) + 1
-      if last_emergency > 180 then
-        -- More and more likely as time goes on, TODO: balance...
-        -- Avoid making a new emergency if one is already underway or any other watch-related
-        -- scenario is active.
-        if not self.ui:getWindow(UIWatch) and math.random(1, last_emergency) > 150 then
-          self.hospitals[1]:createEmergency()
-          last_emergency = 0
-        end
-      end
-      self.time_since_emergency = last_emergency
-      -- TODO: Do other regular things, such as checking if any room needs
-      -- staff at the moment and making plants need water.
     end
     for i = 1, self.ticks_per_tick do
       for _, hospital in ipairs(self.hospitals) do
@@ -772,19 +752,59 @@ function World:setEndYear()
   self:setEndMonth()
 end
 
--- Called immediately prior to the ingame month changing.
--- returns true if the game was killed due to the player losing
-function World:onEndMonth()
-  self:makeAvailableStaff((self.year - 1) * 12 + self.month)
-  self.autosave_next_tick = true
+-- Called immediately prior to the ingame day changing.
+function World:onEndDay()
   for _, entity in ipairs(self.entities) do
-    if entity.checkForDeadlock then
+    if entity.ticks and class.is(entity, Humanoid) then
       self.current_tick_entity = entity
-      entity:checkForDeadlock()
+      entity:tickDay()
+    elseif class.is(entity, Plant) then
+      entity:tickDay()
     end
   end
   self.current_tick_entity = nil
-  
+  -- Maybe it's time for an emergency?
+  if (self.year - 1) * 12 + self.month == self.next_emergency_month 
+  and self.day == self.next_emergency_day then
+    -- Postpone it if anything clock related is already underway.
+    if self.ui:getWindow(UIWatch) then
+      self.next_emergency_month = self.next_emergency_month + 1
+      self.next_emergency_day = math.random(1, month_length[self.next_emergency_month])
+    else
+      -- Do it only for the player hospital for now. TODO: Multiplayer
+      local control = self.map.level_config.emergency_control
+      if control[0].Mean or control[0].Random then
+        -- The level uses random emergencies, so just create one.
+        self.hospitals[1]:createEmergency()
+      else
+        control = control[self.next_emergency_no]
+        -- Find out which disease the emergency patients have.
+        local disease
+        for _, dis in ipairs(TheApp.diseases) do
+          if dis.expertise_id == control.Illness then
+            disease = dis
+            break
+          end
+        end
+        local emergency = {
+          disease = disease,
+          victims = math.random(control.Min, control.Max),
+          bonus = control.Bonus,
+          percentage = control.PercWin,
+          killed_emergency_patients = 0,
+          cured_emergency_patients = 0,
+        }
+        self.hospitals[1]:createEmergency(emergency)
+      end
+    end
+  end
+  -- TODO: Do other regular things? Such as checking if any room needs
+  -- staff at the moment and making plants need water.
+end
+
+-- Called immediately prior to the ingame month changing.
+-- returns true if the game was killed due to the player losing
+function World:onEndMonth()
   -- Check if a player has won the level.
   for i = 1,4 do
     local res = self:checkWinningConditions(i)
@@ -795,6 +815,72 @@ function World:onEndMonth()
       if i == 1 then
         return true
       end
+    end
+  end
+  
+  self:makeAvailableStaff((self.year - 1) * 12 + self.month)
+  self.autosave_next_tick = true
+  for _, entity in ipairs(self.entities) do
+    if entity.checkForDeadlock then
+      self.current_tick_entity = entity
+      entity:checkForDeadlock()
+    end
+  end
+  self.current_tick_entity = nil
+end
+
+-- Called when it is time to determine what the 
+-- next emergency should look like.
+function World:nextEmergency()
+  local control = self.map.level_config.emergency_control
+  local current_month = (self.year - 1) * 12 + self.month
+  -- Does this level use random emergencies?
+  if control and (control[0].Random or control[0].Mean) then
+    -- Support standard values for mean and variance
+    local mean = control[0].Mean or 180
+    local variance = control[0].Variance or 30
+    -- How many days until next emergency?
+    local days = math.round(math.n_random(mean, variance))
+    local next_month = self.month
+    
+    -- Walk forward to get the resulting month and day.
+    if days > month_length[next_month] - self.day then
+      days = days - (month_length[next_month] - self.day)
+      next_month = next_month + 1
+    end
+    while days > month_length[next_month] do
+      days = days - month_length[next_month]
+      next_month = next_month + 1
+    end
+    -- Make it the same format as for "controlled" emergencies
+    self.next_emergency_month = next_month + (self.year - 1) * 12
+    self.next_emergency_day = days
+  else
+    if not self.next_emergency_no then
+      self.next_emergency_no = 0
+    else
+      repeat
+        self.next_emergency_no = self.next_emergency_no + 1
+      until not control[self.next_emergency_no]
+      or control[self.next_emergency_no].EndMonth >= current_month
+    end
+
+    local emergency = control[self.next_emergency_no]
+
+    -- No more emergencies?
+    if not emergency or emergency.EndMonth == 0 then
+      self.next_emergency_month = 0
+    else
+      -- Generate the next month and day the emergency should occur at.
+      -- Make sure it doesn't happen in the past.
+      local start = math.max(emergency.StartMonth, self.month + (self.year - 1) * 12)
+      local next_month = math.random(start, emergency.EndMonth)
+      self.next_emergency_month = next_month
+      local day_start = 1
+      if start == emergency.EndMonth then
+        day_start = self.day
+      end
+      self.next_emergency_day = math.random(day_start, month_length[next_month])
     end
   end
 end
@@ -1460,6 +1546,9 @@ function World:afterLoad(old, new)
   if old < 27 then
     -- Add callsDispatcher
     self.dispatcher = CallsDispatcher(self)
+  end
+  if old < 30 then
+    self:nextEmergency()
   end
   self.savegame_version = new
 end

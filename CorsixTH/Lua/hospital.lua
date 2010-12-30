@@ -373,6 +373,11 @@ function Hospital:afterLoad(old, new)
     self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
     self.num_deaths_this_year = 0
   end
+  if old < 30 then
+    if self.emergency then
+      self.emergency.percentange = 0.75
+    end
+  end
 end
 
 function Hospital:tick()
@@ -518,18 +523,23 @@ end
 
 -- Creates complete emergency with patients, what disease they have, what's needed
 -- to cure them and the fax.
-function Hospital:createEmergency()
+function Hospital:createEmergency(emergency)
   local created_one = false
-  if self:getHeliportSpawnPosition() and #self.discovered_diseases > 0 then
-    local random_disease = self.discovered_diseases[math.random(1, #self.discovered_diseases)]
-    local victims = math.random(4,6) -- TODO: Should depend on disease (e.g. operating theatre is harder)
-    local emergency = {
-      disease = TheApp.diseases[random_disease],
-      victims = victims,
-      bonus = 1000 * victims,
-      killed_emergency_patients = 0,
-      cured_emergency_patients = 0,
-    }
+  if self:getHeliportSpawnPosition() then
+    if not emergency then
+      -- Create a random emergency if parameters are not specified already.
+      local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
+      -- TODO: The following should depend on disease (e.g. operating theatre is harder)
+      emergency = {
+        disease = TheApp.diseases[random_disease.id],
+        victims = math.random(4,6),
+        bonus = 1000,
+        percentage = 0.75,
+        killed_emergency_patients = 0,
+        cured_emergency_patients = 0,
+      }
+    end
+    
     self.emergency = emergency
     -- The last room in the list of treatment rooms is considered when checking for availability.
     -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
@@ -563,10 +573,10 @@ function Hospital:createEmergency()
       {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
       {text = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)},
       {text = added_info},
-      {text = _S.fax.emergency.bonus:format(emergency.bonus)},
+      {text = _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
       choices = {
         {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
-        {text = _S.fax.emergency.choices.refuse, choice = "refuse"},
+        {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
       },
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message, nil, 24*20, 2) -- automatically refuse after 20 days
@@ -577,19 +587,20 @@ end
 
 -- Called when the timer runs out during an emergency or when all emergency patients are cured or dead.
 function Hospital:resolveEmergency()
-  local rescued_patients = self.emergency.cured_emergency_patients
+  local emer = self.emergency
+  local rescued_patients = emer.cured_emergency_patients
   for i, patient in ipairs(self.emergency_patients) do
     if patient and patient.hospital and not patient:getRoom() then
       patient:die()
     end
   end
-  local total = self.emergency.victims
-  local max_bonus = self.emergency.bonus
-  local earned = math.floor((rescued_patients/total > 0.75 and 
+  local total = emer.victims
+  local max_bonus = emer.bonus * total
+  local earned = math.floor((rescued_patients/total > emer.percentage and 
     rescued_patients/total or 0)*10)*max_bonus/10
   local message = {
     {text = _S.fax.emergency_result.saved_people
-      :format(rescued_patients, self.emergency.victims)},
+      :format(rescued_patients, total)},
     {text = _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
     choices = {
       {text = _S.fax.emergency_result.close_text, choice = "close"},
@@ -597,11 +608,12 @@ function Hospital:resolveEmergency()
   }
   self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
   if earned > 0 then -- Reputation increased
-    self:changeReputation("emergency_success", self.emergency.disease)
+    self:changeReputation("emergency_success", emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
   else -- Too few rescued, reputation hit
-    self:changeReputation("emergency_failed", self.emergency.disease)
+    self:changeReputation("emergency_failed", emer.disease)
   end
+  self.world:nextEmergency()
 end
 
 function Hospital:spawnPatient()

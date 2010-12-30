@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 29
+local SAVEGAME_VERSION = 30
 
 class "App"
 
@@ -155,7 +155,18 @@ function App:init()
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
   
   math.randomseed(os.time() + SDL.getTicks())
-  
+  -- Add math.n_random globally. It generates pseudo random normally distributed
+  -- numbers using the Box-Muller transform.
+  strict_declare_global "math.n_random"
+  math.n_random = function(mean, variance)
+    return mean + math.sqrt(-2 * math.log(math.random())) 
+    * math.cos(2 * math.pi * math.random()) * variance
+  end
+  -- Also add the nice-to-have function math.round
+  strict_declare_global "math.round"
+  math.round = function(input)
+    return math.floor(input + 0.5)
+  end
   -- Load audio
   dofile "audio"
   self.audio = Audio(self)
@@ -868,7 +879,8 @@ end
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
-  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart, --[[persistable:app_confirm_restart]] function()
+  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart_level,
+  --[[persistable:app_confirm_restart]] function()
     local level = self.map.level_number
     local difficulty = self.map.difficulty
     local name, file, intro

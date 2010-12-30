@@ -22,7 +22,7 @@ Language("Svenska", "Swedish", "sv", "swe")
 Inherit("english")
 Inherit("original_strings", 5)
 
--- override
+-------------------------------  OVERRIDE  ----------------------------------
 object.reception_desk = "Reception"
 
 -- "Psyket" means something entirely different than "Psykiatrin"
@@ -45,13 +45,17 @@ tooltip.staff_list.prev_person = utf8 "Visa föregående sida"
 tooltip.staff_window.face = utf8 "Vederbörandes ansikte - klicka för att öppna personalhanteraren"
 tooltip.staff_window.center_view = utf8 "Vänsterklicka för att komma till personen, högerklicka för att gå igenom personalen en och en"
 
--- new strings
+confirmation.restart_level = utf8 "Är du säker på att du vill starta om nivån?"
+
+-------------------------------  NEW STRINGS  -------------------------------
 object.litter = utf8 "Skräp"
 tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
 tooltip.fax.close = utf8 "Stäng fönstret utan att ta bort meddelandet"
 tooltip.message.button = utf8 "Vänsterklicka för att öppna meddelandet"
 tooltip.message.button_dismiss = utf8 "Vänsterklicka för att öppna meddelandet, högerklicka för att ta bort det"
+tooltip.casebook.cure_requirement.hire_staff = utf8 "Du behöver anställa personal att hantera behandlingen"
+tooltip.casebook.cure_type.unknown = utf8 "Du vet ännu inte hur denna sjukdom botas"
 
 menu_options = {
   lock_windows = utf8 "  LÅS FÖNSTER  ",
@@ -273,7 +277,6 @@ errors = {
 confirmation = {
   needs_restart = utf8 "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
   abort_edit_room = utf8 "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
-  restart = utf8 "Är du säker på att du vill starta om nivån?"
 }
 
 information = {
@@ -302,6 +305,7 @@ totd_window = {
     utf8 "Juniorer och läkare kan höja sin kompetensnivå genom att gå i träning hos en konsult i utbildningsrummet. Om konsulten har någon färdighet (kirurg, psykiater eller forskare) kommer han också att lära ut detta till sina elever.",
     utf8 "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
     utf8 "Det går att göra vissa inställningar som till exempel upplösning och språk i alternativmenyn som finns både i huvudmenyn och inuti spelet.",
+    utf8 "Hittar du en massa text på engelska i spelet? Hjälp oss översätta färdigt till Svenska!",
     utf8 "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at freenode).",
     utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org.",
     utf8 "Varje bana har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",

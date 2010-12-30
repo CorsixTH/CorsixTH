@@ -154,6 +154,8 @@ function UIFax:choice(choice)
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
     self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
     self.ui.adviser:say(_S.adviser.information.emergency)
+  elseif choice == "refuse_emergency" then
+    self.ui.app.world:nextEmergency()
   elseif choice == "accept_new_level" then
     if tonumber(self.ui.app.world.map.level_number) then
       local offer = self.ui.hospital.salary_offer
