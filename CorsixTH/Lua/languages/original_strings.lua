@@ -740,8 +740,8 @@ adviser = {
       in_progress                 = S[21][18],
     },
     
-    objective_completed           = S[21][19],
-    objective_failed              = S[21][20],
+    objective_completed           = S[21][19], -- missing in some TH versions
+    objective_failed              = S[21][20], -- missing in some TH versions
   },
   
   placement_info = {
@@ -1684,7 +1684,7 @@ confirmation = {
   overwrite_save       = S[35][4],
   delete_room          = S[35][5],
   sack_staff           = S[35][6],
-  restart_level        = S[35][7],
+  restart_level        = S[35][7], -- missing in some TH versions
 }
 
 bank_manager = {

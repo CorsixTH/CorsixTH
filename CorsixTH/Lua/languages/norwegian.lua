@@ -1736,17 +1736,6 @@ adviser = {
     nearly_lost     = utf8 "Det er like för du taper dette nivået nå.",
     three_quarters_won   = utf8 "Du er nå tre fjerdedeler på vei til å fullföre dette nivået.",
   },
-  progress_report = {
-    quite_unhappy = utf8 "Folket ditt er i dårlig humör. ",
-    header = "Progresjonsrapport",
-    very_unhappy = utf8 "Folket ditt er i svært dårlig humör. ",
-    more_drinks_machines = "Bygg flere Brusautomater. ",
-    too_cold = utf8 "Det er alt for kaldt. Sett ut noen ovner. ",
-    too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
-    percentage_pop = utf8 "% befolkning",
-    win_criteria = utf8 "KRITERIER FOR Å VINNE",
-  },
-
   
   -- Staff place advice
   staff_place_advice = {
@@ -1947,6 +1936,18 @@ bank_manager = {
     current_balance = "Balanse",
   },
 }
+
+-- Progress Report window
+progress_report = {
+  quite_unhappy = utf8 "Folket ditt er i dårlig humör. ",
+  header = "Progresjonsrapport",
+  very_unhappy = utf8 "Folket ditt er i svært dårlig humör. ",
+  more_drinks_machines = "Bygg flere Brusautomater. ",
+  too_cold = utf8 "Det er alt for kaldt. Sett ut noen ovner. ",
+  too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
+  percentage_pop = utf8 "% befolkning",
+  win_criteria = utf8 "KRITERIER FOR Å VINNE",
+},
 
 
 -- Newspaper headlines

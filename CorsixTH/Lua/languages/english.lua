@@ -40,7 +40,10 @@ adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 tooltip.staff_window.face = "This person's face - click to open management screen"
 tooltip.staff_window.center_view = "Left click to zoom to staff, right click to cycle through staff members"
 
-
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = "Are you sure you want to restart the level?"
+-- TODO adviser.multiplayer.objective_completed
+-- TODO adviser.multiplayer.objective_failed
 
 -------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Litter"
@@ -272,7 +275,6 @@ errors = {
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  restart = "Are you sure you want to restart the level?",
 }
 
 information = {

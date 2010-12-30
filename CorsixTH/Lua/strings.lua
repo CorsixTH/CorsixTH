@@ -115,11 +115,11 @@ end
 local shadows = setmetatable({}, {__mode = "k"})
 
 -- Metatable which is used for all tables returned by Strings:load()
--- The end effect is to raise errors on accesses to non-existant strings, to
--- add a special string called "__random" to each table (which always resolves
--- to a random string from the table), and to prevent editing or adding to a
--- string table.
-local strings_metatable = {
+-- The end effect is to raise errors on accesses to non-existant strings
+-- (unless no_restriction is set to true), to add a special string called
+-- "__random" to each table (which always resolves to a random string from
+-- the table), and to prevent editing or adding to a string table.
+local strings_metatable = function(no_restriction) return {
   __index = function(t, k)
     t = shadows[t]
     local v = t[k]
@@ -127,6 +127,7 @@ local strings_metatable = {
       return v
     end
     if k ~= "__random" then
+      if no_restriction then return nil end
       error("Non-existant string: " .. tostring(k), 2)
     end
     local candidates = {}
@@ -144,9 +145,11 @@ local strings_metatable = {
   __ipairs = function(t)
     return ipairs(shadows[t])
   end,
-}
+} end
 
-function Strings:load(language)
+-- no_restriction disables errors on access to non-existant strings (for debug purposes)
+-- no_inheritance disables inheritance except original_strings (for debug purposes)
+function Strings:load(language, no_restriction, no_inheritance)
   assert(language ~= "original_strings", "Original strings can not be loaded directly. Please select a proper language.")
   -- env is the table of globals to execute to the language file in, and hence
   -- it also stores the resulting strings.
@@ -161,7 +164,9 @@ function Strings:load(language)
     -- Calling the Langauage() function should have no effect any more
     Language = function() end,
     -- Inherit() should evaluate the named language in the current environment
+    -- NB: Inheritance of any but original_strings disabled when no_inheritance set
     Inherit = function(language, ...)
+      if no_inheritance and language ~= "original_strings" then return end
       self:_loadPrivate(language, env, ...)
     end,
     -- LoadStrings() should return the original game string table
@@ -206,12 +211,12 @@ function Strings:load(language)
       end
     end,
   }
-  metatable.__pairs = strings_metatable.__pairs
+  metatable.__pairs = strings_metatable(no_restriction).__pairs
   -- Evaluate the language file
   setmetatable(env, metatable)
   self:_loadPrivate(language, env)
   -- Change the metamethods on every string table to match strings_metatable
-  for k, v in pairs(strings_metatable) do
+  for k, v in pairs(strings_metatable(no_restriction)) do
     metatable[k] = v
   end
   return env, speech_file

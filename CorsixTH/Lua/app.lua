@@ -373,10 +373,50 @@ function App:dumpStrings()
   fi = assert(io.open("debug-strings-new-lines.txt", "wt"))
   dump_by_line(fi, _S, "")
   fi:close()
-
+  
   fi = assert(io.open("debug-strings-new-grouped.txt", "wt"))
   dump_grouped(fi, _S, "")
   fi:close()
+  
+  -- Compares strings provided by language file of current language WITHOUT inheritance
+  -- with strings provided by english language with inheritance (i.e. all strings).
+  -- This will give translators an idea which strings are missing in their translation.
+  local ltc = self.strings.language_to_chunk
+  if ltc[self.config.language] ~= ltc["english"] then
+    local str_en = self.strings:load("english", true)
+    local str_cur = self.strings:load(self.config.language, true, true)
+    local function dump_diff(file, obj1, obj2, prefix)
+      for n, o in pairs(obj1) do
+        if n ~= "deprecated" then
+          local new_prefix
+          if type(n) == "number" then
+            new_prefix = prefix .. "[" .. n .. "]"
+          else
+            new_prefix = (prefix == "") and n or (prefix .. "." .. n)
+          end
+          if is_table(o) then
+            -- if obj2 is already nil (i.e. whole table does not exist in current language), carry over nil
+            dump_diff(file, o, obj2 and obj2[n], new_prefix)
+          else
+            if not (obj2 and obj2[n]) then
+              -- does not exist in current language
+              file:write(new_prefix .. " = " .. "\"" .. val(o) .. "\"\n")
+            end
+          end
+        end
+      end
+    end
+    fi = assert(io.open("debug-strings-diff.txt", "wt"))
+    fi:write("------------------------------------\n")
+    fi:write("MISSING STRINGS IN LANGUAGE \"" .. self.config.language:upper() .. "\":\n")
+    fi:write("------------------------------------\n")
+    dump_diff(fi, str_en, str_cur, "")
+    fi:write("------------------------------------\n")
+    fi:write("SUPERFLUOUS STRINGS IN LANGUAGE \"" .. self.config.language:upper() .. "\":\n")
+    fi:write("------------------------------------\n")
+    dump_diff(fi, str_cur, str_en, "")
+    fi:close()
+  end
 end
 
 function App:fixConfig()
