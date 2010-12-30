@@ -74,6 +74,7 @@ Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
 
 
+
 -- 2. Faxes
 fax = {
     welcome = {
@@ -287,13 +288,12 @@ new_game_window = {
   cancel = "Annuller",
 }
 
--- Mangler at blive oversat
 tooltip.new_game_window = {
-  easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
-  medium = utf8 "Om du er usikker på hva du skal velge, så er dette mellomtingen",
-  hard = utf8 "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
-  tutorial = utf8 "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
-  cancel = utf8 "Hmm... det var ikke meningen å starte et nytt spill!",
+  easy = "Hvis du ikke har erfaring inden for simulatorspil er dette niveau det rette",
+  medium = utf8 "Hvis du er usikker på hvad du skal vælge er dette niveau en mellem ting",
+  hard = utf8 "Hvis du er sikker på dine evner og önsker udfordring, bör du vælge denne.",
+  tutorial = utf8 "Hvis du önsker lidt hjælp til at komme igang, skal du mærkere denne kasse.",
+  cancel = utf8 "Hmm... Var det ikke meningen at du ville starte et nyt spil?!",
 }
 
 lua_console = {
@@ -314,15 +314,16 @@ dialog_missing_graphics = "Undskyld, men demo data filerne har ikke en dialog.",
   map_file_missing = "Kunne ikke finde kort filen %s for denne bane!",
   minimum_screen_size = utf8 "Indtast venligst en oplösning på mindst 640x480.",
    maximum_screen_size = utf8 "Indtast venligst en oplösning på maksimalt 3000x2000.",
-  unavailable_screen_size = utf8 "Skærmoploesningen du valgte er ikke tilgængelig i fuldskærmsvisning.",
+  unavailable_screen_size = utf8 "Skærmoplösningen du valgte er ikke tilgængelig i fuldskærmsvisning.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Å forandre denne innstillingen krever en omstart av CorsixTH. Spill som ikke er lagret vil gå tapt. Er du sikker på at du vil endre innstillingen?",
-  abort_edit_room = utf8 "Du holder på å bygge eller endre et rom. Om alle obligatoriske gjenstander er plassert ut, ferdigstilles rommet. Om ikke, slettes rommet. Fortsette?",
-  restart = utf8 "Er du sikker på at du vil pröve på nytt?",
+  needs_restart = utf8 "Hvis du vil bruge denne indstilling, så kræver det en genstart af CorsixTH. Spil som ikke er gemt, vil gå tabt. Er du sikker på du vil bruge denne indstilling?",
+  abort_edit_room = utf8 "Du er ved at opbygge eller ændre et rum. Hvis alle obligatoriske genstande er placeret, afsluttes rummet. Hvis ikke, skal du slettes rummet. Fortsætte?",
+  restart = utf8 "Er du sikker på at du vil pröve på ny?",
 }
-
+confirmation.restart_level = "Er du sikker på at du vil pröve på ny?"
+  
 information = {
   custom_game = "Velkommen til CorsixTH. Hav det sjovt med denne special bane!",
   cannot_restart = utf8 "Beklageligvis så er denne special bane lavet för at genstart funtionen blev implanteret.",
@@ -998,13 +999,13 @@ room_classes = {
 
 -- Insurance companies
 insurance_companies = {
-  out_of_business   = "IKKE I DRIFT",
-  utf8 "Nykjöpt Lök",
-  utf8 "Böljan Blå",
-  utf8 "Årlige Forskudd AS",
+  out_of_business   = utf8 "GÅET KONKURS",
+  utf8 "Nyköbt Lökke",
+  utf8 "Böligen Blå",
+  utf8 "Årlige Forskud AS",
   "Stygge Arr Co.",
   utf8 "Svömmeblære Co.",
-  utf8 "Dönn Ærlig AS",
+  utf8 "Dörn Ærlig AS",
   "Sverres Beholdninger",
   "Kate Pus Og Kompani",
   utf8 "Larsen Jr. Forsikring",
@@ -1086,36 +1087,36 @@ menu_charts = {
   briefing            = "  BRIEFING  ",
 }
 
--- mangler
+
 -- Menu Debug
 menu_debug = {
-  object_cells        = "  OBJEKTCELLER        ",
-  entry_cells         = "  INNGANGSCELLER      ",
-  keep_clear_cells    = "  KEEP-CLEAR CELLER   ",
-  nav_bits            = "  NAV BITS            ",
-  remove_walls        = "  FJERN VEGGER        ",
-  remove_objects      = "  FJERN GJENSTANDERER ",
-  display_pager       = "  VIS PAGER           ",
-  mapwho_checking     = "  MAPWHO SJEKK        ",
-  plant_pagers        = "  PLANT PAGERS        ",
-  porter_pagers       = "  PORTER PAGERS       ",
-  pixbuf_cells        = "  PIXBUE CELLS        ",
-  enter_nav_debug     = "  ENTER NAV DEBUG     ",
-  show_nav_cells      = "  SHOW NAV CELLS      ",
-  machine_pagers      = "  MASKIN PAGERS       ",
-  display_room_status = "  VIS ROMSTATUS       ",
-  display_big_cells   = "  VIS STORE CELLER    ",
-  show_help_hotspot   = "  VIS HJELP HOTSPOTS  ",
-  win_game_anim       = "  WIN GAME ANIM       ",
-  win_level_anim      = "  WIN LEVEL ANIM      ",
+  object_cells        = utf8 "  OBJEKTCELLER        ",
+  entry_cells         = utf8 "  INDGANGSCELLER      ",
+  keep_clear_cells    = utf8 "  KEEP-CLEAR CELLER   ",
+  nav_bits            = utf8 "  NAV BITS            ",
+  remove_walls        = utf8 "  FJERN VÆGGE        ",
+  remove_objects      = utf8 "  FJERN OBJEKTER ",
+  display_pager       = utf8 "  VIS PERSONSOEGER           ",
+  mapwho_checking     = utf8 "  MAPWHO CHECKING        ",
+  plant_pagers        = utf8 "  PLANT PERSONSOEGERE        ",
+  porter_pagers       = utf8  "  PORTER PERSONSOEGERE       ",
+  pixbuf_cells        = utf8 "  PIXBUE CELLER        ",
+  enter_nav_debug     = utf8 "  ENTER NAV FEJLSOEGNING     ",
+  show_nav_cells      = utf8 "  VIS NAV CELER      ",
+  machine_pagers      = utf8 "  MASKIN PERSONSOEGER       ",
+  display_room_status = utf8 "  VIS RUM STATUS       ",
+  display_big_cells   = utf8 "  VIS STORE CELLER    ",
+  show_help_hotspot   = utf8 "  VIS HJÆLP HOTSPOTS  ",
+  win_game_anim       = utf8 "  VIND SPIL ANIM       ",
+  win_level_anim      = utf8 "  VIND RUNDE ANIM      ",
   lose_game_anim = {
-    [1]  = "  TAPT SPILL 1 ANIM  ",
-    [2]  = "  TAPT SPILL 2 ANIM  ",
-    [3]  = "  TAPT SPILL 3 ANIM  ",
-    [4]  = "  TAPT SPILL 4 ANIM  ",
-    [5]  = "  TAPT SPILL 5 ANIM  ",
-    [6]  = "  TAPT SPILL 6 ANIM  ",
-    [7]  = "  TAPT SPILL 7 ANIM  ",
+    [1]  = "  TAPT SPIL 1 ANIM  ",
+    [2]  = "  TAPT SPIL 2 ANIM  ",
+    [3]  = "  TAPT SPIL 3 ANIM  ",
+    [4]  = "  TAPT SPIL 4 ANIM  ",
+    [5]  = "  TAPT SPIL 5 ANIM  ",
+    [6]  = "  TAPT SPIL 6 ANIM  ",
+    [7]  = "  TAPT SPIL 7 ANIM  ",
   },
 }
 
@@ -1149,29 +1150,29 @@ high_score = {
 trophy_room = {
   many_cured = {
     awards = {
-      utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
+      utf8 "Tillykke med Marie Curie-prisen for at have været i stand til at kurere næsten alle patienter på hospitalet i det forgangende år.",
     },
     trophies = {
-      utf8 "Den Internasjonale Behandlingsstiftelsen önsker å ære deg fordi du kurerte en haug med mennesker på sykehuset ditt i fjor. De gir deg derfor Kurert-En-Haug Trofeet.",
-      utf8 "Du er blitt tildelt Ingen-Syke-Gurglere Trofeet for å ha kurert en stor prosent av pasientene på sykehuset ditt i fjor.",
+      utf8 "Den Internationale Behandlingsfond ønsker at ære dig, fordi du har kureret en gruppe mennesker på hospitalet i det forgangende år. De giver dig så kureret-A-Haug trofæet.",
+      utf8 "Du har fået tildelt Ingen-Syge-Gurglere trofæ at have kureret en høj procentdel af patienter på hospitalet i det forgangende år.",
     },
   },
   all_cured = {
     awards = {
-      utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere alle pasienter på sykehuset ditt i fjor.",
+      utf8 "Tillykke med Marie Curie-prisen for at have været i stand til at kurere alle patienter på hospitalet i det forgangende år.",
     },
     trophies = {
-      utf8 "Den Internasjonale Behandlingsstiftelsen önsker å ære deg fordi du kurerte alle pasienter på sykehuset ditt i fjor. De gir deg derfor Kurert-Alle Trofeet.",
-      utf8 "Du er blitt tildelt Ingen-Syke-Gurglere Trofeet for å ha kurert alle pasienter på sykehuset ditt i fjor.",
+      utf8 "Den Internationale Behandlingsfond ønsker at ære dig, fordi du har kureret alle patienter på sygehuset i det forgangende år. De gir deg derfor Kurert-Alle Trofeet.",
+      utf8 "Du har fået tildelt Ingen-Syge-Gurglere trofæ at have kureret alle patienter på sygehuset i det forgangende år.",
     },
   },
   high_rep = {
     awards = {
-      utf8 "Du er herved tildelt statsministerens Glitrende Sykehusstandard Pris, som tildeles sykehuset med best omdömme i fjor. Flott!",
-      utf8 "Vær snill å ta imot Bullfrog-prisen som tildeles sykehuset med best omdömme i fjor. Nyt det - det er vel fortjent!",
+      utf8 "Du er blevet tildelt statsministerens glitrende standard sygehus pris, som tildeles det sygehus med bedst omdömme i det forgangende år. Tillykke!",
+      utf8 "Smil og vær glad for at modtage Bullfrog-prisen som tildeles sygehuset med bedst omdömme det forgangende år. Nyd det - det er vel fortjent!",
     },
     trophies = {
-      utf8 "Gratulerer med Rent-Og-Pent Trofeet som tildeles sykehuset med best omdömme i fjor. Vel, det er faktisk fortjent.",
+      utf8 "Tillykke med Rent-og-Pænt trofæet som tildeles sygehuset med best omdömme i det forgangende år. Det er faktisk fortjent.",
     },
   },
   happy_staff = {
@@ -1179,62 +1180,62 @@ trophy_room = {
     },
     trophies = {
       utf8 "Du er tildelt Smilefjes Trofeet for å holde ditt hardt-arbeidende personale så blid og fornöyd som mulig.",
-      utf8 "Instituttet for Humörspredere berömmer deg for at du ikke hadde noen sure og sinte ansatte på sykehuset ditt i fjor, og gir deg derfor dette trofeet.",
-      utf8 "Dette trofeet, Stråle Mer Begeret, er herved tildelt deg for å ha klart å holde alt personell blid og fornöyd, tross en iherdig arbeidsinnsats i fjor. Dine ansatte stråler!",
+      utf8 "Instituttet for Humörspredere goer dig beroemt for at du ikke havde nogen galde og negative ansatte på sygehuset i det forgangende år, og giver dig derfor dette trofæ.",
+      utf8 "Dette trofæ, er hermed tildelt dig for at have klaret at holde alt personale glad og fornöjet, trods en ihærdig arbejdsindsats i det forgangende år. Dine ansatte stråler!",
     },
   },
   happy_vips = {
     awards = {
-      utf8 "Du har vunnet Nobelprisen for Imponerte VIP'er. Alle som besökte sykehuset ditt i fjor snakker ikke om annet.",
-      utf8 "Gratulerer med VIP-prisen for å ha gjort livene til hardtarbeidende kjendiser bedre, ved å sette alle som besökte sykehuset ditt i fjor i et bedre lys. Fantastisk.",
+      utf8 "Du har vundet Nobelprisen for at imponere VIP'erne. Alle som besögte dit sygehuset i det forgangende år snakker ikke om andet.",
+      utf8 "Tillykke med VIP-prisen for at have gjort livene for de hardtarbejdende kendiser bedre, ved at sætte alle som besögte dit sygehuset i det forgangende år i et bedre lys. Fantastisk.",
     },
     trophies = {
-      utf8 "Byrået for Kjente Personer vil belönne deg med Kjendistrofeet for å ha tatt godt vare på alle VIP'er som besökte instutisjonen din i fjor. Du nærmer deg kjendis-status, nesten en av oss.",
+      utf8 "Byrådet af Kendte personer vil belönne dig med Kendistrofæet for at have taget godt vare på alle VIP'er som besögte dit hospital i det forgangende år. Du nærmer dig kendis-status, næsten en af os.",
     },
   },
   no_deaths = {
     awards = {
-      utf8 "Du har vunnet Leve Lenge Trofeet for å holde 100 prosent av pasientene levende i hele fjor.",
+      utf8 "Du har vundet Længe-Leve trofæet for at holde 100 procent af patienterne i live i det forgangende år.",
     },
     trophies = {
-      utf8 "Livet Går Videre Stiftelsen belönner deg med dette trofeet for å ha oppnådd null dödsfall i hele fjor.",
-      utf8 "Du er tildelt Holde Seg I Live Trofeet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.",
+      utf8 "Foreningen Livet-Går-Videre belönner dig med dette trofæ for at have nul dödsfald i det forgangende år.",
+      utf8 "Du er tildelt Holde-sig-i-live trofæet for at have undgået doedsfald på dit sygehus i det forgangende år. Storartet.",
     },
   },
   rats_killed = {
     awards = {
     },
     trophies = {
-      utf8 "Du er tildelt Null Uhyrer Trofeet for å ha skutt %d rotter på sykehuset ditt i löpet av fjoråret.", -- %d (number of rats)
-      utf8 "Du mottar dette trofeet fra Organisasjonen Mot Rotter og Mus, pga. dine unike rotteskytende evner. Du drepte %d dyr i fjor.", -- %d (number of rats)
-      utf8 "Du mottar Rotteskytter Trofeet for å ha vist unike evner i utryddelsen av %d rotter på sykehuset ditt i fjor.", -- %d (number of rats)
+      utf8 "Du er tildelt Nul-Uhyrer trofæet for at have skudt %d rotter på dit sygehuset i det forgangende år.", -- %d (number of rats)
+      utf8 "Du modtager dette trofæ af foreningen Mod Rotter og Mus, pga. dine unikke rotteskydende evner. Du dræbte %d dyr i det forgangende år.", -- %d (number of rats)
+      utf8 "Du modtager rotteskyder trofæet for dine unikke evner i udryddelsen af %d rotter på sygehuset i det forgangende år.", -- %d (number of rats)
     },
   },
   rats_accuracy = {
     awards = {
     },
     trophies = {
-      utf8 "Du er tildelt Nöyaktige Skudd I Håplös Krig Trofeet for å ha en treffprosent på %d%% i jakten på ekle rotter.", -- %d (accuracy percentage)
-      utf8 "Dette trofeet er for å berömme din nöyaktighet ved å drepe %d%% av rottene du sköyt på i fjor.", -- %d (accuracy percentage)
-      "For å hedre prestasjonen det er å drepe %d%% av alle rottene på sykehuset ditt, blir du tildelt Dungeon Keepers Skadedyrfrie Trofe, gRATulerer!", -- %d (accuracy percentage)
+      utf8 "Du er tildelt Nöjagtige-Skud-I-Håblös-Krig Trofæet for at have en træfprocent på %d%% i jagten på ækle rotter.", -- %d (accuracy percentage)
+      utf8 "Dette trofæ er for at ære din nöjagtighed ved dræbe %d%% af rottene i det forgangende år.", -- %d (accuracy percentage)
+      utf8 "For at hædre din præstation der er at dræbe %d%% af rottene på dit sygehuset, bliver du tildelt Dungeon Keepers Skadedyrfrie-Trofe, Tillykke!", -- %d (accuracy percentage)
     },
   },
   healthy_plants = {
     awards = {
-      utf8 "Gratulerer med Voks-Videre prisen for å ha holdt plantene dine ekstremt friske i hele år.",
+      utf8 "Tillykke med Bliv-ved-med-at-gro prisen for at have holdt dine planter ekstremt friske i det forgangende år.",
     },
     trophies = {
-      utf8 "Venner Av Potteplanter önsker å gi deg Grönn Helse Trofeet, for å ha tatt godt vare på plantene dine de siste tolv måneder.",
-      utf8 "Foreningen For Grönne Gamlinger önsker å gi deg Grönnfinger Trofeet for å ha holdt plantene dine friske i hele fjor.",
+      utf8 "Venner-af-Potteplanter önsker at give dig Grön Helse Trofæet, for at have taget godt vare på plantene de siste tolv måneder.",
+      utf8 "Foreningen For Grönne Gamlinger önsker at give dig Grönnefinger Trofæet for at have holdt plantene friske i det forgangende år.",
     },
   },
   sold_drinks = {
     awards = {
     },
     trophies = {
-      utf8 "Foreningen for Globale Tannleger er stolt over å kunne gi deg dette trofeet for å ha solgt store menger brus på sykehuset ditt i fjor.",
-      utf8 "Sykehuset ditt er blitt tildelt Sprudlende-Begjær Trofeet for antall læskedrikker som ble solgt på sykehuset ditt i fjor.",
-      utf8 "På vegne av DK Fyllinger Co., tildeles du herved dette trofeet dekket av sjokolade, for å ha solgt enorme mengder læskedrikker på sykehuset ditt forrige år.",
+      utf8 "Foreningen for Globale Tandlæger er stolt over at kunne give dig dette trofæ for at have solgt store mængder sodavand på dit syhehuset i det forgangende år.",
+      utf8 "Sygehuset blevet tildelt Sprudlende-Begær Trofæet for antallet af sodavand som er blevet solgt på sygehuset i det forgangende år.",
+      utf8 "På vegne af DK Fyllinger Co., tildeles du hermed dette trofæ dækket af Chokolade, for at have solgt enorme mængder sodavand på sygehuset i det forgangende år.",
     },
   },
 }
@@ -2812,12 +2813,12 @@ misc = {
  ***** TODO ************
 -----------------------
     
-* tooltip.new_game_window
-* confirmation 
-* room_descriptions
-* insurance_companies
-* menu_debug
-* trophy_room
+* tooltip.new_game_window  - done
+* confirmation - done 
+* room_descriptions 
+* insurance_companies - done
+* menu_debug - done
+* trophy_room - done
 
 **Under tooltip ****
   * buy_objects_window
