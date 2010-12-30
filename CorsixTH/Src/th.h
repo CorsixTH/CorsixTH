@@ -55,7 +55,7 @@ public:
     /*!
         @param iSection Section index in range [0, getSectionCount() - 1]
         @param iIndex String index in range [0, getSectionSize(iSection) - 1]
-        @return NULL if the index is invalid, otherwise a string
+        @return NULL if the index is invalid, otherwise a UTF-8 encoded string.
     */
     const char* getString(unsigned int iSection, unsigned int iIndex);
 
@@ -73,7 +73,7 @@ protected:
     //! Section information
     section_t* m_pSections;
     //! Memory block containing all the actual strings
-    char* m_sData;
+    unsigned char* m_sData;
 };
 
 #endif // CORSIX_TH_TH_H_

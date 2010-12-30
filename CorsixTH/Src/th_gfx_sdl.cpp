@@ -23,6 +23,9 @@ SOFTWARE.
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_RENDERER
 #include "th_gfx.h"
+#ifdef CORSIX_TH_USE_FREETYPE2
+#include "th_gfx_font.h"
+#endif
 #include "th_map.h"
 #include "agg_rendering_buffer.h"
 #include "agg_pixfmt_rgb.h"
@@ -589,6 +592,33 @@ bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pX, unsign
     return true;
 }
 
+bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
+{
+    if(iSprite >= m_iSpriteCount)
+        return false;
+    const sprite_t *pSprite = m_pSprites + iSprite;
+    int iCountTotal = 0;
+    int iUsageCounts[256] = {0};
+    for(unsigned int i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
+    {
+        unsigned char cPalIndex = pSprite->pData[i];
+        if(cPalIndex == m_pPalette->m_iTransparentIndex)
+            continue;
+        iUsageCounts[cPalIndex]++;
+        iCountTotal++;
+    }
+    if(iCountTotal == 0)
+        return false;
+    int iHighestCountIndex = 0;
+    for(int i = 0; i < 256; ++i)
+    {
+        if(iUsageCounts[i] > iUsageCounts[iHighestCountIndex])
+            iHighestCountIndex = i;
+    }
+    *pColour = (*m_pPalette)[iHighestCountIndex];
+    return true;
+}
+
 void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
 {
     *pX = m_pSprites[iSprite].iWidth;
@@ -810,5 +840,42 @@ void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)
     rcDest.y = (Sint16)(iY - m_iHotspotY);
     SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+bool THFreeTypeFont::_isMonochrome() const
+{
+    return true;
+}
+
+void THFreeTypeFont::_setNullTexture(cached_text_t* pCacheEntry) const
+{
+    pCacheEntry->pTexture = NULL;
+}
+
+void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
+{
+    if(pCacheEntry->pTexture != NULL)
+    {
+        SDL_FreeSurface(reinterpret_cast<SDL_Surface*>(pCacheEntry->pTexture));
+    }
+}
+
+void THFreeTypeFont::_makeTexture(cached_text_t* pCacheEntry) const
+{
+    SDL_Surface *pSurface = SDL_CreateRGBSurfaceFrom(pCacheEntry->pData,
+        pCacheEntry->iWidth, pCacheEntry->iHeight, 8, pCacheEntry->iWidth, 0,
+        0, 0, 0);
+    SDL_SetColors(pSurface, const_cast<SDL_Color*>(&m_oColour), 0xFF, 1);
+    SDL_SetColorKey(pSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL, 0);
+    pCacheEntry->pTexture = reinterpret_cast<void*>(pSurface);
+}
+
+void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry, int iX, int iY) const
+{
+    SDL_Rect rcDest = {iX, iY, 0, 0};
+    SDL_BlitSurface(reinterpret_cast<SDL_Surface*>(pCacheEntry->pTexture),
+        NULL, pCanvas->getRawSurface(), &rcDest);
+}
+#endif // CORSIX_TH_USE_FREETYPE2
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

@@ -49,7 +49,7 @@ const char* g_sBootstrapCode[] = {
     "local modes = {'hardware', 'doublebuf'}",
     "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
     "local video = TheApp and TheApp.video or TH.surface(w, h, unpack(modes))",
-    "local palette, sheet, font = TH.palette(), TH.sheet(), TH.font()",
+    "local palette, sheet, font = TH.palette(), TH.sheet(), TH.bitmap_font()",
     "if not palette:load(dernc(pal)) then error'Unable to load palette' end",
     "sheet:setPalette(palette)",
     "if not sheet:load(dernc(tab), dernc(dat), true, video) then error'Unable to load sheet' end",

@@ -366,7 +366,7 @@ tooltip.cheats_window = {
     emergency = "Crear una emergencia.",
     create_patient = "Crear un paciente en el borde del mapa.",
     end_month = "Avanza hasta el fin del mes actual.",
-    end_year = "Avanza hasta el final del año actual.",
+    end_year = utf8 "Avanza hasta el final del año actual.",
     lose_level = "Perder el nivel actual.",
     win_level = "Ganar el nivel actual.",
   }

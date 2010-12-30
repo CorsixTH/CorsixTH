@@ -6,6 +6,7 @@
 #   - WITH_DIRECTX : Activate DirectX Renderer (Windows only)
 # Any of the following:
 #   - WITH_AUDIO   : Activate Sound (enabled by default)
+#   - WITH_FREETYPE2
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
 
@@ -19,6 +20,7 @@ OPTION(WITH_OPENGL "Activate OpenGL Renderer" OFF)
 OPTION(WITH_DIRECTX "Activate DirectX Renderer" OFF)
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
+OPTION(WITH_FREETYPE2 "Enhanced Font Support" OFF)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
 
@@ -63,6 +65,14 @@ ELSE()
   SET(CORSIX_TH_USE_SDL_MIXER OFF)
   MESSAGE("Note: SDL audio is disabled")
 ENDIF(WITH_AUDIO)
+
+IF(WITH_FREETYPE2)
+  SET(CORSIX_TH_USE_FREETYPE2 ON)
+  MESSAGE("Note: FreeType2 is enabled")
+ELSE()
+  SET(CORSIX_TH_USE_FREETYPE2 OFF)
+  MESSAGE("Note: FreeType2 is disabled (default)")
+ENDIF(WITH_FREETYPE2)
 
 # Environment handling
 

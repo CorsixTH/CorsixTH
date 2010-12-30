@@ -33,6 +33,8 @@ function Strings:Strings(app)
 end
 
 local utf8conv
+local cp437conv
+local function id(...) return ... end
 
 function Strings:init()
   -- Load (but do not execute) everything from the language directory
@@ -60,6 +62,7 @@ function Strings:init()
   -- name for this language, the others may be abbreviations or such.
   self.languages = {}
   self.language_to_chunk = {}
+  self.chunk_to_font = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
     -- is given an infinite table as an environment. Reading a non-existant
@@ -77,7 +80,8 @@ function Strings:init()
     -- unique marker.
     local good_error_marker = {}
     local env = setmetatable({
-      utf8 = utf8conv,
+      utf8 = id,
+      cp437 = cp437conv,
       pairs = pairs,
       Language = function(...)
         local names = {...}
@@ -91,9 +95,13 @@ function Strings:init()
         end
         error(good_error_marker)
       end,
+      Font = function(...)
+        self.chunk_to_font[chunk] = ...
+      end,
       -- Set Inherit and SetSpeechFile to do nothing
       Inherit = function() end,
       SetSpeechFile = function() end,
+      Encoding = function() end,
       -- Set LoadStrings to return an infinite table
       LoadStrings = infinite_table_mt.__index,
     }, infinite_table_mt)
@@ -157,17 +165,58 @@ function Strings:load(language, no_restriction, no_inheritance)
   shadows[env] = {}
   -- speech_file holds the result of any call to SetSpeechFile()
   local speech_file
-  local functions = {
-    utf8 = utf8conv,
+  local default_encoding = id
+  local encoding = default_encoding
+  local language_called = false
+  local functions; functions = {
+    -- Convert UTF-8 to the file's default encoding
+    utf8 = function(s)
+      if encoding == cp437conv then
+        return utf8conv(s)
+      else
+        return s
+      end
+    end,
+    -- Convert CP437 to the file's default encoding
+    cp437 = function(s)
+      if encoding == cp437conv then
+        return s
+      else
+        return cp437conv(s)
+      end
+    end,
     ipairs = ipairs,
     pairs = pairs,
     -- Calling the Langauage() function should have no effect any more
-    Language = function() end,
+    Language = function()
+      language_called = true
+    end,
+    Font = function()
+      if language_called then
+        error("Font declaration must occur before Language declaration")
+      end
+    end,
     -- Inherit() should evaluate the named language in the current environment
     -- NB: Inheritance of any but original_strings disabled when no_inheritance set
     Inherit = function(language, ...)
       if no_inheritance and language ~= "original_strings" then return end
+      local old_encoding = encoding
+      encoding = default_encoding
+      local old_language_called = language_called
+      language_called = false
       self:_loadPrivate(language, env, ...)
+      encoding = old_encoding
+      language_called = old_language_called
+    end,
+    -- Encoding() should set the default encoding for the remainder of the file
+    Encoding = function(new_encoding)
+      if new_encoding == functions.utf8 then
+        encoding = id
+      elseif new_encoding == functions.cp437 then
+        encoding = cp437conv
+      else
+        error("Invalid encoding; expected utf8 or cp437")
+      end
     end,
     -- LoadStrings() should return the original game string table
     LoadStrings = function(filename)
@@ -198,8 +247,13 @@ function Strings:load(language, no_restriction, no_inheritance)
       return value
     end,
     __newindex = function(t, k, v)
-      if type(v) ~= "table" then
+      local ty = type(v)
+      if ty ~= "table" then
         -- non-table values cannot be merged
+        if ty == "string" then
+          -- convert from file's default encoding to UTF-8
+          v = encoding(v)
+        end
         shadows[t][k] = v
       else
         -- v should be merged into t[k]
@@ -220,6 +274,12 @@ function Strings:load(language, no_restriction, no_inheritance)
     metatable[k] = v
   end
   return env, speech_file
+end
+
+--! Get the Font() declaration of a language, if there was one.
+function Strings:getFont(language)
+  local chunk = self.language_to_chunk[language:lower()]
+  return chunk and self.chunk_to_font[chunk]
 end
 
 function Strings:_loadPrivate(language, env, ...)
@@ -283,6 +343,98 @@ local codepoints_to_cp437 = {
   [0xDF] = 0xE1, -- eszett / sharp-S / lowercase-beta
   -- 0xE2 through 0xFF are not present in TH fonts
 }
+
+local cp437_to_codepoints = {
+  [0x91] = 0xE6, -- minuscule ae
+  [0x9B] = 0xA2, -- cent sign
+  [0x9C] = 0xA3, -- pound sign
+  [0x9D] = 0xA5, -- yen sign
+  [0x9E] = 0x20A7, -- peseta sign
+  [0x9F] = 0x192, -- florin sign
+  [0xA6] = 0xAA, -- a ordinal indicator
+  [0xA7] = 0xBA, -- o ordinal indicator
+  [0xA9] = 0x2310, -- negation
+  [0xAA] = 0xAC, -- negation
+  [0xAB] = 0xBD, -- 1/2
+  [0xAC] = 0xBC, -- 1/4
+  [0xAE] = 0xAB, -- << guillemets
+  [0xAF] = 0xBB, -- >> guillemets
+  -- 0xB0 through 0xDF omitted
+  [0xE0] = 0x3B1, -- alpha
+  [0xE2] = 0x393, -- gamma
+  [0xE3] = 0x3C0, -- pi
+  [0xE4] = 0x3A3, -- majuscule sigma
+  [0xE5] = 0x3C3, -- minuscule sigma
+  [0xE6] = 0x3BC, -- minuscule mu
+  [0xE7] = 0x3C4, -- tau
+  [0xE8] = 0x3A6, -- majuscule phi
+  [0xE9] = 0x398, -- theta
+  [0xEA] = 0x3A9, -- omega
+  [0xEB] = 0x3B4, -- delta
+  [0xEC] = 0x221E, -- infinity
+  [0xED] = 0x3C6, -- minuscule phi
+  [0xEE] = 0x3B5, -- epsilon
+  [0xEF] = 0x2229, -- set intersection
+  [0xF0] = 0x2261, -- modular congruence / triple equals
+  [0xF1] = 0xB1, -- plus / minus
+  [0xF2] = 0x2265, -- >=
+  [0xF3] = 0x2264, -- <=
+  [0xF4] = 0x2320, -- upper integral sign
+  [0xF5] = 0x2321, -- lower integral sign
+  [0xF6] = 0xF7, -- obelus
+  [0xF7] = 0x2248, -- approximate equality
+  [0xF8] = 0xB0, -- degree symbol
+  [0xF9] = 0x2219, -- bullet
+  [0xFA] = 0xB7, -- interpunct
+  [0xFB] = 0x221A, -- square root
+  [0xFC] = 0x207F, -- exponentiation
+  [0xFD] = 0xB2, -- superscript 2
+  [0xFE] = 0x25A0, -- filled square
+  [0xFF] = 0xA0, -- non-breaking space
+}
+
+local function utf8encode(codepoint)
+  if codepoint <= 0x7F then
+    return string.char(codepoint)
+  elseif codepoint <= 0x7FF then
+    local sextet = codepoint % 64
+    codepoint = (codepoint - sextet) / 64
+    return string.char(0xC0 + codepoint, 0x80 + sextet)
+  elseif codepoint <= 0xFFFF then
+    local sextet2 = codepoint % 64
+    codepoint = (codepoint - sextet2) / 64
+    local sextet1 = codepoint % 64
+    codepoint = (codepoint - sextet2) / 64
+    return string.char(0xE0 + codepoint, 0x80 + sextet1, 0x80 + sextet2)
+  else
+    local sextet3 = codepoint % 64
+    codepoint = (codepoint - sextet3) / 64
+    local sextet2 = codepoint % 64
+    codepoint = (codepoint - sextet2) / 64
+    local sextet1 = codepoint % 64
+    codepoint = (codepoint - sextet2) / 64
+    return string.char(0xF0 + codepoint, 0x80 + sextet1, 0x80 + sextet2,
+                       0x80 + sextet3)
+  end
+end
+
+local cp437_to_utf8_pattern = {"["}
+local cp437_to_utf8_replacement = {}
+for codepoint, cp437 in pairs(codepoints_to_cp437) do
+  if not cp437_to_codepoints[cp437] then
+    cp437_to_utf8_pattern[#cp437_to_utf8_pattern + 1] = string.char(cp437)
+    cp437_to_utf8_replacement[string.char(cp437)] = utf8encode(codepoint)
+  end
+end
+for cp437, codepoint in pairs(cp437_to_codepoints) do
+  cp437_to_utf8_pattern[#cp437_to_utf8_pattern + 1] = string.char(cp437)
+  cp437_to_utf8_replacement[string.char(cp437)] = utf8encode(codepoint)
+end
+cp437_to_utf8_pattern[#cp437_to_utf8_pattern + 1] = "]"
+cp437_to_utf8_pattern = table.concat(cp437_to_utf8_pattern)
+cp437conv = function(s)
+  return (s:gsub(cp437_to_utf8_pattern, cp437_to_utf8_replacement))
+end
 
 -- Table which maps a single character and a single unicode combining
 -- diacritical mark to a single unicode codepoint
@@ -396,18 +548,14 @@ utf8conv = function(s)
 end
 
 -- Fix string.upper and string.lower to work with CP437 rather than current locale
-local lower_to_upper, upper_to_lower, case_pattern = {}, {}, ""
+local lower_to_upper, upper_to_lower = {}, {}
 local function case(lower, upper)
-  lower = string.char(lower)
-  upper = string.char(upper)
+  lower = cp437conv(string.char(lower))
+  upper = cp437conv(string.char(upper))
   lower_to_upper[lower] = upper
   lower_to_upper[upper] = upper
   upper_to_lower[lower] = lower
   upper_to_lower[upper] = lower
-  case_pattern = case_pattern .. lower .. upper
-end
-for i = string.byte"a", string.byte"z" do
-  case(i, i + string.byte"A" - string.byte"a")
 end
 case(0x87, 0x80) -- c-cedilla
 case(0x81, 0x9A) -- u-umlaut
@@ -416,10 +564,12 @@ case(0x84, 0x8E) -- a-umlaut
 case(0x86, 0x8F) -- a-ring
 case(0x94, 0x99) -- o-umlaut
 case(0xA4, 0xA5) -- n-tilde
-case_pattern = "[" .. case_pattern .. "]"
+local case_pattern = "\195[\128-\191]" -- Unicode range [0xC0, 0xFF] as UTF-8
+local orig_upper = string.upper
 function string.upper(s)
-  return (s:gsub(case_pattern, lower_to_upper))
+  return orig_upper(s:gsub(case_pattern, lower_to_upper))
 end
+local orig_lower = string.lower
 function string.lower(s)
-  return (s:gsub(case_pattern, upper_to_lower))
+  return orig_lower(s:gsub(case_pattern, upper_to_lower))
 end

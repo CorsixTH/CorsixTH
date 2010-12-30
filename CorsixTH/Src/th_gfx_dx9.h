@@ -115,7 +115,7 @@ public: // Internal (this rendering engine only) API
     void draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
         unsigned int iHeight, int iX, int iY, unsigned long iFlags,
         unsigned int iWidth2, unsigned int iHeight2, unsigned int iTexX,
-        unsigned int iTexY);
+        unsigned int iTexY, D3DCOLOR cColour = 0xFFFFFF);
     void flushSprites();
     bool hasCursor() const {return m_pCursor != NULL;}
 
@@ -151,6 +151,8 @@ protected:
     void _drawVerts(size_t iFirst, size_t iLast);
     void _flushZoomBuffer();
 };
+
+typedef uint32_t THColour;
 
 class THPalette
 {
@@ -226,6 +228,8 @@ public: // External API
     unsigned int getSpriteCount() const;
     bool getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
+
+    bool getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;

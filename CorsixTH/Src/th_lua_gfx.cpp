@@ -185,15 +185,29 @@ static int l_spritesheet_hittest(lua_State *L)
     return pSheet->hitTestSprite(iSprite, iX, iY, iFlags);
 }
 
-static int l_font_new(lua_State *L)
+static int l_spritesheet_isvisible(lua_State *L)
 {
-    luaT_stdnew<THFont>(L, luaT_environindex, true);
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
+    unsigned int iSprite = (unsigned int)luaL_checkinteger(L, 2);
+    THColour oDummy;
+    lua_pushboolean(L, pSheet->getSpriteAverageColour(iSprite, &oDummy) ? 1:0);
     return 1;
 }
 
-static int l_font_set_spritesheet(lua_State *L)
+static int l_font_new(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    return luaL_error(L, "Cannot instantiate an interface");
+}
+
+static int l_bitmap_font_new(lua_State *L)
+{
+    luaT_stdnew<THBitmapFont>(L, luaT_environindex, true);
+    return 1;
+}
+
+static int l_bitmap_font_set_spritesheet(lua_State *L)
+{
+    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
     THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
     lua_settop(L, 2);
 
@@ -202,15 +216,67 @@ static int l_font_set_spritesheet(lua_State *L)
     return 1;
 }
 
-static int l_font_set_sep(lua_State *L)
+static int l_bitmap_font_set_sep(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
 
     pFont->setSeparation(luaL_checkint(L, 2), luaL_optint(L, 3, 0));
 
     lua_settop(L, 1);
     return 1;
 }
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+static void l_freetype_throw_error_code(lua_State *L, FT_Error e)
+{
+    if(e != FT_Err_Ok)
+    {
+        switch(e)
+        {
+#undef __FTERRORS_H__
+#define FT_ERRORDEF(e, v, s) case e: lua_pushliteral(L, s); break;
+#define FT_ERROR_START_LIST
+#define FT_ERROR_END_LIST
+#include FT_ERRORS_H
+            default:
+                lua_pushliteral(L, "Unrecognised FreeType2 error");
+                break;
+        };
+        lua_error(L);
+    }
+}
+
+static int l_freetype_font_new(lua_State *L)
+{
+    THFreeTypeFont *pFont = luaT_stdnew<THFreeTypeFont>(L, LUA_ENVIRONINDEX,
+        true);
+    l_freetype_throw_error_code(L, pFont->initialise());
+    return 1;
+}
+
+static int l_freetype_font_set_spritesheet(lua_State *L)
+{
+    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
+    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
+    lua_settop(L, 2);
+
+    l_freetype_throw_error_code(L, pFont->matchBitmapFont(pSheet));
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_freetype_font_set_face(lua_State *L)
+{
+    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
+    size_t iLength;
+    const unsigned char* pData = luaT_checkfile(L, 2, &iLength);
+    lua_settop(L, 2);
+
+    l_freetype_throw_error_code(L, pFont->setFace(pData, iLength));
+    luaT_setenvfield(L, 1, "face");
+    return 1;
+}
+#endif
 
 static int l_font_get_size(lua_State *L)
 {
@@ -679,17 +745,32 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_spritesheet_size, "size");
     luaT_setfunction(l_spritesheet_draw, "draw", MT_Surface);
     luaT_setfunction(l_spritesheet_hittest, "hitTest");
+    luaT_setfunction(l_spritesheet_isvisible, "isVisible");
     luaT_endclass();
 
     // Font
     luaT_class(THFont, l_font_new, "font", MT_Font);
     luaT_setfunction(l_font_get_size, "sizeOf");
-    luaT_setfunction(l_font_set_spritesheet, "setSheet", MT_Sheet);
-    luaT_setfunction(l_font_set_sep, "setSeparation");
     luaT_setfunction(l_font_draw, "draw", MT_Surface);
     luaT_setfunction(l_font_draw_wrapped, "drawWrapped", MT_Surface);
     luaT_setfunction(l_font_draw_tooltip, "drawTooltip", MT_Surface);
     luaT_endclass();
+
+    // BitmapFont
+    luaT_class(THBitmapFont, l_bitmap_font_new, "bitmap_font", MT_BitmapFont);
+    luaT_superclass(MT_Font);
+    luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_bitmap_font_set_sep, "setSeparation");
+    luaT_endclass();
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+    // FreeTypeFont
+    luaT_class(THFreeTypeFont, l_freetype_font_new, "freetype_font", MT_FreeTypeFont);
+    luaT_superclass(MT_Font);
+    luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_freetype_font_set_face, "setFace");
+    luaT_endclass();
+#endif
 
     // Layers
     luaT_class(THLayers_t, l_layers_new, "layers", MT_Layers);

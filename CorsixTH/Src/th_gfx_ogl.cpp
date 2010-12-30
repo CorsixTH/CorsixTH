@@ -506,17 +506,25 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
     return false;
 }
 
+int roundUp2(int x)
+{
+    x--;
+    x |= x >>  1;
+    x |= x >>  2;
+    x |= x >>  3;
+    x |= x >>  4;
+    x |= x >> 16;
+    x++;
+    return x;
+}
+
 GLuint THRenderTarget::createTexture(int iWidth, int iHeight,
                                      const unsigned char* pPixels,
                                      const THPalette* pPalette,
                                      int* pWidth2, int* pHeight2)
 {
-    int iWidth2 = 1;
-    int iHeight2 = 1;
-    while(iWidth2 < iWidth)
-        iWidth2 <<= 1;
-    while(iHeight2 < iHeight)
-        iHeight2 <<= 1;
+    int iWidth2 = roundUp2(iWidth);
+    int iHeight2 = roundUp2(iHeight);
     if(pWidth2)
         *pWidth2 = iWidth2;
     if(pHeight2)
@@ -868,12 +876,8 @@ bool THSpriteSheet::loadFromTHFile(
         pSprite->pAltPaletteMap = NULL;
         pSprite->iWidth = pTHSprite->width;
         pSprite->iHeight = pTHSprite->height;
-        pSprite->iWidth2 = 1;
-        pSprite->iHeight2 = 1;
-        while(pSprite->iWidth2 < pSprite->iWidth)
-            pSprite->iWidth2 <<= 1;
-        while(pSprite->iHeight2 < pSprite->iHeight)
-            pSprite->iHeight2 <<= 1;
+        pSprite->iWidth2 = roundUp2(pSprite->iWidth);
+        pSprite->iHeight2 = roundUp2(pSprite->iHeight);
 
         if(pSprite->iWidth == 0 || pSprite->iHeight == 0)
             continue;
@@ -1071,6 +1075,34 @@ void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* p
     *pY = m_pSprites[iSprite].iHeight;
 }
 
+bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
+{
+    if(iSprite >= m_iSpriteCount)
+        return false;
+    const sprite_t *pSprite = m_pSprites + iSprite;
+    int iCountTotal = 0;
+    int iUsageCounts[256] = {0};
+    for(unsigned int i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
+    {
+        unsigned char cPalIndex = pSprite->pData[i];
+        uint32_t iColour = m_pPalette->getARGBData()[cPalIndex];
+        if((iColour >> 24) == 0)
+            continue;
+        iUsageCounts[cPalIndex]++;
+        iCountTotal++;
+    }
+    if(iCountTotal == 0)
+        return false;
+    int iHighestCountIndex = 0;
+    for(int i = 0; i < 256; ++i)
+    {
+        if(iUsageCounts[i] > iUsageCounts[iHighestCountIndex])
+            iHighestCountIndex = i;
+    }
+    *pColour = m_pPalette->getARGBData()[iHighestCountIndex];
+    return true;
+}
+
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
@@ -1194,5 +1226,57 @@ bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
     // TODO (low priority, as Lua will simulate a cursor)
     return false;
 }
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+bool THFreeTypeFont::_isMonochrome() const
+{
+    return false;
+}
+
+void THFreeTypeFont::_setNullTexture(cached_text_t* pCacheEntry) const
+{
+    pCacheEntry->iTexture = 0;
+}
+
+void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
+{
+    if(pCacheEntry->iTexture != 0)
+    {
+        GLuint iTexture = static_cast<GLuint>(pCacheEntry->iTexture);
+        glDeleteTextures(1, &iTexture);
+    }
+}
+
+void THFreeTypeFont::_makeTexture(cached_text_t* pCacheEntry) const
+{
+    int iWidth2 = roundUp2(pCacheEntry->iWidth);
+    int iHeight2 = roundUp2(pCacheEntry->iHeight);
+    uint32_t* pPixels = new uint32_t[iWidth2 * iHeight2];
+    memset(pPixels, 0, iWidth2 * iHeight2 * sizeof(uint32_t));
+    unsigned char* pInRow = pCacheEntry->pData;
+    uint32_t* pOutRow = pPixels;
+    uint32_t iColBase = m_oColour & 0xFFFFFF;
+    for(int iY = 0; iY < pCacheEntry->iHeight; ++iY, pOutRow += iWidth2,
+        pInRow += pCacheEntry->iWidth)
+    {
+        for(int iX = 0; iX < pCacheEntry->iWidth; ++iX)
+        {
+            pOutRow[iX] = (static_cast<uint32_t>(pInRow[iX]) << 24) | iColBase;
+        }
+    }
+    pCacheEntry->iTexture = static_cast<int>(THRenderTarget::createTexture(iWidth2, iHeight2, pPixels));
+    delete[] pPixels;
+}
+
+void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry, int iX, int iY) const
+{
+    if(pCacheEntry->iTexture == 0)
+        return;
+
+    pCanvas->draw(static_cast<GLuint>(pCacheEntry->iTexture),
+        pCacheEntry->iWidth, pCacheEntry->iHeight, iX, iY, 0,
+        roundUp2(pCacheEntry->iWidth), roundUp2(pCacheEntry->iHeight), 0, 0);
+}
+#endif // CORSIX_TH_USE_FREETYPE2
 
 #endif // CORSIX_TH_USE_OGL_RENDERER

@@ -35,6 +35,7 @@ enum THScaledItems
 #include "th_gfx_dx9.h"
 #include "th_gfx_ogl.h"
 #include "th_gfx_sdl.h"
+#include "th_gfx_font.h"
 #include "persist_lua.h"
 #include <stddef.h>
 
@@ -179,78 +180,6 @@ protected:
     unsigned char *m_data, *m_ptr, *m_end;
     int m_x, m_y, m_width, m_height;
     bool m_skip_eol;
-};
-
-enum eTHAlign
-{
-    Align_Left = 0,
-    Align_Center = 1,
-    Align_Right = 2,
-};
-
-/*!
-    Utility class for using a sprite sheet as a font.
-*/
-class THFont
-{
-public:
-    THFont();
-
-    //! Set the character glyph sprite sheet
-    /*!
-        The sprite sheet should have the space character (ASCII 0x20) at sprite
-        index 1, and other ASCII characters following on in simple order (i.e.
-        '!' (ASCII 0x21) at index 2, 'A' (ASCII 0x41) at index 34, etc.)
-    */
-    void setSpriteSheet(THSpriteSheet* pSpriteSheet);
-
-    THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
-
-    //! Set the seperation between characters and between lines
-    /*!
-        Generally, the sprite sheet glyphs will already include separation, and
-        thus no extra separation is required (set iCharSep and iLineSep to 0).
-    */
-    void setSeparation(int iCharSep, int iLineSep);
-
-    //! Get the size of a single line of text
-    void getTextSize(const char* sMessage, size_t iMessageLength, int* pX,
-                     int* pY) const;
-
-    //! Draw a single line of text
-    void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                  size_t iMessageLength, int iX, int iY) const;
-
-    //! Draw a single line of text, splitting it at word boundaries
-    /*!
-        This function still only draws a single line of text (i.e. any line
-        breaks like \r and \n in sMessage are ignored), but inserts line breaks
-        between words so that no single line is wider than iWidth pixels.
-        @param pCanvas The canvas on which to draw. Can be NULL, in which case
-          nothing is drawn, but other calculations are still made.
-        @param sMessage The line of text to draw, encoded in CP437.
-        @param iMessageLength The length (in bytes) of sMessage.
-        @param iX The X position to start drawing on the canvas.
-        @param iY The Y position to start drawing on the canvas.
-        @param iWidth The maximum width of each line of text.
-        @param pResultingWidth If not NULL, the maximum width of a line will
-          be stored here (the resulting value should be similar to iWidth,
-          but a bit smaller).
-        @param pLastX If not NULL, iX plus the the width of the last printed
-          line will be stored here.
-        @param eAlign How to align each line of text if the width of the line
-          of text is smaller than iWidth.
-        @return iY plus the height (in pixels) of the resulting text.
-    */
-    int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                        size_t iMessageLength, int iX, int iY, int iWidth,
-                        int *pResultingWidth = NULL, int *pLastX = NULL,
-                        eTHAlign eAlign = Align_Left) const;
-
-protected:
-    THSpriteSheet* m_pSpriteSheet;
-    int m_iCharSep;
-    int m_iLineSep;
 };
 
 //! Layer information (see THAnimationManager::drawFrame)

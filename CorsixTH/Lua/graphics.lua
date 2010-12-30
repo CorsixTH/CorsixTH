@@ -65,6 +65,7 @@ function Graphics:Graphics(app)
     palette_greyscale_ghost = {},
     ghosts = {},
     anims = {},
+    language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
   -- The load info table records how objects were loaded, and is used to
@@ -80,6 +81,23 @@ function Graphics:Graphics(app)
   -- Cursors need to be reloaded after sprite sheets, as they are created
   -- from a sprite sheet.
   self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
+  
+  -- Load the Unicode font, if there is one specified.
+  local font_file = app.config.unicode_font
+  if not font_file then
+    -- Try a font which commonly comes with the operating system.
+    local windir = os.getenv("WINDIR")
+    if windir and windir ~= "" then
+      font_file = windir .. pathsep .. "Fonts" .. pathsep .. "ARIALUNI.TTF"
+    else
+      font_file = "/usr/share/fonts/truetype/arphic/uming.ttc"
+    end
+  end
+  font_file = font_file and io.open(font_file, "rb")
+  if font_file then
+    self.ttf_font_data = font_file:read"*a"
+    font_file:close()
+  end
 end
 
 function Graphics:loadMainCursor(id)
@@ -236,6 +254,79 @@ function Graphics:loadBuiltinFont()
   return font
 end
 
+function Graphics:hasLanguageFont(font)
+  if font == nil then
+    -- Original game fonts are always present.
+    return true
+  else
+    if not TH.freetype_font then
+      -- CorsixTH compiled with FreeType2 support, so even if suitable font
+      -- file exists, it cannot be loaded or drawn.
+      return false
+    end
+    
+    -- TODO: Handle more than one font
+    
+    return not not self.ttf_font_data
+  end
+end
+
+local font_proxy_mt = {
+  __index = {
+    sizeOf = function(self, ...)
+      return self._proxy:sizeOf(...)
+    end,
+    draw = function(self, ...)
+      return self._proxy:draw(...)
+    end,
+    drawWrapped = function(self, ...)
+      return self._proxy:drawWrapped(...)
+    end,
+    drawTooltip = function(self, ...)
+      return self._proxy:drawTooltip(...)
+    end,
+  }
+}
+
+function Graphics:onChangeLanguage()
+  -- Some fonts might need changing between bitmap and freetype
+  local load_info = self.load_info
+  self.load_info = {} -- Any newly made objects are temporary, and shouldn't
+                      -- remember reload information (also avoids insertions
+                      -- into a table being iterated over).
+  for object, load_info in pairs(load_info) do
+    if object._proxy then
+      local fn = load_info[1]
+      local new_object = fn(unpack(load_info, 2))
+      object._proxy = new_object._proxy
+    end
+  end
+  self.load_info = load_info
+end
+
+function Graphics:loadLanguageFont(name, sprite_table, ...)
+  local font
+  if name == nil then
+    font = self:loadFont(sprite_table, ...)
+  else
+    local cache = self.cache.language_fonts[name]
+    font = cache and cache[sprite_table]
+    if not font then
+      font = TH.freetype_font()
+      -- TODO: Choose face based on "name" rather than always using same face.
+      font:setFace(self.ttf_font_data)
+      font:setSheet(sprite_table)
+      if not cache then
+        cache = {}
+        self.cache.language_fonts[name] = cache
+      end
+      cache[sprite_table] = font
+    end
+  end
+  self.load_info[font] = {self.loadLanguageFont, self, name, sprite_table, ...}
+  return font
+end
+
 function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
   -- Allow (multiple) arguments for loading a sprite table in place of the
   -- sprite_table argument.
@@ -256,9 +347,27 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     end
   end
   
-  local font = TH.font()
-  font:setSheet(sprite_table)
-  font:setSeparation(x_sep or 0, y_sep or 0)
+  local font
+  local use_bitmap_font = true
+  if not sprite_table:isVisible(46) then -- uppercase M
+    -- The font doesn't contain an uppercase M, so (in all liklihood) is used
+    -- for drawing special symbols rather than text, so the original bitmap
+    -- font should be used.
+  elseif self.language_font then
+    use_bitmap_font = false
+  end
+  local font
+  if use_bitmap_font then
+    font = TH.bitmap_font()
+    font:setSeparation(x_sep or 0, y_sep or 0)
+    font:setSheet(sprite_table)
+  else
+    font = self:loadLanguageFont(self.language_font, sprite_table)
+  end
+  -- A change of language might cause the font to change between bitmap and
+  -- freetype, so wrap it in a proxy object which allows the actual object to
+  -- be changed easily.
+  font = setmetatable({_proxy = font}, font_proxy_mt)
   self.load_info[font] = {self.loadFont, self, sprite_table, x_sep, y_sep, ...}
   return font
 end

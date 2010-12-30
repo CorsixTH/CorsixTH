@@ -36,6 +36,10 @@ enum eTHLuaMetatable
     MT_Palette,
     MT_Sheet,
     MT_Font,
+    MT_BitmapFont,
+#ifdef CORSIX_TH_USE_FREETYPE2
+    MT_FreeTypeFont,
+#endif
     MT_Layers,
     MT_Anims,
     MT_Anim,
@@ -89,6 +93,16 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
     /* Set __index to the methods table */ \
     lua_pushvalue(pState->L, -1); \
     lua_setfield(pState->L, iCurrentClassMT, "__index")
+
+#define luaT_superclass(super_mt) \
+    /* Set __index on the methods metatable to the superclass methods */ \
+    lua_getmetatable(pState->L, -1); \
+    lua_getfield(pState->L, pState->aiMetatables[super_mt], "__index"); \
+    lua_setfield(pState->L, -2, "__index"); \
+    lua_pop(pState->L, 1); \
+    /* Set metatable[1] to super_mt */ \
+    lua_pushvalue(pState->L, pState->aiMetatables[super_mt]); \
+    lua_rawseti(pState->L, iCurrentClassMT, 1)
 
 #define luaT_endclass() \
     lua_setfield(pState->L, pState->iMainTable, sCurrentClassName); }

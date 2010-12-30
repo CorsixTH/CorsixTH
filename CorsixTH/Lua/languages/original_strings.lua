@@ -23,6 +23,7 @@ SOFTWARE. --]]
 Language("original_strings")
 SetSpeechFile("Sound-".. ... ..".dat")
 local S = LoadStrings("Lang-".. ... ..".dat")
+Encoding(utf8)
 
 -- Fix inconsistencies/bugs in german lang file.
 local function fixGermanStrings(lang_num)
@@ -46,20 +47,20 @@ local function fixGermanStrings(lang_num)
   -- German spelling reform: eszett changed to double s in a number of words.
   -- Mass-apply this change here, so we don't have to override all those strings.
   local repl = {
-    ["da·"] = "dass",
-    ["mu·"] = "muss", -- includes occurrences of muﬂte, muﬂten
-    ["lÑ·t"] = "lÑsst", -- includes occurrences of verl‰ﬂt
-    ["Engpa·"] = "Engpass",
-    ["bi·chen"] = "bisschen",
-    ["Stre·"] = "Stress",
-    ["Bi·"] = "Biss",
-    ["Fre·paket"] = "Fresspaket",
-    ["Pa·t"] = "Passt",
-    ["LÑ·t"] = "LÑsst",
-    ["verantwortungsbewu·t"] = "verantwortungsbewusst",
-    ["verlÑ·lich"] = "verlÑsslich",
-    ["Schlu·licht"] = "Schlusslicht",
-    ["unerlÑ·lich"] = "unerlÑsslich",
+    ["da√ü"] = "dass",
+    ["mu√ü"] = "muss", -- includes occurrences of mu√üte, mu√üten
+    ["l√§√üt"] = "l√§sst", -- includes occurrences of verl√§√üt
+    ["Engpa√ü"] = "Engpass",
+    ["bi√üchen"] = "bisschen",
+    ["Stre√ü"] = "Stress",
+    ["Bi√ü"] = "Biss",
+    ["Fre√üpaket"] = "Fresspaket",
+    ["Pa√üt"] = "Passt",
+    ["L√§√üt"] = "L√§sst",
+    ["verantwortungsbewu√üt"] = "verantwortungsbewusst",
+    ["verl√§√ülich"] = "verl√§sslich",
+    ["Schlu√ülicht"] = "Schlusslicht",
+    ["unerl√§√ülich"] = "unerl√§sslich",
   }
   
   for c, cat in ipairs(S) do

@@ -266,6 +266,8 @@ function App:initLanguage()
   if old_S then
     TH.stringProxy.reload(old_S, _S)
   end
+  self.gfx.language_font = self.strings:getFont(self.config.language)
+  self.gfx:onChangeLanguage()
   if self.ui then
     self.ui:onChangeLanguage()
   end

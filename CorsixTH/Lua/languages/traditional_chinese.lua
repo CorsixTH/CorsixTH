@@ -20,9 +20,10 @@ SOFTWARE. --]]
 
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
+Font("unicode")
 Language("繁體中文", "Chinese (traditional)", "zh(t)", "chi(t)", "zho(t)")
 Inherit("english")
-
+Encoding(utf8)
 
 misc = {
   hospital_open = utf8 "醫院開門",

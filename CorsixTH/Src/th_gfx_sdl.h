@@ -114,6 +114,8 @@ protected:
     bool m_bShouldScaleBitmaps;
 };
 
+typedef SDL_Colour THColour;
+
 class THPalette
 {
 public:
@@ -197,6 +199,17 @@ public:
         @param pY Pointer to store height at. Must not be NULL.
     */
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
+
+    //! Get the average of the non-transparent pixels of a sprite
+    /*!
+        For this function, "average" means the mode (i.e. the colour which
+        occurs most frequently) rather than an arithmetic mean.
+        @param iSprite Sprite index. Should be in range [0, getSpriteCount() - 1].
+        @param pColour Pointer to store resulting average at.
+        @return true if there was an average colour (i.e. sprite existed and
+            had at least one opaque pixel), false otherwise.
+    */
+    bool getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;

@@ -151,6 +151,18 @@ template <> struct luaT_classinfo<THFont> {
     static inline const char* name() {return "Font";}
 };
 
+class THBitmapFont;
+template <> struct luaT_classinfo<THBitmapFont> {
+    static inline const char* name() {return "BitmapFont";}
+};
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+class THFreeTypeFont;
+template <> struct luaT_classinfo<THFreeTypeFont> {
+    static inline const char* name() {return "FreeTypeFont";}
+};
+#endif
+
 struct THLayers_t;
 template <> struct luaT_classinfo<THLayers_t> {
     static inline const char* name() {return "Layers";}
@@ -208,16 +220,25 @@ template <> struct luaT_classinfo<FILE*> {
 template <class T>
 static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {
+    // Turn mt_idx into an absolute index, as the stack size changes.
     if(mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
         mt_idx = lua_gettop(L) + mt_idx + 1;
 
     void *ud = lua_touserdata(L, idx);
     if(ud != NULL && lua_getmetatable(L, idx) != 0)
     {
-        if(lua_equal(L, mt_idx, -1) != 0)
+        while(true)
         {
-            lua_pop(L, 1);
-            return (T*)ud;
+            if(lua_equal(L, mt_idx, -1) != 0)
+            {
+                lua_pop(L, 1);
+                return (T*)ud;
+            }
+            // Go up one inheritance level, if there is one.
+            if(lua_type(L, -1) != LUA_TTABLE)
+                break;
+            lua_rawgeti(L, -1, 1);
+            lua_replace(L, -2);
         }
         lua_pop(L, 1);
     }

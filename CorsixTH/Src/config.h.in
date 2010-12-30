@@ -61,6 +61,12 @@ SOFTWARE.
 // any music.
 #cmakedefine CORSIX_TH_USE_SDL_MIXER
 
+/** Font options **/
+// FreeType2 can be used for font support beyond the CP437 bitmap fonts which
+// come with Theme Hospital. It must be used if translations like Russian or
+// Chinese are desired.
+#cmakedefine CORSIX_TH_USE_FREETYPE2
+
 /** Environment detection **/
 #if defined(__amd64__) || defined(__IA64__) || defined(__x86_64__) || \
     defined(__x86_64) || defined(_M_IA64) ||  defined(_IA64) || \

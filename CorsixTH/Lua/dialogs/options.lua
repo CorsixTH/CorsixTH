@@ -99,12 +99,22 @@ function UIOptions:UIOptions(ui, mode)
   -- Language
   local y = 80
   for _, lang in ipairs(app.strings.languages) do
-    self:addBevelPanel(20, y, 280, 20, col_bg):setLabel(lang):makeButton(0, 0, 280, 20, nil, --[[persistable:options_window_language_button]] function()
-      app.config.language = lang
-      app:initLanguage()
-      app:saveConfig()
-    end):setTooltip(_S.tooltip.options_window.language:format(lang))
-    y = y + 20
+    local font = app.strings:getFont(lang)
+    if app.gfx:hasLanguageFont(font) then
+      if font then
+        font = app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
+      end
+      self:addBevelPanel(20, y, 280, 20, col_bg)
+        :setLabel(lang, font)
+        :makeButton(0, 0, 280, 20, nil,
+          --[[persistable:options_window_language_button]] function()
+            app.config.language = lang
+            app:initLanguage()
+            app:saveConfig()
+          end)
+        :setTooltip(_S.tooltip.options_window.language:format(lang))
+      y = y + 20
+    end
   end
   
   -- Adjust size

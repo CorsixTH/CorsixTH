@@ -63,6 +63,8 @@ struct THOGL_Vertex
     GLuint tex;
 };
 
+typedef uint32_t THColour;
+
 class THPalette
 {
 public: // External API
@@ -124,8 +126,8 @@ public: // Internal (this rendering engine only) API
     GLuint createTexture(int iWidth, int iHeight, const unsigned char* pPixels,
                          const THPalette* pPalette, int* pWidth2 = NULL,
                          int* pHeight2 = NULL);
-    GLuint createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels);
-    GLenum getGLError();
+    static GLuint createTexture(int iWidth2, int iHeight2, const uint32_t* pPixels);
+    static GLenum getGLError();
     static void setGLProjection(GLdouble fWidth, GLdouble fHeight);
     bool shouldScaleBitmaps(float* pFactor);
 
@@ -201,6 +203,8 @@ public: // External API
     unsigned int getSpriteCount() const;
     bool getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
     void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
+
+    bool getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const;
 
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;

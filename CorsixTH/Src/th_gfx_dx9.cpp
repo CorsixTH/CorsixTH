@@ -1276,6 +1276,34 @@ void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* p
     *pY = m_pSprites[iSprite].iHeight;
 }
 
+bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
+{
+    if(iSprite >= m_iSpriteCount)
+        return false;
+    const sprite_t *pSprite = m_pSprites + iSprite;
+    int iCountTotal = 0;
+    int iUsageCounts[256] = {0};
+    for(unsigned int i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
+    {
+        unsigned char cPalIndex = pSprite->pData[i];
+        uint32_t iColour = m_pPalette->getARGBData()[cPalIndex];
+        if((iColour >> 24) == 0)
+            continue;
+        iUsageCounts[cPalIndex]++;
+        iCountTotal++;
+    }
+    if(iCountTotal == 0)
+        return false;
+    int iHighestCountIndex = 0;
+    for(int i = 0; i < 256; ++i)
+    {
+        if(iUsageCounts[i] > iUsageCounts[iHighestCountIndex])
+            iHighestCountIndex = i;
+    }
+    *pColour = m_pPalette->getARGBData()[iHighestCountIndex];
+    return true;
+}
+
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL)
@@ -1339,7 +1367,7 @@ void THRenderTarget::draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
                           unsigned int iHeight, int iX, int iY,
                           unsigned long iFlags, unsigned int iWidth2,
                           unsigned int iHeight2, unsigned int iTexX,
-                          unsigned int iTexY)
+                          unsigned int iTexY, D3DCOLOR cColour)
 {
     // Crop to clip rectangle
     RECT rcSource;
@@ -1376,17 +1404,16 @@ void THRenderTarget::draw(IDirect3DTexture9 *pTexture, unsigned int iWidth,
     rcSource.top += iTexY;
 
     // Set alpha blending options
-    D3DCOLOR cColour;
     switch(iFlags & (THDF_Alpha50 | THDF_Alpha75))
     {
     case 0:
-        cColour = D3DCOLOR_ARGB(0xFF, 0xFF, 0xFF, 0xFF);
+        cColour |= 0xFF000000UL;
         break;
     case THDF_Alpha50:
-        cColour = D3DCOLOR_ARGB(0x80, 0xFF, 0xFF, 0xFF);
+        cColour |= 0x80000000UL;
         break;
     default:
-        cColour = D3DCOLOR_ARGB(0x40, 0xFF, 0xFF, 0xFF);
+        cColour |= 0x40000000UL;
         break;
     }
     float fX = (float)iX;
@@ -1598,5 +1625,208 @@ bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
     return pTarget->setCursorPosition(iX, iY);
 }
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+bool THFreeTypeFont::_isMonochrome() const
+{
+    return false;
+}
+
+void THFreeTypeFont::_setNullTexture(cached_text_t* pCacheEntry) const
+{
+    pCacheEntry->pTexture = NULL;
+}
+
+class THDX9_FontTexture : public THDX9_DeviceResource
+{
+public:
+    THDX9_FontTexture()
+    {
+        fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THDX9_FontTexture>;
+        m_pDevice = NULL;
+        m_pTexture = NULL;
+        m_pData = NULL;
+        m_iWidth = 0;
+        m_iHeight = 0;
+    }
+
+    ~THDX9_FontTexture()
+    {
+        if(m_pTexture != NULL)
+            m_pTexture->Release();
+    }
+
+    void make(unsigned char* pData, int iWidth, int iHeight)
+    {
+        m_pData = pData;
+        m_iWidth = iWidth;
+        m_iHeight = iHeight;
+        if(m_pTexture != NULL)
+        {
+            m_pTexture->Release();
+            m_pTexture = NULL;
+            m_pDevice = NULL;
+        }
+        removeFromList();
+    }
+
+    void onDeviceChange(eTHDX9DeviceChangeType eChangeType)
+    {
+        if(m_pTexture)
+        {
+            m_pTexture->Release();
+            m_pTexture = NULL;
+        }
+        removeFromList();
+    }
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY, uint32_t iColour)
+    {
+        if(m_pTexture == NULL || pCanvas->getRawDevice() != m_pDevice)
+        {
+            _makeFor(pCanvas);
+        }
+        if(m_pTexture)
+        {
+            if(m_bIsA8Texture)
+            {
+                pCanvas->flushSprites();
+                m_pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_CURRENT);
+            }
+            pCanvas->draw(m_pTexture, m_iWidth, m_iHeight, iX, iY, 0, m_iWidth2, m_iHeight2, 0, 0, iColour & 0xFFFFFF);
+            pCanvas->flushSprites();
+            if(m_bIsA8Texture)
+            {
+                m_pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+            }
+        }
+    }
+
+protected:
+    static int _roundUp2(int x)
+    {
+        int rounded = 1;
+        while(rounded < x)
+            rounded <<= 1;
+        return rounded;
+    }
+
+    void _makeFor(THRenderTarget* pCanvas)
+    {
+        removeFromList();
+        if(m_pTexture != NULL)
+        {
+            m_pTexture->Release();
+            m_pTexture = NULL;
+        }
+        m_pDevice = pCanvas->getRawDevice(this);
+
+        D3DCAPS9 oCaps;
+        bool bGotCaps = SUCCEEDED(m_pDevice->GetDeviceCaps(&oCaps));
+
+        // Get power of 2 sizes
+        m_iWidth2 = _roundUp2(m_iWidth);
+        m_iHeight2 = _roundUp2(m_iHeight);
+        if(m_iWidth2 != m_iHeight2 && (!bGotCaps
+        || (oCaps.TextureCaps & D3DPTEXTURECAPS_SQUAREONLY)))
+        {
+            if(m_iWidth2 < m_iHeight2)
+                m_iWidth2 = m_iHeight2;
+            else
+                m_iHeight2 = m_iWidth2;
+        }
+
+        // Check aspect ratio
+        if(bGotCaps)
+        {
+            if(m_iWidth2 < m_iHeight2)
+            {
+                if(m_iHeight2 / m_iWidth2 > static_cast<int>(oCaps.MaxTextureAspectRatio))
+                    m_iWidth2 = _roundUp2(m_iHeight2 / oCaps.MaxTextureAspectRatio);
+            }
+            else
+            {
+                if(m_iWidth2 / m_iHeight2 > static_cast<int>(oCaps.MaxTextureAspectRatio))
+                    m_iHeight2 = _roundUp2(m_iWidth2 / oCaps.MaxTextureAspectRatio);
+            }
+        }
+
+        // Make the texture
+        if(SUCCEEDED(m_pDevice->CreateTexture(m_iWidth2, m_iHeight2, 1, 0,
+            D3DFMT_A8, D3DPOOL_MANAGED, &m_pTexture, NULL)))
+        {
+            m_bIsA8Texture = true;
+        }
+        else if(SUCCEEDED(m_pDevice->CreateTexture(m_iWidth2, m_iHeight2, 1,
+            0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &m_pTexture, NULL)))
+        {
+            m_bIsA8Texture = false;
+        }
+        else
+        {
+            return;
+        }
+
+        // Copy in texture data
+        D3DLOCKED_RECT rcLocked;
+        if(m_pTexture->LockRect(0, &rcLocked, NULL, D3DLOCK_DISCARD) != D3D_OK)
+        {
+            m_pTexture->Release();
+            m_pTexture = NULL;
+            return;
+        }
+        const unsigned char* pInRow = m_pData;
+        unsigned char* pOutRow = reinterpret_cast<unsigned char*>(rcLocked.pBits);
+        for(int iY = 0; iY < m_iHeight; ++iY, pInRow += m_iWidth, pOutRow += rcLocked.Pitch)
+        {
+            if(m_bIsA8Texture)
+            {
+                memcpy(pOutRow, pInRow, m_iWidth);
+            }
+            else
+            {
+                uint32_t iColour;
+                for(int iX = 0; iX < m_iWidth; ++iX)
+                {
+                    iColour = (static_cast<uint32_t>(pInRow[iX]) << 24) | 0xffffff;
+                    reinterpret_cast<uint32_t*>(pOutRow)[iX] = iColour;
+                }
+            }
+        }
+        m_pTexture->UnlockRect(0);
+    }
+
+    IDirect3DDevice9* m_pDevice;
+    IDirect3DTexture9* m_pTexture;
+    const unsigned char* m_pData;
+    int m_iWidth;
+    int m_iWidth2;
+    int m_iHeight;
+    int m_iHeight2;
+    bool m_bIsA8Texture;
+};
+
+void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
+{
+    if(pCacheEntry->pTexture != NULL)
+    {
+        delete reinterpret_cast<THDX9_FontTexture*>(pCacheEntry->pTexture);
+    }
+}
+
+void THFreeTypeFont::_makeTexture(cached_text_t* pCacheEntry) const
+{
+    THDX9_FontTexture *pTexture = new THDX9_FontTexture;
+    pTexture->make(pCacheEntry->pData, pCacheEntry->iWidth, pCacheEntry->iHeight);
+    pCacheEntry->pTexture = reinterpret_cast<void*>(pTexture);
+}
+
+void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry, int iX, int iY) const
+{
+    if(pCacheEntry->pTexture == NULL)
+        return;
+    reinterpret_cast<THDX9_FontTexture*>(pCacheEntry->pTexture)->draw(pCanvas, iX, iY, m_oColour);
+}
+#endif // CORSIX_TH_USE_FREETYPE2
 
 #endif // CORSIX_TH_USE_DX9_RENDERER
