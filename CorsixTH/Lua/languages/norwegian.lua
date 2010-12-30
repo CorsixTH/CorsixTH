@@ -1947,8 +1947,7 @@ progress_report = {
   too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
   percentage_pop = utf8 "% befolkning",
   win_criteria = utf8 "KRITERIER FOR Å VINNE",
-},
-
+}
 
 -- Newspaper headlines
 newspaper = {
