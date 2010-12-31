@@ -216,6 +216,13 @@ static int l_bitmap_font_set_spritesheet(lua_State *L)
     return 1;
 }
 
+static int l_bitmap_font_get_spritesheet(lua_State *L)
+{
+    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
+    luaT_getenvfield(L, 1, "sprites");
+    return 1;
+}
+
 static int l_bitmap_font_set_sep(lua_State *L)
 {
     THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
@@ -262,6 +269,12 @@ static int l_freetype_font_set_spritesheet(lua_State *L)
 
     l_freetype_throw_error_code(L, pFont->matchBitmapFont(pSheet));
     lua_settop(L, 1);
+    return 1;
+}
+
+static int l_freetype_font_get_copyright(lua_State *L)
+{
+    lua_pushstring(L, THFreeTypeFont::getCopyrightNotice());
     return 1;
 }
 
@@ -760,6 +773,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_class(THBitmapFont, l_bitmap_font_new, "bitmap_font", MT_BitmapFont);
     luaT_superclass(MT_Font);
     luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_bitmap_font_get_spritesheet, "getSheet", MT_Sheet);
     luaT_setfunction(l_bitmap_font_set_sep, "setSeparation");
     luaT_endclass();
 
@@ -769,6 +783,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_superclass(MT_Font);
     luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", MT_Sheet);
     luaT_setfunction(l_freetype_font_set_face, "setFace");
+    luaT_setfunction(l_freetype_font_get_copyright, "getCopyrightNotice");
     luaT_endclass();
 #endif
 

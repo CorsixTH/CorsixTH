@@ -150,6 +150,22 @@ function App:init()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       (self.config.width - 640) / 2, (self.config.height - 480) / 2)
     self.video:endFrame()
+    -- Add some noticies to the loading screen
+    local notices = {}
+    local font = self.gfx:loadBuiltinFont()
+    if TH.freetype_font and self.gfx:hasLanguageFont("unicode") then
+      notices[#notices + 1] = TH.freetype_font.getCopyrightNotice()
+      font = self.gfx:loadLanguageFont("unicode", font:getSheet())
+    end
+    notices = table.concat(notices)
+    if notices ~= "" then
+      self.video:startFrame()
+      self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
+        (self.config.width - 640) / 2, (self.config.height - 480) / 2)
+      font:drawWrapped(self.video, notices, 32,
+        (self.config.height + 400) / 2, self.config.width - 64, "center")
+      self.video:endFrame()
+    end
   end
   
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order

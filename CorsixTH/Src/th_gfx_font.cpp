@@ -427,7 +427,7 @@ FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
     if(m_pFace == NULL)
         return FT_Err_Invalid_Face_Handle;
 
-    if(_isMonochrome() || iHeight <= 13)
+    if(_isMonochrome() || iHeight <= 14)
     {
         // Look for a bitmap strike of a similar size
         int iBestBitmapScore = 50;
@@ -451,7 +451,14 @@ FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
             return FT_Select_Size(m_pFace, iBestBitmapIndex);
     }
 
-    // Go with the original size request if there was no bitmap strike
+    // Go with the original size request if there was no bitmap strike, unless
+    // the size was very small, in which case scale things up, as vector fonts
+    // look rather poor at small sizes.
+    if(iHeight < 14)
+    {
+        iWidth = iWidth * 14 / iHeight;
+        iHeight = 14;
+    }
     return FT_Set_Pixel_Sizes(m_pFace, iWidth, iHeight);
 }
 
@@ -562,6 +569,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
                 oGlyph.oMetrics.width + 63) / 64 >= iWidth)
             {
                 ftvPen.x = ftvPen.y = 0;
+                iPreviousGlyphIndex = 0;
                 if(sLineStart != sLineBreakPosition)
                 {
                     vLines.push_back(std::make_pair(sLineStart, sLineBreakPosition));
@@ -582,9 +590,11 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
 
             // Save and advance the pen.
             vCharPositions[sOldMessage - sMessageStart] = ftvPen;
+            iPreviousGlyphIndex = oGlyph.iGlyphIndex;
             ftvPen.x += oGlyph.oMetrics.horiAdvance;
         }
-        vLines.push_back(std::make_pair(sLineStart, sMessage));
+        if(sLineStart != sMessageEnd)
+            vLines.push_back(std::make_pair(sLineStart, sMessageEnd));
         sMessage = sMessageStart;
 
         // Finalise the position of each character (alignment might change X,
@@ -606,9 +616,9 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             iLineWidth = vCharPositions[sLastChar - sMessage].x
                 + oLastGlyph.oMetrics.horiBearingX
                 + oLastGlyph.oMetrics.width;
-            if(iLineWidth < iWidth)
+            if((iLineWidth >> 6) < iWidth)
             {
-                iAlignDelta = ((iWidth - iLineWidth) *
+                iAlignDelta = ((iWidth * 64 - iLineWidth) *
                     static_cast<int>(eAlign)) / 2;
             }
             if(iLineWidth > iWidestLine)
@@ -630,6 +640,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             iBaselinePos = ((iBaselinePos + 63) >> 6) << 6; // Pixel-align
             iLineHeight += iBaselinePos;
             iLineHeight += iLineSpacing;
+            iLineHeight = ((iLineHeight + 63) >> 6) << 6; // Pixel-align
 
             // Apply the character position changes.
             for(const char* s = itr->first; s != itr->second; utf8next(s))
@@ -646,7 +657,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         pEntry->iWidestLine = 1 + (iWidestLine >> 6);
         if(iWidth == INT_MAX)
             pEntry->iWidth = pEntry->iWidestLine;
-        pEntry->iLastX = static_cast<int>(iLineWidth + iAlignDelta);
+        pEntry->iLastX = 1 + (static_cast<int>(iLineWidth + iAlignDelta) >> 6);
 
         // Get a bitmap for each glyph.
         bool bIsMonochrome = _isMonochrome();
@@ -711,7 +722,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
 // In theory, the renderers should only be invoked with coordinates which end
 // up within the canvas being rendered to. In practice, this might not happen,
 // at which point the following line can be removed.
-#define TRUST_RENDER_COORDS
+// #define TRUST_RENDER_COORDS
 
 void THFreeTypeFont::_renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const
 {
