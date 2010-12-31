@@ -245,7 +245,7 @@ function Graphics:loadBuiltinFont()
     local sheet = TH.sheet()
     sheet:setPalette(palette)
     sheet:load(dernc(tab), dernc(dat), true, self.target)
-    font = TH.font()
+    font = TH.bitmap_font()
     font:setSheet(sheet)
     font:setSeparation(1, 0)
     self.load_info[font] = {self.loadBuiltinFont, self}
