@@ -427,7 +427,7 @@ FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
     if(m_pFace == NULL)
         return FT_Err_Invalid_Face_Handle;
 
-    if(_isMonochrome() || iHeight <= 14)
+    if(_isMonochrome() || iHeight <= 14 || iWidth <= 9)
     {
         // Look for a bitmap strike of a similar size
         int iBestBitmapScore = 50;
@@ -458,6 +458,11 @@ FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
     {
         iWidth = iWidth * 14 / iHeight;
         iHeight = 14;
+    }
+    if(iWidth < 9)
+    {
+        iHeight = iHeight * 9 / iWidth;
+        iWidth = 9;
     }
     return FT_Set_Pixel_Sizes(m_pFace, iWidth, iHeight);
 }

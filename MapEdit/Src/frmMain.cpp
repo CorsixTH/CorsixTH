@@ -335,7 +335,7 @@ void frmMain::_populateParcelGallery(wxRibbonGallery* pGallery)
         luaT_execute(L, "return TheApp.map.cell_outline");
         pOutlineSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
         luaT_execute(L, "return TheApp.map.debug_font");
-        pFontSheet = reinterpret_cast<THFont*>(lua_touserdata(L, -1))
+        pFontSheet = reinterpret_cast<THBitmapFont*>(lua_touserdata(L, -1))
             ->getSpriteSheet();
         lua_pop(L, 3);
     }
