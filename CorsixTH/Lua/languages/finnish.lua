@@ -85,12 +85,6 @@ fax = {
       utf8 "Mutta pelatkaamme ennen sitä! Näyttää, että sinulle on tullut faksi. Sulje tämä ikkuna ja klikkaa alapalkin yllä olevaa kysymysmerkkiä.",
       utf8 "-- CorsixTH-tiimi, th.corsix.org",
     },
-    beta3 = {
-      utf8 "Tervetuloa pelaamaan 3. beetaversiota CorsixTH:sta, klassikkopeli Theme Hospitalin avoimen lähdekoodin kloonista!",
-      utf8 "Edellisen beetan jälkeen on toteutettu monta uutta ominaisuutta. Voit katsoa lisätietoja muutoksista changelog-tiedostosta.",
-      utf8 "Mutta pelatkaamme ennen sitä! Näyttää, että sinulle on tullut faksi. Sulje tämä ikkuna ja klikkaa alapalkin yllä olevaa kysymysmerkkiä.",
-      utf8 "-- CorsixTH-tiimi, th.corsix.org",
-    },
   },
   tutorial = {
     utf8 "Tervetuloa ensimmäiseen sairaalaasi!",
@@ -206,7 +200,6 @@ main_menu = {
 
 load_game_window = {
   caption       = utf8 "Lataa peli",
-  back          = utf8 "Takaisin",
 }
 
 custom_game_window = {
@@ -223,7 +216,6 @@ menu_list_window = {
 }
 
 options_window = {
-  caption               = utf8 "Asetukset",
   fullscreen            = utf8 "Koko ruutu",
   width                 = utf8 "Leveys",
   height                = utf8 "Korkeus",
@@ -272,7 +264,6 @@ tooltip = {
     load_game           = utf8 "Lataa peli %s",
     load_game_number    = utf8 "Lataa peli numero %d",
     load_autosave       = utf8 "Lataa viimeisin automaattitallennus",
-    back                = utf8 "Sulje tämä ikkuna",
   },
 
   custom_game_window = {
@@ -1530,7 +1521,6 @@ tooltip = {
   window_general = {
     cancel              = utf8 "Peruuta",
     confirm             = utf8 "Vahvista",
-    close_window        = utf8 "Sulje ikkuna",
   },
   -- Information dialog
   information = {
@@ -2136,7 +2126,6 @@ confirmation = {
   sack_staff            = utf8 "Oletko varma, että haluat irtisanoa tämän työntekijän?",
   restart_level         = utf8 "Oletko varma, että haluat aloittaa tason alusta?",
   needs_restart         = utf8 "Tämän asetuksen muuttaminen vaatii CorsixTH:n käynnistämisen uudelleen. Kaikki tallentamattomat muutokset menetetään. Oletko varma, että haluat jatkaa?",
-  restart               = utf8 "Oletko varma, että haluat aloittaa tason alusta?",
   abort_edit_room       = utf8 "Huoneen rakentaminen tai muokkaaminen on kesken. Jos kaikki pakolliset kalusteet on asetettu huoneeseen, se valmistuu, mutta muutoin se poistetaan. Oletko varma, että haluat poistua?",
 }
 
