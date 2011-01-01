@@ -848,8 +848,8 @@ function World:nextEmergency()
       days = days - (month_length[next_month] - self.day)
       next_month = next_month + 1
     end
-    while days > month_length[next_month] do
-      days = days - month_length[next_month]
+    while days > month_length[(next_month - 1) % 12 + 1] do
+      days = days - month_length[(next_month - 1) % 12 + 1]
       next_month = next_month + 1
     end
     -- Make it the same format as for "controlled" emergencies
@@ -861,6 +861,11 @@ function World:nextEmergency()
     else
       repeat
         self.next_emergency_no = self.next_emergency_no + 1
+        -- Level three is missing [5].
+        if not control[self.next_emergency_no] 
+        and control[self.next_emergency_no + 1] then
+          self.next_emergency_no = self.next_emergency_no + 1
+        end
       until not control[self.next_emergency_no]
       or control[self.next_emergency_no].EndMonth >= current_month
     end
@@ -880,7 +885,8 @@ function World:nextEmergency()
       if start == emergency.EndMonth then
         day_start = self.day
       end
-      self.next_emergency_day = math.random(day_start, month_length[next_month])
+      local day_end = month_length[(next_month - 1) % 12 + 1]
+      self.next_emergency_day = math.random(day_start, day_end)
     end
   end
 end

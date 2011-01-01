@@ -375,7 +375,7 @@ function Hospital:afterLoad(old, new)
   end
   if old < 30 then
     if self.emergency then
-      self.emergency.percentange = 0.75
+      self.emergency.percentage = 0.75
     end
   end
 end
@@ -596,7 +596,7 @@ function Hospital:resolveEmergency()
   end
   local total = emer.victims
   local max_bonus = emer.bonus * total
-  local earned = math.floor((rescued_patients/total > emer.percentage and 
+  local earned = math.floor((rescued_patients/total >= emer.percentage and 
     rescued_patients/total or 0)*10)*max_bonus/10
   local message = {
     {text = _S.fax.emergency_result.saved_people

@@ -204,19 +204,19 @@ But we don't want any such conditions on the example level!
 5 Percentage people have been killed
 6 Hospital value
 
-#win_criteria[0].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#win_criteria[1].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#win_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#win_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#win_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#win_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#win_criteria[0].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#win_criteria[1].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#win_criteria[2].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#win_criteria[3].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#win_criteria[5].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
 
-#lose_criteria[0].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#lose_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#lose_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#lose_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
-#lose_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[0].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#lose_criteria[2].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#lose_criteria[3].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#lose_criteria[4].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
+#lose_criteria[5].Criteria.MaxMin.Value.Group.Bound 0 0 0 0 0
 
 --------------------- Competitor Information -----------------------
 
@@ -224,3 +224,8 @@ But we don't want any such conditions on the example level!
 #computer[12].Playing 1 CORSIX
 #computer[13].Playing 1 ROUJIN
 #computer[14].Playing 1 EDVIN
+
+----------------------- Emergency Control --------------------------
+
+#emergency_control[0].StartMonth.EndMonth.Min.Max.Illness.PercWin.Bonus 4 5 4 6 16 75 400
+#emergency_control[1].StartMonth.EndMonth.Min.Max.Illness.PercWin.Bonus 8 10 3 5 32 75 500
