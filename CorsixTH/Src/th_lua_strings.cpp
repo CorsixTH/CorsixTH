@@ -260,8 +260,8 @@ static int l_str_func(lua_State *L)
 
 static int l_str_gsub_table_lookup(lua_State *L)
 {
-    lua_settop(L, 2);
-    lua_gettable(L, 1);
+    lua_settop(L, 1);
+    lua_gettable(L, lua_upvalueindex(1));
     return 1;
 }
 
