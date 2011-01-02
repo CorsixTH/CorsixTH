@@ -258,6 +258,47 @@ static int l_str_func(lua_State *L)
     return 1;
 }
 
+static int l_str_gsub_table_lookup(lua_State *L)
+{
+    lua_settop(L, 2);
+    lua_gettable(L, 1);
+    return 1;
+}
+
+static int l_str_gsub_resolve_proxy(lua_State *L)
+{
+    lua_pushvalue(L, lua_upvalueindex(1));
+    lua_insert(L, 1);
+    lua_call(L, lua_gettop(L) - 1, 1);
+    if(lua_type(L, 1) == LUA_TUSERDATA)
+        lua_rawget(L, lua_upvalueindex(2));
+    return 1;
+}
+
+static int l_str_gsub(lua_State *L)
+{
+    // Subsistute tables for functions, to reduce number of cases to handle
+    if(lua_type(L, 3) == LUA_TTABLE)
+    {
+        lua_pushvalue(L, 3);
+        lua_pushcclosure(L, l_str_gsub_table_lookup, 1);
+        lua_replace(L, 3);
+    }
+
+    // If the replacement function returns a string proxy, then it should get
+    // resolved to a string before returning it to string.gsub.
+    if(lua_type(L, 3) == LUA_TFUNCTION)
+    {
+        lua_pushvalue(L, 3);
+        aux_push_weak_table(L, 0);
+        lua_pushcclosure(L, l_str_gsub_resolve_proxy, 2);
+        lua_replace(L, 3);
+    }
+
+    // Now proceed in the normal way...
+    return l_str_func(L);
+}
+
 // __concat metamethod handler
 // Simple (but inefficient) handling by converting concat into format
 static int l_str_concat(lua_State *L)
@@ -726,7 +767,7 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_str_next, "next");
     luaT_setmetamethod(l_str_inext, "inext");
     luaT_setfunction(l_str_func, "format" , MT_DummyString, "format");
-    luaT_setfunction(l_str_func, "gsub"   , MT_DummyString, "gsub");
+    luaT_setfunction(l_str_gsub, "gsub"   , MT_DummyString, "gsub");
     luaT_setfunction(l_str_func, "lower"  , MT_DummyString, "lower");
     luaT_setfunction(l_str_func, "rep"    , MT_DummyString, "rep");
     luaT_setfunction(l_str_func, "reverse", MT_DummyString, "reverse");
