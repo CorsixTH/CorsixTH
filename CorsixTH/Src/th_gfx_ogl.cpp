@@ -1276,6 +1276,8 @@ void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCache
     pCanvas->draw(static_cast<GLuint>(pCacheEntry->iTexture),
         pCacheEntry->iWidth, pCacheEntry->iHeight, iX, iY, 0,
         roundUp2(pCacheEntry->iWidth), roundUp2(pCacheEntry->iHeight), 0, 0);
+    // As the cache entry might get re-used, flush sprites now.
+    pCanvas->flushSprites();
 }
 #endif // CORSIX_TH_USE_FREETYPE2
 
