@@ -356,9 +356,9 @@ function UI:registerTextBox(box)
 end
 
 function UI:unregisterTextBox(box)
-  for num, b in pairs(self.textboxes) do
+  for num, b in ipairs(self.textboxes) do
     if b == box then
-      self.textboxes[num] = nil
+      table.remove(self.textboxes, num)
       break
     end
   end
@@ -513,7 +513,7 @@ function UI:onKeyDown(code, rawchar)
   end
   
   -- If there is one, the current textbox gets the key
-  for _, box in pairs(self.textboxes) do
+  for _, box in ipairs(self.textboxes) do
     if box.enabled and box.active then
       local handled = box:input(key, rawchar, code)
       if handled then

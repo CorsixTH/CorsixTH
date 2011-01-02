@@ -38,8 +38,8 @@ function Window:Window()
   }
   self.scrollbars = {
   }
-  self.textboxes = {
-  }
+  self.textboxes = { -- list of textboxes in that window. NB: (Game)UI also uses this.
+  }                  -- Take care not to handle things twice as UI is subclass of window!
   self.key_handlers = {--[[a set]]}
   self.windows = false -- => {} when first window added
   self.active_button = false
@@ -810,14 +810,14 @@ function Textbox:input(char, rawchar, code)
     return false
   end
   local ui = self.panel.window.ui
-  local line = type(self.text) == "table" and self.text[#self.text] or self.text
+  local line = type(self.text) == "table" and self.text[self.cursor_pos[1]] or self.text
+  local new_line
   local handled = false
   if not self.char_limit or string.len(line) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
       if #rawchar == 1 and (("a" <= rawchar and rawchar <= "z")
       or ("A" <= rawchar and rawchar <= "Z")) then
-        line = line .. rawchar
         handled = true
       end
     end
@@ -828,37 +828,45 @@ function Textbox:input(char, rawchar, code)
         rawchar = string.char(string.byte"0" + code - 256)
       end
       if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
-        line = line .. rawchar
         handled = true
       end
     end
     -- Space and hyphen
     if not handled and self.allowed_input.misc then
       if rawchar == " " or rawchar == "-" then
-        line = line .. rawchar
         handled = true
       end
+    end
+    if handled then
+      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
+      self.cursor_pos[2] = self.cursor_pos[2] + 1
     end
   end
   -- Backspace (delete last char)
   if not handled and char == "backspace" then
-    if type(self.text) == "table" and line == "" then
-      if #self.text > 1 then
-        self.text[#self.text] = nil
-        self.cursor_pos = {self.cursor_pos[1] - 1, string.len(self.text[#self.text])}
+    if self.cursor_pos[2] == 0 then
+      if type(self.text) == "table" and #self.text > 1 then
+        table.remove(self.text, self.cursor_pos[1])
+        self.cursor_pos[1] = self.cursor_pos[1] - 1
+        self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
+        self.text[self.cursor_pos[1]] = self.text[self.cursor_pos[1]] .. line
       end
-      return true
+      handled = true
     else
-      line = line:sub(1, -2)
+      new_line = line:sub(1, self.cursor_pos[2] - 1) .. line:sub(self.cursor_pos[2] + 1, -1)
+      self.cursor_pos[2] = self.cursor_pos[2] - 1
       handled = true
     end
   end
   -- Enter (newline or confirm)
   if not handled and char == "enter" then
     if type(self.text) == "table" then
-      self.text[#self.text + 1] = ""
-      self.cursor_pos = {#self.text, 1}
-      return true
+      local remainder = line:sub(self.cursor_pos[2] + 1, -1)
+      self.text[self.cursor_pos[1]] = line:sub(1, self.cursor_pos[2])
+      table.insert(self.text, self.cursor_pos[1] + 1, remainder)
+      self.cursor_pos[1] = self.cursor_pos[1] + 1
+      self.cursor_pos[2] = 0
+      handled = true
     else
       self:confirm()
       return true
@@ -869,9 +877,56 @@ function Textbox:input(char, rawchar, code)
     self:abort()
     return true
   end
-  -- Arrow keys, tab (reserved)
-  if not handled and (code >= 273 and code <= 276) -- arrow keys
-     or code == 9 then -- tab
+  -- Arrow keys (code >= 273 and code <= 276)
+  if not handled and code >= 273 and code <= 276 then
+    if code == 273 then -- up
+      if type(self.text) ~= "table" or self.cursor_pos[1] == 1 then
+        -- to beginning of line
+        self.cursor_pos[2] = 0
+      else
+        -- one line up
+        self.cursor_pos[1] = self.cursor_pos[1] - 1
+        self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
+      end
+    elseif code == 274 then -- down
+      if type(self.text) ~= "table" or self.cursor_pos[1] == #self.text then
+        -- to end of line
+        self.cursor_pos[2] = string.len(line)
+      else
+        -- one line down
+        self.cursor_pos[1] = self.cursor_pos[1] + 1
+        self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
+      end
+    elseif code == 275 then -- right
+      if self.cursor_pos[2] == string.len(line) then
+        -- next line
+        if type(self.text) == "table" and self.cursor_pos[1] < #self.text then
+          self.cursor_pos[1] = self.cursor_pos[1] + 1
+          self.cursor_pos[2] = 0
+        end
+      else
+        -- one to the right
+        self.cursor_pos[2] = self.cursor_pos[2] + 1
+      end
+    elseif code == 276 then -- left
+      if self.cursor_pos[2] == 0 then
+        -- previous line
+        if type(self.text) == "table" and self.cursor_pos[1] > 1 then
+          self.cursor_pos[1] = self.cursor_pos[1] - 1
+          self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
+        end
+      else
+        -- one to the left
+        self.cursor_pos[2] = self.cursor_pos[2] - 1
+      end
+    end
+    -- make cursor visible
+    self.cursor_counter = 0
+    self.cursor_state = true
+    return true
+  end
+  -- Tab (reserved)
+  if not handled and code == 9 then
     return true
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
@@ -879,18 +934,23 @@ function Textbox:input(char, rawchar, code)
     if not handled and self.allowed_input.all
        and not (char == "shift" or char == "ctrl" or char == "alt")
        and not (282 <= code and code <= 293) then -- F-Keys
-      line = line .. rawchar
+      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
+      self.cursor_pos[2] = self.cursor_pos[2] + 1
       handled = true
     end
   end
-  if type(self.text) == "table" then
-    self.text[#self.text] = line
-  else
-    self.text = line
+  if new_line then
+    if type(self.text) == "table" then
+      self.text[self.cursor_pos[1]] = new_line
+    else
+      self.text = new_line
+    end
   end
+  -- make cursor visible
+  self.cursor_counter = 0
+  self.cursor_state = true
+  -- update label
   self.panel:setLabel(self.text)
-  self.cursor_pos[1] = type(self.text) == "table" and #self.text or 1
-  self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
   return handled
 end
 
@@ -1312,8 +1372,10 @@ function Window:onTick()
       end
     end
   end
-  for _, box in ipairs(self.textboxes) do
-    box:onTick()
+  if not class.is(self, UI) then -- prevent UI (sub)class from handling the textboxes too
+    for _, box in ipairs(self.textboxes) do
+      box:onTick()
+    end
   end
   if self.windows then
     for _, window in ipairs(self.windows) do
