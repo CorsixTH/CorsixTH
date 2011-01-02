@@ -86,6 +86,7 @@ function UI:initKeyAndButtonCodes()
 
   self.key_codes = {
     backspace = 8,
+    delete = 127,
     esc = 27,
     up = 273,
     down = 274,

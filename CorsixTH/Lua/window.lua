@@ -849,14 +849,25 @@ function Textbox:input(char, rawchar, code)
         table.remove(self.text, self.cursor_pos[1])
         self.cursor_pos[1] = self.cursor_pos[1] - 1
         self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
-        self.text[self.cursor_pos[1]] = self.text[self.cursor_pos[1]] .. line
+        new_line = self.text[self.cursor_pos[1]] .. line
       end
-      handled = true
     else
       new_line = line:sub(1, self.cursor_pos[2] - 1) .. line:sub(self.cursor_pos[2] + 1, -1)
       self.cursor_pos[2] = self.cursor_pos[2] - 1
-      handled = true
     end
+    handled = true
+  end
+  -- Delete (delete next char)
+  if not handled and char == "delete" then
+    if self.cursor_pos[2] == string.len(line) then
+      if type(self.text) == "table" and self.cursor_pos[1] < #self.text then
+        new_line = line .. self.text[self.cursor_pos[1] + 1]
+        table.remove(self.text, self.cursor_pos[1] + 1)
+      end
+    else
+      new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(self.cursor_pos[2] + 2, -1)
+    end
+    handled = true
   end
   -- Enter (newline or confirm)
   if not handled and char == "enter" then
