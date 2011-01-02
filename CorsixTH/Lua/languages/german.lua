@@ -24,8 +24,7 @@ Language("Deutsch", "German", "de", "ger", "deu")
 Inherit("english")
 Inherit("original_strings", 2)
 
--- override
-
+-------------------------------  OVERRIDE  ----------------------------------
 diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
@@ -53,14 +52,18 @@ tooltip.queue_window.dec_queue_size = "Warteschlange verkleinern"
 tooltip.staff_window.face = utf8 "Gesicht dieser Person - klicken, um das Personal-Management zu öffnen"
 tooltip.staff_window.center_view = utf8 "Linksklick um zur Person zu springen, Rechtsklick um durch das Personal zu blättern"
 
--- new strings
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?"
 
+-------------------------------  NEW STRINGS  -------------------------------
 object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
 tooltip.fax.close = utf8 "Das Fenster schließen, ohne die Nachricht zu löschen"
 tooltip.message.button = utf8 "Linksklick um die Nachricht zu öffnen"
 tooltip.message.button_dismiss = utf8 "Linksklick um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
+tooltip.casebook.cure_requirement.hire_staff = utf8 "Sie müssen Personal einstellen, um diese Behandlung durchführen zu können"
+tooltip.casebook.cure_type.unknown = utf8 "Sie wissen noch nicht, wie Sie diese Krankheit behandeln können"
 
 menu_options = {
   lock_windows   = "  FENSTER FESTHALTEN  ",
@@ -89,22 +92,25 @@ menu_debug = {
   make_debug_patient        = "  (F9) DEBUG-PATIENTEN ERSTELLEN  ",
   cheats                    = "  (F11) CHEATS  ",
   lua_console               = "  (F12) LUA-KONSOLE  ",
+  calls_dispatcher          = "  AUFRUF-VERTEILER  ",
   dump_strings              = "  TEXTE ABSPEICHERN  ",
   dump_gamelog              = "  (STRG+D) SPIELPROTOKOLL ABSPEICHERN  ",
   map_overlay               = "  KARTEN-OVERLAY  ",
   sprite_viewer             = "  SPRITE-BETRACHTER  ",
 }
 menu_debug_overlay = {
-  none                      = "  KEIN",
-  flags                     = "  FLAGS",
-  byte_0_1                  = "  BYTE 0 & 1",
-  byte_floor                = "  BYTE BODEN",
-  byte_n_wall               = "  BYTE N WAND",
-  byte_w_wall               = "  BYTE W WAND",
-  byte_5                    = "  BYTE 5",
-  byte_6                    = "  BYTE 6",
-  byte_7                    = "  BYTE 7",
-  parcel               = utf8 "  GRUNDSTÜCK"
+  none                      = "  KEIN  ",
+  flags                     = "  FLAGS  ",
+  positions                 = "  POSITION  ",
+  heat                      = "  TEMPERATUR  ",
+  byte_0_1                  = "  BYTE 0 & 1  ",
+  byte_floor                = "  BYTE BODEN  ",
+  byte_n_wall               = "  BYTE N WAND  ",
+  byte_w_wall               = "  BYTE W WAND  ",
+  byte_5                    = "  BYTE 5  ",
+  byte_6                    = "  BYTE 6  ",
+  byte_7                    = "  BYTE 7  ",
+  parcel               = utf8 "  GRUNDSTÜCK  ",
 }
 
 adviser = {
@@ -279,7 +285,6 @@ errors = {
 confirmation = {
   needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
   abort_edit_room = utf8 "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
-  restart = utf8 "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?",
 }
 
 information = {
@@ -378,4 +383,18 @@ introduction_texts = {
     utf8 "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren.",
     utf8 "Viel Glück!",
   },
+}
+
+calls_dispatcher = {
+  summary = "%d Aufrufe; %d zugewiesen",
+  staff = "%s - %s",
+  watering = "Bewässern @ %d,%d",
+  repair = "Repariert %s",
+  close = "Schließen",
+}
+
+tooltip.calls_dispatcher = {
+  task = "Liste der Aufgaben - Aufgabe anklicken um das Fenster des zugewiesenen Personalmitglieds zu öffnen und zum Ort der Aufgabe zu scrollen.",
+  assigned = "Diese Box ist markiert wenn jemand der Aufgabe zugewiesen ist.",
+  close = "Das Aufruf-Verteiler-Fenster schließen",
 }
