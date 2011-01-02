@@ -52,7 +52,14 @@ tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
-tooltip.staff_window.center_view = utf8 "Botón izquierdo del ratón para enfocar al personal, botón derecho del ratón para rotar entre los miembros del personal."
+tooltip.staff_window.center_view = utf8 "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
+
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = utf8 "Ver página siguiente"
+tooltip.staff_list.prev_person = utf8 "Ver página anterior"
+
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = utf8 "¿Seguro que quieres reiniciar el nivel?"
 
 -------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Basura"
@@ -284,14 +291,13 @@ errors = {
 confirmation = {
   needs_restart = utf8 "Para cambiar este ajuste, antes debes reiniciar CorsixTHo. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
   abort_edit_room = utf8 "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
-  restart = utf8 "¿Seguro que quieres reiniciar el nivel?",
 }
 
 information = {
   custom_game = utf8 "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
   cannot_restart = utf8 "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
   level_lost = {
-    utf8 "¡Qué pena! Has fallado este nivel. ¡Tendrás mejor suerte la próxima vez!",
+    utf8 "¡Qué pena! Has fracasado en este nivel. ¡Mejor suerte la próxima vez!",
     utf8 "La razón por la que has perdido es:",
     reputation = utf8 "Tu reputación ha caído por debajo de %d.",
     balance = utf8 "Tu cuenta bancaria (descontando préstamos) ha llegado a tener menos de %d.",
