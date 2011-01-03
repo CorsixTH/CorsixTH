@@ -223,52 +223,61 @@ function UIStaff:draw(canvas, x_, y_)
   profile:drawFace(canvas, x + 38, y + 54, self.face_parts) -- Portrait
 end
 
+function UIStaff:onMouseDown(button, x, y)
+  self.do_scroll = button == "left" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  return Window.onMouseDown(self, button, x, y)
+end
+
 -- Helper function to faciliate humanoid_class comparison wrt. Surgeons
 local function surg_compat(class)
   return class == "Surgeon" and "Doctor" or class
 end
 
 function UIStaff:onMouseUp(button, x, y)
-  self.mouse_up_x = self.x + x
-  self.mouse_up_y = self.y + y
-  local repaint = Window.onMouseUp(self, button, x, y)
-
-  local circle_center_y
-  if self.staff.profile.humanoid_class == "Handyman" then
-    circle_center_y = 276
-  else
-    circle_center_y = 248
+  local ui = self.ui
+  if button == "left" then
+    self.do_scroll = false
   end
+  local repaint = Window.onMouseUp(self, button, x, y)
   -- Test for hit within the view circle
-  if is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
-    local ui = self.ui
-    if button == "left" then
-      -- Left click centers on staff member
-      ui:scrollMapTo(self:getStaffPosition())
-      repaint = true
-    elseif button == "right" then
-      -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
-      local staff_index = nil
-      for i, staff in ipairs(ui.hospital.staff) do
-        if staff_index and surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
-          ui:addWindow(UIStaff(ui, staff))
-          return false
-        end
-        if staff == self.staff then
-          staff_index = i
-        end
+  if button == "right" and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman") then
+    -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
+    local staff_index = nil
+    for i, staff in ipairs(ui.hospital.staff) do
+      if staff_index and surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+        ui:addWindow(UIStaff(ui, staff))
+        return false
       end
-      -- Try again from beginning of list until staff_index
-      for i = 1, staff_index - 1 do
-        local staff = ui.hospital.staff[i]
-        if surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
-          ui:addWindow(UIStaff(ui, staff))
-          return false
-        end
+      if staff == self.staff then
+        staff_index = i
+      end
+    end
+    -- Try again from beginning of list until staff_index
+    for i = 1, staff_index - 1 do
+      local staff = ui.hospital.staff[i]
+      if surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+        ui:addWindow(UIStaff(ui, staff))
+        return false
       end
     end
   end
   return repaint
+end
+
+function UIStaff:onMouseMove(x, y, dx, dy)
+  self.do_scroll = self.do_scroll and is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
+  return Window.onMouseMove(self, x, y, dx, dy)
+end
+
+function UIStaff:onTick()
+  if self.do_scroll then
+    local ui = self.ui
+    local staff = self.staff
+    local sx, sy = ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
+    local dx, dy = staff.th:getPosition()
+    ui:scrollMapTo(sx + dx, sy + dy)
+  end
+  return Window.onTick(self)
 end
 
 function UIStaff:placeStaff()

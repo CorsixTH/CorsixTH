@@ -185,7 +185,9 @@ end
 
 function UIPatient:onMouseUp(button, x, y)
   local ui = self.ui
-  self.do_scroll = false
+  if button == "left" then
+    self.do_scroll = false
+  end
   local repaint = Window.onMouseUp(self, button, x, y)
   if button == "right" and is_in_view_circle(x, y) then
     -- Right click goes to the next patient
