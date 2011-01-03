@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 --! Timer / clock / watch / countdown dialog for emergencies / level start
+--! The timer lasts approximately 100 days, split into 13 segments
 class "UIWatch" (Window)
 
 --!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
@@ -29,7 +30,7 @@ function UIWatch:UIWatch(ui, count_type)
   
   self.esc_closes = false
   self.modal_class = "open_countdown"
-  self.tick_rate = 24 * 8 -- Counter seems to advance every 8 days in original TH
+  self.tick_rate = math.floor((100 * app.world.hours_per_day) / 13)
   self.tick_timer = self.tick_rate  -- Initialize tick timer
   self.open_timer = 12
   self.ui = ui

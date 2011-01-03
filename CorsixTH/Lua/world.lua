@@ -65,13 +65,17 @@ function World:World(app)
   }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
-  self.ticks_per_tick = 1
+
+  -- Time
+  self.hours_per_day = 50
+  self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
   self.year = 1
   self.month = 1 -- January
   self.day = 1
   self.hour = 0
+
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
@@ -580,6 +584,9 @@ function World:getDate()
   return self.month, self.day
 end
 
+-- Game speeds. The second value is the number of world clicks that pass for each
+-- in-game tick and the first is the number of hours to progress when this
+-- happens. 
 local tick_rates = {
   ["Pause"]              = {0, 1},
   ["Slowest"]            = {1, 9},
@@ -589,14 +596,16 @@ local tick_rates = {
   ["And then some more"] = {3, 1},
 }
 
+-- Return if the selected speed the same as the current speed.
 function World:isCurrentSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
-  return self.ticks_per_tick == numerator and self.tick_rate == denominator
+  return self.hours_per_tick == numerator and self.tick_rate == denominator
 end
 
+-- Return the name of the current speed, relating to a key in tick_rates.
 function World:getCurrentSpeed()
   for name, rate in pairs(tick_rates) do
-    if rate[1] == self.ticks_per_tick and rate[2] == self.tick_rate then
+    if rate[1] == self.hours_per_tick and rate[2] == self.tick_rate then
       return name
     end
   end
@@ -611,7 +620,7 @@ function World:setSpeed(speed)
   end
   self.prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
-  self.ticks_per_tick = numerator
+  self.hours_per_tick = numerator
   self.tick_rate = denominator
 end
 
@@ -641,6 +650,8 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
+-- World ticks are translated to game ticks (or hours) depending on the
+-- current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
@@ -657,18 +668,15 @@ function World:onTick()
       end
     end
     self.tick_timer = self.tick_rate
-    self.hour = self.hour + self.ticks_per_tick
-    -- There doesn't need to be 24 hours in a day. Whatever value gives the
-    -- best ingame speed can be used, but 24 works OK and is a good starting
-    -- point. Vanilla TH appears to take ~3 seconds per day at normal speed.
-    -- With ~33 ticks/sec, reduced to 11 /sec at normal speed, 3 seconds -> 33
-    -- ticks, which is 1 day and 9 hours.
-    if self.hour >= 24 then
+    self.hour = self.hour + self.hours_per_tick
+
+    -- End of day/month/year
+    if self.hour >= self.hours_per_day then
       for _, hospital in ipairs(self.hospitals) do
         hospital:onEndDay()
       end
       self:onEndDay()
-      self.hour = self.hour - 24
+      self.hour = self.hour - self.hours_per_day
       self.day = self.day + 1
       if self.day > month_length[self.month] then
         self.day = month_length[self.month]
@@ -710,7 +718,7 @@ function World:onTick()
         end
       end
     end
-    for i = 1, self.ticks_per_tick do
+    for i = 1, self.hours_per_tick do
       for _, hospital in ipairs(self.hospitals) do
         hospital:tick()
       end
@@ -730,7 +738,7 @@ function World:onTick()
       self.dispatcher:onTick()
     end
   end
-  if self.ticks_per_tick > 0 and self.floating_dollars then
+  if self.hours_per_tick > 0 and self.floating_dollars then
     for obj in pairs(self.floating_dollars) do
       obj:tick()
       if obj:isDead() then
@@ -744,7 +752,7 @@ end
 
 function World:setEndMonth()
   self.day = month_length[self.month]
-  self.hour = 23
+  self.hour = self.hours_per_day - 1
 end
 
 function World:setEndYear()
@@ -1555,6 +1563,10 @@ function World:afterLoad(old, new)
   end
   if old < 30 then
     self:nextEmergency()
+  end
+  if old < 31 then
+    self.hours_per_day = 50
+    self:setSpeed("Normal")
   end
   self.savegame_version = new
 end

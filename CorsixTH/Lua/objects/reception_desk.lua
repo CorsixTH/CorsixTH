@@ -83,7 +83,7 @@ function ReceptionDesk:tick()
     if queue_front.action_queue[1].name == "idle" then
       self.queue_advance_timer = self.queue_advance_timer + 1
       reset_timer = false
-      if self.queue_advance_timer >= 4 + 24 * (1.0 - self.receptionist.profile.skill) then
+      if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
         queue_front:queueAction{name = "seek_room", room_type = "gp"}
         self.queue:pop()
