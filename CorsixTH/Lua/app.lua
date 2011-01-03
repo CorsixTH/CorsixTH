@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 31
+local SAVEGAME_VERSION = 32
 
 class "App"
 

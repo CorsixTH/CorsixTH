@@ -48,8 +48,15 @@ function UIResearch:UIResearch(ui)
   
   self.hospital = ui.hospital
   
-  -- stub for backwards compatibility
-  local --[[persistable:research_policy_adjust]] function adjust(name)
+  -- stubs for backwards compatibility
+  local --[[persistable:research_policy_adjust]] function adjust(name) end
+  local --[[persistable:research_less_stub]] function less_stub() end
+  local --[[persistable:research_more_stub]] function more_stub() end
+  
+  local function handler_factory(area, mode)
+    return --[[persistable:research_policy_adjust_handler]] function(self)
+      self:adjustResearch(area, mode)
+    end
   end
   
   -- Buttons
@@ -63,8 +70,8 @@ function UIResearch:UIResearch(ui)
   self.adjust_buttons = {}
   for i, area in ipairs(research_categories) do
     self.adjust_buttons[area] = {
-      less = self:addPanel(0, c1, topy+i*spacing):makeButton(0, 0, size, size, 1, --[[persistable:research_less_stub]] function() end),
-      more = self:addPanel(0, c2, topy+i*spacing):makeButton(0, 0, size, size, 2, --[[persistable:research_more_stub]] function() end),
+      less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")),
+      more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")),
     }
   end
   
@@ -129,14 +136,7 @@ function UIResearch:onTick()
     end  
   end
   
-  -- adjust research according to pressed button
-  for area, btns in pairs(self.adjust_buttons) do
-    for dir, btn in pairs(btns) do
-      if btn.active then
-        self:adjustResearch(area, dir)
-      end
-    end
-  end
+  return UIFullscreen.onTick(self)
 end
 
 function UIResearch:draw(canvas, x, y)

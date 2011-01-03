@@ -155,6 +155,10 @@ function Panel:makeToggleButton(...)
   return self.window:makeButtonOnPanel(self, ...):makeToggle()
 end
 
+function Panel:makeRepeatButton(...)
+  return self.window:makeButtonOnPanel(self, ...):makeRepeat()
+end
+
 function Panel:makeScrollbar(...)
   return self.window:makeScrollbarOnPanel(self, ...)
 end
@@ -440,7 +444,9 @@ class "Button"
 
 --!dummy
 function Button:Button()
+  self.ui = nil
   self.is_toggle = nil
+  self.is_repeat = nil
   self.x = nil
   self.y = nil
   self.r = nil
@@ -484,6 +490,14 @@ end
 
 function Button:makeToggle()
   self.is_toggle = true
+  self.is_repeat = false
+  self.toggled = false
+  return self
+end
+
+function Button:makeRepeat()
+  self.is_repeat = true
+  self.is_toggle = false
   self.toggled = false
   return self
 end
@@ -543,6 +557,30 @@ function Button:setDynamicTooltip(callback, x, y)
   return self
 end
 
+--! Called whenever a click on the button should be handled. This depends on the type of button.
+--! Normally this is called when a MouseUp occurs over the button (if the MouseDown occurred over
+--! this or another button). However for repeat buttons, it is called once on MouseDown and, after
+--! a short delay, repeatedly.
+--!param mouse_button (string) either "left" or "right"
+function Button:handleClick(mouse_button)
+  local arg = nil
+  if self.is_toggle then
+    arg = self:toggle()
+  end
+  if self.sound then
+    self.ui:playSound(self.sound)
+  end
+  local callback = mouse_button == "left" and self.on_click or self.on_rightclick
+  if callback then
+    callback(self.on_click_self, arg, self)
+  else
+    if mouse_button == "left" then
+      print("Warning: No handler for button click")
+      self.on_click = --[[persistable:button_on_click_handler_stub]] function() end
+    end
+  end
+end
+
 --[[ Convert a static panel into a clickable button.
 !param panel (Panel) The panel to convert into a button.
 !param x (integer) The X co-ordinate of the clickable rectangle on the panel.
@@ -563,7 +601,9 @@ function Window:makeButtonOnPanel(panel, x, y, w, h, sprite, on_click, on_click_
   x = x + panel.x
   y = y + panel.y
   local button = setmetatable({
+    ui = self.ui,
     is_toggle = false,
+    is_repeat = false,
     x = x,
     y = y,
     r = x + w,
@@ -1135,6 +1175,11 @@ function Window:onMouseDown(button, x, y)
         self.active_button = btn
         btn.active = true
         btn.panel_for_sprite.lowered = btn.panel_lowered_active
+        if btn.is_repeat then
+          -- execute callback once, then wait some ticks before repeatedly executing
+          btn:handleClick(button)
+        end
+        self.btn_repeat_delay = 10
         repaint = true
         break
       end
@@ -1210,29 +1255,9 @@ function Window:onMouseUp(button, x, y)
       btn.active = false
       btn.panel_for_sprite.lowered = btn.panel_lowered_normal
       self.active_button = false
-      if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
-        local arg = nil
-        if btn.is_toggle then
-          arg = btn:toggle()
-        end
-        if button == "left" then
-          if btn.sound then
-            self.ui:playSound(btn.sound)
-          end
-          if btn.on_click == nil then
-            print("Warning: No handler for button click")
-            btn.on_click = --[[persistable:button_on_click_handler_stub]] function() end
-          else
-            btn.on_click(btn.on_click_self, arg, btn)
-          end
-        else
-          if btn.sound then
-            self.ui:playSound(btn.sound)
-          end
-          if btn.on_rightclick ~= nil then
-            btn.on_rightclick(btn.on_click_self, arg)
-          end
-        end
+      self.btn_repeat_delay = nil
+      if btn.enabled and not btn.is_repeat and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
+        btn:handleClick(button)
       end
       repaint = true
     end
@@ -1372,6 +1397,20 @@ end
 
 -- Called regularly at a rate independent of the game speed.
 function Window:onTick()
+  if self.active_button then
+    local btn = self.active_button
+    local mouse_btn = self.buttons_down.mouse_left and "left" or self.buttons_down.mouse_right and "right" or nil
+    if mouse_btn then
+      if self.btn_repeat_delay > 0 then
+        self.btn_repeat_delay = self.btn_repeat_delay - 1
+      else
+        if btn.active and btn.is_repeat then
+          self.btn_repeat_delay = 2
+          btn:handleClick(mouse_btn)
+        end
+      end
+    end
+  end
   if self.blinking_button then
     self.blink_counter = self.blink_counter + 1
     if self.blink_counter == 20 then
@@ -1561,7 +1600,13 @@ function Window:afterLoad(old, new)
   if old < 22 then
     self.draggable = true
   end
-
+  if old < 32 then
+    -- ui added to buttons
+    for _, btn in ipairs(self.buttons) do
+      btn.ui = self.ui
+    end
+  end
+  
   if self.windows then
     for _, w in pairs(self.windows) do
       w:afterLoad(old, new)
