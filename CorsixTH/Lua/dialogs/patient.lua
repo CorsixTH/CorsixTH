@@ -178,19 +178,48 @@ function UIPatient:drawTreatmentHistory(canvas, x, y)
   end
 end
 
+function UIPatient:onMouseDown(button, x, y)
+  self.do_scroll = button == "left" and is_in_view_circle(x, y)
+  return Window.onMouseDown(self, button, x, y)
+end
+
 function UIPatient:onMouseUp(button, x, y)
+  local ui = self.ui
+  self.do_scroll = false
   local repaint = Window.onMouseUp(self, button, x, y)
-  if button == "left" and is_in_view_circle(x, y) then
+  if button == "right" and is_in_view_circle(x, y) then
+    -- Right click goes to the next patient
+    local patient_index = nil
+    for i, patient in ipairs(ui.hospital.patients) do
+      if patient == self.patient then
+        patient_index = i
+        break
+      end
+    end
+    patient_index = (patient_index or 0) + 1
+    local patient = ui.hospital.patients[patient_index] or ui.hospital.patients[1]
+    if patient then
+      ui:addWindow(UIPatient(ui, patient))
+      return false
+    end
+  end
+  return repaint
+end
+
+function UIPatient:onMouseMove(x, y, dx, dy)
+  self.do_scroll = self.do_scroll and is_in_view_circle(x, y)
+  return Window.onMouseMove(self, x, y, dx, dy)
+end
+
+function UIPatient:onTick()
+  if self.do_scroll then
     local ui = self.ui
     local patient = self.patient
     local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
     local dx, dy = patient.th:getPosition()
     ui:scrollMapTo(px + dx, py + dy)
-    repaint = true
-  elseif button == "right" then
-    --TODO: Right clicking on patient view should go to the next patient
   end
-  return repaint
+  return Window.onTick(self)
 end
 
 function UIPatient:updateInformation()
