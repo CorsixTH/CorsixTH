@@ -46,10 +46,10 @@ function UICasebook:UICasebook(ui, disease_selection)
   
   -- Buttons
   self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.casebook.close)
-  self:addPanel(0, 439, 29):makeButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up)
-  self:addPanel(0, 437, 394):makeButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down)
-  self:addPanel(0, 354, 133):makeButton(0, 0, 22, 22, 5, self.increasePay):setTooltip(_S.tooltip.casebook.increase)
-  self:addPanel(0, 237, 133):makeButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
+  self:addPanel(0, 439, 29):makeRepeatButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up)
+  self:addPanel(0, 437, 394):makeRepeatButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down)
+  self:addPanel(0, 354, 133):makeRepeatButton(0, 0, 22, 22, 5, self.increasePay):setTooltip(_S.tooltip.casebook.increase)
+  self:addPanel(0, 237, 133):makeRepeatButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
   -- TODO: concentrate research button;  :setTooltip(_S.tooltip.casebook.research)
   
   -- Hotkeys
@@ -358,4 +358,5 @@ function UICasebook:onTick()
       self.percentage_counter = false
     end
   end
+  return UIFullscreen.onTick(self)
 end
