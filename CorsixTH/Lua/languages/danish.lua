@@ -130,9 +130,9 @@ object = {
   litter               = utf8 "Skrald",
 }
 
-tooltip.fax.close = utf8 "Lukk dette vinduet uten å slette meldingen"
-tooltip.message.button = utf8 "Venstreklikk for å lese faksen"
-tooltip.message.button_dismiss = utf8 "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den"
+tooltip.fax.close = utf8 "Luk dette vindue uden at fjerne beskeden"
+tooltip.message.button = utf8 "Venstreklik for at læse faxen"
+tooltip.message.button_dismiss = utf8 "Venstreklik for at åbne faksen.Höjreklik for at ignorere den"
 
 -- 4. Menu 
 menu_options = {
@@ -811,31 +811,31 @@ rooms_long = {
 room_descriptions = {
   ultrascan = {
     [1] = "Ultraskanner//",
-    [2] = utf8 "Ultraskanneren er virtuelt i toppklassen innenfor diagnoseutstyr. Den koster mye, men det lönner seg om du vil ha superb diagnosering på ditt sykehus.//",
-    [3] = utf8 "Ultraskanneren kan kun håndteres av ".. staff_class.doctor .."r. Den krever også vedlikehold. ",
+    [2] = utf8 "Ultraskanneren er virtuelt i toppklassen indenfor diagnoseudstyr. Den koster meget, men kan betale sig hvis du vil kunne lave meget sikre diagnoser på dit hospital.//",
+    [3] = utf8 "Ultraskanneren kan kun håndteres af ".. staff_class.doctor .."ere. Den kræver også vedligeholdelse. ",
   },
   gp = {
-    [1] = "Allmennpraksis//",
-    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler de. Videre blir de sendt enten til dypere diagnosering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er, og jo mer ekstragjenstander du plasserer i rommet, des bedre presterer legen. Dette gjelder også for alle andre rom.//",
-    [3] = "Allmennpraksisen kan kun benyttes av leger. ",
+    [1] = utf8 "Lægens kontor//",
+    [2] = utf8 "Dette er det helt fundementale diagonse redskab på dit sygehus. Nye patienter bliver sendt hertil for at finde ud af hvad de fejler. Herfra kan de blive sendt videre til andre diagnoserum, for at finde den kur som löser deres sygdom. Du skal sandsynligvis bruge flere lægens kontorer, for at undgå lange köer. Nu större rummet er og nu flere objekter du placderer i rummet, des du bedre arbejder lægen. Dette gælder for alle rum.//",
+    [3] = utf8 "Lægens kontor kan kun bruges af læger. ",
   },
   fracture_clinic = {
-    [1] = "Benbruddsklinikk//",
-    [2] = utf8 "Pasienter som uheldigvis har Benbrudd vil bli behandlet her. Gipsfjerneren bruker kraftig industrilaser for å kutte vekk gipsen, og forårsaker bare litt smerte for pasienten.//",
-    [3] = utf8 "Benbruddsklinikken kan kun benyttes av Sykepleiere. Den krever også vedlikehold. ",
+    [1] = "Knoglebrudsklinik//",
+    [2] = utf8 "Patienter som uheldigvis har fået knoglebrud kan blive behandlet her.Gipsfjerneren bruger en kraftig industrilaser for at skære gibsen væk, og forsager kun lidt smerte på patienten.//",
+    [3] = utf8 "Knogleburdsklinikken kan kun bruges af en sygeplejske. Den kræver vedligeholdelse ",
   },
   tv_room = {
-    [1] = "TV ROOM NOT USED",
+    [1] = "TV RUM IKKE BRUGT",
   },
   inflation = {
-    [1] = "Pumperom//",
-    [2] = utf8 "Pasienter med sitt smertefulle, men dog humoristiske Ballonghode, må behandles på Pumperommet. Her blir hodet stukket hull på, trykket forsvinner, og en lege pumper hodet opp til riktig trykknivå.//",
-    [3] = utf8 "Pumperommet kan kun benyttes av Leger. Regelmessig vedlikehold er også viktig. ",
+    [1] = "Pumperum//",
+    [2] = utf8 "Patienter, som har et humoristisk, men dog smertefuldt ballonhoved skal behandles i pumperummet. Her bliver der stukket hul på hovedet så trykket forsvinder. Herefter pumper lægen hovedet op til normalstörrelse.//",
+    [3] = utf8 "Pumperummet kan kun benyttes af læger. Regelmæssig vedligeholdelse er også vigtigt. ",
   },
   jelly_vat = {
-    [1] = "Jelly Clinic//",
-    [2] = "Patients cursed with the risible illness Jellyitis must wobble their way to the Jelly Clinic, and be placed in the Jelly Vat. This cures them in a way still not fully understood by the medical profession.//",
-    [3] = "The Jelly Clinic requires any Doctor. It also needs a Handyman for maintenance. ",
+    [1] = "Geléröret//",
+    [2] = "Patienter som er forbannet med denne forfærdelige sygdom. Må slingre den lange vej til Geléröret. I röret bliver de kureret på en påThis cures them in a way still not fully understood by the medical profession.//",
+    [3] = "Geleröret kræver en læge. Det har også brug for en handyman til vedligeholdelse.",
   },
   scanner = {
     [1] = "Scanner//",
@@ -898,7 +898,7 @@ room_descriptions = {
   },
   general_diag = {
     [1] = "General Diagnosis//",
-    [2] = "Patients who require further diagnosis are sent to be checked here. If a GP's Office doesn't find out what is wrong with them, General Diagnosis often will. From here they will be sent back to the GP's office for analysis of the results produced here.//",
+    [2] = "Patients who require further diagnosis are sent to be checked here. If a GP's Office dösn't find out what is wrong with them, General Diagnosis often will. From here they will be sent back to the GP's office for analysis of the results produced here.//",
     [3] = "The General Diagnosis Room requires any Doctor. ",
   },
   electrolysis = {
@@ -1180,7 +1180,7 @@ trophy_room = {
     },
     trophies = {
       utf8 "Du er tildelt Smilefjes Trofeet for å holde ditt hardt-arbeidende personale så blid og fornöyd som mulig.",
-      utf8 "Instituttet for Humörspredere goer dig beroemt for at du ikke havde nogen galde og negative ansatte på sygehuset i det forgangende år, og giver dig derfor dette trofæ.",
+      utf8 "Instituttet for Humörspredere gör dig berömt for at du ikke havde nogen galde og negative ansatte på sygehuset i det forgangende år, og giver dig derfor dette trofæ.",
       utf8 "Dette trofæ, er hermed tildelt dig for at have klaret at holde alt personale glad og fornöjet, trods en ihærdig arbejdsindsats i det forgangende år. Dine ansatte stråler!",
     },
   },
@@ -1199,7 +1199,7 @@ trophy_room = {
     },
     trophies = {
       utf8 "Foreningen Livet-Går-Videre belönner dig med dette trofæ for at have nul dödsfald i det forgangende år.",
-      utf8 "Du er tildelt Holde-sig-i-live trofæet for at have undgået doedsfald på dit sygehus i det forgangende år. Storartet.",
+      utf8 "Du er tildelt Holde-sig-i-live trofæet for at have undgået dödsfald på dit sygehus i det forgangende år. Storartet.",
     },
   },
   rats_killed = {
@@ -1651,7 +1651,7 @@ tooltip = {
     jelly_vat          = utf8 "En læge bruger geléröret til at behandle patienter med Gelésyndrom",
     staffroom          = utf8 "Læger, sygeplejesker og handymænd bruger personalerummet til at hvilke sig og for at hæve moralen",
     -- rehabilitation  = S[33][27], -- unused
-    general_diag       = utf8 "En læge bruger lægens kontor til at stille den föste diagnose på patienten. Billigt og ofte meget effektivt",
+    general_diag       = utf8 "En læge bruger lægens kontor til at stille den förste diagnose på patienten. Billigt og ofte meget effektivt",
     research_room      = utf8 "Læger med specialisering inden for forskning kan forske sig frem til nye mediciner og maskiner i forskningsavdelingen",
     toilets            = utf8 "Lav toiletter for at få patienterne til at stoppe med at snavse på hospitalet",
     decontamination    = utf8 "En læge bruger dekontaminering til at behandle patienter med radioaktiv stråling",
@@ -1660,27 +1660,27 @@ tooltip = {
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
-    desk                 = "Pult: en Lege kan bruke pulten til PC'en sin.",
-    cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
-    door                 = utf8 "Dör: personer åpner og lukker disse en del.",
-    bench                = utf8 "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabel.",
+    desk                 = utf8 "Bord: En læge kan bruge bordet til sin computer.",
+    cabinet              = "Arkivskab: Indeholder patienterjournaler, noter og forsikringsdokumenter.",
+    door                 = utf8 "Dör: Patienten åbner og lukker disse meget.",
+    bench                = utf8 "Bænk: Giver en plads at sidde på og gör besöget mere behageligt.",
     table1               = S[40][ 6], -- unused
-    chair                = "Stol: Pasienter sitter her og diskuterer sine problemer.",
-    drinks_machine       = utf8 "Brusautomat: hindrer pasientene å bli törste og genererer inntekter.",
-    bed                  = "Seng: virkelig syke pasienter ligger i disse.",
-    inflator             = "Pumpe: Kurerer pasienter med Ballonghode.",
-    pool_table           = utf8 "Biljardbord: Hjelper personalet ditt med å slappe av.",
-    reception_desk       = "Resepsjon: trenger en Resepsjonist som kan henvise pasienter videre.",
+    chair                = utf8 "Stol: Patienten sidder på den og taler om sine problemer.",
+    drinks_machine       = utf8 "Sodavandsautomat: Forbindre at patienterne kommer til at törste og tiltrækker insekter.",
+    bed                  = "Seng: Virkelig syge patienter kan ligge i dem.",
+    inflator             = "Pumpe: Kurerer patienter med opsvulmet hoved.",
+    pool_table           = utf8 "Billardbord: Hjælper dit personale til at slappe af.",
+    reception_desk       = "Reception: Her bliver patienterne henvist videre fra.",
     table2               = S[40][13], -- unused & duplicate
     cardio               = S[40][14], -- no description
     scanner              = S[40][15], -- no description
     console              = S[40][16], -- no description
     screen               = S[40][17], -- no description
-    litter_bomb          = utf8 "Söppelbombe: saboterer konkurrenters sykehus",
+    litter_bomb          = utf8 "Skraldebombe: saboterer konkurrentens sykehus",
     couch                = S[40][19], -- no description
-    sofa                 = utf8 "Sofa: ansatte som slapper av på Personalrommet vil sitte stille i en sofa så fremt det ikke er en bedre måte å slappe av på.",
+    sofa                 = utf8 "Sofa: Ansatte vil sidde i sofaen for at slappe af, såfremt der ikke er bedre måder at slappe af på.",
     crash_trolley        = S[40][21], -- no description
-    tv                   = utf8 "TV: sörg for at personalet ditt ikke går glipp av favorittprogrammet sitt.",
+    tv                   = utf8 "TV: sörg for at personalet ikke går glip af deres ynligs tvprogram.",
     ultrascanner         = S[40][23], -- no description
     dna_fixer            = S[40][24], -- no description
     cast_remover         = S[40][25], -- no description
@@ -1691,35 +1691,35 @@ tooltip = {
     x_ray_viewer         = S[40][30], -- no description
     operating_table      = S[40][31], -- no description
     lamp                 = S[40][32], -- unused
-    toilet_sink          = utf8 "Vask: dine hygienebevisste pasienter kan vaske sine tilgrisede hender i disse. Om det ikke er nok vasker, blir pasientene sure.",
+    toilet_sink          = utf8 "Vask: Hvis dine patienter er hygine beviste kan de vaske deres hænder her. Hvis der ikke er nok håndvaske bliver de sure.",
     op_sink1             = S[40][34], -- no description
     op_sink2             = S[40][35], -- no description
     surgeon_screen       = S[40][36], -- no description
-    lecture_chair        = utf8 "Forelesningsstol: dine legestudenter sitter her og tar notater, kjeder seg og rabler ivrig. Jo flere stoler du har, jo större kan klassen være.",
+    lecture_chair        = utf8 ": Hvis dine læger sidder her og tager noter, kan de kun blive klogere. Jo flere stole du har, jo större kan klassen være.",
     projector            = S[40][38], -- no description
     bed2                 = S[40][39], -- unused duplicate
-    pharmacy_cabinet     = "Apotekskap: medisinbeholdningen din finnes her",
-    computer             = utf8 "Datamaskin: genialt forskningsverktöy",
-    atom_analyser        = utf8 "Atomanalyser: plassert i Forskningsavdelingen, gjör denne gjenstanden hele forskningsprosessen raskere.",
+    pharmacy_cabinet     = "Apotekskab: medicinbeholdningen forefindes her",
+    computer             = utf8 "Computer: genialt forskningsværktöj",
+    atom_analyser        = utf8 "Atomanalyser: placeret i forskningsafdelingen, og gör hele forskningsprocessen hurtigere.",
     blood_machine        = S[40][43], -- no description
-    fire_extinguisher    = "Brannslukningsapparat: minimerer faren for feil i dine maskiner.",
-    radiator             = utf8 "Ovn: sörger for at sykehuset ditt ikke blir kaldt.",
-    plant                = utf8 "Plante: holder pasientenes humör oppe og renser luften.",
+    fire_extinguisher    = "Brandslukker: minimerer risikön for fejl i dine maskiner.",
+    radiator             = utf8 "Radiator: Holder sygehuset varmt.",
+    plant                = utf8 "Plante: Holder patienternes humör oppe og renser luften.",
     electrolyser         = S[40][47], -- no description
     jelly_moulder        = S[40][48], -- no description
     gates_of_hell        = S[40][49], -- no description
     bed3                 = S[40][50], -- unused duplicate
-    bin                  = utf8 "Söppelbötte: pasientene kaster söppelet her.",
-    toilet               = utf8 "Toalett: pasientene, æh..., bruker dette.",
+    bin                  = utf8 "Skaldespand: Patienterne smider deres skrald her..",
+    toilet               = utf8 "Toilet: Patienterne, æh..., bruger dette.",
     swing_door1          = S[40][53], -- no description
     swing_door2          = S[40][54], -- no description
     shower               = S[40][55], -- no description
-    auto_autopsy         = utf8 "Obduksjonsautomat: flott hjelpemiddel for å oppdage nye behandlingsmetoder.",
-    bookcase             = "Bokhylle: referansemateriell for Leger.",
-    video_game           = "Videospill: la personalet ditt slappe av med Hi-Octane.",
+    auto_autopsy         = utf8 "Obduktionsautomat: Godt hjælpemiddel til at opdage nye behandlingsmetoder.",
+    bookcase             = utf8 "Bogreol: Opslagsværker til læger.",
+    video_game           = "Videospil: Lader personale slappe af med et spil Hi-Octane.",
     entrance_left        = S[40][59], -- no description
     entrance_right       = S[40][60], -- no description
-    skeleton             = "Skjelett: brukt til undervisning og Halloween.",
+    skeleton             = "Skelet: bruges til undervisningen og til Halloween.",
     comfortable_chair    = S[40][62], -- no description
   },
 }
@@ -1751,8 +1751,8 @@ adviser = {
     select_diagnosis_rooms       = utf8 "Venstreklikk på det blinkende ikonet for å se en liste over diagnoserom du kan bygge.",
     hire_doctor           = utf8 "Du trenger en Lege for å diagnosere og behandle syke mennesker.",
     select_doctors           = utf8 "Venstreklikk på det blinkende ikonet for å se hvilke Leger som er tilgjengelig i arbeidsmarkedet.",
-    place_windows           = utf8 "Plasser vinduer på samme måten som du plasserte dören. Du trenger ikke vinduer, men de ansatte setter veldig pris på det, og blir blidere når de har noe å se ut gjennom.",
-    place_doctor           = utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart noen trenger å diagnoseres.",
+    place_windows           = utf8 "Plasser vinduer på samme måten som du plasserte dören. Du trenger ikke vinduer, men de ansatte setter veldig pris på det, og blir blidere når de har nö å se ut gjennom.",
+    place_doctor           = utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart nön trenger å diagnoseres.",
     room_in_invalid_position     = utf8 "Oj! Denne blåkopien er ikke gyldig - det röde området indikerer hvor du har overlappet et annet rom eller sykehusets vegger.",
     doctor_in_invalid_position     = utf8 "Hei! Du kan ikke slippe Legen her.",
     place_objects           = utf8 "Höyreklikk for å rotere gjenstander, og venstreklikk for å plassere dem.",
@@ -1768,9 +1768,9 @@ adviser = {
   
   -- Epidemic
   epidemic = {
-    hurry_up         = utf8 "Om du ikke tar deg av epidemien nå, får du store problemer. Fort deg!",
-    serious_warning     = utf8 "Den smittsomme sykdomen begynner å bli et seriöst problem. Du må gjöre noe snart!",
-    multiple_epidemies     = utf8 "Det ser ut som at du har mer enn en epidemi gående samtidig. Dette kan bli en enorm katastrofe, så fort deg.",
+    hurry_up         = utf8 "Hvis du ikke tager dig af epidemien nu, kan du få store problemer. Skynd dig!",
+    serious_warning     = utf8 "Den smidtsomme syddom begynder at blive et seriöst problem. Du må göre noget snart!",
+    multiple_epidemies     = utf8 "Det ser ud som du har mere end en epidemi samtidigt. Dette kan blive en enorm katastrofe for dig!.",
   },
   
   -- Staff advice
@@ -1780,7 +1780,7 @@ adviser = {
     need_handyman_plants   = utf8 "Du må ansette en Vaktmester for å vanne plantene.",
     need_handyman_litter   = utf8 "Folk har begynt å forsöple sykehuset ditt. Ansett en Vaktmester for å rydde opp etter pasientene dine.",
     need_nurses       = utf8 "Du trenger flere Sykepleiere. Sengeavdelinger og Apotek kan bare driftes av Sykepleiere.",
-    too_many_doctors     = utf8 "Du har for mange Leger. Noen av dem har ingenting å gjöre.",
+    too_many_doctors     = utf8 "Du har for mange Leger. Nön av dem har ingenting å gjöre.",
     too_many_nurses     = utf8 "Jeg tror du har for mange Sykepleiere.",
   },
   
@@ -1800,7 +1800,7 @@ adviser = {
     poaching = {
       in_progress           = utf8 "Jeg skal si ifra om denne personen vil komme å jobbe for deg.",
       not_interested         = utf8 "Ha! De er ikke interessert i å jobbe for deg - de har det bra der de er.",
-      already_poached_by_someone   = utf8 "Ikke snakk om! Noen pröver allerede å overtale personen.",
+      already_poached_by_someone   = utf8 "Ikke snakk om! Nön pröver allerede å overtale personen.",
     },
     objective_failed         = utf8 "Du har ikke lykkes i å fullföre utfordringene.",
   },
@@ -2447,74 +2447,74 @@ fax = {
   -- Emergency
   emergency = {
     choices = {
-      accept = utf8 "Ja, jeg er klar til å håndtere dette", 
-      refuse = utf8 "Nei, jeg nekter å ta meg av dette",
+      accept = utf8 "Ja, jeg kan håndtere akkuttilfældet", 
+      refuse = utf8 "Nej, jeg nægter at tage mig af dette akkuttilfælde",
     },
-    location                = "Det har skjedd en ulykke ved %s", 
-    num_disease              = "Det er %d mennesker med %s som trenger akutt behandling.",
-    cure_possible_drug_name_efficiency = utf8 "Du har det som trengs av nödvendig utstyr og ferdigheter, og du har medisinen de trenger. Det er %s og medisinen er %d prosent effektiv.", 
-    cure_possible              = utf8 "Du har nödvendig utstyr og de ferdigheter som trengs for å ta deg av dette.", 
-    cure_not_possible_build_and_employ = utf8 "Du vil måtte bygge  %s og ansette en %s",
-    cure_not_possible_build            = utf8 "Du mangler %s for å håndtere dette",
-    cure_not_possible_employ           = utf8 "Du mangler en %s for å kunne håndtere dette",
-    cure_not_possible                  = utf8 "Du kan ikke behandle denne sykdommen for öyeblikket",
-    bonus                              = utf8 "Om du klarer å håndtere dette nödstilfellet, vil du få en bonus på maksimalt %d. Om du feiler derimot, vil ryktet ditt få en kraftig smell.",
+    location                = "Der er sket en ulykke ved %s", 
+    num_disease              = utf8 "Det er %d mennesker med %s som har brug for behandling.",
+    cure_possible_drug_name_efficiency = utf8 "Du har det udstyr og den medicin som er nödvendig for at kunne behandle patienten. Det er %s og medicinen er %d procent effektiv.", 
+    cure_possible              = utf8 "Du har det nödvendige udstyr og de færdigheder som skal bruges for at kunne håndtere dette.", 
+    cure_not_possible_build_and_employ = utf8 "Du er nødt til at bygge  %s og ansætte en %s",
+    cure_not_possible_build            = utf8 "Du mangler %s for at håndtere dette",
+    cure_not_possible_employ           = utf8 "Du mangler en %s for at kunne håndtere dette",
+    cure_not_possible                  = utf8 "Du kan ikke behandle denne sygdom i öjeblikket",
+    bonus                              = utf8 "Hvis du klarer dette akkuttilfælde, vil du modtage en bonus på maksimalt %d. Om du derimod fejler, vil dit ry blive dårligere.",
     
     locations = {      
-      utf8 "A.Tom's Våpenkjeller",
-      "Snobbeuniversitetet",       
-      "Buskerud Hagesenter", 
+      utf8 "A.Tom's Våbenskælder",
+      "Snoppeuniversitetet",       
+      "Buskerud Hagecenter", 
       "Forskningsinstituttet For Farlige Emner", 
-      "Foreningen For Folkedansende Menn", 
-      "puben Frosk Og Kyr", 
-      utf8 "Hallgeir Juniors Begravelsesbyrå Og Spritbutikk",
-      "Mama-Tai Krydderhus", 
-      "Berts Varehus For Brukt Petrokjemi", 
+      "Foreningen For Folkedansende Mænd", 
+      "Puben Frosk Og Kyr", 
+      utf8 "Hallgeir Juniors Begravelsesbutik Og Spritbutik",
+      "Mamma-Tai Krydderhus", 
+      "Berts Varehus For Brugt Petrokemi", 
     },
   },
 
   emergency_result = {
-    close_text     = utf8 "Klikk for å gå ut",
-    earned_money   = utf8 "Av en maksimal bonus på %d, har du tjent %d.",
-    saved_people   = "Du reddet %d mennesker av totalt %d.",
+    close_text     = utf8 "Klik for at gå ud",
+    earned_money   = utf8 "Af den maksimale bonus på %d, har du tjent %d.",
+    saved_people   = "Du reddet %d mennesker af totalt %d.",
   },  
   
   -- Deseace discovered
   disease_discovered_patient_choice = {
     choices = {
-      send_home = "Send pasienten hjem.",
+      send_home = "Send patienten hjem.",
       wait      = utf8 "Få pasienten til å vente litt på sykehuset.",
-      research  = "Send pasienten til forskningsavdelingen.",
+      research  = "Send patienten til forskningsafdelingen.",
     },
-    need_to_build_and_employ = utf8 "Om du bygger %s og ansetter en %s kan du löse problemet med en gang.",
-    need_to_build            = utf8 "Du må bygge %s for å håndtere dette.",
-    need_to_employ           = utf8 "Ansett en %s for å hjelpe pasienten.",
-    can_not_cure             = "Du kan ikke behandle denne sykdommen.",
-    disease_name             = utf8 "Dine ansatte har stött på et tilfelle av %s.",
-    what_to_do_question      = utf8 "Hva vil du gjöre med pasienten?",
-    guessed_percentage_name  = "Teamet ditt mener de vet hva som feiler pasienten. Det er %d prosent sannsynlighet for at det er %s",
+    need_to_build_and_employ = utf8 "Hvis du bygger %s og ansætter en %s kan du löse problemet på én gang.",
+    need_to_build            = utf8 "Du skal bygge %s for at kunne håndtere dette.",
+    need_to_employ           = utf8 "Ansæt en %s for at hjælpe patienten.",
+    can_not_cure             = "Du kan ikke behandle denne sygdom.",
+    disease_name             = utf8 "Dine ansatte har stödt på et tilfælle af %s.",
+    what_to_do_question      = utf8 "Hvad vil du göre med patienten?",
+    guessed_percentage_name  = "Teamet mener at de ved hvad patienten fejler. Der er %d procent sandsynlighed for at det er %s",
   },
   
   disease_discovered = {
-    close_text          = "En ny sykdom er oppdaget.",
-    can_cure          = "Du kan behandle denne sykdommen.",
-    need_to_build_and_employ = utf8 "Om du bygger %s og ansetter en %s kan du håndtere dette.",
-    need_to_build            = utf8 "Du må bygge %s for å håndtere dette.",
-    need_to_employ           = utf8 "Ansett en %s for å behandle pasienter med denne sykdommen.",
-    discovered_name          = "Ditt team har oppdaget et tilfelle av %s.",
+    close_text          = "Der er blevet opdaget en ny sygdom.",
+    can_cure          = "Du kan behandle denne sygdom.",
+    need_to_build_and_employ = utf8 "Hvis du bygger %s og ansætter en %s kan du håndtere dette.",
+    need_to_build            = utf8 "Du skal bygge %s for at håndtere dette.",
+    need_to_employ           = utf8 "Ansæt en %s for at behandle patienter med denne sygdom.",
+    discovered_name          = "Dit team har oppdaget et tilfælde af %s.",
   },
   
   -- Epidemic
   epidemic = {
     choices = {
-      declare  = utf8 "Offentliggjör epidemi, betal boten og godta at ryktet ditt blir svekket.",
-      cover_up = utf8 "Forsök å behandle alle infiserte pasienter för tiden renner ut, og för noen forlater sykehuset.",
+      declare  = utf8 "Offentligör epidemi, betal böden og accepter at dit ry bliver svækket.",
+      cover_up = utf8 "Forsög at behandle alle inficerede patienter för tiden löber ud, og för nogen forlader sygehuset.",
     },
     
-    disease_name             = utf8 "Dine leger har oppdaget en svært smittsom form for %s.",
-    declare_explanation_fine = utf8 "Om du offentliggjör epidemien, må du betale en bot på %d, ditt rykte får en smell, og samtlige pasienter blir vaksinert automatisk.",
-    cover_up_explanation_1   = utf8 "Om du deriomt forsöker å holde epidemien skjult, må du behandle samtlige infiserte pasienter för helsemyndighetene får rede på det.",
-    cover_up_explanation_2   = utf8 "Om en helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
+    disease_name             = utf8 "Dine læger har opdaget en mget smidtsom form for %s.",
+    declare_explanation_fine = utf8 "Hvis du offentliggör epidemien, skal du betale en böde på %d, dit ry bliver dårligere, og samtlige patienter blir vaccineret automatisk.",
+    cover_up_explanation_1   = utf8 "Hvis du derimod forsöger at holde epidemien skjult, skal du behandle samtlige vaccinerede patienter för sundhedsmyndighederne för det at vide.",
+    cover_up_explanation_2   = utf8 "Hvis en sundhedsinspektör kommer på besög og finder ud af at du har forsögt at skjule epidemien, vil han gå drastisk til værk.",
   },
   
   -- Epidemic result
@@ -2685,7 +2685,7 @@ dynamic_info = {
   },
   --todo
   level7 = {
-    [1] = utf8 "Her vil du være under overvågning af sundhedsministeriet så husk at få det til at se ud som om du tjener en masse penge og at dit omdömme er sky höjt. ",
+    [1] = utf8 "Her vil du være under overvågning af sundhedsmyndighederne så husk at få det til at se ud som om du tjener en masse penge og at dit omdömme er sky höjt. ",
     [2] = utf8 "Vi kan ikke holde til unödvendige dödsfald - de er dårlige for virksomheden. ",
     [3] = utf8 "Vær sikker på at dit personale er i tip-top form, og at du har alt det udstyr de har brug for. ",
     [4] = "Get a reputation of 600, plus $200,000 in the bank.",
@@ -2750,7 +2750,7 @@ dynamic_info = {
   },
   level3 = {
     [1] = utf8 "Du vil denne gang skulle bygge dit hospital i et velhavende kvarter. ",
-    [2] = utf8 "Sundhedsministeriet holder öje med dig for at sikre at du skaber et overskud her. ",
+    [2] = utf8 "Sundhedsmyndighederne holder öje med dig for at sikre at du skaber et overskud her. ",
     [3] = utf8 "Du vil starte med at have et godt omdömme, men så snart at hospitalet er åbent, skal du fokusere på at få tjent så mange penge som muligt. ",
     [4] = utf8 "Der er også en sandsynlighed for at der sker akuttilfælde. ",
     [5] = utf8 "Disse indeholder et stort antal patienter, som kommer samtidigt og har alle den samme sygdom. ",
@@ -2759,7 +2759,7 @@ dynamic_info = {
     [8] = utf8 "Tjen $20,000 for at gennemföre.",
   },
   level10 = {
-    [1] = utf8 "Så vel som at kunne behandle alle former for sygdomme vil sundhedsministeriet gerne have at du bruger noget tid på at foske i mediciners effekt. ",
+    [1] = utf8 "Så vel som at kunne behandle alle former for sygdomme vil Sundhedsmyndighederne gerne have at du bruger noget tid på at foske i mediciners effekt. ",
     [2] = utf8 "Der har været nogle klager fra foreningen af syge, de syges vagthund. Så for holde sit omdömme skal du sörge for at dine medica er effektive. ",
     [3] = utf8 "Du skal også sikre dig at dit hospital er over gennemsnittet. Holder dödstallet så lavt som muligt",
     [4] = utf8 "Et lille tip er at du holder lidt frit plads til et geléör. ",
@@ -2767,7 +2767,7 @@ dynamic_info = {
   },
   level11 = {
     [1] = utf8 "Du har nu fået chancen for at bygge det ultimative hospital. ",
-    [2] = utf8 "Dette er et ekstremt velhavende område, hvor sundhedsministeriet gerne vil sig at der kommer det bedste hospital muligt. ",
+    [2] = utf8 "Dette er et ekstremt velhavende område, hvor Sundhedsmyndighederne gerne vil sig at der kommer det bedste hospital muligt. ",
     [3] = utf8 "Vi forventer at du tjener kassen, har et sky höjt omdömme og håndtere alle uventede situationer. ",
     [4] = utf8 "Dette er en vigtig opgave",
     [5] = utf8 "Du skal være lavet af noget specielt for at dette skal lykkes. ",
@@ -2815,13 +2815,13 @@ misc = {
     
 * tooltip.new_game_window  - done
 * confirmation - done 
-* room_descriptions 
+* room_descriptions  - started
 * insurance_companies - done
 * menu_debug - done
 * trophy_room - done
 
 **Under tooltip ****
-  * buy_objects_window
+  * buy_objects_window - done 
   * patient_window
   * staff_window
   * machine_window
@@ -2865,12 +2865,12 @@ misc = {
 
 ** Under fax ****
   *debug_fax
-  * emergency
-  * locations
+  * emergency - done
+  * locations - done
   * emergency_result
-  * disease_discovered_patient_choice
-  * disease_discovered
-  * epidemic
+  * disease_discovered_patient_choice - done
+  * disease_discovered - done
+  * epidemic - done 
   * disease_name
   * epidemic_result
   * vip_visit_query
