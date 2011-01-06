@@ -73,7 +73,9 @@ because the letters ø and Ø is not included in the original ingame-font.
 Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
 
-
+date_format = {
+  daymonth = utf8 "%1% %2:måneder%",
+}
 
 -- 2. Faxes
 fax = {
