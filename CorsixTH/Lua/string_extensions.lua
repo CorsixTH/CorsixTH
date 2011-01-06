@@ -70,9 +70,12 @@ function TH.stringProxy.format(str, ...)
     idx = idx + 1
     local arg = args[idx]
     if key == "d" and type(arg) == "number"
-    -- TODO the second check should really be class.is(arg, TH.stringProxy), but
+    -- NB: Numbers are allowed for %s as well to allow concatenation with number.
+    -- TODO the third check should really be class.is(arg, TH.stringProxy), but
     -- it doesn't currently work due to TH.stringProxy overriding __index
-    or key == "s" and (type(arg) == "string" or type(arg) == "userdata") then
+    or key == "s" and (type(arg) == "string"
+                    or type(arg) == "number"
+                    or type(arg) == "userdata") then
       return arg
     end
     return str
