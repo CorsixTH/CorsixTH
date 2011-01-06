@@ -62,6 +62,10 @@ tooltip.staff_list.prev_person = utf8 "Ver página anterior"
 confirmation.restart_level = utf8 "¿Seguro que quieres reiniciar el nivel?"
 
 -------------------------------  NEW STRINGS  -------------------------------
+date_format = {
+  daymonth = "%1% %2:meses%",
+}
+
 object.litter = "Basura"
 tooltip.objects.litter = utf8 "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
 
