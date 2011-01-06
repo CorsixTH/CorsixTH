@@ -130,7 +130,7 @@ function UIBankManager:draw(canvas, x, y)
     for no = 1, #hospital.transactions do
       local values = hospital.transactions[#hospital.transactions - no + 1]
       local current_y = no * 15 + y + 60
-      font:draw(canvas, values.day .. " " .. _S.months[values.month], x + 48, current_y)
+      font:draw(canvas, _S.date_format.daymonth:format(values.day, values.month), x + 48, current_y)
       font:draw(canvas, values.desc, x + 129, current_y)
       if values.spend then
         font:draw(canvas, "$ " .. values.spend, x + 377, current_y)

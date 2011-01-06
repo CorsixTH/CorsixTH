@@ -46,6 +46,10 @@ confirmation.restart_level = "Are you sure you want to restart the level?"
 -- TODO adviser.multiplayer.objective_failed
 
 -------------------------------  NEW STRINGS  -------------------------------
+date_format = {
+  daymonth = "%1% %2:months%",
+}
+
 object.litter = "Litter"
 tooltip.objects.litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in."
 
