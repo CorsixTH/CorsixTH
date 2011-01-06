@@ -33,11 +33,13 @@ local TH = require "TH"
 --!  %[num]:[tab]% : replaced by string obtained by indexing string table _S.[tab] with [num]-th parameter.
 --!param str (string, stringProxy) the string that contains keywords to be replaced
 --!param ... (string, stringProxy, number) parameters to be inserted in the string (or used for lookup)
+--!return formatted stringProxy, if any of the result's components was a stringProxy, else formatted string
 function TH.stringProxy.format(str, ...)
   local args = {...}
   
   -- %% and new keywords %[num]% and %[num]:[tab]%
   local found = false
+  local proxy_found = false
   local result = TH.stringProxy.gsub(str, "(%%([1-9]?)(:?)([^%%]*)%%)",
     --[[persistable:App_our_format_new]] function(str, key, sep, tab)
     if key == "" and sep == "" and tab == "" then
@@ -55,31 +57,36 @@ function TH.stringProxy.format(str, ...)
       val = string_table[val]
     end
     found = true
+    proxy_found = proxy_found or type(val) == "userdata"
     return val
   end)
   
-  if found then
-    return result
+  if not found then
+    -- Compatibility with old keywords: %d, %s and %%
+    local idx = 0
+    result = TH.stringProxy.gsub(str, "(%%([ds%%]))",
+      --[[persistable:App_our_format_compat]] function(str, key)
+      if key == "%" then return "%" end
+      idx = idx + 1
+      local arg = args[idx]
+      if key == "d" and type(arg) == "number"
+      -- NB: Numbers are allowed for %s as well to allow concatenation with number.
+      -- TODO the third check should really be class.is(arg, TH.stringProxy), but
+      -- it doesn't currently work due to TH.stringProxy overriding __index
+      or key == "s" and (type(arg) == "string"
+                      or type(arg) == "number"
+                      or type(arg) == "userdata") then
+        proxy_found = proxy_found or type(arg) == "userdata"
+        return arg
+      end
+      return str
+    end)
   end
   
-  -- Compatibility with old keywords: %d, %s and %%
-  local idx = 0
-  result = TH.stringProxy.gsub(str, "(%%([ds%%]))",
-    --[[persistable:App_our_format_compat]] function(str, key)
-    if key == "%" then return "%" end
-    idx = idx + 1
-    local arg = args[idx]
-    if key == "d" and type(arg) == "number"
-    -- NB: Numbers are allowed for %s as well to allow concatenation with number.
-    -- TODO the third check should really be class.is(arg, TH.stringProxy), but
-    -- it doesn't currently work due to TH.stringProxy overriding __index
-    or key == "s" and (type(arg) == "string"
-                    or type(arg) == "number"
-                    or type(arg) == "userdata") then
-      return arg
-    end
-    return str
-  end)
+  -- Convert result to stringProxy if input string was string but a stringProxy was inserted
+  if type(str) == "string" and proxy_found then
+    result = TH.stringProxy(result)
+  end
   
   return result
 end
