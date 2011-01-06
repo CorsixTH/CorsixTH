@@ -493,11 +493,9 @@ end
 
 -- Adjusts one of the `Humanoid`'s attributes.
 --!param attribute (string) One of: "happiness", "thirst", "toilet_need", "warmth".
---!param amount (number) A value between -1 and +1. This amount is added to the
---  existing value for the attribute, and is then capped to be between 0 and 1.
+--!param amount (number) This amount is added to the existing value for the attribute,
+--  and is then capped to be between 0 and 1.
 function Humanoid:changeAttribute(attribute, amount)
-  assert(amount <= 1 and amount >= -1, "Amount must be between -1 and 1")
-
   -- Receptionist is always 100% happy
   if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
     self.attributes[attribute] = 1;
