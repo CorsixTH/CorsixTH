@@ -190,6 +190,7 @@ function App:init()
   
   -- Load strings before UI and before additional Lua
   dofile "strings"
+  dofile "string_extensions"
   self.strings = Strings(self)
   self.strings:init()
   self:initLanguage()
