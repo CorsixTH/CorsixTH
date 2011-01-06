@@ -25,6 +25,10 @@ Language("简体中文", "Chinese (simplified)", "zh(s)", "chi(s)", "zho(s)")
 Inherit("english")
 Encoding(utf8)
 
+date_format = {
+  daymonth = "%2%月 %1%日",
+}
+
 misc = {
   hospital_open = utf8 "医院开门",
   save_success = utf8 "游戏存档成功",

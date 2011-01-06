@@ -70,7 +70,6 @@ CorsixTH/Lua/diseases/kidney_beans.lua -text
 CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text
-CorsixTH/Lua/languages/traditional_chinese.lua -text
 CorsixTH/Lua/objects/machines/operating_table.lua -text
 CorsixTH/Lua/objects/machines/operating_table_b.lua -text
 CorsixTH/Lua/objects/op_sink1.lua -text
