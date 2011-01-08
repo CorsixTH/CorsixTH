@@ -74,7 +74,7 @@ Language("Dansk", "Danish", "da", "dk")
 Inherit("english")
 
 date_format = {
-  daymonth = utf8 "%1% %2:måneder%",
+  daymonth = "%1% %2:months%",
 }
 
 -- 2. Faxes
@@ -1026,7 +1026,7 @@ menu = {
 }
 
 menu_file = {
-  load                = utf8 "  INDLÆS  ",
+  load                = utf8 "  INDLæS  ",
   save                = "  GEM  ",
   restart             = "  START FORFRA  ",
   quit                = "  AFSLUT  ",
