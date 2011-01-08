@@ -150,15 +150,15 @@ menu_file.restart = "  START FORFRA  "
 
 menu_debug = {
   jump_to_level               = utf8 "  Gå til runde  ",
-  transparent_walls           = utf8 "  (K) TRANSPERANTE VÆGE  ",
-  limit_camera                = utf8 "  BEGRÆNS KAMERAET  ",
+  transparent_walls           = utf8 "  (K) TRANSPERANTE VæGE  ",
+  limit_camera                = utf8 "  BEGRæNS KAMERAET  ",
   disable_salary_raise        = utf8 "  STOP LÖNFORHÖJELSER  ",
   make_debug_fax              = "  (F8) LAV FEJLFINDINGS FAX  ",
   make_debug_patient          = utf8 " (F9) LAV FEJLFINDINGS PATIENT  ",
-  spawn_patient               = utf8 "  GENERER TILFÆLDIG PATIENT  ",
+  spawn_patient               = utf8 "  GENERER TILFæLDIG PATIENT  ",
   make_adviser_talk           = utf8 "  FÄ RÄDGIVEREN TIL AT SNAKKE  ",
   show_watch                  = "  VIS URET ",
-  create_emergency            = utf8 "  LAV ET AKUTTILFÆLDE  ",
+  create_emergency            = utf8 "  LAV ET AKUTTILFæLDE  ",
   place_objects               = "  PLACER OBJEKTER  ",
   cheats                      = "  (F11) SNYD  ",
   lua_console                 = "  (F12) LUA KONSOLE  ",
@@ -1376,7 +1376,7 @@ tooltip = {
     num_entered        = utf8 "Antal patienter som er blevet behandlet i dette rum indtil videre",
     max_queue_size     = utf8 "Den maksimale længde köen kan have",
     dec_queue_size     = utf8 "Mindre makslængde",
-    inc_queue_size     = utf8 "Godkend makslængde",
+    inc_queue_size     = utf8 "Större makslængde",
     front_of_queue     = utf8 "Træk i en patient for at stille ham/hende forest i köen",
     end_of_queue       = utf8 "Træk i en patient for at stille ham/hende bagerst i köen",
     close              = "Luk vinduet",
@@ -2045,10 +2045,10 @@ bank_manager = {
 newspaper = {
   -- Seven categories of funny headlines. I think each category is related
   -- to one criterium you can lose to. TODO: categorize
-  { "DR SKREKK OG GRU", "SKUMMEL LEGE LEKER GUD", "DR ACULA SJOKKERER", "HVEM FALT FOR KNIVEN?", "FARLIG FORSKNING STOPPET ETTER RAZZIA" },
-  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KJÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OPP", "KIRURGISK SPIRIT" },
-  { "LEKENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
-  { "LEGE TUKLER MED BALANSEN", "ORGAN-ISERT KRIMINALITET", "BANKMESSIG BYPASS-OPERASJON", "LEGE MED KONTANTBEHOLDNING" },
+  { "DR SKRIG OG GRU", "SKUMMEL LAEGE LEGER GUD", "DR ACULA SJOKKERER", "HVEM FALDT FOR KNIVEN?", "FARLIG FORSKNING STOPPET EFTER RAZZIA" },
+  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OP", "KIRURGISK SPIRIT" },
+  { "LEGENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
+  { "LAEGE TUMLER MED BALANCEN", "ORGAN-ISERT KRIMINALITET", "BANKMAESSIG BYPASS-OPERASION", "LAEGE MED KONTANTBEHOLDNING" },
   { "MEDISINSK RAID AV KISTER", utf8 "DOKTOR TÖMMER GRAVPLASS", "LIK I GARDEROBEN", utf8 "FIN DAG FOR DR DÖD", "SISTE FEILBEHANDLING", "GRAVENDE DOKTOR OPPDAGET" },
   { "LEGE SPIST OPP!", "SLAKK KVAKK", "LIVSFARLIG DIAGNOSE", "UFORSIKTIG KONSULENT", },
   { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
@@ -2059,64 +2059,64 @@ newspaper = {
 letter = {
     --original line-ends:             5          4               2    3
   [1] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Fantastisk! Dette sykehuset har du driftet helt utmerket. Vi i departementet vil vite om du er interessert i å gå lös på et större prosjekt. Vi har en jobbstilling vi tror du ville passet perfekt i. Vi kan friste deg med en lönn på $%d. Tenk litt på det.//",
-    [3] = utf8 "Er du interessert i å jobbe på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Fantastisk! Du har kört sygehuset rigtig godt. Vi i ministeriet vil höre om du er intersseret i et deltage i et större projekt. Vi har et job, som vi tror ville passe dig rigtig godt. Vi kan friste med en lön på $%d. Tænk lidt på det.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [2] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Veldig bra! Sykehuset ditt har hatt en fantastisk utvikling. Vi har en annen institusjon vi vil du skal ta over, om du er klar for forandringer. Du MÅ ikke ta utfordringen, men det vil nok lönne seg. Lönnen er $%d//",
-    [3] = utf8 "Vil du jobbe på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Imponerende! Sygehuset har haft en fantastisk udvikling. Vi har et andet sted, som du kan overtage, hvis du klar til at pröve noget nyt. Du SKAL ikke tage udfordringen, men det vil give en belönning. Lönnen er $%d//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [3] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Din tid på dette sykehuset har vært enormt vellykket. Vi spår en stor fremtid for deg, og önsker å tilby deg en stilling et annet sted. Lönnen vil være $%d, og vi tror du vil elske de nye utfordringene stillingen förer med seg.//",
-    [3] = utf8 "Vil du ha stillingen på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Din tid på dette sygehus har været ekstremt vellykket. Vi spår dig en stor fremtid, og önsker at tilbyde dig en stilling et andet sted. Lönnen vil være $%d, og vi tror du vil elske de nye udfordringer stillingen förer med sig.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [4] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Gratulerer! Vi i departementet er meget imponert over dine evner til å drifte sykehus. Du er definitivt en gullgutt i Helsedepartementet. Vi tror derimot at du foretrekker en litt töffere jobb. Du får en lönn på $%d, men det er din beslutning.//",
-    [3] = utf8 "Er du interessert i å jobbe på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Tillykke! Vi i mínisteriet er meget imponeret over dine evner til drive sygehus. Du er definitivt en gulddreng i sundhedsmyndighederne. Vi tror derimod at du foretrækker en lidt mere udfodrende job. Du får en lön på $%d, men det er din beslutning.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [5] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Hei igjen. Vi respekterer dine önsker om å ikke forlate dette sjarmerende sykehuset, men vi ber deg om å ta en ny vurdering. Vi vil tilby deg en god lönn på $%d om du er klar for å flytte til et annet sykehus, og får opp driften til et respektabelt nivå.//",
-    [3] = utf8 "Er du interessert i å flytte til sykehuset %s nå?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Hej igen. Vi respekterer dine önsker om at ikke forlade dette fantastiske sygehus, men vi beder dig om at tage en ny vurdering. Vi vil tilbyde dig en god lön på $%d hvis du er klar på at flytte til et andet sygehus, og får skabt et respektabelt sygehus.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [6] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Departementet hilser deg. Vi vet hvor glad du er blitt i denne nydelige, velorganiserte institusjonen, men vi tror du bör vurdere å fremme karrieren din nå. Du vil få en respektabel lederlönn på $%d om du bestemmer deg for å flytte. Det er verdt å tenke på det i hvertfall.//",
-    [3] = utf8 "Vil du ta imot stillingen på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Ministeriet hilser dig. Vi ved hvor glad du er blevet for det nydelige og velorganiserede sygehus, men vi mener du bör vurdere at fremme din karriere. Du vil få en respektabel lederlönn på $%d hvis du bestemmer dig for at flytte. Det er værd at overveje i hvertfald.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [7] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "God dag! Helseministeren lurer på om du vil revurdere din stilling på ditt nåværende sykehus. Vi setter pris på ditt nydelige sykehus, men vi tror du vil gjöre mye for en litt mer utfordrende stilling, og en lönn på $%d.//",
-    [3] = utf8 "Tar du utfordringen på sykehuset %s?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "God dag! Sundhedsministeren tænker på om du vil revurdere din stilling på dit nuværrende sygehus. Vi sætter pris på dit nydelige sygehus, men vi tror du vil göre meget for en lidt mere udfordrende stilling, og en lön på $%d.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [8] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Hallo igjen. Du tok ikke vår forrige utfordring, der vi tilbydte deg en alle tiders stilling på et nytt sykehus, og en ökt lönn på $%d. Vi mener, derimot, at du bör revurdere beslutningen din. Vi har den perfekte jobben for deg, skjönner du.//",
-    [3] = utf8 "Tar du imot stillingen på sykehuset %s? Vær så snill?",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Hej igen. Du tog ikke den forrige udfordring, da vi tilböd dig en alle tiders udfordring på et nyt sygehus, og en ok lön på $%d. Vi mener, derimod, at du bör revurdere beslutningen. Vi har den perfekte job til dig, tror vi.//",
+    [3] = utf8 "Er du interessert i at tage jobbet på sygehuset %s?",
   },
   [9] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Du har nok en gang bevist at du er den beste innen helseadministrasjon. Ingen tvil! En slik betydningsfull prestasjon må belönnes, så vi önsker å tilby deg stillingen som Administrerende Direktör for Alle Sykehus. Dette er en ærefull stilling, og gir deg en lönn på hele $%d. Du får din egen Ticker-Tape parade, og folk kommer til å vise sin takknemlighet ovenfor deg, hvor enn du går.//",
-    [3] = utf8 "Takk for alt du har gjort. Vi önsker deg en lang og trivelig pensjonstid.//",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Du har mere end en gang bevist at du er den bedste i sundhedsvæsnet. Ingen tvivl! En så fantastisk præstation skal belönnes, så vi önsker at tilbyde dig stillingen som Administrerende Direktör for Alle Sygehuse. Dette er en ærefuld stilling, og giver dig en lön på hele $%d. Du får din egen Ticker-Tape parade, og folk kommer til at vise sin taknemmelighed, hvor end du går.//",
+    [3] = utf8 "Tak for alt du har gjort. Vi önsker dig en lang og fantastisk pensionstid.//",
   },
   [10] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Gratulerer! Du har driftet alle sykehus vi har gitt deg på en utmerket måte. En slik prestasjon kvalifiserer deg for friheten til å reise rundt i verden. Du blir belönnet med en pensjon på $%d, pluss en limousin, og alt vi ber om er at du reiser fra by til by, möter dine lidenskaplige fans, og promoterer sykehusets arbeid hvor enn du måtte befinne deg.//",
-    [3] = utf8 "Vi er alle stolte av deg. Det er ikke en av oss som ikke er takknemlig for ditt harde arbeid som livredder.//",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Tillykke! Du har drevet alle de sygehuse vi har givet dig på en udemærket fason. En sådan præstation kvalificerer dig til at få friheden til at rejse rundt verdenen. Du bliver belönnet med en pension på $%d, plus en limousine, og alt vi beder dig om er at du rejser fra by til by, möder dine lidenskabelige fans, og promoterer sygehusets arbejde hvor end du måtte befinne dig.//",
+    [3] = utf8 "Vi er stolte af dig. Vi er alle taknemmelige for dit hårde arbejde som livredder.//",
   },
   [11] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Din karriere har vært eksemplarisk, og du er en stor inspirasjon for oss alle. Takk for at du har driftet så mange sykehus, og gjort det så bra i alle jobbene. Vi önsker å gi deg en livslang lönn på $%d, og alt vi ber deg om er å reise offisielt med kabriolet fra by til by, og fortelle folk hvordan du tjente så mye penger så fort.//",
-    [3] = utf8 "Du er et prakteksempel for alle höyre-politiske mennesker, og alle i verden, uten unntak, er dine kjæreste eiendeler.//",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Din karriere har været eksemplarisk, og du er en stor inspiration for os alle. Tak for at du har drevet så mange sygehuse, og gjort det så godt i alle jobsne. Vi önsker at give dig en livslang lön på $%d, og alt vi beder dig om er at rejse officelt fra by til by, og fortælle folk hvordan du tjente så mange penge.//",
+    [3] = utf8 "Du er et pragteksempel for alle höjre-politiske mennesker, og alle i verden, uden tak, er dine kæreste ejendele.//",
   },
   [12] = {
-    [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisin-verdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
-    [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
+    [1] = utf8 "Kære %s//",
+    [2] = utf8 "Din succeskarriere som den beste sygehusadministrator er den bedste siden Moses sin tid, er ved vejs ende. Men siden du har haft så stor indvirkning på den medicinske verden, önsker ministeriet at tilbyde dig en lön på $%d bare for at være til stede på vore vegne, åbne fester, sösætte skibe og stille op i shows. Hele verden efterlyser dig, og du ville en god vært for PR for os alle!//",
+    [3] = utf8 "Vær så venlig at tage i mod denne stilling, det bliver ikke et hårdt arbejde! Og vi skal sorge for at du får politieskorte hvorend du går. .//",
   },
 }
 
@@ -2125,15 +2125,15 @@ letter = {
 -- Humanoid start of names
 humanoid_name_starts = {
   [1] = utf8 "BJÖRN",
-  [2] = utf8 "HÖY",
+  [2] = utf8 "PER",
   [3] = "STOR",
-  [4] = "GULL",
-  [5] = "RIK",
+  [4] = "GUL",
+  [5] = "RIG",
   [6] = "SOL",
   [7] = "LANGE",
-  [8] = "FLAT",
-  [9] = "HARD",
-  [10] = "MYK",
+  [8] = "FLAD",
+  [9] = utf8 "HÅRD",
+  [10] = "MYG",
   [11] = "BAR",
   [12] = "SKODDE",
   [13] = utf8 "MÖRKE",
@@ -2142,19 +2142,19 @@ humanoid_name_starts = {
   [16] = "LAT",
   [17] = "KRABBE",
   [18] = "FISK",
-  [19] = utf8 "VÅT",
+  [19] = utf8 "VÅD",
   [20] = "SEN",
   [21] = "GRAV",
   [22] = "BAK",
   [23] = "LAVE",
-  [24] = "UT",
+  [24] = "UD",
   [25] = "ENGE",
   [26] = utf8 "GRÖN",
   [27] = "KUR",
   [28] = "KVIT",
   [29] = "KJEVE",
   [30] = "TRYGLE",
-  [31] = "KVERN",
+  [31] = "KVÆAEN",
   [32] = "KRYKKE",
   [33] = "SKADE",
 }
@@ -2513,7 +2513,7 @@ fax = {
       cover_up = utf8 "Forsög at behandle alle inficerede patienter för tiden löber ud, og för nogen forlader sygehuset.",
     },
     
-    disease_name             = utf8 "Dine læger har opdaget en mget smidtsom form for %s.",
+    disease_name             = utf8 "Dine læger har opdaget en meget smidtsom form for %s.",
     declare_explanation_fine = utf8 "Hvis du offentliggör epidemien, skal du betale en böde på %d, dit ry bliver dårligere, og samtlige patienter blir vaccineret automatisk.",
     cover_up_explanation_1   = utf8 "Hvis du derimod forsöger at holde epidemien skjult, skal du behandle samtlige vaccinerede patienter för sundhedsmyndighederne för det at vide.",
     cover_up_explanation_2   = utf8 "Hvis en sundhedsinspektör kommer på besög og finder ud af at du har forsögt at skjule epidemien, vil han gå drastisk til værk.",
@@ -2524,28 +2524,28 @@ fax = {
     close_text = "Hurra!",
     
     failed = {
-      part_1_name = utf8 "Gjennom forsöket på å skjule det faktum at vi sto ovenfor et smittsomt utbrudd av %s",
-      part_2      = utf8 "klarte personalet ditt selvfölgelig å spre epidemien ut til alle sykehusets naboer.",
+      part_1_name = utf8 "Gennem forsöget på at skjule det faktum at vi stod overfor et smidtsomtudbrud af %s",
+      part_2      = utf8 "Selvfölgelig var dine medarbejdere i stand til at sprede epidemien til alle hospitalets nabör.",
     },
     succeeded = {
-      part_1_name = utf8 "Helseinspektören hörte rykter om at institusjonen din slet med et alvorlig tilfelle av %s.",
-      part_2      = utf8 "Han har derimot ikke lykkes i å finne beviser som bekrefter ryktene.",
+      part_1_name = utf8 "Sundhedsinspektören hörte rygter om at dit hospital kæmpede med et alvorligt tilfælde af %s.",
+      part_2      = utf8 "Han har dog slet ikke kunne finde noget der kunne bekræfte rygterne.",
     },
     
-    compensation_amount  = utf8 "Myndighetene har besluttet å gi deg %d i kompensasjon for skaden disse lögnene har påfört ditt gode rykte.",
-    fine_amount          = utf8 "Myndighetene har erklært nasjonal unntakstilstand og bötelegger deg med %d.",
-    rep_loss_fine_amount = utf8 "Avisene har nå nytt forsidestoff, og ditt rykte får en kraftig smell. I tillegg blir du bötelagt med %d.",
-    hospital_evacuated   = utf8 "Helserådet har ikke annet valg enn å evakuere sykehuset ditt.",
+    compensation_amount  = utf8 "Myndigherne har besluttet at give dig en kompensation på %d for den skade dit ellers gode rygte har lidet.",
+    fine_amount          = utf8 "Myndighederne har erklæret en nation undtagelsestilstand og for langer at du betaler en böde på %d.",
+    rep_loss_fine_amount = utf8 "Velkommen på forsiden! Dit rygte har fået et ordenligt spark ned af, samtidigt får du en böde på %d.",
+    hospital_evacuated   = utf8 "Sundhedsmyndighederne har ikke andet valg end at evakuere dit sygehus.",
   },
   
   -- VIP visit query
   vip_visit_query = {
     choices = {
-      invite = "Send offisiell invitasjon til V.I.P.",
-      refuse = utf8 "Avvis forespörselen fra V.I.P med dårlige unnskyldninger.",
+      invite = "Send en officiel invitation til en V.I.P.",
+      refuse = utf8 "Afvis forespörselen fra V.I.P med en dårlig undskyldning.",
     },
     
-    vip_name = utf8 "%s har ytret et önske om å få besöke sykehuset ditt",
+    vip_name = utf8 "%s har ydret et önske om at besöge dit sygehus",
   },
   
   -- VIP visit result
@@ -2566,7 +2566,7 @@ fax = {
       good = {
         "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
         utf8 "Hmm. Ingen dårlig medisinsk instutisjon dette, det skal være visst.",
-        utf8 "Jeg likte ditt sjarmerende sykehus. Forresten, noen som blir med å spise indisk?",
+        utf8 "Jeg likte ditt sjarmerende sykehus. Forresten, nön som blir med å spise indisk?",
       },
       mediocre = {
         utf8 "Vel, jeg har sett verre. Men du burde gjöre noen forbedringer.",
@@ -2589,21 +2589,21 @@ fax = {
   -- Diagnosis failed
   diagnosis_failed = {
     choices = {
-      send_home   = "Send pasienten hjem",
-      take_chance = utf8 "Gjett sannsynlig behandling.",
-      wait        = utf8 "Få pasienten til å vente mens du bygger flere diagnoserom.",
+      send_home   = "Send patienten hjem",
+      take_chance = utf8 "Pröv en sandsynlig behandling.",
+      wait        = utf8 "Få patienten til at vente mens du bygger flere diagnoserum.",
     },
-    situation = utf8 "Vi har brukt alle våre diagnosemaskiner på denne pasienten, men vi vet fremdeles ikke sikkert hva som er galt.",
-    what_to_do_question = utf8 "Hva skal vi gjöre med pasienten?",
-    partial_diagnosis_percentage_name = "Det er %d prosent sikkert at vi vet hvilken type %s pasienten har.",
+    situation = utf8 "Vi har prøvet alle vores diagnoserum på denne patient, men vi er ikke helt sikre på hvad patienten fejler.",
+    what_to_do_question = utf8 "Hvad skal vi göre med patienten?",
+    partial_diagnosis_percentage_name = "Der er %d procent sikkert at patienten har en type af %s.",
   },
 }
 
 -- Queue window
 queue_window = {
-  num_in_queue       = utf8 "Kölengde",
+  num_in_queue       = utf8 "Kölængde",
   num_expected       = "Ventet",
-  num_entered        = utf8 "Antall besök",
+  num_entered        = utf8 "Antal besög",
   max_queue_size     = "Maks str.",
 }
 
@@ -2612,45 +2612,45 @@ dynamic_info = {
   patient = {
     actions = {
       dying                       = utf8 "Döende",
-      awaiting_decision           = "Venter din beslutning",
+      awaiting_decision           = utf8 "Venter på din beslutning",
       queueing_for                = utf8 "I köen til %s", -- %s
-      on_my_way_to                = utf8 "På vei til %s", -- %s
+      on_my_way_to                = utf8 "På vej til %s", -- %s
       cured                       = "Kurert!",
-      fed_up                      = "Sint, forlater sykehuset",
+      fed_up                      = "Irriteret, forlader sykehuset",
       sent_home                   = "Sendt hjem",
-      sent_to_other_hospital      = "Henvist til annet sykehus",
-      no_diagnoses_available      = "Ingen flere diagnosemuligheter",
-      no_treatment_available      = utf8 "Ingen behandling mulig - Jeg går hjem",
-      waiting_for_diagnosis_rooms = utf8 "Venter på at du skal bygge flere diagnoserom for meg",
-      waiting_for_treatment_rooms = utf8 "Venter på at du skal bygge behandlingsrom for meg",
-      prices_too_high             = utf8 "Prisene er for höye - Jeg går hjem",
-      epidemic_sent_home          = utf8 "Sendt hjem av inspektör",
-      epidemic_contagious         = "Jeg er smittsom",
+      sent_to_other_hospital      = "Henvist til et andet sygehus",
+      no_diagnoses_available      = "Ingen flere diagnosemuligheder",
+      no_treatment_available      = utf8 "Ingen behandling er mulig - Jeg går hjem",
+      waiting_for_diagnosis_rooms = utf8 "Venter på at du skal bygge flere diagnoserom til mig",
+      waiting_for_treatment_rooms = utf8 "Venter på at du skal bygge behandlingsrum til mig",
+      prices_too_high             = utf8 "Prisene er for höje - Jeg går hjem",
+      epidemic_sent_home          = utf8 "Sendt hjem af inspektör",
+      epidemic_contagious         = utf8 "Jeg er smittebærende",
     },
     diagnosed                   = "Diagnose: %s", -- %s
-    guessed_diagnosis           = "Gjettet diagnose: %s", -- %s
-    diagnosis_progress          = "Diagnoseprosess",
+    guessed_diagnosis           = utf8 "Gættet diagnose: %s", -- %s
+    diagnosis_progress          = "Diagnoseproces",
     emergency                   = "Akutt: %s", -- %s (disease name)
   },
-  vip                           = utf8 "Besökende VIP",
-  health_inspector              = utf8 "Helseinspektör",
+  vip                           = utf8 "Besögende VIP",
+  health_inspector              = utf8 "Sundhedsinspektör",
   
   staff = {
     psychiatrist_abbrev         = "Psyk.",
     actions = {
-      waiting_for_patient         = utf8 "Venter på pasient",
+      waiting_for_patient         = utf8 "Venter på patient",
       wandering                   = "Vandrer rundt omkring",
       going_to_repair             = "Skal reparere %s", -- %s (name of machine)
     },
-    tiredness                   = utf8 "Tretthet",
+    tiredness                   = utf8 "Træthed",
     ability                     = "Evner", -- unused?
   },
   
   object = {
-    strength                    = "Holdbarhet: %d", -- %d (max. uses)
-    times_used                  = "Ganger brukt: %d", -- %d (times used)
-    queue_size                  = utf8 "Kölengde: %d", -- %d (num of patients)
-    queue_expected              = utf8 "Forventet kölengde: %d", -- %d (num of patients)
+    strength                    = "Udholdenhed: %d", -- %d (max. uses)
+    times_used                  = "Timer brugt: %d", -- %d (times used)
+    queue_size                  = utf8 "Kölængde: %d", -- %d (num of patients)
+    queue_expected              = utf8 "Forventet kölængde: %d", -- %d (num of patients)
   },
 }
 
@@ -2862,8 +2862,8 @@ misc = {
 
 * newspaper
 * letter
-* humanoid_name_starts
-* humanoid_name_ends
+* humanoid_name_starts - done
+* humanoid_name_ends - done
 
 ** Under fax ****
   *debug_fax
@@ -2873,12 +2873,11 @@ misc = {
   * disease_discovered_patient_choice - done
   * disease_discovered - done
   * epidemic - done 
-  * disease_name
-  * epidemic_result
-  * vip_visit_query
-  * vip_visit_result
-  * diagnosis_failed
+  * disease_name - done
+  * epidemic_result - done
+  * vip_visit_query - done
+  * vip_visit_result 
+  * diagnosis_failed - done
   * 
-
 -----------------------------------------------------------------------------]]   
     
