@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Erlend Mongstad
+﻿--[[ Copyright (c) 2010 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -318,7 +318,7 @@ totd_window = {
     utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
     utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på freenode).",
     utf8 "Om du finner feil eller mangler, vær snill å rapportere det i vår feilmeldingstjeneste: th-issues.corsix.org",
-    utf8 "CorsixTH ble for förste gang hjort tilgjengelig 24.juli 2009. Den förste utgivelsen var Spillbar Beta 1 (utgitt 24.desember, 2009). Etter tre måneder er vi stolt av å kunne presentere vår Spillbar Beta 2 (utgitt 24.mars, 2010).",
+    utf8 "CorsixTH ble for förste gang gjort tilgjengelig 24.juli 2009. Den förste utgivelsen var Spillbar Beta 1 (utgitt 24.desember, 2009). Etter tre måneder er vi stolt av å kunne presentere vår Spillbar Beta 2 (utgitt 24.mars, 2010).",
   },
   previous = "Forrige tips",
   next = "Neste tips",
@@ -740,13 +740,13 @@ room_descriptions = {
   },
   gp = {
     [1] = "Allmennpraksis//",
-    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler de. Videre blir de sendt enten til dypere diagnosering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er, og jo mer ekstragjenstander du plasserer i rommet, des bedre presterer legen. Dette gjelder også for alle andre rom.//",
-    [3] = "Allmennpraksisen kan kun benyttes av leger. ",
+    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler dem. Videre blir de sendt enten til dypere diagnosering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er, og jo mer ekstragjenstander du plasserer i rommet, des bedre presterer legen. Dette gjelder også for alle andre rom.//",
+    [3] = utf8 "Allmennpraksisen kan kun håndteres av Leger. ",
   },
   fracture_clinic = {
     [1] = "Benbruddsklinikk//",
     [2] = utf8 "Pasienter som uheldigvis har Benbrudd vil bli behandlet her. Gipsfjerneren bruker kraftig industrilaser for å kutte vekk gipsen, og forårsaker bare litt smerte for pasienten.//",
-    [3] = utf8 "Benbruddsklinikken kan kun benyttes av Sykepleiere. Den krever også vedlikehold. ",
+    [3] = utf8 "Benbruddsklinikken kan kun håndteres av Sykepleiere. Den krever også vedlikehold. ",
   },
   tv_room = {
     [1] = "TV ROOM NOT USED",
@@ -754,103 +754,103 @@ room_descriptions = {
   inflation = {
     [1] = "Pumperom//",
     [2] = utf8 "Pasienter med sitt smertefulle, men dog humoristiske Ballonghode, må behandles på Pumperommet. Her blir hodet stukket hull på, trykket forsvinner, og en lege pumper hodet opp til riktig trykknivå.//",
-    [3] = utf8 "Pumperommet kan kun benyttes av Leger. Regelmessig vedlikehold er også viktig. ",
+    [3] = utf8 "Pumperommet kan kun håndteres av Leger. Regelmessig vedlikehold er også viktig. ",
   },
   jelly_vat = {
-    [1] = "Jelly Clinic//",
-    [2] = "Patients cursed with the risible illness Jellyitis must wobble their way to the Jelly Clinic, and be placed in the Jelly Vat. This cures them in a way still not fully understood by the medical profession.//",
-    [3] = "The Jelly Clinic requires any Doctor. It also needs a Handyman for maintenance. ",
+    [1] = utf8 "Gelétönne//",
+    [2] = utf8 "Pasienter med den snodige sykdommen gelésyndrom må skjelve seg fram til gelétönnerommet, for så å bli plassert i gelétönnen. Dette vil kurere dem på en måte som ikke er helt begripelig for det medisinske faget.//",
+    [3] = utf8 "Gelétönnen kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   scanner = {
-    [1] = "Scanner//",
-    [2] = "Patients are accurately diagnosed using the sophisticated Scanner. They then go and see a Doctor in the GP's Office for further treatment.//",
-    [3] = "The Scanner requires any Doctor. It also requires maintenance. ",
+    [1] = "Skanner//",
+    [2] = utf8 "Pasienter får veldig nöyaktig diagnosert sin sykdom ved bruk av den sofistikerte Skanneren. Deretter går de til Allmennpraksisen og snakker med en Lege for videre behandling.//",
+    [3] = utf8 "Skanneren kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   blood_machine = {
-    [1] = "Blood Machine//",
-    [2] = "The Blood Machine is a piece of diagnosis equipment which checks the cells in a patient's blood to find out what is wrong with them.//",
-    [3] = "The Blood Machine requires any Doctor. It also requires maintenance. ",
+    [1] = "Blodmaskin//",
+    [2] = utf8 "Blodmaskinen er et diagnoseverktöy som sjekker alle cellene i pasientens blod for å finne ut hva som feiler dem.//",
+    [3] = utf8 "Blodmaskinen kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   pharmacy = {
-    [1] = "Pharmacy//",
-    [2] = "Patients who have been diagnosed and whose treatment is a drug must visit the Pharmacy to take their medicine. As more and more drug cures are researched and become available, this room gets busier. You might want to build another Pharmacy later.//",
-    [3] = "The Pharmacy requires a Nurse. ",
+    [1] = "Apotek//",
+    [2] = utf8 "Pasienter som har blitt diagnosert og trenger behandling av et medikament må besöke Apoteket for å få medisinen sin. Ettersom fler og fler medisinkurer er forsket på og blir tilgjengelige, blir dette rommet stadig travlere. Du önsker kanskje å bygge et nytt Apotek senere.//",
+    [3] = utf8 "Apoteket kan kun håndteres av Sykepleiere. ",
   },
   cardiogram = {
-    [1] = "Cardio//",
-    [2] = "Patients are diagnosed and checked in here, before going back to a GP's Office to be assigned to a cure.//",
-    [3] = "The Cardio requires any Doctor. It also requires maintenance. ",
+    [1] = "Kardiorom//",
+    [2] = utf8 "Pasienter blir undersökt og diagnosert her, för de går tilbake til Allmennpraksisen for å få utpekt en kur.//",
+    [3] = utf8 "Kardiorommet kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   ward = {
-    [1] = "Ward//",
-    [2] = "Patients are kept here for observation by a Nurse during diagnosis. They remain here prior to having a operation.//",
-    [3] = "The Ward requires one Nurse. ",
+    [1] = "Sengeavdeling//",
+    [2] = utf8 "Pasientene blir lagt inn her for observasjon av en Sykepleier mens de diagnoseres. De forblir her til de er klare for å legges under kniven på Operasjonssalen.//",
+    [3] = utf8 "Sengeavdelingen kan kun håndteres av Sykepleiere. ",
   },
   psych = {
-    [1] = "Psychiatry//",
-    [2] = "Patients diagnosed with psychiatric illnesses must visit the Psychiatry Dept to receive counselling. Psychiatrists can also make diagnoses, finding out what type of illnesses the patients have and, if mental in origin, treating them using the trusty couch.//",
-    [3] = "The Psychiatry Dept. requires a Psychiatrically-trained Doctor. ",
+    [1] = "Psykiatri//",
+    [2] = utf8 "Pasienter diagnosert med psykiske lidelser må gå til Psykiatrien for å få rådgivning. Psykologene kan kjöre diagnose for å finne ut hva slags type sykdom pasientene lider av, og hvis mental opprinnelse, så behandle dem ved å benytte den pålitelige sofaen.//",
+    [3] = utf8 "Psykiatrien kan kun håndteres av Kvalifisert Psykolog. ",
   },
   staff_room = {
-    [1] = "Staff Room//",
-    [2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. ",
+    [1] = "Personalrom//",
+    [2] = utf8 "De ansatte blir slitne etter hvert som de utförer pliktene sine. De trenger dette rommet for å slappe av og heve humöret. Om de ansatte er slitne, så blir de tregere, krever med lönn og vil til slutt si opp. De gjör også flere feilgrep. Å bygge et Personalrom med masse for dem å finne på er vel anvendte penger. Pass på at det er plass til flere ansatte på en gang. ",
   },
   operating_theatre = {
-    [1] = "Operating Theatre//",
-    [2] = "This important installation is where a variety of conditions are treated. The Theatre has to be a good size, and must be filled with the correct equipment. It is a vital part of your hospital.//",
-    [3] = "The Operating Theatre requires two Doctors with Surgeon qualifications. ",
+    [1] = "Operasjonssal//",
+    [2] = utf8 "Denne viktige installasjonen er der en rekke forhold blir behandlet. Operasjonssalen må være av en god störrelse, og må fylles med riktig utstyr. Det er en viktig del av sykehuset.//",
+    [3] = utf8 "Operasjonssalen kan kun håndteres av to Kvalifiserte Kirurger. ",
   },
   training = {
-    [1] = "Training Room//",
-    [2] = "Your Juniors and Doctors can gain valuable extra qualifications by studying in this room. A Consultant with Surgery, Research or Psychiatric skills will pass these on to any Doctors being trained. Doctors who already have these skills will find their ability to use them increases whilst here.//",
-    [3] = "The Training Room requires a Consultant. ",
+    [1] = "Klasserom//",
+    [2] = utf8 "Turnuslegene og Doktorene dine kan få, verdifulle, ekstra kvalifikasjoner ved å studere i dette rommet. En Konsulent med Kirurgi-, Forsker- eller Psykologi-fordypning vil lære bort dette til de Legene som sitter i rommet. Leger som allerede har disse ferdighetene vil bli enda flinkere mens de er her.//",
+    [3] = utf8 "Klasserommet kan kun håndteres av en Konsulent. ",
   },
   dna_fixer = {
-    [1] = "DNA Clinic//",
-    [2] = "Patients who have been meddled with by aliens from another world must have their DNA replaced in this room. The DNA Fixer Machine is a very complex piece of equipment and it would be sensible to keep a fire extinguisher in the room with it, just in case.//",
-    [3] = "The DNA Fixer Machine will require periodic maintenance by a Handyman. It also requires a Doctor with Research qualifications to work it. ",
+    [1] = "DNA-klinikk//",
+    [2] = utf8 "Pasienter som har befattet seg med romvesner fra en annen verden må få DNA-et sitt byttet ut i dette rommet. DNA-fikseren er en veldig kompleks maskin, og det ville være fornuftig å holde et brannslukningsapparat i nærheten av den, bare i tilfelle.//",
+    [3] = utf8 "DNA-fikseren kan kun håndteres av en kvalifisert Forsker. Den behöver periodisk vedlikehold av en Vaktmester. ",
   },
   research = {
-    [1] = "Research Room//",
-    [2] = "New drugs and cures are invented or improved in the Research Room. It's a vital part of your hospital, and will do wonders for your cure percentages.//",
-    [3] = "The Research Room requires a Doctor with Research qualifications. ",
+    [1] = "Forskningsavdeling//",
+    [2] = utf8 "Nye medikamenter og kurer blir funnet opp og forbedret i Forskningsavdelingen. Det er en vital del av sykehuset ditt, og vil gjöre underverker for kureringsstatistikken din.//",
+    [3] = utf8 "Forskningsavdelingen kan kun håndteres av en kvalifisert Forsker. ",
   },
   hair_restoration = {
-    [1] = "Hair Restoration Clinic//",
-    [2] = "Patients suffering from the extreme condition of Baldness will be directed towards the Hair Restorer Machine in this Clinic. A Doctor will operate the machine, and it will rapidly seed the patient's head with fresh hair.//",
-    [3] = "The Hair Restoration Clinic requires any Doctor. It also requires periodic maintenance. ",
+    [1] = utf8 "Hårklinikk//",
+    [2] = utf8 "Pasienter som lider av ekstreme tilfeller av Flintskallethet må henvende seg til Hårrenoveringsmaskinen i denne klinikken. En Lege vil operere maskinen, og den vil sette avleggere i pasientens hode som raskt blir til nytt hår.//",
+    [3] = utf8 "Hårklinikken kan kun håndteres av Leger. Det kreves også periodisk vedlikehold. ",
   },
   general_diag = {
-    [1] = "General Diagnosis//",
-    [2] = "Patients who require further diagnosis are sent to be checked here. If a GP's Office doesn't find out what is wrong with them, General Diagnosis often will. From here they will be sent back to the GP's office for analysis of the results produced here.//",
-    [3] = "The General Diagnosis Room requires any Doctor. ",
+    [1] = "Generell Diagnose//",
+    [2] = utf8 "Pasienter som trenger videre diagnose blir sendt hit for undersökelse. Om Allmennpraksisen ikke finner ut hva som feiler dem, så vil Generell Diagnose ofte finne det ut. Herfra vil de bli sendt tilbake til Allmennpraksisen for analyse av resultatet.//",
+    [3] = utf8 "Generell Diagnose kan kun håndteres av Leger. ",
   },
   electrolysis = {
-    [1] = "Electrolysis Room//",
-    [2] = "Patients with Hairyitis are directed to this room, where a special machine called the Electrolyser yanks out the hairs and seals the pores electrically using a compound not unlike grout.//",
-    [3] = "The Electrolysis Room requires any Doctor. It also needs maintenance by a Handyman. ",
+    [1] = "Elektrolyseklinikk//",
+    [2] = utf8 "Pasienter med Pelssyndrom blir sendt hit, hvor en spesialmaskin napper ur håret og forsegler porene elektrisk med en sammensetning som ikke er ulik fugemasse.//",
+    [3] = utf8 "Elektrolyseklinikken kan kun håndteres av Leger. Den behöver vedlikehold av en Vaktmester. ",
   },
   slack_tongue = {
-    [1] = "Slack Tongue Clinic//",
-    [2] = "Patients diagnosed in the GP's Office with Slack Tongue will be sent to this clinic for treatment. The Doctor will use a piece of high-tech machinery to extend the tongue and snip it off, thus returning the patient to normal good health.//",
-    [3] = "The Slack Tongue Clinic requires any Doctor. It also needs maintenance every so often. ",
+    [1] = "Tungeklinikk//",
+    [2] = utf8 "Pasienter som blir diagnosert med Lös tunge fra Allmennpraksisen, vil bli sendt til denne klinikken for behandling. Legen bruker en höyteknologisk maskin som forlenger tungen og kutter den av, dermed bringes pasienten tilbake til normal, god helse.//",
+    [3] = utf8 "Tungekutteren kan kun håndteres av Leger. Det kreves også vedlikehold nok så ofte. ",
   },
   toilets = {
-    [1] = "Toilet//",
-    [2] = "Patients feeling a call of nature will need to unburden themselves in the comfort of your toilet facilities. You can build extra stalls and wash-basins if you expect a lot of visitors. In some cases, you might consider building further facilities elsewhere in the hospital. ",
+    [1] = "Toalett//",
+    [2] = utf8 "Pasienter som föler at naturen kaller, må gå og lette på trykket i dine behagelige toalettfasiliteter. Du kan bygge ekstra toalettbåser og vasker om du forventer mange besökende. I noen tilfeller bör du kanskje vurdere å bygge flere Toaletter andre steder i sykehuset. ",
   },
   no_room = {
     [1] = "",
   },
   x_ray = {
-    [1] = "X-Ray//",
-    [2] = "The X-Ray machine photographs people's insides using special radiation to provide staff with a good idea of what is wrong with them.//",
-    [3] = "The X-Ray requires any Doctor. It also requires maintenance. ",
+    [1] = utf8 "Röntgenrom//",
+    [2] = utf8 "Röntgenmaskinen fotograferer pasientenes innside ved bruk av spesiell stråling for å gi en god indikasjon på hva som er galt med dem.//",
+    [3] = utf8 "Röntgenmaskinen kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   decontamination = {
-    [1] = "Decontamination Clinic//",
-    [2] = "Patients who have been exposed to Radiation are quickly shown to the Decontamination Clinic. This room contains a shower which cleanses them off all the horrid radioactivity and muck.//",
-    [3] = "The Decontamination Shower requires any Doctor. It also needs maintaining by a Handyman. ",
+    [1] = "Saneringsklinikk//",
+    [2] = utf8 "Pasienter som har blitt utsatt for Stråling blir fort henvist til Saneringsklinikken. Dette rommet inneholder en dusj som skyller av dem all den vemmelige Radioaktiviteten og skitt.//",
+    [3] = utf8 "Saneringsdusjen kan kun håndteres av Leger. Den behöver vedlikehold av en Vaktmester. ",
   },
 }
 
@@ -1509,7 +1509,7 @@ tooltip = {
     reputation        = utf8 "Omdömmet ditt må være minst %d. Nå er det %d",
     population        = utf8 "Du må ha %d%% av befolkningen til å bruke ditt sykehus",
     warmth             = utf8 "Gjennomsnittlig temperatur på personene på ditt sykehus",
-    percentage_killed  = utf8 "Kriteriet er blant annet å drepe ferre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
+    percentage_killed  = utf8 "Kriteriet er blant annet å drepe færre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
     balance        = utf8 "Din bankbalanse må være på minst %d. Nå er den %d",
     value          = utf8 "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
     win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
@@ -1718,7 +1718,7 @@ adviser = {
   -- Surgery requirements
   surgery_requirements = {
     need_surgeons_ward_op   = utf8 "Du trenger to Kirurger og en Sengeavdeling i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
-    need_surgeon_ward     = utf8 "Du trenger en til Kirurg og en Sengeavdeling for å gjöre kirurgiske inngrep.",
+    need_surgeon_ward     = utf8 "Du trenger en Kirurg til og en Sengeavdeling for å gjöre kirurgiske inngrep.",
   },
   
   -- Vomit wave
