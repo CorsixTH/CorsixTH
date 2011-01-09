@@ -79,12 +79,20 @@ static int l_str_new_aux(lua_State *L)
 // Create a new root-level userdata proxy
 static int l_str_new(lua_State *L)
 {
-    lua_remove(L, 1); // Value inserted by __call
-    luaL_checkany(L, 1); // Value to be proxied
-    lua_settop(L, 1);
+    // Pack extra arguments into a table
+    int iNArgs = lua_gettop(L);
+    lua_createtable(L, iNArgs - 2, 0);
+    lua_replace(L, 1); // Value inserted by __call
+    for(int i = iNArgs; i >= 3; --i)
+        lua_rawseti(L, 1, i - 2);
+
+    // Make proxy
+    luaL_checkany(L, 2);
     l_str_new_aux(L);
-    lua_newtable(L);
-    lua_setfenv(L, -2);
+
+    // Save extra arguments as reconstruction information
+    lua_insert(L, 1);
+    lua_setfenv(L, 1);
     return 1;
 }
 
@@ -256,47 +264,6 @@ static int l_str_func(lua_State *L)
     lua_setfenv(L, -2);
 
     return 1;
-}
-
-static int l_str_gsub_table_lookup(lua_State *L)
-{
-    lua_settop(L, 1);
-    lua_gettable(L, lua_upvalueindex(1));
-    return 1;
-}
-
-static int l_str_gsub_resolve_proxy(lua_State *L)
-{
-    lua_pushvalue(L, lua_upvalueindex(1));
-    lua_insert(L, 1);
-    lua_call(L, lua_gettop(L) - 1, 1);
-    if(lua_type(L, 1) == LUA_TUSERDATA)
-        lua_rawget(L, lua_upvalueindex(2));
-    return 1;
-}
-
-static int l_str_gsub(lua_State *L)
-{
-    // Subsistute tables for functions, to reduce number of cases to handle
-    if(lua_type(L, 3) == LUA_TTABLE)
-    {
-        lua_pushvalue(L, 3);
-        lua_pushcclosure(L, l_str_gsub_table_lookup, 1);
-        lua_replace(L, 3);
-    }
-
-    // If the replacement function returns a string proxy, then it should get
-    // resolved to a string before returning it to string.gsub.
-    if(lua_type(L, 3) == LUA_TFUNCTION)
-    {
-        lua_pushvalue(L, 3);
-        aux_push_weak_table(L, 0);
-        lua_pushcclosure(L, l_str_gsub_resolve_proxy, 2);
-        lua_replace(L, 3);
-    }
-
-    // Now proceed in the normal way...
-    return l_str_func(L);
 }
 
 // __concat metamethod handler
@@ -567,10 +534,13 @@ static int l_str_depersist(lua_State *L)
         }
         else
         {
-            // Otherwise, the first value was a method name.
-            lua_pushvalue(L, 6);
-            lua_gettable(L, 7);
-            lua_replace(L, 6);
+            // Otherwise, the first value was a method or method name.
+            if(lua_type(L, 6) != LUA_TFUNCTION)
+            {
+                lua_pushvalue(L, 6);
+                lua_gettable(L, 7);
+                lua_replace(L, 6);
+            }
             lua_call(L, iCount - 1, 1);
         }
     }
@@ -656,6 +626,25 @@ static int l_str_reload_actual(lua_State *L)
     lua_rawset(L, -3);
     lua_pop(L, 2);
     return 1;
+}
+
+static int l_str_unwrap(lua_State *L)
+{
+    luaL_checkany(L, 1);
+    lua_settop(L, 1);
+    aux_push_weak_table(L, 0);
+    lua_pushvalue(L, 1);
+    lua_rawget(L, 2);
+    if(lua_isnil(L, 3))
+    {
+        lua_settop(L, 1);
+        lua_pushboolean(L, 0);
+    }
+    else
+    {
+        lua_pushboolean(L, 1);
+    }
+    return 2;
 }
 
 static int l_str_reload(lua_State *L)
@@ -767,11 +756,11 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_str_next, "next");
     luaT_setmetamethod(l_str_inext, "inext");
     luaT_setfunction(l_str_func, "format" , MT_DummyString, "format");
-    luaT_setfunction(l_str_gsub, "gsub"   , MT_DummyString, "gsub");
     luaT_setfunction(l_str_func, "lower"  , MT_DummyString, "lower");
     luaT_setfunction(l_str_func, "rep"    , MT_DummyString, "rep");
     luaT_setfunction(l_str_func, "reverse", MT_DummyString, "reverse");
     luaT_setfunction(l_str_func, "upper"  , MT_DummyString, "upper");
+    luaT_setfunction(l_str_unwrap, "_unwrap");
     luaT_setfunction(l_str_reload, "reload");
     luaT_endclass();
 }
