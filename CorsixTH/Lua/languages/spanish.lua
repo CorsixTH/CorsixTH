@@ -74,6 +74,8 @@ tooltip.message.button = utf8 "Botón izquierdo del ratón para abrir el mensaje
 tooltip.message.button_dismiss = utf8 "Botón izquierdo para abrir el mensaje, botón derecho para rechazarlo."
 tooltip.casebook.cure_requirement.hire_staff = utf8 "Necesitas contratar a empleados para realizar este tratamiento."
 tooltip.casebook.cure_type.unknown = utf8 "Todavía no conoces la forma de curar esta enfermedad."
+tooltip.research_policy.no_research = utf8 "En este momento no se está investigando ningún apartado de esta categoría."
+tooltip.research_policy.research_progress = utf8 "Progreso para terminar el siguiente descubrimiento de esta categoría: %1%/%2%"
 
 menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
