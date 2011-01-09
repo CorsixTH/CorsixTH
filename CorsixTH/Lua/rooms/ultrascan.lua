@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "ultrascan"
-room.level_config_id = 22
-room.level_config_research = 40
+room.level_config_id = 14
 room.class = "UltrascanRoom"
 room.name = _S.rooms_short.ultrascan
 room.tooltip = _S.tooltip.rooms.ultrascan
-room.build_cost = 8000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { ultrascanner = 1 }
 room.build_preview_animation = 5068

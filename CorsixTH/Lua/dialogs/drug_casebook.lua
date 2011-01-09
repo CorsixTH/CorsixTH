@@ -50,7 +50,8 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addPanel(0, 437, 394):makeRepeatButton(0, 0, 77, 53, 2, self.scrollDown):setTooltip(_S.tooltip.casebook.down)
   self:addPanel(0, 354, 133):makeRepeatButton(0, 0, 22, 22, 5, self.increasePay):setTooltip(_S.tooltip.casebook.increase)
   self:addPanel(0, 237, 133):makeRepeatButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
-  -- TODO: concentrate research button;  :setTooltip(_S.tooltip.casebook.research)
+  self:addPanel(0, 235, 400):makeButton(0, 0, 140, 20, 0, self.concentrateResearch)
+    :setTooltip(_S.tooltip.casebook.research)
   
   -- Hotkeys
   self:addKeyHandler("up", self.scrollUp)
@@ -191,7 +192,7 @@ function UICasebook:updateIcons()
   
   self.unknown.visible    = not known
   self.drug.visible       = known and not not self.casebook[disease].drug
-  self.machinery.visible  = known and not not self.casebook[disease].machine
+  self.machinery.visible  = known and not not self.casebook[disease].machine and not self.casebook[disease].pseudo
   self.psychiatry.visible = known and not not self.casebook[disease].psychiatrist
   self.surgery.visible    = known and not not self.casebook[disease].surgeon
   
@@ -219,10 +220,12 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, _S.casebook.cure,             x + 255, y + 354)
   
   -- Specific disease information
-  if book[disease].concentrate_research then  -- Concentrate research
-    self.selected_title_font:draw(canvas, _S.casebook.research, x + 245, y + 398)
-  else
-    titles:draw(canvas, _S.casebook.research, x + 245, y + 398)
+  if book[disease].machine or book[disease].drug then
+    if book[disease].concentrate_research then  -- Concentrate research
+      self.selected_title_font:draw(canvas, _S.casebook.research, x + 245, y + 398)
+    else
+      titles:draw(canvas, _S.casebook.research, x + 245, y + 398)
+    end
   end
   local rep = book[disease].reputation or self.hospital.reputation
   titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
@@ -323,6 +326,13 @@ function UICasebook:decreasePay()
   end
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
+end
+
+function UICasebook:concentrateResearch()
+  if self.casebook[self.selected_disease].machine 
+  or self.casebook[self.selected_disease].drug then
+    self.hospital.research:concentrateResearch(self.selected_disease)
+  end
 end
 
 function UICasebook:onMouseDown(button, x, y)

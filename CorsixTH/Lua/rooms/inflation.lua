@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "inflation"
-room.level_config_id = 9
-room.level_config_research = 2
+room.level_config_id = 17
 room.class = "InflationRoom"
 room.name = _S.rooms_short.inflation
 room.tooltip = _S.tooltip.rooms.inflation
-room.build_cost = 4000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { inflator = 1 }
 room.build_preview_animation = 908

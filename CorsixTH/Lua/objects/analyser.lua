@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "analyser"
 object.thob = 41
+object.research_category = "cure"
+object.research_fallback = 45
 object.name = _S.object.atom_analyser
 object.tooltip = _S.tooltip.objects.atom_analyser
 object.ticks = true

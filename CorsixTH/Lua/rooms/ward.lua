@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "ward"
-room.level_config_id = 8
-room.level_config_research = 42
+room.level_config_id = 9
 room.class = "WardRoom"
 room.name = _S.rooms_short.ward
 room.tooltip = _S.tooltip.rooms.ward
-room.build_cost = 2000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bed" }
 room.objects_needed = { desk = 1, bed = 1 }
 room.build_preview_animation = 910
@@ -59,6 +57,10 @@ function WardRoom:roomFinished()
     end
   end
   self.maximum_patients = number
+  if not self.hospital:hasStaffOfCategory("Nurse") then
+    self.world.ui.adviser
+    :say(_S.adviser.room_requirements.ward_need_nurse)
+  end
   Room.roomFinished(self)
 end
 

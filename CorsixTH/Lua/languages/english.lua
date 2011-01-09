@@ -58,6 +58,8 @@ tooltip.message.button = "Left click to open message"
 tooltip.message.button_dismiss = "Left click to open message, right click to dismiss it"
 tooltip.casebook.cure_requirement.hire_staff = "You need to employ staff to handle this treatment"
 tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this disease"
+tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
+tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
 menu_options = {
   lock_windows = "  LOCK WINDOWS  ",

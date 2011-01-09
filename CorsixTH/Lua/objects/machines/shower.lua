@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "shower"
 object.thob = 54
+object.research_category = "cure"
+object.research_fallback = 6
 object.name = _S.object.shower
 object.tooltip = _S.tooltip.objects.shower
 object.ticks = true

@@ -27,17 +27,13 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   
   self.total_usage = -1 -- Incremented in the constructor of Object.
   self:Object(world, object_type, x, y, direction, etc)
-  
-  -- Initialize machines with strength values. (TODO: according to current research)
-  local config
-  local level = world.map.level_config
-  local id = self:getRoom().room_info.level_config_id
-  if level and id and level.objects[id]
-  and level.objects[id].StartStrength then
-    config = level.objects[id]
+
+  if object_type.default_strength then
+    -- Only for the main object. The slave doesn't need any strength
+    local progress = world.ui.hospital.research.research_progress[object_type]
+    self.strength = progress.start_strength
   end
-  self.strength = config and config.StartStrength or object_type.default_strength
-  
+
   -- We actually don't want any dynamic info just yet
   self:clearDynamicInfo()
   -- TODO: Smoke, 3424

@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "hair_restoration"
-room.level_config_id = 25
-room.level_config_research = 10
+room.level_config_id = 19
 room.class = "HairRestorationRoom"
 room.name = _S.rooms_short.hair_restoration
 room.tooltip = _S.tooltip.rooms.hair_restoration
-room.build_cost = 4500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { hair_restorer = 1, console = 1 }
 room.build_preview_animation = 5074

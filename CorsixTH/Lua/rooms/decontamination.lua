@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "decontamination"
-room.level_config_id = 54
-room.level_config_research = 6
+room.level_config_id = 30
 room.class = "DecontaminationRoom"
 room.name = _S.rooms_short.decontamination
 room.tooltip = _S.tooltip.rooms.decontamination
-room.build_cost = 15000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { shower = 1, console = 1 }
 room.build_preview_animation = 5100

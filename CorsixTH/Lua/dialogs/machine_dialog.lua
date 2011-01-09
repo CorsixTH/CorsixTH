@@ -92,14 +92,17 @@ end
 
 function UIMachine:replaceMachine()
   local machine = self.machine
+  local hosp = self.ui.hospital
+  local cost = hosp.research.research_progress[machine.object_type].cost
+  local strength = hosp.research.research_progress[machine.object_type].start_strength
   self.ui:addWindow(UIConfirmDialog(self.ui,
-    _S.confirmation.replace_machine:format(machine.object_type.name, machine.object_type.build_cost),
+    _S.confirmation.replace_machine:format(machine.object_type.name, cost),
     --[[persistable:replace_machine_confirm_dialog]]function()
-      self.ui.hospital:spendMoney(machine.object_type.build_cost, _S.transactions.machine_replacement)
+      
+      hosp:spendMoney(cost, _S.transactions.machine_replacement)
       machine.total_usage = 0
       machine.times_used = 0
-      -- TODO: Research should increase strength here
-      self.machine.strength = machine.object_type.default_strength
+      self.machine.strength = strength
       machine:setRepairing(nil)
     end
   ))

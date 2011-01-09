@@ -20,11 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "research"
-room.level_config_id = 55
+room.level_config_id = 28
 room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
 room.tooltip = _S.tooltip.rooms.research_room
-room.build_cost = 5000
 room.objects_additional = { 
   "extinguisher", 
   "radiator", 
@@ -80,8 +79,9 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
             action.prolonged_usage = false
           end
         end,
-        after_use = --[[persistable:research_desk_after_use]] function() 
-          self.hospital:addResearchPoints(100)
+        after_use = --[[persistable:research_desk_after_use]] function()
+          -- TODO: Should interactions give points?
+          self.hospital.research:addResearchPoints(100)
         end,
       }
     else
@@ -90,7 +90,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         object = obj,
         after_use = --[[persistable:research_obj_after_use]] function() 
           if obj.object_type.id == "computer" then
-            self.hospital:addResearchPoints(500) 
+            self.hospital.research:addResearchPoints(500) 
             -- TODO: Balance value, find it in level config?
           end
         end,
@@ -115,14 +115,26 @@ function ResearchRoom:roomFinished()
   local objects = self.world:findAllObjectsNear(fx, fy)
   local number = 0
   for object, value in pairs(objects) do
-    if staff_usage_objects[object.object_type.id] then
+    -- The number of desks in the room determines how many researchers
+    -- can work there at once.
+    if object.object_type.id == "desk" then
       number = number + 1
     end
   end
   self.maximum_staff = {
     Researcher = number,
   }
-  self.hospital.research_dep_built = true
+  -- Is this the first research department built?
+  if not self.hospital.research_dep_built then
+    self.hospital.research_dep_built = true
+    self.world.ui.adviser:say(_S.adviser.information.initial_general_advice
+    .research_now_available)
+  end
+  -- Also check if it would be good to hire a researcher.
+  if not self.hospital:hasStaffOfCategory("Researcher") then
+    self.world.ui.adviser:say(_S.adviser.room_requirements
+    .research_room_need_researcher)
+  end
   return Room.roomFinished(self)
 end
 
@@ -155,7 +167,7 @@ function ResearchRoom:commandEnteringPatient(patient)
       -- Some research is done. :) Might trigger a loss of reputation though.
       local hosp = self.hospital
       local room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
-      hosp:addResearchPoints("dummy", room)
+      hosp.research:addResearchPoints("dummy", room)
       if hosp.discover_autopsy_risk > math.random(1, 100) and not hosp.autopsy_discovered then
         -- Can only be discovered once.
         hosp.autopsy_discovered = true

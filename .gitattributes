@@ -77,6 +77,7 @@ CorsixTH/Lua/objects/op_sink2.lua -text
 CorsixTH/Lua/objects/radiation_shield_b.lua -text
 CorsixTH/Lua/objects/surgeon_screen.lua -text
 CorsixTH/Lua/objects/x_ray_viewer.lua -text
+CorsixTH/Lua/research_department.lua -text
 CorsixTH/Lua/rooms/operating_theatre.lua -text
 CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text

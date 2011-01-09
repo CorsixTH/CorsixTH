@@ -250,6 +250,35 @@ local configuration = {
     {StartCost = 450, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  60 Skeleton
     {StartCost = 100, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  61 Comfy Chair
   },
+  -- Cost for the room itself without any objects.
+  -- For some reason it starts at 7, 
+  -- but that must be retained in order to work with the original.
+  rooms = {
+    [7] = {Cost = 2280}, -- GP_OFFICE
+    [8] = {Cost = 2270}, -- PSYCHO
+    [9] = {Cost = 1700}, -- WARD
+    [10] = {Cost = 2250}, -- OP_THEATRE
+    [11] = {Cost = 500}, -- PHARMACY
+    [12] = {Cost = 470}, -- CARDIO
+    [13] = {Cost = 3970}, -- SCANNER
+    [14] = {Cost = 2000}, -- ULTRASCAN
+    [15] = {Cost = 3000}, -- BLOOD_MACHINE
+    [16] = {Cost = 2000}, -- XRAY
+    [17] = {Cost = 1500}, -- INFLATOR
+    [18] = {Cost = 7000}, -- ALIEN
+    [19] = {Cost = 500}, -- HAIR_RESTORER
+    [20] = {Cost = 1500}, -- SLACK_TONGUE
+    [21] = {Cost = 500}, -- FRACTURE
+    [22] = {Cost = 1850}, -- TRAINING
+    [23] = {Cost = 500}, -- ELECTRO
+    [24] = {Cost = 4500}, -- JELLY_VAT
+    [25] = {Cost = 1350}, -- STAFF ROOM
+    [26] = {Cost = 5}, -- TV ??
+    [27] = {Cost = 720}, -- GENERAL_DIAG
+    [28] = {Cost = 800}, -- RESEARCH
+    [29] = {Cost = 1170}, -- TOILETS
+    [30] = {Cost = 5500}, -- DECON_SHOWER
+  },
   visuals = {
     [0] = {Value = 0}, -- I_BLOATY_HEAD
     {Value = 0}, -- I_HAIRYITUS
@@ -343,6 +372,9 @@ local configuration = {
     {Playing = 0}, -- CEREBRO
     {Playing = 0}, -- MOTHER
     {Playing = 0}, -- JAYNE
+    {Playing = 0}, -- CORSIX
+    {Playing = 0}, -- ROUJIN
+    {Playing = 0}, -- EDVIN
   },
   awards_trophies = {
   

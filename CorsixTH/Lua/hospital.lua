@@ -89,8 +89,7 @@ function Hospital:Hospital(world)
   self.policies = {}
   self.discovered_diseases = {} -- a list
   self.discovered_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are true or nil
-  self.research_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are research
-  -- points gained for this room or nil
+  self.undiscovered_rooms = {} -- NB: These two together must form the list world.available_rooms
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
@@ -158,139 +157,7 @@ function Hospital:Hospital(world)
       end
     end
   end
-end
-
---[[ Initialize research for the level.
-!param next_diag (room) The next diagnosis room to research
-!param next_cure (room) The next treatment room to research
-]]
-function Hospital:_initResearch(next_diag, next_cure) 
-  self.research = {
-    improvements = {frac = 20, points = 0, current = "inflation"},
-    drugs = {frac = 20, points = 0, current = "invisibility"},
-    diagnosis = {frac = 20, points = 0, current = next_diag},
-    cure = {frac = 20, points = 0, current = next_cure},
-    specialisation = {frac = 20, points = 0, current = "special"},
-    global = 100,
-  }
-  self.research_dep_built = false
-end
-
---[[ Add some more research points to research progress. If 
-autopsy_room is specified points are not used. Instead research
-progresses according to the level config for autopsies. 
-Otherwise they will be divided according to the research policy 
-into the different research areas.
-!param points (integer) The total amount of points (before applying
-any level specific divisors to add to research.
-!param autopsy_room (string) If a specific room should get points following
-an autopsy, then this is the id of that room.
-]]
-function Hospital:addResearchPoints(points, autopsy_room)
-  -- Fetch the level research divisor. Fallback is 5 (medium)
-  local level_config = self.world.map.level_config
-  local divisor = 5
-  if level_config and level_config.gbv then
-    divisor = level_config.gbv.ResearchPointsDivisor or 5
-  end
-  -- If an autopsy_room has been specified, let research go there.
-  if autopsy_room then
-    -- Currently only research of rooms is implemented
-    for room, value in pairs(self.research_rooms) do
-      if room.id == autopsy_room then
-        -- Maybe we have enough to discover the room?
-        local required = level_config.expertise[room.level_config_research].RschReqd
-        local advance = level_config.gbv.AutopsyRschPercent / 100 * required
-        -- Is generic research also focusing on this room?
-        local normal_points = 0
-        if self.research.cure.current.id == autopsy_room then
-          normal_points = self.research.cure.points
-        end
-        if value + advance + normal_points > required then
-          self:discoverRoom(room, "cure")
-        else
-          self.research_rooms[room] = value + advance
-        end
-      end
-    end
-  else
-    ---- General research ----
-    -- Divide the points into the different areas. If global is not at 100 % they are
-    -- lowered, but then cost is also lowered.
-    
-    points = math.ceil(points*self.research.global/(100*divisor))
-    -- It also costs to research.
-    -- TODO: This is now simply 3 monetary units per "research", what should it be?
-    self.acc_research_cost = self.acc_research_cost + math.ceil(3*self.research.global/(100))
-    
-    -- Divide the points into the different categories
-    for _, info in pairs(self.research) do
-      if type(info) == "table" then
-        info.points = info.points + points*info.frac/100
-      end
-    end
-    local areas = self.research
-    local config = self.world.map.level_config.expertise
-    
-    -- Do something if the number of points in a category is enough to get something out of it.
-    if areas.diagnosis.current then
-      -- At this point we know that a level config exists, otherwise all rooms would be available
-      local room = areas.diagnosis.current
-      local added_points = self.research_rooms[room]
-      local req = config[room.level_config_research].RschReqd
-      if req < areas.diagnosis.points + added_points then
-        areas.diagnosis.points = areas.diagnosis.points + added_points - req
-        self:discoverRoom(room, "diagnosis")
-      end
-    end
-    if areas.cure.current then
-      local room = areas.cure.current
-      -- Some extra points might have been added through for example the autopsy
-      local added_points = self.research_rooms[room]
-      local req = config[room.level_config_research].RschReqd
-      if req < areas.cure.points + added_points then
-        areas.cure.points = areas.cure.points + added_points - req
-        self:discoverRoom(room, "cure")
-      end
-    end
-  end
-end
-
---[[ When a new room is ready to be discovered, this function is called.
-Also announces through the adviser that the new room is available.
-!param room (room) The room to make available
-!param cat (string) One of "diagnosis" or "cure", the category from this
-room is.
-]]
-function Hospital:discoverRoom(room, cat)
-  self.discovered_rooms[room] = true
-  self.research_rooms[room] = nil
-  if self == self.world.ui.hospital then
-    self.world.ui.adviser:say(_S.adviser.research.new_machine_researched:format(room.name))
-  end
-  -- Find something new to research
-  local finished = true
-  local areas = self.research
-  for room, _ in pairs(self.research_rooms) do
-    if (cat == "diagnosis" and room.categories.diagnosis) 
-    or (cat == "cure" and not room.categories.diagnosis) then
-      areas[cat].current = room
-      finished = false
-      break
-    end
-  end
-  -- No more rooms to research in this category. Set the fraction of this area
-  -- to zero.
-  if finished then
-    areas[cat].current = nil
-    areas.global = areas.global - areas[cat].frac
-    areas[cat].frac = 0
-    if self == self.world.ui.hospital then
-      -- TODO: The original string contains a %-sign, format cannot handle it
-      --self.world.ui.adviser:say(_S.adviser.research.drug_fully_researched:
-      --:format(_S.research.categories.cure))
-    end
-  end
+  self.research = ResearchDepartment(self)
 end
 
 function Hospital:afterLoad(old, new)
@@ -307,6 +174,8 @@ function Hospital:afterLoad(old, new)
     self.opened = true
   end
   if old < 14 then
+    -- NOTE: This will no longer work, but cluttering the code with stub functions 
+    -- for this "old" compatibility, is it neccessary?
     self:_initResearch()
   end
   if old < 19 then
@@ -378,6 +247,66 @@ function Hospital:afterLoad(old, new)
       self.emergency.percentage = 0.75
     end
   end
+  if old < 33 then
+    -- Research has been revamped and expanded. Drugs and improvements
+    -- will work fine, but room research needs to be rebuilt.
+    local research = ResearchDepartment(self)
+    self.undiscovered_rooms = {}
+    local cure, diagnosis
+    local config = self.world.map.level_config.objects
+    for _, room in ipairs(self.world.available_rooms) do
+      -- If a room is discovered, make sure its objects are also 
+      -- discovered, otherwise add it to the undiscovered list.
+      if self.discovered_rooms[room] then
+        for name, _ in pairs(room.objects_needed) do
+          local object = TheApp.objects[name]
+          if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
+          and object.research_category 
+          and not research.research_progress[object].discovered then
+            local progress = self.research_rooms[room]
+            if self.research.cure.current == room 
+            or self.research.diagnosis.current == room then
+              progress = progress + self.research.diagnosis.points
+            end
+            research.research_progress[object].discovered = true
+            research.research_progress[object].points = progress
+          end
+        end
+      else
+        self.undiscovered_rooms[room] = true
+        if not cure or not diagnosis then
+          for name, _ in pairs(room.objects_needed) do
+            local object = TheApp.objects[name]
+            if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
+            and object.research_category 
+            and not research.research_progress[object].discovered then
+              if object.research_category == "cure" then
+                cure = object
+              elseif object.research_category == "diagnosis" then
+                diagnosis = object
+              end
+            end
+          end
+        end
+      end
+    end
+    research.research_policy.cure.current = cure
+    research.research_policy.diagnosis.current = diagnosis
+    self.research = research
+    self.research_rooms = nil
+    -- Cost of rooms has also been changed
+    local rooms = self.world.map.level_config.rooms
+    for i, room in ipairs(TheApp.rooms) do
+      -- Sum up the build cost of the room
+      local build_cost = rooms[room.level_config_id].Cost
+      for name, no in pairs(room.objects_needed) do
+        -- Add cost for this object.
+        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+      end
+      -- Now define the total build cost for the room.
+      room.build_cost = build_cost
+    end
+  end
 end
 
 function Hospital:tick()
@@ -446,6 +375,8 @@ end
 function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
   self.acc_loan_interest = self.acc_loan_interest + pay_this
+
+  self.research:researchCost()
 end
 
 -- Called at the end of each month.
@@ -459,13 +390,13 @@ function Hospital:onEndMonth()
     self:spendMoney(wages, _S.transactions.wages)
   end
   -- Pay interest on loans
-  if math.floor(self.acc_loan_interest+0.5) > 0 then
-    self:spendMoney(math.floor(self.acc_loan_interest+0.5), _S.transactions.loan_interest)
+  if math.round(self.acc_loan_interest) > 0 then
+    self:spendMoney(math.round(self.acc_loan_interest), _S.transactions.loan_interest)
     self.acc_loan_interest = 0
   end
   -- Pay research costs
-  if math.floor(self.acc_research_cost+0.5) > 0 then
-    self:spendMoney(math.floor(self.acc_research_cost+0.5), _S.transactions.research)
+  if math.round(self.acc_research_cost) > 0 then
+    self:spendMoney(math.round(self.acc_research_cost), _S.transactions.research)
     self.acc_research_cost = 0
   end
   -- add to score each month
@@ -502,7 +433,9 @@ function Hospital:onEndMonth()
   -- TODO: Should this also be on a per day basis "behind the scenes" as above?
   local radiators = self.world.object_counts.radiator
   local heating_costs = math.floor(((self.radiator_heat *10)* radiators)* 7.5)
-  self:spendMoney(heating_costs, _S.transactions.heating)
+  if heating_costs > 0 then
+    self:spendMoney(heating_costs, _S.transactions.heating)
+  end
 end
 
 --! Called at the end of each year
@@ -871,9 +804,8 @@ function Hospital:checkDiseaseRequirements(disease)
   local any = false
   for i, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
     local found = false
-    for _, room in ipairs(self.world.rooms) do
+    for _, room in pairs(self.world.rooms) do
       -- Check if room not yet present
-      print(room.hospital, room.room_info.id, "vs", self, room_id)
       if room.hospital == self and room.room_info.id == room_id then
         found = true
       end

@@ -161,7 +161,10 @@ function UIFax:choice(choice)
       local offer = self.ui.hospital.salary_offer
       local carry_to_next_level = {
         world = {room_built = self.ui.app.world.room_built},
-        hospital = {player_salary = offer},
+        hospital = {
+          player_salary = offer,
+          research_dep_built = self.ui.hospital.research_dep_built,
+        },
       }
       self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
       TheApp.world:initFromPreviousLevel(carry_to_next_level)

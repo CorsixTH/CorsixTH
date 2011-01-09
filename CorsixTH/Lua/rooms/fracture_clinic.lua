@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "fracture_clinic"
-room.level_config_id = 24
-room.level_config_research = 9
+room.level_config_id = 21
 room.class = "FractureRoom"
 room.name = _S.rooms_short.fracture_clinic
 room.tooltip = _S.tooltip.rooms.fracture_clinic
-room.build_cost = 2500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { cast_remover = 1 }
 room.build_preview_animation = 5072

@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "jelly_moulder"
 object.thob = 47
+object.research_category = "cure"
+object.research_fallback = 12
 object.name = _S.object.jelly_moulder
 object.tooltip = _S.tooltip.objects.jelly_moulder
 object.ticks = false

@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "cast_remover"
 object.thob = 24
+object.research_category = "cure"
+object.research_fallback = 9
 object.name = _S.object.cast_remover
 object.tooltip = _S.tooltip.objects.cast_remover
 object.ticks = false

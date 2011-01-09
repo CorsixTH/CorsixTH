@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "hair_restorer"
 object.thob = 25
+object.research_category = "cure"
+object.research_fallback = 10
 object.name = _S.object.hair_restorer
 object.tooltip = _S.tooltip.objects.hair_restorer
 object.ticks = false

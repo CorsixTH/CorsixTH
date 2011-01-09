@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "blood_machine"
 object.thob = 42
+object.research_fallback = 37
+object.research_category = "diagnosis"
 object.name = _S.object.blood_machine
 object.tooltip = _S.tooltip.objects.blood_machine
 object.ticks = false

@@ -21,6 +21,7 @@ SOFTWARE. --]]
 Language("Svenska", "Swedish", "sv", "swe")
 Inherit("english")
 Inherit("original_strings", 5)
+Encoding(utf8)
 
 -------------------------------  OVERRIDE  ----------------------------------
 object.reception_desk = "Reception"
@@ -56,6 +57,8 @@ tooltip.message.button = utf8 "Vänsterklicka för att öppna meddelandet"
 tooltip.message.button_dismiss = utf8 "Vänsterklicka för att öppna meddelandet, högerklicka för att ta bort det"
 tooltip.casebook.cure_requirement.hire_staff = utf8 "Du behöver anställa personal att hantera behandlingen"
 tooltip.casebook.cure_type.unknown = utf8 "Du vet ännu inte hur denna sjukdom botas"
+tooltip.research_policy.no_research = "Det pågår ingen forskning i den här kategorin just nu"
+tooltip.research_policy.research_progress = "Framsteg inför nästa upptäckt i denna kategori: %1%/%2%"
 
 menu_options = {
   lock_windows = utf8 "  LÅS FÖNSTER  ",
@@ -170,7 +173,7 @@ misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så
 
 main_menu = {
   new_game = "Nytt spel",
-  custom_level = utf8 "Specialnivå",
+  custom_level = "Specialnivå",
   load_game = "Ladda spel",
   options = "Alternativ",
   exit = "Avsluta",

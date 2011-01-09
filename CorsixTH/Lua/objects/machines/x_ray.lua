@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "x_ray"
 object.thob = 27
+object.research_category = "diagnosis"
+object.research_fallback = 39
 object.name = _S.object.x_ray
 object.tooltip = _S.tooltip.objects.x_ray
 object.ticks = false

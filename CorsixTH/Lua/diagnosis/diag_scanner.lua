@@ -24,5 +24,6 @@ disease.expertise_id = 36
 disease.name = _S.diseases.diag_scanner.name
 disease.cure_price = 300
 disease.pseudo = true
+disease.requires_machine = true
 
 return disease

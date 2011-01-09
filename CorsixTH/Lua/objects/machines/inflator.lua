@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "inflator"
 object.thob = 9
+object.research_category = "cure"
+object.research_fallback = 2
 object.name = _S.object.inflator
 object.tooltip = _S.tooltip.objects.inflator
 object.ticks = false

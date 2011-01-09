@@ -20,10 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "staff_room"
+room.level_config_id = 25
 room.class = "StaffRoom"
 room.name = _S.rooms_short.staffroom
 room.tooltip = _S.tooltip.rooms.staffroom
-room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "sofa", "pool_table", "tv", "video_game" }
 room.objects_needed = { sofa = 1 }
 room.build_preview_animation = 5066

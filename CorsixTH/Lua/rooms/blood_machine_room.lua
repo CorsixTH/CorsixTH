@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "blood_machine"
-room.level_config_id = 42
-room.level_config_research = 37
+room.level_config_id = 15
 room.class = "BloodMachineRoom"
 room.name = _S.rooms_short.blood_machine
 room.tooltip = _S.tooltip.rooms.blood_machine
-room.build_cost = 6000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { blood_machine = 1 }
 room.build_preview_animation = 5094

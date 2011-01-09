@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "computer"
 object.thob = 40
+object.research_category = "cure"
+object.research_fallback = 46
 object.name = _S.object.computer
 object.tooltip = _S.tooltip.objects.computer
 object.ticks = false

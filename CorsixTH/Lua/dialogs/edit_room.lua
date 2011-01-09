@@ -466,25 +466,32 @@ function UIEditRoom:purchaseItems()
 
   local object_list = {} -- transform set to list
   for i, o in ipairs(self.room.room_info.objects_additional) do
-    -- look up current quantity
-    local cur_qty = 0
-    for j, p in ipairs(self.objects) do
-      if p.object.id == o then
-        cur_qty = p.qty
+    -- Don't show the object if it hasn't been researched yet.
+    local object = TheApp.objects[o]
+    local research = self.ui.hospital.research
+    local avail = research.level_config.objects[object.thob].AvailableForLevel
+    if avail == 1 and (not research.research_progress[object] 
+    or research.research_progress[object].discovered) then
+      -- look up current quantity
+      local cur_qty = 0
+      for j, p in ipairs(self.objects) do
+        if p.object.id == o then
+          cur_qty = p.qty
+        end
       end
-    end
-    
-    -- look up minimum quantity (required objects list)
-    local min_qty = self.room.room_info.objects_needed[o] or 0
-    
-    -- subtract number of objects in room from minimum quantity
-    for obj, _ in pairs(self.room.objects) do
-      if min_qty == 0 then break end
-      if obj.object_type.id == o then
-        min_qty = min_qty - 1
+      
+      -- look up minimum quantity (required objects list)
+      local min_qty = self.room.room_info.objects_needed[o] or 0
+      
+      -- subtract number of objects in room from minimum quantity
+      for obj, _ in pairs(self.room.objects) do
+        if min_qty == 0 then break end
+        if obj.object_type.id == o then
+          min_qty = min_qty - 1
+        end
       end
+      object_list[i] = { object = TheApp.objects[o], qty = cur_qty, min_qty = min_qty }
     end
-    object_list[i] = { object = TheApp.objects[o], qty = cur_qty, min_qty = min_qty }
   end
   
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))

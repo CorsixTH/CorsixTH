@@ -30,6 +30,12 @@ local research_categories = {
   "specialisation",
 }
 
+local col_bg = {
+  red = 24,
+  green = 24,
+  blue = 20,
+}
+
 function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
@@ -47,42 +53,75 @@ function UIResearch:UIResearch(ui)
   end
   
   self.hospital = ui.hospital
+  self.research = ui.hospital.research
   
   -- stubs for backwards compatibility
   local --[[persistable:research_policy_adjust]] function adjust(name) end
   local --[[persistable:research_less_stub]] function less_stub() end
   local --[[persistable:research_more_stub]] function more_stub() end
   
-  local function handler_factory(area, mode)
-    return --[[persistable:research_policy_adjust_handler]] function(self)
-      self:adjustResearch(area, mode)
-    end
-  end
-  
-  -- Buttons
-  local topy = 21
-  local spacing = 41
-  local c1 = 372
-  local c2 = 450
-  local size = 40
-  self:addPanel(0, 607, 447):makeButton(0, 0, size, size, 4, self.close):setTooltip(_S.tooltip.research.close)
-  
+  -- Close button
+  self:addPanel(0, 607, 447):makeButton(0, 0, 40, 40, 4, self.close):setTooltip(_S.tooltip.research.close)
   self.adjust_buttons = {}
-  for i, area in ipairs(research_categories) do
-    self.adjust_buttons[area] = {
-      less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")),
-      more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")),
-    }
-  end
+  self:updateCategories()
   
   self.waterclk = 0
   self.ratclk = 0
   self.waterpanel= self:addPanel(5, 2, 312)
   self.ratpanel= self:addPanel(13, 480, 365)
+
+  -- Add tooltips to progress of research.
+  -- TODO: Make them change over time.
+  local research = self.research.research_policy
+  local lx = 165
+  local ly = 60
+  for i, category in ipairs(research_categories) do
+    if research[category].current 
+    and not research[category].current.dummy then
+      local required = self.research:getResearchRequired(research[category].current)
+      local available = self.research.research_progress[research[category].current].points
+      self:makeTooltip(_S.tooltip.research_policy.research_progress
+      :format(math.round(available), required), lx, ly, lx + 315, ly + 41)
+    else
+      self:makeTooltip(_S.tooltip.research_policy.no_research, lx, ly, lx + 315, ly + 41)
+    end
+    ly = ly + 41
+  end
+end
+
+function UIResearch:updateCategories()
+  -- Buttons to increase/decrease percentages
+  local size = 40
+  local topy = 21
+  local spacing = 41
+  local c1 = 372
+  local c2 = 450
+  
+  local function handler_factory(area, mode)
+    return --[[persistable:research_policy_adjust_handler]] function(self)
+      self:adjustResearch(area, mode)
+    end
+  end
+
+  for i, area in ipairs(research_categories) do
+    local current = self.hospital.research.research_policy[area].current
+    if current then
+      self.adjust_buttons[area] = {
+        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")),
+        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")),
+      }
+    else
+      if self.adjust_buttons[area] then
+        self.adjust_buttons[area].less.enabled = false
+        self.adjust_buttons[area].more.enabled = false
+      end
+      self:addColourPanel(c1, topy+i*spacing, 120, 30, col_bg.red, col_bg.green, col_bg.blue)
+    end
+  end
 end
 
 function UIResearch:adjustResearch(area, mode)
-  local hosp = self.hospital
+  local res = self.research
   local amount = 1
   if self.buttons_down.ctrl then
     amount = amount * 20
@@ -90,25 +129,25 @@ function UIResearch:adjustResearch(area, mode)
     amount = amount * 5
   end
   if mode == "less" then
-    if hosp.research[area].frac > 0 then
-      hosp.research[area].frac = math.max(0, hosp.research[area].frac - amount)
+    if res.research_policy[area].frac > 0 then
+      res.research_policy[area].frac = math.max(0, res.research_policy[area].frac - amount)
       self.ui:playSound("selectx.wav")
     else
       self.ui:playSound("Wrong2.wav")
     end
   elseif mode == "more" then
-    if hosp.research.global < 100 and hosp.research[area].current then
-      hosp.research[area].frac = hosp.research[area].frac +
-        math.min(amount, 100 - hosp.research.global)
+    if res.research_policy.global < 100 and res.research_policy[area].current then
+      res.research_policy[area].frac = res.research_policy[area].frac +
+        math.min(amount, 100 - res.research_policy.global)
       self.ui:playSound("selectx.wav")
     else
       self.ui:playSound("Wrong2.wav")
     end
   end
   
-  hosp.research.global = 0
+  res.research_policy.global = 0
   for _, category in ipairs(research_categories) do
-    hosp.research.global = hosp.research.global + hosp.research[category].frac
+    res.research_policy.global = res.research_policy.global + res.research_policy[category].frac
   end
 end
 
@@ -150,19 +189,23 @@ function UIResearch:draw(canvas, x, y)
   local ytop = 28
   local spacing = 41
   local config = self.hospital.world.map.level_config
-  local research = self.hospital.research
+  local research = self.research.research_policy
   
   for i, category in ipairs(research_categories) do
     local y = y + ytop + i * spacing
     lbl_font:draw(canvas, _S.research.categories[category], x + 170, y)
-    num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
-    -- Display research progress  - currently for rooms only.
-    if (i == 1 or i == 2) and config and research[category].current then
+    if not research[category].current then
+      num_font:draw(canvas, _S.misc.done, x + 270, y, 300, 0)
+    else
+      num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
+    end
+    -- Display research progress.
+    if research[category].current 
+    and not research[category].current.dummy then
       local ly = y + 26
       local lx = x + 172
-      local required = config.expertise[research[category].current.level_config_research].RschReqd
-      local extra_points = self.hospital.research_rooms[research[category].current]
-      local available = research[category].points + extra_points
+      local required = self.research:getResearchRequired(research[category].current)
+      local available = self.research.research_progress[research[category].current].points
       local length = 290*available/required
       local dx = 0
       while dx + 10 < length do
@@ -172,7 +215,7 @@ function UIResearch:draw(canvas, x, y)
     end
   end
   
-  num_font:draw(canvas, self.hospital.research.global, x + 270, y + 288, 300, 0)
+  num_font:draw(canvas, research.global, x + 270, y + 288, 300, 0)
 end
 
 function UIResearch:afterLoad(old, new)

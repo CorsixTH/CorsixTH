@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "cardio"
 object.thob = 13
+object.research_fallback = 38
+object.research_category = "diagnosis"
 object.name = _S.object.cardio
 object.tooltip = _S.tooltip.objects.cardio
 object.ticks = false

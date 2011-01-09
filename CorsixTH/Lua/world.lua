@@ -32,6 +32,7 @@ dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
 dofile "calls_dispatcher"
+dofile "research_department"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -80,19 +81,18 @@ function World:World(app)
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
-  self:initLevel(app)
   self.room_build_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
-
+  
+  self:initLevel(app)
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
-  for _, hospital in ipairs(self.hospitals) do
-    self:initDiscoveredRooms(hospital)
-  end
+  self:initRooms()
+
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
   self:initStaff()
@@ -185,18 +185,17 @@ function World:initLevel(app)
   if added_diseases == 0 then
     print("Warning: This level does not contain any diseases")
   end
-  -- Determine available rooms from their required objects
-  self.available_rooms = {} -- Combination of set and list. Use ipairs to iterate through all available rooms.
-  local obj = level_config.objects
-  for i, room in ipairs(app.rooms) do
-    local avail = 1
-    if obj and room.level_config_id and obj[room.level_config_id] then
-      avail = obj[room.level_config_id].AvailableForLevel
+  -- Alter build cost for all objects based on the current level.
+  -- This does in practise make object.build_cost obsolete,
+  -- but it will remain for now to avoid too many complications.
+  -- TODO: Remove object.build_cost from all objects.
+  local config = self.map.level_config.objects
+  for _, object in ipairs(app.objects) do
+    local cost = 0
+    if config[object.thob] then
+      cost = config[object.thob].StartCost
     end
-    if avail == 1 then
-      self.available_rooms[#self.available_rooms + 1] = room
-      self.available_rooms[room.id] = room
-    end
+    object.build_cost = cost
   end
   self:determineWinningConditions()
 end
@@ -305,31 +304,50 @@ function World:determineWinningConditions()
   self.winning_goals = total
 end
 
-function World:initDiscoveredRooms(hospital)
+function World:initRooms()
+  -- Combination of set and list. Use ipairs to iterate through all available rooms.
+  self.available_rooms = {}
+  
   local obj = self.map.level_config.objects
-  -- While at it, also determine what rooms will be next to research
-  local next_cure
-  local next_diag
-  for _, room in ipairs(self.available_rooms) do
+  local rooms = self.map.level_config.rooms
+  for i, room in ipairs(TheApp.rooms) do
+    -- Add build cost based on level files for all rooms.
+    -- For now, sum it up so that the result is the same as before.
+    -- TODO: Change the whole build process so that this value is 
+    -- the room cost only? (without objects)
+    local build_cost = rooms[room.level_config_id].Cost
+    local available = true
     local is_discovered = true
-    if obj and room.level_config_id and obj[room.level_config_id] then
-      is_discovered = obj[room.level_config_id].StartAvail == 1
-    end
-    if is_discovered then
-      hospital.discovered_rooms[room] = true
-    else
-      -- Not discovered, let it be researched instead.
-      hospital.research_rooms[room] = 0
-      if room.categories.diagnosis then
-        next_diag = room
-      elseif room.categories.treatment or room.categories.clinics then
-        next_cure = room
+    -- Make sure that all objects needed for this room are available
+    for name, no in pairs(room.objects_needed) do
+      local spec = obj[TheApp.objects[name].thob]
+      if spec.AvailableForLevel == 0 then
+        -- It won't be possible to build this room at all on the level.
+        available = false
+      elseif spec.StartAvail == 0 then
+        -- Ok, it will be availabe at some point just not from the beginning.
+        is_discovered = false
       end
-      -- NB: cannot research facilities (that is, training room)
+      -- Add cost for this object.
+      build_cost = build_cost + obj[TheApp.objects[name].thob].StartCost * no
+    end
+    -- Now define the total build cost for the room.
+    room.build_cost = build_cost
+    if available then
+      self.available_rooms[#self.available_rooms + 1] = room
+      self.available_rooms[room.id] = room
+      
+      if is_discovered then
+        for _, hospital in ipairs(self.hospitals) do
+          hospital.discovered_rooms[room] = true
+        end
+      else
+        for _, hospital in ipairs(self.hospitals) do
+          hospital.undiscovered_rooms[room] = true
+        end
+      end
     end
   end
-  -- Let the hospital initialize its research department
-  hospital:_initResearch(next_diag, next_cure)
 end
 
 function World:initCompetitors()
@@ -798,7 +816,7 @@ function World:onEndDay()
           disease = disease,
           victims = math.random(control.Min, control.Max),
           bonus = control.Bonus,
-          percentage = control.PercWin,
+          percentage = control.PercWin/100,
           killed_emergency_patients = 0,
           cured_emergency_patients = 0,
         }

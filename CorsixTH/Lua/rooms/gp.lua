@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "gp"
-room.level_config_id = 6
-room.level_config_research = 1
+room.level_config_id = 7
 room.class = "GPRoom"
 room.name = _S.rooms_short.gps_office
 room.tooltip = _S.tooltip.rooms.gps_office
-room.build_cost = 2500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { desk = 1, cabinet = 1, chair = 1 }
 room.build_preview_animation = 900
@@ -140,24 +138,7 @@ function GPRoom:dealtWithPatient(patient)
       self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
-        -- Generate a message about the discovery
-        local message = {
-          {text = _S.fax.disease_discovered.discovered_name:format(patient.disease.name)},
-          {text = patient.disease.cause, offset = 12},
-          {text = patient.disease.symptoms, offset = 12},
-          {text = patient.disease.cure, offset = 12},
-          choices = {
-            {text = _S.fax.disease_discovered.close_text, choice = "close"},
-          },
-        }
-        self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
-        self.hospital.disease_casebook[patient.disease.id].discovered = true
-        self.hospital.discovered_diseases[#self.hospital.discovered_diseases + 1] = patient.disease.id
-        -- If the drug casebook is open, update it.
-        local window = self.world.ui:getWindow(UICasebook)
-        if window then
-          window:updateDiseaseList()
-        end
+        self.hospital.research:discoverDisease(patient.disease)
       end
     elseif #patient.available_diagnosis_rooms == 0 then
       -- The very rare case where the patient has visited all his/her possible diagnosis rooms

@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "ultrascanner"
 object.thob = 22
+object.research_category = "diagnosis"
+object.research_fallback = 40
 object.name = _S.object.ultrascanner
 object.tooltip = _S.tooltip.objects.ultrascanner
 object.ticks = false

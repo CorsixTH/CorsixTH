@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "electrolysis"
-room.level_config_id = 46
-room.level_config_research = 3
+room.level_config_id = 23
 room.class = "ElectrolysisRoom"
 room.name = _S.rooms_short.electrolysis
 room.tooltip = _S.tooltip.rooms.electrolysis
-room.build_cost = 7000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { electrolyser = 1, console = 1 }
 room.build_preview_animation = 930

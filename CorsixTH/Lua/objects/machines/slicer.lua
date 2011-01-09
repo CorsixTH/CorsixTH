@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "slicer"
 object.thob = 26
+object.research_category = "cure"
+object.research_fallback = 7
 object.name = _S.object.slicer
 object.tooltip = _S.tooltip.objects.slicer
 object.ticks = false

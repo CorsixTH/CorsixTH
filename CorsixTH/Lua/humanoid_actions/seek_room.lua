@@ -154,7 +154,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     if humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
       middle_choice = "guess_cure"
       more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
-        :format(humanoid.diagnosis_progress*100, humanoid.disease.name)
+        :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)
     end
     local message = {
       {text = _S.fax.diagnosis_failed.situation},

@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "cardiogram"
-room.level_config_id = 13
-room.level_config_research = 38
+room.level_config_id = 12
 room.class = "CardiogramRoom"
 room.name = _S.rooms_short.cardiogram
 room.tooltip = _S.tooltip.rooms.cardiogram
-room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { cardio = 1, screen = 1 }
 room.build_preview_animation = 918

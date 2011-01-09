@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "autopsy"
 object.thob = 55
+object.research_category = "cure"
 object.name = _S.object.auto_autopsy
 object.tooltip = _S.tooltip.objects.auto_autopsy
 object.ticks = true

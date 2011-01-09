@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "x_ray"
-room.level_config_id = 27
-room.level_config_research = 39
+room.level_config_id = 16
 room.class = "XRayRoom"
 room.name = _S.rooms_short.x_ray
 room.tooltip = _S.tooltip.rooms.x_ray
-room.build_cost = 8000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { x_ray = 1, radiation_shield = 1 }
 room.build_preview_animation = 5076

@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "pharmacy"
-room.level_config_id = 39
-room.level_config_research = 16 -- uncommon cold. TODO: figure out how to do this better
+room.level_config_id = 11
 room.class = "PharmacyRoom"
 room.name = _S.rooms_short.pharmacy
 room.tooltip = _S.tooltip.rooms.pharmacy
-room.build_cost = 1500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { pharmacy_cabinet = 1 }
 room.build_preview_animation = 5088
@@ -45,6 +43,13 @@ class "PharmacyRoom" (Room)
 
 function PharmacyRoom:PharmacyRoom(...)
   self:Room(...)
+end
+
+function PharmacyRoom:roomFinished()
+  if not self.hospital:hasStaffOfCategory("Nurse") then
+    self.world.ui.adviser:say(_S.adviser.room_requirements.pharmacy_need_nurse)
+  end
+  return Room.roomFinished(self)
 end
 
 function PharmacyRoom:commandEnteringStaff(staff)

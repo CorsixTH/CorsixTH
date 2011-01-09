@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "psych"
-room.level_config_id = 18
-room.level_config_research = 43
+room.level_config_id = 8
 room.class = "PsychRoom"
 room.name = _S.rooms_short.psychiatric
 room.tooltip = _S.tooltip.rooms.psychiatry
-room.build_cost = 2500
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bookcase", "skeleton" }
 room.objects_needed = { screen = 1, couch = 1, comfortable_chair = 1 }
 room.build_preview_animation = 924
@@ -46,6 +44,14 @@ class "PsychRoom" (Room)
 
 function PsychRoom:PsychRoom(...)
   self:Room(...)
+end
+
+function PsychRoom:roomFinished()
+  if not self.hospital:hasStaffOfCategory("Psychiatrist") then
+    self.world.ui.adviser
+    :say(_S.adviser.room_requirements.psychiatry_need_psychiatrist)
+  end
+  return Room.roomFinished(self)
 end
 
 function PsychRoom:commandEnteringStaff(staff)

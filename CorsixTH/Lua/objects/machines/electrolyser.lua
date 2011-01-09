@@ -21,6 +21,8 @@ SOFTWARE. --]]
 local object = {}
 object.id = "electrolyser"
 object.thob = 46
+object.research_category = "cure"
+object.research_fallback = 3
 object.name = _S.object.electrolyser
 object.tooltip = _S.tooltip.objects.electrolyser
 object.ticks = false

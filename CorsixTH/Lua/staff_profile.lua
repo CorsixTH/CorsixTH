@@ -74,8 +74,6 @@ local function our_concat(t)
   local result = ""
   for _, s in ipairs(t) do
     result = result .. s
-    print(result)
-    print(type(result))
   end
   return result
 end

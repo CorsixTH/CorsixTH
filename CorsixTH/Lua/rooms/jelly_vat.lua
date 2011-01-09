@@ -20,12 +20,10 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "jelly_vat"
-room.level_config_id = 47
-room.level_config_research = 12
+room.level_config_id = 24
 room.class = "JellyVatRoom"
 room.name = _S.rooms_short.jelly_vat
 room.tooltip = _S.tooltip.rooms.jelly_vat
-room.build_cost = 11000
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { jelly_moulder = 1 }
 room.build_preview_animation = 928
