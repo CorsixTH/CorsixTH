@@ -139,8 +139,8 @@ end
 function UICheats:cheatResearch()
   local hosp = self.ui.hospital
   for _, cat in ipairs({"diagnosis", "cure"}) do
-    while hosp.research[cat].current do
-      hosp:discoverRoom(hosp.research[cat].current, cat)
+    while hosp.research.research_policy[cat].current do
+      hosp.research:discoverObject(hosp.research.research_policy[cat].current)
     end
   end
 end

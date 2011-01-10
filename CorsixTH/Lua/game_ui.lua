@@ -843,7 +843,14 @@ function GameUI:afterLoad(old, new)
     self:setRandomAnnouncementTarget()
     self.ticks_since_last_announcement = 0
   end
-  
+  if old < 34 then
+    self.adviser.queued_messages = {}
+    self.adviser.phase = 0
+    self.adviser.timer = nil
+    self.adviser.frame = 1
+    self.adviser.number_frames = 4
+  end
+
   return UI.afterLoad(self, old, new)
 end
 

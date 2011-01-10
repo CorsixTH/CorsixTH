@@ -45,6 +45,7 @@ function Hospital:Hospital(world)
   self.loan = 0
   self.acc_loan_interest = 0
   self.acc_research_cost = 0
+  self.acc_overdraft = 0
   self.discover_autopsy_risk = 10
   self.initial_grace = true
   
@@ -307,6 +308,10 @@ function Hospital:afterLoad(old, new)
       room.build_cost = build_cost
     end
   end
+  if old < 34 then
+    -- New variable
+    self.acc_overdraft = 0
+  end
 end
 
 function Hospital:tick()
@@ -377,6 +382,14 @@ function Hospital:onEndDay()
   self.acc_loan_interest = self.acc_loan_interest + pay_this
 
   self.research:researchCost()
+
+  if self.balance < 0 then
+    -- TODO: Add the extra interest rate to level configuration.
+    local overdraft_interest = self.interest_rate + 0.02
+    local overdraft = math.abs(self.balance)
+    local overdraft_payment = (overdraft*overdraft_interest)/365
+    self.acc_overdraft = self.acc_overdraft + overdraft_payment
+  end
 end
 
 -- Called at the end of each month.
@@ -393,6 +406,11 @@ function Hospital:onEndMonth()
   if math.round(self.acc_loan_interest) > 0 then
     self:spendMoney(math.round(self.acc_loan_interest), _S.transactions.loan_interest)
     self.acc_loan_interest = 0
+  end
+  -- Pay overdraft charges 
+  if math.round(self.acc_overdraft) > 0 then
+    self:spendMoney(math.round(self.acc_overdraft), _S.transactions.overdraft)
+    self.acc_overdraft = 0
   end
   -- Pay research costs
   if math.round(self.acc_research_cost) > 0 then

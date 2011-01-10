@@ -45,6 +45,9 @@ confirmation.restart_level = "Are you sure you want to restart the level?"
 -- TODO adviser.multiplayer.objective_completed
 -- TODO adviser.multiplayer.objective_failed
 
+-- A small error in the introduction text of level 2
+introduction_texts.level2[6] = "Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",

@@ -124,7 +124,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   -- Either the patient is no longer sick, or he/she dies.
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) >= cure_chance then
+  if self.die_anims and math.random(1, 100) > cure_chance then
     self:die()
   else 
     if hospital.num_cured < 1 then
