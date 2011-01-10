@@ -124,7 +124,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   -- Either the patient is no longer sick, or he/she dies.
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) > cure_chance then
+  if self.die_anims and math.random(1, 100) >= cure_chance then
     self:die()
   else 
     if hospital.num_cured < 1 then
@@ -238,8 +238,8 @@ function Patient:tickDay()
   end
   
   -- Each tick both thirst, warmth and toilet_need changes.
-  self:changeAttribute("thirst", self.attributes["warmth"]*0.005+0.002*math.random() + 0.002)
-  self:changeAttribute("toilet_need", 0.003*math.random() + 0.001)
+  self:changeAttribute("thirst", self.attributes["warmth"]*0.01+0.004*math.random() + 0.004)
+  self:changeAttribute("toilet_need", 0.006*math.random() + 0.002)
   
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.8 then

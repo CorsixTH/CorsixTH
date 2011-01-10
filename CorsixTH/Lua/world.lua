@@ -1144,18 +1144,29 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
   return objects
 end
 
+--[[ Find all objects of the given type near the humanoid.
+Note that regardless of distance, only the room which the humanoid is in
+is searched (or the corridor if the humanoid is not in a room).
+
+When no callback is specified then the first object found is returned, 
+along with its usage tile position. This may return an object already being
+used - if you want to find an object not in use (in order to use it),
+then call findFreeObjectNearToUse instead.
+
+!param humanoid The humanoid to search around
+!param object_type_name The objects to search for
+!param distance Maximum L1 distance to search from humanoid. If nil then
+       everywhere in range will be searched.
+!param callback Function to call for each result. If it returns true then
+       the search will be ended.
+--]]
 function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if not distance then
-    -- Note that regardless of distance, only the room which the humanoid is in
-    -- is searched (or the corridor if the humanoid is not in a room).
     distance = 2^30
   end
   local obj, ox, oy
   if not callback then
-    -- The default callback returns the first object found, along with its
-    -- usage tile position. Note that this may return an object already being
-    -- used - if you want to find an object not in use (in order to use it),
-    -- then call findFreeObjectNearToUse instead.
+    -- The default callback returns the first object found
     callback = function(x, y, d)
       obj = self:getObject(x, y, object_type_name)
       local orientation = obj.object_type.orientations

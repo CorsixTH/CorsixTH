@@ -37,15 +37,16 @@ function Staff:tickDay()
   -- If this is a researcher in the research department some research has 
   -- been done during the day.
   local room = self:getRoom()
-  if room and room.room_info.id == "research" and self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 
-  and self.hospital then
+  if room and room.room_info.id == "research" and self.humanoid_class == "Doctor"
+  and self.profile.is_researcher >= 1.0 and self.hospital then
     -- TODO: Balance value further how much skill is a factor.
     -- This value is good for a medium researcher.
     self.hospital.research:addResearchPoints(1550 + 1000*self.profile.skill)
   end
   -- Is this a doctor in the training room with a consultant?
   local room = self:getRoom()
-  if room and room.room_info.id == "training" and room.staff_member and self.action_queue[1].name == "use_object"
+  if room and room.room_info.id == "training" and room.staff_member
+  and self.action_queue[1].name == "use_object"
   and self.action_queue[1].object.object_type.id == "lecture_chair" then
     -- increase skills based upon what the consultant knows
     -- TODO: possibly adjust based upon consultant's skill level? multiply by
@@ -64,16 +65,16 @@ function Staff:tickDay()
     
     local factor = room:getTrainingFactor()
     if room.staff_member.profile.is_surgeon >= 1.0 then
-      self:updateSkill(room.staff_member, "is_surgeon", 0.05*factor/surg_thres)
+      self:updateSkill(room.staff_member, "is_surgeon", 0.1*factor/surg_thres)
     end
     if room.staff_member.profile.is_psychiatrist >= 1.0 then
-      self:updateSkill(room.staff_member, "is_psychiatrist", 0.05*factor/psych_thres)
+      self:updateSkill(room.staff_member, "is_psychiatrist", 0.1*factor/psych_thres)
     end
     if room.staff_member.profile.is_researcher >= 1.0 then
-      self:updateSkill(room.staff_member, "is_researcher", 0.05*factor/res_thres)
+      self:updateSkill(room.staff_member, "is_researcher", 0.1*factor/res_thres)
     end
 
-    self:updateSkill(room.staff_member, "skill", 0.0002*factor)
+    self:updateSkill(room.staff_member, "skill", 0.0004*factor)
   end
 end
 
@@ -267,28 +268,21 @@ function Staff:updateStaffTitle()
       number = number + 1
     end
     if profile.is_surgeon >= 1.0 then
-      if professions then
-        professions = professions .. _S.staff_title.surgeon .. " "
-      else
-        professions = _S.staff_title.surgeon -- is this case actually needed?
-      end
+      professions = professions .. _S.staff_title.surgeon .. " "
       number = number + 1
     end
     if profile.is_psychiatrist >= 1.0 then
       if number < 3 then
-        if professions then
-          professions = professions .. _S.staff_title.psychiatrist
-        else
-          professions = _S.staff_title.psychiatrist -- is this case actually needed?
-        end
+        professions = professions .. _S.staff_title.psychiatrist
       else
         professions = professions .. _S.dynamic_info.staff.psychiatrist_abbrev
       end
     end
     
-    if professions ~= "" then
-      self.profile.profession = professions
+    if professions == "" then
+      professions = _S.staff_title.doctor
     end
+    self.profile.profession = professions
   end
 end
 
@@ -376,7 +370,7 @@ function Staff:onPlaceInCorridor()
         local use_x, use_y = obj:getSecondaryUsageTile()
         self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
         self:queueAction{name = "staff_reception", object = obj, must_happen = true}
-        return
+        return true
       end
     end)
   end
