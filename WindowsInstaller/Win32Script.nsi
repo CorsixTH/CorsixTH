@@ -1,4 +1,4 @@
-; Copyright (c) 2010 Edvin "Lego3" Linge
+﻿; Copyright (c) 2010 Edvin "Lego3" Linge
 
 ; Permission is hereby granted, free of charge, to any person obtaining a copy of
 ; this software and associated documentation files (the "Software"), to deal in
@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "beta 4"
+!define PRODUCT_VERSION "Trunk Version"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -102,8 +102,11 @@ Icon "..\CorsixTH\corsixTH.ico"
 !insertmacro MUI_LANGUAGE "Italian"
 !insertmacro MUI_LANGUAGE "Norwegian"
 !insertmacro MUI_LANGUAGE "Portuguese"
+!insertmacro MUI_LANGUAGE "Russian"
+!insertmacro MUI_LANGUAGE "SimpChinese"
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "Swedish"
+!insertmacro MUI_LANGUAGE "TradChinese"
 
 ; MUI end ------
 
