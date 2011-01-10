@@ -42,6 +42,8 @@ tooltip.message.button = "Click sinistro per aprire il messaggio"
 tooltip.message.button_dismiss = "Click sinistro per aprire il messaggio, click destro per eliminarlo"
 tooltip.casebook.cure_requirement.hire_staff = "Hai bisogno di assumere personale per somministrare questa cura"
 tooltip.casebook.cure_type.unknown = "Ancora non sei a conoscenza di un modo per curare questa malattia"
+tooltip.research_policy.no_research = utf8 "Non c'è nessuna ricerca in corso in questa categoria al momento"
+tooltip.research_policy.research_progress = "Progresso verso una nuova scoperta in questa categoria: %1%/%2%"
 
 menu_options = {
   lock_windows = "  BLOCCA FINESTRE  ",

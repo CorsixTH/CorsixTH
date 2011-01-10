@@ -128,6 +128,7 @@ function Machine:createHandymanActions(handyman)
       action_use.prolonged_usage = false
     end,
     after_use = after_use,
+    min_length = 20,
   }
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())

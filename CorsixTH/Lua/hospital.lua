@@ -636,11 +636,16 @@ function Hospital:receiveMoneyForTreatment(patient)
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage
+-- Treatment charge should never be less than the starting price if reputation falls below 500
 function Hospital:getTreatmentPrice(disease)
   local reputation = self.disease_casebook[disease].reputation or self.reputation
   local percentage = self.disease_casebook[disease].price
   local raw_price  = self.disease_casebook[disease].disease.cure_price
-  return math.ceil(raw_price * (reputation / 500) * percentage)
+  if reputation >= 500 then
+    return math.ceil(raw_price * (reputation / 500) * percentage)
+  else
+    return math.ceil(raw_price * percentage)
+  end
 end
 
 function Hospital:addInsuranceMoney(company, amount)

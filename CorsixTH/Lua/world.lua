@@ -832,14 +832,19 @@ end
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
   -- Check if a player has won the level.
-  for i = 1,4 do
-    local res = self:checkWinningConditions(i)
-    if res.state == "win" then
-      self:winGame(i)
-    elseif res.state == "lose" then
-      self:loseGame(i, res.reason, res.limit)
-      if i == 1 then
-        return true
+  -- TODO.... this is a step closer to the way TH would check.
+  -- What is missing is that if offer is declined then the next check should be
+  -- either 6 months later or at the end of month 12 and then every 6 months
+  if self.month % 3 == 0 then
+    for i = 1,4 do
+      local res = self:checkWinningConditions(i)
+      if res.state == "win" then
+        self:winGame(i)
+      elseif self.month == 12 and res.state == "lose" then
+        self:loseGame(i, res.reason, res.limit)
+        if i == 1 then
+          return true
+        end
       end
     end
   end

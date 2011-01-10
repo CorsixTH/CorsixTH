@@ -87,7 +87,7 @@ object.multi_usage_animations = {
   },
 }
 object.usage_animations = copy_north_to_south {
-  north = {in_use = {["Handyman"] = 3498}} -- 3484 too...
+  north = {in_use = {["Handyman"] = {3498, 3484}}}
 }
 
 object.orientations = {
