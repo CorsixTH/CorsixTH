@@ -208,7 +208,9 @@ dynamic_info.staff.actions.heading_for = "På vej til %s"
 dynamic_info.staff.actions.fired = "Fyret"
 
 -- 7. Tooltip
-tooltip.objects.litter = "Skrald: Smidt af dine patienter da de ikke kunne finde en skraldespand"
+tooltip.research_policy.no_research = utf8 "Der forskes ikke på nuværrende tidspunkt i dette område"
+tooltip.research_policy.research_progress = utf8 "Fremskidtet mod den næste opdagelse indenfor dette område: %1%/%2%"
+tooltip.objects.litter = utf8 "Skrald: Smidt af dine patienter da de ikke kunne finde en skraldespand"
 -- Misc
 misc.not_yet_implemented = "(ikke implanteret endnu)"
 misc.no_heliport = "Enten er der ikke blevet opdaget nogen sygdomme endnu, ellers er der ingen helicopter plads på denne bane."
