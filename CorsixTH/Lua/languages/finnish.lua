@@ -339,6 +339,11 @@ tooltip = {
       unknown = utf8 "Et vielä tiedä, miten tätä tautia pitää hoitaa",
     },
   },
+
+  research_policy = {
+    no_research         = utf8 "Tämän aiheen parissa ei tehdä tutkimusta tällä hetkellä",
+    research_progress   = utf8 "Edistyminen kohti seuraavaa löytöä tällä aihealueella: %1%/%2%",
+  },
 }
 
 -- 7. Letter
@@ -1361,12 +1366,12 @@ trophy_room = {
 -- Casebook screen
 casebook = {
   reputation            = utf8 "maine",
-  treatment_charge      = utf8 "hoidon kustannukset",
+  treatment_charge      = utf8 "hoidon hinta",
   earned_money          = utf8 "tulot yhteensä",
   cured                 = utf8 "parannettuja",
-  deaths                = utf8 "kuolemantapauksia",
+  deaths                = utf8 "kuolleita",
   sent_home             = utf8 "kotiin lähetettyjä",
-  research              = utf8 "tutkittavaksi lähetettyjä",
+  research              = utf8 "kohdista tutkimusta",
   cure                  = utf8 "hoito",
   cure_desc = {
     build_room          = utf8 "Tarvitset huoneen: %s", -- %s (room name)
