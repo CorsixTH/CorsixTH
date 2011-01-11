@@ -34,6 +34,9 @@ class "ResearchDepartment"
 function ResearchDepartment:ResearchDepartment(hospital)
   self.hospital = hospital
   self.world = hospital.world
+  -- This list contains a lot of information.
+  -- Progress of object discovery, object improvement, drug improvement
+  -- dito costs and room build costs.
   self.research_progress = {}
   self.level_config = hospital.world.map.level_config
   self:initResearch()
@@ -360,7 +363,8 @@ function ResearchDepartment:improveMachine(machine)
     for _, room in ipairs(self.world.available_rooms) do
       for obj, no in pairs(room.objects_needed) do
         if TheApp.objects[obj] == machine then
-          room.build_cost = room.build_cost - decrease * no
+          local progress = self.research_progress[room]
+          progress.build_cost = progress.build_cost - decrease * no
           -- Each room only defines the same object once, so break
           -- from the inner loop.
           break

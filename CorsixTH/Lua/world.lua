@@ -189,6 +189,7 @@ function World:initLevel(app)
   -- This does in practise make object.build_cost obsolete,
   -- but it will remain for now to avoid too many complications.
   -- TODO: Remove object.build_cost from all objects.
+  -- A few places will need fixing to be able to do that.
   local config = self.map.level_config.objects
   for _, object in ipairs(app.objects) do
     local cost = 0
@@ -332,7 +333,11 @@ function World:initRooms()
       build_cost = build_cost + obj[TheApp.objects[name].thob].StartCost * no
     end
     -- Now define the total build cost for the room.
-    room.build_cost = build_cost
+    for _, hospital in ipairs(self.hospitals) do
+      hospital.research.research_progress[room] = {
+        build_cost = build_cost,
+      }
+    end
     if available then
       self.available_rooms[#self.available_rooms + 1] = room
       self.available_rooms[room.id] = room

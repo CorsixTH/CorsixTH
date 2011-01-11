@@ -312,6 +312,23 @@ function Hospital:afterLoad(old, new)
     -- New variable
     self.acc_overdraft = 0
   end
+  if old < 35 then
+    -- Define build costs for rooms once again.
+    local config = self.world.map.level_config.objects
+    local rooms = self.world.map.level_config.rooms
+    for i, room in ipairs(TheApp.rooms) do
+      -- Sum up the build cost of the room
+      local build_cost = rooms[room.level_config_id].Cost
+      for name, no in pairs(room.objects_needed) do
+        -- Add cost for this object.
+        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+      end
+      -- Now define the total build cost for the room.
+      self.research.research_progress[room] = {
+        build_cost = build_cost,
+      }
+    end
+  end
 end
 
 function Hospital:tick()

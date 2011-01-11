@@ -135,13 +135,18 @@ end
 function UIEditRoom:abortRoom()
   if self.payed then
     -- Return half the cost.
-    local cost = math.floor(self.room.room_info.build_cost/2)
+    local progress = self.ui.hospital.research.research_progress
+    local cost = math.floor(progress[self.room.room_info].build_cost/2)
     -- TODO: Return also the cost for additional objects.
 
     -- Decrease the hospital value by the whole room build cost
-    local valueChange = self.room.room_info.build_cost
+    local valueChange = progress[self.room.room_info].build_cost
     for obj, num in pairs(self.room.room_info.objects_needed) do
-      valueChange = valueChange - num * TheApp.objects[obj].build_cost
+      local obj_cost = TheApp.objects[obj].build_cost
+      if progress[TheApp.objects[obj]] then
+        obj_cost = progress[TheApp.objects[obj]].cost
+      end
+      valueChange = valueChange - num * obj_cost
     end
     self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
   end
@@ -207,9 +212,14 @@ function UIEditRoom:confirm(force)
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
     if not self.payed then
-      local cost = self.room_type.build_cost
+      local progress = self.ui.hospital.research.research_progress
+      local cost = progress[self.room.room_info].build_cost
       for obj, num in pairs(self.room.room_info.objects_needed) do
-        cost = cost - num * TheApp.objects[obj].build_cost
+        local obj_cost = TheApp.objects[obj].build_cost
+        if progress[TheApp.objects[obj]] then
+          obj_cost = progress[TheApp.objects[obj]].cost
+        end
+        cost = cost - num * obj_cost
       end
       self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text, cost)
       self.payed = true

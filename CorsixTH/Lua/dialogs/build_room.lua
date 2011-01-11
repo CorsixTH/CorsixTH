@@ -157,8 +157,9 @@ function UIBuildRoom:setCategory(index)
 end
 
 function UIBuildRoom:buildRoom(index)
+  local hosp = self.ui.hospital
   if index == 1 then self.ui:tutorialStep(3, 3, 4) end
-  if self.ui.hospital.balance >= self.list[index].build_cost then
+  if hosp.balance >= hosp.research.research_progress[self.list[index]].build_cost then
     local edit_dlg = UIEditRoom(self.ui, self.list[index])
     self.ui:addWindow(edit_dlg)
   else
@@ -186,7 +187,8 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
       self.cost_box = _S.build_room_window.cost .. "0"
       self.preview_anim = false
     else
-      self.cost_box = _S.build_room_window.cost .. self.list[hover_idx].build_cost
+      local cost = self.ui.hospital.research.research_progress[self.list[hover_idx]].build_cost
+      self.cost_box = _S.build_room_window.cost .. cost
       self.preview_anim = TH.animation()
       self.preview_anim:setAnimation(self.ui.app.anims, self.list[hover_idx].build_preview_animation)
     end
