@@ -293,7 +293,7 @@ information = {
     "Bummer! You failed the level. Better luck next time!",
     "The reason you lost:",
     reputation = "Your reputation fell below %d.",
-    balance = "Your bank balance (minus loan) fell below %d.",
+    balance = "Your bank balance fell below %d.",
     percentage_killed = "You killed more than %d percent of the patients.",
   },
 }

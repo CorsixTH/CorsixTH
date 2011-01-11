@@ -296,7 +296,7 @@ information = {
     utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
     "Der Grund warum Sie verloren haben:",
     reputation = "Ihr Ruf ist unter %d gesunken.",
-    balance = "Ihr Kontostand (abzüglich Kredit) ist unter %d gesunken.",
+    balance = "Ihr Kontostand ist unter %d gesunken.",
     percentage_killed = utf8 "Sie haben mehr als %d Prozent der Patienten getötet.",
   },
 }

@@ -271,9 +271,12 @@ function World:determineWinningConditions()
         total = total + 1
         local criterion = criteria[values.Criteria].name
         active[criterion] = {
+          name = criterion,
           win_value = values.Value, 
           boundary = values.Bound, 
           criterion = values.Criteria,
+          max_min_win = values.MaxMin,
+          group = values.Group,
           number = total,
         }
         active[#active + 1] = active[criterion]
@@ -286,15 +289,19 @@ function World:determineWinningConditions()
       if values.Criteria ~= 0 then
         local criterion = criteria[values.Criteria].name
         if not active[criterion] then
-          active[criterion] = {number = #active + 1}
+          active[criterion] = {number = #active + 1, name = criterion}
           active[#active + 1] = active[criterion]
         end
         active[criterion].lose_value = values.Value
         active[criterion].boundary = values.Bound
         active[criterion].criterion = values.Criteria
+        active[criterion].max_min_lose = values.MaxMin
+        active[criterion].group = values.Group
         active[active[criterion].number].lose_value = values.Value
         active[active[criterion].number].boundary = values.Bound
         active[active[criterion].number].criterion = values.Criteria
+        active[active[criterion].number].max_min_lose = values.MaxMin
+        active[active[criterion].number].group = values.Group
       end
     end
   end
@@ -845,11 +852,6 @@ function World:onEndMonth()
       local res = self:checkWinningConditions(i)
       if res.state == "win" then
         self:winGame(i)
-      elseif self.month == 12 and res.state == "lose" then
-        self:loseGame(i, res.reason, res.limit)
-        if i == 1 then
-          return true
-        end
       end
     end
   end
@@ -929,46 +931,50 @@ end
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
---! If the state is "lose", the table also contains a reason string, which corresponds to the
---! criterion name the player lost to (reputation, balance, percentage_killed)
---! and a number limit which corresponds to the limit the player passed.
+--! If the state is "lose", the table also contains a reason string,
+--! which corresponds to the criterion name the player lost to
+--! (reputation, balance, percentage_killed) and a number limit which
+--! corresponds to the limit the player passed.
 --!param player_no The index of the player to check in the world's list of hospitals
 function World:checkWinningConditions(player_no)
-  -- If there are no goals at all, don't prompt the player each month that he/she has won.
+  -- If there are no goals at all, do nothing.
   if #self.goals == 0 then
     return {state = "nothing"}
   end
-  local hosp = self.hospitals[player_no]
-  local criteria = self.level_criteria
-  local active = self.goals
-  -- Default is to win. As soon as a goals that doesn't support this is found it is changed.
+
+  -- Default is to win. 
+  -- As soon as a goal that doesn't support this is found it is changed.
   local result = {state = "win"}
+  local hospital = self.hospitals[player_no]
+
   -- Go through the goals
-  for i, tab in ipairs(self.goals) do
-    local criterion = criteria[tab.criterion].name
-    local modifier = 0
-    local current = hosp[criterion]
-    -- Right now special case for balance, subtract any loans!
-    if criterion == "balance" then
-      current = current - hosp.loan
-    end
-    if active[criterion].lose_value then
-      local lose = active[criterion].lose_value
-      -- TODO this seems to be a hack that misuses boundary to determine if it is a min 
-      -- or a max value to reach. Use MinMax property (not yet read from level file) instead.
-      modifier = 1 - ((current - lose)/(active[criterion].boundary - lose))
-      -- Is this a minimum that has been passed?
-      if modifier > 1 then
+  for i, goal in ipairs(self.goals) do
+    local current_value = hospital[goal.name]
+    -- If max_min is 1 the value must be > than the goal condition.
+    -- If 0 it must be < than the goal condition.
+    if goal.lose_value then
+      local max_min = goal.max_min_lose == 1 and 1 or -1
+      -- Is this a minimum/maximum that has been passed?
+      -- This is actually not entirely correct. A lose condition
+      -- for balance at -1000 will make you lose if you have exactly
+      -- -1000 too, but how often does that happen? Probably not more often
+      -- than having exactly e.g. 200 in reputation,
+      -- which is handled correctly.
+      if (current_value - goal.lose_value)*max_min > 0 then
         result.state = "lose"
-        result.reason = criterion
-        result.limit = lose
+        result.reason = goal.name
+        result.limit = goal.lose_value
         break
       end
     end
-    if active[criterion].win_value then
-      modifier = current/active[criterion].win_value
+    if goal.win_value then
+      local max_min = goal.max_min_win == 1 and 1 or -1
+      -- Special case for balance, subtract any loans!
+      if goal.name == "balance" then
+        current_value = current_value - hospital.loan
+      end
       -- Is this goal not fulfilled yet?
-      if modifier < 1 then
+      if (current_value - goal.win_value)*max_min <= 0 then
         result.state = "nothing"
       end
     end
@@ -1044,6 +1050,17 @@ end
 function World:onEndYear()
   for _, hospital in ipairs(self.hospitals) do
     hospital:onEndYear()
+  end
+  -- This is done here instead of in onEndMonth so that the player gets
+  -- the chance to receive money or reputation from trophies and awards first.
+  for i = 1,4 do
+    local res = self:checkWinningConditions(i)
+    if res.state == "lose" then
+      self:loseGame(i, res.reason, res.limit)
+      if i == 1 then
+        return true
+      end
+    end
   end
 end
 
@@ -1606,6 +1623,9 @@ function World:afterLoad(old, new)
   if old < 31 then
     self.hours_per_day = 50
     self:setSpeed("Normal")
+  end
+  if old < 36 then
+    self:determineWinningConditions()
   end
   self.savegame_version = new
 end

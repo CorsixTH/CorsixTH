@@ -306,7 +306,7 @@ information = {
     utf8 "¡Qué pena! Has fracasado en este nivel. ¡Mejor suerte la próxima vez!",
     utf8 "La razón por la que has perdido es:",
     reputation = utf8 "Tu reputación ha caído por debajo de %d.",
-    balance = utf8 "Tu cuenta bancaria (descontando préstamos) ha llegado a tener menos de %d.",
+    balance = utf8 "Tu cuenta bancaria ha llegado a tener menos de %d.",
     percentage_killed = utf8 "Has matado a más de un %d por ciento de los pacientes.",
   },
 }

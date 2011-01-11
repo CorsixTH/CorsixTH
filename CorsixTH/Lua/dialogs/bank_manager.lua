@@ -43,6 +43,16 @@ function UIBankManager:UIBankManager(ui)
     self:close()
     return
   end
+  -- counters for the animations of the bank manager
+  self.counter = 0
+  self.browsclk = 0
+  self.smilesclk = 0
+  self.eyesclk = 0
+  
+   -- sprites for the animation
+  self.smiles = self:addPanel(12, 303, 199)
+  self.eyesblink = self:addPanel(7, 298, 173)
+  self.browslift = self:addPanel(9, 296, 165)
   
   -- Button so that the user can click in the middle and get the statistics page and
   -- vice versa
@@ -95,9 +105,20 @@ function UIBankManager:UIBankManager(ui)
 
   self:makeTooltip(_S.tooltip.bank_manager.inflation_rate, 430, 308, 589, 331)
   self:makeTooltip(_S.tooltip.bank_manager.interest_rate, 430, 337, 589, 360)
-  
-  -- TODO: The bank manager's eyes, eyebrows and mouth
-  -- TODO: Add the insurance companies "for real" and draw graphs
+  -- TODO: Add the graphs
+end
+
+function UIBankManager:afterLoad(old, new)
+  if old < 36 then
+    -- adds the new variables for bank manager animation
+    self.browsclk = 0
+    self.smilesclk = 0
+    self.eyesclk = 0
+    self.counter = 0
+    self.smiles = self:addPanel(12, 303, 199)
+    self.eyesblink = self:addPanel(7, 298, 173)
+    self.browslift = self:addPanel(9, 296, 165)
+  end
 end
 
 local function sum(t)
@@ -106,6 +127,86 @@ local function sum(t)
     sum = sum + entry
   end
   return sum
+end
+
+-- animation function
+function UIBankManager:onTick()
+  self.counter = self.counter + 1
+  -- animate the eyes to blink
+  local function animateEyes()
+    self.eyesclk = self.eyesclk + 1
+    if self.eyesclk > 2 then
+      self.eyesclk = 0
+      self.eyesblink.sprite_index = self.eyesblink.sprite_index + 1
+      if self.eyesblink.sprite_index > 8 then 
+        self.eyesblink.sprite_index = 7
+      end
+    end
+  end
+  -- animate the eyebrows to raise and lower
+  local function animateBrows()
+    self.browsclk = self.browsclk + 1
+    if self.browsclk > 3 then
+      self.browsclk = 0
+      self.browslift.sprite_index = self.browslift.sprite_index + 1
+      if self.browslift.sprite_index > 11 then
+        self.browslift.sprite_index = 9
+      end
+    end
+  end
+  -- animate the smile to frown and back again
+  local function animateSmile()
+    self.smilesclk = self.smilesclk + 1
+    if self.smilesclk > 3 then
+      self.smilesclk = 0
+      self.smiles.sprite_index = self.smiles.sprite_index + 1
+      if self.smiles.sprite_index > 15 then 
+        self.smiles.sprite_index = 12
+      end
+    end
+  end
+  -- counters to determine when to start and stop the animations
+  -- two blinks
+  if self.counter  >= 24 and self.counter < 36 then
+    animateEyes()
+  -- one blink
+  elseif self.counter  >= 49 and self.counter < 55 then
+    animateEyes()
+  -- one blink
+  elseif self.counter  >= 70 and self.counter < 76 then
+    animateEyes()
+  -- up and down once
+  elseif self.counter  >= 88 and self.counter < 100 then
+    animateBrows()
+  -- smile 
+  elseif self.counter  >= 132 and  self.counter < 140 then
+    animateSmile()
+  -- two blinks
+  elseif self.counter  >= 164 and self.counter < 176 then
+    animateEyes()
+  -- one blink
+  elseif self.counter  >= 189 and self.counter < 195 then
+    animateEyes()
+  -- one blink
+  elseif self.counter  >= 219 and self.counter < 225 then
+    animateEyes()
+  -- brows  up and down once
+  elseif self.counter  >= 248 and self.counter < 260 then
+    animateBrows()
+  --smiles
+  elseif self.counter  >= 272 and self.counter < 280 then
+    animateSmile()
+  -- brows up and down twice
+  elseif self.counter  >= 298 and self.counter < 322 then
+    animateBrows()
+  -- two blinks
+  elseif self.counter  >= 340 and self.counter < 352 then 
+    animateEyes()
+  end
+  -- reset the animation counter
+  if self.counter > 420 then
+    self.counter = 0
+  end
 end
 
 function UIBankManager:draw(canvas, x, y)
@@ -206,6 +307,10 @@ function UIBankManager:showStatistics()
   self.showingStatistics = true
   self.return_from_stat_button.enabled = true
   self.stat_button.enabled = false
+  -- hides the animated parts of the bank manager when viewing the statement  
+  self.smiles.visible = false
+  self.eyesblink.visible = false
+  self.browslift.visible = false  
   -- The close button has been slightly moved.
   local panel = self.close_panel
   panel.x = panel.x - 6
@@ -222,6 +327,12 @@ function UIBankManager:hideStatistics()
   self.showingStatistics = false
   self.return_from_stat_button.enabled = false
   self.stat_button.enabled = true
+  -- shows the animated parts of the bank manager when viewing the main screen
+  self.smiles.visible = true
+  self.eyesblink.visible = true
+  self.browslift.visible = true  
+  -- resets the animation counter if the screen is switched to the statement and back 
+  self.counter = -1  
   -- return the close button again
   local panel = self.close_panel
   panel.x = panel.x + 6

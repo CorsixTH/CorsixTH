@@ -181,7 +181,7 @@ information = {
     [1] = "Balen! Je hebt het level verloren. Volgende keer beter!",
     [2] = "De reden dat je verloor:",
     reputation = "Je reputatie kwam onder %d",
-    balance = "Je banksaldo (minus lening) was lager dan %d",
+    balance = "Je banksaldo was lager dan %d",
     percentage_killed = "Je hebt meer dan %d procent van je patienten vermoord",
   },
 }

@@ -775,7 +775,7 @@ information = {
     utf8 "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     utf8 "Voilà pourquoi vous avez perdu :",
     reputation = utf8 "Votre réputation est tombée en dessous de %d.",
-    balance = utf8 "Votre solde bancaire (moins les emprunts) est tombé en dessous %d.",
+    balance = utf8 "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = utf8 "Vous avez tué plus de %d pourcents de vos patients.",
   },
 }

@@ -95,10 +95,10 @@ fax = {
     },
     beta2 = {
       --"Welcome to the second beta of CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
-       "Velkommen til CorsixTH, som er en open source klon af det klassiske spil Theme Hospital af Bullfrog!",
-	--"A lot of new features have been implemented since the last release. Have a look at the changelog for an incomplete list.",
+      "Velkommen til CorsixTH, som er en open source klon af det klassiske spil Theme Hospital af Bullfrog!",
+      --"A lot of new features have been implemented since the last release. Have a look at the changelog for an incomplete list.",
       "Der er blevet tilföjet en masse nye funktioner siden sidste udgivelse. Tag og kig i changeloggen for at se en ukomplet liste",
-	   "But first, let's play! It seems there's a message waiting for you. Close this window and click on the question mark above the bottom panel.",
+      "But first, let's play! It seems there's a message waiting for you. Close this window and click on the question mark above the bottom panel.",
       "-- The CorsixTH team, th.corsix.org",
     },
   },  
@@ -335,7 +335,7 @@ level_lost = {
     utf8 "æv! Du gennemförte ikke runden. Bedre held næste gang!",
     "Grundene til du tabte:",
     reputation = utf8 "Dit omdömme var under %d.",
-    balance = utf8 "Din bankbalance (eks. lån) var under %d.",
+    balance = utf8 "Din bankbalance var under %d.",
     percentage_killed = utf8 "Du har dræbt mere end %d procent af patienterne.",
   },
   }
