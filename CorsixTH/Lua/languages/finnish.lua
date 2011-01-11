@@ -314,7 +314,7 @@ tooltip = {
   cheats_window = {
     close = utf8 "Sulje huijaukset-ikkuna",
     cheats = {
-      money             = utf8 "Lisää 10.000 pankkitilillesi",
+      money             = utf8 "Lisää 10 000$ pankkitilillesi",
       all_research      = utf8 "Saat kaiken tutkimuksen valmiiksi",
       emergency         = utf8 "Luo hätätilanteen",
       create_patient    = utf8 "Luo potilaan kartan reunalle",
@@ -365,7 +365,7 @@ introduction_texts = {
     [1] = utf8 "Tervetuloa demosairaalaan!",
     [2] = utf8 "Valitettavasti demoversio sisältää ainoastaan tämän tason (itse luotuja tasoja lukuun ottamatta). Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä!",
     [3] = utf8 "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla.",
-    [4] = utf8 "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70,000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi.",
+    [4] = utf8 "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70 000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi.",
     [5] = utf8 "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason.",
     [6] = utf8 "Onnea!",
   },
@@ -2352,49 +2352,49 @@ diseases = {
     symptoms    = utf8 "Oireet - takana seisovien ihmisten ärsyyntyminen.", 
     cure        = utf8 "Hoito - Potilas juo nopeasti raskaan sekoituksen erityisiä vetisiä atomeja apteekissa.",
   },
-  chronic_nosehair       = { 
+  chronic_nosehair = { 
     name        = utf8 "Krooniset nenäkarvat", 
     cause       = utf8 "Aiheuttaja - nenän nyrpistäminen itseään heikompiosaisille ihmisille.", 
     symptoms    = utf8 "Oireet - nenäparta, johon orava voisi tehdä pesän.", 
     cure        = utf8 "Hoito - Sairaanhoitaja valmistaa apteekissa ällöttävän rohdon, joka nautitaan suun kautta.",
   },
-  corrugated_ankles      = { 
+  corrugated_ankles = { 
     name        = utf8 "Taipuneet nilkat", 
     cause       = utf8 "Aiheuttaja - liiallinen hidastetöyssyjen yli ajaminen.", 
     symptoms    = utf8 "Oireet - kengät eivät sovi hyvin jalkaan.", 
     cure        = utf8 "Hoito - Lievästi myrkyllinen seos yrttejä ja mausteita juodaan nilkkojen oikaisemiseksi.",
   },
-  discrete_itching       = { 
+  discrete_itching = { 
     name        = utf8 "Paikallinen kutina", 
     cause       = utf8 "Aiheuttaja - pienet hyönteiset, joilla on terävät hampaat.", 
     symptoms    = utf8 "Oireet - raapiminen, joka johtaa ruumiinosien tulehduksiin.", 
     cure        = utf8 "Hoito - Potilaalle juotetaan lääkesiirappia kutinan ehkäisemiseksi.",
   },
-  fake_blood             = { 
+  fake_blood = { 
     name        = utf8 "Valeveri", 
     cause       = utf8 "Aiheuttaja - potilas on yleensä joutunut käytännön pilan uhriksi.", 
     symptoms    = utf8 "Oireet - suonissa punaista nestettä, joka haihtuu joutuessaan kosketuksiin kankaan kanssa.", 
     cure        = utf8 "Hoito - Psykiatrinen rauhoittelu on ainoa keino hoitaa ongelmaa.",
   },
-  fractured_bones        = { 
+  fractured_bones = { 
     name        = utf8 "Murtuneet luut",
     cause       = utf8 "Aiheuttaja - putoaminen korkealta betonille.", 
     symptoms    = utf8 "Oireet - voimakas napsahdus ja kyvyttömyys käyttää kyseisiä raajoja.", 
     cure        = utf8 "Hoito - Potilaalle asetetaan kipsi, joka sitten poistetaan laser-toimisella kipsinpoistokoneella.", 
   },
-  gastric_ejections      = { 
+  gastric_ejections = { 
     name        = utf8 "Vääntelehtivä vatsa", 
     cause       = utf8 "Aiheuttaja - mausteinen meksikolainen tai intialainen ruoka.", 
     symptoms    = utf8 "Oireet - puolittain sulanutta ruokaa poistuu potilaan elimistöstä satunnaisesti.", 
     cure        = utf8 "Hoito - Erityisen sitouttamisnesteen juominen estää ruokapäästöjen syntymisen.",
   },
-  golf_stones            = { 
+  golf_stones = { 
     name        = utf8 "Golf-kivet", 
     cause       = utf8 "Aiheuttaja - altistuminen golfpallojen sisältämälle myrkkykaasulle.", 
     symptoms    = utf8 "Oireet - sekavuus ja edistynyt häpeä.", 
     cure        = utf8 "Hoito - Kivet poistetaan leikkauksella, johon tarvitaan kaksi kirurgia.",
   },
-  gut_rot                = { 
+  gut_rot = { 
     name        = utf8 "Mahamätä", 
     cause       = utf8 "Aiheuttaja - rouva Malisen 'Hauskaa iltaa' -viskiyskänlääke.", 
     symptoms    = utf8 "Oireet - ei yskää, mutta ei vatsan limakalvojakaan.", 
@@ -2406,91 +2406,91 @@ diseases = {
     symptoms    = utf8 "Oireet - potilaille kehittyy herkistynyt hajuaisti.", 
     cure        = utf8 "Hoito - Elektrolyysikone poistaa karvat ja sulkee huokoset.", 
   },
-  heaped_piles           = { 
+  heaped_piles = { 
     name        = utf8 "Kasautuneet pukamat", 
     cause       = utf8 "Aiheuttaja - vesiautomaatin lähellä seisoskeleminen.", 
     symptoms    = utf8 "Oireet - potilaasta tuntuu kuin hän istuisi marmorikuulapussin päällä.", 
     cure        = utf8 "Hoito - Miellyttävä, mutta vahvasti hapokas juoma sulattaa pukamat sisältä.",
   },
-  infectious_laughter    = { 
+  infectious_laughter = { 
     name        = utf8 "Tarttuva nauru", 
     cause       = utf8 "Aiheuttaja - klassiset TV:n komediasarjat.", 
     symptoms    = utf8 "Oireet - avuton hihitys ja kuluneiden fraasien toistelu.", 
     cure        = utf8 "Hoito - Ammattitaitoisen psykiatrin täytyy muistuttaa potilaalle, kuinka vakava hänen tilansa on.",
   },
-  invisibility           = { 
+  invisibility = { 
     name        = utf8 "Näkymättömyys",
     cause       = utf8 "Aiheuttaja - radioaktiivisen (ja näkymättömän) muurahaisen purema",
     symptoms    = utf8 "Oireet - potilaat eivät kärsi lainkaan ja monet heistä hyödyntävät tilaansa tekemällä kepposia perheelleen",
     cure        = utf8 "Hoito - Apteekista saatava värikäs juoma palauttaa potilaat pikaisesti näkyviin",
   },
-  iron_lungs             = { 
+  iron_lungs = { 
     name        = utf8 "Rautakeuhkot", 
     cause       = utf8 "Aiheuttaja - kantakaupungin savusumu yhdistettynä kebabin jäänteisiin.", 
     symptoms    = utf8 "Oireet - kyky syöstä tulta ja huutaa kovaa veden alla.", 
     cure        = utf8 "Hoito - Kaksi kirurgia poistaa jähmettyneet keuhkot leikkaussalissa.",
   },
-  jellyitis              = { 
+  jellyitis = { 
     name        = utf8 "Hyytelöityminen", 
     cause       = utf8 "Aiheuttaja - Runsaasti gelatiinia sisältävä ruokavalio ja liiallinen liikunta.", 
     symptoms    = utf8 "Oireet - liiallinen hytkyminen ja runsas kaatuilu.", 
     cure        = utf8 "Hoito - Potilas asetetaan vähäksi aikaa hyytelömuovaimeen erityisessä hyytelömuovainhuoneessa.",
   },
-  kidney_beans           = { 
+  kidney_beans = { 
     name        = utf8 "Munuaispavut",
     cause       = utf8 "Aiheuttaja - jääkuutioiden murskaaminen juomaan.", 
     symptoms    = utf8 "Oireet - kipuja ja jatkuvaa vessassa käymistä.", 
     cure        = utf8 "Hoito - Kahden kirurgin täytyy poistaa pavut koskematta munuaisiin.",
   },
-  king_complex           = { 
+  king_complex = { 
     name        = utf8 "Kuningas-kompleksi", 
     cause       = utf8 "Aiheuttaja - Kuninkaan henki tunkeutuu potilaan tajuntaan ja ottaa vallan.", 
     symptoms    = utf8 "Oireet - värikkäisiin samettikenkiin pukeutuminen ja juustohampurilaisten syöminen", 
     cure        = utf8 "Hoito - Psykiatri kertoo vastaanotollaan potilaalle, kuinka älyttömän typerältä tämä näyttää", 
   },
-  pregnancy              = { 
+  pregnancy = { 
     name        = utf8 "Raskaus", 
     cause       = utf8 "Aiheuttaja - sähkökatkot kaupungistuneilla alueilla.", 
     symptoms    = utf8 "Oireet - taukoamaton syöminen ja siihen liittyvä kaljamaha.", 
     cure        = utf8 "Hoito - Lapsi poistetaan keisarinleikkauksella, pestään ja ojennetaan potilaalle.",
   },   -- unused
-  ruptured_nodules       = { 
+  ruptured_nodules = { 
     name        = utf8 "Repeytyneet kyhmyt", 
     cause       = utf8 "Aiheuttaja - benjihyppääminen kylmässä säässä.", 
     symptoms    = utf8 "Oireet - potilaan on mahdotonta istua mukavasti.", 
     cure        = utf8 "Hoito - Kaksi kirurgia poistaa kyhmyt vakain käsin.",
   },
-  serious_radiation      = { 
+  serious_radiation = { 
     name        = utf8 "Vakava säteily", 
     cause       = utf8 "Aiheuttaja - erehtyminen plutonium-isotooppien ja purukumin välillä.", 
     symptoms    = utf8 "Oireet - potilaat tuntevat itsensä hyvin, hyvin huonovointisiksi.", 
     cure        = utf8 "Hoito - Potilas tulee asettaa puhdistussuihkuun ja pestä huolellisesti.", 
   },
-  slack_tongue           = { 
+  slack_tongue = { 
     name        = utf8 "Velttokielisyys", 
     cause       = utf8 "Aiheuttaja - krooninen saippuaoopperoista puhuminen.", 
     symptoms    = utf8 "Oireet - kieli turpoaa viisi kertaa pidemmäksi kuin normaalisti.", 
     cure        = utf8 "Hoito - Kieli asetetaan paloittelijaan, joka lyhentää sen nopeasti, tehokkaasti ja kivuliaasti.",
   },
-  sleeping_illness       = { 
+  sleeping_illness = { 
     name        = utf8 "Unitauti", 
     cause       = utf8 "Aiheuttaja - yliaktiivinen unirauhanen kitalaessa.", 
     symptoms    = utf8 "Oireet - ylitsepääsemätön tarve käydä nukkumaan kaikkialla.", 
     cure        = utf8 "Hoito - Sairaanhoitaja annostelee suuren annoksen voimakasta piristysainetta.",
   },
-  spare_ribs             = { 
+  spare_ribs = { 
     name        = utf8 "Liikakyljykset", 
     cause       = utf8 "Aiheuttaja - kylmillä kivilattioilla istuminen.", 
     symptoms    = utf8 "Oireet - epämiellyttävä rintavuuden tunne.", 
     cure        = utf8 "Hoito - Kaksi kirurgia poistaa kyljykset ja antaa ne folioon käärittynä potilaalle kotiin vietäväksi.",
   },
-  sweaty_palms           = { 
+  sweaty_palms = { 
     name        = utf8 "Hikiset kädet", 
     cause       = utf8 "Aiheuttaja - työhaastattelujen kammo.", 
     symptoms    = utf8 "Oireet - kätteleminen potilaan kanssa on kuin pitelisi vastakasteltua pesusientä.", 
     cure        = utf8 "Hoito - Psykiatrin pitää saada potilas luopumaan päässään luomastaan sairaudesta.",
   },
-  the_squits             = { 
+  the_squits = { 
     name        = utf8 "Oksennustauti", 
     cause       = utf8 "Aiheuttaja - lattialta löytyneen pizzan syöminen.", 
     symptoms    = utf8 "Oireet - yäk, osaat varmaan arvatakin.", 
@@ -2502,39 +2502,57 @@ diseases = {
     symptoms    = utf8 "Oireet - iso kampaus, leveälahkeiset housut, korokepohjakengät ja kiillemeikit.", 
     cure        = utf8 "Hoito - Psykiatrin täytyy vakuuttaa potilas siitä, että hänen karvakehyksensä ovat inhottavat.",
   },
-  transparency           = { 
+  transparency = { 
     name        = utf8 "Läpinäkyvyys", 
     cause       = utf8 "Aiheuttaja - jogurtin nuoleminen purkkien kansista.", 
     symptoms    = utf8 "Oireet - potilaan liha muuttuu läpinäkyväksi ja kammottavaksi.", 
     cure        = utf8 "Hoito - Apteekista saatava erityisellä tavalla jäähdytetty ja värjätty vesi parantaa taudin.",
   },
-  tv_personalities       = { 
+  tv_personalities = { 
     name        = utf8 "TV-kasvous", 
     cause       = utf8 "Aiheuttaja - päiväsaikaan lähetettävä ohjelmatarjonta.", 
     symptoms    = utf8 "Oireet - kuvitelma, että potilas pystyy juontamaan ruoanlaitto-ohjelman.", 
     cure        = utf8 "Hoito - Psykiatrin tulee suostutella potilas myymään televisionsa ja ostamaan radio sen tilalle.",
   },
-  uncommon_cold          = { 
+  uncommon_cold = { 
     name        = utf8 "Epätavallinen flunssa",
     cause       = utf8 "Aiheuttaja - pienet räkähiukkaset ilmassa.", 
     symptoms    = utf8 "Oireet - vuotava nenä, aivastelu ja värjäytyneet keuhkot.", 
     cure        = utf8 "Hoito - Iso kulaus apteekissa valmisteltua epätavallista flunssalääkettä tekee taudista menneen talven lumia.",
   },
-  unexpected_swelling    = { 
+  unexpected_swelling = { 
     name        = utf8 "Odottamaton turvotus", 
     cause       = utf8 "Aiheuttaja - mikä tahansa odottamaton.", 
     symptoms    = utf8 "Oireet - turvotus.", 
     cure        = utf8 "Hoito - Kahden kirurgin suorittama puhkomistoimenpide poistaa turvotuksen.",
   },
-  diag_scanner          = { name = utf8 "Diagn. magn. kuvaus", },
-  diag_blood_machine    = { name = utf8 "Diagn. verikone", },
-  diag_cardiogram       = { name = utf8 "Diagn. kardiogrammi", },
-  diag_x_ray            = { name = utf8 "Diagn. röntgen", },
-  diag_ultrascan        = { name = utf8 "Diagn. ultraääni", },
-  diag_general_diag     = { name = utf8 "Diagn. yleisdiagn.", },
-  diag_ward             = { name = utf8 "Diagn. vuodeosasto.", },
-  diag_psych            = { name = utf8 "Diagn. psykiatria", },
-  autopsy               = { name = utf8 "Ruumiinavaus", },
+  diag_scanner = {
+    name = utf8 "Diagn. magn. kuvaus",
+  },
+  diag_blood_machine = {
+    name = utf8 "Diagn. verikone",
+  },
+  diag_cardiogram = {
+    name = utf8 "Diagn. kardiogrammi",
+  },
+  diag_x_ray = {
+    name = utf8 "Diagn. röntgen",
+  },
+  diag_ultrascan = {
+    name = utf8 "Diagn. ultraääni",
+  },
+  diag_general_diag = {
+    name = utf8 "Diagn. yleisdiagn.",
+  },
+  diag_ward = {
+    name = utf8 "Diagn. vuodeosasto.",
+  },
+  diag_psych = {
+    name = utf8 "Diagn. psykiatria",
+  },
+  autopsy = {
+    name = utf8 "Ruumiinavaus",
+  },
 }
 
 
