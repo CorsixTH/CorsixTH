@@ -78,7 +78,7 @@ local format_pattern = lpeg.Cs(
           end
           return arg
         end
-        return str
+        return key
       end +
       -- New-style %([1-9])% and %([1-9]):([a-zA-Z0-9_.]-)%
       lpeg.C("%" * lpeg.C(lpeg.R"19") *
