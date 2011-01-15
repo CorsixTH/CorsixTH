@@ -25,13 +25,25 @@ local function meander_action_start(action, humanoid)
     -- If staff starts wandering around in Idle mode,
     -- he's effectively not in any room and need not to comeback after 
     -- staff room visit
-    humanoid.last_room = nil
     if humanoid.world.dispatcher:answerCall(humanoid) then
       if action.must_happen then 
         humanoid:finishAction()
       end
       return
+    else
+      -- Nowhere to go, start going to the old room if it's still in
+      -- need of staff.
+      local room = humanoid.last_room
+      if room and room.is_active
+      and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+        humanoid:queueAction(room:createEnterAction(humanoid))
+        humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for
+        :format(room.room_info.name))
+        humanoid:finishAction()
+        return
+      end
     end
+    humanoid.last_room = nil
   end
 
   -- Just wandering around

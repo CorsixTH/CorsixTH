@@ -92,6 +92,7 @@ object.orientations = {
       {-1, -1},  {-1, 0}, {-1, 1, only_passable = true},
       {0, -1}, {0, 0}, {0, 1, only_passable = true},
     },
+    early_list = true,
   },
   east = {
     render_attach_position = {-1, 0},

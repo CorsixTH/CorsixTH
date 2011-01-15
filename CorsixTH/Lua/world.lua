@@ -848,7 +848,7 @@ function World:onEndMonth()
   -- What is missing is that if offer is declined then the next check should be
   -- either 6 months later or at the end of month 12 and then every 6 months
   if self.month % 3 == 0 then
-    for i = 1,4 do
+    for i, hospital in ipairs(self.hospitals) do
       local res = self:checkWinningConditions(i)
       if res.state == "win" then
         self:winGame(i)
@@ -1053,7 +1053,7 @@ function World:onEndYear()
   end
   -- This is done here instead of in onEndMonth so that the player gets
   -- the chance to receive money or reputation from trophies and awards first.
-  for i = 1,4 do
+  for i, hospital in ipairs(self.hospitals) do
     local res = self:checkWinningConditions(i)
     if res.state == "lose" then
       self:loseGame(i, res.reason, res.limit)

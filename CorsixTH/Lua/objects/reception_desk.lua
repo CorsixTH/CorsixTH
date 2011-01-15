@@ -120,6 +120,7 @@ function ReceptionDesk:checkForNearbyStaff()
   end
   
   self.reserved_for = nearest_staff
+  self.receptionist = nearest_staff
   nearest_staff.associated_desk = self
   nearest_staff:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
   nearest_staff:queueAction{name = "staff_reception", object = self, must_happen = true}
@@ -148,12 +149,14 @@ function ReceptionDesk:onDestroy()
       if obj ~= self and not obj.receptionist and not obj.reserved_for then
         obj.reserved_for = receptionist
         receptionist.associated_desk = obj
+        obj.receptionist = receptionist
         local use_x, use_y = obj:getSecondaryUsageTile()
         receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
         receptionist:queueAction{name = "staff_reception", object = obj, must_happen = true}
         return true
       end
     end)
+    self.receptionist = nil
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
   return Object.onDestroy(self)

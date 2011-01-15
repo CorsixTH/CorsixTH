@@ -268,6 +268,9 @@ end)
 local action_queue_interrupt = permanent"action_queue_interrupt"( function(action, humanoid)
   if action.is_in_queue then
     action.queue:removeValue(humanoid)
+    if action.reserve_when_done then
+      action.reserve_when_done:updateDynamicInfo()
+    end
   end
   if action.reserve_when_done then
     if action.reserve_when_done.reserved_for == humanoid then

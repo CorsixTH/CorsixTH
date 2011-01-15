@@ -63,7 +63,7 @@ confirmation.restart_level = utf8 "¿Seguro que quieres reiniciar el nivel?"
 
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
-  daymonth = "%1% %2:meses%",
+  daymonth = "%1% %2:months%",
 }
 
 object.litter = "Basura"

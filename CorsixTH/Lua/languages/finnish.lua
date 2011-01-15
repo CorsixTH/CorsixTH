@@ -656,7 +656,7 @@ information = {
     utf8 "Harmin paikka! Olet hävinnyt tämän tason. Parempaa onnea ensi kerralla!",
     utf8 "Syy tappioosi oli:",
     reputation          = utf8 "Maineesi putosi alle %d:n.",
-    balance             = utf8 "Pankkitilisi saldo (vähennettynä velalla) putosi alle %d$:n.",
+    balance             = utf8 "Pankkitilisi saldo putosi alle %d$:n.",
     percentage_killed   = utf8 "Olet tappanut yli %d prosenttia potilaista.",
   },
 }

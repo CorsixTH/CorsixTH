@@ -95,7 +95,11 @@ function Staff:tick()
   
   local room = self:getRoom()
   -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
-  if room and room.room_info.id == "staff_room" and not self.on_call then
+  if room then
+    if room.room_info.id == "staff_room" and not self.on_call then
+      tiring = false
+    end
+  elseif self.humanoid_class ~= "Handyman" then
     tiring = false
   end
 
@@ -310,6 +314,11 @@ function Staff:checkIfNeedRest()
     if self.attributes["fatigue"] >= 0.9 then
       self:setMood("tired", "activate")
     end
+    if self.waiting_for_staffroom then
+    -- The staff will get unhappy if there is no staffroom to rest in.
+    -- TODO: Add corresponding adviser alert.
+      self:changeAttribute("happiness", -0.01)
+    end
     -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
     -- already going to staffroom or being picked up
     if self.waiting_for_staffroom or self.staffroom_needed
@@ -367,6 +376,7 @@ function Staff:onPlaceInCorridor()
       if not obj.receptionist and not obj.reserved_for then
         obj.reserved_for = self
         self.associated_desk = obj
+        obj.receptionist = self
         local use_x, use_y = obj:getSecondaryUsageTile()
         self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
         self:queueAction{name = "staff_reception", object = obj, must_happen = true}
@@ -457,7 +467,16 @@ function Staff:isIdle()
       end
     end
   else
-    -- on the corridor and not on_call (watering or going to room), the staff is free
+    -- In the corridor and not on_call (watering or going to room), the staff is free
+    -- unless going back to the training room or research department.
+    local x, y = self.action_queue[1].x, self.action_queue[1].y
+    if x then
+      room = self.world:getRoom(x, y)
+      if room and (room.room_info.id == "training" 
+                   or room.room_info.id == "research") then
+        return false
+      end
+    end
     return true
   end
   return false
