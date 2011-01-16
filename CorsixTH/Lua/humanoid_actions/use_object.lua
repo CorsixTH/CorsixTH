@@ -249,7 +249,8 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       if humanoid.humanoid_class ~= "Handyman"  then
         room_destroyed = object:machineUsed(humanoid:getRoom())
       end
-    elseif object:getDynamicInfo() then
+    elseif object:getDynamicInfo() and not object.master then
+      -- Don't update if it is a slave object.
       object:updateDynamicInfo()
     end
     if not room_destroyed then

@@ -534,7 +534,10 @@ end
 
 function Room:crashRoom()
   self.door:closeDoor()
-  
+  if self.door2 then
+    self.door2.hover_cursor = nil
+  end
+
   local remove_humanoid = function(humanoid)
     humanoid:queueAction({name = "idle"}, 1)
     humanoid.user_of = nil
@@ -563,7 +566,8 @@ function Room:crashRoom()
   local fx, fy = self:getEntranceXY(true)
   for object, _ in pairs(self.world:findAllObjectsNear(fx, fy)) do
     -- Machines (i.e. objects with strength) are already done.
-    if object.object_type.id ~= "door" and not object.strength then
+    if object.object_type.id ~= "door" and not object.strength
+    and object.object_type.class ~= "SwingDoor" then
       object.user = nil
       object.user_list = nil
       object.reserved_for = nil

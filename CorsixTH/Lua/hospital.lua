@@ -291,8 +291,19 @@ function Hospital:afterLoad(old, new)
         end
       end
     end
-    research.research_policy.cure.current = cure
-    research.research_policy.diagnosis.current = diagnosis
+    local policy = research.research_policy
+    if cure then
+      policy.cure.current = cure
+    else
+      policy.global = policy.global - policy.cure.frac
+      policy.cure.frac = 0
+    end
+    if diagnosis then
+      research.research_policy.diagnosis.current = diagnosis
+    else
+      policy.global = policy.global - policy.diagnosis.frac
+      policy.diagnosis.frac = 0
+    end
     self.research = research
     self.research_rooms = nil
     -- Cost of rooms has also been changed

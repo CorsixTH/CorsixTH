@@ -179,7 +179,7 @@ function UIDirBrowser:UIDirBrowser(ui)
   self.ui = ui
   self:Window()
   self.width = 500
-  self.height = 400
+  self.height = 423
   self:addColourPanel(0, 0, self.width, self.height, self.col_bg.red, self.col_bg.green, self.col_bg.blue)
 
   self.font = ui.app.gfx:loadBuiltinFont()
@@ -190,6 +190,11 @@ function UIDirBrowser:UIDirBrowser(ui)
   
   self:addKeyHandler("esc", self.exit)
   
+  -- Add an exit button
+  local font = TheApp.gfx:loadBuiltinFont()
+  self:addBevelPanel(230, 400, 40, 18, self.col_bg):setLabel("Exit", font)
+  :makeButton(0, 0, 40, 18, nil, self.exit)
+
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
   local root

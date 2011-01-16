@@ -119,7 +119,6 @@ local function use_staffroom_action_start(action, humanoid)
             -- Send the staff out of the room
             humanoid:queueAction{name = "meander"}
           end
-          humanoid.last_room = nil
         else
           -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
           action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)

@@ -57,8 +57,6 @@ when the player clicks on it.
 ]]
 function SwingDoor:setAsSlave(swing_door)
   self.master = swing_door
-  -- TODO: Once the surgery is implemented, if the operating table blows up the hover cursor
-  -- for half the door (the slave) will remain.
 end
 
 -- Depending on if this is a master or slave different onClick functions are called.
