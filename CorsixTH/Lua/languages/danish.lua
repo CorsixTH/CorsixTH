@@ -751,7 +751,7 @@ rooms_short = {
   -- S[14][1] -- unused
   -- S[14][3] -- unused
   reception         = "Reception",
-  destroyed         = utf8 "Ødelagt",
+  destroyed         = utf8 "Ödelagt",
   corridor_objects  = "Korridor objekter",
   
   gps_office        = utf8 "Lægens kontor",
@@ -1157,8 +1157,8 @@ trophy_room = {
       utf8 "Tillykke med Marie Curie-prisen for at have været i stand til at kurere næsten alle patienter på hospitalet i det forgangende år.",
     },
     trophies = {
-      utf8 "Den Internationale Behandlingsfond ønsker at ære dig, fordi du har kureret en gruppe mennesker på hospitalet i det forgangende år. De giver dig så kureret-A-Haug trofæet.",
-      utf8 "Du har fået tildelt Ingen-Syge-Gurglere trofæ at have kureret en høj procentdel af patienter på hospitalet i det forgangende år.",
+      utf8 "Den Internationale Behandlingsfond önsker at ære dig, fordi du har kureret en gruppe mennesker på hospitalet i det forgangende år. De giver dig så kureret-A-Haug trofæet.",
+      utf8 "Du har fået tildelt Ingen-Syge-Gurglere trofæ at have kureret en höj procentdel af patienter på hospitalet i det forgangende år.",
     },
   },
   all_cured = {
@@ -1166,7 +1166,7 @@ trophy_room = {
       utf8 "Tillykke med Marie Curie-prisen for at have været i stand til at kurere alle patienter på hospitalet i det forgangende år.",
     },
     trophies = {
-      utf8 "Den Internationale Behandlingsfond ønsker at ære dig, fordi du har kureret alle patienter på sygehuset i det forgangende år. De gir deg derfor Kurert-Alle Trofeet.",
+      utf8 "Den Internationale Behandlingsfond önsker at ære dig, fordi du har kureret alle patienter på sygehuset i det forgangende år. De gir deg derfor Kurert-Alle Trofeet.",
       utf8 "Du har fået tildelt Ingen-Syge-Gurglere trofæ at have kureret alle patienter på sygehuset i det forgangende år.",
     },
   },
@@ -1411,43 +1411,43 @@ tooltip = {
   },
   -- Patient window
   patient_window = {
-    close              = "Lukk vindu",
-    graph              = utf8 "Klikk for å veksle mellom graf med personens helse og personens behandlingshistorikk",
+    close              = "Luk vinduet",
+    graph              = utf8 "Klik fir at skifte mellem graf med personens kurering og personens behandlingshistorik",
     happiness          = utf8 "Personens humör",
-    thirst             = utf8 "Personens törste",
+    thirst             = utf8 "Personens törst",
     warmth             = "Personens temperatur",
-    casebook           = "Vis detaljer for pasientens sykdom",
-    send_home          = "Send pasienten hjem fra sykehuset",
-    center_view        = utf8 "Sentrer personen i skjermbildet",
-    abort_diagnosis    = utf8 "Send personen til behandling istedenfor å vente til diagnosen er ferdigstilt",
-    queue              = utf8 "Se köen pasienten befinner seg i",
+    casebook           = "Vis detaljer om patientens sygdom",
+    send_home          = "Send patienten hjem fra sygehuset",
+    center_view        = utf8 "Centerer personen i skærmbilledet",
+    abort_diagnosis    = utf8 "Send personen til behandling istedet for at vente til diagnosen er færdig tildelt",
+    queue              = utf8 "Se köen patienten er i",
   },
   -- window
   staff_window = {
     name               = "Den ansattes navn",
-    close              = "Lukk vindu",
-    face               = utf8 "Ansiktet til personen - Klikk for å administrere de ansatte",
-    happiness          = utf8 "Humörnivå",
-    tiredness          = utf8 "Tretthetsnivå",
-    ability            = "Evner",
-    doctor_seniority   = "Stilling (Turnuslege, Doktor, Konsulent)",
-    skills             = "Spesialisering",
+    close              = "Luk vinduet",
+    face               = utf8 "Ansigtet på personen - klik for at administere de ansatte",
+    happiness          = utf8 "Humörniveau",
+    tiredness          = utf8 "Træthedsniveau",
+    ability            = "Kvalifikation",
+    doctor_seniority   = "Lægens evner (Praktikant, Doktor, Konsulent)",
+    skills             = "specialisering",
     surgeon            = "Kirurg",
     psychiatrist       = "Psykolog",
     researcher         = "Forsker",
-    salary             = utf8 "Månedslönn",
-    center_view        = utf8 "Venstreklikk for å finne den ansatte, höyreklikk for å bla gjennom de ansatte.",
-    sack               = "Si opp",
-    pick_up            = "Plukk opp",
+    salary             = utf8 "Månedslön",
+    center_view        = utf8 "Venstreklik for at finde den ansatte, höjreklik for at bladre igennem de ansatte.",
+    sack               = "Fyr personen",
+    pick_up            = "Saml op",
   },
   -- Machine window
   machine_window = {
-    name               = "Navn",
-    close              = "Lukk vindu",
-    times_used         = "Antall gangen maskinen er brukt",
-    status             = "Maskinstatus",
-    repair             = utf8 "Kall på vaktmester for å fikse maskinen",
-    replace            = "Erstatt maskin",
+    name               = utf8 "Navn",
+    close              = utf8 "Luk vinduet",
+    times_used         = utf8 "Antal gange maskinen har været brugt",
+    status             = utf8 "Maskinstatus",
+    repair             = utf8 "Kald på handyman til at fixe maskinen",
+    replace            = "Erstat maskinen",
   },
   
   
@@ -1455,96 +1455,96 @@ tooltip = {
   -- Spparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
-    name               = "Vaktmesterens navn", -- contains "handyman"
-    close              = "Lukk vindu",
-    face               = "Vaktmesterens ansikt", -- contains "handyman"
-    happiness          = utf8 "Humörnivå",
-    tiredness          = utf8 "Tretthetsnivå",
-    ability            = "Evner",
-    prio_litter        = utf8 "Be vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
-    prio_plants        = utf8 "Be vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
-    prio_machines      = utf8 "Be vaktmesteren om å prioritere reperasjon av maskiner höyere", -- contains "handyman"
-    salary             = utf8 "Månedslönn",
-    center_view        = "Sentrer i skjermbildet", -- contains "handyman"
-    sack               = "Si opp",
-    pick_up            = "Plukk opp",
+    name               = "Handymandens navn", -- contains "handyman"
+    close              = "Luk vinduet",
+    face               = "Handymandens ansigt", -- contains "handyman"
+    happiness          = utf8 "Humörniveau",
+    tiredness          = utf8 "Træthedsniveau",
+    ability            = "Kvalifikation",
+    prio_litter        = utf8 "Få handymanden til at priotere rengöring höjere", -- contains "handyman"
+    prio_plants        = utf8 "Få handymanden til at priotere vanding af planter höjere.", -- contains "handyman"
+    prio_machines      = utf8 "Få handymanden til at priotere reperation höjere", -- contains "handyman"
+    salary             = utf8 "Månedslön",
+    center_view        = "Centere i skærmbilledet", -- contains "handyman"
+    sack               = "Fyr personen",
+    pick_up            = "Saml op",
   },
   
   -- Place objects window
   place_objects_window = {
-    cancel             = "Avbryt",
-    buy_sell           = utf8 "Kjöp/Selg gjenstander",
-    pick_up            = "Plukk opp en gjenstand",
-    confirm            = "Bekreft",
+    cancel             = "Afbryd",
+    buy_sell           = utf8 "Köb/Sælg objekter",
+    pick_up            = utf8 "Saml et objekt op",
+    confirm            = utf8 "Bekræft",
   },
   
   -- Casebook
   casebook = {
-    up                 = "Rull oppover",
-    down               = "Rull nedover",
-    close              = "Lukk medisinbok",
-    reputation         = utf8 "Ryktet behandlingen eller diagnosen har i nærområdet",
+    up                 = "Scroll op",
+    down               = "Scroll ned",
+    close              = "Luk medicinbogen",
+    reputation         = utf8 "Ry om behandlingen eller diagnosen er i nærområdet",
     treatment_charge   = "Pris for behandling",
-    earned_money       = "Totalt opptjente penger frem til i dag",
-    cured              = "Antall kurerte pasienter",
-    deaths             = utf8 "Antall pasienter drept som fölge av behandlingen",
-    sent_home          = utf8 "Antall pasienter som har snudd og gått hjem",
-    decrease           = "Senk pris",
-    increase           = utf8 "Ök pris",
-    research           = utf8 "Trykk her for å bruke forskingsbudsjettet for spesialisering til å forske på denne behandlingen",
+    earned_money       = "Total tjente penge indtil i dag",
+    cured              = "Antal kurerede patienter",
+    deaths             = utf8 "Antal patienter dræbt som konsekvens af behandlingen",
+    sent_home          = utf8 "Antal patienter som er blevet sendt hjem",
+    decrease           = utf8 "Sænk pris",
+    increase           = utf8 "Forhöj pris",
+    research           = utf8 "Tryk her for at bruge forsikringsbudgettet for specialisering til at udforske denne behandling",
     cure_type = {
-      drug             = "Denne behandlingen krever medisin",
-      drug_percentage  = "Denne behandlingen krever medisin - din er %d%% effektiv", -- %d (effectiveness percentage)
-      psychiatrist     = "En psykolog kreves for behandling",
-      surgery          = "Denne sykdommen krever en operasjon",
-      machine          = "Denne sykdommen krever en maskin for behandling",
+      drug             = utf8 "Behandlingen kræver medicin",
+      drug_percentage  = utf8 "Behandlingen kræver medicin, og din er %d%% effektiv", -- %d (effectiveness percentage)
+      psychiatrist     = utf8 "Behandlingen kræver en psykolog",
+      surgery          = utf8 "Sygdommen kræver en operationsstue",
+      machine          = utf8 "Sygdommen kræver en maskine",
     },
     
     cure_requirement = {
-      possible         = utf8 "Du kan gjennomföre behandling",
-      research_machine = utf8 "Du må forske på maskiner for å gjennomföre behandlingen",
-      build_room       = utf8 "Du må bygge et rom for å gjennomföre behandlingen", -- NB: no %s!
-      hire_surgeons    = utf8 "Du trenger to Kirurger for å gjennomföre behandlingen",
-      hire_surgeon     = utf8 "Du trenger en Kirurg til for å gjennomföre behandlingen",
-      hire_staff = utf8 "Du skal hyre personale for at kunne håndtere denne sygdom",
-      build_ward       = utf8 "Du må bygge en Sengeavdeling for å kunne gjennomföre behandlingen",
-      ward_hire_nurse  = utf8 "Du trenger en Sykepleier på Sengeavdelingen for å gjennomföre behandlingen",
-      not_possible     = utf8 "Du kan ikke håndtere denne behandlingen enda",
+      possible         = utf8 "Du kan genneföre behandlingen",
+      research_machine = utf8 "Du skal forske i maskiner for at kunne behandle denne sygdom",
+      build_room       = utf8 "Du skal bygge et rum for at kunne lave en behandling", -- NB: no %s!
+      hire_surgeons    = utf8 "Du mangler to kirurger for at kunne gennemföre behandlingen",
+      hire_surgeon     = utf8 "Du skal bruge en kirug mere for at kunne gennemföre behandlingen",
+      hire_staff = utf8 "Du skal ansætte noget personale for at kunne behandle denne sygdom",
+      build_ward       = utf8 "Du skal bygge en sygestue for at kunne gennemföre denne behandling",
+      ward_hire_nurse  = utf8 "Du mangler en sygeplejske for at kunne gennemföre behandlingen",
+      not_possible     = utf8 "Du kan ikke håndtere denne behandling endnu",
     },
   },
   
   -- Statement
   statement = {
-    close              = "Lukk kontoutskriften",
+    close              = "Luk kontoutskriften",
   },
   
   -- Research
   research = {
-    close              = utf8 "Gå ut av forskningsavdelingen",
-    cure_dec           = utf8 "Senk prioritering av forskning på behandlingsutstyr",
-    diagnosis_dec      = utf8 "Senk prioritering av forskning på diagnoseutstyr",
-    drugs_dec          = utf8 "Senk prioritering av forskning på medisiner",
-    improvements_dec   = utf8 "Senk prioritering av forskning på forbedringer",
-    specialisation_dec = utf8 "Senk prioritering av forskning på spesialiseringer",
-    cure_inc           = utf8 "Ök prioritering av forskning på behandlingsutstyr",
-    diagnosis_inc      = utf8 "Ök prioritering av forskning på diagnoseutstyr",
-    drugs_inc          = utf8 "Ök prioritering av forskning på medisiner",
-    improvements_inc   = utf8 "Ök prioritering av forskning på forbedringer",
-    specialisation_inc = utf8 "Ök prioritering av forskning på spesialiseringer",
-    allocated_amount   = "Penger satt av til forskning",
+    close              = utf8 "Gå ud af forskingsafdelingen",
+    cure_dec           = utf8 "Sænk priotering af forskning på behandlingsudstyr",
+    diagnosis_dec      = utf8 "Sænk priotering af forskning på diagnoseudstyr",
+    drugs_dec          = utf8 "Sænk priotering af forskning på mediciner",
+    improvements_dec   = utf8 "Sænk priotering af forskning på forbedringer",
+    specialisation_dec = utf8 "Sænk priotering af forskning på specialiseringer",
+    cure_inc           = utf8 "Ög priotering af forskning på behandlingsudstyr",
+    diagnosis_inc      = utf8 "Ög priotering af forskning på diagnoseudstyr",
+    drugs_inc          = utf8 "Ög priotering af forskning på mediciner",
+    improvements_inc   = utf8 "Ög priotering af forskning på forbedringer",
+    specialisation_inc = utf8 "Ög priotering af forskning på specialiseringer",
+    allocated_amount   = "Penge afsat til forskning",
   },
   
   -- Graphs
   graphs = {
-    close              = utf8 "Gå ut av diagramvinduet",
+    close              = utf8 "Gå til diagramvinduet",
     scale              = utf8 "Skala på diagram",
-    money_in           = "Vis/skjul Inntekter",
-    money_out          = "Vis/skjul Utgifter",
+    money_in           = "Vis/skjul indtægter",
+    money_out          = "Vis/skjul udgifter",
     wages              = utf8 "Vis/skjul Lönninger",
-    balance            = "Vis/skjul Balanse",
-    visitors           = utf8 "Vis/skjul Besökende",
-    cures              = "Vis/skjul Kurerte",
-    deaths             = utf8 "Vis/skjul Dödsfall",
+    balance            = "Vis/skjul Balance",
+    visitors           = utf8 "Vis/skjul Besögende",
+    cures              = "Vis/skjul helbrede",
+    deaths             = utf8 "Vis/skjul Dödsfald",
     reputation         = utf8 "Vis/skjul Omdömme",
   },
 
@@ -1553,26 +1553,26 @@ tooltip = {
   town_map = {
     people             = "Vis/Skjul mennesker",
     plants             = "Vis/Skjul planter",
-    fire_extinguishers = "Vis/Skjul brannslukningsapparat",
-    objects            = "Vis/Skjul gjenstander",
-    radiators          = "Vis/Skjul ovner",
+    fire_extinguishers = "Vis/Skjul brandslukningsudstyr",
+    objects            = "Vis/Skjul objekter",
+    radiators          = "Vis/Skjul radiatorer",
     heat_level         = "Temperatur",
-    heat_inc           = "Skru opp temperaturen",
-    heat_dec           = "Skru ned temperaturen",
-    heating_bill       = "Varmekostnader",
-    balance            = "Balanse",
-    close              = utf8 "Lukk områdekart",
+    heat_inc           = "Skrue op for temperaturen",
+    heat_dec           = "Skrue ned for temperaturen",
+    heating_bill       = "varmeomkostninger",
+    balance            = "Balance",
+    close              = utf8 "Luk oversigtskortet",
   },
   
   -- Jukebox.
   jukebox = {
     current_title      = "Jukebox",
-    close              = "Lukk jukebox",
-    play               = "Spill jukebox",
-    rewind             = "Spol tilbake jukebox",
-    fast_forward       = "Spol fremover jukebox",
-    stop               = "Stopp jukebox",
-    loop               = "Repeter jukebox",
+    close              = "Luk jukebox",
+    play               = "Spil jukebox",
+    rewind             = "Spol tilbage - jukebox",
+    fast_forward       = "Spol frem - jukebox",
+    stop               = "Stop jukebox",
+    loop               = "Gentag jukebox",
   },
   
   -- Bank Manager
@@ -1594,20 +1594,20 @@ tooltip = {
   
   -- Status
   status = {
-    percentage_cured   = utf8 "Du må kurere %d besökende på sykehuset ditt. Nå har du kurert %d",
-    thirst             = utf8 "Gjennomsnittlig törste på personene på ditt sykehus",
-    close              = "Lukk oversikten",
-    population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
-    win_progress_own   = utf8 "Vis progresjon i forhold til kravene for dette nivået",
-    reputation        = utf8 "Omdömmet ditt må være minst %d. Nå er det %d",
-    population        = utf8 "Du må ha %d%% av befolkningen til å bruke ditt sykehus",
-    warmth             = utf8 "Gjennomsnittlig temperatur på personene på ditt sykehus",
-    percentage_killed  = utf8 "Kriteriet er blant annet å drepe ferre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
-    balance        = utf8 "Din bankbalanse må være på minst %d. Nå er den %d",
-    value          = utf8 "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
-    win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
-    num_cured        = utf8 "Kriteriet er blant annet å kurere &d mennesker. Så langt har du kurert %d",
-    happiness          = utf8 "Gjennomsnittlig humör på personene på ditt sykehus",
+    percentage_cured   = utf8 "Du skal helbrede %d af de besögende på dit hospital. Indtil nu har du helbredt %d",
+    thirst             = utf8 "Gennemsnitlig törst for dine patienter",
+    close              = utf8 "Luk oversigten",
+    population_chart   = utf8 "Figuren viser hvor en stor andel af lokalbefolkningen der bruger dit sygehus",
+    win_progress_own   = utf8 "Vis progression i forhold til kravene for dette syghus",
+    reputation        = utf8 "Dit omdömme skal være på mindst %d. Indtil nu er det %d",
+    population        = utf8 "Du skal have %d%% af befolkningen til at bruge dit sygehus",
+    warmth             = utf8 "Gennemsnitlig temperatur for patienterne på dit sygehus",
+    percentage_killed  = utf8 "Kriteriet er blandet andet at dræbe færre end %d%% af dine besögende. Indtil nu har du taget livet af %d%%",
+    balance        = utf8 "Din bankbalance skal være på mindst %d. Indtil nu er den %d",
+    value          = utf8 "Dit sygehus skal have en værdi på $%d. Indtil nu er det værd $%d",
+    win_progress_other = utf8 "Vis progression i forhold til kravene for dette niveau for %s", -- %s (name of competitor)
+    num_cured        = utf8 "Kriteriet er blandet andet at helbrede %d mennesker. Indtil nu har du helbredt %d",
+    happiness          = utf8 "Gennemsnitligt humör på personene på dit sygehus",
   },
   
   -- Policy
@@ -2458,7 +2458,7 @@ fax = {
     num_disease              = utf8 "Det er %d mennesker med %s som har brug for behandling.",
     cure_possible_drug_name_efficiency = utf8 "Du har det udstyr og den medicin som er nödvendig for at kunne behandle patienten. Det er %s og medicinen er %d procent effektiv.", 
     cure_possible              = utf8 "Du har det nödvendige udstyr og de færdigheder som skal bruges for at kunne håndtere dette.", 
-    cure_not_possible_build_and_employ = utf8 "Du er nødt til at bygge  %s og ansætte en %s",
+    cure_not_possible_build_and_employ = utf8 "Du er nödt til at bygge  %s og ansætte en %s",
     cure_not_possible_build            = utf8 "Du mangler %s for at håndtere dette",
     cure_not_possible_employ           = utf8 "Du mangler en %s for at kunne håndtere dette",
     cure_not_possible                  = utf8 "Du kan ikke behandle denne sygdom i öjeblikket",
@@ -2552,38 +2552,38 @@ fax = {
   
   -- VIP visit result
   vip_visit_result = {
-    close_text = utf8 "Takk for at du besökte sykehuset.",
-    telegram          = "Telegram!",
-    vip_remarked_name = utf8 "Etter sitt besök på sykehuset ditt, sa %s fölgende:",
-    cash_grant = "Du er blitt tildelt %d i kontanter.",
-    rep_boost  = utf8 "Ditt rykte i næromrdet har fått en opptur.",
-    rep_loss   = utf8 "Ditt rykte har fått seg en smell.",
+    close_text = utf8 "Tak fordi du besögte sygehuget.",
+    telegram          = utf8 "Telegram!",
+    vip_remarked_name = utf8 "Efter sit besög på dit syge, sagde %s fölgende:",
+    cash_grant = utf8 "Du får %d i kontanter.",
+    rep_boost  = utf8 "Dit ry i nærområdet har fået en optur.",
+    rep_loss   = utf8 "Dit ry er gået ned.",
     
     remarks = {
       super = {
-        "For et flott sykehus. Neste gang jeg er alvorlig syk vil jeg hit.",
-        "Dette er hva jeg kaller sykehus.",
-        utf8 "Et supert sykehus. Og jeg burde vite; jeg har vært på en del.",
+        "Det er et meget flot sygehus. Næste gang jeg er alvorlig syg vil jeg her til.",
+        "Det er hvad jeg kalder for et sygehus.",
+        utf8 "Et super sygehus, og det er noget jeg ved noget om, for jeg har været på en del.",
       },
       good = {
-        "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
-        utf8 "Hmm. Ingen dårlig medisinsk instutisjon dette, det skal være visst.",
-        utf8 "Jeg likte ditt sjarmerende sykehus. Forresten, nön som blir med å spise indisk?",
+        utf8 "For et godt organiseret sygehus. Tak fordi jeg måtte komme.",
+        utf8 "Hmm. Det er absolut ikke noget dårligt sted jeg har set.",
+        utf8 "Jeg kan godt lide dit charmerende sygehus. Foresten, nogen der vil med ud og spise indisk?",
       },
       mediocre = {
-        utf8 "Vel, jeg har sett verre. Men du burde gjöre noen forbedringer.",
-        utf8 "Å kjære min tid. Dette er ikke stedet å gå om du föler deg dårlig.",
-        utf8 "Et helt allminnelig sykehus, for å være ærlig. Jeg hadde forventet meg noe mer.",
+        utf8 "Nå, jeg har set værre. Men du kunne göre en lang række forbedringer.",
+        utf8 "Åh, min kære tid. Det her er ikke det sted man går hen hvis man fölger sig dårlig.",
+        utf8 "Et helt normalt sygehus, for at være ærlig. Jeg havde forventet noget mere.",
       },
       bad = {
-        utf8 "Hva gjör jeg her egentlig? Dette her var verre enn en firetimers opera!",
-        "Dette var ekkelt. Kaller du dette et sykehus? Ser mer ut som en svinesti!",
-        utf8 "Jeg er lei av å være en offentlig person og lei stinkende hull som dette! Jeg sier opp.",
+        utf8 "Hvad laver jeg egentligt her?! Det er jo værre end en fire timers opera!",
+        "Det var ækelt! Kalder du det her et sygehus?! Det ligner mere end svinesti!",
+        utf8 "Jeg er træt af at være en offentlig person og træt af at skulle besöge steder som dette stinkende hul! Jeg siger op!.",
       },
       very_bad = {
-        utf8 "For et syn. Dette sykehuset skal jeg pröve å få lagt ned.",
-        utf8 "Jeg har aldri sett på maken. For en skandale!",
-        utf8 "Jeg er sjokkert. Du kan ikke kalle dette et sykehus! Jeg går og tar meg en sterk drink.",
+        utf8 "Föj for et syn! Dette sygehus skal jeg nok få lukket ned!",
+        utf8 "Jeg har aldrig set magen. Det er en direkte skandale!",
+        utf8 "Jeg er chokeret!. Du kan ikke kalde dette et syghus.! Jeg går ud og tager mig en stærk drink!",
       },
     },
   },
@@ -2595,7 +2595,7 @@ fax = {
       take_chance = utf8 "Pröv en sandsynlig behandling.",
       wait        = utf8 "Få patienten til at vente mens du bygger flere diagnoserum.",
     },
-    situation = utf8 "Vi har prøvet alle vores diagnoserum på denne patient, men vi er ikke helt sikre på hvad patienten fejler.",
+    situation = utf8 "Vi har prövet alle vores diagnoserum på denne patient, men vi er ikke helt sikre på hvad patienten fejler.",
     what_to_do_question = utf8 "Hvad skal vi göre med patienten?",
     partial_diagnosis_percentage_name = "Der er %d procent sikkert at patienten har en type af %s.",
   },
@@ -2685,7 +2685,7 @@ dynamic_info = {
     [3] = utf8 "Husk at holde hospitalet rent og stræb efter at få et så höjt omdömme som muligt - Hvis du vil kunne håndtere sygedomme som lös tunge, så skal du bruge en tungeklinik. ",
     [4] = utf8 "Du kan også bygge et löbebånd for at forbedre diagostieringen. ",
     [5] = utf8 "Begge rum skal forskes fremtil för de kan bygges. Du kan udvide sygehuspladsen så du får mere plads at bygge på - Brug oversigtskortet til dette ",
-    [6] = utf8 "Stræb efter at få et omdömme på 300 og en banksaldo på 10000, samt helbrede mindst 40 patienter. ",
+    [6] = utf8 "Stræb efter at få et omdömme på 300 og en banksaldo på 10,000, samt helbrede mindst 40 patienter. ",
   },
   --todo
   level7 = {
@@ -2826,19 +2826,19 @@ misc = {
 
 **Under tooltip ****
   * buy_objects_window - done 
-  * patient_window
-  * staff_window
-  * machine_window
-  * handyman_window
-  * place_objects_window
-  * casebook
-  * cure_requirement
-  * statement
-  * research
-  * graphs
-  * town_map
-  * jukebox
-  * status
+  * patient_window - done
+  * staff_window - done
+  * machine_window - done
+  * handyman_window - done
+  * place_objects_window - done
+  * casebook - done
+  * cure_requirement - done
+  * statement - done
+  * research - done
+  * graphs - done
+  * town_map - done
+  * jukebox - done
+  * status - done
   * policy
   * objects
   * adviser
@@ -2862,8 +2862,8 @@ misc = {
   * information
   * build_advice
 
-* newspaper
-* letter
+* newspaper - unneeded
+* letter -done
 * humanoid_name_starts - done
 * humanoid_name_ends - done
 
@@ -2878,7 +2878,7 @@ misc = {
   * disease_name - done
   * epidemic_result - done
   * vip_visit_query - done
-  * vip_visit_result 
+  * vip_visit_result -done 
   * diagnosis_failed - done
   * 
 -----------------------------------------------------------------------------]]   
