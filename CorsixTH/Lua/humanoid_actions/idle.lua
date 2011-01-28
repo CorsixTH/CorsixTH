@@ -53,7 +53,7 @@ local function action_idle_start(action, humanoid)
     action.on_interrupt = action_idle_interrupt
   end
   if action.loop_callback then
-    action:loop_callback()
+    action:loop_callback(humanoid)
   end
 end
 

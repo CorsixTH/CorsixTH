@@ -160,6 +160,7 @@ function Humanoid:Humanoid(...)
   self.attributes["happiness"] = 1
   self.active_moods = {}
   self.should_knock_on_doors = false
+  self.speed = "normal"
 end
 
 -- Function which is called when the user clicks on the `Humanoid`.
@@ -462,6 +463,10 @@ function Humanoid:tire(amount)
 end
 
 function Humanoid:wake(amount)
+end
+
+function Humanoid:updateSpeed()
+  self.speed = "normal"
 end
 
 function Humanoid:handleRemovedObject(object)

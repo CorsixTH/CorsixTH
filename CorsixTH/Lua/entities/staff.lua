@@ -125,6 +125,8 @@ function Staff:tick()
   else
     self.timer_until_raise = nil
   end
+
+  self:updateSpeed()
 end
 
 function Staff:updateSkill(consultant, trait, amount)
@@ -304,13 +306,42 @@ function Staff:wake(amount)
   self:updateDynamicInfo()
 end
 
+-- Update the movement speed
+function Staff:updateSpeed()
+  local level = 2
+  if self.profile.is_junior then
+    level = 1
+  elseif self.profile.is_consultant then
+    level = 3
+  end
+  local room = self:getRoom()
+  if room and room.room_info.id == "training" then
+    level = 1
+  elseif self.attributes["fatigue"] then
+    if self.attributes["fatigue"] >= 0.8 then
+      level = level - 2
+    elseif self.attributes["fatigue"] >= 0.7 then
+      level = level - 1
+    end
+  end
+  if level >= 3 then
+    self.speed = "fast"
+    self.slow_animation = false
+  elseif level <= 1 then
+    self.speed = "slow"
+    self.slow_animation = true
+  else 
+    self.speed = "normal"
+    self.slow_animation = false
+  end
+end
+
 -- Check if fatigue is over a certain level (decided by the hospital policy), 
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   if self.attributes["fatigue"] and self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
   and not class.is(self:getRoom(), StaffRoom) then
     -- Only when the staff member is very tired should the icon emerge.
-    -- TODO: Staff speed should be affected here.
     if self.attributes["fatigue"] >= 0.9 then
       self:setMood("tired", "activate")
     end
@@ -369,6 +400,7 @@ function Staff:onPlaceInCorridor()
     notify_object:onOccupantChange(1)
   end
   
+  self:updateSpeed()
   self:setNextAction{name = "meander"}
   if self.humanoid_class == "Receptionist" then
     world:findObjectNear(self, "reception_desk", nil, function(x, y)

@@ -59,6 +59,13 @@ local flag_flip_h = 1
 local navigateDoor
 
 local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
+  local factor = 1
+  local quantity = 8
+  if humanoid.speed and humanoid.speed == "fast" then
+    factor = 2
+    quantity = 4
+  end
+       
   local anims = humanoid.walk_anims
   local world = humanoid.world
   local notify_object = world:getObjectToNotifyOfOccupants(x2, y2)
@@ -76,7 +83,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       else
         humanoid.last_move_direction = "east"
         humanoid:setAnimation(anims.walk_east, flag_early_list)
-        humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4, 2)
+        humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4*factor, 2*factor)
       end
     else
       if map and map:getCellFlags(x1, y1).doorWest then
@@ -84,7 +91,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       else
         humanoid.last_move_direction = "west"
         humanoid:setAnimation(anims.walk_north, flag_early_list + flag_flip_h)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4, -2)
+        humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4*factor, -2*factor)
       end
     end
   else
@@ -94,7 +101,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       else
         humanoid.last_move_direction = "south"
         humanoid:setAnimation(anims.walk_east, flag_flip_h)
-        humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4, 2)
+        humanoid:setTilePositionSpeed(x2, y2, 32, -16, -4*factor, 2*factor)
       end
     else
       if map and map:getCellFlags(x1, y1).doorNorth then
@@ -102,11 +109,11 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
       else
         humanoid.last_move_direction = "north"
         humanoid:setAnimation(anims.walk_north)
-        humanoid:setTilePositionSpeed(x1, y1, 0, 0, 4, -2)
+        humanoid:setTilePositionSpeed(x1, y1, 0, 0, 4*factor, -2*factor)
       end
     end
   end
-  humanoid:setTimer(8, timer_fn)
+  humanoid:setTimer(quantity, timer_fn)
 end
 
 local flags_here, flags_there = {}, {}

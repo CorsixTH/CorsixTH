@@ -1513,7 +1513,7 @@ tooltip = {
     balance        = utf8 "Din bankbalanse må være på minst %d. Nå er den %d",
     value          = utf8 "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
     win_progress_other = utf8 "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
-    num_cured        = utf8 "Kriteriet er blant annet å kurere &d mennesker. Så langt har du kurert %d",
+    num_cured        = utf8 "Kriteriet er blant annet å kurere %d mennesker. Så langt har du kurert %d",
     happiness          = utf8 "Gjennomsnittlig humör på personene på ditt sykehus",
   },
   

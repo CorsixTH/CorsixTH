@@ -859,8 +859,10 @@ function Hospital:setCrazyDoctors(crazy)
 end
 
 function Hospital:updatePercentages()
-  self.percentage_killed = self.num_deaths / (self.num_cured + self.num_deaths) * 100
-  self.percentage_cured = self.num_cured / (self.num_cured + self.not_cured + self.num_deaths) * 100
+  local killed = self.num_deaths / (self.num_cured + self.num_deaths) * 100
+  self.percentage_killed = math.round(killed)
+  local cured = self.num_cured / (self.num_cured + self.not_cured + self.num_deaths) * 100
+  self.percentage_cured = math.round(cured)
 end
 
 function Hospital:getAveragePatientAttribute(attribute)

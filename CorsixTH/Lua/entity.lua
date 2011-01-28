@@ -124,19 +124,32 @@ function Entity:setTilePositionSpeed(tx, ty, px, py, sx, sy)
   return self
 end
 
+-- Inner tick function that will skip every other tick when
+-- slow_animation is set.
+function Entity:_tick()
+  if self.slow_animation then
+    if not self.skip_next_tick then
+      self.th:tick()
+    end
+    self.skip_next_tick = not self.skip_next_tick
+  else
+    self.th:tick()
+  end
+end
+
 -- Function which is called once every tick, where a tick is the smallest unit
 -- of time in the game engine. Typically used to advance animations and similar
 -- recurring or long-duration tasks.
 function Entity:tick()
   if self.num_animation_ticks then
     for i = 1, self.num_animation_ticks do
-      self.th:tick()
+      self:_tick()
     end
     if self.num_animation_ticks == 1 then
       self.num_animation_ticks = nil
     end
   else
-    self.th:tick()
+    self:_tick()
   end
   if self.mood_info then
     self.mood_info:tick()
@@ -174,6 +187,8 @@ end
 ! Each `Entity` can have a single timer associated with it, and due to this
 limit of one, it is almost always the case that the currently active humanoid
 action is the only thing wich calls `setTimer`.
+If self.slow_animation is set then all timers will be doubled as animation
+length will be doubled.
 !param tick_count (integer) If 0, then `f` will be called during the entity's
 next `tick`. If 1, then `f` will be called one tick after that, and so on.
 !param f (function) Function which takes a single argument (the entity).
@@ -181,6 +196,10 @@ next `tick`. If 1, then `f` will be called one tick after that, and so on.
 function Entity:setTimer(tick_count, f)
   self.timer_time = tick_count
   self.timer_function = f
+  if self.slow_animation and tick_count then
+    self.skip_next_tick = true
+    self.timer_time = tick_count * 2
+  end
 end
 
 -- Used to set a mood icon over the entity.

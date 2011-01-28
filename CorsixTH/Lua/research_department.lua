@@ -256,7 +256,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
         -- Find an object within this room that needs research points.
         for object, _ in pairs(room.objects_needed) do
           local research = self.research_progress[TheApp.objects[object]]
-          if not research.discovered then
+          if research and not research.discovered then
             local required = self:getResearchRequired(TheApp.objects[object])
             local advance = required * level_config.gbv.AutopsyRschPercent/100
             research.points = research.points + advance

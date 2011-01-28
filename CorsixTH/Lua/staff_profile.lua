@@ -51,6 +51,7 @@ end
 
 function StaffProfile:setSkill(skill)
   self.skill = skill
+  self:parseSkillLevel()
 end
 
 local name_parts = {_S.humanoid_name_starts, _S.humanoid_name_ends}
@@ -84,7 +85,6 @@ function StaffProfile:randomise(world, month)
   -- decide general skill for all staff
   self.skill = math.random()
   --self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
-  --self:parseSkillLevel()
   
   if self.humanoid_class == "Doctor" then
     -- find the correct config line (based on month) for generation of the doctor
@@ -134,6 +134,7 @@ function StaffProfile:randomise(world, month)
     end
   end
   self.wage = self:getFairWage(world)
+  self:parseSkillLevel()
   self:randomiseOrganical()
 end
 
@@ -197,6 +198,7 @@ function StaffProfile:drawFace(canvas, x, y, parts_bitmap)
   parts_bitmap:draw(canvas, x, y + 53, 0, 954 + self.chin_index * 22, 65, 22)
 end
 
+-- Update junior and consultant status
 function StaffProfile:parseSkillLevel()
   local junior_skill = 0.4
   self.is_junior     = self.skill <= junior_skill and 1 or nil
