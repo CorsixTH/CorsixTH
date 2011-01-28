@@ -105,6 +105,14 @@ end
 
 function Room:dealtWithPatient(patient)
   patient = patient or self:getPatient()
+  -- If the patient was sent home while in the room, don't
+  -- do anything apart from removing any leading idle action.
+  if not patient.hospital then
+    if patient.action_queue[1].name == "idle" then
+      patient:finishAction()
+    end
+    return
+  end
   patient:setNextAction(self:createLeaveAction())
   patient:addToTreatmentHistory(self.room_info)
 

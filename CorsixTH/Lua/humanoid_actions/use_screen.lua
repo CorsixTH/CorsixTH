@@ -31,6 +31,32 @@ local finish = permanent"action_use_screen_finish"( function(humanoid)
   humanoid:finishAction()
 end)
 
+-- Set markers for all animations involved.
+local animation_numbers = {
+  946,
+  --1022,
+  1048,
+  1052,
+  --1204,
+  --2772,
+  --2774,
+  --2776,
+  2780,
+  2782,
+  2784,
+  2790,
+  2792,
+  2794,
+  2796,
+  2844,
+  2848,
+  4760,
+  4762,
+  4768,
+  4770,
+}
+TheApp.animation_manager:setMarker(animation_numbers, {-1.05, -0.05})
+
 local patient_clothes_state = permanent"action_use_screen_patient_clothes_state"( function(humanoid)
   humanoid.user_of:setAnimation(1204)
   humanoid.user_of:setLayer(1, humanoid.layers[1])

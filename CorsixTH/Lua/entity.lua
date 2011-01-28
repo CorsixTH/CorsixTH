@@ -189,9 +189,9 @@ function Entity:setMoodInfo(new_mood)
     if not self.mood_info then
       self.mood_info = TH.animation()
       self.mood_info:setPosition(-1, -96)
+      self.mood_info:setParent(self.th)
     end
     self.mood_info:setAnimation(self.world.anims, new_mood.icon)
-    self.mood_info:setParent(self.th)
   else
     if self.mood_info then
       self.mood_info:setTile(nil)

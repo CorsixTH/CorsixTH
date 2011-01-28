@@ -300,8 +300,10 @@ local function action_multi_use_object_start(action, humanoid)
   if action.prolonged_usage then
     action.on_interrupt = action_multi_use_object_interrupt
     use_with.action_queue[1].on_interrupt = --[[persistable:action_multi_use_object_use_with_interrupt]] function()
-      action:on_interrupt()
-      action.on_interrupt = nil
+      if action.on_interrupt then
+        action:on_interrupt()
+        action.on_interrupt = nil
+      end
     end
   end
   local object = action.object

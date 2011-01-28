@@ -308,6 +308,36 @@ function Hospital:afterLoad(old, new)
     self.research_rooms = nil
     -- Cost of rooms has also been changed
     local rooms = self.world.map.level_config.rooms
+    if not rooms then
+      -- Add the new variables manually.
+      rooms = {
+        [7] = {Cost = 2280}, -- GP_OFFICE
+        [8] = {Cost = 2270}, -- PSYCHO
+        [9] = {Cost = 1700}, -- WARD
+        [10] = {Cost = 2250}, -- OP_THEATRE
+        [11] = {Cost = 500}, -- PHARMACY
+        [12] = {Cost = 470}, -- CARDIO
+        [13] = {Cost = 3970}, -- SCANNER
+        [14] = {Cost = 2000}, -- ULTRASCAN
+        [15] = {Cost = 3000}, -- BLOOD_MACHINE
+        [16] = {Cost = 2000}, -- XRAY
+        [17] = {Cost = 1500}, -- INFLATOR
+        [18] = {Cost = 7000}, -- ALIEN
+        [19] = {Cost = 500}, -- HAIR_RESTORER
+        [20] = {Cost = 1500}, -- SLACK_TONGUE
+        [21] = {Cost = 500}, -- FRACTURE
+        [22] = {Cost = 1850}, -- TRAINING
+        [23] = {Cost = 500}, -- ELECTRO
+        [24] = {Cost = 4500}, -- JELLY_VAT
+        [25] = {Cost = 1350}, -- STAFF ROOM
+        [26] = {Cost = 5}, -- TV ??
+        [27] = {Cost = 720}, -- GENERAL_DIAG
+        [28] = {Cost = 800}, -- RESEARCH
+        [29] = {Cost = 1170}, -- TOILETS
+        [30] = {Cost = 5500}, -- DECON_SHOWER
+      }
+      self.world.map.level_config.rooms = rooms
+    end
     for i, room in ipairs(TheApp.rooms) do
       -- Sum up the build cost of the room
       local build_cost = rooms[room.level_config_id].Cost

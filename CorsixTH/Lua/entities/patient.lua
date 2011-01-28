@@ -287,7 +287,8 @@ function Patient:tickDay()
     -- The only allowed situations to grab a soda is when queueing
     -- or idling/walking in the corridors
     -- Also make sure the walk action when leaving a room has a chance to finish.
-    if not self:getRoom() and not self.action_queue[1].is_leaving then
+    if not self:getRoom() and not self.action_queue[1].is_leaving 
+    and not self.action_queue[1].is_entering then
       local machine, lx, ly = self.world:
           findObjectNear(self, "drinks_machine", 8)
 
