@@ -36,8 +36,8 @@ the override translation of all the original english strings.
 
 FORMATING AND NORWEGIAN/DANISH LETTERS
 This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the 
-norwegian/danish letters ø and Ø, you must use the old-style ö and Ö instead. That is 
-because the letters ø and Ø is not included in the original ingame-font.
+norwegian/danish letters ö and Ø, you must use the old-style ö and Ö instead. That is 
+because the letters ö and Ø is not included in the original ingame-font.
 
 
 
@@ -975,11 +975,11 @@ research = {
 
 -- Policy screen
 policy = {
-  header            = "Hospital politik",
-  diag_procedure    = "Dianogse procedure",
-  diag_termination  = utf8 "Dianogse annulæring",
-  staff_rest        = utf8 "Send personale til afslapning",
-  staff_leave_rooms = utf8 "Personale må forlade rum",
+  header            = utf8 "Hospitalets politik",
+  diag_procedure    = utf8 "Diagnose procedure",
+  diag_termination  = utf8 "Diagnose annullering",
+  staff_rest        = utf8 "Send personale til personalerum",
+  staff_leave_rooms = utf8 "Personale må forlade lokaler",
   
   sliders = {
     guess           = utf8 "GæT PÅ KUR", -- belongs to diag_procedure
@@ -1610,15 +1610,16 @@ tooltip = {
     happiness          = utf8 "Gennemsnitligt humör på personene på dit sygehus",
   },
   
-  -- Policy
+    -- Policy
   policy = {
-    close              = "Lukk sykehuspolicy",
-    staff_leave        = utf8 "Klikk her for å få personale som ikke er opptatt til å hjelpe kollegaer som trenger det",
-    staff_stay         = utf8 "Klikk her for å få personale til å bli i rommene du plasserer dem i",
-    diag_procedure     = "Om en leges stilte diagnose er mindre sikker en SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
-    diag_termination   = utf8 "En pasients diagnosering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
-    staff_rest         = utf8 "Hvor trött personale må være för de kan hvile",
+    close              = "Luk sygehuspolitik",
+    staff_leave        = utf8 "Klik her for at få personale som ikke er optaget til at hjælpe kollegaer, som har brug for hjælp",
+    staff_stay         = utf8 "Klik her for at få personalet til at blive i det rum du har placeret dem i",
+    diag_procedure     = utf8 "Hvis lægens diagonse er mindre sikker end send hjem procenten, vil patitenten blive sendt hjem. Hvis diagnosen er mere sikker end gættet kur procenten vil patienten få den aktuelle behandling",
+    diag_termination   = utf8 "Der vil blive ved med at blive sögt efter en diagnose indtil lægerne er helt sikkre på på en kur, eller alle maskiner er afprövet. Du kan dog afbryde diagnostikseringen",
+    staff_rest         = utf8 "Hvor træt dit personale skal være för de går til personalerummet",
   },
+  
   
   -- Pay rise window
   pay_rise_window = {
@@ -1665,12 +1666,12 @@ tooltip = {
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
     desk                 = utf8 "Bord: En læge kan bruge bordet til sin computer.",
-    cabinet              = "Arkivskab: Indeholder patienterjournaler, noter og forsikringsdokumenter.",
+    cabinet              = "Arkivskab: Indeholder patientjournaler, noter og forsikringsdokumenter.",
     door                 = utf8 "Dör: Patienten åbner og lukker disse meget.",
     bench                = utf8 "Bænk: Giver en plads at sidde på og gör besöget mere behageligt.",
     table1               = S[40][ 6], -- unused
     chair                = utf8 "Stol: Patienten sidder på den og taler om sine problemer.",
-    drinks_machine       = utf8 "Sodavandsautomat: Forbindre at patienterne kommer til at törste og tiltrækker insekter.",
+    drinks_machine       = utf8 "Sodavandsautomat: Forbindre at patienterne i at komme til at törste og tiltrækker insekter.",
     bed                  = "Seng: Virkelig syge patienter kan ligge i dem.",
     inflator             = "Pumpe: Kurerer patienter med opsvulmet hoved.",
     pool_table           = utf8 "Billardbord: Hjælper dit personale til at slappe af.",
@@ -1732,7 +1733,7 @@ tooltip = {
     
 adviser = {
   
-  -- Tutorial
+ --[[ -- Tutorial
   tutorial = {
     build_reception         = utf8 "Heisann. Först, trenger sykehuset ditt en Resepsjon. Velg en fra Inventarmenyen.",
     order_one_reception       = utf8 "Klikk en gang på den blinkende linjen med venstre museknapp for å kjöpe en Resepsjon.",
@@ -1769,7 +1770,7 @@ adviser = {
     room_big_enough         = utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
     build_pharmacy           = utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en sykepleier for å ha et fungerende sykehus.",
   },
-  
+  ---]]
   -- Epidemic
   epidemic = {
     hurry_up         = utf8 "Hvis du ikke tager dig af epidemien nu, kan du få store problemer. Skynd dig!",
@@ -1896,13 +1897,13 @@ adviser = {
   -- Goals
   goals = {
     win = {
-      money     = utf8 "Du trenger %d til for å oppnå de finansielle kriteriene på dette nivået.",
-      cure       = utf8 "Kurer %d pasienter til og du har kurert nok for å fullföre dette nivået.",
-      reputation   = utf8 "Sörg for å ha et omdömme på over %d for at du skal kunne fullföre nivået.",
-      value     = utf8 "Sykehuset ditt må ha en verdi på over %d for at du skal kunne fullföre dette nivået",
+      money     = utf8 "Du skal opnå %d  for at nå de finansielle krav på dette niveau.",
+      cure       = utf8 "Du skal kure %d patienter mere og så har du kurreret nok for at gennemföre runden.",
+      reputation   = utf8 "Sörg for at have et omdömme på over %d for at du kan genneföre runden.",
+      value     = utf8 "Dit sygehus skal have en værdi på over %d för du kan gennemföre runden",
     },
     lose = {
-      kill       = utf8 "Drep %d pasienter til for å tape dette nivået !",
+      kill       = utf8 "Dræb %d patienter mere for at tabe runden!",
     },
   },
   
@@ -2203,7 +2204,7 @@ vip_names = {
   "RobseRob",
   utf8 "A.P. MOLLER Mærsk",
   "En professionel fodbold spiller",
-  "Lars larsen", -- Jysk sengetøjslager
+  "Lars larsen", -- Jysk sengetöjslager
   utf8 "Justin bæver",  -- Dont think i like him.. i hate him!
 }
 
@@ -2839,8 +2840,8 @@ misc = {
   * town_map - done
   * jukebox - done
   * status - done
-  * policy
-  * objects
+  * policy - done
+  * objects - done
   * adviser
   * epidemic
   * staff_advice
@@ -2855,7 +2856,7 @@ misc = {
   * boiler_issue
   * competitors
   * room_requirements
-  * goals
+  * goals - done
   * warnings
   * placement_info
   * praise
