@@ -1,38 +1,83 @@
 -----------------------------------------
+Version Beta 6 - released 2011-??-??
+-----------------------------------------
+
+-- Gameplay --
+
+* Feature: Staff speed!
+* Added: All parts of research have been implemented, including
+  machine strength improvements, drug improvements and the
+  "concentrate research" button in the drug casebook.
+* Added: Overdraft charges for having a negative balance.
+* Fix: The length of a day was about half as long as it should be.
+* Fix: A few occurrences of bone-idle patients have been resolved.
+* Fix: Juniors were not correctly labeled as Doctors after promotion.
+* Fix: Some crashes regarding receptionists.
+* Fix: Never charge less than initial cost when reputation is below 500.
+* Fix: Some repair animations were too short.
+* Fix: Don't check winning and losing conditions so often.
+* Fix: Taking loans can now make the player avoid losing.
+* Fix: Level 7 had an emergency with an unavailable disease.
+* Fix: Doctors on their way back to the research room or training room
+  will no longer answer to any calls.
+* Fix: Don't crash if a patient in a machine is sent home.
+* Fix: Various tweaks to the operating theatre logic.
+
+-- User Interface --
+
+* Feature: The drug casebook now shows if you can treat a disease or not,
+  and in the latter case the tooltip tells you what is missing. Actual
+  price is shown after some time, instead of charge %.
+* Feature: Press and hold on value buttons will now make the value continue
+  to increase until the button is released again.
+* Added: The adviser will help out in a few more situations.
+
+-- Translations --
+
+* Feature: CorsixTH now supports TrueType fonts via FreeType2!
+* Feature: To assist translators a new diff file is now created when you
+  choose the debug option "dump strings" (with languages other than English).
+  It contains those strings which are either found in English but not in
+  the given language, or found in the given language but not in English.
+
+* New languages: Traditional Chinese, Simplified Chinese, Russian.
+
+-----------------------------------------
 Version Beta 5 - released 2010-12-24
 -----------------------------------------
 
 -- Gameplay --
 
-Feature: (Some) Cheats added. Type 24328 into the fax machine to get access to them.
-Feature: Custom map "Avatar" added.
-Feature: Player's "salary" (read: score) now increases over your level progress.
-Feature: Level based interest rate.
-Feature: Level based "starting staff" (e.g. original level 5).
-Feature: "No deaths" trophy added.
-Fix: Error could occur when losing a game.
-Fix: Multiple handymen watering the same plant at the same time.
-Fix: Some placements of opposite doors/objects were wrongly forbidden.
-Fix: Error could occur when building a surgery.
-Fix: Autopsy now has an appropriate impact on research.
-Fix: Salaries for doctors were too high.
-Fix: In some cases lose conditions were not triggered.
-Fix: Research room door could disappear after autopsy.
-... and various other bugs fixed.
+* Feature: (Some) Cheats added. Type 24328 into the fax machine to get access to them.
+* Feature: Custom map "Avatar" added.
+* Feature: Player's "salary" (read: score) now increases over your level progress.
+* Feature: Level based interest rate.
+* Feature: Level based "starting staff" (e.g. original level 5).
+* Feature: "No deaths" trophy added.
+* Fix: Error could occur when losing a game.
+* Fix: Multiple handymen watering the same plant at the same time.
+* Fix: Some placements of opposite doors/objects were wrongly forbidden.
+* Fix: Error could occur when building a surgery.
+* Fix: Autopsy now has an appropriate impact on research.
+* Fix: Salaries for doctors were too high.
+* Fix: In some cases lose conditions were not triggered.
+* Fix: Research room door could disappear after autopsy.
+  ... and various other bugs fixed.
 
 -- User Interface --
 
-Feature: The player is now told the reason why he lost, when he loses, instead of being left in the dark.
-Fix: Wrong winning faxes shown for levels 5-11.
-Fix: Weird scrolling behavior could occur after loading a game.
-Fix: No tutorial when playing with demo files.
-Fix: Adviser disappeared too quickly during tutorial.
-Some improvements to textboxes.
-Some improvements to windows.
-... and various other small improvements and fixes.
+* Feature: The player is now told the reason why he lost, when he loses, instead of being left in the dark.
+* Fix: Wrong winning faxes shown for levels 5-11.
+* Fix: Weird scrolling behavior could occur after loading a game.
+* Fix: No tutorial when playing with demo files.
+* Fix: Adviser disappeared too quickly during tutorial.
+* Some improvements to textboxes.
+* Some improvements to windows.
+  ... and various other small improvements and fixes.
 
 -- Translations --
-Fix: Error caused by some winning faxes in Norwegian.
+
+* Fix: Error caused by some winning faxes in Norwegian.
 
 -----------------------------------------
 Version Beta 4 - released 2010-11-12

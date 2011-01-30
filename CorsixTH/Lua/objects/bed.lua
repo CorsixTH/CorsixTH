@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "bed"
 object.thob = 8
+object.research_category = "diagnosis"
 object.name = _S.object.bed
 object.tooltip = _S.tooltip.objects.bed
 object.ticks = false

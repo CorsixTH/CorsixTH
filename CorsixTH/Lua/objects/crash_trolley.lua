@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local object = {}
 object.id = "crash_trolley"
 object.thob = 20
+object.research_category = "diagnosis"
 object.name = _S.object.crash_trolley
 object.tooltip = _S.tooltip.objects.crash_trolley
 object.ticks = false
