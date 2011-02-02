@@ -41,23 +41,23 @@ debug_patient_window = {
 totd_window = {
   previous = "上一个提示",
   tips = {
-    [1] = "Corsix-TH，主题医院开源复刻版，项目主页：http://code.google.com/p/corsix-th",
-    [2] = "运行游戏需要原版中文版主题医院文件，例如151MB的那个，下载地址：http://www.gougou.com/search?search=主题医院",
+    [1] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
+    [2] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
     [3] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
     [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
     [5] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
     [6] = "项目论坛地址1：http://forums.corsix-th.com",
-    [7] = "项目论坛地址2（需要翻墙）：http://groups.google.com/group/corsix-th-dev",
+    [7] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
     [8] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
     [9] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
     [10] = "自定义游戏里面有一幅地图Avatar，里面有特殊的任务",
-    [11] = "Corsix-TH，主题医院开源复刻版，项目主页：http://code.google.com/p/corsix-th",
-    [12] = "运行游戏需要原版中文版主题医院文件，例如151MB的那个，下载地址：http://www.gougou.com/search?search=主题医院",
+    [11] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
+    [12] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
     [13] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
     [14] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
     [15] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
     [16] = "项目论坛地址1：http://forums.corsix-th.com",
-    [17] = "项目论坛地址2（需要翻墙）：http://groups.google.com/group/corsix-th-dev",
+    [17] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
     [18] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
     [19] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
   },
@@ -207,7 +207,7 @@ menu_debug = {
 }
 menu_options = {
   edge_scrolling = " 开启鼠标滚动 ",
-  lock_windows = " 关闭 Windows 键 ",
+  lock_windows = " 锁定窗口 ",
   settings = " 选项 ",
 }
 menu_options_game_speed = {
@@ -218,8 +218,8 @@ lua_console = {
   close = "Close",
 }
 install = {
-  title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
+  title = "--------------------------------- CorsixTH 游戏设置 ---------------------------------",
+  th_directory = "运行游戏需要原版主题医院。请指定原版主题医院游戏安装文件夹。",
 }
 load_game_window = {
   caption = "装载游戏",

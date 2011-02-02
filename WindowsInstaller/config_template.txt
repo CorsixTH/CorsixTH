@@ -17,7 +17,7 @@ theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Chinese (simplified)  / zh(s) / chi(s)
---  Chinese (traditional) / zh(s) / chi(s)
+--  Chinese (traditional) / zh(t) / chi(t)
 --  Danish                / da / dk
 --  Dutch                 / Nederlands / nl / dut / nld
 --  English               / en / eng

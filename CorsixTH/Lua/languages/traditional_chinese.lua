@@ -207,7 +207,7 @@ menu_debug = {
 }
 menu_options = {
   edge_scrolling = " 開啟滑鼠捲動 ",
-  lock_windows = " 關閉 Windows 鍵 ",
+  lock_windows = " 鎖定視窗 ",
   settings = " 選項 ",
 }
 menu_options_game_speed = {
@@ -218,8 +218,8 @@ lua_console = {
   close = "Close",
 }
 install = {
-  title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
+  title = "--------------------------------- CorsixTH 遊戲設定 ---------------------------------",
+  th_directory = "運行游戲需要原版杏林也瘋狂。請指定原版杏林也瘋狂游戲安裝資料夾。",
 }
 load_game_window = {
   caption = "裝載遊戲",
