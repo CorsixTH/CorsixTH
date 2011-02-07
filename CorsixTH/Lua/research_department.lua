@@ -517,8 +517,18 @@ function ResearchDepartment:concentrateResearch(disease_id)
     -- Now, find the object related to the disease.
     -- TODO: This assumes it is the last room in the treatment_rooms list
     -- which is the one to concentrate on.
-    local index = #book_entry.disease.treatment_rooms
-    local room = book_entry.disease.treatment_rooms[index]
+    local room
+    if book_entry.disease.treatment_rooms then
+      local index = #book_entry.disease.treatment_rooms
+      room = book_entry.disease.treatment_rooms[index]
+    else
+      -- This is a pseudo-disease, it should represent a piece of diagnosis
+      -- machinery that we can improve via research.
+      assert(book_entry.disease.id:sub(1, 5) == "diag_", "Trying to " ..
+      "concentrate research on disease without treatment rooms that " ..
+      "isn't a diagnosis machine pseudodisease")
+      room = book_entry.disease.id:sub(6)
+    end
     local object
     -- TODO: Can these loops be improved upon?
     for obj, _ in pairs(self.world.available_rooms[room].objects_needed) do

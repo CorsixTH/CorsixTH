@@ -232,6 +232,8 @@ options_window = {
   width = "Width",
   height = "Height",
   change_resolution = "Change resolution",
+  browse = "Browse...",
+  new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
   back = "Back",
 }
 
@@ -241,6 +243,8 @@ tooltip.options_window = {
   height = "Enter desired screen height",
   change_resolution = "Change the window resolution to the dimensions entered on the left",
   language = "Select %s as language",
+  original_path = "The currently chosen directory of the original Theme Hospital installation",
+  browse = "Browse for another location of a Theme Hospital installation",
   back = "Close the options window",
 }
 

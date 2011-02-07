@@ -28,13 +28,15 @@ local border_offset_y = 9
 local border_size_x = 40
 local border_size_y = 40
 
-function UIResizable:UIResizable(ui, width, height, colour)
+function UIResizable:UIResizable(ui, width, height, colour, no_borders)
   self:Window()
   
   local app = ui.app
   self.ui = ui
   self.resizable = false -- by default, not user-resizable
-  self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  if not no_borders then
+    self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  end
   
   self.background_panel =
     self:addColourPanel(0, 0, 0, 0, 0, 0, 0)

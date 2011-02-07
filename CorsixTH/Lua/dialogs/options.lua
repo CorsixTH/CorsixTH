@@ -69,11 +69,14 @@ function UIOptions:UIOptions(ui, mode)
   
   -- Fullscreen
   self.fullscreen_button =
-    self:addBevelPanel(20, 20, 20, 20, col_button):makeToggleButton(0, 0, 20, 20, nil, self.buttonFullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
+    self:addBevelPanel(20, 20, 20, 20, col_button)
+    :makeToggleButton(0, 0, 20, 20, nil, self.buttonFullscreen)
+    :setTooltip(_S.tooltip.options_window.fullscreen_button)
   if app.fullscreen then
     self.fullscreen_button:toggle()
   end
-  self:addBevelPanel(50, 20, 250, 20, col_bg):setLabel(_S.options_window.fullscreen).lowered = true
+  self:addBevelPanel(50, 20, 250, 20, col_bg)
+    :setLabel(_S.options_window.fullscreen).lowered = true
   
   -- Screen resolution
   local --[[persistable:options_width_textbox_reset]] function width_textbox_reset()
@@ -95,9 +98,20 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_button =
     self:addBevelPanel(140, 50, 160, 20, col_bg):setLabel(_S.options_window.change_resolution)
     :makeButton(0, 0, 160, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.change_resolution)
-  
+
+  -- Also load the built in font
+  local built_in = app.gfx:loadBuiltinFont()
+  -- Location of original game
+  self:addBevelPanel(20, 80, 280, 20, col_bg)
+    :setLabel(app.config.theme_hospital_install, built_in, "left")
+    :setTooltip(_S.tooltip.options_window.original_path).lowered = true
+
+  self.browse_button =
+    self:addBevelPanel(20, 110, 70, 20, col_bg):setLabel(_S.options_window.browse)
+    :makeButton(0, 0, 70, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
+
   -- Language
-  local y = 80
+  local y = 140
   for _, lang in ipairs(app.strings.languages) do
     local font = app.strings:getFont(lang)
     if app.gfx:hasLanguageFont(font) then
@@ -152,13 +166,18 @@ function UIOptions:buttonResolution()
   end
 end
 
+function UIOptions:buttonBrowse()
+  local browser = UIDirBrowser(self.ui, "menu")
+  self.ui:addWindow(browser)
+end
+
 function UIOptions:buttonBack()
   self:close()
+  if self.mode == "menu" then
+    self.ui:addWindow(UIMainMenu(self.ui))
+  end
 end
 
 function UIOptions:close()
   UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
 end

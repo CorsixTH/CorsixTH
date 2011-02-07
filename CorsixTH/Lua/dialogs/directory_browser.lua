@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local lfs = require "lfs"
 dofile("dialogs/tree_ctrl")
+dofile("dialogs/resizable")
 
 --! A tree node representing a directory in the physical file-system
 class "DirTreeNode" (TreeNode)
@@ -163,9 +164,9 @@ function DirTreeNode:getLabel()
 end
 
 --! Prompter for Theme Hospital install directory
-class "UIDirBrowser" (Window)
+class "UIDirBrowser" (UIResizable)
 
-function UIDirBrowser:UIDirBrowser(ui)
+function UIDirBrowser:UIDirBrowser(ui, mode)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -176,24 +177,28 @@ function UIDirBrowser:UIDirBrowser(ui)
     green = 156,
     blue = 208,
   }
+
+  self:UIResizable(ui, 500, 423, self.col_bg, mode ~= "menu" and true or false)
   self.ui = ui
-  self:Window()
-  self.width = 500
-  self.height = 423
+  self.mode = mode
+  self:setSize(500, 423)
   self:addColourPanel(0, 0, self.width, self.height, self.col_bg.red, self.col_bg.green, self.col_bg.blue)
 
-  self.font = ui.app.gfx:loadBuiltinFont()
-  
-  self.modal_class = "dir browser"
+  self.modal_class = mode == "menu" and "main menu" or "dir browser"
   self.resizable = false
-  self:setDefaultPosition(0.05, 0.5)
-  
-  self:addKeyHandler("esc", self.exit)
-  
-  -- Add an exit button
-  local font = TheApp.gfx:loadBuiltinFont()
-  self:addBevelPanel(230, 400, 40, 18, self.col_bg):setLabel("Exit", font)
-  :makeButton(0, 0, 40, 18, nil, self.exit)
+  self.exit_button = self:addBevelPanel(230, 400, 50, 18, self.col_bg)
+  if mode == "menu" then
+    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+    self:setDefaultPosition(0.5, 0.25)
+    self.on_top = true
+    self.esc_closes = true
+    self.exit_button:setLabel("Cancel"):makeButton(0, 0, 50, 18, nil, self.close)
+  else
+    self.font = ui.app.gfx:loadBuiltinFont()
+    self:setDefaultPosition(0.05, 0.5)
+    self:addKeyHandler("esc", self.exit)
+    self.exit_button:setLabel("Exit", self.font):makeButton(0, 0, 50, 18, nil, self.exit)
+  end
 
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
@@ -220,6 +225,13 @@ function UIDirBrowser:exit()
   self.ui.app:exit()
 end
 
+function UIDirBrowser:close()
+  UIResizable.close(self)
+  if self.mode == "menu" then
+    self.ui:addWindow(UIOptions(self.ui, "menu"))
+  end
+end
+
 function UIDirBrowser:chooseDirectory(path)
   local app = TheApp
   app.config.theme_hospital_install = path
@@ -229,9 +241,12 @@ function UIDirBrowser:chooseDirectory(path)
 end
 
 function UIDirBrowser:draw(canvas, x, y)
-  Window.draw(self, canvas, x, y)
+  UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
-  self.font:drawWrapped(canvas, _S.install.title, x + 5, y + 5, self.width - 10, "center")
-  self.font:drawWrapped(canvas, _S.install.th_directory, x + 5, y + 15, self.width - 10)
+  if self.mode ~= "menu" then
+    self.font:drawWrapped(canvas, _S.install.title, x + 5, y + 5, self.width - 10, "center")
+    self.font:drawWrapped(canvas, _S.install.th_directory, x + 5, y + 15, self.width - 10)
+  else
+    self.font:drawWrapped(canvas, _S.options_window.new_th_directory, x + 5, y + 15, self.width - 10)
+  end
 end
