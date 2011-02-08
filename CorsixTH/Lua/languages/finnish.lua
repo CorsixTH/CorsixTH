@@ -220,6 +220,8 @@ options_window = {
   width                 = utf8 "Leveys",
   height                = utf8 "Korkeus",
   change_resolution     = utf8 "Vaihda resoluutio",
+  browse                = utf8 "Selaa...",
+  new_th_directory      = utf8 "Tässä voit määrittää uuden Theme Hospital -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
   back                  = utf8 "Takaisin",
 }
 
@@ -280,12 +282,14 @@ tooltip = {
   },
 
   options_window = {
-    fullscreen_button     = utf8 "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
-    width                 = utf8 "Syötä peli-ikkunan haluttu leveys",
-    height                = utf8 "Syötä peli-ikkunan haluttu korkeus",
-    change_resolution     = utf8 "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
-    language              = utf8 "Valitse kieleksi %s",
-    back                  = utf8 "Sulje tämä ikkuna",
+    fullscreen_button   = utf8 "Klikkaa kytkeäksesi koko ruudun -tilan päälle tai pois",
+    width               = utf8 "Syötä peli-ikkunan haluttu leveys",
+    height              = utf8 "Syötä peli-ikkunan haluttu korkeus",
+    change_resolution   = utf8 "Muuta ikkunan resoluutio vasemmalla annettujen arvojen mukaiseksi",
+    language            = utf8 "Valitse kieleksi %s",
+    original_path       = utf8 "Käytössä oleva Theme Hospital -pelin asennushakemisto",
+    browse              = utf8 "Selaa hakemistoja valitaksesi uuden Theme Hospital -pelin asennushakemiston",
+    back                = utf8 "Sulje tämä ikkuna",
   },
 
   new_game_window = {
@@ -2562,18 +2566,18 @@ fax = {
   debug_fax = {
     -- never seen this, must be a debug option of original TH
     -- TODO: make this nicer if we ever want to make use of it
-    close_text  = utf8 "Yes, yes, yes!",
-    text1       = utf8 "BEST COUNT %d", -- %d
-    text2       = utf8 "TOTAL PEOPLE IN HOSPITAL %d CHECKING AGAINST %d", -- %d %d
-    text3       = utf8 "FIGURES  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d", -- %d %d %d %d %d
-    text4       = utf8 "FACTORS  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d", -- %d %d %d %d %d
-    text5       = utf8 "CONTRIBN : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d PERCENT", -- %d %d %d %d %d
-    text6       = utf8 "THE FOLLOWING FACTORS ARE ALSO APPLIED",
-    text7       = utf8 "REPUTATION: %d EXPECTED %d REDUCTION %d", -- %d %d %d
-    text8       = utf8 "AMENITIES %d PEEPS HANDLED %d REDUCTION %d", -- %d %d %d
-    text9       = utf8 "DISASTERS %d ALLOWED (MTHS) %d (%d)REDUCTION %d", -- %d %d %d %d
-    text10      = utf8 "KILLS %d ALLOWED (MTHS) %d (%d) REDUCTION %d", -- %d %d %d %d
-    text11      = utf8 "PEOPLE THIS MONTH %d", -- %d
+    close_text  = utf8 "Kyllä, kyllä, kyllä!",
+    text1       = utf8 "PARAS MÄÄRÄ %d", -- %d
+    text2       = utf8 "IHMISIÄ YHTEENSÄ SAIRAALASSA %d VERRATTUNA %d:N", -- %d %d
+    text3       = utf8 "LUVUT    : LÄÄKÄRIT %d HOITAJAT %d ALUE %d HUONEET %d HINTA %d", -- %d %d %d %d %d
+    text4       = utf8 "KERTOIMET: LÄÄKÄRIT %d HOITAJAT %d ALUE %d HUONEET %d HINTA %d", -- %d %d %d %d %d
+    text5       = utf8 "OSUUS    : LÄÄKÄRIT %d HOITAJAT %d ALUE %d HUONEET %d HINTA %d PROSENTTIA", -- %d %d %d %d %d
+    text6       = utf8 "SEURAAVAT KERTOIMET OTETAAN MYÖS HUOMIOON",
+    text7       = utf8 "MAINE: %d ODOTETTU %d VÄHENNYS %d", -- %d %d %d
+    text8       = utf8 "WC-TILAT %d IHMISIÄ PALVELTU %d VÄHENNYS %d", -- %d %d %d
+    text9       = utf8 "ONNETTOMUUDET %d SALLITTU (KK) %d (%d)VÄHENNYS %d", -- %d %d %d %d
+    text10      = utf8 "KUOLEMAT %d SALITTU (KK) %d (%d) VÄHENNYS %d", -- %d %d %d %d
+    text11      = utf8 "IHMISIÄ TÄSSÄ KUUSSA %d", -- %d
   },
   
   -- Emergency
