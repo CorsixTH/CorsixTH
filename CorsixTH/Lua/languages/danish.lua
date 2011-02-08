@@ -272,6 +272,8 @@ options_window = {
   width = "Bredde",
   height = utf8 "Höjde",
   change_resolution = utf8 "Skift oplösning",
+  browse = "Gennemse",
+  new_th_directory = utf8 "Her kan du specificere en ny installationsmappe for Theme Hospital. Så snart du har gjort det vil spillet genstarte.",
   back = "Tilbage",
 }
   
@@ -281,7 +283,9 @@ tooltip.options_window = {
   height = utf8 "Indtast den önskede skærm höjde",
   change_resolution = utf8 "Skift skærmstörrelsen til dimmensionerne indtastet til höjre",
   language = utf8 "Vælg %s som sprog",
-  back = "Luk indstillings vinduet",
+  original_path = "Den nuværrende mappe af original installationen af Theme Hospital",
+  browse = "Gennemse et andet sted for installation af Theme Hospital",
+  back = "Luk indstillingsvinduet",
 }
 
 new_game_window = {
