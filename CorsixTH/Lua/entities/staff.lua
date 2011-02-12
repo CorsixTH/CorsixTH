@@ -399,6 +399,9 @@ function Staff:onPlaceInCorridor()
   if notify_object then
     notify_object:onOccupantChange(1)
   end
+  -- Assume that if the player puts someone in the corridor they don't want the 
+  -- staff member to primarily return to his/her old room.
+  self.last_room = nil
   
   self:updateSpeed()
   self:setNextAction{name = "meander"}

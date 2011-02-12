@@ -792,7 +792,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
     
   if str then
-    self.adviser:say(str, true)
+    self.adviser:say(str, true, true)
   else
     self.adviser.stay_up = nil
   end

@@ -70,7 +70,7 @@ Inherit("english")
 fax = {
   welcome = {
     beta1 = {
-      utf8 "Velkommen til CorsixTH, en remake av klassikeren Theme Hospital i åpen kildekode!",
+      utf8 "Velkommen til CorsixTH, en remake av klassikeren Theme Hospital med åpen kildekode!",
       utf8 "Dette er en spillbar beta 1. Mange rom, sykdommer og funksjoner er implementert, men det er fremdeles mye som mangler.",
       utf8 "Om du liker prosjektet, kan du hjelpe oss med utviklingen, f.eks ved å rapportere feil, bidra med oversettelser, eller begynne å programmere noe selv.",
       utf8 "Men nå, kos deg med spillet! For dere som ikke kjenner til Theme Hospital: Start med å bygge en Resepsjon (inventarmenyen) og en Allmennpraksis (diagnoserom). Du trenger også behandlingsrom.",
@@ -100,7 +100,7 @@ fax = {
 letter = {
   dear_player = utf8 "Kjære %s",
   custom_level_completed = utf8 "Bra gjort! Du har fullfört alle utfordringene på dette brukerdefinerte brettet.!",
-  return_to_main_menu = utf8 "Vil du returnere til hovedmenyen eller fortsette å spille?",
+  return_to_main_menu = utf8 "Vil du gå tilbake til hovedmenyen eller fortsette å spille?",
 }
 
 install = {
@@ -135,7 +135,9 @@ menu_debug = {
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
   make_debug_patient            = "  LAG TESTPASIENT  ",
-  spawn_patient                 = "  SPAWN PASIENT  ",
+  cheats                        = "  (F11) JUKSEKODER  ",
+  make_debug_fax                = "  (F8) LAG DEBUG FAKS  ",
+  spawn_patient                 = "  LAG PASIENT  ",
   make_adviser_talk             = utf8 "  FÅ RÅDGIVER TIL Å SNAKKE  ",
   show_watch                    = "  VIS STOPPEKLOKKE  ",
   place_objects                 = "  PLASSER GJENSTANDER  ",
@@ -145,6 +147,7 @@ menu_debug = {
   sprite_viewer                 = "  SPRITE-VISNING  ",
   create_emergency              = utf8 "  LAG NÖDSTILFELLE  ",
   lua_console                   = "  LUA KONSOLL ",
+  calls_dispatcher              = "  ANROPSEKSPEDERING  ",
 }
 
 menu_debug_overlay = {
@@ -165,6 +168,12 @@ menu_debug_overlay = {
 -- 5. Adviser
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Ved å plassere et rom her vil noen områder på sykehuset bli utilgjengelig.",
+  praise = {
+    plants_are_well = utf8 "Det er fint. Du tar godt vare på plantene dine. Storartet.",
+    few_have_to_stand = utf8 "Nesten ingen trenger å stå i Sykehuset ditt. Pasientene dine vil være glade for det.",
+    plenty_of_benches = utf8 "Det er masse sitteplasser, så det er ikke noe problem.",
+    plants_thriving = utf8 "Veldig bra. Plantene dine blomstrer. De ser fantastiske ut. Fortsett slik, så vinner du kanskje en trofé for dem."
+  },
 }
 
 -- 6. Dynamic info
@@ -243,6 +252,50 @@ tooltip.options_window = {
   back = "Lukk vinduet med innstillinger",
 }
 
+calls_dispatcher = {
+  repair = "Reparere %s",
+  summary = "%d Tilkallinger; %d tildelt",
+  close = "Lukk",
+  watering = "Vanne @ %d,%d",
+  staff = "%s - %s",
+}
+
+cheats_window = {
+  close = "Lukk",
+  caption = "Juksekoder",
+  warning = "Advarsel: Du vil ikke få noen bonuspoeng på slutten av nivået om du bruker juksekoder!",
+  
+  cheated = {
+    no = "Juksekoder benyttet: Nei",
+  yes = "Juksekoder benyttet: Ja",
+  },
+  
+  cheats = {
+    end_month = utf8 "Slutten av måneden",
+    emergency = utf8 "Lag nödstilfelle",
+    win_level = utf8 "Vinn nivå",
+    create_patient = "Lag pasient",
+    money = "Penger", 
+  lose_level = utf8 "Tap nivå",
+  all_research = "All forskning",
+    end_year = utf8 "Slutten av året",
+  },
+}
+
+tooltip.cheats_window = {
+  close = "Lukk juksekodevinduet",
+  cheats = {
+    end_month = utf8 "Gå til slutten av denne måneden.",
+  emergency = utf8 "Lag en nödssituasjon.",
+  win_level = utf8 "Vinn dette nivået.",
+  create_patient = "Lag en pasient på enden av kartet.",
+  money = "Sett 10,000 i bankkontoen din.",
+  lose_level = utf8 "Tap dette nivået.",
+  all_research = utf8 "Fullförer all forskning.",
+  end_year = utf8 "Gå til slutten av dette året.",
+  },
+}
+  
 new_game_window = {
   easy = "Turnuslege (Lett)",
   medium = "Lege (Medium)",
@@ -256,7 +309,7 @@ tooltip.new_game_window = {
   medium = utf8 "Om du er usikker på hva du skal velge, så er dette mellomtingen",
   hard = utf8 "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
   tutorial = utf8 "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
-  cancel = utf8 "Hmm... det var ikke meningen å starte et nytt spill!",
+  cancel = utf8 "Hmm... Det var ikke meningen å starte et nytt spill!",
 }
 
 lua_console = {
@@ -275,8 +328,8 @@ errors = {
   save_prefix = "Feil under lagring av spill: ",
   load_prefix = "Feil under lasting av spill: ",
   map_file_missing = utf8 "Kunne ikke finne kartfilen %s for dette nivået!",
-  minimum_screen_size = utf8 "Vennligst sett opplösningen til minimum 640x480.",
-  maximum_screen_size = utf8 "Vennligst velg en skjermopplösning på maksimalt 3000x2000.",
+  minimum_screen_size = utf8 "Vennligst sett opplösningen til minst 640x480.",
+  maximum_screen_size = utf8 "Vennligst velg en skjermopplösning ikke större enn 3000x2000.",
   unavailable_screen_size = utf8 "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
 }
 
@@ -291,10 +344,14 @@ information = {
   cannot_restart = "Dette spillet ble desverre lagret för restartfunksjonen ble implementert.",
   level_lost = {
     "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
+    "Grunnen til at du tapte:",
+    reputation = utf8 "Omdömmet ditt gikk under %d.",
+    balance = utf8 "Banksaldoen din (minus lån) falt under %d.",
+    percentage_killed = "Du drepte mer enn %d prosent av pasientene.", --bruke %-tegn?
   },
 }
 tooltip.information = {
-  close = "Lukk dialogen med informasjon",
+  close = "Lukk informasjonsdialogen",
 }
 -- Tips
 totd_window = {
@@ -304,21 +361,20 @@ totd_window = {
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
     utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
     utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
-    utf8 "Turnusleger og Doktorer kan utvikle sine evner av å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykologi eller Forskning) vil han også lære sine elever dette.",
+    utf8 "Turnusleger og Doktorer kan utvikle sine evner ved å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykologi eller Forskning) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
     utf8 "Du kan forandre noen innstillinger som opplösning og språk i innstillinger-vinduet som du finner på hovedmenyen eller på menyen inne i spillet.",
     utf8 "Hvert nivå har en rekke utfordringer som må fullföres för du kan gå videre til neste nivå. Sjekk statusen på utfordringene for nivået i Statusvinduet.",
     utf8 "Om du vil endre eller fjerne et rom, kan du gjöre det med å klikke på Endre Rom knappen på panelet i bunnen av skjermen.",
     utf8 "Du kan alltids finne fort ut hvilke pasienter som venter på å slippe inn i de ulike rommene, ved å flytte musepekeren over rommet.",
     utf8 "Klikk på dören til et rom for å se köen. Du kan gjöre nyttige finjusteringer her, som å organisere köen og sende pasienter til andre lignende rom.",
-    utf8 "Irritert personale vil spörre om lönnpålegg jevnlig. Sörg for at dine ansatte jobber i komfortable omgivelser for å hindre at det skjer.",
+    utf8 "Irritert personale vil spörre om lönnspålegg jevnlig. Sörg for at dine ansatte jobber i komfortable omgivelser for å hindre at det skjer.",
     utf8 "Pasientene svetter av spenning når de venter på behandling, og gjerne enda mer om du fyrer opp varmen. Plasser noen brusautomater i strategiske punkter på sykehuset for å tjene noen ekstra lapper.",
     utf8 "Du kan avbryte diagnose-prosessen ganske tidlig og gjette på riktig behandling, dersom du allerede har truffet på tilfeller av sykdommen. Vær oppmerksom på at dette öker sjangsen for feilbehandling. Du vil vel ikke avlive pasientene dine, vel?",
     utf8 "Nödtilfeller kan gjöre deg rik, så sant du har kapasitet til å behandle pasientene i tide.",
     utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
     utf8 "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på freenode).",
-    utf8 "Om du finner feil eller mangler, vær snill å rapportere det i vår feilmeldingstjeneste: th-issues.corsix.org",
-    utf8 "CorsixTH ble for förste gang gjort tilgjengelig 24.juli 2009. Den förste utgivelsen var Spillbar Beta 1 (utgitt 24.desember, 2009). Etter tre måneder er vi stolt av å kunne presentere vår Spillbar Beta 2 (utgitt 24.mars, 2010).",
+    utf8 "Om du finner feil eller mangler, vær snill å rapportere det gjennom vår feilmeldingstjeneste: th-issues.corsix.org",
   },
   previous = "Forrige tips",
   next = "Neste tips",
@@ -745,7 +801,7 @@ room_descriptions = {
   },
   fracture_clinic = {
     [1] = "Benbruddsklinikk//",
-    [2] = utf8 "Pasienter som uheldigvis har Benbrudd vil bli behandlet her. Gipsfjerneren bruker kraftig industrilaser for å kutte vekk gipsen, og forårsaker bare litt smerte for pasienten.//",
+    [2] = utf8 "Pasienter som uheldigvis har Benbrudd vil bli behandlet her. Gipsfjerneren bruker en kraftig industrilaser for å kutte vekk gipsen, og forårsaker bare litt smerte for pasienten.//",
     [3] = utf8 "Benbruddsklinikken kan kun håndteres av Sykepleiere. Den krever også vedlikehold. ",
   },
   tv_room = {
@@ -793,7 +849,7 @@ room_descriptions = {
   },
   staff_room = {
     [1] = "Personalrom//",
-    [2] = utf8 "De ansatte blir slitne etter hvert som de utförer pliktene sine. De trenger dette rommet for å slappe av og heve humöret. Om de ansatte er slitne, så blir de tregere, krever med lönn og vil til slutt si opp. De gjör også flere feilgrep. Å bygge et Personalrom med masse for dem å finne på er vel anvendte penger. Pass på at det er plass til flere ansatte på en gang. ",
+    [2] = utf8 "De ansatte blir slitne etter hvert som de utförer pliktene sine. De trenger dette rommet for å slappe av og heve humöret. Om de ansatte er slitne, så blir de tregere, krever mer lönn og vil til slutt si opp. De gjör også flere feilgrep. Å bygge et Personalrom med masse aktiviteter for dem er vel anvendte penger. Pass på at det er plass til flere ansatte på en gang. ",
   },
   operating_theatre = {
     [1] = "Operasjonssal//",
@@ -959,6 +1015,16 @@ menu_file_load = {
   [7] = "  SPILL 7  ",
   [8] = "  SPILL 8  ",
 }
+menu_file_save = {
+  [1] = "  SPILL 1  ",
+  [2] = "  SPILL 2  ",
+  [3] = "  SPILL 3  ",
+  [4] = "  SPILL 4  ",
+  [5] = "  SPILL 5  ",
+  [6] = "  SPILL 6  ",
+  [7] = "  SPILL 7  ",
+  [8] = "  SPILL 8  ",
+}
 
 -- Menu Options
 menu_options = {
@@ -1060,6 +1126,8 @@ high_score = {
 
 -- Trophy room
 trophy_room = {
+  reputation = utf8 "OMDÖMME",
+  cash = "KONTANTER",
   many_cured = {
     awards = {
       utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
@@ -1406,6 +1474,7 @@ tooltip = {
       psychiatrist     = "En psykolog kreves for behandling",
       surgery          = "Denne sykdommen krever en operasjon",
       machine          = "Denne sykdommen krever en maskin for behandling",
+      unknown          = "Du vet ikke hvordan du skal behandle denne sykdommen enda",
     },
     
     cure_requirement = {
@@ -1415,6 +1484,7 @@ tooltip = {
       hire_surgeons    = utf8 "Du trenger to Kirurger for å gjennomföre behandlingen",
       hire_surgeon     = utf8 "Du trenger en Kirurg til for å gjennomföre behandlingen",
       hire_staff       = utf8 "Du må ansette en %s for å gjennomföre behandlingen", -- %s (staff type)
+      hire_staff_old   = utf8 "Du må ansette en %s for å gjennomföre behandlingen",
       build_ward       = utf8 "Du må bygge en Sengeavdeling for å kunne gjennomföre behandlingen",
       ward_hire_nurse  = utf8 "Du trenger en Sykepleier på Sengeavdelingen for å gjennomföre behandlingen",
       not_possible     = utf8 "Du kan ikke håndtere denne behandlingen enda",
@@ -1501,7 +1571,7 @@ tooltip = {
   
   -- Status
   status = {
-    percentage_cured   = utf8 "Du må kurere %d besökende på sykehuset ditt. Nå har du kurert %d",
+    percentage_cured   = utf8 "Du må kurere %d% besökende på sykehuset ditt. Nå har du kurert %d%",
     thirst             = utf8 "Gjennomsnittlig törste på personene på ditt sykehus",
     close              = "Lukk oversikten",
     population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
@@ -1524,7 +1594,7 @@ tooltip = {
     staff_stay         = utf8 "Klikk her for å få personale til å bli i rommene du plasserer dem i",
     diag_procedure     = "Om en leges stilte diagnose er mindre sikker en SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
     diag_termination   = utf8 "En pasients diagnosering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
-    staff_rest         = utf8 "Hvor trött personale må være för de kan hvile",
+    staff_rest         = utf8 "Hvor trött personalet må være för de kan hvile",
   },
   
   -- Pay rise window
@@ -1640,6 +1710,8 @@ adviser = {
   
   -- Tutorial
   tutorial = {
+    start_tutorial         = utf8 "Les Oppdragsbriefingen og klikk venstre museknapp for å starte innföring.",
+    information_window         = "Hjelpeboksen forteller deg alt om den fine Allmennpraksisen du nettopp har bygd.",
     build_reception         = utf8 "Heisann. Först, trenger sykehuset ditt en Resepsjon. Velg en fra Inventarmenyen.",
     order_one_reception       = utf8 "Klikk en gang på den blinkende linjen med venstre museknapp for å kjöpe en Resepsjon.",
     accept_purchase         = utf8 "Venstreklikk på den blinkende linjen for å kjöpe den.",
@@ -1674,6 +1746,19 @@ adviser = {
     place_door             = utf8 "Flytt musen rundt om kring på blåkopiens vegger for å plassere dören der du vil ha den.",
     room_big_enough         = utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
     build_pharmacy           = utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en sykepleier for å ha et fungerende sykehus.",
+  },
+  
+  -- Cheats
+  cheats = {
+    th_cheat = utf8 "Gratulerer du har låst opp juksekodene!",
+    hairyitis_cheat = "Pelssyndom-kode aktivert!",
+    hairyitis_off_cheat = "Pelssyndom-kode deaktivert.",
+    roujin_on_cheat = "Roujins utfordring aktivert! Lykke til...",
+    roujin_off_cheat = "Roujins utfordring deaktivert.",
+    crazy_on_cheat = utf8 "Å nei! Alle legene har blitt gale!",
+    crazy_off_cheat = utf8 "Puh... Legene har fått tilbake forstanden.",
+    bloaty_cheat = "Ballonghode-kode aktivert!",
+    bloaty_off_cheat = "Ballonghode-kode deaktivert.",
   },
   
   -- Epidemic
@@ -1735,6 +1820,15 @@ adviser = {
     halfway_lost     = utf8 "Du er omtrent halvveis til å tape dette nivået.",
     nearly_lost     = utf8 "Det er like för du taper dette nivået nå.",
     three_quarters_won   = utf8 "Du er nå tre fjerdedeler på vei til å fullföre dette nivået.",
+    dont_kill_more_patients   = utf8 "Du har virkelig ikke råd til å drepe flere pasienter!",
+    another_patient_killed   = utf8 "Å nei! Du har drept enda en pasient. Du har drept %d nå.",
+    close_to_win_increase_value   = utf8 "Du er virkelig nær ved å vinne. Ök sykehusets verdi med %d.",
+    financial_criteria_met   = utf8 "Du har tilfredsstilt de finansielle kriteriene for dette nivået. Hold banksaldoen din over %d, mens du passer på at sykehuset ditt drives effektivt.",
+    hospital_value_enough   = utf8 "Hold verdien av ditt sykehus over %d og forsök å fölge med på de andre problemene for å vinne dette nivået.",
+    another_patient_cured   = utf8 "Bra jobbet - enda en pasient kurert. Det blir den %d.",
+    reputation_good_enough   = utf8 "Ok, omdömmet ditter er godt nok for å vinne dette nivået. Hold det over %d og fiks eventuelle andre problemet for klare det.",
+    cured_enough_patients   = utf8 "Du har kurert nok pasienter, men du trenger å få sykehuset ditt i bedre stand for å vinne dette nivået.",
+    improve_reputation   = utf8 "Du må forbedre omdömmet ditt med %d for å ha en sjanse til å vinne dette nivået.",
   },
   
   -- Staff place advice
@@ -2010,21 +2104,25 @@ letter = {
     [1] = utf8 "Kjære %s//",
     [2] = utf8 "Du har nok en gang bevist at du er den beste innen helseadministrasjon. Ingen tvil! En slik betydningsfull prestasjon må belönnes, så vi önsker å tilby deg stillingen som Administrerende Direktör for Alle Sykehus. Dette er en ærefull stilling, og gir deg en lönn på hele $%d. Du får din egen Ticker-Tape parade, og folk kommer til å vise sin takknemlighet ovenfor deg, hvor enn du går.//",
     [3] = utf8 "Takk for alt du har gjort. Vi önsker deg en lang og trivelig pensjonstid.//",
+    [4] = "",
   },
   [10] = {
     [1] = utf8 "Kjære %s//",
     [2] = utf8 "Gratulerer! Du har driftet alle sykehus vi har gitt deg på en utmerket måte. En slik prestasjon kvalifiserer deg for friheten til å reise rundt i verden. Du blir belönnet med en pensjon på $%d, pluss en limousin, og alt vi ber om er at du reiser fra by til by, möter dine lidenskaplige fans, og promoterer sykehusets arbeid hvor enn du måtte befinne deg.//",
     [3] = utf8 "Vi er alle stolte av deg. Det er ikke en av oss som ikke er takknemlig for ditt harde arbeid som livredder.//",
+    [4] = "",
   },
   [11] = {
     [1] = utf8 "Kjære %s//",
     [2] = utf8 "Din karriere har vært eksemplarisk, og du er en stor inspirasjon for oss alle. Takk for at du har driftet så mange sykehus, og gjort det så bra i alle jobbene. Vi önsker å gi deg en livslang lönn på $%d, og alt vi ber deg om er å reise offisielt med kabriolet fra by til by, og fortelle folk hvordan du tjente så mye penger så fort.//",
     [3] = utf8 "Du er et prakteksempel for alle höyre-politiske mennesker, og alle i verden, uten unntak, er dine kjæreste eiendeler.//",
+    [4] = "",
   },
   [12] = {
     [1] = utf8 "Kjære %s//",
     [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisin-verdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
     [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
+    [4] = "",
   },
 }
 
@@ -2579,7 +2677,7 @@ introduction_texts = {
     [7] = utf8 "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
   },
   level9 = {
-    [1] = utf8 "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousine, kan du nå konsentrere deg om å lage et omsorgsfullt, velfungerende sykehus for de trengende. ",
+    [1] = utf8 "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousine, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. ",
     [2] = utf8 "Du må forvente å stöte på en rekke problemer her.",
     [3] = utf8 "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. ",
     [4] = utf8 "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. ",
@@ -2684,6 +2782,14 @@ introduction_texts = {
     [7] = utf8 "Sykehuset ditt må være verdt $240,000, du må ha $500,000 i banken og ditt omdömme må være på minst 700.",
   },
   level18 = {
+  },
+  demo = {
+    [1] = "Velkommen til demonstrasjonssykehuset!",
+    [2] = utf8 "Uheldigvis inneholder demoversjonen kun dette nivået (bortsett fra brukerdefinerte nivåer). Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!",
+    [3] = utf8 "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling.",
+    [4] = utf8 "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene.",
+    [5] = utf8 "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået.",
+    [6] = "Lykke til!",
   },
 }
 

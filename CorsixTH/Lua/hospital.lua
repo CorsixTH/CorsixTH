@@ -73,8 +73,11 @@ function Hospital:Hospital(world)
   self.not_cured = 0
   self.percentage_cured = 0
   self.percentage_killed = 0
-  self.population = 1 -- TODO: Percentage showing how much of the total population that goes
-  -- to the player's hospital, used for one of the goals. Change when competitors are there.
+  self.population = 0.25 -- TODO: Percentage showing how much of
+  -- the total population that goes to the player's hospital, 
+  -- used for one of the goals. Change when competitors are there.
+  -- Since there are none right now the player's hospital always get
+  -- 50 % of all patients as soon as gbv.AllocDelay has expired.
   
   -- Other statistics, back to zero each year
   self.sodas_sold = 0
@@ -372,20 +375,10 @@ function Hospital:afterLoad(old, new)
   end
 end
 
+--! Called each tick, also called 'hours'. Check hours_per_day in
+--! world.lua to see how many times per day this is.
 function Hospital:tick()
-  if self.opened then
-    local spawn_rate = 200
-    -- Vary spawn rate +/- 150 based on reputation
-    spawn_rate = spawn_rate - (self.reputation / 500 - 1) * 150
-    -- TODO: Variate spawn rate based on level, etc.
-    if self.spawn_rate_cheat then
-      -- Roujin's challenge cheat: constant high spawn rate
-      spawn_rate = 40
-    end
-    if math.random(1, spawn_rate) == 1 then
-      self:spawnPatient()
-    end
-  end
+
 end
 
 function Hospital:purchasePlot(plot_number)
@@ -560,11 +553,8 @@ function Hospital:createEmergency(emergency)
     
     local staff_available = self:hasStaffOfCategory(required_staff)
     -- Check so that all rooms in the list are available
-    for _, room in pairs(self.world.rooms) do
-      if room.room_info.id == emergency.disease.treatment_rooms[no_rooms] then
-        room_name = nil
-        break
-      end
+    if self:hasRoomOfType(emergency.disease.treatment_rooms[no_rooms]) then
+      room_name = nil
     end
     local added_info = _S.fax.emergency.cure_possible
     -- TODO: Differentiate if a drug is needed, add drug effectiveness. Add undiscovered treatment.
@@ -770,7 +760,8 @@ end
 
 --! Checks if the hospital employs staff of a given category.
 --!param category (string) A humanoid_class or one of the specialists, i.e.
---! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist", "Surgeon" or "Researcher"
+--! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
+--! "Surgeon", "Researcher" or "Consultant"
 --! returns false if none, else number of that type employed
 function Hospital:hasStaffOfCategory(category)
   local result = false
@@ -780,9 +771,24 @@ function Hospital:hasStaffOfCategory(category)
     elseif staff.humanoid_class == "Doctor" then
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or 
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or 
-          (category == "Researcher" and staff.profile.is_researcher >= 1.0) then
+          (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
+          (category == "Consultant" and staff.profile.is_consultant) then
         result = (result or 0) + 1
       end
+    end
+  end
+  return result
+end
+
+--! Checks if the hospital has a room of a given type.
+--!param type (string) A room_info.id, e.g. "ward".
+--! Returns false if none, else number of that type found
+function Hospital:hasRoomOfType(type)
+  -- Check how many rooms there are.
+  local result = false
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self and room.room_info.id == type then
+      result = (result or 0) + 1
     end
   end
   return result
@@ -886,13 +892,7 @@ function Hospital:checkDiseaseRequirements(disease)
   local staff = {}
   local any = false
   for i, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
-    local found = false
-    for _, room in pairs(self.world.rooms) do
-      -- Check if room not yet present
-      if room.hospital == self and room.room_info.id == room_id then
-        found = true
-      end
-    end
+    local found = self:hasRoomOfType(room_id)
     if not found then
       rooms[#rooms + 1] = room_id
       any = true

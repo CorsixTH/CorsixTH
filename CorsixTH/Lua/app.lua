@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 36
+local SAVEGAME_VERSION = 37
 
 class "App"
 
@@ -318,6 +318,19 @@ function App:loadLevel(level, ...)
   if not map_objects then
     error(errors)
   end
+  -- If going from another level, save progress.
+  local carry_to_next_level
+  if self.world and tonumber(self.world.map.level_number) then
+    carry_to_next_level = {
+      world = {room_built = self.world.room_built},
+      hospital = {
+        player_salary = self.ui.hospital.player_salary,
+        research_dep_built = self.ui.hospital.research_dep_built,
+        message_popup = self.ui.hospital.message_popup,
+      },
+    }
+  end
+  
   -- Unload ui, world and map
   self.ui = nil
   self.world = nil
@@ -335,6 +348,11 @@ function App:loadLevel(level, ...)
   -- Load UI
   self.ui = GameUI(self, self.world:getLocalPlayerHospital())
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
+  
+  -- Now restore progress from previous levels.
+  if carry_to_next_level then
+    self.world:initFromPreviousLevel(carry_to_next_level)
+  end
 end
 
 -- This is a useful debug and development aid

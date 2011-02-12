@@ -72,7 +72,21 @@ function TrainingRoom:roomFinished()
     factor = (factor + level_config.gbv.TrainingRate)/10
   end
   self.training_factor = factor
+  -- Also tell the player if he/she doesn't have a consultant yet.
+  if not self.hospital:hasStaffOfCategory("Consultant") then
+    local text = _S.adviser.room_requirements.training_room_need_consultant
+    self.world.ui.adviser:say(text)
+  end
   Room.roomFinished(self)
+end
+
+function TrainingRoom:testStaffCriteria(criteria, extra_humanoid)
+  if extra_humanoid and extra_humanoid.profile
+  and extra_humanoid.profile.is_consultant and self.staff_member then
+    -- Training room can only have on consultant
+    return false
+  end
+  return Room.testStaffCriteria(self, criteria, extra_humanoid)
 end
 
 function TrainingRoom:getTrainingFactor()

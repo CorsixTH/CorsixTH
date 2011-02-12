@@ -637,7 +637,7 @@ adviser = {
     
     pay_rise                      = S[11][ 29], -- TODO only in tutorial / first time?
     handyman_adjust               = S[11][ 71], -- TODO only in tutorial / first time?
-    fax_received                  = S[11][136], -- TODO only in tutorial / first time?
+    fax_received                  = S[11][136], -- Once only
     
     vip_arrived                   = S[21][  9], -- %s (name of VIP)
     epidemic_health_inspector     = S[21][ 10],

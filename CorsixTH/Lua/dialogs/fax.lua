@@ -157,17 +157,10 @@ function UIFax:choice(choice)
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
   elseif choice == "accept_new_level" then
+    -- Set the new salary.
+    self.ui.hospital.player_salary = self.ui.hospital.salary_offer
     if tonumber(self.ui.app.world.map.level_number) then
-      local offer = self.ui.hospital.salary_offer
-      local carry_to_next_level = {
-        world = {room_built = self.ui.app.world.room_built},
-        hospital = {
-          player_salary = offer,
-          research_dep_built = self.ui.hospital.research_dep_built,
-        },
-      }
       self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
-      TheApp.world:initFromPreviousLevel(carry_to_next_level)
     else
       -- TODO: Allow some kind of custom campaign with custom levels
     end

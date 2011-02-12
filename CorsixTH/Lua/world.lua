@@ -130,6 +130,15 @@ function World:World(app)
 
   self:nextEmergency()
 
+  -- Set initial spawn rate in people per month.
+  -- Assumes that the first entry is always the first month.
+  self.spawn_rate = self.map.level_config.popn[0].Change
+  self.monthly_spawn_increase = self.spawn_rate
+  
+  self.spawn_hours = {}
+  self.spawn_dates = {}
+  self:updateSpawnDates()
+
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }
@@ -752,6 +761,12 @@ function World:onTick()
       for _, hospital in ipairs(self.hospitals) do
         hospital:tick()
       end
+      -- A patient might arrive to the player hospital.
+      if self.spawn_hours[self.hour + i-1] then
+        for k=1, self.spawn_hours[self.hour + i-1] do
+          self:spawnPatient()
+        end
+      end
       for _, entity in ipairs(self.entities) do
         if entity.ticks then
           self.current_tick_entity = entity
@@ -836,6 +851,14 @@ function World:onEndDay()
       end
     end
   end
+  -- Any patients tomorrow?
+  self.spawn_hours = {}
+  if self.spawn_dates[self.day] then
+    for i = 1, self.spawn_dates[self.day] do
+      local hour = math.random(1, self.hours_per_day)
+      self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
+    end
+  end
   -- TODO: Do other regular things? Such as checking if any room needs
   -- staff at the moment and making plants need water.
 end
@@ -855,7 +878,29 @@ function World:onEndMonth()
       end
     end
   end
-  
+
+  -- Change population share for the hospitals, TODO according to reputation.
+  -- Since there are no competitors yet the player's hospital can be considered
+  -- to be fairly good no matter what it looks like, so after gbv.AllocDelay
+  -- months, change the share to half of the new people.
+  if self.month >= self.map.level_config.gbv.AllocDelay then
+    self:getLocalPlayerHospital().population = 0.5
+  end
+
+  -- Also possibly change world spawn rate according to the level configuration.
+  local index = 0
+  local popn = self.map.level_config.popn
+  while popn[index] do
+    if popn[index].Month == self.month + (self.year - 1)*12 then
+      self.monthly_spawn_increase = popn[index].Change
+      break
+    end
+    index = index + 1
+  end
+  -- Now set the new spawn rate
+  self.spawn_rate = self.spawn_rate + self.monthly_spawn_increase
+  self:updateSpawnDates()
+
   self:makeAvailableStaff((self.year - 1) * 12 + self.month)
   self.autosave_next_tick = true
   for _, entity in ipairs(self.entities) do
@@ -865,6 +910,21 @@ function World:onEndMonth()
     end
   end
   self.current_tick_entity = nil
+end
+
+-- Called when a month ends. Decides on which dates patients arrive
+-- during the coming month.
+function World:updateSpawnDates()
+  -- Set dates when people arrive
+  local no_of_spawns = math.n_random(self.spawn_rate, 2)
+  -- Use ceil so that at least one patient arrives (unless population = 0)
+  no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
+  self.spawn_dates = {}
+  for i = 1, no_of_spawns do
+    -- We are interested in the coming month, pick days from it at random.
+    local day = math.random(1, month_length[(self.month + 1) % 12])
+    self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
+  end
 end
 
 -- Called when it is time to determine what the 
@@ -1360,6 +1420,10 @@ function World:newObject(id, ...)
     entity = _G[object_type.class](self, object_type, ...)
   elseif object_type.default_strength then
     entity = Machine(self, object_type, ...)
+    -- Tell the player if there is no handyman to take care of the new machinery.
+    if not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+      self.ui.adviser:say(_S.adviser.staff_advice.need_handyman_machines)
+    end
   else
     entity = Object(self, object_type, ...)
   end
@@ -1383,6 +1447,15 @@ function World:objectPlaced(entity, id)
         end
       end
     end
+  end
+  if id == "reception_desk" and not self.ui.start_tutorial
+    and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
+    -- TODO: Will not work correctly for multiplayer
+    self.ui.adviser:say(_S.adviser.room_requirements.reception_need_receptionist)
+  end
+  -- If it is a plant it might be advisable to hire a handyman
+  if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+    self.ui.adviser:say(_S.adviser.staff_advice.need_handyman_plants)
   end
 end
 
@@ -1626,6 +1699,36 @@ function World:afterLoad(old, new)
   end
   if old < 36 then
     self:determineWinningConditions()
+  end
+  if old < 37 then
+    -- Spawn rate is taken from level files now.
+    -- Make sure that all config values are present.
+    if not self.map.level_config.popn then
+      self.map.level_config.popn = {
+        [0] = {Change = 3, Month = 0},
+        [1] = {Change = 1, Month = 1},
+      }
+    end
+    if not self.map.level_config.gbv.AllocDelay then
+      self.map.level_config.gbv.AllocDelay = 3
+    end
+    local index = 0
+    local popn = self.map.level_config.popn
+    self.spawn_rate = popn[index].Change
+    self.monthly_spawn_increase = self.spawn_rate
+    
+    -- Bring the spawn rate "up to speed".
+    for month = 1, self.month + (self.year-1)*12 do
+      -- Check if the next entry should be used.
+      while popn[index + 1] and month >= popn[index + 1].Month do
+        index = index + 1
+      end
+      self.monthly_spawn_increase = popn[index].Change
+      self.spawn_rate = self.spawn_rate + self.monthly_spawn_increase
+    end
+    self.spawn_hours = {}
+    self.spawn_dates = {}
+    self:updateSpawnDates()
   end
   self.savegame_version = new
 end

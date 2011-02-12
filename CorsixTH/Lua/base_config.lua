@@ -103,6 +103,8 @@ local configuration = {
     TrainingRate           = 40, 
     -- MIN 1 MAX 100 (Percentage)
     DrugImproveRate        = 5, 
+    -- How many months until population allocation is done for real
+    AllocDelay             = 3,
 
     AbilityThreshold = {
       [0] = {Value = 75}, -- SURGEON
@@ -138,6 +140,10 @@ local configuration = {
     {StartCash = 70000, InterestRate = 900}, --  Level 11
     {StartCash = 70000, InterestRate = 900}, --  Level 12
     {StartCash = 70000, InterestRate = 900}, --  Level 12
+  },
+  popn = {
+    [0] = {Month = 0, Change = 4}, -- Standard: 4 patients the first month.
+    [1] = {Month = 1, Change = 1}, -- Then increase by one per month.
   },
   expertise = {
     {StartPrice = 100, Known = 1, RschReqd = 0}, -- GENERAL_PRACTICE
