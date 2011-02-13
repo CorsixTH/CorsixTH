@@ -922,7 +922,7 @@ function World:updateSpawnDates()
   self.spawn_dates = {}
   for i = 1, no_of_spawns do
     -- We are interested in the coming month, pick days from it at random.
-    local day = math.random(1, month_length[(self.month + 1) % 12])
+    local day = math.random(1, month_length[self.month % 12 + 1])
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
   end
 end
