@@ -1563,9 +1563,8 @@ function Window:getTooltipAt(x, y)
   end
   if self.windows then
     for _, window in ipairs(self.windows) do
-      local tooltip = window:getTooltipAt(x - window.x, y - window.y)
-      if tooltip then
-        return tooltip
+      if window:hitTest(x - window.x, y - window.y) then
+        return window:getTooltipAt(x - window.x, y - window.y)
       end
     end
   end

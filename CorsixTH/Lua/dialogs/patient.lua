@@ -24,7 +24,7 @@ local math_floor
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
-  return (x - 55)^2 + (y - 254)^2 < 38^2
+  return (x - 55)^2 + (y - 254)^2 < 39^2
 end
 
 --! Individual patient information dialog
@@ -295,4 +295,8 @@ function UIPatient:guessDisease()
     room_type = patient.disease.treatment_rooms[1],
     treatment_room = true,
   }, 1)
+end
+
+function UIPatient:hitTest(x, y)
+  return Window.hitTest(self, x, y) or is_in_view_circle(x, y)
 end

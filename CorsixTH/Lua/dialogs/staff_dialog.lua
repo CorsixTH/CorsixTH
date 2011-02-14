@@ -25,7 +25,7 @@ local math_floor
 -- Test for hit within the view circle
 local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
   local circle_center_y = is_handyman and 276 or 248
-  return (x - 55)^2 + (y - circle_center_y)^2 < 38^2
+  return (x - 55)^2 + (y - circle_center_y)^2 < 39^2
 end
 
 --! Individual staff information dialog
@@ -357,4 +357,8 @@ function UIStaff:openStaffManagement()
   dlg:selectStaff(self.staff)
   self.ui:addWindow(dlg)
   self:close()
+end
+
+function UIStaff:hitTest(x, y)
+  return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
 end
