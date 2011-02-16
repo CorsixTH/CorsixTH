@@ -54,12 +54,10 @@ tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
 tooltip.staff_window.center_view = utf8 "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
 
--- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
-tooltip.staff_list.next_person = utf8 "Ver página siguiente"
-tooltip.staff_list.prev_person = utf8 "Ver página anterior"
-
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = utf8 "¿Seguro que quieres reiniciar el nivel?"
+-- TODO adviser.multiplayer.objective_completed
+-- TODO adviser.multiplayer.objective_failed
 
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
@@ -245,6 +243,8 @@ options_window = {
   width = "Ancho",
   height = "Alto",
   change_resolution = utf8 "Cambiar resolución",
+  browse = "Buscar...",
+  new_th_directory = utf8 "Aquí puedes especificar una nueva carpeta de instalación de Theme Hospital. En el momento en el que selecciones la nueva carpeta, el juego se reiniciará.",
   back = "Volver",
 }
 
@@ -254,6 +254,8 @@ tooltip.options_window = {
   height = utf8 "Introduce el alto de pantalla deseado",
   change_resolution = utf8 "Cambia la resolución de la ventana a las dimensiones indicadas a la izquierda",
   language = utf8 "Seleccionar el idioma %s",
+  original_path = utf8 "La carpeta actualmente seleccionada con la instalación original de Theme Hospital",
+  browse = utf8 "Buscar otra ubicación de una instalación de Theme Hospital",
   back = utf8 "Cerrar la ventana de opciones",
 }
 
