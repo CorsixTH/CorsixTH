@@ -452,10 +452,15 @@ function ResearchDepartment:discoverDisease(disease)
   if window then
     window:updateDiseaseList()
   end
+
   -- It may now be possible to continue researching drug improvements
-  if self.research_policy.drugs.current
-  and self.research_policy.drugs.current.dummy and disease.drug then
-    self.research_policy.drugs.current = disease
+  local casebook_disease = self.hospital.disease_casebook[disease.id]
+  local current_drug_research = self.research_policy.drugs.current
+  -- If we're not researching any drug right now, and the newest discovery was
+  -- a disease that requires a drug, switch the current policy.
+  if (not current_drug_research or current_drug_research.dummy)
+  and casebook_disease.drug then
+    self.research_policy.drugs.current = casebook_disease
   end
 end
 
