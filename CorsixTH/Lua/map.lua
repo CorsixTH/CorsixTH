@@ -53,6 +53,9 @@ end
 -- for this).
 
 function Map:WorldToScreen(x, y)
+  if x == nil then x = 0 end
+  if y == nil then y = 0 end
+
   -- Adjust origin from (1, 1) to (0, 0) and then linear transform by matrix:
   -- 32 -32
   -- 16  16

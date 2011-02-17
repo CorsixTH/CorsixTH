@@ -439,6 +439,21 @@ function Window:getWindow(window_class)
   end
 end
 
+-- Searches (direct) child windows for window of the given class, and returns
+-- a (potentially empty) list of matching windows.
+-- !param window_class (class) The class of window to search for.
+function Window:getWindows(window_class)
+  local matching_windows = {}
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if class.is(window, window_class) then
+        matching_windows[#matching_windows+1] = window
+      end
+    end
+  end
+  return matching_windows
+end
+
 --! A region of a `Panel` which causes some action when clicked.
 class "Button"
 

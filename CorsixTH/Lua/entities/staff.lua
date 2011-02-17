@@ -85,7 +85,24 @@ function Staff:tick()
     if self.quitting_in then
       self.quitting_in = self.quitting_in - 1
       if self.quitting_in < 0 then
-        self:fire() -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
+        local rise_windows = self.world.ui:getWindows(UIStaffRise)
+        local staff_rise_window = nil
+
+        -- We go through all "requesting rise" windows open, to see if we need
+        -- to close them when the person is fired.
+        for i = 1, #rise_windows do
+          if rise_windows[i].staff == self then
+            staff_rise_window = rise_windows[i]
+            break
+          end
+        end
+
+        -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
+        if staff_rise_window then
+          staff_rise_window:fireStaff()
+        else
+          self:fire()
+        end
       end
     end
   end
@@ -172,7 +189,13 @@ function Staff:fire()
   if self.fired then
     return
   end
-  
+
+  -- Ensure that there are no inspection windows open for this staff member.
+  local staff_window = self.world.ui:getWindow(UIStaff)
+  if staff_window and staff_window.staff == self then
+      staff_window:close()
+  end
+
   self:playSound "sack.wav"
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
