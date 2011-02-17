@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 dofile("dialogs/resizable")
 
+strict_declare_global "_"
+_ = nil
+
 --! Interactive Lua Console for ingame debugging.
 class "UILuaConsole" (UIResizable)
 
@@ -77,17 +80,19 @@ end
 function UILuaConsole:buttonExecute()
   print("Loading UserFunction...")
   local func, err
-  if type(self.textbox.text) == "table" then
-    -- Multiline
-    local i = 0
-    func, err = load(function()
-      i = i + 1
+
+  _ = TheApp.ui and TheApp.ui.debug_cursor_entity
+
+  local i = 0
+  func, err = load(function()
+    i = i + 1
+    if type(self.textbox.text) == "table" then
       return self.textbox.text[i] and self.textbox.text[i] .. "\n"
-    end, "=UserFunction")
-  else
-    -- Single line
-    func, err = loadstring(self.textbox.text, "=UserFunction")
-  end
+    else
+      return i < 2 and self.textbox.text
+    end
+  end, "=UserFunction")
+
   if not func then
     print("Error while loading UserFunction:")
     print(err)

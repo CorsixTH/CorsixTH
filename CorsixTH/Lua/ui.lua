@@ -143,6 +143,7 @@ function UI:UI(app, minimal)
   self.cursor_x = 0
   self.cursor_y = 0
   self.cursor_entity = nil
+  self.debug_cursor_entity = nil
   -- through trial and error, this palette seems to give the desired result (white background, black text)
   -- NB: Need a palette present in both the full game and in the demo data
   if minimal then

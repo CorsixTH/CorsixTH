@@ -296,6 +296,12 @@ function GameUI:onCursorWorldPositionChange()
     if self.cursor_entity then
       self.cursor_entity:setMood(nil)
     end
+
+    -- Make the entity easily accessible when debugging, and ignore "deselecting" an entity.
+    if entity then
+      self.debug_cursor_entity = entity
+    end
+
     self.cursor_entity = entity
     if self.cursor ~= self.edit_room_cursor and self.cursor ~= self.waiting_cursor then
       local cursor = entity and entity.hover_cursor or
