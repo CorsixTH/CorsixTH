@@ -306,7 +306,7 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
     const unsigned char *inputend;
     unsigned char *outputend;
     bit_stream bs;
-    huf_table raw, dist, len;
+    huf_table raw = {0}, dist = {0}, len = {0};
     unsigned long ch_count;
     unsigned long ret_len;
     unsigned long out_crc;

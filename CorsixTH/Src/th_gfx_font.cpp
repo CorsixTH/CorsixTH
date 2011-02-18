@@ -75,6 +75,10 @@ static unsigned int utf8next(const char*& sString)
     return iCode;
 }
 
+#ifdef CORSIX_TH_USE_FREETYPE2
+// Since these functions are only used when we use freetype2, this silences
+// warnings about defined and not used.
+
 static unsigned int utf8decode(const char* sString)
 {
     return utf8next(sString);
@@ -88,6 +92,7 @@ static const char* utf8prev(const char* sString)
     } while(((*sString) & 0xC0) == 0x80);
     return sString;
 }
+#endif
 
 THFont::THFont()
 {

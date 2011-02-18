@@ -1252,8 +1252,8 @@ void THMap::depersist(LuaPersistReader *pReader)
 }
 
 THMapNodeIterator::THMapNodeIterator()
-    : m_pMap(NULL)
-    , m_pNode(NULL)
+    : m_pNode(NULL)
+    , m_pMap(NULL)
     , m_iScreenX(0)
     , m_iScreenY(0)
     , m_iScreenWidth(0)

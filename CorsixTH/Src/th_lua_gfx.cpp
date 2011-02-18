@@ -218,7 +218,7 @@ static int l_bitmap_font_set_spritesheet(lua_State *L)
 
 static int l_bitmap_font_get_spritesheet(lua_State *L)
 {
-    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
+    luaT_testuserdata<THBitmapFont>(L);
     luaT_getenvfield(L, 1, "sprites");
     return 1;
 }
@@ -714,7 +714,7 @@ static int l_surface_set_clip(lua_State *L)
 static int l_surface_scale(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
-    THScaledItems eToScale;
+    THScaledItems eToScale = THSI_None;
     if(lua_isnoneornil(L, 3))
     {
         eToScale = THSI_All;
