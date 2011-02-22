@@ -56,6 +56,10 @@ tooltip.staff_window.center_view = utf8 "Linksklick um zur Person zu springen, R
 confirmation.restart_level = "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?"
 
 -------------------------------  NEW STRINGS  -------------------------------
+date_format = {
+  daymonth = "%1% %2:months%",
+}
+
 object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
@@ -64,6 +68,8 @@ tooltip.message.button = utf8 "Linksklick um die Nachricht zu öffnen"
 tooltip.message.button_dismiss = utf8 "Linksklick um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
 tooltip.casebook.cure_requirement.hire_staff = utf8 "Sie müssen Personal einstellen, um diese Behandlung durchführen zu können"
 tooltip.casebook.cure_type.unknown = utf8 "Sie wissen noch nicht, wie Sie diese Krankheit behandeln können"
+tooltip.research_policy.no_research = "In dieser Kategorie wird momentan keine Forschung durchgeführt"
+tooltip.research_policy.research_progress = "Fortschritt in dieser Kategorie: %1%/%2%"
 
 menu_options = {
   lock_windows   = "  FENSTER FESTHALTEN  ",
@@ -211,6 +217,8 @@ options_window = {
   width = "Breite",
   height = utf8 "Höhe",
   change_resolution = utf8 "Auflösung ändern",
+  browse = "Durchsuchen...",
+  new_th_directory = "Hier kann ein neues Theme Hospital-Installationsverzeichis ausgewählt werden. Sobald ein gültiges Verzeichnis ausgewählt wurde startet das Spiel neu.",
   back = utf8 "Zurück",
 }
 
@@ -220,6 +228,8 @@ tooltip.options_window = {
   height = utf8 "Gewünschte Bildschirmhöhe eingeben",
   change_resolution = utf8 "Die Fensterauflösung auf die links eingegebenen Werte ändern",
   language = utf8 "%s als Sprache auswählen",
+  original_path = "Das momentan gewählte Theme Hospital-Installationsverzeichnis",
+  browse = "Nach einer anderen Theme Hospital-Installation durchsuchen",
   back = utf8 "Das Optionsfenster schließen",
 }
 
