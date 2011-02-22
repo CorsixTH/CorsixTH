@@ -70,28 +70,6 @@ Inherit("english")
 
 -- 2. Faxes
 fax = {
-  welcome = {
-    beta1 = {
-      utf8 "Tervetuloa pelaamaan CorsixTH:ta, klassikkopeli Theme Hospitalin avoimen lähdekoodin kloonia!",
-      utf8 "Tämä on pelattavissa oleva 1. beeta-versio. Monta huonetta, tautia ja ominaisuutta on jo toteutettu, mutta moni asia puuttuu yhä.",
-      utf8 "Jos pidät tästä projektista, voit auttaa meitä kehitystyössä esimerkiksi raportoimalla löytämiäsi vikoja tai koodaamalla itse jotain puuttuvaa.",
-      utf8 "Nyt on kuitenkin aika pitää hauskaa pelin parissa! Niiden, jotka eivät tunne Theme Hospitalia, kannattaa aloittaa rakentamalla vastaanottopöytä (kalusteet-valikosta) ja yleislääkärin vastaanotto (diagnoosihuone). Myös erilaiset hoitohuoneet ovat tarpeen.",
-      utf8 "-- CorsixTH-tiimi, th.corsix.org.",
-      utf8 "PS: Löydätkö easter-eggit, jotka olemme lisänneet?",
-    },
-    beta2 = {
-      utf8 "Tervetuloa pelaamaan 2. beetaversiota CorsixTH:sta, klassikkopeli Theme Hospitalin avoimen lähdekoodin kloonista!",
-      utf8 "Edellisen beetan jälkeen on toteutettu monta uutta ominaisuutta. Voit katsoa lisätietoja muutoksista changelog-tiedostosta.",
-      utf8 "Mutta pelatkaamme ennen sitä! Näyttää, että sinulle on tullut faksi. Sulje tämä ikkuna ja klikkaa alapalkin yllä olevaa kysymysmerkkiä.",
-      utf8 "-- CorsixTH-tiimi, th.corsix.org",
-    },
-  },
-  tutorial = {
-    utf8 "Tervetuloa ensimmäiseen sairaalaasi!",
-    utf8 "Haluatko lyhyen esittelyn?",
-    utf8 "Kyllä, haluan kuulla lisää perusteista.",
-    utf8 "Ei, tiedän jo mitä tehdä.",
-  },
   choices = {
     return_to_main_menu = utf8 "Palaa päävalikkoon",
     accept_new_level    = utf8 "Siirry seuraavalle tasolle",

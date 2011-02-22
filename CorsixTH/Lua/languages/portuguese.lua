@@ -70,31 +70,6 @@ adviser.room_forbidden_non_reachable_parts = utf8 "Colocar o espaço neste síti
 dynamic_info.patient.actions.no_gp_available = utf8 "À espera que seja construidos um consultório de CG."
 dynamic_info.staff.actions.heading_for = "Indo para %s"
 
-fax = {
-  welcome = {
-    beta1 = {
-      utf8 "Bem-vinda(o) ao CorsixTH, um clone opensource do clássico Theme Hospital da Bullfrog!",
-      utf8 "Esta é a versão jogável beta 1 do CorsixTH. Muitos espaços, doenças e outras funcionalidades foram implementadas, mas ainda falta muito para terminar.",
-      utf8 "Se gostas deste projecto, podes ajudar-nos no desenvolvimento, relatando bugs por exemplo, ou contribuindo com código.",
-      utf8 "Mas por agora, diverte-te! Para os que não conhecem o Theme Hospital: começa por construir uma recepção (a partir do menu dos Objectos) e um consultório de CG (zonas de Diagnóstico). Zonas de Tratamento também vão ser necessárias.",
-      "-- A equipa do CorsixTH, th.corsix.org",
-      "PS: Consegues encontrar os Easter Eggs :-) ?",
-    },
-    beta2 = {
-      utf8 "Bem-vinda(o) à beta 2 do CorsixTH, um clone opensource do clássico Theme Hospital da Bullfrog!s",
-      utf8 "Muitas funcionalidades foram adicionadas desde a última versão. Dá uma espreitadela ao changelog para uma lista incompleta.",
-      utf8 "Mas primeiro que tudo, jogar! Ao que parece, tens uma mensagem à tua espera. Fecha esta janela e clica no ponto de interrogação, próximo do painel do fundo.",
-      "-- A equipa do CorsixTH, th.corsix.org",
-    },
-  },
-  tutorial = {
-    "Bem-vinda(o) ao teu primeiro Hospital!",
-    "Gostavas de aprender mais?",
-    utf8 "Sim, mostra-me como é.",
-    utf8 "Não, já sei tudo de trás para a frente.",
-  },
-}
-
 misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = utf8 "Hm... Ou não foram desocbertas novas doenças ou não existe um heliporto neste mapa."
 

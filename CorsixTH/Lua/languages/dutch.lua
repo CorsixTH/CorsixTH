@@ -413,22 +413,6 @@ fax = {
     },
     rep_loss_fine_amount = "De media zal hiervan smullen. Dit is een zware klap voor je reputatie. Daarbij moet je een boete betalen van %d.",
   },
-  welcome = {
-    beta1 = {
-      [1] = "Welkom bij CorsixTH, een open source kloon van de klassieker 'Theme Hospital' van Bullfrog!",
-      [2] = "Dit is een speelbare beta van CorsixTH. Veel kamers, ziektes en features zijn al ge\137mplementeerd, maar er ontbreekt ook nog heel wat.",
-      [3] = "Als je dit project leuk vindt, kun je ons altijd helpen met de development. Je kunt bijvoorbeeld bugs rapporteren of zelf beginnen met coden..",
-      [4] = "Maar nu is het tijd om wat plezier te maken. Voor iedereen die niet bekend is met Theme Hospital: Bouw eerst een Receptie (uit het Voorwerpenmenu) en een Spreekkamer (voor diagnoses). Je hebt ook behandelkamers nodig.",
-      [5] = "-- Het CorsixTH team, th.corsix.org",
-      [6] = "PS: Kun je onze eastereggs vinden?",
-    },
-    beta2 = {
-      [1] = "Welkom bij CorsixTH, een open source kloon van de klassieker 'Theme Hospital' van Bullfrog!",
-      [2] = "Er zijn veel nieuwe features sinds onze laatste release. Lees de changelog voor een korte lijst van de updates.",
-      [3] = "Maar nu is het tijd om te spelen! Zo te zien staat er een bericht te wachten. Sluit dit venster en klik op het vraagteken op je paneel onderin beeld.",
-      [4] = "-- Het CorsixTH team, th.corsix.org",
-    },
-  },
   vip_visit_query = {
     choices = {
       invite = "De VIP officieel uitnodigen.",
@@ -523,12 +507,6 @@ fax = {
     cure_not_possible_build = "Je zult een %s moeten bouwen",
     cure_not_possible_build_and_employ = "Je zult een %s moeten bouwen en een %s moeten huren.",
     bonus = "De maximumbonus voor dit noodgeval bedraagt %d. Als je echter niet slaagt zal je reputatie schade oplopen.",
-  },
-  tutorial = {
-    [1] = "Welkom in je eerste ziekenhuis!",
-    [2] = "Zou je wat korte instructies willen?",
-    [3] = "Ja, graag. Leer me hoe het werkt.",
-    [4] = "Nee, bedankt. Ik weet al hoe dit gaat.",
   },
   choices = {
     decline_new_level = "Nog even blijven doorspelen",

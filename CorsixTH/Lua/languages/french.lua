@@ -814,28 +814,6 @@ tooltip.calls_dispatcher = {
 
 -- Fax messages
 fax = {
-  welcome = {
-    beta1 = {
-      "Bienvenue dans CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog !",
-      utf8 "Ceci est la beta 1 jouable de CorsixTH. Beaucoup de salles, maladies et fonctionnalités ont été implémentées, mais beaucoup de choses manquent",
-      utf8 "Si vous aimez ce projet, vous pouvez nous aider, par ex. en rapportant des bogues ou en codant quelque-chose par vous-même.",
-      utf8 "Mais maintenant, amusez-vous ! Pour ceux qui ne sont pas familier avec Theme Hospital : Commencez par construire un bureau de réception (menu objets) et un bureau de généraliste (salle de diagnostic). Des salles de traitement seront aussi nécessaires.",
-      utf8 "-- L'équipe de CorsixTH, th.corsix.org",
-      utf8 "PS : Trouverez-vous les surprises cachées ?",
-    },
-    beta2 = {
-      "Bienvenue dans la seconde beta de CorsixTH, un clone open source du jeu classique Theme Hospital par Bullfrog !",
-      utf8 "Beaucoup de nouvelles fonctionnalités ont été implémentées depuis la dernière publication. Regardez le changelog pour une liste non exhaustive.",
-      utf8 "Mais d'abord, jouons ! Il semble qu'un message vous attend. Fermez cette fenêtre et cliquez sur le point d'interrogation au dessus du tableau de bord.",
-      utf8 "-- L'équipe de CorsixTH, th.corsix.org",
-    },
-  },
-  tutorial = {
-    utf8 "Bienvenue dans votre premier hôpital !",
-    utf8 "Souhaitez-vous un petit tutoriel ?",
-    utf8 "Oui, montrez-moi les bases SVP.",
-    utf8 "Non, je sais déjà comment faire.",
-  },
   choices = {
     return_to_main_menu = utf8 "Retourner au menu principal",
     accept_new_level = utf8 "Aller au niveau suivant",

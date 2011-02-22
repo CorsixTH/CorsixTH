@@ -133,28 +133,6 @@ dynamic_info.staff.actions.heading_for = "Geht zu: %s"
 dynamic_info.staff.actions.fired = "Gefeuert"
 
 fax = {
-  welcome = {
-    beta1 = {
-      "Willkommen zu CorsixTH, einem Open-Source-Klon von Bullfrogs Spieleklassiker Theme Hospital!",
-      utf8 "Dies ist die spielbare Beta 1 von CorsixTH. Viele Räume, Krankheiten etc. wurden implementiert, aber es fehlen auch noch einige Dinge.",
-      utf8 "Wenn dir das Projekt gefällt, kannst du uns unterstützen, z.B. indem du Fehler berichtest oder uns bei der Programmierung hilfst.",
-      utf8 "Jetzt wünschen wir aber erstmal viel Spaß mit dem Spiel! Falls du Theme Hospital nicht kennst: Baue eine Rezeption (aus dem Objekte-Menü) und eine Allgemeinmedizin (Diagnoseraum), dann diverse Behandlungsräume.",
-      "-- Das CorsixTH-Team, th.corsix.org",
-      "PS: Kannst du die Geheimnisse finden, die wir eingebaut haben?",
-    },
-    beta2 = {
-      "Willkommen zur zweiten Beta von CorsixTH, einem Open-Source-Klon von Bullfrogs Spieleklassiker Theme Hospital!",
-      utf8 "Viele neue Funktionen wurden seit der vorherigen Version implementiert. Eine unvollständige Auflistung findet sich im Changelog.",
-      utf8 "Jetzt wird aber erstmal gespielt! Anscheinend wartet eine Nachricht auf dich. Schließe dieses Fenster und klicke auf das Fragezeichen links unten über der Leiste.",
-      "-- Das CorsixTH-Team, th.corsix.org",
-    },
-  },
-  tutorial = {
-    "Willkommen in Ihrem ersten Krankenhaus!",
-    utf8 "Möchten Sie eine kurze Einführung?",
-    utf8 "Ja, bitte führen Sie mich herum.",
-    utf8 "Nö, ich weiß schon wie hier alles abläuft.",
-  },
   choices = {
     return_to_main_menu = utf8 "Ins Hauptmenü zurückkehren",
     accept_new_level = utf8 "Zum nächsten Level wechseln",

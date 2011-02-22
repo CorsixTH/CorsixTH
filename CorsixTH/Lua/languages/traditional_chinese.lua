@@ -278,28 +278,6 @@ save_game_window = {
   new_save_game = "",
 }
 fax = {
-  welcome = {
-    beta1 = {
-      [1] = "Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
-      [2] = "This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing.",
-      [3] = "If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself.",
-      [4] = "But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed.",
-      [5] = "-- The CorsixTH team, th.corsix.org",
-      [6] = "PS: Can you find the easter eggs we included?",
-    },
-    beta2 = {
-      [1] = "Welcome to the second beta of CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
-      [2] = "A lot of new features have been implemented since the last release. Have a look at the changelog for an incomplete list.",
-      [3] = "But first, let's play! It seems there's a message waiting for you. Close this window and click on the question mark above the bottom panel.",
-      [4] = "-- The CorsixTH team, th.corsix.org",
-    },
-  },
-  tutorial = {
-    [1] = "Welcome to your first Hospital!",
-    [2] = "Would you like a short tutorial?",
-    [3] = "Yes, please show me the ropes.",
-    [4] = "Nope, I already know how to do this.",
-  },
   choices = {
     decline_new_level = "繼續經營這個醫院",
     accept_new_level = "接手下一個醫院",

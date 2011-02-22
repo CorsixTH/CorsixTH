@@ -128,28 +128,6 @@ dynamic_info.staff.actions.heading_for = utf8 "På väg till %s"
 dynamic_info.staff.actions.fired = "Sparkad"
 
 fax = {
-  welcome = {
-    beta1 = {
-      utf8 "Välkommen till CorsixTH, en klon i öppen källkod av det klassiska spelet Theme Hospital av Bullfrog!",
-      utf8 "Detta är den första spelbara betan av CorsixTH. Även om många rum, sjukdomar och funktioner implementerats saknas fortfarande mycket.",
-      utf8 "Om du gillar projektet kanske du vill hjälpa oss? Till exempel genom att rapportera buggar eller rentav börja koda något själv.",
-      utf8 "Hur som helst, börja med att njuta av spelet! Här är några starttips: Bygg en reception (korridorsutrustning) och en allmänpraktik (diagnosrum). Diverse kliniker kommer också att behövas.",
-      "-- Gruppen bakom CorsixTH, th.corsix.org",
-      utf8 "PS: Kan du hitta påskäggen?",
-    },
-    beta2 = {
-      utf8 "Välkommen till den andra betan av CorsixTH, det klassiska spelet Theme Hospital av Bullfrog i ny förpackning!",
-      utf8 "Många funktioner har lagts till sen förra betan. Kolla in ändringsloggen för en nästan komplett lista.",
-      utf8 "Men innan dess är det dags att spela! Det verkar som att ett meddelande väntar. Stäng detta fönster och klicka på frågetecknet nere till vänster.",
-      "-- Gruppen bakom CorsixTH, th.corsix.org",
-    },
-  },
-  tutorial = {
-    utf8 "Välkommen till ditt första Sjukhus!",
-    utf8 "Vill du ha hjälp att komma igång?",
-    utf8 "Ja, det behövs.",
-    utf8 "Det är lugnt, jag kan sånt här.",
-  },
   choices = {
     return_to_main_menu = utf8 "Gå till huvudmenyn",
     accept_new_level = utf8 "Gå vidare till nästa bana",

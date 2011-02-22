@@ -79,35 +79,6 @@ date_format = {
 
 -- 2. Faxes
 fax = {
-    welcome = {
-    beta1 = {
-      --"Welcome to CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!", 
-      "Velkommen til CorsixTH, som er en open source klon af det klassiske spil Theme Hospital af Bullfrog!",
-      --"This is playable beta 1 of CorsixTH. Many rooms, diseases and features have been implemented, but there are still many things missing.",
-      "Dette er den spilbare beta 1 af CorsixTH. Mange af sygdommene, rummene og funktionerne er blevet implementeret, men der er stadigt mange ting som mangler.",
-      --"If you like this project, you can help us with development, e.g. by reporting bugs or starting to code something yourself.",
-      "Hvis du kan lide dette projekt, kan du hjælpe os med udviklingen f.eks. ved at informatere os om fejl og starte med at kode noget for dig selv.",
-      --"But now, have fun with the game! For those who are unfamiliar with Theme Hospital: Start by building a reception desk (from the objects menu) and a GP's office (diagnosis room). Various treatment rooms will also be needed.",
-      "Men nu skal du have det sjovt med spillet. Hvis du ikke er bekendt med Theme Hospital: Start med at bygge en receptionsbord (fra objekt menuen) og et lægens kontor (diagnose rum)",
-      "-- The CorsixTH team, th.corsix.org",
-   --   "PS: Can you find the easter eggs we included?",
-      "PS: Kan du finde de easter eggs der er i spillet?",
-    },
-    beta2 = {
-      --"Welcome to the second beta of CorsixTH, an open source clone of the classic game Theme Hospital by Bullfrog!",
-      "Velkommen til CorsixTH, som er en open source klon af det klassiske spil Theme Hospital af Bullfrog!",
-      --"A lot of new features have been implemented since the last release. Have a look at the changelog for an incomplete list.",
-      "Der er blevet tilföjet en masse nye funktioner siden sidste udgivelse. Tag og kig i changeloggen for at se en ukomplet liste",
-      "But first, let's play! It seems there's a message waiting for you. Close this window and click on the question mark above the bottom panel.",
-      "-- The CorsixTH team, th.corsix.org",
-    },
-  },  
-  tutorial = {
-    utf8 "Velkommen til dit förste hospital!",
-    utf8 "önsker du en kort vejledning til spillet?",
-    "Ja gerne.",
-    "Nej tak, jeg ved allerede hvordan man spillet.",
-  },
   choices = {
     return_to_main_menu = "Tilbage til hovedmenuen",
     accept_new_level = utf8 "Gå videre til næste bane",
