@@ -71,20 +71,20 @@ function UIResearch:UIResearch(ui)
   self.ratpanel= self:addPanel(13, 480, 365)
 
   -- Add tooltips to progress of research.
-  -- TODO: Make them change over time.
-  local research = self.research.research_policy
   local lx = 165
   local ly = 60
   for i, category in ipairs(research_categories) do
-    if research[category].current 
-    and not research[category].current.dummy then
-      local required = self.research:getResearchRequired(research[category].current)
-      local available = self.research.research_progress[research[category].current].points
-      self:makeTooltip(_S.tooltip.research_policy.research_progress
-      :format(math.round(available), required), lx, ly, lx + 315, ly + 41)
-    else
-      self:makeTooltip(_S.tooltip.research_policy.no_research, lx, ly, lx + 315, ly + 41)
-    end
+    self:makeDynamicTooltip(--[[persistable:research_policy_research_progress_tooltip]] function()
+      local research = self.research.research_policy
+      if research[category].current
+      and not research[category].current.dummy then
+        local required = self.research:getResearchRequired(research[category].current)
+        local available = self.research.research_progress[research[category].current].points
+        return _S.tooltip.research_policy.research_progress:format(math.round(available), required)
+      else
+        return _S.tooltip.research_policy.no_research
+      end
+    end, lx, ly, lx + 315, ly + 40)
     ly = ly + 41
   end
 end
