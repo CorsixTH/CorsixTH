@@ -697,6 +697,10 @@ function UI:onTick()
     self.tooltip_counter = self.tooltip_counter - 1
     repaint = (self.tooltip_counter == 0)
   end
+  -- If a tooltip is currently shown, update each tick (may be dynamic)
+  if self.tooltip then
+    self:updateTooltip()
+  end
   return repaint
 end
 

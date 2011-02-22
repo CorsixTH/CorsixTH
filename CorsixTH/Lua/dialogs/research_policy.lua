@@ -84,7 +84,7 @@ function UIResearch:UIResearch(ui)
       else
         return _S.tooltip.research_policy.no_research
       end
-    end, lx, ly, lx + 315, ly + 40)
+    end, lx, ly, lx + 315, ly + 41)
     ly = ly + 41
   end
 end
