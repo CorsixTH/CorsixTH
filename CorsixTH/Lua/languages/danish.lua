@@ -36,8 +36,8 @@ the override translation of all the original english strings.
 
 FORMATING AND NORWEGIAN/DANISH LETTERS
 This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the 
-norwegian/danish letters ö and Ø, you must use the old-style ö and Ö instead. That is 
-because the letters ö and Ø is not included in the original ingame-font.
+norwegian/danish letters ø and Ø, you must use the old-style ö and Ö instead. That is 
+because the letters ø and Ø is not included in the original ingame-font.
 
 
 
