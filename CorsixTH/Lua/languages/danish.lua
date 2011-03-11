@@ -1707,45 +1707,6 @@ tooltip = {
 -- 32. 
     
 adviser = {
-  
- --[[ -- Tutorial
-  tutorial = {
-    build_reception         = utf8 "Heisann. Först, trenger sykehuset ditt en Resepsjon. Velg en fra Inventarmenyen.",
-    order_one_reception       = utf8 "Klikk en gang på den blinkende linjen med venstre museknapp for å kjöpe en Resepsjon.",
-    accept_purchase         = utf8 "Venstreklikk på den blinkende linjen for å kjöpe den.",
-    rotate_and_place_reception     = utf8 "Klikk med höyre museknapp for å rotere Resepsjonen, og venstreklikk for å plassere den i sykehuset.",
-    reception_invalid_position     = utf8 "Resepsjonen er nå grå fordi det er en ugyldig plassering. Pröv å flytte eller rotere den.",
-    hire_receptionist         = utf8 "Du trenger nå en Resepsjonist til å stå i resepsjonen og henvise dine pasienter.",
-    select_receptionists       = utf8 "Venstreklikk på det blinkende ikonet for å se gjennom tilgjengelige resepsjonister. Nummeret på ikonet viser antall som er tilgjengelig.",
-    next_receptionist         = utf8 "Dette er den förste resepsjonisten i listen. Venstreklikk på det blinkende ikonet for å se på neste person.",
-    prev_receptionist         = utf8 "Venstreklikk på det blinkende ikonet for å se på forrige person.",
-    choose_receptionist       = utf8 "Avgjör hvilken resepsjonist som har gode evner og akseptable lönnskrav, og venstreklikk på det blinkende ikonet for å ansette henne.",
-    place_receptionist         = utf8 "Flytt resepsjonisten og plasser henne hvor som helst. Hun klarer å finne veien til resepsjonen selv.",
-    receptionist_invalid_position   = utf8 "Du kan ikke plassere henne der.",
-    window_in_invalid_position     = utf8 "Dette vinduet kan ikke være her. Pröv å plassere det en annen plass på veggen, er du snill.",
-    choose_doctor           = utf8 "Se nöye gjennom evnene til hver enkelt Lege för du bestemmer deg for hvem du vil ansette.",
-    click_and_drag_to_build       = utf8 "For å bygge en Allmennpraksis, må du först avgjöre hvor stor den skal være. Klikk og hold inne venstre museknapp for å justere rommets störrelse.",
-    build_gps_office         = utf8 "For å starte å diagnosere pasientene dine, må du ha en Allmennpraksis.",
-    door_in_invalid_position     = utf8 "Oj, sann! Du prövde å plassere dören i en ugyldig posisjon. Pröv en annen plass på veggen av blåkopien.",
-    confirm_room           = utf8 "Venstreklikk på det blinkende ikonet for å ferdigstille rommet ditt, eller klikk på X'en for å gå et trinn tilbake.",
-    select_diagnosis_rooms       = utf8 "Venstreklikk på det blinkende ikonet for å se en liste over diagnoserom du kan bygge.",
-    hire_doctor           = utf8 "Du trenger en Lege for å diagnosere og behandle syke mennesker.",
-    select_doctors           = utf8 "Venstreklikk på det blinkende ikonet for å se hvilke Leger som er tilgjengelig i arbeidsmarkedet.",
-    place_windows           = utf8 "Plasser vinduer på samme måten som du plasserte dören. Du trenger ikke vinduer, men de ansatte setter veldig pris på det, og blir blidere når de har nö å se ut gjennom.",
-    place_doctor           = utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart nön trenger å diagnoseres.",
-    room_in_invalid_position     = utf8 "Oj! Denne blåkopien er ikke gyldig - det röde området indikerer hvor du har overlappet et annet rom eller sykehusets vegger.",
-    doctor_in_invalid_position     = utf8 "Hei! Du kan ikke slippe Legen her.",
-    place_objects           = utf8 "Höyreklikk for å rotere gjenstander, og venstreklikk for å plassere dem.",
-    room_too_small           = utf8 "Denne blåkopien er röd fordi den er for liten. Strekk den ut for å gjöre den större.",
-    click_gps_office         = utf8 "Venstreklikk på den blinkende linjen for å velge en Allmennpraksis.",
-    
-    room_too_small_and_invalid     = utf8 "Blåkopien er for liten og er ugyldig plassert. Kom igjen.",
-    object_in_invalid_position     = utf8 "Denne gjenstanden er ugyldig plassert. Vær vennlig å plasser den et annet sted, eller roter den for å få den til å passe.",
-    place_door             = utf8 "Flytt musen rundt om kring på blåkopiens vegger for å plassere dören der du vil ha den.",
-    room_big_enough         = utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
-    build_pharmacy           = utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en sykepleier for å ha et fungerende sykehus.",
-  },
-  ---]]
   -- Epidemic
   epidemic = {
     hurry_up         = utf8 "Hvis du ikke tager dig af epidemien nu, kan du få store problemer. Skynd dig!",
@@ -1755,20 +1716,20 @@ adviser = {
   
   -- Staff advice
   staff_advice = {
-    need_handyman_machines   = utf8 "Du må ansette Vaktmestre om du vil holde maskinene dine ved like.",
-    need_doctors       = utf8 "Du trenger flere Leger. Pröv å plassere dine beste leger i rommene med lengst kö.",
-    need_handyman_plants   = utf8 "Du må ansette en Vaktmester for å vanne plantene.",
-    need_handyman_litter   = utf8 "Folk har begynt å forsöple sykehuset ditt. Ansett en Vaktmester for å rydde opp etter pasientene dine.",
-    need_nurses       = utf8 "Du trenger flere Sykepleiere. Sengeavdelinger og Apotek kan bare driftes av Sykepleiere.",
-    too_many_doctors     = utf8 "Du har for mange Leger. Nön av dem har ingenting å gjöre.",
-    too_many_nurses     = utf8 "Jeg tror du har for mange Sykepleiere.",
+    need_handyman_machines   = utf8 "Du skal ansætte flere handymænd.",
+    need_doctors       = utf8 "Du har brug for flere læger. Pröv at placere lægerne i de rum hvor der er længst kö til.",
+    need_handyman_plants   = utf8 "Du skal ansætte en handymand til at vande planterne.",
+    need_handyman_litter   = utf8 "Folk er begyndt at svine på dit hospital. Få en handymand til at rydde op efter dine patienter.",
+    need_nurses       = utf8 "Du har brug for flere sygeplejesker. Sengeafdelingerne og apotekerne skal drives af sygeplejesker.",
+    too_many_doctors     = utf8 "Du har alt for mange læger. Nogle af dem laver ingen ting.",
+    too_many_nurses     = utf8 "Jeg tror du alt for mange sygeplejesker.",
   },
   
   -- Earthquake
   earthquake = {
-    damage     = utf8 "Det jordskjelvet skadet %d maskiner og %d pasienter på sykehuset.", -- %d (count machines), &d (count patients)
-    alert     = utf8 "Jordskjelv-varsel. Under et jordskjelv blir maskinene dine skadet. De kan bli ödelagt om de er dårlig vedlikeholdt.",
-    ended     = utf8 "Puh. Jeg trodde det var et stort skjelv - Det målte %d på Richters skala.",
+    damage     = utf8 "Jordskælvet har skadet %d maskiner og %d patienter på sygehuset.", -- %d (count machines), &d (count patients)
+    alert     = utf8 "Jordskælvsvarsel. Under et jordskælv bliver dine maskiner skadet. De kan blive ödelagt hvis de ikke blive vedligeholdt.",
+    ended     = utf8 "Puha!.  Jeg tror det var et stort skælv -  Det målte %d på Richters skala.",
   },
   
   -- Multiplayer
@@ -1778,97 +1739,13 @@ adviser = {
     players_failed           = utf8 "Fölgende spiller(e) klarte ikke den forrige utfordringen : ",
     
     poaching = {
-      in_progress           = utf8 "Jeg skal si ifra om denne personen vil komme å jobbe for deg.",
-      not_interested         = utf8 "Ha! De er ikke interessert i å jobbe for deg - de har det bra der de er.",
-      already_poached_by_someone   = utf8 "Ikke snakk om! Nön pröver allerede å overtale personen.",
+      in_progress           = utf8 "Jeg skal sige fra denne person, at han gerne vil arbejde for dig.",
+      not_interested         = utf8 "Ha! De er ikke interessert i at arbejde for dig..",
+      already_poached_by_someone   = utf8 "Ikke tale om! Nogle pröver allerede at overtale personen.",
     },
-    objective_failed         = utf8 "Du har ikke lykkes i å fullföre utfordringene.",
+    objective_failed         = utf8 "Det lykkes ikke at fuldföre udfordringerne.",
   },
-  
-  -- Surgery requirements
-  surgery_requirements = {
-    need_surgeons_ward_op   = utf8 "Du trenger to Kirurger og en Sengeavdeling i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
-    need_surgeon_ward     = utf8 "Du trenger en til Kirurg og en Sengeavdeling for å gjöre kirurgiske inngrep.",
-  },
-  
-  -- Vomit wave
-  vomit_wave = {
-    started   = utf8 "Ser ut som du har et magevirus på sykehuset ditt. Om du hadde holdt det renere ville ikke dette skjedd. Kanskje du burde hatt flere Vaktmestre.",
-    ended     = utf8 "Puh! Ser ut som viruset som forårsaket bölgen med oppkast er så godt som borte. Hold sykehuset ditt rent i fremtiden.",
-  },
-  
-  -- Level progress
-  level_progress = {
-    nearly_won       = utf8 "Du har nesten fullfört dette nivået nå.",
-    three_quarters_lost = utf8 "Du er nå tre fjerdedeler på vei til å tape dette nivået.",
-    halfway_won     = utf8 "Du er nå omtrent halvveis på dette nivået.",
-    halfway_lost     = utf8 "Du er omtrent halvveis til å tape dette nivået.",
-    nearly_lost     = utf8 "Det er like för du taper dette nivået nå.",
-    three_quarters_won   = utf8 "Du er nå tre fjerdedeler på vei til å fullföre dette nivået.",
-  },
-  progress_report = {
-    quite_unhappy = utf8 "Folket ditt er i dårlig humör. ",
-    header = "Progresjonsrapport",
-    very_unhappy = utf8 "Folket ditt er i svært dårlig humör. ",
-    more_drinks_machines = "Bygg flere Brusautomater. ",
-    too_cold = utf8 "Det er alt for kaldt. Sett ut noen ovner. ",
-    too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
-    percentage_pop = utf8 "% befolkning",
-    win_criteria = utf8 "KRITERIER FOR Å VINNE",
-  },
-
-  
-  -- Staff place advice
-  staff_place_advice = {
-    receptionists_only_at_desk     = utf8 "Resepsjonister kan kun jobbe i Resepsjoner.",
-    only_psychiatrists         = utf8 "Leger kan bare jobbe i Psykiatri dersom de er kvalifiserte Psykologer.",
-    only_surgeons           = utf8 "Leger kan bare jobbe i Operasjonssalen dersom de er kvalifiserte Kirurger.",
-    only_nurses_in_room       = utf8 "Det er kun Sykepleiere som kan jobbe på %s",
-    only_doctors_in_room       = utf8 "%s kan kun håndteres av Leger",
-    only_researchers         = utf8 "Leger kan bare jobbe på Forskningsavdelingen dersom de er kvalifiserte Forskere.",
-    nurses_cannot_work_in_room     = utf8 "%s kan ikke håndteres av Sykepleiere",
-    doctors_cannot_work_in_room   = utf8 "%s kan ikke håndteres av Leger",
-  },
-  
-  -- Research
-  research = {
-    machine_improved         = utf8 "%s er forbedret av Forskningsavdelingen.",
-    autopsy_discovered_rep_loss   = utf8 "Din Obdiseringsautomat er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
-    drug_fully_researched       = utf8 "Du har utforsket %s til 100%.",
-    new_machine_researched       = utf8 "En ny %s er akkurat utviklet.",
-    drug_improved           = utf8 "%s medisinen er forbedret av Forskningsavdelingen din.",
-    new_available           = utf8 "En ny %s er tilgjengelig.",
-    new_drug_researched       = utf8 "En ny medisin for å kurere %s er utviklet.",
-  },
-  
-  -- Boiler issue
-  boiler_issue = {
-    minimum_heat   = utf8 "Å, der er du. Sentralovnen i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
-    maximum_heat   = utf8 "Sentralovnen i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
-    resolved     = utf8 "Gode nyheter. Sentralvarmen fungerer slik som de skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
-  },
-  
-  -- Competitors
-  competitors = {
-    staff_poached     = utf8 "En av dine ansatte har fått seg jobb på et annet sykehus.",
-    hospital_opened   = utf8 "Et konkurrerende sykehus er åpnet i området av %s.",
-    land_purchased     = utf8 "%s har akkurat kjöpt en tomt.",
-  },
-  
-  -- Room requirements
-  room_requirements = {
-    research_room_need_researcher   = utf8 "Du må ansette en Lege med spesialisering innenfor Forskning for å kunne ta i bruk Forskningsavdelingen.",
-    op_need_another_surgeon     = utf8 "Du trenger fremdeles en Kirurg til, for å kunne ta i bruk Operasjonssalen.",
-    op_need_ward           = utf8 "Du må bygge en Sengeavdeling for å overvåke pasienter som skal opereres.",
-    reception_need_receptionist   = utf8 "Du må ansette en Resepsjonist for å ta imot pasientene.",
-    psychiatry_need_psychiatrist   = utf8 "Du må ansette en Psykolog, nå som du har bygget Psykiatri.",
-    pharmacy_need_nurse       = utf8 "Du må ansette en Sykepleier for å drifte Apoteket.",
-    ward_need_nurse         = utf8 "Du må ansette en Sykepleier som kan jobbe på denne Sengeavdelingen.",
-    op_need_two_surgeons       = utf8 "Ansett to Kirurger for å utföre kirurgiske inngrep i Operasjonssalen.",
-    training_room_need_consultant   = utf8 "Du må ansette en Konsulent som kan undervise i Klasserommet.",
-    gps_office_need_doctor       = utf8 "Du må ansette en Lege som kan jobbe på Allmennpraksisen.",
-  },
-  
+    
   -- Goals
   goals = {
     win = {
@@ -1881,110 +1758,54 @@ adviser = {
       kill       = utf8 "Dræb %d patienter mere for at tabe runden!",
     },
   },
-  
-  -- Warnings
-  warnings = {
-    charges_too_low       = utf8 "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre pr. pasient.",
-    charges_too_high       = utf8 "Dine priser er for höye. Dette gir deg god profitt på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
-    plants_thirsty         = utf8 "Du må huske på plantene dine. De er törste.",
-    staff_overworked       = utf8 "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når di er trötte.",
-    queue_too_long_at_reception = utf8 "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en resepsjonist til.",
-    queue_too_long_send_doctor   = utf8 "Köen til %s er for lang. Sörg for at det er en Lege i rommet.",
-    handymen_tired         = utf8 "Dine Vaktmestere er veldig trött. Gi dem hvile nå.",
-    money_low           = utf8 "Du begynner å gå tom for penger!",
-    money_very_low_take_loan   = utf8 "Din balanse er ganske så lav. Du kan jo alltids låne penger av banken.",
-    staff_unhappy         = utf8 "Personalet ditt er i dårlig humör. Pröv å gi dem bonuser, eller bedre, bygg et Personalrom. Du kan også forandre Hvilepraksisen på Sykehuspolicy-skjermen.",
-    no_patients_last_month     = utf8 "Ingen nye pasienter besökte sykehuset ditt forrige måned. Sjokkerende!",
-    queues_too_long       = utf8 "Köene dine er for lange.",
-    patient_stuck         = utf8 "Noen har gått seg vill. Du må organisere sykehuset ditt bedre.",
-    patients_too_hot       = utf8 "Pasientene er for varme. Du må enten fjerne noen ovner, skru ned temperaturen, eller plassere ut flere Brusautomater.",
-    doctors_tired         = utf8 "Dine Leger er veldig trötte. Gi dem hvile snarest.",
-    need_toilets         = utf8 "Pasientene trenger toaletter. Bygg dem på lett tilgjengelige steder.",
-    machines_falling_apart     = utf8 "Maskinene dine faller sammen. Få Vaktmestre til å fikse de snarest!",
-    nobody_cured_last_month   = utf8 "Absolutt ingen ble kurert forrige måned.",
-    patients_thirsty       = utf8 "Pasientene dine er törste. Du burde gi dem tilgang på brus.",
-    nurses_tired         = utf8 "Sykepleierene dine er trötte. Gi dem hvile nå.",
-    machine_severely_damaged   = utf8 "%s er veldig nær å bli totalskadet.",
-    reception_bottleneck     = utf8 "Det er en flaskehals i Resepsjonen. Ansett en Resepsjonist til.",
-    bankruptcy_imminent     = utf8 "Hallo! Du nærmer deg konkurs. Vær forsiktig!",
-    receptionists_tired     = utf8 "Resepsjonistene dine er meget trötte. Gi dem hvile nå.",
-    too_many_plants       = utf8 "Du har for mange planter. Dette er jo rene jungelen.",
-    many_killed         = utf8 "Du har nå drept %d mennesker. Poenget er liksom å gjöre de friske, vet du.",
-    need_staffroom         = utf8 "Bygg et Personalrom slik at dine ansatte kan slappe av.",
-    staff_too_hot         = utf8 "Dine ansatte holder på å smelte bort. Skru ned temperaturen eller fjern noen ovner fra rommene deres.",
-    patients_unhappy       = utf8 "Pasientene misliker sykehuset ditt. Du burde gjöre noe for å forbedre miljöet på sykehuset.",
-  },
-  
-  -- Placement info
-  placement_info = {
-    door_can_place       = utf8 "Du kan plassere dören her, om du vil.",
-    window_can_place     = utf8 "Du kan plassere vinduet her. Det går fint.",
-    door_cannot_place     = utf8 "Beklager, men du kan ikke plassere dören her.",
-    object_can_place     = utf8 "Du kan plassere gjenstanden her.",
-    reception_can_place   = utf8 "Du kan plassere Resepsjonen her.",
-    staff_cannot_place     = utf8 "Du kan ikke plassere den ansatte her. Beklager.",
-    staff_can_place     = utf8 "Du kan plassere den ansatte her. ",
-    object_cannot_place   = utf8 "Hallo, du kan ikke plassere gjenstanden her.",
-    room_cannot_place     = utf8 "Du kan ikke plassere rommet her.",
-    room_cannot_place_2   = utf8 "Du kan ikke bygge rommet her.",
-    window_cannot_place   = utf8 "Ah. Du kan faktisk ikke plassere vinduet her.",
-    reception_cannot_place   = utf8 "Du kan ikke plassere Resepsjonen her.",
-  },
-  
-  -- Praise
-  praise = {
-    many_benches   = utf8 "Pasientene har nok sitteplasser nå. Fint.",
-    many_plants   = utf8 "Flott. Du har mange planter. Pasientene vil sette pris på det.",
-    patients_cured   = utf8 "%d pasienter kurert.",
-  },
-  
+
   -- Information
   information = {
-    larger_rooms           = utf8 "Större rom gjör at de ansatte föler seg viktigere, og det forbedrer deres prestasjoner.",
-    extra_items           = utf8 "Ekstra gjenstander i rommene får de ansatte til å föle seg mer komfortabel og prestasjonene blir bedre.",
-    epidemic             = utf8 "Du har en smittsom epidemi på sykehuset ditt. Det må du gjöre noe med nå!",
-    promotion_to_doctor       = utf8 "En av dine TURNUSLEGER er nå blitt DOKTOR.",
-    emergency             = utf8 "Nödstilfelle! Unna vei! Flytt dere!",
-    patient_abducted         = utf8 "En av dine pasienter er blitt bortfört av romvesen.",
-    first_cure             = utf8 "Bra jobbet! Du har akkurat kurert din förste pasient.",
-    promotion_to_consultant     = utf8 "En av dine DOKTORER er nå blitt KONSULENT.",
-    handyman_adjust         = utf8 "Du kan gjöre Vaktmesterene mer effektiv ved å justere deres prioriteringer.",
-    promotion_to_specialist     = utf8 "En av dine Leger er blitt forfremmet til %s.",
-    patient_leaving_too_expensive   = utf8 "En pasient forlater sykehuset ditt uten å gjöre opp for seg ved %s. Det er for dyrt.",
-    vip_arrived           = utf8 "Pass på! - %s har akkurat ankommet sykehuset ditt! La alt gå på skinner nå, for å tilfredstille han.",
-    epidemic_health_inspector     = utf8 "Helseministeren har nå fått med seg nyhetene om epidemien din. Du må forberede deg på et besök av ministeren ganske snart.",
-    first_death           = utf8 "Du har akkurat drept din förste pasient. Hvordan föles det?",
-    pay_rise             = utf8 "En av dine ansatte truer med å si opp. Velg om du vil gå med på lönnskravene eller om du vil sparke han/henne. Klikk på ikonet nede i venstre hjörne for å se hvem som truer med oppsigelse.",
-    place_windows           = utf8 "Vinduer gjör rommene lysere og öker arbeidslysten til dine ansatte.",
-    fax_received           = utf8 "Ikonet som akkurat poppet opp nede i venstre hjörne av skjermen, varsler deg om viktig informasjon og beslutninger du må ta.",
+    larger_rooms           = utf8 "Större rum gör at de ansatte föler sig vigtigere, og det forbedre deres arbejde.",
+    extra_items           = utf8 "Ekstra genstande i rumme får dine ansatte til at föle sig bedre tilpas og deres præstationer bliver bedre.",
+    epidemic             = utf8 "Du har en smittsom epidemi på dit sygehus. Det skal du göre noget ved, NU!",
+    promotion_to_doctor       = utf8 "En af dine praktikanter er blevet forfremmet til at blive læge.",
+    emergency             = utf8 "Akkuttilfælde på vej, gör plads!",
+    patient_abducted         = utf8 "En af dine patienter er blevet bortfört af et rumvæsen.",
+    first_cure             = utf8 "Godt arbejde! Du har netop nu kureret din förste patient.",
+    promotion_to_consultant     = utf8 "En af dine læger er blevet forfremmet til konsulent.",
+    handyman_adjust         = utf8 "Du kan göre en handyman mere effektiv ved at justere på hans prioteringer.",
+    promotion_to_specialist     = utf8 "En af dine læger er blevet forfremmt til %s.",
+    patient_leaving_too_expensive   = utf8 "En patient forlader dit sygehus. Det er alt for dyrt!.",
+    vip_arrived           = utf8 "Pas på! - %s er netop ankommet til dit sygehus. Sörg for at alt går på skinner for at gör ham tilfreds.",
+    epidemic_health_inspector     = utf8 "Sunhedsministeren har fået besked om din epidemi. Du skal forbedrede dig på at han kommer på besög meget snart.",
+    first_death           = utf8 "Du har netop dræbt din förste patient. Hvordan har du det med det?!",
+    pay_rise             = utf8 "En af dine ansatte truer med at sige op. Du skal vælge om du vil gå med til lönkravene eller om du vil fyre vedkommende. Klik på ikonet nede i venstre hjörne for at se hvem det der som truer med at sige op.",
+    place_windows           = utf8 "Vinduer gör rumme lysere og forbedre arbejdslysten hos dine ansatte.",
+    fax_received           = utf8 "Ikonet som netop er kommet frem nede i venstre hjörne af skærmen, advarer dig om en vigtig information og beslutninger du skal tage stilling til.",
     
     initial_general_advice = {
-      rats_have_arrived = utf8 "Rotter har infisert sykehuset ditt. Pröv å skyt dem med musen din.",
-      autopsy_available = utf8 "Obduksjonsautomaten er nå ferdigutviklet. Med denne kan du kvitte deg med tröblete eller ikke-velkomne pasienter, og gjöre forskning ut av restene. Advarsel - Å benytte denne er svært kontroversielt.",
-      first_patients_thirsty = utf8 "Flere av pasientene dine begynner å bli dehydrert. De ville satt pris på en Brusautomat.",
-      research_now_available = utf8 "Du har bygd din förste Forskningsavdeling. Du har nå tilgang til Forskningsskjermen.",
-      psychiatric_symbol = utf8 "Leger med spesialisering innen Psykologi gjenkjennes med symbolet: |",
-      decrease_heating = utf8 "Folk på sykehuset ditt svetter. Skru ned sentralvarment. Dette gjöres på Områdekartet.",
-      surgeon_symbol = utf8 "Leger kan utföre kirurgiske inngrep om de har symbolet: {",
-      first_emergency = utf8 "Akutte pasienter har et blinkende blått lys over hodet. Behandle dem i tide, ellers dör de.",
-      first_epidemic = utf8 "Du har en epidemi på sykehuset ditt! Avgjör om du vil rydde opp, eller legge deg paddeflat.",
-      taking_your_staff = utf8 "Noen pröver å stjele personalet ditt. Du må kjempe for å beholde de.",
-      place_radiators = utf8 "Pasientene fryser - du kan plassere flere ovner ved å gå inn på oversikten med gjenstander.",
-      epidemic_spreading = utf8 "Det er smittefare på sykehuset. Kurer infiserte pasienter för de forlater sykehuset.",
-      research_symbol = "Forskere er leger med symbolet: }",
-      machine_needs_repair = utf8 "Du har utstyr som trenger reperasjon. Finn utstyret - det ryker av det - og klikk på den. Klikk deretter på Vaktmestersymbolet.",
-      increase_heating = utf8 "Folk fryser. Skru opp sentralvarmen på Områdekartet.",
-      first_VIP = utf8 "Du er i ferd med å ta imot ditt förste VIP-besök. Sörg for at VIP'er ikke ser noe uhygienisk eller pasienter som henger med hodet.",
+      rats_have_arrived = utf8 "Rotterne har invaderet dit sygehus. Pröv at skyde dem med markören.",
+      autopsy_available = utf8 "Obduktionsautomaten er nu færdigudviklet. Med denne har du få det bedste ud af döende og ikke velkommende patienter.  Advarsel - At benytte denne er meget kontrovatielt.",
+      first_patients_thirsty = utf8 "Flere af patienterne er törstige. De ville sætte pris på en sodavandsautomat.",
+      research_now_available = utf8 "Du har bygget din förste forskningsafdeling. Du kan se indstillinger til den via forskningsskærmen.",
+      psychiatric_symbol = utf8 "Læger med specialisering i psykologi kan genkendes med symbolet: |",
+      decrease_heating = utf8 "Folk på dit sygehus sveder. Skru ned for varmen, det kan du göre på oversigskortet.",
+      surgeon_symbol = utf8 "Læger kan udföre kirugiske indgreb hvis de har symbolet: {",
+      first_emergency = utf8 "Akutte patienter har et blinke blåt lys over hovederne. Behandl dem inden tiden udlöber, ellers dör de!",
+      first_epidemic = utf8 "Du har en epidemi på dit sygehus. Tag stilling til om du vil behandle den selv eller om du vil betale dig fra det.",
+      taking_your_staff = utf8 "Nogen pröver at stjæle dit personale. Du må kæmpe for at beholde dem.",
+      place_radiators = utf8 "Patienterne fryser - du skal pladsere flere radiatorer ved at gå ind i objekt-oversigten.",
+      epidemic_spreading = utf8 "Der er en smittefare på dit sygehus. Kurer de infiferede patienter för de forlader sygehuset.",
+      research_symbol = "Forskere er læger med symbolet: }",
+      machine_needs_repair = utf8 "Du har udstyr som har brug for at blive reperaret. Find udstyret - det ryger fra det - og klik på det. Klik derefter på handyman symbolet.",
+      increase_heating = utf8 "Folk fryser. Skru op for centralvarmen på oversigtskortet.",
+      first_VIP = utf8 "Du er ved at få dit förste VIP-besög. Sörg for at VIP'en ikke ser noget uhygiegnisk eller patienter er triste.",
     },
   },
   
   
   -- Build advice
   build_advice = {
-    placing_object_blocks_door     = utf8 "Om du plasserer gjenstander der, kommer ikke folk seg til dören.",
-    blueprint_would_block       = utf8 "Den blåkopien kommer til å blokkere andre rom. Pröv å endre rommets störrelse, eller flytt det en annen plass!",
-    door_not_reachable         = utf8 "Folk kommer ikke til å komme seg til den dören. Tenk litt.",
-    blueprint_invalid         = utf8 "Det er ikke en gyldig blåkopi.",
+    placing_object_blocks_door     = utf8 "Hvis du placere objetet her, kan folk ikke komme til dören.",
+    blueprint_would_block       = utf8 "Det blåområde kommer til at blokere andre rum. Pröv at ændre på rumstörrelsen eller flyt til et andet sted!",
+    door_not_reachable         = utf8 "Folk kan ikke komme til dören.",
+    blueprint_invalid         = utf8 "Det er ikke et gyldigt blueprint.",
   },
 }
 
@@ -2019,21 +1840,7 @@ bank_manager = {
 }
 
 
--- Newspaper headlines
-newspaper = {
-  -- Seven categories of funny headlines. I think each category is related
-  -- to one criterium you can lose to. TODO: categorize
-  { "DR SKRIG OG GRU", "SKUMMEL LAEGE LEGER GUD", "DR ACULA SJOKKERER", "HVEM FALDT FOR KNIVEN?", "FARLIG FORSKNING STOPPET EFTER RAZZIA" },
-  { "DR ANKER", "KNUST KIRURG", utf8 "KONSULENT PÅ KÖRET", "KIRURGISK SHOT", "KIRURG DRIKKER OP", "KIRURGISK SPIRIT" },
-  { "LEGENDE KIRURG", "DOKTOR PANTSDOWN", utf8 "DOKTOR LANGT NEDE", "GLUPSK KIRURG" },
-  { "LAEGE TUMLER MED BALANCEN", "ORGAN-ISERT KRIMINALITET", "BANKMAESSIG BYPASS-OPERASION", "LAEGE MED KONTANTBEHOLDNING" },
-  { "MEDISINSK RAID AV KISTER", utf8 "DOKTOR TÖMMER GRAVPLASS", "LIK I GARDEROBEN", utf8 "FIN DAG FOR DR DÖD", "SISTE FEILBEHANDLING", "GRAVENDE DOKTOR OPPDAGET" },
-  { "LEGE SPIST OPP!", "SLAKK KVAKK", "LIVSFARLIG DIAGNOSE", "UFORSIKTIG KONSULENT", },
-  { utf8 "DOKTOR BLÅSER LETTET UT", "KIRURG 'OPERERER' SEG SELV", utf8 "LEGE MED UTBLÅSNING", "DOKTOR LEGGER KABEL", "MEDISIN ER NOE DRITT" },
-}
-
 -- Letters
--- TODO
 letter = {
     --original line-ends:             5          4               2    3
   [1] = {
@@ -2787,7 +2594,19 @@ misc = {
   mouse        = "Mus",
   force        = "Styrke",
 }
-    
+ 
+----- Old but strings that failed with previous setup
+progress_report.quite_unhappy = "Folk er rimelig triste. "
+progress_report.header = "Progessionsrapport"
+progress_report.very_unhappy = "Folk er meget triste. "
+progress_report.more_drinks_machines = "Byg flere sodavandsautomater. "
+progress_report.too_cold = "Det er alt for koldt. Byg flere sodavandsautomater. "
+progress_report.too_hot = "Juster varmen. Det er alt for varmt. "
+progress_report.percentage_pop = "% population"
+progress_report.win_criteria = "Kriterier for at vinde"
+
+
+
  --[[ 
  -----------------------
  ***** TODO ************
@@ -2818,25 +2637,18 @@ misc = {
   * policy - done
   * objects - done
   * adviser
-  * epidemic
-  * staff_advice
-  * earthquake
+  * epidemic  - done
+  * staff_advice - done
+  * earthquake - done
   * multiplayer
-  * poaching
+  * poaching - done
   * surgery_requirements
   * level_progress
-  * progress_report
-  * staff_place_advice
-  * research
-  * boiler_issue
-  * competitors
-  * room_requirements
+  * progress_report - done
   * goals - done
-  * warnings
   * placement_info
-  * praise
-  * information
-  * build_advice
+  * information - done
+  * build_advice - done
 
 * newspaper - unneeded
 * letter -done
