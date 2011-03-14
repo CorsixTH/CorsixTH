@@ -2600,7 +2600,7 @@ progress_report.quite_unhappy = "Folk er rimelig triste. "
 progress_report.header = "Progessionsrapport"
 progress_report.very_unhappy = "Folk er meget triste. "
 progress_report.more_drinks_machines = "Byg flere sodavandsautomater. "
-progress_report.too_cold = "Det er alt for koldt. Byg flere sodavandsautomater. "
+progress_report.too_cold = "Det er alt for koldt. Byg flere radiatorer. "
 progress_report.too_hot = "Juster varmen. Det er alt for varmt. "
 progress_report.percentage_pop = "% population"
 progress_report.win_criteria = "Kriterier for at vinde"
@@ -2641,6 +2641,17 @@ adviser.surgery_requirements.need_surgeons_ward_op = "Du skal ansætte to kirgur
 adviser.surgery_requirements.need_surgeon_ward = "Du mangler stadigt at ansætte en kirug og bygge en sengeafdeling før du kan udføre operationer."
 adviser.vomit_wave.started = "Ser ud som om du har en mavevirus på dit hospital, hvis du havde det renere var det ikke sket. Måske skulle du ansætte flere handymænd."
 adviser.vomit_wave.ended = "Puha! Ligner at mavevirusen er døet ud. Hold dit hospital rent i fremtiden."
+
+adviser.room_requirements.research_room_need_researcher = "Du skal ansætte en læge med forsker evner for at kunne bruge forskningsrummet."
+adviser.room_requirements.op_need_another_surgeon = "Du mangler stadigt at ansætte en kirug mere før operationsstuen er brugbar."
+adviser.room_requirements.op_need_ward = "Du skal bygge en sengeafdeling til patienter der skal opereres."
+adviser.room_requirements.reception_need_receptionist = "Du skal ansætte en receptionist for at kunne se dine patienter."
+adviser.room_requirements.psychiatry_need_psychiatrist = "Du skal ansætte en psykiater, nu da du har bygget et rum til en psykiater."
+adviser.room_requirements.pharmacy_need_nurse = "Du skal ansætte en sygeplejeske til at passe apoteket."
+adviser.room_requirements.ward_need_nurse = "Du skal ansætte en sygeplejeske til at arbejde på sengeafdelingen."
+adviser.room_requirements.op_need_two_surgeons = "Ansæt to kiruger for at kunne lave operationer."
+adviser.room_requirements.training_room_need_consultant = "Du skal ansætte en konsulent til at undervise i undervisningslokalet."
+adviser.room_requirements.gps_office_need_doctor = "Du skal ansætte en læge til at arbejde på lægenskontor."
 
  --[[ 
  -----------------------
