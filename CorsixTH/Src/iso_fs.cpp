@@ -151,6 +151,18 @@ char IsoFilesystem::_normalise(char c)
         return c;
 }
 
+void IsoFilesystem::_trimIdentifierVersion(const unsigned char* sIdent, uint8_t& iLength)
+{
+    for(uint8_t i = 0; i < iLength; ++i)
+    {
+        if(sIdent[i] == ';')
+        {
+            iLength = i;
+            return;
+        }
+    }
+}
+
 int IsoFilesystem::_findHospDirectory(const unsigned char *pDirEnt, int iDirEntsSize, int iLevel)
 {
     // Sanity check
@@ -175,6 +187,7 @@ int IsoFilesystem::_findHospDirectory(const unsigned char *pDirEnt, int iDirEnts
         uint32_t iDataLength = ReadNativeInt<uint32_t>(pDirEnt + 10);
         uint8_t iFlags = pDirEnt[25];
         uint8_t iIdentLength = pDirEnt[32];
+        _trimIdentifierVersion(pDirEnt + 33, iIdentLength);
         if(iFlags & DEF_DIRECTORY)
         {
             // The names "\x00" and "\x01" are used for the current directory
@@ -257,6 +270,7 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
         uint32_t iDataLength = ReadNativeInt<uint32_t>(pDirEnt + 10);
         uint8_t iFlags = pDirEnt[25];
         uint8_t iIdentLength = pDirEnt[32];
+        _trimIdentifierVersion(pDirEnt + 33, iIdentLength);
 
         // Build new path
         char *sPath = new char[iLen + iIdentLength + 2];

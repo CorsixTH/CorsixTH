@@ -149,6 +149,7 @@ protected:
 
     static char _normalise(char c);
     static int _fileNameComp(const void* lhs, const void* rhs);
+    static void _trimIdentifierVersion(const unsigned char* sIdent, uint8_t& iLength);
 };
 
 int luaopen_iso_fs(lua_State *L);
