@@ -609,10 +609,13 @@ static int l_str_reload_actual(lua_State *L)
         }
         else
         {
-            // Otherwise, the first value was a method name.
-            lua_pushvalue(L, 6);
-            lua_gettable(L, 7);
-            lua_replace(L, 6);
+            // Otherwise, the first value was a method or method name.
+            if(lua_type(L, 6) != LUA_TFUNCTION)
+            {
+                lua_pushvalue(L, 6);
+                lua_gettable(L, 7);
+                lua_replace(L, 6);
+            }
             lua_call(L, iCount - 1, 1);
         }
     }
