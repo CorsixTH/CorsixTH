@@ -226,7 +226,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   
   self.active_index = 0 -- avoid case of index changing from 1 to 1
   self:setActiveIndex(1)
-  self:onMouseMove(self.ui:getCursorPosition(self))
+  self:onCursorWorldPositionChange(self.ui:getCursorPosition(self))
 end
 
 -- precondition: self.active_index has to correspond to the object to be removed
@@ -770,8 +770,8 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
   return bestx, besty, besto
 end
 
-function UIPlaceObjects:onMouseMove(x, y, ...)
-  local repaint = Window.onMouseMove(self, x, y, ...)
+function UIPlaceObjects:onCursorWorldPositionChange(x, y)
+  local repaint = Window.onCursorWorldPositionChange(self, x, y)
   if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return repaint
   end

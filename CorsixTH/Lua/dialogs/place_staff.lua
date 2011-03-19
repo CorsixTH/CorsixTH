@@ -45,7 +45,7 @@ function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.anim:setAnimation(self.world.anims, idle_anim)
   local _, ghost = ui.app.gfx:loadPalette()
   self.world.anims:setAnimationGhostPalette(idle_anim, ghost)
-  self:onMouseMove(x, y)
+  self:onCursorWorldPositionChange(x, y)
   self:Window()
 end
 
@@ -66,7 +66,7 @@ function UIPlaceStaff:close()
   Window.close(self)
 end
 
-function UIPlaceStaff:onMouseMove(x, y)
+function UIPlaceStaff:onCursorWorldPositionChange(x, y)
   x, y = self.ui:ScreenToWorld(x, y + 14)
   self.tile_x = math_floor(x)
   self.tile_y = math_floor(y)

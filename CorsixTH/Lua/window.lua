@@ -1130,6 +1130,18 @@ function Window:onChangeLanguage()
   end
 end
 
+function Window:onCursorWorldPositionChange(x, y)
+  local repaint = false
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if window:onCursorWorldPositionChange(x - window.x, y - window.y) then
+        repaint = true
+      end
+    end
+  end
+  return repaint
+end
+
 function Window:hitTestPanel(x, y, panel)
   local x, y = x - panel.x, y - panel.y
   if panel.visible and x >= 0 and y >= 0 then

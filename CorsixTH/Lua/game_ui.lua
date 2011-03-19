@@ -356,6 +356,8 @@ function GameUI:onCursorWorldPositionChange()
   if entity and self.bottom_panel then
     self.bottom_panel:setDynamicInfo(entity:getDynamicInfo())
   end
+  
+  return Window.onCursorWorldPositionChange(self, self.cursor_x, self.cursor_y)
 end
 
 local UpdateCursorPosition = TH.cursor.setPosition

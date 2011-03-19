@@ -28,8 +28,8 @@ class "UIEditRoom" (UIPlaceObjects)
 
 function UIEditRoom:UIEditRoom(ui, room_type)
 
-  -- NB: UIEditRoom:onMouseMove is called by the UIPlaceObjects constructor,
-  -- hence the initialisation of required fields prior to the call.
+  -- NB: UIEditRoom:onCursorWorldPositionChange is called by the UIPlaceObjects
+  -- constructor, hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
   self:addKeyHandler("Enter", self.confirm) -- UIPlaceObjects does not need this
 
@@ -1173,8 +1173,8 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   end
 end
 
-function UIEditRoom:onMouseMove(x, y, dx, dy)
-  local repaint = UIPlaceObjects.onMouseMove(self, x, y, dx, dy)
+function UIEditRoom:onCursorWorldPositionChange(x, y)
+  local repaint = UIPlaceObjects.onCursorWorldPositionChange(self, x, y)
   
   local ui = self.ui
   local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
