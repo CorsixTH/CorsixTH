@@ -762,7 +762,8 @@ function World:onTick()
         hospital:tick()
       end
       -- A patient might arrive to the player hospital.
-      if self.spawn_hours[self.hour + i-1] then
+      -- TODO: Multiplayer support.
+      if self.spawn_hours[self.hour + i-1] and self.hospitals[1].opened then
         for k=1, self.spawn_hours[self.hour + i-1] do
           self:spawnPatient()
         end
