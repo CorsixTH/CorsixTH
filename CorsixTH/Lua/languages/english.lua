@@ -148,6 +148,7 @@ letter = {
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
   th_directory = "CorsixTH needs a copy of the data files from the original Theme Hospital game (or demo) in order to run. Please use the below selector to locate the Theme Hospital install directory.",
+  exit = "Exit",
 }
 
 misc.not_yet_implemented = "(not yet implemented)"
@@ -212,6 +213,7 @@ options_window = {
   change_resolution = "Change resolution",
   browse = "Browse...",
   new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
+  cancel = "Cancel",
   back = "Back",
 }
 

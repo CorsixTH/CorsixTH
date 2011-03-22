@@ -27,7 +27,7 @@ adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu M
 misc.save_failed = "ERREUR : Partie non sauvegardée" -- Much more french
 tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostic aient été essayées. " -- Remove a superfluous word
 room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour un autre diagnostic soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
-room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut mEme envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
+room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
 adviser.goals.win = { -- Why are this strings upcase?
   reputation = "Portez votre réputation à %d pour pouvoir gagner",
   value = "Portez la valeur de votre hôpital à %d",
@@ -39,7 +39,7 @@ tooltip.staff_list.next_person = "Voir la page suivante"
 tooltip.staff_list.prev_person = "Voir la page précédente"
 
 -- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = "Visage - cliquez pour ouvrir la fenEtre de gestion"
+tooltip.staff_window.face = "Visage - cliquez pour ouvrir la fenêtre de gestion"
 tooltip.staff_window.center_view = "Clic gauche pour focaliser sur la personne, pour faire défiler les membres du personnel"
 
 -- Fix Winning texts
@@ -61,13 +61,13 @@ letter = {
   },
   [4] = { -- Level four: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
-    [2] = "Félicitations ! Le Ministère de la Santé est très impressionné par vos capacités à gérer cet hôpital. Vous Etes un exemple de réussite dans ce domaine. Vous voudrez peut-Etre une situation plus élevée, toutefois. Vous seriez payé %d$, et la décision vous revient.",
-    [3] = "Etes-vous prEt à accepter un poste à l'hôpital de %s ?",
+    [2] = "Félicitations ! Le Ministère de la Santé est très impressionné par vos capacités à gérer cet hôpital. Vous Etes un exemple de réussite dans ce domaine. Vous voudrez peut-être une situation plus élevée, toutefois. Vous seriez payé %d$, et la décision vous revient.",
+    [3] = "Etes-vous prêt à accepter un poste à l'hôpital de %s ?",
   },
   [5] = { -- Level five: Add missing spaces before punctuation marks and between words
     [1] = "Estimable %s",
     [2] = "Nouvelles salutations. Nous respectons votre souhait de ne pas quitter ce charmant hôpital, mais nous vous supplions d'y réfléchir. Nous vous proposons la coquette somme de %d$ pour accepter de diriger un autre hôpital avec autant de succès.",
-    [3] = "Aimeriez-vous prendre la tEte de l'hôpital de %s ?",
+    [3] = "Aimeriez-vous prendre la tête de l'hôpital de %s ?",
   },
   [6] = { -- Level six: Add missing spaces before punctuation marks, fix last string which contained an anglicism
     [1] = "Estimable %s",
@@ -77,7 +77,7 @@ letter = {
   [7] = { -- Level seven: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
     [2] = "Le Ministère de la Santé souhaite que vous reconsidériez votre décision de rester dans cet hôpital. Nous savons que vous avez un charmant établissement mais il est temps de relever un nouveau défi, avec un salaire attrayant de %d$.",
-    [3] = "Etes-vous prEt à travailler à l'hôpital de %s ?",
+    [3] = "Etes-vous prêt à travailler à l'hôpital de %s ?",
   },
   [8] = { -- Level height: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
@@ -86,7 +86,7 @@ letter = {
   },
   [9] = { -- Level nine: Add missing spaces before punctuation marks, fix some sentences, add missing diacritics
     [1] = "Estimable %s",
-    [2] = "Vous vous Etes montré le meilleur directeur d'hôpital jamais connu dans la longue et mouvementée histoire de la médecine. Nous sommes fiers de vous offrir le poste de Chef SuprEme des Hôpitaux. Ce titre honorifique vous garantit un salaire de %d$. On fera pour vous une parade pleine de serpentins et les gens vous baiseront les pieds.",
+    [2] = "Vous vous êtes montré le meilleur directeur d'hôpital jamais connu dans la longue et mouvementée histoire de la médecine. Nous sommes fiers de vous offrir le poste de Chef Suprême des Hôpitaux. Ce titre honorifique vous garantit un salaire de %d$. On fera pour vous une parade pleine de serpentins et les gens vous baiseront les pieds.",
     [3] = "Merci pour tout ce que vous avez fait. Vous avez mérité cette semi-retraite.",
   },
   [10] = { -- Level ten: Fix some sentences
@@ -96,8 +96,8 @@ letter = {
   },
   [11] = { -- Level eleven: No change
     [1] = "Estimable %s",
-    [2] = "Votre carrière est exemplaire et vous Etes une inspiration pour nous tous. Merci d'avoir géré tous ces hôpitaux avec autant de talent. Nous souhaitons vous offrir une rente à vie de %d$ pour simplement aller de ville en ville à bord d'une voiture de prestige pour saluer la foule et donner des conférences sur votre incroyable réussite.",
-    [3] = "Vous Etes un exemple pour toute personne sensée et tout le monde, sans exception, vous considère comme un modèle absolu.",
+    [2] = "Votre carrière est exemplaire et vous êtes une inspiration pour nous tous. Merci d'avoir géré tous ces hôpitaux avec autant de talent. Nous souhaitons vous offrir une rente à vie de %d$ pour simplement aller de ville en ville à bord d'une voiture de prestige pour saluer la foule et donner des conférences sur votre incroyable réussite.",
+    [3] = "Vous êtes un exemple pour toute personne sensée et tout le monde, sans exception, vous considère comme un modèle absolu.",
   },
   [12] = { -- Level twelve: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
@@ -113,7 +113,7 @@ tooltip.casebook.hire_staff = "Il faut embaucher un(e) %s pour ce traitement"
 tooltip.watch = {
   emergency = "Urgence : temps qui reste pour soigner les patients entrés en urgence.",
   hospital_opening = "Délai : ceci est le temps qui reste avant que votre hôpital soit ouvert. Cliquez sur GO pour l'ouvrir tout de suite.",
-  epidemic = "Epidémie : temps qui reste pour arrEter l'épidémie. Si ce délai expire OU si un malade contagieux quitte l'hôpital, un inspecteur sanitaire viendra... Le bouton active ou désactive la vaccination. Cliquez sur un patient pour lancer la vaccination par une infermière.",
+  epidemic = "Epidémie : temps qui reste pour arrêter l'épidémie. Si ce délai expire OU si un malade contagieux quitte l'hôpital, un inspecteur sanitaire viendra... Le bouton active ou désactive la vaccination. Cliquez sur un patient pour lancer la vaccination par une infermière.",
 }
 tooltip.objects = {
   chair = "Chaise : le patient s'y assied pour parler de ses symptômes.",
@@ -145,7 +145,7 @@ tooltip.objects = {
   cabinet = "Placard : dossiers des patients, notes de recherche.",
 }
 room_descriptions.fracture_clinic[2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur."
-room_descriptions.inflation[2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tEte démesurée sera dégonflée puis regonflée à la bonne taille."
+room_descriptions.inflation[2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille."
 room_descriptions.hair_restoration[2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure."
 room_descriptions.electrolysis[2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation."
 progress_report.too_hot = "Réglez le chauffage : on étouffe."
@@ -166,7 +166,7 @@ adviser.warnings = {
   machines_falling_apart = "Les machines tombent en panne. Faites-les réparer !",
   bankruptcy_imminent = "Hé ! Vous courez à la faillite. Attention !",
   too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
-  many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous Etes censé les soigner.",
+  many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
 }
 adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas mettre cet objet ici."
 adviser.information = {
@@ -235,7 +235,7 @@ introduction_texts = {
     [4] = "Ratissez tous ces malades !",
   },
   level12 = {
-    [1] = "Côté défi, vous allez Etre servi !",
+    [1] = "Côté défi, vous allez être servi !",
     [4] = "Alors, heureux ?",
   },
   level13 = {
@@ -265,7 +265,7 @@ diseases = {
   },
   discrete_itching = {
     cause = "Cause : petits bestioles à dents aiguës.",
-    cure = "Traitement : un sirop gluant est administré pour empEcher les démangeaisons.",
+    cure = "Traitement : un sirop gluant est administré pour empêcher les démangeaisons.",
     name = "Morpionnite",
     symptoms = "Symptômes: le patient se gratte jusqu'au sang.",
   },
@@ -327,7 +327,7 @@ diseases = {
     cause = "Cause: exposition à un comique de situation.",
     cure = "Traitement: un psychiatre doit faire comprendre au patient à quel point son état est sérieux.",
     name = "Fou rire",
-    symptoms = "Symptômes: gloussement irrépressible et répétition compulsive d'accroches mEme pas drôles.",
+    symptoms = "Symptômes: gloussement irrépressible et répétition compulsive d'accroches même pas drôles.",
   },
   general_practice = {
     name = "Généraliste",
@@ -336,10 +336,10 @@ diseases = {
     cause = "Cause: avoir raconté trop de mensonges pour se rendre intéressant.",
     cure = "Traitement: pose très douloureuse de cheveux à l'aide d'un moumouteur.",
     name = "Calvitie",
-    symptoms = "Symptômes: tEte en boule de billard et gros complexe.",
+    symptoms = "Symptômes: tête en boule de billard et gros complexe.",
   },
   heaped_piles = {
-    cause = "Cause: s'Etre assis sur un jet de jacuzzi.",
+    cause = "Cause: s'être assis sur un jet de jacuzzi.",
     cure = "Traitement: un potion agréable bien que puissamment acide dissout les rectoïdes de l'intérieur.",
     name = "Rectoïdes",
     symptoms = "Symptômes: le patient a l'impression de s'asseoir sur un sac de billes.",
@@ -364,15 +364,15 @@ diseases = {
   },
   alien_dna = {
     cause = "Cause: agrippeurs faciaux munis de sang extraterrestre intelligent.",
-    cure = "Traitement: l'ADN est retiré par un correcteur pour Etre nettoyé puis restitué rapidement.",
+    cure = "Traitement: l'ADN est retiré par un correcteur pour être nettoyé puis restitué rapidement.",
     name = "ADN Alien",
     symptoms = "Symptômes: le patient se métamorphose progressivement en sale machin d'outre-espace et veut tout détruire.",
   },
   bloaty_head = {
     cause = "Cause: avoir reniflé du fromage et bu de l'eau de pluie.",
-    cure = "Traitement: la tEte est éclatée puis regonflée à la bonne dimension à l'aide d'une astucieuse machine.",
+    cure = "Traitement: la tête est éclatée puis regonflée à la bonne dimension à l'aide d'une astucieuse machine.",
     name = "Encéphalantiasis",
-    symptoms = "Symptômes: affreux maux de tEte.",
+    symptoms = "Symptômes: affreux maux de tête.",
   },
   gastric_ejections = {
     cause = "Cause: nourriture mexicaine ou indienne très épicée.",
@@ -462,7 +462,7 @@ diseases = {
     cause = "Cause: avoir abusé des programmes télévisés.",
     cure = "Traitement: un psychiatre doit convaincre le patient d'échanger sa télévision contre une radio.",
     name = "Téléincarnation",
-    symptoms = "Symptômes: le patient a l'illusion d'Etre capable de présenter une émission de cuisine.",
+    symptoms = "Symptômes: le patient a l'illusion d'être capable de présenter une émission de cuisine.",
   },
   ruptured_nodules = {
     cause = "Cause: saut à l'élastique par temps froid.",
@@ -524,7 +524,7 @@ tooltip.objects.litter = "Déchet : Laissé sur le sol par un patient car il n'a
 
 -- Adviser
 adviser = {
-  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empEcher des parties de l'hôpital d'Etre atteintes.",
+  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
 
   cheats = {
     th_cheat = "Félicitations, vous avez débloquer les triches !",
@@ -626,7 +626,7 @@ new_game_window = {
 tooltip.new_game_window = {
   easy = "Si vous jouez pour la première fois à un jeu de simulation, cette option est pour vous",
   medium = "C'est la voie du milieu à prendre si vous ne savez pas quoi choisir",
-  hard = "Si vous Etes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
+  hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
   tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
   cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
 }
@@ -668,7 +668,7 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  back = "Fermer cette fenEtre",
+  back = "Fermer cette fenêtre",
 }
 
 -- Options window
@@ -679,18 +679,19 @@ options_window = {
   change_resolution = "Changer la résolution",
   browse = "Parcourir...",
   new_th_directory = "Ici, vous pouvez spécifier un nouveau dossier d'installation de Theme Hospital. Dès que vous aurez changé le répertoire, le jeu sera redémarré.",
+  cancel = "Annuler",
   back = "Précédent",
 }
 
 tooltip.options_window = {
-  fullscreen_button = "Basculer en mode plein écran/fenEtré",
+  fullscreen_button = "Basculer en mode plein écran/fenêtré",
   width = "Entrez la largeur désirée",
   height = "Entrez la hauteur désirée",
   change_resolution = "Changer la résolution pour les dimensions entrées à gauche",
   language = "Utiliser la langue %s",
   original_path = "Le dossier d'installation du Theme Hospital originel qui est actuellement sélectionné",
   browse = "Choisir un autre emplacement d'installation de Theme Hospital",
-  back = "Fermer la fenEtre des options",
+  back = "Fermer la fenêtre des options",
 }
 
 -- Debug patient window
@@ -743,18 +744,18 @@ totd_window = {
     "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostics.",
     "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications pariculières (chirurgien, psyschiatre ou chercheur), il transférera ses connaissances à ses élèves.",
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
-    "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenEtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
+    "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous Etes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
     "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs : th-issues.corsix.org.",
-    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenEtre de status pour voir votre progression dans les objectifs du niveau.",
+    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de status pour voir votre progression dans les objectifs du niveau.",
     "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outil en bas.",
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
     "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utilies ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
     "Le personnel mécontent vous demandra des augmentations de salaires fréquemment. Assurez vous de leur offir un environnement de travail confortable pour éviter cela.",
     "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
     "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
-    "Les urgences peuvent Etre une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
+    "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
   },
   previous = "Astuce précédente",
   next = "Astuce suivante",
@@ -780,7 +781,7 @@ tooltip.lua_console = {
 -- Confirmation dialog
 confirmation = {
   needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Etes-vous sûr de vouloir faire cela ?",
-  abort_edit_room = "Vous Etes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
+  abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
   restart = "Etes-vous sûr de vouloir recommencer ce niveau ?",
 }
 
@@ -824,7 +825,7 @@ calls_dispatcher = {
 }
 
 tooltip.calls_dispatcher = {
-  task = "Liste des tâches - cliquez sur une tâche pour ouvrir la fenEtre du membre du personnel à qui elle est assignée et aller jusqu'à l'endroit où a lieu la tâche.",
+  task = "Liste des tâches - cliquez sur une tâche pour ouvrir la fenêtre du membre du personnel à qui elle est assignée et aller jusqu'à l'endroit où a lieu la tâche.",
   assigned = "Cette case est cochée si la tâche est assignée à quelqu'un.",
   close = "Ferme la boîte de dialogue de répartitions des tâches",
 }
@@ -838,7 +839,7 @@ fax = {
   },
 }
 
-tooltip.fax.close = "Fermer cette fenEtre sans supprimer le message"
+tooltip.fax.close = "Fermer cette fenêtre sans supprimer le message"
 tooltip.message.button = "Clic gauche pour ouvrir le message"
 tooltip.message.button_dismiss = "Clic gauche pour ouvrir le message, clic droit pour le rejeter"
 tooltip.casebook.cure_requirement.hire_staff = "Vous devez embaucher du personnel pour gérer ce traitement"
@@ -856,7 +857,8 @@ letter = {
 -- Installation
 install = {
   title = "----------------------------- Installation de CorsixTH -----------------------------",
-  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital original (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  exit = "Quitter",
 }
 
 -- Errors

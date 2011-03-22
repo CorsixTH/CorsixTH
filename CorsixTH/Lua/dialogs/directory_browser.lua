@@ -192,12 +192,12 @@ function UIDirBrowser:UIDirBrowser(ui, mode)
     self:setDefaultPosition(0.5, 0.25)
     self.on_top = true
     self.esc_closes = true
-    self.exit_button:setLabel("Cancel"):makeButton(0, 0, 50, 18, nil, self.close)
+    self.exit_button:setLabel(_S.options_window.cancel, self.font):makeButton(0, 0, 50, 18, nil, self.close)
   else
     self.font = ui.app.gfx:loadBuiltinFont()
     self:setDefaultPosition(0.05, 0.5)
     self:addKeyHandler("esc", self.exit)
-    self.exit_button:setLabel("Exit", self.font):makeButton(0, 0, 50, 18, nil, self.exit)
+    self.exit_button:setLabel(_S.install.exit, self.font):makeButton(0, 0, 50, 18, nil, self.exit)
   end
 
   -- Create the root item (or items, on Windows), and set it as the
