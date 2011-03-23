@@ -200,6 +200,7 @@ options_window = {
   change_resolution     = utf8 "Vaihda resoluutio",
   browse                = utf8 "Selaa...",
   new_th_directory      = utf8 "Tässä voit määrittää uuden Theme Hospital -pelin asennushakemiston. Kun olet valinnut uuden hakemiston, peli käynnistyy uudestaan.",
+  cancel                = utf8 "Peruuta",
   back                  = utf8 "Takaisin",
 }
 
@@ -339,6 +340,7 @@ letter = {
 install = {
   title         = utf8 "-------------------------------- CorsixTH asennus --------------------------------",
   th_directory  = utf8 "CorsixTH tarvitsee kopion alkuperäisen Theme Hospital -pelin (tai demon) tiedostoista toimiakseen. Ole hyvä ja käytä alla olevaa valitsinta Theme Hospital-pelin asennushakemiston etsimiseen.",
+  exit          = utf8 "Sulje",
 }
 
 -- 9. Level introductions
@@ -2554,7 +2556,7 @@ fax = {
     text7       = utf8 "MAINE: %d ODOTETTU %d VÄHENNYS %d", -- %d %d %d
     text8       = utf8 "WC-TILAT %d IHMISIÄ PALVELTU %d VÄHENNYS %d", -- %d %d %d
     text9       = utf8 "ONNETTOMUUDET %d SALLITTU (KK) %d (%d)VÄHENNYS %d", -- %d %d %d %d
-    text10      = utf8 "KUOLEMAT %d SALITTU (KK) %d (%d) VÄHENNYS %d", -- %d %d %d %d
+    text10      = utf8 "KUOLEMAT %d SALLITTU (KK) %d (%d) VÄHENNYS %d", -- %d %d %d %d
     text11      = utf8 "IHMISIÄ TÄSSÄ KUUSSA %d", -- %d
   },
   
