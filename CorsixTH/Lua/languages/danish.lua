@@ -96,6 +96,7 @@ letter = {
 install = {
   title = "--------------------------------- CorsixTH Installation ---------------------------------",
   th_directory = utf8 "CorsixTH har brug for en kopi af Theme Hospitals datafiler for at kunne fungere. Vælg venligst mappen hvori Theme Hospitals datafiler er placeret med vælgeren herunder.",
+  exit = "Afslut",
 }
 
 -- 3. Objects
@@ -245,6 +246,7 @@ options_window = {
   change_resolution = utf8 "Skift oplösning",
   browse = "Gennemse",
   new_th_directory = utf8 "Her kan du specificere en ny installationsmappe for Theme Hospital. Så snart du har gjort det vil spillet genstarte.",
+  cancel = "Annullér",
   back = "Tilbage",
 }
   
