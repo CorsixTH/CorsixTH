@@ -74,10 +74,12 @@ object.orientations = {
   north = {
     footprint = { {1, -1, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0} },
     use_position = {1, -1},
+    early_list = true,
   },
   east = {
     footprint = { {0, 1, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0} },
     use_position = {0, 1},
+    early_list = true,
   },
   south = {
     footprint = { {1, 0, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0} },

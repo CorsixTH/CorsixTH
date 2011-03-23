@@ -82,6 +82,7 @@ letter = {
 
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
+  exit = "Avslutt",
   th_directory = "CorsixTH trenger en kopi av datafilene fra et ekte Theme Hospital spill (eller demo) for å kjöre. Vennligst velg plasseringen til originalspillet nedenfor.",
 }
 
@@ -215,6 +216,7 @@ options_window = {
   change_resolution = utf8 "Endre opplösning",
   back = "Tilbake",
   browse = "Bla gjennom...",
+  cancel = "Avbryt",
   new_th_directory = utf8 "Her kan du spesifisere en annen installasjonsmappe for Theme Hospital. Så fort du velger en ny mappe vil spillet starte på nytt.",  --kalle det "corsixth" isteden for "theme hospital"?
 }
 tooltip.options_window = {

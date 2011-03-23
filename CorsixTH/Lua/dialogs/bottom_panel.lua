@@ -346,7 +346,7 @@ end
 
 function UIBottomPanel:dialogBankStats()
   local dlg = UIBankManager(self.ui)
-  self:addDialog(dlg, function() dlg:showStatistics() end)
+  self:addDialog(dlg, function() dlg:showStatistics(true) end)
 end
 
 function UIBottomPanel:dialogBuildRoom()

@@ -283,7 +283,11 @@ end
 function UIBankManager:onMouseMove(x, y, ...)
     local ui = self.ui
     if x > 0 and x < 640 and y > 0 and y < 480 then
-      ui:setCursor(ui.app.gfx:loadMainCursor("bank")) -- Set dollar cursor
+      if self.showingStatistics then
+        ui:setCursor(ui.app.gfx:loadMainCursor("banksummary")) -- Set pie chart cursor
+      else
+        ui:setCursor(ui.app.gfx:loadMainCursor("bank")) -- Set dollar cursor
+      end
     else
       ui:setCursor(ui.default_cursor) -- Return to default cursor
     end
@@ -295,7 +299,7 @@ function UIBankManager:close()
     UIFullscreen.close(self)
 end
 
-function UIBankManager:showStatistics()
+function UIBankManager:showStatistics(keep_cursor)
   if self.closed then
     return
   end
@@ -320,6 +324,10 @@ function UIBankManager:showStatistics()
   btn.y = btn.y - 6
   -- Change tooltip to say that the statement screen is closed.
   btn:setTooltip(_S.tooltip.statement.close)
+  -- Set pie chart cursor, unless coming here from right click on the dollar sign.
+  if not keep_cursor then
+    self.ui:setCursor(self.ui.app.gfx:loadMainCursor("banksummary"))
+  end
 end
 
 function UIBankManager:hideStatistics()
@@ -342,6 +350,8 @@ function UIBankManager:hideStatistics()
   btn.y = btn.y + 6
   -- Change the tooltip back
   btn:setTooltip(_S.tooltip.bank_manager.close)
+  -- Set dollar cursor
+  self.ui:setCursor(self.ui.app.gfx:loadMainCursor("bank"))
 end
 
 function UIBankManager:showGraph()

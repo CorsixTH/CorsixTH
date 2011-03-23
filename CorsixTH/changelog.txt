@@ -1,5 +1,5 @@
 -----------------------------------------
-Version Beta 6 - released 2011-??-??
+Version Beta 6 - released 2011-03-24
 -----------------------------------------
 
 -- Gameplay --
@@ -22,6 +22,10 @@ Version Beta 6 - released 2011-??-??
   will no longer answer to any calls.
 * Fix: Don't crash if a patient in a machine is sent home.
 * Fix: Various tweaks to the operating theatre logic.
+* Fix: Don't crash if the staff window of a leaving staff member
+  is open when he/she leaves the world.
+* Fix: Persistant data (salary, built rooms etc) are no longer lost
+  after restarting a level.
 
 -- User Interface --
 
@@ -30,7 +34,13 @@ Version Beta 6 - released 2011-??-??
   price is shown after some time, instead of charge %.
 * Feature: Press and hold on value buttons will now make the value continue
   to increase until the button is released again.
+* Feature: The Theme Hospital installation path can be changed from the 
+  options menu.
 * Added: The adviser will help out in a few more situations.
+* Fix: Mouse position events such as moving staff around didn't work
+  when scrolling using the arrow keys.
+* Fix: Tooltips are now updated more frequently, 
+  most evidently in the research pane.
 
 -- Translations --
 

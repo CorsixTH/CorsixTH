@@ -52,6 +52,11 @@ local cursors_name = {
   queue = 19,
   queue_drag = 20,
   bank = 36,
+  banksummary = 44,
+}
+local cursors_palette = {
+  [36] = "bank01v.pal",
+  [44] = "stat01v.pal",
 }
 
 function Graphics:Graphics(app)
@@ -105,7 +110,9 @@ function Graphics:loadMainCursor(id)
     id = cursors_name[id]
   end
   if id > 20 then -- SPointer cursors
-    return self:loadCursor(self:loadSpriteTable("QData", "SPointer"), id - 20)
+    local cursor_palette = self:loadPalette("QData", cursors_palette[id])
+    cursor_palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+    return self:loadCursor(self:loadSpriteTable("QData", "SPointer", false, cursor_palette), id - 20)
   else
     return self:loadCursor(self:loadSpriteTable("Data", "MPointer"), id)
   end
@@ -418,7 +425,9 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   self.reload_functions[sheet] = reloader
   reloader(sheet)
   
-  self.cache.tabled[name] = sheet
+  if name ~= "SPointer" then
+    self.cache.tabled[name] = sheet
+  end
   self.load_info[sheet] = {self.loadSpriteTable, self, dir, name, complex, palette}
   return sheet
 end

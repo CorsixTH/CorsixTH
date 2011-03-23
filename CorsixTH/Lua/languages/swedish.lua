@@ -144,6 +144,7 @@ letter = {
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
   th_directory = utf8 "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att lokalisera mappen där Theme Hospital installerats.",
+  exit = "Avsluta",
 }
 
 misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
@@ -207,6 +208,7 @@ options_window = {
   height = utf8 "Höjd",
   change_resolution = utf8 "Ändra upplösning",
   back = "Tillbaka",
+  cancel = "Avbryt",
 }
 
 tooltip.options_window = {
