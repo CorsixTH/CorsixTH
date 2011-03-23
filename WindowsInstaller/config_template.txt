@@ -96,3 +96,10 @@ debug = false
 -- more useful FPS values, as they are not artificially capped.
 track_fps = false
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Font file setting.
+-- Specify a font file here if you wish to play the game in a language not
+-- present in the original game. Examples include Russian, Chinese and Polish.
+-- unicode_font = [[X:\ThemeHospital\font.ttc]] 
+-------------------------------------------------------------------------------

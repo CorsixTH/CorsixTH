@@ -134,6 +134,7 @@ theme_hospital_install = [[]=].. config_defaults.theme_hospital_install ..[=[]]
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
+
 language = [[]=].. config_defaults.language ..[=[]]
 -------------------------------------------------------------------------------
 
@@ -197,6 +198,13 @@ debug = ]=].. tostring(config_defaults.debug) ..[=[
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
 -- more useful FPS values, as they are not artificially capped.
 track_fps = ]=].. tostring(config_defaults.track_fps) ..[=[ 
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Font file setting.
+-- Specify a font file here if you wish to play the game in a language not
+-- present in the original game. Examples include Russian, Chinese and Polish.
+-- unicode_font = [[X:\ThemeHospital\font.ttc]] 
 -------------------------------------------------------------------------------
 ]=])
   end
