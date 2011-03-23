@@ -155,6 +155,7 @@ letter = {
 install = {
   title = "----------------------------- CorsixTH Konfiguration -----------------------------",
   th_directory = utf8 "CorsixTH benötigt einige Dateien des Originalspiels Theme Hospital (oder der Demo davon) um zu funktionieren. Bitte das Installationsverzeichnis von Theme Hospital auswählen.",
+  exit = "Beenden",
 }
 
 misc.not_yet_implemented = "(noch nicht implementiert)"
@@ -219,6 +220,7 @@ options_window = {
   change_resolution = utf8 "Auflösung ändern",
   browse = "Durchsuchen...",
   new_th_directory = "Hier kann ein neues Theme Hospital-Installationsverzeichis ausgewählt werden. Sobald ein gültiges Verzeichnis ausgewählt wurde startet das Spiel neu.",
+  cancel = "Abbrechen",
   back = utf8 "Zurück",
 }
 
