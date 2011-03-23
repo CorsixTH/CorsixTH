@@ -669,30 +669,17 @@ static int l_str_reload(lua_State *L)
     lua_setfield(L, -2, "__index");
     lua_setmetatable(L, -2);
 
-    // Do the actual reloading
-    // NB: Due to table weakness and garbage collection, traverse the list
-    // of string proxies repeatedly, until a traversal does nothing.
     aux_push_weak_table(L, 0);
-    bool bDoneSome = true;
-    while(bDoneSome)
-    {
-        bDoneSome = false;
-        lua_pushnil(L);
-        while(lua_next(L, -2))
-        {
-            lua_pop(L, 1);
-            lua_pushvalue(L, -1);
-            lua_rawget(L, 1);
-            if(lua_isnil(L, -1))
-            {
-                lua_pop(L, 1);
-                bDoneSome = true;
-                lua_gettable(L, 1);
-            }
-            else
-                lua_pop(L, 1);
-        }
-    }
+    luaL_loadstring(L, 
+       "local reload, all_proxies, _ = ...\n"
+       // Make a copy of all_proxies which isn't a weak table
+       "local proxies_copy = {}\n"
+       "for k, v in pairs(all_proxies) do proxies_copy[k] = v end\n"
+       // Do the reloading
+       "for k in pairs(proxies_copy) do _ = reload[k] end\n"
+       );
+    lua_insert(L, 1);
+    lua_call(L, 2, 0);
 
     return 0;
 }
