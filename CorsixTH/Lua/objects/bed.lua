@@ -84,7 +84,7 @@ object.orientations = {
   south = {
     footprint = { {1, 0, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0} },
     use_position = {1, 0},
-    render_attach_position = {{-2,0},{-1,0},{0,0},{0,-1,}},
+    early_list = true,
   },
   west = {
     footprint = { {-1, 1, only_passable = true}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0} },
