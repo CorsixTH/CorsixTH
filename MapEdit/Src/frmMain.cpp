@@ -334,7 +334,7 @@ void frmMain::_populateParcelGallery(wxRibbonGallery* pGallery)
         pBlocksSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
         luaT_execute(L, "return TheApp.map.cell_outline");
         pOutlineSheet = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
-        luaT_execute(L, "return TheApp.map.debug_font");
+        luaT_execute(L, "return TheApp.gfx:loadBuiltinFont()");
         pFontSheet = reinterpret_cast<THBitmapFont*>(lua_touserdata(L, -1))
             ->getSpriteSheet();
         lua_pop(L, 3);
@@ -491,7 +491,7 @@ void frmMain::_applyViewOverlay()
     if(m_bViewFlags || m_bViewParcels)
     {
         lua_State *L = m_pGamePanel->getLua();
-        luaT_execute(L, "return TheApp.map.debug_font, TheApp.map.cell_outline");
+        luaT_execute(L, "return TheApp.gfx:loadBuiltinFont(), TheApp.map.cell_outline");
         THFont *pFont = reinterpret_cast<THFont*>(lua_touserdata(L, -2));
         THSpriteSheet *pSprites = reinterpret_cast<THSpriteSheet*>(lua_touserdata(L, -1));
         lua_pop(L, 2);
