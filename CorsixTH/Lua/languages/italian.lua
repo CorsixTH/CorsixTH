@@ -192,6 +192,8 @@ tooltip.options_window = {
   height = utf8 "Inserisci l'altezza dello schermo desiderata",
   change_resolution = "Cambia la risoluzione della finestra alle dimensioni inserite a sinistra",
   language = "Seleziona %s come lingua",
+  original_path = utf8 "La cartella dell'installazione di Theme Hospital originale attualmente selezionata",
+  browse = utf8 "Seleziona la cartella di un'altra installazione di Theme Hospital",
   back = "Chiudi la finestra delle opzioni",
 }
 
