@@ -95,7 +95,7 @@ letter = {
 
 install = {
   title = "--------------------------------- CorsixTH Installation ---------------------------------",
-  th_directory = utf8 "CorsixTH har brug for en kopi af Theme Hospitals datafiler for at kunne fungere. Vælg venligst mappen hvori Theme Hospitals datafiler er placeret med vælgeren herunder.",
+  th_directory = utf8 "CorsixTH kræver en original installation af Theme Hospital for at virke. Angiv placeringen af spillet her.",
   exit = "Afslut",
 }
 
@@ -256,7 +256,7 @@ tooltip.options_window = {
   height = utf8 "Indtast den önskede skærm höjde",
   change_resolution = utf8 "Skift skærmstörrelsen til dimmensionerne indtastet til höjre",
   language = utf8 "Vælg %s som sprog",
-  original_path = "Den nuværrende mappe af original installationen af Theme Hospital",
+  original_path = "Theme Hospitals mappe",
   browse = "Gennemse et andet sted for installation af Theme Hospital",
   back = "Luk indstillingsvinduet",
 }
@@ -299,8 +299,8 @@ dialog_missing_graphics = "Undskyld, men demo data filerne har ikke en dialog.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Hvis du vil bruge denne indstilling, så kræver det en genstart af CorsixTH. Spil som ikke er gemt, vil gå tabt. Er du sikker på du vil bruge denne indstilling?",
-  abort_edit_room = utf8 "Du er ved at opbygge eller ændre et rum. Hvis alle obligatoriske genstande er placeret, afsluttes rummet. Hvis ikke, skal du slettes rummet. Fortsætte?",
+  needs_restart = utf8 "Hvis du vil bruge denne indstilling, så kræver det en genstart af CorsixTH. Runder som ikke er gemt, vil gå tabt. Er du sikker på du vil bruge denne indstilling?",
+  abort_edit_room = utf8 "Du er ved at opbygge eller ændre et lokale. Hvis alle obligatoriske objekter er placeret, kan du gemme lokalet. Hvis ikke, skal du slettes rummet. Fortsætte?",
   restart = utf8 "Er du sikker på at du vil pröve på ny?",
 }
 confirmation.restart_level = "Er du sikker på at du vil pröve på ny?"
@@ -310,51 +310,51 @@ information = {
   cannot_restart = utf8 "Beklageligvis så er denne special bane lavet för at genstart funtionen blev implanteret.",
 level_lost = {
     utf8 "æv! Du gennemförte ikke runden. Bedre held næste gang!",
-    "Grundene til du tabte:",
+    "Derfor tabte du:",
     reputation = utf8 "Dit omdömme var under %d.",
     balance = utf8 "Din bankbalance var under %d.",
     percentage_killed = utf8 "Du har dræbt mere end %d procent af patienterne.",
   },
   }
 tooltip.information = {
-  close = "Luk informations dialogen",
+  close = "Luk informationsdialogen",
 }
--- I translatet these tips that show up on the main menu screen //froksen
+
 totd_window = {
   tips = {
-    utf8 "I et hvert hospital er det nödvendigt have et receptions bord og lægens kontor for at komme i gang. Herefter er det alt efter hvilke patienter der kommer til dit hospital, dog er et apotek altid et fornuftigt valg.",
-    utf8 "Maskiner, som f.eks. pumperum, har brugt for vedligeholdelse. Ansæt en handyman eller to til at vedligeholde dine maskiner, ellers kan du risikere at dine ansatte eller patienter kommer til skade",
-   utf8  "Med tiden bliver dine ansatte trætte. Husk at bygge et personale rum så de kan slappe af.",
-  utf8   "Placer radiatorer så dine patienter og ansatte kan holde varmen, ellers bliver de galde. Brug by kortet til at lokalisere steder på dit hospital som skal være varmere.",
-  utf8   "En læges kvalifikationsniveau betyder meget for kvaliteten og hastighedsen på hans diagnoser. Hvis du placer en meget kvalificeret læge pa lægens kontor behöver du ikke så mange ekstra diagonise rum.",
+    utf8 "På et hvert hospital er det nödvendigt have et receptionsbord og et lægens kontor for at komme i gang. Herefter er det alt efter hvilke patienter der kommer til dit hospital, dog det altid godt at have et apotek.",
+    utf8 "Maskiner, som f.eks. et pumperum, har brugt for vedligeholdelse- Ansæt en handyman eller to til at vedligeholde dine maskiner, ellers kan du risikere at dine ansatte eller patienter kommer til skade",
+   utf8  "Med tiden bliver dine ansatte trætte. Husk at bygge et personalerum så de kan slappe af.",
+  utf8   "Placer radiatorer så dine patienter og ansatte kan holde varmen, ellers bliver de sure. Brug oversigtskortet til at finde steder på dit hospital som skal være varmere.",
+  utf8   "En læges kvalifikationsniveau betyder meget for kvaliteten og hastighedsen på hans diagnoser. Hvis du placerer en meget kvalificeret læge på lægens kontor behöver du ikke så mange ekstra diagoniselokaler.",
     --Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist or researcher), he will also pass on this knowledge to his pupil(s).
-   utf8  "Praktikanter og læger kan forbedre deres kvalifikationer ved at blive undervist af en konsulent i et træningsrum. Hvis konsulenten har specielle kvalifikationer (Kirug, psykiater eller forsker) vil han også give disse kvalifikationer videre til sine elever.",
+   utf8  "Praktikanter og læger kan forbedre deres kvalifikationer ved at blive undervist af en konsulent i et undervisningslokale. Hvis konsulenten har specielle kvalifikationer (kirug, psykiater eller forsker) vil han også give disse kvalifikationer videre til sine elever.",
    -- "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
   utf8   "Har du prövet at indtaste det europæriske alarm nummer (112) på fax maskinen? Husk at have lyd på!",
     --"You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
-   utf8  "Du kan ændre nogle indstillinger, som skærm oplösning og sprog i indstillingsvinduet som kan findes både i hoved menuen og inde i spillet",
+   utf8  "Du kan ændre nogle indstillinger, såsom skærm oplösning og sprog i indstillingsvinduet som kan findes både i hovedmenuen og inde i spillet",
     --"You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
   utf8   "Du har valgt et andet sprog end engelsk, men der er alligevel engelsk over det hele? Hjælp os med at oversætte teksten til dit sprog",
     --"The CorsixTH team is looking for reinforcements! Are you interested in coding, translating or creating graphics for CorsixTH? Contact us at our Forum, Mailing List or IRC Channel (corsix-th at freenode).",
-  utf8   "Holdet bag CorsixTH er altid på udkig efter forskærkninger! Er du interesseret i kodning, oversættelse eller at lave grafik til CorsixTH? Kontakt os på vores forum, mailing liste eller IRC kanalen (corsix-th på freenode).",
+  utf8   "Holdet bag CorsixTH er altid på udkig efter forskærkninger! Er du interesseret i kodning, at oversættelse eller at lave grafik til CorsixTH? Kontakt os på vores forum, mailing liste eller IRC kanalen (corsix-th på freenode).",
     --"If you find a bug, please report it at our bugtracker: th-issues.corsix.org",
    utf8  "Hvis du finder en fejl, så kan du rapportere den til os på vores bugtracker: th-issues.corsix.org",
     --"Each level has certain requirements to fulfill before you can move on to the next one. Check the status window to see your progression towards the level goals.",
-   utf8  "I hver runde er der forskellige krav der skal være opfyldt för du kan gå videre til den næste. Check status vinduet for at se din progression mod rundens mål",
+   utf8  "I hver runde er der forskellige krav der skal være opfyldt för du kan gå videre til den næste. Tjek statusvinduet for at se din progression hen imod rundens mål",
     --"If you want to edit or remove an existing room, you can do so with the edit room button found in the bottom toolbar.",
-  utf8   "Hvis du vil ændre eller fjerne eksiterende rum, kan du göre det ved at trykke på rediger rum knappen som findes i væktöjslinjen i bunden.",
+  utf8   "Hvis du vil ændre eller fjerne eksisterende lokaler, kan du göre det ved at trykke på rediger lokale knappen som findes i væktöjslinjen i bunden.",
    -- "In a horde of waiting patients, you can quickly find out which ones are waiting for a particular room by hovering over that room with your mouse cursor.",
-  utf8   "I en gruppe af ventende patienter kan du hurtigt finde ud af hvilke der er i kö til et specifikt rum ved at bevæge musen kursören over rummet",
+  utf8   "I en gruppe af ventende patienter kan du hurtigt finde ud af hvilke der er i kö til et specifikt lokale ved at bevæge muse kursören over rummet",
     --"Click on the door of a room to see its queue. You can do useful fine tuning here, such as reordering the queue or sending a patient to another room.",
-  utf8   "Klik dören til et rum for at se dens kö. Her kan du lave brugbar tilpasning, som f.eks. sotere i köen eller sende patienter til et andet rum.",
+  utf8   "Klik på dören til et rum for at se dens kö. Her kan du lave brugbar tilpasning, som f.eks. sortere i köen eller sende patienter til et andet lokale.",
     --"Unhappy staff will ask for salary rises frequently. Make sure your staff is working in a comfortable environment to keep that from happening.",
-  utf8   "Galde medarbejdere vil oftere spöge efter lönforhöjelse. Husk at lave et komfortablet arbejdsmiljö for at holde dem glade.",
+  utf8   "Sure medarbejdere vil oftere spörge om lönforhöjelse. Husk at lave et komfortablet arbejdsmiljö for at holde dem glade.",
     --"Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
-  utf8   "Patienter bliver törstige når de venter på dit hospital, og endnu mere hvis du skruer op for varmen! Placer drikke automater på strategiske steder for at ekstra indtægt",
+  utf8   "Patienter bliver törstige når de venter på dit hospital, og endnu mere hvis du skruer op for varmen! Placer drikke automater på strategiske steder for at få en ekstra indtægt",
     --"You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
-  utf8   "Du kan afbryde en patients diagnose proges för tid og gætte på en kur, hvis du allerede har mödt denne sygdom. Men pas på det kan betyde en forhöjet risiko for fejl diagonistiksering, som kan medföre en patients död.",
+  utf8   "Du kan afbryde en patients sögen efter en diagnose för tid og gætte på en kur, hvis du allerede har mödt denne sygdom tidligere. Men pas på det kan betyde en forhöjet risiko for fejl diagonistiksering, som kan medföre en patients död.",
    -- "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
-  utf8 "Akuttilfælde kan være en god möde at få ekstra penge på, sålænge du har kapaciteten til at håndtere patienter fra akuttilfældet inden tiden löber ud.",
+  utf8 "Akuttilfælde kan være en god måde at få ekstra penge på, sålænge du har kapaciteten til at håndtere patienter fra akuttilfældet inden tiden löber ud.",
     },
   previous = "Forrige tip",
   next = utf8 "Næste tip",
@@ -371,9 +371,9 @@ tooltip.totd_window = {
     money = utf8 "Giver dig 10.000 til din bank balance.",
     all_research = utf8 "Du har forsket alt.",
     emergency = utf8 "Skaber et akkuttilfælde.",
-    create_patient = utf8 "laver en patient ved kanten af kortet.",
-    end_month = utf8 "Hopper til slutningen af måneden.",
-    end_year = utf8 "Hopper til slutningen af året",
+    create_patient = utf8 "Skaber en patient ved kanten af kortet.",
+    end_month = utf8 "Går til slutningen af måneden.",
+    end_year = utf8 "Går til slutningen af året",
     lose_level = utf8 "Du taber runden.",
     win_level = utf8 "Du vinder runden.",
   },
@@ -406,7 +406,7 @@ tooltip.totd_window = {
   summary = "%d kalder; %d tildelt",
   staff = "%s - %s",
   watering = "Vander @ %d,%d",
-  repair = "Reparere %s",
+  repair = "Reparerer %s",
   close = "Luk",
 }
 
@@ -418,10 +418,10 @@ tooltip.totd_window = {
 -- Staff class
 -- each of these corresponds to a sprite
 staff_class = {
-  nurse                 = "Sykepleier",
-  doctor                = "Lege",
-  handyman              = "Vaktmester",
-  receptionist          = "Resepsjonist",
+  nurse                 = "Sygeplejeske",
+  doctor                = "Læge",
+  handyman              = "Handyman",
+  receptionist          = "Receptionist",
   surgeon               = "Kirurg",
 }
 
@@ -429,7 +429,7 @@ staff_class = {
 -- these are titles used e.g. in the dynamic info bar
 staff_class = {
   nurse                 = "Sygeplejeske",
-  doctor                = "Laege",
+  doctor                = "Læge",
   handyman              = "Handyman",
   receptionist          = "Receptionist",
   surgeon               = "Kirug",
@@ -441,7 +441,7 @@ staff_title = {
   general               = "Generel", -- unused?
   nurse                 = "Sygeplejeske",
   junior                = "Praktikant",
-  doctor                = "Laege",
+  doctor                = "Læge",
   surgeon               = "Kirug",
   psychiatrist          = "Psykiater",
   consultant            = "Konsulent",
@@ -450,18 +450,19 @@ staff_title = {
 
 -- Pay rises
 pay_rise = {
-  definite_quit = "Ligemeget hvad end du gör så kan du ikke beholde mig her, jeg er træt af det her sted!",
+  definite_quit = "Der er ikke noget du kan göre kunne behold mig. Jeg hader det her sted!",
   regular = {
-    utf8 "Jeg er helt udkört. Jeg har brug for hvile og en lönforhöjelse af  %d  ellers så skal du nok ikke forvente at se mig her mere.", -- %d (rise)
-    utf8 "Jeg er så træt. Jeg har brug for hvile og en lönforhöjelse på %d, altså en lön på %d ialt. Gör det nu din tyran!", -- %d (rise) %d (new total)
-    utf8 "Helt ærligt. Jeg arbejder ligesom en hund her! Giv mig en bonus på %d og jeg bliver i dit hospital.", -- %d (rise)
+    utf8 "Jeg er helt udkört. Jeg har brug for hvile og en lönforhöjelse på  %d  ellers skal du nok ikke forvente at se mig her mere.", -- %d (rise)
+    utf8 "Jeg er så træt. Jeg har brug for hvile og en lönforhöjelse på %d, altså en lön på %d ialt. Giv mig den nu, din tyran!", -- %d (rise) %d (new total)
+    utf8 "Helt ærligt. Jeg knokler en vis legmesdel ud af bukserne! Giv mig en bonus på %d og jeg så bliver jeg på dit hospital.", -- %d (rise)
     utf8 "Jeg er pissesur. Jeg kræver en lönforhöjelse på %d, altså en lön på %d ialt, ellers så er jeg den der er skredet.", -- %d (rise) %d (new total)
-    utf8 "Mine forældre fortalte mig at medicinal industrien betalte godt. Så giv mig en lönforhöjelse på %d ellers bliver jeg en video spils producent.", -- %d (rise)
-    utf8 "Jeg gidder ikke mere. Betal mig en ordenlig lön. Jeg menes at en lönforhöjelse på %d ville hjælpe.", -- %d (rise)
+    utf8 "Mine forældre fortalte mig at medicinal industrien betalte godt. Så giv mig en lönforhöjelse på %d ellers bliver jeg en videospils producent.", -- %d (rise)
+    utf8 "Jeg gidder ikke mere. Giv mig en ordenlig lön. Jeg mener at en lönforhöjelse på %d ville være på plads.", -- %d (rise)
   },
-  poached = "Jeg er blevet tilbudt %d af %s. Ved mindre du betaler mig det samme så er jeg skredet.", -- %d (new total) %s (competitor)
+  poached = "Jeg er blevet tilbudt en lön på %d af %s. Så med mindre du betaler mig det samme så er jeg den der er smuttet.", -- %d (new total) %s (competitor)
 }
 
+-------------------- Her til er kigget igennem // Froksen
 -- Staff descriptions
 staff_descriptions = {
   good = {
@@ -2639,13 +2640,13 @@ adviser.praise.plenty_of_benches = "Der er fornuftigt mange sidde pladser, så d
 adviser.praise.plants_thriving = "Meget godt. Dine planter trives. De ser fantastiske ud. Bliv ved med det, så kan du måske vinde et trofæ for dem."
 adviser.praise.patients_cured = "%d patienter kureret."
 
-adviser.surgery_requirements.need_surgeons_ward_op = "Du skal ansætte to kirgurer og bygge en sengeafdeling, samt et operationsbord før du kan udføre operationer."
-adviser.surgery_requirements.need_surgeon_ward = "Du mangler stadigt at ansætte en kirug og bygge en sengeafdeling før du kan udføre operationer."
+adviser.surgery_requirements.need_surgeons_ward_op = "Du skal ansætte to kirgurer og bygge en sengeafdeling, samt et operationsbord för du kan udföre operationer."
+adviser.surgery_requirements.need_surgeon_ward = "Du mangler stadigt at ansætte en kirug og bygge en sengeafdeling för du kan udföre operationer."
 adviser.vomit_wave.started = "Ser ud som om du har en mavevirus på dit hospital, hvis du havde det renere var det ikke sket. Måske skulle du ansætte flere handymænd."
-adviser.vomit_wave.ended = "Puha! Ligner at mavevirusen er døet ud. Hold dit hospital rent i fremtiden."
+adviser.vomit_wave.ended = "Puha! Ligner at mavevirusen er döet ud. Hold dit hospital rent i fremtiden."
 
 adviser.room_requirements.research_room_need_researcher = "Du skal ansætte en læge med forsker evner for at kunne bruge forskningsrummet."
-adviser.room_requirements.op_need_another_surgeon = "Du mangler stadigt at ansætte en kirug mere før operationsstuen er brugbar."
+adviser.room_requirements.op_need_another_surgeon = "Du mangler stadigt at ansætte en kirug mere för operationsstuen er brugbar."
 adviser.room_requirements.op_need_ward = "Du skal bygge en sengeafdeling til patienter der skal opereres."
 adviser.room_requirements.reception_need_receptionist = "Du skal ansætte en receptionist for at kunne se dine patienter."
 adviser.room_requirements.psychiatry_need_psychiatrist = "Du skal ansætte en psykiater, nu da du har bygget et rum til en psykiater."
@@ -2654,68 +2655,3 @@ adviser.room_requirements.ward_need_nurse = "Du skal ansætte en sygeplejeske ti
 adviser.room_requirements.op_need_two_surgeons = "Ansæt to kiruger for at kunne lave operationer."
 adviser.room_requirements.training_room_need_consultant = "Du skal ansætte en konsulent til at undervise i undervisningslokalet."
 adviser.room_requirements.gps_office_need_doctor = "Du skal ansætte en læge til at arbejde på lægenskontor."
-
- --[[ 
- -----------------------
- ***** TODO ************
------------------------
-    
-* tooltip.new_game_window  - done
-* confirmation - done 
-* room_descriptions  - started
-* insurance_companies - done
-* menu_debug - done
-* trophy_room - done
-
-**Under tooltip ****
-  * buy_objects_window - done 
-  * patient_window - done
-  * staff_window - done
-  * machine_window - done
-  * handyman_window - done
-  * place_objects_window - done
-  * casebook - done
-  * cure_requirement - done
-  * statement - done
-  * research - done
-  * graphs - done
-  * town_map - done
-  * jukebox - done
-  * status - done
-  * policy - done
-  * objects - done
-  * adviser
-  * epidemic  - done
-  * staff_advice - done
-  * earthquake - done
-  * multiplayer
-  * poaching - done
-  * surgery_requirements
-  * level_progress
-  * progress_report - done
-  * goals - done
-  * placement_info
-  * information - done
-  * build_advice - done
-
-* newspaper - unneeded
-* letter -done
-* humanoid_name_starts - done
-* humanoid_name_ends - done
-
-** Under fax ****
-  *debug_fax
-  * emergency - done
-  * locations - done
-  * emergency_result
-  * disease_discovered_patient_choice - done
-  * disease_discovered - done
-  * epidemic - done 
-  * disease_name - done
-  * epidemic_result - done
-  * vip_visit_query - done
-  * vip_visit_result -done 
-  * diagnosis_failed - done
-  * 
------------------------------------------------------------------------------]]   
-    
