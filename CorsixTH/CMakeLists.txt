@@ -58,12 +58,36 @@ FILE(GLOB_RECURSE corsixth_source_files
 )
 
 # Declaration of the executable
-add_executable(CorsixTH ${corsixth_source_files})
-
 IF(APPLE)
-  target_link_libraries(CorsixTH SDLmain)
-  INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
-ENDIF(APPLE)
+set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
+set_source_files_properties(
+  ${corsixth_icon_file}
+  PROPERTIES
+  MACOSX_PACKAGE_LOCATION Resources
+)
+set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
+
+add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_source_files} ${corsixth_icon_file})
+
+#Add an extra step at the end of the build process to copy the resources into the
+#bundle. I haven't yet found a way to keep the folder structure when adding resources
+#into XCode. I would have thought we could use source_group but apparently not.
+set(corsixth_bundle_resources 
+  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua
+)
+add_custom_command(	TARGET CorsixTH 
+					POST_BUILD
+					COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -exclude *.bmp -exclude *.png -resolve-src-symlinks ${corsixth_bundle_resources} \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources
+)
+
+target_link_libraries(CorsixTH SDLmain)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
+
+ELSE()
+add_executable(CorsixTH ${corsixth_source_files})
+ENDIF()
 
 # Finding libraries
 
@@ -133,10 +157,28 @@ IF(CORSIX_TH_USE_OGL_RENDERER)
 ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
 # Declaration of the install process
-install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
-install(DIRECTORY Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)
-install(DIRECTORY Bitmap DESTINATION CorsixTH
+IF(APPLE)
+  #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
+  install(TARGETS CorsixTH BUNDLE DESTINATION .)
+
+  #Copy the required frameworks into the bundle.
+  IF(SDL_FOUND)
+    string(REPLACE "-framework Cocoa" "" SDL_FRAMEWORK_LOC ${SDL_LIBRARY})
+    install(DIRECTORY ${SDL_FRAMEWORK_LOC} DESTINATION CorsixTH.app/Contents/Frameworks)
+  ENDIF()
+  IF(SDLMIXER_FOUND)
+    install(DIRECTORY ${SDLMIXER_LIBRARY} DESTINATION CorsixTH.app/Contents/Frameworks)
+  ENDIF()
+  IF(LUA51_FOUND)
+    IF(${LUA_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
+  	  install(DIRECTORY ${LUA_LIBRARY} DESTINATION CorsixTH.app/Contents/Frameworks)
+    ENDIF()
+  ENDIF()
+ELSE()
+  install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
+  install(DIRECTORY Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)
+  install(DIRECTORY Bitmap DESTINATION CorsixTH
         FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
         PATTERN "*.svn" EXCLUDE)
-install(FILES CorsixTH.lua LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
-
+  install(FILES CorsixTH.lua LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
+ENDIF()
