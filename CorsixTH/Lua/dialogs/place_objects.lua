@@ -437,23 +437,23 @@ end
 function UIPlaceObjects:tryNextOrientation()
   if #self.objects > 0 then
     self.ui:playSound "swoosh.wav"
+    self.objects[self.active_index].orientation_before = self.object_orientation;
     self:nextOrientation()
   end
 end
 
 function UIPlaceObjects:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
-  
+
   if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return
   end
   
-  if #self.objects > 0 then
-    if button == "right" then
-      self.ui:playSound "swoosh.wav"
-      self:nextOrientation()
-      repaint = true
-    elseif button == "left" then
+  if button == "right" then
+    self:tryNextOrientation()
+    repaint = true
+  elseif button == "left" then
+    if #self.objects > 0 then
       if 0 <= x and x < self.width and 0 <= y and y < self.height then
         -- Click within window - do nothing
       elseif self.object_cell_x and self.object_cell_y and self.object_blueprint_good then
@@ -483,7 +483,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   end
   if real_obj then
     -- If there is such an object then we don't want to make a new one, but move this one instead.
-    real_obj:initOrientation(self.object_orientation)
+    if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then 
+      real_obj:initOrientation(self.object_orientation)
+    end
     real_obj:setTile(self.object_cell_x, self.object_cell_y)
     self.world:objectPlaced(real_obj)
     if real_obj.slave then
@@ -503,6 +505,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   self.ui:playSound "place_r.wav"
 
   self:removeObject(object, dont_close_if_empty)
+  object.orientation_before = nil
   
   return real_obj
 end

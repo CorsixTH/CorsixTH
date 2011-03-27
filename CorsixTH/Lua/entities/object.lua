@@ -504,6 +504,7 @@ function Object:onClick(ui, button, data)
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
     window:setOrientation(direction)
+    self.orientation_before = self.direction
     window:stopPickupItems()
     ui:playSound("pickup.wav")
   end
