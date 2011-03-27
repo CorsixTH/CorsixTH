@@ -477,12 +477,12 @@ end
 !param data (table) If some data should be retained after moving an object it is in this table.
 ]]
 function Object:onClick(ui, button, data)
-  if button == "right" then
+  local window = ui:getWindow(UIEditRoom)
+  if button == "right" or (button == "left" and window and window.in_pickup_mode) then
     -- This flag can be used if for example some things should only happen as long as the
     -- object is not picked up. How lovely when it is so logical. :-)
     local object_list = {{object = self.object_type, qty = 1, existing_object = self}}
     local room = self:getRoom()
-    local window = ui:getWindow(UIEditRoom)
     window = window and window.visible and window
     local direction = self.direction
     if (not room and window) 
@@ -504,6 +504,7 @@ function Object:onClick(ui, button, data)
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
     window:setOrientation(direction)
+    window:stopPickupItems()
     ui:playSound("pickup.wav")
   end
 end

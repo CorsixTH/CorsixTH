@@ -70,7 +70,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     :setDisabledSprite(127):enable(false) -- Disabled purchase items button
   self.pickup_button =
   self:addPanel(119,  92, 100):makeButton(1, 8, 41, 42, 120, self.pickupItems):setTooltip(_S.tooltip.place_objects_window.pick_up)
-    :setDisabledSprite(128):enable(false) -- Disabled pick up items button
+    :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button = 
   self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
     :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
@@ -107,6 +107,11 @@ function UIPlaceObjects:resize(num_slots)
       else
         self.place_objects = true
         self:setActiveIndex(i)
+        -- Stop picking up items when user presses object in list
+        local edit_room_window = self.ui:getWindow(UIEditRoom)
+        if edit_room_window then
+          edit_room_window:stopPickupItems()
+        end
       end
     end
   end

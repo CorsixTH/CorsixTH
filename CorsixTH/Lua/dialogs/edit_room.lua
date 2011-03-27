@@ -507,12 +507,26 @@ function UIEditRoom:purchaseItems()
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
+-- callback for item pick up button
 function UIEditRoom:pickupItems()
-  self.place_objects = false
-  self.active_index = 0
-  self.object_cell_x = nil
-  self.object_cell_y = nil
-  self:clearBlueprint()
+  if self.in_pickup_mode then 
+    self:stopPickupItems()
+  else
+    self.in_pickup_mode = true
+    self.ui:setCursor(self.ui.grab_cursor)
+    self.place_objects = false
+    self.active_index = 0
+    self.object_cell_x = nil
+    self.object_cell_y = nil
+    self:clearBlueprint()
+  end
+end
+function UIEditRoom:stopPickupItems()
+  if self.in_pickup_mode then
+    self.in_pickup_mode = false
+    self.ui:setCursor(self.ui.default_cursor)
+    self.pickup_button:setToggleState(false)
+  end
 end
 
 function UIEditRoom:returnToWallPhase(early)
@@ -898,6 +912,12 @@ function UIEditRoom:onMouseUp(button, x, y)
   end
   
   return UIPlaceObjects.onMouseUp(self, button, x, y)
+end
+
+function UIEditRoom:onMouseMove(x, y, ...)
+  if self.in_pickup_mode then
+    self.ui:setCursor(self.ui.app.gfx:loadMainCursor("grab"))
+  end
 end
 
 function UIEditRoom:setBlueprintRect(x, y, w, h)
