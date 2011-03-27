@@ -53,7 +53,8 @@ end)
 -- randomly generate the use time for a given source of relaxation
 local generate_use_time = permanent"use_staffroom_action_generate_use_time"( function(type)
   if type == "sofa" then
-    return math.random(50, 80)
+    -- use sofa until no longer fatigued
+    return 1000 -- this value is large enough
   elseif type == "pool_table" then
     return math.random(2, 5)
   elseif type == "video_game" then
@@ -101,37 +102,39 @@ local function use_staffroom_action_start(action, humanoid)
     object = action.target_obj,
     loop_callback = --[[persistable:use_staffroom_action_loop_callback]] function()
       humanoid:wake(relaxation[action.target_type])
-      obj_use_time = obj_use_time - 1
-      if obj_use_time == 0 then
-        if humanoid.attributes["fatigue"] == 0 then
-          humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
-          local room = humanoid.last_room
-          -- Send back to the last room if that room is still empty.
-          -- (applies to training and research only)
-          -- Make sure that the room is still there though.
-          -- If not, just answer the call
-          if room and room.is_active and 
-          (room.room_info.id == "research" or room.room_info.id == "training")
-          and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
-            humanoid:queueAction(room:createEnterAction(humanoid))
-            humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-          else
-            -- Send the staff out of the room
-            humanoid:queueAction{name = "meander"}
-          end
+      -- if staff is no longer fatigued, make them leave the staff room
+      if humanoid.attributes["fatigue"] == 0 then
+        humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
+        local room = humanoid.last_room
+        -- Send back to the last room if that room is still empty.
+        -- (applies to training and research only)
+        -- Make sure that the room is still there though.
+        -- If not, just answer the call
+        if room and room.is_active and 
+        (room.room_info.id == "research" or room.room_info.id == "training")
+        and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+          humanoid:queueAction(room:createEnterAction(humanoid))
+          humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
         else
-          -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
-          action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-          if action.next_target_type == action.target_type then
-            obj_use_time = generate_use_time(action.target_type)
-          else
-            if action.next_target_obj then
-              action.next_target_obj.reserved_for = humanoid
-            end
-            object_action.prolonged_usage = false
-          end
+          -- Send the staff out of the room
+          humanoid:queueAction{name = "meander"}
         end
       end
+
+      obj_use_time = obj_use_time - 1
+      -- if staff is done using object
+      if obj_use_time == 0 then
+        -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
+        action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
+        if action.next_target_type == action.target_type then
+          obj_use_time = generate_use_time(action.target_type)
+        else
+          if action.next_target_obj then
+            action.next_target_obj.reserved_for = humanoid
+          end
+          object_action.prolonged_usage = false
+        end
+       end
     end
   }
   humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
