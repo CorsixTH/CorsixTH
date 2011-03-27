@@ -138,6 +138,8 @@ function Patient:treated() -- If a drug was used we also need to pay for this
     end
     self:setMood("cured", "activate")
     self:playSound "cheer.wav"
+    self.attributes["health"] = 1
+    self:changeAttribute("happiness", 0.8)
     hospital:changeReputation("cured", self.disease)
     self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
     self:goHome(true)
@@ -236,11 +238,65 @@ function Patient:tickDay()
   if not Humanoid.tickDay(self) then
     return
   end
-  
-  -- Each tick both thirst, warmth and toilet_need changes.
+  -- Die before we poo or drink
+  -- patient has been in the hospital for over 6 months and is still not well, so will become sad and will either get fed up and leave
+  -- or stay in the hope that you will cure them before they die
+  -- strange, but in TH happiness does not go down, even when close to death IMO that is wrong as you would be unhappy if you waited too long.
+  -- TODO death animation for slack female is missing its head.  For now the only option is for her to get fed up and leave
+  -- this can be changed when the animation thing is resolved
+  if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
+    self:setMood("sad2", "activate")
+  elseif self.attributes["health"] >= 0.145 and self.attributes["health"] < 0.15 then
+  elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
+    self:setMood("sad2", "deactivate")
+    self:setMood("sad3", "activate")
+  -- now wishes they had gone to that other hospital
+  elseif self.attributes["health"] >= 0.10 and self.attributes["health"] < 0.14 then
+    self:setMood("sad3", "deactivate")
+    self:setMood("sad4", "activate")
+  -- starts to take a turn for the worse and is slipping away
+  elseif self.attributes["health"] >= 0.06 and self.attributes["health"] < 0.10 then
+    self:setMood("sad4", "deactivate")
+    self:setMood("sad5", "activate")
+  -- fading fast
+  elseif self.attributes["health"] >= 0.01 and self.attributes["health"] < 0.06 then
+    self:setMood("sad5", "deactivate")
+    self:setMood("sad6", "activate")
+  -- its not looking good
+  elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
+    self:setMood("sad6", "deactivate")
+    self:setMood("dead", "activate")
+    self.attributes["health"] = 0.0
+  -- is there time to say a prayer
+  elseif self.attributes["health"] == 0.0 then
+    -- female patients with slack tongue can't die because they have no animation 
+    if self.humanoid_class == "Slack Female Patient" then
+      if not self:getRoom() and not self.action_queue[1].is_leaving then
+        self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
+        self:setMood("sad2", "deactivate")
+        self:setMood("exit", "activate")
+        self:goHome()
+      end
+    end
+    if not self:getRoom() and not self.action_queue[1].is_leaving then
+      local casebook = self.hospital.disease_casebook[self.disease.id]
+      casebook.fatalities = casebook.fatalities + 1
+      self:setMoodInfo() -- clear all moods
+      self.hospital:humanoidDeath(self)
+      self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
+      self:setNextAction{
+        name = "die",
+        must_happen = true, -- truth
+      }
+      --dead people aren't thirsty
+      return
+    end  
+  end 
+
+  -- Each tick both thirst, warmth and toilet_need changes and health decreases.
   self:changeAttribute("thirst", self.attributes["warmth"]*0.01+0.004*math.random() + 0.004)
   self:changeAttribute("toilet_need", 0.006*math.random() + 0.002)
-  
+  self:changeAttribute("health", - 0.004)  
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.8 then
     -- If waiting for user response, do not send to toilets, as this messes
@@ -381,7 +437,7 @@ function Patient:tickDay()
       end
     end
   end
-end
+end  
 
 -- As of now each time a bench is placed the world notifies all patients
 -- in the vicinity through this function.

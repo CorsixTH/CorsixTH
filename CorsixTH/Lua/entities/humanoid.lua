@@ -158,10 +158,19 @@ function Humanoid:Humanoid(...)
   self.attributes = {}
   self.attributes["warmth"] = 0.29
   self.attributes["happiness"] = 1
+  -- patients should be not be fully well when they come to your hospital and if it is staff there is no harm done!
+  self.attributes["health"] = math.random(80, 100) /100
   self.active_moods = {}
   self.should_knock_on_doors = false
   self.speed = "normal"
 end
+function Humanoid:afterLoad(old, new)
+  if old < 39 then
+  -- should existing patients be updated and be getting really ill?
+  -- adds the new variables for health icons 
+  self.attributes["health"] = math.random(60, 100) /100
+  end
+end   
 
 -- Function which is called when the user clicks on the `Humanoid`.
 --!param ui (GameUI) The UI which the user in question is using.
@@ -192,10 +201,11 @@ function Humanoid:dump()
       self.profile.is_psychiatrist or 0,
       self.profile.is_researcher or 0))
   end
-  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f",
+  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f   Health: %.3f",
     self.attributes["warmth"] or 0,
     self.attributes["happiness"] or 0,
-    self.attributes["fatigue"] or 0))
+    self.attributes["fatigue"] or 0,
+    self.attributes["health"]))
   print("")
   print("Actions:")
   for i = 1, #self.action_queue do
