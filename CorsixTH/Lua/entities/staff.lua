@@ -610,6 +610,4 @@ function Staff:afterLoad(old, new)
       self.staffroom_needed = nil
     end
   end
-
-  Humanoid.afterLoad(self, old, new)
 end

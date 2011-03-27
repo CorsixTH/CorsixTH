@@ -205,7 +205,7 @@ function Humanoid:dump()
     self.attributes["warmth"] or 0,
     self.attributes["happiness"] or 0,
     self.attributes["fatigue"] or 0,
-    self.attributes["health"]))
+    self.attributes["health"] or 0))
   print("")
   print("Actions:")
   for i = 1, #self.action_queue do
