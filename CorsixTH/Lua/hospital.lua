@@ -568,9 +568,16 @@ function Hospital:createEmergency(emergency)
     elseif not staff_available then
       added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
     end
+
+    local one_or_many_victims_msg
+    if emergency.victims == 1 then
+      one_or_many_victims_msg = _S.fax.emergency.num_disease_singular:format(emergency.disease.name)
+    else
+      one_or_many_victims_msg = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)
+    end
     local message = {
       {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
-      {text = _S.fax.emergency.num_disease:format(emergency.victims, emergency.disease.name)},
+      {text = one_or_many_victims_msg },
       {text = added_info},
       {text = _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
       choices = {
