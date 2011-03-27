@@ -79,6 +79,9 @@ local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
 
 local days_between_states = 75
 
+-- days before we reannouncing our watering status if we were unreachable
+local days_unreachable = 10
+
 --! An `Object` which needs watering now and then.
 class "Plant" (Object)
 
@@ -89,6 +92,8 @@ function Plant:Plant(world, object_type, x, y, direction, etc)
   self.current_state = 0
   self.base_frame = self.th:getFrame()
   self.days_left = days_between_states
+  self.unreachable = false
+  self.unreachable_counter = days_unreachable
 end
 
 --! Goes one step forward (or backward) in the states of the plant.
@@ -209,7 +214,12 @@ end
 function Plant:createHandymanActions(handyman)
   local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
   if not ux or not uy then
-    -- The plant cannot be reached, let it die.
+    -- The plant cannot be reached.
+    self.unreachable = true
+    self.unreachable_counter = days_unreachable
+    -- Release Handyman
+    handyman:setCallCompleted()
+    handyman:setNextAction{name = "meander"}
     return
   end
   local this_room = self:getRoom()
@@ -280,15 +290,22 @@ function Plant:tickDay()
     if self.days_left < 1 then
       self.days_left = days_between_states
       self:setNextState()
-    elseif not self.reserved_for and self:needsWatering() then
+    elseif not self.reserved_for and self:needsWatering() and not self.unreachable then
       self:callForWatering()
+    end
+    if self.unreachable then
+      self.unreachable_counter = self.unreachable_counter - 1
+      if self.unreachable_counter == 0 then
+        self.unreachable = false
+      end
     end
   end
 end
 
---! The plant needs to retain its animation when being moved.
+--! The plant needs to retain its animation and reset its unreachable flag when being moved
 function Plant:onClick(ui, button)
   if button == "right" then
+    self.unreachable = false
     self.picked_up = true
     self.current_frame = self.base_frame + self.current_state
   end
