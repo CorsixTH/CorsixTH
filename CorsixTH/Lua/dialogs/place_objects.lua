@@ -109,7 +109,7 @@ function UIPlaceObjects:resize(num_slots)
         self:setActiveIndex(i)
         -- Stop picking up items when user presses object in list
         local edit_room_window = self.ui:getWindow(UIEditRoom)
-        if edit_room_window then
+        if edit_room_window and edit_room_window.in_pickup_mode then
           edit_room_window:stopPickupItems()
         end
       end

@@ -509,7 +509,7 @@ room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médec
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
 place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
 fax.emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats."
-fax.emergency.num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.
+fax.emergency.num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats."
 
 -- The demo does not contain this string
 menu_file.restart = "  RELANCER  "

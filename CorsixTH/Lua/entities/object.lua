@@ -505,7 +505,9 @@ function Object:onClick(ui, button, data)
     end
     window:setOrientation(direction)
     self.orientation_before = self.direction
-    window:stopPickupItems()
+    if window.in_pickup_mode then
+      window:stopPickupItems()
+    end
     ui:playSound("pickup.wav")
   end
 end
