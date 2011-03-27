@@ -246,7 +246,6 @@ function Patient:tickDay()
   -- this can be changed when the animation thing is resolved
   if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
     self:setMood("sad2", "activate")
-  elseif self.attributes["health"] >= 0.145 and self.attributes["health"] < 0.15 then
   elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
     self:setMood("sad2", "deactivate")
     self:setMood("sad3", "activate")
