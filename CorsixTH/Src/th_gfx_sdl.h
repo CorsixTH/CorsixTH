@@ -262,6 +262,7 @@ public:
     void draw(THRenderTarget* pCanvas, int iX, int iY);
 protected:
     SDL_Surface* m_pBitmap;
+    SDL_Cursor* m_pCursorHidden;
     int m_iHotspotX;
     int m_iHotspotY;
 };

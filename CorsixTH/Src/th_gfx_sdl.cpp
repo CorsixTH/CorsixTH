@@ -798,11 +798,13 @@ THCursor::THCursor()
     m_pBitmap = NULL;
     m_iHotspotX = 0;
     m_iHotspotY = 0;
+    m_pCursorHidden = NULL;
 }
 
 THCursor::~THCursor()
 {
     SDL_FreeSurface(m_pBitmap);
+    SDL_FreeCursor(m_pCursorHidden);
 }
 
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
@@ -823,7 +825,11 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
 
 void THCursor::use(THRenderTarget* pTarget)
 {
-    SDL_ShowCursor(0);
+    //SDL_ShowCursor(0) is buggy in fullscreen until 1.3 (they say)
+    //  use transparent cursor for same effect
+    uint8_t uData = 0;
+    m_pCursorHidden = SDL_CreateCursor(&uData, &uData, 8, 1, 0, 0);
+    SDL_SetCursor(m_pCursorHidden);
     pTarget->setCursor(this);
 }
 
