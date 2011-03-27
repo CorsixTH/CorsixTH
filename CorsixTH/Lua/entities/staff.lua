@@ -196,6 +196,7 @@ function Staff:fire()
       staff_window:close()
   end
 
+  self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "  .. self.profile.name)
   self:playSound "sack.wav"
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
