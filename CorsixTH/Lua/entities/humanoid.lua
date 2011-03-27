@@ -165,7 +165,7 @@ function Humanoid:Humanoid(...)
   self.speed = "normal"
 end
 function Humanoid:afterLoad(old, new)
-  if old < 39 then
+  if old < 38 then
     -- should existing patients be updated and be getting really ill?
     -- adds the new variables for health icons 
     self.attributes["health"] = math.random(60, 100) /100
