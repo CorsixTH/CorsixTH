@@ -499,15 +499,13 @@ function Object:onClick(ui, button, data)
       window = UIPlaceObjects(ui, object_list, false) -- don't pay for
       ui:addWindow(window)
     else
+      window:stopPickupItems()
       window:addObjects(object_list, false) -- don't pay for
       window:selectObjectType(self.object_type)
       window:checkEnableConfirm() -- since we removed an object from the room, the requirements may not be met anymore
     end
     window:setOrientation(direction)
     self.orientation_before = self.direction
-    if window.in_pickup_mode then
-      window:stopPickupItems()
-    end
     ui:playSound("pickup.wav")
   end
 end

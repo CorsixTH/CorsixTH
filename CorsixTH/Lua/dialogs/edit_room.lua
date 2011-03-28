@@ -173,9 +173,7 @@ function UIEditRoom:cancel()
       self:close()
     end
   elseif self.phase == "objects" then
-    if self.in_pickup_mode then
-      self:stopPickupItems()
-    end
+    self:stopPickupItems()
     self:returnToDoorPhase()
   else
     if self.phase == "clear_area" then
@@ -193,9 +191,7 @@ function UIEditRoom:confirm(force)
   if not force and not self.confirm_button.enabled then
     return
   end
-  if self.in_pickup_mode then
-    self:stopPickupItems()
-  end
+  self:stopPickupItems()
 
   if self.phase == "walls" then
     self.mouse_down_x = false
@@ -480,9 +476,7 @@ end
 function UIEditRoom:purchaseItems()
   self.visible = false
   self.place_objects = false
-  if self.in_pickup_mode then
-    self:stopPickupItems()
-  end
+  self:stopPickupItems()
 
   local object_list = {} -- transform set to list
   for i, o in ipairs(self.room.room_info.objects_additional) do

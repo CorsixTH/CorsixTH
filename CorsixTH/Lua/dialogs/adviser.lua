@@ -48,6 +48,7 @@ function UIAdviser:UIAdviser(ui)
   self.height = 74
   self.x = 378
   self.y = -16
+  self.balloon_width = 0
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.black_font = app.gfx:loadFont("QData", "Font50V")
   
