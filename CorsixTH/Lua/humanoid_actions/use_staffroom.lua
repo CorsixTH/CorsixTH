@@ -53,8 +53,7 @@ end)
 -- randomly generate the use time for a given source of relaxation
 local generate_use_time = permanent"use_staffroom_action_generate_use_time"( function(type)
   if type == "sofa" then
-    -- use sofa until no longer fatigued
-    return 1000 -- this value is large enough
+    return math.random(50, 80)
   elseif type == "pool_table" then
     return math.random(2, 5)
   elseif type == "video_game" then
@@ -125,8 +124,9 @@ local function use_staffroom_action_start(action, humanoid)
       -- if staff is done using object
       if obj_use_time == 0 then
         -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
+        -- also check x,y co-ords to see if the object actually exists in the room
         action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-        if action.next_target_type == action.target_type then
+        if (not action.next_ox and not action.next_oy) or action.next_target_type == action.target_type then
           obj_use_time = generate_use_time(action.target_type)
         else
           if action.next_target_obj then
@@ -134,7 +134,7 @@ local function use_staffroom_action_start(action, humanoid)
           end
           object_action.prolonged_usage = false
         end
-       end
+      end
     end
   }
   humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)

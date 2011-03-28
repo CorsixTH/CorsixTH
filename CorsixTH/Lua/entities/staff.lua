@@ -131,7 +131,7 @@ function Staff:tick()
   
     -- if doctor is in a room and that room is not a staff room and they're using an object
     -- then their skill level will increase _slowly_ over time
-  if room and room.room_info.id ~= "training_room" and room.room_info.id ~= "staff_room" 
+  if room and room.room_info.id ~= "training" and room.room_info.id ~= "staff_room" 
        and room.room_info.id ~= "toilets"
   and self.humanoid_class == "Doctor"
   and self.action_queue[1].name == "use_object" then
