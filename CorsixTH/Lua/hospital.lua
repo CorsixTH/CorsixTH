@@ -46,6 +46,7 @@ function Hospital:Hospital(world)
   self.acc_loan_interest = 0
   self.acc_research_cost = 0
   self.acc_overdraft = 0
+  self.acc_heating = 0
   self.discover_autopsy_risk = 10
   self.initial_grace = true
   
@@ -165,6 +166,9 @@ function Hospital:Hospital(world)
 end
 
 function Hospital:afterLoad(old, new)
+  if old < 39 then
+    self.acc_heating = 0
+  end
   if old < 8 then
     -- The list of discovered rooms was not saved. The best we can do is make everything
     -- discovered which is available for the level.
@@ -441,8 +445,25 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-end
-
+  -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
+  local month_length = {
+    31, -- Jan
+    28, -- Feb 
+    31, -- Mar
+    30, -- Apr
+    31, -- May
+    30, -- Jun
+    31, -- Jul
+    31, -- Aug
+    30, -- Sep
+    31, -- Oct
+    30, -- Nov
+    31, -- Dec
+  }
+  local radiators = self.world.object_counts.radiator
+  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
+  self.acc_heating = self.acc_heating + heating_costs
+end    
 -- Called at the end of each month.
 function Hospital:onEndMonth()
   -- Spend wages
@@ -453,6 +474,11 @@ function Hospital:onEndMonth()
   if wages ~= 0 then
     self:spendMoney(wages, _S.transactions.wages)
   end
+  -- Pay heating costs
+  if math.round(self.acc_heating) > 0 then
+    self:spendMoney(math.round(self.acc_heating), _S.transactions.heating)
+    self.acc_heating = 0
+  end   
   -- Pay interest on loans
   if math.round(self.acc_loan_interest) > 0 then
     self:spendMoney(math.round(self.acc_loan_interest), _S.transactions.loan_interest)
@@ -496,14 +522,6 @@ function Hospital:onEndMonth()
     -- Shift the amounts to the left
     table.remove(company, 3)
     table.insert(company, 1, 0) -- The new month have no payments yet
-  end
-
-  -- Pay heating costs
-  -- TODO: Should this also be on a per day basis "behind the scenes" as above?
-  local radiators = self.world.object_counts.radiator
-  local heating_costs = math.floor(((self.radiator_heat *10)* radiators)* 7.5)
-  if heating_costs > 0 then
-    self:spendMoney(heating_costs, _S.transactions.heating)
   end
 end
 

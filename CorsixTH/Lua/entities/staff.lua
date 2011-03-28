@@ -128,6 +128,15 @@ function Staff:tick()
   if tiring then -- Finally: tire the humanoid.
     self:tire(0.000115)
   end
+  
+    -- if doctor is in a room and that room is not a staff room and they're using an object
+    -- then their skill level will increase _slowly_ over time
+  if room and room.room_info.id ~= "training_room" and room.room_info.id ~= "staff_room" 
+       and room.room_info.id ~= "toilets"
+  and self.humanoid_class == "Doctor"
+  and self.action_queue[1].name == "use_object" then
+    self:updateSkill(self.humanoid_class, "skill", 0.000003)
+  end
 
   -- Make staff members request a raise if they are very unhappy
   if not self.world.debug_disable_salary_raise and self.attributes["happiness"] < 0.1 then
