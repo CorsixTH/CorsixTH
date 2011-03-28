@@ -55,6 +55,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
 end)
 
 local function action_die_start(action, humanoid)
+  humanoid:setMoodInfo() -- clear all mood icons
   if math.random(0, 1) == 1 then
     humanoid.last_move_direction = "east"
   else

@@ -268,28 +268,9 @@ function Patient:tickDay()
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
-    -- female patients with slack tongue can't die because they have no animation 
-    if self.humanoid_class == "Slack Female Patient" then
-      if not self:getRoom() and not self.action_queue[1].is_leaving then
-        self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
-        self:setMood("sad2", "deactivate")
-        self:setMood("exit", "activate")
-        self:goHome()
-      end
-    end
-    if not self:getRoom() and not self.action_queue[1].is_leaving then
-      local casebook = self.hospital.disease_casebook[self.disease.id]
-      casebook.fatalities = casebook.fatalities + 1
-      self:setMoodInfo() -- clear all moods
-      self.hospital:humanoidDeath(self)
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
-      self:setNextAction{
-        name = "die",
-        must_happen = true, -- truth
-      }
-      --dead people aren't thirsty
-      return
-    end  
+    self:die()
+    --dead people aren't thirsty
+    return
   end 
 
   -- Each tick both thirst, warmth and toilet_need changes and health decreases.
