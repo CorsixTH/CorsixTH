@@ -163,6 +163,8 @@ function UIBuildRoom:buildRoom(index)
     local edit_dlg = UIEditRoom(self.ui, self.list[index])
     self.ui:addWindow(edit_dlg)
   else
+    -- give visual warning that player doesn't have enough $ to build
+    self.ui.adviser:say(_S.adviser.warnings.money_very_low_take_loan, false, true)
     self.ui:playSound("Wrong2.wav")
   end
 end
