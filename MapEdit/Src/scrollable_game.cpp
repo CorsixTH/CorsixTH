@@ -84,20 +84,21 @@ void ScrollableGamePanel::_onResize(wxSizeEvent& evt)
 {
     lua_State *L = m_pGamePanel->getLua();
     if(!L)
-    {
-        evt.Skip();
-        return;
-    }
+        goto default_resize;
 
     // Get old world-coordinates of window center
     lua_Number fX, fY;
     lua_getglobal(L, "TheApp");
+    if(lua_isnil(L, -1))
+    {
+        lua_pop(L, 1);
+        goto default_resize;
+    }
     lua_getfield(L, -1, "ui");
     if(lua_isnil(L, -1))
     {
         lua_pop(L, 2);
-        evt.Skip();
-        return;
+        goto default_resize;
     }
     lua_getfield(L, -1, "ScreenToWorld");
     lua_pushvalue(L, -2);
@@ -119,6 +120,9 @@ void ScrollableGamePanel::_onResize(wxSizeEvent& evt)
     lua_pushnumber(L, fY);
     lua_call(L, 3, 0);
     lua_pop(L, 1);
+    return;
+default_resize:
+    evt.Skip();
 }
 
 int ScrollableGamePanel::_l_extra_init(lua_State *L)
@@ -233,6 +237,11 @@ void ScrollableGamePanel::_onScroll(wxScrollEvent& evt)
         return;
     }
     lua_getglobal(L, "TheApp");
+    if(lua_isnil(L, -1))
+    {
+        lua_pop(L, 1);
+        return;
+    }
     lua_getfield(L, -1, "ui");
     if(lua_isnil(L, -1))
     {
