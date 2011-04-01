@@ -34,25 +34,13 @@ function Staff:tickDay()
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
-  -- If this is a researcher in the research department some research has 
-  -- been done during the day.
-  local room = self:getRoom()
-  if room and room.room_info.id == "research" and self.humanoid_class == "Doctor"
-  and self.profile.is_researcher >= 1.0 and self.hospital then
-    -- TODO: Balance value further how much skill is a factor.
-    -- This value is good for a medium researcher.
+  
+  -- is self researcher in research room?
+  if self:isResearching() then
     self.hospital.research:addResearchPoints(1550 + 1000*self.profile.skill)
-  end
-  -- Is this a doctor in the training room with a consultant?
-  local room = self:getRoom()
-  if room and room.room_info.id == "training" and room.staff_member
-  and self.action_queue[1].name == "use_object"
-  and self.action_queue[1].object.object_type.id == "lecture_chair" then
-    -- increase skills based upon what the consultant knows
-    -- TODO: possibly adjust based upon consultant's skill level? multiply by
-    -- random factor to avoid all skills increasing equally?
-    
-    -- Find values for how fast doctors learn the different professions
+  -- is self using lecture chair in a training room w/ a consultant?
+  elseif self:isLearning() then
+    -- Find values for how fast doctors learn the different professions from the level
     local level_config = self.world.map.level_config
     local surg_thres = 1
     local psych_thres = 1
@@ -62,79 +50,49 @@ function Staff:tickDay()
       psych_thres = level_config.gbv.AbilityThreshold[1]
       res_thres = level_config.gbv.AbilityThreshold[2]
     end
+    local general_thres = 200 -- general skill factor
     
-    local factor = room:getTrainingFactor()
+    local room = self:getRoom()
+    -- room_factor starts at 5 for a basic room w/ TrainingRate == 4
+    -- books add +1.5, skeles add +2.0, see TrainingRoom:calculateTrainingFactor
+    local room_factor = room:getTrainingFactor()
+    -- number of staff includes consultant
+    local staff_count = room:getStaffCount() - 1
+    -- update general skill
+    self:trainSkill(room.staff_member, "skill", general_thres, room_factor, staff_count)
+    -- update special skill based on consultant skills
     if room.staff_member.profile.is_surgeon >= 1.0 then
-      self:updateSkill(room.staff_member, "is_surgeon", 0.1*factor/surg_thres)
+      self:trainSkill(room.staff_member, "is_surgeon", surg_thres, room_factor, staff_count)
     end
     if room.staff_member.profile.is_psychiatrist >= 1.0 then
-      self:updateSkill(room.staff_member, "is_psychiatrist", 0.1*factor/psych_thres)
+      self:trainSkill(room.staff_member, "is_psychiatrist", psych_thres, room_factor, staff_count)
     end
     if room.staff_member.profile.is_researcher >= 1.0 then
-      self:updateSkill(room.staff_member, "is_researcher", 0.1*factor/res_thres)
+      self:trainSkill(room.staff_member, "is_researcher", res_thres, room_factor, staff_count)
     end
-
-    self:updateSkill(room.staff_member, "skill", 0.0004*factor)
   end
 end
 
 function Staff:tick()
   Entity.tick(self)
-  if not self.fired and self.hospital then
-    self:checkIfNeedRest()
-    if self.quitting_in then
-      self.quitting_in = self.quitting_in - 1
-      if self.quitting_in < 0 then
-        local rise_windows = self.world.ui:getWindows(UIStaffRise)
-        local staff_rise_window = nil
-
-        -- We go through all "requesting rise" windows open, to see if we need
-        -- to close them when the person is fired.
-        for i = 1, #rise_windows do
-          if rise_windows[i].staff == self then
-            staff_rise_window = rise_windows[i]
-            break
-          end
-        end
-
-        -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
-        if staff_rise_window then
-          staff_rise_window:fireStaff()
-        else
-          self:fire()
-        end
-      end
-    end
-  end
-  
-  -- Decide whether the staff member should be tiring.
-  local tiring = true
-  
-  local room = self:getRoom()
-  -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
-  if room then
-    if room.room_info.id == "staff_room" and not self.on_call then
-      tiring = false
-    end
-  elseif self.humanoid_class ~= "Handyman" then
-    tiring = false
+  -- don't do anything if they're fired or have no hospital
+  if self.fired or not self.hospital then
+    return
   end
 
-  -- Picking staff members up doesn't tire them, it just tires the player.
-  if self.action_queue[1].name == "pickup" then
-    tiring = false
-  end
+  -- check if we need to use the staff room and go there if so
+  self:checkIfNeedRest()
+  -- check if staff has been waiting too long for a raise and fire if so
+  self:checkIfWaitedTooLong()
   
-  if tiring then -- Finally: tire the humanoid.
+  -- Decide whether the staff member should be tiring and tire them
+  if self:isTiring() then
     self:tire(0.000115)
   end
   
-    -- if doctor is in a room and that room is not a staff room and they're using an object
+    -- if doctor is in a room and they're using an object
     -- then their skill level will increase _slowly_ over time
-  if room and room.room_info.id ~= "training" and room.room_info.id ~= "staff_room" 
-       and room.room_info.id ~= "toilets"
-  and self.humanoid_class == "Doctor"
-  and self.action_queue[1].name == "use_object" then
+  if self:isLearningOnTheJob() then
     self:updateSkill(self.humanoid_class, "skill", 0.000003)
   end
 
@@ -154,6 +112,79 @@ function Staff:tick()
 
   self:updateSpeed()
 end
+
+function Staff:checkIfWaitedTooLong()
+  if self.quitting_in then
+    self.quitting_in = self.quitting_in - 1
+    if self.quitting_in < 0 then
+      local rise_windows = self.world.ui:getWindows(UIStaffRise)
+      local staff_rise_window = nil
+
+      -- We go through all "requesting rise" windows open, to see if we need
+      -- to close them when the person is fired.
+      for i = 1, #rise_windows do
+        if rise_windows[i].staff == self then
+          staff_rise_window = rise_windows[i]
+          break
+        end
+      end
+
+      -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
+      if staff_rise_window then
+        staff_rise_window:fireStaff()
+      else
+        self:fire()
+      end
+    end
+  end
+end
+
+function Staff:isTiring()
+  local tiring = true
+
+  local room = self:getRoom()
+  -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
+  if room then
+    if room.room_info.id == "staff_room" and not self.on_call then
+      tiring = false
+    end
+  elseif self.humanoid_class ~= "Handyman" then
+    tiring = false
+  end
+
+  -- Picking staff members up doesn't tire them, it just tires the player.
+  if self.action_queue[1].name == "pickup" then
+    tiring = false
+  end
+  
+  return tiring
+end
+
+-- Determine if the staff member should contribute to research
+function Staff:isResearching()
+  local room = self:getRoom()
+  return room and room.room_info.id == "research" -- in research lab
+    and self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 -- is qualified
+    and self.hospital  -- is not leaving the hospital
+end
+
+-- Determine if the staff member should increase their skills
+function Staff:isLearning()
+  local room = self:getRoom()
+  return room and room.room_info.id == "training"  -- in training room
+    and room.staff_member                          -- the training room has a consultant
+    and self.action_queue[1].name == "use_object"  -- is using lecture chair
+    and self.action_queue[1].object.object_type.id == "lecture_chair"
+end
+
+function Staff:isLearningOnTheJob()
+  local room = self:getRoom()
+  return room and room.room_info.id ~= "training" and room.room_info.id ~= "staff_room" 
+    and room.room_info.id ~= "toilets" -- is in room but not training room, staff room, or toilets
+    and self.humanoid_class == "Doctor" -- and is a doctor
+    and self.action_queue[1].name == "use_object" -- and is using something
+end
+
 
 function Staff:updateSkill(consultant, trait, amount)
   local old_profile = {
@@ -191,6 +222,16 @@ function Staff:updateSkill(consultant, trait, amount)
       self:updateStaffTitle()
     end
   end
+end
+
+function Staff:trainSkill(consultant, trait, skill_thres, room_factor, staff_count)
+  -- TODO: tweak/rework this algorithm
+  -- TODO: possibly adjust based upon consultant's skill level?
+  --       possibly based on attention to detail?
+  local constant = 12.0 
+  local staff_factor = constant + (staff_count-1)*(constant/6.0)
+  local delta = room_factor / (skill_thres * staff_factor)
+  self:updateSkill(consultant, trait, delta)
 end
 
 -- Immediately terminate the staff member's employment.

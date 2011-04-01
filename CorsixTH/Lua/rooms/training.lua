@@ -41,14 +41,15 @@ function TrainingRoom:TrainingRoom(...)
 end
 
 function TrainingRoom:roomFinished()
+  -- Training rate and max occupancy based on objects in the room
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
-  local number = 0
+  local chairs = 0
   local skeletons = 0
   local bookcases = 0
   for object, value in pairs(objects) do
     if object.object_type.id == "lecture_chair" then
-      number = number + 1
+      chairs = chairs + 1
     elseif object.object_type.id == "skeleton" then
       skeletons = skeletons + 1
     elseif object.object_type.id == "bookcase" then
@@ -56,28 +57,43 @@ function TrainingRoom:roomFinished()
     end
   end
   -- Total staff occupancy: number of lecture chairs plus projector
-  self.maximum_staff = { Doctor = number + 1 }
-  -- Training rate based on objects in the room
-  -- TODO:  What should happen if there is no level configuration?
-  local level_config = self.world.map.level_config
-  local factor = 10 -- The projector is always available
-  -- Make use of at most 2 skeletons and/or bookcases for now.
-  -- TODO: Decide how much the two objects affect speed of training.
-  -- They don't do anything for now.
-  if level_config and level_config.gbv.TrainingRate then
-    local skel_fact = level_config.gbv.TrainingValue[1]
-    local book_fact = level_config.gbv.TrainingValue[2]
-    --factor = factor + (skeletons < 3 and skeletons or 2)*skel_fact
-    --factor = factor + (bookcases < 3 and bookcases or 2)*book_fact
-    factor = (factor + level_config.gbv.TrainingRate)/10
-  end
-  self.training_factor = factor
+  self.maximum_staff = { Doctor = chairs + 1 }
+  -- factor is divided by ten so the result from new algroithm will be similar to the old algorithm
+  self.training_factor = self:calculateTrainingFactor(skeletons, bookcases) / 10.0
+
   -- Also tell the player if he/she doesn't have a consultant yet.
   if not self.hospital:hasStaffOfCategory("Consultant") then
     local text = _S.adviser.room_requirements.training_room_need_consultant
     self.world.ui.adviser:say(text)
   end
   Room.roomFinished(self)
+end
+
+function TrainingRoom:calculateTrainingFactor(skeletons, bookcases)
+  -- TODO: tweak/change this function, used in Staff:trainSkill(...)
+  -- Object values and training rate set in level config
+  local level_config = self.world.map.level_config
+  local proj_val = 10
+  local book_val = 15
+  local skel_val = 20
+  local training_rate = 40
+  if level_config and level_config.gbv.TrainingRate then
+    book_val = level_config.gbv.TrainingValue[1]
+    skel_val = level_config.gbv.TrainingValue[2]
+    training_rate = level_config.gbv.TrainingRate
+  end
+  -- Training factor is just everything added together
+  return proj_val + skeletons*skel_val + bookcases*book_val + training_rate
+end
+
+function TrainingRoom:getStaffCount()
+  local count = 0
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Staff) then
+      count = count + 1
+    end
+  end
+  return count
 end
 
 function TrainingRoom:testStaffCriteria(criteria, extra_humanoid)
@@ -100,23 +116,28 @@ end
 function TrainingRoom:doStaffUseCycle(humanoid)
   local projector, ox, oy = self.world:findObjectNear(humanoid, "projector")
   humanoid:queueAction{name = "walk", x = ox, y = oy}
-  local projector_use_time = math.random(20, 30)
+  local projector_use_time = math.random(6,20)
   humanoid:queueAction{name = "use_object",
     object = projector,
     loop_callback = --[[persistable:training_loop_callback]] function()
       projector_use_time = projector_use_time - 1
       if projector_use_time == 0 then
-        local skeleton, ox, oy = self.world:findObjectNear(humanoid, "skeleton")
+        local skeleton, sox, soy = self.world:findFreeObjectNearToUse(humanoid, "skeleton", "near")
+        local bookcase, box, boy = self.world:findFreeObjectNearToUse(humanoid, "bookcase", "near")
+        if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose one
         if skeleton then
-          -- TODO: Make a little more random
-          humanoid:walkTo(ox, oy)
-          humanoid:queueAction{name = "use_object", object = skeleton}
-          humanoid:queueAction{name = "use_object", object = skeleton}
-          humanoid:queueAction{name = "use_object", object = skeleton}
-          self:doStaffUseCycle(humanoid)
-        else
-          -- Consultant will just use the projector indefinitely.
+          humanoid:walkTo(sox, soy)
+          for i = 1, math.random(3, 10) do
+            humanoid:queueAction{name = "use_object", object = skeleton}
+          end
+        elseif bookcase then
+          humanoid:walkTo(box, boy)
+          for i = 1, math.random(3, 10) do
+            humanoid:queueAction{name = "use_object", object = bookcase}
+          end
         end
+        -- go back to the projector
+        self:doStaffUseCycle(humanoid)
       elseif projector_use_time < 0 then
         -- reset variable to avoid potential overflow (over a VERY long
         -- period of time)
@@ -167,8 +188,17 @@ end
 
 function TrainingRoom:onHumanoidLeave(humanoid)
   -- if the consultant is leaving, make sure we indicate that
+  -- so students stop learning
   if self.staff_member == humanoid then
     self.staff_member = nil
+    -- unreserve the projector
+    local fx, fy = self:getEntranceXY(true)
+    local objects = self.world:findAllObjectsNear(fx,fy)
+    for object, value in pairs(objects) do
+      if object.object_type.id == "projector" then
+        object:removeReservedUser()
+      end
+    end
   end
 
   Room.onHumanoidLeave(self, humanoid)
