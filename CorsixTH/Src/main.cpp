@@ -158,8 +158,13 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\"\n"
 #ifdef __APPLE__ // Darrell: Search inside the bundle first.
                  // There's probably a better way of doing this.
+#if defined(IS_CORSIXTH_APP)
     "code = loadfile(\"CorsixTH.app/Contents/Resources/\"..name)\n"
     "if code then return code end\n"
+#elif defined(IS_MAPEDIT_APP)
+    "code = loadfile(\"MapEdit.app/Contents/Resources/\"..name)\n"
+    "if code then return code end\n"
+#endif
 #endif
     "for num_dotdot = 0, 3 do\n"
     "  for num_dir = 0, 1 do\n"

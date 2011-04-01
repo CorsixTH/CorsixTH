@@ -20,10 +20,42 @@ FILE(GLOB_RECURSE mapedit_source_files
 )
 
 # Declaration of the executable
-add_executable(MapEdit 
-  WIN32 
-  ${mapedit_source_files}
+IF(APPLE)
+  add_definitions(-DIS_MAPEDIT_APP)
+
+  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
+  set_source_files_properties(
+    ${corsixth_icon_file}
+    PROPERTIES
+    MACOSX_PACKAGE_LOCATION Resources
+  )
+  set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
+
+  add_executable(MapEdit
+    MACOSX_BUNDLE
+    ${mapedit_source_files}
+    ${corsixth_icon_file}
+  )
+
+  #Add an extra step at the end of the build process to copy the resources into the
+  #bundle. I haven't yet found a way to keep the folder structure when adding resources
+  #into XCode. I would have thought we could use source_group but apparently not.
+  set(corsixth_bundle_resources 
+    ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua
+    ${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap
+    ${CMAKE_SOURCE_DIR}/CorsixTH/Lua
+  )
+  add_custom_command(TARGET MapEdit 
+					 POST_BUILD
+					 COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${corsixth_bundle_resources} \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources
 )
+
+ELSE()
+  add_executable(MapEdit 
+    WIN32 
+    ${mapedit_source_files}
+)
+ENDIF()
 
 # Basic platform dependant stuff
 IF(UNIX)
@@ -51,6 +83,21 @@ ELSE(UNIX)
 ENDIF(UNIX)
 
 # Finding libraries
+
+# Find WxWidgets
+SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+SET(wxWidgets_USE_LIBS gl ribbon core base) # optionally: more than wx std libs
+FIND_PACKAGE(wxWidgets REQUIRED)
+IF(wxWidgets_FOUND)
+  LINK_LIBRARIES(${wxWidgets_LIBRARIES})
+  INCLUDE_DIRECTORIES(${wxWidgets_INCLUDE_DIRS})
+  INCLUDE(${wxWidgets_USE_FILE})
+  TARGET_LINK_LIBRARIES(MapEdit ${wxWidgets_LIBRARIES})
+  message("  wxWidgets found")
+ELSE(wxWidgets_FOUND)
+  message( FATAL_ERROR "error: wxWdigets library (or one of it's components) not found, it is required to build")
+  message( "Make sure the path is correctly defined or set the envirnomental variable WXWIN to the correct location" )
+ENDIF(wxWidgets_FOUND)
 
 # Find SDL
 FIND_PACKAGE(SDL REQUIRED)
@@ -109,20 +156,30 @@ ELSE(LUA51_FOUND)
   message( FATAL_ERROR "error: Lua library not found, it is required to build")
 ENDIF(LUA51_FOUND)
 
-# Find WxWidgets
-SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
-SET(wxWidgets_USE_LIBS gl ribbon core base) # optionally: more than wx std libs
-FIND_PACKAGE(wxWidgets REQUIRED)
-IF(wxWidgets_FOUND)
-  LINK_LIBRARIES(${wxWidgets_LIBRARIES})
-  INCLUDE_DIRECTORIES(${wxWidgets_INCLUDE_DIRS})
-  INCLUDE(${wxWidgets_USE_FILE})
-  TARGET_LINK_LIBRARIES(MapEdit ${wxWidgets_LIBRARIES})
-  message("  wxWidgets found")
-ELSE(wxWidgets_FOUND)
-  message( FATAL_ERROR "error: wxWdigets library (or one of it's components) not found, it is required to build")
-  message( "Make sure the path is correctly defined or set the envirnomental variable WXWIN to the correct location" )
-ENDIF(wxWidgets_FOUND)
+IF(APPLE)
+  #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
+  install(TARGETS MapEdit BUNDLE DESTINATION .)
 
-install(TARGETS MapEdit RUNTIME DESTINATION CorsixTH)
+  #Copy the required frameworks into the bundle.
+  IF(SDL_FOUND)
+	IF(SDL_LIBRARY MATCHES "\\.framework") #Only copy if it's an actual framework.
+      string(REPLACE "-framework Cocoa" "" SDL_FRAMEWORK_LOC ${SDL_LIBRARY})
+      install(DIRECTORY ${SDL_FRAMEWORK_LOC} DESTINATION MapEdit.app/Contents/Frameworks)
+    ENDIF()
+  ENDIF()
 
+  IF(SDLMIXER_FOUND)
+    IF(${SDLMIXER_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
+      install(DIRECTORY ${SDLMIXER_LIBRARY} DESTINATION MapEdit.app/Contents/Frameworks)
+    ENDIF()
+  ENDIF()
+
+  IF(LUA51_FOUND)
+    IF(${LUA_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
+  	  install(DIRECTORY ${LUA_LIBRARY} DESTINATION MapEdit.app/Contents/Frameworks)
+    ENDIF()
+  ENDIF()
+
+ELSE()
+  install(TARGETS MapEdit RUNTIME DESTINATION CorsixTH)
+ENDIF()
