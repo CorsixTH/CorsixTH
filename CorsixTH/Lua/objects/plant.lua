@@ -195,7 +195,9 @@ function Plant:callForWatering()
   -- Note that only one of possibly many possible sides are chosen, prefering
   -- speed to quality of search.
   -- If self.ticks is true it means that a handyman is currently watering the plant.
-  if not self.ticks and not self.reserved_for then
+  -- If there are no tiles to water from, just die.
+  if not self.ticks and not self.reserved_for 
+  and self:getWateringTile() then
     local new_call = self.world.dispatcher:callForWatering(self)
     if new_call and self.current_state > 1 then
       if not self.plant_announced then
