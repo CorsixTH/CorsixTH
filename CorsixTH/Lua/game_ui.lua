@@ -448,7 +448,10 @@ end
 function GameUI:onMouseUp(code, x, y)
   if code == 4 or code == 5 then
     -- Mouse wheel
-    self.app.world:adjustZoom(4.5 - code)
+    local window = self:getWindow(UIFullscreen)
+    if not window or not window:hitTest(x - window.x, y - window.y) then
+      self.app.world:adjustZoom(4.5 - code)
+    end
   end
   
   local button = self.button_codes[code]

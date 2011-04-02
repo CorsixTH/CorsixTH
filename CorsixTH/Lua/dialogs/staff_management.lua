@@ -421,6 +421,24 @@ function UIStaffManagement:onMouseDown(code, x, y)
   return UIFullscreen.onMouseDown(self, code, x, y)
 end
 
+function UIStaffManagement:onMouseUp(code, x, y)
+  if not UIFullscreen.onMouseUp(self, code, x, y) then
+    if self:hitTest(x, y) then
+      if code == 4 then
+        -- Mouse wheel, scroll.
+        self:scrollUp()
+        return true
+      elseif code == 5 then
+        self:scrollDown()
+        return true
+      end
+    end
+    return false
+  else
+    return true
+  end
+end
+
 function UIFullscreen:getStaffPosition(dx, dy)
   local staff = self.staff_members[self.category][self.selected_staff]
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)

@@ -80,6 +80,24 @@ function Hospital:Hospital(world)
   -- Since there are none right now the player's hospital always get
   -- 50 % of all patients as soon as gbv.AllocDelay has expired.
   
+  -- Statistics used in the graph dialog. Each entry is the month, inside it
+  -- is "money in", "money out", wages, balance, visitors, cures, deaths, reputation
+  -- statistic[i] shows what the values were when going from month i - 1 to i.
+  self.statistics = {
+    {
+      money_in = 0,
+      money_out = 0,
+      wages = 0,
+      balance = balance,
+      visitors = 0,
+      cures = 0,
+      deaths = 0,
+      reputation = 500, -- TODO: Always 500 from the beginning?
+    }
+  }
+  self.money_in = 0
+  self.money_out = 0
+    
   -- Other statistics, back to zero each year
   self.sodas_sold = 0
   self.reputation_above_threshold = self.win_awards and level_config.awards_trophies.Reputation < self.reputation or false
@@ -166,9 +184,6 @@ function Hospital:Hospital(world)
 end
 
 function Hospital:afterLoad(old, new)
-  if old < 39 then
-    self.acc_heating = 0
-  end
   if old < 8 then
     -- The list of discovered rooms was not saved. The best we can do is make everything
     -- discovered which is available for the level.
@@ -377,6 +392,14 @@ function Hospital:afterLoad(old, new)
       }
     end
   end
+  if old < 39 then
+    self.acc_heating = 0
+  end
+  if old < 40 then
+    self.statistics = {}
+    self.money_in = 0
+    self.money_out = 0
+  end
 end
 
 --! Called each tick, also called 'hours'. Check hours_per_day in
@@ -523,6 +546,20 @@ function Hospital:onEndMonth()
     table.remove(company, 3)
     table.insert(company, 1, 0) -- The new month have no payments yet
   end
+  
+  -- Add some interesting statistics.
+  self.statistics[self.world.month + 1 + 12 * (self.world.year - 1)] = {
+    money_in = self.money_in,
+    money_out = self.money_out,
+    wages = wages,
+    balance = self.balance,
+    visitors = self.visitors,
+    cures = self.num_cured,
+    deaths = self.num_deaths,
+    reputation = self.reputation,
+  }
+  self.money_in = 0
+  self.money_out = 0
 end
 
 --! Called at the end of each year
@@ -673,6 +710,7 @@ in _S.transactions.
 function Hospital:spendMoney(amount, reason, changeValue)
   self.balance = self.balance - amount
   self:logTransaction{spend = amount, desc = reason}
+  self.money_out = self.money_out + amount
   if changeValue then
     self.value = self.value + changeValue
   end
@@ -688,6 +726,7 @@ in _S.transactions.
 function Hospital:receiveMoney(amount, reason, changeValue)
   self.balance = self.balance + amount
   self:logTransaction{receive = amount, desc = reason}
+  self.money_in = self.money_in + amount
   if changeValue then
     self.value = self.value - changeValue
   end

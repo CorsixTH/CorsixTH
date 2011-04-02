@@ -360,6 +360,24 @@ function UICasebook:onMouseDown(button, x, y)
   end
 end
 
+function UICasebook:onMouseUp(code, x, y)
+  if not UIFullscreen.onMouseUp(self, code, x, y) then
+    if self:hitTest(x, y) then
+      if code == 4 then
+        -- Mouse wheel, scroll.
+        self:scrollUp()
+        return true
+      elseif code == 5 then
+        self:scrollDown()
+        return true
+      end
+    end
+    return false
+  else
+    return true
+  end
+end
+
 function UICasebook:onTick()
   -- Decrease counter for showing percentage of cure price, if applicable
   if self.percentage_counter then
