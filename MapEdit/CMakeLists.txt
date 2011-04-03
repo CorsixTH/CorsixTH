@@ -20,7 +20,7 @@ FILE(GLOB_RECURSE mapedit_source_files
 )
 
 # Declaration of the executable
-IF(APPLE)
+IF(APPLE) 
   add_definitions(-DIS_MAPEDIT_APP)
 
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
@@ -36,6 +36,8 @@ IF(APPLE)
     ${mapedit_source_files}
     ${corsixth_icon_file}
   )
+
+  set_target_properties(MapEdit PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
 
   #Add an extra step at the end of the build process to copy the resources into the
   #bundle. I haven't yet found a way to keep the folder structure when adding resources

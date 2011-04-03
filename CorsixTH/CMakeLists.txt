@@ -71,6 +71,8 @@ IF(APPLE)
 
   add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_source_files} ${corsixth_icon_file})
 
+  set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
+
   #Add an extra step at the end of the build process to copy the resources into the
   #bundle. I haven't yet found a way to keep the folder structure when adding resources
   #into XCode. I would have thought we could use source_group but apparently not.

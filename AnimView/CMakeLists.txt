@@ -17,12 +17,31 @@ SET(animview_source_files
 )
 
 # Declaration of the executable
-add_executable( 
-  AnimView 
-  WIN32 # This prevents the dos console showing up
-  MACOSX_BUNDLE
-  ${animview_source_files}
-)
+IF(APPLE)
+
+  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
+  set_source_files_properties(
+    ${corsixth_icon_file}
+    PROPERTIES
+    MACOSX_PACKAGE_LOCATION Resources
+  )
+  set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
+
+  add_executable( 
+    AnimView
+    MACOSX_BUNDLE
+    ${animview_source_files}
+    ${corsixth_icon_file}
+  )
+
+  set_target_properties(AnimView PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
+ELSE()
+  add_executable( 
+    AnimView 
+    WIN32 # This prevents the dos console showing up
+    ${animview_source_files}
+  )
+ENDIF()
 
 # Finding libraries
 
@@ -65,6 +84,9 @@ ELSE(UNIX)
   ENDIF(WIN32)
 ENDIF(UNIX)
 
-install(TARGETS AnimView RUNTIME DESTINATION AnimView)
-install(FILES LICENSE.txt DESTINATION AnimView )
-
+IF(APPLE)
+  install(TARGETS AnimView BUNDLE DESTINATION .)
+ELSE()
+  install(TARGETS AnimView RUNTIME DESTINATION AnimView)
+  install(FILES LICENSE.txt DESTINATION AnimView )
+ENDIF()
