@@ -547,6 +547,9 @@ function Hospital:onEndMonth()
     table.insert(company, 1, 0) -- The new month have no payments yet
   end
   
+  -- Check for equipment getting available
+  self.research:checkAutomaticDiscovery(self.world.month + 12 * (self.world.year - 1))
+  
   -- Add some interesting statistics.
   self.statistics[self.world.month + 1 + 12 * (self.world.year - 1)] = {
     money_in = self.money_in,

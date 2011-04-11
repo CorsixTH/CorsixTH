@@ -64,6 +64,7 @@ CorsixTH/Levels/original05.level -text
 CorsixTH/Levels/original07.level -text
 CorsixTH/Lua/dialogs/annual_report.lua -text
 CorsixTH/Lua/dialogs/calls_dispatcher.lua -text
+CorsixTH/Lua/dialogs/graphs.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text
@@ -72,6 +73,7 @@ CorsixTH/Lua/diseases/kidney_beans.lua -text
 CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text
+CorsixTH/Lua/languages/czech.lua -text
 CorsixTH/Lua/languages/russian.lua -text
 CorsixTH/Lua/objects/machines/operating_table.lua -text
 CorsixTH/Lua/objects/machines/operating_table_b.lua -text

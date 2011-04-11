@@ -488,7 +488,7 @@ function CallsDispatcher.getPriorityForWatering(plant, staff)
     score = score - 10000
   end
 
-  -- Dying plant should be severed eariler
+  -- Dying plant should be served earlier
   -- Design: Boost the priority from 0..50 on average.
   --   ^ 2: power scale
   --   * 50: State is 0 to 5. cost reduced by ~50 at most.

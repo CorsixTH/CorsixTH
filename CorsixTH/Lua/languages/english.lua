@@ -34,7 +34,6 @@ tooltip.staff_list.prev_person = "Show previous page"
 fax.emergency.cure_not_possible_build = "You will need to build a %s"
 fax.emergency.cure_not_possible_build_and_employ = "You will need to build a %s and employ a %s"
 fax.emergency.num_disease = "There are %d people with %s and they require immediate attention."
-fax.emergency.num_disease_singular = "There is 1 person with %s and they require immediate attention."
 adviser.goals.lose.kill = "Kill another %d patients to lose the level!"
 
 -- Improve tooltips in staff window to mention hidden features
@@ -138,6 +137,9 @@ fax = {
     accept_new_level = "Move on to the next level",
     decline_new_level = "Continue playing a while longer",
   },
+  emergency = {
+    num_disease_singular = "There is 1 person with %s and they require immediate attention.",
+  }
 }
 
 letter = {

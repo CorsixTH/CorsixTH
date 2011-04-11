@@ -127,11 +127,28 @@ function ResearchDepartment:initResearch()
   end
 end
 
+function ResearchDepartment:checkAutomaticDiscovery(month)
+  for object, progress in pairs(self.research_progress) do
+    -- Only check objects
+    if object.default_strength then
+      local avail_at = self.level_config.objects[object.thob].WhenAvail
+      if not progress.discovered and avail_at ~= 0 and month >= avail_at then
+        self:discoverObject(object, true)
+      end
+    end
+  end
+end
+
 --[[! Finds out what to research next in the given research area.
 !param category The research area. One of cure, diagnosis, drugs,
 improvements and specialisation
 --]]
 function ResearchDepartment:nextResearch(category)
+  -- First make sure that the current research target actually has been discovered.
+  -- Otherwise don't do anything.
+  if not self.research_progress[self.research_policy[category].current].discovered then
+    return
+  end
   local hospital = self.hospital
   self.research_policy[category].current = nil
   local found_one = false
@@ -146,13 +163,16 @@ function ResearchDepartment:nextResearch(category)
       end
     end
   elseif category == "improvements" then
+    -- Find the object which needs improvements the most.
+    local min_strength = self.level_config.gbv.MaxObjectStrength
+    local max_strength = self.level_config.gbv.MaxObjectStrength
     for object, progress in pairs(self.research_progress) do
       if object.default_strength then
-        local max_strength = self.level_config.gbv.MaxObjectStrength
+        -- Don't improve those that already have the max strength
         if progress.start_strength < max_strength then
-          if progress.discovered then
+          if progress.discovered and progress.start_strength < min_strength then
             self.research_policy[category].current = object
-            break
+            min_strength = progress.start_strength
           else
             found_one = true
           end
@@ -377,9 +397,10 @@ function ResearchDepartment:improveMachine(machine)
       if self.research_policy.specialisation.current == machine then
         self.research_policy.specialisation.current = self.drain
       end
-      if self.research_policy.improvements.current == machine then
-        self:nextResearch("improvements")
-      end
+    end
+    -- No matter what, check if another machine needs improvements more urgently.
+    if self.research_policy.improvements.current == machine then
+      self:nextResearch("improvements")
     end
   else
     -- Time to improve strength
@@ -396,12 +417,14 @@ function ResearchDepartment:improveMachine(machine)
 end
 
 --[[ Called when it is time to discoer an object. This may currently only
-happen from research. TODO: Add automatic discovery after a certain time.
+happen from research.
 !param object The object to discover, a table from TheApp.objects
+!param automatic If true the discovery was not made by 
+the player's research department.
 --]]
-function ResearchDepartment:discoverObject(object)
+function ResearchDepartment:discoverObject(object, automatic)
   self.research_progress[object].discovered = true
-  self:nextResearch(object.research_category)
+
   -- Go through all rooms to see if another one can be made available.
   for room, _ in pairs(self.hospital.undiscovered_rooms) do
     local discovery = true
@@ -416,8 +439,13 @@ function ResearchDepartment:discoverObject(object)
       self.hospital.discovered_rooms[room] = true
       self.hospital.undiscovered_rooms[room] = nil
       if self.hospital == self.world.ui.hospital then
-        self.world.ui.adviser:say(_S.adviser.research.new_machine_researched
-        :format(object.name))
+        if automatic then
+          self.world.ui.adviser:say(_S.adviser.research.new_available
+          :format(object.name))
+        else
+          self.world.ui.adviser:say(_S.adviser.research.new_machine_researched
+          :format(object.name))
+        end
       end
       -- It may now be possible to continue researching machine improvements
       if self.research_policy.improvements.current
@@ -427,6 +455,8 @@ function ResearchDepartment:discoverObject(object)
       end
     end
   end
+  -- Now find out what to do next.
+  self:nextResearch(object.research_category)
 end
 
 --[[ Called when it is time to discover a disease (i.e. after diagnosis in the GP)

@@ -75,8 +75,8 @@ function UIBottomPanel:UIBottomPanel(ui)
     :setSound():setTooltip(_S.tooltip.toolbar.research) -- Remove default sound for this button
   buttons[5] = self:addPanel(23, 521, 0) -- Status button
   buttons[5]:makeButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
-  buttons[6] = self:addPanel(25, 559, 0) -- Charts button (not yet implemented)
-  buttons[6]:makeButton(1, 6, 35, 36, 26):setTooltip(_S.tooltip.toolbar.charts .. " " .. _S.misc.not_yet_implemented).enabled = false
+  buttons[6] = self:addPanel(25, 559, 0) -- Charts button
+  buttons[6]:makeButton(1, 6, 35, 36, 26, self.dialogCharts):setTooltip(_S.tooltip.toolbar.charts)
   buttons[7] = self:addPanel(27, 597, 0) -- Policy button
   buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
   self.additional_buttons = buttons
@@ -222,6 +222,10 @@ end
 --   }
 -- }
 function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
+  if not self.ui.hospital.message_popup then
+    self.world.ui.adviser:say(_S.adviser.information.fax_received)
+    self.ui.hospital.message_popup = true
+  end
   self.message_queue[#self.message_queue + 1] = {
     type = type,
     message = message,
@@ -346,7 +350,7 @@ end
 
 function UIBottomPanel:dialogBankStats()
   local dlg = UIBankManager(self.ui)
-  self:addDialog(dlg, function() dlg:showStatistics(true) end)
+  self:addDialog(dlg, function() dlg:showStatistics() end)
 end
 
 function UIBottomPanel:dialogBuildRoom()
@@ -385,6 +389,10 @@ end
 
 function UIBottomPanel:dialogPolicy()
   self:addDialog(UIPolicy(self.ui))
+end
+
+function UIBottomPanel:dialogCharts()
+  self:addDialog(UIGraphs(self.ui))
 end
 
 function UIBottomPanel:dialogResearch()
@@ -435,6 +443,18 @@ function UIBottomPanel:editRoom()
   else
     -- no editing is allowed when other dialogs are open
     self.ui:playSound("wrong2.wav")
+  end
+end
+
+function UIBottomPanel:afterLoad(old, new)
+  if old < 40 then
+    -- Find the graph dialog and enable it
+    for _, button in ipairs(self.buttons) do
+      if not button.on_click then
+        button.on_click = self.dialogCharts
+        button.enabled = true
+      end
+    end
   end
 end
 
