@@ -197,35 +197,6 @@ function UIFax:validate()
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
     self.ui:playAnnouncement("rand*.wav")
-  elseif 0.0006422 < x and x < 0.0006423 then
-    -- Bloaty head patient cheat
-    -- Anyone with a 'large' head should be able to spot the required code
-    local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "bloaty_head"
-    self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
-    if undo then
-      self.ui.adviser:say(_S.adviser.cheats.bloaty_off_cheat)
-    else
-      self.ui.adviser:say(_S.adviser.cheats.bloaty_cheat)
-      local disease = self.ui.app.world.available_diseases.bloaty_head
-      local diseases = {}
-      diseases[1] = disease
-      diseases[disease.id] = disease
-      self.ui.app.world.available_diseases = diseases
-    end
-  elseif 0.006602 < x and x < 0.006603 then
-    local undo = #self.ui.app.world.available_diseases == 1 and self.ui.app.world.available_diseases[1].id == "hairyitis"
-    self.ui.app.world:initDiseases(self.ui.app) -- undo any previous disease cheat, i.e. make all diseases available again
-    if undo then
-      self.ui.adviser:say(_S.adviser.cheats.hairyitis_off_cheat)
-    else
-      -- Hairyitis cheat
-      self.ui.adviser:say(_S.adviser.cheats.hairyitis_cheat)
-      local disease = self.ui.app.world.available_diseases.hairyitis
-      local diseases = {}
-      diseases[1] = disease
-      diseases[disease.id] = disease
-      self.ui.app.world.available_diseases = diseases
-    end
   elseif 27868.3 < x and x < 27868.4 then
     -- Roujin's challenge cheat
     local hosp = self.ui.hospital
