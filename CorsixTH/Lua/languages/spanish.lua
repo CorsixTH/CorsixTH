@@ -148,6 +148,9 @@ fax = {
     accept_new_level = utf8 "Continuar al siguiente nivel",
     decline_new_level = utf8 "Seguir jugando un poco más",
   },
+  emergency = {
+    num_disease_singular = utf8 "Hay 1 persona que tiene %s y necesita atención inmediata.",
+  }
 }
 
 letter = {
