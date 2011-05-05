@@ -167,20 +167,27 @@ function Patient:die()
   self.hospital:humanoidDeath(self)
   local casebook = self.hospital.disease_casebook[self.disease.id]
   casebook.fatalities = casebook.fatalities + 1
-  self:setMood("dead", "activate")
-  self:playSound "boo.wav"
-  self.going_home = true
-  if self:getRoom() then
-    self:queueAction{name = "meander", count = 1}
-  else
-    self:setNextAction{name = "meander", count = 1}
-  end  
-  if self.is_emergency then
-    self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
+  -- There is no death animation for Slack Females, send them home instead
+  if self.humanoid_class == "Slack Female Patient" then
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
+    self:setMood("dead", "deactivate")
+    self:setMood("exit", "activate")
+    self:goHome()
+  else 
+    self:setMood("dead", "activate")
+    self:playSound "boo.wav"
+    self.going_home = true
+    if self:getRoom() then
+      self:queueAction{name = "meander", count = 1}
+    else
+      self:setNextAction{name = "meander", count = 1}
+    end  
+    if self.is_emergency then
+      self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
+    end
+    self:queueAction{name = "die"}
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
   end
-  self:queueAction{name = "die"}
-  
-  self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
 function Patient:goHome(cured)
@@ -268,7 +275,9 @@ function Patient:tickDay()
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
-    self:die()
+    if not self:getRoom() and not self.action_queue[1].is_leaving then
+      self:die()
+    end
     --dead people aren't thirsty
     return
   end 
