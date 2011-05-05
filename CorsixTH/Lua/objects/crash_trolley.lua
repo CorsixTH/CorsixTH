@@ -50,6 +50,36 @@ object.multi_usage_animations = {
       finish_use  = {3810, 3814, 3830},
     },
   },
+  ["Stripped Male Patient 2 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3740, 3736, 3818}, 
+      -- Also possibly 548, 556 and 560 for a more smooth animation?
+      in_use      = {540, 544, 552},
+      finish_use  = {3802, 3806, 3826},
+    },
+  },
+  ["Stripped Female Patient 2 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3732, 3728, 3822}, -- 532
+      in_use      = {524, 528, 536},
+      finish_use  = {3810, 3814, 3830},
+    },
+  },
+  ["Stripped Male Patient 3 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3740, 3736, 3818}, 
+      -- Also possibly 548, 556 and 560 for a more smooth animation?
+      in_use      = {540, 544, 552},
+      finish_use  = {3802, 3806, 3826},
+    },
+  },
+  ["Stripped Female Patient 3 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = {3732, 3728, 3822}, -- 532
+      in_use      = {524, 528, 536},
+      finish_use  = {3810, 3814, 3830},
+    },
+  },
 }
 object.orientations = {
   north = {

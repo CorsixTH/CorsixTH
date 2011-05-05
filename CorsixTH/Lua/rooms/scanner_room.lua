@@ -135,7 +135,11 @@ function ScannerRoom:makePatientLeave(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   
   if (patient.humanoid_class == "Stripped Male Patient" or
-    patient.humanoid_class == "Stripped Female Patient") and
+    patient.humanoid_class == "Stripped Male Patient 2" or
+    patient.humanoid_class == "Stripped Female Patient" or
+    patient.humanoid_class == "Stripped Male Patient 3" or
+    patient.humanoid_class == "Stripped Female Patient 2" or
+    patient.humanoid_class == "Stripped Female Patient 3") and
     not patient.action_queue[1].is_leaving then
     
     patient:setNextAction{
@@ -165,7 +169,11 @@ end
 function ScannerRoom:dealtWithPatient(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   if patient.humanoid_class == "Stripped Male Patient" or
-    patient.humanoid_class == "Stripped Female Patient" then
+    patient.humanoid_class == "Stripped Female Patient" or
+    patient.humanoid_class == "Stripped Male Patient 2" or
+    patient.humanoid_class == "Stripped Female Patient 2" or
+    patient.humanoid_class == "Stripped Male Patient 3" or
+    patient.humanoid_class == "Stripped Female Patient 3" then
     
     patient:setNextAction{
       name = "walk",

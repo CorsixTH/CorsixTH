@@ -88,6 +88,7 @@ local function action_use_screen_start(action, humanoid)
   local class = humanoid.humanoid_class
   local anim, when_done
   local is_surgical = not not screen.num_green_outfits
+  local change_to = math.random(1, 3)
   if class == "Elvis Patient" then
     anim, when_done = 946, finish
     humanoid:setType "Standard Male Patient"
@@ -100,6 +101,18 @@ local function action_use_screen_start(action, humanoid)
   elseif class == "Stripped Female Patient" then
     humanoid:setType "Standard Female Patient"
     anim, when_done = 2844, normal_state
+  elseif class == "Stripped Male Patient 2" then
+    humanoid:setType "Standard Male Patient"
+    anim, when_done = 1052, normal_state
+  elseif class == "Stripped Female Patient 2" then
+    humanoid:setType "Standard Female Patient"
+    anim, when_done = 2844, normal_state
+  elseif class == "Stripped Male Patient 3" then
+    humanoid:setType "Standard Male Patient"
+    anim, when_done = 1052, normal_state
+  elseif class == "Stripped Female Patient 3" then
+    humanoid:setType "Standard Female Patient"
+    anim, when_done = 2844, normal_state    
   elseif class == "Gowned Male Patient" then
     humanoid:setType "Standard Male Patient"
     anim, when_done = 4768, finish
@@ -111,16 +124,32 @@ local function action_use_screen_start(action, humanoid)
       humanoid:setType "Gowned Male Patient"
       anim, when_done = 4760, finish
     else
-      humanoid:setType "Stripped Male Patient"
-      anim, when_done = 1048, patient_clothes_state
+      if change_to == 1 then
+        humanoid:setType "Stripped Male Patient"
+        anim, when_done = 1048, patient_clothes_state
+      elseif change_to == 2 then
+        humanoid:setType "Stripped Male Patient 2"
+        anim, when_done = 1048, patient_clothes_state
+      else
+        humanoid:setType "Stripped Male Patient 3"
+        anim, when_done = 1048, patient_clothes_state      
+      end
     end
   elseif class == "Standard Female Patient" then
     if is_surgical then
       humanoid:setType "Gowned Female Patient"
       anim, when_done = 4762, finish
     else
-      humanoid:setType "Stripped Female Patient"
-      anim, when_done = 2848, patient_clothes_state
+      if change_to == 1 then
+        humanoid:setType "Stripped Female Patient"
+        anim, when_done = 2848, patient_clothes_state
+      elseif change_to == 2 then
+        humanoid:setType "Stripped Female Patient 2"
+        anim, when_done = 2848, patient_clothes_state
+      else
+        humanoid:setType "Stripped Female Patient 3"
+        anim, when_done = 2848, patient_clothes_state      
+      end
     end
   elseif class == "Doctor" then
     humanoid:setType "Surgeon"

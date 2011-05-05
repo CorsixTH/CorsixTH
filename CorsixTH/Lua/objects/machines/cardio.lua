@@ -72,6 +72,54 @@ object.multi_usage_animations = {
       },
     },
   },
+  ["Stripped Male Patient 2 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 1018,
+      in_use      =  652,
+      finish_use  = 3282,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
+  ["Stripped Female Patient 2 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 3008,
+      in_use      = 2840,
+      finish_use  = 4556,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
+  ["Stripped Male Patient 3 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 1018,
+      in_use      =  652,
+      finish_use  = 3282,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
+  ["Stripped Female Patient 3 - Doctor"] = copy_north_to_south {
+    north = {
+      begin_use   = 3008,
+      in_use      = 2840,
+      finish_use  = 4556,
+      secondary = {
+        begin_use  = 1030,
+        in_use     =  656,
+        finish_use = 1030,
+      },
+    },
+  },
 }
 object.orientations = {
   north = {
