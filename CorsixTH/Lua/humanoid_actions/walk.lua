@@ -44,6 +44,14 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
+  -- Unexpect the patient from a possible destination room.
+  if humanoid.next_room_to_visit then
+    local door = humanoid.next_room_to_visit.door
+    if door.queue then
+      door.queue:unexpect(humanoid)
+      door:updateDynamicInfo()
+    end
+  end
   -- Terminate immediately if high-priority
   if high_priority then
     local timer_function = humanoid.timer_function
