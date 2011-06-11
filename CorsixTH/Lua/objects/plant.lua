@@ -151,7 +151,7 @@ end
 --! Returns whether the plant is in need of watering right now.
 function Plant:needsWatering()
   if self.current_state == 0 then
-    if self.days_left < 1 then
+    if self.days_left < 10 then
       return true
     end
   else
@@ -214,6 +214,8 @@ end
 --  those too before leaving.
 --!param handyman (Staff) The handyman that is about to get the actions.
 function Plant:createHandymanActions(handyman)
+  local this_room = self:getRoom()
+  local handyman_room = handyman:getRoom()
   local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
   if not ux or not uy then
     -- The plant cannot be reached.
@@ -221,11 +223,14 @@ function Plant:createHandymanActions(handyman)
     self.unreachable_counter = days_unreachable
     -- Release Handyman
     handyman:setCallCompleted()
-    handyman:setNextAction{name = "meander"}
+    if handyman_room then
+      handyman:setNextAction(handyman_room:createLeaveAction())
+      handyman:queuetAction{name = "meander"}
+    else
+      handyman:setNextAction{name = "meander"}
+    end
     return
   end
-  local this_room = self:getRoom()
-  local handyman_room = handyman:getRoom()
   self.reserved_for = handyman
 
   local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
