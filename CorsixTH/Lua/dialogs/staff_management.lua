@@ -481,15 +481,17 @@ end
 
 function UIStaffManagement:fire()
   if self.selected_staff then
-    local current_category = self.staff_members[self.category]
-    current_category[self.selected_staff]:fire()
-    -- Close the staff window if open
-    local staff_window = self.ui:getWindow(UIStaff)
-    if staff_window and staff_window.staff == current_category[self.selected_staff] then
-      staff_window:close()
-    end
-    -- Update the staff list
-    table.remove(current_category, self.selected_staff)
-    self.selected_staff = nil
+    self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.sack_staff, --[[persistable:staff_management_confirm_sack]] function()
+      local current_category = self.staff_members[self.category]
+      current_category[self.selected_staff]:fire()
+      -- Close the staff window if open
+      local staff_window = self.ui:getWindow(UIStaff)
+      if staff_window and staff_window.staff == current_category[self.selected_staff] then
+        staff_window:close()
+      end
+      -- Update the staff list
+      table.remove(current_category, self.selected_staff)
+      self.selected_staff = nil
+    end)) -- End of confirmation dialog
   end
 end

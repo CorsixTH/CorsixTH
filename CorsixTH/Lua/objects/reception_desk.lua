@@ -85,7 +85,11 @@ function ReceptionDesk:tick()
       reset_timer = false
       if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
-        queue_front:queueAction{name = "seek_room", room_type = "gp"}
+        if queue_front.next_room_to_visit then
+          queue_front:queueAction{name = "seek_room", room_type = queue_front.next_room_to_visit.room_info.id}
+        else
+          queue_front:queueAction{name = "seek_room", room_type = "gp"}
+        end
         self.queue:pop()
         self.queue.visitor_count = self.queue.visitor_count + 1
       end

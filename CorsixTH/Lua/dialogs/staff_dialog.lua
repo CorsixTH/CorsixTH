@@ -290,8 +290,9 @@ function UIStaff:placeStaff()
 end
 
 function UIStaff:fireStaff()
-  self:close()
-  self.staff:fire()
+  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.sack_staff, --[[persistable:staff_dialog_confirm_sack]] function()
+    self.staff:fire()
+  end))
 end
 
 local attributes = {"cleaning", "watering", "repairing"}

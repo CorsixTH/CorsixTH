@@ -124,76 +124,91 @@ function UIQueue:onMouseDown(button, x, y)
   if not self:isInsideQueueBoundingBox(x, y) then
     return Window.onMouseDown(self, button, x, y)
   end
-
-  -- Select patient to drag
   local x_min = 219
   local y_min = 15
   self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
-  self.dragged = self.hovered
-  if self.dragged then
-    self.dragged.x = x + self.x
-    self.dragged.y = y + self.y
+  -- Select patient to drag - if left clicking.
+  if button == "left" then
+    self.dragged = self.hovered
+    if self.dragged then
+      self.dragged.x = x + self.x
+      self.dragged.y = y + self.y
+    end
+  elseif button == "right" and self.hovered then
+    -- Otherwise bring up the choice screen.
+    self.just_added = true
+    self.ui:addWindow(UIQueuePopup(self.ui, self.x + x, self.y + y, self.hovered.patient))
   end
 end
 
 function UIQueue:onMouseUp(button, x, y)
-  local queue = self.queue
-  local num_patients = queue:reportedSize()
-  local width = 276
-  self.ui:setCursor(self.ui.default_cursor) -- reset cursor
-
-  if not self.dragged then
-    return Window.onMouseUp(self, button, x, y)
-  end
-
-  -- Check whether the dragged patient is still in the queue
-  local index = -1
-  for i = 1, num_patients do
-    if self.dragged.patient == queue:reportedHumanoid(i) then
-      index = i
-      break
+  if self.just_added then
+    self.just_added = false
+  else
+    -- Always remove any leftover popup windows
+    local window = self.ui:getWindow(UIQueuePopup)
+    if window then
+      window:close()
     end
   end
+  if button == "left" then
+    local queue = self.queue
+    local num_patients = queue:reportedSize()
+    local width = 276
+    self.ui:setCursor(self.ui.default_cursor) -- reset cursor
 
-  if index == -1 then
-    self.dragged = nil
-    return
-  end
-
-  if x > 170 and x < 210 and y > 25 and y < 105 then -- Inside door bounding box
-    queue:move(index, 1) -- move to front
-  elseif x > 542 and x < 585 and y > 50 and y < 105 then -- Inside exit sign bounding box
-    queue:move(index, num_patients) -- move to back
-  elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
-    local dx = 1
-    if num_patients ~= 1 then
-      dx = width / (num_patients - 1)
+    if not self.dragged then
+      return Window.onMouseUp(self, button, x, y)
     end
-    queue:move(index, math.floor((x - 220) / dx) + 1) -- move to dropped position
-    self:onMouseMove(x, y, 0, 0)
-  end
 
-  -- Try to drop to another room
-  local room
-  local wx, wy = self.ui:ScreenToWorld(x + self.x, y + self.y)
-  wx = math.floor(wx)
-  wy = math.floor(wy)
-  if wx > 0 and wy > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
-    room = self.ui.app.world:getRoom(wx, wy)
-  end
+    -- Check whether the dragged patient is still in the queue
+    local index = -1
+    for i = 1, num_patients do
+      if self.dragged.patient == queue:reportedHumanoid(i) then
+        index = i
+        break
+      end
+    end
 
-  -- The new room must be of the same class as the current one
-  local this_room = self.dragged.patient.next_room_to_visit
-  if this_room and room and room ~= this_room and room.room_info.id == this_room.room_info.id then
-    -- Move to another room
-    local patient = self.dragged.patient
-    patient:setNextAction(room:createEnterAction())
-    patient.next_room_to_visit = room
-    patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
-    room.door.queue:expect(patient)
-    room.door:updateDynamicInfo()
-  end
+    if index == -1 then
+      self.dragged = nil
+      return
+    end
 
+    if x > 170 and x < 210 and y > 25 and y < 105 then -- Inside door bounding box
+      queue:move(index, 1) -- move to front
+    elseif x > 542 and x < 585 and y > 50 and y < 105 then -- Inside exit sign bounding box
+      queue:move(index, num_patients) -- move to back
+    elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
+      local dx = 1
+      if num_patients ~= 1 then
+        dx = width / (num_patients - 1)
+      end
+      queue:move(index, math.floor((x - 220) / dx) + 1) -- move to dropped position
+      self:onMouseMove(x, y, 0, 0)
+    end
+
+    -- Try to drop to another room
+    local room
+    local wx, wy = self.ui:ScreenToWorld(x + self.x, y + self.y)
+    wx = math.floor(wx)
+    wy = math.floor(wy)
+    if wx > 0 and wy > 0 and wx < self.ui.app.map.width and wy < self.ui.app.map.height then
+      room = self.ui.app.world:getRoom(wx, wy)
+    end
+
+    -- The new room must be of the same class as the current one
+    local this_room = self.dragged.patient.next_room_to_visit
+    if this_room and room and room ~= this_room and room.room_info.id == this_room.room_info.id then
+      -- Move to another room
+      local patient = self.dragged.patient
+      patient:setNextAction(room:createEnterAction())
+      patient.next_room_to_visit = room
+      patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
+      room.door.queue:expect(patient)
+      room.door:updateDynamicInfo()
+    end
+  end
   self.dragged = nil
 end
 
@@ -220,6 +235,15 @@ function UIQueue:onMouseMove(x, y, dx, dy)
   -- Update hovered patient
   self.hovered = self:getHoveredPatient(x - x_min, y - y_min)
   Window:onMouseMove(x, y, dx, dy)
+end
+
+function UIQueue:close()
+  -- Always remove any leftover popup windows
+  local window = self.ui:getWindow(UIQueuePopup)
+  if window then
+    window:close()
+  end
+  Window.close(self)
 end
 
 function UIQueue:getHoveredPatient(x, y)
@@ -314,3 +338,63 @@ function UIQueue:drawPatient(canvas, x, y, patient)
   end
 end
 
+class "UIQueuePopup" (Window)
+
+function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
+  self:Window()
+  self.esc_closes = true
+  self.ui = ui
+  self.patient = patient
+  self.width = 188
+  self.height = 68
+  local app = ui.app
+  self.modal_class = "popup"
+  self:setDefaultPosition(x, y)
+
+  -- Background sprites
+  self:addPanel(375, 0, 0)
+
+  local function send_to_hospital(i)
+    return --[[persistable:queue_dialog_popup_hospital_button]] function()
+      -- TODO: Actually send to another hospital (when they exist)
+      self.patient:goHome()
+      local str = _S.dynamic_info.patient.actions.sent_to_other_hospital
+      self.patient:updateDynamicInfo(str)
+      self:close()
+    end
+  end
+
+  -- Buttons
+  self:addPanel(0, 12, 12):makeButton(0, 0, 81, 54, 378, self.sendToReception)
+  self:addPanel(0, 95, 12):makeButton(0, 0, 81, 54, 379, self.sendHome)
+  local bottom = 58
+  -- TODO: Add this when there are other hospitals to send patients to.
+  --[[for i, hospital in ipairs(ui.app.world.hospitals) do
+    self:addPanel(376, 0, 68 + (i-1)*34)
+    self:addPanel(0, 12, 34 + i*34):makeButton(0, 0, 164, 32, 380, send_to_hospital(i))
+    bottom = bottom + 34
+  end]]
+  self:addPanel(377, 0, bottom)
+
+  self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
+  self.white_font = app.gfx:loadFont("QData", "Font01V")
+end
+
+function UIQueuePopup:draw(canvas, x, y)
+  Window.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
+  -- TODO: Same as above.
+  --[[for i, hospital in ipairs(self.ui.app.world.hospitals) do
+    self.white_font:draw(canvas, hospital.name:upper() , x + 74, y + 78 + (i-1)*34, 92, 0)
+  end]]
+end
+
+function UIQueuePopup:sendToReception()
+  self.patient:setNextAction{name = "seek_reception"}
+  self:close()
+end
+
+function UIQueuePopup:sendHome()
+  self.patient:goHome()
+  self:close()
+end
