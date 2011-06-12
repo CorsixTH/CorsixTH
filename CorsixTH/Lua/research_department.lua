@@ -144,21 +144,23 @@ end
 improvements and specialisation
 --]]
 function ResearchDepartment:nextResearch(category)
+  local current = self.research_policy[category].current
   -- First make sure that the current research target actually has been discovered.
   -- Otherwise don't do anything.
-  if not self.research_progress[self.research_policy[category].current].discovered then
+  if not (current.drug or self.research_progress[current].discovered) then
     return
   end
   local hospital = self.hospital
   self.research_policy[category].current = nil
   local found_one = false
   if category == "drugs" then
+    local worst_effect = 100
     for _, disease in pairs(hospital.disease_casebook) do
-      if disease.cure_effectiveness < 100 then
+      if disease.cure_effectiveness < worst_effect then
         found_one = true
         if disease.discovered then
           self.research_policy[category].current = disease
-          break
+          worst_effect = disease.cure_effectiveness
         end
       end
     end
@@ -350,9 +352,9 @@ function ResearchDepartment:improveDrug(drug)
       if self.research_policy.specialisation.current == drug then
         self.research_policy.specialisation.current = self.drain
       end
-      if self.research_policy.drugs.current == drug then
-        self:nextResearch("drugs")
-      end
+    end
+    if self.research_policy.drugs.current == drug then
+      self:nextResearch("drugs")
     end
   else
     -- Time to improve effectiveness
