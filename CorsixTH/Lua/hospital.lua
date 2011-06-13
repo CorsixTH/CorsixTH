@@ -981,28 +981,10 @@ end
 
 class "AIHospital" (Hospital)
 
-local competitors = {
-  "ORAC", 
-  "COLOSSUS", 
-  "HAL", 
-  "MULTIVAC", 
-  "HOLLY", 
-  "DEEP THOUGHT", 
-  "ZEN", 
-  "SKYNET",
-  "MARVIN",
-  "CEREBRO",
-  "MOTHER",
-  "JAYNE",
-  "CORSIX",
-  "ROUJIN",
-  "EDVIN",
-}
-
 function AIHospital:AIHospital(competitor, ...)
   self:Hospital(...)
-  if competitors[competitor] then
-    self.name = competitors[competitor]
+  if _S.competitor_names[competitor] then
+    self.name = _S.competitor_names[competitor]
   else
     self.name = "NONAME"
   end

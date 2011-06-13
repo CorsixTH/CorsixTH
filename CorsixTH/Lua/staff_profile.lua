@@ -139,7 +139,8 @@ function StaffProfile:randomise(world, month)
 end
 
 function StaffProfile:randomiseOrganical()
-  self.name = string.char(string.byte"A" + math.random(0, 25)) .. ". "
+  -- TODO: Randomise a letter from the current language's alphabet.
+  self.name = "" -- string.char(string.byte"A" + math.random(0, 25)) .. ". "
   for _, part_table in ipairs(name_parts) do
     self.name = self.name .. part_table.__random
   end

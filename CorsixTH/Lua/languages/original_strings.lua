@@ -295,22 +295,25 @@ diseases = {
 
 competitor_names = {
   S[5][ 1],
-  S[5][ 2],
   S[5][ 3],
+  S[5][ 2],
   S[5][ 4],
   S[5][ 5],
   S[5][ 6],
   S[5][ 7],
   S[5][ 8],
+  S[5][17],
   S[5][ 9],
+  S[5][15],
+  S[5][12],
+  "CORSIX", -- Main developers just for fun.
+  "ROUJIN",
+  "EDVIN",
   S[5][10],
   S[5][11],
-  S[5][12],
   S[5][13],
   S[5][14],
-  S[5][15],
   S[5][16],
-  S[5][17],
   S[5][18],
   S[5][19],
   S[5][20],
@@ -1115,6 +1118,9 @@ trophy_room = {
   many_cured = {
     awards = {
       S[27][ 2],
+      S[55][ 5],
+      S[55][ 6],
+      S[55][ 7],
     },
     trophies = {
       S[27][ 3],
@@ -1134,6 +1140,9 @@ trophy_room = {
     awards = {
       S[27][ 5],
       S[27][ 7],
+      S[55][ 2],
+      S[55][ 3],
+      S[55][ 4],
     },
     trophies = {
       S[27][ 6],
@@ -1160,6 +1169,9 @@ trophy_room = {
   no_deaths = {
     awards = {
       S[27][14],
+      S[55][ 8],
+      S[55][ 9],
+      S[55][10],
     },
     trophies = {
       S[27][15],
@@ -1200,6 +1212,13 @@ trophy_room = {
       S[27][26],
       S[27][27],
       S[27][28],
+    },
+  },
+  pop_percentage = {
+    awards = {
+      S[55][11],
+      S[55][12],
+      S[55][13],
     },
   },
   -- Strings used in the plaques to show what has been won
@@ -1984,6 +2003,8 @@ while true do
   text_index = text_index + 1
 end
 introduction_texts = T
+
+-- 55: Award texts inserted in the trophy room section (27)
 
 -- 57: Information texts for the different rooms
 local R = {}
