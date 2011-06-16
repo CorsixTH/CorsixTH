@@ -1,4 +1,58 @@
 -----------------------------------------
+Version Beta 7 - released 2011-06-24
+-----------------------------------------
+
+-- Known Issues --
+
+* There are still many features which are not yet implemented including trash,
+  earthquakes, epidemics and awards.
+* The graph window doesn't show any graphs.
+
+-- Gameplay --
+
+* Added: Staff severance pay.
+* Added: Patients may die if they don't get treated in time.
+* Added: Doctors slowly gain skill when working.
+* Added: Extra objects and the number of trainees influence speed of training
+  in the training room.
+* Added: Even with no research new machines will eventually become available.
+
+* Change: Vending maintenance costs have increased throughout the world and
+  as a result Sodas now cost $20, up from $15.
+* Change: Heating costs are calculated on a per day basis, rather than per month.
+* Change: Machine and drug improvements are now made evenly across all eligible
+  objects rather than maxing one at a time.
+* Change: Humanoids never meander outside anymore.
+
+* Fix: Handymen no longer crash the game when trying to water an unreachable
+  plant.
+* Fix: Staff resting in the staff room should keep their sofa until fully
+  rested if there's nothing else to do.
+* Fix: The player can't hire new staff without a positive balance.
+
+-- User Interface --
+
+* Added: The graph window, no graphs yet though.
+* Added: Right click menu in the queue dialog.
+* Added: Confirmation dialog when about to fire a member of staff.
+
+* Fix: If there is only one person who is in an emergency, use the singular
+  form in the sentence.
+* Fix: The pickup item button in the edit room dialog is now fully functional.
+* Fix: The pointer should no longer jump around in Linux when using SDL.
+
+-- Graphics --
+
+* Added: The scanner uses more than one animation.
+
+* Fix: Some objects were cut in half after a relocation.
+
+-- Translations --
+
+* Change: If the specified language is not found, try to revert to English.
+* Fix: Competitor names are now translatable.
+
+-----------------------------------------
 Version Beta 6 - released 2011-03-24
 -----------------------------------------
 
