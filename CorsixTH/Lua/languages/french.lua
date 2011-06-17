@@ -109,7 +109,6 @@ letter = {
 -- The originals of these string lacks space before punctuation marks and or between words
 misc.balance = "Ajustage :"
 tooltip.pay_rise_window.decline = "Ne payez pas, licenciez !"
-tooltip.casebook.hire_staff = "Il faut embaucher un(e) %s pour ce traitement"
 tooltip.watch = {
   emergency = "Urgence : temps qui reste pour soigner les patients entrés en urgence.",
   hospital_opening = "Délai : ceci est le temps qui reste avant que votre hôpital soit ouvert. Cliquez sur GO pour l'ouvrir tout de suite.",
@@ -153,7 +152,7 @@ adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une p
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
 adviser.staff_advice.too_many_doctors = "Il y a trop de médecins. Certains n'ont rien à faire !."
 adviser.earthquake.ended = "Ouh là ! J'ai cru que c'était la fin! C'était du %d sur l'échelle de Richter."
-adviser.muliplayer = {
+adviser.multiplayer.poaching = {
   not_interested = "Ha ! Ils ne veulent pas travailler pour vous, ils sont satisfaits comme ça.",
   already_poached_by_someone = "Eh non ! Quelqu'un s'intéresse déjà à cette personne.",
 }
@@ -190,22 +189,19 @@ fax = {
     },
   vip_visit_result = {
     telegram = "Télégramme !",
+    vip_remarked_name = "Après avoir visité votre hôpital, %s a dit :",
     remarks = {
-      [3] = "Charmant, cet hôpital. Bon, si on allait manger un curry ?",
-    },
-    bad = {
-      [2] = "Ce que j'ai vu est révoltant. Ce n'est pas un hôpital, c'est une porcherie !",
-    },
-    bad = {
-      [3] = "J'en ai assez de devoir faire des visites officielles dans des trous puants comme celui-ci. Je démissionne !",
-    },
-    very_bad = {
-      [1] = "Quelle déception ! On devrait fermer cet endroit.",
-      [2] = "Je n'ai jamais vu ça. Quelle honte !",
-      [3] = "Je suis sous le choc. Et on appelle ça un hôpital ! Il me faut un verre pour m'en remettre.",
+      very_bad = {
+        [1] = "Quelle déception ! On devrait fermer cet endroit.",
+        [2] = "Je n'ai jamais vu ça. Quelle honte !",
+        [3] = "Je suis sous le choc. Et on appelle ça un hôpital ! Il me faut un verre pour m'en remettre.",
+      },
+      bad = {
+        [2] = "Ce que j'ai vu est révoltant. Ce n'est pas un hôpital, c'est une porcherie !",
+        [3] = "J'en ai assez de devoir faire des visites officielles dans des trous puants comme celui-ci. Je démissionne !",
+      },
     },
   },
-  vip_remarked_name = "Après avoir visité votre hôpital, %s a dit :",
   disease_discovered_patient_choice = {
     what_to_do_question = "Que voulez-vous faire du patient ?",
   },
@@ -784,7 +780,6 @@ tooltip.lua_console = {
 confirmation = {
   needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Etes-vous sûr de vouloir faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
-  restart = "Etes-vous sûr de vouloir recommencer ce niveau ?",
 }
 
 -- Information dialog
