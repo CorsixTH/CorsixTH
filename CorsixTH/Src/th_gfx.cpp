@@ -1110,7 +1110,7 @@ static int GetAnimationDurationAndExtent(THAnimationManager *pManager,
     return iDuration;
 }
 
-void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
+void THAnimation::setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor)
 {
     m_pMorphTarget = pMorphTarget;
     m_fnDraw = THAnimation_DrawMorph;
@@ -1147,6 +1147,7 @@ void THAnimation::setMorphTarget(THAnimation *pMorphTarget)
         iMorphDuration = iOriginalDuration;
 #undef GADEA
 
+    iMorphDuration *= iDurationFactor;
     if(iOrigMinY < iMorphMinY)
         m_pMorphTarget->m_iX = iOrigMinY;
     else

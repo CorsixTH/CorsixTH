@@ -277,7 +277,11 @@ static int l_anim_set_morph(lua_State *L)
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     THAnimation* pMorphTarget = luaT_testuserdata<THAnimation>(L, 2, luaT_environindex);
 
-    pAnimation->setMorphTarget(pMorphTarget);
+    unsigned int iDurationFactor = 1;
+    if(!lua_isnoneornil(L, 3) && luaL_checkint(L, 3) > 0)
+        iDurationFactor = luaL_checkint(L, 3);
+
+    pAnimation->setMorphTarget(pMorphTarget, iDurationFactor);
     lua_settop(L, 2);
     luaT_setenvfield(L, 1, "morph_target");
 
