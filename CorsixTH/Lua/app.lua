@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 40
+local SAVEGAME_VERSION = 41
 
 class "App"
 
@@ -327,6 +327,7 @@ function App:loadLevel(level, ...)
         player_salary = self.ui.hospital.player_salary,
         research_dep_built = self.ui.hospital.research_dep_built,
         message_popup = self.ui.hospital.message_popup,
+        hospital_littered = self.ui.hospital.hospital_littered,
       },
     }
   end

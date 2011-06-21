@@ -356,6 +356,11 @@ function Patient:tickDay()
           -- Also increase the number of sodas sold this year.
           self.hospital.sodas_sold = self.hospital.sodas_sold + 1
         end
+        -- The patient might also throw the can on the floor, bad patient!
+        if math.random() < 0.6 then
+          -- It will be dropped between 1 and 5 tiles away.
+          self.litter_countdown = math.random(1, 5)
+        end
       end
         
       -- If we are queueing, let the queue handle the situation.
@@ -427,6 +432,28 @@ function Patient:tickDay()
     end
   end
 end  
+
+-- Called each time the patients moves to a new tile.
+function Patient:setTile(x, y)
+  -- Is the patient about to drop some litter?
+  if self.litter_countdown then
+    self.litter_countdown = self.litter_countdown - 1
+    if self.litter_countdown == 0 then
+      if x and not self:getRoom() and not self.world:getObjects(x, y)
+      and self.world.map.th:getCellFlags(x, y).buildable then
+        -- Drop some litter!
+        local litter = self.world:newObject("litter", x, y)
+        litter:setLitterType("soda_can", math.random(0, 1) == 1)
+        if not self.hospital.hospital_littered then
+          self.hospital.hospital_littered = true
+          self.world.ui.adviser:say(_S.adviser.staff_advice.need_handyman_litter)
+        end
+      end
+      self.litter_countdown = nil
+    end
+  end
+  Humanoid.setTile(self, x, y)
+end
 
 -- As of now each time a bench is placed the world notifies all patients
 -- in the vicinity through this function.

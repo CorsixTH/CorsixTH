@@ -400,6 +400,9 @@ function Hospital:afterLoad(old, new)
     self.money_in = 0
     self.money_out = 0
   end
+  if old < 41 then
+    self.boiler_can_break = true
+  end
 end
 
 --! Called each tick, also called 'hours'. Check hours_per_day in
@@ -454,6 +457,33 @@ function Hospital:isInHospital(x, y)
   return self.world.map.th:getCellFlags(x, y).hospital
 end
 
+-- Called when the hospitals's boiler has broken down.
+-- It will remain broken for a certain period of time.
+function Hospital:boilerBreakdown()
+  self.curr_setting = self.radiator_heat
+  self.radiator_heat = math.random(0, 1)
+  self.boiler_countdown = math.random(7, 25)
+
+  self.heating_broke = true
+
+  local hosp = self.world.hospitals[1]
+  -- Only show the message when relevant to the local player's hospital.
+  if self == hosp then
+    if self.radiator_heat == 0 then
+      self.world.ui.adviser:say(_S.adviser.boiler_issue.minimum_heat)
+    else
+      self.world.ui.adviser:say(_S.adviser.boiler_issue.maximum_heat)
+    end
+  end
+end
+
+-- When the boiler has been repaired this function is called.
+function Hospital:boilerFixed()
+  self.radiator_heat = self.curr_setting
+  self.heating_broke = false
+  self.world.ui.adviser:say(_S.adviser.boiler_issue.resolved)
+end
+
 -- Called at the end of each day.
 function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
@@ -468,6 +498,26 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
+
+  -- Countdown for boiler breakdowns 
+  if self.heating_broke then
+    self.boiler_countdown = self.boiler_countdown - 1
+    if self.boiler_countdown == 0 then
+      self:boilerFixed()
+    end
+  end
+
+  -- Is the boiler working today?
+  local breakdown = math.random(1, 120)
+  if breakdown == 1 and not self.heating_broke and self.boiler_can_break
+  and self.world.object_counts.radiator > 0 then
+    if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
+      self:boilerBreakdown()  
+    elseif self.world.map.level_number > 1 then
+      self:boilerBreakdown()
+    end
+  end
+
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
   local month_length = {
     31, -- Jan
@@ -486,7 +536,8 @@ function Hospital:onEndDay()
   local radiators = self.world.object_counts.radiator
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
   self.acc_heating = self.acc_heating + heating_costs
-end    
+end
+
 -- Called at the end of each month.
 function Hospital:onEndMonth()
   -- Spend wages

@@ -65,6 +65,7 @@ function UIWatch:onCountdownEnd()
     self.ui.hospital:resolveEmergency()
   elseif self.count_type == "initial_opening" then
     self.ui.hospital.opened = true
+    self.ui.hospital.boiler_can_break = true -- boiler can't break whilst build timer is open
     self.ui:playSound("fanfare.wav")
   end
 end

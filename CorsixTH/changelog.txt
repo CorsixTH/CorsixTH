@@ -4,9 +4,12 @@ Version Beta 7 - released 2011-06-24
 
 -- Known Issues --
 
+* If the X-Ray Viewer is inaccessible in the Operating Theatre the whole
+  room will be unusable.
 * There are still many features which are not yet implemented including trash,
   earthquakes, epidemics and awards.
 * The graph window doesn't show any graphs.
+* Handyman priorities are not yet fully implemented.
 
 -- Gameplay --
 
@@ -16,6 +19,10 @@ Version Beta 7 - released 2011-06-24
 * Added: Extra objects and the number of trainees influence speed of training
   in the training room.
 * Added: Even with no research new machines will eventually become available.
+* Added: Some patients have started littering your hospital with soda cans!
+  Make sure you have enough handymen to keep your hospital clean.
+* Added: Modern heating systems aren't as reliable as they used to be. Prepare
+  for breakdowns now and then.
 
 * Change: Vending maintenance costs have increased throughout the world and
   as a result Sodas now cost $20, up from $15.

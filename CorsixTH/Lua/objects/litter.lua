@@ -34,7 +34,7 @@ local litter_types = {}
 litter_types["pee"] = 2248
 litter_types["dead_rat"] = 2242
 litter_types["puke"] = 2060
-litter_types["plastic"] = 1894
+litter_types["soda_can"] = 1894
 litter_types["banana"] = 1896
 litter_types["paper"] = 1898
 litter_types["bottle"] = 1900
@@ -58,6 +58,13 @@ function Litter:Litter(world, object_type, x, y, direction, etc)
   self:setTile(x, y)
 end
 
+function Litter:setTile(x, y)
+  Entity.setTile(self, x, y)
+  if x then
+    self.world:addObjectToTile(self, x, y)
+  end
+end
+
 function Litter:setLitterType(anim_type, mirrored)
   local flag = mirrored and 1 or 0
   if anim_type then
@@ -71,8 +78,7 @@ function Litter:setLitterType(anim_type, mirrored)
 end
 
 function Litter:randomiseLitter()
-  local anim = math.random(1, 4)
-  self:setAnimation(litter_types[anim])
+  self:setAnimation(litter_types[math.random(1, 4)], math.random(0, 1))
 end
 
 return object

@@ -30,6 +30,15 @@ local function meander_action_start(action, humanoid)
         humanoid:finishAction()
       end
       return
+    elseif humanoid.humanoid_class == "Handyman" then
+      -- An idle handyman meandering in the corridor, check for nearby litter.
+      local litter, x, y = humanoid.world:findObjectNear(humanoid, "litter", 6)
+      if litter and x then
+        humanoid:setNextAction{name = "walk", x = x, y = y}
+        humanoid:queueAction{name = "sweep_floor", litter = litter}
+        humanoid:queueAction{name = "meander"}
+        return
+      end
     else
       -- Nowhere to go, start going to the old room if it's still in
       -- need of staff.

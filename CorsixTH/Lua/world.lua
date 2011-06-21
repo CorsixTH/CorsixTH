@@ -840,15 +840,20 @@ function World:onEndDay()
             break
           end
         end
-        local emergency = {
-          disease = disease,
-          victims = math.random(control.Min, control.Max),
-          bonus = control.Bonus,
-          percentage = control.PercWin/100,
-          killed_emergency_patients = 0,
-          cured_emergency_patients = 0,
-        }
-        self.hospitals[1]:createEmergency(emergency)
+        if not disease then
+          -- Unknown disease! Create a random one instead.
+          self.hospitals[1]:createEmergency()
+        else
+          local emergency = {
+            disease = disease,
+            victims = math.random(control.Min, control.Max),
+            bonus = control.Bonus,
+            percentage = control.PercWin/100,
+            killed_emergency_patients = 0,
+            cured_emergency_patients = 0,
+          }
+          self.hospitals[1]:createEmergency(emergency)
+        end
       end
     end
   end
