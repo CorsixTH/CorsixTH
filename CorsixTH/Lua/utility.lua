@@ -197,8 +197,44 @@ do
   end
 end
 
+-- Helper functions for flags
+-- NB: flag must be a SINGLE flag, i.e. a power of two: 1, 2, 4, 8, ...
+
+-- Check if flag is set in flags
+function flag_isset(flags, flag)
+  flags = flags % (2*flag)
+  return flags >= flag
+end
+
+-- Set flag in flags and return new flags (unchanged if flag was already set).
+function flag_set(flags, flag)
+  if not flag_isset(flags, flag) then
+    flags = flags + flag
+  end
+  return flags
+end
+
+-- Clear flag in flags and return new flags (unchanged if flag was already cleared).
+function flag_clear(flags, flag)
+  if flag_isset(flags, flag) then
+    flags = flags - flag
+  end
+  return flags
+end
+
+-- Toggle flag in flags, i.e. set if currently cleared, clear if currently set.
+function flag_toggle(flags, flag)
+  return flag_isset(flags, flag) and flag_clear(flags, flag) or flag_set(flags, flag)
+end
+
 -- Various constants
 DrawFlags = {}
-DrawFlags.Alpha50 = 2^2
+DrawFlags.FlipHorizontal  = 2^0
+DrawFlags.FlipVertical    = 2^1
+DrawFlags.Alpha50         = 2^2
+DrawFlags.Alpha75         = 2^3
+DrawFlags.AltPalette      = 2^4
+DrawFlags.EarlyList       = 2^10
+DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
-DrawFlags.Crop = 2^13
+DrawFlags.Crop            = 2^13

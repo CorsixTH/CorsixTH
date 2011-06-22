@@ -27,12 +27,6 @@ function Patient:Patient(...)
   self.should_knock_on_doors = true
   self.treatment_history = {}
   
-  -- Randomise thirst and the need to visit the loo soon.
-  -- Alien patients can only come via helicopter, and therefore have no drink animation
-  if self.humanoid_class ~= "Alien Patient" then
-    self.attributes["thirst"] = math.random()*0.2
-    self.attributes["toilet_need"] = math.random()*0.2
-  end
   self.action_string = ""
 end
 
@@ -67,6 +61,12 @@ function Patient:setDisease(disease)
   local company = math.random(1,12)
   if company < 4 then
     self.insurance_company = company
+  end
+  -- Randomise thirst and the need to visit the loo soon.
+  -- Alien patients do not have the needed animations for these things, so exclude them
+  if not self.disease.only_emergency then
+    self.attributes["thirst"] = math.random()*0.2
+    self.attributes["toilet_need"] = math.random()*0.2
   end
   self:updateDynamicInfo()
 end
@@ -165,8 +165,10 @@ function Patient:die()
     self.world.ui.adviser:say(_S.adviser.information.first_death)
   end
   self.hospital:humanoidDeath(self)
-  local casebook = self.hospital.disease_casebook[self.disease.id]
-  casebook.fatalities = casebook.fatalities + 1
+  if not self.is_debug then
+    local casebook = self.hospital.disease_casebook[self.disease.id]
+    casebook.fatalities = casebook.fatalities + 1
+  end
   -- There is no death animation for Slack Females, send them home instead
   if self.humanoid_class == "Slack Female Patient" then
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)

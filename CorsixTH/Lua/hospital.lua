@@ -990,11 +990,16 @@ function Hospital:updatePercentages()
 end
 
 function Hospital:getAveragePatientAttribute(attribute)
+  -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
   local sum = 0
+  local count = 0
   for _, patient in ipairs(self.patients) do
-    sum = sum + patient.attributes[attribute]
+    sum = sum + (patient.attributes[attribute] or 0)
+    if patient.attributes[attribute] then
+      count = count + 1
+    end
   end
-  return sum / #self.patients
+  return sum / count
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.

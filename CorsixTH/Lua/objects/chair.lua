@@ -55,6 +55,8 @@ object.usage_animations = {
       ["Transparent Male Patient"  ] = 4360,
       ["Alternate Male Patient"    ] = 4480,
       ["Transparent Female Patient"] = 4816,
+      ["Alien Male Patient"        ] =  678, -- TEMP
+      ["Alien Female Patient"      ] = 2824, -- TEMP
     },
     in_use = {
       -- Note that patient mouth not visible in this orientation, so we only
@@ -69,6 +71,8 @@ object.usage_animations = {
       ["Transparent Male Patient"  ] = 4344,
       ["Alternate Male Patient"    ] = 4488,
       ["Transparent Female Patient"] = 4808,
+      ["Alien Male Patient"        ] =  702, -- TEMP
+      ["Alien Female Patient"      ] = 2814, -- TEMP
     },
     finish_use = {
       ["Standard Male Patient"     ] =  694,
@@ -81,6 +85,8 @@ object.usage_animations = {
       ["Transparent Male Patient"  ] = 4368,
       ["Alternate Male Patient"    ] = 4504,
       ["Transparent Female Patient"] = 4824,
+      ["Alien Male Patient"        ] =  694, -- TEMP
+      ["Alien Female Patient"      ] = 2832, -- TEMP
     }
   },
   east = {
@@ -95,6 +101,8 @@ object.usage_animations = {
       ["Transparent Male Patient"  ] = 4362,
       ["Alternate Male Patient"    ] = 4482,
       ["Transparent Female Patient"] = 4818,
+      ["Alien Male Patient"        ] =  680, -- TEMP
+      ["Alien Female Patient"      ] = 2826, -- TEMP
     },
     in_use = { -- Not talking, head nodding, talking
       ["Standard Male Patient"     ] = make_list( 704,  736,  744),
@@ -108,6 +116,8 @@ object.usage_animations = {
       ["Alternate Male Patient"    ] = make_list(4490,  nil, 4498),
       -- NB: 4498 also seems to include big-head patients
       ["Transparent Female Patient"] = make_list(4810, 4842, 4834),
+      ["Alien Male Patient"        ] = make_list( 704,  736,  744), -- TEMP
+      ["Alien Female Patient"      ] = make_list(2818, 3002, 2994), -- TEMP
     },
     finish_use = {
       ["Standard Male Patient"     ] =  696,
@@ -120,6 +130,8 @@ object.usage_animations = {
       ["Transparent Male Patient"  ] = 4370,
       ["Alternate Male Patient"    ] = 4506,
       ["Transparent Female Patient"] = 4826,
+      ["Alien Male Patient"        ] =  696, -- TEMP
+      ["Alien Female Patient"      ] = 2834, -- TEMP
     }
   },
 }

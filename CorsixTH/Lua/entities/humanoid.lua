@@ -81,7 +81,8 @@ anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3
 anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
 anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
 anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798,  4192,  4194)
-anims("Alien Patient",             3598, 3600, 3606, 3608,  182,  184,  286,  288, 3626,  3628)
+anims("Alien Male Patient",        3598, 3600, 3606, 3608,  182,  184,   286,   288, 3626,  3628) -- remember, no "normal"-doors animation
+anims("Alien Female Patient",      3598, 3600, 3606, 3608,  258,  260,   294,   296, 3626,  3628) -- identical to male; however death animations differ
 anims("Doctor",                      32,   34,   40,   42,  670,  672,   nil,   nil, 4750,  4752)
 anims("Surgeon",                   2288, 2290, 2296, 2298)
 anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   nil, 3272,  3274)
@@ -103,7 +104,8 @@ die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- 
 die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222 is the Female)
 die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
 die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
-die_anims("Alien Patient",             4882, 2434, 2438, 2446,  2450) -- Again only males... (4886)
+die_anims("Alien Male Patient",        4882, 2434, 2438, 2446,  2450)
+die_anims("Alien Female Patient",      4886, 3208, 3212, 3216,  3220)
 
 
 --   | Available Moods |

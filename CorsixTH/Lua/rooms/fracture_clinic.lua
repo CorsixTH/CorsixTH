@@ -28,7 +28,7 @@ room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { cast_remover = 1 }
 room.build_preview_animation = 5072
 room.categories = {
-  clinics = 1,
+  clinics = 3,
 }
 room.minimum_size = 4
 room.wall_type = "blue"

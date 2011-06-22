@@ -119,6 +119,7 @@ function UIBankManager:afterLoad(old, new)
     self.eyesblink = self:addPanel(7, 298, 173)
     self.browslift = self:addPanel(9, 296, 165)
   end
+  UIFullscreen.afterLoad(self, old, new)
 end
 
 local function sum(t)

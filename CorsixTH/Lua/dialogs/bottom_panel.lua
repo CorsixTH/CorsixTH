@@ -456,5 +456,6 @@ function UIBottomPanel:afterLoad(old, new)
       end
     end
   end
+  Window.afterLoad(self, old, new)
 end
 

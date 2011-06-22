@@ -28,7 +28,7 @@ room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { hair_restorer = 1, console = 1 }
 room.build_preview_animation = 5074
 room.categories = {
-  clinics = 6,
+  clinics = 4,
 }
 room.minimum_size = 4
 room.wall_type = "blue"

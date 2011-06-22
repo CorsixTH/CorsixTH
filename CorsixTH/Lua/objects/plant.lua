@@ -37,12 +37,12 @@ object.idle_animations = {
 }
 object.usage_animations = {
   north = {
-    begin_use = { ["Handyman"] = 1972 },
-    in_use = { ["Handyman"] = 1980 },
+    begin_use = { ["Handyman"] = {1972, object_visible = true} },
+    in_use = { ["Handyman"] = {1980, object_visible = true} },
   },
   east = {
-    begin_use = { ["Handyman"] = 1974 },
-    in_use = { ["Handyman"] = 1982 },
+    begin_use = { ["Handyman"] = {1974, object_visible = true} },
+    in_use = { ["Handyman"] = {1982, object_visible = true} },
   },
 }
 object.orientations = {

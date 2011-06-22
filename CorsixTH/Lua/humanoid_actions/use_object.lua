@@ -121,13 +121,6 @@ local function action_use_phase(action, humanoid, phase)
   end
   local is_list = false
   local anim = anim_table[humanoid.humanoid_class]
-  if type(anim) == "table" then
-    -- If an animation list is provided rather than a single animation, then
-    -- choose an animation from the list at random.
-    is_list = true
-    anim = anim[math.random(1, #anim)]
-  end
-  
   if not anim then
     -- Handymen have their own number of animations.
     if humanoid.humanoid_class == "Handyman" then
@@ -140,7 +133,41 @@ local function action_use_phase(action, humanoid, phase)
         phase)
     end
   end
+  
+  local anim_length = 1
+  if type(anim) == "table" and anim.length then
+    anim_length = anim.length
+  end
+  
+  if type(anim) == "table" and anim[1] ~= "morph" and #anim > 1 then
+    -- If an animation list is provided rather than a single animation, then
+    -- choose an animation from the list at random.
+    is_list = true
+    anim = anim[math.random(1, #anim)]
+  end
+  
+  print("object: ", object.tile_x, object.tile_y)
+  print("humanoid: ", humanoid.tile_x, humanoid.tile_y)
+  
   local flags = action.mirror_flags
+  if type(anim) == "table" then
+    if anim.mirror then
+      -- a single animation may be (un-)mirrored, switch the mirror flag in that case
+      flags = flag_toggle(flags, DrawFlags.FlipHorizontal)
+    end
+    if anim.object_visible then
+      -- this flag may be set to make the (idle) object visible additionally to the usage animation
+      object.th:makeVisible()
+    else
+      object.th:makeInvisible()
+    end
+    if anim[1] ~= "morph" then
+      anim = anim[1]
+    end
+  else
+    object.th:makeInvisible()
+  end
+  
   if object.split_anims then
     flags = flags + DrawFlags.Crop
     local anims = humanoid.world.anims
@@ -149,7 +176,31 @@ local function action_use_phase(action, humanoid, phase)
       th:setAnimation(anims, anim, flags)
     end
   end
-  humanoid:setAnimation(anim, flags)
+
+  if type(anim) == "table" and anim[1] == "morph" then
+    -- If a table with entries {"morph", A, B} is given rather than a single
+    -- animation, then display A first, then morph to B.
+    humanoid:setAnimation(anim[2], flags)
+    local morph_target = TH.animation()
+    local morph_flags = flags
+    if anim.mirror_morph then
+      morph_flags = flag_toggle(morph_flags, DrawFlags.FlipHorizontal)
+    end
+    morph_target:setAnimation(humanoid.world.anims, anim[3], morph_flags)
+    for layer, id in pairs(humanoid.layers) do
+      morph_target:setLayer(layer, id)
+    end
+    if anim.layers then
+      for layer, id in pairs(humanoid[anim.layers]) do
+        morph_target:setLayer(layer, id)
+      end
+      action.change_layers = humanoid[anim.layers]
+    end
+    humanoid.th:setMorph(morph_target, anim_length)
+    anim = anim[3]
+  else
+    humanoid:setAnimation(anim, flags)
+  end
   
   local offset = object.object_type.orientations
   if offset then
@@ -180,7 +231,7 @@ local function action_use_phase(action, humanoid, phase)
     humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
   end
   humanoid.user_of = object
-  local length = humanoid.world:getAnimLength(anim)
+  local length = anim_length * humanoid.world:getAnimLength(anim)
   if action.min_length and phase == 0 and action.min_length > length then
     -- A certain length is desired. 
     -- Even it out so that an integer number of animation sequences are done.
@@ -236,6 +287,12 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
     phase = action_use_next_phase(action, phase)
   elseif action.loop_callback then
     action:loop_callback()
+  end
+  if action.change_layers then
+    for layer, id in pairs(action.change_layers) do
+      humanoid:setLayer(layer, id)
+    end
+    action.change_layers = nil
   end
   if oldphase <= 5 and phase > 5 then
     finish_using(object, humanoid)
@@ -322,12 +379,7 @@ local function action_use_object_start(action, humanoid)
   if object.object_type.walk_in_to_use then
     action.do_walk = true
   else
-    -- When watering a plant the plant should still be visible
-    if not action.watering_plant then
-      object:setUser(humanoid)
-    else
-      object.reserved_for = nil
-    end
+    object:setUser(humanoid)
     humanoid.user_of = object
     init_split_anims(object, humanoid)
   end

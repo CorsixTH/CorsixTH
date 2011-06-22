@@ -28,7 +28,7 @@ room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { electrolyser = 1, console = 1 }
 room.build_preview_animation = 930
 room.categories = {
-  clinics = 6,
+  clinics = 5,
 }
 room.minimum_size = 5
 room.wall_type = "blue"
@@ -38,7 +38,7 @@ room.required_staff = {
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd019.wav"
-room.handyman_call_sound = "maint004.wav"
+room.handyman_call_sound = "maint008.wav"
 
 class "ElectrolysisRoom" (Room)
 
