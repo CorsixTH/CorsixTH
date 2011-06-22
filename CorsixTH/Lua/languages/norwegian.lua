@@ -174,7 +174,7 @@ tooltip.main_menu = {
   new_game     = "Start et nytt spill fra begynnelsen",
   custom_level   = utf8 "Bygg sykehuset ditt på et valgfritt område",
   load_game   = "Last inn et tidligere spill",
-  options     = "Endre diverse instillinger",
+  options     = "Endre diverse innstillinger",
   exit       = utf8 "Nei, nei, vær så snill å ikke stikk!",
 }
 
@@ -240,7 +240,7 @@ calls_dispatcher = {
 }
 
 tooltip.calls_dispatcher = {
-  assigned = "Denne boksen er avhuket om noen er tildet oppdraget.",
+  assigned = "Denne boksen er huket av om noen er tildet oppdraget.",
   task = utf8 "Liste over oppdrag - Klikk på oppdrag for å se lokasjonen",
   close = "Lukk ekspedisjonsvinduet",
 }
@@ -325,7 +325,7 @@ confirmation = {
 
 information = {
   custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
-  cannot_restart = "Dette spillet ble desverre lagret för restartfunksjonen ble implementert.",
+  cannot_restart = "Dette spillet ble dessverre lagret för restartfunksjonen ble implementert.",
   level_lost = {
     "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
     "Grunnen til at du tapte:",
@@ -341,7 +341,7 @@ tooltip.information = {
 totd_window = {
   tips = {
     utf8 "Ethvert sykehus trenger en Resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
-    utf8 "Maskiner som f.eks Pumpen i Pumperommet trenger vedlikehold. Ansett en Vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
+    utf8 "Maskiner som f.eks. Pumpen i Pumperommet trenger vedlikehold. Ansett en Vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
     utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
     utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
@@ -426,7 +426,7 @@ staff_descriptions = {
     [9] = "Er en perfeksjonist som aldri gir opp. ",
     [10] = "Hjelper alltid mennesker med et smil. ",
     [11] = utf8 "Sjarmerende, höflig og hjelpsom. ",
-    [12] = "Godt motivert og dediktert til jobben. ",
+    [12] = "Godt motivert og dedikert til jobben. ",
     [13] = "Snill av natur og meget hardt arbeidende. ",
     [14] = "Lojal og vennlig. ",
     [15] = utf8 "Omtenksom og til å stole på i akutte situasjoner. ",
@@ -434,7 +434,7 @@ staff_descriptions = {
   misc = {
     [1] = "Spiller golf. ",
     [2] = "Dykker etter kamskjell. ",
-    [3] = "Lager is-skulpturer. ",
+    [3] = "Lager isskulpturer. ",
     [4] = "Drikker vin. ",
     [5] = utf8 "Kjörer rally. ",
     [6] = utf8 "Gjör strikkhopp. ",
@@ -596,6 +596,9 @@ competitor_names = {
   [19] = "DANIEL",
   [20] = "OLIVIA",
   [21] = "NILS",
+  [22] = "THOR",
+  [23] = "RISK",
+  [24] = "NIC",
 }
 
 -- Months
@@ -1139,9 +1142,20 @@ high_score = {
 trophy_room = {
   reputation = utf8 "OMDÖMME",
   cash = "KONTANTER",
+  pop_percentage = {
+    awards = {
+    [1] = utf8 "Legg merke til at du har fått en höy andel av byen befolkning til ditt sykehus det siste året. Bra gjort",
+    [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besøker sykehuset ditt enn noen andre institusjoner.",
+    [3] = utf8 "Strålende. Du har lokket mer av befolkningen inn ditt sykehus enn det som har besøkt alle de andre sykehusene til sammen.",
+    },
+  },
   many_cured = {
     awards = {
-      utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
+      [1] = utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
+      [2] = utf8 "Gratulerer med å ha kurert mengder av pasienter det siste året. Mange mennesker føler seg mye bedre på grunn av ditt arbeid.",
+      [3] = utf8 "Vær så snill å ta imot denne prisen for å ha kurert flere pasienter enn noe annet sykehuset. En enestående innstats.",
+      [4] = utf8 "Du er herved tildelt den ultimate kureringsprisen for å ha kurert flere mennesker enn alle de andre sykehusene til sammen.",
+
     },
     trophies = {
       utf8 "Den Internasjonale Behandlingsstiftelsen önsker å ære deg fordi du kurerte en haug med mennesker på sykehuset ditt i fjor. De gir deg derfor Kurert-En-Haug Trofeet.",
@@ -1159,8 +1173,11 @@ trophy_room = {
   },
   high_rep = {
     awards = {
-      utf8 "Du er herved tildelt statsministerens Glitrende Sykehusstandard Pris, som tildeles sykehuset med best omdömme i fjor. Flott!",
-      utf8 "Vær snill å ta imot Bullfrog-prisen som tildeles sykehuset med best omdömme i fjor. Nyt det - det er vel fortjent!",
+      [1] = utf8 "Du er herved tildelt statsministerens Glitrende Sykehusstandard Pris, som tildeles sykehuset med best omdömme i fjor. Flott!",
+      [2] = utf8 "Vær snill å ta imot Bullfrog-prisen som tildeles sykehuset med best omdömme i fjor. Nyt det - det er vel fortjent!",
+      [3] = utf8 "Godt gjort. Du vinner en liten pris for å ha oppnådd et ganske imponerende rykte det siste året.",
+      [4] = utf8 "Fantastisk! Ditt sykehus vinner en pris for å ha bygd opp best omdømme det siste året.",
+      [5] = utf8 "Dette året har ditt sykehus sitt omdømme overgått alle de andre sykehusene satt sammen. En stor prestasjon.",
     },
     trophies = {
       utf8 "Gratulerer med Rent-Og-Pent Trofeet som tildeles sykehuset med best omdömme i fjor. Vel, det er faktisk fortjent.",
@@ -1177,16 +1194,20 @@ trophy_room = {
   },
   happy_vips = {
     awards = {
-      utf8 "Du har vunnet Nobelprisen for Imponerte VIP'er. Alle som besökte sykehuset ditt i fjor snakker ikke om annet.",
+      utf8 "Du har vunnet Nobelprisen for Imponerte VIP-er. Alle som besökte sykehuset ditt i fjor snakker ikke om annet.",
       utf8 "Gratulerer med VIP-prisen for å ha gjort livene til hardtarbeidende kjendiser bedre, ved å sette alle som besökte sykehuset ditt i fjor i et bedre lys. Fantastisk.",
     },
     trophies = {
-      utf8 "Byrået for Kjente Personer vil belönne deg med Kjendistrofeet for å ha tatt godt vare på alle VIP'er som besökte instutisjonen din i fjor. Du nærmer deg kjendis-status, nesten en av oss.",
+      utf8 "Byrået for Kjente Personer vil belönne deg med Kjendistrofeet for å ha tatt godt vare på alle VIP-er som besökte institusjonen din i fjor. Du nærmer deg kjendis-status, nesten en av oss.",
     },
   },
   no_deaths = {
     awards = {
-      utf8 "Du har vunnet Leve Lenge Trofeet for å holde 100 prosent av pasientene levende i hele fjor.",
+      [1] = utf8 "Du har vunnet Leve Lenge Trofeet for å holde 100 prosent av pasientene levende i hele fjor.",
+      [2] = "Du har fått denne prisen til minne om lavt antall dødsfall på ditt sykehus dette året. Dette er flott.",
+      [3] = "Dødstallene i ditt sykehus i fjor var lavere enn noen andre sykehus. Vennligst ta imot denne prisen.",
+      [4] = "Din geniale styring har holdt dødsfall i sykehuset til et minimum. Du kan være svært fornøyd med dette resultatet.",
+
     },
     trophies = {
       utf8 "Livet Går Videre Stiftelsen belönner deg med dette trofeet for å ha oppnådd null dödsfall i hele fjor.",
@@ -1225,8 +1246,8 @@ trophy_room = {
     },
     trophies = {
       utf8 "Foreningen for Globale Tannleger er stolt over å kunne gi deg dette trofeet for å ha solgt store menger brus på sykehuset ditt i fjor.",
-      utf8 "Sykehuset ditt er blitt tildelt Sprudlende-Begjær Trofeet for antall læskedrikker som ble solgt på sykehuset ditt i fjor.",
-      utf8 "På vegne av DK Fyllinger Co., tildeles du herved dette trofeet dekket av sjokolade, for å ha solgt enorme mengder læskedrikker på sykehuset ditt forrige år.",
+      utf8 "Sykehuset ditt er blitt tildelt Sprudlende-Begjær Trofeet for antall leskedrikker som ble solgt på sykehuset ditt i fjor.",
+      utf8 "På vegne av DK Fyllinger Co., tildeles du herved dette trofeet dekket av sjokolade, for å ha solgt enorme mengder leskedrikker på sykehuset ditt forrige år.",
     },
   },
 }
@@ -1450,7 +1471,7 @@ tooltip = {
     ability            = "Evner",
     prio_litter        = utf8 "Be vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
     prio_plants        = utf8 "Be vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
-    prio_machines      = utf8 "Be vaktmesteren om å prioritere reperasjon av maskiner höyere", -- contains "handyman"
+    prio_machines      = utf8 "Be vaktmesteren om å prioritere reparasjon av maskiner höyere", -- contains "handyman"
     salary             = utf8 "Månedslönn",
     center_view        = "Sentrer i skjermbildet", -- contains "handyman"
     sack               = "Si opp",
@@ -1652,7 +1673,7 @@ tooltip = {
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
-    desk                 = "Pult: en Lege kan bruke pulten til PC'en sin.",
+    desk                 = "Pult: en Lege kan bruke pulten til PC-en sin.",
     cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
     door                 = utf8 "Dör: personer åpner og lukker disse en del.",
     bench                = utf8 "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabel.",
@@ -1740,7 +1761,7 @@ adviser = {
     click_and_drag_to_build       = utf8 "For å bygge en Allmennpraksis, må du först avgjöre hvor stor den skal være. Klikk og hold inne venstre museknapp for å justere rommets störrelse.",
     build_gps_office         = utf8 "For å starte å diagnosere pasientene dine, må du ha en Allmennpraksis.",
     door_in_invalid_position     = utf8 "Oj, sann! Du prövde å plassere dören i en ugyldig posisjon. Pröv en annen plass på veggen av blåkopien.",
-    confirm_room           = utf8 "Venstreklikk på det blinkende ikonet for å ferdigstille rommet ditt, eller klikk på X'en for å gå et trinn tilbake.",
+    confirm_room           = utf8 "Venstreklikk på det blinkende ikonet for å ferdigstille rommet ditt, eller klikk på X-en for å gå et trinn tilbake.",
     select_diagnosis_rooms       = utf8 "Venstreklikk på det blinkende ikonet for å se en liste over diagnoserom du kan bygge.",
     hire_doctor           = utf8 "Du trenger en Lege for å diagnosere og behandle syke mennesker.",
     select_doctors           = utf8 "Venstreklikk på det blinkende ikonet for å se hvilke Leger som er tilgjengelig i arbeidsmarkedet.",
@@ -1837,7 +1858,7 @@ adviser = {
     financial_criteria_met   = utf8 "Du har tilfredsstilt de finansielle kriteriene for dette nivået. Hold banksaldoen din over %d, mens du passer på at sykehuset ditt drives effektivt.",
     hospital_value_enough   = utf8 "Hold verdien av ditt sykehus over %d og forsök å fölge med på de andre problemene for å vinne dette nivået.",
     another_patient_cured   = utf8 "Bra jobbet - enda en pasient kurert. Det blir den %d.",
-    reputation_good_enough   = utf8 "Ok, omdömmet ditter er godt nok for å vinne dette nivået. Hold det over %d og fiks eventuelle andre problemet for klare det.",
+    reputation_good_enough   = utf8 "Ok, omdömmet ditt er er godt nok for å vinne dette nivået. Hold det over %d og fiks eventuelle andre problemet for klare det.",
     cured_enough_patients   = utf8 "Du har kurert nok pasienter, men du trenger å få sykehuset ditt i bedre stand for å vinne dette nivået.",
     improve_reputation   = utf8 "Du må forbedre omdömmet ditt med %d for å ha en sjanse til å vinne dette nivået.",
   },
@@ -1857,7 +1878,7 @@ adviser = {
   -- Research
   research = {
     machine_improved         = utf8 "%s er forbedret av Forskningsavdelingen.",
-    autopsy_discovered_rep_loss   = utf8 "Din Obdiseringsautomat er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
+    autopsy_discovered_rep_loss   = utf8 "Din Obduseringsautomat er blitt offentlig kjent. Forvent en negativ reaksjon fra allmennheten.",
     drug_fully_researched       = utf8 "Du har utforsket %s til 100%.",
     new_machine_researched       = utf8 "En ny %s er akkurat utviklet.",
     drug_improved           = utf8 "%s medisinen er forbedret av Forskningsavdelingen din.",
@@ -1867,9 +1888,9 @@ adviser = {
   
   -- Boiler issue
   boiler_issue = {
-    minimum_heat   = utf8 "Å, der er du. Sentralovnen i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
-    maximum_heat   = utf8 "Sentralovnen i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
-    resolved     = utf8 "Gode nyheter. Sentralvarmen fungerer slik som de skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
+    minimum_heat   = utf8 "Å, der er du. Sentralfyren i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
+    maximum_heat   = utf8 "Sentralfyren i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
+    resolved     = utf8 "Gode nyheter. Sentralvarmen fungerer slik som den skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
   },
   
   -- Competitors
@@ -1899,10 +1920,10 @@ adviser = {
       money     = utf8 "Du trenger %d til for å oppnå de finansielle kriteriene på dette nivået.",
       cure       = utf8 "Kurer %d pasienter til og du har kurert nok for å fullföre dette nivået.",
       reputation   = utf8 "Sörg for å ha et omdömme på over %d for at du skal kunne fullföre nivået.",
-      value     = utf8 "Sykehuset ditt må ha en verdi på over %d for at du skal kunne fullföre dette nivået",
+      value     = utf8 "Sykehuset ditt må ha en verdi på over %d for at du skal kunne fullföre dette nivået.",
     },
     lose = {
-      kill       = utf8 "Drep %d pasienter til for å tape dette nivået !",
+      kill       = utf8 "Drep %d pasienter til for å tape dette nivået!",
     },
   },
   
@@ -1927,7 +1948,7 @@ adviser = {
     machines_falling_apart     = utf8 "Maskinene dine faller sammen. Få Vaktmestre til å fikse de snarest!",
     nobody_cured_last_month   = utf8 "Absolutt ingen ble kurert forrige måned.",
     patients_thirsty       = utf8 "Pasientene dine er törste. Du burde gi dem tilgang på brus.",
-    nurses_tired         = utf8 "Sykepleierene dine er trötte. Gi dem hvile nå.",
+    nurses_tired         = utf8 "Sykepleierne dine er trötte. Gi dem hvile nå.",
     machine_severely_damaged   = utf8 "%s er veldig nær å bli totalskadet.",
     reception_bottleneck     = utf8 "Det er en flaskehals i Resepsjonen. Ansett en Resepsjonist til.",
     bankruptcy_imminent     = utf8 "Hallo! Du nærmer deg konkurs. Vær forsiktig!",
@@ -1940,9 +1961,9 @@ adviser = {
     people_did_it_on_the_floor       = utf8 "Noen av pasientene dine klarte ikke å holde seg. Oppryddingen vil bli en stor jobb for noen.", -- Bruke ordet opprydning eller vasking?
     patients_very_thirsty       = utf8 "Pasientene dine er virkelig törste. Om du ikke setter opp noen Brusautomater snart, vil du snart se at alle går hjem for å hente cola.",
     machinery_very_damaged       = utf8 "Hastesak! Få en Vaktmester til å reparere maskinene dine öyeblikkelig! De kommer til å sprenge!",
-    handymen_tired2       = utf8 "Vaktmesterene dine er helt utkjörte. Gi dem litt hvile med en gang.",
+    handymen_tired2       = utf8 "Vaktmestrene dine er helt utkjörte. Gi dem litt hvile med en gang.",
     desperate_need_for_watering       = utf8 "Du trenger sårt å ansette en Vaktmester for å stelle med plantene dine.",
-    too_much_litter       = utf8 "There's a litter problem. More Handymen could be the answer.",
+    too_much_litter       = utf8 "Det er et söppelproblem. Flere Vaktmestere kan være svaret.",
     place_plants4       = utf8 "Få pasientene i bedre humör ved å sette ut litt flere planter rundt omkring.",
     change_priorities_to_plants       = utf8 "Du må endre prioriteringene for Vaktmestrene dine slik at de bruker mer tid på plantene.",
     finanical_trouble2       = utf8 "Du må få inn litt penger snart, ellers er du snart ute på söppeldynga. Du vil tape nivået om du mister %d til.",
@@ -1960,7 +1981,7 @@ adviser = {
     place_plants_to_keep_people       = utf8 "Folk stikker av. Å plassere noen planter kan kanskje overtale dem til å bli.",
     patients_thirsty2       = utf8 "Folk klager over at de er törste. Du burde plassere noen fler Brusmaskiner eller flytte de eksisterende nærmere dem.",
     people_freezing       = utf8 "Utrolig, i denne alderen av sentralfyring så klager noen av pasientene din over at det er iskaldt. Sett ut noen radiatorer for å varme dem opp, og skru opp temperaturen.",
-    patients_very_cold       = utf8 "Pasientene er veld kalde. Pröve å skru opp temperaturen eller å plassere flere radiatorer i sykehuset.",
+    patients_very_cold       = utf8 "Pasientene er veldig kalde. Pröve å skru opp temperaturen eller å plassere flere radiatorer i sykehuset.",
     build_toilets       = utf8 "Bygg et Toalett med en gang, ellers vil du se noe virklig ubehagelig. Og forestill deg hva sykehuset ditt vil lukte da.",
     place_plants2       = utf8 "Folk går hjem. Litt flere planter ville kanskje holdt dem her lenger.",
     staff_tired       = utf8 "Dine ansatte er veldig slitne. Om du ikke lar dem få litt hvile i Personalrommet, så kan noen knekke av presset.",
@@ -2021,7 +2042,7 @@ adviser = {
     patient_abducted         = utf8 "En av dine pasienter er blitt bortfört av romvesen.",
     first_cure             = utf8 "Bra jobbet! Du har akkurat kurert din förste pasient.",
     promotion_to_consultant     = utf8 "En av dine DOKTORER er nå blitt KONSULENT.",
-    handyman_adjust         = utf8 "Du kan gjöre Vaktmesterene mer effektiv ved å justere deres prioriteringer.",
+    handyman_adjust         = utf8 "Du kan gjöre Vaktmestrene mer effektiv ved å justere deres prioriteringer.",
     promotion_to_specialist     = utf8 "En av dine Leger er blitt forfremmet til %s.",
     patient_leaving_too_expensive   = utf8 "En pasient forlater sykehuset ditt uten å gjöre opp for seg ved %s. Det er for dyrt.",
     vip_arrived           = utf8 "Pass på! - %s har akkurat ankommet sykehuset ditt! La alt gå på skinner nå, for å tilfredstille han.",
@@ -2037,7 +2058,7 @@ adviser = {
       first_patients_thirsty = utf8 "Flere av pasientene dine begynner å bli dehydrert. De ville satt pris på en Brusautomat.",
       research_now_available = utf8 "Du har bygd din förste Forskningsavdeling. Du har nå tilgang til Forskningsskjermen.",
       psychiatric_symbol = utf8 "Leger med spesialisering innen Psykologi gjenkjennes med symbolet: |",
-      decrease_heating = utf8 "Folk på sykehuset ditt svetter. Skru ned sentralvarment. Dette gjöres på Områdekartet.",
+      decrease_heating = utf8 "Folk på sykehuset ditt svetter. Skru ned sentralvarmen. Dette gjöres på Områdekartet.",
       surgeon_symbol = utf8 "Leger kan utföre kirurgiske inngrep om de har symbolet: {",
       first_emergency = utf8 "Akutte pasienter har et blinkende blått lys over hodet. Behandle dem i tide, ellers dör de.",
       first_epidemic = utf8 "Du har en epidemi på sykehuset ditt! Avgjör om du vil rydde opp, eller legge deg paddeflat.",
@@ -2045,9 +2066,9 @@ adviser = {
       place_radiators = utf8 "Pasientene fryser - du kan plassere flere ovner ved å gå inn på oversikten med gjenstander.",
       epidemic_spreading = utf8 "Det er smittefare på sykehuset. Kurer infiserte pasienter för de forlater sykehuset.",
       research_symbol = "Forskere er leger med symbolet: }",
-      machine_needs_repair = utf8 "Du har utstyr som trenger reperasjon. Finn utstyret - det ryker av det - og klikk på den. Klikk deretter på Vaktmestersymbolet.",
+      machine_needs_repair = utf8 "Du har utstyr som trenger reparasjon. Finn utstyret - det ryker av det - og klikk på den. Klikk deretter på Vaktmestersymbolet.",
       increase_heating = utf8 "Folk fryser. Skru opp sentralvarmen på Områdekartet.",
-      first_VIP = utf8 "Du er i ferd med å ta imot ditt förste VIP-besök. Sörg for at VIP'er ikke ser noe uhygienisk eller pasienter som henger med hodet.",
+      first_VIP = utf8 "Du er i ferd med å ta imot ditt förste VIP-besök. Sörg for at VIP-er ikke ser noe uhygienisk eller pasienter som henger med hodet.",
     },
   },
   
@@ -2157,7 +2178,7 @@ letter = {
   },
   [8] = {
     [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Hallo igjen. Du tok ikke vår forrige utfordring, der vi tilbydte deg en alle tiders stilling på et nytt sykehus, og en ökt lönn på $%d. Vi mener, derimot, at du bör revurdere beslutningen din. Vi har den perfekte jobben for deg, skjönner du.//",
+    [2] = utf8 "Hallo igjen. Du tok ikke vår forrige utfordring, der vi tilba deg en alle tiders stilling på et nytt sykehus, og en ökt lönn på $%d. Vi mener, derimot, at du bör revurdere beslutningen din. Vi har den perfekte jobben for deg, skjönner du.//",
     [3] = utf8 "Tar du imot stillingen på sykehuset %s? Vær så snill?",
   },
   [9] = {
@@ -2175,12 +2196,12 @@ letter = {
   [11] = {
     [1] = utf8 "Kjære %s//",
     [2] = utf8 "Din karriere har vært eksemplarisk, og du er en stor inspirasjon for oss alle. Takk for at du har driftet så mange sykehus, og gjort det så bra i alle jobbene. Vi önsker å gi deg en livslang lönn på $%d, og alt vi ber deg om er å reise offisielt med kabriolet fra by til by, og fortelle folk hvordan du tjente så mye penger så fort.//",
-    [3] = utf8 "Du er et prakteksempel for alle höyre-politiske mennesker, og alle i verden, uten unntak, er dine kjæreste eiendeler.//",
+    [3] = utf8 "Du er et prakteksempel for alle höyrepolitiske mennesker, og alle i verden, uten unntak, er dine kjæreste eiendeler.//",
     [4] = "",
   },
   [12] = {
     [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisin-verdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
+    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisinverdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
     [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
     [4] = "",
   },
@@ -2382,7 +2403,7 @@ diseases = {
     name     = "Kikkerter", 
     cause     = utf8 "Årsak - Pasienten har spist isbiter.", 
     symptoms   = utf8 "Symptomer - Smerte og hyppige turer til toalettet.", 
-    cure     = utf8 "Behandling - To kirurger fjerner de ertelignende parasittene, uten å beröre nyrene!",
+    cure     = utf8 "Behandling - To kirurger fjerner de erteliknende parasittene, uten å beröre nyrene!",
   },
   broken_heart           = { 
     name     = "Knust hjerte",
@@ -2418,12 +2439,12 @@ diseases = {
     name     = utf8 "Kronisk nesehår", 
     cause     = utf8 "Årsak - Snöfter med forakt på folk med lavere inntekt.", 
     symptoms   = utf8 "Symptomer - Så mye nesehår at en grevling kunne bodd der.", 
-    cure     = utf8 "Behandling - En ekkel hårfjernende drikk blir inntatt gjennom munnen. Fåes på apoteket.",
+    cure     = utf8 "Behandling - En ekkel hårfjernende drikk blir inntatt gjennom munnen. Fås på apoteket.",
   },
   third_degree_sideburns = { 
     name     = "Tredjegrads koteletter", 
     cause     = utf8 "Årsak - Lengter tilbake til 70-tallet.", 
-    symptoms   = utf8 "Symptomer - Stort hår, inntilsittende klær, langt skinnskjegg og glitter.", 
+    symptoms   = utf8 "Symptomer - Stort hår, tettsittende klær, langt skinnskjegg og glitter.", 
     cure     = utf8 "Behandling - Psykologisk personell må, ved hjelp av nåtidens teknikker, overbevise pasienten om at parykk er noe tull.",
   },
   fake_blood             = { 
@@ -2442,7 +2463,7 @@ diseases = {
     name     = utf8 "Lös mage", 
     cause     = utf8 "Årsak - Har spist pizzabiter som har falt bak komfyren.", 
     symptoms   = utf8 "Symptomer - æsj. Tipper du vet symptomene.", 
-    cure     = utf8 "Behandling - En klebig blanding kjemikalier må drikkes for å stabilisere magen innvendig.",
+    cure     = utf8 "Behandling - En klebrig blanding kjemikalier må drikkes for å stabilisere magen innvendig.",
   },
   iron_lungs             = { 
     name     = "Jernlunger", 
@@ -2530,7 +2551,7 @@ fax = {
     bonus                              = utf8 "Om du klarer å håndtere dette nödstilfellet, vil du få en bonus på maksimalt %d. Om du feiler derimot, vil ryktet ditt få en kraftig smell.",
     
     locations = {      
-      utf8 "A.Tom's Våpenkjeller",
+      utf8 "A.Toms Våpenkjeller",
       "Snobbeuniversitetet",       
       "Buskerud Hagesenter", 
       "Forskningsinstituttet For Farlige Emner", 
@@ -2582,7 +2603,7 @@ fax = {
     
     disease_name             = utf8 "Dine leger har oppdaget en svært smittsom form for %s.",
     declare_explanation_fine = utf8 "Om du offentliggjör epidemien, må du betale en bot på %d, ditt rykte får en smell, og samtlige pasienter blir vaksinert automatisk.",
-    cover_up_explanation_1   = utf8 "Om du deriomt forsöker å holde epidemien skjult, må du behandle samtlige infiserte pasienter för helsemyndighetene får rede på det.",
+    cover_up_explanation_1   = utf8 "Om du derimot forsöker å holde epidemien skjult, må du behandle samtlige infiserte pasienter för helsemyndighetene får rede på det.",
     cover_up_explanation_2   = utf8 "Om en helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
   },
   
@@ -2621,7 +2642,7 @@ fax = {
     telegram          = "Telegram!",
     vip_remarked_name = utf8 "Etter sitt besök på sykehuset ditt, sa %s fölgende:",
     cash_grant = "Du er blitt tildelt %d i kontanter.",
-    rep_boost  = utf8 "Ditt rykte i næromrdet har fått en opptur.",
+    rep_boost  = utf8 "Ditt rykte i nærområdet har fått en opptur.",
     rep_loss   = utf8 "Ditt rykte har fått seg en smell.",
     
     remarks = {
@@ -2632,13 +2653,13 @@ fax = {
       },
       good = {
         "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
-        utf8 "Hmm. Ingen dårlig medisinsk instutisjon dette, det skal være visst.",
+        utf8 "Hmm. Ingen dårlig medisinsk institusjon dette, det skal være visst.",
         utf8 "Jeg likte ditt sjarmerende sykehus. Forresten, noen som blir med å spise indisk?",
       },
       mediocre = {
         utf8 "Vel, jeg har sett verre. Men du burde gjöre noen forbedringer.",
         utf8 "Å kjære min tid. Dette er ikke stedet å gå om du föler deg dårlig.",
-        utf8 "Et helt allminnelig sykehus, for å være ærlig. Jeg hadde forventet meg noe mer.",
+        utf8 "Et helt alminnelig sykehus, for å være ærlig. Jeg hadde forventet meg noe mer.",
       },
       bad = {
         utf8 "Hva gjör jeg her egentlig? Dette her var verre enn en firetimers opera!",
@@ -2725,7 +2746,7 @@ dynamic_info = {
 introduction_texts = {
   level17 = {
     [1] = utf8 "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. ",
-    [2] = utf8 "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået !//",
+    [2] = utf8 "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået!//",
     [3] = utf8 "Nå må du klare deg selv. Lykke til med det.",
   },
   level1 = {
@@ -2738,7 +2759,7 @@ introduction_texts = {
     [7] = utf8 "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
   },
   level9 = {
-    [1] = utf8 "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousine, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. ",
+    [1] = utf8 "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousin, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. ",
     [2] = utf8 "Du må forvente å stöte på en rekke problemer her.",
     [3] = utf8 "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. ",
     [4] = utf8 "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. ",
@@ -2771,7 +2792,7 @@ introduction_texts = {
     [1] = utf8 "Hold alle pasientene dine fornöyde, ta deg av dem så effektivt som mulig og hold dödsfall til et absolutt minimum. ",
     [2] = utf8 "Ditt omdömme står på spill, så sörg for at du får det så höyt som mulig. ",
     [3] = utf8 "Ikke bekymre deg for mye over penger - det vil komme etter som ditt vitale omdömme vokser. ",
-    [4] = utf8 "Du vil kunne skolere Keger til å utvide sine evner. ",
+    [4] = utf8 "Du vil kunne skolere Leger til å utvide sine evner. ",
     [5] = utf8 "Du kan komme til få pasienter som synes å være mer gjennomsiktig enn de fleste. ", --sjekk english.lua er det bra nok oversettelse?
     [6] = utf8 "Oppnå et omdömme på over 500.",
   },
@@ -2795,12 +2816,12 @@ introduction_texts = {
   },
   level13 = {
     [1] = utf8 "Din enestående dyktighet som sykehusadministrator har blitt oppdaget av Hemmelig Super-avdeling fra Superhemmelige Tjenester. ",
-    [2] = utf8 "De har en spesiell bonus for deg; det er et rotte-infisert sykehus som trenger en effektiv Terminator. ",
+    [2] = utf8 "De har en spesiell bonus for deg; det er et rotteinfisert sykehus som trenger en effektiv Terminator. ",
     [3] = utf8 "Du må skyte så mange rotter som mulig för Vaktmesterne rydder opp all söpla. ",
     [4] = "Tror du at du klarer oppgaven?",
   },
   level16 = {
-    [1] = utf8 "Når du har diagnosert noen av pasientene må du bygge behandlingrom og klinikker for å kurere dem - en god idé å begynne ",
+    [1] = utf8 "Når du har diagnosert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne ",
     [2] = utf8 "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
   },
   level6 = {
@@ -2820,14 +2841,14 @@ introduction_texts = {
     [1] = utf8 "Du setter opp et sykehus i et velstående område denne gangen. ",
     [2] = utf8 "Helsedepartementet er ute etter at du klarer å sikre en sunn profitt her. ",
     [3] = utf8 "Du må få et godt rykte til å begynne med, men når sykehuset går av seg selv, så konsentrer deg om å tjene så mye penger du klarer. ",
-    [4] = utf8 "Det er også en sjanse for at nödsituasjoner oppstår. ",
+    [4] = utf8 "Det er også en sjanse for at nödssituasjoner oppstår. ",
     [5] = utf8 "Dette er når store mengder mennesker kommer på en gang med samme tilstand. ",
     [6] = utf8 "Kurerer du alle innen tidsfristen så får du et bedre rykte, og en stor xbonus. ",
     [7] = utf8 "Sykdommer som Rock'n'Roll-syndrom kan inntreffe, og du bör budsjettere for en Operasjonssal og med en Sengeavdeling i nærheten. ",
     [8] = utf8 "Tjen opp $20,000 for å klare nivået.",
   },
   level10 = {
-    [1] = utf8 "I tillegg til å få bukt med alle sykdommene som dukker opp i denne skogkanten, så vil Departementen at du bruker litt tid på å konsentrere deg om effektiviten av legemidlene dine. ",
+    [1] = utf8 "I tillegg til å få bukt med alle sykdommene som dukker opp i denne skogkanten, så vil Departementet at du bruker litt tid på å konsentrere deg om effektiviteten av legemidlene dine. ",
     [2] = utf8 "Det har kommet noen klager fra Ofsick, Helsedepartementets vakthund, så for at alt skal se bra ut du må sörge for at alle legemidler er svært effektive. ", --todo (bytte ut "Ofsick" med et norskt navn).
     [3] = utf8 "Kontroller også at sykehuset i tillegg er uklanderlig. Hold dödsfallene nede. ",
     [4] = utf8 "Som et hint, så kanskje du bör holde av litt plass til en Gelétönne. ",

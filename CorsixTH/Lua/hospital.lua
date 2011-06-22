@@ -511,9 +511,13 @@ function Hospital:onEndDay()
   local breakdown = math.random(1, 120)
   if breakdown == 1 and not self.heating_broke and self.boiler_can_break
   and self.world.object_counts.radiator > 0 then
-    if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
-      self:boilerBreakdown()  
-    elseif self.world.map.level_number > 1 then
+    if tonumber(self.world.map.level_number) then
+      if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
+        self:boilerBreakdown()  
+      elseif self.world.map.level_number > 1 then
+        self:boilerBreakdown()
+      end
+    else
       self:boilerBreakdown()
     end
   end

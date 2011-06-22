@@ -465,8 +465,8 @@ function UIStaffManagement:scrollDown()
 end
 
 function UIStaffManagement:payBonus()
-  if self.selected_staff then
-    local staff = self.staff_members[self.category][self.selected_staff]
+  local staff = self.staff_members[self.category][self.selected_staff]
+  if self.selected_staff and self.hospital.balance > math_floor(staff.profile.wage*0.1) then
     staff:changeAttribute("happiness", 0.5)
     self.hospital:spendMoney(math_floor(staff.profile.wage*0.1), _S.transactions.personal_bonus)
   end

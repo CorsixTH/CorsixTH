@@ -24,6 +24,9 @@ Version Beta 7 - released 2011-06-24
 * Added: Modern heating systems aren't as reliable as they used to be. Prepare
   for breakdowns now and then.
 
+* New disease: Alien DNA! Note that there are still a few glitches to fix
+  concerning this new disease.
+
 * Change: Vending maintenance costs have increased throughout the world and
   as a result Sodas now cost $20, up from $15.
 * Change: Heating costs are calculated on a per day basis, rather than per month.
@@ -35,7 +38,7 @@ Version Beta 7 - released 2011-06-24
   plant.
 * Fix: Staff resting in the staff room should keep their sofa until fully
   rested if there's nothing else to do.
-* Fix: The player can't hire new staff without a positive balance.
+* Fix: The player can't hire new staff or pay bonuses without a positive balance.
 
 -- User Interface --
 

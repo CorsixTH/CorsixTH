@@ -613,8 +613,13 @@ end
 -- the salary by.
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
-  self:changeAttribute("happiness", 0.99)
-  self:setMood("pay_rise", "deactivate")
+  if self.profile.wage > 2000 then -- What cap here?
+    self.profile.wage = 2000
+  else -- If the cap has been reached this member of staff won't get happy
+       -- ever again...
+    self:changeAttribute("happiness", 0.99)
+    self:setMood("pay_rise", "deactivate")
+  end
 end
 
 function Staff:setDynamicInfoText(text)
