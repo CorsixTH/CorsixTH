@@ -289,7 +289,7 @@ function Strings:_loadPrivate(language, env, ...)
     print("Language '".. language .."' could not be found. Reverting to English.")
     chunk = self.language_to_chunk["english"]
     if not chunk then -- If english could not be found, raise an error
-      error("Language 'English' could not be found. Please verify you installation.")
+      error("Language 'English' could not be found. Please verify your installation.")
     end
   end
   local status, err = pcall(chunk, env, ...)
