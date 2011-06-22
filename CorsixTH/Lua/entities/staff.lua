@@ -87,7 +87,7 @@ function Staff:tick()
   
   -- Decide whether the staff member should be tiring and tire them
   if self:isTiring() then
-    self:tire(0.000115)
+    self:tire(0.000090)
   end
   
     -- if doctor is in a room and they're using an object

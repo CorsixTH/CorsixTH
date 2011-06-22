@@ -251,8 +251,16 @@ function Patient:tickDay()
   -- strange, but in TH happiness does not go down, even when close to death IMO that is wrong as you would be unhappy if you waited too long.
   -- TODO death animation for slack female is missing its head.  For now the only option is for her to get fed up and leave
   -- this can be changed when the animation thing is resolved
+  -- TODO clean up this block, nonmagical numbers
   if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
     self:setMood("sad2", "activate")
+    -- There is a 1/3 chance that the patient will get fed up and leave
+    -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
+    if math.random(1,30) == 1 then
+      self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
+      self:setMood("sad2", "deactivate")
+      self:goHome()
+    end
   elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
     self:setMood("sad2", "deactivate")
     self:setMood("sad3", "activate")
