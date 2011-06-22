@@ -80,6 +80,7 @@ IF(APPLE)
     ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua
     ${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap
     ${CMAKE_SOURCE_DIR}/CorsixTH/Lua
+    ${CMAKE_SOURCE_DIR}/CorsixTH/Levels
   )
   add_custom_command(TARGET CorsixTH 
 					 POST_BUILD
