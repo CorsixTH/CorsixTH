@@ -113,7 +113,7 @@ end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
   -- Find out if we have to be standing up
-  local must_stand = class.is(humanoid, Staff)
+  local must_stand = class.is(humanoid, Staff) or (humanoid.disease and humanoid.disease.must_stand)
   local queue = action.queue
   if not must_stand then
     for i = 1, queue.bench_threshold do

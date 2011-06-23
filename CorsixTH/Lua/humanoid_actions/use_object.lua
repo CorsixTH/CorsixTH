@@ -146,9 +146,6 @@ local function action_use_phase(action, humanoid, phase)
     anim = anim[math.random(1, #anim)]
   end
   
-  print("object: ", object.tile_x, object.tile_y)
-  print("humanoid: ", humanoid.tile_x, humanoid.tile_y)
-  
   local flags = action.mirror_flags
   if type(anim) == "table" then
     if anim.mirror then

@@ -66,7 +66,6 @@ CorsixTH/Lua/dialogs/annual_report.lua -text
 CorsixTH/Lua/dialogs/calls_dispatcher.lua -text
 CorsixTH/Lua/dialogs/graphs.lua -text
 CorsixTH/Lua/dialogs/new_game.lua -text
-CorsixTH/Lua/diseases/alien_dna.lua -text
 CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text
 CorsixTH/Lua/diseases/iron_lungs.lua -text
@@ -77,7 +76,6 @@ CorsixTH/Lua/diseases/unexpected_swelling.lua -text
 CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text
 CorsixTH/Lua/languages/czech.lua -text
 CorsixTH/Lua/languages/russian.lua -text
-CorsixTH/Lua/objects/machines/dna_fixer.lua -text
 CorsixTH/Lua/objects/machines/operating_table.lua -text
 CorsixTH/Lua/objects/machines/operating_table_b.lua -text
 CorsixTH/Lua/objects/op_sink1.lua -text
@@ -86,7 +84,6 @@ CorsixTH/Lua/objects/radiation_shield_b.lua -text
 CorsixTH/Lua/objects/surgeon_screen.lua -text
 CorsixTH/Lua/objects/x_ray_viewer.lua -text
 CorsixTH/Lua/research_department.lua -text
-CorsixTH/Lua/rooms/dna_fixer.lua -text
 CorsixTH/Lua/rooms/operating_theatre.lua -text
 CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text

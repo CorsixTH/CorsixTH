@@ -46,6 +46,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3028,
       ["Elvis Patient"             ] = 3642,
       ["Chewbacca Patient"         ] = 3744,
+      ["Alien Male Patient"        ] =   96, -- TEMP
+      ["Alien Female Patient"      ] =  232, -- TEMP
     },
     in_use = {
       ["Standard Male Patient"     ] =  146,
@@ -58,6 +60,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3036,
       ["Chewbacca Patient"         ] = 3760,
       ["Elvis Patient"             ] = 4110,
+      ["Alien Male Patient"        ] =  146, -- TEMP
+      ["Alien Female Patient"      ] =  224, -- TEMP
     },
     finish_use = {
       ["Standard Male Patient"     ] =  216,
@@ -70,6 +74,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3044,
       ["Chewbacca Patient"         ] = 3752,
       ["Elvis Patient"             ] = 4102,
+      ["Alien Male Patient"        ] =  216, -- TEMP
+      ["Alien Female Patient"      ] =  240, -- TEMP
     },
   },
   east = {
@@ -84,6 +90,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3030,
       ["Elvis Patient"             ] = 3644,
       ["Chewbacca Patient"         ] = 3746,
+      ["Alien Male Patient"        ] =   98, -- TEMP
+      ["Alien Female Patient"      ] =  234, -- TEMP
     },
     in_use = {
       ["Standard Male Patient"     ] =  148,
@@ -96,6 +104,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3038,
       ["Chewbacca Patient"         ] = 3762,
       ["Elvis Patient"             ] = 4112,
+      ["Alien Male Patient"        ] =  148, -- TEMP
+      ["Alien Female Patient"      ] =  226, -- TEMP
     },
     finish_use = {
       ["Standard Male Patient"     ] =  218,
@@ -108,6 +118,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3046,
       ["Chewbacca Patient"         ] = 3754,
       ["Elvis Patient"             ] = 4104,
+      ["Alien Male Patient"        ] =  218, -- TEMP
+      ["Alien Female Patient"      ] =  242, -- TEMP
     },
   },
 }

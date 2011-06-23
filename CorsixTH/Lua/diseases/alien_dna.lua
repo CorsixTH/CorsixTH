@@ -28,6 +28,7 @@ disease.symptoms = _S.diseases.alien_dna.symptoms
 disease.cure = _S.diseases.alien_dna.cure
 disease.cure_price = 2000
 disease.emergency_sound = "emerg020.wav"
+disease.must_stand = true -- Alien Patients are forced to stand while queueing because of missing animation
 disease.only_emergency = true -- TODO implement (there are no normal door animations, so they cannot go to GP)
 disease.initPatient = function(patient)
   local which = math.random(0, 1) -- male or female?
