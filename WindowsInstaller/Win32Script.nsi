@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "Trunk Version"
+!define PRODUCT_VERSION "Beta 7"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -218,6 +218,7 @@ Section "MainSection" SEC01
   File ..\CorsixTH\*.lua
   File ..\CorsixTH\changelog.txt
   File ..\CorsixTH\LICENSE.txt
+  File ..\CorsixTH\README.txt
   
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -232,7 +233,7 @@ Section -AdditionalIcons
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk" "$INSTDIR\CorsixTH_SDL.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX9.lnk" "$INSTDIR\CorsixTH_DirectX9.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk" "$INSTDIR\CorsixTH_DirectX.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Map Editor.lnk" "$INSTDIR\MapEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
