@@ -508,7 +508,7 @@ function Hospital:onEndDay()
   end
 
   -- Is the boiler working today?
-  local breakdown = math.random(1, 120)
+  local breakdown = math.random(1, 240)
   if breakdown == 1 and not self.heating_broke and self.boiler_can_break
   and self.world.object_counts.radiator > 0 then
     if tonumber(self.world.map.level_number) then
