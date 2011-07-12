@@ -298,7 +298,7 @@ function Patient:tickDay()
   end 
 
   -- Vomitings.
-  if not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
+  if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
     --Only a patient with a health value of less than 0.7 can be the inital vomiter, however :)
     local initialVomitMult = 0.01   --The initial chance of vomiting.
