@@ -26,6 +26,7 @@ local TH = require "TH"
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
+local vomit_animations = permanent"humanoid_vomit_animations"({})
 local mood_icons = permanent"humanoid_mood_icons"({})
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
@@ -54,6 +55,10 @@ local function die_anims(name, fall, rise, wings, hands, fly, extra)
     fly_east = fly,
     extra_east = extra,
   }
+end
+
+local function vomit_anim(name, vomitAnim)
+  vomit_animations[name] = vomitAnim
 end
 
 local function moods(name, iconNo, prio, alwaysOn)
@@ -107,6 +112,18 @@ die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
 die_anims("Alien Male Patient",        4882, 2434, 2438, 2446,  2450)
 die_anims("Alien Female Patient",      4886, 3208, 3212, 3216,  3220)
 
+--  | Vomit Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+vomit_anim("Elvis Patient",              1034)
+vomit_anim("Standard Female Patient",    3184)
+vomit_anim("Standard Male Patient",      4476)
+vomit_anim("Alternative Male Patient",   4476)
+vomit_anim("Chewbacca Patient",          4138)
+vomit_anim("Invisible Patient",          4204)
+vomit_anim("Slack Male Patient",         4324)
+vomit_anim("Transparent Female Patient", 4452)
+vomit_anim("Transparent Male Patient",   4384)
 
 --   | Available Moods |
 --   | Name            |Icon|Priority|Show Always| Notes
@@ -440,6 +457,7 @@ function Humanoid:setType(humanoid_class)
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
   self.die_anims  = die_animations[humanoid_class]
+  self.vomit_anim = vomit_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}

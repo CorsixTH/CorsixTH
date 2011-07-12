@@ -74,6 +74,7 @@ CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text
 CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text
+CorsixTH/Lua/humanoid_actions/vomit.lua -text
 CorsixTH/Lua/languages/czech.lua -text
 CorsixTH/Lua/languages/russian.lua -text
 CorsixTH/Lua/objects/machines/operating_table.lua -text

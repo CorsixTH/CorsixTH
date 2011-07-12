@@ -192,6 +192,11 @@ function Patient:die()
   end
 end
 
+function Patient:vomit()
+  self:setNextAction{name = "vomit"}
+  self:queueAction{name = "meander"}
+end
+
 function Patient:goHome(cured)
   if self.going_home then
     return
@@ -292,6 +297,42 @@ function Patient:tickDay()
     return
   end 
 
+  -- Vomitings.
+  if not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
+    --Nausea level is based on health then proximity to vomit is used as a multiplier.
+    --Only a patient with a health value of less than 0.7 can be the inital vomiter, however :)
+    local initialVomitMult = 0.01   --The initial chance of vomiting.
+    local proximityVomitMult = 1.5  --The multiplier used when in proximity to vomit.
+    local nausea = (1.0 - self.attributes["health"]) * initialVomitMult
+    local foundVomit = {}
+    local numVomit = 0
+    
+    self.world:findObjectNear(self, "litter", 2, function(x, y)
+      local litter = self.world:getObject(x, y, "litter")
+        if litter:vomitInducing() then
+          local alreadyFound = false
+          for i=1,numVomit do
+            if foundVomit[i] == litter then
+              alreadyFound = true
+              break
+            end
+          end
+
+          if not alreadyFound then
+            numVomit = numVomit + 1
+            foundVomit[numVomit] = litter
+          end
+        end
+    end)
+    
+    if self.attributes["health"] <= 0.7 or numVomit > 0 then
+      nausea = nausea * ((numVomit+1) * proximityVomitMult)
+      if math.random() < nausea then
+        self:vomit()
+      end
+    end
+  end
+  
   -- Each tick both thirst, warmth and toilet_need changes and health decreases.
   self:changeAttribute("thirst", self.attributes["warmth"]*0.01+0.004*math.random() + 0.004)
   self:changeAttribute("toilet_need", 0.006*math.random() + 0.002)
@@ -441,7 +482,7 @@ function Patient:tickDay()
       end
     end
   end
-end  
+end
 
 -- Called each time the patients moves to a new tile.
 function Patient:setTile(x, y)
