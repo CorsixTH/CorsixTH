@@ -344,8 +344,8 @@ totd_window = {
     utf8 "Maskiner som f.eks. Pumpen i Pumperommet trenger vedlikehold. Ansett en Vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
     utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
-    utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink lege i Allmennpraksisen, da trenger du færre diagnoserom.",
-    utf8 "Turnusleger og Doktorer kan utvikle sine evner ved å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykologi eller Forskning) vil han også lære sine elever dette.",
+    utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink Lege i Allmennpraksisen, da trenger du færre diagnoserom.",
+    utf8 "Turnusleger og Doktorer kan utvikle sine evner ved å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykiatri eller Forskning) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
     utf8 "Du kan forandre noen innstillinger som opplösning og språk i innstillinger-vinduet som du finner på hovedmenyen eller på menyen inne i spillet.",
     utf8 "Hvert nivå har en rekke utfordringer som må fullföres för du kan gå videre til neste nivå. Sjekk statusen på utfordringene for nivået i Statusvinduet.",
@@ -353,7 +353,7 @@ totd_window = {
     utf8 "Du kan alltids finne fort ut hvilke pasienter som venter på å slippe inn i de ulike rommene, ved å flytte musepekeren over rommet.",
     utf8 "Klikk på dören til et rom for å se köen. Du kan gjöre nyttige finjusteringer her, som å organisere köen og sende pasienter til andre lignende rom.",
     utf8 "Irritert personale vil spörre om lönnspålegg jevnlig. Sörg for at dine ansatte jobber i komfortable omgivelser for å hindre at det skjer.",
-    utf8 "Pasientene svetter av spenning når de venter på behandling, og gjerne enda mer om du fyrer opp varmen. Plasser noen brusautomater i strategiske punkter på sykehuset for å tjene noen ekstra lapper.",
+    utf8 "Pasientene svetter av spenning når de venter på behandling, og gjerne enda mer om du fyrer opp varmen. Plasser noen Brusautomater i strategiske punkter på sykehuset for å tjene noen ekstra lapper.",
     utf8 "Du kan avbryte diagnose-prosessen ganske tidlig og gjette på riktig behandling, dersom du allerede har truffet på tilfeller av sykdommen. Vær oppmerksom på at dette öker sjangsen for feilbehandling. Du vil vel ikke avlive pasientene dine, vel?",
     utf8 "Nödtilfeller kan gjöre deg rik, så sant du har kapasitet til å behandle pasientene i tide.",
     utf8 "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
@@ -393,7 +393,7 @@ staff_title = {
   junior                = "Turnuslege",
   doctor                = "Doktor",
   surgeon               = "Kirurg",
-  psychiatrist          = "Psykolog",
+  psychiatrist          = "Psykiater",
   consultant            = "Konsulent",
   researcher            = "Forsker",
 }
@@ -440,7 +440,7 @@ staff_descriptions = {
     [6] = utf8 "Gjör strikkhopp. ",
     [7] = utf8 "Samler på ölbrikker. ",
     [8] = utf8 "Liker å stage-dive. ",
-    [9] = "Enjoys fart-surfing. ",
+    [9] = "Nyter fjertesurfing. ",
     [10] = utf8 "Liker å utvide elver. ",
     [11] = "Destillerer whisky. ",
     [12] = utf8 "Gjör-det-selv ekspert. ",
@@ -464,8 +464,8 @@ staff_descriptions = {
     [30] = utf8 "Piper ut dårlige standupartiser. ",
     [31] = utf8 "Gjör innkjöp for sykehusrådet. ",
     [32] = "Hemmelighetsfull gartner. ",
-    [33] = "Smugler uekte klokker. ",
-    [34] = "Vokalist i et rock'n'roll-band. ",
+    [33] = "Smugler falske klokker. ",
+    [34] = "Vokalist i et rockeband. ",
     [35] = utf8 "Forguder tv-titting på dagtid. ",
     [36] = utf8 "Fisker etter örret. ",
     [37] = utf8 "Lurer turister på museum. ",
@@ -544,7 +544,7 @@ object = {
   fire_extinguisher     = "Brannslukningsapp.",
   radiator              = "Ovn",
   plant                 = "Plante",
-  electrolyser          = "Elektrolyser",
+  electrolyser          = "Elektrolysator",
   jelly_moulder         = utf8 "Gelétönne",
   gates_of_hell         = "Helvetesporten",
   bed3                  = "Seng", -- unused duplicate
@@ -722,7 +722,7 @@ rooms_short = {
   
   gps_office        = "Allmennpraksis",
   psychiatric       = "Psykiatri",
-  ward              = "Sengeavdeling",
+  ward              = "Sykestue",
   operating_theatre = "Operasjonssal",
   pharmacy          = "Apotek",
   cardiogram        = "Kardio",
@@ -754,7 +754,7 @@ rooms_long = {
   
   gps_office        = "Allmennpraksis",
   psychiatric       = "Psykiatri",
-  ward              = "Sengeavdeling",
+  ward              = "Sykestue",
   operating_theatre = "Operasjonssal",
   pharmacy          = "Apotek",
   cardiogram        = "Kardiorom",
@@ -781,12 +781,12 @@ rooms_long = {
 room_descriptions = {
   ultrascan = {
     [1] = "Ultraskanner//",
-    [2] = utf8 "Ultraskanneren er virtuelt i toppklassen innenfor diagnoseutstyr. Den koster mye, men det lönner seg om du vil ha superb diagnosering på ditt sykehus.//",
+    [2] = utf8 "Ultraskanneren er virtuelt i toppklassen innenfor diagnoseutstyr. Den koster mye, men det lönner seg om du vil ha superb diagnostisering på ditt sykehus.//",
     [3] = utf8 "Ultraskanneren kan kun håndteres av ".. staff_class.doctor .."r. Den krever også vedlikehold. ",
   },
   gp = {
     [1] = "Allmennpraksis//",
-    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler dem. Videre blir de sendt enten til dypere diagnosering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er, og jo mer ekstragjenstander du plasserer i rommet, des bedre presterer legen. Dette gjelder også for alle andre rom.//",
+    [2] = utf8 "Dette er det fundamentale diagnoserommet på ditt sykehus. Nye pasienter blir sendt hit for å finne ut hva som feiler dem. Videre blir de sendt enten til dypere diagnostisering eller til et rom hvor de kan få behandling for sine plager. Du trenger sannsynligvis flere Allmennpraksiser om det oppstår lange köer. Jo större rommet er og jo mer utstyr du plasserer i rommet, desto bedre presterer Legen. Dette gjelder også for alle andre rom.//",
     [3] = utf8 "Allmennpraksisen kan kun håndteres av Leger. ",
   },
   fracture_clinic = {
@@ -799,7 +799,7 @@ room_descriptions = {
   },
   inflation = {
     [1] = "Pumperom//",
-    [2] = utf8 "Pasienter med sitt smertefulle, men dog humoristiske Ballonghode, må behandles på Pumperommet. Her blir hodet stukket hull på, trykket forsvinner, og en lege pumper hodet opp til riktig trykknivå.//",
+    [2] = utf8 "Pasienter med sitt smertefulle, men dog humoristiske Ballonghode, må behandles på Pumperommet. Her blir hodet stukket hull på, trykket forsvinner, og en Lege pumper hodet opp til riktig trykknivå.//",
     [3] = utf8 "Pumperommet kan kun håndteres av Leger. Regelmessig vedlikehold er også viktig. ",
   },
   jelly_vat = {
@@ -809,7 +809,7 @@ room_descriptions = {
   },
   scanner = {
     [1] = "Skanner//",
-    [2] = utf8 "Pasienter får veldig nöyaktig diagnosert sin sykdom ved bruk av den sofistikerte Skanneren. Deretter går de til Allmennpraksisen og snakker med en Lege for videre behandling.//",
+    [2] = utf8 "Pasienter får veldig nöyaktig diagnostisert sin sykdom ved bruk av den sofistikerte Skanneren. Deretter går de til Allmennpraksisen og snakker med en Lege for videre behandling.//",
     [3] = utf8 "Skanneren kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   blood_machine = {
@@ -819,23 +819,23 @@ room_descriptions = {
   },
   pharmacy = {
     [1] = "Apotek//",
-    [2] = utf8 "Pasienter som har blitt diagnosert og trenger behandling av et medikament må besöke Apoteket for å få medisinen sin. Ettersom fler og fler medisinkurer er forsket på og blir tilgjengelige, blir dette rommet stadig travlere. Du önsker kanskje å bygge et nytt Apotek senere.//",
+    [2] = utf8 "Pasienter som har blitt diagnostisert og trenger behandling av et medikament må besöke Apoteket for å få medisinen sin. Ettersom fler og fler medisinkurer er forsket på og blir tilgjengelige, blir dette rommet stadig travlere. Du önsker kanskje å bygge et nytt Apotek senere.//",
     [3] = utf8 "Apoteket kan kun håndteres av Sykepleiere. ",
   },
   cardiogram = {
     [1] = "Kardiorom//",
-    [2] = utf8 "Pasienter blir undersökt og diagnosert her, för de går tilbake til Allmennpraksisen for å få utpekt en kur.//",
+    [2] = utf8 "Pasienter blir undersökt og diagnostisert her, för de går tilbake til Allmennpraksisen for å få utpekt en kur.//",
     [3] = utf8 "Kardiorommet kan kun håndteres av Leger. Det kreves også vedlikehold. ",
   },
   ward = {
-    [1] = "Sengeavdeling//",
-    [2] = utf8 "Pasientene blir lagt inn her for observasjon av en Sykepleier mens de diagnoseres. De forblir her til de er klare for å legges under kniven på Operasjonssalen.//",
+    [1] = "Sykestue//",
+    [2] = utf8 "Pasientene blir lagt inn her for observasjon av en Sykepleier mens de diagnostiseres. De forblir her til de er klare for å legges under kniven på Operasjonssalen.//",
     [3] = utf8 "Sengeavdelingen kan kun håndteres av Sykepleiere. ",
   },
   psych = {
     [1] = "Psykiatri//",
-    [2] = utf8 "Pasienter diagnosert med psykiske lidelser må gå til Psykiatrien for å få rådgivning. Psykologene kan kjöre diagnose for å finne ut hva slags type sykdom pasientene lider av, og hvis mental opprinnelse, så behandle dem ved å benytte den pålitelige sofaen.//",
-    [3] = utf8 "Psykiatrien kan kun håndteres av Kvalifisert Psykolog. ",
+    [2] = utf8 "Pasienter diagnostisert med psykiske lidelser må gå til Psykiatrien for å få rådgivning. Psykiatrene kan kjöre diagnose for å finne ut hva slags type sykdom pasientene lider av, og hvis mental opprinnelse, så behandle dem ved å benytte den pålitelige sofaen.//",
+    [3] = utf8 "Psykiatrien kan kun håndteres av kvalifisert Psykiater. ",
   },
   staff_room = {
     [1] = "Personalrom//",
@@ -848,7 +848,7 @@ room_descriptions = {
   },
   training = {
     [1] = "Klasserom//",
-    [2] = utf8 "Turnuslegene og Doktorene dine kan få, verdifulle, ekstra kvalifikasjoner ved å studere i dette rommet. En Konsulent med Kirurgi-, Forsker- eller Psykologi-fordypning vil lære bort dette til de Legene som sitter i rommet. Leger som allerede har disse ferdighetene vil bli enda flinkere mens de er her.//",
+    [2] = utf8 "Turnuslegene og Doktorene dine kan få, verdifulle, ekstra kvalifikasjoner ved å studere i dette rommet. En Konsulent med Kirurgi-, Forsker- eller Psykiatri-fordypning vil lære bort dette til de Legene som sitter i rommet. Leger som allerede har disse ferdighetene vil bli enda flinkere mens de er her.//",
     [3] = utf8 "Klasserommet kan kun håndteres av en Konsulent. ",
   },
   dna_fixer = {
@@ -878,7 +878,7 @@ room_descriptions = {
   },
   slack_tongue = {
     [1] = "Tungeklinikk//",
-    [2] = utf8 "Pasienter som blir diagnosert med Lös tunge fra Allmennpraksisen, vil bli sendt til denne klinikken for behandling. Legen bruker en höyteknologisk maskin som forlenger tungen og kutter den av, dermed bringes pasienten tilbake til normal, god helse.//",
+    [2] = utf8 "Pasienter som blir diagnostisert med Lös tunge fra Allmennpraksisen, vil bli sendt til denne klinikken for behandling. Legen bruker en höyteknologisk maskin som forlenger tungen og kutter den av, dermed bringes pasienten tilbake til normal, god helse.//",
     [3] = utf8 "Tungekutteren kan kun håndteres av Leger. Det kreves også vedlikehold nok så ofte. ",
   },
   toilets = {
@@ -947,7 +947,7 @@ no_research = utf8 "Ingen forskning blir utfört i denne kategorien for öyeblik
 policy = {
   header            = "SYKEHUSPOLICY",
   diag_procedure    = "diagnoserutiner",
-  diag_termination  = "diagnosering",
+  diag_termination  = "diagnostisering",
   staff_rest        = utf8 "pauserutiner",
   staff_leave_rooms = "forlate rom",
   
@@ -1265,11 +1265,11 @@ casebook = {
   cure                 = "kur",
   cure_desc = {
     build_room         = utf8 "Jeg anbefaler deg å bygge %s", -- %s (room name)
-    build_ward         = "Du trenger fremdeles en Sengeavdeling.",
-    hire_doctors       = utf8 "Du må ansette noen leger.",
-    hire_surgeons      = utf8 "Du må ansette kirurger.",
-    hire_psychiatrists = utf8 "Du må ansette psykologer.",
-    hire_nurses        = utf8 "Du må ansette sykepleiere.",
+    build_ward         = "Du trenger fremdeles en Sykestue.",
+    hire_doctors       = utf8 "Du må ansette noen Leger.",
+    hire_surgeons      = utf8 "Du må ansette Kirurger.",
+    hire_psychiatrists = utf8 "Du må ansette Psykiatere.",
+    hire_nurses        = utf8 "Du må ansette Sykepleiere.",
     no_cure_known      = "Ingen kjente kurer.",
     cure_known         = "Kur.",
     improve_cure       = "Forbedre kur",
@@ -1325,7 +1325,7 @@ tooltip = {
     salary             = utf8 "Lönnskrav",
     qualifications     = "Legens spesialisering",
     surgeon            = "Kirurg",
-    psychiatrist       = "Psykolog",
+    psychiatrist       = "Psykiater",
     researcher         = "Forsker",
   },
   
@@ -1341,10 +1341,10 @@ tooltip = {
   
   -- Staff list
   staff_list = {
-    doctors            = "Se en oversikt over dine leger",
-    nurses             = "Se en oversikt over dine sykepleiere",
-    handymen           = "Se en oversikt over dine vaktmestere",
-    receptionists      = "Se en oversikt over dine resepsjonister",
+    doctors            = "Se en oversikt over dine Leger",
+    nurses             = "Se en oversikt over dine Sykepleiere",
+    handymen           = "Se en oversikt over dine Vaktmestere",
+    receptionists      = "Se en oversikt over dine Resepsjonister",
     
     happiness          = utf8 "Viser hvordan humöret på dine ansatte er",
     tiredness          = utf8 "Viser hvor trött dine ansatte er",
@@ -1370,10 +1370,10 @@ tooltip = {
     view_staff         = utf8 "Vis ansatt på jobb",
     
     surgeon            = "Kvalifisert Kirurg",
-    psychiatrist       = "Kvalifisert Psykolog",
+    psychiatrist       = "Kvalifisert Psykiater",
     researcher         = "Kvalifisert Forsker",
     surgeon_train      = "%d%% ferdig med fordypning innen kirurgi", -- %d (percentage trained)
-    psychiatrist_train = "%d%% ferdig med fordypning innen psykologi", -- %d (percentage trained)
+    psychiatrist_train = "%d%% ferdig med fordypning innen psykiatri", -- %d (percentage trained)
     researcher_train   = "%d%% ferdig med fordypning innen forskning", -- %d (percentage trained)
     
     skills             = "Ekstra evner",
@@ -1382,9 +1382,9 @@ tooltip = {
   -- Queue window
   queue_window = {
     num_in_queue       = utf8 "Antall pasienter i köen",
-    num_expected       = utf8 "Antall pasienter resepsjonisten forventer i köen innen kort tid",
+    num_expected       = utf8 "Antall pasienter Resepsjonisten forventer i köen innen kort tid",
     num_entered        = utf8 "Antall pasienter som er behandlet i dette rommet så langt",
-    max_queue_size     = utf8 "Maksimal lengde på köen som resepsjonisten skal etterstrebe",
+    max_queue_size     = utf8 "Maksimal lengde på köen som Resepsjonisten skal etterstrebe",
     dec_queue_size     = utf8 "Senk maksimal kölengde",
     inc_queue_size     = utf8 "Ök maksimal kölengde",
     front_of_queue     = utf8 "Dra en pasient hit for å stille han/henne fremst i köen",
@@ -1392,7 +1392,7 @@ tooltip = {
     close              = "Lukk vindu",
     patient            = utf8 "Dra en pasient for å flytte han/henne i köen. Höyreklikk på en pasient for å sende han/henne hjem eller til et konkurrerende sykehus",
     patient_dropdown = {
-      reception        = "Henvis pasient til resepsjonist",
+      reception        = "Henvis pasient til Resepsjonist",
       send_home        = "Send pasienten hjem",
       hospital_1       = "Henvis pasienten til et annet sykehus",
       hospital_2       = "Henvis pasienten til et annet sykehus",
@@ -1441,7 +1441,7 @@ tooltip = {
     doctor_seniority   = "Stilling (Turnuslege, Doktor, Konsulent)",
     skills             = "Spesialisering",
     surgeon            = "Kirurg",
-    psychiatrist       = "Psykolog",
+    psychiatrist       = "Psykiater",
     researcher         = "Forsker",
     salary             = utf8 "Månedslönn",
     center_view        = utf8 "Venstreklikk for å finne den ansatte, höyreklikk for å bla gjennom de ansatte.",
@@ -1454,7 +1454,7 @@ tooltip = {
     close              = "Lukk vindu",
     times_used         = "Antall gangen maskinen er brukt",
     status             = "Maskinstatus",
-    repair             = utf8 "Kall på vaktmester for å fikse maskinen",
+    repair             = utf8 "Kall på Vaktmester for å fikse maskinen",
     replace            = "Erstatt maskin",
   },
   
@@ -1469,9 +1469,9 @@ tooltip = {
     happiness          = utf8 "Humörnivå",
     tiredness          = utf8 "Tretthetsnivå",
     ability            = "Evner",
-    prio_litter        = utf8 "Be vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
-    prio_plants        = utf8 "Be vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
-    prio_machines      = utf8 "Be vaktmesteren om å prioritere reparasjon av maskiner höyere", -- contains "handyman"
+    prio_litter        = utf8 "Be Vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
+    prio_plants        = utf8 "Be Vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
+    prio_machines      = utf8 "Be Vaktmesteren om å prioritere reparasjon av maskiner höyere", -- contains "handyman"
     salary             = utf8 "Månedslönn",
     center_view        = "Sentrer i skjermbildet", -- contains "handyman"
     sack               = "Si opp",
@@ -1503,7 +1503,7 @@ tooltip = {
     cure_type = {
       drug             = "Denne behandlingen krever medisin",
       drug_percentage  = "Denne behandlingen krever medisin - din er %d%% effektiv", -- %d (effectiveness percentage)
-      psychiatrist     = "En psykolog kreves for behandling",
+      psychiatrist     = "En Psykiater kreves for behandling",
       surgery          = "Denne sykdommen krever en operasjon",
       machine          = "Denne sykdommen krever en maskin for behandling",
       unknown          = "Du vet ikke hvordan du skal behandle denne sykdommen enda",
@@ -1517,7 +1517,7 @@ tooltip = {
       hire_surgeon     = utf8 "Du trenger en Kirurg til for å gjennomföre behandlingen",
       hire_staff       = utf8 "Du må ansette en %s for å gjennomföre behandlingen", -- %s (staff type)
       hire_staff_old   = utf8 "Du må ansette en %s for å gjennomföre behandlingen",
-      build_ward       = utf8 "Du må bygge en Sengeavdeling for å kunne gjennomföre behandlingen",
+      build_ward       = utf8 "Du må bygge en Sykestue for å kunne gjennomföre behandlingen",
       ward_hire_nurse  = utf8 "Du trenger en Sykepleier på Sengeavdelingen for å gjennomföre behandlingen",
       not_possible     = utf8 "Du kan ikke håndtere denne behandlingen enda",
     },
@@ -1624,8 +1624,8 @@ tooltip = {
     close              = "Lukk sykehuspolicy",
     staff_leave        = utf8 "Klikk her for å få personale som ikke er opptatt til å hjelpe kollegaer som trenger det",
     staff_stay         = utf8 "Klikk her for å få personale til å bli i rommene du plasserer dem i",
-    diag_procedure     = "Om en leges stilte diagnose er mindre sikker en SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
-    diag_termination   = utf8 "En pasients diagnosering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
+    diag_procedure     = "Om en Leges stilte diagnose er mindre sikker enn SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
+    diag_termination   = utf8 "En pasients diagnostisering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
     staff_rest         = utf8 "Hvor trött personalet må være för de kan hvile",
   },
   
@@ -1637,29 +1637,29 @@ tooltip = {
   
   -- Watch
   watch = {
-    hospital_opening   = utf8 "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE knappen vil åpne sykehuset umiddelbart.",
+    hospital_opening   = utf8 "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE-knappen, så vil sykehuset åpne umiddelbart.",
     emergency          = utf8 "Nödstilfelle: Tid som gjenstår til å behandle alle akutte pasienter.",
-    epidemic           = utf8 "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en sykepleier til å vaksinere de.",
+    epidemic           = utf8 "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, så kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en Sykepleier til å vaksinere dem.",
   },
   
   -- Rooms
   rooms = {
     gps_office         = utf8 "Pasientene får sin förste konsultasjon og tilhörende resultater på Allmennpraksisen",
-    psychiatry         = utf8 "Psykiatrien kurerer gale pasienter og hjelper til med diagnosering av andre pasienter, men trenger en Lege med spesialisering innenfor Psykiatri",
-    ward               = utf8 "Sengeavdelinger er nyttige for både diagnosering og behandling. Pasienter blir sendt hit for observasjon men også for overvåkning etter operasjoner. Sengeavdelingen krever en Sykepleier",
+    psychiatry         = utf8 "Psykiatrien kurerer gale pasienter og hjelper til med diagnostiseringen av andre pasienter, men trenger en Lege med spesialisering innenfor Psykiatri",
+    ward               = utf8 "Sengeavdelinger er nyttige for både diagnostisering og behandling. Pasienter blir sendt hit for observasjon men også for overvåkning etter operasjoner. Sengeavdelingen krever en Sykepleier",
     operating_theatre  = "Operasjonssalen krever to Leger med spesialisering innenfor Kirurgi",
     pharmacy           = utf8 "Sykepleieren skriver ut medisiner på apoteket for å kurere pasienter",
-    cardiogram         = utf8 "En Lege bruker Kardio for å diagnosere pasienter",
-    scanner            = utf8 "En Lege bruker Skanneren for å diagnosere pasienter",
-    ultrascan          = utf8 "En Lege bruker Ultraskanneren for å diagnosere pasienter",
-    blood_machine      = utf8 "En Lege bruker Blodmaskinen for å diagnosere pasienter",
-    x_ray              = utf8 "En Lege bruker Röntgen for å diagnosere pasienter",
+    cardiogram         = utf8 "En Lege bruker Kardio for å diagnostisere pasienter",
+    scanner            = utf8 "En Lege bruker Skanneren for å diagnostisere pasienter",
+    ultrascan          = utf8 "En Lege bruker Ultraskanneren for å diagnostisere pasienter",
+    blood_machine      = utf8 "En Lege bruker Blodmaskinen for å diagnostisere pasienter",
+    x_ray              = utf8 "En Lege bruker Röntgen for å diagnostisere pasienter",
     inflation          = utf8 "En Lege bruker Pumperommet for å behandle pasienter med Ballonghode",
     dna_fixer          = utf8 "En Lege bruker DNA-maskinen for å behandle pasienter med Utenomjordisk DNA",
     hair_restoration   = utf8 "En Lege bruker Hårklinikken for å behandle pasienter med Flintskalle",
     tongue_clinic      = utf8 "En Lege bruker Tungekutteren for å behandle pasienter med Lös tunge",
     fracture_clinic    = utf8 "En Sykepleier bruker Benbruddsklinikken for å reparere Benbrudd",
-    training_room      = utf8 "Et klasserom med en Konsulent kan brukes til å lære opp andre leger",
+    training_room      = utf8 "Et klasserom med en Konsulent kan brukes til å lære opp andre Leger",
     electrolysis       = utf8 "En Lege bruker Elektrolyseklinikken for å behandle pasienter med Pelssyndrom",
     jelly_vat          = utf8 "En Lege bruker Gelétönnen for å behandle pasienter med Gelésyndrom",
     staffroom          = utf8 "Leger, Sykepleiere og Vaktmestre bruker personalrommet for å hvile og heve humöret",
@@ -1708,7 +1708,7 @@ tooltip = {
     op_sink1             = S[40][34], -- no description
     op_sink2             = S[40][35], -- no description
     surgeon_screen       = S[40][36], -- no description
-    lecture_chair        = utf8 "Forelesningsstol: dine legestudenter sitter her og tar notater, kjeder seg og rabler ivrig. Jo flere stoler du har, jo större kan klassen være.",
+    lecture_chair        = utf8 "Forelesningsstol: dine Legestudenter sitter her og tar notater, kjeder seg og rabler ivrig. Jo flere stoler du har, jo större kan klassen være.",
     projector            = S[40][38], -- no description
     bed2                 = S[40][39], -- unused duplicate
     pharmacy_cabinet     = "Apotekskap: medisinbeholdningen din finnes her",
@@ -1750,23 +1750,23 @@ adviser = {
     rotate_and_place_reception     = utf8 "Klikk med höyre museknapp for å rotere Resepsjonen, og venstreklikk for å plassere den i sykehuset.",
     reception_invalid_position     = utf8 "Resepsjonen er nå grå fordi det er en ugyldig plassering. Pröv å flytte eller rotere den.",
     hire_receptionist         = utf8 "Du trenger nå en Resepsjonist til å stå i resepsjonen og henvise dine pasienter.",
-    select_receptionists       = utf8 "Venstreklikk på det blinkende ikonet for å se gjennom tilgjengelige resepsjonister. Nummeret på ikonet viser antall som er tilgjengelig.",
-    next_receptionist         = utf8 "Dette er den förste resepsjonisten i listen. Venstreklikk på det blinkende ikonet for å se på neste person.",
+    select_receptionists       = utf8 "Venstreklikk på det blinkende ikonet for å se gjennom tilgjengelige Resepsjonister. Nummeret på ikonet viser antall som er tilgjengelig.",
+    next_receptionist         = utf8 "Dette er den förste Resepsjonisten i listen. Venstreklikk på det blinkende ikonet for å se på neste person.",
     prev_receptionist         = utf8 "Venstreklikk på det blinkende ikonet for å se på forrige person.",
-    choose_receptionist       = utf8 "Avgjör hvilken resepsjonist som har gode evner og akseptable lönnskrav, og venstreklikk på det blinkende ikonet for å ansette henne.",
-    place_receptionist         = utf8 "Flytt resepsjonisten og plasser henne hvor som helst. Hun klarer å finne veien til resepsjonen selv.",
+    choose_receptionist       = utf8 "Avgjör hvilken Resepsjonist som har gode evner og akseptable lönnskrav, og venstreklikk på det blinkende ikonet for å ansette henne.",
+    place_receptionist         = utf8 "Flytt Resepsjonisten og plasser henne hvor som helst. Hun klarer å finne veien til resepsjonen selv.",
     receptionist_invalid_position   = utf8 "Du kan ikke plassere henne der.",
     window_in_invalid_position     = utf8 "Dette vinduet kan ikke være her. Pröv å plassere det en annen plass på veggen, er du snill.",
     choose_doctor           = utf8 "Se nöye gjennom evnene til hver enkelt Lege för du bestemmer deg for hvem du vil ansette.",
     click_and_drag_to_build       = utf8 "For å bygge en Allmennpraksis, må du först avgjöre hvor stor den skal være. Klikk og hold inne venstre museknapp for å justere rommets störrelse.",
-    build_gps_office         = utf8 "For å starte å diagnosere pasientene dine, må du ha en Allmennpraksis.",
+    build_gps_office         = utf8 "For å starte å diagnostisere pasientene dine, må du ha en Allmennpraksis.",
     door_in_invalid_position     = utf8 "Oj, sann! Du prövde å plassere dören i en ugyldig posisjon. Pröv en annen plass på veggen av blåkopien.",
     confirm_room           = utf8 "Venstreklikk på det blinkende ikonet for å ferdigstille rommet ditt, eller klikk på X-en for å gå et trinn tilbake.",
     select_diagnosis_rooms       = utf8 "Venstreklikk på det blinkende ikonet for å se en liste over diagnoserom du kan bygge.",
-    hire_doctor           = utf8 "Du trenger en Lege for å diagnosere og behandle syke mennesker.",
+    hire_doctor           = utf8 "Du trenger en Lege for å diagnostisere og behandle syke mennesker.",
     select_doctors           = utf8 "Venstreklikk på det blinkende ikonet for å se hvilke Leger som er tilgjengelig i arbeidsmarkedet.",
     place_windows           = utf8 "Plasser vinduer på samme måten som du plasserte dören. Du trenger ikke vinduer, men de ansatte setter veldig pris på det, og blir blidere når de har noe å se ut gjennom.",
-    place_doctor           = utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart noen trenger å diagnoseres.",
+    place_doctor           = utf8 "Plasser Legen hvor som helst i Sykehuset. Han vil spasere til Allmennpraksisen så snart noen trenger å diagnostiseres.",
     room_in_invalid_position     = utf8 "Oj! Denne blåkopien er ikke gyldig - det röde området indikerer hvor du har overlappet et annet rom eller sykehusets vegger.",
     doctor_in_invalid_position     = utf8 "Hei! Du kan ikke slippe Legen her.",
     place_objects           = utf8 "Höyreklikk for å rotere gjenstander, og venstreklikk for å plassere dem.",
@@ -1777,7 +1777,7 @@ adviser = {
     object_in_invalid_position     = utf8 "Denne gjenstanden er ugyldig plassert. Vær vennlig å plasser den et annet sted, eller roter den for å få den til å passe.",
     place_door             = utf8 "Flytt musen rundt om kring på blåkopiens vegger for å plassere dören der du vil ha den.",
     room_big_enough         = utf8 "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
-    build_pharmacy           = utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en sykepleier for å ha et fungerende sykehus.",
+    build_pharmacy           = utf8 "Gratulerer! Nå må du bygge et Apotek og ansette en Sykepleier for å ha et fungerende sykehus.",
   },
   
   -- Cheats
@@ -1787,7 +1787,7 @@ adviser = {
     hairyitis_off_cheat = "Pelssyndom-kode deaktivert.",
     roujin_on_cheat = "Roujins utfordring aktivert! Lykke til...",
     roujin_off_cheat = "Roujins utfordring deaktivert.",
-    crazy_on_cheat = utf8 "Å nei! Alle legene har blitt gale!",
+    crazy_on_cheat = utf8 "Å nei! Alle Legene har blitt gale!",
     crazy_off_cheat = utf8 "Puh... Legene har fått tilbake forstanden.",
     bloaty_cheat = "Ballonghode-kode aktivert!",
     bloaty_off_cheat = "Ballonghode-kode deaktivert.",
@@ -1803,7 +1803,7 @@ adviser = {
   -- Staff advice
   staff_advice = {
     need_handyman_machines   = utf8 "Du må ansette Vaktmestre om du vil holde maskinene dine ved like.",
-    need_doctors       = utf8 "Du trenger flere Leger. Pröv å plassere dine beste leger i rommene med lengst kö.",
+    need_doctors       = utf8 "Du trenger flere Leger. Pröv å plassere dine beste Leger i rommene med lengst kö.",
     need_handyman_plants   = utf8 "Du må ansette en Vaktmester for å vanne plantene.",
     need_handyman_litter   = utf8 "Folk har begynt å forsöple sykehuset ditt. Ansett en Vaktmester for å rydde opp etter pasientene dine.",
     need_nurses       = utf8 "Du trenger flere Sykepleiere. Sengeavdelinger og Apotek kan bare driftes av Sykepleiere.",
@@ -1834,8 +1834,8 @@ adviser = {
   
   -- Surgery requirements
   surgery_requirements = {
-    need_surgeons_ward_op   = utf8 "Du trenger to Kirurger og en Sengeavdeling i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
-    need_surgeon_ward     = utf8 "Du trenger en Kirurg til og en Sengeavdeling for å gjöre kirurgiske inngrep.",
+    need_surgeons_ward_op   = utf8 "Du trenger to Kirurger og en Sykestue i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
+    need_surgeon_ward     = utf8 "Du trenger en Kirurg til og en Sykestue for å gjöre kirurgiske inngrep.",
   },
   
   -- Vomit wave
@@ -1866,7 +1866,7 @@ adviser = {
   -- Staff place advice
   staff_place_advice = {
     receptionists_only_at_desk     = utf8 "Resepsjonister kan kun jobbe i Resepsjoner.",
-    only_psychiatrists         = utf8 "Leger kan bare jobbe i Psykiatri dersom de er kvalifiserte Psykologer.",
+    only_psychiatrists         = utf8 "Leger kan bare jobbe i Psykiatri dersom de er kvalifiserte Psykiatere.",
     only_surgeons           = utf8 "Leger kan bare jobbe i Operasjonssalen dersom de er kvalifiserte Kirurger.",
     only_nurses_in_room       = utf8 "Det er kun Sykepleiere som kan jobbe på %s",
     only_doctors_in_room       = utf8 "%s kan kun håndteres av Leger",
@@ -1888,7 +1888,7 @@ adviser = {
   
   -- Boiler issue
   boiler_issue = {
-    minimum_heat   = utf8 "Å, der er du. Sentralfyren i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
+    minimum_heat   = utf8 "Der er du! Sentralfyren i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
     maximum_heat   = utf8 "Sentralfyren i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
     resolved     = utf8 "Gode nyheter. Sentralvarmen fungerer slik som den skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
   },
@@ -1904,9 +1904,9 @@ adviser = {
   room_requirements = {
     research_room_need_researcher   = utf8 "Du må ansette en Lege med spesialisering innenfor Forskning for å kunne ta i bruk Forskningsavdelingen.",
     op_need_another_surgeon     = utf8 "Du trenger fremdeles en Kirurg til, for å kunne ta i bruk Operasjonssalen.",
-    op_need_ward           = utf8 "Du må bygge en Sengeavdeling for å overvåke pasienter som skal opereres.",
+    op_need_ward           = utf8 "Du må bygge en Sykestue for å overvåke pasienter som skal opereres.",
     reception_need_receptionist   = utf8 "Du må ansette en Resepsjonist for å ta imot pasientene.",
-    psychiatry_need_psychiatrist   = utf8 "Du må ansette en Psykolog, nå som du har bygget Psykiatri.",
+    psychiatry_need_psychiatrist   = utf8 "Du må ansette en Psykiater nå som du har bygget Psykiatri.",
     pharmacy_need_nurse       = utf8 "Du må ansette en Sykepleier for å drifte Apoteket.",
     ward_need_nurse         = utf8 "Du må ansette en Sykepleier som kan jobbe på denne Sengeavdelingen.",
     op_need_two_surgeons       = utf8 "Ansett to Kirurger for å utföre kirurgiske inngrep i Operasjonssalen.",
@@ -1933,7 +1933,7 @@ adviser = {
     charges_too_high       = utf8 "Dine priser er for höye. Dette gir deg god profitt på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
     plants_thirsty         = utf8 "Du må huske på plantene dine. De er törste.",
     staff_overworked       = utf8 "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når di er trötte.",
-    queue_too_long_at_reception = utf8 "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en resepsjonist til.",
+    queue_too_long_at_reception = utf8 "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en Resepsjonist til.",
     queue_too_long_send_doctor   = utf8 "Köen til %s er for lang. Sörg for at det er en Lege i rommet.",
     handymen_tired         = utf8 "Dine Vaktmestere er veldig trött. Gi dem hvile nå.",
     money_low           = utf8 "Du begynner å gå tom for penger!",
@@ -2057,7 +2057,7 @@ adviser = {
       autopsy_available = utf8 "Obduksjonsautomaten er nå ferdigutviklet. Med denne kan du kvitte deg med tröblete eller ikke-velkomne pasienter, og gjöre forskning ut av restene. Advarsel - Å benytte denne er svært kontroversielt.",
       first_patients_thirsty = utf8 "Flere av pasientene dine begynner å bli dehydrert. De ville satt pris på en Brusautomat.",
       research_now_available = utf8 "Du har bygd din förste Forskningsavdeling. Du har nå tilgang til Forskningsskjermen.",
-      psychiatric_symbol = utf8 "Leger med spesialisering innen Psykologi gjenkjennes med symbolet: |",
+      psychiatric_symbol = utf8 "Leger med spesialisering innen Psykiatri gjenkjennes med symbolet: |",
       decrease_heating = utf8 "Folk på sykehuset ditt svetter. Skru ned sentralvarmen. Dette gjöres på Områdekartet.",
       surgeon_symbol = utf8 "Leger kan utföre kirurgiske inngrep om de har symbolet: {",
       first_emergency = utf8 "Akutte pasienter har et blinkende blått lys over hodet. Behandle dem i tide, ellers dör de.",
@@ -2201,8 +2201,8 @@ letter = {
   },
   [12] = {
     [1] = utf8 "Kjære %s//",
-    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid, er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisinverdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne, åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg, og det ville vært god PR for oss alle!//",
-    [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid! Og vi skal sörge for at du får politieskorte hvor enn du går.//",
+    [2] = utf8 "Din suksessrike karriere som den beste sykehusadministratoren siden Moses sin tid er ved veis ende. Men siden du har hatt så stor innvirkning på den koselige medisinverdenen, önsker departementet å tilby deg en lönn på $%d bare for å være til stede på våre vegne i åpne fester, sjösette skip og stille opp på show. Hele verden etterlyser deg og det ville vært god PR for oss alle!//",
+    [3] = utf8 "Vær så snill å ta imot denne stillingen, det blir ikke hardt arbeid!//",
     [4] = "",
   },
 }
@@ -2307,13 +2307,13 @@ diseases = {
     name     = "Pelssyndrom", 
     cause     = utf8 "Årsak - Fullmåne.", 
     symptoms   = utf8 "Symptomer - Ökt luktesans.", 
-    cure    = utf8 "Behandling - En elektrosjokkmaskin fjerner håret, og tetter igjen porene.", 
+    cure    = utf8 "Behandling - En elektrosjokkmaskin fjerner håret og tetter igjen porene.", 
   },
   king_complex           = { 
     name     = "Rock'n'Roll syndrom", 
     cause     = utf8 "Årsak - Elivs' ånd tar over kontrollen over pasientens hode", 
     symptoms   = utf8 "Symptomer - Går med fargede lærsko, og spiser cheeseburgere", 
-    cure     = utf8 "Behandling - En psykolog forteller pasienten hvor tåpelig han eller hun ser ut", 
+    cure     = utf8 "Behandling - En Psykiater forteller pasienten hvor tåpelig han eller hun ser ut", 
   },
   invisibility           = { 
     name     = "Usynlighet", 
@@ -2355,7 +2355,7 @@ diseases = {
     name     = "Skrapesyke", 
     cause     = utf8 "Årsak - Små insekter med skarpe tenner.", 
     symptoms   = utf8 "Symptomer - Pasienten klör intenst, og huden flasser.", 
-    cure     = utf8 "Behandling - En sykepleier gir pasienten en sirupaktig drikk som leger huden og hindrer videre klöe.",
+    cure     = utf8 "Behandling - En Sykepleier gir pasienten en sirupaktig drikk som leger huden og hindrer videre klöe.",
   },
   jellyitis              = { 
     name     = utf8 "Gelésyndrom", 
@@ -2367,7 +2367,7 @@ diseases = {
     name     = utf8 "Sövnsyke", 
     cause     = utf8 "Forårsaket av overaktive sövnkjertler i munnens gane.", 
     symptoms   = utf8 "Symptomer - Sterkt önske om å sove, hvor og når som helst.", 
-    cure     = "Behandling - En sterk dose stimulerende medisin blir delt ut av en sykepleier.",
+    cure     = "Behandling - En sterk dose stimulerende medisin blir delt ut av en Sykepleier.",
   },
   pregnancy              = { 
     name     = "Graviditet", 
@@ -2397,37 +2397,37 @@ diseases = {
     name     = "Juleribbe", 
     cause     = utf8 "Årsak - Pasienten har sittet på kalde steingulv.", 
     symptoms   = utf8 "Symptomer - Ubehagelig fölelse i brystet.", 
-    cure     = "Behandling - Ribben fjernes av to kirurger, og leveres til pasienten i en doggybag.",
+    cure     = "Behandling - Ribben fjernes av to Kirurger, og leveres til pasienten i en doggybag.",
   },
   kidney_beans           = { 
     name     = "Kikkerter", 
     cause     = utf8 "Årsak - Pasienten har spist isbiter.", 
     symptoms   = utf8 "Symptomer - Smerte og hyppige turer til toalettet.", 
-    cure     = utf8 "Behandling - To kirurger fjerner de erteliknende parasittene, uten å beröre nyrene!",
+    cure     = utf8 "Behandling - To Kirurger fjerner de erteliknende parasittene, uten å beröre nyrene!",
   },
   broken_heart           = { 
     name     = "Knust hjerte",
     cause     = utf8 "Årsak - Noen er rikere, yngre og slankere enn pasienten.", 
     symptoms   = utf8 "Symptomer - Hysterisk gråtende. Blodsprengte fingertupper etter å ha revet opp feriebilder.", 
-    cure     = "Behandling - To kirurger spretter opp brystet og setter deretter hjertet forsiktig sammen, mens de holder pusten.", 
+    cure     = "Behandling - To Kirurger spretter opp brystet og setter deretter hjertet forsiktig sammen, mens de holder pusten.", 
   },
   ruptured_nodules       = { 
     name     = utf8 "Knekte nötter", 
     cause     = utf8 "Årsak - Strikkhopp om vinteren.", 
     symptoms   = utf8 "Symptomer - Umulig å sitte behagelig.", 
-    cure     = utf8 "Behandling - To kvalifiserte kirurger må fjerne nöttene med stödige hender.",
+    cure     = utf8 "Behandling - To kvalifiserte Kirurger må fjerne nöttene med stödige hender.",
   },
   tv_personalities       = { 
     name     = "Programledersyndrom", 
     cause     = utf8 "Årsak - TV-titting på dagtid.", 
     symptoms   = utf8 "Symptomer - Forestiller seg at han/hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.", 
-    cure     = utf8 "Behandling - En psykolog må overtale pasienten til å selge fjernsynet og heller kjöpe radio.",
+    cure     = utf8 "Behandling - En Psykiater må overtale pasienten til å selge fjernsynet og heller kjöpe radio.",
   },
   infectious_laughter    = { 
     name     = "Smittsom latter", 
     cause     = utf8 "Årsak - Klassisk situasjonskomedie på TV.", 
     symptoms   = utf8 "Symptomer - Ler hjelpelöst hele tiden, og repeterer stadig dårlige poeng som absolutt ikke er morsomme.", 
-    cure     = utf8 "Behandling - En kvalifisert psykolog må minne pasienten på at dette faktisk er en alvorlig tilstand.",
+    cure     = utf8 "Behandling - En kvalifisert Psykiater må minne pasienten på at dette faktisk er en alvorlig tilstand.",
   },
   corrugated_ankles      = { 
     name      = utf8 "Böyde ankler", 
@@ -2445,19 +2445,19 @@ diseases = {
     name     = "Tredjegrads koteletter", 
     cause     = utf8 "Årsak - Lengter tilbake til 70-tallet.", 
     symptoms   = utf8 "Symptomer - Stort hår, tettsittende klær, langt skinnskjegg og glitter.", 
-    cure     = utf8 "Behandling - Psykologisk personell må, ved hjelp av nåtidens teknikker, overbevise pasienten om at parykk er noe tull.",
+    cure     = utf8 "Behandling - Psykiatrisk personell må, ved hjelp av nåtidens teknikker, overbevise pasienten om at parykk er noe tull.",
   },
   fake_blood             = { 
     name     = "Teaterblod", 
     cause     = utf8 "Årsak - Pasienten er ofte utsatt for narrestreker.", 
     symptoms   = utf8 "Symptomer - Rödt blod som dunster ved kontakt med klær.", 
-    cure     = utf8 "Behandling - Eneste måten å behandle dette på, er å få en psykolog til å roe ned pasienten.",
+    cure     = utf8 "Behandling - Eneste måten å behandle dette på, er å få en Psykiater til å roe ned pasienten.",
   },
   gastric_ejections      = { 
     name     = utf8 "Krydrede oppstöt", 
     cause     = utf8 "Årsak - Sterkt krydret meksikansk eller indisk mat har skylden.", 
     symptoms   = "Symptomer - Gulper karrikylling og tacolefser.", 
-    cure     = utf8 "Behandling - En sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt.",
+    cure     = utf8 "Behandling - En Sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt.",
   },
   the_squits             = { 
     name     = utf8 "Lös mage", 
@@ -2469,13 +2469,13 @@ diseases = {
     name     = "Jernlunger", 
     cause     = utf8 "Årsak - Forurenset byluft blandet med kebabrester.", 
     symptoms   = utf8 "Symptomer - Kan puste flammer og bröle höyt under vann.", 
-    cure     = "Behandling - To kirurger mykner de solide lungene i operasjonssalen.",
+    cure     = "Behandling - To Kirurger mykner de solide lungene i operasjonssalen.",
   },
   sweaty_palms           = { 
     name     = utf8 "Håndsvette", 
     cause     = utf8 "Årsak - Er livredd jobbintervjuer.", 
     symptoms   = utf8 "Symptomer - Å håndhilse på pasienten er som å ta tak i en våt svamp.", 
-    cure     = utf8 "Behandling - En psykolog må snakke pasienten ut av denne oppdiktede lidelsen.",
+    cure     = utf8 "Behandling - En Psykiater må snakke pasienten ut av denne oppdiktede lidelsen.",
   },
   heaped_piles           = { 
     name     = "Hemoroider", 
@@ -2487,19 +2487,19 @@ diseases = {
     name     = utf8 "Mageråte", 
     cause     = utf8 "Årsak - Onkel Georgs miks av hostesaft og whisky.", 
     symptoms   = "Symptomer - Ingen hoste, men ingen magesekk heller.", 
-    cure     = "Behandling - En sykepleier skriver ut en rekke kjemikalier og gjenskaper veggen i magesekken.",
+    cure     = "Behandling - En Sykepleier skriver ut en rekke kjemikalier og gjenskaper veggen i magesekken.",
   },
   golf_stones            = { 
     name     = "Golfsteiner", 
     cause     = utf8 "Årsak - Utsatt for giftige gasser fra golfballer.", 
     symptoms   = utf8 "Symptomer - Forvirring og kraftig skamfölelse.", 
-    cure     = "Behandling - Steinene fjernes kjapt og effektivt av to kirurger.",
+    cure     = "Behandling - Steinene fjernes kjapt og effektivt av to Kirurger.",
   },
   unexpected_swelling    = { 
     name     = "Uventet hevelse", 
     cause     = utf8 "Årsak - Hva som helst uventet.", 
     symptoms   = "Symptomer - Hevelse.", 
-    cure     = utf8 "Behandling - Hevelsen må skjæres bort av to kirurger.",
+    cure     = utf8 "Behandling - Hevelsen må skjæres bort av to Kirurger.",
   },
   diag_scanner           = { name = "Diag Skanner", },
   diag_blood_machine     = { name = "Diag Blodmaskin", },
@@ -2601,10 +2601,10 @@ fax = {
       cover_up = utf8 "Forsök å behandle alle infiserte pasienter för tiden renner ut, og för noen forlater sykehuset.",
     },
     
-    disease_name             = utf8 "Dine leger har oppdaget en svært smittsom form for %s.",
+    disease_name             = utf8 "Dine Leger har oppdaget en svært smittsom form for %s.",
     declare_explanation_fine = utf8 "Om du offentliggjör epidemien, må du betale en bot på %d, ditt rykte får en smell, og samtlige pasienter blir vaksinert automatisk.",
     cover_up_explanation_1   = utf8 "Om du derimot forsöker å holde epidemien skjult, må du behandle samtlige infiserte pasienter för helsemyndighetene får rede på det.",
-    cover_up_explanation_2   = utf8 "Om en helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
+    cover_up_explanation_2   = utf8 "Om en Helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
   },
   
   -- Epidemic result
@@ -2647,9 +2647,9 @@ fax = {
     
     remarks = {
       super = {
-        "For et flott sykehus. Neste gang jeg er alvorlig syk vil jeg hit.",
-        "Dette er hva jeg kaller sykehus.",
-        utf8 "Et supert sykehus. Og jeg burde vite; jeg har vært på en del.",
+        "For et flott sykehus. Neste gang jeg blir alvorlig syk vil jeg hit.",
+        "Dette er hva jeg kaller et sykehus.",
+        utf8 "Et supert sykehus. Og jeg vet hva jeg snakker om, for jeg har vært med på en del.",
       },
       good = {
         "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
@@ -2681,9 +2681,9 @@ fax = {
       take_chance = utf8 "Gjett sannsynlig behandling.",
       wait        = utf8 "Få pasienten til å vente mens du bygger flere diagnoserom.",
     },
-    situation = utf8 "Vi har brukt alle våre diagnosemaskiner på denne pasienten, men vi vet fremdeles ikke sikkert hva som er galt.",
+    situation = utf8 "Vi har brukt alle våre diagnosemetoder på denne pasienten, men vi vet fremdeles ikke sikkert hva som er galt.",
     what_to_do_question = utf8 "Hva skal vi gjöre med pasienten?",
-    partial_diagnosis_percentage_name = "Det er %d prosent sikkert at vi vet hvilken type %s pasienten har.",
+    partial_diagnosis_percentage_name = "Det er %d prosent sannsynlighet for at vi vet hvilken type %s pasienten har.",
   },
 }
 
@@ -2753,7 +2753,7 @@ introduction_texts = {
     [1] = utf8 "Velkommen til ditt förste sykehus!//",
     [2] = utf8 "Få stedet opp og gå ved å plassere en Resepsjon, bygge en Allmennpraksis, og ansette en Resepsjonist og en Lege. ",
     [3] = utf8 "Vent så til det begynner å skje ting.",
-    [4] = utf8 "Det er smart å bygge Psykiatri og ansette en Lege med fordypning innenfor psykologi. ",
+    [4] = utf8 "Det er smart å bygge Psykiatri og ansette en Lege med fordypning innenfor psykiatri. ",
     [5] = utf8 "Et Apotek og en Sykepleier er essensielt for å kurere pasientene dine. ",
     [6] = utf8 "Se opp for mange tilfeller av Ballonghode - et Pumperom vil fort kunne være til stor hjelp. ",
     [7] = utf8 "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
@@ -2769,7 +2769,7 @@ introduction_texts = {
     [1] = utf8 "Det er et större spekter av plager i dette området. ",
     [2] = utf8 "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen Forskningsavdeling. ",
     [3] = utf8 "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som Lös tunge, så du trenger en Tungeklinikk. ",
-    [4] = utf8 "Du kan også bygge Kardiorom for å forbedre diagnoseringen. ",
+    [4] = utf8 "Du kan også bygge Kardiorom for å forbedre diagnostisering. ",
     [5] = utf8 "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk Områdekartet til dette. ",
     [6] = utf8 "Streb etter et omdömme på 300 og en banksaldo på $10,000, samt 40 kurerte pasienter. ",
   },
@@ -2804,7 +2804,7 @@ introduction_texts = {
   },
   level15 = {
     [1] = utf8 "Ok, det var den grunnleggende teknikken i å sette et sykehus sammen.//",
-    [2] = utf8 "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnosere noen av disse pasientene. Du kan hjelpe dem ved å ",
+    [2] = utf8 "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnostisere noen av disse pasientene. Du kan hjelpe dem ved å ",
     [3] = utf8 "bygg et ny diagnoserom, for eksempel Generell Diagnose.",
   },
   level8 = {
@@ -2821,7 +2821,7 @@ introduction_texts = {
     [4] = "Tror du at du klarer oppgaven?",
   },
   level16 = {
-    [1] = utf8 "Når du har diagnosert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne ",
+    [1] = utf8 "Når du har diagnostisert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne ",
     [2] = utf8 "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
   },
   level6 = {
@@ -2844,7 +2844,7 @@ introduction_texts = {
     [4] = utf8 "Det er også en sjanse for at nödssituasjoner oppstår. ",
     [5] = utf8 "Dette er når store mengder mennesker kommer på en gang med samme tilstand. ",
     [6] = utf8 "Kurerer du alle innen tidsfristen så får du et bedre rykte, og en stor xbonus. ",
-    [7] = utf8 "Sykdommer som Rock'n'Roll-syndrom kan inntreffe, og du bör budsjettere for en Operasjonssal og med en Sengeavdeling i nærheten. ",
+    [7] = utf8 "Sykdommer som Rock'n'Roll-syndrom kan inntreffe og du bör budsjettere for en Operasjonssal med en Sykestue i nærheten. ",
     [8] = utf8 "Tjen opp $20,000 for å klare nivået.",
   },
   level10 = {
