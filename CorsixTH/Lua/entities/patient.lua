@@ -193,8 +193,36 @@ function Patient:die()
 end
 
 function Patient:vomit()
-  self:setNextAction{name = "vomit"}
-  self:queueAction{name = "meander"}
+  local current = self.action_queue[1]
+  --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
+  if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
+    self:queueAction({
+      name = "vomit",
+      must_happen = true
+      }, 1)
+    if current.name == "idle" or current.name == "walk" then
+      self:queueAction({
+        name = current.name,
+        x = current.x,
+        y = current.y,
+        must_happen = current.must_happen,
+        is_entering = current.is_entering,
+      }, 2)
+    else
+      self:queueAction({
+        name = current.name,
+        room_type = current.room_type,
+        message_sent = true,
+        diagnosis_room = current.diagnosis_room,
+        treatment_room = current.treatment_room,
+      }, 2)
+    end
+    if current.on_interrupt then
+      current.on_interrupt(current, self)
+    else
+      self:finishAction()
+    end
+  end
 end
 
 function Patient:goHome(cured)
@@ -494,7 +522,7 @@ function Patient:setTile(x, y)
       and self.world.map.th:getCellFlags(x, y).buildable then
         -- Drop some litter!
         local litter = self.world:newObject("litter", x, y)
-        litter:setLitterType("soda_can", math.random(0, 1) == 1)
+        litter:setLitterType("soda_can", math.random(0, 1))
         if not self.hospital.hospital_littered then
           self.hospital.hospital_littered = true
           self.world.ui.adviser:say(_S.adviser.staff_advice.need_handyman_litter)

@@ -65,12 +65,11 @@ function Litter:setTile(x, y)
   end
 end
 
-function Litter:setLitterType(anim_type, mirrored)
-  local flag = mirrored and 1 or 0
+function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
     local anim = litter_types[anim_type]
     if anim then
-      self:setAnimation(anim, flag)
+      self:setAnimation(anim, mirrorFlag)
     else
       error "Unknown litter type"
     end

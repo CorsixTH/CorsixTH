@@ -591,7 +591,7 @@ function Room:crashRoom()
   for x = self.x, self.x + self.width - 1 do
     for y = self.y, self.y + self.height - 1 do
       local soot = self.world:newObject("litter", x, y)
-      soot:setLitterType("soot_floor")
+      soot:setLitterType("soot_floor", 0)
     end
   end
   -- Make walls have soot on them too
@@ -604,7 +604,7 @@ function Room:crashRoom()
       soot_type = "soot_window"
     end
     soot = self.world:newObject("litter", x, ty)
-    soot:setLitterType(soot_type, true)
+    soot:setLitterType(soot_type, 1)
   end
   local x = self.x
   for y = self.y, self.y + self.height - 1 do
@@ -614,7 +614,7 @@ function Room:crashRoom()
       soot_type = "soot_window"
     end
     soot = self.world:newObject("litter", x, y)
-    soot:setLitterType(soot_type)
+    soot:setLitterType(soot_type, 0)
   end
   
   self.crashed = true
