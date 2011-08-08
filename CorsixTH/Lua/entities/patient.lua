@@ -169,27 +169,19 @@ function Patient:die()
     local casebook = self.hospital.disease_casebook[self.disease.id]
     casebook.fatalities = casebook.fatalities + 1
   end
-  -- There is no death animation for Slack Females, send them home instead
-  if self.humanoid_class == "Slack Female Patient" then
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
-    self:setMood("dead", "deactivate")
-    self:setMood("exit", "activate")
-    self:goHome()
-  else 
-    self:setMood("dead", "activate")
-    self:playSound "boo.wav"
-    self.going_home = true
-    if self:getRoom() then
-      self:queueAction{name = "meander", count = 1}
-    else
-      self:setNextAction{name = "meander", count = 1}
-    end  
-    if self.is_emergency then
-      self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
-    end
-    self:queueAction{name = "die"}
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
+  self:setMood("dead", "activate")
+  self:playSound "boo.wav"
+  self.going_home = true
+  if self:getRoom() then
+    self:queueAction{name = "meander", count = 1}
+  else
+    self:setNextAction{name = "meander", count = 1}
+  end  
+  if self.is_emergency then
+    self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
   end
+  self:queueAction{name = "die"}
+  self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
 function Patient:vomit()

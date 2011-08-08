@@ -104,7 +104,8 @@ die_anims("Alternate Male Patient",    1682, 2434, 2438, 2446,  2450)
 die_anims("Slack Male Patient",        1682, 2434, 2438, 2446,  2450)
 -- TODO: Where is slack male transformation? Uses alternate male for now.
 die_anims("Transparent Male Patient",  4412, 2434, 2438, 2446,  2450,  4416) -- Extra = Transformation
-die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220,  4288) -- Extra = Slack tongue
+die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220)
+die_anims("Slack Female Patient",      4288, 3208, 3212, 3216,  3220)
 die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- Extra = Transformation
 die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222 is the Female)
 die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
@@ -187,11 +188,20 @@ function Humanoid:Humanoid(...)
   self.should_knock_on_doors = false
   self.speed = "normal"
 end
+
+-- Save game compatibility
 function Humanoid:afterLoad(old, new)
   if old < 38 then
     -- should existing patients be updated and be getting really ill?
     -- adds the new variables for health icons 
     self.attributes["health"] = math.random(60, 100) /100
+  end
+
+  -- make sure female slack patients have the correct animation
+  if old < 42 then
+    if self.humanoid_class == "Slack Female Patient" then
+      self.die_anims = die_animations["Slack Female Patient"]
+    end
   end
 end   
 

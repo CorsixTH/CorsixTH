@@ -24,8 +24,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
   if phase == 0 then
     action.phase = 1
-    if humanoid.die_anims.extra_east ~= nil and 
-      humanoid.humanoid_class ~= "Standard Female Patient" then
+    if humanoid.die_anims.extra_east ~= nil then
       humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.extra_east), action_die_tick)
       humanoid:setAnimation(humanoid.die_anims.extra_east, mirror)
     else
@@ -36,6 +35,12 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
     humanoid:setTimer(11, action_die_tick)
     humanoid:setAnimation(humanoid.die_anims.rise_east, mirror)
   elseif phase == 2 then
+    -- Female slack tongue head layer is missing from wings animation onwards
+    -- So we change the head to its standard equivalent
+    if humanoid.humanoid_class == "Slack Female Patient" then
+      humanoid:setLayer(0, humanoid.layers[0] - 8)
+    end
+
     action.phase = 3
     humanoid:setTimer(11, action_die_tick)
     humanoid:setAnimation(humanoid.die_anims.wings_east, mirror)
@@ -68,12 +73,7 @@ local function action_die_start(action, humanoid)
   -- TODO: Right now the angel version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
-  -- A special case for the female slack tongue patient. The fall is split into different animations
-  if humanoid.humanoid_class == "Standard Female Patient" and humanoid.disease
-  and humanoid.disease.id == "slack_tongue" and humanoid.hospital then
-    fall = anims.extra_east
-    humanoid:setLayer(0, humanoid.layers[0] - 8)
-  end
+
   if direction == "east" then
     humanoid:setAnimation(anims.fall_east, 0)
   elseif direction == "south" then
