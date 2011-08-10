@@ -1146,7 +1146,7 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(iVersion < 2 || iVersion == 128)
         {
             luaL_error(L, "TODO: Write code to load map data from earlier "
-                "savegame versions (if really neccessary).");
+                "savegame versions (if really necessary).");
         }
         else if(iVersion > 4)
         {

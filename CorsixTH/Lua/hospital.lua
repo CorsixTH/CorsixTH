@@ -198,7 +198,7 @@ function Hospital:afterLoad(old, new)
   end
   if old < 14 then
     -- NOTE: This will no longer work, but cluttering the code with stub functions 
-    -- for this "old" compatibility, is it neccessary?
+    -- for this "old" compatibility, is it necessary?
     self:_initResearch()
   end
   if old < 19 then

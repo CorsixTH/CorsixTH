@@ -191,11 +191,13 @@ function TrainingRoom:onHumanoidLeave(humanoid)
   -- so students stop learning
   if self.staff_member == humanoid then
     self.staff_member = nil
-    -- unreserve the projector
+  end
+  if humanoid.humanoid_class == "Doctor" then
+    -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)
     local objects = self.world:findAllObjectsNear(fx,fy)
     for object, value in pairs(objects) do
-      if object.object_type.id == "projector" then
+      if object.reserved_for == humanoid then
         object:removeReservedUser()
       end
     end

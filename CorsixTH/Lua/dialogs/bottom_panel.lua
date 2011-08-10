@@ -236,7 +236,7 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
 end
 
 --! Trigger a message to be moved from the queue into a actual window, after
--- first performing the neccessary animation.
+-- first performing the necessary animation.
 function UIBottomPanel:showMessage()
   if self.factory_direction ~= -1 then
     self.factory_direction = -1 

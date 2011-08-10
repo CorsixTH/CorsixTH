@@ -89,7 +89,7 @@ end)
 
 local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- Emergency patients also don't need to ask what to do, they'll just wait for the player
-  -- to build the neccessary room.
+  -- to build the necessary room.
   if humanoid.is_emergency then
     return
   end
