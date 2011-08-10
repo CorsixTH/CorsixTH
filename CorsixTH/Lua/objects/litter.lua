@@ -65,6 +65,15 @@ function Litter:setTile(x, y)
   end
 end
 
+-- Litter is an Entity and not an Object so it does not inherit this method
+-- This is an (effective) hack, see issue 918 --cgj
+function Litter:getWalkableTiles()
+  --emulate Object:getWalkableTiles() and return the tile (x,y)
+  local tiles = {}
+  tiles[0] = { self.tile_x, self.tile_y }
+  return tiles
+end
+
 function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
     local anim = litter_types[anim_type]

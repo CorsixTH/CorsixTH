@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local object = {}
 object.id = "bench"
+object.class = "Bench"
 object.thob = 4
 object.name = _S.object.bench
 object.tooltip = _S.tooltip.objects.bench
@@ -142,5 +143,53 @@ object.orientations = {
     use_position = "passable",
   },
 }
+
+class "Bench" (Object)
+
+function Bench:Bench(...)
+  self:Object(...)
+end
+
+--Called when the patient sits up from a bench for whatever reason
+--Maybe related to Humanoid:removedObject(object)
+function Bench:removeUser(user)
+  if user then
+    local has_idle = false
+    for i, action in pairs(user.action_queue) do
+      if action.name == "idle" then
+        has_idle = true
+      end
+    end
+
+    -- patient must idle && action:isStanding() == true at this point
+    if has_idle == true then
+      user:notifyNewObject("bench")
+    end
+  end
+
+  return Object.removeUser(self, user)
+end
+
+--Called when the player picks up a bench
+function Bench:onDestroy()
+  -- make sure that action:isStanding() will be true, see issue 404
+  if self.user then
+    for i, action in pairs(self.user.action_queue) do
+      if action.name == "queue" then
+       self.user.action_queue[i].current_bench_distance = nil
+      end
+    end
+  end
+
+  -- if patient is heading for the destroyed bench then do the same
+  -- things as if they were sitting on it 
+  if self.reserved_for ~= nil then
+    self.reserved_for:handleRemovedObject(self)
+    self:removeUser(self.reserved_for)
+  end
+
+  
+  Object.onDestroy(self)
+end
 
 return object

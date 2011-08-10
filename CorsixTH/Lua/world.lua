@@ -1442,6 +1442,13 @@ end
 --!param entity (Entity) The entity that was just placed.
 --!param id (string) That entity's id.
 function World:objectPlaced(entity, id)
+  -- If id is not supplied, we can use the entities internal id if it exists
+  -- This is so the bench check below works
+  -- see place_object.lua:UIPlaceObjects:placeObject for call w/o id --cgj
+  if not id and entity.object_type.id then
+    id = entity.object_type.id
+  end
+
   self.entities[#self.entities + 1] = entity
   -- If it is a bench we're placing, notify queueing patients in the vicinity
   if id == "bench" and entity.tile_x and entity.tile_y then
