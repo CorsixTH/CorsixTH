@@ -26,6 +26,7 @@ local TH = require "TH"
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
+local pee_animations = permanent"humanoid_pee_animations"({})
 local vomit_animations = permanent"humanoid_vomit_animations"({})
 local mood_icons = permanent"humanoid_mood_icons"({})
 
@@ -60,7 +61,9 @@ end
 local function vomit_anim(name, vomitAnim)
   vomit_animations[name] = vomitAnim
 end
-
+local function pee_anim(name, peeAnim)
+  pee_animations[name] = peeAnim
+end
 local function moods(name, iconNo, prio, alwaysOn)
   mood_icons[name] = {icon = iconNo, priority = prio, on_hover = alwaysOn}
 end
@@ -125,6 +128,20 @@ vomit_anim("Invisible Patient",          4204)
 vomit_anim("Slack Male Patient",         4324)
 vomit_anim("Transparent Female Patient", 4452)
 vomit_anim("Transparent Male Patient",   4384)
+
+--  | pee Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+pee_anim("Elvis Patient",              970)
+pee_anim("Standard Female Patient",    4744)
+pee_anim("Slack Female Patient",    4744)
+pee_anim("Standard Male Patient",      2244) 
+pee_anim("Alternate Male Patient",     4472)
+pee_anim("Slack Male Patient",     4328)
+pee_anim("Chewbacca Patient",          4178)
+pee_anim("Invisible Patient",          4208)
+pee_anim("Transparent Female Patient", 4852)
+pee_anim("Transparent Male Patient",   4848)
 
 --   | Available Moods |
 --   | Name            |Icon|Priority|Show Always| Notes
@@ -234,11 +251,14 @@ function Humanoid:dump()
       self.profile.is_psychiatrist or 0,
       self.profile.is_researcher or 0))
   end
-  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f   Health: %.3f",
+  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
     self.attributes["warmth"] or 0,
     self.attributes["happiness"] or 0,
     self.attributes["fatigue"] or 0,
+    self.attributes["thirst"] or 0,
+    self.attributes["toilet_need"] or 0,
     self.attributes["health"] or 0))
+
   print("")
   print("Actions:")
   for i = 1, #self.action_queue do
@@ -468,6 +488,7 @@ function Humanoid:setType(humanoid_class)
   self.door_anims = door_animations[humanoid_class]
   self.die_anims  = die_animations[humanoid_class]
   self.vomit_anim = vomit_animations[humanoid_class]
+  self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}

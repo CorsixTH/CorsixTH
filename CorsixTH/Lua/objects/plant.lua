@@ -318,5 +318,11 @@ function Plant:onClick(ui, button)
   end
   Object.onClick(self, ui, button)
 end
-
+function Plant:isPleasing()
+  if not self.ticks then
+    return true
+  else
+   return false
+  end
+end
 return object
