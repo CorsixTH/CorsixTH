@@ -36,7 +36,7 @@ function Queue:Queue()
   self.callbacks = {}
   self.expected_count = 0
   self.visitor_count = 0
-  self.max_size = 20
+  self.max_size = 6
   self.bench_threshold = 0
 end
 
@@ -64,6 +64,10 @@ end
 
 function Queue:setBenchThreshold(standing_count)
   self.bench_threshold = standing_count
+end
+
+function Queue:setMaxQueue(queue_count)
+  self.max_size = queue_count
 end
 
 function Queue:size()

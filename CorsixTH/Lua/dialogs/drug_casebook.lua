@@ -228,6 +228,12 @@ function UICasebook:draw(canvas, x, y)
     end
   end
   local rep = book[disease].reputation or self.hospital.reputation
+  if rep < self.hospital.reputation_min then
+    rep = self.hospital.reputation_min
+  elseif rep > self.hospital.reputation_max then
+    rep = self.hospital.reputation_max
+  end
+
   titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
 
   -- Treatment Charge is either displayed in percent, or normally

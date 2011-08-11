@@ -61,8 +61,8 @@ function Door:updateDynamicInfo()
 end
 
 function Door:onClick(ui, button)
-  -- For consistency with reception desk, only open queue from a left click
-  if button == "left" and self.queue then
+  local room = self:getRoom()
+  if button == "left" and room:hasQueueDialog() and self.queue then
     local queue_window = UIQueue(ui, self.queue)
     ui:addWindow(queue_window)
   end

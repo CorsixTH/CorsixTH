@@ -62,7 +62,6 @@ function GameUI:GameUI(app, local_hospital)
   self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
-  self.prevent_edge_scrolling = false
   self.do_world_hit_test = true
   
   self:setRandomAnnouncementTarget()
@@ -393,7 +392,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
     -- In windowed mode, a reasonable size is needed, though not too large.
     scroll_region_size = 4
   end
-  if not self.prevent_edge_scrolling and (x < scroll_region_size
+  if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
   or y >= self.app.config.height - scroll_region_size) then
     local dx = 0

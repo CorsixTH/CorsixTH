@@ -33,6 +33,7 @@ room.categories = {
 room.minimum_size = 4
 room.wall_type = "green"
 room.floor_tile = 17
+room.has_no_queue_dialog = true
 
 class "StaffRoom" (Room)
 

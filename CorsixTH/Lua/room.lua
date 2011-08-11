@@ -662,6 +662,10 @@ function Room:tryToEdit()
   end
 end
 
+function Room:hasQueueDialog()
+  return not self.room_info.has_no_queue_dialog
+end
+
 --! Stub to be extended in subclasses, if needed.
 function Room:afterLoad(old, new)
 end

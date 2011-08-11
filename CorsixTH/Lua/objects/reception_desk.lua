@@ -63,6 +63,7 @@ function ReceptionDesk:ReceptionDesk(...)
   self:Object(...)
   self.queue = Queue()
   self.queue:setBenchThreshold(3) -- Keep 3 people standing in the queue even if there are benches
+  self.queue:setMaxQueue(20) -- larger queues for reception desk
   self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
   self.queue_advance_timer = 0
 end

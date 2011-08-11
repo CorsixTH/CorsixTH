@@ -94,6 +94,7 @@ local config_defaults = {
   audio_buffer_size = 2048,
   debug = false,
   track_fps = false,
+  prevent_edge_scrolling = false,
 }
 local fi = io.open(config_filename, "r")
 if fi then
@@ -116,6 +117,12 @@ else
 -- the Theme Hospital demo, though a full install of the original game is
 -- preferred.
 theme_hospital_install = [[]=].. config_defaults.theme_hospital_install ..[=[]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Theme hospital edge scrolling: By default enabled (prevent_edge_scrolling =
+-- false). To disable edge scrolling, set it to 'true'.
+prevent_edge_scrolling = ]=].. tostring(config_defaults.prevent_edge_scrolling) ..[=[ 
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
