@@ -347,7 +347,7 @@ function Room:tryAdvanceQueue()
       self.door.queue:pop()
       self.door:updateDynamicInfo()
       -- Do nothing if it is the staff room or training room.
-      if self.room_info.id ~= "staff_room" or self.room_info.id ~= "training" then
+      if self:hasQueueDialog() then
         for humanoid in pairs(self.humanoids) do -- Staff is now waiting
           if class.is(humanoid, Staff) then
             if humanoid.humanoid_class ~= "Handyman" then

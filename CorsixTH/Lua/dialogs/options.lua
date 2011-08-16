@@ -173,11 +173,11 @@ end
 
 function UIOptions:buttonBack()
   self:close()
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
 end
 
 function UIOptions:close()
   UIResizable.close(self)
+  if self.mode == "menu" then
+    self.ui:addWindow(UIMainMenu(self.ui))
+  end
 end
