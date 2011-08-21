@@ -834,7 +834,7 @@ room_descriptions = {
   },
   psych = {
     [1] = "Psykiatri//",
-    [2] = utf8 "Pasienter diagnostisert med psykiske lidelser må gå til Psykiatrien for å få rådgivning. Psykiatrene kan kjöre diagnose for å finne ut hva slags type sykdom pasientene lider av, og hvis mental opprinnelse, så behandle dem ved å benytte den pålitelige sofaen.//",
+    [2] = utf8 "Pasienter diagnostisert med psykiske lidelser må gå til Psykiatrien for å få rådgivning. Psykiatrene kan kjöre diagnose for å finne ut hva slags type sykdom pasientene lider av, og hvis mental opprinnelse, så behandle dem ved å benytte den trygge sofaen.//",
     [3] = utf8 "Psykiatrien kan kun håndteres av kvalifisert Psykiater. ",
   },
   staff_room = {
@@ -2420,7 +2420,7 @@ diseases = {
   tv_personalities       = { 
     name     = "Programledersyndrom", 
     cause     = utf8 "Årsak - TV-titting på dagtid.", 
-    symptoms   = utf8 "Symptomer - Forestiller seg at han/hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.", 
+    symptoms   = utf8 "Symptomer - Forestiller seg at han eller hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.", 
     cure     = utf8 "Behandling - En Psykiater må overtale pasienten til å selge fjernsynet og heller kjöpe radio.",
   },
   infectious_laughter    = { 
@@ -2462,7 +2462,7 @@ diseases = {
   the_squits             = { 
     name     = utf8 "Lös mage", 
     cause     = utf8 "Årsak - Har spist pizzabiter som har falt bak komfyren.", 
-    symptoms   = utf8 "Symptomer - æsj. Tipper du vet symptomene.", 
+    symptoms   = utf8 "Symptomer - Æsj! Tipper du vet symptomene.", 
     cure     = utf8 "Behandling - En klebrig blanding kjemikalier må drikkes for å stabilisere magen innvendig.",
   },
   iron_lungs             = { 
@@ -2480,7 +2480,7 @@ diseases = {
   heaped_piles           = { 
     name     = "Hemoroider", 
     cause     = utf8 "Årsak - Står i nærheten av drikkevannskjölere.", 
-    symptoms   = utf8 "Symptomer - Pasienten föler han/hun sitter på en pose med stein.", 
+    symptoms   = utf8 "Symptomer - Pasienten föler at han eller hun sitter på en pose med stein.", 
     cure     = utf8 "Behandling - En behagelig, men meget syrlig drikk, lösner opp hemoroidene innenifra.",
   },
   gut_rot                = { 
@@ -2566,7 +2566,7 @@ fax = {
   emergency_result = {
     close_text     = utf8 "Klikk for å gå ut",
     earned_money   = utf8 "Av en maksimal bonus på %d, har du tjent %d.",
-    saved_people   = "Du reddet %d mennesker av totalt %d.",
+    saved_people   = "Du reddet %d personer av totalt %d.",
   },  
   
   -- Deseace discovered
