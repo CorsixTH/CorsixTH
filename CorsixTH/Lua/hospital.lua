@@ -640,7 +640,7 @@ end
 -- to cure them and the fax.
 function Hospital:createEmergency(emergency)
   local created_one = false
-  if self:getHeliportSpawnPosition() then
+  if self:getHeliportSpawnPosition() and self.world:has_desk_and_is_Staffed() then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
       local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]

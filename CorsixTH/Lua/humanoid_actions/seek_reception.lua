@@ -86,7 +86,7 @@ local function action_seek_reception_start(action, humanoid)
     procrastination = {name = "meander", count = 1}
     if not humanoid.waiting then
       -- Eventually people are going to get bored and leave.
-      humanoid.waiting = 60
+      humanoid.waiting = 5
     end
   else
     local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
