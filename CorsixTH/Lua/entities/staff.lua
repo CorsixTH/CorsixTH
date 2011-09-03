@@ -471,16 +471,19 @@ end
 
 function Staff:saneDoctor()
   local profile = self.profile
-  if self.humanoid_class ~= "Receptionist" and self.attributes["fatigue"] < 0.7 then
-    self:setMood("tired", "deactivate")
-    if self.humanoid_class == "Doctor" and self.attributes["fatigue"] < 0.7
-    and not (self.layers[5] < 5) then
-      self:setLayer(5, self.layers[5] - 4)
+  if not self.fired then
+    if self.humanoid_class ~= "Receptionist" and self.attributes["fatigue"] < 0.7 then
       self:setMood("tired", "deactivate")
-      self.crazy_msg = false
+      if self.humanoid_class == "Doctor" and self.attributes["fatigue"] < 0.7
+      and not (self.layers[5] < 5) then
+        self:setLayer(5, self.layers[5] - 4)
+        self:setMood("tired", "deactivate")
+        self.crazy_msg = false
+      end
     end
   end
 end  	            
+
 function Staff:goToStaffRoom()
   -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   self.going_to_staffroom = true
