@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 --! An `Entity` which occupies a single tile and is capable of moving around the map.
 class "Humanoid" (Entity)
-
+                                      
 local TH = require "TH"
 
 local walk_animations = permanent"humanoid_walk_animations"({})
@@ -28,6 +28,8 @@ local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
 local pee_animations = permanent"humanoid_pee_animations"({})
 local vomit_animations = permanent"humanoid_vomit_animations"({})
+local tap_foot_animations = permanent"humanoid_tap_foot_animations"({})
+local check_watch_animations = permanent"humanoid_check_watch_animations"({})
 local mood_icons = permanent"humanoid_mood_icons"({})
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
@@ -60,6 +62,12 @@ end
 
 local function vomit_anim(name, vomitAnim)
   vomit_animations[name] = vomitAnim
+end
+local function tap_foot_anim(name, tap_footAnim)
+  tap_foot_animations[name] = tap_footAnim
+end
+local function check_watch_anim(name, check_watchAnim)
+  check_watch_animations[name] = check_watchAnim
 end
 local function pee_anim(name, peeAnim)
   pee_animations[name] = peeAnim
@@ -128,6 +136,21 @@ vomit_anim("Invisible Patient",          4204)
 vomit_anim("Slack Male Patient",         4324)
 vomit_anim("Transparent Female Patient", 4452)
 vomit_anim("Transparent Male Patient",   4384)
+
+--  | Foot tapping Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+tap_foot_anim("Standard Female Patient",    4464)
+tap_foot_anim("Standard Male Patient",      2960)
+tap_foot_anim("Alternate Male Patient",     360)
+
+--  | Check watch Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+check_watch_anim("Standard Female Patient",    4468)
+check_watch_anim("Standard Male Patient",      2964)
+check_watch_anim("Alternate Male Patient",     364)
+check_watch_anim("Slack Male Patient",         4060)
 
 --  | pee Animations                  |
 --  | Name                              |Anim | Notes
@@ -491,6 +514,8 @@ function Humanoid:setType(humanoid_class)
   self.door_anims = door_animations[humanoid_class]
   self.die_anims  = die_animations[humanoid_class]
   self.vomit_anim = vomit_animations[humanoid_class]
+  self.tap_foot_anim = tap_foot_animations[humanoid_class]
+  self.check_watch_anim = check_watch_animations[humanoid_class]  
   self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then

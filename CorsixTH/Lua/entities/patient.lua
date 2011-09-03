@@ -28,7 +28,7 @@ function Patient:Patient(...)
   self.treatment_history = {}
   
   self.action_string = ""
-end
+end              
 
 function Patient:onClick(ui, button)
   if button == "left" then
@@ -261,7 +261,22 @@ function Patient:pee()
     return 
   end
 end
-
+function Patient:agitated()
+  if self.check_watch_anim and not self.action_queue[1].is_leaving then
+    self:queueAction({
+      name = "check_watch",
+      must_happen = true
+      }, 1)  
+  end 
+end
+function Patient:veryAgitated()
+  if self.tap_foot_anim and not self.action_queue[1].is_leaving then
+    self:queueAction({
+      name = "tap_foot",
+      must_happen = true
+      }, 1)  
+  end     
+end
 function Patient:goHome(cured)
   if self.going_home then
     return
@@ -301,6 +316,7 @@ function Patient:tickDay()
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
+      self:veryAgitated()
       self:goHome()
       if self.diagnosed then
         -- No treatment rooms
@@ -331,7 +347,7 @@ function Patient:tickDay()
   -- TODO clean up this block, nonmagical numbers
   if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
     self:setMood("sad2", "activate")
-    self:changeAttribute("happiness", -0.0002)   -- waiting too long will make you sad     
+    self:changeAttribute("happiness", -0.0002)   -- waiting too long will make you sad
     -- There is a 1/3 chance that the patient will get fed up and leave
     -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
     if math.random(1,30) == 1 then
@@ -631,8 +647,12 @@ function Patient:notifyNewObject(id)
       if callbacks then
         assert(action.done_init, "Queue action was not yet initialized")
         if action:isStanding() then
+          if math.random(1, 3) == 3 then
+		    self:agitated() -- you might check your watch
+		  else
           callbacks:onChangeQueuePosition(self)
           break
+          end
         end
       end
     end
