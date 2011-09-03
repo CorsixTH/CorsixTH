@@ -406,6 +406,8 @@ function Patient:tickDay()
       nausea = nausea * ((numVomit+1) * proximityVomitMult)
       if math.random() < nausea then
         self:vomit()
+        self:playSound "puke.wav"
+        self:playSound "vomsplat.wav"
       end
     end
   end

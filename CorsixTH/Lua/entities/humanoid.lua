@@ -203,6 +203,7 @@ function Humanoid:Humanoid(...)
   self.attributes["health"] = math.random(80, 100) /100
   self.active_moods = {}
   self.should_knock_on_doors = false
+  self.crazy_msg = false
   self.speed = "normal"
 end
 
@@ -213,7 +214,9 @@ function Humanoid:afterLoad(old, new)
     -- adds the new variables for health icons 
     self.attributes["health"] = math.random(60, 100) /100
   end
-
+  if old < 43 then
+    self.crazy_msg = false
+  end
   -- make sure female slack patients have the correct animation
   if old < 42 then
     if self.humanoid_class == "Slack Female Patient" then

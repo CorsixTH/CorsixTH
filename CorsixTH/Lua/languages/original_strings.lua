@@ -543,7 +543,7 @@ adviser = {
     staff_very_cold               = S[28][ 55],
     staff_unhappy                 = S[11][ 89],
     staff_unhappy2                = S[28][ 15],
-    --doctor_crazy_overwork       = S[11][ 95], -- unused? could this be the answer to the crazy doctor sprite mystery?
+    doctor_crazy_overwork         = S[11][ 95],
     
     reduce_staff_rest_threshold   = S[28][ 45],
     nurses_tired                  = S[11][ 96],

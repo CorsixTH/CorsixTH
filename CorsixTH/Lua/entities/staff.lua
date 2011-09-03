@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
-
+  
 --!param ... Arguments to base class constructor.
 function Staff:Staff(...)
   self:Humanoid(...)
@@ -34,7 +34,7 @@ function Staff:tickDay()
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
-  
+  self:saneDoctor() -- if there are any crazy doctors this will change tham back if rested /also removes tried mood from all staff
   -- is self researcher in research room?
   if self:isResearching() then
     self.hospital.research:addResearchPoints(1550 + 1000*self.profile.skill)
@@ -51,7 +51,7 @@ function Staff:tickDay()
       res_thres = level_config.gbv.AbilityThreshold[2]
     end
     local general_thres = 200 -- general skill factor
-    
+
     local room = self:getRoom()
     -- room_factor starts at 5 for a basic room w/ TrainingRate == 4
     -- books add +1.5, skeles add +2.0, see TrainingRoom:calculateTrainingFactor
@@ -247,7 +247,7 @@ function Staff:fire()
   end
 
   self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "  .. self.profile.name)
-  self:playSound "sack.wav"
+  self:playSound "sack.wav"  
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
@@ -410,14 +410,27 @@ function Staff:updateSpeed()
   end
 end
 
--- Check if fatigue is over a certain level (decided by the hospital policy), 
+-- Check if fatigue is over a certain level (decided by the hospital policy),
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   if self.attributes["fatigue"] and self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
   and not class.is(self:getRoom(), StaffRoom) then
     -- Only when the staff member is very tired should the icon emerge.
-    if self.attributes["fatigue"] >= 0.9 then
+    if self.attributes["fatigue"] >= 0.7 then
       self:setMood("tired", "activate")
+    end
+-- if you overwork your Dr's then there is a chance that they can go crazy
+-- when this happens, find him and get him to rest straight away
+    local profile = self.profile
+    if self.humanoid_class == "Doctor" then
+  -- don't check too ofter as it can take a week or so to get to the staffroom
+      if self.attributes["fatigue"] >= 0.7 and math.random(1, 3000) == 1 then
+        self:setLayer(5, profile.layer5 + 4)
+        if not self.crazy_msg then
+          self.world.ui.adviser:say(_S.adviser.warnings.doctor_crazy_overwork)
+          self.crazy_msg = true
+        end
+      end
     end
     if self.waiting_for_staffroom then
     -- The staff will get unhappy if there is no staffroom to rest in.
@@ -429,6 +442,7 @@ function Staff:checkIfNeedRest()
     if self.waiting_for_staffroom or self.staffroom_needed
     or self.going_to_staffroom or self.pickup then
       return
+
     end
     -- If no staff room exists, prevent further checks until one is built
     if not self.world:findRoomNear(self, "staff_room") then
@@ -455,6 +469,18 @@ function Staff:checkIfNeedRest()
   end
 end
 
+function Staff:saneDoctor()
+  local profile = self.profile
+  if self.humanoid_class ~= "Receptionist" and self.attributes["fatigue"] < 0.7 then
+    self:setMood("tired", "deactivate")
+    if self.humanoid_class == "Doctor" and self.attributes["fatigue"] < 0.7
+    and not (self.layers[5] < 5) then
+      self:setLayer(5, self.layers[5] - 4)
+      self:setMood("tired", "deactivate")
+      self.crazy_msg = false
+    end
+  end
+end  	            
 function Staff:goToStaffRoom()
   -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   self.going_to_staffroom = true
@@ -664,7 +690,6 @@ function Staff:afterLoad(old, new)
   if old < 27 then
     self.going_to_staffroom = nil
   end
-  
   if old < 29 then
     -- Handymen could have "staffroom_needed" flag set due to a bug, unset it.
     if self.humanoid_class == "Handyman" then

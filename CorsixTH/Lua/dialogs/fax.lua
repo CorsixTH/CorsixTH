@@ -207,16 +207,6 @@ function UIFax:validate()
       self.ui.adviser:say(_S.adviser.cheats.roujin_off_cheat)
       hosp.spawn_rate_cheat = nil
     end
-  elseif 7.8768e-11 < x and x < 7.8769e-11 then
-    -- Crazy doctors enabled
-    local hosp = self.ui.hospital
-    if not hosp.crazy_doctors then
-      self.ui.adviser:say(_S.adviser.cheats.crazy_on_cheat)
-      hosp:setCrazyDoctors(true)
-    else
-      self.ui.adviser:say(_S.adviser.cheats.crazy_off_cheat)
-      hosp:setCrazyDoctors(nil)
-    end
   else
     -- no valid cheat entered
     self.ui:playSound("fax_no.wav")
