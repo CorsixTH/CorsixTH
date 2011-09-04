@@ -54,5 +54,4 @@ disease.treatment_rooms = {
   "pharmacy",
 }
 
-
 return disease

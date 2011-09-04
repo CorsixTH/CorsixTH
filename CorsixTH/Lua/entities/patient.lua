@@ -97,7 +97,6 @@ function Patient:setDiagnosisProgress(progress)
   self:updateDynamicInfo()
 end
 
-
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
@@ -109,6 +108,24 @@ function Patient:modifyDiagnosisProgress(incrementValue)
     window:updateInformation()
   end
   self:updateDynamicInfo()
+end
+
+-- Updates the patients diagnostic progress based on the doctors skill
+-- called when they are done using a diagnosis room
+function Patient:completeDiagnosticStep(room)
+  -- Base: depending on difficulty of disease as set in sam file
+  local diagnosis_difficulty = self:setdiagDiff()
+  local diagnosis_base = math.random() * (1 - diagnosis_difficulty)
+  if diagnosis_base < 0 then
+    diagnosis_base = 0
+  end
+  -- Bonus: based on skill and attn to detail (with some randomness).
+  local divisor = math.random(1, 3)
+  local attn_detail = room.staff_member.profile.attention_to_detail / divisor
+  local skill = room.staff_member.profile.skill / divisor
+  local diagnosis_bonus = (attn_detail * math.random()) *  skill
+  
+  self:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
 end
 
 function Patient:setHospital(hospital)
@@ -140,27 +157,27 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   if self.die_anims and math.random(1, 100) > cure_chance then
     self:die()
   else 
-  -- to guess the cure is risky and the patient could die
-  if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
-    self:die()
-  else
-  if hospital.num_cured < 1 then
-    self.world.ui.adviser:say(_S.adviser.information.first_cure)
-  end
-    self.hospital.num_cured = hospital.num_cured + 1
-    local casebook = hospital.disease_casebook[self.disease.id]
-    casebook.recoveries = casebook.recoveries + 1
-    if self.is_emergency then
-      self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
-    end
-    self:setMood("cured", "activate")
-    self:playSound "cheer.wav"
-    self.attributes["health"] = 1
-    self:changeAttribute("happiness", 0.8)
-    hospital:changeReputation("cured", self.disease)
-    self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-    self:goHome(true)
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+    -- to guess the cure is risky and the patient could die
+    if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
+      self:die()
+    else
+      if hospital.num_cured < 1 then
+        self.world.ui.adviser:say(_S.adviser.information.first_cure)
+      end
+      self.hospital.num_cured = hospital.num_cured + 1
+      local casebook = hospital.disease_casebook[self.disease.id]
+      casebook.recoveries = casebook.recoveries + 1
+      if self.is_emergency then
+        self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
+      end
+      self:setMood("cured", "activate")
+      self:playSound "cheer.wav"
+      self.attributes["health"] = 1
+      self:changeAttribute("happiness", 0.8)
+      hospital:changeReputation("cured", self.disease)
+      self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
+      self:goHome(true)
+      self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     end
   end
 
@@ -348,6 +365,7 @@ function Patient:tickDay()
       end
     end
   end
+
   -- if patients are getting unhappy, then maybe we should see this!
   if self.attributes["happiness"] < 0.3 then
     self:setMood("sad7", "activate")
@@ -669,12 +687,8 @@ function Patient:notifyNewObject(id)
       if callbacks then
         assert(action.done_init, "Queue action was not yet initialized")
         if action:isStanding() then
-          if math.random(1, 3) == 3 then
-            self:checkWatch() -- you might check your watch
-          else
-            callbacks:onChangeQueuePosition(self)
-            break
-          end
+          callbacks:onChangeQueuePosition(self)
+          break
         end
       end
     end
@@ -710,7 +724,7 @@ function Patient:updateDynamicInfo(action_string)
   if self.going_home then
     self:setDynamicInfo('progress', nil)
   elseif self.diagnosed then
-    if self.diagnosis_progress < 1.0  then
+    if self.diagnosis_progress < 1.0 then
       -- The cure was guessed
       info = _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)
     else

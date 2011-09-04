@@ -48,14 +48,14 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
-"general_diag",
-"cardiogram",
-"scanner",
-"ultrascan",
-"blood_machine",
-"x_ray",
-"psych",
-"ward", 
+  "general_diag",
+  "cardiogram",
+  "scanner",
+  "ultrascan",
+  "blood_machine",
+  "x_ray",
+  "psych",
+  "ward", 
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.
@@ -63,7 +63,6 @@ disease.treatment_rooms = {
   "decontamination",
 }
 
- 
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

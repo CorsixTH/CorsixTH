@@ -49,6 +49,4 @@ disease.treatment_rooms = {
   "psych",
 }
 
-
-
 return disease

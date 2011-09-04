@@ -57,5 +57,4 @@ disease.treatment_rooms = {
   "operating_theatre",
 }
 
-
 return disease

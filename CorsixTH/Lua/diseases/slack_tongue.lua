@@ -54,7 +54,6 @@ disease.treatment_rooms = {
   "slack_tongue",
 }
 
-
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

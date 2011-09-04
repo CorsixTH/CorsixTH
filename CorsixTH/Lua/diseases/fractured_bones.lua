@@ -65,7 +65,6 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "fracture_clinic",
 }
-
  
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true

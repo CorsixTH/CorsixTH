@@ -120,21 +120,7 @@ function Room:dealtWithPatient(patient)
     -- Patient not yet diagnosed, hence just been in a diagnosis room.
     -- Increment diagnosis_progress, and send patient back to GP.
 
-    -- Base: depending on difficulty of disease as set in sam file
-    local diagnosis_difficulty = patient:setdiagDiff()
-    local diagnosis_base = math.random() * (1 - diagnosis_difficulty)
-    if diagnosis_base < 0 then
-    end
-    -- Bonus: based on skill and attn to detail (with some randomness).
-    local diagnosis_bonus = 0
-    local divisor = math.random(1, 3)
-    local attn_detail = self.staff_member.profile.attention_to_detail / divisor
-    local skill = self.staff_member.profile.skill / divisor
-    if self.staff_member then
-      diagnosis_bonus = (attn_detail * math.random()) * skill
-    end
-    
-    patient:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
+    patient:completeDiagnosticStep(self) 
     patient:queueAction{name = "seek_room", room_type = "gp"}
     self.hospital:receiveMoneyForTreatment(patient)
   elseif patient.disease and patient.diagnosed then
