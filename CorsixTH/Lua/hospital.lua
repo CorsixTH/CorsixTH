@@ -466,9 +466,8 @@ function Hospital:boilerBreakdown()
 
   self.heating_broke = true
 
-  local hosp = self.world.hospitals[1]
   -- Only show the message when relevant to the local player's hospital.
-  if self == hosp then
+  if self:isPlayerHospital() then
     if self.radiator_heat == 0 then
       self.world.ui.adviser:say(_S.adviser.boiler_issue.minimum_heat)
     else
@@ -481,7 +480,9 @@ end
 function Hospital:boilerFixed()
   self.radiator_heat = self.curr_setting
   self.heating_broke = false
-  self.world.ui.adviser:say(_S.adviser.boiler_issue.resolved)
+  if self:isPlayerHospital() then
+    self.world.ui.adviser:say(_S.adviser.boiler_issue.resolved)
+  end
 end
 
 -- Called at the end of each day.
@@ -620,7 +621,7 @@ function Hospital:onEndMonth()
   self.money_out = 0
 
   -- make players aware of the need for a receptionist and desk.
-  if not self:hasStaffedDesk() then
+  if self:isPlayerHospital() and not self:hasStaffedDesk() then
     if self.world.month == 3 and self.world.year == 1 then
       self.world.ui.adviser:say(_S.adviser.warnings.no_desk, true)
     elseif self.world.month == 8 and self.world.year == 1 then
@@ -629,6 +630,12 @@ function Hospital:onEndMonth()
       self.world.ui.adviser:say(_S.adviser.warnings.no_desk_2, true)
     end
   end
+end
+
+--! Returns whether this hospital is controlled by a real person or not.
+function Hospital:isPlayerHospital()
+  -- TODO: Prepare for multiplayer at some point.
+  return self == self.world.hospitals[1]
 end
 
 function Hospital:hasStaffedDesk()
