@@ -261,7 +261,8 @@ function Patient:pee()
     return 
   end
 end
-function Patient:agitated()
+
+function Patient:checkWatch()
   if self.check_watch_anim and not self.action_queue[1].is_leaving then
     self:queueAction({
       name = "check_watch",
@@ -269,7 +270,8 @@ function Patient:agitated()
       }, 1)  
   end 
 end
-function Patient:veryAgitated()
+
+function Patient:tapFoot()
   if self.tap_foot_anim and not self.action_queue[1].is_leaving then
     self:queueAction({
       name = "tap_foot",
@@ -277,6 +279,7 @@ function Patient:veryAgitated()
       }, 1)  
   end     
 end
+
 function Patient:goHome(cured)
   if self.going_home then
     return
@@ -316,7 +319,7 @@ function Patient:tickDay()
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
-      self:veryAgitated()
+      self:tapFoot()
       self:goHome()
       if self.diagnosed then
         -- No treatment rooms
@@ -616,11 +619,11 @@ function Patient:setTile(x, y)
   -- Is the patient about to drop some litter?
   if self.litter_countdown then
     self.litter_countdown = self.litter_countdown - 1
-    if self.litter_countdown == 0 then
+    if self.litter_countdown == 0 and self.hospital then
       if x and not self:getRoom() and not self.world:getObjects(x, y)
       and self.world.map.th:getCellFlags(x, y).buildable then
         -- Drop some litter!
-	local trash = math.random(1, 4)
+        local trash = math.random(1, 4)
         local litter = self.world:newObject("litter", x, y)
         litter:setLitterType(trash, math.random(0, 1))
         if not self.hospital.hospital_littered then
@@ -648,10 +651,10 @@ function Patient:notifyNewObject(id)
         assert(action.done_init, "Queue action was not yet initialized")
         if action:isStanding() then
           if math.random(1, 3) == 3 then
-		    self:agitated() -- you might check your watch
-		  else
-          callbacks:onChangeQueuePosition(self)
-          break
+            self:checkWatch() -- you might check your watch
+          else
+            callbacks:onChangeQueuePosition(self)
+            break
           end
         end
       end

@@ -34,7 +34,23 @@ function Staff:tickDay()
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
-  self:saneDoctor() -- if there are any crazy doctors this will change tham back if rested /also removes tried mood from all staff
+
+  if self.attributes['fatigue'] then
+    if self.attributes['fatigue'] < 0.7 then
+      if self:isResting() then
+        self:setMood("tired", "deactivate")
+        self:setCrazy(false)
+      end
+    else
+      -- doctor can go crazy if they're too tired
+      if self.humanoid_class == "Doctor" then
+        if math.random(1, 300) == 1 then
+          self:setCrazy(true)
+        end
+      end
+    end
+  end
+
   -- is self researcher in research room?
   if self:isResearching() then
     self.hospital.research:addResearchPoints(1550 + 1000*self.profile.skill)
@@ -89,7 +105,7 @@ function Staff:tick()
   if self:isTiring() then
     self:tire(0.000090)
   end
-  
+
     -- if doctor is in a room and they're using an object
     -- then their skill level will increase _slowly_ over time
   if self:isLearningOnTheJob() then
@@ -158,6 +174,15 @@ function Staff:isTiring()
   end
   
   return tiring
+end
+
+function Staff:isResting()
+  local room = self:getRoom()
+  if room and room.room_info.id == "staff_room" and not self.on_call then
+    return true
+  else
+    return false
+  end
 end
 
 -- Determine if the staff member should contribute to research
@@ -422,16 +447,6 @@ function Staff:checkIfNeedRest()
 -- if you overwork your Dr's then there is a chance that they can go crazy
 -- when this happens, find him and get him to rest straight away
     local profile = self.profile
-    if self.humanoid_class == "Doctor" then
-  -- don't check too ofter as it can take a week or so to get to the staffroom
-      if self.attributes["fatigue"] >= 0.7 and math.random(1, 3000) == 1 then
-        self:setLayer(5, profile.layer5 + 4)
-        if not self.crazy_msg then
-          self.world.ui.adviser:say(_S.adviser.warnings.doctor_crazy_overwork)
-          self.crazy_msg = true
-        end
-      end
-    end
     if self.waiting_for_staffroom then
     -- The staff will get unhappy if there is no staffroom to rest in.
     -- TODO: Add corresponding adviser alert.
@@ -442,7 +457,6 @@ function Staff:checkIfNeedRest()
     if self.waiting_for_staffroom or self.staffroom_needed
     or self.going_to_staffroom or self.pickup then
       return
-
     end
     -- If no staff room exists, prevent further checks until one is built
     if not self.world:findRoomNear(self, "staff_room") then
@@ -469,20 +483,26 @@ function Staff:checkIfNeedRest()
   end
 end
 
-function Staff:saneDoctor()
-  local profile = self.profile
-  if not self.fired then
-    if self.humanoid_class ~= "Receptionist" and self.attributes["fatigue"] < 0.7 then
-      self:setMood("tired", "deactivate")
-      if self.humanoid_class == "Doctor" and self.attributes["fatigue"] < 0.7
-      and not (self.layers[5] < 5) then
+function Staff:setCrazy(crazy)
+  if crazy == false then
+    -- make doctor sane
+    if self.crazy_msg then
+      if self.humanoid_class == "Doctor" and not (self.layers[5] < 5) then
         self:setLayer(5, self.layers[5] - 4)
         self:setMood("tired", "deactivate")
         self.crazy_msg = false
       end
     end
+  else
+    -- make doctor crazy
+    if not self.crazy_msg then
+      self:setLayer(5, self.profile.layer5 + 4)
+      self:setMood("tired", "activate")
+      self.world.ui.adviser:say(_S.adviser.warnings.doctor_crazy_overwork)
+      self.crazy_msg = true
+    end
   end
-end  	            
+end
 
 function Staff:goToStaffRoom()
   -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
@@ -693,6 +713,7 @@ function Staff:afterLoad(old, new)
   if old < 27 then
     self.going_to_staffroom = nil
   end
+
   if old < 29 then
     -- Handymen could have "staffroom_needed" flag set due to a bug, unset it.
     if self.humanoid_class == "Handyman" then

@@ -618,7 +618,22 @@ function Hospital:onEndMonth()
   }
   self.money_in = 0
   self.money_out = 0
+
+  -- make players aware of the need for a receptionist and desk.
+  if not self:hasStaffedDesk() then
+    if self.world.month == 3 and self.world.year == 1 then
+      self.world.ui.adviser:say(_S.adviser.warnings.no_desk, true)
+    elseif self.world.month == 8 and self.world.year == 1 then
+      self.world.ui.adviser:say(_S.adviser.warnings.no_desk_1, true)
+    elseif self.world.month == 11 and self.world.year == 1 then
+      self.world.ui.adviser:say(_S.adviser.warnings.no_desk_2, true)
+    end
+  end
 end
+
+function Hospital:hasStaffedDesk()
+  return self.world.object_counts["reception_desk"] and self:hasStaffOfCategory("Receptionist")
+end  
 
 --! Called at the end of each year
 function Hospital:onEndYear()
@@ -640,7 +655,7 @@ end
 -- to cure them and the fax.
 function Hospital:createEmergency(emergency)
   local created_one = false
-  if self:getHeliportSpawnPosition() and self.world:has_desk_and_is_Staffed() then
+  if self:getHeliportSpawnPosition() and self:hasStaffedDesk() then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
       local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]

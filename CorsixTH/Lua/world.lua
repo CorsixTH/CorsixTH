@@ -64,9 +64,10 @@ function World:World(app)
     plant = 0,
     reception_desk = 0,
     general = 0,
-   }
+  }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
+
   -- Time
   self.hours_per_day = 50
   self.hours_per_tick = 1
@@ -443,23 +444,18 @@ function World:spawnPatient(hospital)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
-  if self:has_desk_and_is_Staffed()  then
-  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
-  local patient = self:newEntity("Patient", 2)
-  local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-  patient:setDisease(disease)
-  patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
-  patient:setHospital(hospital)
-  
-  return patient
+  if hospital:hasStaffedDesk() then
+    local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+    local patient = self:newEntity("Patient", 2)
+    local disease = self.available_diseases[math.random(1, #self.available_diseases)]
+    patient:setDisease(disease)
+    patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+    patient:setHospital(hospital)
+    
+    return patient
   end
 end
-function World:has_desk_and_is_Staffed()
-  if self.object_counts["reception_desk"] ~= 0 
-  and self.hospitals[1]:hasStaffOfCategory("Receptionist")then
-  return true
-  end
-end  
+
 function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
@@ -736,22 +732,7 @@ function World:onTick()
         end
         self.day = 1
         self.month = self.month + 1
-        -- A temporary solution to make players more aware of the need for radiators, having a receptionist and desk.
-        if self.month == 4 and self.year == 1 then
-          if not self:has_desk_and_is_Staffed() then
-            self.ui.adviser:say(_S.adviser.warnings.no_desk, true)
-          end
-        end
-        if self.month == 9 and self.year == 1 then
-          if not self:has_desk_and_is_Staffed() then
-            self.ui.adviser:say(_S.adviser.warnings.no_desk_1, true)
-          end
-        end
-        if self.month == 12 and self.year == 1 then
-          if not self:has_desk_and_is_Staffed() then
-            self.ui.adviser:say(_S.adviser.warnings.no_desk_2, true)
-          end
-        end
+        -- A temporary solution to make players more aware of the need for radiators
         if self.month == 6 and self.year == 1 then
           local warmth = 0
           local no = 0
@@ -1698,12 +1679,16 @@ function World:afterLoad(old, new)
    if old < 43 then
     self.object_counts = {
       reception_desk = 0,
-      }
+    }
     for position, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat then
-          self.object_counts[count_cat] = self.object_counts[count_cat] + 1
+          if self.object_counts[count_cat] then
+            self.object_counts[count_cat] = self.object_counts[count_cat] + 1
+          else
+            self.object_counts[count_cat] = 1
+          end
         end
       end
     end

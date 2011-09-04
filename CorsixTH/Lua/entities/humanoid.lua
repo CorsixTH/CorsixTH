@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 --! An `Entity` which occupies a single tile and is capable of moving around the map.
 class "Humanoid" (Entity)
-                                      
+
 local TH = require "TH"
 
 local walk_animations = permanent"humanoid_walk_animations"({})
