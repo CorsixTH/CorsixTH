@@ -35,6 +35,8 @@ function Staff:tickDay()
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
 
+  -- if you overwork your Dr's then there is a chance that they can go crazy
+  -- when this happens, find him and get him to rest straight away
   if self.attributes['fatigue'] then
     if self.attributes['fatigue'] < 0.7 then
       if self:isResting() then
@@ -438,68 +440,67 @@ end
 -- Check if fatigue is over a certain level (decided by the hospital policy),
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
-  if self.attributes["fatigue"] and self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
-  and not class.is(self:getRoom(), StaffRoom) then
+  if self.attributes["fatigue"] then
     -- Only when the staff member is very tired should the icon emerge.
     if self.attributes["fatigue"] >= 0.7 then
       self:setMood("tired", "activate")
     end
--- if you overwork your Dr's then there is a chance that they can go crazy
--- when this happens, find him and get him to rest straight away
-    local profile = self.profile
-    if self.waiting_for_staffroom then
-    -- The staff will get unhappy if there is no staffroom to rest in.
-    -- TODO: Add corresponding adviser alert.
-      self:changeAttribute("happiness", -0.01)
-    end
-    -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
-    -- already going to staffroom or being picked up
-    if self.waiting_for_staffroom or self.staffroom_needed
-    or self.going_to_staffroom or self.pickup then
-      return
-    end
-    -- If no staff room exists, prevent further checks until one is built
-    if not self.world:findRoomNear(self, "staff_room") then
-      self.waiting_for_staffroom = true
-      local callback
-      callback = --[[persistable:staff_build_staff_room_callback]] function(room)
-        if room.room_info.id == "staff_room" then
-          self.waiting_for_staffroom = nil
-          self.world:unregisterRoomBuildCallback(callback)
-          self.build_callback = nil
-        end
+    -- If above the policy threshold, go to the staff room.
+    if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
+    and not class.is(self:getRoom(), StaffRoom) then
+      local profile = self.profile
+      if self.waiting_for_staffroom then
+      -- The staff will get unhappy if there is no staffroom to rest in.
+      -- TODO: Add corresponding adviser alert.
+        self:changeAttribute("happiness", -0.01)
       end
-      self.build_callback = callback
-      self.world:registerRoomBuildCallback(callback)
-      return
-    end
-    local room = self:getRoom()
-    if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
-      -- If occupied by patient, staff will go to the staffroom after the patient left.
-      self.staffroom_needed = true
-    else
-      self:goToStaffRoom()
+      -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
+      -- already going to staffroom or being picked up
+      if self.waiting_for_staffroom or self.staffroom_needed
+      or self.going_to_staffroom or self.pickup then
+        return
+      end
+      -- If no staff room exists, prevent further checks until one is built
+      if not self.world:findRoomNear(self, "staff_room") then
+        self.waiting_for_staffroom = true
+        local callback
+        callback = --[[persistable:staff_build_staff_room_callback]] function(room)
+          if room.room_info.id == "staff_room" then
+            self.waiting_for_staffroom = nil
+            self.world:unregisterRoomBuildCallback(callback)
+            self.build_callback = nil
+          end
+        end
+        self.build_callback = callback
+        self.world:registerRoomBuildCallback(callback)
+        return
+      end
+      local room = self:getRoom()
+      if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
+        -- If occupied by patient, staff will go to the staffroom after the patient left.
+        self.staffroom_needed = true
+      else
+        self:goToStaffRoom()
+      end
     end
   end
 end
 
 function Staff:setCrazy(crazy)
-  if crazy == false then
-    -- make doctor sane
-    if self.crazy_msg then
-      if self.humanoid_class == "Doctor" and not (self.layers[5] < 5) then
-        self:setLayer(5, self.layers[5] - 4)
-        self:setMood("tired", "deactivate")
-        self.crazy_msg = false
-      end
+  if crazy then
+    -- make doctor crazy
+    if not self.is_crazy then
+      self:setLayer(5, self.profile.layer5 + 4)
+      self.world.ui.adviser:say(_S.adviser.warnings.doctor_crazy_overwork)
+      self.is_crazy = true
     end
   else
-    -- make doctor crazy
-    if not self.crazy_msg then
-      self:setLayer(5, self.profile.layer5 + 4)
-      self:setMood("tired", "activate")
-      self.world.ui.adviser:say(_S.adviser.warnings.doctor_crazy_overwork)
-      self.crazy_msg = true
+    -- make doctor sane
+    if self.is_crazy then
+      if self.humanoid_class == "Doctor" and not (self.layers[5] < 5) then
+        self:setLayer(5, self.layers[5] - 4)
+        self.is_crazy = false
+      end
     end
   end
 end

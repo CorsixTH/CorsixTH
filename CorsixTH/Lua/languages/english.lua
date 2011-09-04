@@ -25,9 +25,7 @@ Inherit("original_strings", 0)
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
-adviser.warnings.no_desk ="You should build a reception desk and hire a receptionist at some point!"
-adviser.warnings.no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!"
-adviser.warnings.no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!"
+
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Show next page"
 tooltip.staff_list.prev_person = "Show previous page"
@@ -115,7 +113,11 @@ menu_debug_overlay = {
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
-
+  warnings = {
+    no_desk ="You should build a reception desk and hire a receptionist at some point!",
+    no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!",
+    no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!",
+  },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",
     crazy_on_cheat = "Oh no! All doctors have gone crazy!",

@@ -210,7 +210,7 @@ namespace agg
         typedef Filter filter_type;
         typedef typename filter_type::color_type color_type;
         typedef line_image_pattern<Filter> base_type;
-	
+    
         //--------------------------------------------------------------------
         line_image_pattern_pow2(const Filter& filter) :
             line_image_pattern<Filter>(filter), m_mask(line_subpixel_mask) {}

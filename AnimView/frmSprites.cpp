@@ -182,7 +182,7 @@ void frmSprites::_onBrowseTable(wxCommandEvent& WXUNUSED(evt))
 {
     m_txtTable->SetValue(::wxFileSelector(L"Select location of Font00V.tab (DATA)",
         m_txtTable->GetValue(),L"Font00V.tab",L"tab",L"Tab files (*.tab)|*.tab"
-		,0, this));
+        ,0, this));
 }
 void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt))
 {
@@ -192,5 +192,5 @@ void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt))
 void frmSprites::_onBrowsePalette(wxCommandEvent& WXUNUSED(evt))
 {
     m_txtPalette->SetValue(::wxFileSelector(L"Select location of MPalette.dat (QDATA)",
-        m_txtPalette->GetValue(),L"MPalette.dat",L"dat",L"Dat files (*.dat)|*.dat", 0, this));
+        m_txtPalette->GetValue(),L"MPalette.dat",L"dat",L"Dat or Pal files (*.dat, *.pal)|*.dat;*.pal", 0, this));
 }

@@ -38,6 +38,7 @@ SOFTWARE.
 #include <wx/string.h>
 #include <wx/file.h>
 #include <wx/image.h>
+#include <wx/txtstrm.h>
 #ifdef _MSC_VER
 typedef signed __int8 int8_t;
 typedef signed __int16 int16_t;
@@ -118,6 +119,16 @@ public:
         else
             return false;
     }
+    inline bool isSet(int iLayer) const
+    {
+        if(0 <= iLayer && iLayer < 13)
+            for(int iId = 0; iId < 32; ++iId)
+            {
+                if((m_iMask[iLayer] & (1 << iId)) != 0)
+                    return true;
+            }
+        return false;
+    }
 
 protected:
     uint32_t m_iMask[13];
@@ -164,11 +175,15 @@ public:
     bool loadPaletteFile(wxString sFilename);
     bool loadGhostFile(wxString sFilename, int iIndex);
 
+    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size);
+    void writeTableDataHeader(wxTextOutputStream *outputLog);
+
     size_t markDuplicates();
 
     size_t getAnimationCount();
     size_t getSpriteCount();
     size_t getFrameCount(size_t iAnimation);
+    uint16_t getUnknownField(size_t iAnimation);
     bool isAnimationDuplicate(size_t iAnimation);
     bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
     uint16_t getFrameFlags(size_t iAnimation, size_t iFrame);

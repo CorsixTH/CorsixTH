@@ -30,7 +30,9 @@ SOFTWARE.
 #include <wx/timer.h>
 #include <wx/listbox.h>
 #include <wx/dcclient.h>
+#include <wx/txtstrm.h>
 #include "th.h"
+//#include <vector>
 
 class frmMain : public wxFrame
 {
@@ -59,15 +61,21 @@ public:
         ID_GHOST_3,
         ID_LOAD,
         ID_BROWSE,
+        ID_EXPORT,
         ID_DRAW_MOOD,
         ID_DRAW_COORDINATES,
         ID_LAYER_CHECKS, // Must be last ID
     };
 
     void load();
+    void export_png();
+    void exportSpritesPage(bool bComplex, wxString sPath, wxString sFilename, wxString spPath=L"", wxString sPalette=L"MPALETTE.DAT");
+    //std::vector<_sprite_t> m_vSprites;
+
 protected:
     void _onLoad(wxCommandEvent& evt);
     void _onBrowse(wxCommandEvent& evt);
+    void _onExport(wxCommandEvent& evt);
     void _onFirstAnim(wxCommandEvent& evt);
     void _onPrevAnim(wxCommandEvent& evt);
     void _onNextAnim(wxCommandEvent& evt);

@@ -399,27 +399,27 @@ function Patient:tickDay()
     
     self.world:findObjectNear(self, "litter", 2, function(x, y)
       local litter = self.world:getObject(x, y, "litter")
-        if litter:vomitInducing() then
-          local alreadyFound = false
-          for i=1,numVomit do
-            if foundVomit[i] == litter then
-              alreadyFound = true
-              break
-            end
-          end
-
-          if not alreadyFound then
-            numVomit = numVomit + 1
-            foundVomit[numVomit] = litter
+      if litter:vomitInducing() then
+        local alreadyFound = false
+        for i=1,numVomit do
+          if foundVomit[i] == litter then
+            alreadyFound = true
+            break
           end
         end
-  -- seeing litter will make you unhappy. If it is pee or puke it is worse
-        if litter:anyLitter() then
-	  self:changeAttribute("happiness", -0.0002) 
-	else
-          self:changeAttribute("happiness", -0.0004) 	
-	end        	
-    end)
+
+        if not alreadyFound then
+          numVomit = numVomit + 1
+          foundVomit[numVomit] = litter
+        end
+      end
+      -- seeing litter will make you unhappy. If it is pee or puke it is worse
+      if litter:anyLitter() then
+        self:changeAttribute("happiness", -0.0002)
+      else
+        self:changeAttribute("happiness", -0.0004)
+      end
+    end) -- End of findObjectNear
     
     if self.attributes["health"] <= 0.7 or numVomit > 0 or self.attributes["happiness"] < 0.4 then
       nausea = nausea * ((numVomit+1) * proximityVomitMult)
@@ -430,8 +430,9 @@ function Patient:tickDay()
       end
     end
   end
-  -- it is nice to see plants, but dead plants make you unhappy
-  self.world:findObjectNear(self, "plant", 2, function(x, y)  
+
+  -- It is nice to see plants, but dead plants make you unhappy
+  self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
     if plant:isPleasing() then
       self:changeAttribute("happiness", 0.0002) 
@@ -439,11 +440,11 @@ function Patient:tickDay()
       self:changeAttribute("happiness", -0.0002) 
     end
   end)  
--- it always makes you happy to see you are in safe place  
+  -- It always makes you happy to see you are in safe place  
   self.world:findObjectNear(self, "extinguisher", 2, function(x, y)  
     self:changeAttribute("happiness", 0.0002) 
   end)
- -- sitting makes you happy whilst standing and walking does not
+  -- sitting makes you happy whilst standing and walking does not
   if self:goingToUseObject("bench")  then
     self:changeAttribute("happiness", 0.00002) 
   else 
@@ -466,32 +467,32 @@ function Patient:tickDay()
         self:pee()
         self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
         self.going_to_toilet = false
-  else      
-    -- If waiting for user response, do not send to toilets, as this messes
-    -- things up.
+      else
+        -- If waiting for user response, do not send to toilets, as this messes
+        -- things up.
         if not self.going_to_toilet and not self.waiting then
-        self:setMood("poo", "activate")
-      -- Check if any room exists.
-        if not self.world:findRoomNear(self, "toilets") then
-          self.going_to_toilet = true
-          local callback
-        callback = --[[persistable:patient_toilet_build_callback]] function(room)
-          if room.room_info.id == "toilets" then
-            self.going_to_toilet = false
-            self.world:unregisterRoomBuildCallback(callback)
+          self:setMood("poo", "activate")
+          -- Check if any room exists.
+          if not self.world:findRoomNear(self, "toilets") then
+            self.going_to_toilet = true
+            local callback
+            callback = --[[persistable:patient_toilet_build_callback]] function(room)
+              if room.room_info.id == "toilets" then
+                self.going_to_toilet = false
+                self.world:unregisterRoomBuildCallback(callback)
+              end
+            end
+            self.toilet_callback = callback
+            self.world:registerRoomBuildCallback(callback)
+          -- Otherwise we can queue the action, but only if not in any rooms right now.
+          elseif not self:getRoom() and not self.action_queue[1].is_leaving then
+            self:setNextAction{
+              name = "seek_toilets",
+              must_happen = true,
+              }
+            self.going_to_toilet = true
           end
         end
-        self.toilet_callback = callback
-        self.world:registerRoomBuildCallback(callback)
-        -- Otherwise we can queue the action, but only if not in any rooms right now.
-      elseif not self:getRoom() and not self.action_queue[1].is_leaving then
-        self:setNextAction{
-          name = "seek_toilets",
-          must_happen = true,
-          }
-        self.going_to_toilet = true
-	  end
-	end
       end
     end
   end

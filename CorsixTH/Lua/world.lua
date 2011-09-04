@@ -1676,19 +1676,13 @@ function World:afterLoad(old, new)
       end
     end
   end
-   if old < 43 then
-    self.object_counts = {
-      reception_desk = 0,
-    }
+  if old < 43 then
+    self.object_counts.reception_desk = 0
     for position, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
-        if count_cat then
-          if self.object_counts[count_cat] then
-            self.object_counts[count_cat] = self.object_counts[count_cat] + 1
-          else
-            self.object_counts[count_cat] = 1
-          end
+        if count_cat and count_cat == "reception_desk" then
+          self.object_counts[count_cat] = self.object_counts[count_cat] + 1
         end
       end
     end

@@ -23,6 +23,7 @@ SOFTWARE.
 #include "th.h"
 #include <wx/app.h>
 #include <wx/toplevel.h>
+#include <wx/filename.h>
 #include <map>
 
 static const unsigned char palette_upscale_map[0x40] = {
@@ -334,6 +335,76 @@ bool THAnimations::loadTableFile(wxString sFilename)
     return true;
 }
 
+void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, size_t iAnimation, 
+        size_t iFrame, const THLayerMask* pMask, wxSize& size)
+{
+    if(iAnimation >= m_iAnimCount)
+        return;
+    uint16_t iFrameIndex = m_pAnims[iAnimation].frame;
+    while(iFrame--)
+    {
+        iFrameIndex = m_pFrames[iFrameIndex].next;
+    }
+
+    th_frame_t* pFrame = m_pFrames + iFrameIndex;
+    th_element_t* pElement;
+    uint32_t iListIndex = pFrame->list_index;
+    int iFarX = 0;
+    int iFarY = 0;
+    while((pElement = _getElement(iListIndex++)))
+    {
+        //wxString aePath = aPath + wxString::Format(L"e%u", iListIndex);
+        //if(!wxFileName::DirExists(aePath))
+        //{
+        //    wxFileName::Mkdir(aePath);
+        //}
+
+        uint16_t iSpriteIndex = pElement->table_position / sizeof(th_sprite_t);
+        wxString elementFile = aPath + wxString::Format(L"a%04ue.png", iSpriteIndex);
+
+        th_sprite_t* pSprite = m_pSprites + iSpriteIndex;
+        int iRight = pElement->offx + pSprite->width;
+        int iBottom = pElement->offy + pSprite->height;
+        if(iRight > iFarX)
+            iFarX = iRight;
+        if(iBottom > iFarY)
+            iFarY = iBottom;
+        if(pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
+            continue;
+        outputXml->WriteString(wxString::Format(L"\t\t\t\t<sprite id='%u' flags='%u' xoffset='%u' yoffset='%u' width='%u' height='%u'/>\n", 
+                iSpriteIndex, pElement->flags, pElement->offx, pElement->offy, pSprite->width, pSprite->height ));
+        if(!wxFileName::FileExists(elementFile) && pSprite->width > 0 && pSprite->height > 0)
+        {
+            wxImage imgSprite(pSprite->width, pSprite->height, true);
+            if(!imgSprite.HasAlpha())
+            {
+                imgSprite.SetAlpha();
+            }
+            for(int iX = 0; iX < pSprite->width; ++iX)
+            {
+                for(int iY = 0; iY < pSprite->height; ++iY)
+                {
+                    imgSprite.SetAlpha(iX,iY,(unsigned char)0);
+                }
+            }
+            getSpriteBitmap(iSpriteIndex)->blit(imgSprite, 0, 0, m_pGhostMaps + m_iGhostMapOffset, m_pColours, pElement->flags & 0xF);
+            if(!imgSprite.SaveFile(elementFile,wxBITMAP_TYPE_PNG))
+                return;
+            outputLog->WriteString(wxString::Format(L"E%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\n", iSpriteIndex,  
+                    pElement->table_position, pElement->flags, pElement->layerid, pElement->offx, pElement->offy, 
+                    iListIndex, sizeof(th_sprite_t), pSprite->width, pSprite->height, pSprite->offset));
+        }
+    }
+    size.x = iFarX;
+    size.y = iFarY;
+
+}
+
+void THAnimations::writeTableDataHeader(wxTextOutputStream *outputLog)
+{
+    outputLog->WriteString(wxString::Format(L"Element\tTablePos\tFlags\tLayerID\tXoff\tYoff\tListIndex\tSpriteSize\tWidth\tHeight\tOffset\n"));
+}
+
 bool THAnimations::loadPaletteFile(wxString sFilename)
 {
     if(!_loadArray(m_pColours, m_iColourCount, sFilename))
@@ -423,6 +494,13 @@ size_t THAnimations::getFrameCount(size_t iAnimation)
         }
     }
     return iCount;
+}
+
+uint16_t THAnimations::getUnknownField(size_t iAnimation)
+{
+    if(iAnimation >= m_iAnimCount)
+        return 0;
+    return m_pAnims[iAnimation].unknown;
 }
 
 bool THAnimations::doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame)
@@ -615,6 +693,11 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY, const unsigned char* pColo
                 }
             }
             pCanvas[iDstY * iCanvasWidth + iDstX] = srcc;
+            if(imgCanvas.HasAlpha())
+            {
+                //set completely opaque
+                imgCanvas.SetAlpha(iDstX,iDstY,(unsigned char)255);
+            }
         }
     }
 }

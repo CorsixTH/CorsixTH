@@ -157,10 +157,10 @@ check_watch_anim("Slack Male Patient",         4060)
 ----+-----------------------------------+-----+
 pee_anim("Elvis Patient",              970)
 pee_anim("Standard Female Patient",    4744)
-pee_anim("Slack Female Patient",    4744)
+pee_anim("Slack Female Patient",       4744)
 pee_anim("Standard Male Patient",      2244) 
 pee_anim("Alternate Male Patient",     4472)
-pee_anim("Slack Male Patient",     4328)
+pee_anim("Slack Male Patient",         4328)
 pee_anim("Chewbacca Patient",          4178)
 pee_anim("Invisible Patient",          4208)
 pee_anim("Transparent Female Patient", 4852)
@@ -226,7 +226,7 @@ function Humanoid:Humanoid(...)
   self.attributes["health"] = math.random(80, 100) /100
   self.active_moods = {}
   self.should_knock_on_doors = false
-  self.crazy_msg = false
+
   self.speed = "normal"
 end
 
@@ -236,9 +236,6 @@ function Humanoid:afterLoad(old, new)
     -- should existing patients be updated and be getting really ill?
     -- adds the new variables for health icons 
     self.attributes["health"] = math.random(60, 100) /100
-  end
-  if old < 43 then
-    self.crazy_msg = false
   end
   -- make sure female slack patients have the correct animation
   if old < 42 then

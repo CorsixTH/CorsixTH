@@ -15,6 +15,12 @@ theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+-- Theme hospital edge scrolling: By default enabled (prevent_edge_scrolling =
+-- false). To disable edge scrolling, set it to 'true'.
+prevent_edge_scrolling = false
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Chinese (simplified)  / zh(s) / chi(s)
 --  Chinese (traditional) / zh(t) / chi(t)

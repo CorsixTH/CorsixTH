@@ -30,11 +30,15 @@ SOFTWARE.
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 #include <wx/dirdlg.h>
+#include <wx/image.h>
+#include <wx/bitmap.h>
+#include <wx/wfstream.h>
 #include "backdrop.h"
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_BUTTON(ID_LOAD      , frmMain::_onLoad)
   EVT_BUTTON(ID_BROWSE    , frmMain::_onBrowse)
+  EVT_BUTTON(ID_EXPORT    , frmMain::_onExport)
   EVT_BUTTON(ID_FIRST_ANIM, frmMain::_onFirstAnim)
   EVT_BUTTON(ID_PREV_ANIM , frmMain::_onPrevAnim)
   EVT_BUTTON(ID_NEXT_ANIM , frmMain::_onNextAnim)
@@ -70,6 +74,7 @@ frmMain::frmMain()
     pThemeHospital->Add(m_txtTHPath = new wxTextCtrl(this, wxID_ANY, L"", def, wxTE_CENTRE), 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(new wxButton(this, ID_BROWSE, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(new wxButton(this, ID_LOAD, L"Load"), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
+    pThemeHospital->Add(new wxButton(this, ID_EXPORT, L"Export"), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pSidebarSizer->Add(pThemeHospital, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer *pPalette = new wxStaticBoxSizer(wxVERTICAL, this, L"Palette");
@@ -275,6 +280,13 @@ void frmMain::_onLoad(wxCommandEvent& WXUNUSED(evt))
     load();
 }
 
+void frmMain::_onExport(wxCommandEvent& WXUNUSED(evt))
+{
+    m_tmrAnimate.Stop();
+    ::wxInitAllImageHandlers();
+    export_png();
+}
+
 void frmMain::load()
 {
     wxBusyCursor oBusy;
@@ -342,6 +354,295 @@ void frmMain::load()
     }
 
     _onAnimChange(0);
+}
+
+void frmMain::export_png()
+{
+    wxBusyCursor oBusy;
+    wxString sPath = m_txtTHPath->GetValue();
+    if(sPath.IsEmpty())
+        return;
+    if(sPath.Mid(sPath.Len() - 1) != wxFileName::GetPathSeparator())
+    {
+        sPath += wxFileName::GetPathSeparator();
+    }
+    if(!wxFileName::DirExists(sPath))
+    {
+        ::wxMessageBox(L"Theme Hospital path non-existant", L"Load Animations", wxOK | wxICON_ERROR, this);
+        return;
+    }
+    wxString sdPath = sPath + L"DATA";
+    sdPath += wxFileName::GetPathSeparator();
+
+    //wxDialog warnDialog(this, wxID_ANY, L"Export Warning");
+    //warnDialog::CreateButtonSizer(wxOK|wxCANCEL);
+    if(::wxMessageBox(L"The export process may run for over an hour, and will create over 20,000 files on \n \
+your hard disk (~200MB). Do you want to continue?",
+        L"Export Warning", wxYES_NO) == wxYES) {
+
+        //Start with animations, then move on to sprite sheets (map tiles)
+        if(!m_oAnims.loadAnimationFile(sdPath + L"VSTART-1.ANI")
+         ||!m_oAnims.loadFrameFile(sdPath + L"VFRA-1.ANI")
+         ||!m_oAnims.loadListFile(sdPath + L"VLIST-1.ANI")
+         ||!m_oAnims.loadElementFile(sdPath + L"VELE-1.ANI")
+         ||!m_oAnims.loadTableFile(sdPath + L"VSPR-0.TAB")
+         ||!m_oAnims.loadSpriteFile(sdPath + L"VSPR-0.DAT")
+         ||!m_oAnims.loadPaletteFile(sdPath + L"MPALETTE.DAT")
+         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST1.DAT", 1)
+         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST2.DAT", 2)
+         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST66.DAT", 3))
+        {
+            ::wxMessageBox(L"Cannot load one or more data files", L"Load Animations", wxOK | wxICON_ERROR, this);
+        }
+        m_oAnims.markDuplicates();
+        wxString aPath = sdPath + L"VSPR-0";
+        aPath += wxFileName::GetPathSeparator();
+        if(!wxFileName::DirExists(aPath))
+        {
+            wxFileName::Mkdir(aPath);
+        }
+        size_t iExportCount = m_oAnims.getAnimationCount();
+        wxFile f(sdPath + L"VSPR-0export.log", wxFile::write_append);
+        wxFileOutputStream fos(f);
+        wxTextOutputStream outputLog(fos);
+        outputLog.WriteString(wxString::Format(L"File\tIndex\tFrame\tLayer\tID\tWidth\tHeight\tUnknown\n"));
+        m_oAnims.writeTableDataHeader(&outputLog);
+        wxFile fxml(sdPath + L"VSPR-0.xml", wxFile::write);
+        wxFileOutputStream fosxml(fxml);
+        wxTextOutputStream outputXml(fosxml);
+        outputXml.WriteString(wxString::Format(L"<?xml version='1.0' encoding='ISO-8859-1' standalone='no'?>\n"));
+        outputXml.WriteString(wxString::Format(L"<theme_hospital_graphics>\n"));
+    
+        for(size_t iAnimation = 0; iAnimation < iExportCount; ++iAnimation)
+        {
+            if(!m_oAnims.isAnimationDuplicate(iAnimation))
+            //if(true)
+            {
+                THLayerMask oMask;
+                m_oAnims.getAnimationMask(iAnimation, oMask);
+                wxString aiPath = aPath + wxString::Format(L"a%u", iAnimation);
+                if(!wxFileName::DirExists(aiPath))
+                {
+                    wxFileName::Mkdir(aiPath);
+                    outputXml.WriteString(wxString::Format(L"<animation id='%u' unknown='%u'>\n", iAnimation, m_oAnims.getUnknownField(iAnimation)));
+                    aiPath += wxFileName::GetPathSeparator();
+                    size_t iFrameCount = m_oAnims.getFrameCount(iAnimation);
+                    for(size_t iFrame = 0; iFrame < iFrameCount; ++iFrame)
+                    {
+                        wxImage imgCanvas;
+                        outputXml.WriteString(wxString::Format(L"\t<frame id='%u'>\n", iFrame));
+
+                        for(int iLayer = 0; iLayer < 13; ++iLayer)
+                        {
+                            if(iLayer != 1)
+                            {
+                                if(oMask.isSet(iLayer))
+                                    outputXml.WriteString(wxString::Format(L"\t\t<layer id='%u'>\n", iLayer));
+                                for(int iId = 0; iId < 32; ++iId)
+                                {
+                                    if(oMask.isSet(iLayer, iId))
+                                    {
+                                        wxSize oSize;
+                                        m_mskLayers.clear();
+                                        m_mskLayers.set(iLayer, iId);
+                                        outputXml.WriteString(wxString::Format(L"\t\t\t<type id='%u'>\n", iId));
+                                        m_oAnims.writeElementData(aPath, &outputLog, &outputXml, iAnimation, iFrame, &m_mskLayers, oSize);
+                                        if( oSize.x > 0 && oSize.y > 0 )
+                                        {
+                                            //if( iId == 0 && iLayer == 0 )
+                                            if(!imgCanvas.IsOk())
+                                            {
+                                                imgCanvas.Create(oSize.x, oSize.y, true);
+                                                if(!imgCanvas.HasAlpha())
+                                                {
+                                                    imgCanvas.SetAlpha();
+                                                }
+                                                for(int iX = 0; iX < oSize.x; ++iX)
+                                                {
+                                                    for(int iY = 0; iY < oSize.y; ++iY)
+                                                    {
+                                                        //set completely transparent
+                                                        imgCanvas.SetAlpha(iX,iY,(unsigned char)0);
+                                                    }
+                                                }
+                                            }
+
+                                            m_oAnims.drawFrame(imgCanvas, iAnimation, iFrame, &m_mskLayers, oSize, 0, 0);
+                                            outputLog.WriteString(wxString::Format(L"%s\t%u\t%u\t%u\t%u\t%u\t%u\t%u\n", L"VSPR-0", iAnimation, iFrame, 
+                                                    iLayer, iId, oSize.x, oSize.y, m_oAnims.getUnknownField(iAnimation)));
+                                            outputXml.WriteString(wxString::Format(L"\t\t\t</type>\n"));
+                                        }
+                                    }
+                                }
+                                if(oMask.isSet(iLayer))
+                                    outputXml.WriteString(wxString::Format(L"\t\t</layer>\n"));
+                            }
+                        }
+                        outputXml.WriteString(wxString::Format(L"\t</frame>\n"));
+
+                        if(imgCanvas.IsOk())
+                        {
+                            if(!imgCanvas.SaveFile(aiPath + wxString::Format(L"a%u_f%u.png", iAnimation, iFrame),wxBITMAP_TYPE_PNG))
+                                return;
+                            //imgCanvas.Create(1, 1, true);
+                            imgCanvas.Destroy();
+                        }
+                    }
+                    outputXml.WriteString(wxString::Format(L"</animation>\n"));
+                    //_onAnimChange(iAnimation);
+                }
+            }
+        }
+        outputXml.WriteString(wxString::Format(L"</theme_hospital_graphics>\n"));
+
+        //Sprite sheet code for Data directory
+        exportSpritesPage(false, sdPath, L"MONEY01V");
+        exportSpritesPage(false, sdPath, L"MPOINTER");
+        exportSpritesPage(true, sdPath, L"PANEL02V");
+        exportSpritesPage(true, sdPath, L"PANEL04V");
+        exportSpritesPage(true, sdPath, L"PULLDV");
+        exportSpritesPage(false, sdPath, L"VBLK-0");
+        exportSpritesPage(true, sdPath, L"WATCH01V");
+        //Skip DataM directory because it appears to be low-res versions of same
+
+        //Sprite sheet code for QData directory 
+        wxString sqPath = sPath + L"QDATA";
+        sqPath += wxFileName::GetPathSeparator();
+        exportSpritesPage(true, sqPath, L"AWARD03V", L"", L"AWARD02V.PAL");
+        exportSpritesPage(true, sqPath, L"BANK02V", L"", L"BANK01V.PAL");
+        exportSpritesPage(true, sqPath, L"DRUGN02V", L"", L"DRUGN01V.PAL");
+        exportSpritesPage(true, sqPath, L"FAME02V", L"", L"FAME01V.PAL");
+        exportSpritesPage(true, sqPath, L"FAX02V", L"", L"FAX01V.PAL");
+        exportSpritesPage(false, sqPath, L"FONT00V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT01V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT02V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT04V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT05V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT09V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT16V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT18V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT19V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT24V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT25V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT26V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT31V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT34V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT35V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT36V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT37V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT38V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT39V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT40V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT43V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT44V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT45V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT46V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT47V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT50V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT51V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT60V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT74V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT100V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT101V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT102V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT105V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT106V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT110V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT111V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT112V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT113V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT115V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT120V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT121V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT122V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT124V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT250V", sdPath);
+        exportSpritesPage(false, sqPath, L"FONT502V", sdPath);
+        exportSpritesPage(true, sqPath, L"GRAPH02V", L"", L"GRAPH01V.PAL");
+        exportSpritesPage(true, sqPath, L"LETTR02V", L"", L"REP01V.PAL");
+        exportSpritesPage(true, sqPath, L"LOAD02V", L"", L"LOAD01V.PAL");
+        exportSpritesPage(true, sqPath, L"MAIN02M", L"", L"MAIN01M.PAL");
+        exportSpritesPage(true, sqPath, L"POL02V", L"", L"POL01V.PAL");
+        exportSpritesPage(true, sqPath, L"PREF02V", L"", L"PREF01V.PAL");
+        exportSpritesPage(true, sqPath, L"REP02V", L"", L"REP01V.PAL");
+        //exportSpritesPage(true, sqPath, L"REQ00V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ01V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ02V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ03V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ04V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ05V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ06V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ09V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ10V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ11V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ12V", sdPath);
+        //exportSpritesPage(true, sqPath, L"REQ13V", sdPath);
+        exportSpritesPage(true, sqPath, L"RES02V", L"", L"RES01V.PAL");
+        exportSpritesPage(true, sqPath, L"REP02V", L"", L"REP01V.PAL");
+        exportSpritesPage(true, sqPath, L"SPOINTER", sdPath);
+        exportSpritesPage(true, sqPath, L"STAFF02V", L"", L"STAFF01V.PAL");
+        exportSpritesPage(true, sqPath, L"STAT02V", L"", L"STAT01V.PAL");
+        exportSpritesPage(true, sqPath, L"TOWN02V", L"", L"TOWN01V.PAL");
+        exportSpritesPage(true, sqPath, L"VER00V", L"", L"REP01V.PAL");
+    }
+}
+
+void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilename, wxString spPath, wxString sPalette)
+{
+    if(spPath.length() == 0) 
+    {
+        spPath = sPath;
+    }
+    if(!m_oAnims.loadTableFile(sPath + wxString::Format(L"%s.TAB",sFilename))
+     ||!m_oAnims.loadSpriteFile(sPath + wxString::Format(L"%s.DAT",sFilename))
+     ||!m_oAnims.loadPaletteFile(spPath + sPalette))
+    {
+        //::wxMessageBox(L"Cannot load files");
+        return;
+    }
+
+    wxFile f(sPath + sFilename + L"export.log", wxFile::write);
+    wxFileOutputStream fos(f);
+    wxTextOutputStream outputLog(fos);
+    outputLog.WriteString(wxString::Format(L"File\tIndex\tPalette\tComplex\tWidth\tHeight\n"));
+
+    wxString aPath = sPath + sFilename;
+    aPath += wxFileName::GetPathSeparator();
+    if(!wxFileName::DirExists(aPath))
+    {
+        wxFileName::Mkdir(aPath);
+
+        //m_vSprites.clear();
+        for(size_t i = 0; i < m_oAnims.getSpriteCount(); ++i)
+        {
+            //_sprite_t oSprite;
+            Bitmap* pSpriteBitmap = m_oAnims.getSpriteBitmap(i, bComplex);
+            //oSprite.caption = wxString::Format(L"#%i (%ix%i)", (int)i, pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight());
+            if(pSpriteBitmap->getWidth() * pSpriteBitmap->getHeight() > 0)
+            {
+                wxImage imgSprite(pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight(), false);
+                if(!imgSprite.HasAlpha())
+                {
+                    imgSprite.SetAlpha();
+                }
+                for(int iX = 0; iX < pSpriteBitmap->getWidth(); ++iX)
+                {
+                    for(int iY = 0; iY < pSpriteBitmap->getHeight(); ++iY)
+                    {
+                        imgSprite.SetAlpha(iX,iY,(unsigned char)0);
+                    }
+                }
+                pSpriteBitmap->blit(imgSprite, 0, 0, NULL, m_oAnims.getPalette(), 0x8000);
+                //oSprite.bitmap = wxBitmap(imgSprite);
+                if(!imgSprite.SaveFile(aPath + wxString::Format(L"s%u.png", i),wxBITMAP_TYPE_PNG))
+                    return;
+                outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%s\t%u\t%u\n", sFilename, i, sPalette, bComplex, pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
+            }
+            //m_vSprites.push_back(oSprite);
+        }
+    }
+
+    //m_panFrame->Refresh();
 }
 
 void frmMain::_onToggleMask(wxCommandEvent& evt)

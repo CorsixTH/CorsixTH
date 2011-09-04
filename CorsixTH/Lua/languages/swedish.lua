@@ -109,7 +109,11 @@ menu_debug_overlay = {
 
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
-  
+  warnings = {
+    no_desk = "Det kanske börjar bli dags att bygga en reception och anställa en receptionist?",
+    no_desk_1 = "Om du vill att det ska komma patienter till sjukhuset så behövs en receptionist och en reception där hon kan jobba!",
+    no_desk_2 = "Fantastiskt, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
+  },
   cheats = {
     th_cheat = utf8 "Ojoj, nån vill fuska sig till segern!",
     crazy_on_cheat = utf8 "Åh nej!! Alla läkare har blivit galna!",

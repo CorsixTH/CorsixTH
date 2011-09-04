@@ -143,7 +143,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         static rgba from_wavelength(double wl, double gamma = 1.0);
-	
+    
         //--------------------------------------------------------------------
         explicit rgba(double wavelen, double gamma=1.0)
         {

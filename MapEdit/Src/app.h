@@ -41,7 +41,7 @@ SOFTWARE.
 
 class ThemeHospitalMapEditApp : public wxGLApp
 {
-	virtual bool OnInit();
+    virtual bool OnInit();
 };
 
 DECLARE_APP(ThemeHospitalMapEditApp)

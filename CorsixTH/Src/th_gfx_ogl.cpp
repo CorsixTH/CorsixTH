@@ -264,7 +264,7 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
             m_glGenFramebuffersEXT(1, &m_iZoomFrameBuffer);
             if(getGLError() != GL_NO_ERROR)
                 return false;
-            m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_iZoomFrameBuffer);	
+            m_glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_iZoomFrameBuffer);
             if(getGLError() != GL_NO_ERROR)
                 return false;
             m_glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_iZoomTexture, 0);
