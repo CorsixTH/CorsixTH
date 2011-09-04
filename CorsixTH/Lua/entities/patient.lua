@@ -71,6 +71,17 @@ function Patient:setDisease(disease)
   self:updateDynamicInfo()
 end
 
+function Patient:setdiagDiff()
+  local disease = self.disease
+  local difficulty = 0  
+  local expertise = self.world.map.level_config.expertise
+  if expertise then
+    difficulty = expertise[disease.expertise_id].MaxDiagDiff
+    self.diagnosis_difficulty = difficulty / 1000
+  end  
+  return self.diagnosis_difficulty
+end
+ 
 function Patient:setDiagnosed(diagnosed)
   self.diagnosed = diagnosed
   local window = self.world.ui:getWindow(UIPatient)
@@ -86,12 +97,13 @@ function Patient:setDiagnosisProgress(progress)
   self:updateDynamicInfo()
 end
 
+
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
   self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"], 
     self.diagnosis_progress + incrementValue)
-  self.diagnosis_progress = math.max(0.0, self.diagnosis_progress)
+  self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -122,14 +134,19 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   end
 
   -- Either the patient is no longer sick, or he/she dies.
+  
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
   if self.die_anims and math.random(1, 100) > cure_chance then
     self:die()
   else 
-    if hospital.num_cured < 1 then
-      self.world.ui.adviser:say(_S.adviser.information.first_cure)
-    end
+  -- to guess the cure is risky and the patient could die
+  if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
+    self:die()
+  else
+  if hospital.num_cured < 1 then
+    self.world.ui.adviser:say(_S.adviser.information.first_cure)
+  end
     self.hospital.num_cured = hospital.num_cured + 1
     local casebook = hospital.disease_casebook[self.disease.id]
     casebook.recoveries = casebook.recoveries + 1
@@ -144,6 +161,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
     self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
     self:goHome(true)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+    end
   end
 
   hospital:updatePercentages()
@@ -692,7 +710,7 @@ function Patient:updateDynamicInfo(action_string)
   if self.going_home then
     self:setDynamicInfo('progress', nil)
   elseif self.diagnosed then
-    if self.diagnosis_progress < 1.0 then
+    if self.diagnosis_progress < 1.0  then
       -- The cure was guessed
       info = _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)
     else

@@ -122,16 +122,20 @@ function GPRoom:dealtWithPatient(patient)
   if patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
     
-    -- Base: 0 .. 1 depending on difficulty of disease
-    local diagnosis_base = 1 - patient.disease.diagnosis_difficulty
+    -- Base: depending on difficulty of disease as set in sam file
+    local diagnosis_difficulty = patient:setdiagDiff()
+    local diagnosis_base = math.random() * (1 - diagnosis_difficulty)
     if diagnosis_base < 0 then
       diagnosis_base = 0
     end
-    -- Bonus: 0.3 .. 0.5 (random) for perfectly skilled doctor. Less for less skilled doctors.
-    local diagnosis_bonus = (0.3 + 0.2 * math.random()) * self.staff_member.profile.skill
+    -- Bonus: based on skill and attn to detail (with some randomness).
+    local divisor = math.random(1, 3)
+    local attn_detail = self.staff_member.profile.attention_to_detail / divisor
+    local skill = self.staff_member.profile.skill / divisor
+    local diagnosis_bonus = (attn_detail * math.random()) *  skill
     
     patient:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
-    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
+    if patient.diagnosis_progress >= (self.hospital.policies["stop_procedure"] * self.hospital.policies["guess_cure"])then
       patient:setDiagnosed(true)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
 

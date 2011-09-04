@@ -70,6 +70,7 @@ CorsixTH/Lua/diseases/broken_heart.lua -text
 CorsixTH/Lua/diseases/golf_stones.lua -text
 CorsixTH/Lua/diseases/iron_lungs.lua -text
 CorsixTH/Lua/diseases/kidney_beans.lua -text
+CorsixTH/Lua/diseases/pregnant.lua -text
 CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text

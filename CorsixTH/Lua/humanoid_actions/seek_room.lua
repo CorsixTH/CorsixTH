@@ -137,8 +137,7 @@ end
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
   -- If none of the diagnosis rooms can be built yet, go home anyway.
   -- Otherwise, depending on hospital policy three things can happen:
-  if not action.diagnosis_exists 
-  or humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
+  if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
     humanoid:goHome()
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)

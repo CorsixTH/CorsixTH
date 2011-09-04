@@ -53,8 +53,8 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "slack_tongue",
 }
--- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
-disease.diagnosis_difficulty = 0.2
+
+
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

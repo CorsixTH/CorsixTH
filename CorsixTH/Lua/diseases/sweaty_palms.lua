@@ -46,16 +46,20 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
-  "general_diag",
-  "cardiogram",
-  "blood_machine",
+"general_diag",
+"cardiogram",
+"scanner",
+"ultrascan",
+"blood_machine",
+"x_ray",
+"psych",
+"ward", 
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.
 disease.treatment_rooms = {
   "psych",
 }
--- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
-disease.diagnosis_difficulty = 0.6
+
 
 return disease

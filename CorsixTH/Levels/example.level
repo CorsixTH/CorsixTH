@@ -47,44 +47,44 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 When a drug is researched, what effectiveness does it have
 #gbv.StartRating 100 
 
-The following table contains all diagnoses and treatments that shows up inte drug casebook
+The following table contains all diagnoses and treatments that shows up in the drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
-RschReqd how much research is required to discover the treatment room for the disease.
+RschReqd how much research is required to discover the treatment room for the disease, MaxDiagDiff is how hard it is to diagnose (don't apply to diag rooms).
 #expertise[1].Known.RschReqd 1 0 GENERAL_PRACTICE
-#expertise[2].Known.RschReqd 1 40000 BLOATY_HEAD
-#expertise[3].Known.RschReqd 1 40000 HAIRYITUS
-#expertise[4].Known.RschReqd 1 60000 ELVIS
-#expertise[5].Known.RschReqd 1 60000 INVIS
-#expertise[6].Known.RschReqd 1 60000 RADIATION
-#expertise[7].Known.RschReqd 1 40000 SLACK_TONGUE
-#expertise[8].Known.RschReqd 1 60000 ALIEN
-#expertise[9].Known.RschReqd 1 20000 BROKEN_BONES
-#expertise[10].Known.RschReqd 1 40000 BALDNESS
-#expertise[11].Known.RschReqd 1 40000 DISCRETE_ITCHING
-#expertise[12].Known.RschReqd 1 40000 JELLYITUS
-#expertise[13].Known.RschReqd 1 40000 SLEEPING_ILLNESS
-#expertise[14].Known.RschReqd 1 30000 PREGNANT
-#expertise[15].Known.RschReqd 1 40000 TRANSPARENCY
-#expertise[16].Known.RschReqd 1 20000 UNCOMMON_COLD
-#expertise[17].Known.RschReqd 1 60000 BROKEN_WIND
-#expertise[18].Known.RschReqd 1 20000 SPARE_RIBS
-#expertise[19].Known.RschReqd 1 20000 KIDNEY_BEANS
-#expertise[20].Known.RschReqd 1 20000 BROKEN_HEART
-#expertise[21].Known.RschReqd 1 20000 RUPTURED_NODULES
-#expertise[22].Known.RschReqd 1 40000 MULTIPLE_TV_PERSONALITIES
-#expertise[23].Known.RschReqd 1 60000 INFECTIOUS_LAUGHTER
-#expertise[24].Known.RschReqd 1 40000 CORRUGATED_ANKLES
-#expertise[25].Known.RschReqd 1 40000 CHRONIC_NOSEHAIR
-#expertise[26].Known.RschReqd 1 40000 3RD_DEGREE_SIDEBURNS
-#expertise[27].Known.RschReqd 1 40000 FAKE_BLOOD
-#expertise[28].Known.RschReqd 1 40000 GASTRIC_EJECTIONS
-#expertise[29].Known.RschReqd 1 20000 THE_SQUITS
-#expertise[30].Known.RschReqd 1 20000 IRON_LUNGS
-#expertise[31].Known.RschReqd 1 40000 SWEATY_PALMS
-#expertise[32].Known.RschReqd 1 20000 HEAPED_PILES
-#expertise[33].Known.RschReqd 1 20000 GUT_ROT
-#expertise[34].Known.RschReqd 1 20000 GOLF_STONES
-#expertise[35].Known.RschReqd 1 20000 UNEXPECTED_SWELLING
+#expertise[2].Known.RschReqd.MaxDiagDiff 1 40000 500 BLOATY_HEAD
+#expertise[3].Known.RschReqd.MaxDiagDiff 1 40000 150 HAIRYITUS
+#expertise[4].Known.RschReqd.MaxDiagDiff 1 60000 150 ELVIS
+#expertise[5].Known.RschReqd.MaxDiagDiff 1 60000 150 INVIS
+#expertise[6].Known.RschReqd.MaxDiagDiff 1 60000 750 RADIATION
+#expertise[7].Known.RschReqd.MaxDiagDiff 1 40000 150 SLACK_TONGUE
+#expertise[8].Known.RschReqd.MaxDiagDiff 1 60000 350 ALIEN
+#expertise[9].Known.RschReqd.MaxDiagDiff 1 20000 100 BROKEN_BONES
+#expertise[10].Known.RschReqd.MaxDiagDiff 1 40000 150 BALDNESS
+#expertise[11].Known.RschReqd.MaxDiagDiff 1 40000 500 DISCRETE_ITCHING
+#expertise[12].Known.RschReqd.MaxDiagDiff 1 40000 450 JELLYITUS
+#expertise[13].Known.RschReqd.MaxDiagDiff 1 40000 500 SLEEPING_ILLNESS
+#expertise[14].Known.RschReqd.MaxDiagDiff 1 30000 300 PREGNANT
+#expertise[15].Known.RschReqd.MaxDiagDiff 1 40000 250 TRANSPARENCY
+#expertise[16].Known.RschReqd.MaxDiagDiff 1 20000 250 UNCOMMON_COLD
+#expertise[17].Known.RschReqd.MaxDiagDiff 1 60000 750 BROKEN_WIND
+#expertise[18].Known.RschReqd.MaxDiagDiff 1 20000 250 SPARE_RIBS
+#expertise[19].Known.RschReqd.MaxDiagDiff 1 20000 500 KIDNEY_BEANS
+#expertise[20].Known.RschReqd.MaxDiagDiff 1 20000 500 BROKEN_HEART
+#expertise[21].Known.RschReqd.MaxDiagDiff 1 20000 600 RUPTURED_NODULES
+#expertise[22].Known.RschReqd.MaxDiagDiff 1 40000 250 MULTIPLE_TV_PERSONALITIES
+#expertise[23].Known.RschReqd.MaxDiagDiff 1 60000 250 INFECTIOUS_LAUGHTER
+#expertise[24].Known.RschReqd.MaxDiagDiff 1 40000 500 CORRUGATED_ANKLES
+#expertise[25].Known.RschReqd.MaxDiagDiff 1 40000 600 CHRONIC_NOSEHAIR
+#expertise[26].Known.RschReqd.MaxDiagDiff 1 40000 300 3RD_DEGREE_SIDEBURNS
+#expertise[27].Known.RschReqd.MaxDiagDiff 1 40000 300 FAKE_BLOOD
+#expertise[28].Known.RschReqd.MaxDiagDiff 1 40000 500 GASTRIC_EJECTIONS
+#expertise[29].Known.RschReqd.MaxDiagDiff 1 20000 750 THE_SQUITS
+#expertise[30].Known.RschReqd.MaxDiagDiff 1 20000 700 IRON_LUNGS
+#expertise[31].Known.RschReqd.MaxDiagDiff 1 40000 750 SWEATY_PALMS
+#expertise[32].Known.RschReqd.MaxDiagDiff 1 20000 500 HEAPED_PILES
+#expertise[33].Known.RschReqd.MaxDiagDiff 1 20000 750 GUT_ROT
+#expertise[34].Known.RschReqd.MaxDiagDiff 1 20000 500 GOLF_STONES
+#expertise[35].Known.RschReqd.MaxDiagDiff 1 20000 500 UNEXPECTED_SWELLING
 #expertise[36].Known.RschReqd 1 40000 I_D_SCANNER             DIAGNOSIS
 #expertise[37].Known.RschReqd 1 50000 I_D_BLOOD_MACHINE       DIAGNOSIS
 #expertise[38].Known.RschReqd 1 20000 I_D_CARDIO              DIAGNOSIS

@@ -56,7 +56,6 @@ disease.treatment_rooms = {
   "ward",
   "operating_theatre",
 }
--- Diagnosis difficulty: a value between 0 (instant diagnosis in GP's office) and 1.
-disease.diagnosis_difficulty = 0.8
+
 
 return disease

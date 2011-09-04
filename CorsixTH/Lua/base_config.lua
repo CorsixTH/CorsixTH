@@ -147,40 +147,40 @@ local configuration = {
   },
   expertise = {
     {StartPrice = 100, Known = 1, RschReqd = 0}, -- GENERAL_PRACTICE
-    {StartPrice = 850, Known = 0, RschReqd = 40000}, -- BLOATY_HEAD
-    {StartPrice = 1150, Known = 0, RschReqd = 40000}, --  HAIRYITUS
-    {StartPrice = 1600, Known = 0, RschReqd = 60000}, --  ELVIS
-    {StartPrice = 1400, Known = 0, RschReqd = 60000}, --  INVIS
-    {StartPrice = 1800, Known = 0, RschReqd = 60000}, --  RADIATION
-    {StartPrice = 900, Known = 0, RschReqd = 40000}, --  SLACK_TONGUE
-    {StartPrice = 2000, Known = 0, RschReqd = 60000}, --  ALIEN
-    {StartPrice = 450, Known = 0, RschReqd = 20000}, --  BROKEN_BONES
-    {StartPrice = 950, Known = 0, RschReqd = 40000}, --  BALDNESS
-    {StartPrice = 700, Known = 0, RschReqd = 40000}, --  DISCRETE_ITCHING
-    {StartPrice = 1000, Known = 0, RschReqd = 40000}, --  JELLYITUS
-    {StartPrice = 750, Known = 0, RschReqd = 40000}, --  SLEEPING_ILLNESS
-    {StartPrice = 0, Known = 0, RschReqd = 0}, --  PREGNANT
-    {StartPrice = 800, Known = 0, RschReqd = 40000}, --  TRANSPARENCY
-    {StartPrice = 300, Known = 0, RschReqd = 20000}, --  UNCOMMON_COLD
-    {StartPrice = 1300, Known = 0, RschReqd = 60000}, --  BROKEN_WIND
-    {StartPrice = 1100, Known = 0, RschReqd = 20000}, --  SPARE_RIBS
-    {StartPrice = 1050, Known = 0, RschReqd = 20000}, --  KIDNEY_BEANS
-    {StartPrice = 1900, Known = 0, RschReqd = 20000}, --  BROKEN_HEART
-    {StartPrice = 1600, Known = 0, RschReqd = 20000}, --  RUPTURED_NODULES
-    {StartPrice = 800, Known = 0, RschReqd = 40000}, --  MULTIPLE_TV_PERSONALITIES
-    {StartPrice = 1500, Known = 0, RschReqd = 60000}, --  INFECTIOUS_LAUGHTER
-    {StartPrice = 800, Known = 0, RschReqd = 40000}, --  CORRUGATED_ANKLES
-    {StartPrice = 800, Known = 0, RschReqd = 40000}, --  CHRONIC_NOSEHAIR
-    {StartPrice = 550, Known = 0, RschReqd = 40000}, --  3RD_DEGREE_SIDEBURNS
-    {StartPrice = 800, Known = 0, RschReqd = 40000}, --  FAKE_BLOOD
-    {StartPrice = 650, Known = 0, RschReqd = 40000}, --  GASTRIC_EJECTIONS
-    {StartPrice = 400, Known = 0, RschReqd = 20000}, --  THE_SQUITS
-    {StartPrice = 1700, Known = 0, RschReqd = 20000}, --  IRON_LUNGS
-    {StartPrice = 600, Known = 0, RschReqd = 40000}, --  SWEATY_PALMS
-    {StartPrice = 400, Known = 0, RschReqd = 20000}, --  HEAPED_PILES
-    {StartPrice = 350, Known = 0, RschReqd = 20000}, --  GUT_ROT
-    {StartPrice = 1600, Known = 0, RschReqd = 20000}, --  GOLF_STONES
-    {StartPrice = 500, Known = 0, RschReqd = 20000}, --  UNEXPECTED_SWELLING
+    {StartPrice = 850, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, -- BLOATY_HEAD
+    {StartPrice = 1150, Known = 0, RschReqd = 40000, MaxDiagDiff = 250}, --  HAIRYITUS
+    {StartPrice = 1600, Known = 0, RschReqd = 60000, MaxDiagDiff = 250}, --  ELVIS
+    {StartPrice = 1400, Known = 0, RschReqd = 60000, MaxDiagDiff = 250}, --  INVIS
+    {StartPrice = 1800, Known = 0, RschReqd = 60000, MaxDiagDiff = 250}, --  RADIATION
+    {StartPrice = 900, Known = 0, RschReqd = 40000, MaxDiagDiff = 250}, --  SLACK_TONGUE
+    {StartPrice = 2000, Known = 0, RschReqd = 60000, MaxDiagDiff = 350}, --  ALIEN
+    {StartPrice = 450, Known = 0, RschReqd = 20000, MaxDiagDiff = 250}, --  BROKEN_BONES
+    {StartPrice = 950, Known = 0, RschReqd = 40000, MaxDiagDiff = 250}, --  BALDNESS
+    {StartPrice = 700, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  DISCRETE_ITCHING
+    {StartPrice = 1000, Known = 0, RschReqd = 40000, MaxDiagDiff = 1000}, --  JELLYITUS
+    {StartPrice = 750, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  SLEEPING_ILLNESS
+    {StartPrice = 0, Known = 0, RschReqd = 5000, MaxDiagDiff = 400}, --  PREGNANT
+    {StartPrice = 800, Known = 0, RschReqd = 40000, MaxDiagDiff = 350}, --  TRANSPARENCY
+    {StartPrice = 300, Known = 0, RschReqd = 20000, MaxDiagDiff = 350}, --  UNCOMMON_COLD
+    {StartPrice = 1300, Known = 0, RschReqd = 60000, MaxDiagDiff = 1000}, --  BROKEN_WIND
+    {StartPrice = 1100, Known = 0, RschReqd = 20000, MaxDiagDiff = 350}, --  SPARE_RIBS
+    {StartPrice = 1050, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  KIDNEY_BEANS
+    {StartPrice = 1900, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  BROKEN_HEART
+    {StartPrice = 1600, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  RUPTURED_NODULES
+    {StartPrice = 800, Known = 0, RschReqd = 40000, MaxDiagDiff = 350}, --  MULTIPLE_TV_PERSONALITIES
+    {StartPrice = 1500, Known = 0, RschReqd = 60000, MaxDiagDiff = 350}, --  INFECTIOUS_LAUGHTER
+    {StartPrice = 800, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  CORRUGATED_ANKLES
+    {StartPrice = 800, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  CHRONIC_NOSEHAIR
+    {StartPrice = 550, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  3RD_DEGREE_SIDEBURNS
+    {StartPrice = 800, Known = 0, RschReqd = 40000, MaxDiagDiff = 350}, --  FAKE_BLOOD
+    {StartPrice = 650, Known = 0, RschReqd = 40000, MaxDiagDiff = 700}, --  GASTRIC_EJECTIONS
+    {StartPrice = 400, Known = 0, RschReqd = 20000, MaxDiagDiff = 1000}, --  THE_SQUITS
+    {StartPrice = 1700, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  IRON_LUNGS
+    {StartPrice = 600, Known = 0, RschReqd = 40000, MaxDiagDiff = 1000}, --  SWEATY_PALMS
+    {StartPrice = 400, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  HEAPED_PILES
+    {StartPrice = 350, Known = 0, RschReqd = 20000, MaxDiagDiff = 1000}, --  GUT_ROT
+    {StartPrice = 1600, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  GOLF_STONES
+    {StartPrice = 500, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  UNEXPECTED_SWELLING
     {StartPrice = 300, Known = 0, RschReqd = 40000}, --    I_D_SCANNER  
     {StartPrice = 250, Known = 0, RschReqd = 50000}, --    I_D_BLOOD_MACHINE       DIAGNOSIS
     {StartPrice = 150, Known = 0, RschReqd = 20000}, --    I_D_CARDIO              DIAGNOSIS

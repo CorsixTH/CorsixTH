@@ -26,7 +26,7 @@ function StaffProfile:StaffProfile(humanoid_class, local_string)
   self.wage = 0
   self.skill = 0 -- [0.0, 1.0]
   self.layer5 = 2
-  self.attention_to_detail = 0.5 -- [0.0, 1.0] TODO currently not used
+  self.attention_to_detail = math.random()
   self.profession = local_string
 end
 
