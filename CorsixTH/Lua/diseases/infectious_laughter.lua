@@ -46,7 +46,6 @@ end
 -- to aid in diagnosis. The need not be visited, and if they are visited, the
 -- order in which they are visited is not fixed.
 disease.diagnosis_rooms = {
-  "general_diag",
   "cardiogram",
   "scanner",
   "ultrascan",
