@@ -292,6 +292,10 @@ function Patient:pee()
     end
     self:setMood("poo", "deactivate")
     self:changeAttribute("happiness", -0.02)  -- not being able to find a loo and doing it in the corridor will make you sad too
+    if not self.hospital.did_it_on_floor then
+      self.hospital.did_it_on_floor = true
+      self.world.ui.adviser:say(_S.adviser.warnings.people_did_it_on_the_floor)
+    end
   else
     return 
   end
@@ -461,8 +465,6 @@ function Patient:tickDay()
       nausea = nausea * ((numVomit+1) * proximityVomitMult)
       if math.random() < nausea then
         self:vomit()
-        self:playSound "puke.wav"
-        self:playSound "vomsplat.wav"
       end
     end
   end
