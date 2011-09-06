@@ -522,4 +522,40 @@ function Map:afterLoad(old, new)
   if old < 18 then
     self.difficulty = "full"
   end
+  if old < 44 then
+    self.level_config.expertise[2].MaxDiagDiff = 700
+    self.level_config.expertise[3].MaxDiagDiff = 250
+    self.level_config.expertise[4].MaxDiagDiff = 250
+    self.level_config.expertise[5].MaxDiagDiff = 250
+    self.level_config.expertise[6].MaxDiagDiff = 250
+    self.level_config.expertise[7].MaxDiagDiff = 250
+    self.level_config.expertise[8].MaxDiagDiff = 350
+    self.level_config.expertise[9].MaxDiagDiff = 250
+    self.level_config.expertise[10].MaxDiagDiff = 250
+    self.level_config.expertise[11].MaxDiagDiff = 700
+    self.level_config.expertise[12].MaxDiagDiff = 1000
+    self.level_config.expertise[13].MaxDiagDiff = 700
+    self.level_config.expertise[14].MaxDiagDiff = 400
+    self.level_config.expertise[15].MaxDiagDiff = 350
+    self.level_config.expertise[16].MaxDiagDiff = 350
+    self.level_config.expertise[17].MaxDiagDiff = 1000
+    self.level_config.expertise[18].MaxDiagDiff = 350
+    self.level_config.expertise[19].MaxDiagDiff = 700
+    self.level_config.expertise[20].MaxDiagDiff = 700
+    self.level_config.expertise[21].MaxDiagDiff = 700
+    self.level_config.expertise[22].MaxDiagDiff = 350
+    self.level_config.expertise[23].MaxDiagDiff = 350
+    self.level_config.expertise[24].MaxDiagDiff = 700
+    self.level_config.expertise[25].MaxDiagDiff = 700
+    self.level_config.expertise[26].MaxDiagDiff = 700
+    self.level_config.expertise[27].MaxDiagDiff = 350
+    self.level_config.expertise[28].MaxDiagDiff = 700
+    self.level_config.expertise[29].MaxDiagDiff = 1000
+    self.level_config.expertise[30].MaxDiagDiff = 700
+    self.level_config.expertise[31].MaxDiagDiff = 1000
+    self.level_config.expertise[32].MaxDiagDiff = 700
+    self.level_config.expertise[33].MaxDiagDiff = 1000
+    self.level_config.expertise[34].MaxDiagDiff = 700
+    self.level_config.expertise[35].MaxDiagDiff = 700
+  end
 end
