@@ -306,7 +306,7 @@ function Patient:checkWatch()
     self:queueAction({
       name = "check_watch",
       must_happen = true
-      }, 1)  
+      }, 0)  
   end 
 end
 
@@ -315,7 +315,7 @@ function Patient:tapFoot()
     self:queueAction({
       name = "tap_foot",
       must_happen = true
-      }, 1)  
+      }, 0)  
   end     
 end
 
@@ -358,7 +358,6 @@ function Patient:tickDay()
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
-      self:tapFoot()
       self:goHome()
       if self.diagnosed then
         -- No treatment rooms
@@ -367,6 +366,10 @@ function Patient:tickDay()
         -- No diagnosis rooms
         self:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
       end
+    elseif self.waiting == 10 then
+      self:tapFoot()
+    elseif self.waiting == 30 then
+      self:checkWatch()
     end
   end
 
