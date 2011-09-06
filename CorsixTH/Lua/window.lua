@@ -659,8 +659,8 @@ function Scrollbar:Scrollbar()
 end
 
 function Scrollbar:setRange(min_value, max_value, page_size, value)
-  value = value or min_value
   page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
+  value = math.min(value or min_value, math.max(min_value, max_value - page_size + 1))
   
   self.min_value = min_value
   self.max_value = max_value

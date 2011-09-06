@@ -109,6 +109,7 @@ function UIMachine:replaceMachine()
 end
 
 function UIMachine:onMouseDown(code, x, y)
+  -- cycle through all machines when you right click on the machine title
   if code == "right" then
     if x > 18 and x < 139 then
       if y > 19 and y < 42 then
