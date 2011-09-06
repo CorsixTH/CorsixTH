@@ -107,3 +107,46 @@ function UIMachine:replaceMachine()
     end
   ))
 end
+
+function UIMachine:onMouseDown(code, x, y)
+  if code == "right" then
+    if x > 18 and x < 139 then
+      if y > 19 and y < 42 then
+        -- select next machine
+        local ui = self.ui
+        local first_machine, next_machine = nil, self.machine
+        local next_room
+        for _, entity in ipairs(ui.app.world.entities) do
+          -- is a machine and not a slave (e.g. operating_table_b)
+          if class.is(entity, Machine) and not entity.master then
+            next_room = entity:getRoom()
+            if next_room.is_active then
+              if not first_machine then
+                first_machine = entity
+              end
+              if not next_machine then
+                next_machine = entity
+                break
+              elseif entity == next_machine then
+                next_machine = nil
+              end
+            end
+          end
+        end
+        if not next_machine or next_machine == self.machine then
+          next_machine = first_machine
+        end
+        if next_machine and next_machine ~= self.machine then
+          -- center screen on machine
+          local sx, sy = ui.app.map:WorldToScreen(next_machine.tile_x, next_machine.tile_y)
+          local dx, dy = next_machine.th:getPosition()
+          ui:scrollMapTo(sx + dx, sy + dy)
+          -- change window
+          ui:addWindow(UIMachine(ui, next_machine, next_room))
+          ui:playSound("camclick.wav")
+        end
+      end
+    end
+  end
+  return Window.onMouseDown(self, code, x, y)
+end
