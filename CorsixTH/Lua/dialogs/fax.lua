@@ -156,6 +156,11 @@ function UIFax:choice(choice)
     self.ui.adviser:say(_S.adviser.information.emergency)
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
+  elseif choice == "accept_vip" then
+    self.ui.hospital.num_vips = self.ui.hospital.num_vips+1
+    self.ui.app.world:spawnVIP()
+  elseif choice == "refuse_vip" then
+    self.ui.app.world:nextVip() -- don't start an inspection
   elseif choice == "accept_new_level" then
     -- Set the new salary.
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer

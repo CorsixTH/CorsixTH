@@ -219,6 +219,63 @@ navigateDoor = function(humanoid, x1, y1, dir)
   door:updateDynamicInfo()
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
+
+  -- vip is outside the door of a room
+  if is_entering_room and humanoid.humanoid_class == "VIP" then
+    -- set the vip to be idle
+    humanoid:queueAction({
+         name = "idle",
+         direction = dir
+    },0)
+    room.door.reserved_for = humanoid
+    humanoid:setTilePositionSpeed(x1, y1)
+    -- wait for a short time
+    humanoid.waiting = 4
+
+    -- if the user is about to kill a live patient for research, lower their rating dramatically
+    if room.room_info.id == "research" then
+      if room:getPatient() then
+  humanoid.vip_rating = humanoid.vip_rating - 80
+      end
+    end
+
+    if room.staff_member then
+      if room.staff_member.profile.skill > 0.9 then
+        humanoid.room_eval = humanoid.room_eval + 3
+      end
+      if room.staff_member.attributes["fatigue"] then
+        if (room.staff_member.attributes["fatigue"] < 0.4) then
+          humanoid.room_eval = humanoid.room_eval + 2
+        end
+      end
+    end
+
+    -- evaluate the room we're currently looking at
+    for object, value in pairs(room.objects) do
+      if object.object_type.id == "extinguisher" then
+        humanoid.room_eval = humanoid.room_eval + 1
+        break
+      elseif object.object_type.id == "plant" then
+        if object.days_left >= 10 then
+          humanoid.room_eval = humanoid.room_eval + 1
+        elseif object.days_left <= 3 then
+          humanoid.room_eval = humanoid.room_eval - 1
+        end
+        break
+      end
+
+      if object.strength then
+        if object.strength > (object.object_type.default_strength / 2) then
+          humanoid.room_eval = humanoid.room_eval + 1
+        else
+          humanoid.room_eval = humanoid.room_eval - 3
+        end
+      end
+    end --for objects
+
+    return
+  end -- if vip
+
   if class.is(humanoid, Staff) and is_entering_room 
   and humanoid.humanoid_class ~= "Handyman" then
     -- A member of staff is entering, but is maybe no longer needed 

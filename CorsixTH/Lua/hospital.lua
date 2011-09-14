@@ -72,6 +72,10 @@ function Hospital:Hospital(world)
   self.num_deaths_this_year = 0
   self.num_cured = 0
   self.not_cured = 0
+  self.num_explosions = 0
+  self.announce_vip = 0
+  self.num_vips = 0 -- used to check if it's the user's first vip
+  self.visitingVIP = ""
   self.percentage_cured = 0
   self.percentage_killed = 0
   self.population = 0.25 -- TODO: Percentage showing how much of
@@ -403,6 +407,10 @@ function Hospital:afterLoad(old, new)
   if old < 41 then
     self.boiler_can_break = true
   end
+  if old < 44 then
+    self.num_explosions = 0
+    self.num_vips = 0
+  end
 end
 
 --! Called each tick, also called 'hours'. Check hours_per_day in
@@ -498,6 +506,23 @@ function Hospital:onEndDay()
     local overdraft = math.abs(self.balance)
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
+  end
+
+  -- check if we still have to anounce VIP visit
+  if self.announce_vip == 1 then
+    -- check if the VIP is in the building yet
+    for i, e in ipairs(self.world.entities) do
+      if e.humanoid_class == "VIP" then
+        if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
+          if self.num_vips < 1 then
+            self.world.ui.adviser:say(_S.adviser.information.initial_general_advice.first_VIP)
+          else
+            self.world.ui.adviser:say(_S.adviser.information.vip_arrived:format(self.visitingVIP))
+          end
+          self.announce_vip = 0
+        end
+      end
+    end
   end
 
   -- Countdown for boiler breakdowns 
@@ -754,7 +779,31 @@ function Hospital:resolveEmergency()
   else -- Too few rescued, reputation hit
     self:changeReputation("emergency_failed", emer.disease)
   end
+
+  --check if there's a VIP in the building, and if there is then let him know the outcome
+  for i, e in ipairs(self.world.entities) do
+    if e.humanoid_class == "VIP" then
+      if earned > 0 then
+        e.vip_rating = e.vip_rating + 10
+      else
+        e.vip_rating = e.vip_rating - 15
+      end
+    end
+  end
+
   self.world:nextEmergency()
+end
+
+-- Creates VIP
+function Hospital:createVip()
+  self.visitingVIP = _S.vip_names[math.random(1,10)]
+  local message = {
+    {text = _S.fax.vip_visit_query.vip_name:format(self.visitingVIP)},
+    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip"},
+               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip"}}
+  }
+  -- auto-refuse after 20 days
+  self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
 end
 
 function Hospital:spawnPatient()

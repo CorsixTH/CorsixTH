@@ -135,6 +135,12 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
 end
 
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
+   --If it's the VIP then there's been an explosion. Skip the exploded room
+  if humanoid.humanoid_class == "VIP" then
+    humanoid.waiting = 1
+    return
+  end
+
   -- If none of the diagnosis rooms can be built yet, go home anyway.
   -- Otherwise, depending on hospital policy three things can happen:
   if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then

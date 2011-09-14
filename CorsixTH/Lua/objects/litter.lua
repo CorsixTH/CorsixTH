@@ -74,6 +74,7 @@ function Litter:getWalkableTiles()
   tiles[0] = { self.tile_x, self.tile_y }
   return tiles
 end
+
 function Litter:setLitterType(anim_type, mirrorFlag)
   if anim_type then
     local anim = litter_types[anim_type]
@@ -91,17 +92,23 @@ end
 
 function Litter:vomitInducing()
   local anim = self.animation_idx
-  if anim == litter_types["puke"] or anim == litter_types["pee"] or anim == litter_types["dead_rat"] then
+  if anim == litter_types["puke"] or
+     anim == litter_types["pee"] or
+     anim == litter_types["dead_rat"] then
     return true
   end
   return false
 end
+
 function Litter:anyLitter()
   local anim = self.animation_idx
-  if anim == litter_types["soda_can"] or anim == litter_types["banana"] 
-  or anim == litter_types["paper"] or anim == litter_types["bottle"]  then
+  if anim == litter_types["soda_can"] or
+     anim == litter_types["banana"] or
+     anim == litter_types["paper"] or
+     anim == litter_types["bottle"] then
     return true
   end
   return false
 end
+
 return object

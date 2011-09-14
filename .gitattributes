@@ -74,6 +74,7 @@ CorsixTH/Lua/diseases/pregnant.lua -text
 CorsixTH/Lua/diseases/ruptured_nodules.lua -text
 CorsixTH/Lua/diseases/spare_ribs.lua -text
 CorsixTH/Lua/diseases/unexpected_swelling.lua -text
+CorsixTH/Lua/entities/vip.lua -text
 CorsixTH/Lua/humanoid_actions/check_watch.lua -text
 CorsixTH/Lua/humanoid_actions/pee.lua -text
 CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text

@@ -206,7 +206,7 @@ end
 --! Queue a fax notification message to appear.
 --! The arguments specify a message, which is added to a FIFO queue, and will
 -- appear on screen once there is space.
---!param type (string) The type of message, can be: "emergency", "epidemy", "personnality", "information", "disease", "report" or "strike"
+--!param type (string) The type of message, can be: "emergency", "epidemy", "personality", "information", "disease", "report" or "strike"
 --!param message (table or number) If type == "strike", the amount of pay rise. Else a list of texts to display, including a "choices" table with choices. See below for structure.
 --!param owner (humanoid or nil) Some messages are related to one staff or patient. Otherwise this is nil.
 --!param timeout (number or nil) If given, the message will expire after that many world ticks and be removed.

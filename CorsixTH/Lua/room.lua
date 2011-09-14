@@ -606,6 +606,8 @@ function Room:crashRoom()
     soot:setLitterType(soot_type, 0)
   end
   
+  self.hospital.num_explosions = self.hospital.num_explosions + 1
+
   self.crashed = true
   self:deactivate()
 end

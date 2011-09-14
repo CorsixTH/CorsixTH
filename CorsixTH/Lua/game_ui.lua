@@ -248,7 +248,7 @@ function GameUI:makeDebugFax()
     choices = {{text = "close debug fax", choice = "close"}},
   }
   -- Don't use "strike" type here, as these open a different window and must have an owner
-  local types = {"emergency", "epidemy", "personnality", "information", "disease", "report"}
+  local types = {"emergency", "epidemy", "personality", "information", "disease", "report"}
   self.bottom_panel:queueMessage(types[math.random(1, #types)], message)
 end
 

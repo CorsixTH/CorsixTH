@@ -89,7 +89,14 @@ function ReceptionDesk:tick()
         if queue_front.next_room_to_visit then
           queue_front:queueAction{name = "seek_room", room_type = queue_front.next_room_to_visit.room_info.id}
         else
-          queue_front:queueAction{name = "seek_room", room_type = "gp"}
+          -- VIP has his own list, don't add the gp office twice
+          if queue_front.humanoid_class ~= "VIP" then
+            queue_front:queueAction{name = "seek_room", room_type = "gp"}
+          else
+            -- the VIP will realise that he is idle, and start going round rooms
+            queue_front:queueAction{name = "idle"}
+            queue_front.waiting = 1
+          end
         end
         self.queue:pop()
         self.queue.visitor_count = self.queue.visitor_count + 1

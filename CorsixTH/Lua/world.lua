@@ -28,6 +28,7 @@ dofile "room"
 dofile "entities/object"
 dofile "entities/humanoid"
 dofile "entities/patient"
+dofile "entities/vip"
 dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
@@ -130,6 +131,7 @@ function World:World(app)
   self:calculateSpawnTiles()
 
   self:nextEmergency()
+  self:nextVip()
 
   -- Set initial spawn rate in people per month.
   -- Assumes that the first entry is always the first month.
@@ -454,6 +456,31 @@ function World:spawnPatient(hospital)
     
     return patient
   end
+end
+
+function World:spawnVIP(hospital)
+  if not hospital then
+    hospital = self:getLocalPlayerHospital()
+  end
+
+  hospital.announce_vip = 1
+  
+  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+  local vip = self:newEntity("Vip", 2)
+  vip:setType "VIP"
+  vip.enter_deaths = hospital.num_deaths
+  vip.enter_visitors = hospital.num_visitors
+  vip.enter_cures = hospital.num_cured
+
+  vip.enter_explosions = hospital.num_explosions
+
+  -- we need to know how many rooms vip visiting for room evaluation
+  vip.enter_num_rooms = #self.rooms
+
+  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+  vip:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  vip:setHospital(hospital)
+  vip:queueAction{name = "seek_reception"}
 end
 
 function World:debugDisableSalaryRaise(mode)
@@ -820,6 +847,17 @@ function World:onEndDay()
     end
   end
   self.current_tick_entity = nil
+
+  --check if it's time for a VIP visit
+  if (self.year - 1) * 12 + self.month == self.next_vip_month
+  and self.day == self.next_vip_day then
+    if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
+      self.hospitals[1]:createVip()
+    else
+      self:nextVip()
+    end
+  end
+
   -- Maybe it's time for an emergency?
   if (self.year - 1) * 12 + self.month == self.next_emergency_month 
   and self.day == self.next_emergency_day then
@@ -996,6 +1034,30 @@ function World:nextEmergency()
       self.next_emergency_day = math.random(day_start, day_end)
     end
   end
+end
+
+-- Called when it is time to have another VIP
+function World:nextVip()
+  local current_month = (self.year - 1) * 12 + self.month
+
+  -- Support standard values for mean and variance
+  local mean = 180
+  local variance = 30
+  -- How many days until next vip?
+  local days = math.round(math.n_random(mean, variance))
+  local next_month = self.month
+
+  -- Walk forward to get the resulting month and day.
+  if days > month_length[next_month] - self.day then
+    days = days - (month_length[next_month] - self.day)
+    next_month = next_month + 1
+  end
+  while days > month_length[(next_month - 1) % 12 + 1] do
+    days = days - month_length[(next_month - 1) % 12 + 1]
+    next_month = next_month + 1
+  end
+  self.next_vip_month = next_month + (self.year - 1) * 12
+  self.next_vip_day = days
 end
 
 --! Checks if all goals have been achieved or if the player has lost.
@@ -1756,6 +1818,9 @@ function World:afterLoad(old, new)
     self.spawn_hours = {}
     self.spawn_dates = {}
     self:updateSpawnDates()
+  end
+  if old < 44 then
+    self:nextVip()
   end
   self.savegame_version = new
 end
