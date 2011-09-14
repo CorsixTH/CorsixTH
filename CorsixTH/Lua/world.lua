@@ -1819,7 +1819,7 @@ function World:afterLoad(old, new)
     self.spawn_dates = {}
     self:updateSpawnDates()
   end
-  if old < 44 then
+  if old < 45 then
     self:nextVip()
   end
   self.savegame_version = new

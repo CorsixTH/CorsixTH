@@ -407,7 +407,7 @@ function Hospital:afterLoad(old, new)
   if old < 41 then
     self.boiler_can_break = true
   end
-  if old < 44 then
+  if old < 45 then
     self.num_explosions = 0
     self.num_vips = 0
   end
