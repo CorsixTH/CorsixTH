@@ -61,6 +61,7 @@ menu_debug = {
   limit_camera                = "  LIMITA TELECAMERA  ",
   disable_salary_raise        = "  DISABILITA AUMENTI DI SALARIO  ",
   make_debug_fax              = "  (F8) CREA FAX DI DEBUG  ",
+  make_debug_vip              = "  CREA UN VIP DI DEBUG  ",
   make_debug_patient          = "  (F9) CREA UN PAZIENTE DI DEBUG  ",
   cheats                      = "  (F11) CHEAT  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
@@ -86,6 +87,11 @@ menu_debug_overlay = {
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione risulterebbe nel blocco dell'accesso ad alcune parti dell'ospedale.",
+  warnings = {
+    no_desk ="Prima o poi dovrai costruire un banco di accettazione ed assumere una receptionist!",
+    no_desk_1 = "Se vuoi che i pazienti vengano nel tuo ospedale dovrai assumere una receptionist e costruirle una scrivania dove farla lavorare!",
+    no_desk_2 = "Ben fatto, deve essere un record mondiale: quasi un anno e nessun paziente! Se vuoi continuare come Manager di questo ospedale avrai bisogno di assumere una receptionist e costruire un banco di accettazione dove farla lavorare!",
+  },
 
   cheats = {  
     th_cheat = "Congratulazioni, hai sbloccato i cheat!",
@@ -110,6 +116,9 @@ fax = {
     accept_new_level = "Vai al livello successivo",
     decline_new_level = utf8 "Continua a giocare un altro po'",
   },
+  emergency = {
+    num_disease_singular = utf8 "C'è una persona con %s che richiede la tua immediata attenzione.",
+  }
 }
 
 letter = {
@@ -121,6 +130,7 @@ letter = {
 install = {
   title = "--------------------------------- Installazione CorsixTH ---------------------------------",
   th_directory = "CorsixTH ha bisogno di una copia dei file dati di Theme Hospital (o della demo) per essere eseguito. Per favore indica la posizione della cartella di installazione di Theme Hospital.",
+  exit = "Esci",
 }
 
 misc.not_yet_implemented = "(non ancora implementato)"
@@ -183,6 +193,9 @@ options_window = {
   width = "Largh",
   height = "Alt",
   change_resolution = "Cambia risoluzione",
+  browse = "Sfoglia...",
+  new_th_directory = utf8 "Qui puoi specificare una nuova cartella di installazione di Theme Hospital. Appena scegli la nuova cartella il gioco verrà riavviato.",
+  cancel = "Cancella",
   back = "Indietro",
 }
 
@@ -302,6 +315,7 @@ cheats_window = {
     money = "Cheat soldi",
     all_research = "Cheat Completa Ricerche",
     emergency = "Crea Emergenza",
+    vip = "Crea VIP",
     create_patient = "Crea Paziente",
     end_month = "Fine Mese",
     end_year = "Fine Anno",
@@ -317,6 +331,7 @@ tooltip.cheats_window = {
     money = "Aggiunge 10.000 al tuo conto in banca.",
     all_research = "Completa tutte le ricerche.",
     emergency = utf8 "Crea un'emergenza.",
+    vip = "Crea un VIP.",
     create_patient = "Crea un Paziente a bordo mappa.",
     end_month = "Salta alla fine del mese.",
     end_year = "Salta alla fine dell'anno.",
