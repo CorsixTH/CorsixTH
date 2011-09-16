@@ -99,6 +99,7 @@ menu_debug = {
   limit_camera                = utf8 "  LIMITAR CÁMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
   make_debug_fax              = utf8 "  (F8) CREAR FAX DE DEPURACIÓN  ",
+  make_debug_vip              = utf8"  CREAR VIP DE DEPURACIÓN  ",
   make_debug_patient          = utf8 "  (F9) CREAR PACIENTE DE DEPURACIÓN  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",
@@ -124,7 +125,11 @@ menu_debug_overlay = {
 }
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
-
+  warnings = {
+    no_desk ="¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
+    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
+    no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
+  },
   cheats = {
     th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos!",
     crazy_on_cheat = utf8 "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
@@ -346,6 +351,7 @@ cheats_window = {
     money = "Truco de dinero",
     all_research = "Truco de todo investigado",
     emergency = "Crear una emergencia",
+    vip = "Crear un VIP",
     create_patient = "Crear un paciente",
     end_month = "Fin de mes",
     end_year = utf8 "Fin del año",
@@ -361,6 +367,7 @@ tooltip.cheats_window = {
     money = utf8 "Añadir 10.000 dólares a tu cuenta bancaria.",
     all_research = "Completar todas las investigaciones.",
     emergency = "Crear una emergencia.",
+    vip = "Crear un VIP.",
     create_patient = "Crear un paciente en el borde del mapa.",
     end_month = "Avanza hasta el fin del mes actual.",
     end_year = utf8 "Avanza hasta el final del año actual.",
