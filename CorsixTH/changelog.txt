@@ -1,4 +1,35 @@
 -----------------------------------------
+Version Beta 8 - released 2011-09-24
+-----------------------------------------
+
+-- Gameplay --
+
+* Fix: Patients should manage to use benches more often now.
+* Change: Which diagnosis rooms different patients go to have been changed
+  to be more like the original game.
+* Added: People may now puke or pee on the floor.
+* Added: Various things such as litter and plants affect patient happiness.
+* Added: A doctor may now get crazy if he is waaay too tired.
+* Added: VIP visits. Watch out for those picky black suit visitors!
+
+-- User Interface --
+
+* Added: It is now possible to cycle through owned machines by right-clicking
+  the machine name in the machine dialog.
+
+-- Graphics --
+
+* Added: Waiting patients may sometimes check their watch or start to tap their foot.
+* Added: (Animation Viewer) A new export function has been added. Note that there
+  is currently no import equivalent, so it is mostly for people to try out and
+  see what graphics there are in the game. In the future we hope to make it possible
+  to import these graphics after changing them in your favourite graphics program.
+
+-- Translations --
+
+New language: Polish
+
+-----------------------------------------
 Version Beta 7 - released 2011-06-24
 -----------------------------------------
 
