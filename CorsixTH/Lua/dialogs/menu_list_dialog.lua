@@ -65,6 +65,7 @@ function LoadSaveTreeControl:LoadSaveTreeControl(root, x, y, width, height, col_
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, has_font)
   -- Move the tree itself downwards to make room for the top column headers.
   self.y_offset = 14
+  self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
   -- Add the two column headers and make buttons on them.
   self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name)
   :makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name)

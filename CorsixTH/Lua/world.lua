@@ -727,6 +727,13 @@ function World:onTick()
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
       local pathsep = package.config:sub(1, 1)
+      local dir = TheApp.savegame_dir
+      if not dir:sub(-1, -1) == pathsep then
+        dir = dir .. pathsep
+      end
+      if not lfs.attributes(dir .. "Autosaves", "modification") then
+        lfs.mkdir(dir .. "Autosaves")
+      end
       local status, err = pcall(TheApp.save, TheApp, "Autosaves" .. pathsep .. "Autosave" .. self.month .. ".sav")
       if not status then
         print("Error while autosaving game: " .. err)
