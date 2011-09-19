@@ -35,7 +35,7 @@ room.wall_type = "blue"
 room.floor_tile = 17
 room.swing_doors = true
 room.required_staff = {
-  Doctor = 1,
+  Researcher = 1,
 }
 room.maximum_staff = room.required_staff
 room.call_sound = "reqd015.wav"

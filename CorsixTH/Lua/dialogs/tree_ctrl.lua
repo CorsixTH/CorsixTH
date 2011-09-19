@@ -173,6 +173,160 @@ function TreeNode:getNextVisible()
   end
 end
 
+--! A tree node representing a file (or directory) in the physical file-system.
+class "FileTreeNode" (TreeNode)
+
+local pathsep = package.config:sub(1, 1)
+
+function FileTreeNode:FileTreeNode(path)
+  self:TreeNode()
+  if path:sub(-1) == pathsep and path ~= pathsep then
+    path = path:sub(1, -2)
+  end
+  self.path = path
+  self.children = {}
+  self.has_looked_for_children = false
+end
+
+function FileTreeNode:childPath(item)
+  if self.path:sub(-1, -1) == pathsep then
+    return self.path .. item
+  else
+    return self.path .. pathsep .. item
+  end
+end
+
+function FileTreeNode:hasChildren()
+  if self.has_looked_for_children then
+    return #self.children ~= 0
+  elseif self.has_children == nil then
+    if self:getLevel() == 0 then
+      -- Assume root level things have children until we really need to check
+      return true
+    end
+    self.has_children = false
+    local status, _f, _s, _v = pcall(lfs.dir, self.path)
+    if not status then
+      print("Error while fetching children for " .. self.path .. ": " .. _f)
+    else
+      for item in _f, _s, _v do
+        if self:isValidFile(item) then
+          self.has_children = true
+          break
+        end
+      end
+    end
+  end
+  return self.has_children
+end
+
+--! Returns whether the given file name is valid
+--  in this tree. Override for desired behaviour.
+function FileTreeNode:isValidFile(name)
+  return name ~= "." and name ~= ".."
+end
+
+function FileTreeNode:createNewNode(path)
+  return FileTreeNode(path)
+end
+
+local function sort_by_key(t1, t2)
+  local second_mode = lfs.attributes(t2.path, "mode") == "directory"
+  if lfs.attributes(t1.path, "mode") == "directory" then
+    if second_mode then
+      return t1.sort_key < t2.sort_key
+    else
+      return true
+    end
+  else
+    if second_mode then
+      return false
+    else
+      return t1.sort_key < t2.sort_key
+    end
+  end
+end
+
+function FileTreeNode:reSortChildren()
+  for i, child in ipairs(self.children) do
+    if self.sort_by_date then
+      child.sort_key = -lfs.attributes(child.path, "modification")
+      child.sort_by_date = true
+    else
+      child.sort_key = child:getLabel()
+      child.sort_by_date = false
+    end
+  end
+  table.sort(self.children, sort_by_key)
+  for i, child in ipairs(self.children) do
+    self.children[child] = i
+    child:reSortChildren()
+  end
+end
+
+function FileTreeNode:checkForChildren()
+  if not self.has_looked_for_children then
+    self.has_looked_for_children = true
+    if self.has_children == false then
+      -- Already checked and found nothing
+      return
+    end
+    for item in lfs.dir(self.path) do
+      local path = self:childPath(item)
+      if self:isValidFile(item) then
+        local node = self:createNewNode(path)
+        node.sort_key = item:lower()
+        self.children[#self.children + 1] = node
+      end
+    end
+    table.sort(self.children, sort_by_key)
+    for i, child in ipairs(self.children) do
+      self.children[child] = i
+      child.parent = self
+    end
+  end
+end
+
+function FileTreeNode:getHighlightColour(canvas)
+  return self.highlight_colour
+end
+
+function FileTreeNode:getChildCount()
+  self:checkForChildren()
+  return #self.children
+end
+
+function FileTreeNode:getChildByIndex(idx)
+  self:checkForChildren()
+  return self.children[idx]
+end
+
+function FileTreeNode:getIndexOfChild(child)
+  return self.children[child]
+end
+
+function FileTreeNode:getLabel()
+  local label = self.label
+  if not label then
+    local parent = self:getParent()
+    if parent and parent.path then
+      if parent.path:sub(-1, -1) == pathsep then
+        label = self.path:sub(#parent.path + 1, -1)
+      else
+        label = self.path:sub(#parent.path + 2, -1)
+      end
+    else
+      label = self.path
+    end
+    self.label = label
+  end
+  return label
+end
+
+function FileTreeNode:getLastModification()
+  return lfs.attributes(self.path, "modification")
+end
+
 --! A tree node which can be used as a root node to give the effect of having
 -- multiple root nodes.
 class "DummyRootNode" (TreeNode)
@@ -219,17 +373,22 @@ class "TreeControl" (Window)
 -- a table with `red`, `green`, and `blue` fields, each an integer between 0
 -- and 255.
 --!param col_fg (table) The colour used for the scrollbar and highlighted items.
-function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg)
+function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, has_font)
   -- Setup the base window
   self:Window()
   self.x = x
   self.y = y
   self.width = width
   self.height = height
+  self.y_offset = 0
   
   -- Load the graphical resources
   local gfx = TheApp.gfx
-  self.font = gfx:loadBuiltinFont()
+  if not has_font then
+    self.font = gfx:loadBuiltinFont()
+  else
+    self.font = TheApp.gfx:loadFont("QData", "Font01V")
+  end
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
     gfx:loadPalette("Bitmap", "tree_ctrl.pal"))
     
@@ -267,7 +426,7 @@ end
 function TreeControl:hitTestTree(x, y)
   local rect = self.tree_rect
   x = x - rect.x
-  y = y - rect.y
+  y = y - rect.y - self.y_offset
   if 0 <= x and 0 <= y and x < rect.w and y < rect.h then
     local n = math.floor(y / self.row_height)
     local node = self.first_visible_node
@@ -352,9 +511,14 @@ function TreeControl:onScroll()
   self.first_visible_ordinal = self.scrollbar.value
 end
 
+--! Override this function if a certain row should have certain text
+-- or additional flavour to it.
+function TreeControl:drawExtraOnRow(canvas, node, x, y)
+end
+
 function TreeControl:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
+  x, y = self.x + x, self.y + y + self.y_offset
   
   local node = self.first_visible_node
   local num_nodes_drawn = 0
@@ -380,6 +544,7 @@ function TreeControl:draw(canvas, x, y)
     end
     self.tree_sprites:draw(canvas, icon, x + level * 10, y)
     self.font:draw(canvas, node:getLabel(), x + (level + 1) * 10, y)
+    self:drawExtraOnRow(canvas, node, x, y)
     y = y + self.row_height
     num_nodes_drawn = num_nodes_drawn + 1
     node = node:getNextVisible()

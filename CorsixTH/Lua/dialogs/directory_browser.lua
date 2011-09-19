@@ -22,84 +22,26 @@ local lfs = require "lfs"
 dofile("dialogs/tree_ctrl")
 dofile("dialogs/resizable")
 
---! A tree node representing a directory in the physical file-system
-class "DirTreeNode" (TreeNode)
+--! A tree node representing a directory in the physical file-system.
+--! This tree only shows directories and highlights valid TH directories.
+class "InstallDirTreeNode" (FileTreeNode)
 
 local pathsep = package.config:sub(1, 1)
 
-function DirTreeNode:DirTreeNode(path)
-  self:TreeNode()
-  if path:sub(-1) == pathsep and path ~= pathsep then
-    path = path:sub(1, -2)
-  end
-  self.path = path
-  self.children = {}
-  self.has_looked_for_children = false
+function InstallDirTreeNode:InstallDirTreeNode(path)
+  self:FileTreeNode(path)
 end
 
-local function sort_by_path(t1, t2)
-  return t1.sort_key < t2.sort_key
+function InstallDirTreeNode:isValidFile(name)
+  return FileTreeNode.isValidFile(self, name) 
+  and lfs.attributes(self:childPath(name), "mode") == "directory"
 end
 
-function DirTreeNode:_childPath(item)
-  if self.path:sub(-1, -1) == pathsep then
-    return self.path .. item
-  else
-    return self.path .. pathsep .. item
-  end
+function InstallDirTreeNode:createNewNode(path)
+  return InstallDirTreeNode(path)
 end
 
-function DirTreeNode:hasChildren()
-  if self.has_looked_for_children then
-    return #self.children ~= 0
-  elseif self.has_children == nil then
-    if self:getLevel() == 0 then
-      -- Assume root level things have children until we really need to check
-      return true
-    end
-    self.has_children = false
-    local status, _f, _s, _v = pcall(lfs.dir, self.path)
-    if not status then
-      print("Error while fetching children for " .. self.path .. ": " .. _f)
-    else
-      for item in _f, _s, _v do
-        local path = self:_childPath(item)
-        if item ~= "." and item ~= ".."
-        and lfs.attributes(path, "mode") == "directory" then
-          self.has_children = true
-          break
-        end
-      end
-    end
-  end
-  return self.has_children
-end
-
-function DirTreeNode:checkForChildren()
-  if not self.has_looked_for_children then
-    self.has_looked_for_children = true
-    if self.has_children == false then
-      -- Already checked and found nothing
-      return
-    end
-    for item in lfs.dir(self.path) do
-      local path = self:_childPath(item)
-      if item ~= "." and item ~= ".."
-      and lfs.attributes(path, "mode") == "directory" then
-        local node = DirTreeNode(path)
-        node.sort_key = item:lower()
-        self.children[#self.children + 1] = node
-      end
-    end
-    table.sort(self.children, sort_by_path)
-    for i, child in ipairs(self.children) do
-      self.children[child] = i
-      child.parent = self
-    end
-  end
-end
-
-function DirTreeNode:getHighlightColour(canvas)
+function InstallDirTreeNode:getHighlightColour(canvas)
   local highlight_colour = self.highlight_colour
   if highlight_colour == nil then
     highlight_colour = false
@@ -131,42 +73,10 @@ function DirTreeNode:getHighlightColour(canvas)
   return highlight_colour or nil
 end
 
-function DirTreeNode:getChildCount()
-  self:checkForChildren()
-  return #self.children
-end
-
-function DirTreeNode:getChildByIndex(idx)
-  self:checkForChildren()
-  return self.children[idx]
-end
-
-function DirTreeNode:getIndexOfChild(child)
-  return self.children[child]
-end
-
-function DirTreeNode:getLabel()
-  local label = self.label
-  if not label then
-    local parent = self:getParent()
-    if parent and parent.path then
-      if parent.path:sub(-1, -1) == pathsep then
-        label = self.path:sub(#parent.path + 1, -1)
-      else
-        label = self.path:sub(#parent.path + 2, -1)
-      end
-    else
-      label = self.path
-    end
-    self.label = label
-  end
-  return label
-end
-
 --! Prompter for Theme Hospital install directory
-class "UIDirBrowser" (UIResizable)
+class "UIInstallDirBrowser" (UIResizable)
 
-function UIDirBrowser:UIDirBrowser(ui, mode)
+function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -206,11 +116,11 @@ function UIDirBrowser:UIDirBrowser(ui, mode)
   local roots = lfs.volumes()
   if #roots > 1 then
     for k, v in pairs(roots) do
-      roots[k] = DirTreeNode(v)
+      roots[k] = InstallDirTreeNode(v)
     end
     root = DummyRootNode(roots)
   else
-    root = DirTreeNode(roots[1])
+    root = InstallDirTreeNode(roots[1])
   end
 
   self:addWindow(TreeControl(root, 5, 55, 490, 340, self.col_bg, self.col_scrollbar)
@@ -221,18 +131,18 @@ function UIDirBrowser:UIDirBrowser(ui, mode)
     end))
 end
 
-function UIDirBrowser:exit()
+function UIInstallDirBrowser:exit()
   self.ui.app:exit()
 end
 
-function UIDirBrowser:close()
+function UIInstallDirBrowser:close()
   UIResizable.close(self)
   if self.mode == "menu" then
     self.ui:addWindow(UIOptions(self.ui, "menu"))
   end
 end
 
-function UIDirBrowser:chooseDirectory(path)
+function UIInstallDirBrowser:chooseDirectory(path)
   local app = TheApp
   app.config.theme_hospital_install = path
   app:saveConfig()
@@ -240,7 +150,7 @@ function UIDirBrowser:chooseDirectory(path)
   app.running = false
 end
 
-function UIDirBrowser:draw(canvas, x, y)
+function UIInstallDirBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
   if self.mode ~= "menu" then

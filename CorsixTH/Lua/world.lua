@@ -402,6 +402,7 @@ end
 
 function World:getLocalPlayerHospital()
   -- NB: UI code can get the hospital to use via ui.hospital
+  -- TODO: Make this work in multiplayer?
   return self.hospitals[1]
 end
 
@@ -725,7 +726,8 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
-      local status, err = pcall(TheApp.save, TheApp, "Autosave.sav")
+      local pathsep = package.config:sub(1, 1)
+      local status, err = pcall(TheApp.save, TheApp, "Autosaves" .. pathsep .. "Autosave" .. self.month .. ".sav")
       if not status then
         print("Error while autosaving game: " .. err)
       end

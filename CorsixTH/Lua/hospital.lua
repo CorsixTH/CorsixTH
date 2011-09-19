@@ -659,8 +659,7 @@ end
 
 --! Returns whether this hospital is controlled by a real person or not.
 function Hospital:isPlayerHospital()
-  -- TODO: Prepare for multiplayer at some point.
-  return self == self.world.hospitals[1]
+  return self == self.world:getLocalPlayerHospital()
 end
 
 function Hospital:hasStaffedDesk()

@@ -167,7 +167,7 @@ function UIOptions:buttonResolution()
 end
 
 function UIOptions:buttonBrowse()
-  local browser = UIDirBrowser(self.ui, "menu")
+  local browser = UIInstallDirBrowser(self.ui, "menu")
   self.ui:addWindow(browser)
 end
 

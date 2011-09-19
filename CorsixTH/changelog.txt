@@ -5,21 +5,32 @@ Version Beta 8 - released 2011-09-24
 -- Gameplay --
 
 * Fix: Patients should manage to use benches more often now.
+* Fix: Staff will never have the "waiting for patient" mood when in a training  
+  room or a staff room anymore.
 * Change: Which diagnosis rooms different patients go to have been changed
   to be more like the original game.
+* Change: No patients will arrive until you have both a receptionist and a reception 
+  desk. There will be no emergencies or VIP visits either until this criterion is met.
 * Added: People may now puke or pee on the floor.
 * Added: Various things such as litter and plants affect patient happiness.
 * Added: A doctor may now get crazy if he is waaay too tired.
 * Added: VIP visits. Watch out for those picky black suit visitors!
+* Added: The "guess cure" fax message will now properly pop up.
 
 -- User Interface --
 
+* Change: The save and load dialogs now look a little different. Autosaves are stored
+  in a separate folder and there can be up to 12 autosaves at the same time. One for
+  each month. The dialogs now show when a save was made, and the list can also be
+  sorted by this criterion.
 * Added: It is now possible to cycle through owned machines by right-clicking
   the machine name in the machine dialog.
 
 -- Graphics --
 
 * Added: Waiting patients may sometimes check their watch or start to tap their foot.
+* Added: Soda machines now sell more than soda cans. This can be seen through the 
+  litter people throw on the floor after using said machines.
 * Added: (Animation Viewer) A new export function has been added. Note that there
   is currently no import equivalent, so it is mostly for people to try out and
   see what graphics there are in the game. In the future we hope to make it possible

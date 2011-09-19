@@ -207,10 +207,14 @@ tooltip.save_game_window = {
 }
 
 menu_list_window = {
+  name = "Name",
+  save_date = "Modified",
   back = "Back",
 }
 
 tooltip.menu_list_window = {
+  name = "Click here to sort the list by name",
+  save_date = "Click here to sort the list by last modification date",
   back = "Close this window",
 }
 
@@ -356,7 +360,7 @@ tooltip.cheats_window = {
     money = "Adds 10.000 to your bank balance.",
     all_research = "Completes all research.",
     emergency = "Creates an emergency.",
-    vip = "Creates an VIP.",
+    vip = "Creates a VIP.",
     create_patient = "Creates a Patient at the map border.",
     end_month = "Jumps to the end of the month.",
     end_year = "Jumps to the end of the year.",

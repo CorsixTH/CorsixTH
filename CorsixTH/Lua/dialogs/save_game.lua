@@ -23,6 +23,8 @@ dofile("dialogs/menu_list_dialog")
 --! Save Game Window
 class "UISaveGame" (UIMenuList)
 
+local pathsep = package.config:sub(1, 1)
+
 local col_textbox = {
   red = 0,
   green = 0,
@@ -42,21 +44,11 @@ local col_shadow = {
 }
 
 function UISaveGame:UISaveGame(ui)
-  
-  -- Scan for savegames
-  local saves = ui.app:scanSavegames()
-  -- Make the list required by UIMenuList
-  local items = {}
-  for _, name in ipairs(saves) do
-    items[#items + 1] = {
-      name = name, 
-      tooltip = _S.tooltip.save_game_window.save_game:format(name)
-    }
-  end
-  self:UIMenuList(ui, "game", _S.save_game_window.caption, items, 8)
+
+  self:UIMenuList(ui, "game", _S.save_game_window.caption, 265)
   
   -- Textbox for entering new savegame name
-  self.new_savegame_textbox = self:addBevelPanel(20, 190, 160, 17, col_textbox, col_highlight, col_shadow)
+  self.new_savegame_textbox = self:addBevelPanel(5, 310, self.width - 10, 17, col_textbox, col_highlight, col_shadow)
     :setLabel(_S.save_game_window.new_save_game, nil, "left"):setTooltip(_S.tooltip.save_game_window.new_save_game)
     :makeTextbox(--[[persistable:save_game_new_savegame_textbox_confirm_callback]] function() self:confirmName() end,
     --[[persistable:save_game_new_savegame_textbox_abort_callback]] function() self:abortName() end)
@@ -79,21 +71,13 @@ function UISaveGame:confirmName()
 end
 
 --! Function called by clicking button of existing save #num
-function UISaveGame:buttonClicked(num)
-  local filename = self.items[num + self.scrollbar.value - 1].name
-  self:trySave(filename)
+function UISaveGame:choiceMade(name)
+  self:trySave(name)
 end
 
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
-  local found = false
-  for _, save in ipairs(self.items) do
-    if save.name:lower() == filename:lower() then
-      found = true
-      break
-    end
-  end
-  if found then
+  if lfs.attributes(self.ui.app.savegame_dir .. filename .. ".sav", "size") ~= nil then
     self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
     self:doSave(filename)

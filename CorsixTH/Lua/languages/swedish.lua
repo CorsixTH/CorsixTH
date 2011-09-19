@@ -83,6 +83,7 @@ menu_debug = {
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",
   make_debug_fax              = "  (F8) SKAPA DEBUGFAX  ",
+  make_debug_vip              = "  SKAPA DEBUGVIP  ",
   make_debug_patient          = "  (F9) SKAPA DEBUGPATIENT  ",
   cheats                      = "  (F11) FUSK  ",
   lua_console                 = "  (F12) LUATERMINAL  ",
@@ -202,10 +203,14 @@ tooltip.save_game_window = {
 }
 
 menu_list_window = {
+  name = "Namn",
+  save_date = "Senast ändrad",
   back = "Tillbaka",
 }
 
 tooltip.menu_list_window = {
+  name = "Klicka här för att sortera listan efter namn",
+  save_date = "Klicka här för att sortera listan efter daturm då spelen sparades",
   back = utf8 "Stäng detta fönster",
 }
 
@@ -214,6 +219,8 @@ options_window = {
   width = "Bredd",
   height = utf8 "Höjd",
   change_resolution = utf8 "Ändra upplösning",
+  browse = "Bläddra...",
+  new_th_directory = "Här kan du välja en ny plats här Theme Hospital installerats. Så fort du väljer den nya mappen kommer spelet att startas om.",
   back = "Tillbaka",
   cancel = "Avbryt",
 }
@@ -224,6 +231,8 @@ tooltip.options_window = {
   height = utf8 "Fyll i önskad skärmhöjd",
   change_resolution = utf8 "Ändra upplösning till de dimensioner ifyllda till vänster",
   language = utf8 "Ändra till %s som språk",
+  original_path = "Den just nu valda mappen där Theme Hospital installerats",
+  browse = "Bläddra efter en annan Theme Hospital installation",
   back = utf8 "Stäng alternativmenyn",
 }
 
@@ -331,6 +340,7 @@ cheats_window = {
     money = "Pengar",
     all_research = "All forskning",
     emergency = "Skapa akutfall",
+    vip = "Skapa VIP",
     create_patient = "Skapa patient",
     end_month = utf8 "Månadsslut",
     end_year = utf8 "Hoppa till nyår",
@@ -346,6 +356,7 @@ tooltip.cheats_window = {
     money = utf8 "Ökar din balans med 10 000.",
     all_research = utf8 "Färdigställer all forskning.",
     emergency = "Skapar ett akutfall.",
+    vip = "Skapar en Mycket Viktig Person (VIP)",
     create_patient = "Skapar en patient vid kanten av kartan.",
     end_month = utf8 "Hoppar till slutet av månaden.",
     end_year = utf8 "Hoppar till slutet av året.",

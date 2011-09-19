@@ -239,7 +239,7 @@ function App:init()
   else
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
-    self.ui:addWindow(UIDirBrowser(self.ui))
+    self.ui:addWindow(UIInstallDirBrowser(self.ui))
     return true
   end
   
@@ -894,16 +894,6 @@ function App:loadLuaFolder(dir, no_results, append_to)
   else
     return results
   end
-end
-
-function App:scanSavegames()
-  local saves = {}
-  for file in lfs.dir(self.savegame_dir) do
-    if file:match"%.sav$" then
-      saves[#saves + 1] = file:sub(1, -5)
-    end
-  end
-  return saves
 end
 
 function App:save(filename)

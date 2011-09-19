@@ -24,24 +24,12 @@ dofile("dialogs/menu_list_dialog")
 class "UILoadGame" (UIMenuList)
 
 function UILoadGame:UILoadGame(ui, mode)
-  -- Scan for savegames
-  local saves = ui.app:scanSavegames()
-  -- Make the list required by UIMenuList
-  local items = {}
-  for _, name in ipairs(saves) do
-    items[#items + 1] = {
-      name = name, 
-      tooltip = _S.tooltip.load_game_window.load_game:format(name)
-    }
-  end
-  self:UIMenuList(ui, mode, _S.load_game_window.caption, items)
+  self:UIMenuList(ui, mode, _S.load_game_window.caption, 295)
 end
 
-function UILoadGame:buttonClicked(num)
-  local filename = self.items[num + self.scrollbar.value - 1].name .. ".sav"
+function UILoadGame:choiceMade(name)
   local app = self.ui.app
-
-  local status, err = pcall(app.load, app, filename)
+  local status, err = pcall(app.load, app, name .. ".sav")
   if not status then
     err = _S.errors.load_prefix .. err
     print(err)
