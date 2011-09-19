@@ -113,6 +113,7 @@ menu_debug = {
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
   make_debug_patient            = "  LAG TESTPASIENT  ",
+  make_debug_vip                = "  LAG DEBUG VIP  ",
   cheats                        = "  (F11) JUKSEKODER  ",
   make_debug_fax                = "  (F8) LAG DEBUG FAKS  ",
   dump_strings                  = utf8 "  DUMP SPRÅKSTRENGER  ",
@@ -164,7 +165,7 @@ misc.no_heliport       = utf8 "Enten er ingen sykdommer utforsket enda, eller s�
 -- Main menu
 main_menu = {
   new_game     = "Ny karriere",
-  custom_level   = utf8 "Valgfritt brett",
+  custom_level   = "Valgfritt brett",
   load_game   = "Last inn",
   options     = "Innstillinger",
   exit       = "Avslutt",
@@ -205,9 +206,13 @@ tooltip.save_game_window = {
 }
 menu_list_window = {
   back = "Tilbake",
+  name = "Navn",
+  save_date = "Endret",
 }
 tooltip.menu_list_window = {
   back = utf8 "Lukk dette vinduet",
+  name = utf8 "Klikk her for å sortere listen etter navn",
+  save_date = utf8 "Klikk her for å sortere listen etter siste endringer",
 }
 options_window = {
   fullscreen = "Fullskjerm",
@@ -248,7 +253,7 @@ tooltip.calls_dispatcher = {
 cheats_window = {
   close = "Lukk",
   caption = "Juksekoder",
-  warning = "Advarsel: Du vil ikke få noen bonuspoeng på slutten av nivået om du bruker juksekoder!",
+  warning = utf8 "Advarsel: Du vil ikke få noen bonuspoeng på slutten av nivået om du bruker juksekoder!",
   
   cheated = {
     no = "Juksekoder benyttet: Nei",
@@ -260,6 +265,7 @@ cheats_window = {
     emergency = utf8 "Lag nödstilfelle",
     win_level = utf8 "Vinn nivå",
     create_patient = "Lag pasient",
+    vip = "Lag VIP",
     money = "Penger", 
     lose_level = utf8 "Tap nivå",
     all_research = "All forskning",
@@ -274,6 +280,7 @@ tooltip.cheats_window = {
   emergency = utf8 "Lag en nödssituasjon.",
   win_level = utf8 "Vinn dette nivået.",
   create_patient = "Lag en pasient på enden av kartet.",
+  vip = "Lag en VIP.",
   money = "Sett 10,000 i bankkontoen din.",
   lose_level = utf8 "Tap dette nivået.",
   all_research = utf8 "Fullförer all forskning.",
@@ -325,7 +332,7 @@ confirmation = {
 
 information = {
   custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
-  cannot_restart = "Dette spillet ble dessverre lagret för restartfunksjonen ble implementert.",
+  cannot_restart = utf8 "Dette spillet ble dessverre lagret för restartfunksjonen ble implementert.",
   level_lost = {
     "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
     "Grunnen til at du tapte:",
@@ -1145,14 +1152,14 @@ trophy_room = {
   pop_percentage = {
     awards = {
     [1] = utf8 "Legg merke til at du har fått en höy andel av byen befolkning til ditt sykehus det siste året. Bra gjort",
-    [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besøker sykehuset ditt enn noen andre institusjoner.",
-    [3] = utf8 "Strålende. Du har lokket mer av befolkningen inn ditt sykehus enn det som har besøkt alle de andre sykehusene til sammen.",
+    [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besöker sykehuset ditt enn noen andre institusjoner.",
+    [3] = utf8 "Strålende. Du har lokket mer av befolkningen inn ditt sykehus enn det som har besökt alle de andre sykehusene til sammen.",
     },
   },
   many_cured = {
     awards = {
       [1] = utf8 "Gratulerer med Marie Curie Prisen for å ha klart å kurere nesten alle pasientene på sykehuset ditt i fjor.",
-      [2] = utf8 "Gratulerer med å ha kurert mengder av pasienter det siste året. Mange mennesker føler seg mye bedre på grunn av ditt arbeid.",
+      [2] = utf8 "Gratulerer med å ha kurert mengder av pasienter det siste året. Mange mennesker föler seg mye bedre på grunn av ditt arbeid.",
       [3] = utf8 "Vær så snill å ta imot denne prisen for å ha kurert flere pasienter enn noe annet sykehuset. En enestående innstats.",
       [4] = utf8 "Du er herved tildelt den ultimate kureringsprisen for å ha kurert flere mennesker enn alle de andre sykehusene til sammen.",
 
@@ -1176,8 +1183,8 @@ trophy_room = {
       [1] = utf8 "Du er herved tildelt statsministerens Glitrende Sykehusstandard Pris, som tildeles sykehuset med best omdömme i fjor. Flott!",
       [2] = utf8 "Vær snill å ta imot Bullfrog-prisen som tildeles sykehuset med best omdömme i fjor. Nyt det - det er vel fortjent!",
       [3] = utf8 "Godt gjort. Du vinner en liten pris for å ha oppnådd et ganske imponerende rykte det siste året.",
-      [4] = utf8 "Fantastisk! Ditt sykehus vinner en pris for å ha bygd opp best omdømme det siste året.",
-      [5] = utf8 "Dette året har ditt sykehus sitt omdømme overgått alle de andre sykehusene satt sammen. En stor prestasjon.",
+      [4] = utf8 "Fantastisk! Ditt sykehus vinner en pris for å ha bygd opp best omdömme det siste året.",
+      [5] = utf8 "Dette året har ditt sykehus sitt omdömme overgått alle de andre sykehusene satt sammen. En stor prestasjon.",
     },
     trophies = {
       utf8 "Gratulerer med Rent-Og-Pent Trofeet som tildeles sykehuset med best omdömme i fjor. Vel, det er faktisk fortjent.",
@@ -1204,9 +1211,9 @@ trophy_room = {
   no_deaths = {
     awards = {
       [1] = utf8 "Du har vunnet Leve Lenge Trofeet for å holde 100 prosent av pasientene levende i hele fjor.",
-      [2] = "Du har fått denne prisen til minne om lavt antall dødsfall på ditt sykehus dette året. Dette er flott.",
-      [3] = "Dødstallene i ditt sykehus i fjor var lavere enn noen andre sykehus. Vennligst ta imot denne prisen.",
-      [4] = "Din geniale styring har holdt dødsfall i sykehuset til et minimum. Du kan være svært fornøyd med dette resultatet.",
+      [2] = utf8 "Du har fått denne prisen til minne om lavt antall dödsfall på ditt sykehus dette året. Dette er flott.",
+      [3] = utf8 "Dödstallene i ditt sykehus i fjor var lavere enn noen andre sykehus. Vennligst ta imot denne prisen.",
+      [4] = utf8 "Din geniale styring har holdt dödsfall i sykehuset til et minimum. Du kan være svært fornöyd med dette resultatet.",
 
     },
     trophies = {
@@ -2007,6 +2014,10 @@ adviser = {
     some_litter       = utf8 "Vaktmestere kan bli kvitt söpla för den blir et alvorlig problem.",
     patients_annoyed       = utf8 "Folk er utrolig misfornöyd med måten du driver sykehuset ditt. Og jeg kan ikke si jeg klandrer dem. Ta deg sammen eller ta konsekvensene!",
     receptionists_tired2       = utf8 "Resepsjonistene din er veldig slitne. La dem hvile med en gang.",
+    doctor_crazy_overwork = utf8 "Å nei! En av dine Doktorer har blitt gal på grunn av overarbeid. Han kan komme seg hvis du lar ham hvile umiddelbart.",
+    no_desk = utf8 "Du burde bygge en resepsjon og ansette en Resepsjonist snart.",
+    no_desk_1 = utf8  "Om du vil at pasienter skal komme til sykehuset ditt bör du ansette en Resepsjonsist og bygge en resepsjon der hun kan arbeide!",
+    no_desk_2 = utf8 "Bra gjort! Dette må være en verdensrekord: nesten ett år uten å få noen pasienter! Om du vil fortsette som sjef for dette sykehuset bör du ansette en Resepsjonist og bygg en respsjon der hun kan arbede!",
   },
   
   -- Placement info
