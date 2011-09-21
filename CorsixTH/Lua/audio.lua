@@ -36,11 +36,6 @@ function Audio:Audio(app)
   }
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
-  self.bg_music_volume = 0.5
-  self.announcement_volume = 0.5
-  self.sound_volume = 0.5
-  self.play_sounds = true
-  self.play_announcements = true
 end
 
 local function GetFileData(path)
@@ -164,7 +159,10 @@ function Audio:init()
   local status, err = SDL.audio.init(self.app.config.audio_frequency,
     self.app.config.audio_channels, self.app.config.audio_buffer_size)
   if status then
-    self:playRandomBackgroundTrack()
+    -- Start playing unless the configuration says otherwise.
+    if self.app.config.play_music then
+      self:playRandomBackgroundTrack()
+    end
   else
     print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
     self.not_loaded = true
@@ -258,7 +256,7 @@ function Audio:playSound(name, where, is_announcement)
       name = list[1] and list[math.random(1, #list)] or name
     end
     local _, warning
-    local volume = is_announcement and self.announcement_volume or self.sound_volume
+    local volume = is_announcement and self.app.config.announcement_volume or self.app.config.sound_volume
     if where then
       local x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
       local dx, dy = where.th:getPosition()
@@ -345,7 +343,7 @@ function Audio:pauseBackgroundTrack()
   
   -- NB: Explicit false check, as old C side returned nil in all cases
   if status == false then
-    -- SDL doesn't seeem to support pausing/resuming for this format/driver,
+    -- SDL doesn't seem to support pausing/resuming for this format/driver,
     -- so just stop the music instead.
     self:stopBackgroundTrack()
   else
@@ -354,16 +352,16 @@ function Audio:pauseBackgroundTrack()
     -- If it wasn't really paused, then muting it is the next best thing that
     -- we can do (even though it'll continue playing).
     if self.background_paused then
-      self.old_bg_music_volume = self.bg_music_volume
-      self.bg_music_volume = 0
+      self.old_bg_music_volume = self.app.config.music_volume
       SDL.audio.setMusicVolume(0)
     else
-      self.bg_music_volume = self.old_bg_music_volume
+      self.app.config.music_volume = self.old_bg_music_volume
       SDL.audio.setMusicVolume(self.old_bg_music_volume)
       self.old_bg_music_volume = nil
     end
   end
-
+  -- Update configuration that we don't want music
+  self.app.config.play_music = false
   self:notifyJukebox()
 end
 
@@ -374,7 +372,8 @@ function Audio:stopBackgroundTrack()
   end
   SDL.audio.stopMusic()
   self.background_music = nil
-
+  -- Update configuration that we don't want music
+  self.app.config.play_music = false
   self:notifyJukebox()
 end
 
@@ -414,10 +413,11 @@ function Audio:playBackgroundTrack(index)
     end)
     return
   end
-  SDL.audio.setMusicVolume(self.bg_music_volume)
+  SDL.audio.setMusicVolume(self.app.config.music_volume)
   assert(SDL.audio.playMusic(music))
   self.background_music = music
-  
+  -- Update configuration that we want music
+  self.app.config.play_music = not not self.background_music
   self:notifyJukebox()
 end
 
@@ -432,13 +432,13 @@ function Audio:setBackgroundVolume(volume)
   if self.background_paused then
     self.old_bg_music_volume = volume
   else
-    self.bg_music_volume = volume
+    self.app.config.music_volume = volume
     SDL.audio.setMusicVolume(volume)
   end
 end
 
 function Audio:setSoundVolume(volume)
-  self.sound_volume = volume
+  self.app.config.sound_volume = volume
   if self.sound_fx then
     -- Since some sounds are played automatically (using computers etc)
     -- we need to set a value on C level too.
@@ -447,7 +447,7 @@ function Audio:setSoundVolume(volume)
 end
 
 function Audio:playSoundEffects(play_effects)
-  self.play_sounds = play_effects
+  self.app.config.play_sounds = play_effects
   if self.sound_fx then
     -- As above.
     self.sound_fx:setSoundEffectsOn(play_effects)
@@ -455,7 +455,7 @@ function Audio:playSoundEffects(play_effects)
 end
 
 function Audio:setAnnouncementVolume(volume)
-  self.announcement_volume = volume
+  self.app.config.announcement_volume = volume
 end
 
 -- search for jukebox and notify it to update its play button

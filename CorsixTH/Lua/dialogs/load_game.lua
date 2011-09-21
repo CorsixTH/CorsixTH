@@ -21,10 +21,10 @@ SOFTWARE. --]]
 dofile("dialogs/menu_list_dialog")
 
 --! Load Game Window
-class "UILoadGame" (UIMenuList)
+class "UILoadGame" (UIFileBrowser)
 
 function UILoadGame:UILoadGame(ui, mode)
-  self:UIMenuList(ui, mode, _S.load_game_window.caption, 295)
+  self:UIFileBrowser(ui, mode, _S.load_game_window.caption, 295)
 end
 
 function UILoadGame:choiceMade(name)

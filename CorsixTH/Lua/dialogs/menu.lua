@@ -516,19 +516,19 @@ function UIMenuBar:makeMenu(app)
   if app.audio.has_bg_music then
     local function vol(level, setting)
       if setting == "music" then
-        return level == app.audio.bg_music_volume,
+        return level == app.config.music_volume,
           function()
             app.audio:setBackgroundVolume(level)
           end,
           ""
       elseif setting == "sound" then
-        return level == app.audio.sound_volume,
+        return level == app.config.sound_volume,
           function()
             app.audio:setSoundVolume(level)
           end,
           ""
       else
-        return level == app.audio.announcement_volume,
+        return level == app.config.announcement_volume,
           function()
             app.audio:setAnnouncementVolume(level)
           end,
@@ -539,7 +539,7 @@ function UIMenuBar:makeMenu(app)
       app.audio:playSoundEffects(item.checked)
     end
     local function playAnno(item)
-      app.audio.play_announcements = item.checked
+      app.config.play_announcements = item.checked
     end
     local function playMusic(item)
       if not app.audio.background_music then
@@ -559,9 +559,9 @@ function UIMenuBar:makeMenu(app)
       return menu
     end
     options
-    :appendCheckItem(_S.menu_options.sound,         true, playSounds)
-    :appendCheckItem(_S.menu_options.announcements, true, playAnno)
-    :appendCheckItem(_S.menu_options.music,         true, playMusic, nil, musicStatus)
+    :appendCheckItem(_S.menu_options.sound,         app.config.play_sounds, playSounds)
+    :appendCheckItem(_S.menu_options.announcements, app.config.play_announcements, playAnno)
+    :appendCheckItem(_S.menu_options.music,         app.config.play_music, playMusic, nil, musicStatus)
     :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
     :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
     :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))

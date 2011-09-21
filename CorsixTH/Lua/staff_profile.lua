@@ -145,22 +145,15 @@ function StaffProfile:randomiseOrganical()
     self.name = self.name .. part_table.__random
   end
   local desc_table1, desc_table2
-  if self.skill < 0.33 then
+  if self.skill < 0.55 then
     desc_table1 = _S.staff_descriptions.bad
-    desc_table2 = _S.staff_descriptions.bad
-  elseif self.skill < 0.66 then
-    desc_table1 = _S.staff_descriptions.good
-    desc_table2 = _S.staff_descriptions.bad
+    desc_table2 = _S.staff_descriptions.misc
   else
     desc_table1 = _S.staff_descriptions.good
-    desc_table2 = _S.staff_descriptions.good
+    desc_table2 = _S.staff_descriptions.misc
   end
-  local descs = {_S.staff_descriptions.misc.__random,
-                 desc_table1.__random,
+  local descs = {desc_table1.__random,
                  desc_table2.__random}
-  if descs[2] == descs[3] then
-    descs[3] = nil
-  end
   while #our_concat(descs) > 96 do
     descs[#descs] = nil
   end

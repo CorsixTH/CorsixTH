@@ -21,7 +21,7 @@ SOFTWARE. --]]
 dofile("dialogs/menu_list_dialog")
 
 --! Save Game Window
-class "UISaveGame" (UIMenuList)
+class "UISaveGame" (UIFileBrowser)
 
 local pathsep = package.config:sub(1, 1)
 
@@ -45,7 +45,7 @@ local col_shadow = {
 
 function UISaveGame:UISaveGame(ui)
 
-  self:UIMenuList(ui, "game", _S.save_game_window.caption, 265)
+  self:UIFileBrowser(ui, "game", _S.save_game_window.caption, 265)
   
   -- Textbox for entering new savegame name
   self.new_savegame_textbox = self:addBevelPanel(5, 310, self.width - 10, 17, col_textbox, col_highlight, col_shadow)

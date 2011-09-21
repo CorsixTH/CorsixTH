@@ -95,6 +95,12 @@ local config_defaults = {
   debug = false,
   track_fps = false,
   prevent_edge_scrolling = false,
+  play_music = true,
+  music_volume = 0.5,
+  play_announcements = true,
+  announcement_volume = 0.5,
+  play_sounds = true,
+  sound_volume = 0.5,
 }
 local fi = io.open(config_filename, "r")
 if fi then
@@ -120,9 +126,22 @@ theme_hospital_install = [[]=].. config_defaults.theme_hospital_install ..[=[]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
--- Theme hospital edge scrolling: By default enabled (prevent_edge_scrolling =
--- false). To disable edge scrolling, set it to 'true'.
+-- Theme hospital option settings
+--
+-- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 prevent_edge_scrolling = ]=].. tostring(config_defaults.prevent_edge_scrolling) ..[=[ 
+--
+-- Background music: By default disabled at level 0.5
+play_music = ]=].. tostring(config_defaults.play_music) ..[=[ 
+music_volume = ]=].. tostring(config_defaults.music_volume) ..[=[ 
+--
+-- Announcements: By default enabled at level 0.5
+play_announcements = ]=].. tostring(config_defaults.play_announcements) ..[=[ 
+announcement_volume = ]=].. tostring(config_defaults.announcement_volume) ..[=[ 
+--
+-- Sounds: By default enabled at level 0.5
+play_sounds = ]=].. tostring(config_defaults.play_sounds) ..[=[ 
+sound_volume = ]=].. tostring(config_defaults.sound_volume) ..[=[ 
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
