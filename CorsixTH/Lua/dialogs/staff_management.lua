@@ -66,8 +66,8 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   -- Other buttons
   self:addPanel(0, 12, 86):makeButton(0, 0, 31, 74, 2, self.scrollUp):setTooltip(_S.tooltip.staff_list.prev_person)
   self:addPanel(0, 12, 274):makeButton(0, 0, 31, 74, 3, self.scrollDown):setTooltip(_S.tooltip.staff_list.next_person)
-  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus):setSound"cashreg.wav"
-  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise):setSound"cashreg.wav"
+  self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus)
+  self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise)
   self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire):setTooltip(_S.tooltip.staff_list.sack)
   
   -- "Arrow" to show title of doctors
@@ -469,6 +469,7 @@ function UIStaffManagement:payBonus()
   if self.selected_staff and self.hospital.balance > math_floor(staff.profile.wage*0.1) then
     staff:changeAttribute("happiness", 0.5)
     self.hospital:spendMoney(math_floor(staff.profile.wage*0.1), _S.transactions.personal_bonus)
+    self.ui:playSound("cashreg.wav")
   end
 end
 
