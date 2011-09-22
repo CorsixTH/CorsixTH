@@ -37,14 +37,18 @@ function UIMakeDebugPatient:UIMakeDebugPatient(ui)
 end
 
 function UIMakeDebugPatient:buttonClicked(num)
-  local item = self.items[num + self.scrollbar.value - 1]
-  local patient = self.ui.app.world:newEntity("Patient", 2)
-  patient.is_debug = true
-  table.insert(self.ui.hospital.debug_patients, patient)
-  item.disease.initPatient(patient)
-  patient:setDisease(item.disease)
-  local x, y = self.ui:ScreenToWorld(self.x + self.width / 2, self.y + self.height + 100)
-  patient:setTile(math.floor(x), math.floor(y))
-  patient:setMood("idea1", "activate") -- temporary, to make debug patients distinguishable from normal ones
-  patient:setHospital(self.ui.hospital)
+  if self.ui.hospital:hasStaffedDesk() then
+    local item = self.items[num + self.scrollbar.value - 1]
+    local patient = self.ui.app.world:newEntity("Patient", 2)
+    patient.is_debug = true
+    table.insert(self.ui.hospital.debug_patients, patient)
+    item.disease.initPatient(patient)
+    patient:setDisease(item.disease)
+    local x, y = self.ui:ScreenToWorld(self.x + self.width / 2, self.y + self.height + 100)
+    patient:setTile(math.floor(x), math.floor(y))
+    patient:setMood("idea1", "activate") -- temporary, to make debug patients distinguishable from normal ones
+    patient:setHospital(self.ui.hospital)
+  else
+    self.ui:playSound("wrong2.wav")
+  end
 end
