@@ -193,14 +193,14 @@ end
 
 -- Used for everything except music and announcements
 function UI:playSound(name)
-  if self.app.audio.play_sounds then
+  if self.app.config.play_sounds then
     self.app.audio:playSound(name)
   end
 end
 
 -- Used for announcements only
 function UI:playAnnouncement(name)
-  if self.app.audio.play_announcements then
+  if self.app.config.play_announcements then
     self.app.audio:playSound(name, nil, true)
   end
 end

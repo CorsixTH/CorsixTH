@@ -37,7 +37,7 @@ end
 -- then use UI:playSound instead.
 -- !param name (string, integer) The filename or ordinal of the sound to play.
 function Entity:playSound(name)
-  if TheApp.audio.play_sounds then
+  if TheApp.config.play_sounds then
     TheApp.audio:playSound(name, self)
   end
 end
