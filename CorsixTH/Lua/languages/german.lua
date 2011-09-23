@@ -30,6 +30,7 @@ diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
 fax.epidemic.declare_explanation_fine = utf8 "Wenn Sie die Epidemie melden, zahlen Sie eine Strafe von %d und Ihr Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
 fax.emergency_result.saved_people = "Sie haben %d der %d Notfall-Patienten gerettet." -- swapped %d's
+fax.emergency.num_disease = "Hier sind %d Leute mit %s, sie brauchen sofortige Aufmerksamkeit." -- original spelled "sie" wrong
 dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
 adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
 tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- original mentioned hospital value, while it's actually reputation.
@@ -121,6 +122,11 @@ menu_debug_overlay = {
 
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären.",
+  warnings = {
+    no_desk ="Sie sollten beizeiten mal eine Rezeption bauen und eine Empfangsdame einstellen!",
+    no_desk_1 = utf8 "Wenn Sie wollen, dass Patienten in Ihr Krankenhaus kommen, müssen Sie eine Empfangsdame einstellen und eine Rezeption für sie bauen!",
+    no_desk_2 = utf8 "Na klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
+  },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
     crazy_on_cheat = utf8 "Oh nein! Alle Ärzte sind verrückt geworden!",
@@ -143,6 +149,9 @@ fax = {
     return_to_main_menu = utf8 "Ins Hauptmenü zurückkehren",
     accept_new_level = utf8 "Zum nächsten Level wechseln",
     decline_new_level = "Noch ein wenig im aktuellen Level weiterspielen",
+  },
+  emergency = {
+    num_disease_singular = "Hier ist eine Person mit %s, sie braucht sofortige Aufmerksamkeit.",
   },
 }
 
@@ -206,10 +215,14 @@ tooltip.save_game_window = {
 }
 
 menu_list_window = {
+  name = "Dateiname",
+  save_date = utf8 "Änderungsdatum",
   back = utf8 "Zurück",
 }
 
 tooltip.menu_list_window = {
+  name = "Hier klicken, um nach Dateinamen zu sortieren",
+  save_date = utf8 "Hier klicken, um nach dem letzten Änderungsdatum zu sortieren",
   back = utf8 "Das Fenster schließen",
 }
 
@@ -340,12 +353,13 @@ cheats_window = {
   cheats = {
     money = "Geld-Cheat",
     all_research = "Alle-Forschungen-Cheat",
-    emergency = "Notfall Erzeugen",
-    create_patient = "Patienten Erzeugen",
+    emergency = "Notfall erzeugen",
+    vip = "VIP erzeugen",
+    create_patient = "Patienten erzeugen",
     end_month = "Ende des Monats",
     end_year = "Ende des Jahres",
-    lose_level = "Level Verlieren",
-    win_level = "Level Gewinnen",
+    lose_level = "Level verlieren",
+    win_level = "Level gewinnen",
   },
   close = utf8 "Schließen",
 }
@@ -356,6 +370,7 @@ tooltip.cheats_window = {
     money = utf8 "10.000 zum Konto hinzufügen.",
     all_research = utf8 "Alle Forschungen abschließen.",
     emergency = "Einen Notfall erzeugen.",
+    vip = "Einen VIP vorbeischicken.",
     create_patient = "Einen Patienten am Kartenrand erzeugen.",
     end_month = "Zum Monatsende springen.",
     end_year = "Zum Jahresende springen.",
