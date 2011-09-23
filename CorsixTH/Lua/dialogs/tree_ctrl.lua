@@ -373,14 +373,14 @@ class "TreeControl" (Window)
 -- a table with `red`, `green`, and `blue` fields, each an integer between 0
 -- and 255.
 --!param col_fg (table) The colour used for the scrollbar and highlighted items.
-function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, has_font)
+function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_offset, has_font)
   -- Setup the base window
   self:Window()
   self.x = x
   self.y = y
   self.width = width
   self.height = height
-  self.y_offset = 0
+  self.y_offset = y_offset or 0
   
   -- Load the graphical resources
   local gfx = TheApp.gfx
@@ -401,8 +401,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, has_
     w = width - scrollbar_width,
     h = height - height % self.row_height,
   }
-  self.num_rows = self.tree_rect.h / self.row_height
-  
+  self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
   self:addBevelPanel(0, 0, width, height, col_bg).lowered = true
   local scrollbar_base = self:addBevelPanel(width - scrollbar_width, 0,
     scrollbar_width, height, col_bg)
