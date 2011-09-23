@@ -25,6 +25,8 @@ Version Beta 8 - released 2011-09-24
   sorted by this criterion.
 * Added: It is now possible to cycle through owned machines by right-clicking
   the machine name in the machine dialog.
+* Added: Sound, announcement and music volumes and on/off settings are now
+  saved between sessions.s
 
 -- Graphics --
 

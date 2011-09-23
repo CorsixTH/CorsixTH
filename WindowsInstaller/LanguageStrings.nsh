@@ -106,6 +106,17 @@ LangString options_subtitle   ${LANG_NORWEGIAN} "Spesifiser hvor originalspillet
 LangString save_in_appdata    ${LANG_NORWEGIAN} "Lagre spilldata og innstillinger i %APPDATA% (Anbefalt)"
 LangString remove_saves       ${LANG_NORWEGIAN} "Vil du beholde dine lagrede spill?"
 
+LangString install_language   ${LANG_POLISH} "Polish"
+LangString original_text      ${LANG_POLISH} "In order to play the game an installation of the original game is required. Please specify that location here."
+LangString original_folder    ${LANG_POLISH} "Theme Hospital Folder"
+LangString successful_removal ${LANG_POLISH} "$(^Name) was successfully removed from your computer."
+LangString confirm_removal    ${LANG_POLISH} "Are you sure you want to completely remove $(^Name) and all of its components?"
+LangString files_left         ${LANG_POLISH} "Some files could not be removed."
+LangString options_title      ${LANG_POLISH} "Additional Options" 
+LangString options_subtitle   ${LANG_POLISH} "Specify where the original game is."
+LangString save_in_appdata    ${LANG_POLISH} "Save game data and settings in %APPDATA% (Recommended)"
+LangString remove_saves       ${LANG_POLISH} "Would you like to keep your saved games?"
+
 LangString install_language   ${LANG_PORTUGUESE} "Portuguese"
 LangString original_text      ${LANG_PORTUGUESE} "De forma a poderes jogar precisas do jogo original instalado. Por favor diz-nos onde está instalado aqui."
 LangString original_folder    ${LANG_PORTUGUESE} "Pasta do Theme Hospital"
