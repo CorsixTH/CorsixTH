@@ -99,7 +99,6 @@ menu_debug = {
   limit_camera                = utf8 "  LIMITAR CÁMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
   make_debug_fax              = utf8 "  (F8) CREAR FAX DE DEPURACIÓN  ",
-  make_debug_vip              = utf8"  CREAR VIP DE DEPURACIÓN  ",
   make_debug_patient          = utf8 "  (F9) CREAR PACIENTE DE DEPURACIÓN  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",

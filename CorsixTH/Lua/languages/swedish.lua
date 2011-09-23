@@ -83,7 +83,6 @@ menu_debug = {
   limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",
   make_debug_fax              = "  (F8) SKAPA DEBUGFAX  ",
-  make_debug_vip              = "  SKAPA DEBUGVIP  ",
   make_debug_patient          = "  (F9) SKAPA DEBUGPATIENT  ",
   cheats                      = "  (F11) FUSK  ",
   lua_console                 = "  (F12) LUATERMINAL  ",

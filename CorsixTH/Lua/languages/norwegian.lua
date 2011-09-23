@@ -113,7 +113,6 @@ menu_debug = {
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = utf8 "  DEAKTIVER LÖNNSÖKNINGER  ",
   make_debug_patient            = "  LAG TESTPASIENT  ",
-  make_debug_vip                = "  LAG DEBUG VIP  ",
   cheats                        = "  (F11) JUKSEKODER  ",
   make_debug_fax                = "  (F8) LAG DEBUG FAKS  ",
   dump_strings                  = utf8 "  DUMP SPRÅKSTRENGER  ",

@@ -61,7 +61,6 @@ menu_debug = {
   limit_camera                = "  LIMITA TELECAMERA  ",
   disable_salary_raise        = "  DISABILITA AUMENTI DI SALARIO  ",
   make_debug_fax              = "  (F8) CREA FAX DI DEBUG  ",
-  make_debug_vip              = "  CREA UN VIP DI DEBUG  ",
   make_debug_patient          = "  (F9) CREA UN PAZIENTE DI DEBUG  ",
   cheats                      = "  (F11) CHEAT  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",

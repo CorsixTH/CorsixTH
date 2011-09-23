@@ -88,7 +88,6 @@ menu_debug = {
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   make_debug_fax              = "  (F8) MAKE DEBUG FAX  ",
-  make_debug_vip              = "  MAKE DEBUG VIP  ",
   make_debug_patient          = "  (F9) MAKE DEBUG PATIENT  ",
   cheats                      = "  (F11) CHEATS  ",
   lua_console                 = "  (F12) LUA CONSOLE  ",
