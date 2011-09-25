@@ -111,9 +111,6 @@ local col_scrollbar = {
 !param ui (UI) The active ui.
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
 !param title (string) The desired title of the dialog.
-!param items (table) A list of items to include in the list. Each listing should be a table with
-keys "name" and "tooltip" with the corresponding values.
-!param num_rows (integer) The number of rows displayed at a given time. Default is 10.
 ]]
 function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
   self.col_bg = {
