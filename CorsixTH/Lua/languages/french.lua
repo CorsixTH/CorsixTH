@@ -523,6 +523,12 @@ tooltip.objects.litter = "Déchet : Laissé sur le sol par un patient car il n'a
 -- Adviser
 adviser = {
   room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
+  
+  warnings = {
+    no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours!",
+    no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
+    no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
+  },
 
   cheats = {
     th_cheat = "Félicitations, vous avez débloquer les triches !",
@@ -571,6 +577,7 @@ menu_debug = {
   limit_camera                = "  LIMITER LA CAMERA  ",
   disable_salary_raise        = "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
   make_debug_fax              = "  (F8) CREER UN FAX DE TEST  ",
+  make_debug_vip              = "  CREER UN VIP DE TEST  ",
   make_debug_patient          = "  (F9) CREER UN PATIENT DE TEST  ",
   cheats                      = "  (F11) TRICHES  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
@@ -709,6 +716,7 @@ cheats_window = {
     money = "Plus d'argent",
     all_research = "Toutes les recherches",
     emergency = "Créer une urgence",
+    vip = "Créer un VIP",
     create_patient = "Créer un patient",
     end_month = "Fin du mois",
     end_year = "Fin de l'année",
@@ -724,6 +732,7 @@ tooltip.cheats_window = {
     money = "Ajoute 10.000 à votre solde bancaire.",
     all_research = "Termine toutes les recherches.",
     emergency = "Crée une urgence.",
+    vip = "Crée un VIP.",
     create_patient = "Crée un patient au bord de la carte.",
     end_month = "Va directement à la fin du mois.",
     end_year = "Va directement à la fin de l'année.",
