@@ -577,7 +577,6 @@ menu_debug = {
   limit_camera                = "  LIMITER LA CAMERA  ",
   disable_salary_raise        = "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
   make_debug_fax              = "  (F8) CREER UN FAX DE TEST  ",
-  make_debug_vip              = "  CREER UN VIP DE TEST  ",
   make_debug_patient          = "  (F9) CREER UN PATIENT DE TEST  ",
   cheats                      = "  (F11) TRICHES  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
@@ -670,10 +669,14 @@ tooltip.save_game_window = {
 -- Menu list window
 menu_list_window = {
   back = "Précédent",
+  save_date = "Modifié",
+  name = "Nom"
 }
 
 tooltip.menu_list_window = {
   back = "Fermer cette fenêtre",
+  save_date = "Cliquez ici pour classer la liste par date de dernière modification",
+  name = "Cliquez ici pour classer la liste par par nom"
 }
 
 -- Options window
