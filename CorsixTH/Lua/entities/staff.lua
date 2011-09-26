@@ -157,6 +157,21 @@ function Staff:checkIfWaitedTooLong()
   end
 end
 
+function Staff:leaveAnnounce()
+  if self.humanoid_class == "Nurse" then
+    local nurse = {"sack004.wav", "sack005.wav",}
+    self.world.ui:playAnnouncement(nurse[math.random(1, #nurse)])
+  elseif self.humanoid_class == "Doctor"  then
+    local doctor = {"sack001.wav", "sack002.wav", "sack003.wav",}
+    self.world.ui:playAnnouncement(doctor[math.random(1, #doctor)])
+  elseif self.humanoid_class == "Receptionist" then
+    local receptionist = {"sack007.wav", "sack008.wav",}
+    self.world.ui:playAnnouncement(receptionist[math.random(1, #receptionist)])
+  elseif self.humanoid_class == "Handyman" then
+    self.world.ui:playAnnouncement("sack006.wav")
+  end
+end
+
 function Staff:isTiring()
   local tiring = true
 
@@ -282,7 +297,7 @@ function Staff:fire()
   self:setHospital(nil)
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
-  
+  self:leaveAnnounce()
   -- Unregister any build callbacks or messages.
   self:unregisterCallbacks()
 end

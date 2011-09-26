@@ -484,6 +484,15 @@ function Hospital:boilerBreakdown()
   end
 end
 
+function Hospital:vipAnnounce()   
+  local announcements = {
+    "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
+  }   -- there is also vip008 which announces a man from the ministry 
+  if announcements and self:isPlayerHospital() then
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+  end
+end
+
 -- When the boiler has been repaired this function is called.
 function Hospital:boilerFixed()
   self.radiator_heat = self.curr_setting
@@ -519,6 +528,7 @@ function Hospital:onEndDay()
           else
             self.world.ui.adviser:say(_S.adviser.information.vip_arrived:format(self.visitingVIP))
           end
+          self:vipAnnounce()
           self.announce_vip = 0
         end
       end
