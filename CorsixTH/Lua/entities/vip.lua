@@ -177,6 +177,20 @@ function Vip:onDestroy()
   return Humanoid.onDestroy(self)
 end
 
+function Vip:announce()
+  local announcements = {
+    "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
+  }   -- there is also vip008 which announces a man from the ministry 
+  self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+  if self.hospital.num_vips < 1 then
+    self.world.ui.adviser:say(_S.adviser.information.initial_general_advice.first_VIP)
+  else
+    --TODO: keep VIP's name with the VIP, not the hospital. maybe make
+    --hospital.visitingVIP a reference to the VIP
+    self.world.ui.adviser:say(_S.adviser.information.vip_arrived:format(self.hospital.visitingVIP))
+  end
+end
+
 function Vip:setVIPRating()
   --check the visitor to patient death ratio
   local deathDiff = self.hospital.num_deaths - self.enter_deaths
