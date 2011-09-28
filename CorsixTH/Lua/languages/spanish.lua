@@ -217,10 +217,14 @@ tooltip.save_game_window = {
 }
 
 menu_list_window = {
+  name = "Nombre",
+  save_date = "Modificado",
   back = "Volver",
 }
 
 tooltip.menu_list_window = {
+  name = utf8 "Pulsa aquí para ordenar la lista por el nombre",
+  save_date = utf8 "Pulsa aquí para ordenar la lista por la última fecha de modificación",
   back = "Cerrar esta ventana",
 }
 
