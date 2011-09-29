@@ -257,10 +257,10 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   machine:addReservedUser(humanoid)
   -- Insert an idle action so that change_position can do its work.
   humanoid:queueAction({
-      name = "idle", 
-      direction = machine.direction,
-      must_happen = true,
-    }, num_actions_prior + 2)
+    name = "idle", 
+    direction = machine.direction,
+    must_happen = true,
+  }, num_actions_prior + 2)
   -- Make sure noone thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end)
@@ -303,8 +303,6 @@ local function action_queue_start(action, humanoid)
     door:updateDynamicInfo()
     if class.is(humanoid, Patient) then
       humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
-      -- Make another call for staff just in case.
-      humanoid.world.dispatcher:callForStaff(door.room)
     end
   end
   humanoid:queueAction({

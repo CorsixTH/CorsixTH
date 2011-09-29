@@ -224,8 +224,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
   if is_entering_room and humanoid.humanoid_class == "VIP" then
     -- set the vip to be idle
     humanoid:queueAction({
-         name = "idle",
-         direction = dir
+      name = "idle",
+      direction = dir
     },0)
     room.door.reserved_for = humanoid
     humanoid:setTilePositionSpeed(x1, y1)
@@ -235,7 +235,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     -- if the user is about to kill a live patient for research, lower their rating dramatically
     if room.room_info.id == "research" then
       if room:getPatient() then
-  humanoid.vip_rating = humanoid.vip_rating - 80
+        humanoid.vip_rating = humanoid.vip_rating - 80
       end
     end
 
@@ -291,10 +291,12 @@ navigateDoor = function(humanoid, x1, y1, dir)
   if (door.user)
   or (door.reserved_for and door.reserved_for ~= humanoid)
   or (is_entering_room and not room:canHumanoidEnter(humanoid)) then
+    --queueing patients are no longer enroute
+    room.humanoids_enroute[humanoid] = nil
     local queue = door.queue
     if door.reserved_for == humanoid then
       door.reserved_for = nil
-      if queue:size() > 0 then
+      if queue:size() > 0 and room.is_active then
         queue:pop()
         door:updateDynamicInfo()
       end

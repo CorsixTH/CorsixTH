@@ -42,18 +42,14 @@ function StaffRoom:StaffRoom(...)
 end
 
 function StaffRoom:onHumanoidEnter(humanoid)
-  self.humanoids[humanoid] = true
-  self:tryAdvanceQueue()
   humanoid:setDynamicInfoText("")
-  if class.is(humanoid, Staff) then
-    -- Receptionists cannot enter, so we do not have to worry about them
-    -- If it is a handyman and he is here to do a job, let him pass
-    if not humanoid.on_call then
-      humanoid:setNextAction({name = "use_staffroom"})
-      self.door.queue.visitor_count = self.door.queue.visitor_count + 1
-    end
-  else
-    -- Other humanoids shouldn't be entering, so don't worry about them
+  return Room.onHumanoidEnter(self, humanoid)
+end
+
+function StaffRoom:commandEnteringStaff(humanoid)
+  if not humanoid.on_call then
+    humanoid:setNextAction({name = "use_staffroom"})
+    self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   end
 end
 

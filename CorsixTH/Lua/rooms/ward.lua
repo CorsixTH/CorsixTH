@@ -96,7 +96,7 @@ function WardRoom:commandEnteringPatient(patient)
   local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
   if not bed then
     patient:setNextAction(self:createLeaveAction())
-    patient:queueAction(self:createEnterAction())
+    patient:queueAction(self:createEnterAction(patient))
     print("Warning: A patient was called into the ward even though there are no free beds.")
   else
     bed.reserved_for = patient

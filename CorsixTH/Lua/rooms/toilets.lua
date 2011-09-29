@@ -126,7 +126,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       -- If no loo is found, go out again and start over. TODO: This should never happen - 
       -- when does it?
       humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction(self:createEnterAction())
+      humanoid:queueAction(self:createEnterAction(humanoid))
       print("Warning: A patient was called into the toilets even though there are no free loos.")
     end
   end

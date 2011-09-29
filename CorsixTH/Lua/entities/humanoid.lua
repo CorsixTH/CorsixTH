@@ -265,7 +265,7 @@ function Humanoid:dump()
   end
 
   print("-----------------------------------")
-  print("Clicked on ".. name)
+  print("Clicked on ".. name, self)
   print("Class: ", self.humanoid_class)
   if self.humanoid_class == "Doctor" then
     print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",

@@ -202,7 +202,7 @@ function UIQueue:onMouseUp(button, x, y)
     if this_room and room and room ~= this_room and room.room_info.id == this_room.room_info.id then
       -- Move to another room
       local patient = self.dragged.patient
-      patient:setNextAction(room:createEnterAction())
+      patient:setNextAction(room:createEnterAction(patient))
       patient.next_room_to_visit = room
       patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
       room.door.queue:expect(patient)

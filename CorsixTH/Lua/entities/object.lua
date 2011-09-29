@@ -453,7 +453,11 @@ end
 -- If the argument is nil a check for any reserved user is done.
 function Object:isReservedFor(user)
   if not user then
-    return #self.reserved_for_list > 0 or self.reserved_for
+    if self.reserved_for_list then
+      return #self.reserved_for_list > 0
+    else
+      return self.reserved_for
+    end
   end
   if self.user == user then -- "Normal" use
     return true

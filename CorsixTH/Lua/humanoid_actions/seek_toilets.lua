@@ -22,6 +22,7 @@ SOFTWARE. --]]
 local function seek_toilets_action_start(action, humanoid)
   -- Mechanism for clearing the going_to_toilets flag when this action is
   -- interrupted.
+
   if action.todo_interrupt then
     humanoid.going_to_toilet = nil
     humanoid:finishAction()
@@ -32,7 +33,7 @@ local function seek_toilets_action_start(action, humanoid)
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
-    local task = room:createEnterAction()
+    local task = room:createEnterAction(humanoid)
     task.must_happen = true
     humanoid:setNextAction(task)
     -- Unexpect the patient from a possible destination room.
