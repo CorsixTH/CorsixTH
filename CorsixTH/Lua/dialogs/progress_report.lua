@@ -152,10 +152,25 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)
   
-  -- Possibly show warning that it's too cold in the hospital
-  if warmth < 0.3 then
+  -- Possibly show warning that it's too cold, too hot, patients not happy 
+  -- or if theres need to build drink machines as folks are thirsty.  Only show one at a time though!
+  -- TODO the levels may need adjustment
+  local msg = self.ui.hospital.show_progress_screen_warnings
+  if warmth < 0.3 and msg == 1 then
     self.warning.visible = true
     self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285, y + 285, 285)
+  elseif warmth > 0.4 and msg == 1 then
+    self.warning.visible = true
+    self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285, y + 285, 285)
+  elseif thirst > 0.5 and msg == 2 then
+    self.warning.visible = true
+    self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285, y + 285, 285)
+  elseif happiness < 0.8 and happiness >= 0.6 and msg == 3 then
+    self.warning.visible = true
+    self.normal_font:drawWrapped(canvas, _S.progress_report.quite_unhappy, x + 285, y + 285, 285)
+  elseif happiness < 0.6 and msg == 3 then
+    self.warning.visible = true
+    self.normal_font:drawWrapped(canvas, _S.progress_report.very_unhappy, x + 285, y + 285, 285)
   else
     self.warning.visible = false
   end

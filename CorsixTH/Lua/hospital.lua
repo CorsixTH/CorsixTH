@@ -494,11 +494,13 @@ function Hospital:boilerFixed()
 end
 
 -- Called at the end of each day.
+
 function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
   self.acc_loan_interest = self.acc_loan_interest + pay_this
 
   self.research:researchCost()
+  self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
 
   if self.balance < 0 then
     -- TODO: Add the extra interest rate to level configuration.
