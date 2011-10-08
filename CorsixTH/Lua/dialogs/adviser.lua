@@ -33,7 +33,7 @@ function UIAdviser:UIAdviser(ui)
   self.tick_rate = app.world.tick_rate
   self.tick_timer = self.tick_rate -- Initialize tick timer
   self.frame = 1                   -- Current frame
-
+  self.enabled = true              -- So he can be turned off
   self.number_frames = 4           -- Used for playing animation only once
   self.speech = nil                -- Store what adviser is going to say
   self.queued_messages = {}        -- There might be many messages in a row
@@ -121,28 +121,30 @@ end
 --!param override_current Cancels previous messages (if any) immediately 
 -- and shows this new one instead.
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
-  -- Queue the new message
-  self.queued_messages[#self.queued_messages + 1] = {
-    speech = speech,
-    stay_up = talk_until_next_announce,
-  }
-  if self.phase == 0 then
-    -- The adviser is not active at all at the moment.
-    self:show()
-  elseif self.phase == 3 then
-    -- He's not talking, so we can show the new message.
-    self:talk()
-  elseif self.phase == 4 then
-    -- He's getting down. Let him do that and then tell him
-    -- to go up again.
-    self.up_again = true
-  elseif override_current then
-    -- He was saying/was about to say something else. Discard those messages.
-    while #self.queued_messages > 1 do
-      table.remove(self.queued_messages, 2)
+  if self.enabled then
+    -- Queue the new message
+    self.queued_messages[#self.queued_messages + 1] = {
+      speech = speech,
+      stay_up = talk_until_next_announce,
+    }
+    if self.phase == 0 then
+      -- The adviser is not active at all at the moment.
+      self:show()
+    elseif self.phase == 3 then
+      -- He's not talking, so we can show the new message.
+      self:talk()
+    elseif self.phase == 4 then
+      -- He's getting down. Let him do that and then tell him
+      -- to go up again.
+      self.up_again = true
+    elseif override_current then
+     -- He was saying/was about to say something else. Discard those messages.
+      while #self.queued_messages > 1 do
+        table.remove(self.queued_messages, 2)
+      end
+      -- Now say the new thing instead.
+      self:talk()
     end
-    -- Now say the new thing instead.
-    self:talk()
   end
 end
 
@@ -236,4 +238,11 @@ function UIAdviser:onTick()
       end
     end
   end
+end
+
+function UIAdviser:afterLoad(old, new)
+  if old < 47 then
+    self.enabled = true
+  end
+  Window.afterLoad(self, old, new)
 end

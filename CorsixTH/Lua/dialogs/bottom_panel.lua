@@ -91,6 +91,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   end, 41, 30, 137, 42)
 
   ui:addKeyHandler("R", self, self.dialogResearch)      -- R for research
+  ui:addKeyHandler("A", self, self.disableAdviser)      -- A for adviser
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
   ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
   ui:addKeyHandler("C", self, self.dialogDrugCasebook)  -- C for casebook
@@ -404,6 +405,15 @@ function UIBottomPanel:dialogResearch()
   end
 end
 
+function UIBottomPanel:disableAdviser()
+  if self.world.ui.adviser.enabled then
+    self.world.ui.adviser.enabled = false
+  else
+    self.world.ui.adviser.enabled = true
+  end
+end
+
+
 function UIBottomPanel:dialogStatus()
   self:addDialog(UIProgressReport(self.ui))
 end
@@ -455,6 +465,9 @@ function UIBottomPanel:afterLoad(old, new)
         button.enabled = true
       end
     end
+  end
+  if old < 47 then
+    self.ui:addKeyHandler("A", self, self.disableAdviser)
   end
   Window.afterLoad(self, old, new)
 end
