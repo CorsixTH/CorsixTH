@@ -80,6 +80,7 @@ function World:World(app)
   self.day = 1
   self.hour = 0
 
+  self.enable_information = true
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
@@ -212,6 +213,14 @@ function World:initLevel(app)
     object.build_cost = cost
   end
   self:determineWinningConditions()
+end
+
+function World:enableInformation()
+  if self.enable_information then
+    self.enable_information = false
+  else
+    self.enable_information = true
+  end
 end
 
 function World:initStaff()
@@ -1787,6 +1796,9 @@ function World:afterLoad(old, new)
   if old < 27 then
     -- Add callsDispatcher
     self.dispatcher = CallsDispatcher(self)
+  end
+  if old < 47 then
+    self.enable_information = true
   end
   if old < 30 then
     self:nextEmergency()

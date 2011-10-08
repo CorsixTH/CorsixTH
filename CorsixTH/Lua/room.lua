@@ -495,9 +495,12 @@ function Room:roomFinished()
   -- Only true when not editing the room at all.
   self.is_active = true
   -- Show information about the room if not already shown.
-  if not self.world.room_built[self.room_info.id] then
-    self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
-    self.world.room_built[self.room_info.id] = true
+  if self.world.enable_information then
+    if not self.world.room_built[self.room_info.id] then
+      self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
+      self.world.room_built[self.room_info.id] = true
+    end
+  else
   end
   self:tryToFindNearbyPatients()
   -- It may also happen that there are patients queueing for this room already (e.g after editing)
