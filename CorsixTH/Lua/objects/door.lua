@@ -46,17 +46,24 @@ function Door:Door(...)
   -- self.user = "locked" -- prevents doors from being used (debug aid)
 end
 
+
 function Door:getRoom()
   return self.room
 end
 
 function Door:updateDynamicInfo()
   if self.room and self.queue then
-    self:setDynamicInfo('text', {
-      self.room.room_info.name, 
-      _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()), 
-      _S.dynamic_info.object.queue_expected:format(self.queue.expected_count)
-    })
+    if not self.room:hasQueueDialog() then
+      self:setDynamicInfo('text', {
+      self.room.room_info.name
+      })
+    else
+      self:setDynamicInfo('text', {
+        self.room.room_info.name, 
+        _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()), 
+        _S.dynamic_info.object.queue_expected:format(self.queue.expected_count)
+      })
+    end
   end
 end
 

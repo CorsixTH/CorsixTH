@@ -41,11 +41,17 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.door = door
   -- If it's a swing door we have two doors
   self.door2 = door2
-  door:setDynamicInfo('text', {
-    self.room_info.name, 
-    _S.dynamic_info.object.queue_size:format(0), 
-    _S.dynamic_info.object.queue_expected:format(0)
-  })
+  if not self:hasQueueDialog() then
+    door:setDynamicInfo('text', {
+    self.room_info.name
+    })
+  else
+    door:setDynamicInfo('text', {
+      self.room_info.name,
+      _S.dynamic_info.object.queue_size:format(0),
+      _S.dynamic_info.object.queue_expected:format(0)
+    })
+  end
   self.built = false
   self.crashed = false
   
@@ -494,6 +500,10 @@ function Room:roomFinished()
   self.built = true
   -- Only true when not editing the room at all.
   self.is_active = true
+  -- Some rooms should not have the door cursor for the queue dialog
+  if not self:hasQueueDialog() then
+    self.door.hover_cursor = TheApp.gfx:loadMainCursor("default")
+  end
   -- Show information about the room if not already shown.
   if self.world.enable_information then
     if not self.world.room_built[self.room_info.id] then
