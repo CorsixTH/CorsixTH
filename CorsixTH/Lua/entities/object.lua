@@ -546,7 +546,8 @@ function Object.processTypeDefinition(object_type)
   if object_type.id == "extinguisher"
   or object_type.id == "radiator"
   or object_type.id == "plant" 
-  or object_type.id == "reception_desk" then
+  or object_type.id == "reception_desk" 
+  or object_type.id == "bench" then
     object_type.count_category = object_type.id
   elseif object_type.id ~= "bin"
   and not object_type.corridor_object

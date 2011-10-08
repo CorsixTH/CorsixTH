@@ -117,6 +117,8 @@ adviser = {
     no_desk ="You should build a reception desk and hire a receptionist at some point!",
     no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!",
     no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!",
+    no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!",
+    cannot_afford = "You don't have enough money in the bank to hire that person!" -- I can't see anything like this in the original strings
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",

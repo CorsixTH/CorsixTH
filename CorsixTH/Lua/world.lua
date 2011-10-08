@@ -64,6 +64,7 @@ function World:World(app)
     radiator = 0,
     plant = 0,
     reception_desk = 0,
+    bench = 0,
     general = 0,
   }
   self.objects_notify_occupants = {}
@@ -768,18 +769,6 @@ function World:onTick()
         end
         self.day = 1
         self.month = self.month + 1
-        -- A temporary solution to make players more aware of the need for radiators
-        if self.month == 6 and self.year == 1 then
-          local warmth = 0
-          local no = 0
-          for _, staff in ipairs(self.hospitals[1].staff) do
-            warmth = warmth + staff.attributes["warmth"]
-            no = no + 1
-          end
-          if warmth / no < 0.5 then
-            self.ui.adviser:say(_S.adviser.information.initial_general_advice.place_radiators)
-          end
-        end
         if self.month > 12 then
           self.month = 12
           if self.year == 1 then
@@ -1753,6 +1742,17 @@ function World:afterLoad(old, new)
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat and count_cat == "reception_desk" then
+          self.object_counts[count_cat] = self.object_counts[count_cat] + 1
+        end
+      end
+    end
+  end
+  if old < 45 then
+    self.object_counts.bench = 0
+    for position, obj_list in pairs(self.objects) do
+      for _, obj in ipairs(obj_list) do
+        local count_cat = obj.object_type.count_category
+        if count_cat and count_cat == "bench" then
           self.object_counts[count_cat] = self.object_counts[count_cat] + 1
         end
       end

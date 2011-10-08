@@ -285,6 +285,7 @@ function Room:onHumanoidEnter(humanoid)
       self.humanoids[humanoid] = true
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction{name = "meander"}
+      humanoid:adviseWrongPersonForThisRoom()
     else
       self.humanoids[humanoid] = true
       humanoid:setCallCompleted()

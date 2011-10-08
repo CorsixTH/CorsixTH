@@ -125,13 +125,22 @@ function UIHireStaff:hire()
   end
   if not profile or self.ui.hospital.balance < profile.wage then
     self.ui:playSound "wrong2.wav"
+    self:cannotAfford()
     return
   end
   self.ui:playSound "YesX.wav"
   table.remove(self.world.available_staff[self.category], self.current_index)
   self.ui:addWindow(UIPlaceStaff(self.ui, profile, self.mouse_up_x, self.mouse_up_y))
 end
-
+function UIHireStaff:cannotAfford()
+  local msg = {
+  (_S.adviser.warnings.cannot_afford),
+  (_S.adviser.warnings.cash_low_consider_loan),
+  }
+  if msg then
+    self.world.ui.adviser:say(msg[math.random(1, #msg)])
+  end  
+end
 function UIHireStaff:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
