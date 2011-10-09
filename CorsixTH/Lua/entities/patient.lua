@@ -114,18 +114,21 @@ end
 -- called when they are done using a diagnosis room
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
+  local multiplier = 1
   local diagnosis_difficulty = self:setdiagDiff()
-  local diagnosis_base = math.random() * (1 - diagnosis_difficulty)
-  if diagnosis_base < 0 then
-    diagnosis_base = 0
-  end
+  local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
+
   -- Bonus: based on skill and attn to detail (with some randomness).
-  local divisor = math.random(1, 3)
+  -- additional bonus if the staff member is highly skilled / consultant
+  if room.staff_member.profile.skill == 1 then
+    multiplier = math.random(1, 5)
+  end
+  local divisor = math.random(1, 2)
   local attn_detail = room.staff_member.profile.attention_to_detail / divisor
   local skill = room.staff_member.profile.skill / divisor
-  local diagnosis_bonus = (attn_detail * math.random()) *  skill
+  local diagnosis_bonus = (attn_detail + 0.3) *  skill
   
-  self:modifyDiagnosisProgress(diagnosis_base + diagnosis_bonus)
+  self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 
 function Patient:setHospital(hospital)

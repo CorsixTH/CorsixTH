@@ -159,10 +159,10 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   if warmth < 0.3 and msg == 1 then
     self.warning.visible = true
     self.normal_font:drawWrapped(canvas, _S.progress_report.too_cold, x + 285, y + 285, 285)
-  elseif warmth > 0.4 and msg == 1 then
+  elseif warmth > 0.7 and msg == 1 then
     self.warning.visible = true
     self.normal_font:drawWrapped(canvas, _S.progress_report.too_hot, x + 285, y + 285, 285)
-  elseif thirst > 0.5 and msg == 2 then
+  elseif thirst > 0.7 and msg == 2 then
     self.warning.visible = true
     self.normal_font:drawWrapped(canvas, _S.progress_report.more_drinks_machines, x + 285, y + 285, 285)
   elseif happiness < 0.8 and happiness >= 0.6 and msg == 3 then
