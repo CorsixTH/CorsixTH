@@ -473,8 +473,6 @@ function UIBottomPanel:afterLoad(old, new)
   end
   if old < 47 then
     self.ui:addKeyHandler("I", self, self.disableInformation)
-  end
-  if old < 47 then
     self.ui:addKeyHandler("A", self, self.disableAdviser)
   end
   Window.afterLoad(self, old, new)

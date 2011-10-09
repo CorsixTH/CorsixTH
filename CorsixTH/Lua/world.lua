@@ -1756,7 +1756,8 @@ function World:afterLoad(old, new)
       end
     end
   end
-  if old < 45 then
+  if old < 47 then
+  self.enable_information = true
     self.object_counts.bench = 0
     for position, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
@@ -1796,9 +1797,6 @@ function World:afterLoad(old, new)
   if old < 27 then
     -- Add callsDispatcher
     self.dispatcher = CallsDispatcher(self)
-  end
-  if old < 47 then
-    self.enable_information = true
   end
   if old < 30 then
     self:nextEmergency()
