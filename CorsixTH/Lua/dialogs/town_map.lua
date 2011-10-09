@@ -68,7 +68,6 @@ function UITownMap:UITownMap(ui)
   -- terrain, an auction is started.
   -- TODO display the areas, in the right color
   -- TODO display everything in the areas
-  -- TODO make it possible to buy areas
   -- TODO multiplayer mode
   
   -- NB: original TH closed the town map on right click of balance button.
@@ -147,7 +146,7 @@ function UITownMap:draw(canvas, x, y)
   local config   = app.runtime_config.town_dialog
   
   -- We need to draw number of people, plants, fire extinguisers, other objects
-  -- and radiators, heat level and radiator total costs, to the left.
+  -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
   local patientcount = 0
