@@ -125,9 +125,11 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
   warnings = {
-    no_desk ="¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
-    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
-    no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
+    no_desk = utf8 "¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
+    no_desk_1 = utf8 "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
+    no_desk_2 = utf8 "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
+    no_desk_3 = utf8 "¡Fabuloso, casi ha pasado un año y no tienes personal de recepción! ¿Cómo quieres que vengan a ti los pacientes? ¡Arréglalo y deja de perder el tiempo!",
+    cannot_afford = utf8 "¡No tienes dinero en el banco para contratar a esa persona!" -- I can't see anything like this in the original strings
   },
   cheats = {
     th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos!",
