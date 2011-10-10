@@ -215,7 +215,7 @@ function World:initLevel(app)
   self:determineWinningConditions()
 end
 
-function World:enableInformation()
+function World:toggleInformation()
   if self.enable_information then
     self.enable_information = false
   else

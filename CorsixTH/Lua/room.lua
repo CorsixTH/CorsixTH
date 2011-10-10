@@ -43,7 +43,7 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.door2 = door2
   if not self:hasQueueDialog() then
     door:setDynamicInfo('text', {
-    self.room_info.name
+      self.room_info.name
     })
   else
     door:setDynamicInfo('text', {

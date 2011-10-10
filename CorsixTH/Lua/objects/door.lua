@@ -55,7 +55,7 @@ function Door:updateDynamicInfo()
   if self.room and self.queue then
     if not self.room:hasQueueDialog() then
       self:setDynamicInfo('text', {
-      self.room.room_info.name
+        self.room.room_info.name
       })
     else
       self:setDynamicInfo('text', {

@@ -91,10 +91,10 @@ function UIBottomPanel:UIBottomPanel(ui)
   end, 41, 30, 137, 42)
 
   ui:addKeyHandler("R", self, self.dialogResearch)      -- R for research
-  ui:addKeyHandler("A", self, self.disableAdviser)      -- A for adviser
+  ui:addKeyHandler("A", self, self.toggleAdviser)      -- A for adviser
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
   ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
-  ui:addKeyHandler("I", self, self.disableInformation)  -- I for Information when you first build
+  ui:addKeyHandler("I", self, self.toggleInformation)  -- I for Information when you first build
   ui:addKeyHandler("C", self, self.dialogDrugCasebook)  -- C for casebook
 end
 
@@ -393,8 +393,8 @@ function UIBottomPanel:dialogPolicy()
   self:addDialog(UIPolicy(self.ui))
 end
 
-function UIBottomPanel:disableInformation()
-  self.world:enableInformation()
+function UIBottomPanel:toggleInformation()
+  self.world:toggleInformation()
 end
 
 function UIBottomPanel:dialogCharts()
@@ -410,7 +410,7 @@ function UIBottomPanel:dialogResearch()
   end
 end
 
-function UIBottomPanel:disableAdviser()
+function UIBottomPanel:toggleAdviser()
   if self.world.ui.adviser.enabled then
     self.world.ui.adviser.enabled = false
   else
@@ -472,8 +472,8 @@ function UIBottomPanel:afterLoad(old, new)
     end
   end
   if old < 47 then
-    self.ui:addKeyHandler("I", self, self.disableInformation)
-    self.ui:addKeyHandler("A", self, self.disableAdviser)
+    self.ui:addKeyHandler("I", self, self.toggleInformation)
+    self.ui:addKeyHandler("A", self, self.toggleAdviser)
   end
   Window.afterLoad(self, old, new)
 end

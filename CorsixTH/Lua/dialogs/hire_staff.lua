@@ -134,8 +134,8 @@ function UIHireStaff:hire()
 end
 function UIHireStaff:cannotAfford()
   local msg = {
-  (_S.adviser.warnings.cannot_afford),
-  (_S.adviser.warnings.cash_low_consider_loan),
+    (_S.adviser.warnings.cannot_afford),
+    (_S.adviser.warnings.cash_low_consider_loan),
   }
   if msg then
     self.world.ui.adviser:say(msg[math.random(1, #msg)])
