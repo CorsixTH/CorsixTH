@@ -149,22 +149,11 @@ function UITownMap:draw(canvas, x, y)
   -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
-  local patientcount = 0
+  local patientcount = hospital.patientcount
   local plants = world.object_counts.plant
   local fireext = world.object_counts.extinguisher
   local objs = world.object_counts.general
   local radiators = world.object_counts.radiator
-
-  -- Even though it says "people", staff and guests like VIPS aren't included.
-  -- TH counts someone as a patient the moment he walks into the hospital; when
-  -- he walks out to really go away, he isn't counted anymore.
-  for _, patient in pairs(hospital.patients) do
-    -- only count patients that are in the hospital
-    local tx, ty = patient.tile_x, patient.tile_y
-    if tx and ty and hospital:isInHospital(tx, ty) then
-      patientcount = patientcount + 1
-    end
-  end
 
   self.info_font:draw(canvas, patientcount, x +  95, y +  57)
   self.info_font:draw(canvas, plants,       x +  95, y + 110)
