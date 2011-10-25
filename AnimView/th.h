@@ -39,6 +39,7 @@ SOFTWARE.
 #include <wx/file.h>
 #include <wx/image.h>
 #include <wx/txtstrm.h>
+#include "tinyxml.h"
 #ifdef _MSC_VER
 typedef signed __int8 int8_t;
 typedef signed __int16 int16_t;
@@ -174,8 +175,10 @@ public:
     bool loadSpriteFile(wxString sFilename) {return _loadArray(m_pChunks, m_iChunkCount, sFilename);}
     bool loadPaletteFile(wxString sFilename);
     bool loadGhostFile(wxString sFilename, int iIndex);
+    bool loadXMLFile(TiXmlDocument* xmlDocument);
 
-    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size);
+    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, 
+        size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int* iListIndex);
     void writeTableDataHeader(wxTextOutputStream *outputLog);
 
     size_t markDuplicates();
@@ -183,17 +186,23 @@ public:
     size_t getAnimationCount();
     size_t getSpriteCount();
     size_t getFrameCount(size_t iAnimation);
-    uint16_t getUnknownField(size_t iAnimation);
+    uint16_t getUnknownField(size_t iAnimation) {return m_pAnims[iAnimation].unknown; }
+    uint16_t getFrameField(size_t iAnimation) {return m_pAnims[iAnimation].frame; }
+    //uint32_t getListIndexField(size_t iFrame) {return m_pFrames[iFrame].list_index; }
+    //uint8_t getFrameWidthField(size_t iFrame) {return m_pFrames[iFrame].width; }
+    //uint8_t getFrameHeightField(size_t iFrame) {return m_pFrames[iFrame].height; }
+    th_frame_t* getFrameStruct(size_t iAnimation, size_t iFrame);
     bool isAnimationDuplicate(size_t iAnimation);
     bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
-    uint16_t getFrameFlags(size_t iAnimation, size_t iFrame);
     void getAnimationMask(size_t iAnimation, THLayerMask& mskLayers);
+    void setSpritePath(wxString aPath);
 
     Bitmap* getSpriteBitmap(size_t iSprite, bool bComplex = false);
     th_colour_t* getPalette() {return m_pColours;}
 
     void setGhost(int iFile, int iIndex);
     void drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset = 0, int iYOffset = 0);
+    void copySpriteToCanvas(wxString spriteFile, int iSpriteIndex, wxImage& imgCanvas, int iX, int iY, int iFlags = 0);
 
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
 protected:
@@ -233,6 +242,8 @@ protected:
     th_element_t* m_pElements;
     th_sprite_t* m_pSprites;
     Bitmap* m_pSpriteBitmaps;
+    wxImage* m_pSpriteImages;
+    uint8_t* m_pSpriteScaleFactors;
     uint8_t* m_pChunks;
     th_colour_t* m_pColours;
     unsigned char* m_pGhostMaps;
@@ -244,4 +255,6 @@ protected:
     size_t m_iSpriteCount;
     size_t m_iChunkCount;
     size_t m_iColourCount;
+    bool m_bXmlLoaded;
+    wxString m_sSpritePath;
 };

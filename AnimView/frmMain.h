@@ -116,6 +116,7 @@ protected:
     bool m_bDrawCoordinates;
 
     wxButton* m_btnPlayPause;
+    wxButton* m_btnExport;
     wxTextCtrl* m_txtTHPath;
     wxTextCtrl* m_txtAnimIndex;
     wxTextCtrl* m_txtAnimCount;

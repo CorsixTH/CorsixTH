@@ -34,6 +34,7 @@ SOFTWARE.
 #include <wx/bitmap.h>
 #include <wx/wfstream.h>
 #include "backdrop.h"
+#include "tinyxml.h"
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_BUTTON(ID_LOAD      , frmMain::_onLoad)
@@ -74,7 +75,7 @@ frmMain::frmMain()
     pThemeHospital->Add(m_txtTHPath = new wxTextCtrl(this, wxID_ANY, L"", def, wxTE_CENTRE), 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(new wxButton(this, ID_BROWSE, L"Browse..."), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(new wxButton(this, ID_LOAD, L"Load"), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
-    pThemeHospital->Add(new wxButton(this, ID_EXPORT, L"Export"), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
+    pThemeHospital->Add(m_btnExport = new wxButton(this, ID_EXPORT, L"Export"), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pSidebarSizer->Add(pThemeHospital, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer *pPalette = new wxStaticBoxSizer(wxVERTICAL, this, L"Palette");
@@ -107,6 +108,7 @@ frmMain::frmMain()
     pFrame->Add(new wxButton(this, ID_NEXT_FRAME, L">", def, wxBU_EXACTFIT), 0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause"), 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     m_bPlayingAnimation = true;
+    //m_bPlayingAnimation = false;
     pSidebarSizer->Add(pFrame, 0, wxEXPAND | wxALL, 0);
     
 #define ID(layer, id) (ID_LAYER_CHECKS + (layer) * 25 + (id))
@@ -277,6 +279,7 @@ void frmMain::_onBrowse(wxCommandEvent& WXUNUSED(evt))
 
 void frmMain::_onLoad(wxCommandEvent& WXUNUSED(evt))
 {
+    ::wxInitAllImageHandlers();
     load();
 }
 
@@ -304,8 +307,24 @@ void frmMain::load()
     }
     sPath += L"DATA";
     sPath += wxFileName::GetPathSeparator();
+    wxString aPath = sPath + L"VSPR-0";
+    aPath += wxFileName::GetPathSeparator();
+    m_oAnims.setSpritePath(aPath);
 
-    if(!m_oAnims.loadAnimationFile(sPath + L"VSTART-1.ANI")
+    bool bXmlLoaded = false;
+    wxString xmlFile = sPath + L"VSPR-0.xml";
+    TiXmlDocument xmlDocument((const char*)xmlFile.mb_str());
+    if(wxFileName::FileExists(xmlFile) && xmlDocument.LoadFile())
+    {
+        m_oAnims.loadXMLFile(&xmlDocument);
+        m_oAnims.loadPaletteFile(sPath + L"MPALETTE.DAT");
+        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST1.DAT", 1);
+        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST2.DAT", 2);
+        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST66.DAT", 3);
+        bXmlLoaded = true;
+        m_btnExport->Disable();
+    }
+    else if(!m_oAnims.loadAnimationFile(sPath + L"VSTART-1.ANI")
      ||!m_oAnims.loadFrameFile(sPath + L"VFRA-1.ANI")
      ||!m_oAnims.loadListFile(sPath + L"VLIST-1.ANI")
      ||!m_oAnims.loadElementFile(sPath + L"VELE-1.ANI")
@@ -318,7 +337,7 @@ void frmMain::load()
     {
         ::wxMessageBox(L"Cannot load one or more data files", L"Load Animations", wxOK | wxICON_ERROR, this);
     }
-    m_oAnims.markDuplicates();
+    if(!bXmlLoaded) { m_oAnims.markDuplicates(); }
 
     m_txtAnimCount->SetValue(wxString::Format(L"%u", (int)m_oAnims.getAnimationCount()));
 
@@ -376,10 +395,15 @@ void frmMain::export_png()
 
     //wxDialog warnDialog(this, wxID_ANY, L"Export Warning");
     //warnDialog::CreateButtonSizer(wxOK|wxCANCEL);
-    if(::wxMessageBox(L"The export process may run for over an hour, and will create over 20,000 files on \n \
-your hard disk (~200MB). Do you want to continue?",
-        L"Export Warning", wxYES_NO) == wxYES) {
-
+    bool bWriteFrames = false;
+    int response = ::wxMessageBox(L"If you click Yes, the export process will write animation frames \n \
+in separate folders and will run for about 20 minutes, and will create about 18,000 files on \n \
+your hard disk (~250MB). \n If you click No, it will write the XML and element files only. This will create \n \
+2,950 files (~80MB) and is everything you need to modify graphics. As long as the XML file is present in \n \
+the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hospital data files.",
+        L"Export Warning", wxYES_NO | wxCANCEL);
+    if( response == wxYES) { bWriteFrames = true; }
+    if( response != wxCANCEL) {
         //Start with animations, then move on to sprite sheets (map tiles)
         if(!m_oAnims.loadAnimationFile(sdPath + L"VSTART-1.ANI")
          ||!m_oAnims.loadFrameFile(sdPath + L"VFRA-1.ANI")
@@ -411,88 +435,78 @@ your hard disk (~200MB). Do you want to continue?",
         wxFileOutputStream fosxml(fxml);
         wxTextOutputStream outputXml(fosxml);
         outputXml.WriteString(wxString::Format(L"<?xml version='1.0' encoding='ISO-8859-1' standalone='no'?>\n"));
-        outputXml.WriteString(wxString::Format(L"<theme_hospital_graphics>\n"));
+        outputXml.WriteString(wxString::Format(L"<theme_hospital_graphics scale_factor='1'>\n"));
     
+        int iAnimationCount = 0;
+        int iFrameCountTotal = 1;
+        int iElementCount = 0;
+        int iSpriteCount = 0;
+        int iListIndex = 0;
         for(size_t iAnimation = 0; iAnimation < iExportCount; ++iAnimation)
         {
-            if(!m_oAnims.isAnimationDuplicate(iAnimation))
+            if(!m_oAnims.isAnimationDuplicate(iAnimation) && m_oAnims.getFrameField(iAnimation) >= iFrameCountTotal)
             //if(true)
             {
-                THLayerMask oMask;
-                m_oAnims.getAnimationMask(iAnimation, oMask);
-                wxString aiPath = aPath + wxString::Format(L"a%u", iAnimation);
+                wxString aiPath = aPath + wxString::Format(L"a%04u", iAnimation);
                 if(!wxFileName::DirExists(aiPath))
                 {
                     wxFileName::Mkdir(aiPath);
-                    outputXml.WriteString(wxString::Format(L"<animation id='%u' unknown='%u'>\n", iAnimation, m_oAnims.getUnknownField(iAnimation)));
-                    aiPath += wxFileName::GetPathSeparator();
-                    size_t iFrameCount = m_oAnims.getFrameCount(iAnimation);
-                    for(size_t iFrame = 0; iFrame < iFrameCount; ++iFrame)
+                }
+                outputXml.WriteString(wxString::Format(L"<an id='%u' fr='%u' un='%u'>\n", 
+                    iAnimation, m_oAnims.getFrameField(iAnimation), m_oAnims.getUnknownField(iAnimation)));
+                aiPath += wxFileName::GetPathSeparator();
+                size_t iFrameCount = m_oAnims.getFrameCount(iAnimation);
+                for(size_t iFrame = 0; iFrame < iFrameCount; ++iFrame)
+                {
+                    wxImage imgCanvas;
+                    th_frame_t* pFrame = m_oAnims.getFrameStruct(iAnimation,iFrame);
+                    outputXml.WriteString(wxString::Format(L"\t<fr id='%u' li='%u' w='%u' h='%u' fl='%u' nx='%u'>\n", 
+                        iFrameCountTotal, iListIndex, pFrame->width, pFrame->height, pFrame->flags, pFrame->next));
+
+                    wxSize oSize;
+                    m_oAnims.writeElementData(aPath, &outputLog, &outputXml, iAnimation, iFrame, &m_mskLayers, oSize, &iListIndex);
+
+                    if( bWriteFrames && oSize.x > 0 && oSize.y > 0 )
                     {
-                        wxImage imgCanvas;
-                        outputXml.WriteString(wxString::Format(L"\t<frame id='%u'>\n", iFrame));
-
-                        for(int iLayer = 0; iLayer < 13; ++iLayer)
+                        if(!imgCanvas.IsOk())
                         {
-                            if(iLayer != 1)
+                            imgCanvas.Create(oSize.x, oSize.y, true);
+                            if(!imgCanvas.HasAlpha())
                             {
-                                if(oMask.isSet(iLayer))
-                                    outputXml.WriteString(wxString::Format(L"\t\t<layer id='%u'>\n", iLayer));
-                                for(int iId = 0; iId < 32; ++iId)
+                                imgCanvas.SetAlpha();
+                            }
+                            for(int iX = 0; iX < oSize.x; ++iX)
+                            {
+                                for(int iY = 0; iY < oSize.y; ++iY)
                                 {
-                                    if(oMask.isSet(iLayer, iId))
-                                    {
-                                        wxSize oSize;
-                                        m_mskLayers.clear();
-                                        m_mskLayers.set(iLayer, iId);
-                                        outputXml.WriteString(wxString::Format(L"\t\t\t<type id='%u'>\n", iId));
-                                        m_oAnims.writeElementData(aPath, &outputLog, &outputXml, iAnimation, iFrame, &m_mskLayers, oSize);
-                                        if( oSize.x > 0 && oSize.y > 0 )
-                                        {
-                                            //if( iId == 0 && iLayer == 0 )
-                                            if(!imgCanvas.IsOk())
-                                            {
-                                                imgCanvas.Create(oSize.x, oSize.y, true);
-                                                if(!imgCanvas.HasAlpha())
-                                                {
-                                                    imgCanvas.SetAlpha();
-                                                }
-                                                for(int iX = 0; iX < oSize.x; ++iX)
-                                                {
-                                                    for(int iY = 0; iY < oSize.y; ++iY)
-                                                    {
-                                                        //set completely transparent
-                                                        imgCanvas.SetAlpha(iX,iY,(unsigned char)0);
-                                                    }
-                                                }
-                                            }
-
-                                            m_oAnims.drawFrame(imgCanvas, iAnimation, iFrame, &m_mskLayers, oSize, 0, 0);
-                                            outputLog.WriteString(wxString::Format(L"%s\t%u\t%u\t%u\t%u\t%u\t%u\t%u\n", L"VSPR-0", iAnimation, iFrame, 
-                                                    iLayer, iId, oSize.x, oSize.y, m_oAnims.getUnknownField(iAnimation)));
-                                            outputXml.WriteString(wxString::Format(L"\t\t\t</type>\n"));
-                                        }
-                                    }
+                                    //set completely transparent
+                                    imgCanvas.SetAlpha(iX,iY,(unsigned char)0);
                                 }
-                                if(oMask.isSet(iLayer))
-                                    outputXml.WriteString(wxString::Format(L"\t\t</layer>\n"));
                             }
                         }
-                        outputXml.WriteString(wxString::Format(L"\t</frame>\n"));
 
-                        if(imgCanvas.IsOk())
-                        {
-                            if(!imgCanvas.SaveFile(aiPath + wxString::Format(L"a%u_f%u.png", iAnimation, iFrame),wxBITMAP_TYPE_PNG))
-                                return;
-                            //imgCanvas.Create(1, 1, true);
-                            imgCanvas.Destroy();
-                        }
+                        m_oAnims.drawFrame(imgCanvas, iAnimation, iFrame, &m_mskLayers, oSize, 0, 0);
+                        outputLog.WriteString(wxString::Format(L"%s\t%u\t%u\t%u\t%u\t%u\n", L"VSPR-0", iAnimation, iFrame, 
+                                oSize.x, oSize.y, m_oAnims.getUnknownField(iAnimation)));
                     }
-                    outputXml.WriteString(wxString::Format(L"</animation>\n"));
-                    //_onAnimChange(iAnimation);
+
+                    outputXml.WriteString(wxString::Format(L"\t</fr>\n"));
+                    iFrameCountTotal++;
+
+                    if( bWriteFrames && imgCanvas.IsOk() )
+                    {
+                        if(!imgCanvas.SaveFile(aiPath + wxString::Format(L"a%u_f%u.png", iAnimation, iFrame),wxBITMAP_TYPE_PNG))
+                            return;
+                        //imgCanvas.Create(1, 1, true);
+                        imgCanvas.Destroy();
+                    }
                 }
+                outputXml.WriteString(wxString::Format(L"</an>\n"));
+                iAnimationCount++;
             }
         }
+        //outputXml.WriteString(wxString::Format(L"\t<graphics_totals animations='%u' frames='%u' elements='%u' sprites='%u'>\n", 
+        //    iAnimationCount, iFrameCount, iElementCount, iSpriteCount));
         outputXml.WriteString(wxString::Format(L"</theme_hospital_graphics>\n"));
 
         //Sprite sheet code for Data directory
@@ -621,6 +635,7 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
             if(pSpriteBitmap->getWidth() * pSpriteBitmap->getHeight() > 0)
             {
                 wxImage imgSprite(pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight(), false);
+                pSpriteBitmap->blit(imgSprite, 0, 0, NULL, m_oAnims.getPalette(), 0x8000);
                 if(!imgSprite.HasAlpha())
                 {
                     imgSprite.SetAlpha();
@@ -629,14 +644,17 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
                 {
                     for(int iY = 0; iY < pSpriteBitmap->getHeight(); ++iY)
                     {
-                        imgSprite.SetAlpha(iX,iY,(unsigned char)0);
+                        if(imgSprite.GetRed(iX,iY) == 255 && imgSprite.GetBlue(iX,iY) == 255) {
+                            imgSprite.SetAlpha(iX,iY,(unsigned char)0);
+                        } else {
+                            imgSprite.SetAlpha(iX,iY,(unsigned char)255);
+                        }
                     }
                 }
-                pSpriteBitmap->blit(imgSprite, 0, 0, NULL, m_oAnims.getPalette(), 0x8000);
                 //oSprite.bitmap = wxBitmap(imgSprite);
                 if(!imgSprite.SaveFile(aPath + wxString::Format(L"s%u.png", i),wxBITMAP_TYPE_PNG))
                     return;
-                outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%s\t%u\t%u\n", sFilename, i, sPalette, bComplex, pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
+                outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%u\t%u\n", sFilename, i, sPalette, pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
             }
             //m_vSprites.push_back(oSprite);
         }
@@ -824,13 +842,29 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
     {
         memset(imgCanvas.GetData(), 0xFF, 400 * 400 * 3);
     }
+    if(!imgCanvas.HasAlpha())
+    {
+        imgCanvas.InitAlpha();
+    }
+    for(int iX = 0; iX < 400; ++iX)
+    {
+        for(int iY = 0; iY < 400; ++iY)
+        {
+            //set completely opaque
+            imgCanvas.SetAlpha(iX,iY,(unsigned char)255);
+        }
+    }
     wxSize oSize;
     m_oAnims.drawFrame(imgCanvas, m_iCurrentAnim, m_iCurrentFrame, &m_mskLayers, oSize);
     if(m_bDrawMood)
     {
         m_oAnims.drawFrame(imgCanvas, 4048, 0, &m_mskLayers, oSize, m_iMoodDrawX - 1, m_iMoodDrawY - 80);
     }
-    uint16_t iFlags = m_oAnims.getFrameFlags(m_iCurrentAnim, m_iCurrentFrame);
+    th_frame_t *pFrame = m_oAnims.getFrameStruct(m_iCurrentAnim, m_iCurrentFrame);
+    uint16_t iFlags = 0;
+    if(pFrame) {
+        iFlags = pFrame->flags;
+    }
     int iFlags1 = (int)(iFlags & 0xFF);
     int iFlags2 = (int)(iFlags >> 8);
     m_txtFrameFlags[0]->SetValue(wxString::Format(L"0x%02x (%03i)", iFlags1, iFlags1));
@@ -840,7 +874,7 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt)
 
     wxBitmap bmpCanvas(imgCanvas);
 
-    DC.DrawBitmap(bmpCanvas, 1, 1);
+    DC.DrawBitmap(bmpCanvas, 1, 1, false);
 
     // Draw relative tile coordinates
     if (m_bDrawCoordinates) {
@@ -930,7 +964,7 @@ void frmMain::_onSearchSoundIndex(wxCommandEvent& evt)
         size_t iCount = m_oAnims.getFrameCount(i);
         for(size_t j = 0; j < iCount; ++j)
         {
-            if((m_oAnims.getFrameFlags(i, j) & 0xFF) == iFrame)
+            if((m_oAnims.getFrameStruct(i, j)->flags & 0xFF) == iFrame)
             {
                 m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
                 break;

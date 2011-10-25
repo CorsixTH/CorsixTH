@@ -9,11 +9,17 @@ SET(animview_source_files
   frmSprites.cpp
   rnc.cpp
   th.cpp
+  tinystr.cpp
+  tinyxml.cpp
+  tinyxmlerror.cpp
+  tinyxmlparser.cpp
   app.h
   backdrop.h
   frmMain.h
   frmSprites.h
   th.h
+  tinystr.h
+  tinyxml.h
 )
 
 # Declaration of the executable

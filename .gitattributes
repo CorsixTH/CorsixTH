@@ -1,5 +1,12 @@
 * text=auto !eol
 AnimView/CMakeLists.txt -text
+AnimView/VSPR-0.xml -text
+AnimView/tinystr.cpp -text
+AnimView/tinystr.h -text
+AnimView/tinyxml.cpp -text
+AnimView/tinyxml.h -text
+AnimView/tinyxmlerror.cpp -text
+AnimView/tinyxmlparser.cpp -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
