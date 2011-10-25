@@ -48,6 +48,9 @@ RequestExecutionLevel admin
 !define MUI_ABORTWARNING
 !define MUI_CUSTOMFUNCTION_UNGUIINIT un.onGUIInit2
 
+!define MUI_WELCOMEFINISHPAGE_BITMAP "welcome.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "welcome.bmp"
+
 ; Language Selection Dialog Settings
 !define MUI_LANGDLL_REGISTRY_ROOT "${PRODUCT_UNINST_ROOT_KEY}"
 !define MUI_LANGDLL_REGISTRY_KEY "${PRODUCT_UNINST_KEY}"

@@ -505,12 +505,12 @@ function Room:roomFinished()
     self.door.hover_cursor = TheApp.gfx:loadMainCursor("default")
   end
   -- Show information about the room if not already shown.
-  if self.world.enable_information then
+  -- Also only show them if the player is playing the original campaign.
+  if tonumber(self.world.map.level_number) and not self.world.room_info_dialogs_off then
     if not self.world.room_built[self.room_info.id] then
       self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
       self.world.room_built[self.room_info.id] = true
     end
-  else
   end
   self:tryToFindNearbyPatients()
   -- It may also happen that there are patients queueing for this room already (e.g after editing)

@@ -101,6 +101,7 @@ local config_defaults = {
   announcement_volume = 0.5,
   play_sounds = true,
   sound_volume = 0.5,
+  adviser_disabled = false,
 }
 local fi = io.open(config_filename, "r")
 if fi then
@@ -142,6 +143,10 @@ announcement_volume = ]=].. tostring(config_defaults.announcement_volume) ..[=[
 -- Sounds: By default enabled at level 0.5
 play_sounds = ]=].. tostring(config_defaults.play_sounds) ..[=[ 
 sound_volume = ]=].. tostring(config_defaults.sound_volume) ..[=[ 
+--
+-- Adviser on/off: If you set this setting to true the adviser will no longer
+-- pop up.
+adviser_disabled = ]=].. tostring(config_defaults.adviser_disabled) ..[=[
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------

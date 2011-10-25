@@ -27,7 +27,7 @@ CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
 CorsixTH/Bitmap/lib_bmp.lua -text
 CorsixTH/Bitmap/lib_spritesheet.lua -text
 CorsixTH/Bitmap/mainmenu1080.bmp -text
-CorsixTH/Bitmap/mainmenu1080.dat -text
+CorsixTH/Bitmap/mainmenu1080.dat -text svneol=unset#application/octet-stream
 CorsixTH/Bitmap/mainmenu1080.pal -text
 CorsixTH/Bitmap/map_cell_outline.bmp -text
 CorsixTH/Bitmap/map_cell_outline_east.bmp -text
@@ -93,6 +93,8 @@ CorsixTH/Lua/objects/surgeon_screen.lua -text
 CorsixTH/Lua/objects/x_ray_viewer.lua -text
 CorsixTH/Lua/research_department.lua -text
 CorsixTH/Lua/rooms/operating_theatre.lua -text
+CorsixTH/Original_Logo.svg -text
+CorsixTH/Original_Logo_Text.svg -text
 CorsixTH/SDLMain/CMakeLists.txt -text
 CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
@@ -132,6 +134,7 @@ WindowsInstaller/StrRep.nsh -text
 WindowsInstaller/Win32Script.nsi -text
 WindowsInstaller/config_template.txt -text
 WindowsInstaller/readme.txt -text
+WindowsInstaller/welcome.bmp -text
 agg/authors -text
 agg/copying -text
 agg/news -text

@@ -600,39 +600,20 @@ function Staff:fulfillsCriterium(criterium)
   return false
 end
 
-function Staff:onlyDoctors()
-  local room_name = {
-    "x_ray",
-    "ultrascan",
-    "slack_tongue",
-    "scanner",
-    "jelly_vat",
-    "inflation",
-    "hair_restoration",
-    "gp",
-    "general_diag",
-    "electrolysis",
-    "decontamination",
-    "cardiogram",
-    "blood_machine"
-    }
-  return true
-end
-
 function Staff:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
-  local room_name =  room.room_info.id
-  local where = room.room_info.name
-  if room_name == "pharmacy" or room_name == "ward" or room_name == "fracture_clinic" then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_nurses_in_room:format(where))
-  elseif self.humanoid_class == "Doctor" and room_name == "operating_theatre" then
+  local room_name = room.room_info.name
+  local required = room.room_info.required_staff
+  if required.Nurse then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_nurses_in_room:format(room_name))
+  elseif required.Surgeon then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_surgeons)
-  elseif self.humanoid_class == "Doctor" and room_name == "research" or room_name == "dna_fixer" then
+  elseif required.Researcher then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_researchers)
-  elseif self.humanoid_class == "Doctor" and room_name == "psych" then
+  elseif required.Psychiatrist then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_psychiatrists)
-  elseif self:onlyDoctors() then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(where))
+  else
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(room_name))
   end
 end
 

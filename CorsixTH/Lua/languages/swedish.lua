@@ -64,6 +64,7 @@ menu_options = {
   lock_windows = utf8 "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",
   settings = utf8 "  INSTÄLLNINGAR  ",
+  adviser_disabled = "  MEDHJÄLPARE  ",
 }
 
 menu_options_game_speed = {

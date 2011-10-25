@@ -1,4 +1,16 @@
 -----------------------------------------
+Version ? - released ?
+-----------------------------------------
+
+-- Known Issues --
+
+* If the user exits the game via "the cross" when in windowed mode settings are not saved.
+
+-- User Interface --
+
+* The auto-scroll setting is now saved between sessions.
+
+-----------------------------------------
 Version Beta 8 - released 2011-09-24
 -----------------------------------------
 

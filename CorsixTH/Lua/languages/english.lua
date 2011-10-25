@@ -68,6 +68,7 @@ menu_options = {
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
   settings = "  SETTINGS  ",
+  adviser_disabled = "  ADVISER  ",
 }
 
 menu_options_game_speed = {

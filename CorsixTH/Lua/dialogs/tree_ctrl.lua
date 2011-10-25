@@ -205,6 +205,10 @@ function FileTreeNode:hasChildren()
       return true
     end
     self.has_children = false
+    -- Only directories have children.
+    if lfs.attributes(self.path, "mode") ~= "directory" then
+      return false
+    end
     local status, _f, _s, _v = pcall(lfs.dir, self.path)
     if not status then
       print("Error while fetching children for " .. self.path .. ": " .. _f)

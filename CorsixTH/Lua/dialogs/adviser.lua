@@ -33,7 +33,6 @@ function UIAdviser:UIAdviser(ui)
   self.tick_rate = app.world.tick_rate
   self.tick_timer = self.tick_rate -- Initialize tick timer
   self.frame = 1                   -- Current frame
-  self.enabled = true              -- So he can be turned off
   self.number_frames = 4           -- Used for playing animation only once
   self.speech = nil                -- Store what adviser is going to say
   self.queued_messages = {}        -- There might be many messages in a row
@@ -121,7 +120,7 @@ end
 --!param override_current Cancels previous messages (if any) immediately 
 -- and shows this new one instead.
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
-  if self.enabled then
+  if not self.ui.app.config.adviser_disabled then
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
       speech = speech,

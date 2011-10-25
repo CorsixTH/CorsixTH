@@ -31,6 +31,10 @@ announcement_volume = 0.5
 -- Sounds: By default enabled at level 0.5
 play_sounds = true
 sound_volume = 0.5
+--
+-- Adviser on/off: If you set this setting to true the adviser will no longer
+-- pop up.
+adviser_disabled = false
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------

@@ -80,7 +80,7 @@ function World:World(app)
   self.day = 1
   self.hour = 0
 
-  self.enable_information = true
+  self.room_information_dialogs_off = app.config.debug
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
@@ -216,11 +216,7 @@ function World:initLevel(app)
 end
 
 function World:toggleInformation()
-  if self.enable_information then
-    self.enable_information = false
-  else
-    self.enable_information = true
-  end
+  self.room_information_dialogs_off = not self.room_information_dialogs_off
 end
 
 function World:initStaff()
@@ -1757,7 +1753,6 @@ function World:afterLoad(old, new)
     end
   end
   if old < 47 then
-  self.enable_information = true
     self.object_counts.bench = 0
     for position, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do

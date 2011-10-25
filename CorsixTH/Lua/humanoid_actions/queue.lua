@@ -57,29 +57,6 @@ local function interrupt_head(humanoid, n)
   end
 end
 
-local function action_queue_leave_bench(action, humanoid)
-  local index
-  for i, current_action in ipairs(humanoid.action_queue) do
-    assert(current_action ~= action)
-    if current_action.name == "use_object" then
-      if humanoid.action_queue[i + 1] == action then
-        interrupt_head(humanoid, i)
-        index = i
-        break
-      end
-    end
-  end
-  index = index + 1
-  while true do
-    local current_action = humanoid.action_queue[index]
-    if current_action == action then
-      return index - 1
-    end
-    index = index - 1
-  end
-  error "Queue action not in action_queue"
-end
-
 local function action_queue_find_idle(action, humanoid)
   local found_any = false
   for i, current_action in ipairs(humanoid.action_queue) do
@@ -100,6 +77,37 @@ end
 local function action_queue_finish_standing(action, humanoid)
   local index = action_queue_find_idle(action, humanoid)
   interrupt_head(humanoid, index)
+  index = index + 1
+  while true do
+    local current_action = humanoid.action_queue[index]
+    if current_action == action then
+      return index - 1
+    end
+    index = index - 1
+  end
+  error "Queue action not in action_queue"
+end
+
+local function action_queue_leave_bench(action, humanoid)
+  local index
+  for i, current_action in ipairs(humanoid.action_queue) do
+    -- Check to see that we haven't 
+    -- gotten to the actual queue action yet.
+    -- Instead of crashing if we have, try with the assumption
+    -- that we're actually standing.
+    if current_action == action then
+      print("Warning: A patient supposedly sitting down was not," ..
+        " trying to recover assuming he/she is standing.")
+      return action_queue_finish_standing(action, humanoid)
+    end
+    if current_action.name == "use_object" then
+      if humanoid.action_queue[i + 1] == action then
+        interrupt_head(humanoid, i)
+        index = i
+        break
+      end
+    end
+  end
   index = index + 1
   while true do
     local current_action = humanoid.action_queue[index]
@@ -238,6 +246,13 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   -- Callback function used after the drinks machine has been used.
   local --[[persistable:action_queue_get_soda_after_use]] function after_use()
     fun_after_use() -- Defined in patient:tickDay
+    -- Insert an idle action so that change_position can do its work.
+    -- Note that it is inserted after the currently executing use_object action.
+    humanoid:queueAction({
+      name = "idle", 
+      --direction = machine,
+      must_happen = true,
+    }, 1)
     action_queue_on_change_position(action, humanoid)
   end
   
@@ -255,12 +270,6 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     must_happen = true,
   }, num_actions_prior + 1)
   machine:addReservedUser(humanoid)
-  -- Insert an idle action so that change_position can do its work.
-  humanoid:queueAction({
-    name = "idle", 
-    direction = machine.direction,
-    must_happen = true,
-  }, num_actions_prior + 2)
   -- Make sure noone thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end)

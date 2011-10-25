@@ -579,7 +579,10 @@ function UIMenuBar:makeMenu(app)
     function(item) self.ui.app.config.prevent_edge_scrolling = not item.checked end,
     nil,
     function() return not self.ui.app.config.prevent_edge_scrolling end)
-  
+  options:appendCheckItem(_S.menu_options.adviser_disabled, 
+    not self.ui.app.config.adviser_disabled,
+    function(item) self.ui.app.config.adviser_disabled = not item.checked end)
+    
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)

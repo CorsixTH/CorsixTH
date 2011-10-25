@@ -411,11 +411,7 @@ function UIBottomPanel:dialogResearch()
 end
 
 function UIBottomPanel:toggleAdviser()
-  if self.world.ui.adviser.enabled then
-    self.world.ui.adviser.enabled = false
-  else
-    self.world.ui.adviser.enabled = true
-  end
+  self.ui.app.config.adviser_disabled = not self.ui.app.config.adviser_disabled
 end
 
 
