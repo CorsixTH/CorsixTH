@@ -27,13 +27,10 @@ misc.hospital_open = "Hospital abierto"
 misc.save_success = "Partida guardada correctamente"
 misc.save_failed = "ERROR: No se ha podido guardar la partida"
 
-fax = {
-  vip_visit_result = {
-      very_bad = {
-        [1] = utf8 "¡Vaya tugurio! Voy a intentar clausurarlo.",
-      },
-  },
-}
+fax.vip_visit_result.remarks.mediocre[2] = utf8 "¡Oh, cielos! No es un lugar agradable para ir si estás pachucho."
+fax.vip_visit_result.remarks.mediocre[3] = utf8 "Si le soy sincero, es un hospital normalucho. Francamente, yo esperaba más."
+fax.vip_visit_result.remarks.very_bad[1] = utf8 "¡Vaya tugurio! Voy a intentar clausurarlo."
+introduction_texts.level1[7] = utf8 "Tendrás que curar a 10 personas y asegurarte de que tu reputación no sea inferior a 200. "
 fax.emergency.num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente."
 
 tooltip.handyman_window.close = "Cerrar ventana"
@@ -78,7 +75,8 @@ tooltip.research_policy.research_progress = utf8 "Progreso para terminar el sigu
 menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
-  settings = utf8 "  CONFIGURACIÓN  ",
+  settings = utf8 "  CONFIGURACIóN  ",
+  adviser_disabled = "  CONSEJERO  ",
 }
 
 menu_options_game_speed = {
@@ -86,7 +84,7 @@ menu_options_game_speed = {
   slowest             = "  (1) MUY LENTA  ",
   slower              = "  (2) LENTA  ",
   normal              = "  (3) NORMAL  ",
-  max_speed           = utf8 "  (4) VELOCIDAD MÁXIMA  ",
+  max_speed           = "  (4) VELOCIDAD MAXIMA  ",
   and_then_some_more  = "  (5) VELOCIDAD ABSURDA  ",
 }
 
@@ -96,10 +94,10 @@ menu_file.restart = "  REINICIAR  "
 menu_debug = {
   jump_to_level               = "  CAMBIAR DE NIVEL  ",
   transparent_walls           = "  (X) PAREDES TRANSPARENTES  ",
-  limit_camera                = utf8 "  LIMITAR CÁMARA  ",
+  limit_camera                = "  LIMITAR CAMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
-  make_debug_fax              = utf8 "  (F8) CREAR FAX DE DEPURACIÓN  ",
-  make_debug_patient          = utf8 "  (F9) CREAR PACIENTE DE DEPURACIÓN  ",
+  make_debug_fax              = "  (F8) CREAR FAX DE DEPURACION  ",
+  make_debug_patient          = "  (F9) CREAR PACIENTE DE DEPURACION  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",
   calls_dispatcher            = "  LLAMAR A CONTROLADOR  ",
@@ -109,7 +107,7 @@ menu_debug = {
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
 }
 menu_debug_overlay = {
-  none                        = utf8 "  NINGUNO/A  ",
+  none                        = "  NADA  ",
   flags                       = "  BANDERAS  ",
   positions                   = "  POSICIONES  ",
   heat                        = "  TEMPERATURA  ",
