@@ -117,17 +117,21 @@ function Patient:completeDiagnosticStep(room)
   local multiplier = 1
   local diagnosis_difficulty = self:setdiagDiff()
   local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
-
-  -- Bonus: based on skill and attn to detail (with some randomness).
-  -- additional bonus if the staff member is highly skilled / consultant
-  if room.staff_member.profile.skill == 1 then
-    multiplier = math.random(1, 5)
-  end
-  local divisor = math.random(1, 2)
-  local attn_detail = room.staff_member.profile.attention_to_detail / divisor
-  local skill = room.staff_member.profile.skill / divisor
-  local diagnosis_bonus = (attn_detail + 0.3) *  skill
+  local diagnosis_bonus = 0.4
   
+  -- Did the staff member manage to leave the room before the patient had
+  -- a chance to get diagnosed? Then use a default middle value.
+  if room.staff_member then
+    -- Bonus: based on skill and attn to detail (with some randomness).
+    -- additional bonus if the staff member is highly skilled / consultant
+    if room.staff_member.profile.skill == 1 then
+      multiplier = math.random(1, 5)
+    end
+    local divisor = math.random(1, 2)
+    local attn_detail = room.staff_member.profile.attention_to_detail / divisor
+    local skill = room.staff_member.profile.skill / divisor
+    local diagnosis_bonus = (attn_detail + 0.3) *  skill
+  end
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 

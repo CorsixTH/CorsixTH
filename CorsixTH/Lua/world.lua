@@ -878,7 +878,7 @@ function World:onEndDay()
         control = control[self.next_emergency_no]
         -- Find out which disease the emergency patients have.
         local disease
-        for _, dis in ipairs(TheApp.diseases) do
+        for _, dis in ipairs(self.available_diseases) do
           if dis.expertise_id == control.Illness then
             disease = dis
             break
