@@ -295,6 +295,16 @@ function Humanoid:dump()
       print(action.name .. " - " .. action.object.object_type.id .. flag)
     elseif action.name == "walk" then
       print(action.name .. " - going to " .. action.x .. ":" .. action.y .. flag)
+    elseif action.name == "queue" then
+      local distance = action.current_bench_distance
+      if distance == nil then
+        distance = "nil"
+      end
+      local standing = "false"
+      if action:isStanding() then 
+        standing = "true"
+      end
+      print(action.name .. " - Bench distance: " .. distance .. " Standing: " .. standing)
     else
       print(action.name .. flag)
     end

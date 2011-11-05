@@ -74,16 +74,38 @@ local function action_queue_find_idle(action, humanoid)
   end
 end
 
+local function action_queue_find_drink_action(action, humanoid)
+  local found_any = false
+  for i, current_action in ipairs(humanoid.action_queue) do
+    if current_action.name == "use_object" and current_action.object.object_type.id == "drinks_machine" then
+      found_any = true
+      if humanoid.action_queue[i + 1] == action then
+        return i
+      end
+    end
+  end
+  if found_any then
+    error "Proper drink action not in action_queue"
+  else
+    return -1
+  end
+end
+
+-- Finish standing includes currently going to the drinks machine.
 local function action_queue_finish_standing(action, humanoid)
   local index = action_queue_find_idle(action, humanoid)
   if index == -1 then
-    -- Attempt to recover by assuming the person is sitting down.
-    print("Warning: Idle not in action_queue")
-    if humanoid.action_queue[1].name == "use_object" then
-      -- It is likely that the person is sitting down.
-      return action_queue_leave_bench(action, humanoid)
-    else
-      error "This person seems to neither be standing nor sitting?!"
+    -- Maybe going to the drinks machine?
+    index = action_queue_find_drink_action(action, humanoid)
+    if index == -1 then
+      -- Attempt to recover by assuming the person is sitting down.
+      print("Warning: Idle not in action_queue")
+      if humanoid.action_queue[1].name == "use_object" then
+        -- It is likely that the person is sitting down.
+        return action_queue_leave_bench(action, humanoid)
+      else
+        error "This person seems to neither be standing nor sitting?!"
+      end
     end
   end
   interrupt_head(humanoid, index)
@@ -201,6 +223,15 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
   local idle_direction = get_direction(ix, iy, facing_x, facing_y)
   if action:isStanding() then
     local idle_index = action_queue_find_idle(action, humanoid)
+    if idle_index == -1 then
+      idle_index = action_queue_find_drink_action(action, humanoid)
+      if idle_index ~= -1 then
+        -- Going to get a drink. Do nothing since it will be fixed after getting the drink.
+        return
+      else
+        error "Could not find an idle or drink action when trying to stand in line."
+      end
+    end
     humanoid.action_queue[idle_index].direction = idle_direction
     humanoid:queueAction({
       name = "walk",
