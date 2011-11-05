@@ -491,8 +491,7 @@ function UIStaffManagement:fire()
         staff_window:close()
       end
       -- Update the staff list
-      table.remove(current_category, self.selected_staff)
-      self.selected_staff = nil
+      self:updateStaffList(current_category[self.selected_staff])
     end)) -- End of confirmation dialog
   end
 end

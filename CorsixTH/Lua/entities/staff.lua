@@ -300,6 +300,11 @@ function Staff:fire()
   self:leaveAnnounce()
   -- Unregister any build callbacks or messages.
   self:unregisterCallbacks()
+  -- Update the staff management window if it is open.
+  local window = self.world.ui:getWindow(UIStaffManagement)
+  if window then
+    window:updateStaffList(self)
+  end
 end
 
 function Staff:die()

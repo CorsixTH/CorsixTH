@@ -670,6 +670,10 @@ end
 
 local UpdateCursorPosition = TH.cursor.setPosition
 
+--! Called when the mouse enters or leaves the game window.
+function UI:onWindowActive(gain)
+end
+
 function UI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
   

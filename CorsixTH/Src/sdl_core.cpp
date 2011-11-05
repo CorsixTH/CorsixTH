@@ -192,6 +192,11 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.motion.yrel);
                 nargs = 5;
                 break;
+            case SDL_ACTIVEEVENT:
+                lua_pushliteral(dispatcher, "active");
+                lua_pushinteger(dispatcher, e.active.gain);
+                nargs = 2;
+                break;
             case SDL_USEREVENT_MUSIC_OVER:
                 lua_pushliteral(dispatcher, "music_over");
                 nargs = 1;

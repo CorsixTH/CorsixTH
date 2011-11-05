@@ -47,6 +47,7 @@ function App:App()
     buttonup = self.onMouseUp,
     buttondown = self.onMouseDown,
     motion = self.onMouseMove,
+    active = self.onWindowActive,
     music_over = self.onMusicOver,
   }
   self.strings = {}
@@ -722,6 +723,10 @@ end
 
 function App:onMouseMove(...)
   return self.ui:onMouseMove(...)
+end
+
+function App:onWindowActive(...)
+  return self.ui:onWindowActive(...)
 end
 
 function App:onMusicOver(...)

@@ -121,6 +121,11 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         entity:setHospital(self.ui.hospital)
         self.ui:tutorialStep(2, 6, "next")
         self.ui:tutorialStep(4, 4, "next")
+        -- Update the staff management window if it is open.
+        local window = self.world.ui:getWindow(UIStaffManagement)
+        if window then
+          window:updateStaffList(self)
+        end
       end
       self:close()
       return true

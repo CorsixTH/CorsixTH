@@ -363,6 +363,13 @@ local UpdateCursorPosition = TH.cursor.setPosition
 
 local highlight_x, highlight_y
 
+--! Called when the mouse enters or leaves the game window.
+function GameUI:onWindowActive(gain)
+  if gain == 0 then
+    self.tick_scroll_amount_mouse = false
+  end
+end
+
 -- TODO: try to remove duplication with UI:onMouseMove
 function GameUI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
@@ -390,7 +397,7 @@ function GameUI:onMouseMove(x, y, dx, dy)
     scroll_region_size = 1
   else
     -- In windowed mode, a reasonable size is needed, though not too large.
-    scroll_region_size = 4
+    scroll_region_size = 8
   end
   if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
