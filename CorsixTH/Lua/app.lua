@@ -610,7 +610,10 @@ function App:run()
       -- returned from mainloop(), meaning that where == "callback".
       self.last_dispatch_type = where
     end
-    print("An error has occured while running the " .. self.last_dispatch_type .. " handler.")
+    print("An error has occured!")
+    print("Almost anything can be the cause, but the detailed information "..
+    "below can help the developers find the source of the error.")
+    print("Running: The " .. self.last_dispatch_type .. " handler.")
     print "A stack trace is included below, and the handler has been disconnected."
     print(debug.traceback(co, e, 0))
     print ""
@@ -632,7 +635,7 @@ function App:run()
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
       self.ui:addWindow(UIConfirmDialog(self.ui,
-        "An error has occured while running the timer handler - see the log "..
+        "Sorry, but an error has occured. There can be many reasons - see the log "..
         "window for details. Would you like to attempt a recovery?",
         --[[persistable:app_attempt_recovery]] function()
           self.world:gameLog("Recovering from error in timer handler...")

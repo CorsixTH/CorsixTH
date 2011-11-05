@@ -63,7 +63,11 @@ class "LoadSaveTreeControl" (TreeControl)
 
 function LoadSaveTreeControl:LoadSaveTreeControl(root, x, y, width, height, col_bg, col_fg, has_font)
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
-  -- Move the tree itself downwards to make room for the top column headers.
+  -- The most probable preference of sorting is by date - what you played last
+  -- is the thing you want to play soon again.
+  root:reSortChildren("date", "descending")
+  self.sort_by = "date"
+  self.order = "descending"
 
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
   -- Add the two column headers and make buttons on them.
@@ -74,13 +78,43 @@ function LoadSaveTreeControl:LoadSaveTreeControl(root, x, y, width, height, col_
 end
 
 function LoadSaveTreeControl:sortByName()
-  self.tree_root.sort_by_date = false
-  self.tree_root:reSortChildren()
+  if self.sort_by == "date" or (self.sort_by == "name" and self.order == "descending") then
+    self:sortBy("name", "ascending")
+  else
+    self:sortBy("name", "descending")
+  end
 end
 
 function LoadSaveTreeControl:sortByDate()
-  self.tree_root.sort_by_date = true
-  self.tree_root:reSortChildren()
+  if self.sort_by == "name" or (self.sort_by == "date" and self.order == "descending") then
+    self:sortBy("date", "ascending")
+  else
+    self:sortBy("date", "descending")
+  end
+end
+
+--! Sorts the list according to the given parameters.
+--!param sort_by Either "name" or "date".
+--!param order Either "ascending" or "descending"
+function LoadSaveTreeControl:sortBy(sort_by, order)
+  self.sort_by = sort_by
+  self.order = order
+  -- Find how many nodes are above the first visible one in order
+  -- to make the correct new nodes show. (Because of the scrollbar)
+  local number = 0
+  local node = self.first_visible_node
+  while node ~= self.tree_root do
+    number = number + 1
+    node = node:getPrevVisible()
+  end
+  self.tree_root:reSortChildren(sort_by, order)
+  -- Now check which new node will be the first visible one.
+  node = self.tree_root
+  while number > 0 do
+    node = node:getNextVisible()
+    number = number - 1
+  end
+  self.first_visible_node = node
 end
 
 function LoadSaveTreeControl:drawExtraOnRow(canvas, node, x, y)

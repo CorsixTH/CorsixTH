@@ -276,7 +276,7 @@ end
 
 function UIPlaceObjects:removeAllObjects(refund)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
-  self.active_index = 1
+  self:setActiveIndex(1)
   for i = 1, #self.objects do
     for j = 1, self.objects[1].qty do
       self:removeObject(self.objects[1], true, refund)

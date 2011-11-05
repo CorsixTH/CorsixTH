@@ -70,12 +70,22 @@ local function action_queue_find_idle(action, humanoid)
   if found_any then
     error "Proper idle not in action_queue"
   else
-    error "Idle not in action_queue"
+    return -1
   end
 end
 
 local function action_queue_finish_standing(action, humanoid)
   local index = action_queue_find_idle(action, humanoid)
+  if index == -1 then
+    -- Attempt to recover by assuming the person is sitting down.
+    print("Warning: Idle not in action_queue")
+    if humanoid.action_queue[1].name == "use_object" then
+      -- It is likely that the person is sitting down.
+      return action_queue_leave_bench(action, humanoid)
+    else
+      error "This person seems to neither be standing nor sitting?!"
+    end
+  end
   interrupt_head(humanoid, index)
   index = index + 1
   while true do

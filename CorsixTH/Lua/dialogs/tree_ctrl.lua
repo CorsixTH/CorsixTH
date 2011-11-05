@@ -234,11 +234,20 @@ function FileTreeNode:createNewNode(path)
   return FileTreeNode(path)
 end
 
+function FileTreeNode:expand()
+  TreeNode.expand(self)
+  self:reSortChildren(self.sort_by, self.sort_order)
+end
+
 local function sort_by_key(t1, t2)
   local second_mode = lfs.attributes(t2.path, "mode") == "directory"
   if lfs.attributes(t1.path, "mode") == "directory" then
     if second_mode then
-      return t1.sort_key < t2.sort_key
+      if t1.sort_order == "ascending" then
+        return t1.sort_key < t2.sort_key
+      else
+        return t1.sort_key > t2.sort_key
+      end
     else
       return true
     end
@@ -246,25 +255,37 @@ local function sort_by_key(t1, t2)
     if second_mode then
       return false
     else
-      return t1.sort_key < t2.sort_key
+      if t1.sort_order == "ascending" then
+        return t1.sort_key < t2.sort_key
+      else
+        return t1.sort_key > t2.sort_key
+      end
     end
   end
 end
 
-function FileTreeNode:reSortChildren()
+--! Sorts the node and its children either by date or by name.
+--!param sort_by What to sort by. Either "name" or "date".
+--!param order If the ordering should be "ascending" or "descending".
+function FileTreeNode:reSortChildren(sort_by, order)
   for i, child in ipairs(self.children) do
-    if self.sort_by_date then
-      child.sort_key = -lfs.attributes(child.path, "modification")
-      child.sort_by_date = true
-    else
+    if sort_by == "date" then
+      child.sort_key = lfs.attributes(child.path, "modification")
+      child.sort_by = sort_by
+      child.sort_order = order
+    elseif sort_by == "name" then
       child.sort_key = child:getLabel()
-      child.sort_by_date = false
+      child.sort_by = sort_by
+      child.sort_order = order
+    else
+      -- No sorting
+      return
     end
   end
   table.sort(self.children, sort_by_key)
   for i, child in ipairs(self.children) do
     self.children[child] = i
-    child:reSortChildren()
+    child:reSortChildren(sort_by, order)
   end
 end
 
@@ -283,7 +304,7 @@ function FileTreeNode:checkForChildren()
         self.children[#self.children + 1] = node
       end
     end
-    table.sort(self.children, sort_by_key)
+
     for i, child in ipairs(self.children) do
       self.children[child] = i
       child.parent = self
@@ -398,7 +419,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
     
   -- Calculate sizes and counts
   local scrollbar_width = 20
-  self.row_height = 10
+  self.row_height = 14
   self.tree_rect = {
     x = 0,
     y = 0,
@@ -530,12 +551,12 @@ function TreeControl:draw(canvas, x, y)
   while node and num_nodes_drawn < self.num_rows do
     local level = node:getLevel()
     for i = 0, level - 1 do
-      self.tree_sprites:draw(canvas, 1, x + i * 10, y)
+      self.tree_sprites:draw(canvas, 1, x + i * 14, y)
     end
     if node == self.highlighted_node then
-      local offset = (level + 1) * 10
+      local offset = (level + 1) * 14
       local colour = node:getHighlightColour(canvas) or self.scrollbar.slider.colour
-      canvas:drawRect(colour, x + offset - 1, y + 1, self.tree_rect.w - offset - 1, self.row_height - 2)
+      canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
     end
     local icon
     if not node:hasChildren() then
@@ -545,8 +566,8 @@ function TreeControl:draw(canvas, x, y)
     else
       icon = 3
     end
-    self.tree_sprites:draw(canvas, icon, x + level * 10, y)
-    self.font:draw(canvas, node:getLabel(), x + (level + 1) * 10, y)
+    self.tree_sprites:draw(canvas, icon, x + level * 14, y)
+    self.font:draw(canvas, node:getLabel(), x + (level + 1) * 14, y + 2)
     self:drawExtraOnRow(canvas, node, x, y)
     y = y + self.row_height
     num_nodes_drawn = num_nodes_drawn + 1
