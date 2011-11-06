@@ -25,7 +25,7 @@ class "UICustomGame" (UIMenuList)
 
 function UICustomGame:UICustomGame(ui)
 
-  local path = debug.getinfo(1, "S").source:sub(2, -28)
+  local path = debug.getinfo(1, "S").source:sub(2, -57)
 
   path = path .. "Levels" .. pathsep
 

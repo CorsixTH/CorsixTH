@@ -609,16 +609,22 @@ function Staff:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.name
   local required = room.room_info.required_staff
-  if required.Nurse then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_nurses_in_room:format(room_name))
-  elseif required.Surgeon then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_surgeons)
-  elseif required.Researcher then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_researchers)
-  elseif required.Psychiatrist then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_psychiatrists)
-  else
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(room_name))
+  if required then
+    if required.Nurse then
+      self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_nurses_in_room:format(room_name))
+    elseif required.Surgeon then
+      self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_surgeons)
+    elseif required.Researcher then
+      self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_researchers)
+    elseif required.Psychiatrist then
+      self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_psychiatrists)
+    else
+      self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(room_name))
+    end
+  elseif self.humanoid_class == "Nurse" then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
+  elseif self.humanoid_class == "Doctor" then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
   end
 end
 
