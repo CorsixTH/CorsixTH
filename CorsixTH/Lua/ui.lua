@@ -184,6 +184,10 @@ function UI:UI(app, minimal)
   
   if not LOADED_DIALOGS then
     app:loadLuaFolder("dialogs", true)
+    app:loadLuaFolder("dialogs/fullscreen", true)
+    app:loadLuaFolder("dialogs/resizables", true)
+    app:loadLuaFolder("dialogs/resizables/menu_list_dialogs", true)
+    app:loadLuaFolder("dialogs/resizables/file_browsers", true)
     LOADED_DIALOGS = true
   end
   

@@ -200,7 +200,10 @@ function Audio:initSpeech(speech_file)
   
   if not archive_data then
     print("Notice: No sound effects as no SOUND/DATA/".. speech_file ..
-          " file could be found / opened. The reported error was:\n".. err)
+          " file could be found / opened.")
+    if self.app.good_install_folder then
+      print("The reported error was: ".. err)
+    end
   else
     if archive_data:sub(1, 3) == "RNC" then
       archive_data = assert(rnc.decompress(archive_data))

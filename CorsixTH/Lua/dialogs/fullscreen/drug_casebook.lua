@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-dofile "dialogs/fullscreen"
-
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
 
@@ -132,14 +130,6 @@ function UICasebook:selectDisease(disease)
   self:updateIcons()
 end
 
-local staffclass_to_string = {
-  Nurse        = _S.staff_title.nurse,
-  Doctor       = _S.staff_title.doctor,
-  Surgeon      = _S.staff_title.surgeon,
-  Psychiatrist = _S.staff_title.psychiatrist,
-  Researcher   = _S.staff_title.researcher,
-}
-
 --! Function that is called when a new entry is selected in some way
 --! It updates all icons etc. that react to what is selected
 function UICasebook:updateIcons()
@@ -180,6 +170,14 @@ function UICasebook:updateIcons()
       research = research and (_S.tooltip.casebook.cure_requirement.research_machine .. research .. "). ") or ""
       build    = build    and (_S.tooltip.casebook.cure_requirement.build_room .. build .. "). ") or ""
       
+      local staffclass_to_string = {
+        Nurse        = _S.staff_title.nurse,
+        Doctor       = _S.staff_title.doctor,
+        Surgeon      = _S.staff_title.surgeon,
+        Psychiatrist = _S.staff_title.psychiatrist,
+        Researcher   = _S.staff_title.researcher,
+      }
+
       -- Staff requirements
       for sclass, amount in pairs(req.staff) do
         staff = (staff and (staff .. ", ") or " (") .. staffclass_to_string[sclass] .. ": " .. amount

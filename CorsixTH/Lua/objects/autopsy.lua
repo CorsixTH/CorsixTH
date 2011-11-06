@@ -46,7 +46,6 @@ object.usage_animations = copy_north_to_south {
   },
 }
 
-dofile "entities/humanoid"
 object.multi_usage_animations = {}
 local function anim_set(patient_type, invite_in, configure, taken_in, closing)
   local anims = {

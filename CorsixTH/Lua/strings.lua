@@ -107,7 +107,7 @@ function Strings:init()
     }, infinite_table_mt)
     -- Actually run the language file
     local status, err = pcall(chunk, env)
-    if not status and err ~= good_error_marker then
+    if not status and err ~= good_error_marker and app.good_install_folder then
       print("Error evaluating " .. filename .. ":\n" .. tostring(err))
     end
   end
@@ -293,7 +293,7 @@ function Strings:_loadPrivate(language, env, ...)
     end
   end
   local status, err = pcall(chunk, env, ...)
-  if not status then
+  if not status and self.app.good_install_folder then
     print("Error evaluating " .. self.language_chunks[chunk] .. ":\n" .. tostring(err))
   end
 end

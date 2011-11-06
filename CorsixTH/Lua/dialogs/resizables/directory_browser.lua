@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local lfs = require "lfs"
-dofile("dialogs/tree_ctrl")
-dofile("dialogs/resizable")
 
 --! A tree node representing a directory in the physical file-system.
 --! This tree only shows directories and highlights valid TH directories.

@@ -23,13 +23,9 @@ local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
-dofile "entity"
-dofile "room"
-dofile "entities/object"
-dofile "entities/humanoid"
 dofile "entities/patient"
+dofile "entities/staff"
 dofile "entities/vip"
-dofile "entities/machine"
 dofile "staff_profile"
 dofile "hospital"
 dofile "calls_dispatcher"

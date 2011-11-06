@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 
         if(bRun)
         {
-            printf("Restarting...\n");
+            printf("\n\nRestarting...\n\n\n");
         }
     }
     return 0;
