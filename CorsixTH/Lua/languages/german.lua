@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,10 +27,74 @@ Inherit("original_strings", 2)
 -------------------------------  OVERRIDE  ----------------------------------
 diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
+fax.vip_visit_query.vip_name = utf8 "%s hat den Wunsch geäußert ihr Krankenhaus besuchen zu wollen." -- text was missing
+fax.vip_visit_query.choices.invite = utf8 "Lassen Sie dem V.I.P. eine offizielle Einladung zukommen." -- text was ferusing instead of inviting
+
+fax.vip_visit_query.choices.refuse = utf8 "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
+
 fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
-fax.epidemic.declare_explanation_fine = utf8 "Wenn Sie die Epidemie melden, zahlen Sie eine Strafe von %d und Ihr Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
-fax.emergency_result.saved_people = "Sie haben %d der %d Notfall-Patienten gerettet." -- swapped %d's
-fax.emergency.num_disease = "Hier sind %d Leute mit %s, sie brauchen sofortige Aufmerksamkeit." -- original spelled "sie" wrong
+
+fax.vip_visit_result.vip_remarked_name = utf8 "%s hat Ihr Krankenhaus besucht."
+fax.vip_visit_result.cash_grant = utf8 "Ihnen wurde ein Geldbonus von %d gewährt."
+fax.vip_visit_result.rep_boost = utf8 "Ihr Ruf in der Öffentlichkeit hat sich gebessert."
+fax.vip_visit_result.rep_loss = utf8 "Ihr Ruf hat gelitten."
+fax.vip_visit_result.close_text = utf8 "Danke, dass Sie unser Krankenhaus besucht haben." -- text was missing
+
+fax.emergency.choices.accept = utf8 "Ja, ich übernehme diesen Notfall!"
+fax.emergency.choices.refuse = utf8 "Nein, ich weigere mich diesen Notfall zu übernehmen!"
+fax.emergency.location = utf8 "Wir haben einen Notruf aus dem %s erhalten." -- wrong spelling
+fax.emergency.num_disease = utf8 "Es handelt sich um %d Personen mit %s, die sofort behandelt werden müssen." -- wrong spelling
+fax.emergency.num_disease_singular = utf8 "Es handelt sich um eine Personen mit %s, die sofort behandelt werden muss." -- wrong spelling
+fax.emergency.cure_possible = utf8 "Wir können diesen Notfall übernehmen."
+fax.emergency.cure_not_possible_build_and_employ = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen."
+fax.emergency.cure_not_possible_build = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen."
+fax.emergency.cure_not_possible_employ = utf8 "Um den Notfall übernehmen zu können, müssen wir zusätzliches Personal einstellen."
+fax.emergency.cure_not_possible = utf8 "Wir können diesen Notfall im Moment keinesfalls übernehmen."
+fax.emergency.bonus = utf8 "Wenn wir keinen Patienten verlieren, erhalten wir einen Geldbonus von maximal %d. Sollten wir es jedoch vermasseln, wird unser Ruf Schaden nehmen."
+fax.emergency_result.close_text = utf8 "Danke, ich habe gerne geholfen."
+fax.emergency_result.earned_money = utf8 "Sie erhalten von maximal %d einen Geldbonus von %d."
+fax.emergency_result.saved_people = utf8 "Vielen Dank für Ihre Hilfe! Sie haben %d von insgesamt %d gerettet."
+
+fax.disease_discovered_patient_choice.choices.send_home = utf8 "Schicken Sie den Patienten nach Hause." -- wrong text for button
+fax.disease_discovered_patient_choice.choices.wait = utf8 "Sorgen Sie dafür, dass der Patient eine Weile im Krankenhaus wartet." -- wrong text for button
+fax.disease_discovered_patient_choice.choices.research = utf8 "Schicken Sie den Patienten in die Forschungsabteilung." -- wrong text for button
+fax.disease_discovered_patient_choice.need_to_build_and_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
+fax.disease_discovered_patient_choice.need_to_build = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
+fax.disease_discovered_patient_choice.need_to_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
+fax.disease_discovered_patient_choice.can_not_cure = utf8 "Im Moment können wir diese Krankheit nicht behandeln."
+fax.disease_discovered_patient_choice.disease_name = utf8 "Unser Ärzteteam hat herausgefunden, an was für einer Art von %s der Patient leidet." -- text was missing
+fax.disease_discovered_patient_choice.what_to_do_question = utf8 "Was sollen wir jetzt mit dem Patienten anstellen?" -- text was missing
+fax.disease_discovered_patient_choice.guessed_percentage_name = utf8 "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet." -- text was missing
+fax.disease_discovered.close_text = utf8 "Eine neue Krankheit wurde entdeckt."
+fax.disease_discovered.can_cure = utf8 "Wir können diese Krankheit problemlos behandeln." -- text was missing
+fax.disease_discovered.need_to_build_and_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
+fax.disease_discovered.need_to_build = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
+fax.disease_discovered.need_to_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
+fax.disease_discovered.discovered_name = utf8 "Unser Ärzteteam hat einen Fall von %s entdeckt."
+
+fax.diagnosis_failed.choices.send_home = utf8 "Schicken Sie den Patienten nach Hause." -- wrong text for button
+fax.diagnosis_failed.choices.take_chance = utf8 "Nehmen Sie die wahrscheinliche Möglichkeit zur Heilung wahr." -- wrong text for button
+fax.diagnosis_failed.choices.wait = utf8 "Der Patient soll eine Weile im Krankenhaus warten, wir stellen bald neue Diagnosearten zur Verfügung."
+fax.diagnosis_failed.situation = utf8 "Dieser Patient hat all unsere Diagnosegeräte zum qualmen gebracht. Trotzdem wissen wir immer noch nicht genau, was ihm fehlt." -- text was missing
+fax.diagnosis_failed.what_to_do_question = utf8 "Was sollen wir jetzt mit dem Patienten anstellen?" -- wrong spelling
+fax.diagnosis_failed.partial_diagnosis_percentage_name = utf8 "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet."
+
+fax.epidemic.choices.declare = utf8 "Wir melden die Epidemie und zahlen die Geldstrafe!"
+fax.epidemic.choices.cover_up = utf8 "Wir versuchen die Epidemie einzudämmen bevor sie das Krankenhaus verlässt!"
+fax.epidemic.declare_explanation_fine = utf8 "Wenn wir die Epidemie melden, zahlen wir eine Strafe von %d und unser Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
+fax.epidemic.cover_up_explanation_1 = utf8 "Wenn wir versuchen die Epidemie zu vertuschen, müssen wir die Infizierten heilen, bevor das Gesudheitsministerium davon Wind bekommt."
+fax.epidemic.cover_up_explanation_2 = utf8 "Wenn der Gesundheitsinspektor die Vertuschungsaktion bemerkt, wird das Konsequenzen haben."
+fax.epidemic.disease_name = utf8 "Unser Ärzteteam hat eine hochgradig ansteckende Form von %s entdeckt!"
+fax.epidemic_result.close_text = utf8 "Hurra!"
+fax.epidemic_result.failed.part_1_name = utf8 "Ihr Versuch diese %s-Epidemie zu vertuschen ist fehlgeschlagen! Sie konnten nicht verhindern,"
+fax.epidemic_result.failed.part_2 = utf8 "dass sich die Epidemie in Ihrem ganzen Krankenhaus ausbreitet."
+fax.epidemic_result.succeeded.part_1_name = utf8 "Dem Gesundheitsinspektor ist zu Ohren gekommen, dass Sie mit einem schweren Fall von %s zu kämpfen haben."
+fax.epidemic_result.succeeded.part_2 = utf8 "Allerdings hat er dafür keine Beweise finden können."
+fax.epidemic_result.compensation_amount = utf8 "Die Behörden haben beschlossen, Sie wegen Ihren Lügen zu einer Geldstrafe von %d zu verurteilen."
+fax.epidemic_result.fine_amount = utf8 "Die Behörden haben den nationalen Notstand ausgerufen und sie zu einer Geldstrafe von %d verurteilt."
+fax.epidemic_result.rep_loss_fine_amount = utf8 "Die Zeitungen haben Wind von der Epidemie bekommen und ziehen Ihren Ruf in den Dreck. Darüber hinaus hat man zu einer Geldstrafe von %d verurteilt."
+fax.epidemic_result.hospital_evacuated = utf8 "Die Behörden haben keine andere Wahl, als ihr Krankenhaus zu evakuieren."
+
 dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
 adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
 tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- original mentioned hospital value, while it's actually reputation.
