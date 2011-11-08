@@ -100,6 +100,7 @@ menu_options = {
   lock_windows = utf8 "  LÅS VINDUER  ",
   edge_scrolling = "  KANTSCROLLING  ",
   settings = "  INNSTILLINGER  ",
+  adviser_disabled = utf8 "  RÅDGIVER  "
 }
 
 menu_options_game_speed.pause   = "  PAUSE  "
@@ -1938,7 +1939,7 @@ adviser = {
     charges_too_low       = utf8 "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre pr. pasient.",
     charges_too_high       = utf8 "Dine priser er for höye. Dette gir deg god profitt på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
     plants_thirsty         = utf8 "Du må huske på plantene dine. De er törste.",
-    staff_overworked       = utf8 "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når di er trötte.",
+    staff_overworked       = utf8 "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når de er trötte.",
     queue_too_long_at_reception = utf8 "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en Resepsjonist til.",
     queue_too_long_send_doctor   = utf8 "Köen til %s er for lang. Sörg for at det er en Lege i rommet.",
     handymen_tired         = utf8 "Dine Vaktmestere er veldig trött. Gi dem hvile nå.",
@@ -2017,6 +2018,8 @@ adviser = {
     no_desk = utf8 "Du burde bygge en resepsjon og ansette en Resepsjonist snart.",
     no_desk_1 = utf8  "Om du vil at pasienter skal komme til sykehuset ditt bör du ansette en Resepsjonsist og bygge en resepsjon der hun kan arbeide!",
     no_desk_2 = utf8 "Bra gjort! Dette må være en verdensrekord: nesten ett år uten å få noen pasienter! Om du vil fortsette som sjef for dette sykehuset bör du ansette en Resepsjonist og bygg en respsjon der hun kan arbede!",
+    no_desk_3 = utf8 "Glimrende! Nesten et år har gått og du har ikke engang en betjent resepsjon! Hvordan tror du at du skal få noen pasienter? Slutt å tulle rundt og få orden på problemet!",
+    cannot_afford = utf8 "Du har ikke nok penger på konto til å ansette denne personen!",
   },
   
   -- Placement info
