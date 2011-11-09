@@ -260,6 +260,7 @@ function Staff:updateSkill(consultant, trait, amount)
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction{name = "meander"}
+        self.last_room = nil
       end
       self:updateStaffTitle()
     end
