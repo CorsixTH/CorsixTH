@@ -41,7 +41,7 @@ function Queue:Queue()
 end
 
 function Queue:expect(humanoid)
-  if not self.expected[humanoid] then
+  if not self.expected[humanoid] and not class.is(humanoid, Vip) then
     self.expected[humanoid] = true
     self.expected_count = self.expected_count + 1
   end
