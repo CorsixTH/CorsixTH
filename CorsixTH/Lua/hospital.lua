@@ -72,6 +72,7 @@ function Hospital:Hospital(world)
   self.num_deaths_this_year = 0
   self.num_cured = 0
   self.not_cured = 0
+  self.seating_warning = 0
   self.num_explosions = 0
   self.announce_vip = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
@@ -234,6 +235,7 @@ function Hospital:warningBench()
   }
   if bench_msg then
     self.world.ui.adviser:say(bench_msg[math.random(1, #bench_msg)])
+    self.bench_msg = true
   end  
 end
 
@@ -514,6 +516,9 @@ function Hospital:afterLoad(old, new)
     self.num_explosions = 0
     self.num_vips = 0
   end
+  if old < 48 then
+    self.seating_warning = 0
+  end
 end
 
 function Hospital:countPatients()
@@ -561,15 +566,39 @@ function Hospital:checkFacilites()
     end
     -- How are we for seating, if there are plenty then praise is due, if not the player is warned
     -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
+    -- check the seating : standing ratio of waiting patients
+    -- find all the patients who are currently waiting around
     local show_msg = math.random(1, 4)
-    if self.world.year == 1 and self.world.month > 4 
+    local numberSitting = 0
+    local numberStanding = 0
+    for _, patient in ipairs(self.patients) do
+      if (patient.action_queue[1].name == "idle") then
+        numberStanding = numberStanding + 1
+      elseif (patient.action_queue[1].name == "use_object" 
+      and patient.action_queue[1].object.object_type.id == "bench") then
+        numberSitting = numberSitting + 1
+      end
+    end
+    -- If there are patients standing then maybe the seating is in the wrong place!
+    -- set to 5% (standing:seated). If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
+    -- So there are now two checks about having enough seating, if either are called then you won't receive praise. (may need balancing)
+    if numberStanding > math.min(numberSitting / 20) then
+      self.seating_warning = self.seating_warning + 1
+      if self.seating_warning >= 10 and not self.bench_msg then
+        self:warningBench()
+        self.seating_warning = 0
+      end
+    elseif self.world.year == 1 and self.world.month > 4
     and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
+      -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
+      -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
         self:praiseBench()
-      elseif self.world.object_counts.bench < self.patientcount then
+      -- Are there enough benches for the volume of patients in your hospital?
+        elseif self.world.object_counts.bench < self.patientcount then
         self:warningBench()
       end
-    elseif self.world.year > 1 and self.world.day == 12 
+    elseif self.world.year > 1 and self.world.day == 12
     and show_msg  == 4  and not self.bench_msg then
       if self.world.object_counts.bench > self.patientcount then
         self:praiseBench()
@@ -582,7 +611,7 @@ function Hospital:checkFacilites()
     if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
       self.world.ui.adviser:say(_S.adviser.information.initial_general_advice.place_radiators)
     end
-    -- Now to check how warn or cold patients and staff are.  So that we are not bombarded with warmth
+    -- Now to check how warm or cold patients and staff are.  So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
     local warmth = self:getAveragePatientAttribute("warmth")
@@ -645,6 +674,7 @@ function Hospital:checkFacilites()
       self.cash_msg = false
       self.warmth_msg = false
       self.thirst_msg = false
+      self.seating_warning = 0
     end
   end
 end
@@ -734,9 +764,9 @@ function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
   self.acc_loan_interest = self.acc_loan_interest + pay_this
   self.research:researchCost()
-
-  self:checkFacilites()
-
+  if self:hasStaffedDesk() then
+    self:checkFacilites()
+  end
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
 
   if self.balance < 0 then
