@@ -624,7 +624,7 @@ function Staff:adviseWrongPersonForThisRoom()
     end
   elseif self.humanoid_class == "Nurse" then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
-  elseif self.humanoid_class == "Doctor" then
+  elseif self.humanoid_class == "Doctor" and not room_name == "training" then
     self.world.ui.adviser:say(_S.adviser.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
   end
 end
