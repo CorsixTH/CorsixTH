@@ -175,6 +175,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       else
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction{name = "meander"}
+        humanoid.last_room = nil
       end
     end
   elseif humanoid.humanoid_class ~= "Handyman" then
