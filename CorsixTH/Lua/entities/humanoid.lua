@@ -26,10 +26,16 @@ local TH = require "TH"
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
+local falling_animations = permanent"humanoid_falling_animations"({})
+local on_ground_animations = permanent"humanoid_on_ground_animations"({})
+local get_up_animations = permanent"humanoid_get_up_animations"({})
+local shake_fist_animations = permanent"humanoid_shake_fist_animations"({})
 local pee_animations = permanent"humanoid_pee_animations"({})
 local vomit_animations = permanent"humanoid_vomit_animations"({})
 local tap_foot_animations = permanent"humanoid_tap_foot_animations"({})
+local yawn_animations = permanent"humanoid_yawn_animations"({})
 local check_watch_animations = permanent"humanoid_check_watch_animations"({})
+
 local mood_icons = permanent"humanoid_mood_icons"({})
 
 local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
@@ -59,9 +65,23 @@ local function die_anims(name, fall, rise, wings, hands, fly, extra)
     extra_east = extra,
   }
 end
-
+local function falling_anim(name, fallingAnim)
+  falling_animations[name] = fallingAnim
+end
+local function on_ground_anim(name, on_groundAnim)
+  on_ground_animations[name] = on_groundAnim
+end
+local function get_up_anim(name, get_upAnim)
+  get_up_animations[name] = get_upAnim
+end
+local function shake_fist_anim(name, shake_fistAnim)
+  shake_fist_animations[name] = shake_fistAnim
+end
 local function vomit_anim(name, vomitAnim)
   vomit_animations[name] = vomitAnim
+end
+local function yawn_anim(name, yawnAnim)
+  yawn_animations[name] = yawnAnim
 end
 local function tap_foot_anim(name, tap_footAnim)
   tap_foot_animations[name] = tap_footAnim
@@ -124,6 +144,34 @@ die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
 die_anims("Alien Male Patient",        4882, 2434, 2438, 2446,  2450)
 die_anims("Alien Female Patient",      4886, 3208, 3212, 3216,  3220)
 
+-- The next fours sets belong together, but are done like this so we can use them on there own
+-- I also had difficulty in keeping them together, as the patient needs to on the floor
+-- for the duration of the earth quake before getting back up
+-- Shaking of fist could perhaps be used when waiting too long
+--  | Falling Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+falling_anim("Standard Male Patient",     1682) 
+falling_anim("Standard Female Patient",   3116)
+
+--  | On_ground Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+on_ground_anim("Standard Male Patient",     1258) 
+on_ground_anim("Standard Female Patient",   3116)
+
+--  | Get_up Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+get_up_anim("Standard Male Patient",     384) 
+get_up_anim("Standard Female Patient",   580)
+
+--  | Shake_fist Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+shake_fist_anim("Standard Male Patient",     392) -- bloaty head patients lose head!
+
+
 --  | Vomit Animations                  |
 --  | Name                              |Anim | Notes
 ----+-----------------------------------+-----+
@@ -136,6 +184,14 @@ vomit_anim("Invisible Patient",          4204)
 vomit_anim("Slack Male Patient",         4324)
 vomit_anim("Transparent Female Patient", 4452)
 vomit_anim("Transparent Male Patient",   4384)
+
+--  | Yawn Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+yawn_anim("Standard Female Patient",    4864)
+yawn_anim("Standard Male Patient",      368)
+--yawn_anim("Alternate Male Patient",     2968)  is this one the same as standard male?
+-- whichever one is used for male, if he wears a hat it will lift when he yawns
 
 --  | Foot tapping Animations                  |
 --  | Name                              |Anim | Notes
@@ -242,6 +298,9 @@ function Humanoid:afterLoad(old, new)
     if self.humanoid_class == "Slack Female Patient" then
       self.die_anims = die_animations["Slack Female Patient"]
     end
+  end
+  if old < 49 then
+    self.has_fallen = 1
   end
 end   
 
@@ -520,7 +579,12 @@ function Humanoid:setType(humanoid_class)
   self.walk_anims = walk_animations[humanoid_class]
   self.door_anims = door_animations[humanoid_class]
   self.die_anims  = die_animations[humanoid_class]
+  self.falling_anim  = falling_animations[humanoid_class]
+  self.on_ground_anim  = on_ground_animations[humanoid_class]
+  self.get_up_anim  = get_up_animations[humanoid_class]
+  self.shake_fist_anim  = shake_fist_animations[humanoid_class]
   self.vomit_anim = vomit_animations[humanoid_class]
+  self.yawn_anim = yawn_animations[humanoid_class]
   self.tap_foot_anim = tap_foot_animations[humanoid_class]
   self.check_watch_anim = check_watch_animations[humanoid_class]  
   self.pee_anim = pee_animations[humanoid_class]

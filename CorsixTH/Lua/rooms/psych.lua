@@ -23,6 +23,7 @@ room.id = "psych"
 room.level_config_id = 8
 room.class = "PsychRoom"
 room.name = _S.rooms_short.psychiatric
+room.long_name = _S.rooms_long.psychiatric
 room.tooltip = _S.tooltip.rooms.psychiatry
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bookcase", "skeleton" }
 room.objects_needed = { screen = 1, couch = 1, comfortable_chair = 1 }

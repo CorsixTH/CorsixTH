@@ -23,6 +23,7 @@ room.id = "x_ray"
 room.level_config_id = 16
 room.class = "XRayRoom"
 room.name = _S.rooms_short.x_ray
+room.long_name = _S.rooms_long.x_ray
 room.tooltip = _S.tooltip.rooms.x_ray
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { x_ray = 1, radiation_shield = 1 }

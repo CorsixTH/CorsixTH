@@ -23,6 +23,7 @@ room.id = "pharmacy"
 room.level_config_id = 11
 room.class = "PharmacyRoom"
 room.name = _S.rooms_short.pharmacy
+room.long_name = _S.rooms_long.pharmacy
 room.tooltip = _S.tooltip.rooms.pharmacy
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { pharmacy_cabinet = 1 }

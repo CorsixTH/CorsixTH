@@ -23,6 +23,7 @@ room.id = "fracture_clinic"
 room.level_config_id = 21
 room.class = "FractureRoom"
 room.name = _S.rooms_short.fracture_clinic
+room.long_name = _S.rooms_long.fracture_clinic
 room.tooltip = _S.tooltip.rooms.fracture_clinic
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { cast_remover = 1 }

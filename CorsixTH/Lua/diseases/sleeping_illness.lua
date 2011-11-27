@@ -27,6 +27,7 @@ disease.name = _S.diseases.sleeping_illness.name
 disease.cause = _S.diseases.sleeping_illness.cause
 disease.symptoms = _S.diseases.sleeping_illness.symptoms
 disease.cure = _S.diseases.sleeping_illness.cure
+disease.yawn = true
 disease.cure_price = 750
 disease.emergency_sound = "emerg015.wav"
 disease.initPatient = function(patient)

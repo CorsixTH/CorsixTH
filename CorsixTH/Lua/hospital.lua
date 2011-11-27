@@ -580,13 +580,20 @@ function Hospital:checkFacilites()
       end
     end
     -- If there are patients standing then maybe the seating is in the wrong place!
-    -- set to 5% (standing:seated). If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
+    -- set to 5% (standing:seated) if there are more than 50 patients or 20% if there are less than 50.
+    -- If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
     -- So there are now two checks about having enough seating, if either are called then you won't receive praise. (may need balancing)
-    if numberStanding > math.min(numberSitting / 20) then
-      self.seating_warning = self.seating_warning + 1
-      if self.seating_warning >= 10 and not self.bench_msg then
-        self:warningBench()
-        self.seating_warning = 0
+    if self.patientcount < 50 then
+      if numberStanding > math.min(numberSitting / 5) then
+        self.seating_warning = self.seating_warning + 1
+      elseif self.patientcount >= 50 then
+        if numberStanding > math.min(numberSitting / 20) then
+          self.seating_warning = self.seating_warning + 1
+          if self.seating_warning >= 10 and not self.bench_msg then
+            self:warningBench()
+            self.seating_warning = 0
+          end
+        end
       end
     elseif self.world.year == 1 and self.world.month > 4
     and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then

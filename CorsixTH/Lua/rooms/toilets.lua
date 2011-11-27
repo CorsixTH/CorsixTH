@@ -23,6 +23,7 @@ room.id = "toilets"
 room.level_config_id = 29
 room.class = "ToiletRoom"
 room.name = _S.rooms_short.toilets
+room.long_name = _S.rooms_long.toilets
 room.tooltip = _S.tooltip.rooms.toilets
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "loo", "sink" }
 room.objects_needed = { loo = 1, sink = 1 }

@@ -22,7 +22,8 @@ local room = {}
 room.id = "training"
 room.level_config_id = 22
 room.class = "TrainingRoom"
-room.name = _S.rooms_long.training_room
+room.long_name = _S.rooms_long.training_room
+room.name = _S.rooms_short.training_room
 room.tooltip = _S.tooltip.rooms.training_room
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "lecture_chair", "bookcase", "skeleton" }
 room.objects_needed = { lecture_chair = 1, projector = 1 }

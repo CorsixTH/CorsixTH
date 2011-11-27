@@ -26,7 +26,8 @@ function Patient:Patient(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   self.should_knock_on_doors = true
   self.treatment_history = {}
-  
+  self.booked_in = false
+  self.has_fallen = 1
   self.action_string = ""
 end              
 
@@ -34,6 +35,9 @@ function Patient:onClick(ui, button)
   if button == "left" then
     if self.message_callback then
       self:message_callback()
+    elseif math.random(1, 8) == 5 then
+      ui:addWindow(UIPatient(ui, self))
+      self:falling()
     else
       ui:addWindow(UIPatient(ui, self))
     end
@@ -114,7 +118,8 @@ end
 -- called when they are done using a diagnosis room
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
-  local multiplier = 1
+  -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
+  local multiplier = 1 * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
   local diagnosis_difficulty = self:setdiagDiff()
   local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
   local diagnosis_bonus = 0.4
@@ -124,13 +129,13 @@ function Patient:completeDiagnosticStep(room)
   if room.staff_member then
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
-    if room.staff_member.profile.skill == 1 then
+    if room.staff_member.profile.skill > 0.9 then
       multiplier = math.random(1, 5)
     end
-    local divisor = math.random(1, 2)
+    local divisor = math.random(1, 3)
     local attn_detail = room.staff_member.profile.attention_to_detail / divisor
     local skill = room.staff_member.profile.skill / divisor
-    local diagnosis_bonus = (attn_detail + 0.3) *  skill
+    local diagnosis_bonus = (attn_detail + 0.4) *  skill
   end
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
@@ -150,7 +155,6 @@ end
 
 function Patient:treated() -- If a drug was used we also need to pay for this
   local hospital = self.hospital
-
   local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
   hospital:receiveMoneyForTreatment(self)
   if amount ~= 0 then
@@ -228,7 +232,80 @@ end
 
 function Patient:canPeeOrPuke(current)
   return ((current.name == "walk" or current.name == "idle" or current.name == "seek_room")
-         and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
+         and self.booked_in and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
+end
+  -- animations for when there is an earth quake
+  -- for now though it can happen if you right click on a patient
+  -- that he or she could fall over
+function Patient:falling()
+  local current = self.action_queue[1]
+  current.keep_reserved = true
+  if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
+    self:setNextAction({
+      name = "falling",
+      must_happen = true
+      }, 0)
+    self.has_fallen = 2
+    if self.has_fallen == 2 then
+      self:setNextAction{name = "on_ground"}
+      self.on_ground = true
+    end 
+      if self.on_ground then
+        self:setNextAction{name = "get_up"}
+      end
+      if current.name == "idle" or current.name == "walk" then
+        self:queueAction({
+          name = current.name,
+          x = current.x,
+          y = current.y,
+          must_happen = current.must_happen,
+          is_entering = current.is_entering,
+        }, 2)
+      else
+      self:queueAction({
+        name = current.name,
+        room_type = current.room_type,
+        message_sent = true,
+        diagnosis_room = current.diagnosis_room,
+        treatment_room = current.treatment_room,
+      }, 2)
+      end
+      if current.on_interrupt then
+        current.on_interrupt(current, self)
+      else
+      self:finishAction()
+      end
+      self.on_ground = false
+      if math.random(1, 5) == 3 then
+        self:shake_fist()
+      end
+      self:fallingAnnounce()
+      self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
+  else
+    return
+  end
+end
+
+function Patient:fallingAnnounce()
+  local msg = {
+  (_S.adviser.warnings.falling_1),
+  (_S.adviser.warnings.falling_2),
+  (_S.adviser.warnings.falling_3),
+  (_S.adviser.warnings.falling_4),
+  (_S.adviser.warnings.falling_5),
+  (_S.adviser.warnings.falling_6),
+  }
+  if msg then
+    self.world.ui.adviser:say(msg[math.random(1, #msg)])
+  end
+end
+function Patient:shake_fist()
+  if self.shake_fist_anim then
+    self:queueAction({
+        name = "shake_fist",
+        must_happen = true
+        }, 1)
+  end
 end
 
 function Patient:vomit()
@@ -317,6 +394,15 @@ function Patient:checkWatch()
   end 
 end
 
+function Patient:yawn()
+  if self.yawn_anim and not self.action_queue[1].is_leaving then
+    self:queueAction({
+      name = "yawn",
+      must_happen = true
+      }, 2)
+  end
+end
+
 function Patient:tapFoot()
   if self.tap_foot_anim and not self.action_queue[1].is_leaving then
     self:queueAction({
@@ -375,6 +461,8 @@ function Patient:tickDay()
       end
     elseif self.waiting == 10 then
       self:tapFoot()
+    elseif self.waiting == 20 then
+      self:yawn()
     elseif self.waiting == 30 then
       self:checkWatch()
     end
@@ -435,8 +523,14 @@ function Patient:tickDay()
     end
     --dead people aren't thirsty
     return
-  end 
-       
+  end
+  -- Note: to avoid empty action queue error if the player spam clicks a patient at the same time as the day changes
+  -- there is now an inbetween "neutal" stage.
+  if self.has_fallen == 3 then
+    self.has_fallen = 1
+  elseif self.has_fallen == 2 then
+    self.has_fallen = 3
+  end
   -- Vomitings.
   if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
@@ -544,7 +638,10 @@ function Patient:tickDay()
       end
     end
   end
-  
+  if self.disease.yawn and math.random(1, 10) == 5 then
+    self:yawn()
+  end
+
   -- If thirsty enough a soda would be nice
   if self.attributes["thirst"] and self.attributes["thirst"] > 0.7 then
     self:changeAttribute("happiness", -0.002)

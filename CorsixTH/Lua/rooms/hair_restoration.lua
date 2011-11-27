@@ -23,6 +23,7 @@ room.id = "hair_restoration"
 room.level_config_id = 19
 room.class = "HairRestorationRoom"
 room.name = _S.rooms_short.hair_restoration
+room.long_name = _S.rooms_long.hair_restoration
 room.tooltip = _S.tooltip.rooms.hair_restoration
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { hair_restorer = 1, console = 1 }

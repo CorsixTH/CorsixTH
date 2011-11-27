@@ -23,6 +23,7 @@ room.id = "slack_tongue"
 room.level_config_id = 20
 room.class = "SlackTongueRoom"
 room.name = _S.rooms_short.tongue_clinic
+room.long_name = _S.rooms_long.tongue_clinic
 room.tooltip = _S.tooltip.rooms.tongue_clinic
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { slicer = 1 }

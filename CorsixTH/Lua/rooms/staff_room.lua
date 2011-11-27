@@ -23,6 +23,7 @@ room.id = "staff_room"
 room.level_config_id = 25
 room.class = "StaffRoom"
 room.name = _S.rooms_short.staffroom
+room.long_name = _S.rooms_long.staffroom
 room.tooltip = _S.tooltip.rooms.staffroom
 room.objects_additional = { "extinguisher", "radiator", "plant", "sofa", "pool_table", "tv", "video_game" }
 room.objects_needed = { sofa = 1 }

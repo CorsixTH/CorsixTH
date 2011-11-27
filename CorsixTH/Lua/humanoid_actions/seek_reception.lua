@@ -76,6 +76,7 @@ local function action_seek_reception_start(action, humanoid)
     return true
   end)
   if found_desk then
+    humanoid.booked_in = true
     return
   end
   

@@ -23,6 +23,7 @@ room.id = "gp"
 room.level_config_id = 7
 room.class = "GPRoom"
 room.name = _S.rooms_short.gps_office
+room.long_name = _S.rooms_long.gps_office
 room.tooltip = _S.tooltip.rooms.gps_office
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { desk = 1, cabinet = 1, chair = 1 }

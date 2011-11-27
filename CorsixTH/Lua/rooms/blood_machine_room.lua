@@ -23,6 +23,7 @@ room.id = "blood_machine"
 room.level_config_id = 15
 room.class = "BloodMachineRoom"
 room.name = _S.rooms_short.blood_machine
+room.long_name = _S.rooms_long.blood_machine
 room.tooltip = _S.tooltip.rooms.blood_machine
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { blood_machine = 1 }

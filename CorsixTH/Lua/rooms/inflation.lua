@@ -23,6 +23,7 @@ room.id = "inflation"
 room.level_config_id = 17
 room.class = "InflationRoom"
 room.name = _S.rooms_short.inflation
+room.long_name = _S.rooms_long.inflation
 room.tooltip = _S.tooltip.rooms.inflation
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { inflator = 1 }

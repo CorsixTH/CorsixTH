@@ -24,6 +24,7 @@ room.level_config_id = 9
 room.class = "WardRoom"
 room.name = _S.rooms_short.ward
 room.tooltip = _S.tooltip.rooms.ward
+room.long_name = _S.rooms_long.ward
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bed" }
 room.objects_needed = { desk = 1, bed = 1 }
 room.build_preview_animation = 910

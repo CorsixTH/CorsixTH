@@ -23,6 +23,7 @@ room.id = "ultrascan"
 room.level_config_id = 14
 room.class = "UltrascanRoom"
 room.name = _S.rooms_short.ultrascan
+room.long_name = _S.rooms_long.ultrascan
 room.tooltip = _S.tooltip.rooms.ultrascan
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { ultrascanner = 1 }

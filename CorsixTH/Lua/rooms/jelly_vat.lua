@@ -23,6 +23,7 @@ room.id = "jelly_vat"
 room.level_config_id = 24
 room.class = "JellyVatRoom"
 room.name = _S.rooms_short.jelly_vat
+room.long_name = _S.rooms_long.jelly_vat
 room.tooltip = _S.tooltip.rooms.jelly_vat
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { jelly_moulder = 1 }

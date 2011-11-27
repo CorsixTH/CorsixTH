@@ -62,7 +62,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
     self.title_text = room_type.room_info.name
     self.room = room_type
     self.desc_text = _S.place_objects_window.confirm_or_buy_objects
-    self.payed = true
+    self.paid = true
     self.blueprint_rect = {
       x = room_type.x,
       y = room_type.y,
@@ -133,7 +133,7 @@ function UIEditRoom:verifyOrAbortRoom()
 end
 
 function UIEditRoom:abortRoom()
-  if self.payed then
+  if self.paid then
     -- Return half the cost.
     local progress = self.ui.hospital.research.research_progress
     local cost = math.floor(progress[self.room.room_info].build_cost/2)
@@ -161,7 +161,7 @@ end
 
 function UIEditRoom:cancel()
   if self.phase == "walls" then
-    if self.payed then
+    if self.paid then
       -- Ask if the user really wish to sell this room
       self.ui:addWindow(UIConfirmDialog(self.ui,
         _S.confirmation.delete_room,
@@ -214,7 +214,7 @@ function UIEditRoom:confirm(force)
     self:enterObjectsPhase()
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
-    if not self.payed then
+    if not self.paid then
       local progress = self.ui.hospital.research.research_progress
       local cost = progress[self.room.room_info].build_cost
       for obj, num in pairs(self.room.room_info.objects_needed) do
@@ -225,7 +225,7 @@ function UIEditRoom:confirm(force)
         cost = cost - num * obj_cost
       end
       self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text, cost)
-      self.payed = true
+      self.paid = true
     end
     
     self.world:markRoomAsBuilt(self.room)

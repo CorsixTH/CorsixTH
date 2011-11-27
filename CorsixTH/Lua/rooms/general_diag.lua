@@ -23,6 +23,7 @@ room.id = "general_diag"
 room.level_config_id = 27
 room.class = "GeneralDiagRoom"
 room.name = _S.rooms_short.general_diag
+room.long_name = _S.rooms_long.general_diag
 room.tooltip = _S.tooltip.rooms.general_diag
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { screen = 1, crash_trolley = 1 }

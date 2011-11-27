@@ -23,6 +23,7 @@ room.id = "scanner"
 room.level_config_id = 13
 room.class = "ScannerRoom"
 room.name = _S.rooms_short.scanner
+room.long_name = _S.rooms_long.scanner
 room.tooltip = _S.tooltip.rooms.scanner
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { scanner = 1, console = 1, screen = 1 }

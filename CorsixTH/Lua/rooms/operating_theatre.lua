@@ -23,6 +23,7 @@ room.id = "operating_theatre"
 room.level_config_id = 10
 room.class = "OperatingTheatreRoom"
 room.name = _S.rooms_short.operating_theatre
+room.long_name = _S.rooms_long.operating_theatre
 room.tooltip = _S.tooltip.rooms.operating_theatre
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = {

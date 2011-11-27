@@ -608,9 +608,15 @@ end
 
 function Staff:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
-  local room_name = room.room_info.name
+  local room_name = room.room_info.long_name
   local required = room.room_info.required_staff
-  if required then
+  if self.humanoid_class == "Doctor" and room.room_info.id == "toilets" then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+  elseif self.humanoid_class == "Nurse" then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
+  elseif self.humanoid_class == "Doctor" and not room.room_info.id == "training" then
+    self.world.ui.adviser:say(_S.adviser.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+  elseif required then
     if required.Nurse then
       self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_nurses_in_room:format(room_name))
     elseif required.Surgeon then
@@ -622,10 +628,6 @@ function Staff:adviseWrongPersonForThisRoom()
     else
       self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(room_name))
     end
-  elseif self.humanoid_class == "Nurse" then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
-  elseif self.humanoid_class == "Doctor" and not room_name == "training" then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
   end
 end
 

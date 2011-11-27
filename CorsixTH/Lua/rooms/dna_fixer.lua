@@ -23,6 +23,7 @@ room.id = "dna_fixer"
 room.level_config_id = 23
 room.class = "DNAFixerRoom"
 room.name = _S.rooms_short.dna_fixer
+room.long_name = _S.rooms_long.dna_fixer
 room.tooltip = _S.tooltip.rooms.dna_fixer
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { dna_fixer = 1, console = 1 }

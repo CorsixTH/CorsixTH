@@ -23,6 +23,7 @@ room.id = "electrolysis"
 room.level_config_id = 23
 room.class = "ElectrolysisRoom"
 room.name = _S.rooms_short.electrolysis
+room.long_name = _S.rooms_long.electrolysis
 room.tooltip = _S.tooltip.rooms.electrolysis
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { electrolyser = 1, console = 1 }

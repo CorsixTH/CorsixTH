@@ -23,6 +23,7 @@ room.id = "research"
 room.level_config_id = 28
 room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
+room.long_name = _S.rooms_long.research_room
 room.tooltip = _S.tooltip.rooms.research_room
 room.objects_additional = { 
   "extinguisher", 

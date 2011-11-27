@@ -23,6 +23,7 @@ room.id = "decontamination"
 room.level_config_id = 30
 room.class = "DecontaminationRoom"
 room.name = _S.rooms_short.decontamination
+room.long_name = _S.rooms_long.decontamination
 room.tooltip = _S.tooltip.rooms.decontamination
 room.objects_additional = { "extinguisher", "radiator", "plant", "bin" }
 room.objects_needed = { shower = 1, console = 1 }
