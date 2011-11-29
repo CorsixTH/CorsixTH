@@ -35,12 +35,11 @@ function Patient:onClick(ui, button)
   if button == "left" then
     if self.message_callback then
       self:message_callback()
-    elseif math.random(1, 8) == 5 then
-      ui:addWindow(UIPatient(ui, self))
-      self:falling()
     else
       ui:addWindow(UIPatient(ui, self))
     end
+  elseif button == "right" and math.random(1, 8) == 5 then
+    self:falling()
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.

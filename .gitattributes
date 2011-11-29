@@ -86,7 +86,9 @@ CorsixTH/Lua/entities/vip.lua -text
 CorsixTH/Lua/humanoid_actions/check_watch.lua -text
 CorsixTH/Lua/humanoid_actions/falling.lua -text
 CorsixTH/Lua/humanoid_actions/get_up.lua -text
+CorsixTH/Lua/humanoid_actions/on_ground.lua -text
 CorsixTH/Lua/humanoid_actions/pee.lua -text
+CorsixTH/Lua/humanoid_actions/shake_fist.lua -text
 CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text
 CorsixTH/Lua/humanoid_actions/tap_foot.lua -text
 CorsixTH/Lua/humanoid_actions/vomit.lua -text
