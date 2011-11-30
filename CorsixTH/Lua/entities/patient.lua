@@ -35,11 +35,12 @@ function Patient:onClick(ui, button)
   if button == "left" then
     if self.message_callback then
       self:message_callback()
+    elseif math.random(1, 8) == 5 and self.booked_in and not ui:addWindow(UIPatient(ui, self)) then
+      self:falling()
     else
       ui:addWindow(UIPatient(ui, self))
     end
-  elseif button == "right" and math.random(1, 8) == 5 then
-    self:falling()
+  
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
@@ -231,7 +232,7 @@ end
 
 function Patient:canPeeOrPuke(current)
   return ((current.name == "walk" or current.name == "idle" or current.name == "seek_room")
-         and self.booked_in and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
+         and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
 end
   -- animations for when there is an earth quake
   -- for now though it can happen if you right click on a patient

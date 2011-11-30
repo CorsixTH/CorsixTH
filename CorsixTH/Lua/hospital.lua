@@ -586,14 +586,14 @@ function Hospital:checkFacilites()
     if self.patientcount < 50 then
       if numberStanding > math.min(numberSitting / 5) then
         self.seating_warning = self.seating_warning + 1
-      elseif self.patientcount >= 50 then
-        if numberStanding > math.min(numberSitting / 20) then
-          self.seating_warning = self.seating_warning + 1
-          if self.seating_warning >= 10 and not self.bench_msg then
-            self:warningBench()
-            self.seating_warning = 0
-          end
-        end
+      end
+    elseif self.patientcount >= 50 then
+      if numberStanding > math.min(numberSitting / 20) then
+        self.seating_warning = self.seating_warning + 1
+      end
+      if self.seating_warning >= 10 and not self.bench_msg then
+        self:warningBench()
+        self.seating_warning = 0
       end
     elseif self.world.year == 1 and self.world.month > 4
     and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
@@ -602,7 +602,7 @@ function Hospital:checkFacilites()
       if self.world.object_counts.bench > self.patientcount then
         self:praiseBench()
       -- Are there enough benches for the volume of patients in your hospital?
-        elseif self.world.object_counts.bench < self.patientcount then
+      elseif self.world.object_counts.bench < self.patientcount then
         self:warningBench()
       end
     elseif self.world.year > 1 and self.world.day == 12
