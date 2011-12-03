@@ -121,18 +121,24 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 adviser = {
-  room_forbidden_non_reachable_parts = utf8 "Colocar la habitación en este lugar hará que ciertas partes del hospital no sean accesibles.",
+  room_forbidden_non_reachable_parts = utf8 "Si colocas la habitación en este lugar, bloquearás el acceso a ciertas partes del hospital.",
   warnings = {
     no_desk = utf8 "¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
     no_desk_1 = utf8 "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
     no_desk_2 = utf8 "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
     no_desk_3 = utf8 "¡Fabuloso, casi ha pasado un año y no tienes personal de recepción! ¿Cómo quieres que vengan a ti los pacientes? ¡Arréglalo y deja de perder el tiempo!",
     cannot_afford = utf8 "¡No tienes dinero en el banco para contratar a esa persona!" -- I can't see anything like this in the original strings
+    falling_1 utf8 = "¡Eh! Eso no tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacerle daño a alguien!",
+    falling_2 utf8 = "¿Te importaría dejar de perder el tiempo?",
+    falling_3 utf8 = "¡Ay! Eso ha tenido que doler. ¡Llamen a un médico!",
+    falling_4 utf8 = "¡Esto es un hospital, no un parque de atracciones!",
+    falling_5 utf8 = "¡Este no es el lugar para tumbar a personas, que están enfermas!",
+    falling_6 utf8 = "¡Esto no es una bolera, no deberías tratar así a los enfermos!"
   },
   cheats = {
     th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos!",
     crazy_on_cheat = utf8 "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
-    crazy_off_cheat = utf8 "Uff... los médicos han recuperado la cordura.",
+    crazy_off_cheat = utf8 "Uf... los médicos han recuperado la cordura.",
     roujin_on_cheat = utf8"¡Desafío de Roujin activado! Buena suerte...",
     roujin_off_cheat = utf8 "Desafío de Roujin desactivado.",
     hairyitis_cheat = utf8 "¡Truco de peludismo activado!",
