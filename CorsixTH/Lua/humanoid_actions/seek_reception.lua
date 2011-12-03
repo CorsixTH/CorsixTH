@@ -75,10 +75,6 @@ local function action_seek_reception_start(action, humanoid)
     found_desk = true
     return true
   end)
-  if found_desk then
-    humanoid.booked_in = true
-    return
-  end
   
   -- No reception desk found. One will probably be built soon, somewhere in
   -- the hospital, so either walk to the hospital, or walk around the hospital.

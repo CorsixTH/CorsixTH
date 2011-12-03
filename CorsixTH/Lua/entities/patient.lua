@@ -26,7 +26,6 @@ function Patient:Patient(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   self.should_knock_on_doors = true
   self.treatment_history = {}
-  self.booked_in = false
   self.has_fallen = 1
   self.action_string = ""
 end              
@@ -35,8 +34,6 @@ function Patient:onClick(ui, button)
   if button == "left" then
     if self.message_callback then
       self:message_callback()
-    elseif math.random(1, 8) == 5 and self.booked_in and not ui:addWindow(UIPatient(ui, self)) then
-      self:falling()
     else
       ui:addWindow(UIPatient(ui, self))
     end
@@ -235,8 +232,6 @@ function Patient:canPeeOrPuke(current)
          and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
 end
   -- animations for when there is an earth quake
-  -- for now though it can happen if you right click on a patient
-  -- that he or she could fall over
 function Patient:falling()
   local current = self.action_queue[1]
   current.keep_reserved = true
