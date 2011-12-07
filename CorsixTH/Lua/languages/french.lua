@@ -166,6 +166,12 @@ adviser.warnings = {
   bankruptcy_imminent = "Hé ! Vous courez à la faillite. Attention !",
   too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
   many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
+  falling_1 = "Hé ! Ce n'est pas drôle, regardez ou vous cliquez, quelqu'un pourrait être blessé !",
+  falling_2 = "Arrêtez de faire n'importe quoi, vous en pensez quoi ?",
+  falling_3 = "Aïe, ça doit faire mal,  qu'on appelle un médecin !",
+  falling_4 = "C'est un hôpital, pas un parc d'attraction !",
+  falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
+  falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
 }
 adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas mettre cet objet ici."
 adviser.information = {
@@ -558,6 +564,7 @@ menu_options = {
   lock_windows = "  FIGER LES FENETRES  ",
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
   settings = "  PARAMETRES  ",
+  adviser_disabled = "  ASSISTANT  "
 }
 
 menu_options_game_speed = {
