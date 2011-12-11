@@ -225,7 +225,7 @@ end
 -- }
 function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
   if not self.ui.hospital.message_popup then
-    self.world.ui.adviser:say(_S.adviser.information.fax_received)
+    self.world.ui.adviser:say(_A.information.fax_received)
     self.ui.hospital.message_popup = true
   end
   self.message_queue[#self.message_queue + 1] = {

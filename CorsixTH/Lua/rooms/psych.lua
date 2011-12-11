@@ -50,7 +50,7 @@ end
 function PsychRoom:roomFinished()
   if not self.hospital:hasStaffOfCategory("Psychiatrist") then
     self.world.ui.adviser
-    :say(_S.adviser.room_requirements.psychiatry_need_psychiatrist)
+    :say(_A.room_requirements.psychiatry_need_psychiatrist)
   end
   return Room.roomFinished(self)
 end

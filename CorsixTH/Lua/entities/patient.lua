@@ -170,7 +170,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       self:die()
     else
       if hospital.num_cured < 1 then
-        self.world.ui.adviser:say(_S.adviser.information.first_cure)
+        self.world.ui.adviser:say(_A.information.first_cure)
       end
       self.hospital.num_cured = hospital.num_cured + 1
       local casebook = hospital.disease_casebook[self.disease.id]
@@ -205,7 +205,7 @@ end
 
 function Patient:die()
   if self.hospital.num_deaths < 1 then
-    self.world.ui.adviser:say(_S.adviser.information.first_death)
+    self.world.ui.adviser:say(_A.information.first_death)
   end
   self.hospital:humanoidDeath(self)
   if not self.is_debug then
@@ -283,12 +283,12 @@ end
 
 function Patient:fallingAnnounce()
   local msg = {
-  (_S.adviser.warnings.falling_1),
-  (_S.adviser.warnings.falling_2),
-  (_S.adviser.warnings.falling_3),
-  (_S.adviser.warnings.falling_4),
-  (_S.adviser.warnings.falling_5),
-  (_S.adviser.warnings.falling_6),
+  (_A.warnings.falling_1),
+  (_A.warnings.falling_2),
+  (_A.warnings.falling_3),
+  (_A.warnings.falling_4),
+  (_A.warnings.falling_5),
+  (_A.warnings.falling_6),
   }
   if msg then
     self.world.ui.adviser:say(msg[math.random(1, #msg)])
@@ -373,7 +373,7 @@ function Patient:pee()
     self:changeAttribute("happiness", -0.02)  -- not being able to find a loo and doing it in the corridor will make you sad too
     if not self.hospital.did_it_on_floor then
       self.hospital.did_it_on_floor = true
-      self.world.ui.adviser:say(_S.adviser.warnings.people_did_it_on_the_floor)
+      self.world.ui.adviser:say(_A.warnings.people_did_it_on_the_floor)
     end
   else
     return 
@@ -769,7 +769,7 @@ function Patient:setTile(x, y)
         litter:setLitterType(trash, math.random(0, 1))
         if not self.hospital.hospital_littered then
           self.hospital.hospital_littered = true
-          self.world.ui.adviser:say(_S.adviser.staff_advice.need_handyman_litter)
+          self.world.ui.adviser:say(_A.staff_advice.need_handyman_litter)
         end
       end
       self.litter_countdown = nil

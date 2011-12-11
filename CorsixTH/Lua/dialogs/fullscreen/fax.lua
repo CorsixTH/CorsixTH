@@ -151,7 +151,7 @@ function UIFax:choice(choice)
     self.ui.app.world:newObject("helicopter", self.ui.hospital, "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
     self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
-    self.ui.adviser:say(_S.adviser.information.emergency)
+    self.ui.adviser:say(_A.information.emergency)
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
   elseif choice == "accept_vip" then
@@ -195,7 +195,7 @@ function UIFax:validate()
   print("Code typed on fax:", code)
   if code == "24328" then
     -- Original game cheat code
-    self.ui.adviser:say(_S.adviser.cheats.th_cheat)
+    self.ui.adviser:say(_A.cheats.th_cheat)
     self.ui:addWindow(UICheats(self.ui))
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
@@ -204,10 +204,10 @@ function UIFax:validate()
     -- Roujin's challenge cheat
     local hosp = self.ui.hospital
     if not hosp.spawn_rate_cheat then
-      self.ui.adviser:say(_S.adviser.cheats.roujin_on_cheat)
+      self.ui.adviser:say(_A.cheats.roujin_on_cheat)
       hosp.spawn_rate_cheat = true
     else
-      self.ui.adviser:say(_S.adviser.cheats.roujin_off_cheat)
+      self.ui.adviser:say(_A.cheats.roujin_off_cheat)
       hosp.spawn_rate_cheat = nil
     end
   else

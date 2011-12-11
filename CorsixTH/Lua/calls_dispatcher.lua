@@ -112,7 +112,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   if new_call then
     if not object.world:getLocalPlayerHospital():hasStaffOfCategory("Handyman") then
       -- Advise about hiring Handyman
-      message = _S.adviser.warnings.machinery_damaged2
+      message = _A.warnings.machinery_damaged2
     end
   end
   
@@ -123,7 +123,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
       ui:playAnnouncement(sound)
       ui:playSound "machwarn.wav"
     end
-    message = _S.adviser.warnings.machines_falling_apart
+    message = _A.warnings.machines_falling_apart
   end
   if message then
     ui.adviser:say(message)

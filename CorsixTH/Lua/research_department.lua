@@ -201,7 +201,7 @@ function ResearchDepartment:nextResearch(category)
     self.research_policy.global = self.research_policy.global - cat.frac
     cat.frac = 0
     if self.hospital == self.world.ui.hospital then
-      self.world.ui.adviser:say(_S.adviser.research.drug_fully_researched
+      self.world.ui.adviser:say(_A.research.drug_fully_researched
       :format(_S.research.categories[category]))
     end
     -- Notify any research window
@@ -364,7 +364,7 @@ function ResearchDepartment:improveDrug(drug)
     research_info.effect_imp = research_info.effect_imp + 1
   end
   if self.hospital == self.world.ui.hospital then
-    self.world.ui.adviser:say(_S.adviser.research.drug_improved
+    self.world.ui.adviser:say(_A.research.drug_improved
     :format(drug.disease.name))
   end
 end
@@ -413,7 +413,7 @@ function ResearchDepartment:improveMachine(machine)
   end
   -- Tell the player that something has been improved
   if self.hospital == self.world.ui.hospital then
-    self.world.ui.adviser:say(_S.adviser.research.machine_improved
+    self.world.ui.adviser:say(_A.research.machine_improved
     :format(machine.name))
   end
 end
@@ -442,10 +442,10 @@ function ResearchDepartment:discoverObject(object, automatic)
       self.hospital.undiscovered_rooms[room] = nil
       if self.hospital == self.world.ui.hospital then
         if automatic then
-          self.world.ui.adviser:say(_S.adviser.research.new_available
+          self.world.ui.adviser:say(_A.research.new_available
           :format(object.name))
         else
-          self.world.ui.adviser:say(_S.adviser.research.new_machine_researched
+          self.world.ui.adviser:say(_A.research.new_machine_researched
           :format(object.name))
         end
       end

@@ -129,7 +129,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       self:close()
       return true
     else
-      self.ui.adviser:say(_S.adviser.placement_info.staff_cannot_place)
+      self.ui.adviser:say(_A.placement_info.staff_cannot_place)
     end
   end
 end

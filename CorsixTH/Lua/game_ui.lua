@@ -641,98 +641,98 @@ local function make_tutorial_phases()
 tutorial_phases = {
   {
     -- 1) build reception
-    { text = _S.adviser.tutorial.build_reception,      -- 1
+    { text = _A.tutorial.build_reception,              -- 1
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.order_one_reception,  -- 2
+    { text = _A.tutorial.order_one_reception,          -- 2
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(3) end, },
-    { text = _S.adviser.tutorial.accept_purchase,      -- 3
+    { text = _A.tutorial.accept_purchase,              -- 3
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(2) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(2) end, },
-    _S.adviser.tutorial.rotate_and_place_reception,    -- 4
-    _S.adviser.tutorial.reception_invalid_position,    -- 5
+    _A.tutorial.rotate_and_place_reception,            -- 4
+    _A.tutorial.reception_invalid_position,            -- 5
                                                        -- 6: object other than reception selected. currently no text for this phase.
   },
   
   {
     -- 2) hire receptionist
-    { text = _S.adviser.tutorial.hire_receptionist,             -- 1
+    { text = _A.tutorial.hire_receptionist,            -- 1
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.select_receptionists,          -- 2
+    { text = _A.tutorial.select_receptionists,         -- 2
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.next_receptionist,             -- 3
+    { text = _A.tutorial.next_receptionist,            -- 3
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(8) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.prev_receptionist,             -- 4
+    { text = _A.tutorial.prev_receptionist,            -- 4
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.choose_receptionist,           -- 5
+    { text = _A.tutorial.choose_receptionist,          -- 5
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(6) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    _S.adviser.tutorial.place_receptionist,            -- 6
-    _S.adviser.tutorial.receptionist_invalid_position, -- 7
+    _A.tutorial.place_receptionist,                    -- 6
+    _A.tutorial.receptionist_invalid_position,         -- 7
   },
   
   {
     -- 3) build GP's office
     -- 3.1) room window
-    { text = _S.adviser.tutorial.build_gps_office,              -- 1
+    { text = _A.tutorial.build_gps_office,             -- 1
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(2) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.select_diagnosis_rooms,        -- 2
+    { text = _A.tutorial.select_diagnosis_rooms,       -- 2
       begin_callback = function() TheApp.ui:getWindow(UIBuildRoom):startButtonBlinking(1) end,
       end_callback = function() TheApp.ui:getWindow(UIBuildRoom):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.click_gps_office,              -- 3
+    { text = _A.tutorial.click_gps_office,             -- 3
       begin_callback = function() TheApp.ui:getWindow(UIBuildRoom):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIBuildRoom):stopButtonBlinking() end, },
     
     -- 3.2) blueprint
     -- [11][58] was maybe planned to be used in this place, but is not needed.
-    _S.adviser.tutorial.click_and_drag_to_build,       -- 4
-    _S.adviser.tutorial.room_in_invalid_position,      -- 5
-    _S.adviser.tutorial.room_too_small,                -- 6
-    _S.adviser.tutorial.room_too_small_and_invalid,    -- 7
-    { text = _S.adviser.tutorial.room_big_enough,               -- 8
+    _A.tutorial.click_and_drag_to_build,               -- 4
+    _A.tutorial.room_in_invalid_position,              -- 5
+    _A.tutorial.room_too_small,                        -- 6
+    _A.tutorial.room_too_small_and_invalid,            -- 7
+    { text = _A.tutorial.room_big_enough,              -- 8
       begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
     
     -- 3.3) door and windows
-    _S.adviser.tutorial.place_door,                    -- 9
-    _S.adviser.tutorial.door_in_invalid_position,      -- 10
-    { text = _S.adviser.tutorial.place_windows,                 -- 11
+    _A.tutorial.place_door,                            -- 9
+    _A.tutorial.door_in_invalid_position,              -- 10
+    { text = _A.tutorial.place_windows,                -- 11
       begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.window_in_invalid_position,    -- 12
+    { text = _A.tutorial.window_in_invalid_position,   -- 12
       begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
     
     -- 3.4) objects
-    _S.adviser.tutorial.place_objects,                 -- 13
-    _S.adviser.tutorial.object_in_invalid_position,    -- 14
-    { text = _S.adviser.tutorial.confirm_room,                  -- 15
+    _A.tutorial.place_objects,                         -- 13
+    _A.tutorial.object_in_invalid_position,            -- 14
+    { text = _A.tutorial.confirm_room,                 -- 15
       begin_callback = function() TheApp.ui:getWindow(UIEditRoom):startButtonBlinking(4) end,
       end_callback = function() TheApp.ui:getWindow(UIEditRoom):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.information_window,            -- 16
+    { text = _A.tutorial.information_window,           -- 16
       begin_callback = function() TheApp.ui:getWindow(UIInformation):startButtonBlinking(1) end,
       end_callback = function() TheApp.ui:getWindow(UIInformation):stopButtonBlinking() end, },
   },
   
   {
     -- 4) hire doctor
-    { text = _S.adviser.tutorial.hire_doctor,                   -- 1
+    { text = _A.tutorial.hire_doctor,                  -- 1
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(5) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.select_doctors,                -- 2
+    { text = _A.tutorial.select_doctors,               -- 2
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(1) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    { text = _S.adviser.tutorial.choose_doctor,                 -- 3
+    { text = _A.tutorial.choose_doctor,                -- 3
       begin_callback = function() TheApp.ui:getWindow(UIHireStaff):startButtonBlinking(6) end,
       end_callback = function() TheApp.ui:getWindow(UIHireStaff):stopButtonBlinking() end, },
-    _S.adviser.tutorial.place_doctor,                  -- 4
-    _S.adviser.tutorial.doctor_in_invalid_position,    -- 5
+    _A.tutorial.place_doctor,                          -- 4
+    _A.tutorial.doctor_in_invalid_position,            -- 5
   },
   {
     -- 5) end of tutorial

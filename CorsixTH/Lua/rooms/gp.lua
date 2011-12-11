@@ -174,7 +174,7 @@ end
 function GPRoom:roomFinished()
   if not self.hospital:hasStaffOfCategory("Doctor")
   and not self.world.ui.start_tutorial then
-    self.world.ui.adviser:say(_S.adviser.room_requirements.gps_office_need_doctor)
+    self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
   end
   return Room.roomFinished(self)
 end

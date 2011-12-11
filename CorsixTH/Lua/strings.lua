@@ -298,6 +298,68 @@ function Strings:_loadPrivate(language, env, ...)
   end
 end
 
+function Strings:setupAdviserMessage(messages)
+  local prioTable
+  prioTable = {
+    _priority = 5, -- Default priority
+    --tutorial,
+    epidemic = { _priority = 6 },
+    --staff_advice
+    --earthquake
+    --multiplayer
+    --surgery_requirements
+    --vomit_wave
+    --level_progress
+    --staff_place_advice
+    --room_forbidden_non_reachable_parts
+    --research
+    --boiler_issue
+    --room_requirements
+    --goals
+    warnings = { _priority = 10 },
+    --placement_info
+    praise = { _priority = 1 },
+    --information
+    --build_advice
+    --cheats
+  }
+  local formatFunc
+  formatFunc = function(self, arg)
+    -- After 'format', it is not useful to have indexing magic anymore.
+    return { text = self.text:format(arg), priority = self.priority }
+  end
+  local indexFunc
+  indexFunc = function(self, field)
+    -- Since prioTable is a partial table, self.table may disappear, prevent infinite recursion.
+    if field == "table" then
+      return nil
+    end
+    local val = {}
+    val.text = self.text[field]
+    val.format = formatFunc
+    val.table = self.table
+    val.priority = self.priority
+    if val.table ~= nil then
+      val.table = val.table[field]
+      if val.table ~= nil and val.table._priority ~= nil then
+        val.priority = val.table._priority
+      end
+    end
+    setmetatable(val, {__index = indexFunc})
+    return val
+  end
+  -- Initial value
+  local adviserMessage = {
+    text = messages,
+    table = prioTable,
+    priority = prioTable._priority,
+    format = formatFunc
+  }
+  setmetatable(adviserMessage, {__index = indexFunc})
+  return adviserMessage
+end
+
+
 -- Primitive system to map UTF-8 characters onto Code Page 437.
 -- Provided so that language scripts can encode text in a modern and well
 -- supported manner, and have the text automatically transcoded into the

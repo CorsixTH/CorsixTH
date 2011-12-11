@@ -1492,7 +1492,7 @@ function World:newObject(id, ...)
     entity = Machine(self, object_type, ...)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if not self.hospitals[1]:hasStaffOfCategory("Handyman") then
-      self.ui.adviser:say(_S.adviser.staff_advice.need_handyman_machines)
+      self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
     entity = Object(self, object_type, ...)
@@ -1528,11 +1528,11 @@ function World:objectPlaced(entity, id)
   if id == "reception_desk" and not self.ui.start_tutorial
     and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
     -- TODO: Will not work correctly for multiplayer
-    self.ui.adviser:say(_S.adviser.room_requirements.reception_need_receptionist)
+    self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
   end
   -- If it is a plant it might be advisable to hire a handyman
   if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
-    self.ui.adviser:say(_S.adviser.staff_advice.need_handyman_plants)
+    self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
   end
 end
 

@@ -201,7 +201,7 @@ function Plant:callForWatering()
     local new_call = self.world.dispatcher:callForWatering(self)
     if new_call and self.current_state > 1 then
       if not self.plant_announced then
-        self.world.ui.adviser:say(_S.adviser.warnings.plants_thirsty)
+        self.world.ui.adviser:say(_A.warnings.plants_thirsty)
         self.plant_announced = true
       end
     end

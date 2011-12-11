@@ -23,8 +23,8 @@ local rnc = require "rnc"
 local lfs = require "lfs"
 local TH = require "TH"
 local SDL = require "sdl"
-local assert, io, type, dofile, loadfile, pcall, tonumber, print
-    = assert, io, type, dofile, loadfile, pcall, tonumber, print
+local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
+    = assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -268,6 +268,7 @@ end
 function App:initLanguage()
   local strings, speech_file = self.strings:load(self.config.language)
   strict_declare_global "_S"
+  strict_declare_global "_A"
   local old_S = _S
   _S = strings
   -- For immediate compatibility:
@@ -287,6 +288,7 @@ function App:initLanguage()
   if old_S then
     TH.stringProxy.reload(old_S, _S)
   end
+  _A = self.strings:setupAdviserMessage(_S.adviser)
   self.gfx.language_font = self.strings:getFont(self.config.language)
   self.gfx:onChangeLanguage()
   if self.ui then

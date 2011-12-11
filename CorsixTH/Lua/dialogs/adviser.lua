@@ -72,9 +72,15 @@ function UIAdviser:talk()
   self.frame = 1
   self.number_frames = 45
   -- Fetch the next message from the queue.
-  local speech = self.queued_messages[1].speech
-  self.stay_up = self.queued_messages[1].stay_up
-  table.remove(self.queued_messages, 1)
+  local best = 1
+  for i = 1, #self.queued_messages do
+    if best ~= i and self.queued_messages[best].priority < self.queued_messages[i].priority then
+      best = i
+    end
+  end
+  local speech = self.queued_messages[best].speech
+  self.stay_up = self.queued_messages[best].stay_up
+  table.remove(self.queued_messages, best)
   self.speech = speech
   -- Calculate number of lines needed for the text. 
   -- Each "/" at end of string indicates a blank line
@@ -114,17 +120,19 @@ function UIAdviser:hide()
 end
 
 -- Makes the adviser say something
---!param speech The text string he should say.
+--!param speech The table containing the text he should say and the priority.
 --!param talk_until_next_announce Whether he should stay up
 -- until the next say() call is made. Useful for the tutorial.
 --!param override_current Cancels previous messages (if any) immediately 
 -- and shows this new one instead.
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
+  assert(type(speech) == "table")
   if not self.ui.app.config.adviser_disabled then
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
-      speech = speech,
+      speech = speech.text,
       stay_up = talk_until_next_announce,
+      priority = speech.priority
     }
     if self.phase == 0 then
       -- The adviser is not active at all at the moment.
@@ -137,7 +145,7 @@ function UIAdviser:say(speech, talk_until_next_announce, override_current)
       -- to go up again.
       self.up_again = true
     elseif override_current then
-     -- He was saying/was about to say something else. Discard those messages.
+      -- He was saying/was about to say something else. Discard those messages.
       while #self.queued_messages > 1 do
         table.remove(self.queued_messages, 2)
       end

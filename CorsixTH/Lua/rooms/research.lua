@@ -128,12 +128,12 @@ function ResearchRoom:roomFinished()
   -- Is this the first research department built?
   if not self.hospital.research_dep_built then
     self.hospital.research_dep_built = true
-    self.world.ui.adviser:say(_S.adviser.information.initial_general_advice
+    self.world.ui.adviser:say(_A.information.initial_general_advice
     .research_now_available)
   end
   -- Also check if it would be good to hire a researcher.
   if not self.hospital:hasStaffOfCategory("Researcher") then
-    self.world.ui.adviser:say(_S.adviser.room_requirements
+    self.world.ui.adviser:say(_A.room_requirements
     .research_room_need_researcher)
   end
   return Room.roomFinished(self)
@@ -173,7 +173,7 @@ function ResearchRoom:commandEnteringPatient(patient)
         -- Can only be discovered once.
         hosp.autopsy_discovered = true
         hosp:changeReputation("autopsy_discovered")
-        hosp.world.ui.adviser:say(_S.adviser.research.autopsy_discovered_rep_loss)
+        hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
       else
         -- The risk increases after each use.
         -- TODO: Should it ever become 100%?

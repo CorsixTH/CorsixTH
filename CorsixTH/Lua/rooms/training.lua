@@ -65,7 +65,7 @@ function TrainingRoom:roomFinished()
 
   -- Also tell the player if he/she doesn't have a consultant yet.
   if not self.hospital:hasStaffOfCategory("Consultant") then
-    local text = _S.adviser.room_requirements.training_room_need_consultant
+    local text = _A.room_requirements.training_room_need_consultant
     self.world.ui.adviser:say(text)
   end
   Room.roomFinished(self)
@@ -180,7 +180,8 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       end
     end
   elseif humanoid.humanoid_class ~= "Handyman" then
-    self.world.ui.adviser:say(_S.adviser.staff_place_advice.only_doctors_in_room:format(_S.rooms_long.training_room))
+    self.world.ui.adviser:say(_A.staff_place_advice.only_doctors_in_room
+    :format(_S.rooms_long.training_room))
     humanoid:setNextAction(self:createLeaveAction())
     humanoid:queueAction{name = "meander"}
     return

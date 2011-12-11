@@ -48,7 +48,7 @@ end
 
 function PharmacyRoom:roomFinished()
   if not self.hospital:hasStaffOfCategory("Nurse") then
-    self.world.ui.adviser:say(_S.adviser.room_requirements.pharmacy_need_nurse)
+    self.world.ui.adviser:say(_A.room_requirements.pharmacy_need_nurse)
   end
   return Room.roomFinished(self)
 end

@@ -350,7 +350,7 @@ totd_window = {
     utf8 "Ethvert sykehus trenger en Resepsjon og en Allmennpraksis for å fungere. Etter det avhenger det av hvilke pasienter som besöker sykehuset. Apotek er som regel en god start.",
     utf8 "Maskiner som f.eks. Pumpen i Pumperommet trenger vedlikehold. Ansett en Vaktmester eller to for å vedlikeholde maskinene, ellers risikerer du å skade ansatte og pasienter.",
     utf8 "Etter en stund blir personalet ditt trött. Sörg for å bygge et Personalrom så de kan hvile seg.",
-    utf8 "Plasser ovner nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
+    utf8 "Plasser radiatorer nok til å holde pasientene og personalet varme, ellers blir de fort misfornöyd. Bruk kartet for å lokalisere områder på sykehuset ditt som trenger mer varme.",
     utf8 "En Lege sine evner påvirker hvor langt tid han bruker på å stille diagnose, samt kvaliteten på diagnosen. Plasser en flink Lege i Allmennpraksisen, da trenger du færre diagnoserom.",
     utf8 "Turnusleger og Doktorer kan utvikle sine evner ved å bli undervist av en Konsulent i Klasserommet. Om Konsulenten har spesielle kvalifikasjoner (Kirurgi, Psykiatri eller Forskning) vil han også lære sine elever dette.",
     utf8 "Har du prövd å slå inn det europeiske nödnummeret (112) på faksen? Sörg for at lyden er på!",
@@ -549,7 +549,7 @@ object = {
   atom_analyser         = "Atomanalyser",
   blood_machine         = "Blodmaskin",
   fire_extinguisher     = "Brannslukningsapp.",
-  radiator              = "Ovn",
+  radiator              = "Radiator",
   plant                 = "Plante",
   electrolyser          = "Elektrolysator",
   jelly_moulder         = utf8 "Gelétönne",
@@ -1571,7 +1571,7 @@ tooltip = {
     plants             = "Vis/Skjul planter",
     fire_extinguishers = "Vis/Skjul brannslukningsapparat",
     objects            = "Vis/Skjul gjenstander",
-    radiators          = "Vis/Skjul ovner",
+    radiators          = "Vis/Skjul radiatorer",
     heat_level         = "Temperatur",
     heat_inc           = "Skru opp temperaturen",
     heat_dec           = "Skru ned temperaturen",
@@ -1723,7 +1723,7 @@ tooltip = {
     atom_analyser        = utf8 "Atomanalyser: plassert i Forskningsavdelingen, gjör denne gjenstanden hele forskningsprosessen raskere.",
     blood_machine        = S[40][43], -- no description
     fire_extinguisher    = "Brannslukningsapparat: minimerer faren for feil i dine maskiner.",
-    radiator             = utf8 "Ovn: sörger for at sykehuset ditt ikke blir kaldt.",
+    radiator             = utf8 "Radiator: sörger for at sykehuset ditt ikke blir kaldt.",
     plant                = utf8 "Plante: holder pasientenes humör oppe og renser luften.",
     electrolyser         = S[40][47], -- no description
     jelly_moulder        = S[40][48], -- no description
@@ -1896,7 +1896,7 @@ adviser = {
   -- Boiler issue
   boiler_issue = {
     minimum_heat   = utf8 "Der er du! Sentralfyren i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
-    maximum_heat   = utf8 "Sentralfyren i kjelleren er löpt löpsk. Ovnene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
+    maximum_heat   = utf8 "Sentralfyren i kjelleren er löpt löpsk. Radiatorene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
     resolved     = utf8 "Gode nyheter. Sentralvarmen fungerer slik som den skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
   },
   
@@ -1949,7 +1949,7 @@ adviser = {
     no_patients_last_month     = utf8 "Ingen nye pasienter besökte sykehuset ditt forrige måned. Sjokkerende!",
     queues_too_long       = utf8 "Köene dine er for lange.",
     patient_stuck         = utf8 "Noen har gått seg vill. Du må organisere sykehuset ditt bedre.",
-    patients_too_hot       = utf8 "Pasientene er for varme. Du må enten fjerne noen ovner, skru ned temperaturen, eller plassere ut flere Brusautomater.",
+    patients_too_hot       = utf8 "Pasientene er for varme. Du må enten fjerne noen radiatorer, skru ned temperaturen, eller plassere ut flere Brusautomater.",
     doctors_tired         = utf8 "Dine Leger er veldig trötte. Gi dem hvile snarest.",
     need_toilets         = utf8 "Pasientene trenger toaletter. Bygg dem på lett tilgjengelige steder.",
     machines_falling_apart     = utf8 "Maskinene dine faller sammen. Få Vaktmestre til å fikse de snarest!",
@@ -1963,7 +1963,7 @@ adviser = {
     too_many_plants       = utf8 "Du har for mange planter. Dette er jo rene jungelen.",
     many_killed         = utf8 "Du har nå drept %d mennesker. Poenget er liksom å gjöre de friske, vet du.",
     need_staffroom         = utf8 "Bygg et Personalrom slik at dine ansatte kan slappe av.",
-    staff_too_hot         = utf8 "Dine ansatte holder på å smelte bort. Skru ned temperaturen eller fjern noen ovner fra rommene deres.",
+    staff_too_hot         = utf8 "Dine ansatte holder på å smelte bort. Skru ned temperaturen eller fjern noen radiatorer fra rommene deres.",
     patients_unhappy       = utf8 "Pasientene misliker sykehuset ditt. Du burde gjöre noe for å forbedre miljöet på sykehuset.",
     people_did_it_on_the_floor       = utf8 "Noen av pasientene dine klarte ikke å holde seg. Oppryddingen vil bli en stor jobb for noen.", -- Bruke ordet opprydning eller vasking?
     patients_very_thirsty       = utf8 "Pasientene dine er virkelig törste. Om du ikke setter opp noen Brusautomater snart, vil du snart se at alle går hjem for å hente cola.",
@@ -1987,7 +1987,7 @@ adviser = {
     many_epidemics       = utf8 "Det ser ut som du har mer enn en epidemi på samme tid. Dette kan bli en kjempekatastrofe, så du må handle raskt.",
     place_plants_to_keep_people       = utf8 "Folk stikker av. Å plassere noen planter kan kanskje overtale dem til å bli.",
     patients_thirsty2       = utf8 "Folk klager over at de er törste. Du burde plassere noen fler Brusmaskiner eller flytte de eksisterende nærmere dem.",
-    people_freezing       = utf8 "Utrolig, i denne alderen av sentralfyring så klager noen av pasientene din over at det er iskaldt. Sett ut noen radiatorer for å varme dem opp, og skru opp temperaturen.",
+    people_freezing       = utf8 "Utrolig, med nåtidens sentralfyring, så klager noen av pasientene dine over at det er iskaldt. Sett ut noen radiatorer for å varme dem opp, og skru opp temperaturen.",
     patients_very_cold       = utf8 "Pasientene er veldig kalde. Pröve å skru opp temperaturen eller å plassere flere radiatorer i sykehuset.",
     build_toilets       = utf8 "Bygg et Toalett med en gang, ellers vil du se noe virkelig ubehagelig. Og forestill deg hva sykehuset ditt vil lukte da.",
     place_plants2       = utf8 "Folk går hjem. Litt flere planter ville kanskje holdt dem her lenger.",
@@ -2076,7 +2076,7 @@ adviser = {
       first_emergency = utf8 "Akutte pasienter har et blinkende blått lys over hodet. Behandle dem i tide, ellers dör de.",
       first_epidemic = utf8 "Du har en epidemi på sykehuset ditt! Avgjör om du vil rydde opp, eller legge deg paddeflat.",
       taking_your_staff = utf8 "Noen pröver å stjele personalet ditt. Du må kjempe for å beholde de.",
-      place_radiators = utf8 "Pasientene fryser - du kan plassere flere ovner ved å gå inn på oversikten med gjenstander.",
+      place_radiators = utf8 "Pasientene fryser - du kan plassere flere radiatorer ved å gå inn på oversikten med gjenstander.",
       epidemic_spreading = utf8 "Det er smittefare på sykehuset. Kurer infiserte pasienter för de forlater sykehuset.",
       research_symbol = "Forskere er leger med symbolet: }",
       machine_needs_repair = utf8 "Du har utstyr som trenger reparasjon. Finn utstyret - det ryker av det - og klikk på den. Klikk deretter på Vaktmestersymbolet.",
@@ -2131,7 +2131,7 @@ progress_report = {
   header = "Progresjonsrapport",
   very_unhappy = utf8 "Folket ditt er i svært dårlig humör. ",
   more_drinks_machines = "Bygg flere Brusautomater. ",
-  too_cold = utf8 "Det er alt for kaldt. Sett ut noen ovner. ",
+  too_cold = utf8 "Det er alt for kaldt. Sett ut noen radiatorer. ",
   too_hot = utf8 "Du bör regulere sentralvarmen. Det er alt for varmt. ",
   percentage_pop = utf8 "% befolkning",
   win_criteria = utf8 "KRITERIER FOR Å VINNE",
@@ -2458,7 +2458,7 @@ diseases = {
     name     = "Tredjegrads koteletter", 
     cause     = utf8 "Årsak - Lengter tilbake til 70-tallet.", 
     symptoms   = utf8 "Symptomer - Stort hår, tettsittende klær, langt skinnskjegg og glitter.", 
-    cure     = utf8 "Behandling - Psykiatrisk personell må, ved hjelp av nåtidens teknikker, overbevise pasienten om at parykk er noe tull.",
+    cure     = utf8 "Behandling - Psykiatrisk personell må, ved hjelp av nymoderne teknikker, overbevise pasienten om at parykk er noe tull.",
   },
   fake_blood             = { 
     name     = "Teaterblod", 

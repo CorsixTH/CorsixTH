@@ -191,10 +191,10 @@ end
 -- Seasoned players will know these things, but it does not arm things to be reminded if there is no staff room or toilet!
 function Hospital:noStaffroom_msg()
   local staffroom_msg = {
-    (_S.adviser.warnings.build_staffroom),
-    (_S.adviser.warnings.need_staffroom),
-    (_S.adviser.warnings.staff_overworked),
-    (_S.adviser.warnings.staff_tired),
+    (_A.warnings.build_staffroom),
+    (_A.warnings.need_staffroom),
+    (_A.warnings.staff_overworked),
+    (_A.warnings.staff_tired),
   }
   if staffroom_msg then
     self.world.ui.adviser:say(staffroom_msg[math.random(1, #staffroom_msg)])
@@ -204,9 +204,9 @@ end
 
 function Hospital:noToilet_msg()
   local toilet_msg = {
-    (_S.adviser.warnings.need_toilets),
-    (_S.adviser.warnings.build_toilets),
-    (_S.adviser.warnings.build_toilet_now),
+    (_A.warnings.need_toilets),
+    (_A.warnings.build_toilets),
+    (_A.warnings.build_toilet_now),
   }
   if toilet_msg then
     self.world.ui.adviser:say(toilet_msg[math.random(1, #toilet_msg)])
@@ -217,9 +217,9 @@ end
 -- Give praise where it is due
 function Hospital:praiseBench()
   local bench_msg = {
-    (_S.adviser.praise.many_benches),
-    (_S.adviser.praise.plenty_of_benches),
-    (_S.adviser.praise.few_have_to_stand),
+    (_A.praise.many_benches),
+    (_A.praise.plenty_of_benches),
+    (_A.praise.few_have_to_stand),
   }
   if bench_msg then
     self.world.ui.adviser:say(bench_msg[math.random(1, #bench_msg)])
@@ -230,8 +230,8 @@ end
 -- Warn if the hospital is lacking some basics
 function Hospital:warningBench()
   local bench_msg = {
-    (_S.adviser.warnings.more_benches),
-    (_S.adviser.warnings.people_have_to_stand),
+    (_A.warnings.more_benches),
+    (_A.warnings.people_have_to_stand),
   }
   if bench_msg then
     self.world.ui.adviser:say(bench_msg[math.random(1, #bench_msg)])
@@ -242,9 +242,9 @@ end
 -- Warn when it is too hot
 function Hospital:warningTooHot()
   local hot_msg = {
-    (_S.adviser.information.initial_general_advice.decrease_heating),
-    (_S.adviser.warnings.patients_too_hot),
-    (_S.adviser.warnings.patients_getting_hot),
+    (_A.information.initial_general_advice.decrease_heating),
+    (_A.warnings.patients_too_hot),
+    (_A.warnings.patients_getting_hot),
   }
   if hot_msg then
     self.world.ui.adviser:say(hot_msg[math.random(1, #hot_msg)])
@@ -255,9 +255,9 @@ end
 -- Warn when it is too cold
 function Hospital:warningTooCold()
   local cold_msg = {
-    (_S.adviser.information.initial_general_advice.increase_heating),
-    (_S.adviser.warnings.patients_very_cold),
-    (_S.adviser.warnings.people_freezing),
+    (_A.information.initial_general_advice.increase_heating),
+    (_A.warnings.patients_very_cold),
+    (_A.warnings.people_freezing),
   }
   if cold_msg then
     self.world.ui.adviser:say(cold_msg[math.random(1, #cold_msg)])
@@ -267,8 +267,8 @@ end
 
 function Hospital:warningThirst()
   local thirst_msg = {
-    (_S.adviser.warnings.patients_thirsty),
-    (_S.adviser.warnings.patients_thirsty2),
+    (_A.warnings.patients_thirsty),
+    (_A.warnings.patients_thirsty2),
   }
   if thirst_msg then
     self.world.ui.adviser:say(thirst_msg[math.random(1, #thirst_msg)])
@@ -280,15 +280,15 @@ end
 function Hospital:cashLow()
   local hosp = self.world.hospitals[1]
   local cashlowmessage = {
-    (_S.adviser.warnings.money_low),
-    (_S.adviser.warnings.money_very_low_take_loan),
-    (_S.adviser.warnings.cash_low_consider_loan),
+    (_A.warnings.money_low),
+    (_A.warnings.money_very_low_take_loan),
+    (_A.warnings.cash_low_consider_loan),
   }
   if hosp.balance < 2000 and hosp.balance >= -500 then
     hosp.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
   elseif hosp.balance < -2000 and hosp.world.month > 8 then
     -- ideally this should be linked to the lose criteria for balance
-    hosp.world.ui.adviser:say(_S.adviser.warnings.bankruptcy_imminent)
+    hosp.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
   end
 end
 
@@ -616,7 +616,7 @@ function Hospital:checkFacilites()
     -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
     -- If there are no radiators remind the player from May onwards
     if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
-      self.world.ui.adviser:say(_S.adviser.information.initial_general_advice.place_radiators)
+      self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
     -- Now to check how warm or cold patients and staff are.  So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
@@ -645,30 +645,30 @@ function Hospital:checkFacilites()
       end
       if self.world.year == 1 and self.world.month > 4 and self.world.day == 20
       and warmth / no < 0.22 and not self.warmth_msg then
-        self.world.ui.adviser:say(_S.adviser.warnings.staff_very_cold)
+        self.world.ui.adviser:say(_A.warnings.staff_very_cold)
       elseif self.world.month > 4 and self.world.day == 20
       and warmth / no >= 0.36 and not self.warmth_msg then
-        self.world.ui.adviser:say  (_S.adviser.warnings.staff_too_hot)
+        self.world.ui.adviser:say(_A.warnings.staff_too_hot)
       elseif self.world.year > 1 and self.world.day == 20
       and warmth / no < 0.22 and not self.warmth_msg then
-        self.world.ui.adviser:say(_S.adviser.warnings.staff_very_cold)
+        self.world.ui.adviser:say(_A.warnings.staff_very_cold)
       elseif self.world.month > 4 and self.world.day == 20
       and warmth / no >= 0.36 and not self.warmth_msg then
-        self.world.ui.adviser:say  (_S.adviser.warnings.staff_too_hot)
+        self.world.ui.adviser:say(_A.warnings.staff_too_hot)
       end
     end
     -- Are the patients in need of a drink
     local thirst = self:getAveragePatientAttribute("thirst")
     if self.world.year == 1 and self.world.month > 4 and self.world.day == 24
     and thirst > 0.8 and not self.thirst_msg then
-      self.world.ui.adviser:say(_S.adviser.warnings.patients_very_thirsty)
+      self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
     elseif self.world.year == 1 and self.world.month > 4 and self.world.day == 24
     and thirst > 0.6 and not self.thirst_msg then
       self:warningThirst()
     end
     if self.world.year > 1 and self.world.day == 24
     and thirst > 0.9 and not self.thirst_msg then
-      self.world.ui.adviser:say(_S.adviser.warnings.patients_very_thirsty)
+      self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
     elseif self.world.year > 1 and self.world.day == 24
     and thirst > 0.6 and not self.thirst_msg then
       self:warningThirst()
@@ -765,10 +765,10 @@ function Hospital:boilerBreakdown()
   -- Only show the message when relevant to the local player's hospital.
   if self:isPlayerHospital() then
     if self.radiator_heat == 0 then
-      self.world.ui.adviser:say(_S.adviser.boiler_issue.minimum_heat)
+      self.world.ui.adviser:say(_A.boiler_issue.minimum_heat)
       self:coldWarning()
     else
-      self.world.ui.adviser:say(_S.adviser.boiler_issue.maximum_heat)
+      self.world.ui.adviser:say(_A.boiler_issue.maximum_heat)
       self:hotWarning()
     end
   end
@@ -779,7 +779,7 @@ function Hospital:boilerFixed()
   self.radiator_heat = self.curr_setting
   self.heating_broke = false
   if self:isPlayerHospital() then
-    self.world.ui.adviser:say(_S.adviser.boiler_issue.resolved)
+    self.world.ui.adviser:say(_A.boiler_issue.resolved)
   end
 end
 
@@ -879,7 +879,7 @@ function Hospital:onEndMonth()
       self:cashLow()
     elseif self.balance > 6000 
     and self.loan > 0 and not self.cash_ms then
-      self.world.ui.adviser:say(_S.adviser.warnings.pay_back_loan)
+      self.world.ui.adviser:say(_A.warnings.pay_back_loan)
     end
     self.cash_msg = true
   end
@@ -948,13 +948,13 @@ function Hospital:onEndMonth()
   -- make players aware of the need for a receptionist and desk.
   if self:isPlayerHospital() and not self:hasStaffedDesk() then
     if self.world.month == 3 and self.world.year == 1 then
-      self.world.ui.adviser:say(_S.adviser.warnings.no_desk, true)
+      self.world.ui.adviser:say(_A.warnings.no_desk, true)
     elseif self.world.month == 8 and self.world.year == 1 then
-      self.world.ui.adviser:say(_S.adviser.warnings.no_desk_1, true)
+      self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
     elseif self.world.month == 11 and self.world.year == 1 and self.visitors == 0 then
-      self.world.ui.adviser:say(_S.adviser.warnings.no_desk_2, true)
+      self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
     elseif self.world.month == 11 and self.world.year == 1 and self.visitors ~= 0 then
-      self.world.ui.adviser:say(_S.adviser.warnings.no_desk_3, true)
+      self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
     end
   end
 end

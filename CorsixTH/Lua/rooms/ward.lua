@@ -60,7 +60,7 @@ function WardRoom:roomFinished()
   self.maximum_patients = number
   if not self.hospital:hasStaffOfCategory("Nurse") then
     self.world.ui.adviser
-    :say(_S.adviser.room_requirements.ward_need_nurse)
+    :say(_A.room_requirements.ward_need_nurse)
   end
   Room.roomFinished(self)
 end

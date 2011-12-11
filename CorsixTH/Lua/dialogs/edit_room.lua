@@ -801,7 +801,7 @@ function UIEditRoom:enterDoorPhase()
     self.phase = "walls"
     self:returnToWallPhase(true)
     self.ui:playSound("wrong2.wav")
-    self.ui.adviser:say(_S.adviser.room_forbidden_non_reachable_parts)
+    self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
     return
   end
   
