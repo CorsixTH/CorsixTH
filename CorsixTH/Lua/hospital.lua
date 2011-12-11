@@ -737,7 +737,22 @@ function Hospital:isInHospital(x, y)
   -- TODO: Fix to work when there are multiple hospitals.
   return self.world.map.th:getCellFlags(x, y).hospital
 end
-
+function Hospital:coldWarning()
+  local announcements = {
+    "sorry002.wav", "sorry004.wav", 
+  }
+  if announcements and self:isPlayerHospital() then
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+  end
+end
+function Hospital:hotWarning()
+  local announcements = {
+    "sorry003.wav", "sorry004.wav", 
+  }
+  if announcements and self:isPlayerHospital() then
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+  end
+end
 -- Called when the hospitals's boiler has broken down.
 -- It will remain broken for a certain period of time.
 function Hospital:boilerBreakdown()
@@ -751,8 +766,10 @@ function Hospital:boilerBreakdown()
   if self:isPlayerHospital() then
     if self.radiator_heat == 0 then
       self.world.ui.adviser:say(_S.adviser.boiler_issue.minimum_heat)
+      self:coldWarning()
     else
       self.world.ui.adviser:say(_S.adviser.boiler_issue.maximum_heat)
+      self:hotWarning()
     end
   end
 end
