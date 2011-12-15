@@ -33,7 +33,7 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   -- Unreserve any door which we had reserved unless specifically told not to.
   if not action.keep_reserved then
     local door = action.reserve_on_resume
-    if door and door.reserved_for == humanoid then
+    if door and door.reserved_for == humanoid or class.is(humanoid, Vip) then
       door.reserved_for = nil
       if door.queue:size() > 0 then
         door.queue:pop()
