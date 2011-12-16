@@ -33,7 +33,8 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
   -- Unreserve any door which we had reserved unless specifically told not to.
   if not action.keep_reserved then
     local door = action.reserve_on_resume
-    if door and door.reserved_for == humanoid or class.is(humanoid, Vip) then
+    if door and door.reserved_for == humanoid or class.is(humanoid, Vip) then --  "or class.is(humanoid, Vip)" is added as a temporary fix
+  -- TODO: find the cause of the "VIP bug", why does the door not get unreserved sometimes when the VIP has looked into a room? See issue 1025
       door.reserved_for = nil
       if door.queue:size() > 0 then
         door.queue:pop()
