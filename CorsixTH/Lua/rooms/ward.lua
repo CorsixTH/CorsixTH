@@ -91,7 +91,8 @@ function WardRoom:doStaffUseCycle(humanoid)
     end,
   }
 end
-
+-- TODO the nurse should not leave the ward if there are beds in use, therefore prevent her from being picked up
+-- and have a system that stops patients entering the ward if she is in need of taking a break or being called elsewhere.
 function WardRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
@@ -101,7 +102,7 @@ function WardRoom:commandEnteringPatient(patient)
     print("Warning: A patient was called into the ward even though there are no free beds.")
   else
     bed.reserved_for = patient
-    local length = math.random(90, 120) * (1.5 - staff.profile.skill)
+    local length = math.random(200, 600) * (1.5 - staff.profile.skill)
     local --[[persistable:ward_loop_callback]] function loop_callback(action)
       if length <= 0 then
         action.prolonged_usage = false
@@ -115,6 +116,7 @@ function WardRoom:commandEnteringPatient(patient)
     patient:queueAction{
       name = "use_object", 
       object = bed,
+      prolonged_usage = true,
       loop_callback = loop_callback,
       after_use = after_use,
     }
