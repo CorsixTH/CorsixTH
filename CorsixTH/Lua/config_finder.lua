@@ -146,7 +146,7 @@ sound_volume = ]=].. tostring(config_defaults.sound_volume) ..[=[
 --
 -- Adviser on/off: If you set this setting to true the adviser will no longer
 -- pop up.
-adviser_disabled = ]=].. tostring(config_defaults.adviser_disabled) ..[=[
+adviser_disabled = ]=].. tostring(config_defaults.adviser_disabled) ..[=[ 
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
