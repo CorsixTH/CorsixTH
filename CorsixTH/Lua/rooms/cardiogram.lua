@@ -47,12 +47,6 @@ function CardiogramRoom:CardiogramRoom(...)
   self:Room(...)
 end
 
-function CardiogramRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function CardiogramRoom:commandEnteringPatient(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   patient:walkTo(sx, sy)

@@ -46,12 +46,6 @@ function GeneralDiagRoom:GeneralDiagRoom(...)
   self:Room(...)
 end
 
-function GeneralDiagRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function GeneralDiagRoom:commandEnteringPatient(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   patient:walkTo(sx, sy)

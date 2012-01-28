@@ -47,12 +47,6 @@ function FractureRoom:FractureRoom(...)
   self:Room(...)
 end
 
-function FractureRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function FractureRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local cast, pat_x, pat_y = self.world:findObjectNear(patient, "cast_remover")

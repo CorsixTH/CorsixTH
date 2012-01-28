@@ -263,7 +263,7 @@ function Room:onHumanoidEnter(humanoid)
     print ('Warning: humanoid entering non-active room')
     self.humanoids[humanoid] = true
     if class.is(humanoid, Patient) then
-      self:makePatientLeave(humanoid)
+      self:makeHumanoidLeave(humanoid)
       humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
     else
       humanoid:setNextAction(self:createLeaveAction())
@@ -332,8 +332,16 @@ function Room:isWaitingToGetStaff(staff)
   return self:staffFitsInRoom(staff, true)
 end
 
-function Room:commandEnteringStaff(humanoid)
-  -- To be extended in derived classes
+--! When a valid member of staff enters the room this function is called.
+-- Can be extended in derived classes.
+--!param humanoid The staff in question
+--!param already_initialized If true, this means that the staff has already got order
+-- what to do.
+function Room:commandEnteringStaff(humanoid, already_initialized)
+  if not already_initialized then
+    self.staff_member = humanoid
+    humanoid:setNextAction{name = "meander"}
+  end
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
   -- This variable is used to avoid multiple calls for staff (sound played only)
@@ -386,6 +394,9 @@ function Room:tryAdvanceQueue()
 end
 
 function Room:onHumanoidLeave(humanoid)
+  if self.staff_member == humanoid then
+    self.staff_member = nil
+  end
   humanoid.in_room = nil
   if not self.humanoids[humanoid] then
     print("Warning: Humanoid leaving a room that they are not in")
@@ -435,7 +446,7 @@ function Room:onHumanoidLeave(humanoid)
       end
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) and self:shouldHavePatientReenter(humanoid) then
-          self:makePatientLeave(humanoid)
+          self:makeHumanoidLeave(humanoid)
           humanoid:queueAction(self:createEnterAction(humanoid))
         end
       end
@@ -506,7 +517,7 @@ function Room:roomFinished()
   end
   -- Show information about the room if not already shown.
   -- Also only show them if the player is playing the original campaign.
-  if tonumber(self.world.map.level_number) and not self.world.room_info_dialogs_off then
+  if tonumber(self.world.map.level_number) and not self.world.room_information_dialogs_off then
     if not self.world.room_built[self.room_info.id] then
       self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
       self.world.room_built[self.room_info.id] = true
@@ -656,9 +667,9 @@ function Room:crashRoom()
   self:deactivate()
 end
 
--- Tells the patient to leave the room. This can be overridden for special
--- handling, e.g. if the patient needs to change before leaving the room.
-function Room:makePatientLeave(patient)
+-- Tells a humanoid in the room to leave it. This can be overridden for special
+-- handling, e.g. if the humanoid needs to change before leaving the room.
+function Room:makeHumanoidLeave(patient)
   local leave = self:createLeaveAction()
   leave.must_happen = true
   patient:setNextAction(leave)
@@ -680,7 +691,7 @@ function Room:tryToEdit()
   for humanoid, _ in pairs(self.humanoids) do
     if not humanoid:isLeaving() then
       if class.is(humanoid, Patient) then
-        self:makePatientLeave(humanoid)
+        self:makeHumanoidLeave(humanoid)
         humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
       else
         humanoid:setNextAction(self:createLeaveAction())

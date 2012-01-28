@@ -48,12 +48,6 @@ function DNAFixerRoom:DNAFixerRoom(...)
   self:Room(...)
 end
 
-function DNAFixerRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function DNAFixerRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local dna_fixer, pat_x, pat_y = self.world:findObjectNear(patient, "dna_fixer")

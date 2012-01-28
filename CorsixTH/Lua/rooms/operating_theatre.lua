@@ -126,7 +126,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   }
   staff:queueAction{name = "use_screen", object = obj, must_happen = true, is_leaving = true}
   
-  return Room.commandEnteringStaff(self, staff)
+  return Room.commandEnteringStaff(self, staff, true)
 end
 
 function OperatingTheatreRoom:commandEnteringPatient(patient)

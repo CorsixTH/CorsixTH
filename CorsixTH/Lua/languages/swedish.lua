@@ -159,16 +159,16 @@ misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
 misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."
 
 main_menu = {
-  new_game = "Nytt spel",
-  custom_level = "Specialnivå",
+  new_game = "Kampanj",
+  custom_level = "Enkel nivå",
   load_game = "Ladda spel",
   options = "Alternativ",
   exit = "Avsluta",
 }
 
 tooltip.main_menu = {
-  new_game = utf8 "Starta ett helt nytt spel från början",
-  custom_level = utf8 "Bygg ditt sjukhus i en specialnivå",
+  new_game = utf8 "Starta bana ett i kampanjen",
+  custom_level = utf8 "Bygg ditt sjukhus på en valfri nivå",
   load_game = "Ladda ett sparat spel",
   options = utf8 "Fixa till dina inställningar",
   exit = utf8 "Nej! Du vill väl inte sluta redan?",

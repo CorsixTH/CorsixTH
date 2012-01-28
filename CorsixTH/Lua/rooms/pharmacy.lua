@@ -53,12 +53,6 @@ function PharmacyRoom:roomFinished()
   return Room.roomFinished(self)
 end
 
-function PharmacyRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function PharmacyRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local cabinet, stf_x, stf_y = self.world:findObjectNear(patient, "pharmacy_cabinet")

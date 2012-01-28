@@ -49,12 +49,6 @@ function ScannerRoom:ScannerRoom(...)
   self:Room(...)
 end
 
-function ScannerRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function ScannerRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
@@ -132,7 +126,7 @@ function ScannerRoom:onHumanoidLeave(humanoid)
   Room.onHumanoidLeave(self, humanoid)
 end
 
-function ScannerRoom:makePatientLeave(patient)
+function ScannerRoom:makeHumanoidLeave(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   
   if (patient.humanoid_class == "Stripped Male Patient" or

@@ -187,15 +187,10 @@ function TrainingRoom:commandEnteringStaff(humanoid)
     return
   end
 
-  return Room.commandEnteringStaff(self, humanoid)
+  return Room.commandEnteringStaff(self, humanoid, true)
 end
 
 function TrainingRoom:onHumanoidLeave(humanoid)
-  -- if the consultant is leaving, make sure we indicate that
-  -- so students stop learning
-  if self.staff_member == humanoid then
-    self.staff_member = nil
-  end
   if humanoid.humanoid_class == "Doctor" then
     -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)

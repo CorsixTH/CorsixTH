@@ -61,6 +61,7 @@ RequestExecutionLevel admin
 ; License page
 !insertmacro MUI_PAGE_LICENSE "..\CorsixTH\LICENSE.txt"
 ; Directory page
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateDirectory
 !insertmacro MUI_PAGE_DIRECTORY
 ; Another directory page to choose where the original game is
 Var ORIGINALPATH
@@ -130,6 +131,16 @@ Function .onInit
 FunctionEnd
 
 !include LanguageStrings.nsh
+
+; A function called when the user wants to move on past the choose installation directory dialog.
+Function ValidateDirectory
+  ; Check if we're trying to install over an existing installation
+  ${If} ${FileExists} "$INSTDIR\Lua"
+    MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(overwrite_install)" IDYES overwriting
+    Abort
+  ${EndIf}
+  overwriting:
+FunctionEnd
 
 ; ----------------------------- Functions for the custom options page ----------------------------
 
@@ -205,6 +216,10 @@ Section "MainSection" SEC01
   saves:
   
   ; The three other needed folders
+  ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
+  ${If} ${FileExists} "$INSTDIR\Lua"
+    RMDir "$INSTDIR\Lua"
+  ${EndIf}
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*
   

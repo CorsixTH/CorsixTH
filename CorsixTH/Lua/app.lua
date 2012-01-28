@@ -909,6 +909,18 @@ function App:loadLuaFolder(dir, no_results, append_to)
   end
 end
 
+--! Returns the version number of the local copy of the game based on
+--! which save game version it is. This was added after the Beta 8
+--! release, which is why the checks prior to that version aren't made.
+function App:getVersion()
+  local ver = self.savegame_version
+  if ver > 45 then
+    return "Trunk"
+  else
+    return "Beta 8 or earlier"
+  end
+end
+
 function App:save(filename)
   return SaveGameFile(self.savegame_dir .. filename)
 end

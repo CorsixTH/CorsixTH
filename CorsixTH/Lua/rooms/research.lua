@@ -146,7 +146,7 @@ end
 function ResearchRoom:commandEnteringStaff(staff)
   self.staff_member_set[staff] = true
   self:doStaffUseCycle(staff)
-  return Room.commandEnteringStaff(self, staff)
+  return Room.commandEnteringStaff(self, staff, true)
 end
 
 function ResearchRoom:commandEnteringPatient(patient)

@@ -47,12 +47,6 @@ function SlackTongueRoom:SlackTongueRoom(...)
   self:Room(...)
 end
 
-function SlackTongueRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function SlackTongueRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local slicer, pat_x, pat_y = self.world:findObjectNear(patient, "slicer")

@@ -47,12 +47,6 @@ function BloodMachineRoom:BloodMachineRoom(...)
   self:Room(...)
 end
 
-function BloodMachineRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function BloodMachineRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")

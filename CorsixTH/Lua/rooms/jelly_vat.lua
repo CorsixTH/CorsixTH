@@ -47,12 +47,6 @@ function JellyVatRoom:JellyVatRoom(...)
   self:Room(...)
 end
 
-function JellyVatRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function JellyVatRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local moulder, stf_x, stf_y = self.world:findObjectNear(patient, "jelly_moulder")

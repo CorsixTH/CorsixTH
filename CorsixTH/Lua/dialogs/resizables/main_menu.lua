@@ -28,7 +28,7 @@ local col_bg = {
 }
 
 function UIMainMenu:UIMainMenu(ui)
-  self:UIResizable(ui, 200, 280, col_bg)
+  self:UIResizable(ui, 200, 300, col_bg)
   
   local app = ui.app
   self.esc_closes = false
@@ -36,6 +36,10 @@ function UIMainMenu:UIMainMenu(ui)
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+
+  -- The main menu also shows the version number of the player's copy of the game.
+  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+  self.version_number = TheApp:getVersion()
   
   -- individual buttons
   self.default_button_sound = "selectx.wav"
@@ -59,6 +63,19 @@ function UIMainMenu:onMouseDown(button, x, y)
     return self:beginDrag(x, y)
   end
   return repaint
+end
+
+function UIMainMenu:draw(canvas, x, y)
+  UIResizable.draw(self, canvas, x, y)
+  x, y = self.x + x, self.y + y
+
+  -- Move the version string up a bit if also showing the savegame version.
+  local ly = y + 285
+  if TheApp.config.debug then
+    self.label_font:draw(canvas, "Savegame version: " .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
+    ly = ly - 15
+  end
+  self.label_font:draw(canvas, "Version: " .. self.version_number, x + 5, ly, 190, 0, "right")
 end
 
 function UIMainMenu:hitTest(x, y)

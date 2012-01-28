@@ -1,14 +1,47 @@
 -----------------------------------------
-Version ? - released ?
+Version 0.01 - released ?
 -----------------------------------------
+
+-- Not Yet Implemented --
+
+* Earthquakes
+* Epidemics
+* Handyman priorities
+* Rats
+* Graphs
+* Visual effects on patients with serious radiation and jellyitis.
 
 -- Known Issues --
 
+* If the X-Ray Viewer is inaccessible in the Operating Theatre the whole
+  room will be unusable.
 * If the user exits the game via "the cross" when in windowed mode settings are not saved.
+* The graph window doesn't show any graphs.
+* Handyman priorities are not yet fully implemented.
+
+-- Gameplay --
+
+* Change: The queue size for a room can be set to 0 to prevent patients from going there.
+* Fix: Crash when removing a room that has humanoids on their way to it.
+* Fix: Patients sitting down, but about to get a soda got ordered to sit down again.
+* Fix: A crash could occur if a new room was accepted when there were multiple types
+  of objects left to place.
+* Fix: Emergencies with diseases not available on a level no longer happen.
+* Fix: The VIP no longer makes staff be called to the rooms he visits.
 
 -- User Interface --
 
+* Fix: The staff management window is now updated when staff is hired or fired from 
+  outside the window itself.
+* Added: The save and load dialogs can now save both ascending and descending and are
+  a little more spacy.
+* Added: More messages in the progress report dialog.
+* Added: More advice in different situations from the adviser.
+* Change: When the mouse cursor leaves the game window it will stop scrolling the
+  in-game world.
 * The auto-scroll setting is now saved between sessions.
+* The adviser can now be turned off from the top menu.
+* The game uses a new icon.
 
 -----------------------------------------
 Version Beta 8 - released 2011-09-24

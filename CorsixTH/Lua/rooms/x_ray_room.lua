@@ -47,12 +47,6 @@ function XRayRoom:XRayRoom(...)
   self:Room(...)
 end
 
-function XRayRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function XRayRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local x_ray, pat_x, pat_y = self.world:findObjectNear(patient, "x_ray")

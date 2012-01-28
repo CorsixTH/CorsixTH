@@ -68,7 +68,7 @@ end
 function WardRoom:commandEnteringStaff(humanoid)
   self.staff_member = humanoid
   self:doStaffUseCycle(humanoid)
-  return Room.commandEnteringStaff(self, humanoid)
+  return Room.commandEnteringStaff(self, humanoid, true)
 end
 
 function WardRoom:doStaffUseCycle(humanoid)

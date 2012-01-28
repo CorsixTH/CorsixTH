@@ -47,12 +47,6 @@ function HairRestorationRoom:HairRestorationRoom(...)
   self:Room(...)
 end
 
-function HairRestorationRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function HairRestorationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local hair_restorer, pat_x, pat_y = self.world:findObjectNear(patient, "hair_restorer")

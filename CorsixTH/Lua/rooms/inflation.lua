@@ -47,12 +47,6 @@ function InflationRoom:InflationRoom(...)
   self:Room(...)
 end
 
-function InflationRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function InflationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")

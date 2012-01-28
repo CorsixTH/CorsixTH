@@ -171,16 +171,16 @@ misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.  It might be that you need to build a reception desk and hire a receptionist"
 
 main_menu = {
-  new_game = "New Game",
-  custom_level = "Custom Level",
+  new_game = "Campaign",
+  custom_level = "Single Scenario",
   load_game = "Load Game",
   options = "Options",
   exit = "Exit",
 }
 
 tooltip.main_menu = {
-  new_game = "Start a completely new game from scratch",
-  custom_level = "Build your hospital in a custom level",
+  new_game = "Start the first level on the campaign",
+  custom_level = "Build your hospital in a single scenario",
   load_game = "Load a saved game",
   options = "Tweak various settings",
   exit = "No, no, please don't leave!",

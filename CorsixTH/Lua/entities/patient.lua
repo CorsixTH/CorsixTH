@@ -435,7 +435,7 @@ function Patient:goHome(cured)
   self.going_home = true
   local room = self:getRoom()
   if room then
-    room:makePatientLeave(self)
+    room:makeHumanoidLeave(self)
   end
   self:setHospital(nil)
 end

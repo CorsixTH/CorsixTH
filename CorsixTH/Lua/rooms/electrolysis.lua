@@ -47,12 +47,6 @@ function ElectrolysisRoom:ElectrolysisRoom(...)
   self:Room(...)
 end
 
-function ElectrolysisRoom:commandEnteringStaff(staff)
-  self.staff_member = staff
-  staff:setNextAction{name = "meander"}
-  return Room.commandEnteringStaff(self, staff)
-end
-
 function ElectrolysisRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local electrolyser, pat_x, pat_y = self.world:findObjectNear(patient, "electrolyser")
