@@ -72,10 +72,10 @@ function UIMainMenu:draw(canvas, x, y)
   -- Move the version string up a bit if also showing the savegame version.
   local ly = y + 285
   if TheApp.config.debug then
-    self.label_font:draw(canvas, "Savegame version: " .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
+    self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
     ly = ly - 15
   end
-  self.label_font:draw(canvas, "Version: " .. self.version_number, x + 5, ly, 190, 0, "right")
+  self.label_font:draw(canvas, _S.main_menu.version .. self.version_number, x + 5, ly, 190, 0, "right")
 end
 
 function UIMainMenu:hitTest(x, y)

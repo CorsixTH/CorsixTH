@@ -163,6 +163,8 @@ main_menu = {
   custom_level = "Enkel nivå",
   load_game = "Ladda spel",
   options = "Alternativ",
+  savegame_version = "Sparningsversion: ",
+  version = "Version: ",
   exit = "Avsluta",
 }
 

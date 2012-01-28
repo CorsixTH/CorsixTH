@@ -175,6 +175,8 @@ main_menu = {
   custom_level = "Single Scenario",
   load_game = "Load Game",
   options = "Options",
+  savegame_version = "Savegame version: ",
+  version = "Version: ",
   exit = "Exit",
 }
 
