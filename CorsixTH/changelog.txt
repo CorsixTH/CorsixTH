@@ -16,8 +16,7 @@ Version 0.01 - released ?
 * If the X-Ray Viewer is inaccessible in the Operating Theatre the whole
   room will be unusable.
 * If the user exits the game via "the cross" when in windowed mode settings are not saved.
-* The graph window doesn't show any graphs.
-* Handyman priorities are not yet fully implemented.
+* Radiators occupy a whole tile instead of just one edge of the tile.
 
 -- Gameplay --
 

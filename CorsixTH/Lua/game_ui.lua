@@ -838,8 +838,13 @@ function GameUI:setEditRoom(enabled)
     if class.is(self.edit_room, Room) and self.cursor == self.waiting_cursor then
       self.edit_room.is_active = true
     else
-      local edit_window = self.app.ui:getWindow(UIEditRoom)
       -- If we are currently editing a room it may happen that we need to abort it.
+      -- Also remove any dialog where the user is buying items.
+      local item_window = self.app.ui:getWindow(UIFurnishCorridor)
+      if item_window and item_window.edit_dialog then
+        item_window:close()
+      end
+      local edit_window = self.app.ui:getWindow(UIEditRoom)
       if edit_window then
         edit_window:verifyOrAbortRoom()
       end
