@@ -621,57 +621,47 @@ function Hospital:checkFacilites()
     -- Now to check how warm or cold patients and staff are.  So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
-    local warmth = self:getAveragePatientAttribute("warmth")
     if not self.heating_broke then
-      if self.world.year == 1 and self.world.month > 4 and self.world.day == 15
-      and warmth < 0.22 and not self.warmth_msg then
-        self:warningTooCold()
-      elseif self.world.month > 4 and self.world.day == 15
-      and warmth >= 0.36 and not self.warmth_msg then
-        self:warningTooHot()
-      elseif self.world.year > 1 and self.world.day == 15
-      and warmth < 0.22 and not self.warmth_msg then
-        self:warningTooCold()
-      elseif self.world.month > 4 and self.world.day == 15
-      and warmth >= 0.36 and not self.warmth_msg then
-        self:warningTooHot()
+      if not self.warmth_msg and self.world.day == 15 then
+        local warmth = self:getAveragePatientAttribute("warmth")
+        if (self.world.year > 1 or self.world.month > 4) and warmth < 0.22 then
+          self:warningTooCold()
+        elseif self.world.month > 4 and warmth >= 0.36 then
+          self:warningTooHot()
+        end
       end
       -- Are the staff warm enough?
-      local warmth = 0
-      local no = 0
-      for _, staff in ipairs(self.staff) do
-        warmth = warmth + staff.attributes["warmth"]
-        no = no + 1
-      end
-      if self.world.year == 1 and self.world.month > 4 and self.world.day == 20
-      and warmth / no < 0.22 and not self.warmth_msg then
-        self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-      elseif self.world.month > 4 and self.world.day == 20
-      and warmth / no >= 0.36 and not self.warmth_msg then
-        self.world.ui.adviser:say(_A.warnings.staff_too_hot)
-      elseif self.world.year > 1 and self.world.day == 20
-      and warmth / no < 0.22 and not self.warmth_msg then
-        self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-      elseif self.world.month > 4 and self.world.day == 20
-      and warmth / no >= 0.36 and not self.warmth_msg then
-        self.world.ui.adviser:say(_A.warnings.staff_too_hot)
+      if not self.warmth_msg and self.world.day == 20 then
+        local warmth = 0
+        local no = 0
+        for _, staff in ipairs(self.staff) do
+          warmth = warmth + staff.attributes["warmth"]
+          no = no + 1
+        end
+        if (self.world.year > 1 or self.world.month > 4) and warmth / no < 0.22 then
+          self.world.ui.adviser:say(_A.warnings.staff_very_cold)
+        elseif self.world.month > 4 and warmth / no >= 0.36 then
+          self.world.ui.adviser:say(_A.warnings.staff_too_hot)
+        end
       end
     end
     -- Are the patients in need of a drink
-    local thirst = self:getAveragePatientAttribute("thirst")
-    if self.world.year == 1 and self.world.month > 4 and self.world.day == 24
-    and thirst > 0.8 and not self.thirst_msg then
-      self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
-    elseif self.world.year == 1 and self.world.month > 4 and self.world.day == 24
-    and thirst > 0.6 and not self.thirst_msg then
-      self:warningThirst()
-    end
-    if self.world.year > 1 and self.world.day == 24
-    and thirst > 0.9 and not self.thirst_msg then
-      self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
-    elseif self.world.year > 1 and self.world.day == 24
-    and thirst > 0.6 and not self.thirst_msg then
-      self:warningThirst()
+    if not self.thirst_msg and self.world.day == 24 then
+      local thirst = self:getAveragePatientAttribute("thirst")
+      if self.world.year == 1 and self.world.month > 4 then
+        if thirst > 0.8 then
+          self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
+        elseif thirst > 0.6 then
+          self:warningThirst()
+        end
+      end
+      if self.world.year > 1 then
+        if thirst > 0.9 then
+          self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
+        elseif thirst > 0.6 then
+          self:warningThirst()
+        end
+      end
     end
     -- reset all the messages on 28th of each month
     if self.world.day == 28 then
