@@ -31,8 +31,13 @@ function InstallDirTreeNode:InstallDirTreeNode(path)
 end
 
 function InstallDirTreeNode:isValidFile(name)
-  return FileTreeNode.isValidFile(self, name) 
-  and lfs.attributes(self:childPath(name), "mode") == "directory"
+  -- Check parent criteria and that it's a directory.
+  if FileTreeNode.isValidFile(self, name) 
+  and lfs.attributes(self:childPath(name), "mode") == "directory" then
+    -- Make sure that we are allowed to read the directory.
+    local status, result = pcall(lfs.dir, self:childPath(name))
+    return status
+  end
 end
 
 function InstallDirTreeNode:createNewNode(path)
@@ -50,20 +55,16 @@ function InstallDirTreeNode:getHighlightColour(canvas)
     elseif self:getChildCount() >= 3 then
       local ngot = 0
       local things_to_check = {"data", "levels", "qdata"}
-      local nxt = things_to_check[ngot + 1]
-      for i = 1, self:getChildCount() do
-        local item = self:getChildByIndex(i).sort_key
-        if item == nxt then
-          ngot = ngot + 1
-          if ngot == 3 then
-            highlight_colour = canvas:mapRGB(0, 255, 0)
-            self.is_valid_directory = true
-            break
-          end
-          nxt = things_to_check[ngot + 1]
-        elseif item > nxt then
+      for _, thing in ipairs(things_to_check) do
+        if not self.children[thing:lower()] then
           break
+        else
+          ngot = ngot + 1
         end
+      end
+      if ngot == 3 then
+        highlight_colour = canvas:mapRGB(0, 255, 0)
+        self.is_valid_directory = true
       end
     end
     self.highlight_colour = highlight_colour

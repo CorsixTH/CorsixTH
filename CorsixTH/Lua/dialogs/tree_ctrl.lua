@@ -186,6 +186,9 @@ function FileTreeNode:FileTreeNode(path)
   self.path = path
   self.children = {}
   self.has_looked_for_children = false
+  -- Default sorting is by name
+  self.sort_by = "name"
+  self.order = "ascending"
 end
 
 function FileTreeNode:childPath(item)
@@ -236,14 +239,14 @@ end
 
 function FileTreeNode:expand()
   TreeNode.expand(self)
-  self:reSortChildren(self.sort_by, self.sort_order)
+  self:reSortChildren(self.sort_by, self.order)
 end
 
 local function sort_by_key(t1, t2)
   local second_mode = lfs.attributes(t2.path, "mode") == "directory"
   if lfs.attributes(t1.path, "mode") == "directory" then
     if second_mode then
-      if t1.sort_order == "ascending" then
+      if t1.order == "ascending" then
         return t1.sort_key < t2.sort_key
       else
         return t1.sort_key > t2.sort_key
@@ -255,7 +258,7 @@ local function sort_by_key(t1, t2)
     if second_mode then
       return false
     else
-      if t1.sort_order == "ascending" then
+      if t1.order == "ascending" then
         return t1.sort_key < t2.sort_key
       else
         return t1.sort_key > t2.sort_key
@@ -272,11 +275,11 @@ function FileTreeNode:reSortChildren(sort_by, order)
     if sort_by == "date" then
       child.sort_key = lfs.attributes(child.path, "modification")
       child.sort_by = sort_by
-      child.sort_order = order
+      child.order = order
     elseif sort_by == "name" then
-      child.sort_key = child:getLabel()
+      child.sort_key = child:getLabel():lower()
       child.sort_by = sort_by
-      child.sort_order = order
+      child.order = order
     else
       -- No sorting
       return
@@ -307,6 +310,7 @@ function FileTreeNode:checkForChildren()
 
     for i, child in ipairs(self.children) do
       self.children[child] = i
+      self.children[child.sort_key] = i
       child.parent = self
     end
   end
