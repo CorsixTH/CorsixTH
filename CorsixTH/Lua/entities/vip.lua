@@ -118,59 +118,64 @@ end
 
 -- called when the vip is out of the hospital grounds
 function Vip:onDestroy()
-  if self.vip_rating == 1 then
+  local message
+  -- First of all there's a special message if we're in free build mode.
+  if self.world.free_build_mode then
+    self.last_hospital.reputation = self.last_hospital.reputation+20
+    message = {
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1,3)]},
+      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
+    }
+  elseif self.vip_rating == 1 then
     self.last_hospital.reputation = self.last_hospital.reputation-10
-    local message = {
+    message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
       {text = _S.fax.vip_visit_result.remarks.very_bad[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
-    self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
   elseif self.vip_rating == 2 then
     self.last_hospital.reputation = self.last_hospital.reputation-5
-    local message = {
+    message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
       {text = _S.fax.vip_visit_result.remarks.bad[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
-    self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
   elseif self.vip_rating == 3 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
-    local message = {
+    message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
       {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
-    self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
   elseif self.vip_rating == 4 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
-    local message = {
+    message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
       {text = _S.fax.vip_visit_result.remarks.good[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
-    self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
   else
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
     if self.vip_rating == 5 then
-      local message = {
+      message = {
         {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
         {text = _S.fax.vip_visit_result.remarks.super[math.random(1,3)]},
         {text = _S.fax.vip_visit_result.rep_boost},
         {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
         choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
       }
-      self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
     end
   end
+  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
 
   self.world:nextVip()
 

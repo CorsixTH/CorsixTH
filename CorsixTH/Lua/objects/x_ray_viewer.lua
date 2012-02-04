@@ -24,7 +24,6 @@ object.thob = 29
 object.name = _S.object.x_ray_viewer
 object.tooltip = _S.tooltip.objects.x_ray_viewer
 object.ticks = false
-object.build_cost = 500
 object.build_preview_animation = 5078
 object.locked_to_wall = {
   -- permittable wall -> orientation

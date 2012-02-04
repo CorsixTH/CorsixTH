@@ -24,7 +24,6 @@ object.thob = 60
 object.name = _S.object.skeleton
 object.tooltip = _S.tooltip.objects.skeleton
 object.ticks = false
-object.build_cost = 450
 object.build_preview_animation = 5108
 local function copy_north_to_south(t)
   t.south = t.north

@@ -26,7 +26,6 @@ object.research_category = "diagnosis"
 object.name = _S.object.blood_machine
 object.tooltip = _S.tooltip.objects.blood_machine
 object.ticks = false
-object.build_cost = 3000
 object.build_preview_animation = 5094
 object.default_strength = 12
 object.crashed_animation = 3372

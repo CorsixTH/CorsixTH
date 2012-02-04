@@ -24,6 +24,7 @@ class "UIBankManager" (UIFullscreen)
 function UIBankManager:UIBankManager(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
+  self.world = ui.app.world
   if not pcall(function()
     self.background = gfx:loadRaw("Bank01V", 640, 480)
     self.stat_background = gfx:loadRaw("Stat01V", 640, 480)
@@ -394,7 +395,7 @@ end
 
 function UIBankManager:increaseLoan()
   local hospital = self.ui.hospital
-  local max_loan = (math.floor((hospital.value * 0.33) / 5000) * 5000) + 10000
+  local max_loan = not self.world.free_build_mode and (math.floor((hospital.value * 0.33) / 5000) * 5000) + 10000 or 0
   if hospital.loan + 5000 <= max_loan  then
     local amount = self.buttons_down.ctrl and max_loan - hospital.loan or 5000
     hospital.loan = hospital.loan + amount

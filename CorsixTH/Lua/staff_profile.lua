@@ -217,6 +217,10 @@ local ability_conf_id = {
 }
 
 function StaffProfile:getFairWage(world)
+  if world.free_build_mode then
+    return 0
+  end
+  
   local level_config = world.map.level_config
   local wage = level_config.staff[conf_id[self.humanoid_class]].MinSalary
   wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor

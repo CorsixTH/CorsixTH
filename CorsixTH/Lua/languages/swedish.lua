@@ -132,6 +132,8 @@ dynamic_info.patient.actions.no_gp_available = utf8 "Väntar på att du ska bygg
 dynamic_info.staff.actions.heading_for = utf8 "På väg till %s"
 dynamic_info.staff.actions.fired = "Sparkad"
 
+progress_report.free_build = "FRITT BYGGANDE"
+
 fax = {
   choices = {
     return_to_main_menu = utf8 "Gå till huvudmenyn",
@@ -140,7 +142,17 @@ fax = {
   },
   emergency = {
     num_disease_singular = "Vi har 1 person som kräver omedelbar vård med %s.",
+    free_build = "Om du lyckas ökar ditt anseende, men om du misslyckas kommer ditt anseende att få en rejäl känga."
   },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        "Det var ju ett trevligt sjukhus du har! Inte så svårt att få det så bra utan begränsande budget dock, eller hur?",
+        "Jag är ingen ekonom, men jag tror att jag också hade kunnat driva det här sjukhuset, om du förstår vad jag menar...",
+        "Ett mycket väld fungerande sjukhus må jag säga. Akta lågkonjunkturen bara! Just det... du behöver inte oroa dig över pengar nä.",
+      }
+    }
+  }
 }
 
 letter = {
@@ -188,10 +200,12 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Specialbanor",
+  free_build = "Bygg fritt",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = utf8 "Ladda banan %s",
+  free_build = "Bocka för den här rutan om du vill spela utan pengar och vinst- och förlustkriterier",
 }
 
 save_game_window = {

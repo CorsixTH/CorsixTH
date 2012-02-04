@@ -26,7 +26,6 @@ object.research_fallback = 36
 object.name = _S.object.scanner
 object.tooltip = _S.tooltip.objects.scanner
 object.ticks = false
-object.build_cost = 5000
 object.build_preview_animation = 920
 object.default_strength = 12
 object.crashed_animation = 3316

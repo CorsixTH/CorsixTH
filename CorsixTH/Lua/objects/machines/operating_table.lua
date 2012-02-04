@@ -28,7 +28,6 @@ object.research_fallback = 19 -- Kidney beans
 object.name = _S.object.operating_table
 object.tooltip = _S.tooltip.objects.operating_table
 object.ticks = false
-object.build_cost = 5000
 object.build_preview_animation = 5080
 object.default_strength = 8
 object.crashed_animation = 3392

@@ -26,7 +26,6 @@ object.research_fallback = 7
 object.name = _S.object.slicer
 object.tooltip = _S.tooltip.objects.slicer
 object.ticks = false
-object.build_cost = 1500
 object.build_preview_animation = 932
 object.default_strength = 8
 object.crashed_animation = 3400

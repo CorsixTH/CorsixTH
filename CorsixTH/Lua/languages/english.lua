@@ -144,6 +144,8 @@ dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's 
 dynamic_info.staff.actions.heading_for = "Heading for %s"
 dynamic_info.staff.actions.fired = "Fired"
 
+progress_report.free_build = "FREE BUILD"
+
 fax = {
   choices = {
     return_to_main_menu = "Return to the main menu",
@@ -152,6 +154,16 @@ fax = {
   },
   emergency = {
     num_disease_singular = "There is 1 person with %s and they require immediate attention.",
+    free_build = "If you are successful your reputation will increase but if you fail your reputation will be seriously dented.",
+  },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?",
+        "I'm no economist, but I think I could run this hospital too if you know what I mean...",
+        "A very well run hospital. Watch out for the recession though! Right... you didn't have to worry about that.",
+      }
+    }
   }
 }
 
@@ -200,10 +212,12 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Custom Game",
+  free_build = "Free Build",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = "Load the level %s",
+  free_build = "Tick this box if you want to play without money or winning and losing conditions",
 }
 
 save_game_window = {
@@ -263,6 +277,7 @@ tooltip.new_game_window = {
   medium = "This is the middle way to go if you are unsure what to choose",
   hard = "If you are used to this kind of game and want more of a challenge, pick this option",
   tutorial = "If you want some help to get started once in the game, tick this box",
+  tutorial = "Tutorial",
   cancel = "Oh, I didn't really mean to start a new game!",
 }
 

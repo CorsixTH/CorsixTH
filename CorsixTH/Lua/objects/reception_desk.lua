@@ -26,7 +26,6 @@ object.name = _S.object.reception_desk
 object.tooltip = _S.tooltip.objects.reception_desk
 object.ticks = true
 object.corridor_object = 1
-object.build_cost = 150
 object.build_preview_animation = 5060
 object.idle_animations = {
   north = 2062,

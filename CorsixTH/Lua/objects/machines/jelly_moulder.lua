@@ -26,7 +26,6 @@ object.research_fallback = 12
 object.name = _S.object.jelly_moulder
 object.tooltip = _S.tooltip.objects.jelly_moulder
 object.ticks = false
-object.build_cost = 6500
 object.build_preview_animation = 928
 object.default_strength = 7
 object.crashed_animation = 3312

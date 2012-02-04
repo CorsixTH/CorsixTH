@@ -26,7 +26,6 @@ object.research_fallback = 3
 object.name = _S.object.electrolyser
 object.tooltip = _S.tooltip.objects.electrolyser
 object.ticks = false
-object.build_cost = 3500
 object.build_preview_animation = 930
 object.default_strength = 10
 object.crashed_animation = 3300

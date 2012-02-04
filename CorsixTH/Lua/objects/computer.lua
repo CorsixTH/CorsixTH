@@ -26,7 +26,6 @@ object.research_fallback = 46
 object.name = _S.object.computer
 object.tooltip = _S.tooltip.objects.computer
 object.ticks = false
-object.build_cost = 5000
 object.build_preview_animation = 5090
 
 local function copy_north_to_south(t)

@@ -41,7 +41,8 @@ function Hospital:Hospital(world)
   end
   self.name = os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
   -- TODO: Variate initial reputation etc based on level
-  self.balance = balance
+  -- When playing in free build mode you don't care about money.
+  self.balance = not world.free_build_mode and balance or 0
   self.loan = 0
   self.acc_loan_interest = 0
   self.acc_research_cost = 0
@@ -278,6 +279,10 @@ end
 
 -- Remind the player when cash is low that a loan might be available
 function Hospital:cashLow()
+  -- Don't remind in free build mode.
+  if self.world.free_build_mode then
+    return
+  end
   local hosp = self.world.hospitals[1]
   local cashlowmessage = {
     (_A.warnings.money_low),
@@ -1030,7 +1035,7 @@ function Hospital:createEmergency(emergency)
       {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
       {text = one_or_many_victims_msg },
       {text = added_info},
-      {text = _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
+      {text = self.world.free_build_mode and _S.fax.emergency.free_build or _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
       choices = {
         {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
         {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
@@ -1053,18 +1058,18 @@ function Hospital:resolveEmergency()
   end
   local total = emer.victims
   local max_bonus = emer.bonus * total
-  local earned = math.floor((rescued_patients/total >= emer.percentage and 
-    rescued_patients/total or 0)*10)*max_bonus/10
+  local emergency_success = rescued_patients/total >= emer.percentage
+  local earned = math.floor((emergency_success and rescued_patients/total or 0) * 10) * max_bonus/10
   local message = {
     {text = _S.fax.emergency_result.saved_people
       :format(rescued_patients, total)},
-    {text = _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
+    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
     choices = {
       {text = _S.fax.emergency_result.close_text, choice = "close"},
     },
   }
   self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
-  if earned > 0 then -- Reputation increased
+  if emergency_success then -- Reputation increased
     self:changeReputation("emergency_success", emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
   else -- Too few rescued, reputation hit
@@ -1128,11 +1133,13 @@ in _S.transactions.
 !param changeValue (integer) The (positive) amount the hospital value should be increased
 ]]
 function Hospital:spendMoney(amount, reason, changeValue)
-  self.balance = self.balance - amount
-  self:logTransaction{spend = amount, desc = reason}
-  self.money_out = self.money_out + amount
-  if changeValue then
-    self.value = self.value + changeValue
+  if not self.world.free_build_mode then
+    self.balance = self.balance - amount
+    self:logTransaction{spend = amount, desc = reason}
+    self.money_out = self.money_out + amount
+    if changeValue then
+      self.value = self.value + changeValue
+    end
   end
 end
 
@@ -1144,11 +1151,13 @@ in _S.transactions.
 !param changeValue (integer) The (positive) amount the hospital value should be decreased
 ]]
 function Hospital:receiveMoney(amount, reason, changeValue)
-  self.balance = self.balance + amount
-  self:logTransaction{receive = amount, desc = reason}
-  self.money_in = self.money_in + amount
-  if changeValue then
-    self.value = self.value - changeValue
+  if not self.world.free_build_mode then
+    self.balance = self.balance + amount
+    self:logTransaction{receive = amount, desc = reason}
+    self.money_in = self.money_in + amount
+    if changeValue then
+      self.value = self.value - changeValue
+    end
   end
 end
 
@@ -1157,31 +1166,35 @@ end
 !param patient (Patient) The patient that just got treated.
 ]]
 function Hospital:receiveMoneyForTreatment(patient)
-  local disease_id
-  local reason
-  if patient.diagnosed then
-    disease_id = patient.disease.id
-    reason = _S.transactions.cure_colon .. " " .. patient.disease.name
-  else
-    local room_info = patient:getRoom()
-    if not room_info then
-      print("Warning: Trying to receieve money for treated patient who is "..
-            "not in a room")
-      return
+  if not self.world.free_build_mode then
+    local disease_id
+    local reason
+    if not self.world.free_build_mode then
+      if patient.diagnosed then
+        disease_id = patient.disease.id
+        reason = _S.transactions.cure_colon .. " " .. patient.disease.name
+      else
+        local room_info = patient:getRoom()
+        if not room_info then
+          print("Warning: Trying to receieve money for treated patient who is "..
+              "not in a room")
+          return
+        end
+        room_info = room_info.room_info
+        disease_id = "diag_" .. room_info.id
+        reason = _S.transactions.treat_colon .. " " .. room_info.name
+      end
+     local casebook = self.disease_casebook[disease_id]
+     local amount = self:getTreatmentPrice(disease_id)
+      casebook.money_earned = casebook.money_earned + amount
+      patient.world:newFloatingDollarSign(patient, amount)
+      -- 25% of the payments now go through insurance
+      if patient.insurance_company then
+        self:addInsuranceMoney(patient.insurance_company, amount)
+      else
+        self:receiveMoney(amount, reason) 
+      end 
     end
-    room_info = room_info.room_info
-    disease_id = "diag_" .. room_info.id
-    reason = _S.transactions.treat_colon .. " " .. room_info.name
-  end
-  local casebook = self.disease_casebook[disease_id]
-  local amount = self:getTreatmentPrice(disease_id)
-  casebook.money_earned = casebook.money_earned + amount
-  patient.world:newFloatingDollarSign(patient, amount)
-  -- 25% of the payments now go through insurance
-  if patient.insurance_company then
-    self:addInsuranceMoney(patient.insurance_company, amount)
-  else
-    self:receiveMoney(amount, reason)  
   end
 end
 

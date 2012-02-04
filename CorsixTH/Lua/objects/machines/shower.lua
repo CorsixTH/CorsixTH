@@ -26,7 +26,6 @@ object.research_fallback = 6
 object.name = _S.object.shower
 object.tooltip = _S.tooltip.objects.shower
 object.ticks = true
-object.build_cost = 6500
 object.build_preview_animation = 5100
 object.default_strength = 10
 object.crashed_animation = 3380

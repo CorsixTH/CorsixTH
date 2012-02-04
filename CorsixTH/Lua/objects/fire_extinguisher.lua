@@ -25,7 +25,6 @@ object.name = _S.object.fire_extinguisher
 object.tooltip = _S.tooltip.objects.fire_extinguisher
 object.ticks = false
 object.corridor_object = 4
-object.build_cost = 25
 object.build_preview_animation = 912
 object.idle_animations = {
   north = 178,

@@ -77,6 +77,14 @@ function World:World(app)
   self.hour = 0
 
   self.room_information_dialogs_off = app.config.debug
+
+  -- In Free Build mode?
+  if tonumber(self.map.level_number) then
+    self.free_build_mode = false
+  else
+    self.free_build_mode = app.config.free_build_mode
+  end
+
   self.debug_disable_salary_raise = false
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
@@ -206,7 +214,8 @@ function World:initLevel(app)
     if config[object.thob] then
       cost = config[object.thob].StartCost
     end
-    object.build_cost = cost
+    -- Everything is free in free build mode.
+    object.build_cost = not self.free_build_mode and cost or 0
   end
   self:determineWinningConditions()
 end
@@ -270,6 +279,12 @@ function World:initStaff()
 end
 
 function World:determineWinningConditions()
+  -- No conditions if in free build mode!
+  if self.free_build_mode then
+    self.goals = {}
+    self.winning_goals = {}
+    return
+  end
   -- Determine winning and losing conditions
   local win = self.map.level_config.win_criteria
   local lose = self.map.level_config.lose_criteria
@@ -353,10 +368,11 @@ function World:initRooms()
       -- Add cost for this object.
       build_cost = build_cost + obj[TheApp.objects[name].thob].StartCost * no
     end
-    -- Now define the total build cost for the room.
+    -- Now define the total build cost for the room. In free build mode nothing
+    -- costs anything.
     for _, hospital in ipairs(self.hospitals) do
       hospital.research.research_progress[room] = {
-        build_cost = build_cost,
+        build_cost = not self.free_build_mode and build_cost or 0,
       }
     end
     if available then
@@ -1442,7 +1458,9 @@ function World:newFloatingDollarSign(patient, amount)
   if not self.floating_dollars then
     self.floating_dollars = {}
   end
-  
+  if self.free_build_mode then
+    return
+  end
   local spritelist = TH.spriteList()
   spritelist:setPosition(-17, -60)
   spritelist:setSpeed(0, -1):setLifetime(100)

@@ -25,7 +25,6 @@ object.thob = 34
 object.name = _S.object.op_sink2
 object.tooltip = _S.tooltip.objects.op_sink2
 object.ticks = false
-object.build_cost = 0
 local function copy_north_to_south(t)
   t.south = t.north
   return t

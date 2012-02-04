@@ -25,7 +25,6 @@ object.thob = 35
 object.name = _S.object.surgeon_screen
 object.tooltip = _S.tooltip.objects.surgeon_screen
 object.ticks = false
-object.build_cost = 200
 object.build_preview_animation = 926
 object.idle_animations = {
   north = 2772,

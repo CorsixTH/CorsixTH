@@ -88,6 +88,7 @@ local config_defaults = {
   width = 800,
   height = 600,
   fullscreen = false,
+  free_build_mode = false,
   audio = true,
   audio_frequency = 22050,
   audio_channels = 2,
@@ -147,6 +148,15 @@ sound_volume = ]=].. tostring(config_defaults.sound_volume) ..[=[
 -- Adviser on/off: If you set this setting to true the adviser will no longer
 -- pop up.
 adviser_disabled = ]=].. tostring(config_defaults.adviser_disabled) ..[=[ 
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Free Build or Sandbox mode
+-- You cannot win or lose custom made maps if this is set to true. 
+-- You also don't have to worry about money.
+-- This setting does not apply to any of the campaign maps.
+
+free_build_mode = ]=].. tostring(config_defaults.free_build_mode) ..[=[
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------

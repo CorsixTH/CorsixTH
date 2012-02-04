@@ -26,7 +26,6 @@ object.research_fallback = 2
 object.name = _S.object.inflator
 object.tooltip = _S.tooltip.objects.inflator
 object.ticks = false
-object.build_cost = 2500
 object.build_preview_animation = 908
 object.default_strength = 10
 object.crashed_animation = 3362

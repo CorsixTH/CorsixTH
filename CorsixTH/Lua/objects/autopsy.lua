@@ -25,7 +25,6 @@ object.research_category = "cure"
 object.name = _S.object.auto_autopsy
 object.tooltip = _S.tooltip.objects.auto_autopsy
 object.ticks = true
-object.build_cost = 4000
 object.build_preview_animation = 5102
 object.crashed_animation = 3304
 

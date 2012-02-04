@@ -25,11 +25,12 @@ class "UICustomGame" (UIMenuList)
 
 function UICustomGame:UICustomGame(ui)
 
+  -- Supply the required list of items to UIMenuList
   local path = debug.getinfo(1, "S").source:sub(2, -57)
 
   path = path .. "Levels" .. pathsep
 
-  -- Supply the required list of items to UIMenuList
+  -- Create the actual list
   local items = {}
   for file in lfs.dir(path) do
     if file:match"%.level$" then
@@ -59,9 +60,28 @@ function UICustomGame:UICustomGame(ui)
       end
     end
   end
-  self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items)
-end
+  self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items, 10, 30)
   
+  -- Now add the free build button above the list.
+  if not pcall(function()
+    local palette = ui.app.gfx:loadPalette("QData", "DrugN01V.pal")
+    self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "DrugN02V", true, palette)
+    self.border_sprites = ui.app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
+  end) then
+    self:close()
+    return
+  end
+  
+  self:addBevelPanel(20, 40, 120, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
+  local button =  self:addPanel(12, 150, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
+    :setTooltip(_S.tooltip.custom_game_window.free_build)
+  if self.ui.app.config.free_build_mode then
+    button:toggle()
+  end
+end
+
+-- Overrides the function in the UIMenuList, choosing what should happen when the player
+-- clicks a choice in the list.
 function UICustomGame:buttonClicked(num)
   local app = self.ui.app
   local item = self.items[num + self.scrollbar.value - 1]
@@ -77,4 +97,9 @@ function UICustomGame:buttonClicked(num)
   end
   app:loadLevel(filename, nil, level_name, level_file, level_intro)
 end
+
+function UICustomGame:buttonFreebuild(checked)
+  self.ui.app.config.free_build_mode = checked
+end
+
 

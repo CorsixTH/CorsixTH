@@ -26,7 +26,6 @@ object.research_fallback = 39
 object.name = _S.object.x_ray
 object.tooltip = _S.tooltip.objects.x_ray
 object.ticks = false
-object.build_cost = 4000
 object.build_preview_animation = 5076
 object.default_strength = 12
 object.crashed_animation = 3384

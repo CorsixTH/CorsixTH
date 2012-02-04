@@ -38,6 +38,15 @@ adviser_disabled = false
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+-- Free Build or Sandbox mode
+-- You cannot win or lose custom made maps if this is set to true. 
+-- You also don't have to worry about money.
+-- This setting does not apply to any of the campaign maps.
+
+free_build_mode = false
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Chinese (simplified)  / zh(s) / chi(s)
 --  Chinese (traditional) / zh(t) / chi(t)

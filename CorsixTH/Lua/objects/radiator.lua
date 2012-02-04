@@ -25,7 +25,6 @@ object.name = _S.object.radiator
 object.tooltip = _S.tooltip.objects.radiator
 object.ticks = false
 object.corridor_object = 5
-object.build_cost = 20
 object.build_preview_animation = 914
 object.idle_animations = {
   north = 750,

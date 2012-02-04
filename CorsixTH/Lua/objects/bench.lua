@@ -26,7 +26,6 @@ object.name = _S.object.bench
 object.tooltip = _S.tooltip.objects.bench
 object.ticks = false
 object.corridor_object = 2
-object.build_cost = 40
 object.build_preview_animation = 902
 object.dynamic_info = true
 object.idle_animations = {

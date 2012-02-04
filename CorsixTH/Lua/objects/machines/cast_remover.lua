@@ -26,7 +26,6 @@ object.research_fallback = 9
 object.name = _S.object.cast_remover
 object.tooltip = _S.tooltip.objects.cast_remover
 object.ticks = false
-object.build_cost = 2000
 object.build_preview_animation = 5072
 object.default_strength = 10
 object.crashed_animation = 3388

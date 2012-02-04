@@ -25,7 +25,6 @@ object.research_category = "diagnosis"
 object.name = _S.object.bed
 object.tooltip = _S.tooltip.objects.bed
 object.ticks = false
-object.build_cost = 200
 object.build_preview_animation = 910
 object.idle_animations = {
   north = 2644,

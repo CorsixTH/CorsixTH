@@ -145,12 +145,17 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local happiness = self.ui.hospital:getAveragePatientAttribute("happiness")
   local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst")
   local warmth = self.ui.hospital:getAveragePatientAttribute("warmth")
+  local world = self.ui.app.world
 
   warmth = UIPatient.normaliseWarmth(warmth)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * happiness, y + 193)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
   self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)
   
+  if world.free_build_mode then
+    self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")
+  end
+
   -- Possibly show warning that it's too cold, too hot, patients not happy 
   -- or if theres need to build drink machines as folks are thirsty.  Only show one at a time though!
   -- TODO the levels may need adjustment

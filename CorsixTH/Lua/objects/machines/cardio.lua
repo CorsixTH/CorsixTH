@@ -26,7 +26,6 @@ object.research_category = "diagnosis"
 object.name = _S.object.cardio
 object.tooltip = _S.tooltip.objects.cardio
 object.ticks = false
-object.build_cost = 1000
 object.build_preview_animation = 918
 object.default_strength = 12
 object.crashed_animation = 3308

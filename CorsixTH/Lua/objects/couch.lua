@@ -25,7 +25,6 @@ object.research_category = "diagnosis"
 object.name = _S.object.couch
 object.tooltip = _S.tooltip.objects.couch
 object.ticks = false
-object.build_cost = 100
 object.build_preview_animation = 5064
 local function copy_north_to_south(t)
   t.south = t.north

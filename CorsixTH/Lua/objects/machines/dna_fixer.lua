@@ -26,7 +26,6 @@ object.research_category = "cure"
 object.name = _S.object.dna_fixer
 object.tooltip = _S.tooltip.objects.dna_fixer
 object.ticks = false
-object.build_cost = 10000
 object.build_preview_animation = 5070
 object.default_strength = 7
 object.crashed_animation = 3376 -- TODO correct?

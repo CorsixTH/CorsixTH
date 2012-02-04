@@ -26,7 +26,6 @@ object.research_fallback = 45
 object.name = _S.object.atom_analyser
 object.tooltip = _S.tooltip.objects.atom_analyser
 object.ticks = true
-object.build_cost = 10000
 object.build_preview_animation = 5092
 object.idle_animations = {
   north = 2134,

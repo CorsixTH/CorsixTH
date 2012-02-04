@@ -26,7 +26,6 @@ object.thob = 28
 object.name = _S.object.radiation_shield
 object.tooltip = _S.tooltip.objects.radiation_shield
 object.ticks = false
-object.build_cost = 0
 
 local function copy_east_to_west(t)
   t.west = t.east

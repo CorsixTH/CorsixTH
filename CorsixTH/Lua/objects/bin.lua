@@ -24,7 +24,6 @@ object.thob = 50
 object.name = _S.object.bin
 object.tooltip = _S.tooltip.objects.bin
 object.ticks = false
-object.build_cost = 5
 object.build_preview_animation = 5096
 object.idle_animations = {
   north = 1752,
