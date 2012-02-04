@@ -83,6 +83,7 @@ function World:World(app)
     self.free_build_mode = false
   else
     self.free_build_mode = app.config.free_build_mode
+    self.debug_disable_salary_raise = self.free_build_mode
   end
 
   self.debug_disable_salary_raise = false
