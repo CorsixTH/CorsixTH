@@ -33,6 +33,8 @@ SOFTWARE.
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/wfstream.h>
+#include <wx/dir.h>
+#include <wx/tokenzr.h>
 #include "backdrop.h"
 #include "tinyxml.h"
 
@@ -305,35 +307,35 @@ void frmMain::load()
         ::wxMessageBox(L"Theme Hospital path non-existant", L"Load Animations", wxOK | wxICON_ERROR, this);
         return;
     }
-    sPath += L"DATA";
+    sPath = _getCaseSensitivePath(L"DATA", sPath);
     sPath += wxFileName::GetPathSeparator();
-    wxString aPath = sPath + L"VSPR-0";
+    wxString aPath = _getCaseSensitivePath(L"VSPR-0", sPath);
     aPath += wxFileName::GetPathSeparator();
     m_oAnims.setSpritePath(aPath);
 
     bool bXmlLoaded = false;
-    wxString xmlFile = sPath + L"VSPR-0.xml";
+    wxString xmlFile = _getCaseSensitivePath(L"VSPR-0.xml", sPath);
     TiXmlDocument xmlDocument((const char*)xmlFile.mb_str());
     if(wxFileName::FileExists(xmlFile) && xmlDocument.LoadFile())
     {
         m_oAnims.loadXMLFile(&xmlDocument);
-        m_oAnims.loadPaletteFile(sPath + L"MPALETTE.DAT");
-        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST1.DAT", 1);
-        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST2.DAT", 2);
-        m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST66.DAT", 3);
+        m_oAnims.loadPaletteFile(_getCaseSensitivePath(L"MPALETTE.DAT", sPath));
+        m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST1.DAT", sPath), 1);
+        m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST2.DAT", sPath), 2);
+        m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST66.DAT", sPath), 3);
         bXmlLoaded = true;
         m_btnExport->Disable();
     }
-    else if(!m_oAnims.loadAnimationFile(sPath + L"VSTART-1.ANI")
-     ||!m_oAnims.loadFrameFile(sPath + L"VFRA-1.ANI")
-     ||!m_oAnims.loadListFile(sPath + L"VLIST-1.ANI")
-     ||!m_oAnims.loadElementFile(sPath + L"VELE-1.ANI")
-     ||!m_oAnims.loadTableFile(sPath + L"VSPR-0.TAB")
-     ||!m_oAnims.loadSpriteFile(sPath + L"VSPR-0.DAT")
-     ||!m_oAnims.loadPaletteFile(sPath + L"MPALETTE.DAT")
-     ||!m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST1.DAT", 1)
-     ||!m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST2.DAT", 2)
-     ||!m_oAnims.loadGhostFile(sPath + L"../QDATA/GHOST66.DAT", 3))
+    else if(!m_oAnims.loadAnimationFile(_getCaseSensitivePath(L"VSTART-1.ANI", sPath))
+      ||!m_oAnims.loadFrameFile(_getCaseSensitivePath(L"VFRA-1.ANI", sPath))
+     ||!m_oAnims.loadListFile(_getCaseSensitivePath(L"VLIST-1.ANI", sPath))
+     ||!m_oAnims.loadElementFile(_getCaseSensitivePath(L"VELE-1.ANI", sPath))
+     ||!m_oAnims.loadTableFile(_getCaseSensitivePath(L"VSPR-0.TAB", sPath))
+     ||!m_oAnims.loadSpriteFile(_getCaseSensitivePath(L"VSPR-0.DAT", sPath))
+     ||!m_oAnims.loadPaletteFile(_getCaseSensitivePath(L"MPALETTE.DAT", sPath))
+     ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST1.DAT", sPath), 1)
+     ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST2.DAT", sPath), 2)
+     ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST66.DAT", sPath), 3))
     {
         ::wxMessageBox(L"Cannot load one or more data files", L"Load Animations", wxOK | wxICON_ERROR, this);
     }
@@ -390,7 +392,7 @@ void frmMain::export_png()
         ::wxMessageBox(L"Theme Hospital path non-existant", L"Load Animations", wxOK | wxICON_ERROR, this);
         return;
     }
-    wxString sdPath = sPath + L"DATA";
+    wxString sdPath = _getCaseSensitivePath(L"DATA", sPath);
     sdPath += wxFileName::GetPathSeparator();
 
     //wxDialog warnDialog(this, wxID_ANY, L"Export Warning");
@@ -405,33 +407,33 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
     if( response == wxYES) { bWriteFrames = true; }
     if( response != wxCANCEL) {
         //Start with animations, then move on to sprite sheets (map tiles)
-        if(!m_oAnims.loadAnimationFile(sdPath + L"VSTART-1.ANI")
-         ||!m_oAnims.loadFrameFile(sdPath + L"VFRA-1.ANI")
-         ||!m_oAnims.loadListFile(sdPath + L"VLIST-1.ANI")
-         ||!m_oAnims.loadElementFile(sdPath + L"VELE-1.ANI")
-         ||!m_oAnims.loadTableFile(sdPath + L"VSPR-0.TAB")
-         ||!m_oAnims.loadSpriteFile(sdPath + L"VSPR-0.DAT")
-         ||!m_oAnims.loadPaletteFile(sdPath + L"MPALETTE.DAT")
-         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST1.DAT", 1)
-         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST2.DAT", 2)
-         ||!m_oAnims.loadGhostFile(sdPath + L"../QDATA/GHOST66.DAT", 3))
+        if(!m_oAnims.loadAnimationFile(_getCaseSensitivePath(L"VSTART-1.ANI", sdPath))
+         ||!m_oAnims.loadFrameFile(_getCaseSensitivePath(L"VFRA-1.ANI", sdPath))
+         ||!m_oAnims.loadListFile(_getCaseSensitivePath(L"VLIST-1.ANI", sdPath))
+         ||!m_oAnims.loadElementFile(_getCaseSensitivePath(L"VELE-1.ANI", sdPath))
+         ||!m_oAnims.loadTableFile(_getCaseSensitivePath(L"VSPR-0.TAB", sdPath))
+         ||!m_oAnims.loadSpriteFile(_getCaseSensitivePath(L"VSPR-0.DAT",sdPath))
+         ||!m_oAnims.loadPaletteFile(_getCaseSensitivePath(L"MPALETTE.DAT", sdPath))
+         ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST1.DAT", sdPath), 1)
+         ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST2.DAT", sdPath), 2)
+         ||!m_oAnims.loadGhostFile(_getCaseSensitivePath(L"../QDATA/GHOST66.DAT", sdPath), 3))
         {
             ::wxMessageBox(L"Cannot load one or more data files", L"Load Animations", wxOK | wxICON_ERROR, this);
         }
         m_oAnims.markDuplicates();
-        wxString aPath = sdPath + L"VSPR-0";
+        wxString aPath = _getCaseSensitivePath(L"VSPR-0", sdPath);
         aPath += wxFileName::GetPathSeparator();
         if(!wxFileName::DirExists(aPath))
         {
             wxFileName::Mkdir(aPath);
         }
         size_t iExportCount = m_oAnims.getAnimationCount();
-        wxFile f(sdPath + L"VSPR-0export.log", wxFile::write_append);
+        wxFile f(_getCaseSensitivePath(L"VSPR-0export.log", sdPath), wxFile::write_append);
         wxFileOutputStream fos(f);
         wxTextOutputStream outputLog(fos);
         outputLog.WriteString(wxString::Format(L"File\tIndex\tFrame\tLayer\tID\tWidth\tHeight\tUnknown\n"));
         m_oAnims.writeTableDataHeader(&outputLog);
-        wxFile fxml(sdPath + L"VSPR-0.xml", wxFile::write);
+        wxFile fxml(_getCaseSensitivePath(L"VSPR-0.xml", sdPath), wxFile::write);
         wxFileOutputStream fosxml(fxml);
         wxTextOutputStream outputXml(fosxml);
         outputXml.WriteString(wxString::Format(L"<?xml version='1.0' encoding='ISO-8859-1' standalone='no'?>\n"));
@@ -520,7 +522,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
         //Skip DataM directory because it appears to be low-res versions of same
 
         //Sprite sheet code for QData directory 
-        wxString sqPath = sPath + L"QDATA";
+        wxString sqPath = _getCaseSensitivePath(L"QDATA", sPath);
         sqPath += wxFileName::GetPathSeparator();
         exportSpritesPage(true, sqPath, L"AWARD03V", L"", L"AWARD02V.PAL");
         exportSpritesPage(true, sqPath, L"BANK02V", L"", L"BANK01V.PAL");
@@ -607,20 +609,20 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
     {
         spPath = sPath;
     }
-    if(!m_oAnims.loadTableFile(sPath + wxString::Format(L"%s.TAB",sFilename.wx_str()))
-     ||!m_oAnims.loadSpriteFile(sPath + wxString::Format(L"%s.DAT",sFilename.wx_str()))
-     ||!m_oAnims.loadPaletteFile(spPath + sPalette))
+    if(!m_oAnims.loadTableFile(_getCaseSensitivePath(wxString::Format(L"%s.TAB",sFilename.wx_str()), sPath))
+     ||!m_oAnims.loadSpriteFile(_getCaseSensitivePath(wxString::Format(L"%s.DAT",sFilename.wx_str()), sPath))
+     ||!m_oAnims.loadPaletteFile(_getCaseSensitivePath(sPalette, spPath)))
     {
         //::wxMessageBox(L"Cannot load files");
         return;
     }
 
-    wxFile f(sPath + sFilename + L"export.log", wxFile::write);
+    wxFile f(_getCaseSensitivePath(sFilename + L"export.log", sPath), wxFile::write);
     wxFileOutputStream fos(f);
     wxTextOutputStream outputLog(fos);
     outputLog.WriteString(wxString::Format(L"File\tIndex\tPalette\tComplex\tWidth\tHeight\n"));
 
-    wxString aPath = sPath + sFilename;
+    wxString aPath = _getCaseSensitivePath(sFilename, sPath);
     aPath += wxFileName::GetPathSeparator();
     if(!wxFileName::DirExists(aPath))
     {
@@ -652,7 +654,7 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
                     }
                 }
                 //oSprite.bitmap = wxBitmap(imgSprite);
-                if(!imgSprite.SaveFile(aPath + wxString::Format(L"s%u.png", i),wxBITMAP_TYPE_PNG))
+                if(!imgSprite.SaveFile(_getCaseSensitivePath(wxString::Format(L"s%u.png", i), aPath),wxBITMAP_TYPE_PNG))
                     return;
                 outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%u\t%u\n", sFilename.wx_str(), i, sPalette.wx_str(), pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
             }
@@ -987,5 +989,64 @@ void frmMain::_drawCoordinates(wxPaintDC& DC, int i, int j)
     wxString s;
     s.Printf(_T("(%2d,%2d)"), i, j);
     DC.DrawText(s, 32 * (i - j) + x, 16 * (i + j - 2) + y);
+}
+
+wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, const wxString& sPath)
+{
+  bool found;
+  bool cont;
+  
+  if(!wxFileName::IsCaseSensitive()) { return sPath + sInsensitivePathPart; }
+  
+  wxString retStr(sPath);
+  
+  wxStringTokenizer pathTokenizer(sInsensitivePathPart, wxFileName::GetPathSeparator());
+  while(pathTokenizer.HasMoreTokens())
+  {
+    wxDir dir(retStr);
+    if(!dir.IsOpened())
+    {
+      break;
+    }
+    
+    wxString pathPart = pathTokenizer.GetNextToken();
+    
+    wxString realName;
+    cont = dir.GetFirst(&realName, wxEmptyString, wxDIR_DIRS|wxDIR_FILES|wxDIR_HIDDEN|wxDIR_DOTDOT);
+    found = false;
+    while(cont)
+    {
+      if(realName.Upper() == pathPart.Upper())
+      {
+        if(retStr.Last() != wxFileName::GetPathSeparator())
+        {
+          retStr += wxFileName::GetPathSeparator();
+        }
+        retStr += realName;
+        found = true;
+        break;
+      }
+      cont = dir.GetNext(&realName);
+    }
+    
+    if(!found)
+    {
+      retStr += wxFileName::GetPathSeparator();
+      retStr += pathPart;
+      break;
+    }
+  }
+  
+  while(pathTokenizer.HasMoreTokens())
+  {
+    wxString pathPart = pathTokenizer.GetNextToken();
+    if(retStr.Last() != wxFileName::GetPathSeparator())
+    {
+      retStr += wxFileName::GetPathSeparator();
+    }
+    retStr += pathPart;
+  }
+  
+  return retStr;
 }
 

@@ -100,6 +100,7 @@ protected:
     void _onAnimChange(size_t iIndex);
 
     void _drawCoordinates(wxPaintDC& DC, int i, int j);
+    wxString _getCaseSensitivePath(const wxString& sInsensitivePathPart, const wxString& sPath);
 
     THAnimations m_oAnims;
     THLayerMask m_mskLayers;
