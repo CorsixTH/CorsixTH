@@ -28,7 +28,7 @@ function UIFullscreen:UIFullscreen(ui)
   self.esc_closes = true
   self.ui = ui
   self.modal_class = "fullscreen"
-  self.on_top = true
+
   self.width = 640
   self.height = 480
   

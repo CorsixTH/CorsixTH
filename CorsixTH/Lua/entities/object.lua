@@ -493,7 +493,12 @@ function Object:onClick(ui, button, data)
     or (not room and not self.object_type.corridor_object) then
       return
     end
-    
+
+    local fullscreen = ui:getWindow(UIFullscreen)
+    if fullscreen then
+      fullscreen:close()
+    end
+
     self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,

@@ -390,13 +390,12 @@ function Patient:checkWatch()
 end
 
 function Patient:yawn()
-  if self.yawn_anim and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering 
-  and not self:goingToUseObject("screen") then   -- see issue 1113, seems that you can get an 
-  -- error if the action is queued at the instance the patient uses the screen.  This should stop this, but there may be a better way! MarkL
+  local action = self.action_queue[1]
+  if self.yawn_anim and action.name == "idle" then
     self:queueAction({
       name = "yawn",
       must_happen = true
-      }, 2)
+      }, 0)
   end
 end
 

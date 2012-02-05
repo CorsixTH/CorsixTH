@@ -21,7 +21,7 @@ SOFTWARE. --]]
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 class "UIConfirmDialog" (Window)
 
-function UIConfirmDialog:UIConfirmDialog(ui, text, callback)
+function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
   
   local app = ui.app
@@ -35,22 +35,38 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.text = text
-  self.callback = callback  -- Callback function to launch if user choose ok
-  
+  self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
+  self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
+
+  -- Check how "high" the dialog must be
+  local w, h = self.white_font:sizeOf(text)
+
   self:addPanel(357, 0, 0)  -- Dialog header
-  for y = 22, 136, 11 do
+  local last_y = 22
+  -- Rough estimate of how many rows it will be when drawn.
+  for y = 22, h * (w / 160) * 1.4, 11 do -- Previous value: 136
     self:addPanel(358, 0, y)  -- Dialog background
+    self.height = self.height + 11
+    last_y = last_y + 11
   end
-  self:addPanel(359, 0, 136)  -- Dialog footer
-  self:addPanel(360, 0, 146):makeButton(8, 10, 82, 34, 361, self.close):setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
-  self:addPanel(362, 90, 146):makeButton(0, 10, 82, 34, 363, self.ok):setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
+
+  self:addPanel(359, 0, last_y)  -- Dialog footer
+  self:addPanel(360, 0, last_y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
+    :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
+  self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
+    :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
   
   self:addKeyHandler("Enter", self.ok)
 end
 
+function UIConfirmDialog:cancel()
+  self:close()
+  self.callback_cancel()
+end
+
 function UIConfirmDialog:ok()
   self:close()
-  self.callback()
+  self.callback_ok()
 end
 
 function UIConfirmDialog:draw(canvas, x, y)

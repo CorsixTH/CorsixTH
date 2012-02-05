@@ -160,6 +160,11 @@ function UIBuildRoom:buildRoom(index)
   local hosp = self.ui.hospital
   if index == 1 then self.ui:tutorialStep(3, 3, 4) end
   if hosp.balance >= hosp.research.research_progress[self.list[index]].build_cost then
+    -- Close any full screen window currently open.
+    local fullscreen = self.ui:getWindow(UIFullscreen)
+    if fullscreen then
+      fullscreen:close()
+    end
     local edit_dlg = UIEditRoom(self.ui, self.list[index])
     self.ui:addWindow(edit_dlg)
   else

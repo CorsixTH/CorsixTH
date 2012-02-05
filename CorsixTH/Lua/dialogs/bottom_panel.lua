@@ -363,6 +363,11 @@ function UIBottomPanel:dialogBuildRoom()
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
+  -- Close any fullscreen window
+  local fullscreen = self.ui:getWindow(UIFullscreen)
+  if fullscreen then
+    fullscreen:close()
+  end
   local dlg = UIFurnishCorridor(self.ui)
   self.ui:setEditRoom(false)
   self.ui:addWindow(dlg)

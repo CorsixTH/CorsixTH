@@ -463,8 +463,67 @@ end
 
 local function Humanoid_startAction(self)
   local action = self.action_queue[1]
-  assert(action, "Empty action queue")
-  
+
+  -- Handle an empty action queue in some way instead of crashing.
+  if not action then
+    ---- Empty action queue! ----
+    -- First find out if this humanoid is in a room.
+    local room = self:getRoom()
+    if room then
+      room:makeHumanoidLeave(self)
+    end
+    -- Is it a member of staff or a patient?
+    if class.is(self, Staff) then
+      self:queueAction({name = "meander"})
+    else
+      self:queueAction({name = "seek_reception"})
+    end
+    -- Open the dialog of the humanoid.
+    local ui = self.world.ui
+    if class.is(self, Patient) then
+      ui:addWindow(UIPatient(ui, self))
+    elseif class.is(self, Staff) then
+      ui:addWindow(UIStaff(ui, self))
+    end
+    -- Pause the game.
+    self.world:setSpeed("Pause")
+
+    -- Tell the player what just happened.
+    self.world:gameLog("Empty action queue!")
+    self.world:gameLog(debug.traceback())
+    print("")
+    print("Empty action queue!")
+    print("Last action: " .. self.previous_action.name)
+    print(debug.traceback())
+
+    ui:addWindow(UIConfirmDialog(ui,
+      "Sorry, a humanoid just had an empty action queue,"..
+      " which means that he or she didn't know what to do next."..
+      " Please consult the command window for more detailed information. "..
+      "A dialog with "..
+      "the offending humanoid has been opened. "..
+      "Would you like him/her to leave the hospital?",
+      --[[persistable:humanoid_leave_hospital]] function()
+        self.world:gameLog("The humanoid was told to leave the hospital...")
+        if class.is(self, Staff) then
+          self:fire()
+        else
+          self:goHome()
+        end
+        if TheApp.world:isCurrentSpeed("Pause") then
+        TheApp.world:setSpeed(TheApp.world.prev_speed)
+      end
+      end,
+      --[[persistable:humanoid_stay_in_hospital]] function()
+        if TheApp.world:isCurrentSpeed("Pause") then
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
+      end
+    ))
+    action = self.action_queue[1]
+    
+  end
+  ---- There is an action to start ----
   -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
   
@@ -555,6 +614,8 @@ function Humanoid:finishAction(action)
   if action ~= nil then
     assert(action == self.action_queue[1], "Can only finish current action")
   end
+  -- Save the previous action just a while longer.
+  self.previous_action = self.action_queue[1]
   table.remove(self.action_queue, 1)
   Humanoid_startAction(self)
 end
