@@ -607,8 +607,8 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
     {
         spPath = sPath;
     }
-    if(!m_oAnims.loadTableFile(sPath + wxString::Format(L"%s.TAB",sFilename))
-     ||!m_oAnims.loadSpriteFile(sPath + wxString::Format(L"%s.DAT",sFilename))
+    if(!m_oAnims.loadTableFile(sPath + wxString::Format(L"%s.TAB",sFilename.wx_str()))
+     ||!m_oAnims.loadSpriteFile(sPath + wxString::Format(L"%s.DAT",sFilename.wx_str()))
      ||!m_oAnims.loadPaletteFile(spPath + sPalette))
     {
         //::wxMessageBox(L"Cannot load files");
@@ -654,7 +654,7 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
                 //oSprite.bitmap = wxBitmap(imgSprite);
                 if(!imgSprite.SaveFile(aPath + wxString::Format(L"s%u.png", i),wxBITMAP_TYPE_PNG))
                     return;
-                outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%u\t%u\n", sFilename, i, sPalette, pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
+                outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%u\t%u\n", sFilename.wx_str(), i, sPalette.wx_str(), pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
             }
             //m_vSprites.push_back(oSprite);
         }
