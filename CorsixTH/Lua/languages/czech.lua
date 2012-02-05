@@ -134,6 +134,7 @@ level_names = {
   [15] = "Zakopej Pohřbi",
 }
 custom_game_window = {
+  free_build = "Volné stavění",
   caption = "Vlastní Hra",
 }
 menu_debug_overlay = {
@@ -965,6 +966,7 @@ tooltip = {
   },
   custom_game_window = {
     start_game_with_name = "Načíst úroveň %s",
+    free_build = "Toto políčko zaškrtněte, pokud chcete hrát bez peněz a podmínek pro vítězství a prohru",
   },
   new_game_window = {
     easy = "Pokud jste začátečníci v simulačních hrách, tak toto je volba pro Vás",
@@ -1754,6 +1756,7 @@ progress_report = {
   quite_unhappy = "Vaši lidé jsou pěkně nešťastní. ",
   too_cold = "Je tu příliš velká zima. Umístěte radiátory. ",
   header = "Hlášení o Postupu",
+  free_build = "VOLNÉ STAVĚNÍ",
   too_hot = "Zorganizujte si Váš systém vytápění. Je tu příliš vedro. ",
   percentage_pop = "% populace",
   very_unhappy = "Vaši lidé jsou velmi nešťastní. ",
@@ -2469,6 +2472,8 @@ main_menu = {
   custom_level = "Vlastní Úroveň",
   load_game = "Načíst Hru",
   options = "Nastavení",
+  savegame_version = "Verze uložených her: ",
+  version = "Verze: ",
   exit = "Ukončit",
   new_game = "Nová Hra",
 }
@@ -2605,6 +2610,10 @@ fax = {
         [2] = "Jémináčku. To není pěkné místo, kam jít, když se cítíte neduživě.",
         [3] = "Upřímně, je to průměrná nemocnice. Abych pravdu řekl, čekal jsem více.",
       },
+      free_build = {
+        [1] = "Máte tady velmi hezkou nemocnici! Není to ale zas tak těžké ji postavit, když nejste omezeni penězi, co?",
+        [2] = "Sice nejsem ekonom, ale myslím si, že bych tuto nemocnici také mohl řídit, víte, co tím myslím...",
+        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano... Vy se ji nemusíte obávat.",
       good = {
         [1] = "Jaká to dobře provozovaná nemocnice. Děkuji, že jste mě do ní pozvali.",
         [2] = "Hmm. Není to špatné zdravotnické zařízení, to zajisté.",
@@ -2681,6 +2690,7 @@ fax = {
       refuse = "Ne. Odmítám zvládnout tuto havárii.",
     },
     cure_not_possible_employ = "Potřebujete zaměstnat %s",
+    free_build = "Pokud budete úspěšní, Vaše reputace se zvýší, pokud ale selžete, bude to mít velký dopad na Vaši reputaci.",
     num_disease_singular = "Je tu 1 osoba s %s a vyžaduje okamžitou pozornost.",
     cure_not_possible_build_and_employ = "Bude potřeba postavit %s a zaměstnat %s",
     bonus = "K dispozici je maximální bonus %d za zvládnutí této havárie. Pokud ale selžete, Vaše reputace bude silně pošramocena.",
@@ -2738,6 +2748,7 @@ fax = {
     text10 = "ÚMRTÍ %d POVOLENO (MĚS) %d (%d) SNÍŽENÍ %d",
     text11 = "LIDÍ TENTO MĚSÍC %d",
   },
+},
 }
 insurance_companies = {
   [1] = "LabutíList s.r.o.",
