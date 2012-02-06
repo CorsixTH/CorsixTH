@@ -204,20 +204,7 @@ function World:initLevel(app)
   if added_diseases == 0 then
     print("Warning: This level does not contain any diseases")
   end
-  -- Alter build cost for all objects based on the current level.
-  -- This does in practise make object.build_cost obsolete,
-  -- but it will remain for now to avoid too many complications.
-  -- TODO: Remove object.build_cost from all objects.
-  -- A few places will need fixing to be able to do that.
-  local config = self.map.level_config.objects
-  for _, object in ipairs(app.objects) do
-    local cost = 0
-    if config[object.thob] then
-      cost = config[object.thob].StartCost
-    end
-    -- Everything is free in free build mode.
-    object.build_cost = not self.free_build_mode and cost or 0
-  end
+
   self:determineWinningConditions()
 end
 
@@ -460,9 +447,13 @@ end
 function World:spawnPatient(hospital)
   -- The level might not contain any diseases
   if #self.available_diseases < 1 then
+    self.ui:addWindow(UIInformation(self.ui, {"There are no diseases on this level! Please add some to your level."}))
     return
   end
-  assert(#self.spawn_points > 0, "Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level.")
+  if #self.spawn_points == 0 then
+    self.ui:addWindow(UIInformation(self.ui, {"Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level."}))
+    return
+  end
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end

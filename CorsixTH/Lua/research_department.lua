@@ -54,7 +54,7 @@ function ResearchDepartment:initResearch()
       self.research_progress[object] = {
         points = 0, 
         start_strength = config[object.thob].StartStrength,
-        cost = object.build_cost,
+        cost = not self.world.free_build_mode and config[object.thob].StartCost or 0,
         discovered = config[object.thob].StartAvail == 1,
         strength_imp = 0,
         cost_imp = 0,

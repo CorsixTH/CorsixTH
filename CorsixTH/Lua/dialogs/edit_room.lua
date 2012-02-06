@@ -142,10 +142,9 @@ function UIEditRoom:abortRoom()
     -- Decrease the hospital value by the whole room build cost
     local valueChange = progress[self.room.room_info].build_cost
     for obj, num in pairs(self.room.room_info.objects_needed) do
-      local obj_cost = TheApp.objects[obj].build_cost
-      if progress[TheApp.objects[obj]] then
-        obj_cost = progress[TheApp.objects[obj]].cost
-      end
+      -- Get how much this item costs.
+      local obj_cost = self.ui.hospital:getObjectBuildCost(obj)
+
       valueChange = valueChange - num * obj_cost
     end
     self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)
@@ -218,10 +217,8 @@ function UIEditRoom:confirm(force)
       local progress = self.ui.hospital.research.research_progress
       local cost = progress[self.room.room_info].build_cost
       for obj, num in pairs(self.room.room_info.objects_needed) do
-        local obj_cost = TheApp.objects[obj].build_cost
-        if progress[TheApp.objects[obj]] then
-          obj_cost = progress[TheApp.objects[obj]].cost
-        end
+        -- Get how much this item costs.
+        local obj_cost = self.ui.hospital:getObjectBuildCost(obj)
         cost = cost - num * obj_cost
       end
       self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text, cost)

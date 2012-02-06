@@ -128,9 +128,10 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
     quantity = 99
   end
   quantity = quantity - o.qty
-  if self.ui.hospital.balance >= self.total_price + quantity * o.object.build_cost then
+  local hospital = self.ui.hospital
+  if hospital.balance >= self.total_price + quantity * hospital:getObjectBuildCost(o.object.id) then
     o.qty = o.qty + quantity
-    self.total_price = self.total_price + quantity * o.object.build_cost
+    self.total_price = self.total_price + quantity * hospital:getObjectBuildCost(o.object.id)
     if o.object.id == "reception_desk" then
       if o.qty > 0 then
         self.ui:tutorialStep(1, 2, 3)
@@ -150,14 +151,15 @@ function UIFurnishCorridor:confirm()
   local to_purchase = {}
   local to_sell = {}
   for i, o in ipairs(self.objects) do
+    local build_cost = self.ui.hospital:getObjectBuildCost(o.object.id)
     if o.qty - o.start_qty > 0 then
       local diff_qty = o.qty - o.start_qty
       to_purchase[#to_purchase + 1] = { object = o.object, qty = diff_qty }
-      self.ui.hospital:spendMoney(o.object.build_cost * diff_qty, _S.transactions.buy_object .. ": " .. o.object.name, o.object.build_cost * diff_qty)
+      self.ui.hospital:spendMoney(build_cost * diff_qty, _S.transactions.buy_object .. ": " .. o.object.name, build_cost * diff_qty)
     elseif o.qty - o.start_qty < 0 then
       local diff_qty = o.start_qty - o.qty
       to_sell[#to_sell + 1] = { object = o.object, qty = diff_qty }
-      self.ui.hospital:receiveMoney(o.object.build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name, o.object.build_cost * diff_qty)
+      self.ui.hospital:receiveMoney(build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name, build_cost * diff_qty)
     end
   end
   
@@ -213,7 +215,7 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   if hover_idx ~= self.list_hover_index then
     if 1 <= hover_idx and hover_idx <= #self.objects then
       local obj = self.objects[hover_idx].object
-      self.item_price = obj.build_cost
+      self.item_price = self.ui.hospital:getObjectBuildCost(obj.id)
       self.preview_anim:setAnimation(self.anims, obj.build_preview_animation)
     end
     self.list_hover_index = hover_idx

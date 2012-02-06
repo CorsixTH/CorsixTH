@@ -1125,6 +1125,26 @@ function Hospital:getDebugPatient()
   return self.debug_patients[debug_n]
 end
 
+--[[ Returns how much a given object currently costs to purchase. The cost
+may be affected by research progress.
+
+!param name (string) The name (id) of the object to investigate.
+]]
+function Hospital:getObjectBuildCost(name)
+  -- Some helpers
+  local progress = self.research.research_progress
+  local config = self.world.map.level_config.objects
+  local obj_def = TheApp.objects[name]
+  -- Get how much this item costs at the start of the level.
+  local obj_cost = config[obj_def.thob].StartCost
+  -- Some objects might have got their cost reduced by research.
+  if progress[obj_def] then
+    obj_cost = progress[obj_def].cost
+  end
+  -- Everything is free in free build mode.
+  return not self.world.free_build_mode and obj_cost or 0
+end
+
 --[[ Lowers the player's money by the given amount and logs the transaction.
 
 !param amount (integer) The (positive) amount to spend.
