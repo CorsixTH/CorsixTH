@@ -29,6 +29,8 @@ adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in Ge
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Show next page"
 tooltip.staff_list.prev_person = "Show previous page"
+tooltip.status.reputation = "Your Reputation should not be less than %d. Currently it's %d"
+tooltip.status.balance = "Your bank balance should not be less than %d. Currently it's %d"
 
 -- The originals of these two contain one space too much
 fax.emergency.cure_not_possible_build = "You will need to build a %s"
