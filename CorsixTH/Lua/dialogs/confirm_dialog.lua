@@ -61,12 +61,16 @@ end
 
 function UIConfirmDialog:cancel()
   self:close()
-  self.callback_cancel()
+  if self.callback_cancel then
+    self.callback_cancel()
+  end
 end
 
 function UIConfirmDialog:ok()
   self:close()
-  self.callback_ok()
+  if self.callback_ok then
+    self.callback_ok()
+  end
 end
 
 function UIConfirmDialog:draw(canvas, x, y)
