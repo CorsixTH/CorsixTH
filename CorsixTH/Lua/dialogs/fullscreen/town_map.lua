@@ -219,11 +219,11 @@ function UITownMap:decreaseHeat()
   local heat = math.floor(h.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
     heat = heat - 1
+    if heat < 1 then
+      heat = 1
+    end
+    h.radiator_heat = heat / 10
   end
-  if heat < 1 then
-    heat = 1
-  end
-  h.radiator_heat = heat / 10
 end
 
 function UITownMap:increaseHeat()
@@ -231,11 +231,11 @@ function UITownMap:increaseHeat()
   local heat = math.floor(h.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
     heat = heat + 1
+    if heat > 10 then
+      heat = 10
+    end
+    h.radiator_heat = heat / 10
   end
-  if heat > 10 then
-    heat = 10
-  end
-  h.radiator_heat = heat / 10
 end
 
 function UITownMap:bankManager()
