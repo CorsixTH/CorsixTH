@@ -161,6 +161,7 @@ LangString options_title      ${LANG_SPANISH} "Opciones adicionales"
 LangString options_subtitle   ${LANG_SPANISH} "Especifica la carpeta donde está el juego original."
 LangString save_in_appdata    ${LANG_SPANISH} "Guardar la configuración y los datos del juego en %APPDATA% (Recomendado)"
 LangString remove_saves       ${LANG_SPANISH} "¿Quieres conservar tus partidas guardadas?"
+LangString overwrite_install  ${LANG_ENGLISH} "Estás instalando CorsixTH sobre una instalación ya existente. Se podría perder cualquier cambio que hayas hecho en los archivos. ¿Quieres continuar?"
 
 LangString install_language   ${LANG_SWEDISH} "Swedish"
 LangString original_text      ${LANG_SWEDISH} "För att spela spelet krävs att Theme Hospital eller dess demoversion redan är installerat. Specificera här var det finns."

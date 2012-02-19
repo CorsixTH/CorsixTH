@@ -37,7 +37,7 @@ tooltip.handyman_window.close = "Cerrar ventana"
 tooltip.machine_window.close = "Cerrar ventana"
 tooltip.queue_window.close = "Cerrar ventana"
 tooltip.jukebox.rewind = utf8 "Rebobinar reproductor de música"
-tooltip.jukebox.loop = utf8 "Funcionamiento contínuo del reproductor de música"
+tooltip.jukebox.loop = utf8 "El reproductor de música funciona continuamente"
 tooltip.jukebox.stop = utf8 "Parar reproductor de música"
 tooltip.jukebox.close = utf8 "Cerrar reproductor de música"
 tooltip.jukebox.current_title = utf8 "Reproductor de música"
@@ -152,6 +152,8 @@ dynamic_info.patient.actions.no_gp_available = utf8 "Esperando a que construyas 
 dynamic_info.staff.actions.heading_for = utf8 "Dirigiéndose a %s"
 dynamic_info.staff.actions.fired = "Despedido"
 
+progress_report.free_build = utf8 "CONSTRUCCIÓN GRATUITA"
+
 fax = {
   choices = {
     return_to_main_menu = utf8 "Volver al menú principal",
@@ -160,6 +162,16 @@ fax = {
   },
   emergency = {
     num_disease_singular = utf8 "Hay 1 persona que tiene %s y necesita atención inmediata.",
+    free_build = utf8 "Si tienes éxito, mejorarás tu reputación, pero si fracasas tu reputación caerá en picado.",
+  },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        utf8 "¡Tienes un muy buen hospital! No es difícil mantenerlo sin limitaciones económicas, ¿eh?",
+        utf8 "No soy economista, pero hasta yo podría dirigir este hospital, si me entiendes...",
+        utf8 "Un hospital muy bien cuidado. ¡Pero ojo con la crisis financiera! Ah... que tú no tienes que preocuparte por eso.",
+      }
+    }
   }
 }
 
@@ -183,6 +195,8 @@ main_menu = {
   custom_level = "Nivel personalizado",
   load_game = "Cargar partida",
   options = "Opciones",
+  savegame_version = utf8 "Versión de la partida guardada: ",
+  version = utf8 "Versión: ",
   exit = "Salir",
 }
 
@@ -206,10 +220,12 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Partida personalizada",
+  free_build = utf8 "Construcción libre",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = "Cargar el nivel %s",
+  free_build = "Marca esta casilla si quieres jugar sin condiciones para ganar, para perder y sin dinero",
 }
 
 save_game_window = {
@@ -268,7 +284,8 @@ tooltip.new_game_window = {
   easy = utf8 "Si acabas de conocer los juegos de simulación, esta dificultad es para ti.",
   medium = utf8 "Esta es la dificultad intermedia, si no estás seguro de a dónde quieres ir.",
   hard = utf8 "Si ya estás acostumbrado a este tipo de juegos y quieres un buen desafío, aquí lo tendrás.",
-  tutorial = utf8 "¿Necesitas ayuda para entender cómo funciona el juego? Selecciona esta opción.",
+  tutorial = "Selecciona esta casilla si necesitas ayuda para empezar a jugar.",
+  tutorial = "Tutorial",
   cancel = utf8 "¡Perdón, yo no quería empezar una nueva partida!",
 }
 
