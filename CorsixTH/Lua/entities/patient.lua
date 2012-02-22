@@ -116,7 +116,7 @@ end
 function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
   -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
-  local multiplier = 1 * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
+  local multiplier = 1
   local diagnosis_difficulty = self:setdiagDiff()
   local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
   local diagnosis_bonus = 0.4
@@ -126,8 +126,11 @@ function Patient:completeDiagnosticStep(room)
   if room.staff_member then
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
-    if room.staff_member.profile.skill > 0.9 then
-      multiplier = math.random(1, 5)
+    -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
+    if room.staff_member.profile.skill >= 0.9 then
+      multiplier = math.random(1, 5) * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
+    else
+      multiplier = 1 * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
     end
     local divisor = math.random(1, 3)
     local attn_detail = room.staff_member.profile.attention_to_detail / divisor
