@@ -196,6 +196,7 @@ end
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
   humanoid:setMood("patient_wait", "deactivate")
   humanoid.world:unregisterRoomBuildCallback(action.build_callback)
+  humanoid.build_callback = nil
   -- Just in case we are somehow started again:
   action.build_callback = nil
   action.done_init = false
@@ -233,6 +234,7 @@ local function action_seek_room_start(action, humanoid)
           -- Clean up and start over to find the room we actually want to go to.
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid.world:unregisterRoomBuildCallback(build_callback)
+          humanoid.build_callback = nil
           action.room_type_needed = nil
           action_seek_room_start(action, humanoid)
         elseif not humanoid.diagnosed then
@@ -249,11 +251,11 @@ local function action_seek_room_start(action, humanoid)
           action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid.world:unregisterRoomBuildCallback(build_callback)
+          humanoid.build_callback = nil
         end
       end -- End of build_callback function
       action.build_callback = build_callback
-      humanoid.build_callback = build_callback
-      humanoid.world:registerRoomBuildCallback(action.build_callback)
+      humanoid:registerNewRoomBuildCallback(build_callback)
       action.on_interrupt = action_seek_room_interrupt
     end
     

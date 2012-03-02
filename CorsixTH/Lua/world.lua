@@ -634,14 +634,26 @@ function World:clearCaches()
 end
 
 function World:getWallIdFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
   return self.wall_id_by_block_id[block_id]
 end
 
 function World:getWallSetFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
   return self.wall_set_by_block_id[block_id]
 end
 
 function World:getWallDirFromBlockId(block_id)
+  -- Remove the transparency flag if present.
+  if self.ui.transparent_walls then
+    block_id = block_id - 1024
+  end
   return self.wall_dir_by_block_id[block_id]
 end
 

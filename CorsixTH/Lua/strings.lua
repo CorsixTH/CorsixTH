@@ -302,7 +302,7 @@ function Strings:setupAdviserMessage(messages)
   local prioTable
   prioTable = {
     _priority = 5, -- Default priority
-    --tutorial,
+    tutorial = { _priority = 11},
     epidemic = { _priority = 6 },
     --staff_advice
     --earthquake

@@ -227,7 +227,12 @@ function UIEditRoom:confirm(force)
     
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
-    self.ui:tutorialStep(3, 15, 16)
+    -- If information dialogs are disabled, go ahead.
+    if self.world.room_information_dialogs_off then
+      self.ui:tutorialStep(3, 15, "next")
+    else
+      self.ui:tutorialStep(3, 15, 16)
+    end
     self:close()
   end
 end
@@ -362,6 +367,11 @@ function UIEditRoom:finishRoom()
   local map = self.ui.app.map.th
   local rect = self.blueprint_rect
   local door, door2
+  -- Add the transparency flag if it is set.
+  local flag = 0
+  if self.ui.transparent_walls then
+    flag = 1024
+  end
   local function check_external_window(x, y, layer)
     -- If a wall is built which is normal to an external window, then said
     -- window needs to be removed, otherwise it looks odd (see issue #59).
@@ -370,23 +380,23 @@ function UIEditRoom:finishRoom()
     local tiles = self.ui.app.walls.external[world:getWallSetFromBlockId(block)]
     if dir == "north_window_1" then
       if x ~= rect.x then
-        map:setCell(x, y, layer, tiles.north)
-        map:setCell(x + 1, y, layer, tiles.north)
+        map:setCell(x, y, layer, flag + tiles.north)
+        map:setCell(x + 1, y, layer, flag + tiles.north)
       end
     elseif dir == "north_window_2" then
       if x == rect.x then
-        map:setCell(x - 1, y, layer, tiles.north)
-        map:setCell(x, y, layer, tiles.north)
+        map:setCell(x - 1, y, layer, flag + tiles.north)
+        map:setCell(x, y, layer, flag + tiles.north)
       end
     elseif dir == "west_window_1" then
       if y == rect.y then
-        map:setCell(x, y, layer, tiles.west)
-        map:setCell(x, y - 1, layer, tiles.west)
+        map:setCell(x, y, layer, flag + tiles.west)
+        map:setCell(x, y - 1, layer, flag + tiles.west)
       end
     elseif dir == "west_window_2" then
       if y ~= rect.y then
-        map:setCell(x, y + 1, layer, tiles.west)
-        map:setCell(x, y, layer, tiles.west)
+        map:setCell(x, y + 1, layer, flag + tiles.west)
+        map:setCell(x, y, layer, flag + tiles.west)
       end
     end
   end
@@ -397,16 +407,16 @@ function UIEditRoom:finishRoom()
         if world:getWallIdFromBlockId(east) == "external" then
           check_external_window(x, y, 2)
         elseif world:getWallSetFromBlockId(east) == "window_tiles" then
-          map:setCell(x, y, 2, wall_type.window_tiles.north)
+          map:setCell(x, y, 2, flag + wall_type.window_tiles.north)
         else
-          map:setCell(x, y, 2, wall_type.inside_tiles.north)
+          map:setCell(x, y, 2, flag + wall_type.inside_tiles.north)
         end
         if world:getWallIdFromBlockId(north) == "external" then
           check_external_window(x, y, 3)
         elseif world:getWallSetFromBlockId(north) == "window_tiles" then
-          map:setCell(x, y, 3, wall_type.window_tiles.west)
+          map:setCell(x, y, 3, flag + wall_type.window_tiles.west)
         else
-          map:setCell(x, y, 3, wall_type.inside_tiles.west)
+          map:setCell(x, y, 3, flag + wall_type.inside_tiles.west)
         end
       else
         repeat
@@ -450,11 +460,11 @@ function UIEditRoom:finishRoom()
             door = world:newObject("swing_door_right", x, y, dir)
           elseif tag == "swing_slave" then
             door2 = world:newObject("swing_door_left", x, y, dir)
-            map:setCell(x, y, layer, wall_type[tiles][dir .. suffixes[2 - num]])
+            map:setCell(x, y, layer, flag + wall_type[tiles][dir .. suffixes[2 - num]])
           elseif tag == "nothing" then
-            map:setCell(x, y, layer, wall_type[tiles][dir .. suffixes[num + 1]])
+            map:setCell(x, y, layer, flag + wall_type[tiles][dir .. suffixes[num + 1]])
           else
-            map:setCell(x, y, layer, wall_type[tiles][dir])
+            map:setCell(x, y, layer, flag + wall_type[tiles][dir])
           end
         until true
       end
@@ -602,6 +612,11 @@ function UIEditRoom:returnToDoorPhase()
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
     for i = 1, n_steps do
       local existing = map:getCell(x, y, layer)
+      -- Possibly add transparency.
+      local flag = 0
+      if self.ui.transparent_walls then
+        flag = 1024
+      end
       if self.world:getWallIdFromBlockId(existing) ~= "external" then
         local neighbour = self.world:getRoom(x + neigh_x, y + neigh_y)
         if neighbour then
@@ -611,10 +626,10 @@ function UIEditRoom:returnToDoorPhase()
             if set == "inside_tiles" then
               set = "outside_tiles"
             end
-            map:setCell(x, y, layer, self.world.wall_types[neighbour.room_info.wall_type][set][dir])
+            map:setCell(x, y, layer, flag + self.world.wall_types[neighbour.room_info.wall_type][set][dir])
           end
         else
-          map:setCell(x, y, layer, 0)
+          map:setCell(x, y, layer, flag)
         end
       end
       x = x + step_x

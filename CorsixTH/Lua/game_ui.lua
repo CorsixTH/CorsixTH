@@ -783,7 +783,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
   
   local old_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
-  if old_phase and old_phase.end_callback then
+  if old_phase and old_phase.end_callback and type(old_phase.end_callback) == "function" then
     old_phase.end_callback(...)
   end
   
@@ -801,14 +801,13 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
   local new_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
   local str, callback
-  if type(new_phase) == "table" then
+  if (type(new_phase) == "table" and type(new_phase.text) == "table") or not new_phase.text then
     str = new_phase.text
     callback = new_phase.begin_callback
   else
     str = new_phase
   end
-    
-  if str then
+  if str and str.text then
     self.adviser:say(str, true, true)
   else
     self.adviser.stay_up = nil

@@ -1516,11 +1516,14 @@ function Window:startButtonBlinking(button_index)
 end
 
 function Window:stopButtonBlinking()
-  local btn = self.buttons[self.blinking_button]
-  btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
-  btn.sprite_index_blink = nil
-  self.blinking_button = false
-  self.blink_counter = 0
+  -- Does any button actually blink?
+  if self.blinking_button then
+    local btn = self.buttons[self.blinking_button]
+    btn.panel_for_sprite.sprite_index = btn.sprite_index_normal
+    btn.sprite_index_blink = nil
+    self.blinking_button = false
+    self.blink_counter = 0
+  end
 end
 
 --! Create a static (non-changeable) tooltip to be displayed in a certain region.

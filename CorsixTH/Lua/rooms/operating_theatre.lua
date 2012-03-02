@@ -130,8 +130,10 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
 end
 
 function OperatingTheatreRoom:commandEnteringPatient(patient)
-  -- Turn on x-ray viewer
-  self.x_ray_viewer:setLayer(11, 2)
+  -- Turn on x-ray viewer - if it has been found.
+  if self.x_ray_viewer then
+    self.x_ray_viewer:setLayer(11, 2)
+  end
   
   -- Identify the staff
   local surgeon1 = next(self.staff_member_set)
@@ -266,7 +268,9 @@ function OperatingTheatreRoom:onHumanoidLeave(humanoid)
   self.staff_member_set[humanoid] = nil
   -- Turn off x-ray viewer
   if class.is(humanoid, Patient) then
-    self.x_ray_viewer:setLayer(11, 0)
+    if self.x_ray_viewer then
+      self.x_ray_viewer:setLayer(11, 0)
+    end
     local surgeon1 = next(self.staff_member_set)
     local surgeon2 = next(self.staff_member_set, surgeon1)
     if surgeon1 then

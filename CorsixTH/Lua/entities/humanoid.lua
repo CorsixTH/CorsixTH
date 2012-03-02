@@ -785,15 +785,29 @@ function Humanoid:goingToUseObject(object_type)
   return false
 end
 
+-- Cleanly registers a new build callback for this humanoid. There can be only
+-- one such callback per humanoid at a given time.
+--!param callback (function) The callback to call when a room has been built.
+function Humanoid:registerNewRoomBuildCallback(callback)
+    -- Unregister the previous callback, if any.
+    if self.build_callback then
+      self.world:unregisterRoomBuildCallback(self.build_callback)
+    end
+    self.build_callback = callback
+    self.world:registerRoomBuildCallback(callback)
+end
+
 -- Function called when a humanoid is sent away from the hospital to prevent
 -- further actions taken as a result of a callback
 function Humanoid:unregisterCallbacks()
   -- Remove callbacks for new rooms
   if self.build_callback then
     self.world:unregisterRoomBuildCallback(self.build_callback)
+    self.build_callback = nil
   end
   if self.toilet_callback then
     self.world:unregisterRoomBuildCallback(self.toilet_callback)
+    self.toilet_callback = nil
   end
   -- Remove any message related to the humanoid.
   if self.message_callback then

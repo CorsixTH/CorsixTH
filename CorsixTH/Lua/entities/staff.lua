@@ -492,8 +492,7 @@ function Staff:checkIfNeedRest()
             self.build_callback = nil
           end
         end
-        self.build_callback = callback
-        self.world:registerRoomBuildCallback(callback)
+        self:registerNewRoomBuildCallback(callback)
         return
       end
       local room = self:getRoom()
