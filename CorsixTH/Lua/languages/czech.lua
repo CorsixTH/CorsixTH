@@ -2378,6 +2378,7 @@ totd_window = {
 information = {
   custom_game = "Vítejte v CorsixTH. Užijte si tuto vlastní mapu!",
   cannot_restart = "Bohužel, tato hra byla uložena předtím, než byla zavedena funkce restart.",
+  very_old_save = "Od spuštění této úrovně došlo k mnoha aktualizacím. Aby bylo zajištěno, že všechny funkce pracují tak, jak mají, zvažte restartování této úrovně.",
   level_lost = {
     [1] = "Smůla! Nesplnili jste úroveň. Hodně štěstí příště!",
     [2] = "Důvod, proč jste prohráli:",
@@ -2613,7 +2614,8 @@ fax = {
       free_build = {
         [1] = "Máte tady velmi hezkou nemocnici! Není to ale zas tak těžké ji postavit, když nejste omezeni penězi, co?",
         [2] = "Sice nejsem ekonom, ale myslím si, že bych tuto nemocnici také mohl řídit, víte, co tím myslím...",
-        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano... Vy se ji nemusíte obávat.",
+        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano... Vy se ji nemusíte obávat.", 
+        },
       good = {
         [1] = "Jaká to dobře provozovaná nemocnice. Děkuji, že jste mě do ní pozvali.",
         [2] = "Hmm. Není to špatné zdravotnické zařízení, to zajisté.",
@@ -2748,7 +2750,6 @@ fax = {
     text10 = "ÚMRTÍ %d POVOLENO (MĚS) %d (%d) SNÍŽENÍ %d",
     text11 = "LIDÍ TENTO MĚSÍC %d",
   },
-},
 }
 insurance_companies = {
   [1] = "LabutíList s.r.o.",
