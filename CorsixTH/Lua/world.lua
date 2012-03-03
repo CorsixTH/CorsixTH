@@ -96,6 +96,8 @@ function World:World(app)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
+  -- Also preserve this throughout future updates.
+  self.original_savegame_version = app.savegame_version
   
   self:initLevel(app)
   self.hospitals[1] = Hospital(self) -- Player's hospital
@@ -1707,6 +1709,13 @@ function World:afterLoad(old, new)
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
+  end
+  if not self.original_savegame_version then
+    self.original_savegame_version = old
+  end
+  -- If the original save game version is considerably lower than the current, warn the player.
+  if new - 10 > self.original_savegame_version then
+    self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
   end
   -- insert global compatibility code here
   if old < 4 then

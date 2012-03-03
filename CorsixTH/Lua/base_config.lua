@@ -399,6 +399,119 @@ local configuration = {
     TrophyReputationBonus = 2000,
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
+    
+    
+    ------------------- Award win/loss criteria -------------------
+    
+    
+    -- >x to win the award MIN 0 MAX 255
+    CuresAward = 50,
+    -- <x to win this award MIN 0 MAX 255
+    CuresPoor = 10,
+    -- <x to win this award MIN 0 MAX 255
+    DeathsAward = 10,
+    -- >x to win the award MIN 0 MAX 255
+    DeathsPoor = 25,
+    -- >x Percentage - to win the award MIN 0 MAX 100
+    PopulationPercentageAward = 50,
+    -- <x Percentage - to win the award MIN 0 MAX 100
+    PopulationPercentagePoor = 15,
+    -- >x to win the award MIN 0 MAX 100
+    CuresVDeathsAward = 5,
+    -- <x to win this award MIN 0 MAX 100
+    CuresVDeathsPoor = 1,
+    -- >x to win the award MIN 0 MAX 1000
+    ReputationAward = 500,
+    -- <x to win the award MIN 0 MAX 1000
+    ReputationPoor = 200,
+    -- >x to win the award MIN 0 MAX 2000000
+    HospValueAward = 150000,
+    -- <x to win the award MIN 0 MAX 2000000
+    HospValuePoor = 50000,
+    -- <x Percentage - to win the award MIN 0 MAX 100 - low is good (ie low amount of litter per square)
+    CleanlinessAward = 5,
+    -- >x Percentage - to win the award MIN 0 MAX 100 - high is bad (ie high amount of litter per square)
+    CleanlinessPoor = 40,
+    -- >x Percentage - to win the award MIN 0 MAX 100 - percentage of peeps saved in emergencies - at least two emergencies per year  to qualify
+    EmergencyAward = 90,
+    -- <x Percentage - to win the award MIN 0 MAX 100
+    EmergencyPoor = 50,
+    -- >x Percentage - to win the award MIN 0 MAX 100 - staff mean happiness thoughout the year
+    StaffHappinessAward = 75,
+    -- <x Percentage - to win the award MIN 0 MAX 100
+    StaffHappinessPoor = 25,
+    -- >x Percentage - to win the award MIN 0 MAX 100 - peeps mean happiness thoughout the year
+    PeepHappinessAward = 75,
+    -- <x Percentage - to win the award MIN 0 MAX 100
+    PeepHappinessPoor = 25,
+    -- >x Percentage - to win the award MIN 0 MAX 100 - percentage of BAL_LC_LEAVE - gbv.LeaveMax - high is bad, low is good
+    WaitingTimesAward = 25,
+    -- <x Percentage - to win the award MIN 0 MAX 100
+    WaitingTimesPoor = 75,
+    -- Percentages - low is well looked after, high is bad
+    WellKeptTechAward = 20,
+    WellKeptTechPoor = 70,
+    
+    
+    ---------------- Award bonuses and penalties --------------------
+    
+    
+    -- MIN -32000 MAX +32000 - MONEY
+    CuresBonus = 2000,
+    -- MIN -32000 MAX +32000 - MONEY
+    CuresPenalty = -3000,
+    -- MIN -32000 MAX +32000 - MONEY
+    DeathsBonus = 3000,
+    -- MIN -32000 MAX +32000 - MONEY
+    DeathsPenalty = -5000,
+    -- MIN -127 MAX +127 - REP - REP BONUSES ARE NOW PERCENTAGES
+    PopulationPercentageBonus = 4,
+    -- MIN -127 MAX +127 - REP
+    PopulationPercentagePenalty = -5,
+    -- MIN -32000 MAX +32000 - MONEY
+    CuresVDeathsBonus = 4000,
+    -- MIN -32000 MAX +32000 - MONEY
+    CuresVDeathsPenalty = -4000,
+    -- MIN -32000 MAX +32000 - MONEY
+    AwardReputationBonus = 2000,
+    -- MIN -32000 MAX +32000 - MONEY
+    AwardReputationPenalty = -3000,
+    -- MIN -127 MAX +127 - REP
+    HospValueBonus = 3,
+    -- MIN -127 MAX +127 - REP
+    HospValuePenalty = -6,
+    -- MIN -127 MAX +127 - REP
+    CleanlinessBonus = 6,
+    -- MIN -127 MAX +127 - REP
+    CleanlinessPenalty = -12,
+    -- MIN -127 MAX +127 - REP
+    EmergencyBonus = 7,
+    -- MIN -127 MAX +127 - REP
+    EmergencyPenalty = -11,
+    -- MIN -127 MAX +127 - REP
+    AwardStaffHappinessBonus = 4,
+    -- MIN -127 MAX +127 - REP
+    AwardStaffHappinessPenalty = -10,
+    -- MIN -127 MAX +127 - REP
+    PeepHappinessBonus = 4,
+    -- MIN -127 MAX +127 - REP
+    PeepHappinessPenalty = -9,
+    -- MIN -127 MAX +127 - REP
+    WaitingTimesBonus = 2,
+    -- MIN -127 MAX +127 - REP
+    WaitingTimesPenalty = -6,
+    -- MIN -127 MAX +127 - REP
+    WellKeptTechBonus = 7,
+    -- MIN -127 MAX +127 - REP
+    WellKeptTechPenalty = -5,
+    -- 0-4,000,000
+    NewTechAward = 2000,
+    -- 0-4,000,000
+    NewTechPoor = 0,
+    -- MIN -127 MAX +127 reputation bonus
+    ResearchBonus = 5,
+    -- MIN -127 MAX +127 reputation penalty
+    ResearchPenalty = -6,
   },
 }
 

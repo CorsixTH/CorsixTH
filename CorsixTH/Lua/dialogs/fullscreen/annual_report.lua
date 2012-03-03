@@ -28,7 +28,6 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self:UIFullscreen(ui)
 
   self.ui = ui
-  local hosp = ui.hospital
   local gfx   = ui.app.gfx
 
   if not pcall(function()
@@ -51,7 +50,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     self:close()
     return
   end
-  -- The current state the dialog is in.
+  ------------------------ The current state the dialog is in.  ---------------------------
   -- Possible values are 1, 2 and 3 = fame, statistics and awards pages respectively
   -- TODO: The dialog has some preparations for the fame screen, but as long as there are no
   -- competitor scores and the player's own score isn't increased anywhere there's no use in
@@ -73,7 +72,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self.third_change = self:addPanel(0, 272, 367):makeButton(0, 0, 91, 42, 3, self.changePage)
   self:setActive(self.third_change, false)
   
-  -- The plaque
+  -- The plaque showed after the player has clicked on a trophy
   local plaque = {}
   plaque[1] = self:addPanel(19, 206, 87)
   plaque[2] = self:addPanel(20, 206, 161)
@@ -82,43 +81,36 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   plaque.is_table = true
   self.plaque = plaque
   self:setActive(self.plaque, false)
-  
-  -- Close button for the award motivations
-  self.third_close = self:addPanel(0, 389, 378):makeButton(0, 0, 26, 26, 2, self.showMotivation)
-  self:setActive(self.third_close, false)
-  
-  -- Trophies. Currently the soda and the reputation award have been implemented
-  local trophies = {}
-  trophies[1] = self:addPanel(12, 142, 324)
-  trophies[2] = self:addPanel(13, 407, 324)
-  trophies[3] = self:addPanel(14, 466, 331)
-  trophies[4] = trophies[1]:makeButton(0, 0, 61, 144, 12, self.reputationTrophy)
-  trophies[5] = trophies[2]:makeButton(0, 0, 60, 144, 13, self.sodaTrophy)
-  trophies[6] = trophies[3]:makeButton(0, 0, 72, 145, 14, self.nodeathsTrophy)
-  trophies.is_table = true
-  self.trophies = trophies
-  self:setActive(self.trophies, false)
 
-  -- "Activate" awards and trophies won
-  if hosp.win_awards then
-    local won_amount = 0
-    if hosp.sodas_sold > world.map.level_config.awards_trophies.CansofCoke then
-      self.soda_trophy_won = world.map.level_config.awards_trophies.CansofCokeBonus
-      won_amount = self.soda_trophy_won
-    end
-    if hosp.reputation_above_threshold then
-      self.rep_trophy_won = world.map.level_config.awards_trophies.TrophyReputationBonus
-      won_amount = won_amount + self.rep_trophy_won
-    end
-    if hosp.num_deaths_this_year == 0 then
-      self.no_deaths_trophy_won = world.map.level_config.awards_trophies.TrophyDeathBonus
-      won_amount = won_amount + self.no_deaths_trophy_won
-    end
-    if won_amount > 0 then
-      hosp:receiveMoney(won_amount, _S.transactions.eoy_trophy_bonus)
-    end
-  end
-  
+  -- Close button for the trophy motivations
+  self.third_close = self:addPanel(0, 389, 378):makeButton(0, 0, 26, 26, 2, self.showTrophyMotivation)
+  self:setActive(self.third_close, false)
+
+  -- The scroll showed after the player has clicked on an award
+  local scroll = {}
+  scroll[1] = self:addPanel(16, 206, 87)
+  scroll[2] = self:addPanel(17, 206, 200)
+  scroll[3] = self:addPanel(18, 206, 304)
+  scroll[4] = self:addPanel(15, 300, 341)
+  scroll.is_table = true
+  self.scroll = scroll
+  self:setActive(self.scroll, false)
+
+  -- Close button for the award motivations
+  self.fourth_close = self:addPanel(0, 369, 358):makeButton(0, 0, 26, 26, 2, self.showAwardMotivation)
+  self:setActive(self.fourth_close, false)
+
+  -- How many awards the player got this year. Will increase after the checkup.
+  self.no_awards = 0
+  self.awards = {}
+
+  -- Trophies. Currently the soda and the reputation award have been implemented
+  self.no_trophies = 0
+  self.trophies = {}
+
+  -- Check which awards and trophies the player should get.
+  self:checkTrophiesAndAwards(world)
+
   -- Get and sort values used on the statistics screen.
   -- The six categories. The extra tables are used to be able to sort the values. 
     self.money = {}
@@ -162,45 +154,203 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   world:setSpeed("Pause")
 end
 
---! When the player clicks the reputation trophy this function is called.
-function UIAnnualReport:reputationTrophy()
-  if not self.rep_trophy then
-    self.rep_trophy = _S.trophy_room.high_rep.awards[math.random(1, 2)]
+--! Finds out which awards and/or trophies the player has been awarded this year.
+function UIAnnualReport:checkTrophiesAndAwards(world)
+  local hosp = self.ui.hospital
+
+  local prices = world.map.level_config.awards_trophies
+
+  -- Check CuresAward so that we know the new config settings are available
+  if hosp.win_awards and prices.HospValueAward then
+    local won_amount = 0
+    
+    -- The three trophies available at this time
+    if hosp.sodas_sold > prices.CansofCoke then
+      self:addTrophy(_S.trophy_room.sold_drinks.trophies[math.random(1, 3)], "money", prices.CansofCokeBonus)
+      won_amount = prices.CansofCokeBonus
+    end
+
+    if hosp.reputation_above_threshold then
+      self:addTrophy(_S.trophy_room.high_rep.awards[math.random(1, 2)], "money", prices.TrophyReputationBonus)
+      won_amount = won_amount + prices.TrophyReputationBonus
+    elseif  hosp.reputation > prices.ReputationAward then
+      -- One of the two related awards that are only given
+      -- if the corresponding trophy was not won this year?
+      --won_amount += prices.AwardReputationBonus
+    elseif hosp.reputation < prices.ReputationPoor then
+      --won_amount += prices.AwardReputationPenalty
+    end
+
+    if hosp.num_deaths_this_year == 0 then
+      self:addTrophy(_S.trophy_room.no_deaths.trophies[math.random(1, 2)], "money", prices.TrophyDeathBonus)
+      won_amount = won_amount + prices.TrophyDeathBonus
+    elseif hosp.num_deaths_this_year < prices.DeathsAward then
+      -- One of the two related awards that are only given
+      -- if the corresponding trophy was not won this year?
+      --won_amount += prices.DeathsBonus
+    elseif hosp.num_deaths_this_year > prices.DeathsAward then
+      --won_amount += prices.DeathsPenalty
+    end
+
+    ---------------- Insert other awards the player can get, both good and bad. ---------------------------
+    -- Check out base_config.lua for a lot of values to use.
+    -- Example: self:addAward("Too bad!", "reputation", prices.PopulationPercentagePenalty)
+    if won_amount ~= 0 then
+      hosp:receiveMoney(won_amount, _S.transactions.eoy_trophy_bonus)
+    end
   end
-  self.trophy_money = self.rep_trophy_won
-  self:showMotivation(self.rep_trophy)
-end
---! When the player clicks the no deaths trophy this function is called.
-function UIAnnualReport:nodeathsTrophy()
-  if not self.no_deaths_trophy then
-    self.no_deaths_trophy = _S.trophy_room.no_deaths.trophies[math.random(1, 2)]
-  end
-  self.trophy_money = self.no_deaths_trophy_won
-  self:showMotivation(self.no_deaths_trophy)
-end
---! When the player clicks the soda trophy this function is called.
-function UIAnnualReport:sodaTrophy()
-  if not self.soda_trophy then
-    self.soda_trophy = _S.trophy_room.sold_drinks.trophies[math.random(1, 3)]
-  end
-  self.trophy_money = self.soda_trophy_won
-  self:showMotivation(self.soda_trophy)
 end
 
---! Activate the motivation plaque with the given text on it.
---!param text_to_show The text that should be shown on the plaque.
-function UIAnnualReport:showMotivation(text_to_show)
-  -- TODO: Awards will be shown on some kind of "paper".
-  if text_to_show then
+-- A table defining which type of shadow each award should have.
+local award_shadows = {
+  { shadow = 4 },
+  { shadow = 4 },
+  { shadow = 4 },
+  { shadow = 7 },
+  { shadow = 7 },
+  { shadow = 9 },
+}
+
+-- Another table defining some properties of the three trophies.
+local trophy_prop = {
+  {
+    sprite = 12,
+    x = 142,
+    y = 324,
+    w = 61,
+    h = 144,
+  },
+  {
+    sprite = 14,
+    x = 466,
+    y = 331,
+    w = 72,
+    h = 145,
+  },
+  {
+    sprite = 13,
+    x = 407,
+    y = 324,
+    w = 60,
+    h = 144,
+  },
+}
+
+--! Adds a trophy figure with some text if the player clicks on it.
+--!param text (string) The text to show as motivation.
+--!param award_type (string) Should be one of "reputation" or "money"
+--!param amount (integer) How much the player got/lost.
+function UIAnnualReport:addTrophy(text, award_type, amount)
+  local no = self.no_trophies + 1
+  -- Only show up to three trophies visually.
+  if no <= 3 then
+    local prop = trophy_prop[no]
+    -- The actual figure and a button on it.
+    local trophy_parts = {}
+    trophy_parts.is_table = true
+    -- Insert the info for later reference
+    trophy_parts.info = {
+      text = text,
+      award_type = award_type,
+      amount = amount
+    }
+
+    local --[[persistable:annual_report_show_trophy_motivation]] function change() self:showTrophyMotivation(no) end
+    trophy_parts[1] = self:addPanel(prop.sprite, prop.x, prop.y)
+    trophy_parts[2] = trophy_parts[1]:makeButton(0, 0, prop.w, prop.h, prop.sprite, change)
+
+    self:setActive(trophy_parts, false)
+    self.trophies[no] = trophy_parts
+  end
+  self.no_trophies = no
+end
+
+--! Adds an award frame with some text if the player clicks on it.
+--!param text (string) The text to show as motivation.
+--!param award_type (string) Should be one of "reputation" or "money"
+--!param amount (integer) How much the player got/lost.
+function UIAnnualReport:addAward(text, award_type, amount)
+  -- How many awards the player has got up to this point.
+  local no = self.no_awards + 1
+  if no <= 6 then
+    -- Only visually show the first six awards.
+    -- Add them one column at a time from the left.
+    local x = no <= 3 and 16 or 525
+    local y = 74
+    if no % 3 == 2 then
+      y = 189
+    elseif no % 3 == 0 then
+      y = 304
+    end
+    local award_parts = {}
+    award_parts.is_table = true
+    -- Insert the info for later reference
+    award_parts.info = {
+      text = text,
+      award_type = award_type,
+      amount = amount
+    }
+
+    -- The plaque
+    if amount > 0 then
+      -- A positive award
+      award_parts[1] = self:addPanel(10, x + 12, y + 11)
+    else
+      -- A bad award
+      award_parts[1] = self:addPanel(11, x + 12, y + 11)
+    end
+    -- The frame
+    award_parts[2] = self:addPanel(23, x, y)
+    -- The shadow
+    award_parts[3] = self:addPanel(award_shadows[no].shadow, x, y)
+    -- Make a button so that the player can click and see the motivation
+    local --[[persistable:annual_report_show_award_motivation]] function change() self:showAwardMotivation(no) end
+    award_parts[4] = award_parts[3]:makeButton(0, 0, 105, 103, award_shadows[no].shadow, change)
+    self.awards[no] = award_parts
+    self:setActive(award_parts, false)
+  end
+
+  -- The economic part of the award.
+  self.no_awards = no
+end
+
+--! Activates the motivation scroll with the given text on it.
+--!param text_to_show The index of the award to show info from.
+function UIAnnualReport:showAwardMotivation(text_index_to_show)
+  if text_index_to_show then
+    -- Make sure no trophy motivation is shown
+    self:showTrophyMotivation()
+    self:setActive(self.scroll, true)
+    -- Possibly hide the black award symbol
+    if self.awards[text_index_to_show].info.amount > 0 then
+      self:setActive(self.scroll[4], false)
+    end
+    self:setActive(self.fourth_close, true)
+    self:setActive(self.third_change, false)
+    self.award_motivation = text_index_to_show
+  else
+    self:setActive(self.scroll, false)
+    self:setActive(self.fourth_close, false)
+    self:setActive(self.third_change, true)
+    self.award_motivation = nil
+  end
+end
+
+--! Activates the motivation plaque with the given text on it.
+--!param text_to_show The index of the trophy to show info from.
+function UIAnnualReport:showTrophyMotivation(text_index_to_show)
+  if text_index_to_show then
+    -- Make sure no award motivation is shown
+    self:showAwardMotivation()
     self:setActive(self.plaque, true)
     self:setActive(self.third_close, true)
     self:setActive(self.third_change, false)
-    self.showing_motivation = text_to_show
+    self.trophy_motivation = text_index_to_show
   else
     self:setActive(self.plaque, false)
     self:setActive(self.third_close, false)
     self:setActive(self.third_change, true)
-    self.showing_motivation = nil
+    self.trophy_motivation = nil
   end
 end
 
@@ -239,28 +389,24 @@ function UIAnnualReport:changePage(page_no)
     self.background = self.stat_background
     self:setActive(self.third_change, false)
     self:setActive(self.second_change, true)
-    self:setActive(self.trophies, false)
+    for i, _ in ipairs(self.trophies) do
+      self:setActive(self.trophies[i], false)
+    end
+    for i, _ in ipairs(self.awards) do
+      self:setActive(self.awards[i], false)
+    end
     self.state = 2
   else -- Awards and trophies
     self.background = self.award_background
     self:setActive(self.third_change, true)
     self:setActive(self.second_change, false)
-    
-    -- Show trophies only if the corresponding criterias are met.
-    local hosp = self.ui.hospital
-    if hosp.win_awards then
-      if self.rep_trophy_won then
-        self:setActive(self.trophies[1], true)
-        self:setActive(self.trophies[4], true)
-      end
-      if self.no_deaths_trophy_won then
-        self:setActive(self.trophies[3], true)
-        self:setActive(self.trophies[6], true)
-      end  
-      if self.soda_trophy_won then
-        self:setActive(self.trophies[2], true)
-        self:setActive(self.trophies[5], true)
-      end
+    -- Show awards given.
+    for i, _ in ipairs(self.awards) do
+      self:setActive(self.awards[i], true)
+    end
+    -- And trophies given.
+    for i, _ in ipairs(self.trophies) do
+      self:setActive(self.trophies[i], true)
     end
     self.state = 3
   end
@@ -292,13 +438,35 @@ function UIAnnualReport:draw(canvas, x, y)
     --end
   elseif self.state == 2 then -- Statistics screen
     self:drawStatisticsScreen(canvas, x, y)
-  else -- Award screen
-    -- Write motivation if appropriate
-    if self.showing_motivation then
-      self.stone_font:drawWrapped(canvas, self.showing_motivation, x + 225, y + 105, 185, "center")
-      -- Right now only money can be given from trophies.
-      self.stone_font:draw(canvas, _S.trophy_room.cash, x + 220, y + 330, 200, 0)
-      self.stone_font:draw(canvas, "+" .. self.trophy_money, x + 220, y + 355, 200, 0)
+  else -- Award and trophy screen
+    -- Write out motivation if appropriate
+    if self.trophy_motivation then
+      -- If it is a plaque showing we write in stone text.
+      local info = self.trophies[self.trophy_motivation].info
+      self.stone_font:drawWrapped(canvas, info.text, x + 225, y + 105, 185, "center")
+      -- Type of award
+      local award_type = _S.trophy_room.cash
+      if info.award_type == "reputation" then
+        award_type = _S.trophy_room.reputation
+      end
+      self.stone_font:draw(canvas, award_type, x + 220, y + 330, 200, 0)
+      -- Amount won/lost
+      self.stone_font:draw(canvas, "+" .. info.amount, x + 220, y + 355, 200, 0)
+    elseif self.award_motivation then
+      local info = self.awards[self.award_motivation].info
+      self.write_font:drawWrapped(canvas, info.text, x + 225, y + 125, 185, "center")
+      -- Type of award
+      local award_type = _S.trophy_room.cash
+      if info.award_type == "reputation" then
+        award_type = _S.trophy_room.reputation
+      end
+      self.write_font:draw(canvas, award_type, x + 220, y + 290, 200, 0)
+      -- The amount won/lost
+      local text = ""
+      if info.amount > 0 then
+        text = "+"
+      end
+      self.write_font:draw(canvas, text .. info.amount, x + 220, y + 315, 200, 0)
     end
   end
 end

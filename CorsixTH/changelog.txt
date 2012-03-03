@@ -13,8 +13,7 @@ Version 0.01 - released ?
 
 -- Known Issues --
 
-* If the X-Ray Viewer is inaccessible in the Operating Theatre the whole
-  room will be unusable.
+* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will be shown on it.
 * If the user exits the game via "the cross" when in windowed mode settings are not saved.
 * Radiators occupy a whole tile instead of just one edge of the tile.
 

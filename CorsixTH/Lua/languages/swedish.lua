@@ -297,6 +297,7 @@ confirmation = {
 information = {
   custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
   cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
+  very_old_save = "Det har hänt en hel del med spelet sedan du startade den här banan. För att vara säker på att allt fungerar som det är tänkt kan det vara bra att överväga att starta om banan.",
   level_lost = {
     utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
     utf8 "Anledning till att du förlorade:",
