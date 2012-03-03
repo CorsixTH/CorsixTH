@@ -176,7 +176,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
   local treenode = LoadSaveFileTreeNode(root)
   treenode.label = "Saves"
   local control = LoadSaveTreeControl(treenode, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true)
-    :setSelectCallback(function(node)
+    :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
       if (lfs.attributes(node.path, "mode") ~= "directory") then
         local name = node.label
         while (node.parent.parent) do
