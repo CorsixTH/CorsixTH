@@ -27,6 +27,12 @@ misc.hospital_open = "Hospital abierto"
 misc.save_success = "Partida guardada correctamente"
 misc.save_failed = "ERROR: No se ha podido guardar la partida"
 
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = utf8 "Mostrar la página siguiente"
+tooltip.staff_list.prev_person = utf8 "Mostrar la página anterior"
+tooltip.status.reputation = utf8 "Tu reputación no debe estar por debajo de %d. Actualmente tienes %d"
+tooltip.status.balance = utf8 "No debes tener menos de %d $ en el banco. Actualmente tienes %d"
+
 fax.vip_visit_result.remarks.mediocre[2] = utf8 "¡Oh, cielos! No es un lugar agradable para ir si estás pachucho."
 fax.vip_visit_result.remarks.mediocre[3] = utf8 "Si le soy sincero, es un hospital normalucho. Francamente, yo esperaba más."
 fax.vip_visit_result.remarks.very_bad[1] = utf8 "¡Vaya tugurio! Voy a intentar clausurarlo."
@@ -318,6 +324,7 @@ confirmation = {
 information = {
   custom_game = utf8 "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
   cannot_restart = utf8 "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
+  very_old_save = utf8 "Desde que empezaste a jugar en este nivel, el juego ha recibido muchas actualizaciones. Para asegurarte de que todas las características funcionen como es debido, considera empezarlo de nuevo.",
   level_lost = {
     utf8 "¡Qué pena! Has fracasado en este nivel. ¡Mejor suerte la próxima vez!",
     utf8 "La razón por la que has perdido es:",
