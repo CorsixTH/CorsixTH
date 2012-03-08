@@ -46,10 +46,7 @@ local function action_seek_reception_start(action, humanoid)
     local x = desk.tile_x + orientation.use_position[1]
     local y = desk.tile_y + orientation.use_position[2]
     local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-    print("")
-    print("score:")
-    print(this_score)
-    print(desk:getUsageScore())
+
     this_score = this_score + desk:getUsageScore()
     if not score or this_score < score then
       -- It is better, or the first one!

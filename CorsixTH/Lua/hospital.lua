@@ -536,6 +536,15 @@ function Hospital:afterLoad(old, new)
     self.num_cured_ty = 0
     self.not_cured_ty = 0 
     self.num_visitors_ty = 0
+
+    self.reception_desks = {}
+    for _, obj_list in pairs(self.world.objects) do
+      for _, obj in ipairs(obj_list) do
+        if obj.object_type.id == "reception_desk" then
+          self.reception_desks[obj] = true
+        end
+      end
+    end
   end
 end
 
