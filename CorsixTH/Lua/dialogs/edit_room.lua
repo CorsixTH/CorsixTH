@@ -144,7 +144,7 @@ function UIEditRoom:abortRoom()
     for obj, num in pairs(self.room.room_info.objects_needed) do
       -- Get how much this item costs.
       local obj_cost = self.ui.hospital:getObjectBuildCost(obj)
-
+      cost = cost - math.floor(obj_cost)/2
       valueChange = valueChange - num * obj_cost
     end
     self.ui.hospital:receiveMoney(cost, _S.transactions.sell_object, valueChange)

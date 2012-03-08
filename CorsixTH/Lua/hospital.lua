@@ -107,11 +107,17 @@ function Hospital:Hospital(world)
   -- Other statistics, back to zero each year
   self.sodas_sold = 0
   self.reputation_above_threshold = self.win_awards and level_config.awards_trophies.Reputation < self.reputation or false
-  
+  self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
+  self.pleased_vips_ty  = 0
+  self.num_cured_ty = 0
+  self.not_cured_ty = 0 
+  self.num_visitors_ty = 0
+
   self.is_in_world = true
   self.opened = false
   self.transactions = {}
   self.staff = {}
+  self.reception_desks = {}
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
@@ -523,6 +529,13 @@ function Hospital:afterLoad(old, new)
   end
   if old < 48 then
     self.seating_warning = 0
+  end
+  if old < 50 then
+    self.num_vips_ty  = 0
+    self.pleased_vips_ty  = 0
+    self.num_cured_ty = 0
+    self.not_cured_ty = 0 
+    self.num_visitors_ty = 0
   end
 end
 
@@ -966,6 +979,7 @@ end
 --! Called at the end of each year
 function Hospital:onEndYear()
   self.sodas_sold = 0
+  self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
   self.reputation_above_threshold = self.win_awards 
   and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
@@ -1265,6 +1279,7 @@ function Hospital:addPatient(patient)
   self.patients[#self.patients + 1] = patient
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
+  self.num_visitors_ty = self.num_visitors_ty + 1
 end
 
 function Hospital:humanoidDeath(humanoid)
@@ -1338,11 +1353,19 @@ local reputation_changes = {
   ["emergency_failed"] = -20,
 }
 
-function Hospital:changeReputation(reason, disease)
+--! Normally reputation is changed based on a reason, and the affected
+--! disease also has its own reputation meter.
+--!param reason (string) The reason for changing reputation, for example "cured" or "death".
+--!param disease The disease, if any, that should be affected.
+--!param valueChange (integer) In some cases, for example at year end, the amount varies a lot. 
+-- Then it is specified here.
+function Hospital:changeReputation(reason, disease, valueChange)
   local amount
   if reason == "autopsy_discovered" then
     local config = self.world.map.level_config.gbv.AutopsyRepHitPercent
     amount = config and math.floor(-self.reputation*config/100) or -70
+  elseif valueChange then
+    amount = valueChange
   else
     amount = reputation_changes[reason]
   end

@@ -1117,39 +1117,86 @@ trophy_room = {
   -- S[27][1] unused
   many_cured = {
     awards = {
-      S[27][ 2],
       S[55][ 5],
       S[55][ 6],
+    },
+    penalty = {
+      S[56][ 5],  
+      S[56][ 6],  
+    },
+    trophies = {
+      S[27][ 2],          -- for around 100% cure rate
+      S[27][ 3],          -- for around 100% cure rate
+      S[27][ 4],          -- for around 100% cure rate
+    },
+    regional = {
       S[55][ 7],
     },
+  },
+  all_cured = {         -- not implemented
+    awards = {
+      S[27][29],          -- for 100% treat rate (does that mean none sent home or killed?)
+    },
     trophies = {
-      S[27][ 3],
-      S[27][ 4],
+      S[27][30],          -- for 100% cure rate
+      S[27][31],          -- for 100% cure rate
     },
   },
-  all_cured = {
+  hosp_value = {
     awards = {
-      S[27][29],
+      S[55][20],
     },
+    penalty = {
+      S[56][20],     
+    },
+    regional = {
+      S[55][22],
+    },
+  },
+   best_value_hosp = {  -- not implemented
     trophies = {
-      S[27][30],
-      S[27][31],
+      S[27][ 6],  
+    },
+    regional = {
+      S[55][21],   
+    },
+    penalty = {  
+      S[56][21], 
+    },
+  },
+  consistant_rep = {
+    trophies = {
+      S[27][ 5],
+      S[27][ 6],
     },
   },
   high_rep = {
     awards = {
-      S[27][ 5],
-      S[27][ 7],
       S[55][ 2],
       S[55][ 3],
+    },
+    penalty = {
+      S[56][ 2],     -- is this the penalty for consistant poor rep?
+      S[56][ 3],
+    },
+    regional = {      -- not implemented
+      S[27][ 7],
       S[55][ 4],
     },
-    trophies = {
-      S[27][ 6],
-    },
   },
-  happy_staff = {
+  happy_staff = {     -- not implemented
     awards = {
+      S[55][23],
+      S[55][25],
+    },
+    penalty = {
+      S[56][23],  
+    },
+    regional_good = {
+      S[55][24],   
+    },
+    regional_bad = {
+      S[56][24],    
     },
     trophies = {
       S[27][ 8],
@@ -1158,45 +1205,46 @@ trophy_room = {
     },
   },
   happy_vips = {
-    awards = {
+     trophies = {
       S[27][11],
-      S[27][13],
-    },
-    trophies = {
       S[27][12],
+      S[27][13],
     },
   },
   no_deaths = {
     awards = {
-      S[27][14],
       S[55][ 8],
-      S[55][ 9],
       S[55][10],
     },
+    penalty = {
+      S[56][ 8], -- this may need an over-ride as it looks wrong  "unacceptably" not "acceptably" IMO
+      S[56][ 9],
+    },
     trophies = {
+      S[27][14],
       S[27][15],
       S[27][16],
     },
-  },
-  rats_killed = {
-    awards = {
+    regional = {      -- not implemented
+      S[55][ 9],
     },
+  },
+  rats_killed = {     -- not implemented
+
     trophies = {
       S[27][17], -- %d (number of rats)
       S[27][18], -- %d (number of rats)
       S[27][19], -- %d (number of rats)
     },
   },
-  rats_accuracy = {
-    awards = {
-    },
+  rats_accuracy = {   -- not implemented
     trophies = {
       S[27][20], -- %d (accuracy percentage)
       S[27][21], -- %d (accuracy percentage)
       S[27][22], -- %d (accuracy percentage)
     },
   },
-  healthy_plants = {
+  healthy_plants = {  -- not implemented
     awards = {
       S[27][23],
     },
@@ -1206,19 +1254,99 @@ trophy_room = {
     },
   },
   sold_drinks = {
-    awards = {
-    },
     trophies = {
       S[27][26],
       S[27][27],
       S[27][28],
     },
   },
-  pop_percentage = {
+  pop_percentage = {  -- not implemented
     awards = {
       S[55][11],
       S[55][12],
       S[55][13],
+    },
+    penalty = {
+      S[55][11],
+      S[55][12],     
+    },
+  },
+  gen_repairs = {     -- not implemented
+    awards = {
+      S[55][38],
+      S[55][39],
+      S[55][40],
+    },
+    penalty = {
+      S[56][38],
+      S[56][39],     
+    },
+  },
+  curesvdeaths = {     
+    awards = {
+      S[55][14],
+    },
+    penalty = {
+      S[56][14],     
+    },
+  },
+  research = {         -- not implemented
+    awards = {
+      S[55][35],
+      S[55][37],
+    },
+    penalty = {
+      S[56][35],
+    },
+    regional_good = {
+      S[55][35],    
+    },
+    regional_bad = {
+      S[56][36],    
+    },
+  },
+  cleanliness = {      -- not implemented
+    award = {
+      S[55][26],
+    },
+    regional_good = {
+      S[56][26],    
+    },
+    regional_bad = {
+      S[56][27],    
+    },
+  },
+  emergencies = {      -- not implemented
+    award = {
+      S[55][32],
+      S[55][34],
+    },
+    penalty = {
+      S[56][32],
+    },
+    regional_good = {
+      S[55][33],     
+    },
+    regional_bad = {
+      S[56][33],    
+    },
+  },
+  wait_times = {      -- not implemented
+    award = {
+      S[55][29],
+    },
+    penalty = {
+      S[56][29],
+    },
+  },
+  happy_patients = {     -- not implemented
+    awards = {
+      S[55][17],
+      S[55][18], 
+    },
+    penalty = {
+      S[56][17],
+      S[56][18],  
     },
   },
   -- Strings used in the plaques to show what has been won

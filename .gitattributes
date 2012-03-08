@@ -69,6 +69,8 @@ CorsixTH/Levels/demo.level -text
 CorsixTH/Levels/example.level -text
 CorsixTH/Levels/original05.level -text
 CorsixTH/Levels/original07.level -text
+CorsixTH/Levels/original11.level -text
+CorsixTH/Levels/original12.level -text
 CorsixTH/Lua/dialogs/fullscreen/annual_report.lua -text
 CorsixTH/Lua/dialogs/fullscreen/graphs.lua -text
 CorsixTH/Lua/dialogs/resizables/calls_dispatcher.lua -text
@@ -91,6 +93,7 @@ CorsixTH/Lua/humanoid_actions/pee.lua -text
 CorsixTH/Lua/humanoid_actions/shake_fist.lua -text
 CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text
 CorsixTH/Lua/humanoid_actions/tap_foot.lua -text
+CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua -text
 CorsixTH/Lua/humanoid_actions/vomit.lua -text
 CorsixTH/Lua/humanoid_actions/yawn.lua -text
 CorsixTH/Lua/languages/czech.lua -text

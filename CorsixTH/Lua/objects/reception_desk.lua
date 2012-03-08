@@ -138,6 +138,13 @@ function ReceptionDesk:checkForNearbyStaff()
   return true
 end
 
+-- how many tiles further are we willing to walk for 1 person fewer in the queue
+local tile_factor = 10
+function ReceptionDesk:getUsageScore()
+  local score = self.queue:patientSize() * tile_factor
+  return score
+end
+
 function ReceptionDesk:setTile(x, y)
   Object.setTile(self, x, y)
   if x and y then
@@ -170,6 +177,8 @@ function ReceptionDesk:onDestroy()
     self.receptionist = nil
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
+  self.world:getLocalPlayerHospital().reception_desks[self] = nil
+
   return Object.onDestroy(self)
 end
 

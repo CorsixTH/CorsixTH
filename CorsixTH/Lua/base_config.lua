@@ -399,6 +399,8 @@ local configuration = {
     TrophyReputationBonus = 2000,
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
+    -- Bonus to reputation for pleasing VIPs in the year (REPUTATION BONUS)
+    TrophyMayorBonus = 5,
     
     
     ------------------- Award win/loss criteria -------------------

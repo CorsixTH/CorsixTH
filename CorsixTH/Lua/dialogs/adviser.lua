@@ -73,9 +73,11 @@ function UIAdviser:talk()
   self.number_frames = 45
   -- Fetch the next message from the queue.
   local best = 1
-  for i = 1, #self.queued_messages do
-    if best ~= i and self.queued_messages[best].priority < self.queued_messages[i].priority then
-      best = i
+  if self.queued_messages[1].priority then
+    for i = 1, #self.queued_messages do
+      if best ~= i and self.queued_messages[best].priority < self.queued_messages[i].priority then
+        best = i
+      end
     end
   end
   local speech = self.queued_messages[best].speech

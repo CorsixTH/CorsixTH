@@ -27,33 +27,54 @@ end
 
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
+
+  local best_desk
+  local score
   
-  local found_desk = false
-  world:findObjectNear(humanoid, "reception_desk", nil, function(x, y, d)
-    local desk = world:getObject(x, y, "reception_desk")
+  -- Go through all receptions desks.
+  for desk, _ in pairs(humanoid.hospital.reception_desks) do
     if (not desk.receptionist and not desk.reserved_for) or desk.queue:isFull() then
+      -- Not an allowed reception desk to go to.
       return
     end
-    
+
+    -- Ok, so we found one.
+    -- Is this one better than the last one?
+    -- A lower score is better.
+    -- First find out where the usage tile is.
     local orientation = desk.object_type.orientations[desk.direction]
-    if not orientation.pathfind_allowed_dirs[d] then
-      return
+    local x = desk.tile_x + orientation.use_position[1]
+    local y = desk.tile_y + orientation.use_position[2]
+    local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+    print("")
+    print("score:")
+    print(this_score)
+    print(desk:getUsageScore())
+    this_score = this_score + desk:getUsageScore()
+    if not score or this_score < score then
+      -- It is better, or the first one!
+      score = this_score
+      best_desk = desk
     end
-    x = x + orientation.use_position[1]
-    y = y + orientation.use_position[2]
+  end
+  if best_desk then
+    -- We found a desk to go to!
+    local orientation = best_desk.object_type.orientations[best_desk.direction]
+    local x = best_desk.tile_x + orientation.use_position[1]
+    local y = best_desk.tile_y + orientation.use_position[2]
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
-      :format(desk.object_type.name))
+      :format(best_desk.object_type.name))
     humanoid.waiting = nil
     
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
-      local face_x, face_y = desk:getSecondaryUsageTile()
+      local face_x, face_y = best_desk:getSecondaryUsageTile()
       humanoid:setNextAction{
         name = "queue",
         x = x,
         y = y,
-        queue = desk.queue,
+        queue = best_desk.queue,
         face_x = face_x,
         face_y = face_y,
         must_happen = action.must_happen,
@@ -72,28 +93,23 @@ local function action_seek_reception_start(action, humanoid)
         end
       end
     end
-    found_desk = true
-    return true
-  end)
-  if found_desk then
-    return
-  end
-  
-  -- No reception desk found. One will probably be built soon, somewhere in
-  -- the hospital, so either walk to the hospital, or walk around the hospital.
-  local procrastination
-  if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
-    procrastination = {name = "meander", count = 1}
-    if not humanoid.waiting then
-      -- Eventually people are going to get bored and leave.
-      humanoid.waiting = 5
-    end
   else
-    local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-    procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+    -- No reception desk found. One will probably be built soon, somewhere in
+    -- the hospital, so either walk to the hospital, or walk around the hospital.
+    local procrastination
+    if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
+      procrastination = {name = "meander", count = 1}
+      if not humanoid.waiting then
+        -- Eventually people are going to get bored and leave.
+        humanoid.waiting = 5
+      end
+    else
+      local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
+      procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+    end
+    procrastination.must_happen = action.must_happen
+    humanoid:queueAction(procrastination, 0)
   end
-  procrastination.must_happen = action.must_happen
-  humanoid:queueAction(procrastination, 0)
 end
 
 return action_seek_reception_start

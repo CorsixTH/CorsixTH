@@ -686,6 +686,8 @@ function Room:deactivate()
   for humanoid, callback in pairs(self.humanoids_enroute) do
     callback.callback();
   end
+  -- Now empty the humanoids_enroute list since they are not enroute anymore.
+  self.humanoids_enroute = {}
 end
 
 function Room:tryToEdit()

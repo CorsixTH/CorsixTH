@@ -463,6 +463,9 @@ function World:spawnPatient(hospital)
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
+    while disease.only_emergency do
+      disease = self.available_diseases[math.random(1, #self.available_diseases)]
+    end
     patient:setDisease(disease)
     patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
     patient:setHospital(hospital)
@@ -486,9 +489,6 @@ function World:spawnVIP(hospital)
   vip.enter_cures = hospital.num_cured
 
   vip.enter_explosions = hospital.num_explosions
-
-  -- we need to know how many rooms vip visiting for room evaluation
-  vip.enter_num_rooms = #self.rooms
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
@@ -1549,10 +1549,14 @@ function World:objectPlaced(entity, id)
       end
     end
   end
-  if id == "reception_desk" and not self.ui.start_tutorial
+  if id == "reception_desk" then
+    if not self.ui.start_tutorial 
     and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
-    -- TODO: Will not work correctly for multiplayer
-    self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
+      -- TODO: Will not work correctly for multiplayer
+      self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
+    end
+    -- A new reception desk? Then add it to the reception desk set.
+    self:getLocalPlayerHospital().reception_desks[entity] = true
   end
   -- If it is a plant it might be advisable to hire a handyman
   if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then

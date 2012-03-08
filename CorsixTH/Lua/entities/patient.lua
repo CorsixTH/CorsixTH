@@ -176,6 +176,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
         self.world.ui.adviser:say(_A.information.first_cure)
       end
       self.hospital.num_cured = hospital.num_cured + 1
+      self.hospital.num_cured_ty = hospital.num_cured_ty + 1
       local casebook = hospital.disease_casebook[self.disease.id]
       casebook.recoveries = casebook.recoveries + 1
       if self.is_emergency then
@@ -421,6 +422,7 @@ function Patient:goHome(cured)
     if not self.is_debug then
       hosp:changeReputation("kicked", self.disease)
       self.hospital.not_cured = hosp.not_cured + 1
+      self.hospital.not_cured_ty = hosp.not_cured_ty + 1
       local casebook = self.hospital.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end

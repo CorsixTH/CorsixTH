@@ -29,7 +29,7 @@ function Vip:Vip(...)
   self.vip_rating = 50
 
   self.cash_reward = 0
-  self.current_room = 1
+
   self.enter_deaths = 0
   self.enter_visitors = 0
   self.enter_explosions = 0
@@ -37,7 +37,7 @@ function Vip:Vip(...)
   self.num_vomit_noninducing = 0
   self.num_vomit_inducing = 0
   self.found_vomit = {}
-  self.enter_num_rooms = 0
+  self.num_visited_rooms = 0
   self.room_eval = 0
   self.waiting = 0
 end
@@ -50,27 +50,22 @@ function Vip:tickDay()
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
       if #self.world.rooms == 0 then
+        -- No rooms have been built yet
         self:goHome()
       end
-      for i, room in pairs(self.world.rooms) do
-        if room.door.reserved_for == self then
-          room.door.reserved_for = nil
-        end
-        if i == self.current_room-1 then
-          room.door.reserved_for = nil
-          room:tryAdvanceQueue()
-        end
-        if i == self.current_room then
-          self:setNextAction{name = "seek_room", room_type = room.room_info.id}
-          if #self.world.rooms ~= (i-1) then
-            self.current_room = self.current_room + 1
-            return
-          end
-        elseif #self.world.rooms == i then
-          self:setVIPRating()
-          self:goHome()
-        end
+      -- First let the previous room go.
+      -- Include this when the VIP is supposed to block doors again.
+      --[[if self.next_room then
+        self.next_room.door.reserved_for = nil
+        self.next_room:tryAdvanceQueue()
+      end--]]
+      -- Find out which next room to visit.
+      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      -- Make sure that this room is active
+      while self.next_room and not self.next_room.is_active do
+        self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       end
+      self:setNextAction{name = "vip_go_to_next_room"}
     end
   end
 
@@ -165,6 +160,7 @@ function Vip:onDestroy()
   else
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
+    self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty +1
     if self.vip_rating == 5 then
       message = {
         {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
@@ -193,6 +189,52 @@ function Vip:announce()
     --TODO: keep VIP's name with the VIP, not the hospital. maybe make
     --hospital.visitingVIP a reference to the VIP
     self.world.ui.adviser:say(_A.information.vip_arrived:format(self.hospital.visitingVIP))
+  end
+end
+
+function Vip:evaluateRoom()
+  -- Another room visited.
+  self.num_visited_rooms = self.num_visited_rooms + 1
+  local room = self.next_room
+  -- if the player is about to kill a live patient for research, lower their rating dramatically
+  if room.room_info.id == "research" then
+    if room:getPatient() then
+      self.vip_rating = self.vip_rating - 80
+    end
+  end
+
+  if room.staff_member then
+    if room.staff_member.profile.skill > 0.9 then
+      self.room_eval = self.room_eval + 3
+    end
+    if room.staff_member.attributes["fatigue"] then
+      if (room.staff_member.attributes["fatigue"] < 0.4) then
+        self.room_eval = self.room_eval + 2
+      end
+    end
+  end
+
+  -- evaluate the room we're currently looking at
+  for object, value in pairs(room.objects) do
+    if object.object_type.id == "extinguisher" then
+      self.room_eval = self.room_eval + 1
+      break
+    elseif object.object_type.id == "plant" then
+      if object.days_left >= 10 then
+        self.room_eval = self.room_eval + 1
+      elseif object.days_left <= 3 then
+        self.room_eval = self.room_eval - 1
+      end
+      break
+    end
+
+    if object.strength then
+      if object.strength > (object.object_type.default_strength / 2) then
+        self.room_eval = self.room_eval + 1
+      else
+        self.room_eval = self.room_eval - 3
+      end
+    end
   end
 end
 
@@ -376,8 +418,8 @@ function Vip:setVIPRating()
     end
   end
 
-  if self.enter_num_rooms ~= 0 then
-    self.vip_rating = self.vip_rating + self.room_eval / self.enter_num_rooms
+  if self.num_visited_rooms ~= 0 then
+    self.vip_rating = self.vip_rating + self.room_eval / self.num_visited_rooms
   end
 
   -- check average patient happiness
@@ -441,6 +483,22 @@ function Vip:setVIPRating()
   else
     self.vip_rating = 5
   end
+  self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
+end
+
+function Vip:afterLoad(old, new)
+  if old < 50 then
+    self.num_visited_rooms = 0
+    self:setNextAction{name = "idle"}
+    self.waiting = 1
+    for _, room in pairs(self.world.rooms) do
+      if room.door.reserved_for == self then
+        room.door.reserved_for = nil
+        room:tryAdvanceQueue()
+      end
+    end
+  end
+  Humanoid.afterLoad(self, old, new)
 end
 
 
