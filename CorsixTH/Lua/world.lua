@@ -1446,10 +1446,6 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
       local this_score = d
       if mode == "advanced" then
         this_score = this_score + r:getUsageScore()
-        -- Add constant penalty if queue is full
-        if r.door.queue:isFull() then
-          this_score = this_score + 1000
-        end
       end
       if not score or this_score < score then
         score = this_score

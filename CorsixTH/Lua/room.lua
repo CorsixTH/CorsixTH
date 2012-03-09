@@ -487,6 +487,10 @@ function Room:getUsageScore()
   if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
     score = score - readiness_bonus
   end
+  -- Add constant penalty if queue is full
+  if queue:isFull() then
+    score = score + 1000
+  end
   return score
 end
 

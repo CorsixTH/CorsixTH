@@ -142,6 +142,10 @@ end
 local tile_factor = 10
 function ReceptionDesk:getUsageScore()
   local score = self.queue:patientSize() * tile_factor
+  -- Add constant penalty if queue is full
+  if self.queue:isFull() then
+    score = score + 1000
+  end
   return score
 end
 

@@ -22,7 +22,6 @@ local flag_cache = {}
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
   return humanoid.world.map.th:getCellFlags(x, y, flag_cache).hospital
     and (not flag_cache.room)
-    and (x - use_x)^2 + (y - use_y)^2 < 12^2
 end
 
 local function action_seek_reception_start(action, humanoid)
@@ -33,25 +32,25 @@ local function action_seek_reception_start(action, humanoid)
   
   -- Go through all receptions desks.
   for desk, _ in pairs(humanoid.hospital.reception_desks) do
-    if (not desk.receptionist and not desk.reserved_for) or desk.queue:isFull() then
+    if (not desk.receptionist and not desk.reserved_for) then
       -- Not an allowed reception desk to go to.
-      return
-    end
+    else
 
-    -- Ok, so we found one.
-    -- Is this one better than the last one?
-    -- A lower score is better.
-    -- First find out where the usage tile is.
-    local orientation = desk.object_type.orientations[desk.direction]
-    local x = desk.tile_x + orientation.use_position[1]
-    local y = desk.tile_y + orientation.use_position[2]
-    local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+      -- Ok, so we found one.
+      -- Is this one better than the last one?
+      -- A lower score is better.
+      -- First find out where the usage tile is.
+      local orientation = desk.object_type.orientations[desk.direction]
+      local x = desk.tile_x + orientation.use_position[1]
+      local y = desk.tile_y + orientation.use_position[2]
+      local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
 
-    this_score = this_score + desk:getUsageScore()
-    if not score or this_score < score then
-      -- It is better, or the first one!
-      score = this_score
-      best_desk = desk
+      this_score = this_score + desk:getUsageScore()
+      if not score or this_score < score then
+        -- It is better, or the first one!
+        score = this_score
+        best_desk = desk
+      end
     end
   end
   if best_desk then
