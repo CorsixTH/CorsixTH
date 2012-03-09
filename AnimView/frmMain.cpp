@@ -405,7 +405,8 @@ your hard disk (~250MB). \n If you click No, it will write the XML and element f
 the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hospital data files.",
         L"Export Warning", wxYES_NO | wxCANCEL);
     if( response == wxYES) { bWriteFrames = true; }
-    if( response != wxCANCEL) {
+    if( response != wxCANCEL) 
+    {
         //Start with animations, then move on to sprite sheets (map tiles)
         if(!m_oAnims.loadAnimationFile(_getCaseSensitivePath(L"VSTART-1.ANI", sdPath))
          ||!m_oAnims.loadFrameFile(_getCaseSensitivePath(L"VFRA-1.ANI", sdPath))
@@ -447,7 +448,6 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
         for(size_t iAnimation = 0; iAnimation < iExportCount; ++iAnimation)
         {
             if(!m_oAnims.isAnimationDuplicate(iAnimation) && m_oAnims.getFrameField(iAnimation) >= iFrameCountTotal)
-            //if(true)
             {
                 wxString aiPath = aPath + wxString::Format(L"a%04u", iAnimation);
                 if(!wxFileName::DirExists(aiPath))
@@ -499,7 +499,6 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
                     {
                         if(!imgCanvas.SaveFile(aiPath + wxString::Format(L"a%u_f%u.png", iAnimation, iFrame),wxBITMAP_TYPE_PNG))
                             return;
-                        //imgCanvas.Create(1, 1, true);
                         imgCanvas.Destroy();
                     }
                 }
@@ -613,7 +612,6 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
      ||!m_oAnims.loadSpriteFile(_getCaseSensitivePath(wxString::Format(L"%s.DAT",sFilename.wx_str()), sPath))
      ||!m_oAnims.loadPaletteFile(_getCaseSensitivePath(sPalette, spPath)))
     {
-        //::wxMessageBox(L"Cannot load files");
         return;
     }
 
@@ -627,13 +625,9 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
     if(!wxFileName::DirExists(aPath))
     {
         wxFileName::Mkdir(aPath);
-
-        //m_vSprites.clear();
         for(size_t i = 0; i < m_oAnims.getSpriteCount(); ++i)
         {
-            //_sprite_t oSprite;
             Bitmap* pSpriteBitmap = m_oAnims.getSpriteBitmap(i, bComplex);
-            //oSprite.caption = wxString::Format(L"#%i (%ix%i)", (int)i, pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight());
             if(pSpriteBitmap->getWidth() * pSpriteBitmap->getHeight() > 0)
             {
                 wxImage imgSprite(pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight(), false);
@@ -653,16 +647,12 @@ void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilenam
                         }
                     }
                 }
-                //oSprite.bitmap = wxBitmap(imgSprite);
                 if(!imgSprite.SaveFile(_getCaseSensitivePath(wxString::Format(L"s%u.png", i), aPath),wxBITMAP_TYPE_PNG))
                     return;
                 outputLog.WriteString(wxString::Format(L"%s\t%u\t%s\t%u\t%u\n", sFilename.wx_str(), i, sPalette.wx_str(), pSpriteBitmap->getWidth(),pSpriteBitmap->getHeight()));
             }
-            //m_vSprites.push_back(oSprite);
         }
     }
-
-    //m_panFrame->Refresh();
 }
 
 void frmMain::_onToggleMask(wxCommandEvent& evt)
@@ -1049,4 +1039,3 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
   
   return retStr;
 }
-
