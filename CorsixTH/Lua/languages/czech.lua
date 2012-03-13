@@ -1,4 +1,4 @@
---[[ Copyright (c) 2011 <Zbyněk "teh awesome with big ego" Schwarz>
+--[[ Copyright (c) 2011, 2012 <Zbyněk "teh awesome with big ego" Schwarz>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -726,21 +726,7 @@ humanoid_name_starts = {
   [33] = "KEŘ",
 }
 trophy_room = {
-  high_rep = {
-    awards = {
-      [1] = "Byla Vám udělena Cena Kabinetu Ministra za nejdokonalejší standardy a nejvyšší možnou reputaci v tomto roce. Jen tak dál.",
-      [2] = "Přijměte prosím Cenu Bullfrog za nejvyšší reputaci v tomto roce ze všech nemocnic. Užijte si to - zasloužili jste si ji.",
-      [3] = "Výborně. Vyhráli jste maličkou cenu za dosažení docela působivé reputace v minulém roce.",
-      [4] = "Báječné! Vaše nemocnice vyhrává ocenění za vybudování nejlepší reputace během minulého roku.",
-      [5] = "Tento rok reputace Vaší nemocnice převýšila reputaci všech ostatních nemocnic dohromady. To je velký úspěch.",
-    },
-    trophies = {
-      [1] = "Blahopřejeme k získání Poháru BezPoskrvnky za nemocnici s nejlepší reputací za poslední rok. Také je velmi zasloužená.",
-    },
-  },
   rats_accuracy = {
-    awards = {
-    },
     trophies = {
       [1] = "Je Vám udělen Pohár Syndicate Wars Přesnosti ve Střílení za to, že jste měli %d%% přesnost při střílení krys.",
       [2] = "Tento pohár připomíná Vaši neuvěřitelnou přesnost při zabití %d%% krys, na které jste ve Vaší nemocnici mířili v posledním roce.",
@@ -748,24 +734,47 @@ trophy_room = {
     },
   },
   happy_staff = {
+   regional_bad = {
+      [1] = "Všichni Vaši zaměstnanci byli minulý rok velmi nešťastní. Měli jste si toho všimnout. Tak jak je to teď mají všechny ostatní nemocnice zaměstnance šťastnější než Vy.",
+    },
     awards = {
+      [1] = "Vaši zaměstnanci Vám udělují tuto cenu. Říkají, že i když je co zlepšovat, zacházeli jste s nimi vcelku dobře.",
+      [2] = "Vaši zaměstnanci pro Vás tak rádi pracují, že se nemůžou přestat smát. Jste výborný správce.",
+    },
+    regional_good = {
+      [1] = "Vaši zaměstnanci jsou šťastnější než ti v ostatních nemocnicích. Šťastní zaměstnanci přinášejí více výdělku a méně úmrtí. Ministerstvo je potěšeno.",
+    },
+    penalty = {
+      [1] = "Vaši zaměstnanci chtějí, aby se vědělo, že jsou velmi nešťastní. Spokojení zaměstnanci jsou přínosem. Udělejte je šťastnějšími nebo je jednoho dne ztratit.",
     },
     trophies = {
       [1] = "Je Vám udělen Pohár Chechtáka za udržení radosti Vašich pracovitých zaměstnanců tak, jak to jen jde.",
       [2] = "Adami Institut Radosti Vás oceňuje za to, že jste Ve vaší nemocnici neměli minulý rok žádné nešťastné zaměstnance, tím že Vám uděluje tento pohár.",
-      [3] = "Toto Ocenění, Pohár Více Úsměvů je Vám slavnostně udělen za to, že jste Vaše zaměstnance udrželi šťastné nad rámec Vašich povinností během minulého roku. Úsměvy všude kolem!",
+      [3] = "Toto ocenění, Pohár Více Úsměvů je Vám slavnostně udělen za to, že jste Vaše zaměstnance udrželi šťastné nad rámec Vašich povinností během minulého roku. Úsměvy všude kolem!",
+    },
+  },
+  happy_patients = {
+    penalty = {
+      [1] = "Lidé přicházející do nemocnice mají otřesné zážitky. Pokud si chcete vysloužit respekt ministerstva, budete se muset mnohem více snažit.",
+      [2] = "Lidé, dostávající ve Vaši nemocnici léčbu, jsou velmi nespokojeni se stavem tohoto místa. Blaho pacientů byste měli důkladněji zvážit.",
+    },
+    awards = {
+      [1] = "Můžete se dmout pýchou nad tím, že lidé v předchozím roce byly ve Vaší nemocnici velmi šťastní.",
+      [2] = "Lidé navštěvující Vaši nemocnici byly během jejich léčby v průměru šťastnější než v kterékoliv jiné nemocnici ve hře.",
     },
   },
   happy_vips = {
-    awards = {
-      [1] = "Vyhráli jste Nobelovu Cenu za ohromení VIP. Každý, kdo v minulém roce Vaši nemocnici navštívil, pěl o ní samou chválu.",
-      [2] = "Gratulujeme k výhře ocenění VIP VÝLET za zlepšení životů těžce pracujících osobností v oku veřejnosti tím, že jste potěšili ty, kteří Vaši nemocnici navštívili. Vynikající.",
-    },
     trophies = {
-      [1] = "Agentura Slavných Lidí by Vám chtěla darovat Pohár Celebrity za potěšení těch, kteří navštívili Vaše zařízení. Považujte se za mírně slavného a skoro jednoho z nás.",
+      [1] = "Vyhráli jste Nobelovu cenu za zapůsobení na VIP. Každý, kdo v minulém navštívil Vaší nemocnici, o ní pěl jen samou chválu.",
+      [2] = "Agentura Slavných Lidí by Vám chtěla darovat Pohár Celebrity za potěšení těch, kteří navštívili Vaše zařízení. Považujte se za mírně slavného a skoro jednoho z nás.",
+      [3] = "Blahopřejeme Vám k získání ocenění VÝLET VIP za ulehčení života těžce pracujících osobností v oku veřejnosti uspokojením těch, co Vaši nemocnici navštívili. To je výtečné.",
     },
   },
     pop_percentage = {
+    penalty = {
+      [1] = "Poznamenejte si, že jste v předchozím roce získali vysoký podíl obyvatel ve Vaší nemocnici města. Výborně.",
+      [2] = "Blahopřejeme. Vaší nemocnici navštěvuje vyšší podíl místních obyvatel města než kterékoli jiné zařízení.",
+    },
     awards = {
       [1] = "Poznamenejte si, že jste získali vysoký podíl obyvatel města ve Vaší nemocnici v minulém roce. Výborně.",
       [2] = "Blahopřejeme. Vaši nemocnici navštěvuje vyšší podíl místní populace, než jakoukoli jinou instituci.",
@@ -776,8 +785,8 @@ trophy_room = {
     awards = {
     },
     trophies = {
-      [1] = "Byla Vám udělen Pohár Proti Havěti za zastřelení %d krys ve Vaší nemocnici během minulého roku.",
-      [2] = "Díky Vaším výjímečným schopnostem střílení krys jste se kvalifikovali na získání tohoto poháru z Federace Proti Krysám a Myším, při zabití %d potvor.",
+      [1] = "Byl Vám udělen Pohár Proti Havěti za zastřelení %d krys ve Vaší nemocnici během minulého roku.",
+      [2] = "Díky Vaším výjimečným schopnostem střílení krys jste se kvalifikovali na získání tohoto poháru od Federace Proti Krysám a Myším, při zabití %d potvor.",
       [3] = "Kvalifikovali jste se na Pohár Odstřelení Krys za výjimečné dovednosti při zbavení %d krys ve Vaší nemocnici v minulém roce.",
     },
   },
@@ -785,12 +794,18 @@ trophy_room = {
     awards = {
       [1] = "Obdrželi jste Ocenění Nikdo-Nechcíp za udržení 100 procent živých pacientů v posledním roce.",
       [2] = "Toto ocenění jste obdrželi, aby Vám připomnělo nízký počet úmrtí ve Vaší nemocnici tento rok. To je skvělé.",
-      [3] = "Počet úmrtí ve Vaší nemocnici byl v minulém roce nižší, než v jakékoli jiné nemocnici. Přijměte prosím toto ocenění.",
-      [4] = "Vaše genialita udržela úmrtí ve Vaší nemocnici na minimu. S tímto výsledkem můžete být velmi spokojeni.",
     },
     trophies = {
       [1] = "Společnost Život Jde Dál Vám uděluje tento pohár za zabránění jakéhokoli úmrtí v posledním roce.",
       [2] = "Byl Vám udělen Pohár Zůstávám Naživu, že jste zvládli se vyhnout všech možných úmrtí v posledním roce ve Vaši nemocnici. Skvělé.",
+      [3] = "Byla Vám udělena trofej Zůstávám Naživu za to, že jste dokázali v tomto roce zabránit jakémukoliv úmrtí ve Vaši skvělé nemocnici. Výborně.",
+    },
+        penalty = {
+      [1] = "Počet smrtí Ve Vaší nemocnici byl v minulém roce na přijatelné výši. Věnujte větší pozornost Vaší práci. V budoucnu zajistěte, ať více lidí přežije.",
+      [2] = "Vaše nemocnice je rizikem pro zdraví pacientů. Očekává se, že hodně lidí vyléčíte a ne, že je zahubíte.",
+    },
+    regional = {
+      [1] = "Počet smrtí ve Vaší nemocnici byl minulý rok nižší než v ostatních nemocnicích. Přijměte prosím tuto cenu.",
     },
   },
   healthy_plants = {
@@ -804,23 +819,76 @@ trophy_room = {
   },
   many_cured = {
     awards = {
-      [1] = "Gratulujeme k výhře Ocenění Marie Curie za úspěšné vyléčení skoro všech pacientů ve Vaší nemocnici v minulém roce.",
-      [2] = "Blahopřejeme Vám k vyléčení spousty lidí během minulého roku. Díky Vaší práci se jich mnoho cítí mnohem lépe.",
-      [3] = "Přijměte, prosím, toto ocenění za vyléčení více pacientů, než v kterékoli jiné nemocnici. Ryzí výkon.",
-      [4] = "Tímto jste slavnostně oceněn nejlepším oceněním za léčbu více lidí, než všechny ostatní nemocnice dohromady.",
+      [1] = "Gratulujeme za vyléčení mnoha pacientů v minulém roce. Díky Vaší práci se mnoho lidí cítí dobře.",
+      [2] = "Přijměte prosím toto ocenění za vyléčené více pacientů než kterákoli jiná nemocnice. Ryzí výkon.",
+    },
+    penalty = {
+      [1] = "Vaše nemocnice selhává v poskytnutí účinné léčby pacientům, kteří ji potřebují. Soustřeďte se na Vaše léčby, abyste zvýšili jejich účinnost.",
+      [2] = "Vaše nemocnice je méně účinná při ošetřovaní pacientů, než kterákoliv jiná. Zklamali jste ministerstvo a zklamali jste sebe. To je vše, co jsme chtěli říct.",
+    },
+    regional ={
+      [1] = "Slavnostně Vám udělujeme cenu Všemocného léku za vyléčení více lidí, než všechny ostatní nemocnice dohromady.",
     },
     trophies = {
-      [1] = "Mezinárodní Nadace Léčení si přeje ocenit skutečnost, že jste vyléčili ohromný počet lidí ve Vaší nemocnici minulý rok tím, že Vám udělí Pohár Hodně-Vyléčeno.",
-      [2] = "Byl Vám darován Pohár Žádný Nemocný Řiťolezec za úspěšnou léčbu vysokého procenta pacientů ve Vaši nemocnici v minulém roce.",
+      [1] = "Gratulujeme k výhře Ocenění Marie Curie za úspěšné vyléčení skoro všech pacientů ve Vaší nemocnici v minulém roce.",
+      [2] = "Mezinárodní Nadace Léčení si přeje ocenit skutečnost, že jste vyléčili ohromný počet lidí ve Vaší nemocnici minulý rok tím, že Vám udělí Pohár Hodně-Vyléčeno.",
+      [3] = "Byl Vám darován Pohár Žádný Nemocný Řiťolezec za úspěšnou léčbu vysokého procenta pacientů ve Vaši nemocnici v minulém roce.",
     },
   },
   sold_drinks = {
-    awards = {
-    },
     trophies = {
       [1] = "Světová Asociace Zubařů je hrdá, že Vás může ocenit touto cenou a plaketou za prodej spousty konzervovaných nápojů ve Vaší nemocnici.",
       [2] = "Vaše nemocnice byla oceněna Pohárem Šumivý Byznys za Prodej Nealkoholických Nápojů při uznání počtu nápojů prodaných ve Vaší nemocnici za poslední rok.",
       [3] = "Jménem DK Plomby a.s., je Vám udělena tato čokoládou pokrytý Pohár na oslavu neobyčejného počtu prodaných nealkoholických nápojů ve Vaší nemocnici tento rok.",
+    },
+  },
+  gen_repairs = {
+     penalty = {
+      [1] = "Vaši údržbáři moc dobře Vaše stroje neudržovali. Měli byste na ně dohlédnout pečlivěji, nebo jich najmout více, aby byli schopni množství práce pojmout.",
+      [2] = "Z údržby máte nepořádek. Vaši zaměstnanci by se o stroje měli starat rychle a s péčí.",
+     },
+     awards = {
+      [1] = "Obdrželi jste zvláštní ocenění za pohotovost Vašich údržbářů, kteří udržují stroje Vaší nemocnice v dobrém stavu. Skvělé. Můžete si vzít dovolenou.",
+      [2] = "Vaši údržbáři si vedli lépe než ti v ostatních nemocnicích. Toto je obrovský úspěch, za který je Vám poblahopřáno.",
+      [3] = "Vaše stroje jsou skvěle udržované. Oddanost Vašich údržbářů je výjimečná. Vy všichni si toto prestižní ocenění zasloužíte. Výtečná práce.",
+     },
+  },
+  research = {
+     regional_good = {
+      [1] = "Váš výzkum Vaší nemocnice udržel krok s nejnovějšími poznatky. Vaši výzkumní zaměstnanci si tuto cenu zaslouží. Skvělé.",
+     },
+     regional_bad = {
+      [1] = "Všechny nemocnice v okolí mají lepší výzkum než Vy. Ministerstvo je rozčílené, protože výzkum by ve Vaší nemocnici měl být velmi důležitý.",
+     },
+     penalty = {
+      [1] = "Ve výzkumu nové léčby, vybavení a léků jste zaostali. To je velmi špatné, protože technologický pokrok je nezbytný.",
+     },
+     awards = {
+      [1] = "Váš výzkum Vaší nemocnice udržel krok s nejnovějšími poznatky. Vaši výzkumní zaměstnanci si tuto cenu zaslouží. Skvělé.",
+      [2] = "Během posledního roku jste prozkoumali více léků a zařízení, než kdokoliv mohl doufat. Prosím přijměte toto ocenění od nás všech na ministerstvu.",
+     },
+  },
+    curesvdeaths = {
+    penalty = {
+      [1] = "Váš poměr vyléčení k úmrtím je velmi nízký. Měli byste zajistit, že vyléčíte mnohem více lidí, než necháte zemřít. Nebuďte naší ostudou.",
+    },
+    awards = {
+      [1] = "Vydatné gratulace za dosažení úchvatného poměru vyléčení k úmrtím ve Vaší nemocnici minulý rok.",
+    },
+  },
+  emergencies = {
+    regional_good = {
+      [1] = "Ministerstvo uznává, že Vaše nemocnice zvládla předešlý rok mimořádné události lépe než kterákoliv jiná nemocnice a uděluje Vám toto ocenění.",
+    },
+    award = {
+      [1] = "Blahopřejeme: Vaše efektivní a účinné zvládnutí mimořádných událostí Vám získaly toto zvláštní ocenění. Dobrá práce.",
+      [2] = "Vaše zacházení s mimořádnými událostmi je výjimečné. Toto ocenění je za to, že jste nejlepší ve zvládání velkých návalů nemocných a trpících.",
+    },
+    penalty = {
+      [1] = "Mimořádné situace moc nezvládáte. Přicházející pacienti pohotovosti vyžadují rychlou a správnou pozornost, kterou jste nedokázali poskytnout.",
+    },
+    regional_bad = {
+      [1] = "Vaše nemocnice je ve zvládání mimořádných událostí ta nejhorší v oblasti. Je Vaší chybou, že se potácíte na konci místní ligy ošetření v mimořádných situacích.",
     },
   },
   all_cured = {
@@ -832,8 +900,69 @@ trophy_room = {
       [2] = "Byl Vám darován Pohár Žádný Nemocný Řiťolezec za úspěšnou léčbu všech pacientů ve Vaší nemocnici v minulém roce.",
     },
   },
+    best_value_hosp = {
+    regional = {
+      [1] = "Blahopřejeme Vám za nejcennější nemocnici ve hře. Dobrá práce. Snažte se prosím takto pokračovat.",
+    },
+    penalty = {
+      [1] = "Každá nemocnice v oblasti má větší hodnotu než ta Vaše. Udělejte něco s touto ostudnou situací. Dejte se nějaké drahé věci!",
+    },
+    trophies = {
+      [1] = "Blahopřejeme k získání ocenění Křišťálová Lilie za nemocnici s nejlepší reputací během minulého roku. Také je velmi zasloužená.",
+    },
+  },
+  high_rep = {
+    penalty = {
+      [1] = "Budete potrestáni za udržení velmi špatné reputace během minulého roku. Ujistěte se, že se to do budoucna zlepší.",
+      [2] = "Reputace Vaší nemocnice je nejhorší v oblasti. Jste ostuda. Zlepšete ji nebo si hledejte jinou práci.",
+    },
+    regional = {
+      [1] = "Přijměte prosím Cenu Bullfrog za nejvyšší reputaci v tomto roce ze všech nemocnic. Užijte si to - zasloužili jste si ji.",
+      [2] = "Tento rok reputace Vaší nemocnice překonala všechny ostatní v oblasti dohromady. To je významný úspěch.",
+    },
+    awards = {
+      [1] = "Výborně. Vyhráváte maličké ocenění za dosažení velmi úctyhodné reputace v posledním roce.",
+      [2] = "Úžasné! Vaše nemocnice vyhrává cenu za vybudování nejlepší během posledního roku.",
+    },
+    },
   cash = "PENÍZE",
   reputation = "REPUTACE",
+    consistant_rep = {
+    trophies = {
+      [1] = "Tímto se Vám slavnostně uděluje ocenění Kabinetu Ministra za dokonalé standardy a nejvyšší možnou reputaci tento rok. Úžasné.",
+      [2] = "Blahopřejeme k získání ocenění Křišťálová Lilie za nemocnici s nejlepší reputací během minulého roku. Také je velmi zasloužená.",
+  },
+  },
+  wait_times = {
+    penalty = {
+      [1] = "Lidé ve Vaší nemocnici musí dlouho čekat. Vždy zde existují nepřijatelné fronty. Pokud byste chtěli, mohli byste zacházet s Vašimi pacienty účinněji.",
+    },
+    award = {
+      [1] = "Gratulujeme. Vaše nemocnice soustavně má nízkou dobu ve frontě. Toto je důležité ocenění.",
+    },
+  },
+  cleanliness = {
+    regional_good = {
+      [1] = "Vaše nemocnice byla uvedena jako jedna z nejméně čistých v oblasti. Špinavá nemocnice smrdí a je nebezpečná. Měli byste nepořádku věnovat větší pozornost.",
+    },
+    award = {
+      [1] = "Kontroloři si poznamenali, že Vaše nemocnice je velmi čistá. Čisté nemocnice jsou bezpečné nemocnice. Jen tak dál.",
+    },
+    regional_bad = {
+      [1] = "Vaše nemocnice je nejšpinavější v oblasti. Ostatní správci zvládli udržet svoje chodby čistší. Jste hanbou zdravotnické profese.",
+    },
+  },
+  hosp_value = {
+    penalty = {
+      [1] = "Vaší nemocnici se nepodařilo dosáhnout slušné hodnoty. Provedli sjte špatná rozhodnutí s penězi. Nezapomeňte, že dobrá nemocnice je také drahá nemocnice.",
+    },
+    regional = {
+      [1] = "Jste zázračné dítě přes finance. Vaše nemocnice má větší hodnotu než všechny ostatní nemocnice v oblasti dohromady.",
+    },
+    awards = {
+      [1] = "Ministerstvo zdravotnictví by chtělo využít této příležitosti a poblahopřát Vám k působivé celkové hodnotě Vaší nemocnice.",
+    },
+  },
 }
 build_room_window = {
   pick_room_type = "Vyberte Typ Místnosti",
@@ -1869,7 +1998,7 @@ original_credits = {
   [46] = " ",
   [47] = " ",
   [48] = " ",
-  [49] = ":Dodatečné Programování",
+  [49] = ":Dodatečné programování",
   [50] = ",",
   [51] = "Ben Deane",
   [52] = "Gary Morgan",
@@ -1877,7 +2006,7 @@ original_credits = {
   [54] = " ",
   [55] = " ",
   [56] = " ",
-  [57] = ":Dodatečná Grafika",
+  [57] = ":Dodatečná grafika",
   [58] = ",",
   [59] = "Eoin Rogan",
   [60] = "George Svarovsky",
@@ -1888,33 +2017,33 @@ original_credits = {
   [65] = " ",
   [66] = " ",
   [67] = " ",
-  [68] = ":Úvodní Video",
+  [68] = ":Úvodní video",
   [69] = ",",
   [70] = "Stuart Black",
   [71] = " ",
   [72] = " ",
   [73] = " ",
-  [74] = ":Hudba a Zvukové Efekty",
+  [74] = ":Hudba a zvukové Efekty",
   [75] = ",",
   [76] = "Russell Shaw",
   [77] = "Adrian Moore",
   [78] = " ",
   [79] = " ",
   [80] = " ",
-  [81] = ":Dodatečná Hudba",
+  [81] = ":Dodatečná hudba",
   [82] = ",",
   [83] = "Jeremy Longley",
   [84] = "Andy Wood",
   [85] = " ",
   [86] = " ",
   [87] = " ",
-  [88] = ":Hlas Oznamovatelky",
+  [88] = ":Hlas oznamovatelky",
   [89] = ",",
   [90] = "Rebecca Green",
   [91] = " ",
   [92] = " ",
   [93] = " ",
-  [94] = ":Návrh Úrovní",
+  [94] = ":Návrh úrovní",
   [95] = ",",
   [96] = "Wayne Imlach",
   [97] = "Natalie White",
@@ -1931,16 +2060,16 @@ original_credits = {
   [108] = " ",
   [109] = " ",
   [110] = " ",
-  [111] = ":Výzkum a Vývoj",
+  [111] = ":Výzkum a vývoj",
   [112] = " ",
-  [113] = ":Grafické Jádro",
+  [113] = ":Grafické jádro",
   [114] = ",",
   [115] = "Andy Cakebread",
   [116] = "Richard Reed",
   [117] = " ",
   [118] = " ",
   [119] = " ",
-  [120] = ":Podpora Výzkumu a Vývoje",
+  [120] = ":Podpora výzkumu a vývoje",
   [121] = ",",
   [122] = "Glenn Corpes",
   [123] = "Martin Bell",
@@ -1949,7 +2078,7 @@ original_credits = {
   [126] = " ",
   [127] = " ",
   [128] = " ",
-  [129] = ":Knihovny a Nástroje",
+  [129] = ":Knihovny a nástroje",
   [130] = " ",
   [131] = "Knihovna Dos a Win 95",
   [132] = ",",
@@ -1966,14 +2095,14 @@ original_credits = {
   [143] = " ",
   [144] = " ",
   [145] = " ",
-  [146] = ":Zvuková Knihovna",
+  [146] = ":Zvuková knihovna",
   [147] = ",",
   [148] = "Russell Shaw",
   [149] = "Tony Cox",
   [150] = " ",
   [151] = " ",
   [152] = " ",
-  [153] = ":Programování Instalátoru",
+  [153] = ":Programování instalátoru",
   [154] = ",",
   [155] = "Andy Nuttall",
   [156] = "Tony Cox",
@@ -1981,26 +2110,26 @@ original_credits = {
   [158] = " ",
   [159] = " ",
   [160] = " ",
-  [161] = ":Morální Podpora",
+  [161] = ":Morální podpora",
   [162] = ",",
   [163] = "Peter Molyneux",
   [164] = " ",
   [165] = " ",
   [166] = " ",
-  [167] = ":Manažer Testování",
+  [167] = ":Manažer testování",
   [168] = ",",
   [169] = "Andy Robson",
   [170] = " ",
   [171] = " ",
   [172] = " ",
-  [173] = ":Hlavní Testeři",
+  [173] = ":Hlavní testeři",
   [174] = ",",
   [175] = "Wayne Imlach",
   [176] = "Jon Rennie",
   [177] = " ",
   [178] = " ",
   [179] = " ",
-  [180] = ":Testeři Hraní",
+  [180] = ":Testeři hraní",
   [181] = ",",
   [182] = "Jeff Brutus",
   [183] = "Wayne Frost",
@@ -2023,11 +2152,11 @@ original_credits = {
   [200] = "Stuart Stephen",
   [201] = "David Wallington",
   [202] = " ",
-  [203] = "A všichni naši ostatní zkušení Testeři Hraní",
+  [203] = "A všichni naši ostatní zkušení testeři hraní",
   [204] = " ",
   [205] = " ",
   [206] = " ",
-  [207] = ":Technická Podpora",
+  [207] = ":Technická podpora",
   [208] = ",",
   [209] = "Kevin Donkin",
   [210] = "Mike Burnham",
@@ -2066,14 +2195,14 @@ original_credits = {
   [243] = " ",
   [244] = " ",
   [245] = " ",
-  [246] = ":Úprava Dokumentace a Balení",
+  [246] = ":Úprava dokumentace a balení",
   [247] = ",",
   [248] = "Caroline Arthur",
   [249] = "James Nolan",
   [250] = " ",
   [251] = " ",
   [252] = " ",
-  [253] = ":Manažer Lokalizace Projektu",
+  [253] = ":Manažer lokalizace projektu",
   [254] = ",",
   [255] = "Carol Aggett",
   [256] = " ",
@@ -2115,7 +2244,7 @@ original_credits = {
   [292] = " ",
   [293] = " ",
   [294] = " ",
-  [295] = ":Vedoucí Výroby",
+  [295] = ":Vedoucí výroby",
   [296] = ",",
   [297] = "Andy Nuttall",
   [298] = " ",
@@ -2127,7 +2256,7 @@ original_credits = {
   [304] = " ",
   [305] = " ",
   [306] = " ",
-  [307] = ":Správa Společnosti",
+  [307] = ":Správa společnosti",
   [308] = ",",
   [309] = "Audrey Adams",
   [310] = "Annette Dabb",
@@ -2140,7 +2269,7 @@ original_credits = {
   [317] = " ",
   [318] = " ",
   [319] = " ",
-  [320] = ":Vedení Společnosti",
+  [320] = ":Vedení společnosti",
   [321] = ",",
   [322] = "Les Edgar",
   [323] = "Peter Molyneux",
@@ -2151,7 +2280,7 @@ original_credits = {
   [328] = " ",
   [329] = " ",
   [330] = " ",
-  [331] = ":Zvláštní Poděkování",
+  [331] = ":Zvláštní poděkování",
   [332] = ",",
   [333] = "Všem ve Frimley Park Hospital",
   [334] = " ",
@@ -2162,7 +2291,7 @@ original_credits = {
   [339] = " ",
   [340] = " ",
   [341] = " ",
-  [342] = ":Neustále Myslete",
+  [342] = ":Nepřestávejte myslet",
   [343] = " ",
   [344] = " ",
   [345] = " ",
@@ -2925,7 +3054,7 @@ introduction_texts = {
 }
 install = {
   th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo dema), aby mohla běžet. Prosím použijte okno níže k nalezení instalační složky Theme Hospital.",
-  title = "--------------------------------- Nastavení CorsixTH ---------------------------------",
+  title = "-------------------------------- Nastavení CorsixTH --------------------------------",
   exit = "Odejít",
 }
 staff_class = {
