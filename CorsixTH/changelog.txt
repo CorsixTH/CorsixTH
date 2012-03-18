@@ -1,5 +1,5 @@
 -----------------------------------------
-Version 0.01 - released ?
+Version 0.01 - released 2012-03-24
 -----------------------------------------
 
 -- Not Yet Implemented --
@@ -13,13 +13,16 @@ Version 0.01 - released ?
 
 -- Known Issues --
 
-* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will be shown on it.
-* If the user exits the game via "the cross" when in windowed mode settings are not saved.
+* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will 
+  be shown on it.
+* If the user exits the game via "the cross" when in windowed mode settings 
+  are not saved.
 * Radiators occupy a whole tile instead of just one edge of the tile.
 
 -- Gameplay --
 
-* Change: The queue size for a room can be set to 0 to prevent patients from going there.
+* Change: The queue size for a room can be set to 0 to prevent patients 
+  from going there.
 * Fix: Crash when removing a room that has humanoids on their way to it.
 * Fix: Patients sitting down, but about to get a soda got ordered to sit down again.
 * Fix: A crash could occur if a new room was accepted when there were multiple types
@@ -29,14 +32,14 @@ Version 0.01 - released ?
 
 -- User Interface --
 
-* Fix: The staff management window is now updated when staff is hired or fired from 
-  outside the window itself.
-* Added: The save and load dialogs can now save both ascending and descending and are
-  a little more spacy.
+* Fix: The staff management window is now updated when staff is hired or 
+  fired from outside the window itself.
+* Added: The save and load dialogs can now save both ascending and descending 
+  and are a little more spacy.
 * Added: More messages in the progress report dialog.
 * Added: More advice in different situations from the adviser.
-* Change: When the mouse cursor leaves the game window it will stop scrolling the
-  in-game world.
+* Change: When the mouse cursor leaves the game window it will stop scrolling 
+  the in-game world.
 * The auto-scroll setting is now saved between sessions.
 * The adviser can now be turned off from the top menu.
 * The game uses a new icon.
