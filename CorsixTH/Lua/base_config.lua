@@ -385,24 +385,50 @@ local configuration = {
   awards_trophies = {
   
     -- Trophy win conditions
-    
+    -- Kill more than this number of rats in a year to win this award
+    -- MIN 0
+    RatKillsAbsolute  = 25,
     -- Sell more than this number of cans to win the award MIN 0
     CansofCoke = 100, 
     -- If player's reputation is >x all through the year then win trophy MIN 0 MAX 1000
     Reputation = 400, 
+    -- Percentage - keep your plants >x or more watered MIN 0 MAX 100
+    Plant = 80,
+    -- Percentage - keep mean staff happiness >x throughout the year to win the trophy 
+    -- MIN 0 MAX 100
+    TrophyStaffHappiness = 85,
+    -- Percentage - Rats shot:Rats killed - only valid if player kills at least 
+    -- half the number of rats needed to win the other rats trophy
+    RatKillsPercentage =  11,
+    -- TODO: this one is hard to understand! percentage of what exactly?
+    -- Percentage  (0-100) low is good needs at 2 mayor visits to be triggered
+    -- So for now, it is super visits that will trigger this prize
+    -- Please all of the VIP’s that visit your hospital during the year 
+    -- you will have to get a super feedback for each visit 
+    -- TrophyMayor = 25,
 
     -- Trophy win bonuses
-    
+
+    -- Bonus - MIN 0 MAX 255 (REP BONUS) REP BONUSES ARE NOW PERCENTAGES
+    RatKillsAbsoluteBonus = 5,
+    -- Bonus - MIN 0 MAX 65535 (MONEY BONUS)
+    RatKillsPercentageBonus = 5000,
     -- Bonus - MIN 0 (MONEY BONUS)
     CansofCokeBonus = 1000,
     -- Bonus - MIN 0 (MONEY BONUS)
     TrophyReputationBonus = 2000,
+    -- Bonus - MIN 0 MAX 255 (REP BONUS)
+    PlantBonus = 5,
+    -- Bonus - MIN 0 MAX 255 (REP BONUS)
+    TrophyStaffHappinessBonus = 5,
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
+    -- Bonus to money for approximately 100% Cure Rate in the year (MONEY BONUS)
+    TrophyCuresBonus = 6000, 
     -- Bonus to reputation for pleasing VIPs in the year (REPUTATION BONUS)
-    TrophyMayorBonus = 5,
-    
-    
+    TrophyMayorBonus = 5, 
+
+
     ------------------- Award win/loss criteria -------------------
     
     
