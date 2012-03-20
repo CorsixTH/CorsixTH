@@ -1219,7 +1219,7 @@ trophy_room = {
   },
   curesvdeaths = {
     awards = {
-      [1] = utf8 "Solide gratulasjoner på å oppnå et imponerende kurerte-vs-dödsfall-forhold på sykehuset det siste året.",
+      [1] = utf8 "Solide gratulasjoner på å oppnå et imponerende kurerte kontra dödsfall-forhold på sykehuset det siste året.",
 	},
     penalty = {
       [1] = utf8 "Din andel av kurerte-vs-dödsfall-forhold er ekstremt dårlig. Du bör sörge for at du kurerer mange flere mennesker enn du lot dö. Ikke svikt oss.",

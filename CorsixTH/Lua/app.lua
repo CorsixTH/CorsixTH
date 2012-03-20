@@ -195,7 +195,7 @@ function App:init()
   dofile "string_extensions"
   self.strings = Strings(self)
   self.strings:init()
-  self:initLanguage()
+  local language_load_success = self:initLanguage()
   if (self.command_line.dump or ""):match"strings" then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
@@ -252,6 +252,15 @@ function App:init()
     self:loadLevel("")
   else
     self:loadMainMenu()
+    -- If we couldn't properly load the language, show an information dialog
+    if not language_load_success then
+      -- At this point we know the language is english, so no use having
+      -- localized strings.
+      -- TODO: Make this an option in the options dialog
+      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
+      " to English because the desired language could not be loaded. "..
+      "Please make sure you have specified a font file in the config file."}))
+    end
   end
   -- If a savegame was specified, load it
   if self.command_line.load then
@@ -266,7 +275,23 @@ function App:init()
 end
 
 function App:initLanguage()
-  local strings, speech_file = self.strings:load(self.config.language)
+  -- Make sure that we can actually show the desired language.
+  -- If we can't, then the player probably didn't specify a font file
+  -- in the config file properly.
+  local success = true
+  local language = self.config.language
+  local font = self.strings:getFont(language)
+  if self.gfx:hasLanguageFont(font) then
+    self.gfx.language_font = font
+  else
+    -- Otherwise revert to english.
+    self.gfx.language_font = self.strings:getFont("english")
+    language = "english"
+    self.config.language = "english"
+    success = false
+  end
+
+  local strings, speech_file = self.strings:load(language)
   strict_declare_global "_S"
   strict_declare_global "_A"
   local old_S = _S
@@ -289,12 +314,13 @@ function App:initLanguage()
     TH.stringProxy.reload(old_S, _S)
   end
   _A = self.strings:setupAdviserMessage(_S.adviser)
-  self.gfx.language_font = self.strings:getFont(self.config.language)
+
   self.gfx:onChangeLanguage()
   if self.ui then
     self.ui:onChangeLanguage()
   end
   self.audio:initSpeech(speech_file)
+  return success
 end
 
 function App:loadMainMenu(message)
