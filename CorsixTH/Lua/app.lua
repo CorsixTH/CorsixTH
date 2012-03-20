@@ -940,8 +940,10 @@ end
 --! release, which is why the checks prior to that version aren't made.
 function App:getVersion()
   local ver = self.savegame_version
-  if ver > 45 then
+  if ver > 51 then
     return "Trunk"
+  elseif ver > 45 then
+    return "0.01"
   else
     return "Beta 8 or earlier"
   end
