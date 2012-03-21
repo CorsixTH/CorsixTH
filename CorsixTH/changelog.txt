@@ -1,5 +1,5 @@
 -----------------------------------------
-Version 0.01 - released ?
+Version 0.01 - released 2012-03-24
 -----------------------------------------
 
 -- Not Yet Implemented --
@@ -10,36 +10,72 @@ Version 0.01 - released ?
 * Rats
 * Graphs
 * Visual effects on patients with serious radiation and jellyitis.
+* Fullscreen animations such as the level screen and winning letter.
 
 -- Known Issues --
 
-* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will be shown on it.
-* If the user exits the game via "the cross" when in windowed mode settings are not saved.
-* Radiators occupy a whole tile instead of just one edge of the tile.
+* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will 
+  be shown on it.
+* If the user exits the game via "the cross" when in windowed mode settings 
+  are not saved.
+* Radiators and other "edge tile" objects occupy a whole tile instead of 
+  just one edge of the tile.
 
 -- Gameplay --
 
-* Change: The queue size for a room can be set to 0 to prevent patients from going there.
+* Added: A host of awards given at year end.
+* Added: A new mode: Free Build Mode. In this mode you don't have to worry
+  about money. All custom maps can be played in this mode.
+* Added: Patient animations such as yawning and checking watch when waiting.
+
+* Change: The queue size for a room can be set to 0 to prevent patients 
+  from going there.
+* Change: Patients now spend some more time in the ward.
+
 * Fix: Crash when removing a room that has humanoids on their way to it.
 * Fix: Patients sitting down, but about to get a soda got ordered to sit down again.
 * Fix: A crash could occur if a new room was accepted when there were multiple types
   of objects left to place.
 * Fix: Emergencies with diseases not available on a level no longer happen.
 * Fix: The VIP no longer makes staff be called to the rooms he visits.
+* Fix: With multiple reception desks new patients now find their way to the
+  reception with the least queue size.
+* Fix: The wrong amount of money was returned when selling a room.
+* Fix: Aliens could not be cured on the last two levels.
+* Fix: The transparent walls setting made new rooms remove outer walls.
+* Fix: Sometimes patients who had left the hospital could still wait for a new room,
+  making said room impossible to build.
+* Fix: A crash when the staff member left a room before the patient.
+* Fix: Build cost of objects were not always correct.
 
 -- User Interface --
 
-* Fix: The staff management window is now updated when staff is hired or fired from 
-  outside the window itself.
-* Added: The save and load dialogs can now save both ascending and descending and are
-  a little more spacy.
+* Added: The save and load dialogs can now sort both ascending and descending 
+  and are a little more spacy.
 * Added: More messages in the progress report dialog.
 * Added: More advice in different situations from the adviser.
-* Change: When the mouse cursor leaves the game window it will stop scrolling the
-  in-game world.
+* Added: Adviser messages now has priorities, making more important messages
+  appear faster.
+
+* Change: When the mouse cursor leaves the game window it will stop scrolling 
+  the in-game world.
+* Change: The message when a crash occurs is now a little more informative, and
+  humanoids no longer get stuck as easily.
+
+* Fix: The staff management window is now updated when staff is hired or 
+  fired from outside the window itself.
+* Fix: If the desired language cannot be loaded on startup the game now
+  reverts to English instead of crashing.
+* Fix: The game could not autosave if the save or load dialog was open.
+
 * The auto-scroll setting is now saved between sessions.
 * The adviser can now be turned off from the top menu.
 * The game uses a new icon.
+
+-- Map Editor --
+
+* Fix: The game no longer crash just because the map builder has not added any
+  access roads from the edge of the map.
 
 -----------------------------------------
 Version Beta 8 - released 2011-09-24
