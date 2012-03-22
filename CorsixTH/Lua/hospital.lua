@@ -715,6 +715,9 @@ function Hospital:purchasePlot(plot_number)
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
+      -- Also make sure that the transparent walls setting is used. 
+      -- TODO: This check should be done in C++?
+      self.world.ui:makeWallsTransparent(self.world.ui.transparent_walls)
       self:spendMoney(cost, _S.transactions.buy_land, cost)
       return true
     end
@@ -1101,12 +1104,8 @@ function Hospital:resolveEmergency()
 
   --check if there's a VIP in the building, and if there is then let him know the outcome
   for i, e in ipairs(self.world.entities) do
-    if e.humanoid_class == "VIP" then
-      if earned > 0 then
-        e.vip_rating = e.vip_rating + 10
-      else
-        e.vip_rating = e.vip_rating - 15
-      end
+    if class.is(e, Vip) then
+      e:evaluateEmergency(emergency_success)
     end
   end
 

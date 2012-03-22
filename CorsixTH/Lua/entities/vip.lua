@@ -238,6 +238,17 @@ function Vip:evaluateRoom()
   end
 end
 
+function Vip:evaluateEmergency(success)
+  -- Make sure that the VIP is still actually in the process of evaluation
+  if not self.going_home then
+    if success then
+      self.vip_rating = self.vip_rating + 10
+    else
+      self.vip_rating = self.vip_rating - 15
+    end
+  end
+end
+
 function Vip:setVIPRating()
   --check the visitor to patient death ratio
   local deathDiff = self.hospital.num_deaths - self.enter_deaths
