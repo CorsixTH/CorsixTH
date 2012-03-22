@@ -511,7 +511,6 @@ room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médec
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
 place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
 fax.emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats."
-fax.emergency.num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats."
 
 -- The demo does not contain this string
 menu_file.restart = "  RELANCER  "
@@ -531,11 +530,12 @@ adviser = {
   room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
   
   warnings = {
-    no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours!",
+    no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
     no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
     no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
+    no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
+    cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
   },
-
   cheats = {
     th_cheat = "Félicitations, vous avez débloquer les triches !",
     crazy_on_cheat = "Oh non ! Tous les médecins sont devenus fous !",
@@ -554,6 +554,9 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = "Va vers %s"
 dynamic_info.staff.actions.fired = "Renvoyé"
+
+-- Progress report
+progress_report.free_build = "CONSTRUCTION LIBRE"
 
 -- Misc
 misc.not_yet_implemented = "(pas encore implémenté)"
@@ -614,6 +617,8 @@ main_menu = {
   custom_level = "Niveau personnalisé",
   load_game = "Charger une partie",
   options = "Options",
+  savegame_version = "Version de la sauvegarde : ",
+  version = "Version : ",
   exit = "Quitter",
 }
 
@@ -656,10 +661,12 @@ tooltip.load_game_window = {
 -- Custom game window
 custom_game_window = {
   caption = "Niveau personnalisé",
+  free_build = "Construction libre",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = "Charger le niveau %s",
+  free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaites",
 }
 
 -- Save game window
@@ -805,6 +812,7 @@ confirmation = {
 information = {
   custom_game = "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
+  very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
   level_lost = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     "Voilà pourquoi vous avez perdu :",
@@ -852,6 +860,19 @@ fax = {
     return_to_main_menu = "Retourner au menu principal",
     accept_new_level = "Aller au niveau suivant",
     decline_new_level = "Continuer la partie encore un peu",
+  },
+  emergency = {
+    num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.",
+    free_build = "Si vous réussissez votre réputation augmentera mais si vous échouez votre réputation sera sérieusement entachée.",
+  },
+  vip_visit_result = {
+    remarks = {
+        free_build = {
+        "C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?",
+        "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...",
+        "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela.",
+      },
+    },
   },
 }
 
