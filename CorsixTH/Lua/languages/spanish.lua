@@ -323,6 +323,7 @@ confirmation = {
 
 information = {
   custom_game = utf8 "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
+  no_custom_game_in_demo = utf8 "Lamentándolo mucho, la versión demo no permite jugar a mapas personalizados.",
   cannot_restart = utf8 "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
   very_old_save = utf8 "Desde que empezaste a jugar en este nivel, el juego ha recibido muchas actualizaciones. Para asegurarte de que todas las características funcionen como es debido, considera empezarlo de nuevo.",
   level_lost = {
