@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "Trunk Version"
+!define PRODUCT_VERSION "0.01"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
@@ -218,7 +218,8 @@ Section "MainSection" SEC01
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
   ${If} ${FileExists} "$INSTDIR\Lua"
-    RMDir "$INSTDIR\Lua"
+    RMDir /r "$INSTDIR\Lua"
+    CreateDirectory "$INSTDIR\Lua"
   ${EndIf}
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*

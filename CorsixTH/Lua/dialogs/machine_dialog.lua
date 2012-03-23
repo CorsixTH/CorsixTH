@@ -94,6 +94,10 @@ function UIMachine:replaceMachine()
   local machine = self.machine
   local hosp = self.ui.hospital
   local cost = hosp.research.research_progress[machine.object_type].cost
+  if self.ui.hospital.balance < cost then
+    self.ui:playSound "wrong2.wav"
+    return
+  end
   local strength = hosp.research.research_progress[machine.object_type].start_strength
   self.ui:addWindow(UIConfirmDialog(self.ui,
     _S.confirmation.replace_machine:format(machine.object_type.name, cost),

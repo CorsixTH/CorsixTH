@@ -113,7 +113,9 @@ adviser = {
   warnings = {
     no_desk = "Det kanske börjar bli dags att bygga en reception och anställa en receptionist?",
     no_desk_1 = "Om du vill att det ska komma patienter till sjukhuset så behövs en receptionist och en reception där hon kan jobba!",
-    no_desk_2 = "Fantastiskt, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
+    no_desk_2 = "Snyggt jobbat, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
+    no_desk_3 = "Helt otroligt, nästan ett år och du har fortfarande ingen bemannad reception! Tror du det kommer några patienter då? Sluta leka omkring och fixa till det här nu!",
+    cannot_afford = "Du har inte tillräckligt med pengar på banken för att anställa den personen!"
   },
   cheats = {
     th_cheat = utf8 "Ojoj, nån vill fuska sig till segern!",
@@ -172,7 +174,7 @@ misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så
 
 main_menu = {
   new_game = "Kampanj",
-  custom_level = "Enkel nivå",
+  custom_level = "Enskild nivå",
   load_game = "Ladda spel",
   options = "Alternativ",
   savegame_version = "Sparningsversion: ",
@@ -295,8 +297,9 @@ confirmation = {
 }
 
 information = {
-  custom_game = utf8 "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
-  cannot_restart = utf8 "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
+  custom_game = "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
+  no_custom_game_in_demo = "Ledsen, men det går inte att spela enskilda nivåer med demofilerna.",
+  cannot_restart = "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
   very_old_save = "Det har hänt en hel del med spelet sedan du startade den här banan. För att vara säker på att allt fungerar som det är tänkt kan det vara bra att överväga att starta om banan.",
   level_lost = {
     utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",

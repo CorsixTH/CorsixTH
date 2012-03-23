@@ -311,6 +311,7 @@ confirmation = {
 
 information = {
   custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
+  no_custom_game_in_demo = "Sorry, but in the demo version you can't play any custom maps.",
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
   very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it.",
   level_lost = {
