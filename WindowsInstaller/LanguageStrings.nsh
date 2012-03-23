@@ -106,6 +106,7 @@ LangString options_title      ${LANG_NORWEGIAN} "Flere innstillinger"
 LangString options_subtitle   ${LANG_NORWEGIAN} "Spesifiser hvor originalspillet ligger."
 LangString save_in_appdata    ${LANG_NORWEGIAN} "Lagre spilldata og innstillinger i %APPDATA% (Anbefalt)"
 LangString remove_saves       ${LANG_NORWEGIAN} "Vil du beholde dine lagrede spill?"
+LangString overwrite_install  ${LANG_NORWEGIAN} "Det ser ut som om du prøver å skrive over en eksisterende installasjon av CorsixTH. Om du har gjort endringer kan disse gå tapt. Fortsette?"
 
 LangString install_language   ${LANG_POLISH} "Polish"
 LangString original_text      ${LANG_POLISH} "In order to play the game an installation of the original game is required. Please specify that location here."
