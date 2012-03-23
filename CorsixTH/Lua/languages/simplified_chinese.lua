@@ -1,4 +1,4 @@
---[[ Copyright (c) 2011 lwglwsss
+--[[ Copyright (c) 2012 lwglwsss
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -206,12 +206,12 @@ menu_debug = {
   jump_to_level = "  JUMP TO LEVEL  ",
 }
 menu_options = {
-  edge_scrolling = " 开启鼠标滚动 ",
-  lock_windows = " 锁定窗口 ",
-  settings = " 选项 ",
+  edge_scrolling = "    开启鼠标滚动",
+  lock_windows = "    锁定窗口",
+  settings = "    选项",
 }
 menu_options_game_speed = {
-  pause = " 暂停 ",
+  pause = "    暂停",
 }
 lua_console = {
   execute_code = "Execute",
@@ -333,6 +333,42 @@ letter = {
   dear_player = "Dear %s",
   return_to_main_menu = "Would you like to return to the main menu or continue playing?",
 }
+
+tooltip.custom_game_window.free_build = "Tick this box if you want to play without money or winning and losing conditions"
+tooltip.cheats_window.cheats.vip = "Creates a VIP."
+tooltip.menu_list_window.save_date = "Click here to sort the list by last modification date"
+tooltip.menu_list_window.name = "Click here to sort the list by name"
+tooltip.options_window.original_path = "The currently chosen directory of the original Theme Hospital installation"
+tooltip.options_window.browse = "Browse for another location of a Theme Hospital installation"
+custom_game_window.free_build = "Free Build"
+cheats_window.cheats.vip = "Create VIP"
+main_menu.version = "Version: "
+main_menu.savegame_version = "Savegame version: "
+progress_report.free_build = "FREE BUILD"
+menu_options.adviser_disabled = "    显示助手"
+install.exit = "Exit"
+adviser.warnings.falling_2 = "Stop messing about, how would you like it?"
+adviser.warnings.no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!"
+adviser.warnings.falling_5 = "This is not the place for knocking people over, they're ill you know!"
+adviser.warnings.falling_4 = "This is an Hospital, not a Theme Park!"
+adviser.warnings.falling_6 = "This is not a bowling alley, sick people should not be treated like that!"
+adviser.warnings.falling_3 = "Ouch, that had to hurt, someone call a Doctor!"
+adviser.warnings.no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!"
+adviser.warnings.cannot_afford = "You don't have enough money in the bank to hire that person!"
+adviser.warnings.no_desk = "You should build a reception desk and hire a receptionist at some point!"
+adviser.warnings.no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!"
+adviser.warnings.falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!"
+information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
+options_window.cancel = "取消"
+options_window.browse = "浏览..."
+options_window.new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted."
+menu_list_window.save_date = "修改日期"
+menu_list_window.name = "名称"
+fax.vip_visit_result.remarks.free_build[1] = "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?"
+fax.vip_visit_result.remarks.free_build[2] = "I'm no economist, but I think I could run this hospital too if you know what I mean..."
+fax.vip_visit_result.remarks.free_build[3] = "A very well run hospital. Watch out for the recession though! Right... you didn't have to worry about that."
+fax.emergency.free_build = "If you are successful your reputation will increase but if you fail your reputation will be seriously dented."
+fax.emergency.num_disease_singular = "There is 1 person with %s and they require immediate attention."
 
 ------------------------------------
 --OLD STRINGS IN LANGUAGE "简体中文":
@@ -782,15 +818,15 @@ tooltip = {
   },
 }
 menu_charts = {
-  briefing = " 任务简报 ",
-  casebook = " 治疗手册 ",
-  graphs = " 图表 ",
-  policy = " 制度 ",
-  bank_manager = " 银行经理 ",
-  statement = " 银行账户 ",
-  staff_listing = " 员工列表 ",
-  research = " 研究 ",
-  status = " 状态 ",
+  briefing = "    任务简报",
+  casebook = "    治疗手册",
+  graphs = "    图表",
+  policy = "    制度",
+  bank_manager = "    银行经理",
+  statement = "    银行账户",
+  staff_listing = "    员工列表",
+  research = "    研究",
+  status = "    状态",
 }
 town_map = {
   number = "地区编号",
@@ -1407,22 +1443,22 @@ progress_report = {
   win_criteria = "视窗标准",
 }
 menu_options = {
-  game_speed = " 游戏速度 ",
-  sound_vol = " 音效音量 ",
-  music_vol = " 音乐音量 ",
-  announcements = " 语音 ",
-  sound = " 音效 ",
-  announcements_vol = " 语音音量 ",
-  music = " 音乐 ",
-  autosave = " 自动存盘 ",
-  jukebox = " 音乐盒 ",
+  game_speed = "    游戏速度",
+  sound_vol = "    音效音量",
+  music_vol = "    音乐音量",
+  announcements = "    语音",
+  sound = "    音效",
+  announcements_vol = "    语音音量",
+  music = "    音乐",
+  autosave = "    自动存盘",
+  jukebox = "    音乐盒",
 }
 menu_options_game_speed = {
-  normal = " 正常 ",
-  slower = " 较慢 ",
-  max_speed = " 快速 ",
-  slowest = " 非常慢 ",
-  and_then_some_more = " 极快 ",
+  normal = "    正常",
+  slower = "    较慢",
+  max_speed = "    快速",
+  slowest = "    非常慢",
+  and_then_some_more = "    极快",
 }
 rooms_short = {
   ultrascan = "超级扫描仪",
@@ -1798,6 +1834,7 @@ adviser = {
     charges_too_low = "治疗费用太低了。它将使更多的病人到医院就诊，但您无法从每个病人身上获取太多的利润。",
     charges_too_high = "治疗费用太高了。短期内它将产生很好的效益，但最终会把病人吓跑的。",
     staff_overworked = "您的员工已经劳累过度。他们的办事效率正在下降，并将有可能发生医疗事故。",
+    doctor_crazy_overwork = "喔，不！您的一位医生已经由于劳累过度快要发狂了。如果能够立即让他休息，他将得到恢复。",
     doctors_tired = "您的医生太累了。立即让他们休息。",
     people_did_it_on_the_floor = "您的一些病人坚持不住了。赶快打扫干净。",
     queues_too_long = "队伍太长了。",
@@ -2213,26 +2250,29 @@ policy = {
 }
 competitor_names = {
   [1] = "神谕",
-  [2] = "黑尔",
-  [3] = "巨人",
+  [2] = "巨人",
+  [3] = "黑尔",
   [4] = "马笛维克",
   [5] = "冬青树",
   [6] = "沉思",
   [7] = "禅",
   [8] = "里昂",
-  [9] = "晶体",
-  [10] = "萨姆",
-  [11] = "查理",
+  [9] = "玛文",
+  [10] = "晶体",
+  [11] = "母亲",
   [12] = "洁尼",
-  [13] = "亚瑟",
-  [14] = "马格尼斯",
-  [15] = "母亲",
-  [16] = "赛尔",
-  [17] = "玛文",
-  [18] = "约书亚",
-  [19] = "丹尼尔",
-  [20] = "奥利文",
-  [21] = "尼克",
+  [13] = "CORSIX",
+  [14] = "ROUJIN",
+  [15] = "EDVIN",
+  [16] = "萨姆",
+  [17] = "查理",
+  [18] = "亚瑟",
+  [19] = "马格尼斯",
+  [20] = "赛尔",
+  [21] = "约书亚",
+  [22] = "丹尼尔",
+  [23] = "奥利文",
+  [24] = "尼克",
 }
 buy_objects_window = {
   price = "价格：",
@@ -2240,39 +2280,35 @@ buy_objects_window = {
   total = "总共：",
 }
 trophy_room = {
-  reputation = "声望",
+  wait_times = {
+    award = {
+      [1] = "恭喜。您的医院的排队等待时间非常短。这是给您的奖励。",
+    },
+    penalty = {
+      [1] = "病人在您的医院中排队等待时间太长了。您应该好好地管理前来就诊的病人。",
+    },
+  },
   happy_vips = {
-    awards = {
+    trophies = {
       [1] = "由于您的医院在过去一年中给来访的贵宾们留下了深深地好感，特此向您颁发诺贝尔奖。",
-      [2] = "由于您的医院在过去一年中使每一位来访贵宾都感到了员工的工作热情，特此颁发贵宾满意奖。",
-    },
-    trophies = {
-      [1] = "由于您的医院使每位造访贵宾都感到快乐，特此由名人机构颁发著名人士奖。您已经成为我们名人行列中的一员。",
+      [2] = "由于您的医院使每位造访贵宾都感到快乐，特此由名人机构颁发著名人士奖。您已经成为我们名人行列中的一员。",
+      [3] = "由于您的医院在过去一年中使每一位来访贵宾都感到了员工的工作热情，特此颁发贵宾满意奖。",
     },
   },
-  rats_killed = {
+  hosp_value = {
+    penalty = {
+      [1] = "您的医院价值太低了。您的理财能力太次了。记住一个好的医院通常也是价值最高的医院。",
+    },
     awards = {
+      [1] = "由于您的医院价值不菲，因此卫生部向您表示恭喜。",
     },
-    trophies = {
-      [1] = "由于您的医院在过去一年中共击毙了%d只老鼠，特此颁发除害奖。",
-      [2] = "由于您高超的击鼠技巧共击毙老鼠%d只，特此颁发联邦灭鼠奖。",
-      [3] = "由于您的医院在过去一年中共击毙了%d只老鼠，特此颁发老鼠克星奖。",
-    },
-  },
-  happy_staff = {
-    awards = {
-    },
-    trophies = {
-      [1] = "由于您的医院在过去一年中使努力工作的员工保持快乐，特此颁发微笑奖。",
-      [2] = "由于您的医院在过去一年中没有不快乐的员工，特此颁发阿达尼学院奖。",
-      [3] = "由于您的医院在过去一年中使努力工作的员工保持快乐，特此颁发笑星奖杯。快乐地笑吧！",
+    regional = {
+      [1] = "您真是一个理财高手。您的医院的价值比其它医院的总和还要多。",
     },
   },
   rats_accuracy = {
-    awards = {
-    },
     trophies = {
-      [1] = "由于您击打老鼠的命中率为%d%%，特此颁发极道枭雄2射击准确奖。",
+      [1] = "由于您击打老鼠的命中率为%d%%，特此颁发极道枭雄2 射击准确奖。",
       [2] = "由于您的医院在过去一年中以难以置信的命中率%d%%击毙老鼠，特此颁奖。",
       [3] = "由于您的医院在过去一年中击毙了%d%%的老鼠，特此颁发地下城守护者除害奖。恭喜！",
     },
@@ -2283,43 +2319,138 @@ trophy_room = {
     },
     trophies = {
       [1] = "由于您的医院在过去一年中成功地治疗了就诊的每个病人，国际治疗基金会特此向您颁发全部治愈奖。",
-      [2] = "由于您的医院在过去一年中治愈了大量患者，特此颁发疾病克星奖。",
+      [2] = "由于您的医院在过去一年中治愈了大量患者，特此颁发急病克星奖。",
     },
   },
-  no_deaths = {
-    awards = {
-      [1] = "由于您的医院在过去一年中没有发生任何病人死亡事件，特此颁发安全奖。",
-    },
-    trophies = {
-      [1] = "由于您的医院在过去一年中没有发生病人死亡事件，特此由生命发展组织向您颁奖。",
-      [2] = "由于您的医院在过去一年中避免发生病人死亡事件，特此颁发挽留妙手回春奖。",
-    },
-  },
-  many_cured = {
-    awards = {
-      [1] = "由于您的医院在过去一年中成功地治疗了几乎所有病人，特此恭喜您荣获玛丽治疗奖。",
-    },
-    trophies = {
-      [1] = "由于您的医院在过去一年中治愈了大量患者，国际治疗基金会特此向您颁发悬壶济世奖。",
-      [2] = "由于您的医院在过去一年中治愈了大量患者，特此颁发疾病克星奖。",
-    },
-  },
-  high_rep = {
-    awards = {
-      [1] = "由于您的医院在过去一年中无懈可击的运营以及最高的声望，您被授予内阁大臣奖。干得好。",
-      [2] = "由于您的医院在过去一年中赢得了最高的声望，特此颁发牛蛙奖。这是您应得的。",
-    },
+  best_value_hosp = {
     trophies = {
       [1] = "由于您的医院在过去一年中赢得了最高的声望，特此颁发白衣天使奖。这是您应得的。",
     },
-  },
-  sold_drinks = {
-    awards = {
+    penalty = {
+      [1] = "周围每个医院都比您的医院富有。您要加油啊。多购买一些昂贵的东西。",
     },
+    regional = {
+      [1] = "恭喜您管理的医院成为最有价值的医院。干得好。保持下去。",
+    },
+  },
+  high_rep = {
+    penalty = {
+      [1] = "在过去一年中，您赢得了很低的声望。以后一定要加油啊。",
+      [2] = "您的声望是本区域最低的。真丢人。加油干。",
+    },
+    awards = {
+      [1] = "干得好。在上一个年度，由于您获得了很高的声望，特此颁发一个小小的奖励。",
+      [2] = "太棒了! 由于您在过去一年中取得了很高的声望，特此颁发奖励。",
+    },
+    regional = {
+      [1] = "由于您的医院在过去一年中赢得了最高的声望，特此颁发牛蛙奖。这是您应得的。",
+      [2] = "在这一年中，您的医院的声望超过了其它所有医院的总和。真是一项伟大的成就。",
+    },
+  },
+  consistant_rep = {
     trophies = {
-      [1] = "由于您的医院在过去一年中售出了大量的罐装饮料，特此由全球牙医联合会向您颁奖。",
-      [2] = "由于您的医院在过去一年中卖出大量饮料，特此软饮料零售组织向您颁发清凉饮料奖。",
-      [3] = "由于您的医院在过去一年中卖出大量软饮料，特此由DK馅料公司向您颁发巧克力奖杯。",
+      [1] = "由于您的医院在过去一年中无懈可击的运营以及最高的声望，您被授予内阁大臣奖。干得好。",
+      [2] = "由于您的医院在过去一年中赢得了最高的声望，特此颁发白衣天使奖。这是您应得的。",
+    },
+  },
+  curesvdeaths = {
+    awards = {
+      [1] = "恭喜您在过去一年中使医院保持了很高的治愈率和很低的死亡率。",
+    },
+    penalty = {
+      [1] = "您的治愈率实在是太低了。您应该使治愈的病人多于死亡的病人。不要颠倒了。",
+    },
+  },
+  cleanliness = {
+    regional_good = {
+      [1] = "您的医院是最脏乱的医院之一。一个脏乱的医院不仅味道难闻，而且是十分危险的。请密切留意。",
+    },
+    award = {
+      [1] = "卫生巡查员注意到您的医院非常干净。干净的医院意味着安全的医院。坚持下去。",
+    },
+    regional_bad = {
+      [1] = "您的医院是本区域中最脏乱的。其它医院都使走廊保持整洁。您使医学界蒙羞。",
+    },
+  },
+  happy_patients = {
+    awards = {
+      [1] = "在过去一年中，您的医院使所有访问的病人都感到快乐，您将为此感到骄傲。",
+      [2] = "访问您的医院的病人比其它医院内的病人要快乐得多。",
+    },
+    penalty = {
+      [1] = "前去您的医院就诊的病人感到非常不满。您必须改进提高才可以获得卫生部的尊重。",
+      [2] = "在您的医院中接受治疗的病人感到非常不高兴。您应多为病人的福利着想。",
+    },
+  },
+  emergencies = {
+    regional_good = {
+      [1] = "卫生部认识到您的医院在处理紧急事件时比其它医院都要好，特此颁发奖励。",
+    },
+    penalty = {
+      [1] = "您处理紧急事件的能力实在太差了。前来就诊的急救病人并没有得到正确的治疗。",
+    },
+    regional_bad = {
+      [1] = "您的医院是本区域中处理紧急事件最差的。这都是您的过错。",
+    },
+    award = {
+      [1] = "恭喜：由于您的努力和卓有成效的紧急事件处理能力，使您荣获该特别大奖。干得好。",
+      [2] = "您处理紧急事件的能力非常突出。由于您最佳的处理能力，特此颁发奖励。",
+    },
+  },
+  gen_repairs = {
+    awards = {
+      [1] = "由于您的清洁工人使医院内的仪器设备运行良好，特此颁发特别奖金。干得好。假期愉快。",
+      [2] = "您的清洁工人比其它医院的都要好。这真是一件值得庆祝的事情。",
+      [3] = "您的仪器维护得很好。这一切都离不开清洁工人的努力。干得好。",
+    },
+    penalty = {
+      [1] = "您的清洁工人在维护机器方面表现不是很好。您应该让他们更多地关心维护保养工作，或者再多雇佣几名清洁工人。",
+      [2] = "维修工作一团糟。您的清洁工人无法很好的照料各种医疗仪器。",
+    },
+  },
+  no_deaths = {
+    trophies = {
+      [1] = "由于您的医院在过去一年中没有发生任何病人死亡事件，特此颁发安全奖。",
+      [2] = "由于您的医院在过去一年中没有发生病人死亡事件，特此由生命发展组织向您颁奖。",
+      [3] = "由于您的医院在过去一年中避免发生病人死亡事件，特此颁发挽留妙手回春奖。",
+    },
+    penalty = {
+      [1] = "在过去一年中，您的医院的死亡人数始终很高。一定要多加注意。以后一定要确保病人的存活。",
+      [2] = "您的医院对于病人的健康简直就是在冒险。您应该治愈大量的病人，而不是让他们加速死亡。",
+    },
+    awards = {
+      [1] = "由于您的医院在本年度保持了很低的死亡人数，特此颁发奖励。太棒了。",
+      [2] = "由于您的天才管理使医院的死亡人数达到最低点。这真是令人高兴的事情。",
+    },
+    regional = {
+      [1] = "您的医院的死亡人数比其它医院都低。请接受这个奖励。",
+    },
+  },
+  rats_killed = {
+    trophies = {
+      [1] = "由于您的医院在过去一年中共击毙了%d只老鼠，特此颁发除害奖。",
+      [2] = "由于您高超的击鼠技巧共击毙老鼠%d只，特此颁发联邦灭鼠奖。",
+      [3] = "由于您的医院在过去一年中共击毙了%d只老鼠，特此颁发老鼠克星奖。",
+    },
+  },
+  happy_staff = {
+    trophies = {
+      [1] = "由于您的医院在过去一年中使努力工作的员工保持快乐，特此颁发微笑奖。",
+      [2] = "由于您的医院在过去一年中没有不快乐的员工，特此颁发阿达尼学院奖。",
+      [3] = "由于您的医院在过去一年中使努力工作的员工保持快乐，特此颁发笑星奖杯。快乐地笑吧！",
+    },
+    awards = {
+      [1] = "您的员工表示要向您颁奖。他们说虽然还有很多需要改进的地方，但您对待他们的态度使他们感到很快乐。",
+      [2] = "您的员工感到能够为您工作是一件非常快乐的事情，他们的笑容挂在脸上。您真是一个超级管理人才。",
+    },
+    penalty = {
+      [1] = "您的员工希望您知道他们非常不高兴。好的员工就是最有价值的资产。使他们快乐，否则您将在一天之内失去全部。",
+    },
+    regional_good = {
+      [1] = "您的员工比其它医院的员工都要快乐。快乐的员工意味着更高的利润和更低的死亡率。卫生部感到非常高兴。",
+    },
+    regional_bad = {
+      [1] = "您的员工在上一年度中非常不幸。您一定要加以留意。其它医院的员工都比您的员工快乐。",
     },
   },
   healthy_plants = {
@@ -2331,19 +2462,71 @@ trophy_room = {
       [2] = "由于您的医院在过去一年中使所有植物长势良好，特此颁发绿色名人奖。",
     },
   },
+  sold_drinks = {
+    trophies = {
+      [1] = "由于您的医院在过去一年中售出了大量的罐装饮料，特此由全球牙医联合会向您颁奖。",
+      [2] = "由于您的医院在过去一年中卖出大量饮料，特此软饮料零售组织向您颁发清凉饮料奖。",
+      [3] = "由于您的医院在过去一年中卖出大量软饮料，特此由DK饮料公司向您颁发巧克力奖杯。",
+    },
+  },
+  many_cured = {
+    trophies = {
+      [1] = "由于您的医院在过去一年中成功地治疗了几乎所有病人，特此恭喜您荣获玛丽治疗奖。",
+      [2] = "由于您的医院在过去一年中治愈了大量患者，国际治疗基金会特此向您颁发悬壶济世奖。",
+      [3] = "由于您的医院在过去一年中治愈了大量患者，特此颁发疾病克星奖。",
+    },
+    penalty = {
+      [1] = "您的医院无法使病人得到很好的治疗。请关注并加以改进。",
+      [2] = "您的医院对病人的治疗效果不如其它医院。您使卫生部和您自己都名声扫地。下不为例。",
+    },
+    awards = {
+      [1] = "恭喜您在过去一年中治愈了这么多的病人。很多人都感觉不错，感谢您的工作。",
+      [2] = "由于您的医院治愈了比其它医院更多的病人，所以请接受这个奖励。您的表现太棒了。",
+    },
+    regional = {
+      [1] = "由于您的医院治愈的病人数目比其它医院的总和还多，特此颁发奖励。",
+    },
+  },
+  pop_percentage = {
+    awards = {
+      [1] = "在过去一年中，您的医院在城镇人口中获得了很高的份额。干得好。",
+      [2] = "恭喜。访问您的医院的居民人数超过了其它任何一个医院。",
+      [3] = "干得好。访问您的医院的居民人数超过了其它医院的总和。",
+    },
+    penalty = {
+      [1] = "在过去一年中，您的医院在城镇人口中获得了很高的份额。干得好。",
+      [2] = "恭喜。访问您的医院的居民人数超过了其它任何一个医院。",
+    },
+  },
+  research = {
+    regional_good = {
+      [1] = "您的研究使您的医院始终紧跟最新发展。这是您的科研人员应得的奖励。",
+    },
+    penalty = {
+      [1] = "您研究开发新治疗方案，仪器和药品的速度太慢了。这将无法赶上时代的步伐。",
+    },
+    regional_bad = {
+      [1] = "本区域中的每个医院在研究方面都强于您的医院。这一点使卫生部感到震怒。",
+    },
+    awards = {
+      [1] = "您的研究使您的医院始终紧跟最新发展。这是您的科研人员应得的奖励。",
+      [2] = "在过去一年中，您比其它医院研究出更多的药品和仪器设备。请接受卫生部颁发的这个奖励。",
+    },
+  },
+  reputation = "声望",
   cash = "现金",
 }
 menu_options_volume = {
-  [50] = " 50%  ",
-  [100] = " 100%  ",
-  [30] = " 30%  ",
-  [60] = " 60%  ",
-  [90] = " 90%  ",
-  [10] = " 10%  ",
-  [20] = " 20%  ",
-  [40] = " 40%  ",
-  [80] = " 80%  ",
-  [70] = " 70%  ",
+  [50] = "    50%",
+  [100] = "    100%",
+  [30] = "    30%",
+  [60] = "    60%",
+  [90] = "    90%",
+  [10] = "    10%",
+  [20] = "    20%",
+  [40] = "    40%",
+  [80] = "    80%",
+  [70] = "    70%",
 }
 menu_file_load = {
   [1] = " 存档一 ",
@@ -2356,10 +2539,10 @@ menu_file_load = {
   [8] = " 存档八 ",
 }
 menu_file = {
-  quit = " 退出 ",
-  save = " 存储 ",
-  load = " 读取 ",
-  restart = " 重新开始 ",
+  quit = "    退出",
+  save = "    存储",
+  load = "    读取",
+  restart = "    重新开始",
 }
 rooms_long = {
   ultrascan = "超级扫描仪房间",
@@ -2998,9 +3181,9 @@ build_room_window = {
   cost = "花费：",
 }
 menu = {
-  debug = " DEBUG  ",
-  display = " 显示 ",
-  file = " 文件 ",
-  options = " 选项 ",
-  charts = " 图表 ",
+  debug = "    DEBUG",
+  display = "    显示",
+  file = "    文件",
+  options = "    选项",
+  charts = "    图表",
 }
