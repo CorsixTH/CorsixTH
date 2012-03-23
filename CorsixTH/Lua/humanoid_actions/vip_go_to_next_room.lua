@@ -25,7 +25,6 @@ end)
 local function action_vip_go_to_next_room_start(action, humanoid)
   if humanoid.next_room_no == nil then
     -- This vip is done here.
-    humanoid:setVIPRating()
     humanoid:goHome()
   else
     -- Walk to the entrance of the room and stay there for a while.
