@@ -104,6 +104,8 @@ function Vip:goHome()
   end
 
   self:unregisterCallbacks()
+  -- Set the rating.
+  humanoid:setVIPRating()
 
   self.going_home = true
   -- save self.hospital so we can reference it in self:onDestroy
