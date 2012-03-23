@@ -106,8 +106,12 @@ function UIMainMenu:buttonNewGame()
 end
 
 function UIMainMenu:buttonCustomGame()
-  local window = UICustomGame(self.ui)
-  self.ui:addWindow(window)
+  if TheApp.using_demo_files then
+    self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
+  else
+    local window = UICustomGame(self.ui)
+    self.ui:addWindow(window)
+  end
 end
 
 function UIMainMenu:buttonLoadGame()
