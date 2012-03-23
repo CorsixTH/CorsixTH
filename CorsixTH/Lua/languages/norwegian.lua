@@ -336,6 +336,7 @@ confirmation = {
 
 information = {
   custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
+  no_custom_game_in_demo = "Unnskyld, men i demoversjonen kan du ikke spille egenutviklede kart.",
   cannot_restart = utf8 "Dette spillet ble dessverre lagret för restartfunksjonen ble implementert.",
   very_old_save = "Det har vært mange oppdateringer siden du startet på dette nivået. For å være sikker på at alle funksjoner virker riktig, vennligst vurder å starte nivået på nytt.",
   level_lost = {
