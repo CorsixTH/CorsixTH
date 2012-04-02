@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 RAS; FlyingBastard, L_konings, Nossah, KasperVld et al
+ï»¿--[[ Copyright (c) 2010 RAS; FlyingBastard, L_konings, Nossah, KasperVld, Omni et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -24,7 +24,7 @@ Inherit("English")
 --[[ SLEUTELWOORDEN
 Chirurgen; Onderzoekers; Psychiaters
 Assistenten; Basisartsen; Specialisten
-Artsen; Zusters; Congiërges; Receptionistes
+Artsen; Zusters; CongiÃ«rges; Receptionistes
 --]]
 
 newspaper = {
@@ -70,9 +70,9 @@ newspaper = {
     [4] = "SLONZIGE SPECIALIST",
   },
   [7] = {
-    [1] = "DOC FEELS AT LOOSE END",
+    [1] = "CHIRURG HECHT AAN ZIJDEN DRAADJE",
     [2] = "CHIRURG 'OPEREERT' ZICHZELF",
-    [3] = "BOG BISHOP-BASHING",
+    [3] = "DUISTERE DOKTERS DANS",
     [4] = "DOKTER BIBBER SCHANDAAL",
     [5] = "ZOOITJE IN ZIEKENHUIS",
   },
@@ -176,7 +176,9 @@ staff_descriptions = {
 }
 information = {
   custom_game = "Welkom bij CorsixTH. Veel plezier met dit Eigen Level!",
-  cannot_restart = "Dit Eigen Spel is opgeslagen voor de Herstart-functie was ge\137mplementeerd.",
+  cannot_restart = "Dit Eigen Level is opgeslagen voordat de Herstart-functie was geimplementeerd.",
+  very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort kun je dit level het beste opnieuw beginnen.",
+  no_custom_game_in_demo = "Sorry, maar in de demo versie kan je geen Eigen Levels spelen.",
   level_lost = {
     [1] = "Balen! Je hebt het level verloren. Volgende keer beter!",
     [2] = "De reden dat je verloor:",
@@ -277,11 +279,14 @@ rooms_long = {
   blood_machine = "Bloedmachinekamer",
 }
 options_window = {
-  fullscreen = "Volledige Scherm",
+  fullscreen = "Volledig Scherm",
   height = "Hoogte",
   width = "Breedte",
   change_resolution = "Resolutie wijzigen",
   back = "Terug",
+  cancel = "Annuleren",
+  browse = "Zoeken...",
+  new_th_directory = "Kies hier een andere Theme Hospital installatie map. Als je deze hebt gekozen wordt het spel opnieuw opgestart.",
 }
 load_game_window = {
   caption = "Spel Laden",
@@ -289,17 +294,15 @@ load_game_window = {
 queue_window = {
   num_in_queue = "Rijlengte",
   num_entered = "Bezoekers",
-  max_queue_size = "Max Grootte",
+  max_queue_size = "Max lengte",
   num_expected = "Verwacht",
 }
 trophy_room = {
   happy_vips = {
-    awards = {
-      [1] = "Door de indruk die je hebt gemaakt op VIPs heb je een Nobelprijs gewonnen. Iedereen die je ziekenhuis bezocht sprak niets dan lof.",
-      [2] = "Gefeliciteerd met het winnen van de VIP TRIP. Bedankt dat je het leven van hardwerkende publieke figuren zoveel beter hebt gemaakt door je fantastische ziekenhuis.",
-    },
     trophies = {
-      [1] = "Het Beroemde Personenbureau keert je bij deze de Celebrity Trofee uit voor de lof die je van alle VIPs hebt ontvangen. Beschouw jezelf een beetje beroemd en bijna een van ons.",
+      [1] = "Door de indruk die je hebt gemaakt op VIPs heb je een Nobelprijs gewonnen. Iedereen die je ziekenhuis bezocht sprak niets dan lof.",
+	  [2] = "Het Beroemde Personenbureau keert u bij deze de Celebrity Trofee uit voor de lof die u van alle VIPs heeft ontvangen. Beschouw uzelf een beetje beroemd en bijna een van ons.",
+	  [3] = "Gefeliciteerd met het winnen van de VIP TRIP. U maakt de levens van hardwerkende beroemdheden een stuk mooier, door het ze allemaal naar hun zin te maken. Fantastisch!",
     },
   },
   rats_killed = {
@@ -327,16 +330,25 @@ trophy_room = {
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Iedereen Trofee voor het genezen van iedereen die in het afgelopen jaar uw ziekenhuis binnen is komen lopen.",
       [2] = "U krijgt de Geen Zieke Rochel Trofee voor het genezen van elke pati\137nt die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
-    },
+	},
   },
   many_cured = {
     awards = {
       [1] = "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van bijne alle pati\137nten in uw ziekenhuis in het afgelopen jaar.",
+	  [2] = "U ontvangt deze trofee omdat u meer pati\137nten heeft genezen dan alle andere ziekenhuizen. Een opvallende prestatie.",
     },
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Alles Trofee voor het genezen van massa's mensen die in het afgelopen jaar uw ziekenhuis binnen zijn komen lopen.",
       [2] = "U krijgt de Geen Zieke Rochel Trofee voor het genezen van een groot aantal pati\137nten die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
+	  [3] = "Hierbij ontvangt u de Gezonde Gorgel, een prijs voor het genezen van een enorm percentage van uw bezoekers in het afgelopen jaar.",
     },
+	penalty = {
+	  [1] = "Het lukt uw ziekenhuis niet de pati\137nten effectief te genezen. Concentreer u op goede behandelmethoden zodat behandelingen effectiever worden.",
+	  [2] = "Uw ziekenhuis is het minst effectief als het gaat om pati\137nten genezen. U heeft het Ministerie teleur gesteld. Moeten we nog meer zeggen?",
+	},
+	regional = {
+	  [1] = "Vanwege het feit dat u meer zieken heeft genezen dan alle andere ziekenhuizen bij elkaar opgeteld ontvangt u hiervoor de hoogst haalbare onderscheiding. Gefeliciteerd!",
+	},
   },
   healthy_plants = {
     awards = {
@@ -350,11 +362,20 @@ trophy_room = {
   no_deaths = {
     awards = {
       [1] = "U heeft de Nimmer Vergaan award gewonnen voor het in leven houden van al uw pati\137nten in het afgelopen jaar.",
+	  [2] = "Uw talent heeft gezorgd voor een minimaal aantal sterfgevallen in uw ziekenhuis. U kunt apetrots zijn op dit resultaat.",
     },
     trophies = {
       [1] = "De 'Het Leven Gaat Door'-corporatie presenteert u de volgende trofee omdat er in het afgelopen jaar geen mensen zijn overleden.",
       [2] = "U heeft de Overlijden Vermijden Trofee uitgereikt gekregen voor het in leven houden van elke bezoeker van uw fantastische ziekenhuis in het afgelopen jaar. Bravo.",
+	  [3] = "Hierbij ontvangt u de 'Ik Leef Nog' prijs omdat dit jaar geen van uw pati\137nten is overleden in uw mooie ziekenhuis. Heel goed.",
     },
+	penalty = {
+	  [1] = "Het aantal overledenen in uw ziekenhuis was het afgelopen jaar behoorlijk hoog. Let goed op en zorg dat in de toekomst meer mensen de behandeling overleven.",
+	  [2] = "Uw ziekenhuis in een gevaar voor de gezondheid van de patient. Er wordt verwacht dat u mensen geneest, niet laat doodgaan!",
+	},
+	regional = {
+	  [1] = "Het dodental in uw ziekenhuis was het laatste jaar lager dan dat van ieder ander ziekenhuis. Daarvoor bieden wij u deze trofee aan.",
+	},
   },
   sold_drinks = {
     awards = {
@@ -368,20 +389,153 @@ trophy_room = {
   high_rep = {
     awards = {
       [1] = "Hierbij eren wij uw hoge standaarden en een reputatie die dit jaar gewoon niet beter kan zijn. Goed werk.",
-      [2] = "Wij bieden u de Bullfrog Award aan voor de hoogste reputatie van alle ziekenhuizen in het afgelopen jaar. Geniet ervan - u heeft het verdiend.",
+      [2] = "Gefeliciteerd met de Zuijver Op Den Graet trofee voor het ziekenhuis met de hoogste reputatie van het land. En het is welverdiend ook.",
     },
-    trophies = {
-      [1] = "Gefeliciteerd met de Zuijver Op Den Graet trofee voor het ziekenhuis met de hoogste reputatie van het land. En het is welverdiend ook.",
-    },
+	penalty = {
+	  [1] = "Deze maatregel wordt genomen vanwege de zeer slechte reputatie over het afgelopen jaar. We gaan ervan uit dat u verbetering laat zien in de toekomst.",
+	  [2] = "De reputatie van uw ziekenhuis is het laagst in de omgeving. U bent een schande. Laat verbetering zien, of zoek een andere baan!",
+	},
+	regional = {
+	  [1] = "Wij bieden u de Bullfrog Award aan voor de hoogste reputatie van alle ziekenhuizen in het afgelopen jaar. Geniet ervan - u heeft het verdiend.",
+	  [2] = "Dit jaar behaalde uw ziekenhuis een reputatie die hoger is dan alle andere ziekenhuizen bij elkaar. Een enorme prestatie.",
+	},
+  },
+  consistant_rep = {
+	trophies = {
+	  [1] = "Hiebij ontvangt u de Ministers Onderscheiding voor de meest onberispelijke standaarden en de hoogst mogelijke reputatie dit jaar. Heel goed.",  --Cabinet Minister's Award, misschien anders vertalen?
+	  [2] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
+	},
+  },
+  happy_patients = {
+	awards = {
+	  [1] = "U mag trots zijn op het feit dat bezoekers van uw ziekenhuis in het afgelopen jaar erg tevreden waren.",
+	  [2] = "Bezoekers van uw ziekenhuis waren gemiddeld meer tevreden tijdens hun behandeling, dan bezoekers van andere ziekenhuizen in het spel.",
+	},
+	penalty = {
+	  [1] = "Bezoekers van uw ziekenhuis vinden het verschrikkelijk. U zult het veel beter moeten doen voor u waardering van het Ministerie zult krijgen.",
+	  [2] = "Mensen die in uw ziekenhuis in behandeling zijn, zijn zeer ontevreden over de staat van het ziekenhuis. U moet meer aandacht hebben voor het wel en wee van de pati\137nten.",
+	},
   },
   happy_staff = {
     awards = {
+	  [1] = "Deze oorkonde ontvangt u van uw eigen personeel. Er is natuurlijk nog ruimte voor verbetering, maar over het algemeen wordt u als werkgever zeer gewaardeerd.",
+	  [2] = "Uw personeel is zo tevreden en gemotiveerd, niets kan hun glimlach nog verpesten. U bent een geweldige manager!",
     },
     trophies = {
       [1] = "U krijgt de Smiley Trofee voor het zo gelukkig mogelijk houden van uw hardwerkende personeel.",
       [2] = "Het Adami Instituut van Tevredenheid keert u hierbij deze trofee uit omdat uw personeel geen moment blijk heeft gegeven van ontevredenheid.",
       [3] = "Deze trofee, de Straalmeer Cup, is hierbij de uwe voor uw inzet voor het welzijn en de tevredenheid van uw personeel. Een glimlach van iedereen!",
     },
+	penalty = {
+	  [1] = "Uw personeel laat officieel weten dat ze ontevreden zijn. Gemotiveerd personeel is waardevol. Werk aan hun tevredenheid voor u ze helemaal zult verliezen.",
+	},
+	regional_good = {
+	  [1] = "Uw personeel is meer tevreden dan dat van andere ziekenhuizen. Tevreden personeel betekend meer inkomsten en minder sterfgevallen. Dit wordt door het Ministerie zeer gewaardeerd.",
+	},
+	regional_bad = {
+	  [1] = "Uw personeel heeft zich het afgelopen jaar ontevreden getoond. Heeft u dat niet gemerkt? Op dit moment heeft ieder ander ziekenhuis meer tevreden personeel dan u.",
+	},
+  },
+  wait_times = {
+	award = { --attention: this string says AWARD, not AWARDS
+	  [1] = "Gefeliciteerd. Uw ziekenhuis heeft altijd zeer korte wachttijden. Dit is een belangrijke onderscheiding.",
+	},
+	penalty = {
+	  [1] = "Patienten in uw ziekenhuis moeten veel te lang wachten. Er zijn altijd enorme wachtrijen. U kunt uw pati\137nten veel efficienter helpen, maar daar moet u wel wat voor doen.",
+	},
+  },
+  hosp_value = {
+	awards = {
+	  [1] = "Het Ministerie van Volksgezondheid wil dit moment graag gebruiken, u te feliciteren met de indrukwekkende waarde die uw ziekenhuis heeft behaald.",
+	},
+	penalty = {
+	  [1] = "Uw ziekenhuis heeft gefaald een behoorlijke waarde te behalen. U heeft slechte financiele keuzes gemaakt. Houd in uw achterhoofd dat een goed ziekenhuis niet goedkoop is.",
+	},
+	regional = {
+	  [1] = "U bent een financieel wonder! Uw ziekenhuis is meer waard dan alle ziekenhuizen in de omgeving bij elkaar opgeteld.",
+	},
+  },
+  best_value_hosp = {
+	trophies = {
+	  [1] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
+	},
+	penalty = {
+	  [1] = "Elke ziekenhuis in de omgeving is meer waard dan die van u. Doe iets aan deze beschamende gang van zaken. Zorg voor mooie en dure apparatuur!",
+	},
+	regional = {
+	  [1] = "Gefeliciteerd met het meest waardevolle ziekenhuis in het spel, goed werk. Probeer dat zo te houden.",
+	},
+  },
+  curesvdeaths = {
+	awards = {
+	  [1] = "Hartelijk gefeliciteerd met het behalen van een indrukwekkende genezen-of-overleden rato in uw ziekenhuis in het afgelopen jaar.",
+	},
+	penalty = {
+	  [1] = "Uw genzen-of-overleden rato is erg slecht. U moet ervoor zorgen u veel meer mensen geneest dan laat sterven. Laat het er niet bij zitten.",
+	},
+  },
+  cleanliness = {
+	award = {  --attention: this string says AWARD, not AWARDS
+	  [1] = "Inspecteurs vinden uw ziekenhuis heel schoon. Schone ziekenhuizen zijn veilige ziekenhuizen. Houden zo.",
+	},
+	regional_good = {
+	  [1] = "Uw ziekenhuis wordt genoemd als een van de minst schone in de omgeving. Een smerig ziekenhuis stinkt en is gevaarlijk. U moet meer aandacht hebben voor troep.",
+	},
+	regional_bad = {
+	  [1] = "Uw ziekenhuis is het smerigst van de regio. Alle andere managers is het het gelukt hun gangen schoner te houden. U bent een schande voor de medische wereld.",
+	},
+  },
+  gen_repairs = {
+	awards = {
+	  [1] = "U ontvangt deze prijs vanwege de oplettendheid van uw Congierges die alle apparatuur heel goed hebben onderhouden. Heel goed. U kunt gerust op vakantie.",
+	  [2] = "Uw Congierges hebben beter gepresteerd de die van andere ziekenhuizen. Dit is een enorme presatie. Ere wie ere toekomt.",
+	  [3] = "Uw apparatuur is fantastisch onderhouden. De motivatie van uw Congierges in uitmuntend. Deze prijs heeft u meer dan verdiend. Geweldig!.",
+	},
+	penalty = {
+	  [1] = "Uw Congierges hebben uw apparatur niet goed ondehouden. U moet hen beter in de gaten houden, of meer Congierges kunnen inhuren als het teveel werk is.",
+	  [2] = "Het onderhoud is een drama. Uw personeel moet de apparatuur beter in de gaten houden en zorgvuldiger onderhouden.",
+	},
+  },
+  emergencies = {
+	award = {  --attention: this string says AWARD, not AWARDS
+	  [1] = "Gefeliciteerd: vanwege uw efficiente en effectieve manier van afhandelen van noodgevallen, ontvangt u deze speciale prijs. Goed werk.",
+	  [2] = "Uw werkwijze bij noodgevallen is een unicum. Deze prijs ontvangt u, omdat u absoluut het beste omgaat met grote drommen zieken en zwakken.",
+	},
+	penalty = {
+	  [1] = "U heeft noodgevallen niet goed afgehandeld. Spoed eisende pati\137nten moeten direct en goed worden geholpen, dat is u niet gelukt.",
+	},
+	regional_good = {
+	  [1] = "Het Ministerie heeft het afgelopen jaar gezien dat u noodgevallen beter aankunt dan ieder ander ziekenhuis. Daarvoor ontvangt u deze prijs.",
+	},
+	regional_bad = {
+	  [1] = "Uw ziekenhuis doet het het slechtst van de regio als het gaat om noodgevallen. Het is uw eigen fout dat u onderaan de lokale noodgevallen ranglijst bungelt.",
+	},
+  },
+  pop_percentage = {
+	awards = {
+	  [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
+	  [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
+	  [3] = "Briljant. U heeft meer lokale bewoners naar uw ziekenhuis weten te lokken dan alle andere ziekenhuizen bij elkaar opgeteld.",
+	},
+	penalty = { --strange thing is that the penalties have the same text as the awards...
+	  [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
+	  [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
+	},
+  },
+  research = {
+	awards = {
+	  [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
+	  [2] = "Het afgelopen jaar heeft u meer medicijnen en apparatuur ontwikkeld dan was verwacht. Wij bieden u deze prijs aan namens het volledige Ministerie.",
+	},
+	penalty = {
+	  [1] = "U heeft een minimale hoeveelheid behandelmethoden, medicijnen en apparatuur ontwikkeld. Dit is helemaal niet goed, technologische vooruitgang is essenti\137el.",
+	},
+	regional_good ={
+	  [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
+	},
+	regional_bad = {
+	  [1] = "Ieder ander ziekenhuis in de regio heeft meer en beter onderzoek gedaan dan u. Omdat onderzoek cruciaal is voor een ziekenhuis, noemt het Ministerie dit onacceptabel.",
+	},
   },
   reputation = "REPUTATIE",
   cash = "GELD",
@@ -448,6 +602,11 @@ fax = {
         [2] = "Ik heb nooit zo een verschrikkelijk ziekenhuis gezien. Schande!",
         [3] = "Ik ben geschokt. Dat is toch geen ziekenhuis? Ik heb een biertje nodig.",
       },
+	  free_build = {
+	    [1] = "U heeft een heel mooi ziekehuis neergezet. Dat is natuurlijk ook niet zo moeilijk als geld geen rol speelt he?",
+		[2] = "Ik ben geen econoom, maar ik denk dat ik dit ziekenhuis ook wel zou kunnen besturen, als u begrijpt wat ik bedoel...",
+		[3] = "Een heel goed lopend ziekenhuis. Pas wel op voor de economische crisis! Onee... Daar hoef u zich natuurlijk geen zorgen om te maken.",
+	  },
     },
     rep_boost = "Je reputatie is verbeterd..",
     vip_remarked_name = "Na zijn bezoek zei %s:",
@@ -495,6 +654,7 @@ fax = {
       [9] = "Berts Gebruikte Petrochemische Producten Emporium.",
     },
     num_disease = "Er zijn %d mensen met %s die onmiddelijk hulp nodig hebben.",
+	num_disease_singular = "Er is 1 persoon met %s die onmiddelijk hulp nodig heeft.",
     cure_possible_drug_name_efficiency = "Je hebt alle benodigde apparatuur en hulpverleners. Je hebt het geneesmiddel, %s, welke een effici\137ntie heeft van %d procent.",
     cure_not_possible_employ = "Je zult een %s moeten aannemen",
     cure_not_possible = "Je kunt op dit moment de ziekte niet genezen.",
@@ -507,6 +667,7 @@ fax = {
     cure_not_possible_build = "Je zult een %s moeten bouwen",
     cure_not_possible_build_and_employ = "Je zult een %s moeten bouwen en een %s moeten huren.",
     bonus = "De maximumbonus voor dit noodgeval bedraagt %d. Als je echter niet slaagt zal je reputatie schade oplopen.",
+	free_build = "Als je slaagt, is dit goed voor je reputatie. Als je echter niet slaagt zal je reputatie schade oplopen.",
   },
   choices = {
     decline_new_level = "Nog even blijven doorspelen",
@@ -594,6 +755,7 @@ tooltip = {
     cheats = {
       end_month = "Spring naar het einde van de maand.",
       emergency = "Cre\137ert een noodgeval",
+	  vip = "Cre\137ert een VIP",
       win_level = "Win het huidige level.",
       create_patient = "Cre\137ert een pati\137nt op de rand van de kaart.",
       money = "Voegt 10.000 toe aan je saldo.",
@@ -611,7 +773,7 @@ tooltip = {
   },
   calls_dispatcher = {
     assigned = "Dit vakje is aangekruist als de taak is toegewezen.",
-    task = "Lijst van de taken - Click op een taak om het personeelslid te zien die deze taak uit voert en om naar de locatie van de taak te gaan",
+    task = "Lijst van de taken - klik op een taak om het personeelslid te zien die deze taak uit voert en om naar de locatie van de taak te gaan",
     close = "Sluit dit scherm",
   },
   hire_staff_window = {
@@ -787,7 +949,8 @@ tooltip = {
     heat_inc = "Verwarming hoger zetten",
   },
   custom_game_window = {
-    start_game_with_name = "Laad level %s",
+    start_game_with_name = "Start level %s",
+	free_build = "Klik hier als je wilt spelen zonder geld, en zonder win en verliesvoorwaarden", --kan ook overwinningsvoorwaarden worden genoemd, maar is misschien net te weinig info
   },
   casebook = {
     sent_home = "Aantal afgewezen pati\137nten",
@@ -874,11 +1037,13 @@ tooltip = {
   },
   menu_list_window = {
     back = "Dit venster sluiten",
+	save_date = "Klik hier om te sorteren op datum van opslaan",
+	name = "Klik hier om te sorteren op naam",
   },
   watch = {
     emergency = "Noodgeval: tijd over om alle pati\137nten te genezen.",
     hospital_opening = "Bouwtijd: dit is hoelang het nog duurt voor je ziekenhuis opengaat. Klik op de START knop om je ziekenhuis nu te openen.",
-    epidemic = "Epidemie: tijd over om de epidemie te verbergen. Als de tijd op is OF een besmettelijke pati\137nt je ziekenhuis verlaat, komt er een Inspecteur langs. De knop zet vaccinatiemodus aan en uit. Klik ermee op een pati\137nt om hem of haar te laten inenten door een Zuster.",
+    epidemic = "Epidemie: tijd over om de epidemie te verbergen. Als de tijd om is OF een besmettelijke pati\137nt je ziekenhuis verlaat, komt er een Inspecteur langs. De knop zet vaccinatiemodus aan en uit. Klik ermee op een pati\137nt om hem of haar te laten inenten door een Zuster.",
   },
   save_game_window = {
     new_save_game = "Voer hier de naam in",
@@ -1041,6 +1206,12 @@ tooltip = {
     width = "Voer de gewenste horizontale resolutie in",
     language = "Kies %s als taal",
     back = "Sluit het Instellingenvenster",
+	original_path = "De gekozen locatie van de originele Theme Hospital installatie",
+	browse = "Zoek een andere locatie van een originele Theme Hospital installatie",
+  },
+  research_policy = {
+	research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
+	no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
   },
 }
 menu_debug_overlay = {
@@ -1077,6 +1248,7 @@ progress_report = {
   too_hot = "Kijk naar je verwarming. Het is veel te heet. ",
   percentage_pop = "% bevolking",
   win_criteria = "Overwinningsvoorwaarden",
+  free_build = "VRIJ BOUWEN",
 }
 dynamic_info = {
   patient = {
@@ -1207,14 +1379,14 @@ adviser = {
     halfway_lost = "Je bent halverwege naar verlies van dit level.",
     nearly_lost = "Je hebt dit level bijna verloren.",
     three_quarters_won = "Je bent driekwart onderweg naar de winst van det level.",
-    dont_kill_more_patients = "Je kunt echt niet meer patienten afmaken!",
+    dont_kill_more_patients = "Je kunt echt niet meer pati\137nten afmaken!",
     another_patient_killed = "Oh nee! Je hebt nog een patient vermoord. Dat zijn er nu al %d.",
     close_to_win_increase_value = "Je hebt bijna gewonnen, verhoog de waarde van je ziekenhuis met %d.",
     financial_criteria_met = "Je hebt aan alle financiele eisen van dit level voldaan. Hou je banksaldo boven de %d, en zorg ervoor dat je ziekenhuis soepel draait.",
     hospital_value_enough = "Hou de waarde van je ziekenhuis boven de %d en los alle andere problemen in de gaten om dit level te winnen",
     another_patient_cured = "Goed gedaan - nog een patient is genezen, dat zijn er nu al %d.",
     reputation_good_enough = "Oke, je reputatie is goed genoeg om dit level te winnen, hou het boven %d en los andere problemen op om te winnen",
-    cured_enough_patients = "Je hebt genoeg van je patienten genezen om dit level te winnen maar je moet je ziekenhuis efficienter maken om te winnen.",
+    cured_enough_patients = "Je hebt genoeg van je pati\137nten genezen om dit level te winnen maar je moet je ziekenhuis efficienter maken om te winnen.",
     improve_reputation = "Je moet je reputatie met %d punten verbeteren om dit level te kunnen winnen.",
   },
   staff_place_advice = {
@@ -1302,24 +1474,24 @@ adviser = {
     patients_unhappy = "Pati\137nten hebben geen hoge pet op van je ziekenhuis. Je zou iets aan hun omgeving kunnen doen.",
     people_did_it_on_the_floor = "Enkele patienten konden het niet meer ophouden. Iemand zal het toch op moeten ruimen.",
     patients_very_thirsty = "Patienten hebben echt dorst; als je niet snel drankmachines neerzet zullen veel patienten je ziekenhuis verlaten en naar huis gaan om cola te drinken.",
-    machinery_very_damaged = "Spoed! Zorg dat een conci\137rge je machines gaat repraren! Ze exploderen bijna!",
+    machinery_very_damaged = "Spoed! Zorg dat een conci\137rge je machines gaat repararen! Ze exploderen bijna!",
     handymen_tired2 = "Je conci\137rges zijn totaal uitgeput, zorg dat ze meteen uit kunnen rusten.",
     desperate_need_for_watering = "Je moet echt een conci\137rge inhuren om de planten water te geven.",
     too_much_litter = "Er is een afvalprobleem, meer conci\137rges zouden hier tegen kunnen helpen.",
     place_plants4 = "Vrolijk de pati\137nten op met wat planten in je ziekenhuis.",
-    change_priorities_to_plants = "Je moet de prioriteiten van je conci\137rges aanpssen zodat ze meer tijd besteden aan de planten.",
-    finanical_trouble2 = "Zorg dat je wat inkomensten krijgt of je wordt ontslagen. Je zult het level verliezen als je nog %d verder in de min komt.",
+    change_priorities_to_plants = "Je moet de prioriteiten van je conci\137rges aanpassen zodat ze meer tijd besteden aan de planten.",
+    finanical_trouble2 = "Zorg dat je wat inkomsten krijgt of je wordt ontslagen. Je zult het level verliezen als je nog %d verder in de min komt.",
     litter_everywhere = "Er is overal afval. Zet er wat conci\137rges op.",
     nurses_tired2 = "Je zusters zijn erg moe, zorg dat ze wat rust krijgen.",
     plants_dying = "Je planten gaan dood: ze zijn wanhopig op zoek naar water. Zorg dat je meer conci\137rges erop zet want pati\137nten houden niet van dode planten.",
-    reduce_staff_rest_threshold = "Try reducing the Staff Rest threshold on your Policy screen so that your staff rest more often. Just an idea.",
+    reduce_staff_rest_threshold = "Verkort de tijd dat je personeel moet doorwerken tussen pauzes op het Beleid scherm, zodat ze wat vaker kunnen rusten. Het is maar een idee.",
     more_toilets = "Je hebt meer toiletten nodig. Mensen in de rij beginnen kabouters te kleien!",
     hospital_is_rubbish = "Mensen zeggen openlijk dat je ziekenhuis slecht is. Als je niet oppast zullen ze hun ziektes ergens anders mee naartoe nemen.",
     pay_back_loan = "Je hebt meer dan genoeg geld. Misschien kun je nu die lening afbetalen?",
     financial_trouble3 = "Je banksaldo is zorgelijk. Misschien moet je je inkomsten wat verhogen, je zit %d af van een faillissement.",
     build_toilet_now = "Bouw nu een toilet, mensen houden het niet meer! Niet lachen, dit is serieus.",
     more_benches = "Misschien moet je meer bankjes plaatsen, zieke mensen blijven niet graag staan",
-    many_epidemics = "Het lijkt  er op dat er meer dan \130\130n epidemie tegelijk plaatsvind. Dit zou een enorme ramp kunnen worden dus doe er snel iets aan.",
+    many_epidemics = "Het lijkt erop dat er meer dan \130\130n epidemie tegelijk plaatsvind. Dit zou een enorme ramp kunnen worden dus doe er snel iets aan.",
     place_plants_to_keep_people = "Mensen gaan weg. Als je wat planten neerzet zou dat kunnen helpen.",
     patients_thirsty2 = "Mensen klagen over dorst. Je zou wat drankautomaten neer moeten zetten of bestaande automaten dichter bij de mensen moeten zetten.",
     people_freezing = "Onvoorstelbaar. In deze tijd van centrale verwarming vriezen sommige pati\137nten dood. Bouw radiatoren om ze up te warmen en zet de thermostaat hoger.",
@@ -1329,7 +1501,7 @@ adviser = {
     staff_tired = "Je personeel is helemaal kapot. Als je ze niet laat uitrusten in een personeelskamer kunnen ze gek worden van de stress.",
     place_plants3 = "Pati\137nten worden ongelukkig, zet wat meer planten neer om ze op te vrolijken.",
     staff_unhappy2 = "Je personeel is over het algemeen ongelukkig, dat betekend dat ze binnenkort om een hoger salaris zullen vragen.",
-    cash_low_consider_loan = "Je hoeveeldheid cash is erg laag, heb je al eens aan een lening gedacht?",
+    cash_low_consider_loan = "Je hoeveelheid cash is erg laag, heb je al eens aan een lening gedacht?",
     financial_trouble = "Je zit zwaar in de financi\137le problemen, los die zo snel mogelijk op! Als je nog %d verliest zul je dit level weg hebben gegooid!",
     doctors_tired2 = "Je doktoren zijn ongelooflijk moe, laat ze nu meteen rusten.",
     patient_leaving = "Er gaat een pati\137nt weg. De reden? Je slecht draaiende ziekenhuis.",
@@ -1349,6 +1521,18 @@ adviser = {
     some_litter = "Conci\137rges kunnen dat afval opruimen voordat het echt een probleem wordt.",
     patients_annoyed = "Mensen hebben genoeg van de manier waarop je dit ziekenhuis bestuurd en ik kan ze geen ongelijk geven. Verbeter of verdwijn!",
     receptionists_tired2 = "Je receptionistes zijn erg vermoeid, laat ze zo snel mogelijk rusten.",
+	doctor_crazy_overwork = "Oh nee! Een van je artsen is overspannen door overwerk. Misschien komt hij er nog bovenop als je hem meteen laat rusten.",
+	falling_1 = "He! Daar kan ik niet om lachen, kijk uit waar je met die muis klikt; straks raken er mensen gewond!",
+	falling_2 = "Stop daarmee, zou jij dat leuk vinden?", --Stop messing about, how would you like it?
+	falling_3 = "Au, dat doet vast zeer, is er een dokter in de buurt?!", --Ouch, that had to hurt, someone call a Doctor!
+	falling_4 = "Dit is een ziekenhuis, geen pretpark!",
+	falling_5 = "Dit is niet de plek om mensen omver te duwen, je ziet toch dat de ziek zijn?!", --This is not the place for knocking people over, they're ill you know
+	falling_6 = "Het is hier geen bowlingbaan, zieken horen niet zo behandeld te worden!", --This is not a bowling alley, sick people should not be treated like that
+	no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!", --You should build a reception desk and hire a receptionist at some point
+	no_desk_1 = "Als je wilt dat pati\137nten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen zodat ze haar werk kan doen!", --If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at
+	no_desk_2 = "Lekker gedaan, dit moet een nieuw record zijn: Bijna een jaar zonder pati\137nten! Als je hier manager wilt blijven huur dan nu een receptioniste in en bouw een receptiebalie waar ze kan werken!", --Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from
+	no_desk_3 = "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je pati\137nten gaat krijgen? Los het onmiddelijk op, en stop met dat gerommel!", --That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!
+	cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in te huren.",
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
@@ -1493,7 +1677,7 @@ room_descriptions = {
   },
   operating_theatre = {
     [1] = "Operatiekamer//",
-    [2] = "De Operatiekamer is onmisbaar in een ziekenhuis. Patiënten met verschillende lichamelijke kwalen kunnen hier worden ge\148pereerd door twee chirurgen. Het is van belang dat de Operatiekamer groot genoeg is, en dat de juiste apparatuur aanwezig is.//",
+    [2] = "De Operatiekamer is onmisbaar in een ziekenhuis. Pati\137nten met verschillende lichamelijke kwalen kunnen hier worden ge\148pereerd door twee chirurgen. Het is van belang dat de Operatiekamer groot genoeg is, en dat de juiste apparatuur aanwezig is.//",
     [3] = "Om de Operatiekamer te kunnen gebruiken moet je twee Chirurgen inhuren. ",
   },
   training = {
@@ -1556,8 +1740,8 @@ introduction_texts = {
     [3] = "En nu mag je het zelf opknappen. Veel success enzo.",
   },
   level1 = {
-    [1] = "Welkom bij je eerste ziekenhuis!//",
-    [2] = "Zorg dat de boel op gang komt door een Receptie te plaatsen en een Spreekkamer te bouwen. Huur ook een Receptioniste en een Arts. ",
+    [1] = "Welkom in je eerste ziekenhuis!",
+    [2] = "Zorg dat de boel op gang komt door een Receptie te plaatsen en een Spreekkamer te bouwen. Neem ook een Receptioniste en een Arts in dienst. ",
     [3] = "Wacht dan tot er mensen langskomen.",
     [4] = "Het is een goed idee om een Psychiatrische Afdeling te bouwen en een Arts in te huren met de correcte kwalificaties. ",
     [5] = "Een Apotheek en een Zuster zijn essentieel voor het genezen van je pati\137nten. ",
@@ -1763,7 +1947,8 @@ vip_names = {
   health_minister = "de Minister van Gezondheid",
 }
 custom_game_window = {
-  caption = "Eigen Spel",
+  caption = "Eigen Level",
+  free_build = "Vrij bouwen",
 }
 transactions = {
   severance = "Ontslagpremie",
@@ -1874,7 +2059,8 @@ letter = {
 }
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = "CorsixTH heeft de databestanden van de originele Theme Hospital (of de demo) nodig om te kunnen draaien. Kies hieronder waar Theme Hospital staat ge\137nstalleerd.",
+  th_directory = "CorsixTH heeft de databestanden van de originele Theme Hospital (of de demo) nodig om te kunnen draaien. Kies hieronder waar Theme Hospital staat geinstalleerd.",
+  exit = "Afsluiten",
 }
 casebook = {
   sent_home = "weggestuurd",
@@ -2183,6 +2369,9 @@ competitor_names = {
   [19] = "DANEEL",
   [20] = "OLIVAW",
   [21] = "NIC",
+  [22] = "DANEEL",
+  [23] = "OLIVAW",
+  [24] = "NIC",
 }
 main_menu = {
   exit = "Afsluiten",
@@ -2190,17 +2379,19 @@ main_menu = {
   new_game = "Nieuw Spel",
   load_game = "Laad Spel",
   options = "Opties",
+  version = "Versie: ",
+  savegame_version = "Savegame versie: ",
 }
-confirmation = {
-  quit = "Je hebt gekozen af te sluiten. Weet je zeker dat je het spel wil verlaten?",
-  return_to_blueprint = "Weet je zeker dat je terug wil gaan naar blauwdrukmodus?",
-  needs_restart = "Om deze instellingen toe te passen moet CorsixTH opnieuw opstarten. Onopgeslagen vooruitgang zal hierbij verloren gaan. Weet je zeker dat je dit wil doen?",
-  overwrite_save = "Er is hier al een spel opgeslagen. Weet je zeker dat je het bestaande spel wil overschrijven?",
-  delete_room = "Weet je zeker dat je deze kamer wil verwijderen?",
-  sack_staff = "Weet je zeker dat je dit personeelslid wil ontslaan?",
-  replace_machine = "Weet je zeker dat je de %s wil vervangen voor $%d?",
-  abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn is de ruimte af, zo niet wordt de ruimte vernietigd",
-  restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?",
+confirmation = {  --spaces on the end make the text fit properly in text windows
+  quit = "Je hebt gekozen voor afsluiten. Weet je zeker dat je het spel wilt verlaten?                ",
+  return_to_blueprint = "Weet je zeker dat je terug wil gaan naar blauwdrukmodus?                   ",
+  needs_restart = "Om deze instellingen toe te passen moet CorsixTH opnieuw opstarten. Onopgeslagen vooruitgang zal hierbij verloren gaan. Weet je zeker dat je dit wil doen?                     ",
+  overwrite_save = "Er is hier al een spel opgeslagen. Weet je zeker dat je het bestaande spel wilt overschrijven?                        ",
+  delete_room = "Weet je zeker dat je deze kamer wilt verwijderen?                  ",
+  sack_staff = "Weet je zeker dat je dit personeelslid wilt ontslaan?                  ",
+  replace_machine = "Weet je zeker dat je de %s wilt vervangen voor $%d?           ",
+  abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn is de ruimte af, zo niet wordt de ruimte vernietigd                     ",
+  restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?                      ",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
@@ -2209,6 +2400,8 @@ menu_display = {
 }
 menu_list_window = {
   back = "Terug",
+  save_date = "Gewijzigd op",
+  name = "Naam",
 }
 menu_options_volume = {
   [50] = "  50%  ",
@@ -2709,6 +2902,8 @@ months = {
   [11] = "Nov",
   [12] = "Dec",
 }
+date_format.daymonth = "%1% %2:months%"
+
 menu_options = {
   game_speed = "  SNELHEID  ",
   sound_vol = "  VOLUME GELUID  ",
@@ -2721,7 +2916,8 @@ menu_options = {
   music = "  MUZIEK   ",
   autosave = "  AUTOSAVE  ",
   jukebox = "  JUKEBOX  ",
-  edge_scrolling = "  RANDSCROLLEN  "
+  edge_scrolling = "  RANDSCROLLEN  ",
+  adviser_disabled = "  ADVISEUR  ",
 }
 menu_options_game_speed = {
   pause = "  PAUZE  ",
@@ -2922,6 +3118,7 @@ cheats_window = {
   cheats = {
     end_month = "Einde van de maand",
     emergency = "Cre\137er noodgeval",
+	vip = "Cre\137er VIP",
     win_level = "Win Level",
     create_patient = "Cre\137er pati\137nt",
     money = "Geld cheat",
