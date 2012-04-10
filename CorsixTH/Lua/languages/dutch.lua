@@ -1,4 +1,6 @@
-﻿--[[ Copyright (c) 2010 RAS; FlyingBastard, L_konings, Nossah, KasperVld, Omni et al
+﻿--[[ Copyright (c) 2010 RAS
+				   2011	FlyingBastard, L_konings, Nossah, KasperVld 
+				   2012 Omni
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -16,16 +18,30 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. --]]
+SOFTWARE. 
+
+-------------------------------------------------------------------------------
+   READ BEFORE CHANGING ANYTHING
+-------------------------------------------------------------------------------
+
+FORMATTING AND SPECIAL LETTERS
+This file contains UTF-8 text. Make sure your editor is set to UTF-8!
+The Capital utf8 letters like Ë and Ä do not look good ingame, if you need a 
+letter like that, please go with the normal letter instead.
+
+ADDING UTF8 TEXT
+a string should look like this:
+category.subcategory.whatever = utf8 "translation with äáëéö etc.",
+
+SLEUTELWOORDEN
+Chirurgen; Onderzoekers; Psychiaters
+Assistenten; Basisartsen; Specialisten
+Artsen; Zusters; Conciërges; Receptionistes
+
+-----------------------------------------------------------------------------]]
 
 Language("Nederlands", "Dutch", "nl", "dut", "nld")
 Inherit("English")
-
---[[ SLEUTELWOORDEN
-Chirurgen; Onderzoekers; Psychiaters
-Assistenten; Basisartsen; Specialisten
-Artsen; Zusters; Congiërges; Receptionistes
---]]
 
 newspaper = {
   [1] = {
@@ -88,7 +104,7 @@ misc = {
     mildly = "mild",
     moderately = "vrij",
   },
-  not_yet_implemented = "(nog niet ge\137mplementeerd)",
+  not_yet_implemented = utf8 "(nog niet geïmplementeerd)",
   send_message = "Bericht sturen naar speler %d",
   out_of_sync = "Spel uit sync",
   balance = "Balans bestand:",
@@ -102,7 +118,7 @@ misc = {
 staff_descriptions = {
   good = {
     [1] = "Een snelle en ijverige werker. ",
-    [2] = "Erg grondig. Geeft veel om mensen. ",
+    [2] = "Werkt nauwkeurig. Geeft veel om mensen. ",
     [3] = "Zeer competent. ",
     [4] = "Erg vriendelijk en goedlachs. ",
     [5] = "Een echte doorzetter. Gaat maar door. ",
@@ -110,12 +126,12 @@ staff_descriptions = {
     [7] = "Ongelofelijk getalenteerd en kundig. ",
     [8] = "Geeft veel om het afgeleverde werk. ",
     [9] = "Een pietje precies die maar niet opgeeft. ",
-    [10] = "Toegewijd om mensen te helpen met een glimlach. ",
+    [10] = "Toegewijd, helpt mensen met een glimlach. ",
     [11] = "Charmant, beleefd en behulpzaam. ",
     [12] = "Gemotiveerd en toegewijd. ",
-    [13] = "Zachtaardig en een harde werker. ",
+    [13] = "Een zachtaardige en harde werker. ",
     [14] = "Trouw en vriendelijk. ",
-    [15] = "Voorzichtig en betrouwbaar in een noodsituatie. ",
+    [15] = "Zorgvuldig en betrouwbaar in een noodsituatie. ",
   },
   misc = {
     [1] = "Speelt golf. ",
@@ -127,7 +143,7 @@ staff_descriptions = {
     [7] = "Verzamelt bierviltjes. ",
     [8] = "Houdt van stage-diving. ",
     [9] = "Houdt van ruftsurfen. ",
-    [10] = "Graaft graag rivieren uit. ",
+    [10] = "Progammeert voor CorsixTH. ", --EN: Developer for CorsixTH
     [11] = "Stookt whisky. ",
     [12] = "Een goede klusser. ",
     [13] = "Houdt van artistieke Franse films. ",
@@ -135,19 +151,19 @@ staff_descriptions = {
     [15] = "Heeft rijbewijs CE. ",
     [16] = "Doet aan motorracen. ",
     [17] = "Speelt viool en cello. ",
-    [18] = "Gepassioneerde treinsloper. ",
+    [18] = "Gepassioneerd treinsloper. ",
     [19] = "Gek op honden. ",
     [20] = "Luistert graag naar de radio. ",
     [21] = "Neemt vaak een bad. ",
     [22] = "Leraar vlechtwerkjes. ",
     [23] = "Gebruikt uitgeholde groenten als zeepbakjes. ",
-    [24] = "Part-time Surveillant. ",
+    [24] = "Vrijwillig politieagent. ",
     [25] = "Presenteerde een televisiequiz. ",
     [26] = "Verzamelt granaatscherven uit de Tweede Wereldoorlog. ",
     [27] = "Richt kamers in. ",
     [29] = "Pest insecten met deodorant. ",
     [28] = "Luistert naar rave en trip-hop muziek. ",
-    [30] = "Hekelt slechte comedians. ",
+    [30] = "Haat slechte cabaretiers. ",
     [31] = "Spioneert voor de raad. ",
     [32] = "Tuiniert stiekem. ",
     [33] = "Smokkelt nephorloges. ",
@@ -163,7 +179,7 @@ staff_descriptions = {
     [4] = "Grof en opdringerig. Irriteert mensen. ",
     [5] = "Geeft snel op - kan zich niet gedragen. ",
     [6] = "Doof als een kwartel. Stinkt naar bloemkool. ",
-    [7] = "Slecht in het vak. Risicofactor. ",
+    [7] = "Slecht in het vak. Onbetrouwbaar. ",
     [8] = "Verstrooid en snel afgeleid. ",
     [9] = "Gespannen en maakt snel fouten. ",
     [10] = "Labiel en wrokkig - wordt verteerd door haat. ",
@@ -175,16 +191,16 @@ staff_descriptions = {
   },
 }
 information = {
-  custom_game = "Welkom bij CorsixTH. Veel plezier met dit Eigen Level!",
-  cannot_restart = "Dit Eigen Level is opgeslagen voordat de Herstart-functie was geimplementeerd.",
-  very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort kun je dit level het beste opnieuw beginnen.",
-  no_custom_game_in_demo = "Sorry, maar in de demo versie kan je geen Eigen Levels spelen.",
+  custom_game = "Welkom bij CorsixTH. Veel plezier met dit Level!",
+  cannot_restart = utf8 "Dit Losse Level is opgeslagen voordat de Herstart-functie was geïmplementeerd.",
+  very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort kun je dit level beter opnieuw beginnen.",
+  no_custom_game_in_demo = "Sorry, maar in de demo versie kan je geen Losse Levels spelen.",
   level_lost = {
     [1] = "Balen! Je hebt het level verloren. Volgende keer beter!",
     [2] = "De reden dat je verloor:",
     reputation = "Je reputatie kwam onder %d",
     balance = "Je banksaldo was lager dan %d",
-    percentage_killed = "Je hebt meer dan %d procent van je patienten vermoord",
+    percentage_killed = utf8 "Je hebt meer dan %d procent van je patiënten vermoord",
   },
 }
 
@@ -228,25 +244,25 @@ place_objects_window = {
 totd_window = {
   previous = "Vorige tip",
   tips = {
-    "Elk ziekenhuis begint met een receptie en een Praktijk. Daarna ligt het er helemaal aan wat voor pati\137nten er langskomen. Een Apotheek is altijd een goede volgende keuze.",
-    "Machines zoals de Compressor in Inflatie hebben onderhoud nodig. Huur \130\130n of twee Conci\137rges in om je machines te repareren, anders loop je het risico je personeel en je pati\137nten te verwonden.",
+    utf8 "Elk ziekenhuis begint met een receptie en een Praktijk. Daarna ligt het er helemaal aan wat voor patiënten er langskomen. Een Apotheek is altijd een goede volgende keuze.",
+    utf8 "Machines zoals de Compressor in Inflatie hebben onderhoud nodig. Huur één of twee Conciërges in om je machines te repareren, anders loop je het risico je personeel en je patiënten te verwonden.",
     "Op een gegeven moment wordt je personeel moe. Bouw een personeelskamer zodat ze zich kunnen ontspannen.",
-    "Plaats genoeg radiatoren om je personeel en je pati\137nten warm - en daarmee tevreden - te houden.",
+    utf8 "Plaats genoeg radiatoren om je personeel en je patiënten warm, en daarmee tevreden te houden.",
     "De bekwaamheid van een Arts bepaalt hoe snel en hoe goed zijn diagnoses zijn. Als je een goede Arts in de Praktijk plaatst, heb je ook niet zoveel diagnostische kamers nodig.",
     "Assistenten en Basisartsen kunnen zich laten opleiden door een Specialist in het Klaslokaal. Als de Specialist een specifieke kwalificatie heeft (Chirurg, Psychiater of Onderzoeker), zal hij deze kennis overdragen aan zijn leerling(en).",
     "Heb je al geprobeerd het alarmnummer te bellen op de faxmachine? Zet wel je geluid eerst aan!",
-    "Het Optiesmenu is nog niet ge\139mplementeerd, maar je kunt sommige instellingen, zoals de resolutie en de taal, instellen door config.txt in de installatiemap aan te passen.",
+    utf8 "Het Optiesmenu is nog niet geïmplementeerd, maar je kunt sommige instellingen, zoals de resolutie en de taal, instellen door config.txt in de installatiemap aan te passen.",
     "Zie je nog overal Engels ondanks dat je een andere taal hebt gekozen? Help dan de teksten te vertalen!",
     "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum, onze mailing list of ons IRC kanaal (corsix-th op freenode).",
     "Als je een bug vindt zouden we het op prijs stellen als je het meldt via onze bugtracker: th-issues.corsix.org",
     "Bij elk level moet je aan bepaalde eisen voldoen voordat je door kunt gaan naar het volgende level. Controleer het Statusscherm om te zien hoe ver of dicht je bij je doel bent.",
     "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de Aanpassen-knop op de werkbalk.",
-    "Je kunt eenvoudig uitvissen welke pati\137nten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
-    "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zou ook wat aanpassingen kunnen maken, zoals de volgorde van de rij veranderen of een pati\137nt naar een andere kamer sturen.",
+    utf8 "Je kunt eenvoudig uitvissen welke patiënten van een grote groep voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan staan.",
+    utf8 "Klik op de deur van een kamer om de wachtrij voor die kamer te zien. Je zou ook wat aanpassingen kunnen maken, zoals de volgorde van de rij veranderen of een patiënt naar een andere kamer sturen.",
     "Ongelukkige werknemers zullen vaak om salarisverhoging vragen. Zorg voor een comfortabele werkomgeving om dit soort dingen te voorkomen.",
-    "Pati\137nten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
-    "Je kunt het diagnostische proces voor een pati\137nt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de pati\137nt.",
-    "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra pati\137nten kunnen behapstukken om ze op tijd te kunnen genezen.",
+    utf8 "Patiënten krijgen dorst van het wachten, en het gaat helemaal hard als je de verwarming flink opschroeft! Plaats frisdrankautomaten op strategische locaties voor een extra zakcentje.",
+    utf8 "Je kunt het diagnostische proces voor een patiënt vroegtijdig stopzetten als je al weet wat voor ziekte hij of zij heeft. Maar pas op, dit vergroot de kans op een verkeerde behandeling, wat fataal kan zijn voor de patiënt.",
+    utf8 "Noodgevallen zijn een goede bron van inkomsten, maar je moet wel de extra patiënten kunnen behapstukken om ze op tijd te kunnen genezen.",
   },
   next = "Volgende tip",
 }
@@ -267,7 +283,7 @@ rooms_long = {
   training_room = "Klaslokaal",
   psychiatric = "Psychiatrie",
   operating_theatre = "Operatiekamer",
-  dna_fixer = "DNA Reparatie",
+  dna_fixer = "DNA Hersteller",
   tongue_clinic = "Lamme Tongkliniek",
   hair_restoration = "Haarrestaurateur",
   general_diag = "Algemene Diagnose",
@@ -275,7 +291,7 @@ rooms_long = {
   fracture_clinic = "Gipskamer",
   toilets = "Toilet",
   electrolysis = "Elektrolysekliniek",
-  x_ray = "R\153ntgenkamer",
+  x_ray = utf8 "Röntgenkamer",
   blood_machine = "Bloedmachinekamer",
 }
 options_window = {
@@ -325,26 +341,26 @@ trophy_room = {
   },
   all_cured = {
     awards = {
-      [1] = "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van alle pati\137nten in uw ziekenhuis in het afgelopen jaar.",
+      [1] = utf8 "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van alle patiënten in uw ziekenhuis in het afgelopen jaar.",
     },
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Iedereen Trofee voor het genezen van iedereen die in het afgelopen jaar uw ziekenhuis binnen is komen lopen.",
-      [2] = "U krijgt de Geen Zieke Rochel Trofee voor het genezen van elke pati\137nt die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
+      [2] = utf8 "U krijgt de Geen Zieke Rochel Trofee voor het genezen van elke patiënt die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
 	},
   },
   many_cured = {
     awards = {
-      [1] = "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van bijne alle pati\137nten in uw ziekenhuis in het afgelopen jaar.",
-	  [2] = "U ontvangt deze trofee omdat u meer pati\137nten heeft genezen dan alle andere ziekenhuizen. Een opvallende prestatie.",
+      [1] = utf8 "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van bijne alle patiënten in uw ziekenhuis in het afgelopen jaar.",
+	  [2] = utf8"U ontvangt deze trofee omdat u meer patiënten heeft genezen dan alle andere ziekenhuizen. Een opvallende prestatie.",
     },
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Alles Trofee voor het genezen van massa's mensen die in het afgelopen jaar uw ziekenhuis binnen zijn komen lopen.",
-      [2] = "U krijgt de Geen Zieke Rochel Trofee voor het genezen van een groot aantal pati\137nten die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
+      [2] = utf8 "U krijgt de Geen Zieke Rochel Trofee voor het genezen van een groot aantal patiënten die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
 	  [3] = "Hierbij ontvangt u de Gezonde Gorgel, een prijs voor het genezen van een enorm percentage van uw bezoekers in het afgelopen jaar.",
     },
 	penalty = {
-	  [1] = "Het lukt uw ziekenhuis niet de pati\137nten effectief te genezen. Concentreer u op goede behandelmethoden zodat behandelingen effectiever worden.",
-	  [2] = "Uw ziekenhuis is het minst effectief als het gaat om pati\137nten genezen. U heeft het Ministerie teleur gesteld. Moeten we nog meer zeggen?",
+	  [1] = utf8 "Het lukt uw ziekenhuis niet de patiënten effectief te genezen. Concentreer u op goede behandelmethoden zodat behandelingen effectiever worden.",
+	  [2] = utf8 "Uw ziekenhuis is het minst effectief als het gaat om patiënten genezen. U heeft het Ministerie teleur gesteld. Moeten we nog meer zeggen?",
 	},
 	regional = {
 	  [1] = "Vanwege het feit dat u meer zieken heeft genezen dan alle andere ziekenhuizen bij elkaar opgeteld ontvangt u hiervoor de hoogst haalbare onderscheiding. Gefeliciteerd!",
@@ -361,17 +377,17 @@ trophy_room = {
   },
   no_deaths = {
     awards = {
-      [1] = "U heeft de Nimmer Vergaan award gewonnen voor het in leven houden van al uw pati\137nten in het afgelopen jaar.",
+      [1] = utf8 "U heeft de Nimmer Vergaan award gewonnen voor het in leven houden van al uw patiënten in het afgelopen jaar.",
 	  [2] = "Uw talent heeft gezorgd voor een minimaal aantal sterfgevallen in uw ziekenhuis. U kunt apetrots zijn op dit resultaat.",
     },
     trophies = {
       [1] = "De 'Het Leven Gaat Door'-corporatie presenteert u de volgende trofee omdat er in het afgelopen jaar geen mensen zijn overleden.",
       [2] = "U heeft de Overlijden Vermijden Trofee uitgereikt gekregen voor het in leven houden van elke bezoeker van uw fantastische ziekenhuis in het afgelopen jaar. Bravo.",
-	  [3] = "Hierbij ontvangt u de 'Ik Leef Nog' prijs omdat dit jaar geen van uw pati\137nten is overleden in uw mooie ziekenhuis. Heel goed.",
+	  [3] = utf8 "Hierbij ontvangt u de 'Ik Leef Nog' prijs omdat dit jaar geen van uw patiënten is overleden in uw mooie ziekenhuis. Heel goed.",
     },
 	penalty = {
 	  [1] = "Het aantal overledenen in uw ziekenhuis was het afgelopen jaar behoorlijk hoog. Let goed op en zorg dat in de toekomst meer mensen de behandeling overleven.",
-	  [2] = "Uw ziekenhuis in een gevaar voor de gezondheid van de patient. Er wordt verwacht dat u mensen geneest, niet laat doodgaan!",
+	  [2] = utf8 "Uw ziekenhuis is een gevaar voor de gezondheid van de patiënt. Er wordt verwacht dat u mensen geneest, niet laat doodgaan!",
 	},
 	regional = {
 	  [1] = "Het dodental in uw ziekenhuis was het laatste jaar lager dan dat van ieder ander ziekenhuis. Daarvoor bieden wij u deze trofee aan.",
@@ -413,7 +429,7 @@ trophy_room = {
 	},
 	penalty = {
 	  [1] = "Bezoekers van uw ziekenhuis vinden het verschrikkelijk. U zult het veel beter moeten doen voor u waardering van het Ministerie zult krijgen.",
-	  [2] = "Mensen die in uw ziekenhuis in behandeling zijn, zijn zeer ontevreden over de staat van het ziekenhuis. U moet meer aandacht hebben voor het wel en wee van de pati\137nten.",
+	  [2] = utf8 "Mensen die in uw ziekenhuis in behandeling zijn, zijn zeer ontevreden over de staat van het ziekenhuis. U moet meer aandacht hebben voor het wel en wee van de patiënten.",
 	},
   },
   happy_staff = {
@@ -441,7 +457,7 @@ trophy_room = {
 	  [1] = "Gefeliciteerd. Uw ziekenhuis heeft altijd zeer korte wachttijden. Dit is een belangrijke onderscheiding.",
 	},
 	penalty = {
-	  [1] = "Patienten in uw ziekenhuis moeten veel te lang wachten. Er zijn altijd enorme wachtrijen. U kunt uw pati\137nten veel efficienter helpen, maar daar moet u wel wat voor doen.",
+	  [1] = utf8 "Patiënten in uw ziekenhuis moeten veel te lang wachten. Er zijn altijd enorme wachtrijen. U kunt uw patiënten veel efficiënter helpen, maar daar moet u wel wat voor doen.",
 	},
   },
   hosp_value = {
@@ -487,22 +503,22 @@ trophy_room = {
   },
   gen_repairs = {
 	awards = {
-	  [1] = "U ontvangt deze prijs vanwege de oplettendheid van uw Congierges die alle apparatuur heel goed hebben onderhouden. Heel goed. U kunt gerust op vakantie.",
-	  [2] = "Uw Congierges hebben beter gepresteerd de die van andere ziekenhuizen. Dit is een enorme presatie. Ere wie ere toekomt.",
-	  [3] = "Uw apparatuur is fantastisch onderhouden. De motivatie van uw Congierges in uitmuntend. Deze prijs heeft u meer dan verdiend. Geweldig!.",
+	  [1] = utf8 "U ontvangt deze prijs vanwege de oplettendheid van uw Conciërges die alle apparatuur heel goed hebben onderhouden. Heel goed. U kunt gerust op vakantie.",
+	  [2] = utf8 "Uw Conciërges hebben beter gepresteerd de die van andere ziekenhuizen. Dit is een enorme presatie. Ere wie ere toekomt.",
+	  [3] = utf8 "Uw apparatuur is fantastisch onderhouden. De motivatie van uw Conciërges in uitmuntend. Deze prijs heeft u meer dan verdiend. Geweldig!.",
 	},
 	penalty = {
-	  [1] = "Uw Congierges hebben uw apparatur niet goed ondehouden. U moet hen beter in de gaten houden, of meer Congierges kunnen inhuren als het teveel werk is.",
+	  [1] = utf8 "Uw Conciërges hebben uw apparatur niet goed onderhouden. U moet hen beter in de gaten houden, of meer Conciërges kunnen inhuren als het teveel werk is.",
 	  [2] = "Het onderhoud is een drama. Uw personeel moet de apparatuur beter in de gaten houden en zorgvuldiger onderhouden.",
 	},
   },
   emergencies = {
 	award = {  --attention: this string says AWARD, not AWARDS
-	  [1] = "Gefeliciteerd: vanwege uw efficiente en effectieve manier van afhandelen van noodgevallen, ontvangt u deze speciale prijs. Goed werk.",
+	  [1] = utf8 "Gefeliciteerd: vanwege uw efficiënte en effectieve manier van afhandelen van noodgevallen, ontvangt u deze speciale prijs. Goed werk.",
 	  [2] = "Uw werkwijze bij noodgevallen is een unicum. Deze prijs ontvangt u, omdat u absoluut het beste omgaat met grote drommen zieken en zwakken.",
 	},
 	penalty = {
-	  [1] = "U heeft noodgevallen niet goed afgehandeld. Spoed eisende pati\137nten moeten direct en goed worden geholpen, dat is u niet gelukt.",
+	  [1] = utf8 "U heeft noodgevallen niet goed afgehandeld. Spoed eisende patiënten moeten direct en goed worden geholpen, dat is u niet gelukt.",
 	},
 	regional_good = {
 	  [1] = "Het Ministerie heeft het afgelopen jaar gezien dat u noodgevallen beter aankunt dan ieder ander ziekenhuis. Daarvoor ontvangt u deze prijs.",
@@ -528,7 +544,7 @@ trophy_room = {
 	  [2] = "Het afgelopen jaar heeft u meer medicijnen en apparatuur ontwikkeld dan was verwacht. Wij bieden u deze prijs aan namens het volledige Ministerie.",
 	},
 	penalty = {
-	  [1] = "U heeft een minimale hoeveelheid behandelmethoden, medicijnen en apparatuur ontwikkeld. Dit is helemaal niet goed, technologische vooruitgang is essenti\137el.",
+	  [1] = utf8 "U heeft een minimale hoeveelheid behandelmethoden, medicijnen en apparatuur ontwikkeld. Dit is helemaal niet goed, technologische vooruitgang is essentiëel.",
 	},
 	regional_good ={
 	  [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
@@ -546,7 +562,7 @@ save_game_window = {
 }
 staff_class = {
   doctor = "Arts",
-  handyman = "Conci\137rge",
+  handyman = utf8 "Conciërge",
   receptionist = "Receptioniste",
   nurse = "Zuster",
   surgeon = "Chirurg",
@@ -617,12 +633,12 @@ fax = {
   disease_discovered_patient_choice = {
     need_to_build = "Je moet een %s bouwen om dit te kunnen behandelen.",
     need_to_employ = "Huur een %s om deze situatie te behandelen.",
-    what_to_do_question = "Wat moeten we met de pati\137nt doen?",
-    guessed_percentage_name = "Je team moest raden naar de conditie van de pati\137nt. De kans dat het %s is bedraagt %d",
+    what_to_do_question = utf8 "Wat moeten we met de patiënt doen?",
+    guessed_percentage_name = utf8 "Je team moest raden naar de conditie van de patiënt. De kans dat het %s is bedraagt %d",
     choices = {
-      send_home = "Stuur de pati\137nt naar huis.",
-      research = "Stuur de pati\137nt naar het Laboratorium.",
-      wait = "Laat de pati\137nt even geduld hebben.",
+      send_home = utf8 "Stuur de patiënt naar huis.",
+      research = utf8 "Stuur de patiënt naar het Laboratorium.",
+      wait = utf8 "Laat de patiënt even geduld hebben.",
     },
     disease_name = "Je team heeft een nieuwe ziekte ontdekt. Het is %s",
     need_to_build_and_employ = "Als je een %s bouwt en een %s aanneemt, kun je slagen.",
@@ -631,7 +647,7 @@ fax = {
   emergency_result = {
     earned_money = "Van de maximum bonus van %d heb je %d verdiend.",
     close_text = "Sluiten.",
-    saved_people = "Je hebt %d van de %d pati\137nten genezen.",
+    saved_people = utf8 "Je hebt %d van de %d patiënten genezen.",
   },
   disease_discovered = {
     discovered_name = "Je team heeft een nieuwe ziekte ontdekt. Het is %s",
@@ -655,7 +671,7 @@ fax = {
     },
     num_disease = "Er zijn %d mensen met %s die onmiddelijk hulp nodig hebben.",
 	num_disease_singular = "Er is 1 persoon met %s die onmiddelijk hulp nodig heeft.",
-    cure_possible_drug_name_efficiency = "Je hebt alle benodigde apparatuur en hulpverleners. Je hebt het geneesmiddel, %s, welke een effici\137ntie heeft van %d procent.",
+    cure_possible_drug_name_efficiency = utf8 "Je hebt alle benodigde apparatuur en hulpverleners. Je hebt het geneesmiddel voor %s, deze is %d procent effectief.",
     cure_not_possible_employ = "Je zult een %s moeten aannemen",
     cure_not_possible = "Je kunt op dit moment de ziekte niet genezen.",
     cure_possible = "Je hebt de benodigde apparatuur en hulpverleners, dus je zou dit noodgeval aan moeten kunnen.",
@@ -665,7 +681,7 @@ fax = {
     },
     location = "Er is een ongeluk gebeurd bij %s",
     cure_not_possible_build = "Je zult een %s moeten bouwen",
-    cure_not_possible_build_and_employ = "Je zult een %s moeten bouwen en een %s moeten huren.",
+    cure_not_possible_build_and_employ = "Je zult een %s moeten bouwen en een %s moeten inhuren.",
     bonus = "De maximumbonus voor dit noodgeval bedraagt %d. Als je echter niet slaagt zal je reputatie schade oplopen.",
 	free_build = "Als je slaagt, is dit goed voor je reputatie. Als je echter niet slaagt zal je reputatie schade oplopen.",
   },
@@ -689,24 +705,24 @@ fax = {
     text7 = "REPUTATION: %d EXPECTED %d REDUCTION %d",
   },
   epidemic = {
-    cover_up_explanation_1 = "Als je probeert dit te verbergen, heb je een beperkte tijd om alle ge\139nfecteerde pati\137nten te genezen voor de Inspectie erachter komt.",
+    cover_up_explanation_1 = utf8 "Als je probeert dit te verbergen, heb je een beperkte tijd om alle geïnfecteerde patiënten te genezen voor de Inspectie erachter komt.",
     cover_up_explanation_2 = "Als je bezoek krijgt van een Inspecteur terwijl je nog bezig bent de epidemie op te lossen, kan hij drastische maatregelen tegen je nemen.",
     choices = {
-      cover_up = "Alle ge\139nfecteerde pati\137nten proberen te genezen voor de tijd voorbij is of iemand je ziekenhuis verlaat.",
+      cover_up = utf8 "Alle geïnfecteerde patiënten proberen te genezen voor de tijd voorbij is of iemand je ziekenhuis verlaat.",
       declare = "Een epidemie afkondigen. Betaal de boete en je reputatie eronder laten lijden.",
     },
     disease_name = "Je Artsen hebben een besmettelijke variant van %s ontdekt.",
-    declare_explanation_fine = "Als je een epidemie afkondigt, betaal je een boete van %d, worden al je pati\137nten automatisch inge\137nt. Je reputatie zal hieronder lijden.",
+    declare_explanation_fine = utf8 "Als je een epidemie afkondigt, betaal je een boete van %d, worden al je patiënten automatisch ingeënt. Je reputatie zal hieronder lijden.",
   },
   diagnosis_failed = {
     choices = {
-      send_home = "Stuur pati\137nt naar huis.",
+      send_home = utf8 "Stuur patiënt naar huis.",
       take_chance = "Waag de gok en probeer de behandeling.",
-      wait = "Laat de pati\137nt even wachten terwijl je meer diagnostische kamers bouwt.",
+      wait = utf8 "Laat de patiënt even wachten terwijl je meer diagnostische kamers bouwt.",
     },
-    situation = "We hebben al onze diagnostische opties al gebruikt en we weten nog steeds niet wat er met deze pati\137nt aan de hand is.",
-    what_to_do_question = "Wat moeten we doen met de pati\137nt?",
-    partial_diagnosis_percentage_name = "Er is een kans van %d procent dat we weten wat voor soort %s de pati\137nt heeft.",
+    situation = utf8 "We hebben al onze diagnostische opties al gebruikt en we weten nog steeds niet wat er met deze patiënt aan de hand is.",
+    what_to_do_question = utf8 "Wat moeten we doen met deze patiënt?",
+    partial_diagnosis_percentage_name = utf8 "Er is een kans van %d procent dat we weten wat voor soort %s de patiënt heeft.",
   },
 }
 bank_manager = {
@@ -754,10 +770,10 @@ tooltip = {
     close = "Sluit het cheatmenu",
     cheats = {
       end_month = "Spring naar het einde van de maand.",
-      emergency = "Cre\137ert een noodgeval",
-	  vip = "Cre\137ert een VIP",
+      emergency = utf8 "Creëert een noodgeval",
+	  vip = utf8 "Creëert een VIP",
       win_level = "Win het huidige level.",
-      create_patient = "Cre\137ert een pati\137nt op de rand van de kaart.",
+      create_patient = utf8 "Creëert een patiënt op de rand van de kaart.",
       money = "Voegt 10.000 toe aan je saldo.",
       lose_level = "Verlies het huidige level.",
       all_research = "Voltooi al het onderzoek.",
@@ -766,7 +782,7 @@ tooltip = {
   },
   new_game_window = {
     hard = "Als je het spel kent en meer uitdaging zoekt, kies deze optie.",
-    cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel startne!", 
+    cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel starten!", 
     tutorial = "Als je wat hulp nodig hebt in het spel, klik hier",
     easy = "Als je dit spel nog nooit gespeeld hebt is deze optie voor jou",
     medium = "De gulden middenweg, als je geen idee hebt wat je wilt",
@@ -784,7 +800,7 @@ tooltip = {
     next_person = "Volgende persoon bekijken",
     nurses = "Beschikbare Zusters bekijken",
     surgeon = "Chirurg",
-    handymen = "Beschikbare Conci\137rges bekijken",
+    handymen = utf8 "Beschikbare Conciërges bekijken",
     doctors = "Beschikbare Artsen bekijken",
     doctor_seniority = "Niveau Arts (Assistent, Basisarts, Specialist)",
     hire = "Aannemen",
@@ -801,9 +817,9 @@ tooltip = {
     prio_litter = "Hogere prioriteit geven aan schoonmaken",
     happiness = "Tevredenheid",
     prio_plants = "Hogere prioriteit geven aan de planten",
-    name = "Naam van de Conci\137rge",
+    name = utf8 "Naam van de Conciërge",
     tiredness = "Moeheid",
-    center_view = "Naar Conci\137rge springen",
+    center_view = utf8 "Naar Conciërge springen",
     salary = "Salaris",
     sack = "Ontslaan",
     pick_up = "Oppakken",
@@ -814,7 +830,7 @@ tooltip = {
     detail = "Precisie",
     happiness = "Tevredenheid",
     researcher_train = "%d%% van de opleiding tot onderzoeker voltooid",
-    handymen = "Lijst van Conci\137rges bekijken",
+    handymen = utf8 "Lijst van Conciërges bekijken",
     tiredness = "Laat zien hoe moe de werknemers zijn",
     researcher = "Gekwalificeerde Onderzoeker",
     happiness_2 = "Moraal",
@@ -852,7 +868,7 @@ tooltip = {
     diagnosis_inc = "Budget voor Diagnostische apparatuur verhogen",
   },
   machine_window = {
-    repair = "Een Congi\137rge sturen om deze machine te repareren",
+    repair = utf8 "Een Conciërge sturen om deze machine te repareren",
     name = "Naam",
     close = "Sluiten",
     times_used = "Aantal keren gebruikt",
@@ -875,22 +891,22 @@ tooltip = {
     load_game_number = "Laad spel %d",
   },
   queue_window = {
-    end_of_queue = "Sleep een pati\137nt hiernaartoe om hem of haar achteraan in de rij te zetten",
-    num_entered = "Aantal pati\137nten die in deze kamer zijn behandeld",
+    end_of_queue = utf8 "Sleep een patiënt hiernaartoe om hem of haar achteraan in de rij te zetten",
+    num_entered = utf8 "Aantal patiënten die in deze kamer zijn behandeld",
     close = "Dit scherm sluiten",
-    num_in_queue = "Aantal pati\137nten in de rij",
-    num_expected = "Aantal pati\137nten die door de Receptioniste worden verwacht zich aan te sluiten",
-    front_of_queue = "Sleep een pati\137nt hiernaartoe om ze vooraan de rij te plaatsen",
+    num_in_queue = utf8 "Aantal patiënten in de rij",
+    num_expected = utf8 "Aantal patiënten die door de Receptioniste worden verwacht zich aan te sluiten",
+    front_of_queue = utf8 "Sleep een patiënt hiernaartoe om ze vooraan de rij te plaatsen",
     dec_queue_size = "Maximum rijlengte verkleinen",
     max_queue_size = "Maximum rijlengte die de Receptioniste zal proberen aan te houden",
     inc_queue_size = "Maximum rijlengte vergroten",
-    patient = "Sleep een pati\137nt naar een specifieke plaats in de rij. Rechtsklik om een patient naar huis te sturen of ze naar een rivaliserend ziekenhuis door te verwijzen",
+    patient = utf8 "Sleep een patiënt naar een specifieke plaats in de rij. Rechtsklik om een patiënt naar huis te sturen of naar een rivaliserend ziekenhuis door te verwijzen",
     patient_dropdown = {
-      send_home = "Pati\137nt uit ziekenhuis ontslaan",
-      hospital_2 = "Pati\137nt naar een ander ziekenhuis verwijzen",
-      reception = "Pati\137nt naar Receptioniste verwijzen",
-      hospital_1 = "Pati\137nt naar een ander ziekenhuis verwijzen",
-      hospital_3 = "Pati\137nt naar een ander ziekenhuis verwijzen",
+      send_home = utf8 "Patiënt uit ziekenhuis ontslaan",
+      hospital_2 = utf8 "Patiënt naar een ander ziekenhuis verwijzen",
+      reception = utf8 "Patiënt naar Receptioniste verwijzen",
+      hospital_1 = utf8 "Patiënt naar een ander ziekenhuis verwijzen",
+      hospital_3 = utf8 "Patiënt naar een ander ziekenhuis verwijzen",
     },
   },
   jukebox = {
@@ -925,7 +941,7 @@ tooltip = {
     objects = "Gangartikelen",
     balance = "Je saldo",
     research = "Onderzoek",
-    hire = "Personeel huren",
+    hire = "Personeel inhuren",
     status = "Status",
     town_map = "Kaart",
     rooms = "Bouwen",
@@ -949,11 +965,11 @@ tooltip = {
     heat_inc = "Verwarming hoger zetten",
   },
   custom_game_window = {
-    start_game_with_name = "Start level %s",
+    start_game_with_name = "%s starten",
 	free_build = "Klik hier als je wilt spelen zonder geld, en zonder win en verliesvoorwaarden", --kan ook overwinningsvoorwaarden worden genoemd, maar is misschien net te weinig info
   },
   casebook = {
-    sent_home = "Aantal afgewezen pati\137nten",
+    sent_home = utf8 "Aantal afgewezen patiënten",
     cure_requirement = {
       possible = "Je kunt deze behandeling uitvoeren",
       not_possible = "Je kunt deze behandeling nog niet uitvoeren",
@@ -990,7 +1006,7 @@ tooltip = {
     diag_termination = "Het diagnoseproces zal doorlopen worden tot Artsen zo zeker zijn als STOP PROCEDURE aangeeft, of tot alle diagnostische testen zijn uitgevoerd",
     close = "Sluit Beleidscherm",
     staff_leave = "Artsen en Zusters mogen bijspringen waar nodig",
-    diag_procedure = "Als de diagnose van een Arts minder zeker is dan het WEGSTUREN percentage, zal de pati\137nt naar huis gestuurd worden. Als de diagnose beter is dan GOKKEN aangeeft, zal de pati\137nt de betreffende behandeling ondergaan",
+    diag_procedure = utf8 "Als de diagnose van een Arts minder zeker is dan het WEGSTUREN percentage, zal de patiënt naar huis gestuurd worden. Als de diagnose beter is dan GOKKEN aangeeft, zal de patiënt de betreffende behandeling ondergaan",
     staff_rest = "Hoe moe personeelsleden moeten zijn voordat ze mogen uitrusten",
     staff_stay = "Artsen en Zusters blijven in de kamer waar je ze plaatst",
   },
@@ -1011,7 +1027,7 @@ tooltip = {
   },
   main_menu = {
     exit = "Nee! Nee! Verlaat ons niet!",
-    custom_level = "Bouw je ziekenhuis in een eigen level",
+    custom_level = "Bouw je ziekenhuis in een losstaand level",
     network = "Start een netwerkspel",
     quit = "Afsluiten",
     continue = "Doorgaan met vorig spel",
@@ -1025,15 +1041,15 @@ tooltip = {
   },
   patient_window = {
     graph = "Klik om te schakelen tussen de gezondheid en de geschiedenis van deze persoon",
-    casebook = "Details bekijken van de ziekte van deze pati\137nt",
+    casebook = utf8 "Details bekijken van de ziekte van deze patiënt",
     close = "Venster sluiten",
     queue = "Bekijk de rij waarin deze persoon staat",
-    happiness = "Tevredenheid van deze pati\137nt",
+    happiness = utf8 "Tevredenheid van deze patiënt",
     warmth = "Hoe warm deze persoon het heeft",
     center_view = "Deze persoon bekijken",
-    thirst = "Hoe dorstig deze pati\137nt is",
+    thirst = utf8 "Hoe dorstig deze patiënt is",
     send_home = "Uit ziekenhuis ontslaan",
-    abort_diagnosis = "Behandel deze pati\137nt nu, zonder een complete diagnose",
+    abort_diagnosis = utf8 "Behandel deze patiënt nu, zonder een complete diagnose",
   },
   menu_list_window = {
     back = "Dit venster sluiten",
@@ -1041,9 +1057,9 @@ tooltip = {
 	name = "Klik hier om te sorteren op naam",
   },
   watch = {
-    emergency = "Noodgeval: tijd over om alle pati\137nten te genezen.",
+    emergency = utf8 "Noodgeval: tijd over om alle patiënten te genezen.",
     hospital_opening = "Bouwtijd: dit is hoelang het nog duurt voor je ziekenhuis opengaat. Klik op de START knop om je ziekenhuis nu te openen.",
-    epidemic = "Epidemie: tijd over om de epidemie te verbergen. Als de tijd om is OF een besmettelijke pati\137nt je ziekenhuis verlaat, komt er een Inspecteur langs. De knop zet vaccinatiemodus aan en uit. Klik ermee op een pati\137nt om hem of haar te laten inenten door een Zuster.",
+    epidemic = utf8 "Epidemie: tijd over om de epidemie te verbergen. Als de tijd om is OF een besmettelijke patiënt je ziekenhuis verlaat, komt er een Inspecteur langs. De knop zet vaccinatiemodus aan en uit. Klik ermee op een patiënt om hem of haar te laten inenten door een Zuster.",
   },
   save_game_window = {
     new_save_game = "Voer hier de naam in",
@@ -1056,25 +1072,25 @@ tooltip = {
     ultrascan = "Een Arts gebruikt de Echoscopie om diagnoses te stellen",
     research_room = "Artsen die een kwalificatie hebben als onderzoeker kunnen nieuwe medijnen en machines uitvinden in het laboratorium",
     fracture_clinic = "Een Zuster gebruikt de Gipskamer om Gebroken Botten te verhelpen",
-    gps_office = "Pati\137nten krijgen hun eerste consult en resultaten in de Spreekkamer.",
-    inflation = "Een Arts gebruikt de Inflatiekamer om pati\137nten met Plofkop te genezen",
+    gps_office = utf8 "Patiënten krijgen hun eerste consult en resultaten in de Spreekkamer.",
+    inflation = utf8 "Een Arts gebruikt de Inflatiekamer om patiënten met Plofkop te genezen",
     staffroom = "Artsen en Zusters ontspannen in de personeelskamer en raken zo hun moeheid kwijt",
     jelly_vat = "Een Arts gebruikt de Gelatinetank om Gelatinis genezen",
     scanner = "Een Arts gebruikt de Scannerkamer om een diagnose te stellen",
     decontamination = "Een Arts gebruikt de Ontsmettingscabine om Radioactiviteit te genezen",
-    pharmacy = "Een Zuster geeft medicijnen uit een Apotheek aan pati\137nten om hen te genezen van verschillende kwalen.",
+    pharmacy = utf8 "Een Zuster geeft medicijnen uit een Apotheek aan patiënten om hen te genezen van verschillende kwalen.",
     cardiogram = "Een Arts gebruikt de Cardiogramkamer om een diagnose te stellen",
-    ward = "Slaapzalen worden door Zusters gebruikt om diagnoses te stellen en pati\137nten te behandelen. Pati\137nten worden hiernaartoe gestuurd ter observatie en rusten hier uit indien ze een operatie moeten ondergaan",
+    ward = utf8 "Slaapzalen worden door Zusters gebruikt om diagnoses te stellen en patiënten te behandelen. Patiënten worden hiernaartoe gestuurd ter observatie en rusten hier uit indien ze een operatie moeten ondergaan",
     training_room = "Een Klaslokaal met een Specialist kan worden gebruikt om andere Artsen op te leiden",
     operating_theatre = "De operatiekamer heeft twee gekwalificeerde Chirurgen nodig",
-    psychiatry = "De Psychiatrie geneest geesteszieke pati\137nten en helpt het diagnostisch proces. Het vereist echter wel een gekwalificeerde Psychiater",
+    psychiatry = utf8 "De Psychiatrie geneest geesteszieke patiënten en helpt het diagnostisch proces. Het vereist echter wel een gekwalificeerde Psychiater",
     hair_restoration = "Een Arts gebruikt de Haarrestaurateur om Kaalheid te genezen",
     tongue_clinic = "Een Arts gebruikt de Snijmachine om Lamme Tong te genezen",
-    dna_fixer = "Een Arts gebruikt DNA-reparatie om pati\137nten met Buitenaards DNA te genezen",
-    general_diag = "Een Arts gebruikt de Spreekkamer om een basisdiagnose voor zijn pati\137nten te stellen. Goedkoop en vaak zeer effectief",
+    dna_fixer = utf8 "Een Arts gebruikt DNA Hersteller om patiënten met Buitenaards DNA te genezen",
+    general_diag = utf8 "Een Arts gebruikt de Spreekkamer om een basisdiagnose voor zijn patiënten te stellen. Goedkoop en vaak zeer effectief",
     toilets = "Bouw Toiletten zodat mensen geen zooi maken van je ziekenhuis!",
     electrolysis = "Een Arts gebruikt de Electrolysekamer om Pilitis te genezen",
-    x_ray = "Een Arts gebruikt de R\153ntgenkamer om een diagnose te stellen",
+    x_ray = utf8 "Een Arts gebruikt de Röntgenkamer om een diagnose te stellen",
     blood_machine = "Een Arts gebruikt de Bloedmachinekamer om een diagnose te stellen", 
   },
   statement = {
@@ -1118,7 +1134,7 @@ tooltip = {
     balance = "Je saldo moet tenminste %d bedragen. Momenteel bedraagt deze %d",
     value = "Je ziekenhuis moet $%d waard zijn. Momenteel is deze $%d waard",
     win_progress_other = "Laat vooruitgang zien tot het ziekenhuis van %s aan de eisen voldoet",
-    num_cured = "Je doel is %d pati\137nten te genezen. Tot nu toe heb je er %d genezen",
+    num_cured = utf8 "Je doel is %d patiënten te genezen. Tot nu toe heb je er %d genezen",
     happiness = "Algemene tevredenheid van de mensen in je ziekenhuis",
   },
   window_general = {
@@ -1126,12 +1142,12 @@ tooltip = {
     cancel = "Annuleren",
   },
   objects = {
-    chair = "Stoel: pati\137nten zitten hierop als ze over hun ziekte praten.",
-    litter = "Vuilnis: Op de grond gegooid door een pati\137nt omdat hij geen vuilnisbak kon vinden.",
+    chair = utf8 "Stoel: patiënten zitten hierop als ze over hun ziekte vertellen.",
+    litter = utf8 "Troep: Op de grond gegooid door een patiënt omdat hij geen prullenbak kon vinden.",
     sofa = "Bankstel: Werknemers rusten uit op een bankstel tenzij ze een betere manier vinden om zich te ontspannen.",
     operating_table = "30 OB_OP_TABLE",
     bed2 = "unused",
-    bench = "Bank: Hier kunnen wachtende pati\137nten in comfort wachten op hun beurt.",
+    bench = utf8 "Bank: Hier kunnen wachtende patiënten comfortabel wachten op hun beurt.",
     scanner = "14 OB_SCANNER",
     couch = "18 OB_COUCH",
     blood_machine = "42 OB_BLOOD_MC",
@@ -1160,26 +1176,26 @@ tooltip = {
     console = "15 OB_SCANNER_CONSOLE",
     op_sink1 = "33 OB_OP_SINK_1",
     bookcase = "Boekenkast: Referentiemateriaal voor Artsen.",
-    drinks_machine = "Frisdrankautomaat: Lest de dorst van pati\137nten en zorgt voor inkomsten.",
+    drinks_machine = utf8 "Frisdrankautomaat: Lest de dorst van patiënten en zorgt voor inkomsten.",
     comfortable_chair = "61 OB_COMFY_CHAIR",
     skeleton = "Geraamte: Gebruikt voor opleidingen en Halloween.",
     computer = "Computer: Belangrijk voor onderzoek",
-    bin = "Vuilnisbak: Hier gooien pati\137nten hun vuilnis in.",
+    bin = utf8 "Prullenbak: Hier gooien patiënten hun afval in.",
     pharmacy_cabinet = "Apotheek: Waar de medicijnen worden bewaard.",
     radiator = "Radiator: Zo wordt het ziekenhuis niet koud.",
     cast_remover = "24 OB_CAST_REMOVE",
     atom_analyser = "Pulsmixer: Wordt geplaatst in het Laboratorium. Versnelt het onderzoeksproces.",
-    plant = "Plant: Houdt pati\137nten tevreden en zuivert de lucht.",
+    plant = utf8 "Plant: Houdt patiënten tevreden en zuivert de lucht.",
     jelly_moulder = "47 OB_JELLY_VAT",
     cardio = "13 OB_CARDIO",
-    toilet = "Pot: Pati\137nten, eh, gebruiken dit.",
+    toilet = utf8 "Pot: Patiënten, eh, gebruiken dit.",
     electrolyser = "46 OB_ELECTRO",
     fire_extinguisher = "Blusser: Verkleint het gevaar van defecte apparatuur.",
     bed3 = "unused",
     swing_door1 = "52 OB_DOUBLE_DOOR1",
     lecture_chair = "Schoolbank: Je studerende Artsen zitten hier om aantekeningen te maken, zich dood te vervelen en doelloos poppetjes te tekenen. Hoe meer schoolbanken je plaatst, des te groter je klas kan zijn.",
     screen = "16 OB_SCREEN",
-    toilet_sink = "Wasbak: De pati\137nten die zich wat meer bewust zijn van hygi\137ne kunnen hier hun vieze handen in wassen. Als er niet genoeg wasbakken zijn, raken pati\137nten nukkig.",
+    toilet_sink = utf8 "Wasbak: De patiënten die zich wat meer bewust zijn van hygiëne kunnen hier hun vieze handen in wassen. Als er niet genoeg wasbakken zijn, raken patiënten nukkig.",
     shower = "54 OB_DECON_SHOWER",
     gates_of_hell = "48 OB_HELL",
     entrance_right = "59 OB_ENT_RDOOR",
@@ -1187,7 +1203,7 @@ tooltip = {
     slicer = "26 OB_SLICER",
     dna_fixer = "23 OB_DNA_FIXER",
     x_ray = "27 OB_XRAY",
-    cabinet = "Dossierkast: Bevat dossiers van pati\137nten, aantekeningen en rapportages.",
+    cabinet = utf8 "Dossierkast: Bevat dossiers van patiënten, aantekeningen en rapportages.",
   },
   build_room_window = {
     cost = "Kosten van deze kamer",
@@ -1270,7 +1286,7 @@ dynamic_info = {
       sent_home = "Naar huis gestuurd",
       fed_up = "Heeft er schoon genoeg van en vertrekt",
       no_treatment_available = "Geen behandeling beschikbaar - Ik ga naar huis",
-      on_my_way_to = "Ik ga naar %s",
+      on_my_way_to = "Onderweg naar %s",
       queueing_for = "In de rij voor %s",
     },
     diagnosed = "Diagnose: %s ",
@@ -1287,7 +1303,7 @@ dynamic_info = {
     ability = "Competentie",
     psychiatrist_abbrev = "Psych.",
     actions = {
-      waiting_for_patient = "Wacht op pati\137nt",
+      waiting_for_patient = utf8 "Wacht op patiënt",
       wandering = "Loopt wat rond",
       going_to_repair = "Gaat %s repareren",
       heading_for = "Gaat naar %s",
@@ -1298,7 +1314,7 @@ dynamic_info = {
 }
 adviser = {
   tutorial = {
-    hire_receptionist = "Je hebt ook een Receptioniste nodig om je pati\137nten de weg te wijzen.",
+    hire_receptionist = utf8 "Je hebt ook een Receptioniste nodig om je patiënten de weg te wijzen.",
     build_pharmacy = "Gefeliciteerd! Bouw nu een Apotheek en huur een Zuster zodat je een werkend ziekenhuis hebt.",
     hire_doctor = "Je hebt een Arts nodig om diagnoses te stellen en de zieken te behandelen.",
     place_receptionist = "Plaats de Receptioniste ergens in je ziekenhuis.",
@@ -1310,13 +1326,13 @@ adviser = {
     receptionist_invalid_position = "Daar kun je de Receptioniste niet neerzetten.",
     room_too_small_and_invalid = "De blauwdruk is te klein en staat niet op bebouwbare grond. Kom op.",
     window_in_invalid_position = "Dit raam bevindt zich op een onmogelijke positie. Probeer het eens ergens anders te plaatsen.",
-    choose_doctor = "Kijk goed naar wat een Arts kan voor je er \130\130n aanneemt.",
+    choose_doctor = "Kijk goed naar wat een Arts kan voor je er een aanneemt.",
     build_gps_office = "Om diagnoses te kunnen stellen moet je eerst een Spreekkamer bouwen.",
     select_doctors = "Klik op het knipperende icoontje om te zien welke Artsen je kunt inhuren.",
     place_objects = "Rechtsklik om voorwerpen te draaien. Linksklik om ze te plaatsen.",
     select_receptionists = "Klik op het knipperende icoontje om de beschikbare Receptionistes te bekijken. Het nummer onder het icoontje geeft aan uit hoeveel sollicitantes kunt kiezen.",
     order_one_reception = "Klik eenmaal op de knipperende regel om een Receptie te bestellen.",
-    choose_receptionist = "Kies een Receptioniste met voldoende competentie en een redelijke salariseis en klik tenslotte op het knipperende icoontje om haar in te huren.",
+    choose_receptionist = "Kies een Receptioniste met voldoende competentie en een redelijke salaris eis en klik tenslotte op het knipperende icoontje om haar in te huren.",
     place_doctor = "Plaats de Arts ergens in het ziekenhuis. Zodra er een diagnose gesteld moet worden zal hij zich naar de Spreekkamer begeven.",
     accept_purchase = "Klik op het knipperende icoontje om de bestelling af te ronden.",
     place_door = "Beweeg de muis langs de muren van de blauwdruk om te bepalen waar je de deur wil hebben.",
@@ -1337,13 +1353,13 @@ adviser = {
   epidemic = {
     hurry_up = "Als je die epidemie nu niet snel oplost zit je straks flink in de knoei. Schiet op!",
     serious_warning = "Deze besmettelijke ziekte ziet er ernstig uit. Je moet snel actie ondernemen!",
-    multiple_epidemies = "Zo te zien waren er meerdere epidemi\137n tegelijk rond. Dit kan op een enorme ramp uitlopen, dus doe er snel wat aan.",
+    multiple_epidemies = utf8 "Zo te zien waren er meerdere epidemiën tegelijk rond. Dit kan op een enorme ramp uitlopen, dus doe er snel wat aan.",
   },
   staff_advice = {
-    need_handyman_machines = "Je zult Congi\137rges moeten inhuren om je apparatuur te onderhouden.",
+    need_handyman_machines = utf8 "Je zult Conciërges moeten inhuren om je apparatuur te onderhouden.",
     need_doctors = "Je hebt meer Artsen nodig. Zet de beste Artsen in de kamers met de langste wachtrijen.",
-    need_handyman_plants = "Je zult een Congi\137rge moeten huren om de planten water te geven.",
-    need_handyman_litter = "Mensen maken een troep in je ziekenhuis. Huur een Congi\137rge in om op te ruimen.",
+    need_handyman_plants = utf8 "Je zult een Conciërge moeten aannemen om de planten water te geven.",
+    need_handyman_litter = utf8 "Mensen maken een troep in je ziekenhuis. Huur een Conciërge in om het op te ruimen.",
     need_nurses = "Je moet Zusters inhuren. Slaapzalen en Apotheken hebben Zusters nodig.",
     too_many_doctors = "Je hebt teveel Artsen. Sommigen hebben nu niets te doen.",
     too_many_nurses = "Ik denk dat je teveel Zusters hebt aangenomen.",
@@ -1358,7 +1374,7 @@ adviser = {
     players_failed = "De volgende speler(s) hebben het laatste doel niet gehaald: ",
     poaching = {
       in_progress = "Ik laat je nog wel weten of deze medewerker voor je wil werken.",
-      not_interested = "Ha! Ze zijn totaal niet ge\139nteresseerd in voor jou werken. Ze zijn tevreden met hun huidige baan.",
+      not_interested = utf8 "Ha! Ze zijn totaal niet geïnteresseerd om voor jou te werken. Ze zijn tevreden met hun huidige baan.",
       already_poached_by_someone = "Dat gaat niet door! Iemand anders probeert deze medewerker al te stropen.",
     },
     objective_completed = "Je hebt het doel behaald! Gefeliciteerd!",
@@ -1369,7 +1385,7 @@ adviser = {
     need_surgeon_ward = "Om operaties uit te kunnen voeren moet je nog een Chirurg inhuren, een Slaapzaal en een Operatiekamer bouwen.",
   },
   vomit_wave = {
-    started = "Zo te zien waart er een kotsvirus rond in je ziekenhuis. Dit had je kunnen voorkomen door je ziekenhuis schoner te houden. Misschien moet je meer Congi\137rges aannemen.",
+    started = utf8 "Zo te zien waart er een kotsvirus rond in je ziekenhuis. Dit had je kunnen voorkomen door je ziekenhuis schoner te houden. Misschien moet je meer Conciërges aannemen.",
     ended = "Poeh poeh. Het ziet ernaar uit dat die kotsgolf voorbij is. Hou je ziekenhuis in het vervolg wat beter schoon.",
   },
   level_progress = {
@@ -1379,14 +1395,14 @@ adviser = {
     halfway_lost = "Je bent halverwege naar verlies van dit level.",
     nearly_lost = "Je hebt dit level bijna verloren.",
     three_quarters_won = "Je bent driekwart onderweg naar de winst van det level.",
-    dont_kill_more_patients = "Je kunt echt niet meer pati\137nten afmaken!",
-    another_patient_killed = "Oh nee! Je hebt nog een patient vermoord. Dat zijn er nu al %d.",
+    dont_kill_more_patients = utf8 "Je kunt echt niet meer patiënten afmaken!",
+    another_patient_killed = utf8 "Oh nee! Je hebt nog een patiënt vermoord. Dat zijn er nu al %d.",
     close_to_win_increase_value = "Je hebt bijna gewonnen, verhoog de waarde van je ziekenhuis met %d.",
     financial_criteria_met = "Je hebt aan alle financiele eisen van dit level voldaan. Hou je banksaldo boven de %d, en zorg ervoor dat je ziekenhuis soepel draait.",
     hospital_value_enough = "Hou de waarde van je ziekenhuis boven de %d en los alle andere problemen in de gaten om dit level te winnen",
-    another_patient_cured = "Goed gedaan - nog een patient is genezen, dat zijn er nu al %d.",
+    another_patient_cured = utf8 "Goed gedaan - nog een patiënt is genezen, dat zijn er nu al %d.",
     reputation_good_enough = "Oke, je reputatie is goed genoeg om dit level te winnen, hou het boven %d en los andere problemen op om te winnen",
-    cured_enough_patients = "Je hebt genoeg van je pati\137nten genezen om dit level te winnen maar je moet je ziekenhuis efficienter maken om te winnen.",
+    cured_enough_patients = utf8 "Je hebt genoeg van je patiënten genezen om dit level te winnen maar je moet je ziekenhuis efficienter maken om te winnen.",
     improve_reputation = "Je moet je reputatie met %d punten verbeteren om dit level te kunnen winnen.",
   },
   staff_place_advice = {
@@ -1412,54 +1428,54 @@ adviser = {
   boiler_issue = {
     minimum_heat = "Aha, daar ben je. De boiler in de kelder is kapot. De mensen in je ziekenhuis zullen het straks nogal fris krijgen.",
     maximum_heat = "De boiler in de kelder is op hol geslagen. De verwarming zit vast op maximum. Mensen zullen het snikheet krijgen. Plaats wat frisdrankautomaten ter compensatie.",
-    resolved = "Goed nieuws. De boiler en verwarming doen het weer normaal. De temperatuur zou nu weer goed moeten zijn voor je personeel en pati\137nten.",
+    resolved = utf8 "Goed nieuws. De boiler en verwarming doen het weer normaal. De temperatuur zou nu weer goed moeten zijn voor je personeel en patiënten.",
   },
   competitors = {
-    staff_poached = "E\130n van je personeelsleden is gestroopt door een tegenstander.",
+    staff_poached = utf8 "Eén van je personeelsleden is gestroopt door een tegenstander.",
     hospital_opened = "Er is door %s een concurrerend ziekenhuis geopend.",
     land_purchased = "%s heeft zojuist land gekocht.",
   },
   room_requirements = {
     research_room_need_researcher = "Je moet nog een Arts met een Onderzoeksgraad inhuren voor het Laboratorium.",
-    op_need_another_surgeon = "Je hebt nog \130\130n Chirurg nodig om de Operatiekamer te kunnen gebruiken.",
-    op_need_ward = "Je moet nog een Slaapzaal bouwen voor de pati\137nten die uit moeten rusten voor de operatie.",
-    reception_need_receptionist = "Je moet een Receptioniste inhuren om je pati\137nten wegwijs te maken.",
+    op_need_another_surgeon = utf8 "Je hebt nog één Chirurg nodig om de Operatiekamer te kunnen gebruiken.",
+    op_need_ward = utf8 "Je moet nog een Slaapzaal bouwen voor de patiënten die uit moeten rusten voor de operatie.",
+    reception_need_receptionist = utf8 "Je moet een Receptioniste inhuren om je patiënten wegwijs te maken.",
     psychiatry_need_psychiatrist = "Nu je een Psychiatrie hebt zul je een Psychiater moeten inhuren.",
     pharmacy_need_nurse = "Je zult een Zuster moeten inhuren voor de Apotheek.",
     ward_need_nurse = "Je moet nog een Zuster aannemen om in deze Slaapzaal te werken.",
-    op_need_two_surgeons = "Huur twee Chirurgen om operaties uit te kunnen voeren in de Operatiekamer.",
+    op_need_two_surgeons = "Neem twee Chirurgen aan om operaties uit te kunnen voeren in de Operatiekamer.",
     training_room_need_consultant = "Je hebt een Specialist nodig om les te kunnen geven in dat Klaslokaal.",
     gps_office_need_doctor = "Je moet een Arts inhuren voor de Spreekkamer.",
   },
   goals = {
     win = {
-      money = "Je hebt nog %d nodig om de financi\137le doel te halen voor dit level.",
-      cure = "Genees nog %d pati\137nten en je hebt genoeg mensen genezen om dit level te winnen.",
+      money = utf8 "Je hebt nog %d nodig om de financiële doel te halen voor dit level.",
+      cure = utf8 "Genees nog %d patiënten en je hebt genoeg mensen genezen om dit level te winnen.",
       reputation = "Bouw je reputatie op naar %d punten om je doel te behalen.",
-      value = "Bouw je ziekenhus uit tot het %d waard is om dit doel te behalen.",
+      value = "Bouw je ziekenhuis uit tot het %d waard is om dit doel te behalen.",
     },
     lose = {
-      kill = "Als er nog %d pati\137nten overlijden heb je dit level verloren!",
+      kill = utf8 "Als er nog %d patiënten overlijden heb je dit level verloren!",
     },
   },
   warnings = {
-    charges_too_low = "Je vraagt te weinig. Dit brengt wel mensen binnen, maar je verdient erg weinig aan ze.",
-    charges_too_high = "Je vraagt veel geld. Op de korte termijn brengt dat geld in het laatje, maar uiteindelijk jaag je mensen ermee weg.",
+    charges_too_low = "Je behandelingen zijn te goedkoop. Dit brengt wel mensen binnen, maar je verdient erg weinig aan ze.",
+    charges_too_high = "Je vraagt veel geld. Op de korte termijn brengt dat geld in het laatje, maar uiteindelijk jaag je er mensen mee weg.",
     plants_thirsty = "Je moet een oogje houden op je planten. Ze zien er dorstig uit.",
-    staff_overworked = "Je personeel is overwerkt. Ze worden ineffici\137nt en gaan fouten maken, met alle rampzalige gevolgen van dien.",
+    staff_overworked = utf8 "Je personeel is overwerkt. Ze worden inefficiënt en gaan fouten maken, met alle rampzalige gevolgen van dien.",
     queue_too_long_at_reception = "Er staan teveel mensen te wachten om een kamer toegewezen te krijgen door de Receptioniste. Plaats nog een Receptie en huur een Receptioniste bij.",
     queue_too_long_send_doctor = "De rij voor de %s is te lang. Is er daar wel een Arts aan het werk?",
-    handymen_tired = "Je Congi\137rges zijn erg moe. Laat ze uitrusten.",
+    handymen_tired = utf8 "Je Conciërges zijn erg moe. Laat ze uitrusten.",
     money_low = "Je hebt bijna geen geld meer!",
-    money_very_low_take_loan = "Je hebt amper geld meer. Je kunt een lening afsluiten, weet je.",
+    money_very_low_take_loan = "Je hebt amper geld over. Je kunt een lening afsluiten, weet je.",
     staff_unhappy = "Je personeel is ongelukkig. Geef ze een bonus of beter nog, geef ze een personeelskamer! Je kunt ook je beleid aanpassen in het Beleidscherm.",
-    no_patients_last_month = "Ik ben geschokt! Er is in de afgelopen maand geen enkele nieuwe pati\137nt binnengekomen.",
+    no_patients_last_month = utf8 "Ik ben geschokt! Er is in de afgelopen maand geen enkele nieuwe patiënt binnengekomen.",
     queues_too_long = "Je wachtrijen zijn te lang.",
     patient_stuck = "Er is iemand verdwaald. Plan je ziekenhuis beter uit.",
-    patients_too_hot = "De pati\137nten krijgen het te heet. Verwijder wat radiatoren, zet de verwarming wat lager of plaats meer frisdrankautomaten.",
+    patients_too_hot = utf8 "De patiënten krijgen het te heet. Verwijder wat radiatoren, zet de verwarming wat lager of plaats meer frisdrankautomaten.",
     doctors_tired = "Je Artsen zijn hartstikke moe. Laat ze onmiddelijk uitrusten.",
-    need_toilets = "Pati\137nten hebben toiletten nodig. Bouw ze op een plek waar mensen snel bij kunnen komen.",
-    machines_falling_apart = "Je apparatuur valt haast uit elkaar. Stuur er snel Congi\137rges op af!",
+    need_toilets = utf8 "Patiënten hebben toiletten nodig. Bouw ze op een plek waar mensen snel bij kunnen komen.",
+    machines_falling_apart = utf8 "Je apparatuur valt haast uit elkaar. Stuur er snel Conciërges op af!",
     nobody_cured_last_month = "Er is in de afgelopen maand helemaal niemand genezen.",
     patients_thirsty = "Mensen krijgen dorst. Misschien zou je wat frisdrankautomaten kunnen plaatsen.",
     nurses_tired = "Je Zusters zijn moe. Laat ze uitrusten.",
@@ -1471,19 +1487,19 @@ adviser = {
     many_killed = "Je hebt nu %d doden op je geweten. Je toch weet wel dat het de bedoeling is dat je ze geneest, he?",
     need_staffroom = "Bouw een personeelskamer zodat je werknemers kunnen uitrusten.",
     staff_too_hot = "Je personeel raakt oververhit. Zet de verwarming wat lager of verwijder radiatoren uit hun kamers.",
-    patients_unhappy = "Pati\137nten hebben geen hoge pet op van je ziekenhuis. Je zou iets aan hun omgeving kunnen doen.",
-    people_did_it_on_the_floor = "Enkele patienten konden het niet meer ophouden. Iemand zal het toch op moeten ruimen.",
-    patients_very_thirsty = "Patienten hebben echt dorst; als je niet snel drankmachines neerzet zullen veel patienten je ziekenhuis verlaten en naar huis gaan om cola te drinken.",
-    machinery_very_damaged = "Spoed! Zorg dat een conci\137rge je machines gaat repararen! Ze exploderen bijna!",
-    handymen_tired2 = "Je conci\137rges zijn totaal uitgeput, zorg dat ze meteen uit kunnen rusten.",
-    desperate_need_for_watering = "Je moet echt een conci\137rge inhuren om de planten water te geven.",
-    too_much_litter = "Er is een afvalprobleem, meer conci\137rges zouden hier tegen kunnen helpen.",
-    place_plants4 = "Vrolijk de pati\137nten op met wat planten in je ziekenhuis.",
-    change_priorities_to_plants = "Je moet de prioriteiten van je conci\137rges aanpassen zodat ze meer tijd besteden aan de planten.",
+    patients_unhappy = utf8 "Patiënten hebben geen hoge pet op van je ziekenhuis. Je zou iets aan hun omgeving kunnen doen.",
+    people_did_it_on_the_floor = utf8 "Sommige patiënten konden het niet meer ophouden. Iemand zal het toch op moeten ruimen.",
+    patients_very_thirsty = utf8 "Patiënten hebben echt dorst; als je niet snel drankmachines neerzet zullen veel patiënten je ziekenhuis verlaten en naar huis gaan om cola te drinken.",
+    machinery_very_damaged = utf8 "Spoed! Zorg dat een Conciërge je machines gaat repararen! Ze exploderen bijna!",
+    handymen_tired2 = utf8 "Je Conciërges zijn totaal uitgeput, zorg dat ze meteen uit kunnen rusten.",
+    desperate_need_for_watering = utf8 "Je moet echt een Conciërge inhuren om de planten water te geven.",
+    too_much_litter = utf8 "Er is een afvalprobleem, meer Conciërges zouden hier tegen kunnen helpen.",
+    place_plants4 = utf8 "Vrolijk de patiënten op met wat planten in je ziekenhuis.",
+    change_priorities_to_plants = utf8 "Je moet de prioriteiten van je Conciërges aanpassen zodat ze meer tijd besteden aan de planten.",
     finanical_trouble2 = "Zorg dat je wat inkomsten krijgt of je wordt ontslagen. Je zult het level verliezen als je nog %d verder in de min komt.",
-    litter_everywhere = "Er is overal afval. Zet er wat conci\137rges op.",
-    nurses_tired2 = "Je zusters zijn erg moe, zorg dat ze wat rust krijgen.",
-    plants_dying = "Je planten gaan dood: ze zijn wanhopig op zoek naar water. Zorg dat je meer conci\137rges erop zet want pati\137nten houden niet van dode planten.",
+    litter_everywhere = utf8 "Er ligt overal troep. Zet er wat Conciërges op.",
+    nurses_tired2 = "Je Zusters zijn erg moe, zorg dat ze wat rust krijgen.",
+    plants_dying = utf8 "Je planten gaan dood: ze zijn wanhopig op zoek naar water. Zorg dat je meer Conciërges erop zet want patiënten houden niet van dode planten.",
     reduce_staff_rest_threshold = "Verkort de tijd dat je personeel moet doorwerken tussen pauzes op het Beleid scherm, zodat ze wat vaker kunnen rusten. Het is maar een idee.",
     more_toilets = "Je hebt meer toiletten nodig. Mensen in de rij beginnen kabouters te kleien!",
     hospital_is_rubbish = "Mensen zeggen openlijk dat je ziekenhuis slecht is. Als je niet oppast zullen ze hun ziektes ergens anders mee naartoe nemen.",
@@ -1491,47 +1507,47 @@ adviser = {
     financial_trouble3 = "Je banksaldo is zorgelijk. Misschien moet je je inkomsten wat verhogen, je zit %d af van een faillissement.",
     build_toilet_now = "Bouw nu een toilet, mensen houden het niet meer! Niet lachen, dit is serieus.",
     more_benches = "Misschien moet je meer bankjes plaatsen, zieke mensen blijven niet graag staan",
-    many_epidemics = "Het lijkt erop dat er meer dan \130\130n epidemie tegelijk plaatsvind. Dit zou een enorme ramp kunnen worden dus doe er snel iets aan.",
+    many_epidemics = utf8 "Het lijkt erop dat er meer dan één epidemie tegelijk plaatsvind. Dit zou een enorme ramp kunnen worden dus doe er snel iets aan.",
     place_plants_to_keep_people = "Mensen gaan weg. Als je wat planten neerzet zou dat kunnen helpen.",
     patients_thirsty2 = "Mensen klagen over dorst. Je zou wat drankautomaten neer moeten zetten of bestaande automaten dichter bij de mensen moeten zetten.",
-    people_freezing = "Onvoorstelbaar. In deze tijd van centrale verwarming vriezen sommige pati\137nten dood. Bouw radiatoren om ze up te warmen en zet de thermostaat hoger.",
-    patients_very_cold = "Pati\137nten hebben het erg koud. Probeer de thermostaat hoger te zetten of zet meer radiatoren neer.",
+    people_freezing = utf8 "Onvoorstelbaar. In deze tijd van centrale verwarming vriezen sommige patiënten dood. Bouw radiatoren om ze up te warmen en zet de thermostaat hoger.",
+    patients_very_cold = utf8 "Patiënten hebben het erg koud. Probeer de thermostaat hoger te zetten of zet meer radiatoren neer.",
     build_toilets = "Bouw nu meteen een toilet of je zult iets onplezierigs zien, om over de stank nog maar te zwijgen.",
     place_plants2 = "Mensen lopen weg. Wat meer planten zou ze misschien op andere gedachten kunnen brengen.",
     staff_tired = "Je personeel is helemaal kapot. Als je ze niet laat uitrusten in een personeelskamer kunnen ze gek worden van de stress.",
-    place_plants3 = "Pati\137nten worden ongelukkig, zet wat meer planten neer om ze op te vrolijken.",
+    place_plants3 = utf8 "Patiënten worden ongelukkig, zet wat meer planten neer om ze op te vrolijken.",
     staff_unhappy2 = "Je personeel is over het algemeen ongelukkig, dat betekend dat ze binnenkort om een hoger salaris zullen vragen.",
     cash_low_consider_loan = "Je hoeveelheid cash is erg laag, heb je al eens aan een lening gedacht?",
-    financial_trouble = "Je zit zwaar in de financi\137le problemen, los die zo snel mogelijk op! Als je nog %d verliest zul je dit level weg hebben gegooid!",
-    doctors_tired2 = "Je doktoren zijn ongelooflijk moe, laat ze nu meteen rusten.",
-    patient_leaving = "Er gaat een pati\137nt weg. De reden? Je slecht draaiende ziekenhuis.",
-    machinery_damaged2 = "Je moet een conci\137rge aannemen om je machines te repareren.",
-    patients_leaving = "Pati\137nten gaan weg. Verbeter het ziekenhuis voor je bezoekers door bijvoorbeeld planten, bankjes en drankautomaten te plaatsen.",
+    financial_trouble = utf8 "Je zit zwaar in de financiële problemen, los die zo snel mogelijk op! Als je nog %d verliest zul je dit level weg hebben gegooid!",
+    doctors_tired2 = "Je doktoren zijn ongelofelijk moe, laat ze nu meteen rusten.",
+    patient_leaving = utf8 "Er gaat een patiënt weg. De reden? Je slecht draaiende ziekenhuis.",
+    machinery_damaged2 = utf8 "Je moet een Conciërge aannemen om je machines te repareren.",
+    patients_leaving = utf8 "Patiënten gaan weg. Verbeter het ziekenhuis voor je bezoekers door bijvoorbeeld planten, bankjes en drankautomaten te plaatsen.",
     epidemic_getting_serious = "Die besmettelijke ziekte is serieus. Je moet er snel iets aan doen!",
     machinery_damaged = "Repareer je machines snel. Het zal niet lang meer duren voordat ze uit elkaar gaan vallen.",
-    people_have_to_stand = "Ziekelijke mensen moeten blijven staan. Zorg dat ze ergens kunnen zitten.",
+    people_have_to_stand = "Zieke en zwakke mensen moeten blijven staan. Zorg dat ze ergens kunnen zitten.",
     build_staffroom = "Bouw meteen een personeelskamer. Je personeel werkt te hard en storten bijna in! Kom op!",
     machinery_slightly_damaged = "Je machines zijn enigszins beschadigd geraakt. Vergeet niet om ze zo af en toe te onderhouden.",
-    patients_getting_hot = "Pati\137nten hebben het te warm. Probeer de thermostaat wat lager te zetten of verwijder wat radiatoren.",
+    patients_getting_hot = utf8 "Patiënten hebben het te warm. Probeer de thermostaat wat lager te zetten of verwijder wat radiatoren.",
     machinery_deteriorating = "Je machines zijn zojuist behoorlijk achteruit gegaan doordat  ze te veel gebruikt worden. Hou een oogje in het zeil.",
-    litter_catastrophy = "Het afvalprobleem heeft epische proporties aangenomen. Trek een blik conci\137rges open en zet ze aan het werk!",
+    litter_catastrophy = utf8 "Het afvalprobleem heeft epische proporties aangenomen. Trek een blik Conciërges open en zet ze aan het werk!",
     staff_very_cold = "Personeel klaagt over de kou. Zet de thermostaat hoger of plaats meer radiatoren.",
     deal_with_epidemic_now = "Als je die epidemie niet snel oplost zul je de gevolgen moeten ondervinden. Aan het werk!",
-    patients_really_thirsty = "Pati\137nten hebben erg veel dorst. Plaats meer drankautomaten of verplaats bestaande automaten naar de langste rijen.",
-    some_litter = "Conci\137rges kunnen dat afval opruimen voordat het echt een probleem wordt.",
+    patients_really_thirsty = utf8 "Patiënten hebben erg veel dorst. Plaats meer drankautomaten of verplaats bestaande automaten naar de langste rijen.",
+    some_litter = utf8 "Conciërges kunnen die rommel opruimen voordat het echt een probleem wordt.",
     patients_annoyed = "Mensen hebben genoeg van de manier waarop je dit ziekenhuis bestuurd en ik kan ze geen ongelijk geven. Verbeter of verdwijn!",
     receptionists_tired2 = "Je receptionistes zijn erg vermoeid, laat ze zo snel mogelijk rusten.",
-	doctor_crazy_overwork = "Oh nee! Een van je artsen is overspannen door overwerk. Misschien komt hij er nog bovenop als je hem meteen laat rusten.",
+	doctor_crazy_overwork = "Oh nee! Een van je Artsen is overspannen door overwerk. Misschien komt hij er nog bovenop als je hem meteen laat rusten.",
 	falling_1 = "He! Daar kan ik niet om lachen, kijk uit waar je met die muis klikt; straks raken er mensen gewond!",
-	falling_2 = "Stop daarmee, zou jij dat leuk vinden?", --Stop messing about, how would you like it?
-	falling_3 = "Au, dat doet vast zeer, is er een dokter in de buurt?!", --Ouch, that had to hurt, someone call a Doctor!
+	falling_2 = "Stop daarmee, zou jij dat leuk vinden?",
+	falling_3 = "Au, dat doet vast zeer, is er een dokter in de buurt?!",
 	falling_4 = "Dit is een ziekenhuis, geen pretpark!",
-	falling_5 = "Dit is niet de plek om mensen omver te duwen, je ziet toch dat de ziek zijn?!", --This is not the place for knocking people over, they're ill you know
-	falling_6 = "Het is hier geen bowlingbaan, zieken horen niet zo behandeld te worden!", --This is not a bowling alley, sick people should not be treated like that
-	no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!", --You should build a reception desk and hire a receptionist at some point
-	no_desk_1 = "Als je wilt dat pati\137nten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen zodat ze haar werk kan doen!", --If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at
-	no_desk_2 = "Lekker gedaan, dit moet een nieuw record zijn: Bijna een jaar zonder pati\137nten! Als je hier manager wilt blijven huur dan nu een receptioniste in en bouw een receptiebalie waar ze kan werken!", --Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from
-	no_desk_3 = "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je pati\137nten gaat krijgen? Los het onmiddelijk op, en stop met dat gerommel!", --That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!
+	falling_5 = "Dit is niet de plek om mensen omver te duwen, je ziet toch dat de ziek zijn?!",
+	falling_6 = "Het is hier geen bowlingbaan! Zieken horen niet zo behandeld te worden!",
+	no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!",
+	no_desk_1 = utf8 "Als je wilt dat patiënten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen zodat ze haar werk kan doen!",
+	no_desk_2 = utf8 "Lekker gedaan, dit moet een nieuw record zijn: Bijna een jaar zonder patiënten! Als je hier manager wilt blijven huur dan nu een receptioniste in en bouw een receptiebalie waar ze kan werken!", 
+	no_desk_3 = utf8 "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je patiënten gaat krijgen? Los het onmiddelijk op, en stop met dat gerommel!",
 	cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in te huren.",
   },
   placement_info = {
@@ -1549,11 +1565,11 @@ adviser = {
     reception_cannot_place = "Je kunt daar geen Receptie plaatsen.",
   },
   praise = {
-    many_benches = "Pati\137nten hebben nu genoeg zitplaats. Netjes.",
-    many_plants = "Heerlijk. Je hebt planten zat. Dat zullen je pati\137nten fijn vinden.",
-    patients_cured = "%d pati\137nten genezen.",
+    many_benches = utf8 "Patiënten hebben nu genoeg zitplaats. Netjes.",
+    many_plants = utf8 "Heerlijk. Je hebt planten zat. Dat zullen je patiënten fijn vinden.",
+    patients_cured = utf8 "%d patiënten genezen.",
     plants_are_well = "Oh mooi. Je zorgt goed voor je planten, prachtig.",
-    few_have_to_stand = "Bijna niemand hoeft te blijven staan in jouw ziekenhuis. De pati\137nten zullen daar blij mee zijn",
+    few_have_to_stand = utf8 "Bijna niemand hoeft te blijven staan in jouw ziekenhuis. De patiënten zullen daar blij mee zijn",
     plenty_of_benches = "Er is voldoende zitplaats, dus dat is geen probleem",
     plants_thriving = "Erg goed. Je planten bloeien prachtig en zien er fantastisch uit. Als dat zo doorgaat kun je een prijs verwachten",
   },
@@ -1561,50 +1577,50 @@ adviser = {
     larger_rooms = "Grotere kamers strelen het ego van de personeel waardoor ze beter gaan werken.",
     extra_items = "Extra voorwerpen in de kamer zorgen voor comfort waardoor je personeel beter gaan werken.",
     epidemic = "Je hebt een besmettelijke ziekte in je ziekenhuis. Daar moet je meteen achteraan!",
-    promotion_to_doctor = "E\130n van je ASSISTENTEN is zojuist BASISARTS geworden",
+    promotion_to_doctor = utf8 "Eén van je ASSISTENTEN is zojuist BASISARTS geworden",
     emergency = "We hebben een noodgeval! Hup hup hup!",
-    patient_abducted = "E\130n van je pati\137nten wordt ontvoerd door aliens.",
-    first_cure = "Goed werk! Je hebt zojuist je eerste pati\137nt genezen.",
-    promotion_to_consultant = "E\130n van je BASISARTSEN is zojuist SPECIALIST geworden.",
-    handyman_adjust = "Je kunt de Congi\137rges effectiever laten werken door hun prioriteiten aan te passen.",
+    patient_abducted = utf8 "Eén van je patiënten wordt ontvoerd door aliens!",
+    first_cure = utf8 "Goed werk! Je hebt zojuist je eerste patiënt genezen.",
+    promotion_to_consultant = utf8 "Eén van je BASISARTSEN is zojuist SPECIALIST geworden.",
+    handyman_adjust = utf8 "Je kunt de Conciërges effectiever laten werken door hun prioriteiten aan te passen.",
     promotion_to_specialist = "Een van je Artsen is gepromoveerd tot %s.",
     initial_general_advice = {
       rats_have_arrived = "Ratten hebben zich in je ziekenhuis genesteld. Schiet ze kapot met je muis.",
-      autopsy_available = "De Auto-Autopsie Machine is uitgevonden. Als je een lastige pati\137nt hebt, kun je ze hiermee 'kwijtraken' en onderzoek doen op hun lichaam. Wees gewaarschuwd - deze machine is erg controversieel.",
+      autopsy_available = utf8 "De Auto-Autopsie Machine is uitgevonden. Als je een lastige patiënt hebt, kun je ze hiermee 'kwijtraken' en onderzoek doen op hun lichaam. Wees gewaarschuwd: deze machine is erg controversieel.",
       first_patients_thirsty = "Er zijn dorstige mensen in je ziekenhuis. Plaats een frisdrankautomaat.",
       research_now_available = "Je hebt je eerste Laboratorium gebouwd. Nu kun je naar het Onderzoekscherm gaan.",
       psychiatric_symbol = "Artsen die Psychiatrie hebben gestudeerd dragen het symbool: |",
       decrease_heating = "Mensen hebben het te heet in je ziekenhuis. Draai de verwarming wat lager. Dit kun je doen bij de Kaart.",
       surgeon_symbol = "Artsen die kunnen opereren dragen het symbool: {",
-      first_emergency = "Pati\137nten van een Noodgeval hebben een blauwe sirene boven hun hoofd. Genees ze voor ze sterven of de tijd is afgelopen.",
+      first_emergency = utf8 "Patiënten van een Noodgeval hebben een blauwe sirene boven hun hoofd. Genees ze voor ze sterven of de tijd is afgelopen.",
       first_epidemic = "Er is een epidemie gaande! Beslis of je het in de doofpot wil stoppen of wil opbiechten.",
       taking_your_staff = "Iemand probeert je personeel weg te stropen. Je zult moeten vechten om ze bij je te houden.",
       place_radiators = "Mensen in je ziekenhuis hebben het koud. Je kunt meer radiatoren in het Gangartikelenmenu kopen.",
-      epidemic_spreading = "Er waart een besmettelijke ziekte rond. Probeer de ge\139nfecteerde pati\137nten te genezen voor ze kunnen vertrekken.",
+      epidemic_spreading = utf8 "Er waart een besmettelijke ziekte rond. Probeer de geïnfecteerde patiënten te genezen voor ze kunnen vertrekken.",
       research_symbol = "Dokters die onderzoek kunnen doen dragen dit symbool: }",
-      machine_needs_repair = "Er is een apparaat dat gerepareerd moet worden. Zoek naar een rokend apparaat en klik erop. Klik dan op de Congi\137rgeknop.",
+      machine_needs_repair = utf8 "Er is een apparaat dat gerepareerd moet worden. Zoek naar een rokend apparaat en klik erop. Klik dan op de Conciërgeknop.",
       increase_heating = "Mensen hebben het koud. Zet de verwarming hoger in het Kaartscherm.",
-      first_VIP = "Straks komt er voor het eerst een VIP langs. Zorg ervoor dat de VIP geen onhygi\137nische dingen of ongelukkige pati\137nten ziet.",
+      first_VIP = utf8 "Straks komt er voor het eerst een VIP langs. Zorg ervoor dat de VIP geen onhygiënische dingen of ongelukkige patiënten ziet.",
     },
-    patient_leaving_too_expensive = "Een pati\137nt is vertrokken zonder te betalen voor je %s. Schijnbaar is het te duur.",
-    vip_arrived = "Let op! - %s is zojuist ge\132rriveerd! Zorg dat alles gladjes verloopt zodat hij tevreden is.",
+    patient_leaving_too_expensive = utf8 "Een patiënt is vertrokken zonder te betalen voor je %s. Schijnbaar is het te duur.",
+    vip_arrived = utf8 "Let op! - %s is zojuist geärriveerd! Zorg dat alles gladjes verloopt zodat hij tevreden is.",
     epidemic_health_inspector = "Nieuws van je epidemie is aangekomen bij het Ministerie van Volksgezondheid. Verwacht een bezoekje van de Inspectie.",
-    first_death = "Je hebt zojuist je eerste pati\137nt gedood. Hoe voelt het?",
-    pay_rise = "Iemand van de staf dreigt op te stappen. Kies of je hun eis inwilligt of ze ontslaat. Klik op het bericht linksonderin om te zien welk personeelslid dreigt ontslag te nemen.",
+    first_death = utf8 "Je hebt zojuist je eerste patiënt gedood. Hoe voelt dat?",
+    pay_rise = "Een personeelslid dreigt op te stappen. Kies of je de eis inwilligt of hem ontslaat. Klik op het bericht linksonderin om te zien welk personeelslid dreigt ontslag te nemen.",
     place_windows = "Ramen plaatsen zorgt voor lichtere kamers en doet het moraal van je werknemers goed.",
     fax_received = "Het icoontje dat zojuist in de linkeronderhoek omhoog is gekomen betekent dat er een belangrijk stuk informatie te lezen valt of dat er een beslissing moet worden genomen.",
   },
   build_advice = {
     placing_object_blocks_door = "Dat voorwerp daar plaatsen zou de toegang tot een deur blokkeren.",
     blueprint_would_block = "Met deze blauwdruk zou een andere kamer worden geblokkeerd. Probeer een andere grootte of een andere locatie!",
-    door_not_reachable = "Zo kunnen mensen niet bij een deur komen. Denk daar maar eens over na.",
+    door_not_reachable = "Zo kunnen mensen niet bij een deur komen. Hou je koppie erbij.",
     blueprint_invalid = "Dat is geen geldige blauwdruk.",
   },
   cheats = {
     th_cheat = "Gefeliciteerd, je hebt de cheats ontdekt!",
     hairyitis_cheat = "Pilitis cheat geactiveerd",
     roujin_on_cheat = "Roujin's uitdaging geactiveerd, succes...",
-    crazy_on_cheat = "Oh nee! Alle artsen zijn gek geworden!",
+    crazy_on_cheat = "Oh nee! Alle Artsen zijn gek geworden!",
     bloaty_off_cheat = "Plofkop cheat gedeactiveerd.",
     bloaty_cheat = "Plofkop cheat geactiveerd",
     crazy_off_cheat = "Pfoe.. de doktoren zijn weer tot zichzelf gekomen",
@@ -1620,12 +1636,12 @@ room_descriptions = {
   },
   gp = {
     [1] = "Spreekkamer//",
-    [2] = "Dit is het fundament van alle diagnoses. Nieuwe pati\137nten komen hier langs zodat er gekeken kan worden wat er met hen aan de hand is. Vanaf hier worden ze doorverwezen naar andere diagnostische kamers of naar een kamer waar ze genezen kunnen worden. Als de eerste Spreekkamer te druk wordt, zul je er waarschijnlijk nog \130\130n willen bouwen. Hoe groter de kamer, hoe meer voorwerpen je erin kwijt kunt, en hoe hoger de prestige voor de Arts in functie zal zijn. Dit geldt trouwens voor alle kamers.//",
+    [2] = utf8 "Dit is het fundament van alle diagnoses. Nieuwe patiënten komen hier langs zodat er gekeken kan worden wat er met hen aan de hand is. Vanaf hier worden ze doorverwezen naar andere diagnostische kamers of naar een kamer waar ze genezen kunnen worden. Als de eerste Spreekkamer te druk wordt, zul je er waarschijnlijk nog één willen bouwen. Hoe groter de kamer, hoe meer voorwerpen je erin kwijt kunt, en hoe hoger de prestige voor de Arts in functie zal zijn. Dit geldt trouwens voor alle kamers.//",
     [3] = "De Spreekkamer wordt gebruikt door een Arts. ",
   },
   fracture_clinic = {
     [1] = "Gipskamer//",
-    [2] = "Pati\137nten die de pech hebben een Botfactuur te hebben opgelopen. De Gipsverwijderaar gebruikt krachtige industri\137le lasers om verhard gips weg te snijden, met slechts een kleine martelgang voor de pati\137nt.//",
+    [2] = utf8 "Patiënten die de pech hebben een Botfactuur te hebben opgelopen. De Gipsverwijderaar gebruikt krachtige industriële lasers om verhard gips weg te snijden, met slechts een kleine martelgang voor de patiënt.//",
     [3] = "De Gipskamer heeft een Zuster nodig. Het moet ook eens in de zoveel tijd onderhouden worden. ",
   },
   tv_room = {
@@ -1633,42 +1649,42 @@ room_descriptions = {
   },
   inflation = {
     [1] = "Inflatiekliniek//",
-    [2] = "Pati\137nten met de pijnlijke doch grappige Plofkop worden naar de Inflatie Kliniek gestuurd, waar het opgeblazen hoofd wordt doorgeprikt en meteen weer opgeblazen tot de juiste luchtdruk is bereikt.//",
-    [3] = "De Inflatiekliniek heeft een Arts nodig. Het moet ook in de gaten worden gehouden door een Congi\137rge. ",
+    [2] = utf8 "Patiënten met de pijnlijke doch grappige Plofkop worden naar de Inflatie Kliniek gestuurd, waar het opgeblazen hoofd wordt doorgeprikt en meteen weer opgeblazen tot de juiste luchtdruk is bereikt.//",
+    [3] = utf8 "De Inflatiekliniek heeft een Arts nodig. Het moet ook in de gaten worden gehouden door een Conciërge. ",
   },
   jelly_vat = {
     [1] = "Gelatinekliniek//",
-    [2] = "Pati\137nten die met tot de lachwekkende ziekte Gelatinis zijn overgeleverd blubberen zichzelf naar de Gelatine Kliniek, waar ze in een Gelatinetank worden geplaatst. Dit geneest ze op een manier die de medische wetenschap nog niet helemaal duidelijk is.//",
-    [3] = "De Gelatine Kliniek heeft een Arts nodig, en het waakzame oog van een Congi\137rge voor onderhoud. ",
+    [2] = utf8 "Patiënten die tot de lachwekkende ziekte Gelatinis zijn overgeleverd blubberen zichzelf naar de Gelatine Kliniek, waar ze in een Gelatinetank worden geplaatst. Dit geneest ze op een manier die zelfs de medische wetenschap nog niet helemaal duidelijk is.//",
+    [3] = utf8 "De Gelatine Kliniek heeft een Arts nodig, en het waakzame oog van een Conciërge voor onderhoud. ",
   },
   scanner = {
     [1] = "Scanner//",
-    [2] = "Met de moderne Scanner kan er een nauwkeurige diagnose gesteld worden. Wanneer de diagnose is afgerond gaat de pati\137nt weer naar de Spreekkamer voor verdere behandelingen.//",
+    [2] = utf8 "Met de moderne Scanner kan er een nauwkeurige diagnose gesteld worden. Wanneer de diagnose is afgerond gaat de patiënt weer naar de Spreekkamer voor verdere behandelingen.//",
     [3] = "De Scanner heeft zowel een Arts als onderhoud nodig. ",
   },
   blood_machine = {
     [1] = "Bloedmachine//",
-    [2] = "De Bloedmachine is een diagnosemachine die de bloedcellen van een pati\137nt analyseert om te zien wat er mis is.//",
+    [2] = utf8 "De Bloedmachine is een diagnosemachine die de bloedcellen van een patiënt analyseert om te zien wat er mis is.//",
     [3] = "De Bloedmachine wordt gebruikt door een Arts. Het heeft ook onderhoud nodig. ",
   },
   pharmacy = {
     [1] = "Apotheek//",
-    [2] = "Pati\137nten die behandeld worden met een medicinaal drankje brengen een bezoekje aan de Apotheek. Hoe meer geneesmiddelen er worden uitgevonden, hoe drukker het hier zal worden. Waarschijnlijk zul je later nog een Apotheek willen bouwen.//",
+    [2] = utf8 "Patiënten die behandeld worden met een medicinaal drankje brengen een bezoekje aan de Apotheek. Hoe meer geneesmiddelen er worden uitgevonden, hoe drukker het hier zal worden. Waarschijnlijk zul je later nog een Apotheek willen bouwen.//",
     [3] = "Alleen Zusters kunnen in een Apotheek werken. ",
   },
   cardiogram = {
     [1] = "Cardio//",
-    [2] = "Pati\137nten gaan hier naar toe voor controle en diagnose. Daarna gaan ze terug naar de Spreekkamer om zich te laten behandelen.",
+    [2] = utf8 "Patiënten gaan hier naar toe voor controle en diagnose. Daarna gaan ze terug naar de Spreekkamer om zich te laten behandelen.",
     [3] = "De Cardio heeft een Arts en onderhoud nodig. ",
   },
   ward = {
     [1] = "Slaapzaal//",
-    [2] = "Pati\137nten verblijven hier kort voor observatie door een Zuster. Ze rusten hier ook uit als ze zich klaar moeten maken voor een operatie.//",
+    [2] = utf8 "Patiënten verblijven hier kort voor observatie door een Zuster. Ze rusten hier ook uit als ze zich klaar moeten maken voor een operatie.//",
     [3] = "De Slaapzaal heeft een Zuster nodig. ",
   },
   psych = {
     [1] = "Psychiatrie//",
-    [2] = "Pati\137nten die een psychisch probleem hebben worden naar de Psychiatrie gestuurd voor therapie. Psychiaters kunnen ook diagnoses stellen. Als er een pati\137nt langskomt die aan een geestelijk probleem lijdt, kunnen ze met behulp van de trouwe ligbank de pati\137nt helpen.//",
+    [2] = utf8 "Patiënten die een psychisch probleem hebben worden naar de Psychiatrie gestuurd voor therapie. Psychiaters kunnen ook diagnoses stellen. Als er een patiënt langskomt die aan een geestelijk probleem lijdt, kunnen ze met behulp van de trouwe ligbank de patiënt helpen.//",
     [3] = "De Psychiatrie heeft een Arts nodig die een diploma heeft voor Psychiater. ",
   },
   staff_room = {
@@ -1677,7 +1693,7 @@ room_descriptions = {
   },
   operating_theatre = {
     [1] = "Operatiekamer//",
-    [2] = "De Operatiekamer is onmisbaar in een ziekenhuis. Pati\137nten met verschillende lichamelijke kwalen kunnen hier worden ge\148pereerd door twee chirurgen. Het is van belang dat de Operatiekamer groot genoeg is, en dat de juiste apparatuur aanwezig is.//",
+    [2] = utf8 "De Operatiekamer is onmisbaar in een ziekenhuis. Patiënten met verschillende lichamelijke kwalen kunnen hier worden geopereerd door twee chirurgen. Het is van belang dat de Operatiekamer groot genoeg is, en dat de juiste apparatuur aanwezig is.//",
     [3] = "Om de Operatiekamer te kunnen gebruiken moet je twee Chirurgen inhuren. ",
   },
   training = {
@@ -1686,70 +1702,70 @@ room_descriptions = {
     [3] = "Het Klaslokaal heeft een Specialist en leerlingen nodig. ",
   },
   dna_fixer = {
-    [1] = "DNA Kliniek//",
-    [2] = "Pati\137nten waarmee gerotzooid is door aliens van een andere wereld moeten hun DNA laten vervangen in deze kamer. De DNA Reparatiemachine is een ingewikkeld en duur instrument en er zal altijd, gewoon voor het geval dat, een brandblusser bij de hand gehouden moeten worden.//",
-    [3] = "De DNA Reperatiemachine heeft onderhoud nodig van een Congi\137rge. Alleen een Arts met met een Onderzoeksgraad kan van deze machine gebruik maken. ",
+    [1] = "DNA Hersteller//",
+    [2] = utf8 "Patiënten waarmee gerotzooid is door bewoners van een andere wereld moeten hun DNA laten vervangen in deze kamer. De DNA Reparatiemachine is een ingewikkeld en duur instrument en er zal altijd, gewoon voor het geval dat, een brandblusser bij de hand gehouden moeten worden.//",
+    [3] = utf8 "De DNA Reperatiemachine heeft onderhoud nodig van een Conciërge. Alleen een Arts met met een Onderzoeksgraad kan van deze machine gebruik maken. ",
   },
   research = {
     [1] = "Laboratorium//",
-    [2] = "Hier worden nieuwe medicijnen en behandelingen uitgevonden. Dit belangrijke onderdeel van je ziekenhuis zal je beter in staat stellen je pati\137nten te genezen met als resultaat dat er meer pati\137nten zijn die je ziekenhuis gezond zullen verlaten.//",
+    [2] = utf8 "Hier worden nieuwe medicijnen en behandelingen uitgevonden. Dit belangrijke onderdeel van je ziekenhuis zal je beter in staat stellen je patiënten te genezen met als resultaat dat er meer patiënten zijn die je ziekenhuis gezond zullen verlaten.//",
     [3] = "Het Laboratorium heeft een Arts met een Onderzoeksgraad nodig. ",
   },
   hair_restoration = {
     [1] = "Haarrestauratiekliniek//",
-    [2] = "Pati\137nten die last hebben van extreme Kaalheid worden naar de Haarrestaurateur gestuurd. Een Arts zal met deze machine het hoofd van de pati\137nt van een frisse, nieuwe coupe voorzien.//",
-    [3] = "De Haarrestauratie heeft een Arts nodig. Ook moet een Congi\137rge zo nu en dan wat onderhoud plegen. ",
+    [2] = utf8 "Patiënten die last hebben van extreme Kaalheid worden naar de Haarrestaurateur gestuurd. Een Arts zal met deze machine het hoofd van de patiënt van een frisse, nieuwe coupe voorzien.//",
+    [3] = utf8 "De Haarrestauratie heeft een Arts nodig. Ook moet een Conciërge zo nu en dan wat onderhoud plegen. ",
   },
   general_diag = {
     [1] = "Algemene Diagnose//",
-    [2] = "Pati\137nten die een verdere diagnose moeten ondergaan worden hiernaartoe gestuurd voor controle. Als men er in de Spreekkamer niet achter komt wat er mis is, zal dit na de Algemene Diagnose vaak wel lukken. Na deze kamer gaan ze terug naar de Spreekkamer om de resultaten te laten analyseren.//",
+    [2] = utf8 "Patiënten die een verdere diagnose moeten ondergaan worden hiernaartoe gestuurd voor controle. Als men er in de Spreekkamer niet achter komt wat er mis is, zal dit na de Algemene Diagnose vaak wel lukken. Na deze kamer gaan ze terug naar de Spreekkamer om de resultaten te laten analyseren.//",
     [3] = "Algemene Diagnose heeft alleen een Arts nodig. ",
   },
   electrolysis = {
     [1] = "Electrolyse//",
-    [2] = "Pati\137nten met Pilitis worden naar deze kamer gestuurd waar een speciale machine, de Electrolyseerder, de haren uitrukt en de pori\137n electrisch sluit met een substantie die veel weg heeft van beton.//",
-    [3] = "De Electrolysekamer wordt gebruikt door een Arts en onderhouden door een Congi\137rge. ",
+    [2] = utf8 "Patiënten met Pilitis worden naar deze kamer gestuurd waar een speciale machine, de Electrolyseerder, de haren uitrukt en de poriën electrisch sluit met een substantie die veel weg heeft van beton.//",
+    [3] = utf8 "De Electrolysekamer wordt gebruikt door een Arts en onderhouden door een Conciërge. ",
   },
   slack_tongue = {
     [1] = "Lamme Tongkliniek//",
-    [2] = "Pati\137nten waarvan in de Spreekkamer wordt vastgesteld dat ze lijden aan Lamme Tong, worden naar deze kliniek gestuurd voor een behandeling. De Arts gebruikt hier een technisch hoogstandje om de tong uit te rekken en het overtollige spierweefsel weg te snijden. Hierna mag de pati\137nt weer volledig gezond zijn of haar weg naar huis vinden.//",
-    [3] = "De Lamme Tongkliniek heeft een Arts nodig. Het moet ook zo nu en dan onderhouden worden door een Congi\137rge. ",
+    [2] = utf8 "Patiënten waarvan in de Spreekkamer wordt vastgesteld dat ze lijden aan Lamme Tong, worden naar deze kliniek gestuurd voor een behandeling. De Arts gebruikt hier een technisch hoogstandje om de tong uit te rekken en het overtollige spierweefsel weg te snijden. Hierna mag de patiënt weer volledig gezond zijn of haar weg naar huis vinden.//",
+    [3] = utf8 "De Lamme Tongkliniek heeft een Arts nodig. Het moet ook zo nu en dan onderhouden worden door een Conciërge. ",
   },
   toilets = {
     [1] = "Toiletten//",
-    [2] = "Ook pati\137nten voelen af en toe in hun binnenste dat het tijd is om een bruine trui te breien. Dit kunnen ze doen op je comfortabele toiletten. Als je veel bezoekers verwacht, kun je extra wasbakken en toiletten bouwen. Soms zul je meerdere faciliteiten willen bouwen verspreid over het ziekenhuis, zodat iedereen snel zijn behoefte kan doen. ",
+    [2] = utf8 "Ook patiënten voelen af en toe in hun binnenste dat het tijd is om een bruine trui te breien. Dit kunnen ze doen op je comfortabele toiletten. Als je veel bezoekers verwacht, kun je extra wasbakken en toiletten bouwen. Soms zul je meerdere faciliteiten willen bouwen verspreid over het ziekenhuis, zodat iedereen snel zijn behoefte kan doen. ",
   },
   no_room = {
     [1] = "",
   },
   x_ray = {
-    [1] = "R\153ntgenkamer//",
-    [2] = "Het R\153ntgenapparaat maakt met speciale stralen een foto van het binnenste van de pati\137nt zodat ze een goed idee hebben wat er met hem aan de hand is.//",
-    [3] = "De R\153ntgenkamer heeft een Arts nodig. Ook moet het af en toe nagekeken worden door een Congi\137rge. ",
+    [1] = utf8 "Röntgenkamer//",
+    [2] = utf8 "Het Röntgenapparaat maakt met speciale stralen een foto van het binnenste van de patiënt zodat ze een goed idee hebben wat er met hem aan de hand is.//",
+    [3] = utf8 "De Röntgenkamer heeft een Arts nodig. Ook moet het af en toe nagekeken worden door een Conciërge. ",
   },
   decontamination = {
     [1] = "Ontsmettingskliniek//",
-    [2] = "Pati\137nten die aan Straling zijn blootgesteld worden snel naar de Ontsmettingskliniek doorverwezen. Deze kamer heeft een Ontsmettingscabine die de pati\137nt reinigt van al die verschrikkelijke radioactiviteit.//",
-    [3] = "De Ontsmettingscabine heeft een Arts nodig voor gebruik en een Congi\137rge voor onderhoud. ",
+    [2] = utf8 "Patiënten die aan Straling zijn blootgesteld worden snel naar de Ontsmettingskliniek doorverwezen. Deze kamer heeft een Ontsmettingscabine die de patiënt reinigt van al die verschrikkelijke radioactiviteit.//",
+    [3] = utf8 "De Ontsmettingscabine heeft een Arts nodig voor gebruik en een Conciërge voor onderhoud. ",
   },
 }
 introduction_texts = {
   level17 = {
-    [1] = "Nog een laatste waarschuwing - hou een oogje op je Reputatie - dat is namelijk wat pati\137nten van heinde en verre naar je ziekenhuis laat komen. ",
+    [1] = utf8 "Nog een laatste waarschuwing - hou een oogje op je Reputatie - dat is namelijk wat patiënten van heinde en verre naar je ziekenhuis laat komen. ",
     [2] = "Als je niet teveel mensen doodt en ze redelijk gelukkig houdt, zou je niet al teveel problemen moeten hebben met dit level!//",
-    [3] = "En nu mag je het zelf opknappen. Veel success enzo.",
+    [3] = "En nu mag je het zelf opknappen. Veel success ermee.",
   },
   level1 = {
     [1] = "Welkom in je eerste ziekenhuis!",
     [2] = "Zorg dat de boel op gang komt door een Receptie te plaatsen en een Spreekkamer te bouwen. Neem ook een Receptioniste en een Arts in dienst. ",
     [3] = "Wacht dan tot er mensen langskomen.",
     [4] = "Het is een goed idee om een Psychiatrische Afdeling te bouwen en een Arts in te huren met de correcte kwalificaties. ",
-    [5] = "Een Apotheek en een Zuster zijn essentieel voor het genezen van je pati\137nten. ",
+    [5] = utf8 "Een Apotheek en een Zuster zijn essentieel voor het genezen van je patiënten. ",
     [6] = "Kijk uit voor voor ernstige gevallen van Plofkop. Een Inflatiekamer lost deze probleempjes op. ",
     [7] = "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
   },
   level9 = {
-    [1] = "Nu je de kas van het Ministerie flink hebt gespekt en de Minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke cli\137nten geeft. ",
+    [1] = utf8 "Nu je de kas van het Ministerie flink hebt gespekt en de Minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke cliënten geeft. ",
     [2] = "Verwacht dat er een boel problemen de kop opsteken.",
     [3] = "Als je genoeg kamers en een goed getrainde staf hebt, zul je die problemen makkelijk het hoofd moeten kunnen bieden. ",
     [4] = "Je ziekenhuis moet uiteindelijk $200,000 waard zijn. Verzamel ook een comfortabele $400.000 op je bankrekening. ",
@@ -1757,7 +1773,7 @@ introduction_texts = {
   },
   level2 = {
     [1] = "Er zijn hier in de omgeving een stuk meer ziektes. ",
-    [2] = "Zet je ziekenhuis zo op dat je de grotere hoeveelheid pati\137nten kunt behapstukken en bouw onderweg nog een Laboratorium. ",
+    [2] = utf8 "Zet je ziekenhuis zo op dat je de grotere hoeveelheid patiënten kunt behapstukken en bouw onderweg nog een Laboratorium. ",
     [3] = "Hou je gelegenheid schoon en je reputatie zo hoog mogelijk. Je zult te maken krijgen met ziektes zoals Lamme Tong, dus je hebt een Lamme Tongkliniek nodig. ",
     [4] = "Je hebt ook een Cardio nodig zodat je betere diagnoses kunt stellen en nieuwe ziektes kunt ontdekken. ",
     [5] = "Beide kamers moeten worden onderzocht voor je ze kunt bouwen. Je kunt nu ook extra gebouwen kopen om je ziekenhuis uit te breiden. Gebruik hier het Kaartscherm voor. ",
@@ -1776,14 +1792,14 @@ introduction_texts = {
     [4] = "Daarbij is je ziekenhuis gebouwd op de San Androide-breuk. ",
     [5] = "Aardbevingen kunnen dus elk moment toeslaan. ",
     [6] = "Deze zullen je machines beschadigen en je goedlopende ziekenhuis flink verstoren. ",
-    [7] = "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 op je bankrekening. Zorg ook dat je 200 pati\137nten geneest.",
+    [7] = utf8 "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 op je bankrekening. Zorg ook dat je 200 patiënten geneest.",
   },
   level4 = {
-    [1] = "Hou al je pati\137nten tevreden en werk ze zo effici\137nt mogelijk af. Voorkom sterfgevallen zoveel mogelijk.",
+    [1] = utf8 "Hou al je patiënten tevreden en werk ze zo efficiënt mogelijk af. Voorkom sterfgevallen zoveel mogelijk.",
     [2] = "Je reputatie staat op het spel, dus hou die zo hoog mogelijk. ",
     [3] = "Maak je niet al teveel zorgen over geld - dat komt wel als die o zo belangrijke reputatie groeit. ",
     [4] = "Je kunt nu je ook Artsen trainen zodat ze beter gekwalificeerd zullen zijn. ",
-    [5] = "Waarschijnlijk zul je heel wat pati\137nten tegenkomen die nogal doorzichtig zijn. ",
+    [5] = utf8 "Waarschijnlijk zul je heel wat patiënten tegenkomen die nogal doorzichtig zijn. ",
     [6] = "Bouw je reputatie op tot deze de 500 heeft bereikt.",
   },
   
@@ -1804,7 +1820,7 @@ introduction_texts = {
     [3] = "door meerdere diagnostische kamers te bouwen zoals de Algemene Diagnose.",
   },
   level8 = {
-    [1] = "Het is aan jou om het meeste efficiente ziekenhuis op te zetten voor zo weinig mogelijk geld. ",
+    [1] = utf8 "Het is aan jou om het meeste efficiënte ziekenhuis op te zetten voor zo weinig mogelijk geld. ",
     [2] = "De mensen zitten hier goed in de slappe was, dus pers zoveel mogelijk geld uit ze als mogelijk is. ",
     [3] = "Ja, mensen genezen is heel leuk, maar je hebt het geld dat ze binnenbrengen echt NODIG. ",
     [4] = "Schudt die zieke mensen dus maar flink uit. ",
@@ -1812,18 +1828,18 @@ introduction_texts = {
   },
   level13 = {
     [1] = "Je fantastische werk als directeur is ondertussen bij de Speciale Geheime Divisie van de Geheime Speciale Dienst bekend. ",
-    [2] = "Ze hebben een bonus voor je; er is een ziekenhuis ge\137nfecteerd met ratten en ze hebben een echte Terminator nodig. ",
-    [3] = "Schiet zoveel mogelijk ratten voordat de Congi\137rges de boel hebben opgeruimd. ",
+    [2] = utf8 "Ze hebben een bonus voor je; er is een ziekenhuis geïnfecteerd met ratten en ze hebben een echte Terminator nodig. ",
+    [3] = utf8 "Vermorzel zoveel mogelijk ratten voordat de Conciërges de boel hebben opgeruimd. ",
     [4] = "Denk je dat je die taak aankunt?",
   },
   level16 = {
-    [1] = "Zodra je wat diagnoses hebt gesteld zul je behandelkamers en klinieken moeten bouwen om voor de mensen te zorgen. Een goede om mee te ",
-    [2] = "beginnen is de Apotheek. Je moet ook een Zuster inhuren zodat ze de verschillende medicijnen kan toedienen.",
+    [1] = "Zodra je wat diagnoses hebt gesteld zul je behandelkamers en klinieken moeten bouwen om voor de mensen te zorgen. Een goede om mee te beginnen is de Apotheek. ",
+    [2] = "Je moet ook een Zuster inhuren zodat ze de verschillende medicijnen kan toedienen.",
   },
   level6 = {
     [1] = "Gebruik al je kennis om je ziekenhuis soepel te laten draaien, een gezonde winst te maken en alle ziektes te genezen die de mensen met zich meedragen. ",
-    [2] = "Wees je ervan bewust dat de atmosfeer hier erg geschikt is voor het overdragen van bacteri\137n en infecties. ",
-    [3] = "Hou je ziekenhuis dus schoon, tenzij je een lange rits van epidemie\137n onder je pati\137nten wilt brengen. ",
+    [2] = utf8 "Wees je ervan bewust dat de atmosfeer hier erg geschikt is voor het overdragen van bacteriën en infecties. ",
+    [3] = utf8 "Hou je ziekenhuis dus schoon, tenzij je een lange rits van epidemieën onder je patiënten wilt brengen. ",
     [4] = "Zorg ervoor dat je $150.000 verdient en dat je ziekenhuis meer dan $140.000 waard is.",
   },
   level12 = {
@@ -1838,13 +1854,13 @@ introduction_texts = {
     [2] = "Het Ministerie van Gezondheid vraagt een gezonde winst van je. ",
     [3] = "Je zult eerst een goede reputatie moeten opbouwen, maar schakel zodra je ziekenhuis volloopt over op zoveel mogelijk geld binnenhalen. ",
     [4] = "Er kunnen zich ook Noodgevallen voordoen. ",
-    [5] = "Dit zijn gevallen waarin er meerdere pati\137nten binnenkomen met dezelfde ziekte. ",
+    [5] = utf8 "Dit zijn gevallen waarin er meerdere patiënten binnenkomen met dezelfde ziekte. ",
     [6] = "Als je ze allemaal binnen een bepaalde tijd geneest, zit er een vette bonus aan vast en gaat je reputatie erop vooruit. ",
     [7] = "Ziektes als het King Complex kunnen voorkomen en er wordt aangeraden om wat geld opzij te zetten voor een Operatiekamer in de buurt van een Slaapzaal. ",
     [8] = "Verdien $20.000 om het level te halen.",
   },
   level10 = {
-    [1] = "Het Ministerie vraagt nu niet alleen dat je alle ziektes in deze buurt aanpakt, maar ook dat je je concentreert op de effici\137ntie van je medicijnen. ",
+    [1] = utf8 "Het Ministerie vraagt nu niet alleen dat je alle ziektes in deze buurt aanpakt, maar ook dat je je concentreert op de efficiëntie van je medicijnen. ",
     [2] = "Er zijn wat klachten binnengekomen van Ofziek, de Waakhond van de Gezondheidszorg, dus als je goed over wil komen, zorg je ervoor dat je medicijnen goed werken. ",
     [3] = "Zorg ook dat er niets te klagen valt over je ziekenhuis zelf. Hou die sterfgevallen zeldzaam. ",
     [4] = "Hint: Hou wat ruimte vrij voor een Gelatinetank. ",
@@ -1863,10 +1879,10 @@ introduction_texts = {
   },
   demo = {
     [1] = "Welkom in het demo ziekenhuis!",
-    [2] = "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, er is echter meer dan genoeg te doen om je voorlopig bezig te houden!",
+    [2] = "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, maar er is meer dan genoeg te doen om je voorlopig bezig te houden!",
     [3] = "Je zult verschillende kwalen tegenkomen die verschillende ruimtes nodig hebben om genezen te worden, af en toe kunnen zich noodgevallen voordoen, en je zult nieuwe ruimtes uit moeten vinden met het Laboratorium",
-    [4] = "Jouw doal is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patienten geneesd",
-    [5] = "Zorg er voor dat je reputatie niet lager wordt dan 300 and dat je niet meer dna 40% van je patienten vermoord, je zult dan ontslagen worden!",
+    [4] = utf8 "Jouw doel is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patiënten geneest",
+    [5] = utf8 "Zorg er voor dat je reputatie niet lager wordt dan 300 en dat je niet meer dan 40% van je patiënten vermoord, anders zal je ontslagen worden!",
     [6] = "Succes!",
   },
 }
@@ -1936,18 +1952,18 @@ humanoid_name_ends = {
 vip_names = {
   [1] = "De Burgemeester van Lagerzand",
   [2] = "Marko Boerzaato",
-  [3] = "Koning Filip van Belgi\137",
-  [4] = "Aung Sang Su Kyi, de Noord-Koreaanse Oppositieleider",
-  [5] = "de helderziende Zomanda",
-  [6] = "de schrijver Jan Volkerts",
+  [3] = utf8 "Koning Filip van België",
+  [4] = "Aung Sang Su Kyi, de Myanmarese Oppositieleidster",
+  [5] = "De helderziende Zomanda",
+  [6] = "De schrijver Jan Volkerts",
   [7] = "Jan Peter Bakellende",
   [8] = "Hans Spreeuwen",
-  [9] = "een Eredivise voetballer",
+  [9] = "Een Eredivise voetballer",
   [10] = "Albert Zweijn",
   health_minister = "de Minister van Gezondheid",
 }
 custom_game_window = {
-  caption = "Eigen Level",
+  caption = "Los Level",
   free_build = "Vrij bouwen",
 }
 transactions = {
@@ -1991,8 +2007,8 @@ transactions = {
 letter = {
   [1] = {
     [1] = "Beste %s//",
-    [2] = "Fantastisch! Je hebt dit ziekenhuis goed onder controle gehouden. Wij hoge pieten van het Ministerie van Gezondheid zouden graag willen weten of je ge\139nteresseerd bent in een groter project. Wij denken dat je een perfecte kandidaat bent voor een andere locatie. Het salaris is $%d. Denk er maar eens over na.//",
-    [3] = "Ben je ge\139nteresseerd in een baan in het %s-ziekenhuis?",
+    [2] = utf8 "Fantastisch! Je hebt dit ziekenhuis goed onder controle gehouden. Wij hoge pieten van het Ministerie van Gezondheid zouden graag willen weten of je geïnteresseerd bent in een groter project. Wij denken dat je een perfecte kandidaat bent voor een andere locatie. Het salaris is $%d. Denk er maar eens over na.//",
+    [3] = utf8 "Ben je geïnteresseerd in een baan in het %s-ziekenhuis?",
   },
   [2] = {
     [1] = "Beste %s//",
@@ -2007,7 +2023,7 @@ letter = {
   [4] = {
     [1] = "Beste %s//",
     [2] = "Gefeliciteerd! Wij van het Ministerie zijn erg onder de indruk van je kundigheid met ziekenhuizen. Je bent zeker weten een ster in de gezondheidszorg. Toch denken we dat je voorkeur uitgaat naar een iets moeilijkere positie. Je zou een salaris van $%d krijgen, maar de keuze is helemaal aan jou.//",
-    [3] = "Ben je ge\139nteresseerd in werken in het zieken huis bij %s?",
+    [3] = utf8 "Ben je geïnteresseerd in werken in het ziekenhuis bij %s?",
   },
   [5] = {
     [1] = "Beste %s//",
@@ -2016,7 +2032,7 @@ letter = {
   },
   [6] = {
     [1] = "Beste %s//",
-    [2] = "Gegroet. We weten hoe gelukkig je bent met dit prachtige instituut, maar waarschijnlijk zou je eens over de voortgang van je carri\138re moeten nadenken. Je zult beschikken over een salaris van $%d als je besluit te verhuizen. Het is het overdenken waard.//",
+    [2] = utf8 "Gegroet. We weten hoe gelukkig je bent met dit prachtige instituut, maar waarschijnlijk zou je eens over de voortgang van je carriëre moeten nadenken. Je zult beschikken over een salaris van $%d als je besluit te verhuizen. Het is het overdenken waard.//",
     [3] = "Wil je een positie in het %s-ziekenhuis?",
   },
   [7] = {
@@ -2043,18 +2059,18 @@ letter = {
   },
   [11] = {
     [1] = "Beste %s//",
-    [2] = "Je hebt een voorbeeldige carri\138re achter de rug en je bent een inspiratie voor ons allen. Hartelijk bedankt voor het geweldige werk dat je hebt gedaan in alle ziekenhuizen waar we je over hebben aagestald. We willen je eren met een levenslang salaris van $%d als je ons helpt door in een offici\137le cabrio van stad naar stad te reizen waar je lezingen geeft over hoe je zo veel zo snel voor elkaar hebt gebokst.//",
+    [2] = utf8 "Je hebt een voorbeeldige carriëre achter de rug en je bent een inspiratie voor ons allen. Hartelijk bedankt voor het geweldige werk dat je hebt gedaan in alle ziekenhuizen waar we je over hebben aagestald. We willen je eren met een levenslang salaris van $%d als je ons helpt door in een officiële cabrio van stad naar stad te reizen waar je lezingen geeft over hoe je zo veel zo snel voor elkaar hebt gebokst.//",
     [3] = "Je bent een voorbeeld voor elk verstandig mens, en iedereen ter wereld, zonder uitzondering, ziet je als een geschenk uit de hemel.//",
     [4] = "",
   },
   [12] = {
     [1] = "Beste %s//",
-    [2] = "Je succesvolle carri\137re naar de beste ziekenhuisdirecteur sinds Mozes is tot een einde gekomen. De impact op het knusse wereldje van gezondheidszorg is echter zo groot geweest dat het Ministerie je graag een salaris van $%d wil aanbieden om in onze naam festivals te openen, schepen te lanceren en in praatprogramma's te verschijnen. De hele wereld kijkt uit naar je eerste verschijning, en het zou fantastische PR zijn voor ons allemaal!//",
+    [2] = utf8 "Je succesvolle carriëre naar de beste ziekenhuisdirecteur sinds Mozes is tot een einde gekomen. De impact op het knusse wereldje van gezondheidszorg is echter zo groot geweest dat het Ministerie je graag een salaris van $%d wil aanbieden om in onze naam festivals te openen, schepen te dopen en in praatprogramma's te verschijnen. De hele wereld kijkt uit naar je eerste verschijning, en het zou fantastische PR zijn voor ons allemaal!//",
     [3] = "Accepteer asjeblieft deze positie. Het werk is niet zwaar en we geven je een auto en een politie escorte waar je ook gaat.//",
     [4] = "",
   },
   dear_player = "Beste %s",
-  custom_level_completed = "Goed werk! Je hebt alle doelen voor dit Eigen Level behaald!",
+  custom_level_completed = "Goed werk! Je hebt alle doelen voor dit level behaald!",
   return_to_main_menu = "Wil je teruggaan naar het hoofdmenu of wil je doorspelen?",
 }
 install = {
@@ -2108,60 +2124,60 @@ diseases = {
   
   third_degree_sideburns = {
     cause = "Oorzaak - Nostalgisch verlangen naar de seventies.",
-    cure = "Behandeling - De Psychiater probeert de pati\137nt er via moderne conversatietechnieken van te overtuigen dat die flamboyante stijlen echt niet meer kunnen.",
+    cure = utf8 "Behandeling - De Psychiater probeert de patiënt er via moderne conversatietechnieken van te overtuigen dat die flamboyante stijlen echt niet meer kunnen.",
     name = "Derdegraads Brandhaar",
     symptoms = "Symptomen - Felgeverfd haar, bakkebaarden, plateauschoenen en glitter make-up.",
   },
   discrete_itching = {
     cause = "Oorzaak - Kleine insecten met scherpe tandjes.",
-    cure = "Behandeling - Pati\137nt drinkt een pharmaceutische klodder anti-jeuksiroop.",
+    cure = utf8 "Behandeling - Patiënt drinkt een pharmaceutische klodder anti-jeuksiroop.",
     name = "Onregelmatige Jeuk",
     symptoms = "Symptomen - Krabben met lokale ontstekingen tot gevolg.",
   },
   the_squits = {
     cause = "Oorzaak - Het eten van aan de binnenkant van de oven aangebakken stukjes pizza.",
-    cure = "Behandeling - Een plakkerige mix van draderige chemicali\137n drinken om de binnenkant van de pati\137nt weer wat te laten stollen.",
+    cure = utf8 "Behandeling - Een plakkerige mix van draderige chemicaliën drinken om de binnenkant van de patiënt weer wat te laten stollen.",
     name = "Sproeipoep",
     symptoms = "Symptomen - Ugh. Dat kun je vast zelf wel bedenken.",
   },
   spare_ribs = {
     cause = "Oorzaak - Op koude stenen vloeren zitten.",
-    cure = "Behandeling - Het stukje rib wordt verwijderd door twee Chirurgen en aan de pati\137nt in een zakje meegegeven.",
-    name = "Ribstuk",
+    cure = utf8 "Behandeling - Het stukje rib wordt verwijderd door twee Chirurgen en aan de patiënt in een zakje meegegeven.",
+    name = "Spare Ribs", --its has the same double meaning as in English.
     symptoms = "Symptomen - Een iets te grote borstkas.",
   },
   diag_blood_machine = {
     name = "Diag Bloedmachine",
   },
   king_complex = {
-    cause = "Oorzaak - De geest van de King neemt bezit van de pati\137nt.",
-    cure = "Behandeling - Een Psychiater vertelt de pati\137nt hoe belachelijk hij of zij eruit ziet.",
+    cause = utf8 "Oorzaak - De geest van de King neemt bezit van de patiënt.",
+    cure = utf8 "Behandeling - Een Psychiater vertelt de patiënt hoe belachelijk hij of zij eruit ziet.",
     name = "King Complex",
     symptoms = "Symptomen - Een dieet van cheeseburgers en felgekleurd suede schoeisel.",
   },
   diag_x_ray = {
-    name = "Diag R\148ntgen",
+    name = utf8 "Diag Röntgen",
   },
   pregnancy = {
     cause = "Oorzaak - Stroomuitval in steden.",
-    cure = "Behandeling - De baby wordt verwijderd in de Operatiekamer en aan de pati\137nt gegeven.",
-    name = "Zwanger",
+    cure = utf8 "Behandeling - De baby wordt verwijderd in de Operatiekamer en aan de patiënt gegeven.",
+    name = "Zwangerschap",
     symptoms = "Symptomen - Vet eten met bierbuik tot gevolg.",
   },
   fake_blood = {
-    cause = "Oorzaak - Patient is het slachtoffer van een flauwe grap.",
+    cause = utf8 "Oorzaak - Patiënt is het slachtoffer van een flauwe grap.",
     cure = "Behandeling - De kalmerende stem van een Psychiater is het enige dat dit kan oplossen.",
     name = "Nepbloed",
-    symptoms = "Symptomen - Rode vloeistof in aderen die oplost bij contact met kleding fluid in veins which evaporates on contact with clothing.",
+    symptoms = "Symptomen - Rode vloeistof in aderen die oplost bij contact met kleding.",
   },
   diag_psych = {
     name = "Diag Psychiater",
   },
   invisibility = {
     cause = "Oorzaak - Gebeten worden door een radioactieve (en onzichtbare) mier.",
-    cure = "Behandeling - Een felle drank uit de Apotheek toont weer de ware kleuren van de pati\137nt.",
+    cure = utf8 "Behandeling - Een felle drank uit de Apotheek toont weer de ware kleuren van de patiënt.",
     name = "Onzichtbaarheid",
-    symptoms = "Symptomen - Pati\137nten lijden er niet onder. Sommigen maken misbruik van de situatie door grapjes uit te halen met hun familie.",
+    symptoms = utf8 "Symptomen - Patiënten lijden er niet onder. Sommigen maken misbruik van de situatie door grapjes uit te halen met hun familie.",
   },
   golf_stones = {
     cause = "Oorzaak - Blootstelling aan giftig gas uit golfballen.",
@@ -2173,27 +2189,29 @@ diseases = {
     name = "Diag Algemeen",
   },
   infectious_laughter = {
-    cause = "Oorzaak - Klassieke sitcoms.",
-    cure = "Behandeling - Een gekwalificeerde Psychiater vertelt de pati\137nt hoe verschrikkelijk zijn ziekte wel niet is.",
+    cause = "Oorzaak - Klassieke comedyseries.",
+    cure = utf8 "Behandeling - Een gekwalificeerde Psychiater vertelt de patiënt hoe verschrikkelijk zijn ziekte wel niet is.",
     name = "Aanstekelijke Lach",
-    symptoms = "Symptomen - Constant gegniffel en het herhalen van flauwe catchphrases.",
+    symptoms = "Symptomen - Constant gegniffel en het herhalen van flauwe kantlijngrapjes.",
   },
   general_practice = {
     name = "Spreekkamerbezoek",
   },
   baldness = {
     cause = "Oorzaak - Liegen en verhalen verzinnen om populair te zijn.",
-    cure = "Behandeling - Haar wordt naadloos vastgesmolten in het hoofd van de pati\137nt met deze pijnlijke machine.",
+    cure = utf8 "Behandeling - Haar wordt naadloos vastgesmolten in het hoofd van de patiënt met deze pijnlijke machine.",
     name = "Kaalheid",
     symptoms = "Symptomen - Een glimmend hoofd en schaamte.",
   },
   
-  --[[ Heaped Piles is een woordspeling. Heaped is opgestapeld, en Piles is zowel aambeien als stapels. Wat doen we hiermee? --]]
+  --[[ Heaped Piles is een woordspeling. Heaped is opgestapeld, en Piles is zowel aambeien als stapels. Wat doen we hiermee? 
+       Omni: ik heb het nu veranderd naar Kuise Kruisbessen. Kruisbessen als grappige verbastering van Aambeien (bessen in je
+       kruis...) --]]
   heaped_piles = {
     cause = "Oorzaak - Rondhangen bij koffieautomaten.",
-    cure = "Behandeling - Een prettig, krachtig drankje met een zuurgraad waarvan de aambeien van binnenuit oplossen.",
-    name = "Stapels Aambeien",
-    symptoms = "Symptomen - Het is voor de pati\137nt net alsof hij op een zak knikkers zit.",
+    cure = "Behandeling - Een prettig, krachtig drankje met een zuurgraad waarvan de kruisbessen van binnenuit oplost.",
+    name = "Kuise Kruisbessen",
+    symptoms = utf8 "Symptomen - Het is voor de patiënt net alsof hij op een zak knikkers zit.",
   },
   unexpected_swelling = {
     cause = "Oorzaak - Iets onverwachts.",
@@ -2202,20 +2220,20 @@ diseases = {
     symptoms = "Symptomen - Zwelling.",
   },
   jellyitis = {
-    cause = "Oorzaak - Gelatinerijk dieet en teveel beweging.",
-    cure = "Behandeling - De pati\137nt wordt in een Gelatinetank gegoten om daar een beetje te stollen.",
+    cause = utf8 "Oorzaak - Gelatinerijk diëet en teveel beweging.",
+    cure = utf8 "Behandeling - De patiënt wordt in een Gelatinetank gegoten om daar een beetje te stollen.",
     name = "Gelatinis",
     symptoms = "Symptomen - Uitzonderlijke drillerigheid en vallen.",
   },
   hairyitis = {
     cause = "Oorzaak - Overmatige blootstelling aan de maan.",
-    cure = "Behandeling - Een electrolysemachine verwijdert het haar en dicht de pori\137n.",
+    cure = utf8 "Behandeling - Een electrolysemachine verwijdert het haar en dicht de poriën.",
     name = "Pilitis",
     symptoms = "Symptomen - De zieke ervaart een betere reukzin.",
   },
   alien_dna = {
     cause = "Oorzaak - Gezichtzuigers met het bloed van intelligente aliens.",
-    cure = "Behandeling - De DNA wordt machinaal verwijderd, de buitenaardse elementen worden gefilterd en het DNA snel weer teruggepompt.",
+    cure = "Behandeling - De DNA wordt machinaal verwijderd, de buitenaardse elementen worden gefilterd en het DNA wordt snel weer teruggepompt.",
     name = "Buitenaards DNA",
     symptoms = "Symptomen - Langzame monsterachtige metamorfose en een drang tot het vernietigen van onze steden.",
   },
@@ -2228,12 +2246,12 @@ diseases = {
   gastric_ejections = {
     cause = "Oorzaak - Pittig Mexicaans of Indiaas eten.",
     cure = "Behandeling - Een speciaal bindend drankje zorgt ervoor dat er niets meer uit wordt geworpen.",
-    name = "Gastrische Uitwerpingen",
-    symptoms = "Symptomen - Halfverteerd voedsel wordt in willekeurige clusters uit de pati\137nt gestoten.",
+    name = "Gastrische Uitstoot",
+    symptoms = utf8 "Symptomen - Halfverteerd voedsel wordt in willekeurige clusters uit de patiënt gestoten.",
   },
   uncommon_cold = {
     cause = "Oorzaak - Deeltjes snot in de lucht.",
-    cure = "Behandeling - Een grote slok speciale hoestdrank uit de Apotheek, gemaakt van speciale ingredi\137nten.",
+    cure = utf8 "Behandeling - Een grote slok speciale hoestdrank uit de Apotheek, gemaakt van speciale ingrediënten.",
     name = "Verguurheid",
     symptoms = "Symptomen - Loopneus, niezen en verkleurde longen.",
   },
@@ -2251,15 +2269,15 @@ diseases = {
   },
   sweaty_palms = {
     cause = "Oorzaak - Angst voor sollicitaties.",
-    cure = "Behandeling - Een Psychiater moet de pati\137nt overtuigen dat dit geen echte ziekte is.",
-    name = "Zweterige Handpalmen",
-    symptoms = "Symptomen - De hand van de pati\137nt voelt aan als een natte spons.",
+    cure = utf8 "Behandeling - Een Psychiater moet de patiënt overtuigen dat dit geen echte ziekte is.",
+    name = "Zweethanden",
+    symptoms = utf8 "Symptomen - De hand van de patiënt voelt aan als een natte spons.",
   },
   serious_radiation = {
     cause = "Oorzaak - Plutoniumisotopen verwarren met kauwgom.",
-    cure = "Behandeling - De pati\137nt wordt voor grondige reiniging in een Ontsmettingscabine geplaatst.",
+    cure = utf8 "Behandeling - De patiënt wordt voor grondige reiniging in een Ontsmettingscabine geplaatst.",
     name = "Zware Straling",
-    symptoms = "Symptomen - Pati\137nten met deze aandoening voelen zich heel, heel ziek.",
+    symptoms = utf8 "Symptomen - Patiënten met deze aandoening voelen zich heel, heel ziek.",
   },
   diag_cardiogram = {
     name = "Diag Cardio",
@@ -2269,7 +2287,7 @@ diseases = {
   },
   gut_rot = {
     cause = "Oorzaak - Tante Triens Vrolijke Whiskey Hoestsiroop.",
-    cure = "Behandeling - Een Zuster dient een selectie opgeloste chemicali\137n toe om het buikje vanbinnen te bekleden.",
+    cure = utf8 "Behandeling - Een Zuster dient een selectie opgeloste chemicaliën toe om het buikje vanbinnen te bekleden.",
     name = "Buikrot",
     symptoms = "Symptomen - Geen hoest, maar ook geen maagwand.",
   },
@@ -2283,12 +2301,12 @@ diseases = {
     cause = "Oorzaak - Een loopband gebruiken net na de maaltijd.",
     cure = "Behandeling - In de Apotheek wordt er snel een zware mix van speciale waterige atomen gedronken.",
     name = "Wind Tegen",
-    symptoms = "Symptomen - Mensen direct achter de pati\137nt raken vaak overstuur.",
+    symptoms = utf8 "Symptomen - Mensen direct achter de patiënt raken vaak overstuur.",
   },
   kidney_beans = {
     cause = "Oorzaak - Kauwen op ijsklontjes uit drankjes.",
-    cure = "Behandeling - Twee Chirurgen verwijderen de bessen zonder gevoelige lichaamsdelen aan te raken.",
-    name = "Kruisbessen",
+    cure = "Behandeling - Twee Chirurgen verwijderen het Froliet zonder gevoelige lichaamsdelen aan te raken.",
+    name = "Nierfroliet", --combinatie van Nierstenen en synoniem Nefroliet
     symptoms = "Symptomen - Pijn en regelmatig naar het toilet.",
   },
   transparency = {
@@ -2298,22 +2316,22 @@ diseases = {
     symptoms = "Symptomen - Organen worden doorzichtig en zien er ranzig uit.",
   },
   broken_heart = {
-    cause = "Oorzaak - Iemand die rijker, jonger en slanker is dan de pati\137nt.",
+    cause = utf8 "Oorzaak - Iemand die rijker, jonger en slanker is dan de patiënt.",
     cure = "Behandeling - Twee Chirurgen openen de borstkas en herstellen ademloos en liefdevol het hart.",
     name = "Gebroken Hart",
     symptoms = "Symptomen - Huilen en RSI door het constante verscheuren van vakantiefoto's.",
   },
   slack_tongue = {
     cause = "Oorzaak - Chronische geklets over soaps.",
-    cure = "Behandeling - De tong wordt in de Snijmachine geplaatst en snel, effici\137nt en pijnlijk verwijderd.",
+    cure = utf8 "Behandeling - De tong wordt in de Snijmachine geplaatst en snel, efficiënt en pijnlijk verwijderd.",
     name = "Lamme Tong",
     symptoms = "Symptomen - Tong zwelt op tot vijf maal de normale lengte.",
   },
   tv_personalities = {
     cause = "Oorzaak - Dagtelevisie.",
-    cure = "Behandeling - Een getrainde Psychiater moet de pati\137nt overtuigen zijn televisie te verkopen en een radio aan te schaffen.",
+    cure = utf8 "Behandeling - Een getrainde Psychiater moet de patiënt overtuigen zijn televisie te verkopen en een radio aan te schaffen.",
     name = "TV Persoonlijkheid",
-    symptoms = "Symptomen - De pati\137nt denkt dat hij of zij een kookprogramma kan presenteren.",
+    symptoms = utf8 "Symptomen - De patiënt denkt dat hij of zij een kookprogramma kan presenteren.",
   },
   ruptured_nodules = {
     cause = "Oorzaak - Bungeejumpen in de kou.",
@@ -2328,8 +2346,8 @@ diseases = {
     symptoms = "Symptomen - Luid gekraak en betreffend ledemaat niet meer kunnen gebruiken.",
   },
   chronic_nosehair = {
-    cause = "Oorzaak - Het ophalen van de neus in verachting voor mensen die slechter af zijn dan de pati\137nt.",
-    cure = "Behandeling - Een smerig, haarverwijderend drankje wordt door een Zuster in de Apotheek klaargemaakt en wordt door de pati\137nt gedronken.",
+    cause = utf8 "Oorzaak - Het ophalen van de neus in verachting voor mensen die slechter af zijn dan de patiënt.",
+    cure = utf8 "Behandeling - Een smerig, haarverwijderend drankje wordt door een Zuster in de Apotheek klaargemaakt en wordt door de patiënt gedronken.",
     name = "Chronisch Neushaar",
     symptoms = "Symptomen - Neushaar waarin een marter zou kunnen nestelen.",
   },
@@ -2375,9 +2393,9 @@ competitor_names = {
 }
 main_menu = {
   exit = "Afsluiten",
-  custom_level = "Eigen Level",
-  new_game = "Nieuw Spel",
-  load_game = "Laad Spel",
+  custom_level = "Los Level",
+  new_game = utf8 "Nieuwe Carriëre",
+  load_game = "Spel Laden",
   options = "Opties",
   version = "Versie: ",
   savegame_version = "Savegame versie: ",
@@ -2775,7 +2793,7 @@ original_credits = {
   [272] = " ",
   [273] = "Elena Ruiz de Velasco",
   [274] = "Julio Valladares",
-  [275] = "Ricardo Mart�nez",
+  [275] = "Ricardo Martinez",
   [276] = " ",
   [277] = "Kia Collin",
   [278] = "CBG Consult",
@@ -2950,7 +2968,7 @@ rooms_short = {
   training_room = "Klaslokaal",
   corridor_objects = "Gangartikelen",
   operating_theatre = "Operatiekamer",
-  dna_fixer = "DNA Reparatie",
+  dna_fixer = "DNA Hersteller",
   ward = "Slaapzaal",
   psychiatric = "Psychiatrie",
   hair_restoration = "Haarrestauratie",
@@ -2959,7 +2977,7 @@ rooms_short = {
   tongue_clinic = "Lamme Tongkliniek",
   toilets = "Toiletten",
   electrolysis = "Electrolyse",
-  x_ray = "R\148ntgenkamer",
+  x_ray = utf8 "Röntgenkamer",
   blood_machine = "Bloedmachine",
 }
 object = {
@@ -2990,7 +3008,7 @@ object = {
   table2 = "Tafel",
   desk = "Bureau",
   pool_table = "Biljarttafel",
-  x_ray_viewer = "R\153ntgenscherm",
+  x_ray_viewer = utf8 "Röntgenscherm",
   radiation_shield = "Radiatieschild",
   bed = "Bed",
   swing_door2 = "Klapdeur",
@@ -3001,7 +3019,7 @@ object = {
   comfortable_chair = "Luie stoel",
   skeleton = "Geraamte",
   computer = "Computer",
-  bin = "Vuilnisbak",
+  bin = "Prullenbak",
   pharmacy_cabinet = "Medicijnkast",
   radiator = "Radiator",
   cast_remover = "Gipsverwijderaar",
@@ -3023,7 +3041,7 @@ object = {
   entrance_left = "Linkerkant ingang",
   slicer = "Snijmachine",
   dna_fixer = "DNA Reparatiemachine",
-  x_ray = "R\153ntgen",
+  x_ray = utf8 "Röntgen",
   cabinet = "Dossierkast",
 }
 pay_rise = {
@@ -3108,7 +3126,7 @@ calls_dispatcher = {
   staff = "%s - %s",
 }
 debug_patient_window = {
-  caption = "Debug Pati\137nt",
+  caption = utf8 "Debug Patiënt",
 }
 lua_console = {
   execute_code = "Uitvoeren",
@@ -3117,10 +3135,10 @@ lua_console = {
 cheats_window = {
   cheats = {
     end_month = "Einde van de maand",
-    emergency = "Cre\137er noodgeval",
-	vip = "Cre\137er VIP",
+    emergency = utf8 "Creëer noodgeval",
+	vip = utf8 "Creëer VIP",
     win_level = "Win Level",
-    create_patient = "Cre\137er pati\137nt",
+    create_patient = utf8 "Creëer patiënt",
     money = "Geld cheat",
     lose_level = "Verlies Level",
     all_research = "All Research Cheat",
