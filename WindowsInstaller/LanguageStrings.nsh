@@ -38,7 +38,8 @@ LangString files_left         ${LANG_DUTCH} "Sommige bestanden konden niet worde
 LangString options_title      ${LANG_DUTCH} "Meer opties"
 LangString options_subtitle   ${LANG_DUTCH} "Geef aan waar Theme Hospital staat geïnstalleerd."
 LangString save_in_appdata    ${LANG_DUTCH} "Opgeslagen spellen en instellingen opslaan in %APPDATA% (Aanbevolen)"
-LangString remove_saves       ${LANG_DUTCH} "Would you like to keep your saved games?"
+LangString remove_saves       ${LANG_DUTCH} "Wilt u uw opgeslagen spellen bewaren?"
+LangString overwrite_install  ${LANG_DUTCH} "U installeert over een bestaande installatie van CorsixTH. Gemaakte wijzigingen aan bestanden zullen verloren gaan. Wilt u doorgaan?"
 
 LangString install_language   ${LANG_ENGLISH} "English"
 LangString original_text      ${LANG_ENGLISH} "In order to play the game an installation of the original game is required. Please specify that location here."
