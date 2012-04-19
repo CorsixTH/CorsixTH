@@ -1267,8 +1267,8 @@ trophy_room = {
       S[55][13],
     },
     penalty = {
-      S[55][11],
-      S[55][12],     
+      S[56][11],
+      S[56][12],     
     },
   },
   gen_repairs = {     -- not implemented
