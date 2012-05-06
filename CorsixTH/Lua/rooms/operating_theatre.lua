@@ -57,7 +57,7 @@ end
 function OperatingTheatreRoom:roomFinished()
   -- Find the X-ray viewer
   local fx, fy = self:getEntranceXY(true)
-  local objects = self.world:findAllObjectsNear(fx, fy, 2^30)
+  local objects = self.world:findAllObjectsNear(fx, fy)
   for object in pairs(objects) do
     local id = object.object_type.id
     if id == "x_ray_viewer" then

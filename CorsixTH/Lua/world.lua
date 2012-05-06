@@ -1301,7 +1301,7 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
   if not distance then
     -- Note that regardless of distance, only the room which the humanoid is in
     -- is searched (or the corridor if the humanoid is not in a room).
-    distance = 20
+    distance = 2^30
   end
   local objects = {}
   local thob = 0
