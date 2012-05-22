@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+ --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+-- Thanks to Michael "michederoide" Armbruster for some additional corrections!
+
 -- Note: This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
 Language("Deutsch", "German", "de", "ger", "deu")
@@ -27,12 +29,12 @@ Inherit("original_strings", 2)
 -------------------------------  OVERRIDE  ----------------------------------
 diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
 diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
-fax.vip_visit_query.vip_name = utf8 "%s hat den Wunsch geäußert ihr Krankenhaus besuchen zu wollen." -- text was missing
+fax.vip_visit_query.vip_name = utf8 "%s hat den Wunsch geäußert, ihr Krankenhaus besuchen zu wollen." -- text was missing
 fax.vip_visit_query.choices.invite = utf8 "Lassen Sie dem V.I.P. eine offizielle Einladung zukommen." -- text was ferusing instead of inviting
 
 fax.vip_visit_query.choices.refuse = utf8 "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
 
-fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
+fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste Mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
 
 fax.vip_visit_result.vip_remarked_name = utf8 "%s hat Ihr Krankenhaus besucht."
 fax.vip_visit_result.cash_grant = utf8 "Ihnen wurde ein Geldbonus von %d gewährt."
@@ -44,7 +46,7 @@ fax.emergency.choices.accept = utf8 "Ja, ich übernehme diesen Notfall!"
 fax.emergency.choices.refuse = utf8 "Nein, ich weigere mich diesen Notfall zu übernehmen!"
 fax.emergency.location = utf8 "Wir haben einen Notruf aus dem %s erhalten." -- wrong spelling
 fax.emergency.num_disease = utf8 "Es handelt sich um %d Personen mit %s, die sofort behandelt werden müssen." -- wrong spelling
-fax.emergency.num_disease_singular = utf8 "Es handelt sich um eine Personen mit %s, die sofort behandelt werden muss." -- wrong spelling
+fax.emergency.num_disease_singular = utf8 "Es handelt sich um eine Person mit %s, die sofort behandelt werden muss." -- wrong spelling
 fax.emergency.cure_possible = utf8 "Wir können diesen Notfall übernehmen."
 fax.emergency.cure_not_possible_build_and_employ = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen."
 fax.emergency.cure_not_possible_build = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen."
@@ -90,7 +92,7 @@ fax.epidemic_result.failed.part_1_name = utf8 "Ihr Versuch diese %s-Epidemie zu 
 fax.epidemic_result.failed.part_2 = utf8 "dass sich die Epidemie in Ihrem ganzen Krankenhaus ausbreitet."
 fax.epidemic_result.succeeded.part_1_name = utf8 "Dem Gesundheitsinspektor ist zu Ohren gekommen, dass Sie mit einem schweren Fall von %s zu kämpfen haben."
 fax.epidemic_result.succeeded.part_2 = utf8 "Allerdings hat er dafür keine Beweise finden können."
-fax.epidemic_result.compensation_amount = utf8 "Die Behörden haben beschlossen, Sie wegen Ihren Lügen zu einer Geldstrafe von %d zu verurteilen."
+fax.epidemic_result.compensation_amount = utf8 "Die Behörden haben beschlossen, Sie wegen Ihrer Lügen zu einer Geldstrafe von %d zu verurteilen."
 fax.epidemic_result.fine_amount = utf8 "Die Behörden haben den nationalen Notstand ausgerufen und sie zu einer Geldstrafe von %d verurteilt."
 fax.epidemic_result.rep_loss_fine_amount = utf8 "Die Zeitungen haben Wind von der Epidemie bekommen und ziehen Ihren Ruf in den Dreck. Darüber hinaus hat man zu einer Geldstrafe von %d verurteilt."
 fax.epidemic_result.hospital_evacuated = utf8 "Die Behörden haben keine andere Wahl, als ihr Krankenhaus zu evakuieren."
@@ -129,8 +131,8 @@ object.litter = utf8 "Müll"
 tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
 tooltip.fax.close = utf8 "Das Fenster schließen, ohne die Nachricht zu löschen"
-tooltip.message.button = utf8 "Linksklick um die Nachricht zu öffnen"
-tooltip.message.button_dismiss = utf8 "Linksklick um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
+tooltip.message.button = utf8 "Linksklick, um die Nachricht zu öffnen"
+tooltip.message.button_dismiss = utf8 "Linksklick, um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
 tooltip.casebook.cure_requirement.hire_staff = utf8 "Sie müssen Personal einstellen, um diese Behandlung durchführen zu können"
 tooltip.casebook.cure_type.unknown = utf8 "Sie wissen noch nicht, wie Sie diese Krankheit behandeln können"
 tooltip.research_policy.no_research = "In dieser Kategorie wird momentan keine Forschung durchgeführt"
@@ -189,7 +191,7 @@ adviser = {
   warnings = {
     no_desk ="Sie sollten beizeiten mal eine Rezeption bauen und eine Empfangsdame einstellen!",
     no_desk_1 = utf8 "Wenn Sie wollen, dass Patienten in Ihr Krankenhaus kommen, müssen Sie eine Empfangsdame einstellen und eine Rezeption für sie bauen!",
-    no_desk_2 = utf8 "Na klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
+    no_desk_2 = utf8 "Na Klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
   },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
@@ -378,7 +380,7 @@ totd_window = {
     utf8 "Maschinen wie die Entlüftung müssen gewartet werden. Stelle ein paar Handlanger ein, oder die Patienten und das Personal könnte verletzt werden.",
     utf8 "Nach einer Weile wird das Personal müde. Baue unbedingt einen Personalraum, damit es sich ausruhen kann.",
     utf8 "Platziere genug Heizkörper, um das Personal und die Patienten warm zu halten, sonst werden sie unglücklich. Benutze die Übersichtskarte, um Stellen im Krankenhaus zu finden, die noch etwas besser beheizt werden müssen.",
-    utf8 "Der Fähigkeits-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
+    utf8 "Der Fähigkeiten-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
     utf8 "AIPler und Ärzte können ihre Fähigkeiten verbessern, indem sie in der Ausbildung von Beratern lernen. Wenn der Berater eine zusätzliche Qualifikation (Chirurg, Psychiater oder Forscher) besitzt, gibt er dieses Wissen ebenfalls weiter.",
     utf8 "Hast du schon versucht, die Europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Mach vorher den Sound an!!",
     utf8 "Im Options-Menü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
@@ -386,13 +388,13 @@ totd_window = {
     utf8 "Das CorsixTH-Team sucht Verstärkung! Hast du Interesse, beim Programmieren, Übersetzen oder Grafiken erstellen zu helfen? Kontaktiere uns in unserem Forum, der Mailing List oder unserem IRC-Channel (corsix-th im freenode).",
     utf8 "Wenn du einen Bug findest, bitte melde ihn in unserem Bug-Tracker: th-issues.corsix.org",
     utf8 "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum nächsten wechseln kann. Im Status-Fenster kannst du deinen Fortschritt bezüglich der Levelziele sehen.",
-    utf8 "Um existierende Räume zu bearbeiten oder gar zu löschen kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
-    utf8 "Um aus einer Horde wartender Patienten diejenigen zu finden die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",
+    utf8 "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
+    utf8 "Um aus einer Horde wartender Patienten diejenigen zu finden, die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",
     utf8 "Klicke auf die Tür eines Raumes, um seine Warteschlange zu sehen. Hier kann man nützliche Feineinstellungen vornehmen, wie etwa die Warteschlange umzusortieren oder einen Patienten zu einem anderen Raum zu senden.",
-    utf8 "Unglückliches Personal verlangt öfter Gehaltserhöhungen. Gestalte die Arbeitsumgebung deines Personals möglichst angenehm um dies zu verhindern.",
+    utf8 "Unglückliches Personal verlangt öfter Gehaltserhöhungen. Gestalte die Arbeitsumgebung deines Personals möglichst angenehm, um dies zu verhindern.",
     utf8 "Patienten werden beim Warten durstig, besonders wenn die Heizungen aufgedreht sind! Strategisch platzierte Getränkeautomaten sind eine nette zusätzliche Einnahmequelle.",
     utf8 "Du kannst die Diagnose für einen Patienten vorzeitig abbrechen und ihn direkt zur Behandlung schicken, falls seine Krankheit zuvor schon entdeckt wurde. Allerdings erhöht sich dadurch das Risiko, dass das Heilmittel falsch ist und der Patient stirbt.",
-    utf8 "Notfälle können eine gute Einnahmequelle abgeben, sofern genügend Kapazitäten vorhanden sind um die Notfallpatienten rechtzeitig zu behandeln.",
+    utf8 "Notfälle können eine gute Einnahmequelle abgeben, sofern genügend Kapazitäten vorhanden sind, um die Notfallpatienten rechtzeitig zu behandeln.",
   },
   previous = "Vorheriger Tipp",
   next = utf8 "Nächster Tipp",
@@ -429,7 +431,7 @@ cheats_window = {
 }
 
 tooltip.cheats_window = {
-  close = utf8 "Das Cheats-Fenster schließen",
+  close = utf8 "Das Cheat-Fenster schließen",
   cheats = {
     money = utf8 "10.000 zum Konto hinzufügen.",
     all_research = utf8 "Alle Forschungen abschließen.",
