@@ -37,11 +37,12 @@ function Staff:tickDay()
 
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
-  if self.attributes['fatigue'] then
-    if self.attributes['fatigue'] < 0.7 then
+  if self.attributes["fatigue"] then
+    if self.attributes["fatigue"] < 0.7 then
       if self:isResting() then
         self:setMood("tired", "deactivate")
         self:setCrazy(false)
+        self:changeAttribute("happiness", 0.006)
       end
     else
       -- doctor can go crazy if they're too tired
@@ -51,7 +52,54 @@ function Staff:tickDay()
         end
       end
     end
+  -- Working when you should be taking a break will make you unhappy
+    if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] then
+      self:changeAttribute("happiness", -0.02)
+    end
+  -- You will also start to become unhappy as you become tired
+    if self.attributes["fatigue"] >= 0.5 then
+      self:changeAttribute("happiness", -0.01)
+    end
   end
+  -- It is nice to see plants, but dead plants make you unhappy
+  self.world:findObjectNear(self, "plant", 2, function(x, y)
+    local plant = self.world:getObject(x, y, "plant")
+    if plant:isPleasing() then
+      self:changeAttribute("happiness", 0.002)
+    else
+      self:changeAttribute("happiness", -0.003)
+    end
+  end)  
+  -- It always makes you happy to see you are in safe place  
+  self.world:findObjectNear(self, "extinguisher", 2, function(x, y)  
+    self:changeAttribute("happiness", 0.002)
+  end)
+  -- Extra room items add to your happiness (some more than others)
+  self.world:findObjectNear(self, "bin", 2, function(x, y)  
+    self:changeAttribute("happiness", 0.001)
+  end)
+  self.world:findObjectNear(self, "bookcase", 2, function(x, y)  
+    self:changeAttribute("happiness", 0.003)
+  end)
+  self.world:findObjectNear(self, "skeleton", 2, function(x, y)  
+    self:changeAttribute("happiness", 0.002)
+  end)
+  self.world:findObjectNear(self, "tv", 2, function(x, y)  
+    self:changeAttribute("happiness", 0.0005)
+  end)
+  -- Being able to rest from work and play the video game or pool will make you happy
+  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "video_game") then
+   self:changeAttribute("happiness", 0.08)
+  end
+  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "pool_table") then
+   self:changeAttribute("happiness", 0.074)
+  end
+  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "sofa") then
+   self:changeAttribute("happiness", 0.05)
+  end
+
+  --TODO windows in your work space and a large space to work in add to happiness
+  -- working in a small space makes you unhappy
 
   -- is self researcher in research room?
   if self:isResearching() then
@@ -106,6 +154,7 @@ function Staff:tick()
   -- Decide whether the staff member should be tiring and tire them
   if self:isTiring() then
     self:tire(0.000090)
+    self:changeAttribute("happiness", -0.00002)
   end
 
     -- if doctor is in a room and they're using an object
@@ -127,7 +176,15 @@ function Staff:tick()
   else
     self.timer_until_raise = nil
   end
-
+  -- seeing litter will make you unhappy. If it is pee or puke it is worse
+  self.world:findObjectNear(self, "litter", 2, function(x, y)
+  local litter = self.world:getObject(x, y, "litter")
+    if litter:anyLitter() then
+      self:changeAttribute("happiness", -0.0002)
+    else
+      self:changeAttribute("happiness", -0.0004)
+    end
+  end)
   self:updateSpeed()
 end
 
@@ -462,9 +519,10 @@ end
 -- and go to the StaffRoom if it is.
 function Staff:checkIfNeedRest()
   if self.attributes["fatigue"] then
-    -- Only when the staff member is very tired should the icon emerge.
+    -- Only when the staff member is very tired should the icon emerge. Unhappiness will also escalate
     if self.attributes["fatigue"] >= 0.7 then
       self:setMood("tired", "activate")
+      self:changeAttribute("happiness", -0.0002)
     end
     -- If above the policy threshold, go to the staff room.
     if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] 
@@ -472,8 +530,7 @@ function Staff:checkIfNeedRest()
       local profile = self.profile
       if self.waiting_for_staffroom then
       -- The staff will get unhappy if there is no staffroom to rest in.
-      -- TODO: Add corresponding adviser alert.
-        self:changeAttribute("happiness", -0.01)
+        self:changeAttribute("happiness", -0.001)
       end
       -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
       -- already going to staffroom or being picked up
@@ -717,7 +774,7 @@ function Staff:increaseWage(amount)
   self.world.ui:playSound "cashreg.wav"
   if self.profile.wage > 2000 then -- What cap here?
     self.profile.wage = 2000
-  else -- If the cap has been reached this member of staff won't get happy
+  else -- If the cap has been reached this member of staff won't get unhappy
        -- ever again...
     self:changeAttribute("happiness", 0.99)
     self:setMood("pay_rise", "deactivate")
