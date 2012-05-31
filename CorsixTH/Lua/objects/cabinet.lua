@@ -41,6 +41,10 @@ object.usage_animations = {
     },
   },
 }
+local anim_mgr = TheApp.animation_manager
+anim_mgr:setMarker(object.usage_animations.east.in_use, {-1, 0})
+anim_mgr:setMarker(object.usage_animations.north.in_use, {-1, 0})
+
 object.orientations = {
   north = {
     footprint = { {0, 0}, {0, 1, only_passable = true} },
