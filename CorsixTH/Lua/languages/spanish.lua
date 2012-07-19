@@ -267,6 +267,15 @@ options_window = {
   back = "Volver",
 }
 
+tooltip.handyman_window = {
+	parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
+}
+
+handyman_window = {
+	all_parcels = "Todas las parcelas",
+	parcel = "Parcela"
+}
+
 tooltip.options_window = {
   fullscreen_button = utf8 "Pulsa para activar el modo de pantalla completa",
   width = utf8 "Introduce el ancho de pantalla deseado",
