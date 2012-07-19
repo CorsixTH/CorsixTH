@@ -56,6 +56,7 @@ function Litter:Litter(world, object_type, x, y, direction, etc)
   self.object_type = object_type
   self.world = world
   self:setTile(x, y)
+  world.hospitals[1]:addHandymanTask(self, "cleaning", 1, x, y)
 end
 
 function Litter:setTile(x, y)

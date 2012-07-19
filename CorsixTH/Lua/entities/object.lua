@@ -45,6 +45,7 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self.ticks = object_type.ticks
   self.object_type = object_type
   self.world = world
+  self.hospital = world.hospitals[1]
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
   self:updateDynamicInfo()
@@ -499,6 +500,16 @@ function Object:onClick(ui, button, data)
       fullscreen:close()
     end
 
+	if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
+		local taskType = "watering"
+		if self.object_type.class == "Machine" then
+			taskType = "repairing"		
+		end
+		local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
+		if index ~= -1 then
+			self.hospital:removeHandymanTask(index, taskType)
+		end
+	end
     self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
@@ -541,7 +552,9 @@ function Object:onDestroy()
     end
     self.reserved_for_list = {}
   end
+  
   Entity.onDestroy(self)
+  
 end
 
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
@@ -668,3 +681,4 @@ function Object.processTypeDefinition(object_type)
     end
   end
 end
+

@@ -91,29 +91,25 @@ end
 --  If urgent or manual is specified, lock_room will be true automatically
 function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   lock_room = manual or lock_room
-  local new_call = self:enqueue(
-    object,
-    'repair',
-    _S.calls_dispatcher.repair:format(object.object_type.name),
-    --[[persistable:call_dispatcher_repair_verification]] function(staff)
-      return CallsDispatcher.verifyStaffForRepair(object, staff)
-    end,
-    --[[persistable:call_dispatcher_repair_priority]] function(staff)
-      return CallsDispatcher.getPriorityForRepair(object, staff)
-    end,
-    --[[persistable:call_dispatcher_repair_execute]] function(staff)
-      return CallsDispatcher.sendStaffToRepair(object, staff)
-    end
-  )
+  
+  local call = {
+				 verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
+				 priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
+				 execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
+				 object = object,
+				 key = "repair",
+				 description = _S.calls_dispatcher.repair:format(object.object_type.name),
+				 dispatcher = self,
+				 created = self.tick,
+				 assigned = nil,
+				 dropped = nil}
   
   object:setRepairingMode(lock_room and true or false)
   local message
   local ui = object.world.ui
-  if new_call then
-    if not object.world:getLocalPlayerHospital():hasStaffOfCategory("Handyman") then
-      -- Advise about hiring Handyman
-      message = _A.warnings.machinery_damaged2
-    end
+  if not object.world:getLocalPlayerHospital():hasStaffOfCategory("Handyman") then
+    -- Advise about hiring Handyman
+    message = _A.warnings.machinery_damaged2
   end
   
   if not manual and urgent then
@@ -128,23 +124,33 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   if message then
     ui.adviser:say(message)
   end
+  
+  if not self.call_queue[object] then
+		self.call_queue[object] = {}
+	end
+  self.call_queue[object]["repair"] = call
+  return call
 end
 
 function CallsDispatcher:callForWatering(plant)
-  return self:enqueue(
-    plant,
-    'watering',
-    _S.calls_dispatcher.watering:format(plant.tile_x, plant.tile_y),
-    --[[persistable:call_dispatcher_watering_verification]] function(staff)
-      return CallsDispatcher.verifyStaffForWatering(plant, staff)
-    end,
-    --[[persistable:call_dispatcher_watering_priority]] function(staff)
-      return CallsDispatcher.getPriorityForWatering(plant, staff)
-    end,
-    --[[persistable:call_dispatcher_watering_execute]] function(staff)
-      return CallsDispatcher.sendStaffToWatering(plant, staff)
-    end
-  )
+  local call = {verification = --[[persistable:call_dispatcher_watering_verification]]function(staff) 
+								return false end,
+				 priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
+								return 1 end,
+				 execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
+				 object = plant,
+				 key = "watering",
+				 description = _S.calls_dispatcher.watering:format(plant.tile_x, plant.tile_y),
+				 dispatcher = self,
+				 created = self.tick,
+				 assigned = nil,
+				 dropped = nil
+				 }
+	if not self.call_queue[plant] then
+		self.call_queue[plant] = {}
+	end
+	self.call_queue[plant]["watering"] = call
+	return call
 end
 
 -- Enqueue the call
@@ -190,11 +196,13 @@ function CallsDispatcher:findSuitableStaff(call)
   local min_staff = nil
   for _, e in ipairs(self.world.entities) do
     if class.is(e, Staff) then
-      local score = call.verification(e) and call.priority(e) or nil
-      if score ~= nil and score < min_score then
-        min_score = score
-        min_staff = e
-      end
+      if e.humanoid_class ~= "Handyman" then
+		local score = call.verification(e) and call.priority(e) or nil
+		if score ~= nil and score < min_score then
+			min_score = score
+			min_staff = e
+		end
+	  end
     end
   end
 
@@ -218,6 +226,10 @@ function CallsDispatcher:answerCall(staff)
   local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
 
+  if staff.humanoid_class == "Handyman" then
+	 staff:searchForHandymanTask()
+	 return true
+  end
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
   for object, queue in pairs(self.call_queue) do
@@ -424,78 +436,8 @@ function CallsDispatcher.staffActionInterruptHandler(action, humanoid, high_prio
   end
 end
 
-function CallsDispatcher.verifyStaffForRepair(object, staff)
-  if staff:isIdle() and staff:fulfillsCriterium("Handyman") then
-    return true
-  end
-  return false
-end
-
-function CallsDispatcher.getPriorityForRepair(object, staff)
-  local score = 0;
-  local x, y = object:getRepairTile()
-  
-  -- Handyman prefer serving nearby machines
-  local distance = object.world:getPathDistance(staff.tile_x, staff.tile_y, x, y);
-  if distance then
-    score = score + distance
-  end
-
-  local object_room = object:getRoom()
-  local staff_room = staff:getRoom()
-  if object_room and object_room == staff_room then
-    -- In the room already? Great
-    score = score - 10000
-  end
-
-  -- Object with less strength should be served eariler
-  -- Design: Boost the priority from 0..50 on average.
-  --   ^ 2: power scale
-  --   * 70: If the machine is about to explode (at 85% usage), cost reduced by ~50
-  --   * 3: Each handyman has 3 assigned tasks...
-  --   * 3: Boost the score, machine repairing is more important than watering
-  score = score - (math.max(object.times_used / object.strength, object.repairing and 0.85 or 0)) ^ 2 * 70 * 
-    staff.attributes["repairing"] * 3 * 3
-
-  return score
-end
-
 function CallsDispatcher.sendStaffToRepair(object, handyman)
   object:createHandymanActions(handyman)
-end
-
-function CallsDispatcher.verifyStaffForWatering(plant, staff)
-  if staff:isIdle() and staff:fulfillsCriterium("Handyman") then
-    return true
-  end
-  return false
-end
-
-function CallsDispatcher.getPriorityForWatering(plant, staff)
-  local score = 0;
-  local x, y = plant:getWateringTile()
-  
-  -- Handyman prefer serving nearby plants
-  local distance = plant.world:getPathDistance(staff.tile_x, staff.tile_y, x, y);
-  if distance then
-    score = score + distance
-  end
-
-  local object_room = plant:getRoom()
-  local staff_room = staff:getRoom()
-  if object_room and object_room == staff_room then
-    -- In the room already? Great
-    score = score - 10000
-  end
-
-  -- Dying plant should be served earlier
-  -- Design: Boost the priority from 0..50 on average.
-  --   ^ 2: power scale
-  --   * 50: State is 0 to 5. cost reduced by ~50 at most.
-  --   * 3: Each handyman has 3 assigned tasks...
-  score = score - (plant.current_state / 5) ^ 2 * 50 * staff.attributes["watering"] * 3
-
-  return score
 end
 
 function CallsDispatcher.sendStaffToWatering(plant, handyman)

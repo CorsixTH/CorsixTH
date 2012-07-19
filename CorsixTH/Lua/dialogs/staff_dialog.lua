@@ -31,6 +31,35 @@ end
 --! Individual staff information dialog
 class "UIStaff" (Window)
 
+function UIStaff:changeParcel()
+	if not self.staff.hospital.ownedPlots then
+		self.staff.hospital:updateOwnedPlots()
+	end
+	local index = 0
+	for i, v in ipairs(self.staff.hospital.ownedPlots) do
+		if v == self.staff.parcelNr then
+			index = i
+			break
+		end
+	end
+	if not self.staff.hospital.ownedPlots[index + 1] then
+		self.staff.parcelNr = 0
+	else
+		self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1] 
+	end
+end
+
+function UIStaff:getParcelText()
+	if not self.staff.parcelNr then
+		self.staff.parcelNr = 0
+	end
+	if self.staff.parcelNr == 0 then
+		return _S.handyman_window.all_parcels --"All parcels"
+	else
+		return _S.handyman_window.parcel .. " " .. self.staff.parcelNr
+	end
+end
+
 function UIStaff:UIStaff(ui, staff)
   self:Window()
   
@@ -70,7 +99,8 @@ function UIStaff:UIStaff(ui, staff)
     self:addPanel(314,  37, 145):makeButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
     self:addPanel(316,  92, 145):makeButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
     self:addPanel(318, 148, 145):makeButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
-    self:addPanel(303,   0, 253) -- View circle midpiece
+    self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select)
+	self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
     self:addPanel(307, 106, 253):makeButton(0, 0, 50, 50, 308, self.fireStaff):setTooltip(_S.tooltip.staff_window.sack)
     self:addPanel(309, 164, 253):makeButton(0, 0, 37, 50, 310, self.placeStaff):setTooltip(_S.tooltip.staff_window.pick_up)
@@ -147,6 +177,7 @@ function UIStaff:draw(canvas, x_, y_)
   font:draw(canvas, profile.name, x + 42, y + 28) -- Name
   if profile.humanoid_class == "Handyman" then
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
+	font:draw(canvas, self:getParcelText(), x + 25, y + 223)
     -- The concentration areas
     local cleaning_width, watering_width, repairing_width = 0, 0, 0
     if self.staff.attributes["cleaning"] then -- Backwards compatibility
@@ -363,3 +394,4 @@ end
 function UIStaff:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y, self.staff.profile.humanoid_class == "Handyman")
 end
+

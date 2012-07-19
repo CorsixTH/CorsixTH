@@ -627,6 +627,13 @@ function Room:crashRoom()
   local fx, fy = self:getEntranceXY(true)
   for object, _ in pairs(self.world:findAllObjectsNear(fx, fy)) do
     -- Machines (i.e. objects with strength) are already done.
+	if object.object_type.class == "Plant" then
+		local index = self.hospital:getIndexOfTask(object.tile_x, object.tile_y, "watering")
+		if index ~= -1 then
+			self.hospital:removeHandymanTask(index, "watering")
+		end
+		object.unreachable = true
+	end
     if object.object_type.id ~= "door" and not object.strength
     and object.object_type.class ~= "SwingDoor" then
       object.user = nil
