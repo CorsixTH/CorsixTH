@@ -823,6 +823,7 @@ tooltip = {
     salary = "Salaris",
     sack = "Ontslaan",
     pick_up = "Oppakken",
+	parcel_select = utf8 "Het gebouw waar de Conciërge taken mag verrichten. Klik om te veranderen",
   },
   staff_list = {
     ability_2 = "Competentie",
@@ -3151,4 +3152,8 @@ cheats_window = {
   close = "Sluiten",
   caption = "Cheats",
   warning = "Waarschuwing: je zult geen bonuspunten aan het einde van het level krijgen wanneer je cheat",
+}
+handyman_window = {
+  all_parcels = "Overal", --Translates to: Everywhere, because the full Dutch translation would be far too long to fit the ingame window
+  parcel = "Gebouw",
 }
