@@ -1033,6 +1033,10 @@ object = {
   swing_door1 = "Kyvadlové Dveře",
   skeleton = "Kostlivec",
 }
+handyman_window = {
+    all_parcels = "Všude",
+    parcel = "Parcela",
+    }
 policy = {
   staff_leave_rooms = "zam. opouští místnost",
   diag_procedure = "proces vyšetření",
@@ -1306,6 +1310,7 @@ tooltip = {
     prio_plants = "Zvýšit Údržbářovu prioritu zalévání rostlin",
     face = "Tvář údržbáře",
     ability = "Schopnost",
+    parcel_select = "Parcela kde údržbář přijím úkoly, klikněte pro změnu nastavení"
   },
   watch = {
     hospital_opening = "Čas pro stavbu: toto je zbývající čas, než je Vaše nemocnice prohlášena za otevřenou. Kliknutím na zelené tlačítko ji otevře okamžitě.",
@@ -1313,7 +1318,7 @@ tooltip = {
     emergency = "Pohotovost: zbývající čas do vyléčení všech pacientů pohotovosti.",
   },
   policy = {
-    close = "Zavřít obrazovku zásady",
+    close = "Zavřít obrazovku zásad",
     staff_leave = "Klikněte zde, aby zaměstnanci, kteří nemají nic na práci, pomohli kolegům, kteří to potřebují",
     staff_stay = "Klikněte zde, aby určití zaměstnanci zůstali tam, kam je umístíte",
     staff_rest = "Jak moc musí být zaměstnanci unavení, než si můžou odpočinout",
@@ -1618,19 +1623,19 @@ diseases = {
     symptoms = "Příznaky - trpící pocítí zlepšený čich.",
   },
   golf_stones = {
-    cure = "Léčba - Tyto musí být odstraněny pomocí operace vyžadující dva Chirurgy.",
+    cure = "Léčba - Kameny musí být odstraněny pomocí operace vyžadující dva Chirurgy.",
     cause = "Příčina - vystavení se jedovatému plynu uvnitř golfových míčků.",
     name = "Golfové Kameny",
     symptoms = "Symptomy - blouznění a pokročilý stud.",
   },
   discrete_itching = {
-    cure = "Léčba - Pacient vypije a lékárnický lepkavý sirup k zabránění svědění kůže.",
+    cure = "Léčba - Pacient vypije lékárnický lepkavý sirup k zabránění svědění kůže.",
     cause = "Příčina - malý hmyz s ostrými zuby.",
     name = "Diskrétní Svědění",
     symptoms = "Příznaky - škrábání, vedoucí k zánětu části těla.",
   },
   serious_radiation = {
-    cure = "Léčba - Pacient musí být umístěn v Dekontaminační Sprše a pořádně vyčištěn.",
+    cure = "Léčba - Pacient musí být umístěn do Dekontaminační Sprchy a pořádně vyčištěn.",
     cause = "Příčina - záměna izotopů plutonia za žvýkačku.",
     name = "Vážná Radiace",
     symptoms = "Příznaky - pacienti s touto nemocí se cítí velmi, velmi mizerně.",
@@ -1651,13 +1656,13 @@ diseases = {
     cure = "Léčba - Barevná tekutina vypitá v Lékárně brzo pacienta obnoví do plné pozorovatelnosti.",
     cause = "Příčina - kousnutí radioaktivním (a neviditelným) mravencem.",
     name = "Neviditelnost",
-    symptoms = "Příznaky - pacienti netrpí žádnou újmou. Ba někteří používají tuto nemoc k uskutečnění kanadských žertíků na jejich rodiny.",
+    symptoms = "Příznaky - pacienti netrpí žádnou újmou. Ba někteří používají tuto nemoc k uskutečnění kanadských žertíků na své známé.",
   },
   infectious_laughter = {
     cure = "Léčba - Kvalifikovaný Psychiatr musí pacientovi připomenout, jak závažná tato nemoc je.",
     cause = "Příčina - klasická situační komedie.",
     name = "Nakažlivý Smích",
-    symptoms = "Příznaky - bezmocné potlačování smíchu a opakování neveselých frází.",
+    symptoms = "Příznaky - bezmocné potlačování smíchu a opakování nevtipných frází.",
   },
   diag_blood_machine = {
     name = "Vyše Krevní Stroj",
@@ -1705,7 +1710,7 @@ diseases = {
     symptoms = "Příznaky - Nepřekonatelná touha se všude vyspat.",
   },
   uncommon_cold = {
-    cure = "Léčba - Velký doušek medicíny proti Neobyčejnému Nachlazení vytvořená ze speciálních přísad v Lékárně toto vyléčí.",
+    cure = "Léčba - Velký doušek medicíny proti Neobyčejnému Nachlazení vytvořená ze speciálních přísad v Lékárně nemoc vyléčí.",
     cause = "Příčina - malé částečky nosního hlenu ve vzduchu.",
     name = "Neobyčejné Nachlazení",
     symptoms = "Příznaky - rýma, kýchání a odbarvené plíce.",
@@ -1723,19 +1728,19 @@ diseases = {
     name = "Vyše Obecné",
   },
   spare_ribs = {
-    cure = "Léčba - Tyto musí být vyňaty dvěma Chirurgy a dány pacientovi v sáčku.",
+    cure = "Léčba - Žebra musí být vyňata dvěma Chirurgy a dána pacientovi v sáčku.",
     cause = "Příčina - sezení na studených kamenných podlahách.",
     name = "Nadbytečná Žebra",
     symptoms = "Příznaky - nepříjemný pocit nafouknutí.",
   },
   the_squits = {
     cure = "Léčba - Lepkavá směs vláknitých lékárenských chemikálií zpevní pacientovy vnitřnosti.",
-    cause = "Příčina - jezení pizzy nalezené za sporákem.",
+    cause = "Příčina - jedení pizzy nalezené za sporákem.",
     name = "Hnačka",
     symptoms = "Příznaky - ehm. Tohle jistě víte.",
   },
   broken_heart = {
-    cure = "Léčba - Dva Chirurgové otevřou hrudník a, zadržujíc dech, něžně srdce spraví.",
+    cure = "Léčba - Dva Chirurgové otevřou hrudník a, zadržujíce dech, něžně srdce spraví.",
     cause = "Příčina - někdo bohatší, mladší a štíhlejší než pacient.",
     name = "Zlomené Srdce",
     symptoms = "Příznaky - pláč a zranění z opakované námahy způsobené hodinami trhání fotek z dovolené.",
@@ -1768,7 +1773,7 @@ diseases = {
     cure = "Léčba - Lektvar na odstranění ohavných chlupů je podán ústně, připraven Sestrou v Lékárně.",
     cause = "Příčina - pohrdavé popotahování na ty, kteří jsou na tom hůř než pacient.",
     name = "Strašné Chlupy v Nose",
-    symptoms = "Příznaky - knír z chlupů z kterých by si jezevec mohl udělat hnízdo.",
+    symptoms = "Příznaky - knír z chlupů z kterých by si i jezevec mohl udělat doupě.",
   },
   kidney_beans = {
     cure = "Léčba - Dva Chirurgové musí fazole odstranit, aniž by se dotkli okrajů ledvin.",
@@ -1790,7 +1795,7 @@ diseases = {
   },
   gastric_ejections = {
     cure = "Léčba - Vypití speciálního svazovacího roztoku zabrání čemukoliv být katapultováno.",
-    cause = "Příčina - pálivé Mexické nebo Indické jídlo.",
+    cause = "Příčina - pálivé mexické nebo indické jídlo.",
     name = "Žaludeční Katapulty",
     symptoms = "Příznaky - napůl strávené jídlo je vysíláno z pacienta v náhodných svazcích.",
   },
@@ -1807,7 +1812,7 @@ diseases = {
     cure = "Léčba - Psychiatr řekne pacientovi jak směšně on nebo ona vypadá.",
     cause = "Příčina - Způsobeno duchem Krále, který vstoupí do pacientovy mysli a ovládne ji.",
     name = "Králův Komplex",
-    symptoms = "Příznaky - nošení barevné semišové obuvi a jezení cheeseburgerů.",
+    symptoms = "Příznaky - nošení barevné semišové obuvi a jedení cheeseburgerů.",
   },
   autopsy = {
     name = "Pitva",
@@ -1826,7 +1831,7 @@ diseases = {
   },
   pregnancy = {
     cure = "Léčba - Dítě je odstraněno na Operačním Sále, umyto a představeno pacientovi.",
-    cause = "Příčina - výpadky proudu v prostorách měst.",
+    cause = "Příčina - výpadky proudu v prostorech měst.",
     name = "Těhotenství",
     symptoms = "Příznaky - vybíravé stravování s následným pivním pupkem.",
   },
@@ -2507,6 +2512,7 @@ totd_window = {
 information = {
   custom_game = "Vítejte v CorsixTH. Užijte si tuto vlastní mapu!",
   cannot_restart = "Bohužel, tato hra byla uložena předtím, než byla zavedena funkce restart.",
+  no_custom_game_in_demo = "Je nám líto, ale ve zkušební verzi nemůžete hrát žádné vlastní mapy.",
   very_old_save = "Od spuštění této úrovně došlo k mnoha aktualizacím. Aby bylo zajištěno, že všechny funkce pracují tak, jak mají, zvažte restartování této úrovně.",
   level_lost = {
     [1] = "Smůla! Nesplnili jste úroveň. Hodně štěstí příště!",
@@ -2602,7 +2608,7 @@ main_menu = {
   custom_level = "Vlastní Úroveň",
   load_game = "Načíst Hru",
   options = "Nastavení",
-  savegame_version = "Verze uložených her: ",
+  savegame_version = "Verze ukládaných her: ",
   version = "Verze: ",
   exit = "Ukončit",
   new_game = "Nová Hra",
@@ -2713,14 +2719,14 @@ vip_names = {
   [1] = "Starosta Většího Trumfáku",
   [2] = "Karel Schwarzenberg",
   [3] = "Král Bernard z Nizozemí",
-  [4] = "Aun Schan Su Ťij, Barmská Předsedkyně Demokratické Opozice",
-  [5] = "David Rath",
+  [4] = "Aun Schan Su Ťij, Barmská předsedkyně Demokratické Opozice",
+  [5] = "Franta z Ostravy",
   [6] = "Václav Havel ŘBL",
   [7] = "Rada Vacátko",
   [8] = "Karel Brückner",
   [9] = "Fotbalista Premier League",
   [10] = "Maxmilián Teroplík III",
-  health_minister = "Ministr Zdravotnictví",
+  health_minister = "Ministr zdravotnictví",
 }
 fax = {
   vip_visit_query = {
