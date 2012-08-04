@@ -1068,7 +1068,7 @@ menu_options_game_speed = {
   slower              = "  TREGERE  ",
   normal              = "  NORMAL  ",
   max_speed           = "  MAKSIMAL HASTIGHET  ",
-  and_then_some_more  = "  OG LITT RASKERE  ",
+  and_then_some_more  = "  ENDA LITT RASKERE  ",
 }
 
 -- Menu Display
@@ -1157,9 +1157,9 @@ trophy_room = {
   cash = "KONTANTER",
   wait_times = {
     award = {
-	  [1] = utf8 "Gratulerer. Sykehuset ditt har lav kötid i lang tid. Dette er en viktig pris.", --todo: skal det brukes ordet "pris"?
+      [1] = utf8 "Gratulerer. Sykehuset ditt har lav kötid i lang tid. Dette er en viktig pris.", --todo: skal det brukes ordet "pris"?
     },
-    penalty = {
+      penalty = {
       [1] = utf8 "Pasienter i sykehuset ditt må stå for lenge i kö. Det er alltid uakseptabelt lange köer. Du kunne behandlet pasientene dine mer effektivt, om du bare hadde gått inn for det.",
     },
   },
@@ -1169,8 +1169,8 @@ trophy_room = {
       [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besöker sykehuset ditt enn noen andre institusjoner.",
       [3] = utf8 "Strålende. Du har lokket mer av befolkningen inn ditt sykehus enn det som har besökt alle de andre sykehusene til sammen.",
     },
-	penalty = {
-	  [1] = utf8 "Merk deg at du fikk en höy andel av byen befolkningen til sykehuset ditt det siste året. Godt gjort.",
+  penalty = {
+      [1] = utf8 "Merk deg at du fikk en höy andel av byen befolkningen til sykehuset ditt det siste året. Godt gjort.",
       [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besöker sykehuset ditt enn noen av de andre institusjonene.",
     },
   },
@@ -1194,9 +1194,9 @@ trophy_room = {
   },
   research = {
     regional_good = {
-	  [1] = utf8 "Din forskning har holdt ditt sykehus à jour med den siste utviklingen. Ditt forskningspersonale fortjener denne prisen. Godt gjort.",
+      [1] = utf8 "Din forskning har holdt ditt sykehus à jour med den siste utviklingen. Ditt forskningspersonale fortjener denne prisen. Godt gjort.",
     },
-	regional_bad = {
+  regional_bad = {
       [1] = utf8 "Alle andre sykehus i regionen er bedre på forskning enn deg. Forskning bör være en avgjörende del av sykehuset ditt. Departementet er rasende.",
     },
     penalty = {
@@ -1221,7 +1221,7 @@ trophy_room = {
   curesvdeaths = {
     awards = {
       [1] = utf8 "Solide gratulasjoner på å oppnå et imponerende kurerte kontra dödsfall-forhold på sykehuset det siste året.",
-	},
+  },
     penalty = {
       [1] = utf8 "Din andel av kurerte-vs-dödsfall-forhold er ekstremt dårlig. Du bör sörge for at du kurerer mange flere mennesker enn du lot dö. Ikke svikt oss.",
     },
@@ -1245,7 +1245,7 @@ trophy_room = {
     award = {
       [1] = utf8 "Inspektörer gjör oppmerksom på at sykehuset er veldig rent. Rene sykehus er trygge sykehus. Hold oppe det gode arbeidet.",
     },
-	  regional_good ={
+    regional_good ={
       [1] = utf8 "Ditt sykehus har blitt bemerket som en av de minst rene i området. Et skitten sykehus er stinkende og farlig. Du bör sette mer oppmerksomhet på å fjerne rot.",
     },
       regional_bad = {
@@ -1256,7 +1256,7 @@ trophy_room = {
     awards ={
       [1] = utf8 "Du kan være selvtilfreds om det faktum at folk i sykehuset har vært svært fornöyde i löpet av det siste året.",
       [2] = utf8 "Personer som besöker sykehuset ditt var gjennomsnittlig lykkeligere under deres behandling hos deg enn på noe annet sykehus i spillet.",
-	},
+  },
     penalty = {
       [1] = utf8 "Folk som kommer til sykehuset ditt synes opplevelsen er elendig. Du må gjöre det mye bedre hvis du önsker å få respekt av departementet.",
       [2] = utf8 "Folk som får behandling på sykehuset ditt var svært misfornöyd med tilstanden der. Du bör sette mer fokus på pasientenes velferd.",
@@ -1283,11 +1283,11 @@ trophy_room = {
       [2] = utf8 "Vær snill å ta imot Bullfrog-prisen som tildeles sykehuset med best omdömme i fjor. Nyt det - det er vel fortjent!",
     },
     penalty = {
-	  [1] = utf8 "Man skal være veldig disiplinert for å klare å opprettholde et så dårlig rykte gjennom hele det siste året. Sörg for at det forbedrer i fremtiden.",
+      [1] = utf8 "Man skal være veldig disiplinert for å klare å opprettholde et så dårlig rykte gjennom hele det siste året. Sörg for at det forbedrer i fremtiden.",
       [2] = utf8 "Ditt Sykehus sitt omdömme er det verste i området. Du er en skam. Gjör det bedre eller få deg en annen jobb.",
     },
     regional = {
-	  [1] = utf8 "Vennligst godta Bullfrog-prisen for det höyeste omdömmet det siste året. Nyt det - du har fortjent det.",
+      [1] = utf8 "Vennligst godta Bullfrog-prisen for det höyeste omdömmet det siste året. Nyt det - du har fortjent det.",
       [2] = utf8 "I år har ditt sykehus sitt omdömme overgått alle de andre sykehusene til sammen. En stor prestasjon.",
     },
   },
@@ -1303,7 +1303,7 @@ trophy_room = {
     },
     penalty = {
       [1] = utf8 "De ansatte önsker det skal bli kjent at de er svært misfornöyde. Gode ansatte er en ressurs. Gjör dine lykkeligere, ellers vil du miste dem en dag.",
-	},
+  },
     regional_good = {
       [1] = utf8 "De ansatte er lykkeligere enn på noe annet sykehus. Glade ansatte betyr mer overskudd og mindre död. Departementet er fornöyd.",
     },
@@ -1326,10 +1326,10 @@ trophy_room = {
     trophies = {
       [1] = utf8 "Livet Går Videre Stiftelsen belönner deg med dette trofeet for å ha oppnådd null dödsfall i hele fjor.",
       [2] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.",
-	  [3] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.", --todo: Denne er overflødig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
+      [3] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.", --todo: Denne er overflødig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
     },
-	penalty = {
-	  [1] = utf8 "Antallet dödsfall i sykehuset ditt i fjor var uakseptabelt höyt. Gi mer oppmerksomhet til ditt arbeid. Vær sikker på at flere mennesker overlever i fremtiden.",
+  penalty = {
+      [1] = utf8 "Antallet dödsfall i sykehuset ditt i fjor var uakseptabelt höyt. Gi mer oppmerksomhet til ditt arbeid. Vær sikker på at flere mennesker overlever i fremtiden.",
       [2] = utf8 "Ditt sykehus er en risiko for pasientenes helse. Du forventes å kurere mange mennesker, ikke la dem dö.",
     },
     regional = {
@@ -1376,13 +1376,13 @@ trophy_room = {
   },
   best_value_hosp = {
     trophies  = {
-	  [1] = utf8 "Gratulerer. Du mottar GnukkiRen-Troféet for sykehuset med best omdömme det siste året. Vel fortjent er det også.",
+    [1] = utf8 "Gratulerer. Du mottar GnukkiRen-Troféet for sykehuset med best omdömme det siste året. Vel fortjent er det også.",
     },
-	penalty = {
-	  [1] = utf8 "Hvert sykehus i nærområdet er verdt mer enn ditt. Gjör noe med denne skammelige situasjonen. Få inn noen dyrere ting!",
+  penalty = {
+    [1] = utf8 "Hvert sykehus i nærområdet er verdt mer enn ditt. Gjör noe med denne skammelige situasjonen. Få inn noen dyrere ting!",
     },
     regional = {
-	  [1] = utf8 "Gratulerer med å ha det mest verdifulle sykehuset i spillet. Godt arbeid. Pröv å holde det slik.",
+    [1] = utf8 "Gratulerer med å ha det mest verdifulle sykehuset i spillet. Godt arbeid. Pröv å holde det slik.",
     },
   },
   sold_drinks = {
@@ -1490,37 +1490,28 @@ tooltip = {
     nurses             = "Se en oversikt over dine Sykepleiere",
     handymen           = "Se en oversikt over dine Vaktmestere",
     receptionists      = "Se en oversikt over dine Resepsjonister",
-    
     happiness          = utf8 "Viser hvordan humöret på dine ansatte er",
     tiredness          = utf8 "Viser hvor trött dine ansatte er",
     ability            = "Viser evnene til dine ansatte",
     salary             = utf8 "Den enkeltes gjeldende lönn",
-    
     happiness_2        = "Den ansattes moral",
     tiredness_2        = utf8 "Den ansattes tretthetsnivå",
     ability_2          = "Den ansattes evner",
-    
     prev_person        = "Velg forrige side",
     next_person        = "Velg neste side",
-    
     bonus              = "Gi denne ansatte 10% bonus",
     sack               = "Si opp denne ansatte",
     pay_rise           = utf8 "Hev lönnen til denne ansatte med 10%",
-    
     close              = "Lukk og returner til spillet",
-    
     doctor_seniority   = "Legens erfaring",
     detail             = utf8 "Oppmerksom på detaljer",
-    
     view_staff         = utf8 "Vis ansatt på jobb",
-    
     surgeon            = "Kvalifisert Kirurg",
     psychiatrist       = "Kvalifisert Psykiater",
     researcher         = "Kvalifisert Forsker",
     surgeon_train      = "%d%% ferdig med fordypning innen kirurgi", -- %d (percentage trained)
     psychiatrist_train = "%d%% ferdig med fordypning innen psykiatri", -- %d (percentage trained)
     researcher_train   = "%d%% ferdig med fordypning innen forskning", -- %d (percentage trained)
-    
     skills             = "Ekstra evner",
   },
   
@@ -1605,7 +1596,7 @@ tooltip = {
   
   
   -- Handyman window
-  -- Spparently handymen have their own set of strings (partly) containing "handyman".
+  -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
     name               = "Vaktmesterens navn", -- contains "handyman"
@@ -2158,7 +2149,7 @@ adviser = {
     no_desk_2 = utf8 "Bra gjort! Dette må være en verdensrekord: nesten ett år uten å få noen pasienter! Om du vil fortsette som sjef for dette sykehuset bör du ansette en Resepsjonist og bygg en respsjon der hun kan arbede!",
     no_desk_3 = utf8 "Glimrende! Nesten et år har gått og du har ikke engang en betjent resepsjon! Hvordan tror du at du skal få noen pasienter? Slutt å tulle rundt og få orden på problemet!",
     cannot_afford = utf8 "Du har ikke nok penger på konto til å ansette denne personen!",
-	falling_1 = utf8 "Hei! Det der er ikke moro. Pass på hvor du klikker med den musa; noen kan bli skadet!",
+  falling_1 = utf8 "Hei! Det der er ikke moro. Pass på hvor du klikker med den musa; noen kan bli skadet!",
     falling_2 = utf8 "Slutt å tulle. Hvordan ville du likt det?",
     falling_3 = utf8 "Au, det måtte gjöre vondt. Noen burde ringe etter en Lege!",
     falling_4 = "Dette er et sykehus, ikke en temapark!",
@@ -2707,7 +2698,7 @@ fax = {
     cure_not_possible_employ = utf8 "Du mangler en %s for å kunne håndtere dette",
     cure_not_possible = utf8 "Du kan ikke behandle denne sykdommen for öyeblikket",
     bonus = utf8 "Om du klarer å håndtere dette nödstilfellet, vil du få en bonus på maksimalt %d. Om du feiler derimot, vil ryktet ditt få en kraftig smell.",
-	free_build = utf8 "Hvis du lykkes, vil ditt omdömme vil öke. Men hvis du mislykkes, vil ditt omdömme bli alvorlig svekket!",
+  free_build = utf8 "Hvis du lykkes, vil ditt omdömme vil öke. Men hvis du mislykkes, vil ditt omdömme bli alvorlig svekket!",
 
     locations = {      
       utf8 "A.Toms Våpenkjeller",
@@ -2805,7 +2796,7 @@ fax = {
     rep_loss   = utf8 "Ditt rykte har fått seg en smell.",
     
     remarks = {
-	  free_build = {
+    free_build = {
         [1] = "Det er et veldig fint sykehus du har der! Men det er ikke veldig vanskelig å få det til å fungerer uten pengebegrensninger.",
         [2] = "Jeg er ingen ökonom, men jeg tror jeg kunne styrt dette sykehuset også, hvis du skjönner hva jeg mener.",
         [3] = "Et meget veldrevet sykehus. Men se opp for ökonomiske nedgangstider! Å, det er sant. Du trenger ikke å bekymre deg for det.",

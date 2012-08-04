@@ -544,9 +544,9 @@ function Patient:tickDay()
     
     self.world:findObjectNear(self, "litter", 2, function(x, y)
       local litter = self.world:getObject(x, y, "litter")
-	  if not litter then
-		return
-	  end
+    if not litter then
+    return
+    end
       if litter:vomitInducing() then
         local alreadyFound = false
         for i=1,numVomit do
@@ -580,9 +580,9 @@ function Patient:tickDay()
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
-	if not plant then
-		return
-	end
+  if not plant then
+    return
+  end
     if plant:isPleasing() then
       self:changeAttribute("happiness", 0.0002) 
     else

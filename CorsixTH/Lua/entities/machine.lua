@@ -79,38 +79,38 @@ function Machine:machineUsed(room)
   self:updateDynamicInfo()
   local threshold = self.times_used/self.strength
   if not self.hospital then
-	self.hospital = self.world.hospitals[1]
+  self.hospital = self.world.hospitals[1]
   end
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   if self.ticks ~= true then
-	if threshold >= 1 then
-		self.hospital:removeHandymanTask(taskIndex, "repairing")
-		room:crashRoom()
-		self:setCrashedAnimation()
-		self.hover_cursor = nil
-		self:clearDynamicInfo()
-		local window = self.world.ui:getWindow(UIMachine)
-		if window and window.machine == self then
-			window:close()
-		end
-		self:setRepairing(nil)
-		return true
-	elseif threshold >= 0.75 then
+  if threshold >= 1 then
+    self.hospital:removeHandymanTask(taskIndex, "repairing")
+    room:crashRoom()
+    self:setCrashedAnimation()
+    self.hover_cursor = nil
+    self:clearDynamicInfo()
+    local window = self.world.ui:getWindow(UIMachine)
+    if window and window.machine == self then
+     window:close()
+    end
+    self:setRepairing(nil)
+    return true
+  elseif threshold >= 0.75 then
     -- TODO: 3428 is smoke, add it when additional objects can be made
     -- Urgent
-		if taskIndex == -1 then
-			local call = self.world.dispatcher:callForRepair(self, true)
-			self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
-		else 
-			self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
-		end
-	elseif threshold >= 0.25 then
-		-- Not urgent
-		if taskIndex == -1 then
-			local call = self.world.dispatcher:callForRepair(self, true)
-			self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
-		end
-	end
+    if taskIndex == -1 then
+    local call = self.world.dispatcher:callForRepair(self, true)
+    self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
+    else 
+      self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
+    end
+  elseif threshold >= 0.25 then
+    -- Not urgent
+    if taskIndex == -1 then
+    local call = self.world.dispatcher:callForRepair(self, true)
+    self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
+    end
+  end
   end
 end
 
@@ -167,7 +167,7 @@ function Machine:machineRepaired(room)
   self.times_used = 0
   self:setRepairing(nil)
   if not self.hospital then 
-	self.hospital = self.world.hospitals[1]
+  self.hospital = self.world.hospitals[1]
   end
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   self.hospital:removeHandymanTask(taskIndex, "repairing")
@@ -255,7 +255,7 @@ function Machine:onDestroy()
   end
   local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   if index ~= -1 then
-	 self.hospital:removeHandymanTask(index, "repairing")
+    self.hospital:removeHandymanTask(index, "repairing")
   end
   Object.onDestroy(self)
 end

@@ -256,12 +256,12 @@ options_window = {
 }
 
 tooltip.handyman_window = {
-	parcel_select = "The parcel where the handyman accepts tasks, click to change setting"
+  parcel_select = "The parcel where the handyman accepts tasks, click to change setting"
 }
 
 handyman_window = {
-	all_parcels = "All parcels",
-	parcel = "Parcel"
+  all_parcels = "All parcels",
+  parcel = "Parcel"
 }
 
 tooltip.options_window = {

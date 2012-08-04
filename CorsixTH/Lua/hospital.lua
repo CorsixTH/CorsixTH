@@ -117,8 +117,7 @@ function Hospital:Hospital(world)
   self.not_cured_ty = 0 
   self.num_visitors_ty = 0
 
-  self.ownedPlots = {}
-  self.ownedPlots[1] = 1
+  self.ownedPlots = {1}
   self.is_in_world = true
   self.opened = false
   self.transactions = {}
@@ -721,9 +720,9 @@ function Hospital:purchasePlot(plot_number)
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
-	  if not self.ownedPlots then
-		self:updateOwnedPlots()
-	  end
+    if not self.ownedPlots then
+    self:updateOwnedPlots()
+    end
       table.insert(self.ownedPlots, plot_number)
       -- Also make sure that the transparent walls setting is used. 
       -- TODO: This check should be done in C++?
@@ -830,7 +829,7 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-	  
+    
   -- check if we still have to anounce VIP visit
   if self.announce_vip == 1 then
     -- check if the VIP is in the building yet
@@ -1477,165 +1476,158 @@ function AIHospital:logTransaction()
 end
 
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
-	if not self.handymanTasks then
-		self.handymanTasks = {}
-	end
-	local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
-	local subTable = self:findHandymanTaskSubtable(taskType)
-	table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
+  if not self.handymanTasks then
+  self.handymanTasks = {}
+  end
+  local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
 end
 
 function Hospital:modifyHandymanTaskPriority(taskIndex, newPriority, taskType)
-	if taskIndex ~= -1 then
-		local subTable = self:findHandymanTaskSubtable(taskType)
-		self:findHandymanTaskSubtable(taskType)[taskIndex].priority = newPriority;
-	end
+  if taskIndex ~= -1 then
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  self:findHandymanTaskSubtable(taskType)[taskIndex].priority = newPriority;
+  end
 end
 
 function Hospital:removeHandymanTask(taskIndex, taskType)
-	if taskIndex ~= -1 then
-		local subTable = self:findHandymanTaskSubtable(taskType)
-		local task = subTable[taskIndex]
-		table.remove(subTable, taskIndex)
-		if task.assignedHandyman then
-			if taskType ~= "cleaning" and task.object.ticks ~= true then 
-				task.assignedHandyman:intreruptHandymanTask()
-			end
-		end
-	end
+  if taskIndex ~= -1 then
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  local task = subTable[taskIndex]
+  table.remove(subTable, taskIndex)
+  if task.assignedHandyman then
+    if taskType ~= "cleaning" and task.object.ticks ~= true then 
+      task.assignedHandyman:intreruptHandymanTask()
+    end
+  end
+  end
 end
 
 function Hospital:findHandymanTaskSubtable(taskType)
-	if not self.handymanTasks then
-		self.handymanTasks = {}
-	end
-	for i,v in ipairs(self.handymanTasks) do
-		if self.handymanTasks[i].taskType == taskType then
-			return self.handymanTasks[i].subTable 
-		end
-	end
-	table.insert(self.handymanTasks, {["taskType"] = taskType, ["subTable"] = {}})
-	return self:findHandymanTaskSubtable(taskType)
+  if not self.handymanTasks then
+  self.handymanTasks = {}
+  end
+  for i,v in ipairs(self.handymanTasks) do
+  if self.handymanTasks[i].taskType == taskType then
+    return self.handymanTasks[i].subTable 
+  end
+  end
+  table.insert(self.handymanTasks, {["taskType"] = taskType, ["subTable"] = {}})
+  return self:findHandymanTaskSubtable(taskType)
 end
 
 function Hospital:getTaskObject(taskIndex, taskType)
-	return self:findHandymanTaskSubtable(taskType)[taskIndex]
+  return self:findHandymanTaskSubtable(taskType)[taskIndex]
 end
 
 function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
-	if taskIndex ~= -1 then
-		local subTable = self:findHandymanTaskSubtable(taskType)
-		if not subTable[taskIndex].assignedHandyman then
-			subTable[taskIndex].assignedHandyman  = handyman
-		else
-			local formerHandyman = subTable[taskIndex].assignedHandyman
-			subTable[taskIndex].assignedHandyman  = handyman
-			formerHandyman:intreruptHandymanTask()
-		end
-	end
+  if taskIndex ~= -1 then
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  if not subTable[taskIndex].assignedHandyman then
+    subTable[taskIndex].assignedHandyman  = handyman
+  else
+    local formerHandyman = subTable[taskIndex].assignedHandyman
+      subTable[taskIndex].assignedHandyman  = handyman
+    formerHandyman:intreruptHandymanTask()
+  end
+  end
 end
 
 function Hospital:searchForHandymanTask(handyman, taskType)
-	local subTable = self:findHandymanTaskSubtable(taskType)
-	--if a distance is smaller than this value stop the search to 
-	--save performance
-	local thresholdForStopping = 3
-	local first = true
-	local dist
-	local index = -1
-	local priority = 0
-	local multiplier = 1
-	if handyman.profile.is_consultant then
-		multiplier = 0.5
-	elseif handyman.profile.is_junior then
-		multiplier = 2
-	end
-	if not handyman.parcelNr then
-		handyman.parcelNr = 0
-	end
-	for i, v in ipairs(subTable) do
-		local distance = self.world:getPathDistance(v.tile_x, v.tile_y, handyman.tile_x, handyman.tile_y)
-		local canContinue = true
-		if not first and v.priority < priority then
-			canContinue = false
-		end
-		if not v.parcelId then
-		   v.parcelId = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
-		end
-		if handyman.parcelNr ~= 0 and handyman.parcelNr ~= v.parcelId then
-			canContinue = false
-		end
-		if distance == false then
-			canContinue = false
-		end
-		if canContinue then
-			if v.assignedHandyman then
-				if v.assignedHandyman.fired then
-					v.assignedHandyman = nil
-				else
-					local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
-					if assignedDistance ~= false then
-						if v.assignedHandyman.profile.is_consultant then
-							assignedDistance = assignedDistance / 2
-						elseif v.assignedHandyman.profile.is_junior then
-							assignedDistance = assignedDistance * 2
-						end
-						distance = distance * multiplier
-						if distance + 5 > assignedDistance then
-							canContinue = false
-						else
-							distance = distance / multiplier
-						end
-					end
-				end
-			end	
-			if canContinue then
-				if first then
-					if distance <= thresholdForStopping then
-						return i
-					end
-					first, dist, index, priority = false, distance, i, v.priority
-				elseif  priority < v.priority or distance < dist then
-					if distance < thresholdForStopping then
-						return i
-					end
-					dist, index, priority = distance, i, v.priority
-				end
-			end
-		end
-	end
-	return index
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  --if a distance is smaller than this value stop the search to 
+  --save performance
+  local thresholdForStopping = 3
+  local first, dist, index, priority, multiplier = true, 0, -1, 0, 1
+  if handyman.profile.is_consultant then
+   multiplier = 0.5
+  elseif handyman.profile.is_junior then
+  multiplier = 2
+  end
+  if not handyman.parcelNr then
+  handyman.parcelNr = 0
+  end
+  for i, v in ipairs(subTable) do
+  local distance = self.world:getPathDistance(v.tile_x, v.tile_y, handyman.tile_x, handyman.tile_y)
+  local canContinue = true
+  if not first and v.priority < priority then
+    canContinue = false
+  end
+  if not v.parcelId then
+    v.parcelId = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
+  end
+  if handyman.parcelNr ~= 0 and handyman.parcelNr ~= v.parcelId then
+    canContinue = false
+  end
+  if distance == false then
+    canContinue = false
+  end
+  if canContinue then
+    if v.assignedHandyman then
+    if v.assignedHandyman.fired then
+      v.assignedHandyman = nil
+    else
+      local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
+      if assignedDistance ~= false then
+      if v.assignedHandyman.profile.is_consultant then
+        assignedDistance = assignedDistance / 2
+      elseif v.assignedHandyman.profile.is_junior then
+        assignedDistance = assignedDistance * 2
+      end
+      if distance * multiplier + 5 > assignedDistance then
+        canContinue = false
+      end
+         end
+    end
+    end  
+    if canContinue then
+    if first then
+      if distance <= thresholdForStopping then
+      return i
+      end
+     first, dist, index, priority = false, distance, i, v.priority
+    elseif  priority < v.priority or distance < dist then
+      if distance < thresholdForStopping then
+      return i
+      end
+      dist, index, priority = distance, i, v.priority
+    end
+    end
+  end
+  end
+  return index
 end
 
 
 function Hospital:getIndexOfTask(x, y, taskType)
-	if not self.handymanTasks then
-		self.handymanTasks = {}
-	end
-	local subTable = self:findHandymanTaskSubtable(taskType)
-	for i, v in ipairs(subTable) do
-		if v.tile_x == x and v.tile_y == y then
-			return i
-		end
-	end
-	return -1
+  if not self.handymanTasks then
+  self.handymanTasks = {}
+  end
+  local subTable = self:findHandymanTaskSubtable(taskType)
+  for i, v in ipairs(subTable) do
+    if v.tile_x == x and v.tile_y == y then
+    return i
+  end
+  end
+  return -1
 end
 
 function Hospital:updateOwnedPlots()
-	self.ownedPlots = {}
-	for i, v in ipairs(self.world.entities) do
-		if v.tile_x and v.tile_y then
-			local parcel = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId;
-			local isAlreadyContained = false
-			for i2, v2 in ipairs(self.ownedPlots) do
-				if parcel == v2 then
-					isAlreadyContained = true
-					break
-				end
-			end
-			if isAlreadyContained == false and parcel ~= 0 and self.world.map.th:getPlotOwner(parcel) ~= 0  then
-				table.insert(self.ownedPlots, parcel)
-			end
-		end
-	end
+  self.ownedPlots = {}
+  for i, v in ipairs(self.world.entities) do
+   if v.tile_x and v.tile_y then
+      local parcel = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId;
+    local isAlreadyContained = false
+    for i2, v2 in ipairs(self.ownedPlots) do
+    if parcel == v2 then
+      isAlreadyContained = true
+      break
+    end
+    end
+    if isAlreadyContained == false and parcel ~= 0 and self.world.map.th:getPlotOwner(parcel) ~= 0  then
+    table.insert(self.ownedPlots, parcel)
+    end
+  end
+  end
 end

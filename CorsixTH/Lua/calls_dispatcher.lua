@@ -93,16 +93,17 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   lock_room = manual or lock_room
   
   local call = {
-				 verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
-				 priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
-				 execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
-				 object = object,
-				 key = "repair",
-				 description = _S.calls_dispatcher.repair:format(object.object_type.name),
-				 dispatcher = self,
-				 created = self.tick,
-				 assigned = nil,
-				 dropped = nil}
+    verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
+  priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
+  execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
+  object = object,
+  key = "repair",
+  description = _S.calls_dispatcher.repair:format(object.object_type.name),
+  dispatcher = self,
+  created = self.tick,
+  assigned = nil,
+  dropped = nil
+  }
   
   object:setRepairingMode(lock_room and true or false)
   local message
@@ -126,31 +127,32 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
   
   if not self.call_queue[object] then
-		self.call_queue[object] = {}
-	end
+  self.call_queue[object] = {}
+  end
   self.call_queue[object]["repair"] = call
   return call
 end
 
 function CallsDispatcher:callForWatering(plant)
-  local call = {verification = --[[persistable:call_dispatcher_watering_verification]]function(staff) 
-								return false end,
-				 priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
-								return 1 end,
-				 execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
-				 object = plant,
-				 key = "watering",
-				 description = _S.calls_dispatcher.watering:format(plant.tile_x, plant.tile_y),
-				 dispatcher = self,
-				 created = self.tick,
-				 assigned = nil,
-				 dropped = nil
-				 }
-	if not self.call_queue[plant] then
-		self.call_queue[plant] = {}
-	end
-	self.call_queue[plant]["watering"] = call
-	return call
+  local call = {
+    verification = --[[persistable:call_dispatcher_watering_verification]]function(staff) 
+    return false end,
+  priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
+    return 1 end,
+  execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
+  object = plant,
+  key = "watering",
+    description = _S.calls_dispatcher.watering:format(plant.tile_x, plant.tile_y),
+  dispatcher = self,
+  created = self.tick,
+  assigned = nil,
+  dropped = nil
+  }
+  if not self.call_queue[plant] then
+    self.call_queue[plant] = {}
+  end
+  self.call_queue[plant]["watering"] = call
+  return call
 end
 
 -- Enqueue the call
@@ -197,12 +199,12 @@ function CallsDispatcher:findSuitableStaff(call)
   for _, e in ipairs(self.world.entities) do
     if class.is(e, Staff) then
       if e.humanoid_class ~= "Handyman" then
-		local score = call.verification(e) and call.priority(e) or nil
-		if score ~= nil and score < min_score then
-			min_score = score
-			min_staff = e
-		end
-	  end
+    local score = call.verification(e) and call.priority(e) or nil
+    if score ~= nil and score < min_score then
+      min_score = score
+      min_staff = e
+    end
+    end
     end
   end
 
@@ -227,8 +229,8 @@ function CallsDispatcher:answerCall(staff)
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
 
   if staff.humanoid_class == "Handyman" then
-	 staff:searchForHandymanTask()
-	 return true
+   staff:searchForHandymanTask()
+   return true
   end
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
@@ -342,7 +344,7 @@ end
 --   or when the object is destroyed, etc.
 function CallsDispatcher:dropFromQueue(object, key)
   if debug then self:dump() end
-  if key then
+  if key and self.call_queue[object] then
     local call = self.call_queue[object][key]
     if call then
       call.dropped = true

@@ -22,19 +22,18 @@ local function meander_action_start(action, humanoid)
   local room = humanoid:getRoom()
   -- Answering call queue
   if class.is(humanoid, Staff) and humanoid:isIdle() and not room then
-  
-	if humanoid.humanoid_class == "Handyman" then
-		if humanoid:searchForHandymanTask() == true then
-			return
-		end
+  if humanoid.humanoid_class == "Handyman" then
+    if humanoid:searchForHandymanTask() == true then
+      return
+    end
     -- If staff starts wandering around in Idle mode,
     -- he's effectively not in any room and need not to comeback after 
     -- staff room visit
     elseif humanoid.world.dispatcher:answerCall(humanoid) then
       if action.must_happen then 
-		humanoid:finishAction()
-	  end
-	  return
+    humanoid:finishAction()
+    end
+    return
     else
       -- Nowhere to go, start going to the old room if it's still in
       -- need of staff.

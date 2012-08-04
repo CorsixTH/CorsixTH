@@ -65,13 +65,13 @@ function Staff:tickDay()
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
-	if plant then
-		if plant:isPleasing() then
-			self:changeAttribute("happiness", 0.002)
-		else
-			self:changeAttribute("happiness", -0.003)
-		end
-	end
+  if plant then
+    if plant:isPleasing() then
+     self:changeAttribute("happiness", 0.002)
+      else
+      self:changeAttribute("happiness", -0.003)
+    end
+    end
   end)  
   -- It always makes you happy to see you are in safe place  
   self.world:findObjectNear(self, "extinguisher", 2, function(x, y)  
@@ -181,10 +181,10 @@ function Staff:tick()
   end
   -- seeing litter will make you unhappy. If it is pee or puke it is worse
   self.world:findObjectNear(self, "litter", 2, function(x, y)
-	local litter = self.world:getObject(x, y, "litter")
-	if not litter then
-		return
-	end
+  local litter = self.world:getObject(x, y, "litter")
+  if not litter then
+    return
+  end
     if litter:anyLitter() then
       self:changeAttribute("happiness", -0.0002)
     else
@@ -592,8 +592,8 @@ function Staff:goToStaffRoom()
   -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   self.going_to_staffroom = true
   if self.task then
-	self.task.assignedHandyman = nil
-	self.task = nil
+  self.task.assignedHandyman = nil
+  self.task = nil
   end
   local room = self:getRoom()
   if room then
@@ -614,8 +614,8 @@ function Staff:onPlaceInCorridor()
   -- staff member to primarily return to his/her old room.
   self.last_room = nil
   if self.task then
-	self.task.assignedHandyman = nil
-	self.task = nil
+  self.task.assignedHandyman = nil
+  self.task = nil
   end
   self:updateSpeed()
   self:setNextAction{name = "meander"}
@@ -840,98 +840,76 @@ function Staff:afterLoad(old, new)
 end
 
 function Staff:intreruptHandymanTask()
-	self:setDynamicInfoText(" ")
-	if self.on_call then
-		self.on_call.assigned = nil
-		self.on_call = nil
-    end
-	self:setNextAction{name = "answer_call"}
+  self:setDynamicInfoText("")
+  if self.on_call then
+  self.on_call.assigned = nil
+  self.on_call = nil
+  end
+  self:setNextAction{name = "answer_call"}
 end
 
 function Staff:searchForHandymanTask()
-	self.task = nil
-	local nr = math.random()
-	local index
-	local task, task2, task3
-	local assignedTask = false
-	if nr < self.attributes["cleaning"] then
-		index = self.hospital:searchForHandymanTask(self, "cleaning")
-		task = "cleaning"
-		task2 = "watering"
-		task3 = "repairing"
-	elseif nr < self.attributes["cleaning"] + self.attributes["watering"] then
-		index = self.hospital:searchForHandymanTask(self, "watering")
-		task = "watering"
-		task2 = "cleaning"
-		task3 = "repairing"
-	else 
-		index = self.hospital:searchForHandymanTask(self, "repairing")
-		task = "repairing"
-		task2 = "watering"
-		task3 = "cleaning"
-	end
-	if index ~= -1 then
-		self:assignHandymanTask(index, task)
-		assignedTask = true
-	else
-		if self.attributes[task] < 1 then
-			local sum = self.attributes[task2] + self.attributes[task3]
-			if math.random(0, sum * 100) < self.attributes[task2] * 100 then
-				index = self.hospital:searchForHandymanTask(self, task2)
-				if index ~= -1 then
-					self:assignHandymanTask(index, task2)
-					assignedTask = true
-				elseif self.attributes[task3] > 0 then
-					index = self.hospital:searchForHandymanTask(self, task3)
-					if index ~= -1 then
-						self:assignHandymanTask(index, task3)
-						assignedTask = true
-					end
-				end
-			else
-				index = self.hospital:searchForHandymanTask(self, task3)
-				if index ~= -1 then
-					self:assignHandymanTask(index, task3)
-					assignedTask = true
-				elseif self.attributes[task2] > 0 then
-					index = self.hospital:searchForHandymanTask(self, task2)
-					if index ~= -1 then
-						self:assignHandymanTask(index, task2)
-						assignedTask = true
-					end
-				end
-			end
-		end
-	
-	end
-	if assignedTask == false then
-		if self:getRoom() then
-			self:queueAction(self:getRoom():createLeaveAction())
-		end
-		self:queueAction({name = "meander"})
-		return false
-	else
-		return true
-	end
+  self.task = nil
+  local nr = math.random()
+  local task, task2, task3
+  local assignedTask = false
+  if nr < self.attributes["cleaning"] then
+  task, task2, task3 = "cleaning", "watering", "repairing"
+  elseif nr < self.attributes["cleaning"] + self.attributes["watering"] then
+  task, task2, task3 = "watering", "cleaning", "repairing"
+  else 
+  task, task2, task3 = "repairing", "watering", "cleaning"
+  end
+  local index = self.hospital:searchForHandymanTask(self, task)
+  if index ~= -1 then
+  self:assignHandymanTask(index, task)
+  assignedTask = true
+  else
+    if self.attributes[task] < 1 then
+    local sum = self.attributes[task2] + self.attributes[task3]
+    if math.random(0, sum * 100) > self.attributes[task2] * 100 then
+    task2, task3 =  task3, task2
+    end
+    index = self.hospital:searchForHandymanTask(self, task2)
+    if index ~= -1 then
+    self:assignHandymanTask(index, task2)
+    assignedTask = true
+    elseif self.attributes[task3] > 0 then
+    index = self.hospital:searchForHandymanTask(self, task3)
+    if index ~= -1 then
+      self:assignHandymanTask(index, task3)
+      assignedTask = true
+    end
+    end
+  end
+  end
+  if assignedTask == false then
+  if self:getRoom() then
+    self:queueAction(self:getRoom():createLeaveAction())
+  end
+  self:queueAction({name = "meander"})
+  return false
+  end
+  return true
 end
 
 function Staff:assignHandymanTask(taskIndex, taskType)
-	self.hospital:assignHandymanToTask(self, taskIndex, taskType)
-	local task = self.hospital:getTaskObject(taskIndex, taskType)
-	self.task = task
-	if taskType == "cleaning" then
-		if self:getRoom() then
-			self:setNextAction(self:getRoom():createLeaveAction())
-			self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
-		else
-			self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
-		end
-		self:queueAction{name = "sweep_floor", litter = task.object}
-		self:queueAction{name = "answer_call"}
-	else
-		if task.call.dropped then
-			task.call.dropped = nil
-		end
-			task.call.dispatcher:executeCall(task.call, self)
-	end
+  self.hospital:assignHandymanToTask(self, taskIndex, taskType)
+  local task = self.hospital:getTaskObject(taskIndex, taskType)
+  self.task = task
+  if taskType == "cleaning" then
+   if self:getRoom() then
+      self:setNextAction(self:getRoom():createLeaveAction())
+    self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
+  else
+    self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
+  end
+  self:queueAction{name = "sweep_floor", litter = task.object}
+  self:queueAction{name = "answer_call"}
+  else
+  if task.call.dropped then
+    task.call.dropped = nil
+  end
+  task.call.dispatcher:executeCall(task.call, self)
+  end
 end

@@ -72,9 +72,9 @@ function Vip:tickDay()
   self.world:findObjectNear(self, "litter", 8, function(x, y)
     local litter = self.world:getObject(x, y, "litter")
     local alreadyFound = false
-	if not litter then
-		return
-	end
+  if not litter then
+    return
+  end
     for i=1,(self.num_vomit_noninducing + self.num_vomit_inducing) do
       if self.found_vomit[i] == litter then
         alreadyFound = true
@@ -402,7 +402,7 @@ function Vip:setVIPRating()
     if (patient.action_queue[1].name == "idle") then
       numberStanding = numberStanding + 1
     elseif (patient.action_queue[1].name == "use_object" and
-	    patient.action_queue[1].object.object_type.id == "bench") then
+      patient.action_queue[1].object.object_type.id == "bench") then
       numberSitting = numberSitting + 1
     end
   end

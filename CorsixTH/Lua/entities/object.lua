@@ -500,16 +500,16 @@ function Object:onClick(ui, button, data)
       fullscreen:close()
     end
 
-	if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
-		local taskType = "watering"
-		if self.object_type.class == "Machine" then
-			taskType = "repairing"		
-		end
-		local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
-		if index ~= -1 then
-			self.hospital:removeHandymanTask(index, taskType)
-		end
-	end
+  if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
+    local taskType = "watering"
+    if self.object_type.class == "Machine" then
+     taskType = "repairing"    
+    end
+    local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
+    if index ~= -1 then
+    self.hospital:removeHandymanTask(index, taskType)
+    end
+  end
     self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,

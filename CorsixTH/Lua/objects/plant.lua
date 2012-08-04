@@ -130,11 +130,11 @@ function Plant:restoreToFullHealth()
   self:setTimer((self.direction == "south" or self.direction == "east") and 35 or 20, plant_restoring)
   self.days_left = days_between_states
   if not self.hospital then 
-	self.hospital = self.world.hospitals[1]
+  self.hospital = self.world.hospitals[1]
   end
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
   if taskIndex ~= -1 then
-	self.hospital:removeHandymanTask(taskIndex, "watering")
+  self.hospital:removeHandymanTask(taskIndex, "watering")
   end
 end
 
@@ -198,32 +198,32 @@ end
 --! When the plant needs water it preiodically calls for a nearby handyman.
 function Plant:callForWatering()
   if not self.hospital then
-	self.hospital = self.world.hospitals[1]
+  self.hospital = self.world.hospitals[1]
   end
   if self.unreachable then
-	local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
-	if ux and uy then
-		self.unreachable = nil
-	end
+  local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
+  if ux and uy then
+    self.unreachable = nil
+  end
   end
   -- If self.ticks is true it means that a handyman is currently watering the plant.
   -- If there are no tiles to water from, just die.
   if not self.ticks and not self.unreachable then
-	local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
-	if index == -1 then
-		local call = self.world.dispatcher:callForWatering(self)
-		if self.current_state > 1 and not self.plant_announced then
-			self.world.ui.adviser:say(_A.warnings.plants_thirsty)
-			self.plant_announced = true
-		end
-		self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
-	else 
-		if self.current_state > 1 and not self.plant_announced then
-			self.world.ui.adviser:say(_A.warnings.plants_thirsty)
-			self.plant_announced = true
-		end
-		self.hospital:modifyHandymanTaskPriority(index, self.current_state + 1, "watering")
-	end
+    local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
+  if index == -1 then
+    local call = self.world.dispatcher:callForWatering(self)
+    if self.current_state > 1 and not self.plant_announced then
+        self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+      self.plant_announced = true
+    end
+    self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
+  else 
+    if self.current_state > 1 and not self.plant_announced then
+    self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+    self.plant_announced = true
+    end
+    self.hospital:modifyHandymanTaskPriority(index, self.current_state + 1, "watering")
+  end
   end
 end
 
@@ -240,10 +240,10 @@ function Plant:createHandymanActions(handyman)
     -- The plant cannot be reached.
     self.unreachable = true
     self.unreachable_counter = days_unreachable
-	local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
-	if index ~= -1 then
-		self.hospital:removeHandymanTask(index, "watering")
-	end
+  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
+  if index ~= -1 then
+    self.hospital:removeHandymanTask(index, "watering")
+  end
     -- Release Handyman
     handyman:setCallCompleted()
     if handyman_room then
@@ -350,10 +350,10 @@ function Plant:isPleasing()
 end
 
 function Plant:onDestroy()
-	local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
-	if index ~= -1 then
-		self.hospital:removeHandymanTask(index, "watering")
-	end
-	Object.onDestroy(self)
+  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
+  if index ~= -1 then
+  self.hospital:removeHandymanTask(index, "watering")
+  end
+  Object.onDestroy(self)
 end
 return object
