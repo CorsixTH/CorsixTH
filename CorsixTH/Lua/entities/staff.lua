@@ -65,12 +65,12 @@ function Staff:tickDay()
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
-  if plant then
-    if plant:isPleasing() then
-     self:changeAttribute("happiness", 0.002)
+    if plant then
+      if plant:isPleasing() then
+        self:changeAttribute("happiness", 0.002)
       else
-      self:changeAttribute("happiness", -0.003)
-    end
+        self:changeAttribute("happiness", -0.003)
+      end
     end
   end)  
   -- It always makes you happy to see you are in safe place  
@@ -842,8 +842,8 @@ end
 function Staff:intreruptHandymanTask()
   self:setDynamicInfoText("")
   if self.on_call then
-  self.on_call.assigned = nil
-  self.on_call = nil
+    self.on_call.assigned = nil
+    self.on_call = nil
   end
   self:setNextAction{name = "answer_call"}
 end
@@ -854,41 +854,41 @@ function Staff:searchForHandymanTask()
   local task, task2, task3
   local assignedTask = false
   if nr < self.attributes["cleaning"] then
-  task, task2, task3 = "cleaning", "watering", "repairing"
+    task, task2, task3 = "cleaning", "watering", "repairing"
   elseif nr < self.attributes["cleaning"] + self.attributes["watering"] then
-  task, task2, task3 = "watering", "cleaning", "repairing"
+    task, task2, task3 = "watering", "cleaning", "repairing"
   else 
-  task, task2, task3 = "repairing", "watering", "cleaning"
+    task, task2, task3 = "repairing", "watering", "cleaning"
   end
   local index = self.hospital:searchForHandymanTask(self, task)
   if index ~= -1 then
-  self:assignHandymanTask(index, task)
-  assignedTask = true
+    self:assignHandymanTask(index, task)
+    assignedTask = true
   else
     if self.attributes[task] < 1 then
-    local sum = self.attributes[task2] + self.attributes[task3]
-    if math.random(0, sum * 100) > self.attributes[task2] * 100 then
-    task2, task3 =  task3, task2
+      local sum = self.attributes[task2] + self.attributes[task3]
+      if math.random(0, sum * 100) > self.attributes[task2] * 100 then
+        task2, task3 =  task3, task2
+      end
+      index = self.hospital:searchForHandymanTask(self, task2)
+      if index ~= -1 then
+        self:assignHandymanTask(index, task2)
+        assignedTask = true
+      elseif self.attributes[task3] > 0 then
+        index = self.hospital:searchForHandymanTask(self, task3)
+        if index ~= -1 then
+          self:assignHandymanTask(index, task3)
+          assignedTask = true
+        end
+      end
     end
-    index = self.hospital:searchForHandymanTask(self, task2)
-    if index ~= -1 then
-    self:assignHandymanTask(index, task2)
-    assignedTask = true
-    elseif self.attributes[task3] > 0 then
-    index = self.hospital:searchForHandymanTask(self, task3)
-    if index ~= -1 then
-      self:assignHandymanTask(index, task3)
-      assignedTask = true
-    end
-    end
-  end
   end
   if assignedTask == false then
-  if self:getRoom() then
-    self:queueAction(self:getRoom():createLeaveAction())
-  end
-  self:queueAction({name = "meander"})
-  return false
+    if self:getRoom() then
+      self:queueAction(self:getRoom():createLeaveAction())
+    end
+    self:queueAction({name = "meander"})
+    return false
   end
   return true
 end
@@ -898,18 +898,18 @@ function Staff:assignHandymanTask(taskIndex, taskType)
   local task = self.hospital:getTaskObject(taskIndex, taskType)
   self.task = task
   if taskType == "cleaning" then
-   if self:getRoom() then
+    if self:getRoom() then
       self:setNextAction(self:getRoom():createLeaveAction())
-    self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
+      self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
+    else
+      self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
+    end
+    self:queueAction{name = "sweep_floor", litter = task.object}
+    self:queueAction{name = "answer_call"}
   else
-    self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
-  end
-  self:queueAction{name = "sweep_floor", litter = task.object}
-  self:queueAction{name = "answer_call"}
-  else
-  if task.call.dropped then
-    task.call.dropped = nil
-  end
-  task.call.dispatcher:executeCall(task.call, self)
+    if task.call.dropped then
+      task.call.dropped = nil
+    end
+    task.call.dispatcher:executeCall(task.call, self)
   end
 end

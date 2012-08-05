@@ -630,7 +630,7 @@ function Room:crashRoom()
   if object.object_type.class == "Plant" then
     local index = self.hospital:getIndexOfTask(object.tile_x, object.tile_y, "watering")
     if index ~= -1 then
-    self.hospital:removeHandymanTask(index, "watering")
+      self.hospital:removeHandymanTask(index, "watering")
     end
     object.unreachable = true
   end

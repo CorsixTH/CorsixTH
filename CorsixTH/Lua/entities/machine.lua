@@ -91,7 +91,7 @@ function Machine:machineUsed(room)
     self:clearDynamicInfo()
     local window = self.world.ui:getWindow(UIMachine)
     if window and window.machine == self then
-     window:close()
+      window:close()
     end
     self:setRepairing(nil)
     return true
@@ -99,16 +99,16 @@ function Machine:machineUsed(room)
     -- TODO: 3428 is smoke, add it when additional objects can be made
     -- Urgent
     if taskIndex == -1 then
-    local call = self.world.dispatcher:callForRepair(self, true)
-    self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
+      local call = self.world.dispatcher:callForRepair(self, true)
+      self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
     else 
       self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
     end
   elseif threshold >= 0.25 then
     -- Not urgent
     if taskIndex == -1 then
-    local call = self.world.dispatcher:callForRepair(self, true)
-    self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
+      local call = self.world.dispatcher:callForRepair(self, true)
+      self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
     end
   end
   end

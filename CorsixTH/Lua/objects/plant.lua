@@ -213,14 +213,14 @@ function Plant:callForWatering()
   if index == -1 then
     local call = self.world.dispatcher:callForWatering(self)
     if self.current_state > 1 and not self.plant_announced then
-        self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+      self.world.ui.adviser:say(_A.warnings.plants_thirsty)
       self.plant_announced = true
     end
     self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
   else 
     if self.current_state > 1 and not self.plant_announced then
-    self.world.ui.adviser:say(_A.warnings.plants_thirsty)
-    self.plant_announced = true
+      self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+      self.plant_announced = true
     end
     self.hospital:modifyHandymanTaskPriority(index, self.current_state + 1, "watering")
   end
@@ -352,7 +352,7 @@ end
 function Plant:onDestroy()
   local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
   if index ~= -1 then
-  self.hospital:removeHandymanTask(index, "watering")
+    self.hospital:removeHandymanTask(index, "watering")
   end
   Object.onDestroy(self)
 end

@@ -268,12 +268,12 @@ options_window = {
 }
 
 tooltip.handyman_window = {
-	parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
+  parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
 }
 
 handyman_window = {
-	all_parcels = "Todas las parcelas",
-	parcel = "Parcela"
+  all_parcels = "Todas las parcelas",
+  parcel = "Parcela"
 }
 
 tooltip.options_window = {

@@ -1,6 +1,6 @@
 ﻿--[[ Copyright (c) 2010 RAS
-				   2011	FlyingBastard, L_konings, Nossah, KasperVld 
-				   2012 Omni
+                   2011 FlyingBastard, L_konings, Nossah, KasperVld 
+                   2012 Omni
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -317,8 +317,8 @@ trophy_room = {
   happy_vips = {
     trophies = {
       [1] = "Door de indruk die je hebt gemaakt op VIPs heb je een Nobelprijs gewonnen. Iedereen die je ziekenhuis bezocht sprak niets dan lof.",
-	  [2] = "Het Beroemde Personenbureau keert u bij deze de Celebrity Trofee uit voor de lof die u van alle VIPs heeft ontvangen. Beschouw uzelf een beetje beroemd en bijna een van ons.",
-	  [3] = "Gefeliciteerd met het winnen van de VIP TRIP. U maakt de levens van hardwerkende beroemdheden een stuk mooier, door het ze allemaal naar hun zin te maken. Fantastisch!",
+      [2] = "Het Beroemde Personenbureau keert u bij deze de Celebrity Trofee uit voor de lof die u van alle VIPs heeft ontvangen. Beschouw uzelf een beetje beroemd en bijna een van ons.",
+      [3] = "Gefeliciteerd met het winnen van de VIP TRIP. U maakt de levens van hardwerkende beroemdheden een stuk mooier, door het ze allemaal naar hun zin te maken. Fantastisch!",
     },
   },
   rats_killed = {
@@ -346,25 +346,25 @@ trophy_room = {
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Iedereen Trofee voor het genezen van iedereen die in het afgelopen jaar uw ziekenhuis binnen is komen lopen.",
       [2] = utf8 "U krijgt de Geen Zieke Rochel Trofee voor het genezen van elke patiënt die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
-	},
+    },
   },
   many_cured = {
     awards = {
       [1] = utf8 "Gefeliciteerd met het winnen van de Marie Curie Award voor het behandelen van bijne alle patiënten in uw ziekenhuis in het afgelopen jaar.",
-	  [2] = utf8"U ontvangt deze trofee omdat u meer patiënten heeft genezen dan alle andere ziekenhuizen. Een opvallende prestatie.",
+      [2] = utf8"U ontvangt deze trofee omdat u meer patiënten heeft genezen dan alle andere ziekenhuizen. Een opvallende prestatie.",
     },
     trophies = {
       [1] = "De Internationale Geneesstichting wil u eren met de Gezondheid voor Alles Trofee voor het genezen van massa's mensen die in het afgelopen jaar uw ziekenhuis binnen zijn komen lopen.",
       [2] = utf8 "U krijgt de Geen Zieke Rochel Trofee voor het genezen van een groot aantal patiënten die in het afgelopen jaar uw ziekenhuis heeft bezocht.",
-	  [3] = "Hierbij ontvangt u de Gezonde Gorgel, een prijs voor het genezen van een enorm percentage van uw bezoekers in het afgelopen jaar.",
+      [3] = "Hierbij ontvangt u de Gezonde Gorgel, een prijs voor het genezen van een enorm percentage van uw bezoekers in het afgelopen jaar.",
     },
-	penalty = {
-	  [1] = utf8 "Het lukt uw ziekenhuis niet de patiënten effectief te genezen. Concentreer u op goede behandelmethoden zodat behandelingen effectiever worden.",
-	  [2] = utf8 "Uw ziekenhuis is het minst effectief als het gaat om patiënten genezen. U heeft het Ministerie teleur gesteld. Moeten we nog meer zeggen?",
-	},
-	regional = {
-	  [1] = "Vanwege het feit dat u meer zieken heeft genezen dan alle andere ziekenhuizen bij elkaar opgeteld ontvangt u hiervoor de hoogst haalbare onderscheiding. Gefeliciteerd!",
-	},
+    penalty = {
+      [1] = utf8 "Het lukt uw ziekenhuis niet de patiënten effectief te genezen. Concentreer u op goede behandelmethoden zodat behandelingen effectiever worden.",
+      [2] = utf8 "Uw ziekenhuis is het minst effectief als het gaat om patiënten genezen. U heeft het Ministerie teleur gesteld. Moeten we nog meer zeggen?",
+    },
+    regional = {
+      [1] = "Vanwege het feit dat u meer zieken heeft genezen dan alle andere ziekenhuizen bij elkaar opgeteld ontvangt u hiervoor de hoogst haalbare onderscheiding. Gefeliciteerd!",
+    },
   },
   healthy_plants = {
     awards = {
@@ -378,20 +378,20 @@ trophy_room = {
   no_deaths = {
     awards = {
       [1] = utf8 "U heeft de Nimmer Vergaan award gewonnen voor het in leven houden van al uw patiënten in het afgelopen jaar.",
-	  [2] = "Uw talent heeft gezorgd voor een minimaal aantal sterfgevallen in uw ziekenhuis. U kunt apetrots zijn op dit resultaat.",
+      [2] = "Uw talent heeft gezorgd voor een minimaal aantal sterfgevallen in uw ziekenhuis. U kunt apetrots zijn op dit resultaat.",
     },
     trophies = {
       [1] = "De 'Het Leven Gaat Door'-corporatie presenteert u de volgende trofee omdat er in het afgelopen jaar geen mensen zijn overleden.",
       [2] = "U heeft de Overlijden Vermijden Trofee uitgereikt gekregen voor het in leven houden van elke bezoeker van uw fantastische ziekenhuis in het afgelopen jaar. Bravo.",
-	  [3] = utf8 "Hierbij ontvangt u de 'Ik Leef Nog' prijs omdat dit jaar geen van uw patiënten is overleden in uw mooie ziekenhuis. Heel goed.",
+      [3] = utf8 "Hierbij ontvangt u de 'Ik Leef Nog' prijs omdat dit jaar geen van uw patiënten is overleden in uw mooie ziekenhuis. Heel goed.",
     },
-	penalty = {
-	  [1] = "Het aantal overledenen in uw ziekenhuis was het afgelopen jaar behoorlijk hoog. Let goed op en zorg dat in de toekomst meer mensen de behandeling overleven.",
-	  [2] = utf8 "Uw ziekenhuis is een gevaar voor de gezondheid van de patiënt. Er wordt verwacht dat u mensen geneest, niet laat doodgaan!",
-	},
-	regional = {
-	  [1] = "Het dodental in uw ziekenhuis was het laatste jaar lager dan dat van ieder ander ziekenhuis. Daarvoor bieden wij u deze trofee aan.",
-	},
+    penalty = {
+      [1] = "Het aantal overledenen in uw ziekenhuis was het afgelopen jaar behoorlijk hoog. Let goed op en zorg dat in de toekomst meer mensen de behandeling overleven.",
+      [2] = utf8 "Uw ziekenhuis is een gevaar voor de gezondheid van de patiënt. Er wordt verwacht dat u mensen geneest, niet laat doodgaan!",
+    },
+    regional = {
+      [1] = "Het dodental in uw ziekenhuis was het laatste jaar lager dan dat van ieder ander ziekenhuis. Daarvoor bieden wij u deze trofee aan.",
+    },
   },
   sold_drinks = {
     awards = {
@@ -407,151 +407,151 @@ trophy_room = {
       [1] = "Hierbij eren wij uw hoge standaarden en een reputatie die dit jaar gewoon niet beter kan zijn. Goed werk.",
       [2] = "Gefeliciteerd met de Zuijver Op Den Graet trofee voor het ziekenhuis met de hoogste reputatie van het land. En het is welverdiend ook.",
     },
-	penalty = {
-	  [1] = "Deze maatregel wordt genomen vanwege de zeer slechte reputatie over het afgelopen jaar. We gaan ervan uit dat u verbetering laat zien in de toekomst.",
-	  [2] = "De reputatie van uw ziekenhuis is het laagst in de omgeving. U bent een schande. Laat verbetering zien, of zoek een andere baan!",
-	},
-	regional = {
-	  [1] = "Wij bieden u de Bullfrog Award aan voor de hoogste reputatie van alle ziekenhuizen in het afgelopen jaar. Geniet ervan - u heeft het verdiend.",
-	  [2] = "Dit jaar behaalde uw ziekenhuis een reputatie die hoger is dan alle andere ziekenhuizen bij elkaar. Een enorme prestatie.",
-	},
+    penalty = {
+      [1] = "Deze maatregel wordt genomen vanwege de zeer slechte reputatie over het afgelopen jaar. We gaan ervan uit dat u verbetering laat zien in de toekomst.",
+      [2] = "De reputatie van uw ziekenhuis is het laagst in de omgeving. U bent een schande. Laat verbetering zien, of zoek een andere baan!",
+    },
+    regional = {
+      [1] = "Wij bieden u de Bullfrog Award aan voor de hoogste reputatie van alle ziekenhuizen in het afgelopen jaar. Geniet ervan - u heeft het verdiend.",
+      [2] = "Dit jaar behaalde uw ziekenhuis een reputatie die hoger is dan alle andere ziekenhuizen bij elkaar. Een enorme prestatie.",
+    },
   },
   consistant_rep = {
-	trophies = {
-	  [1] = "Hiebij ontvangt u de Ministers Onderscheiding voor de meest onberispelijke standaarden en de hoogst mogelijke reputatie dit jaar. Heel goed.",  --Cabinet Minister's Award, misschien anders vertalen?
-	  [2] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
-	},
+    trophies = {
+      [1] = "Hiebij ontvangt u de Ministers Onderscheiding voor de meest onberispelijke standaarden en de hoogst mogelijke reputatie dit jaar. Heel goed.",  --Cabinet Minister's Award, misschien anders vertalen?
+      [2] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
+    },
   },
   happy_patients = {
-	awards = {
-	  [1] = "U mag trots zijn op het feit dat bezoekers van uw ziekenhuis in het afgelopen jaar erg tevreden waren.",
-	  [2] = "Bezoekers van uw ziekenhuis waren gemiddeld meer tevreden tijdens hun behandeling, dan bezoekers van andere ziekenhuizen in het spel.",
-	},
-	penalty = {
-	  [1] = "Bezoekers van uw ziekenhuis vinden het verschrikkelijk. U zult het veel beter moeten doen voor u waardering van het Ministerie zult krijgen.",
-	  [2] = utf8 "Mensen die in uw ziekenhuis in behandeling zijn, zijn zeer ontevreden over de staat van het ziekenhuis. U moet meer aandacht hebben voor het wel en wee van de patiënten.",
-	},
+    awards = {
+      [1] = "U mag trots zijn op het feit dat bezoekers van uw ziekenhuis in het afgelopen jaar erg tevreden waren.",
+      [2] = "Bezoekers van uw ziekenhuis waren gemiddeld meer tevreden tijdens hun behandeling, dan bezoekers van andere ziekenhuizen in het spel.",
+    },
+    penalty = {
+      [1] = "Bezoekers van uw ziekenhuis vinden het verschrikkelijk. U zult het veel beter moeten doen voor u waardering van het Ministerie zult krijgen.",
+      [2] = utf8 "Mensen die in uw ziekenhuis in behandeling zijn, zijn zeer ontevreden over de staat van het ziekenhuis. U moet meer aandacht hebben voor het wel en wee van de patiënten.",
+    },
   },
   happy_staff = {
     awards = {
-	  [1] = "Deze oorkonde ontvangt u van uw eigen personeel. Er is natuurlijk nog ruimte voor verbetering, maar over het algemeen wordt u als werkgever zeer gewaardeerd.",
-	  [2] = "Uw personeel is zo tevreden en gemotiveerd, niets kan hun glimlach nog verpesten. U bent een geweldige manager!",
+      [1] = "Deze oorkonde ontvangt u van uw eigen personeel. Er is natuurlijk nog ruimte voor verbetering, maar over het algemeen wordt u als werkgever zeer gewaardeerd.",
+      [2] = "Uw personeel is zo tevreden en gemotiveerd, niets kan hun glimlach nog verpesten. U bent een geweldige manager!",
     },
     trophies = {
       [1] = "U krijgt de Smiley Trofee voor het zo gelukkig mogelijk houden van uw hardwerkende personeel.",
       [2] = "Het Adami Instituut van Tevredenheid keert u hierbij deze trofee uit omdat uw personeel geen moment blijk heeft gegeven van ontevredenheid.",
       [3] = "Deze trofee, de Straalmeer Cup, is hierbij de uwe voor uw inzet voor het welzijn en de tevredenheid van uw personeel. Een glimlach van iedereen!",
     },
-	penalty = {
-	  [1] = "Uw personeel laat officieel weten dat ze ontevreden zijn. Gemotiveerd personeel is waardevol. Werk aan hun tevredenheid voor u ze helemaal zult verliezen.",
-	},
-	regional_good = {
-	  [1] = "Uw personeel is meer tevreden dan dat van andere ziekenhuizen. Tevreden personeel betekend meer inkomsten en minder sterfgevallen. Dit wordt door het Ministerie zeer gewaardeerd.",
-	},
-	regional_bad = {
-	  [1] = "Uw personeel heeft zich het afgelopen jaar ontevreden getoond. Heeft u dat niet gemerkt? Op dit moment heeft ieder ander ziekenhuis meer tevreden personeel dan u.",
-	},
+    penalty = {
+      [1] = "Uw personeel laat officieel weten dat ze ontevreden zijn. Gemotiveerd personeel is waardevol. Werk aan hun tevredenheid voor u ze helemaal zult verliezen.",
+    },
+    regional_good = {
+      [1] = "Uw personeel is meer tevreden dan dat van andere ziekenhuizen. Tevreden personeel betekend meer inkomsten en minder sterfgevallen. Dit wordt door het Ministerie zeer gewaardeerd.",
+    },
+    regional_bad = {
+      [1] = "Uw personeel heeft zich het afgelopen jaar ontevreden getoond. Heeft u dat niet gemerkt? Op dit moment heeft ieder ander ziekenhuis meer tevreden personeel dan u.",
+    },
   },
   wait_times = {
-	award = { --attention: this string says AWARD, not AWARDS
-	  [1] = "Gefeliciteerd. Uw ziekenhuis heeft altijd zeer korte wachttijden. Dit is een belangrijke onderscheiding.",
-	},
-	penalty = {
-	  [1] = utf8 "Patiënten in uw ziekenhuis moeten veel te lang wachten. Er zijn altijd enorme wachtrijen. U kunt uw patiënten veel efficiënter helpen, maar daar moet u wel wat voor doen.",
-	},
+    award = { --attention: this string says AWARD, not AWARDS
+      [1] = "Gefeliciteerd. Uw ziekenhuis heeft altijd zeer korte wachttijden. Dit is een belangrijke onderscheiding.",
+    },
+    penalty = {
+      [1] = utf8 "Patiënten in uw ziekenhuis moeten veel te lang wachten. Er zijn altijd enorme wachtrijen. U kunt uw patiënten veel efficiënter helpen, maar daar moet u wel wat voor doen.",
+    },
   },
   hosp_value = {
-	awards = {
-	  [1] = "Het Ministerie van Volksgezondheid wil dit moment graag gebruiken, u te feliciteren met de indrukwekkende waarde die uw ziekenhuis heeft behaald.",
-	},
-	penalty = {
-	  [1] = "Uw ziekenhuis heeft gefaald een behoorlijke waarde te behalen. U heeft slechte financiele keuzes gemaakt. Houd in uw achterhoofd dat een goed ziekenhuis niet goedkoop is.",
-	},
-	regional = {
-	  [1] = "U bent een financieel wonder! Uw ziekenhuis is meer waard dan alle ziekenhuizen in de omgeving bij elkaar opgeteld.",
-	},
+    awards = {
+      [1] = "Het Ministerie van Volksgezondheid wil dit moment graag gebruiken, u te feliciteren met de indrukwekkende waarde die uw ziekenhuis heeft behaald.",
+    },
+    penalty = {
+      [1] = "Uw ziekenhuis heeft gefaald een behoorlijke waarde te behalen. U heeft slechte financiele keuzes gemaakt. Houd in uw achterhoofd dat een goed ziekenhuis niet goedkoop is.",
+    },
+    regional = {
+      [1] = "U bent een financieel wonder! Uw ziekenhuis is meer waard dan alle ziekenhuizen in de omgeving bij elkaar opgeteld.",
+    },
   },
   best_value_hosp = {
-	trophies = {
-	  [1] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
-	},
-	penalty = {
-	  [1] = "Elke ziekenhuis in de omgeving is meer waard dan die van u. Doe iets aan deze beschamende gang van zaken. Zorg voor mooie en dure apparatuur!",
-	},
-	regional = {
-	  [1] = "Gefeliciteerd met het meest waardevolle ziekenhuis in het spel, goed werk. Probeer dat zo te houden.",
-	},
+    trophies = {
+      [1] = "Proficiat met het behalen van de Brandschoon Trofee voor het ziekenhuis met de beste reputatie in het afgelopen jaar. Welverdiend.",
+    },
+    penalty = {
+      [1] = "Elke ziekenhuis in de omgeving is meer waard dan die van u. Doe iets aan deze beschamende gang van zaken. Zorg voor mooie en dure apparatuur!",
+    },
+    regional = {
+      [1] = "Gefeliciteerd met het meest waardevolle ziekenhuis in het spel, goed werk. Probeer dat zo te houden.",
+    },
   },
   curesvdeaths = {
-	awards = {
-	  [1] = "Hartelijk gefeliciteerd met het behalen van een indrukwekkende genezen-of-overleden rato in uw ziekenhuis in het afgelopen jaar.",
-	},
-	penalty = {
-	  [1] = "Uw genzen-of-overleden rato is erg slecht. U moet ervoor zorgen u veel meer mensen geneest dan laat sterven. Laat het er niet bij zitten.",
-	},
+    awards = {
+      [1] = "Hartelijk gefeliciteerd met het behalen van een indrukwekkende genezen-of-overleden rato in uw ziekenhuis in het afgelopen jaar.",
+    },
+    penalty = {
+      [1] = "Uw genzen-of-overleden rato is erg slecht. U moet ervoor zorgen u veel meer mensen geneest dan laat sterven. Laat het er niet bij zitten.",
+    },
   },
   cleanliness = {
-	award = {  --attention: this string says AWARD, not AWARDS
-	  [1] = "Inspecteurs vinden uw ziekenhuis heel schoon. Schone ziekenhuizen zijn veilige ziekenhuizen. Houden zo.",
-	},
-	regional_good = {
-	  [1] = "Uw ziekenhuis wordt genoemd als een van de minst schone in de omgeving. Een smerig ziekenhuis stinkt en is gevaarlijk. U moet meer aandacht hebben voor troep.",
-	},
-	regional_bad = {
-	  [1] = "Uw ziekenhuis is het smerigst van de regio. Alle andere managers is het het gelukt hun gangen schoner te houden. U bent een schande voor de medische wereld.",
-	},
+    award = {  --attention: this string says AWARD, not AWARDS
+      [1] = "Inspecteurs vinden uw ziekenhuis heel schoon. Schone ziekenhuizen zijn veilige ziekenhuizen. Houden zo.",
+    },
+    regional_good = {
+      [1] = "Uw ziekenhuis wordt genoemd als een van de minst schone in de omgeving. Een smerig ziekenhuis stinkt en is gevaarlijk. U moet meer aandacht hebben voor troep.",
+    },
+    regional_bad = {
+      [1] = "Uw ziekenhuis is het smerigst van de regio. Alle andere managers is het het gelukt hun gangen schoner te houden. U bent een schande voor de medische wereld.",
+    },
   },
   gen_repairs = {
-	awards = {
-	  [1] = utf8 "U ontvangt deze prijs vanwege de oplettendheid van uw Conciërges die alle apparatuur heel goed hebben onderhouden. Heel goed. U kunt gerust op vakantie.",
-	  [2] = utf8 "Uw Conciërges hebben beter gepresteerd de die van andere ziekenhuizen. Dit is een enorme presatie. Ere wie ere toekomt.",
-	  [3] = utf8 "Uw apparatuur is fantastisch onderhouden. De motivatie van uw Conciërges in uitmuntend. Deze prijs heeft u meer dan verdiend. Geweldig!.",
-	},
-	penalty = {
-	  [1] = utf8 "Uw Conciërges hebben uw apparatur niet goed onderhouden. U moet hen beter in de gaten houden, of meer Conciërges kunnen inhuren als het teveel werk is.",
-	  [2] = "Het onderhoud is een drama. Uw personeel moet de apparatuur beter in de gaten houden en zorgvuldiger onderhouden.",
-	},
+    awards = {
+      [1] = utf8 "U ontvangt deze prijs vanwege de oplettendheid van uw Conciërges die alle apparatuur heel goed hebben onderhouden. Heel goed. U kunt gerust op vakantie.",
+      [2] = utf8 "Uw Conciërges hebben beter gepresteerd de die van andere ziekenhuizen. Dit is een enorme presatie. Ere wie ere toekomt.",
+      [3] = utf8 "Uw apparatuur is fantastisch onderhouden. De motivatie van uw Conciërges in uitmuntend. Deze prijs heeft u meer dan verdiend. Geweldig!.",
+    },
+    penalty = {
+      [1] = utf8 "Uw Conciërges hebben uw apparatur niet goed onderhouden. U moet hen beter in de gaten houden, of meer Conciërges kunnen inhuren als het teveel werk is.",
+      [2] = "Het onderhoud is een drama. Uw personeel moet de apparatuur beter in de gaten houden en zorgvuldiger onderhouden.",
+    },
   },
   emergencies = {
-	award = {  --attention: this string says AWARD, not AWARDS
-	  [1] = utf8 "Gefeliciteerd: vanwege uw efficiënte en effectieve manier van afhandelen van noodgevallen, ontvangt u deze speciale prijs. Goed werk.",
-	  [2] = "Uw werkwijze bij noodgevallen is een unicum. Deze prijs ontvangt u, omdat u absoluut het beste omgaat met grote drommen zieken en zwakken.",
-	},
-	penalty = {
-	  [1] = utf8 "U heeft noodgevallen niet goed afgehandeld. Spoed eisende patiënten moeten direct en goed worden geholpen, dat is u niet gelukt.",
-	},
-	regional_good = {
-	  [1] = "Het Ministerie heeft het afgelopen jaar gezien dat u noodgevallen beter aankunt dan ieder ander ziekenhuis. Daarvoor ontvangt u deze prijs.",
-	},
-	regional_bad = {
-	  [1] = "Uw ziekenhuis doet het het slechtst van de regio als het gaat om noodgevallen. Het is uw eigen fout dat u onderaan de lokale noodgevallen ranglijst bungelt.",
-	},
+    award = {  --attention: this string says AWARD, not AWARDS
+      [1] = utf8 "Gefeliciteerd: vanwege uw efficiënte en effectieve manier van afhandelen van noodgevallen, ontvangt u deze speciale prijs. Goed werk.",
+      [2] = "Uw werkwijze bij noodgevallen is een unicum. Deze prijs ontvangt u, omdat u absoluut het beste omgaat met grote drommen zieken en zwakken.",
+    },
+    penalty = {
+      [1] = utf8 "U heeft noodgevallen niet goed afgehandeld. Spoed eisende patiënten moeten direct en goed worden geholpen, dat is u niet gelukt.",
+    },
+    regional_good = {
+      [1] = "Het Ministerie heeft het afgelopen jaar gezien dat u noodgevallen beter aankunt dan ieder ander ziekenhuis. Daarvoor ontvangt u deze prijs.",
+    },
+    regional_bad = {
+      [1] = "Uw ziekenhuis doet het het slechtst van de regio als het gaat om noodgevallen. Het is uw eigen fout dat u onderaan de lokale noodgevallen ranglijst bungelt.",
+    },
   },
   pop_percentage = {
-	awards = {
-	  [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
-	  [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
-	  [3] = "Briljant. U heeft meer lokale bewoners naar uw ziekenhuis weten te lokken dan alle andere ziekenhuizen bij elkaar opgeteld.",
-	},
-	penalty = { --strange thing is that the penalties have the same text as the awards...
-	  [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
-	  [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
-	},
+    awards = {
+      [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
+      [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
+      [3] = "Briljant. U heeft meer lokale bewoners naar uw ziekenhuis weten te lokken dan alle andere ziekenhuizen bij elkaar opgeteld.",
+    },
+    penalty = { --strange thing is that the penalties have the same text as the awards...
+      [1] = "Heeft u gezien dat een groot deel van de lokale bevolking voor uw ziekenhuis heeft gekozen? Goed gedaan.",
+      [2] = "Gefeliciteerd. Vergeleken met andere medische instellingen heeft uw ziekenhuis het grootste aandeel in de bezoekers uit de regio.",
+    },
   },
   research = {
-	awards = {
-	  [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
-	  [2] = "Het afgelopen jaar heeft u meer medicijnen en apparatuur ontwikkeld dan was verwacht. Wij bieden u deze prijs aan namens het volledige Ministerie.",
-	},
-	penalty = {
-	  [1] = utf8 "U heeft een minimale hoeveelheid behandelmethoden, medicijnen en apparatuur ontwikkeld. Dit is helemaal niet goed, technologische vooruitgang is essentiëel.",
-	},
-	regional_good ={
-	  [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
-	},
-	regional_bad = {
-	  [1] = "Ieder ander ziekenhuis in de regio heeft meer en beter onderzoek gedaan dan u. Omdat onderzoek cruciaal is voor een ziekenhuis, noemt het Ministerie dit onacceptabel.",
-	},
+    awards = {
+      [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
+      [2] = "Het afgelopen jaar heeft u meer medicijnen en apparatuur ontwikkeld dan was verwacht. Wij bieden u deze prijs aan namens het volledige Ministerie.",
+    },
+    penalty = {
+      [1] = utf8 "U heeft een minimale hoeveelheid behandelmethoden, medicijnen en apparatuur ontwikkeld. Dit is helemaal niet goed, technologische vooruitgang is essentiëel.",
+    },
+    regional_good ={
+      [1] = "Uw onderzoekers hebben er het afgelopen jaar voor gezorgd dat uw ziekenhuis volledig up-to-date is met de nieuwste ontwikkelingen. Uw personeel heeft deze onderscheiding verdiend. Heel goed.",
+    },
+    regional_bad = {
+      [1] = "Ieder ander ziekenhuis in de regio heeft meer en beter onderzoek gedaan dan u. Omdat onderzoek cruciaal is voor een ziekenhuis, noemt het Ministerie dit onacceptabel.",
+    },
   },
   reputation = "REPUTATIE",
   cash = "GELD",
@@ -618,11 +618,11 @@ fax = {
         [2] = "Ik heb nooit zo een verschrikkelijk ziekenhuis gezien. Schande!",
         [3] = "Ik ben geschokt. Dat is toch geen ziekenhuis? Ik heb een biertje nodig.",
       },
-	  free_build = {
-	    [1] = "U heeft een heel mooi ziekehuis neergezet. Dat is natuurlijk ook niet zo moeilijk als geld geen rol speelt he?",
-		[2] = "Ik ben geen econoom, maar ik denk dat ik dit ziekenhuis ook wel zou kunnen besturen, als u begrijpt wat ik bedoel...",
-		[3] = "Een heel goed lopend ziekenhuis. Pas wel op voor de economische crisis! Onee... Daar hoef u zich natuurlijk geen zorgen om te maken.",
-	  },
+      free_build = {
+        [1] = "U heeft een heel mooi ziekehuis neergezet. Dat is natuurlijk ook niet zo moeilijk als geld geen rol speelt he?",
+        [2] = "Ik ben geen econoom, maar ik denk dat ik dit ziekenhuis ook wel zou kunnen besturen, als u begrijpt wat ik bedoel...",
+        [3] = "Een heel goed lopend ziekenhuis. Pas wel op voor de economische crisis! Onee... Daar hoef u zich natuurlijk geen zorgen om te maken.",
+      },
     },
     rep_boost = "Je reputatie is verbeterd..",
     vip_remarked_name = "Na zijn bezoek zei %s:",
@@ -670,7 +670,7 @@ fax = {
       [9] = "Berts Gebruikte Petrochemische Producten Emporium.",
     },
     num_disease = "Er zijn %d mensen met %s die onmiddelijk hulp nodig hebben.",
-	num_disease_singular = "Er is 1 persoon met %s die onmiddelijk hulp nodig heeft.",
+    num_disease_singular = "Er is 1 persoon met %s die onmiddelijk hulp nodig heeft.",
     cure_possible_drug_name_efficiency = utf8 "Je hebt alle benodigde apparatuur en hulpverleners. Je hebt het geneesmiddel voor %s, deze is %d procent effectief.",
     cure_not_possible_employ = "Je zult een %s moeten aannemen",
     cure_not_possible = "Je kunt op dit moment de ziekte niet genezen.",
@@ -683,7 +683,7 @@ fax = {
     cure_not_possible_build = "Je zult een %s moeten bouwen",
     cure_not_possible_build_and_employ = "Je zult een %s moeten bouwen en een %s moeten inhuren.",
     bonus = "De maximumbonus voor dit noodgeval bedraagt %d. Als je echter niet slaagt zal je reputatie schade oplopen.",
-	free_build = "Als je slaagt, is dit goed voor je reputatie. Als je echter niet slaagt zal je reputatie schade oplopen.",
+    free_build = "Als je slaagt, is dit goed voor je reputatie. Als je echter niet slaagt zal je reputatie schade oplopen.",
   },
   choices = {
     decline_new_level = "Nog even blijven doorspelen",
@@ -771,7 +771,7 @@ tooltip = {
     cheats = {
       end_month = "Spring naar het einde van de maand.",
       emergency = utf8 "Creëert een noodgeval",
-	  vip = utf8 "Creëert een VIP",
+      vip = utf8 "Creëert een VIP",
       win_level = "Win het huidige level.",
       create_patient = utf8 "Creëert een patiënt op de rand van de kaart.",
       money = "Voegt 10.000 toe aan je saldo.",
@@ -823,7 +823,7 @@ tooltip = {
     salary = "Salaris",
     sack = "Ontslaan",
     pick_up = "Oppakken",
-	parcel_select = utf8 "Het gebouw waar de Conciërge taken mag verrichten. Klik om te veranderen",
+    parcel_select = utf8 "Het gebouw waar de Conciërge taken mag verrichten. Klik om te veranderen",
   },
   staff_list = {
     ability_2 = "Competentie",
@@ -967,7 +967,7 @@ tooltip = {
   },
   custom_game_window = {
     start_game_with_name = "%s starten",
-	free_build = "Klik hier als je wilt spelen zonder geld, en zonder win en verliesvoorwaarden", --kan ook overwinningsvoorwaarden worden genoemd, maar is misschien net te weinig info
+    free_build = "Klik hier als je wilt spelen zonder geld, en zonder win en verliesvoorwaarden", --kan ook overwinningsvoorwaarden worden genoemd, maar is misschien net te weinig info
   },
   casebook = {
     sent_home = utf8 "Aantal afgewezen patiënten",
@@ -1054,8 +1054,8 @@ tooltip = {
   },
   menu_list_window = {
     back = "Dit venster sluiten",
-	save_date = "Klik hier om te sorteren op datum van opslaan",
-	name = "Klik hier om te sorteren op naam",
+    save_date = "Klik hier om te sorteren op datum van opslaan",
+    name = "Klik hier om te sorteren op naam",
   },
   watch = {
     emergency = utf8 "Noodgeval: tijd over om alle patiënten te genezen.",
@@ -1223,12 +1223,12 @@ tooltip = {
     width = "Voer de gewenste horizontale resolutie in",
     language = "Kies %s als taal",
     back = "Sluit het Instellingenvenster",
-	original_path = "De gekozen locatie van de originele Theme Hospital installatie",
-	browse = "Zoek een andere locatie van een originele Theme Hospital installatie",
+    original_path = "De gekozen locatie van de originele Theme Hospital installatie",
+    browse = "Zoek een andere locatie van een originele Theme Hospital installatie",
   },
   research_policy = {
-	research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
-	no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
+    research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
+    no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
   },
 }
 menu_debug_overlay = {
@@ -1538,18 +1538,18 @@ adviser = {
     some_litter = utf8 "Conciërges kunnen die rommel opruimen voordat het echt een probleem wordt.",
     patients_annoyed = "Mensen hebben genoeg van de manier waarop je dit ziekenhuis bestuurd en ik kan ze geen ongelijk geven. Verbeter of verdwijn!",
     receptionists_tired2 = "Je receptionistes zijn erg vermoeid, laat ze zo snel mogelijk rusten.",
-	doctor_crazy_overwork = "Oh nee! Een van je Artsen is overspannen door overwerk. Misschien komt hij er nog bovenop als je hem meteen laat rusten.",
-	falling_1 = "He! Daar kan ik niet om lachen, kijk uit waar je met die muis klikt; straks raken er mensen gewond!",
-	falling_2 = "Stop daarmee, zou jij dat leuk vinden?",
-	falling_3 = "Au, dat doet vast zeer, is er een dokter in de buurt?!",
-	falling_4 = "Dit is een ziekenhuis, geen pretpark!",
-	falling_5 = "Dit is niet de plek om mensen omver te duwen, je ziet toch dat de ziek zijn?!",
-	falling_6 = "Het is hier geen bowlingbaan! Zieken horen niet zo behandeld te worden!",
-	no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!",
-	no_desk_1 = utf8 "Als je wilt dat patiënten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen zodat ze haar werk kan doen!",
-	no_desk_2 = utf8 "Lekker gedaan, dit moet een nieuw record zijn: Bijna een jaar zonder patiënten! Als je hier manager wilt blijven huur dan nu een receptioniste in en bouw een receptiebalie waar ze kan werken!", 
-	no_desk_3 = utf8 "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je patiënten gaat krijgen? Los het onmiddelijk op, en stop met dat gerommel!",
-	cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in te huren.",
+    doctor_crazy_overwork = "Oh nee! Een van je Artsen is overspannen door overwerk. Misschien komt hij er nog bovenop als je hem meteen laat rusten.",
+    falling_1 = "He! Daar kan ik niet om lachen, kijk uit waar je met die muis klikt; straks raken er mensen gewond!",
+    falling_2 = "Stop daarmee, zou jij dat leuk vinden?",
+    falling_3 = "Au, dat doet vast zeer, is er een dokter in de buurt?!",
+    falling_4 = "Dit is een ziekenhuis, geen pretpark!",
+    falling_5 = "Dit is niet de plek om mensen omver te duwen, je ziet toch dat de ziek zijn?!",
+    falling_6 = "Het is hier geen bowlingbaan! Zieken horen niet zo behandeld te worden!",
+    no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!",
+    no_desk_1 = utf8 "Als je wilt dat patiënten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen zodat ze haar werk kan doen!",
+    no_desk_2 = utf8 "Lekker gedaan, dit moet een nieuw record zijn: Bijna een jaar zonder patiënten! Als je hier manager wilt blijven huur dan nu een receptioniste in en bouw een receptiebalie waar ze kan werken!", 
+    no_desk_3 = utf8 "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je patiënten gaat krijgen? Los het onmiddelijk op, en stop met dat gerommel!",
+    cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in te huren.",
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
@@ -3137,7 +3137,7 @@ cheats_window = {
   cheats = {
     end_month = "Einde van de maand",
     emergency = utf8 "Creëer noodgeval",
-	vip = utf8 "Creëer VIP",
+    vip = utf8 "Creëer VIP",
     win_level = "Win Level",
     create_patient = utf8 "Creëer patiënt",
     money = "Geld cheat",

@@ -33,30 +33,30 @@ class "UIStaff" (Window)
 
 function UIStaff:changeParcel()
   if not self.staff.hospital.ownedPlots then
-  self.staff.hospital:updateOwnedPlots()
+    self.staff.hospital:updateOwnedPlots()
   end
   local index = 0
   for i, v in ipairs(self.staff.hospital.ownedPlots) do
-  if v == self.staff.parcelNr then
-    index = i
-    break
-  end
+    if v == self.staff.parcelNr then
+      index = i
+      break
+    end
   end
   if not self.staff.hospital.ownedPlots[index + 1] then
-  self.staff.parcelNr = 0
+    self.staff.parcelNr = 0
   else
-  self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1] 
+    self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1] 
   end
 end
 
 function UIStaff:getParcelText()
   if not self.staff.parcelNr then
-  self.staff.parcelNr = 0
+    self.staff.parcelNr = 0
   end
   if self.staff.parcelNr == 0 then
-  return _S.handyman_window.all_parcels --"All parcels"
+    return _S.handyman_window.all_parcels --"All parcels"
   else
-  return _S.handyman_window.parcel .. " " .. self.staff.parcelNr
+    return _S.handyman_window.parcel .. " " .. self.staff.parcelNr
   end
 end
 

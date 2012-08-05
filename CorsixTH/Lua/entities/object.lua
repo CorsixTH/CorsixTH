@@ -503,11 +503,11 @@ function Object:onClick(ui, button, data)
   if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
     local taskType = "watering"
     if self.object_type.class == "Machine" then
-     taskType = "repairing"    
+      taskType = "repairing"    
     end
     local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
     if index ~= -1 then
-    self.hospital:removeHandymanTask(index, taskType)
+      self.hospital:removeHandymanTask(index, taskType)
     end
   end
     self.picked_up = true

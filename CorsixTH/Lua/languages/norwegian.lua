@@ -1159,7 +1159,7 @@ trophy_room = {
     award = {
       [1] = utf8 "Gratulerer. Sykehuset ditt har lav kötid i lang tid. Dette er en viktig pris.", --todo: skal det brukes ordet "pris"?
     },
-      penalty = {
+    penalty = {
       [1] = utf8 "Pasienter i sykehuset ditt må stå for lenge i kö. Det er alltid uakseptabelt lange köer. Du kunne behandlet pasientene dine mer effektivt, om du bare hadde gått inn for det.",
     },
   },
@@ -1169,7 +1169,7 @@ trophy_room = {
       [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besöker sykehuset ditt enn noen andre institusjoner.",
       [3] = utf8 "Strålende. Du har lokket mer av befolkningen inn ditt sykehus enn det som har besökt alle de andre sykehusene til sammen.",
     },
-  penalty = {
+    penalty = {
       [1] = utf8 "Merk deg at du fikk en höy andel av byen befolkningen til sykehuset ditt det siste året. Godt gjort.",
       [2] = utf8 "Gratulerer. En höyere andel av lokalbefolkningen besöker sykehuset ditt enn noen av de andre institusjonene.",
     },
@@ -1328,7 +1328,7 @@ trophy_room = {
       [2] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.",
       [3] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.", --todo: Denne er overflødig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
     },
-  penalty = {
+    penalty = {
       [1] = utf8 "Antallet dödsfall i sykehuset ditt i fjor var uakseptabelt höyt. Gi mer oppmerksomhet til ditt arbeid. Vær sikker på at flere mennesker overlever i fremtiden.",
       [2] = utf8 "Ditt sykehus er en risiko for pasientenes helse. Du forventes å kurere mange mennesker, ikke la dem dö.",
     },
@@ -2149,7 +2149,7 @@ adviser = {
     no_desk_2 = utf8 "Bra gjort! Dette må være en verdensrekord: nesten ett år uten å få noen pasienter! Om du vil fortsette som sjef for dette sykehuset bör du ansette en Resepsjonist og bygg en respsjon der hun kan arbede!",
     no_desk_3 = utf8 "Glimrende! Nesten et år har gått og du har ikke engang en betjent resepsjon! Hvordan tror du at du skal få noen pasienter? Slutt å tulle rundt og få orden på problemet!",
     cannot_afford = utf8 "Du har ikke nok penger på konto til å ansette denne personen!",
-  falling_1 = utf8 "Hei! Det der er ikke moro. Pass på hvor du klikker med den musa; noen kan bli skadet!",
+    falling_1 = utf8 "Hei! Det der er ikke moro. Pass på hvor du klikker med den musa; noen kan bli skadet!",
     falling_2 = utf8 "Slutt å tulle. Hvordan ville du likt det?",
     falling_3 = utf8 "Au, det måtte gjöre vondt. Noen burde ringe etter en Lege!",
     falling_4 = "Dette er et sykehus, ikke en temapark!",

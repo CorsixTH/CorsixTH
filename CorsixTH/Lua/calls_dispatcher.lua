@@ -94,15 +94,15 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   
   local call = {
     verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
-  priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
-  execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
-  object = object,
-  key = "repair",
-  description = _S.calls_dispatcher.repair:format(object.object_type.name),
-  dispatcher = self,
-  created = self.tick,
-  assigned = nil,
-  dropped = nil
+    priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
+    execute = --[[persistable:call_dispatcher_repair_execute]] function(staff) return CallsDispatcher.sendStaffToRepair(object, staff) end,
+    object = object,
+    key = "repair",
+    description = _S.calls_dispatcher.repair:format(object.object_type.name),
+    dispatcher = self,
+    created = self.tick,
+    assigned = nil,
+    dropped = nil
   }
   
   object:setRepairingMode(lock_room and true or false)
@@ -127,7 +127,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
   
   if not self.call_queue[object] then
-  self.call_queue[object] = {}
+    self.call_queue[object] = {}
   end
   self.call_queue[object]["repair"] = call
   return call
@@ -136,17 +136,17 @@ end
 function CallsDispatcher:callForWatering(plant)
   local call = {
     verification = --[[persistable:call_dispatcher_watering_verification]]function(staff) 
-    return false end,
-  priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
-    return 1 end,
-  execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
-  object = plant,
-  key = "watering",
+      return false end,
+    priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
+      return 1 end,
+    execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
+    object = plant,
+    key = "watering",
     description = _S.calls_dispatcher.watering:format(plant.tile_x, plant.tile_y),
-  dispatcher = self,
-  created = self.tick,
-  assigned = nil,
-  dropped = nil
+    dispatcher = self,
+    created = self.tick,
+    assigned = nil,
+    dropped = nil
   }
   if not self.call_queue[plant] then
     self.call_queue[plant] = {}
