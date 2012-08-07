@@ -29,6 +29,7 @@ function UITownMap:UITownMap(ui)
   local app      = self.ui.app
   local hospital = self.ui.hospital
   local gfx      = app.gfx
+  self.app = app
 
   if not pcall(function()
     local palette   = gfx:loadPalette("QData", "Town01V.pal")
@@ -48,18 +49,7 @@ function UITownMap:UITownMap(ui)
   self.default_button_sound = "selectx.wav"
   self.default_buy_sound    = "buy.wav"
 
-  -- config is a *runtime* configuration list; re-instantiations of the dialog
-  -- share the same values, but it's not saved across saves or sessions
-  local config   = app.runtime_config.town_dialog
-  if config == nil then
-    config = {}
-    app.runtime_config.town_dialog = config
-    config.people_enabled = true
-    config.plants_enabled = true
-    config.fire_ext_enabled = true
-    config.objects_enabled = true
-    config.radiators_enabled = true  
-  end
+  local config = self:initRuntimeConfig()
 
   -- A list of areas in the town, including the owner.
   -- In single player there are only bought and available areas, in multiplayer
@@ -92,6 +82,22 @@ function UITownMap:UITownMap(ui)
   
   self:makeTooltip(_S.tooltip.town_map.heat_level, 94, 318, 167, 331)
   self:makeTooltip(_S.tooltip.town_map.heating_bill, 72, 351, 167, 374)
+end
+
+function UITownMap:initRuntimeConfig()
+  -- config is a *runtime* configuration list; re-instantiations of the dialog
+  -- share the same values, but it's not saved across saves or sessions
+  local config = self.app.runtime_config.town_dialog
+  if config == nil then
+    config = {}
+    self.app.runtime_config.town_dialog = config
+    config.people_enabled = true
+    config.plants_enabled = true
+    config.fire_ext_enabled = true
+    config.objects_enabled = true
+    config.radiators_enabled = true  
+  end
+  return config
 end
 
 function UITownMap:close()
@@ -143,6 +149,9 @@ function UITownMap:draw(canvas, x, y)
   -- config is a *runtime* configuration list; re-instantiations of the dialog
   -- share the same values, but it's not saved across saves or sessions
   local config   = app.runtime_config.town_dialog
+  if not config then
+    config = self:initRuntimeConfig()
+  end
   
   -- We need to draw number of people, plants, fire extinguisers, other objects
   -- and radiators.

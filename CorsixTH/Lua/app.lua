@@ -152,7 +152,7 @@ function App:init()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
       (self.config.width - 640) / 2, (self.config.height - 480) / 2)
     self.video:endFrame()
-    -- Add some noticies to the loading screen
+    -- Add some notices to the loading screen
     local notices = {}
     local font = self.gfx:loadBuiltinFont()
     if TH.freetype_font and self.gfx:hasLanguageFont("unicode") then
@@ -597,7 +597,7 @@ end
 
 function App:run()
   -- The application "main loop" is an SDL event loop written in C, which calls
-  -- a coroutine whenver an event occurs. Initially it may seem odd to involve
+  -- a coroutine whenever an event occurs. Initially it may seem odd to involve
   -- coroutines, but it does give a few advantages:
   --  1) Lua can signal the main loop to exit by finishing the coroutine
   --  2) If an error occurs, the call stack is preserved in the coroutine, so
@@ -656,7 +656,7 @@ function App:run()
     end
     if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
       -- Disconnecting the tick handler is quite a drastic measure, so give
-      -- the option of just disconnecting the offending entity and attemping
+      -- the option of just disconnecting the offending entity and attempting
       -- to continue.
       local handler = self.eventHandlers[self.last_dispatch_type]
       local entity = self.world.current_tick_entity

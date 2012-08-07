@@ -1484,6 +1484,7 @@ function Window:sendToTop(window)
     for i = 1, #self.windows do -- Search specified window in windows list
       if self.windows[i] == window then
         window_index = i -- Keep window index
+        break
       end
     end
   end
@@ -1504,6 +1505,20 @@ function Window:sendToTop(window)
     end
     table.remove(self.windows, window_index)       -- Remove the window from the list
     table.insert(self.windows, insert_pos, window) -- And reinsert it at the before computed position
+  end
+end
+
+-- Tell the window to bring the specified sub-window to its bottom
+function Window:sendToBottom(window)
+  local window_index
+  if self.windows then
+    for i = 1, #self.windows do -- Search specified window in windows list
+      if self.windows[i] == window then
+        table.remove(self.windows, i)       -- Remove the window from the list
+        table.insert(self.windows, #self.windows + 1, window) -- And reinsert it at the end
+        break
+      end
+    end
   end
 end
 

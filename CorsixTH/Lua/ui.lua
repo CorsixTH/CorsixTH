@@ -438,7 +438,7 @@ function UI:toggleFullscreen()
     video = TH.surface(self.app.config.width, self.app.config.height, unpack(self.app.modes))
   end
   
-  self.app.video = video -- Apply changements
+  self.app.video = video -- Apply changes
   self.app.gfx:updateTarget(self.app.video)
   self.app.video:startFrame()
   -- Redraw cursor
@@ -485,7 +485,7 @@ local workaround_shift = {
 --! Called when the user presses a key on the keyboard
 --!param code (integer) The hardware key-code for the pressed key. Note that
 -- these codes only coincide with ASCII for certain keyboard layouts.
---!param rawchar (string) The unicode character coresponding to the pressed
+--!param rawchar (string) The unicode character corresponding to the pressed
 -- key, encoded as UTF8 in a Lua string (for non-character keys, this value is
 -- "\0"). This value is affected by shift/caps-lock keys, but is not affected
 -- by any key-remappings.

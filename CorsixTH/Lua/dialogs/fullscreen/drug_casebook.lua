@@ -117,6 +117,9 @@ function UICasebook:updateDiseaseList()
     end
     return c1.disease.name:upper() < c2.disease.name:upper()
   end)
+  if self.selected_index then
+    self.selected_disease = self.names_sorted[self.selected_index]
+  end
 end
 
 function UICasebook:selectDisease(disease)

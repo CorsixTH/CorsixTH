@@ -82,6 +82,10 @@ function UIMenuBar:onTick()
       self.active_menu = false
       self.visible = false
       self.disappear_counter = nil
+      if self.on_top then
+        self.ui:sendToBottom(self)
+        self.on_top = false
+      end
     else
       self.disappear_counter = self.disappear_counter - 1
     end
@@ -303,6 +307,10 @@ end
 function UIMenuBar:appear()
   self.disappear_counter = nil
   self.visible = true
+  if not self.on_top then
+    self.ui:sendToTop(self)
+    self.on_top = true
+  end
 end
 
 function UIMenuBar:disappear()
@@ -329,7 +337,7 @@ function UIMenuBar:onMouseDown(button, x, y)
       if repaint then
         self:onMouseMove(x, y)
       end
-      return repaint
+      return true
     end
     for i = #self.open_menus, self.active_menu.level, -1 do
       self.open_menus[i] = nil

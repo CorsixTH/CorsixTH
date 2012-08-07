@@ -735,7 +735,7 @@ end
 
 --! Stub to be extended in subclasses, if needed.
 function Room:afterLoad(old, new)
-  if old < 46 then
+  if old and old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
   end
 end

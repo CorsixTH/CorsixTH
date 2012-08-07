@@ -87,7 +87,7 @@ function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
     blue = 208,
   }
 
-  self:UIResizable(ui, 500, 423, self.col_bg, mode ~= "menu" and true or false)
+  self:UIResizable(ui, 500, 423, self.col_bg, mode == nil and true or false)
   self.ui = ui
   self.mode = mode
   self:setSize(500, 423)
@@ -96,7 +96,7 @@ function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
   self.modal_class = mode == "menu" and "main menu" or "dir browser"
   self.resizable = false
   self.exit_button = self:addBevelPanel(230, 400, 50, 18, self.col_bg)
-  if mode == "menu" then
+  if mode ~= nil then
     self.font = TheApp.gfx:loadFont("QData", "Font01V")
     self:setDefaultPosition(0.5, 0.25)
     self.on_top = true
@@ -152,7 +152,7 @@ end
 function UIInstallDirBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  if self.mode ~= "menu" then
+  if not self.mode then
     self.font:drawWrapped(canvas, _S.install.title, x + 5, y + 5, self.width - 10, "center")
     self.font:drawWrapped(canvas, _S.install.th_directory, x + 5, y + 15, self.width - 10)
   else
