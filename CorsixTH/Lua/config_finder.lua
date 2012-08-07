@@ -219,7 +219,7 @@ audio_buffer_size = ]=].. tostring(config_defaults.audio_buffer_size) ..[=[
 -- If you want to listen to high quality MP3 audio rather than the original XMI
 -- (MIDI) audio, then follow these steps:
 --  1) Find MP3 versions of the original tracks (for example the remixes by ZR
---     from http://www.mobstar.biz/openTH/forums/viewtopic.php?t=77 ) or any
+--     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
 --     other music you want to listen to.
 --  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
 --  3) Uncomment the next line and point it to where the mp3s are. 

@@ -60,6 +60,10 @@ tooltip.casebook.cure_type.unknown = utf8 "Du vet ännu inte hur denna sjukdom b
 tooltip.research_policy.no_research = "Det pågår ingen forskning i den här kategorin just nu"
 tooltip.research_policy.research_progress = "Framsteg inför nästa upptäckt i denna kategori: %1%/%2%"
 
+handyman_window.all_parcels = "Alla tomter"
+handyman_window.parcel = "Tomt"
+tooltip.handyman_window.parcel_select = "Tomten där vaktmästaren accepterar uppdrag. Klicka för att ändra"
+
 menu_options = {
   lock_windows = utf8 "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",

@@ -402,8 +402,9 @@ function App:dumpStrings()
   local function is_table(o)
     return type(val(o)) == "table"
   end
-  
-  local fi = assert(io.open("debug-strings-orig.txt", "wt"))
+  local dir = self.command_line["config-file"] or ""
+  dir = string.sub(dir, 0, -11)
+  local fi = assert(io.open(dir .. "debug-strings-orig.txt", "wt"))
   for i, sec in ipairs(_S.deprecated) do
     for j, str in ipairs(sec) do
       fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(val(str)))
@@ -451,11 +452,11 @@ function App:dumpStrings()
     end
   end
   
-  fi = assert(io.open("debug-strings-new-lines.txt", "wt"))
+  fi = assert(io.open(dir .. "debug-strings-new-lines.txt", "wt"))
   dump_by_line(fi, _S, "")
   fi:close()
   
-  fi = assert(io.open("debug-strings-new-grouped.txt", "wt"))
+  fi = assert(io.open(dir .. "debug-strings-new-grouped.txt", "wt"))
   dump_grouped(fi, _S, "")
   fi:close()
   
@@ -487,7 +488,7 @@ function App:dumpStrings()
         end
       end
     end
-    fi = assert(io.open("debug-strings-diff.txt", "wt"))
+    fi = assert(io.open(dir .. "debug-strings-diff.txt", "wt"))
     fi:write("------------------------------------\n")
     fi:write("MISSING STRINGS IN LANGUAGE \"" .. self.config.language:upper() .. "\":\n")
     fi:write("------------------------------------\n")
