@@ -112,4 +112,10 @@ function Litter:anyLitter()
   return false
 end
 
+function Litter:afterLoad(old, new)
+  if old < 52 then
+    self.world.hospitals[1]:addHandymanTask(self, "cleaning", 1, x, y)
+  end
+end
+
 return object
