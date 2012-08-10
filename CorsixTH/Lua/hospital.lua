@@ -528,13 +528,16 @@ function Hospital:afterLoad(old, new)
   if old < 41 then
     self.boiler_can_break = true
   end
+  
   if old < 45 then
     self.num_explosions = 0
     self.num_vips = 0
   end
+  
   if old < 48 then
     self.seating_warning = 0
   end
+  
   if old < 50 then
     self.num_vips_ty  = 0
     self.pleased_vips_ty  = 0
@@ -550,6 +553,11 @@ function Hospital:afterLoad(old, new)
         end
       end
     end
+  end
+  
+  if old < 52 then
+    self:initOwnedPlots()
+    self.handymanTasks = {}
   end
 end
 
@@ -720,9 +728,6 @@ function Hospital:purchasePlot(plot_number)
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
-    if not self.ownedPlots then
-    self:updateOwnedPlots()
-    end
       table.insert(self.ownedPlots, plot_number)
       -- Also make sure that the transparent walls setting is used. 
       -- TODO: This check should be done in C++?
@@ -1476,9 +1481,7 @@ function AIHospital:logTransaction()
 end
 
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
-  if not self.handymanTasks then
-    self.handymanTasks = {}
-  end
+
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
   table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
@@ -1505,9 +1508,6 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
 end
 
 function Hospital:findHandymanTaskSubtable(taskType)
-  if not self.handymanTasks then
-    self.handymanTasks = {}
-  end
   for i,v in ipairs(self.handymanTasks) do
     if self.handymanTasks[i].taskType == taskType then
       return self.handymanTasks[i].subTable 
@@ -1604,9 +1604,6 @@ end
 
 
 function Hospital:getIndexOfTask(x, y, taskType)
-  if not self.handymanTasks then
-    self.handymanTasks = {}
-  end
   local subTable = self:findHandymanTaskSubtable(taskType)
   for i, v in ipairs(subTable) do
     if v.tile_x == x and v.tile_y == y then
@@ -1616,7 +1613,7 @@ function Hospital:getIndexOfTask(x, y, taskType)
   return -1
 end
 
-function Hospital:updateOwnedPlots()
+function Hospital:initOwnedPlots()
   self.ownedPlots = {}
   for i, v in ipairs(self.world.entities) do
     if v.tile_x and v.tile_y then

@@ -45,7 +45,7 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self.ticks = object_type.ticks
   self.object_type = object_type
   self.world = world
-  self.hospital = world.hospitals[1]
+  self.hospital = world:getLocalPlayerHospital()
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
   self:updateDynamicInfo()
@@ -555,6 +555,12 @@ function Object:onDestroy()
   
   Entity.onDestroy(self)
   
+end
+
+function Object:afterLoad(old, new)
+  if old < 52 then
+    self.hospital = self.world:getLocalPlayerHospital()
+  end
 end
 
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}

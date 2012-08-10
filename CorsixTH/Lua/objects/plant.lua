@@ -129,9 +129,7 @@ function Plant:restoreToFullHealth()
   self.cycles = self.current_state
   self:setTimer((self.direction == "south" or self.direction == "east") and 35 or 20, plant_restoring)
   self.days_left = days_between_states
-  if not self.hospital then 
-  self.hospital = self.world.hospitals[1]
-  end
+
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
   if taskIndex ~= -1 then
   self.hospital:removeHandymanTask(taskIndex, "watering")
@@ -197,9 +195,7 @@ end
 
 --! When the plant needs water it preiodically calls for a nearby handyman.
 function Plant:callForWatering()
-  if not self.hospital then
-  self.hospital = self.world.hospitals[1]
-  end
+
   if self.unreachable then
   local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
   if ux and uy then
@@ -356,4 +352,13 @@ function Plant:onDestroy()
   end
   Object.onDestroy(self)
 end
+
+function Plant:afterLoad(old, new)
+  if old < 52 then
+    self.hospital = self.world:getLocalPlayerHospital()
+  end
+  Object.afterLoad(self, old, new)
+end
+
+
 return object

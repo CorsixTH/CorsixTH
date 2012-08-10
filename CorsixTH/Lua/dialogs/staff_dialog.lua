@@ -32,9 +32,6 @@ end
 class "UIStaff" (Window)
 
 function UIStaff:changeParcel()
-  if not self.staff.hospital.ownedPlots then
-    self.staff.hospital:updateOwnedPlots()
-  end
   local index = 0
   for i, v in ipairs(self.staff.hospital.ownedPlots) do
     if v == self.staff.parcelNr then
