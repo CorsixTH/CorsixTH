@@ -55,6 +55,7 @@ public:
         ID_VIEW_WALLS,
         ID_VIEW_FLAGS,
         ID_VIEW_PARCELS,
+        ID_VIEW_POSITIONS,
         ID_PARCEL_PANEL,
         ID_SAVE_IN_DROPDOWN,
         ID_SAVEAS
@@ -73,6 +74,7 @@ protected:
     wxString m_sFilename;
     bool m_bViewFlags;
     bool m_bViewParcels;
+    bool m_bViewPositions;
     bool m_bViewWalls;
     int m_iFloorTabBrushF;
     int m_iFloorTabBrushW1;
@@ -102,6 +104,7 @@ protected:
     void _onViewWalls(wxRibbonButtonBarEvent& evt);
     void _onViewFlags(wxRibbonButtonBarEvent& evt);
     void _onViewParcels(wxRibbonButtonBarEvent& evt);
+    void _onViewPositions(wxRibbonButtonBarEvent& evt);
     void _onRibbonPageChanged(wxRibbonBarEvent& evt);
     void _populateParcelGallery(wxRibbonGallery* pGallery);
     static wxBitmap _asBitmap(THSpriteSheet* pSheet, unsigned int iSprite);

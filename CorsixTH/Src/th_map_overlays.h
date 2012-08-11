@@ -86,6 +86,15 @@ protected:
     unsigned int m_iBackgroundSprite;
 };
 
+class THMapPositionsOverlay : public THMapTextOverlay
+{
+public:
+    virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY);
+
+protected:
+    char m_sBuffer[16];
+};
+
 class THMapFlagsOverlay : public THMapTypicalOverlay
 {
 public:

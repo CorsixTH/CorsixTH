@@ -65,54 +65,49 @@ function UIMapEditor:classifyBlocks()
     block_info[i] = {"floor", "simple", "Inside"}
   end
   for i = 24, 40 do
-    block_info[i] = {"floor", "simple", "UI"}
+    block_info[i] = {"object"}
   end
   for i = 41, 58 do
     block_info[i] = {"floor", "simple", "Road"}
   end
-  block_info[59] = {"floor", "simple", "Pond"}
-  block_info[60] = {"floor", "simple", "Pond"}
+  block_info[59] = {"floor", "decorated", "Pond"}
+  block_info[60] = {"floor", "decorated", "Pond"}
   for i = 61, 64 do
     block_info[i] = {"floor", "simple", "Outside"}
   end
-  block_info[65] = {"floor", "simple", "Pond"}
-  block_info[66] = {"floor", "simple", "Inside"}
-  block_info[67] = {"floor", "simple", "UI"}
-  block_info[68] = {"floor", "simple", "Pond"}
-  block_info[69] = {"floor", "simple", "Pond"}
+  block_info[65] = {"floor", "decorated", "Pond"}
+  block_info[66] = {"floor", "simple", "Inside"} -- 67 is UI.
+  block_info[68] = {"floor", "decorated", "Pond"}
+  block_info[69] = {"floor", "decorated", "Pond"}
   block_info[70] = {"floor", "simple", "Inside"}
   for i = 71, 73 do
     block_info[i] = {"floor", "decorated", "Pond", base = 69}
   end
   block_info[76] = {"floor", "simple", "Inside"}
   for i = 77, 80 do
-    block_info[i] = {"floor", "simple", "Pond"}
+    block_info[i] = {"floor", "decorated", "Pond"}
   end
-  for i = 82, 164 do
+  for i = 114, 164 do -- 82-113 are internal walls
     local pair
-    local category = "Internal"
+    local category = "External"
     local dir = i % 2 == 0 and "north" or "west"
-    if (82 <= i and i <= 89) or (98 <= i and i <= 105) then
-      pair = i + 8
-    elseif (i <= 90 and i < 97) or (106 <= i and i <= 113) then
-      pair = i - 8
-    elseif 114 <= i and i <= 127 then
-      category = "External"
+    if 114 <= i and i <= 127 then
       if 114 <= i and i <= 119 then
         pair = i + 8
       elseif 122 <= i and i < 127 then
         pair = i - 8
       end
-    elseif 142 <= i and i <= 145 then
-      category = "Barrier"
     elseif 157 <= i and i <= 164 then
-      category = "External"
+      category = "Doorway"
       if 157 <= i and i <= 160 then
         pair = i + 4
       elseif 161 <= i and i < 164 then
         pair = i - 4
       end
       dir = dir == "north" and "west" or "north"
+    end
+    for i = 128, 156 do
+    block_info[i] = {"object"}
     end
     if i ~= 144 and i ~= 145 and i ~= 156 then
       block_info[i] = {"wall", dir, category, pair = pair}

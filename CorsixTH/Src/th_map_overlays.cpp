@@ -93,6 +93,12 @@ void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     }
 }
 
+const char* THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
+{
+    sprintf(m_sBuffer, "%i,%i", iNodeX + 1, iNodeY + 1);
+    return m_sBuffer;
+}
+
 THMapTypicalOverlay::THMapTypicalOverlay()
 {
     m_pSprites = NULL;
