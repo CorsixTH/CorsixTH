@@ -55,7 +55,9 @@ public:
         ID_VIEW_WALLS,
         ID_VIEW_FLAGS,
         ID_VIEW_PARCELS,
-        ID_PARCEL_PANEL
+        ID_PARCEL_PANEL,
+        ID_SAVE_IN_DROPDOWN,
+        ID_SAVEAS
     };
 
 protected:

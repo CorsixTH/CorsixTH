@@ -62,13 +62,18 @@ protected:
     lua_CFunction m_fnExtraInit;
     void* m_pExtraInitArg;
     bool m_bShouldRespondToScroll;
+    wxTimer* m_pTimer;
 
-    void _onResize(wxSizeEvent& e);
-    void _onScroll(wxScrollEvent& e);
+    void _onResize(wxSizeEvent& evt);
+    void _onScroll(wxScrollEvent& evt);
+    void _onTimer(wxTimerEvent& evt);
 
     static int _l_extra_init(lua_State *L);
     static int _l_init_with_app(lua_State *L);
     static int _l_on_ui_scroll_map(lua_State *L);
 
     DECLARE_EVENT_TABLE();
+    
+private:
+    void _positionMap();
 };

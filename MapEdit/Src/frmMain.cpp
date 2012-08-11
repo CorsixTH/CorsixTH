@@ -35,6 +35,8 @@ EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, frmMain::_onSave)
 EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_SAVE, frmMain::_onSaveMenu)
+EVT_MENU(ID_SAVE_IN_DROPDOWN, frmMain::_onSaveMenuSave)
+EVT_MENU(ID_SAVEAS, frmMain::_onSaveMenuSaveAs)
 EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_WALLS, frmMain::_onViewWalls)
 EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_FLAGS, frmMain::_onViewFlags)
 EVT_RIBBONBUTTONBAR_CLICKED(ID_VIEW_PARCELS, frmMain::_onViewParcels)
@@ -216,8 +218,8 @@ void frmMain::_onSave(wxRibbonButtonBarEvent& evt)
 void frmMain::_onSaveMenu(wxRibbonButtonBarEvent& evt)
 {
     wxMenu mnuPopup;
-    mnuPopup.Append(wxID_SAVE, "Save");
-    mnuPopup.Append(wxID_SAVEAS, "Save As");
+    mnuPopup.Append(ID_SAVE_IN_DROPDOWN, "Save");
+    mnuPopup.Append(ID_SAVEAS, "Save As");
     evt.PopupMenu(&mnuPopup);
 }
 
