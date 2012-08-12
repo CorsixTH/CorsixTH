@@ -203,7 +203,8 @@ function World:initLevel(app)
       end
     end
   end
-  if added_diseases == 0 then
+  if added_diseases == 0 and not _MAP_EDITOR then
+    -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
   end
 

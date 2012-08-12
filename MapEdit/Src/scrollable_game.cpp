@@ -241,28 +241,35 @@ void ScrollableGamePanel::_onScroll(wxScrollEvent& evt)
 
 void ScrollableGamePanel::_onTimer(wxTimerEvent& evt)
 {
-    const int KEY_SENSITIVITY = 10;
+    const int KEY_SENSITIVITY = 20;
     int x = m_pMapScrollX->GetThumbPosition();
     int y = m_pMapScrollY->GetThumbPosition();
+    bool bChanges = false;
     
     if(wxGetKeyState(WXK_LEFT))
     {
         m_pMapScrollX->SetThumbPosition(std::max(0, x - KEY_SENSITIVITY));
+        bChanges = true;
     }
-    else if(wxGetKeyState(WXK_RIGHT))
+    if(wxGetKeyState(WXK_RIGHT))
     {
         m_pMapScrollX->SetThumbPosition(std::min(m_pMapScrollX->GetRange(), x + KEY_SENSITIVITY));
+        bChanges = true;
     }
-    else if(wxGetKeyState(WXK_UP))
+    if(wxGetKeyState(WXK_UP))
     {
         m_pMapScrollY->SetThumbPosition(std::max(0, y - KEY_SENSITIVITY));
+        bChanges = true;
     }
-    else if(wxGetKeyState(WXK_DOWN))
+    if(wxGetKeyState(WXK_DOWN))
     {
         m_pMapScrollY->SetThumbPosition(std::min(m_pMapScrollY->GetRange(), y + KEY_SENSITIVITY));
+        bChanges = true;
     }
-
-    _positionMap();
+    if (bChanges)
+    {
+        _positionMap();
+    }
 }
 
 void ScrollableGamePanel::_positionMap()
@@ -288,7 +295,7 @@ void ScrollableGamePanel::_positionMap()
     lua_getfield(L, -1, "scrollMapTo");
     lua_insert(L, -2);
     lua_pushinteger(L, m_pMapScrollX->GetThumbPosition() - m_pMapScrollX->GetRange() / 2 + m_pMapScrollX->GetThumbSize() / 2);
-    lua_pushinteger(L, m_pMapScrollY->GetThumbPosition() + m_pMapScrollY->GetThumbSize() / 2);
+    lua_pushinteger(L, m_pMapScrollY->GetThumbPosition());
     m_bShouldRespondToScroll = false;
     lua_call(L, 3, 1);
     m_bShouldRespondToScroll = true;
