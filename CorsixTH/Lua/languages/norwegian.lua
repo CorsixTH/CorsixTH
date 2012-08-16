@@ -1612,6 +1612,7 @@ tooltip = {
     center_view        = "Sentrer i skjermbildet", -- contains "handyman"
     sack               = "Si opp",
     pick_up            = "Plukk opp",
+    parcel_select      = "Stedet hvor Vaktmesteren velger oppgaver. Klikk for å endre innstilling.",
   },
   
   -- Place objects window
@@ -2850,6 +2851,11 @@ queue_window = {
   max_queue_size     = "Maks str.",
 }
 
+-- Handyman window
+handyman_window = {
+    parcel           = "Parsell",
+    all_parcels      = "Alle parseller",
+}
 -- Dynamic info
 dynamic_info = {
   patient = {
