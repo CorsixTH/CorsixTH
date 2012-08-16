@@ -2,16 +2,25 @@ This document describes a rudimentary test procedure used before
 all major releases.
 
 Operating Systems that should be checked if possible:
-Windows 8
-Windows 7
-Windows XP
-Ubuntu
-Mac OS X Snow Leopard
-Mac OS X Mountain Lion
+ Windows 8
+ Windows 7
+ Windows XP
+ Ubuntu
+ Mac OS X Snow Leopard
+ Mac OS X Mountain Lion
 
---------------
- INSTALLATION
---------------
+
+Save games should be named after their issue number if they
+come from a specific issue on the Google Project site.
+e.g. "issue 1119.sav". If it doesn't come from a specific issue,
+a descriptive name is needed.
+Add enough information in the "specific issue" section in this
+document to check that the bug isn't reintroduced.
+
+
+------------------
+   INSTALLATION
+------------------
 
 1. Do a completely fresh install.
 
@@ -25,12 +34,37 @@ Mac OS X Mountain Lion
  b) an existing 0.01 installation
    and make sure that it is playable.
 
---------------
-   GAMEPLAY
---------------
+
+------------------
+    GAMEPLAY
+------------------
 
 1. Load the supplied save games in the new release and
    make sure that:
- a) Litter is swept
- b) Machines are repaired
- c) All queues work
+ a) No specific issue bugs occurs.
+ b) Litter is swept
+ c) Machines are repaired
+ d) All queues work
+ e) Abort room building works
+ f) Abort placing room objects works
+ g) Buying and placing additional room objects works
+ 
+
+------------------
+ SPECIFIC ISSUES
+------------------
+
+Issue 1119
+ Load the save game and unpause.
+ Keep an eye on the scanner room where the doctor leaves the 
+ room while the patent is getting changed.
+ If the bug occurs it happens just within seconds from unpause.
+ https://code.google.com/p/corsix-th/issues/detail?id=1119
+
+Issue 1149
+ Turn on tutorial mode.
+ Select a campaign
+ Try to buy a reception desk
+ An error could occur and leave everything unresponsive.
+ https://code.google.com/p/corsix-th/issues/detail?id=1149
+
