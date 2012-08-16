@@ -1685,6 +1685,10 @@ end
 --!param message (string) The message to add.
 function World:gameLog(message)
   self.game_log[#self.game_log + 1] = message
+  -- If in debug mode also show it in the command prompt
+  if TheApp.config.debug then
+    print(message)
+  end
 end
 
 --! Dump the contents of the game log into a file.
@@ -1705,12 +1709,13 @@ function World:dumpGameLog()
   end
 end
 
+--! Let the world react to and old save game. First it gets the chance to
+-- do things for itself, and then it calls corresponding functions for
+-- the hospitals, entities and rooms in that order.
+--!param old The old version of the save game.
+--!param new The current version of the save game format.
 function World:afterLoad(old, new)
-  for _, cat in pairs({self.entities, self.rooms, self.hospitals}) do
-    for _, obj in pairs(cat) do
-      obj:afterLoad(old, new)
-    end
-  end
+
   if not self.original_savegame_version then
     self.original_savegame_version = old
   end
@@ -1864,5 +1869,23 @@ function World:afterLoad(old, new)
   if old < 45 then
     self:nextVip()
   end
+  if old < 52 then
+    -- Litter was not properly removed from the world.
+    for i = #self.entities, 1, -1 do
+      if class.is(self.entities[i], Litter) then
+        if not self.entities[i].tile_x then
+          self:destroyEntity(self.entities[i])
+        end
+      end      
+    end
+  end
+  
+  -- Now let things inside the world react.
+  for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
+    for _, obj in pairs(cat) do
+      obj:afterLoad(old, new)
+    end
+  end
+  
   self.savegame_version = new
 end

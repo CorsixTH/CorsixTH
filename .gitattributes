@@ -143,6 +143,8 @@ LFS/lfs.def -text
 LPEG/lpeg-128.gif -text
 LPEG/lpeg.html -text
 MapEdit/CMakeLists.txt -text
+TestProcedure/Saves/test-save-beta8.sav -text
+TestProcedure/procedure.txt -text
 WindowsInstaller/LanguageStrings.nsh -text
 WindowsInstaller/OptionsPage.ini -text
 WindowsInstaller/ReplaceInFile.nsh -text

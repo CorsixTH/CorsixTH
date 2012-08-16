@@ -939,8 +939,10 @@ end
 --! Returns the version number (name) of the local copy of the game based on
 --! which save game version it is. This was added after the Beta 8
 --! release, which is why the checks prior to that version aren't made.
-function App:getVersion()
-  local ver = self.savegame_version
+--!param version An optional value if you want to find what game version
+-- a specific savegame verion is from.
+function App:getVersion(version)
+  local ver = version or self.savegame_version
   if ver > 51 then
     return "Trunk"
   elseif ver > 45 then
@@ -1010,12 +1012,15 @@ function App:afterLoad()
   end
   
   if new == old then
+    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() .. ")")
     return
   elseif new > old then
-    self.world:gameLog("Savegame version changed from " .. old .. " to " .. new .. ".")
+    self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
+                       ") to " .. new .. " (" .. self:getVersion() .. ").")
   else
     -- TODO: This should maybe be forbidden completely.
-    self.world:gameLog("Warning: loaded savegame version " .. old .. " in older version " .. new .. ".")
+    self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
+                       ")" .. " in older version " .. new .. " (" .. self:getVersion() .. ").")
   end
   self.world.savegame_version = new
   

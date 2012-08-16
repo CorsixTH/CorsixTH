@@ -1,0 +1,36 @@
+This document describes a rudimentary test procedure used before
+all major releases.
+
+Operating Systems that should be checked if possible:
+Windows 8
+Windows 7
+Windows XP
+Ubuntu
+Mac OS X Snow Leopard
+Mac OS X Mountain Lion
+
+--------------
+ INSTALLATION
+--------------
+
+1. Do a completely fresh install.
+
+2. Try starting the game and choose both of these options: 
+ a) A full version of TH'97
+ b) The demo version of TH'97
+   and make sure that it is playable.
+
+3. Overwrite
+ a) An existing Beta 8 installation
+ b) an existing 0.01 installation
+   and make sure that it is playable.
+
+--------------
+   GAMEPLAY
+--------------
+
+1. Load the supplied save games in the new release and
+   make sure that:
+ a) Litter is swept
+ b) Machines are repaired
+ c) All queues work

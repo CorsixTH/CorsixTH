@@ -114,7 +114,12 @@ end
 
 function Litter:afterLoad(old, new)
   if old < 52 then
-    self.world.hospitals[1]:addHandymanTask(self, "cleaning", 1, x, y)
+    if self.tile_x then
+      self.world.hospitals[1]:addHandymanTask(self, "cleaning", 1, self.tile_x, self.tile_y)
+    else
+      -- This object was not properly removed from the world.
+      self.world:destroyEntity(self)
+    end
   end
 end
 

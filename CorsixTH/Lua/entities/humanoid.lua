@@ -489,12 +489,10 @@ local function Humanoid_startAction(self)
     self.world:setSpeed("Pause")
 
     -- Tell the player what just happened.
+    self.world:gameLog("")
     self.world:gameLog("Empty action queue!")
+    self.world:gameLog("Last action: " .. self.previous_action.name)
     self.world:gameLog(debug.traceback())
-    print("")
-    print("Empty action queue!")
-    print("Last action: " .. self.previous_action.name)
-    print(debug.traceback())
 
     ui:addWindow(UIConfirmDialog(ui,
       "Sorry, a humanoid just had an empty action queue,"..
