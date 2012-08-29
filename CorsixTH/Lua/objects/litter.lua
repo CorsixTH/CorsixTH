@@ -77,6 +77,8 @@ function Litter:getWalkableTiles()
 end
 
 function Litter:setLitterType(anim_type, mirrorFlag)
+  -- To make litter render beneath humanoids, set the list_bottom flag.
+  mirrorFlag = mirrorFlag + 2048
   if anim_type then
     local anim = litter_types[anim_type]
     if anim then
@@ -85,10 +87,6 @@ function Litter:setLitterType(anim_type, mirrorFlag)
       error "Unknown litter type"
     end
   end
-end
-
-function Litter:randomiseLitter()
-  self:setAnimation(litter_types[math.random(1, 4)], math.random(0, 1))
 end
 
 function Litter:vomitInducing()

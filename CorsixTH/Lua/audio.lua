@@ -273,9 +273,18 @@ function Audio:playSound(name, where, is_announcement)
       _, warning = sound_fx:play(name, volume)
     end
     if warning then
-      print("Audio:playSound - Warning: " .. warning)
+      -- Indicates something happened
+      self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
     end
   end
+end
+
+--! Returns whether the given sound (either a string or a number)
+--! exists in the sound archive
+--!param sound The sound to look for, either a string (name) or a
+-- number (position in the list of sounds)
+function Audio:soundExists(sound)
+  return self.sound_archive:soundExists(sound)
 end
 
 function Audio:playRandomBackgroundTrack()

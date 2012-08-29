@@ -142,6 +142,12 @@ function World:World(app)
   self:nextEmergency()
   self:nextVip()
 
+  -- earthquakes
+  -- current_map_earthquakes is a counter that tracks which number of earthquake
+  -- we are currently on in maps which have information for earthquakes in them
+  self.current_map_earthquake = 0
+  self:nextEarthquake()
+
   -- Set initial spawn rate in people per month.
   -- Assumes that the first entry is always the first month.
   self.spawn_rate = self.map.level_config.popn[0].Change
@@ -497,6 +503,117 @@ function World:spawnVIP(hospital)
   vip:queueAction{name = "seek_reception"}
 end
 
+function World:createEarthquake()
+  -- the bigger the earthquake, the longer it lasts. We add two
+  -- further days, as we use those to give a small earthquake first,
+  -- before the bigger one begins
+  local stop_day = math.round(self.earthquake_size / 3) + 2
+
+  -- make sure the user has at least three days of an earthquake
+  if stop_day < 3 then
+    stop_day = 3
+  end
+
+  -- store the offsets so we can not shake the user to some too distant location
+  self.currentX = self.ui.screen_offset_x
+  self.currentY = self.ui.screen_offset_y
+
+  -- we add an extra 1 at the end because we register the start of earthquakes at the end of the day
+  self.earthquake_stop_day = self.day + stop_day + 1
+
+  -- if the day the earthquake is supposed to stop on a day greater than the length of the current month (eg 34)
+  if self.earthquake_stop_day > self:getCurrentMonthLength() then
+    -- subtract the current length of the month so the earthquake will stop at the start of the next month
+    self.earthquake_stop_day = self.earthquake_stop_day - self:getCurrentMonthLength()
+  end
+
+  -- set a flag to indicate that we are now having an earthquake
+  self.active_earthquake = true
+
+end
+
+function World:tickEarthquake()
+  -- check if this is the day that the earthquake is supposed to stop
+  if (self.day == self.earthquake_stop_day) then
+    self.active_earthquake = false
+    self.ui.tick_scroll_amount = false
+    -- if the earthqake measured more than 7 on the richter scale, tell the user about it
+    if (self.earthquake_size > 7) then
+      self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.earthquake_size)))
+    end
+    -- set up the next earthquake date
+    self:nextEarthquake()
+  else
+    if (self.day > self.earthquake_stop_day) or (self.day < math.round(self.earthquake_size / 3)) then
+      -- if we are in the first two days of the earthquake, make it smaller
+      self.randomX = math.random(-(self.earthquake_size/2)*7, (self.earthquake_size/2)*7)
+      self.randomY = math.random(-(self.earthquake_size/2)*7, (self.earthquake_size/2)*7)
+    else
+      -- otherwise, hit the user with the full earthquake
+      self.randomX = math.random(-self.earthquake_size*7, self.earthquake_size*7)
+      self.randomY = math.random(-self.earthquake_size*7, self.earthquake_size*7)
+    end
+
+    -- if the game is not paused
+    if not self:isCurrentSpeed("Pause") then
+      -- Play the earthquake sound. It has different names depending on language used though.
+      if TheApp.audio:soundExists("quake2.wav") then
+        self.ui:playSound("quake2.wav")
+      else
+        self.ui:playSound("quake.wav")
+      end
+
+      -- shake the screen randomly to give the appearance of an earthquake
+      -- the greater the earthquake, the more the screen will shake
+
+      -- restrict the amount the earthquake can shift the user left and right
+      if self.ui.screen_offset_x > (self.currentX + 600) then
+        if self.randomX > 0 then
+          self.randomX = -self.randomX
+        end
+      elseif self.ui.screen_offset_x < (self.currentX - 600) then
+        if self.randomX < 0 then
+          self.randomX = -self.randomX
+        end
+      end
+
+      -- restrict the amount the earthquake can shift the user up and down
+      if self.ui.screen_offset_y > (self.currentY + 600) then
+        if self.randomY > 0 then
+          self.randomY = -self.randomY
+        end
+      elseif self.ui.screen_offset_y < (self.currentY - 600) then
+        if self.randomY < 0 then
+          self.randomY = -self.randomY
+        end
+      end
+
+      self.ui.tick_scroll_amount = {x = self.randomX, y = self.randomY}
+
+      local hospital = self:getLocalPlayerHospital()
+      -- loop through the patients and allow the possibilty for them to fall over
+      for _, patient in ipairs(hospital.patients) do
+        local current = patient.action_queue[1]
+
+        if not patient.in_room and patient.falling_anim then
+
+          -- make the patients fall
+
+          -- jpirie: this is currently disabled. Calling this function
+          -- really screws up the action queue, sometimes the patients
+          -- end up with nil action queues, and sometimes the resumed
+          -- actions throw exceptions. Also, patients in the hospital
+          -- who have not yet found reception throw exceptions after
+          -- they visit reception. Some debugging needed here to get
+          -- this working.
+
+          -- patient:falling()
+        end
+      end
+    end
+  end
+end
+
 function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
@@ -691,6 +808,11 @@ local tick_rates = {
   ["And then some more"] = {3, 1},
 }
 
+-- Return the length of the current month
+function World:getCurrentMonthLength()
+  return month_length[self.month]
+end
+
 -- Return if the selected speed the same as the current speed.
 function World:isCurrentSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
@@ -722,6 +844,10 @@ end
 -- Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
   if not self:isCurrentSpeed("Pause") then
+    -- stop screen shaking if there was an earthquake in progress
+    if self.active_earthquake then
+      self.ui.tick_scroll_amount = {x = 0, y = 0}
+    end
     self:setSpeed("Pause")
   elseif self.prev_speed then
     self:setSpeed(self.prev_speed)
@@ -772,6 +898,12 @@ function World:onTick()
     end
     self.tick_timer = self.tick_rate
     self.hour = self.hour + self.hours_per_tick
+
+    -- if an earthqake is supposed to be going on, call the earthquake function
+    if self.active_earthquake then
+      self:tickEarthquake()
+    end
+
 
     -- End of day/month/year
     if self.hour >= self.hours_per_day then
@@ -878,6 +1010,18 @@ function World:onEndDay()
     else
       self:nextVip()
     end
+  end
+
+  -- check if it's time for an earthquake, and the user is at least on level 5
+  if (self.year - 1) * 12 + self.month == self.next_earthquake_month
+  and self.day == self.next_earthquake_day then
+    -- warn the user that an earthquake is on the way
+    local announcements = {
+      "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
+    }
+    self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+
+    self:createEarthquake()
   end
 
   -- Maybe it's time for an emergency?
@@ -1081,6 +1225,50 @@ function World:nextVip()
   self.next_vip_month = next_month + (self.year - 1) * 12
   self.next_vip_day = days
 end
+
+-- Called when it is time to have another earthquake
+function World:nextEarthquake()
+
+  -- check carefully that no value that we are going to use is going to be nil
+  if self.map.level_config.quake_control and
+  self.map.level_config.quake_control[self.current_map_earthquake] and
+  self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
+      -- this map has rules to follow when making earthquakes, let's follow them
+    local control = self.map.level_config.quake_control[self.current_map_earthquake]
+    self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)
+    self.next_earthquake_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
+    self.earthquake_size = control.Severity
+    self.current_map_earthquake = self.current_map_earthquake + 1
+  else
+    if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
+    (not tonumber(self.map.level_number)) then
+      local current_month = (self.year - 1) * 12 + self.month
+
+      -- Support standard values for mean and variance
+      local mean = 180
+      local variance = 30
+      -- How many days until next earthquake?
+      local days = math.round(math.n_random(mean, variance))
+      local next_month = self.month
+
+      -- Walk forward to get the resulting month and day.
+      if days > month_length[next_month] - self.day then
+        days = days - (month_length[next_month] - self.day)
+        next_month = next_month + 1
+      end
+      while days > month_length[(next_month - 1) % 12 + 1] do
+        days = days - month_length[(next_month - 1) % 12 + 1]
+        next_month = next_month + 1
+      end
+      self.next_earthquake_month = next_month + (self.year - 1) * 12
+      self.next_earthquake_day = days
+
+      -- earthquake can be between 1 and 10 on the richter scale
+      self.earthquake_size = math.random()*10
+    end
+  end
+end
+
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
@@ -1879,7 +2067,32 @@ function World:afterLoad(old, new)
       end      
     end
   end
-  
+  if old < 53 then
+    self.current_map_earthquake = 0
+    -- It may happen that the current game has gone on for a while
+    if self.map.level_config.quake_control then
+      while true do
+        if self.map.level_config.quake_control[self.current_map_earthquake] and
+        self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
+          -- Check to see if the start month has passed
+          local control = self.map.level_config.quake_control[self.current_map_earthquake]
+          if control.StartMonth <= self.month + 12 * (self.year - 1) then
+            -- Then check the next one
+            self.current_map_earthquake = self.current_map_earthquake + 1
+          else
+            -- We found an earthquake coming in the future!
+            break
+          end
+        else
+          -- No more earthquakes in the config file.
+          break
+        end
+      end
+    end
+    -- Now set up the next earthquake.
+    self:nextEarthquake()
+  end
+
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
     for _, obj in pairs(cat) do

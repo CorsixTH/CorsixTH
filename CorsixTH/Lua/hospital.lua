@@ -834,7 +834,20 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-    
+
+  -- if there's currently an earthquake going on, possibly give the machines some damage
+  if (self.world.active_earthquake) then
+    for _, room in pairs(self.world.rooms) do
+      for object, value in pairs(room.objects) do
+        if (object.strength) then
+          if (math.random(0,3) == 1) then
+            object:machineUsed(room)
+          end
+        end
+      end
+    end
+  end
+
   -- check if we still have to anounce VIP visit
   if self.announce_vip == 1 then
     -- check if the VIP is in the building yet

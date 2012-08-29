@@ -137,6 +137,17 @@ static int l_soundarc_filedata(lua_State *L)
     return 1;
 }
 
+static int l_soundarc_sound_exists(lua_State *L)
+{
+    THSoundArchive* pArchive = luaT_testuserdata<THSoundArchive>(L);
+    size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
+    if(iIndex == pArchive->getSoundCount())
+        lua_pushboolean(L, 0);
+    else
+        lua_pushboolean(L, 1);
+    return 1;
+}
+
 static int l_soundfx_new(lua_State *L)
 {
     luaT_stdnew<THSoundEffects>(L, luaT_environindex, true);
@@ -212,6 +223,7 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_soundarc_filename, "getFilename");
     luaT_setfunction(l_soundarc_duration, "getDuration");
     luaT_setfunction(l_soundarc_filedata, "getFileData");
+    luaT_setfunction(l_soundarc_sound_exists, "soundExists");
     luaT_endclass();
 
     // Sound Effects

@@ -60,6 +60,7 @@ function UICheats:UICheats(ui)
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
     {name = "vip",            func = self.cheatVip},
+    {name = "earthquake",     func = self.cheatEarthquake},
     {name = "create_patient", func = self.cheatPatient},
     {name = "end_month",      func = self.cheatMonth},
     {name = "end_year",       func = self.cheatYear},
@@ -152,6 +153,10 @@ end
 
 function UICheats:cheatVip()
   self.ui.hospital:createVip()
+end
+
+function UICheats:cheatEarthquake()
+  self.ui.app.world:createEarthquake()
 end
 
 function UICheats:cheatPatient()

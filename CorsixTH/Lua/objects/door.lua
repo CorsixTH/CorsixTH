@@ -141,10 +141,12 @@ function Door:setAnimation(animation, flags)
 end
 
 function Door:closeDoor()
-  self.queue:rerouteAllPatients({name = "seek_room", room_type = self:getRoom().room_info.id})
+  if self.queue then
+    self.queue:rerouteAllPatients({name = "seek_room", room_type = self:getRoom().room_info.id})
+    self.queue = nil
+  end
   self:clearDynamicInfo(nil)
   self.hover_cursor = nil
-  self.queue = nil
 end
 
 function Door:checkForDeadlock()
