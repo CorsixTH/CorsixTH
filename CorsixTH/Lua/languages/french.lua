@@ -823,7 +823,7 @@ confirmation = {
 -- Information dialog
 information = {
   custom_game = "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
-  no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez avec aucune des cartes personnalisées.",
+  no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
   level_lost = {
