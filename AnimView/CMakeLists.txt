@@ -20,6 +20,7 @@ SET(animview_source_files
   th.h
   tinystr.h
   tinyxml.h
+  AnimView.rc
 )
 
 # Declaration of the executable

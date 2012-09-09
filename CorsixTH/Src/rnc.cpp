@@ -29,6 +29,9 @@ SOFTWARE.
       * Prebuilt CRC table
       * Lua interface
       * Indentation and code style
+      * Bit stream pointers to data
+      * Fix bit operations near end of stream
+      * Style changes to conform to CorsixTH
 */
 
 #include "config.h"
@@ -79,13 +82,15 @@ static const unsigned short rnc_crc_table[256] = {
 
 struct bit_stream
 {
-    unsigned long bitbuf;           /* holds between 16 and 32 bits */
-    int bitcount;               /* how many bits does bitbuf hold? */
+    unsigned long bitbuf;           // holds between 16 and 32 bits
+    int bitcount;                   // how many bits does bitbuf hold?
+    const unsigned char* endpos;    // final position that can be read
+    const unsigned char* p;         // pointer in data that stream is reading
 };
 
 struct huf_table
 {
-    int num;                   /* number of nodes in the tree */
+    int num;                        // number of nodes in the tree
     struct
     {
         unsigned long code;
@@ -94,9 +99,11 @@ struct huf_table
     } table[32];
 };
 
-/*
- * Calculate a CRC, the RNC way.
- */
+//! Calculate a CRC, the RNC way.
+/*!
+    @param data data for which to calculate the CRC
+    @param len length of the data in bytes
+*/
 static unsigned long rnc_crc(const unsigned char* data, long len)
 {
     unsigned short val = 0;
@@ -111,9 +118,10 @@ static unsigned long rnc_crc(const unsigned char* data, long len)
 }
 
 
-/*
- * Return the big-endian longword at p.
- */
+//! Return the big-endian 32 bit word at p.
+/*!
+    @param p Pointer to data containing the word
+*/
 static unsigned long blong (const unsigned char *p)
 {
     unsigned long n;
@@ -124,9 +132,10 @@ static unsigned long blong (const unsigned char *p)
     return n;
 }
 
-/*
- * Return the big-endian word at p.
- */
+//! Return the big-endian 16 bit word at p. 
+/*!
+    @param p Pointer to data containing the word
+*/
 static unsigned long bword (const unsigned char *p)
 {
     unsigned long n;
@@ -135,8 +144,9 @@ static unsigned long bword (const unsigned char *p)
     return n;
 }
 
-/*
- * Return the little-endian word at p.
+//! Return the little-endian 16 bit word at p. 
+/*!
+    @param p Pointer to data containing the word
  */
 static unsigned long lword (const unsigned char *p)
 {
@@ -146,9 +156,11 @@ static unsigned long lword (const unsigned char *p)
     return n;
 }
 
-/*
- * Mirror the bottom n bits of x.
- */
+//! Mirror the bottom n bits of x.
+/*!
+    @param x
+    @param n
+*/
 static unsigned long mirror (unsigned long x, int n)
 {
     unsigned long top = 1 << (n-1), bottom = 1;
@@ -167,72 +179,120 @@ static unsigned long mirror (unsigned long x, int n)
 }
 
 
-/*
- * Initialises a bit stream with the first two bytes of the packed
- * data.
- */
-static void bitread_init (bit_stream *bs, const unsigned char **p)
+//! Initialises a bit stream with the first two bytes of the packed
+//! data.
+/*!
+    @param bs Bit stream to be initialized
+    @param p Pointer to start of memory block the bitstream is to
+        traverse
+    @param endpos Pointer to end of memory block the bitstream is
+        to traverse
+*/
+static void bitread_init (bit_stream *bs, const unsigned char *p, const unsigned char* endpos)
 {
-    bs->bitbuf = lword (*p);
+    bs->bitbuf = lword (p);
     bs->bitcount = 16;
+    bs->p = p;
+    bs->endpos = endpos;
 }
 
-/*
- * Fixes up a bit stream after literals have been read out of the
- * data stream.
- */
-static void bitread_fix (bit_stream *bs, const unsigned char **p)
+//! Fixes up a bit stream after literals have been read out of the
+//! data stream and the pointer has been moved.
+/*!
+    @param bs Bit stream to correct
+*/
+static void bitread_fix (bit_stream *bs)
 {
+    // Remove the top 16 bits
     bs->bitcount -= 16;
-    bs->bitbuf &= (1<<bs->bitcount)-1; /* remove the top 16 bits */
-    bs->bitbuf |= (lword(*p)<<bs->bitcount);/* replace with what's at *p */
-    bs->bitcount += 16;
+    bs->bitbuf &= (1<<bs->bitcount)-1;
+
+    // Replace with what is in the new current location
+    // in the bit stream
+    if(bs->p < bs->endpos)
+    {
+        bs->bitbuf |= (lword(bs->p)<<bs->bitcount);
+        bs->bitcount += 16;
+    }
+    else if(bs->p == bs->endpos)
+    {
+        bs->bitbuf |= (*(bs->p)<<bs->bitcount);
+        bs->bitcount += 8;
+    }
 }
 
-/*
- * Returns some bits.
- */
+//! Return a word consisting of the specified bits without advancing
+//! the bit stream.
+/*!
+    @param bs Bit stream from which to peek
+    @param mask A 32 bit bit mask specifying which bits to peek
+*/
 static unsigned long bit_peek (bit_stream *bs, const unsigned long mask)
 {
     return bs->bitbuf & mask;
 }
 
-/*
- * Advances the bit stream.
- */
-static void bit_advance (bit_stream *bs, int n, const unsigned char **p)
+//! Advances the bit stream.
+/*!
+    @param bs Bit stream to advance
+    @param n Number of bits to advance the stream.  Must be
+        between 0 and 16
+*/
+static void bit_advance (bit_stream *bs, int n)
 {
     bs->bitbuf >>= n;
     bs->bitcount -= n;
+
     if (bs->bitcount < 16)
     {
-        (*p) += 2;
-        bs->bitbuf |= (lword(*p)<<bs->bitcount);
-        bs->bitcount += 16;
+        // At this point it is possible for bs->p to advance past
+        // the end of the data.  In that case we simply do not read
+        // anything more into the buffer.  If we are on the last
+        // byte the lword matches what is in that byte.
+        bs->p += 2;
+    
+        if(bs->p < bs->endpos)
+        {
+            bs->bitbuf |= (lword(bs->p)<<bs->bitcount);
+            bs->bitcount += 16;
+        }
+        else if (bs->p == bs->endpos)
+        {
+            bs->bitbuf |= (*(bs->p)<<bs->bitcount);
+            bs->bitcount += 8;
+        }
     }
 }
 
-/*
- * Reads some bits in one go (ie the above two routines combined).
- */
-static unsigned long bit_read (bit_stream *bs, unsigned long mask, int n, const unsigned char **p)
+//! Returns bits from the bit stream matching the mask and advances it
+//! n places.
+/*!
+    @param bs Bit stream to read
+    @param mask A 32 bit bit mask specifiying which bits to read
+    @param n Number of bits to advance the stream.  Must be
+        between 0 and 16
+*/
+static unsigned long bit_read (bit_stream *bs, unsigned long mask, int n)
 {
     unsigned long result = bit_peek(bs, mask);
-    bit_advance(bs, n, p);
+    bit_advance(bs, n);
     return result;
 }
 
-/*
- * Read a Huffman table out of the bit stream and data stream given.
- */
-static void read_huftable(huf_table *h, bit_stream *bs, const unsigned char **p)
+//! Read a Huffman table out of the bit stream given.
+/*!
+    @param h huf_table structure to populate
+    @param bs Bit stream pointing to the start of the Huffman table
+        description
+*/
+static void read_huftable(huf_table *h, bit_stream *bs)
 {
     int i, j, k, num;
     int leaflen[32];
     int leafmax;
     unsigned long codeb;           /* big-endian form of code */
 
-    num = bit_read(bs, 0x1F, 5, p);
+    num = bit_read(bs, 0x1F, 5);
 
     if(num == 0)
     {
@@ -242,7 +302,7 @@ static void read_huftable(huf_table *h, bit_stream *bs, const unsigned char **p)
     leafmax = 1;
     for(i = 0; i < num; i++)
     {
-        leaflen[i] = bit_read(bs, 0x0F, 4, p);
+        leaflen[i] = bit_read(bs, 0x0F, 4);
         if (leafmax < leaflen[i])
         {
             leafmax = leaflen[i];
@@ -269,43 +329,59 @@ static void read_huftable(huf_table *h, bit_stream *bs, const unsigned char **p)
     h->num = k;
 }
 
-/*
- * Read a value out of the bit stream using the given Huffman table.
- */
+//! Read a value out of the bit stream using the given Huffman table.
+/*!
+    @param h Huffman table to transcribe from
+    @param bs bit stream
+    @param p input data
+    @return The value from the table with the matching bits, or -1 if none found.
+*/
 static unsigned long huf_read(huf_table *h, bit_stream *bs, const unsigned char **p)
 {
     int i;
     unsigned long val;
+    unsigned long mask;
 
+    // Find the current bits in the table
     for (i = 0; i < h->num; i++)
     {
-        unsigned long mask = (1 << h->table[i].codelen) - 1;
+        mask = (1 << h->table[i].codelen) - 1;
         if(bit_peek(bs, mask) == h->table[i].code)
         {
             break;
         }
     }
+
+    // No match found in table (error)
     if(i == h->num)
     {
         return -1;
     }
-    bit_advance(bs, h->table[i].codelen, p);
+
+    bit_advance(bs, h->table[i].codelen);
 
     val = h->table[i].value;
-
     if (val >= 2)
     {
         val = 1 << (val-1);
-        val |= bit_read(bs, val-1, h->table[i].value - 1, p);
+        val |= bit_read(bs, val-1, h->table[i].value - 1);
     }
     return val;
 }
 
+//! Decompresses RNC data
+/*!
+    @param input Pointer to compressed RNC data
+    @param output Pointer to allocated memory region to hold uncompressed
+        data.  The size of output must match the value specified in the
+        4 byte segment of the input header starting at the 4th byte
+        in Big-endian.
+*/
 static int rnc_unpack(const unsigned char* input, unsigned char* output)
 {
     const unsigned char *inputend;
     unsigned char *outputend;
-    bit_stream bs;
+    bit_stream input_bs;
     huf_table raw = {0}, dist = {0}, len = {0};
     unsigned long ch_count;
     unsigned long ret_len;
@@ -318,36 +394,37 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
     outputend = output + ret_len;
     inputend = input + 18 + blong(input + 8);
 
-    input += 18;               /* skip header */
+    //skip header
+    input += 18;
 
-    /*
-     * Check the packed-data CRC. Also save the unpacked-data CRC
-     * for later.
-     */
+    // Check the packed-data CRC. Also save the unpacked-data CRC
+    // for later.
     if(rnc_crc(input, static_cast<long>(inputend-input)) != bword(input - 4))
     {
         return RNC_PACKED_CRC_ERROR;
     }
     out_crc = bword(input - 6);
 
-    bitread_init(&bs, &input);
-    bit_advance(&bs, 2, &input);      /* discard first two bits */
+    //initialize the bitstream to the input and advance past the
+    //first two bytes as they don't have any understood use.
+    bitread_init(&input_bs, input, inputend);
+    bit_advance(&input_bs, 2);
 
-    /*
-     * Process chunks.
-     */
+    //process chunks
     while (output < outputend)
     {
-        read_huftable(&raw, &bs, &input);
-        read_huftable(&dist, &bs, &input);
-        read_huftable(&len, &bs, &input);
-        ch_count = bit_read(&bs, 0xFFFF, 16, &input);
+        read_huftable(&raw, &input_bs); //raw byte length table
+        read_huftable(&dist, &input_bs); //distance prior to copy table
+        read_huftable(&len, &input_bs); //length bytes to copy table
+        ch_count = bit_read(&input_bs, 0xFFFF, 16);
 
         while(true)
         {
             long length, posn;
 
-            length = huf_read(&raw, &bs, &input);
+            // Copy bit pattern to output based on lookup
+            // of bytes from input.
+            length = huf_read(&raw, &input_bs, &input);
             if(length == -1)
             {
                 return RNC_HUF_DECODE_ERROR;
@@ -355,26 +432,33 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
             if(length)
             {
                 while(length--)
-                    *output++ = *input++;
-                bitread_fix(&bs, &input);
+                {
+                    *output++ = *(input_bs.p++);
+                }
+                bitread_fix(&input_bs);
             }
             if(--ch_count <= 0)
             {
                 break;
             }
 
-            posn = huf_read(&dist, &bs, &input);
+            // Read position to copy output to
+            posn = huf_read(&dist, &input_bs, &input);
             if(posn == -1)
             {
                 return RNC_HUF_DECODE_ERROR;
             }
-            length = huf_read(&len, &bs, &input);
+            posn += 1;
+
+            // Read length of output to copy back
+            length = huf_read(&len, &input_bs, &input);
             if(length == -1)
             {
                 return RNC_HUF_DECODE_ERROR;
             }
-            posn += 1;
             length += 2;
+
+            // Copy length bytes from output back posn
             while(length--)
             {
                 *output = output[-posn];
@@ -388,9 +472,7 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
         return RNC_FILE_SIZE_MISMATCH;
     }
 
-    /*
-     * Check the unpacked-data CRC.
-     */
+    // Check the unpacked-data CRC.
     if(rnc_crc(outputend - ret_len, ret_len) != out_crc)
     {
         return RNC_UNPACKED_CRC_ERROR;
@@ -399,10 +481,19 @@ static int rnc_unpack(const unsigned char* input, unsigned char* output)
     return RNC_OK;
 }
 
+//! Provides lua function to decompress RNC data
+/*!
+    @param L Lua state where the function is called from.  In lua a call
+        to this function has one parameter which is the RNC compressed data.
+        The return value is the decompressed data.
+*/
 static int l_decompress(lua_State *L)
 {
     size_t inlen;
     const unsigned char* in = (const unsigned char*)luaL_checklstring(L, 1, &inlen);
+
+    // Verify that the data contains an RNC signature, and that the input
+    // size matches the size specified in the data header.
     if(inlen < 18 || blong(in) != RNC_SIGNATURE || blong(in + 8) != (inlen - 18))
     {
         lua_pushnil(L);
@@ -410,6 +501,7 @@ static int l_decompress(lua_State *L)
         return 2;
     }
     unsigned long outlen = blong(in + 4);
+
     // Allocate scratch area as Lua userdata so that if something horrible
     // happens, it'll be cleaned up by Lua's GC. Remember that most Lua API
     // calls can throw errors, so they all have to be wrapped with code to

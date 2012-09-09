@@ -12,6 +12,7 @@ FILE(GLOB_RECURSE mapedit_source_files
   ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.cpp
   ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.c
   ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.h
+  ${CMAKE_SOURCE_DIR}/MapEdit/MapEdit.rc
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
