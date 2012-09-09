@@ -74,6 +74,7 @@ LangString options_title      ${LANG_FRENCH} "Options additionnelles"
 LangString options_subtitle   ${LANG_FRENCH} "Préciser où se trouve le jeu original."
 LangString save_in_appdata    ${LANG_FRENCH} "Enregistrer les données de jeu et les paramètres dabs %APPDATA% (recommandé)"
 LangString remove_saves       ${LANG_FRENCH} "Voulez-vous conserver vos parties sauvegardées ?"
+LangString overwrite_install  ${LANG_FRENCH} "Il semble que vous installez par dessus une installation existante de CorsixTH. Tous les changements faits aux fichiers pourraient être perdus. Voulez-vous continuer ?"
 
 LangString install_language   ${LANG_GERMAN} "German"
 LangString original_text      ${LANG_GERMAN} "Um das Spiel zu spielen wird das Originalspiel benötigt. Bitte das Verzeichnis des Originalspiels angeben."

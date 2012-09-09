@@ -716,6 +716,16 @@ tooltip.options_window = {
   back = "Fermer la fenêtre des options",
 }
 
+-- Handyman window
+handyman_window = {
+  all_parcels = "Partout",
+  parcel = "Parcelle"
+}
+
+tooltip.handyman_window = {
+  parcel_select = "Les parcelles où les agents de maintenance peuvent travailler, cliquez pour changer le paramètre"
+}
+
 -- Debug patient window
 debug_patient_window = {
   caption = "Patient de test",
@@ -734,6 +744,7 @@ cheats_window = {
     all_research = "Toutes les recherches",
     emergency = "Créer une urgence",
     vip = "Créer un VIP",
+    earthquake = "Créer un tremblement de terre",
     create_patient = "Créer un patient",
     end_month = "Fin du mois",
     end_year = "Fin de l'année",
@@ -750,6 +761,7 @@ tooltip.cheats_window = {
     all_research = "Termine toutes les recherches.",
     emergency = "Crée une urgence.",
     vip = "Crée un VIP.",
+    earthquake = "Crée un tremblement de terre.",
     create_patient = "Crée un patient au bord de la carte.",
     end_month = "Va directement à la fin du mois.",
     end_year = "Va directement à la fin de l'année.",
@@ -811,6 +823,7 @@ confirmation = {
 -- Information dialog
 information = {
   custom_game = "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
+  no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez avec aucune des cartes personnalisées.",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
   level_lost = {
