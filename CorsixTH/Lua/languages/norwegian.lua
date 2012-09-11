@@ -274,6 +274,7 @@ cheats_window = {
     lose_level = utf8 "Tap nivå",
     all_research = "All forskning",
     end_year = utf8 "Slutten av året",
+    earthquake = "Lag jordskjelv",
   },
 }
 
@@ -289,6 +290,7 @@ tooltip.cheats_window = {
   lose_level = utf8 "Tap dette nivået.",
   all_research = utf8 "Fullförer all forskning.",
   end_year = utf8 "Gå til slutten av dette året.",
+  earthquake = "Forårsaker et jordskjelv.",
   },
 }
   
