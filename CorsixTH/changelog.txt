@@ -1,4 +1,72 @@
 -----------------------------------------
+Version 0.10 - released 2012-09-24
+-----------------------------------------
+
+-- How versions work --
+
+If you have been wondering how the new version system works:
+When major new features are added the second digit is increased.
+When there are only fixes or smaller new features the third digit
+is increased.
+
+In this version, for example, earthquakes have been added.
+
+-- Not Yet Implemented --
+
+* Epidemics
+* Rats
+* Graphs
+* Visual effects on patients with serious radiation and jellyitis.
+* Fullscreen animations such as the level screen and winning letter.
+
+-- Known Issues --
+
+* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will 
+  be shown on it.
+* If the user exits the game via "the cross" when in windowed mode settings 
+  are not saved.
+* Radiators and other "edge tile" objects occupy a whole tile instead of 
+  just one edge of the tile.
+  
+-- Gameplay --
+
+* Added: Earthquakes have recently been reported!
+* Added: Handyman priorities have been added. They can also be told to stay 
+  and respond to calls in one building (parcel) only.
+* Added: Staff's happiness will change due to more environmental factors.
+
+* Change: The files containing dumped strings are now created alongside the 
+  config file instead of in the installation directory.
+
+* Fix: Handymen will now meander inside a room until the machine which needs 
+  repair is free for use.
+* Fix: The URL in the config file pointing to better quality music was outdated. 
+  Note that this only affects new installations.
+* Fix: Two identical entries were shown in the drug casebook if a new disease 
+  was discovered when it was open.
+* Fix: Don't crash when a saved game with the town map open is loaded.
+* Fix: Too large rooms could make them unusable.
+* Some graphical glitches have been fixed.
+
+-- User Interface --
+
+* Added: The Map Editor and Animation Viewer have new icons.
+* Change: In debug mode all gamelog output is now also displayed in the 
+  command prompt.
+* Fix: Don't initiate a window move if it happens to be below a top menu 
+  selection.
+* Fix: Don't show the main menu under any circumstances when closing the 
+  options menu in-game.
+
+-- Map Editor --
+
+* Fix: The "Save" and "Save As" buttons now do what they should do.
+* Fix: There were some strange log messages on opening the editor.
+* Added: The arrow keys can now be used to scroll the map.
+* Change: Removed a lot of tiles from the palette, since maps may not
+  work as intended if they would be used.
+
+-----------------------------------------
 Version 0.01 - released 2012-03-24
 -----------------------------------------
 
