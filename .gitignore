@@ -3,5 +3,9 @@ CorsixTH/config.txt
 /DataRaw
 /Debug
 /LuaJIT
+MapEdit/CMakeCache.txt
+MapEdit/CMakeFiles
+MapEdit/Makefile
+MapEdit/cmake_install.cmake
 /SDL
 /SDL_mixer-1.2.8
