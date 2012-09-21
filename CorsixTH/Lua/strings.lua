@@ -61,6 +61,7 @@ function Strings:init()
   -- names given to Inherit() to a file. The first name is used as the official
   -- name for this language, the others may be abbreviations or such.
   self.languages = {}
+  self.languages_english = {}
   self.language_to_chunk = {}
   self.chunk_to_font = {}
   for chunk, filename in pairs(self.language_chunks) do
@@ -88,6 +89,8 @@ function Strings:init()
         -- Use the first name for display purposes (case-dependent!).
         if names[1] ~= "original_strings" then
           self.languages[#self.languages + 1] = names[1]
+          -- Also save the second name for internal purposes.
+          self.languages_english[#self.languages_english + 1] = names[2]
         end
         -- Associate every passed name with this file, case-independently
         for _, name in pairs(names) do
