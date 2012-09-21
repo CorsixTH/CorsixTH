@@ -214,6 +214,11 @@ function GameUI:onKeyDown(code, rawchar)
     self:updateKeyScroll()
     return
   end
+  -- Allow players to dump strings to be able to see which strings their language
+  -- is lacking.
+  if key == "d" and self.buttons_down.ctrl and self.buttons_down.shift then
+    self.app:dumpStrings()
+  end
   if TheApp.config.debug then -- Debug commands
     if key == "f8" then -- Make debug fax
       self:makeDebugFax()

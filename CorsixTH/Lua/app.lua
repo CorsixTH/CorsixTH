@@ -460,13 +460,37 @@ function App:dumpStrings()
   dump_grouped(fi, _S, "")
   fi:close()
   
-  -- Compares strings provided by language file of current language WITHOUT inheritance
-  -- with strings provided by english language with inheritance (i.e. all strings).
-  -- This will give translators an idea which strings are missing in their translation.
+  self:checkMissingStringsInLanguage(dir, self.config.language)
+  -- Uncomment these lines to get diffs for all languages in the game
+  -- for _, lang in ipairs(self.strings.languages_english) do
+  --   self:checkMissingStringsInLanguage(dir, lang)
+  -- end
+end
+
+--!Compares strings provided by language file of given language WITHOUT inheritance
+-- with strings provided by english language with inheritance (i.e. all strings).
+-- This will give translators an idea which strings are missing in their translation.
+--!param dir The directory where the file to write to should be.
+--!param language The language to check against.
+function App:checkMissingStringsInLanguage(dir, language)
+
+  -- Accessors to reach through the userdata proxies on strings
+  local LUT = debug.getregistry().StringProxyValues
+  local function val(o)
+    if type(o) == "userdata" then
+      return LUT[o]
+    else
+      return o
+    end
+  end
+  local function is_table(o)
+    return type(val(o)) == "table"
+  end
+
   local ltc = self.strings.language_to_chunk
-  if ltc[self.config.language] ~= ltc["english"] then
+  if ltc[language] ~= ltc["english"] then
     local str_en = self.strings:load("english", true)
-    local str_cur = self.strings:load(self.config.language, true, true)
+    local str_cur = self.strings:load(language, true, true)
     local function dump_diff(file, obj1, obj2, prefix)
       for n, o in pairs(obj1) do
         if n ~= "deprecated" then
@@ -488,13 +512,13 @@ function App:dumpStrings()
         end
       end
     end
-    fi = assert(io.open(dir .. "debug-strings-diff.txt", "wt"))
+    local fi = assert(io.open(dir .. "debug-strings-diff-" .. language:lower() .. ".txt", "wt"))
     fi:write("------------------------------------\n")
-    fi:write("MISSING STRINGS IN LANGUAGE \"" .. self.config.language:upper() .. "\":\n")
+    fi:write("MISSING STRINGS IN LANGUAGE \"" .. language:upper() .. "\":\n")
     fi:write("------------------------------------\n")
     dump_diff(fi, str_en, str_cur, "")
     fi:write("------------------------------------\n")
-    fi:write("SUPERFLUOUS STRINGS IN LANGUAGE \"" .. self.config.language:upper() .. "\":\n")
+    fi:write("SUPERFLUOUS STRINGS IN LANGUAGE \"" .. language:upper() .. "\":\n")
     fi:write("------------------------------------\n")
     dump_diff(fi, str_cur, str_en, "")
     fi:close()
