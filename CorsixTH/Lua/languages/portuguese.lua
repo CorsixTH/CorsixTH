@@ -1,4 +1,6 @@
-﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, "Fabiomsouto"
+Copyright (c) 2011 Sérgio "Get_It" Ribeiro
+Copyright (c) 2012 <Filipe "Aka" Carvalho>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,11 +20,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+
 Language(utf8 "Português", "Portuguese", "pt", "pt")
 Inherit("english")
-Inherit("original_strings", 0)
 
--- override
+-------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = utf8 "Estás a ficar sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
@@ -31,7 +33,14 @@ adviser.warnings.money_low = utf8 "Estás a ficar sem dinheiro!" -- Funny. Exist
 fax.emergency.cure_not_possible_build = "Vais precisar de construir %s"
 fax.emergency.cure_not_possible_build_and_employ = "Vais precisar de construir um %s e empregar um %s"
 
--- new strings
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = utf8 "A cara desta pessoa - clique para abrir o ecrã de gestão de pessoal"
+tooltip.staff_window.center_view = utf8 "Clique esquerdo para ir para onde está a pessoa, clique direito para navegador através dos funcionários"
+
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = utf8 "Tem a certeza que deseja reiniciar este nível?"
+
+-------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Lixo"
 tooltip.objects.litter = utf8 "Lixo: Deitado fora por um paciente porque não encontrou um caixote do lixo onde o colocar."
 
@@ -137,28 +146,6 @@ tooltip.totd_window = {
   next = utf8 "Mostrar a próxima dica",
 }
 
-
-
-
---[[ Copyright (c) 2012 <Filipe "Aka" Carvalho>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. --]]
 
 debug_patient_window.caption = "Debug Paciente"
 
