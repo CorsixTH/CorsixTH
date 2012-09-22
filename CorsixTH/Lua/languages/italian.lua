@@ -34,8 +34,11 @@ fax.emergency.cure_not_possible_build = "E' necessario costruire un %s"
 fax.emergency.cure_not_possible_build_and_employ = "E' necessario costruire un %s e assunere un %s"
 
 -- new strings
+date_format = {
+  daymonth = "%1% %2:months%",
+}
 object.litter = "Spazzatura"
-tooltip.objects.litter = utf8 "Spazzatura: Lasciata da un paziente perché non ha trovato un cestino dove gettarla."
+tooltip.objects.litter = utf8 "Spazzatura: Lasciata sul pavimento da un paziente perché non ha trovato un cestino in cui gettarla."
 
 tooltip.fax.close = "Chiudi questa finestra senza cancellare il messaggio"
 tooltip.message.button = "Click sinistro per aprire il messaggio"
@@ -49,8 +52,17 @@ menu_options = {
   lock_windows = "  BLOCCA FINESTRE  ",
   edge_scrolling = "  SCORRIMENTO AI LATI  ",
   settings = "  IMPOSTAZIONI  ",
+  adviser_disabled = "  CONSIGLIERE  ",
 }
-menu_options_game_speed.pause = "  PAUSA  "
+
+menu_options_game_speed = {
+  pause               = "  (P) PAUSA  ",
+  slowest             = "  (1) LENTISSIMO  ",
+  slower              = "  (2) LENTO  ",
+  normal              = "  (3) NORMALE  ",
+  max_speed           = "  (4) VELOCITA' MASSIMA  ",
+  and_then_some_more  = "  (5) E ANCORA DI PIU'  ",
+}
 
 -- The demo does not contain this string
 menu_file.restart = "  RIAVVIA  "
@@ -87,11 +99,18 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione risulterebbe nel blocco dell'accesso ad alcune parti dell'ospedale.",
   warnings = {
-    no_desk ="Prima o poi dovrai costruire un banco di accettazione ed assumere una receptionist!",
+    no_desk = "Prima o poi dovrai costruire un banco di accettazione ed assumere una receptionist!",
     no_desk_1 = "Se vuoi che i pazienti vengano nel tuo ospedale dovrai assumere una receptionist e costruirle una scrivania dove farla lavorare!",
-    no_desk_2 = "Ben fatto, deve essere un record mondiale: quasi un anno e nessun paziente! Se vuoi continuare come Manager di questo ospedale avrai bisogno di assumere una receptionist e costruire un banco di accettazione dove farla lavorare!",
+    no_desk_2 = "Ben fatto, deve essere un record mondiale: quasi un anno e nessun paziente! Se vuoi continuare come Manager di questo ospedale dovrai assumere una receptionist e costruire un banco di accettazione dove farla lavorare!",
+	no_desk_3 = utf8 "Grandioso, quasi un anno e ancora non hai personale all'accettazione! Come ti aspetti di trovare pazienti, ora vedi di rimediare e di non fare più casini!",
+	cannot_afford = "Non hai abbastanza soldi in banca per assumere questa persona!", -- I can't see anything like this in the original strings
+	falling_1 = utf8 "Ehi! Non è divertente, attento a dove clicchi: qualcuno potrebbe farsi male!",
+	falling_2 = utf8 "Basta fare casini, a te piacerebbe?",
+	falling_3 = "Ahi, deve far male, qualcuno chiami un dottore!",
+	falling_4 = utf8 "Questo è un ospedale, non un parco giochi!",
+	falling_5 = utf8 "Non è il luogo adatto per far cadere le persone, sono malate sai!",
+	falling_6 = utf8 "Non è una sala da bowling, i malati non dovrebbero essere trattati così!"
   },
-
   cheats = {  
     th_cheat = "Congratulazioni, hai sbloccato i cheat!",
     crazy_on_cheat = "Oh no! Tutti i dottori sono impazziti!",
@@ -109,6 +128,8 @@ dynamic_info.patient.actions.no_gp_available = "Aspettando che venga costruito u
 dynamic_info.staff.actions.heading_for = "Andando verso %s"
 dynamic_info.staff.actions.fired = "Licenziato"
 
+progress_report.free_build = "COSTRUZIONE LIBERA"
+
 fax = {
    choices = {
     return_to_main_menu = "Ritorna al menu principale",
@@ -117,6 +138,16 @@ fax = {
   },
   emergency = {
     num_disease_singular = utf8 "C'è una persona con %s che richiede la tua immediata attenzione.",
+	free_build = utf8 "Se hai successo la tua reputazione aumenterà, ma se fallisci la tua reputazione verrà intaccata pesantemente.",
+  },
+  vip_visit_result = {
+    remarks = {
+      free_build = utf8 {
+        "Hai proprio un bell'ospedale! Anche se non è difficile ottenerlo con fondi illimitati, eh?",
+        "Non sono un economista, ma penso che anch'io avrei potuto dirigere quest'ospedale, non so se mi spiego...",
+        "Un ospedale molto ben gestito. Attento alla crisi economica però! Ah, giusto... non te ne sei dovuto preoccupare.",
+      }
+    }
   }
 }
 
@@ -127,19 +158,21 @@ letter = {
 }
 
 install = {
-  title = "--------------------------------- Installazione CorsixTH ---------------------------------",
+  title = "----------------------------- Installazione CorsixTH -----------------------------",
   th_directory = "CorsixTH ha bisogno di una copia dei file dati di Theme Hospital (o della demo) per essere eseguito. Per favore indica la posizione della cartella di installazione di Theme Hospital.",
   exit = "Esci",
 }
 
 misc.not_yet_implemented = "(non ancora implementato)"
-misc.no_heliport = "Non è stata scoperta nessuna malattia, oppure non c'è eliporto sulla mappa."
+misc.no_heliport = "O non è stata ancora scoperta nessuna malattia, oppure non c'è un eliporto sulla mappa. Oppure potrebbe essere necessario costruire un banco accettazione e assumere una receptionist"
 
 main_menu = {
   new_game = "Nuova partita",
   custom_level = "Livello personalizzato",
   load_game = "Carica partita",
   options = "Opzioni",
+  savegame_version = "Versione salvataggi: ",
+  version = "Versione: ",
   exit = "Esci",
 }
 
@@ -163,10 +196,12 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Partita personalizzata",
+  free_build = "Costruzione Libera",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = "Carica il livello %s",
+  free_build = utf8 "Spunta questa casella per giocare senza soldi, né vittoria o sconfitta",
 }
 
 save_game_window = {
@@ -180,10 +215,14 @@ tooltip.save_game_window = {
 }
 
 menu_list_window = {
+  name = "Nome",
+  save_date = "Modificata",
   back = "Indietro",
 }
 
 tooltip.menu_list_window = {
+  name = "Clicca qui per ordinare la lista in ordine alfabetico",
+  save_date = "Clicca qui per ordinare la lista in base alla data dell'ultima modifica",
   back = "Chiudi questa finestra",
 }
 -- Width / height's translation doesn't fit - had to write "larghezza" and "altezza" shorter
@@ -197,6 +236,15 @@ options_window = {
   cancel = "Cancella",
   back = "Indietro",
 }
+
+tooltip.handyman_window = {
+  parcel_select = utf8 "Il lotto dove l'inserviente può operare. Clicca per cambiarlo."
+}
+ 
+handyman_window = {
+  all_parcels = "Tutti i lotti",
+  parcel = "Lotto"
+}  
 
 tooltip.options_window = {
   fullscreen_button = utf8 "Clicca per selezionare o deselezionare la modalità a schermo intero",
@@ -231,7 +279,7 @@ lua_console = {
 }
 
 tooltip.lua_console = {
-  textbox = "Inserisci il codice Lua da eseguire qui",
+  textbox = "Inserisci qui il codice Lua da eseguire",
   execute_code = "Esegui il codice che hai inserito",
   close = "Chiudi la console",
 }
@@ -254,7 +302,9 @@ confirmation = {
 
 information = {
   custom_game = "Benvenuto in CorsixTH. Divertiti con questa mappa personalizzata!",
+  no_custom_game_in_demo = "Spiacente, ma nella versione demo non puoi giocare mappe personalizzate.",
   cannot_restart = utf8 "Sfortunatamente questa mappa personalizzata è stata salvata prima che venisse implementata la funzione per riavviare.",
+  very_old_save = utf8 "Il gioco è stato molto aggiornato da quando hai avviato questo livello. Per assicurarti che tutto funzioni come dovrebbe prendi in considerazione l'idea di riavviarlo.",
   level_lost = {
     utf8 "Peccato! Hai perso il livello. Avrai più fortuna la prossima volta!",
     utf8 "Hai perso perchè:",
@@ -308,13 +358,14 @@ cheats_window = {
   warning = "Attenzione: Non riceverai alcun punto bonus alla fine del livello se usi i cheat!",
   cheated = {
     no = "Cheat usati: No",
-    yes = "Cheats usati: Yes",
+    yes = utf8 "Cheats usati: Sì",
   },
   cheats = {
     money = "Cheat soldi",
     all_research = "Cheat Completa Ricerche",
     emergency = "Crea Emergenza",
     vip = "Crea VIP",
+	earthquake = "Crea Terremoto",
     create_patient = "Crea Paziente",
     end_month = "Fine Mese",
     end_year = "Fine Anno",
@@ -331,7 +382,8 @@ tooltip.cheats_window = {
     all_research = "Completa tutte le ricerche.",
     emergency = utf8 "Crea un'emergenza.",
     vip = "Crea un VIP.",
-    create_patient = "Crea un Paziente a bordo mappa.",
+	earthquake = "Crea un terremoto.",
+    create_patient = "Crea un Paziente sul bordo della mappa.",
     end_month = "Salta alla fine del mese.",
     end_year = "Salta alla fine dell'anno.",
     lose_level = "Perdi il livello corrente.",
@@ -365,3 +417,64 @@ tooltip.calls_dispatcher = {
   close = "Chiude la finestra del gestore chiamate",
 }
 
+-- I added those lines because I didn't like 'em to show up in every diff dump!
+original_credits[302] = ","
+original_credits[303] = "Steve Fitton"
+original_credits[304] = " "
+original_credits[305] = " "
+original_credits[306] = " "
+original_credits[307] = ":Company Administration"
+original_credits[308] = ","
+original_credits[309] = "Audrey Adams"
+original_credits[310] = "Annette Dabb"
+original_credits[311] = "Emma Gibbs"
+original_credits[312] = "Lucia Gobbo"
+original_credits[313] = "Jo Goodwin"
+original_credits[314] = "Sian Jones"
+original_credits[315] = "Kathy McEntee"
+original_credits[316] = "Louise Ratcliffe"
+original_credits[317] = " "
+original_credits[318] = " "
+original_credits[319] = " "
+original_credits[320] = ":Company Management"
+original_credits[321] = ","
+original_credits[322] = "Les Edgar"
+original_credits[323] = "Peter Molyneux"
+original_credits[324] = "David Byrne"
+original_credits[325] = " "
+original_credits[326] = " "
+original_credits[327] = ":Tutti alla Bullfrog Productions"
+original_credits[328] = " "
+original_credits[329] = " "
+original_credits[330] = " "
+original_credits[331] = ":Un Ringraziamento Speciale A"
+original_credits[332] = ","
+original_credits[333] = "Tutti al Frimley Park Hospital"
+original_credits[334] = " "
+original_credits[335] = ":Specialmente"
+original_credits[336] = ","
+original_credits[337] = "Beverley Cannell"
+original_credits[338] = "Doug Carlisle"
+original_credits[339] = " "
+original_credits[340] = " "
+original_credits[341] = " "
+original_credits[342] = ":Keep On Thinking"
+original_credits[343] = " "
+original_credits[344] = " "
+original_credits[345] = " "
+original_credits[346] = " "
+original_credits[347] = " "
+original_credits[348] = " "
+original_credits[349] = " "
+original_credits[350] = " "
+original_credits[351] = " "
+original_credits[352] = " "
+original_credits[353] = " "
+original_credits[354] = " "
+original_credits[355] = " "
+original_credits[356] = " "
+original_credits[357] = " "
+original_credits[358] = " "
+original_credits[359] = " "
+original_credits[360] = " "
+original_credits[361] = "."
