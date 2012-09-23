@@ -49,7 +49,8 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
         11. Room descriptions
         12. Lua console
         13. Information
-        14. Misc
+        14. Handyman window
+        15. Misc
  
  -- SECTION B - OLD STRINGS (OVERRIDE)
  
@@ -106,7 +107,7 @@ menu_debug_overlay = {
   byte_5        = utf8 "  TAVU 5  ",
   byte_6        = utf8 "  TAVU 6  ",
   byte_7        = utf8 "  TAVU 7  ",
-  parcel        = utf8 "  PAKETTI  ",
+  parcel        = utf8 "  ALUE  ",
 }
 
 menu_options_game_speed = {
@@ -645,11 +646,19 @@ information = {
   },
 }
 
--- 14. Misc
+-- 14. Handyman window
+handyman_window = {
+  all_parcels = "Kaikkialla",
+  parcel = "Alue",
+}
+
+-- 15. Misc
 misc = {
   not_yet_implemented   = utf8 "(ei toteutettu vielä)",
   no_heliport           = utf8 "Joko yhtään tautia ei vielä tunneta tai sairaalalla ei ole helikopterikenttää",
 }
+
+date_format.daymonth = "%1%. %2:months%"
 
 -------------------------------------------------------------------------------
 --   SECTION B - OLD STRINGS (OVERRIDE)
@@ -1561,19 +1570,20 @@ tooltip = {
   -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
-    name                = utf8 "Huoltomiehen nimi", -- contains "handyman"
+    ability             = utf8 "Kyvyt",
+    center_view         = utf8 "Keskitä näkymä huoltomieheen", -- contains "handyman"
     close               = utf8 "Sulje ikkuna",
     face                = utf8 "Huoltomiehen kuva", -- contains "handyman"
     happiness           = utf8 "Tyytyväisyys",
-    tiredness           = utf8 "Väsymys",
-    ability             = utf8 "Kyvyt",
+    name                = utf8 "Huoltomiehen nimi", -- contains "handyman"
+    parcel_select       = utf8 "Alue, jolla huoltomies hoitaa tehtäviään. Klikkaa vaihtaaksesi asetusta",
+    pick_up             = utf8 "Poimi huoltomies",
     prio_litter         = utf8 "Pyydä huoltomiestä keskittymään lattioiden siivoamiseen", -- contains "handyman"
     prio_plants         = utf8 "Pyydä huoltomiestä keskittymään kasvien kastelemiseen", -- contains "handyman"
     prio_machines       = utf8 "Pyydä huoltomiestä keskittymään koneiden huoltamiseen", -- contains "handyman"
-    salary              = utf8 "Kuukausipalkka",
-    center_view         = utf8 "Keskitä näkymä huoltomieheen", -- contains "handyman"
     sack                = utf8 "Anna potkut",
-    pick_up             = utf8 "Poimi huoltomies",
+    salary              = utf8 "Kuukausipalkka",
+    tiredness           = utf8 "Väsymys",
   },
   
   -- Place objects window
