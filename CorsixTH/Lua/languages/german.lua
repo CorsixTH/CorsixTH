@@ -139,11 +139,11 @@ tooltip.research_policy.no_research = "In dieser Kategorie wird momentan keine F
 tooltip.research_policy.research_progress = "Fortschritt in dieser Kategorie: %1%/%2%"
 
 menu_options = {
-  lock_windows   = "  FENSTER FESTHALTEN  ",
-  edge_scrolling = "  AM BILDSCHIRMRAND SCROLLEN  ",
-  settings       = "  EINSTELLUNGEN  ",
+  lock_windows     = "  FENSTER FESTHALTEN  ",
+  edge_scrolling   = "  AM BILDSCHIRMRAND SCROLLEN  ",
+  settings         = "  EINSTELLUNGEN  ",
+  adviser_disabled = "  BERATER  ",
 }
-menu_options_game_speed.pause        = "  PAUSE"
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
   slowest             = "  (1) AM LANGSAMSTEN  ",
@@ -192,6 +192,14 @@ adviser = {
     no_desk ="Sie sollten beizeiten mal eine Rezeption bauen und eine Empfangsdame einstellen!",
     no_desk_1 = utf8 "Wenn Sie wollen, dass Patienten in Ihr Krankenhaus kommen, müssen Sie eine Empfangsdame einstellen und eine Rezeption für sie bauen!",
     no_desk_2 = utf8 "Na Klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
+    no_desk_3 = "Ich glaub ich spinne, fast ein Jahr ist um und Sie haben keine besetzte Rezeption! Wie denken Sie denn, dass die Patienten zu Ihnen finden? Schauen Sie mal zu, dass Sie Ihren Kram auf die Reihe bekommen!",
+    falling_1 = "He! Vorsicht mit dem Mauszeiger, jemand könnte sich verletzen!",
+    falling_2 = "Hören Sie schon auf damit, wie würde das Ihnen denn gefallen?",
+    falling_3 = "Autsch, das sah schmerzhaft aus. Ruft einen Arzt!",
+    falling_4 = "Dies ist ein Krankenhaus, kein Vergnügungspark!",
+    falling_5 = "Sie sind nicht hier um Leute umzustoßen. Sie sind krank, okay?",
+    falling_6 = "Dies ist keine Bowlingbahn. Patienten sollten nicht so behandelt werden!",
+    cannot_afford = "Sie haben nicht genügend Geld auf dem Konto um diese Person einzustellen!",
   },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
@@ -216,8 +224,18 @@ fax = {
     accept_new_level = utf8 "Zum nächsten Level wechseln",
     decline_new_level = "Noch ein wenig im aktuellen Level weiterspielen",
   },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        "Echt ein hübsches Krankenhaus haben Sie da! War aber wohl nicht so schwer zum laufen zu bekommen, so ohne finanzielle Beschränkungen, was? Haha...",
+        "Ich bin zwar kein BWLer, aber ich denke dieses Krankenhaus könnte ich auch führen. Sie wissen schon, was ich meine.",
+        "Ein gut organisiertes Krankenhaus. Aber hüten Sie sich vor der Finanzkrise! Ach ja... da müssen Sie sich ja keine Sorgen machen.",
+      },
+    },
+  },
   emergency = {
     num_disease_singular = "Hier ist eine Person mit %s, sie braucht sofortige Aufmerksamkeit.",
+    free_build = "Wenn wir erfolgreich sind, wird unser Ruf steigen. Falls wir versagen, wird unser Ruf Schaden nehmen.",
   },
 }
 
@@ -242,6 +260,8 @@ main_menu = {
   load_game = "Spiel Laden",
   options = "Optionen",
   exit = "Verlassen",
+  version = "Version: ",
+  savegame_version = "Savegame-Version: ",
 }
 
 tooltip.main_menu = {
@@ -264,10 +284,12 @@ tooltip.load_game_window = {
 
 custom_game_window = {
   caption = "Eigenes Level",
+  free_build = "Freies Spiel",
 }
 
 tooltip.custom_game_window = {
   start_game_with_name = "Level %s starten",
+  free_build = "Auswählen, um ohne Geld und Sieg-/Niederlagebedingungen zu spielen",
 }
 
 save_game_window = {
@@ -368,6 +390,8 @@ information = {
     balance = "Ihr Kontostand ist unter %d gesunken.",
     percentage_killed = utf8 "Sie haben mehr als %d Prozent der Patienten getötet.",
   },
+  very_old_save = "Seit dieses Level gestartet wurde, wurden einige Änderungen am Spiel durchgeführt. Sie sollten ein neues Spiel starten, damit alle Änderungen wirksam werden.",
+  no_custom_game_in_demo = "Tut uns Leid, aber in der Demo-Version sind keine eigenen Level spielbar.",
 }
 
 tooltip.information = {
@@ -421,6 +445,7 @@ cheats_window = {
     all_research = "Alle-Forschungen-Cheat",
     emergency = "Notfall erzeugen",
     vip = "VIP erzeugen",
+    earthquake = "Erdbeben starten",
     create_patient = "Patienten erzeugen",
     end_month = "Ende des Monats",
     end_year = "Ende des Jahres",
@@ -437,6 +462,7 @@ tooltip.cheats_window = {
     all_research = utf8 "Alle Forschungen abschließen.",
     emergency = "Einen Notfall erzeugen.",
     vip = "Einen VIP vorbeischicken.",
+    earthquake = "Ein Erdbeben starten.",
     create_patient = "Einen Patienten am Kartenrand erzeugen.",
     end_month = "Zum Monatsende springen.",
     end_year = "Zum Jahresende springen.",
@@ -469,3 +495,81 @@ tooltip.calls_dispatcher = {
   assigned = "Diese Box ist markiert wenn jemand der Aufgabe zugewiesen ist.",
   close = "Das Aufruf-Verteiler-Fenster schließen",
 }
+
+handyman_window = {
+  all_parcels = "Alle Grundstücke",
+  parcel = "Grundstück",
+}
+
+tooltip.handyman_window = {
+  parcel_select = "Der Arbeitsbereich des Handlangers. Klicken zum Ändern.",
+}
+
+progress_report = {
+  free_build = "FREIES SPIEL",
+}
+
+-------------------------------  FIX FOR MISSING CREDITS LINES  ----------------------------------
+
+original_credits[301] = " "
+original_credits[302] = " "
+original_credits[303] = " "
+original_credits[304] = " "
+original_credits[305] = " "
+original_credits[306] = " "
+original_credits[307] = " "
+original_credits[308] = " "
+original_credits[309] = " "
+original_credits[310] = " "
+original_credits[311] = " "
+original_credits[312] = " "
+original_credits[313] = " "
+original_credits[314] = " "
+original_credits[315] = " "
+original_credits[316] = " "
+original_credits[317] = " "
+original_credits[318] = " "
+original_credits[319] = " "
+original_credits[320] = " "
+original_credits[321] = " "
+original_credits[322] = " "
+original_credits[323] = " "
+original_credits[324] = " "
+original_credits[325] = " "
+original_credits[326] = " "
+original_credits[327] = " "
+original_credits[328] = " "
+original_credits[329] = " "
+original_credits[330] = " "
+original_credits[331] = " "
+original_credits[332] = " "
+original_credits[333] = " "
+original_credits[334] = " "
+original_credits[335] = " "
+original_credits[336] = " "
+original_credits[337] = " "
+original_credits[338] = " "
+original_credits[339] = " "
+original_credits[340] = " "
+original_credits[341] = " "
+original_credits[342] = " "
+original_credits[343] = " "
+original_credits[344] = " "
+original_credits[345] = " "
+original_credits[346] = " "
+original_credits[347] = " "
+original_credits[348] = " "
+original_credits[349] = " "
+original_credits[350] = " "
+original_credits[351] = " "
+original_credits[352] = " "
+original_credits[353] = " "
+original_credits[354] = " "
+original_credits[355] = " "
+original_credits[356] = " "
+original_credits[357] = " "
+original_credits[358] = " "
+original_credits[359] = " "
+original_credits[360] = " "
+original_credits[361] = " "
+
