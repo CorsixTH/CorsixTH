@@ -561,6 +561,7 @@ function Object:afterLoad(old, new)
   if old < 52 then
     self.hospital = self.world:getLocalPlayerHospital()
   end
+  return Entity.afterLoad(self, old, new)
 end
 
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}

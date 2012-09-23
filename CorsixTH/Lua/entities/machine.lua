@@ -280,5 +280,5 @@ function Machine:afterLoad(old, new)
       })
     end
   end
-  return Entity.afterLoad(self, old, new)
+  return Object.afterLoad(self, old, new)
 end
