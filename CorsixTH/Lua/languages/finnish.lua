@@ -136,6 +136,8 @@ cheats_window = {
     end_year            = utf8 "Siirry vuoden loppuun",
     lose_level          = utf8 "Häviä",
     win_level           = utf8 "Voita",
+    vip                 = utf8 "Luo VIP",
+    earthquake          = utf8 "Maanjäristys",
   },
 }
 
@@ -182,7 +184,8 @@ load_game_window = {
 }
 
 custom_game_window = {
-  caption = utf8 "Luo oma sairaala",
+  caption     = utf8 "Luo oma sairaala",
+  free_build  = utf8 "Rakenna vapaasti",
 }
 
 save_game_window = {
@@ -249,7 +252,8 @@ tooltip = {
   },
 
   custom_game_window = {
-    start_game_with_name = utf8 "Lataa taso %s",
+    free_build            = utf8 "Valitse tämä, jos haluat pelata ilman rahaa ja mahdollisuutta voittaa tai hävitä",
+    start_game_with_name  = utf8 "Lataa taso %s",
   },
 
   save_game_window = {
@@ -306,6 +310,8 @@ tooltip = {
       end_year          = utf8 "Siirtää aikaa eteenpäin vuoden loppuun",
       lose_level        = utf8 "Häviät tämän tason",
       win_level         = utf8 "Voitat tämän tason",
+      vip               = utf8 "Luo VIP-potilaan",
+      earthquake        = utf8 "Aiheuttaa maanjäristyksen"
     },
   },
 
@@ -1286,9 +1292,6 @@ trophy_room = {
       utf8 "Sinulle myönnetään täten sisäministeriön Kiiltävät sairaalastandardit -palkinto, joka myönnetään vuosittain parhaan maineen saavuttaneelle sairaalalle. Onneksi olkoon!",
       utf8 "Ole hyvä ja ota vastaan Bullfrog-palkinto, joka myönnetään maineeltaan vuoden parhaalle sairaalalle. Olet ehdottomasti ansainnut sen!",
     },
-    trophies = {
-      utf8 "Onnittelut Siisti ja kaunis -kunniamaininnasta, joka myönnetään vuosittain sairaalalle, jolla on paras maine. Tämä kunnianosoitus meni takuulla oikeaan osoitteeseen!",
-    },
   },
   happy_staff = {
     awards = {
@@ -1300,10 +1303,6 @@ trophy_room = {
     },
   },
   happy_vips = {
-    awards = {
-      utf8 "Olet voittanut Nobel-palkinnon hoidettuasi VIP-potilaasi kunnialla. Kenelläkään viime vuonna sairaalassasi vierailleista VIP-potilaista ei ollut mitään pahaa sanottavaa.",
-      utf8 "Onnittelut VIP-palkinnosta, joka myönnetään työteliäiden julkkisten elämänlaadun parantamisesta. Viime vuonna joka ainoa julkimo lähti sairaalastasi paremmalla tuulella kuin saapui sinne.",
-    },
     trophies = {
       utf8 "Tunnettujen henkilöiden toimisto haluaa palkita sinut Julkkis-kunniamaininnalla, koska olet pitänyt hyvää huolta kaikista VIP-potilaistasi. Olet jo itsekin melkein tunnettu!",
     },
@@ -2666,8 +2665,8 @@ fax = {
   -- VIP visit query
   vip_visit_query = {
     choices = {
-      invite    = utf8 "Lähetä virallinen kutsu V.I.P.-potilaalle.",
-      refuse    = utf8 "Kieltäydy ottamasta V.I.P-vierasta vastaan jollakin tekosyyllä.",
+      invite    = utf8 "Lähetä virallinen kutsu VIP-potilaalle.",
+      refuse    = utf8 "Kieltäydy ottamasta VIP-vierasta vastaan jollakin tekosyyllä.",
     },
     vip_name = utf8 "%s on esittänyt toiveen päästä käymään sairaalassasi.",
   },
@@ -2757,7 +2756,7 @@ dynamic_info = {
     diagnosis_progress  = utf8 "Diagnosointiprosessi",
     emergency           = utf8 "Hätätilanne: %s", -- %s (disease name)
   },
-  vip                   = utf8 "Vieraileva V.I.P.",
+  vip                   = utf8 "Vieraileva VIP",
   health_inspector      = utf8 "Terveystarkastaja",
   
   staff = {
