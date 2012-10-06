@@ -76,6 +76,10 @@ function Machine:setCrashedAnimation()
 end
 
 function Machine:machineUsed(room)
+  if room.crashed then
+    -- Do nothing if the room has already crashed.
+    return
+  end
   self:updateDynamicInfo()
   local threshold = self.times_used/self.strength
 
@@ -278,6 +282,13 @@ function Machine:afterLoad(old, new)
       self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {
         thob = self.object_type.thob
       })
+    end
+  end
+  if old < 54 then
+    local room = self:getRoom()
+    if room.crashed then
+      local taskIndex = room.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
+      room.hospital:removeHandymanTask(taskIndex, "repairing")
     end
   end
   return Object.afterLoad(self, old, new)

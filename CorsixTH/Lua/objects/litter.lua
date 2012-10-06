@@ -56,7 +56,6 @@ function Litter:Litter(world, object_type, x, y, direction, etc)
   self.object_type = object_type
   self.world = world
   self:setTile(x, y)
-  world.hospitals[1]:addHandymanTask(self, "cleaning", 1, x, y)
 end
 
 function Litter:setTile(x, y)
@@ -86,6 +85,10 @@ function Litter:setLitterType(anim_type, mirrorFlag)
     else
       error "Unknown litter type"
     end
+    if self:isCleanable() then
+      local hospital = self.world:getLocalPlayerHospital()
+      hospital:addHandymanTask(self, "cleaning", 1, self.tile_x, self.tile_y)
+    end
   end
 end
 
@@ -97,6 +100,10 @@ function Litter:vomitInducing()
     return true
   end
   return false
+end
+
+function Litter:isCleanable()
+  return self:vomitInducing() or self:anyLitter() 
 end
 
 function Litter:anyLitter()
@@ -117,6 +124,13 @@ function Litter:afterLoad(old, new)
     else
       -- This object was not properly removed from the world.
       self.world:destroyEntity(self)
+    end
+  end
+  if old < 54 then
+    if not self:isCleanable() then
+      local hospital = self.world:getLocalPlayerHospital()
+      local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
+      hospital:removeHandymanTask(taskIndex, "cleaning")
     end
   end
 end

@@ -110,14 +110,14 @@ function UIPlaceStaff:onMouseUp(button, x, y)
         entity:setProfile(self.profile)
         self.profile = nil
         entity:setTile(self.tile_x, self.tile_y)
+        self.ui.hospital:addStaff(entity)
+        entity:setHospital(self.ui.hospital)
         local room = entity:getRoom()
         if room then
           room:onHumanoidEnter(entity)
         else
           entity:onPlaceInCorridor()
         end
-        self.ui.hospital:addStaff(entity)
-        entity:setHospital(self.ui.hospital)
         self.ui:tutorialStep(2, 6, "next")
         self.ui:tutorialStep(4, 4, "next")
         -- Update the staff management window if it is open.

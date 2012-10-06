@@ -1513,7 +1513,7 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     local task = subTable[taskIndex]
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
-      if taskType ~= "cleaning" and task.object.ticks ~= true then 
+      if task.object.ticks ~= true then 
         task.assignedHandyman:intreruptHandymanTask()
       end
     end
