@@ -116,6 +116,7 @@ end
 
 function UIFurnishCorridor:purchaseItem(index, quantity)
   local o = self.objects[index]
+  local is_negative_quantity = quantity < 0
   if self.buttons_down.ctrl then
     quantity = quantity * 10
   elseif self.buttons_down.shift then
@@ -129,7 +130,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
   end
   quantity = quantity - o.qty
   local hospital = self.ui.hospital
-  if hospital.balance >= self.total_price + quantity * hospital:getObjectBuildCost(o.object.id) then
+  if hospital.balance >= self.total_price + quantity * hospital:getObjectBuildCost(o.object.id) or is_negative_quantity then
     o.qty = o.qty + quantity
     self.total_price = self.total_price + quantity * hospital:getObjectBuildCost(o.object.id)
     if o.object.id == "reception_desk" then
