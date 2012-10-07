@@ -156,7 +156,9 @@ function UICheats:cheatVip()
 end
 
 function UICheats:cheatEarthquake()
-  self.ui.app.world:createEarthquake()
+  if (tonumber(self.ui.app.world.map.level_number) >= 5) then
+    self.ui.app.world:createEarthquake()
+  end
 end
 
 function UICheats:cheatPatient()
