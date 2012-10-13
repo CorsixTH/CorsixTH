@@ -504,6 +504,11 @@ function World:spawnVIP(hospital)
 end
 
 function World:createEarthquake()
+  -- Sanity check
+  if not self.earthquake_size then
+    return false
+  end
+  
   -- the bigger the earthquake, the longer it lasts. We add two
   -- further days, as we use those to give a small earthquake first,
   -- before the bigger one begins
@@ -529,7 +534,7 @@ function World:createEarthquake()
 
   -- set a flag to indicate that we are now having an earthquake
   self.active_earthquake = true
-
+  return true
 end
 
 function World:tickEarthquake()
@@ -1228,11 +1233,10 @@ end
 
 -- Called when it is time to have another earthquake
 function World:nextEarthquake()
-
   -- check carefully that no value that we are going to use is going to be nil
   if self.map.level_config.quake_control and
   self.map.level_config.quake_control[self.current_map_earthquake] and
-  self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
+  self.map.level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
       -- this map has rules to follow when making earthquakes, let's follow them
     local control = self.map.level_config.quake_control[self.current_map_earthquake]
     self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)

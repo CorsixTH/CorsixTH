@@ -312,6 +312,7 @@ information = {
     balance = utf8 "Din bankbalans sjönk till under %d.",
     percentage_killed = utf8 "Du dödade mer än %d procent av dina patienter.",
   },
+  cheat_not_possible = "Det går inte att använda det fusket på den här nivån. Du misslyckas till och med att fuska, det kan inte vara roligt!",
 }
 
 tooltip.information = {

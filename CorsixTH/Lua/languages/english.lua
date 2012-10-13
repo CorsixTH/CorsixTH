@@ -330,6 +330,7 @@ information = {
     balance = "Your bank balance fell below %d.",
     percentage_killed = "You killed more than %d percent of the patients.",
   },
+  cheat_not_possible = "Cannot use that cheat on this level. You even fail to cheat, not that funny huh?",
 }
 
 tooltip.information = {
