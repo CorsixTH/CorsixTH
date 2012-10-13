@@ -832,6 +832,7 @@ information = {
     reputation = "Votre réputation est tombée en dessous de %d.",
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
+    cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
   },
 }
 
