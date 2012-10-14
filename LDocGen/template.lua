@@ -87,7 +87,7 @@ local templates = setmetatable({}, {__index = function(t, fname)
     local template = assert(loadstring(data, "@".. fname ..".htlua"))
     wrapper = function(env)
       local old_env = getfenv(template)
-      caller_env = getfenv(2)
+      local caller_env = getfenv(2)
       local env_wrap = setmetatable({}, {__index = function(t, k)
         return env[k] or caller_env[k]
       end})
