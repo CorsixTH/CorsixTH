@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local L = require "lpeg"
-assert(tonumber(L.version()) >= 0.9, "LPEG version >= 0.9 is required")
+need_lpeg_version(0, 9)
 
 local C, P, R, S, V = L.C, L.P, L.R, L.S, L.V
 local Carg, Cc, Cp, Ct, Cg, Cb, Cmt = L.Carg, L.Cc, L.Cp, L.Ct, L.Cg, L.Cb, L.Cmt

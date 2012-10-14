@@ -70,18 +70,33 @@ local templates = setmetatable({}, {__index = function(t, fname)
   end
   data = transform(data)
   f:close()
-  local template = assert(loadstring(data, "@".. fname ..".htlua"))
-  local wrapper = function(env)
-    local old_env = getfenv(template)
-    local caller_env = getfenv(2)
-    local env_wrap = setmetatable({}, {__index = function(t, k)
-      return env[k] or caller_env[k]
-    end})
-    setfenv(template, env_wrap)
-    local output = {}
-    template(function(x) output[#output + 1] = tostring(x) end)
-    setfenv(template, old_env)
-    return table.concat(output)
+  local wrapper
+  if not rawget(_G, "setfenv") then
+    data = "return function(_ENV, ...) local _template = template local function template(name) local t = _template(name) return function(args) return t(args, _ENV) end end ".. data .." end"
+    local template = assert(loadstring(data, "@".. fname ..".htlua"))()
+    wrapper = function(env, caller_env)
+      caller_env = caller_env or _G
+      local env_wrap = setmetatable({}, {__index = function(t, k)
+        return env[k] or caller_env[k]
+      end})
+      local output = {}
+      template(env_wrap, function(x) output[#output + 1] = tostring(x) end)
+      return table.concat(output)
+    end
+  else
+    local template = assert(loadstring(data, "@".. fname ..".htlua"))
+    wrapper = function(env)
+      local old_env = getfenv(template)
+      caller_env = getfenv(2)
+      local env_wrap = setmetatable({}, {__index = function(t, k)
+        return env[k] or caller_env[k]
+      end})
+      setfenv(template, env_wrap)
+      local output = {}
+      template(function(x) output[#output + 1] = tostring(x) end)
+      setfenv(template, old_env)
+      return table.concat(output)
+    end
   end
   t[fname] = wrapper
   return t[fname]

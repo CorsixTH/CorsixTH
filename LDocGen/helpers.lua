@@ -18,6 +18,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+if not rawget(_G, "unpack") then
+  unpack = table.unpack
+end
+if not rawget(_G, "loadstring") then
+  loadstring = load
+end
+
+function need_lpeg_version(major, minor)
+  local v = require"lpeg".version()
+  local m, n = v:match"^(%d+)%.(%d+)"
+  m = tonumber(m)
+  n = tonumber(n)
+  if m < major or (m == major and n < minor) then
+    error(("LPEG version >= %d.%d is required (you have %s)"):format(major, minor, v))
+  end
+end
+
 local auto_tokens
 local auto_tokens_c = {
   [","]  = {"operator", ","},
