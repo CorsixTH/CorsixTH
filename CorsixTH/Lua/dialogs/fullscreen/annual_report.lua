@@ -386,7 +386,7 @@ function UIAnnualReport:addAward(text, award_type, amount)
 end
 
 --! Activates the motivation scroll with the given text on it.
---!param text_to_show The index of the award to show info from.
+--!param text_index_to_show The index of the award to show info from.
 function UIAnnualReport:showAwardMotivation(text_index_to_show)
   if text_index_to_show then
     -- Make sure no trophy motivation is shown
@@ -408,7 +408,7 @@ function UIAnnualReport:showAwardMotivation(text_index_to_show)
 end
 
 --! Activates the motivation plaque with the given text on it.
---!param text_to_show The index of the trophy to show info from.
+--!param text_index_to_show The index of the trophy to show info from.
 function UIAnnualReport:showTrophyMotivation(text_index_to_show)
   if text_index_to_show then
     -- Make sure no award motivation is shown

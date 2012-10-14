@@ -467,7 +467,7 @@ function App:dumpStrings()
   -- end
 end
 
---!Compares strings provided by language file of given language WITHOUT inheritance
+--! Compares strings provided by language file of given language WITHOUT inheritance
 -- with strings provided by english language with inheritance (i.e. all strings).
 -- This will give translators an idea which strings are missing in their translation.
 --!param dir The directory where the file to write to should be.
