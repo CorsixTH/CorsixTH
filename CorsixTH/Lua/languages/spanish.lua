@@ -342,6 +342,7 @@ information = {
     balance = utf8 "Tu cuenta bancaria ha llegado a tener menos de %d.",
     percentage_killed = utf8 "Has matado a más de un %d por ciento de los pacientes.",
   },
+  cheat_not_possible = utf8 "No puedes usar ese truco en este nivel. No sabes ni hacer trampas, ¿a que no tiene gracia?",
 }
 
 tooltip.information = {
