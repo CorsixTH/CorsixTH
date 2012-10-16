@@ -284,7 +284,11 @@ end
 --!param sound The sound to look for, either a string (name) or a
 -- number (position in the list of sounds)
 function Audio:soundExists(sound)
-  return self.sound_archive:soundExists(sound)
+  if self.sound_archive then
+    return self.sound_archive:soundExists(sound)
+  else
+    return false
+  end
 end
 
 function Audio:playRandomBackgroundTrack()
