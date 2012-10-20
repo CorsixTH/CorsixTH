@@ -1,6 +1,6 @@
 ﻿--[[ Copyright (c) 2010 RAS
                    2011 FlyingBastard, L_konings, Nossah, KasperVld 
-                   2012 Omni
+                   2012 Omni, Maarten
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -202,6 +202,7 @@ information = {
     balance = "Je banksaldo was lager dan %d",
     percentage_killed = utf8 "Je hebt meer dan %d procent van je patiënten vermoord",
   },
+  cheat_not_possible = "Cheat kan niet toegepast worden op dit level. Je faalt zelfs om vals te spelen, niet zo grappig hè?",
 }
 
 staff_list = {
