@@ -1,6 +1,40 @@
------------------------------------------
+-------------------------------------------------------------------------------
+Version 0.11 - to be released in november 2012
+-------------------------------------------------------------------------------
+
+This is a bugfix release, for known issues etcetera, check out the
+changelog for version 0.10 below.
+
+
+-- Gameplay --
+
+* Fix: Patients were not fully diagnosed according to settings 
+  in the policy screen.
+* Fix: The game now handles a player trying to cheat into an earthquake 
+  on levels 1-4.
+* Fix: It was not possible to sell equipment if you had a negative balance.
+* Fix: Handymen could not be placed inside rooms.
+* Fix: Handymen would get called to clean soot in blown up rooms.
+* Fix: Machines that need to be repaired will now cancel that request if 
+  they are blown up.
+
+  
+-- User Interface --
+
+* Fix: Disabling background music no longer disables sound effects on Windows.
+* Fix: Checking if a sound exists crashed the game if there was no sound 
+  archive at all.
+
+  
+-- Graphics --
+
+* Fix: On a few levels some sliding doors would not animate correctly.
+
+
+
+-------------------------------------------------------------------------------
 Version 0.10 - released 2012-09-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- How versions work --
 
@@ -66,9 +100,9 @@ In this version, for example, earthquakes have been added.
 * Change: Removed a lot of tiles from the palette, since maps may not
   work as intended if they would be used.
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version 0.01 - released 2012-03-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Not Yet Implemented --
 
@@ -145,9 +179,9 @@ Version 0.01 - released 2012-03-24
 * Fix: The game no longer crash just because the map builder has not added any
   access roads from the edge of the map.
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 8 - released 2011-09-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Gameplay --
 
@@ -189,9 +223,9 @@ Version Beta 8 - released 2011-09-24
 
 New language: Polish
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 7 - released 2011-06-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Known Issues --
 
@@ -253,9 +287,9 @@ Version Beta 7 - released 2011-06-24
 * Change: If the specified language is not found, try to revert to English.
 * Fix: Competitor names are now translatable.
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 6 - released 2011-03-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Gameplay --
 
@@ -307,9 +341,9 @@ Version Beta 6 - released 2011-03-24
 
 * New languages: Traditional Chinese, Simplified Chinese, Russian.
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 5 - released 2010-12-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Gameplay --
 
@@ -344,9 +378,9 @@ Version Beta 5 - released 2010-12-24
 
 * Fix: Error caused by some winning faxes in Norwegian.
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 4 - released 2010-11-12
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Gameplay --
 
@@ -380,9 +414,9 @@ Version Beta 4 - released 2010-11-12
 * Fix: When playing the game in French it no longer crashes upon completion of a level.
 
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 3 - released 2010-06-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 -- Gameplay --
 
@@ -432,9 +466,9 @@ Version Beta 3 - released 2010-06-24
   home directory or equivalent.
 
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 2 - released 2010-03-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 * Feature: Save / Load functionality.
 * Feature: Patients and staff now have a need for heat (from radiators) in
@@ -478,8 +512,8 @@ Also, a great number of bugs have been squashed. Most remaining bugs are no
 longer fatal, and can be continued from.
 
 
------------------------------------------
+-------------------------------------------------------------------------------
 Version Beta 1 - released 2009-12-24
------------------------------------------
+-------------------------------------------------------------------------------
 
 Initial release
