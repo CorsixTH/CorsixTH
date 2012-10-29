@@ -553,7 +553,7 @@ function UIMenuBar:makeMenu(app)
       if not app.audio.background_music then
         app.audio:playRandomBackgroundTrack() -- play
       else
-        app.audio:pauseBackgroundTrack() -- pause or unpause
+        app.audio:stopBackgroundTrack() -- stop
       end
     end
     local function musicStatus(item)

@@ -28,6 +28,7 @@ LangString options_title      ${LANG_DANISH} "Yderligere indstillinger"
 LangString options_subtitle   ${LANG_DANISH} "Angive hvor det originale spil er."
 LangString save_in_appdata    ${LANG_DANISH} "Gemme spil data og indstillinger i %APPDATA% (Anbefales)"
 LangString remove_saves       ${LANG_DANISH} "Vil du gerne beholde dine gemte spil?"
+LangString overwrite_install  ${LANG_DANISH} "Det ser ud til at du forsøger at installere over en eksisterende installation af CorsixTH. Eventuelle ændringer mellem filerne kan gå tabt. Ønsker du at fortsætte?"
 
 LangString install_language   ${LANG_DUTCH} "Dutch"
 LangString original_text      ${LANG_DUTCH} "Om het spel te kunnen spelen moet u het origineel geïnstalleerd hebben. Kies de map waarin Theme Hospital zich bevindt."

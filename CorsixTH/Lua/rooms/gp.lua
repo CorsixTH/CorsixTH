@@ -124,7 +124,7 @@ function GPRoom:dealtWithPatient(patient)
     self.hospital:receiveMoneyForTreatment(patient)
     
     patient:completeDiagnosticStep(self)
-    if patient.diagnosis_progress >= (self.hospital.policies["stop_procedure"] * self.hospital.policies["guess_cure"])then
+    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed(true)
       patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
 

@@ -38,9 +38,21 @@ function EntranceDoor:EntranceDoor(world, object_type, x, y, direction, etc)
   self:Object(world, object_type, x, y, direction, etc)
   self.occupant_count = 0
   self.is_open = false
-  if self.is_master then
+  -- We need to link the master to the slave but we don't know in which order they will be initialized
+  if self.is_master then -- The master will check for an adjacent slave
     local slave_type = "entrance_left_door"
     self.slave = world:getObject(x - 1, y, slave_type) or world:getObject(x, y - 1, slave_type) or nil
+    
+    if self.slave then
+      self.slave.master = self
+    end
+  else -- The slave will check for an adjacent master
+    local master_type = "entrance_right_door"
+    self.master = world:getObject(x + 1, y, master_type) or world:getObject(x, y + 1, master_type) or nil
+    
+    if self.master then
+      self.master.slave = self
+    end
   end
   local anim = self.object_type.idle_animations[self.direction]
   local anims = self.world.anims
