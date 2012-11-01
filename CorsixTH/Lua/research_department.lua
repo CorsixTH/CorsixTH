@@ -570,7 +570,7 @@ function ResearchDepartment:concentrateResearch(disease_id)
     -- TODO: Can these loops be improved upon?
     for obj, _ in pairs(self.world.available_rooms[room].objects_needed) do
       for research, _ in pairs(self.research_progress) do
-        if research.id == obj then
+        if research.id == obj and research.thob then
           object = research
           break
         end

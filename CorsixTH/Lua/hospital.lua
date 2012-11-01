@@ -559,6 +559,18 @@ function Hospital:afterLoad(old, new)
     self:initOwnedPlots()
     self.handymanTasks = {}
   end
+  
+  if old < 54 then
+    local current = self.research.research_policy.specialisation.current
+	if current and not current.dummy and not current.thob and not current.drug then
+	  for _, diseaseEntry in pairs(self.disease_casebook) do
+        if diseaseEntry.concentrate_research then
+		  self.research:concentrateResearch(diseaseEntry.disease.id)
+		  self.research:concentrateResearch(diseaseEntry.disease.id)
+		end
+	  end
+    end
+  end  
 end
 
 function Hospital:countPatients()
