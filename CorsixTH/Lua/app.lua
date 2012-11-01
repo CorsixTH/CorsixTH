@@ -1038,13 +1038,16 @@ function App:afterLoad()
     self.world.game_log = {}
     self.world:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
   end
-  
+  local first = self.world.original_savegame_version
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() .. ")")
+    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() 
+      .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
-                       ") to " .. new .. " (" .. self:getVersion() .. ").")
+                       ") to " .. new .. " (" .. self:getVersion() .. 
+                       "). The save was created using " .. first .. 
+                       " (" .. self:getVersion(first) .. ")")
   else
     -- TODO: This should maybe be forbidden completely.
     self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
