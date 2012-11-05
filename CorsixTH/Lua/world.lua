@@ -840,6 +840,12 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
+  if speed == "Pause" then
+    -- stop screen shaking if there was an earthquake in progress
+    if self.active_earthquake then
+      self.ui.tick_scroll_amount = {x = 0, y = 0}
+    end
+  end
   self.prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
   self.hours_per_tick = numerator
@@ -849,10 +855,6 @@ end
 -- Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
   if not self:isCurrentSpeed("Pause") then
-    -- stop screen shaking if there was an earthquake in progress
-    if self.active_earthquake then
-      self.ui.tick_scroll_amount = {x = 0, y = 0}
-    end
     self:setSpeed("Pause")
   elseif self.prev_speed then
     self:setSpeed(self.prev_speed)
