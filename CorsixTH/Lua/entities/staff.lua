@@ -144,8 +144,8 @@ end
 
 function Staff:tick()
   Entity.tick(self)
-  -- don't do anything if they're fired or have no hospital
-  if self.fired or not self.hospital then
+  -- don't do anything if they're fired or picked up or have no hospital
+  if self.fired or self.pickup or not self.hospital then
     return
   end
 

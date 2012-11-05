@@ -309,6 +309,7 @@ function UIStaff:onTick()
 end
 
 function UIStaff:placeStaff()
+  self.staff.pickup = true
   self.staff:setNextAction({
     name = "pickup",
     ui = self.ui,
