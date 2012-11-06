@@ -177,7 +177,7 @@ shake_fist_anim("Standard Male Patient",     392) -- bloaty head patients lose h
 ----+-----------------------------------+-----+
 vomit_anim("Elvis Patient",              1034)
 vomit_anim("Standard Female Patient",    3184)
-vomit_anim("Standard Male Patient",      4476)
+vomit_anim("Standard Male Patient",      2056)
 vomit_anim("Alternate Male Patient",     4476)
 vomit_anim("Chewbacca Patient",          4138)
 vomit_anim("Invisible Patient",          4204)

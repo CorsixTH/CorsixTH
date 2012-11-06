@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
-Version 0.11 - to be released in november 2012
+Version 0.11 - released in november 2012
 -------------------------------------------------------------------------------
 
-This is a bugfix release, for known issues etcetera, check out the
+This is a bugfix release. For known issues etcetera, check out the
 changelog for version 0.10 below.
 
 
@@ -12,23 +12,33 @@ changelog for version 0.10 below.
   in the policy screen.
 * Fix: The game now handles a player trying to cheat into an earthquake 
   on levels 1-4.
-* Fix: It was not possible to sell equipment if you had a negative balance.
+* Fix: It was not possible to sell equipment in rooms if you had a negative 
+  balance.
 * Fix: Handymen could not be placed inside rooms.
 * Fix: Handymen would get called to clean soot in blown up rooms.
 * Fix: Machines that need to be repaired will now cancel that request if 
   they are blown up.
+* Fix: Alien DNA could under some circumstances not have the 
+  "concentrate research" button clicked without triggering a crash.
+* Fix: A crash occurring under some circumstances if the player picked
+  up a staff member.
 
   
 -- User Interface --
 
+* Enchancement: Since consultants are unable to learn new skills icons for 
+  not yet fully learned skills are now removed when a doctor is promoted.
 * Fix: Disabling background music no longer disables sound effects on Windows.
 * Fix: Checking if a sound exists crashed the game if there was no sound 
   archive at all.
+* Fix: If the player paused the game from the top menu bar while an earthquake 
+  was active it would be impossible to scroll.
 
   
 -- Graphics --
 
 * Fix: On a few levels some sliding doors would not animate correctly.
+* Fix: Vomiting standard males had the wrong animation.
 
 
 

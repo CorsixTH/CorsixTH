@@ -353,7 +353,7 @@ function UIStaffManagement:draw(canvas, x, y)
       if profile.is_surgeon > 0 then
         if profile.is_surgeon >= 1.0 then
           self.qualified_surgeon.visible = true
-        else
+        elseif not profile.is_consultant then
           self.progress_surgeon.visible = true
           self.progress_surgeon:setTooltip(_S.tooltip.staff_list.surgeon_train:format(math_floor(profile.is_surgeon * 100)))
           local progress = math_floor(profile.is_surgeon * 23 + 0.5)
@@ -365,7 +365,7 @@ function UIStaffManagement:draw(canvas, x, y)
       if profile.is_psychiatrist > 0 then
         if profile.is_psychiatrist >= 1.0 then
           self.qualified_psychiatrist.visible = true
-        else
+        elseif not profile.is_consultant then
           self.progress_psychiatrist.visible = true
           self.progress_psychiatrist:setTooltip(_S.tooltip.staff_list.psychiatrist_train:format(math_floor(profile.is_psychiatrist * 100)))
           local progress = math_floor(profile.is_psychiatrist * 23 + 0.5)
@@ -377,7 +377,7 @@ function UIStaffManagement:draw(canvas, x, y)
       if profile.is_researcher > 0 then
         if profile.is_researcher >= 1.0 then
           self.qualified_researcher.visible = true
-        else
+        elseif not profile.is_consultant then
           self.progress_researcher.visible = true
           self.progress_researcher:setTooltip(_S.tooltip.staff_list.researcher_train:format(math_floor(profile.is_researcher * 100)))
           local progress = math_floor(profile.is_researcher * 23 + 0.5)
