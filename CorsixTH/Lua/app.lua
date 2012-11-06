@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 56
+local SAVEGAME_VERSION = 54
 
 class "App"
 
@@ -357,6 +357,7 @@ function App:loadLevel(level, ...)
       world = {room_built = self.world.room_built},
       hospital = {
         player_salary = self.ui.hospital.player_salary,
+        research_dep_built = self.ui.hospital.research_dep_built,
         message_popup = self.ui.hospital.message_popup,
         hospital_littered = self.ui.hospital.hospital_littered,
       },
@@ -1037,19 +1038,13 @@ function App:afterLoad()
     self.world.game_log = {}
     self.world:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
   end
-  if not self.world.original_savegame_version then
-    self.world.original_savegame_version = old
-  end
-  local first = self.world.original_savegame_version
+  
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() 
-      .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
+    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() .. ")")
     return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
-                       ") to " .. new .. " (" .. self:getVersion() .. 
-                       "). The save was created using " .. first .. 
-                       " (" .. self:getVersion(first) .. ")")
+                       ") to " .. new .. " (" .. self:getVersion() .. ").")
   else
     -- TODO: This should maybe be forbidden completely.
     self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..

@@ -869,6 +869,7 @@ rooms_long = {
   decontamination   = S[53][28],
 }
 
+-- TODO where is this used?
 drug_companies = {
   -- S[15][1], -- unused
   S[15][2],

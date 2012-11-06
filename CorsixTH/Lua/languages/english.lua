@@ -127,9 +127,7 @@ adviser = {
     falling_3 = "Ouch, that had to hurt, someone call a Doctor!",
     falling_4 = "This is an Hospital, not a Theme Park!",
     falling_5 = "This is not the place for knocking people over, they're ill you know!",
-    falling_6 = "This is not a bowling alley, sick people should not be treated like that!",
-	research_screen_open_1 = "You have to build a Research Department before you can access the Reasearch screen.",
-	research_screen_open_2 = "Research is disabled for the current level.",
+    falling_6 = "This is not a bowling alley, sick people should not be treated like that!"
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",

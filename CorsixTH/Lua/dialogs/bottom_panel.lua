@@ -412,18 +412,6 @@ function UIBottomPanel:dialogResearch()
     self.ui:playSound("selectx.wav")
   else
     self.ui:playSound("wrong2.wav")
-	local can_build_research = false
-	for _, room in pairs(self.ui.app.world.available_rooms) do
-	  if room.class == "ResearchRoom" then
-		can_build_research = true
-		break
-	  end
-	end
-	if can_build_research then
-	  self.ui.adviser:say(_A.warnings.research_screen_open_1)
-	else
-	  self.ui.adviser:say(_A.warnings.research_screen_open_2)
-	end
   end
 end
 
