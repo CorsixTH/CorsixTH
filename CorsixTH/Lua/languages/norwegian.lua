@@ -340,7 +340,8 @@ information = {
   custom_game = utf8 "Velkommen til CorsixTH. Kos deg med dette egenutviklede kartet!",
   no_custom_game_in_demo = "Unnskyld, men i demoversjonen kan du ikke spille egenutviklede kart.",
   cannot_restart = utf8 "Dette spillet ble dessverre lagret för restartfunksjonen ble implementert.",
-  very_old_save = "Det har vært mange oppdateringer siden du startet på dette nivået. For å være sikker på at alle funksjoner virker riktig, vennligst vurder å starte nivået på nytt.",
+  very_old_save = utf8 "Det har vært mange oppdateringer siden du startet på dette nivået. For å være sikker på at alle funksjoner virker riktig, vennligst vurder å starte nivået på nytt.",
+  cheat_not_possible = utf8 "Juksekoder kan ikke brukes på dette nivået. Du klarer ikke engang å jukse!",
   level_lost = {
     "Kjipt! Du klarte ikke brettet. Bedre lykke neste gang!",
     "Grunnen til at du tapte:",
@@ -1184,7 +1185,7 @@ trophy_room = {
     trophies = {
       [1] = utf8 "Den Internasjonale Behandlingsstiftelsen önsker å ære deg fordi du kurerte en haug med mennesker på sykehuset ditt i fjor. De gir deg derfor Kurert-En-Haug Trofeet.",
       [2] = utf8 "Du er blitt tildelt Ingen-Syke-Gurglere troféet for å ha kurert en stor prosent av pasientene på sykehuset ditt i fjor.",
-      [3] = utf8 "Du er blitt tildelt Ingen-Syke-Gurglere troféet for å ha kurert en stor prosent av pasientene på sykehuset ditt i fjor.", --todo: Denne er overflødig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
+      [3] = utf8 "Du er blitt tildelt Ingen-Syke-Gurglere troféet for å ha kurert en stor prosent av pasientene på sykehuset ditt i fjor.", --todo: Denne er overflödig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
     },
     penalty = {
       [1] = utf8 "Ditt sykehus klarer ikke å gi effektive botemidler til pasienter som trenger det. Konsentrer deg om dine kurer for å gjöre dem mer effektive.",
@@ -1315,7 +1316,7 @@ trophy_room = {
   },
   happy_vips = {
     trophies = {
-      [1] = utf8 "Du har vunnet Nobelprisen for Mest Imponerte VIP-er. Alle som besøkte sykehuset i fjor var svært komplimenterende.",
+      [1] = utf8 "Du har vunnet Nobelprisen for Mest Imponerte VIP-er. Alle som besökte sykehuset i fjor var svært komplimenterende.",
       [2] = utf8 "Byrået for Kjente Personer vil belönne deg med Kjendistroféet for å ha tatt godt vare på alle VIP-er som besökte institusjonen din i fjor. Du nærmer deg kjendis-status, nesten en av oss.",
       [3] = utf8 "Gratulerer med VIP-prisen for å ha gjort livene til hardtarbeidende kjendiser bedre, ved å sette alle som besökte sykehuset ditt i fjor i et bedre lys. Fantastisk.",
     },
@@ -1328,7 +1329,7 @@ trophy_room = {
     trophies = {
       [1] = utf8 "Livet Går Videre Stiftelsen belönner deg med dette trofeet for å ha oppnådd null dödsfall i hele fjor.",
       [2] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.",
-      [3] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.", --todo: Denne er overflødig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
+      [3] = utf8 "Du er tildelt Holde Seg I Live-troféet for å ha unngått dödsfall på ditt flotte sykehus dette året. Storartet.", --todo: Denne er overflödig (dobbelt opp), men debug-strings-diff.txt insisterer på at denne linjen skal være her.
     },
     penalty = {
       [1] = utf8 "Antallet dödsfall i sykehuset ditt i fjor var uakseptabelt höyt. Gi mer oppmerksomhet til ditt arbeid. Vær sikker på at flere mennesker overlever i fremtiden.",
@@ -1614,7 +1615,7 @@ tooltip = {
     center_view        = "Sentrer i skjermbildet", -- contains "handyman"
     sack               = "Si opp",
     pick_up            = "Plukk opp",
-    parcel_select      = "Steder hvor Vaktmesteren utfører oppgaver. Klikk for å endre innstilling.",
+    parcel_select      = "Steder hvor Vaktmesteren utförer oppgaver. Klikk for å endre innstilling.",
   },
   
   -- Place objects window
@@ -2158,6 +2159,8 @@ adviser = {
     falling_4 = "Dette er et sykehus, ikke en temapark!",
     falling_5 = "Dette er ikke et sted der du kan dytte folk over ende, de er jo syke!",
     falling_6 = utf8 "Dette er ingen bowlingbane. Syke folk bör ikke behandles slik!",
+    research_screen_open_1 = utf8 "Du må bygge en forskningsavdeling för du får tilgang til forskningsvinduet.",
+    research_screen_open_2 = utf8 "Forskning er deaktivert for dette nivået.",
   },
   
   -- Placement info
