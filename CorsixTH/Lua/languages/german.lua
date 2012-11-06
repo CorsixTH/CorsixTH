@@ -27,78 +27,78 @@ Inherit("english")
 Inherit("original_strings", 2)
 
 -------------------------------  OVERRIDE  ----------------------------------
-diseases.broken_wind.cure = utf8 " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
-diseases.corrugated_ankles.cure = utf8 "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
-fax.vip_visit_query.vip_name = utf8 "%s hat den Wunsch geäußert, ihr Krankenhaus besuchen zu wollen." -- text was missing
-fax.vip_visit_query.choices.invite = utf8 "Lassen Sie dem V.I.P. eine offizielle Einladung zukommen." -- text was ferusing instead of inviting
+diseases.broken_wind.cure = " Therapie: Eine spezielle Mixtur aus der Pharma-Theke sorgt für Windstille." -- original string mentioned inflation, which is plain wrong.
+diseases.corrugated_ankles.cure = "Therapie: Eine Schwester verabreicht dem Patienten ein leicht toxisches Gebräu, welches das Bein wieder strafft." -- original string mentioned applying a cast, which is wrong and misleads people to think of fracture clinic
+fax.vip_visit_query.vip_name = "%s hat den Wunsch geäußert, ihr Krankenhaus besuchen zu wollen." -- text was missing
+fax.vip_visit_query.choices.invite = "Lassen Sie dem V.I.P. eine offizielle Einladung zukommen." -- text was ferusing instead of inviting
 
-fax.vip_visit_query.choices.refuse = utf8 "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
+fax.vip_visit_query.choices.refuse = "Speisen Sie den V.I.P. mit einer Entschuldigung ab." -- text was missing
 
-fax.vip_visit_result.remarks.super[1] = utf8 "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste Mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
+fax.vip_visit_result.remarks.super[1] = "Was für ein Spitzen-Krankenhaus! Wenn ich das nächste Mal ernsthaft krank bin, will ich hier hin!" -- storming should not be translated with 'turbulent' here
 
-fax.vip_visit_result.vip_remarked_name = utf8 "%s hat Ihr Krankenhaus besucht."
-fax.vip_visit_result.cash_grant = utf8 "Ihnen wurde ein Geldbonus von %d gewährt."
-fax.vip_visit_result.rep_boost = utf8 "Ihr Ruf in der Öffentlichkeit hat sich gebessert."
-fax.vip_visit_result.rep_loss = utf8 "Ihr Ruf hat gelitten."
-fax.vip_visit_result.close_text = utf8 "Danke, dass Sie unser Krankenhaus besucht haben." -- text was missing
+fax.vip_visit_result.vip_remarked_name = "%s hat Ihr Krankenhaus besucht."
+fax.vip_visit_result.cash_grant = "Ihnen wurde ein Geldbonus von %d gewährt."
+fax.vip_visit_result.rep_boost = "Ihr Ruf in der Öffentlichkeit hat sich gebessert."
+fax.vip_visit_result.rep_loss = "Ihr Ruf hat gelitten."
+fax.vip_visit_result.close_text = "Danke, dass Sie unser Krankenhaus besucht haben." -- text was missing
 
-fax.emergency.choices.accept = utf8 "Ja, ich übernehme diesen Notfall!"
-fax.emergency.choices.refuse = utf8 "Nein, ich weigere mich diesen Notfall zu übernehmen!"
-fax.emergency.location = utf8 "Wir haben einen Notruf aus dem %s erhalten." -- wrong spelling
-fax.emergency.num_disease = utf8 "Es handelt sich um %d Personen mit %s, die sofort behandelt werden müssen." -- wrong spelling
-fax.emergency.num_disease_singular = utf8 "Es handelt sich um eine Person mit %s, die sofort behandelt werden muss." -- wrong spelling
-fax.emergency.cure_possible = utf8 "Wir können diesen Notfall übernehmen."
-fax.emergency.cure_not_possible_build_and_employ = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen."
-fax.emergency.cure_not_possible_build = utf8 "Um den Notfall übernehmen zu können, müssen wir eine %s bauen."
-fax.emergency.cure_not_possible_employ = utf8 "Um den Notfall übernehmen zu können, müssen wir zusätzliches Personal einstellen."
-fax.emergency.cure_not_possible = utf8 "Wir können diesen Notfall im Moment keinesfalls übernehmen."
-fax.emergency.bonus = utf8 "Wenn wir keinen Patienten verlieren, erhalten wir einen Geldbonus von maximal %d. Sollten wir es jedoch vermasseln, wird unser Ruf Schaden nehmen."
-fax.emergency_result.close_text = utf8 "Danke, ich habe gerne geholfen."
-fax.emergency_result.earned_money = utf8 "Sie erhalten von maximal %d einen Geldbonus von %d."
-fax.emergency_result.saved_people = utf8 "Vielen Dank für Ihre Hilfe! Sie haben %d von insgesamt %d gerettet."
+fax.emergency.choices.accept = "Ja, ich übernehme diesen Notfall!"
+fax.emergency.choices.refuse = "Nein, ich weigere mich diesen Notfall zu übernehmen!"
+fax.emergency.location = "Wir haben einen Notruf aus dem %s erhalten." -- wrong spelling
+fax.emergency.num_disease = "Es handelt sich um %d Personen mit %s, die sofort behandelt werden müssen." -- wrong spelling
+fax.emergency.num_disease_singular = "Es handelt sich um eine Person mit %s, die sofort behandelt werden muss." -- wrong spelling
+fax.emergency.cure_possible = "Wir können diesen Notfall übernehmen."
+fax.emergency.cure_not_possible_build_and_employ = "Um den Notfall übernehmen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen."
+fax.emergency.cure_not_possible_build = "Um den Notfall übernehmen zu können, müssen wir eine %s bauen."
+fax.emergency.cure_not_possible_employ = "Um den Notfall übernehmen zu können, müssen wir zusätzliches Personal einstellen."
+fax.emergency.cure_not_possible = "Wir können diesen Notfall im Moment keinesfalls übernehmen."
+fax.emergency.bonus = "Wenn wir keinen Patienten verlieren, erhalten wir einen Geldbonus von maximal %d. Sollten wir es jedoch vermasseln, wird unser Ruf Schaden nehmen."
+fax.emergency_result.close_text = "Danke, ich habe gerne geholfen."
+fax.emergency_result.earned_money = "Sie erhalten von maximal %d einen Geldbonus von %d."
+fax.emergency_result.saved_people = "Vielen Dank für Ihre Hilfe! Sie haben %d von insgesamt %d gerettet."
 
-fax.disease_discovered_patient_choice.choices.send_home = utf8 "Schicken Sie den Patienten nach Hause." -- wrong text for button
-fax.disease_discovered_patient_choice.choices.wait = utf8 "Sorgen Sie dafür, dass der Patient eine Weile im Krankenhaus wartet." -- wrong text for button
-fax.disease_discovered_patient_choice.choices.research = utf8 "Schicken Sie den Patienten in die Forschungsabteilung." -- wrong text for button
-fax.disease_discovered_patient_choice.need_to_build_and_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
-fax.disease_discovered_patient_choice.need_to_build = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
-fax.disease_discovered_patient_choice.need_to_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
-fax.disease_discovered_patient_choice.can_not_cure = utf8 "Im Moment können wir diese Krankheit nicht behandeln."
-fax.disease_discovered_patient_choice.disease_name = utf8 "Unser Ärzteteam hat herausgefunden, an was für einer Art von %s der Patient leidet." -- text was missing
-fax.disease_discovered_patient_choice.what_to_do_question = utf8 "Was sollen wir jetzt mit dem Patienten anstellen?" -- text was missing
-fax.disease_discovered_patient_choice.guessed_percentage_name = utf8 "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet." -- text was missing
-fax.disease_discovered.close_text = utf8 "Eine neue Krankheit wurde entdeckt."
-fax.disease_discovered.can_cure = utf8 "Wir können diese Krankheit problemlos behandeln." -- text was missing
-fax.disease_discovered.need_to_build_and_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
-fax.disease_discovered.need_to_build = utf8 "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
-fax.disease_discovered.need_to_employ = utf8 "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
-fax.disease_discovered.discovered_name = utf8 "Unser Ärzteteam hat einen Fall von %s entdeckt."
+fax.disease_discovered_patient_choice.choices.send_home = "Schicken Sie den Patienten nach Hause." -- wrong text for button
+fax.disease_discovered_patient_choice.choices.wait = "Sorgen Sie dafür, dass der Patient eine Weile im Krankenhaus wartet." -- wrong text for button
+fax.disease_discovered_patient_choice.choices.research = "Schicken Sie den Patienten in die Forschungsabteilung." -- wrong text for button
+fax.disease_discovered_patient_choice.need_to_build_and_employ = "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
+fax.disease_discovered_patient_choice.need_to_build = "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
+fax.disease_discovered_patient_choice.need_to_employ = "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
+fax.disease_discovered_patient_choice.can_not_cure = "Im Moment können wir diese Krankheit nicht behandeln."
+fax.disease_discovered_patient_choice.disease_name = "Unser Ärzteteam hat herausgefunden, an was für einer Art von %s der Patient leidet." -- text was missing
+fax.disease_discovered_patient_choice.what_to_do_question = "Was sollen wir jetzt mit dem Patienten anstellen?" -- text was missing
+fax.disease_discovered_patient_choice.guessed_percentage_name = "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet." -- text was missing
+fax.disease_discovered.close_text = "Eine neue Krankheit wurde entdeckt."
+fax.disease_discovered.can_cure = "Wir können diese Krankheit problemlos behandeln." -- text was missing
+fax.disease_discovered.need_to_build_and_employ = "Um diese Krankheit heilen zu können, müssen wir eine %s bauen und zusätzliches Personal einstellen." -- text was missing
+fax.disease_discovered.need_to_build = "Um diese Krankheit heilen zu können, müssen wir eine %s bauen." -- text was missing
+fax.disease_discovered.need_to_employ = "Um diese Krankheit heilen zu können, müssen wir zusätzliches Personal einstellen."
+fax.disease_discovered.discovered_name = "Unser Ärzteteam hat einen Fall von %s entdeckt."
 
-fax.diagnosis_failed.choices.send_home = utf8 "Schicken Sie den Patienten nach Hause." -- wrong text for button
-fax.diagnosis_failed.choices.take_chance = utf8 "Nehmen Sie die wahrscheinliche Möglichkeit zur Heilung wahr." -- wrong text for button
-fax.diagnosis_failed.choices.wait = utf8 "Der Patient soll eine Weile im Krankenhaus warten, wir stellen bald neue Diagnosearten zur Verfügung."
-fax.diagnosis_failed.situation = utf8 "Dieser Patient hat all unsere Diagnosegeräte zum qualmen gebracht. Trotzdem wissen wir immer noch nicht genau, was ihm fehlt." -- text was missing
-fax.diagnosis_failed.what_to_do_question = utf8 "Was sollen wir jetzt mit dem Patienten anstellen?" -- wrong spelling
-fax.diagnosis_failed.partial_diagnosis_percentage_name = utf8 "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet."
+fax.diagnosis_failed.choices.send_home = "Schicken Sie den Patienten nach Hause." -- wrong text for button
+fax.diagnosis_failed.choices.take_chance = "Nehmen Sie die wahrscheinliche Möglichkeit zur Heilung wahr." -- wrong text for button
+fax.diagnosis_failed.choices.wait = "Der Patient soll eine Weile im Krankenhaus warten, wir stellen bald neue Diagnosearten zur Verfügung."
+fax.diagnosis_failed.situation = "Dieser Patient hat all unsere Diagnosegeräte zum qualmen gebracht. Trotzdem wissen wir immer noch nicht genau, was ihm fehlt." -- text was missing
+fax.diagnosis_failed.what_to_do_question = "Was sollen wir jetzt mit dem Patienten anstellen?" -- wrong spelling
+fax.diagnosis_failed.partial_diagnosis_percentage_name = "Unser Ärzteteam ist sich zu %d Prozent sicher, dass der Patient an einer Form von %s leidet."
 
-fax.epidemic.choices.declare = utf8 "Wir melden die Epidemie und zahlen die Geldstrafe!"
-fax.epidemic.choices.cover_up = utf8 "Wir versuchen die Epidemie einzudämmen bevor sie das Krankenhaus verlässt!"
-fax.epidemic.declare_explanation_fine = utf8 "Wenn wir die Epidemie melden, zahlen wir eine Strafe von %d und unser Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
-fax.epidemic.cover_up_explanation_1 = utf8 "Wenn wir versuchen die Epidemie zu vertuschen, müssen wir die Infizierten heilen, bevor das Gesudheitsministerium davon Wind bekommt."
-fax.epidemic.cover_up_explanation_2 = utf8 "Wenn der Gesundheitsinspektor die Vertuschungsaktion bemerkt, wird das Konsequenzen haben."
-fax.epidemic.disease_name = utf8 "Unser Ärzteteam hat eine hochgradig ansteckende Form von %s entdeckt!"
-fax.epidemic_result.close_text = utf8 "Hurra!"
-fax.epidemic_result.failed.part_1_name = utf8 "Ihr Versuch diese %s-Epidemie zu vertuschen ist fehlgeschlagen! Sie konnten nicht verhindern,"
-fax.epidemic_result.failed.part_2 = utf8 "dass sich die Epidemie in Ihrem ganzen Krankenhaus ausbreitet."
-fax.epidemic_result.succeeded.part_1_name = utf8 "Dem Gesundheitsinspektor ist zu Ohren gekommen, dass Sie mit einem schweren Fall von %s zu kämpfen haben."
-fax.epidemic_result.succeeded.part_2 = utf8 "Allerdings hat er dafür keine Beweise finden können."
-fax.epidemic_result.compensation_amount = utf8 "Die Behörden haben beschlossen, Sie wegen Ihrer Lügen zu einer Geldstrafe von %d zu verurteilen."
-fax.epidemic_result.fine_amount = utf8 "Die Behörden haben den nationalen Notstand ausgerufen und sie zu einer Geldstrafe von %d verurteilt."
-fax.epidemic_result.rep_loss_fine_amount = utf8 "Die Zeitungen haben Wind von der Epidemie bekommen und ziehen Ihren Ruf in den Dreck. Darüber hinaus hat man zu einer Geldstrafe von %d verurteilt."
-fax.epidemic_result.hospital_evacuated = utf8 "Die Behörden haben keine andere Wahl, als ihr Krankenhaus zu evakuieren."
+fax.epidemic.choices.declare = "Wir melden die Epidemie und zahlen die Geldstrafe!"
+fax.epidemic.choices.cover_up = "Wir versuchen die Epidemie einzudämmen bevor sie das Krankenhaus verlässt!"
+fax.epidemic.declare_explanation_fine = "Wenn wir die Epidemie melden, zahlen wir eine Strafe von %d und unser Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
+fax.epidemic.cover_up_explanation_1 = "Wenn wir versuchen die Epidemie zu vertuschen, müssen wir die Infizierten heilen, bevor das Gesudheitsministerium davon Wind bekommt."
+fax.epidemic.cover_up_explanation_2 = "Wenn der Gesundheitsinspektor die Vertuschungsaktion bemerkt, wird das Konsequenzen haben."
+fax.epidemic.disease_name = "Unser Ärzteteam hat eine hochgradig ansteckende Form von %s entdeckt!"
+fax.epidemic_result.close_text = "Hurra!"
+fax.epidemic_result.failed.part_1_name = "Ihr Versuch diese %s-Epidemie zu vertuschen ist fehlgeschlagen! Sie konnten nicht verhindern,"
+fax.epidemic_result.failed.part_2 = "dass sich die Epidemie in Ihrem ganzen Krankenhaus ausbreitet."
+fax.epidemic_result.succeeded.part_1_name = "Dem Gesundheitsinspektor ist zu Ohren gekommen, dass Sie mit einem schweren Fall von %s zu kämpfen haben."
+fax.epidemic_result.succeeded.part_2 = "Allerdings hat er dafür keine Beweise finden können."
+fax.epidemic_result.compensation_amount = "Die Behörden haben beschlossen, Sie wegen Ihrer Lügen zu einer Geldstrafe von %d zu verurteilen."
+fax.epidemic_result.fine_amount = "Die Behörden haben den nationalen Notstand ausgerufen und sie zu einer Geldstrafe von %d verurteilt."
+fax.epidemic_result.rep_loss_fine_amount = "Die Zeitungen haben Wind von der Epidemie bekommen und ziehen Ihren Ruf in den Dreck. Darüber hinaus hat man zu einer Geldstrafe von %d verurteilt."
+fax.epidemic_result.hospital_evacuated = "Die Behörden haben keine andere Wahl, als ihr Krankenhaus zu evakuieren."
 
-dynamic_info.patient.actions.dying = utf8 "Ins Jenseits befördert!" -- wrong verb case
-adviser.research.drug_fully_researched = utf8 "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
+dynamic_info.patient.actions.dying = "Ins Jenseits befördert!" -- wrong verb case
+adviser.research.drug_fully_researched = "Sie haben die Effektivität Ihres %s-Medikaments auf 100% gesteigert." -- grammatical error in original
 tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- original mentioned hospital value, while it's actually reputation.
 staff_title.researcher = "Forscher" -- one of the most annoying (since prominent) wrong strings in original
 bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
@@ -109,15 +109,15 @@ tooltip.staff_list.surgeon_train = "Wurde zu %d%% zum Chirurgen ausgebildet." --
 tooltip.staff_list.psychiatrist_train = "Wurde zu %d%% zum Psychiater ausgebildet."
 tooltip.staff_list.researcher_train = "Wurde zu %d%% zum Forscher ausgebildet."
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in english)
-tooltip.staff_list.next_person = utf8 "Zur nächsten Seite blättern"
-tooltip.staff_list.prev_person = utf8 "Zur vorherigen Seite blättern"
+tooltip.staff_list.next_person = "Zur nächsten Seite blättern"
+tooltip.staff_list.prev_person = "Zur vorherigen Seite blättern"
 
-tooltip.queue_window.inc_queue_size = utf8 "Warteschlange vergrößern"
+tooltip.queue_window.inc_queue_size = "Warteschlange vergrößern"
 tooltip.queue_window.dec_queue_size = "Warteschlange verkleinern"
 
 -- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = utf8 "Gesicht dieser Person - klicken, um das Personal-Management zu öffnen"
-tooltip.staff_window.center_view = utf8 "Linksklick um zur Person zu springen, Rechtsklick um durch das Personal zu blättern"
+tooltip.staff_window.face = "Gesicht dieser Person - klicken, um das Personal-Management zu öffnen"
+tooltip.staff_window.center_view = "Linksklick um zur Person zu springen, Rechtsklick um durch das Personal zu blättern"
 
 -- These strings are missing in some versions of TH (unpatched?)
 confirmation.restart_level = "Sind Sie sicher, dass Sie das aktuelle Level von vorne beginnen möchten?"
@@ -127,14 +127,14 @@ date_format = {
   daymonth = "%1% %2:months%",
 }
 
-object.litter = utf8 "Müll"
-tooltip.objects.litter = utf8 "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
+object.litter = "Müll"
+tooltip.objects.litter = "Müll: Wurde von einem Patienten fallengelassen, nachdem er keinen Mülleimer fand."
 
-tooltip.fax.close = utf8 "Das Fenster schließen, ohne die Nachricht zu löschen"
-tooltip.message.button = utf8 "Linksklick, um die Nachricht zu öffnen"
-tooltip.message.button_dismiss = utf8 "Linksklick, um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
-tooltip.casebook.cure_requirement.hire_staff = utf8 "Sie müssen Personal einstellen, um diese Behandlung durchführen zu können"
-tooltip.casebook.cure_type.unknown = utf8 "Sie wissen noch nicht, wie Sie diese Krankheit behandeln können"
+tooltip.fax.close = "Das Fenster schließen, ohne die Nachricht zu löschen"
+tooltip.message.button = "Linksklick, um die Nachricht zu öffnen"
+tooltip.message.button_dismiss = "Linksklick, um die Nachricht zu öffnen, Rechtsklick um sie zu entfernen"
+tooltip.casebook.cure_requirement.hire_staff = "Sie müssen Personal einstellen, um diese Behandlung durchführen zu können"
+tooltip.casebook.cure_type.unknown = "Sie wissen noch nicht, wie Sie diese Krankheit behandeln können"
 tooltip.research_policy.no_research = "In dieser Kategorie wird momentan keine Forschung durchgeführt"
 tooltip.research_policy.research_progress = "Fortschritt in dieser Kategorie: %1%/%2%"
 
@@ -158,9 +158,9 @@ menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
   jump_to_level             = "  SPRINGE ZU LEVEL  ",
-  transparent_walls    = utf8 "  (X) DURCHSICHTIGE WÄNDE  ",
+  transparent_walls    = "  (X) DURCHSICHTIGE WÄNDE  ",
   limit_camera              = "  KAMERA BEGRENZEN  ",
-  disable_salary_raise = utf8 "  KEINE GEHALTSERHÖHUNGEN  ",
+  disable_salary_raise = "  KEINE GEHALTSERHÖHUNGEN  ",
   make_debug_fax            = "  (F8) DEBUG-FAX ERSTELLEN  ",
   make_debug_patient        = "  (F9) DEBUG-PATIENTEN ERSTELLEN  ",
   cheats                    = "  (F11) CHEATS  ",
@@ -183,15 +183,15 @@ menu_debug_overlay = {
   byte_5                    = "  BYTE 5  ",
   byte_6                    = "  BYTE 6  ",
   byte_7                    = "  BYTE 7  ",
-  parcel               = utf8 "  GRUNDSTÜCK  ",
+  parcel               = "  GRUNDSTÜCK  ",
 }
 
 adviser = {
-  room_forbidden_non_reachable_parts = utf8 "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären.",
+  room_forbidden_non_reachable_parts = "Sie können den Raum hier nicht bauen, da dann Teile des Krankenhauses nicht mehr erreichbar wären.",
   warnings = {
     no_desk ="Sie sollten beizeiten mal eine Rezeption bauen und eine Empfangsdame einstellen!",
-    no_desk_1 = utf8 "Wenn Sie wollen, dass Patienten in Ihr Krankenhaus kommen, müssen Sie eine Empfangsdame einstellen und eine Rezeption für sie bauen!",
-    no_desk_2 = utf8 "Na Klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
+    no_desk_1 = "Wenn Sie wollen, dass Patienten in Ihr Krankenhaus kommen, müssen Sie eine Empfangsdame einstellen und eine Rezeption für sie bauen!",
+    no_desk_2 = "Na Klasse, das muss ja ein Weltrekord sein: Fast ein Jahr ohne einen einzigen Patienten! Wenn Sie dieses Krankenhaus weiter leiten wollen, müssen Sie eine Empfangsdame einstellen und eine Rezeption bauen!",
     no_desk_3 = "Ich glaub ich spinne, fast ein Jahr ist um und Sie haben keine besetzte Rezeption! Wie denken Sie denn, dass die Patienten zu Ihnen finden? Schauen Sie mal zu, dass Sie Ihren Kram auf die Reihe bekommen!",
     falling_1 = "He! Vorsicht mit dem Mauszeiger, jemand könnte sich verletzen!",
     falling_2 = "Hören Sie schon auf damit, wie würde das Ihnen denn gefallen?",
@@ -203,9 +203,9 @@ adviser = {
   },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
-    crazy_on_cheat = utf8 "Oh nein! Alle Ärzte sind verrückt geworden!",
-    crazy_off_cheat = utf8 "Uff... die Ärzte haben ihre Vernunft zurückgewonnen.",
-    roujin_on_cheat = utf8 "Roujins Herausforderungs-Cheat aktiviert! Viel Glück...",
+    crazy_on_cheat = "Oh nein! Alle Ärzte sind verrückt geworden!",
+    crazy_off_cheat = "Uff... die Ärzte haben ihre Vernunft zurückgewonnen.",
+    roujin_on_cheat = "Roujins Herausforderungs-Cheat aktiviert! Viel Glück...",
     roujin_off_cheat = "Roujins Herausforderung deaktiviert.",
     hairyitis_cheat = "Haarspalterei-Cheat aktiviert!",
     hairyitis_off_cheat = "Haarspalterei-Cheat deaktiviert.",
@@ -220,8 +220,8 @@ dynamic_info.staff.actions.fired = "Gefeuert"
 
 fax = {
   choices = {
-    return_to_main_menu = utf8 "Ins Hauptmenü zurückkehren",
-    accept_new_level = utf8 "Zum nächsten Level wechseln",
+    return_to_main_menu = "Ins Hauptmenü zurückkehren",
+    accept_new_level = "Zum nächsten Level wechseln",
     decline_new_level = "Noch ein wenig im aktuellen Level weiterspielen",
   },
   vip_visit_result = {
@@ -242,12 +242,12 @@ fax = {
 letter = {
   dear_player = "Hallo %s",
   custom_level_completed = "Gut gemacht! Sie haben alle Ziele dieses eigenen Levels erreicht!",
-  return_to_main_menu = utf8 "Möchten Sie ins Hauptmenü zurückkehren, oder weiterspielen?",
+  return_to_main_menu = "Möchten Sie ins Hauptmenü zurückkehren, oder weiterspielen?",
 }
 
 install = {
   title = "----------------------------- CorsixTH Konfiguration -----------------------------",
-  th_directory = utf8 "CorsixTH benötigt einige Dateien des Originalspiels Theme Hospital (oder der Demo davon) um zu funktionieren. Bitte das Installationsverzeichnis von Theme Hospital auswählen.",
+  th_directory = "CorsixTH benötigt einige Dateien des Originalspiels Theme Hospital (oder der Demo davon) um zu funktionieren. Bitte das Installationsverzeichnis von Theme Hospital auswählen.",
   exit = "Beenden",
 }
 
@@ -268,7 +268,7 @@ tooltip.main_menu = {
   new_game = "Ein komplett neues Spiel anfangen",
   custom_level = "Ein Krankenhaus in einem eigenen Level errichten",
   load_game = "Ein zuvor gespeichertes Spiel fortsetzen",
-  options = utf8 "Diverse Einstellungen verändern",
+  options = "Diverse Einstellungen verändern",
   exit = "Bitte geh nicht fort!",
 }
 
@@ -298,135 +298,135 @@ save_game_window = {
 }
 
 tooltip.save_game_window = {
-  save_game = utf8 "Spielstand %s überschreiben",
-  new_save_game = utf8 "Namen für einen neuen Spielstand eingeben",
+  save_game = "Spielstand %s überschreiben",
+  new_save_game = "Namen für einen neuen Spielstand eingeben",
 }
 
 menu_list_window = {
   name = "Dateiname",
-  save_date = utf8 "Änderungsdatum",
-  back = utf8 "Zurück",
+  save_date = "Änderungsdatum",
+  back = "Zurück",
 }
 
 tooltip.menu_list_window = {
   name = "Hier klicken, um nach Dateinamen zu sortieren",
-  save_date = utf8 "Hier klicken, um nach dem letzten Änderungsdatum zu sortieren",
-  back = utf8 "Das Fenster schließen",
+  save_date = "Hier klicken, um nach dem letzten Änderungsdatum zu sortieren",
+  back = "Das Fenster schließen",
 }
 
 options_window = {
   fullscreen = "Vollbild",
   width = "Breite",
-  height = utf8 "Höhe",
-  change_resolution = utf8 "Auflösung ändern",
+  height = "Höhe",
+  change_resolution = "Auflösung ändern",
   browse = "Durchsuchen...",
   new_th_directory = "Hier kann ein neues Theme Hospital-Installationsverzeichis ausgewählt werden. Sobald ein gültiges Verzeichnis ausgewählt wurde startet das Spiel neu.",
   cancel = "Abbrechen",
-  back = utf8 "Zurück",
+  back = "Zurück",
 }
 
 tooltip.options_window = {
   fullscreen_button = "Klicken, um zwischen Vollbild- und Fenstermodus zu wechseln",
-  width = utf8 "Gewünschte Bildschirmbreite eingeben",
-  height = utf8 "Gewünschte Bildschirmhöhe eingeben",
-  change_resolution = utf8 "Die Fensterauflösung auf die links eingegebenen Werte ändern",
-  language = utf8 "%s als Sprache auswählen",
+  width = "Gewünschte Bildschirmbreite eingeben",
+  height = "Gewünschte Bildschirmhöhe eingeben",
+  change_resolution = "Die Fensterauflösung auf die links eingegebenen Werte ändern",
+  language = "%s als Sprache auswählen",
   original_path = "Das momentan gewählte Theme Hospital-Installationsverzeichnis",
   browse = "Nach einer anderen Theme Hospital-Installation durchsuchen",
-  back = utf8 "Das Optionsfenster schließen",
+  back = "Das Optionsfenster schließen",
 }
 
 new_game_window = {
   easy = "AIP (Einfach)",
   medium = "Arzt (Mittel)",
   hard = "Berater (Schwer)",
-  tutorial = utf8 "Einführung",
+  tutorial = "Einführung",
   cancel = "Abbrechen",
 }
 
 tooltip.new_game_window = {
-  easy = utf8 "Die richtige Option für Simulations-Neulinge",
-  medium = utf8 "Der Mittelweg - für diejenigen, die sich nicht entscheiden können",
-  hard = utf8 "Wer diese Art von Spielen schon gewöhnt ist und eine Herausforderung will, sollte hier klicken",
-  tutorial = utf8 "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
+  easy = "Die richtige Option für Simulations-Neulinge",
+  medium = "Der Mittelweg - für diejenigen, die sich nicht entscheiden können",
+  hard = "Wer diese Art von Spielen schon gewöhnt ist und eine Herausforderung will, sollte hier klicken",
+  tutorial = "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
   cancel = "Oh, eigentlich wollte ich gar kein neues Spiel starten!",
 }
 
 lua_console = {
-  execute_code = utf8 "Ausführen",
-  close = utf8 "Schließen",
+  execute_code = "Ausführen",
+  close = "Schließen",
 }
 
 tooltip.lua_console = {
-  textbox = utf8 "Hier Lua-Code zum Ausführen eingeben",
-  execute_code = utf8 "Den eingegebenen Code ausführen",
-  close = utf8 "Die Konsole schließen",
+  textbox = "Hier Lua-Code zum Ausführen eingeben",
+  execute_code = "Den eingegebenen Code ausführen",
+  close = "Die Konsole schließen",
 }
 
 errors = {
   dialog_missing_graphics = "Entschuldigung, aber dieses Fenster ist in den Demo-Dateien nicht enthalten.",
   save_prefix = "Fehler beim Speichern: ",
   load_prefix = "Fehler beim Laden: ",
-  map_file_missing = utf8 "Konnte die Kartendatei %s für das Level nicht finden!",
-  minimum_screen_size = utf8 "Bitte eine Auflösung von mindestens 640x480 eingeben.",
-  maximum_screen_size = utf8 "Bitte eine Auflösung von höchstens 3000x2000 eingeben.",
-  unavailable_screen_size = utf8 "Die gewünschte Auflösung ist im Vollbildmodus nicht verfügbar.",
+  map_file_missing = "Konnte die Kartendatei %s für das Level nicht finden!",
+  minimum_screen_size = "Bitte eine Auflösung von mindestens 640x480 eingeben.",
+  maximum_screen_size = "Bitte eine Auflösung von höchstens 3000x2000 eingeben.",
+  unavailable_screen_size = "Die gewünschte Auflösung ist im Vollbildmodus nicht verfügbar.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
-  abort_edit_room = utf8 "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
+  needs_restart = "Um diese Änderung vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
+  abort_edit_room = "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
 }
 
 information = {
-  custom_game = utf8 "Willkommen zu CorsixTH. Viel Spaß mit diesem eigenen Level!",
+  custom_game = "Willkommen zu CorsixTH. Viel Spaß mit diesem eigenen Level!",
   cannot_restart = "Leider wurde dieses eigene Level vor Implementierung des Neustart-Features gespeichert.",
   level_lost = {
   },
   level_lost = {
-    utf8 "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
+    "So ein Mist! Sie haben das Level leider nicht geschafft. Vielleicht klappts ja beim nächsten Mal!",
     "Der Grund warum Sie verloren haben:",
     reputation = "Ihr Ruf ist unter %d gesunken.",
     balance = "Ihr Kontostand ist unter %d gesunken.",
-    percentage_killed = utf8 "Sie haben mehr als %d Prozent der Patienten getötet.",
+    percentage_killed = "Sie haben mehr als %d Prozent der Patienten getötet.",
   },
   very_old_save = "Seit dieses Level gestartet wurde, wurden einige Änderungen am Spiel durchgeführt. Sie sollten ein neues Spiel starten, damit alle Änderungen wirksam werden.",
   no_custom_game_in_demo = "Tut uns Leid, aber in der Demo-Version sind keine eigenen Level spielbar.",
 }
 
 tooltip.information = {
-  close = utf8 "Das Informationsfenster schließen",
+  close = "Das Informationsfenster schließen",
 }
 
 totd_window = {
   tips = {
-    utf8 "Zu Beginn benötigt jedes Krankenhaus eine Rezeption und eine Allgemeinmedizin. Danach kommt es darauf an, was für Patienten im Krankenhaus auftauchen. Eine Pharma-Theke ist aber immer eine gute Wahl.",
-    utf8 "Maschinen wie die Entlüftung müssen gewartet werden. Stelle ein paar Handlanger ein, oder die Patienten und das Personal könnte verletzt werden.",
-    utf8 "Nach einer Weile wird das Personal müde. Baue unbedingt einen Personalraum, damit es sich ausruhen kann.",
-    utf8 "Platziere genug Heizkörper, um das Personal und die Patienten warm zu halten, sonst werden sie unglücklich. Benutze die Übersichtskarte, um Stellen im Krankenhaus zu finden, die noch etwas besser beheizt werden müssen.",
-    utf8 "Der Fähigkeiten-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
-    utf8 "AIPler und Ärzte können ihre Fähigkeiten verbessern, indem sie in der Ausbildung von Beratern lernen. Wenn der Berater eine zusätzliche Qualifikation (Chirurg, Psychiater oder Forscher) besitzt, gibt er dieses Wissen ebenfalls weiter.",
-    utf8 "Hast du schon versucht, die Europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Mach vorher den Sound an!!",
-    utf8 "Im Options-Menü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
-    utf8 "Du hast eine andere Sprache als Englisch ausgewählt, aber es erscheinen Englische Texte? Hilf uns die Übersetzung zu vervollständigen, indem du fehlende Texte in deine Sprache Übersetzt!",
-    utf8 "Das CorsixTH-Team sucht Verstärkung! Hast du Interesse, beim Programmieren, Übersetzen oder Grafiken erstellen zu helfen? Kontaktiere uns in unserem Forum, der Mailing List oder unserem IRC-Channel (corsix-th im freenode).",
-    utf8 "Wenn du einen Bug findest, bitte melde ihn in unserem Bug-Tracker: th-issues.corsix.org",
-    utf8 "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum nächsten wechseln kann. Im Status-Fenster kannst du deinen Fortschritt bezüglich der Levelziele sehen.",
-    utf8 "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
-    utf8 "Um aus einer Horde wartender Patienten diejenigen zu finden, die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",
-    utf8 "Klicke auf die Tür eines Raumes, um seine Warteschlange zu sehen. Hier kann man nützliche Feineinstellungen vornehmen, wie etwa die Warteschlange umzusortieren oder einen Patienten zu einem anderen Raum zu senden.",
-    utf8 "Unglückliches Personal verlangt öfter Gehaltserhöhungen. Gestalte die Arbeitsumgebung deines Personals möglichst angenehm, um dies zu verhindern.",
-    utf8 "Patienten werden beim Warten durstig, besonders wenn die Heizungen aufgedreht sind! Strategisch platzierte Getränkeautomaten sind eine nette zusätzliche Einnahmequelle.",
-    utf8 "Du kannst die Diagnose für einen Patienten vorzeitig abbrechen und ihn direkt zur Behandlung schicken, falls seine Krankheit zuvor schon entdeckt wurde. Allerdings erhöht sich dadurch das Risiko, dass das Heilmittel falsch ist und der Patient stirbt.",
-    utf8 "Notfälle können eine gute Einnahmequelle abgeben, sofern genügend Kapazitäten vorhanden sind, um die Notfallpatienten rechtzeitig zu behandeln.",
+    "Zu Beginn benötigt jedes Krankenhaus eine Rezeption und eine Allgemeinmedizin. Danach kommt es darauf an, was für Patienten im Krankenhaus auftauchen. Eine Pharma-Theke ist aber immer eine gute Wahl.",
+    "Maschinen wie die Entlüftung müssen gewartet werden. Stelle ein paar Handlanger ein, oder die Patienten und das Personal könnte verletzt werden.",
+    "Nach einer Weile wird das Personal müde. Baue unbedingt einen Personalraum, damit es sich ausruhen kann.",
+    "Platziere genug Heizkörper, um das Personal und die Patienten warm zu halten, sonst werden sie unglücklich. Benutze die Übersichtskarte, um Stellen im Krankenhaus zu finden, die noch etwas besser beheizt werden müssen.",
+    "Der Fähigkeiten-Level eines Arztes beeinflusst die Qualität und Geschwindigkeit seiner Diagnosen deutlich. Ein geübter Arzt in der Allgemeinmedizin erspart so manchen zusätzlichen Diagnoseraum.",
+    "AIPler und Ärzte können ihre Fähigkeiten verbessern, indem sie in der Ausbildung von Beratern lernen. Wenn der Berater eine zusätzliche Qualifikation (Chirurg, Psychiater oder Forscher) besitzt, gibt er dieses Wissen ebenfalls weiter.",
+    "Hast du schon versucht, die Europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Mach vorher den Sound an!!",
+    "Im Options-Menü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
+    "Du hast eine andere Sprache als Englisch ausgewählt, aber es erscheinen Englische Texte? Hilf uns die Übersetzung zu vervollständigen, indem du fehlende Texte in deine Sprache Übersetzt!",
+    "Das CorsixTH-Team sucht Verstärkung! Hast du Interesse, beim Programmieren, Übersetzen oder Grafiken erstellen zu helfen? Kontaktiere uns in unserem Forum, der Mailing List oder unserem IRC-Channel (corsix-th im freenode).",
+    "Wenn du einen Bug findest, bitte melde ihn in unserem Bug-Tracker: th-issues.corsix.org",
+    "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum nächsten wechseln kann. Im Status-Fenster kannst du deinen Fortschritt bezüglich der Levelziele sehen.",
+    "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
+    "Um aus einer Horde wartender Patienten diejenigen zu finden, die für einen bestimmten Raum warten, einfach mit dem Mauszeiger über den entsprechenden Raum fahren.",
+    "Klicke auf die Tür eines Raumes, um seine Warteschlange zu sehen. Hier kann man nützliche Feineinstellungen vornehmen, wie etwa die Warteschlange umzusortieren oder einen Patienten zu einem anderen Raum zu senden.",
+    "Unglückliches Personal verlangt öfter Gehaltserhöhungen. Gestalte die Arbeitsumgebung deines Personals möglichst angenehm, um dies zu verhindern.",
+    "Patienten werden beim Warten durstig, besonders wenn die Heizungen aufgedreht sind! Strategisch platzierte Getränkeautomaten sind eine nette zusätzliche Einnahmequelle.",
+    "Du kannst die Diagnose für einen Patienten vorzeitig abbrechen und ihn direkt zur Behandlung schicken, falls seine Krankheit zuvor schon entdeckt wurde. Allerdings erhöht sich dadurch das Risiko, dass das Heilmittel falsch ist und der Patient stirbt.",
+    "Notfälle können eine gute Einnahmequelle abgeben, sofern genügend Kapazitäten vorhanden sind, um die Notfallpatienten rechtzeitig zu behandeln.",
   },
   previous = "Vorheriger Tipp",
-  next = utf8 "Nächster Tipp",
+  next = "Nächster Tipp",
 }
 
 tooltip.totd_window = {
   previous = "Den vorherigen Tipp anzeigen",
-  next = utf8 "Den nächsten Tipp anzeigen",
+  next = "Den nächsten Tipp anzeigen",
 }
 
 debug_patient_window = {
@@ -452,14 +452,14 @@ cheats_window = {
     lose_level = "Level verlieren",
     win_level = "Level gewinnen",
   },
-  close = utf8 "Schließen",
+  close = "Schließen",
 }
 
 tooltip.cheats_window = {
-  close = utf8 "Das Cheat-Fenster schließen",
+  close = "Das Cheat-Fenster schließen",
   cheats = {
-    money = utf8 "10.000 zum Konto hinzufügen.",
-    all_research = utf8 "Alle Forschungen abschließen.",
+    money = "10.000 zum Konto hinzufügen.",
+    all_research = "Alle Forschungen abschließen.",
     emergency = "Einen Notfall erzeugen.",
     vip = "Einen VIP vorbeischicken.",
     earthquake = "Ein Erdbeben starten.",
@@ -474,11 +474,11 @@ tooltip.cheats_window = {
 introduction_texts = {
   demo = {
     "Willkommen im Demo-Krankenhaus!",
-    utf8 "Leider beinhaltet die Demo-Version nur dieses eine Level (abgesehen von eigenen Levels). Dafür gibt es hier aber mehr als genug zu tun um Sie eine Weile zu beschäftigen!",
-    utf8 "Sie werden diversen Krankheiten begegnen, die unterschiedliche Räume zur Behandlung benötigen. Ab und zu können auch Notfälle eintreffen. Und Sie werden mithilfe einer Forschungsabteilung neue Räume erforschen müssen.",
-    utf8 "Ihr Ziel ist es, 100.000 DM zu verdienen, einen Krankenhauswert von 70.000 DM und einen Ruf von 700 vorzuweisen, und gleichzeitig mindestens 75% der Patienten erfolgreich zu behandeln.",
-    utf8 "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren.",
-    utf8 "Viel Glück!",
+    "Leider beinhaltet die Demo-Version nur dieses eine Level (abgesehen von eigenen Levels). Dafür gibt es hier aber mehr als genug zu tun um Sie eine Weile zu beschäftigen!",
+    "Sie werden diversen Krankheiten begegnen, die unterschiedliche Räume zur Behandlung benötigen. Ab und zu können auch Notfälle eintreffen. Und Sie werden mithilfe einer Forschungsabteilung neue Räume erforschen müssen.",
+    "Ihr Ziel ist es, 100.000 DM zu verdienen, einen Krankenhauswert von 70.000 DM und einen Ruf von 700 vorzuweisen, und gleichzeitig mindestens 75% der Patienten erfolgreich zu behandeln.",
+    "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren.",
+    "Viel Glück!",
   },
 }
 

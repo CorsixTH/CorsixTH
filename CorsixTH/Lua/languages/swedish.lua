@@ -29,34 +29,34 @@ object.reception_desk = "Reception"
 -- "Psyket" means something entirely different than "Psykiatrin"
 rooms_long.psychiatric = "Den psykiatriska avdelningen"
 rooms_short.psychiatric = "Psykiatri"
-tooltip.rooms.psychiatry = utf8 "I den psykiatriska avdelningen kureras galningar och man hjälper också till med diagnoser av andra patienter. Här behövs en läkare med psykiatrisk kompetens"
-adviser.staff_place_advice.only_psychiatrists = utf8 "Läkare utan psykiatrisk examen kan inte arbeta inom psykiatrin."
-adviser.room_requirements.psychiatry_need_psychiatrist = utf8 "Nu när du byggt en psykiatrisk avdelning måste du också anställa en psykiater."
+tooltip.rooms.psychiatry = "I den psykiatriska avdelningen kureras galningar och man hjälper också till med diagnoser av andra patienter. Här behövs en läkare med psykiatrisk kompetens"
+adviser.staff_place_advice.only_psychiatrists = "Läkare utan psykiatrisk examen kan inte arbeta inom psykiatrin."
+adviser.room_requirements.psychiatry_need_psychiatrist = "Nu när du byggt en psykiatrisk avdelning måste du också anställa en psykiater."
 room_descriptions.psych = {
   "Den psykiatriska avdelningen//",
-  utf8 "Patienter som får diagnosen psykisk sjukdom måste uppsöka den psykiatriska avdelningen för att få behandling. Psykiatriker kan också ställa diagnoser, ta reda på vilken typ av sjukdom patienterna har och, i det fall det är mentalt behandla dem på den pålitliga gamla britsen.//",
-  utf8 "Här behövs en läkare utbildad i psykiatri. "
+  "Patienter som får diagnosen psykisk sjukdom måste uppsöka den psykiatriska avdelningen för att få behandling. Psykiatriker kan också ställa diagnoser, ta reda på vilken typ av sjukdom patienterna har och, i det fall det är mentalt behandla dem på den pålitliga gamla britsen.//",
+  "Här behövs en läkare utbildad i psykiatri. "
 }
-introduction_texts.level1[4] = utf8 "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
+introduction_texts.level1[4] = "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
 
-tooltip.staff_list.next_person = utf8 "Visa nästa sida"
-tooltip.staff_list.prev_person = utf8 "Visa föregående sida"
+tooltip.staff_list.next_person = "Visa nästa sida"
+tooltip.staff_list.prev_person = "Visa föregående sida"
 
 -- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = utf8 "Vederbörandes ansikte - klicka för att öppna personalhanteraren"
-tooltip.staff_window.center_view = utf8 "Vänsterklicka för att komma till personen, högerklicka för att gå igenom personalen en och en"
+tooltip.staff_window.face = "Vederbörandes ansikte - klicka för att öppna personalhanteraren"
+tooltip.staff_window.center_view = "Vänsterklicka för att komma till personen, högerklicka för att gå igenom personalen en och en"
 
-confirmation.restart_level = utf8 "Är du säker på att du vill starta om nivån?"
+confirmation.restart_level = "Är du säker på att du vill starta om nivån?"
 
 -------------------------------  NEW STRINGS  -------------------------------
-object.litter = utf8 "Skräp"
-tooltip.objects.litter = utf8 "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
+object.litter = "Skräp"
+tooltip.objects.litter = "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
 
-tooltip.fax.close = utf8 "Stäng fönstret utan att ta bort meddelandet"
-tooltip.message.button = utf8 "Vänsterklicka för att öppna meddelandet"
-tooltip.message.button_dismiss = utf8 "Vänsterklicka för att öppna meddelandet, högerklicka för att ta bort det"
-tooltip.casebook.cure_requirement.hire_staff = utf8 "Du behöver anställa personal att hantera behandlingen"
-tooltip.casebook.cure_type.unknown = utf8 "Du vet ännu inte hur denna sjukdom botas"
+tooltip.fax.close = "Stäng fönstret utan att ta bort meddelandet"
+tooltip.message.button = "Vänsterklicka för att öppna meddelandet"
+tooltip.message.button_dismiss = "Vänsterklicka för att öppna meddelandet, högerklicka för att ta bort det"
+tooltip.casebook.cure_requirement.hire_staff = "Du behöver anställa personal att hantera behandlingen"
+tooltip.casebook.cure_type.unknown = "Du vet ännu inte hur denna sjukdom botas"
 tooltip.research_policy.no_research = "Det pågår ingen forskning i den här kategorin just nu"
 tooltip.research_policy.research_progress = "Framsteg inför nästa upptäckt i denna kategori: %1%/%2%"
 
@@ -65,28 +65,28 @@ handyman_window.parcel = "Tomt"
 tooltip.handyman_window.parcel_select = "Tomten där vaktmästaren accepterar uppdrag. Klicka för att ändra"
 
 menu_options = {
-  lock_windows = utf8 "  LÅS FÖNSTER  ",
+  lock_windows = "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",
-  settings = utf8 "  INSTÄLLNINGAR  ",
+  settings = "  INSTÄLLNINGAR  ",
   adviser_disabled = "  MEDHJÄLPARE  ",
 }
 
 menu_options_game_speed = {
   pause               = "  (P) PAUSA  ",
-  slowest             = utf8 "  (1) LÅNGSAMMAST  ",
-  slower              = utf8 "  (2) LÅNGSAMMARE  ",
+  slowest             = "  (1) LÅNGSAMMAST  ",
+  slower              = "  (2) LÅNGSAMMARE  ",
   normal              = "  (3) NORMAL  ",
   max_speed           = "  (4) MAXHASTIGHET  ",
-  and_then_some_more  = utf8 "  (5) OCH SÅ LITE TILL  ",
+  and_then_some_more  = "  (5) OCH SÅ LITE TILL  ",
 }
 
 menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
-  jump_to_level               = utf8 "  HOPPA TILL NIVÅ  ",
-  transparent_walls           = utf8 "  (X) TRANSPARENTA VÄGGAR  ",
-  limit_camera                = utf8 "  BEGRÄNSA KAMERAN  ",
-  disable_salary_raise        = utf8 "  STÄNG AV LÖNEÖKNINGAR  ",
+  jump_to_level               = "  HOPPA TILL NIVÅ  ",
+  transparent_walls           = "  (X) TRANSPARENTA VÄGGAR  ",
+  limit_camera                = "  BEGRÄNSA KAMERAN  ",
+  disable_salary_raise        = "  STÄNG AV LÖNEÖKNINGAR  ",
   make_debug_fax              = "  (F8) SKAPA DEBUGFAX  ",
   make_debug_patient          = "  (F9) SKAPA DEBUGPATIENT  ",
   cheats                      = "  (F11) FUSK  ",
@@ -94,7 +94,7 @@ menu_debug = {
   calls_dispatcher            = "  ANROPSKLARERARE  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
   dump_gamelog                = "  (CTRL+D) DUMPA SPELLOGG  ",
-  map_overlay                 = utf8 "  KARTÖVERSIKT  ",
+  map_overlay                 = "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }
 menu_debug_overlay = {
@@ -104,8 +104,8 @@ menu_debug_overlay = {
   heat                        = "  TEMPERATUR  ",
   byte_0_1                    = "  BYTE 0 & 1  ",
   byte_floor                  = "  BYTE GOLV  ",
-  byte_n_wall                 = utf8 "  BYTE N VÄGG  ",
-  byte_w_wall                 = utf8 "  BYTE W VÄGG  ",
+  byte_n_wall                 = "  BYTE N VÄGG  ",
+  byte_w_wall                 = "  BYTE W VÄGG  ",
   byte_5                      = "  BYTE 5  ",
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
@@ -113,7 +113,7 @@ menu_debug_overlay = {
 }
 
 adviser = {
-  room_forbidden_non_reachable_parts = utf8 "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
+  room_forbidden_non_reachable_parts = "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
   warnings = {
     no_desk = "Det kanske börjar bli dags att bygga en reception och anställa en receptionist?",
     no_desk_1 = "Om du vill att det ska komma patienter till sjukhuset så behövs en receptionist och en reception där hon kan jobba!",
@@ -124,9 +124,9 @@ adviser = {
     research_screen_open_2 = "På den här nivån finns det ingen möjlighet till forskning.",
   },
   cheats = {
-    th_cheat = utf8 "Ojoj, nån vill fuska sig till segern!",
-    crazy_on_cheat = utf8 "Åh nej!! Alla läkare har blivit galna!",
-    crazy_off_cheat = utf8 "Vilken tur... läkarna har återfått förståndet.",
+    th_cheat = "Ojoj, nån vill fuska sig till segern!",
+    crazy_on_cheat = "Åh nej!! Alla läkare har blivit galna!",
+    crazy_off_cheat = "Vilken tur... läkarna har återfått förståndet.",
     roujin_on_cheat = "Roujin's utmaning aktiverad! Lycka till...",
     roujin_off_cheat = "Roujin's utmaning avaktiverad.",
     hairyitis_cheat = "Pälssyndromsfusket aktiverat!",
@@ -136,17 +136,17 @@ adviser = {
   },
 }
 
-dynamic_info.patient.actions.no_gp_available = utf8 "Väntar på att du ska bygga en allmänpraktik"
-dynamic_info.staff.actions.heading_for = utf8 "På väg till %s"
+dynamic_info.patient.actions.no_gp_available = "Väntar på att du ska bygga en allmänpraktik"
+dynamic_info.staff.actions.heading_for = "På väg till %s"
 dynamic_info.staff.actions.fired = "Sparkad"
 
 progress_report.free_build = "FRITT BYGGANDE"
 
 fax = {
   choices = {
-    return_to_main_menu = utf8 "Gå till huvudmenyn",
-    accept_new_level = utf8 "Gå vidare till nästa bana",
-    decline_new_level = utf8 "Fortsätt spela ett tag till",
+    return_to_main_menu = "Gå till huvudmenyn",
+    accept_new_level = "Gå vidare till nästa bana",
+    decline_new_level = "Fortsätt spela ett tag till",
   },
   emergency = {
     num_disease_singular = "Vi har 1 person som kräver omedelbar vård med %s.",
@@ -164,19 +164,19 @@ fax = {
 }
 
 letter = {
-  dear_player = utf8 "Käre %s",
-  custom_level_completed = utf8 "Bra gjort! Du klarade alla mål på den här specialbanan!",
-  return_to_main_menu = utf8 "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
+  dear_player = "Käre %s",
+  custom_level_completed = "Bra gjort! Du klarade alla mål på den här specialbanan!",
+  return_to_main_menu = "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
 }
 
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = utf8 "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att lokalisera mappen där Theme Hospital installerats.",
+  th_directory = "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att lokalisera mappen där Theme Hospital installerats.",
   exit = "Avsluta",
 }
 
-misc.not_yet_implemented = utf8 "(ej tillgänglig ännu)"
-misc.no_heliport = utf8 "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."
+misc.not_yet_implemented = "(ej tillgänglig ännu)"
+misc.no_heliport = "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."
 
 main_menu = {
   new_game = "Kampanj",
@@ -189,11 +189,11 @@ main_menu = {
 }
 
 tooltip.main_menu = {
-  new_game = utf8 "Starta bana ett i kampanjen",
-  custom_level = utf8 "Bygg ditt sjukhus på en valfri nivå",
+  new_game = "Starta bana ett i kampanjen",
+  custom_level = "Bygg ditt sjukhus på en valfri nivå",
   load_game = "Ladda ett sparat spel",
-  options = utf8 "Fixa till dina inställningar",
-  exit = utf8 "Nej! Du vill väl inte sluta redan?",
+  options = "Fixa till dina inställningar",
+  exit = "Nej! Du vill väl inte sluta redan?",
 }
 
 load_game_window = {
@@ -212,7 +212,7 @@ custom_game_window = {
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = utf8 "Ladda banan %s",
+  start_game_with_name = "Ladda banan %s",
   free_build = "Bocka för den här rutan om du vill spela utan pengar och vinst- och förlustkriterier",
 }
 
@@ -222,8 +222,8 @@ save_game_window = {
 }
 
 tooltip.save_game_window = {
-  save_game = utf8 "Skriv över %s",
-  new_save_game = utf8 "Skriv namnet på den nya filen",
+  save_game = "Skriv över %s",
+  new_save_game = "Skriv namnet på den nya filen",
 }
 
 menu_list_window = {
@@ -235,14 +235,14 @@ menu_list_window = {
 tooltip.menu_list_window = {
   name = "Klicka här för att sortera listan efter namn",
   save_date = "Klicka här för att sortera listan efter daturm då spelen sparades",
-  back = utf8 "Stäng detta fönster",
+  back = "Stäng detta fönster",
 }
 
 options_window = {
-  fullscreen = utf8 "Helskärm",
+  fullscreen = "Helskärm",
   width = "Bredd",
-  height = utf8 "Höjd",
-  change_resolution = utf8 "Ändra upplösning",
+  height = "Höjd",
+  change_resolution = "Ändra upplösning",
   browse = "Bläddra...",
   new_th_directory = "Här kan du välja en ny plats här Theme Hospital installerats. Så fort du väljer den nya mappen kommer spelet att startas om.",
   back = "Tillbaka",
@@ -250,56 +250,56 @@ options_window = {
 }
 
 tooltip.options_window = {
-  fullscreen_button = utf8 "Klicka för att gå mellan fönster och helskärm",
-  width = utf8 "Fyll i önskad skärmbredd",
-  height = utf8 "Fyll i önskad skärmhöjd",
-  change_resolution = utf8 "Ändra upplösning till de dimensioner ifyllda till vänster",
-  language = utf8 "Ändra till %s som språk",
+  fullscreen_button = "Klicka för att gå mellan fönster och helskärm",
+  width = "Fyll i önskad skärmbredd",
+  height = "Fyll i önskad skärmhöjd",
+  change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster",
+  language = "Ändra till %s som språk",
   original_path = "Den just nu valda mappen där Theme Hospital installerats",
   browse = "Bläddra efter en annan Theme Hospital installation",
-  back = utf8 "Stäng alternativmenyn",
+  back = "Stäng alternativmenyn",
 }
 
 new_game_window = {
-  easy = utf8 "Junior (Lätt)",
-  medium = utf8 "Läkare (Medel)",
-  hard = utf8 "Konsult (Svår)",
-  tutorial = utf8 "Starthjälp",
+  easy = "Junior (Lätt)",
+  medium = "Läkare (Medel)",
+  hard = "Konsult (Svår)",
+  tutorial = "Starthjälp",
   cancel = "Avbryt",
 }
 
 tooltip.new_game_window = {
-  easy = utf8 "Om du känner dig ny på denna typ av spel är detta läget för dig",
-  medium = utf8 "Detta är den gyllene medelvägen om du är osäker på vad du ska välja",
-  hard = utf8 "Känner du för en utmaning och är van vid den här typen av spel är det här rätt val",
-  tutorial = utf8 "Vill du ha lite hjälp på traven i början, tryck ner den här rutan",
+  easy = "Om du känner dig ny på denna typ av spel är detta läget för dig",
+  medium = "Detta är den gyllene medelvägen om du är osäker på vad du ska välja",
+  hard = "Känner du för en utmaning och är van vid den här typen av spel är det här rätt val",
+  tutorial = "Vill du ha lite hjälp på traven i början, tryck ner den här rutan",
   cancel = "Oj, det var ju egentligen inte meningen att starta ett nytt spel!",
 }
 
 lua_console = {
-  execute_code = utf8 "Exekvera",
-  close = utf8 "Stäng",
+  execute_code = "Exekvera",
+  close = "Stäng",
 }
 
 tooltip.lua_console = {
-  textbox = utf8 "Skriv in Luakod att köra här",
-  execute_code = utf8 "Kör koden du skrivit",
-  close = utf8 "Stäng terminalen",
+  textbox = "Skriv in Luakod att köra här",
+  execute_code = "Kör koden du skrivit",
+  close = "Stäng terminalen",
 }
 
 errors = {
-  dialog_missing_graphics = utf8 "Tyvärr innehåller demon inte den här dialogrutan.",
-  save_prefix = utf8 "Fel när spelet skulle sparas: ",
-  load_prefix = utf8 "Fel när spelet skulle laddas: ",
-  map_file_missing = utf8 "Kunde inte hitta kartfilen %s till den här nivån!",
-  minimum_screen_size = utf8 "Skärmupplösningen måste vara åtminstone 640x480.",
-  maximum_screen_size = utf8 "Skärmupplösningen kan inte vara större än 3000x2000.",
-  unavailable_screen_size = utf8 "Skärmupplösningen du valde finns inte i fullskärmsläge.",
+  dialog_missing_graphics = "Tyvärr innehåller demon inte den här dialogrutan.",
+  save_prefix = "Fel när spelet skulle sparas: ",
+  load_prefix = "Fel när spelet skulle laddas: ",
+  map_file_missing = "Kunde inte hitta kartfilen %s till den här nivån!",
+  minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
+  maximum_screen_size = "Skärmupplösningen kan inte vara större än 3000x2000.",
+  unavailable_screen_size = "Skärmupplösningen du valde finns inte i fullskärmsläge.",
 }
 
 confirmation = {
-  needs_restart = utf8 "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
-  abort_edit_room = utf8 "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
+  needs_restart = "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
+  abort_edit_room = "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
 }
 
 information = {
@@ -308,48 +308,48 @@ information = {
   cannot_restart = "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
   very_old_save = "Det har hänt en hel del med spelet sedan du startade den här banan. För att vara säker på att allt fungerar som det är tänkt kan det vara bra att överväga att starta om banan.",
   level_lost = {
-    utf8 "Attans! Du förlorade. Bättre lycka nästa gång!",
-    utf8 "Anledning till att du förlorade:",
-    reputation = utf8 "Ditt anseende föll under %d.",
-    balance = utf8 "Din bankbalans sjönk till under %d.",
-    percentage_killed = utf8 "Du dödade mer än %d procent av dina patienter.",
+    "Attans! Du förlorade. Bättre lycka nästa gång!",
+    "Anledning till att du förlorade:",
+    reputation = "Ditt anseende föll under %d.",
+    balance = "Din bankbalans sjönk till under %d.",
+    percentage_killed = "Du dödade mer än %d procent av dina patienter.",
   },
   cheat_not_possible = "Det går inte att använda det fusket på den här nivån. Du misslyckas till och med att fuska, det kan inte vara roligt!",
 }
 
 tooltip.information = {
-  close = utf8 "Stäng informationsrutan",
+  close = "Stäng informationsrutan",
 }
 
 totd_window = {
   tips = {
-    utf8 "Alla sjukhus behöver en reception och en allmänpraktik för att fungera. Sedan beror allt på vad det är för patienter som besöker sjukhuset. Ett hett tips är att börja med ett apotek.",
-    utf8 "Maskiner som till exempel pumpen behöver underhåll då och då. Anställ en vaktmästare eller två för att reparera dem, annars riskeras personalens och patienternas hälsa.",
-    utf8 "Efter ett tag kommer din personal att bli trött. Se till att göra ett personalrum så att de kan slappna av lite.",
-    utf8 "För att inte dina anställda och alla patienter ska bli arga gäller det att ha tillräckligt med element utplacerade lite här och där. Använd stadskartan för att hitta ställen som behöver mer värme.",
-    utf8 "En läkares kompetensnivå påverkar kvaliteten och hastigheten på hans diagnoser ganska mycket. Sätt en riktigt kompetent läkare i allmänpraktiken så behövs det inte så många andra diagnosrum.",
-    utf8 "Juniorer och läkare kan höja sin kompetensnivå genom att gå i träning hos en konsult i utbildningsrummet. Om konsulten har någon färdighet (kirurg, psykiater eller forskare) kommer han också att lära ut detta till sina elever.",
-    utf8 "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
-    utf8 "Det går att göra vissa inställningar som till exempel upplösning och språk i alternativmenyn som finns både i huvudmenyn och inuti spelet.",
-    utf8 "Hittar du en massa text på engelska i spelet? Hjälp oss översätta färdigt till Svenska!",
-    utf8 "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at freenode).",
-    utf8 "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org.",
-    utf8 "Varje bana har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",
-    utf8 "Om du vill ändra eller ta bort ett existerande rum kan du göra det med hjälp av ändra rum-knappen i panelen längst ner (saxen).",
-    utf8 "Om du ur högen av patienter vill ta reda på vilka som köar till ett visst rum är det bara att föra muspekaren över rummet.",
-    utf8 "Klicka på dörren till ett rum för att se kön till det. Sedan går det att genomföra finlir som att ändra ordning eller skicka en patient till ett annat likadant rum.",
-    utf8 "Olycklig personal frågar efter löneökning ofta. Se till att de jobbar i en behaglig miljö så händer det inte.",
-    utf8 "Patienter blir törstiga när de väntar på sin tur, ännu mer om du sätter upp värmen! Sätt ut läskautomater på strategiska platser för lite extra inkomst.",
-    utf8 "Det går att avbryta diagnosprocessen för en patient i förtid och gissa behandling om sjukdomen är känd. Notera att detta ökar risken för felbehandling - och dödsfall.",
-    utf8 "Akutfall kan vara ett smidigt sätt att få in lite extra stålar, såvida du har kapacitet att hantera alla patienter i tid vill säga.",
+    "Alla sjukhus behöver en reception och en allmänpraktik för att fungera. Sedan beror allt på vad det är för patienter som besöker sjukhuset. Ett hett tips är att börja med ett apotek.",
+    "Maskiner som till exempel pumpen behöver underhåll då och då. Anställ en vaktmästare eller två för att reparera dem, annars riskeras personalens och patienternas hälsa.",
+    "Efter ett tag kommer din personal att bli trött. Se till att göra ett personalrum så att de kan slappna av lite.",
+    "För att inte dina anställda och alla patienter ska bli arga gäller det att ha tillräckligt med element utplacerade lite här och där. Använd stadskartan för att hitta ställen som behöver mer värme.",
+    "En läkares kompetensnivå påverkar kvaliteten och hastigheten på hans diagnoser ganska mycket. Sätt en riktigt kompetent läkare i allmänpraktiken så behövs det inte så många andra diagnosrum.",
+    "Juniorer och läkare kan höja sin kompetensnivå genom att gå i träning hos en konsult i utbildningsrummet. Om konsulten har någon färdighet (kirurg, psykiater eller forskare) kommer han också att lära ut detta till sina elever.",
+    "Har du testat att slå numret till SOS Alarm på faxen? Se till att ljudet är påslaget...",
+    "Det går att göra vissa inställningar som till exempel upplösning och språk i alternativmenyn som finns både i huvudmenyn och inuti spelet.",
+    "Hittar du en massa text på engelska i spelet? Hjälp oss översätta färdigt till Svenska!",
+    "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at freenode).",
+    "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org.",
+    "Varje bana har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",
+    "Om du vill ändra eller ta bort ett existerande rum kan du göra det med hjälp av ändra rum-knappen i panelen längst ner (saxen).",
+    "Om du ur högen av patienter vill ta reda på vilka som köar till ett visst rum är det bara att föra muspekaren över rummet.",
+    "Klicka på dörren till ett rum för att se kön till det. Sedan går det att genomföra finlir som att ändra ordning eller skicka en patient till ett annat likadant rum.",
+    "Olycklig personal frågar efter löneökning ofta. Se till att de jobbar i en behaglig miljö så händer det inte.",
+    "Patienter blir törstiga när de väntar på sin tur, ännu mer om du sätter upp värmen! Sätt ut läskautomater på strategiska platser för lite extra inkomst.",
+    "Det går att avbryta diagnosprocessen för en patient i förtid och gissa behandling om sjukdomen är känd. Notera att detta ökar risken för felbehandling - och dödsfall.",
+    "Akutfall kan vara ett smidigt sätt att få in lite extra stålar, såvida du har kapacitet att hantera alla patienter i tid vill säga.",
   },
-  previous = utf8 "Föregående tips",
-  next = utf8 "Nästa tips",
+  previous = "Föregående tips",
+  next = "Nästa tips",
 }
 
 tooltip.totd_window = {
-  previous = utf8 "Visa föregående tips",
-  next = utf8 "Visa nästa tips",
+  previous = "Visa föregående tips",
+  next = "Visa nästa tips",
 }
 
 debug_patient_window = {
@@ -358,7 +358,7 @@ debug_patient_window = {
 
 cheats_window = {
   caption = "Fusk",
-  warning = utf8 "Varning: Du kommer inte att få bonuspoäng på slutet av nivån om du fuskar!",
+  warning = "Varning: Du kommer inte att få bonuspoäng på slutet av nivån om du fuskar!",
   cheated = {
     no = "Har fuskat: Nej",
     yes = "Har fuskat: Ja",
@@ -370,37 +370,37 @@ cheats_window = {
     vip = "Skapa VIP",
     earthquake = "Skapa jordbävning",
     create_patient = "Skapa patient",
-    end_month = utf8 "Månadsslut",
-    end_year = utf8 "Hoppa till nyår",
-    lose_level = utf8 "Förlora nivå",
-    win_level = utf8 "Vinn nivå",
+    end_month = "Månadsslut",
+    end_year = "Hoppa till nyår",
+    lose_level = "Förlora nivå",
+    win_level = "Vinn nivå",
   },
-  close = utf8 "Stäng",
+  close = "Stäng",
 }
 
 tooltip.cheats_window = {
-  close = utf8 "Stäng fuskfönstret",
+  close = "Stäng fuskfönstret",
   cheats = {
-    money = utf8 "Ökar din balans med 10 000.",
-    all_research = utf8 "Färdigställer all forskning.",
+    money = "Ökar din balans med 10 000.",
+    all_research = "Färdigställer all forskning.",
     emergency = "Skapar ett akutfall.",
     vip = "Skapar en Mycket Viktig Person (VIP)",
     earthquake = "Skapar en jordbävning med slumpad styrka",
     create_patient = "Skapar en patient vid kanten av kartan.",
-    end_month = utf8 "Hoppar till slutet av månaden.",
-    end_year = utf8 "Hoppar till slutet av året.",
-    lose_level = utf8 "Förlora nuvarande nivå.",
-    win_level = utf8 "Vinn nuvarande nivå.",
+    end_month = "Hoppar till slutet av månaden.",
+    end_year = "Hoppar till slutet av året.",
+    lose_level = "Förlora nuvarande nivå.",
+    win_level = "Vinn nuvarande nivå.",
   }
 }
 
 introduction_texts = {
   demo = {
-    utf8 "Välkommen till demosjukhuset!",
-    utf8 "Tyvärr innehåller demon bara denna nivå (förutom specialnivåer). Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
-    utf8 "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
-    utf8 "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
-    utf8 "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",
+    "Välkommen till demosjukhuset!",
+    "Tyvärr innehåller demon bara denna nivå (förutom specialnivåer). Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
+    "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
+    "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
+    "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",
     "Lycka till!",
   },
 }
@@ -411,11 +411,11 @@ calls_dispatcher = {
   staff = "%s - %s",
   watering = "Vattnar @ %d,%d",
   repair = "Reparera %s",
-  close = utf8 "Stäng",
+  close = "Stäng",
 }
 
 tooltip.calls_dispatcher = {
-  task = utf8 "Lista över uppgifter - klicka på en uppgift för att öppna tilldelad personals fönster och flytta vyn till det ställe där uppgiften finns.",
-  assigned = utf8 "Denna ruta är markerad om någon har fått uppgiften tilldelad till sig.",
-  close = utf8 "Stäng anropsklarerardialogen",
+  task = "Lista över uppgifter - klicka på en uppgift för att öppna tilldelad personals fönster och flytta vyn till det ställe där uppgiften finns.",
+  assigned = "Denna ruta är markerad om någon har fått uppgiften tilldelad till sig.",
+  close = "Stäng anropsklarerardialogen",
 }
