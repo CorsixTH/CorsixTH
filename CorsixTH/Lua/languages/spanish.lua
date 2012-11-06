@@ -140,6 +140,8 @@ adviser = {
     falling_4 = utf8 "¡Esto es un hospital, no un parque de atracciones!",
     falling_5 = utf8 "¡Este no es el lugar para tumbar a personas, que están enfermas!",
     falling_6 = utf8 "¡Esto no es una bolera, no deberías tratar así a los enfermos!",
+    research_screen_open_1 = utf8 "Tienes que construir un Departamento de Investigación para poder acceder a la pantalla de investigación.",
+    research_screen_open_2 = "No se pueden realizar investigaciones en este nivel.",
   },
   cheats = {
     th_cheat = utf8 "¡Felicidades, has desbloqueado los trucos!",
