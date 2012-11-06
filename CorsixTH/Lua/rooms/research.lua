@@ -197,4 +197,9 @@ function ResearchRoom:onHumanoidLeave(humanoid)
   Room.onHumanoidLeave(self, humanoid)
 end
 
+function ResearchRoom:afterLoad(old, new)
+  if old < 56 then
+    self.hospital.research_dep_built = true 
+  end
+end
 return room

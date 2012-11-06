@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 55
+local SAVEGAME_VERSION = 56
 
 class "App"
 
@@ -357,7 +357,6 @@ function App:loadLevel(level, ...)
       world = {room_built = self.world.room_built},
       hospital = {
         player_salary = self.ui.hospital.player_salary,
-        research_dep_built = self.ui.hospital.research_dep_built,
         message_popup = self.ui.hospital.message_popup,
         hospital_littered = self.ui.hospital.hospital_littered,
       },
@@ -1037,6 +1036,9 @@ function App:afterLoad()
     -- Game log was not present before introduction of savegame versions, so create it now.
     self.world.game_log = {}
     self.world:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
+  end
+  if not self.world.original_savegame_version then
+    self.world.original_savegame_version = old
   end
   local first = self.world.original_savegame_version
   if new == old then
