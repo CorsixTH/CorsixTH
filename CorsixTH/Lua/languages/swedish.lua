@@ -119,7 +119,9 @@ adviser = {
     no_desk_1 = "Om du vill att det ska komma patienter till sjukhuset så behövs en receptionist och en reception där hon kan jobba!",
     no_desk_2 = "Snyggt jobbat, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
     no_desk_3 = "Helt otroligt, nästan ett år och du har fortfarande ingen bemannad reception! Tror du det kommer några patienter då? Sluta leka omkring och fixa till det här nu!",
-    cannot_afford = "Du har inte tillräckligt med pengar på banken för att anställa den personen!"
+    cannot_afford = "Du har inte tillräckligt med pengar på banken för att anställa den personen!",
+    research_screen_open_1 = "Du behöver bygga en forskningsavdelning innan du får tillgång till forskningsskärmen.",
+    research_screen_open_2 = "På den här nivån finns det ingen möjlighet till forskning.",
   },
   cheats = {
     th_cheat = utf8 "Ojoj, nån vill fuska sig till segern!",
