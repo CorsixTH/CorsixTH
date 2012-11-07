@@ -209,12 +209,16 @@ function Patient:treated() -- If a drug was used we also need to pay for this
 end
 
 function Patient:die()
-  if self.hospital.num_deaths < 1 then
+  -- It may happen that this patient was just cured and then the room blew up.
+  -- (Hospital not set when going home)
+  local hospital = self.hospital or self.world:getLocalPlayerHospital()
+  
+  if hospital.num_deaths < 1 then
     self.world.ui.adviser:say(_A.information.first_death)
   end
-  self.hospital:humanoidDeath(self)
+  hospital:humanoidDeath(self)
   if not self.is_debug then
-    local casebook = self.hospital.disease_casebook[self.disease.id]
+    local casebook = hospital.disease_casebook[self.disease.id]
     casebook.fatalities = casebook.fatalities + 1
   end
   self:setMood("dead", "activate")
@@ -226,7 +230,7 @@ function Patient:die()
     self:setNextAction{name = "meander", count = 1}
   end  
   if self.is_emergency then
-    self.hospital.emergency.killed_emergency_patients = self.hospital.emergency.killed_emergency_patients + 1
+    hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction{name = "die"}
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
