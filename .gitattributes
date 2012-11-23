@@ -33,8 +33,6 @@ CorsixTH/Bitmap/fullscreen_border_right.bmp -text
 CorsixTH/Bitmap/fullscreen_border_top.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_topright.bmp -text
-CorsixTH/Bitmap/lib_bmp.lua -text
-CorsixTH/Bitmap/lib_spritesheet.lua -text
 CorsixTH/Bitmap/mainmenu1080.bmp -text
 CorsixTH/Bitmap/mainmenu1080.dat -text svneol=unset#application/octet-stream
 CorsixTH/Bitmap/mainmenu1080.pal -text
@@ -43,8 +41,6 @@ CorsixTH/Bitmap/map_cell_outline_east.bmp -text
 CorsixTH/Bitmap/map_cell_outline_north.bmp -text
 CorsixTH/Bitmap/map_cell_outline_south.bmp -text
 CorsixTH/Bitmap/map_cell_outline_west.bmp -text
-CorsixTH/Bitmap/mkbootstrap.lua -text
-CorsixTH/Bitmap/mkfont.lua -text
 CorsixTH/Bitmap/new32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/open32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/parcels32.png -text
@@ -62,7 +58,6 @@ CorsixTH/Bitmap/tree_level.bmp -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.deproj -text
 CorsixTH/CorsixTH.ico -text
-CorsixTH/CorsixTH.lua -text
 CorsixTH/CorsixTH.rc -text
 CorsixTH/Icon.icns -text
 CorsixTH/Levels/Example.map -text
@@ -74,37 +69,8 @@ CorsixTH/Levels/original05.level -text
 CorsixTH/Levels/original07.level -text
 CorsixTH/Levels/original11.level -text
 CorsixTH/Levels/original12.level -text
-CorsixTH/Lua/dialogs/fullscreen/annual_report.lua -text
 CorsixTH/Lua/dialogs/fullscreen/graphs.lua -text
-CorsixTH/Lua/dialogs/resizables/calls_dispatcher.lua -text
-CorsixTH/Lua/dialogs/resizables/file_browser.lua -text
-CorsixTH/Lua/dialogs/resizables/new_game.lua -text
-CorsixTH/Lua/diseases/broken_heart.lua -text
-CorsixTH/Lua/diseases/golf_stones.lua -text
-CorsixTH/Lua/diseases/iron_lungs.lua -text
-CorsixTH/Lua/diseases/kidney_beans.lua -text
-CorsixTH/Lua/diseases/pregnant.lua -text
-CorsixTH/Lua/diseases/ruptured_nodules.lua -text
-CorsixTH/Lua/diseases/spare_ribs.lua -text
-CorsixTH/Lua/diseases/unexpected_swelling.lua -text
 CorsixTH/Lua/entities/vip.lua -text
-CorsixTH/Lua/humanoid_actions/check_watch.lua -text
-CorsixTH/Lua/humanoid_actions/falling.lua -text
-CorsixTH/Lua/humanoid_actions/get_up.lua -text
-CorsixTH/Lua/humanoid_actions/on_ground.lua -text
-CorsixTH/Lua/humanoid_actions/pee.lua -text
-CorsixTH/Lua/humanoid_actions/shake_fist.lua -text
-CorsixTH/Lua/humanoid_actions/sweep_floor.lua -text
-CorsixTH/Lua/humanoid_actions/tap_foot.lua -text
-CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua -text
-CorsixTH/Lua/humanoid_actions/vomit.lua -text
-CorsixTH/Lua/humanoid_actions/yawn.lua -text
-CorsixTH/Lua/languages/czech.lua -text
-CorsixTH/Lua/languages/polish.lua -text
-CorsixTH/Lua/languages/russian.lua -text
-CorsixTH/Lua/objects/radiation_shield_b.lua -text
-CorsixTH/Lua/research_department.lua -text
-CorsixTH/Lua/rooms/operating_theatre.lua -text
 CorsixTH/Original_Logo.svg -text
 CorsixTH/Original_Logo_Text.svg -text
 CorsixTH/SDLMain/CMakeLists.txt -text
@@ -120,9 +86,6 @@ DebianPackage/usr/games/CorsixTH -text
 DebianPackage/usr/share/applications/CorsixTH.desktop -text
 DebianPackage/usr/share/applications/MapEdit.desktop -text
 DebianPackage/usr/share/doc/corsix-th/copyright -text
-LDocGen/c_tokenise.lua -text
-LDocGen/helpers.lua -text
-LDocGen/main.lua -text
 LDocGen/output/corner_right.gif -text
 LDocGen/output/logo.png -text
 LDocGen/output/main.css -text
