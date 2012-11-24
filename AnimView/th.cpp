@@ -680,7 +680,7 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex)
 
     if(!m_pSpriteBitmaps[iSprite].IsOk())
     {
-        wxString spriteFile = m_sSpritePath + wxString::Format(L"a%04ue.png", iSprite);
+        wxString spriteFile = m_sSpritePath + wxString::Format(L"a%04ue.png", (int)iSprite);
         th_sprite_t* pSprite = m_pSprites + iSprite;
 
         if(m_bXmlLoaded && wxFileName::FileExists(spriteFile))

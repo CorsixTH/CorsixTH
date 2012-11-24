@@ -804,7 +804,7 @@ void frmMain::_onTimer(wxTimerEvent& evt)
             return;
 
         m_iCurrentFrame = (m_iCurrentFrame + 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-        m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
+        m_txtFrameIndex->SetValue(wxString::Format(L"%u", (int)m_iCurrentFrame));
         m_panFrame->Refresh(false);
     }
 }
