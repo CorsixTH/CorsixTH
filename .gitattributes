@@ -1,14 +1,6 @@
 * text=auto !eol
 AnimView/AnimView.ico -text
 AnimView/AnimView.rc -text
-AnimView/CMakeLists.txt -text
-AnimView/VSPR-0.xml -text
-AnimView/tinystr.cpp -text
-AnimView/tinystr.h -text
-AnimView/tinyxml.cpp -text
-AnimView/tinyxml.h -text
-AnimView/tinyxmlerror.cpp -text
-AnimView/tinyxmlparser.cpp -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
@@ -70,18 +62,13 @@ CorsixTH/Levels/original07.level -text
 CorsixTH/Levels/original11.level -text
 CorsixTH/Levels/original12.level -text
 CorsixTH/Lua/dialogs/fullscreen/graphs.lua -text
-CorsixTH/Lua/entities/vip.lua -text
 CorsixTH/Original_Logo.svg -text
 CorsixTH/Original_Logo_Text.svg -text
-CorsixTH/SDLMain/CMakeLists.txt -text
-CorsixTH/SDLMain/SDLMain.m -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
-CorsixTH/changelog.txt -text
 DebianPackage/control -text
 DebianPackage/debian-binary -text
 DebianPackage/postinst -text
 DebianPackage/prerm -text
-DebianPackage/readme.txt -text
 DebianPackage/usr/games/CorsixTH -text
 DebianPackage/usr/share/applications/CorsixTH.desktop -text
 DebianPackage/usr/share/applications/MapEdit.desktop -text
@@ -101,19 +88,15 @@ LDocGen/templates/page.htlua -text
 LFS/lfs.def -text
 LPEG/lpeg-128.gif -text
 LPEG/lpeg.html -text
-MapEdit/CMakeLists.txt -text
 MapEdit/MapEdit.ico -text
 MapEdit/MapEdit.rc -text
 TestProcedure/Saves/issue[!!-~]1119.sav -text
 TestProcedure/Saves/test-save-beta8.sav -text
-TestProcedure/procedure.txt -text
 WindowsInstaller/LanguageStrings.nsh -text
 WindowsInstaller/OptionsPage.ini -text
 WindowsInstaller/ReplaceInFile.nsh -text
 WindowsInstaller/StrRep.nsh -text
 WindowsInstaller/Win32Script.nsi -text
-WindowsInstaller/config_template.txt -text
-WindowsInstaller/readme.txt -text
 WindowsInstaller/welcome.bmp -text
 agg/authors -text
 agg/copying -text
