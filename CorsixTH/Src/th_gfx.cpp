@@ -763,6 +763,20 @@ static void THAnimation_Draw(THDrawable* pSelf, THRenderTarget* pCanvas, int iDe
     reinterpret_cast<THAnimation*>(pSelf)->draw(pCanvas, iDestX, iDestY);
 }
 
+static bool THAnimation_isMultipleFrameAnimation(THDrawable* pSelf)
+{
+    THAnimation *pAnimation = reinterpret_cast<THAnimation *>(pSelf);
+    if(pAnimation)
+    {
+        int firstFrame = pAnimation->getAnimationManager()->getFirstFrame(pAnimation->getAnimation());
+        int nextFrame = pAnimation->getAnimationManager()->getNextFrame(firstFrame);
+        return nextFrame != firstFrame;
+    }
+    else
+        return false;
+   
+}
+
 THAnimationBase::THAnimationBase()
 {
     m_iX = 0;
@@ -776,6 +790,7 @@ THAnimation::THAnimation()
 {
     m_fnDraw = THAnimation_Draw;
     m_fnHitTest = THAnimation_HitTest;
+    m_fnIsMultipleFrameAnimation = THAnimation_isMultipleFrameAnimation;
     m_pManager = NULL;
     m_pMorphTarget = NULL;
     m_iAnimation = 0;
@@ -996,25 +1011,29 @@ void THAnimationBase::removeFromTile()
     THLinkList::removeFromList();
 }
 
-void THAnimationBase::attachToTile(THMapNode *pMapNode)
+void THAnimationBase::attachToTile(THMapNode *pMapNode, int layer)
 {
     removeFromTile();
-
     THLinkList *pList;
     if(m_iFlags & THDF_EarlyList)
         pList = &pMapNode->oEarlyEntities;
     else
         pList = pMapNode;
+
+    this->setDrawingLayer(layer);
+
 #define GetFlags(x) (reinterpret_cast<THDrawable*>(x)->m_iFlags)
-    while(pList->m_pNext && (GetFlags(pList->m_pNext) & THDF_ListBottom))
+    while(pList->m_pNext && pList->m_pNext->getDrawingLayer() < layer)
+    {
         pList = pList->m_pNext;
+    }
 #undef GetFlags
 
     m_pPrev = pList;
     if(pList->m_pNext != NULL)
     {
-        m_pNext = pList->m_pNext;
-        m_pNext->m_pPrev = this;
+        pList->m_pNext->m_pPrev = this;
+        this->m_pNext = pList->m_pNext;
     }
     else
     {
@@ -1190,10 +1209,15 @@ static void THSpriteRenderList_Draw(THDrawable* pSelf, THRenderTarget* pCanvas,
         draw(pCanvas, iDestX, iDestY);
 }
 
+static bool THSpriteRenderList_isMultipleFrameAnimation(THDrawable* pSelf)
+{
+    return false;
+}
 THSpriteRenderList::THSpriteRenderList()
 {
     m_fnDraw = THSpriteRenderList_Draw;
     m_fnHitTest = THSpriteRenderList_HitTest;
+    m_fnIsMultipleFrameAnimation = THSpriteRenderList_isMultipleFrameAnimation;
     m_iBufferSize = 0;
     m_iNumSprites = 0;
     m_pSpriteSheet = NULL;
@@ -1220,7 +1244,7 @@ void THSpriteRenderList::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
     if(!m_pSpriteSheet)
         return;
-
+  
     iDestX += m_iX;
     iDestY += m_iY;
     for(_sprite_t *pSprite = m_pSprites, *pLast = m_pSprites + m_iNumSprites;

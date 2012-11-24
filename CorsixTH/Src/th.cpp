@@ -28,6 +28,7 @@ SOFTWARE.
 
 THLinkList::THLinkList()
 {
+    m_drawingLayer = 0;
     m_pPrev = NULL;
     m_pNext = NULL;
 }

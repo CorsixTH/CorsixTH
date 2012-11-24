@@ -174,6 +174,7 @@ function UIEditRoom:cancel()
   elseif self.phase == "objects" then
     self:stopPickupItems()
     self:returnToDoorPhase()
+    self.world:resetSideObjects()
   else
     if self.phase == "clear_area" then
       self.ui:setDefaultCursor(nil)
@@ -210,6 +211,7 @@ function UIEditRoom:confirm(force)
     self.ui:setDefaultCursor(nil)
     self.phase = "objects"
     self:finishRoom()
+    self.world:resetSideObjects()
     self:enterObjectsPhase()
   else
     -- Pay for room (subtract cost of needed objects, which were already paid for)
@@ -1102,8 +1104,17 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
     local flags = {}
+    local flag_names 
+    if wall == "west" then
+      flag_names = {"buildableNorth", "buildableSouth"}
+    else
+      flag_names = {"buildableWest", "buildableEast"}
+    end
     if not (map:getCellFlags(x , y , flags).buildable or flags.passable)
-    or not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) then
+    or not (flags[flag_names[1]] and flags[flag_names[2]])
+    or not (map:getCellFlags(x2, y2, flags).buildable or flags.passable)
+    or not (flags[flag_names[1]] and flags[flag_names[2]])
+    then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.

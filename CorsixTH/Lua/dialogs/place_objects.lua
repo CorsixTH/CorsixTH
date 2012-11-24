@@ -593,6 +593,14 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     local opt_tiles_blocked = 0
     local world = self.ui.app.world
     local roomId = self.room and self.room.id
+    local passable_flag 
+    local direction = self.object_orientation
+    local direction_parameters =  {
+      north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
+      east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
+      south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
+      west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
+      }
     
     local function setAllGood(xy)
       if xy.optional then
@@ -619,6 +627,14 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         if xy.only_passable then
           flag = "passable"
         end
+        if xy.only_side then
+          if object.thob == 50 and direction == "east" then
+            direction = "west"
+          end
+          flag = direction_parameters[direction]["buildable_flag"]
+          passable_flag = direction_parameters[direction]["passable_flag"]
+        end
+        
         local cell_flags = map:getCellFlags(x, y, flags)[flag]
         local is_object_allowed = false
         if roomId and flags.roomId ~= roomId then
@@ -644,12 +660,33 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           end
         end
         
+        local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)        
+          if complete_cell or need_side then
+            return flags[flag_name]
+          end
+          for i, xy in ipairs(object_footprint) do
+              if(xy[1] == x and xy[2] == y) then 
+              return flags[flag_name]
+            end
+          end 
+          return true
+        end
+        
+        if cell_flags and not xy.only_side then
+          for _, value in pairs(direction_parameters) do
+            local x1, y1 = xy[1] + value["x"], xy[2] + value["y"]
+            if not isTileValid(x1, y1, xy.complete_cell, flags, value["buildable_flag"], xy[value["needed_side"]]) then
+              is_object_allowed = false
+              break
+            end
+          end
+        end 
         
         if cell_flags and is_object_allowed then
           if not xy.invisible then
             map:setCell(x, y, 4, good_tile)
           end
-        else
+        else 
           if not xy.invisible then
             map:setCell(x, y, 4, bad_tile)
           end
@@ -659,7 +696,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_footprint[i][1] = x
       self.object_footprint[i][2] = y
     end
-    if self.object_anim then
+    if self.object_anim and object.class ~= "SideObject" then
       if allgood then
         -- Check that pathfinding still works, i.e. that placing the object
         -- wouldn't disconnect one part of the hospital from another. To do
@@ -721,7 +758,36 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       self.object_slave_anim:setPartialFlag(flag_altpal, not allgood)
       self.object_blueprint_good = allgood
       self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
+    elseif object.class == "SideObject" then
+      if map:getCellFlags(x, y)[passable_flag] == true then
+        local checked_x, checked_y = x, y
+        if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
+          checked_y =  checked_y + (passable_flag == "travelNorth" and -1 or 1) 
+        else 
+          checked_x = checked_x + (passable_flag == "travelEast" and 1 or -1) 
+        end
+    
+        flags = {}
+        flags[passable_flag] = false
+        map:setCellFlags(x, y, flags)
+        if not world.pathfinder:findDistance(x, y, checked_x, checked_y) then
+          --we need to check if the failure to get the distance is due to the presence of an object in the adjacent tile
+          if map:getCellFlags(checked_x, checked_y)["passable"] then
+            allgood = false
+          end
+        end
+        flags[passable_flag] = true
+        map:setCellFlags(x, y, flags)
+      end
+      if ATTACH_BLUEPRINT_TO_TILE then
+        self.object_anim:setTile(map, x, y)
+      end
+      self.object_anim:setPartialFlag(flag_altpal, not allgood)
+      self.object_slave_anim:setPartialFlag(flag_altpal, not allgood)
+      self.object_blueprint_good = allgood
+      self.ui:tutorialStep(1, allgood and 5 or 4, allgood and 4 or 5)
     end
+        
   else
     self.object_footprint = {}
   end

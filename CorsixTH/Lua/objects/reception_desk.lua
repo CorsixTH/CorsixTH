@@ -33,22 +33,34 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1, only_passable = true}, {1, 0}, {-1, 0} },
+    footprint = { {0, 0}, {0, -1, only_passable = true}, 
+                  {0, 1, only_passable = true}, {1, 0, need_north_side = true, need_south_side = true},
+                  {-1, 0, need_north_side = true, need_south_side = true} 
+                },
     use_position = {0, -1},
     use_position_secondary = {0, 1},
   },
   east = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0, only_passable = true}, {-1, 0, only_passable = true} },
+    footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true}, 
+                  {0, 1, need_west_side = true, need_east_side = true}, {1, 0, only_passable = true}, 
+                  {-1, 0, only_passable = true} 
+                },
     use_position = {1, 0},
     use_position_secondary = {-1, 0},
   },
   south = {
-    footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1, only_passable = true}, {1, 0}, {-1, 0} },
+    footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1, only_passable = true},
+                  {1, 0, need_north_side = true, need_south_side = true}, 
+                  {-1, 0, need_north_side = true, need_south_side = true} 
+                },
     use_position = {0, 1},
     use_position_secondary = {0, -1},
   },
   west = {
-    footprint = { {0, 0}, {0, -1}, {0, 1}, {1, 0, only_passable = true}, {-1, 0, only_passable = true} },
+    footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true},
+                   {0, 1, need_west_side = true, need_east_side = true}, 
+                  {1, 0, only_passable = true}, {-1, 0, only_passable = true} 
+                },
     use_position = {-1, 0},
     use_position_secondary = {1, 0},
   },

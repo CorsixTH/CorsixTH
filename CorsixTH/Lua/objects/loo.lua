@@ -109,15 +109,14 @@ anim_mgr:setMarker(object.usage_animations.north.finish_use_2, 0, kf1, 1, kf1, 6
 
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
     use_position = "passable",
     use_animate_from_use_position = true,
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true} },
     use_position = "passable",
     use_animate_from_use_position = true,
-    early_list_while_in_use = true,
   },
 }
 

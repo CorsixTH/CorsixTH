@@ -330,8 +330,25 @@ bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
 
 #define TryNode(n, d) \
         node_t *pNeighbour = n; \
+        int iObjectNumber = 0; \
+        const THMapNode *pMapNode = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y);\
         uint32_t iNFlags = pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->iFlags; \
-        if(anyObjectType || ((iNFlags & 0xFF000000) == iTHOB)) \
+        if ((iNFlags & 0xFF000000) == iTHOB) \
+            iObjectNumber = 1; \
+        if(pMapNode->pExtendedObjectList != NULL)\
+        {\
+            int count = *pMapNode->pExtendedObjectList & 7;\
+            for(int i = 0; i < count; i++) \
+            { \
+                int thob = (*pMapNode->pExtendedObjectList & (255 << (3  + (i << 3)))) >> (3 + (i << 3)); \
+                if(thob == eTHOB)\
+                    iObjectNumber++; \
+            } \
+        } \
+        if(anyObjectType) \
+            iObjectNumber = 1; \
+        bool bSucces = false; \
+        for(int i = 0; i < iObjectNumber; i++) \
         { \
             /* call the given Lua function, passing four arguments: */ \
             /* The x and y position of the object (Lua tile co-ords) */ \
@@ -346,11 +363,12 @@ bool THPathfinder::visitObjects(const THMap *pMap, int iStartX, int iStartY,
             lua_call(L, 4, 1); \
             if(lua_toboolean(L, -1) != 0) \
             { \
-                lua_pop(L, 1); \
-                return true; \
+                bSucces = true; \
             } \
             lua_pop(L, 1); \
         } \
+        if(bSucces) \
+            return true; \
         if(pNode->distance < iMaxDistance) \
         { \
             switch(d) \

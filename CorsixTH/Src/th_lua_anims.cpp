@@ -24,6 +24,10 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_map.h"
 
+/* this variable is used to determine the layer of the animation, it should be rewriten at some
+  point so that the it is passed as an argument in the function l_anim_set_tile */
+static int lastLayer = 2;
+
 static int l_anims_new(lua_State *L)
 {
     luaT_stdnew<THAnimationManager>(L, luaT_environindex, true);
@@ -288,6 +292,12 @@ static int l_anim_set_morph(lua_State *L)
     return 1;
 }
 
+static int l_anim_set_drawable_layer(lua_State *L)
+{
+    lastLayer = luaL_checkint(L, 2);
+    return 1;
+}
+
 static int l_anim_get_anim(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
@@ -299,6 +309,7 @@ static int l_anim_get_anim(lua_State *L)
 template <typename T>
 static int l_anim_set_tile(lua_State *L)
 {
+
     T* pAnimation = luaT_testuserdata<T>(L);
     if(lua_isnoneornil(L, 2))
     {
@@ -312,7 +323,8 @@ static int l_anim_set_tile(lua_State *L)
         THMap* pMap = luaT_testuserdata<THMap>(L, 2);
         THMapNode* pNode = pMap->getNode(luaL_checkint(L, 3) - 1, luaL_checkint(L, 4) - 1);
         if(pNode)
-            pAnimation->attachToTile(pNode);
+            pAnimation->attachToTile(pNode, lastLayer);
+
         else
         {
             luaL_argerror(L, 3, lua_pushfstring(L, "Map index out of bounds ("
@@ -637,6 +649,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");
     luaT_setfunction(l_anim_tick<THAnimation>, "tick");
     luaT_setfunction(l_anim_draw<THAnimation>, "draw", MT_Surface);
+    luaT_setfunction(l_anim_set_drawable_layer, "setDrawingLayer");
     luaT_endclass();
 
     // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

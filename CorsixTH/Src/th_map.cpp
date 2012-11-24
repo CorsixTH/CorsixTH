@@ -40,6 +40,12 @@ THMapNode::THMapNode()
     iFlags = 0;
 }
 
+THMapNode::~THMapNode()
+{
+    if(pExtendedObjectList)
+        delete pExtendedObjectList;
+}
+
 THMap::THMap()
 {
     m_iWidth = 0;
@@ -206,6 +212,8 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     THMapNode *pOriginalNode = m_pOriginalCells;
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
+
+    pNode->pExtendedObjectList = NULL;
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
@@ -268,8 +276,21 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
                 if(*pParcel && !(pData[7] & 16))
                 {
                     pNode->iFlags |= THMN_Hospital;
-                    if(!(pData[5] & 2))
+                    if(!(pData[5] & 2)) {
                         pNode->iFlags |= THMN_Buildable;
+                    }
+                    if(!(pData[5] & 4) || pData[1] == 0) {
+                        pNode->iFlags |= THMN_BuildableN;
+                    }
+                    if(!(pData[5] & 8) || pData[1] == 0) {
+                        pNode->iFlags |= THMN_BuildableE;
+                    }
+                    if(!(pData[5] & 16) || pData[1] == 0) {
+                        pNode->iFlags |= THMN_BuildableS;
+                    }
+                    if(!(pData[5] & 32) || pData[1] == 0) {
+                        pNode->iFlags |= THMN_BuildableW;
+                    }
                 }
             }
 
@@ -285,6 +306,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
             {
                 fnObjectCallback(pCallbackToken, iX, iY, (THObjectType)pData[1], pData[0]);
             }
+
         }
     }
     m_pPlotOwner = new int[m_iParcelCount];
@@ -333,12 +355,22 @@ void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[2] & 0xFF];
 
         // Flags (TODO: Set a few more flag bits?)
-        unsigned char iFlags = 3;
+        unsigned char iFlags = 63;
         if(pNode->iFlags & THMN_Passable)
             iFlags ^= 1;
         if(pNode->iFlags & THMN_Buildable)
             iFlags ^= 2;
+        if(pNode->iFlags & THMN_BuildableN)
+            iFlags ^= 4;
+        if(pNode->iFlags & THMN_BuildableE)
+            iFlags ^= 8;
+        if(pNode->iFlags & THMN_BuildableS)
+            iFlags ^= 16;
+        if(pNode->iFlags & THMN_BuildableW)
+            iFlags ^= 32;
+
         aBuffer[iBufferNext++] = iFlags;
+
         aBuffer[iBufferNext++] = 0;
         iFlags = 16;
         if(pNode->iFlags & THMN_Hospital)
@@ -751,6 +783,8 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     }
     pCanvas->finishNonOverlapping();
 
+    bool bFirst = true;
+    THMapScanlineIterator formerIterator;
     // 2nd pass
     for(THMapNodeIterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight); itrNode2; ++itrNode2)
     {
@@ -799,8 +833,20 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 pItem = (THDrawable*)(pItem->m_pNext);
             }
         }
-        for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY); itrNode; ++itrNode)
+
+        THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY);
+        if(!bFirst) {
+            //since the scanline count from one THMapScanlineIterator to another can differ 
+            //syncronization between the current iterator and the former one is neeeded
+             if(itrNode.x() < -64)
+                 ++itrNode;
+             while(formerIterator.x() < itrNode.x())
+                 ++formerIterator;
+        }
+        bool bPreviousTileNeedsRedraw = false;
+        for(; itrNode; ++itrNode)
         {
+            bool bNeedsRedraw = false;
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[2];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
@@ -816,22 +862,103 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
+            iBlock = itrNode->iBlock[1];
+            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                NULL, &iH) && iH > 0)
+                bNeedsRedraw = true;
+            if(itrNode->oEarlyEntities.m_pNext)
+                bNeedsRedraw = true;
+
+            bool bRedrawAnimations = false;
+
             THDrawable *pItem = (THDrawable*)(itrNode->m_pNext);
             while(pItem)
             {
                 pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
+                if(pItem->m_fnIsMultipleFrameAnimation(pItem))
+                    bRedrawAnimations = true;
+                if(pItem->getDrawingLayer() == 1)
+                    bNeedsRedraw = true;
                 pItem = (THDrawable*)(pItem->m_pNext);
             }
-        }
-    }
 
-    if(m_pOverlay)
-    {
-        for(THMapNodeIterator itrNode(this, iScreenX, iScreenY, iWidth, iHeight); itrNode; ++itrNode)
-        {
-            m_pOverlay->drawCell(pCanvas, itrNode.x() + iCanvasX - 32,
-                itrNode.y() + iCanvasY, this, itrNode.nodeX(), itrNode.nodeY());
+            //if the current tile contained a multiple frame animation (e.g. a doctor walking)
+            //check to see if in the tile to its left and above it there are items that need to
+            //be redrawn (i.e. in the tile to its left side objects to the south of the tile and 
+            //in the tile above it side objects to the east of the tile).
+            if(bRedrawAnimations && !bFirst)
+            {
+                bool bTileNeedsRedraw = bPreviousTileNeedsRedraw;
+
+                //check if an object in the adjacent tile to the left of the current tile needs to be redrawn
+                //and if necessary draw it
+                pItem = (THDrawable*)(formerIterator.getPreviousNode()->m_pNext);
+                while(pItem) 
+                {
+                    if (pItem->getDrawingLayer() == 9)
+                    {
+                        pItem->m_fnDraw(pItem, pCanvas, formerIterator.x() - 64, formerIterator.y());
+                        bTileNeedsRedraw = true;
+                    }
+                    pItem = (THDrawable*)(pItem->m_pNext);
+                }
+
+                //check if an object in the adjacent tile above the current tile needs to be redrawn
+                //and if necessary draw it
+                pItem = (THDrawable*)(formerIterator->m_pNext);
+                while(pItem)
+                {
+                    if(pItem->getDrawingLayer() == 8)
+                        pItem->m_fnDraw(pItem, pCanvas, formerIterator.x(), formerIterator.y());
+                    pItem = (THDrawable*)(pItem->m_pNext);
+                }
+
+
+                //if an object was redrawn in the tile to the left of the current tile
+                //or if the tile below it had an object in the north side or a wall to the north
+                //redraw that tile
+                if(bTileNeedsRedraw)
+                {
+                    //redraw the north wall
+                    unsigned int iBlock = itrNode.getPreviousNode()->iBlock[1];
+                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                        NULL, &iH) && iH > 0)
+                    {
+                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
+                            itrNode.y() - iH + 32, iBlock >> 8);
+                        if(itrNode.getPreviousNode()->iFlags & THMN_ShadowWall)
+                        {
+                            THClipRect rcOldClip, rcNewClip;
+                            pCanvas->getClipRect(&rcOldClip);
+                            rcNewClip.x = static_cast<THClipRect::xy_t>(itrNode.x() - 96);
+                            rcNewClip.y = static_cast<THClipRect::xy_t>(itrNode.y() - iH + 32 + 4);
+                            rcNewClip.w = static_cast<THClipRect::wh_t>(64);
+                            rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
+                            IntersectTHClipRect(rcNewClip, rcOldClip);
+                            pCanvas->setClipRect(&rcNewClip);
+                            m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 96,
+                                itrNode.y() - 56, THDF_Alpha75);
+                            pCanvas->setClipRect(&rcOldClip);
+                        }   
+                    }
+                    pItem = (THDrawable*)(itrNode.getPreviousNode()->oEarlyEntities.m_pNext);
+                    while(pItem)
+                    {
+                        pItem->m_fnDraw(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+                        pItem = (THDrawable*)(pItem->m_pNext);
+                    }
+
+                    pItem = (THDrawable*)(itrNode.getPreviousNode())->m_pNext;
+                    for(; pItem; pItem = (THDrawable*)(pItem->m_pNext)) 
+                        pItem->m_fnDraw(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+                }
+            }
+           bPreviousTileNeedsRedraw = bNeedsRedraw;
+           if (!bFirst) ++formerIterator;
         }
+
+     formerIterator = itrNode;
+     bFirst = false;
     }
 
     pCanvas->setClipRect(NULL);
@@ -929,51 +1056,82 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         // Get average temperature of neighbour cells
         uint32_t iNeighbourSum = 0;
         uint32_t iNeighbourCount = 0;
-#define NEIGHBOUR(flag, idx) \
+#define NEIGHBOUR(flag, idx, pNeighbour) \
         if(pNode->iFlags & flag) \
         { \
+            iNeighbourCount += 4; \
+            iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
+        } \
+        else \
+        {  \
+            bool bObjectPresent = false; \
+            if(pNeighbour && pNeighbour < pLastNode && pNeighbour > m_pCells) \
+            { \
+                int iHospital1 = ((THMapNode * )pNeighbour)->iFlags & THMN_Hospital; \
+                int iHospital2 = pNode->iFlags & THMN_Hospital; \
+                if (iHospital1 == iHospital2) \
+                    if ((((THMapNode * )pNeighbour)->iFlags & THMN_Room) == (pNode->iFlags & THMN_Room)) \
+                        bObjectPresent = true; \
+            } \
+            if (bObjectPresent) \
+            { \
                 iNeighbourCount += 4; \
                 iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
-        } \
-        else if(m_pCells <= pNode + (idx) && pNode + (idx) < pLastNode) \
-        { \
-            iNeighbourCount += 1; \
-            iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
+            } \
+            else if(m_pCells <= pNode + (idx) && pNode + (idx) < pLastNode) \
+                { \
+                    iNeighbourCount += 1; \
+                    iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
+                } \
         }
 
-        NEIGHBOUR(THMN_CanTravelN, -m_iWidth);
-        NEIGHBOUR(THMN_CanTravelS,  m_iWidth);
-        NEIGHBOUR(THMN_CanTravelE,  1);
-        NEIGHBOUR(THMN_CanTravelW, -1);
+        NEIGHBOUR(THMN_CanTravelN, -m_iWidth, pNode - m_iWidth);
+        NEIGHBOUR(THMN_CanTravelS,  m_iWidth, pNode + m_iWidth);
+        NEIGHBOUR(THMN_CanTravelE,  1, pNode + 1);
+        NEIGHBOUR(THMN_CanTravelW, -1, pNode - 1);
 
 #undef NEIGHBOUR
 #define MERGE2(src, other, ratio) (src) = static_cast<uint16_t>( \
     (static_cast<uint32_t>(src) * ((ratio) - 1) + (other)) / (ratio))
 #define MERGE(other, ratio) \
     MERGE2(pNode->aiTemperature[iNewTemp], other, ratio)
-
-        // Diffuse 25% with neighbours
-        pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
-        if(iNeighbourCount != 0)
-            MERGE(iNeighbourSum / iNeighbourCount, 4);
-
+        uint32_t iRadiatorNumber = 0;
         // Merge 1% against air temperature
         // or 50% against radiator temperature
         // or generally dissipate 0.1% of temperature.
         uint32_t iMergeTemp = 0;
-        uint32_t iMergeRatio = 100;
+        double iMergeRatio = 100;
         if(pNode->iFlags & THMN_Hospital)
         {
-            if((pNode->iFlags >> 24) == THOB_Radiator)
+           if((pNode->iFlags >> 24) == THOB_Radiator)
+                iRadiatorNumber = 1;
+            if(pNode->pExtendedObjectList != NULL)
+            {
+               int nr = *pNode->pExtendedObjectList & 7;
+
+               for(int i = 0; i < nr; i++)
+               {
+                   int thob = (*pNode->pExtendedObjectList & (255 << (3  + (i << 3)))) >> (3 + (i << 3));
+                   if(thob == THOB_Radiator)
+                       iRadiatorNumber++;
+               }
+            }
+            if(iRadiatorNumber > 0)
             {
                 iMergeTemp = iRadiatorTemperature;
-                iMergeRatio = 2;
+                iMergeRatio = 2 - (iRadiatorNumber - 1) * 0.5;
             }
             else
                 iMergeRatio = 1000;
         }
         else
             iMergeTemp = iAirTemperature;
+        
+        // Diffuse 25% with neighbours
+        pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
+        if(iNeighbourCount != 0)
+            MERGE(iNeighbourSum / iNeighbourCount, 4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
+
         MERGE(iMergeTemp, iMergeRatio);
 #undef MERGE
 #undef MERGE2
@@ -1381,6 +1539,7 @@ bool THMapNodeIterator::isLastOnScanline() const
 THMapScanlineIterator::THMapScanlineIterator()
     : m_iNodeStep(0)
     , m_iXStep(0)
+    , m_takenSteps(0)
 {
 }
 
@@ -1389,6 +1548,7 @@ THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
                                              int iXOffset, int iYOffset)
     : m_iNodeStep((static_cast<int>(eDirection) - 1) * (1 - itrNodes.m_pMap->getWidth()))
     , m_iXStep((static_cast<int>(eDirection) - 1) * 64)
+    , m_takenSteps(0)
 {
     if(eDirection == ScanlineBackward)
     {
@@ -1400,15 +1560,32 @@ THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
         m_pNode = itrNodes.m_pNode - m_iNodeStep * (itrNodes.m_iScanlineCount - 1);
         m_iXs = itrNodes.x() - m_iXStep * (itrNodes.m_iScanlineCount - 1);
     }
+   
     m_iXs += iXOffset;
     m_iYs = itrNodes.y() + iYOffset;
+
     m_pNodeEnd = m_pNode + m_iNodeStep * itrNodes.m_iScanlineCount;
+    m_pNodeFirst = m_pNode;
+
 }
 
 THMapScanlineIterator& THMapScanlineIterator::operator ++ ()
 {
     m_pNode += m_iNodeStep;
     m_iXs += m_iXStep;
+    m_takenSteps++;
     return *this;
 }
 
+//copies the members of the given THMapScanlineIterator and resets the node member to the 
+//first element.
+THMapScanlineIterator THMapScanlineIterator::operator= (const THMapScanlineIterator &iterator)
+ {
+     m_pNode = iterator.m_pNodeFirst;
+     m_pNodeEnd = iterator.m_pNodeEnd;    
+     m_iXs = iterator.m_iXs - iterator.m_takenSteps * iterator.m_iXStep;
+     m_iYs = iterator.m_iYs;
+     m_iXStep = iterator.m_iXStep;
+     m_iNodeStep = iterator.m_iNodeStep;
+     return *this;
+ }

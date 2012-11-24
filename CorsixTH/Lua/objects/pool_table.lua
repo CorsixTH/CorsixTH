@@ -91,15 +91,16 @@ object.usage_animations = {
 
 object.orientations = {
   north = {
-    footprint = { {-1, -2, only_passable = true}, {0, -2},                       {1, -2, only_passable = true},
-                  {-1, -1, only_passable = true}, {0, -1},                       {1, -1, only_passable = true},
-                  {-1,  0, only_passable = true}, {0,  0, only_passable = true}, {1,  0, only_passable = true} },
+    footprint = { {-1, -2, only_passable = true}, {0, -2, need_north_side = true},{1, -2, only_passable = true},
+                  {-1, -1, only_passable = true}, {0, -1},                        {1, -1, only_passable = true},
+                  {-1,  0, only_passable = true}, {0,  0, only_passable = true, complete_cell = true},  
+                  {1,  0, only_passable = true} },
     render_attach_position = {-1, 0},
     use_position = {0, 0},
   },
   east = {
     footprint = {{-2, -1, only_passable = true}, {-1, -1, only_passable = true}, {0, -1, only_passable = true},
-                 {-2,  0},                       {-1,  0},                       {0,  0, only_passable = true},
+                 {-2,  0, complete_cell = true}, {-1,  0},                       {0,  0, only_passable = true, complete_cell = true},
                  {-2,  1, only_passable = true}, {-1,  1, only_passable = true}, {0,  1, only_passable = true} },
     render_attach_position = {0, -1},
     use_position = {0, 0},

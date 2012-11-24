@@ -41,13 +41,13 @@ object.idle_animations = copy_north_to_south {
 object.orientations = {
   north = {
     footprint = {
-      {0, 0},
+      {0, 0, need_west_side = true },
     },
     list_bottom = true,
   },
   east = {
     footprint = {
-      {0, 0},
+      {0, 0, need_north_side = true},
     },
     list_bottom = true,
     early_list = true,

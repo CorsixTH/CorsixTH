@@ -118,7 +118,11 @@ enum THMapNodeFlags
     THMN_DoNotIdle  = 1 << 14, //!< World: Humanoids should not idle on tile
     THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
     THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
-
+    THMN_BuildableN = 1 << 17, //!< Can build on the north side of the tile
+    THMN_BuildableE = 1 << 18, //!< Can build on the east side of the tile
+    THMN_BuildableS = 1 << 19, //!< Can build on the south side of the tile
+    THMN_BuildableW = 1 << 20, //!< Can build on the west side of the tile
+    THMN_ObjectsAlreadyErased = 1 << 23, //!< Specifies if after a load the object types in this tile were already erased
     // NB: Bits 24 through 31 reserved for object type (that being one of the
     // THObjectType values)
 };
@@ -126,6 +130,7 @@ enum THMapNodeFlags
 struct THMapNode : public THLinkList
 {
     THMapNode();
+    ~THMapNode();
 
     // Linked list for entities rendered at this node
     // THLinkList::pPrev (will always be NULL)
@@ -163,6 +168,10 @@ struct THMapNode : public THLinkList
     // The point of storing the object type here is to allow pathfinding code
     // to use object types as pathfinding goals.
     uint32_t iFlags;
+
+    // the first 3 bits of the object store the number of additional objects stored, while
+    // the remaining bits store the object type of the additional objects
+    uint64_t *pExtendedObjectList;
 };
 
 class THSpriteSheet;
@@ -423,6 +432,11 @@ public:
     inline int nodeX() const {return m_iX;}
     inline int nodeY() const {return m_iY;}
 
+    inline const THMap *getMap() {return m_pMap;}
+    inline const THMapNode *getMapNode() {return m_pNode;}
+    inline int getScanlineCount() { return m_iScanlineCount;}
+    inline int getNodeStep() {return (static_cast<int>(m_eDirection) - 1) * (1 - m_pMap->getWidth());}
+
     //! Returns true iff the next node will be on a different scanline
     /*!
         To visit a scanline in right-to-left order, or to revisit a scanline,
@@ -483,14 +497,20 @@ public:
     inline const THMapNode* operator -> () const {return m_pNode;}
     inline int x() const {return m_iXs;}
     inline int y() const {return m_iYs;}
+    inline const THMapNode* getNextNode()  {return m_pNode + m_iNodeStep;}
+    inline const THMapNode* getPreviousNode() { return m_pNode - m_iNodeStep;}
+    THMapScanlineIterator operator= (const THMapScanlineIterator &iterator);
+    inline const THMapNode* getNode() {return m_pNode;}
 
 protected:
     const THMapNode* m_pNode;
+    const THMapNode* m_pNodeFirst;
     const THMapNode* m_pNodeEnd;
-    const int m_iNodeStep;
-    const int m_iXStep;
+    int m_iNodeStep;
+    int m_iXStep;
     int m_iXs;
     int m_iYs;
+    int m_takenSteps;
 };
 
 #endif // CORSIX_TH_TH_MAP_H_

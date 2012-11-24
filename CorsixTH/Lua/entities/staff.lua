@@ -35,7 +35,6 @@ function Staff:tickDay()
   local fair_wage = self.profile:getFairWage(self.world)
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
-
   -- if you overwork your Dr's then there is a chance that they can go crazy
   -- when this happens, find him and get him to rest straight away
   if self.attributes["fatigue"] then
@@ -911,5 +910,17 @@ function Staff:assignHandymanTask(taskIndex, taskType)
       task.call.dropped = nil
     end
     task.call.dispatcher:executeCall(task.call, self)
+  end
+end
+
+function Staff:getDrawingLayer()
+  if self.humanoid_class == "Receptionist" then
+    local direction = self.last_move_direction
+    if direction == "west" or direction == "north" then
+      return 5
+    end
+    return 3
+  else
+    return 4
   end
 end

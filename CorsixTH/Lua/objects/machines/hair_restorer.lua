@@ -61,7 +61,7 @@ object.orientations = {
     handyman_position = {0, -1},
     added_handyman_animate_offset_while_in_use = {0, 2},
     finish_use_position = {0, 1},
-    footprint = { {0, -1, only_passable = true}, {0, 0}, {0, 1, only_passable = true} },
+    footprint = { {0, -1, only_passable = true}, {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
     use_animate_from_use_position = true,
   },
   east = {
@@ -69,7 +69,7 @@ object.orientations = {
     handyman_position = {-1, 0},
     added_handyman_animate_offset_while_in_use = {2, 0},
     finish_use_position = {1, 0},
-    footprint = { {-1, 0, only_passable = true}, {0, 0}, {1, 0, only_passable = true} },
+    footprint = { {-1, 0, only_passable = true}, {0, 0, complete_cell = true}, {1, 0, only_passable = true} },
     use_animate_from_use_position = true,
   },
 }

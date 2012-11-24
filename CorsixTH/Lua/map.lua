@@ -558,4 +558,12 @@ function Map:afterLoad(old, new)
     self.level_config.expertise[34].MaxDiagDiff = 700
     self.level_config.expertise[35].MaxDiagDiff = 700
   end
+  if old < 57 then
+    local flags_to_set = {buildableNorth = true, buildableSouth = true, buildableWest = true, buildableEast = true}
+    for x = 1, self.width do
+      for y = 1, self.height do
+        self:setCellFlags(x, y, flags_to_set)
+      end
+    end
+  end
 end

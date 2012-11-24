@@ -69,17 +69,16 @@ object.multi_usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, 1, only_passable = true}, {0, 2, only_passable = true}, {-1, 1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true}, {0, 2, only_passable = true}, {-1, 1, only_passable = true} },
     use_position = {0, 1},
     use_position_secondary = {-1, 1},
     use_animate_from_use_position = true,
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true}, {2, 0, only_passable = true}, {1, -1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true}, {2, 0, only_passable = true}, {1, -1, only_passable = true} },
     use_position = {1, 0},
     use_position_secondary = {1, -1},
     use_animate_from_use_position = true,
-    early_list_while_in_use = true,
   },
 }
 

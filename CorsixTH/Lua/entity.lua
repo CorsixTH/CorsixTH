@@ -75,6 +75,7 @@ function Entity:setTile(x, y)
   end
   self.tile_x = x
   self.tile_y = y
+  self.th:setDrawingLayer(self:getDrawingLayer())
   -- NB: (x, y) can be nil, in which case th:setTile expects all nil arguments
   self.th:setTile(x and self.world.map.th, x, y)
   if self.mood_info then
@@ -270,4 +271,21 @@ end
 
 --! Stub to be extended in subclasses, if needed.
 function Entity:afterLoad(old, new)
+end
+
+function Entity:resetAnimation()
+  self.th:setDrawingLayer(self:getDrawingLayer())
+  local x, y = self.tile_x, self.tile_y
+  self.th:setTile(x and self.world.map.th, x, y)
+end
+
+--[[
+  Returns the drawing layer for this particular entity. Should be overriden in derived classes. The drawing layer 
+  specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
+  Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
+  normal objects should have layers between 3 and 7, east side object should have layer 8 and south side 
+  objects layer 9.  
+]]
+function Entity:getDrawingLayer()
+  return 4
 end

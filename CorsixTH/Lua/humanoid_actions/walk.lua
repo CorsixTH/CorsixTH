@@ -91,7 +91,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
         return navigateDoor(humanoid, x1, y1, "east")
       else
         humanoid.last_move_direction = "east"
-        humanoid:setAnimation(anims.walk_east, flag_early_list)
+        humanoid:setAnimation(anims.walk_east)
         humanoid:setTilePositionSpeed(x2, y2, -32, -16, 4*factor, 2*factor)
       end
     else
@@ -99,7 +99,7 @@ local function action_walk_raw(humanoid, x1, y1, x2, y2, map, timer_fn)
         return navigateDoor(humanoid, x1, y1, "west")
       else
         humanoid.last_move_direction = "west"
-        humanoid:setAnimation(anims.walk_north, flag_early_list + flag_flip_h)
+        humanoid:setAnimation(anims.walk_north, flag_flip_h)
         humanoid:setTilePositionSpeed(x1, y1, 0, 0, -4*factor, -2*factor)
       end
     end
@@ -313,11 +313,11 @@ navigateDoor = function(humanoid, x1, y1, dir)
     to_x, to_y = dx, dy - 1
     duration = humanoid.world:getAnimLength(leaving)
   elseif dir == "west" then
-    humanoid:setAnimation(leaving, flag_list_bottom + flag_early_list + flag_flip_h)
+    humanoid:setAnimation(leaving, flag_list_bottom + flag_flip_h)
     to_x, to_y = dx - 1, dy
     duration = humanoid.world:getAnimLength(leaving)
   elseif dir == "east" then
-    humanoid:setAnimation(entering, flag_list_bottom + flag_early_list)
+    humanoid:setAnimation(entering, flag_list_bottom)
     to_x, to_y = dx, dy
     direction = "out"
   elseif dir == "south" then

@@ -288,6 +288,7 @@ end
 
 -- Save game compatibility
 function Humanoid:afterLoad(old, new)
+
   if old < 38 then
     -- should existing patients be updated and be getting really ill?
     -- adds the new variables for health icons 
@@ -812,4 +813,8 @@ function Humanoid:unregisterCallbacks()
     self:message_callback(true)
     self.message_callback = nil
   end
+end
+
+function Humanoid:getDrawingLayer()
+  return 4
 end

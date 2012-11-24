@@ -251,7 +251,7 @@ static int l_map_updateblueprint(lua_State *L)
     THMapNode *pNode = pMap->getNodeUnchecked(iNewX, iNewY);
     pAnim->setAnimation(pAnims, iWallAnimTopCorner);
     pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
-    pAnim->attachToTile(pNode);
+    pAnim->attachToTile(pNode, 0);
 
     for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
     {
@@ -261,7 +261,7 @@ static int l_map_updateblueprint(lua_State *L)
             pNode = pMap->getNodeUnchecked(iX, iNewY);
             pAnim->setAnimation(pAnims, iWallAnim);
             pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
-            pAnim->attachToTile(pNode);
+            pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(0, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
@@ -269,7 +269,7 @@ static int l_map_updateblueprint(lua_State *L)
         pAnim->setAnimation(pAnims, iWallAnim);
         pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH);
-        pAnim->attachToTile(pNode);
+        pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(0, -1);
     }
     for(int iY = iNewY; iY < iNewY + iNewH; ++iY)
@@ -280,7 +280,7 @@ static int l_map_updateblueprint(lua_State *L)
             pNode = pMap->getNodeUnchecked(iNewX, iY);
             pAnim->setAnimation(pAnims, iWallAnim);
             pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (IsValid(pNode) ? 0 : THDF_AltPalette));
-            pAnim->attachToTile(pNode);
+            pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(2, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
@@ -288,7 +288,7 @@ static int l_map_updateblueprint(lua_State *L)
         pAnim->setAnimation(pAnims, iWallAnim);
         pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (IsValid(pNode) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iNewX + iNewW, iY);
-        pAnim->attachToTile(pNode);
+        pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(2, -1);
     }
 
@@ -414,6 +414,7 @@ static int l_map_getcellflags(lua_State *L)
         lua_settable(L, 4); \
     }
 
+
     Flag(THMN_Passable, "passable")
     Flag(THMN_Hospital, "hospital")
     Flag(THMN_Buildable, "buildable")
@@ -427,7 +428,10 @@ static int l_map_getcellflags(lua_State *L)
     Flag(THMN_CanTravelS, "travelSouth")
     Flag(THMN_CanTravelW, "travelWest")
     Flag(THMN_DoNotIdle, "doNotIdle")
-
+    Flag(THMN_BuildableN, "buildableNorth")
+    Flag(THMN_BuildableE, "buildableEast")
+    Flag(THMN_BuildableS, "buildableSouth")
+    Flag(THMN_BuildableW, "buildableWest")
     FlagInt(iRoomId, "roomId")
     FlagInt(iParcelId, "parcelId");
     FlagInt(iFlags >> 24, "thob")
@@ -436,6 +440,114 @@ static int l_map_getcellflags(lua_State *L)
 #undef Flag
 
     return 1;
+}
+
+
+/* because all the thobs are not retrieved when the map is loaded in c
+  lua objects use the afterLoad function to be registered after a load,
+  if the object list would not be cleared it would result in duplication
+  of thobs in the object list. */
+static int l_map_erase_thobs(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
+    int iY = luaL_checkint(L, 3) - 1; // the map does too.
+    THMapNode* pNode = pMap->getNode(iX, iY);
+    if(pNode == NULL)
+        return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    if(pNode->iFlags & THMN_ObjectsAlreadyErased)
+    {
+        // after the last load the map node already has had its object type list erased
+        // so the call must be ignored
+        return 2;
+    }
+    if(pNode->pExtendedObjectList)
+        delete pNode->pExtendedObjectList;
+    pNode->pExtendedObjectList = NULL;
+    pNode->iFlags &= 0x00FFFFFF; //erase thob
+    pNode->iFlags |= THMN_ObjectsAlreadyErased;
+    return 1;
+}
+
+static int l_map_remove_cell_thob(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX = luaL_checkint(L, 2) - 1; // Lua arrays start at 1 - pretend
+    int iY = luaL_checkint(L, 3) - 1; // the map does too.
+    THMapNode* pNode = pMap->getNode(iX, iY);
+    if(pNode == NULL)
+        return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    int thob = luaL_checkint(L, 4);
+    if(pNode->pExtendedObjectList == NULL)
+    {
+        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
+            {
+            pNode->iFlags &= 0x00FFFFFF;
+            }
+    }
+    else
+    {
+        int i, nr = *pNode->pExtendedObjectList & 7;
+        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        {    
+            pNode->iFlags &= 0x00FFFFFF;
+            pNode->iFlags |= (*pNode->pExtendedObjectList & (255 << 3)) << 21;
+            if(nr == 1)
+            {
+                delete pNode->pExtendedObjectList;
+                pNode->pExtendedObjectList = NULL;
+            }
+            else
+            {
+                // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
+             for( i = 0; i < nr - 1; i++)
+                {
+                    *pNode->pExtendedObjectList &= ~(255 << (3 + (i << 3)));
+                    *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (255 << (3 + ((i + 1) << 3)))) >> 8;
+                }
+                *pNode->pExtendedObjectList &= ~(255 << (3 + (nr << 3)));
+                *pNode->pExtendedObjectList &= ~7;
+                *pNode->pExtendedObjectList |= (nr - 1);
+            }
+
+        }
+        else 
+        {
+            bool found = false;
+            for(i = 0; i < nr; i++)
+            {
+
+                if(((*pNode->pExtendedObjectList & (255 << (3 + (i << 3)))) >> (3 + (i << 3))) == thob)
+                {
+                    found = true;
+                    //shift all thobs to the left of the found one by 8 bits to the right
+                    for(int j = i; i < nr - 1; i++)
+                    {
+                        *pNode->pExtendedObjectList &= ~(255 << (3 + (j << 3)));
+                        *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (255 << (3 + ((j + 1) << 3)))) >> 8;
+                    }
+                    break;
+                }
+            }
+            if(found)
+            {
+                nr--;
+                if(nr > 0)
+                {
+                    //delete the last thob in the list and update the count
+                    *pNode->pExtendedObjectList &= ~(255 << (3 + (nr << 3)));
+                    *pNode->pExtendedObjectList &= ~7;
+                    *pNode->pExtendedObjectList |= nr;
+                }
+                else
+                {
+                    delete pNode->pExtendedObjectList;
+                    pNode->pExtendedObjectList = NULL;
+                }
+            }
+        }
+    }
+     return 1;
 }
 
 static int l_map_setcellflags(lua_State *L)
@@ -459,11 +571,14 @@ static int l_map_setcellflags(lua_State *L)
     } else
 
     lua_pushnil(L);
+   
     while(lua_next(L, 4))
     {
         if(lua_type(L, 5) == LUA_TSTRING)
         {
             const char *field = lua_tostring(L, 5);
+
+            
             Flag(THMN_Passable, "passable")
             Flag(THMN_Hospital, "hospital")
             Flag(THMN_Buildable, "buildable")
@@ -472,12 +587,45 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_DoorNorth, "doorNorth")
             Flag(THMN_TallWest, "tallWest")
             Flag(THMN_TallNorth, "tallNorth")
+            Flag(THMN_CanTravelN, "travelNorth")
+            Flag(THMN_CanTravelE, "travelEast")
+            Flag(THMN_CanTravelS, "travelSouth")
+            Flag(THMN_CanTravelW, "travelWest")
             Flag(THMN_DoNotIdle, "doNotIdle")
+            Flag(THMN_BuildableN, "buildableNorth")
+            Flag(THMN_BuildableE, "buildableEast")
+            Flag(THMN_BuildableS, "buildableSouth")
+            Flag(THMN_BuildableW, "buildableWest")
             /* else */ if(strcmp(field, "thob") == 0)
-            {
-                pNode->iFlags &= 0x00FFFFFF;
-                pNode->iFlags |= static_cast<uint32_t>(lua_tointeger(L, 6)) << 24;
-            }
+            {           
+                uint64_t x;
+                uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
+                if((pNode->iFlags >> 24) != 0)
+                {
+                    if(pNode->pExtendedObjectList == NULL)
+                    {
+                        pNode->pExtendedObjectList = new uint64_t;
+                        x = 1;
+                        x |=  thob << 3;
+                        *pNode->pExtendedObjectList = x;
+                    }
+                    else
+                    {
+                        x = *pNode->pExtendedObjectList;
+                        int nr = x & 7;
+                        nr++;
+                        FILE *f = fopen("log.txt", "a");
+                        x = (x & (~7)) | nr;
+                        uint64_t orAmount = thob << (3 + ((nr - 1) << 3));
+                        x |= orAmount;
+                       *pNode->pExtendedObjectList = x;                    
+                     }
+                 }
+                else
+                {
+                    pNode->iFlags |= (thob << 24);
+                }
+           }
             else if(strcmp(field, "parcelId") == 0)
             {
                 pNode->iParcelId = static_cast<uint16_t>(lua_tointeger(L, 6));
@@ -486,10 +634,9 @@ static int l_map_setcellflags(lua_State *L)
             {
                 luaL_error(L, "Invalid flag \'%s\'", field);
             }
-        }
+         }
         lua_settop(L, 5);
     }
-
 #undef Flag
 
     return 0;
@@ -548,7 +695,6 @@ static int l_map_mark_room(lua_State *L)
     int iH = luaL_checkint(L, 5);
     int iTile = luaL_checkint(L, 6);
     int iRoomId = luaL_optint(L, 7, 0);
-
     if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->getWidth() || (iY_ + iH) > pMap->getHeight())
         luaL_argerror(L, 2, "Rectangle is out of bounds");
 
@@ -570,7 +716,6 @@ static int l_map_mark_room(lua_State *L)
 
     pMap->updatePathfinding();
     pMap->updateShadows();
-
     lua_settop(L, 1);
     return 1;
 }
@@ -806,6 +951,8 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_set_parcel_owner, "setPlotOwner");
     luaT_setfunction(l_map_get_parcel_owner, "getPlotOwner");
     luaT_setfunction(l_map_is_parcel_purchasable, "isParcelPurchasable");
+    luaT_setfunction(l_map_erase_thobs, "eraseObjectTypes");
+    luaT_setfunction(l_map_remove_cell_thob, "removeObjectType");
     luaT_endclass();
 
     // Pathfinder

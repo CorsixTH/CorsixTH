@@ -80,23 +80,22 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, -1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, -1, only_passable = true} },
     use_position = "passable",
     added_animation_offset_while_in_use = {-1, 0},
   },
   east = {
-    footprint = { {0, 0}, {1, 0, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true} },
     use_position = "passable",
     use_animate_from_use_position = true,
-    early_list_while_in_use = true,
   },
   south = {
-    footprint = { {0, 0}, {0, 1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
     use_position = "passable",
     use_animate_from_use_position = true,
   },
   west = {
-    footprint = { {0, 0}, {-1, 0, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {-1, 0, only_passable = true} },
     use_position = "passable",
   },
 }

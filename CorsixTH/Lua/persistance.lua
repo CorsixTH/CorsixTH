@@ -243,6 +243,7 @@ function LoadGame(data)
   TheApp.ui.menu_bar:onChangeLanguage()
   --end, persist.errcatch)
   TheApp:afterLoad()
+  TheApp.world:resetAnimations()
   TheApp.ui:onChangeResolution()
 end
 

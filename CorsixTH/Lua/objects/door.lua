@@ -149,6 +149,10 @@ function Door:closeDoor()
   self.hover_cursor = nil
 end
 
+function Door:getDrawingLayer()
+  return 0
+end
+
 function Door:checkForDeadlock()
   -- In an ideal world, deadlocks should not occur, as they indicate errors in
   -- some logic elsewhere. From a practical point of view, we should check for
@@ -168,4 +172,19 @@ function Door:checkForDeadlock()
   end
 end
 
+function Door:afterLoad(old, new)
+  if old < 57 then
+    local flags_to_set
+    local map = self.world.map
+    if self.direction == "west" then
+      flags_to_set = {buildableNorth = false, buildableSouth = false}
+      map:setCellFlags(self.tile_x, self.tile_y, flags_to_set)
+      map:setCellFlags(self.tile_x - 1, self.tile_y, flags_to_set)
+    else
+      flags_to_set = {buildableEast = false, buildableWest = false}
+      map:setCellFlags(self.tile_x, self.tile_y, flags_to_set)
+      map:setCellFlags(self.tile_x, self.tile_y - 1, flags_to_set)
+    end
+  end
+end
 return object

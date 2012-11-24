@@ -27,13 +27,17 @@ SOFTWARE.
 //! Generic linked list class (for inheriting from)
 struct THLinkList
 {
-    THLinkList();
+    THLinkList() ;
     ~THLinkList();
 
     THLinkList* m_pPrev;
     THLinkList* m_pNext;
 
     void removeFromList();
+    int getDrawingLayer() {return m_drawingLayer;}
+    void setDrawingLayer(int layer) {m_drawingLayer = layer;}
+
+    int m_drawingLayer;
 };
 
 //! Theme Hospital localised string list

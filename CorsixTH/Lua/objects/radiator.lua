@@ -24,6 +24,7 @@ object.thob = 44
 object.name = _S.object.radiator
 object.tooltip = _S.tooltip.objects.radiator
 object.ticks = false
+object.class = "SideObject"
 object.corridor_object = 5
 object.build_preview_animation = 914
 object.idle_animations = {
@@ -32,16 +33,16 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   east = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   south = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   west = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
 }
 

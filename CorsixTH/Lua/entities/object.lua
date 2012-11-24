@@ -30,6 +30,10 @@ local orient_mirror = {
   south = "east",
 }
 
+function Object:getDrawingLayer()
+  return 4
+end
+
 function Object:Object(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)
@@ -287,6 +291,51 @@ function Object:getWalkableTiles()
 end
 
 function Object:setTile(x, y)
+  local function coordinatesAreInFootprint(object_footprint, x, y)
+    for i, xy in ipairs(object_footprint) do
+      if(xy[1] == x and xy[2] == y) then 
+        return true
+      end
+    end 
+    return false
+  end 
+  
+  local function isEmpty(table)
+    for _, _ in pairs(table) do
+      return false
+    end
+    return true
+  end
+
+  local function getComplementaryPassableFlag(passable_flag)
+    if passable_flag == "travelNorth" or passable_flag == "travelSouth" then
+      return passable_flag == "travelNorth" and "travelSouth" or "travelNorth"
+    else
+      return passable_flag == "travelEast" and "travelWest" or "travelEast"
+    end
+  end
+  
+  local function setPassableFlags(passable_flag, x, y, next_x, next_y, value)
+    local flags1 = {}
+    flags1[passable_flag] = value
+    self.world.map.th:setCellFlags(x, y, flags1)
+    local flags2 = {}
+    flags2[getComplementaryPassableFlag(passable_flag)] = value
+    self.world.map.th:setCellFlags(next_x, next_y, flags2)
+  end
+  
+  local direction_parameters = {
+            north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
+            east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
+            south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
+            west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
+            }
+            
+  local direction = self.direction
+  if self.object_type.thob == 50 and direction == "east" then
+    direction = "west"
+  end
+  
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
     if self.footprint then
@@ -294,18 +343,41 @@ function Object:setTile(x, y)
       for _, xy in ipairs(self.footprint) do
         local x, y = self.tile_x + xy[1], self.tile_y + xy[2]
         
-        if not map:getCellFlags(x, y).passable then
-          map:setCellFlags(x, y, {
-            buildable = true,
-            passable = true,
-          })
+        if xy.only_side then 
+          if self.set_passable_flags then
+            self.set_passable_flags = nil
+            local par = direction_parameters[direction]
+            local passableFlag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
+            setPassableFlags(passableFlag, x, y, next_tile_x, next_tile_y, true)
+          end
+          local flags_to_set= {}
+          flags_to_set[direction_parameters[direction]["buildable_flag"]] = true
+          map:setCellFlags(x, y, flags_to_set)
         else
-          -- passable tiles can "belong" to multiple objects, so we have to check that
-          if not self.world:isTilePartOfNearbyObject(x, y, 10) then
-            -- assumption: no object defines a passable tile further than 10 tiles away from its origin
+          local flags_to_set = {}
+          for _, value in pairs(direction_parameters) do
+            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or 
+            xy.complete_cell or xy[value["needed_side"]] then
+              flags_to_set[value["buildable_flag"]] = true
+            end
+          end
+    
+          if not isEmpty(flags_to_set) then
+            map:setCellFlags(x, y, flags_to_set)
+          end    
+          if not map:getCellFlags(x, y).passable then
             map:setCellFlags(x, y, {
               buildable = true,
+              passable = true,
             })
+          else
+            -- passable tiles can "belong" to multiple objects, so we have to check that
+            if not self.world:isTilePartOfNearbyObject(x, y, 10) then
+              -- assumption: no object defines a passable tile further than 10 tiles away from its origin
+              map:setCellFlags(x, y, {
+                buildable = true,
+              })
+            end
           end
         end
       end
@@ -313,7 +385,8 @@ function Object:setTile(x, y)
   end
   self.tile_x = x
   self.tile_y = y
-  if x then
+  if x then 
+    self.th:setDrawingLayer(self:getDrawingLayer())
     self.th:setTile(self.world.map.th, self:getRenderAttachTile())
     self.world:addObjectToTile(self, x, y)
     if self.footprint then
@@ -322,22 +395,27 @@ function Object:setTile(x, y)
       local flags = {}
       local room = self.world:getRoom(x, y)
       local roomId = room and room.id
-
+      local next_tile_x, next_tile_y = x,y
+      local passable_flag
+      
       for _, xy in ipairs(self.footprint) do
         local change_flags = true
+        local flags_to_set = {}
         local lx = x + xy[1]
         local ly = y + xy[2]
-
+        local flag
+        
         if xy.optional then
           if optional_found then
             -- An optional tile has been accepted, we don't need anymore such tiles.
             change_flags = false
           else
             -- Check if this optional tile is acceptable
-            local flag = "buildable"
+            flag = "buildable"
             if xy.only_passable then
               flag = "passable"
             end
+            
             local cell_flags = map:getCellFlags(lx, ly, flags)[flag]
             local is_object_allowed = true
             if roomId and flags.roomId ~= roomId then
@@ -345,6 +423,7 @@ function Object:setTile(x, y)
             elseif xy.only_passable and not self.world.pathfinder:isReachableFromHospital(lx, ly) then
               is_object_allowed = false
             end
+            
             if is_object_allowed then
               change_flags = true
               optional_found = true
@@ -353,11 +432,40 @@ function Object:setTile(x, y)
             end
           end
         end
+        
+        map:getCellFlags(lx, ly, flags)
+        if xy.only_side then
+          local par = direction_parameters[direction]
+          flags_to_set[par["buildable_flag"]] = false
+          passable_flag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
+        else 
+          for _, value in pairs(direction_parameters) do
+            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or 
+            xy.complete_cell or xy[value["needed_side"]] then
+              if map:getCellFlags(x, y, flags)[value["buildable_flag"]] == 0 then
+                change_flags = false
+              end
+              flags_to_set[value["buildable_flag"]] = false
+            end
+          end
+        end 
+        
         if change_flags then
-          map:setCellFlags(lx, ly, {
-            buildable = false,
-            passable = not not xy.only_passable,
-          })
+          if not xy.only_side then 
+            map:setCellFlags(lx, ly, {
+              buildable = false,
+              passable = not not xy.only_passable,
+            })
+          end
+          if not isEmpty(flags_to_set) then
+            map:setCellFlags(lx, ly, flags_to_set)
+          end    
+          if xy.only_side then
+            if map:getCellFlags(lx, ly)[passable_flag] == true then
+              self.set_passable_flags = true
+              setPassableFlags(passable_flag, lx, ly, next_tile_x, next_tile_y, false)
+            end
+          end
         end
       end
     end
@@ -500,16 +608,17 @@ function Object:onClick(ui, button, data)
       fullscreen:close()
     end
 
-  if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
-    local taskType = "watering"
-    if self.object_type.class == "Machine" then
-      taskType = "repairing"    
+    if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
+      local taskType = "watering"
+      if self.object_type.class == "Machine" then
+        taskType = "repairing"    
+      end
+      local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
+      if index ~= -1 then
+        self.hospital:removeHandymanTask(index, taskType)
+      end
     end
-    local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
-    if index ~= -1 then
-      self.hospital:removeHandymanTask(index, taskType)
-    end
-  end
+    
     self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
@@ -527,6 +636,13 @@ function Object:onClick(ui, button, data)
     self.orientation_before = self.direction
     ui:playSound("pickup.wav")
   end
+end
+
+function Object:resetAnimation()
+  self.world.map.th:eraseObjectTypes(self.tile_x, self.tile_y)
+  self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {thob = self.object_type.thob})
+  self.th:setDrawingLayer(self:getDrawingLayer())
+  self.th:setTile(self.world.map.th, self:getRenderAttachTile())
 end
 
 function Object:onDestroy()
@@ -560,6 +676,23 @@ end
 function Object:afterLoad(old, new)
   if old < 52 then
     self.hospital = self.world:getLocalPlayerHospital()
+  end
+  if old < 57 then
+    if self.footprint and self.direction then
+      local object_type = self.object_type
+      local footprint = object_type.orientations
+      footprint = footprint and footprint[self.direction]
+      if footprint and footprint.animation_offset then
+        self:setPosition(unpack(footprint.animation_offset))
+      end
+      footprint = footprint and footprint.footprint
+      self.footprint = footprint
+      if object_type.class == "SideObject" then
+        local flags = {buildable = true}
+        self.world.map.th:setCellFlags(self.tile_x, self.tile_y, flags)
+      end         
+      self:setTile(self.tile_x, self.tile_y)
+    end
   end
   return Entity.afterLoad(self, old, new)
 end
@@ -688,4 +821,3 @@ function Object.processTypeDefinition(object_type)
     end
   end
 end
-

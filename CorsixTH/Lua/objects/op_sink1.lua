@@ -46,7 +46,7 @@ object.usage_animations = copy_north_to_south {
 object.orientations = {
   north = {
     footprint = {
-      {0, 0}, {0, -1},
+      {0, 0, complete_cell = true}, {0, -1, complete_cell = true},
       {1, 0, only_passable = true, invisible = true},
     },
     use_position = {1, 0},
@@ -54,7 +54,7 @@ object.orientations = {
   },
   east = {
     footprint = {
-      {0, 0}, {-1, 0},
+      {0, 0, complete_cell = true}, {-1, 0, complete_cell = true},
       {0, 1, only_passable = true, invisible = true},
     },
     use_position = {0, 1},

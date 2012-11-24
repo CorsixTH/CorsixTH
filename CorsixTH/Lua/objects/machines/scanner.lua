@@ -208,12 +208,12 @@ object.usage_animations = copy_north_to_south {
 object.orientations = {
   north = {
     use_position = {0, 0},
-    footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0},  {0, 0, only_passable = true} },
+    footprint = { {-2, -1}, {-1, -1}, {0, -1}, {-2, 0}, {-1, 0, need_south_side = true},  {0, 0, complete_cell = true, only_passable = true} },
     render_attach_position = {0, -1},
   },
   east = {
     use_position = {0, 0},
-    footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true} },
+    footprint = { {-1, -2} , {0, -2}, {-1, -1}, {0, -1, need_east_side = true}, {-1, 0}, {0, 0, complete_cell = true, only_passable = true} },
     render_attach_position = {-1, 0},
   },
 }

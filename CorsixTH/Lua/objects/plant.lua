@@ -46,22 +46,22 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0} },
+    footprint = { {0, 0, complete_cell = true} },
     use_position = {0, -1},
     use_animate_from_use_position = true
   },
   east = {
-    footprint = { {0, 0} },
+    footprint = { {0, 0, complete_cell = true} },
     use_position = {-1, 0},
     use_animate_from_use_position = true
   },
   south = {
-    footprint = { {0, 0} },
+    footprint = { {0, 0, complete_cell = true} },
     use_position = {0, -1},
     use_animate_from_use_position = true
   },
   west = {
-    footprint = { {0, 0} },
+    footprint = { {0, 0, complete_cell = true} },
     use_position = {-1, 0},
     use_animate_from_use_position = true
   },

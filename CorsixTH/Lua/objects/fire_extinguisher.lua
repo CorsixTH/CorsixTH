@@ -25,6 +25,7 @@ object.name = _S.object.fire_extinguisher
 object.tooltip = _S.tooltip.objects.fire_extinguisher
 object.ticks = false
 object.corridor_object = 4
+object.class = "SideObject"
 object.build_preview_animation = 912
 object.idle_animations = {
   north = 178,
@@ -33,16 +34,16 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   east = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   south = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
   west = {
-    footprint = { {0, 0} }
+    footprint = { {0, 0, only_side = true} }
   },
 }
 

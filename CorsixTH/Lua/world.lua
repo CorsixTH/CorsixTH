@@ -1763,17 +1763,12 @@ end
 function World:removeObjectFromTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
+  local thob = object.object_type.thob
   if objects then
     for k, v in ipairs(objects) do
       if v == object then
         table_remove(objects, k)
-        if k == 1 then
-          if objects[1] then
-            self.map.th:setCellFlags(x, y, {thob = objects[1].object_type.thob})
-          else
-            self.map.th:setCellFlags(x, y, {thob = 0})
-          end
-        end
+        self.map.th:removeObjectType(x, y, thob)
         local count_cat = object.object_type.count_category
         if count_cat then
           self.object_counts[count_cat] = self.object_counts[count_cat] - 1
@@ -1794,15 +1789,7 @@ function World:addObjectToTile(object, x, y)
   local index = (y - 1) * self.map.width + x
   local objects = self.objects[index]
   if objects then
-    if #objects >= 1 then
-      -- Until it is clear how multiple objects will work, this warning should
-      -- be in place. In most cases, having multiple objects on a tile should
-      -- be impossible, but there are some edge cases like having two radiators
-      -- or bins on a tile which need thinking about.
-      print("Warning: Multiple objects on tile " .. x .. "," .. y .. " - only one will be encoded")
-    else
-      self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
-    end
+    self.map.th:setCellFlags(x, y, {thob = object.object_type.thob})
     objects[#objects + 1] = object
   else
     objects = {object}
@@ -1900,6 +1887,14 @@ function World:dumpGameLog()
     fi:close()
   else
     print("Warning: Cannot dump game log: " .. tostring(err))
+  end
+end
+
+-- Because the save file only saves one thob per tile if they are more that information 
+-- will be lost. To solve this after a load we need to set again all the thobs on each tile.
+function World:resetAnimations()
+  for _, entity in ipairs(self.entities) do
+    entity:resetAnimation()
   end
 end
 
@@ -2107,4 +2102,18 @@ function World:afterLoad(old, new)
   end
   
   self.savegame_version = new
+end
+
+--[[ There is a problem with room editing in that it resets all the partial passable flags
+(travelNorth, travelSouth etc.) in the corridor, a workaround is calling this function
+after the room was edited so that all edge only objects, that set partial passable flags set
+those flags again]] 
+function World:resetSideObjects()
+  for _, objects in pairs(self.objects) do
+    for _, obj in ipairs(objects) do
+      if obj.object_type.class == "SideObject" then
+        obj:setTile(obj.tile_x, obj.tile_y)
+      end
+    end
+  end
 end

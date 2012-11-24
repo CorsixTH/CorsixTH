@@ -58,7 +58,7 @@ object.orientations = {
     use_position_secondary = {-1, 1},
     finish_use_position = {1, 0},
     finish_use_position_secondary = {1, -1},
-    footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
+    footprint = { {-1, -1}, {0, -1, need_north_side = true}, {1, -1, only_passable = true},
                   {-1, 0}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1, only_passable = true} },
   },
@@ -69,7 +69,7 @@ object.orientations = {
     finish_use_position = {0, 1},
     finish_use_position_secondary = {-1, 1},
     footprint = { {-1, -1}, {0, -1}, {1, -1, only_passable = true},
-                  {-1, 0}, {0, 0}, {1, 0, only_passable = true},
+                  {-1, 0, need_west_side = true}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true}, {0, 1, only_passable = true}, {1, 1, only_passable = true} },
   },
 }
