@@ -38,6 +38,7 @@ local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( fu
 end)
 
 local function action_pickup_start(action, humanoid)
+  humanoid.dealing_with_patient = nil
   if action.todo_close then
     action.todo_close:close()
   end

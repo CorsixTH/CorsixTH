@@ -108,7 +108,7 @@ function PsychRoom:commandEnteringPatient(patient)
       else
         self:dealtWithPatient(patient)
       end
-      self:commandEnteringStaff(staff)
+      self:getStaffMember():setNextAction{name = "meander"}
       return
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then

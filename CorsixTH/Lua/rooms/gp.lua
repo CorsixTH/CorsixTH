@@ -152,6 +152,12 @@ function GPRoom:dealtWithPatient(patient)
     patient:queueAction{name = "idle"}
   end
 
+  if self.dealt_patient_callback then
+    self.dealt_patient_callback(self.waiting_staff_member)
+  end
+  if self.staff_member then
+    self:setStaffMembersAttribute("dealing_with_patient", false)
+  end
   -- Maybe the staff member can go somewhere else
   self:findWorkForStaff()
 end

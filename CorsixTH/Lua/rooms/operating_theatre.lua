@@ -129,6 +129,28 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   return Room.commandEnteringStaff(self, staff, true)
 end
 
+function OperatingTheatreRoom:setStaffMembersAttribute(attribute, value)
+  for staff_member, _ in pairs(self.staff_member_set) do
+    staff_member[attribute] = value
+  end
+end
+
+-- Returns the current staff member. if there are currently two surgeons it returns
+-- the one with higher tiredness.
+function OperatingTheatreRoom:getStaffMember()
+  local staff
+  for staff_member, _ in pairs(self.staff_member_set) do
+    if staff then
+      if staff.attributes["fatigue"] < staff_member.attributes["fatigue"] then
+        staff = staff_member
+      end
+    else
+      staff = staff_member
+    end
+  end
+  return staff
+end
+
 function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- Turn on x-ray viewer - if it has been found.
   if self.x_ray_viewer then

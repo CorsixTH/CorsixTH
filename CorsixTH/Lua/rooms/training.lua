@@ -149,6 +149,33 @@ function TrainingRoom:doStaffUseCycle(humanoid)
   }
 end
 
+function TrainingRoom:onHumanoidEnter(humanoid)
+  assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+  humanoid.in_room = self
+  humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
+  -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
+
+  --entering humanoids are no longer enroute
+  if self.humanoids_enroute[humanoid] then
+    self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
+  end
+  
+  self.humanoids[humanoid] = true
+  if not self:staffFitsInRoom(humanoid) then
+    if self:getStaffMember() and self:staffMeetsRooomRequirements(humanoid) then
+      self:commandEnteringStaff(humanoid)
+    else
+      humanoid:setNextAction(self:createLeaveAction())
+      humanoid:queueAction{name = "meander"}
+      humanoid:adviseWrongPersonForThisRoom()
+    end
+  else
+    humanoid:setCallCompleted()
+    self:commandEnteringStaff(humanoid)
+  end
+  self:tryAdvanceQueue()
+end
+
 function TrainingRoom:commandEnteringStaff(humanoid)
   local obj, ox, oy
   local profile = humanoid.profile
@@ -157,14 +184,28 @@ function TrainingRoom:commandEnteringStaff(humanoid)
     -- Consultants try to use the projector and/or skeleton
     if profile.is_consultant then
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
-      if obj and not self.staff_member then
-        obj.reserved_for = humanoid
-        self.staff_member = humanoid
-        humanoid:walkTo(ox, oy)
-        self:doStaffUseCycle(humanoid)
+      if self.staff_member then 
+        if self.waiting_staff_member then
+          local staff = self.waiting_staff_member
+          staff.waiting_on_other_staff = nil
+          staff:setNextAction(self:createLeaveAction())
+          staff:queueAction{name = "meander"}
+        end
+        humanoid.waiting_on_other_staff = true
+        humanoid:setNextAction{name = "meander"}
+        self.waiting_staff_member = humanoid
+        self.staff_member:setNextAction(self:createLeaveAction())
+        self.staff_member:queueAction{name = "meander"}
       else
-        humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        if obj then
+          obj.reserved_for = humanoid
+          humanoid:walkTo(ox, oy)
+          self:doStaffUseCycle(humanoid)
+          self:setStaffMember(humanoid)
+        else
+          humanoid:setNextAction(self:createLeaveAction())
+          humanoid:queueAction{name = "meander"}
+        end
       end
     else
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "lecture_chair")
@@ -198,6 +239,16 @@ function TrainingRoom:onHumanoidLeave(humanoid)
     for object, value in pairs(objects) do
       if object.reserved_for == humanoid then
         object:removeReservedUser()
+      end
+    end
+    
+    if humanoid.profile.is_consultant and humanoid == self.staff_member then
+      local humanoid = self.waiting_staff_member
+      self:setStaffMember(nil)
+      if humanoid then
+        humanoid.waiting_on_other_staff = nil
+        self.waiting_staff_member = nil
+        self:commandEnteringStaff(humanoid)
       end
     end
   end

@@ -96,6 +96,7 @@ end
 function WardRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
+  self:setStaffMembersAttribute("dealing_with_patient", nil)
   if not bed then
     patient:setNextAction(self:createLeaveAction())
     patient:queueAction(self:createEnterAction(patient))
