@@ -26,19 +26,43 @@ object.research_fallback = 45
 object.name = _S.object.atom_analyser
 object.tooltip = _S.tooltip.objects.atom_analyser
 object.ticks = true
+object.class = "AtomAnalyser"
 object.build_preview_animation = 5092
 object.idle_animations = {
   north = 2134,
   south = 2134,
 }
+local function copy_north_to_south(t)
+  t.south = t.north
+  return t
+end
+
+object.usage_animations = copy_north_to_south {
+  north = {
+    in_use = {
+      Doctor =  {4878, object_visible = true}
+    },
+  },
+} 
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0, only_passable = true}, {1, 0} },
-    render_attach_position = {-1, 0},
+    use_position = {0, 0},
   },
   east = {
-    footprint = { {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true}, {-1, 1}, {0, 1} }
+    footprint = { {-1, -1}, {0, -1}, {-1, 0}, {0, 0, only_passable = true}, {-1, 1}, {0, 1} },
+    use_position = {0, 0},
   },
 }
+
+class "AtomAnalyser" (Object)
+
+function AtomAnalyser:AtomAnalyser(...)
+  self:Object(...)
+end
+
+function AtomAnalyser:getDrawingLayer()
+  return 3
+end
 
 return object

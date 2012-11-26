@@ -32,8 +32,8 @@ room.objects_additional = {
   "bin", 
   "computer", 
   "desk", 
-  "cabinet",} 
-  --"analyser" } -- No animations yet anyway
+  "cabinet",
+  "analyser" } 
 room.objects_needed = { desk = 1, cabinet = 1, autopsy = 1 }
 room.build_preview_animation = 5102
 room.categories = {
@@ -58,8 +58,8 @@ local staff_usage_objects = {
   desk = true,
   cabinet = true,
   computer = true,
+  analyser = true,
   -- Not autopsy: it should be free for when a patient arrives
-  -- Not atom analyser: there are no usage anims
 }
 
 function ResearchRoom:doStaffUseCycle(staff, previous_object)
@@ -91,7 +91,9 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         object = obj,
         after_use = --[[persistable:research_obj_after_use]] function() 
           if obj.object_type.id == "computer" then
-            self.hospital.research:addResearchPoints(500) 
+            self.hospital.research:addResearchPoints(500)
+          elseif obj.object_type.id == "analyser" then
+            self.hospital.research:addResearchPoints(800)
             -- TODO: Balance value, find it in level config?
           end
         end,
