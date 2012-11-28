@@ -27,6 +27,7 @@ object.name = _S.object.op_sink1
 object.tooltip = _S.tooltip.objects.op_sink1
 object.ticks = false
 object.walk_in_to_use = true
+object.show_in_town_map = true
 object.locked_to_wall = {
   -- permittable wall -> orientation
   north = "east",

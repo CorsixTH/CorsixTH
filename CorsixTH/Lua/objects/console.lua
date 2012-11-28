@@ -25,6 +25,7 @@ object.name = _S.object.console
 object.tooltip = _S.tooltip.objects.console
 object.ticks = true
 object.build_preview_animation = 922
+object.show_in_town_map = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

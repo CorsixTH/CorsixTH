@@ -27,6 +27,7 @@ object.name = _S.object.pharmacy_cabinet
 object.tooltip = _S.tooltip.objects.pharmacy_cabinet
 object.ticks = false
 object.build_preview_animation = 5088
+object.show_in_town_map = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

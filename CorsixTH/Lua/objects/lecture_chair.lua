@@ -25,6 +25,7 @@ object.name = _S.object.lecture_chair
 object.tooltip = _S.tooltip.objects.lecture_chair
 object.ticks = false
 object.build_preview_animation = 5084
+object.show_in_town_map = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

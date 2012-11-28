@@ -28,6 +28,7 @@ object.tooltip = _S.tooltip.objects.atom_analyser
 object.ticks = true
 object.class = "AtomAnalyser"
 object.build_preview_animation = 5092
+object.show_in_town_map = true
 object.idle_animations = {
   north = 2134,
   south = 2134,

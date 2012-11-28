@@ -133,7 +133,14 @@ function UITownMap:onMouseUp(button, x, y)
         end
       end
     end
+  elseif button == "right" then
+    local tx = math.floor((x - 227) / 3)
+    local ty = math.floor((y - 25) / 3)
+    local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
+    self.ui:scrollMapTo(sx, sy)
+    self:close()
   end
+  
   return UIFullscreen.onMouseUp(self, button, x, y) or redraw
 end
 
@@ -186,9 +193,67 @@ function UITownMap:draw(canvas, x, y)
   -- city name
   self.city_font:draw(canvas, map.level_name, x + 300, y + 43, 260, 15)
 
-  TH.windowHelpers.townMapDraw(self, map.th, canvas, x + 227, y + 25,
+  local town_map_offset_x = x + 227
+  local town_map_offset_y = y + 25
+  TH.windowHelpers.townMapDraw(self, map.th, canvas, town_map_offset_x, town_map_offset_y,
     config.radiators_enabled)
 
+  -- Draw entities
+  local function draw_entities(list, color, size)
+    for i, ent in ipairs(list) do
+      -- 3 is the number of pixel that are used to represent one world tile in the map
+      canvas:drawRect(color, town_map_offset_x + ent.tile_x * 3 - 2,
+        town_map_offset_y + ent.tile_y * 3 + 1, size, size)
+    end
+  end
+  
+  local function draw_entities_in_hospital(list, color, size)
+    for i, ent in ipairs(list) do
+      local tile_x, tile_y = ent.tile_x, ent.tile_y
+      if tile_x and hospital:isInHospital(tile_x, tile_y) then
+        -- 3 is the number of pixel that are used to represent one world tile in the map
+        canvas:drawRect(color, town_map_offset_x + tile_x * 3 - 2,
+          town_map_offset_y + tile_y * 3 + 1, size, size)
+      end
+    end
+  end
+
+  if config.people_enabled then
+    local staff_color = canvas:mapRGB(97, 109, 235)
+    local patient_color = canvas:mapRGB(255, 255, 255)
+    draw_entities_in_hospital(self.ui.hospital.staff, staff_color, 2)
+    draw_entities_in_hospital(self.ui.hospital.patients, patient_color, 2)
+  end
+  
+  if config.radiators_enabled then
+    local radiator_color = canvas:mapRGB(255, 0, 70)
+    draw_entities(world:getObjectsById("radiator"), radiator_color, 1)
+  end
+  
+  if config.fire_ext_enabled then
+    local fire_ext_color = canvas:mapRGB(216, 0, 0)
+    draw_entities(world:getObjectsById("extinguisher"), fire_ext_color, 2)
+  end
+  
+  if config.plants_enabled then
+    local plant_color = canvas:mapRGB(127, 180, 73)
+    draw_entities(world:getObjectsById("plant"), plant_color, 2)
+  end
+  
+  if config.objects_enabled then
+    local machine_list = {}
+    for _, obj_list in pairs(world.objects) do
+      for _, obj in ipairs(obj_list) do
+        if obj.object_type.show_in_town_map then
+          table.insert(machine_list, obj)
+        end
+      end
+    end
+
+    local machine_color = canvas:mapRGB(142, 182, 182)
+    draw_entities(machine_list, machine_color, 3)
+  end
+  
   -- plot number, owner, area and price
   local plot_num = "-"
   local tile_count = "-"

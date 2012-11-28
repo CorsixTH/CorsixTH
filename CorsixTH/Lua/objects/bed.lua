@@ -26,6 +26,7 @@ object.name = _S.object.bed
 object.tooltip = _S.tooltip.objects.bed
 object.ticks = false
 object.build_preview_animation = 910
+object.show_in_town_map = true
 object.idle_animations = {
   north = 2644,
   east = 2646,

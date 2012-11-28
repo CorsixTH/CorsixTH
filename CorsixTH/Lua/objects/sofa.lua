@@ -25,6 +25,7 @@ object.name = _S.object.sofa
 object.tooltip = _S.tooltip.objects.sofa
 object.ticks = false
 object.build_preview_animation = 5066
+object.show_in_town_map = true
 object.idle_animations = {
   north = 2122,
   east = 2124,

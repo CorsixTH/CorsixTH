@@ -49,10 +49,11 @@ static int l_town_map_draw(lua_State *L)
     const THMapNode *pNode = pMap->getNodeUnchecked(0, 0);
     const THMapNode *pOriginalNode = pMap->getOriginalNodeUnchecked(0, 0);
     int iCanvasY = iCanvasYBase + 3;
+    int iMapWidth = pMap->getWidth();
     for(int iY = 0; iY < pMap->getHeight(); ++iY, iCanvasY += 3)
     {
         int iCanvasX = iCanvasXBase;
-        for(int iX = 0; iX < pMap->getWidth(); ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3)
+        for(int iX = 0; iX < iMapWidth; ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3)
         {
             if(pOriginalNode->iFlags & THMN_Hospital)
             {
@@ -82,16 +83,32 @@ static int l_town_map_draw(lua_State *L)
 #define IsWall(blk) ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164))
 #define IsWallDrawn(n) pMap->getNodeOwner(pNode) != 0 ? \
     IsWall(pNode->iBlock[n]) : IsWall(pOriginalNode->iBlock[n])
-            if(IsWallDrawn(1))
+            if(IsWallDrawn(1)) {
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 3, 1);
-            if(IsWallDrawn(2))
+
+                // Draw entrance door
+                if((pNode-1)->iFlags >> 24 == THOB_EntranceRightDoor) {
+                    if (pNode->iFlags & THMN_Hospital) {
+                        pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY-2, 9, 3);
+                    } else {
+                        pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY, 9, 3);
+                    }
+                }
+            }
+            if(IsWallDrawn(2)) {
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 1, 3);
+
+                // Draw entrance door
+                if((pNode-iMapWidth)->iFlags >> 24 == THOB_EntranceRightDoor) {
+                    if (pNode->iFlags & THMN_Hospital) {
+                        pCanvas->fillRect(iColourDoor, iCanvasX-2, iCanvasY-6, 3, 9);
+                    } else {
+                        pCanvas->fillRect(iColourDoor, iCanvasX, iCanvasY-6, 3, 9);
+                    }
+                }
+            }
 #undef IsWallDrawn
 #undef IsWall
-            if(pNode->iFlags & THMN_DoorNorth)
-                pCanvas->fillRect(iColourDoor, iCanvasX, iCanvasY - 2, 2, 3);
-            if(pNode->iFlags & THMN_DoorWest)
-                pCanvas->fillRect(iColourDoor, iCanvasX - 3, iCanvasY, 3, 2);
         }
     }
 

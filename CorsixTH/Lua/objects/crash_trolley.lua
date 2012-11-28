@@ -26,6 +26,7 @@ object.name = _S.object.crash_trolley
 object.tooltip = _S.tooltip.objects.crash_trolley
 object.ticks = false
 object.build_preview_animation = 916
+object.show_in_town_map = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

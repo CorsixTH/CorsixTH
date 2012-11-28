@@ -27,6 +27,7 @@ object.tooltip = _S.tooltip.objects.auto_autopsy
 object.ticks = true
 object.build_preview_animation = 5102
 object.crashed_animation = 3304
+object.show_in_town_map = true
 
 local function copy_north_to_south(t)
   t.south = t.north

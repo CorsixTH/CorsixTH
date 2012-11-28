@@ -26,6 +26,7 @@ object.name = _S.object.surgeon_screen
 object.tooltip = _S.tooltip.objects.surgeon_screen
 object.ticks = false
 object.build_preview_animation = 926
+object.show_in_town_map = true
 object.idle_animations = {
   north = 2772,
 }

@@ -25,6 +25,7 @@ object.name = _S.object.x_ray_viewer
 object.tooltip = _S.tooltip.objects.x_ray_viewer
 object.ticks = false
 object.build_preview_animation = 5078
+object.show_in_town_map = true
 object.locked_to_wall = {
   -- permittable wall -> orientation
   north = "east",

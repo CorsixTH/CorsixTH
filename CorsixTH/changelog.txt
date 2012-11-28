@@ -1,4 +1,29 @@
 -------------------------------------------------------------------------------
+Version 0.20 - no release date yet
+-------------------------------------------------------------------------------
+
+Goals for this release:
+Implement Graphs, fix these known issues:
+* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will 
+  be shown on it.
+* If the user exits the game via "the cross" when in windowed mode settings 
+  are not saved.
+* Radiators and other "edge tile" objects occupy a whole tile instead of 
+  just one edge of the tile.
+  
+-- Not Yet Implemented --
+* Epidemics
+* Rats
+* (Graphs)
+* Visual effects on patients with serious radiation and jellyitis.
+* Fullscreen animations such as the level screen and winning letter.
+  
+-- Gameplay --
+
+* Added: Radiators and other "edge tile" objects now occupy just one edge of 
+  the tile, inline with the original game.
+
+-------------------------------------------------------------------------------
 Version 0.11 - released in november 2012
 -------------------------------------------------------------------------------
 
@@ -18,6 +43,8 @@ changelog for version 0.10 below.
 * Fix: Handymen would get called to clean soot in blown up rooms.
 * Fix: Machines that need to be repaired will now cancel that request if 
   they are blown up.
+* Fix: If a cured patient was leaving a room just as it crashed because 
+  of an earthquake the game would throw an error.
 * Fix: Alien DNA could under some circumstances not have the 
   "concentrate research" button clicked without triggering a crash.
 * Fix: A crash occurring under some circumstances if the player picked

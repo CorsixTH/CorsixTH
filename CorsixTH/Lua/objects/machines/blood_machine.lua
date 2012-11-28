@@ -29,6 +29,7 @@ object.ticks = false
 object.build_preview_animation = 5094
 object.default_strength = 12
 object.crashed_animation = 3372
+object.show_in_town_map = true
 local function copy_north_to_south(t)
   t.south = t.north
   return t

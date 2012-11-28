@@ -25,6 +25,7 @@ object.class = "RadiationShield"
 object.thob = 28
 object.name = _S.object.radiation_shield
 object.tooltip = _S.tooltip.objects.radiation_shield
+object.show_in_town_map = true
 object.ticks = false
 
 local function copy_east_to_west(t)
