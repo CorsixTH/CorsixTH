@@ -197,7 +197,8 @@ function UI:UI(app, minimal)
   -- the sprite sheet associated with all fullscreen windows so they are correctly cached.
   -- Darrell: Only do this if we have a valid data directory otherwise we won't be able to 
   -- display the directory browser to even find the data directory.
-  if self.app.good_install_folder then
+  -- Edvin: Also, the demo does not contain any of the dialogs.
+  if self.app.good_install_folder and not self.app.using_demo_files then
     local gfx = self.app.gfx
     local palette
     -- load drug casebook sprite table
@@ -417,12 +418,14 @@ end
 function UI:changeResolution(width, height)
   local old_width, old_height = self.app.config.width, self.app.config.height
   self.app.video:endFrame()
-  local video = TH.surface(width, height, unpack(self.app.modes))
+  local video, error_message = TH.surface(width, height, unpack(self.app.modes))
   if video then
     self.app.config.width = width
     self.app.config.height = height
   else
     print("Warning: Could not change resolution to " .. width .. "x" .. height .. ". Reverting to previous resolution.")
+    print("The error was: ")
+    print(error_message)
     video = TH.surface(old_width, old_height, unpack(self.app.modes))
     return false
   end
