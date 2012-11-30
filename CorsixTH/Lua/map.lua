@@ -34,6 +34,7 @@ function Map:Map(app)
   self.debug_flags = false
   self.debug_font = false
   self.debug_tick_timer = 1
+  self:setTemperatureDisplayMethod(app.config.warmth_colors_display_default)
 end
 
 local flag_cache = {}
@@ -43,6 +44,22 @@ end
 
 function Map:getRoomId(x, y)
   return self.th:getCellFlags(x, y).roomId
+end
+
+function Map:setTemperatureDisplayMethod(method)
+  if method ~= 1 and method ~= 2 and method ~= 3 then
+    method = 1
+  end
+  self.temperature_display_method = method
+  self.app.config.warmth_colors_display_default = method
+  self.th:setTemperatureDisplay(method)
+end
+
+function Map:registerTemperatureDisplayMethod()
+  if not self.temperature_display_method then
+    self:setTemperatureDisplayMethod(self.app.config.warmth_colors_display_default)
+  end
+  self.th:setTemperatureDisplay(self.temperature_display_method)
 end
 
 -- Convert between world co-ordinates and screen co-ordinates

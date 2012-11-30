@@ -590,7 +590,22 @@ function UIMenuBar:makeMenu(app)
   options:appendCheckItem(_S.menu_options.adviser_disabled, 
     not self.ui.app.config.adviser_disabled,
     function(item) self.ui.app.config.adviser_disabled = not item.checked end)
-    
+  
+  local function temperatureDisplay(method)
+    --local map = app.world.map
+    return method == 1, function()
+      app.world.map:setTemperatureDisplayMethod(method)
+    end, "", function () 
+      return app.world.map.temperature_display_method == method
+    end      
+  end
+  
+  options:appendMenu(_S.menu_options.warmth_colors, UIMenu()
+    :appendCheckItem(_S.menu_options_warmth_colors.choice_1, temperatureDisplay(1))
+    :appendCheckItem(_S.menu_options_warmth_colors.choice_2, temperatureDisplay(2))
+    :appendCheckItem(_S.menu_options_warmth_colors.choice_3, temperatureDisplay(3))
+  )
+  
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)

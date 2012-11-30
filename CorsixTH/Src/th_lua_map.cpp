@@ -143,6 +143,15 @@ static uint16_t l_check_temp(lua_State *L, int iArg)
     return static_cast<uint16_t>(n * static_cast<lua_Number>(65535));
 }
 
+static int l_map_settemperaturedisplay(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iTD = luaL_checkint(L, 2) - 1;
+    if (iTD >= THMT_Count) iTD = THMT_Red;
+    pMap->setTemperatureDisplay((THMapTemperatureDisplay)iTD);
+    return 1;
+}
+
 static int l_map_updatetemperature(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -938,6 +947,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_setcellflags, "setCellFlags");
     luaT_setfunction(l_map_setcell, "setCell");
     luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
+    luaT_setfunction(l_map_settemperaturedisplay, "setTemperatureDisplay");
     luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", MT_Anims, MT_Anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");

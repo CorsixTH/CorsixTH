@@ -127,6 +127,15 @@ enum THMapNodeFlags
     // THObjectType values)
 };
 
+enum THMapTemperatureDisplay
+{
+    THMT_Red,         //!< Default warmth colouring (red gradients)
+    THMT_MultiColour, //!< Different colours (blue, green, red)
+    THMT_YellowRed,   //!< Gradients of yellow, orange, and red
+
+    THMT_Count, //!< Number of temperature display values.
+};
+
 struct THMapNode : public THLinkList
 {
     THMapNode();
@@ -220,6 +229,8 @@ public:
 
     void updatePathfinding();
     void updateShadows();
+    void setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay);
+    inline THMapTemperatureDisplay getTemperatureDisplay() const {return m_eTempDisplay;}
     void updateTemperatures(uint16_t iAirTemperature,
                             uint16_t iRadiatorTemperature);
 
@@ -367,6 +378,7 @@ protected:
     int m_aiHeliportY[4];
     int m_iParcelCount;
     int m_iCurrentTemperatureIndex;
+    THMapTemperatureDisplay m_eTempDisplay;
     int* m_pParcelTileCounts;
 
     // 2D symmetric array giving true if there is a path between two parcels

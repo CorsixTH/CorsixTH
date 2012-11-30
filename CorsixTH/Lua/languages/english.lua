@@ -71,6 +71,7 @@ menu_options = {
   edge_scrolling = "  EDGE SCROLLING  ",
   settings = "  SETTINGS  ",
   adviser_disabled = "  ADVISER  ",
+  warmth_colors = "  WARMTH COLOURS",
 }
 
 menu_options_game_speed = {
@@ -80,6 +81,12 @@ menu_options_game_speed = {
   normal              = "  (3) NORMAL  ",
   max_speed           = "  (4) MAX SPEED  ",
   and_then_some_more  = "  (5) AND THEN SOME MORE  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "   Red ",
+  choice_2 = "   Blue Green Red ",
+  choice_3 = "   Yellow Orange Red ",
 }
 
 -- The demo does not contain this string

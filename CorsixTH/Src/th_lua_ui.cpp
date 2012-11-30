@@ -32,6 +32,11 @@ static int l_window_base_new(lua_State *L)
         " do not create a windowBase directly.");
 }
 
+static uint8_t Clamp8(uint16_t iVal)
+{
+    return (iVal > 255) ? 255 : static_cast<uint8_t>(iVal);
+}
+
 static int l_town_map_draw(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -75,7 +80,48 @@ static int l_town_map_draw(lua_State *L)
                         iTemp = 255;
                     else // NB: 108 == (32767 - 5200) / 255
                         iTemp = (iTemp - 5200) / 108;
-                    iColour = pCanvas->mapColour(static_cast<uint8_t>(iTemp), 0, 70);
+
+#define MIN_OK_TEMP 140
+#define MAX_OK_TEMP 180
+#define RangeScale(low, high, val, start, end) \
+    Clamp8(start + (end - start) * (val - low) / (high - low))
+                    switch(pMap->getTemperatureDisplay())
+                    {
+                    case THMT_MultiColour:
+                    {
+                        uint8_t iR = 0;
+                        uint8_t iG = 0;
+                        uint8_t iB = 70;
+                        if(iTemp < MIN_OK_TEMP)
+                            iB = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 200, 60);
+                        else if(iTemp < MAX_OK_TEMP)
+                            iG = RangeScale(MIN_OK_TEMP, MAX_OK_TEMP - 1, iTemp, 140, 224);
+                        else
+                            iR = RangeScale(MAX_OK_TEMP, 255, iTemp, 224, 255);
+                        iColour = pCanvas->mapColour(iR, iG, iB);
+                        break;
+                    }
+                    case THMT_YellowRed:
+                        if(iTemp < MIN_OK_TEMP) // Below 11 degrees
+                        {
+                            uint8_t iR = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 100, 213);
+                            uint8_t iG = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 80, 180);
+                            iColour = pCanvas->mapColour(iR, iG, 0);
+                        }
+                        else
+                        {
+                            uint8_t iR = RangeScale(MIN_OK_TEMP, 255, iTemp, 223, 235);
+                            uint8_t iG = RangeScale(MIN_OK_TEMP, 255, iTemp, 184, 104);
+                            uint8_t iB = RangeScale(MIN_OK_TEMP, 255, iTemp, 0, 53);
+                            iColour = pCanvas->mapColour(iR, iG, iB);
+                        }
+                        break;
+                    default:
+                    case THMT_Red:
+                        iColour = pCanvas->mapColour(static_cast<uint8_t>(iTemp), 0, 70);
+                        break;
+                    }
+#undef RangeScale
                 }
                 pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
             }

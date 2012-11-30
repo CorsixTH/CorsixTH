@@ -52,6 +52,7 @@ THMap::THMap()
     m_iHeight = 0;
     m_iPlayerCount = 0;
     m_iCurrentTemperatureIndex = 0;
+    m_eTempDisplay = THMT_Red;
     m_iParcelCount = 0;
     m_pCells = NULL;
     m_pOriginalCells = NULL;
@@ -1039,6 +1040,11 @@ int THMap::getParcelOwner(int iParcel) const
 uint16_t THMap::getNodeTemperature(const THMapNode* pNode) const
 {
     return pNode->aiTemperature[m_iCurrentTemperatureIndex];
+}
+
+void THMap::setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay)
+{
+    if (eTempDisplay < THMT_Count) m_eTempDisplay = eTempDisplay;
 }
 
 void THMap::updateTemperatures(uint16_t iAirTemperature,
