@@ -136,9 +136,11 @@ function UITownMap:onMouseUp(button, x, y)
   elseif button == "right" then
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
-    local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
-    self.ui:scrollMapTo(sx, sy)
-    self:close()
+    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
+      local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
+      self.ui:scrollMapTo(sx, sy)
+      self:close()
+    end
   end
   
   return UIFullscreen.onMouseUp(self, button, x, y) or redraw
