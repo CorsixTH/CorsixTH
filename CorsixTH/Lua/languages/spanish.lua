@@ -110,6 +110,7 @@ menu_options = {
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
   settings = utf8 "  CONFIGURACIóN  ",
   adviser_disabled = "  CONSEJERO  ",
+  warmth_colors = "  COLORES DE TEMPERATURA",
 }
 
 menu_options_game_speed = {
@@ -119,6 +120,12 @@ menu_options_game_speed = {
   normal              = "  (3) NORMAL  ",
   max_speed           = utf8 "  (4) VELOCIDAD MáXIMA  ",
   and_then_some_more  = "  (5) VELOCIDAD ABSURDA  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "   Rojo ",
+  choice_2 = "   Azul, Verde, Rojo ",
+  choice_3 = "   Amarillo, Naranja, Rojo ",
 }
 
 -- The demo does not contain this string
@@ -223,7 +230,7 @@ install = {
 }
 
 misc.not_yet_implemented = utf8 "(aún no implementado)"
-misc.no_heliport = utf8 "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel."
+misc.no_heliport = utf8 "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  A lo mejor necesitas comprar una mesa de recepción y contratar a una recepcionista."
 
 main_menu = {
   new_game = "Nueva partida",
@@ -291,7 +298,7 @@ options_window = {
   height = "Alto",
   change_resolution = utf8 "Cambiar resolución",
   browse = "Buscar...",
-  new_th_directory = utf8 "Aquí puedes especificar una nueva carpeta de instalación de Theme Hospital. En el momento en el que selecciones la nueva carpeta, el juego se reiniciará.",
+  new_th_directory = utf8 "Aquí puedes especificar una nueva carpeta de instalación de Theme Hospital. En cuanto selecciones la nueva carpeta, el juego se reiniciará.",
   cancel = "Cancelar",
   back = "Volver",
 }
@@ -345,9 +352,9 @@ tooltip.lua_console = {
 }
 
 errors = {
-  dialog_missing_graphics = utf8 "Los archivos de datos de la demo no contienen esta ventana.",
-  save_prefix = utf8 "Error al guardar la partida: ",
-  load_prefix = utf8 "Error al cargar la partida: ",
+  dialog_missing_graphics = "Los archivos de datos de la demo no contienen esta ventana.",
+  save_prefix = "Error al guardar la partida: ",
+  load_prefix = "Error al cargar la partida: ",
   map_file_missing = utf8 "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
   minimum_screen_size = utf8 "Introduce un tamaño de pantalla como mínimo de 640x480.",
   maximum_screen_size = utf8 "Introduce un tamaño de pantalla como máximo de 3000x2000.",
@@ -355,7 +362,7 @@ errors = {
 }
 
 confirmation = {
-  needs_restart = utf8 "Para cambiar este ajuste, antes debes reiniciar CorsixTHo. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
+  needs_restart = utf8 "Para cambiar este ajuste, antes debes reiniciar CorsixTH. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
   abort_edit_room = utf8 "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
 }
 
@@ -400,13 +407,13 @@ totd_window = {
     utf8 "Puedes cancelar el progreso del diagnóstico de un paciente de forma prematura y adivinar la cura si ya has descubierto la enfermedad. Ten en cuenta que esto aumentará el riesgo de darle el tratamiento equivocado, lo que matará al paciente.",
     utf8 "Las emergencias pueden ser una buena forma de llevarte algo de dinero extra, siempre y cuando tengas la capacidad suficiente para ocuparte de los pacientes de la emergencia a tiempo.",
   },
-  previous = utf8 "Siguiente consejo",
-  next = utf8 "Consejo anterior",
+  previous = "Siguiente consejo",
+  next = "Consejo anterior",
 }
 
 tooltip.totd_window = {
-  previous = utf8 "Mostrar el consejo anterior",
-  next = utf8 "Mostrar el consejo siguiente",
+  previous = "Mostrar el consejo anterior",
+  next = "Mostrar el consejo siguiente",
 }
 
 debug_patient_window = {
@@ -464,7 +471,7 @@ introduction_texts = {
 
 calls_dispatcher = {
   -- Dispatcher description message. Visible in Calls Dispatcher dialog
-  summary = "%d llamadas; %d asignadas",
+  summary = "%d llamadas, %d asignadas",
   staff = "%s - %s",
   watering = "Regando @ %d,%d",
   repair = "Reparar %s",
