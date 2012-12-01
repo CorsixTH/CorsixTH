@@ -180,10 +180,10 @@ staff_descriptions = {
   },
 }
 information = {
-  custom_game = "Welkom bij CorsixTH. Veel plezier met dit level!",
-  cannot_restart = "Dit losse level is opgeslagen voordat de herstart-functie was geïmplementeerd.",
+  custom_game = "Welkom bij CorsixTH. Veel plezier in dit ziekenhuis!",
+  cannot_restart = "Dit level is opgeslagen voordat de herstart-functie was geïmplementeerd.",
   very_old_save = "Er zijn veel updates geweest sinds je met dit level bent begonnen. Om zeker te zijn dat alles werkt zoals het hoort, kun je dit level beter opnieuw beginnen.",
-  no_custom_game_in_demo = "Sorry, maar in de demo versie kan je geen losse levels spelen.",
+  no_custom_game_in_demo = "Sorry, maar in de demo versie kan je niet als uitzendkracht werken.",
   level_lost = {
     [1] = "Balen! Je hebt het level verloren. Volgende keer beter!",
     [2] = "De reden dat je verloor:",
@@ -605,7 +605,7 @@ fax = {
       },
       very_bad = {
         [1] = "Wat een zooi. Ik ga kijken of ik het kan laten sluiten.",
-        [2] = "Ik heb nooit zo een verschrikkelijk ziekenhuis gezien. Schande!",
+        [2] = "Ik heb nog nooit zo'n verschrikkelijk ziekenhuis gezien. Wat een schande!",
         [3] = "Ik ben geschokt. Dat is toch geen ziekenhuis? Ik heb een biertje nodig.",
       },
       free_build = {
@@ -614,10 +614,10 @@ fax = {
         [3] = "Een heel goed lopend ziekenhuis. Pas wel op voor de economische crisis! Oh nee... Daar hoeft u zich natuurlijk geen zorgen om te maken.",
       },
     },
-    rep_boost = "Je reputatie is verbeterd..",
+    rep_boost = "Je reputatie is verbeterd!",
     vip_remarked_name = "Na zijn bezoek zei %s:",
     cash_grant = "Je hebt een bonus gekregen van %d.",
-    rep_loss = "Je reputatie is hierdoor verslechterd.",
+    rep_loss = "Je reputatie is heeft een flinke deuk opgelopen.",
     close_text = "Bedankt voor uw bezoek aan ons ziekenhuis.",
   },
   disease_discovered_patient_choice = {
@@ -1019,7 +1019,7 @@ tooltip = {
   },
   main_menu = {
     exit = "Nee! Nee! Verlaat ons niet!",
-    custom_level = "Bouw je ziekenhuis in een losstaand level",
+    custom_level = "Als uitzendkracht ben je verantwoordelijk voor maar één ziekenhuis",
     network = "Start een netwerkspel",
     quit = "Afsluiten",
     continue = "Doorgaan met vorig spel",
@@ -1510,7 +1510,7 @@ adviser = {
     place_plants3 = "Patiënten worden ongelukkig, zet wat meer planten neer om ze op te vrolijken.",
     staff_unhappy2 = "Je personeel is over het algemeen ongelukkig, dat betekend dat ze binnenkort om een hoger salaris zullen vragen.",
     cash_low_consider_loan = "Je hoeveelheid cash is erg laag, heb je al eens aan een lening gedacht?",
-    financial_trouble = "Je zit zwaar in de financiële problemen, los die zo snel mogelijk op! Als je nog %d verliest is al je moeite voor niks geweest!",
+    financial_trouble = "Je zit zwaar in de financiële problemen, los dit zo snel mogelijk op! Als je nog %d verliest is al je moeite voor niks geweest!",
     doctors_tired2 = "Je doktoren zijn ongelofelijk moe, laat ze nu meteen rusten.",
     patient_leaving = "Er gaat een patiënt weg. De reden? Je slecht draaiende ziekenhuis.",
     machinery_damaged2 = "Je moet een conciërge aannemen om je machines te laten repareren.",
@@ -1957,7 +1957,7 @@ vip_names = {
   health_minister = "De Minister van Volksgezondheid",
 }
 custom_game_window = {
-  caption = "Los Level",
+  caption = "Uitzendwerk",
   free_build = "Vrij bouwen",
 }
 transactions = {  --[[Hier geen veranderingen in aanbrengen. Sommige woorden zijn bewust weggelaten vanwege ruimtegebrek ingame!]]--
@@ -2064,8 +2064,8 @@ letter = {
     [4] = "",
   },
   dear_player = "Beste %s",
-  custom_level_completed = "Goed werk! Je hebt alle doelen voor dit level behaald!",
-  return_to_main_menu = "Wil je teruggaan naar het hoofdmenu of wil je doorspelen?",
+  custom_level_completed = "Goed werk! Je hebt alle doelen voor dit ziekenhuis behaald!",
+  return_to_main_menu = "Wil je teruggaan naar het hoofdmenu of doorspelen?",
 }
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
@@ -2381,7 +2381,7 @@ competitor_names = {
 }
 main_menu = {
   exit = "Afsluiten",
-  custom_level = "Los level",
+  custom_level = "Uitzendwerk",
   new_game = "Nieuwe carrière",
   load_game = "Spel laden",
   options = "Instellingen",
@@ -2562,14 +2562,20 @@ menu_options = {
   jukebox = "  JUKEBOX  ",
   edge_scrolling = "  RANDSCROLLEN  ",
   adviser_disabled = "  ADVISEUR  ",
+  warmth_colors = "  WARMTE KLEUREN  ",
 }
 menu_options_game_speed = {
   pause = "  PAUZE  ",
-  slowest = "  LANGZAAM  ",
-  slower = "  LANGZAMER  ",
+  slowest = "  EN NOG LANGZAMER  ",
+  slower = "  LANGZAAM  ",
   normal = "  NORMAAL  ",
   max_speed = "  MAX SNELHEID ",
   and_then_some_more = "  EN NOG EEN BEETJE ",
+}
+menu_options_warmth_colors = { 
+  choice_1 = "   Rood ", 
+  choice_2 = "   Blauw, groen en rood ", 
+  choice_3 = "   Geel, oranje en rood ", 
 }
 menu = {
   debug = "  DEBUG  ",
@@ -2777,7 +2783,7 @@ cheats_window = {
   },
   close = "Sluiten",
   caption = "Cheats",
-  warning = "Waarschuwing: je zult geen bonuspunten aan het einde van het level krijgen wanneer je cheat",
+  warning = "Waarschuwing: wanneer je cheat zul je aan het einde van het level geen bonuspunten verdienen",
 }
 handyman_window = {
   all_parcels = "Overal", --Translates to: Everywhere, because the full Dutch translation would be far too long to fit the ingame window
