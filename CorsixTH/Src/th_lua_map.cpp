@@ -623,7 +623,6 @@ static int l_map_setcellflags(lua_State *L)
                         x = *pNode->pExtendedObjectList;
                         int nr = x & 7;
                         nr++;
-                        FILE *f = fopen("log.txt", "a");
                         x = (x & (~7)) | nr;
                         uint64_t orAmount = thob << (3 + ((nr - 1) << 3));
                         x |= orAmount;

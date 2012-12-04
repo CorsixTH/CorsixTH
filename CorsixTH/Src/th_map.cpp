@@ -38,12 +38,16 @@ THMapNode::THMapNode()
     iRoomId = 0;
     aiTemperature[0] = aiTemperature[1] = 8192;
     iFlags = 0;
+    pExtendedObjectList = NULL;
 }
 
 THMapNode::~THMapNode()
 {
     if(pExtendedObjectList)
+    {
         delete pExtendedObjectList;
+        pExtendedObjectList = NULL;
+    }
 }
 
 THMap::THMap()
