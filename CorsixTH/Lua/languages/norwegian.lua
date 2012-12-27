@@ -62,8 +62,10 @@ because the letters ø and Ø is not included in the original ingame-font.
 -------------------------------------------------------------------------------
 
 -- 1. Global setings (do not edit!)
+--Font("unicode") --todo: Add unicode/freefont
 Language("Norsk", "Norwegian", "nb", "nob")
 Inherit("english")
+Encoding(utf8)
 
 
 -- 2. Faxes
@@ -100,7 +102,8 @@ menu_options = {
   lock_windows = "  LÅS VINDUER  ",
   edge_scrolling = "  KANTSCROLLING  ",
   settings = "  INNSTILLINGER  ",
-  adviser_disabled = "  RÅDGIVER  "
+  adviser_disabled = "  RÅDGIVER  ",
+  warmth_colors = "  VARMEFARGER", --Todo: Open for suggestions for a better word for it (warmth colours).
 }
 
 menu_options_game_speed.pause   = "  PAUSE  "
@@ -1072,6 +1075,13 @@ menu_options_game_speed = {
   normal              = "  NORMAL  ",
   max_speed           = "  MAKSIMAL HASTIGHET  ",
   and_then_some_more  = "  ENDA LITT RASKERE  ",
+}
+
+-- Menu Options Warmth Colours
+menu_options_warmth_colors = {
+choice_1 = "  Röd  ",
+choice_2 = "  Blå Grönn Röd  ",
+choice_3 = "  Gul Orange Röd  ",
 }
 
 -- Menu Display
