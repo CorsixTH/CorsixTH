@@ -105,8 +105,8 @@ function UIOptions:UIOptions(ui, mode)
     :setTooltip(_S.tooltip.options_window.original_path).lowered = true
 
   self.browse_button =
-    self:addBevelPanel(20, 110, 70, 20, col_bg):setLabel(_S.options_window.browse)
-    :makeButton(0, 0, 70, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
+    self:addBevelPanel(20, 110, 100, 20, col_bg):setLabel(_S.options_window.browse)
+    :makeButton(0, 0, 100, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
 
   -- Language
   local y = 140
