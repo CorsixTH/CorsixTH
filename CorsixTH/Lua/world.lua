@@ -1387,8 +1387,10 @@ function World:loseGame(player_no, reason, limit)
     local message = {_S.information.level_lost[1]}
     if reason then
       message[2] = _S.information.level_lost[2]
-      message[3] = _S.information.level_lost[reason]:format(limit)
-    end
+      message[3] = _S.information.level_lost[reason]:format(limit)    
+    else   
+      message[2] = _S.information.level_lost["cheat"]     
+     end
     self.ui.app:loadMainMenu(message)
   end
 end
