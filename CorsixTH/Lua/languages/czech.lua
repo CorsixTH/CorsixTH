@@ -2525,13 +2525,14 @@ information = {
     reputation = "Vaše reputace spadla pod %d.",
     balance = "Vaše bankovní bilance spadla pod %d.",
     percentage_killed = "Zabili jste více než %d procent pacientů.",
+    cheat = "Tohle jste chtěli, či jste snad zvolili špatné tlačítko? To Vám ani nejde podvádět? Tady máte lopatu a jděte se zahrabat.",
   },
 }
 errors = {
   minimum_screen_size = "Zadejte prosím alespoň 640x480 jako velikost obrazovky.",
   maximum_screen_size = "Zadejte prosím nanejvýše 3000x2000 jako velikost obrazovky.",
   map_file_missing = "Nelze nalézt soubor s mapou %s pro tuto úroveň!",
-  dialog_missing_graphics = "Je nám líto, datové soubory dema toto dialogové okno neobsahují.",
+  dialog_missing_graphics = "Je nám líto, datové soubory demoverze toto dialogové okno neobsahují.",
   load_prefix = "Chyba při načtení hry: ",
   unavailable_screen_size = "Velikost obrazovky, kterou požadujete, není dostupná v režimu celé obrazovky.",
   save_prefix = "Chyba při uložení hry: ",
@@ -2561,6 +2562,12 @@ menu_options = {
   announcements_vol = "    HLASITOST OZNÁMENÍ  ",
   settings = "    NASTAVENÍ  ",
   jukebox = "    JUKEBOX  ",
+  warmth_colors = "    BARVY TEPLOTY",  
+}
+menu_options_warmth_colors = {
+  choice_2 = "     Modrá Zelená Ćervená ",
+  choice_1 = "     Červená ",
+  choice_3 = "     Žlutá Oranžová Červená ",
 }
 menu_debug = {
   cheats = "    (F11) ČÍTY  ",
@@ -3064,7 +3071,7 @@ introduction_texts = {
   },
 }
 install = {
-  th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo dema), aby mohla běžet. Prosím použijte okno níže k nalezení instalační složky Theme Hospital.",
+  th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo demoverze), aby mohla běžet. Prosím použijte okno níže k nalezení instalační složky Theme Hospital.",
   title = "-------------------------------- Nastavení CorsixTH --------------------------------",
   exit = "Odejít",
 }
