@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010 Peter "Corsix" Cawley
+Copyright (c) 2010-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -641,6 +641,13 @@ static int l_surface_nonoverlapping(lua_State *L)
     return 1;
 }
 
+static int l_surface_set_blue_filter_active(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    pCanvas->setBlueFilterActive(lua_isnoneornil(L, 3) ? false : lua_toboolean(L, 3));
+    return 1;
+}
+
 static int l_surface_map(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
@@ -809,6 +816,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_end_frame, "endFrame");
     luaT_setfunction(l_surface_nonoverlapping, "nonOverlapping");
     luaT_setfunction(l_surface_map, "mapRGB");
+    luaT_setfunction(l_surface_set_blue_filter_active, "setBlueFilterActive");
     luaT_setfunction(l_surface_rect, "drawRect");
     luaT_setfunction(l_surface_get_clip, "getClip");
     luaT_setfunction(l_surface_set_clip, "setClip");

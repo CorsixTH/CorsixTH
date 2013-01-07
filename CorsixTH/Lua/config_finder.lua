@@ -103,6 +103,7 @@ local config_defaults = {
   play_sounds = true,
   sound_volume = 0.5,
   adviser_disabled = false,
+  allow_user_actions_while_paused = false,
   warmth_colors_display_default = 1,
 }
 local fi = io.open(config_filename, "r")
@@ -185,6 +186,16 @@ adviser_disabled = ]=].. tostring(config_values.adviser_disabled) ..[=[
 
 free_build_mode = ]=].. tostring(config_values.free_build_mode) ..[=[
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Allow user actions while game is paused
+-- In Theme Hospital the player would only be allowed to use the top menu if
+-- the game was paused. That is the default setting in CorsixTH too, but by
+-- setting this to true everything is allowed while the game is paused.
+
+allow_user_actions_while_paused = ]=].. tostring(config_defaults.allow_user_actions_while_paused) ..[=[
+-------------------------------------------------------------------------------
+
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:

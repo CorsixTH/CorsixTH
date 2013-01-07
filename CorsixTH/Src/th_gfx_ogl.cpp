@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2009-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -119,6 +119,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         if(m_pSurface == NULL)
             return false;
     }
+
+    m_bBlueFilterActive = false;
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -336,6 +338,21 @@ bool THRenderTarget::endFrame()
         return false;
     _flushZoomBuffer();
 
+    // Possibly add a blue filter on top of everything
+    if (m_bBlueFilterActive)
+    {
+        // This particular quad will not have any texture on it.
+        glDisable(GL_TEXTURE_2D);
+        glBegin(GL_QUADS);
+            glColor4f(0.0f,0.0f,1.0f, 0.3f);
+            glVertex3f(0.0f, 0.0f, 0.0f);
+            glVertex3f((GLfloat) (GLfloat) getWidth(), 0.0f, 0.0f);
+            glVertex3f((GLfloat) getWidth(), (GLfloat) getHeight(), 0.0f);
+            glVertex3f(0.0f, (GLfloat) getHeight(), 0.0f);
+        glEnd(); 
+        glEnable(GL_TEXTURE_2D);
+    }
+
     if(m_pSurface)
         SDL_GL_SwapBuffers();
     return true;
@@ -402,6 +419,11 @@ bool THRenderTarget::fillBlack()
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     return getGLError() == GL_NO_ERROR;
+}
+
+void THRenderTarget::setBlueFilterActive(bool bActivate)
+{
+    m_bBlueFilterActive = bActivate;
 }
 
 uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)

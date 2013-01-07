@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2009-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -40,6 +40,7 @@ SOFTWARE.
 THRenderTarget::THRenderTarget()
 {
     m_pSurface = NULL;
+    m_pDummySurface = NULL;
     m_pCursor = NULL;
     m_bShouldScaleBitmaps = false;
 }
@@ -54,6 +55,16 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight,
         pParams->iBPP, pParams->iSDLFlags);
+
+    // Create another surface that's simply blue. This is used as an overlay
+    // when the game is paused to create a blue filter.
+    m_bBlueFilterActive = false;
+    const SDL_PixelFormat& fmt = *(m_pSurface->format);
+    m_pDummySurface = SDL_CreateRGBSurface(SDL_HWSURFACE, pParams->iWidth, pParams->iHeight,
+        fmt.BitsPerPixel, fmt.Rmask,fmt.Gmask,fmt.Bmask,fmt.Amask );
+    SDL_FillRect(m_pDummySurface, NULL, mapColour(50, 50, 200));
+    SDL_SetAlpha(m_pDummySurface, SDL_SRCALPHA, 128);
+
     return m_pSurface != NULL;
 }
 
@@ -95,9 +106,14 @@ bool THRenderTarget::startFrame()
 
 bool THRenderTarget::endFrame()
 {
+    // End the frame by adding the cursor and possibly a filter.
     if(m_pCursor)
     {
         m_pCursor->draw(this, m_iCursorX, m_iCursorY);
+    }
+    if(m_bBlueFilterActive)
+    {
+        SDL_BlitSurface(m_pDummySurface, NULL, this->getRawSurface(), NULL);
     }
     return SDL_Flip(m_pSurface) == 0;
 }
@@ -105,6 +121,11 @@ bool THRenderTarget::endFrame()
 bool THRenderTarget::fillBlack()
 {
     return SDL_FillRect(m_pSurface, NULL, mapColour(0, 0, 0)) == 0;
+}
+
+void THRenderTarget::setBlueFilterActive(bool bActivate)
+{
+    m_bBlueFilterActive = bActivate;
 }
 
 uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)

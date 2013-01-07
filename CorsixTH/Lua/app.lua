@@ -150,6 +150,7 @@ function App:init()
   end
   self.modes = modes
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
+  self.video:setBlueFilterActive(self.video, false)
   SDL.wm.setIconWin32()
   
   
@@ -336,6 +337,9 @@ function App:initLanguage()
 end
 
 function App:loadMainMenu(message)
+  -- Make sure there is no blue filter active.
+  self.video:setBlueFilterActive(self.video, false)
+
   -- Unload ui, world and map
   self.ui = nil
   self.world = nil
@@ -371,10 +375,14 @@ function App:loadLevel(level, ...)
         player_salary = self.ui.hospital.player_salary,
         message_popup = self.ui.hospital.message_popup,
         hospital_littered = self.ui.hospital.hospital_littered,
+        has_seen_pay_rise = self.ui.hospital.has_seen_pay_rise,
       },
     }
   end
   
+  -- Make sure there is no blue filter active.
+  self.video:setBlueFilterActive(self.video, false)
+
   -- Unload ui, world and map
   self.ui = nil
   self.world = nil
@@ -828,9 +836,11 @@ function App:checkInstallFolder()
   check("QData".. pathsep .."SPointer.dat")
   if #missing ~= 0 then
     missing = table.concat(missing, ", ")
-    error("Invalid Theme Hospital install folder specified in config file, "..
+    print("Invalid Theme Hospital install folder specified in config file, "..
           "as at least the following files are missing: ".. missing ..".\n"..
           message)
+    print("Trying to let the user select a new one.")
+    return false
   end
     
   -- Check for demo version

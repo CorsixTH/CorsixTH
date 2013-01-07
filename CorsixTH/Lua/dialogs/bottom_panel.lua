@@ -36,6 +36,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.money_font = app.gfx:loadFont("QData", "Font05V")
   self.date_font = app.gfx:loadFont("QData", "Font16V")
   self.white_font = app.gfx:loadFont("QData", "Font01V", 0, -2)
+  self.pause_font = app.gfx:loadFont("QData", "Font124V")
   
   -- State relating to fax notification messages
   self.show_animation = true
@@ -145,7 +146,9 @@ function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
 end
 
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
-  if self.dynamic_info then
+  if self.world:isCurrentSpeed("Pause") then
+    self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
+  elseif self.dynamic_info then
     local info = self.dynamic_info
     local font = self.white_font
     for i, text in ipairs(info["text"]) do
@@ -224,7 +227,8 @@ end
 --   }
 -- }
 function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
-  if not self.ui.hospital.message_popup then
+  -- Show a helpful message if there has been no messages before - only in campaign though
+  if not self.ui.hospital.message_popup and tonumber(self.world.map.level_number) then
     self.world.ui.adviser:say(_A.information.fax_received)
     self.ui.hospital.message_popup = true
   end
@@ -347,39 +351,49 @@ function UIBottomPanel:onTick()
 end
 
 function UIBottomPanel:dialogBankManager()
-  self:addDialog(UIBankManager(self.ui))
+  if self.world.user_actions_allowed then
+    self:addDialog(UIBankManager(self.ui))
+  end
 end
 
 function UIBottomPanel:dialogBankStats()
-  local dlg = UIBankManager(self.ui)
-  self:addDialog(dlg, function() dlg:showStatistics() end)
+  if self.world.user_actions_allowed then
+    local dlg = UIBankManager(self.ui)
+    self:addDialog(dlg, function() dlg:showStatistics() end)
+  end
 end
 
 function UIBottomPanel:dialogBuildRoom()
-  local dlg = UIBuildRoom(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
-  self.ui:tutorialStep(3, 1, 2)
+  if self.world.user_actions_allowed then
+    local dlg = UIBuildRoom(self.ui)
+    self.ui:setEditRoom(false)
+    self.ui:addWindow(dlg)
+    self.ui:tutorialStep(3, 1, 2)
+  end
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
-  -- Close any fullscreen window
-  local fullscreen = self.ui:getWindow(UIFullscreen)
-  if fullscreen then
-    fullscreen:close()
+  if self.world.user_actions_allowed then
+    -- Close any fullscreen window
+    local fullscreen = self.ui:getWindow(UIFullscreen)
+    if fullscreen then
+      fullscreen:close()
+    end
+    local dlg = UIFurnishCorridor(self.ui)
+    self.ui:setEditRoom(false)
+    self.ui:addWindow(dlg)
+    self.ui:tutorialStep(1, 1, 2)
   end
-  local dlg = UIFurnishCorridor(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
-  self.ui:tutorialStep(1, 1, 2)
 end
 
 function UIBottomPanel:dialogHireStaff()
-  local dlg = UIHireStaff(self.ui)
-  self.ui:setEditRoom(false)
-  self.ui:addWindow(dlg)
-  self.ui:tutorialStep(2, 1, 2)
-  self.ui:tutorialStep(4, 1, 2)
+  if self.world.user_actions_allowed then
+    local dlg = UIHireStaff(self.ui)
+    self.ui:setEditRoom(false)
+    self.ui:addWindow(dlg)
+    self.ui:tutorialStep(2, 1, 2)
+    self.ui:tutorialStep(4, 1, 2)
+  end
 end
 
 function UIBottomPanel:dialogTownMap()
@@ -487,6 +501,9 @@ function UIBottomPanel:afterLoad(old, new)
   if old < 47 then
     self.ui:addKeyHandler("I", self, self.toggleInformation)
     self.ui:addKeyHandler("A", self, self.toggleAdviser)
+  end
+  if old < 57 then
+    self.pause_font = TheApp.gfx:loadFont("QData", "Font124V")
   end
   Window.afterLoad(self, old, new)
 end

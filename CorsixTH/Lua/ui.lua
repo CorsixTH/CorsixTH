@@ -679,7 +679,8 @@ function UI:onMouseUp(code, x, y)
   if Window.onMouseUp(self, button, x, y) then
     repaint = true
   else
-    if self.cursor_entity and self.cursor_entity.onClick then
+    if self.cursor_entity and self.cursor_entity.onClick 
+    and self.app.world.user_actions_allowed then
       self.cursor_entity:onClick(self, button)
       repaint = true
     end

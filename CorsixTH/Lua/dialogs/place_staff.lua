@@ -74,62 +74,66 @@ end
 local flag_cache = {}
 local flag_altpal = 16
 function UIPlaceStaff:draw(canvas)
-  self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-  local room = self.world:getRoom(self.tile_x, self.tile_y)
-  local valid = flag_cache.hospital and flag_cache.passable and
-    (self.allow_in_rooms or flag_cache.roomId == 0) and 
-    (not room and true or not room.crashed)
-  self.anim:setFlag(valid and 0 or flag_altpal)
-  local zoom = self.ui.zoom_factor
-  if canvas:scale(zoom) then
-    local x, y = self.ui:WorldToScreen(self.tile_x, self.tile_y)
-    self.anim:draw(canvas, x / zoom, y / zoom)
-    canvas:scale(1)
-  else
-    self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
+  if self.world.user_actions_allowed then
+    self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+    local room = self.world:getRoom(self.tile_x, self.tile_y)
+    local valid = flag_cache.hospital and flag_cache.passable and
+      (self.allow_in_rooms or flag_cache.roomId == 0) and 
+      (not room and true or not room.crashed)
+    self.anim:setFlag(valid and 0 or flag_altpal)
+    local zoom = self.ui.zoom_factor
+    if canvas:scale(zoom) then
+      local x, y = self.ui:WorldToScreen(self.tile_x, self.tile_y)
+      self.anim:draw(canvas, x / zoom, y / zoom)
+      canvas:scale(1)
+    else
+      self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))
+    end
+    self.ui:tutorialStep(2, valid and 7 or 6, valid and 6 or 7)
+    self.ui:tutorialStep(4, valid and 5 or 4, valid and 4 or 5)
   end
-  self.ui:tutorialStep(2, valid and 7 or 6, valid and 6 or 7)
-  self.ui:tutorialStep(4, valid and 5 or 4, valid and 4 or 5)
 end
 
 function UIPlaceStaff:onMouseUp(button, x, y)
-  if button == "right" then
-    self:close()
-    return true
-  elseif button == "left" then
-    self:onMouseMove(x, y)
-    self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-    local room = self.world:getRoom(self.tile_x, self.tile_y)
-    if flag_cache.hospital and flag_cache.passable
-    and (self.allow_in_rooms or flag_cache.roomId == 0) 
-    and (not room and true or not room.crashed) then
-      if self.staff then
-        self.staff:setTile(self.tile_x, self.tile_y)
-      else
-        local entity = self.world:newEntity("Staff", 2)
-        entity:setProfile(self.profile)
-        self.profile = nil
-        entity:setTile(self.tile_x, self.tile_y)
-        self.ui.hospital:addStaff(entity)
-        entity:setHospital(self.ui.hospital)
-        local room = entity:getRoom()
-        if room then
-          room:onHumanoidEnter(entity)
-        else
-          entity:onPlaceInCorridor()
-        end
-        self.ui:tutorialStep(2, 6, "next")
-        self.ui:tutorialStep(4, 4, "next")
-        -- Update the staff management window if it is open.
-        local window = self.world.ui:getWindow(UIStaffManagement)
-        if window then
-          window:updateStaffList(self)
-        end
-      end
+  if self.world.user_actions_allowed then
+    if button == "right" then
       self:close()
       return true
-    else
-      self.ui.adviser:say(_A.placement_info.staff_cannot_place)
+    elseif button == "left" then
+      self:onMouseMove(x, y)
+      self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+      local room = self.world:getRoom(self.tile_x, self.tile_y)
+      if flag_cache.hospital and flag_cache.passable
+      and (self.allow_in_rooms or flag_cache.roomId == 0) 
+      and (not room and true or not room.crashed) then
+        if self.staff then
+          self.staff:setTile(self.tile_x, self.tile_y)
+        else
+          local entity = self.world:newEntity("Staff", 2)
+          entity:setProfile(self.profile)
+          self.profile = nil
+          entity:setTile(self.tile_x, self.tile_y)
+          self.ui.hospital:addStaff(entity)
+          entity:setHospital(self.ui.hospital)
+          local room = entity:getRoom()
+          if room then
+            room:onHumanoidEnter(entity)
+          else
+            entity:onPlaceInCorridor()
+          end
+          self.ui:tutorialStep(2, 6, "next")
+          self.ui:tutorialStep(4, 4, "next")
+          -- Update the staff management window if it is open.
+          local window = self.world.ui:getWindow(UIStaffManagement)
+          if window then
+            window:updateStaffList(self)
+          end
+        end
+        self:close()
+        return true
+      else
+        self.ui.adviser:say(_A.placement_info.staff_cannot_place)
+      end
     end
   end
 end

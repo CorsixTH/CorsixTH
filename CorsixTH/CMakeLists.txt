@@ -49,6 +49,7 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
   ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
@@ -160,6 +161,19 @@ IF(CORSIX_TH_USE_OGL_RENDERER)
   ENDIF(OPENGL_FOUND)
 ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
+# Find DirectX
+IF(CORSIX_TH_USE_DX9_RENDERER)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
+  FIND_PACKAGE(DirectX REQUIRED)
+  IF(DirectX_FOUND)
+    TARGET_LINK_LIBRARIES(CorsixTH ${DirectX_LIBRARY})
+    TARGET_LINK_LIBRARIES(CorsixTH ${DirectX_D3DX9_LIBRARY})
+    INCLUDE_DIRECTORIES(${DirectX_INCLUDE_DIR})
+    message("  DirectX found")
+  ELSE(DirectX_FOUND)
+    message(FATAL_ERROR "Error: DirectX library not found, it is required to build (consider changing choice of renderer)")
+  ENDIF(DirectX_FOUND)
+ENDIF(CORSIX_TH_USE_DX9_RENDERER)
 # Declaration of the install process
 IF(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.

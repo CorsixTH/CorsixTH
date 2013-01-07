@@ -246,6 +246,10 @@ function LoadGame(data)
   TheApp:afterLoad()
   TheApp.world:resetAnimations()
   TheApp.ui:onChangeResolution()
+    -- Possibly add the blueish tone if the game is currently paused.
+  if not TheApp.world.user_actions_allowed then
+    TheApp.video:setBlueFilterActive(TheApp.video, true)
+  end
 end
 
 function LoadGameFile(filename)

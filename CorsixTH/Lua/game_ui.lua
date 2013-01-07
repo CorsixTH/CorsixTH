@@ -308,8 +308,11 @@ function GameUI:onCursorWorldPositionChange()
 
     self.cursor_entity = entity
     if self.cursor ~= self.edit_room_cursor and self.cursor ~= self.waiting_cursor then
-      local cursor = entity and entity.hover_cursor or
+      local cursor = self.default_cursor
+      if self.app.world.user_actions_allowed then
+        cursor = entity and entity.hover_cursor or
         (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+      end
       self:setCursor(cursor)
     end
     if self.bottom_panel then

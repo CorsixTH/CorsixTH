@@ -149,7 +149,7 @@ function Audio:init()
       end
     end
   end
-  if #self.background_playlist == 0 then
+  if #self.background_playlist == 0 and self.app.good_install_folder then
     print "Notice: Audio system loaded, but found no background tracks"
   else
     table.sort(self.background_playlist, function(left, right)
@@ -191,7 +191,7 @@ function Audio:initSpeech(speech_file)
   
   -- If sound file not found and language choosen is not English, 
   -- maybe we can have more chance loading English sounds
-  if not archive_data and speech_file ~= "Sound-0.dat" then
+  if not archive_data and speech_file ~= "Sound-0.dat" and self.app.good_install_folder then
     if self.speech_file_name == "Sound-0.dat" then
       return
     end
@@ -201,9 +201,9 @@ function Audio:initSpeech(speech_file)
   end
   
   if not archive_data then
-    print("Notice: No sound effects as no SOUND/DATA/".. speech_file ..
-          " file could be found / opened.")
     if self.app.good_install_folder then
+      print("Notice: No sound effects as no SOUND/DATA/".. speech_file ..
+          " file could be found / opened.")
       print("The reported error was: ".. err)
     end
   else

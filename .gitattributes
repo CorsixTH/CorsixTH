@@ -1,6 +1,8 @@
 * text=auto !eol
 AnimView/AnimView.ico -text
 AnimView/AnimView.rc -text
+CMake/FindDirectX.cmake -text
+CMake/FindPkgMacros.cmake -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text

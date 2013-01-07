@@ -874,48 +874,51 @@ function UIEditRoom:enterObjectsPhase()
 end
 
 function UIEditRoom:draw(canvas, ...)
-  local ui = self.ui
-  local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
-  local zoom = self.ui.zoom_factor
-  if canvas:scale(zoom) then
-    x = x / zoom
-    y = y / zoom
+  if self.world.user_actions_allowed then
+    local ui = self.ui
+    local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
+    local zoom = self.ui.zoom_factor
+    if canvas:scale(zoom) then
+      x = x / zoom
+      y = y / zoom
+    end
+    self.cell_outline:draw(canvas, 2, x - 32, y)
+    canvas:scale(1)
   end
-  self.cell_outline:draw(canvas, 2, x - 32, y)
-  canvas:scale(1)
   
   UIPlaceObjects.draw(self, canvas, ...)
 end
 
 function UIEditRoom:onMouseDown(button, x, y)
-  if button == "left" then
-    if self.phase == "walls" then
-      if 0 <= x and x < self.width and 0 <= y and y < self.height then
-      else
-        local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-        self.mouse_down_x = math_floor(x)
-        self.mouse_down_y = math_floor(y)
-        if self.move_rect then
-          self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
-          self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
-        elseif self.resize_rect then
-          -- nothing to do
+  if self.world.user_actions_allowed then
+    if button == "left" then
+      if self.phase == "walls" then
+        if 0 <= x and x < self.width and 0 <= y and y < self.height then
         else
-          self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+          local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
+          self.mouse_down_x = math_floor(x)
+          self.mouse_down_y = math_floor(y)
+          if self.move_rect then
+            self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
+            self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
+          elseif self.resize_rect then
+            -- nothing to do
+          else
+            self:setBlueprintRect(self.mouse_down_x, self.mouse_down_y, 1, 1)
+          end
         end
+      elseif self.phase == "door" then
+        if self.blueprint_door.valid then
+          self.ui:playSound "buildclk.wav"
+          self:confirm(true)
+        else
+          self.ui:tutorialStep(3, 9, 10)
+        end
+      elseif self.phase == "windows" then
+        self:placeWindowBlueprint()
       end
-    elseif self.phase == "door" then
-      if self.blueprint_door.valid then
-        self.ui:playSound "buildclk.wav"
-        self:confirm(true)
-      else
-        self.ui:tutorialStep(3, 9, 10)
-      end
-    elseif self.phase == "windows" then
-      self:placeWindowBlueprint()
     end
   end
-  
   return UIPlaceObjects.onMouseDown(self, button, x, y) or true
 end
 
@@ -1225,6 +1228,12 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
   local repaint = UIPlaceObjects.onCursorWorldPositionChange(self, x, y)
   
   local ui = self.ui
+  
+  -- Is the game paused?
+  if not self.world.user_actions_allowed then
+    ui:setCursor(ui.default_cursor)
+    return
+  end
   local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
   wx = math_floor(wx)
   wy = math_floor(wy)

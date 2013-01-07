@@ -527,27 +527,32 @@ function UIMenuBar:makeMenu(app)
         return level == app.config.music_volume,
           function()
             app.audio:setBackgroundVolume(level)
+            app:saveConfig()
           end,
           ""
       elseif setting == "sound" then
         return level == app.config.sound_volume,
           function()
             app.audio:setSoundVolume(level)
+            app:saveConfig()
           end,
           ""
       else
         return level == app.config.announcement_volume,
           function()
             app.audio:setAnnouncementVolume(level)
+            app:saveConfig()
           end,
           ""
       end
     end
     local function playSounds(item)
       app.audio:playSoundEffects(item.checked)
+      app:saveConfig()
     end
     local function playAnno(item)
       app.config.play_announcements = item.checked
+      app:saveConfig()
     end
     local function playMusic(item)
       if not app.audio.background_music then
@@ -555,6 +560,7 @@ function UIMenuBar:makeMenu(app)
       else
         app.audio:stopBackgroundTrack() -- stop
       end
+      app:saveConfig()
     end
     local function musicStatus(item)
       return not not app.audio.background_music and not app.audio.background_paused
@@ -583,13 +589,16 @@ function UIMenuBar:makeMenu(app)
   end
   options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
   options:appendCheckItem(_S.menu_options.edge_scrolling,
-    not self.ui.app.config.prevent_edge_scrolling,
-    function(item) self.ui.app.config.prevent_edge_scrolling = not item.checked end,
+    not app.config.prevent_edge_scrolling,
+    function(item) app.config.prevent_edge_scrolling = not item.checked end,
     nil,
-    function() return not self.ui.app.config.prevent_edge_scrolling end)
+    function() return not app.config.prevent_edge_scrolling end)
   options:appendCheckItem(_S.menu_options.adviser_disabled, 
-    not self.ui.app.config.adviser_disabled,
-    function(item) self.ui.app.config.adviser_disabled = not item.checked end)
+    not app.config.adviser_disabled,
+    function(item) 
+      app.config.adviser_disabled = not item.checked
+      app:saveConfig() 
+    end)
   
   local function temperatureDisplay(method)
     --local map = app.world.map

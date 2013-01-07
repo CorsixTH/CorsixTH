@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2009-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -59,6 +59,10 @@ public: // External API
     //! Paint the entire render target black
     bool fillBlack();
 
+    //! Sets a blue filter on the current surface.
+    // Used to add the blue effect when the game is paused.
+    void setBlueFilterActive(bool bActivate);
+
     //! Encode an RGB triplet for fillRect()
     uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
 
@@ -107,6 +111,8 @@ public: // Internal (this rendering engine only) API
 
 protected:
     SDL_Surface* m_pSurface;
+    SDL_Surface* m_pDummySurface;
+    bool m_bBlueFilterActive;
     THCursor* m_pCursor;
     float m_fBitmapScaleFactor;
     int m_iCursorX;

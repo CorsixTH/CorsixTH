@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2009-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -124,6 +124,7 @@ public: // External API
     bool startFrame();
     bool endFrame();
     bool fillBlack();
+    void setBlueFilterActive(bool bActivate);
     uint32_t mapColour(uint8_t iR, uint8_t iG, uint8_t iB);
     bool fillRect(uint32_t iColour, int iX, int iY, int iW, int iH);
     void getClipRect(THClipRect* pRect) const;
@@ -179,6 +180,8 @@ protected:
     int m_iWidth;
     int m_iHeight;
     bool m_bShouldScaleBitmaps;
+
+    bool m_bBlueFilterActive;
 
     void _drawVerts(size_t iFirst, size_t iLast);
     void _flushZoomBuffer();

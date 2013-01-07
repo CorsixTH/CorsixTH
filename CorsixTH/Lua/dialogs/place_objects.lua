@@ -448,7 +448,9 @@ end
 function UIPlaceObjects:onMouseUp(button, x, y)
   local repaint = Window.onMouseUp(self, button, x, y)
 
-  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+  -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+  -- Or the game is paused.
+  if not self.place_objects or not self.world.user_actions_allowed then 
     return
   end
   
@@ -517,19 +519,21 @@ function UIPlaceObjects:draw(canvas, x, y)
   if not self.visible then
     return -- Do nothing if dialog is not visible
   end
-
-  if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
-    local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
-    local zoom = self.ui.zoom_factor
-    if canvas:scale(zoom) then
-      x = x / zoom
-      y = y / zoom
+  -- Don't show the object if the game is paused
+  if self.world.user_actions_allowed then
+    if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
+      local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
+      local zoom = self.ui.zoom_factor
+      if canvas:scale(zoom) then
+        x = x / zoom
+        y = y / zoom
+      end
+      self.object_anim:draw(canvas, x, y)
+      if self.objects[self.active_index].object.slave_type then
+        self.object_slave_anim:draw(canvas, x, y)
+      end
+      canvas:scale(1)
     end
-    self.object_anim:draw(canvas, x, y)
-    if self.objects[self.active_index].object.slave_type then
-      self.object_slave_anim:draw(canvas, x, y)
-    end
-    canvas:scale(1)
   end
   
   Window.draw(self, canvas, x, y)
@@ -854,15 +858,18 @@ function UIPlaceObjects:onCursorWorldPositionChange(x, y)
   end
   
   repaint = true
-  
-  local wx, wy, wo = self:calculateBestPlacementPosition(x, y)
-  if wx ~= self.object_cell_x or wy ~= self.object_cell_y then
-    self:setBlueprintCell(wx, wy)
-    repaint = true
-  end
-  if wo ~= self.object_orientation then
-    self:setOrientation(wo)
-    repaint = true
+  if self.world.user_actions_allowed then
+    local wx, wy, wo = self:calculateBestPlacementPosition(x, y)
+    if wx ~= self.object_cell_x or wy ~= self.object_cell_y then
+      self:setBlueprintCell(wx, wy)
+      repaint = true
+    end
+    if wo ~= self.object_orientation then
+      self:setOrientation(wo)
+      repaint = true
+    end
+  else
+    self:clearBlueprint()
   end
   
   return repaint
