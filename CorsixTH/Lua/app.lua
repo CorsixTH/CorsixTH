@@ -150,7 +150,7 @@ function App:init()
   end
   self.modes = modes
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
-  self.video:setBlueFilterActive(self.video, false)
+  self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
   
   
@@ -338,7 +338,7 @@ end
 
 function App:loadMainMenu(message)
   -- Make sure there is no blue filter active.
-  self.video:setBlueFilterActive(self.video, false)
+  self.video:setBlueFilterActive(false)
 
   -- Unload ui, world and map
   self.ui = nil
@@ -381,7 +381,7 @@ function App:loadLevel(level, ...)
   end
   
   -- Make sure there is no blue filter active.
-  self.video:setBlueFilterActive(self.video, false)
+  self.video:setBlueFilterActive(false)
 
   -- Unload ui, world and map
   self.ui = nil

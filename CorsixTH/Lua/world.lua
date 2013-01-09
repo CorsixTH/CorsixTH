@@ -849,12 +849,12 @@ function World:setSpeed(speed)
     end
     -- If the config does not allow actions when the game is paused, add a blueish tone.
     if not TheApp.world.user_actions_allowed then
-      TheApp.video:setBlueFilterActive(TheApp.video, true)
+      TheApp.video:setBlueFilterActive(true)
     end
   elseif self:getCurrentSpeed() == "Pause" then
     -- Possibly remove the blueish tone.
     if not TheApp.config.allow_user_actions_while_paused then
-      TheApp.video:setBlueFilterActive(TheApp.video, false)
+      TheApp.video:setBlueFilterActive(false)
     end
   end
   self.prev_speed = self:getCurrentSpeed()

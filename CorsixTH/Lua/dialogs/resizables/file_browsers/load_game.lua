@@ -28,7 +28,7 @@ end
 function UILoadGame:choiceMade(name)
   local app = self.ui.app
   -- Make sure there is no blue filter active.
-  self.video:setBlueFilterActive(self.video, false)
+  app.video:setBlueFilterActive(false)
 
   local status, err = pcall(app.load, app, name .. ".sav")
   if not status then
