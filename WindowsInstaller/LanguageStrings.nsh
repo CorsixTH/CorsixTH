@@ -1,4 +1,4 @@
-﻿; Copyright (c) 2010 Edvin "Lego3" Linge
+; Copyright (c) 2010 Edvin "Lego3" Linge
 
 ; Permission is hereby granted, free of charge, to any person obtaining a copy of
 ; this software and associated documentation files (the "Software"), to deal in
@@ -64,6 +64,7 @@ LangString options_title      ${LANG_FINNISH} "Lisäasetukset"
 LangString options_subtitle   ${LANG_FINNISH} "Valitse alkuperäisen pelin asennushakemisto."
 LangString save_in_appdata    ${LANG_FINNISH} "Pelitietojen ja asetusten tallennushakemisto: %APPDATA% (Suositus)"
 LangString remove_saves       ${LANG_FINNISH} "Haluatko säilyttää tallennetut pelit?"
+LangString overwrite_install  ${LANG_FINNISH} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_FRENCH} "French"
 LangString original_text      ${LANG_FRENCH} "Pour pouvoir jouer, une installation du jeu original est nécessaire. Spécifiez cet emplacement ici."
@@ -87,6 +88,7 @@ LangString options_title      ${LANG_GERMAN} "Zusätzliche Einstellungen"
 LangString options_subtitle   ${LANG_GERMAN} "Verzeichnis des Originalspiels angeben."
 LangString save_in_appdata    ${LANG_GERMAN} "Spieldaten und Einstellungen in %APPDATA% speichern (empfohlen)"
 LangString remove_saves       ${LANG_GERMAN} "Möchten Sie gespeicherte Spielstände behalten?"
+LangString overwrite_install  ${LANG_GERMAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_ITALIAN} "Italian"
 LangString original_text      ${LANG_ITALIAN} "Per poter installare il gioco è necessario aver installato Theme Hospital Originale. Specifica qui la posizione della cartella."
@@ -98,6 +100,7 @@ LangString options_title      ${LANG_ITALIAN} "Opzioni Addizionali"
 LangString options_subtitle   ${LANG_ITALIAN} "Indica dove è il gioco originale."
 LangString save_in_appdata    ${LANG_ITALIAN} "Salva i dati di gioco e le impostazioni in %APPDATA% (Recommended)"
 LangString remove_saves       ${LANG_ITALIAN} "Vuoi tenere i tuoi salvataggi?"
+LangString overwrite_install  ${LANG_ITALIAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_NORWEGIAN} "Norwegian"
 LangString original_text      ${LANG_NORWEGIAN} "For å kunne spille dette spillet, må du ha det originale Theme Hospital installert. Spesifiser hvor det ligger."
@@ -121,6 +124,7 @@ LangString options_title      ${LANG_POLISH} "Dodatkowe opcje"
 LangString options_subtitle   ${LANG_POLISH} "Wybierz katalog z oryginalną grą."
 LangString save_in_appdata    ${LANG_POLISH} "Zapisz wszelkie dane z grą w katalogu %APPDATA% (Zalecane)"
 LangString remove_saves       ${LANG_POLISH} "Czy chcesz zachować zapisane gry?"
+LangString overwrite_install  ${LANG_POLISH} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_PORTUGUESE} "Portuguese"
 LangString original_text      ${LANG_PORTUGUESE} "De forma a poderes jogar precisas do jogo original instalado. Por favor diz-nos onde está instalado aqui."
@@ -132,6 +136,7 @@ LangString options_title      ${LANG_PORTUGUESE} "Opções adicionais"
 LangString options_subtitle   ${LANG_PORTUGUESE} "Especifica o caminho onde o jogo original se encontra."
 LangString save_in_appdata    ${LANG_PORTUGUESE} "Guardar as configurações e os dados do jogo em %APPDATA% (Recomendado)"
 LangString remove_saves       ${LANG_PORTUGUESE} "Would you like to keep your saved games?"
+LangString overwrite_install  ${LANG_PORTUGUESE} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_RUSSIAN} "Russian"
 LangString original_text      ${LANG_RUSSIAN} "Для работы этой игре требуется установка оригинальной Theme Hospital. Пожалуйста, укажите расположение ее файлов ниже."
@@ -143,6 +148,7 @@ LangString options_title      ${LANG_RUSSIAN} "Дополнительные оп
 LangString options_subtitle   ${LANG_RUSSIAN} "Укажите расположение оригинальной игры."
 LangString save_in_appdata    ${LANG_RUSSIAN} "Сохранять игровые данные и настройки в %APPDATA% (рекомендовано)"
 LangString remove_saves       ${LANG_RUSSIAN} "Оставить сохраненные игры?"
+LangString overwrite_install  ${LANG_RUSSIAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_SIMPCHINESE} "Chinese (simplified)"
 LangString original_text      ${LANG_SIMPCHINESE} "运行游戏需要原版主题医院。请指定原版主题医院游戏安装文件夹。"
@@ -154,6 +160,7 @@ LangString options_title      ${LANG_SIMPCHINESE} "附加选项"
 LangString options_subtitle   ${LANG_SIMPCHINESE} ""
 LangString save_in_appdata    ${LANG_SIMPCHINESE} "游戏设置保存在“用户帐户文件夹”（推荐）"
 LangString remove_saves       ${LANG_SIMPCHINESE} "你愿意保留已保存的游戏吗？"
+LangString overwrite_install  ${LANG_SIMPCHINESE} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
 
 LangString install_language   ${LANG_SPANISH} "Spanish"
 LangString original_text      ${LANG_SPANISH} "Para poder jugar a este juego, necesitas tener instalado el juego original. Introduce aquí la carpeta donde está instalado Theme Hospital."
@@ -189,3 +196,4 @@ LangString options_title      ${LANG_TRADCHINESE} "附加選項"
 LangString options_subtitle   ${LANG_TRADCHINESE} ""
 LangString save_in_appdata    ${LANG_TRADCHINESE} "遊戲設置保存在“使用者帳戶資料夾”（推薦）"
 LangString remove_saves       ${LANG_TRADCHINESE} "你願意保留已保存的遊戲嗎？"
+LangString overwrite_install  ${LANG_TRADCHINESE} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
