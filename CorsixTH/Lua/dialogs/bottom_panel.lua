@@ -502,7 +502,7 @@ function UIBottomPanel:afterLoad(old, new)
     self.ui:addKeyHandler("I", self, self.toggleInformation)
     self.ui:addKeyHandler("A", self, self.toggleAdviser)
   end
-  if old < 57 then
+  if old < 58 then
     self.pause_font = TheApp.gfx:loadFont("QData", "Font124V")
   end
   Window.afterLoad(self, old, new)
