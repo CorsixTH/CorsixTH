@@ -12,6 +12,7 @@
 
 PROJECT(CorsixTH_Top_Level)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
@@ -20,6 +21,7 @@ OPTION(WITH_OPENGL "Activate OpenGL Renderer" OFF)
 OPTION(WITH_DIRECTX "Activate DirectX Renderer" OFF)
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
+OPTION(WITH_MOVIES "Activate in game movies" ON)
 OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
@@ -65,6 +67,14 @@ ELSE()
   SET(CORSIX_TH_USE_SDL_MIXER OFF)
   MESSAGE("Note: SDL audio is disabled")
 ENDIF(WITH_AUDIO)
+
+IF(WITH_MOVIES)
+  SET(CORSIX_TH_USE_FFMPEG ON)
+  MESSAGE("Note: FFMPEG video is enabled (default)")
+ELSE()
+  SET(CORSIX_TH_USE_FFMPEG OFF)
+  MESSAGE("Note: FFMPEG video is disabled")
+ENDIF(WITH_MOVIES)
 
 IF(WITH_FREETYPE2)
   SET(CORSIX_TH_USE_FREETYPE2 ON)

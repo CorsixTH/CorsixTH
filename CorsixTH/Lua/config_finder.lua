@@ -105,6 +105,8 @@ local config_defaults = {
   adviser_disabled = false,
   allow_user_actions_while_paused = false,
   warmth_colors_display_default = 1,
+  movies = true,
+  play_intro = true
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -176,6 +178,9 @@ sound_volume = ]=].. tostring(config_values.sound_volume) ..[=[
 -- Adviser on/off: If you set this setting to true the adviser will no longer
 -- pop up.
 adviser_disabled = ]=].. tostring(config_values.adviser_disabled) ..[=[ 
+--
+-- Intro movie: By default enabled
+play_intro = ]=].. tostring(config_values.play_intro) ..[=[ 
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -291,6 +296,13 @@ warmth_colors_display_default = ]=].. tostring(config_values.warmth_colors_displ
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
 -- unicode_font = [[X:\ThemeHospital\font.ttc]] 
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Movie global on/off switch.
+-- Note that movies will also be disabled if CorsixTH was compiled without the
+-- FFMPEG library.
+movies = ]=].. tostring(config_values.movies) ..[=[ 
 -------------------------------------------------------------------------------
 ]=])
   end

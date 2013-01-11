@@ -203,7 +203,13 @@ function GameUI:onKeyDown(code, rawchar)
   end
   rawchar = self.key_code_to_rawchar[code] -- UI may have translated rawchar
   local key = self:_translateKeyCode(code, rawchar)
-  
+  --abort movies
+  if self.app.moviePlayer.playing then
+    if key == "esc" or key == " " then
+      self.app.moviePlayer:stop()
+    end
+    return true
+  end
   --Maybe the player wants to abort an "about to edit room" action
   if key == "esc" and self.edit_room then
     self:setEditRoom(false)
@@ -381,6 +387,9 @@ end
 -- TODO: try to remove duplication with UI:onMouseMove
 function GameUI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
+  if self.app.moviePlayer.playing then
+    return false
+  end
   
   self.cursor_x = x
   self.cursor_y = y
@@ -460,6 +469,10 @@ function GameUI:onMouseMove(x, y, dx, dy)
 end
 
 function GameUI:onMouseUp(code, x, y)
+  if self.app.moviePlayer.playing then
+    return UI.onMouseUp(self, code, x, y)
+  end
+
   if code == 4 or code == 5 then
     -- Mouse wheel
     local window = self:getWindow(UIFullscreen)

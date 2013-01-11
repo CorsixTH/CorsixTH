@@ -193,6 +193,11 @@ template <> struct luaT_classinfo<THSoundEffects> {
     static inline const char* name() {return "SoundEffects";}
 };
 
+class THMovie;
+template <> struct luaT_classinfo<THMovie> {
+    static inline const char* name() {return "Movie";}
+};
+
 struct THWindowBase_t;
 template <> struct luaT_classinfo<THWindowBase_t> {
     static inline const char* name() {return "WindowBase";}

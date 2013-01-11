@@ -198,7 +198,7 @@ void THSoundEffects::_onChannelFinish(int iChannel)
     if(pThis == NULL)
         return;
 
-    pThis->m_iChannelStatus |= (1 << iChannel);
+    pThis->releaseChannel(iChannel);
 }
 
 THSoundEffects* THSoundEffects::getSingleton()
@@ -274,12 +274,24 @@ void THSoundEffects::setSoundEffectsOn(bool bOn)
     m_bSoundEffectsOn = bOn;
 }
 
-void THSoundEffects::_playRaw(size_t iIndex, int iVolume)
+int THSoundEffects::reserveChannel()
 {
     // NB: Callers ensure that m_iChannelStatus != 0
     int iChannel = 0;
     for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
     m_iChannelStatus &=~ (1 << iChannel);
+
+    return iChannel;
+}
+
+void THSoundEffects::releaseChannel(int iChannel)
+{
+    m_iChannelStatus |= (1 << iChannel);
+}
+
+void THSoundEffects::_playRaw(size_t iIndex, int iVolume)
+{
+    int iChannel = reserveChannel();
 
     Mix_Volume(iChannel, iVolume);
     Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);

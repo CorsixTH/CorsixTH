@@ -49,6 +49,7 @@ enum eTHLuaMetatable
     MT_Cursor,
     MT_SoundArc,
     MT_SoundFx,
+    MT_Movie,
     MT_String,
     MT_WindowBase,
     MT_SpriteList,

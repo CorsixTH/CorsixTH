@@ -36,6 +36,7 @@ function Audio:Audio(app)
   }
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
+  self.abort_bg_music = false
 end
 
 local function GetFileData(path)
@@ -383,6 +384,16 @@ function Audio:pauseBackgroundTrack()
   self:notifyJukebox()
 end
 
+function Audio:stopBackgroundMusic()
+  self:stopBackgroundTrack()
+  self.abort_bg_music = true
+end
+
+function Audio:resumeBackgroundMusic()
+  self.abort_bg_music = false
+  self:playRandomBackgroundTrack()
+end
+
 function Audio:stopBackgroundTrack()
   if self.background_paused then
     -- unpause first in order to clear the backupped volume
@@ -431,12 +442,14 @@ function Audio:playBackgroundTrack(index)
     end)
     return
   end
-  SDL.audio.setMusicVolume(self.app.config.music_volume)
-  assert(SDL.audio.playMusic(music))
-  self.background_music = music
-  -- Update configuration that we want music
-  self.app.config.play_music = not not self.background_music
-  self:notifyJukebox()
+  if not self.abort_bg_music then
+    SDL.audio.setMusicVolume(self.app.config.music_volume)
+    assert(SDL.audio.playMusic(music))
+    self.background_music = music
+    -- Update configuration that we want music
+    self.app.config.play_music = not not self.background_music
+    self:notifyJukebox()
+  end
 end
 
 function Audio:onMusicOver()
@@ -481,5 +494,19 @@ function Audio:notifyJukebox()
   local jukebox = self.app.ui:getWindow(UIJukebox)
   if jukebox then
     jukebox:updatePlayButton()
+  end
+end
+
+function Audio:reserveChannel()
+  if self.sound_fx then
+    return self.sound_fx:reserveChannel()
+  else
+    return -1
+  end
+end
+
+function Audio:releaseChannel(channel)
+  if self.sound_fx and channel > -1 then
+    self.sound_fx:releaseChannel(channel)
   end
 end

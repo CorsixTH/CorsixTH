@@ -104,6 +104,8 @@ public:
     void setSoundEffectsVolume(double dVolume);
     void setSoundEffectsOn(bool bOn);
     void setCamera(int iX, int iY, int iRadius);
+    int reserveChannel();
+    void releaseChannel(int iChannel);
 
 protected:
 #ifdef CORSIX_TH_USE_SDL_MIXER

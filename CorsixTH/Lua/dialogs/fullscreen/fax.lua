@@ -168,6 +168,7 @@ function UIFax:choice(choice)
       -- TODO: Allow some kind of custom campaign with custom levels
     end
   elseif choice == "return_to_main_menu" then
+    self.ui.app.moviePlayer:playWinMovie()
     self.ui.app:loadMainMenu()
   end
   self.icon:removeMessage()

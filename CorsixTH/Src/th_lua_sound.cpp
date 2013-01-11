@@ -214,6 +214,22 @@ static int l_soundfx_set_camera(lua_State *L)
     return 0;
 }
 
+static int l_soundfx_reserve_channel(lua_State *L)
+{
+    int iChannel;
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    iChannel = pEffects->reserveChannel();
+    lua_pushinteger(L, iChannel);
+    return 1;
+}
+
+static int l_soundfx_release_channel(lua_State *L)
+{
+    THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
+    pEffects->releaseChannel(luaL_checkinteger(L, 2));
+    return 1;
+}
+
 void THLuaRegisterSound(const THLuaRegisterState_t *pState)
 {
     // Sound Archive
@@ -233,5 +249,7 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
     luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
     luaT_setfunction(l_soundfx_set_camera, "setCamera");
+    luaT_setfunction(l_soundfx_reserve_channel, "reserveChannel");
+    luaT_setfunction(l_soundfx_release_channel, "releaseChannel");
     luaT_endclass();
 }

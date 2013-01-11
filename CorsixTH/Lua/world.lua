@@ -1398,6 +1398,7 @@ end
 --!param limit (number) [optional] The number the player went over/under which caused him to lose.
 function World:loseGame(player_no, reason, limit)
   if player_no == 1 then -- TODO: Multiplayer
+    self.ui.app.moviePlayer:playLoseMovie()
     local message = {_S.information.level_lost[1]}
     if reason then
       message[2] = _S.information.level_lost[2]

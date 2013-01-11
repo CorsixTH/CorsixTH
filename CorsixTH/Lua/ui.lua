@@ -415,6 +415,19 @@ function UI:unregisterTextBox(box)
   end
 end
 
+function UI:resetVideo()
+  local width, height = self.app.config.width, self.app.config.height
+
+  self.app.video:endFrame()
+  self.app.video = TH.surface(width, height, unpack(self.app.modes))
+  self.app.gfx:updateTarget(self.app.video)
+  self.app.video:startFrame()
+  -- Redraw cursor
+  local cursor = self.cursor
+  self.cursor = nil
+  self:setCursor(cursor)
+end
+
 function UI:changeResolution(width, height)
   local old_width, old_height = self.app.config.width, self.app.config.height
   self.app.video:endFrame()
@@ -552,6 +565,13 @@ function UI:onKeyDown(code, rawchar)
   
   -- Apply key-remapping and normalisation
   local key = self.key_codes[code] or rawchar:lower()
+  if self.app.moviePlayer.playing then
+      if key == "esc" or key == " " then
+          self.app.moviePlayer:stop()
+      end
+      return true
+  end
+
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
@@ -649,6 +669,12 @@ end
 function UI:onMouseDown(code, x, y)
   local repaint = false
   local button = self.button_codes[code] or code
+  if self.app.moviePlayer.playing then
+    if button == "left" then
+      self.app.moviePlayer:stop()
+    end
+    return true
+  end
   if self.cursor_entity == nil and self.down_count == 0
   and self.cursor == self.default_cursor then
     self:setCursor(self.down_cursor)

@@ -49,6 +49,8 @@ function App:App()
     motion = self.onMouseMove,
     active = self.onWindowActive,
     music_over = self.onMusicOver,
+    movie_allocate_picture = self.onMovieAllocatePicture,
+    movie_over = self.onMovieOver
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
@@ -203,6 +205,13 @@ function App:init()
   self.audio = Audio(self)
   self.audio:init()
   
+  -- Load movie player
+  dofile "movie_player"
+  self.moviePlayer = MoviePlayer(self, self.audio)
+  if good_install_folder then
+    self.moviePlayer:init()
+  end
+
   -- Load strings before UI and before additional Lua
   dofile "strings"
   dofile "string_extensions"
@@ -265,6 +274,9 @@ function App:init()
     self:loadLevel("")
   else
     self:loadMainMenu()
+    if self.config.play_intro then
+      self.moviePlayer:playIntro()
+    end
     -- If we couldn't properly load the language, show an information dialog
     if not language_load_success then
       -- At this point we know the language is english, so no use having
@@ -400,7 +412,11 @@ function App:loadLevel(level, ...)
   -- Load UI
   self.ui = GameUI(self, self.world:getLocalPlayerHospital())
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
-  
+ 
+  if tonumber(level) then
+    self.moviePlayer:playAdvanceMovie(level)
+  end
+ 
   -- Now restore progress from previous levels.
   if carry_to_next_level then
     self.world:initFromPreviousLevel(carry_to_next_level)
@@ -749,10 +765,12 @@ function App:dispatch(evt_type, ...)
 end
 
 function App:onTick(...)
-  if self.world then
-    self.world:onTick(...)
+  if(not self.moviePlayer.playing) then
+    if self.world then
+      self.world:onTick(...)
+    end
+    self.ui:onTick(...)
   end
-  self.ui:onTick(...)
   return true -- tick events always result in a repaint
 end
 
@@ -762,9 +780,13 @@ local fps_sum = 0 -- Sum of fps_history array
 local fps_next = 1 -- Used to loop through fps_history when [over]writing
 
 function App:drawFrame()
-  self.video:startFrame()
-  self.ui:draw(self.video)
-  self.video:endFrame()
+  if(self.moviePlayer.playing) then
+    self.moviePlayer:refresh()
+  else
+    self.video:startFrame()
+    self.ui:draw(self.video)
+    self.video:endFrame()
+  end
   
   if self.config.track_fps then
     fps_sum = fps_sum - fps_history[fps_next]
@@ -806,6 +828,14 @@ end
 
 function App:onMusicOver(...)
   return self.audio:onMusicOver(...)
+end
+
+function App:onMovieAllocatePicture(...)
+  return self.moviePlayer:onMovieAllocatePicture(...)
+end
+
+function App:onMovieOver(...)
+  self.moviePlayer:onMovieOver(...)
 end
 
 function App:checkInstallFolder()

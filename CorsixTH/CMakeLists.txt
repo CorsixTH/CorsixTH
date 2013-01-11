@@ -137,6 +137,20 @@ IF(CORSIX_TH_USE_SDL_MIXER)
   ENDIF(SDLMIXER_FOUND)
 ENDIF(CORSIX_TH_USE_SDL_MIXER)
 
+message( STATUS "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}" )
+
+# Find FFMPEG
+IF(CORSIX_TH_USE_FFMPEG)
+	FIND_PACKAGE(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
+  IF(FFMPEG_FOUND)
+    TARGET_LINK_LIBRARIES(CorsixTH ${FFMPEG_LIBRARIES})
+    INCLUDE_DIRECTORIES(${FFMPEG_INCLUDE_DIRS})
+    message("  FFmpeg found")
+  ELSE(FFMPEG_FOUND)
+    message("Error: FFmpeg library not found, even though it was selected to be included")
+  ENDIF(FFMPEG_FOUND)
+ENDIF(CORSIX_TH_USE_FFMPEG)
+
 # Find Freetype2
 IF(CORSIX_TH_USE_FREETYPE2)
   FIND_PACKAGE(Freetype REQUIRED)
@@ -163,7 +177,6 @@ ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
 # Find DirectX
 IF(CORSIX_TH_USE_DX9_RENDERER)
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
   FIND_PACKAGE(DirectX REQUIRED)
   IF(DirectX_FOUND)
     TARGET_LINK_LIBRARIES(CorsixTH ${DirectX_LIBRARY})
@@ -174,6 +187,15 @@ IF(CORSIX_TH_USE_DX9_RENDERER)
     message(FATAL_ERROR "Error: DirectX library not found, it is required to build (consider changing choice of renderer)")
   ENDIF(DirectX_FOUND)
 ENDIF(CORSIX_TH_USE_DX9_RENDERER)
+
+# Find msinttypes for MSVC
+IF(MSVC)
+  FIND_PATH(MSINTTYPES_INCLUDE_DIRS "inttypes.h" NO_DEFAULT_PATH)
+  MARK_AS_ADVANCED(MSINTTYPES_INCLUDE_DIRS)
+  MESSAGE(STATUS "Adding include directory: ${MSINTTYPES_INCLUDE_DIRS}")
+  INCLUDE_DIRECTORIES(${MSINTTYPES_INCLUDE_DIRS})
+ENDIF(MSVC)
+
 # Declaration of the install process
 IF(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
