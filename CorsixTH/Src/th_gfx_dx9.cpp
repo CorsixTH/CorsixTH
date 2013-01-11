@@ -49,6 +49,7 @@ THRenderTarget::THRenderTarget()
     fnOnDeviceChange = THDX9_OnDeviceChangeThunk<THRenderTarget>;
     m_pD3D = NULL;
     m_pDevice = NULL;
+    m_pPixelShader = NULL;
     m_pVerticies = NULL;
     m_pWhiteTexture = NULL;
     m_pZoomRenderTexture = NULL;
@@ -70,6 +71,10 @@ THRenderTarget::THRenderTarget()
 
 THRenderTarget::~THRenderTarget()
 {
+    if(m_pPixelShader != NULL) {
+        m_pPixelShader->Release();
+        m_pPixelShader = NULL;
+    }
     if(m_pOriginalBackBuffer != NULL)
     {
         if(m_pDevice != NULL)
@@ -277,8 +282,9 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     // Create the pixel shader used for making a blue filter effect
     // when the game is paused.
     m_bBlueFilterActive = false;
-    LPD3DXBUFFER m_pCode;
-    m_pResult = D3DXCompileShaderFromFile("Src/shaders/blue_filter.psh",
+    if (m_pPixelShader == NULL) {
+        LPD3DXBUFFER m_pCode;
+        m_pResult = D3DXCompileShaderFromFile("Src/shaders/blue_filter.psh",
                                    NULL,          //macro's            
                                    NULL,          //includes           
                                    "ps_main",     //main function      
@@ -288,8 +294,9 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
                                    NULL,          //errors
                                    NULL);         //constants
 
-    m_pDevice->CreatePixelShader((DWORD*)m_pCode->GetBufferPointer(),
+        m_pDevice->CreatePixelShader((DWORD*)m_pCode->GetBufferPointer(),
                                    &m_pPixelShader);
+    }
 
     SetWindowLongPtr(hWindow, GWLP_USERDATA, (LONG_PTR)this);
     return true;
