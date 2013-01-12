@@ -95,7 +95,7 @@ function ResearchDepartment:initResearch()
   local policy = {
     cure = {frac = cure and 20 or 0, current = cure},
     diagnosis = {frac = diagnosis and 20 or 0, current = diagnosis},
-    drugs = {frac = drug and 20 or 0, points = 0, current = drug},
+    drugs = {frac = 20, points = 0, current = drug and drug or drain},
     improvements = {frac = improve and 20 or 0, points = 0, current = improve},
     specialisation = {frac = 20, points = 0, current = drain},
   }
@@ -136,6 +136,77 @@ function ResearchDepartment:checkAutomaticDiscovery(month)
         self:discoverObject(object, true)
       end
     end
+  end
+end
+
+--! Find a disease (if it exists) on which research can be concentrated and concentrate on it.
+function ResearchDepartment:setResearchConcentration()
+  local casebook = self.hospital.disease_casebook
+  if self.research_policy.specialisation.current ~= self.drain then
+    return
+  end
+  for _, disease in pairs(casebook) do
+    if disease.discovered and self.hospital:canConcentrateResearch(disease.disease.id) then
+      self:concentrateResearch(disease.disease.id)
+      return
+    end
+  end
+end
+
+--! Function that redistributes research points from a finished category to
+--! all the other categories.
+function ResearchDepartment:redistributeResearchPoints()
+  local sum, all_finished = 0, true
+  local policy = {"cure", "diagnosis", "drugs", "improvements", "specialisation"}
+  for _, research_category in ipairs(policy) do    
+    sum = sum + self.research_policy[research_category].frac
+    if self.research_policy[research_category].current and self.research_policy[research_category].current ~= self.drain then
+      all_finished = false
+    end
+  end
+  if not all_finished then
+    if sum == 0 then
+      local num_cat = 0
+      for _, categ  in ipairs(policy) do
+        if self.research_policy[categ].current then
+          num_cat = num_cat + 1
+        end
+      end
+      for _, categ  in ipairs(policy) do
+        if self.research_policy[categ].current then
+          self.research_policy[categ].frac = math.floor(self.research_policy.global / num_cat)
+        end
+      end
+      sum = math.floor(self.research_policy.global / num_cat) * num_cat
+      for _, categ  in ipairs(policy) do
+        if self.research_policy[categ].current then
+          if sum == self.research_policy.global then
+            break
+          end
+          self.research_policy[categ].frac = self.research_policy[categ].frac + 1
+          sum = sum + 1
+        end
+      end
+    else
+      local new_sum, max_value, max_category = 0, 0, ""
+      for _, categ  in ipairs(policy) do
+        local research_cat = self.research_policy[categ]
+        if research_cat.frac > max_value then
+          max_value = research_cat.frac
+          max_category = categ
+        end
+        research_cat.frac = math.floor(self.research_policy.global * research_cat.frac / sum) 
+        new_sum = new_sum + research_cat.frac
+      end
+      --if there are still some points left redistribute them to the research category with the maximum points
+      if new_sum < self.research_policy.global then
+        local frac = self.research_policy[max_category].frac + self.research_policy.global - new_sum 
+        self.research_policy[max_category].frac = frac
+      end
+    end
+  else
+    self.research_policy.global = 0
+    self.research_policy.specialisation.current = nil
   end
 end
 
@@ -198,8 +269,9 @@ function ResearchDepartment:nextResearch(category)
     local cat = self.research_policy[category]
     -- Nothing more to research
     cat.current = nil
-    self.research_policy.global = self.research_policy.global - cat.frac
     cat.frac = 0
+    self:redistributeResearchPoints()
+    
     if self.hospital == self.world.ui.hospital then
       self.world.ui.adviser:say(_A.research.drug_fully_researched
       :format(_S.research.categories[category]))
@@ -351,6 +423,7 @@ function ResearchDepartment:improveDrug(drug)
       -- Did the researchers concentrate on this drug?
       if self.research_policy.specialisation.current == drug then
         self.research_policy.specialisation.current = self.drain
+        self:setResearchConcentration()
       end
     end
     if self.research_policy.drugs.current == drug then
@@ -398,6 +471,7 @@ function ResearchDepartment:improveMachine(machine)
     if research_info.start_strength >= max then
       if self.research_policy.specialisation.current == machine then
         self.research_policy.specialisation.current = self.drain
+        self:setResearchConcentration()
       end
     end
     -- No matter what, check if another machine needs improvements more urgently.
@@ -494,6 +568,7 @@ function ResearchDepartment:discoverDisease(disease)
   and casebook_disease.drug then
     self.research_policy.drugs.current = casebook_disease
   end
+  self:setResearchConcentration()
 end
 
 --[[! It also costs to research.

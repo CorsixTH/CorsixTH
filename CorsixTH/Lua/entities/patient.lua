@@ -184,7 +184,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
         self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
       end
       self:setMood("cured", "activate")
-      self:playSound "cheer.wav"
+      self.world.ui:playSound "cheer.wav" -- This sound is always heard
       self.attributes["health"] = 1
       self:changeAttribute("happiness", 0.8)
       hospital:changeReputation("cured", self.disease)
@@ -222,7 +222,7 @@ function Patient:die()
     casebook.fatalities = casebook.fatalities + 1
   end
   self:setMood("dead", "activate")
-  self:playSound "boo.wav"
+  self.world.ui:playSound "boo.wav" -- this sound is always heard
   self.going_home = true
   if self:getRoom() then
     self:queueAction{name = "meander", count = 1}

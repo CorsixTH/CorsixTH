@@ -1660,3 +1660,50 @@ function Hospital:initOwnedPlots()
     end
   end
 end
+
+--! Function that returns true if the room for the given disease
+--! has not been researched yet.
+--! param disease (string): the disease to be checked.
+function Hospital:roomNotYetResearched(disease)
+  local req = self:checkDiseaseRequirements(disease)
+  if type(req) == "table" and #req.rooms > 0 then
+    for i, room_id in ipairs(req.rooms) do
+      if not self.discovered_rooms[self.world.available_rooms[room_id]] then
+        return true
+      end
+    end
+  end
+  return false  
+end
+
+--! Function that returns true if concentrating research on the disease is possible.
+--! @param disease (string): the disease to be checked. 
+function Hospital:canConcentrateResearch(disease)
+  local book = self.disease_casebook
+  if not book[disease].pseudo and self:roomNotYetResearched(disease) then
+    return true
+  end
+  if book[disease].drug then
+    return book[disease].cure_effectiveness < 100
+  end 
+  local room
+  if book[disease].pseudo then
+    room = book[disease].disease.id:sub(6)
+  else
+    room = book[disease].disease.treatment_rooms[#book[disease].disease.treatment_rooms]
+  end
+  local research_progress = self.research.research_progress
+  local object_type
+  for obj, _ in pairs(self.world.available_rooms[room].objects_needed) do
+    if self.world.object_types[obj].default_strength then
+      object_type = obj
+      break
+    end
+  end
+
+  if object_type then
+    local progress = research_progress[self.world.object_types[object_type]]  
+    return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
+  end
+  return false
+end

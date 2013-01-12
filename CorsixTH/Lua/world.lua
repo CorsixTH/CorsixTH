@@ -105,6 +105,10 @@ function World:World(app)
   self.hospitals[1] = Hospital(self) -- Player's hospital
   self:initCompetitors()
   self:initRooms()
+  -- Now the hospitals can concentrate their research.
+  for i, hospital in ipairs(self.hospitals) do
+    hospital.research:setResearchConcentration()
+  end
 
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support

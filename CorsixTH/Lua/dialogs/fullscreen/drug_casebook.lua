@@ -221,7 +221,7 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, _S.casebook.cure,             x + 255, y + 354)
   
   -- Specific disease information
-  if book[disease].machine or book[disease].drug then
+  if self.hospital:canConcentrateResearch(disease) then
     if book[disease].concentrate_research then  -- Concentrate research
       self.selected_title_font:draw(canvas, _S.casebook.research, x + 245, y + 398)
     else
@@ -336,8 +336,7 @@ function UICasebook:decreasePay()
 end
 
 function UICasebook:concentrateResearch()
-  if self.casebook[self.selected_disease].machine 
-  or self.casebook[self.selected_disease].drug then
+  if self.hospital:canConcentrateResearch(self.selected_disease) then
     self.hospital.research:concentrateResearch(self.selected_disease)
   end
 end
