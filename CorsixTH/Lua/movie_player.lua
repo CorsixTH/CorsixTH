@@ -36,6 +36,8 @@ function MoviePlayer:MoviePlayer(app, audio)
   self.advance_movies = {}
   self.intro_movie = nil
   self.win_movie = nil
+  self.wait_for_stop = false
+  self.wait_for_over = false
 end
 
 function MoviePlayer:init()
@@ -75,11 +77,11 @@ function MoviePlayer:init()
 end
 
 function MoviePlayer:playIntro()
-  self:playMovie(self.intro_movie)
+  self:playMovie(self.intro_movie, false)
 end
 
 function MoviePlayer:playWinMovie()
-  self:playMovie(self.win_movie)
+  self:playMovie(self.win_movie, true)
 end
 
 function MoviePlayer:playAdvanceMovie(level)
@@ -92,17 +94,17 @@ function MoviePlayer:playAdvanceMovie(level)
   else
     self.audio:playSound("DICEYFIN.WAV")
   end
-  self:playMovie(filename)
+  self:playMovie(filename, true)
 end
 
 function MoviePlayer:playLoseMovie()
   if #self.lose_movies > 0 then
     local filename = self.lose_movies[math.random(#self.lose_movies)]
-    self:playMovie(filename)
+    self:playMovie(filename, true)
   end
 end
 
-function MoviePlayer:playMovie(filename)
+function MoviePlayer:playMovie(filename, wait_for_stop)
   local x, y, w, h = 0
   local screen_w, screen_h = self.app.config.width, self.app.config.height
   local ar
@@ -148,6 +150,10 @@ function MoviePlayer:playMovie(filename)
   self.app.video:startFrame()
   self.app.video:fillBlack()
   self.app.video:endFrame()
+
+  self.wait_for_stop = wait_for_stop
+  self.wait_for_over = true
+  
   --TODO: Add text e.g. for newspaper headlines
   self.moviePlayer:play(x, y, w, h, self.channel)
   self.playing = true
@@ -158,26 +164,38 @@ function MoviePlayer:onMovieAllocatePicture()
 end
 
 function MoviePlayer:onMovieOver()
-  self.moviePlayer:unload()
-  self.app.ui:resetVideo()
-  if self.channel >= 0 then
-    self.audio:releaseChannel(self.channel)
-    self.channel = -1
+  self.wait_for_over = false
+  if not self.wait_for_stop then
+    self:_destroyMovie()
   end
-  if self.holding_bg_music then
-    self.audio:resumeBackgroundMusic()
-  end
-  -- restore defaults
-  self.playing = false
-  self.can_skip = true
+end
+
+function MoviePlayer:stop()
+    if self.can_skip then
+        self.moviePlayer:stop()
+    end
+    self.wait_for_stop = false
+    if not self.wait_for_over then
+        self:_destroyMovie()
+    end
+end
+
+function MoviePlayer:_destroyMovie()
+    self.moviePlayer:unload()
+    self.app.ui:resetVideo()
+    if self.channel >= 0 then
+        self.audio:releaseChannel(self.channel)
+        self.channel = -1
+    end
+    if self.holding_bg_music then
+        self.audio:resumeBackgroundMusic()
+    end
+    -- restore defaults
+    self.playing = false
+    self.can_skip = true
 end
 
 function MoviePlayer:refresh()
   self.moviePlayer:refresh()
 end
 
-function MoviePlayer:stop()
-  if self.can_skip then
-    self.moviePlayer:stop()
-  end
-end
