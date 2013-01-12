@@ -136,10 +136,14 @@ function UITownMap:onMouseUp(button, x, y)
   elseif button == "right" then
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
+    local map = self.ui.hospital.world.map.th
     if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
-      local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
-      self.ui:scrollMapTo(sx, sy)
-      self:close()
+      local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
+      if plot ~= 0 then
+        local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
+        self.ui:scrollMapTo(sx, sy)
+        self:close()
+      end  
     end
   end
   
