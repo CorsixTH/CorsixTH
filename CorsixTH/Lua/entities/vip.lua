@@ -23,7 +23,7 @@ class "Vip" (Humanoid)
 
 function Vip:Vip(...)
   self:Humanoid(...)
-  self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
+  self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.action_string = ""
 
   self.vip_rating = 50
