@@ -85,6 +85,7 @@ end
  
 function Patient:setDiagnosed(diagnosed)
   self.diagnosed = diagnosed
+  self.treatment_history[#self.treatment_history + 1] = self.disease.name
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
