@@ -171,28 +171,28 @@ function MoviePlayer:onMovieOver()
 end
 
 function MoviePlayer:stop()
-    if self.can_skip then
-        self.moviePlayer:stop()
-    end
-    self.wait_for_stop = false
-    if not self.wait_for_over then
-        self:_destroyMovie()
-    end
+  if self.can_skip then
+    self.moviePlayer:stop()
+  end
+  self.wait_for_stop = false
+  if not self.wait_for_over then
+    self:_destroyMovie()
+  end
 end
 
 function MoviePlayer:_destroyMovie()
-    self.moviePlayer:unload()
-    self.app.ui:resetVideo()
-    if self.channel >= 0 then
-        self.audio:releaseChannel(self.channel)
-        self.channel = -1
-    end
-    if self.holding_bg_music then
-        self.audio:resumeBackgroundMusic()
-    end
-    -- restore defaults
-    self.playing = false
-    self.can_skip = true
+  self.moviePlayer:unload()
+  self.app.ui:resetVideo()
+  if self.channel >= 0 then
+    self.audio:releaseChannel(self.channel)
+    self.channel = -1
+  end
+  if self.holding_bg_music then
+    self.audio:resumeBackgroundMusic()
+  end
+  -- restore defaults
+  self.playing = false
+  self.can_skip = true
 end
 
 function MoviePlayer:refresh()
