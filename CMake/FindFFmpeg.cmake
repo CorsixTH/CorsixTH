@@ -25,6 +25,7 @@
 # Copyright (c) 2006, Matthias Kretz, <kretz@kde.org>
 # Copyright (c) 2008, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2011, Michael Jansen, <kde@michael-jansen.biz>
+# Copyright (c) 2013, Stephen Baker
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -85,12 +86,6 @@ macro(find_component _component _pkgconfig _library _header)
   set(${_component}_VERSION      ${PC_${_component}_VERSION}      CACHE STRING "The ${_component} version number.")
 
   set_component_found(${_component})
-
-  mark_as_advanced(
-    ${_component}_INCLUDE_DIRS
-    ${_component}_LIBRARIES
-    ${_component}_DEFINITIONS
-    ${_component}_VERSION)
 
 endmacro()
 
