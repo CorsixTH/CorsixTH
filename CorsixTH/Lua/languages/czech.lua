@@ -2565,9 +2565,9 @@ menu_options = {
   warmth_colors = "    BARVY TEPLOTY",  
 }
 menu_options_warmth_colors = {
-  choice_2 = "     Modrá Zelená Ćervená ",
-  choice_1 = "     Červená ",
-  choice_3 = "     Žlutá Oranžová Červená ",
+  choice_2 = "     MODRÁ ZELENÁ ĆERVENÁ ",
+  choice_1 = "     ČERVENÁ ",
+  choice_3 = "     ŽLUTÁ ORANŽOVÁ ČERVENÁ ",
 }
 menu_debug = {
   cheats = "    (F11) ČÍTY  ",

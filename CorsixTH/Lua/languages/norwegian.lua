@@ -1079,9 +1079,9 @@ menu_options_game_speed = {
 
 -- Menu Options Warmth Colours
 menu_options_warmth_colors = {
-choice_1 = "  Röd  ",
-choice_2 = "  Blå Grönn Röd  ",
-choice_3 = "  Gul Orange Röd  ",
+choice_1 = "  RÖD  ",
+choice_2 = "  BLÅ GRÖNN RÖD  ",
+choice_3 = "  GUL ORANGE RÖD  ",
 }
 
 -- Menu Display

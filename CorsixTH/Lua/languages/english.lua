@@ -84,9 +84,9 @@ menu_options_game_speed = {
 }
 
 menu_options_warmth_colors = {
-  choice_1 = "  Red  ",
-  choice_2 = "  Blue Green Red  ",
-  choice_3 = "  Yellow Orange Red  ",
+  choice_1 = "  RED  ",
+  choice_2 = "  BLUE GREEN RED  ",
+  choice_3 = "  YELLOW ORANGE RED  ",
 }
 
 -- The demo does not contain this string

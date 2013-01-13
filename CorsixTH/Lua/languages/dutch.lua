@@ -2573,9 +2573,9 @@ menu_options_game_speed = {
   and_then_some_more = "  EN NOG EEN BEETJE ",
 }
 menu_options_warmth_colors = { 
-  choice_1 = "   Rood ", 
-  choice_2 = "   Blauw, groen en rood ", 
-  choice_3 = "   Geel, oranje en rood ", 
+  choice_1 = "   ROOD ", 
+  choice_2 = "   BLAUW, GROEN EN ROOD ", 
+  choice_3 = "   GEEL, ORANJE EN ROOD ", 
 }
 menu = {
   debug = "  DEBUG  ",

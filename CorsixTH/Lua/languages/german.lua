@@ -143,6 +143,7 @@ menu_options = {
   edge_scrolling   = "  AM BILDSCHIRMRAND SCROLLEN  ",
   settings         = "  EINSTELLUNGEN  ",
   adviser_disabled = "  BERATER  ",
+  warmth_colors    = "  FARBEN FÜR WÄRMEDARSTELLUNG  ",
 }
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
@@ -151,6 +152,12 @@ menu_options_game_speed = {
   normal              = "  (3) NORMAL  ",
   max_speed           = "  (4) MAXIMALE GESCHWINDIGKEIT  ",
   and_then_some_more  = "  (5) UND NOCH MEHR  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "  ROTTÖNE  ",
+  choice_2 = "  BLAU-GRÜN-ROT  ",
+  choice_3 = "  GELB-ORANGE-ROT  ",
 }
 
 -- The demo does not contain this string
@@ -200,6 +207,8 @@ adviser = {
     falling_5 = "Sie sind nicht hier um Leute umzustoßen. Sie sind krank, okay?",
     falling_6 = "Dies ist keine Bowlingbahn. Patienten sollten nicht so behandelt werden!",
     cannot_afford = "Sie haben nicht genügend Geld auf dem Konto um diese Person einzustellen!",
+    research_screen_open_1 = "Sie müssen eine Forschungseinrichtung errichten, um auf das Forschungsmenü zugreifen zu können.",
+    research_screen_open_2 = "Forschung ist im aktuellen Level nicht verfügbar.",
   },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
@@ -389,9 +398,11 @@ information = {
     reputation = "Ihr Ruf ist unter %d gesunken.",
     balance = "Ihr Kontostand ist unter %d gesunken.",
     percentage_killed = "Sie haben mehr als %d Prozent der Patienten getötet.",
+    cheat = "Sie haben das selbst so gewollt. Oder haben Sie etwa auf den falschen Knopf gedrückt? Sie können also nichtmal richtig cheaten. Traurig.",
   },
   very_old_save = "Seit dieses Level gestartet wurde, wurden einige Änderungen am Spiel durchgeführt. Sie sollten ein neues Spiel starten, damit alle Änderungen wirksam werden.",
   no_custom_game_in_demo = "Tut uns Leid, aber in der Demo-Version sind keine eigenen Level spielbar.",
+  cheat_not_possible = "Dieser Cheat ist in diesem Level nicht verfügbar. Sogar beim cheaten versagen Sie, wie armselig!",
 }
 
 tooltip.information = {
