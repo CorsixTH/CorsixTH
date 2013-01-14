@@ -21,7 +21,9 @@ SOFTWARE. --]]
 local action_staff_reception_interrupt = permanent"action_staff_reception_interrupt"( function(action, humanoid, high_priority)
   local object = action.object
   object.receptionist = nil
-  object:checkForNearbyStaff()
+  if not object.being_destroyed then -- don't look for replacement if desk was picked up
+    object:checkForNearbyStaff()
+  end
   humanoid.associated_desk = nil
   local dx, dy = object:getSecondaryUsageTile()
   if high_priority then

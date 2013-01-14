@@ -622,15 +622,7 @@ function Staff:onPlaceInCorridor()
   if self.humanoid_class == "Receptionist" then
     world:findObjectNear(self, "reception_desk", nil, function(x, y)
       local obj = world:getObject(x, y, "reception_desk")
-      if not obj.receptionist and not obj.reserved_for then
-        obj.reserved_for = self
-        self.associated_desk = obj
-        obj.receptionist = self
-        local use_x, use_y = obj:getSecondaryUsageTile()
-        self:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-        self:queueAction{name = "staff_reception", object = obj, must_happen = true}
-        return true
-      end
+      return obj and obj:occupy(self)
     end)
   end
 end

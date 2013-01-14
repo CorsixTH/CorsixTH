@@ -142,11 +142,7 @@ function ReceptionDesk:checkForNearbyStaff()
     return false
   end
   
-  self.reserved_for = nearest_staff
-  self.receptionist = nearest_staff
-  nearest_staff.associated_desk = self
-  nearest_staff:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-  nearest_staff:queueAction{name = "staff_reception", object = self, must_happen = true}
+  self:occupy(nearest_staff)
   return true
 end
 
@@ -170,9 +166,11 @@ function ReceptionDesk:setTile(x, y)
 end
 
 function ReceptionDesk:onDestroy()
-  if self.receptionist then
-    local receptionist = self.receptionist
-    self.receptionist:handleRemovedObject(self)
+  self.being_destroyed = true -- temporary flag for receptionist (re-)routing logic
+  local receptionist = self.receptionist or self.reserved_for
+  if receptionist then
+    receptionist:handleRemovedObject(self)
+    self.receptionist = nil
     self.reserved_for = nil
 
     -- Find a new reception desk for the receptionist
@@ -180,22 +178,32 @@ function ReceptionDesk:onDestroy()
     world:findObjectNear(receptionist, "reception_desk", nil, function(x, y)
       local obj = world:getObject(x, y, "reception_desk")
       -- Make sure we are not selecting the same desk again
-      if obj ~= self and not obj.receptionist and not obj.reserved_for then
-        obj.reserved_for = receptionist
-        receptionist.associated_desk = obj
-        obj.receptionist = receptionist
-        local use_x, use_y = obj:getSecondaryUsageTile()
-        receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-        receptionist:queueAction{name = "staff_reception", object = obj, must_happen = true}
-        return true
+      if obj and obj ~= self then
+        return obj:occupy(receptionist)
       end
     end)
-    self.receptionist = nil
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
   self.world:getLocalPlayerHospital().reception_desks[self] = nil
 
+  self.being_destroyed = nil
   return Object.onDestroy(self)
+end
+
+--[[ Create orders for the specified receptionist to walk to and then staff the reception desk,
+if not already staffed or someone is on the way
+!param receptionist (Staff) the receptionist to occupy this desk
+!return true iff the receptionist was ordered to the desk
+]]
+function ReceptionDesk:occupy(receptionist)
+  if not self.receptionist and not self.reserved_for then
+    self.reserved_for = receptionist
+    receptionist.associated_desk = self
+    local use_x, use_y = self:getSecondaryUsageTile()
+    receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
+    receptionist:queueAction{name = "staff_reception", object = self, must_happen = true}
+    return true
+  end
 end
 
 return object
