@@ -966,6 +966,15 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
      bFirst = false;
     }
 
+    if(m_pOverlay)
+    {
+        for(THMapNodeIterator itrNode(this, iScreenX, iScreenY, iWidth, iHeight); itrNode; ++itrNode)
+        {
+            m_pOverlay->drawCell(pCanvas, itrNode.x() + iCanvasX - 32,
+                itrNode.y() + iCanvasY, this, itrNode.nodeX(), itrNode.nodeY());
+        }
+    }
+
     pCanvas->setClipRect(NULL);
 }
 
