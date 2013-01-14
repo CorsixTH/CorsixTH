@@ -190,6 +190,7 @@ information = {
     reputation = "Je reputatie kwam onder %d",
     balance = "Je banksaldo was lager dan %d",
     percentage_killed = "Je hebt meer dan %d procent van je patiënten vermoord",
+    cheat = "Dit was jouw keuze of heb je op de verkeerde knop gedrukt? Dus je faalt zelfs om vals te spelen, niet zo grappig hè?",
   },
   cheat_not_possible = "Cheat kan niet toegepast worden op dit level. Je faalt zelfs om vals te spelen, niet zo grappig hè?",
 }
