@@ -88,7 +88,7 @@ LangString options_title      ${LANG_GERMAN} "Zusätzliche Einstellungen"
 LangString options_subtitle   ${LANG_GERMAN} "Verzeichnis des Originalspiels angeben."
 LangString save_in_appdata    ${LANG_GERMAN} "Spieldaten und Einstellungen in %APPDATA% speichern (empfohlen)"
 LangString remove_saves       ${LANG_GERMAN} "Möchten Sie gespeicherte Spielstände behalten?"
-LangString overwrite_install  ${LANG_GERMAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString overwrite_install  ${LANG_GERMAN} "Sie installieren in ein Verzeichnis mit einer existierenden Installation von CorsixTH. Eventuell vorgenommene Änderungen an den Spieldateien gehen verloren. Fortsetzen?"
 
 LangString install_language   ${LANG_ITALIAN} "Italian"
 LangString original_text      ${LANG_ITALIAN} "Per poter installare il gioco è necessario aver installato Theme Hospital Originale. Specifica qui la posizione della cartella."
