@@ -35,21 +35,18 @@ function UIFax:UIFax(ui, icon)
   self.code = ""
   
   -- Add choice buttons
-  local choices = false
+  local choices = self.message.choices
+  self.choice_buttons = {}
   local orig_y = 175
-  if self.message["choices"] then
-    choices = true
-    local last_y
-    for k = 3, 3 - #self.message["choices"] + 1, -1 do
-      last_y = orig_y + (k-1)*48
-      if self.message["choices"][k - (3 - #self.message["choices"])].choice ~= "disabled" then
-        local --[[persistable:fax_choice_button]] function callback()
-          self:choice(self.message["choices"][k - (3 - #self.message["choices"])].choice)
-        end
-        self:addPanel(17, 492, last_y):makeButton(0, 0, 43, 43, 18, callback)
-      else
-        self:addPanel(19, 492, last_y)
+  if choices then
+    for i = 1, #choices do
+      local y = orig_y + ((i-1) + (3-#choices)) * 48
+      local choice = choices[i].choice
+      local --[[persistable:fax_choice_button]] function callback()
+        self:choice(choice)
       end
+      self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
+        :setDisabledSprite(19):enable(choice ~= "disabled")
     end
   end
   
@@ -94,14 +91,13 @@ function UIFax:draw(canvas, x, y)
                                          last_y + (message.offset or 0), 330,
                                          "center")
     end
-    local choices = self.message["choices"]
+    local choices = self.message.choices
     if choices then
       local orig_y = y + 190
-      for k = 3, 3 - #choices + 1, -1 do
-        local choice = choices[k - (3 - #choices)]
-        last_y = orig_y + (k - 1) * 47
-        self.fax_font:drawWrapped(canvas, choice.text, x + 190,
-                                  last_y + (choice.offset or 0), 300)
+      for i = 1, #choices do
+        local last_y = orig_y + ((i-1) + (3-#choices)) * 48
+        self.fax_font:drawWrapped(canvas, choices[i].text, x + 190,
+                                  last_y + (choices[i].offset or 0), 300)
       end
     end
   end
@@ -229,4 +225,13 @@ function UIFax:close()
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
+end
+
+function UIFax:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
+  if old < 59 then
+    -- self.choice_buttons added, changes to disabled buttons.
+    -- Since it's hard to add retroactively, just close any opened fax window.
+    self:close()
+  end
 end

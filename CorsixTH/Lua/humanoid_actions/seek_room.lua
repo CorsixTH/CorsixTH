@@ -107,7 +107,9 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
       break
     end
   end
+  local room_available = false
   if not room_needed or humanoid.hospital.discovered_rooms[room_needed] then
+    room_available = true
     local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
     output_text = strings.need_to_build:format(room_name)
     if not humanoid.hospital:hasStaffOfCategory(required_staff) then
@@ -115,7 +117,7 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
     end
   end
   local research_btn = "disabled"
-  if humanoid.world:findRoomNear(humanoid, "research") then
+  if not room_available and humanoid.world:findRoomNear(humanoid, "research") then
     research_btn = "research"
   end
   local message = {
