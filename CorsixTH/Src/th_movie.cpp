@@ -250,6 +250,11 @@ THMovie::~THMovie()
     sws_freeContext(m_pSwsContext);
 }
 
+bool THMovie::moviesEnabled()
+{
+    return true;
+}
+
 void THMovie::load(const char* szFilepath)
 {
     int iError = 0;
@@ -486,11 +491,6 @@ void THMovie::unload()
         m_pbAudioPacketData = NULL;
         m_iAudioPacketSize = 0;
     }
-
-#ifdef CORSIX_TH_USE_OGL_RENDERER
-    SDL_Surface* pSurface = SDL_GetVideoSurface();
-    SDL_SetVideoMode(pSurface->w, pSurface->h, 0, pSurface->flags | SDL_OPENGL);
-#endif
 }
 
 void THMovie::readStreams()
@@ -539,6 +539,15 @@ void THMovie::readStreams()
     SDL_PushEvent(&endEvent);
 
     m_fAborting = true;
+}
+
+bool THMovie::requiresVideoReset()
+{
+#ifdef CORSIX_TH_USE_OGL_RENDERER
+    return true;
+#else
+    return false;
+#endif
 }
 
 void THMovie::refresh()
@@ -931,7 +940,7 @@ int THMovie::decodeAudioFrame()
 #else //CORSIX_TH_USE_FFMPEG
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
-
+bool THMovie::moviesEnabled() { return false; }
 void THMovie::load(const char* filepath) {}
 void THMovie::unload() {}
 void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
@@ -944,6 +953,7 @@ void THMovie::stop() {}
 int THMovie::getNativeHeight() { return 0; }
 int THMovie::getNativeWidth() { return 0; }
 bool THMovie::hasAudioTrack() { return false; }
+bool THMovie::requiresVideoReset() { return false; }
 void THMovie::refresh() {}
 void THMovie::copyAudioToStream(Uint8 *stream, int length) {}
 void THMovie::runVideo() {}

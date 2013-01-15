@@ -80,6 +80,7 @@ public:
     THMovie();
     ~THMovie();
 
+    bool moviesEnabled();
     void load(const char* szFilepath);
     void unload();
     void play(int iX, int iY, int iWidth, int iHeight, int iChannel);
@@ -87,6 +88,7 @@ public:
     int getNativeHeight();
     int getNativeWidth();
     bool hasAudioTrack();
+    bool requiresVideoReset();
     void refresh();
     void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
     void runVideo();

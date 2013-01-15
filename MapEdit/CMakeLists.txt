@@ -88,7 +88,8 @@ ENDIF(UNIX)
 # Finding libraries
 
 # Find WxWidgets
-SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}")
+SET(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}")
+MESSAGE("Module path:  ${CMAKE_MODULE_PATH}")
 SET(wxWidgets_USE_LIBS gl ribbon core base) # optionally: more than wx std libs
 FIND_PACKAGE(wxWidgets REQUIRED)
 IF(wxWidgets_FOUND)
@@ -124,6 +125,18 @@ IF(CORSIX_TH_USE_SDL_MIXER)
     message( "error: SDL_mixer library not found, it was selected to be included")
   ENDIF(SDLMIXER_FOUND)
 ENDIF(CORSIX_TH_USE_SDL_MIXER)
+
+# Find FFMPEG
+IF(CORSIX_TH_USE_FFMPEG)
+    FIND_PACKAGE(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
+  IF(FFMPEG_FOUND)
+    TARGET_LINK_LIBRARIES(MapEdit ${FFMPEG_LIBRARIES})
+    INCLUDE_DIRECTORIES(${FFMPEG_INCLUDE_DIRS})
+    message("  FFmpeg found")
+  ELSE(FFMPEG_FOUND)
+    message("Error: FFmpeg library not found, even though it was selected to be included")
+  ENDIF(FFMPEG_FOUND)
+ENDIF(CORSIX_TH_USE_FFMPEG)
 
 # Find Freetype2
 IF(CORSIX_TH_USE_FREETYPE2)
