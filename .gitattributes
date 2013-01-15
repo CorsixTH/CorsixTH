@@ -108,6 +108,7 @@ WindowsInstaller/Win32Script.nsi -text
 WindowsInstaller/welcome.bmp -text
 agg/authors -text
 agg/copying -text
+agg/include/agg_vcgen_stroke.cpp -text
 agg/news -text
 agg/src/authors -text
 agg/src/copying -text

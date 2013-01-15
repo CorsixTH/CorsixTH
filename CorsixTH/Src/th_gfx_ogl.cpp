@@ -1249,6 +1249,85 @@ bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
     return false;
 }
 
+THLine::THLine()
+{
+    m_fWidth = 1;
+    m_iR = 0;
+    m_iG = 0;
+    m_iB = 0;
+    m_iA = 255;
+
+    // We start at 0,0
+    m_pFirstOp = new THLineOperation(THLOP_MOVE, 0, 0);
+    m_pCurrentOp = m_pFirstOp;
+}
+
+THLine::~THLine()
+{
+    THLineOperation* op = m_pFirstOp;
+    while (op) {
+        THLineOperation* next = (THLineOperation*)(op->m_pNext);
+        delete(op);
+        op = next;
+    }
+}
+
+void THLine::moveTo(double fX, double fY)
+{
+    THLineOperation* previous = m_pCurrentOp;
+    m_pCurrentOp = new THLineOperation(THLOP_MOVE, fX, fY);
+    previous->m_pNext = m_pCurrentOp;
+}
+
+void THLine::lineTo(double fX, double fY)
+{
+    THLineOperation* previous = m_pCurrentOp;
+    m_pCurrentOp = new THLineOperation(THLOP_LINE, fX, fY);
+    previous->m_pNext = m_pCurrentOp;
+}
+
+void THLine::setWidth(double pLineWidth)
+{
+    m_fWidth = pLineWidth;
+}
+
+void THLine::setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA)
+{
+    m_iR = iR;
+    m_iG = iG;
+    m_iB = iB;
+    m_iA = iA;
+}
+
+void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+    pCanvas->flushSprites(); // Without this the lines are draw behind sprites/textures
+
+    glDisable(GL_TEXTURE_2D);
+    glColor4ub(m_iR, m_iG, m_iB, m_iA);
+    glLineWidth(m_fWidth);
+
+    double lastX, lastY;
+    lastX = m_pFirstOp->m_fX;
+    lastY = m_pFirstOp->m_fY;
+
+    THLineOperation* op = (THLineOperation*)(m_pFirstOp->m_pNext);
+    while (op) {
+        if (op->type == THLOP_LINE) {
+            glBegin(GL_LINES);
+            glVertex3f(lastX + iX, lastY +iY, 0.0f);
+            glVertex3f(op->m_fX + iX, op->m_fY + iY, 0.0f);
+            glEnd();
+        }
+
+        lastX = op->m_fX;
+        lastY = op->m_fY;
+
+        op = (THLineOperation*)(op->m_pNext);
+    }
+    glEnable(GL_TEXTURE_2D);
+}
+
 #ifdef CORSIX_TH_USE_FREETYPE2
 bool THFreeTypeFont::_isMonochrome() const
 {

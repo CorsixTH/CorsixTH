@@ -29,6 +29,7 @@ SOFTWARE.
 #endif
 #define CORSIX_TH_HAS_RENDERING_ENGINE
 #include <SDL.h>
+#include "agg_path_storage.h"
 
 class THCursor;
 struct THClipRect : public SDL_Rect
@@ -271,6 +272,30 @@ protected:
     SDL_Cursor* m_pCursorHidden;
     int m_iHotspotX;
     int m_iHotspotY;
+};
+
+class THLine
+{
+public:
+    THLine();
+    ~THLine();
+
+    void moveTo(double fX, double fY);
+
+    void lineTo(double fX, double fY);
+
+    void setWidth(double lineWidth);
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
+
+    void setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
+protected:
+    agg::path_storage m_oPath;
+    double m_fWidth;
+    uint8_t m_iR, m_iG, m_iB, m_iA;
+
+    SDL_Surface* m_pBitmap; // A cache for line drawing
+    double m_fMaxX, m_fMaxY; // We'll need a surface with this size
 };
 
 #endif // CORSIX_TH_USE_SDL_RENDERER

@@ -1000,7 +1000,7 @@ function Hospital:onEndMonth()
     money_out = self.money_out,
     wages = wages,
     balance = self.balance,
-    visitors = self.visitors,
+    visitors = self.num_visitors,
     cures = self.num_cured,
     deaths = self.num_deaths,
     reputation = self.reputation,

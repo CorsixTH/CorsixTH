@@ -298,5 +298,41 @@ protected:
     friend class THRenderTarget;
 };
 
+class THLine
+{
+public:
+    THLine();
+    ~THLine();
+
+    void moveTo(double fX, double fY);
+
+    void lineTo(double fX, double fY);
+
+    void setWidth(double lineWidth);
+
+    void draw(THRenderTarget* pCanvas, int iX, int iY);
+
+    void setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
+protected:
+    enum THLineOpType {
+        THLOP_MOVE,
+        THLOP_LINE
+    };
+
+    struct THLineOperation : public THLinkList
+    {
+        THLineOpType type;
+        double m_fX, m_fY;
+        THLineOperation(THLineOpType type, double m_fX, double m_fY) : type(type), m_fX(m_fX), m_fY(m_fY) {
+            m_pNext = NULL;
+        }
+    };
+
+    THLineOperation* m_pFirstOp;
+    THLineOperation* m_pCurrentOp;
+    double m_fWidth;
+    uint8_t m_iR, m_iG, m_iB, m_iA;
+};
+
 #endif // CORSIX_TH_USE_OGL_RENDERER
 #endif // CORSIX_TH_TH_GFX_OGL_H_

@@ -742,6 +742,58 @@ static int l_surface_scale(lua_State *L)
     return 1;
 }
 
+static int l_line_new(lua_State *L)
+{
+    luaT_stdnew<THLine>(L);
+    return 1;
+}
+
+static int l_move_to(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    pLine->moveTo(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_line_to(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    pLine->lineTo(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_set_width(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    pLine->setWidth(luaL_optnumber(L, 2, 1));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_set_colour(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    pLine->setColour(luaL_optint(L, 2, 0), luaL_optint(L, 3, 0), luaL_optint(L, 4, 0), luaL_optint(L, 5, 255));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
+static int l_line_draw(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    pLine->draw(pCanvas, luaL_optint(L, 3, 0), luaL_optint(L, 4, 0));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 {
     // Palette
@@ -822,5 +874,14 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_set_clip, "setClip");
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
     luaT_setfunction(l_surface_scale, "scale");
+    luaT_endclass();
+
+    // Line
+    luaT_class(THLine, l_line_new, "line", MT_Line);
+    luaT_setfunction(l_move_to, "moveTo");
+    luaT_setfunction(l_line_to, "lineTo");
+    luaT_setfunction(l_set_width, "setWidth");
+    luaT_setfunction(l_set_colour, "setColour");
+    luaT_setfunction(l_line_draw, "draw", MT_Surface);
     luaT_endclass();
 }

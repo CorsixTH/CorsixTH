@@ -29,12 +29,16 @@ SOFTWARE.
 #include "th_map.h"
 #include "agg_rendering_buffer.h"
 #include "agg_pixfmt_rgb.h"
+#include "agg_pixfmt_rgba.h"
 #include "agg_renderer_base.h"
 #include "agg_span_interpolator_linear.h"
 #include "agg_span_image_filter_rgb.h"
 #include "agg_scanline_p.h"
 #include "agg_renderer_scanline.h"
 #include "agg_span_allocator.h"
+#include "agg_rasterizer_scanline_aa.h"
+#include "agg_conv_stroke.h"
+#include "agg_vcgen_stroke.cpp"
 #include <new>
 
 THRenderTarget::THRenderTarget()
@@ -865,6 +869,105 @@ void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)
     SDL_Rect rcDest;
     rcDest.x = (Sint16)(iX - m_iHotspotX);
     rcDest.y = (Sint16)(iY - m_iHotspotY);
+    SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+}
+
+THLine::THLine()
+{
+    m_fWidth = 1;
+    m_iR = 0;
+    m_iG = 0;
+    m_iB = 0;
+    m_iA = 255;
+    m_pBitmap = NULL;
+    m_fMaxX = 0;
+    m_fMaxY = 0;
+}
+
+THLine::~THLine()
+{
+    SDL_FreeSurface(m_pBitmap);
+}
+
+void THLine::moveTo(double fX, double fY)
+{
+    m_oPath.move_to(fX, fY);
+
+    m_fMaxX = fX > m_fMaxX ? fX : m_fMaxX;
+    m_fMaxY = fY > m_fMaxY ? fY : m_fMaxY;
+
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
+}
+
+void THLine::lineTo(double fX, double fY)
+{
+    m_oPath.line_to(fX, fY);
+
+    m_fMaxX = fX > m_fMaxX ? fX : m_fMaxX;
+    m_fMaxY = fY > m_fMaxY ? fY : m_fMaxY;
+
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
+}
+
+void THLine::setWidth(double pLineWidth)
+{
+    m_fWidth = pLineWidth;
+
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
+}
+
+void THLine::setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA)
+{
+    m_iR = iR;
+    m_iG = iG;
+    m_iB = iB;
+    m_iA = iA;
+
+    SDL_FreeSurface(m_pBitmap);
+    m_pBitmap = NULL;
+}
+
+void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
+{
+    SDL_Rect rcDest;
+    rcDest.x = iX;
+    rcDest.y = iY;
+
+    // Try to get a cached line surface
+    if (m_pBitmap) {
+        SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+        return;
+    }
+
+    // No cache, let's build a new one
+    SDL_FreeSurface(m_pBitmap);
+
+    Uint32 amask;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    amask = 0x000000ff;
+#else
+    amask = 0xff000000;
+#endif
+
+    const SDL_PixelFormat& fmt = *(pCanvas->getRawSurface()->format);
+    m_pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCALPHA, (int)ceil(m_fMaxX), (int)ceil(m_fMaxY), fmt.BitsPerPixel, fmt.Rmask, fmt.Gmask, fmt.Bmask, amask);
+
+    agg::rendering_buffer rbuf(reinterpret_cast<agg::int8u*>(m_pBitmap->pixels), m_pBitmap->w, m_pBitmap->h, m_pBitmap->pitch);
+    agg::pixfmt_rgba32 pixf(rbuf);
+    agg::renderer_base<agg::pixfmt_rgba32> renb(pixf);
+
+    agg::conv_stroke<agg::path_storage> stroke(m_oPath);
+    stroke.width(m_fWidth);
+
+    agg::rasterizer_scanline_aa<> ras;
+    ras.add_path(stroke);
+
+    agg::scanline_p8 sl;
+    agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba8(m_iB, m_iG, m_iR, m_iA));
+
     SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 

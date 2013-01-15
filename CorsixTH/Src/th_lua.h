@@ -178,6 +178,11 @@ template <> struct luaT_classinfo<THCursor> {
     static inline const char* name() {return "Cursor";}
 };
 
+class THLine;
+template <> struct luaT_classinfo<THLine> {
+    static inline const char* name() {return "Line";}
+};
+
 struct music_t;
 template <> struct luaT_classinfo<music_t> {
     static inline const char* name() {return "Music";}
