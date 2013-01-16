@@ -1,10 +1,6 @@
 * text=auto !eol
 AnimView/AnimView.ico -text
 AnimView/AnimView.rc -text
-CMake/COPYING-CMAKE-SCRIPTS -text
-CMake/FindDirectX.cmake -text
-CMake/FindFFmpeg.cmake -text
-CMake/FindPkgMacros.cmake -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.spec -text
 CorsixTH/Bitmap/aux_ui.tab -text
@@ -66,12 +62,8 @@ CorsixTH/Levels/original07.level -text
 CorsixTH/Levels/original11.level -text
 CorsixTH/Levels/original12.level -text
 CorsixTH/Lua/dialogs/fullscreen/graphs.lua -text
-CorsixTH/Lua/movie_player.lua -text
 CorsixTH/Original_Logo.svg -text
 CorsixTH/Original_Logo_Text.svg -text
-CorsixTH/Src/th_lua_movie.cpp -text
-CorsixTH/Src/th_movie.cpp -text
-CorsixTH/Src/th_movie.h -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 DebianPackage/control -text
 DebianPackage/debian-binary -text
