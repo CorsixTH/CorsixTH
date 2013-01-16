@@ -222,7 +222,7 @@ end
 --   { text = "second line of text", offset (integer, optional) }
 --   ...
 --   choices = {
---     { text = "first choice", choice = "choice_type" }
+--     { text = "first choice", choice = "choice_type", enabled = true or false (optional, defaults to true) }
 --     ...
 --   }
 -- }
@@ -239,6 +239,10 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     timeout = timeout,
     default_choice = default_choice,
   }
+  -- create reference to message in owner
+  if owner then
+    owner.message = message
+  end
 end
 
 --! Trigger a message to be moved from the queue into a actual window, after
@@ -266,9 +270,17 @@ function UIBottomPanel:openFirstMessage()
   end
 end
 
--- Removes a message from the mesasge queue (for example if a room is built before the player
+-- Removes a message from the message queue (for example if a room is built before the player
 -- says what to do with the patient.
 function UIBottomPanel:removeMessage(owner)
+  for i, msg_info in ipairs(self.message_queue) do
+    if msg_info.owner == owner then
+      -- TODO: restructure message_queue to contain UIMessage objects already, so this special handling isn't required
+      owner.message = nil
+      table.remove(self.message_queue, i)
+      return true
+    end
+  end
   for _, window in ipairs(self.message_windows) do
     if window.owner == owner then
       window:removeMessage()

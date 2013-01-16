@@ -870,3 +870,32 @@ function Patient:updateDynamicInfo(action_string)
   end
   self:setDynamicInfo('text', {action_string, "", info})
 end
+
+--[[ Update availability of a choice in message owned by this patient, if any
+!param choice (string) The choice that needs updating (currently "research" or "guess_cure").
+]]
+function Patient:updateMessage(choice)
+  if self.message and self.message.choices then
+    local enabled = false
+    if choice == "research" then
+      -- enable only if research department is built and a room in the treatment chain is undiscovered
+      if self.hospital:hasRoomOfType("research") then
+        local req = self.hospital:checkDiseaseRequirements(self.disease.id)
+        for _, room_id in ipairs(req.rooms) do
+          local room = self.world.available_rooms[room_id]
+          if room and self.hospital.undiscovered_rooms[room] then
+            enabled = true
+          end
+        end
+      end
+    else -- if choice == "guess_cure" then
+      -- TODO: implement
+    end
+    
+    for _, c in ipairs(self.message.choices) do
+      if c.choice == choice then
+        c.enabled = enabled
+      end
+    end
+  end
+end

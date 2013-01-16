@@ -129,7 +129,8 @@ function UIMessage:removeMessage(choice_number)
     if self.fax then
       self.fax:close()
     end
-    if self.owner and self.owner.message_callback then
+    if self.owner then
+      self.owner.message = nil
       self.owner.message_callback = nil
     end
     self:onClose(false)

@@ -100,26 +100,20 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   -- Can this room be built right now? What is then missing?
   -- TODO: Change to make use of Hospital:checkDiseaseRequirements
   local output_text = strings.can_not_cure
-  local room_needed
-  for _, room in ipairs(TheApp.rooms) do
-    if room_type == room.id then
-      room_needed = room
-      break
-    end
-  end
-  local room_available = false
-  if not room_needed or humanoid.hospital.discovered_rooms[room_needed] then
-    room_available = true
+  -- TODO: can we really assert this? Or should we just make the patient go home?
+  local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
+  
+  local room_discovered = false
+  if humanoid.hospital.discovered_rooms[room] then
+    room_discovered = true
     local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
-    output_text = strings.need_to_build:format(room_name)
-    if not humanoid.hospital:hasStaffOfCategory(required_staff) then
+    if humanoid.hospital:hasStaffOfCategory(required_staff) then
+      output_text = strings.need_to_build:format(room_name)
+    else
       output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
     end
   end
-  local research_btn = "disabled"
-  if not room_available and humanoid.world:findRoomNear(humanoid, "research") then
-    research_btn = "research"
-  end
+  local research_enabled = not room_discovered and humanoid.hospital:hasRoomOfType("research")
   local message = {
     {text = strings.disease_name:format(humanoid.disease.name)},
     {text = " "},
@@ -128,7 +122,7 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
     choices = {
       {text = strings.choices.send_home, choice = "send_home"},
       {text = strings.choices.wait,      choice = "wait"},
-      {text = strings.choices.research,  choice = research_btn},
+      {text = strings.choices.research,  choice = "research", enabled = research_enabled},
     },
   }
   -- Ok, send the message in all channels.
@@ -157,25 +151,20 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Wait two months before going home anyway.
     humanoid:setMood("patient_wait", "activate")
     humanoid.waiting = 60
-    local middle_choice = "disabled"
-    local more_text = ""
-    if humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
-      middle_choice = "guess_cure"
-      more_text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
-        :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)
-    end
+    local guess_enabled = humanoid.hospital.disease_casebook[humanoid.disease.id].discovered
     local message = {
       {text = _S.fax.diagnosis_failed.situation},
       {text = " "},
       {text = _S.fax.diagnosis_failed.what_to_do_question},
       choices = {
         {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home"},
-        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = middle_choice},
+        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
         {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait"},
       },
     }
-    if more_text ~= "" then
-      table.insert(message, 3, {text = more_text})
+    if guess_enabled then
+      table.insert(message, 3, {text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
+        :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)})
     end
     TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
@@ -227,6 +216,11 @@ local function action_seek_room_start(action, humanoid)
       action.must_happen = true
       local build_callback
       build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
+        -- if research room was built, message may need to be updated
+        if room.room_info.id == "research" then
+          humanoid:updateMessage("research")
+        end
+        
         local found = false
         if room.room_info.id == action.room_type then
           found = true
