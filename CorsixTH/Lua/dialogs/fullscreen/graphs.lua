@@ -226,3 +226,9 @@ function UIGraphs:toggleGraph(name)
   self.hide_graph[name] = not self.hide_graph[name]
   self.ui:playSound("selectx.wav")
 end
+
+function UIGraphs:afterLoad(old, new)
+  if old < 60 then
+    self:close()
+  end
+end
