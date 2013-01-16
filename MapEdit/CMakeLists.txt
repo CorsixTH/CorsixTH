@@ -172,6 +172,15 @@ ELSE(LUA51_FOUND)
   message( FATAL_ERROR "error: Lua library not found, it is required to build")
 ENDIF(LUA51_FOUND)
 
+# Find msinttypes for MSVC
+IF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
+  FIND_PATH(MSINTTYPES_INCLUDE_DIRS "inttypes.h" NO_DEFAULT_PATH)
+  MESSAGE(STATUS "Adding include directory: ${MSINTTYPES_INCLUDE_DIRS}")
+  INCLUDE_DIRECTORIES(${MSINTTYPES_INCLUDE_DIRS})
+  SET(CORSIX_TH_HAS_STDINT_H 1)
+  SET(CORSIX_TH_HAS_INTTYPES_H 1)
+ENDIF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
+
 IF(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
   install(TARGETS MapEdit BUNDLE DESTINATION .)
