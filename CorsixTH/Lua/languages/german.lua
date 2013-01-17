@@ -160,6 +160,18 @@ menu_options_warmth_colors = {
   choice_3 = "  GELB-ORANGE-ROT  ",
 }
 
+menu_charts = {
+  bank_manager  = "  (F1) BANK-MANAGER  ",
+  statement     = "  (F2) BILANZ  ",
+  staff_listing = "  (F3) PERSONALLISTE  ",
+  town_map      = "  (F4) ÜBERSICHTSKARTE  ",
+  casebook      = "  (F5) BEHANDLUNGSMAPPE  ",
+  research      = "  (F6) FORSCHUNG  ",
+  status        = "  (F7) STATUS  ",
+  graphs        = "  (F8) DIAGRAMME  ",
+  policy        = "  (F9) EINSTELLUNGEN  ",
+}
+
 -- The demo does not contain this string
 menu_file.restart = "  NEUSTART  "
 
