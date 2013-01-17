@@ -465,6 +465,9 @@ end
 function UIBottomPanel:addDialog(dialog, extra_function)
   local edit_window = self.ui:getWindow(UIEditRoom)
   -- If we are currently editing a room, ask for abortion before adding any dialog.
+  -- FIXME: with the current scheme, the dialog is already there while waiting on the user's
+  --        confirmation, just not visible. This raises problems e.g. with the casebook, where
+  --        arrow keys are intercepted and used to change treatment costs.
   if edit_window then
     self.ui:addWindow(UIConfirmDialog(self.ui,
       _S.confirmation.abort_edit_room,
@@ -474,6 +477,9 @@ function UIBottomPanel:addDialog(dialog, extra_function)
           extra_function()
         end
         self.ui:addWindow(dialog)
+      end,
+      --[[persistable:abort_edit_room_cancel_dialog]]function()
+        dialog:close()
       end
     ))
   else
