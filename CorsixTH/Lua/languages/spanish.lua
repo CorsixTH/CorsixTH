@@ -23,9 +23,9 @@ Inherit("english")
 Inherit("original_strings", 4)
 
 -------------------------------  OVERRIDE  ----------------------------------
-misc.hospital_open = "Hospital abierto"
-misc.save_success = "Partida guardada correctamente"
-misc.save_failed = "ERROR: No se ha podido guardar la partida"
+adviser.warnings.money_low = "Te estás quedando sin dinero."
+tooltip.graphs.reputation = "Cambiar reputación"
+tooltip.status.close = "Cerrar pantalla de estado"
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Mostrar la página siguiente"
@@ -33,10 +33,19 @@ tooltip.staff_list.prev_person = "Mostrar la página anterior"
 tooltip.status.reputation = "Tu reputación no debe estar por debajo de %d. Actualmente tienes %d"
 tooltip.status.balance = "No debes tener menos de %d $ en el banco. Actualmente tienes %d"
 
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
+tooltip.staff_window.center_view = "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
+
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = "¿Seguro que quieres reiniciar el nivel?"
+-- TODO adviser.multiplayer.objective_completed
+-- TODO adviser.multiplayer.objective_failed
+
 fax.vip_visit_result.remarks.mediocre[2] = "¡Oh, cielos! No es un lugar agradable para ir si estás pachucho."
 fax.vip_visit_result.remarks.mediocre[3] = "Si le soy sincero, es un hospital normalucho. Francamente, yo esperaba más."
 fax.vip_visit_result.remarks.very_bad[1] = "¡Vaya tugurio! Voy a intentar clausurarlo."
-introduction_texts.level1[7] = "Tendrás que curar a 10 personas y asegurarte de que tu reputación no sea inferior a 200. "
+introduction_texts.level1[7] = "Tendrás que curar a 10 personas y asegurarte de que tu reputación no sea inferior a 200."
 fax.emergency.num_disease = "Hay %d personas con %s y necesitan ser atendidas inmediatamente."
 
 tooltip.handyman_window.close = "Cerrar ventana"
@@ -54,14 +63,10 @@ tooltip.staff_window.close = "Cerrar ventana"
 tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
 menu_options.jukebox = "  REPRODUCTOR DE MúSICA  "
 
--- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = "Rostro de la persona - pulsa para abrir pantalla de recursos."
-tooltip.staff_window.center_view = "Botón izquierdo para fijarse en la persona, botón derecho para rotar entre los miembros del personal."
-
--- These strings are missing in some versions of TH (unpatched?)
-confirmation.restart_level = "¿Seguro que quieres reiniciar el nivel?"
--- TODO adviser.multiplayer.objective_completed
--- TODO adviser.multiplayer.objective_failed
+misc.hospital_open = "Hospital abierto"
+misc.save_success = "Partida guardada correctamente"
+misc.save_failed = "ERROR: No se ha podido guardar la partida"
+misc.out_of_sync = "Partida desincronizada"
 
 -- Some overrides as original texts were too long see issue 1355 MarkL
 high_score = {
