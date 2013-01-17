@@ -319,6 +319,7 @@ function Humanoid:afterLoad(old, new)
       self.toilet_callback = nil
     end
   end
+  Entity.afterLoad(self, old, new)
 end
 
 -- Function which is called when the user clicks on the `Humanoid`.
