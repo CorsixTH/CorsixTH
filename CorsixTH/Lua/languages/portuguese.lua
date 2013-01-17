@@ -312,7 +312,7 @@ date_format.daymonth = "%1% - %2% -"
 
 menu_debug = {
   lua_console = "  (F12) CONSOLA LUA",
-  make_debug_fax = "  (F8) DEBUG FAX",
+  make_debug_fax = "  DEBUG FAX",
   calls_dispatcher = "  CHAMAR EXPEDIDOR",
   cheats = "  (F11) TRUQUES",
   dump_gamelog = "  (CTRL+D) CRIAR LOG DO JOGO",
