@@ -493,3 +493,8 @@ function UIStaffManagement:fire()
     end)) -- End of confirmation dialog
   end
 end
+
+function UIStaffManagement:close()
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
+end

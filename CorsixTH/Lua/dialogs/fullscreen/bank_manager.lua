@@ -294,9 +294,10 @@ function UIBankManager:onMouseMove(x, y, ...)
 end
 
 function UIBankManager:close()
-    local ui = self.ui
-    ui:setCursor(ui.default_cursor) -- Return to default cursor
-    UIFullscreen.close(self)
+  local ui = self.ui
+  ui:setCursor(ui.default_cursor) -- Return to default cursor
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 function UIBankManager:showStatistics(keep_cursor)

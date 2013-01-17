@@ -48,7 +48,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   self.default_button_sound = "selectx.wav"
   self.countdown = 0
   
-  self:addPanel( 1,   0, 0):makeButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
+  self.bank_button = self:addPanel( 1,   0, 0):makeToggleButton(6, 6, 35, 36, 2, self.dialogBankManager, nil, self.dialogBankStats):setTooltip(_S.tooltip.toolbar.bank_button)
   self:addPanel( 3,  40, 0) -- Background for balance, rep and date
   self:addPanel( 4, 206, 0):makeButton(6, 6, 35, 36, 5, self.dialogBuildRoom):setTooltip(_S.tooltip.toolbar.rooms)
   self:addPanel( 6, 248, 0):makeButton(1, 6, 35, 36, 7, self.dialogFurnishCorridor):setTooltip(_S.tooltip.toolbar.objects)
@@ -63,27 +63,29 @@ function UIBottomPanel:UIBottomPanel(ui)
   self:addPanel(14, 627, 0)
   
   -- Buttons that are shown instead of the dynamic info bar when hovering over it.
+  local panels = {}
   local buttons = {}
   
-  buttons[1] = self:addPanel(15, 364, 0) -- Staff management button
-  buttons[1]:makeButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
-  buttons[2] = self:addPanel(17, 407, 0) -- Town map button
-  buttons[2]:makeButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
-  buttons[3] = self:addPanel(19, 445, 0) -- Casebook button
-  buttons[3]:makeButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
-  buttons[4] = self:addPanel(21, 483, 0) -- Research button
-  buttons[4]:makeButton(1, 6, 35, 36, 22, self.dialogResearch)
+  panels[1]  = self:addPanel(15, 364, 0) -- Staff management button
+  buttons[1] = panels[1]:makeToggleButton(6, 6, 35, 36, 16, self.dialogStaffManagement):setTooltip(_S.tooltip.toolbar.staff_list)
+  panels[2]  = self:addPanel(17, 407, 0) -- Town map button
+  buttons[2] = panels[2]:makeToggleButton(1, 6, 35, 36, 18, self.dialogTownMap):setTooltip(_S.tooltip.toolbar.town_map)
+  panels[3]  = self:addPanel(19, 445, 0) -- Casebook button
+  buttons[3] = panels[3]:makeToggleButton(1, 6, 35, 36, 20, self.dialogDrugCasebook):setTooltip(_S.tooltip.toolbar.casebook)
+  panels[4]  = self:addPanel(21, 483, 0) -- Research button
+  buttons[4] = panels[4]:makeToggleButton(1, 6, 35, 36, 22, self.dialogResearch)
     :setSound():setTooltip(_S.tooltip.toolbar.research) -- Remove default sound for this button
-  buttons[5] = self:addPanel(23, 521, 0) -- Status button
-  buttons[5]:makeButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
-  buttons[6] = self:addPanel(25, 559, 0) -- Charts button
-  buttons[6]:makeButton(1, 6, 35, 36, 26, self.dialogCharts):setTooltip(_S.tooltip.toolbar.charts)
-  buttons[7] = self:addPanel(27, 597, 0) -- Policy button
-  buttons[7]:makeButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
-  self.additional_buttons = buttons
-  for _, buttons in ipairs(buttons) do
-    buttons.visible = false
+  panels[5]  = self:addPanel(23, 521, 0) -- Status button
+  buttons[5] = panels[5]:makeToggleButton(1, 6, 35, 36, 24, self.dialogStatus):setTooltip(_S.tooltip.toolbar.status)
+  panels[6]  = self:addPanel(25, 559, 0) -- Charts button
+  buttons[6] = panels[6]:makeToggleButton(1, 6, 35, 36, 26, self.dialogCharts):setTooltip(_S.tooltip.toolbar.charts)
+  panels[7]  = self:addPanel(27, 597, 0) -- Policy button
+  buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
+  for _, panel in ipairs(panels) do
+    panel.visible = false
   end
+  self.additional_panels = panels
+  self.additional_buttons = buttons
   
   self:makeTooltip(_S.tooltip.toolbar.balance, 41, 5, 137, 28)
   self:makeTooltip(_S.tooltip.toolbar.date, 140, 5, 200, 42)
@@ -91,12 +93,26 @@ function UIBottomPanel:UIBottomPanel(ui)
     return _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")"
   end, 41, 30, 137, 42)
 
-  ui:addKeyHandler("R", self, self.dialogResearch)      -- R for research
-  ui:addKeyHandler("A", self, self.toggleAdviser)      -- A for adviser
+  -- original TH F-key shortcuts
+  ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
+  ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
+  ui:addKeyHandler("F3", buttons[1], buttons[1].handleClick, "left")    -- staff management
+  ui:addKeyHandler("F4", buttons[2], buttons[2].handleClick, "left")    -- town map
+  ui:addKeyHandler("F5", buttons[3], buttons[3].handleClick, "left")    -- casebook
+  ui:addKeyHandler("F6", buttons[4], buttons[4].handleClick, "left")    -- research
+  ui:addKeyHandler("F7", buttons[5], buttons[5].handleClick, "left")    -- status
+  ui:addKeyHandler("F8", buttons[6], buttons[6].handleClick, "left")    -- charts
+  ui:addKeyHandler("F9", buttons[7], buttons[7].handleClick, "left")    -- policy
+  
+  -- "old" keyboard shortcuts for some of the fullscreen windows
+  ui:addKeyHandler("T", buttons[2], buttons[2].handleClick, "left") -- T for town map
+  ui:addKeyHandler("C", buttons[3], buttons[3].handleClick, "left") -- C for casebook
+  ui:addKeyHandler("R", buttons[4], buttons[4].handleClick, "left") -- R for research
+  
+  -- misc. keyhandlers
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler("T", self, self.dialogTownMap)       -- T for town map
-  ui:addKeyHandler("I", self, self.toggleInformation)  -- I for Information when you first build
-  ui:addKeyHandler("C", self, self.dialogDrugCasebook)  -- C for casebook
+  ui:addKeyHandler("A", self, self.toggleAdviser)       -- A for adviser
+  ui:addKeyHandler("I", self, self.toggleInformation)   -- I for Information when you first build
 end
 
 function UIBottomPanel:draw(canvas, x, y)
@@ -108,7 +124,7 @@ function UIBottomPanel:draw(canvas, x, y)
   self.date_font:draw(canvas, _S.date_format.daymonth:format(day, month), x + 140, y + 20, 60, 0)
   
   -- Draw possible information in the dynamic info bar
-  if not self.additional_buttons[1].visible then
+  if not self.additional_panels[1].visible then
     self:drawDynamicInfo(canvas, x + 364, y)
   end
   
@@ -188,17 +204,17 @@ function UIBottomPanel:onMouseMove(x, y, dx, dy)
 end
 
 function UIBottomPanel:showAdditionalButtons(x, y)
-  local buttons = self.additional_buttons
+  local panels = self.additional_panels
   if self:hitTest(x, y) then -- Inside the panel
-    if not buttons[1].visible then -- Are the buttons already shown?
-      for _, btn in ipairs(buttons) do
-        btn.visible = true
+    if not panels[1].visible then -- Are the buttons already shown?
+      for _, panel in ipairs(panels) do
+        panel.visible = true
       end
     end
   else -- Outside the rectangle
-    if buttons[1].visible then -- Are the buttons already invisible?
-      for _, btn in ipairs(buttons) do
-        btn.visible = false
+    if panels[1].visible then -- Are the buttons already invisible?
+      for _, panel in ipairs(panels) do
+        panel.visible = false
       end
     end
   end
@@ -362,16 +378,36 @@ function UIBottomPanel:onTick()
   Window.onTick(self)
 end
 
-function UIBottomPanel:dialogBankManager()
-  if self.world.user_actions_allowed then
+function UIBottomPanel:dialogBankManager(enable)
+  if not self.world.user_actions_allowed then
+    self.bank_button:toggle()
+    return
+  end
+    
+  if enable then
     self:addDialog(UIBankManager(self.ui))
+  else
+    local w = self.ui:getWindow(UIBankManager)
+    if w then
+      w:close()
+    end
   end
 end
 
-function UIBottomPanel:dialogBankStats()
-  if self.world.user_actions_allowed then
+function UIBottomPanel:dialogBankStats(enable)
+  if not self.world.user_actions_allowed then
+    self.bank_button:toggle()
+    return
+  end
+    
+  if enable then
     local dlg = UIBankManager(self.ui)
     self:addDialog(dlg, function() dlg:showStatistics() end)
+  else
+    local w = self.ui:getWindow(UIBankManager)
+    if w then
+      w:close()
+    end
   end
 end
 
@@ -408,36 +444,69 @@ function UIBottomPanel:dialogHireStaff()
   end
 end
 
-function UIBottomPanel:dialogTownMap()
-  self:addDialog(UITownMap(self.ui))
+function UIBottomPanel:dialogStaffManagement(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[1]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UIStaffManagement(self.ui))
+  else
+    local w = self.ui:getWindow(UIStaffManagement)
+    if w then
+      w:close()
+    end
+  end
 end
 
-function UIBottomPanel:dialogDrugCasebook()
-  self:addDialog(UICasebook(self.ui))
+function UIBottomPanel:dialogTownMap(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[2]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UITownMap(self.ui))
+  else
+    local w = self.ui:getWindow(UITownMap)
+    if w then
+      w:close()
+    end
+  end
 end
 
-function UIBottomPanel:dialogStaffManagement()
-  self:addDialog(UIStaffManagement(self.ui))
+function UIBottomPanel:dialogDrugCasebook(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[3]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UICasebook(self.ui))
+  else
+    local w = self.ui:getWindow(UICasebook)
+    if w then
+      w:close()
+    end
+  end
 end
 
-function UIBottomPanel:dialogPolicy()
-  self:addDialog(UIPolicy(self.ui))
-end
-
-function UIBottomPanel:toggleInformation()
-  self.world:toggleInformation()
-end
-
-function UIBottomPanel:dialogCharts()
-  self:addDialog(UIGraphs(self.ui))
-end
-
-function UIBottomPanel:dialogResearch()
+function UIBottomPanel:dialogResearch(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[4]:toggle()
+    return
+  end
   if self.ui.hospital.research_dep_built then
-    self:addDialog(UIResearch(self.ui))
+    if enable then
+      self:addDialog(UIResearch(self.ui))
+    else
+      local w = self.ui:getWindow(UIResearch)
+      if w then
+        w:close()
+      end
+    end
     self.ui:playSound("selectx.wav")
   else
     self.ui:playSound("wrong2.wav")
+    self:updateButtonStates()
     local can_build_research = false
     for _, room in pairs(self.ui.app.world.available_rooms) do
       if room.class == "ResearchRoom" then
@@ -453,13 +522,74 @@ function UIBottomPanel:dialogResearch()
   end
 end
 
+function UIBottomPanel:dialogStatus(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[5]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UIProgressReport(self.ui))
+  else
+    local w = self.ui:getWindow(UIProgressReport)
+    if w then
+      w:close()
+    end
+  end
+end
+
+function UIBottomPanel:dialogCharts(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[6]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UIGraphs(self.ui))
+  else
+    local w = self.ui:getWindow(UIGraphs)
+    if w then
+      w:close()
+    end
+  end
+end
+
+function UIBottomPanel:dialogPolicy(enable)
+  if not self.world.user_actions_allowed then
+    self.additional_buttons[7]:toggle()
+    return
+  end
+  if enable then
+    self:addDialog(UIPolicy(self.ui))
+  else
+    local w = self.ui:getWindow(UIPolicy)
+    if w then
+      w:close()
+    end
+  end
+end
+
 function UIBottomPanel:toggleAdviser()
   self.ui.app.config.adviser_disabled = not self.ui.app.config.adviser_disabled
 end
 
+function UIBottomPanel:toggleInformation()
+  self.world:toggleInformation()
+end
 
-function UIBottomPanel:dialogStatus()
-  self:addDialog(UIProgressReport(self.ui))
+local fullscreen_dialogs = {
+  "UIStaffManagement",
+  "UITownMap",
+  "UICasebook",
+  "UIResearch",
+  "UIProgressReport",
+  "UIGraphs",
+  "UIPolicy",
+}
+
+function UIBottomPanel:updateButtonStates()
+  for i, button in ipairs(self.additional_buttons) do
+    button:setToggleState(not not self.ui:getWindow(_G[fullscreen_dialogs[i]]))
+  end
+  self.bank_button:setToggleState(not not self.ui:getWindow(UIBankManager))
 end
 
 function UIBottomPanel:addDialog(dialog, extra_function)
@@ -477,17 +607,20 @@ function UIBottomPanel:addDialog(dialog, extra_function)
           extra_function()
         end
         self.ui:addWindow(dialog)
+        self:updateButtonStates()
       end,
       --[[persistable:abort_edit_room_cancel_dialog]]function()
         dialog:close()
       end
     ))
+    self:updateButtonStates()
   else
     self.ui:setEditRoom(false)
     if extra_function then
       extra_function()
     end
     self.ui:addWindow(dialog)
+    self:updateButtonStates()
   end
 end
 
@@ -522,6 +655,33 @@ function UIBottomPanel:afterLoad(old, new)
   end
   if old < 58 then
     self.pause_font = TheApp.gfx:loadFont("QData", "Font124V")
+  end
+  if old < 62 then
+    -- renamed additional_buttons to additional_panels
+    -- additional_buttons are now the actual buttons
+    self.additional_panels = self.additional_buttons
+    self.additional_buttons = {}
+    for i = 1, 7 do
+      self.additional_buttons[i] = self.buttons[5 + i]:makeToggle() -- made them toggle buttons
+    end
+	self.bank_button = self.buttons[1]:makeToggle()
+	
+    -- keyboard shortcuts have been added/changed
+    self.ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
+    self.ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank manager
+    self.ui:addKeyHandler("F3", self.additional_buttons[1], self.additional_buttons[1].handleClick, "left")    -- staff management
+    self.ui:addKeyHandler("F4", self.additional_buttons[2], self.additional_buttons[2].handleClick, "left")    -- town map
+    self.ui:addKeyHandler("F5", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left")    -- casebook
+    self.ui:addKeyHandler("F6", self.additional_buttons[4], self.additional_buttons[4].handleClick, "left")    -- research
+    self.ui:addKeyHandler("F7", self.additional_buttons[5], self.additional_buttons[5].handleClick, "left")    -- status
+    self.ui:addKeyHandler("F8", self.additional_buttons[6], self.additional_buttons[6].handleClick, "left")    -- charts
+    self.ui:addKeyHandler("F9", self.additional_buttons[7], self.additional_buttons[7].handleClick, "left")    -- policy
+    self.ui:removeKeyHandler("T", self)
+    self.ui:removeKeyHandler("C", self)
+    self.ui:removeKeyHandler("R", self)
+    self.ui:addKeyHandler("T", self.additional_buttons[2], self.additional_buttons[2].handleClick, "left") -- T for town map
+    self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
+    self.ui:addKeyHandler("R", self.additional_buttons[4], self.additional_buttons[4].handleClick, "left") -- R for research
   end
   Window.afterLoad(self, old, new)
 end

@@ -135,7 +135,8 @@ function UIProgressReport:UIProgressReport(ui)
 end
 
 function UIProgressReport:close()
-  Window.close(self)
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 function UIProgressReport:drawMarkers(canvas, x, y)

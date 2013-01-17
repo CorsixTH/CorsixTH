@@ -89,6 +89,20 @@ menu_options_warmth_colors = {
   choice_3 = "  YELLOW ORANGE RED  ",
 }
 
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager  = "  (F1) BANK MANAGER  ",
+  statement     = "  (F2) STATEMENT  ",
+  staff_listing = "  (F3) STAFF LISTING  ",
+  town_map      = "  (F4) TOWN MAP  ",
+  casebook      = "  (F5) CASEBOOK  ",
+  research      = "  (F6) RESEARCH  ",
+  status        = "  (F7) STATUS  ",
+  graphs        = "  (F8) GRAPHS  ",
+  policy        = "  (F9) POLICY  ",
+}
+
+
 -- The demo does not contain this string
 menu_file.restart = "  RESTART  "
 
@@ -97,8 +111,8 @@ menu_debug = {
   transparent_walls           = "  (X) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
-  make_debug_fax              = "  (F8) MAKE DEBUG FAX  ",
-  make_debug_patient          = "  (F9) MAKE DEBUG PATIENT  ",
+  make_debug_fax              = "  MAKE DEBUG FAX  ",
+  make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (F11) CHEATS  ",
   lua_console                 = "  (F12) LUA CONSOLE  ",
   calls_dispatcher            = "  CALLS DISPATCHER  ",

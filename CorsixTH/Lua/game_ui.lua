@@ -226,11 +226,7 @@ function GameUI:onKeyDown(code, rawchar)
     self.app:dumpStrings()
   end
   if TheApp.config.debug then -- Debug commands
-    if key == "f8" then -- Make debug fax
-      self:makeDebugFax()
-    elseif key == "f9" then -- Make debug patient
-      self:addWindow(UIMakeDebugPatient(self))
-    elseif key == "f11" then -- Open cheat window
+    if key == "f11" then -- Open cheat window
       self:addWindow(UICheats(self))
     elseif key == "x" then -- Toggle wall transparency
       self:makeWallsTransparent(not self.transparent_walls)

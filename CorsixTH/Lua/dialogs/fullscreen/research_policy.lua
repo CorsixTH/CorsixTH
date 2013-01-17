@@ -216,6 +216,11 @@ function UIResearch:draw(canvas, x, y)
   num_font:draw(canvas, research.global, x + 270, y + 288, 300, 0)
 end
 
+function UIResearch:close()
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
+end
+
 function UIResearch:afterLoad(old, new)
   UIFullscreen.afterLoad(self, old, new)
   if old < 26 then

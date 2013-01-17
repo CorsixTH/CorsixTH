@@ -227,6 +227,11 @@ function UIGraphs:toggleGraph(name)
   self.ui:playSound("selectx.wav")
 end
 
+function UIGraphs:close()
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
+end
+
 function UIGraphs:afterLoad(old, new)
   if old < 60 then
     self:close()

@@ -101,7 +101,8 @@ function UITownMap:initRuntimeConfig()
 end
 
 function UITownMap:close()
-  Window.close(self)
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 local flag_cache = {}

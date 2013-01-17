@@ -97,7 +97,8 @@ end
 
 function UICasebook:close()
   self.ui:disableKeyboardRepeat()
-  Window.close(self)
+  UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 function UICasebook:updateDiseaseList()

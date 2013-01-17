@@ -191,5 +191,6 @@ function UIPolicy:close()
     self.hospital.policies[key] = number + (s.x - (s.total_min_x or s.min_x))/divider
   end
   UIFullscreen.close(self)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
