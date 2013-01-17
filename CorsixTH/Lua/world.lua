@@ -874,31 +874,25 @@ function World:setSpeed(speed)
     if self.active_earthquake then
       self.ui.tick_scroll_amount = {x = 0, y = 0}
     end
-    -- If the config does not allow actions when the game is paused, add a blueish tone.
-    if not TheApp.world.user_actions_allowed then
-      TheApp.video:setBlueFilterActive(true)
-    end
+    -- By default actions are not allowed when the game is paused.
+    self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
   elseif self:getCurrentSpeed() == "Pause" then
-    -- Possibly remove the blueish tone.
-    if not TheApp.config.allow_user_actions_while_paused then
-      TheApp.video:setBlueFilterActive(false)
-    end
+    self.user_actions_allowed = true
   end
   self.prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
   self.hours_per_tick = numerator
   self.tick_rate = denominator
+  -- Set the blue filter according to whether the user can build or not.
+  TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
 end
 
 -- Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
   if not self:isCurrentSpeed("Pause") then
-    -- By default actions are not allowed when the game is paused.
-    self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
     self:setSpeed("Pause")
   elseif self.prev_speed then
     self:setSpeed(self.prev_speed)
-    self.user_actions_allowed = true
   end
 end
 
