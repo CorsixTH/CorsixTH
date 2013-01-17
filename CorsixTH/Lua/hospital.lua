@@ -1370,7 +1370,7 @@ function Hospital:hasRoomOfType(type)
   -- Check how many rooms there are.
   local result = false
   for _, room in pairs(self.world.rooms) do
-    if room.hospital == self and room.room_info.id == type and not room.crashed then
+    if room.hospital == self and room.room_info.id == type and room.is_active then
       result = (result or 0) + 1
     end
   end

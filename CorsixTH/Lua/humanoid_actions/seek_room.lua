@@ -186,10 +186,14 @@ end
 
 local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( function(action, humanoid)
   humanoid:setMood("patient_wait", "deactivate")
-  humanoid.world:unregisterRoomBuildCallback(action.build_callback)
-  humanoid.build_callback = nil
   -- Just in case we are somehow started again:
+  -- FIXME: This seems to be used for intermediate actions like peeing while the patient is waiting
+  --        Unfortunately this means that if you finish the required room while the patient is peeing
+  --        the callback does not happen, meaning that the message does not disappear.
+  humanoid:unregisterRoomBuildCallback(action.build_callback)
+  humanoid:unregisterRoomRemoveCallback(action.remove_callback)
   action.build_callback = nil
+  action.remove_callback = nil
   action.done_init = false
   humanoid:finishAction()
 end)
@@ -214,6 +218,15 @@ local function action_seek_room_start(action, humanoid)
     if not action.done_init then
       action.done_init = true
       action.must_happen = true
+      
+      local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(room)
+        if room.room_info.id == "research" then
+          humanoid:updateMessage("research")
+        end
+      end -- End of remove_callback function
+      action.remove_callback = remove_callback
+      humanoid:registerRoomRemoveCallback(remove_callback)
+      
       local build_callback
       build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
         -- if research room was built, message may need to be updated
@@ -229,8 +242,8 @@ local function action_seek_room_start(action, humanoid)
           -- Example: Will go to ward, but is waiting for the operating theatre.
           -- Clean up and start over to find the room we actually want to go to.
           TheApp.ui.bottom_panel:removeMessage(humanoid)
-          humanoid.world:unregisterRoomBuildCallback(build_callback)
-          humanoid.build_callback = nil
+          humanoid:unregisterRoomBuildCallback(build_callback)
+          humanoid:unregisterRoomRemoveCallback(remove_callback)
           action.room_type_needed = nil
           action_seek_room_start(action, humanoid)
         elseif not humanoid.diagnosed then
@@ -246,12 +259,13 @@ local function action_seek_room_start(action, humanoid)
         if found then 
           action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
-          humanoid.world:unregisterRoomBuildCallback(build_callback)
-          humanoid.build_callback = nil
+          humanoid:unregisterRoomBuildCallback(build_callback)
+          humanoid:unregisterRoomRemoveCallback(remove_callback)
         end
       end -- End of build_callback function
       action.build_callback = build_callback
-      humanoid:registerNewRoomBuildCallback(build_callback)
+      humanoid:registerRoomBuildCallback(build_callback)
+      
       action.on_interrupt = action_seek_room_interrupt
     end
     

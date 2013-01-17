@@ -634,11 +634,10 @@ function Patient:tickDay()
             callback = --[[persistable:patient_toilet_build_callback]] function(room)
               if room.room_info.id == "toilets" then
                 self.going_to_toilet = false
-                self.world:unregisterRoomBuildCallback(callback)
+                self:unregisterRoomBuildCallback(callback)
               end
             end
-            self.toilet_callback = callback
-            self.world:registerRoomBuildCallback(callback)
+            self:registerRoomBuildCallback(callback)
           -- Otherwise we can queue the action, but only if not in any rooms right now.
           elseif not self:getRoom() and not self.action_queue[1].is_leaving then
             self:setNextAction{
@@ -897,5 +896,12 @@ function Patient:updateMessage(choice)
         c.enabled = enabled
       end
     end
+    
+    -- Update the fax window if it is open.
+    local window = self.world.ui:getWindow(UIFax)
+    if window then
+      window:updateChoices()
+    end
+    
   end
 end

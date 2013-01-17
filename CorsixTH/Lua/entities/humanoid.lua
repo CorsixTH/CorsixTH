@@ -284,6 +284,9 @@ function Humanoid:Humanoid(...)
   self.should_knock_on_doors = false
 
   self.speed = "normal"
+  
+  self.build_callbacks  = {--[[set]]}
+  self.remove_callbacks = {--[[set]]}
 end
 
 -- Save game compatibility
@@ -303,7 +306,20 @@ function Humanoid:afterLoad(old, new)
   if old < 49 then
     self.has_fallen = 1
   end
-end   
+  if old < 61 then
+    -- callbacks changed
+    self.build_callbacks = {}
+    self.remove_callbacks = {}
+    if self.build_callback then
+      self.build_callbacks[self.build_callback] = true
+      self.build_callback = nil
+    end
+    if self.toilet_callback then
+      self.build_callbacks[self.toilet_callback] = true
+      self.toilet_callback = nil
+    end
+  end
+end
 
 -- Function which is called when the user clicks on the `Humanoid`.
 --!param ui (GameUI) The UI which the user in question is using.
@@ -784,29 +800,60 @@ function Humanoid:goingToUseObject(object_type)
   return false
 end
 
--- Cleanly registers a new build callback for this humanoid. There can be only
--- one such callback per humanoid at a given time.
+-- Registers a new build callback for this humanoid.
 --!param callback (function) The callback to call when a room has been built.
-function Humanoid:registerNewRoomBuildCallback(callback)
-    -- Unregister the previous callback, if any.
-    if self.build_callback then
-      self.world:unregisterRoomBuildCallback(self.build_callback)
-    end
-    self.build_callback = callback
+function Humanoid:registerRoomBuildCallback(callback)
+  if not self.build_callbacks[callback] then
     self.world:registerRoomBuildCallback(callback)
+    self.build_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add room build callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a build callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterRoomBuildCallback(callback)
+  if self.build_callbacks[callback] then
+    self.world:unregisterRoomBuildCallback(callback)
+    self.build_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistant room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Registers a new remove callback for this humanoid.
+--!param callback (function) The callback to call when a room has been removed.
+function Humanoid:registerRoomRemoveCallback(callback)
+  if not self.remove_callbacks[callback] then
+    self.world:registerRoomRemoveCallback(callback)
+    self.remove_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add room remove callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a remove callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterRoomRemoveCallback(callback)
+  if self.remove_callbacks[callback] then
+    self.world:unregisterRoomRemoveCallback(callback)
+    self.remove_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistant room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
 end
 
 -- Function called when a humanoid is sent away from the hospital to prevent
 -- further actions taken as a result of a callback
 function Humanoid:unregisterCallbacks()
   -- Remove callbacks for new rooms
-  if self.build_callback then
-    self.world:unregisterRoomBuildCallback(self.build_callback)
-    self.build_callback = nil
+  for cb, _ in pairs(self.build_callbacks) do
+    self:unregisterRoomBuildCallback(cb)
   end
-  if self.toilet_callback then
-    self.world:unregisterRoomBuildCallback(self.toilet_callback)
-    self.toilet_callback = nil
+  -- Remove callbacks for removed rooms
+  for cb, _ in pairs(self.remove_callbacks) do
+    self:unregisterRoomRemoveCallback(cb)
   end
   -- Remove any message related to the humanoid.
   if self.message_callback then

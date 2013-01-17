@@ -776,7 +776,7 @@ end
 
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
-  self.world.dispatcher:dropFromQueue(self)
+  self.world:notifyRoomRemoved(self)
   for humanoid, callback in pairs(self.humanoids_enroute) do
     callback.callback();
   end

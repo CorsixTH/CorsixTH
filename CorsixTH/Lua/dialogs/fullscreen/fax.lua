@@ -81,6 +81,15 @@ function UIFax:UIFax(ui, icon)
   self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button"#")
 end
 
+function UIFax:updateChoices()
+  local choices = self.message.choices
+  for i, button in ipairs(self.choice_buttons) do
+    -- NB: both nil and true result in enabled; also handle old "disabled" choice
+    local enabled = (choices[i].enabled ~= false) and (choices[i].choice ~= "disabled")
+    button:enable(enabled)
+  end
+end
+
 function UIFax:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
