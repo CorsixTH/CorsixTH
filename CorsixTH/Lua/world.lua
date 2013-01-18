@@ -454,7 +454,7 @@ function World:calculateSpawnTiles()
     -- Choose at most 8 points for the edge
     local num = math.min(8, #xs)
     for i = 1, num do
-      local index = 1 + math.floor((i - 1) / (num - 1) * (#xs - 1) + 0.5)
+      local index = math.floor((i - 0.5) / num * #xs + 1)
       self.spawn_points[#self.spawn_points + 1] = {x = xs[index], y = ys[index], direction = edge.direction}
     end
   end
