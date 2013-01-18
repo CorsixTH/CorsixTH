@@ -322,10 +322,12 @@ end
 function UITownMap:bankManager()
   local dlg = UIBankManager(self.ui)
   self.ui:addWindow(dlg)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
 function UITownMap:bankStats()
   local dlg = UIBankManager(self.ui)
   dlg:showStatistics()
   self.ui:addWindow(dlg)
+  self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end

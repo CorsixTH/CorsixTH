@@ -389,7 +389,12 @@ function UIBottomPanel:dialogBankManager(enable)
   else
     local w = self.ui:getWindow(UIBankManager)
     if w then
-      w:close()
+      if w.showingStatistics then
+        w:hideStatistics()
+        self.bank_button:toggle()
+      else
+        w:close()
+      end
     end
   end
 end
@@ -406,7 +411,12 @@ function UIBottomPanel:dialogBankStats(enable)
   else
     local w = self.ui:getWindow(UIBankManager)
     if w then
-      w:close()
+      if w.showingStatistics then
+        w:close()
+      else
+        w:showStatistics()
+        self.bank_button:toggle()
+      end
     end
   end
 end
