@@ -1238,15 +1238,16 @@ menu_debug_overlay = {
   heat = "  TEMPERATUUR  "
 }
 menu_charts = {
-  briefing = "  OPDRACHT  ",
-  casebook = "  BEHANDELINGEN  ",
-  graphs = "  GRAFIEKEN  ",
-  policy = "  BELEID  ",
-  bank_manager = "  KASBOEK  ",
-  statement = "  AFSCHRIFTEN  ",
-  staff_listing = "  PERSONEELSLIJST  ",
-  research = "  ONDERZOEK  ",
-  status = "  STATUS  ",
+  bank_manager  = "  (F1) KASBOEK  ",
+  statement     = "  (F2) AFSCHRIFTEN  ",
+  staff_listing = "  (F3) PERSONEELSLIJST  ",
+  town_map      = "  (F4) KAART  ",
+  casebook      = "  (F5) BEHANDELINGEN  ",
+  research      = "  (F6) ONDERZOEK  ",
+  status        = "  (F7) STATUS  ",
+  graphs        = "  (F8) GRAFIEKEN  ",
+  policy        = "  (F9) BELEID  ",
+  briefing      = "  OPDRACHT  ",
 }
 progress_report = {
   quite_unhappy = "De mensen zijn nogal ongelukkig. ",
