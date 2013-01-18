@@ -71,7 +71,7 @@ menu_options = {
   edge_scrolling = "  EDGE SCROLLING  ",
   settings = "  SETTINGS  ",
   adviser_disabled = "  ADVISER  ",
-  warmth_colors = "  WARMTH COLOURS",
+  warmth_colors = "  WARMTH COLOURS  ",
 }
 
 menu_options_game_speed = {

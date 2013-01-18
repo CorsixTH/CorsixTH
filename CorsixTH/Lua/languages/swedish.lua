@@ -69,6 +69,7 @@ menu_options = {
   edge_scrolling = "  KANTRULLNING  ",
   settings = "  INSTÄLLNINGAR  ",
   adviser_disabled = "  MEDHJÄLPARE  ",
+  warmth_colors = "  VÄRMEFÄRGER  ",
 }
 
 menu_options_game_speed = {
@@ -78,6 +79,12 @@ menu_options_game_speed = {
   normal              = "  (3) NORMAL  ",
   max_speed           = "  (4) MAXHASTIGHET  ",
   and_then_some_more  = "  (5) OCH SÅ LITE TILL  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "  RÖD  ",
+  choice_2 = "  BLÅ GRÖN RÖD  ",
+  choice_3 = "  GUL ORANGE RÖD  ",
 }
 
 menu_file.restart = "  STARTA OM  "
@@ -120,6 +127,12 @@ adviser = {
     no_desk_2 = "Snyggt jobbat, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
     no_desk_3 = "Helt otroligt, nästan ett år och du har fortfarande ingen bemannad reception! Tror du det kommer några patienter då? Sluta leka omkring och fixa till det här nu!",
     cannot_afford = "Du har inte tillräckligt med pengar på banken för att anställa den personen!",
+    falling_1 = "Nämen! Det där inte kul, om du inte ser dig för var du klickar så kan någon skada sig!",
+    falling_2 = "Sluta strula omkring, hur tror du det känns?",
+    falling_3 = "Ajaj, det måste ha gjort ont. Ring en läkare!",
+    falling_4 = "Det här är ett sjukhus, inte ett nöjesfält!",
+    falling_5 = "Jag tror inte det här är rätt arena att knuffa omkull folk på, det är sjuka vet du!",
+    falling_6 = "Det här är inte en bowlinghall, sjuka människor ska inte behandlas så!",
     research_screen_open_1 = "Du behöver bygga en forskningsavdelning innan du får tillgång till forskningsskärmen.",
     research_screen_open_2 = "På den här nivån finns det ingen möjlighet till forskning.",
   },
@@ -313,6 +326,7 @@ information = {
     reputation = "Ditt anseende föll under %d.",
     balance = "Din bankbalans sjönk till under %d.",
     percentage_killed = "Du dödade mer än %d procent av dina patienter.",
+    cheat = "Var det verkligen ditt val eller tryckte du bara på fel knapp? Så du kan inte ens fuska ordentligt, tråkigt för dig...",
   },
   cheat_not_possible = "Det går inte att använda det fusket på den här nivån. Du misslyckas till och med att fuska, det kan inte vara roligt!",
 }
@@ -419,3 +433,67 @@ tooltip.calls_dispatcher = {
   assigned = "Denna ruta är markerad om någon har fått uppgiften tilldelad till sig.",
   close = "Stäng anropsklarerardialogen",
 }
+
+date_format.daymonth = "%1% %2:months%"
+
+original_credits[301] = ":Operations"
+original_credits[302] = ","
+original_credits[303] = "Steve Fitton"
+original_credits[304] = " "
+original_credits[305] = " "
+original_credits[306] = " "
+original_credits[307] = ":Company Administration"
+original_credits[308] = ","
+original_credits[309] = "Audrey Adams"
+original_credits[310] = "Annette Dabb"
+original_credits[311] = "Emma Gibbs"
+original_credits[312] = "Lucia Gobbo"
+original_credits[313] = "Jo Goodwin"
+original_credits[314] = "Sian Jones"
+original_credits[315] = "Kathy McEntee"
+original_credits[316] = "Louise Ratcliffe"
+original_credits[317] = " "
+original_credits[318] = " "
+original_credits[319] = " "
+original_credits[320] = ":Company Management"
+original_credits[321] = ","
+original_credits[322] = "Les Edgar"
+original_credits[323] = "Peter Molyneux"
+original_credits[324] = "David Byrne"
+original_credits[325] = " "
+original_credits[326] = " "
+original_credits[327] = ":All at Bullfrog Productions"
+original_credits[328] = " "
+original_credits[329] = " "
+original_credits[330] = " "
+original_credits[331] = ":Special Thanks to"
+original_credits[332] = ","
+original_credits[333] = "Everyone at Frimley Park Hospital"
+original_credits[334] = " "
+original_credits[335] = ":Especially"
+original_credits[336] = ","
+original_credits[337] = "Beverley Cannell"
+original_credits[338] = "Doug Carlisle"
+original_credits[339] = " "
+original_credits[340] = " "
+original_credits[341] = " "
+original_credits[342] = ":Keep On Thinking"
+original_credits[343] = " "
+original_credits[344] = " "
+original_credits[345] = " "
+original_credits[346] = " "
+original_credits[347] = " "
+original_credits[348] = " "
+original_credits[349] = " "
+original_credits[350] = " "
+original_credits[351] = " "
+original_credits[352] = " "
+original_credits[353] = " "
+original_credits[354] = " "
+original_credits[355] = " "
+original_credits[356] = " "
+original_credits[357] = " "
+original_credits[358] = " "
+original_credits[359] = " "
+original_credits[360] = " "
+original_credits[361] = "."
