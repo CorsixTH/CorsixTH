@@ -83,7 +83,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   buttons[7] = panels[7]:makeToggleButton(1, 6, 35, 36, 28, self.dialogPolicy):setTooltip(_S.tooltip.toolbar.policy)
   for _, panel in ipairs(panels) do
     panel.visible = false
-  end
+    end
   self.additional_panels = panels
   self.additional_buttons = buttons
   
@@ -379,44 +379,32 @@ function UIBottomPanel:onTick()
 end
 
 function UIBottomPanel:dialogBankManager(enable)
-  if not self.world.user_actions_allowed then
-    self.bank_button:toggle()
-    return
-  end
-    
-  if enable then
-    self:addDialog(UIBankManager(self.ui))
-  else
-    local w = self.ui:getWindow(UIBankManager)
-    if w then
-      if w.showingStatistics then
-        w:hideStatistics()
-        self.bank_button:toggle()
-      else
-        w:close()
-      end
-    end
-  end
+  self:dialogBankCommon(enable)
 end
 
 function UIBottomPanel:dialogBankStats(enable)
+  self:dialogBankCommon(enable, true)
+end
+
+function UIBottomPanel:dialogBankCommon(enable, stats)
   if not self.world.user_actions_allowed then
-    self.bank_button:toggle()
+    self:updateButtonStates()
     return
   end
     
   if enable then
-    local dlg = UIBankManager(self.ui)
-    self:addDialog(dlg, function() dlg:showStatistics() end)
+    self:addDialog("UIBankManager", stats and "showStatistics")
   else
     local w = self.ui:getWindow(UIBankManager)
     if w then
-      if w.showingStatistics then
-        w:close()
-      else
+      if not stats and w.showingStatistics then
+        w:hideStatistics()
+      elseif stats and not w.showingStatistics then
         w:showStatistics()
-        self.bank_button:toggle()
+      else
+        w:close()
       end
+      self:updateButtonStates()
     end
   end
 end
@@ -456,11 +444,11 @@ end
 
 function UIBottomPanel:dialogStaffManagement(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[1]:toggle()
+    self:updateButtonStates()
     return
   end
   if enable then
-    self:addDialog(UIStaffManagement(self.ui))
+    self:addDialog("UIStaffManagement")
   else
     local w = self.ui:getWindow(UIStaffManagement)
     if w then
@@ -471,26 +459,26 @@ end
 
 function UIBottomPanel:dialogTownMap(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[2]:toggle()
+    self:updateButtonStates()
     return
   end
-  if enable then
-    self:addDialog(UITownMap(self.ui))
-  else
+    if enable then
+    self:addDialog("UITownMap")
+    else
     local w = self.ui:getWindow(UITownMap)
-    if w then
-      w:close()
+      if w then
+        w:close()
+      end
     end
   end
-end
 
 function UIBottomPanel:dialogDrugCasebook(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[3]:toggle()
+    self:updateButtonStates()
     return
-  end
+end
   if enable then
-    self:addDialog(UICasebook(self.ui))
+    self:addDialog("UICasebook")
   else
     local w = self.ui:getWindow(UICasebook)
     if w then
@@ -501,12 +489,12 @@ end
 
 function UIBottomPanel:dialogResearch(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[4]:toggle()
+    self:updateButtonStates()
     return
   end
   if self.ui.hospital.research_dep_built then
     if enable then
-      self:addDialog(UIResearch(self.ui))
+      self:addDialog("UIResearch")
     else
       local w = self.ui:getWindow(UIResearch)
       if w then
@@ -517,28 +505,29 @@ function UIBottomPanel:dialogResearch(enable)
   else
     self.ui:playSound("wrong2.wav")
     self:updateButtonStates()
-    local can_build_research = false
-    for _, room in pairs(self.ui.app.world.available_rooms) do
-      if room.class == "ResearchRoom" then
-        can_build_research = true
-        break
-      end
-    end
-    if can_build_research then
-      self.ui.adviser:say(_A.warnings.research_screen_open_1)
-    else
-      self.ui.adviser:say(_A.warnings.research_screen_open_2)
+    self:giveResearchAdvice()
+  end
+end
+
+function UIBottomPanel:giveResearchAdvice()
+  local can_build_research = false
+  for _, room in ipairs(self.ui.app.world.available_rooms) do
+    if room.class == "ResearchRoom" then
+      can_build_research = true
+      break
     end
   end
+  local msg = can_build_research and _A.warnings.research_screen_open_1 or _A.warnings.research_screen_open_2
+  self.ui.adviser:say(msg)
 end
 
 function UIBottomPanel:dialogStatus(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[5]:toggle()
+    self:updateButtonStates()
     return
   end
   if enable then
-    self:addDialog(UIProgressReport(self.ui))
+    self:addDialog("UIProgressReport")
   else
     local w = self.ui:getWindow(UIProgressReport)
     if w then
@@ -549,11 +538,11 @@ end
 
 function UIBottomPanel:dialogCharts(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[6]:toggle()
+    self:updateButtonStates()
     return
   end
   if enable then
-    self:addDialog(UIGraphs(self.ui))
+    self:addDialog("UIGraphs")
   else
     local w = self.ui:getWindow(UIGraphs)
     if w then
@@ -564,11 +553,11 @@ end
 
 function UIBottomPanel:dialogPolicy(enable)
   if not self.world.user_actions_allowed then
-    self.additional_buttons[7]:toggle()
+    self:updateButtonStates()
     return
   end
   if enable then
-    self:addDialog(UIPolicy(self.ui))
+    self:addDialog("UIPolicy")
   else
     local w = self.ui:getWindow(UIPolicy)
     if w then
@@ -602,36 +591,36 @@ function UIBottomPanel:updateButtonStates()
   self.bank_button:setToggleState(not not self.ui:getWindow(UIBankManager))
 end
 
-function UIBottomPanel:addDialog(dialog, extra_function)
+function UIBottomPanel:addDialog(dialog_class, extra_function)
   local edit_window = self.ui:getWindow(UIEditRoom)
   -- If we are currently editing a room, ask for abortion before adding any dialog.
-  -- FIXME: with the current scheme, the dialog is already there while waiting on the user's
-  --        confirmation, just not visible. This raises problems e.g. with the casebook, where
-  --        arrow keys are intercepted and used to change treatment costs.
   if edit_window then
     self.ui:addWindow(UIConfirmDialog(self.ui,
       _S.confirmation.abort_edit_room,
       --[[persistable:abort_edit_room_confirm_dialog]]function()
         self.ui:setEditRoom(false)
+        local dialog = _G[dialog_class](self.ui)
         if extra_function then
-          extra_function()
+          _G[dialog_class][extra_function](d)
         end
         self.ui:addWindow(dialog)
         self:updateButtonStates()
-      end,
-      --[[persistable:abort_edit_room_cancel_dialog]]function()
-        dialog:close()
       end
-    ))
+      ))
     self:updateButtonStates()
   else
     self.ui:setEditRoom(false)
-    if extra_function then
-      extra_function()
-    end
+    local dialog = _G[dialog_class](self.ui)
     self.ui:addWindow(dialog)
+    if extra_function then
+      _G[dialog_class][extra_function](dialog)
+    end
     self:updateButtonStates()
   end
+end
+
+-- Do not remove, for savegame compatibility < r1878
+local --[[persistable:abort_edit_room_cancel_dialog]]function stub()
 end
 
 function UIBottomPanel:editRoom()
