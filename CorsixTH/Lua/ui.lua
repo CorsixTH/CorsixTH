@@ -643,10 +643,14 @@ function UI:onKeyDown(code, rawchar)
     local i = 0
     local filename
     repeat
-      filename = (".%sscreenshot%i.bmp"):format(pathsep, i)
+      filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
       i = i + 1
     until lfs.attributes(filename, "size") == nil
-    self.app.video:takeScreenshot(filename) -- Take screenshot
+    print("Taking screenshot: " .. filename)
+    local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
+    if not res then
+      print("Screenshot failed: " .. err)
+    end
     return true
   end
 end

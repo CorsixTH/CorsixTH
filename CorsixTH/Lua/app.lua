@@ -110,6 +110,18 @@ function App:init()
   if self.savegame_dir:sub(-1, -1) ~= pathsep then
     self.savegame_dir = self.savegame_dir .. pathsep
   end
+  self.screenshot_dir = self.config.screenshots or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Screenshots"
+  if self.screenshot_dir:sub(-1, -1) == pathsep then
+    self.screenshot_dir = self.screenshot_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.screenshot_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.screenshot_dir) then
+       print "Notice: Savegame directory does not exist and could not be created."
+    end
+  end
+  if self.screenshot_dir:sub(-1, -1) ~= pathsep then
+    self.screenshot_dir = self.screenshot_dir .. pathsep
+  end
   
   -- Create the window
   if not SDL.init("audio", "video", "timer") then

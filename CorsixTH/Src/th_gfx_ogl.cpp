@@ -525,6 +525,7 @@ void THRenderTarget::setCursorPosition(int iX, int iY)
 bool THRenderTarget::takeScreenshot(const char* sFile)
 {
     // TODO
+    SDL_SetError("Not implemented in OpenGL mode");
     return false;
 }
 

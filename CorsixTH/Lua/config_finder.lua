@@ -240,6 +240,14 @@ fullscreen = ]=].. tostring(config_values.fullscreen) ..[=[
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
+-- Screenshots. By default, the "Screenshots" directory alongside this config
+-- file will be used for saving screenshots. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+-- screenshots = [[C:\CorsixTH\Screenshots]]
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
 -- Audio global on/off switch.
 -- Note that audio will also be disabled if CorsixTH was compiled without the
 -- SDL_mixer library.
