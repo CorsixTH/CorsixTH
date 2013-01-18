@@ -60,17 +60,25 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
 end
 
 function UIConfirmDialog:cancel()
-  self:close()
-  if self.callback_cancel then
-    self.callback_cancel()
-  end
+  self:close(false)
 end
 
 function UIConfirmDialog:ok()
-  self:close()
-  if self.callback_ok then
-    self.callback_ok()
+  self:close(true)
+end
+
+-- NB: if called without argument (e.g. pressing esc), cancel callback is executed
+function UIConfirmDialog:close(ok)
+  if ok then
+    if self.callback_ok then
+      self.callback_ok()
+    end
+  else
+    if self.callback_cancel then
+      self.callback_cancel()
+    end
   end
+  Window.close(self)
 end
 
 function UIConfirmDialog:draw(canvas, x, y)
