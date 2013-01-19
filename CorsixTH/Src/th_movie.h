@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef TH_VIDEO_H
 #define TH_VIDEO_H
 #define PICTURE_BUFFER_SIZE 4
+#define MOVIE_ERROR_BUFFER_SIZE 128
 
 #include <string>
 #include <queue>
@@ -81,7 +82,7 @@ public:
     ~THMovie();
 
     bool moviesEnabled();
-    void load(const char* szFilepath);
+    bool load(const char* szFilepath);
     void unload();
     void play(int iX, int iY, int iWidth, int iHeight, int iChannel);
     void stop();
@@ -89,6 +90,8 @@ public:
     int getNativeWidth();
     bool hasAudioTrack();
     bool requiresVideoReset();
+    const char* getLastError();
+    void clearLastError();
     void refresh();
     void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
     void runVideo();
@@ -96,6 +99,9 @@ public:
     void readStreams();
 protected:
 #ifdef CORSIX_TH_USE_FFMPEG
+    std::string m_sLastError;
+    char m_szErrorBuffer[MOVIE_ERROR_BUFFER_SIZE];
+
     int decodeAudioFrame();
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
     int queuePicture(AVFrame *pFrame, double dPts);

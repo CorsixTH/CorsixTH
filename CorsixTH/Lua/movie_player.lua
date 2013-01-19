@@ -113,12 +113,25 @@ function MoviePlayer:playMovie(filename, wait_for_stop)
   local x, y, w, h = 0
   local screen_w, screen_h = self.app.config.width, self.app.config.height
   local ar
+  local success, warning
 
   if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
-      return
+    return
   end
 
-  self.moviePlayer:load(filename)
+  success, warning = self.moviePlayer:load(filename)
+  if warning ~= nil and warning ~= "" then
+    local message = "MoviePlayer:playMovie - Warning: " .. warning
+    if self.app.world then
+      self.app.world:gameLog(message)
+    elseif self.app.config.debug then
+      print(message)
+    end
+  end
+  if not success then
+    -- Indicates failure to load movie
+    return
+  end
 
   if self.moviePlayer:hasAudioTrack() then
     self.channel = self.audio:reserveChannel()
@@ -160,7 +173,15 @@ function MoviePlayer:playMovie(filename, wait_for_stop)
   self.wait_for_over = true
   
   --TODO: Add text e.g. for newspaper headlines
-  self.moviePlayer:play(x, y, w, h, self.channel)
+  warning = self.moviePlayer:play(x, y, w, h, self.channel)
+  if warning ~= nil and warning ~= "" then
+    local message = "MoviePlayer:playMovie - Warning: " .. warning
+    if self.app.world then
+      self.app.world:gameLog(message)
+    elseif self.app.config.debug then
+      print(message)
+    end
+  end
   self.playing = true
 end
 

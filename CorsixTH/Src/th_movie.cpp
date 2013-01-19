@@ -222,7 +222,8 @@ THMovie::THMovie():
     m_pVideoThread(NULL),
     m_iAudioBufferMaxSize(0),
     m_iAudioBufferSize(0),
-    m_pAudioPacket(NULL)
+    m_pAudioPacket(NULL),
+    m_sLastError()
 {
     av_register_all();
 
@@ -255,7 +256,7 @@ bool THMovie::moviesEnabled()
     return true;
 }
 
-void THMovie::load(const char* szFilepath)
+bool THMovie::load(const char* szFilepath)
 {
     int iError = 0;
 
@@ -265,15 +266,17 @@ void THMovie::load(const char* szFilepath)
     iError = avformat_open_input(&m_pFormatContext, szFilepath, NULL, NULL);
     if(iError < 0)
     {
-        std::cerr << "Failed to open av input: " << iError;
-        return;
+        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        m_sLastError = std::string(m_szErrorBuffer);
+        return false;
     }
 
     iError = avformat_find_stream_info(m_pFormatContext, NULL);
     if(iError < 0)
     {
-        std::cerr << "Failed to find stream info: " << iError;
-        return;
+        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        m_sLastError = std::string(m_szErrorBuffer);
+        return false;
     }
 
     m_iVideoStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &m_pVideoCodec, 0);
@@ -286,6 +289,8 @@ void THMovie::load(const char* szFilepath)
         m_pAudioCodecContext = m_pFormatContext->streams[m_iAudioStream]->codec;
         avcodec_open2(m_pAudioCodecContext, m_pAudioCodec, NULL);
     }
+
+    return true;
 }
 
 int THMovie::getNativeHeight()
@@ -365,7 +370,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
         if(m_iChannel < 0)
         {
             m_iChannel = -1;
-            std::cerr << "Error on Mix_PlayChannel for th_movie";
+            m_sLastError = std::string(Mix_GetError());
         }
         else
         {
@@ -537,7 +542,6 @@ void THMovie::readStreams()
     SDL_Event endEvent;
     endEvent.type = SDL_USEREVENT_MOVIE_OVER;
     SDL_PushEvent(&endEvent);
-
     m_fAborting = true;
 }
 
@@ -548,6 +552,16 @@ bool THMovie::requiresVideoReset()
 #else
     return false;
 #endif
+}
+
+const char* THMovie::getLastError()
+{
+    return m_sLastError.c_str();
+}
+
+void THMovie::clearLastError()
+{
+    m_sLastError.clear();
 }
 
 void THMovie::refresh()
@@ -749,7 +763,7 @@ int THMovie::queuePicture(AVFrame *pFrame, double dPts)
 
         if(m_pSwsContext == NULL)
         {
-            std::cerr << "Failed to initialize SwsContext";
+            m_sLastError = std::string("Failed to initialize SwsContext");
             return 1;
         }
 
@@ -941,7 +955,7 @@ int THMovie::decodeAudioFrame()
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
 bool THMovie::moviesEnabled() { return false; }
-void THMovie::load(const char* filepath) {}
+bool THMovie::load(const char* filepath) { return true; }
 void THMovie::unload() {}
 void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
 {
@@ -954,6 +968,8 @@ int THMovie::getNativeHeight() { return 0; }
 int THMovie::getNativeWidth() { return 0; }
 bool THMovie::hasAudioTrack() { return false; }
 bool THMovie::requiresVideoReset() { return false; }
+const char* THMovie::getLastError() { return NULL; }
+void THMovie::clearLastError() {}
 void THMovie::refresh() {}
 void THMovie::copyAudioToStream(Uint8 *stream, int length) {}
 void THMovie::runVideo() {}

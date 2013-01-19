@@ -38,16 +38,26 @@ static int l_movie_enabled(lua_State *L)
 
 static int l_movie_load(lua_State *L)
 {
+    bool loaded;
+    const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     const char* filepath = lua_tolstring(L, 2, NULL);
-    pMovie->load(filepath);
-    return 1;
+    pMovie->clearLastError();
+    loaded = pMovie->load(filepath);
+    warning = pMovie->getLastError();
+    lua_pushboolean(L, loaded);
+    lua_pushstring(L, warning);
+    return 2;
 }
 
 static int l_movie_play(lua_State *L)
 {
+    const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    pMovie->clearLastError();
     pMovie->play(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6));
+    warning = pMovie->getLastError();
+    lua_pushstring(L, warning);
     return 1;
 }
 
@@ -55,7 +65,7 @@ static int l_movie_unload(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->unload();
-    return 1;
+    return 0;
 }
 
 static int l_movie_get_native_width(lua_State *L)
@@ -90,21 +100,21 @@ static int l_movie_allocate_picture(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->allocatePicture();
-    return 1;
+    return 0;
 }
 
 static int l_movie_stop(lua_State *L)
 {
     THMovie *pVideo = luaT_testuserdata<THMovie>(L);
     pVideo->stop();
-    return 1;
+    return 0;
 }
 
 static int l_movie_refresh(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->refresh();
-    return 1;
+    return 0;
 }
 
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
