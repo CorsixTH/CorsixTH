@@ -1,30 +1,121 @@
 -------------------------------------------------------------------------------
-Version 0.20 - no release date yet
+Version 0.20 - preliminary release date 2013-03-24
 -------------------------------------------------------------------------------
 
-Goals for this release:
-Implement Graphs, fix these known issues:
-* If the X-Ray Viewer is inaccessible in the Operating Theatre no image will 
-  be shown on it.
-* If the user exits the game via "the cross" when in windowed mode settings 
-  are not saved.
-* Radiators and other "edge tile" objects occupy a whole tile instead of 
-  just one edge of the tile.
+In this version major new features include in-game movies, objects that
+occupy only the edge of a tile and the graph window.
+
   
 -- Not Yet Implemented --
+
 * Epidemics
 * Rats
-* (Graphs)
+* Insurance company graphs, illness graph
 * Visual effects on patients with serious radiation and jellyitis.
-* Fullscreen animations such as the level screen and winning letter.
-  
+* Some fullscreen animations such as the winning letter.
+
+
+-- Known Issues --
+
+* Emotion icons don't appear just above a humanoid's head at all times.
+
+
 -- Gameplay --
 
 * Added: Radiators and other "edge tile" objects now occupy just one edge of 
-  the tile, inline with the original game.
+  the tile, inline with the original game. As a result one tile corridors can
+  now be heated properly. An addition is that you can place many such objects
+  on a single tile as long as they face different directions.
+
+* Added: Possibility to play movies in-game. At the moment the intro movie,
+  advancement between levels and the win/lose movies has been added.
+
+* Added: The atom analyzer can now be built in the research department if it
+  is available on the map.
+
+* Added: User actions are no longer allowed by default (for new games) when 
+  the game is paused. When trying this it might seem like it doesn't work 
+  correctly, but we try to mimic the original as much as possible. This for 
+  example means that a staff member being placed as you pause will disappear 
+  from the cursor. We might change this behaviour in the future though.
+
+* Change: Placing a member of staff inside a room that is already occupied
+  will now replace that person.
+* Fix: Crashes in certain situations involving receptionists and reception 
+  desks.
+* Fix: Patients being handled at a reception desk even if no receptionist 
+  is present.
+* Fix: Allow patients to be sent to the research room only if the corresponding
+  room is not yet researched (so not if it is researched but not built).
+
+
+-- User Interface --
+
+* Added: You can now see in the bank statement which drug company a certain 
+  drug was bought from. It has no effect on gameplay though.
+
+* Added: The adviser now tells you why the research screen can't be opened
+  before you have built a research department.
+
+* Added: The Town Map functionality has been extended inline with Theme
+  Hospital. For example, if you right-click somewhere in your hospital the
+  view will be moved there.
+
+* Added: Available options on open faxes now gets updated if for example a room
+  explodes or the player builds a research department.
+* Added: Keyboard shortcuts F1 - F9 for the fullscreen windows. They are NOT the
+  same as in original TH but instead correspond to the order on the bottom panel.
+  
+* Removed: Keyboard shortcuts F8 and F9 for debug fax and debug patients.
+
+* Change: It is now possible to concentrate research on operating theatre
+  diseases and redistribution of research is automatically done when
+  a category has been completely researched.
+* Change: Add disease name to patients' treatment history when they are 
+  diagnosed.
+* Change: Buttons on the bottom panel for fullscreen windows are now
+  toggle buttons.
+* Change: Reordered entries of graphs menu to correspond with order in
+  bottom panel.
+
+* Fix: When an unanswered fax became meaningless (e.g. if you built the 
+  required room), it was only removed if its message button was visible at the
+  bottom panel (not if it was queued because of 5 buttons being there already).
+* Fix: Update the drug casebook if the last room of one kind explodes.
+* Fix: The directory browser was not always shown if the chosen Theme Hospital
+  install directory was illegal.
+* Fix: Settings changed in the game will be saved immediately so that they
+  persist to the next session regardless of how the game is shut down.
+* Fix: The bottom panel is no longer always on top, making fullscreen
+  dialogs truly fullscreen on 640x480.
+
+
+-- Graphics --
+
+* Added: The graph dialog now actually display graphs.
+
+* Added: It is now possible to choose among three colour scales for warmth
+  level. Look in the top menu for this choice.
+
+* Fix: Loading a game on startup where a fullscreen window was open would
+  open with the font messed up.
+* Fix: Taking a screenshot (Ctrl+S) now possible under windows without
+  fiddling in a lua file.
+* Change: Screenshots get saved to a dedicated screenshot folder now, 
+  which can be changed in the config.
+* Added: Print some info in the command prompt when the user wants to take
+  a screenshot, so he can see if and why it failed.
+
+
+-- Translations --
+
+* Change: The "utf8" prefix has been obsolete for some time and has been
+  removed from all language files.
+
+
 
 -------------------------------------------------------------------------------
-Version 0.11 - released in november 2012
+Version 0.11 - released 2012-11-17
 -------------------------------------------------------------------------------
 
 This is a bugfix release. For known issues etcetera, check out the
