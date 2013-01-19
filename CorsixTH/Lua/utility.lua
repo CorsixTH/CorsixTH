@@ -238,3 +238,27 @@ DrawFlags.EarlyList       = 2^10
 DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
+
+-- Compare values of two simple (non-nested) tables
+function compare_tables(t1, t2)
+  local count1 = 0
+  for k, v in pairs(t1) do
+    count1 = count1 + 1
+    if t2[k] ~= v then return false end
+  end
+  local count2 = 0
+  for k, v in pairs(t2) do
+    count2 = count2 + 1
+  end
+  if count1 ~= count2 then return false end
+  return true
+end
+
+-- Convert a list to a set
+function list_to_set(list)
+  local set = {}
+  for i, v in ipairs(list) do
+    set[v] = true
+  end
+  return set
+end

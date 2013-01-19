@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 62
+local SAVEGAME_VERSION = 63
 
 class "App"
 
@@ -1077,13 +1077,6 @@ function App:restart()
   end))
 end
 
---! Quits the running game and returns to main menu (offers confirmation window first)
-function App:quit()
-  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.quit, --[[persistable:app_confirm_quit]] function()
-    self:loadMainMenu()
-  end))
-end
-
 --! Exits the game completely (no confirmation window)
 function App:exit()
   -- Save config before exiting
@@ -1124,4 +1117,9 @@ function App:afterLoad()
   self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
+end
+
+
+-- Do not remove, for savegame compatibility < r1891
+local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end

@@ -240,6 +240,18 @@ function UI:UI(app, minimal)
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
     gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end
+  
+  -- Add some global keyhandlers
+  self:addKeyHandler("esc", self, self.closeWindow)
+  self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
+  self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
+  self:addKeyHandler({"alt", "f4"}, self, self.quit)
+  self:addKeyHandler("f10", self, self.resetApp)
+  
+  if app.config.debug then
+    self:addKeyHandler("f12", self, self.showLuaConsole)
+  end
+  
 end
 
 -- Used for everything except music and announcements
@@ -326,19 +338,23 @@ function UI:draw(canvas)
 end
 
 --! Register a key handler / hotkey for a window.
---!param key (string) The keyboard key which should trigger the callback (for
--- example, "left" or "z" or "F9").
+--!param keys (string or table) The keyboard key which should trigger the callback (for
+-- example, "left" or "z" or "F9"), or a list with modifier(s) and the key (e.g. {"ctrl", "s"}).
 --!param window (Window) The UI window which should receive the callback.
 --!param callback (function) The method to be called on `window` when `key` is
 -- pressed.
 --!param ... Additional arguments to `callback`.
-function UI:addKeyHandler(key, window, callback, ...)
-  key = key:lower()
+function UI:addKeyHandler(keys, window, callback, ...)
+  keys = (type(keys) == "table") and keys or {keys}
+
+  local key = table.remove(keys, #keys):lower()
+  local modifiers = list_to_set(keys) -- SET of modifiers
   if not self.key_handlers[key] then
     -- No handlers for this key? Create a new table.
     self.key_handlers[key] = {}
   end
   table.insert(self.key_handlers[key], {
+    modifiers = modifiers,
     window = window,
     callback = callback,
     ...
@@ -346,15 +362,18 @@ function UI:addKeyHandler(key, window, callback, ...)
 end
 
 --! Unregister a key handler previously registered by `addKeyHandler`.
---!param key (string) The key of a key / window pair previously passed to
--- `addKeyHandler`.
+--!param keys (string or table) The key or list of modifiers+key of a key / window
+-- pair previously passed to `addKeyHandler`.
 --!param window (Window) The window of a key / window pair previously passed
 -- to `addKeyHandler`.
-function UI:removeKeyHandler(key, window)
-  key = key:lower()
+function UI:removeKeyHandler(keys, window)
+  keys = (type(keys) == "table") and keys or {keys}
+
+  local key = table.remove(keys, #keys):lower()
+  local modifiers = list_to_set(keys) -- SET of modifiers
   if self.key_handlers[key] then
     for index, info in ipairs(self.key_handlers[key]) do
-      if info.window == window then
+      if info.window == window and compare_tables(info.modifiers, modifiers) then
         table.remove(self.key_handlers[key], index)
       end
     end
@@ -601,58 +620,27 @@ function UI:onKeyDown(code, rawchar)
   -- the key.
   local keyHandlers = self.key_handlers[key]
   if keyHandlers then
-    -- Call only the latest (last) handler for this code, because sometimes
-    -- even cursor keys are taken over.
-    local info = keyHandlers[#keyHandlers]
-    info.callback(info.window, unpack(info))
-    return true
+    -- Iterate over key handlers and call each one whose modifier(s) are pressed
+    -- TODO: Currently, a handler is triggered regardless of additional modifiers
+    --       being pressed (example: "s" triggers when "ctrl+s" is pressed).
+    --       Decide if this is a good or bad thing.
+    local handled = false
+    for _, handler in ipairs(keyHandlers) do
+      local match = true
+      for m, _ in pairs(handler.modifiers) do
+        match = match and self.buttons_down[m]
+      end
+      if match then
+        handler.callback(handler.window, unpack(handler))
+        handled = true
+      end
+    end
+    if handled then
+      return true
+    end
   end
   
   self.buttons_down[key] = true
-  if key == "esc" then
-    -- Close the topmost window first
-    local first = self.windows[1]
-    if first.on_top and first.esc_closes then
-      first:close()
-      return true
-    end
-    for i = #self.windows, 1, -1 do
-      local window = self.windows[i]
-      if window.esc_closes then
-        window:close()
-        return true
-      end
-    end
-  elseif key == "f10" then -- Restart
-    debug.getregistry()._RESTART = true
-    TheApp.running = false
-    return true
-  elseif key == "f12" and TheApp.config.debug then -- Show console
-    self:addWindow(UILuaConsole(self))
-  elseif self.buttons_down.alt and key == "f4" then
-    if self.hospital then
-      self.app:quit()
-    else
-      self.app:exit()
-    end
-  elseif self.buttons_down.alt and key == "enter" then --Alt + Enter: Toggle Fullscreen
-    self:toggleFullscreen()
-    return true
-  elseif self.buttons_down.ctrl and key == "s" then -- Ctrl + S: Take a screenshot
-     -- Find an index for screenshot which is not already used
-    local i = 0
-    local filename
-    repeat
-      filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
-      i = i + 1
-    until lfs.attributes(filename, "size") == nil
-    print("Taking screenshot: " .. filename)
-    local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
-    if not res then
-      print("Screenshot failed: " .. err)
-    end
-    return true
-  end
 end
 
 --! Called when the user releases a key on the keyboard
@@ -843,6 +831,14 @@ function UI:afterLoad(old, new)
   if old < 13 then
     self.key_code_to_rawchar = {}
   end
+  if old < 63 then
+    -- modifiers have been added to key handlers
+    for key, handlers in pairs(self.key_handlers) do
+      for _, handler in ipairs(handlers) do
+        handler.modifiers = {}
+      end
+    end
+  end
   
   -- disable keyboardrepeat after loading a game just in case
   -- (might be transferred from before loading, or broken savegame)
@@ -856,4 +852,53 @@ end
 -- Stub to allow the function to be called in e.g. the information
 -- dialog without having to worry about a GameUI being present
 function UI:tutorialStep(...)
+end
+
+function UI:makeScreenshot()
+   -- Find an index for screenshot which is not already used
+  local i = 0
+  local filename
+  repeat
+    filename = TheApp.screenshot_dir .. ("screenshot%i.bmp"):format(i)
+    i = i + 1
+  until lfs.attributes(filename, "size") == nil
+  print("Taking screenshot: " .. filename)
+  local res, err = self.app.video:takeScreenshot(filename) -- Take screenshot
+  if not res then
+    print("Screenshot failed: " .. err)
+  end
+end
+
+--! Closes one window (the topmost / active window, if possible)
+--!return true iff a window was closed
+function UI:closeWindow()
+  -- Close the topmost window first
+  local first = self.windows[1]
+  if first.on_top and first.esc_closes then
+    first:close()
+    return true
+  end
+  for i = #self.windows, 1, -1 do
+    local window = self.windows[i]
+    if window.esc_closes then
+      window:close()
+      return true
+    end
+  end
+end
+
+--! Shows the Lua console
+function UI:showLuaConsole()
+  self:addWindow(UILuaConsole(self))
+end
+
+--! Triggers reset of the application (reloads .lua files)
+function UI:resetApp()
+  debug.getregistry()._RESTART = true
+  TheApp.running = false
+end
+
+--! Triggers quitting the application
+function UI:quit()
+  self.app:exit()
 end

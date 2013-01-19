@@ -517,7 +517,7 @@ function UIMenuBar:makeMenu(app)
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
     :appendItem(_S.menu_file.restart, function() app:restart() end)
-    :appendItem(_S.menu_file.quit, function() app:quit() end)
+    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
   
   local options = UIMenu()

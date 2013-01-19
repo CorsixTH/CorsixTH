@@ -902,3 +902,11 @@ function GameUI:showBriefing()
   end
   self:addWindow(UIInformation(self, text))
 end
+
+--! Offers a confirmation window to quit the game and return to main menu
+-- NB: overrides UI.quit, do NOT call it from here
+function GameUI:quit()
+  self:addWindow(UIConfirmDialog(self, _S.confirmation.quit, --[[persistable:gameui_confirm_quit]] function()
+    self.app:loadMainMenu()
+  end))
+end
