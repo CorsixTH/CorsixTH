@@ -241,17 +241,17 @@ function World:initStaff()
         skill = conf.Skill / 100
       end
       
-      if conf.Nurse == 1 then
-        profile = StaffProfile("Nurse", _S.staff_class["nurse"])
-        profile:init(skill, self)
+      if conf.Nurse == 1 then 
+        profile = StaffProfile(self, "Nurse", _S.staff_class["nurse"])
+        profile:init(skill)
       elseif conf.Receptionist == 1 then
-        profile = StaffProfile("Receptionist", _S.staff_class["receptionist"])
-        profile:init(skill, self)
+        profile = StaffProfile(self, "Receptionist", _S.staff_class["receptionist"])
+        profile:init(skill)
       elseif conf.Handyman == 1 then
-        profile = StaffProfile("Handyman", _S.staff_class["handyman"])
-        profile:init(skill, self)      
+        profile = StaffProfile(self, "Handyman", _S.staff_class["handyman"])
+        profile:init(skill)      
       elseif conf.Doctor == 1 then
-        profile = StaffProfile("Doctor", _S.staff_class["doctor"])
+        profile = StaffProfile(self, "Doctor", _S.staff_class["doctor"])
         
         local shrink = 0
         local rsch = 0
@@ -265,7 +265,7 @@ function World:initStaff()
         if conf.Junior == 1 then jr = 1
         elseif conf.Consultant == 1 then cons = 1
         end
-        profile:initDoctor(shrink,surg,rsch,jr,cons,skill,self)
+        profile:initDoctor(shrink,surg,rsch,jr,cons,skill)
       else
         added_staff = false
       end
@@ -653,8 +653,8 @@ function World:makeAvailableStaff(month)
     end
     local group = {}
     for i = 1, num do
-      group[i] = StaffProfile(info.class, _S.staff_class[info.name])
-      group[i]:randomise(self, month)
+      group[i] = StaffProfile(self, info.class, _S.staff_class[info.name])
+      group[i]:randomise(month)
     end
     self.available_staff[info.class] = group
   end
@@ -2164,6 +2164,14 @@ function World:afterLoad(old, new)
   if old < 61 then
     -- room remove callbacks added
     self.room_remove_callbacks = {}
+  end
+  if old < 64 then
+    -- added reference to world for staff profiles
+    for _, group in pairs(self.available_staff) do
+      for _, profile in ipairs(group) do
+        profile.world = self
+      end
+    end
   end
   
   -- Now let things inside the world react.

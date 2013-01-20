@@ -20,7 +20,8 @@ SOFTWARE. --]]
 
 class "StaffProfile"
 
-function StaffProfile:StaffProfile(humanoid_class, local_string)
+function StaffProfile:StaffProfile(world, humanoid_class, local_string)
+  self.world = world
   self.humanoid_class = humanoid_class
   self.name = "U. N. Initialised"
   self.wage = 0
@@ -38,14 +39,14 @@ function StaffProfile:setDoctorAbilities(psychiatrist, surgeon, researcher, juni
   self.is_consultant = consultant 
 end
 
-function StaffProfile:initDoctor(psychiatrist, surgeon, researcher, junior, consultant, skill, world)
+function StaffProfile:initDoctor(psychiatrist, surgeon, researcher, junior, consultant, skill)
   self:setDoctorAbilities(psychiatrist, surgeon, researcher, junior, consultant)
-  self:init(skill, world)
+  self:init(skill)
 end
 
-function StaffProfile:init(skill, world)
+function StaffProfile:init(skill)
   self:setSkill(skill)
-  self.wage = self:getFairWage(world)
+  self.wage = self:getFairWage()
   self:randomiseOrganical()
 end
 
@@ -79,8 +80,8 @@ local function our_concat(t)
   return result
 end
 
-function StaffProfile:randomise(world, month)
-  local level_config = world.map.level_config
+function StaffProfile:randomise(month)
+  local level_config = self.world.map.level_config
   
   -- decide general skill for all staff
   self.skill = math.random()
@@ -121,10 +122,10 @@ function StaffProfile:randomise(world, month)
     -- is_consultant is forced to nil if is_junior is already 1
     self.is_consultant = not self.is_junior and self.is_consultant or nil
     
-    local jr_limit = 0.4
-    local cons_limit = 0.9
+    local jr_limit = level_config.gbv.DoctorThreshold / 1000
+    local cons_limit = level_config.gbv.ConsultantThreshold / 1000
     
-    -- put the doctor in the right skill level box ( 0 .. 0.4 .. 0.9 .. 1 )
+    -- put the doctor in the right skill level box
     if self.is_junior then
       self.skill = jr_limit * self.skill
     elseif self.is_consultant then
@@ -133,7 +134,7 @@ function StaffProfile:randomise(world, month)
       self.skill = jr_limit + ((cons_limit - jr_limit) * self.skill)
     end
   end
-  self.wage = self:getFairWage(world)
+  self.wage = self:getFairWage()
   self:parseSkillLevel()
   self:randomiseOrganical()
 end
@@ -194,9 +195,10 @@ end
 
 -- Update junior and consultant status
 function StaffProfile:parseSkillLevel()
-  local junior_skill = 0.4
+  local level_config = self.world.map.level_config
+  local junior_skill = level_config.gbv.DoctorThreshold / 1000
   self.is_junior     = self.skill <= junior_skill and 1 or nil
-  local consultant_skill = 0.9
+  local consultant_skill = level_config.gbv.ConsultantThreshold / 1000
   self.is_consultant = self.skill >= consultant_skill and 1 or nil
 end
 
@@ -216,12 +218,12 @@ local ability_conf_id = {
   is_researcher   = 8,
 }
 
-function StaffProfile:getFairWage(world)
-  if world.free_build_mode then
+function StaffProfile:getFairWage()
+  if self.world.free_build_mode then
     return 0
   end
   
-  local level_config = world.map.level_config
+  local level_config = self.world.map.level_config
   local wage = level_config.staff[conf_id[self.humanoid_class]].MinSalary
   wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor
   if self.humanoid_class == "Doctor" then

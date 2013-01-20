@@ -32,7 +32,7 @@ function Staff:tickDay()
   Humanoid.tickDay(self)
   -- Pay too low  --> unhappy
   -- Pay too high -->   happy
-  local fair_wage = self.profile:getFairWage(self.world)
+  local fair_wage = self.profile:getFairWage()
   local wage = self.profile.wage
   self:changeAttribute("happiness", 0.05 * (wage - fair_wage) / (fair_wage ~= 0 and fair_wage or 1))
   -- if you overwork your Dr's then there is a chance that they can go crazy
@@ -766,7 +766,7 @@ function Staff:requestRaise()
   end
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
-    local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
+    local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
     -- At least for now, staff are timid, and only ask for raises 1/5th of the time
     if math.random(1, 5) ~= 1 or amount <= 0 then
       self.timer_until_raise = nil
@@ -837,6 +837,12 @@ function Staff:afterLoad(old, new)
       self.staffroom_needed = nil
     end
   end
+  
+  if old < 64 then
+    -- added reference to world for staff profiles
+    self.profile.world = self.world
+  end
+  
   Humanoid.afterLoad(self, old, new)
 end
 
