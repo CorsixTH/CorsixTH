@@ -745,9 +745,8 @@ function Hospital:purchasePlot(plot_number)
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
       table.insert(self.ownedPlots, plot_number)
-      -- Also make sure that the transparent walls setting is used. 
-      -- TODO: This check should be done in C++?
-      self.world.ui:makeWallsTransparent(self.world.ui.transparent_walls)
+      -- Also make sure to apply transparency to the new walls, if required. 
+      self.world.ui:applyTransparency()
       self:spendMoney(cost, _S.transactions.buy_land, cost)
       return true
     end

@@ -319,13 +319,6 @@ function UIMenuBar:disappear()
   end
 end
 
-function UIMenuBar:onKeyDown(key)
-  if key == "esc" then
-    self:appear()
-    return true
-  end
-end
-
 function UIMenuBar:onMouseDown(button, x, y)
   if button ~= "left" or not self.visible then
     return
@@ -647,7 +640,7 @@ function UIMenuBar:makeMenu(app)
   )
   local function _(s) return "  " .. s:upper() .. "  " end
   local function transparent_walls(item)
-    app.ui:makeWallsTransparent(item.checked)
+    app.ui:toggleWallsTransparent()
   end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)

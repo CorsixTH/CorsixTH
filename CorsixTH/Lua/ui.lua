@@ -241,17 +241,22 @@ function UI:UI(app, minimal)
     gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end
   
+  self:setupGlobalKeyHandlers()
+end
+
+function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
   self:addKeyHandler("esc", self, self.closeWindow)
+  self:addKeyHandler("esc", self, self.stopVideo)
+  self:addKeyHandler(" ", self, self.stopVideo)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.quit)
   self:addKeyHandler("f10", self, self.resetApp)
   
-  if app.config.debug then
+  if self.app.config.debug then
     self:addKeyHandler("f12", self, self.showLuaConsole)
   end
-  
 end
 
 -- Used for everything except music and announcements
@@ -590,13 +595,6 @@ function UI:onKeyDown(code, rawchar)
   
   -- Apply key-remapping and normalisation
   local key = self.key_codes[code] or rawchar:lower()
-  if self.app.moviePlayer.playing then
-      if key == "esc" or key == " " then
-          self.app.moviePlayer:stop()
-      end
-      return true
-  end
-
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
@@ -838,6 +836,8 @@ function UI:afterLoad(old, new)
         handler.modifiers = {}
       end
     end
+    -- some global key shortcuts were converted to use keyHandlers
+    self:setupGlobalKeyHandlers()
   end
   
   -- disable keyboardrepeat after loading a game just in case
@@ -901,4 +901,11 @@ end
 --! Triggers quitting the application
 function UI:quit()
   self.app:exit()
+end
+
+--! Tries to stop a video, if one is currently playing
+function UI:stopVideo()
+  if self.app.moviePlayer.playing then
+    self.app.moviePlayer:stop()
+  end
 end

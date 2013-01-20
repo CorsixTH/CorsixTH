@@ -68,6 +68,20 @@ function GameUI:GameUI(app, local_hospital)
   self.ticks_since_last_announcement = 0
 end
 
+function GameUI:setupGlobalKeyHandlers()
+  UI.setupGlobalKeyHandlers(self)
+
+  self:addKeyHandler("esc", self, self.setEditRoom, false)
+  self:addKeyHandler("esc", self, self.showMenuBar)
+
+  if self.app.config.debug then
+    self:addKeyHandler("f11", self, self.showCheatsWindow)
+    self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
+    self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
+    self:addKeyHandler("x", self, self.toggleWallsTransparent)
+  end
+end
+
 function GameUI:makeVisibleDiamond(scr_w, scr_h)
   local map_w = self.app.map.width
   local map_h = self.app.map.height
@@ -199,40 +213,14 @@ end
 
 function GameUI:onKeyDown(code, rawchar)
   if UI.onKeyDown(self, code, rawchar) then
+    -- Key has been handled already
     return true
   end
   rawchar = self.key_code_to_rawchar[code] -- UI may have translated rawchar
   local key = self:_translateKeyCode(code, rawchar)
-  --abort movies
-  if self.app.moviePlayer.playing then
-    if key == "esc" or key == " " then
-      self.app.moviePlayer:stop()
-    end
-    return true
-  end
-  --Maybe the player wants to abort an "about to edit room" action
-  if key == "esc" and self.edit_room then
-    self:setEditRoom(false)
-    return true
-  end
-  self.menu_bar:onKeyDown(key, rawchar, code)
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
-  end
-  -- Allow players to dump strings to be able to see which strings their language
-  -- is lacking.
-  if key == "d" and self.buttons_down.ctrl and self.buttons_down.shift then
-    self.app:dumpStrings()
-  end
-  if TheApp.config.debug then -- Debug commands
-    if key == "f11" then -- Open cheat window
-      self:addWindow(UICheats(self))
-    elseif key == "x" then -- Toggle wall transparency
-      self:makeWallsTransparent(not self.transparent_walls)
-    elseif key == "d" and self.buttons_down.ctrl then
-      self.app.world:dumpGameLog()
-    end
   end
 end
 
@@ -648,9 +636,21 @@ function GameUI:limitCamera(mode)
   self:scrollMap(0, 0)
 end
 
-function GameUI:makeWallsTransparent(mode)
+--! Applies the current setting for wall transparency to the map
+function GameUI:applyTransparency()
+  self.app.map.th:setWallDrawFlags(self.transparent_walls and 4 or 0)
+end
+
+--! Sets wall transparency to the specified parameter
+--!param mode (boolean) whether to enable or disable wall transparency
+function GameUI:setWallsTransparent(mode)
   self.transparent_walls = mode
-  self.app.map.th:setWallDrawFlags(mode and 4 or 0)
+  self:applyTransparency()
+end
+
+--! Toggles transparency of walls, i.e. enables if currently disabled, and vice versa
+function GameUI:toggleWallsTransparent()
+  self:setWallsTransparent(not self.transparent_walls)
 end
 
 local tutorial_phases
@@ -909,4 +909,12 @@ function GameUI:quit()
   self:addWindow(UIConfirmDialog(self, _S.confirmation.quit, --[[persistable:gameui_confirm_quit]] function()
     self.app:loadMainMenu()
   end))
+end
+
+function GameUI:showCheatsWindow()
+  self:addWindow(UICheats(self))
+end
+
+function GameUI:showMenuBar()
+  self.menu_bar:appear()
 end
