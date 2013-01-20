@@ -102,7 +102,7 @@ protected:
     std::string m_sLastError;
     char m_szErrorBuffer[MOVIE_ERROR_BUFFER_SIZE];
 
-    int decodeAudioFrame();
+    int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
     int queuePicture(AVFrame *pFrame, double dPts);
     void advancePictureQueue();
@@ -131,6 +131,8 @@ protected:
 
     //tick when video was started in ms
     int m_iStartTime;
+    int m_iCurSyncPtsSystemTime;
+    double m_iCurSyncPts;
 
     THAVPacketQueue *m_pAudioQueue;
 

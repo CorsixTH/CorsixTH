@@ -348,6 +348,8 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
 
     m_pAudioQueue = new THAVPacketQueue();
     m_iStartTime = SDL_GetTicks();
+    m_iCurSyncPts = 0;
+    m_iCurSyncPtsSystemTime = m_iStartTime;
 
     if(m_iAudioStream >= 0)
     {
@@ -573,7 +575,7 @@ void THMovie::refresh()
         if(m_iPictureQueueSize > 0)
         {
             pMoviePicture = &(m_aPictureQueue[m_iPictureQueueReadIndex]);
-            double curTime = SDL_GetTicks() - m_iStartTime;
+            double curTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
 
             //don't play a frame too early
             if(pMoviePicture->m_dPts > 0)
@@ -801,12 +803,14 @@ void THMovie::copyAudioToStream(Uint8 *pbStream, int iStreamSize)
 {
     int iAudioSize;
     int iCopyLength;
+    bool fFirst = true;
 
     while(iStreamSize > 0)
     {
         if(m_iAudioBufferIndex >= m_iAudioBufferSize)
         {
-            iAudioSize = decodeAudioFrame();
+            iAudioSize = decodeAudioFrame(fFirst);
+            fFirst = false;
 
             if(iAudioSize <= 0)
             {
@@ -828,7 +832,7 @@ void THMovie::copyAudioToStream(Uint8 *pbStream, int iStreamSize)
     }
 }
 
-int THMovie::decodeAudioFrame()
+int THMovie::decodeAudioFrame(bool fFirst)
 {
     int iBytesConsumed = 0;
     int iSampleSize = 0;
@@ -836,6 +840,8 @@ int THMovie::decodeAudioFrame()
     int iGotFrame = 0;
     bool fNewPacket = false;
     bool fFlushComplete = false;
+    double dClockPts;
+    int iStreamPts;
 
     while(!iGotFrame && !m_fAborting)
     {
@@ -870,6 +876,19 @@ int THMovie::decodeAudioFrame()
                 avcodec_flush_buffers(m_pAudioCodecContext);
                 fFlushComplete = false;
             }
+        }
+
+        if(fFirst)
+        {
+            iStreamPts = m_pAudioPacket->pts;
+            if(iStreamPts != AV_NOPTS_VALUE)
+            {
+                //There is a time_base in m_pAudioCodecContext too, but that one is wrong.
+                dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iAudioStream]->time_base);
+                m_iCurSyncPts = dClockPts;
+                m_iCurSyncPtsSystemTime = SDL_GetTicks();
+            }
+            fFirst = false;
         }
 
         while(m_pAudioPacket->size > 0 || (!m_pAudioPacket->data && fNewPacket))
@@ -910,8 +929,6 @@ int THMovie::decodeAudioFrame()
         }
     }
 
-    //TODO: Compensate for audio being out of sync
-
 #if LIBSWRESAMPLE_VERSION_INT < AV_VERSION_INT(0, 12, 100)
     //over-estimate output samples
     iOutSamples = (int)av_rescale_rnd(m_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
@@ -949,6 +966,7 @@ int THMovie::decodeAudioFrame()
 #endif
 
     swr_convert(m_pSwrContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_frame->data[0], m_frame->nb_samples);
+
     return iSampleSize;
 }
 #else //CORSIX_TH_USE_FFMPEG
