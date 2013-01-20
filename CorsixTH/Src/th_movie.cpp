@@ -570,36 +570,33 @@ void THMovie::refresh()
 {
     THMoviePicture* pMoviePicture;
 
-    if(m_pFormatContext->streams[m_iVideoStream])
+    if(m_iPictureQueueSize > 0)
     {
-        if(m_iPictureQueueSize > 0)
+        pMoviePicture = &(m_aPictureQueue[m_iPictureQueueReadIndex]);
+        double curTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
+
+        //don't play a frame too early
+        if(pMoviePicture->m_dPts > 0)
         {
-            pMoviePicture = &(m_aPictureQueue[m_iPictureQueueReadIndex]);
-            double curTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
-
-            //don't play a frame too early
-            if(pMoviePicture->m_dPts > 0)
+            if(pMoviePicture->m_dPts * 1000.0 > curTime)
             {
-                if(pMoviePicture->m_dPts * 1000.0 > curTime)
-                {
-                    return;
-                }
+                return;
             }
-
-            if(m_iPictureQueueSize > 1)
-            {
-                THMoviePicture* nextPicture = &(m_aPictureQueue[(m_iPictureQueueReadIndex + 1) % PICTURE_BUFFER_SIZE]);
-
-                //if we have another frame and it's time has already passed, drop the current frame
-                if(nextPicture->m_dPts > 0 && nextPicture->m_dPts * 1000.0 < curTime)
-                {
-                    advancePictureQueue();
-                }
-            }
-
-            pMoviePicture->draw();
-            advancePictureQueue();
         }
+
+        if(m_iPictureQueueSize > 1)
+        {
+            THMoviePicture* nextPicture = &(m_aPictureQueue[(m_iPictureQueueReadIndex + 1) % PICTURE_BUFFER_SIZE]);
+
+            //if we have another frame and it's time has already passed, drop the current frame
+            if(nextPicture->m_dPts > 0 && nextPicture->m_dPts * 1000.0 < curTime)
+            {
+                advancePictureQueue();
+            }
+        }
+
+        pMoviePicture->draw();
+        advancePictureQueue();
     }
 }
 

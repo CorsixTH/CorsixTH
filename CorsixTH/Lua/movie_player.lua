@@ -190,6 +190,7 @@ function MoviePlayer:onMovieAllocatePicture()
 end
 
 function MoviePlayer:onMovieOver()
+  self.moviePlayer:unload()
   self.wait_for_over = false
   if not self.wait_for_stop then
     self:_destroyMovie()
@@ -207,7 +208,6 @@ function MoviePlayer:stop()
 end
 
 function MoviePlayer:_destroyMovie()
-  self.moviePlayer:unload()
   if(self.moviePlayer:requiresVideoReset()) then
     self.app.ui:resetVideo()
   end
