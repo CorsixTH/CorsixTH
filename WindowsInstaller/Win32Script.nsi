@@ -97,6 +97,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 
 
 ; Language files
+!insertmacro MUI_LANGUAGE "Czech"
 !insertmacro MUI_LANGUAGE "Danish"
 !insertmacro MUI_LANGUAGE "Dutch"
 !insertmacro MUI_LANGUAGE "English"
