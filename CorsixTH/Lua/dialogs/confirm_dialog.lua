@@ -67,8 +67,11 @@ function UIConfirmDialog:ok()
   self:close(true)
 end
 
--- NB: if called without argument (e.g. pressing esc), cancel callback is executed
+--! Closes the confirm dialog
+--!param ok (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
 function UIConfirmDialog:close(ok)
+  -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
+  Window.close(self)
   if ok then
     if self.callback_ok then
       self.callback_ok()
@@ -78,7 +81,6 @@ function UIConfirmDialog:close(ok)
       self.callback_cancel()
     end
   end
-  Window.close(self)
 end
 
 function UIConfirmDialog:draw(canvas, x, y)
