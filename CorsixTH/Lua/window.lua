@@ -247,6 +247,16 @@ function Panel:drawLabel(canvas, x, y, limit)
   end
 end
 
+function Panel:setPosition(x, y)
+  self.x = x
+  self.y = y
+end
+
+function Panel:setSize(width, height)
+  self.w = width
+  self.h = height
+end
+
 --[[ Add a `Panel` to the window.
 ! Panels form the basic building blocks of most windows. A panel is a small
 bitmap coupled with a position, and by combining several panels, a window can
@@ -593,6 +603,28 @@ function Button:handleClick(mouse_button)
       print("Warning: No handler for button click")
       self.on_click = --[[persistable:button_on_click_handler_stub]] function() end
     end
+  end
+end
+
+function Button:setPosition(x, y)
+  self.panel_for_sprite:setPosition(x, y)
+  self.r = self.r - self.x + x
+  self.b = self.b - self.y + y
+  self.x = x
+  self.y = y
+  if self.tooltip then
+    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_y = self.y
+  end
+end
+
+function Button:setSize(width, height)
+  self.panel_for_sprite:setSize(width, height)
+  self.r = self.x + width
+  self.b = self.y + height
+  if self.tooltip then
+    self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
+    self.tooltip.tooltip_y = self.y
   end
 end
 
@@ -1071,6 +1103,14 @@ end
 function Textbox:setText(text)
   self.text = text
   return self
+end
+
+function Textbox:setPosition(x, y)
+  self.button:setPosition(x, y)
+end
+
+function Textbox:setSize(width, height)
+  self.button:setSize(width, height)
 end
 
 --[[ Convert a static panel into a textbox.

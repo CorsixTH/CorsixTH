@@ -55,6 +55,8 @@ function UILuaConsole:UILuaConsole(ui)
   self.modal_class = "console"
   self.esc_closes = true
   self.resizable = true
+  self.min_width = 200
+  self.min_height = 150
   self:setDefaultPosition(0.1, 0.1)
   
   -- Window parts definition
@@ -68,11 +70,25 @@ function UILuaConsole:UILuaConsole(ui)
   self.textbox:setActive(true) -- activated by default
   
   -- "Execute" button
-  self:addBevelPanel(20, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.execute_code)
+  self.execute_button = self:addBevelPanel(20, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.execute_code)
     :makeButton(0, 0, 130, 40, nil, self.buttonExecute):setTooltip(_S.tooltip.lua_console.execute_code)
-  -- "Back" button
-  self:addBevelPanel(170, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.close)
-    :makeButton(0, 0, 130, 40, nil, self.buttonBack):setTooltip(_S.tooltip.lua_console.close)
+  -- "Close" button
+  self.close_button = self:addBevelPanel(170, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.close)
+    :makeButton(0, 0, 130, 40, nil, self.buttonClose):setTooltip(_S.tooltip.lua_console.close)
+end
+
+function UILuaConsole:setSize(width, height)
+  UIResizable.setSize(self, width, height)
+  
+  self.textbox:setSize(self.width - 40, self.height - 100)
+  
+  local button_width = math.floor((self.width - 60) / 2)
+  
+  self.execute_button:setPosition(20, self.height - 60)
+  self.execute_button:setSize(button_width, 40)
+  
+  self.close_button:setPosition(self.width - 20 - button_width, self.height - 60)
+  self.close_button:setSize(button_width, 40)
 end
 
 function UILuaConsole:buttonExecute()
@@ -104,6 +120,19 @@ function UILuaConsole:buttonExecute()
   end
 end
 
-function UILuaConsole:buttonBack()
+function UILuaConsole:buttonClose()
   self:close()
+end
+
+function UILuaConsole:afterLoad(old, new)
+  UIResizable.afterLoad(self, old, new)
+  if old < 65 then
+    -- added min_width and min_height
+    self.min_width = 200
+    self.min_height = 150
+    -- added execute_button, close_button, changed callback
+    self.execute_button = self.buttons[2]
+    self.close_button = self.buttons[3]
+    self.close_button.on_click = self.buttonClose
+  end
 end

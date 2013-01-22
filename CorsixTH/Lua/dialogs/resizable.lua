@@ -38,21 +38,25 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders)
     self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   end
   
-  self.background_panel =
-    self:addColourPanel(0, 0, 0, 0, 0, 0, 0)
-
+  self.background_panel = self:addColourPanel(0, 0, 0, 0, 0, 0, 0)
+  
+  -- Minimum size. Can be changed per window, but should never be smaller than this
+  -- because it would result in visual glitches
+  self.min_width = 50
+  self.min_height = 50
+  
   self.border_pos = {}
   self.border_pos.left = -border_offset_x
   self.border_pos.upper = -border_offset_y
   
-  self:setSize(width, height)
+  -- NB: intentionally calling like this to allow subclasses to extend setSize without being called from here
+  UIResizable.setSize(self, width, height)
   self:setColour(colour)
 end
 
 function UIResizable:setSize(width, height)
-  -- NB: minimum size: 50 px each. Would look strange otherwise.
-  width = width < 50 and 50 or width
-  height = height < 50 and 50 or height
+  width = math.max(self.min_width, width)
+  height = math.max(self.min_height, height)
   
   self.width = width
   self.height = height
@@ -64,8 +68,6 @@ function UIResizable:setSize(width, height)
 
   self.border_pos.lower = self.height
   self.border_pos.corner_lower = self.height - border_size_y
-  
-  return width, height
 end
 
 function UIResizable:setColour(colour)
@@ -102,24 +104,17 @@ function UIResizable:draw(canvas, x, y)
 end
 
 function UIResizable:onMouseDown(button, x, y)
-  local repaint = Window.onMouseDown(self, button, x, y)
-  if button == "left" and not repaint and not (x >= 0 and y >= 0 and
-  x < self.width and y < self.height) then
-    local res = self:hitTest(x, y)
-    if res then
-      if res == true or not self.resizable then
-        return self:beginDrag(x, y)
-      else
-        return self:beginResize(x, y, res)
-      end
-    end
+  local res = self.resizable and self:hitTestCorners(x, y)
+  if res then
+    self:beginResize(x, y, res)
+    return true
   end
-  return repaint
+  return Window.onMouseDown(self, button, x, y)
 end
 
 function UIResizable:hitTest(x, y)
-  if x >= 0 and y >= 0 and x < self.width and y < self.height then -- inside window, should never happen
-    return true
+  if x >= 0 and y >= 0 and x < self.width and y < self.height then -- inside window
+    return Window.hitTest(self, x, y)
   end
   local sprites = self.border_sprites
   if not sprites then
@@ -131,11 +126,27 @@ function UIResizable:hitTest(x, y)
   if (0 <= x and x < self.width) or (0 <= y and y < self.height) then -- edges (upper/lower/left/right)
     return true
   end
-  local test = sprites.hitTest -- for corners, do explicit hit test because they're round
-  return test(sprites, 10, x - self.border_pos.left        , y - self.border_pos.upper) and "ul"        -- upper left
-      or test(sprites, 12, x - self.border_pos.corner_right, y - self.border_pos.upper) and "ur"        -- upper right
-      or test(sprites, 15, x - self.border_pos.left        , y - self.border_pos.corner_lower) and "ll" -- lower left
-      or test(sprites, 17, x - self.border_pos.corner_right, y - self.border_pos.corner_lower) and "lr" -- lower right
+  return self:hitTestCorners(x, y) and true
+end
+
+--! Tests if any of the four corners of the window border is hit
+--!param x the x coordinate to test
+--!param y the y coordinate to test
+--!return (boolean or string) false if not hit, else a string to denote which corner was hit (can be "ul", "ur", "ll" or "lr")
+function UIResizable:hitTestCorners(x, y)
+  if self.border_sprites then
+    local yzone = (-9 <= y and y < 0) and "u" or (self.height <= y and y < self.height + 9) and "l"
+    local xzone = (-9 <= x and x < 0) and "l" or (self.width  <= x and x < self.width  + 9) and "r"
+    
+    local sprite_ids = {ul = 10, ur = 12, ll = 15, lr = 17}
+    if yzone and xzone then
+      local zone = yzone .. xzone
+      local dy = (yzone == "u" and self.border_pos.upper or self.border_pos.corner_lower)
+      local dx = (xzone == "l" and self.border_pos.left  or self.border_pos.corner_right)
+      return self.border_sprites:hitTest(sprite_ids[zone], x - dx, y - dy) and zone
+    end
+  end
+  return false
 end
 
 --[[ Initiate resizing of the resizable window.
@@ -144,11 +155,6 @@ end
 !param mode Either one of "ul", "ur", "ll" or "lr" to denote in which direction to resize. (upper/lower + left/right)
 ]]
 function UIResizable:beginResize(x, y, mode)
-  if not self.width or not self.height or not self.ui then
-    -- Need width, height and UI to resize
-    return false
-  end
-  
   local orig_x = self.x
   local orig_y = self.y
   local ref_x = self.x + x
@@ -168,19 +174,27 @@ function UIResizable:beginResize(x, y, mode)
     sx = invert_x and -sx or sx
     sy = invert_y and -sy or sy
     
-    local new_width, new_height = self:setSize(orig_width + sx, orig_height + sy)
+    self:setSize(orig_width + sx, orig_height + sy)
     local new_x, new_y
     
     if invert_x then
-      new_x = orig_x + orig_width - new_width
+      new_x = orig_x + orig_width - self.width
     end
     if invert_y then
-      new_y = orig_y + orig_height - new_height
+      new_y = orig_y + orig_height - self.height
     end
     
     if new_x or new_y then
       self:setPosition(new_x or orig_x, new_y or orig_y)
     end
   end
-  return true
+end
+
+function UIResizable:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
+  if old < 65 then
+    -- added min_width and min_height
+    self.min_width = 50
+    self.min_height = 50
+  end
 end

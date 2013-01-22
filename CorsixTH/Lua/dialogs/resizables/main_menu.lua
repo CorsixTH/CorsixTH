@@ -35,7 +35,6 @@ function UIMainMenu:UIMainMenu(ui)
   self.modal_class = "main menu"
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
-  self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
 
   -- The main menu also shows the version number of the player's copy of the game.
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
@@ -56,15 +55,6 @@ end
 
 local label_y = { 27, 75, 123, 171, 231 }
 
-function UIMainMenu:onMouseDown(button, x, y)
-  local repaint = UIResizable.onMouseDown(self, button, x, y)
-  if button == "left" and not repaint and not (x >= 0 and y >= 0 and
-  x < self.width and y < self.height) and self:hitTest(x, y) then
-    return self:beginDrag(x, y)
-  end
-  return repaint
-end
-
 function UIMainMenu:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
@@ -76,27 +66,6 @@ function UIMainMenu:draw(canvas, x, y)
     ly = ly - 15
   end
   self.label_font:draw(canvas, _S.main_menu.version .. self.version_number, x + 5, ly, 190, 0, "right")
-end
-
-function UIMainMenu:hitTest(x, y)
-  if x >= 0 and y >= 0 and x < self.width and y < self.height then
-    return true
-  end
-  local sprites = self.border_sprites
-  if not sprites then
-    return false
-  end
-  if x < -9 or y < -9 or x >= self.width + 9 or y >= self.height + 9 then
-    return false
-  end
-  if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
-    return true
-  end
-  local test = sprites.hitTest
-  return test(sprites, 10, x + 9, y + 9)
-      or test(sprites, 12, x - 160, y + 9)
-      or test(sprites, 15, x + 9, y - 240)
-      or test(sprites, 17, x - 160, y - 240)
 end
 
 function UIMainMenu:buttonNewGame()
