@@ -945,6 +945,7 @@ function Textbox:input(char, rawchar, code)
   end
   -- Arrow keys (code >= 273 and code <= 276)
   if not handled and code >= 273 and code <= 276 then
+    local pat = "%a%d_" -- which characters form "words" for ctrl+left/right
     if code == 273 then -- up
       if type(self.text) ~= "table" or self.cursor_pos[1] == 1 then
         -- to beginning of line
@@ -971,8 +972,13 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = 0
         end
       else
-        -- one to the right
-        self.cursor_pos[2] = self.cursor_pos[2] + 1
+        if ui.buttons_down.ctrl then
+          -- to the right until next word or end of line
+          self.cursor_pos[2] = string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)
+        else
+          -- one to the right
+          self.cursor_pos[2] = self.cursor_pos[2] + 1
+        end
       end
     elseif code == 276 then -- left
       if self.cursor_pos[2] == 0 then
@@ -982,18 +988,30 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
         end
       else
-        -- one to the left
-        self.cursor_pos[2] = self.cursor_pos[2] - 1
+        if ui.buttons_down.ctrl then
+          -- to the left until beginning of word or beginning of line
+          self.cursor_pos[2] = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
+        else
+          -- one to the left
+          self.cursor_pos[2] = self.cursor_pos[2] - 1
+        end
       end
     end
-    -- make cursor visible
-    self.cursor_counter = 0
-    self.cursor_state = true
-    return true
+    handled = true
   end
   -- Tab (reserved)
   if not handled and code == 9 then
     return true
+  end
+  -- Home (beginning of line)
+  if not handled and char == "home" then
+    self.cursor_pos[2] = 0
+    handled = true
+  end
+  -- End (end of line)
+  if not handled and char == "end_key" then
+    self.cursor_pos[2] = string.len(line)
+    handled = true
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Experimental "all" category

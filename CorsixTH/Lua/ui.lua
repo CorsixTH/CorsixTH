@@ -105,6 +105,8 @@ function UI:initKeyAndButtonCodes()
     f11 = 292,
     f12 = 293,
     enter = 13,
+    home = 278,
+    end_key = 279,
     shift = {303, 304},
     ctrl = {305, 306},
     alt = {307, 308, 313},
