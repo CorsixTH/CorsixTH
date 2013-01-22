@@ -898,6 +898,7 @@ function Textbox:input(char, rawchar, code)
   end
   local ui = self.panel.window.ui
   local line = type(self.text) == "table" and self.text[self.cursor_pos[1]] or self.text
+  local pat = "%a%d_" -- which characters form "words" for ctrl+[left/right/backspace/delete]
   local new_line
   local handled = false
   if not self.char_limit or string.len(line) < self.char_limit then
@@ -929,22 +930,26 @@ function Textbox:input(char, rawchar, code)
       self.cursor_pos[2] = self.cursor_pos[2] + 1
     end
   end
-  -- Backspace (delete last char)
+  -- Backspace (delete last char, or last word if ctrl is pressed)
   if not handled and char == "backspace" then
     if self.cursor_pos[2] == 0 then
-      if type(self.text) == "table" and #self.text > 1 then
+      if type(self.text) == "table" and self.cursor_pos[1] > 1 then
         table.remove(self.text, self.cursor_pos[1])
         self.cursor_pos[1] = self.cursor_pos[1] - 1
         self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
         new_line = self.text[self.cursor_pos[1]] .. line
       end
     else
-      new_line = line:sub(1, self.cursor_pos[2] - 1) .. line:sub(self.cursor_pos[2] + 1, -1)
-      self.cursor_pos[2] = self.cursor_pos[2] - 1
+      local pos = self.cursor_pos[2] - 1
+      if ui.buttons_down.ctrl then
+        pos = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
+      end
+      new_line = line:sub(1, pos) .. line:sub(self.cursor_pos[2] + 1, -1)
+      self.cursor_pos[2] = pos
     end
     handled = true
   end
-  -- Delete (delete next char)
+  -- Delete (delete next char, or next word if ctrl is pressed)
   if not handled and char == "delete" then
     if self.cursor_pos[2] == string.len(line) then
       if type(self.text) == "table" and self.cursor_pos[1] < #self.text then
@@ -952,7 +957,11 @@ function Textbox:input(char, rawchar, code)
         table.remove(self.text, self.cursor_pos[1] + 1)
       end
     else
-      new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(self.cursor_pos[2] + 2, -1)
+      local pos = self.cursor_pos[2] + 2
+      if ui.buttons_down.ctrl then
+        pos = (string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)) + 1
+      end
+      new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(pos, -1)
     end
     handled = true
   end
@@ -977,7 +986,6 @@ function Textbox:input(char, rawchar, code)
   end
   -- Arrow keys (code >= 273 and code <= 276)
   if not handled and code >= 273 and code <= 276 then
-    local pat = "%a%d_" -- which characters form "words" for ctrl+left/right
     if code == 273 then -- up
       if type(self.text) ~= "table" or self.cursor_pos[1] == 1 then
         -- to beginning of line
