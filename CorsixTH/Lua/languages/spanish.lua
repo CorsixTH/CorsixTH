@@ -133,6 +133,20 @@ menu_options_warmth_colors = {
   choice_3 = "   AMARILLO, NARANJA, ROJO ",
 }
 
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager  = "  (F1) DIRECTOR DEL BANCO  ",
+  statement     = "  (F2) ESTADO DE CUENTAS  ",
+  staff_listing = "  (F3) LISTA DE PERSONAL  ",
+  town_map      = "  (F4) MAPA DE LA CIUDAD  ",
+  casebook      = "  (F5) HISTORIAL  ",
+  research      = "  (F6) INVESTIGACIóN  ",
+  status        = "  (F7) ESTADO  ",
+  graphs        = "  (F8) GRáFICAS  ",
+  policy        = "  (F9) NORMAS  ",
+}
+
+
 -- The demo does not contain this string
 menu_file.restart = "  REINICIAR  "
 
