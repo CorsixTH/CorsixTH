@@ -115,7 +115,7 @@ menu_options = {
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
   settings = "  CONFIGURACIóN  ",
   adviser_disabled = "  CONSEJERO  ",
-  warmth_colors = "  COLORES DE TEMPERATURA",
+  warmth_colors = "  COLORES DE TEMPERATURA  ",
 }
 
 menu_options_game_speed = {
