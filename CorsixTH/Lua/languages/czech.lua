@@ -2565,7 +2565,7 @@ menu_options = {
   warmth_colors = "    BARVY TEPLOTY",  
 }
 menu_options_warmth_colors = {
-  choice_2 = "     MODRÁ ZELENÁ ĆERVENÁ ",
+  choice_2 = "     MODRÁ ZELENÁ ČERVENÁ ",
   choice_1 = "     ČERVENÁ ",
   choice_3 = "     ŽLUTÁ ORANŽOVÁ ČERVENÁ ",
 }
@@ -3083,15 +3083,16 @@ staff_class = {
   nurse = "Sestra",
 }
 menu_charts = {
-  policy = "  ZÁSADY  ",
-  staff_listing = "  SEZNAM ZAMĚSTNANCŮ  ",
-  status = "  STAV  ",
-  statement = "  FINANČNÍ VÝKAZ  ",
-  bank_manager = "  SPRÁVCE BANKY  ",
-  graphs = "  GRAFY  ",
-  casebook = "  KNIHA LÉČBY PACIENTŮ  ",
-  briefing = "  ÚVOD DO MISE  ",
-  research = "  VÝZKUM  ",
+  bank_manager  = "  (F1) SPRÁVCE BANKY  ",
+  statement     = "  (F2) FINANČNÍ VÝKAZ  ",
+  staff_listing = "  (F3) SEZNAM ZAMĚSTNANCŮ  ",
+  town_map      = "  (F4) MAPA MĚSTA  ",
+  casebook      = "  (F5) KNIHA LÉČBY PACIENTŮ  ",
+  research      = "  (F6) VÝZKUM  ",
+  status        = "  (F7) STAV  ",
+  graphs        = "  (F8) GRAFY  ",
+  policy        = "  (F9) ZÁSADY  ",
+  briefing      = "  ÚVOD DO MISE  ",
 }
 menu_options_volume = {
   [30] = "    30%  ",
