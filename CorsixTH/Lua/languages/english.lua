@@ -470,3 +470,10 @@ tooltip.calls_dispatcher = {
   assigned = "This box is marked if someone is assigned to the corresponding task.",
   close = "Close the calls dispatcher dialog",
 }
+
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Change resolution"
+options_window.tooltip.change_resolution = "Change the window resolution to the dimensions entered on the left"
