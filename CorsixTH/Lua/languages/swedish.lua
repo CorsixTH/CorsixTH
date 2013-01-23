@@ -87,6 +87,19 @@ menu_options_warmth_colors = {
   choice_3 = "  GUL ORANGE RÖD  ",
 }
 
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager  = "  (F1) BANKKAMRER  ",
+  statement     = "  (F2) KONTOUTDRAG  ",
+  staff_listing = "  (F3) PERSONALLEDNING  ",
+  town_map      = "  (F4) STADSKARTA  ",
+  casebook      = "  (F5) MEDICINJOURNAL  ",
+  research      = "  (F6) FORSKNING  ",
+  status        = "  (F7) STATUS  ",
+  graphs        = "  (F8) GRAFER  ",
+  policy        = "  (F9) POLICY  ",
+}
+
 menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
@@ -252,10 +265,16 @@ tooltip.menu_list_window = {
 }
 
 options_window = {
+  caption = "Alternativ",
   fullscreen = "Helskärm",
+  option_on = "På",
+  option_off = "Av",
+  data_location = "Speldatakälla",
   width = "Bredd",
   height = "Höjd",
-  change_resolution = "Ändra upplösning",
+  resolution = "Upplösning",
+  language = "Spelspråk",
+  apply = "Tillämpa",
   browse = "Bläddra...",
   new_th_directory = "Här kan du välja en ny plats här Theme Hospital installerats. Så fort du väljer den nya mappen kommer spelet att startas om.",
   back = "Tillbaka",
@@ -266,8 +285,13 @@ tooltip.options_window = {
   fullscreen_button = "Klicka för att gå mellan fönster och helskärm",
   width = "Fyll i önskad skärmbredd",
   height = "Fyll i önskad skärmhöjd",
-  change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster",
-  language = "Ändra till %s som språk",
+  data_location = "Mapp som en installation av Theme Hospital finns i, krävs för att köra CorsixTH",
+  fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
+  language = "Text i spelet kommer att visas på det här språket",
+  apply = "Tillämpa den valda upplösningen",
+  resolution = "Upplösning spelet ska köras i",
+  select_language = "Väljs spelspråk",
+  language_dropdown_item = "Ändra till %s som språk";
   original_path = "Den just nu valda mappen där Theme Hospital installerats",
   browse = "Bläddra efter en annan Theme Hospital installation",
   back = "Stäng alternativmenyn",

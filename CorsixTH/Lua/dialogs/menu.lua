@@ -550,9 +550,12 @@ function UIMenuBar:makeMenu(app)
     local function playMusic(item)
       if not app.audio.background_music then
         app.audio:playRandomBackgroundTrack() -- play
+        app.config.play_music = true
       else
         app.audio:stopBackgroundTrack() -- stop
+        app.config.play_music = false
       end
+      -- Also save this directly to the configuration file.
       app:saveConfig()
     end
     local function musicStatus(item)

@@ -36,7 +36,6 @@ function Audio:Audio(app)
   }
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
-  self.abort_bg_music = false
 end
 
 local function GetFileData(path)
@@ -162,10 +161,8 @@ function Audio:init()
   local status, err = SDL.audio.init(self.app.config.audio_frequency,
     self.app.config.audio_channels, self.app.config.audio_buffer_size)
   if status then
-    -- Start playing unless the configuration says otherwise.
-    if self.app.config.play_music then
-      self:playRandomBackgroundTrack()
-    end
+    -- NB: Playback will not start if play_music is set to false
+    self:playRandomBackgroundTrack()
   else
     print("Notice: Audio system could not initialise (SDL error: " .. tostring(err) .. ")")
     self.not_loaded = true
@@ -349,6 +346,9 @@ function Audio:playPreviousBackgroundTrack()
   self:playNextOrPreviousBackgroundTrack(-1)
 end
 
+--! Pauses or unpauses background music depending on the current state.
+--! Returns whether music is currently paused or not after the call.
+--! If nil is returned music might either be playing or completely stopped.
 function Audio:pauseBackgroundTrack()
   assert(self.background_music, "Trying to pause music while music is stopped")
   local status
@@ -365,6 +365,7 @@ function Audio:pauseBackgroundTrack()
     -- SDL doesn't seem to support pausing/resuming for this format/driver,
     -- so just stop the music instead.
     self:stopBackgroundTrack()
+    self.background_paused = nil
   else
     -- SDL can also be odd and report music as paused even though it is still
     -- playing. If it really is paused, then there is no harm in muting it.
@@ -379,21 +380,12 @@ function Audio:pauseBackgroundTrack()
       self.old_bg_music_volume = nil
     end
   end
-  -- Update configuration that we don't want music
-  self.app.config.play_music = false
   self:notifyJukebox()
+  return self.background_paused
 end
 
-function Audio:stopBackgroundMusic()
-  self:stopBackgroundTrack()
-  self.abort_bg_music = true
-end
-
-function Audio:resumeBackgroundMusic()
-  self.abort_bg_music = false
-  self:playRandomBackgroundTrack()
-end
-
+--! Stops playing background music for the time being.
+--! Does not affect the configuration setting play_music.
 function Audio:stopBackgroundTrack()
   if self.background_paused then
     -- unpause first in order to clear the backupped volume
@@ -401,53 +393,61 @@ function Audio:stopBackgroundTrack()
   end
   SDL.audio.stopMusic()
   self.background_music = nil
-  -- Update configuration that we don't want music
-  self.app.config.play_music = false
+
   self:notifyJukebox()
 end
 
+--! Plays a given background track.
+--! Playback will only start if the configuration says it's ok. (play_music = true)
+--!param index Index of the track to play in the playlist.
 function Audio:playBackgroundTrack(index)
   local info = self.background_playlist[index]
   assert(info, "Index not valid")
-  local music = info.music
-  if not music then
-    local data
-    if info.filename_mp3 then
-      data = assert(GetFileData(info.filename_mp3))
-    else
-      data = assert(self.app.fs:readContents(info.filename))
-    end
-    if data:sub(1, 3) == "RNC" then
-      data = assert(rnc.decompress(data))
-    end
-    if not info.filename_mp3 then
-      data = SDL.audio.transcodeXmiToMid(data)
-    end
-    -- Loading of music files can incur a slight pause, which is why it is
-    -- done asynchronously.
-    SDL.audio.loadMusicAsync(data, function(music, e)
-      if music == nil then
-        error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
-          .. (e and (" (" .. e .. ")" or "")))
+  if self.app.config.play_music then
+    local music = info.music
+    if not music then
+      local data
+      if info.filename_mp3 then
+        data = assert(GetFileData(info.filename_mp3))
       else
-        if _DECODA then
-          debug.getmetatable(music).__tostring = function(ud)
-            return debug.getfenv(ud).tostring
-          end
-          debug.getfenv(music).tostring = "Music <".. info.filename .. ">"
-        end
-        info.music = music
-        return self:playBackgroundTrack(index)
+        data = assert(self.app.fs:readContents(info.filename))
       end
-    end)
-    return
-  end
-  if not self.abort_bg_music then
+      if data:sub(1, 3) == "RNC" then
+        data = assert(rnc.decompress(data))
+      end
+      if not info.filename_mp3 then
+        data = SDL.audio.transcodeXmiToMid(data)
+      end
+      -- Loading of music files can incur a slight pause, which is why it is
+      -- done asynchronously.
+      -- Someone might want to stop the player from 
+      -- starting to play once it's loaded though.
+      self.load_music = true
+      SDL.audio.loadMusicAsync(data, function(music, e)
+        
+        if music == nil then
+          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
+            .. (e and (" (" .. e .. ")" or "")))
+        else
+          if _DECODA then
+            debug.getmetatable(music).__tostring = function(ud)
+              return debug.getfenv(ud).tostring
+            end
+            debug.getfenv(music).tostring = "Music <".. info.filename .. ">"
+          end
+          info.music = music
+          -- Do we still want it to play?
+          if self.load_music then
+            return self:playBackgroundTrack(index)
+          end
+        end
+      end)
+      return
+    end
     SDL.audio.setMusicVolume(self.app.config.music_volume)
     assert(SDL.audio.playMusic(music))
     self.background_music = music
-    -- Update configuration that we want music
-    self.app.config.play_music = not not self.background_music
+
     self:notifyJukebox()
   end
 end

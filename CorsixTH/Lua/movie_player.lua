@@ -91,8 +91,11 @@ function MoviePlayer:playAdvanceMovie(level)
       return
   end
 
-  self.audio:stopBackgroundMusic()
-  self.holding_bg_music = true
+  if self.audio.background_music then
+    self.holding_bg_music = self.audio:pauseBackgroundTrack()
+  else
+    
+  end
   if level == 12 then
     self.audio:playSound("DICE122M.WAV")
   else
@@ -131,11 +134,13 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
     -- Indicates failure to load movie
     return
   end
-
+  -- Abort any loading of music
+  self.audio.load_music = false
   if self.moviePlayer:hasAudioTrack() then
     self.channel = self.audio:reserveChannel()
-    self.audio:stopBackgroundMusic()
-    self.holding_bg_music = true
+    if self.audio.background_music then
+      self.holding_bg_music = self.audio:pauseBackgroundTrack()
+    end
   end
 
   -- calculate target dimensions
@@ -216,7 +221,10 @@ function MoviePlayer:_destroyMovie()
     self.channel = -1
   end
   if self.holding_bg_music then
-    self.audio:resumeBackgroundMusic()
+    -- If possible we want to continue playing music where we were
+    self.audio:pauseBackgroundTrack()
+  else
+    self.audio:playRandomBackgroundTrack()
   end
   self.playing = false
 end

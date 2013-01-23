@@ -28,6 +28,7 @@ function UIJukebox:UIJukebox(app)
   self.modal_class = "jukebox"
   self.esc_closes = true
   self.audio = app.audio
+  self.app = app
   self.ui = app.ui
   self.width = 259
   self.height = 74 + 30 * #self.audio.background_playlist + 18
@@ -93,13 +94,22 @@ end
 
 function UIJukebox:togglePlayPause()
   if not self.audio.background_music then
+    -- Update configuration that we want music now.
+    self.app.config.play_music = true
+    self.app:saveConfig()
     self.audio:playRandomBackgroundTrack()
   else
     self.audio:pauseBackgroundTrack()
+    -- Just pausing does not imply that the player will want to have music turned off
+    -- the next time he or she starts the game.
   end
 end
 
 function UIJukebox:stopBackgroundTrack()
+  -- Pressing this button means that the player doesn't want any
+  -- background music in the future, so set that config flag.
+  self.app.config.play_music = false
+  self.app:saveConfig()
   self.audio:stopBackgroundTrack()
 end
 

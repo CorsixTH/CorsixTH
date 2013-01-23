@@ -243,6 +243,8 @@ function LoadGame(data)
   TheApp.ui.menu_bar:onChangeLanguage()
   --end, persist.errcatch)
   TheApp.world.map:registerTemperatureDisplayMethod()
+  -- TODO: sound effects on/off are saved too, but should be a global value?
+  TheApp.audio:playSoundEffects(TheApp.config.play_sounds)
   TheApp:afterLoad()
   TheApp.world:resetAnimations()
   TheApp.ui:onChangeResolution()
