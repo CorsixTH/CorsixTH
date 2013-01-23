@@ -51,8 +51,14 @@ local col_shadow = {
   blue = 178,
 }
 
+local col_caption = {
+  red = 174,
+  green = 166,
+  blue = 218,
+}
+
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 240, col_bg)
+  self:UIResizable(ui, 320, 220, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -61,22 +67,35 @@ function UIOptions:UIOptions(ui, mode)
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
-  
-  -- Window parts definition
   self.default_button_sound = "selectx.wav"
   
-  -- Fullscreen
-  self.fullscreen_button =
-    self:addBevelPanel(20, 20, 20, 20, col_button)
-    :makeToggleButton(0, 0, 20, 20, nil, self.buttonFullscreen)
-    :setTooltip(_S.tooltip.options_window.fullscreen_button)
-  if app.fullscreen then
-    self.fullscreen_button:toggle()
+  -- Set up list of available languages
+  local langs = {}
+  for _, lang in ipairs(app.strings.languages) do
+    local font = app.strings:getFont(lang)
+    if app.gfx:hasLanguageFont(font) then
+      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
+      langs[#langs + 1] = {text = lang, font = font, tooltip = _S.tooltip.options_window.language_dropdown_item:format(lang)}
+    end
   end
-  self:addBevelPanel(50, 20, 250, 20, col_bg)
-    :setLabel(_S.options_window.fullscreen).lowered = true
+  self.available_languages = langs
+  
+  -- Window parts definition
+  -- Title
+  self:addBevelPanel(80, 10, 160, 20, col_caption):setLabel(_S.options_window.caption)
+    .lowered = true
+  
+  -- Fullscreen
+  self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen).lowered = true
+  self.fullscreen_panel =
+    self:addBevelPanel(160, 50, 140, 20, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFullscreen)
+    :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
   
   -- Screen resolution
+  self:addBevelPanel(20, 70, 140, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
   local --[[persistable:options_width_textbox_reset]] function width_textbox_reset()
     if self.width_textbox.text == "" then
       self.width_textbox.panel:setLabel(_S.options_window.width)
@@ -87,57 +106,56 @@ function UIOptions:UIOptions(ui, mode)
       self.height_textbox.panel:setLabel(_S.options_window.height)
     end
   end
-  self.width_textbox = self:addBevelPanel(20, 50, 50, 20, col_textbox, col_highlight, col_shadow)
+  self.width_textbox = self:addBevelPanel(160, 70, 40, 20, col_textbox, col_highlight, col_shadow)
     :setLabel(_S.options_window.width, nil, "left"):setTooltip(_S.tooltip.options_window.width)
     :makeTextbox(width_textbox_reset, width_textbox_reset):allowedInput("numbers"):characterLimit(4)
-  self.height_textbox = self:addBevelPanel(80, 50, 50, 20, col_textbox, col_highlight, col_shadow)
+  self.height_textbox = self:addBevelPanel(200, 70, 40, 20, col_textbox, col_highlight, col_shadow)
     :setLabel(_S.options_window.height, nil, "left"):setTooltip(_S.tooltip.options_window.height)
     :makeTextbox(height_textbox_reset, height_textbox_reset):allowedInput("numbers"):characterLimit(4)
-  self.resolution_button =
-    self:addBevelPanel(140, 50, 160, 20, col_bg):setLabel(_S.options_window.change_resolution)
-    :makeButton(0, 0, 160, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.change_resolution)
-
-  -- Also load the built in font
-  local built_in = app.gfx:loadBuiltinFont()
-  -- Location of original game
-  self:addBevelPanel(20, 80, 280, 20, col_bg)
-    :setLabel(app.config.theme_hospital_install, built_in, "left")
-    :setTooltip(_S.tooltip.options_window.original_path).lowered = true
-
-  self.browse_button =
-    self:addBevelPanel(20, 110, 100, 20, col_bg):setLabel(_S.options_window.browse)
-    :makeButton(0, 0, 100, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
+  self:addBevelPanel(240, 70, 60, 20, col_bg):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 60, 20, nil, self.buttonResolution):setTooltip(_S.tooltip.options_window.apply)
 
   -- Language
-  local y = 140
-  for _, lang in ipairs(app.strings.languages) do
-    local font = app.strings:getFont(lang)
-    if app.gfx:hasLanguageFont(font) then
-      if font then
-        font = app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
-      end
-      self:addBevelPanel(20, y, 280, 20, col_bg)
-        :setLabel(lang, font)
-        :makeButton(0, 0, 280, 20, nil,
-          --[[persistable:options_window_language_button]] function()
-            app.config.language = lang
-            app:initLanguage()
-            app:saveConfig()
-          end)
-        :setTooltip(_S.tooltip.options_window.language:format(lang))
-      y = y + 20
-    end
-  end
+  self:addBevelPanel(20, 90, 140, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
+  self.language_panel = self:addBevelPanel(160, 90, 140, 20, col_bg):setLabel(app.config.language)
+  self.language_button = self.language_panel:makeToggleButton(0, 0, 140, 20, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
   
-  -- Adjust size
-  y = y + 70
-  if y > self.height then
-    self:setSize(self.width, y)
-  end
+  -- Location of original game
+  local built_in = app.gfx:loadBuiltinFont()
+  self:addBevelPanel(20, 110, 140, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.data_location):setTooltip(_S.tooltip.options_window.data_location)
+    .lowered = true
+  self:addBevelPanel(160, 110, 140, 20, col_bg)
+    :setLabel(app.config.theme_hospital_install, built_in)
+    :makeButton(0, 0, 140, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
   
   -- "Back" button
-  self:addBevelPanel(20, self.height - 60, 280, 40, col_bg):setLabel(_S.options_window.back)
+  self:addBevelPanel(20, 160, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
+end
+
+local --[[persistable:options_window_language_button]] function stub() end
+
+function UIOptions:dropdownLanguage(activate)
+  if activate then
+    self.language_dropdown = UIDropdown(self.ui, self, self.language_button, self.available_languages, self.selectLanguage)
+    self:addWindow(self.language_dropdown)
+  else
+    if self.language_dropdown then
+      self.language_dropdown:close()
+      self.language_dropdown = nil
+    end
+  end
+end
+
+function UIOptions:selectLanguage(number)
+  local app = self.ui.app
+  app.config.language = self.available_languages[number].text
+  app:initLanguage()
+  app:saveConfig()
+  self.language_panel:setLabel(app.config.language)
+  self.language_button:setToggleState(false)
 end
 
 function UIOptions:buttonFullscreen(checked)
@@ -146,6 +164,7 @@ function UIOptions:buttonFullscreen(checked)
       self.ui:addWindow(UIInformation(self.ui, err))
       self.fullscreen_button:toggle()
   end
+  self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
 function UIOptions:buttonResolution()

@@ -28,7 +28,7 @@ local border_offset_y = 9
 local border_size_x = 40
 local border_size_y = 40
 
-function UIResizable:UIResizable(ui, width, height, colour, no_borders)
+function UIResizable:UIResizable(ui, width, height, colour, no_borders, background_bevel)
   self:Window()
   
   local app = ui.app
@@ -38,7 +38,12 @@ function UIResizable:UIResizable(ui, width, height, colour, no_borders)
     self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   end
   
-  self.background_panel = self:addColourPanel(0, 0, 0, 0, 0, 0, 0)
+  if background_bevel then
+    self.background_panel = self:addBevelPanel(0, 0, 0, 0, colour)
+    self.background_panel.lowered = true
+  else
+    self.background_panel = self:addColourPanel(0, 0, 0, 0, 0, 0, 0)
+  end
   
   -- Minimum size. Can be changed per window, but should never be smaller than this
   -- because it would result in visual glitches
@@ -72,7 +77,7 @@ end
 
 function UIResizable:setColour(colour)
   self.colour = colour
-  self.background_panel.colour = TheApp.video:mapRGB(colour.red, colour.green, colour.blue)
+  self.background_panel:setColour(colour)
 end
 
 function UIResizable:draw(canvas, x, y)

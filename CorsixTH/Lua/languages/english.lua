@@ -268,18 +268,36 @@ tooltip.menu_list_window = {
 }
 
 options_window = {
+  caption = "Options",
+  option_on = "On",
+  option_off = "Off",
   fullscreen = "Fullscreen",
+  resolution = "Resolution",
   width = "Width",
   height = "Height",
-  change_resolution = "Change resolution",
+  apply = "Apply",
+  data_location = "Data location",
   browse = "Browse...",
   new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
+  language = "Game language",
   cancel = "Cancel",
   back = "Back",
 }
 
-tooltip.handyman_window = {
-  parcel_select = "The parcel where the handyman accepts tasks, click to change setting"
+tooltip.options_window = {
+  fullscreen = "Whether the game should run in fullscreen or windowed mode",
+  fullscreen_button = "Click to toggle fullscreen mode",
+  resolution = "The resolution the game should run in",
+  width = "Enter desired screen width",
+  height = "Enter desired screen height",
+  apply = "Apply the entered resolution",
+  data_location = "The directory of the original Theme Hospital installation, which is required to run CorsixTH",
+  language = "The language texts in the game will appear in",
+  select_language = "Select the game language",
+  language_dropdown_item = "Choose %s as language",
+  original_path = "The currently chosen directory of the original Theme Hospital installation",
+  browse = "Browse for another location of a Theme Hospital installation",
+  back = "Close the options window",
 }
 
 handyman_window = {
@@ -287,15 +305,8 @@ handyman_window = {
   parcel = "Parcel"
 }
 
-tooltip.options_window = {
-  fullscreen_button = "Click to toggle fullscreen mode",
-  width = "Enter desired screen width",
-  height = "Enter desired screen height",
-  change_resolution = "Change the window resolution to the dimensions entered on the left",
-  language = "Select %s as language",
-  original_path = "The currently chosen directory of the original Theme Hospital installation",
-  browse = "Browse for another location of a Theme Hospital installation",
-  back = "Close the options window",
+tooltip.handyman_window = {
+  parcel_select = "The parcel where the handyman accepts tasks, click to change setting"
 }
 
 new_game_window = {

@@ -167,14 +167,33 @@ function Panel:makeTextbox(...)
   return self.window:makeTextboxOnPanel(self, ...)
 end
 
+local function sanitize(colour)
+  if colour > 255 then
+    colour = 255
+  elseif colour < 0 then
+    colour = 0
+  end
+  return colour
+end
+
 --[[ Set the colour of a panel
 ! Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.
 !param col (table) Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].
 ]]
 function Panel:setColour(col)
-  if self.colour then
-    self.colour = TheApp.video:mapRGB(col.red, col.green, col.blue)
-  end
+  self.colour = self.colour and TheApp.video:mapRGB(col.red, col.green, col.blue)
+  self.highlight_colour = self.highlight_colour and TheApp.video:mapRGB(
+    sanitize(col.red + 40),
+    sanitize(col.green + 40),
+    sanitize(col.blue + 40))
+  self.shadow_colour = self.shadow_colour and TheApp.video:mapRGB(
+    sanitize(col.red - 40),
+    sanitize(col.green - 40),
+    sanitize(col.blue - 40))
+  self.disabled_colour = self.disabled_colour and TheApp.video:mapRGB(
+    sanitize(math.floor((col.red + 100) / 2)),
+    sanitize(math.floor((col.green + 100) / 2)),
+    sanitize(math.floor((col.blue + 100) / 2)))
   return self
 end
 
@@ -337,15 +356,6 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
   if panel.label then
     panel:drawLabel(canvas, x, y)
   end
-end
-
-local function sanitize(colour)
-  if colour > 255 then
-    colour = 255
-  elseif colour < 0 then
-    colour = 0
-  end
-  return colour
 end
 
 --[[ Add a beveled `Panel` to the window.
@@ -1232,7 +1242,7 @@ top-left corner of the window.
 ]]
 function Window:hitTest(x, y)
   if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
-    return false
+--    return false
   end
   if self.panels[1] then
     for _, panel in ipairs(self.panels) do
