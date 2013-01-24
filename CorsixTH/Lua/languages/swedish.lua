@@ -531,4 +531,4 @@ original_credits[361] = "."
 ------------------- (kept for backwards compatibility) ----------------------
 
 options_window.change_resolution = "Ändra upplösning"
-options_window.tooltip.change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster"
+tooltip.options_window.change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster"

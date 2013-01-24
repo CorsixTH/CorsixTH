@@ -480,4 +480,4 @@ tooltip.calls_dispatcher = {
 ------------------- (kept for backwards compatibility) ----------------------
 
 options_window.change_resolution = "Change resolution"
-options_window.tooltip.change_resolution = "Change the window resolution to the dimensions entered on the left"
+tooltip.options_window.change_resolution = "Change the window resolution to the dimensions entered on the left"
