@@ -512,6 +512,11 @@ function App:dumpStrings()
   -- for _, lang in ipairs(self.strings.languages_english) do
   --   self:checkMissingStringsInLanguage(dir, lang)
   -- end
+  print("")
+  print("------------------------------------------------------")
+  print("Dumped strings to default configuration file directory")
+  print("------------------------------------------------------")
+  print("")
 end
 
 --! Compares strings provided by language file of given language WITHOUT inheritance

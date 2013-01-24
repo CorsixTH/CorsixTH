@@ -88,8 +88,12 @@ function UIOptions:UIOptions(ui, mode)
     {text = "1280x960 (4:3)",   width = 1280, height = 960},
     {text = "1600x1200 (4:3)",  width = 1600, height = 1200},
     {text = "1280x720 (16:9)",  width = 1280, height = 720},
+    {text = "1366x768 (16:9)",  width = 1366, height = 768},
     {text = "1600x900 (16:9)",  width = 1600, height = 900},
     {text = "1920x1080 (16:9)", width = 1920, height = 1080},
+    {text = "1280x800 (16:10)",  width = 1280, height = 800},
+    {text = "1680x1050 (16:10)",  width = 1680, height = 1050},
+    {text = "1920x1200 (16:10)", width = 1920, height = 1200},
     {text = _S.options_window.custom_resolution, custom = true},
   }
   

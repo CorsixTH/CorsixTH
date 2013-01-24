@@ -276,6 +276,7 @@ options_window = {
   language = "Spelspråk",
   apply = "Tillämpa",
   browse = "Bläddra...",
+  custom_resolution = "Anpassad...",
   new_th_directory = "Här kan du välja en ny plats här Theme Hospital installerats. Så fort du väljer den nya mappen kommer spelet att startas om.",
   back = "Tillbaka",
   cancel = "Avbryt",
@@ -291,7 +292,9 @@ tooltip.options_window = {
   apply = "Tillämpa den valda upplösningen",
   resolution = "Upplösning spelet ska köras i",
   select_language = "Väljs spelspråk",
-  language_dropdown_item = "Ändra till %s som språk";
+  language_dropdown_item = "Ändra till %s som språk",
+  select_resolution = "Välj en ny upplösning",
+  cancel = "Återvänd utan att ändra upplösning",
   original_path = "Den just nu valda mappen där Theme Hospital installerats",
   browse = "Bläddra efter en annan Theme Hospital installation",
   back = "Stäng alternativmenyn",
@@ -521,3 +524,11 @@ original_credits[358] = " "
 original_credits[359] = " "
 original_credits[360] = " "
 original_credits[361] = "."
+
+
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Ändra upplösning"
+options_window.tooltip.change_resolution = "Ändra upplösning till de dimensioner ifyllda till vänster"
