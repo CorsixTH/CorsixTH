@@ -63,6 +63,5 @@ agg/authors -text
 agg/copying -text
 agg/news -text
 agg/src/authors -text
-agg/src/copying -text
 agg/src/install -text
 agg/src/news -text
