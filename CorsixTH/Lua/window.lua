@@ -1120,6 +1120,7 @@ end
 ]]
 function Textbox:setText(text)
   self.text = text
+  self.panel:setLabel(self.text)
   return self
 end
 
