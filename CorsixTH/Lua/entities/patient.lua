@@ -880,10 +880,13 @@ function Patient:updateMessage(choice)
       -- enable only if research department is built and a room in the treatment chain is undiscovered
       if self.hospital:hasRoomOfType("research") then
         local req = self.hospital:checkDiseaseRequirements(self.disease.id)
-        for _, room_id in ipairs(req.rooms) do
-          local room = self.world.available_rooms[room_id]
-          if room and self.hospital.undiscovered_rooms[room] then
-            enabled = true
+        if req then
+          for _, room_id in ipairs(req.rooms) do
+            local room = self.world.available_rooms[room_id]
+            if room and self.hospital.undiscovered_rooms[room] then
+              enabled = true
+              break
+            end
           end
         end
       end
