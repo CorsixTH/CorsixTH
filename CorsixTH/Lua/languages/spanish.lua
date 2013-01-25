@@ -312,18 +312,40 @@ tooltip.menu_list_window = {
 }
 
 options_window = {
+  caption = "Opciones",
+  option_on = "Sí",
+  option_off = "No",
   fullscreen = "Pantalla completa",
+  resolution = "Resolución",
+  custom_resolution = "Personalizada...",
   width = "Ancho",
   height = "Alto",
-  change_resolution = "Cambiar resolución",
+  apply = "Apply",
+  cancel = "Cancel",
+  data_location = "Ubicación de datos",
   browse = "Buscar...",
   new_th_directory = "Aquí puedes especificar una nueva carpeta de instalación de Theme Hospital. En cuanto selecciones la nueva carpeta, el juego se reiniciará.",
+  language = "Idioma del juego",
   cancel = "Cancelar",
   back = "Volver",
 }
 
-tooltip.handyman_window = {
-  parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
+tooltip.options_window = {
+  fullscreen = "Hace que el juego se ejecute en pantalla completa o en una ventana.",
+  fullscreen_button = "Pulsa aquí para activar el modo de pantalla completa.",
+  resolution = "Cambia la resolución en la que funcionará el juego.",
+  select_resolution = "Selecciona una nueva resolución.",
+  width = "Introduce el ancho de la pantalla.",
+  height = "Introduce la altura de la pantalla.",
+  apply = "Aplica la resolución seleccionada.",
+  cancel = "Vuelve sin cambiar la resolución.",
+  data_location = "Indica la carpeta donde está instalado el Theme Hospital original, necesario para ejecutar CorsixTH.",
+  language = "Selecciona el idioma de los textos.",
+  select_language = "Selecciona el idioma del juego.",
+  language_dropdown_item = "Utilizar el idioma %s.",
+  original_path = "La carpeta donde está instalado el Theme Hospital original.",
+  browse = "Busca otra ubicación de una instalación de Theme Hospital.",
+  back = "Cierra la ventana de opciones.",
 }
 
 handyman_window = {
@@ -331,15 +353,8 @@ handyman_window = {
   parcel = "Parcela"
 }
 
-tooltip.options_window = {
-  fullscreen_button = "Pulsa para activar el modo de pantalla completa",
-  width = "Introduce el ancho de pantalla deseado",
-  height = "Introduce el alto de pantalla deseado",
-  change_resolution = "Cambia la resolución de la ventana a las dimensiones indicadas a la izquierda",
-  language = "Seleccionar el idioma %s",
-  original_path = "La carpeta actualmente seleccionada con la instalación original de Theme Hospital",
-  browse = "Buscar otra ubicación de una instalación de Theme Hospital",
-  back = "Cerrar la ventana de opciones",
+tooltip.handyman_window = {
+  parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
 }
 
 new_game_window = {
@@ -503,3 +518,10 @@ tooltip.calls_dispatcher = {
   assigned = "Esta opción está activada si alguien ha sido asignado a la tarea correspondiente.",
   close = "Cerrar la ventana de llamadas de control.",
 }
+
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Cambiar resolución"
+tooltip.options_window.change_resolution = "Cambia la resolución de la ventana utilizando la dimensión indicada a la izquierda."
