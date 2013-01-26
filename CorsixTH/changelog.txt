@@ -39,6 +39,8 @@ occupy only the edge of a tile and the graph window.
   example means that a staff member being placed as you pause will disappear 
   from the cursor. We might change this behaviour in the future though.
 
+* Added: Some background sounds, coughs, phones ringing etc. 
+
 * Change: Placing a member of staff inside a room that is already occupied
   will now replace that person.
 * Fix: Crashes in certain situations involving receptionists and reception 
