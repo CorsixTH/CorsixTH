@@ -4,6 +4,7 @@ all major releases.
 Operating Systems that should be checked if possible:
  Windows 8
  Windows 7
+ Windows Vista
  Windows XP
  Ubuntu
  Mac OS X Snow Leopard
@@ -27,12 +28,12 @@ document to check that the bug isn't reintroduced.
 2. Try starting the game and choose both of these options: 
  a) A full version of TH'97
  b) The demo version of TH'97
-   and make sure that it is playable.
+    and make sure that it is playable.
 
 3. Overwrite
- a) An existing Beta 8 installation
- b) an existing 0.01 installation
-   and make sure that it is playable.
+ a) An existing 0.10 installation
+ b) an existing 0.11 installation
+    and make sure that it is playable.
 
 
 ------------------
@@ -41,30 +42,27 @@ document to check that the bug isn't reintroduced.
 
 1. Load the supplied save games in the new release and
    make sure that:
- a) No specific issue bugs occurs.
- b) Litter is swept
- c) Machines are repaired
+ a) No specific issue bugs occurs
+ b) All the new hotkeys are working correctly
+ c) When pausing the game user actions are not allowed is working correctly.
  d) All queues work
- e) Abort room building works
+ e) Transparant walls are working correctly, without bugs.
  f) Abort placing room objects works
  g) Buying and placing additional room objects works
+ h) Graph dialog is working correctly
+ I) Town Map is working correctly.
+ J) Placing one or more object on one tile works and give no glitches.
+ K) Movies, from the original TH, are played correctly.
  
 
 ------------------
  SPECIFIC ISSUES
 ------------------
+ 
+No specific issues are available for testing at the moment.
 
-Issue 1119
- Load the save game and unpause.
- Keep an eye on the scanner room where the doctor leaves the 
- room while the patent is getting changed.
- If the bug occurs it happens just within seconds from unpause.
- https://code.google.com/p/corsix-th/issues/detail?id=1119
+------------------
+ TEST PROCEDURE
+------------------
 
-Issue 1149
- Turn on tutorial mode.
- Select a campaign
- Try to buy a reception desk
- An error could occur and leave everything unresponsive.
- https://code.google.com/p/corsix-th/issues/detail?id=1149
-
+Here you can find everything about testing: http://forums.corsixth.com/index.php?board=16.0.
