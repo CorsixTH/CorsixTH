@@ -59,15 +59,21 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
     pMovie->copyAudioToStream((Uint8*)pStream, iStreamSize);
 }
 
+//NOTE: THMoviePicture will leak some memory if the surface changes before the
+//overlay is freed. We cannot free the overlay at this point because it crashes
+//on linux.
+//TODO: Attempt to free the overlay before any surface changes. The code
+//probably needs to be refactored to make that possible without deadlock.
 THMoviePicture::THMoviePicture():
     m_fAllocated(false),
     m_pOverlay(NULL),
     m_fReallocate(false),
-    m_pixelFormat(PIX_FMT_YUV420P) {}
+    m_pixelFormat(PIX_FMT_YUV420P),
+    m_pSurface(NULL) {}
 
 THMoviePicture::~THMoviePicture()
 {
-    if(m_pOverlay)
+    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
     {
         SDL_FreeYUVOverlay(m_pOverlay);
         m_pOverlay = NULL;
@@ -77,12 +83,12 @@ THMoviePicture::~THMoviePicture()
 void THMoviePicture::allocate()
 {
     SDL_Surface* pSurface = SDL_GetVideoSurface();
-
-    if(m_pOverlay)
+    if(m_pOverlay && m_pSurface == pSurface)
     {
         SDL_FreeYUVOverlay(m_pOverlay);
     }
 
+    m_pSurface = pSurface;
     m_pOverlay = SDL_CreateYUVOverlay(m_iWidth, m_iHeight, SDL_YV12_OVERLAY, pSurface);
     if(m_pOverlay == NULL || m_pOverlay->pitches[0] < m_iWidth)
     {
@@ -93,7 +99,7 @@ void THMoviePicture::allocate()
 
 void THMoviePicture::deallocate()
 {
-    if(m_pOverlay)
+    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
     {
         SDL_FreeYUVOverlay(m_pOverlay);
         m_pOverlay = NULL;
@@ -109,8 +115,7 @@ void THMoviePicture::draw()
     rcDest.y = m_iY;
     rcDest.w = m_iWidth;
     rcDest.h = m_iHeight;
-
-    if(m_pOverlay)
+    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
     {
         iError = SDL_DisplayYUVOverlay(m_pOverlay, &rcDest);
         if(iError < 0)
@@ -715,7 +720,8 @@ int THMovie::queuePicture(AVFrame *pFrame, double dPts)
         !pMoviePicture->m_fAllocated ||
         pMoviePicture->m_fReallocate ||
         pMoviePicture->m_iWidth != m_iWidth ||
-        pMoviePicture->m_iHeight != m_iHeight)
+        pMoviePicture->m_iHeight != m_iHeight ||
+        pMoviePicture->m_pSurface != SDL_GetVideoSurface())
     {
         SDL_Event reallocEvent;
 

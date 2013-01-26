@@ -249,8 +249,8 @@ end
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
   self:addKeyHandler("esc", self, self.closeWindow)
-  self:addKeyHandler("esc", self, self.stopVideo)
-  self:addKeyHandler(" ", self, self.stopVideo)
+  self:addKeyHandler("esc", self, self.stopMovie)
+  self:addKeyHandler(" ", self, self.stopMovie)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.quit)
@@ -906,7 +906,7 @@ function UI:quit()
 end
 
 --! Tries to stop a video, if one is currently playing
-function UI:stopVideo()
+function UI:stopMovie()
   if self.app.moviePlayer.playing then
     self.app.moviePlayer:stop()
   end

@@ -50,6 +50,7 @@ public:
     bool m_fAllocated;
     bool m_fReallocate;
     PixelFormat m_pixelFormat;
+    SDL_Surface *m_pSurface;
 
     THMoviePicture();
     ~THMoviePicture();
