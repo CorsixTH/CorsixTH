@@ -77,7 +77,9 @@ occupy only the edge of a tile and the graph window.
   toggle buttons.
 * Change: Reordered entries of graphs menu to correspond with order in
   bottom panel.
-
+* Change: Restructured options window to make it more consistent, less clutter-y
+  and smaller.
+ 
 * Fix: When an unanswered fax became meaningless (e.g. if you built the 
   required room), it was only removed if its message button was visible at the
   bottom panel (not if it was queued because of 5 buttons being there already).
@@ -97,14 +99,14 @@ occupy only the edge of a tile and the graph window.
 * Added: It is now possible to choose among three colour scales for warmth
   level. Look in the top menu for this choice.
 
+* Added: Print some info in the command prompt when the user wants to take
+  a screenshot, so he can see if and why it failed.
+* Change: Screenshots get saved to a dedicated screenshot folder now, 
+  which can be changed in the config.
 * Fix: Loading a game on startup where a fullscreen window was open would
   open with the font messed up.
 * Fix: Taking a screenshot (Ctrl+S) now possible under windows without
   fiddling in a lua file.
-* Change: Screenshots get saved to a dedicated screenshot folder now, 
-  which can be changed in the config.
-* Added: Print some info in the command prompt when the user wants to take
-  a screenshot, so he can see if and why it failed.
 
 
 -- Translations --
