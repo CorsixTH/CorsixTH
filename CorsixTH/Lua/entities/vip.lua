@@ -150,6 +150,7 @@ function Vip:onDestroy()
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
       {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
+      {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 4 then
