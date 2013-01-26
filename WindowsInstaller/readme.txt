@@ -14,3 +14,6 @@ in Win32Script.nsi.
 When packaging, make sure that architecture specific files are in the 
 x64 and x86 folders. All other files (lua etc) should be as they
 are when checked out, i.e. "../CorsixTH/*".
+
+You can find more information about creating a Windows installer here:
+http://code.google.com/p/corsix-th/wiki/HowToPackageWindows.

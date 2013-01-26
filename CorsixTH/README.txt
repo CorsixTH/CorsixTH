@@ -31,8 +31,9 @@ Briefly:
     See http://code.google.com/p/corsix-th/wiki/HowToCompile for details.
     Start the game for the first time. You will be asked for the location of
     the Theme Hospital data files. Select the directory you chose in step 3.
-6)  Go play! If this doesn't go smoothly, then consult:
+5)  Go play! If this doesn't go smoothly, then consult:
     http://code.google.com/p/corsix-th/wiki/FrequentlyAskedQuestions
+    http://forums.corsixth.com/
     http://groups.google.com/group/corsix-th-dev
     #corsix-th on FreeNode (IRC)
    
@@ -41,5 +42,6 @@ Briefly:
 -- Contact Details
 ------------------------------------------------------------------------------
 Homepage: http://th.corsix.org/
+Forum: http://forums.corsixth.com/
 Mailing list: http://groups.google.com/group/corsix-th-dev
 IRC: #corsix-th on FreeNode
