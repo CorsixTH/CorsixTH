@@ -59,8 +59,6 @@ LPEG/lpeg-128.gif -text
 LPEG/lpeg.html -text
 MapEdit/MapEdit.ico -text
 WindowsInstaller/welcome.bmp -text
-agg/authors -text
-agg/copying -text
 agg/news -text
 agg/src/authors -text
 agg/src/install -text
