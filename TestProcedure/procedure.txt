@@ -15,8 +15,9 @@ Save games should be named after their issue number if they
 come from a specific issue on the Google Project site.
 e.g. "issue 1119.sav". If it doesn't come from a specific issue,
 a descriptive name is needed.
-Add enough information in the "specific issue" section in this
-document to check that the bug isn't reintroduced.
+
+''Specific issues to test'' need to be tested. Does this really (still) occur
+and/or work the patch well? Or is it already resolved? 
 
 
 ------------------
@@ -40,8 +41,7 @@ document to check that the bug isn't reintroduced.
     GAMEPLAY
 ------------------
 
-1. Load the supplied save games in the new release and
-   make sure that:
+1. Start a new game in the new release and make sure that:
  a) No specific issue bugs occurs
  b) All the new hotkeys are working correctly
  c) When pausing the game user actions are not allowed is working correctly.
@@ -51,18 +51,28 @@ document to check that the bug isn't reintroduced.
  g) Buying and placing additional room objects works
  h) Graph dialog is working correctly
  I) Town Map is working correctly.
- J) Placing one or more object on one tile works and give no glitches.
+ J) Placing one or more object on one tile works and no glitches occur.
  K) Movies, from the original TH, are played correctly.
  
 
-------------------
- SPECIFIC ISSUES
-------------------
+-------------------------
+ SPECIFIC ISSUES TO TEST
+-------------------------
  
-No specific issues are available for testing at the moment.
+* Emotion icons don't appear just above a humanoid's head at all times.
+* Exhausted staff members don't go to staff room (a possible patch can
+  be found here: http://code.google.com/p/corsix-th/issues/detail?id=592#c31)
+  Testing of this patch is needed.
+* Earthquakes have been reported to be too severe. More investigation is needed. 
 
 ------------------
  TEST PROCEDURE
 ------------------
 
-Here you can find everything about testing: http://forums.corsixth.com/index.php?board=16.0.
+When you don't know how to apply patches or have a question, then contact me: maartenpeters@hotmail.nl.
+Contact me too when you want to be an tester.
+
+Use the latest snapshot to test CorsixTH: http://th.corsix.org/corsix-th-latest.html.
+
+Here you can find more detailed information about testing (checklist, whole procedure etc.): 
+http://forums.corsixth.com/index.php?board=16.0.
