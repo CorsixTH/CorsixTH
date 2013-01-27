@@ -49,10 +49,10 @@ CorsixTH/CorsixTH.ico -text
 CorsixTH/Icon.icns -text
 CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/avatar.map -text
-CorsixTH/Levels/beta_confined_v5.level -text
-CorsixTH/Levels/beta_confined_v5.map -text
-CorsixTH/Levels/beta_finisham.level -text
-CorsixTH/Levels/beta_finisham.map -text
+CorsixTH/Levels/confined_v5.level -text
+CorsixTH/Levels/confined_v5.map -text
+CorsixTH/Levels/finisham.level -text
+CorsixTH/Levels/finisham.map -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 DebianPackage/usr/games/CorsixTH -text
 LDocGen/output/corner_right.gif -text
