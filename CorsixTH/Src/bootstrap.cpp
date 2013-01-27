@@ -21,6 +21,7 @@ SOFTWARE.
 */
 #include "lua.hpp"
 #include <string.h>
+#include "config.h"
 
 /* Often, an error occurs during the CorsixTH startup process. Examples of
 such errors include:
@@ -46,7 +47,11 @@ const char* g_sBootstrapCode[] = {
     "if not SDL.init('video') then error'Unable to initialise video' end",
     "SDL.wm.setCaption('CorsixTH - Error during startup')",
     "local w, h = 640, 480",
+#ifdef CORSIX_TH_USE_OGL_RENDERER
+    "local modes = {'hardware', 'doublebuf', 'opengl'}",
+#else
     "local modes = {'hardware', 'doublebuf'}",
+#endif
     "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
     "local video = TheApp and TheApp.video or TH.surface(w, h, unpack(modes))",
     "local palette, sheet, font = TH.palette(), TH.sheet(), TH.bitmap_font()",

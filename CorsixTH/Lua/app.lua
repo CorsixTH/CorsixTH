@@ -149,6 +149,9 @@ function App:init()
   self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
   SDL.wm.setCaption(self.caption)
   local modes = {"hardware", "doublebuf"}
+  if compile_opts.renderer == "OpenGL" then
+    modes[#modes + 1] = "opengl"
+  end
   self.fullscreen = false
   if _MAP_EDITOR then
     MapEditorInitWithLuaApp(self)

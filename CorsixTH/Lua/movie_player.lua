@@ -176,7 +176,18 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
   self.wait_for_over = true
-  
+
+  self.opengl_mode_index = nil
+  for i=1, #self.app.modes do
+    print(self.app.modes[i])
+    if self.app.modes[i] == "opengl" then
+      self.opengl_mode_index = i
+    end
+  end
+  if self.opengl_mode_index then
+    self.app.modes[self.opengl_mode_index] = ""
+  end
+
   --TODO: Add text e.g. for newspaper headlines
   warning = self.moviePlayer:play(x, y, w, h, self.channel)
   if warning ~= nil and warning ~= "" then
@@ -213,6 +224,9 @@ function MoviePlayer:stop()
 end
 
 function MoviePlayer:_destroyMovie()
+  if self.opengl_mode_index then
+    self.app.modes[self.opengl_mode_index] = "opengl"
+  end
   if(self.moviePlayer:requiresVideoReset()) then
     self.app.ui:resetVideo()
   end

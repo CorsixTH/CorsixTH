@@ -115,7 +115,7 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pParams->bDoubleBuffered   ? 1:0);
         SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, pParams->bPresentImmediate ? 0:1);
         m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight, iBPP,
-            pParams->iSDLFlags | SDL_OPENGL);
+            pParams->iSDLFlags);
         if(m_pSurface == NULL)
             return false;
     }
