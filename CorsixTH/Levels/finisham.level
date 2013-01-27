@@ -33,7 +33,7 @@ on the contrary everything is available unless specified otherwise in the level 
 
 ---------------------- General Information -------------------------
 %Name = "Finisham"
-%LevelFile = "Finisham.Map"
+%LevelFile = "finisham.map"
 
 Note that the below introduction text at the moment must reside on a single line within this file!
 %LevelBriefing = "The Ministry of Health wants you to run his newest hospital in the holiday resort of Finisham.                                                                 This hospital is located in a popular tourist spot and they are opening a Theme Park nearby next year, so expect seasonal peaks in visitors. You are expected to run a superb hospital with the highest of standards; he expects nothing less than perfection.                 You should aim to keep queues to a minimum and keep your staff happy at the same time.                                                                      Get a reputation of at least 700, treat 85% of your visitors, cure 900 patients, amass $500,000 in the bank and have a hospital worth $400,000 to keep the Minister happy and make him a big wad of cash at the same time."
