@@ -38,6 +38,7 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
   self.modal_class = "dropdown"
   self.esc_closes = true
   self.resizable = false
+  self.default_button_sound = "selectx.wav"
   
   self.parent_window = parent_window
   self.parent_button = parent_button
