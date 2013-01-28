@@ -18,6 +18,7 @@ occupy only the edge of a tile and the graph window.
 -- Known Issues --
 
 * Emotion icons don't appear just above a humanoid's head at all times.
+* Main menu/in-game glitches when using the OpenGL version.
 
 
 -- Gameplay --
