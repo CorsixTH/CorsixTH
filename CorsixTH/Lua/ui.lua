@@ -786,7 +786,8 @@ function UI:addWindow(window)
     return
   end
   if window.modal_class then
-    if self.modal_windows[window.modal_class] then
+    -- NB: while instead of if in case of another window being created during the close function
+    while self.modal_windows[window.modal_class] do
       self.modal_windows[window.modal_class]:close()
     end
     self.modal_windows[window.modal_class] = window
