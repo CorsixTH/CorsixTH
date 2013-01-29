@@ -193,13 +193,6 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
     :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
 end
 
-function UIFileBrowser:getSavedWindowPositionName()
-  if self.mode == "menu" then
-    return "main_menu_group"
-  end
-  return UIResizable.getSavedWindowPositionName(self)
-end
-
 -- Function stub for dialogs to override. This function is called each time a file is chosen.
 --!param name (string) Name of the file chosen.
 function UIFileBrowser:choiceMade(name)

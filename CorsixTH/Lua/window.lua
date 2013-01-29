@@ -638,6 +638,13 @@ function Button:setSize(width, height)
   end
 end
 
+--! Convenience function to allow setLabel to be called on a button, not only its panel.
+--! see Panel:setLabel
+function Button:setLabel(label, font, align)
+  self.panel_for_sprite:setLabel(label, font, align)
+  return self
+end
+
 --[[ Convert a static panel into a clickable button.
 !param panel (Panel) The panel to convert into a button.
 !param x (integer) The X co-ordinate of the clickable rectangle on the panel.

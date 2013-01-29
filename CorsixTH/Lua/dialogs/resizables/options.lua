@@ -162,8 +162,6 @@ function UIOptions:selectLanguage(number)
   app.config.language = self.available_languages[number].text
   app:initLanguage()
   app:saveConfig()
-  self.language_panel:setLabel(app.config.language)
-  self.language_button:setToggleState(false)
 end
 
 function UIOptions:dropdownResolution(activate)
@@ -192,11 +190,11 @@ function UIOptions:selectResolution(number)
   end
   
   if res.custom then
+    self.resolution_panel:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
     self.ui:addWindow(UIResolution(self.ui, callback))
   else
     callback(res.width, res.height)
   end
-  self.resolution_button:setToggleState(false)
 end
 
 function UIOptions:buttonFullscreen(checked)

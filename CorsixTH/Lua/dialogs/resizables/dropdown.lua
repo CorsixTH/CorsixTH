@@ -58,7 +58,7 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
       :makeButton(-1, -1, width, height, nil, --[[persistable:dropdown_callback]] function() self:selectItem(i) end)
       -- TODO: tooltips for dropdown items currently deactivated because alignment and conditions for displaying are off for tooltips on sub-windows
       --:setTooltip(item.tooltip)
-    y = y + 20
+    y = y + height
   end
   
   -- Adjust size
@@ -67,6 +67,7 @@ end
 
 function UIDropdown:selectItem(number)
   UIResizable.close(self)
+  self.parent_button:setLabel(self.items[number].text, self.items[number].font):setToggleState(false)
   if self.callback then
     self.callback(self.parent_window, number)
   end

@@ -314,19 +314,25 @@ tooltip.handyman_window = {
 }
 
 new_game_window = {
+  caption = "Campaign",
+  option_on = "On",
+  option_off = "Off",
+  difficulty = "Difficulty",
   easy = "Junior (Easy)",
   medium = "Doctor (Medium)",
   hard = "Consultant (Hard)",
   tutorial = "Tutorial",
+  start = "Start",
   cancel = "Cancel",
 }
 
 tooltip.new_game_window = {
+  difficulty = "Select the difficulty level you want to play the game in",
   easy = "If you are new to simulation games this is the option for you",
   medium = "This is the middle way to go if you are unsure what to choose",
   hard = "If you are used to this kind of game and want more of a challenge, pick this option",
   tutorial = "If you want some help to get started once in the game, tick this box",
-  tutorial = "Tutorial",
+  start = "Start the game with the chosen settings",
   cancel = "Oh, I didn't really mean to start a new game!",
 }
 

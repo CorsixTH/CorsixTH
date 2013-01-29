@@ -912,3 +912,6 @@ function UI:stopMovie()
     self.app.moviePlayer:stop()
   end
 end
+
+-- Stub for compatibility with savegames r1896-1921
+function UI:stopVideo() end
