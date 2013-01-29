@@ -358,19 +358,25 @@ tooltip.handyman_window = {
 }
 
 new_game_window = {
+  caption = "Campañapaign",
+  option_on = "Activada",
+  option_off = "Desactivada",
+  difficulty = "Dificultad",
   easy = "Novato (Fácil)",
   medium = "Médico (Normal)",
   hard = "Especialista (Difícil)",
   tutorial = "Tutorial",
+  start = "Comenzar",
   cancel = "Cancelar",
 }
 
 tooltip.new_game_window = {
+  difficulty = "Selecciona el nivel de dificultad con el que quieres jugar.",
   easy = "Si acabas de conocer los juegos de simulación, esta dificultad es para ti.",
   medium = "Esta es la dificultad intermedia, si no estás seguro de a dónde quieres ir.",
   hard = "Si ya estás acostumbrado a este tipo de juegos y quieres un buen desafío, aquí lo tendrás.",
   tutorial = "Selecciona esta casilla si necesitas ayuda para empezar a jugar.",
-  tutorial = "Tutorial",
+  start = "Empezar la partida con la configuración seleccionada.",
   cancel = "¡Perdón, yo no quería empezar una nueva partida!",
 }
 
