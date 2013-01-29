@@ -301,10 +301,15 @@ tooltip.options_window = {
 }
 
 new_game_window = {
+  caption = "Kampanj",
+  option_on = "På",
+  option_off = "Av",
+  difficulty = "Svårighetsgrad",
   easy = "Junior (Lätt)",
   medium = "Läkare (Medel)",
   hard = "Konsult (Svår)",
   tutorial = "Starthjälp",
+  start = "Börja",
   cancel = "Avbryt",
 }
 
@@ -312,6 +317,8 @@ tooltip.new_game_window = {
   easy = "Om du känner dig ny på denna typ av spel är detta läget för dig",
   medium = "Detta är den gyllene medelvägen om du är osäker på vad du ska välja",
   hard = "Känner du för en utmaning och är van vid den här typen av spel är det här rätt val",
+  difficulty = "Välj vilken svårighetsgrad spelet ska ha",
+  start = "Börja spela med dessa inställningar",
   tutorial = "Vill du ha lite hjälp på traven i början, tryck ner den här rutan",
   cancel = "Oj, det var ju egentligen inte meningen att starta ett nytt spel!",
 }
