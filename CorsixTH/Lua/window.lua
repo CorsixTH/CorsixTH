@@ -247,10 +247,10 @@ function Panel:drawLabel(canvas, x, y, limit)
       end
       local last_y = next_y
       next_y, width = self.label_font:drawWrapped(canvas, line, x + self.x + 2, next_y, self.w - 4)
-      if next_y == last_y then
-        -- Special handling for empty lines
+      if not line:find("%S") then
+        -- Special handling for empty lines or lines with only space
         local _, h = self.label_font:sizeOf("A")
-        next_y = next_y + h
+        next_y = last_y + h
       end
       if limit and limit[1] == i then
         break
