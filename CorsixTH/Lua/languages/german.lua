@@ -368,23 +368,30 @@ tooltip.options_window = {
   select_language = "Die Spielsprache ändern",
   language_dropdown_item = "%s als Sprache auswählen",
   original_path = "Das momentan gewählte Theme Hospital-Installationsverzeichnis",
-  browse = "Nach einer anderen Theme Hospital-Installation durchsuchen",
+  browse = "Nach einer anderen Theme Hospital-Installation durchsuchen (aktueller Pfad: %1%)",
   back = "Das Optionsfenster schließen",
 }
 
 new_game_window = {
+  caption = "Neues Spiel",
+  option_on = "Ein",
+  option_off = "Aus",
+  difficulty = "Schwierigkeit",
   easy = "AIP (Einfach)",
   medium = "Arzt (Mittel)",
   hard = "Berater (Schwer)",
   tutorial = "Einführung",
+  start = "Start",
   cancel = "Abbrechen",
 }
 
 tooltip.new_game_window = {
+  difficulty = "Hier kann der Schwierigkeitsgrad des Spiels eingestellt werden",
   easy = "Die richtige Option für Simulations-Neulinge",
   medium = "Der Mittelweg - für diejenigen, die sich nicht entscheiden können",
   hard = "Wer diese Art von Spielen schon gewöhnt ist und eine Herausforderung will, sollte hier klicken",
   tutorial = "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
+  start = "Das Spiel mit den gewählten Einstellungen starten",
   cancel = "Oh, eigentlich wollte ich gar kein neues Spiel starten!",
 }
 
