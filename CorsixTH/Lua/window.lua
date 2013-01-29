@@ -231,6 +231,31 @@ function Panel:setLabel(label, font, align)
   return self
 end
 
+--! Specifies whether auto clip (clipping text at the end so it fits) is enabled for this panel
+--!param mode (boolean) true to activate, false to deactivate.
+function Panel:setAutoClip(mode)
+  self.auto_clip = mode
+  return self
+end
+
+--! Checks if a given line drawn with the panel's label font would be longer than the given limit
+--! and if so, shortens it enough to fit including "..." at the end
+--!param line (string) the line to modify
+--!param limit (int) the maximum length in pixels the line should have
+--!return the possibly modified line
+function Panel:clipLine(line, limit)
+  local last_x = self.label_font:draw(nil, line, 0, 0)
+  if last_x > limit then
+    limit = limit - self.label_font:sizeOf("..._")
+    while last_x > limit do
+      line = line:sub(1, -2)
+      last_x = self.label_font:draw(nil, line, 0, 0)
+    end
+    line = line .. "..."
+  end
+  return line
+end
+
 --! Draw function for the label on a panel
 --!param canvas The canvas to draw on (can be nil for test)
 --!param x x position to start drawing on
@@ -241,27 +266,39 @@ function Panel:drawLabel(canvas, x, y, limit)
   if type(self.label) == "table" then -- multiline label
     local width
     local next_y = y + self.y + 1
+    local last_x = x + self.x + 2
     for i, line in ipairs(self.label) do
       if limit and limit[1] == i then
-        line = string.sub(line, 1, limit[2])
+        line = line:sub(1, limit[2])
       end
-      local last_y = next_y
-      next_y, width = self.label_font:drawWrapped(canvas, line, x + self.x + 2, next_y, self.w - 4)
-      if not line:find("%S") then
-        -- Special handling for empty lines or lines with only space
+      if self.auto_clip then
+        line = self:clipLine(line, self.w - 4)
+        last_x = self.label_font:draw(canvas, line, x + self.x + 2, next_y, self.w - 4)
         local _, h = self.label_font:sizeOf("A")
-        next_y = last_y + h
+        next_y = next_y + h
+      else
+        local last_y = next_y
+        next_y, width = self.label_font:drawWrapped(canvas, line, x + self.x + 2, next_y, self.w - 4)
+        last_x = x + self.x + 2 + width
+        if not line:find("%S") then
+          -- Special handling for empty lines or lines with only space
+          local _, h = self.label_font:sizeOf("A")
+          next_y = last_y + h
+        end
       end
       if limit and limit[1] == i then
         break
       end
     end
-    return x + self.x + 2 + width, next_y
+    return last_x, next_y
   else
     local line = self.label
     if limit then
-      line = string.sub(line, 1, limit[2])
+      line = line:sub(1, limit[2])
     end
+      if self.auto_clip then
+        line = self:clipLine(line, self.w - 4)
+      end
     return self.label_font:draw(canvas, line, x + self.x + 2, y + self.y, self.w - 4, self.h, self.align)
   end
 end

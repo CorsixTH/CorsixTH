@@ -130,8 +130,8 @@ function UIOptions:UIOptions(ui, mode)
     :setLabel(_S.options_window.data_location):setTooltip(_S.tooltip.options_window.data_location)
     .lowered = true
   self:addBevelPanel(160, 110, 140, 20, col_bg)
-    :setLabel(app.config.theme_hospital_install, built_in)
-    :makeButton(0, 0, 140, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse)
+    :setLabel(app.config.theme_hospital_install, built_in):setAutoClip(true)
+    :makeButton(0, 0, 140, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse:format(app.config.theme_hospital_install))
   
   -- "Back" button
   self:addBevelPanel(20, 160, 280, 40, col_bg):setLabel(_S.options_window.back)

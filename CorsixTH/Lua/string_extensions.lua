@@ -130,6 +130,23 @@ function TH.stringProxy.format(str, ...)
   return result
 end
 
-for _, method_name in ipairs{"gsub", "format"} do
+--! Wrapper for the lua string.find function. Make sure to call mystring:find(...) instead of string.find(mystring, ...).
+function TH.stringProxy.find(str, ...)
+  str = _unwrap(str)
+  return str:find(...)
+end
+
+--! Wrapper for the lua string.sub function. Make sure to call mystring:sub(...) instead of string.sub(mystring, ...).
+function TH.stringProxy.sub(str, ...)
+  local str_was_proxy
+  str, str_was_proxy = _unwrap(str)
+  local result = str:sub(...)
+  if str_was_proxy then
+    result = TH.stringProxy(result, TH.stringProxy.sub, str, ...)
+  end
+  return result
+end
+
+for _, method_name in ipairs{"gsub", "format", "find", "sub"} do
   permanent("TH.stringProxy.".. method_name, TH.stringProxy[method_name])
 end

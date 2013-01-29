@@ -300,7 +300,7 @@ tooltip.options_window = {
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
   original_path = "The currently chosen directory of the original Theme Hospital installation",
-  browse = "Browse for another location of a Theme Hospital installation",
+  browse = "Browse for another location of a Theme Hospital installation (current location: %1%)",
   back = "Close the options window",
 }
 
