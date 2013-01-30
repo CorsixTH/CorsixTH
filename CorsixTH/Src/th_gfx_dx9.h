@@ -30,6 +30,7 @@ SOFTWARE.
 #define CORSIX_TH_HAS_RENDERING_ENGINE
 #include <D3D9.h>
 #include <D3DX9.h>
+#include "persist_lua.h"
 
 struct IDirect3D9;
 struct IDirect3DDevice9;
@@ -331,7 +332,13 @@ public:
     void draw(THRenderTarget* pCanvas, int iX, int iY);
 
     void setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
+
 protected:
+    void initialize();
+
     enum THLineOpType {
         THLOP_MOVE,
         THLOP_LINE

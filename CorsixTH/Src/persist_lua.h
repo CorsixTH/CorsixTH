@@ -100,6 +100,12 @@ public:
         }
         writeVUInt(tValueToWrite);
     }
+
+    template <class T>
+    void writeVFloat(T fValue)
+    {
+        writeByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T));
+    }
 };
 
 //! Interface used for depersisting Lua objects
@@ -154,6 +160,14 @@ public:
             tValue = (-(T)(tWrittenValue >> 1)) - 1;
         else
             tValue = (T)(tWrittenValue >> 1);
+        return true;
+    }
+
+    template <class T>
+    bool readVFloat(T& fValue)
+    {
+        if(!readByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T)))
+            return false;
         return true;
     }
 };

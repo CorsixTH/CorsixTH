@@ -144,7 +144,8 @@ function UIGraphs:updateLines()
   for stat, value in pairs(part) do
     -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
     local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-    lines[stat].line:moveTo(first_x, top_y + (bottom_y - top_y) - value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) + zero_point)
+    local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
+    lines[stat].line:moveTo(first_x, top_y + (bottom_y - top_y) - normalized_value + zero_point)
   end
   
   local aux_lines = {}
@@ -153,7 +154,8 @@ function UIGraphs:updateLines()
     for stat, value in pairs(part) do
       -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
       local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-      lines[stat].line:lineTo(first_x, top_y + (bottom_y - top_y) - value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) + zero_point)
+      local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
+      lines[stat].line:lineTo(first_x, top_y + (bottom_y - top_y) - normalized_value + zero_point)
     end
     -- Also add a small line going from the number of month name to the actual graph.
     local line = TH.line()

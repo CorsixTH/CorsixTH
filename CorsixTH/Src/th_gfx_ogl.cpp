@@ -1252,15 +1252,7 @@ bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 
 THLine::THLine()
 {
-    m_fWidth = 1;
-    m_iR = 0;
-    m_iG = 0;
-    m_iB = 0;
-    m_iA = 255;
-
-    // We start at 0,0
-    m_pFirstOp = new THLineOperation(THLOP_MOVE, 0, 0);
-    m_pCurrentOp = m_pFirstOp;
+    initialize();
 }
 
 THLine::~THLine()
@@ -1271,6 +1263,19 @@ THLine::~THLine()
         delete(op);
         op = next;
     }
+}
+
+void THLine::initialize()
+{
+    m_fWidth = 1;
+    m_iR = 0;
+    m_iG = 0;
+    m_iB = 0;
+    m_iA = 255;
+
+    // We start at 0,0
+    m_pFirstOp = new THLineOperation(THLOP_MOVE, 0, 0);
+    m_pCurrentOp = m_pFirstOp;
 }
 
 void THLine::moveTo(double fX, double fY)
@@ -1327,6 +1332,59 @@ void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
         op = (THLineOperation*)(op->m_pNext);
     }
     glEnable(GL_TEXTURE_2D);
+}
+
+void THLine::persist(LuaPersistWriter *pWriter) const
+{
+    pWriter->writeVUInt((uint32_t)m_iR);
+    pWriter->writeVUInt((uint32_t)m_iG);
+    pWriter->writeVUInt((uint32_t)m_iB);
+    pWriter->writeVUInt((uint32_t)m_iA);
+    pWriter->writeVFloat(m_fWidth);
+
+    THLineOperation* op = (THLineOperation*)(m_pFirstOp->m_pNext);
+    uint32_t numOps = 0;
+    for (; op; numOps++) {
+        op = (THLineOperation*)(op->m_pNext);
+    }
+
+    pWriter->writeVUInt(numOps);
+
+    op = (THLineOperation*)(m_pFirstOp->m_pNext);
+    while (op) {
+        pWriter->writeVUInt((uint32_t)op->type);
+        pWriter->writeVFloat<double>(op->m_fX);
+        pWriter->writeVFloat(op->m_fY);
+
+        op = (THLineOperation*)(op->m_pNext);
+    }
+}
+
+void THLine::depersist(LuaPersistReader *pReader)
+{
+    initialize();
+
+    pReader->readVUInt(m_iR);
+    pReader->readVUInt(m_iG);
+    pReader->readVUInt(m_iB);
+    pReader->readVUInt(m_iA);
+    pReader->readVFloat(m_fWidth);
+
+    uint32_t numOps = 0;
+    pReader->readVUInt(numOps);
+    for (uint32_t i = 0; i < numOps; i++) {
+        THLineOpType type;
+        double fX, fY;
+        pReader->readVUInt((uint32_t&)type);
+        pReader->readVFloat(fX);
+        pReader->readVFloat(fY);
+
+        if (type == THLOP_MOVE) {
+            moveTo(fX, fY);
+        } else if (type == THLOP_LINE) {
+            lineTo(fX, fY);
+        }
+    }
 }
 
 #ifdef CORSIX_TH_USE_FREETYPE2

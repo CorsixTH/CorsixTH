@@ -30,6 +30,7 @@ SOFTWARE.
 #define CORSIX_TH_HAS_RENDERING_ENGINE
 #include <SDL.h>
 #include "agg_path_storage.h"
+#include "persist_lua.h"
 
 class THCursor;
 struct THClipRect : public SDL_Rect
@@ -289,8 +290,19 @@ public:
     void draw(THRenderTarget* pCanvas, int iX, int iY);
 
     void setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
+
 protected:
-    agg::path_storage m_oPath;
+    void initialize();
+
+    enum THLineOpType {
+        THLOP_MOVE,
+        THLOP_LINE
+    };
+
+    agg::path_storage* m_oPath;
     double m_fWidth;
     uint8_t m_iR, m_iG, m_iB, m_iA;
 

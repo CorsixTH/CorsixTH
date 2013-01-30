@@ -796,6 +796,26 @@ static int l_line_draw(lua_State *L)
     return 1;
 }
 
+static int l_line_persist(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    pLine->persist(pWriter);
+    return 0;
+}
+
+static int l_line_depersist(lua_State *L)
+{
+    THLine* pLine = luaT_testuserdata<THLine>(L);
+    lua_settop(L, 2);
+    lua_insert(L, 1);
+    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    pLine->depersist(pReader);
+    return 0;
+}
+
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 {
     // Palette
@@ -885,5 +905,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_set_width, "setWidth");
     luaT_setfunction(l_set_colour, "setColour");
     luaT_setfunction(l_line_draw, "draw", MT_Surface);
+    luaT_setmetamethod(l_line_persist, "persist");
+    luaT_setmetamethod(l_line_depersist, "depersist");
     luaT_endclass();
 }

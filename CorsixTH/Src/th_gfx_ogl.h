@@ -42,6 +42,7 @@ SOFTWARE.
 #endif
 
 #include <SDL_opengl.h>
+#include "persist_lua.h"
 
 //Darrell: The wxWindows OGL includes can stop these from being defined in 
 //SDL_opengl.h so as a temporary solution I'm defining them here.
@@ -313,7 +314,13 @@ public:
     void draw(THRenderTarget* pCanvas, int iX, int iY);
 
     void setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
+
+    void persist(LuaPersistWriter *pWriter) const;
+    void depersist(LuaPersistReader *pReader);
+
 protected:
+    void initialize();
+
     enum THLineOpType {
         THLOP_MOVE,
         THLOP_LINE
