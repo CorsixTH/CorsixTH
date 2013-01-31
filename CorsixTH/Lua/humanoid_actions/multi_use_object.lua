@@ -201,6 +201,9 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
   local oldphase = phase
   if phase ~= 0 or not action.prolonged_usage then
     phase = action_multi_use_next_phase(action, phase)
+    if phase == 1 then
+      humanoid:setMood("emergency", "deactivate")
+    end
   elseif action.loop_callback then
     action:loop_callback()
   end
