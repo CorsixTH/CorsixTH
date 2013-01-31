@@ -86,8 +86,6 @@ occupy only the edge of a tile and the graph window.
  
 * Fix: Colour selection algorithm for freetype fonts resulted in unreadable text
   on faxes for some languages.
-* Fix: The emergency light is still a few seconds above the machine when using the
-  Inflator room.
 * Fix: When an unanswered fax became meaningless (e.g. if you built the 
   required room), it was only removed if its message button was visible at the
   bottom panel (not if it was queued because of 5 buttons being there already).
