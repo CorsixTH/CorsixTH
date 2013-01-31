@@ -44,6 +44,8 @@ occupy only the edge of a tile and the graph window.
 
 * Change: Placing a member of staff inside a room that is already occupied
   will now replace that person.
+* Fix: Fix: Colour selection algorithm for freetype fonts resulted in unreadable text
+  on faxes for some languages.
 * Fix: Crashes in certain situations involving receptionists and reception 
   desks.
 * Fix: Patients being handled at a reception desk even if no receptionist 
