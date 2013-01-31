@@ -1327,8 +1327,14 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
         uint32_t iColour = m_pPalette->getARGBData()[cPalIndex];
         if((iColour >> 24) == 0)
             continue;
-        iUsageCounts[cPalIndex]++;
-        iCountTotal++;
+        // Grant higher score to pixels with high or low intensity (helps avoid grey fonts)
+        unsigned char iR = static_cast<uint8_t> ((iColour >> 16) & 0xFF);
+        unsigned char iG = static_cast<uint8_t> ((iColour >>  8) & 0xFF);
+        unsigned char iB = static_cast<uint8_t> ((iColour >>  0) & 0xFF);
+        unsigned char cIntensity = (unsigned char)(((int)iR + (int)iG + (int)iB) / 3);
+        int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
+        iUsageCounts[cPalIndex] += iScore;
+        iCountTotal += iScore;
     }
     if(iCountTotal == 0)
         return false;

@@ -40,6 +40,9 @@ SOFTWARE.
 #include "agg_conv_stroke.h"
 #include "agg_vcgen_stroke.cpp"
 #include <new>
+#ifndef max
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#endif
 
 THRenderTarget::THRenderTarget()
 {
@@ -629,8 +632,12 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
         unsigned char cPalIndex = pSprite->pData[i];
         if(cPalIndex == m_pPalette->m_iTransparentIndex)
             continue;
-        iUsageCounts[cPalIndex]++;
-        iCountTotal++;
+        // Grant higher score to pixels with high or low intensity (helps avoid grey fonts)
+        THColour col = ((*m_pPalette)[cPalIndex]);
+        unsigned char cIntensity = (unsigned char)(((int)col.r + (int)col.b + (int)col.g) / 3);
+        int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
+        iUsageCounts[cPalIndex] += iScore;
+        iCountTotal += iScore;
     }
     if(iCountTotal == 0)
         return false;

@@ -211,7 +211,8 @@ public:
     //! Get the average of the non-transparent pixels of a sprite
     /*!
         For this function, "average" means the mode (i.e. the colour which
-        occurs most frequently) rather than an arithmetic mean.
+        occurs most frequently) rather than an arithmetic mean, modified to favour
+        both dark and bright colours over intermediate ones.
         @param iSprite Sprite index. Should be in range [0, getSpriteCount() - 1].
         @param pColour Pointer to store resulting average at.
         @return true if there was an average colour (i.e. sprite existed and
