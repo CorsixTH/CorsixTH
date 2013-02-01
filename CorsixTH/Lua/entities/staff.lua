@@ -640,28 +640,28 @@ local profile_attributes = {
   Researcher = "is_researcher",
 }
 
--- Helper function to decide if Staff fulfills a criterium 
+-- Helper function to decide if Staff fulfills a criterion
 -- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
-function Staff:fulfillsCriterium(criterium)
+function Staff:fulfillsCriterion(criterion)
   local class = self.humanoid_class
-  if criterium == "Doctor" then
+  if criterion == "Doctor" then
     if class == "Doctor" or class == "Surgeon" then
       return true
     end
-  elseif criterium == "Nurse" then
+  elseif criterion == "Nurse" then
     if class == "Nurse" then
       return true
     end
-  elseif criterium == "Psychiatrist" or criterium == "Surgeon" or criterium == "Researcher" then
-    if self.profile and self.profile[profile_attributes[criterium]] == 1.0 then
+  elseif criterion == "Psychiatrist" or criterion == "Surgeon" or criterion == "Researcher" then
+    if self.profile and self.profile[profile_attributes[criterion]] == 1.0 then
       return true
     end
-  elseif criterium == "Handyman" then
+  elseif criterion == "Handyman" then
     if class == "Handyman" then
       return true
     end
   else
-    error("Unknown criterium " .. criterium)
+    error("Unknown criterion " .. criterion)
   end
   return false
 end

@@ -1854,7 +1854,7 @@ bank_manager = {
 
 newspaper = {
   -- Seven categories of funny headlines. I think each category is related
-  -- to one criterium you can lose to. TODO: categorize
+  -- to one criterion you can lose to. TODO: categorize
   { S[38][ 1], S[38][ 2], S[38][ 3], S[38][ 4], S[38][ 5]            },
   { S[38][ 7], S[38][ 8], S[38][ 9], S[38][10], S[38][11], S[38][12] },
   { S[38][14], S[38][15], S[38][16], S[38][17]                       },

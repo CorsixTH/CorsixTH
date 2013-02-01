@@ -150,29 +150,23 @@ function TrainingRoom:doStaffUseCycle(humanoid)
 end
 
 function TrainingRoom:onHumanoidEnter(humanoid)
+  if humanoid.humanoid_class ~= "Doctor" then
+    -- use default behavior for staff other than doctors
+    return Room.onHumanoidEnter(self, humanoid)
+  end
+  
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
-  -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
 
   --entering humanoids are no longer enroute
   if self.humanoids_enroute[humanoid] then
     self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
   end
   
+  humanoid:setCallCompleted()
+  self:commandEnteringStaff(humanoid)
   self.humanoids[humanoid] = true
-  if not self:staffFitsInRoom(humanoid) then
-    if self:getStaffMember() and self:staffMeetsRooomRequirements(humanoid) then
-      self:commandEnteringStaff(humanoid)
-    else
-      humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction{name = "meander"}
-      humanoid:adviseWrongPersonForThisRoom()
-    end
-  else
-    humanoid:setCallCompleted()
-    self:commandEnteringStaff(humanoid)
-  end
   self:tryAdvanceQueue()
 end
 

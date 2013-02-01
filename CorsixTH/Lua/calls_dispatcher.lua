@@ -374,7 +374,7 @@ function CallsDispatcher.unassignCall(call)
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
-  if staff:isIdle() and staff:fulfillsCriterium(attribute) then
+  if staff:isIdle() and staff:fulfillsCriterion(attribute) then
     local current_room = staff:getRoom()
     if not staff.hospital.policies["staff_allowed_to_move"]
     and current_room and current_room ~= room then

@@ -209,7 +209,7 @@ function Room:getMissingStaff(criteria)
   local result = {}
   for attribute, count in pairs(criteria) do
     for humanoid in pairs(self.humanoids) do
-      if class.is(humanoid, Staff) and humanoid:fulfillsCriterium(attribute) and not humanoid:isLeaving() then
+      if class.is(humanoid, Staff) and humanoid:fulfillsCriterion(attribute) and not humanoid:isLeaving() then
         count = count - 1
       end
     end
@@ -307,7 +307,7 @@ function Room:onHumanoidEnter(humanoid)
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
     if not self:staffFitsInRoom(humanoid) then
-      if self:getStaffMember() and self:staffMeetsRooomRequirements(humanoid) then
+      if self:getStaffMember() and self:staffMeetsRoomRequirements(humanoid) then
         local staff_member = self:getStaffMember()
          self.humanoids[humanoid] = true
         if not staff_member.dealing_with_patient then
@@ -397,14 +397,15 @@ function Room:staffFitsInRoom(staff)
   return true
 end
 
-function Room:staffMeetsRooomRequirements(humanoid)
+--! Returns true if the humanoid meets (one of) the required staff criteria of the room
+function Room:staffMeetsRoomRequirements(humanoid)
   local criteria = self:getRequiredStaffCriteria()
   for attribute, _ in pairs(criteria) do
-    if not humanoid:fulfillsCriterium(attribute) then
-      return false
+    if humanoid:fulfillsCriterion(attribute) then
+      return true
     end
   end
-  return true
+  return false
 end
 
 -- Tests whether this room is awaiting more staff to be able to do business

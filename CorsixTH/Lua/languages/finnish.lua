@@ -2181,7 +2181,7 @@ bank_manager = {
 -- Newspaper headlines
 newspaper = {
   -- Seven categories of funny headlines. I think each category is related
-  -- to one criterium you can lose to. TODO: categorize
+  -- to one criterion you can lose to. TODO: categorize
   { "TOHTORI KAUHUN KIROUS", "OUTO LÄÄKÄRI LEIKKII JUMALAA", "TOHTORI EBOLA SHOKEERAA", "KUKA USKOO VIILTÄJÄKIRURGIIN?", "RATSIA PÄÄTTI VAARALLISEN LÄÄKETUTKIMUKSEN" },
   { "TOHTORI ANKKURI", "ITKEVÄT PSYKIATRIT", "KONSULTIN PAKOMATKA", "KIRURGINEN LAUKAUS", "KIRURGI JUO LASINSA TYHJÄKSI", "KIRURGIN HENKI" },
   { "LEIKKIVÄ PSYKIATRI", "TOHTORI ILMAN-HOUSUJA", "TOHTORI KAUHUISSAAN", "KIRURGIN NÄLKÄ" },
