@@ -20,8 +20,9 @@ Briefly:
     The demo can be found at: http://th.corsix.org/Demo.zip and the full game
     can be found at http://www.gog.com/gamecard/theme_hospital. 
     The full game can also often be found on ebay.
-3)  Copy the HOSP folder from either the demo or full game to a directory 
-    of your choice.
+3)  Copy the resources folder (which contains the folder "ANIMS" and "LEVELS" 
+    among others, this is in some cases called "HOSP") from either the demo 
+    or full game to a directory of your choice.
 4a) If you have downloaded a pre-compiled version: 
     At this point Windows users should run the installer, during install you 
     will be asked for the location of the original game files set in step 3. 

@@ -88,10 +88,10 @@ menu_file_load = {
 }
 cheats_window = {
   warning = "Varování: Pokud budete podvádět, nedostanete na konci úrovně žádné bonusové body!",
-  caption = "Číty",
+  caption = "Cheaty",
   cheated = {
-    no = "Číty použity: Ne",
-    yes = "Číty použity: Ano",
+    no = "Cheaty použity: Ne",
+    yes = "Cheaty použity: Ano",
   },
   close = "Zavřít",
   cheats = {
