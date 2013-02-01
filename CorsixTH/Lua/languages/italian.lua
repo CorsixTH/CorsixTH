@@ -253,7 +253,7 @@ tooltip.options_window = {
   change_resolution = "Cambia la risoluzione della finestra alle dimensioni inserite a sinistra",
   language = "Seleziona %s come lingua",
   original_path = "La cartella dell'installazione di Theme Hospital originale attualmente selezionata",
-  browse = "Seleziona la cartella di un'altra installazione di Theme Hospital",
+  browse = "Seleziona la cartella di un'altra installazione di Theme Hospital. %1%",
   back = "Chiudi la finestra delle opzioni",
 }
 

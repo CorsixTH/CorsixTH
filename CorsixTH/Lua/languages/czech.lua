@@ -1074,7 +1074,7 @@ tooltip = {
     back = "Zavřít okno možností",
     fullscreen_button = "Klikněte pro přepnutí režimu celé obrazovky",
     original_path = "Nyní zvolená složka instalace původní Theme Hospital",
-    browse = "Procházet pro jiné umístění instalace Theme Hospital",
+    browse = "Procházet pro jiné umístění instalace Theme Hospital. %1%",
     height = "Zadejte požadovanou výšku obrazovky",
     language = "Vybrat %s jako jazyk",
   },

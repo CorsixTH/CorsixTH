@@ -58,7 +58,7 @@ local col_caption = {
 }
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 220, col_bg)
+  self:UIResizable(ui, 320, 240, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -131,10 +131,20 @@ function UIOptions:UIOptions(ui, mode)
     .lowered = true
   self:addBevelPanel(160, 110, 140, 20, col_bg)
     :setLabel(app.config.theme_hospital_install, built_in):setAutoClip(true)
-    :makeButton(0, 0, 140, 20, nil, self.buttonBrowse):setTooltip(_S.tooltip.options_window.browse:format(app.config.theme_hospital_install))
+    :makeButton(0, 0, 140, 20, nil, self.buttonBrowseForTHInstall):setTooltip(_S.tooltip.options_window.browse:format(app.config.theme_hospital_install))
+    
+  -- Location of font file
+  local built_in = app.gfx:loadBuiltinFont()
+  self:addBevelPanel(20, 130, 140, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.font_location):setTooltip(_S.tooltip.options_window.font_location)
+    .lowered = true
+  local tooltip = app.config.unicode_font and _S.tooltip.options_window.browse_font:format(app.config.unicode_font) or _S.tooltip.options_window.no_font_specified
+  self:addBevelPanel(160, 130, 140, 20, col_bg)
+    :setLabel(app.config.unicode_font and app.config.unicode_font or tooltip, built_in):setAutoClip(true)
+    :makeButton(0, 0, 140, 20, nil, self.buttonBrowseForFont):setTooltip(tooltip)
   
   -- "Back" button
-  self:addBevelPanel(20, 160, 280, 40, col_bg):setLabel(_S.options_window.back)
+  self:addBevelPanel(20, 180, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
@@ -206,7 +216,12 @@ function UIOptions:buttonFullscreen(checked)
   self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
-function UIOptions:buttonBrowse()
+function UIOptions:buttonBrowseForFont()
+  local browser = UIChooseFont(self.ui, self.mode)
+  self.ui:addWindow(browser)
+end
+
+function UIOptions:buttonBrowseForTHInstall()
   local browser = UIInstallDirBrowser(self.ui, self.mode)
   self.ui:addWindow(browser)
 end

@@ -74,10 +74,11 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("esc", self, self.setEditRoom, false)
   self:addKeyHandler("esc", self, self.showMenuBar)
 
+  self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
+  self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
+
   if self.app.config.debug then
     self:addKeyHandler("f11", self, self.showCheatsWindow)
-    self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
-    self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
     self:addKeyHandler("x", self, self.toggleWallsTransparent)
   end
 end

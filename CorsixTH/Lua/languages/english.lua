@@ -226,7 +226,7 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  caption = "Load Game",
+  caption = "Load Game (%1%)",
 }
 
 tooltip.load_game_window = {
@@ -246,7 +246,7 @@ tooltip.custom_game_window = {
 }
 
 save_game_window = {
-  caption = "Save Game",
+  caption = "Save Game (%1%)",
   new_save_game = "New Savegame",
 }
 
@@ -279,6 +279,7 @@ options_window = {
   apply = "Apply",
   cancel = "Cancel",
   data_location = "Data location",
+  font_location = "Font location",
   browse = "Browse...",
   new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
   language = "Game language",
@@ -296,12 +297,19 @@ tooltip.options_window = {
   apply = "Apply the entered resolution",
   cancel = "Return without changing the resolution",
   data_location = "The directory of the original Theme Hospital installation, which is required to run CorsixTH",
+  font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
   language = "The language texts in the game will appear in",
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
   original_path = "The currently chosen directory of the original Theme Hospital installation",
   browse = "Browse for another location of a Theme Hospital installation (current location: %1%)",
+  browse_font = "Browse for another font file (current location: %1%)",
+  no_font_specified = "No location specified yet!",
   back = "Close the options window",
+}
+
+font_location_window = {
+  caption = "Choose font (%1%)",
 }
 
 handyman_window = {

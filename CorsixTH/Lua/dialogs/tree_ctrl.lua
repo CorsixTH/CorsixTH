@@ -317,7 +317,23 @@ function FileTreeNode:checkForChildren()
 end
 
 function FileTreeNode:getHighlightColour(canvas)
-  return self.highlight_colour
+  local highlight_colour = self.highlight_colour
+  if highlight_colour == nil then
+    highlight_colour = false
+    if type(self.filter_by) == "table" then
+      for _, ext in ipairs(self.filter_by) do
+        if string.sub(self.path:lower(), -string.len(ext)) == ext then
+          self.is_valid_file = true
+          highlight_colour = canvas:mapRGB(0, 255, 0)
+        end
+      end
+    elseif string.sub(self.path:lower(), -string.len(self.filter_by)) == self.filter_by then
+      self.is_valid_file = true
+      highlight_colour = canvas:mapRGB(0, 255, 0)
+    end
+    self.highlight_colour = highlight_colour
+  end
+  return highlight_colour or nil
 end
 
 function FileTreeNode:getChildCount()

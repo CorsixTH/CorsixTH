@@ -239,7 +239,7 @@ tooltip.options_window = {
   language = "Velg %s som språk",
   back = "Lukk vinduet med innstillinger",
   original_path = "Valgt mappe for Theme Hospital installasjonen",
-  browse = "Bla gjennom mappene for å finne et annet sted for Theme Hospital-installasjonen",
+  browse = "Bla gjennom mappene for å finne et annet sted for Theme Hospital-installasjonen. %1%",
 }
 
 calls_dispatcher = {

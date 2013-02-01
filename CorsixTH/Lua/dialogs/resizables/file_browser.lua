@@ -21,61 +21,79 @@ SOFTWARE. --]]
 local lfs = require "lfs"
 
 --! A tree node representing a file (or directory) in the physical file-system 
---  that can be loaded as a saved game or contains saved games.
-class "LoadSaveFileTreeNode" (FileTreeNode)
+--  that meets a given file extension criterion.
+class "FilteredFileTreeNode" (FileTreeNode)
 
 local pathsep = package.config:sub(1, 1)
 
-function LoadSaveFileTreeNode:LoadSaveFileTreeNode(path)
+function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
   self:FileTreeNode(path)
+  self.filter_by = filter
 end
 
-function LoadSaveFileTreeNode:isValidFile(name)
+function FilteredFileTreeNode:isValidFile(name)
   -- Directories and files ending with .sav are valid.
-  return FileTreeNode.isValidFile(self, name) 
-  and (lfs.attributes(self:childPath(name), "mode") == "directory"
-  or string.sub(name, -4) == ".sav")
+  if FileTreeNode.isValidFile(self, name) then
+    if lfs.attributes(self:childPath(name), "mode") == "directory" then
+      return true
+    end
+    if type(self.filter_by) == "table" then
+      for _, ext in ipairs(self.filter_by) do
+        if string.sub(name:lower(), -string.len(ext)) == ext then
+          return true
+        end
+      end
+    else
+      return string.sub(name:lower(), -string.len(self.filter_by)) == self.filter_by
+    end
+  end
+  return false
+  -- TODO: We don't want to show hidden files on windows. How can we check that?
 end
 
-function LoadSaveFileTreeNode:createNewNode(path)
-  return LoadSaveFileTreeNode(path)
+function FilteredFileTreeNode:createNewNode(path)
+  return FilteredFileTreeNode(path, self.filter_by)
 end
 
-function LoadSaveFileTreeNode:getLabel()
-  -- The label should be only the file name without extension or
-  -- folder hierarchy.
+function FilteredFileTreeNode:getLabel()
+  -- The label was previously only the file name without extension or
+  -- folder hierarchy. TODO: Is there some reason to not show the extension?
   local label = self.label
   if not label then
     label = FileTreeNode.getLabel(self)
-    if string.sub(label, -4) == ".sav" then
-      label = string.sub(label, 0, -5)
-    end
+    --[[if type(self.filter_by) == "table" then
+      for _, ext in ipairs(self.filter_by) do
+        if string.sub(label:lower(), -string.len(ext)) == ext then
+          label = string.sub(label:lower(), 0, -string.len(ext) - 1)
+        end
+      end
+    elseif string.sub(label:lower(), -string.len(self.filter_by)) == self.filter_by then
+      label = string.sub(label:lower(), 0, -string.len(self.filter_by) - 1)
+    end--]]
     self.label = label
   end
   return label
 end
 
---! A sortable tree control that accomodates saved games and also shows
+--! A sortable tree control that accomodates a certain file type and also possibly shows
 --  their last modification dates.
-class "LoadSaveTreeControl" (TreeControl)
+class "FilteredTreeControl" (TreeControl)
 
-function LoadSaveTreeControl:LoadSaveTreeControl(root, x, y, width, height, col_bg, col_fg, has_font)
+function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
-  -- The most probable preference of sorting is by date - what you played last
-  -- is the thing you want to play soon again.
-  root:reSortChildren("date", "descending")
-  self.sort_by = "date"
-  self.order = "descending"
 
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
+  
   -- Add the two column headers and make buttons on them.
-  self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name)
-  :makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name)
-  self:addBevelPanel(width - 169, 1, 150, 13, col_bg):setLabel(_S.menu_list_window.save_date)
-  :makeButton(0, 0, width - 170, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date)
+  if show_dates then
+    self.main_bar = self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name):makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name)
+    self:addBevelPanel(width - 169, 1, 150, 13, col_bg):setLabel(_S.menu_list_window.save_date)
+    :makeButton(0, 0, width - 170, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date)
+  end
+  self.show_dates = show_dates
 end
 
-function LoadSaveTreeControl:sortByName()
+function FilteredTreeControl:sortByName()
   if self.sort_by == "date" or (self.sort_by == "name" and self.order == "descending") then
     self:sortBy("name", "ascending")
   else
@@ -83,7 +101,7 @@ function LoadSaveTreeControl:sortByName()
   end
 end
 
-function LoadSaveTreeControl:sortByDate()
+function FilteredTreeControl:sortByDate()
   if self.sort_by == "name" or (self.sort_by == "date" and self.order == "descending") then
     self:sortBy("date", "ascending")
   else
@@ -94,7 +112,7 @@ end
 --! Sorts the list according to the given parameters.
 --!param sort_by Either "name" or "date".
 --!param order Either "ascending" or "descending"
-function LoadSaveTreeControl:sortBy(sort_by, order)
+function FilteredTreeControl:sortBy(sort_by, order)
   self.sort_by = sort_by
   self.order = order
   -- Find how many nodes are above the first visible one in order
@@ -115,13 +133,13 @@ function LoadSaveTreeControl:sortBy(sort_by, order)
   self.first_visible_node = node
 end
 
-function LoadSaveTreeControl:drawExtraOnRow(canvas, node, x, y)
+function FilteredTreeControl:drawExtraOnRow(canvas, node, x, y)
   -- We want to show the modification date to the right of each save.
-  if not node:hasChildren() then
-      local last_mod = node:getLastModification()
-      local daytime = _S.date_format.daymonth:format(os.date("%d", last_mod), tonumber(os.date("%m", last_mod)))
-      self.font:draw(canvas, daytime .. " " .. os.date("%Y %X", last_mod), x + self.tree_rect.w  - 140, y)
-    end
+  if not node:hasChildren() and self.show_dates then
+    local last_mod = node:getLastModification()
+    local daytime = _S.date_format.daymonth:format(os.date("%d", last_mod), tonumber(os.date("%m", last_mod)))
+    self.font:draw(canvas, daytime .. " " .. os.date("%Y %X", last_mod), x + self.tree_rect.w  - 140, y)
+  end
 end
 
 --! A file browser with a scrollbar. Used by load_game and save_game.
@@ -144,7 +162,7 @@ local col_scrollbar = {
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
 !param title (string) The desired title of the dialog.
 ]]
-function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
+function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -172,12 +190,9 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
     .lowered = true
 
   -- Initialize the tree control
-  local root = self.ui.app.savegame_dir
-  local treenode = LoadSaveFileTreeNode(root)
-  treenode.label = "Saves"
-  local control = LoadSaveTreeControl(treenode, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true)
+  self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
-      if (lfs.attributes(node.path, "mode") ~= "directory") then
+      if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
         local name = node.label
         while (node.parent.parent) do
           name = node.parent.label .. pathsep .. name
@@ -186,7 +201,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size)
         self:choiceMade(name)
       end
     end)
-  self:addWindow(control)
+  self:addWindow(self.control)
   
   -- Create the back button.
   self:addBevelPanel((h_size - 160) / 2, 340, 160, 30, self.col_bg):setLabel(_S.menu_list_window.back)

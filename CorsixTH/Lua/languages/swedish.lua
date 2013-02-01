@@ -270,6 +270,7 @@ options_window = {
   option_on = "På",
   option_off = "Av",
   data_location = "Speldatakälla",
+  font_location = "Typsnittsplats",
   width = "Bredd",
   height = "Höjd",
   resolution = "Upplösning",
@@ -287,6 +288,7 @@ tooltip.options_window = {
   width = "Fyll i önskad skärmbredd",
   height = "Fyll i önskad skärmhöjd",
   data_location = "Mapp som en installation av Theme Hospital finns i, krävs för att köra CorsixTH",
+  font_location = "För att kunna använda språk som inte fanns i originalspelet och som kräver fler Unicodebokstäver måste en typsnittsfil väljas. Annars går det inte att välja språk som till exempel ryska och kinesiska",
   fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
   language = "Text i spelet kommer att visas på det här språket",
   apply = "Tillämpa den valda upplösningen",
@@ -296,8 +298,13 @@ tooltip.options_window = {
   select_resolution = "Välj en ny upplösning",
   cancel = "Återvänd utan att ändra upplösning",
   original_path = "Den just nu valda mappen där Theme Hospital installerats",
-  browse = "Bläddra efter en annan Theme Hospital installation",
+  browse = "Bläddra efter en annan Theme Hospital installation. (Nuvarande: %1%)",
+  browse_font = "Bläddra efter en (annan) typsnittsfil. (Nuvarande: %1%)",
   back = "Stäng alternativmenyn",
+}
+
+font_location_window = {
+  caption = "Välj typsnitt (%1%)",
 }
 
 new_game_window = {
