@@ -24,7 +24,7 @@ class "UILoadGame" (UIFileBrowser)
 function UILoadGame:UILoadGame(ui, mode)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"
-  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".sav"), 295, treenode)
+  self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".sav"), 295, treenode, true)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -35,11 +35,18 @@ function UILoadGame:choiceMade(name)
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
 
-  local status, err = pcall(app.load, app, name .. ".sav")
+  local status, err = pcall(app.load, app, name)
   if not status then
     err = _S.errors.load_prefix .. err
     print(err)
     app:loadMainMenu()
     app.ui:addWindow(UIInformation(self.ui, {err}))
+  end
+end
+
+function UILoadGame:close()
+  UIResizable.close(self)
+  if self.mode == "menu" then
+    self.ui:addWindow(UIMainMenu(self.ui))
   end
 end

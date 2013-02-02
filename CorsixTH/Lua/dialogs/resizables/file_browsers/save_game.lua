@@ -44,7 +44,7 @@ local col_shadow = {
 function UISaveGame:UISaveGame(ui)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"
-  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265, treenode)
+  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265, treenode, true)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -69,7 +69,7 @@ function UISaveGame:confirmName()
     self:abortName()
     return
   end
-  self:trySave(filename)
+  self:trySave(filename .. ".sav")
 end
 
 --! Function called by clicking button of existing save #num
@@ -79,7 +79,7 @@ end
 
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
-  if lfs.attributes(self.ui.app.savegame_dir .. filename .. ".sav", "size") ~= nil then
+  if lfs.attributes(self.ui.app.savegame_dir .. filename, "size") ~= nil then
     self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
     self:doSave(filename)
@@ -88,7 +88,7 @@ end
 
 --! Actually do save the game with given filename.
 function UISaveGame:doSave(filename)
-  filename = filename .. ".sav"
+  filename = filename
   local ui = self.ui
   local app = ui.app
   self:close()

@@ -87,8 +87,14 @@ function Graphics:Graphics(app)
   -- from a sprite sheet.
   self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
   
+  self:loadFontFile()
+end
+
+--! Tries to load the font file given in the config file as unicode_font.
+--! If it is not found it tries to find one in the operating system.
+function Graphics:loadFontFile()
   -- Load the Unicode font, if there is one specified.
-  local font_file = app.config.unicode_font
+  local font_file = self.app.config.unicode_font
   if not font_file then
     -- Try a font which commonly comes with the operating system.
     local windir = os.getenv("WINDIR")
@@ -267,7 +273,7 @@ function Graphics:hasLanguageFont(font)
     return true
   else
     if not TH.freetype_font then
-      -- CorsixTH compiled with FreeType2 support, so even if suitable font
+      -- CorsixTH compiled without FreeType2 support, so even if suitable font
       -- file exists, it cannot be loaded or drawn.
       return false
     end

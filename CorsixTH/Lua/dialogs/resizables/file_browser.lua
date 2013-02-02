@@ -162,7 +162,7 @@ local col_scrollbar = {
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
 !param title (string) The desired title of the dialog.
 ]]
-function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root)
+function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -190,7 +190,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root)
     .lowered = true
 
   -- Initialize the tree control
-  self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true)
+  self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
       if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
         local name = node.label
@@ -215,12 +215,5 @@ end
 
 function UIFileBrowser:buttonBack()
   self:close()
-end
-
-function UIFileBrowser:close()
-  UIResizable.close(self)
-  if self.mode == "menu" then
-    self.ui:addWindow(UIMainMenu(self.ui))
-  end
 end
 

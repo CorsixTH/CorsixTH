@@ -61,6 +61,16 @@ function UIChooseFont:choiceMade(name)
   local app = TheApp
   app.config.unicode_font = name
   app:saveConfig()
-  debug.getregistry()._RESTART = true
-  app.running = false
+  app.gfx:loadFontFile()
+  if class.is(self.parent, UIOptions) then
+    self.parent:checkForAvailableLanguages()
+  end
+  self:close()
+end
+
+function UIChooseFont:close()
+  UIResizable.close(self)
+  if self.mode == "menu" then
+    self.ui:addWindow(UIOptions(self.ui, self.mode))
+  end
 end

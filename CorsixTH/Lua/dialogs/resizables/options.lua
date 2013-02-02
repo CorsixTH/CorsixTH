@@ -68,17 +68,9 @@ function UIOptions:UIOptions(ui, mode)
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
   self.default_button_sound = "selectx.wav"
+  self.app = app
   
-  -- Set up list of available languages
-  local langs = {}
-  for _, lang in ipairs(app.strings.languages) do
-    local font = app.strings:getFont(lang)
-    if app.gfx:hasLanguageFont(font) then
-      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
-      langs[#langs + 1] = {text = lang, font = font, tooltip = _S.tooltip.options_window.language_dropdown_item:format(lang)}
-    end
-  end
-  self.available_languages = langs
+  self:checkForAvailableLanguages()
   
   -- Set up list of resolutions
   self.available_resolutions = {
@@ -152,6 +144,20 @@ end
 local --[[persistable:options_window_language_button]] function language_button() end
 local --[[persistable:options_width_textbox_reset]] function width_textbox_reset() end
 local --[[persistable:options_height_textbox_reset]] function height_textbox_reset() end
+
+function UIOptions:checkForAvailableLanguages()
+  local app = self.app
+  -- Set up list of available languages
+  local langs = {}
+  for _, lang in ipairs(app.strings.languages) do
+    local font = app.strings:getFont(lang)
+    if app.gfx:hasLanguageFont(font) then
+      font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
+      langs[#langs + 1] = {text = lang, font = font, tooltip = _S.tooltip.options_window.language_dropdown_item:format(lang)}
+    end
+  end
+  self.available_languages = langs
+end
 
 function UIOptions:dropdownLanguage(activate)
   if activate then
