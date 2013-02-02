@@ -128,9 +128,9 @@ menu_options_game_speed = {
 }
 
 menu_options_warmth_colors = {
-  choice_1 = "   ROJO ",
-  choice_2 = "   AZUL, VERDE, ROJO ",
-  choice_3 = "   AMARILLO, NARANJA, ROJO ",
+  choice_1 = "  ROJO  ",
+  choice_2 = "  AZUL, VERDE, ROJO  ",
+  choice_3 = "  AMARILLO, NARANJA, ROJO  ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
@@ -213,7 +213,7 @@ dynamic_info.patient.actions.no_gp_available = "Esperando a que construyas una c
 dynamic_info.staff.actions.heading_for = "Dirigiéndose a %s"
 dynamic_info.staff.actions.fired = "Despedido"
 
-progress_report.free_build = "CONSTRUCCIÓN GRATUITA"
+progress_report.free_build = "CONSTRUCCIÓN LIBRE"
 
 fax = {
   choices = {
@@ -323,6 +323,7 @@ options_window = {
   apply = "Apply",
   cancel = "Cancel",
   data_location = "Ubicación de datos",
+  font_location = "Ubicación de fuentes",
   browse = "Buscar...",
   new_th_directory = "Aquí puedes especificar una nueva carpeta de instalación de Theme Hospital. En cuanto selecciones la nueva carpeta, el juego se reiniciará.",
   language = "Idioma del juego",
@@ -340,12 +341,19 @@ tooltip.options_window = {
   apply = "Aplica la resolución seleccionada.",
   cancel = "Vuelve sin cambiar la resolución.",
   data_location = "Indica la carpeta donde está instalado el Theme Hospital original, necesario para ejecutar CorsixTH.",
+  font_location = "Indica un archivo de fuente capaz de mostrar los caracteres Unicode que necesita tu idioma. Si no se especifica, no podrás seleccionar idiomas que necesiten más caracteres de los que dispone el juego original. Por ejemplo: Ruso y Chino.",
   language = "Selecciona el idioma de los textos.",
   select_language = "Selecciona el idioma del juego.",
   language_dropdown_item = "Utilizar el idioma %s.",
   original_path = "La carpeta donde está instalado el Theme Hospital original.",
-  browse = "Busca otra ubicación de una instalación de Theme Hospital.",
+  browse = "Busca otra ubicación de una instalación de Theme Hospital. (ubicación actual: %1%)",
+  browse_font = "Buscar otro archivo de fuentes (ubicación actual: %1%)",
+  no_font_specified = "¡No se ha especificado una ubicación!",
   back = "Cierra la ventana de opciones.",
+}
+
+font_location_window = {
+  caption = "Seleccionar fuente (%1%)",
 }
 
 handyman_window = {
@@ -354,7 +362,7 @@ handyman_window = {
 }
 
 tooltip.handyman_window = {
-  parcel_select = "La parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
+  parcel_select = "Parcela donde el bedel acepta encargos, haz clic para cambiar el ajuste"
 }
 
 new_game_window = {
@@ -486,16 +494,16 @@ cheats_window = {
 tooltip.cheats_window = {
   close = "Cerrar la ventana de trucos",
   cheats = {
-    money = "Añadir 10.000 dólares a tu cuenta bancaria.",
-    all_research = "Completar todas las investigaciones.",
-    emergency = "Crear una emergencia.",
-    vip = "Crear un VIP.",
-    earthquake = "Crear un terremoto.",
-    create_patient = "Crear un paciente en el borde del mapa.",
+    money = "Añade 10.000 dólares a tu cuenta bancaria.",
+    all_research = "Completa todas las investigaciones.",
+    emergency = "Crea una emergencia.",
+    vip = "Crea un VIP.",
+    earthquake = "Crea un terremoto.",
+    create_patient = "Crea un paciente en el borde del mapa.",
     end_month = "Avanza hasta el fin del mes actual.",
     end_year = "Avanza hasta el final del año actual.",
-    lose_level = "Perder el nivel actual.",
-    win_level = "Ganar el nivel actual.",
+    lose_level = "Hace que pierdas el nivel actual.",
+    win_level = "Hace que ganes el nivel actual.",
   }
 }
 
