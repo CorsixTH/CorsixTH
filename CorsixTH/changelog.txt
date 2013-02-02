@@ -69,9 +69,12 @@ occupy only the edge of a tile and the graph window.
   explodes or the player builds a research department.
 * Added: Keyboard shortcuts F1 - F9 for the fullscreen windows. They are NOT the
   same as in original TH but instead correspond to the order on the bottom panel.
-  
+* Added: Added possibility to choose font file in the options dialog.
+ 
 * Removed: Keyboard shortcuts F8 and F9 for debug fax and debug patients.
 
+* Change: Restructured options window to make it more consistent, less clutter-y
+  and smaller. 
 * Change: It is now possible to concentrate research on operating theatre
   diseases and redistribution of research is automatically done when
   a category has been completely researched.
@@ -81,9 +84,6 @@ occupy only the edge of a tile and the graph window.
   toggle buttons.
 * Change: Reordered entries of graphs menu to correspond with order in
   bottom panel.
-* Change: Restructured options window to make it more consistent, less clutter-y
-  and smaller.
- 
 * Fix: Colour selection algorithm for freetype fonts resulted in unreadable text
   on faxes for some languages.
 * Fix: When an unanswered fax became meaningless (e.g. if you built the 
@@ -117,10 +117,13 @@ occupy only the edge of a tile and the graph window.
 
 -- Translations --
 
+* Added: Brazilian Portuguese language
 * Change: The "utf8" prefix has been obsolete for some time and has been
   removed from all language files.
 
+-- Misc --
 
+* Change: Don't require debug mode to be able to dump strings and gamelog.
 
 -------------------------------------------------------------------------------
 Version 0.11 - released 2012-11-17
