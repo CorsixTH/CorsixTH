@@ -116,6 +116,7 @@ http://code.google.com/p/corsix-th/issues/list
 
 * Added: Print some info in the command prompt when the user wants to take
   a screenshot, so he can see if and why it failed.
+* Added: Screenshot functionality for OpenGL version.
 * Change: Screenshots get saved to a dedicated screenshot folder now, 
   which can be changed in the config.
 * Fix: Loading a game on startup where a fullscreen window was open would
