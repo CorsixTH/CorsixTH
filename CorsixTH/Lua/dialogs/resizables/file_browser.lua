@@ -88,7 +88,7 @@ function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_
   if show_dates then
     self.main_bar = self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name):makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name)
     self:addBevelPanel(width - 169, 1, 150, 13, col_bg):setLabel(_S.menu_list_window.save_date)
-    :makeButton(0, 0, width - 170, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date)
+    :makeButton(0, 0, 150, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date)
   end
   self.show_dates = show_dates
 end
