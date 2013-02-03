@@ -103,7 +103,7 @@ function World:World(app)
   self.original_savegame_version = app.savegame_version
   
   self:initLevel(app)
-  self.hospitals[1] = Hospital(self) -- Player's hospital
+  self.hospitals[1] = Hospital(self, app.config.player_name) -- Player's hospital
   self:initCompetitors()
   self:initRooms()
   -- Now the hospitals can concentrate their research.

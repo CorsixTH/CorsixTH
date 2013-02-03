@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 class "Hospital"
 
-function Hospital:Hospital(world)
+function Hospital:Hospital(world, name)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
@@ -39,7 +39,7 @@ function Hospital:Hospital(world)
       self.win_awards = true
     end
   end
-  self.name = os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
+  self.name = name or "PLAYER"
   -- TODO: Variate initial reputation etc based on level
   -- When playing in free build mode you don't care about money.
   self.balance = not world.free_build_mode and balance or 0

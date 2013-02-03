@@ -349,9 +349,10 @@ static int l_font_draw(lua_State *L)
     {
         pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
     }
+    lua_pushinteger(L, iY + iHeight);
     lua_pushinteger(L, iX + iWidth);
 
-    return 1;
+    return 2;
 }
 
 static int l_font_draw_wrapped(lua_State *L)

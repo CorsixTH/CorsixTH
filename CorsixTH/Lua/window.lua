@@ -244,12 +244,12 @@ end
 --!param limit (int) the maximum length in pixels the line should have
 --!return the possibly modified line
 function Panel:clipLine(line, limit)
-  local last_x = self.label_font:draw(nil, line, 0, 0)
+  local _, last_x = self.label_font:draw(nil, line, 0, 0)
   if last_x > limit then
     limit = limit - self.label_font:sizeOf("..._")
     while last_x > limit do
       line = line:sub(1, -2)
-      last_x = self.label_font:draw(nil, line, 0, 0)
+      _, last_x = self.label_font:draw(nil, line, 0, 0)
     end
     line = line .. "..."
   end
@@ -261,46 +261,44 @@ end
 --!param x x position to start drawing on
 --!param y y position to start drawing on
 --!param limit (nil or {int, int}) limit after which line and with character on that line to stop drawing
---!return for single line panels x, for multiline panels x and y end positions after drawing
+--!return y and x end positions after drawing
 function Panel:drawLabel(canvas, x, y, limit)
-  if type(self.label) == "table" then -- multiline label
-    local width
-    local next_y = y + self.y + 1
-    local last_x = x + self.x + 2
-    for i, line in ipairs(self.label) do
-      if limit and limit[1] == i then
-        line = line:sub(1, limit[2])
-      end
-      if self.auto_clip then
-        line = self:clipLine(line, self.w - 4)
-        last_x = self.label_font:draw(canvas, line, x + self.x + 2, next_y, self.w - 4)
-        local _, h = self.label_font:sizeOf("A")
-        next_y = next_y + h
-      else
-        local last_y = next_y
-        next_y, width = self.label_font:drawWrapped(canvas, line, x + self.x + 2, next_y, self.w - 4)
-        last_x = x + self.x + 2 + width
-        if not line:find("%S") then
-          -- Special handling for empty lines or lines with only space
-          local _, h = self.label_font:sizeOf("A")
-          next_y = last_y + h
-        end
-      end
-      if limit and limit[1] == i then
-        break
-      end
-    end
-    return last_x, next_y
-  else
-    local line = self.label
-    if limit then
+  local text = self.label
+  local multi_line = type(text) == "table"
+  local wrapped = not self.auto_clip
+  local center_y = false
+  
+  if not multi_line then
+    text = {text}
+    wrapped = false
+    center_y = true
+  end
+  
+  local next_y = y + self.y + 1
+  local last_x = x + self.x + 2
+  for i, line in ipairs(text) do
+    local old_y = next_y
+    if limit and limit[1] == i then
       line = line:sub(1, limit[2])
     end
-      if self.auto_clip then
-        line = self:clipLine(line, self.w - 4)
-      end
-    return self.label_font:draw(canvas, line, x + self.x + 2, y + self.y, self.w - 4, self.h, self.align)
+    if self.auto_clip then
+      line = self:clipLine(line, self.w - 4)
+    end
+    
+    if wrapped then
+      next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x + 2, old_y, self.w - 4, self.align)
+    else
+      next_y, last_x = self.label_font:draw(canvas, line, x + self.x + 2, old_y, self.w - 4, center_y and self.h or 0, self.align)
+    end
+    if not line:find("%S") then
+      -- Special handling for empty lines or lines with only space
+      next_y = self.label_font:draw(nil, "A", x + self.x + 2, old_y, self.w - 4, center_y and self.h or 0, self.align)
+    end
+    if limit and limit[1] == i then
+      break
+    end
   end
+  return next_y, last_x
 end
 
 function Panel:setPosition(x, y)
@@ -872,14 +870,14 @@ end
 function Textbox:drawCursor(canvas, x, y)
   if self.cursor_state then
     local col = TheApp.video:mapRGB(255, 255, 255)
-    local cursor_x, cursor_y = self.panel:drawLabel(nil, x, y, self.cursor_pos)
-    local w, h = self.panel.label_font:sizeOf("A")
-    cursor_y = cursor_y and cursor_y - 3 or self.panel.y + y + h -- cursor_y not returned for single line labels
+    local cursor_y, cursor_x = self.panel:drawLabel(nil, x, y, self.cursor_pos)
+    local w, h = self.panel.label_font:sizeOf("0")
+    cursor_y = cursor_y - 3
     -- Add x separation, but only if there was actually some text in this line.
     if self.text[self.cursor_pos[1]] ~= "" then
       cursor_x = cursor_x + 1 -- TODO font:getSeparation?
     end
-    canvas:drawRect(col, cursor_x, cursor_y, w, 2)
+    canvas:drawRect(col, cursor_x, cursor_y, w, 1)
   end
 end
 

@@ -323,6 +323,7 @@ tooltip.handyman_window = {
 
 new_game_window = {
   caption = "Campaign",
+  player_name = "Player name",
   option_on = "On",
   option_off = "Off",
   difficulty = "Difficulty",
@@ -335,6 +336,7 @@ new_game_window = {
 }
 
 tooltip.new_game_window = {
+  player_name = "Enter the name you wish to be referred to as in the game",
   difficulty = "Select the difficulty level you want to play the game in",
   easy = "If you are new to simulation games this is the option for you",
   medium = "This is the middle way to go if you are unsure what to choose",

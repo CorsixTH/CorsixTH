@@ -64,7 +64,7 @@ function UILuaConsole:UILuaConsole(ui)
   
   -- Textbox for entering code
   self.textbox = self:addBevelPanel(20, 20, 280, 140, col_textbox, col_highlight, col_shadow)
-    :setLabel("", app.gfx:loadBuiltinFont()):setTooltip(_S.tooltip.lua_console.textbox):setAutoClip(true)
+    :setLabel("", app.gfx:loadBuiltinFont(), "left"):setTooltip(_S.tooltip.lua_console.textbox):setAutoClip(true)
     :makeTextbox():allowedInput("all"):setText({""})
   
   self.textbox:setActive(true) -- activated by default

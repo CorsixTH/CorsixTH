@@ -39,6 +39,18 @@ local col_caption = {
   blue = 218,
 }
 
+local col_textbox = {
+  red = 0,
+  green = 0,
+  blue = 0,
+}
+
+local col_highlight = {
+  red = 174,
+  green = 166,
+  blue = 218,
+}
+
 local col_shadow = {
   red = 134,
   green = 126,
@@ -79,21 +91,45 @@ function UINewGame:UINewGame(ui)
   -- Title
   self:addBevelPanel(80, 10, 160, 20, col_caption):setLabel(_S.new_game_window.caption).lowered = true
 
+  -- Player Name
+  self.player_name = app.config.player_name or os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
+  self:addBevelPanel(20, 50, 140, 30, col_shadow, col_bg, col_bg)
+    :setLabel(_S.new_game_window.player_name).lowered = true
+  self.name_textbox = self:addBevelPanel(160, 50, 140, 30, col_textbox, col_highlight, col_shadow)
+    :setTooltip(_S.tooltip.new_game_window.player_name):setAutoClip(true)
+    :makeTextbox(
+    --[[persistable:new_game_confirm_name]]function()
+      local name = self.name_textbox.text
+      if not name:find("%S") then
+        self.name_textbox:setText(self.player_name)
+      else
+        self.player_name = name
+        self:saveToConfig()
+      end
+    end,
+    --[[persistable:new_game_abort_name]]function() self.name_textbox:setText(self.player_name) end)
+    :allowedInput({"alpha", "numbers", "misc"}):characterLimit(15):setText(self.player_name)
+
   -- Tutorial
-  self:addBevelPanel(20, 60, 140, 30, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 80, 140, 30, col_shadow, col_bg, col_bg)
     :setLabel(_S.new_game_window.tutorial).lowered = true
-  self:addBevelPanel(160, 60, 140, 30, col_bg):setLabel(_S.new_game_window.option_off)
+  self:addBevelPanel(160, 80, 140, 30, col_bg):setLabel(_S.new_game_window.option_off)
     :makeToggleButton(0, 0, 140, 30, nil, self.buttonTutorial):setTooltip(_S.tooltip.new_game_window.tutorial)
 
   -- Difficulty
-  self:addBevelPanel(20, 90, 140, 30, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 110, 140, 30, col_shadow, col_bg, col_bg)
     :setLabel(_S.new_game_window.difficulty).lowered = true
-  self:addBevelPanel(160, 90, 140, 30, col_bg):setLabel(self.available_difficulties[self.difficulty].text)
+  self:addBevelPanel(160, 110, 140, 30, col_bg):setLabel(self.available_difficulties[self.difficulty].text)
     :makeToggleButton(0, 0, 140, 30, nil, self.dropdownDifficulty):setTooltip(_S.tooltip.new_game_window.difficulty)
 
   -- Start and Cancel
   self:addBevelPanel(20, 160, 135, 40, col_bg):setLabel(_S.new_game_window.start):makeButton(0, 0, 160, 40, nil, self.buttonStart):setTooltip(_S.tooltip.new_game_window.start)
   self:addBevelPanel(165, 160, 135, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 160, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
+end
+
+function UINewGame:saveToConfig()
+  self.ui.app.config.player_name = self.player_name
+  self.ui.app:saveConfig()
 end
 
 function UINewGame:onMouseDown(button, x, y)
@@ -148,6 +184,7 @@ function UINewGame:selectDifficulty(number)
 end
 
 function UINewGame:buttonStart()
+  self.name_textbox:confirm()
   print("starting game with difficulty " .. self.available_difficulties[self.difficulty].param)
   self:startGame(self.available_difficulties[self.difficulty].param)
 end
@@ -161,6 +198,7 @@ function UINewGame:startGame(difficulty)
 end
 
 function UINewGame:buttonCancel()
+  self.name_textbox:confirm()
   self:close()
 end
 

@@ -297,7 +297,7 @@ int THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
     if(pResultingWidth != NULL)
         *pResultingWidth = iResultingWidth;
     if(pLastX != NULL)
-        *pLastX = iLastX;
+        *pLastX = iX + iLastX;
     return iY;
 }
 
