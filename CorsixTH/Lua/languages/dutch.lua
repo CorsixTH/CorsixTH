@@ -313,6 +313,11 @@ queue_window = {
   max_queue_size = "Max lengte",
   num_expected = "Verwacht",
 }
+
+font_location_window = {
+  caption = "Kies font (%1%)",
+}
+
 trophy_room = { --gebruik hiervoor meer formele tekst
   happy_vips = {
     trophies = {
