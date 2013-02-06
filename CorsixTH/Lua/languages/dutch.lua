@@ -292,6 +292,7 @@ options_window = {
   option_off = "Uit",
   resolution = "Resolutie",
   data_location = "Data locatie",
+  font_location = "Font locatie",
   apply = "Toepassen",
   language = "Taal",
   fullscreen = "Volledig scherm",
@@ -304,7 +305,7 @@ options_window = {
   new_th_directory = "Kies hier een andere Theme Hospital installatie map. Als je deze hebt gekozen wordt het spel opnieuw opgestart.",
 }
 load_game_window = {
-  caption = "Spel laden",
+  caption = "Spel laden (%1%)",
 }
 queue_window = {
   num_in_queue = "Rijlengte",
@@ -556,7 +557,7 @@ trophy_room = { --gebruik hiervoor meer formele tekst
   cash = "GELD",
 }
 save_game_window = {
-  caption = "Spel opslaan",
+  caption = "Spel opslaan (%1%)",
   new_save_game = "Nieuw bestand",
 }
 staff_class = {
@@ -1240,6 +1241,9 @@ tooltip = {
     back = "Sluit het instellingenvenster",
     original_path = "De gekozen locatie van de originele Theme Hospital installatie",
     browse = "Zoek een andere locatie van een originele Theme Hospital installatie (locatie is op dit moment: %1%)",
+	font_location = "Locatie van het font bestand dat Unicode tekens kan weergeven, welke vereist is bij je taal. Wanneer dit niet gekozen is, zul je niet in staat zijn om talen te kiezen welke meer tekens nodig hebben dan het orginele spel kan leveren. Voorbeelden: Russisch en Chinees.",
+	browse_font = "Zoek naar een ander font bestand (locatie op dit moment: %1%)", 
+    no_font_specified = "Geen locatie geselecteerd!", 
   },
   research_policy = {
     research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
