@@ -136,7 +136,7 @@ LangString options_title      ${LANG_POLISH} "Dodatkowe opcje"
 LangString options_subtitle   ${LANG_POLISH} "Wybierz katalog z oryginalną grą."
 LangString save_in_appdata    ${LANG_POLISH} "Zapisz wszelkie dane z grą w katalogu %APPDATA% (Zalecane)"
 LangString remove_saves       ${LANG_POLISH} "Czy chcesz zachować zapisane gry?"
-LangString overwrite_install  ${LANG_POLISH} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString overwrite_install  ${LANG_POLISH} "Wygląda na to, że próbujesz zainstalować w miejsce już istniejącej instalacji CorsixTH. Wszelkie zmiany dokonane w plikach mogą zostać utracone. Kontynuować?"
 
 LangString install_language   ${LANG_PORTUGUESE} "Portuguese"
 LangString original_text      ${LANG_PORTUGUESE} "De forma a poderes jogar precisas do jogo original instalado. Por favor diz-nos onde está instalado aqui."
