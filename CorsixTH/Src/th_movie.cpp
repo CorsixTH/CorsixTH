@@ -297,6 +297,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, NULL, NULL, NULL);
         if(m_pSwsContext == NULL)
         {
+            SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
             std::cerr << "Failed to initialize SwsContext";
             return 1;
         }
