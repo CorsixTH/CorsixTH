@@ -47,16 +47,46 @@ public:
     SDL_Overlay *m_pOverlay;
     int m_iX, m_iY, m_iWidth, m_iHeight;
     double m_dPts;
-    bool m_fAllocated;
-    bool m_fReallocate;
     PixelFormat m_pixelFormat;
     SDL_Surface *m_pSurface;
-
+    SDL_mutex *m_pMutex;
+    SDL_cond *m_pCond;
+    
     THMoviePicture();
     ~THMoviePicture();
-    void allocate();
+    void allocate(int iX, int iY, int iWidth, int iHeight);
     void deallocate();
     void draw();
+};
+
+class THMoviePictureBuffer
+{
+public:
+    THMoviePictureBuffer();
+    ~THMoviePictureBuffer();
+
+    //NB: The following functions are called by the main program thread
+    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void deallocate();
+    void release();
+    bool advance();
+    void draw();
+    bool empty();
+    double getCurrentPts();
+    double getNextPts();
+
+    //NB: These functions are called by a second thread
+    THMoviePicture* getPictureForWrite();
+    void finishedWrite();
+    bool full();
+protected:
+    SDL_mutex *m_pMutex;
+    SDL_cond *m_pCond;
+    THMoviePicture m_aPictureQueue[PICTURE_BUFFER_SIZE];
+    int m_iWriteIndex;
+    int m_iReadIndex;
+    int m_iCount;
+    bool m_fAllocated;
 };
 
 class THAVPacketQueue
@@ -96,7 +126,8 @@ public:
     void refresh();
     void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
     void runVideo();
-    void allocatePicture();
+    void deallocatePictureBuffer();
+    void allocatePictureBuffer();
     void readStreams();
 protected:
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -106,7 +137,6 @@ protected:
     int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
     int queuePicture(AVFrame *pFrame, double dPts);
-    void advancePictureQueue();
 
     int m_iX;
     int m_iY;
@@ -123,19 +153,14 @@ protected:
 
     THAVPacketQueue *m_pVideoQueue;
 
-    SDL_mutex *m_pPictureQueueMutex;
-    SDL_cond *m_pPictureQueueCond;
-    THMoviePicture m_aPictureQueue[PICTURE_BUFFER_SIZE];
-    int m_iPictureQueueWriteIndex;
-    int m_iPictureQueueReadIndex;
-    int m_iPictureQueueSize;
-
     //tick when video was started in ms
     int m_iStartTime;
     int m_iCurSyncPtsSystemTime;
     double m_iCurSyncPts;
 
     THAVPacketQueue *m_pAudioQueue;
+
+    THMoviePictureBuffer *m_pMoviePictureBuffer;
 
     //audio buffer
     int m_iAudioBufferSize;

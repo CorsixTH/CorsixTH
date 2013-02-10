@@ -49,7 +49,6 @@ function App:App()
     motion = self.onMouseMove,
     active = self.onWindowActive,
     music_over = self.onMusicOver,
-    movie_allocate_picture = self.onMovieAllocatePicture,
     movie_over = self.onMovieOver
   }
   self.strings = {}
@@ -848,10 +847,6 @@ end
 
 function App:onMusicOver(...)
   return self.audio:onMusicOver(...)
-end
-
-function App:onMovieAllocatePicture(...)
-  return self.moviePlayer:onMovieAllocatePicture(...)
 end
 
 function App:onMovieOver(...)

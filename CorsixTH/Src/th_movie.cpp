@@ -59,17 +59,14 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
     pMovie->copyAudioToStream((Uint8*)pStream, iStreamSize);
 }
 
-//NOTE: THMoviePicture will leak some memory if the surface changes before the
-//overlay is freed. We cannot free the overlay at this point because it crashes
-//on linux.
-//TODO: Attempt to free the overlay before any surface changes. The code
-//probably needs to be refactored to make that possible without deadlock.
 THMoviePicture::THMoviePicture():
-    m_fAllocated(false),
     m_pOverlay(NULL),
-    m_fReallocate(false),
     m_pixelFormat(PIX_FMT_YUV420P),
-    m_pSurface(NULL) {}
+    m_pSurface(NULL)
+{
+    m_pMutex = SDL_CreateMutex();
+    m_pCond = SDL_CreateCond();
+}
 
 THMoviePicture::~THMoviePicture()
 {
@@ -78,16 +75,26 @@ THMoviePicture::~THMoviePicture()
         SDL_FreeYUVOverlay(m_pOverlay);
         m_pOverlay = NULL;
     }
+
+    SDL_DestroyMutex(m_pMutex);
+    SDL_DestroyCond(m_pCond);
 }
 
-void THMoviePicture::allocate()
+void THMoviePicture::allocate(int iX, int iY, int iWidth, int iHeight)
 {
+    m_iX = iX;
+    m_iY = iY;
+    m_iWidth = iWidth;
+    m_iHeight = iHeight;
     SDL_Surface* pSurface = SDL_GetVideoSurface();
-    if(m_pOverlay && m_pSurface == pSurface)
+    if(m_pOverlay)
     {
-        SDL_FreeYUVOverlay(m_pOverlay);
+        if(m_pSurface == pSurface)
+        {
+            SDL_FreeYUVOverlay(m_pOverlay);
+        }
+        std::cerr << "THMovie overlay should be deallocated before being allocated!";
     }
-
     m_pSurface = pSurface;
     m_pOverlay = SDL_CreateYUVOverlay(m_iWidth, m_iHeight, SDL_YV12_OVERLAY, pSurface);
     if(m_pOverlay == NULL || m_pOverlay->pitches[0] < m_iWidth)
@@ -99,9 +106,16 @@ void THMoviePicture::allocate()
 
 void THMoviePicture::deallocate()
 {
-    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
+    if(m_pOverlay)
     {
-        SDL_FreeYUVOverlay(m_pOverlay);
+        if(m_pSurface == SDL_GetVideoSurface())
+        {
+            SDL_FreeYUVOverlay(m_pOverlay);
+        }
+        else
+        {
+            std::cerr << "THMovie overlay must be deallocated before a surface change";
+        }
         m_pOverlay = NULL;
     }
 }
@@ -123,6 +137,143 @@ void THMoviePicture::draw()
             std::cerr << "Error displaying overlay: " << SDL_GetError();
         }
     }
+}
+
+THMoviePictureBuffer::THMoviePictureBuffer():
+    m_iCount(0),
+    m_iReadIndex(0),
+    m_iWriteIndex(0)
+{
+    m_pMutex = SDL_CreateMutex();
+    m_pCond = SDL_CreateCond();
+}
+
+THMoviePictureBuffer::~THMoviePictureBuffer()
+{
+    SDL_DestroyCond(m_pCond);
+    SDL_DestroyMutex(m_pMutex);
+}
+
+void THMoviePictureBuffer::release()
+{
+    SDL_LockMutex(m_pMutex);
+    SDL_CondSignal(m_pCond);
+    SDL_UnlockMutex(m_pMutex);
+}
+
+void THMoviePictureBuffer::allocate(int iX, int iY, int iWidth, int iHeight)
+{
+    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    {
+        m_aPictureQueue[i].allocate(iX, iY, iWidth, iHeight);
+    }
+    m_iReadIndex = 0;
+    m_iWriteIndex = 0;
+    SDL_LockMutex(m_pMutex);
+    m_iCount = 0;
+    m_fAllocated = true;
+    SDL_CondSignal(m_pCond);
+    SDL_UnlockMutex(m_pMutex);
+}
+
+void THMoviePictureBuffer::deallocate()
+{
+    SDL_LockMutex(m_pMutex);
+    m_fAllocated = false;
+    SDL_UnlockMutex(m_pMutex);
+    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    {
+        SDL_LockMutex(m_aPictureQueue[i].m_pMutex);
+        m_aPictureQueue[i].deallocate();
+        SDL_UnlockMutex(m_aPictureQueue[i].m_pMutex);
+    }
+}
+
+void THMoviePictureBuffer::draw()
+{
+    if(!empty())
+    {
+        SDL_LockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
+        m_aPictureQueue[m_iReadIndex].draw();
+        SDL_UnlockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
+    }
+}
+
+double THMoviePictureBuffer::getCurrentPts()
+{
+    if(empty()) { return 0; }
+    return m_aPictureQueue[m_iReadIndex].m_dPts;
+}
+
+double THMoviePictureBuffer::getNextPts()
+{
+    if(empty() || m_iCount < 2) { return 0; }
+    return m_aPictureQueue[(m_iReadIndex+1)%PICTURE_BUFFER_SIZE].m_dPts;
+}
+
+bool THMoviePictureBuffer::advance()
+{
+    if(empty()) { return false; }
+
+    m_iReadIndex++;
+    if(m_iReadIndex == PICTURE_BUFFER_SIZE)
+    {
+        m_iReadIndex = 0;
+    }
+
+    SDL_LockMutex(m_pMutex);
+    m_iCount--;
+    SDL_CondSignal(m_pCond);
+    SDL_UnlockMutex(m_pMutex);
+
+    return true;
+}
+
+bool THMoviePictureBuffer::empty()
+{
+    return (!m_fAllocated || m_iCount == 0);
+}
+
+bool THMoviePictureBuffer::full()
+{
+    return (!m_fAllocated || m_iCount == PICTURE_BUFFER_SIZE);
+}
+
+THMoviePicture* THMoviePictureBuffer::getPictureForWrite()
+{
+    THMoviePicture* pMoviePicture;
+    SDL_LockMutex(m_pMutex);
+    if(full())
+    {
+        SDL_CondWait(m_pCond, m_pMutex);
+    }
+
+    if(full())
+    {
+        pMoviePicture = NULL;
+    }
+    else
+    {
+        pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
+        SDL_LockMutex(pMoviePicture->m_pMutex);
+    }
+    SDL_UnlockMutex(m_pMutex);
+
+    return pMoviePicture;
+}
+
+void THMoviePictureBuffer::finishedWrite()
+{
+    SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
+
+    m_iWriteIndex++;
+    if(m_iWriteIndex == PICTURE_BUFFER_SIZE)
+    {
+        m_iWriteIndex = 0;
+    }
+    SDL_LockMutex(m_pMutex);
+    m_iCount++;
+    SDL_UnlockMutex(m_pMutex);
 }
 
 THAVPacketQueue::THAVPacketQueue():
@@ -237,8 +388,7 @@ THMovie::THMovie():
     m_flushPacket->data = (uint8_t *)"FLUSH";
     m_flushPacket->size = 5;
 
-    m_pPictureQueueCond = SDL_CreateCond();
-    m_pPictureQueueMutex = SDL_CreateMutex();
+    m_pMoviePictureBuffer = new THMoviePictureBuffer();
 
     m_pbChunkBuffer = (Uint8*)malloc(AUDIO_BUFFER_SIZE);
     memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
@@ -251,8 +401,6 @@ THMovie::~THMovie()
     av_free_packet(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
-    SDL_DestroyCond(m_pPictureQueueCond);
-    SDL_DestroyMutex(m_pPictureQueueMutex);
     sws_freeContext(m_pSwsContext);
 }
 
@@ -339,9 +487,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
     m_frame = NULL;
 
     m_pVideoQueue = new THAVPacketQueue();
-    m_iPictureQueueSize = 0;
-    m_iPictureQueueReadIndex = 0;
-    m_iPictureQueueWriteIndex = 0;
+    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
 
     m_pAudioPacket = NULL;
     m_iAudioPacketSize = 0;
@@ -408,9 +554,7 @@ void THMovie::unload()
         m_pVideoQueue->release();
     }
 
-    SDL_LockMutex(m_pPictureQueueMutex);
-    SDL_CondSignal(m_pPictureQueueCond);
-    SDL_UnlockMutex(m_pPictureQueueMutex);
+    m_pMoviePictureBuffer->release();
 
     if(m_pStreamThread)
     {
@@ -447,11 +591,7 @@ void THMovie::unload()
         m_pVideoQueue = NULL;
     }
 
-    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
-    {
-        m_aPictureQueue[i].deallocate();
-        m_aPictureQueue[i].m_fAllocated = false;
-    }
+    m_pMoviePictureBuffer->deallocate();
 
     if(m_iChannel >= 0)
     {
@@ -539,7 +679,7 @@ void THMovie::readStreams()
 
     while(!m_fAborting)
     {
-        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_iPictureQueueSize == 0)
+        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_pMoviePictureBuffer->empty())
         {
             break;
         }
@@ -573,50 +713,30 @@ void THMovie::clearLastError()
 
 void THMovie::refresh()
 {
-    THMoviePicture* pMoviePicture;
-
-    if(m_iPictureQueueSize > 0)
+    if(!m_pMoviePictureBuffer->empty())
     {
-        pMoviePicture = &(m_aPictureQueue[m_iPictureQueueReadIndex]);
-        double curTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
-
+        double dCurTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
+        double dCurPts = m_pMoviePictureBuffer->getCurrentPts();
+        double dNextPts = m_pMoviePictureBuffer->getNextPts();
+        
         //don't play a frame too early
-        if(pMoviePicture->m_dPts > 0)
+        if(dCurPts > 0)
         {
-            if(pMoviePicture->m_dPts * 1000.0 > curTime)
+            if(dCurPts * 1000.0 > dCurTime)
             {
                 return;
             }
         }
 
-        if(m_iPictureQueueSize > 1)
+        //if we have another frame and it's time has already passed, drop the current frame
+        if(dNextPts > 0 && dNextPts * 1000.0 < dCurTime)
         {
-            THMoviePicture* nextPicture = &(m_aPictureQueue[(m_iPictureQueueReadIndex + 1) % PICTURE_BUFFER_SIZE]);
-
-            //if we have another frame and it's time has already passed, drop the current frame
-            if(nextPicture->m_dPts > 0 && nextPicture->m_dPts * 1000.0 < curTime)
-            {
-                advancePictureQueue();
-            }
+            m_pMoviePictureBuffer->advance();
         }
 
-        pMoviePicture->draw();
-        advancePictureQueue();
+        m_pMoviePictureBuffer->draw();
+        m_pMoviePictureBuffer->advance();
     }
-}
-
-void THMovie::advancePictureQueue()
-{
-    m_iPictureQueueReadIndex++;
-    if(m_iPictureQueueReadIndex == PICTURE_BUFFER_SIZE)
-    {
-        m_iPictureQueueReadIndex = 0;
-    }
-
-    SDL_LockMutex(m_pPictureQueueMutex);
-    m_iPictureQueueSize--;
-    SDL_CondSignal(m_pPictureQueueCond);
-    SDL_UnlockMutex(m_pPictureQueueMutex);
 }
 
 void THMovie::runVideo()
@@ -701,55 +821,12 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
 
 int THMovie::queuePicture(AVFrame *pFrame, double dPts)
 {
-    SDL_LockMutex(m_pPictureQueueMutex);
-    while(!m_fAborting && m_iPictureQueueSize >= PICTURE_BUFFER_SIZE - 2)
+    THMoviePicture* pMoviePicture = NULL;
+    while(pMoviePicture == NULL && !m_fAborting)
     {
-        SDL_CondWait(m_pPictureQueueCond, m_pPictureQueueMutex);
+        pMoviePicture = m_pMoviePictureBuffer->getPictureForWrite();
     }
-    SDL_UnlockMutex(m_pPictureQueueMutex);
-
-    if(m_fAborting)
-    {
-        return -1;
-    }
-
-    THMoviePicture* pMoviePicture = &m_aPictureQueue[m_iPictureQueueWriteIndex];
-
-    //check if overlay needs to be allocated or changed
-    if(!pMoviePicture->m_pOverlay ||
-        !pMoviePicture->m_fAllocated ||
-        pMoviePicture->m_fReallocate ||
-        pMoviePicture->m_iWidth != m_iWidth ||
-        pMoviePicture->m_iHeight != m_iHeight ||
-        pMoviePicture->m_pSurface != SDL_GetVideoSurface())
-    {
-        SDL_Event reallocEvent;
-
-        pMoviePicture->m_fAllocated = false;
-        pMoviePicture->m_fReallocate = false;
-        pMoviePicture->m_iWidth = m_iWidth;
-        pMoviePicture->m_iHeight = m_iHeight;
-        pMoviePicture->m_iX = m_iX;
-        pMoviePicture->m_iY = m_iY;
-
-        //the actual allocation needs to be done on the main thread or else puppies may die.
-        reallocEvent.type = SDL_USEREVENT_ALLOCATE_MOVIE_PICTURE;
-        reallocEvent.user.data1 = this;
-        SDL_PushEvent(&reallocEvent);
-
-        //wait for the main tread
-        SDL_LockMutex(m_pPictureQueueMutex);
-        while(!m_fAborting && !pMoviePicture->m_fAllocated)
-        {
-            SDL_CondWait(m_pPictureQueueCond, m_pPictureQueueMutex);
-        }
-        SDL_UnlockMutex(m_pPictureQueueMutex);
-
-        if(m_fAborting)
-        {
-            return -1;
-        }
-    }
+    if(m_fAborting) { return -1; }
 
     if(pMoviePicture->m_pOverlay)
     {
@@ -778,28 +855,19 @@ int THMovie::queuePicture(AVFrame *pFrame, double dPts)
 
         pMoviePicture->m_dPts = dPts;
 
-        m_iPictureQueueWriteIndex++;
-        if(m_iPictureQueueWriteIndex == PICTURE_BUFFER_SIZE)
-        {
-            m_iPictureQueueWriteIndex = 0;
-        }
-        SDL_LockMutex(m_pPictureQueueMutex);
-        m_iPictureQueueSize++;
-        SDL_UnlockMutex(m_pPictureQueueMutex);
+        m_pMoviePictureBuffer->finishedWrite();
     }
     return 0;
 }
 
-void THMovie::allocatePicture()
+void THMovie::allocatePictureBuffer()
 {
-    THMoviePicture *pMoviePicture = &m_aPictureQueue[m_iPictureQueueWriteIndex];
+    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
+}
 
-    pMoviePicture->allocate();
-
-    SDL_LockMutex(m_pPictureQueueMutex);
-    pMoviePicture->m_fAllocated = true;
-    SDL_CondSignal(m_pPictureQueueCond);
-    SDL_UnlockMutex(m_pPictureQueueMutex);
+void THMovie::deallocatePictureBuffer()
+{
+    m_pMoviePictureBuffer->deallocate();
 }
 
 void THMovie::copyAudioToStream(Uint8 *pbStream, int iStreamSize)
@@ -844,7 +912,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
     bool fNewPacket = false;
     bool fFlushComplete = false;
     double dClockPts;
-    int iStreamPts;
+    int64_t iStreamPts;
 
     while(!iGotFrame && !m_fAborting)
     {
@@ -994,7 +1062,8 @@ void THMovie::clearLastError() {}
 void THMovie::refresh() {}
 void THMovie::copyAudioToStream(Uint8 *stream, int length) {}
 void THMovie::runVideo() {}
-void THMovie::allocatePicture() {}
+void THMovie::allocatePictureBuffer() {}
+void THMovie::deallocatePictureBuffer() {}
 void THMovie::readStreams() {}
 #endif //CORSIX_TH_USE_FFMPEG
 

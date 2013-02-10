@@ -214,10 +214,6 @@ static int l_mainloop(lua_State *L)
                 do_timer = true;
                 nargs = 0;
                 break;
-            case SDL_USEREVENT_ALLOCATE_MOVIE_PICTURE:
-                lua_pushliteral(dispatcher, "movie_allocate_picture");
-                nargs = 1;
-                break;
             case SDL_USEREVENT_MOVIE_OVER:
                 lua_pushliteral(dispatcher, "movie_over");
                 nargs = 1;

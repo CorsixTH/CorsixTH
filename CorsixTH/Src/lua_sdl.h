@@ -34,10 +34,8 @@ SOFTWARE.
 #define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
 // SDL_USEREVENT_CPCALL - calls lua_cpcall with SDL_Event user.data1 and data2
 #define SDL_USEREVENT_CPCALL (SDL_USEREVENT + 2)
-// SDL_USEREVENT_ALLOCATE_MOVIE_PICTURE - tells the engine that a picture in the movie picture buffer needs to be allocated
-#define SDL_USEREVENT_ALLOCATE_MOVIE_PICTURE (SDL_USEREVENT + 3)
 // SDL USEREVENT_MOVIE_OVER - informs script of THMovie movie finishing
-#define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 4)
+#define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 3)
 
 int luaopen_sdl(lua_State *L);
 

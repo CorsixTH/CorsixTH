@@ -96,10 +96,17 @@ static int l_movie_requires_video_reset(lua_State *L)
     return 1;
 }
 
-static int l_movie_allocate_picture(lua_State *L)
+static int l_movie_allocate_picture_buffer(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->allocatePicture();
+    pMovie->allocatePictureBuffer();
+    return 0;
+}
+
+static int l_movie_deallocate_picture_buffer(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    pMovie->deallocatePictureBuffer();
     return 0;
 }
 
@@ -122,7 +129,8 @@ void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
     luaT_class(THMovie, l_movie_new, "moviePlayer", MT_Movie);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_stop, "stop");
-    luaT_setfunction(l_movie_allocate_picture, "allocatePicture");
+    luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
+    luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");
     luaT_setfunction(l_movie_refresh, "refresh");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");

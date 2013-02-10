@@ -201,8 +201,14 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
   self.playing = true
 end
 
-function MoviePlayer:onMovieAllocatePicture()
-  self.moviePlayer:allocatePicture()
+--NB: Call after any changes to TH.surface
+function MoviePlayer:allocatePictureBuffer()
+  self.moviePlayer:allocatePictureBuffer()
+end
+
+--NB: Call before any changes to TH.surface
+function MoviePlayer:deallocatePictureBuffer()
+  self.moviePlayer:deallocatePictureBuffer()
 end
 
 function MoviePlayer:onMovieOver()

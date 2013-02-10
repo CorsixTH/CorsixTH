@@ -514,6 +514,7 @@ function UI:toggleFullscreen()
   -- Toggle Fullscreen mode
   toggleMode(index)
   self.app.video:endFrame()
+  self.app.moviePlayer:deallocatePictureBuffer();
   
   local success = true
   local video = TH.surface(self.app.config.width, self.app.config.height, unpack(modes))
@@ -528,6 +529,7 @@ function UI:toggleFullscreen()
   
   self.app.video = video -- Apply changes
   self.app.gfx:updateTarget(self.app.video)
+  self.app.moviePlayer:allocatePictureBuffer();
   self.app.video:startFrame()
   -- Redraw cursor
   local cursor = self.cursor
