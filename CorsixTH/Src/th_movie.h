@@ -68,7 +68,8 @@ public:
     //NB: The following functions are called by the main program thread
     void allocate(int iX, int iY, int iWidth, int iHeight);
     void deallocate();
-    void release();
+    void abort();
+    void reset();
     bool advance();
     void draw();
     bool empty();
@@ -76,8 +77,7 @@ public:
     double getNextPts();
 
     //NB: These functions are called by a second thread
-    THMoviePicture* getPictureForWrite();
-    void finishedWrite();
+    int write(AVFrame* pFrame, double dPts);
     bool full();
 protected:
     SDL_mutex *m_pMutex;
@@ -87,6 +87,8 @@ protected:
     int m_iReadIndex;
     int m_iCount;
     bool m_fAllocated;
+    bool m_fAborting;
+    SwsContext* m_pSwsContext;
 };
 
 class THAVPacketQueue
@@ -185,7 +187,6 @@ protected:
     AVPacket* m_flushPacket;
 
     AVFrame* m_frame;
-    SwsContext* m_pSwsContext;
 
     SDL_Thread* m_pStreamThread;
     SDL_Thread* m_pRefreshThread;

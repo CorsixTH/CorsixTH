@@ -142,7 +142,9 @@ void THMoviePicture::draw()
 THMoviePictureBuffer::THMoviePictureBuffer():
     m_iCount(0),
     m_iReadIndex(0),
-    m_iWriteIndex(0)
+    m_iWriteIndex(0),
+    m_pSwsContext(NULL),
+    m_fAborting(false)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -152,13 +154,20 @@ THMoviePictureBuffer::~THMoviePictureBuffer()
 {
     SDL_DestroyCond(m_pCond);
     SDL_DestroyMutex(m_pMutex);
+    sws_freeContext(m_pSwsContext);
 }
 
-void THMoviePictureBuffer::release()
+void THMoviePictureBuffer::abort()
 {
+    m_fAborting = true;
     SDL_LockMutex(m_pMutex);
     SDL_CondSignal(m_pCond);
     SDL_UnlockMutex(m_pMutex);
+}
+
+void THMoviePictureBuffer::reset()
+{
+    m_fAborting = false;
 }
 
 void THMoviePictureBuffer::allocate(int iX, int iY, int iWidth, int iHeight)
@@ -167,8 +176,9 @@ void THMoviePictureBuffer::allocate(int iX, int iY, int iWidth, int iHeight)
     {
         m_aPictureQueue[i].allocate(iX, iY, iWidth, iHeight);
     }
-    m_iReadIndex = 0;
-    m_iWriteIndex = 0;
+    //Do not change m_iWriteIndex, it's used by the other thread.
+    //m_iReadIndex is only used in this thread.
+    m_iReadIndex = m_iWriteIndex;
     SDL_LockMutex(m_pMutex);
     m_iCount = 0;
     m_fAllocated = true;
@@ -207,8 +217,18 @@ double THMoviePictureBuffer::getCurrentPts()
 
 double THMoviePictureBuffer::getNextPts()
 {
-    if(empty() || m_iCount < 2) { return 0; }
-    return m_aPictureQueue[(m_iReadIndex+1)%PICTURE_BUFFER_SIZE].m_dPts;
+    double nextPts;
+    SDL_LockMutex(m_pMutex);
+    if(!m_fAllocated || m_iCount < 2)
+    {
+        nextPts = 0;
+    }
+    else
+    {
+        nextPts = m_aPictureQueue[(m_iReadIndex+1)%PICTURE_BUFFER_SIZE].m_dPts;
+    }
+    SDL_UnlockMutex(m_pMutex);
+    return nextPts;
 }
 
 bool THMoviePictureBuffer::advance()
@@ -231,49 +251,72 @@ bool THMoviePictureBuffer::advance()
 
 bool THMoviePictureBuffer::empty()
 {
-    return (!m_fAllocated || m_iCount == 0);
+    bool empty;
+    SDL_LockMutex(m_pMutex);
+    empty = (!m_fAllocated || m_iCount == 0);
+    SDL_UnlockMutex(m_pMutex);
+    return empty;
 }
 
 bool THMoviePictureBuffer::full()
 {
-    return (!m_fAllocated || m_iCount == PICTURE_BUFFER_SIZE);
+    bool full;
+    SDL_LockMutex(m_pMutex);
+    full = (!m_fAllocated || m_iCount == PICTURE_BUFFER_SIZE);
+    SDL_UnlockMutex(m_pMutex);
+    return full;
 }
 
-THMoviePicture* THMoviePictureBuffer::getPictureForWrite()
+int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 {
-    THMoviePicture* pMoviePicture;
+    THMoviePicture* pMoviePicture = NULL;
     SDL_LockMutex(m_pMutex);
-    if(full())
+    while(full() && !m_fAborting)
     {
         SDL_CondWait(m_pCond, m_pMutex);
     }
-
-    if(full())
-    {
-        pMoviePicture = NULL;
-    }
-    else
-    {
-        pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
-        SDL_LockMutex(pMoviePicture->m_pMutex);
-    }
     SDL_UnlockMutex(m_pMutex);
+    if(m_fAborting) { return -1; }
 
-    return pMoviePicture;
-}
+    pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
+    SDL_LockMutex(pMoviePicture->m_pMutex);
 
-void THMoviePictureBuffer::finishedWrite()
-{
-    SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
-
-    m_iWriteIndex++;
-    if(m_iWriteIndex == PICTURE_BUFFER_SIZE)
+    if(pMoviePicture->m_pOverlay)
     {
-        m_iWriteIndex = 0;
+        AVPicture picture = {};
+
+        SDL_LockYUVOverlay(pMoviePicture->m_pOverlay);
+        picture.data[0] = pMoviePicture->m_pOverlay->pixels[0];
+        picture.data[1] = pMoviePicture->m_pOverlay->pixels[2];
+        picture.data[2] = pMoviePicture->m_pOverlay->pixels[1];
+
+        picture.linesize[0] = pMoviePicture->m_pOverlay->pitches[0];
+        picture.linesize[1] = pMoviePicture->m_pOverlay->pitches[2];
+        picture.linesize[2] = pMoviePicture->m_pOverlay->pitches[1];
+
+        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, NULL, NULL, NULL);
+        if(m_pSwsContext == NULL)
+        {
+            std::cerr << "Failed to initialize SwsContext";
+            return 1;
+        }
+
+        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, picture.data, picture.linesize);
+        SDL_UnlockYUVOverlay(pMoviePicture->m_pOverlay);
+
+        pMoviePicture->m_dPts = dPts;
+
+        SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
+        m_iWriteIndex++;
+        if(m_iWriteIndex == PICTURE_BUFFER_SIZE)
+        {
+            m_iWriteIndex = 0;
+        }
+        SDL_LockMutex(m_pMutex);
+        m_iCount++;
+        SDL_UnlockMutex(m_pMutex);
     }
-    SDL_LockMutex(m_pMutex);
-    m_iCount++;
-    SDL_UnlockMutex(m_pMutex);
+    return 0;
 }
 
 THAVPacketQueue::THAVPacketQueue():
@@ -371,7 +414,6 @@ THMovie::THMovie():
     m_iChannel(-1),
     m_pVideoQueue(NULL),
     m_pAudioQueue(NULL),
-    m_pSwsContext(NULL),
     m_pChunk(NULL),
     m_frame(NULL),
     m_pStreamThread(NULL),
@@ -401,7 +443,6 @@ THMovie::~THMovie()
     av_free_packet(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
-    sws_freeContext(m_pSwsContext);
 }
 
 bool THMovie::moviesEnabled()
@@ -487,6 +528,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
     m_frame = NULL;
 
     m_pVideoQueue = new THAVPacketQueue();
+    m_pMoviePictureBuffer->reset();
     m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
 
     m_pAudioPacket = NULL;
@@ -553,8 +595,7 @@ void THMovie::unload()
     {
         m_pVideoQueue->release();
     }
-
-    m_pMoviePictureBuffer->release();
+    m_pMoviePictureBuffer->abort();
 
     if(m_pStreamThread)
     {
@@ -761,7 +802,7 @@ void THMovie::runVideo()
         }
 
         dClockPts = iStreamPts * av_q2d(m_pVideoCodecContext->time_base);
-        iError = queuePicture(pFrame, dClockPts);
+        iError = m_pMoviePictureBuffer->write(pFrame, dClockPts);
 
         if(iError < 0)
         {
@@ -815,47 +856,6 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
             *piPts = 0;
         }
         return iError;
-    }
-    return 0;
-}
-
-int THMovie::queuePicture(AVFrame *pFrame, double dPts)
-{
-    THMoviePicture* pMoviePicture = NULL;
-    while(pMoviePicture == NULL && !m_fAborting)
-    {
-        pMoviePicture = m_pMoviePictureBuffer->getPictureForWrite();
-    }
-    if(m_fAborting) { return -1; }
-
-    if(pMoviePicture->m_pOverlay)
-    {
-        AVPicture picture = {};
-
-        SDL_LockYUVOverlay(pMoviePicture->m_pOverlay);
-        picture.data[0] = pMoviePicture->m_pOverlay->pixels[0];
-        picture.data[1] = pMoviePicture->m_pOverlay->pixels[2];
-        picture.data[2] = pMoviePicture->m_pOverlay->pixels[1];
-
-        picture.linesize[0] = pMoviePicture->m_pOverlay->pitches[0];
-        picture.linesize[1] = pMoviePicture->m_pOverlay->pitches[2];
-        picture.linesize[2] = pMoviePicture->m_pOverlay->pitches[1];
-
-        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, NULL, NULL, NULL);
-
-        if(m_pSwsContext == NULL)
-        {
-            m_sLastError = std::string("Failed to initialize SwsContext");
-            return 1;
-        }
-
-        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, picture.data, picture.linesize);
-
-        SDL_UnlockYUVOverlay(pMoviePicture->m_pOverlay);
-
-        pMoviePicture->m_dPts = dPts;
-
-        m_pMoviePictureBuffer->finishedWrite();
     }
     return 0;
 }
