@@ -44,19 +44,20 @@ extern "C"
 class THMoviePicture
 {
 public:
-    SDL_Overlay *m_pOverlay;
-    int m_iX, m_iY, m_iWidth, m_iHeight;
-    double m_dPts;
-    PixelFormat m_pixelFormat;
-    SDL_Surface *m_pSurface;
-    SDL_mutex *m_pMutex;
-    SDL_cond *m_pCond;
-    
     THMoviePicture();
     ~THMoviePicture();
+
     void allocate(int iX, int iY, int iWidth, int iHeight);
     void deallocate();
     void draw();
+
+    SDL_Overlay *m_pOverlay;
+    PixelFormat m_pixelFormat;
+    SDL_Surface *m_pSurface;
+    int m_iX, m_iY, m_iWidth, m_iHeight;
+    double m_dPts;
+    SDL_mutex *m_pMutex;
+    SDL_cond *m_pCond;
 };
 
 class THMoviePictureBuffer
@@ -66,29 +67,29 @@ public:
     ~THMoviePictureBuffer();
 
     //NB: The following functions are called by the main program thread
-    void allocate(int iX, int iY, int iWidth, int iHeight);
-    void deallocate();
     void abort();
     void reset();
+    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void deallocate();
     bool advance();
     void draw();
-    bool empty();
     double getCurrentPts();
     double getNextPts();
+    bool empty();
 
     //NB: These functions are called by a second thread
-    int write(AVFrame* pFrame, double dPts);
     bool full();
+    int write(AVFrame* pFrame, double dPts);
 protected:
+    bool m_fAborting;
+    bool m_fAllocated;
+    int m_iCount;
+    int m_iReadIndex;
+    int m_iWriteIndex;
+    SwsContext* m_pSwsContext;
     SDL_mutex *m_pMutex;
     SDL_cond *m_pCond;
     THMoviePicture m_aPictureQueue[PICTURE_BUFFER_SIZE];
-    int m_iWriteIndex;
-    int m_iReadIndex;
-    int m_iCount;
-    bool m_fAllocated;
-    bool m_fAborting;
-    SwsContext* m_pSwsContext;
 };
 
 class THAVPacketQueue
@@ -115,81 +116,90 @@ public:
     ~THMovie();
 
     bool moviesEnabled();
+
     bool load(const char* szFilepath);
     void unload();
+
     void play(int iX, int iY, int iWidth, int iHeight, int iChannel);
     void stop();
+
     int getNativeHeight();
     int getNativeWidth();
     bool hasAudioTrack();
     bool requiresVideoReset();
+
     const char* getLastError();
     void clearLastError();
+
     void refresh();
-    void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
-    void runVideo();
     void deallocatePictureBuffer();
     void allocatePictureBuffer();
+
     void readStreams();
+    void runVideo();
+    void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
 protected:
 #ifdef CORSIX_TH_USE_FFMPEG
+    int decodeAudioFrame(bool fFirst);
+    int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
+
+    //last error
     std::string m_sLastError;
     char m_szErrorBuffer[MOVIE_ERROR_BUFFER_SIZE];
 
-    int decodeAudioFrame(bool fFirst);
-    int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
-    int queuePicture(AVFrame *pFrame, double dPts);
+    //abort playing movie
+    bool m_fAborting;
 
-    int m_iX;
-    int m_iY;
-    int m_iWidth;
-    int m_iHeight;
+    //current movie dimensions and placement
+    int m_iX, m_iY, m_iWidth, m_iHeight;
 
+    //ffmpeg movie information
     AVFormatContext* m_pFormatContext;
     int m_iVideoStream;
     int m_iAudioStream;
-    AVCodec* m_pVideoCodec;
-    AVCodec* m_pAudioCodec;
     AVCodecContext* m_pVideoCodecContext;
     AVCodecContext* m_pAudioCodecContext;
 
+    //queues for transfering data between threads
     THAVPacketQueue *m_pVideoQueue;
+    THAVPacketQueue *m_pAudioQueue;
+    THMoviePictureBuffer *m_pMoviePictureBuffer;
 
-    //tick when video was started in ms
-    int m_iStartTime;
+    //clock sync parameters
     int m_iCurSyncPtsSystemTime;
     double m_iCurSyncPts;
 
-    THAVPacketQueue *m_pAudioQueue;
+    //audio resample context
+    SwrContext* m_pSwrContext;
 
-    THMoviePictureBuffer *m_pMoviePictureBuffer;
-
-    //audio buffer
+    //decoded audio buffer
     int m_iAudioBufferSize;
     int m_iAudioBufferIndex;
     int m_iAudioBufferMaxSize;
     uint8_t* m_pbAudioBuffer;
 
-    int m_iChannel;
-    Uint8* m_pbChunkBuffer;
-    Mix_Chunk* m_pChunk;
-
-    int m_iMixerChannels;
-    int m_iMixerFrequency;
-    SwrContext* m_pSwrContext;
-
-    bool m_fAborting;
-
+    //decoding audio packet
     AVPacket* m_pAudioPacket;
     int m_iAudioPacketSize;
     uint8_t *m_pbAudioPacketData;
 
-    AVPacket* m_flushPacket;
-
+    //decoding audio frame
     AVFrame* m_frame;
 
+    //empty raw chunk for SDL_mixer
+    Mix_Chunk* m_pChunk;
+    Uint8* m_pbChunkBuffer;
+
+    //SDL_mixer parameters
+    int m_iChannel;
+    int m_iMixerChannels;
+    int m_iMixerFrequency;
+
+    //signal packet indicating flush
+    AVPacket* m_flushPacket;
+
+    //threads
     SDL_Thread* m_pStreamThread;
-    SDL_Thread* m_pRefreshThread;
     SDL_Thread* m_pVideoThread;
 #endif //CORSIX_TH_USE_FFMPEG
 };

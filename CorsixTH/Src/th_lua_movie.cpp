@@ -50,6 +50,13 @@ static int l_movie_load(lua_State *L)
     return 2;
 }
 
+static int l_movie_unload(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    pMovie->unload();
+    return 0;
+}
+
 static int l_movie_play(lua_State *L)
 {
     const char* warning;
@@ -61,24 +68,24 @@ static int l_movie_play(lua_State *L)
     return 1;
 }
 
-static int l_movie_unload(lua_State *L)
+static int l_movie_stop(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->unload();
+    THMovie *pVideo = luaT_testuserdata<THMovie>(L);
+    pVideo->stop();
     return 0;
-}
-
-static int l_movie_get_native_width(lua_State *L)
-{
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushinteger(L, pMovie->getNativeWidth());
-    return 1;
 }
 
 static int l_movie_get_native_height(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     lua_pushinteger(L, pMovie->getNativeHeight());
+    return 1;
+}
+
+static int l_movie_get_native_width(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    lua_pushinteger(L, pMovie->getNativeWidth());
     return 1;
 }
 
@@ -96,6 +103,13 @@ static int l_movie_requires_video_reset(lua_State *L)
     return 1;
 }
 
+static int l_movie_refresh(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    pMovie->refresh();
+    return 0;
+}
+
 static int l_movie_allocate_picture_buffer(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
@@ -110,34 +124,20 @@ static int l_movie_deallocate_picture_buffer(lua_State *L)
     return 0;
 }
 
-static int l_movie_stop(lua_State *L)
-{
-    THMovie *pVideo = luaT_testuserdata<THMovie>(L);
-    pVideo->stop();
-    return 0;
-}
-
-static int l_movie_refresh(lua_State *L)
-{
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->refresh();
-    return 0;
-}
-
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
 {
     luaT_class(THMovie, l_movie_new, "moviePlayer", MT_Movie);
     luaT_setfunction(l_movie_enabled, "getEnabled");
-    luaT_setfunction(l_movie_stop, "stop");
-    luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
-    luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");
-    luaT_setfunction(l_movie_refresh, "refresh");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");
     luaT_setfunction(l_movie_play, "play");
-    luaT_setfunction(l_movie_get_native_width, "getNativeWidth");
+    luaT_setfunction(l_movie_stop, "stop");
     luaT_setfunction(l_movie_get_native_height, "getNativeHeight");
+    luaT_setfunction(l_movie_get_native_width, "getNativeWidth");
     luaT_setfunction(l_movie_has_audio_track, "hasAudioTrack");
     luaT_setfunction(l_movie_requires_video_reset, "requiresVideoReset");
+    luaT_setfunction(l_movie_refresh, "refresh");
+    luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
+    luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");
     luaT_endclass();
 }
