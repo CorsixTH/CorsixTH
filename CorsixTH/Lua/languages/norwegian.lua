@@ -230,6 +230,15 @@ options_window = {
   browse = "Bla gjennom...",
   cancel = "Avbryt",
   new_th_directory = "Her kan du spesifisere en annen installasjonsmappe for Theme Hospital. Så fort du velger en ny mappe vil spillet starte på nytt.",  --kalle det "corsixth" isteden for "theme hospital"?
+  custom_resolution = "Egendefinert...",
+  option_on = "På",
+  option_off = "Av",
+  caption = "Innstillinger",
+  language = "Språk",
+  apply = "Bruk",
+  data_location = "Data-beliggenhet",
+  font_location = "Font-beliggenhet",
+  resolution = "Opplösning",
 }
 tooltip.options_window = {
   fullscreen_button = "Klikk for å gå i fullskjermmodus",
@@ -240,6 +249,21 @@ tooltip.options_window = {
   back = "Lukk vinduet med innstillinger",
   original_path = "Valgt mappe for Theme Hospital installasjonen",
   browse = "Bla gjennom mappene for å finne et annet sted for Theme Hospital-installasjonen. %1%",
+  fullscreen = "Om spillet skal kjøre i fullskjerm eller vindusmodus",
+  cancel = "Returner uten å endre opplösning",
+  font_location = "Beliggenhet av en font-fil som klarer å vise Unicode-bokstaver som brukes i det valgte språket. Om dette ikke er spesifisert, så vil ikke ha mulighet til å velge språk som krever andre bokstaver enn i originalspillet. For eksempel: Russisk eller Kinesisk",
+  apply = "Bruk den innskrevne opplösningen",
+  browse_font = "Se etter en annen font-fil (nåværende beliggenhet: %1%)",
+  data_location = "Beliggenheten av den originale Theme Hospital installasjonen, som trengs for å kjöre CorsixTH",
+  language_dropdown_item = "Velg %s som språk",
+  no_font_specified = "Ingen beliggenhet spesifisert!",
+  select_language = "Velg språk",
+  select_resolution = "Velg en ny opplösning",
+  resolution = "Opplösningen spillet skal kjøres i.",
+}
+
+font_location_window = {
+  caption = "Velg font (%1%)",
 }
 
 calls_dispatcher = {
@@ -303,6 +327,12 @@ new_game_window = {
   hard = "Konsulent (Vanskelig)",
   tutorial = "Innföring",
   cancel = "Avbryt",
+  option_on = "På",
+  option_off = "Av",
+  difficulty = "Vanskelighetsgrad",
+  caption = "Karriere",
+  player_name = "Spillernavn",
+  start = "Start",
 }
 
 tooltip.new_game_window = {
@@ -311,6 +341,9 @@ tooltip.new_game_window = {
   hard = "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
   tutorial = "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
   cancel = "Hmm... Det var ikke meningen å starte et nytt spill!",
+  difficulty = "Velg vanskelighetsgrad du vil spille på",
+  start = "Start spillet med de valgte innstillingene",
+  player_name = "Skriv inn hva du vil hete i spillet",
 }
 
 lua_console = {
@@ -351,6 +384,7 @@ information = {
     reputation = "Omdömmet ditt gikk under %d.",
     balance = "Banksaldoen din (minus lån) falt under %d.",
     percentage_killed = "Du drepte mer enn %d prosent av pasientene.", --bruke %-tegn?
+	cheat = "Dette var ditt eget valg, eller trykket du bare på feil knapp? Du klarer ikke engang å jukse skikkelig. Det var ikke så morsomt likevel?",
   },
 }
 tooltip.information = {
@@ -1102,6 +1136,7 @@ menu_charts = {
   bank_manager        = "  BANKMANAGER  ",
   status              = "  STATUS  ",
   briefing            = "  BRIEFING  ",
+  town_map            = "  BYKART (F4)  ",
 }
 
 -- Menu Debug
