@@ -111,8 +111,8 @@ LangString files_left         ${LANG_ITALIAN} "Non è stato possibile rimuovere 
 LangString options_title      ${LANG_ITALIAN} "Opzioni Addizionali" 
 LangString options_subtitle   ${LANG_ITALIAN} "Indica dove è il gioco originale."
 LangString save_in_appdata    ${LANG_ITALIAN} "Salva i dati di gioco e le impostazioni in %APPDATA% (Recommended)"
-LangString remove_saves       ${LANG_ITALIAN} "Vuoi tenere i tuoi salvataggi?"
-LangString overwrite_install  ${LANG_ITALIAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString remove_saves       ${LANG_ITALIAN} "Vuoi mantenere i tuoi salvataggi?"
+LangString overwrite_install  ${LANG_ITALIAN} "Sembra che stai reinstallando su una precedente installazione di CorsixTH. Tutte le precedenti modifiche ai file potrebbero andare perse. Continuare?"
 
 LangString install_language   ${LANG_NORWEGIAN} "Norwegian"
 LangString original_text      ${LANG_NORWEGIAN} "For å kunne spille dette spillet, må du ha det originale Theme Hospital installert. Spesifiser hvor det ligger."
