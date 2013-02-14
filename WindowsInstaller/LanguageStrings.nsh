@@ -102,6 +102,18 @@ LangString save_in_appdata    ${LANG_GERMAN} "Spieldaten und Einstellungen in %A
 LangString remove_saves       ${LANG_GERMAN} "Möchten Sie gespeicherte Spielstände behalten?"
 LangString overwrite_install  ${LANG_GERMAN} "Sie installieren in ein Verzeichnis mit einer existierenden Installation von CorsixTH. Eventuell vorgenommene Änderungen an den Spieldateien gehen verloren. Fortsetzen?"
 
+LangString install_language   ${LANG_HUNGARIAN} "Magyar"
+LangString original_text      ${LANG_HUNGARIAN} "A program futtatásához az eredeti játék telepítése szükséges.Kérlek add meg az eredeti játék telepítési helyét."
+LangString original_folder    ${LANG_HUNGARIAN} "Theme Hospital Könyvtár"
+LangString successful_removal ${LANG_HUNGARIAN} "$(^Name) sikeresen el lett távolítva a gépedről."
+LangString confirm_removal    ${LANG_HUNGARIAN} "Biztos vagy benne, hogy teljesen eltávolítod a $(^Name)-t minden összetevőjével együtt?"
+LangString files_left         ${LANG_HUNGARIAN} "Néhány filet nem lehetett eltávolítani."
+LangString options_title      ${LANG_HUNGARIAN} "Egyéb beállítások" 
+LangString options_subtitle   ${LANG_HUNGARIAN} "Határozd meg az eredeti játék helyét."
+LangString save_in_appdata    ${LANG_HUNGARIAN} "A játék mentéseinek és beállításainak mentése ide: %APPDATA% (Ajánlott)"
+LangString remove_saves       ${LANG_HUNGARIAN} "Meg szeretnéd tartani az elmentett állásaidat?"
+LangString overwrite_install  ${LANG_HUNGARIAN} "Úgy tűnik, hogy már egy meglévő CorsixTH-ra szeretnél telepíteni. Minden változás a korábbi fileokon elveszhet. Folytatod?"
+
 LangString install_language   ${LANG_ITALIAN} "Italian"
 LangString original_text      ${LANG_ITALIAN} "Per poter installare il gioco è necessario aver installato Theme Hospital Originale. Specifica qui la posizione della cartella."
 LangString original_folder    ${LANG_ITALIAN} "Cartella di Theme Hospital"
