@@ -122,7 +122,7 @@ LangString confirm_removal    ${LANG_ITALIAN} "Sei sicuro di voler rimuovere  $(
 LangString files_left         ${LANG_ITALIAN} "Non è stato possibile rimuovere alcuni file."
 LangString options_title      ${LANG_ITALIAN} "Opzioni Addizionali" 
 LangString options_subtitle   ${LANG_ITALIAN} "Indica dove è il gioco originale."
-LangString save_in_appdata    ${LANG_ITALIAN} "Salva i dati di gioco e le impostazioni in %APPDATA% (Recommended)"
+LangString save_in_appdata    ${LANG_ITALIAN} "Salva i dati di gioco e le impostazioni in %APPDATA% (Raccomandato)"
 LangString remove_saves       ${LANG_ITALIAN} "Vuoi mantenere i tuoi salvataggi?"
 LangString overwrite_install  ${LANG_ITALIAN} "Sembra che stai reinstallando su una precedente installazione di CorsixTH. Tutte le precedenti modifiche ai file potrebbero andare perse. Continuare?"
 
