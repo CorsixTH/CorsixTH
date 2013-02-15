@@ -592,7 +592,7 @@ function Hospital:countPatients()
 end
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
-function Hospital:checkFacilites()
+function Hospital:checkFacilities()
   if self:isPlayerHospital() then
     -- Check to see if a staff room has been built
     self.is_staff_room = false
@@ -747,7 +747,10 @@ function Hospital:tick()
 -- receptionist telephoning! opted for gp as you can't run the hospital without one.  
   if self:hasRoomOfType("gp") and self.patientcount > 2 then
     if math.random(1, 100) == 3 then
-      self.world.ui:playSound(sounds [math.random(1, #sounds)])
+      local sound_to_play = sounds[math.random(1, #sounds)]
+      if TheApp.audio:soundExists(sound_to_play) then
+        self.world.ui:playSound(sound_to_play)
+      end
     end  
   end    
 end
@@ -852,7 +855,7 @@ function Hospital:onEndDay()
   self.acc_loan_interest = self.acc_loan_interest + pay_this
   self.research:researchCost()
   if self:hasStaffedDesk() then
-    self:checkFacilites()
+    self:checkFacilities()
   end
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
 

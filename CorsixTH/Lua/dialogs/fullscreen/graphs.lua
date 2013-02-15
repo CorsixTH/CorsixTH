@@ -137,7 +137,7 @@ function UIGraphs:updateLines()
   local bottom_y = 353
   local first_x = 346
   local dx = -25
-  
+  local text = {}
   
   -- First start at the correct place
   local part = values[1]
@@ -145,8 +145,19 @@ function UIGraphs:updateLines()
     -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
     local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
     local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
-    lines[stat].line:moveTo(first_x, top_y + (bottom_y - top_y) - normalized_value + zero_point)
+    -- Save the starting point for text drawing purposes.
+    local start = top_y + (bottom_y - top_y) - normalized_value + zero_point
+    text[#text + 1] = {stat = stat, start_y = start, value = value}
+    lines[stat].line:moveTo(first_x, start)
   end
+
+  -- Sort the y positions where to put text to draw the top text first.
+  local function compare(a,b)
+    return a.start_y < b.start_y
+  end
+  table.sort(text, compare)
+  self.text_positions = text
+
   
   local aux_lines = {}
   -- Then add all the nodes available for each graph
@@ -191,8 +202,24 @@ function UIGraphs:draw(canvas, x, y)
       values.line:draw(canvas, x, y)
     end
   end
-  
+
   local first_x = 334
+
+  -- Draw strings showing what values each entry has at the moment just to the right of the graph.
+  -- TODO: These should be coloured according to the colour of the corresponding line.
+  local cur_y = 85
+  for _, values in pairs(self.text_positions) do
+    if not self.hide_graph[values.stat] then
+      -- -5 makes the text appear just to the right of the line instead of just beneath it.
+      cur_y = (cur_y > values.start_y and cur_y or values.start_y - 5)
+      -- The last y compensates that draw returns the last y position relative to the top of the window, not the dialog.
+      -- To get all values in the same "column", draw them separately.
+      self.black_font:draw(canvas, _S.graphs[values.stat] .. ":", x + first_x + 15, y + cur_y)
+      cur_y = self.black_font:draw(canvas, values.value, x + first_x + 72, y + cur_y) - y
+    end
+  end
+
+
   local dx = -25
   local number = math.floor(#self.hospital.statistics / 12)
   
@@ -204,17 +231,16 @@ function UIGraphs:draw(canvas, x, y)
     number = #self.hospital.statistics - number * 12
   end
   local no = 1
-  -- Draw numbers (or month names) below
-  --if #self.values > 1 then
-    for _, _ in ipairs(self.values) do
-      self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")
-      first_x = first_x + dx
-      number = number + decrements
-      -- And the small black line
-      self.aux_lines[no]:draw(canvas, x, y)
-      no = no + 1
-    end
-  --end
+  
+  -- Draw numbers (or month names) below the graph
+  for _, _ in ipairs(self.values) do
+    self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")
+    first_x = first_x + dx
+    number = number + decrements
+    -- And the small black line
+    self.aux_lines[no]:draw(canvas, x, y)
+    no = no + 1
+  end
 end
 
 function UIGraphs:toggleGraphScale()

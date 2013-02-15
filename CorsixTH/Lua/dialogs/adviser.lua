@@ -70,6 +70,7 @@ function UIAdviser:talk()
   self.phase = 2
   self.th:setAnimation(self.ui.app.world.anims, 460)
   self.frame = 1
+  self.timer = nil -- Reset the idle timer
   self.number_frames = 45
   -- Fetch the next message from the queue.
   local best = 1
@@ -154,6 +155,8 @@ function UIAdviser:say(speech, talk_until_next_announce, override_current)
       -- Now say the new thing instead.
       self:talk()
     end
+    -- If none of the above apply the message is now queued and will be shown in
+    -- due time.
   end
 end
 

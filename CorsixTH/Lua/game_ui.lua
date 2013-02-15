@@ -506,7 +506,9 @@ end
 
 function GameUI:playAnnouncement(name)
   self.ticks_since_last_announcement = 0
-  return UI.playAnnouncement(self, name)
+  if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
+    UI.playAnnouncement(self, name)
+  end
 end
 
 function GameUI:onTick()
