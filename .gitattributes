@@ -51,6 +51,7 @@ CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/confined_v5.map -text
 CorsixTH/Levels/finisham.map -text
+CorsixTH/Lua/languages/hungarian.lua -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 LDocGen/output/corner_right.gif -text
 LDocGen/output/logo.png -text
