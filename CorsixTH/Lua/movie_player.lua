@@ -179,7 +179,6 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
 
   self.opengl_mode_index = nil
   for i=1, #self.app.modes do
-    print(self.app.modes[i])
     if self.app.modes[i] == "opengl" then
       self.opengl_mode_index = i
     end
