@@ -456,15 +456,15 @@ adviser = {
     machine_improved = "%s byl vylepšen Vašim Výzkumným Oddělením.",
   },
   cheats = {
-    bloaty_cheat = "Čít Nafouknuté Hlavy aktivován!",
-    th_cheat = "Blahopřejeme, právě jste odemkli číty!",
-    hairyitis_cheat = "Čít Vlasoitidy aktivován!",
+    bloaty_cheat = "Cheat Nafouknuté Hlavy aktivován!",
+    th_cheat = "Blahopřejeme, právě jste odemkli cheaty!",
+    hairyitis_cheat = "Cheat Vlasoitidy aktivován!",
     crazy_on_cheat = "Ale ne! Všichni doktoři se zbláznili!",
     roujin_off_cheat = "Roujinova výzva deaktivována.",
     crazy_off_cheat = "Uf... doktoři znovu získali svou příčetnost.",
-    hairyitis_off_cheat = "Čít Vlasoitidy deaktivován.",
+    hairyitis_off_cheat = "Cheat Vlasoitidy deaktivován.",
     roujin_on_cheat = "Roujinova výzva aktivována! Hodně štěstí...",
-    bloaty_off_cheat = "Čít Nafouknuté Hlavy deaktivován.",
+    bloaty_off_cheat = "Cheat Nafouknuté Hlavy deaktivován.",
   },
   room_forbidden_non_reachable_parts = "Umístěním místnosti zde by zapříčinilo, že části nemocnice by byly nedostupné.",
   level_progress = {
@@ -683,7 +683,7 @@ staff_descriptions = {
   },
 }
 load_game_window = {
-  caption = "Načíst Hru",
+  caption = "Načíst Hru (%1%)",
 }
 menu_options_game_speed = {
   slowest = "    (1) NEJPOMALEJŠÍ  ",
@@ -1077,6 +1077,9 @@ tooltip = {
     browse = "Procházet pro jiné umístění instalace Theme Hospital. %1%",
     height = "Zadejte požadovanou výšku obrazovky",
     language = "Vybrat %s jako jazyk",
+    browse_font = "Procházet pro výběr jiného souboru s písmem (současné umístění: %1%)",
+    no_font_specified = "Umístšní zatím nezadáno!",
+    font_location = "Umístění souboru s písmem, které je schopno zobrazit znaky Unicode vyžadované vaším jazykem. Pokud toto není zadáno, nebudete moci zvolit jazyky, které potřebují více znaků, než původní hra obsahuje. Příklad: ruština a čínština",
   },
   information = {
     close = "Zavřít informační dialogové okno",
@@ -1087,7 +1090,7 @@ tooltip = {
     back = "Zavřít toto okno",
   },
   cheats_window = {
-    close = "Zavřít dialogové okno čítů",
+    close = "Zavřít dialogové okno cheatů",
     cheats = {
       lose_level = "Prohrát současnou úroveň.",
       emergency = "Vytvoří havárii.",
@@ -1116,9 +1119,12 @@ tooltip = {
   new_game_window = {
     easy = "Pokud jste začátečníci v simulačních hrách, tak toto je volba pro Vás",
     cancel = "Ah, Já vlastně nechtěl začít novou hru!",
-    tutorial = "Pokud chcete se začátkem jednou pomoci, zaškrtněte tento rámeček.",
+    difficulty = "Vyberte úroveň obtížnosti s kterou chcete hru hrát",
+    tutorial = "Pokud chcete se začátkem jednou pomoci, stiskněte toto tlačítko.",
     hard = "Pokud tento druh hry znáte a chcete výzvu, tak si vyberte tuto volbu",
     medium = "Toto je střední cesta, když nevíte, co si vybrat",
+    player_name = "Zadejte jméno kterým chcete být ve hře oslovováni.",
+    start = "Zahájit hru se zvolenými možnostmi",
   },
   machine_window = {
     close = "Zrušit žadatele",
@@ -1588,7 +1594,7 @@ transactions = {
   eoy_bonus_penalty = "Bonus/Penalizace na konci roku",
   wages = "Platy",
   machine_replacement = "Cena Náhradního Přístroje",
-  cheat = "Peníze pomocí Čítu",
+  cheat = "Peníze pomocí cheatu",
   bank_loan = "Půjčka Banky",
   build_room = "Stavba Místnosti",
   research = "Náklady Výzkumu",
@@ -1910,9 +1916,15 @@ progress_report = {
 new_game_window = {
   easy = "Rezident (Jednoduché)",
   cancel = "Zrušit",
+  caption = "Kampaň",
+  difficulty = "Obtížnost",
+  option_off = "Vypnuto",
+  option_on = "Zapnuto",
   tutorial = "Výuka",
   hard = "Konzultant (Těžké)",
   medium = "Doktor (Střední)",
+  start = "Zahájit",
+  player_name = "Jméno hráče",
 }
 date_format = {
   daymonth = "%1% %2:months%",
@@ -2526,7 +2538,7 @@ information = {
   cannot_restart = "Bohužel, tato hra byla uložena předtím, než byla zavedena funkce restart.",
   no_custom_game_in_demo = "Je nám líto, ale ve zkušební verzi nemůžete hrát žádné vlastní mapy.",
   very_old_save = "Od spuštění této úrovně došlo k mnoha aktualizacím. Aby bylo zajištěno, že všechny funkce pracují tak, jak mají, zvažte restartování této úrovně.",
-  cheat_not_possible = "Tento čít nemůžete použít v této úrovni. Už ani podvádět Vám nejde, to je život, co?",
+  cheat_not_possible = "Tento cheat nemůžete použít v této úrovni. Už ani podvádět Vám nejde, to je život, co?",
   level_lost = {
     [1] = "Smůla! Nesplnili jste úroveň. Hodně štěstí příště!",
     [2] = "Důvod, proč jste prohráli:",
@@ -2578,7 +2590,7 @@ menu_options_warmth_colors = {
   choice_3 = "     ŽLUTÁ ORANŽOVÁ ČERVENÁ ",
 }
 menu_debug = {
-  cheats = "    (F11) ČÍTY  ",
+  cheats = "    (F11) CHEATY  ",
   win_level_anim = "    ANIM VÝHRY ÚROVNĚ       ",
   enter_nav_debug = "    VSTOUPIT DO LADĚNÍ NAV      ",
   object_cells = "    BUŇKY OBJEKTU         ",
@@ -2621,7 +2633,7 @@ menu_debug = {
   porter_pagers = "    PAGERY OBSLUHY        ",
 }
 save_game_window = {
-  caption = "Uložit Hru",
+  caption = "Uložit Hru (%1%)",
   new_save_game = "Nová Uložená Hra",
 }
 main_menu = {
@@ -3138,4 +3150,8 @@ options_window = {
   cancel = "Zrušit",
   new_th_directory = "Zde můžete zadat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
   back = "Zpátky",
+  font_location = "Umístění písma",
+}
+font_location_window = {
+caption = "Zvolte písmo (%1%)"
 }
