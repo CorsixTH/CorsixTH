@@ -33,10 +33,11 @@ adviser.warnings.money_low = "Stai finendo i soldi!"
 fax.emergency.cure_not_possible_build = "E' necessario costruire un %s"
 fax.emergency.cure_not_possible_build_and_employ = "E' necessario costruire un %s e assunere un %s"
 
--- new strings
+-------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
 }
+
 object.litter = "Spazzatura"
 tooltip.objects.litter = "Spazzatura: Lasciata sul pavimento da un paziente perché non ha trovato un cestino in cui gettarla."
 
@@ -53,6 +54,7 @@ menu_options = {
   edge_scrolling = "  SCORRIMENTO AI LATI  ",
   settings = "  IMPOSTAZIONI  ",
   adviser_disabled = "  CONSIGLIERE  ",
+  warmth_colors = "  COLORI RISCALDAMENTO  ",
 }
 
 menu_options_game_speed = {
@@ -63,6 +65,26 @@ menu_options_game_speed = {
   max_speed           = "  (4) VELOCITA' MASSIMA  ",
   and_then_some_more  = "  (5) E ANCORA DI PIU'  ",
 }
+
+menu_options_warmth_colors = {
+  choice_1 = "  ROSSO  ",
+  choice_2 = "  BLU VERDE ROSSO  ",
+  choice_3 = "  GIALLO ARANCIONE ROSSO  ",
+}
+
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager  = "  (F1) BANCA  ",
+  statement     = "  (F2) RENDICONTO  ",
+  staff_listing = "  (F3) PERSONALE  ",
+  town_map      = "  (F4) MAPPA CITTADINA  ",
+  casebook      = "  (F5) REGISTRO CURE  ",
+  research      = "  (F6) RICERCA  ",
+  status        = "  (F7) RIEPILOGO  ",
+  graphs        = "  (F8) GRAFICI  ",
+  policy        = "  (F9) GESTIONE  ",  
+}
+
 
 -- The demo does not contain this string
 menu_file.restart = "  RIAVVIA  "
@@ -82,6 +104,7 @@ menu_debug = {
   map_overlay                 = "  MAPPA IN SOVRAPPOSIZIONE  ",
   sprite_viewer               = "  VISUALIZZATORE SPRITE  ",
 }
+
 menu_debug_overlay = {
   none                        = "  NESSUN OVERLAY  ",
   flags                       = "  FLAGS  ",
@@ -94,7 +117,7 @@ menu_debug_overlay = {
   byte_5                      = "  BYTE 5  ",
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
-  parcel                      = "  PARCEL  ",
+  parcel                      = "  LOTTO  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Mettere la stanza in questa posizione risulterebbe nel blocco dell'accesso ad alcune parti dell'ospedale.",
@@ -109,7 +132,9 @@ adviser = {
     falling_3 = "Ahi, deve far male, qualcuno chiami un dottore!",
     falling_4 = "Questo è un ospedale, non un parco giochi!",
     falling_5 = "Non è il luogo adatto per far cadere le persone, sono malate sai!",
-    falling_6 = "Non è una sala da bowling, i malati non dovrebbero essere trattati così!"
+    falling_6 = "Non è una sala da bowling, i malati non dovrebbero essere trattati così!",
+	research_screen_open_1 = "Devi costruire un Reparto Ricerca prima di poter accedere alla schermata Ricerca.",
+    research_screen_open_2 = "La Ricerca è disabilitata in questo livello.",
   },
   cheats = {  
     th_cheat = "Congratulazioni, hai sbloccato i cheat!",
@@ -185,13 +210,13 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  caption = "Carica Partita",
+  caption = "Carica Partita (%1%)",
 }
 
 tooltip.load_game_window = {
   load_game = "Carica la partita %s",
   load_game_number = "Carica la partita %d",
-  load_autosave = "Carica l'ultimo autosalvataggio",
+  load_autosave = "Carica autosalvataggio",
 }
 
 custom_game_window = {
@@ -205,7 +230,7 @@ tooltip.custom_game_window = {
 }
 
 save_game_window = {
-  caption = "Salva Partita",
+  caption = "Salva Partita (%1%)",
   new_save_game = "Nuovo Salvataggio",
 }
 
@@ -225,51 +250,83 @@ tooltip.menu_list_window = {
   save_date = "Clicca qui per ordinare la lista in base alla data dell'ultima modifica",
   back = "Chiudi questa finestra",
 }
+
 -- Width / height's translation doesn't fit - had to write "larghezza" and "altezza" shorter
 options_window = {
+  caption = "Opzioni",
+  option_on = "On",
+  option_off = "Off",
   fullscreen = "Schermo intero",
+  resolution = "Risoluzione",
+  custom_resolution = "Personalizzata...",
   width = "Largh",
   height = "Alt",
-  change_resolution = "Cambia risoluzione",
+  apply = "Applica",
+  data_location = "Posizione dati",
+  font_location = "Posizione font",
   browse = "Sfoglia...",
   new_th_directory = "Qui puoi specificare una nuova cartella di installazione di Theme Hospital. Appena scegli la nuova cartella il gioco verrà riavviato.",
+  language = "Lingua del gioco",
   cancel = "Cancella",
   back = "Indietro",
 }
 
-tooltip.handyman_window = {
-  parcel_select = "Il lotto dove l'inserviente può operare. Clicca per cambiarlo."
-}
- 
-handyman_window = {
-  all_parcels = "Tutti i lotti",
-  parcel = "Lotto"
-}  
-
 tooltip.options_window = {
+  fullscreen = "Decide se il gioco verrà eseguito a tutto schermo o in finestra",
   fullscreen_button = "Clicca per selezionare o deselezionare la modalità a schermo intero",
+  resolution = "La risoluzione a cui il gioco dovrebbe essere eseguito",
+  select_resolution = "Seleziona una nuova risoluzione",
   width = "Inserisci la larghezza dello schermo desiderata",
   height = "Inserisci l'altezza dello schermo desiderata",
-  change_resolution = "Cambia la risoluzione della finestra alle dimensioni inserite a sinistra",
-  language = "Seleziona %s come lingua",
+  apply = "Applica la risoluzione inserita",
+  cancel = "Esci senza cambiare la risoluzione",
+  data_location = "La cartella dove è installato il Theme Hospital originale, che è richiesto per eseguire CorsixTH",
+  font_location = "La posizione di un font che è in grado di mostrare caratteri Unicode richiesti dalla tua lingua. Se non specificata, non potrai scegliere lingue che hanno bisogno di più caratteri rispetto a quelli di cui dispone il gioco originale. Esempio: Russo e Cinese",
+  language = "La lingua in cui verrà mostrato il testo",
+  select_language = "Seleziona la lingua del gioco",
+  language_dropdown_item = "Seleziona %s come lingua",
   original_path = "La cartella dell'installazione di Theme Hospital originale attualmente selezionata",
-  browse = "Seleziona la cartella di un'altra installazione di Theme Hospital. %1%",
+  browse = "Seleziona un'altra cartella di installazione di Theme Hospital (posizione corrente: %1%)",
+  browse_font = "Seleziona un altro file font (posizione corrente: %1%)",
+  no_font_specified = "Non hai ancora specificato alcuna posizione!",
   back = "Chiudi la finestra delle opzioni",
 }
 
+font_location_window = {
+  caption = "Scegli il font (%1%)",
+}
+
+handyman_window = {
+  all_parcels = "Tutti i lotti",
+  parcel = "Lotto"
+} 
+
+tooltip.handyman_window = {
+  parcel_select = "Il lotto dove l'inserviente può operare. Clicca per cambiarlo."
+} 
+
 new_game_window = {
+  caption = "Campagna",
+  player_name = "Nome del giocatore",
+  option_on = "On",
+  option_off = "Off",
+  difficulty = "Difficoltà",
   easy = "Assistente (Facile)",
   medium = "Dottore (Medio)",
   hard = "Consulente (Difficile)",
   tutorial = "Tutorial",
+  start = "Comincia",
   cancel = "Cancella",
 }
 
 tooltip.new_game_window = {
+  player_name = "Inserisci il nome col quale vuoi essere chiamato nel gioco",
+  difficulty = "Seleziona il livello di difficoltà a cui vuoi giocare",
   easy = "Se non sei pratico di simulatori questa è l'opzione per te",
   medium = "Questa è la via di mezzo se non sei sicuro su cosa scegliere",
   hard = "Se sei abituato a questo tipo di giochi e vuoi una sfida più impegnativa, scegli questa opzione",
   tutorial = "Se vuoi aiuto per cominciare mentre sei in gioco, spunta questa casella",
+  start = "Avvia il gioco con le impostazioni scelte",
   cancel = "Oh, non volevo davvero cominciare una nuova partita!",
 }
 
@@ -297,7 +354,7 @@ errors = {
 confirmation = {
   needs_restart = "Cambiare questa impostazione richiede che CorsixTH sia riavviato. Ogni progresso non salvato sarà perduto. Sei sicuro di volerlo fare?",
   abort_edit_room = "Stai attualmente costruendo o modificando una stanza. Se tutti gli oggetti richiesti sono stati posizionati sarà completata, altrimenti sarà cancellata. Continuare?",
-  restart_level = "Sei sicuro di voler riavviare il livello?"
+  restart_level = "Sei sicuro di voler riavviare il livello?",
 }
 
 information = {
@@ -311,7 +368,9 @@ information = {
     reputation = "La tua reputazione è scesa sotto %d.",
     balance = "Il tuo conto in banca è sceso sotto %d.",
     percentage_killed = "Hai ucciso più del %d dei pazienti.",
+	cheat = "È stata una tua scelta o hai selezionato il pulsante sbagliato? Non riesci nemmeno a barare correttamente, non è così divertente, eh?",
   },
+  cheat_not_possible = "Non puoi usare cheat in questo livello. Fallisci anche nel barare, non è così divertente, eh?",
 }
 
 tooltip.information = {
@@ -416,6 +475,13 @@ tooltip.calls_dispatcher = {
   assigned = "Questo box è segnato se qualcuno è assegnato al compito corrispondente.",
   close = "Chiude la finestra del gestore chiamate",
 }
+
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Cambia risoluzione"
+tooltip.options_window.change_resolution = "Cambia la risoluzione della finestra con le dimensioni inserite a sinistra"
 
 -- I added those lines because I didn't like 'em to show up in every diff dump!
 original_credits[302] = ","
