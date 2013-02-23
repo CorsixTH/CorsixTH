@@ -764,7 +764,10 @@ tooltip.options_window = {
   select_language = "Sélectionner la langue du jeu",
   select_resolution = "Sélectionner une nouvelle résolution",
   resolution = "La résolution vidéo pour le jeu",
+  no_font_specified = "Aucun emplacement spécifié !",
 }
+
+font_location_window.caption = "Choisir une police (%1%)"
 
 -- Handyman window
 handyman_window = {
