@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2011 Nicolas "MeV" Elie
+﻿--[[ Copyright (c) 2010-2011 Nicolas "MeV" Elie
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -504,7 +504,7 @@ tooltip.status.percentage_cured = "Vous devez soigner %d%% des visiteurs de l'h�
 tooltip.status.num_cured = "L'objectif est de soigner %d personnes. Pour le moment, vous en avez soigné %d"
 dynamic_info.staff.actions.going_to_repair = "Pour réparer %s"
 adviser.staff_place_advice.only_doctors_in_room = "Seuls les médecins peuvent travailler en %s"
-adviser.staff_place_advice.nurses_cannot_work_in_room = "Les infermières ne peuvent travailler en %s"
+adviser.staff_place_advice.nurses_cannot_work_in_room = "Les infirmières ne peuvent travailler en %s"
 room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour une autre diagnostic soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
 room_descriptions.pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard."
 room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
@@ -535,6 +535,8 @@ adviser = {
     no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
     no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
     cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
+    research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches."
+    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours."
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloquer les triches !",
@@ -568,8 +570,15 @@ menu_options = {
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
   settings = "  PARAMETRES  ",
   adviser_disabled = "  ASSISTANT  "
-}
+  warmth_colors = "  COULEURS CHAUDES  "
+  }
 
+ menu_options_warmth_colors = {
+  choice_1 = "  ROUGE  ",
+  choice_2 = "  BLEU VERT ROUGE  ",
+  choice_3 = "  JAUNE ORANGE ROUGE  ",
+}
+  
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
   slowest             = "  (1) AU PLUS LENT  ",
@@ -579,6 +588,19 @@ menu_options_game_speed = {
   and_then_some_more  = "  (5) ET ENCORE PLUS  ",
 }
 menu_options_game_speed.pause = "  PAUSE  "
+
+-- Charts Menu ' Temporary; must see in-game for correct translation
+menu_charts = {
+  bank_manager  = "  (F1) GESTION BANCAIRE  ",
+  statement     = "  (F2) DECLARATION  ",
+  staff_listing = "  (F3) LISTE DU PERSONNEL  ",
+  town_map      = "  (F4) CARTE DE LA VILLE  ",
+  casebook      = "  (F5) MALETTE  ",
+  research      = "  (F6) RECHERCHE  ",
+  status        = "  (F7) STATUTS  ",
+  graphs        = "  (F8) GRAPHIQUES  ",
+  policy        = "  (F9) POLITIQUE ",
+}
 
 -- Debug menu
 menu_debug = {
@@ -637,6 +659,12 @@ new_game_window = {
   hard = "Consultant (Difficile)",
   tutorial = "Tutoriel",
   cancel = "Annuler",
+  option_on = "Marche"
+  option_off = "Arrêt"
+  difficulty = "Difficulté"
+  caption = "Campagne"
+  player_name = "Nom du joueur"
+  start = "Démarrer"
 }
 
 tooltip.new_game_window = {
@@ -645,6 +673,9 @@ tooltip.new_game_window = {
   hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
   tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
   cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
+  difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu"
+  start = "Démarrer le jeu avec les paramtères sélectionnés"
+  player_name = "Entrez le nom avec lequel vous voulez être appelé dans le jeu"
 }
 
 -- Load game window
@@ -666,7 +697,7 @@ custom_game_window = {
 
 tooltip.custom_game_window = {
   start_game_with_name = "Charger le niveau %s",
-  free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaites",
+  free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaite",
 }
 
 -- Save game window
@@ -703,6 +734,15 @@ options_window = {
   new_th_directory = "Ici, vous pouvez spécifier un nouveau dossier d'installation de Theme Hospital. Dès que vous aurez changé le répertoire, le jeu sera redémarré.",
   cancel = "Annuler",
   back = "Précédent",
+  custom_resolution = "Personnaliser..."
+  option_on = "Marche"
+  option_off = "Arrêt"
+  caption = "Paramètres"
+  language = "Langue du jeu"
+  apply = "Appliquer"
+  data_location = "Emplacement des données"
+  font_location = "Emplacemetn de la police"
+  resolution = "Résolution"
 }
 
 tooltip.options_window = {
@@ -714,6 +754,16 @@ tooltip.options_window = {
   original_path = "Le dossier d'installation du Theme Hospital originel qui est actuellement sélectionné",
   browse = "Choisir un autre emplacement d'installation de Theme Hospital %1%",
   back = "Fermer la fenêtre des options",
+  fullscreen = "Mode plein écran ou mode fenêtré"
+  cancel = "Retour sans changement de résolution"
+  font_location = "Emplacement d'un fichier de police capable d'afficher des caractères unicodes requis par votre langue. Si rien n'est spécifié, vous ne serez pas capable de sélectionner une langue qui nécessite plus de caractères que ne peut en fournir le jeu original. Par exemple : Russe et Chinois"
+  apply = "Appliquer la résolution choisie"
+  browse_font = "Parcourir les dossier pour un autre fichier de police (Emplacement actuel : ù1ù)"
+  data_location = "Le dossier d'installation du jeu original Theme Hospital, requis pour lancer CorsixTH"
+  language_dropdown_item = "Choisir %s comme langue"
+  select_language = "Sélectionner la langue du jeu"
+  select_resolution = "Sélectionner une nouvelle résolution"
+  resolution = "La résolution vidéo pour le jeu"
 }
 
 -- Handyman window
@@ -723,7 +773,7 @@ handyman_window = {
 }
 
 tooltip.handyman_window = {
-  parcel_select = "Les parcelles où les agents de maintenance peuvent travailler, cliquez pour changer le paramètre"
+  parcel_select = "Les parcelles où les agents de maintenance peuvent travailler : cliquez pour changer le paramètre"
 }
 
 -- Debug patient window
@@ -826,6 +876,7 @@ information = {
   no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
+  cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?"
   level_lost = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     "Voilà pourquoi vous avez perdu :",
@@ -833,6 +884,7 @@ information = {
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
     cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
+    cheat = "Etais-ce votre choix, ou bien avez vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
   },
 }
 
