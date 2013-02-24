@@ -787,17 +787,14 @@ tooltip = {
     },
   },
   new_game_window = {
-    player_name = "Voer de naam in die je wild gebruiken in het spel",
-	caption = "Nieuwe carrière", 
-    option_on = "Aan", 
-    option_off = "Uit", 
+    player_name = "Voer de naam in die je wild gebruiken in het spel", 
     difficulty = "Moeilijkheid", 
     cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel starten!", 
     tutorial = "Als je wat hulp nodig hebt in het spel, klik dan hier",
-	start = "Begin het spel met de geselecteerde instellingen",
+    start = "Begin het spel met de geselecteerde instellingen",
     easy = "Als je dit spel nog nooit gespeeld hebt, is deze optie voor jou",
     medium = "De gulden middenweg, als je geen idee hebt wat je wilt",
-	hard = "Als je het spel kent en meer uitdaging zoekt, kies deze optie.",
+    hard = "Als je het spel kent en meer uitdaging zoekt, kies deze optie.",
   },
   calls_dispatcher = {
     assigned = "Dit vakje is aangekruist als de taak is toegewezen",
@@ -1246,8 +1243,8 @@ tooltip = {
     back = "Sluit het instellingenvenster",
     original_path = "De gekozen locatie van de originele Theme Hospital installatie",
     browse = "Zoek een andere locatie van een originele Theme Hospital installatie (locatie is op dit moment: %1%)",
-	font_location = "Locatie van het font bestand dat Unicode tekens kan weergeven, welke vereist is bij je taal. Wanneer dit niet gekozen is, zul je niet in staat zijn om talen te kiezen welke meer tekens nodig hebben dan het orginele spel kan leveren. Voorbeelden: Russisch en Chinees.",
-	browse_font = "Zoek naar een ander font bestand (locatie op dit moment: %1%)", 
+    font_location = "Locatie van het font bestand dat Unicode tekens kan weergeven, welke vereist is bij je taal. Wanneer dit niet gekozen is, zul je niet in staat zijn om talen te kiezen welke meer tekens nodig hebben dan het orginele spel kan leveren. Voorbeelden: Russisch en Chinees.",
+    browse_font = "Zoek naar een ander font bestand (locatie op dit moment: %1%)", 
     no_font_specified = "Geen locatie geselecteerd!", 
   },
   research_policy = {
@@ -1575,8 +1572,8 @@ adviser = {
     no_desk_2 = "Lekker gedaan, dit moet een nieuw record zijn: bijna een jaar zonder patiënten! Als je hier manager wilt blijven, neem dan nu een receptioniste aan en bouw een receptiebalie waar ze kan werken!", 
     no_desk_3 = "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je patiënten gaat krijgen? Los het onmiddellijk op, en stop met dat gerommel!",
     cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in aan te nemen.",
-	research_screen_open_1 = "Je moet eerst een laboratorium bouwen, voordat je het onderzoeksscherm kunt bekijken.",
-	research_screen_open_2 = "Onderzoek is in dit level nog niet toegankelijk.",
+    research_screen_open_1 = "Je moet eerst een laboratorium bouwen, voordat je het onderzoeksscherm kunt bekijken.",
+    research_screen_open_2 = "Onderzoek is in dit level nog niet toegankelijk.",
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
@@ -2786,6 +2783,9 @@ new_game_window = {
   start = "Begin",
   cancel = "Annuleren",
   tutorial = "Leermodus",
+  option_on = "Aan",
+  option_off = "Uit",
+  caption = "Nieuwe carrière",
 }
 calls_dispatcher = {
   repair = "Reparatie",
