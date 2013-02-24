@@ -870,10 +870,18 @@ function Hospital:onEndDay()
   -- if there's currently an earthquake going on, possibly give the machines some damage
   if (self.world.active_earthquake) then
     for _, room in pairs(self.world.rooms) do
-      for object, value in pairs(room.objects) do
-        if (object.strength) then
-          if (math.random(0,3) == 1) then
-            object:machineUsed(room)
+      -- Only damage this hospital's objects.
+      if room.hospital == self then -- TODO: For multiplayer?
+        for object, value in pairs(room.objects) do
+          if object.strength then
+            -- The or clause is for backwards compatibility. Then the machine takes one damage each day.
+            if (object.quake_points and object.quake_points > 0) 
+            or object.quake_points == nil then
+              object:machineUsed(room)
+            end
+            if object.quake_points then
+              object.quake_points = object.quake_points - 1
+            end
           end
         end
       end

@@ -516,14 +516,14 @@ function World:createEarthquake()
     return false
   end
   
-  -- the bigger the earthquake, the longer it lasts. We add two
-  -- further days, as we use those to give a small earthquake first,
+  -- the bigger the earthquake, the longer it lasts. We add one
+  -- further day, as we use those to give a small earthquake first,
   -- before the bigger one begins
-  local stop_day = math.round(self.earthquake_size / 3) + 2
+  local stop_day = math.round(self.earthquake_size / 3) + 1
 
-  -- make sure the user has at least three days of an earthquake
-  if stop_day < 3 then
-    stop_day = 3
+  -- make sure the user has at least two days of an earthquake
+  if stop_day < 2 then
+    stop_day = 2
   end
 
   -- store the offsets so we can not shake the user to some too distant location
@@ -539,6 +539,15 @@ function World:createEarthquake()
     self.earthquake_stop_day = self.earthquake_stop_day - self:getCurrentMonthLength()
   end
 
+  -- Prepare machines for getting damage - at most as much as the severity of the earthquake +-1
+  for _, room in pairs(self.rooms) do
+    for object, value in pairs(room.objects) do
+      if object.strength then
+        object.quake_points = self.earthquake_size + math.random(-1, 1)
+      end
+    end
+  end
+  
   -- set a flag to indicate that we are now having an earthquake
   self.active_earthquake = true
   return true
@@ -553,17 +562,31 @@ function World:tickEarthquake()
     if (self.earthquake_size > 7) then
       self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.earthquake_size)))
     end
+    -- Make sure that machines got all the damage they should get.
+    for _, room in pairs(self.rooms) do
+      for object, value in pairs(room.objects) do
+        if object.strength and object.quake_points then
+          while object.quake_points > 0 do
+            object:machineUsed(room)
+            object.quake_points = object.quake_points - 1
+          end
+        end
+      end
+    end
+  
     -- set up the next earthquake date
     self:nextEarthquake()
   else
+    -- Multiplier for how much the screen moves around during the quake.
+    local multi = 4
     if (self.day > self.earthquake_stop_day) or (self.day < math.round(self.earthquake_size / 3)) then
       -- if we are in the first two days of the earthquake, make it smaller
-      self.randomX = math.random(-(self.earthquake_size/2)*7, (self.earthquake_size/2)*7)
-      self.randomY = math.random(-(self.earthquake_size/2)*7, (self.earthquake_size/2)*7)
+      self.randomX = math.random(-(self.earthquake_size/2)*multi, (self.earthquake_size/2)*multi)
+      self.randomY = math.random(-(self.earthquake_size/2)*multi, (self.earthquake_size/2)*multi)
     else
       -- otherwise, hit the user with the full earthquake
-      self.randomX = math.random(-self.earthquake_size*7, self.earthquake_size*7)
-      self.randomY = math.random(-self.earthquake_size*7, self.earthquake_size*7)
+      self.randomX = math.random(-self.earthquake_size*multi, self.earthquake_size*multi)
+      self.randomY = math.random(-self.earthquake_size*multi, self.earthquake_size*multi)
     end
 
     -- if the game is not paused
@@ -1304,8 +1327,9 @@ function World:nextEarthquake()
       self.next_earthquake_month = next_month + (self.year - 1) * 12
       self.next_earthquake_day = days
 
-      -- earthquake can be between 1 and 10 on the richter scale
-      self.earthquake_size = math.random()*10
+      -- earthquake can be between 1 and 10 (non-inclusive) on the richter scale
+      -- Make quakes at around 4 more probable.
+      self.earthquake_size = math.round(math.min(math.max(math.n_random(4,2), 1), 9))
     end
   end
 end
