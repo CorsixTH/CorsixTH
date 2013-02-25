@@ -24,7 +24,7 @@ FILE(GLOB_RECURSE mapedit_source_files
 IF(APPLE) 
   add_definitions(-DIS_MAPEDIT_APP)
 
-  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
+  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/MapEdit/Icon.icns)
   set_source_files_properties(
     ${corsixth_icon_file}
     PROPERTIES
@@ -39,19 +39,12 @@ IF(APPLE)
   )
 
   set_target_properties(MapEdit PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
+  set_target_properties(MapEdit PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 
-  #Add an extra step at the end of the build process to copy the resources into the
-  #bundle. I haven't yet found a way to keep the folder structure when adding resources
-  #into XCode. I would have thought we could use source_group but apparently not.
-  set(corsixth_bundle_resources 
-    ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua
-    ${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap
-    ${CMAKE_SOURCE_DIR}/CorsixTH/Lua
-  )
-  add_custom_command(TARGET MapEdit 
-    POST_BUILD
-    COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks ${corsixth_bundle_resources} \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources
-)
+  #Add an extra step at the end of the build process to copy the resources into the bundle.
+  add_custom_command(TARGET MapEdit
+  					 POST_BUILD
+  					 COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/MapEdit/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources)
 
 ELSE()
   add_executable(MapEdit 

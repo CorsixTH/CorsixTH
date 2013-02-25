@@ -1,5 +1,6 @@
 * text=auto !eol
 AnimView/AnimView.ico -text
+AnimView/Icon.icns -text
 CorsixTH/Bitmap/aux_ui.dat -text svneol=unset#unset
 CorsixTH/Bitmap/aux_ui.tab -text
 CorsixTH/Bitmap/bootstrap_font.bmp -text
@@ -52,9 +53,12 @@ CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/confined_v5.map -text
 CorsixTH/Levels/finisham.map -text
 CorsixTH/Lua/languages/hungarian.lua -text
+CorsixTH/RequiredResources.txt -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 LDocGen/output/corner_right.gif -text
 LDocGen/output/logo.png -text
 LPEG/lpeg-128.gif -text
+MapEdit/Icon.icns -text
 MapEdit/MapEdit.ico -text
+MapEdit/RequiredResources.txt -text
 WindowsInstaller/welcome.bmp -text

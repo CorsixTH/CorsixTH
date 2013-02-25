@@ -1,0 +1,14 @@
+# rsync compatible filter file which is used post-build 
+# to help with copying the required resources into the 
+# bundles for the Mac build.
+
+- .svn
+- .DS_Store
+- CVS
++ CorsixTH.lua
++ Lua/
++ Lua/**
++ Bitmap/
++ Bitmap/*.png
++ Bitmap/aux_ui.*
+- *

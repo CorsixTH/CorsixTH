@@ -73,20 +73,12 @@ IF(APPLE)
   add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_source_files} ${corsixth_icon_file})
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
+  set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 
-  #Add an extra step at the end of the build process to copy the resources into the
-  #bundle. I haven't yet found a way to keep the folder structure when adding resources
-  #into XCode. I would have thought we could use source_group but apparently not.
-  set(corsixth_bundle_resources 
-    ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.lua
-    ${CMAKE_SOURCE_DIR}/CorsixTH/Bitmap
-    ${CMAKE_SOURCE_DIR}/CorsixTH/Lua
-    ${CMAKE_SOURCE_DIR}/CorsixTH/Levels
-  )
-  add_custom_command(TARGET CorsixTH 
-					 POST_BUILD
-					 COMMAND /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -exclude *.bmp -exclude *.png -resolve-src-symlinks ${corsixth_bundle_resources} \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources
-  )
+  #Add an extra step at the end of the build process to copy the resources into the bundle.
+  add_custom_command(TARGET CorsixTH
+  					 POST_BUILD
+  					 COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources)
 
   target_link_libraries(CorsixTH SDLmain)
   INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
@@ -221,7 +213,7 @@ IF(APPLE)
   	  install(DIRECTORY ${LUA_LIBRARY} DESTINATION CorsixTH.app/Contents/Frameworks)
     ENDIF()
   ENDIF()
-
+  
 ELSE()
   install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
   install(DIRECTORY Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)

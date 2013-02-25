@@ -26,7 +26,7 @@ SET(animview_source_files
 # Declaration of the executable
 IF(APPLE)
 
-  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
+  set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/AnimView/Icon.icns)
   set_source_files_properties(
     ${corsixth_icon_file}
     PROPERTIES
@@ -42,6 +42,8 @@ IF(APPLE)
   )
 
   set_target_properties(AnimView PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
+  set_target_properties(AnimView PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
+  
 ELSE()
   add_executable( 
     AnimView 
