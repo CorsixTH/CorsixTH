@@ -1353,6 +1353,10 @@ void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
     pCanvas->flushSprites(); // Without this the lines are draw behind sprites/textures
 
+    // Strangely drawing at 0,0 would draw outside of the screen
+    // so we start at 1,0. This makes OpenGl behave like DirectX.
+    iX++; 
+
     glDisable(GL_TEXTURE_2D);
     glColor4ub(m_iR, m_iG, m_iB, m_iA);
     glLineWidth(m_fWidth);
@@ -1365,7 +1369,7 @@ void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
     while (op) {
         if (op->type == THLOP_LINE) {
             glBegin(GL_LINES);
-            glVertex3f(lastX + iX, lastY +iY, 0.0f);
+            glVertex3f(lastX + iX, lastY + iY, 0.0f);
             glVertex3f(op->m_fX + iX, op->m_fY + iY, 0.0f);
             glEnd();
         }

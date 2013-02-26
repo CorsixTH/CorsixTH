@@ -946,8 +946,10 @@ void THLine::setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA)
 
 void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
+    // Strangely drawing at 0,0 would draw outside of the screen
+    // so we start at 1,0. This makes SDL behave like DirectX.
     SDL_Rect rcDest;
-    rcDest.x = iX;
+    rcDest.x = iX + 1;
     rcDest.y = iY;
 
     // Try to get a cached line surface
