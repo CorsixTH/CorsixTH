@@ -137,6 +137,9 @@ IF(CORSIX_TH_USE_FFMPEG)
   IF(FFMPEG_FOUND)
     TARGET_LINK_LIBRARIES(CorsixTH ${FFMPEG_LIBRARIES})
     INCLUDE_DIRECTORIES(${FFMPEG_INCLUDE_DIRS})
+    IF(APPLE)
+      TARGET_LINK_LIBRARIES(CorsixTH libz.dylib)
+    ENDIF()
     message("  FFmpeg found")
   ELSE(FFMPEG_FOUND)
     message("Error: FFmpeg library not found, even though it was selected to be included")
@@ -149,6 +152,9 @@ IF(CORSIX_TH_USE_FREETYPE2)
   IF(FREETYPE_FOUND)
     TARGET_LINK_LIBRARIES(CorsixTH ${FREETYPE_LIBRARIES})
     INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIRS})
+	IF(APPLE)
+      TARGET_LINK_LIBRARIES(CorsixTH libbz2.dylib)
+    ENDIF()
     message("  FreeType2 found")
   ELSE(FREETYPE_FOUND)
     message("Error: FreeType2 library not found, even though it was selected to be used")
@@ -191,6 +197,7 @@ ENDIF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
 
 # Declaration of the install process
 IF(APPLE)
+
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
   install(TARGETS CorsixTH BUNDLE DESTINATION .)
 
