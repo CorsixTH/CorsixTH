@@ -1,5 +1,5 @@
 ﻿--[[
-Copyright (c) 2011 - translation -  BuTcHeR (extragry.pl)
+Copyright (c) 2013 - translation -  BuTcHeR (extragry.pl)
 
 The study, diagnosis and surgery on the translation performed by:
 - Bemberg, the anesthesiologist - translation, corrections, testing (grajpopolsku.pl)
@@ -54,6 +54,10 @@ misc = {
   force = "Siła",
   pause = "Pauza",
   send_message_all = "Wyślij wiadomość do wszystkich graczy",
+}
+handyman_window = {
+  all_parcels = "Wszystkie",
+  parcel = "Parcela",
 }
 staff_list = {
   morale = "MORALE",
@@ -132,6 +136,7 @@ tooltip = {
     staff_ability = "Umiejętności personelu",
   },
   handyman_window = {
+    parcel_select = "Miejsce, w którym dozorca przyjmuje zadania, kliknij aby zmienić ustawienia.",
     close = "Anuluj żądanie",
     ability = "Umiejętności",
     face = "Twarz Dozorcy",
@@ -303,18 +308,21 @@ tooltip = {
   },
   custom_game_window = {
     start_game_with_name = "Wczytaj poziom %s",
+    free_build = "Zaznacz, jeżeli chcesz grać bez limitów finansowych oraz ustalonych warunków przegranej lub zwycięstwa",
   },
   cheats_window = {
     close = "Zamknij okno oszustw",
     cheats = {
-      end_month = "Przeskocz na koniec miesiąca.",
-      emergency = "Stwórz nagły wypadek.",
-      win_level = "Wygraj obecny poziom.",
-      create_patient = "Stwórz pacjenta na skraju mapy.",
-      money = "Dodaj 10.000 do swojego konta.",
-      lose_level = "Przegraj obecny poziom.",
-      all_research = "Dokończ wszystkie badania.",
-      end_year = "Przeskocz na koniec roku.",
+      end_month = "Przeskakuje na koniec miesiąca.",
+      create_patient = "Tworzy pacjenta na skraju mapy.",
+      money = "Dodaje 10.000 do swojego konta.",
+      emergency = "Tworzy nagły wypadek.",
+      win_level = "Wygrywa obecny poziom.",
+      vip = "Tworzy VIP'a.",
+      lose_level = "Przegrywa obecny poziom.",
+      earthquake = "Tworzy trzęsienie ziemi.",
+      all_research = "Dokańcza wszystkie badania.",
+      end_year = "Przeskakuje na koniec roku.",
     },
   },
   casebook = {
@@ -401,6 +409,8 @@ tooltip = {
     abort_diagnosis = "Wyślij osobę na leczenie bez skończenia diagnozowania choroby",
   },
   menu_list_window = {
+    save_date = "Kliknij tutaj aby sortować listę według ostatniej daty modyfikacji",
+    name = "Kliknij tutaj aby sortować listę według nazwy",
     back = "Wróć",
   },
   watch = {
@@ -409,11 +419,14 @@ tooltip = {
     epidemic = "Epidemia: czas pozostały na opanowanie epidemii. Gdy czas upłynie lub zarażony pacjent opuści szpital, odwiedzi cię Inspektor Zdrowia. Przycisk włącza/wyłącza tryb szczepienia. Kliknij na pacjenta, aby zaszczepiła go Pielęgniarka.",
   },
   new_game_window = {
-    hard = "Jeżeli chcesz mieć więcej wyzwań a tego typu gry to Twój chleb powszedni wybierz tą opcję",
-    cancel = "Och, tak naprawdę nie chcę rozpoczynać nowej gry!",
-    tutorial = "Jeżeli potrzebujesz pomocy przy rozpoczęciu gry zaznacz to pole.",
-    easy = "Jeżeli jesteś początkującym graczem, jest to dla Ciebie odpowiedni poziom",
-    medium = "Jest to średni poziom trudności, zalecany dla większości graczy",
+  player_name = "Wprowadź nazwę jaka będzie używana podczas gry",
+  difficulty = "Wybierz poziom trudności na jakim chcesz rozpocząć grę",
+  easy = "Jeżeli jesteś początkującym graczem, jest to dla ciebie odpowiedni poziom",
+  medium = "Jest to średni poziom trudności, zalecany dla większości graczy",
+  hard = "Jeżeli chcesz mieć więcej wyzwań a tego typu gry to twój chleb powszedni wybierz tą opcję",
+  tutorial = "Jeżeli potrzebujesz pomocy przy rozpoczęciu gry zaznacz to pole.",
+  start = "Rozpocznij grę z wybranymi ustawieniami",
+  cancel = "Och, tak naprawdę nie chcę rozpoczynać nowej gry!",
   },
   save_game_window = {
     new_save_game = "Wprowadź nazwę dla zapisanej gry",
@@ -576,26 +589,37 @@ tooltip = {
     close = "Przerwij i wróć do gry",
   },
   options_window = {
+	fullscreen = "Wybór pomiędzy trybem pełnoekranowym lub grą w oknie",
     fullscreen_button = "Kliknij aby włączyć tryb pełnoekranowy",
-    original_path = "Aktualnie wybrany katalog z zainstalowaną grą Theme Hospital",
-    browse = "Zmień ścieżkę zainstalowanej gry Theme Hospital. %1%",
-    change_resolution = "Zmień rozdzielczość okna do wymiarów wpisanych po lewo",
-    height = "Wpisz żądaną wysokość ekranu",
+	resolution = "Rozdzielczość w jakiej powinna działać gra",
+	select_resolution = "Wybierz nową rozdzielczość",
     width = "Wpisz żądaną szerokość ekranu",
-    language = "Wybierz %s jako język gry",
-    back = "Zamknij okno opcji",
+    height = "Wpisz żądaną wysokość ekranu",
+	apply = "Zatwierdź wybraną rozdzielczość",
+	cancel = "Powrót bez zmiany rozdzielczośći",
+	data_location = "Katalog z zainstalowaną oryginalną grą Theme Hospital, która wymagana jest do uruchomienia CorsixTH",
+	font_location = "Lokalizacja pliku z czcionką, która jest w stanie wyświetlić znaki wymagane przez twój język. Jeżeli nie będzie ona wybrana, wybór języka obsługującego inne znaki niż oryginalna gra nie będzie możliwy. Przykłady: Rosyjski i Chiński",
+	language = "Język, w którym wyświetlone zostaną teksty gry",
+	select_language = "Wybierz język gry",
+	language_dropdown_item = "Wybierz %s jako język gry",
+    original_path = "Aktualnie wybrany katalog z zainstalowaną grą Theme Hospital",
+	browse = "Zmień ścieżkę zainstalowanej gry Theme Hospital (obecna lokalizacja: %1%)",
+	browse_font = "Zmień ścieżkę dla innego pliku z czcionką (obecna lokalizacja: %1%)",
+	no_font_specified = "Lokalizacja czcionki nie została jeszcze wybrana!",
+	back = "Zamknij okno opcji",
   },
 }
 menu_charts = {
-  briefing = "  ODPRAWA  ",
-  casebook = "  TECZKA  ",
-  graphs = "  WYKRESY ",
-  policy = "  STRATEGIA SZPITALA",
-  bank_manager = "  MENADŻER BANKU ",
-  statement = "  RAPORT  ",
-  staff_listing = "  LISTA PERSONELU",
-  research = "  BADANIA  ",
-  status = "  POZYCJA ",
+  bank_manager  = "  (F1) MENADŻER BANKU  ",
+  statement     = "  (F2) RAPORT  ",
+  staff_listing = "  (F3) LISTA PERSONELU  ",
+  town_map      = "  (F4) MAPA MIASTA  ",
+  casebook      = "  (F5) TECZKA  ",
+  research      = "  (F6) BADANIA  ",
+  status        = "  (F7) POZYCJA  ",
+  graphs        = "  (F8) WYKRESY  ",
+  policy        = "  (F9) STRATEGIA SZPITALA  ",
+  briefing		= "  ODPRAWA  ",
 }
 town_map = {
   number = "Numer Gruntu",
@@ -621,17 +645,20 @@ vip_names = {
 }
 custom_game_window = {
   caption = "Gra niestandardowa",
+  free_build = "Wolna budowa",
 }
 cheats_window = {
   cheats = {
-    end_month = "Koniec Miesiąca",
-    emergency = "Nagły wypadek",
-    win_level = "Wygraj Poziom",
-    create_patient = "Stwórz Pacjenta",
+    end_month = "Koniec miesiąca",
+    create_patient = "Stwórz pacjenta",
     money = "Pieniądze",
-    lose_level = "Przegraj Poziom",
-    all_research = "Dokończ Badania",
-    end_year = "Koniec Roku",
+    emergency = "Nagły wypadek",
+    win_level = "Wygraj poziom",
+    vip = "Stwórz VIP",
+    lose_level = "Przegraj poziom",
+    earthquake = "Stwórz trzęsienie ziemi",
+    all_research = "Dokończ badania",
+    end_year = "Koniec roku",
   },
   close = "Zamknij",
   caption = "Oszustwa",
@@ -791,9 +818,11 @@ bank_manager = {
 main_menu = {
   exit = "Wyjście",
   custom_level = "Gra niestandardowa",
+  version = "Wersja: ",
   new_game = "Nowa gra",
   load_game = "Wczytaj grę",
   options = "Ustawienia",
+  savegame_version = "Wersja zapisu: ",
 }
 date_format = {
   daymonth = "%1% %2:months%",
@@ -1222,19 +1251,22 @@ menu_debug = {
   plant_pagers = "  PLANT PAGERS         ",
 }
 progress_report = {
-  quite_unhappy = "Twoi ludzie są niezadowoleni. ",
-  header = "Informacje o postępie",
-  very_unhappy = "Twoi ludzie są bardzo niezadowoleni. ",
-  more_drinks_machines = "Kup więcej Automatów do napoi. ",
-  too_cold = "Jest zdecydowanie za zimno. Dokup kaloryfery. ",
+  free_build = "WOLNA BUDOWA",
   too_hot = "Zrób coś z centralnym ogrzewaniem. Jest za gorąco. ",
   percentage_pop = "% populacji",
   win_criteria = "KRYTERIA ZWYCIĘSTWA",
+  very_unhappy = "Twoi ludzie są bardzo niezadowoleni. ",
+  quite_unhappy = "Twoi ludzie są niezadowoleni. ",
+  header = "Informacje o postępie",
+  too_cold = "Jest zdecydowanie za zimno. Dokup kaloryfery. ",
+  more_drinks_machines = "Kup więcej Automatów do napoi. ",
 }
 menu_options = {
   game_speed = "  SZYBKOŚĆ GRY ",
-  sound_vol = "  GŁOŚNOŚĆ DŹWIĘKU ",
   music_vol = "  GŁOŚNOŚĆ MUZYKI ",
+  sound_vol = "  GŁOŚNOŚĆ DŹWIĘKU ",
+  adviser_disabled = "  DORADCA  ",
+  warmth_colors = "  CIEPŁOŚĆ BARW  ",
   edge_scrolling = "  PRZEWIJANIE PRZY KRAWĘDZIACH  ",
   announcements = "  POWIADOMIENIA   ",
   lock_windows = "  ZABLOKUJ OKNA  ",
@@ -1245,13 +1277,19 @@ menu_options = {
   autosave = "  AUTOZAPIS ",
   jukebox = "  SZAFA GRAJĄCA ",
 }
+menu_options_warmth_colors = {
+  choice_1 = "  CZERWONY  ",
+  choice_2 = "  NIEBIESKI ZIELONY CZERWONY  ",
+  choice_3 = "  ŻÓŁTY POMARAŃCZOWY CZERWONY  ",
+}
+
 menu_options_game_speed = {
-  normal = "  (3) NORMALNIE  ",
-  slower = "  (2) WOLNO  ",
-  pause = "  (P) PAUZA  ",
-  max_speed = "  (4) NAJSZYBCIEJ  ",
-  slowest = "  (1) NAJWOLNIEJ  ",
-  and_then_some_more = "  (5) I JESZCZE TROCHĘ  ",
+  pause               = "  (P) PAUZA  ",
+  slowest             = "  (1) NAJWOLNIEJ  ",
+  slower              = "  (2) WOLNO  ",
+  normal              = "  (3) NORMALNIE  ",
+  max_speed           = "  (4) NAJSZYBCIEJ  ",
+  and_then_some_more  = "  (5) I JESZCZE TROCHĘ  ",
 }
 rooms_short = {
   ultrascan = "Ultraskaner",
@@ -1462,7 +1500,7 @@ newspaper = {
   },
 }
 load_game_window = {
-  caption = "Wczytaj Grę",
+  caption = "Wczytaj Grę (%1%)",
 }
 staff_title = {
   junior = "Asystent",
@@ -1651,10 +1689,12 @@ adviser = {
     charges_too_low = "Pobierasz za niskie opłaty. Ludzie będą wybierać twój szpital, jednak nie zostawią w nim dużo pieniędzy.",
     charges_too_high = "Wprowadziłeś zbyt wysokie opłaty. Przez jakiś czas będziesz miał spore zyski, ale potem pacjenci zaczną rezygnować z twoich usług.",
     staff_overworked = "Twoi pracownicy są niezmiernie przepracowani. Stają się nieefektywni i mogą popełniać katastrofalne błędy.",
+    doctor_crazy_overwork = "O nie! Jeden z twoich Lekarzy oszalał z przepracowania. Jeżeli natychmiast pozwolisz mu odpocząć, to może wyzdrowieje.",
     doctors_tired = "Twoi Lekarze są bardzo zmęczeni. Daj im odpocząć.",
     people_did_it_on_the_floor = "Niektórzy z twoich pacjentów nie wytrzymali. Szykuje się dla kogoś duże sprzątanie.",
     queues_too_long = "Kolejki w twoim szpitalu są za długie.",
     money_very_low_take_loan = "Stan twojego konta jest zatrważająco niski. Mógłbyś rozważyć wzięcie kredytu.",
+    falling_2 = "Przestaniesz się w końcu wygłupiać?",
     patients_very_thirsty = "Pacjenci naprawdę są spragnieni. Jeżeli nie kupisz szybko Automatów do napoi, będziesz świadkiem wielkiej migracji ludzi do domu po własną colę.",
     machinery_very_damaged = "Pilne! Bezzwłocznie wezwij Dozorcę! Urządzenia za chwilę eksplodują!",
     handymen_tired2 = "Twoi Dozorcy słaniają się ze zmęczenia. Daj im natychmiast odpocząć.",
@@ -1663,12 +1703,13 @@ adviser = {
     too_much_litter = "Jest problem ze śmieciami, który rozwiązać może większa liczba Dozorców.",
     reception_bottleneck = "W recepcji utworzył się korek. Zatrudnij nową Recepcjonistkę.",
     place_plants4 = "Rozwesel pacjentów stawiając wokół więcej roślin.",
-    change_priorities_to_plants = "Musisz zmienić zadania swoim Dozorcom tak, aby spędzali więcej czasu na podlewaniu roślin.",
+    place_plants3 = "Pacjenci są przygnębieni. Kup więcej roślin, aby ich rozweselić.",
     staff_too_hot = "Twoim pracownikom jest za gorąco. Obniż temperaturę lub usuń kaloryfery z ich gabinetów.",
     finanical_trouble2 = "Zdobądź jakieś pieniądze albo szpital pójdzie pod młotek. Nie ukończysz poziomu, jeśli stracisz kolejne %d.",
     plants_thirsty = "Musisz dbać o szpitalne rośliny. Zaczynają usychać.",
     litter_everywhere = "Śmieci są wszędzie. Niech Dozorcy zajmą się tym problemem.",
     nurses_tired2 = "Twoje Pielęgniarki są bardzo zmęczone. Daj im natychmiast odpocząć.",
+    no_desk_2 = "Dobra robota, to musi być rekord świata: prawie rok bez pacjentów! Jeżeli chcesz nadal być kierownikiem tego szpitala, musisz zatrudnić recepcjonistkę i kupić jej biurko aby mogła pracować!",
     plants_dying = "Rośliny umierają błagając o kroplę wody. Niech Dozorcy się tym zajmą. Pacjenci nie lubią martwych roślin.",
     reduce_staff_rest_threshold = "Spróbuj obniżyć próg zmęczenia personelu na ekranie Strategii Szpitala tak, aby załoga mogła częściej odpoczywać.",
     more_toilets = "Potrzebujesz więcej Toalet. Ludzie muszą się załatwić.",
@@ -1679,35 +1720,44 @@ adviser = {
     build_toilet_now = "Zbuduj Toalety! Ludzie nie mogą już dłużej wytrzymać. Nie śmiej się, to poważna sprawa.",
     patient_stuck = "Ktoś się zaklinował. Musisz lepiej rozplanować swój szpital.",
     no_patients_last_month = "W poprzednim miesiącu żaden nowy pacjent nie pojawił się w twoim szpitalu. Tragedia!",
-    more_benches = "Pomyśl o wstawieniu większej liczby ławek. Pacjenci nie znoszą stania.",
+    falling_5 = "To nie miejsce na przewracanie ludzi, wiesz przecież, że są chorzy!",
+    patients_too_hot = "Pacjentom jest za gorąco. Usuń kilka kaloryferów, obniż temperaturę, albo dokup automaty do napoi.",
     many_epidemics = "Wygląda na to, że w szpitalu szaleje więcej niż jedna epidemia. To może skończyć się kolosalna katastrofą, więc lepiej zacznij działać.",
+    falling_4 = "To jest szpital, nie wesołe miasteczko!",
     place_plants_to_keep_people = "Ludzie odchodzą. Umieszczenie roślin mogłoby ich przekonać do pozostania.",
     patients_thirsty2 = "Ludziom chce się pić. Powinieneś kupić więcej Automatów do napoi, albo przesunąć te, które już masz bliżej pacjentów.",
-    money_low = "Your money is getting low!",
+    money_low = "Kończą ci się pieniądze!",
     staff_unhappy = "Twoi pracownicy są niezadowoleni. Daj im podwyżkę, a najlepiej zbuduj dla nich Pokój Socjalny. Możesz także przydzielić im więcej czasu wolnego w dziale Strategia.",
     people_freezing = "Aż trudno uwierzyć, ale w epoce centralnego ogrzewania niektórzy z twoich pacjentów marzną na kość. Zamontuj kaloryfery i podkręć ogrzewanie.",
+    falling_6 = "To nie kręgielnia, chorzy nie powinni być traktowani w taki sposób!",
     need_toilets = "Pacjenci potrzebują toalet. Zbuduj je w łatwo dostępnym miejscu.",
+    falling_3 = "Auć, to musiało boleć, niech ktoś wezwie doktora!",
     nobody_cured_last_month = "W poprzednim miesiącu nie wyleczyłeś absolutnie nikogo.",
+    financial_trouble = "Jesteś w poważnych finansowych tarapatach. Natychmiast uporządkuj swoje finanse! Jeżeli stracisz kolejne %d, zawalisz ten poziom!",
     patients_very_cold = "Pacjentom jest bardzo zimno. Spróbuj podkręcić ogrzewanie lub zamontuj więcej kaloryferów.",
+    no_desk_3 = "Po prostu wspaniale, minął prawie rok a ty nadal nie masz recepcji! W jako sposób zamierzasz zdobyć pacjentów? Zajmij się tym natychmiast i przestań się w końcu wygłupiać!",
     build_toilets = "Czym prędzej zbuduj Toalety, albo ujrzysz coś nieprzyjemnego. Wyobraź sobie także zapach swojego szpitala.",
+    cannot_afford = "Nie masz wystarczającej ilości pieniędzy aby zatrudnić tą osobę!",
+    no_desk = "Powinieneś zakupić biurko recepcji i zatrudnić recepcjonistkę!",
+    patients_annoyed = "Ludzie są strasznie zdenerwowani twoim sposobem prowadzenia szpitala. I wcale im się nie dziwię. Weź się do roboty albo poniesiesz konsekwencje!",
     many_killed = "Masz już na sumieniu %d ludzi. A powinieneś ich leczyć i dobrze o tym wiesz.",
     place_plants2 = "Ludzie odchodzą. Więcej roślin mogłoby ich tu zatrzymać dłużej.",
     staff_tired = "Twoi pracownicy są strasznie zmęczeni. Jeżeli nie dasz im choć trochę odpocząć, niektórzy mogą paść z wycieńczenia.",
     machines_falling_apart = "Przyrządy w twoim szpitalu psują się. Wyślij natychmiast Dozorcę do ich naprawy!",
     patients_unhappy = "Pacjenci nie lubią twojego szpitala. Powinieneś coś zrobić, by poprawić im warunki.",
-    place_plants3 = "Pacjenci są przygnębieni. Kup więcej roślin, aby ich rozweselić.",
+    no_desk_1 = "Jeżeli chcesz aby pacjenci odwiedzali twój szpital, będziesz musiał zatrudnić recepcjonistkę i zakupić jej biurko, przy którym będzie pracować!",
     staff_unhappy2 = "Twoi pracownicy są niezadowoleni. Poza tym wkrótce będą chcieli więcej pieniędzy.",
     cash_low_consider_loan = "Twoja sytuacja finansowa jest bardzo zła. Czy rozważałeś wzięcie kredytu?",
     queue_too_long_at_reception = "Zbyt wielu pacjentów czeka na rejestrację. Postaw nowe Biurko Recepcji i zatrudnij Recepcjonistkę.",
     queue_too_long_send_doctor = "Kolejki do %s są za długie. Upewnij się, że w gabinecie jest Lekarz.",
-    financial_trouble = "Jesteś w poważnych finansowych tarapatach. Natychmiast uporządkuj swoje finanse! Jeżeli stracisz kolejne %d, zawalisz ten poziom!",
+    falling_1 = "Hej! To nie jest śmieszne, uważaj gdzie klikasz tą myszką; komuś może stać się krzywda!",
     doctors_tired2 = "Twoi Lekarze ledwo żyją. Potrzebują natychmiastowego odpoczynku.",
     handymen_tired = "Twoi Dozorcy są bardzo zmęczeni. Daj im odpocząć.",
     patient_leaving = "Jakiś pacjent odchodzi. Powód? Twój kiepsko zarządzany i słabo wyposażony szpital.",
-    machinery_damaged2 = "Musisz zatrudnić Dozorcę do naprawy urządzeń.",
+    deal_with_epidemic_now = "Jeżeli natychmiast nie zaradzisz tej epidemii, znajdziesz się w niezłych tarapatach. Rusz się!",
     patients_leaving = "Pacjenci odchodzą. Ulepsz swój szpital umieszczając w nim rośliny, ławki, automaty do napoi, itd.",
+    machinery_damaged2 = "Musisz zatrudnić Dozorcę do naprawy urządzeń.",
     epidemic_getting_serious = "Ta Zaraźliwa Choroba zaczyna być poważna. Musisz szybko coś zrobić!",
-    machinery_damaged = "Niedługo będziesz musiał zająć się naprawą urządzeń szpitalnych, bo zaczną się rozpadać.",
     people_have_to_stand = "Zmuszasz cierpiący lud do stania. Kup natychmiast więcej ławek.",
     receptionists_tired = "Twoje Recepcjonistki są strasznie zmęczone. Daj im odpocząć.",
     build_staffroom = "Natychmiast zbuduj Pokój Socjalny! Twój personel pracuje ponad siły i jest na skraju wyczerpania. Nabierz wreszcie rozumu!",
@@ -1715,17 +1765,17 @@ adviser = {
     need_staffroom = "Zbuduj Pokój Socjalny, aby twoi pracownicy mieli gdzie odpocząć.",
     patients_getting_hot = "Pacjentom jest bardzo gorąco. Spróbuj zmniejszyć ogrzewanie lub usuń niektóre kaloryfery.",
     machinery_deteriorating = "Twoje urządzenia właśnie zaczęły niszczeć na skutek zużycia. Miej na nie oko.",
-    patients_too_hot = "Pacjentom jest za gorąco. Usuń kilka kaloryferów, obniż temperaturę, albo dokup automaty do napoi.",
+    machinery_damaged = "Niedługo będziesz musiał zająć się naprawą urządzeń szpitalnych, bo zaczną się rozpadać.",
     patients_thirsty = "Ludziom chce się pić. Może powinieneś kupić jakieś automaty do napoi.",
     machine_severely_damaged = "%s wkrótce ulegnie nieodwracalnemu uszkodzeniu.",
     litter_catastrophy = "Sytuacja ze śmieciami wygląda strasznie. Niech brygada Dozorców szybko się tym zajmie!",
     staff_very_cold = "Personel narzeka na zimno. Podkręć ogrzewanie lub zamontuj więcej kaloryferów.",
-    deal_with_epidemic_now = "Jeżeli natychmiast nie zaradzisz tej epidemii, znajdziesz się w niezłych tarapatach. Rusz się!",
+    more_benches = "Pomyśl o wstawieniu większej liczby ławek. Pacjenci nie znoszą stania.",
     too_many_plants = "Masz zdecydowanie za dużo roślin. Tu jest jak w dżungli.",
-    patients_really_thirsty = "Pacjenci są naprawdę spragnieni. Wstaw nowe Automaty do napoi, lub przesuń stare bliżej dużych kolejek.",
+    change_priorities_to_plants = "Musisz zmienić zadania swoim Dozorcom tak, aby spędzali więcej czasu na podlewaniu roślin.",
     some_litter = "Dozorcy mogą pozbyć się śmieci, zanim staną się one poważnym problemem.",
-    patients_annoyed = "Ludzie są strasznie zdenerwowani twoim sposobem prowadzenia szpitala. I wcale im się nie dziwię. Weź się do roboty albo poniesiesz konsekwencje!",
     receptionists_tired2 = "Twoje Recepcjonistki opadły z sił. Daj im trochę odpocząć.",
+    patients_really_thirsty = "Pacjenci są naprawdę spragnieni. Wstaw nowe Automaty do napoi, lub przesuń stare bliżej dużych kolejek.",
   },
   placement_info = {
     door_can_place = "Jeżeli chcesz, możesz umieścić tutaj drzwi.",
@@ -1802,6 +1852,11 @@ calls_dispatcher = {
   staff = "%s - %s",
 }
 information = {
+  cheat_not_possible = "Nie można używać oszustwa na tym poziomie. Nie potrafisz nawet oszukiwać, niezbyt to śmieszne co?",
+  very_old_save = "Zaszło sporo zmian w grze od czasu, gdy rozpoczęty został ten poziom. Aby mieć pewność, że wszystko działa jak należy, zaleca się rozpoczęcie poziomu od nowa.",
+  no_custom_game_in_demo = "Przepraszamy ale w wersji demonstracyjnej nie można grać na niestandardowych mapach.",
+  cannot_restart = "Niestety ta dodatkowa mapa była zapisana zanim wprowadzona została możliwość ponownego rozpoczynania gry.",
+  custom_game = "Witaj w CorsixTH. Życzymy dużo zabawy z dodatkowymi mapami!",
   level_lost = {
     [1] = "Pech! Nie udało Ci się ukończyć poziomu. Powodzenia następnym razem!",
     [2] = "Powód dla którego przegrałeś:",
@@ -1809,8 +1864,6 @@ information = {
     balance = "Twój stan konta był mniejszy niż %d.",
     percentage_killed = "Zabiłeś więcej niż %d procent pacientów.",
   },
-  cannot_restart = "Niestety ta dodatkowa mapa była zapisana zanim wprowadzona została możliwość ponownego rozpoczynania gry.",
-  custom_game = "Witaj w CorsixTH. Życzymy dużo zabawy z dodatkowymi mapami!",
 }
 casebook = {
   sent_home = "odprawionych",
@@ -1834,11 +1887,17 @@ casebook = {
   },
 }
 new_game_window = {
-  hard = "Konsultan (Trudny)",
-  cancel = "Anuluj",
-  tutorial = "Samouczek",
+  caption = "Kampania",
+  player_name = "Imię gracza",
+  option_on = "Włączone",
+  option_off = "Wyłączone",
+  difficulty = "Poziom trudności",
   easy = "Asystent (Łatwy)",
   medium = "Doktor (Średni)",
+  hard = "Konsultan (Trudny)",
+  tutorial = "Samouczek",
+  start = "Rozpocznij",
+  cancel = "Anuluj",
 }
 diseases = {
   diag_ward = {
@@ -1871,7 +1930,7 @@ diseases = {
   spare_ribs = {
     cause = "Przyczyna - siadanie na zimnej podłodze.",
     cure = "Leczenie - to coś musi być usunięte przez dwóch Chirurgów i oddane pacjentowi w papierowej torbie.",
-    name = "Zapasowe Żebra",
+    name = "Żeberka",
     symptoms = "Objawy - nieprzyjemne uczucie w klatce piersiowej.",
   },
   diag_blood_machine = {
@@ -2030,7 +2089,7 @@ diseases = {
   kidney_beans = {
     cause = "Przyczyna - miażdżenie kostek lodu w drinkach.",
     cure = "Leczenie - dwóch Chirurgów usuwa kamienie bez naruszania nerek.",
-    name = "Kamienie Nerkowe",
+    name = "Kamionka Nerkowa",
     symptoms = "Objawy - ból i częste wizyty w toalecie.",
   },
   transparency = {
@@ -2116,13 +2175,22 @@ competitor_names = {
   [24] = "NIC",
 }
 options_window = {
+  caption = "Opcje",
+  option_on = "Włączone",
+  option_off = "Wyłączone",
   fullscreen = "Pełny ekran",
-  cancel = "Anuluj",
+  resolution = "Rozdzielczość",
+  custom_resolution = "Niestandardowa...",
   browse = "Przeglądaj...",
   width = "Szerokość",
   height = "Wysokość",
   new_th_directory = "Tutaj możesz określić nowy katalog z zainstalowaną grą Theme Hospital. Jak tylko dokonasz wyboru gra będzie uruchomiona ponownie.",
-  change_resolution = "Zmień rozdzielczość",
+  apply = "Zatwierdź",
+  cancel = "Anuluj",
+  data_location = "Lokalizacja danych",
+  font_location = "Lokalizacja czcionki",
+  language = "Game language",
+  cancel = "Anuluj",
   back = "Wróć",
 }
 buy_objects_window = {
@@ -2131,53 +2199,43 @@ buy_objects_window = {
   total = "Suma: ",
 }
 trophy_room = {
-  happy_staff = {
-    awards = {
+  wait_times = {
+    award = {
+      [1] = "Gratulacje. Kolejki w twoim szpitalu są zawsze wyjątkowo krótkie. To bardzo ważne wyróżnienie.",
     },
-    trophies = {
-      [1] = "Zostałeś nagrodzony Radosnym Trofeum za utrzymanie szczęśliwym ciężko pracującego personelu.",
-      [2] = "Instytut Szczęścia nagrodził cię, za brak niezadowolonego personelu w twoim szpitalu w ciągu ostatniego roku.",
-      [3] = "To trofeum, Więcej Radości jest niniejszym wręczone tobie, za utrzymanie zadowolonego personelu podczas ostatniego roku. Uśmiechajcie się wszyscy!",
+    penalty = {
+      [1] = "Ludzie w twoim szpitalu muszą zbyt długo czekać. Kolejki są za długie. Gdybyś tylko chciał, mógłbyś bardziej efektywnie obsługiwać pacjentów.",
     },
   },
-  reputation = "REPUTACJA",
   happy_vips = {
+    trophies = {
+      [1] = "Agencja Znani&Bogaci chciałaby cię nagrodzić Trofeum Sławy za uszczęśliwienie każdego VIPa, jaki odwiedził twój szpital. Możesz uznać się za dość sławnego i prawie jednego z nas.",
+      [2] = "Agencja Znani&Bogaci chciałaby cię nagrodzić Trofeum Sławy za uszczęśliwienie każdego VIPa, jaki odwiedził twój szpital. Możesz uznać się za dość sławnego i prawie jednego z nas.",
+      [3] = "Gratulacje z okazji nagrody JAZDA VIPa, za pokazanie odwiedzającym jaką to ciężko pracującą placówką jest twój szpital. Wyśmienicie.",
+    },
     awards = {
       [1] = "Zdobyłeś Nagrodę Nobla za zaimponowanie VIPom. Wszyscy odwiedzający twój szpital w ostatnim roku byli z niego bardzo zadowoleni.",
       [2] = "Gratulacje z okazji nagrody JAZDA VIPa, za pokazanie odwiedzającym jaką to ciężko pracującą placówką jest twój szpital. Wyśmienicie.",
     },
-    trophies = {
-      [1] = "Agencja Znani&Bogaci chciałaby cię nagrodzić Trofeum Sławy za uszczęśliwienie każdego VIPa, jaki odwiedził twój szpital. Możesz uznać się za dość sławnego i prawie jednego z nas.",
-    },
   },
-  rats_killed = {
+  hosp_value = {
+    penalty = {
+      [1] = "Twój szpital nie osiągnął przyzwoitej wartości. Podejmujesz decyzje błędne pod względem finansowym. Pamiętaj, dobry szpital to także drogi szpital.",
+    },
     awards = {
+      [1] = "Ministerstwo Zdrowia chciałoby ci pogratulować imponującej wartości, jaką osiągnął twój szpital.",
     },
-    trophies = {
-      [1] = "Przyznano ci Trofeum Anty-Szkodnik za zeszłoroczny odstrzał %d szczurów w twoim szpitalu.",
-      [2] = "Zakwalifikowano cię do trofeum z Federacji Przeciw Szczurom i Myszom, dzięki twym wyjątkowym umiejętnościom w wystrzeleniu %d tych stworzeń.",
-      [3] = "Zakwalifikowałeś się do otrzymania Trofeum Wysadzić-Szczura za niebywałą umiejętność likwidacji %d szczurów w szpitalu w  zeszłym roku.",
-    },
-  },
-  no_deaths = {
-    awards = {
-      [1] = "Zdobyłeś Nagrodę Nie-Odwal-Kity za utrzymanie przy życiu 100 procent pacjentów w ostatnim roku.",
-      [2] = "Otrzymujesz tę nagrodę, aby uczcić niską liczbę zgonów w twoim szpitalu w tym roku. Świetna robota.",
-      [3] = "Śmiertelność w twoim szpitalu w ubiegłym roku była niższa niż w innych szpitalach. Proszę, przyjmij tę nagrodę.",
-      [4] = "Dzięki twojemu talentowi poziom zgonów nie przekroczył minimum. Możesz być z siebie dumny.",
-    },
-    trophies = {
-      [1] = "Towarzystwo Życie Płynie Dalej przyznało ci to trofeum za absolutny brak zgonów w zeszłym roku.",
-      [2] = "Zostałeś nominowany do Trofeum Pozostań Żywy za uniknięcie jakichkolwiek zgonów w twoim świetnym szpitalu w tym roku. Super.",
+    regional = {
+      [1] = "Jesteś geniuszem finansów. Twój szpital jest wart więcej niż wszystkie inne razem wzięte.",
     },
   },
   rats_accuracy = {
-    awards = {
-    },
     trophies = {
       [1] = "Otrzymałeś Trofeum Najcelniejszego Strzelca im. gry Syndicate Wars za %d%% precyzję w strzelaniu do szczurów.",
       [2] = "Tym trofeum pragniemy uczcić niezwykłą precyzję z jaką wymordowałeś %d%% szczurów, strzelając do nich w zeszłym roku.",
       [3] = "Aby upamiętnić wybicie %d%% wszystkich szczurów w twoim szpitalu, przyznano ci Trofeum Lochy Bez Gryzoni im. Dungeon Keepera. Gratulacje!",
+    },
+    awards = {
     },
   },
   all_cured = {
@@ -2189,7 +2247,25 @@ trophy_room = {
       [2] = "Zostałeś obdarowany Trofeum Nie-Chorobom, za wyleczenie wszystkich pacjentów szpitala w zeszłym roku.",
     },
   },
+  best_value_hosp = {
+    trophies = {
+      [1] = "Gratulacje z okazji otrzymania Trofeum, za szpital z najlepszą reputacją w ciągu ostatniego roku. Cóż, zasłużyłeś na to.",
+    },
+    penalty = {
+      [1] = "Każdy szpital w okolicy jest wart więcej niż twój. Zrób coś z tym, bo jest to żenujące. Dokup jakieś droższe urządzenia!",
+    },
+    regional = {
+      [1] = "Gratulacje, twój szpital jest najbardziej wartościowy w całej grze. Dobra robota i oby tak dalej.",
+    },
+  },
   high_rep = {
+    trophies = {
+      [1] = "Gratulacje z okazji otrzymania Trofeum, za szpital z najlepszą reputacją w ciągu ostatniego roku. Cóż, zasłużyłeś na to.",
+    },
+    penalty = {
+      [1] = "Zostajesz ukarany za utrzymywanie bardzo niskiej reputacji w przeciągu ostatniego roku. Postaraj się, by w przyszłości było lepiej.",
+      [2] = "Reputacja twojego szpitala jest najgorsza w okolicy. To hańba. Jak tak dalej pójdzie, możesz szukać nowej pracy.",
+    },
     awards = {
       [1] = "Niniejszym zostajesz nominowany do Nagrody Rządowej, za nieskazitelne standardy i najwyższą możliwą reputację w tym roku. Pięknie.",
       [2] = "Przyjmij, proszę, Nagrodę Bullfroga, za najwyższą reputację wśród szpitali w ciągu ostatniego roku. Masz powody do zadowolenia, zapracowałeś na to.",
@@ -2197,20 +2273,119 @@ trophy_room = {
       [4] = "Cudownie! Twój szpital wygrywa nagrodę za osiągniecie najlepszej reputacji w zeszłym roku.",
       [5] = "W tym roku reputacja twojego szpitala przekroczyła reputację wszystkich szpitali razem wziętych. Znaczące osiągnięcie.",
     },
-    trophies = {
-      [1] = "Gratulacje z okazji otrzymania Trofeum, za szpital z najlepszą reputacją w ciągu ostatniego roku. Cóż, zasłużyłeś na to.",
+    regional = {
+      [1] = "Przyjmij, proszę, Nagrodę Bullfroga, za najwyższą reputację wśród szpitali w ciągu ostatniego roku. Masz powody do zadowolenia, zapracowałeś na to.",
+      [2] = "W tym roku reputacja twojego szpitala przekroczyła reputację wszystkich szpitali razem wziętych. Znaczące osiągnięcie.",
     },
   },
-  many_cured = {
-    awards = {
-      [1] = "Gratulacje! Zdobywasz Nagrodę Marii Curie za wyleczenie prawie wszystkich pacjentów twojego szpitala w ciągu ostatniego roku.",
-      [2] = "Gratulacje za wyleczenie masy ludzi podczas ostatniego roku. Dużo pacjentów czuje się znacznie lepiej dzięki twojej pracy.",
-      [3] = "Przyjmij tę nagrodę, za wyleczenie większej liczby pacjentów niż inne szpitale. Niebagatelny uczynek.",
-      [4] = "Z zaszczytem wręczamy ci nagrodę za wyleczenie większej ilości pacjentów, niż wszystkie szpitale razem wzięte.",
-    },
+  consistant_rep = {
     trophies = {
-      [1] = "Za wyleczenie ogromnej liczby ludzi w ciągu ostatniego roku, Międzynarodowa Fundacja Zdrowia chce uhonorować cię Trofeum WieloLecz.",
-      [2] = "Za wyleczenie znacznego odsetka pacjentów odwiedzających twój szpital w ciągu ostatniego roku, przyznano ci Płukankowe Trofeum Nie Chorobom!",
+      [1] = "Niniejszym zostajesz nominowany do Nagrody Rządowej, za nieskazitelne standardy i najwyższą możliwą reputację w tym roku. Pięknie.",
+      [2] = "Gratulacje z okazji otrzymania Trofeum, za szpital z najlepszą reputacją w ciągu ostatniego roku. Cóż, zasłużyłeś na to.",
+    },
+  },
+  curesvdeaths = {
+    awards = {
+      [1] = "Szczere gratulacje za osiągnięcie imponującej proporcji wyleczeń-zgonów w twoim szpitalu w zeszłym roku.",
+    },
+    penalty = {
+      [1] = "Twój współczynnik wyleczeń w stosunku do zgonów jest bardzo mały. Powinieneś się upewnić, że leczysz więcej ludzi niż zabijasz. Nie zawiedź nas.",
+    },
+  },
+  cleanliness = {
+    regional_good = {
+      [1] = "Twój szpital jest znany jako jeden z najmniej czystych w okolicy. Brudny szpital jest śmierdzący i niebezpieczny. Powinieneś zwracać większą uwagę na bałagan.",
+    },
+    award = {
+      [1] = "Inspekcja odnotowała, że twój szpital jest bardzo czysty. Czysty szpital to bezpieczny szpital. Tak trzymać.",
+    },
+    regional_bad = {
+      [1] = "Twój szpital jest najbrudniejszy w okolicy. Inni administratorzy zdołali utrzymać korytarze w czystości. Przynosisz wstyd środowisku medycznemu.",
+    },
+  },
+  happy_patients = {
+    awards = {
+      [1] = "Możesz być zadowolony z faktu, że ludzie w twoim szpitalu byli bardzo zadowoleni podczas ostatniego roku.",
+      [2] = "Ludzie odwiedzający twój szpital byli bardziej zadowoleni z kuracji niż gdziekolwiek indziej.",
+    },
+    penalty = {
+      [1] = "Ludzie uważają wizyty w twoim szpitalu za niemiłe doświadczenie. Musisz coś z tym zrobić, jeżeli chcesz zdobyć poważanie Ministerstwa.",
+      [2] = "Ludzie leczący się w twoim szpitalu byli bardzo niezadowoleni ze stanu tego miejsca. Pamiętaj, najważniejsze jest dobro pacjenta.",
+    },
+  },
+  emergencies = {
+    regional_good = {
+      [1] = "Ministerstwo zauważyło, że twój szpital radził sobie lepiej z nagłymi wypadkami niż inne szpitale w zeszłym roku i przyznało ci nagrodę.",
+    },
+    penalty = {
+      [1] = "Nie radzisz sobie z nagłymi wypadkami. Pacjenci z nagłych wypadków potrzebują natychmiastowej i właściwej opieki, której ty nie zapewniasz.",
+    },
+    regional_bad = {
+      [1] = "Twój szpital najgorzej w regionie w radzi sobie z nagłymi wypadkami. To twoja wina, że wylądowałeś na szarym końcu lokalnej opieki zdrowotnej.",
+    },
+    award = {
+      [1] = "Gratulacje: skuteczne leczenie nagłych wypadków pozwoliło nam przyznać ci to specjalne wyróżnienie. Dobra robota. ",
+      [2] = "Twoja zaradność w nagłych wypadkach jest wyjątkowa. Ta nagroda jest dla najlepszych za radzenie sobie z dużym napływem chorych i cierpiących.",
+    },
+  },
+  gen_repairs = {
+    awards = {
+      [1] = "Zostałeś nominowany do specjalnej nagrody za błyskotliwość twoich Dozorców w naprawianiu sprzętu szpitalnego. Dobra robota. Weź urlop.",
+      [2] = "Twoi Dozorcy są lepsi niż w innych szpitalach. To znaczące osiągnięcie, za które ci gratulujemy.",
+      [3] = "Twój sprzęt jest w świetnym stanie. Poświęcenie twoich Dozorców jest niezwykłe. Wszyscy zasługujecie na tę prestiżową nagrodę. Świetna robota.",
+    },
+    penalty = {
+      [1] = "Dozorcy nie dbają za bardzo o twoje urządzenia. Powinieneś ich lepiej nadzorować lub zatrudnić nowych, aby poradzić sobie z natłokiem pracy.",
+      [2] = "Masz bałagan w konserwacji urządzeń. Twoi pracownicy powinni szybko i starannie opiekować się wyposażeniem.",
+    },
+  },
+  no_deaths = {
+    trophies = {
+      [1] = "Towarzystwo Życie Płynie Dalej przyznało ci to trofeum za absolutny brak zgonów w zeszłym roku.",
+      [2] = "Zostałeś nominowany do Trofeum Pozostań Żywy za uniknięcie jakichkolwiek zgonów w twoim świetnym szpitalu w tym roku. Super.",
+      [3] = "Zostałeś nominowany do Trofeum Pozostań Żywy za uniknięcie jakichkolwiek zgonów w twoim świetnym szpitalu w tym roku. Super.",
+    },
+    penalty = {
+      [1] = "Liczba zgonów w twoim szpitalu przez ostatni rok jest nie do przyjęcia. Zwróć większą uwagę na to, co robisz. Spraw, aby w przyszłości wyleczyć więcej osób.",
+      [2] = "Twój szpital niesie ryzyko dla zdrowia pacjentów. Oczekujemy od ciebie leczenia ludzi a nie ich zabijania.",
+    },
+    awards = {
+      [1] = "Zdobyłeś Nagrodę Nie-Odwal-Kity za utrzymanie przy życiu 100 procent pacjentów w ostatnim roku.",
+      [2] = "Otrzymujesz tę nagrodę, aby uczcić niską liczbę zgonów w twoim szpitalu w tym roku. Świetna robota.",
+      [3] = "Śmiertelność w twoim szpitalu w ubiegłym roku była niższa niż w innych szpitalach. Proszę, przyjmij tę nagrodę.",
+      [4] = "Dzięki twojemu talentowi poziom zgonów nie przekroczył minimum. Możesz być z siebie dumny.",
+    },
+    regional = {
+      [1] = "Śmiertelność w twoim szpitalu w ubiegłym roku była niższa niż w innych szpitalach. Proszę, przyjmij tę nagrodę.",
+    },
+  },
+  rats_killed = {
+    trophies = {
+      [1] = "Przyznano ci Trofeum Anty-Szkodnik za zeszłoroczny odstrzał %d szczurów w twoim szpitalu.",
+      [2] = "Zakwalifikowano cię do trofeum z Federacji Przeciw Szczurom i Myszom, dzięki twym wyjątkowym umiejętnościom w wystrzeleniu %d tych stworzeń.",
+      [3] = "Zakwalifikowałeś się do otrzymania Trofeum Wysadzić-Szczura za niebywałą umiejętność likwidacji %d szczurów w szpitalu w  zeszłym roku.",
+    },
+    awards = {
+    },
+  },
+  happy_staff = {
+    trophies = {
+      [1] = "Zostałeś nagrodzony Radosnym Trofeum za utrzymanie szczęśliwym ciężko pracującego personelu.",
+      [2] = "Instytut Szczęścia nagrodził cię, za brak niezadowolonego personelu w twoim szpitalu w ciągu ostatniego roku.",
+      [3] = "To trofeum, Więcej Radości jest niniejszym wręczone tobie, za utrzymanie zadowolonego personelu podczas ostatniego roku. Uśmiechajcie się wszyscy!",
+    },
+    awards = {
+      [1] = "Twoi pracownicy fundują ci tę nagrodę. Mówią, że można wprowadzić jeszcze kilka usprawnień, ale ogólnie jest dobrze.",
+      [2] = "Twój pracownicy są tak zadowoleni, że uśmiech nie schodzi im z ust. Jesteś wyśmienitym menadżerem.",
+    },
+    penalty = {
+      [1] = "Twój personel nie kryje faktu, że jest bardzo niezadowolony. Dobrzy pracownicy to skarb. Uszczęśliw ich albo dużo na tym stracisz.",
+    },
+    regional_good = {
+      [1] = "Twój personel jest szczęśliwszy niż w innych szpitalach. Zadowolona załoga oznacza większe profity i mniej zgonów.",
+    },
+    regional_bad = {
+      [1] = "Twoi pracownicy podczas ostatniego roku byli bardzo przygnębieni. Powinieneś był to zauważyć. Każdy inny szpital ma szczęśliwszych pracowników niż twój.",
     },
   },
   healthy_plants = {
@@ -2223,12 +2398,32 @@ trophy_room = {
     },
   },
   sold_drinks = {
-    awards = {
-    },
     trophies = {
       [1] = "Światowe Stowarzyszenie Dentystów ma zaszczyt przyznać ci trofeum i odznakę za wysoką sprzedaż napojów w puszkach w twoim szpitalu.",
       [2] = "Twój szpital otrzymał nagrodę Gazowanego Zeusa Handlu Detalicznego za sprzedaż dużej liczby napojów w ostatnim roku.",
       [3] = "W imieniu kompanii Plomba Bomba Inc, otrzymujesz to pokryte czekoladą trofeum, aby uczcić niezwykle wysoką tegoroczną sprzedaż napojów w twoim szpitalu.",
+    },
+    awards = {
+    },
+  },
+  many_cured = {
+    trophies = {
+      [1] = "Za wyleczenie ogromnej liczby ludzi w ciągu ostatniego roku, Międzynarodowa Fundacja Zdrowia chce uhonorować cię Trofeum WieloLecz.",
+      [2] = "Za wyleczenie znacznego odsetka pacjentów odwiedzających twój szpital w ciągu ostatniego roku, przyznano ci Płukankowe Trofeum Nie Chorobom!",
+      [3] = "Za wyleczenie znacznego odsetka pacjentów odwiedzających twój szpital w ciągu ostatniego roku, przyznano ci Płukankowe Trofeum Nie Chorobom!",
+    },
+    penalty = {
+      [1] = "Twój szpital zawodzi w skutecznym niesieniu pomocy potrzebującym. Skoncentruj się na większej wydajności w leczeniu ludzi.",
+      [2] = "Twój szpital jest mniej efektywny w leczeniu niż jakikolwiek inny. Zawiodłeś Ministerstwo i zawiodłeś samego siebie. Nic więcej nie mamy do powiedzenia.",
+    },
+    awards = {
+      [1] = "Gratulacje! Zdobywasz Nagrodę Marii Curie za wyleczenie prawie wszystkich pacjentów twojego szpitala w ciągu ostatniego roku.",
+      [2] = "Gratulacje za wyleczenie masy ludzi podczas ostatniego roku. Dużo pacjentów czuje się znacznie lepiej dzięki twojej pracy.",
+      [3] = "Przyjmij tę nagrodę, za wyleczenie większej liczby pacjentów niż inne szpitale. Niebagatelny uczynek.",
+      [4] = "Z zaszczytem wręczamy ci nagrodę za wyleczenie większej ilości pacjentów, niż wszystkie szpitale razem wzięte.",
+    },
+    regional = {
+      [1] = "Z zaszczytem wręczamy ci nagrodę za wyleczenie większej ilości pacjentów, niż wszystkie szpitale razem wzięte.",
     },
   },
   pop_percentage = {
@@ -2237,10 +2432,32 @@ trophy_room = {
       [2] = "Gratulacje. Liczba miejscowej ludności odwiedzającej twój szpital w zeszłym roku była dużo wyższa niż gdzie indziej.",
       [3] = "Wspaniale. Zwabiłeś więcej populacji do swojego szpitala, niż było odwiedzających we wszystkich innych szpitalach razem.",
     },
+    penalty = {
+      [1] = "Bardzo mało ludzi odwiedziło twój szpital w tym roku. Aby zarabiać pieniądze, ta instytucja potrzebuje pacjentów.",
+      [2] = "Każdy szpital w tej okolicy zdołał przyjąć większą liczbę pacjentów, niż twój. Powinieneś się wstydzić.",
+    },
   },
+  research = {
+    regional_good = {
+      [1] = "Dzięki badaniom naukowym twój szpital przoduje w nowoczesności. Twój sztab naukowy zasłużył na tę nagrodę. Świetnie.",
+    },
+    penalty = {
+      [1] = "Nie radziłeś sobie z wynajdowaniem nowych kuracji, urządzeń i leków. To niedobrze, gdyż postęp technologiczny jest niezwykle ważny.",
+    },
+    regional_bad = {
+      [1] = "Jesteś najsłabszy w okolicy pod względem badań naukowych. Ministerstwo jest wściekłe, ponieważ powinno ci na tym szczególnie zależeć.",
+    },
+    awards = {
+      [1] = "Dzięki badaniom naukowym twój szpital przoduje w nowoczesności. Twój sztab naukowy zasłużył na tę nagrodę. Świetnie.",
+      [2] = "Podczas ostatniego roku wynalazłeś więcej leków i sprzętu, niż ktokolwiek mógł przypuszczać. Proszę, przyjmij tę nagrodę od całego Ministerstwa.",
+    },
+  },
+  reputation = "REPUTACJA",
   cash = "GOTÓWKA",
 }
 menu_list_window = {
+  save_date = "Utworzony",
+  name = "Nazwa",
   back = "Wróć",
 }
 menu_options_volume = {
@@ -2300,7 +2517,7 @@ rooms_long = {
   blood_machine = "Analizator Krwi",
 }
 save_game_window = {
-  caption = "Zapisz Grę",
+  caption = "Zapisz Grę (%1%)",
   new_save_game = "Nowy Zapis",
 }
 fax = {
@@ -2343,6 +2560,11 @@ fax = {
         [1] = "Po co sobie zawracałem głowę? To było gorsze, niż oglądanie czterogodzinnej opery!",
         [2] = "Odrażający widok. To ma być szpital?! Chyba raczej chlew!",
         [3] = "Jako osoba publiczna mam już dosyć odwiedzania takich nor jak ta! Rezygnuję.",
+      },
+      free_build = {
+        [1] = "Masz tu bardzo ładny szpital! Nie trudno się go prowadzi bez ograniczeń finansowych czyż nie?",
+        [2] = "Nie jestem ekonomistą ale wydaje mi się, że też mógłbym poprowadzić ten szpital, jeżeli wiesz o czym mówię...",
+        [3] = "Bardzo dobrze prowadzony szpital. Pamiętaj jednak o recesji! Racja... nie musisz się o to martwić.",
       },
       mediocre = {
         [1] = "No cóż, widywałem gorsze, ale powinieneś się bardziej postarać.",
@@ -2403,6 +2625,7 @@ fax = {
     num_disease = "Jest %d ludzi z %s wymagających natychmiastowej pomocy.",
     cure_possible_drug_name_efficiency = "Już masz niezbędny sprzęt i umiejętności. Masz lek, którego potrzebują. To %s, a lek jest skuteczny w %d procentach.",
     cure_not_possible_employ = "Musisz zatrudnić %s",
+    free_build = "Jeżeli ci się powiedzie, twoja reputacja wzrośnie, jeżeli jednak zawiedziesz, twoja reputacja poważnie ucierpi.",
     cure_not_possible = "W tej chwili nie możesz wyleczyć tej choroby.",
     num_disease_singular = "Jest 1 osoba z %s i wymaga natychmiastowej pomocy..",
     cure_possible = "Masz odpowiedni sprzęt i umiejętności, więc powinieneś poradzić sobie z tym nagłym wypadkiem.",
@@ -2781,7 +3004,7 @@ transactions = {
 }
 object = {
   chair = "Krzesło",
-  litter = "Litter",
+  litter = "Śmieci",
   sofa = "Sofa",
   operating_table = "Stół Operacyjny",
   bed2 = "Łóżko",
@@ -2955,3 +3178,11 @@ menu = {
   options = "  OPCJE  ",
   charts = "  STATYSTYKI ",
 }
+
+
+
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
+
+options_window.change_resolution = "Zmień rozdzielczość"
+tooltip.options_window.change_resolution = "Zmień rozdzielczość okna do rozmiarów wpisanych po lewo"
