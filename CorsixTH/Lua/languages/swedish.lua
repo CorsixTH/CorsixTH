@@ -303,6 +303,7 @@ tooltip.options_window = {
   original_path = "Den just nu valda mappen där Theme Hospital installerats",
   browse = "Bläddra efter en annan Theme Hospital installation. (Nuvarande: %1%)",
   browse_font = "Bläddra efter en (annan) typsnittsfil. (Nuvarande: %1%)",
+  no_font_specified = "Ingen sökväg har valts ännu!",
   back = "Stäng alternativmenyn",
 }
 
