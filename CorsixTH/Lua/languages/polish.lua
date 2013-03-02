@@ -33,6 +33,8 @@ Language("Polski", "Polish", "pl", "pol")
 Inherit("English")
 Encoding(utf8)
 
+font_location_window.caption = "Wybierz czcionkę (%1%)"
+
 misc = {
   hospital_open = "Szpital otwarty",
   save_success = "Gra zapisana poprawnie",
@@ -1645,7 +1647,7 @@ adviser = {
   room_forbidden_non_reachable_parts = "Budując tutaj to pomieszczenie, zablokujesz dostęp do pozostałych części szpitala.",
   research = {
     machine_improved = "Urządzenie %s zostało ulepszone przez Dział Badawczy.",
-    autopsy_discovered_rep_loss = "Twój szpital wynalazł Maszynę do Auto-Autopsji. Spodziewaj się negatywnych reakcji opinii publicznej.",
+    autopsy_discovered_rep_loss = "Wyciekły informacje o używaniu maszyny do Auto-Autopsji. Spodziewaj się negatywnych reakcji opinii publicznej.",
     drug_fully_researched = "Doprowadziłeś badanie %s do 100%.",
     new_machine_researched = "Nowy %s właśnie został odkryty.",
     drug_improved = "Lek %s właśnie został udoskonalony przez twój Dział Badawczy.",
@@ -1776,6 +1778,8 @@ adviser = {
     some_litter = "Dozorcy mogą pozbyć się śmieci, zanim staną się one poważnym problemem.",
     receptionists_tired2 = "Twoje Recepcjonistki opadły z sił. Daj im trochę odpocząć.",
     patients_really_thirsty = "Pacjenci są naprawdę spragnieni. Wstaw nowe Automaty do napoi, lub przesuń stare bliżej dużych kolejek.",
+    research_screen_open_2 = "Na obecnym poziomie badania są niedostępne.",
+    research_screen_open_1 = "Najpierw musisz wybudować Dział Badawczy aby mieć dostęp do ekranu badań.",
   },
   placement_info = {
     door_can_place = "Jeżeli chcesz, możesz umieścić tutaj drzwi.",
@@ -1863,6 +1867,7 @@ information = {
     reputation = "Twoja reputacja spadła poniżej %d.",
     balance = "Twój stan konta był mniejszy niż %d.",
     percentage_killed = "Zabiłeś więcej niż %d procent pacientów.",
+	cheat = "To był twój wybór czy wcisnąłeś zły przycisk? Więc nawet nie wiesz jak oszukiwać, nie jest ci teraz do śmiechu co?",
   },
 }
 casebook = {
