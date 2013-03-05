@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local finish = permanent"action_use_screen_finish"( function(humanoid)
   local screen = humanoid.user_of
   humanoid.user_of = nil
-  screen:setUser(nil)
+  screen:removeUser(humanoid)
   local offset = screen.object_type.orientations[screen.direction].use_position
   humanoid:setTile(screen.tile_x + offset[1], screen.tile_y + offset[2])
   local after_use = humanoid.action_queue[1].after_use

@@ -36,8 +36,8 @@ local function interrupt_head(humanoid, n)
     local action = humanoid.action_queue[n]
     if action.name == "use_object" then
       -- Pull object usages out of the queue
-      if action.object and action.object.reserved_for == humanoid then
-        action.object.reserved_for = nil
+      if action.object and action.object:isReservedFor(humanoid) then
+        action.object:removeReservedUser(humanoid)
       end
       table.remove(humanoid.action_queue, n)
     else
@@ -153,7 +153,7 @@ end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
   -- Find out if we have to be standing up
-  local must_stand = class.is(humanoid, Staff) or (humanoid.disease and humanoid.disease.must_stand)
+  local must_stand = class.is(humanoid, Staff) or class.is(humanoid, Vip) or  (humanoid.disease and humanoid.disease.must_stand)
   local queue = action.queue
   if not must_stand then
     for i = 1, queue.bench_threshold do
@@ -263,7 +263,7 @@ end)
 local action_queue_on_leave = permanent"action_queue_on_leave"( function(action, humanoid)
   action.is_in_queue = false
   if action.reserve_when_done then
-    action.reserve_when_done.reserved_for = humanoid
+    action.reserve_when_done:addReservedUser(humanoid)
   end
   for i, current_action in ipairs(humanoid.action_queue) do
     if current_action == action then
@@ -323,8 +323,8 @@ local action_queue_interrupt = permanent"action_queue_interrupt"( function(actio
     end
   end
   if action.reserve_when_done then
-    if action.reserve_when_done.reserved_for == humanoid then
-      action.reserve_when_done.reserved_for = nil
+    if action.reserve_when_done:isReservedFor(humanoid) then
+      action.reserve_when_done:removeReservedUser(humanoid)
     end
   end
   humanoid:finishAction()

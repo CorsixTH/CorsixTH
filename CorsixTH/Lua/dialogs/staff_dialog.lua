@@ -384,9 +384,13 @@ end
 
 function UIStaff:openStaffManagement()
   local dlg = UIStaffManagement(self.ui)
-  dlg:selectStaff(self.staff)
-  self.ui:addWindow(dlg)
-  self:close()
+  -- Make sure that the dialog managed to create itself properly.
+  -- For example, if using the demo files closed will be true because the dialog could not be loaded.
+  if not dlg.closed then
+    dlg:selectStaff(self.staff)
+    self.ui:addWindow(dlg)
+    self:close()
+  end
 end
 
 function UIStaff:hitTest(x, y)

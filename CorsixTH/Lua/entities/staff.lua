@@ -891,13 +891,18 @@ function Staff:searchForHandymanTask()
     end
   end
   if assignedTask == false then
+    -- Make sure that the handyman isn't meandering already.
+    for i, action in ipairs(self.action_queue) do
+      if action.name == "meander" then
+        return false
+      end
+    end
     if self:getRoom() then
       self:queueAction(self:getRoom():createLeaveAction())
     end
     self:queueAction({name = "meander"})
-    return false
   end
-  return true
+  return assignedTask
 end
 
 function Staff:assignHandymanTask(taskIndex, taskType)

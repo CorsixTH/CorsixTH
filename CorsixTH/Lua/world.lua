@@ -1998,7 +1998,7 @@ function World:afterLoad(old, new)
     self.original_savegame_version = old
   end
   -- If the original save game version is considerably lower than the current, warn the player.
-  if new - 10 > self.original_savegame_version then
+  if new - 20 > self.original_savegame_version then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
   end
   -- insert global compatibility code here
@@ -2194,6 +2194,33 @@ function World:afterLoad(old, new)
     for _, group in pairs(self.available_staff) do
       for _, profile in ipairs(group) do
         profile.world = self
+      end
+    end
+  end
+  if old < 66 then
+    -- Unreserve objects which are not actually reserved for real in the staff room.
+    -- This is a special case where reserved_for could be set just as a staff member was leaving
+    for _, room in pairs(self.rooms) do
+      if room.room_info.id == "staff_room" then
+        -- Find all objects in the room
+        local fx, fy = room:getEntranceXY(true)
+        for obj, _ in pairs(self:findAllObjectsNear(fx, fy)) do
+          if obj.reserved_for then
+            local found = false
+            for _, action in ipairs(obj.reserved_for.action_queue) do
+              if action.name == "use_object" then
+                if action.object == obj then
+                  found = true
+                  break
+                end
+              end
+            end
+            if not found then
+              self:gameLog("Unreserved an object: " .. obj.object_type.id .. " at " .. obj.tile_x .. ":" .. obj.tile_y)
+              obj.reserved_for = nil
+            end
+          end
+        end
       end
     end
   end

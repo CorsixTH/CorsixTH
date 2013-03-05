@@ -118,21 +118,22 @@ local function use_staffroom_action_start(action, humanoid)
           -- Send the staff out of the room
           humanoid:queueAction{name = "meander"}
         end
-      end
+      else
 
-      obj_use_time = obj_use_time - 1
-      -- if staff is done using object
-      if obj_use_time == 0 then
-        -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
-        -- also check x,y co-ords to see if the object actually exists in the room
-        action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-        if (not action.next_ox and not action.next_oy) or action.next_target_type == action.target_type then
-          obj_use_time = generate_use_time(action.target_type)
-        else
-          if action.next_target_obj then
-            action.next_target_obj.reserved_for = humanoid
+        obj_use_time = obj_use_time - 1
+        -- if staff is done using object
+        if obj_use_time == 0 then
+          -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
+          -- also check x,y co-ords to see if the object actually exists in the room
+          action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
+          if (not action.next_ox and not action.next_oy) or action.next_target_type == action.target_type then
+            obj_use_time = generate_use_time(action.target_type)
+          else
+            if action.next_target_obj then
+              action.next_target_obj.reserved_for = humanoid
+            end
+            object_action.prolonged_usage = false
           end
-          object_action.prolonged_usage = false
         end
       end
     end

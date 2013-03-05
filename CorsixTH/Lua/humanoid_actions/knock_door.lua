@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local action_knock_door_tick = permanent"action_knock_door_tick"( function(humanoid)
   local door = humanoid.user_of
-  door:setUser(nil)
+  door:removeUser(humanoid)
   humanoid.user_of = nil
   door:getRoom():tryAdvanceQueue()
   humanoid:finishAction()

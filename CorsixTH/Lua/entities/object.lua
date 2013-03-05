@@ -488,72 +488,97 @@ function Object:setTile(x, y)
   return self
 end
 
+-- Sets the user of this object to the given user. Note that if multiple_users_allowed
+-- is set to true for this object "user" will always be the last added user to this object.
+-- Please do not modify object.user directly.
+--!param user The user that is about to use this object.
 function Object:setUser(user)
-  self.user = user or false
-  if user then
-    if self.multiple_users_allowed then
-      if not self.user_list then
-        self.user_list = {}
-      end
-      self.user_list[#self.user_list + 1] = user
+  assert(user, "setUser: Expected a user, got nil") -- It makes no sense to add a nil value
+  self.user = user
+  if self.object_type.multiple_users_allowed then
+    if not self.user_list then
+      self.user_list = {}
     end
-    self.th:makeInvisible()
-    self.reserved_for = nil
-  else
-    self.th:makeVisible()
+    table.insert(self.user_list, user)
   end
+  self.th:makeInvisible()
+  self:removeReservedUser(user)
 end
 
--- The functions below works in the same way as using the variables "reserved_for"
--- and "user" as long as the flag multiple_users_allowed isn't set.
+-- Removes a user from the set of users if multiple_users_allowed is set to true for this
+-- object. Otherwise it sets "user" to nil. Please don't directly change the variable "user".
 function Object:removeUser(user)
-  self.user = nil
-  if self.multiple_users_allowed then
+  if self.object_type.multiple_users_allowed then
     if not user or not self.user_list then
       -- No user specified, empty the list; or the list didn't exist
       self.user_list = {}
     end
+    local found = false
     for i, users in ipairs(self.user_list) do
       if users == user then
         table.remove(self.user_list, i)
+        found = true
+        break
       end
     end
+    if not found then
+      self.world:gameLog("Warning: Could not find a humanoid to remove from the user list")
+    end
     if #self.user_list == 0 then
+      -- No users left, make the object visible again.
+      self.user = nil
       self.th:makeVisible()
     end
-  else 
+  else
+    self.user = nil
     self.th:makeVisible()
   end
 end
 
--- Removes the user specified from this object's list of reserved users (if one exists).
+-- Adds a reserved user for this object. If multiple_users_allowed is set there can be
+-- many users reserving the object. reserved_for will then be the user who most recently
+-- reserved this object.
+function Object:addReservedUser(user)
+  assert(user, "Expected a user, got nil") -- It makes no sense to add a nil value
+  if self.object_type.multiple_users_allowed then
+    if not self.reserved_for_list then
+      self.reserved_for_list = {}
+    end
+    table.insert(self.reserved_for_list, user)
+  else
+    assert(not self.reserved_for or user ~= self.reserved_for, "Object already reserved for another user")
+  end
+  self.reserved_for = user
+end
+
+-- If multiple_users_allowed is true: Removes the user specified from this object's list of reserved users.
 -- If the argument is nil it is assumed that the list should be emptied.
+-- Note that if there are many humanoids reserving this object reserved_for might still be set after a 
+-- call to this function.
+-- Otherwise: sets reserved_for to nil.
 function Object:removeReservedUser(user)
-  self.reserved_for = nil
-  if self.multiple_users_allowed then
+  if self.object_type.multiple_users_allowed then
     -- No user specified, delete the whole list; or no list found, make it.
     if not user or not self.reserved_for_list then
       self.reserved_for_list = {}
     end
+    local found = false
     for i, users in ipairs(self.reserved_for_list) do
       if users == user then
         table.remove(self.reserved_for_list, i)
+        found = true
+        break
       end
     end
-  end
-end
-
--- If multiple_users_allowed is not set this will remove any previously reserved users
--- from the object.
-function Object:addReservedUser(user)
-  assert(user, "Expected a user, got nil") -- It makes no sense to add a nil value
-  if self.multiple_users_allowed then
-    if not self.reserved_for_list then
-      self.reserved_for_list = {}
+    if not found then
+      self.world:gameLog("Warning: Could not find a humanoid to remove from the reserved user list")
     end
-    self.reserved_for_list[#self.reserved_for_list + 1] = user
+    if #self.reserved_for_list == 0 then
+      -- No users left, set reserved_for to nil.
+      self.reserved_for = nil
+    end
   else
-    self.user = user
+    self.reserved_for = nil
   end
 end
 
@@ -564,13 +589,13 @@ function Object:isReservedFor(user)
     if self.reserved_for_list then
       return #self.reserved_for_list > 0
     else
-      return self.reserved_for
+      return not not self.reserved_for
     end
   end
-  if self.user == user then -- "Normal" use
+  if self.reserved_for == user then -- "Normal" use
     return true
   end
-  if self.multiple_users_allowed then
+  if self.object_type.multiple_users_allowed then
     if not self.reserved_for_list then
       self.reserved_for_list = {}
     end
@@ -650,24 +675,24 @@ function Object:onDestroy()
   if room then
     room.objects[self] = nil
   end
-  if self.user then
-    self.user:handleRemovedObject(self)
-  end
   if self.user_list then
     for i, user in ipairs(self.user_list) do
       user:handleRemovedObject(self)
     end
+    self.user_list = {}
+  elseif self.user then
+    self.user:handleRemovedObject(self)
   end
-  if self.reserved_for then
-    self.reserved_for:handleRemovedObject(self)
-    self.reserved_for = nil
-  end
+  self.user = nil
   if self.reserved_for_list then
     for i, reserver in ipairs(self.reserved_for_list) do
       reserver:handleRemovedObject(self)
     end
     self.reserved_for_list = {}
+  elseif self.reserved_for then
+    self.reserved_for:handleRemovedObject(self)
   end
+  self.reserved_for = nil
   
   Entity.onDestroy(self)
   

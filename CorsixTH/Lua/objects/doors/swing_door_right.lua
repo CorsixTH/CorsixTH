@@ -131,7 +131,7 @@ function SwingDoor:swing(anim, flags)
     self.ticks = false
     if self.is_master then
       -- We're now ready to let another humanoid walk through
-      self:setUser(nil)
+      self:removeUser()
       self:getRoom():tryAdvanceQueue()
     end
   end

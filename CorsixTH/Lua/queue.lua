@@ -145,7 +145,7 @@ function Queue:push(humanoid, callbacks_on)
     end
     increment_reported_size = false
   end
-  if humanoid.is_emergency then -- Emergencies get put before all the other patients, but AFTER currently queued emergencies.
+  if humanoid.is_emergency or class.is(humanoid, Vip)then -- Emergencies and any VIP's get put before all the other patients, but AFTER currently queued emergencies.
     while index > 1 do
       local before = self[index - 1]
       if before.is_emergency then

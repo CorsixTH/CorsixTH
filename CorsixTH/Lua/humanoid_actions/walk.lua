@@ -192,7 +192,7 @@ local action_walk_tick_door = permanent"action_walk_tick_door"( function(humanoi
   local door = humanoid.user_of
   if not class.is(door, SwingDoor) then
     -- The doors will need to finish swinging before another humanoid can walk through.
-    door:setUser(nil)
+    door:removeUser(humanoid)
   end
   humanoid.user_of = nil
   return action_walk_tick(humanoid)

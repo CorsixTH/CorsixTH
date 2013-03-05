@@ -212,7 +212,7 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
     copy_layers(humanoid, use_with)
   end
   if oldphase <= 5 and phase > 5 then
-    object:setUser(nil)
+    object:removeUser(humanoid)
     humanoid.user_of = nil
     if object.split_anims then
       local anims, anim, frame, flags = humanoid.world.anims,

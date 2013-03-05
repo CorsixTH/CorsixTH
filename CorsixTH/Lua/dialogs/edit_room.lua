@@ -159,13 +159,24 @@ function UIEditRoom:abortRoom()
 end
 
 function UIEditRoom:cancel()
+  if self.confirm_dialog_open then
+    -- Don't do anything as long as the confirm dialog is open.
+    return
+  end
   if self.phase == "walls" then
     if self.paid then
+      -- While the confirmation window is open, don't allow the player to click the confirm button.
+      self.confirm_button:enable(false)
+      self.confirm_dialog_open = true
       -- Ask if the user really wish to sell this room
       self.ui:addWindow(UIConfirmDialog(self.ui,
         _S.confirmation.delete_room,
         --[[persistable:delete_room_confirm_dialog]]function()
           self:abortRoom()
+        end,
+        --[[persistable:delete_room_confirm_dialog_cancel]]function()
+          self.confirm_button:enable(true)
+          self.confirm_dialog_open = nil
         end
       ))
     else
@@ -890,7 +901,7 @@ function UIEditRoom:draw(canvas, ...)
 end
 
 function UIEditRoom:onMouseDown(button, x, y)
-  if self.world.user_actions_allowed then
+  if self.world.user_actions_allowed and not self.confirm_dialog_open then
     if button == "left" then
       if self.phase == "walls" then
         if 0 <= x and x < self.width and 0 <= y and y < self.height then
@@ -1230,7 +1241,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
   local ui = self.ui
   
   -- Is the game paused?
-  if not self.world.user_actions_allowed then
+  if not self.world.user_actions_allowed or self.confirm_dialog_open then
     ui:setCursor(ui.default_cursor)
     return
   end
