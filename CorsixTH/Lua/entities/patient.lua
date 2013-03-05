@@ -419,10 +419,11 @@ function Patient:tapFoot()
 end
 
 function Patient:goHome(cured)
-  if self.going_home then
-    return
-  end
   local hosp = self.hospital
+  if not hosp and self.going_home then
+    -- The patient should be going home already, not much we can do.
+    TheApp.world:gameLog("Warning: goHome called when the patient is already going home")
+  end
   if not cured then
     self:setMood("exit", "activate")
     if not self.is_debug then
