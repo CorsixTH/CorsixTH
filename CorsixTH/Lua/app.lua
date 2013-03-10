@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 66
+local SAVEGAME_VERSION = 67
 
 class "App"
 
@@ -1033,8 +1033,10 @@ end
 -- a specific savegame verion is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 54 then
+  if ver > 66 then
     return "Trunk"
+  elseif ver > 54 then
+    return "0.20"
   elseif ver > 53 then
     return "0.11"
   elseif ver > 51 then
