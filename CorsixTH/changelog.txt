@@ -55,7 +55,8 @@ http://code.google.com/p/corsix-th/issues/list
 * Change: Placing a member of staff inside a room that is already occupied
   will now replace that person.
 
-* Fix: Earthquakes could be four times as severe was intended.
+* Fix: Earthquakes could be four times as severe as intended. Still todo:
+  A tremor before a coming big earthquake.
 
 * Fix: Crashes in certain situations involving receptionists and reception 
   desks.
@@ -150,7 +151,7 @@ http://code.google.com/p/corsix-th/issues/list
 
 --- Translations ---
 
-* Added: The beginning of Brazilian Portuguese and Hungarian
+* Added: The beginning of Brazilian Portuguese and Hungarian.
 * Change: The "utf8" prefix has been obsolete for some time and has been
   removed from all language files.
 
