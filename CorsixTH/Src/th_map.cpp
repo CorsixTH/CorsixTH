@@ -1397,6 +1397,7 @@ void THMap::depersist(LuaPersistReader *pReader)
                 fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
+        pNode->iFlags &= ~THMN_ObjectsAlreadyErased;
         lua_pop(L, 1);
     }
     oDecoder.initialise(6, pReader);
