@@ -352,6 +352,7 @@ options_window = {
   language = "Spielsprache",
   cancel = "Abbrechen",
   back = "Zurück",
+  font_location = "Schriftverzeichnis",
 }
 
 tooltip.options_window = {
@@ -370,7 +371,12 @@ tooltip.options_window = {
   original_path = "Das momentan gewählte Theme Hospital-Installationsverzeichnis",
   browse = "Nach einer anderen Theme Hospital-Installation durchsuchen (aktueller Pfad: %1%)",
   back = "Das Optionsfenster schließen",
+  browse_font = "Nach einer anderen Schrift-Datei durchsuchen (aktueller Pfad: %1%)",
+  font_location = "Pfad einer Schrift-Datei, die Unicode Zeichen deiner Sprache unterstützt. Wenn diese Einstellung nicht vorgenommen wird, kannst du keine Sprachen auswählen, die mehr Zeichen benötigen als das Originalspiel unterstützt. Beispiel: Russisch und Chinesisch",
+  no_font_specified = "Bisher wurde kein Pfad angegeben!",
 }
+
+font_location_window.caption = "Schrift auswählen (%1%)"
 
 new_game_window = {
   caption = "Neues Spiel",
@@ -383,6 +389,7 @@ new_game_window = {
   tutorial = "Einführung",
   start = "Start",
   cancel = "Abbrechen",
+  player_name = "Spielername",
 }
 
 tooltip.new_game_window = {
@@ -393,6 +400,7 @@ tooltip.new_game_window = {
   tutorial = "Dieses Feld abhaken, um zu Beginn des Spieles eine Einführung zu erhalten",
   start = "Das Spiel mit den gewählten Einstellungen starten",
   cancel = "Oh, eigentlich wollte ich gar kein neues Spiel starten!",
+  player_name = "Gib den Namen ein mit dem du im Spiel genannt werden möchtest.",
 }
 
 lua_console = {
