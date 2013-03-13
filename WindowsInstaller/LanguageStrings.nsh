@@ -159,8 +159,8 @@ LangString files_left         ${LANG_PORTUGUESE} "Alguns ficheiros não foram re
 LangString options_title      ${LANG_PORTUGUESE} "Opções adicionais"
 LangString options_subtitle   ${LANG_PORTUGUESE} "Especifica o caminho onde o jogo original se encontra."
 LangString save_in_appdata    ${LANG_PORTUGUESE} "Guardar as configurações e os dados do jogo em %APPDATA% (Recomendado)"
-LangString remove_saves       ${LANG_PORTUGUESE} "Would you like to keep your saved games?"
-LangString overwrite_install  ${LANG_PORTUGUESE} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString remove_saves       ${LANG_PORTUGUESE} "Gostarias de manter os teus jogos gravados?"
+LangString overwrite_install  ${LANG_PORTUGUESE} "Parece que estás a instalar sobre uma instalação existente do CorsixTH. Quaisquer mudanças feitas entre os ficheiros serão perdidas. Continuar?"
 
 LangString install_language   ${LANG_RUSSIAN} "Russian"
 LangString original_text      ${LANG_RUSSIAN} "Для работы этой игре требуется установка оригинальной Theme Hospital. Пожалуйста, укажите расположение ее файлов ниже."
