@@ -131,14 +131,17 @@ function loadfile_envcall(filename)
     result = result .. f:read"*a"
   end
   f:close()
+  return loadstring_envcall(result, "@".. filename)
+end
     
-  if rawget(_G, "loadin") then
+if rawget(_G, "loadin") then
+  function loadstring_envcall(contents, chunkname)
     -- Lua 5.2 lacks setfenv(), but does provide loadin()
     -- loadin() still only allows a chunk to have an environment set once, so
     -- we give it an empty environment and use __[new]index metamethods on it
     -- to allow the same effect as changing the actual environment.
     local env_mt = {}
-    result, err = loadin(setmetatable({}, env_mt), result, "@".. filename)
+    local result, err = loadin(setmetatable({}, env_mt), contents, chunkname)
     if result then
       return function(env, ...)
         env_mt.__index = env
@@ -148,9 +151,11 @@ function loadfile_envcall(filename)
     else
       return result, err
     end
-  else
+  end
+else
+  function loadstring_envcall(contents, chunkname)
     -- Lua 5.1 has setfenv(), which allows environments to be set at runtime
-    result, err = loadstring(result, "@".. filename)
+    local result, err = loadstring(contents, chunkname)
     if result then
       return function(env, ...)
         setfenv(result, env)
