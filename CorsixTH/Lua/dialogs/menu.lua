@@ -167,6 +167,9 @@ function UIMenuBar:draw(canvas)
   for _, menu in ipairs(self.open_menus) do
     self:drawMenu(menu, canvas)
   end
+  
+  -- Draw clock 
+  self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
