@@ -168,8 +168,12 @@ function UIMenuBar:draw(canvas)
     self:drawMenu(menu, canvas)
   end
   
-  -- Draw clock 
-  self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
+  -- Draw clock
+  if self.ui.app.config.twentyfour_hour_clock then  
+    self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
+  else
+    self.white_font:draw(canvas, os.date("%I:%M %p"), self.width-65, 2,  0)
+  end  
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
