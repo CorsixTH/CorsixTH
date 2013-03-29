@@ -3,7 +3,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main
 {	
-	static final double VERSION = 0.13;
+	static final double VERSION = 0.14;
 	public static void main(String[] args)
 	{
 		try

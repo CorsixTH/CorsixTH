@@ -22,8 +22,8 @@ public class TabDiseases
 
 //variables
 	static Disease[] arDiseases = new Disease[36]; //index 0,1 are never used.
-	static int[] expertiseResearch = new int [44]; //using the numbers of #expertise[]. index [0] is never used.
-	static int[] known = new int[44]; //#expertise[]
+	static int[] expertiseResearch = new int [47]; //using the numbers of #expertise[]. index [0] is never used.
+	static int[] known = new int[47]; //#expertise[]
 	static int[] visuals = new int[14];
 	static int[] nonVisuals = new int[20];
 	static int[] visualsAvailable = new int[14];
@@ -31,9 +31,9 @@ public class TabDiseases
 //components
 	static JCheckBox[] visualsCB = new JCheckBox[14];
 	static JCheckBox[] nonVisualsCB = new JCheckBox[20];
-	static JCheckBox[] knownCB = new JCheckBox[44]; //#expertise[]
+	static JCheckBox[] knownCB = new JCheckBox[47]; //#expertise[]
 	static JTextField[] visualsAvailableTF = new JTextField[14];
-	static JTextField[] expertiseResearchTF = new JTextField[44]; //#expertise[]
+	static JTextField[] expertiseResearchTF = new JTextField[47]; //#expertise[]
 	
 	JPanel diseases = new JPanel(new MigLayout("wrap 1"));
 	JScrollPane scrollPane = new JScrollPane(diseases);
@@ -287,11 +287,11 @@ public class TabDiseases
 		});
 		
 		drug.add(existsLabel1, "skip");
-		existsLabel1.setToolTipText("Whether the disease should appear at all in new ItemListener() level");
+		existsLabel1.setToolTipText("Whether the disease should appear at all in this level");
 		drug.add(knownLabel1);
 		knownLabel1.setToolTipText("Whether the disease should be known from the beginning in the drug casebook");
 		drug.add(researchLabel);
-		researchLabel.setToolTipText("How much research is required to improve new ItemListener() drug");
+		researchLabel.setToolTipText("How much research is required to improve this drug");
 		drug.add(availableLabel1);
 		availableLabel1.setToolTipText("In which month a visual disease should first appear (not implemented in the game yet?)");
 
@@ -1081,7 +1081,7 @@ public class TabDiseases
 		});
 
 		psych.add(existsLabel2, "skip");
-		existsLabel2.setToolTipText("Whether the disease should appear at all in new ItemListener() level");
+		existsLabel2.setToolTipText("Whether the disease should appear at all in this level");
 		
 		psych.add(knownLabel2);
 		knownLabel2.setToolTipText("Whether the disease should be known from the beginning in the drug casebook");
@@ -1328,7 +1328,7 @@ public class TabDiseases
 		});
 		
 		op.add(existsLabel3, "skip");
-		existsLabel3.setToolTipText("Whether the disease should appear at all in new ItemListener() level");
+		existsLabel3.setToolTipText("Whether the disease should appear at all in this level");
 		
 		op.add(knownLabel3);
 		knownLabel3.setToolTipText("Whether the disease should be known from the beginning in the drug casebook");
@@ -1625,7 +1625,7 @@ public class TabDiseases
 		});
 		
 		clinic.add(existsLabel4, "skip");
-		existsLabel4.setToolTipText("Whether the disease should appear at all in new ItemListener() level");
+		existsLabel4.setToolTipText("Whether the disease should appear at all in this level");
 		
 		clinic.add(knownLabel4);
 		knownLabel4.setToolTipText("Whether the disease should be known from the beginning in the drug casebook");

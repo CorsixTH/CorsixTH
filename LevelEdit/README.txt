@@ -2,7 +2,7 @@
 -- CorsixTH Level Editor -----------------------------------------------------
 ------------------------------------------------------------------------------
 
-Original author of this tool: Koaxnd
+Original author of this tool: Koanxd
 
 This tool makes it easier to create new levels for CorsixTH. Instead of
 editing a text file, which can be quite error prone the level creator can use

@@ -423,8 +423,11 @@ public class VarManipulator
 		}
 		else if (variable == "emergency.illness")
 		{
-			TabEmergencies.emergencyList.get(index).illness = value;
-			TabEmergencies.emergencyList.get(index).illnessCombo.setSelectedItem(TabDiseases.arDiseases[value].name);
+			if (value != 0)
+			{
+				TabEmergencies.emergencyList.get(index).illness = value;
+				TabEmergencies.emergencyList.get(index).illnessCombo.setSelectedItem(TabDiseases.arDiseases[value].name);
+			}
 		}
 		else if (variable == "emergency.percWin")
 		{

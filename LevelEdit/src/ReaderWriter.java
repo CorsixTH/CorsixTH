@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class ReaderWriter
 {
 
@@ -382,6 +381,19 @@ public class ReaderWriter
 					}
 					write.newLine();
 					write.newLine();
+					write.write("#gbv.TrainingRate	45");
+					write.newLine();
+					write.write("#gbv.AbilityThreshold[0]  70 Surgeon");
+					write.newLine();
+					write.write("#gbv.AbilityThreshold[1]  60 Psychiatrist");
+					write.newLine();
+					write.write("#gbv.TrainingValue[0]     10 Projector");
+					write.newLine();
+					write.write("#gbv.TrainingValue[1]     25 Skeleton");
+					write.newLine();
+					write.write("#gbv.TrainingValue[2]     30 Bookcase");
+					write.newLine();
+					write.newLine();
 					
 					write.write("----------------------- Emergency Control --------------------------");
 					write.newLine();
@@ -703,6 +715,7 @@ public class ReaderWriter
 		}
 		return returnFile;
 	}
+	
 	//convert interest to an int value up to 2 decimals precision.
 	public int interestToInt(double interest2)
 	{

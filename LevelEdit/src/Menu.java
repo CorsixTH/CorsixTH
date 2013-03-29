@@ -41,9 +41,6 @@ public class Menu extends JMenuBar
 		JMenu menuHelp = new JMenu("Help");
 		menuHelp.add(about);
 
-		add(menuFile);
-		add(menuHelp);
-
 		// new
 		fileNew.addActionListener(new ActionListener()
 		{
@@ -63,12 +60,21 @@ public class Menu extends JMenuBar
 				File file = (fileChooser.open());
 				if (file != null)
 				{
+					if (! file.getPath().toLowerCase().endsWith(".level"))
+					{
+						JOptionPane optionPane = new JOptionPane("This file type is not " +
+								"fully supported. Proceed anyway?");
+						Object[] options = new String[] {"Ok", "Cancel" };
+						optionPane.setOptions(options);
+
+						JDialog dialog = optionPane.createDialog(null, "Warning");
+						dialog.setVisible(true);
+						
+						if (optionPane.getValue() == options[1])
+							return;
+					}
 					//set all variables to default first in case some values are missing inside the file.
-					var.setDefault();
-//					String extension = file.getName().substring(file.getName().lastIndexOf("."));
-//					if (extension.toLowerCase().matches("sam"))
-//							readerWriter.open(new File ("original.level"));
-					
+					var.setDefault();					
 					readerWriter.open(file);
 				}
 			}
@@ -107,5 +113,8 @@ public class Menu extends JMenuBar
 				dialog.setVisible(true);
 			}
 		});
+
+		add(menuFile);
+		add(menuHelp);
 	}
 }

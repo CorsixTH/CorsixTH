@@ -15,21 +15,19 @@ public class FileChooser extends JFileChooser
 	
 	FileNameExtensionFilter corsixTH = new FileNameExtensionFilter(
 			"CorsixTH level files (.level)", "level");
-//	FileNameExtensionFilter originalTH = new FileNameExtensionFilter(
-//			"Theme Hospital Level files (.SAM)", "SAM");
-	FileNameExtensionFilter anyLevel = new FileNameExtensionFilter(
-			"All Level files (.level/.SAM)", "level", "SAM");
+	FileNameExtensionFilter originalTH = new FileNameExtensionFilter(
+			"Theme Hospital Level files (.SAM)", "SAM");
 	
 public FileChooser()
 {
-	setFileFilter(corsixTH);
-	setAcceptAllFileFilterUsed(false);
 	setCurrentDirectory(readerWriter.getLastFilePath());
+	setFileFilter(corsixTH);
 }
 
 	public File open()
 	{
-		addChoosableFileFilter(anyLevel);
+		addChoosableFileFilter(originalTH);
+		setAcceptAllFileFilterUsed(true);
 		int returnVal = showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
@@ -42,7 +40,9 @@ public FileChooser()
 	}
 	public File saveAs() throws IOException
 	{
-		removeChoosableFileFilter(anyLevel);
+		removeChoosableFileFilter(originalTH);
+		setAcceptAllFileFilterUsed(false);
+		setFileFilter(corsixTH);
 		int returnVal = showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
