@@ -381,7 +381,7 @@ function UIMapEditor:doLargePaint(x, y)
     local f = map:getCell(x, y)
     if f % 256 == match_f then
       self.current_command_cell:addTile(x, y, 1, f - match_f + brush_f)
-	  map:setCell(x, y, 1, f - match_f + brush_f)
+      map:setCell(x, y, 1, f - match_f + brush_f)
       visited[combine_ints(x, y + 1)] = {x, y + 1}
       visited[combine_ints(x, y - 1)] = {x, y - 1}
       visited[combine_ints(x + 1, y)] = {x + 1, y}
@@ -477,7 +477,7 @@ function UIMapEditor:finishPaint(apply)
         end
       until true
       -- Remove the UI layer and perform the adjustment of the other layers.
-	    self.current_command_cell:addTile(tx,ty,f,w1,w2,0)
+      self.current_command_cell:addTile(tx,ty,f,w1,w2,0)
       map:setCell(tx, ty, f, w1, w2, 0)
       if flags then
         self.current_command_cell_flags:addTile(tx, ty, flags)

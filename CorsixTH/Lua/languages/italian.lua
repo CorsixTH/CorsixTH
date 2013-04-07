@@ -133,7 +133,7 @@ adviser = {
     falling_4 = "Questo è un ospedale, non un parco giochi!",
     falling_5 = "Non è il luogo adatto per far cadere le persone, sono malate sai!",
     falling_6 = "Non è una sala da bowling, i malati non dovrebbero essere trattati così!",
-	research_screen_open_1 = "Devi costruire un Reparto Ricerca prima di poter accedere alla schermata Ricerca.",
+    research_screen_open_1 = "Devi costruire un Reparto Ricerca prima di poter accedere alla schermata Ricerca.",
     research_screen_open_2 = "La Ricerca è disabilitata in questo livello.",
   },
   cheats = {  
@@ -368,7 +368,7 @@ information = {
     reputation = "La tua reputazione è scesa sotto %d.",
     balance = "Il tuo conto in banca è sceso sotto %d.",
     percentage_killed = "Hai ucciso più del %d dei pazienti.",
-	cheat = "È stata una tua scelta o hai selezionato il pulsante sbagliato? Non riesci nemmeno a barare correttamente, non è così divertente, eh?",
+    cheat = "È stata una tua scelta o hai selezionato il pulsante sbagliato? Non riesci nemmeno a barare correttamente, non è così divertente, eh?",
   },
   cheat_not_possible = "Non puoi usare cheat in questo livello. Fallisci anche nel barare, non è così divertente, eh?",
 }

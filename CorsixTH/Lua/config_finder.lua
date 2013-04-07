@@ -107,7 +107,8 @@ local config_defaults = {
   warmth_colors_display_default = 1,
   movies = true,
   play_intro = true,
-  twentyfour_hour_clock = true
+  twentyfour_hour_clock = true,
+  scrolling_momentum = 0.8
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -321,6 +322,14 @@ movies = ]=].. tostring(config_values.movies) ..[=[
 
 twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=[ 
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Scrolling Momentum.
+-- Determines the amount of momentum when scrolling the map with the mouse.
+-- This should be a value between 0 and 1 where 0 is no momentum
+scrolling_momentum = ]=] .. tostring(config_values.scrolling_momentum) .. [=[
+-------------------------------------------------------------------------------
+
 ]=])
   end
 end

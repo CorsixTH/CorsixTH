@@ -668,8 +668,8 @@ function UIBottomPanel:afterLoad(old, new)
     for i = 1, 7 do
       self.additional_buttons[i] = self.buttons[5 + i]:makeToggle() -- made them toggle buttons
     end
-	self.bank_button = self.buttons[1]:makeToggle()
-	
+    self.bank_button = self.buttons[1]:makeToggle()
+    
     -- keyboard shortcuts have been added/changed
     self.ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
     self.ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank manager

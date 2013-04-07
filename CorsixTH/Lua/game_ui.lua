@@ -66,6 +66,9 @@ function GameUI:GameUI(app, local_hospital)
   
   self:setRandomAnnouncementTarget()
   self.ticks_since_last_announcement = 0
+  
+  self.momentum = app.config.scrolling_momentum
+  self.current_momentum = {x = 0.0, y = 0.0}
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -383,7 +386,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
   end
   if self.buttons_down.mouse_middle then
     local zoom = self.zoom_factor
-    self:scrollMap(-dx / zoom, -dy / zoom)
+    self.current_momentum = { x = -dx/zoom, y = -dy/zoom}
+    self:scrollMap(self.current_momentum.x, self.current_momentum.y)
     repaint = true
   end
   
@@ -513,6 +517,16 @@ end
 
 function GameUI:onTick()
   local repaint = UI.onTick(self)
+  if not self.buttons_down.mouse_middle then  
+    if math.abs(self.current_momentum.x) < 0.2 and math.abs(self.current_momentum.y) < 0.2 then
+      -- Stop scrolling
+      self.current_momentum = {x = 0.0, y = 0.0}
+    else
+      self.current_momentum.x = self.current_momentum.x * self.momentum
+      self.current_momentum.y = self.current_momentum.y * self.momentum
+      self:scrollMap(self.current_momentum.x, self.current_momentum.y)
+    end
+  end
   do
     local ticks_since_last_announcement = self.ticks_since_last_announcement
     if ticks_since_last_announcement >= self.random_announcement_ticks_target then
@@ -891,7 +905,11 @@ function GameUI:afterLoad(old, new)
     self.adviser.frame = 1
     self.adviser.number_frames = 4
   end
-
+  if old < 69 then
+    self.current_momentum = { x = 0, y = 0 }
+    self.momentum = self.app.config.scrolling_momentum
+  end
+  
   return UI.afterLoad(self, old, new)
 end
 

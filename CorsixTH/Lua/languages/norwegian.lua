@@ -384,7 +384,7 @@ information = {
     reputation = "Omdömmet ditt gikk under %d.",
     balance = "Banksaldoen din (minus lån) falt under %d.",
     percentage_killed = "Du drepte mer enn %d prosent av pasientene.", --bruke %-tegn?
-	cheat = "Dette var ditt eget valg, eller trykket du bare på feil knapp? Du klarer ikke engang å jukse skikkelig. Det var ikke så morsomt likevel?",
+    cheat = "Dette var ditt eget valg, eller trykket du bare på feil knapp? Du klarer ikke engang å jukse skikkelig. Det var ikke så morsomt likevel?",
   },
 }
 tooltip.information = {
