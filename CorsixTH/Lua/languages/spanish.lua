@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
+﻿--[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -195,6 +195,9 @@ adviser = {
     falling_6 = "¡Esto no es una bolera, no deberías tratar así a los enfermos!",
     research_screen_open_1 = "Tienes que construir un Departamento de Investigación para poder acceder a la pantalla de investigación.",
     research_screen_open_2 = "No se pueden realizar investigaciones en este nivel.",
+    researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
+    researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que darles a cada uno una mesa para que trabajen.",
+    researcher_needs_desk_3 = "Cada investigador necesita su propia mesa para trabajar.",
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -252,8 +255,8 @@ misc.not_yet_implemented = "(aún no implementado)"
 misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  A lo mejor necesitas comprar una mesa de recepción y contratar a una recepcionista."
 
 main_menu = {
-  new_game = "Nueva partida",
-  custom_level = "Nivel personalizado",
+  new_game = "Campaña",
+  custom_level = "Selección de nivel",
   load_game = "Cargar partida",
   options = "Opciones",
   savegame_version = "Versión del guardado: ",
@@ -262,10 +265,10 @@ main_menu = {
 }
 
 tooltip.main_menu = {
-  new_game = "Empezar una partida completamente nueva desde el principio",
-  custom_level = "Construir tu hospital en un nivel personalizado",
-  load_game = "Cargar una partida guardada",
-  options = "Ajustar la configuración",
+  new_game = "Empezar el primer nivel de la campaña.",
+  custom_level = "Construir tu hospital en un nivel concreto.",
+  load_game = "Cargar una partida guardada.",
+  options = "Ajustar la configuración.",
   exit = "¡No, no, por favor, no te vayas!",
 }
 
@@ -306,9 +309,9 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  name = "Pulsa aquí para ordenar la lista por el nombre",
-  save_date = "Pulsa aquí para ordenar la lista por la última fecha de modificación",
-  back = "Cerrar esta ventana",
+  name = "Pulsa aquí para ordenar la lista por el nombre.",
+  save_date = "Pulsa aquí para ordenar la lista por la última fecha de modificación.",
+  back = "Cerrar esta ventana.",
 }
 
 options_window = {
