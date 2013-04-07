@@ -111,7 +111,6 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   -- misc. keyhandlers
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler("A", self, self.toggleAdviser)       -- A for adviser
   ui:addKeyHandler("I", self, self.toggleInformation)   -- I for Information when you first build
 end
 
@@ -571,10 +570,6 @@ function UIBottomPanel:dialogPolicy(enable)
   end
 end
 
-function UIBottomPanel:toggleAdviser()
-  self.ui.app.config.adviser_disabled = not self.ui.app.config.adviser_disabled
-end
-
 function UIBottomPanel:toggleInformation()
   self.world:toggleInformation()
 end
@@ -686,6 +681,9 @@ function UIBottomPanel:afterLoad(old, new)
     self.ui:addKeyHandler("T", self.additional_buttons[2], self.additional_buttons[2].handleClick, "left") -- T for town map
     self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
     self.ui:addKeyHandler("R", self.additional_buttons[4], self.additional_buttons[4].handleClick, "left") -- R for research
+  end
+  if old <  70 then
+    self.ui:removeKeyHandler("a", self)
   end
   Window.afterLoad(self, old, new)
 end

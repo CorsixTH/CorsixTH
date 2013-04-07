@@ -72,6 +72,7 @@ menu_options = {
   settings = "  SETTINGS  ",
   adviser_disabled = "  ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
+  twentyfour_hour_clock = "  24 HOUR CLOCK  "
 }
 
 menu_options_game_speed = {
