@@ -303,6 +303,11 @@ function Room:onHumanoidEnter(humanoid)
     end
     return
   end
+  local msg = {
+    (_A.warnings.researcher_needs_desk_1),
+    (_A.warnings.researcher_needs_desk_2),
+    (_A.warnings.researcher_needs_desk_3),
+  }
   if class.is(humanoid, Staff) then
     -- If the room is already full of staff, or the staff member isn't relevant
     -- to the room, then make them leave. Otherwise, take control of them.
@@ -310,6 +315,9 @@ function Room:onHumanoidEnter(humanoid)
       if self:getStaffMember() and self:staffMeetsRoomRequirements(humanoid) then
         local staff_member = self:getStaffMember()
          self.humanoids[humanoid] = true
+           if staff_member.profile.is_researcher and self.room_info.id == "research" then
+             self.world.ui.adviser:say(msg[math.random(1, #msg)]) 
+           end 
         if not staff_member.dealing_with_patient then
           staff_member:setNextAction(self:createLeaveAction())
           staff_member:queueAction{name = "meander"}

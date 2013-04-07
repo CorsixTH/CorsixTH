@@ -524,6 +524,9 @@ local function Humanoid_startAction(self)
         if class.is(self, Staff) then
           self:fire()
         else
+          -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
+          self.going_home = false
+          self.hospital = self.world:getLocalPlayerHospital()
           self:goHome()
         end
         if TheApp.world:isCurrentSpeed("Pause") then
@@ -714,7 +717,7 @@ function Humanoid:handleRemovedObject(object)
   local replacement_action
   if self.humanoid_class and self.humanoid_class == "Receptionist" then
     replacement_action = {name = "meander"}
-  elseif object.object_type.id == "bench" then
+  elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
     replacement_action = {name = "idle", must_happen = true}
   end
 
@@ -733,6 +736,11 @@ function Humanoid:handleRemovedObject(object)
         table.remove(self.action_queue, i)
         self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
       end
+      -- Are we in a queue?
+      if self.action_queue[i + 1] and self.action_queue[i + 1].name == "queue" then
+        self.action_queue[i + 1]:onChangeQueuePosition(self)
+      end
+      break
     end
   end
 end

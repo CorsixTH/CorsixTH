@@ -151,6 +151,9 @@ adviser = {
     falling_6 = "This is not a bowling alley, sick people should not be treated like that!",
     research_screen_open_1 = "You have to build a Research Department before you can access the Reasearch screen.",
     research_screen_open_2 = "Research is disabled for the current level.",
+    researcher_needs_desk_1 = "A Researcher needs to have a desk to work at.",
+    researcher_needs_desk_2 = "Your Researcher is pleased that you have allowed him to have a break. If you were intending to have more staff researching, then you need to provide them each with a desk to work from.",
+    researcher_needs_desk_3 = "Each Researcher needs to have his own desk to work from.",
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",
@@ -186,7 +189,7 @@ fax = {
       free_build = {
         "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?",
         "I'm no economist, but I think I could run this hospital too if you know what I mean...",
-        "A very well run hospital. Watch out for the recession though! Right... you didn't have to worry about that.",
+        "A very well run hospital. Watch out for the recession though! Right... you don't have to worry about that.",
       }
     }
   }
@@ -341,7 +344,7 @@ tooltip.new_game_window = {
   easy = "If you are new to simulation games this is the option for you",
   medium = "This is the middle way to go if you are unsure what to choose",
   hard = "If you are used to this kind of game and want more of a challenge, pick this option",
-  tutorial = "If you want some help to get started once in the game, tick this box",
+  tutorial = "Click here to turn on some help to get you started once in the game",
   start = "Start the game with the chosen settings",
   cancel = "Oh, I didn't really mean to start a new game!",
 }
