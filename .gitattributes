@@ -36,6 +36,7 @@ CorsixTH/Bitmap/new32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/open32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/parcels32.png -text
 CorsixTH/Bitmap/positions32.png -text
+CorsixTH/Bitmap/redo32.png -text
 CorsixTH/Bitmap/save32.png -text svneol=unset#image/png
 CorsixTH/Bitmap/transparent_walls32.png -text
 CorsixTH/Bitmap/tree_collapsed.bmp -text
@@ -45,6 +46,7 @@ CorsixTH/Bitmap/tree_ctrl.tab -text
 CorsixTH/Bitmap/tree_expanded.bmp -text
 CorsixTH/Bitmap/tree_leaf.bmp -text
 CorsixTH/Bitmap/tree_level.bmp -text
+CorsixTH/Bitmap/undo32.png -text
 CorsixTH/CorsixTH.aps -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/Icon.icns -text
@@ -52,6 +54,11 @@ CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/confined_v5.map -text
 CorsixTH/Levels/finisham.map -text
+CorsixTH/Lua/command.lua -text
+CorsixTH/Lua/command_stack.lua -text
+CorsixTH/Lua/commands/compound.lua -text
+CorsixTH/Lua/commands/set_map_cell.lua -text
+CorsixTH/Lua/commands/set_map_cell_flags.lua -text
 CorsixTH/Lua/languages/hungarian.lua -text
 CorsixTH/RequiredResources.txt -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text

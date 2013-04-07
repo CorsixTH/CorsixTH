@@ -37,6 +37,7 @@ SOFTWARE.
 #include "scrollable_game.h"
 #include <wx/ribbon/bar.h>
 #include <wx/ribbon/buttonbar.h>
+#include <wx/splitter.h>
 #include "block_gallery.h"
 
 class frmMain : public wxFrame
@@ -97,6 +98,8 @@ protected:
     void _onNew(wxRibbonButtonBarEvent& evt);
     void _onOpen(wxRibbonButtonBarEvent& evt);
     void _onSave(wxRibbonButtonBarEvent& evt);
+    void _onUndo(wxRibbonButtonBarEvent& evt);
+    void _onRedo(wxRibbonButtonBarEvent& evt);
     void _onSaveMenu(wxRibbonButtonBarEvent& evt);
     void _onSaveMenuSave(wxCommandEvent& evt);
     void _onSaveMenuSaveAs(wxCommandEvent& evt);
@@ -119,6 +122,8 @@ protected:
     void _setLuaBlockBrushWallsTab();
     void _setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2);
     void _setLuaParcelBrush(int iParcel);
+    void _doLuaUndo();
+    void _doLuaRedo();
 
     DECLARE_EVENT_TABLE();
 };
