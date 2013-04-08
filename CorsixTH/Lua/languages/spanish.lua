@@ -116,6 +116,7 @@ menu_options = {
   settings = "  CONFIGURACIóN  ",
   adviser_disabled = "  CONSEJERO  ",
   warmth_colors = "  COLORES DE TEMPERATURA  ",
+  twentyfour_hour_clock = "  RELOJ DE 24 HORAS  "
 }
 
 menu_options_game_speed = {
