@@ -61,7 +61,6 @@ tooltip.jukebox.fast_forward = "Avance rápido del reproductor de música"
 tooltip.patient_window.close = "Cerrar ventana"
 tooltip.staff_window.close = "Cerrar ventana"
 tooltip.build_room_window.close = "Salir de esta ventana y volver al juego"
-menu_options.jukebox = "  REPRODUCTOR DE MúSICA  "
 
 misc.hospital_open = "Hospital abierto"
 misc.save_success = "Partida guardada correctamente"
@@ -110,7 +109,15 @@ tooltip.casebook.cure_type.unknown = "Todavía no conoces la forma de curar esta
 tooltip.research_policy.no_research = "En este momento no se está investigando ningún apartado de esta categoría."
 tooltip.research_policy.research_progress = "Progreso para terminar el siguiente descubrimiento de esta categoría: %1%/%2%"
 
+menu_file = {
+  load =    " (MAYUS+L) CARGAR   ",
+  save =    " (MAYUS+S) GUARDAR   ",
+  restart = " (MAYUS+R) REINICIAR",
+  quit =    " (ALT+F4) SALIR   "
+}
+
 menu_options = {
+  jukebox = "  (J) REPRODUCTOR DE MúSICA  ",
   lock_windows = "  BLOQUEAR VENTANAS  ",
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
   settings = "  CONFIGURACIóN  ",
@@ -146,10 +153,6 @@ menu_charts = {
   graphs        = "  (F8) GRáFICAS  ",
   policy        = "  (F9) NORMAS  ",
 }
-
-
--- The demo does not contain this string
-menu_file.restart = "  REINICIAR  "
 
 menu_debug = {
   jump_to_level               = "  CAMBIAR DE NIVEL  ",
