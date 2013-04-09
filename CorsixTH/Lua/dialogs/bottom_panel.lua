@@ -106,12 +106,41 @@ function UIBottomPanel:UIBottomPanel(ui)
   
   -- "old" keyboard shortcuts for some of the fullscreen windows
   ui:addKeyHandler("T", buttons[2], buttons[2].handleClick, "left") -- T for town map
-  ui:addKeyHandler("C", buttons[3], buttons[3].handleClick, "left") -- C for casebook
   ui:addKeyHandler("R", buttons[4], buttons[4].handleClick, "left") -- R for research
+  if ui.app.volume_opens_casebook then
+    ui:addKeyHandler("C", buttons[3], buttons[3].handleClick, "left") -- C for casebook
+  else
+    ui:addKeyHandler({"shift", "C"}, buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
+  end    
+  ui:addKeyHandler({"shift", "L"}, self, self.openLoad)  -- Shift + L for Load saved game menu
+  ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
+  ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level
+  ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu
   
   -- misc. keyhandlers
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
   ui:addKeyHandler("I", self, self.toggleInformation)   -- I for Information when you first build
+  ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
+end
+
+function UIBottomPanel:openJukebox()
+  self.ui:addWindow(UIJukebox(self.ui.app))
+end  
+
+function UIBottomPanel:openSave()
+  self.ui:addWindow(UISaveGame(self.ui))
+end  
+
+function UIBottomPanel:openLoad()
+  self.ui:addWindow(UILoadGame(self.ui, "game"))
+end  
+
+function UIBottomPanel:restart()
+  self.ui.app:restart()
+end 
+
+function UIBottomPanel:quit()
+  self.ui:quit() 
 end
 
 function UIBottomPanel:draw(canvas, x, y)
@@ -685,6 +714,21 @@ function UIBottomPanel:afterLoad(old, new)
   if old <  70 then
     self.ui:removeKeyHandler("a", self)
   end
+  if old < 71 then
+    self.ui:removeKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left")  -- remove C for opening the Casebook
+    -- add choice for opening casebook as per chosen option in config
+    if self.ui.app.volume_opens_casebook then
+      self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
+    else
+      self.ui:addKeyHandler({"shift", "C"}, self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- Shift + C for casebook
+    end
+    -- add new key handlers
+    self.ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
+    self.ui:addKeyHandler({"shift", "L"}, self, self.openLoad)  -- Shift + L for Load saved game menu
+    self.ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
+    self.ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level 
+    self.ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu    
+  end  
   Window.afterLoad(self, old, new)
 end
 

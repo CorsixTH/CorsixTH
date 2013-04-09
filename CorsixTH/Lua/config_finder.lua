@@ -108,7 +108,8 @@ local config_defaults = {
   movies = true,
   play_intro = true,
   twentyfour_hour_clock = true,
-  scrolling_momentum = 0.8
+  scrolling_momentum = 0.8,
+  volume_opens_casebook = false
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -328,6 +329,17 @@ twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=
 -- Determines the amount of momentum when scrolling the map with the mouse.
 -- This should be a value between 0 and 1 where 0 is no momentum
 scrolling_momentum = ]=] .. tostring(config_values.scrolling_momentum) .. [=[
+--
+-------------------------------------------------------------------------------
+-- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
+--
+-- If your keyboard volume control opens the Drug Casebook at the same time
+-- then change this to true.  From then on you will have to use Shift + C to open
+-- the Casebook and volume down will not open it.
+-- For example for shift + C to open casebook change the setting below to = true
+--
+volume_opens_casebook = ]=] .. tostring(config_values.volume_opens_casebook) .. [=[
+--
 -------------------------------------------------------------------------------
 
 ]=])

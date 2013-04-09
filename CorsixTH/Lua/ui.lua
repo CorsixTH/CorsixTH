@@ -253,7 +253,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler(" ", self, self.stopMovie)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
-  self:addKeyHandler({"alt", "f4"}, self, self.quit)
+  self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
   
   if self.app.config.debug then
@@ -850,7 +850,12 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler("f10", self)
     self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
     self:removeKeyHandler("a", self)
-  end  
+  end
+  -- changing this so that it is quit application and Shift + Q is quit to main menu  
+  if old < 71 then
+    self:removeKeyHandler({"alt", "f4"}, self, self.quit)
+    self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  end    
   Window.afterLoad(self, old, new)
 end
 
@@ -901,6 +906,10 @@ end
 function UI:resetApp()
   debug.getregistry()._RESTART = true
   TheApp.running = false
+end
+-- Added this function as quit does not exit the application, it only exits the game to the menu screen
+function UI:exitApplication()
+  self.app:abandon()
 end
 
 --! Triggers quitting the application
