@@ -852,6 +852,7 @@ function Staff:intreruptHandymanTask()
     self.on_call.assigned = nil
     self.on_call = nil
   end
+  self.task = nil
   self:setNextAction{name = "answer_call"}
 end
 
