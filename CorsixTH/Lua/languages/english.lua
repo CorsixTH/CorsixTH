@@ -70,7 +70,7 @@ menu_file = {
   load =    " (SHIFT+L) LOAD   ",
   save =    " (SHIFT+S) SAVE   ",
   restart = " (SHIFT+R) RESTART",
-  quit =    " (ALT+F4) QUIT   "
+  quit =    " (SHIFT+Q) QUIT   "
 }
 
 menu_options = {

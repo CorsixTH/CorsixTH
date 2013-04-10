@@ -107,7 +107,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   -- "old" keyboard shortcuts for some of the fullscreen windows
   ui:addKeyHandler("T", buttons[2], buttons[2].handleClick, "left") -- T for town map
   ui:addKeyHandler("R", buttons[4], buttons[4].handleClick, "left") -- R for research
-  if ui.app.volume_opens_casebook then
+  local config = ui.app.config
+  if not config.volume_opens_casebook then
     ui:addKeyHandler("C", buttons[3], buttons[3].handleClick, "left") -- C for casebook
   else
     ui:addKeyHandler({"shift", "C"}, buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
@@ -717,7 +718,8 @@ function UIBottomPanel:afterLoad(old, new)
   if old < 71 then
     self.ui:removeKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left")  -- remove C for opening the Casebook
     -- add choice for opening casebook as per chosen option in config
-    if self.ui.app.volume_opens_casebook then
+    local config = self.ui.app.config
+    if not config.volume_opens_casebook then
       self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
     else
       self.ui:addKeyHandler({"shift", "C"}, self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- Shift + C for casebook
