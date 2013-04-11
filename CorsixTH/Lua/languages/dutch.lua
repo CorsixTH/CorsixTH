@@ -2466,9 +2466,9 @@ menu_file_load = {
   [8] = "  GAME 8  ",
 }
 menu_file = {
-  quit =    "  (SHIFT+R) AFSLUITEN  ",
+  quit =    "  (SHIFT+Q) AFSLUITEN  ",
   save =    "  (SHIFT+S) OPSLAAN  ",
-  load =    "  (SHIFT+Q) LADEN  ",
+  load =    "  (SHIFT+L) LADEN  ",
   restart = "  (SHIFT+R) HERSTARTEN  ",
 }
 high_score = {
