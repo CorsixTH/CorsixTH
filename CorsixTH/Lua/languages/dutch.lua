@@ -790,7 +790,7 @@ tooltip = {
     player_name = "Voer de naam in die je wild gebruiken in het spel", 
     difficulty = "Moeilijkheid", 
     cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel starten!", 
-    tutorial = "Als je wat hulp nodig hebt in het spel, klik dan hier",
+    tutorial = "Klik hier als je wat hulp nodig hebt in het spel",
     start = "Begin het spel met de geselecteerde instellingen",
     easy = "Als je dit spel nog nooit gespeeld hebt, is deze optie voor jou",
     medium = "De gulden middenweg, als je geen idee hebt wat je wilt",
@@ -1574,6 +1574,9 @@ adviser = {
     cannot_afford = "Je hebt niet genoeg geld op je rekening om dit personeelslid in aan te nemen.",
     research_screen_open_1 = "Je moet eerst een laboratorium bouwen, voordat je het onderzoeksscherm kunt bekijken.",
     research_screen_open_2 = "Onderzoek is in dit level nog niet toegankelijk.",
+	researcher_needs_desk_1 = "Een onderzoeker heeft een bureau nodig om aan te werken.",
+	researcher_needs_desk_2 = "Je onderzoeker is blij dat je hem op pauze laat gaan. Als het je bedoeling was om meer onderzoekers tegelijk te laten werken, dan moet je voor elk van hen een bureau neerzetten zodat ze hun werk kunnen doen.",
+	researcher_needs_desk_3 = "Elke onderzoeker heeft zijn eigen bureau nodig om aan te werken.",	
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
@@ -2463,10 +2466,10 @@ menu_file_load = {
   [8] = "  GAME 8  ",
 }
 menu_file = {
-  quit = "  AFSLUITEN  ",
-  save = "  OPSLAAN  ",
-  load = "  LADEN  ",
-  restart = "  HERSTARTEN  ",
+  quit =    "  (SHIFT+R) AFSLUITEN  ",
+  save =    "  (SHIFT+S) OPSLAAN  ",
+  load =    "  (SHIFT+Q) LADEN  ",
+  restart = "  (SHIFT+R) HERSTARTEN  ",
 }
 high_score = {
   categories = {
@@ -2590,10 +2593,11 @@ menu_options = {
   announcements_vol = "  VOLUME OMROEPBERICHTEN  ",
   music = "  MUZIEK   ",
   autosave = "  AUTOSAVE  ",
-  jukebox = "  JUKEBOX  ",
+  jukebox = "  (J) JUKEBOX  ",
   edge_scrolling = "  RANDSCROLLEN  ",
-  adviser_disabled = "  ADVISEUR  ",
+  adviser_disabled = "  (SHIFT+A) ADVISEUR  ",
   warmth_colors = "  WARMTE KLEUREN  ",
+  twentyfour_hour_clock = "  24 UUR KLOK  "
 }
 menu_options_game_speed = {
   pause = "  PAUZE  ",
