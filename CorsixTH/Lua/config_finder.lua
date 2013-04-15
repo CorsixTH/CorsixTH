@@ -106,7 +106,8 @@ local config_defaults = {
   allow_user_actions_while_paused = false,
   warmth_colors_display_default = 1,
   movies = true,
-  play_intro = true
+  play_intro = true,
+  twentyfour_hour_clock = true
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -311,6 +312,14 @@ warmth_colors_display_default = ]=].. tostring(config_values.warmth_colors_displ
 -- Note that movies will also be disabled if CorsixTH was compiled without the
 -- FFMPEG library.
 movies = ]=].. tostring(config_values.movies) ..[=[ 
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Top menu clock is by default always on
+-- setting to true will give you a twentyfour hours display
+-- change to false if you want AM / PM time displayed.
+
+twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=[ 
 -------------------------------------------------------------------------------
 ]=])
   end
