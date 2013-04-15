@@ -28,7 +28,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 68
+local SAVEGAME_VERSION = 72
 
 class "App"
 
@@ -1086,6 +1086,11 @@ end
 function App:exit()
   -- Save config before exiting
   self:saveConfig()
+  self.running = false
+end
+
+--! Exits the game completly without saving the config i.e. Alt+F4 for Quit Application
+function App:abandon()
   self.running = false
 end
 

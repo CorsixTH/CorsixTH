@@ -73,6 +73,7 @@ function GameUI:setupGlobalKeyHandlers()
 
   self:addKeyHandler("esc", self, self.setEditRoom, false)
   self:addKeyHandler("esc", self, self.showMenuBar)
+  self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
 
   self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
@@ -656,6 +657,11 @@ function GameUI:toggleWallsTransparent()
   self:setWallsTransparent(not self.transparent_walls)
 end
 
+function UI:toggleAdviser()
+  self.app.config.adviser_disabled = not self.app.config.adviser_disabled
+  self.app:saveConfig()
+end
+
 local tutorial_phases
 local function make_tutorial_phases()
 tutorial_phases = {
@@ -891,7 +897,14 @@ function GameUI:afterLoad(old, new)
     self.adviser.frame = 1
     self.adviser.number_frames = 4
   end
-
+  if old < 69 then
+    self.current_momentum = { x = 0, y = 0 }
+    self.momentum = self.app.config.scrolling_momentum
+  end
+  if old < 70 then
+    self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
+  end
+  
   return UI.afterLoad(self, old, new)
 end
 

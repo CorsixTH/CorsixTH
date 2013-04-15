@@ -417,6 +417,7 @@ function Staff:dump()
   if self.last_room then 
       print("Last room: ", self.last_room.room_info.id .. '@' .. self.last_room.x ..','.. self.last_room.y)
   end
+
   if self.humanoid_class == "Handyman" then
     print("Cleaning: " .. self.attributes["cleaning"],
           "Watering: " .. self.attributes["watering"], 
@@ -538,6 +539,14 @@ function Staff:checkIfNeedRest()
       -- The staff will get unhappy if there is no staffroom to rest in.
         self:changeAttribute("happiness", -0.001)
       end
+      local room = self:getRoom()
+      if self.staffroom_needed and ((room and not room:getPatient()) or not room)
+      or (room and self.going_to_staffroom) then
+        if self.action_queue[1].name ~= "walk" and self.action_queue[1].name ~= "queue" then
+          self.staffroom_needed = nil
+          self:goToStaffRoom()
+        end
+      end
       -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
       -- already going to staffroom or being picked up
       if self.waiting_for_staffroom or self.staffroom_needed
@@ -562,6 +571,9 @@ function Staff:checkIfNeedRest()
         -- If occupied by patient, staff will go to the staffroom after the patient left.
         self.staffroom_needed = true
       else
+        if room then
+          room.staff_leaving = true
+        end
         self:goToStaffRoom()
       end
     end
@@ -596,6 +608,7 @@ function Staff:goToStaffRoom()
   end
   local room = self:getRoom()
   if room then
+    room.staff_leaving = true
     self:setNextAction(room:createLeaveAction())
     self:queueAction{name = "seek_staffroom", must_happen = true}
   else
@@ -842,6 +855,14 @@ function Staff:afterLoad(old, new)
     -- added reference to world for staff profiles
     self.profile.world = self.world
   end
+  if old < 72 then
+    if self.attributes["fatigue"] then
+      if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] then
+        self:goToStaffRoom()
+        self.going_to_staffroom = true
+      end  
+    end  
+  end
   
   Humanoid.afterLoad(self, old, new)
 end
@@ -852,6 +873,7 @@ function Staff:intreruptHandymanTask()
     self.on_call.assigned = nil
     self.on_call = nil
   end
+  self.task = nil
   self:setNextAction{name = "answer_call"}
 end
 

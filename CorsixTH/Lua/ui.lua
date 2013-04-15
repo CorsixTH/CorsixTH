@@ -253,8 +253,8 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler(" ", self, self.stopMovie)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
-  self:addKeyHandler({"alt", "f4"}, self, self.quit)
-  self:addKeyHandler("f10", self, self.resetApp)
+  self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
   
   if self.app.config.debug then
     self:addKeyHandler("f12", self, self.showLuaConsole)
@@ -620,19 +620,18 @@ function UI:onKeyDown(code, rawchar)
 
   -- Otherwise, if there is a key handler bound to the given key, then it gets
   -- the key.
-  local keyHandlers = self.key_handlers[key]
+  -- For some reason the rawchar used above is not good if Ctrl is being pressed
+  local key_down = key
+  if code < 128 then
+    key_down = string.char(code)
+  end
+  local keyHandlers = self.key_handlers[key_down]
   if keyHandlers then
     -- Iterate over key handlers and call each one whose modifier(s) are pressed
-    -- TODO: Currently, a handler is triggered regardless of additional modifiers
-    --       being pressed (example: "s" triggers when "ctrl+s" is pressed).
-    --       Decide if this is a good or bad thing.
+    -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
     local handled = false
     for _, handler in ipairs(keyHandlers) do
-      local match = true
-      for m, _ in pairs(handler.modifiers) do
-        match = match and self.buttons_down[m]
-      end
-      if match then
+      if compare_tables(handler.modifiers, self.buttons_down) then
         handler.callback(handler.window, unpack(handler))
         handled = true
       end
@@ -659,9 +658,6 @@ function UI:onKeyUp(code)
       return true
     end
     key = self.key_remaps[key] or key
-  end
-  if self.key_handlers[key] then
-    return true
   end
   self.buttons_down[key] = nil
 end
@@ -850,7 +846,16 @@ function UI:afterLoad(old, new)
   repeat
     self:disableKeyboardRepeat()
   until self.keyboard_repeat_enable_count == 0
-
+  if old < 70 then
+    self:removeKeyHandler("f10", self)
+    self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
+    self:removeKeyHandler("a", self)
+  end
+  -- changing this so that it is quit application and Shift + Q is quit to main menu  
+  if old < 71 then
+    self:removeKeyHandler({"alt", "f4"}, self, self.quit)
+    self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  end    
   Window.afterLoad(self, old, new)
 end
 
@@ -901,6 +906,10 @@ end
 function UI:resetApp()
   debug.getregistry()._RESTART = true
   TheApp.running = false
+end
+-- Added this function as quit does not exit the application, it only exits the game to the menu screen
+function UI:exitApplication()
+  self.app:abandon()
 end
 
 --! Triggers quitting the application

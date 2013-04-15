@@ -66,12 +66,21 @@ tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this dise
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
+menu_file = {
+  load =    " (SHIFT+L) LOAD   ",
+  save =    " (SHIFT+S) SAVE   ",
+  restart = " (SHIFT+R) RESTART",
+  quit =    " (SHIFT+Q) QUIT   "
+}
+
 menu_options = {
+  jukebox = "  (J) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
   settings = "  SETTINGS  ",
-  adviser_disabled = "  ADVISER  ",
+  adviser_disabled = "  (SHIFT+A) ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
+  twentyfour_hour_clock = "  24 HOUR CLOCK  "
 }
 
 menu_options_game_speed = {
@@ -101,10 +110,6 @@ menu_charts = {
   graphs        = "  (F8) GRAPHS  ",
   policy        = "  (F9) POLICY  ",
 }
-
-
--- The demo does not contain this string
-menu_file.restart = "  RESTART  "
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
