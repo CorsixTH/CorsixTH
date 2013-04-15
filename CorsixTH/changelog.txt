@@ -1,5 +1,62 @@
 -------------------------------------------------------------------------------
-Version 0.20 - preliminary release date 2013-03-24
+Version 0.21 - released 2013-05-04
+-------------------------------------------------------------------------------
+
+This is mainly a bugfix release, but a few minor features are still also
+introduced, see the changelog below. 
+
+
+
+--- Gameplay ---
+
+* Fix: Staff would sometimes not go for a break.
+* Fix: A few crashes related to Handymen.
+* Fix: An error could occur if a fax message was removed just as it was animating
+  into view.
+* Fix: Patients could sometimes be told to go home multiple times,
+  resulting in a crash.
+* Fix: If a queueing patient was heading for a drinks machine just as the player
+  moved that machine the game would crash.
+
+
+
+--- User Interface ---
+
+* Added: Scrolling momentum when using the middle button.
+* Added: There is now a clock in the right corner of the menu bar that
+  shows the real world time. It can be toggled between AM/PM and 24h
+  in the configuration file.
+
+
+
+--- Hotkeys ---
+
+* Added: Hotkeys for the Jukebox (J), Save game menu (Shift + S),
+  Load game menu (Shift + L), to restart the level (Shift + R) and finally
+  quit the current game and take you back to the opening screen (Shift + Q). 
+
+* Change: Restart is now Shift + F10 instead of only F10.
+* Change: Toggle adviser is now Shift + A instead of only A.
+* Change: Key combinations will only trigger if that exact combination
+  is pressed. E.g. Ctrl + R will not trigger R too.
+* Change: Alt + F4 is now the hotkey to quit CorsixTH. 
+
+* Fix: Added a configuration option to have the possibility to use Shift + C
+  as hotkey to open the Drug casebook instead of C. This is to workaround
+  a bug that when you press on the volume down key on your keyboard
+  the Drug casebook would open. 
+
+
+
+--- Map Editor ---
+
+* Added: Undo/Redo functionality.
+* Added: Street lamps and the dead looking tree.
+
+
+
+-------------------------------------------------------------------------------
+Version 0.20 - released 2013-03-24
 -------------------------------------------------------------------------------
 
 In this version major new features include in-game movies, objects that
@@ -128,6 +185,7 @@ http://code.google.com/p/corsix-th/issues/list
 * Fix: While a player viewed the confirm dialog to delete a room he/she could
   continue to edit the room and complete it again resulting in an inconsistent
   game state.
+
 
 
 --- Graphics ---
