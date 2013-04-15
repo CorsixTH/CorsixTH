@@ -1,4 +1,22 @@
 -------------------------------------------------------------------------------
+Version 0.XX - released ??
+-------------------------------------------------------------------------------
+
+Another release that will be made at some point...
+
+
+
+--- User Interface ---
+
+* Added: A helpful message when the player puts more Researchers in the
+  research department than there are desks.
+
+* Fix: The tooltip for the tutorial button was incorrect since the dialog
+  has been visually changed.
+
+
+
+-------------------------------------------------------------------------------
 Version 0.21 - released 2013-05-04
 -------------------------------------------------------------------------------
 
