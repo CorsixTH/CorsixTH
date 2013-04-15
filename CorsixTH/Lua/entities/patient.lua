@@ -421,8 +421,11 @@ end
 function Patient:goHome(cured)
   local hosp = self.hospital
   if not hosp and self.going_home then
-    -- The patient should be going home already, not much we can do.
+    -- The patient should be going home already! Anything related to the hospital
+    -- will not be updated correctly, but we still want to try to get the patient to go home.
     TheApp.world:gameLog("Warning: goHome called when the patient is already going home")
+    self:setHospital(nil)
+    return
   end
   if not cured then
     self:setMood("exit", "activate")
@@ -444,6 +447,8 @@ function Patient:goHome(cured)
   self:unregisterCallbacks()
   
   self.going_home = true
+  self.waiting = nil
+
   local room = self:getRoom()
   if room then
     room:makeHumanoidLeave(self)
@@ -908,4 +913,13 @@ function Patient:updateMessage(choice)
     end
     
   end
+end
+
+function Patient:afterLoad(old, new)
+  if old < 68 then
+    if self.going_home then
+      self.waiting = nil
+    end
+  end
+  Humanoid.afterLoad(self, old, new)
 end

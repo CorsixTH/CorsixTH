@@ -34,6 +34,8 @@ EVT_RIBBONGALLERY_SELECTED(ID_GALLERY_PARCELS, frmMain::_onParcelGallerySelect)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_NEW, frmMain::_onNew)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_OPEN, frmMain::_onOpen)
 EVT_RIBBONBUTTONBAR_CLICKED(wxID_SAVE, frmMain::_onSave)
+EVT_RIBBONBUTTONBAR_CLICKED(wxID_UNDO, frmMain::_onUndo)
+EVT_RIBBONBUTTONBAR_CLICKED(wxID_REDO, frmMain::_onRedo)
 EVT_RIBBONBUTTONBAR_DROPDOWN_CLICKED(wxID_SAVE, frmMain::_onSaveMenu)
 EVT_MENU(ID_SAVE_IN_DROPDOWN, frmMain::_onSaveMenuSave)
 EVT_MENU(ID_SAVEAS, frmMain::_onSaveMenuSaveAs)
@@ -46,12 +48,20 @@ END_EVENT_TABLE()
 
 frmMain::frmMain()
   : wxFrame(NULL, wxID_ANY, L"CorsixTH Map Editor",
-            wxDefaultPosition, wxSize(640, 480))
+            wxDefaultPosition, wxSize(800, 600))
 {
     m_sFrameCaption = wxFrame::GetTitle();
     _setFilename(wxEmptyString);
 
-    m_pRibbon = new wxRibbonBar(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRIBBON_BAR_FLOW_VERTICAL | wxRIBBON_BAR_SHOW_PAGE_LABELS);
+	wxSizer *pMainSizer = new wxBoxSizer(wxVERTICAL);
+	wxSplitterWindow* pSplitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D);
+	pSplitter->SetMinimumPaneSize(250);
+	wxPanel *pLeftPanel = new wxPanel(pSplitter, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+	wxPanel *pRightPanel = new wxPanel(pSplitter, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+	wxSizer *pLeftSizer = new wxBoxSizer(wxVERTICAL);
+	wxSizer *pRightSizer = new wxBoxSizer(wxVERTICAL);
+
+    m_pRibbon = new wxRibbonBar(pLeftPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxRIBBON_BAR_FLOW_VERTICAL | wxRIBBON_BAR_SHOW_PAGE_LABELS);
     m_pRibbon->SetArtProvider(new wxRibbonMSWArtProvider);
     m_pRibbon->SetTabCtrlMargins(0, 0);
     m_pHomePage = new wxRibbonPage(m_pRibbon, wxID_ANY, L"Home");
@@ -67,17 +77,22 @@ frmMain::frmMain()
     m_pWallGallery2 = new RibbonBlockGallery(pWallNorthPanel, ID_GALLERY_WALL2);
     m_pRibbon->Realize();
 
-    m_pGamePanel = new ScrollableGamePanel(this);
+    m_pGamePanel = new ScrollableGamePanel(pRightPanel);
     m_pGamePanel->setExtraLuaInitFunction(_l_init, this);
     m_pGamePanel->setLogWindow(m_pLogWindow = new frmLog);
     wxPoint ptLogWindow = GetPosition();
     ptLogWindow.x += GetSize().GetWidth();
     m_pLogWindow->SetPosition(ptLogWindow);
 
-    wxSizer *pTopSizer = new wxBoxSizer(wxHORIZONTAL);
-    pTopSizer->Add(m_pRibbon, 0, wxEXPAND);
-    pTopSizer->Add(m_pGamePanel, 1, wxEXPAND);
-    SetSizer(pTopSizer);
+	pLeftSizer->Add(m_pRibbon, 1, wxALL | wxEXPAND);
+	pRightSizer->Add(m_pGamePanel, 1, wxALL | wxEXPAND);
+	pLeftPanel->SetSizer(pLeftSizer);
+	pRightPanel->SetSizer(pRightSizer);
+	pSplitter->SplitVertically(pLeftPanel,pRightPanel);
+	pSplitter->SetSashPosition(250);
+	pMainSizer->Add(pSplitter, 1, wxEXPAND);
+
+	SetSizer(pMainSizer);	
 }
 
 void frmMain::_setFilename(const wxString& sFilename)
@@ -223,6 +238,16 @@ void frmMain::_onSaveMenu(wxRibbonButtonBarEvent& evt)
     mnuPopup.Append(ID_SAVEAS, "Save As");
     evt.PopupMenu(&mnuPopup);
 }
+
+void frmMain::_onUndo(wxRibbonButtonBarEvent& evt)
+{
+	_doLuaUndo();
+}
+void frmMain::_onRedo(wxRibbonButtonBarEvent& evt)
+{
+	_doLuaRedo();
+}
+
 
 struct map_save_t
 {
@@ -473,6 +498,8 @@ int frmMain::_l_init_with_lua_app(lua_State *L)
     pFileButtons->AddButton(wxID_NEW, wxT("New"), BITMAP("new"));
     pFileButtons->AddButton(wxID_OPEN, wxT("Load"), BITMAP("open"));
     pFileButtons->AddHybridButton(wxID_SAVE, wxT("Save"), BITMAP("save"));
+	pFileButtons->AddButton(wxID_UNDO, wxT("Undo"), BITMAP("undo"));
+	pFileButtons->AddButton(wxID_REDO, wxT("Redo"), BITMAP("redo"));
 
     
     wxRibbonPanel* pViewPanel = new wxRibbonPanel(pHomePage, wxID_ANY, wxT("View"));
@@ -717,4 +744,18 @@ void frmMain::_setLuaBlockBrush(int iBlockF, int iBlockW1, int iBlockW2)
     lua_State *L = m_pGamePanel->getLua();
     luaT_execute(L, "_MAP_EDITOR:setBlockBrush(...)",
         iBlockF, iBlockW1, iBlockW2);
+}
+
+void frmMain::_doLuaUndo()
+{
+	lua_State *L = m_pGamePanel->getLua();
+	luaT_execute(L, "_MAP_EDITOR:undo()");
+	m_pGamePanel->Refresh();
+}
+
+void frmMain::_doLuaRedo()
+{
+	lua_State *L = m_pGamePanel->getLua();
+	luaT_execute(L, "_MAP_EDITOR:redo()");
+	m_pGamePanel->Refresh();
 }

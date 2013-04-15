@@ -18,6 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile "command_stack"
+dofile "command"
+dofile "commands/set_map_cell"
+dofile "commands/set_map_cell_flags"
+dofile "commands/compound"
+
 class "UIMapEditor" (Window)
 
 local math_floor
@@ -32,6 +38,10 @@ function UIMapEditor:UIMapEditor(ui)
   self.width = math.huge
   self.height = math.huge
   self.ui = ui
+  
+  self.command_stack = CommandStack()
+
+
   
   -- For when there are multiple things which could be sampled from a tile,
   -- keep track of the index of which one was most recently sampled, so that
@@ -109,6 +119,9 @@ function UIMapEditor:classifyBlocks()
     for i = 128, 156 do
     block_info[i] = {"object"}
     end
+    for i = 120, 121 do  -- removes the complete windows as they disappear in the game
+    block_info[i] = {"object"}
+    end
     if i ~= 144 and i ~= 145 and i ~= 156 then
       block_info[i] = {"wall", dir, category, pair = pair}
     end
@@ -119,16 +132,24 @@ function UIMapEditor:classifyBlocks()
   for i = 192, 196 do
     block_info[i] = {"floor", "decorated", "Foliage", base = 2}
   end
-  for i = 198, 204 do
+  for i = 197, 204 do
     block_info[i] = {"floor", "decorated", "Foliage", base = 2}
   end
   for i = 205, 208 do
     block_info[i] = {"floor", "simple", "Outside"}
   end
   block_info[208].base = 3
+-- adds street lights, could do with mirrors of these to have lamps facing different directions  
   for i = 209, 210 do
-    block_info[i] = {"object"}
+  local pair
+  local category = "External"
+  local dir = i % 2 == 0 and "north" or "west" 
+  if i ~= 209 then 
+    pair = i - 1
+  end   
+  block_info[i] = {"wall", dir, category, pair = pair}
   end
+ 
   MapEditorSetBlocks(self.ui.app.map.blocks, block_info) -- pass data to UI
   self.block_info = block_info
 end
@@ -212,6 +233,7 @@ end
 
 function UIMapEditor:onMouseDown(button, x, y)
   local repaint = false
+  local map = self.ui.app.map.th
   if button == "right" then
     if self.buttons_down.mouse_left then
       -- Right click while left is down: set paint step size
@@ -226,9 +248,15 @@ function UIMapEditor:onMouseDown(button, x, y)
       self:sampleBlock(x, y)
     end
   elseif button == "left" then
+    self.current_command = CompoundCommand()
+    self.current_command_cell = SetMapCellCommand(map)
+    self.current_command_cell_flags = SetMapCellFlagsCommand(map)
     self:startPaint(x, y)
     repaint = true
   elseif button == "left_double" then
+    self.current_command = CompoundCommand()
+    self.current_command_cell = SetMapCellCommand(map)
+    self.current_command_cell_flags = SetMapCellFlagsCommand(map)
     self:doLargePaint(x, y)
     -- Set a dummy paint rect for the mouse up event.
     self:setPaintRect(0, 0, 0, 0)
@@ -242,6 +270,13 @@ function UIMapEditor:onMouseUp(button, x, y)
   local repaint = false
   if button == "left" and self.paint_rect then
     self:finishPaint(true)
+    if #self.current_command_cell.paint_list ~=0 then
+      self.current_command:addCommand(self.current_command_cell)
+    end
+    if #self.current_command_cell_flags.paint_list ~= 0 then
+      self.current_command:addCommand(self.current_command_cell_flags)
+    end
+    self.command_stack:add(self.current_command)
     repaint = true
   end
   
@@ -316,7 +351,9 @@ function UIMapEditor:doLargePaint(x, y)
   end
   
   -- Reset the starting tile as to simplify the upcoming loop.
+  self.current_command_cell:addTile(x, y, 1, match_f)
   map:setCell(x, y, 1, match_f)
+  
   
   local to_visit = {[key] = {x, y}}
   local visited = {[key] = true}
@@ -343,7 +380,8 @@ function UIMapEditor:doLargePaint(x, y)
     to_visit[key] = nil
     local f = map:getCell(x, y)
     if f % 256 == match_f then
-      map:setCell(x, y, 1, f - match_f + brush_f)
+      self.current_command_cell:addTile(x, y, 1, f - match_f + brush_f)
+	  map:setCell(x, y, 1, f - match_f + brush_f)
       visited[combine_ints(x, y + 1)] = {x, y + 1}
       visited[combine_ints(x, y - 1)] = {x, y - 1}
       visited[combine_ints(x + 1, y)] = {x + 1, y}
@@ -386,7 +424,6 @@ function UIMapEditor:finishPaint(apply)
   -- saved.
   local old_floors = {}
   self.old_floors = old_floors
-  
   for tx = x_first, x_last do
     for ty = y_first, y_last do
       -- Grab and save the contents of the tile
@@ -440,13 +477,16 @@ function UIMapEditor:finishPaint(apply)
         end
       until true
       -- Remove the UI layer and perform the adjustment of the other layers.
+	    self.current_command_cell:addTile(tx,ty,f,w1,w2,0)
       map:setCell(tx, ty, f, w1, w2, 0)
       if flags then
+        self.current_command_cell_flags:addTile(tx, ty, flags)
         map:setCellFlags(tx, ty, flags)
       end
     end
   end
   map:updateShadows()
+
 end
 
 -- Move/resize the rectangle to be painted, and update the UI preview layer
@@ -483,8 +523,7 @@ function UIMapEditor:setPaintRect(x, y, w, h, xstep, ystep)
   local is_wall = self.block_info[self.block_brush_preview]
   local block_brush_preview_pair = is_wall and is_wall.pair
   is_wall = is_wall and is_wall[1] == "wall" and is_wall[2]
-  
-  
+
   for tx = left, right do
     for ty = top, bottom do
       local now_in, was_in
@@ -518,11 +557,12 @@ function UIMapEditor:setPaintRect(x, y, w, h, xstep, ystep)
           end
           ui_layer = brush + 256 * DrawFlags.Alpha50
         end
+        self.current_command_cell:addTile(tx, ty, 4, ui_layer)
         map:setCell(tx, ty, 4, ui_layer)
       end
     end
   end
-  
+
   -- Save the details of the new rectangle
   if not rect then
     rect = {}
@@ -605,4 +645,16 @@ function UIMapEditor:setBlockBrushParcel(parcel)
   self.block_brush_f = self.block_brush_preview
   self.block_brush_w1 = 0
   self.block_brush_w2 = 0
+end
+
+function UIMapEditor:undo()
+  local last = self.command_stack:undo()
+  self.ui.app.map.th:updateShadows()
+  return last
+end
+
+function UIMapEditor:redo()
+  local last = self.command_stack:redo()
+  self.ui.app.map.th:updateShadows()
+  return last
 end

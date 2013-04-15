@@ -638,6 +638,9 @@ static int l_map_setcellflags(lua_State *L)
             {
                 pNode->iParcelId = static_cast<uint16_t>(lua_tointeger(L, 6));
             }
+			else if(strcmp(field, "roomId") == 0) {
+				pNode->iRoomId = static_cast<uint16_t>(lua_tointeger(L,6));
+			}
             else
             {
                 luaL_error(L, "Invalid flag \'%s\'", field);

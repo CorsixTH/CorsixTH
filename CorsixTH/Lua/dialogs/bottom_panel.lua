@@ -341,6 +341,11 @@ function UIBottomPanel:onTick()
       self.factory_counter = self.factory_counter + 1
     end
   elseif self.factory_direction == -1 then
+    if #self.message_queue == 0 then
+      -- Message was removed before we could display it. Reset.
+      self.factory_direction = 1
+      self.factory_counter = 22
+    end
     -- Open factory animation
     if self.factory_counter >= 0 then
       if self.factory_counter == 0 then
