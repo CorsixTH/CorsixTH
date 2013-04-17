@@ -113,7 +113,7 @@ menu_file = {
   load =    " (MAYUS+L) CARGAR   ",
   save =    " (MAYUS+S) GUARDAR   ",
   restart = " (MAYUS+R) REINICIAR",
-  quit =    " (ALT+F4) SALIR   "
+  quit =    " (MAYUS+Q) SALIR   "
 }
 
 menu_options = {
