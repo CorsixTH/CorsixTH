@@ -46,6 +46,8 @@ object.usage_animations = copy_north_to_south {
       ["Transparent Female Patient"] = 4432,
       ["Chewbacca Patient"         ] = 4158,
       ["Elvis Patient"             ] =  950,
+      ["Alien Male Patient"        ] = 1712,
+      ["Alien Female Patient"      ] = 3132,
     },
     begin_use_2 = {
       ["Standard Male Patient"     ] = 1716,
@@ -58,6 +60,8 @@ object.usage_animations = copy_north_to_south {
       ["Transparent Female Patient"] = 4436,
       ["Chewbacca Patient"         ] = 4162,
       ["Elvis Patient"             ] =  954,
+      ["Alien Male Patient"        ] = 1716,
+      ["Alien Female Patient"      ] = 3132,
     },
     in_use = {
       ["Standard Male Patient"     ] = {1728, 1732},
@@ -70,6 +74,8 @@ object.usage_animations = copy_north_to_south {
       ["Transparent Female Patient"] = 4440,
       ["Chewbacca Patient"         ] = 4170,
       ["Elvis Patient"             ] =  962,
+      ["Alien Male Patient"        ] = {1728, 1732},
+      ["Alien Female Patient"      ] = 3144,
     },
     finish_use = {
       ["Standard Male Patient"     ] = 1740,
@@ -82,6 +88,8 @@ object.usage_animations = copy_north_to_south {
       ["Transparent Female Patient"] = 4444,
       ["Chewbacca Patient"         ] = 4174,
       ["Elvis Patient"             ] =  966,
+      ["Alien Male Patient"        ] = 1740,
+      ["Alien Female Patient"      ] = 3152,
     },
     finish_use_2 = {
       ["Standard Male Patient"     ] = 1744,
@@ -94,6 +102,8 @@ object.usage_animations = copy_north_to_south {
       ["Transparent Female Patient"] = 4448,
       ["Chewbacca Patient"         ] = 4740,
       ["Elvis Patient"             ] = 1158,
+      ["Alien Male Patient"        ] = 1744,
+      ["Alien Female Patient"      ] = 3156,
     },
   },
 }

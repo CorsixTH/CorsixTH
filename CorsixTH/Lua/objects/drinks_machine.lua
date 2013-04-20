@@ -47,6 +47,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3060, -- is 426 an initial try at this?
       ["Chewbacca Patient"         ] = 3768,
       ["Elvis Patient"             ] =  198,
+      ["Alien Male Patient"        ] = 190,
+      ["Alien Female Patient"      ] = 250,
     },
   },
   east = {
@@ -61,6 +63,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3066,
       ["Chewbacca Patient"         ] = 3774,
       ["Elvis Patient"             ] =  204,
+      ["Alien Male Patient"        ] = 196,
+      ["Alien Female Patient"      ] = 256,
     },
   },
   west = {
@@ -75,6 +79,8 @@ object.usage_animations = {
       ["Transparent Female Patient"] = 3062,
       ["Chewbacca Patient"         ] = 3770,
       ["Elvis Patient"             ] =  200,
+      ["Alien Male Patient"        ] = 192,
+      ["Alien Female Patient"      ] = 252,
     },
   },
 }

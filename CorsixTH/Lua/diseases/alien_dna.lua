@@ -28,8 +28,8 @@ disease.symptoms = _S.diseases.alien_dna.symptoms
 disease.cure = _S.diseases.alien_dna.cure
 disease.cure_price = 2000
 disease.emergency_sound = "emerg020.wav"
-disease.must_stand = true -- Alien Patients are forced to stand while queueing because of missing animation
-disease.only_emergency = true -- TODO implement (there are no normal door animations, so they cannot go to GP)
+disease.must_stand = TheApp.config.alien_dna_must_stand -- Alien Patients are forced to stand while queueing because of missing animation
+disease.only_emergency = TheApp.config.alien_dna_only_by_emergency -- TODO implement (there are no normal door animations, so they cannot go to GP)
 disease.initPatient = function(patient)
   local which = math.random(0, 1) -- male or female?
   patient:setType((which == 0) and "Alien Male Patient" or "Alien Female Patient")
@@ -44,7 +44,7 @@ disease.initPatient = function(patient)
   patient:setLayer(1, math.random(0, 3) * 2) -- 3 clothes variations for both genders
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
-  patient.should_knock_on_doors = false
+  patient.should_knock_on_doors = TheApp.config.alien_dna_can_knock_on_doors
 end
 
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited
