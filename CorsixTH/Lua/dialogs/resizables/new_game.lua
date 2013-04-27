@@ -123,8 +123,8 @@ function UINewGame:UINewGame(ui)
     :makeToggleButton(0, 0, 140, 30, nil, self.dropdownDifficulty):setTooltip(_S.tooltip.new_game_window.difficulty)
 
   -- Start and Cancel
-  self:addBevelPanel(20, 160, 135, 40, col_bg):setLabel(_S.new_game_window.start):makeButton(0, 0, 160, 40, nil, self.buttonStart):setTooltip(_S.tooltip.new_game_window.start)
-  self:addBevelPanel(165, 160, 135, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 160, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
+  self:addBevelPanel(20, 160, 135, 40, col_bg):setLabel(_S.new_game_window.start):makeButton(0, 0, 137, 40, nil, self.buttonStart):setTooltip(_S.tooltip.new_game_window.start)
+  self:addBevelPanel(165, 160, 135, 40, col_bg):setLabel(_S.new_game_window.cancel):makeButton(0, 0, 137, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.new_game_window.cancel)
 end
 
 function UINewGame:saveToConfig()
