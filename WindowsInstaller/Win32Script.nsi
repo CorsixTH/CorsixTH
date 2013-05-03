@@ -297,6 +297,7 @@ Section Uninstall
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
   RMDir /r "$INSTDIR\Levels"
+  RMDir /r "$INSTDIR\Src"
   
   Delete "$INSTDIR\*.*"
 
