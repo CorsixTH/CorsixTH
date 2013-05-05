@@ -620,11 +620,13 @@ function UI:onKeyDown(code, rawchar)
 
   -- Otherwise, if there is a key handler bound to the given key, then it gets
   -- the key.
+
   -- For some reason the rawchar used above is not good if Ctrl is being pressed
   local key_down = key
-  if code < 128 then
+  if self.buttons_down.ctrl and code < 128 then
     key_down = string.char(code)
   end
+
   local keyHandlers = self.key_handlers[key_down]
   if keyHandlers then
     -- Iterate over key handlers and call each one whose modifier(s) are pressed
