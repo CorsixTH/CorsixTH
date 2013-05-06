@@ -645,7 +645,7 @@ function Patient:tickDay()
             end
             self:registerRoomBuildCallback(callback)
           -- Otherwise we can queue the action, but only if not in any rooms right now.
-          elseif not self:getRoom() and not self.action_queue[1].is_leaving then
+          elseif not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].pee then
             self:setNextAction{
               name = "seek_toilets",
               must_happen = true,

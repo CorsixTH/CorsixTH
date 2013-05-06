@@ -37,6 +37,8 @@ room.floor_tile = 21
 
 class "ToiletRoom" (Room)
 
+room.free_loos = 0
+
 function ToiletRoom:ToiletRoom(...)
   self:Room(...)
   self.door.queue:setBenchThreshold(3)
@@ -55,6 +57,21 @@ function ToiletRoom:roomFinished()
   Room.roomFinished(self)
 end
 
+-- if any of the occupants are not using the loo then the loo must be free!
+function ToiletRoom:freeLoos()
+  local number = 0
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then 
+      if (humanoid.action_queue[1].name == "use_object"
+      and humanoid.action_queue[1].object.object_type.id ~= "loo") then
+        number = number + 1
+        room.free_loos = number
+      end
+    end
+  end
+  return room.free_loos
+end
+
 function ToiletRoom:dealtWithPatient(patient)
 -- Continue to the previous room
   patient:setNextAction(self:createLeaveAction())
@@ -67,7 +84,7 @@ end
 
 function ToiletRoom:onHumanoidEnter(humanoid)
   if class.is(humanoid, Patient) then
-    local loo, lx, ly = self.world:findFreeObjectNearToUse(humanoid, "loo")
+    local loo, lx, ly = self.world:findFreeObjectNearToUse(humanoid, "loo")      
     if loo and lx and ly then
       humanoid:walkTo(lx, ly)
       loo.reserved_for = humanoid
@@ -104,13 +121,21 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                   -- Make sure that the mood waiting is no longer active.
                   humanoid:setMood("patient_wait", "deactivate")
                 else
+                  -- if there is a queue to wash hands there is a chance we might not bother
+                  -- but the patient won't be happy about this.
+                  if math.random(1, 4) > 2 then
                   -- Wait for a while before trying again.
-                  humanoid:setNextAction{
-                    name = "idle", 
-                    count = 5,
-                    after_use = after_use,
-                    direction = loo.direction == "north" and "south" or "east",
-                    }
+                    humanoid:setNextAction{
+                      name = "idle", 
+                      count = 5,
+                      after_use = after_use,
+                      direction = loo.direction == "north" and "south" or "east",
+                      }
+                    else 
+                      self:dealtWithPatient(humanoid)
+                      humanoid:changeAttribute("happiness", -0.08) 
+                      humanoid:setMood("patient_wait", "deactivate")
+                    end  
                   -- For now, activate the wait icon to show the player that the patient hasn't
                   -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
                   humanoid:setMood("patient_wait", "activate")
@@ -124,14 +149,41 @@ function ToiletRoom:onHumanoidEnter(humanoid)
         end
       }
     else
-      -- If no loo is found, go out again and start over. TODO: This should never happen - 
-      -- when does it?
-      humanoid:setNextAction(self:createLeaveAction())
+
+      --[[ If no loo is found, perhaps the patient followed another one in and they were heading for the same one.
+      Now there is no free loo, so wait for a bit, meander and then leave the room to wait outside.  No need for a warning
+      as this is what happens in busy toilets]]--
+      humanoid:setNextAction{
+        name = "meander", 
+        count = 1
+        } 
+      humanoid:queueAction(self:createLeaveAction())
       humanoid:queueAction(self:createEnterAction(humanoid))
-      print("Warning: A patient was called into the toilets even though there are no free loos.")
     end
   end
   return Room.onHumanoidEnter(self, humanoid)
+end
+
+-- Override the standard way to count the number of patients to take account
+-- that some of them may not be using the loo.  Allowing others to enter the room earlier than normal
+function ToiletRoom:getPatientCount()
+  local count = 0
+  local true_space = 0
+  for humanoid in pairs(self.humanoids) do
+    if class.is(humanoid, Patient) then
+      count = count + 1 
+      self:freeLoos() 
+      true_space = count - room.free_loos
+    end
+  end
+  return true_space 
+end
+
+function ToiletRoom:afterLoad(old, new)
+  if old < 74 then
+    room.free_loos = 0
+  end
+  Room.afterLoad(self, old, new)
 end
 
 return room
