@@ -159,6 +159,8 @@ adviser = {
     researcher_needs_desk_1 = "A Researcher needs to have a desk to work at.",
     researcher_needs_desk_2 = "Your Researcher is pleased that you have allowed him to have a break. If you were intending to have more staff researching, then you need to provide them each with a desk to work from.",
     researcher_needs_desk_3 = "Each Researcher needs to have his own desk to work from.",
+    nurse_needs_desk_1 = "Each Nurse needs to have her own desk to work from.",
+    nurse_needs_desk_2 = "Your Nurse is pleased that you have allowed her to have a break. If you were intending to have more than one working in the ward, then you need to provide them each with a desk to work from.",
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",

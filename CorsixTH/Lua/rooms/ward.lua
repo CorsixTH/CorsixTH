@@ -25,7 +25,13 @@ room.class = "WardRoom"
 room.name = _S.rooms_short.ward
 room.tooltip = _S.tooltip.rooms.ward
 room.long_name = _S.rooms_long.ward
-room.objects_additional = { "extinguisher", "radiator", "plant", "bin", "bed" }
+room.objects_additional = { 
+  "extinguisher", 
+  "radiator", 
+  "plant", 
+  "desk",
+  "bin", 
+  "bed" }
 room.objects_needed = { desk = 1, bed = 1 }
 room.build_preview_animation = 910
 room.categories = {
@@ -39,25 +45,33 @@ room.swing_doors = true
 room.required_staff = {
   Nurse = 1,
 }
-room.maximum_staff = room.required_staff
+
 room.call_sound = "reqd009.wav"
 
 class "WardRoom" (Room)
 
 function WardRoom:WardRoom(...)
   self:Room(...)
+  self.staff_member_set = {}
 end
 
 function WardRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
-  local number = 0
+  local beds = 0
+  local desks = 0
   for object, value in pairs(objects) do
     if object.object_type.id == "bed" then
-      number = number + 1
+      beds = beds + 1
+    end  
+    if object.object_type.id == "desk" then
+      desks = desks + 1
     end
   end
-  self.maximum_patients = number
+  self.maximum_staff = {
+    Nurse = desks,
+  } 
+  self.maximum_patients = beds
   if not self.hospital:hasStaffOfCategory("Nurse") then
     self.world.ui.adviser
     :say(_A.room_requirements.ward_need_nurse)
@@ -65,8 +79,12 @@ function WardRoom:roomFinished()
   Room.roomFinished(self)
 end
 
+function WardRoom:getMaximumStaffCriteria()
+  return self.maximum_staff
+end
+
 function WardRoom:commandEnteringStaff(humanoid)
-  self.staff_member = humanoid
+  self.staff_member_set[humanoid] = true
   self:doStaffUseCycle(humanoid)
   return Room.commandEnteringStaff(self, humanoid, true)
 end
@@ -79,22 +97,42 @@ function WardRoom:doStaffUseCycle(humanoid)
     name = "meander",
     count = meander_time,
   }
-  local obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
-  humanoid:queueAction{name = "use_object",
-    object = obj,
+  local obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "desk")
+   if obj then
+    obj.reserved_for = humanoid
+    humanoid:walkTo(ox, oy)
+    if obj.object_type.id == "desk" then
+      local desk_use_time = math.random(7, 14)
+      humanoid:queueAction {
+        name = "use_object",
+        object = obj,
     loop_callback = --[[persistable:ward_desk_loop_callback]] function()
       desk_use_time = desk_use_time - 1
       if desk_use_time == 0 then
         self:doStaffUseCycle(humanoid)
       end
     end,
-  }
+  }    
+  end  
+
+  end
+  local num_meanders = math.random(2, 4)
+  humanoid:queueAction {
+    name = "meander",
+    loop_callback = --[[persistable:ward_meander_loop_callback]] function(action)
+      num_meanders = num_meanders - 1
+      if num_meanders == 0 then
+        self:doStaffUseCycle(humanoid)
+      end
+    end
+  }    
 end
+
+
 -- TODO the nurse should not leave the ward if there are beds in use, therefore prevent her from being picked up
 -- and have a system that stops patients entering the ward if she is in need of taking a break or being called elsewhere.
 function WardRoom:commandEnteringPatient(patient)
-  local staff = self.staff_member
+  local staff = next(self.staff_member_set) or self.staff_member
   local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
   self:setStaffMembersAttribute("dealing_with_patient", nil)
   if not bed then
@@ -103,13 +141,15 @@ function WardRoom:commandEnteringPatient(patient)
     print("Warning: A patient was called into the ward even though there are no free beds.")
   else
     bed.reserved_for = patient
-    local length = math.random(200, 600) * (1.5 - staff.profile.skill)
-    local --[[persistable:ward_loop_callback]] function loop_callback(action)
+    self:countWorkingNurses()
+    local length = (math.random(200, 800) * (1.5 - staff.profile.skill))  / self.nursecount -- reduce time in ward if there is more than one nurse on duty 
+    local --[[persistable:ward_loop_callback]] function loop_callback(action)  
+    -- TODO Perhaps it should take longer if there are more used beds! 
       if length <= 0 then
         action.prolonged_usage = false
       end
       length = length - 1
-    end
+    end    
     local after_use = --[[persistable:ward_after_use]] function()
       self:dealtWithPatient(patient)
     end
@@ -124,6 +164,47 @@ function WardRoom:commandEnteringPatient(patient)
   end
 
   return Room.commandEnteringPatient(self, patient)
+end
+
+-- Returns the staff member with the minimum amount of skill. Perhaps we should consider tiredness too
+function WardRoom:getStaffMember()
+  local staff
+  for staff_member, _ in pairs(self.staff_member_set) do
+    if staff then
+      if staff.profile.skill > staff_member.profile.skill then
+        staff = staff_member
+      end
+    else
+      staff = staff_member
+    end
+  end
+  return staff
+end 
+
+function WardRoom:setStaffMember(staff)
+  self.staff_member_set[staff] = true
+end
+
+function WardRoom:countWorkingNurses()
+  local staff = next(self.staff_member_set) --or self.staff_member
+  self.nursecount = 0
+  for staff_member, _ in pairs(self.staff_member_set) do
+    if staff then
+      staff = staff_member
+      self.nursecount = self.nursecount + 1   
+    end  
+  end 
+end
+
+function WardRoom:setStaffMembersAttribute(attribute, value)
+  for staff_member, _ in pairs(self.staff_member_set) do
+    staff_member[attribute] = value
+  end
+end 
+
+function WardRoom:onHumanoidLeave(humanoid)
+  self.staff_member_set[humanoid] = nil
+  Room.onHumanoidLeave(self, humanoid)
 end
 
 function WardRoom:afterLoad(old, new)
@@ -168,6 +249,20 @@ function WardRoom:afterLoad(old, new)
       end
     end
   end
+  if old < 74 then
+    -- add some new variables
+    self.staff_member_set = {}
+    self.nursecount = 0
+    -- reset any wards that already exist
+    self:roomFinished()  
+    -- if there is already a nurse in the ward
+    -- make her leave so she gets counted properly
+    local nurse = self.staff_member
+    if nurse then 
+      nurse:setNextAction(self:createLeaveAction())
+      nurse:queueAction({name = "meander"})
+    end
+  end  
   Room.afterLoad(self, old, new)
 end
 
