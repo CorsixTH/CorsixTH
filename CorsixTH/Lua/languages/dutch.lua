@@ -1577,6 +1577,8 @@ adviser = {
 	researcher_needs_desk_1 = "Een onderzoeker heeft een bureau nodig om aan te werken.",
 	researcher_needs_desk_2 = "Je onderzoeker is blij dat je hem op pauze laat gaan. Als het je bedoeling was om meer onderzoekers tegelijk te laten werken, dan moet je voor elk van hen een bureau neerzetten zodat ze hun werk kunnen doen.",
 	researcher_needs_desk_3 = "Elke onderzoeker heeft zijn eigen bureau nodig om aan te werken.",	
+    nurse_needs_desk_2 = "Je zuster is blij dat je haar een pauze gunt. Als het je bedoeling was om meer zusters tegelijk in de slaapzaal te laten werken, dan moet je voor elk van hen een bureau neerzetten.",
+    nurse_needs_desk_1 = "Elke zuster heeft haar eigen bureau nodig om aan te werken.",
   },
   placement_info = {
     door_can_place = "Je kunt hier een deur plaatsen als je wilt.",
