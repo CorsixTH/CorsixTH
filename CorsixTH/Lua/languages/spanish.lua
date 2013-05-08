@@ -121,7 +121,7 @@ menu_options = {
   lock_windows = "  BLOQUEAR VENTANAS  ",
   edge_scrolling = "  DESPLAZAR POR BORDES  ",
   settings = "  CONFIGURACIóN  ",
-  adviser_disabled = "  CONSEJERO  ",
+  adviser_disabled = "  (MAYUS+A) CONSEJERO  ",
   warmth_colors = "  COLORES DE TEMPERATURA  ",
   twentyfour_hour_clock = "  RELOJ DE 24 HORAS  "
 }
@@ -202,6 +202,8 @@ adviser = {
     researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
     researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que darles a cada uno una mesa para que trabajen.",
     researcher_needs_desk_3 = "Cada investigador necesita su propia mesa para trabajar.",
+    nurse_needs_desk_1 = "Cada enfermera necesita su propia mesa para trabajar.",
+    nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que darles a cada una una mesa para que trabajen.",
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -229,7 +231,7 @@ fax = {
     decline_new_level = "Seguir jugando un poco más",
   },
   emergency = {
-    num_disease_singular = "Hay 1 persona que tiene %s y necesita atención inmediata.",
+    num_disease_singular = "Hay %d persona con %s y necesita ser atendida inmediatamente.",
     free_build = "Si tienes éxito, mejorarás tu reputación, pero si fracasas tu reputación caerá en picado.",
   },
   vip_visit_result = {
