@@ -57,7 +57,7 @@ function ToiletRoom:roomFinished()
   Room.roomFinished(self)
 end
 
--- if any of the occupants are not using the loo then the loo must be free!
+-- if any of the occupants are not using a loo then the loo must be free!
 function ToiletRoom:freeLoos()
   local number = 0
   for humanoid in pairs(self.humanoids) do
@@ -149,14 +149,13 @@ function ToiletRoom:onHumanoidEnter(humanoid)
         end
       }
     else
-
       --[[ If no loo is found, perhaps the patient followed another one in and they were heading for the same one.
-      Now there is no free loo, so wait for a bit, meander and then leave the room to wait outside.  No need for a warning
-      as this is what happens in busy toilets]]--
+      Now there is no free loo, so wait for a bit and then leave the room to wait outside.  No need for a warning
+      as this is what happens in busy toilets]]
       humanoid:setNextAction{
         name = "meander", 
         count = 1
-        } 
+        }
       humanoid:queueAction(self:createLeaveAction())
       humanoid:queueAction(self:createEnterAction(humanoid))
     end
@@ -164,16 +163,21 @@ function ToiletRoom:onHumanoidEnter(humanoid)
   return Room.onHumanoidEnter(self, humanoid)
 end
 
--- Override the standard way to count the number of patients to take account
--- that some of them may not be using the loo.  Allowing others to enter the room earlier than normal
+-- Override the standard way to count the number of patients to take into account
+-- that some of them may not be using the loo, allowing others to enter the room earlier than normal;
+-- but not if there is only one loo in the room, then it becomes a private toilet with only one person at a time.
 function ToiletRoom:getPatientCount()
   local count = 0
   local true_space = 0
   for humanoid in pairs(self.humanoids) do
     if class.is(humanoid, Patient) then
       count = count + 1 
-      self:freeLoos() 
-      true_space = count - room.free_loos
+      self:freeLoos()
+      if self.maximum_patients > 1 then      
+        true_space = count - room.free_loos
+      else 
+        true_space = count
+      end
     end
   end
   return true_space 
