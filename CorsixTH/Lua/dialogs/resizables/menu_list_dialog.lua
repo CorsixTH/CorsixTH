@@ -49,7 +49,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
     blue = 198,
   }
   extra_above_list = extra_above_list or 0
-  self:UIResizable(ui, 200, 270 + extra_above_list, self.col_bg)
+  self:UIResizable(ui, 220, 270 + extra_above_list, self.col_bg)
 
   self.default_button_sound = "selectx.wav"
   self.items = items
@@ -63,10 +63,10 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
   
-  self:addBevelPanel(20, 10, 160, 20, col_caption):setLabel(title)
+  self:addBevelPanel(20, 10, 180, 20, col_caption):setLabel(title)
     .lowered = true
   
-  local scrollbar_base = self:addBevelPanel(160, 40 + extra_above_list, 20, self.num_rows*17, self.col_bg)
+  local scrollbar_base = self:addBevelPanel(180, 40 + extra_above_list, 20, self.num_rows*17, self.col_bg)
   scrollbar_base.lowered = true
   self.scrollbar = scrollbar_base:makeScrollbar(col_scrollbar, --[[persistable:menu_list_scrollbar_callback]] function()
     self:updateButtons()
@@ -82,7 +82,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self.item_buttons = {}
   
   for num = 1, self.num_rows do
-    self.item_panels[num] = self:addBevelPanel(20, 40 + extra_above_list + (num - 1) * 17, 130, 17, self.col_bg):setLabel(nil, nil, "left")
+    self.item_panels[num] = self:addBevelPanel(20, 40 + extra_above_list + (num - 1) * 17, 150, 17, self.col_bg):setLabel(nil, nil, "left")
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 130, 17, nil, button_clicked(num))
   end
   

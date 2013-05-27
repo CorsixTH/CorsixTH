@@ -72,8 +72,8 @@ function UICustomGame:UICustomGame(ui)
     return
   end
   
-  self:addBevelPanel(20, 40, 120, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
-  local button =  self:addPanel(12, 150, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
+  self:addBevelPanel(20, 40, 140, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
+  local button =  self:addPanel(12, 170, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
     :setTooltip(_S.tooltip.custom_game_window.free_build)
   if self.ui.app.config.free_build_mode then
     button:toggle()
