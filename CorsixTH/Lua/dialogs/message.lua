@@ -21,7 +21,7 @@ SOFTWARE. --]]
 --! Small fax notification window which sits on the bottom bar.
 class "UIMessage" (Window)
 
-function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice)
+function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice, callback)
   self:Window()
   
   local app = ui.app
@@ -34,6 +34,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self.default_choice = default_choice
   self.ui = ui
   self.message = message
+  self.callback = callback
   if owner then
     self.owner = owner
     if owner.message_callback then

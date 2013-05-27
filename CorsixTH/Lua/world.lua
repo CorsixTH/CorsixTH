@@ -1409,7 +1409,7 @@ function World:winGame(player_no)
       text[1] = text[1]:format(self.hospitals[player_no].name)
       text[2] = text[2]:format(self.hospitals[player_no].salary_offer)
       text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
-      if no < 12 then
+      if has_next then
         choice_text = _S.fax.choices.accept_new_level
         choice = 1
       else
@@ -1433,7 +1433,20 @@ function World:winGame(player_no)
         {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
       },
     }
-    self.ui.bottom_panel:queueMessage("information", message, nil, 28*24, 2)
+    local --[[persistable:world_win_game_message_close_callback]] function callback ()
+      local world = self.ui.app.world
+      if world then
+        world.hospitals[player_no].game_won = false
+        if world:isCurrentSpeed("Pause") then
+          world:setSpeed(world.prev_speed)
+        end  
+      end
+    end
+    self.hospitals[player_no].game_won = true
+    self:setSpeed("Pause")
+    self.ui.app.video:setBlueFilterActive(false)
+    self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
+    self.ui.bottom_panel:openLastMessage()    
   end
 end
 

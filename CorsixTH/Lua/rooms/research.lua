@@ -128,7 +128,7 @@ function ResearchRoom:roomFinished()
     Researcher = number,
   }
   -- Is this the first research department built?
-  if not self.hospital.research_dep_built then
+  if not self.hospital.research_dep_built and not TheApp.using_demo_files then
     self.hospital.research_dep_built = true
     self.world.ui.adviser:say(_A.information.initial_general_advice
     .research_now_available)

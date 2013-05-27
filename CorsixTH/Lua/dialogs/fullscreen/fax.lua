@@ -233,9 +233,13 @@ function UIFax:appendNumber(number)
 end
 
 function UIFax:close()
+  local world = self.ui.app.world
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
+  if world and world:isCurrentSpeed("Pause") then
+    world:setSpeed(world.prev_speed)
+  end  
 end
 
 function UIFax:afterLoad(old, new)

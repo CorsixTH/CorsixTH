@@ -261,6 +261,7 @@ end
 --!param owner (humanoid or nil) Some messages are related to one staff or patient. Otherwise this is nil.
 --!param timeout (number or nil) If given, the message will expire after that many world ticks and be removed.
 --!param default_choice (number or nil) If given, the choice with this number will be executed on expiration of the message.
+--!param callback (function or nil) If given, it will be called when the message is closed.
 --! Structure of message (except strike):
 -- message = {
 --   { text = "first line of text", offset (integer, optional) }
@@ -271,7 +272,7 @@ end
 --     ...
 --   }
 -- }
-function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice)
+function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choice, callback)
   -- Show a helpful message if there has been no messages before - only in campaign though
   if not self.ui.hospital.message_popup and tonumber(self.world.map.level_number) then
     self.world.ui.adviser:say(_A.information.fax_received)
@@ -283,11 +284,20 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     owner = owner,
     timeout = timeout,
     default_choice = default_choice,
+    callback = callback,
   }
   -- create reference to message in owner
   if owner then
     owner.message = message
   end
+end
+-- Opens the last available message. Currently used to open the level completed message.
+function UIBottomPanel:openLastMessage()
+  if #self.message_queue > 0 then
+    self:createMessageWindow(#self.message_queue)
+    table.remove(self.message_queue, #self.message_queue)
+  end
+  self.message_windows[#self.message_windows]:openMessage()
 end
 
 --! Trigger a message to be moved from the queue into a actual window, after
@@ -335,9 +345,9 @@ function UIBottomPanel:removeMessage(owner)
   return false
 end
 
---! Pop a message off the front of the message queue and turn it into an actual
--- message window.
-function UIBottomPanel:createMessageWindow()
+--! Pop the message with the given index from the message queue and turn it into an actual
+-- message window; if no index is provided the first message in the queue is popped.
+function UIBottomPanel:createMessageWindow(index)
   local --[[persistable:bottom_panel_message_window_close]] function onClose(window, out_of_time)
     local index_to_remove
     for i, win in ipairs(self.message_windows) do
@@ -345,21 +355,30 @@ function UIBottomPanel:createMessageWindow()
         win:setXLimit(1 + (i - 2) * 30)
       elseif win == window then
         index_to_remove = i
+        if win.callback then
+          win.callback()
+        end
       end
     end
     table.remove(self.message_windows, index_to_remove)
   end
   
+  if not index then
+    index = 1
+  end
   local message_windows = self.message_windows
-  local message_info = self.message_queue[1]
+  local message_info = self.message_queue[index]
+  if not message_info then
+    return
+  end
   local alert_window = UIMessage(self.ui, 175, 1 + #message_windows * 30,
-    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice)
+    onClose, message_info.type, message_info.message, message_info.owner, message_info.timeout, message_info.default_choice, message_info.callback)
   message_windows[#message_windows + 1] = alert_window
   self:addWindow(alert_window)
   self.factory_direction = 1
   self.show_animation = true
   self.factory_counter = -50                -- Delay close of message factory
-  table.remove(self.message_queue, 1)          -- Delete the last element of the queue
+  table.remove(self.message_queue, index)   -- Delete the last element of the queue
 end
 
 function UIBottomPanel:onTick()
