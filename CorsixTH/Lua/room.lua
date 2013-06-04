@@ -209,7 +209,7 @@ function Room:getMissingStaff(criteria)
   local result = {}
   for attribute, count in pairs(criteria) do
     for humanoid in pairs(self.humanoids) do
-      if class.is(humanoid, Staff) and humanoid:fulfillsCriterion(attribute) and not humanoid:isLeaving() then
+      if class.is(humanoid, Staff) and humanoid:fulfillsCriterion(attribute) and not humanoid:isLeaving() and not humanoid.fired then
         count = count - 1
       end
     end
