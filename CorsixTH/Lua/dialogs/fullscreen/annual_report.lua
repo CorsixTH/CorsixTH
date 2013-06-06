@@ -450,7 +450,6 @@ end
 
 --! Overridden close function. The game should be unpaused again when closing the dialog.
 function UIAnnualReport:close()
-  Window.close(self)
   if TheApp.world:getLocalPlayerHospital().game_won then
     if not TheApp.world:isCurrentSpeed("Pause") then
       TheApp.world:setSpeed("Pause")
@@ -460,6 +459,8 @@ function UIAnnualReport:close()
   elseif TheApp.world:isCurrentSpeed("Pause") then
     TheApp.world:setSpeed(TheApp.world.prev_speed)
   end
+  self:updateAwards()
+  Window.close(self)
 end
 
 --! Changes the page of the annual report
