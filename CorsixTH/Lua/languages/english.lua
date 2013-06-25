@@ -49,7 +49,8 @@ confirmation.restart_level = "Are you sure you want to restart the level?"
 
 -- A small error in the introduction text of level 2
 introduction_texts.level2[6] = "Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
-
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",

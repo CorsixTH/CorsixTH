@@ -437,8 +437,13 @@ function ResearchDepartment:improveDrug(drug)
     research_info.effect_imp = research_info.effect_imp + 1
   end
   if self.hospital == self.world.ui.hospital then
-    self.world.ui.adviser:say(_A.research.drug_improved
-    :format(drug.disease.name))
+    if drug.disease.id == "the_squits" then
+      self.world.ui.adviser:say(_A.research.drug_improved_1
+      :format(drug.disease.name))
+    else
+      self.world.ui.adviser:say(_A.research.drug_improved
+      :format(drug.disease.name)) 
+    end      
   end
 end
 
@@ -521,16 +526,29 @@ function ResearchDepartment:discoverObject(object, automatic)
         else
           self.world.ui.adviser:say(_A.research.new_machine_researched
           :format(object.name))
-        end
+        end  
       end
       -- It may now be possible to continue researching machine improvements
-      if self.research_policy.improvements.current
-      and self.research_policy.improvements.current.dummy
-      and object.default_strength then
-        self.research_policy.improvements.current = object
+      local current_improvement_research = self.research_policy.improvements.current
+      local min_strength = self.level_config.gbv.MaxObjectStrength
+      local max_strength = self.level_config.gbv.MaxObjectStrength
+      -- If we're not researching any improvement right now, and the newest discovery was
+      -- a machine that requires an improvement, switch the current policy.
+      if (not current_improvement_research or current_improvement_research.dummy) then 
+        for object, progress in pairs(self.research_progress) do
+          if object.default_strength then
+          -- Don't improve those that already have the max strength
+            if progress.start_strength < max_strength then
+              if progress.discovered and progress.start_strength < min_strength then
+                self.research_policy["improvements"].current = object
+                min_strength = progress.start_strength
+              end                
+            end   
+          end              
+        end
       end
-    end
-  end
+    end 
+  end      
   -- Now find out what to do next.
   self:nextResearch(object.research_category)
 end
