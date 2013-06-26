@@ -191,6 +191,7 @@ adviser = {
     no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
     no_desk_3 = "¡Fabuloso, casi ha pasado un año y no tienes personal de recepción! ¿Cómo quieres que vengan a ti los pacientes? ¡Arréglalo y deja de perder el tiempo!",
     cannot_afford = "¡No tienes dinero en el banco para contratar a esa persona!", -- I can't see anything like this in the original strings
+    cannot_afford_2 = "¡No tienes dinero en el banco para comprar eso!", 
     falling_1 = "¡Eh! Eso no tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacerle daño a alguien!",
     falling_2 = "¿Te importaría dejar de perder el tiempo?",
     falling_3 = "¡Ay! Eso ha tenido que doler. ¡Llamen a un médico!",
