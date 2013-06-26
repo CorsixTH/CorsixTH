@@ -765,9 +765,13 @@ function Hospital:purchasePlot(plot_number)
       -- Also make sure to apply transparency to the new walls, if required. 
       self.world.ui:applyTransparency()
       self:spendMoney(cost, _S.transactions.buy_land, cost)
-      return true
+      return true 
+    else
+    -- Give visual warning that player doesn't have enough $ to build
+    -- Let the message remain unitl cancelled by the player as it is being displayed behind the town map
+      self.world.ui.adviser:say(_A.warnings.cannot_afford_2, true, true)    
     end
-  end
+  end   
   return false
 end
 

@@ -149,6 +149,7 @@ adviser = {
     no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!",
     no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!",
     cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
+    cannot_afford_2 = "You don't have enough money in the bank to make that purchase!", 
     falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!",
     falling_2 = "Stop messing about, how would you like it?",
     falling_3 = "Ouch, that had to hurt, someone call a Doctor!",

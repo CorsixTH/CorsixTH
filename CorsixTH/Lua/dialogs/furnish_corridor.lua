@@ -89,6 +89,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   local function item_callback(index, qty)
     return --[[persistable:furnish_corridor_item_callback]] function(self)
       if self:purchaseItem(index, qty) == 0 then
+        -- give visual warning that player doesn't have enough $ to buy
+        self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
         self.ui:playSound "wrong2.wav"
       elseif qty > 0 then
         self.ui:playSound "AddItemJ.wav"
