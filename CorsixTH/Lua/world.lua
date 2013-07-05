@@ -1820,6 +1820,10 @@ function World:objectPlaced(entity, id)
     and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
+    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and self.object_counts["reception_desk"] == 1 
+    and not self.hospitals[1].receptionist_msg and self.month > 3 then
+      self.ui.adviser:say(_A.warnings.no_desk_5)
+      self.hospitals[1].receptionist_msg = true
     end
     -- A new reception desk? Then add it to the reception desk set.
     self:getLocalPlayerHospital().reception_desks[entity] = true

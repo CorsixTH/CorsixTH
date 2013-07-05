@@ -139,6 +139,7 @@ function Staff:tickDay()
       self:trainSkill(room.staff_member, "is_researcher", res_thres, room_factor, staff_count)
     end
   end
+  self:needsWorkStation()
 end
 
 function Staff:tick()
@@ -344,13 +345,12 @@ function Staff:fire()
   if self.fired then
     return
   end
-
+ 
   -- Ensure that there are no inspection windows open for this staff member.
   local staff_window = self.world.ui:getWindow(UIStaff)
   if staff_window and staff_window.staff == self then
       staff_window:close()
   end
-
   self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "  .. self.profile.name)
   self.world.ui:playSound "sack.wav"  
   self:setMood("exit", "activate")
@@ -441,6 +441,15 @@ function Staff:setProfile(profile)
   end
   self:setLayer(5, profile.layer5)
   self:updateStaffTitle()
+end
+
+function Staff:needsWorkStation()
+  if self.hospital and not self.hospital.receptionist_msg then  
+    if self.humanoid_class == "Receptionist" and self.world.object_counts["reception_desk"] == 0 then
+      self.world.ui.adviser:say(_A.warnings.no_desk_4)
+      self.hospital.receptionist_msg = true   
+    end 
+  end  
 end
 
 function Staff:updateStaffTitle()

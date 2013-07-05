@@ -870,7 +870,13 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-
+  local hosp = self.world.hospitals[1]
+  hosp.receptionist_count = 0
+  for i, staff in ipairs(self.staff) do
+    if staff.humanoid_class == "Receptionist" then
+      hosp.receptionist_count = hosp.receptionist_count + 1
+    end
+  end    
   -- if there's currently an earthquake going on, possibly give the machines some damage
   if (self.world.active_earthquake) then
     for _, room in pairs(self.world.rooms) do
@@ -1037,8 +1043,14 @@ function Hospital:onEndMonth()
   self.money_out = 0
 
   -- make players aware of the need for a receptionist and desk.
-  if self:isPlayerHospital() and not self:hasStaffedDesk() then
-    if self.world.month == 3 and self.world.year == 1 then
+  if (self:isPlayerHospital() and not self:hasStaffedDesk()) then
+    if self.receptionist_count ~= 0 and self.world.month > 2 and self.world.year == 1 and not self.receptionist_msg then
+      self.world.ui.adviser:say(_A.warnings.no_desk_6)
+      self.receptionist_msg = true 
+    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.year == 1 and self.world.object_counts["reception_desk"] ~= 0  then
+      self.world.ui.adviser:say(_A.warnings.no_desk_7)
+    --  self.receptionist_msg = true     
+    elseif self.world.month == 3 and self.world.year == 1 then
       self.world.ui.adviser:say(_A.warnings.no_desk, true)
     elseif self.world.month == 8 and self.world.year == 1 then
       self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
@@ -1046,7 +1058,7 @@ function Hospital:onEndMonth()
       self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
     elseif self.world.month == 11 and self.world.year == 1 and self.visitors ~= 0 then
       self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
-    end
+    end      
   end
 end
 
@@ -1056,7 +1068,7 @@ function Hospital:isPlayerHospital()
 end
 
 function Hospital:hasStaffedDesk()
-  return self.world.object_counts["reception_desk"] and self:hasStaffOfCategory("Receptionist")
+  return (self.world.object_counts["reception_desk"] ~= 0 and self:hasStaffOfCategory("Receptionist"))
 end  
 
 --! Called at the end of each year

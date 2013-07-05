@@ -186,7 +186,7 @@ function WardRoom:setStaffMember(staff)
 end
 
 function WardRoom:countWorkingNurses()
-  local staff = next(self.staff_member_set) --or self.staff_member
+  local staff = next(self.staff_member_set) 
   self.nursecount = 0
   for staff_member, _ in pairs(self.staff_member_set) do
     if staff then
