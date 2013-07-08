@@ -899,7 +899,7 @@ tooltip.information = {
 introduction_texts = {
   demo = {
     "Bienvenue dans l'hôpital de démonstration !",
-    "Malheureusement, la version démo ne contient que ce niveau (excepté les niveaux personnalisés). Malgré tout, il y a assez à faire ici pour vous occuper un moment !",
+    "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !",
     "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles.",
     "Votre but est de gagner 100.000$, de faire monter la valeur de votre hôpital à 70.000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients.",
     "Veillez à ce que votre réputation ne tombre pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.",

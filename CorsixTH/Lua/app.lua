@@ -279,7 +279,14 @@ function App:init()
   else
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
-    self.ui:addWindow(UIInstallDirBrowser(self.ui))
+    local function callback(path)
+      local app = TheApp
+      app.config.theme_hospital_install = path
+      app:saveConfig()
+      debug.getregistry()._RESTART = true
+      app.running = false
+    end
+    self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
   

@@ -73,9 +73,17 @@ function InstallDirTreeNode:getHighlightColour(canvas)
 end
 
 --! Prompter for Theme Hospital install directory
-class "UIInstallDirBrowser" (UIResizable)
+class "UIDirectoryBrowser" (UIResizable)
 
-function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
+--! Creates a new directory browser window
+--!param ui The active UI to hook into.
+--!param mode Whether the dialog has been opened from the main_menu or somewhere else. Currently
+--! valid are "menu" or "dir_browser".
+--!param instruction The textual instruction what the user should do in the dialog.
+--!param treenode_type What TreeNode type the nodes will be built from. E.g. "InstallDirTreeNode"
+--!param callback The function that is called when the user has chosen a directory. Gets
+--! a path string as argument.
+function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_class, callback)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -90,6 +98,7 @@ function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
   self:UIResizable(ui, 500, 423, self.col_bg, mode == nil and true or false)
   self.ui = ui
   self.mode = mode
+  self.instruction = instruction
   self:setSize(500, 423)
   self:addColourPanel(0, 0, self.width, self.height, self.col_bg.red, self.col_bg.green, self.col_bg.blue)
 
@@ -115,47 +124,39 @@ function UIInstallDirBrowser:UIInstallDirBrowser(ui, mode)
   local roots = lfs.volumes()
   if #roots > 1 then
     for k, v in pairs(roots) do
-      roots[k] = InstallDirTreeNode(v)
+      roots[k] = _G[treenode_class](v)
     end
     root = DummyRootNode(roots)
   else
-    root = InstallDirTreeNode(roots[1])
+    root = _G[treenode_class](roots[1])
   end
 
   self:addWindow(TreeControl(root, 5, 55, 490, 340, self.col_bg, self.col_scrollbar)
     :setSelectCallback(function(node)
       if node.is_valid_directory then
-        self:chooseDirectory(node.path)
+        callback(node.path)
       end
     end))
 end
 
-function UIInstallDirBrowser:exit()
+function UIDirectoryBrowser:exit()
   self.ui.app:exit()
 end
 
-function UIInstallDirBrowser:close()
+function UIDirectoryBrowser:close()
   UIResizable.close(self)
   if self.mode == "menu" then
     self.ui:addWindow(UIOptions(self.ui, "menu"))
   end
 end
 
-function UIInstallDirBrowser:chooseDirectory(path)
-  local app = TheApp
-  app.config.theme_hospital_install = path
-  app:saveConfig()
-  debug.getregistry()._RESTART = true
-  app.running = false
-end
-
-function UIInstallDirBrowser:draw(canvas, x, y)
+function UIDirectoryBrowser:draw(canvas, x, y)
   UIResizable.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
   if not self.mode then
     self.font:drawWrapped(canvas, _S.install.title, x + 5, y + 5, self.width - 10, "center")
-    self.font:drawWrapped(canvas, _S.install.th_directory, x + 5, y + 15, self.width - 10)
+    self.font:drawWrapped(canvas, self.instruction, x + 5, y + 15, self.width - 10)
   else
-    self.font:drawWrapped(canvas, _S.options_window.new_th_directory, x + 5, y + 15, self.width - 10)
+    self.font:drawWrapped(canvas, self.instruction, x + 5, y + 15, self.width - 10)
   end
 end

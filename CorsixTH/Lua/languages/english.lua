@@ -484,7 +484,7 @@ tooltip.cheats_window = {
 introduction_texts = {
   demo = {
     "Welcome to the demo hospital!",
-    "Unfortunately the demo version only contains this level (apart from custom levels). However, there is more than enough to do here to keep you busy for a while!",
+    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!",
     "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room.",
     "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.",
     "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",

@@ -2882,7 +2882,7 @@ introduction_texts = {
   },
   demo = {
     [1] = "Witaj w szpitalu demonstracyjnym!",
-    [2] = "Niestety wersja demo zawiera tylko ten poziom (za wyjątkiem własnych poziomów). Jednakże, jest to więcej niż wystarczająco, aby zając ci trochę czasu!",
+    [2] = "Niestety wersja demo zawiera tylko ten poziom. Jednakże, jest to więcej niż wystarczająco, aby zając ci trochę czasu!",
     [3] = "Napotkasz tutaj rozmaite choroby, które będą wymagały różnych gabinetów do ich wyleczenia. Od czasu do czasu moga tu również wystąpić nagłe wypadki. Będziesz musiał równiez wynaleźć nowe pomieszczenia przy użyciu gabinetu badawczego.",
     [4] = "Twoim celem jest zarobienie 100,000 PLN, mieć szpital warty 70,000 PLN i reputację 700, przy czym musisz wyleczyć co najmniej 75% swoich pacjentów.",
     [5] = "Upewnij się, że Twoja reputacja nie spadnie poniżej 300 oraz, że nie zabijesz więcej niż 40% pacjentów, albo przegrasz.",

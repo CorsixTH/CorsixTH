@@ -3082,7 +3082,7 @@ introduction_texts = {
   },
   demo = {
     [1] = "Velkommen til demonstrasjonssykehuset!",
-    [2] = "Uheldigvis inneholder demoversjonen kun dette nivået (bortsett fra brukerdefinerte nivåer). Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!",
+    [2] = "Uheldigvis inneholder demoversjonen kun dette nivået. Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!",
     [3] = "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling.",
     [4] = "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene.",
     [5] = "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået.",

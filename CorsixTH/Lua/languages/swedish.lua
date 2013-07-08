@@ -456,7 +456,7 @@ tooltip.cheats_window = {
 introduction_texts = {
   demo = {
     "Välkommen till demosjukhuset!",
-    "Tyvärr innehåller demon bara denna nivå (förutom specialnivåer). Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
+    "Tyvärr innehåller demon bara denna nivå. Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
     "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
     "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
     "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",

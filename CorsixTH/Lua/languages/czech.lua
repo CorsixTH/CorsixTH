@@ -3048,7 +3048,7 @@ introduction_texts = {
   },
   demo = {
     [1] = "Vítejte v demo nemocnici!",
-    [2] = "Bohužel, demo verze obsahuje pouze tuto úroveň (kromě vlastních úrovní). Nicméně je toho více než dost, abyste se na chvilku zabavili!",
+    [2] = "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili!",
     [3] = "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času se můžou stát havárie. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumného oddělení.",
     [4] = "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice ve výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% Vašich pacientů.",
     [5] = "Ujistěte se, že Vaše reputace nespadne 300 a že nezabijete více než 40% Vašich pacientů, nebo prohrajete.",
