@@ -60,6 +60,7 @@ CorsixTH/Lua/commands/compound.lua -text
 CorsixTH/Lua/commands/set_map_cell.lua -text
 CorsixTH/Lua/commands/set_map_cell_flags.lua -text
 CorsixTH/Lua/languages/hungarian.lua -text
+CorsixTH/Lua/languages/korean.lua -text
 CorsixTH/RequiredResources.txt -text
 CorsixTH/__MACOSX/SDLMain/._SDLMain.m -text
 LDocGen/output/corner_right.gif -text
