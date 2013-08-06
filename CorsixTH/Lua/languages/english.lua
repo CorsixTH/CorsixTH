@@ -379,13 +379,13 @@ errors = {
   load_prefix = "Error while loading game: ",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
-  maximum_screen_size = "Please enter a screen size of at most 3000x2000.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
 }
 
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
+  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000.  Larger resolutions are possible, but will require better hardware in order to maintain a playable frame rate.  Are you sure you want to continue?",
 }
 
 information = {
