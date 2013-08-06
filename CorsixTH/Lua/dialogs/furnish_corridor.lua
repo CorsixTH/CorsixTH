@@ -86,9 +86,10 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:addPanel(236, 146, 223) -- List bottom
   self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
   local i = 1
-  local function item_callback(index, qty)
+  local function item_callback(index, qty)  
+  local is_negative_quantity = qty < 0
     return --[[persistable:furnish_corridor_item_callback]] function(self)
-      if self:purchaseItem(index, qty) == 0 then
+      if self:purchaseItem(index, qty) == 0 and not is_negative_quantity then
         -- give visual warning that player doesn't have enough $ to buy
         self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
         self.ui:playSound "wrong2.wav"
