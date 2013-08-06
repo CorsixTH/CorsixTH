@@ -568,6 +568,9 @@ function GameUI:onTick()
       mult = mult * 2
     end
 
+    -- Overall faster scrolling
+    mult = mult * 2
+
     self:scrollMap(dx * mult, dy * mult)
     repaint = true
   else

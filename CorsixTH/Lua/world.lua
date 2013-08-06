@@ -188,7 +188,7 @@ end
 function World:adjustZoom(delta)
   local scr_w = self.ui.app.config.width
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
-  virtual_width = virtual_width - delta * 40
+  virtual_width = virtual_width - delta * 80
   if virtual_width < 200 then
     return false
   end
