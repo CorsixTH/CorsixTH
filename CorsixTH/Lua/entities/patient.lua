@@ -179,6 +179,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       end
       self.hospital.num_cured = hospital.num_cured + 1
       self.hospital.num_cured_ty = hospital.num_cured_ty + 1
+      self.hospital:msgCured()      
       local casebook = hospital.disease_casebook[self.disease.id]
       casebook.recoveries = casebook.recoveries + 1
       if self.is_emergency then
@@ -222,6 +223,7 @@ function Patient:die()
     local casebook = hospital.disease_casebook[self.disease.id]
     casebook.fatalities = casebook.fatalities + 1
   end
+  self.hospital:msgKilled()
   self:setMood("dead", "activate")
   self.world.ui:playSound "boo.wav" -- this sound is always heard
   self.going_home = true

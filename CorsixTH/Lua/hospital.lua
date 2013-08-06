@@ -84,6 +84,7 @@ function Hospital:Hospital(world, name)
   self.visitingVIP = ""
   self.percentage_cured = 0
   self.percentage_killed = 0
+  self.msg_counter = 0
   self.population = 0.25 -- TODO: Percentage showing how much of
   -- the total population that goes to the player's hospital, 
   -- used for one of the goals. Change when competitors are there.
@@ -237,6 +238,29 @@ function Hospital:praiseBench()
     self.world.ui.adviser:say(bench_msg[math.random(1, #bench_msg)])
     self.bench_msg = true
   end  
+end
+
+-- Messages regarding numbers cured and killed
+function Hospital:msgCured()
+  local msg_chance = math.random(1, 15)
+  if msg_chance == 3 and self.msg_counter > 10 then
+    self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
+    self.msg_counter = 0
+  elseif msg_chance == 12 and self.msg_counter > 10 then
+    self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
+    self.msg_counter = 0   
+  end 
+end
+-- So the messages don't show too often there will need to be at least 10 days before one can show again.
+function Hospital:msgKilled()
+  local msg_chance = math.random(1, 10)      
+  if msg_chance < 4 and self.msg_counter > 10 then
+    self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
+    self.msg_counter = 0
+  elseif msg_chance > 7 and self.msg_counter > 10 then
+    self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
+    self.msg_counter = 0    
+  end   
 end
 
 -- Warn if the hospital is lacking some basics
@@ -574,7 +598,10 @@ function Hospital:afterLoad(old, new)
 
   if old < 56 then
     self.research_dep_built = false 
-  end  
+  end 
+  if old < 76 then
+    self.msg_counter = 0
+  end    
 end
 
 function Hospital:countPatients()
@@ -862,7 +889,7 @@ function Hospital:onEndDay()
     self:checkFacilities()
   end
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
-
+  self.msg_counter = self.msg_counter + 1
   if self.balance < 0 then
     -- TODO: Add the extra interest rate to level configuration.
     local overdraft_interest = self.interest_rate + 0.02
