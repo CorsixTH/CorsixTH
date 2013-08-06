@@ -54,6 +54,7 @@ CorsixTH/Levels/Example.map -text
 CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/confined_v5.map -text
 CorsixTH/Levels/finisham.map -text
+CorsixTH/Levels/original08.level -text
 CorsixTH/Lua/command.lua -text
 CorsixTH/Lua/command_stack.lua -text
 CorsixTH/Lua/commands/compound.lua -text
