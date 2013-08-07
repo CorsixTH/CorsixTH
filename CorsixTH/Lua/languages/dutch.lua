@@ -2142,8 +2142,6 @@ errors = {
   map_file_missing = "Bestand %s voor dit level is niet gevonden!",
   minimum_screen_size = "Voer een resolutie in van minstens 640x480.",
   unavailable_screen_size = "De resolutie die je hebt ingevoerd is niet beschikbaar in fullscreen",
-  maximum_screen_size = "Voer een resolutie in van maximaal 3000x2000",
-
 }
 diseases = {
   diag_ward = {
@@ -2440,6 +2438,7 @@ confirmation = {  --spaces on the end make the text fit properly in text windows
   replace_machine = "Weet je zeker dat je de %s wilt vervangen voor $%d?           ",
   abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn, is de ruimte af. Zo niet, dan wordt de ruimte vernietigd.                     ",
   restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?                      ",
+  maximum_screen_size = "De resolutie die je hebt ingevoerd is groter dan 3000x2000. Een hoge resolutie is mogelijk, mits je hardware goed genoeg is om een speelbare framerate te behalen. Weet je zeker dat je wilt doorgaan?",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
