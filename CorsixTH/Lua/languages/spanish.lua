@@ -207,7 +207,7 @@ adviser = {
     researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
     researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que darles a cada uno una mesa para que trabajen.",
     researcher_needs_desk_3 = "Cada investigador necesita su propia mesa para trabajar.",
-    nurse_needs_desk_1 = "Cada enfermera necesita su propia mesa para trabajar.",
+    nurse_needs_desk_1 = "Cada enfermera necesita una mesa para trabajar.",
     nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que darles a cada una una mesa para que trabajen.",
   },
   cheats = {
@@ -421,13 +421,13 @@ errors = {
   load_prefix = "Error al cargar la partida: ",
   map_file_missing = "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
   minimum_screen_size = "Introduce un tamaño de pantalla como mínimo de 640x480.",
-  maximum_screen_size = "Introduce un tamaño de pantalla como máximo de 3000x2000.",
   unavailable_screen_size = "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
 }
 
 confirmation = {
   needs_restart = "Para cambiar este ajuste, antes debes reiniciar CorsixTH. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
   abort_edit_room = "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
+  maximum_screen_size = "El tamaño de pantalla que has introducido es mayor que 3000 x 2000.  Es posible utilizar una resolución más grande, pero necesitará de un ordenador mejor para que la velocidad de fotogramas sea aceptable. ¿Seguro que quieres continuar?",
 }
 
 information = {
