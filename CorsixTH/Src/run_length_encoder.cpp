@@ -117,7 +117,7 @@ void IntegerRunLengthEncoder::_flush(bool bAll)
                         ++iNumRepeats;
                     }
                     if(iNumRepeats > iBestRepeats
-                    ||(iBestRepeats == iBestRepeats && iObjSize < iBestSize))
+                    ||(iNumRepeats == iBestRepeats && iObjSize < iBestSize))
                     {
                         iBestRepeats = iNumRepeats;
                         iBestSize = iObjSize;
