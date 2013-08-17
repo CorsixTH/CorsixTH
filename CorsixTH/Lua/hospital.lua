@@ -136,6 +136,7 @@ function Hospital:Hospital(world, name)
   self.policies["guess_cure"] = 0.9
   self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
+  self.policies["grant_wage_increase"] = TheApp.config.grant_wage_increase
   -- Randomly select three insurance companies to use, only different by name right now.
   -- The first ones are more likely to come
   self.insurance = {}

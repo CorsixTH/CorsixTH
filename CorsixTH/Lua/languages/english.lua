@@ -81,6 +81,7 @@ menu_options = {
   settings = "  SETTINGS  ",
   adviser_disabled = "  (SHIFT+A) ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
+  wage_increase = "  WAGE REQUESTS",
   twentyfour_hour_clock = "  24 HOUR CLOCK  "
 }
 
@@ -97,6 +98,11 @@ menu_options_warmth_colors = {
   choice_1 = "  RED  ",
   choice_2 = "  BLUE GREEN RED  ",
   choice_3 = "  YELLOW ORANGE RED  ",
+}
+ 
+menu_options_wage_increase = {
+  grant = "    GRANT ",
+  deny =  "    DENY ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.

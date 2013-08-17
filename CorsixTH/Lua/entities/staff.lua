@@ -209,7 +209,17 @@ function Staff:checkIfWaitedTooLong()
           break
         end
       end
-
+      --If the hospital policy is set to automatically grant wage increases, grant the requested raise 
+      --instead of firing the staff member
+      if self.hospital.policies.grant_wage_increase then
+        local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage(self.world) + self.profile.wage) / 2) - self.profile.wage)
+        self.quitting_in = nil
+        self:setMood("pay_rise", "deactivate")
+        self.world.ui.bottom_panel:removeMessage(self)
+        self:increaseWage(amount)
+        return
+      end 
+  
       -- Plays the sack sound, but maybe it's good that you hear a staff member leaving?
       if staff_rise_window then
         staff_rise_window:fireStaff()

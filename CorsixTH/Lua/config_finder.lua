@@ -105,7 +105,8 @@ local config_defaults = {
   prevent_edge_scrolling = false,  
   adviser_disabled = false,  
   twentyfour_hour_clock = true,  
-  warmth_colors_display_default = 1,  
+  warmth_colors_display_default = 1,
+  grant_wage_increase = false,  
   audio = true, 
   audio_frequency = 22050,
   audio_channels = 2,
@@ -265,6 +266,12 @@ twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=
 --
 warmth_colors_display_default = ]=].. tostring(config_values.warmth_colors_display_default) ..[=[ 
  
+ -------------------------------------------------------------------------------
+-- Wage increase request settings.
+-- If set to true when wage increase requests expire automatically grant them
+-- otherwise let the staff member quit.
+grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
+
 ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
 -- These settings can only be changed here
 -------------------------------------------------------------------------------------------------------------------------
