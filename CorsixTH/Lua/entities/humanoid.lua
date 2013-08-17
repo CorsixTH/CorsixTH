@@ -301,8 +301,11 @@ function Humanoid:afterLoad(old, new)
   if old < 42 then
     if self.humanoid_class == "Slack Female Patient" then
       self.die_anims = die_animations["Slack Female Patient"]
-    end
   end
+  if old < 77 then
+    self.has_vomitted = 0
+  end
+end   
   if old < 49 then
     self.has_fallen = 1
   end
