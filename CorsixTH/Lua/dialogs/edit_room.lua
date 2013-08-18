@@ -876,12 +876,53 @@ function UIEditRoom:enterObjectsPhase()
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
   else
+    local room_objects = self.room.room_info.objects_needed;
+    if TheApp.config.enable_avg_contents then
+      room_objects = self:computeAverageContents()
+    end
     local object_list = {} -- transform set to list
-    for o, num in pairs(self.room.room_info.objects_needed) do
-      object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
+    for o, num in pairs(room_objects) do
+      if num > 0 then
+        object_list[#object_list + 1] = { object = TheApp.objects[o], qty = num }
+      end
     end
     self:addObjects(object_list, true)
   end
+end
+
+-- Decide contents of the new room based on average content of previous built rooms
+-- of the same type.
+function UIEditRoom:computeAverageContents()
+  local average_objects = {} -- what does the average room of this type contain?
+  local room_count = 0
+  for _, room in pairs(self.world.rooms) do
+    if room and room.built and not room.crashed
+    and room.hospital == self.ui.hospital and room.room_info == self.room_type then
+      room_count = room_count + 1
+      for obj, _ in pairs(room.objects) do
+        average_objects[obj.object_type.id] = (average_objects[obj.object_type.id] or 0) + 1
+      end
+    end
+  end
+  -- Ensure room contents is within the boundaries of objects_needed and objects_additional.
+  local objects_needed = self.room.room_info.objects_needed
+  local additional_objects = {} -- Reversed mapping
+  for _, obj in pairs(self.room.room_info.objects_additional) do
+    additional_objects[obj] = 1
+  end
+  for id, count in pairs(average_objects) do
+    count = math.floor(count / room_count + 0.5)
+    if additional_objects[id] == nil and objects_needed[id] == nil then
+      count = 0
+    end
+    average_objects[id] = count
+  end
+  for id, count in pairs(objects_needed) do
+    if (average_objects[id] or 0) < count then
+      average_objects[id] = count
+    end
+  end
+  return average_objects
 end
 
 function UIEditRoom:draw(canvas, ...)

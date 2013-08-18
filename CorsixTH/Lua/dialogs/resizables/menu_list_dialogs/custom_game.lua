@@ -52,7 +52,7 @@ function UICustomGame:UICustomGame(ui)
       if level_name and level_file then
         items[#items + 1] = {
           name = level_name, 
-          tooltip = _S.tooltip.custom_game_window.start_game_with_name:format(level_name),
+          tooltip = _S.tooltip.custom_game_window.start_game_with_name:format(level_file, level_intro),
           level_file = level_file,
           path = path .. file,
           intro = level_intro,
@@ -72,8 +72,8 @@ function UICustomGame:UICustomGame(ui)
     return
   end
   
-  self:addBevelPanel(20, 40, 140, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
-  local button =  self:addPanel(12, 170, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
+  self:addBevelPanel(20, 40, 200, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
+  local button =  self:addPanel(12, 230, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
     :setTooltip(_S.tooltip.custom_game_window.free_build)
   if self.ui.app.config.free_build_mode then
     button:toggle()

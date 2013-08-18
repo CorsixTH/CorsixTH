@@ -75,6 +75,11 @@ function TreeNode:getHighlightColour(canvas)
   return nil
 end
 
+--! Get the background colour for when the item is selected
+function TreeNode:getSelectColour(canvas)
+  return canvas:mapRGB(174, 166, 218)
+end
+
 --! Make the children of the item visible
 function TreeNode:expand()
   if self.is_expanded then return end
@@ -327,7 +332,7 @@ function FileTreeNode:getHighlightColour(canvas)
           highlight_colour = canvas:mapRGB(0, 255, 0)
         end
       end
-    elseif string.sub(self.path:lower(), -string.len(self.filter_by)) == self.filter_by then
+    elseif self.filter_by and string.sub(self.path:lower(), -string.len(self.filter_by)) == self.filter_by then
       self.is_valid_file = true
       highlight_colour = canvas:mapRGB(0, 255, 0)
     end
@@ -370,6 +375,12 @@ end
 
 function FileTreeNode:getLastModification()
   return lfs.attributes(self.path, "modification")
+end
+
+--! Selects an item. By default everything selected is valid. Can be overridden
+-- by inheriting classes.
+function FileTreeNode:select()
+  self.is_valid_directory = true
 end
 
 --! A tree node which can be used as a root node to give the effect of having
@@ -479,15 +490,27 @@ function TreeControl:hitTestTree(x, y)
       n = n - 1
     end
     if n == 0 then
-      return node
+      if node then
+        local level = node:getLevel()
+        if x > level * 14 then
+          if x < (level+1) * 14 then
+            return node, true
+          else
+            return node, false
+          end
+        end
+      end
     end
   end
 end
 
 function TreeControl:onMouseMove(x, y)
   local redraw = Window.onMouseMove(self, x, y)
-  local node = self:hitTestTree(x, y)
-  if node ~= self.highlighted_node then
+  local node, expand = self:hitTestTree(x, y)
+  if expand and self.highlighted_node ~= nil then
+    self.highlighted_node = nil
+    return redraw
+  elseif not expand and node ~= self.highlighted_node then
     self.highlighted_node = node
     return redraw
   end
@@ -518,17 +541,22 @@ function TreeControl:onMouseUp(button, x, y)
     -- Scrollwheel
     self.scrollbar:setXorY(self.scrollbar:getXorY() + (button - 4.5) * 8)
   else
-    local node = self.mouse_down_in_self and self:hitTestTree(x, y)
-    if node then
-      if self.select_callback then
-        self.select_callback(node)
-      end
-      if node:hasChildren() then
-        if node:isExpanded() then
-          node:contract()
-        else
-          node:expand()
+    local node, expand = self:hitTestTree(x, y)
+    if self.mouse_down_in_self and node then
+      if expand then
+        if node:hasChildren() then
+          if node:isExpanded() then
+            node:contract()
+          else
+            node:expand()
+          end
+          redraw = true
         end
+      elseif self.selected_node == node and self.select_callback then
+        self.select_callback(node)
+      else
+        self.selected_node = node
+        node:select()
         redraw = true
       end
     end
@@ -573,11 +601,18 @@ function TreeControl:draw(canvas, x, y)
     for i = 0, level - 1 do
       self.tree_sprites:draw(canvas, 1, x + i * 14, y)
     end
+    
     if node == self.highlighted_node then
       local offset = (level + 1) * 14
       local colour = node:getHighlightColour(canvas) or self.scrollbar.slider.colour
       canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
     end
+    if node == self.selected_node then
+      local offset = (level + 1) * 14
+      local colour = node:getSelectColour(canvas) or self.scrollbar.slider.colour
+      canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
+    end
+    
     local icon
     if not node:hasChildren() then
       icon = 2

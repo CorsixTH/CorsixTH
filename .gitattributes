@@ -60,6 +60,8 @@ CorsixTH/Lua/command_stack.lua -text
 CorsixTH/Lua/commands/compound.lua -text
 CorsixTH/Lua/commands/set_map_cell.lua -text
 CorsixTH/Lua/commands/set_map_cell_flags.lua -text
+CorsixTH/Lua/dialogs/resizables/customise.lua -text
+CorsixTH/Lua/dialogs/resizables/folder_settings.lua -text
 CorsixTH/Lua/languages/hungarian.lua -text
 CorsixTH/Lua/languages/korean.lua -text
 CorsixTH/RequiredResources.txt -text

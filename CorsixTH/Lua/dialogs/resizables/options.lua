@@ -92,51 +92,50 @@ function UIOptions:UIOptions(ui, mode)
   
   -- Window parts definition
   -- Title
-  self:addBevelPanel(80, 10, 160, 20, col_caption):setLabel(_S.options_window.caption)
+  self:addBevelPanel(80, 10, 165, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
   
   -- Fullscreen
-  self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 45, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen).lowered = true
   self.fullscreen_panel =
-    self:addBevelPanel(160, 50, 140, 20, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+    self:addBevelPanel(165, 45, 135, 20, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
   self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFullscreen)
     :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
   
   -- Screen resolution
-  self:addBevelPanel(20, 70, 140, 20, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 70, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
   
-  self.resolution_panel = self:addBevelPanel(160, 70, 140, 20, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
-  self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 140, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
+  self.resolution_panel = self:addBevelPanel(165, 70, 135, 20, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
+  self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
   
   -- Language
-  self:addBevelPanel(20, 90, 140, 20, col_shadow, col_bg, col_bg)
+  local lang = string.upper(app.config.language)
+  self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
-  self.language_panel = self:addBevelPanel(160, 90, 140, 20, col_bg):setLabel(app.config.language)
-  self.language_button = self.language_panel:makeToggleButton(0, 0, 140, 20, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
+  self.language_panel = self:addBevelPanel(165, 95, 135, 20, col_bg):setLabel(lang)
+  self.language_button = self.language_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
+
+  -- add the Audio global switch.
+  self:addBevelPanel(20, 120, 135, 20, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
+  self.volume_panel =
+    self:addBevelPanel(165, 120, 135, 20, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.volume_button = self.volume_panel:makeToggleButton(0, 0, 135, 20, nil, self.buttonAudioGlobal)
+    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle) 
   
-  -- Location of original game
-  local built_in = app.gfx:loadBuiltinFont()
-  self:addBevelPanel(20, 110, 140, 20, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.data_location):setTooltip(_S.tooltip.options_window.data_location)
-    .lowered = true
-  self:addBevelPanel(160, 110, 140, 20, col_bg)
-    :setLabel(app.config.theme_hospital_install, built_in):setAutoClip(true)
-    :makeButton(0, 0, 140, 20, nil, self.buttonBrowseForTHInstall):setTooltip(_S.tooltip.options_window.browse:format(app.config.theme_hospital_install))
-    
-  -- Location of font file
-  local built_in = app.gfx:loadBuiltinFont()
-  self:addBevelPanel(20, 130, 140, 20, col_shadow, col_bg, col_bg)
-    :setLabel(_S.options_window.font_location):setTooltip(_S.tooltip.options_window.font_location)
-    .lowered = true
-  local tooltip = app.config.unicode_font and _S.tooltip.options_window.browse_font:format(app.config.unicode_font) or _S.tooltip.options_window.no_font_specified
-  self:addBevelPanel(160, 130, 140, 20, col_bg)
-    :setLabel(app.config.unicode_font and app.config.unicode_font or tooltip, built_in):setAutoClip(true)
-    :makeButton(0, 0, 140, 20, nil, self.buttonBrowseForFont):setTooltip(tooltip)
+  -- "Customise" button
+  self:addBevelPanel(20, 150, 135, 30, col_bg):setLabel(_S.options_window.customise)
+    :makeButton(0, 0, 135, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button) 
+
+  -- "Folders" button
+  self:addBevelPanel(165, 150, 135, 30, col_bg):setLabel(_S.options_window.folder)
+    :makeButton(0, 0, 135, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button) 
   
+   
   -- "Back" button
-  self:addBevelPanel(20, 180, 280, 40, col_bg):setLabel(_S.options_window.back)
+  self:addBevelPanel(20, 190, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
@@ -175,9 +174,11 @@ end
 
 function UIOptions:selectLanguage(number)
   local app = self.ui.app
-  app.config.language = self.available_languages[number].text
+  app.config.language = (self.available_languages[number].text)
   app:initLanguage()
   app:saveConfig()
+  debug.getregistry()._RESTART = true
+  app.running = false  
 end
 
 function UIOptions:dropdownResolution(activate)
@@ -222,9 +223,15 @@ function UIOptions:buttonFullscreen(checked)
   self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
-function UIOptions:buttonBrowseForFont()
-  local browser = UIChooseFont(self.ui, self.mode)
-  self.ui:addWindow(browser)
+
+function UIOptions:buttonCustomise()
+  local window = UICustomise(self.ui, "menu")
+  self.ui:addWindow(window)
+end
+
+function UIOptions:buttonFolder()
+  local window = UIFolder(self.ui, "menu")
+  self.ui:addWindow(window)
 end
 
 function UIOptions:buttonBrowseForTHInstall()
@@ -237,6 +244,13 @@ function UIOptions:buttonBrowseForTHInstall()
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.options_window.new_th_directory, "InstallDirTreeNode", callback)
   self.ui:addWindow(browser)
+end
+
+function UIOptions:buttonAudioGlobal(checked)
+  local app = self.ui.app
+  app.config.audio = not app.config.audio
+  app:saveConfig()
+  UI:resetApp()
 end
 
 function UIOptions:buttonBack()

@@ -874,7 +874,7 @@ function Staff:afterLoad(old, new)
     -- added reference to world for staff profiles
     self.profile.world = self.world
   end
-  if old < 72 then
+  if old < 68 then
     if self.attributes["fatigue"] then
       if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] then
         self:goToStaffRoom()

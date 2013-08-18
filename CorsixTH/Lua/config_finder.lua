@@ -92,9 +92,8 @@ local config_defaults = {
   fullscreen = false,
   width = 800,
   height = 600,
-  language = [[English]],  
-  theme_hospital_install = [[F:\ThemeHospital\hospital]],
--- unicode_font
+  language = [[English]],
+  audio = true,   
   free_build_mode = false,
   play_sounds = true, 
   sound_volume = 0.5,  
@@ -103,28 +102,29 @@ local config_defaults = {
   play_music = true,
   music_volume = 0.5,  
   prevent_edge_scrolling = false,  
-  adviser_disabled = false,  
+  adviser_disabled = false, 
+  scrolling_momentum = 0.8,  
   twentyfour_hour_clock = true,  
   warmth_colors_display_default = 1,
   grant_wage_increase = false,  
-  audio = true, 
-  audio_frequency = 22050,
-  audio_channels = 2,
-  audio_buffer_size = 2048,  
--- audio_mp3   
--- savegames
--- screenshots
+  audio = true,  
   movies = true,
   play_intro = true,
   allow_user_actions_while_paused = false,
-  scrolling_momentum = 0.8,
   volume_opens_casebook = false,  
   alien_dna_only_by_emergency = true,
   alien_dna_must_stand = true,
   alien_dna_can_knock_on_doors = false,
+  disable_fractured_bones_females = true,
+  enable_avg_contents = false,  
+  audio_frequency = 22050,
+  audio_channels = 2,
+  audio_buffer_size = 2048,  
+  theme_hospital_install = [[F:\ThemeHospital\hospital]],
   debug = false,
-  track_fps = false
---player name
+  track_fps = false,
+  zoom_speed = 80,
+  scroll_speed = 2
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -166,8 +166,8 @@ if needs_rewrite then
 -- Number settings should not have anything around their value, 
 -- e.g. setting = 42
 --
----------------------------------------- OPTIONS / SETTINGS MENU -----------------------------------------
--- These settings can also be changed from within the game from the options/settings menu
+--------------------------------------------  SETTINGS MENU ---------------------------------------------
+-- These settings can also be changed from within the game from the settings menu
 -------------------------------------------------------------------------------------------------------------------------
 -- Screen size. Must be at least 640x480. Larger sizes will require better
 -- hardware in order to maintain a playable framerate. The fullscreen setting
@@ -177,7 +177,7 @@ fullscreen = ]=].. tostring(config_values.fullscreen) ..[=[
  
 width = ]=].. tostring(config_values.width) ..[=[ 
 height = ]=].. tostring(config_values.height) ..[=[ 
- 
+
 -------------------------------------------------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Chinese (simplified)  / zh(s) / chi(s)
@@ -197,21 +197,11 @@ height = ]=].. tostring(config_values.height) ..[=[
 --
 language = [[]=].. config_values.language ..[=[]]
  
--------------------------------------------------------------------------------------------------------------------------
--- Theme hospital install folder: original game data files are loaded from this
--- folder. Between the square braces should be the folder which contains the
--- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
--- the Theme Hospital demo, though a full install of the original game is
--- preferred.
---
-theme_hospital_install = [[]=].. config_values.theme_hospital_install ..[=[]]
- 
--------------------------------------------------------------------------------------------------------------------------
--- Font file setting. Can be changed from main game menu
--- Specify a font file here if you wish to play the game in a language not
--- present in the original game. Examples include Russian, Chinese and Polish.
---
--- unicode_font = [[X:\ThemeHospital\font.ttc]] 
+------------------------------------------------------------------------------------------------------------------------- 
+-- Audio global on/off switch.
+-- Note that audio will also be disabled if CorsixTH was compiled without the
+-- SDL_mixer library.
+audio = ]=].. tostring(config_values.audio) ..[=[ 
  
 --------------------------------------------- CUSTOM GAME MENU ----------------------------------------------
 -- These settings can also be changed from the opening menu screen in the custom games menu
@@ -253,6 +243,12 @@ prevent_edge_scrolling = ]=].. tostring(config_values.prevent_edge_scrolling) ..
 adviser_disabled = ]=].. tostring(config_values.adviser_disabled) ..[=[ 
  
 -------------------------------------------------------------------------------------------------------------------------
+-- Scrolling Momentum.
+-- Determines the amount of momentum when scrolling the map with the mouse.
+-- This should be a value between 0 and 1 where 0 is no momentum
+scrolling_momentum = ]=] .. tostring(config_values.scrolling_momentum) .. [=[
+ 
+-------------------------------------------------------------------------------------------------------------------------
 -- Top menu clock is by default is always on
 -- setting to true will give you a twentyfour hours display
 -- change to false if you want AM / PM time displayed.
@@ -265,6 +261,21 @@ twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 --
 warmth_colors_display_default = ]=].. tostring(config_values.warmth_colors_display_default) ..[=[ 
+
+--------------------------------------------- CUSTOMISE SETTINGS --------------------------------------------
+-- These settings can also be changed from the Customise Menu
+
+-------------------------------------------------------------------------------
+-- Wage increase request settings.
+-- If set to true when wage increase requests expire automatically grant them
+-- otherwise let the staff member quit.
+grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
+ 
+ -------------------------------------------------------------------------------
+-- Wage increase request settings.
+-- If set to true when wage increase requests expire automatically grant them
+-- otherwise let the staff member quit.
+grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
  
  -------------------------------------------------------------------------------
 -- Wage increase request settings.
@@ -274,50 +285,6 @@ grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
 
 ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
 -- These settings can only be changed here
--------------------------------------------------------------------------------------------------------------------------
--- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without the
--- SDL_mixer library.
-audio = ]=].. tostring(config_values.audio) ..[=[ 
- 
--------------------------------------------------------------------------------------------------------------------------
--- Audio playback settings.
--- These can be commented out to use the default values from the game binary.
--- Note: On some platforms, these settings may not effect MIDI playback - only
--- sound effects and MP3 audio. If you are experiencing poor audio playback,
--- then try doubling the buffer size.
-audio_frequency = ]=].. tostring(config_values.audio_frequency) ..[=[ 
-audio_channels = ]=].. tostring(config_values.audio_channels) ..[=[ 
-audio_buffer_size = ]=].. tostring(config_values.audio_buffer_size) ..[=[ 
- 
--------------------------------------------------------------------------------------------------------------------------
--- High quality (MP3 rather than MIDI) audio replacements.
--- If you want to listen to high quality MP3 audio rather than the original XMI
--- (MIDI) audio, then follow these steps:
---  1) Find MP3 versions of the original tracks (for example the remixes by ZR
---     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
---     other music you want to listen to.
---  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
---  3) Uncomment the next line and point it to where the mp3s are. 
---  4) If you want to change the names of songs ingame, make a file called 
---     "names.txt" and write the file name on one row, followed by the desired
---     ingame name on the next row.
--- audio_mp3 = [[X:\ThemeHospital\Music]]
- 
--------------------------------------------------------------------------------------------------------------------------
--- Savegames. By default, the "Saves" directory alongside this config file will
--- be used for storing saved games in. Should this not be suitable, then
--- uncomment the following line, and point it to a directory which exists and
--- is more suitable.
--- savegames = [[C:\CorsixTH\Savegames]]
- 
--------------------------------------------------------------------------------------------------------------------------
--- Screenshots. By default, the "Screenshots" directory alongside this config
--- file will be used for saving screenshots. Should this not be suitable, then
--- uncomment the following line, and point it to a directory which exists and
--- is more suitable.
--- screenshots = [[C:\CorsixTH\Screenshots]]
- 
 -------------------------------------------------------------------------------------------------------------------------
 -- Movie global on/off switch.
 -- Note that movies will also be disabled if CorsixTH was compiled without the
@@ -336,12 +303,6 @@ play_intro = ]=].. tostring(config_values.play_intro) ..[=[
 allow_user_actions_while_paused = ]=].. tostring(config_defaults.allow_user_actions_while_paused) ..[=[
  
 -------------------------------------------------------------------------------------------------------------------------
--- Scrolling Momentum.
--- Determines the amount of momentum when scrolling the map with the mouse.
--- This should be a value between 0 and 1 where 0 is no momentum
-scrolling_momentum = ]=] .. tostring(config_values.scrolling_momentum) .. [=[
- 
--------------------------------------------------------------------------------------------------------------------------
 -- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
  
 -- If your keyboard volume control opens the Drug Casebook at the same time
@@ -356,15 +317,87 @@ volume_opens_casebook = ]=] .. tostring(config_values.volume_opens_casebook) .. 
 -- the settings below.  Understand that there are no animations for sitting down, opening 
 -- or knocking on doors etc.
 -- So, like with Theme Hospital to do these things they will appear to change to normal
--- looking and then change back.  Can only be activated from before a game is started .
+-- looking and then change back.
 --
 alien_dna_only_by_emergency = ]=].. tostring(config_values.alien_dna_only_by_emergency) ..[=[  
  
 alien_dna_must_stand = ]=].. tostring(config_values.alien_dna_must_stand) ..[=[ 
  
 alien_dna_can_knock_on_doors = ]=].. tostring(config_values.alien_dna_can_knock_on_doors) ..[=[ 
+
+-- To allow female patients with fractured bones, which are by default disabled due to poor
+-- animation that skips and jumps a bit
+
+disable_fractured_bones_females = ]=].. tostring(config_values.disable_fractured_bones_females) ..[=[ 
+--
+-------------------------------------------------------------------------------------------------------------------------
+-- By default the player selects any extra objects they want for each room they build.
+-- If you would like the game to remember what you usually add, then change this option to true.
+
+enable_avg_contents = ]=].. tostring(config_values.enable_avg_contents) ..[=[ 
+--
+
+----------------------------------------------- FOLDER SETTINGS ----------------------------------------------
+-- These settings can also be changed from the Folders Menu
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+-- Theme hospital install folder: original game data files are loaded from this
+-- folder. Between the square braces should be the folder which contains the
+-- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
+-- the Theme Hospital demo, though a full install of the original game is
+-- preferred.
+--
+theme_hospital_install = [[]=].. config_values.theme_hospital_install ..[=[]]
  
 -------------------------------------------------------------------------------------------------------------------------
+-- Font file setting. Can be changed from main game menu
+-- Specify a font file here if you wish to play the game in a language not
+-- present in the original game. Examples include Russian, Chinese and Polish.
+--
+-- unicode_font [[X:\ThemeHospital\font.ttc]] 
+ 
+ -------------------------------------------------------------------------------------------------------------------------
+-- Savegames. By default, the "Saves" directory alongside this config file will
+-- be used for storing saved games in. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+-- savegames = [[X:\ThemeHospital\Saves]]
+ 
+-------------------------------------------------------------------------------------------------------------------------
+-- Screenshots. By default, the "Screenshots" directory alongside this config
+-- file will be used for saving screenshots. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+-- screenshots = [[X:\ThemeHospital\Screenshots]]
+  
+-------------------------------------------------------------------------------------------------------------------------
+-- High quality (MP3 rather than MIDI) audio replacements.
+-- If you want to listen to high quality MP3 audio rather than the original XMI
+-- (MIDI) audio, then follow these steps:
+--  1) Find MP3 versions of the original tracks (for example the remixes by ZR
+--     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
+--     other music you want to listen to.
+--  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
+--  3) Uncomment the next line and point it to where the mp3s are. 
+--  4) If you want to change the names of songs ingame, make a file called 
+--     "names.txt" and write the file name on one row, followed by the desired
+--     ingame name on the next row.
+-- audio_mp3 = [[X:\ThemeHospital\Music]]
+  
+ ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
+-- These settings can only be changed here
+-------------------------------------------------------------------------------------------------------------------------
+-- Audio playback settings.
+-- These can be commented out to use the default values from the game binary.
+-- Note: On some platforms, these settings may not effect MIDI playback - only
+-- sound effects and MP3 audio. If you are experiencing poor audio playback,
+-- then try doubling the buffer size.
+audio_frequency = ]=].. tostring(config_values.audio_frequency) ..[=[ 
+audio_channels = ]=].. tostring(config_values.audio_channels) ..[=[ 
+audio_buffer_size = ]=].. tostring(config_values.audio_buffer_size) ..[=[ 
+
+ ------------------------------------------------------------------------------------------------------------------------
+
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
@@ -375,10 +408,29 @@ debug = ]=].. tostring(config_values.debug) ..[=[
 -- more useful FPS values, as they are not artificially capped.
 track_fps = ]=].. tostring(config_values.track_fps) ..[=[ 
 --
+-------------------------------------------------------------------------------------------------------------------------
+-- Zoom Speed: By default this is set at 80
+-- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
+--
+zoom_speed = ]=].. tostring(config_values.zoom_speed) ..[=[ 
+--
+-------------------------------------------------------------------------------------------------------------------------
+-- Scroll Speed: By default this is set at level 2
+-- Any number value between 1 and 10, 1 is very slow and 10 is fast!
+-- Press shift when you are scrolling and it will be a lot quicker
+--
+scroll_speed = ]=].. tostring(config_values.scroll_speed) ..[=[ 
+--
 ------------------------------------------------ CAMPAIGNE MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the 
 -- campaign menu or between the brace brackets below [[YOUR NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!
+--
+-- If you have specified any other locations for things like saves, music or screenshots you will find these below.  If 
+-- you change your mind and wish to go back to the default folders, just delete the relevant line.
+-- 
+-- If you wish to go back to the default settings for everything, you can delete this text file and it will be re-created
+-- you play the game.
 -------------------------------------------------------------------------------------------------------------------------
 
 ]=])

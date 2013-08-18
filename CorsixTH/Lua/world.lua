@@ -182,17 +182,29 @@ function World:setUI(ui)
   self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
   
   self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
   self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
+  self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)
 end
 
 function World:adjustZoom(delta)
   local scr_w = self.ui.app.config.width
+  local factor = self.ui.app.config.zoom_speed
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
-  virtual_width = virtual_width - delta * 80
+  
+  -- The modifier is a normal distribution to make it more difficult to zoom at the extremes
+  local modifier = math.exp(1)^(-((self.ui.zoom_factor-1)^2)/(2 * 1))/(math.sqrt(2*math.pi)*1)
+  
+  if modifier < 0.05 or modifier > 1 then
+    modifier = 0.05
+  end
+
+  virtual_width = virtual_width - delta * factor * modifier
   if virtual_width < 200 then
     return false
   end
-  return self.ui:setZoom(scr_w / virtual_width)
+  
+  return self.ui:setZoom(scr_w/virtual_width)
 end
 
 function World:initLevel(app)
@@ -2241,12 +2253,19 @@ function World:afterLoad(old, new)
       end
     end
   end
-  
+  if old < 77 then
+    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom,  5)
+    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
+  end
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
+  end
+  if old < 77 then
+    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
+    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
   
   self.savegame_version = new
