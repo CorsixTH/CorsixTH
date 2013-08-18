@@ -573,7 +573,17 @@ function App:checkMissingStringsInLanguage(dir, language)
         end
       end
     end
-    local fi = assert(io.open(dir .. "debug-strings-diff-" .. language:lower() .. ".txt", "wt"))
+    
+    -- if possible, use the English name of the language for the file name.
+    local language_english = language
+    for _, lang_eng in ipairs(self.strings.languages_english) do
+      if ltc[language] == ltc[lang_eng:lower()] then
+        language_english = lang_eng
+        break
+      end
+    end
+    
+    local fi = assert(io.open(dir .. "debug-strings-diff-" .. language_english:lower() .. ".txt", "wt"))
     fi:write("------------------------------------\n")
     fi:write("MISSING STRINGS IN LANGUAGE \"" .. language:upper() .. "\":\n")
     fi:write("------------------------------------\n")
