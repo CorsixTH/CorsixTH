@@ -29,7 +29,8 @@ disease.cure = _S.diseases.fractured_bones.cure
 disease.cure_price = 450
 disease.emergency_sound = "emerg005.wav"
 disease.initPatient = function(patient)
-  if 1 == 2 then -- Right now the female animation in the cast remover is bad
+  if not TheApp.config.disable_fractured_bones_females and math.random(1, 2) == 2 then -- The female animation in the cast remover is bad
+  -- so by default it is disabled.  They can though be allowed by turning them on in config
     patient:setType("Standard Female Patient")
     patient:setLayer(0, math.random(1, 4) * 2)
     local num1 = math.random(0, 1) -- The first bandage yes/no
