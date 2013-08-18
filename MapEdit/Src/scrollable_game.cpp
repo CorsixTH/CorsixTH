@@ -57,6 +57,7 @@ ScrollableGamePanel::ScrollableGamePanel(wxWindow *pParent)
 
 ScrollableGamePanel::~ScrollableGamePanel()
 {
+	m_pTimer->Stop();
 }
 
 void ScrollableGamePanel::setExtraLuaInitFunction(lua_CFunction fn, void* arg)
