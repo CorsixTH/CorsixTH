@@ -94,7 +94,7 @@ high_score = {
 confirmation.quit = "¿Seguro que quieres salir del juego?                       "
 
 --Typo found on the official translation
-tooltip.rooms.dna_fixer = "El médico usa el Reparador de ADN para curar a los pacientes con ADN alienígena",
+tooltip.rooms.dna_fixer = "El médico usa el Reparador de ADN para curar a los pacientes con ADN alienígena"
 
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {

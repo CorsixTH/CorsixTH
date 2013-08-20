@@ -107,7 +107,6 @@ local config_defaults = {
   twentyfour_hour_clock = true,  
   warmth_colors_display_default = 1,
   grant_wage_increase = false,  
-  audio = true,  
   movies = true,
   play_intro = true,
   allow_user_actions_while_paused = false,
@@ -270,21 +269,7 @@ warmth_colors_display_default = ]=].. tostring(config_values.warmth_colors_displ
 -- If set to true when wage increase requests expire automatically grant them
 -- otherwise let the staff member quit.
 grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
- 
- -------------------------------------------------------------------------------
--- Wage increase request settings.
--- If set to true when wage increase requests expire automatically grant them
--- otherwise let the staff member quit.
-grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
- 
- -------------------------------------------------------------------------------
--- Wage increase request settings.
--- If set to true when wage increase requests expire automatically grant them
--- otherwise let the staff member quit.
-grant_wage_increase = ]=].. tostring(config_values.grant_wage_increase) ..[=[
 
------------------------------------------------ SPECIAL SETTINGS ----------------------------------------------
--- These settings can only be changed here
 -------------------------------------------------------------------------------------------------------------------------
 -- Movie global on/off switch.
 -- Note that movies will also be disabled if CorsixTH was compiled without the
@@ -354,21 +339,21 @@ theme_hospital_install = [[]=].. config_values.theme_hospital_install ..[=[]]
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
 --
--- unicode_font [[X:\ThemeHospital\font.ttc]] 
+unicode_font = nil -- [[X:\ThemeHospital\font.ttc]] 
  
  -------------------------------------------------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
--- savegames = [[X:\ThemeHospital\Saves]]
+savegames = nil -- [[X:\ThemeHospital\Saves]]
  
 -------------------------------------------------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
 -- file will be used for saving screenshots. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
--- screenshots = [[X:\ThemeHospital\Screenshots]]
+screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
   
 -------------------------------------------------------------------------------------------------------------------------
 -- High quality (MP3 rather than MIDI) audio replacements.
@@ -382,7 +367,7 @@ theme_hospital_install = [[]=].. config_values.theme_hospital_install ..[=[]]
 --  4) If you want to change the names of songs ingame, make a file called 
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
--- audio_mp3 = [[X:\ThemeHospital\Music]]
+audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
   
  ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
 -- These settings can only be changed here
@@ -421,7 +406,7 @@ zoom_speed = ]=].. tostring(config_values.zoom_speed) ..[=[
 --
 scroll_speed = ]=].. tostring(config_values.scroll_speed) ..[=[ 
 --
------------------------------------------------- CAMPAIGNE MENU -----------------------------------------------
+------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the 
 -- campaign menu or between the brace brackets below [[YOUR NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!

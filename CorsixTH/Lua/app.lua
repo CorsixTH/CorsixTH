@@ -669,7 +669,7 @@ function App:saveConfig()
           
           -- If identifier also exists in runtime options, compare their values and
           -- replace the line, if needed
-          if self.config[identifier] ~= nil then
+          --if self.config[identifier] ~= nil then
             handled_ids[identifier] = true
             if value ~= tostring(self.config[identifier]) then
               local new_value = self.config[identifier]
@@ -680,7 +680,7 @@ function App:saveConfig()
               end
               lines[#lines] = string.format("%s = %s", identifier, new_value)
             end
-          end
+          --end
         end
       end
     end
