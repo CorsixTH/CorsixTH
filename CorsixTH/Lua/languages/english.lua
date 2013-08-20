@@ -107,16 +107,6 @@ menu_options_wage_increase = {
   deny =  "    DENY ",
 }
 
-menu_options_wage_increase = {
-  grant = "    GRANT ",
-  deny =  "    DENY ",
-}
-
-menu_options_wage_increase = {
-  grant = "    GRANT ",
-  deny =  "    DENY ",
-}
-
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
   bank_manager  = "  (F1) BANK MANAGER  ",
