@@ -92,6 +92,7 @@ const char* THRenderTarget::getLastError()
 
 bool THRenderTarget::startFrame()
 {
+    fillBlack();
     return true;
 }
 
@@ -115,9 +116,8 @@ bool THRenderTarget::endFrame()
 
 bool THRenderTarget::fillBlack()
 {
-    SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRect(m_pRenderer, NULL);
+    SDL_RenderClear(m_pRenderer);
 
     return true;
 }
