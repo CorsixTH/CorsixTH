@@ -6,7 +6,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 # Generate source files list
 # Note: Done after generating config.h
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/agg/include/)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 FILE(GLOB_RECURSE mapedit_source_files
   ${CMAKE_SOURCE_DIR}/MapEdit/Src/*.cpp
