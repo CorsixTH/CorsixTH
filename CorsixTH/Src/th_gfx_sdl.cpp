@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_RENDERER
+
 #include "th_gfx.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
@@ -1074,5 +1074,3 @@ void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCache
 }
 
 #endif // CORSIX_TH_USE_FREETYPE2
-
-#endif // CORSIX_TH_USE_SDL_RENDERER

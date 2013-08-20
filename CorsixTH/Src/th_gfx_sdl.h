@@ -23,13 +23,8 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_SDL_H_
 #define CORSIX_TH_TH_GFX_SDL_H_
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_RENDERER
-#ifdef CORSIX_TH_HAS_RENDERING_ENGINE
-#error More than one rendering engine enabled in config file
-#endif
-#define CORSIX_TH_HAS_RENDERING_ENGINE
+
 #include <SDL.h>
-#include "agg_path_storage.h"
 #include "persist_lua.h"
 
 class THCursor;
@@ -310,6 +305,4 @@ protected:
     uint8_t m_iR, m_iG, m_iB, m_iA;
 };
 
-
-#endif // CORSIX_TH_USE_SDL_RENDERER
 #endif // CORSIX_TH_TH_GFX_SDL_H_

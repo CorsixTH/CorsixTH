@@ -23,22 +23,6 @@ SOFTWARE.
 #ifndef CORSIX_TH_CONFIG_H_
 #define CORSIX_TH_CONFIG_H_
 
-/** Rendering engine choice **/
-// SDL - Multiplatform, but suboptimal on some platforms
-// DirectX 9 - Windows only, but always has HW accellerated (alpha) blitting
-// OpenGL - Faster than SDL on supported platforms, but DX9 may still be
-//          preferable on Windows (not yet finished, but should work).
-#ifndef CORSIX_TH_RENDERING_ENGINE_DEFINED
-#cmakedefine CORSIX_TH_USE_OGL_RENDERER
-#cmakedefine CORSIX_TH_USE_DX9_RENDERER
-#cmakedefine CORSIX_TH_USE_SDL_RENDERER
-#endif //CORSIX_TH_RENDERING_ENGINE_DEFINED
-
-// When OpenGL is used as the rendering engine, try to make use of the
-// extension which allows for rendering to a texture. This must be enabled to
-// allow the zooming feature to work.
-#define CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
-
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when
 // using the SDL rendering engine, the platform SDK is not used for anything

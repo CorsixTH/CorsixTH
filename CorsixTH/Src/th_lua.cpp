@@ -228,15 +228,7 @@ static int l_get_compile_options(lua_State *L)
 #endif
     lua_setfield(L, -2, "arch_64");
 
-#if defined(CORSIX_TH_USE_OGL_RENDERER)
-    lua_pushliteral(L, "OpenGL");
-#elif defined(CORSIX_TH_USE_DX9_RENDERER)
-    lua_pushliteral(L, "DirectX 9");
-#elif defined(CORSIX_TH_USE_SDL_RENDERER)
     lua_pushliteral(L, "SDL");
-#else
-    lua_pushliteral(L, "Unknown");
-#endif
     lua_setfield(L, -2, "renderer");
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
