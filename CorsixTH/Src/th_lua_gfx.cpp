@@ -566,30 +566,14 @@ static int l_surface_new(lua_State *L)
         const char* sOption = luaL_checkstring(L, iArg);
         if(sOption[0] == 0)
             continue;
-        FLAG("hardware"         , bHardware        , SDL_HWSURFACE );
-        FLAG("doublebuf"        , bDoubleBuffered  , SDL_DOUBLEBUF );
-        FLAG("fullscreen"       , bFullscreen      , SDL_FULLSCREEN);
-        FLAG("present immediate", bPresentImmediate, 0             );
-        FLAG("reuse context"    , bReuseContext    , 0             );
-        FLAG("opengl"           , bOpenGL          , SDL_OPENGL    );
+        FLAG("fullscreen",          bFullscreen,        SDL_WINDOW_FULLSCREEN_DESKTOP   );
+        FLAG("doublebuf",           bDoubleBuffered,    0                               );
+        FLAG("present immediate",   bPresentImmediate,  0                               );
+        FLAG("reuse context",       bReuseContext,      0                               );
+        FLAG("opengl",              bOpenGL,            SDL_WINDOW_OPENGL               );
     }
 
 #undef FLAG
-
-#ifndef CORSIX_TH_USE_DX9_RENDERER
-    if(SDL_WasInit(SDL_INIT_VIDEO))
-    {
-        char *sTitle, *sIcon;
-        SDL_WM_GetCaption(&sTitle, &sIcon);
-        if(sTitle) sTitle = strdup(sTitle);
-        if(sIcon) sIcon = strdup(sIcon);
-        SDL_QuitSubSystem(SDL_INIT_VIDEO);
-        SDL_InitSubSystem(SDL_INIT_VIDEO);
-        SDL_WM_SetCaption(sTitle, sIcon);
-        if(sTitle) free(sTitle);
-        if(sIcon) free(sIcon);
-    }
-#endif
 
     THRenderTarget* pCanvas = luaT_stdnew<THRenderTarget>(L);
     if(pCanvas->create(&oParams))
@@ -745,6 +729,15 @@ static int l_surface_scale(lua_State *L)
     return 1;
 }
 
+static int l_surface_set_caption(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    pCanvas->setCaption(luaL_checkstring(L, 2));
+
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_line_new(lua_State *L)
 {
     luaT_stdnew<THLine>(L);
@@ -897,6 +890,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_set_clip, "setClip");
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
     luaT_setfunction(l_surface_scale, "scale");
+    luaT_setfunction(l_surface_set_caption, "setCaption");
     luaT_endclass();
 
     // Line

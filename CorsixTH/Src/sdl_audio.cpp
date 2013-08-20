@@ -223,7 +223,8 @@ static int l_load_music_async(lua_State *L)
         call the callback and remove the new entries from the registry.
     */
 
-    SDL_CreateThread(load_music_async_thread, async);
+    SDL_CreateThread(load_music_async_thread, "music_thread", async);
+
     return 0;
 }
 

@@ -177,9 +177,7 @@ function UI:UI(app, minimal)
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
   self.key_code_to_rawchar = {}
-  
-  self.keyboard_repeat_enable_count = 0
-  SDL.modifyKeyboardRepeat(0, 0)
+
   self.down_count = 0
   if not minimal then
     self.default_cursor = app.gfx:loadMainCursor("default")
@@ -391,23 +389,6 @@ function UI:removeKeyHandler(keys, window)
   end
 end
 
--- Enables a keyboard repeat.
--- Default is 500 delay, interval 30
-function UI:enableKeyboardRepeat(delay, interval)
-  self.keyboard_repeat_enable_count = self.keyboard_repeat_enable_count + 1
-  SDL.modifyKeyboardRepeat(delay or nil, interval or nil)
-end
-
--- Disables the keyboard repeat.
-function UI:disableKeyboardRepeat()
-  if self.keyboard_repeat_enable_count <= 1 then
-    self.keyboard_repeat_enable_count = 0
-    SDL.modifyKeyboardRepeat(0, 0)
-  else
-    self.keyboard_repeat_enable_count = self.keyboard_repeat_enable_count - 1
-  end
-end
-
 local menu_bg_sizes = { -- Available menu background sizes
   {1920, 1080},
 }
@@ -440,10 +421,6 @@ function UI:unregisterTextBox(box)
       table.remove(self.textboxes, num)
       break
     end
-  end
-  -- If the textbox was active at time of unregistering, disable keyboard repeat
-  if box.active then
-    self:disableKeyboardRepeat()
   end
 end
 
@@ -579,7 +556,8 @@ local workaround_shift = {
 -- key, encoded as UTF8 in a Lua string (for non-character keys, this value is
 -- "\0"). This value is affected by shift/caps-lock keys, but is not affected
 -- by any key-remappings.
-function UI:onKeyDown(code, rawchar)
+--!param is_repeat (boolean) True if this is a key repeat event
+function UI:onKeyDown(code, rawchar, is_repeat)
   -- Workaround bad SDL implementations and/or old binaries
   if rawchar == nil or rawchar == "\0" then
     if code < 128 then
@@ -842,12 +820,7 @@ function UI:afterLoad(old, new)
     -- some global key shortcuts were converted to use keyHandlers
     self:setupGlobalKeyHandlers()
   end
-  
-  -- disable keyboardrepeat after loading a game just in case
-  -- (might be transferred from before loading, or broken savegame)
-  repeat
-    self:disableKeyboardRepeat()
-  until self.keyboard_repeat_enable_count == 0
+
   if old < 70 then
     self:removeKeyHandler("f10", self)
     self:addKeyHandler({"shift", "f10"}, self, self.resetApp)

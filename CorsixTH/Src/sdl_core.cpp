@@ -54,7 +54,7 @@ static int l_init(lua_State *L)
         lua_pushboolean(L, 0);
         return 1;
     }
-    SDL_EnableUNICODE(1);
+
     luaT_addcleanup(L, SDL_Quit);
     lua_pushboolean(L, 1);
     return 1;
@@ -161,8 +161,10 @@ static int l_mainloop(lua_State *L)
             case SDL_KEYDOWN:
                 lua_pushliteral(dispatcher, "keydown");
                 lua_pushinteger(dispatcher, e.key.keysym.sym);
-                l_push_utf8(dispatcher, e.key.keysym.unicode);
-                nargs = 3;
+                // TODO: I don't think keysym.sym is really UTF8 for all values.
+                l_push_utf8(dispatcher, e.key.keysym.sym);
+                lua_pushboolean(dispatcher, e.key.repeat != 0);
+                nargs = 4;
                 break;
             case SDL_KEYUP:
                 lua_pushliteral(dispatcher, "keyup");
@@ -192,10 +194,22 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.motion.yrel);
                 nargs = 5;
                 break;
-            case SDL_ACTIVEEVENT:
-                lua_pushliteral(dispatcher, "active");
-                lua_pushinteger(dispatcher, e.active.gain);
-                nargs = 2;
+            case SDL_WINDOWEVENT:
+                switch (e.window.event) {
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                        lua_pushliteral(dispatcher, "active");
+                        lua_pushinteger(dispatcher, 1);
+                        nargs = 2;
+                        break;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        lua_pushliteral(dispatcher, "active");
+                        lua_pushinteger(dispatcher, 0);
+                        nargs = 2;
+                        break;
+                    default:
+                        nargs = 0;
+                        break;
+                }
                 break;
             case SDL_USEREVENT_MUSIC_OVER:
                 lua_pushliteral(dispatcher, "music_over");
@@ -309,25 +323,9 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
-/*
-    Enable or disable the keyboard modifier.
-    
-    Takes two parameters: delay and interval. Both are integers in miliseconds
-    where nil gives default values, and delay of 0 disables the repeat.
-*/
-static int l_modify_keyboardrepeat(lua_State *L)
-{
-    int delay = luaL_optint(L, 1, SDL_DEFAULT_REPEAT_DELAY);
-    int interval = luaL_optint(L, 2, SDL_DEFAULT_REPEAT_INTERVAL);
-    
-    lua_pushboolean(L, SDL_EnableKeyRepeat(delay, interval) == 0 ? 1 : 0);
-    return 1;
-}
-
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
-    {"modifyKeyboardRepeat", l_modify_keyboardrepeat},
     {NULL, NULL}
 };
 static const struct luaL_reg sdllib_with_upvalue[] = {
