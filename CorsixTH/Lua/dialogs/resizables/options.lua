@@ -253,8 +253,9 @@ function UIOptions:buttonAudioGlobal(checked)
   app.audio:stopBackgroundTrack()
   app.audio.has_bg_music = false
   app.audio.not_loaded = not app.config.audio
+  app.audio.speech_file_name = nil
   app.audio:init()
-  app.audio:initSpeech()
+  app:initLanguage()
 end
 
 function UIOptions:buttonBack()
