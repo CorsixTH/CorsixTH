@@ -80,7 +80,7 @@ IF(APPLE)
   					 POST_BUILD
   					 COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources)
 
-  target_link_libraries(CorsixTH SDLmain)
+  target_link_libraries(CorsixTH SDL2main)
   INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 ELSE()
   add_executable(CorsixTH ${corsixth_source_files})
@@ -89,7 +89,7 @@ ENDIF()
 # Finding libraries
 
 # Find SDL
-FIND_PACKAGE(SDL REQUIRED)
+FIND_PACKAGE(SDL2 REQUIRED)
 IF(SDL_FOUND)
   INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
   IF(SDLMAIN_LIBRARY STREQUAL "")
@@ -119,7 +119,7 @@ ENDIF(LUA51_FOUND)
 
 # Find SDL_mixer
 IF(CORSIX_TH_USE_SDL_MIXER)
-  FIND_PACKAGE(SDL_mixer REQUIRED)
+  FIND_PACKAGE(SDL2_mixer REQUIRED)
   IF(SDLMIXER_FOUND)
     TARGET_LINK_LIBRARIES(CorsixTH ${SDLMIXER_LIBRARY})
     INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
