@@ -152,16 +152,6 @@ menu_options_wage_increase = {
   deny =  "    RECHAZAR ",
 }
 
-menu_options_wage_increase = {
-  grant = "    CONCEDER ",
-  deny =  "    RECHAZAR ",
-}
-
-menu_options_wage_increase = {
-  grant = "    CONCEDER ",
-  deny =  "    RECHAZAR ",
-}
-
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
   bank_manager  = "  (F1) DIRECTOR DEL BANCO  ",
@@ -375,7 +365,7 @@ tooltip.options_window = {
   height = "Introduce la altura de la pantalla.",
   apply = "Aplica la resolución seleccionada.",
   cancel = "Vuelve sin cambiar la resolución.",
-  audio_button = "Activa o desactiva todos los sonidos del juego. AVISO: ¡El juego se reiniciará!", 
+  audio_button = "Activa o desactiva todos los sonidos del juego.", 
   audio_toggle = "Activar o desactivar",
   customise_button = "Más opciones para personalizar tu experiencia de juego.",
   folder_button = "Opciones de carpeta",  
@@ -447,6 +437,7 @@ tooltip.folders_window = {
   no_font_specified = "¡Aún no has especificado la ubicación de la fuente!",  
   not_specified = "¡Aún no has especificado una carpeta!",
   default = "Ubicación predeterminada",
+  reset_to_default = "Vuelve a asignar la carpeta a su ubicación predeterminada.",
  -- original_path = "Carpeta actual con la instalación del Theme Hospital original", -- where is this used, I have left if for the time being?
   back  = "Cerrar este menú y volver al menú de Opciones.",
 }
