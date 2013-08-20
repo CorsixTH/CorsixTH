@@ -97,30 +97,10 @@ function App:init()
   local good_install_folder = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
-  self.savegame_dir = self.config.savegames or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Saves"
-  if self.savegame_dir:sub(-1, -1) == pathsep then
-    self.savegame_dir = self.savegame_dir:sub(1, -2)
-  end
-  if lfs.attributes(self.savegame_dir, "mode") ~= "directory" then
-    if not lfs.mkdir(self.savegame_dir) then
-       print "Notice: Savegame directory does not exist and could not be created."
-    end
-  end
-  if self.savegame_dir:sub(-1, -1) ~= pathsep then
-    self.savegame_dir = self.savegame_dir .. pathsep
-  end
-  self.screenshot_dir = self.config.screenshots or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Screenshots"
-  if self.screenshot_dir:sub(-1, -1) == pathsep then
-    self.screenshot_dir = self.screenshot_dir:sub(1, -2)
-  end
-  if lfs.attributes(self.screenshot_dir, "mode") ~= "directory" then
-    if not lfs.mkdir(self.screenshot_dir) then
-       print "Notice: Savegame directory does not exist and could not be created."
-    end
-  end
-  if self.screenshot_dir:sub(-1, -1) ~= pathsep then
-    self.screenshot_dir = self.screenshot_dir .. pathsep
-  end
+  
+  self:initSavegameDir()
+  
+  self:initScreenshotsDir()
   
   -- Create the window
   if not SDL.init("audio", "video", "timer") then
@@ -316,6 +296,44 @@ function App:init()
       print(err)
       self.ui:addWindow(UIInformation(self.ui, {err}))
     end
+  end
+  return true
+end
+
+--! Tries to initialize the savegame directory, returns true on success and
+--! false on failure.
+function App:initSavegameDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.savegame_dir = self.config.savegames or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Saves"
+  if self.savegame_dir:sub(-1, -1) == pathsep then
+    self.savegame_dir = self.savegame_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.savegame_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.savegame_dir) then
+       print "Notice: Savegame directory does not exist and could not be created."
+       return false
+    end
+  end
+  if self.savegame_dir:sub(-1, -1) ~= pathsep then
+    self.savegame_dir = self.savegame_dir .. pathsep
+  end
+  return true
+end
+
+function App:initScreenshotsDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.screenshot_dir = self.config.screenshots or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Screenshots"
+  if self.screenshot_dir:sub(-1, -1) == pathsep then
+    self.screenshot_dir = self.screenshot_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.screenshot_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.screenshot_dir) then
+       print "Notice: Screenshot directory does not exist and could not be created."
+       return false
+    end
+  end
+  if self.screenshot_dir:sub(-1, -1) ~= pathsep then
+    self.screenshot_dir = self.screenshot_dir .. pathsep
   end
   return true
 end

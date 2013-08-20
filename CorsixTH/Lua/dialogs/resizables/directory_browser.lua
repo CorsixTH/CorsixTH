@@ -157,6 +157,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   local select_function = function(node)
     if node.is_valid_directory then
       callback(node.path)
+      self:close()
     end
   end
   
@@ -181,7 +182,7 @@ end
 function UIDirectoryBrowser:close()
   UIResizable.close(self)
   if self.mode == "menu" then
-    self.ui:addWindow(UIOptions(self.ui, "menu"))
+    self.ui:addWindow(UIFolder(self.ui, "menu"))
   end
 end
 

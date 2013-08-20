@@ -85,7 +85,6 @@ function UIFolder:UIFolder(ui, mode)
     :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForTHInstall):setTooltip(_S.tooltip.folders_window.browse_data:format(app.config.theme_hospital_install))
     
   -- Location of font file
-  local built_in = app.gfx:loadBuiltinFont()
   self:addBevelPanel(20, 75, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.font_label):setTooltip(_S.tooltip.folders_window.font_location)
     .lowered = true
@@ -95,23 +94,24 @@ function UIFolder:UIFolder(ui, mode)
     :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForFont):setTooltip(tooltip_font)    
 
   -- Location saves alternative
-  local built_in = app.gfx:loadBuiltinFont()
   self:addBevelPanel(20, 100, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.savegames_label):setTooltip(_S.tooltip.folders_window.savegames_location)
     .lowered = true
   local tooltip_saves = app.config.savegames and _S.tooltip.folders_window.browse_saves:format(app.config.savegames) or _S.tooltip.folders_window.default  
-  self:addBevelPanel(160, 100, 180, 20, col_bg)
-    :setLabel(app.config.savegames and app.config.savegames or tooltip_saves , built_in):setAutoClip(true)
-    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForSavegames):setTooltip(tooltip_saves)  
+  self.saves_panel = self:addBevelPanel(160, 100, 160, 20, col_bg)
+  self.saves_panel:setLabel(app.config.savegames and app.config.savegames or tooltip_saves , built_in):setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForSavegames):setTooltip(tooltip_saves)
+  self:addBevelPanel(320, 100, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetSavegameDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
   
   -- location for screenshots
   self:addBevelPanel(20, 125, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.screenshots_label):setTooltip(_S.tooltip.folders_window.screenshots_location)
     .lowered = true
   local tooltip_screenshots = app.config.screenshots and _S.tooltip.folders_window.browse_screenshots:format(app.config.screenshots) or _S.tooltip.folders_window.default  
-  self:addBevelPanel(160, 125, 180, 20, col_bg)
-    :setLabel(app.config.screenshots and app.config.screenshots or tooltip_screenshots, built_in):setAutoClip(true)
-    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForScreenshots):setTooltip(tooltip_screenshots)  
+  self.screenshots_panel = self:addBevelPanel(160, 125, 160, 20, col_bg)
+  self.screenshots_panel:setLabel(app.config.screenshots and app.config.screenshots or tooltip_screenshots, built_in):setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForScreenshots):setTooltip(tooltip_screenshots)
+  self:addBevelPanel(320, 125, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir):setTooltip(_S.tooltip.folders_window.reset_to_default)    
  
  -- location for mp3 music files
   self:addBevelPanel(20, 150, 130, 20, col_shadow, col_bg, col_bg)
@@ -125,7 +125,23 @@ function UIFolder:UIFolder(ui, mode)
   -- "Back" button
   self:addBevelPanel(20, 180, 320, 40, col_bg):setLabel(_S.folders_window.back)
     :makeButton(0, 0, 320, 40, nil, self.buttonBack):setTooltip(_S.tooltip.folders_window.back)
-  
+  self.built_in_font = built_in
+end
+
+function UIFolder:resetSavegameDir()
+  local app = TheApp
+  app.config.savegames = nil
+  app:saveConfig()
+  app:initSavegameDir()
+  self.saves_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
+end
+
+function UIFolder:resetScreenshotDir()
+  local app = TheApp
+  app.config.screenshots = nil
+  app:saveConfig()
+  app:initScreenshotsDir()
+  self.screenshots_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
 end
 
 function UIFolder:buttonBrowseForFont()
@@ -134,12 +150,15 @@ function UIFolder:buttonBrowseForFont()
 end
 
 function UIFolder:buttonBrowseForSavegames()
+  local app = TheApp
+  local old_path = app.config.savegames
   local function callback(path)
-    local app = TheApp
-    app.config.savegames = path
-    app:saveConfig()
-    debug.getregistry()._RESTART = true
-    app.running = false
+    if old_path ~= path then
+      app.config.savegames = path
+      app:saveConfig()
+      app:initSavegameDir()
+      self.saves_panel:setLabel(app.config.savegames and app.config.savegames or tooltip_saves , self.built_in_font)
+    end
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
   self.ui:addWindow(browser)
@@ -147,7 +166,7 @@ end
 
 function UIFolder:buttonBrowseForTHInstall()
   local function callback(path)
-  local app = TheApp
+    local app = TheApp
     app.config.theme_hospital_install = path
     app:saveConfig()
     debug.getregistry()._RESTART = true
@@ -158,12 +177,15 @@ function UIFolder:buttonBrowseForTHInstall()
 end
 
 function UIFolder:buttonBrowseForScreenshots()
-  local function callback(path)
   local app = TheApp
-    app.config.screenshots = path
-    app:saveConfig()
-    debug.getregistry()._RESTART = true
-    app.running = false
+  local old_path = app.config.savegames
+  local function callback(path)
+    if old_path ~= path then
+      app.config.screenshots = path
+      app:saveConfig()
+      app:initScreenshotsDir()
+      self.screenshots_panel:setLabel(app.config.screenshots and app.config.screenshots or tooltip_screenshots, self.built_in_font)
+    end
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
   self.ui:addWindow(browser)

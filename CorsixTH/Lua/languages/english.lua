@@ -392,6 +392,7 @@ tooltip.folders_window = {
   no_font_specified = "No font location specified yet!",  
   not_specified = "No folder location specified yet!",
   default = "Default location",
+  reset_to_default = "Reset the directory to its default location",
  -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back  = "Close this menu and go back to the Settings Menu",
 }

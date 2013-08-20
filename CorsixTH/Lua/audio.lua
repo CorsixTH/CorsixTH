@@ -31,9 +31,7 @@ class "Audio"
 
 function Audio:Audio(app)
   self.app = app
-  self.background_playlist = {
-    -- {title = "", filename = "", enabled = true, music = nil},
-  }
+  
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
 end
@@ -49,6 +47,9 @@ local function GetFileData(path)
 end
 
 function Audio:init()
+  self.background_playlist = {
+    -- {title = "", filename = "", enabled = true, music = nil},
+  }
   if self.not_loaded then
     return
   end
@@ -151,6 +152,7 @@ function Audio:init()
   end
   if #self.background_playlist == 0 and self.app.good_install_folder then
     print "Notice: Audio system loaded, but found no background tracks"
+    self.has_bg_music = false
   else
     table.sort(self.background_playlist, function(left, right)
       return left.title:upper() < right.title:upper()
@@ -173,6 +175,8 @@ function Audio:init()
 end
 
 function Audio:initSpeech(speech_file)
+  self.sound_archive = nil
+  self.sound_fx = nil
   if self.not_loaded then
     return
   end

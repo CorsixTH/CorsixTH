@@ -177,8 +177,6 @@ function UIOptions:selectLanguage(number)
   app.config.language = (self.available_languages[number].text)
   app:initLanguage()
   app:saveConfig()
-  debug.getregistry()._RESTART = true
-  app.running = false  
 end
 
 function UIOptions:dropdownResolution(activate)
@@ -250,7 +248,13 @@ function UIOptions:buttonAudioGlobal(checked)
   local app = self.ui.app
   app.config.audio = not app.config.audio
   app:saveConfig()
-  UI:resetApp()
+  self.volume_button:setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+  -- Reinit audio
+  app.audio:stopBackgroundTrack()
+  app.audio.has_bg_music = false
+  app.audio.not_loaded = not app.config.audio
+  app.audio:init()
+  app.audio:initSpeech()
 end
 
 function UIOptions:buttonBack()
