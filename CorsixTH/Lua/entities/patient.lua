@@ -224,7 +224,7 @@ function Patient:die()
     local casebook = hospital.disease_casebook[self.disease.id]
     casebook.fatalities = casebook.fatalities + 1
   end
-  self.hospital:msgKilled()
+  hospital:msgKilled()
   self:setMood("dead", "activate")
   self.world.ui:playSound "boo.wav" -- this sound is always heard
   self.going_home = true
