@@ -17,3 +17,14 @@ CorsixTH/config.txt
 /SDL
 /SDL_mixer-1.2.8
 /cmake_install.cmake
+
+# This is for the CMake-generated XCode project and output
+/build/
+*.xcodeproj/
+Debug/
+Release/
+MinSizeRel/
+RelWithDebInfo/
+
+# OSX metadata
+.DS_Store
