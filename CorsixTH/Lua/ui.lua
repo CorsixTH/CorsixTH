@@ -84,36 +84,8 @@ function UI:initKeyAndButtonCodes()
     end
   end
 
-  self.key_codes = {
-    backspace = 8,
-    delete = 127,
-    esc = 27,
-    up = 273,
-    down = 274,
-    right = 275,
-    left = 276,
-    f1 = 282,
-    f2 = 283,
-    f3 = 284,
-    f4 = 285,
-    f5 = 286,
-    f6 = 287,
-    f7 = 288,
-    f8 = 289,
-    f9 = 290,
-    f10 = 291,
-    f11 = 292,
-    f12 = 293,
-    enter = 13,
-    home = 278,
-    end_key = 279,
-    shift = {303, 304},
-    ctrl = {305, 306},
-    alt = {307, 308, 313},
-  }
   self.key_remaps = key_remaps
   self.key_to_button_remaps = key_to_button_remaps
-  self.key_codes = invert(self.key_codes)
   
   self.button_codes = {
     left = 1,
@@ -176,7 +148,6 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
-  self.key_code_to_rawchar = {}
 
   self.down_count = 0
   if not minimal then
@@ -520,63 +491,12 @@ function UI:toggleFullscreen()
   return success
 end
 
-function UI:_translateKeyCode(code, rawchar)
-  local key = self.key_codes[code] or rawchar:lower()
-  return self.key_remaps[key] or key
-end
-
---! Table with chars and corresponding chars when shift is pressed (qwerty keyboard layout)
-local workaround_shift = {
-  ["1"] = "!",
-  ["2"] = "@",
-  ["3"] = "#",
-  ["4"] = "$",
-  ["5"] = "%",
-  ["6"] = "^",
-  ["7"] = "&",
-  ["8"] = "*",
-  ["9"] = "(",
-  ["0"] = ")",
-  ["-"] = "_",
-  ["="] = "+",
-  ["["] = "{",
-  ["]"] = "}",
-  [";"] = ":",
-  ["'"] = "\"",
-  ["\\"] = "|",
-  [","] = "<",
-  ["."] = ">",
-  ["/"] = "?",
-}
-
 --! Called when the user presses a key on the keyboard
---!param code (integer) The hardware key-code for the pressed key. Note that
--- these codes only coincide with ASCII for certain keyboard layouts.
---!param rawchar (string) The unicode character corresponding to the pressed
--- key, encoded as UTF8 in a Lua string (for non-character keys, this value is
--- "\0"). This value is affected by shift/caps-lock keys, but is not affected
--- by any key-remappings.
+--!param rawchar (string) The name of the key the user pressed.
 --!param is_repeat (boolean) True if this is a key repeat event
-function UI:onKeyDown(code, rawchar, is_repeat)
-  -- Workaround bad SDL implementations and/or old binaries
-  if rawchar == nil or rawchar == "\0" then
-    if code < 128 then
-      rawchar = string.char(code)
-      if self.buttons_down.shift then
-        if 97 <= code and code <= 122 then -- letters
-          rawchar = rawchar:upper()
-        else
-          rawchar = workaround_shift[rawchar] or rawchar
-        end
-      end
-    end
-  end
-  -- Remember the raw character associated with the code, as when the key is
-  -- released, we only get given the code.
-  self.key_code_to_rawchar[code] = rawchar
-  
+function UI:onKeyDown(rawchar, is_repeat)
   -- Apply key-remapping and normalisation
-  local key = self.key_codes[code] or rawchar:lower()
+  local key = rawchar:lower()
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
@@ -589,7 +509,7 @@ function UI:onKeyDown(code, rawchar, is_repeat)
   -- If there is one, the current textbox gets the key
   for _, box in ipairs(self.textboxes) do
     if box.enabled and box.active then
-      local handled = box:input(key, rawchar, code)
+      local handled = box:input(key, rawchar)
       if handled then
         return true
       end
@@ -598,14 +518,7 @@ function UI:onKeyDown(code, rawchar, is_repeat)
 
   -- Otherwise, if there is a key handler bound to the given key, then it gets
   -- the key.
-
-  -- For some reason the rawchar used above is not good if Ctrl is being pressed
-  local key_down = key
-  if self.buttons_down.ctrl and code < 128 then
-    key_down = string.char(code)
-  end
-
-  local keyHandlers = self.key_handlers[key_down]
+  local keyHandlers = self.key_handlers[key]
   if keyHandlers then
     -- Iterate over key handlers and call each one whose modifier(s) are pressed
     -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
@@ -625,12 +538,9 @@ function UI:onKeyDown(code, rawchar, is_repeat)
 end
 
 --! Called when the user releases a key on the keyboard
---!param code (integer) The hardware key-code for the pressed key. Note that
--- these codes only coincide with ASCII for certain keyboard layouts.
-function UI:onKeyUp(code)
-  local rawchar = self.key_code_to_rawchar[code] or ""
-  self.key_code_to_rawchar[code] = nil
-  local key = self.key_codes[code] or rawchar:lower()
+--!param rawchar (string) The name of the key the user pressed.
+function UI:onKeyUp(rawchar)
+  local key = rawchar:lower()
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
@@ -806,9 +716,6 @@ end
 function UI:afterLoad(old, new)
   if old < 5 then
     self.editing_allowed = true
-  end
-  if old < 13 then
-    self.key_code_to_rawchar = {}
   end
   if old < 63 then
     -- modifiers have been added to key handlers

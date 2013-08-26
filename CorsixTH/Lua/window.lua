@@ -940,7 +940,7 @@ function Textbox:clicked()
   end
 end
 
-function Textbox:input(char, rawchar, code)
+function Textbox:input(char, rawchar)
   if not self.active then
     return false
   end
@@ -959,10 +959,6 @@ function Textbox:input(char, rawchar, code)
     end
     -- Numbers
     if not handled and self.allowed_input.numbers then
-      if 256 <= code and code <= 265 then
-        -- Numeric keypad
-        rawchar = string.char(string.byte"0" + code - 256)
-      end
       if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
         handled = true
       end
@@ -1032,9 +1028,9 @@ function Textbox:input(char, rawchar, code)
     self:abort()
     return true
   end
-  -- Arrow keys (code >= 273 and code <= 276)
-  if not handled and code >= 273 and code <= 276 then
-    if code == 273 then -- up
+  -- Arrow keys
+  if not handled then
+    if char == "up" then -- up
       if type(self.text) ~= "table" or self.cursor_pos[1] == 1 then
         -- to beginning of line
         self.cursor_pos[2] = 0
@@ -1043,7 +1039,7 @@ function Textbox:input(char, rawchar, code)
         self.cursor_pos[1] = self.cursor_pos[1] - 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
-    elseif code == 274 then -- down
+    elseif char == "down" then -- down
       if type(self.text) ~= "table" or self.cursor_pos[1] == #self.text then
         -- to end of line
         self.cursor_pos[2] = string.len(line)
@@ -1052,7 +1048,7 @@ function Textbox:input(char, rawchar, code)
         self.cursor_pos[1] = self.cursor_pos[1] + 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
-    elseif code == 275 then -- right
+    elseif char == "right" then -- right
       if self.cursor_pos[2] == string.len(line) then
         -- next line
         if type(self.text) == "table" and self.cursor_pos[1] < #self.text then
@@ -1068,7 +1064,7 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = self.cursor_pos[2] + 1
         end
       end
-    elseif code == 276 then -- left
+    elseif char == "left" then -- left
       if self.cursor_pos[2] == 0 then
         -- previous line
         if type(self.text) == "table" and self.cursor_pos[1] > 1 then
@@ -1088,7 +1084,7 @@ function Textbox:input(char, rawchar, code)
     handled = true
   end
   -- Tab (reserved)
-  if not handled and code == 9 then
+  if not handled and char == "tab" then
     return true
   end
   -- Home (beginning of line)
@@ -1097,15 +1093,14 @@ function Textbox:input(char, rawchar, code)
     handled = true
   end
   -- End (end of line)
-  if not handled and char == "end_key" then
+  if not handled and char == "end" then
     self.cursor_pos[2] = string.len(line)
     handled = true
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Experimental "all" category
     if not handled and self.allowed_input.all
-       and not (char == "shift" or char == "ctrl" or char == "alt")
-       and not (282 <= code and code <= 293) then -- F-Keys
+       and not (char == "shift" or char == "ctrl" or char == "alt") then -- F-Keys
       new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
       self.cursor_pos[2] = self.cursor_pos[2] + 1
       handled = true

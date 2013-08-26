@@ -160,16 +160,13 @@ static int l_mainloop(lua_State *L)
                 goto leave_loop;
             case SDL_KEYDOWN:
                 lua_pushliteral(dispatcher, "keydown");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                // TODO: I don't think keysym.sym is really UTF8 for all values.
-                l_push_utf8(dispatcher, e.key.keysym.sym);
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
                 lua_pushboolean(dispatcher, e.key.repeat != 0);
-                nargs = 4;
+                nargs = 3;
                 break;
             case SDL_KEYUP:
                 lua_pushliteral(dispatcher, "keyup");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                // NB: No unicode translation done by SDL for keyup
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
                 nargs = 2;
                 break;
             case SDL_MOUSEBUTTONDOWN:

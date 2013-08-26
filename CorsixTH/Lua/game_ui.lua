@@ -191,8 +191,6 @@ function GameUI:resync(ui)
 
   self.key_remaps = ui.key_remaps
   self.key_to_button_remaps = ui.key_to_button_remaps
-  self.key_codes = ui.key_codes
-  self.key_code_to_rawchar = ui.key_code_to_rawchar
 end
 
 local scroll_keys = {
@@ -219,26 +217,24 @@ function GameUI:updateKeyScroll()
   end
 end
 
-function GameUI:onKeyDown(code, rawchar)
-  if UI.onKeyDown(self, code, rawchar) then
+function GameUI:onKeyDown(rawchar, is_repeat)
+  if UI.onKeyDown(self, rawchar, is_repeat) then
     -- Key has been handled already
     return true
   end
-  rawchar = self.key_code_to_rawchar[code] -- UI may have translated rawchar
-  local key = self:_translateKeyCode(code, rawchar)
+  local key = rawchar:lower()
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
   end
 end
 
-function GameUI:onKeyUp(code)
-  local rawchar = self.key_code_to_rawchar[code] or ""
-  if UI.onKeyUp(self, code) then
+function GameUI:onKeyUp(rawchar)
+  if UI.onKeyUp(self, rawchar) then
     return true
   end
-  local key = self:_translateKeyCode(code, rawchar)
-  
+
+  local key = rawchar:lower()
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
