@@ -621,7 +621,7 @@ end
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
-  if self:isPlayerHospital() then
+  if self.hospital and self:isPlayerHospital() then
     -- Check to see if a staff room has been built
     self.is_staff_room = false
     if self:hasRoomOfType("staff_room") then
