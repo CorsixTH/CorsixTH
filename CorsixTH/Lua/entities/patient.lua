@@ -483,7 +483,7 @@ function Patient:tickDay()
     elseif self.waiting == 30 then
       self:checkWatch()
     end
-  if self.has_vomitted > 0 then 
+  if self.has_vomitted and self.has_vomitted > 0 then 
     self.has_vomitted = 0
   end
   end
@@ -538,8 +538,12 @@ function Patient:tickDay()
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
+    local room = self:getRoom()
     if not self:getRoom() and not self.action_queue[1].is_leaving then
       self:die()
+    elseif self.in_room and self.attributes["health"] == 0.0 then
+      room:makeHumanoidLeave(self)
+      self:die()     
     end
     --dead people aren't thirsty
     return
