@@ -249,6 +249,7 @@ tooltip.main_menu = {
   load_game = "Load a saved game",
   options = "Tweak various settings",
   exit = "No, no, please don't leave!",
+  quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
 
 load_game_window = {

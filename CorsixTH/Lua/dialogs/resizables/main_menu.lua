@@ -94,5 +94,10 @@ function UIMainMenu:buttonOptions()
 end
 
 function UIMainMenu:buttonExit()
+  self.ui:addWindow(UIConfirmDialog(self.ui,
+  _S.tooltip.main_menu.quit,
+  --[[persistable:quit_confirm_dialog]]function()
   self.ui.app:exit()
+  end
+  ))
 end
