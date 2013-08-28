@@ -629,6 +629,18 @@ tooltip.calls_dispatcher = {
   close = "Cerrar la ventana de llamadas de control.",
 }
 
+update_window = {
+  caption = "¡Actualización disponible!",
+  new_version = "Versión nueva:",
+  current_version = "Versión actual:",
+  download = "Ir a la página de descargas",
+  ignore = "Saltar e ir al menú principal",
+}
+
+tooltip.update_window = {
+  download = "Ir a la página de descargas para obtener la última versión de CorsixTH.",
+  ignore = "Ignorar esta actualización por el momento. Volverás a ser notificado la próxima vez que ejecutes CorsixTH.",
+}
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
