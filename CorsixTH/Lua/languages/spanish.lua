@@ -294,6 +294,7 @@ tooltip.main_menu = {
   load_game = "Cargar una partida guardada.",
   options = "Ajustar la configuración.",
   exit = "¡No, no, por favor, no te vayas!",
+  quit = "Estás a punto de salir de CorsixTH.   ¿Seguro que quieres continuar?",
 }
 
 load_game_window = {
