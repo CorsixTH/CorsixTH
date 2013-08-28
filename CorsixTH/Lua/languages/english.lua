@@ -584,6 +584,18 @@ tooltip.calls_dispatcher = {
   close = "Close the calls dispatcher dialog",
 }
 
+update_window = {
+  caption = "Update Available!",
+  new_version = "New Version:",
+  current_version = "Current Version:",
+  download = "Go to download page",
+  ignore = "Skip and go to main menu",
+}
+
+tooltip.update_window = {
+  download = "Go to the download page for the very latest version of CorsixTH",
+  ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
+}
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
