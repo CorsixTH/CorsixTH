@@ -392,19 +392,12 @@ customise_window = {
 
 tooltip.customise_window = {
   movies = "Control global de vídeos, esto permite desactivar todos los vídeos.",  
-  movies_button = "Pulsa para activar o desactivar todos los vídeos del juego.",
   intro = "Activa o desactiva el vídeo de introducción, si quieres que la introducción se muestre cada vez que arranques CorsixTH, necesitarás que el control global de vídeos esté activado.",
-  intro_button = "Pulsa para activar o desactivar",
   paused = "En Theme Hospital, el jugador solo podía utilizar el menú superior si la partida estaba en pausa. Esto también se hace en CorsixTH de forma predeterminada, pero al activar esta opción, podrás acceder a ese menú mientras el juego esté en pausa.",
-  paused_button = "Permitir acciones del usuario mientras el juego está en pausa",
   volume = "Si la tecla de bajar volumen abre también el botiquín, utiliza esta opción para cambiar el acceso directo a Mayúsculas + C.",
-  volume_button = "Pulsa para cambiar la tecla",
   aliens = "Debido a la falta de animaciones decentes disponibles, hemos hecho que los pacientes con ADN alienígena solo aparezcan en una emergencia. Para permitir que los pacientes con ADN alienígena puedan visitar tu hospital, desactiva esta opción.",
-  aliens_button = "Pulsa para activar o desactivar",
   fractured_bones = "Debido a una animación deficiente que tenemos, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
-  fractured_bones_button = "Pulsa para activar o desactivar",
   average_contents = "Activa esta opción si quieres que el juego recuerde que objetos adicionales sueles añadir cuando construyes habitaciones.",  
-  average_contents_button =  "Pulsa para activar o desactivar",
   back = "Cerrar este menú y volver al menú de Opciones",
 }
 
