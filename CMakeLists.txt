@@ -7,6 +7,7 @@
 # Any of the following:
 #   - WITH_AUDIO   : Activate Sound (enabled by default)
 #   - WITH_FREETYPE2
+#   - WITH_MOVIES  : Activate movies (requires Sound)
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
 
@@ -77,8 +78,13 @@ ELSE()
 ENDIF(WITH_AUDIO)
 
 IF(WITH_MOVIES)
-  SET(CORSIX_TH_USE_FFMPEG ON)
-  MESSAGE("Note: FFMPEG video is enabled (default)")
+  IF(WITH_AUDIO)
+    SET(CORSIX_TH_USE_FFMPEG ON)
+    MESSAGE("Note: FFMPEG video is enabled (default)")
+  ELSE()
+    SET(CORSIX_TH_USE_FFMPEG OFF)
+    MESSAGE("Note: FFMPEG video disabled since it requires SDL audio.")
+  ENDIF(WITH_AUDIO)
 ELSE()
   SET(CORSIX_TH_USE_FFMPEG OFF)
   MESSAGE("Note: FFMPEG video is disabled")
