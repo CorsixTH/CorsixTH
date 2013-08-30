@@ -76,8 +76,8 @@ function MoviePlayer:init()
   end
 end
 
-function MoviePlayer:playIntro()
-  self:playMovie(self.intro_movie, false, true)
+function MoviePlayer:playIntro(callback_after_movie)
+  self:playMovie(self.intro_movie, false, true, callback_after_movie)
 end
 
 function MoviePlayer:playWinMovie()
@@ -111,13 +111,16 @@ function MoviePlayer:playLoseMovie()
   end
 end
 
-function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
+function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   local x, y, w, h = 0
   local screen_w, screen_h = self.app.config.width, self.app.config.height
   local ar
   local success, warning
 
   if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
+    if callback then
+      callback()
+    end
     return
   end
 
@@ -132,6 +135,9 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
   end
   if not success then
     -- Indicates failure to load movie
+    if callback then
+      callback()
+    end
     return
   end
   -- Abort any loading of music
@@ -176,6 +182,8 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
   self.wait_for_over = true
+  
+  self.callback_on_destroy_movie = callback
 
   self.opengl_mode_index = nil
   for i=1, #self.app.modes do
@@ -246,6 +254,10 @@ function MoviePlayer:_destroyMovie()
     self.audio:playRandomBackgroundTrack()
   end
   self.playing = false
+  if self.callback_on_destroy_movie then
+    self.callback_on_destroy_movie()
+    self.callback_on_destroy_movie = nil
+  end
 end
 
 function MoviePlayer:refresh()

@@ -347,19 +347,12 @@ customise_window = {
 
 tooltip.customise_window = {
   movies = "Global movie control, this will allow you to disable all the movies",  
-  movies_button = "Click to turn on or off all the game movies",
   intro = "Turn off or on the intro movie, global movies will need to be on if you want the intro movie to play each time you load CorsixTH",
-  intro_button = "Click to turn on or off",
   paused = "In Theme Hospital the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
-  paused_button = "Allow user actions while game is paused",
-  volume = "If the volume down button is opening the casebook as well, use this to change the hotkey to Shift +C",
-  volume_button = "Click to switch hotkey",
+  volume = "If the volume down button is opening the casebook as well, turn this on to change the hotkey for the casebook to Shift + C",
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA so that they can only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
-  aliens_button = "Click to turn this option on or off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no patients with Fractured Bones that are female. To allow female patients with Fractured Bones to visit your hospital, turn this off",
-  fractured_bones_button = "Click to turn this option on or off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",  
-  average_contents_button =  "Click to turn this option on or off", 
   back = "Close this menu and go back to the Settings Menu",
 }
 

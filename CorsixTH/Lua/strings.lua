@@ -64,6 +64,7 @@ function Strings:init()
   self.languages_english = {}
   self.language_to_chunk = {}
   self.chunk_to_font = {}
+  self.chunk_to_names = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
     -- is given an infinite table as an environment. Reading a non-existant
@@ -96,6 +97,7 @@ function Strings:init()
         for _, name in pairs(names) do
           self.language_to_chunk[name:lower()] = chunk
         end
+		self.chunk_to_names[chunk] = names
         error(good_error_marker)
       end,
       Font = function(...)
@@ -283,6 +285,11 @@ end
 function Strings:getFont(language)
   local chunk = self.language_to_chunk[language:lower()]
   return chunk and self.chunk_to_font[chunk]
+end
+
+function Strings:getLanguageNames(language)
+  local chunk = self.language_to_chunk[language:lower()]
+  return chunk and self.chunk_to_names[chunk]
 end
 
 function Strings:_loadPrivate(language, env, ...)

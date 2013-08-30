@@ -53,6 +53,7 @@ function App:App()
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
+  self.check_for_updates = true
 end
 
 function App:setCommandLine(...)
@@ -94,7 +95,7 @@ function App:init()
   end
   self:fixConfig()
   dofile "filesystem"
-  local good_install_folder = self:checkInstallFolder()
+  local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
   
@@ -256,6 +257,7 @@ function App:init()
   dofile "ui"
   if good_install_folder then
     dofile "game_ui"
+    self.ui = UI(self, true)
   else
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
@@ -274,27 +276,36 @@ function App:init()
   if _MAP_EDITOR then
     self:loadLevel("")
   else
-    self:loadMainMenu()
+    local function callback_after_movie()
+      self:loadMainMenu()
+      -- If we couldn't properly load the language, show an information dialog
+      if not language_load_success then
+        -- At this point we know the language is english, so no use having
+        -- localized strings.
+        self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
+        " to English because the desired language could not be loaded. "..
+        "Please make sure you have specified a font file in the config file."}))
+      end
+      
+      -- If a savegame was specified, load it
+      if self.command_line.load then
+        local status, err = pcall(self.load, self, self.command_line.load)
+        if not status then
+          err = _S.errors.load_prefix .. err
+          print(err)
+          self.ui:addWindow(UIInformation(self.ui, {err}))
+        end
+      end
+      -- There might also be a message from the earlier initialization process that should be shown.
+      -- Show it using the built-in font in case the game's font is messed up.
+      if error_message then
+        self.ui:addWindow(UIInformation(self.ui, error_message, true))
+      end
+    end
     if self.config.play_intro then
-      self.moviePlayer:playIntro()
-    end
-    -- If we couldn't properly load the language, show an information dialog
-    if not language_load_success then
-      -- At this point we know the language is english, so no use having
-      -- localized strings.
-      -- TODO: Make this an option in the options dialog
-      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
-      " to English because the desired language could not be loaded. "..
-      "Please make sure you have specified a font file in the config file."}))
-    end
-  end
-  -- If a savegame was specified, load it
-  if self.command_line.load then
-    local status, err = pcall(self.load, self, self.command_line.load)
-    if not status then
-      err = _S.errors.load_prefix .. err
-      print(err)
-      self.ui:addWindow(UIInformation(self.ui, {err}))
+      self.moviePlayer:playIntro(callback_after_movie)
+    else
+      callback_after_movie()
     end
   end
   return true
@@ -400,6 +411,9 @@ function App:loadMainMenu(message)
   self.ui:setMenuBackground()
   self.ui:addWindow(UIMainMenu(self.ui))
   self.ui:addWindow(UITipOfTheDay(self.ui))
+  
+  -- Show update window if there's an update
+  self:checkForUpdates()
   
   -- If a message was supplied, show it
   if message then
@@ -894,8 +908,8 @@ function App:checkInstallFolder()
   if self.config.theme_hospital_install then
     status, err = self.fs:setRoot(self.config.theme_hospital_install)
   end
-  local message = "Please ensure that the theme_hospital_install setting in"..
-    " config.txt points to a copy of the data files from the original game,"..
+  local message = "Please make sure that you point the game to"..
+    " a valid copy of the data files from the original game,"..
     " as said files are required for graphics and sounds."
   if not status then
     -- If the given directory didn't exist, then likely the config file hasn't
@@ -916,11 +930,12 @@ function App:checkInstallFolder()
   check("QData".. pathsep .."SPointer.dat")
   if #missing ~= 0 then
     missing = table.concat(missing, ", ")
-    print("Invalid Theme Hospital install folder specified in config file, "..
+    message = "Invalid Theme Hospital folder specified in config file, "..
           "as at least the following files are missing: ".. missing ..".\n"..
-          message)
+          message
+    print(message)
     print("Trying to let the user select a new one.")
-    return false
+    return false, {message}
   end
     
   -- Check for demo version
@@ -929,7 +944,37 @@ function App:checkInstallFolder()
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end
-  return true
+  
+  -- Do a few more checks to make sure that commonly corrupted files are OK.
+  local corrupt = {}
+
+  if not self.using_demo_files then
+    local function check_corrupt(path, correct_size)
+      local real_path = self.fs:getFilePath(path)
+      -- If the file exists but is smaller than usual it is probably corrupt
+      if real_path then
+        local real_size = lfs.attributes(real_path, "size") 
+        if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
+          corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size/1024) .. " kB / Correct: about " .. math.floor(correct_size/1024) .. " kB)"
+        end
+      else
+        corrupt[#corrupt + 1] = path .. " (This file is missing)"
+      end
+    end
+    check_corrupt("ANIMS" .. pathsep .. "320X2402.SMK", 1122228)
+    check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
+    check_corrupt("INTRO" .. pathsep .. "INTRO.SM2", 16354880)
+    check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
+    check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
+    
+    if #corrupt ~= 0 then
+      table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " .. 
+      "so don't be suprised if CorsixTH crashes. At least the following files are wrong:")
+      table.insert(corrupt, message)
+    end
+  end
+  
+  return true, #corrupt ~= 0 and corrupt or nil
 end
 
 -- TODO: is it okay to remove this without replacement?
@@ -1166,6 +1211,80 @@ function App:afterLoad()
   self.ui:afterLoad(old, new)
 end
 
+function App:checkForUpdates()
+  -- Only check for updates once per application launch
+  if not self.check_for_updates or not self.config.check_for_updates then return end
+  self.check_for_updates = false
+  
+  -- Default language to use for the changelog if no localised version is available
+  local default_language = "en"
+  local update_url = 'http://www.corsixth.com/check-for-updates'
+  local current_version = self:getVersion()
+  
+  -- Only URLs that match this list of trusted domains will be accepted.
+  local trusted_domains = { 'corsixth.com', 'code.google.com' }
+  
+  -- Only check for updates against released versions
+  if current_version == "Trunk" then
+    print "Will not check for updates since this is the Trunk version."
+    return
+  end
+
+  local success, socket = pcall(require, "socket")
+
+  if not success then
+    -- LuaSocket is not available, just return
+    print "Cannot check for updates since LuaSocket is not available."
+    return
+  end
+  local http = require "socket.http"
+  local url = require "socket.url"
+
+  print "Checking for CorsixTH updates..."
+  local update_body, status, headers = http.request(update_url)
+
+  if not update_body or not (status == 200) then
+    print("Couldn't check for updates. Server returned code: " .. status)
+    print("Check that you have an active internet connection and that CorsixTH is allowed in your firewall.")
+    return
+  end
+
+  local update_table = loadstring_envcall(update_body, "@updatechecker"){}
+  local changelog = update_table["changelog_" .. default_language] 
+  local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
+  
+  if (new_version <= current_version) then
+    print "You are running the latest version of CorsixTH."
+    return
+  end
+  
+  -- Check to make sure download URL is trusted
+  local download_url = url.parse(update_table["download_url"])
+  local valid_url = false
+  for _,v in ipairs(trusted_domains) do
+    if download_url.host == v then
+      valid_url = true
+      break
+    end
+  end
+  if not valid_url then 
+    print ("Update download url is not on the trusted domains list (" .. updateTable["download_url"] .. ")")
+    return
+  end
+  
+  -- Check to see if there's a changelog in the user's language
+  local current_langs = self.strings:getLanguageNames(self.config.language)
+  for _,v in ipairs(current_langs) do
+    if (update_table["changelog_" .. v]) then
+      changelog = update_table["changelog_" .. v]
+      break
+    end
+  end
+  
+  print ("New version found: " .. new_version)
+  -- Display the update window
+  self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))
+end
 
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
