@@ -28,3 +28,21 @@ RelWithDebInfo/
 
 # OSX metadata
 .DS_Store
+!LevelEdit/src/com/corsixth/leveledit/*.xcodeproj
+!LevelEdit/src/com/corsixth/leveledit/Debug
+!LevelEdit/src/com/corsixth/leveledit/Release
+!LevelEdit/src/com/corsixth/leveledit/MinSizeRel
+!LevelEdit/src/com/corsixth/leveledit/RelWithDebInfo
+!LevelEdit/src/com/corsixth/leveledit/.DS_Store
+!LevelEdit/src/com/corsixth/*.xcodeproj
+!LevelEdit/src/com/corsixth/Debug
+!LevelEdit/src/com/corsixth/Release
+!LevelEdit/src/com/corsixth/MinSizeRel
+!LevelEdit/src/com/corsixth/RelWithDebInfo
+!LevelEdit/src/com/corsixth/.DS_Store
+!LevelEdit/src/com/*.xcodeproj
+!LevelEdit/src/com/Debug
+!LevelEdit/src/com/Release
+!LevelEdit/src/com/MinSizeRel
+!LevelEdit/src/com/RelWithDebInfo
+!LevelEdit/src/com/.DS_Store
