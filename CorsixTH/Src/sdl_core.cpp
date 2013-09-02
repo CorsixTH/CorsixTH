@@ -108,34 +108,31 @@ struct fps_ctrl
     }
 };
 
-static void l_push_utf8(lua_State *L, uint32_t iCodePoint)
+static void l_push_modifiers_table(lua_State *L, Uint16 mod)
 {
-    uint8_t aBytes[4];
-    size_t iNBytes = 1;
-    if(iCodePoint <= 0x7F)
-        aBytes[0] = static_cast<uint8_t>(iCodePoint);
-    else if(iCodePoint <= 0x7FF)
+    lua_newtable(L);
+    if ((mod & KMOD_SHIFT) != 0)
     {
-        aBytes[0] = 0xC0 | static_cast<uint8_t>(iCodePoint >> 6);
-        aBytes[1] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 2;
+        luaT_pushtablebool(L, "shift", true);
     }
-    else if(iCodePoint <= 0xFFFF)
+    if ((mod & KMOD_ALT) != 0)
     {
-        aBytes[0] = 0xE0 | static_cast<uint8_t>(iCodePoint >> 12);
-        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
-        aBytes[2] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 3;
+        luaT_pushtablebool(L, "alt", true);
     }
-    else
+    if ((mod & KMOD_CTRL) != 0)
     {
-        aBytes[0] = 0xF0 | static_cast<uint8_t>(iCodePoint >> 18);
-        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 12) & 0x3F);
-        aBytes[2] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
-        aBytes[3] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 4;
+        luaT_pushtablebool(L, "ctrl", true);
     }
-    lua_pushlstring(L, reinterpret_cast<char*>(aBytes), iNBytes);
+    if ((mod & KMOD_GUI) != 0)
+    {
+        luaT_pushtablebool(L, "gui", true);
+    }
+}
+
+static int l_get_key_modifiers(lua_State *L)
+{
+    l_push_modifiers_table(L, SDL_GetModState());
+    return 1;
 }
 
 static int l_mainloop(lua_State *L)
@@ -160,16 +157,14 @@ static int l_mainloop(lua_State *L)
                 goto leave_loop;
             case SDL_KEYDOWN:
                 lua_pushliteral(dispatcher, "keydown");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                // TODO: I don't think keysym.sym is really UTF8 for all values.
-                l_push_utf8(dispatcher, e.key.keysym.sym);
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
+                l_push_modifiers_table(dispatcher, e.key.keysym.mod);
                 lua_pushboolean(dispatcher, e.key.repeat != 0);
                 nargs = 4;
                 break;
             case SDL_KEYUP:
                 lua_pushliteral(dispatcher, "keyup");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                // NB: No unicode translation done by SDL for keyup
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
                 nargs = 2;
                 break;
             case SDL_MOUSEBUTTONDOWN:
@@ -326,6 +321,7 @@ static int l_get_ticks(lua_State *L)
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
+    {"getKeyModifiers", l_get_key_modifiers},
     {NULL, NULL}
 };
 static const struct luaL_reg sdllib_with_upvalue[] = {

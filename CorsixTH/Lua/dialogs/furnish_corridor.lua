@@ -120,9 +120,9 @@ end
 function UIFurnishCorridor:purchaseItem(index, quantity)
   local o = self.objects[index]
   local is_negative_quantity = quantity < 0
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     quantity = quantity * 10
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     quantity = quantity * 5
   end
   quantity = quantity + o.qty

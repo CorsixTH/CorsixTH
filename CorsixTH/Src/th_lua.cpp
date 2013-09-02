@@ -366,3 +366,10 @@ void luaT_push(lua_State *L, const char* s)
 {
     lua_pushstring(L, s);
 }
+
+void luaT_pushtablebool(lua_State *L, const char *k, bool v)
+{
+    lua_pushstring(L, k);
+    lua_pushboolean(L, v);
+    lua_settable(L, -3);
+}
