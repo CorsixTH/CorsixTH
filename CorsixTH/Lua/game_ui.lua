@@ -74,8 +74,8 @@ end
 function GameUI:setupGlobalKeyHandlers()
   UI.setupGlobalKeyHandlers(self)
 
-  self:addKeyHandler("esc", self, self.setEditRoom, false)
-  self:addKeyHandler("esc", self, self.showMenuBar)
+  self:addKeyHandler("escape", self, self.setEditRoom, false)
+  self:addKeyHandler("escape", self, self.showMenuBar)
   self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
 
   self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)

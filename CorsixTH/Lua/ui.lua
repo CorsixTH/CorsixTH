@@ -48,8 +48,8 @@ function UI:initKeyAndButtonCodes()
   local button_remaps = {}
   local key_to_button_remaps = {}
   local key_norms = setmetatable({
-    space = " ",
-    escape = "esc",
+    [" "] = "space",
+    esc = "escape",
   }, {__index = function(t, k)
     k = tostring(k):lower()
     return rawget(t, k) or k
@@ -217,9 +217,9 @@ end
 
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
-  self:addKeyHandler("esc", self, self.closeWindow)
-  self:addKeyHandler("esc", self, self.stopMovie)
-  self:addKeyHandler(" ", self, self.stopMovie)
+  self:addKeyHandler("escape", self, self.closeWindow)
+  self:addKeyHandler("escape", self, self.stopMovie)
+  self:addKeyHandler("space", self, self.stopMovie)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)

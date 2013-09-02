@@ -965,7 +965,7 @@ function Textbox:input(char, rawchar)
     end
     -- Space and hyphen
     if not handled and self.allowed_input.misc then
-      if rawchar == " " or rawchar == "-" then
+      if rawchar == "space" or rawchar == "-" then
         handled = true
       end
     end
@@ -1024,7 +1024,7 @@ function Textbox:input(char, rawchar)
     end
   end
   -- Escape (abort)
-  if not handled and char == "esc" then
+  if not handled and char == "escape" then
     self:abort()
     return true
   end
