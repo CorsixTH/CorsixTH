@@ -82,12 +82,9 @@ struct THRenderTargetCreationParams
     int iHeight;
     int iBPP;
     uint32_t iSDLFlags;
-    bool bHardware;
-    bool bDoubleBuffered;
     bool bFullscreen;
     bool bPresentImmediate;
     bool bReuseContext;
-    bool bOpenGL;
 };
 
 /*!
