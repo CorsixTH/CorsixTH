@@ -716,7 +716,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         }
 
         // Convert the canvas to a texture
-        _makeTexture(pEntry);
+        _makeTexture(pCanvas, pEntry);
         pEntry->bIsValid = true;
     }
 

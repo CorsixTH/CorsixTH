@@ -56,7 +56,6 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addKeyHandler("down", self.scrollDown)
   self:addKeyHandler("right", self.increasePay)
   self:addKeyHandler("left", self.decreasePay)
-  self.ui:enableKeyboardRepeat() -- To quickly change values
   
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
@@ -96,7 +95,6 @@ function UICasebook:UICasebook(ui, disease_selection)
 end
 
 function UICasebook:close()
-  self.ui:disableKeyboardRepeat()
   UIFullscreen.close(self)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end

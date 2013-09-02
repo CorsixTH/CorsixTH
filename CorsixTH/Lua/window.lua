@@ -916,12 +916,8 @@ function Textbox:setActive(active)
     self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
     -- Update text
     self.panel:setLabel(self.text)
-    -- Enable Keyboard repeat
-    ui:enableKeyboardRepeat()
   else
     self.cursor_state = false
-    -- Disable Keyboard repeat
-    ui:disableKeyboardRepeat()
   end
   
   self.active = active

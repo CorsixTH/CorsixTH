@@ -1,8 +1,10 @@
 IF(APPLE)
-	find_package(SDL REQUIRED)
+	find_package(SDL2 REQUIRED)
 
-	set(CMAKE_OSX_ARCHITECTURES "x86_64;i386;ppc")	
+	if(NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+		set(CMAKE_OSX_ARCHITECTURES "x86_64;i386;ppc")
+	endif(NOT DEFINED CMAKE_OSX_ARCHITECTURES)
 	include_directories(${SDL_INCLUDE_DIR})
 
-	add_library (SDLmain STATIC SDLMain.m)
+	add_library (SDL2main STATIC SDLMain.m)
 endif(APPLE)

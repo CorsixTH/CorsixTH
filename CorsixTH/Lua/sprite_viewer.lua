@@ -62,7 +62,7 @@ local function LoadTable(n, complex)
 end
 LoadTable(1, false)
 
-local function DoKey(self, code)
+local function DoKey(self, code, rawchar, repeat)
   if code == string.byte"c" then
     gfx.cache.tabled = {}
     LoadTable(sprite_table_index, not is_complex)

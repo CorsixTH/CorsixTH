@@ -45,7 +45,6 @@ const char* g_sBootstrapCode[] = {
     "for s in tostring(err):gmatch'[^\\r\\n]+' do lines[#lines+1] = t(s) end",
     "local TH, SDL, rnc = require'TH', require'sdl', require'rnc'.decompress",
     "if not SDL.init('video') then error'Unable to initialise video' end",
-    "SDL.wm.setCaption('CorsixTH - Error during startup')",
     "local w, h = 640, 480",
 #ifdef CORSIX_TH_USE_OGL_RENDERER
     "local modes = {'hardware', 'doublebuf', 'opengl'}",
@@ -54,6 +53,7 @@ const char* g_sBootstrapCode[] = {
 #endif
     "local function dernc(x) return x:match'^RNC' and assert(rnc(x)) or x end",
     "local video = TheApp and TheApp.video or TH.surface(w, h, unpack(modes))",
+    "video:setCaption('CorsixTH - Error during startup')",
     "local palette, sheet, font = TH.palette(), TH.sheet(), TH.bitmap_font()",
     "if not palette:load(dernc(pal)) then error'Unable to load palette' end",
     "sheet:setPalette(palette)",

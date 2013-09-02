@@ -119,15 +119,7 @@ function App:init()
       " fail to run until you recompile the binary.")
     end
   end
-  local caption_descs = {compile_opts.renderer}
-  if compile_opts.jit then
-    caption_descs[#caption_descs + 1] = compile_opts.jit
-  end
-  if compile_opts.arch_64 then
-    caption_descs[#caption_descs + 1] = "64 bit"
-  end
-  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
-  SDL.wm.setCaption(self.caption)
+
   local modes = {"hardware", "doublebuf"}
   if compile_opts.renderer == "OpenGL" then
     modes[#modes + 1] = "opengl"
@@ -150,6 +142,15 @@ function App:init()
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
   
+  local caption_descs = {compile_opts.renderer}
+  if compile_opts.jit then
+    caption_descs[#caption_descs + 1] = compile_opts.jit
+  end
+  if compile_opts.arch_64 then
+    caption_descs[#caption_descs + 1] = "64 bit"
+  end
+  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
+  self.video:setCaption(self.caption)
   
   -- Prereq 2: Load and initialise the graphics subsystem
   dofile "persistance"
