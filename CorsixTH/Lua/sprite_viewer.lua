@@ -62,7 +62,7 @@ local function LoadTable(n, complex)
 end
 LoadTable(1, false)
 
-local function DoKey(self, rawchar, is_repeat)
+local function DoKey(self, rawchar, modifiers, is_repeat)
   local key = rawchar:lower()
   if key == "c" then
     gfx.cache.tabled = {}

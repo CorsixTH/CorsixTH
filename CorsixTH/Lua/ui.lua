@@ -494,7 +494,7 @@ end
 --! Called when the user presses a key on the keyboard
 --!param rawchar (string) The name of the key the user pressed.
 --!param is_repeat (boolean) True if this is a key repeat event
-function UI:onKeyDown(rawchar, is_repeat)
+function UI:onKeyDown(rawchar, modifiers, is_repeat)
   -- Apply key-remapping and normalisation
   local key = rawchar:lower()
   do
@@ -524,7 +524,7 @@ function UI:onKeyDown(rawchar, is_repeat)
     -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
     local handled = false
     for _, handler in ipairs(keyHandlers) do
-      if compare_tables(handler.modifiers, self.buttons_down) then
+      if compare_tables(handler.modifiers, modifiers) then
         handler.callback(handler.window, unpack(handler))
         handled = true
       end

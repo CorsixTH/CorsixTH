@@ -217,8 +217,8 @@ function GameUI:updateKeyScroll()
   end
 end
 
-function GameUI:onKeyDown(rawchar, is_repeat)
-  if UI.onKeyDown(self, rawchar, is_repeat) then
+function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
+  if UI.onKeyDown(self, rawchar, modifiers, is_repeat) then
     -- Key has been handled already
     return true
   end
