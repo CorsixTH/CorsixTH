@@ -550,12 +550,9 @@ static int l_surface_new(lua_State *L)
     else
         oParams.iBPP = 0;
     oParams.iSDLFlags = 0;
-    oParams.bHardware = false;
-    oParams.bDoubleBuffered = false;
     oParams.bFullscreen = false;
     oParams.bPresentImmediate = false;
     oParams.bReuseContext = false;
-    oParams.bOpenGL = false;
 
 #define FLAG(name, field, flag) \
     else if(stricmp(sOption, name) == 0) \
@@ -567,10 +564,8 @@ static int l_surface_new(lua_State *L)
         if(sOption[0] == 0)
             continue;
         FLAG("fullscreen",          bFullscreen,        SDL_WINDOW_FULLSCREEN_DESKTOP   );
-        FLAG("doublebuf",           bDoubleBuffered,    0                               );
         FLAG("present immediate",   bPresentImmediate,  0                               );
         FLAG("reuse context",       bReuseContext,      0                               );
-        FLAG("opengl",              bOpenGL,            SDL_WINDOW_OPENGL               );
     }
 
 #undef FLAG

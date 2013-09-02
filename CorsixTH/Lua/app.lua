@@ -119,7 +119,7 @@ function App:init()
     end
   end
 
-  local modes = {"hardware", "doublebuf"}
+  local modes = {}
   if compile_opts.renderer == "OpenGL" then
     modes[#modes + 1] = "opengl"
   end
