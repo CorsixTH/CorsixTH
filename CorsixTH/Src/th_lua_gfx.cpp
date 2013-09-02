@@ -738,6 +738,13 @@ static int l_surface_set_caption(lua_State *L)
     return 1;
 }
 
+static int l_surface_get_renderer_details(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    lua_pushstring(L, pCanvas->getRendererDetails());
+    return 1;
+}
+
 static int l_line_new(lua_State *L)
 {
     luaT_stdnew<THLine>(L);
@@ -891,6 +898,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_screenshot, "takeScreenshot");
     luaT_setfunction(l_surface_scale, "scale");
     luaT_setfunction(l_surface_set_caption, "setCaption");
+    luaT_setfunction(l_surface_get_renderer_details, "getRendererDetails");
     luaT_endclass();
 
     // Line

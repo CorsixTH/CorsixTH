@@ -85,6 +85,13 @@ void THRenderTarget::setCaption(const char* sCaption)
     SDL_SetWindowTitle(m_pWindow, sCaption);
 }
 
+const char *THRenderTarget::getRendererDetails() const
+{
+    SDL_RendererInfo info = {};
+    SDL_GetRendererInfo(m_pRenderer, &info);
+    return info.name;
+}
+
 const char* THRenderTarget::getLastError()
 {
     return SDL_GetError();

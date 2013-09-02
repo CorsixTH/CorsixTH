@@ -99,6 +99,9 @@ public: // External API
     //! Set the window caption
     void setCaption(const char* sCaption);
 
+    //! Get any user-displayable information to describe the renderer path used
+    const char *getRendererDetails() const;
+
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.
