@@ -79,7 +79,7 @@ THMoviePicture::~THMoviePicture()
     SDL_DestroyCond(m_pCond);
 }
 
-void THMoviePicture::allocate(int iX, int iY, int iWidth, int iHeight)
+void THMoviePicture::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight)
 {
     m_iX = iX;
     m_iY = iY;
@@ -119,7 +119,7 @@ void THMoviePicture::deallocate()
     }
 }
 
-void THMoviePicture::draw()
+void THMoviePicture::draw(SDL_Renderer *pRenderer)
 {
     SDL_Rect rcDest;
     int iError;
@@ -170,11 +170,11 @@ void THMoviePictureBuffer::reset()
     m_fAborting = false;
 }
 
-void THMoviePictureBuffer::allocate(int iX, int iY, int iWidth, int iHeight)
+void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight)
 {
     for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
     {
-        m_aPictureQueue[i].allocate(iX, iY, iWidth, iHeight);
+        m_aPictureQueue[i].allocate(pRenderer, iX, iY, iWidth, iHeight);
     }
     //Do not change m_iWriteIndex, it's used by the other thread.
     //m_iReadIndex is only used in this thread.
@@ -216,12 +216,12 @@ bool THMoviePictureBuffer::advance()
     return true;
 }
 
-void THMoviePictureBuffer::draw()
+void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer)
 {
     if(!empty())
     {
         SDL_LockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
-        m_aPictureQueue[m_iReadIndex].draw();
+        m_aPictureQueue[m_iReadIndex].draw(pRenderer);
         SDL_UnlockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
     }
 }
@@ -407,6 +407,7 @@ void THAVPacketQueue::release()
 }
 
 THMovie::THMovie():
+    m_pRenderer(NULL),
     m_sLastError(),
     m_pFormatContext(NULL),
     m_pVideoCodecContext(NULL),
@@ -442,6 +443,11 @@ THMovie::~THMovie()
     av_free_packet(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
+}
+
+void THMovie::setRenderer(SDL_Renderer *pRenderer)
+{
+    m_pRenderer = pRenderer;
 }
 
 bool THMovie::moviesEnabled()
@@ -601,7 +607,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
 
     m_pVideoQueue = new THAVPacketQueue();
     m_pMoviePictureBuffer->reset();
-    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, m_iX, m_iY, m_iWidth, m_iHeight);
 
     m_pAudioPacket = NULL;
     m_iAudioPacketSize = 0;
@@ -644,8 +650,8 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
         }
     }
 
-    m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, this);
-    m_pVideoThread = SDL_CreateThread(th_movie_video_thread, this);
+    m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, "Stream", this);
+    m_pVideoThread = SDL_CreateThread(th_movie_video_thread, "Video", this);
 }
 
 void THMovie::stop()
@@ -722,14 +728,14 @@ void THMovie::refresh()
             m_pMoviePictureBuffer->advance();
         }
 
-        m_pMoviePictureBuffer->draw();
+        m_pMoviePictureBuffer->draw(m_pRenderer);
         m_pMoviePictureBuffer->advance();
     }
 }
 
 void THMovie::allocatePictureBuffer()
 {
-    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, m_iX, m_iY, m_iWidth, m_iHeight);
 }
 
 void THMovie::deallocatePictureBuffer()
@@ -1037,6 +1043,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
 #else //CORSIX_TH_USE_FFMPEG
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
+void THMovie::setRenderer(SDL_Renderer *pRenderer) {}
 bool THMovie::moviesEnabled() { return false; }
 bool THMovie::load(const char* filepath) { return true; }
 void THMovie::unload() {}

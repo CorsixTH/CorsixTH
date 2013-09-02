@@ -203,7 +203,7 @@ function App:init()
   
   -- Load movie player
   dofile "movie_player"
-  self.moviePlayer = MoviePlayer(self, self.audio)
+  self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
     self.moviePlayer:init()
   end

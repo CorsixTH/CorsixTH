@@ -47,9 +47,9 @@ public:
     THMoviePicture();
     ~THMoviePicture();
 
-    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
     void deallocate();
-    void draw();
+    void draw(SDL_Renderer *pRenderer);
 
     SDL_Overlay *m_pOverlay;
     PixelFormat m_pixelFormat;
@@ -69,10 +69,10 @@ public:
     //NB: The following functions are called by the main program thread
     void abort();
     void reset();
-    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
     void deallocate();
     bool advance();
-    void draw();
+    void draw(SDL_Renderer *pRenderer);
     double getCurrentPts();
     double getNextPts();
     bool empty();
@@ -115,6 +115,8 @@ public:
     THMovie();
     ~THMovie();
 
+    void setRenderer(SDL_Renderer *pRenderer);
+
     bool moviesEnabled();
 
     bool load(const char* szFilepath);
@@ -142,6 +144,8 @@ protected:
 #ifdef CORSIX_TH_USE_FFMPEG
     int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
+
+    SDL_Renderer *m_pRenderer;
 
     //last error
     std::string m_sLastError;
