@@ -147,12 +147,7 @@ uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
 
 bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
-    SDL_Rect rcDest = {
-        .x = iX,
-        .y = iY,
-        .w = iW,
-        .h = iH
-    };
+    SDL_Rect rcDest = { iX, iY, iW, iH };
 
     Uint8 r, g, b, a;
     SDL_GetRGBA(iColour, m_pFormat, &r, &g, &b, &a);
@@ -414,12 +409,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
     if(m_pTexture == NULL)
         return;
 
-    const SDL_Rect rcDest = {
-        .x = iX,
-        .y = iY,
-        .w = m_iWidth,
-        .h = m_iHeight,
-    };
+    const SDL_Rect rcDest = { iX, iY, m_iWidth, m_iHeight };
 
     pCanvas->draw(m_pTexture, NULL, &rcDest, 0);
 }
@@ -430,19 +420,8 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     if (m_pTexture == NULL)
         return;
 
-    const SDL_Rect rcSrc = {
-        .x = iSrcX,
-        .y = iSrcY,
-        .w = iWidth,
-        .h = iHeight,
-    };
-
-    const SDL_Rect rcDest = {
-        .x = iX,
-        .y = iY,
-        .w = m_iWidth,
-        .h = m_iHeight,
-    };
+    const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth,   iHeight };
+    const SDL_Rect rcDest = { iX,    iY,    m_iWidth, m_iHeight };
 
     pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);
 }
@@ -776,19 +755,8 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         }
     }
 
-    SDL_Rect rcSrc = {
-        .x = 0,
-        .y = 0,
-        .w = sprite.iWidth,
-        .h = sprite.iHeight,
-    };
-
-    SDL_Rect rcDest = {
-        .x = iX,
-        .y = iY,
-        .w = sprite.iWidth,
-        .h = sprite.iHeight,
-    };
+    SDL_Rect rcSrc  = { 0,  0,  sprite.iWidth, sprite.iHeight };
+    SDL_Rect rcDest = { iX, iY, sprite.iWidth, sprite.iHeight };
 
 
     if(pTexture == m_pMegaTexture)
@@ -1077,12 +1045,7 @@ void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCache
     if(pCacheEntry->iTexture == 0)
         return;
 
-    SDL_Rect rcDest = {
-        .x = iX,
-        .y = iY,
-        .w = pCacheEntry->iWidth,
-        .h = pCacheEntry->iHeight,
-    };
+    SDL_Rect rcDest = { iX, iY, pCacheEntry->iWidth, pCacheEntry->iHeight };
     pCanvas->draw(reinterpret_cast<SDL_Texture*>(pCacheEntry->pTexture), NULL, &rcDest, 0);
 }
 
