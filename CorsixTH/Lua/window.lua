@@ -985,7 +985,7 @@ function Textbox:input(char, rawchar)
       end
     else
       local pos = self.cursor_pos[2] - 1
-      if ui.buttons_down.ctrl then
+      if ui.app.key_modifiers.ctrl then
         pos = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
       end
       new_line = line:sub(1, pos) .. line:sub(self.cursor_pos[2] + 1, -1)
@@ -1002,7 +1002,7 @@ function Textbox:input(char, rawchar)
       end
     else
       local pos = self.cursor_pos[2] + 2
-      if ui.buttons_down.ctrl then
+      if ui.app.key_modifiers.ctrl then
         pos = (string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)) + 1
       end
       new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(pos, -1)
@@ -1056,7 +1056,7 @@ function Textbox:input(char, rawchar)
           self.cursor_pos[2] = 0
         end
       else
-        if ui.buttons_down.ctrl then
+        if ui.app.key_modifiers.ctrl then
           -- to the right until next word or end of line
           self.cursor_pos[2] = string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)
         else
@@ -1072,7 +1072,7 @@ function Textbox:input(char, rawchar)
           self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
         end
       else
-        if ui.buttons_down.ctrl then
+        if ui.app.key_modifiers.ctrl then
           -- to the left until beginning of word or beginning of line
           self.cursor_pos[2] = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
         else
@@ -1452,7 +1452,7 @@ function Window:beginDrag(x, y)
     sy = sy - y
     -- Calculate best positioning
     local w, h = TheApp.config.width, TheApp.config.height
-    if self.buttons_down.ctrl then
+    if TheApp.key_modifiers.ctrl then
       local px = round(sx / (w - self.width), 0.1)
       local py = round(sy / (h - self.height), 0.1)
       if px >= 1 then

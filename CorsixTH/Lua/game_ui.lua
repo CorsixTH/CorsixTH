@@ -578,7 +578,7 @@ function GameUI:onTick()
     
     -- Faster scrolling with shift key
     local factor = self.app.config.scroll_speed
-    if self.buttons_down.shift then
+    if self.app.key_modifiers.shift then
       mult = mult * factor
     end
 

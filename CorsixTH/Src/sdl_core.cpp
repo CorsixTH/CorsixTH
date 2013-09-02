@@ -129,6 +129,12 @@ static void l_push_modifiers_table(lua_State *L, Uint16 mod)
     }
 }
 
+static int l_get_key_modifiers(lua_State *L)
+{
+    l_push_modifiers_table(L, SDL_GetModState());
+    return 1;
+}
+
 static int l_mainloop(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTHREAD);
@@ -315,6 +321,7 @@ static int l_get_ticks(lua_State *L)
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
+    {"getKeyModifiers", l_get_key_modifiers},
     {NULL, NULL}
 };
 static const struct luaL_reg sdllib_with_upvalue[] = {

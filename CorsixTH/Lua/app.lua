@@ -37,6 +37,7 @@ function App:App()
   self.config = {}
   self.runtime_config = {}
   self.running = false
+  self.key_modifiers = {}
   self.gfx = {}
   self.last_dispatch_type = ""
   self.eventHandlers = {
@@ -836,8 +837,10 @@ local fps_next = 1 -- Used to loop through fps_history when [over]writing
 
 function App:drawFrame()
   if(self.moviePlayer.playing) then
+    self.key_modifiers = {}
     self.moviePlayer:refresh()
   else
+    self.key_modifiers = SDL.getKeyModifiers()
     self.video:startFrame()
     self.ui:draw(self.video)
     self.video:endFrame()
@@ -1162,6 +1165,10 @@ function App:afterLoad()
   end
   self.world.savegame_version = new
   
+  if new < 79 then
+    self.key_modifiers = {}
+  end
+
   self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
