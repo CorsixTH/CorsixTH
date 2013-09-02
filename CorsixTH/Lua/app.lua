@@ -119,7 +119,7 @@ function App:init()
     end
   end
 
-  local modes = {"hardware", "doublebuf"}
+  local modes = {}
   if compile_opts.renderer == "OpenGL" then
     modes[#modes + 1] = "opengl"
   end
@@ -141,7 +141,7 @@ function App:init()
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
   
-  local caption_descs = {compile_opts.renderer}
+  local caption_descs = {self.video:getRendererDetails()}
   if compile_opts.jit then
     caption_descs[#caption_descs + 1] = compile_opts.jit
   end

@@ -53,17 +53,23 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     if(m_pRenderer != NULL)
         return false;
 
-    SDL_CreateWindowAndRenderer(pParams->iWidth, pParams->iHeight,
-                                pParams->iSDLFlags, &m_pWindow, &m_pRenderer);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    if (!m_pWindow || !m_pRenderer)
+    m_pWindow = SDL_CreateWindow("CorsixTH",
+                                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                 pParams->iWidth, pParams->iHeight,
+                                 SDL_WINDOW_OPENGL | pParams->iSDLFlags);
+    if (!m_pWindow)
     {
         return false;
     }
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC));
+    if (!m_pRenderer)
+    {
+        return false;
+    }
 
-    SDL_SetWindowTitle(m_pWindow, "CorsixTH");
     SDL_RenderSetLogicalSize(m_pRenderer, pParams->iWidth, pParams->iHeight);
     m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
 
@@ -83,6 +89,13 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 void THRenderTarget::setCaption(const char* sCaption)
 {
     SDL_SetWindowTitle(m_pWindow, sCaption);
+}
+
+const char *THRenderTarget::getRendererDetails() const
+{
+    SDL_RendererInfo info = {};
+    SDL_GetRendererInfo(m_pRenderer, &info);
+    return info.name;
 }
 
 const char* THRenderTarget::getLastError()
