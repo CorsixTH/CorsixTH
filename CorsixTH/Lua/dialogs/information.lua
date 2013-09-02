@@ -98,7 +98,7 @@ end
 
 function UIInformation:draw(canvas, x, y)
   local dx, dy = x + self.x, y + self.y
-  local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(0, 255, 255)
+  local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(255, 255, 255)
   canvas:drawRect(background, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + self.spacing.t
   for i, text in ipairs(self.text) do
