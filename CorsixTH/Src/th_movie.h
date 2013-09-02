@@ -51,7 +51,7 @@ public:
     void deallocate();
     void draw(SDL_Renderer *pRenderer);
 
-    SDL_Overlay *m_pOverlay;
+    SDL_Texture *m_pTexture;
     PixelFormat m_pixelFormat;
     SDL_Surface *m_pSurface;
     int m_iX, m_iY, m_iWidth, m_iHeight;

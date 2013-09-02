@@ -60,7 +60,7 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
 }
 
 THMoviePicture::THMoviePicture():
-    m_pOverlay(NULL),
+    m_pTexture(NULL),
     m_pixelFormat(PIX_FMT_YUV420P),
     m_pSurface(NULL)
 {
@@ -70,10 +70,10 @@ THMoviePicture::THMoviePicture():
 
 THMoviePicture::~THMoviePicture()
 {
-    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
+    if(m_pTexture)
     {
-        SDL_FreeYUVOverlay(m_pOverlay);
-        m_pOverlay = NULL;
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = NULL;
     }
     SDL_DestroyMutex(m_pMutex);
     SDL_DestroyCond(m_pCond);
@@ -85,18 +85,13 @@ void THMoviePicture::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidt
     m_iY = iY;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
-    SDL_Surface* pSurface = SDL_GetVideoSurface();
-    if(m_pOverlay)
+    if(m_pTexture)
     {
-        if(m_pSurface == pSurface)
-        {
-            SDL_FreeYUVOverlay(m_pOverlay);
-        }
+        SDL_DestroyTexture(m_pTexture);
         std::cerr << "THMovie overlay should be deallocated before being allocated!";
     }
-    m_pSurface = pSurface;
-    m_pOverlay = SDL_CreateYUVOverlay(m_iWidth, m_iHeight, SDL_YV12_OVERLAY, pSurface);
-    if(m_pOverlay == NULL || m_pOverlay->pitches[0] < m_iWidth)
+    m_pTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, m_iWidth, m_iHeight);
+    if(m_pTexture == NULL)
     {
         std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
         return;
@@ -105,17 +100,10 @@ void THMoviePicture::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidt
 
 void THMoviePicture::deallocate()
 {
-    if(m_pOverlay)
+    if(m_pTexture)
     {
-        if(m_pSurface == SDL_GetVideoSurface())
-        {
-            SDL_FreeYUVOverlay(m_pOverlay);
-        }
-        else
-        {
-            std::cerr << "THMovie overlay must be deallocated before a surface change";
-        }
-        m_pOverlay = NULL;
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = NULL;
     }
 }
 
@@ -128,9 +116,9 @@ void THMoviePicture::draw(SDL_Renderer *pRenderer)
     rcDest.y = m_iY;
     rcDest.w = m_iWidth;
     rcDest.h = m_iHeight;
-    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
+    if(m_pTexture)
     {
-        iError = SDL_DisplayYUVOverlay(m_pOverlay, &rcDest);
+        iError = SDL_RenderCopy(pRenderer, m_pTexture, NULL, &rcDest);
         if(iError < 0)
         {
             std::cerr << "Error displaying overlay: " << SDL_GetError();
@@ -277,21 +265,23 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
     SDL_UnlockMutex(m_pMutex);
     if(m_fAborting) { return -1; }
 
+    // TODO: Need to rejigger this to work with SDL_Texture.
+#if 0
     pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
     SDL_LockMutex(pMoviePicture->m_pMutex);
 
-    if(pMoviePicture->m_pOverlay)
+    if(pMoviePicture->m_pTexture)
     {
         AVPicture picture = {};
 
-        SDL_LockYUVOverlay(pMoviePicture->m_pOverlay);
-        picture.data[0] = pMoviePicture->m_pOverlay->pixels[0];
-        picture.data[1] = pMoviePicture->m_pOverlay->pixels[2];
-        picture.data[2] = pMoviePicture->m_pOverlay->pixels[1];
+        SDL_LockYUVOverlay(pMoviePicture->m_pTexture);
+        picture.data[0] = pMoviePicture->m_pTexture->pixels[0];
+        picture.data[1] = pMoviePicture->m_pTexture->pixels[2];
+        picture.data[2] = pMoviePicture->m_pTexture->pixels[1];
 
-        picture.linesize[0] = pMoviePicture->m_pOverlay->pitches[0];
-        picture.linesize[1] = pMoviePicture->m_pOverlay->pitches[2];
-        picture.linesize[2] = pMoviePicture->m_pOverlay->pitches[1];
+        picture.linesize[0] = pMoviePicture->m_pTexture->pitches[0];
+        picture.linesize[1] = pMoviePicture->m_pTexture->pitches[2];
+        picture.linesize[2] = pMoviePicture->m_pTexture->pitches[1];
 
         m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, NULL, NULL, NULL);
         if(m_pSwsContext == NULL)
@@ -302,7 +292,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         }
 
         sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, picture.data, picture.linesize);
-        SDL_UnlockYUVOverlay(pMoviePicture->m_pOverlay);
+        SDL_UnlockYUVOverlay(pMoviePicture->m_pTexture);
 
         pMoviePicture->m_dPts = dPts;
 
@@ -316,6 +306,8 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         m_iCount++;
         SDL_UnlockMutex(m_pMutex);
     }
+#endif
+
     return 0;
 }
 
