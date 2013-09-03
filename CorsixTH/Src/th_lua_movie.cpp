@@ -34,9 +34,7 @@ static int l_movie_set_renderer(lua_State *L)
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     THRenderTarget *pRenderTarget = luaT_testuserdata<THRenderTarget>(L, 2);
     pMovie->setRenderer(pRenderTarget->getRenderer());
-    lua_settop(L, 2);
-
-    return 1;
+    return 0;
 }
 
 static int l_movie_enabled(lua_State *L)
