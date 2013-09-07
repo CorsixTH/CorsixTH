@@ -27,14 +27,22 @@ import java.io.IOException;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-//creates JFileChooser
+/**
+ * A custom JFileChooser
+ * 
+ * @author Koanxd
+ * 
+ */
 public class FileChooser extends JFileChooser {
+
     // this is insignificant but apparently its needed because JFrame is
     // serializable
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2153326271573582591L;
+
     ReaderWriter readerWriter = new ReaderWriter();
 
     FileNameExtensionFilter corsixTH = new FileNameExtensionFilter(
@@ -42,15 +50,19 @@ public class FileChooser extends JFileChooser {
     FileNameExtensionFilter originalTH = new FileNameExtensionFilter(
             "Theme Hospital Level files (.SAM)", "SAM");
 
-    public FileChooser() {
+    // Used to get the CorsixTH icon in the top bar of the dialog.
+    JFrame mainFrame;
+
+    public FileChooser(JFrame frame) {
         setCurrentDirectory(readerWriter.getLastFilePath());
         setFileFilter(corsixTH);
+        mainFrame = frame;
     }
 
     public File open() {
         addChoosableFileFilter(originalTH);
         setAcceptAllFileFilterUsed(true);
-        int returnVal = showOpenDialog(null);
+        int returnVal = showOpenDialog(mainFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             readerWriter.saveLastFilePath(getSelectedFile().getPath());
             return getSelectedFile();
@@ -63,7 +75,7 @@ public class FileChooser extends JFileChooser {
         removeChoosableFileFilter(originalTH);
         setAcceptAllFileFilterUsed(false);
         setFileFilter(corsixTH);
-        int returnVal = showSaveDialog(null);
+        int returnVal = showSaveDialog(mainFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = getSelectedFile();
             readerWriter.saveLastFilePath(file.getPath());

@@ -29,14 +29,12 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabObjects extends JScrollPane {
 
-public class TabObjects {
-
+    private static final long serialVersionUID = 1176963244482675840L;
     // variables
     static int[] objectsAvail = new int[62]; // index [0] is never used.
     static int[] objectsStartAvail = new int[62];
@@ -44,13 +42,13 @@ public class TabObjects {
     static int[] objectsResearch = new int[62];
 
     // components
-    JPanel objects = new JPanel(new MigLayout("wrap 5", "[]15[]")); // Row gaps
+    GridPanel objects = new GridPanel(5); // Row gaps
     JScrollPane scrollPane = new JScrollPane(objects);
 
-    JLabel availableLabel = new JLabel("available");
-    JLabel startLabel = new JLabel("from start");
-    JLabel strengthLabel = new JLabel("strength");
-    JLabel researchLabel = new JLabel("research");
+    JLabel availableLabel = new JLabel("Available");
+    JLabel startLabel = new JLabel("From start");
+    JLabel strengthLabel = new JLabel("Strength");
+    JLabel researchLabel = new JLabel("Research");
     JCheckBox checkAllAvailableCB = new JCheckBox();
     JCheckBox checkAllStartCB = new JCheckBox();
     static JCheckBox[] objectsAvailCB = new JCheckBox[62];
@@ -63,9 +61,11 @@ public class TabObjects {
 
     public TabObjects() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
 
+        setViewportView(objects);
+        objects.setInsets(2, 7, 2, 7);
         // initializing members of checkbox and textfield arrays, else they will
         // be null.
         for (int i = 0; i < objectsAvailCB.length; i++)
@@ -80,7 +80,7 @@ public class TabObjects {
         // objectsCostTF[i] = new JTextField(5);
 
         // column headings
-        objects.add(new JLabel("check all"));
+        objects.add(new JLabel("Check all"));
         objects.add(checkAllAvailableCB);
         checkAllAvailableCB.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -133,7 +133,7 @@ public class TabObjects {
                 }
             }
         });
-        objects.add(checkAllStartCB, "wrap");
+        objects.add(checkAllStartCB);
         checkAllStartCB.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -181,7 +181,8 @@ public class TabObjects {
                 }
             }
         });
-        objects.add(availableLabel, "skip");
+        objects.next(3);
+        objects.add(availableLabel);
         availableLabel
                 .setToolTipText("Whether the object should appear at all in this level");
 
@@ -205,7 +206,8 @@ public class TabObjects {
         objects.add(new JLabel("Ward"));
         objects.add(objectsAvailCB[8]);
         objects.add(objectsStartAvailCB[8]);
-        objects.add(objectsResearchTF[8], "wrap");
+        objects.add(objectsResearchTF[8]);
+        objects.next();
         objectsAvailCB[8].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -248,7 +250,8 @@ public class TabObjects {
         objects.add(new JLabel("Standard Diagnosis"));
         objects.add(objectsAvailCB[20]);
         objects.add(objectsStartAvailCB[20]);
-        objects.add(objectsResearchTF[20], "wrap");
+        objects.add(objectsResearchTF[20]);
+        objects.next();
         objectsAvailCB[20].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -292,7 +295,8 @@ public class TabObjects {
         objects.add(new JLabel("Psychiatry"));
         objects.add(objectsAvailCB[18]);
         objects.add(objectsStartAvailCB[18]);
-        objects.add(objectsResearchTF[18], "wrap");
+        objects.add(objectsResearchTF[18]);
+        objects.next();
         objectsAvailCB[18].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -336,7 +340,8 @@ public class TabObjects {
         objects.add(new JLabel("Pharmacy"));
         objects.add(objectsAvailCB[39]);
         objects.add(objectsStartAvailCB[39]);
-        objects.add(objectsResearchTF[39], "wrap");
+        objects.add(objectsResearchTF[39]);
+        objects.next();
         objectsAvailCB[39].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -1388,7 +1393,8 @@ public class TabObjects {
         objects.add(new JLabel("Research Computer"));
         objects.add(objectsAvailCB[40]);
         objects.add(objectsStartAvailCB[40]);
-        objects.add(objectsResearchTF[40], "wrap");
+        objects.add(objectsResearchTF[40]);
+        objects.next();
         objectsAvailCB[40].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -1432,7 +1438,8 @@ public class TabObjects {
         objects.add(new JLabel("Atom Analyser"));
         objects.add(objectsAvailCB[41]);
         objects.add(objectsStartAvailCB[41]);
-        objects.add(objectsResearchTF[41], "wrap");
+        objects.add(objectsResearchTF[41]);
+        objects.next();
         objectsAvailCB[41].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -1474,7 +1481,8 @@ public class TabObjects {
         });
 
         objects.add(new JLabel("Training"));
-        objects.add(objectsAvailCB[37], "wrap");
+        objects.add(objectsAvailCB[37]);
+        objects.next(3);
         objectsAvailCB[37].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
@@ -1485,7 +1493,7 @@ public class TabObjects {
         });
 
         objects.add(new JLabel("Video Game"));
-        objects.add(objectsAvailCB[57], "wrap");
+        objects.add(objectsAvailCB[57]);
         objectsAvailCB[57].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)

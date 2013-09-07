@@ -25,8 +25,6 @@ package com.corsixth.leveledit;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
-
 public class Quake {
     static final int START_MONTH = 6;
     static final int END_MONTH = 18;
@@ -36,7 +34,7 @@ public class Quake {
     int endMonth = END_MONTH;
     int severity = SEVERITY;
 
-    JPanel quakePanel = new JPanel(new MigLayout("insets 1"));
+    JPanel quakePanel = new JPanel();
 
     JTextField startMonthTF = new JTextField(Integer.toString(startMonth), 2);
     JTextField endMonthTF = new JTextField(Integer.toString(endMonth), 2);

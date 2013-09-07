@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -38,11 +39,11 @@ public class Menu extends JMenuBar {
 
     // this is insignificant but apparently its needed because JFrame is
     // serializable
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5339035000069193766L;
 
     ReaderWriter readerWriter = new ReaderWriter();
     VarManipulator var = new VarManipulator();
-    FileChooser fileChooser = new FileChooser();
+    FileChooser fileChooser;
 
     JMenuItem fileNew = new JMenuItem("New");
     JMenuItem fileOpen = new JMenuItem("Open");
@@ -51,7 +52,7 @@ public class Menu extends JMenuBar {
 
     JMenuItem about = new JMenuItem("About");
 
-    public Menu() {
+    public Menu(JFrame frame) {
         JMenu menuFile = new JMenu("File");
         menuFile.add(fileNew);
         menuFile.add(fileOpen);
@@ -60,6 +61,9 @@ public class Menu extends JMenuBar {
 
         JMenu menuHelp = new JMenu("Help");
         menuHelp.add(about);
+
+        fileChooser = new FileChooser(frame);
+        
 
         // new
         fileNew.addActionListener(new ActionListener() {
@@ -113,13 +117,10 @@ public class Menu extends JMenuBar {
 
         about.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane aboutPane = new JOptionPane(
-                        "Version: "
-                                + Main.VERSION
-                                + "\n\n"
-                                + "Programmers: snowblind\n"
-                                + "Logo Artist: Wolter\n\n"
-                                + "Software includes MigLayout library. (www.miglayout.com)");
+                JOptionPane aboutPane = new JOptionPane("Version: "
+                        + Main.VERSION + "\n\n"
+                        + "Programmers: snowblind aka koanxd\n"
+                        + "Logo Artist: Wolter\n");
                 Object[] options = new String[] { "Ok" };
                 aboutPane.setOptions(options);
 

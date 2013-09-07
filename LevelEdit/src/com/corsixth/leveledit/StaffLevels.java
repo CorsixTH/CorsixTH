@@ -23,10 +23,7 @@ SOFTWARE.
 package com.corsixth.leveledit;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import net.miginfocom.swing.MigLayout;
 
 public class StaffLevels {
     int month = 0;
@@ -40,7 +37,7 @@ public class StaffLevels {
     int consultantRate = 10;
     int juniorRate = 5;
 
-    JPanel staffLevelsPanel = new JPanel(new MigLayout());
+    GridPanel staffLevelsPanel = new GridPanel(10);
 
     JLabel monthLabel = new JLabel("Starting from month:");
     JLabel nursesLabel = new JLabel("Nurses:");

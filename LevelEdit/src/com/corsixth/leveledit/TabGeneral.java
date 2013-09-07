@@ -25,7 +25,6 @@ package com.corsixth.leveledit;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -34,10 +33,10 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import net.miginfocom.swing.MigLayout;
-
 //creates the general panel
-public class TabGeneral {
+public class TabGeneral extends JScrollPane {
+
+    private static final long serialVersionUID = -1025120107673788464L;
 
     // variables
     static final String NAME = "Example Town";
@@ -75,8 +74,8 @@ public class TabGeneral {
     static int maxStrength = MAX_STRENGTH;
 
     // components
-    JPanel general = new JPanel(new MigLayout("wrap 2"));
-    JScrollPane scrollPane = new JScrollPane(general);
+    GridPanel general = new GridPanel(2);
+    // JScrollPane scrollPane = new JScrollPane(general);
 
     JLabel nameLabel = new JLabel("Name:");
     JLabel mapFileLabel = new JLabel("Map file:");
@@ -114,10 +113,12 @@ public class TabGeneral {
     static JTextField maxStrengthTF = new JTextField(10);
 
     public TabGeneral() {
-        // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
 
+        // set scroll speed
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
+
+        setViewportView(general);
         general.add(nameLabel);
         general.add(nameTF);
         nameLabel

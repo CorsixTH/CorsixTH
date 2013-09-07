@@ -24,43 +24,36 @@ package com.corsixth.leveledit;
 
 import javax.swing.JTabbedPane;
 
-//creates JTabbedPane, Tabs
+/**
+ * A JTabbedPane and all actual tabs
+ * @author Koanxd
+ *
+ */
 public class TabBar extends JTabbedPane {
 
     // this is insignificant but apparently its needed because JFrame is
     // serializable
-    private static final long serialVersionUID = 1L;
-
-    JTabbedPane tabs = new JTabbedPane();
+    private static final long serialVersionUID = 3421838428038605079L;
 
     public TabBar() {
 
-        TabGeneral tabGeneral = new TabGeneral();
-        tabs.addTab("General", tabGeneral.scrollPane);
+        addTab("General", new TabGeneral());
 
-        TabDiseases tabDiseases = new TabDiseases();
-        tabs.addTab("Diseases", tabDiseases.scrollPane);
+        addTab("Diseases", new TabDiseases());
 
-        TabObjects tabObjects = new TabObjects();
-        tabs.addTab("Objects", tabObjects.scrollPane);
+        addTab("Objects", new TabObjects());
 
-        TabStaff tabStaff = new TabStaff();
-        tabs.addTab("Staff", tabStaff.scrollPane);
+        addTab("Staff", new TabStaff());
 
-        TabEmergencies tabEmergencies = new TabEmergencies();
-        tabs.addTab("Emergencies", tabEmergencies.scrollPane);
+        addTab("Emergencies", new TabEmergencies());
 
-        TabEarthquakes tabEarthquakes = new TabEarthquakes();
-        tabs.addTab("Earthquakes", tabEarthquakes.scrollPane);
+        addTab("Earthquakes", new TabEarthquakes());
 
-        TabPopulation tabPopulation = new TabPopulation();
-        tabs.addTab("Population", tabPopulation.scrollPane);
+        addTab("Population", new TabPopulation());
 
-        TabAwards tabAwards = new TabAwards();
-        tabs.addTab("Awards", tabAwards.scrollPane);
+        addTab("Awards", new TabAwards());
 
-        TabGoals tabGoals = new TabGoals();
-        tabs.addTab("Goals", tabGoals.scrollPane);
+        addTab("Goals", new TabGoals());
 
     }
 }

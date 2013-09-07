@@ -28,8 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
-
 public class StartStaff {
     int doctor = 1;
     int shrink = 0;
@@ -41,7 +39,7 @@ public class StartStaff {
     int skill = 50;
     String[] staffChoice = { "Doctor", "Nurse", "Handyman", "Receptionist" };
 
-    JPanel startStaffPanel = new JPanel(new MigLayout("insets 1"));
+    JPanel startStaffPanel = new JPanel();
 
     JComboBox staffMemberCombo = new JComboBox(staffChoice);
     JCheckBox shrinkCB = new JCheckBox();

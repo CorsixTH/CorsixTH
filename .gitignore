@@ -46,3 +46,10 @@ RelWithDebInfo/
 !LevelEdit/src/com/MinSizeRel
 !LevelEdit/src/com/RelWithDebInfo
 !LevelEdit/src/com/.DS_Store
+
+# This is for the CMake-generated Visual Studio project
+*.vcxproj*
+CorsixTH_Top_Level*
+
+# For the LevelEdit project
+*.class

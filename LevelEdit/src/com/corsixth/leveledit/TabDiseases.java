@@ -38,9 +38,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
 
-public class TabDiseases {
+public class TabDiseases extends JScrollPane {
+
+    private static final long serialVersionUID = 3970826882625493102L;
 
     // variables
     static Disease[] arDiseases = new Disease[36]; // index 0,1 are never used.
@@ -59,14 +60,14 @@ public class TabDiseases {
     static JTextField[] visualsAvailableTF = new JTextField[14];
     static JTextField[] expertiseResearchTF = new JTextField[47]; // #expertise[]
 
-    JPanel diseases = new JPanel(new MigLayout("wrap 1"));
-    JScrollPane scrollPane = new JScrollPane(diseases);
+    GridPanel diseases = new GridPanel(1);
     JPanel topPanel = new JPanel();
 
-    JPanel drug = new JPanel(new MigLayout("wrap 5", "[]15[]")); // Row gaps
-    JPanel psych = new JPanel(new MigLayout("wrap 4", "[]15[]")); // Row gaps
-    JPanel clinic = new JPanel(new MigLayout("wrap 4", "[]15[]")); // Row gaps
-    JPanel op = new JPanel(new MigLayout("wrap 4", "[]15[]")); // Row gaps
+    GridPanel drug = new GridPanel(5);
+    GridPanel psych = new GridPanel(4);
+    GridPanel clinic = new GridPanel(4);
+    GridPanel op = new GridPanel(4);
+    GridPanel selected = drug;
 
     // top panel
     ButtonGroup buttonGroup = new ButtonGroup();
@@ -81,28 +82,28 @@ public class TabDiseases {
 
     // column headings for each panel.
     // they are needed 4 times because they cannot be shared among panels
-    JLabel existsLabel1 = new JLabel("available");
-    JLabel knownLabel1 = new JLabel("known");
-    JLabel availableLabel1 = new JLabel("month");
-    JLabel researchLabel = new JLabel("research");
+    JLabel existsLabel1 = new JLabel("Available");
+    JLabel knownLabel1 = new JLabel("Known");
+    JLabel availableLabel1 = new JLabel("Month");
+    JLabel researchLabel = new JLabel("Research");
     static JCheckBox checkAllExistsCB1 = new JCheckBox();
     static JCheckBox checkAllKnownCB1 = new JCheckBox();
 
-    JLabel existsLabel2 = new JLabel("available");
-    JLabel knownLabel2 = new JLabel("known");
-    JLabel availableLabel2 = new JLabel("month");
+    JLabel existsLabel2 = new JLabel("Available");
+    JLabel knownLabel2 = new JLabel("Known");
+    JLabel availableLabel2 = new JLabel("Month");
     static JCheckBox checkAllExistsCB2 = new JCheckBox();
     static JCheckBox checkAllKnownCB2 = new JCheckBox();
 
-    JLabel existsLabel3 = new JLabel("available");
-    JLabel knownLabel3 = new JLabel("known");
-    JLabel availableLabel3 = new JLabel("month");
+    JLabel existsLabel3 = new JLabel("Available");
+    JLabel knownLabel3 = new JLabel("Known");
+    JLabel availableLabel3 = new JLabel("Month");
     static JCheckBox checkAllExistsCB3 = new JCheckBox();
     static JCheckBox checkAllKnownCB3 = new JCheckBox();
 
-    JLabel existsLabel4 = new JLabel("available");
-    JLabel knownLabel4 = new JLabel("known");
-    JLabel availableLabel4 = new JLabel("month");
+    JLabel existsLabel4 = new JLabel("Available");
+    JLabel knownLabel4 = new JLabel("Known");
+    JLabel availableLabel4 = new JLabel("Month");
     static JCheckBox checkAllExistsCB4 = new JCheckBox();
     static JCheckBox checkAllKnownCB4 = new JCheckBox();
 
@@ -145,9 +146,12 @@ public class TabDiseases {
     JLabel unexpectedSwellingLabel = new JLabel("Unexpected Swelling");
 
     public TabDiseases() {
+
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
+
+        setViewportView(diseases);
 
         // initializing members of arrays, else they will be null.
         for (int i = 0; i < visualsCB.length; i++)
@@ -168,50 +172,38 @@ public class TabDiseases {
         buttonGroup.add(opRB);
         buttonGroup.add(clinicRB);
         topPanel.add(drugRB);
-        drugRB.addActionListener(new ActionListener() {
+        drugRB.setActionCommand("drug");
+        psychRB.setActionCommand("psych");
+        opRB.setActionCommand("op");
+        clinicRB.setActionCommand("clinic");
+        ActionListener listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                diseases.remove(psych);
-                diseases.remove(op);
-                diseases.remove(clinic);
-                diseases.add(drug);
+                GridPanel newSelection;
+                switch (e.getActionCommand()) {
+                    case "op": newSelection = op; break;
+                    case "clinic": newSelection = clinic; break;
+                    case "psych": newSelection = psych; break;
+                    default: newSelection = drug;
+                }
+
+                diseases.swap(selected, newSelection);
+                selected = newSelection;
                 diseases.updateUI();
             }
-        });
+        };
+        drugRB.addActionListener(listener);
         topPanel.add(drugLabel);
         topPanel.add(psychRB);
-        psychRB.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                diseases.remove(drug);
-                diseases.remove(op);
-                diseases.remove(clinic);
-                diseases.add(psych);
-                diseases.updateUI();
-            }
-        });
+        psychRB.addActionListener(listener);
         topPanel.add(psychLabel);
         topPanel.add(opRB);
-        opRB.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                diseases.remove(psych);
-                diseases.remove(drug);
-                diseases.remove(clinic);
-                diseases.add(op);
-                diseases.updateUI();
-            }
-        });
+        opRB.addActionListener(listener);
         topPanel.add(opLabel);
         topPanel.add(clinicRB);
-        clinicRB.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                diseases.remove(psych);
-                diseases.remove(op);
-                diseases.remove(drug);
-                diseases.add(clinic);
-                diseases.updateUI();
-            }
-        });
+        clinicRB.addActionListener(listener);
         topPanel.add(clinicLabel);
-        drugRB.doClick();
+        diseases.add(drug);
+        buttonGroup.setSelected(drugRB.getModel(), true);
 
         // create borders for 4 panels
         drug.setBorder(BorderFactory.createTitledBorder("Pharmacy"));
@@ -220,7 +212,7 @@ public class TabDiseases {
         clinic.setBorder(BorderFactory.createTitledBorder("Clinic"));
 
         // drug panel
-        drug.add(new JLabel("check all"));
+        drug.add(new JLabel("Check all"));
         drug.add(checkAllExistsCB1);
         checkAllExistsCB1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -254,7 +246,7 @@ public class TabDiseases {
                 }
             }
         });
-        drug.add(checkAllKnownCB1, "wrap");
+        drug.add(checkAllKnownCB1);
         checkAllKnownCB1.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -287,8 +279,8 @@ public class TabDiseases {
                 }
             }
         });
-
-        drug.add(existsLabel1, "skip");
+        drug.next(3);
+        drug.add(existsLabel1);
         existsLabel1
                 .setToolTipText("Whether the disease should appear at all in this level");
         drug.add(knownLabel1);
@@ -572,7 +564,8 @@ public class TabDiseases {
         drug.add(uncommonColdLabel);
         drug.add(nonVisualsCB[0]);
         drug.add(knownCB[16]);
-        drug.add(expertiseResearchTF[16], "wrap");
+        drug.add(expertiseResearchTF[16]);
+        drug.next();
         uncommonColdLabel.setToolTipText("worth $300");
         nonVisualsCB[0].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -616,7 +609,8 @@ public class TabDiseases {
         drug.add(brokenWindLabel);
         drug.add(nonVisualsCB[1]);
         drug.add(knownCB[17]);
-        drug.add(expertiseResearchTF[17], "wrap");
+        drug.add(expertiseResearchTF[17]);
+        drug.next();
         brokenWindLabel.setToolTipText("worth $1300");
         nonVisualsCB[1].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -660,7 +654,8 @@ public class TabDiseases {
         drug.add(corrugatedAnklesLabel);
         drug.add(nonVisualsCB[8]);
         drug.add(knownCB[24]);
-        drug.add(expertiseResearchTF[24], "wrap");
+        drug.add(expertiseResearchTF[24]);
+        drug.next();
         corrugatedAnklesLabel.setToolTipText("worth $800");
         nonVisualsCB[8].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -704,7 +699,8 @@ public class TabDiseases {
         drug.add(chronicNosehairLabel);
         drug.add(nonVisualsCB[9]);
         drug.add(knownCB[25]);
-        drug.add(expertiseResearchTF[25], "wrap");
+        drug.add(expertiseResearchTF[25]);
+        drug.next();
         chronicNosehairLabel.setToolTipText("worth $800");
         nonVisualsCB[9].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -748,7 +744,8 @@ public class TabDiseases {
         drug.add(gastricEjectionsLabel);
         drug.add(nonVisualsCB[12]);
         drug.add(knownCB[28]);
-        drug.add(expertiseResearchTF[28], "wrap");
+        drug.add(expertiseResearchTF[28]);
+        drug.next();
         gastricEjectionsLabel.setToolTipText("worth $650");
         nonVisualsCB[12].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -792,7 +789,8 @@ public class TabDiseases {
         drug.add(theSquitsLabel);
         drug.add(nonVisualsCB[13]);
         drug.add(knownCB[29]);
-        drug.add(expertiseResearchTF[29], "wrap");
+        drug.add(expertiseResearchTF[29]);
+        drug.next();
         theSquitsLabel.setToolTipText("worth $400");
         nonVisualsCB[13].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -836,7 +834,8 @@ public class TabDiseases {
         drug.add(heapedPilesLabel);
         drug.add(nonVisualsCB[16]);
         drug.add(knownCB[32]);
-        drug.add(expertiseResearchTF[32], "wrap");
+        drug.add(expertiseResearchTF[32]);
+        drug.next();
         heapedPilesLabel.setToolTipText("worth $400");
         nonVisualsCB[16].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -880,7 +879,8 @@ public class TabDiseases {
         drug.add(gutRotLabel);
         drug.add(nonVisualsCB[17]);
         drug.add(knownCB[33]);
-        drug.add(expertiseResearchTF[33], "wrap");
+        drug.add(expertiseResearchTF[33]);
+        drug.next();
         gutRotLabel.setToolTipText("worth $350");
         nonVisualsCB[17].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -922,7 +922,7 @@ public class TabDiseases {
         });
 
         // psych panel
-        psych.add(new JLabel("check all"));
+        psych.add(new JLabel("Check all"));
         psych.add(checkAllExistsCB2);
         checkAllExistsCB2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -943,7 +943,7 @@ public class TabDiseases {
                 }
             }
         });
-        psych.add(checkAllKnownCB2, "wrap");
+        psych.add(checkAllKnownCB2);
         checkAllKnownCB2.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -963,8 +963,8 @@ public class TabDiseases {
                 }
             }
         });
-
-        psych.add(existsLabel2, "skip");
+        psych.next(2);
+        psych.add(existsLabel2);
         existsLabel2
                 .setToolTipText("Whether the disease should appear at all in this level");
 
@@ -1022,7 +1022,8 @@ public class TabDiseases {
 
         psych.add(multipleTvPersonalitiesLabel);
         psych.add(nonVisualsCB[6]);
-        psych.add(knownCB[22], "wrap");
+        psych.add(knownCB[22]);
+        psych.next();
         multipleTvPersonalitiesLabel.setToolTipText("worth $800");
         nonVisualsCB[6].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1043,7 +1044,8 @@ public class TabDiseases {
 
         psych.add(infectiousLaughterLabel);
         psych.add(nonVisualsCB[7]);
-        psych.add(knownCB[23], "wrap");
+        psych.add(knownCB[23]);
+        psych.next();
         infectiousLaughterLabel.setToolTipText("worth $1500");
         nonVisualsCB[7].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1064,7 +1066,8 @@ public class TabDiseases {
 
         psych.add(thirdDegreeSideburnsLabel);
         psych.add(nonVisualsCB[10]);
-        psych.add(knownCB[26], "wrap");
+        psych.add(knownCB[26]);
+        psych.next();
         thirdDegreeSideburnsLabel.setToolTipText("worth $550");
         nonVisualsCB[10].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1085,7 +1088,8 @@ public class TabDiseases {
 
         psych.add(fakeBloodLabel);
         psych.add(nonVisualsCB[11]);
-        psych.add(knownCB[27], "wrap");
+        psych.add(knownCB[27]);
+        psych.next();
         fakeBloodLabel.setToolTipText("worth $800");
         nonVisualsCB[11].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1106,7 +1110,8 @@ public class TabDiseases {
 
         psych.add(sweatyPalmsLabel);
         psych.add(nonVisualsCB[15]);
-        psych.add(knownCB[31], "wrap");
+        psych.add(knownCB[31]);
+        psych.next();
         sweatyPalmsLabel.setToolTipText("worth $600");
         nonVisualsCB[15].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1126,7 +1131,7 @@ public class TabDiseases {
         });
 
         // op panel
-        op.add(new JLabel("check all"));
+        op.add(new JLabel("Check all"));
         op.add(checkAllExistsCB3);
         checkAllExistsCB3.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1151,7 +1156,7 @@ public class TabDiseases {
                 }
             }
         });
-        op.add(checkAllKnownCB3, "wrap");
+        op.add(checkAllKnownCB3);
         checkAllKnownCB3.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -1175,8 +1180,9 @@ public class TabDiseases {
                 }
             }
         });
+        op.next(2);
 
-        op.add(existsLabel3, "skip");
+        op.add(existsLabel3);
         existsLabel3
                 .setToolTipText("Whether the disease should appear at all in this level");
 
@@ -1234,7 +1240,8 @@ public class TabDiseases {
 
         op.add(spareRibsLabel);
         op.add(nonVisualsCB[2]);
-        op.add(knownCB[18], "wrap");
+        op.add(knownCB[18]);
+        op.next();
         spareRibsLabel.setToolTipText("worth $1100");
         nonVisualsCB[2].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1255,7 +1262,8 @@ public class TabDiseases {
 
         op.add(kidneyBeansLabel);
         op.add(nonVisualsCB[3]);
-        op.add(knownCB[19], "wrap");
+        op.add(knownCB[19]);
+        op.next();
         kidneyBeansLabel.setToolTipText("worth $1050");
         nonVisualsCB[3].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1276,7 +1284,8 @@ public class TabDiseases {
 
         op.add(brokenHeartLabel);
         op.add(nonVisualsCB[4]);
-        op.add(knownCB[20], "wrap");
+        op.add(knownCB[20]);
+        op.next();
         brokenHeartLabel.setToolTipText("worth $1950");
         nonVisualsCB[4].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1297,7 +1306,8 @@ public class TabDiseases {
 
         op.add(rupturedNodulesLabel);
         op.add(nonVisualsCB[5]);
-        op.add(knownCB[21], "wrap");
+        op.add(knownCB[21]);
+        op.next();
         rupturedNodulesLabel.setToolTipText("worth $1600");
         nonVisualsCB[5].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1318,7 +1328,8 @@ public class TabDiseases {
 
         op.add(ironLungsLabel);
         op.add(nonVisualsCB[14]);
-        op.add(knownCB[30], "wrap");
+        op.add(knownCB[30]);
+        op.next();
         ironLungsLabel.setToolTipText("worth $1700");
         nonVisualsCB[14].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1339,7 +1350,8 @@ public class TabDiseases {
 
         op.add(golfStonesLabel);
         op.add(nonVisualsCB[18]);
-        op.add(knownCB[34], "wrap");
+        op.add(knownCB[34]);
+        op.next();
         golfStonesLabel.setToolTipText("worth $1600");
         nonVisualsCB[18].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1360,7 +1372,7 @@ public class TabDiseases {
 
         op.add(unexpectedSwellingLabel);
         op.add(nonVisualsCB[19]);
-        op.add(knownCB[35], "wrap");
+        op.add(knownCB[35]);
         unexpectedSwellingLabel.setToolTipText("worth $500");
         nonVisualsCB[19].addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1380,7 +1392,7 @@ public class TabDiseases {
         });
 
         // clinic panel
-        clinic.add(new JLabel("check all"));
+        clinic.add(new JLabel("Check all"));
         clinic.add(checkAllExistsCB4);
         checkAllExistsCB4.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -1405,7 +1417,7 @@ public class TabDiseases {
                 }
             }
         });
-        clinic.add(checkAllKnownCB4, "wrap");
+        clinic.add(checkAllKnownCB4);
         checkAllKnownCB4.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -1429,8 +1441,8 @@ public class TabDiseases {
                 }
             }
         });
-
-        clinic.add(existsLabel4, "skip");
+        clinic.next(2);
+        clinic.add(existsLabel4);
         existsLabel4
                 .setToolTipText("Whether the disease should appear at all in this level");
 

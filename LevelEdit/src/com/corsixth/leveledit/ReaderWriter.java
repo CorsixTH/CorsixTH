@@ -29,6 +29,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Reads .level and .SAM files and writes the currently opened data to .level
+ * files.
+ * 
+ * @author Koanxd
+ * 
+ */
 public class ReaderWriter {
 
     VarManipulator varManipulator = new VarManipulator();

@@ -25,8 +25,16 @@ package com.corsixth.leveledit;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * The main entry point of the Level Editor that simply sets the L&F and starts
+ * the {@link Gui}. The source file also contains a list of TODOs for the
+ * project.
+ * 
+ * @author Koanxd
+ * 
+ */
 public class Main {
-    static final double VERSION = 0.14;
+    public static final double VERSION = 0.14;
 
     public static void main(String[] args) {
         try {

@@ -39,20 +39,20 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabEmergencies extends JScrollPane {
 
-public class TabEmergencies {
-
+    private static final long serialVersionUID = 415938853978498463L;
     // variables
     static ArrayList<Emergency> emergencyList = new ArrayList<Emergency>();
     static int emergencyInterval = 120;
     static int emergencyIntervalVariance = 30;
 
     // components
-    static JPanel emergencies = new JPanel(new MigLayout());
+    static GridPanel emergencies = new GridPanel(1);
     JScrollPane scrollPane = new JScrollPane(emergencies);
-    JPanel emergencyMode = new JPanel(new MigLayout());
-    JPanel emergencyButtons = new JPanel(new MigLayout());
+    JPanel emergencyMode = new JPanel();
+    JPanel semirandom = new JPanel();
+    JPanel emergencyButtons = new JPanel();
     JButton addEmergencyButt = new JButton("Add");
     JButton removeEmergencyButt = new JButton("Remove");
     ButtonGroup buttonGroup = new ButtonGroup();
@@ -73,15 +73,17 @@ public class TabEmergencies {
 
     public TabEmergencies() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
 
+        emergencies.setInsets(0);
+        setViewportView(emergencies);
         // mode set
         buttonGroup.add(randomEmergenciesRB);
         buttonGroup.add(semiRandomEmergenciesRB);
         buttonGroup.add(controlledEmergenciesRB);
 
-        emergencies.add(emergencyMode, "span");
+        emergencies.add(emergencyMode);
         emergencyMode.setBorder(BorderFactory.createTitledBorder("Mode"));
         emergencyMode.add(randomEmergenciesRB);
         randomEmergenciesRB.addActionListener(new ActionListener() {
@@ -128,6 +130,79 @@ public class TabEmergencies {
             }
         });
 
+        semirandom.add(emergencyIntervalLabel);
+        emergencyIntervalLabel
+                .setToolTipText("Days between emergencies = interval +- variance");
+        semirandom.add(emergencyIntervalTF);
+        emergencyIntervalTF.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                JTextField tf = (JTextField) e.getComponent();
+                tf.selectAll();
+                Gui.tempValue = tf.getText();
+            }
+
+            public void focusLost(FocusEvent e) {
+                JTextField tf = (JTextField) e.getComponent();
+                try {
+                    int input = Integer.parseInt(tf.getText());
+                    if (input <= 0) {
+                        tf.setText(Gui.tempValue);
+                        emergencyInterval = Integer.parseInt(Gui.tempValue);
+                    } else
+                        emergencyInterval = input;
+                } catch (NumberFormatException nfe) {
+                    tf.setText(Gui.tempValue);
+                    emergencyInterval = Integer.parseInt(Gui.tempValue);
+                }
+                // if variance is equal or bigger than interval, make variance
+                // equal to interval -1
+                if (emergencyIntervalVariance >= emergencyInterval) {
+                    emergencyIntervalVariance = emergencyInterval - 1;
+                    int intervalMinusOne = Integer.parseInt(emergencyIntervalTF
+                            .getText()) - 1;
+                    emergencyIntervalVarianceTF.setText(Integer
+                            .toString(intervalMinusOne));
+                }
+
+            }
+        });
+        semirandom.add(emergencyIntervalVarianceLabel);
+        emergencyIntervalVarianceLabel
+                .setToolTipText("Days between emergencies = interval +- variance");
+        semirandom.add(emergencyIntervalVarianceTF);
+        emergencyIntervalVarianceTF.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                JTextField tf = (JTextField) e.getComponent();
+                tf.selectAll();
+                Gui.tempValue = tf.getText();
+            }
+
+            public void focusLost(FocusEvent e) {
+                JTextField tf = (JTextField) e.getComponent();
+                try {
+                    int input = Integer.parseInt(tf.getText());
+                    if (input < 0) {
+                        tf.setText(Gui.tempValue);
+                        emergencyIntervalVariance = Integer
+                                .parseInt(Gui.tempValue);
+                    } else
+                        emergencyIntervalVariance = input;
+                } catch (NumberFormatException nfe) {
+                    tf.setText(Gui.tempValue);
+                    emergencyIntervalVariance = Integer.parseInt(Gui.tempValue);
+                }
+                // if variance is equal or bigger than interval, make variance
+                // equal to interval -1
+                if (emergencyIntervalVariance >= emergencyInterval) {
+                    emergencyIntervalVariance = emergencyInterval - 1;
+                    int intervalMinusOne = Integer.parseInt(emergencyIntervalTF
+                            .getText()) - 1;
+                    emergencyIntervalVarianceTF.setText(Integer
+                            .toString(intervalMinusOne));
+                }
+
+            }
+        });
     }
 
     public static void addEmergency() {
@@ -504,7 +579,7 @@ public class TabEmergencies {
             }
         });
 
-        emergencies.add(emergencyList.get(index).emergencyPanel, "span");
+        emergencies.add(emergencyList.get(index).emergencyPanel);
         emergencies.updateUI();
 
         // increase month with each add
@@ -563,89 +638,15 @@ public class TabEmergencies {
         emergencies.remove(randomDescription);
         emergencies.remove(noEmergenciesDescription);
         hideControlledEmergencies();
-        emergencies.add(emergencyIntervalLabel);
-        emergencyIntervalLabel
-                .setToolTipText("Days between emergencies = interval +- variance");
-        emergencies.add(emergencyIntervalTF);
-        emergencyIntervalTF.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                JTextField tf = (JTextField) e.getComponent();
-                tf.selectAll();
-                Gui.tempValue = tf.getText();
-            }
 
-            public void focusLost(FocusEvent e) {
-                JTextField tf = (JTextField) e.getComponent();
-                try {
-                    int input = Integer.parseInt(tf.getText());
-                    if (input <= 0) {
-                        tf.setText(Gui.tempValue);
-                        emergencyInterval = Integer.parseInt(Gui.tempValue);
-                    } else
-                        emergencyInterval = input;
-                } catch (NumberFormatException nfe) {
-                    tf.setText(Gui.tempValue);
-                    emergencyInterval = Integer.parseInt(Gui.tempValue);
-                }
-                // if variance is equal or bigger than interval, make variance
-                // equal to interval -1
-                if (emergencyIntervalVariance >= emergencyInterval) {
-                    emergencyIntervalVariance = emergencyInterval - 1;
-                    int intervalMinusOne = Integer.parseInt(emergencyIntervalTF
-                            .getText()) - 1;
-                    emergencyIntervalVarianceTF.setText(Integer
-                            .toString(intervalMinusOne));
-                }
-
-            }
-        });
-        emergencies.add(emergencyIntervalVarianceLabel);
-        emergencyIntervalVarianceLabel
-                .setToolTipText("Days between emergencies = interval +- variance");
-        emergencies.add(emergencyIntervalVarianceTF);
-        emergencyIntervalVarianceTF.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                JTextField tf = (JTextField) e.getComponent();
-                tf.selectAll();
-                Gui.tempValue = tf.getText();
-            }
-
-            public void focusLost(FocusEvent e) {
-                JTextField tf = (JTextField) e.getComponent();
-                try {
-                    int input = Integer.parseInt(tf.getText());
-                    if (input < 0) {
-                        tf.setText(Gui.tempValue);
-                        emergencyIntervalVariance = Integer
-                                .parseInt(Gui.tempValue);
-                    } else
-                        emergencyIntervalVariance = input;
-                } catch (NumberFormatException nfe) {
-                    tf.setText(Gui.tempValue);
-                    emergencyIntervalVariance = Integer.parseInt(Gui.tempValue);
-                }
-                // if variance is equal or bigger than interval, make variance
-                // equal to interval -1
-                if (emergencyIntervalVariance >= emergencyInterval) {
-                    emergencyIntervalVariance = emergencyInterval - 1;
-                    int intervalMinusOne = Integer.parseInt(emergencyIntervalTF
-                            .getText()) - 1;
-                    emergencyIntervalVarianceTF.setText(Integer
-                            .toString(intervalMinusOne));
-                }
-
-            }
-        });
+        emergencies.add(semirandom);
         emergencies.updateUI();
 
     }
 
     // semi-random
     protected void hideSemiRandomEmergencies() {
-        emergencies.remove(emergencyIntervalLabel);
-        emergencies.remove(emergencyIntervalTF);
-        emergencies.remove(emergencyIntervalVarianceLabel);
-        emergencies.remove(emergencyIntervalVarianceTF);
+        emergencies.remove(semirandom);
         emergencies.updateUI();
     }
 
@@ -654,9 +655,9 @@ public class TabEmergencies {
         emergencies.remove(randomDescription);
         emergencies.remove(noEmergenciesDescription);
         hideSemiRandomEmergencies();
-        emergencies.add(emergencyButtons, "span");
+        emergencies.add(emergencyButtons);
         for (int i = 0; i < emergencyList.size(); i++)
-            emergencies.add(emergencyList.get(i).emergencyPanel, "span");
+            emergencies.add(emergencyList.get(i).emergencyPanel);
         if (emergencyList.size() <= 0)
             emergencies.add(noEmergenciesDescription);
         emergencies.updateUI();

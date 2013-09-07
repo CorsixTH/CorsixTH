@@ -34,16 +34,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabPopulation extends JScrollPane {
 
-public class TabPopulation {
+    private static final long serialVersionUID = -7707325095353711104L;
 
     // variables
     static ArrayList<Population> populationList = new ArrayList<Population>();
 
     // components
-    static JPanel populations = new JPanel(new MigLayout());
-    JScrollPane scrollPane = new JScrollPane(populations);
+    static GridPanel populations = new GridPanel(1);
 
     JPanel buttonsPanel = new JPanel();
     JButton addButt = new JButton("Add");
@@ -52,11 +51,13 @@ public class TabPopulation {
 
     public TabPopulation() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
 
+        populations.setInsets(0);
+        setViewportView(populations);
         // population panel
-        populations.add(buttonsPanel, "span");
+        populations.add(buttonsPanel);
 
         buttonsPanel.add(addButt);
         addButt.addActionListener(new ActionListener() {
@@ -75,7 +76,7 @@ public class TabPopulation {
     }
 
     public static void addPopulation() {
-
+        populations.remove(overflowWarning);
         final Population population = new Population();
         populationList.add(population);
 
@@ -177,7 +178,7 @@ public class TabPopulation {
                     .setToolTipText("Number of patients that will arrive in this month. This number is then divided among competing hospitals");
         }
 
-        populations.add(populationList.get(index).populationPanel, "span");
+        populations.add(populationList.get(index).populationPanel);
         populations.updateUI();
 
         // set default for the first population
@@ -200,6 +201,7 @@ public class TabPopulation {
     }
 
     public static void removePopulation() {
+        populations.remove(overflowWarning);
         int lastIndex = populationList.size() - 1;
         if (lastIndex >= 0) {
             // remove panel
@@ -208,6 +210,7 @@ public class TabPopulation {
             // remove object from the arraylist
             populationList.remove(lastIndex);
         }
+        calculateNumberOfPatients();
     }
 
     public static void calculateNumberOfPatients() {
@@ -221,23 +224,26 @@ public class TabPopulation {
             populationList.get(i).spawn = spawn;
             populationList.get(i).spawnLabel.setText("Number of patients: "
                     + Integer.toString(spawn));
-
-            // give a warning if the last change is not 0.
+        }
+        // give a warning if the last change is not 0.
+        int size = populationList.size();
+        if (size > 0) {
             if (populationList.get(populationList.size() - 1).change > 0) {
-                populations.add(overflowWarning, "span");
+                populations.add(overflowWarning);
                 overflowWarning
                         .setText("Warning: patient count will increase infinitely after month "
-                                + populationList.get(i).month + "!");
+                                + populationList.get(size - 1).month + "!");
             } else if (populationList.get(populationList.size() - 1).change < 0) {
-                populations.add(overflowWarning, "span");
+                populations.add(overflowWarning);
                 overflowWarning
                         .setText("Warning: patient count will decrease infinitely after month "
-                                + populationList.get(i).month + "!");
-            } else {
-                populations.remove(overflowWarning);
-                populations.updateUI();
+                                + populationList.get(size - 1).month + "!");
             }
-
+        } else {
+            populations.add(overflowWarning);
+            overflowWarning
+                    .setText("Warning: You need to define at least one month to get any patients!");
         }
+        populations.updateUI();
     }
 }

@@ -39,9 +39,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabStaff extends JScrollPane {
 
-public class TabStaff {
+    private static final long serialVersionUID = -6211357935747302151L;
+
     VarManipulator variableManipulator = new VarManipulator();
 
     // variables
@@ -51,31 +52,34 @@ public class TabStaff {
     static int[] salaryAdd = new int[9]; // index 0,1,2 are not used.
 
     // components
-    JPanel staff = new JPanel(new MigLayout("wrap 1"));
+    GridPanel staff = new GridPanel(1);
     JScrollPane scrollPane = new JScrollPane(staff);
 
-    JPanel salary = new JPanel(new MigLayout());
+    GridPanel salary = new GridPanel(1);
     JLabel salaryLabel = new JLabel("   Minimum salary");
     JLabel salaryAddLabel = new JLabel("   Added salary");
     static JTextField[] staffSalaryTF = new JTextField[4];
     static JTextField[] salaryAddTF = new JTextField[9];// index 0,1,2 are not
                                                         // used.
 
-    static JPanel levels = new JPanel(new MigLayout());
+    static JPanel levels = new GridPanel(1);
     JPanel levelsButtons = new JPanel();
     JButton addLevelsButt = new JButton("Add");
     JButton removeLevelsButt = new JButton("Remove");
 
-    static JPanel start = new JPanel(new MigLayout());
+    static GridPanel start = new GridPanel(1);
     JPanel startButtons = new JPanel();
     JButton addStartButt = new JButton("Add");
     JButton removeStartButt = new JButton("Remove");
 
     public TabStaff() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
 
+        salary.setInsets(0);
+        start.setInsets(0);
+        setViewportView(staff);
         // initializing members of checkbox and textfield arrays, else they will
         // be null.
         for (int i = 0; i < staffSalaryTF.length; i++)
@@ -84,13 +88,14 @@ public class TabStaff {
             salaryAddTF[i] = new JTextField(3);
 
         // salary panel
-        staff.add(salary, "span");
+        staff.add(salary);
         salary.setBorder(BorderFactory.createTitledBorder("Salary"));
-        salary.add(salaryLabel, "span");
+        salary.add(salaryLabel);
         salaryLabel.setToolTipText("Minimum salary for each staff type");
 
-        salary.add(new JLabel("Nurse:"));
-        salary.add(staffSalaryTF[0]);
+        JPanel minSalary = new JPanel();
+        minSalary.add(new JLabel("Nurse:"));
+        minSalary.add(staffSalaryTF[0]);
         staffSalaryTF[0].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -114,8 +119,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Doctor:"));
-        salary.add(staffSalaryTF[1]);
+        minSalary.add(new JLabel("Doctor:"));
+        minSalary.add(staffSalaryTF[1]);
         staffSalaryTF[1].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -139,8 +144,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Handyman:"));
-        salary.add(staffSalaryTF[2]);
+        minSalary.add(new JLabel("Handyman:"));
+        minSalary.add(staffSalaryTF[2]);
         staffSalaryTF[2].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -164,8 +169,9 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Receptionist:"));
-        salary.add(staffSalaryTF[3], "wrap");
+        minSalary.add(new JLabel("Receptionist:"));
+        minSalary.add(staffSalaryTF[3]);
+        salary.add(minSalary);
         staffSalaryTF[3].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -189,12 +195,13 @@ public class TabStaff {
             }
         });
 
-        salary.add(salaryAddLabel, "span");
+        salary.add(salaryAddLabel);
         salaryAddLabel
                 .setToolTipText("Salary modifiers for different doctor attributes");
 
-        salary.add(new JLabel("Junior:"));
-        salary.add(salaryAddTF[3]);
+        JPanel addSalary = new JPanel();
+        addSalary.add(new JLabel("Junior:"));
+        addSalary.add(salaryAddTF[3]);
         salaryAddTF[3].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -213,8 +220,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Doctor:"));
-        salary.add(salaryAddTF[4]);
+        addSalary.add(new JLabel("Doctor:"));
+        addSalary.add(salaryAddTF[4]);
         salaryAddTF[4].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -233,8 +240,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Consultant:"));
-        salary.add(salaryAddTF[7]);
+        addSalary.add(new JLabel("Consultant:"));
+        addSalary.add(salaryAddTF[7]);
         salaryAddTF[7].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -253,8 +260,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Surgeon:"));
-        salary.add(salaryAddTF[5]);
+        addSalary.add(new JLabel("Surgeon:"));
+        addSalary.add(salaryAddTF[5]);
         salaryAddTF[5].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -273,8 +280,8 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Psychiatrist:"));
-        salary.add(salaryAddTF[6]);
+        addSalary.add(new JLabel("Psychiatrist:"));
+        addSalary.add(salaryAddTF[6]);
         salaryAddTF[6].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -293,8 +300,9 @@ public class TabStaff {
             }
         });
 
-        salary.add(new JLabel("Researcher:"));
-        salary.add(salaryAddTF[8]);
+        addSalary.add(new JLabel("Researcher:"));
+        addSalary.add(salaryAddTF[8]);
+        salary.add(addSalary);
         salaryAddTF[8].addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -314,8 +322,8 @@ public class TabStaff {
         });
 
         // staff distribution
-        staff.add(levels, "span");
-        levels.add(levelsButtons, "span");
+        staff.add(levels);
+        levels.add(levelsButtons);
         levels.setBorder(BorderFactory.createTitledBorder("Staff distribution"));
 
         levelsButtons.add(addLevelsButt);
@@ -335,8 +343,8 @@ public class TabStaff {
         });
 
         // starting staff panel
-        staff.add(start, "span");
-        start.add(startButtons, "span");
+        staff.add(start);
+        start.add(startButtons);
         start.setBorder(BorderFactory.createTitledBorder("Starting staff"));
 
         startButtons.add(addStartButt);
@@ -393,7 +401,7 @@ public class TabStaff {
                             startStaffList.get(index).startStaffPanel
                                     .add(startStaffList.get(index).skillLabel);
                             startStaffList.get(index).startStaffPanel.add(
-                                    startStaffList.get(index).skillTF, "wrap");
+                                    startStaffList.get(index).skillTF);
                             startStaffList.get(index).startStaffPanel
                                     .updateUI();
                         } else {
@@ -480,7 +488,7 @@ public class TabStaff {
         startStaffList.get(index).skillLabel
                 .setToolTipText("45 gives doctor, 90 gives consultant");
         startStaffList.get(index).startStaffPanel.add(
-                startStaffList.get(index).skillTF, "wrap");
+                startStaffList.get(index).skillTF);
         startStaffList.get(index).skillTF.addFocusListener(new FocusListener() {
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
@@ -511,7 +519,7 @@ public class TabStaff {
 
         startStaffList.get(index).startStaffPanel.updateUI();
 
-        start.add(startStaffList.get(index).startStaffPanel, "span");
+        start.add(startStaffList.get(index).startStaffPanel);
         start.updateUI();
     }
 
@@ -687,7 +695,7 @@ public class TabStaff {
         staffLevelsList.get(index).staffLevelsPanel.add(staffLevelsList
                 .get(index).receptionistsLabel);
         staffLevelsList.get(index).staffLevelsPanel.add(
-                staffLevelsList.get(index).receptionistsTF, "wrap");
+                staffLevelsList.get(index).receptionistsTF);
         staffLevelsList.get(index).receptionistsTF
                 .addFocusListener(new FocusListener() {
                     public void focusGained(FocusEvent e) {
@@ -898,7 +906,7 @@ public class TabStaff {
         staffLevelsList.get(index).staffLevelsPanel.add(staffLevelsList
                 .get(index).juniorRateLabel);
         staffLevelsList.get(index).staffLevelsPanel.add(
-                staffLevelsList.get(index).juniorRateTF, "wrap");
+                staffLevelsList.get(index).juniorRateTF);
         staffLevelsList.get(index).juniorRateTF
                 .addFocusListener(new FocusListener() {
                     public void focusGained(FocusEvent e) {
@@ -941,7 +949,7 @@ public class TabStaff {
 
                 });
 
-        levels.add(staffLevelsList.get(index).staffLevelsPanel, "span");
+        levels.add(staffLevelsList.get(index).staffLevelsPanel);
         levels.updateUI();
 
         // increase starting month with each new add

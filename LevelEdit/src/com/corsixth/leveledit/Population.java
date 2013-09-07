@@ -26,8 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
-
 public class Population {
     static final int MONTH = 0;
     static final int SPAWN = 0;
@@ -37,7 +35,7 @@ public class Population {
     int spawn = SPAWN;
     int change = CHANGE;
 
-    JPanel populationPanel = new JPanel(new MigLayout("insets 1"));
+    JPanel populationPanel = new JPanel();
 
     JTextField monthTF = new JTextField(Integer.toString(month), 2);
     JTextField changeTF = new JTextField(Integer.toString(change), 2);

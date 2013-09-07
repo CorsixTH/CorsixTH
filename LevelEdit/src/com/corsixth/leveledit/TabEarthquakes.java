@@ -34,16 +34,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabEarthquakes extends JScrollPane {
 
-public class TabEarthquakes {
+    private static final long serialVersionUID = -5841183676154086892L;
 
     // variables
     static ArrayList<Quake> quakeList = new ArrayList<Quake>();
 
     // components
-    static JPanel earthquakes = new JPanel(new MigLayout());
-    JScrollPane scrollPane = new JScrollPane(earthquakes);
+    static GridPanel earthquakes = new GridPanel(1);
 
     JPanel buttonsPanel = new JPanel();
     JButton addButt = new JButton("Add");
@@ -54,11 +53,13 @@ public class TabEarthquakes {
 
     public TabEarthquakes() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
-
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
+        
+        setViewportView(earthquakes);
+        earthquakes.setInsets(0);
         // earthquakes panel
-        earthquakes.add(buttonsPanel, "span");
+        earthquakes.add(buttonsPanel);
         earthquakes.add(randomQuakesLabel);
         buttonsPanel.add(addButt);
         addButt.addActionListener(new ActionListener() {
@@ -180,7 +181,7 @@ public class TabEarthquakes {
             }
         });
 
-        earthquakes.add(quakeList.get(index).quakePanel, "span");
+        earthquakes.add(quakeList.get(index).quakePanel);
         earthquakes.updateUI();
 
         // increment startMonth, endMonth with each add

@@ -24,14 +24,14 @@ package com.corsixth.leveledit;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabAwards extends JScrollPane {
 
-public class TabAwards {
+    private static final long serialVersionUID = -244055170654039024L;
 
     // variables
     static final int CANS_OF_COKE = 100;
@@ -47,8 +47,7 @@ public class TabAwards {
     static int noDeathsBonus = NO_DEATHS_BONUS;
 
     // components
-    JPanel awards = new JPanel(new MigLayout("wrap 4"));
-    JScrollPane scrollPane = new JScrollPane(awards);
+    GridPanel awards = new GridPanel(4);
 
     static JLabel cansOfCokeLabel = new JLabel("Cans of coke:");
     static JLabel cansOfCokeBonusLabel = new JLabel("Cans of coke bonus:");
@@ -68,9 +67,12 @@ public class TabAwards {
             Integer.toString(noDeathsBonus), 5);
 
     public TabAwards() {
+
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
+
+        setViewportView(awards);
 
         // cans of coke
         awards.add(cansOfCokeLabel);

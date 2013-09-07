@@ -22,6 +22,7 @@ SOFTWARE.
 
 package com.corsixth.leveledit;
 
+import java.awt.FlowLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
@@ -34,10 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
+public class TabGoals extends JScrollPane {
 
-public class TabGoals {
-
+    private static final long serialVersionUID = 1413048579654855631L;
     // variables
     static boolean winReputation = false;
     static boolean winBalance = false;
@@ -72,8 +72,8 @@ public class TabGoals {
     static int warnPercentageKilled;
 
     // components
-    static JPanel winCriteria = new JPanel(new MigLayout("wrap 3"));
-    static JPanel loseCriteria = new JPanel(new MigLayout("wrap 5"));
+    static GridPanel winCriteria = new GridPanel(3);
+    static GridPanel loseCriteria = new GridPanel(5);
 
     static JLabel minReputationLabel = new JLabel("Reputation:");
     static JLabel minBalanceLabel = new JLabel("Bank balance:");
@@ -118,14 +118,17 @@ public class TabGoals {
     static JCheckBox loseBalanceCB = new JCheckBox();
     static JCheckBox losePercentageKilledCB = new JCheckBox();
 
-    JPanel goals = new JPanel(new MigLayout());
-    JScrollPane scrollPane = new JScrollPane(goals);
+    JPanel goals = new JPanel();
 
     public TabGoals() {
         // set scroll speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        getVerticalScrollBar().setUnitIncrement(20);
+        getHorizontalScrollBar().setUnitIncrement(20);
 
+        FlowLayout layout = new FlowLayout(FlowLayout.LEADING);
+        layout.setAlignOnBaseline(true);
+        goals.setLayout(layout);
+        setViewportView(goals);
         // win criteria
         goals.add(winCriteria);
         winCriteria.setBorder(BorderFactory.createTitledBorder("Win Criteria"));

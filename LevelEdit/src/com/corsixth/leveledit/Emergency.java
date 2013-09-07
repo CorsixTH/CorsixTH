@@ -27,8 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import net.miginfocom.swing.MigLayout;
-
 public class Emergency {
     static int emergencyMode = 2; // 0 = random;
     // 1 = semi-random
@@ -53,7 +51,7 @@ public class Emergency {
             "Spare Ribs", "Sweaty Palms", "The Squits", "Transparency",
             "Uncommon Cold", "Unexpected Swelling" };
 
-    JPanel emergencyPanel = new JPanel(new MigLayout("insets 1"));
+    JPanel emergencyPanel = new JPanel();
 
     JComboBox illnessCombo = new JComboBox(diseases);
     JLabel minPatientsLabel = new JLabel("Patients min:");
