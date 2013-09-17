@@ -86,6 +86,8 @@ install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
   exit = "Avslutt",
   th_directory = "CorsixTH trenger en kopi av datafilene fra et ekte Theme Hospital spill (eller demo) for å kjöre. Vennligst velg plasseringen til originalspillet nedenfor.",
+  ok = "Ok",
+  cancel = "Avbryt",
 }
 
 -- 3. Objects
@@ -239,6 +241,9 @@ options_window = {
   data_location = "Data-beliggenhet",
   font_location = "Font-beliggenhet",
   resolution = "Opplösning",
+  folder = "Mapper",
+  audio = "Global lyd",
+  customise = "Tilpass",
 }
 tooltip.options_window = {
   fullscreen_button = "Klikk for å gå i fullskjermmodus",
@@ -249,7 +254,7 @@ tooltip.options_window = {
   back = "Lukk vinduet med innstillinger",
   original_path = "Valgt mappe for Theme Hospital installasjonen",
   browse = "Bla gjennom mappene for å finne et annet sted for Theme Hospital-installasjonen. %1%",
-  fullscreen = "Om spillet skal kjøre i fullskjerm eller vindusmodus",
+  fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
   cancel = "Returner uten å endre opplösning",
   font_location = "Beliggenhet av en font-fil som klarer å vise Unicode-bokstaver som brukes i det valgte språket. Om dette ikke er spesifisert, så vil ikke ha mulighet til å velge språk som krever andre bokstaver enn i originalspillet. For eksempel: Russisk eller Kinesisk",
   apply = "Bruk den innskrevne opplösningen",
@@ -259,7 +264,58 @@ tooltip.options_window = {
   no_font_specified = "Ingen beliggenhet spesifisert!",
   select_language = "Velg språk",
   select_resolution = "Velg en ny opplösning",
-  resolution = "Opplösningen spillet skal kjøres i.",
+  resolution = "Opplösningen spillet skal kjöres i.",
+  audio_button = "Slå av eller på all lyd",
+  folder_button = "Mappeinnstillinger",
+  audio_toggle = "Slå av eller på",
+  customise_button = "¨Flere innstillinger", --todo: mer beskrivelse? var "More settings you can change to customise your game play experience"
+}
+
+folders_window = {
+  screenshots_location = "Velg banen du vil bruke for skjermdumper",
+  music_label = "MP3", --todo: annet ordvalg? "MP3's"
+  back = "Tilbake",
+  savegames_label = "Lagrede spill", --todo: annet ordvalg? "saves"
+  caption = "Mappebane", --todo: annet ordvalg? "folder locations"
+  savegames_location = "Velg banen du vil bruke for lagrede spill",
+  font_label = "Font",
+  new_th_location = "Her kan du spesifisere en ny bane for Theme Hospital. Spillet startes på nytt når du velger en ny bane.",
+  screenshots_label = "Skjermdumper",
+  music_location = "Velg banen du vil bruke for musikk",
+  data_label = "TH-data", --todo: annet ordvalg? "TH Data"
+}
+  
+tooltip.folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
+  browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
+  screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
+  browse_music = "Se etter en annen lokasjon for musikk ( nåværende beliggenhet: %1% ) ",
+  music_location = "Velg en lokasjon for mp3-musikk. Mappen må være laget på forhånd.",
+  data_location = "Banen til den originale Theme Hospital-installasjonen, som du trenger for å spille CorsixTH",
+  browse_data = "Se etter en annen lokasjon for Theme Hospital-installasjonen ( nåværende beliggenhet: %1%)",
+  savegames_location = "Normalt er de lagrede spillene lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
+  back = "Lukk denne menyen og gå tilbake",
+  browse_saves = "Se etter en annen lokasjon for dine lagrede spill  ( nåværende beliggenhet: %1% ) ",
+  browse = "Se etter mappelokasjon",
+  browse_screenshots = "Se etter en annen lokasjon for skjermdumper  ( nåværende beliggenhet: %1% ) ",
+  not_specified = "Ingen mappe er valgt enda!",
+  font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
+  reset_to_default = "Tilbakestill mappen til standard lokasjon",
+  default = "Standard lokasjon",
+  no_font_specified = "Ingen font-fil er valgt enda!",
+}
+
+
+update_window = {
+  current_version = "Gjeldende versjon:",
+  ignore = "Hopp over og gå til hovedmenyen",
+  new_version = "Ny versjon:",
+  caption = "Oppdatering tilgjengelig!",
+  download = "Gå til nedlastingsside",
+}
+
+tooltip.update_window = {
+  download = "Gå til nedlastingssiden for den seneste versjonen av CorsixTH",
+  ignore = "Ignorer oppdateringen denne gangen. Du vil få en ny beskjed neste gang du starter CorsixTH",
 }
 
 font_location_window = {
@@ -335,6 +391,38 @@ new_game_window = {
   start = "Start",
 }
 
+customise_window = {
+  movies = "Global videostyring",
+  option_on = "På",
+  option_off = "Av",
+  back = "Tilbake",
+  paused = "Bygging i pause",
+  intro = "Spill introvideo",
+  volume = "Hurtigtast volumsenking",
+  caption = "Egendefinerte innstillinger",
+  fractured_bones = "Benbrudd",
+  average_contents = "Gjennomsnittlig rominnhold", 
+  aliens = "Utenomjordiske pasienter",
+}
+
+tooltip.customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
+intro_button = "Klikk for å slå av eller på",
+movies = "Slår av alle videoer i spillet",
+aliens = "På grunn av manglende standardanimasjoner ble pasienter med utenomjordisk DNA satt til å kun komme gjennom nödstilfeller. For å la pasienter med denne sykdommen komme til sykehuset på vanlig måte, så må du slå denne av.",
+volume_button = "Klikk for å endre hurtigtast. Benyttes hvis volumsenkings-knappen på tastaturet åpner en meny i spillet.",
+paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
+average_contents_button = "Lar deg få de mest brukte gjenstandene (gjennomsnittlig) inn i rombyggeren automatisk.",
+back = "Gå tilbake",
+movies_button = "Slå av eller på filmsnutter i spillet",
+paused_button = "Tillat bevegelser når spillet er satt til pause",
+intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
+volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
+fractured_bones_button = "Slå denne innstillingen på eller av",
+fractured_bones = "På grunn av mangelfulle animasjoner har vi gjort stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
+aliens_button = "Slå denne innstillingen på eller av",
+average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne", 
+}
+
 tooltip.new_game_window = {
   easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
   medium = "Om du er usikker på hva du skal velge, så er dette mellomtingen",
@@ -365,6 +453,8 @@ errors = {
   minimum_screen_size = "Vennligst sett opplösningen til minst 640x480.",
   maximum_screen_size = "Vennligst velg en skjermopplösning ikke större enn 3000x2000.",
   unavailable_screen_size = "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
+  alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
+  fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
 }
 
 confirmation = {
@@ -1087,6 +1177,12 @@ menu_options = {
   game_speed          = "  SPILLHASTIGHET  ",
   jukebox             = "  JUKEBOX  ",
   twentyfour_hour_clock = "  24 TIMERS KLOKKE  ",
+  wage_increase = "  LÖNNSBEGJÆRINGER", --todo: annet ord? "wage requests"
+}
+
+menu_options_wage_increase = {
+  deny = "    AVSLÅ ",
+  grant = "    GODKJENN ",
 }
 
 -- Menu Options Volume
@@ -1591,7 +1687,7 @@ tooltip = {
     load_game          = "Last inn et tidligere spill",
     continue           = "Fortsett forrige spill",
     network            = "Start nettverksspill",
-    quit               = "Avslutt",
+    quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?", --todo: Her tror jeg det er valgt feil navn/sted for "quit". Denne viser til spörsmålet man får ved å trykke på Avslutt i hovedmenyen.
     load_menu = {
       load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
       empty_slot       = "  TOM  ",
@@ -2201,11 +2297,11 @@ adviser = {
     no_desk_4 = "En Resepsjonist må ha sin egen arbeidsplass for å motta pasientene som ankommer",
     no_desk_5 = "Det var på tide! Du burde se noen pasienter ankomme snart.",
     no_desk_6 = "Du har en Resepsjonist, så hva med å sette opp en resepsjon hun kan jobbe i?",
-    no_desk_7 = "Du har bygd en resepsjon, så hva med å ansette en Resepsjonist? Du får ingen pasienter før du har fikset dette!", 
+    no_desk_7 = "Du har bygd en resepsjon, så hva med å ansette en Resepsjonist? Du får ingen pasienter för du har fikset dette!", 
     nurse_needs_desk_1 = "Hver Sykepleier trenger sin egen kontorpult å arbeide ved.",
     nurse_needs_desk_2 = "Sykepleieren din er glad for at du har gitt henne en pause. Om hensikten var å ha mer enn én Sykepleier arbeidende her, så må du gi dem begge en kontorpult.",
     cannot_afford = "Du har ikke nok penger på konto til å ansette denne personen!",
-    cannot_afford_2 = "Du har ikke nok penger på konto til å gjøre dette kjøpet!",
+    cannot_afford_2 = "Du har ikke nok penger på konto til å gjöre dette kjöpet!",
     falling_1 = "Hei! Det der er ikke moro. Pass på hvor du klikker med den musa; noen kan bli skadet!",
     falling_2 = "Slutt å tulle. Hvordan ville du likt det?",
     falling_3 = "Au, det måtte gjöre vondt. Noen burde ringe etter en Lege!",
@@ -2214,9 +2310,9 @@ adviser = {
     falling_6 = "Dette er ingen bowlingbane. Syke folk bör ikke behandles slik!",
     research_screen_open_1 = "Du må bygge en forskningsavdeling för du får tilgang til forskningsvinduet.",
     research_screen_open_2 = "Forskning er deaktivert for dette nivået.",
-    researcher_needs_desk_2 = "En av dine Forskere er glad for at du gir ham en pause. Om du ønsker å ha flere ansatte som faktisk forsker, så må du gi dem et skrivebord hver.",
+    researcher_needs_desk_2 = "En av dine Forskere er glad for at du gir ham en pause. Om du önsker å ha flere ansatte som faktisk forsker, så må du gi dem et skrivebord hver.",
     researcher_needs_desk_1 = "En Forsker må ha et skrivebord for å kunne arbeide.",
-    researcher_needs_desk_3 = "Hver Forsker må ha hvert sitt skrivebord for å kunne gjøre jobben sin.",
+    researcher_needs_desk_3 = "Hver Forsker må ha hvert sitt skrivebord for å kunne gjöre jobben sin.",
   },
   
   -- Placement info
@@ -2301,6 +2397,9 @@ confirmation = {
   delete_room          = "Önsker du virkelig å fjerne dette rommet?",
   sack_staff           = "Er du sikker på at du vil si opp denne personen?",
   restart_level        = "Er du sikker på at du vil starte dette nivået på nytt?",
+  maximum_screen_size = "Opplösningen du har valgt er större enn 3000 x 2000.  Större opplösninger er mulig, men det krever bedre maskinvare om det ikke skal hakke.  Önsker du å fortsette?",
+  music_warning = "För du får brukt mp3-er som spillmusikk, så må du ha smpeg.dll eller tilsvarende for operativsystemet ditt. Eller vil du ikke få musikk i spillet.  Forelöpig fins det ikke noe tilsvarende for 64-bit systemer.  Önsker du å fortsette?",
+
 }
 
 -- Bank manager
