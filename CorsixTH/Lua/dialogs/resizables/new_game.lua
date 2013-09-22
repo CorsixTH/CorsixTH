@@ -78,18 +78,18 @@ function UINewGame:UINewGame(ui)
 
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.start_tutorial = false
-  self.difficulty = "full"
+  self.difficulty = 1
   
   
   local avail_diff = {
-    full = {text = _S.new_game_window.medium, tooltip = _S.tooltip.new_game_window.medium, param = "full"},
+    {text = _S.new_game_window.medium, tooltip = _S.tooltip.new_game_window.medium, param = "full"},
   }
-  
   if TheApp.fs:getFilePath("Levels", "Easy01.SAM") then
-    avail_diff.easy = {text = _S.new_game_window.easy,   tooltip = _S.tooltip.new_game_window.easy,   param = "easy"}
+    table.insert(avail_diff, 1, {text = _S.new_game_window.easy, tooltip = _S.tooltip.new_game_window.easy, param = "easy"})
+    self.difficulty = 2
   end
   if TheApp.fs:getFilePath("Levels", "Hard01.SAM") then
-    avail_diff.hard = {text = _S.new_game_window.hard,   tooltip = _S.tooltip.new_game_window.hard,   param = "hard"}
+    avail_diff[#avail_diff + 1] = {text = _S.new_game_window.hard, tooltip = _S.tooltip.new_game_window.hard, param = "hard"}
   end
   self.available_difficulties = avail_diff
 
