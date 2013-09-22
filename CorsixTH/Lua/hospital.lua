@@ -1120,14 +1120,15 @@ end
 -- to cure them and the fax.
 function Hospital:createEmergency(emergency)
   local created_one = false
+  local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
+  local disease = TheApp.diseases[random_disease.id]
+  local number = math.random(2, disease.emergency_number)
   if self:getHeliportSpawnPosition() and self:hasStaffedDesk() then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
-      local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
-      -- TODO: The following should depend on disease (e.g. operating theatre is harder)
       emergency = {
-        disease = TheApp.diseases[random_disease.id],
-        victims = math.random(4,6),
+        disease = disease,
+        victims = number, 
         bonus = 1000,
         percentage = 0.75,
         killed_emergency_patients = 0,

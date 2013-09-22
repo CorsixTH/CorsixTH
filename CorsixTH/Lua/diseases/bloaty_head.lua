@@ -28,6 +28,7 @@ disease.symptoms = _S.diseases.bloaty_head.symptoms
 disease.cure = _S.diseases.bloaty_head.cure
 disease.cure_price = 850
 disease.emergency_sound = "emerg007.wav"
+disease.emergency_number = 18
 disease.initPatient = function(patient)
   patient:setType("Standard Male Patient")
   patient:setLayer(0, math.random(6, 8) * 2)
