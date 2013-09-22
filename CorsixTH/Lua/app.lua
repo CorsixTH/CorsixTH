@@ -961,11 +961,12 @@ function App:checkInstallFolder()
         corrupt[#corrupt + 1] = path .. " (This file is missing)"
       end
     end
-    check_corrupt("ANIMS" .. pathsep .. "320X2402.SMK", 1122228)
+    check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572)
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
-    check_corrupt("INTRO" .. pathsep .. "INTRO.SM2", 16354880)
+    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220)
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
     check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
+    check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
     
     if #corrupt ~= 0 then
       table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " .. 
