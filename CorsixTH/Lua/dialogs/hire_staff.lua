@@ -123,9 +123,13 @@ function UIHireStaff:hire()
     profile = self.world.available_staff[self.category]
     profile = profile and profile[self.current_index]
   end
-  if not profile or self.ui.hospital.balance < profile.wage then
+  if not profile then
     self.ui:playSound "wrong2.wav"
+    return
+  end  
+  if self.ui.hospital.balance < profile.wage then  
     self:cannotAfford()
+    self.ui:playSound "wrong2.wav"
     return
   end
   self.ui:playSound "YesX.wav"
