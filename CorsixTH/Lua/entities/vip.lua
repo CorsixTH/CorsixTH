@@ -25,6 +25,8 @@ function Vip:Vip(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.action_string = ""
+  self.name=""
+  self.announced = false
 
   self.vip_rating = 50
 
@@ -98,7 +100,7 @@ end
 
 -- display the VIP name in the info box
 function Vip:updateDynamicInfo(action_string)
-  self:setDynamicInfo('text', {self.hospital.visitingVIP})
+  self:setDynamicInfo('text', {self.name})
 end
 
 function Vip:goHome()
@@ -123,14 +125,14 @@ function Vip:onDestroy()
   if self.world.free_build_mode then
     self.last_hospital.reputation = self.last_hospital.reputation+20
     message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1,3)]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 1 then
     self.last_hospital.reputation = self.last_hospital.reputation-10
     message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.very_bad[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
@@ -138,7 +140,7 @@ function Vip:onDestroy()
   elseif self.vip_rating == 2 then
     self.last_hospital.reputation = self.last_hospital.reputation-5
     message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.bad[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
@@ -147,7 +149,7 @@ function Vip:onDestroy()
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
     message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
@@ -157,7 +159,7 @@ function Vip:onDestroy()
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
     message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.good[math.random(1,3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
@@ -169,7 +171,7 @@ function Vip:onDestroy()
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty +1
     if self.vip_rating == 5 then
       message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.last_hospital.visitingVIP)},
+        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
         {text = _S.fax.vip_visit_result.remarks.super[math.random(1,3)]},
         {text = _S.fax.vip_visit_result.rep_boost},
         {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
@@ -192,9 +194,7 @@ function Vip:announce()
   if self.hospital.num_vips < 1 then
     self.world.ui.adviser:say(_A.information.initial_general_advice.first_VIP)
   else
-    --TODO: keep VIP's name with the VIP, not the hospital. maybe make
-    --hospital.visitingVIP a reference to the VIP
-    self.world.ui.adviser:say(_A.information.vip_arrived:format(self.hospital.visitingVIP))
+    self.world.ui.adviser:say(_A.information.vip_arrived:format(self.name))
   end
 end
 
@@ -515,6 +515,9 @@ function Vip:afterLoad(old, new)
       end
     end
   end
+  if old < 79 then
+    self.name = self.hospital.visitingVIP
+  end 
   Humanoid.afterLoad(self, old, new)
 end
 

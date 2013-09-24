@@ -500,16 +500,13 @@ function World:spawnPatient(hospital)
   end
 end
 
-function World:spawnVIP(hospital)
-  if not hospital then
-    hospital = self:getLocalPlayerHospital()
-  end
-
-  hospital.announce_vip = 1
+function World:spawnVIP(name)
+  local hospital = self:getLocalPlayerHospital()
   
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local vip = self:newEntity("Vip", 2)
   vip:setType "VIP"
+  vip.name = name
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
@@ -519,6 +516,8 @@ function World:spawnVIP(hospital)
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
   vip:setHospital(hospital)
+  vip:updateDynamicInfo()
+  hospital.announce_vip = hospital.announce_vip + 1
   vip:queueAction{name = "seek_reception"}
 end
 
