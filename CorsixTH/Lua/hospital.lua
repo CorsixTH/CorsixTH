@@ -81,7 +81,6 @@ function Hospital:Hospital(world, name)
   self.num_explosions = 0
   self.announce_vip = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
-  self.visitingVIP = ""
   self.percentage_cured = 0
   self.percentage_killed = 0
   self.msg_counter = 0
@@ -927,14 +926,15 @@ function Hospital:onEndDay()
   end
 
   -- check if we still have to anounce VIP visit
-  if self.announce_vip == 1 then
+  if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for i, e in ipairs(self.world.entities) do
-      if e.humanoid_class == "VIP" then
+      if e.humanoid_class == "VIP" and e.announced == false then
         if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
           -- play VIP arrival sound and show tooltips
           e:announce()
-          self.announce_vip = 0
+          e.announced = true
+          self.announce_vip = self.announce_vip - 1
         end
       end
     end
@@ -1226,10 +1226,10 @@ end
 
 -- Creates VIP
 function Hospital:createVip()
-  self.visitingVIP = _S.vip_names[math.random(1,10)]
+  local vipName =  _S.vip_names[math.random(1,10)]
   local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(self.visitingVIP)},
-    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip"},
+    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
+    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
                {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip"}}
   }
   -- auto-refuse after 20 days

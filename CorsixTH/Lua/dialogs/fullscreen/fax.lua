@@ -42,10 +42,11 @@ function UIFax:UIFax(ui, icon)
     for i = 1, #choices do
       local y = orig_y + ((i-1) + (3-#choices)) * 48
       local choice = choices[i].choice
+      local additionalInfo = choices[i].additionalInfo
       -- NB: both nil and true result in enabled; also handle old "disabled" choice
       local enabled = (choices[i].enabled ~= false) and (choice ~= "disabled")
       local --[[persistable:fax_choice_button]] function callback()
-        self:choice(choice)
+        self:choice(choice,additionalInfo)
       end
       self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
         :setDisabledSprite(19):enable(enabled)
@@ -114,7 +115,7 @@ function UIFax:draw(canvas, x, y)
   end
 end
 
-function UIFax:choice(choice)
+function UIFax:choice(choice,additionalInfo)
   local owner = self.owner
   if owner then
     -- A choice was made, the patient is no longer waiting for a decision
@@ -163,7 +164,7 @@ function UIFax:choice(choice)
     self.ui.app.world:nextEmergency()
   elseif choice == "accept_vip" then
     self.ui.hospital.num_vips = self.ui.hospital.num_vips+1
-    self.ui.app.world:spawnVIP()
+    self.ui.app.world:spawnVIP(additionalInfo.name)
   elseif choice == "refuse_vip" then
     self.ui.app.world:nextVip() -- don't start an inspection
   elseif choice == "accept_new_level" then
