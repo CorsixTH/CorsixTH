@@ -291,8 +291,6 @@ options_window = {
   option_on = "Aan",
   option_off = "Uit",
   resolution = "Resolutie",
-  data_location = "Data locatie",
-  font_location = "Font locatie",
   apply = "Toepassen",
   language = "Taal",
   fullscreen = "Volledig scherm",
@@ -301,8 +299,9 @@ options_window = {
   change_resolution = "Resolutie wijzigen",
   back = "Terug",
   cancel = "Annuleren",
-  browse = "Zoeken...",
-  new_th_directory = "Kies hier een andere Theme Hospital installatie map. Als je deze hebt gekozen wordt het spel opnieuw opgestart.",
+  folder = "Mappen",
+  audio = "Audio algemeen",
+  customise = "Aangepast",
 }
 load_game_window = {
   caption = "Spel laden (%1%)",
@@ -313,9 +312,41 @@ queue_window = {
   max_queue_size = "Max lengte",
   num_expected = "Verwacht",
 }
-
 font_location_window = {
   caption = "Kies font (%1%)",
+}
+update_window = {
+  new_version = "Nieuwe versie:",
+  caption = "Update beschikbaar!",
+  download = "Ga naar de download pagina",
+  current_version = "Huidige versie:",
+  ignore = "Negeer en ga naar het menu",
+}
+folders_window = {
+  screenshots_location = "Selecteer de map om screenshots in op te slaan",
+  music_label = "MP3's",
+  back = "Terug",
+  savegames_label = "Opgeslagen spellen",
+  caption = "Bestands locaties",
+  savegames_location = "Selecteer de map om spellen in op te slaan",
+  font_label = "Lettertype",
+  new_th_location = "Kies hier een andere map voor de Them Hospital installatie. Hiervoor wordt het spel opnieuw gestart.",
+  screenshots_label = "Screenshots",
+  music_location = "Selecteer de map die je wilt gebruiken voor muziek.",
+  data_label = "TH Data",
+}
+customise_window = {
+  movies = "Video algemeen",
+  option_on = "Aan",
+  option_off = "Uit",
+  back = "Terug",
+  paused = "Bouwen tijdens pause",
+  intro = "Speel intro video",
+  volume = "Volume lager koppeling",
+  caption = "Aangepaste instellingen",
+  fractured_bones = "Gebroken botten",
+  average_contents = "Gemiddeld meubilair",
+  aliens = "Alien patiënten",
 }
 
 trophy_room = { --gebruik hiervoor meer formele tekst
@@ -1229,7 +1260,6 @@ tooltip = {
     fullscreen = "Wil je het spel in volledig scherm of in een venster spelen?", --Hoe kun je ''Windowed mode'' het beste verwoorden? Omni: wat vind je hiervan?--
     resolution = "Verander de resolutie naar wat er rechts is ingevuld",
     apply = "Pas de ingevoerde resolutie toe",
-    data_location = "De locatie van de orginele Theme Hospital installatie, welke nodig is om CorsixTH te kunnen spelen",
     language_dropdown_item = "Kies %s als taal",
     language = "De taal waarin het spel wordt weergeven",
     select_language = "Selecteer de taal waarin je het spel wilt spelen",
@@ -1241,15 +1271,46 @@ tooltip = {
     width = "Voer de gewenste horizontale resolutie in",
     language = "Kies %s als taal",
     back = "Sluit het instellingenvenster",
-    original_path = "De gekozen locatie van de originele Theme Hospital installatie",
-    browse = "Zoek een andere locatie van een originele Theme Hospital installatie (locatie is op dit moment: %1%)",
-    font_location = "Locatie van het font bestand dat Unicode tekens kan weergeven, welke vereist is bij je taal. Wanneer dit niet gekozen is, zul je niet in staat zijn om talen te kiezen welke meer tekens nodig hebben dan het orginele spel kan leveren. Voorbeelden: Russisch en Chinees.",
-    browse_font = "Zoek naar een ander font bestand (locatie op dit moment: %1%)", 
-    no_font_specified = "Geen locatie geselecteerd!", 
+    audio_button = "Zet alle spelgeluiden aan of uit.",
+    folder_button = "Mapopties.",
+    audio_toggle = "Zet aan of uit.",
+    customise_button = "Meer instellingen om je spel aan te passen.",
   },
   research_policy = {
     research_progress = "Voortgang tot de volgende ontdekking in deze categorie: %1%/%2%",
     no_research = "Naar deze categorie wordt momenteel geen onderzoek gedaan",
+  },
+  customise_window = {
+    intro = "Zet de intro video aan of uit. Zet deze instelling aan om de intro video te tonen als CorsixTH wordt gestart.",
+    fractured_bones = "Omdat de animatie niet mooi is, zijn vrouwelijke patiëntien met gebroken botten standaard uitgeschakeld. Om vrouwelijke patiënten met gebroken botten in je ziekenhuis te ontvangen zet je deze instelling uit.",
+    movies = "Met algemene video instellingen zet je alle video's aan of uit.",
+    volume = "Als de 'volume-lager' knop ook het behandelingenboek opent, zet deze instelling aan om de sneltoets naar het behandelingenboek te veranderen naar shift+C",
+    aliens = "Vanwege de sleche animatie bezoeken patiënten met alien-DNA je ziekenhuis alleen bij een noodgeval. Om patiënten met alien-DNA ook buiten noodgevallen je ziekenhuis te laten bezoeken zet je deze instelling uit.",
+    paused = "In Theme Hospital was het niet mogelijk de menubalk te gebruiken als het spel was gepauzeerd. De standaard instelling in CorsixTH is het zelfde, maar met deze instelling aan is dit tijdens pauze wel toegestaan.",
+    average_contents = "Als het spel moet onthouden wat je gemiddeld genomen aan meubilair in een kamer bouwt, zet deze instelling aan.",
+    back = "Sluit dit menu af en ga terug naar het instellingen menu.",
+  },
+  update_window = {
+    download = "Ga naar de download pagina voor de nieuwste versie van CorsixTH",
+    ignore = "Negeer deze update. Je wordt opnieuw herinnerd als je CorsixTH de volgende keer start.",
+  },
+  folders_window = {
+    browse_font = "Zoek naar een ander lettertype ( huidige locatie: %1% ) ",
+    screenshots_location = "Standaard worden screenshots opgeslagen bij het configuratie bestand. Als dit niet gewenst is, kies dan hier een andere locatie.",
+    browse_music = "Zoek naar een andere locatie voor je muziek bestand ( huidige locatie: %1% ) ",
+    data_location = "De map waar de originele Theme Hospital installatie in staat. Deze is nodig om CorsixTH te laten werken.",
+    browse_data = "Zoek naar een andere locatie van je Theme Hospital installatie ( huidige lacatie: %1% )",
+    savegames_location = "Standaard worden opgeslagen spellen in de saves map bij het configuratie bestand opgeslagen. Als dit niet gewenst is, kies dan hier een andere locatie.",
+    back = "Sluit dit menu af en ga terug naar het instellingen menu.",
+    browse_saves = "Zoek naar een andere locatie voor je saves map ( huidige locatie: %1% ) ",
+    browse = "Zoek naar de lacatie van de map",
+    browse_screenshots = "Zoek naar een andere locatie voor je screenshots map ( huidige locatie: %1% ) ",
+    not_specified = "Nog geen map ingesteld!",
+    font_location = "Locatie van een lettertype bestand dat de Unicode karakters van je taal kan weergeven. Als dit niet is ingesteld is het niet mogelijk talen te kiezen die meer karakters nodig hebben dan het originele spel kan tonen. Bijvoorbeeld Russisch of Chinees.",
+    reset_to_default = "Herstel de map naar de standaard locatie.",
+    default = "Standaard locatie.",
+    no_font_specified = "Nog geen lettertype locatie ingesteld!",
+    music_location = "Selecteer de locatie van je MP3 bestanden. Deze moet van te voren zijn gemaakt, zoek vervolgens hier naar de locatie.",
   },
 }
 menu_debug_overlay = {
@@ -1654,14 +1715,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "Gefeliciteerd, je hebt de cheats ontdekt!",
-    hairyitis_cheat = "Pilitis cheat geactiveerd",
     roujin_on_cheat = "Roujin's uitdaging geactiveerd, succes...",
-    crazy_on_cheat = "Oh nee! Alle artsen zijn gek geworden!",
-    bloaty_off_cheat = "Plofkop cheat gedeactiveerd.",
-    bloaty_cheat = "Plofkop cheat geactiveerd",
-    crazy_off_cheat = "Pfoe.. de doktoren zijn weer tot zichzelf gekomen",
     roujin_off_cheat = "Roujin's uitdaging gedeactiveerd.",
-    hairyitis_off_cheat = "Pilitis cheat gedeactiveerd.",
   },
 }
 room_descriptions = {
@@ -2113,6 +2168,8 @@ install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
   th_directory = "CorsixTH heeft de databestanden van de originele Theme Hospital (of de demo) nodig om te kunnen draaien. Geef hieronder aan waar Theme Hospital staat geïnstalleerd.",
   exit = "Afsluiten",
+  ok = "OK",
+  cancel = "Annuleren",
 }
 casebook = {
   sent_home = "weggestuurd",
@@ -2142,6 +2199,8 @@ errors = {
   map_file_missing = "Bestand %s voor dit level is niet gevonden!",
   minimum_screen_size = "Voer een resolutie in van minstens 640x480.",
   unavailable_screen_size = "De resolutie die je hebt ingevoerd is niet beschikbaar in fullscreen",
+  alien_dna = "LET OP: Er zijn geen animaties voor alien patiënten die zitten, op deuren kloppenen, deuren openen, enz. Daarom veranderen ze naar een normaal mens als ze dit doen en veranderen dan weer terug, net als in Them Hospital.  Patiënten met alien-DNA verschijnen alleen wanneer dit in het level is toegestaan.",
+  fractured_bones = "LET OP: De animatie voor vrouwelijke patiënten met gebrokken botten is niet goed.",
 }
 diseases = {
   diag_ward = {
@@ -2439,6 +2498,7 @@ confirmation = {  --spaces on the end make the text fit properly in text windows
   abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn, is de ruimte af. Zo niet, dan wordt de ruimte vernietigd.                     ",
   restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?                      ",
   maximum_screen_size = "De resolutie die je hebt ingevoerd is groter dan 3000x2000. Een hoge resolutie is mogelijk, mits je hardware goed genoeg is om een speelbare framerate te behalen. Weet je zeker dat je wilt doorgaan?",
+  music_warning = "Voordat je MP3's gaat gebruiken als ingame muziek, heb je smpeg.dll (of gelijkwaardig voor je systeem) nodig, anders werkt de muziek niet. Op dit moment is een dergerlijk bestand niet beschikbaar voor 64bit systemen.  Wil je doorgaan?",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",
@@ -2595,7 +2655,6 @@ menu_options = {
   music_vol = "  VOLUME MUZIEK  ",
   announcements = "  OMROEPBERICHTEN   ",
   lock_windows = "  VENSTERS VASTZETTEN  ",
-  settings = "  INSTELLINGEN  ",
   sound = "  GELUID   ",
   announcements_vol = "  VOLUME OMROEPBERICHTEN  ",
   music = "  MUZIEK   ",
@@ -2604,7 +2663,12 @@ menu_options = {
   edge_scrolling = "  RANDSCROLLEN  ",
   adviser_disabled = "  (SHIFT+A) ADVISEUR  ",
   warmth_colors = "  WARMTE KLEUREN  ",
-  twentyfour_hour_clock = "  24 UUR KLOK  "
+  twentyfour_hour_clock = "  24 UUR KLOK  ",
+  wage_increase = "  SALARIS VERZOEKEN  ",
+}
+menu_options_wage_increase = {
+  deny = "    AFWIJZEN ",
+  grant = "    TOEKENNEN ",
 }
 menu_options_game_speed = {
   pause = "  PAUZE  ",
