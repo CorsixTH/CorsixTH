@@ -12,7 +12,7 @@ original game can be made.
 ------------------------------------------------------------------------------
 -- Getting started
 ------------------------------------------------------------------------------
-See http://code.google.com/p/corsix-th/wiki/GettingStarted for full details.
+See https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started for full details.
 Briefly:
 1)  Ensure that you are using a supported platform (Windows, Linux, OS X)
 2)  Ensure that you have either the demo of Theme Hospital or the original 
@@ -33,7 +33,7 @@ Briefly:
     Start the game for the first time. You will be asked for the location of
     the Theme Hospital data files. Select the directory you chose in step 3.
 5)  Go play! If this doesn't go smoothly, then consult:
-    http://code.google.com/p/corsix-th/wiki/FrequentlyAskedQuestions
+    https://github.com/CorsixTH/CorsixTH/wiki/Frequently-Asked-Questions
     http://forums.corsixth.com/
     http://groups.google.com/group/corsix-th-dev
     #corsix-th on FreeNode (IRC)
