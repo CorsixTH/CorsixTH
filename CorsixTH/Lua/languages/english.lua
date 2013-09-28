@@ -178,14 +178,8 @@ adviser = {
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",
-    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
-    crazy_off_cheat = "Phew... the doctors regained their sanity.",
     roujin_on_cheat = "Roujin's challenge activated! Good luck...",
     roujin_off_cheat = "Roujin's challenge deactivated.",
-    hairyitis_cheat = "Hairyitis cheat activated!",
-    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
   },
 }
 
