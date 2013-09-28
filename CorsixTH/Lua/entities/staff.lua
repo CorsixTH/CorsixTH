@@ -622,8 +622,8 @@ function Staff:goToStaffRoom()
   -- NB: going_to_staffroom set if (and only if) a seek_staffroom action is in the action_queue
   self.going_to_staffroom = true
   if self.task then
-  self.task.assignedHandyman = nil
-  self.task = nil
+    self.task.assignedHandyman = nil
+    self.task = nil
   end
   local room = self:getRoom()
   if room then
@@ -645,8 +645,8 @@ function Staff:onPlaceInCorridor()
   -- staff member to primarily return to his/her old room.
   self.last_room = nil
   if self.task then
-  self.task.assignedHandyman = nil
-  self.task = nil
+    self.task.assignedHandyman = nil
+    self.task = nil
   end
   self:updateSpeed()
   self:setNextAction{name = "meander"}
