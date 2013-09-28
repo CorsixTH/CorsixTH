@@ -886,7 +886,7 @@ function Staff:afterLoad(old, new)
   Humanoid.afterLoad(self, old, new)
 end
 
-function Staff:intreruptHandymanTask()
+function Staff:interruptHandymanTask()
   self:setDynamicInfoText("")
   if self.on_call then
     self.on_call.assigned = nil
