@@ -59,14 +59,14 @@ function UIProgressReport:UIProgressReport(ui)
     local res_value = world_goals[crit_name].win_value
     world_goals[crit_name].visible = true
     -- Special case for money, subtract loans
-    local current = hospital[crit_name]
+    local cur_value = hospital[crit_name]
     if crit_name == "balance" then
-      current = current - hospital.loan
+      cur_value = cur_value - hospital.loan
     end
     if world_goals[crit_name].lose_value then
       world_goals[crit_name].red = false
       
-      if current < world_goals[crit_name].boundary then
+      if cur_value < world_goals[crit_name].boundary then
         world_goals[crit_name].red = true
         res_value = world_goals[crit_name].lose_value
         -- TODO: Make the ugly workaround for the special case "percentage_killed" better
@@ -86,7 +86,7 @@ function UIProgressReport:UIProgressReport(ui)
     if res_value then
       local tooltip
       if world.level_criteria[tab.criterion].formats == 2 then
-        tooltip = _S.tooltip.status[crit_name]:format(res_value, current)
+        tooltip = _S.tooltip.status[crit_name]:format(res_value, cur_value)
       else
         tooltip = _S.tooltip.status[crit_name]:format(res_value)
       end
@@ -200,17 +200,17 @@ function UIProgressReport:draw(canvas, x, y)
     local crit_name = world.level_criteria[tab.criterion].name
     if world_goals[crit_name].visible then
       local sprite_offset = world_goals[crit_name].red and 2 or 0
-      local current = hospital[crit_name]
+      local cur_value = hospital[crit_name]
       -- Balance is special
       if crit_name == "balance" then
-        current = current - hospital.loan
+        cur_value = cur_value - hospital.loan
       end
       local height
       if world_goals[crit_name].red then
         local lose = world_goals[crit_name].lose_value
-        height = 1 + 49*(1 - ((current - lose)/(world_goals[crit_name].boundary - lose)))
+        height = 1 + 49*(1 - ((cur_value - lose)/(world_goals[crit_name].boundary - lose)))
       else
-        height = 1 + 49*(current/world_goals[crit_name].win_value)
+        height = 1 + 49*(cur_value/world_goals[crit_name].win_value)
       end
       if height > 50 then height = 50 end
       local result_y = 0
