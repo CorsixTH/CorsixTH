@@ -117,6 +117,8 @@ function UIBottomPanel:UIBottomPanel(ui)
   ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
   ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level
   ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu
+  ui:addKeyHandler({"alt", "S"}, self, self.quickSave)  -- Alt + S quick save
+  ui:addKeyHandler({"alt", "L"}, self, self.quickLoad)  -- Alt + L load last quick save 
   
   -- misc. keyhandlers
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
@@ -134,7 +136,15 @@ end
 
 function UIBottomPanel:openLoad()
   self.ui:addWindow(UILoadGame(self.ui, "game"))
-end  
+end 
+
+function UIBottomPanel:quickSave()
+  self.ui.app:quickSave()
+end
+
+function UIBottomPanel:quickLoad()
+  self.ui.app:quickLoad()
+end 
 
 function UIBottomPanel:restart()
   self.ui.app:restart()
@@ -750,6 +760,10 @@ function UIBottomPanel:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level 
     self.ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu    
   end  
+  if old < 80 then
+    self.ui:addKeyHandler({"alt", "S"}, self, self.quickSave)  -- Alt + S quick save
+    self.ui:addKeyHandler({"alt", "L"}, self, self.quickLoad)  -- Alt + L load last quick save
+  end    
   Window.afterLoad(self, old, new)
 end
 
