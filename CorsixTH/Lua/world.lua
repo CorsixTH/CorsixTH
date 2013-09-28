@@ -295,24 +295,24 @@ function World:initStaff()
 end
 
 function World:determineWinningConditions()
+  local winning_goal_count = 0
   -- No conditions if in free build mode!
   if self.free_build_mode then
     self.goals = {}
-    self.winning_goals = {}
+    self.winning_goal_count = winning_goal_count
     return
   end
   -- Determine winning and losing conditions
   local win = self.map.level_config.win_criteria
   local lose = self.map.level_config.lose_criteria
   local active = {}
-  local total = 0
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
   if win then
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
-        total = total + 1
+        winning_goal_count = winning_goal_count + 1
         local criterion = self.level_criteria[values.Criteria].name
         active[criterion] = {
           name = criterion,
@@ -321,7 +321,7 @@ function World:determineWinningConditions()
           criterion = values.Criteria,
           max_min_win = values.MaxMin,
           group = values.Group,
-          number = total,
+          number = winning_goal_count,
         }
         active[#active + 1] = active[criterion]
       end
@@ -353,7 +353,7 @@ function World:determineWinningConditions()
   -- Order the criteria (some icons in the progress report shouldn't be next to each other)
   table.sort(active, function(a,b) return a.criterion < b.criterion end)
   self.goals = active
-  self.winning_goals = total
+  self.winning_goal_count = winning_goal_count
 end
 
 function World:initRooms()

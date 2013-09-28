@@ -53,7 +53,6 @@ function UIProgressReport:UIProgressReport(ui)
   
   -- Get goals
   local active = world.goals
-  local total = world.winning_goals
 
   -- Add the icons for the criteria
   local x = 263
@@ -83,7 +82,7 @@ function UIProgressReport:UIProgressReport(ui)
       end
     end
     -- Only five criteria can be there at once.
-    if crit:find("killed") and total > 5 then
+    if crit:find("killed") and world.winning_goal_count > 5 then
       res_value = nil
       active[crit].visible = false
     end
