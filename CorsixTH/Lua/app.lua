@@ -28,7 +28,8 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
-local SAVEGAME_VERSION = 79
+
+local SAVEGAME_VERSION = 80
 
 class "App"
 
@@ -1149,9 +1150,24 @@ end
 function App:save(filename)
   return SaveGameFile(self.savegame_dir .. filename)
 end
+-- Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten
+function App:quickSave()
+  local filename = "quicksave"
+  return SaveGameFile(self.savegame_dir .. filename)
+end
 
 function App:load(filename)
   return LoadGameFile(self.savegame_dir .. filename)
+end
+
+function App:quickLoad()
+  local filename = "quicksave"
+  if lfs.attributes(self.savegame_dir .. filename) then
+    self:load(filename)  
+  else 
+    self:quickSave()  
+    self.ui:addWindow(UIInformation(self.ui, {_S.errors.load_quick_save}))
+  end
 end
 
 --! Restarts the current level (offers confirmation window first)
