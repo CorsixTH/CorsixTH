@@ -1599,7 +1599,7 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
       if task.object.ticks ~= true then 
-        task.assignedHandyman:intreruptHandymanTask()
+        task.assignedHandyman:interruptHandymanTask()
       end
     end
   end
@@ -1627,7 +1627,7 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
       subTable[taskIndex].assignedHandyman  = handyman
-      formerHandyman:intreruptHandymanTask()
+      formerHandyman:interruptHandymanTask()
     end
   end
 end
