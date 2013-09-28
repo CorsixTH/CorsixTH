@@ -203,19 +203,18 @@ function UIProgressReport:draw(canvas, x, y)
     local crit_name = world.level_criteria[tab.criterion].name
     if active[crit_name].visible then
       local sprite_offset = active[crit_name].red and 2 or 0
-      local modifier = 0
       local current = hospital[crit_name]
       -- Balance is special
       if crit_name == "balance" then
         current = current - hospital.loan
       end
+      local height
       if active[crit_name].red then
         local lose = active[crit_name].lose_value
-        modifier = 49*(1 - ((current - lose)/(active[crit_name].boundary - lose)))
+        height = 1 + 49*(1 - ((current - lose)/(active[crit_name].boundary - lose)))
       else
-        modifier = 49*(current/active[crit_name].win_value)
+        height = 1 + 49*(current/active[crit_name].win_value)
       end
-      local height = 1 + modifier
       if height > 50 then height = 50 end
       local result_y = 0
       for dy = 0, height - 1 do
