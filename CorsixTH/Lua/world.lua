@@ -313,9 +313,9 @@ function World:determineWinningConditions()
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
         winning_goal_count = winning_goal_count + 1
-        local criterion = self.level_criteria[values.Criteria].name
-        active[criterion] = {
-          name = criterion,
+        local crit_name = self.level_criteria[values.Criteria].name
+        active[crit_name] = {
+          name = crit_name,
           win_value = values.Value, 
           boundary = values.Bound, 
           criterion = values.Criteria,
@@ -323,7 +323,7 @@ function World:determineWinningConditions()
           group = values.Group,
           number = winning_goal_count,
         }
-        active[#active + 1] = active[criterion]
+        active[#active + 1] = active[crit_name]
       end
     end
   end
@@ -331,21 +331,21 @@ function World:determineWinningConditions()
   if lose then
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
-        local criterion = self.level_criteria[values.Criteria].name
-        if not active[criterion] then
-          active[criterion] = {number = #active + 1, name = criterion}
-          active[#active + 1] = active[criterion]
+        local crit_name = self.level_criteria[values.Criteria].name
+        if not active[crit_name] then
+          active[crit_name] = {number = #active + 1, name = crit_name}
+          active[#active + 1] = active[crit_name]
         end
-        active[criterion].lose_value = values.Value
-        active[criterion].boundary = values.Bound
-        active[criterion].criterion = values.Criteria
-        active[criterion].max_min_lose = values.MaxMin
-        active[criterion].group = values.Group
-        active[active[criterion].number].lose_value = values.Value
-        active[active[criterion].number].boundary = values.Bound
-        active[active[criterion].number].criterion = values.Criteria
-        active[active[criterion].number].max_min_lose = values.MaxMin
-        active[active[criterion].number].group = values.Group
+        active[crit_name].lose_value = values.Value
+        active[crit_name].boundary = values.Bound
+        active[crit_name].criterion = values.Criteria
+        active[crit_name].max_min_lose = values.MaxMin
+        active[crit_name].group = values.Group
+        active[active[crit_name].number].lose_value = values.Value
+        active[active[crit_name].number].boundary = values.Bound
+        active[active[crit_name].number].criterion = values.Criteria
+        active[active[crit_name].number].max_min_lose = values.MaxMin
+        active[active[crit_name].number].group = values.Group
       end
     end
   end
