@@ -50,41 +50,39 @@ function UIProgressReport:UIProgressReport(ui)
   
   -- Selected hospital number
   self.selected = 1
-  
-  -- Get goals
-  local active = world.goals
 
   -- Add the icons for the criteria
   local x = 263
-  for i, tab in ipairs(active) do
+  local world_goals = world.goals
+  for i, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
     local str = _S.tooltip.status[crit_name]
-    local res_value = active[crit_name].win_value
-    active[crit_name].visible = true
+    local res_value = world_goals[crit_name].win_value
+    world_goals[crit_name].visible = true
     -- Special case for money, subtract loans
     local current = hospital[crit_name]
     if crit_name == "balance" then
       current = current - hospital.loan
     end
-    if active[crit_name].lose_value then
-      active[crit_name].red = false
+    if world_goals[crit_name].lose_value then
+      world_goals[crit_name].red = false
       
-      if current < active[crit_name].boundary then
-        active[crit_name].red = true
-        res_value = active[crit_name].lose_value
+      if current < world_goals[crit_name].boundary then
+        world_goals[crit_name].red = true
+        res_value = world_goals[crit_name].lose_value
         -- TODO: Make the ugly workaround for the special case "percentage_killed" better
         if crit_name:find("killed") then
           res_value = nil
-          active[crit_name].visible = false
+          world_goals[crit_name].visible = false
         end
-      elseif not active[crit_name].win_value then
-        active[crit_name].visible = false
+      elseif not world_goals[crit_name].win_value then
+        world_goals[crit_name].visible = false
       end
     end
     -- Only five criteria can be there at once.
     if crit_name:find("killed") and world.winning_goal_count > 5 then
       res_value = nil
-      active[crit_name].visible = false
+      world_goals[crit_name].visible = false
     end
     if res_value then
       if world.level_criteria[tab.criterion].formats == 2 then
@@ -97,7 +95,6 @@ function UIProgressReport:UIProgressReport(ui)
       x = x + 30
     end
   end
-  self.criteria = active
   
   self:addPanel(0, 606, 447):makeButton(0, 0, 26, 26, 8, self.close):setTooltip(_S.tooltip.status.close)
   
@@ -187,7 +184,7 @@ function UIProgressReport:draw(canvas, x, y)
   local app      = self.ui.app
   local hospital = self.ui.hospital
   local world    = hospital.world
-  local active = self.criteria
+  local world_goals = world.goals
   
   -- Names of the players playing
   local ly = 73
@@ -199,21 +196,21 @@ function UIProgressReport:draw(canvas, x, y)
   
   -- Draw the vertical bars for the winning conditions
   local lx = 270
-  for i, tab in ipairs(self.criteria) do
+  for i, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
-    if active[crit_name].visible then
-      local sprite_offset = active[crit_name].red and 2 or 0
+    if world_goals[crit_name].visible then
+      local sprite_offset = world_goals[crit_name].red and 2 or 0
       local current = hospital[crit_name]
       -- Balance is special
       if crit_name == "balance" then
         current = current - hospital.loan
       end
       local height
-      if active[crit_name].red then
-        local lose = active[crit_name].lose_value
-        height = 1 + 49*(1 - ((current - lose)/(active[crit_name].boundary - lose)))
+      if world_goals[crit_name].red then
+        local lose = world_goals[crit_name].lose_value
+        height = 1 + 49*(1 - ((current - lose)/(world_goals[crit_name].boundary - lose)))
       else
-        height = 1 + 49*(current/active[crit_name].win_value)
+        height = 1 + 49*(current/world_goals[crit_name].win_value)
       end
       if height > 50 then height = 50 end
       local result_y = 0

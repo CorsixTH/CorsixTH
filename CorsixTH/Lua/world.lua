@@ -305,7 +305,8 @@ function World:determineWinningConditions()
     return
   end
   -- Determine winning and losing conditions
-  local active = {}
+  local world_goals = {}
+
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
@@ -315,7 +316,7 @@ function World:determineWinningConditions()
       if values.Criteria ~= 0 then
         winning_goal_count = winning_goal_count + 1
         local crit_name = self.level_criteria[values.Criteria].name
-        active[crit_name] = {
+        world_goals[crit_name] = {
           name = crit_name,
           win_value = values.Value, 
           boundary = values.Bound, 
@@ -324,7 +325,7 @@ function World:determineWinningConditions()
           group = values.Group,
           number = winning_goal_count,
         }
-        active[#active + 1] = active[crit_name]
+        world_goals[#world_goals + 1] = world_goals[crit_name]
       end
     end
   end
@@ -334,27 +335,27 @@ function World:determineWinningConditions()
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
         local crit_name = self.level_criteria[values.Criteria].name
-        if not active[crit_name] then
-          active[crit_name] = {number = #active + 1, name = crit_name}
-          active[#active + 1] = active[crit_name]
+        if not world_goals[crit_name] then
+          world_goals[crit_name] = {number = #world_goals + 1, name = crit_name}
+          world_goals[#world_goals + 1] = world_goals[crit_name]
         end
-        active[crit_name].lose_value = values.Value
-        active[crit_name].boundary = values.Bound
-        active[crit_name].criterion = values.Criteria
-        active[crit_name].max_min_lose = values.MaxMin
-        active[crit_name].group = values.Group
-        active[active[crit_name].number].lose_value = values.Value
-        active[active[crit_name].number].boundary = values.Bound
-        active[active[crit_name].number].criterion = values.Criteria
-        active[active[crit_name].number].max_min_lose = values.MaxMin
-        active[active[crit_name].number].group = values.Group
+        world_goals[crit_name].lose_value = values.Value
+        world_goals[crit_name].boundary = values.Bound
+        world_goals[crit_name].criterion = values.Criteria
+        world_goals[crit_name].max_min_lose = values.MaxMin
+        world_goals[crit_name].group = values.Group
+        world_goals[world_goals[crit_name].number].lose_value = values.Value
+        world_goals[world_goals[crit_name].number].boundary = values.Bound
+        world_goals[world_goals[crit_name].number].criterion = values.Criteria
+        world_goals[world_goals[crit_name].number].max_min_lose = values.MaxMin
+        world_goals[world_goals[crit_name].number].group = values.Group
       end
     end
   end
   
   -- Order the criteria (some icons in the progress report shouldn't be next to each other)
-  table.sort(active, function(a,b) return a.criterion < b.criterion end)
-  self.goals = active
+  table.sort(world_goals, function(a,b) return a.criterion < b.criterion end)
+  self.goals = world_goals
   self.winning_goal_count = winning_goal_count
 end
 
