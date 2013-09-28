@@ -56,7 +56,6 @@ function UIProgressReport:UIProgressReport(ui)
   local world_goals = world.goals
   for i, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
-    local str = _S.tooltip.status[crit_name]
     local res_value = world_goals[crit_name].win_value
     world_goals[crit_name].visible = true
     -- Special case for money, subtract loans
@@ -85,13 +84,14 @@ function UIProgressReport:UIProgressReport(ui)
       world_goals[crit_name].visible = false
     end
     if res_value then
+      local tooltip
       if world.level_criteria[tab.criterion].formats == 2 then
-        str = _S.tooltip.status[crit_name]:format(res_value, current)
+        tooltip = _S.tooltip.status[crit_name]:format(res_value, current)
       else
-        str = _S.tooltip.status[crit_name]:format(res_value)
+        tooltip = _S.tooltip.status[crit_name]:format(res_value)
       end
       self:addPanel(world.level_criteria[tab.criterion].icon, x, 240)
-      self:makeTooltip(str, x, 180, x + 30, 180 + 90)
+      self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
       x = x + 30
     end
   end
