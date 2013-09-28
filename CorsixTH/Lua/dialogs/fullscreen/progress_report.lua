@@ -57,9 +57,8 @@ function UIProgressReport:UIProgressReport(ui)
 
   -- Add the icons for the criteria
   local x = 263
-  local criteria = world.level_criteria
   for i, tab in ipairs(active) do
-    local crit = criteria[tab.criterion].name
+    local crit = world.level_criteria[tab.criterion].name
     local str = _S.tooltip.status[crit]
     local res_value = active[crit].win_value
     active[crit].visible = true
@@ -89,12 +88,12 @@ function UIProgressReport:UIProgressReport(ui)
       active[crit].visible = false
     end
     if res_value then
-      if criteria[tab.criterion].formats == 2 then
+      if world.level_criteria[tab.criterion].formats == 2 then
         str = _S.tooltip.status[crit]:format(res_value, current)
       else
         str = _S.tooltip.status[crit]:format(res_value)
       end
-      self:addPanel(criteria[tab.criterion].icon, x, 240)
+      self:addPanel(world.level_criteria[tab.criterion].icon, x, 240)
       self:makeTooltip(str, x, 180, x + 30, 180 + 90)
       x = x + 30
     end
@@ -190,7 +189,6 @@ function UIProgressReport:draw(canvas, x, y)
   local hospital = self.ui.hospital
   local world    = hospital.world
   local active = self.criteria
-  local criteria = world.level_criteria
   
   -- Names of the players playing
   local ly = 73
@@ -203,7 +201,7 @@ function UIProgressReport:draw(canvas, x, y)
   -- Draw the vertical bars for the winning conditions
   local lx = 270
   for i, tab in ipairs(self.criteria) do
-    local criterion = criteria[tab.criterion].name
+    local criterion = world.level_criteria[tab.criterion].name
     if active[criterion].visible then
       local sprite_offset = active[criterion].red and 2 or 0
       local modifier = 0

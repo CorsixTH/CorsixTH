@@ -306,7 +306,6 @@ function World:determineWinningConditions()
   local lose = self.map.level_config.lose_criteria
   local active = {}
   local total = 0
-  local criteria = self.level_criteria
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
@@ -314,7 +313,7 @@ function World:determineWinningConditions()
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
         total = total + 1
-        local criterion = criteria[values.Criteria].name
+        local criterion = self.level_criteria[values.Criteria].name
         active[criterion] = {
           name = criterion,
           win_value = values.Value, 
@@ -332,7 +331,7 @@ function World:determineWinningConditions()
   if lose then
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
-        local criterion = criteria[values.Criteria].name
+        local criterion = self.level_criteria[values.Criteria].name
         if not active[criterion] then
           active[criterion] = {number = #active + 1, name = criterion}
           active[#active + 1] = active[criterion]
