@@ -294,6 +294,8 @@ function World:initStaff()
   end
 end
 
+--! Load goals to win and lose from the map, and store them in 'self.goals'.
+--! Also set 'self.winning_goal_count'.
 function World:determineWinningConditions()
   local winning_goal_count = 0
   -- No conditions if in free build mode!
@@ -303,12 +305,11 @@ function World:determineWinningConditions()
     return
   end
   -- Determine winning and losing conditions
-  local win = self.map.level_config.win_criteria
-  local lose = self.map.level_config.lose_criteria
   local active = {}
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
+  local win = self.map.level_config.win_criteria
   if win then
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
@@ -328,6 +329,7 @@ function World:determineWinningConditions()
     end
   end
   -- Likewise there might be no losing criteria (i.e. the demo)
+  local lose = self.map.level_config.lose_criteria
   if lose then
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
