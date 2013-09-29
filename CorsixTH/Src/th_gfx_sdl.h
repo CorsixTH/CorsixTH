@@ -146,6 +146,10 @@ public: // Internal (this rendering engine only) API
     }
     int getColourCount() const;
     const uint32_t* getARGBData() const;
+    inline void setARGB(int iEntry, uint32_t iVal)
+    {
+        m_aColoursARGB[iEntry] = iVal;
+    }
 
 protected:
     uint32_t m_aColoursARGB[256];

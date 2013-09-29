@@ -822,18 +822,26 @@ void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, 
 
 SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
 {
-    int iPixelCount = pSprite->iHeight * pSprite->iWidth;
-    unsigned char *pData = new unsigned char[iPixelCount];
-    for(int i = 0; i < iPixelCount; ++i)
+    if (!pSprite->pAltPaletteMap)
     {
-        unsigned char iPixel = pSprite->pData[i];
-        if(iPixel != 0xFF && pSprite->pAltPaletteMap)
-            iPixel = pSprite->pAltPaletteMap[iPixel];
-        pData[i] = iPixel;
+        pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
+                                                                  pSprite->pData, m_pPalette);
     }
-    pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
-                                                              pData, m_pPalette);
-    delete[] pData;
+    else
+    {
+        const uint32_t *pPalette = m_pPalette->getARGBData();
+
+        THPalette oPalette;
+        for (int iColour = 0; iColour < 255; iColour++)
+        {
+            oPalette.setARGB(iColour, pPalette[pSprite->pAltPaletteMap[iColour]]);
+        }
+        oPalette.setARGB(255, pPalette[255]); // Colour 0xFF doesn't get remapped.
+
+        pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
+                                                                  pSprite->pData, &oPalette);
+    }
+
     return pSprite->pAltTexture;
 }
 
