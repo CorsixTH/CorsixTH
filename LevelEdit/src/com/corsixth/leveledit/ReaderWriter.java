@@ -521,71 +521,81 @@ public class ReaderWriter {
                 write.newLine();
                 write.write("6 Hospital value");
                 write.newLine();
-                write.write("#win_criteria[0].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.winReputation)
+                write.newLine();
+
+                int numberOfCriteria = 0;
+                if (TabGoals.winReputation) {
+                    write.write("#win_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(1 + " " + 1 + " " + TabGoals.minReputation
                             + " " + 1 + " " + 0);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#win_criteria[1].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.winBalance)
+                if (TabGoals.winBalance) {
+                    write.write("#win_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(2 + " " + 1 + " " + TabGoals.minBalance + " "
                             + 1 + " " + 0);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#win_criteria[2].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.winPercentage)
+                if (TabGoals.winPercentage) {
+                    write.write("#win_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(3 + " " + 1 + " " + TabGoals.minPercentage
                             + " " + 1 + " " + 0);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#win_criteria[3].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.winCureCount)
+                if (TabGoals.winCureCount) {
+                    write.write("#win_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(4 + " " + 1 + " " + TabGoals.minCureCount + " "
                             + 1 + " " + 0);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#win_criteria[4].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.winValue)
+                if (TabGoals.winValue) {
+                    write.write("#win_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(6 + " " + 1 + " " + TabGoals.minValue + " " + 1
                             + " " + 0);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    write.newLine();
+                }
                 write.newLine();
 
-                write.write("#lose_criteria[0].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.loseReputation)
+                numberOfCriteria = 0;
+                if (TabGoals.loseReputation) {
+                    write.write("#lose_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(1 + " " + 0 + " " + TabGoals.maxReputation
                             + " " + 1 + " " + TabGoals.warnReputation);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound ");
-                if (TabGoals.loseBalance)
+                if (TabGoals.loseBalance) {
+                    write.write("#lose_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(2 + " " + 0 + " " + TabGoals.maxBalance + " "
                             + 2 + " " + TabGoals.warnBalance);
-                else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    numberOfCriteria++;
+                    write.newLine();
+                }
 
-                write.write("#lose_criteria[2].Criteria.MaxMin.Value.Group.Bound ");
                 if (TabGoals.losePercentageKilled) {
+                    write.write("#lose_criteria[" + numberOfCriteria
+                            + "].Criteria.MaxMin.Value.Group.Bound ");
                     write.write(5 + " " + 1 + " "
                             + TabGoals.minPercentageKilled + " " + 3 + " "
                             + TabGoals.warnPercentageKilled);
-                } else
-                    write.write("0 0 0 0 0");
-                write.newLine();
+                    write.newLine();
+                }
 
                 write.close();
 
