@@ -173,6 +173,46 @@ public: // Internal (this rendering engine only) API
         (static_cast<THColour>(iA) << 24) ;
     }
 
+    //! Get the red component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The red component intensity of the colour.
+    */
+    inline static unsigned char getR(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 0) & 0xFF);
+    }
+
+    //! Get the green component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The green component intensity of the colour.
+    */
+    inline static unsigned char getG(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 8) & 0xFF);
+    }
+
+    //! Get the blue component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The blue component intensity of the colour.
+    */
+    inline static unsigned char getB(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 16) & 0xFF);
+    }
+
+    //! Get the opacity component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The opacity of the colour.
+    */
+    inline static unsigned char getA(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 24) & 0xFF);
+    }
+
     //! Get the number of colours in the palette.
     /*!
         @return The number of colours in the palette.
