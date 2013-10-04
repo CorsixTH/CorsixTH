@@ -487,8 +487,7 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-bool THSpriteSheet::loadFromTHFile(
-                                   const unsigned char* pTableData, size_t iTableDataLength,
+bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                                    const unsigned char* pChunkData, size_t iChunkDataLength,
                                    bool bComplexChunks, THRenderTarget* pCanvas)
 {
@@ -697,21 +696,21 @@ unsigned int THSpriteSheet::getSpriteCount() const
     return m_iSpriteCount;
 }
 
-bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
+bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
-    if(pX != NULL)
-        *pX = m_pSprites[iSprite].iWidth;
-    if(pY != NULL)
-        *pY = m_pSprites[iSprite].iHeight;
+    if(pWidth != NULL)
+        *pWidth = m_pSprites[iSprite].iWidth;
+    if(pHeight != NULL)
+        *pHeight = m_pSprites[iSprite].iHeight;
     return true;
 }
 
-void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
+void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
-    *pX = m_pSprites[iSprite].iWidth;
-    *pY = m_pSprites[iSprite].iHeight;
+    *pWidth = m_pSprites[iSprite].iWidth;
+    *pHeight = m_pSprites[iSprite].iHeight;
 }
 
 bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
