@@ -466,8 +466,7 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-bool THSpriteSheet::loadFromTHFile(
-                                   const unsigned char* pTableData, size_t iTableDataLength,
+bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                                    const unsigned char* pChunkData, size_t iChunkDataLength,
                                    bool bComplexChunks, THRenderTarget* pCanvas)
 {
@@ -676,21 +675,21 @@ unsigned int THSpriteSheet::getSpriteCount() const
     return m_iSpriteCount;
 }
 
-bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
+bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
-    if(pX != NULL)
-        *pX = m_pSprites[iSprite].iWidth;
-    if(pY != NULL)
-        *pY = m_pSprites[iSprite].iHeight;
+    if(pWidth != NULL)
+        *pWidth = m_pSprites[iSprite].iWidth;
+    if(pHeight != NULL)
+        *pHeight = m_pSprites[iSprite].iHeight;
     return true;
 }
 
-void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
+void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
-    *pX = m_pSprites[iSprite].iWidth;
-    *pY = m_pSprites[iSprite].iHeight;
+    *pWidth = m_pSprites[iSprite].iWidth;
+    *pHeight = m_pSprites[iSprite].iHeight;
 }
 
 bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
@@ -707,10 +706,10 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
         if((iColour >> 24) == 0)
             continue;
         // Grant higher score to pixels with high or low intensity (helps avoid grey fonts)
-        unsigned char iR = static_cast<uint8_t> ((iColour >>  0) & 0xFF);
-        unsigned char iG = static_cast<uint8_t> ((iColour >>  8) & 0xFF);
-        unsigned char iB = static_cast<uint8_t> ((iColour >> 16) & 0xFF);
-        unsigned char cIntensity = (unsigned char)(((int)iR + (int)iG + (int)iB) / 3);
+        int iR = THPalette::getR(iColour);
+        int iG = THPalette::getG(iColour);
+        int iB = THPalette::getB(iColour);
+        unsigned char cIntensity = (unsigned char)((iR + iG + iB) / 3);
         int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
         iUsageCounts[cPalIndex] += iScore;
         iCountTotal += iScore;
@@ -780,10 +779,10 @@ void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, 
     {
         for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pPixels, ++pAData, pRGBData += 3)
         {
-            pRGBData[0] = (pColours[*pPixels] >>  0) & 0xFF;
-            pRGBData[1] = (pColours[*pPixels] >>  8) & 0xFF;
-            pRGBData[2] = (pColours[*pPixels] >> 16) & 0xFF;
-            pAData  [0] = (pColours[*pPixels] >> 24) & 0xFF;
+            pRGBData[0] = THPalette::getR(pColours[*pPixels]);
+            pRGBData[1] = THPalette::getG(pColours[*pPixels]);
+            pRGBData[2] = THPalette::getB(pColours[*pPixels]);
+            pAData  [0] = THPalette::getA(pColours[*pPixels]);
         }
     }
 }
@@ -817,8 +816,8 @@ bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned
         iX = iWidth - iX - 1;
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
-    return (m_pPalette->getARGBData()
-            [m_pSprites[iSprite].pData[iY * iWidth + iX]] >> 24) != 0;
+    return THPalette::getA(m_pPalette->getARGBData()
+            [m_pSprites[iSprite].pData[iY * iWidth + iX]]) != 0;
 }
 
 THCursor::THCursor()
