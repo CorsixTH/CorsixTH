@@ -117,6 +117,7 @@ function Hospital:Hospital(world, name)
   self.not_cured_ty = 0 
   self.num_visitors_ty = 0
 
+  self.elapsed_months = 0
   self.ownedPlots = {1}
   self.is_in_world = true
   self.opened = false
@@ -936,9 +937,13 @@ function Hospital:onEndDay()
           e.announced = true
           self.announce_vip = self.announce_vip - 1
         end
-      end
     end
   end
+  
+  if self.elapsed_months then
+    self.elapsed_months = self.elapsed_months + 1
+  end
+end
 
   -- Countdown for boiler breakdowns 
   if self.heating_broke then

@@ -126,7 +126,7 @@ end
 
 function UIBottomPanel:openJukebox()
   self.ui:addWindow(UIJukebox(self.ui.app))
-end  
+end
 
 function UIBottomPanel:openSave()
   self.ui:addWindow(UISaveGame(self.ui))
