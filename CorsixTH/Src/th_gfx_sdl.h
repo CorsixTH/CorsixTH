@@ -239,18 +239,28 @@ protected:
 #pragma pack(pop)
 #endif
 
+    //! Sprite data structure.
     struct sprite_t
     {
         SDL_Surface *pBitmap[32];
+
+        //! Data of the sprite (width * height bytes).
         unsigned char *pData;
         const unsigned char *pAltPaletteMap;
+
+        //! Width of the sprite.
         unsigned int iWidth;
+
+        //! Height of the sprite.
         unsigned int iHeight;
     } *m_pSprites;
     const THPalette* m_pPalette;
+
+    //! Number of sprites in the sprite sheet.
     unsigned int m_iSpriteCount;
     bool m_bHasAnyFlaggedBitmaps;
 
+    //! Free the memory used by the sprites. Also releases the SDL bitmaps.
     void _freeSprites();
     SDL_Surface* _getSpriteBitmap(unsigned int iSprite, unsigned long iFlags);
 };

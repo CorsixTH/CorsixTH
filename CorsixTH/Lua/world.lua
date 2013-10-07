@@ -1737,6 +1737,9 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   return room
 end
 
+--! Setup an animated floating money amount above a patient.
+--!param patient Patient to float above.
+--!param amount Amount of money to display.
 function World:newFloatingDollarSign(patient, amount)
   if not self.floating_dollars then
     self.floating_dollars = {}
