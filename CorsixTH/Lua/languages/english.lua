@@ -438,6 +438,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
