@@ -874,6 +874,7 @@ local tick_rates = {
   ["Normal"]             = {1, 3},
   ["Max speed"]          = {1, 1},
   ["And then some more"] = {3, 1},
+  ["Speed Up"]           = {3, 1},
 }
 
 -- Return the length of the current month
@@ -895,6 +896,17 @@ function World:getCurrentSpeed()
     end
   end
 end
+
+function World:speedUp() 
+  self:setSpeed("Speed Up")  
+end
+
+function World:previousSpeed()
+  if self:isCurrentSpeed("Speed Up") then
+    self:setSpeed(self.prev_speed)
+  end  
+end
+
 
 -- Set the (approximate) number of seconds per tick.
 --!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
@@ -1454,6 +1466,9 @@ function World:winGame(player_no)
       end
     end
     self.hospitals[player_no].game_won = true
+    if self:isCurrentSpeed("Speed Up") then
+      self:previousSpeed()
+    end  
     self:setSpeed("Pause")
     self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
@@ -1737,6 +1752,9 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   return room
 end
 
+--! Setup an animated floating money amount above a patient.
+--!param patient Patient to float above.
+--!param amount Amount of money to display.
 function World:newFloatingDollarSign(patient, amount)
   if not self.floating_dollars then
     self.floating_dollars = {}
@@ -2261,10 +2279,6 @@ function World:afterLoad(old, new)
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
-  end
-  if old < 77 then
-    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
-    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
   
   self.savegame_version = new

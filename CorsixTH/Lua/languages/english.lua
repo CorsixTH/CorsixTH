@@ -178,8 +178,14 @@ adviser = {
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",
+    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
+    crazy_off_cheat = "Phew... the doctors regained their sanity.",
     roujin_on_cheat = "Roujin's challenge activated! Good luck...",
     roujin_off_cheat = "Roujin's challenge deactivated.",
+    hairyitis_cheat = "Hairyitis cheat activated!",
+    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
+    bloaty_cheat = "Bloaty Head cheat activated!",
+    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
   },
 }
 
@@ -438,6 +444,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",

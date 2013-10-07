@@ -784,7 +784,7 @@ end
 
 function Hospital:purchasePlot(plot_number)
   local map = self.world.map
-  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) then
+  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) and not self.world.ui.transparent_walls then
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
@@ -1071,22 +1071,24 @@ function Hospital:onEndMonth()
   self.money_out = 0
 
   -- make players aware of the need for a receptionist and desk.
-  if (self:isPlayerHospital() and not self:hasStaffedDesk()) then
-    if self.receptionist_count ~= 0 and self.world.month > 2 and self.world.year == 1 and not self.receptionist_msg then
+  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world.year == 1 then
+    if self.receptionist_count ~= 0 and self.world.month > 2 and not self.receptionist_msg then
       self.world.ui.adviser:say(_A.warnings.no_desk_6)
       self.receptionist_msg = true 
-    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.year == 1 and self.world.object_counts["reception_desk"] ~= 0  then
+    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
       self.world.ui.adviser:say(_A.warnings.no_desk_7)
     --  self.receptionist_msg = true     
-    elseif self.world.month == 3 and self.world.year == 1 then
+    elseif self.world.month == 3 then
       self.world.ui.adviser:say(_A.warnings.no_desk, true)
-    elseif self.world.month == 8 and self.world.year == 1 then
+    elseif self.world.month == 8 then
       self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
-    elseif self.world.month == 11 and self.world.year == 1 and self.visitors == 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
-    elseif self.world.month == 11 and self.world.year == 1 and self.visitors ~= 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
-    end      
+    elseif self.world.month == 11 then
+      if self.visitors == 0 then
+        self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
+      else
+        self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
+      end
+    end
   end
 end
 
@@ -1599,7 +1601,7 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
       if task.object.ticks ~= true then 
-        task.assignedHandyman:intreruptHandymanTask()
+        task.assignedHandyman:interruptHandymanTask()
       end
     end
   end
@@ -1627,7 +1629,7 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
       subTable[taskIndex].assignedHandyman  = handyman
-      formerHandyman:intreruptHandymanTask()
+      formerHandyman:interruptHandymanTask()
     end
   end
 end
