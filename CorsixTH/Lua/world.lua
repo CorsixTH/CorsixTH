@@ -485,11 +485,33 @@ function World:spawnPatient(hospital)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
+ 
+  local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
+  local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
+  
+  local function isVisualDiseaseAvailable(disease)
+    if not disease.visuals_id then 
+      return true
+    end
+    if not hospital.elapsed_months and hospital.elapsed_months ~= 0 then
+      return true
+    end
+    if (hold_visual_months and hold_visual_months > hospital.elapsed_months) or
+      (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
+      return false
+    end
+    local level_config = self.map.level_config
+    if level_config.visuals_available[disease.visuals_id].Value >= hospital.elapsed_months then 
+      return false
+    end
+    return true
+  end
+  
   if hospital:hasStaffedDesk() then
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-    while disease.only_emergency do
+    while disease.only_emergency or not isVisualDiseaseAvailable(disease) do
       disease = self.available_diseases[math.random(1, #self.available_diseases)]
     end
     patient:setDisease(disease)
@@ -874,7 +896,6 @@ local tick_rates = {
   ["Normal"]             = {1, 3},
   ["Max speed"]          = {1, 1},
   ["And then some more"] = {3, 1},
-  ["Speed Up"]           = {3, 1},
 }
 
 -- Return the length of the current month
@@ -896,17 +917,6 @@ function World:getCurrentSpeed()
     end
   end
 end
-
-function World:speedUp() 
-  self:setSpeed("Speed Up")  
-end
-
-function World:previousSpeed()
-  if self:isCurrentSpeed("Speed Up") then
-    self:setSpeed(self.prev_speed)
-  end  
-end
-
 
 -- Set the (approximate) number of seconds per tick.
 --!param speed (string) One of: "Pause", "Slowest", "Slower", "Normal",
@@ -1466,9 +1476,6 @@ function World:winGame(player_no)
       end
     end
     self.hospitals[player_no].game_won = true
-    if self:isCurrentSpeed("Speed Up") then
-      self:previousSpeed()
-    end  
     self:setSpeed("Pause")
     self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
@@ -2279,6 +2286,10 @@ function World:afterLoad(old, new)
     for _, obj in pairs(cat) do
       obj:afterLoad(old, new)
     end
+  end
+  if old < 77 then
+    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
+    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
   
   self.savegame_version = new
