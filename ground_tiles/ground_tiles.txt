@@ -1,0 +1,640 @@
+sprite 1 {
+    base = "ground_tiles/s1.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 2 {
+    base = "ground_tiles/s2.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 3 {
+    base = "ground_tiles/s3.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 4 {
+    base = "ground_tiles/s4.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 5 {
+    base = "ground_tiles/s5.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 6 {
+    base = "ground_tiles/s6.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 7 {
+    base = "ground_tiles/s7.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 8 {
+    base = "ground_tiles/s8.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 9 {
+    base = "ground_tiles/s9.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 10 {
+    base = "ground_tiles/s10.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 11 {
+    base = "ground_tiles/s11.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 12 {
+    base = "ground_tiles/s12.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 13 {
+    base = "ground_tiles/s13.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 14 {
+    base = "ground_tiles/s14.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 15 {
+    base = "ground_tiles/s15.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 16 {
+    base = "ground_tiles/s16.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 17 {
+    base = "ground_tiles/s17.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 18 {
+    base = "ground_tiles/s18.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 19 {
+    base = "ground_tiles/s19.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 20 {
+    base = "ground_tiles/s20.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 21 {
+    base = "ground_tiles/s21.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 22 {
+    base = "ground_tiles/s22.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 23 {
+    base = "ground_tiles/s23.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 24 {
+    base = "ground_tiles/s24.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 25 {
+    base = "ground_tiles/s25.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 26 {
+    base = "ground_tiles/s26.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 27 {
+    base = "ground_tiles/s27.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 28 {
+    base = "ground_tiles/s28.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 29 {
+    base = "ground_tiles/s29.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 30 {
+    base = "ground_tiles/s30.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 31 {
+    base = "ground_tiles/s31.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 32 {
+    base = "ground_tiles/s32.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 33 {
+    base = "ground_tiles/s33.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 34 {
+    base = "ground_tiles/s34.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 35 {
+    base = "ground_tiles/s35.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 36 {
+    base = "ground_tiles/s36.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 37 {
+    base = "ground_tiles/s37.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 38 {
+    base = "ground_tiles/s38.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 39 {
+    base = "ground_tiles/s39.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 40 {
+    base = "ground_tiles/s40.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 41 {
+    base = "ground_tiles/s41.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 42 {
+    base = "ground_tiles/s42.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 43 {
+    base = "ground_tiles/s43.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 44 {
+    base = "ground_tiles/s44.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 45 {
+    base = "ground_tiles/s45.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 46 {
+    base = "ground_tiles/s46.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 47 {
+    base = "ground_tiles/s47.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 48 {
+    base = "ground_tiles/s48.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 49 {
+    base = "ground_tiles/s49.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 50 {
+    base = "ground_tiles/s50.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 51 {
+    base = "ground_tiles/s51.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 52 {
+    base = "ground_tiles/s52.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 53 {
+    base = "ground_tiles/s53.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 54 {
+    base = "ground_tiles/s54.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 55 {
+    base = "ground_tiles/s55.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 56 {
+    base = "ground_tiles/s56.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 57 {
+    base = "ground_tiles/s57.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 58 {
+    base = "ground_tiles/s58.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 59 {
+    base = "ground_tiles/s59.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 60 {
+    base = "ground_tiles/s60.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+//sprite 61 {
+//    base = "ground_tiles/s61.png";
+//    top = 0;
+//    left = 0;
+//    width = 64;
+//    height = 32;
+//}
+
+//sprite 62 {
+//    base = "ground_tiles/s62.png";
+//    top = 0;
+//    left = 0;
+//    width = 64;
+//    height = 32;
+//}
+
+//sprite 63 {
+//    base = "ground_tiles/s63.png";
+//    top = 0;
+//    left = 0;
+//    width = 64;
+//    height = 32;
+//}
+
+//sprite 64 {
+//    base = "ground_tiles/s64.png";
+//    top = 0;
+//    left = 0;
+//    width = 64;
+//    height = 32;
+//}
+
+sprite 65 {
+    base = "ground_tiles/s65.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 66 {
+    base = "ground_tiles/s66.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 67 {
+    base = "ground_tiles/s67.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 68 {
+    base = "ground_tiles/s68.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+//sprite 69 {
+//    base = "ground_tiles/s69.png";
+//    top = 0;
+//    left = 0;
+//    width = 64;
+//    height = 32;
+//}
+
+sprite 70 {
+    base = "ground_tiles/s70.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 71 {
+    base = "ground_tiles/s71.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 72 {
+    base = "ground_tiles/s72.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 73 {
+    base = "ground_tiles/s73.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 74 {
+    base = "ground_tiles/s74.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 75 {
+    base = "ground_tiles/s75.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 76 {
+    base = "ground_tiles/s76.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 77 {
+    base = "ground_tiles/s77.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 78 {
+    base = "ground_tiles/s78.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 79 {
+    base = "ground_tiles/s79.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
+sprite 80 {
+    base = "ground_tiles/s80.png";
+    top = 0;
+    left = 0;
+    width = 64;
+    height = 32;
+}
+
