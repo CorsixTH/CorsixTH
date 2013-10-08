@@ -266,7 +266,7 @@ end
 
 function UICasebook:scrollUp()
   if self.selected_index > 1 then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = 1
     else
       self.selected_index = self.selected_index - 1
@@ -282,7 +282,7 @@ end
 
 function UICasebook:scrollDown()
   if self.selected_index < #self.names_sorted then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = #self.names_sorted
     else
       self.selected_index = self.selected_index + 1
@@ -299,9 +299,9 @@ end
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price + amount
@@ -318,9 +318,9 @@ end
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price - amount
