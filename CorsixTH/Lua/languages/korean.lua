@@ -183,6 +183,16 @@ tooltip = {
     allocated_amount = "할당된 예산",
     close = "연구 화면 닫기",
   },
+  customise_window = {
+    intro = "인트로 영상을 켜거나 끕니다. CorsixTH 를 플레이할 때마다 인트로 영상을 재생하게 하려면 영상 컨트롤이 켜져 있어야 합니다",
+    fractured_bones = "조잡한 애니메이션의 문제로, 기본적으로 여성 골절 환자는 등장하지 않도록 되어있습니다. 여성 골절 환자들이 병원을 방문하게 하려면 이 옵션을 끄세요",
+    movies = "이 옵션을 끄면 게임 내의 모든 영상이 재생되지 않습니다",
+    volume = "음량 감소 버튼이  약물 사례집을 열게 되는 경우, 이 옵션을 켜서 약물 사례집 단축키를 Shift + C 로 변경하세요",
+    aliens = "적절한 애니메이션의 부재로, 외계인 DNA 환자들은 응급 상황에서만 방문하도록 되어있습니다. 외계 DNA 환자들이 병원을 평소에도 방문하게 하려면 이 옵션을 끄세요",
+    paused = "테마 병원에서 기본적으로 플레이어는 게임이 일시 정지 되었을 때 상위 메뉴만을 사용할 수 있고, CorsixTH 에서도 마찬가지 입니다. 이 옵션을 켜면 게임이 정지된 상태에서도 모든 기능이 활성화 됩니다",
+    average_contents = "방을 건설할 때 당신이 보통 어떤 비품들을 추가로 배치하는지 게임이 기억하도록 하려면 이 옵션을 켜세요",
+    back = "이 메뉴를 닫고 옵션 메뉴로 돌아감",
+  },
   machine_window = {
     repair = "잡역부를 불러서 수리하기",
     name = "이름",
@@ -1403,6 +1413,19 @@ folders_window = {
   screenshots_label = "스크린샷",
   music_location = "음악을 재생할 디렉토리를 선택하세요",
   data_label = "테마 병원 데이터",
+}
+customise_window = {
+  movies = "영상 컨트롤",
+  option_on = "켜짐",
+  option_off = "꺼짐",
+  back = "뒤로",
+  paused = "정지 상태에서 건설",
+  intro = "인트로 영상 재생",
+  volume = "음량 감소 단축키",
+  caption = "커스텀 설정",
+  fractured_bones = "골절",
+  average_contents = "일반 비품",
+  aliens = "외계인 환자",
 }
 diseases = {
   alien_dna = {
