@@ -225,6 +225,16 @@ public: // Internal (this rendering engine only) API
     */
     const THColour* getARGBData() const;
 
+    //! Set an entry in the palette.
+    /*!
+        @param iEntry Entry to set.
+        @param iVal New colour of the entry.
+    */
+    inline void setARGB(int iEntry, uint32_t iVal)
+    {
+        m_aColoursARGB[iEntry] = iVal;
+    }
+
 protected:
     //! 32bpp palette colours associated with the 8bpp colour index.
     uint32_t m_aColoursARGB[256];
