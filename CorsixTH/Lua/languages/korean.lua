@@ -590,6 +590,10 @@ tooltip = {
     select_language = "게임 언어를 선택하세요",
     select_resolution = "새로운 해상도를 선택하세요",
     resolution = "게임이 실행될 해상도",
+    audio_button = "게임 전체의 오디오를 켜고 끕니다",
+    folder_button = "폴더 옵션",
+    audio_toggle = "켜고 끄기",
+    customise_button = "게임 플레이 경험을 커스터마이즈 하기 위한 세부 설정",
   },
 }
 menu_charts = {
@@ -1697,14 +1701,13 @@ options_window = {
   caption = "옵션",
   language = "게임 언어",
   apply = "적용",
-  data_location = "데이터 위치",
   width = "너비",
-  browse = "찾아보기...",
   change_resolution = "해상도 변경",
   height = "높이",
-  font_location = "폰트 위치",
   resolution = "해상도",
-  new_th_directory = "여기서 테마 병원 설치 경로를 새로 설정할 수 있습니다. 새로운 경로를 선택하면 게임이 재시작됩니다.",
+  folder = "폴더",
+  audio = "오디오",
+  customise = "커스터마이즈",
 }
 trophy_room = {
   all_cured = {
