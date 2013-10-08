@@ -431,8 +431,6 @@ THSpriteSheet::THSpriteSheet()
     m_pSprites = NULL;
     m_pPalette = NULL;
     m_pTarget = NULL;
-    m_pMegaTexture = 0;
-    m_iMegaTextureSize = 0;
     m_iSpriteCount = 0;
 }
 
@@ -445,20 +443,14 @@ void THSpriteSheet::_freeSprites()
 {
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
-        if (m_pSprites[i].pTexture != m_pMegaTexture)
-            SDL_DestroyTexture(m_pSprites[i].pTexture);
-        if (m_pSprites[i].pAltTexture != m_pMegaTexture)
-            SDL_DestroyTexture(m_pSprites[i].pAltTexture);
+        SDL_DestroyTexture(m_pSprites[i].pTexture);
+        SDL_DestroyTexture(m_pSprites[i].pAltTexture);
         if(m_pSprites[i].pData)
             delete[] m_pSprites[i].pData;
     }
     delete[] m_pSprites;
     m_pSprites = NULL;
     m_iSpriteCount = 0;
-
-    SDL_DestroyTexture(m_pMegaTexture);
-    m_pMegaTexture = NULL;
-    m_iMegaTextureSize = 0;
 }
 
 void THSpriteSheet::setPalette(const THPalette* pPalette)
@@ -508,148 +500,7 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             pSprite->pData = oRenderer.takeData();
         }
     }
-
-    sprite_t **ppSortedSprites = new sprite_t*[m_iSpriteCount];
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-    {
-        ppSortedSprites[i] = m_pSprites + i;
-    }
-    qsort(ppSortedSprites, m_iSpriteCount, sizeof(sprite_t*), _sortSpritesHeight);
-
-    unsigned int iSize;
-    if(_tryFitSingleTex(ppSortedSprites, 2048))
-    {
-        iSize = 2048;
-        if(_tryFitSingleTex(ppSortedSprites, 1024))
-        {
-            iSize = 1024;
-            if(_tryFitSingleTex(ppSortedSprites, 512))
-            {
-                iSize = 512;
-                if(_tryFitSingleTex(ppSortedSprites, 256))
-                {
-                    iSize = 256;
-                    if(_tryFitSingleTex(ppSortedSprites, 128))
-                        iSize = 128;
-                }
-            }
-        }
-    }
-    else
-    {
-        delete[] ppSortedSprites;
-        return true;
-    }
-
-    _makeSingleTex(ppSortedSprites, iSize);
-    delete[] ppSortedSprites;
     return true;
-}
-
-int THSpriteSheet::_sortSpritesHeight(const void* left, const void* right)
-{
-    const sprite_t *pLeft = *reinterpret_cast<const sprite_t* const*>(left);
-    const sprite_t *pRight = *reinterpret_cast<const sprite_t* const*>(right);
-
-    // Move all NULL datas to the end
-    if(pLeft->pData == NULL || pRight->pData == NULL)
-    {
-        if(pLeft->pData == NULL && pRight->pData == NULL)
-            return 0;
-        if(pLeft->pData == NULL)
-            return 1;
-        else
-            return -1;
-    }
-
-    // Sort from tallest to shortest
-    return static_cast<int>(pRight->iHeight) - static_cast<int>(pLeft->iHeight);
-}
-
-bool THSpriteSheet::_tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
-{
-    // There are probably better algorithms for trying to fit lots of small
-    // rectangular sprites onto a single square sheet, but sorting them by
-    // height and then filling up one row at a time is simple and yields a good
-    // enough result.
-
-    unsigned int iX = 0;
-    unsigned int iY = 0;
-    unsigned int iTallest = ppSortedSprites[0]->iHeight;
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-    {
-        sprite_t *pSprite = ppSortedSprites[i];
-        if(pSprite->pData == NULL)
-            break;
-        if(pSprite->iWidth > iSize || pSprite->iHeight > iSize)
-            return false;
-        if(iX + pSprite->iWidth > iSize)
-        {
-            iX = 0;
-            iY += iTallest;
-            iTallest = pSprite->iHeight;
-        }
-        iX += pSprite->iWidth;
-    }
-
-    iY += iTallest;
-    return iY <= iSize;
-}
-
-void THSpriteSheet::_makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize)
-{
-    uint32_t *pData = new (std::nothrow) uint32_t[iSize * iSize];
-    if(pData == NULL)
-        return;
-
-    // Pass 1: Fill entirely transparent
-    uint32_t* pRow = pData;
-    uint32_t iTransparent = THPalette::packARGB(0x00, 0x00, 0x00, 0x00);
-    for(unsigned int y = 0; y < iSize; ++y)
-    {
-        for(unsigned int x = 0; x < iSize; ++x, ++pRow)
-        {
-            *pRow = iTransparent;
-        }
-    }
-
-    // Pass 2: Blit sprites onto sheet
-    const uint32_t* pColours = m_pPalette->getARGBData();
-    unsigned int iX = 0;
-    unsigned int iY = 0;
-    unsigned int iTallest = ppSortedSprites[0]->iHeight;
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-    {
-        sprite_t *pSprite = ppSortedSprites[i];
-        if(pSprite->pData == NULL)
-            break;
-
-        pSprite->pTexture = m_pMegaTexture;
-        if(iX + pSprite->iWidth > iSize)
-        {
-            iX = 0;
-            iY += iTallest;
-            iTallest = pSprite->iHeight;
-        }
-        pSprite->iSheetX = iX;
-        pSprite->iSheetY = iY;
-        iX += pSprite->iWidth;
-
-        const unsigned char *pPixels = pSprite->pData;
-        pRow = pData + pSprite->iSheetY * iSize + pSprite->iSheetX;
-        for(unsigned int y = 0; y < pSprite->iHeight; ++y)
-        {
-            for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pRow, ++pPixels)
-            {
-                *pRow = pColours[*pPixels];
-            }
-        }
-    }
-
-    m_pMegaTexture = m_pTarget->createTexture(iSize, iSize, pData);
-    delete[] pData;
-    if(m_pMegaTexture)
-        m_iMegaTextureSize = iSize;
 }
 
 void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
@@ -663,7 +514,6 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
         pSprite->pAltPaletteMap = pMap;
         if(pSprite->pAltTexture)
         {
-            // TODO: alt texture == mega?
             SDL_DestroyTexture(pSprite->pAltTexture);
             pSprite->pAltTexture = NULL;
         }
@@ -756,13 +606,6 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
 
     SDL_Rect rcSrc  = { 0,  0,  sprite.iWidth, sprite.iHeight };
     SDL_Rect rcDest = { iX, iY, sprite.iWidth, sprite.iHeight };
-
-
-    if(pTexture == m_pMegaTexture)
-    {
-        rcSrc.x = sprite.iSheetX;
-        rcSrc.y = sprite.iSheetY;
-    }
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 }
