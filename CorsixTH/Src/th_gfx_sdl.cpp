@@ -449,6 +449,24 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
     }
 }
 
+//! Helper function to read a word from memory.
+/*! @param pData Pointer to the word to read.
+    @return The read word value.
+ */
+static unsigned int readWord(const unsigned char* pData)
+{
+    return *pData | (pData[1] << 8);
+}
+
+//! Helper function to read a long word from memory.
+/*! @param pData Pointer to the word to read.
+    @return The read word value.
+ */
+static unsigned int readLong(const unsigned char* pData)
+{
+    return readWord(pData) | (readWord(pData + 2) << 16);
+}
+
 THPalette::THPalette()
 {
     m_iNumColours = 0;
@@ -542,16 +560,125 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
     if (pPixelData == NULL)
         return false;
 
-    int iHeight = static_cast<int>(iPixelDataLength)/iWidth;
+    int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
     m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pPixelData, m_pPalette);
-
     if(!m_pTexture)
         return false;
 
     m_iWidth = iWidth;
-    m_iHeight = static_cast<int>(iPixelDataLength) / iWidth;
+    m_iHeight = iHeight;
     m_pTarget = pEventualCanvas;
+    return true;
+}
 
+/**
+ * Test whether the loaded full colour sprite loads correctly.
+ * @param pData Data of the sprite.
+ * @param iDataLength Length of the sprite data.
+ * @param iWidth Width of the sprite.
+ * @param iHeight Height of the sprite.
+ * @return Whether the sprite loads correctly (at the end of the sprite, all data is used).
+ */
+static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidth, int iHeight)
+{
+    if (iWidth <= 0 || iHeight <= 0)
+        return true;
+
+    size_t iCount = iWidth * iHeight;
+    while (iCount > 0)
+    {
+        if (iDataLength < 1)
+            return false;
+        iDataLength--;
+        unsigned char iType = *pData++;
+
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                if (iCount < iLength || iDataLength < iLength * 3)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength * 3;
+                pData += iLength * 3;
+                break;
+
+            case 1: // Fixed partially transparent 32bpp pixels
+                if (iDataLength < 1)
+                    return false;
+                iDataLength--;
+                pData++; // Opacity byte.
+
+                if (iCount < iLength || iDataLength < iLength * 3)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength * 3;
+                pData += iLength * 3;
+                break;
+
+            case 2: // Fixed fully transparent pixels
+                if (iCount < iLength)
+                    return false;
+                iCount -= iLength;
+                break;
+
+            case 3: // Recolour layer
+                if (iDataLength < 2)
+                    return false;
+                iDataLength -= 2;
+                pData += 2; // Table number, opacity byte.
+
+                if (iCount < iLength || iDataLength < iLength)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength;
+                pData += iLength;
+                break;
+        }
+    }
+    return iDataLength == 0;
+}
+
+
+bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
+                                 THRenderTarget *pEventualCanvas)
+{
+    if(pEventualCanvas == NULL)
+        return false;
+
+    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
+
+    if(iLength < 6 || memcmp(header, pData, 6) != 0)
+        return false;
+    pData += 6; iLength -= 6;
+
+    if (iLength < 4+2+2+2) // Length of a sprite header.
+        return false;
+
+    uint32_t iSprLength = readLong(pData);
+    pData += 4; iLength -= 4;
+    if (iSprLength < 2+2+2 || iSprLength > iLength)
+        return false;
+
+    unsigned int iSprite = readWord(pData);
+    int iWidth = readWord(pData + 2);
+    int iHeight = readWord(pData + 4);
+    pData += 6; iLength -= 6;
+    iSprLength -= 6;
+
+    if (iSprite > 0)
+        return false; // Only load sprite 0.
+
+    if (!testSprite(pData, iSprLength, iWidth, iHeight))
+        return false;
+
+    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pData, m_pPalette);
+    if(!m_pTexture)
+        return false;
+
+    m_iWidth = iWidth;
+    m_iHeight = iHeight;
+    m_pTarget = pEventualCanvas;
     return true;
 }
 
@@ -590,15 +717,33 @@ THSpriteSheet::~THSpriteSheet()
     _freeSprites();
 }
 
+void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
+{
+    if (iNumber >= m_iSpriteCount)
+        return;
+
+    if (m_pSprites[iNumber].pTexture != NULL)
+    {
+        SDL_DestroyTexture(m_pSprites[iNumber].pTexture);
+        m_pSprites[iNumber].pTexture = NULL;
+    }
+    if (m_pSprites[iNumber].pAltTexture != NULL)
+    {
+        SDL_DestroyTexture(m_pSprites[iNumber].pAltTexture);
+        m_pSprites[iNumber].pAltTexture = NULL;
+    }
+    if(m_pSprites[iNumber].pData != NULL)
+    {
+        delete[] m_pSprites[iNumber].pData;
+        m_pSprites[iNumber].pData = NULL;
+    }
+}
+
 void THSpriteSheet::_freeSprites()
 {
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-    {
-        SDL_DestroyTexture(m_pSprites[i].pTexture);
-        SDL_DestroyTexture(m_pSprites[i].pAltTexture);
-        if(m_pSprites[i].pData)
-            delete[] m_pSprites[i].pData;
-    }
+        _freeSingleSprite(i);
+
     delete[] m_pSprites;
     m_pSprites = NULL;
     m_iSpriteCount = 0;
@@ -652,6 +797,53 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
             delete pData;
         }
+    }
+    return true;
+}
+
+bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
+                                 THRenderTarget *pEventualCanvas)
+{
+    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
+
+    if(iLength < 6 || memcmp(header, pData, 6) != 0)
+        return false;
+    pData += 6; iLength -= 6;
+
+    while (iLength >= 4+2+2+2) // Length of a sprite header.
+    {
+        uint32_t iSprLength = readLong(pData);
+        pData += 4; iLength -= 4;
+        if (iSprLength < 2+2+2 || iSprLength > iLength)
+            return false;
+
+        unsigned int iSprite = readWord(pData);
+        int iWidth = readWord(pData + 2);
+        int iHeight = readWord(pData + 4);
+        pData += 6; iLength -= 6;
+        iSprLength -= 6;
+
+        if (iSprite >= m_iSpriteCount)
+            break;
+
+        if (!testSprite(pData, iSprLength, iWidth, iHeight))
+        {
+            printf("Sprite number %d has a bad encoding, skipping remainder of the file", iSprite);
+            return false;
+        }
+
+        _freeSingleSprite(iSprite);
+        sprite_t *pSprite = m_pSprites + iSprite;
+        pSprite->pData = new (std::nothrow) unsigned char[iSprLength];
+        if (pSprite->pData == NULL)
+            return false;
+
+        memcpy(pSprite->pData, pData, iSprLength);
+        iLength -= iSprLength;
+        pData += iSprLength;
+
+        pSprite->iWidth = iWidth;
+        pSprite->iHeight = iHeight;
     }
     return true;
 }
