@@ -765,11 +765,13 @@ room_descriptions = {
 errors = {
   unavailable_screen_size = "요청한 화면 크기는 전체화면에서 지원되지 않습니다.",
   dialog_missing_graphics = "죄송합니다, 데모 데이터 파일은 이 대화창이 포함되어 있지 않습니다.",
-  maximum_screen_size = "최대 3000x2000 의 화면 크기를 입력해 주세요.",
   load_prefix = "게임을 불러오는 중 오류 발생: ",
+  load_quick_save = "에러, 빠른 저장이 존재하지 않아 읽어올 수 없습니다. 지금 막 빠른 저장 파일을 생성했습니다!",
   save_prefix = "게임을 저장하는 중 오류 발생: ",
   map_file_missing = "이 레벨의 맵 파일(%s)을 찾을 수 없습니다!",
   minimum_screen_size = "최소 640x480 의 화면 크기를 입력해 주세요.",
+  alien_dna = "주의: 외계인 환자들이 앉을 때, 문을 열거나 두드릴 때 등의 애니메이션이 없습니다. 따라서, 원본 테마 병원에서와 같이 환자들은 이런 행동을 취할 때 잠시동안 평상시의 모습으로 변했다가 되돌아오게 됩니다. 외계 DNA 환자들은 해당 레벨에서 나타나도록 설정되어 있을 경우에만 나타납니다",
+  fractured_bones = "주의: 여성 골절 환자들의 애니메이션은 완전하지 못합니다",
 }
 menu_options_warmth_colors = {
   choice_2 = "  파랑 초록 빨강  ",
