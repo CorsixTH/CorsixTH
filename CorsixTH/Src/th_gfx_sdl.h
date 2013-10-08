@@ -35,6 +35,93 @@ struct THClipRect : public SDL_Rect
 };
 struct THRenderTargetCreationParams;
 
+/*!
+    Utility class for decoding 32bpp images.
+*/
+class FullColourRenderer
+{
+public:
+    //! Initialize the renderer for a specific render.
+    /*!
+        @param width Pixel width of the resulting image
+        @param height Pixel height of the resulting image
+    */
+    FullColourRenderer(int iWidth, int iHeight);
+    virtual ~FullColourRenderer();
+
+    //! Decode a 32bpp image, and push it to the storage backend.
+    /*!
+        @param pImg Encoded 32bpp image.
+        @param pPalette Palette of a legacy sprite.
+        @return Decoding was successful.
+    */
+    bool decodeImage(const unsigned char* pImg, const THPalette *pPalette);
+
+protected:
+    //! Store a decoded pixel. Use m_iX and m_iY if necessary.
+    /*!
+        @param pixel Pixel to store.
+    */
+    virtual void storeARGB(uint32_t pixel) = 0;
+
+    const int m_iWidth;
+    const int m_iHeight;
+    int m_iX;
+    int m_iY;
+
+private:
+    //! Push a pixel to the storage.
+    /*!
+        @param iValue Pixel value to store.
+    */
+    inline void _pushPixel(uint32_t iValue)
+    {
+        if (m_iY < m_iHeight)
+        {
+            storeARGB(iValue);
+            m_iX++;
+            if (m_iX >= m_iWidth)
+            {
+                m_iX = 0;
+                m_iY++;
+            }
+        }
+        else
+        {
+            m_iX = 1; // Will return 'failed'.
+        }
+    }
+};
+
+class FullColourStoring : public FullColourRenderer
+{
+public:
+    FullColourStoring(uint32_t *pDest, int iWidth, int iHeight);
+
+protected:
+    virtual void storeARGB(uint32_t pixel);
+
+protected:
+    //! Pointer to the storage (not owned by this class).
+    uint32_t *m_pDest;
+};
+
+class WxStoring : public FullColourRenderer
+{
+public:
+    WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight);
+
+protected:
+    virtual void storeARGB(uint32_t pixel);
+
+protected:
+    //! Pointer to the RGB storage (not owned by this class).
+    unsigned char *m_pRGBData;
+
+    //! Pointer to the Alpha channel storage (not owned by this class).
+    unsigned char *m_pAData;
+};
+
 class THRenderTarget
 {
 public: // External API

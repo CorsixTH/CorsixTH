@@ -32,6 +32,125 @@ SOFTWARE.
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
+FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidth), m_iHeight(iHeight)
+{
+    m_iX = 0;
+    m_iY = 0;
+}
+
+FullColourRenderer::~FullColourRenderer()
+{
+}
+
+bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette *pPalette)
+{
+    if (m_iWidth <= 0 || m_iHeight <= 0)
+        return false;
+
+    const uint32_t* pColours = pPalette->getARGBData();
+    for (;;) {
+        unsigned char iType = *pImg++;
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                while (iLength > 0)
+                {
+                    uint32_t iColour = THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
+                    _pushPixel(iColour);
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+
+            case 1: // Fixed partially transparent 32bpp pixels
+            {
+                unsigned char iOpacity = *pImg++;
+                while (iLength > 0)
+                {
+                    uint32_t iColour = THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
+                    _pushPixel(iColour);
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+            }
+
+            case 2: // Fixed fully transparent pixels
+            {
+                static const uint32_t iTransparent = THPalette::packARGB(0, 0, 0, 0);
+                while (iLength > 0)
+                {
+                    _pushPixel(iTransparent);
+                    iLength--;
+                }
+                break;
+            }
+
+            case 3: // Recolour layer
+            {
+                unsigned char iTable = *pImg++;
+                pImg++; // Skip reading the opacity for now.
+                if (iTable == 0xFF)
+                {
+                    // Legacy sprite data. Use the palette to recolour the layer.
+                    // Note that the iOpacity is ignored here.
+                    while (iLength > 0)
+                    {
+                        _pushPixel(pColours[*pImg++]);
+                        iLength--;
+                    }
+                }
+                else
+                {
+                    // TODO: Add proper recolour layers, where RGB comes from
+                    // table 'iTable' at index *pImg (iLength times), and
+                    // opacity comes from the byte after the iTable byte.
+                    //
+                    // For now just draw black pixels, so it won't go unnoticed.
+                    while (iLength > 0)
+                    {
+                        uint32_t iColour = THPalette::packARGB(0xFF, 0, 0, 0);
+                        _pushPixel(iColour);
+                        iLength--;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (m_iY >= m_iHeight)
+            break;
+    }
+    return m_iX == 0;
+}
+
+FullColourStoring::FullColourStoring(uint32_t *pDest, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
+{
+    m_pDest = pDest;
+}
+
+void FullColourStoring::storeARGB(uint32_t pixel)
+{
+    *m_pDest++ = pixel;
+}
+
+WxStoring::WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
+{
+    m_pRGBData = pRGBData;
+    m_pAData = pAData;
+}
+
+void WxStoring::storeARGB(uint32_t pixel)
+{
+    m_pRGBData[0] = THPalette::getR(pixel);
+    m_pRGBData[1] = THPalette::getG(pixel);
+    m_pRGBData[2] = THPalette::getB(pixel);
+    m_pRGBData += 3;
+
+    *m_pAData++ = THPalette::getA(pixel);
+}
+
 THRenderTarget::THRenderTarget()
 {
     m_pWindow = NULL;
