@@ -832,7 +832,6 @@ menu_options = {
   twentyfour_hour_clock = "  24 시간 시계  ",
   warmth_colors = "  온도 표시 색  ",
   game_speed = "  게임 속도  ",
-  settings = "  설정  ",
   autosave = "  자동 저장  ",
 }
 menu_options_game_speed = {
@@ -1075,14 +1074,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "축하합니다, 치트를 해제했습니다!",
-    bloaty_cheat = "부은 머리 치트가 활성화 되었습니다!",
-    bloaty_off_cheat = "부은 머리 치트가 비활성화 되었습니다.",
-    hairyitis_cheat = "모발과다 치트가 활성화 되었습니다!",
-    hairyitis_off_cheat = "모발과다 치트가 비활성화 되었습니다.",
     roujin_on_cheat = "로우진의 도전이 활성화 되었습니다! 행운을 빌어요...",
     roujin_off_cheat = "로우진의 도전이 비활성화 되었습니다.",
-    crazy_on_cheat = "안돼! 모든 의사들이 미쳐버렸습니다!",
-    crazy_off_cheat = "휴... 의사들이 제정신을 찾았습니다.",
   },
   level_progress = {
     halfway_lost = "레벨 패배 조건에 절반정도 도달했습니다.",
