@@ -431,6 +431,10 @@ tooltip = {
     new_save_game = "저장될 게임의 이름을 입력하세요",
     save_game = "저장된 게임 %s 덮어쓰기",
   },
+  update_window = {
+    download = "가장 최신 버전의 CorsixTH 다운로드 페이지로 이동합니다",
+    ignore = "이 업데이트를 무시합니다. 다음 번에 CorsixTH 를 열 때 다시 알립니다",
+  },
   calls_dispatcher = {
     assigned = "누군가가 해당 과업에 할당되어 있으면 이 상자가 표시됩니다",
     task = "과업 목록 - 할당된 직원의 정보와 과업의 위치를 보려면 과업을 클릭하세요",
@@ -1340,6 +1344,13 @@ adviser = {
     door_not_reachable = "사람들은 그 문을 사용할 수 없을 것입니다. 생각을 해보세요.",
     blueprint_invalid = "올바른 청사진이 아닙니다.",
   },
+}
+update_window = {
+  new_version = "새 버전:",
+  caption = "업데이트 가능!",
+  download = "다운로드 페이지로 이동",
+  current_version = "현재 버전:",
+  ignore = "건너 뛰고 메인 메뉴로 이동",
 }
 calls_dispatcher = {
   repair = "%s 을(를) 수리",
