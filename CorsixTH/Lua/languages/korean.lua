@@ -865,6 +865,7 @@ menu_options = {
   warmth_colors = "  온도 표시 색  ",
   game_speed = "  게임 속도  ",
   autosave = "  자동 저장  ",
+  wage_increase = "  급여 인상  ",
 }
 menu_options_game_speed = {
   pause = "  (P) 일시 정지  ",
@@ -1985,6 +1986,10 @@ menu_file = {
   save = " (SHIFT+S) 저장   ",
   load = " (SHIFT+L) 불러오기   ",
   restart = " (SHIFT+R) 재시작",
+}
+menu_options_wage_increase = {
+  deny = "    거절 ",
+  grant = "    승인 ",
 }
 save_game_window = {
   caption = "저장 게임 (%1%)",
