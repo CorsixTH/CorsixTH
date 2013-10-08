@@ -437,12 +437,6 @@ protected:
         //! Alternative palette (if available).
         const unsigned char *pAltPaletteMap;
 
-        //! X position of the start of the sprite at the sheet.
-        unsigned int iSheetX;
-
-        //! Y position of the start of the sprite at the sheet.
-        unsigned int iSheetY;
-
         //! Width of the sprite.
         unsigned int iWidth;
 
@@ -456,32 +450,11 @@ protected:
     //! Target to render to.
     THRenderTarget* m_pTarget;
 
-    //! Big SDL structure that contains all sprites with the original palette.
-    SDL_Texture *m_pMegaTexture;
-
-    //! Size of the #m_pMegaTexture texture (both width and height, as it's rectangular).
-    unsigned int m_iMegaTextureSize;
-
     //! Number of sprites at the sheet.
     unsigned int m_iSpriteCount;
 
     //! Free memory used for storing all sprite information.
     void _freeSprites();
-
-    //! Test whether the provided sprites fit at a sheet of the given size.
-    /*!
-        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
-        @param iSize Size of the suggested area to use (both width and height, as it's rectangular).
-        @return Whether all sprites can be fit at the sheet.
-    */
-    bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
-
-    //! Construct the sprite sheet.
-    /*!
-        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
-        @param iSize Size of the sheet area to use (both width and height, as it's rectangular).
-    */
-    void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
 
     //! Construct an alternative version (with its alternative palette map) of the sprite.
     /*!
@@ -489,14 +462,6 @@ protected:
         @return SDL texture containing the sprite.
     */
     SDL_Texture *_makeAltBitmap(sprite_t *pSprite);
-
-    //! Compare function for sorting sprites on having data, and decreasing height.
-    /*!
-        @param left Left sprite to compare.
-        @param right Right sprite to compare.
-        @return Negative, zero, or positive number, depending on desired order of the compared sprites.
-    */
-    static int _sortSpritesHeight(const void* left, const void* right);
 };
 
 class THCursor
