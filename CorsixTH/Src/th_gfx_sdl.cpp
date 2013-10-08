@@ -339,6 +339,39 @@ bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
     return true;
 }
 
+//! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
+/*!
+    @param pPixelData Legacy 8bpp pixels.
+    @param iPixelDataLength Number of pixels in the \a pPixelData.
+    @return Converted 32bpp pixel data, if succeeded else NULL is returned. Caller should free the returned memory.
+ */
+static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_t iPixelDataLength)
+{
+    // Recolour blocks are 63 pixels long.
+    // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
+    size_t iNumFilled = iPixelDataLength / 63;
+    size_t iRemaining = iPixelDataLength - iNumFilled * 63;
+    size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
+
+    unsigned char *pData = new (std::nothrow) unsigned char[iNewSize];
+    if (pData == NULL)
+        return NULL;
+
+    unsigned char *pDest = pData;
+    while (iPixelDataLength > 0)
+    {
+        size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
+        *pDest++ = iLength + 0xC0; // Recolour layer type of block.
+        *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
+        *pDest++ = 0xFF; // Non-transparent.
+        memcpy(pDest, pPixelData, iLength);
+        pDest += iLength;
+        pPixelData += iLength;
+        iPixelDataLength -= iLength;
+    }
+    return pData;
+}
+
 SDL_Texture* THRenderTarget::createPalettizedTexture(int iWidth, int iHeight,
                                                      const unsigned char* pPixels,
                                                      const THPalette* pPalette) const
@@ -346,16 +379,11 @@ SDL_Texture* THRenderTarget::createPalettizedTexture(int iWidth, int iHeight,
     uint32_t *pARGBPixels = new (std::nothrow) uint32_t[iWidth * iHeight];
     if(pARGBPixels == NULL)
         return 0;
-    const uint32_t* pColours = pPalette->getARGBData();
 
-    uint32_t *pRow = pARGBPixels;
-    for(int y = 0; y < iHeight; ++y)
-    {
-        for(int x = 0; x < iWidth; ++x, ++pPixels, ++pRow)
-        {
-            *pRow = pColours[*pPixels];
-        }
-    }
+    FullColourStoring oRenderer(pARGBPixels, iWidth, iHeight);
+    bool bOk = oRenderer.decodeImage(pPixels, pPalette);
+    if (!bOk)
+        return 0;
 
     SDL_Texture *pTexture = createTexture(iWidth, iHeight, pARGBPixels);
     delete [] pARGBPixels;
@@ -510,6 +538,10 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
     if(pEventualCanvas == NULL)
         return false;
 
+    pPixelData = convertLegacySprite(pPixelData, iPixelDataLength);
+    if (pPixelData == NULL)
+        return false;
+
     int iHeight = static_cast<int>(iPixelDataLength)/iWidth;
     m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pPixelData, m_pPalette);
 
@@ -616,7 +648,9 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             if(iDataLen < 0)
                 iDataLen = 0;
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
-            pSprite->pData = oRenderer.takeData();
+            pData = oRenderer.takeData();
+            pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
+            delete pData;
         }
     }
     return true;
@@ -734,19 +768,9 @@ void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, 
     if(iSprite >= m_iSpriteCount || pRGBData == NULL || pAData == NULL)
         return;
     sprite_t *pSprite = m_pSprites + iSprite;
-    const uint32_t* pColours = m_pPalette->getARGBData();
 
-    const unsigned char *pPixels = pSprite->pData;
-    for(unsigned int y = 0; y < pSprite->iHeight; ++y)
-    {
-        for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pPixels, ++pAData, pRGBData += 3)
-        {
-            pRGBData[0] = THPalette::getR(pColours[*pPixels]);
-            pRGBData[1] = THPalette::getG(pColours[*pPixels]);
-            pRGBData[2] = THPalette::getB(pColours[*pPixels]);
-            pAData  [0] = THPalette::getA(pColours[*pPixels]);
-        }
-    }
+    WxStoring oRenderer(pRGBData, pAData, pSprite->iWidth, pSprite->iHeight);
+    oRenderer.decodeImage(pSprite->pData, m_pPalette);
 }
 
 SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
