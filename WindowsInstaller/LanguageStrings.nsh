@@ -126,6 +126,18 @@ LangString save_in_appdata    ${LANG_ITALIAN} "Salva i dati di gioco e le impost
 LangString remove_saves       ${LANG_ITALIAN} "Vuoi mantenere i tuoi salvataggi?"
 LangString overwrite_install  ${LANG_ITALIAN} "Sembra che stai reinstallando su una precedente installazione di CorsixTH. Tutte le precedenti modifiche ai file potrebbero andare perse. Continuare?"
 
+LangString install_language   ${LANG_KOREAN} "Korean"
+LangString original_text      ${LANG_KOREAN} "게임을 플레이하기 위해서는 원본 게임이 설치되어 있어야 합니다. 원본이 설치 경로를 여기서 지정해 주세요."
+LangString original_folder    ${LANG_KOREAN} "테마 병원 폴더"
+LangString successful_removal ${LANG_KOREAN} "$(^Name) 이(가) 성공적으로 제거되었습니다."
+LangString confirm_removal    ${LANG_KOREAN} "정말로 $(^Name) 와(과) 구성 요소들을 모두 제거하시겠습니까?"
+LangString files_left         ${LANG_KOREAN} "몇몇 파일들을 제거할 수 없었습니다."
+LangString options_title      ${LANG_KOREAN} "추가 옵션" 
+LangString options_subtitle   ${LANG_KOREAN} "원본 게임이 어디에 있는지 지정."
+LangString save_in_appdata    ${LANG_KOREAN} "게임 데이터와 설정을 %APPDATA% 에 저장 (권장됨)"
+LangString remove_saves       ${LANG_KOREAN} "저장된 게임들을 유지하시겠습니까?"
+LangString overwrite_install  ${LANG_KOREAN} "기존의 CorsixTH 설치본 위에 설치하는 것 같습니다. 기존 파일들의 수정된 부분들을 잃을 수도 있습니다. 계속하시겠습니까?"
+
 LangString install_language   ${LANG_NORWEGIAN} "Norwegian"
 LangString original_text      ${LANG_NORWEGIAN} "For å kunne spille dette spillet, må du ha det originale Theme Hospital installert. Spesifiser hvor det ligger."
 LangString original_folder    ${LANG_NORWEGIAN} "Mappen med Theme Hospital"
