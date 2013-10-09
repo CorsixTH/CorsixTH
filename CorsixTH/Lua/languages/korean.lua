@@ -183,6 +183,16 @@ tooltip = {
     allocated_amount = "할당된 예산",
     close = "연구 화면 닫기",
   },
+  customise_window = {
+    intro = "인트로 영상을 켜거나 끕니다. CorsixTH 를 플레이할 때마다 인트로 영상을 재생하게 하려면 영상 컨트롤이 켜져 있어야 합니다",
+    fractured_bones = "조잡한 애니메이션의 문제로, 기본적으로 여성 골절 환자는 등장하지 않도록 되어있습니다. 여성 골절 환자들이 병원을 방문하게 하려면 이 옵션을 끄세요",
+    movies = "이 옵션을 끄면 게임 내의 모든 영상이 재생되지 않습니다",
+    volume = "음량 감소 버튼이  약물 사례집을 열게 되는 경우, 이 옵션을 켜서 약물 사례집 단축키를 Shift + C 로 변경하세요",
+    aliens = "적절한 애니메이션의 부재로, 외계인 DNA 환자들은 응급 상황에서만 방문하도록 되어있습니다. 외계 DNA 환자들이 병원을 평소에도 방문하게 하려면 이 옵션을 끄세요",
+    paused = "테마 병원에서 기본적으로 플레이어는 게임이 일시 정지 되었을 때 상위 메뉴만을 사용할 수 있고, CorsixTH 에서도 마찬가지 입니다. 이 옵션을 켜면 게임이 정지된 상태에서도 모든 기능이 활성화 됩니다",
+    average_contents = "방을 건설할 때 당신이 보통 어떤 비품들을 추가로 배치하는지 게임이 기억하도록 하려면 이 옵션을 켜세요",
+    back = "이 메뉴를 닫고 옵션 메뉴로 돌아감",
+  },
   machine_window = {
     repair = "잡역부를 불러서 수리하기",
     name = "이름",
@@ -421,6 +431,10 @@ tooltip = {
     new_save_game = "저장될 게임의 이름을 입력하세요",
     save_game = "저장된 게임 %s 덮어쓰기",
   },
+  update_window = {
+    download = "가장 최신 버전의 CorsixTH 다운로드 페이지로 이동합니다",
+    ignore = "이 업데이트를 무시합니다. 다음 번에 CorsixTH 를 열 때 다시 알립니다",
+  },
   calls_dispatcher = {
     assigned = "누군가가 해당 과업에 할당되어 있으면 이 상자가 표시됩니다",
     task = "과업 목록 - 할당된 직원의 정보와 과업의 위치를 보려면 과업을 클릭하세요",
@@ -437,6 +451,24 @@ tooltip = {
     textbox = "실행할 루아 코드를 여기 입력하세요",
     execute_code = "입력한 코드 실행",
     close = "콘솔 닫기",
+  },
+  folders_window = {
+    browse_font = "다른 폰트 파일을 지정합니다 ( 현재 위치: %1% )",
+    screenshots_location = "기본적으로, 스크린샷들은 설정 파일이 있는 곳에 함께 저장됩니다. 필요한 경우 스크린샷을 원하는 곳에 저장할 수 있습니다. 사용하기 원하는 디렉토리를 선택하세요.",
+    browse_music = "다른 음악 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    music_location = "mp3 음악 파일들이 있는 위치를 지정하세요. 디렉토리는 미리 만들어져 있어야 합니다.",
+    data_location = "오리지널 테마 병원 설치 경로 (CorsixTH 를 플레이 하기 위해 필요)",
+    browse_data = "테마 병원 설치 경로를 다시 설정합니다 ( 현재 위치: %1% )",
+    savegames_location = "기본적으로, 저장된 게임들은 설정 파일이 있는 곳에 함께 저장됩니다. 필요한 경우 저장된 게임들을 원하는 곳에 저장할 수 있습니다. 사용하기 원하는 디렉토리를 선택하세요.",
+    back = "이 메뉴를 닫고 설정 메뉴로 돌아갑니다",
+    browse_saves = "다른 저장 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    browse = "폴더 위치를 지정합니다",
+    browse_screenshots = "다른 스크린샷 디렉토리를 지정합니다 ( 현재 위치: %1% )",
+    not_specified = "폴더 위치 지정되지 않음!",
+    font_location = "사용중인 언어를 표시하는데 필요한 폰트 파일의 위치를 지정합니다. 이것을 설정하지 않으면 오리지널 게임에 포함되지 않은 문자들은 표시되지 않습니다 (예: 러시아어, 중국어)",
+    reset_to_default = "디렉토리를 기본 위치로 되돌립니다",
+    default = "기본 위치",
+    no_font_specified = "폰트 위치 지정되지 않음!",
   },
   staff_window = {
     name = "직원 이름",
@@ -548,22 +580,20 @@ tooltip = {
     fullscreen = "게임을 전체화면으로 플레이할 것인지 설정합니다",
     cancel = "해상도를 변경하지 않고 돌아갑니다",
     back = "옵션 창을 닫습니다",
-    font_location = "사용중인 언어를 표시하는데 필요한 폰트 파일의 위치를 지정합니다. 이것을 설정하지 않으면 오리지널 게임에 포함되지 않은 문자들은 표시되지 않습니다 (예: 러시아어, 중국어)",
     language = "게임 내의 글을 표시할 언어",
     apply = "입력된 해상도를 적용합니다",
-    browse_font = "다른 폰트 파일을 지정합니다 (현재 위치: %1%)",
-    original_path = "현재 지정된 오리지널 테마 병원 설치 경로",
-    data_location = "오리지널 테마 병원 설치 경로 (CorsixTH 를 플레이 하기 위해 필요)",
     change_resolution = "왼쪽에 입력된 해상도로 변경합니다",
     fullscreen_button = "전체화면 설정을 변경하려면 클릭하세요",
     width = "원하는 화면 너비를 입력하세요",
     language_dropdown_item = "%s 을(를) 언어로 선택합니다",
-    browse = "테마 병원 설치 경로를 다시 설정합니다 (현재 위치: %1%)",
-    no_font_specified = "지정되지 않음",
     height = "원하는 화면 높이를 입력하세요",
     select_language = "게임 언어를 선택하세요",
     select_resolution = "새로운 해상도를 선택하세요",
     resolution = "게임이 실행될 해상도",
+    audio_button = "게임 전체의 오디오를 켜고 끕니다",
+    folder_button = "폴더 옵션",
+    audio_toggle = "켜고 끄기",
+    customise_button = "게임 플레이 경험을 커스터마이즈 하기 위한 세부 설정",
   },
 }
 menu_charts = {
@@ -735,11 +765,13 @@ room_descriptions = {
 errors = {
   unavailable_screen_size = "요청한 화면 크기는 전체화면에서 지원되지 않습니다.",
   dialog_missing_graphics = "죄송합니다, 데모 데이터 파일은 이 대화창이 포함되어 있지 않습니다.",
-  maximum_screen_size = "최대 3000x2000 의 화면 크기를 입력해 주세요.",
   load_prefix = "게임을 불러오는 중 오류 발생: ",
+  load_quick_save = "에러, 빠른 저장이 존재하지 않아 읽어올 수 없습니다. 지금 막 빠른 저장 파일을 생성했습니다!",
   save_prefix = "게임을 저장하는 중 오류 발생: ",
   map_file_missing = "이 레벨의 맵 파일(%s)을 찾을 수 없습니다!",
   minimum_screen_size = "최소 640x480 의 화면 크기를 입력해 주세요.",
+  alien_dna = "주의: 외계인 환자들이 앉을 때, 문을 열거나 두드릴 때 등의 애니메이션이 없습니다. 따라서, 원본 테마 병원에서와 같이 환자들은 이런 행동을 취할 때 잠시동안 평상시의 모습으로 변했다가 되돌아오게 됩니다. 외계 DNA 환자들은 해당 레벨에서 나타나도록 설정되어 있을 경우에만 나타납니다",
+  fractured_bones = "주의: 여성 골절 환자들의 애니메이션은 완전하지 못합니다",
 }
 menu_options_warmth_colors = {
   choice_2 = "  파랑 초록 빨강  ",
@@ -832,8 +864,8 @@ menu_options = {
   twentyfour_hour_clock = "  24 시간 시계  ",
   warmth_colors = "  온도 표시 색  ",
   game_speed = "  게임 속도  ",
-  settings = "  설정  ",
   autosave = "  자동 저장  ",
+  wage_increase = "  급여 인상  ",
 }
 menu_options_game_speed = {
   pause = "  (P) 일시 정지  ",
@@ -957,6 +989,8 @@ room_classes = {
   treatment = "치료",
 }
 install = {
+  ok = "확인",
+  cancel = "취소",
   exit = "종료",
   th_directory = "CorsixTH 를 실행하기 위해서는 테마병원 원본 (또는 데모) 게임 데이터가 필요합니다. 아래의 선택 버튼을 눌러서 테마 병원 설치 디렉토리를 지정하세요.",
   title = "--------------------------------- CorsixTH 설치 ---------------------------------",
@@ -1075,14 +1109,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "축하합니다, 치트를 해제했습니다!",
-    bloaty_cheat = "부은 머리 치트가 활성화 되었습니다!",
-    bloaty_off_cheat = "부은 머리 치트가 비활성화 되었습니다.",
-    hairyitis_cheat = "모발과다 치트가 활성화 되었습니다!",
-    hairyitis_off_cheat = "모발과다 치트가 비활성화 되었습니다.",
     roujin_on_cheat = "로우진의 도전이 활성화 되었습니다! 행운을 빌어요...",
     roujin_off_cheat = "로우진의 도전이 비활성화 되었습니다.",
-    crazy_on_cheat = "안돼! 모든 의사들이 미쳐버렸습니다!",
-    crazy_off_cheat = "휴... 의사들이 제정신을 찾았습니다.",
   },
   level_progress = {
     halfway_lost = "레벨 패배 조건에 절반정도 도달했습니다.",
@@ -1326,6 +1354,13 @@ adviser = {
     blueprint_invalid = "올바른 청사진이 아닙니다.",
   },
 }
+update_window = {
+  new_version = "새 버전:",
+  caption = "업데이트 가능!",
+  download = "다운로드 페이지로 이동",
+  current_version = "현재 버전:",
+  ignore = "건너 뛰고 메인 메뉴로 이동",
+}
 calls_dispatcher = {
   repair = "%s 을(를) 수리",
   summary = "%d 건의 요청; %d 건 할당됨",
@@ -1385,6 +1420,32 @@ casebook = {
 handyman_window = {
   all_parcels = "모든 구획",
   parcel = "구획",
+}
+folders_window = {
+  screenshots_location = "스크린샷을 저장할 디렉토리를 선택하세요",
+  music_label = "MP3들",
+  back = "뒤로",
+  savegames_label = "저장된 게임들",
+  caption = "폴더 위치",
+  savegames_location = "게임을 저장할 디렉토리를 선택하세요",
+  font_label = "폰트",
+  new_th_location = "여기서 테마 병원 설치 디렉토리를 새로 지정할 수 있습니다. 새 위치를 지정하는 즉시 게임이 재시작 됩니다.",
+  screenshots_label = "스크린샷",
+  music_location = "음악을 재생할 디렉토리를 선택하세요",
+  data_label = "테마 병원 데이터",
+}
+customise_window = {
+  movies = "영상 컨트롤",
+  option_on = "켜짐",
+  option_off = "꺼짐",
+  back = "뒤로",
+  paused = "정지 상태에서 건설",
+  intro = "인트로 영상 재생",
+  volume = "음량 감소 단축키",
+  caption = "커스텀 설정",
+  fractured_bones = "골절",
+  average_contents = "일반 비품",
+  aliens = "외계인 환자",
 }
 diseases = {
   alien_dna = {
@@ -1645,14 +1706,13 @@ options_window = {
   caption = "옵션",
   language = "게임 언어",
   apply = "적용",
-  data_location = "데이터 위치",
   width = "너비",
-  browse = "찾아보기...",
   change_resolution = "해상도 변경",
   height = "높이",
-  font_location = "폰트 위치",
   resolution = "해상도",
-  new_th_directory = "여기서 테마 병원 설치 경로를 새로 설정할 수 있습니다. 새로운 경로를 선택하면 게임이 재시작됩니다.",
+  folder = "폴더",
+  audio = "오디오",
+  customise = "커스터마이즈",
 }
 trophy_room = {
   all_cured = {
@@ -1929,6 +1989,10 @@ menu_file = {
   load = " (SHIFT+L) 불러오기   ",
   restart = " (SHIFT+R) 재시작",
 }
+menu_options_wage_increase = {
+  deny = "    거절 ",
+  grant = "    승인 ",
+}
 save_game_window = {
   caption = "저장 게임 (%1%)",
   new_save_game = "새로운 저장 게임",
@@ -2104,6 +2168,8 @@ confirmation = {
   overwrite_save = "이 슬롯에 이미 다른 게임이 저장되어 있습니다. 정말로 덮어쓰기 원합니까?",
   sack_staff = "정말로 이 직원을 해고하기 원합니까?",
   replace_machine = "정말로 %s 기계를 $%d 의 비용으로 교체합니까?",
+  maximum_screen_size = "입력한 화면 크기가 3000 x 2000 보다 큽니다. 큰 해상도도 가능하지만, 플레이할만한 프레임 수를 유지하려면 하드웨어 성능이 충분히 좋아야 합니다. 계속하시겠습니까?",
+  music_warning = "게임중에 mp3 파일들을 재생하도록 하기 전에, smpeg.dll 파일이나 그에 상응하는 파일이 운영 체제에 설치되어 있어야 합니다. 그렇지 않으면 음악이 재생되지 않을 것입니다. 현재 64bit 시스템에는 이에 대응되는 파일이 없습니다. 계속하시겠습니까?",
 }
 months = {
   [1] = "1월",
