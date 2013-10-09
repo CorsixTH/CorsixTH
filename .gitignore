@@ -18,6 +18,11 @@ CorsixTH/config.txt
 /SDL_mixer-1.2.8
 /cmake_install.cmake
 
+# For CorsixTH directory and Windows
+*.dll
+*.exe
+Thumbs.db
+
 # This is for the CMake-generated XCode project and output
 /build/
 *.xcodeproj/
@@ -53,3 +58,4 @@ CorsixTH_Top_Level*
 
 # For the LevelEdit project
 *.class
+LevelEdit/bin/
