@@ -294,67 +294,69 @@ function World:initStaff()
   end
 end
 
+--! Load goals to win and lose from the map, and store them in 'self.goals'.
+--! Also set 'self.winning_goal_count'.
 function World:determineWinningConditions()
+  local winning_goal_count = 0
   -- No conditions if in free build mode!
   if self.free_build_mode then
     self.goals = {}
-    self.winning_goals = {}
+    self.winning_goal_count = winning_goal_count
     return
   end
   -- Determine winning and losing conditions
-  local win = self.map.level_config.win_criteria
-  local lose = self.map.level_config.lose_criteria
-  local active = {}
-  local total = 0
-  local criteria = self.level_criteria
+  local world_goals = {}
+
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
+  local win = self.map.level_config.win_criteria
   if win then
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
-        total = total + 1
-        local criterion = criteria[values.Criteria].name
-        active[criterion] = {
-          name = criterion,
+        winning_goal_count = winning_goal_count + 1
+        local crit_name = self.level_criteria[values.Criteria].name
+        world_goals[crit_name] = {
+          name = crit_name,
           win_value = values.Value, 
           boundary = values.Bound, 
           criterion = values.Criteria,
           max_min_win = values.MaxMin,
           group = values.Group,
-          number = total,
+          number = winning_goal_count,
         }
-        active[#active + 1] = active[criterion]
+        world_goals[#world_goals + 1] = world_goals[crit_name]
       end
     end
   end
   -- Likewise there might be no losing criteria (i.e. the demo)
+  local lose = self.map.level_config.lose_criteria
   if lose then
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
-        local criterion = criteria[values.Criteria].name
-        if not active[criterion] then
-          active[criterion] = {number = #active + 1, name = criterion}
-          active[#active + 1] = active[criterion]
+        local crit_name = self.level_criteria[values.Criteria].name
+        if not world_goals[crit_name] then
+          world_goals[crit_name] = {number = #world_goals + 1, name = crit_name}
+          world_goals[#world_goals + 1] = world_goals[crit_name]
         end
-        active[criterion].lose_value = values.Value
-        active[criterion].boundary = values.Bound
-        active[criterion].criterion = values.Criteria
-        active[criterion].max_min_lose = values.MaxMin
-        active[criterion].group = values.Group
-        active[active[criterion].number].lose_value = values.Value
-        active[active[criterion].number].boundary = values.Bound
-        active[active[criterion].number].criterion = values.Criteria
-        active[active[criterion].number].max_min_lose = values.MaxMin
-        active[active[criterion].number].group = values.Group
+        world_goals[crit_name].lose_value = values.Value
+        world_goals[crit_name].boundary = values.Bound
+        world_goals[crit_name].criterion = values.Criteria
+        world_goals[crit_name].max_min_lose = values.MaxMin
+        world_goals[crit_name].group = values.Group
+        world_goals[world_goals[crit_name].number].lose_value = values.Value
+        world_goals[world_goals[crit_name].number].boundary = values.Bound
+        world_goals[world_goals[crit_name].number].criterion = values.Criteria
+        world_goals[world_goals[crit_name].number].max_min_lose = values.MaxMin
+        world_goals[world_goals[crit_name].number].group = values.Group
       end
     end
   end
   
   -- Order the criteria (some icons in the progress report shouldn't be next to each other)
-  table.sort(active, function(a,b) return a.criterion < b.criterion end)
-  self.goals = active
-  self.winning_goals = total
+  table.sort(world_goals, function(a,b) return a.criterion < b.criterion end)
+  self.goals = world_goals
+  self.winning_goal_count = winning_goal_count
 end
 
 function World:initRooms()
