@@ -116,7 +116,8 @@ function Hospital:Hospital(world, name)
   self.num_cured_ty = 0
   self.not_cured_ty = 0 
   self.num_visitors_ty = 0
-
+  
+  self.elapsed_months = 0
   self.ownedPlots = {1}
   self.is_in_world = true
   self.opened = false
@@ -1090,6 +1091,9 @@ function Hospital:onEndMonth()
       end
     end
   end
+  if self.elapsed_months then
+    self.elapsed_months = self.elapsed_months + 1
+  end  
 end
 
 --! Returns whether this hospital is controlled by a real person or not.

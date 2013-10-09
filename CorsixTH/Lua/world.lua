@@ -485,11 +485,33 @@ function World:spawnPatient(hospital)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
+ 
+  local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
+  local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
+  
+  local function isVisualDiseaseAvailable(disease)
+    if not disease.visuals_id then 
+      return true
+    end
+    if not hospital.elapsed_months and hospital.elapsed_months ~= 0 then
+      return true
+    end
+    if (hold_visual_months and hold_visual_months > hospital.elapsed_months) or
+      (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
+      return false
+    end
+    local level_config = self.map.level_config
+    if level_config.visuals_available[disease.visuals_id].Value >= hospital.elapsed_months then 
+      return false
+    end
+    return true
+  end
+    
   if hospital:hasStaffedDesk() then
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-    while disease.only_emergency do
+    while disease.only_emergency or not isVisualDiseaseAvailable(disease) do
       disease = self.available_diseases[math.random(1, #self.available_diseases)]
     end
     patient:setDisease(disease)
