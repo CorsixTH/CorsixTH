@@ -692,9 +692,6 @@ function UIMenuBar:makeMenu(app)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
   local function _(s) return "  " .. s:upper() .. "  " end
-  local function transparent_walls(item)
-    app.ui:toggleWallsTransparent()
-  end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)
   end
@@ -725,7 +722,6 @@ function UIMenuBar:makeMenu(app)
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
-      :appendCheckItem(_S.menu_debug.transparent_walls,    false, transparent_walls, nil, function() return self.ui.transparent_walls end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)

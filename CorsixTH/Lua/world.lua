@@ -874,6 +874,7 @@ local tick_rates = {
   ["Normal"]             = {1, 3},
   ["Max speed"]          = {1, 1},
   ["And then some more"] = {3, 1},
+  ["Speed Up"]           = {3, 1},
 }
 
 -- Return the length of the current month
@@ -894,6 +895,16 @@ function World:getCurrentSpeed()
       return name
     end
   end
+end
+
+function World:speedUp() 
+  self:setSpeed("Speed Up")  
+end
+
+function World:previousSpeed()
+  if self:isCurrentSpeed("Speed Up") then
+    self:setSpeed(self.prev_speed)
+  end  
 end
 
 -- Set the (approximate) number of seconds per tick.
@@ -1454,6 +1465,9 @@ function World:winGame(player_no)
       end
     end
     self.hospitals[player_no].game_won = true
+    if self:isCurrentSpeed("Speed Up") then
+      self:previousSpeed()
+    end     
     self:setSpeed("Pause")
     self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
