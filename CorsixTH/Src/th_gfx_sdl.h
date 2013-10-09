@@ -126,81 +126,268 @@ protected:
     bool m_bShouldScaleBitmaps;
 };
 
+//! 32bpp ARGB colour. See #THPalette::packARGB
 typedef uint32_t THColour;
 
+//! 8bpp palette class.
 class THPalette
 {
 public: // External API
     THPalette();
 
+    //! Load palette from the supplied data.
+    /*!
+        Note that the data uses palette entries of 6 bit colours.
+        @param pData Data loaded from the file.
+        @param iDataLength Size of the data.
+        @return Whether loading of the palette succeeded.
+    */
     bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+
+    //! Set an entry of the palette.
+    /*!
+        The RGB colour (255, 0, 255) is used as the transparent colour.
+        @param iEntry Entry number to change.
+        @param iR Amount of red in the new entry.
+        @param iG Amount of green in the new entry.
+        @param iB Amount of blue in the new entry.
+        @return Setting the entry succeeded.
+    */
     bool setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
 
 public: // Internal (this rendering engine only) API
-    inline static uint32_t packARGB(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
+
+    //! Convert A, R, G, B values to a 32bpp colour.
+    /*!
+        @param iA Amount of opacity (0-255).
+        @param iR Amount of red (0-255).
+        @param iG Amount of green (0-255).
+        @param iB Amount of blue (0-255).
+        @return 32bpp value representing the provided colour values.
+    */
+    inline static THColour packARGB(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
     {
-        return (static_cast<uint32_t>(iR) <<  0) |
-        (static_cast<uint32_t>(iG) <<  8) |
-        (static_cast<uint32_t>(iB) << 16) |
-        (static_cast<uint32_t>(iA) << 24) ;
+        return (static_cast<THColour>(iR) <<  0) |
+        (static_cast<THColour>(iG) <<  8) |
+        (static_cast<THColour>(iB) << 16) |
+        (static_cast<THColour>(iA) << 24) ;
     }
+
+    //! Get the red component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The red component intensity of the colour.
+    */
+    inline static unsigned char getR(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 0) & 0xFF);
+    }
+
+    //! Get the green component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The green component intensity of the colour.
+    */
+    inline static unsigned char getG(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 8) & 0xFF);
+    }
+
+    //! Get the blue component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The blue component intensity of the colour.
+    */
+    inline static unsigned char getB(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 16) & 0xFF);
+    }
+
+    //! Get the opacity component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The opacity of the colour.
+    */
+    inline static unsigned char getA(THColour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 24) & 0xFF);
+    }
+
+    //! Get the number of colours in the palette.
+    /*!
+        @return The number of colours in the palette.
+    */
     int getColourCount() const;
-    const uint32_t* getARGBData() const;
+
+    //! Get the internal palette data for fast (read-only) access.
+    /*!
+        @return Table with all 256 colours of the palette.
+    */
+    const THColour* getARGBData() const;
 
 protected:
+    //! 32bpp palette colours associated with the 8bpp colour index.
     uint32_t m_aColoursARGB[256];
+
+    //! Number of colours in the palette.
     int m_iNumColours;
 };
 
+//! Stored image.
 class THRawBitmap
 {
 public:
     THRawBitmap();
     ~THRawBitmap();
 
+    //! Set the palette of the image.
+    /*!
+        @param pPalette Palette to set for this image.
+    */
     void setPalette(const THPalette* pPalette);
 
+    //! Load the image from the supplied pixel data.
+    /*!
+        Loader uses the palette supplied before.
+        @param pPixelData Image data loaded from a TH file.
+        @param iPixelDataLength Size of the loaded image data.
+        @param iWidth Width of the image.
+        @param pEventualCanvas Canvas to render the image to (eventually).
+        @return Loading was a success.
+    */
     bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
-                        int iWidth, THRenderTarget *pUnused);
+                        int iWidth, THRenderTarget *pEventualCanvas);
 
+    //! Draw the image at a given position at the given canvas.
+    /*!
+        @param pCanvas Canvas to draw at.
+        @param iX Destination x position.
+        @param iY Destination y position.
+    */
     void draw(THRenderTarget* pCanvas, int iX, int iY);
+
+    //! Draw part of the image at a given position at the given canvas.
+    /*!
+        @param pCanvas Canvas to draw at.
+        @param iX Destination x position.
+        @param iY Destination y position.
+        @param iSrcX X position of the part to display.
+        @param iSrcY Y position of the part to display.
+        @param iWidth Width of the part to display.
+        @param iHeight Height of the part to display.
+    */
     void draw(THRenderTarget* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
               int iWidth, int iHeight);
 
 protected:
+    //! Image stored in SDL format for quick rendering.
     SDL_Texture *m_pTexture;
+
+    //! Palette of the image.
     const THPalette* m_pPalette;
+
+    //! Target canvas.
     THRenderTarget* m_pTarget;
+
+    //! Width of the stored image.
     int m_iWidth;
+
+    //! Height of the stored image.
     int m_iHeight;
 };
 
-
+//! Sheet of sprites.
 class THSpriteSheet
 {
 public: // External API
     THSpriteSheet();
     ~THSpriteSheet();
 
+    //! Set the palette to use for the sprites in the sheet.
+    /*!
+        @param pPalette Palette to use for the sprites at the sheet.
+    */
     void setPalette(const THPalette* pPalette);
 
+    //! Load the sprites from the supplied data (using the palette supplied earlier).
+    /*!
+        @param pTableData Start of table data with TH sprite information (see th_sprite_t).
+        @param iTableDataLength Length of the table data.
+        @param pChunkData Start of image data (chunks).
+        @param iChunkDataLength Length of the chunk data.
+        @param bComplexChunks Whether the supplied chunks are 'complex'.
+        @param pEventualCanvas Canvas to draw at.
+        @return Loading succeeded.
+    */
     bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                         const unsigned char* pChunkData, size_t iChunkDataLength,
                         bool bComplexChunks, THRenderTarget* pEventualCanvas);
 
+    //! Supply a new mapped palette to a sprite.
+    /*!
+        @param iSprite Sprite getting the mapped palette.
+        @param pMap The palette map to apply.
+    */
     void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap);
 
+    //! Get the number of sprites at the sheet.
+    /*!
+        @return The number of sprites available at the sheet.
+    */
     unsigned int getSpriteCount() const;
-    bool getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
-    void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const;
 
+    //! Get size of a sprite.
+    /*!
+        @param iSprite Sprite to get info from.
+        @param pWidth [out] If not NULL, the sprite width is stored in the destination.
+        @param pHeight [out] If not NULL, the sprite height is stored in the destination.
+        @return Size could be provided for the sprite.
+    */
+    bool getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+
+    //! Get size of a sprite, assuming all input is correctly supplied.
+    /*!
+        @param iSprite Sprite to get info from.
+        @param pWidth [out] The sprite width is stored in the destination.
+        @param pHeight [out] The sprite height is stored in the destination.
+    */
+    void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+
+    //! Get the best colour to represent the sprite.
+    /*!
+        @param iSprite Sprite number to analyze.
+        @param pColour [out] Resulting colour.
+        @return Best colour could be established.
+    */
     bool getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const;
 
+    //! Draw a sprite onto the canvas.
+    /*!
+        @param pCanvas Canvas to draw on.
+        @param iSprite Sprite to draw.
+        @param iX X position to draw the sprite.
+        @param iY Y position to draw the sprite.
+        @param iFlags Flags to apply for drawing.
+    */
     void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
+
+    //! Test whether a sprite was hit.
+    /*!
+        @param iSprite Sprite being tested.
+        @param iX X position of the point to test relative to the origin of the sprite.
+        @param iY Y position of the point to test relative to the origin of the sprite.
+        @param iFlags Draw flags to apply to the sprite before testing.
+        @return Whether the sprite covers the give point.
+    */
     bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
 
 public: // Internal (this rendering engine only) API
     //! Draw a sprite into wxImage data arrays (for the Map Editor)
+    /*!
+        @param iSprite Sprite number to draw.
+        @param pRGBData Output RGB data array.
+        @param pAData Output Alpha channel array.
+    */
     void wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData);
 
 protected:
@@ -209,38 +396,97 @@ protected:
 #pragma pack(push)
 #pragma pack(1)
 #endif
+    //! Sprite structure in the table file.
     struct th_sprite_t
     {
+        //! Position of the sprite in the chunk data file.
         uint32_t position;
+
+        //! Width of the sprite.
         unsigned char width;
+
+        //! Height of the sprite.
         unsigned char height;
     } CORSIX_TH_PACKED_FLAGS;
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
 #endif
 
+    //! Sprites of the sheet.
     struct sprite_t
     {
+        //! SDL structure containing the sprite with original palette.
         SDL_Texture *pTexture;
+
+        //! SDL structure containing the sprite with alternative palette.
         SDL_Texture *pAltTexture;
+
+        //! Sprite data (copied from the chunk data file).
         unsigned char *pData;
+
+        //! Alternative palette (if available).
         const unsigned char *pAltPaletteMap;
+
+        //! X position of the start of the sprite at the sheet.
         unsigned int iSheetX;
+
+        //! Y position of the start of the sprite at the sheet.
         unsigned int iSheetY;
+
+        //! Width of the sprite.
         unsigned int iWidth;
+
+        //! Height of the sprite.
         unsigned int iHeight;
     } *m_pSprites;
+
+    //! Original palette.
     const THPalette* m_pPalette;
+
+    //! Target to render to.
     THRenderTarget* m_pTarget;
+
+    //! Big SDL structure that contains all sprites with the original palette.
     SDL_Texture *m_pMegaTexture;
+
+    //! Size of the #m_pMegaTexture texture (both width and height, as it's rectangular).
     unsigned int m_iMegaTextureSize;
+
+    //! Number of sprites at the sheet.
     unsigned int m_iSpriteCount;
 
+    //! Free memory used for storing all sprite information.
     void _freeSprites();
+
+    //! Test whether the provided sprites fit at a sheet of the given size.
+    /*!
+        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
+        @param iSize Size of the suggested area to use (both width and height, as it's rectangular).
+        @return Whether all sprites can be fit at the sheet.
+    */
     bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
+
+    //! Construct the sprite sheet.
+    /*!
+        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
+        @param iSize Size of the sheet area to use (both width and height, as it's rectangular).
+    */
     void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
+
+    //! Construct an alternative version (with its alternative palette map) of the sprite.
+    /*!
+        @param pSprite Sprite to change.
+        @return SDL texture containing the sprite.
+    */
     SDL_Texture *_makeAltBitmap(sprite_t *pSprite);
-    static int _sortSpritesHeight(const void*, const void*);
+
+    //! Compare function for sorting sprites on having data, and decreasing height.
+    /*!
+        @param left Left sprite to compare.
+        @param right Right sprite to compare.
+        @return Negative, zero, or positive number, depending on desired order of the compared sprites.
+    */
+    static int _sortSpritesHeight(const void* left, const void* right);
 };
 
 class THCursor
