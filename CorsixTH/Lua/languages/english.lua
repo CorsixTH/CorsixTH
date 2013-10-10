@@ -21,6 +21,7 @@ SOFTWARE. --]]
 Language("English", "en", "eng")
 Inherit("original_strings", 0)
 
+-- another test
 -------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
