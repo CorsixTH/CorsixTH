@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 Language("English", "en", "eng")
 Inherit("original_strings", 0)
+-- testing
 
 -------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
