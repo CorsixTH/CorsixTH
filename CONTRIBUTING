@@ -1,0 +1,56 @@
+HOW TO CONTRIBUTE
+
+First Time
+1. Ensure you have a GitHub account (https://github.com/signup/free)
+2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
+3. Ensure you have a git client.  (http://windows.github.com or 
+http://mac.github.com)
+4. Clone your fork to your computer
+	- If using github client, run Git Shell
+	- git clone https://github.com/mygithubuser/CorsixTH.git
+5. Add upstream remote
+	- git remote add upstream https://github.com/CorsixTH/CorsixTH.git
+
+Every Time
+6. Sync with upstream
+	- git fetch upstream
+7. Create feature branch
+	- git branch myfeature upstream/master
+8. Checkout your feature branch
+	- git checkout myfeature
+9. Make your changes
+10. Review your changes
+	- git diff
+	(each file) - git add
+	- git commit
+	Write an informative commit message and save
+11. Push your changes to your fork
+	- git push origin myfeature
+12. Create a pull request 
+(https://github.com/mygithubuser/CorsixTH/compare/CorsixTH:master...myfeature)
+
+Now watch to see if your feature is accepted.
+
+Notes:
+Multiple commits:
+If your feature is very big, break it into subprojects and do a separate commit 
+for every independent operation.  This means doing step 10 several times as you 
+go.  You still only need to do one pull request at the end.
+
+Syncing with Upstream:
+If it takes a long time between when you start your feature and when you finish 
+there might be other important changes other people are making to CorsixTH.  It 
+is a good idea to make sure your code will still operate correctly with the 
+latest changes.  To do this:
+	- git fetch upstream
+	- git rebase upstream/master
+What this does is downloads all the changes from CorsixTH\CorsixTH since you 
+started, and pretends that all your changes were made after them.  If there are 
+conflicts, for example if someone else changed the same line in the same file 
+that you did you will be asked to resolve those conflicts.
+
+If you follow these guidelines then you should be well on your way to producing 
+good pull requests.
+
+If you need more help just ask the friendly people on 
+corsix-th-dev@googlegroups.com or via IRC in #corsix-th on freenode.
