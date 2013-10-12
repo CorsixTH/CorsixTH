@@ -494,7 +494,9 @@ function World:spawnPatient(hospital)
   -- and / or until a given number of patients have arrived
   local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
   local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
-  -- function to determine whether or not any visual is available at this point
+  --! Function to determine whether a given disease is visible and available.
+  --!param disease (disease) Disease to test.
+  --!return (boolean) Whether the disease is visible and available.
   local function isVisualDiseaseAvailable(disease)
     if not disease.visuals_id then 
       return true
