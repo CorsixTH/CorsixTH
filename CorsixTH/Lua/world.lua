@@ -488,29 +488,25 @@ function World:spawnPatient(hospital)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
-  local elapsed_months = (self.year * self.month) 
-  -- level files can either delay visuals to a given month
-  local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
+  -- how many months have elapsed
+  local current_month = (self.year - 1) * 12 + self.month 
+  -- level files can delay visuals to a given month
   -- and / or until a given number of patients have arrived
+  local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
   local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
-  
+  -- function to determine whether or not any visual is available at this point
   local function isVisualDiseaseAvailable(disease)
-
     if not disease.visuals_id then 
       return true
     end
-    -- TODO: What is the point of this block?
- --   if elapsed_months and elapsed_months ~= 0 then
- --     return true
- --   end
     -- if the month is greater than either of these values then visuals will not appear in the game
-    if (hold_visual_months and hold_visual_months > elapsed_months) or
-      (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
+    if hold_visual_months and hold_visual_months > current_month or
+    hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors then
       return false
     end
     -- the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
-    local level_config = self.map.level_config
-    if level_config.visuals_available[disease.visuals_id].Value >= elapsed_months then 
+    local level_config = self.map.level_config 
+    if level_config.visuals_available[disease.visuals_id].Value >= current_month then 
       return false
     end   
     return true
