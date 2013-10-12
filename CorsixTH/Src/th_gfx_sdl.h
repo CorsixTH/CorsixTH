@@ -35,6 +35,93 @@ struct THClipRect : public SDL_Rect
 };
 struct THRenderTargetCreationParams;
 
+/*!
+    Utility class for decoding 32bpp images.
+*/
+class FullColourRenderer
+{
+public:
+    //! Initialize the renderer for a specific render.
+    /*!
+        @param width Pixel width of the resulting image
+        @param height Pixel height of the resulting image
+    */
+    FullColourRenderer(int iWidth, int iHeight);
+    virtual ~FullColourRenderer();
+
+    //! Decode a 32bpp image, and push it to the storage backend.
+    /*!
+        @param pImg Encoded 32bpp image.
+        @param pPalette Palette of a legacy sprite.
+        @return Decoding was successful.
+    */
+    bool decodeImage(const unsigned char* pImg, const THPalette *pPalette);
+
+protected:
+    //! Store a decoded pixel. Use m_iX and m_iY if necessary.
+    /*!
+        @param pixel Pixel to store.
+    */
+    virtual void storeARGB(uint32_t pixel) = 0;
+
+    const int m_iWidth;
+    const int m_iHeight;
+    int m_iX;
+    int m_iY;
+
+private:
+    //! Push a pixel to the storage.
+    /*!
+        @param iValue Pixel value to store.
+    */
+    inline void _pushPixel(uint32_t iValue)
+    {
+        if (m_iY < m_iHeight)
+        {
+            storeARGB(iValue);
+            m_iX++;
+            if (m_iX >= m_iWidth)
+            {
+                m_iX = 0;
+                m_iY++;
+            }
+        }
+        else
+        {
+            m_iX = 1; // Will return 'failed'.
+        }
+    }
+};
+
+class FullColourStoring : public FullColourRenderer
+{
+public:
+    FullColourStoring(uint32_t *pDest, int iWidth, int iHeight);
+
+protected:
+    virtual void storeARGB(uint32_t pixel);
+
+protected:
+    //! Pointer to the storage (not owned by this class).
+    uint32_t *m_pDest;
+};
+
+class WxStoring : public FullColourRenderer
+{
+public:
+    WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight);
+
+protected:
+    virtual void storeARGB(uint32_t pixel);
+
+protected:
+    //! Pointer to the RGB storage (not owned by this class).
+    unsigned char *m_pRGBData;
+
+    //! Pointer to the Alpha channel storage (not owned by this class).
+    unsigned char *m_pAData;
+};
+
 class THRenderTarget
 {
 public: // External API
@@ -225,6 +312,16 @@ public: // Internal (this rendering engine only) API
     */
     const THColour* getARGBData() const;
 
+    //! Set an entry of the palette.
+    /*!
+        @param iEntry Entry to modify.
+        @param iVal Palette value to set.
+    */
+    inline void setARGB(int iEntry, uint32_t iVal)
+    {
+        m_aColoursARGB[iEntry] = iVal;
+    }
+
 protected:
     //! 32bpp palette colours associated with the 8bpp colour index.
     uint32_t m_aColoursARGB[256];
@@ -257,6 +354,16 @@ public:
     */
     bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
                         int iWidth, THRenderTarget *pEventualCanvas);
+
+    //! Load the image from the supplied full colour pixel data.
+    /*!
+        @param pData Image data.
+        @param iLength Size of the loaded image data.
+        @param pEventualCanvas Canvas to render the image to (eventually).
+        @return Loading was a success.
+    */
+    bool loadFullColour(const unsigned char* pData, size_t iLength,
+                        THRenderTarget *pEventualCanvas);
 
     //! Draw the image at a given position at the given canvas.
     /*!
@@ -322,6 +429,16 @@ public: // External API
     bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                         const unsigned char* pChunkData, size_t iChunkDataLength,
                         bool bComplexChunks, THRenderTarget* pEventualCanvas);
+
+    //! Load the image from the supplied full colour pixel data.
+    /*!
+        @param pData Image data.
+        @param iLength Size of the loaded image data.
+        @param pEventualCanvas Canvas to render the image to (eventually).
+        @return Loading was a success.
+    */
+    bool loadFullColour(const unsigned char* pData, size_t iLength,
+                        THRenderTarget *pEventualCanvas);
 
     //! Supply a new mapped palette to a sprite.
     /*!
@@ -427,12 +544,6 @@ protected:
         //! Alternative palette (if available).
         const unsigned char *pAltPaletteMap;
 
-        //! X position of the start of the sprite at the sheet.
-        unsigned int iSheetX;
-
-        //! Y position of the start of the sprite at the sheet.
-        unsigned int iSheetY;
-
         //! Width of the sprite.
         unsigned int iWidth;
 
@@ -446,32 +557,17 @@ protected:
     //! Target to render to.
     THRenderTarget* m_pTarget;
 
-    //! Big SDL structure that contains all sprites with the original palette.
-    SDL_Texture *m_pMegaTexture;
-
-    //! Size of the #m_pMegaTexture texture (both width and height, as it's rectangular).
-    unsigned int m_iMegaTextureSize;
-
     //! Number of sprites at the sheet.
     unsigned int m_iSpriteCount;
 
+    //! Free memory of a single sprite.
+    /*!
+        @param iNumber Number of the sprite to clear.
+    */
+    void _freeSingleSprite(unsigned int iNumber);
+
     //! Free memory used for storing all sprite information.
     void _freeSprites();
-
-    //! Test whether the provided sprites fit at a sheet of the given size.
-    /*!
-        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
-        @param iSize Size of the suggested area to use (both width and height, as it's rectangular).
-        @return Whether all sprites can be fit at the sheet.
-    */
-    bool _tryFitSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
-
-    //! Construct the sprite sheet.
-    /*!
-        @param ppSortedSprites Sprites to store at the sheet (sorted in size).
-        @param iSize Size of the sheet area to use (both width and height, as it's rectangular).
-    */
-    void _makeSingleTex(sprite_t** ppSortedSprites, unsigned int iSize);
 
     //! Construct an alternative version (with its alternative palette map) of the sprite.
     /*!
@@ -479,14 +575,6 @@ protected:
         @return SDL texture containing the sprite.
     */
     SDL_Texture *_makeAltBitmap(sprite_t *pSprite);
-
-    //! Compare function for sorting sprites on having data, and decreasing height.
-    /*!
-        @param left Left sprite to compare.
-        @param right Right sprite to compare.
-        @return Negative, zero, or positive number, depending on desired order of the compared sprites.
-    */
-    static int _sortSpritesHeight(const void* left, const void* right);
 };
 
 class THCursor

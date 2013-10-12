@@ -414,6 +414,12 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
   
   local sheet = TH.sheet()
+  local function loadCustomSprites(path)
+    local file = assert(io.open(path, "rb"))
+    local data = file:read"*a"
+    file:close()
+    return data
+  end
   local function reloader(sheet)
     sheet:setPalette(palette or self:loadPalette())
     local data_tab, data_dat
@@ -427,6 +433,13 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
     if not sheet:load(data_tab, data_dat, complex, self.target) then
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
     end
+    -- XXX Needs more Lua to make more generic.
+    -- if dir == "Data" and name == "VBlk-0" then
+    --   local data = loadCustomSprites("ground_tiles/ground_tiles.sprites")
+    --   if not sheet:loadCustom(data, self.target) then
+    --     print("Warning: custom sheet loading failed")
+    --   end
+    -- end
   end
   self.reload_functions[sheet] = reloader
   reloader(sheet)
