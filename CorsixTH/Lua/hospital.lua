@@ -621,31 +621,21 @@ end
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
   if self.hospital and self:isPlayerHospital() then
-    -- Check to see if a staff room has been built
-    self.is_staff_room = false
-    if self:hasRoomOfType("staff_room") then
-      self.is_staff_room = true
-    end
-    -- Check to see if toilets have been built
-    self.is_toilet = false
-    if self:hasRoomOfType("toilets") then
-      self.is_toilet = true
-    end
     -- If there is no staff room, remind player of the need to build one
-    if self.world.year == 1 and self.world.month > 4 and self.world.day == 3
-    and not self.is_staff_room and not self.staff_room_msg then
-      self:noStaffroom_msg()
-    elseif self.world.year > 1 and self.world.day == 3
-    and not self.is_staff_room then
-      self:noStaffroom_msg()
+    if self.world.day == 3 and not self:hasRoomOfType("staff_room") then
+      if self.world.month > 4 and not self.staff_room_msg then
+        self:noStaffroom_msg()
+      elseif self.world.year > 1 then
+        self:noStaffroom_msg()
+      end
     end
     -- If there is no toilet, remind player of the need to build one
-    if self.world.month > 4 and self.world.day == 8
-    and not self.is_toilet and not self.toilet_msg then
-      self:noToilet_msg()
-    elseif self.world.year > 1 and self.world.day == 8
-    and not self.is_toilet then
-      self:noToilet_msg()
+    if self.world.day == 8 and not self:hasRoomOfType("toilets") then
+      if self.world.month > 4 and not self.toilet_msg then
+        self:noToilet_msg()
+      elseif self.world.year > 1 then
+        self:noToilet_msg()
+      end
     end
     -- How are we for seating, if there are plenty then praise is due, if not the player is warned
     -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
