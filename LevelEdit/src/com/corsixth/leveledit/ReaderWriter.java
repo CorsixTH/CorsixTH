@@ -408,9 +408,11 @@ public class ReaderWriter {
                 write.newLine();
                 write.write("#gbv.TrainingRate	45");
                 write.newLine();
-                write.write("#gbv.AbilityThreshold[0]  70 Surgeon");
+                write.write("#gbv.AbilityThreshold[0]  75 Surgeon");
                 write.newLine();
                 write.write("#gbv.AbilityThreshold[1]  60 Psychiatrist");
+                write.newLine();
+                write.write("#gbv.AbilityThreshold[2]  45 Researcher");
                 write.newLine();
                 write.write("#gbv.TrainingValue[0]     10 Projector");
                 write.newLine();
