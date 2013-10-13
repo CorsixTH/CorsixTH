@@ -201,7 +201,7 @@ function Hospital:Hospital(world, name)
   self.research = ResearchDepartment(self)
 end
 
--- Seasoned players will know these things, but it does not arm things to be reminded if there is no staff room or toilet!
+-- Seasoned players will know these things, but it does not harm to be reminded if there is no staff room or toilet!
 function Hospital:noStaffroom_msg()
   local staffroom_msg = {
     (_A.warnings.build_staffroom),
@@ -807,7 +807,8 @@ function Hospital:getPlayerIndex()
   return 1
 end
 
--- Returns the heliport x and y coordinates or nil if none exist.
+--! Returns the heliport x and y coordinates or nil if none exist.
+--!return (pair of integers, or nil) The x,y position of the tile with the heliport, if it exists.
 function Hospital:getHeliportPosition()
   local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
   -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
@@ -818,7 +819,8 @@ function Hospital:getHeliportPosition()
   end
 end
 
--- Returns the tile on which patients should spawn when getting out of the helicopter.
+--! Returns the tile on which patients should spawn when getting out of the helicopter.
+--!return (pair of integers, or nil) The x,y position to use for spawning emergency patients from the heliport, if available.
 function Hospital:getHeliportSpawnPosition()
   local x, y = self:getHeliportPosition()
   if x and y then
