@@ -395,10 +395,10 @@ function Hospital:afterLoad(old, new)
     end
     -- Redefine the research table
     self.research = {
-      improvements = {frac = 20, points = 0, current = "inflation"},
-      drugs = {frac = 20, points = 0, current = "invisibility"},
-      diagnosis = {frac = 20, points = 0, current = next_diag},
-      cure = {frac = 20, points = 0, current = next_cure},
+      improvements =   {frac = 20, points = 0, current = "inflation"},
+      drugs =          {frac = 20, points = 0, current = "invisibility"},
+      diagnosis =      {frac = 20, points = 0, current = next_diag},
+      cure =           {frac = 20, points = 0, current = next_cure},
       specialisation = {frac = 20, points = 0, current = "special"},
       global = 100,
     }
