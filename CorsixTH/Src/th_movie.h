@@ -53,7 +53,6 @@ public:
 
     SDL_Texture *m_pTexture;
     PixelFormat m_pixelFormat;
-    SDL_Surface *m_pSurface;
     int m_iX, m_iY, m_iWidth, m_iHeight;
     double m_dPts;
     SDL_mutex *m_pMutex;
@@ -73,7 +72,6 @@ public:
     void deallocate();
     bool advance();
     void draw(SDL_Renderer *pRenderer);
-    double getCurrentPts();
     double getNextPts();
     bool empty();
 
@@ -146,6 +144,9 @@ protected:
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
 
     SDL_Renderer *m_pRenderer;
+    SDL_GLContext m_shareContext;
+    // Sadly we have to keep this around, since SDL_GL_MakeCurrent requires a window.
+    SDL_Window *m_pShareWindow;
 
     //last error
     std::string m_sLastError;

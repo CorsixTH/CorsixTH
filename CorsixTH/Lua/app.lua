@@ -836,15 +836,15 @@ local fps_sum = 0 -- Sum of fps_history array
 local fps_next = 1 -- Used to loop through fps_history when [over]writing
 
 function App:drawFrame()
+  self.video:startFrame()
   if(self.moviePlayer.playing) then
     self.key_modifiers = {}
     self.moviePlayer:refresh()
   else
     self.key_modifiers = SDL.getKeyModifiers()
-    self.video:startFrame()
     self.ui:draw(self.video)
-    self.video:endFrame()
   end
+  self.video:endFrame()
   
   if self.config.track_fps then
     fps_sum = fps_sum - fps_history[fps_next]
