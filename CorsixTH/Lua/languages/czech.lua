@@ -280,6 +280,7 @@ town_map = {
 }
 confirmation = {
   replace_machine = "Jste si jisti, že chcete nahradit %s za %d€?",
+  music_warning = "Před zvolením hudby ve formátu mp3 se ujistěte, že máte dostupný soubor smpeg.dll, nebo podobné, pro váš operační systém, jinak ve hře nebudete mít žádnou hudbu. Chcete pokračovat?",
   abort_edit_room = "Právě stavíte nebo upravujete místnost. Pokud jsou všechny povinné objekty umístěny, bude dokončena, ale jinak bude smazána. Pokračovat?",
   quit = "Zvolili jste, že chcete Odejít. Opravdu chcete hru opustit?",
   needs_restart = "Změna tohoto nastavení vyžaduje restart CorsixTH. Jakýkoli neuložený postup bude ztracen. Jste si jisti, že to chcete udělat?",
@@ -288,6 +289,7 @@ confirmation = {
   restart_level = "Jste si jisti, že chcete úroveň restartovat?",
   overwrite_save = "Hra už byla do této pozice uložena. Jste si jisti, že ji chcete přepsat?",
   return_to_blueprint = "Jste si jisti, že se chcete vrátit do režimu Návrhu?",
+  maximum_screen_size = "Velikost obrazovky, kterou jste zadali, je vyšší než 3000 x 2000. Na tato rozlišení lze přejít za předpokladu, že máte hardware schopný tuto hru udržet v hratelné rychlosti. Opravdu chcete pokračovat?",
 }
 adviser = {
   goals = {
@@ -341,7 +343,7 @@ adviser = {
     first_death = "Právě jste zabili svého prvního pacienta. Jaký je to pocit?",
     extra_items = "Dodatečné věci v místnostech Vaše zaměstnance uklidňuje a zlepšuje jejich výkon.",
     promotion_to_consultant = "Jeden z Vašich DOKTORŮ se stal KONZULTANTEM.",
-    patient_abducted = "Jednoho z Vašich pacientů unášejí mimozemšťani.",
+    patient_abducted = "Jednoho z Vašich pacientů unášejí mimozemšťané.",
   },
   praise = {
     many_plants = "Jak milé. Máte spousty rostlin. Vaši Pacienti to jistě ocení.",
@@ -384,8 +386,6 @@ adviser = {
     },
     everyone_failed = "Všichni nedokázali splnit poslední úkol. Takže všichni budou hrát dál !",
     players_failed = "Následující hráč(i) nedokázal(i) splnit poslední úkol : ",
-    objective_completed = "Splnili jste úkol. Blahopřeji!",
-    objective_failed = "Nedokázali jste splnit úkol.",
   },
   staff_place_advice = {
     only_doctors_in_room = "Pouze Doktoři mohou v %s pracovat",
@@ -450,21 +450,16 @@ adviser = {
     new_available = "Nový %s je dostupný.",
     drug_fully_researched = "%s jste vyzkoumali na 100%.",
     new_drug_researched = "Nový lék pro léčbu %s byl vynalezen.",
-    drug_improved = "Lék %s byl vylepšen Vašim Výzkumným Oddělením.",
-    autopsy_discovered_rep_loss = "Váš stroj Auto-Pitvy byl objeven. Očekávejte zápornou reakci obecné veřejnosti.",
+    drug_improved = "Lék %s byl vylepšen vaším Výzkumným Oddělením.",
+    autopsy_discovered_rep_loss = "Váš stroj Auto-Pitvy byl objeven. Očekávejte zápornou reakci široké veřejnosti.",
     new_machine_researched = "Nový %s byl právě úspěšně vynalezen.",
-    machine_improved = "%s byl vylepšen Vašim Výzkumným Oddělením.",
+    machine_improved = "%s byl vylepšen vaším Výzkumným Oddělením.",
+    drug_improved_1 = "Lék %s byl vylepšen vaším Výzkumným oddělením."
   },
   cheats = {
-    bloaty_cheat = "Cheat Nafouknuté Hlavy aktivován!",
     th_cheat = "Blahopřejeme, právě jste odemkli cheaty!",
-    hairyitis_cheat = "Cheat Vlasoitidy aktivován!",
-    crazy_on_cheat = "Ale ne! Všichni doktoři se zbláznili!",
     roujin_off_cheat = "Roujinova výzva deaktivována.",
-    crazy_off_cheat = "Uf... doktoři znovu získali svou příčetnost.",
-    hairyitis_off_cheat = "Cheat Vlasoitidy deaktivován.",
     roujin_on_cheat = "Roujinova výzva aktivována! Hodně štěstí...",
-    bloaty_off_cheat = "Cheat Nafouknuté Hlavy deaktivován.",
   },
   room_forbidden_non_reachable_parts = "Umístěním místnosti zde by zapříčinilo, že části nemocnice by byly nedostupné.",
   level_progress = {
@@ -493,9 +488,9 @@ adviser = {
     nobody_cured_last_month = "Minulý měsíc nebyl vůbec nikdo vyléčen.",
     charges_too_high = "Vaše poplatky jsou vysoké. Sice budete mít krátkodobě vysoké příjmy, ale nakonec začnete odhánět lidi pryč.",
     patient_stuck = "Někdo uváznul. Plánujte Vaši nemocnici lépe.",
-    build_staffroom = "Okamžitě postavte Místnost pro Zaměstnance. Vaši zaměstnanci pracují příliš tvrdě a jsou napokraji zhroucení. No tak - mějte rozum!",
+    build_staffroom = "Okamžitě postavte Místnost pro Zaměstnance. Vaši zaměstnanci pracují příliš tvrdě a jsou na pokraji zhroucení. No tak - mějte rozum!",
     doctor_crazy_overwork = "Ale ne! Jeden z Vašich Doktorů se kvůli přepracování zbláznil. Pokud mu okamžitě máte odpočinou, může se z toho zotavit.",
-    machinery_very_damaged = "Naléhávé! Řekněte Vašemu Údržbáři, aby okamžitě opravil Vaše přístroje! Chystají se vybouchnout!",
+    machinery_very_damaged = "Naléhavé! Řekněte Vašemu Údržbáři, aby okamžitě opravil Vaše přístroje! Chystají se vybouchnout!",
     nurses_tired2 = "Vaše Sestry jsou velmi unavené. Hned jim dejte odpočinout.",
     patients_very_thirsty = "Pacienti opravdu trpí žízní. Pokud brzo neumístíte automaty na nápoje, budete čelit velkému odcházení, jak všichni lidé odejdou domů pro kolu.",
     machinery_deteriorating = "Vaše přístroje začali chátrat kvůli nadměrnému užívání. Tak je hlídejte.",
@@ -506,6 +501,7 @@ adviser = {
     deal_with_epidemic_now = "Pokud se s touto epidemií brzo něco neprovede, budete až po oči v průšvihu. Tak pohyb!",
     too_many_plants = "Máte až příliš mnoho kytek. Je to tam jako v džungli.",
     cannot_afford = "V bance nemáte dostatek peněz, abyste tuto osobu najali!",
+    cannot_afford_2 = "Nejste tak bohatí, abyste si toto zakoupili!",
     patients_thirsty = "Lidé začínají mít žízeň. Možná by jste jim měli poskytnout automaty na nápoje.",
     machinery_slightly_damaged = "Vaše přístroje v nemocnici jsou lehce poškozené. Nezapomeňte, abyste je všechny někdy udržovali.",
     change_priorities_to_plants = "Musíte změnit priority Vašich Údržbářů, aby trávili více času zaléváním rostlin.",
@@ -513,6 +509,11 @@ adviser = {
     too_much_litter = "Máte problém s odpadky. Více údržbářů by mohla být odpověď.",
     place_plants_to_keep_people = "Lidé odcházejí. Umístěním kytek je může přesvědčit, aby zůstali.",
     research_screen_open_1 = "Předtím, než můžete vstoupit na obrazovku výzkumu, musíte postavit Výzkumné oddělení.",
+    researcher_needs_desk_1 = "Výzkumník potřebuje pro práci svůj stůl.",
+    researcher_needs_desk_2 = "Váš Výzkumník je potěšen vaší velkorysostí mu poskytnout přestávku při práci. Pokud jste zamýšleli, aby současně pracovalo více výzkumníků, musíte každému pořídit vlastní stůl pro práci.",
+    researcher_needs_desk_3 = "Každý Výzkumník musí mít svůj vlastní pracovní stůl.",
+    nurse_needs_desk_1 = "Každá Sestra potřebuje pro svoji práci vlastní stůl.",
+    nurse_needs_desk_2 = "Vaše Sestra je přímo nadšená množstvím volna, které ji poskytujete. Pokud jste měli v úmyslu její začlenění do pracovního procesu, pak muíste každé dát stůl z kterého mohou pracovat.",
     research_screen_open_2 = "Výzkum je v současné úrovni zakázán.",
     no_desk_1 = "Pokud chcete, aby lidé do Vaší nemocnice chodili, budete muset najmout recepční a postavit ji recepci, kde může pracovat!",
     queue_too_long_at_reception = "Máte příliš mnoho pacientů čekajících na přidělení místnosti v recepci. Umístěte další Recepci a zaměstnejte další Recepční.",
@@ -530,7 +531,7 @@ adviser = {
     receptionists_tired2 = "Vaše Recepční jsou velmi vyčerpané. Hned je nechte odpočinout.",
     patients_getting_hot = "Pacientům začíná být velké horko. Zkuste snížit vytápění, nebo dokonce odstraňte některé radiátory.",
     people_did_it_on_the_floor = "Někteří pacienti to nemohli vydržet. Čištění bude pro někoho velká práce.",
-    patients_really_thirsty = "Pacienti mají velkou žízeň. Umístěte více automatů na nápoje, nebo přemistěte existující blízko k největším frontám.",
+    patients_really_thirsty = "Pacienti mají velkou žízeň. Umístěte více automatů na nápoje, nebo přemístěte existující blízko k největším frontám.",
     doctors_tired = "Vaši Doktoři jsou velmi unavení. Hned je nechte odpočinout.",
     financial_trouble3 = "Vaše bankovní bilance vypadá trochu znepokojivě. Přemýšlejte o vydělávání více peněz. Jste %d vzdáleni od katastrofy.",
     handymen_tired2 = "Vaši Údržbáři jsou naprosto zničení. Okamžitě jim dejte odpočinout.",
@@ -577,6 +578,10 @@ adviser = {
     reduce_staff_rest_threshold = "Zkuste snížit práh Odpočinku Zaměstnanců ve Vaší obrazovce Zásad tak, aby Vaši zaměstnanci častěji odpočívají. Jen takový nápad.",
     place_plants3 = "Pacienti začínají být nešťastní. Umístěte více rostlin, abyste je utěšili.",
     build_toilets = "Hned teď vybudujte Toaletu nebo uvidíte něco velmi nepěkného. A představte si, jak Vaše nemocnice bude smrdět.",
+    no_desk_4 = "Recepční potřebuje svoji vlastní pracovní stanici, kde bude vítat pacienty při jejich příchodu",
+    no_desk_5 = "No už bylo načase, za chvíli by Vám měli začít přicházet pacienti!",
+    no_desk_6 = "Recepční máte, tak co kdybyste ji postavili recepci, kde by mohla začít pracovat?",
+    no_desk_7 = "Recepci jste postavili, a teď jenom najmout recepční. Bez ní do vaší nemocnice nevkročí ani noha!",
   },
   earthquake = {
     ended = "Uf. Myslel jsem si, že tento byl Ten Velký - Byl %d stupně na Richterově Škále.",
@@ -602,8 +607,8 @@ adviser = {
     hurry_up = "Pokud se s touto epidemií brzo něco neprovede, budete až po oči v průšvihu. Tak pohyb!",
   },
   boiler_issue = {
-    resolved = "Dobré zprávy. Bojler a radiátory nyní už zase správně fungují. Teplota by měla pro Vaše pacienty a zaměstnace být v pořádku.",
-    maximum_heat = "Bojler ve sklepě se zbláznil. Teplo radiátorů je zaseklé na maximu. Lidi začnou tát! Umístěním více Automatů na nápoje by pomohlo.",
+    resolved = "Dobré zprávy. Bojler a radiátory nyní už zase správně fungují. Teplota by měla pro Vaše pacienty a zaměstnance být v pořádku.",
+    maximum_heat = "Bojler ve sklepě se zbláznil. Teplo radiátorů se zaseklo na maximu. Lidi začnou tát! Umístěním více Automatů na nápoje by pomohlo.",
     minimum_heat = "Ah, tady jste. Bojler ve sklepě je rozbitý. Vypadá to, že lidem ve Vaší nemocnici bude za chvilku pořádná zima.",
   },
 }
@@ -667,7 +672,7 @@ staff_descriptions = {
     [22] = "Instruktor pro ruční práce s rafií. ",
     [23] = "Vydlabává zeleninu a používá ji jako držáky na mýdlo. ",
     [24] = "Zvláštní policejní komisař na částečný úvazek. ",
-    [25] = "Bývalý moderátor kvízového pořadu. ",
+    [25] = "Bývalý moderátor kvizového pořadu. ",
     [26] = "Sbírá šrapnely z 2. světové války. ",
     [27] = "Přemisťuje nábytek. ",
     [28] = "Poslouchá rave a trip-hop. ",
@@ -957,7 +962,7 @@ trophy_room = {
   },
   hosp_value = {
     penalty = {
-      [1] = "Vaší nemocnici se nepodařilo dosáhnout slušné hodnoty. Provedli sjte špatná rozhodnutí s penězi. Nezapomeňte, že dobrá nemocnice je také drahá nemocnice.",
+      [1] = "Vaší nemocnici se nepodařilo dosáhnout slušné hodnoty. Provedli jste špatná rozhodnutí s penězi. Nezapomeňte, že dobrá nemocnice je také drahá nemocnice.",
     },
     regional = {
       [1] = "Jste zázračné dítě přes finance. Vaše nemocnice má větší hodnotu než všechny ostatní nemocnice v oblasti dohromady.",
@@ -1060,27 +1065,57 @@ room_classes = {
   clinics = "Kliniky",
 }
 tooltip = {
-  options_window = {
-    fullscreen = "Zdali má být hra spuštěna v režimu okna nebo celé obrazovky",
-    width = "Zadejte požadovanou šířku obrazovky",
-    select_language = "vybrat jazyk hry",
-    select_resolution = "Vybrat nové rozlišení",
+  folders_window = {
     data_location = "Adresář instalace původní hry Theme Hospital, jenž je vyžadován pro spuštění CorsixTH",
-    change_resolution = "Změnit rozlišení okna na rozměry zadané vlevo",
-    language_dropdown_item = "Zvolit %s jako jazyk",
-    cancel = "Vrátit se zpět bez změny rozlišení",
-    resolution = "Rozlišení v kterém by hra měla být spuštěna",
-    apply = "Použít zadané rozlišení",
-    back = "Zavřít okno možností",
-    fullscreen_button = "Klikněte pro přepnutí režimu celé obrazovky",
-    original_path = "Nyní zvolená složka instalace původní Theme Hospital",
-    browse = "Procházet pro jiné umístění instalace Theme Hospital. %1%",
-    height = "Zadejte požadovanou výšku obrazovky",
-    language = "Vybrat %s jako jazyk",
+    no_font_specified = "Umístění písma zatím nezadáno!",
+    browse_data = "Procházet pro jiné umístění instalace Theme Hospital. (současné umístění: %1%)",
     browse_font = "Procházet pro výběr jiného souboru s písmem (současné umístění: %1%)",
-    no_font_specified = "Umístšní zatím nezadáno!",
     font_location = "Umístění souboru s písmem, které je schopno zobrazit znaky Unicode vyžadované vaším jazykem. Pokud toto není zadáno, nebudete moci zvolit jazyky, které potřebují více znaků, než původní hra obsahuje. Příklad: ruština a čínština",
+    screenshots_location = "Standardně je složka se snímky obrazovky ve stejném umístění jako soubor s nastavením. Pokud toto není žádané, pak si můžete zvolit vlastní. Stačí zvolit adresář, který chete použít.",
+    reset_to_default = "Resetovat adresář na jeho výchozí umístění",
+    back = "Zavřít tuto nabídku a vrátit se zpět do nabídky Nastavení",
+    music_location = "Vyberte umístění vašich mp3 souborů s hudbou. Adresář musí být vytvořen předem a pak ho můžete zde zvolit.",
+    savegames_location = "Standardně je adresář uložených her na stejném místě jako soubor s nastavením. Pokud toto nechcete, můžete si zvolit svůj vlastní. Stačí zvolit adresář, který chcete používat.",
+    browse = "Procházet pro zvolení adresáře",
+    browse_screenshots = "Procházet pro zvolení jiného umístění vašeho adresáře snímků obrazovky  ( Současné umístění: %1% ) ",
+    browse_music = "Procházet pro zvolení jiného umístění vašeho adresáře s hudbou  ( Současné umístění: %1% ) ",
+    not_specified = "Žádné umístění adresáře zatím nezadáno!",
+    browse_saves = "Procházet pro zvolení jiného umístění vašeho adresáře uložených her  ( Současné umístění: %1% ) ",
+    default = "Výchozí umístění",    
   },
+  customise_window = {
+    aliens = "Kvůli chybějícím správným animacím standardně pacienti s Mimozemskou DNA přicházejí pouze při pohotovosti. Abyste je povolili i jako normální pacienty, stačí toto vypnout.",
+    average_contents = "Pokud chcete, aby si hra pamatovala vámi přidané dodatečné objekty při stavbě místností, pak toto zapněte.",
+    back = "Zavřít tuto nabídku a přejít zpět do Nastavení",
+    movies = "Globální kontrola videí, toto umožňuje zákaz všech videí",
+    fractured_bones = "Kvůli špatné animaci jsou standardně zakázány pacientky se Zlomenými Kostmi. Pro povolení pacientek s touto diagnózou ve vaší nemocnici musíte toto vypnout.",
+    volume = "Pokud tlačítko pro snížení hlasitosti zároveň také otevírá Knihu léčby pacientů, můžete toto zapnout pro změnu klávesové zkratky knihy na Shift + C",
+	intro = "Zapne nebo vypne úvodní video. Pokud chcete, aby video bylo přehráváno při každém spuštění CorsixTH, je třeba zapnout globální kontrolu videí.",
+	paused = "V Theme Hospital může hráč použít horní nabídku pouze při pozastavení hry. To samé platí v CorsixTH, ale pomocí této volby můžete při pozastavení povolit vše.",
+  },
+  options_window = {
+    language = "Vybrat %s jako jazyk",
+    language_dropdown_item = "Zvolit %s jako jazyk",
+    width = "Zadejte požadovanou šířku obrazovky",
+    select_language = "Vybrat jazyk hry",
+    select_resolution = "Vybrat nové rozlišení", 
+    back = "Zavřít okno možností", 
+    resolution = "Rozlišení v kterém by hra měla být spuštěna", 
+    fullscreen = "Zdali má být hra spuštěna v režimu v okně nebo celé obrazovky",
+    fullscreen_button = "Klikněte pro přepnutí režimu celé obrazovky",
+    change_resolution = "Změnit rozlišení okna na rozměry zadané vlevo", 
+    apply = "Použít zadané rozlišení",
+    cancel = "Vrátit se zpět bez změny rozlišení", 
+    height = "Zadejte požadovanou výšku obrazovky",
+    audio_button = "Zapnout nebo vypnout všechny zvuky ve hře",
+    audio_toggle = "Zapnout/vypnout",
+    folder_button = "Možnosti složky",
+    customise_button = "Další nastavení, pomocí kterých si můžete svoji hru přizpůsobit",
+    },
+  update_window = {  
+    download = "Přejít na stránku stahování pro získání nejnovější verze CorsixTH",
+    ignore = "Zatím si této aktualizace nevšímat. Při příštím spuštění CorsixTH budete znovu informováni.",
+    },
   information = {
     close = "Zavřít informační dialogové okno",
   },
@@ -1328,7 +1363,7 @@ tooltip = {
     prio_plants = "Zvýšit Údržbářovu prioritu zalévání rostlin",
     face = "Tvář údržbáře",
     ability = "Schopnost",
-    parcel_select = "Parcela kde údržbář přijím úkoly, klikněte pro změnu nastavení"
+    parcel_select = "Parcela, kde údržbář přijímá úkoly. Klikněte pro změnu nastavení"
   },
   watch = {
     hospital_opening = "Čas pro stavbu: toto je zbývající čas, než je Vaše nemocnice prohlášena za otevřenou. Kliknutím na zelené tlačítko ji otevře okamžitě.",
@@ -2550,12 +2585,14 @@ information = {
 }
 errors = {
   minimum_screen_size = "Zadejte prosím alespoň 640x480 jako velikost obrazovky.",
-  maximum_screen_size = "Zadejte prosím nanejvýše 3000x2000 jako velikost obrazovky.",
   map_file_missing = "Nelze nalézt soubor s mapou %s pro tuto úroveň!",
   dialog_missing_graphics = "Je nám líto, datové soubory demoverze toto dialogové okno neobsahují.",
   load_prefix = "Chyba při načtení hry: ",
   unavailable_screen_size = "Velikost obrazovky, kterou požadujete, není dostupná v režimu celé obrazovky.",
   save_prefix = "Chyba při uložení hry: ",
+  alien_dna = "POZNÁMKA: Pro animaci s Mimozemskou DNA neexistují animace pro sednutí, otevírání nebo klepání na dveře atd. Proto se při těchto činnostech, stejně jako v Theme Hospital, dočasně změní na normálně vypadající pacienty a pak se změní zpět. Tyto pacienti se v nemocnici objeví pouze při nastavení v souboru úrovně",
+  fractured_bones = "POZNÁMKA: Animace ženských pacientů se Zlomenými kostmi není dokonalá",
+  load_quick_save = "Chyba! Rychle uloženou pozici nelze načíst, protože neexistuje. Není třeba se obávat, hned jsme jednu pro Vás vytvořili!",
 }
 menu = {
   charts = "  GRAFY  ",
@@ -2580,9 +2617,10 @@ menu_options = {
   music_vol = "    HLASITOST HUDBY  ",
   sound = "    ZVUK   ",
   announcements_vol = "    HLASITOST OZNÁMENÍ  ",
-  settings = "    NASTAVENÍ  ",
   jukebox = "    JUKEBOX  ",
-  warmth_colors = "    BARVY TEPLOTY",  
+  warmth_colors = "    BARVY TEPLOTY",
+  twentyfour_hour_clock = "    24HODINOVÝ REŽIM  ",
+  wage_increase = "  MZDOVÉ POŽADAVKY",  
 }
 menu_options_warmth_colors = {
   choice_2 = "     MODRÁ ZELENÁ ČERVENÁ ",
@@ -3094,6 +3132,8 @@ install = {
   th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo demoverze), aby mohla běžet. Prosím použijte okno níže k nalezení instalační složky Theme Hospital.",
   title = "-------------------------------- Nastavení CorsixTH --------------------------------",
   exit = "Odejít",
+  ok = "OK",
+  cancel = "Zrušit",
 }
 staff_class = {
   receptionist = "Recepční",
@@ -3140,18 +3180,56 @@ options_window = {
   apply = "Použít",
   caption = "Nastavení",
   resolution = "Rozlišení",
-  data_location = "Umístění dat",
   option_off = "Vypnuto",
-  browse = "Procházet...",
   custom_resolution = "Vlastní...",
   option_on = "Zapnuto",
   language = "Jazyk hry",
   height = "Výška",
   cancel = "Zrušit",
-  new_th_directory = "Zde můžete zadat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
-  back = "Zpátky",
-  font_location = "Umístění písma",
+  back = "Zpět",
+  folder = "Složky",
+  customise = "Přizpůsobit",
+  audio = "Globální audio",
+}
+folders_window = {
+  new_th_location = "Zde můžete zadat novou instalační složku Theme Hospital. Jakmile ji zvolíte, hra bude restartována.",
+  data_label = "Data TH",
+  music_label = "MP3",
+  savegames_label = "Uložené hry",
+  music_location = "Vyberte adresář s hudbou, která bude použita ve hře.",
+  caption = "Umístění složek",
+  screenshots_label = "Snímky obrazovky",
+  font_label = "Písmo",
+  back = "Zpět",
+  savegames_location = "Vyberte složku, kde budou ukládány vaše uložené hry",
+  screenshots_location = "Vyberte složku, kde budou ukládány snímky obrazovky",
 }
 font_location_window = {
 caption = "Zvolte písmo (%1%)"
 }
+menu_options_wage_increase = {
+  deny = "    ZAMÍTNOUT",
+  grant = "    VYHOVĚT",
+}
+update_window = {
+ caption = "Dostupná aktualizace!",
+ new_version = "Nová verze:",
+ current_version = "Současná verze:",
+ download = "Přejít na stránku ke stažení",
+ ignore = "Přeskočit a přejít do hlavní nabídky", 
+}
+customise_window = {
+ average_contents = "Průměrný obsah",
+ option_on = "Zapnuto",
+ paused = "Stavět při pozastavení",
+ option_off = "Vypnuto",
+ intro = "Přehrát úvodní video",
+ caption = "Vlastní nastavení",
+ back = "Zpět",
+ movies = "Globální kontrola videí",
+ volume = "Zkrátka snížení hlasitosti",
+ aliens = "PAcienti s mimozemskou DNA",
+ fractured_bones = "Zlomené kosti",
+}
+
+
