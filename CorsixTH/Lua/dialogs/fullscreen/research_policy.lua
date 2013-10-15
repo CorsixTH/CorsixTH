@@ -100,13 +100,21 @@ function UIResearch:updateCategories()
       self:adjustResearch(area, mode)
     end
   end
+  
+  local function getfield(fieldname)
+    local v = _G
+    for w in string.gfind(fieldname, "[%w_]+") do
+        v = v[w]
+    end
+    return v
+  end
 
   for i, area in ipairs(research_categories) do
     local current = self.hospital.research.research_policy[area].current
     if current then
       self.adjust_buttons[area] = {
-        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")),
-        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")),
+        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")):setTooltip(getfield("_S.tooltip.research." .. area .. "_dec")),
+        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")):setTooltip(getfield("_S.tooltip.research." .. area .. "_inc")),
       }
     else
       if self.adjust_buttons[area] then
