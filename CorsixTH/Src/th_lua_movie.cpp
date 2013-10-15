@@ -29,6 +29,14 @@ static int l_movie_new(lua_State *L)
     return 1;
 }
 
+static int l_movie_set_renderer(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    THRenderTarget *pRenderTarget = luaT_testuserdata<THRenderTarget>(L, 2);
+    pMovie->setRenderer(pRenderTarget->getRenderer());
+    return 0;
+}
+
 static int l_movie_enabled(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
@@ -127,6 +135,7 @@ static int l_movie_deallocate_picture_buffer(lua_State *L)
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
 {
     luaT_class(THMovie, l_movie_new, "moviePlayer", MT_Movie);
+    luaT_setfunction(l_movie_set_renderer, "setRenderer", MT_Surface);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");

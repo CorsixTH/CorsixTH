@@ -25,9 +25,10 @@ local pathsep = package.config:sub(1, 1)
 
 class "MoviePlayer"
 
-function MoviePlayer:MoviePlayer(app, audio)
+function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio
+  self.video = video
   self.playing = false
   self.holding_bg_music = false
   self.channel = -1
@@ -42,6 +43,7 @@ end
 
 function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
+  self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
   local num
@@ -169,9 +171,9 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip)
     w, h = screen_w, screen_h
   end
 
-  self.app.video:startFrame()
-  self.app.video:fillBlack()
-  self.app.video:endFrame()
+  self.video:startFrame()
+  self.video:fillBlack()
+  self.video:endFrame()
 
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
