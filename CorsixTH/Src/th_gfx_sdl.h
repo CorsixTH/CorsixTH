@@ -107,6 +107,7 @@ public: // External API
     // to the other rendering engines.
 
 public: // Internal (this rendering engine only) API
+    SDL_Renderer *getRenderer() const { return m_pRenderer; }
     bool shouldScaleBitmaps(float* pFactor);
     SDL_Texture* createPalettizedTexture(int iWidth, int iHeight, const unsigned char* pPixels,
                                          const THPalette* pPalette) const;
