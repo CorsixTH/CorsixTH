@@ -779,10 +779,11 @@ void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, 
     {
         for(unsigned int x = 0; x < pSprite->iWidth; ++x, ++pPixels, ++pAData, pRGBData += 3)
         {
-            pRGBData[0] = THPalette::getR(pColours[*pPixels]);
-            pRGBData[1] = THPalette::getG(pColours[*pPixels]);
-            pRGBData[2] = THPalette::getB(pColours[*pPixels]);
-            pAData  [0] = THPalette::getA(pColours[*pPixels]);
+            const uint32_t iARGB = pColours[*pPixels];
+            pRGBData[0] = THPalette::getR(iARGB);
+            pRGBData[1] = THPalette::getG(iARGB);
+            pRGBData[2] = THPalette::getB(iARGB);
+            pAData  [0] = THPalette::getA(iARGB);
         }
     }
 }
@@ -808,16 +809,20 @@ bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned
 {
     if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
-    int iWidth = m_pSprites[iSprite].iWidth;
-    int iHeight = m_pSprites[iSprite].iHeight;
+
+    sprite_t &sprite = m_pSprites[iSprite];
+    int iWidth = sprite.iWidth;
+    int iHeight = sprite.iHeight;
     if(iX >= iWidth || iY >= iHeight)
         return false;
     if(iFlags & THDF_FlipHorizontal)
         iX = iWidth - iX - 1;
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
-    return THPalette::getA(m_pPalette->getARGBData()
-            [m_pSprites[iSprite].pData[iY * iWidth + iX]]) != 0;
+    unsigned char cPalIndex = sprite.pData[iY * iWidth + iX];
+
+    const uint32_t* pColours = m_pPalette->getARGBData();
+    return THPalette::getA(pColours[cPalIndex]) != 0;
 }
 
 THCursor::THCursor()
