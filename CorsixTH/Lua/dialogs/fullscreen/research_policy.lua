@@ -101,20 +101,23 @@ function UIResearch:updateCategories()
     end
   end
   
-  local function getfield(fieldname)
-    local v = _G
-    for w in string.gfind(fieldname, "[%w_]+") do
-        v = v[w]
+  -- Retrieves the localized string dynamically
+  -- i.e., if "tooltip.research.cure_dec" is given as string_name,
+  -- this function returns the value of _S.tooltip.research.cure_dec.
+  local function get_localized_string(string_name)
+    local var_table = _G["_S"]
+    for token in string.gfind(string_name, "[%w_]+") do
+        var_table = var_table[token]
     end
-    return v
+    return var_table
   end
 
   for i, area in ipairs(research_categories) do
     local current = self.hospital.research.research_policy[area].current
     if current then
       self.adjust_buttons[area] = {
-        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")):setTooltip(getfield("_S.tooltip.research." .. area .. "_dec")),
-        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")):setTooltip(getfield("_S.tooltip.research." .. area .. "_inc")),
+        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")):setTooltip(get_localized_string("tooltip.research." .. area .. "_dec")),
+        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")):setTooltip(get_localized_string("tooltip.research." .. area .. "_inc")),
       }
     else
       if self.adjust_buttons[area] then
