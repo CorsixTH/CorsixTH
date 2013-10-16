@@ -1108,7 +1108,8 @@ function World:onEndDay()
     -- Postpone it if anything clock related is already underway.
     if self.ui:getWindow(UIWatch) then
       self.next_emergency_month = self.next_emergency_month + 1
-      self.next_emergency_day = math.random(1, month_length[self.next_emergency_month])
+      local month_of_year = 1 + ((self.next_emergency_month - 1) % 12)
+      self.next_emergency_day = math.random(1, month_length[month_of_year])
     else
       -- Do it only for the player hospital for now. TODO: Multiplayer
       local control = self.map.level_config.emergency_control
