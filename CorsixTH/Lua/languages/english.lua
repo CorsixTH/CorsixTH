@@ -47,12 +47,11 @@ confirmation.restart_level = "Are you sure you want to restart the level?"
 -- TODO adviser.multiplayer.objective_completed
 -- TODO adviser.multiplayer.objective_failed
 
-
 -- Replace Billy Savile
 -- this is only relevant to the English game so does not need adding
 -- in other language files
 vip_names = {
-[ 6] = "Sir Lancelot Spratt",
+ [6] = "Sir Lancelot Spratt",
 }
 
 -- A small error in the introduction text of level 2
