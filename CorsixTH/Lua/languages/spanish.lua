@@ -223,14 +223,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
-    crazy_on_cheat = "¡Oh, no! ¡Todos los médicos se han vuelto locos!",
-    crazy_off_cheat = "Uf... los médicos han recuperado la cordura.",
     roujin_on_cheat = "¡Desafío de Roujin activado! Buena suerte...",
     roujin_off_cheat = "Desafío de Roujin desactivado.",
-    hairyitis_cheat = "¡Truco de peludismo activado!",
-    hairyitis_off_cheat = "Truco de peludismo desactivado.",
-    bloaty_cheat = "¡Truco de cabezudos activado!",
-    bloaty_off_cheat = "Truco de cabezudos desactivado.",
   },
 }
 
@@ -489,6 +483,7 @@ errors = {
   dialog_missing_graphics = "Los archivos de datos de la demo no contienen esta ventana.",
   save_prefix = "Error al guardar la partida: ",
   load_prefix = "Error al cargar la partida: ",
+  load_quick_save = "Error, no existe el guardado rápido y por tanto no se puede cargar, pero tranquilo, que acabamos de generar uno para ti.",
   map_file_missing = "¡No se ha podido encontrar el archivo de mapa %s de este nivel!",
   minimum_screen_size = "Introduce un tamaño de pantalla como mínimo de 640x480.",
   unavailable_screen_size = "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
