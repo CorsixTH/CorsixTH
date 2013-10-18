@@ -1,6 +1,6 @@
 ﻿--[[ Copyright (c) 2010 RAS
                    2011 FlyingBastard, L_konings, Nossah, KasperVld 
-                   2012 Omni, Maarten
+                   2012-2013 Omni, Maarten
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -2194,6 +2194,7 @@ casebook = {
 }
 errors = {
   dialog_missing_graphics = "Sorry, de demobestanden bevatten geen data voor dit scherm.",
+  +  load_quick_save = "Error, kan de quicksave niet laden, omdat het niet bestaat. Maak je maar geen zorgen, we hebben er eentje voor je aangemaakt!", 
   load_prefix = "Fout bij het laden van het spel: ",
   save_prefix = "Fout bij het opslaan van het spel: ",
   map_file_missing = "Bestand %s voor dit level is niet gevonden!",
