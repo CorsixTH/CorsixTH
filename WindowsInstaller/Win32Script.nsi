@@ -260,6 +260,7 @@ Section -AdditionalIcons
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk" "$INSTDIR\CorsixTH_DirectX.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Map Editor.lnk" "$INSTDIR\MapEdit.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Level Editor.lnk" "$INSTDIR\LevelEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
   !insertmacro MUI_STARTMENU_WRITE_END
