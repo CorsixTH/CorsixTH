@@ -2194,7 +2194,7 @@ casebook = {
 }
 errors = {
   dialog_missing_graphics = "Sorry, de demobestanden bevatten geen data voor dit scherm.",
-  +  load_quick_save = "Error, kan de quicksave niet laden, omdat het niet bestaat. Maak je maar geen zorgen, we hebben er eentje voor je aangemaakt!", 
+  load_quick_save = "Error, kan de quicksave niet laden, omdat het niet bestaat. Maak je maar geen zorgen, we hebben er eentje voor je aangemaakt!", 
   load_prefix = "Fout bij het laden van het spel: ",
   save_prefix = "Fout bij het opslaan van het spel: ",
   map_file_missing = "Bestand %s voor dit level is niet gevonden!",
