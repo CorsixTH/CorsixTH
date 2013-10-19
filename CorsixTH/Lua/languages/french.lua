@@ -91,7 +91,7 @@ letter = {
   },
   [10] = { -- Level ten: Fix some sentences
     [1] = "Estimable %s",
-    [2] = "Félicitations pour avoir réussi dans tous les hôpitaux que vous avez dirigé. Une telle performance fait de vous un héros. Vous recevrez une pension de %d$ plus une limousine. Tout ce que nous vous demandons, c'est d'aller de ville en ville rencontrer votre public en adoration et défendre le renom des hôpitaux.",
+    [2] = "Félicitations pour avoir réussi dans tous les hôpitaux que vous avez dirigés. Une telle performance fait de vous un héros. Vous recevrez une pension de %d$ plus une limousine. Tout ce que nous vous demandons, c'est d'aller de ville en ville rencontrer votre public en adoration et défendre le renom des hôpitaux.",
     [3] = "Nous sommes tous fiers de vous et notre coeur déborde de gratitude pour votre dévouement à sauver des vies.",
   },
   [11] = { -- Level eleven: No change
@@ -150,7 +150,7 @@ room_descriptions.electrolysis[2] = "Les patients souffrant de pilose viennent d
 progress_report.too_hot = "Réglez le chauffage : on étouffe."
 adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infermière."
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
-adviser.staff_advice.too_many_doctors = "Il y a trop de médecins. Certains n'ont rien à faire !."
+adviser.staff_advice.too_many_doctors = "Il y a trop de médecins. Certains n'ont rien à faire !"
 adviser.earthquake.ended = "Ouh là ! J'ai cru que c'était la fin! C'était du %d sur l'échelle de Richter."
 adviser.multiplayer.poaching = {
   not_interested = "Ha ! Ils ne veulent pas travailler pour vous, ils sont satisfaits comme ça.",
@@ -342,7 +342,7 @@ diseases = {
   },
   heaped_piles = {
     cause = "Cause: s'être assis sur un jet de jacuzzi.",
-    cure = "Traitement: un potion agréable bien que puissamment acide dissout les rectoïdes de l'intérieur.",
+    cure = "Traitement: une potion agréable bien que puissamment acide dissout les rectoïdes de l'intérieur.",
     name = "Rectoïdes",
     symptoms = "Symptômes: le patient a l'impression de s'asseoir sur un sac de billes.",
   },
@@ -410,7 +410,7 @@ diseases = {
     cause = "Cause: avoir pris du plutonium pour des bonbons.",
     cure = "Traitement: le patient est passé à la douche de décontamination et consciencieusement récuré.",
     name = "Radionite",
-    symptoms = "Symptômes: le patient se sent vraiment, vraiment pas bien.",
+    symptoms = "Symptômes: le patient ne se sent vraiment, vraiment pas bien.",
   },
   diag_cardiogram = {
     name = "Diag Cardio",
@@ -505,7 +505,7 @@ tooltip.status.num_cured = "L'objectif est de soigner %d personnes. Pour le mome
 dynamic_info.staff.actions.going_to_repair = "Pour réparer %s"
 adviser.staff_place_advice.only_doctors_in_room = "Seuls les médecins peuvent travailler en %s"
 adviser.staff_place_advice.nurses_cannot_work_in_room = "Les infirmières ne peuvent travailler en %s"
-room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour une autre diagnostic soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
+room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour un autre diagnostic soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
 room_descriptions.pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard."
 room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
@@ -539,7 +539,7 @@ adviser = {
     research_screen_open_2 = "La recherche est désactivée pour le niveau en cours."
   },
   cheats = {
-    th_cheat = "Félicitations, vous avez débloquer les triches !",
+    th_cheat = "Félicitations, vous avez débloqué les triches !",
     crazy_on_cheat = "Oh non ! Tous les médecins sont devenus fous !",
     crazy_off_cheat = "Ouf... les médecins ont retrouvé leur santé mentale.",
     roujin_on_cheat = "Défi de Roujin activé ! Bonne chance...",
@@ -674,7 +674,7 @@ tooltip.new_game_window = {
   tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
   cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
   difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu",
-  start = "Démarrer le jeu avec les paramtères sélectionnés",
+  start = "Démarrer le jeu avec les paramètres sélectionnés",
   player_name = "Entrez le nom avec lequel vous voulez être appelé dans le jeu",
 }
 
@@ -741,7 +741,7 @@ options_window = {
   language = "Langue du jeu",
   apply = "Appliquer",
   data_location = "Emplacement des données",
-  font_location = "Emplacemetn de la police",
+  font_location = "Emplacement de la police",
   resolution = "Résolution",
 }
 
@@ -756,9 +756,9 @@ tooltip.options_window = {
   back = "Fermer la fenêtre des options",
   fullscreen = "Mode plein écran ou mode fenêtré",
   cancel = "Retour sans changement de résolution",
-  font_location = "Emplacement d'un fichier de police capable d'afficher des caractères unicodes requis par votre langue. Si rien n'est spécifié, vous ne serez pas capable de sélectionner une langue qui nécessite plus de caractères que ne peut en fournir le jeu original. Par exemple : Russe et Chinois",
+  font_location = "Emplacement d'un fichier de police capable d'afficher des caractères Unicodes requis par votre langue. Si rien n'est spécifié, vous ne serez pas capable de sélectionner une langue qui nécessite plus de caractères que ne peut en fournir le jeu original. Par exemple : Russe et Chinois",
   apply = "Appliquer la résolution choisie",
-  browse_font = "Parcourir les dossier pour un autre fichier de police (Emplacement actuel : ù1ù)",
+  browse_font = "Parcourir les dossiers pour un autre fichier de police (Emplacement actuel : ù1ù)",
   data_location = "Le dossier d'installation du jeu original Theme Hospital, requis pour lancer CorsixTH",
   language_dropdown_item = "Choisir %s comme langue",
   select_language = "Sélectionner la langue du jeu",
@@ -831,17 +831,17 @@ totd_window = {
     "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
     "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
     "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostics. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostics.",
-    "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications pariculières (chirurgien, psyschiatre ou chercheur), il transférera ses connaissances à ses élèves.",
+    "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
     "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
-    "Si vous avez trouvé un bug, SVP, reportez le sur notre gestionnaire de bugs : th-issues.corsix.org.",
-    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de status pour voir votre progression dans les objectifs du niveau.",
-    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outil en bas.",
+    "Si vous avez trouvé un bug, SVP, reportez-le sur notre gestionnaire de bugs : th-issues.corsix.org.",
+    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
+    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
     "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
-    "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utilies ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
-    "Le personnel mécontent vous demandra des augmentations de salaires fréquemment. Assurez vous de leur offir un environnement de travail confortable pour éviter cela.",
+    "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
+    "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
     "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
     "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
     "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
@@ -857,13 +857,13 @@ tooltip.totd_window = {
 
 -- Lua Console
 lua_console = {
-  execute_code = "Éxécuter",
+  execute_code = "Exécuter",
   close = "Fermer",
 }
 
 tooltip.lua_console = {
-  textbox = "Entrez du code Lua à éxécuter ici",
-  execute_code = "Éxécuter le code que vous avez entré",
+  textbox = "Entrez du code Lua à exécuter ici",
+  execute_code = "Exécuter le code que vous avez entré",
   close = "Fermer la console",
 }
 
@@ -887,7 +887,7 @@ information = {
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
     cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
-    cheat = "Etais-ce votre choix, ou bien avez vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
+    cheat = "Etais-ce votre choix, ou bien avez-vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
   },
 }
 
@@ -902,7 +902,7 @@ introduction_texts = {
     "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !",
     "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles.",
     "Votre but est de gagner 100.000$, de faire monter la valeur de votre hôpital à 70.000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients.",
-    "Veillez à ce que votre réputation ne tombre pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.",
+    "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.",
     "Bonne chance !",
   },
 }
@@ -963,7 +963,7 @@ letter = {
 -- Installation
 install = {
   title = "----------------------------- Installation de CorsixTH -----------------------------",
-  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fontionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
   exit = "Quitter",
 }
 
@@ -975,5 +975,5 @@ errors = {
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
   maximum_screen_size = "Veuillez entrer une résolution inférieure à 3000x2000.",
-  unavailable_screen_size = "La résolution que vous avez demandé n'est pas disponible en plein écran.",
+  unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
 }
