@@ -10,6 +10,7 @@
 #   - WITH_MOVIES  : Activate movies (requires Sound)
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
+#   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
 
 PROJECT(CorsixTH_Top_Level)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -32,6 +33,7 @@ OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
 OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
+OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" ON)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
 
