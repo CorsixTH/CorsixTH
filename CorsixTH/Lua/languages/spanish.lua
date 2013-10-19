@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
+--[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -102,21 +102,21 @@ date_format = {
 }
 
 object.litter = "Basura"
-tooltip.objects.litter = "Basura: Tirada en el suelo por un paciente porque no ha encontrado una papelera donde tirarla."
+tooltip.objects.litter = "Basura: Un paciente la ha tirado porque no ha encontrado una papelera."
 
 tooltip.fax.close = "Cierra esta ventana sin borrar el mensaje."
-tooltip.message.button = "Botón izquierdo del ratón para abrir el mensaje."
-tooltip.message.button_dismiss = "Botón izquierdo para abrir el mensaje, botón derecho para rechazarlo."
-tooltip.casebook.cure_requirement.hire_staff = "Necesitas contratar a empleados para realizar este tratamiento."
-tooltip.casebook.cure_type.unknown = "Todavía no conoces la forma de curar esta enfermedad."
+tooltip.message.button = "Haz clic izquierdo para abrir el mensaje."
+tooltip.message.button_dismiss = "Haz clic izquierdo para abrir el mensaje, clic derecho para rechazarlo."
+tooltip.casebook.cure_requirement.hire_staff = "Necesitas contratar empleados para realizar este tratamiento."
+tooltip.casebook.cure_type.unknown = "Todavía no sabes cómo curar esta enfermedad."
 tooltip.research_policy.no_research = "En este momento no se está investigando ningún apartado de esta categoría."
 tooltip.research_policy.research_progress = "Progreso para terminar el siguiente descubrimiento de esta categoría: %1%/%2%"
 
 menu_file = {
   load =    " (MAYUS+L) CARGAR   ",
-  save =    " (MAYUS+S) GUARDAR   ",
+  save =    " (MAYUS+S) GUARDAR  ",
   restart = " (MAYUS+R) REINICIAR",
-  quit =    " (MAYUS+Q) SALIR   "
+  quit =    " (MAYUS+Q) SALIR    "
 }
 
 menu_options = {
@@ -182,7 +182,7 @@ menu_debug = {
 }
 menu_debug_overlay = {
   none                        = "  NADA  ",
-  flags                       = "  BANDERAS  ",
+  flags                       = "  MARCAS  ",
   positions                   = "  POSICIONES  ",
   heat                        = "  TEMPERATURA  ",
   byte_0_1                    = "  BYTE 0 Y 1  ",
@@ -197,29 +197,29 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación en este lugar, bloquearás el acceso a ciertas partes del hospital.",
   warnings = {
-    no_desk = "¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
-    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
-    no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construirla una mesa donde pueda trabajar!",
-    no_desk_3 = "¡Fabuloso, casi ha pasado un año y no tienes personal de recepción! ¿Cómo quieres que vengan a ti los pacientes? ¡Arréglalo y deja de perder el tiempo!",
-    no_desk_4 = "Una recepcionista necesita una mesa para poder atender a los pacientes que vengan.",
-    no_desk_5 = "¡Ya iba siendo hora! Los pacientes deberían empezar a llegar pronto.", 
-    no_desk_6 = "Tienes una recepcionista, ¿qué tal si le construyes una mesa de recepción para que pueda trabajar?",
-    no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que arregles esto, ¿lo sabes, no?",
-    cannot_afford = "¡No tienes dinero en el banco para contratar a esa persona!", -- I can't see anything like this in the original strings
+    no_desk = "¡Deberías construir en algún momento una mesa de recepción y contratar a una recepcionista!",
+    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas una recepcionista y construir una mesa donde pueda trabajar!",
+    no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construir una mesa donde pueda trabajar!",
+    no_desk_3 = "¡Fabuloso, casi ha pasado un año y no tienes recepcionistas! ¿Cómo quieres que vengan los pacientes? ¡Arréglalo y deja de perder el tiempo!",
+    no_desk_4 = "Una recepcionista necesita una mesa para atender a los pacientes que vengan.",
+    no_desk_5 = "¡Ya era hora! Los pacientes empezarán a llegar pronto.", 
+    no_desk_6 = "Tienes una recepcionista, ¿qué tal si construyes una mesa de recepción para que pueda trabajar?",
+    no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que lo arregles, ¿lo sabes, no?",
+    cannot_afford = "¡No tienes dinero en el banco para contratar a esa persona!",
     cannot_afford_2 = "¡No tienes dinero en el banco para comprar eso!", 
-    falling_1 = "¡Eh! Eso no tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacerle daño a alguien!",
+    falling_1 = "¡Eh! Eso no tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacer daño a alguien!",
     falling_2 = "¿Te importaría dejar de perder el tiempo?",
     falling_3 = "¡Ay! Eso ha tenido que doler. ¡Llamen a un médico!",
     falling_4 = "¡Esto es un hospital, no un parque de atracciones!",
-    falling_5 = "¡Este no es el lugar para tumbar a personas, que están enfermas!",
-    falling_6 = "¡Esto no es una bolera, no deberías tratar así a los enfermos!",
-    research_screen_open_1 = "Tienes que construir un Departamento de Investigación para poder acceder a la pantalla de investigación.",
+    falling_5 = "¡Este no es lugar para tumbar personas, que están enfermas!",
+    falling_6 = "¡Esto no es una bolera, no trates así a los enfermos!",
+    research_screen_open_1 = "Para acceder a la pantalla de investigación, tienes que construir un Departamento de Investigación.",
     research_screen_open_2 = "No se pueden realizar investigaciones en este nivel.",
     researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
-    researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que darles a cada uno una mesa para que trabajen.",
+    researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que dar a cada uno una mesa para que trabajen.",
     researcher_needs_desk_3 = "Cada investigador necesita su propia mesa para trabajar.",
     nurse_needs_desk_1 = "Cada enfermera necesita una mesa para trabajar.",
-    nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que darles a cada una una mesa para que trabajen.",
+    nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que dar a cada una una mesa para que trabajen.",
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -241,7 +241,7 @@ fax = {
     decline_new_level = "Seguir jugando un poco más",
   },
   emergency = {
-    num_disease_singular = "Hay %d persona con %s y necesita ser atendida inmediatamente.",
+    num_disease_singular = "Hay 1 persona con %s y necesita ser atendida inmediatamente.",
     free_build = "Si tienes éxito, mejorarás tu reputación, pero si fracasas tu reputación caerá en picado.",
   },
   vip_visit_result = {
@@ -249,14 +249,14 @@ fax = {
       free_build = {
         "¡Tienes un muy buen hospital! No es difícil mantenerlo sin limitaciones económicas, ¿eh?",
         "No soy economista, pero hasta yo podría dirigir este hospital, si me entiendes...",
-        "Un hospital muy bien cuidado. ¡Pero ojo con la crisis financiera! Ah... que tú no tienes que preocuparte por eso.",
+        "Un hospital muy bien cuidado. ¡Pero ojo con la crisis financiera! Ah... que no tienes que preocuparte de eso.",
       }
     }
   }
 }
 
 letter = {
-  dear_player = "Estimado %s",
+  dear_player = "Estimado %s,",
   custom_level_completed = "¡Bien hecho! ¡Has completado todos los objetivos de este nivel personalizado!",
   return_to_main_menu = "¿Quieres volver al menú principal o seguir jugando?",
 }
@@ -270,11 +270,11 @@ install = {
 }
 
 misc.not_yet_implemented = "(aún no implementado)"
-misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  A lo mejor necesitas comprar una mesa de recepción y contratar a una recepcionista."
+misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  Quizás necesitas comprar una mesa de recepción y contratar a una recepcionista."
 
 main_menu = {
   new_game = "Campaña",
-  custom_level = "Selección de nivel",
+  custom_level = "Misión individual",
   load_game = "Cargar partida",
   options = "Opciones",
   savegame_version = "Versión del guardado: ",
@@ -292,7 +292,7 @@ tooltip.main_menu = {
 }
 
 load_game_window = {
-  caption = "Cargar partida",
+  caption = "Cargar partida (%1%)",
 }
 
 tooltip.load_game_window = {
@@ -307,12 +307,12 @@ custom_game_window = {
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Cargar el nivel %s",
-  free_build = "Marca esta casilla si quieres jugar sin condiciones para ganar, para perder y sin dinero",
+  start_game_with_name = "Información de este escenario, que utiliza: %s           Informe: %s",
+  free_build = "Marca esta casilla si quieres jugar sin dinero ni condiciones para ganar o perder.",
 }
 
 save_game_window = {
-  caption = "Guardar partida",
+  caption = "Guardar partida (%1%)",
   new_save_game = "Nueva partida guardada",
 }
 
@@ -328,7 +328,7 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  name = "Pulsa aquí para ordenar la lista por el nombre.",
+  name = "Pulsa aquí para ordenar la lista por los nombres.",
   save_date = "Pulsa aquí para ordenar la lista por la última fecha de modificación.",
   back = "Cerrar esta ventana.",
 }
@@ -342,7 +342,7 @@ options_window = {
   custom_resolution = "Personalizada...",
   width = "Ancho",
   height = "Alto",
-  audio = "Sonido",  
+  audio = "Sonido global",  
   customise = "Personalizar",
   folder = "Carpetas",
   language = "Idioma del juego",
@@ -386,11 +386,11 @@ customise_window = {
 
 tooltip.customise_window = {
   movies = "Control global de vídeos, esto permite desactivar todos los vídeos.",  
-  intro = "Activa o desactiva el vídeo de introducción, si quieres que la introducción se muestre cada vez que arranques CorsixTH, necesitarás que el control global de vídeos esté activado.",
+  intro = "Activa o desactiva el vídeo de introducción, necesitas tener activado el control global de vídeos si quieres ver la introducción cada vez que arranques CorsixTH.",
   paused = "En Theme Hospital, el jugador solo podía utilizar el menú superior si la partida estaba en pausa. Esto también se hace en CorsixTH de forma predeterminada, pero al activar esta opción, podrás acceder a ese menú mientras el juego esté en pausa.",
   volume = "Si la tecla de bajar volumen abre también el botiquín, utiliza esta opción para cambiar el acceso directo a Mayúsculas + C.",
   aliens = "Debido a la falta de animaciones decentes disponibles, hemos hecho que los pacientes con ADN alienígena solo aparezcan en una emergencia. Para permitir que los pacientes con ADN alienígena puedan visitar tu hospital, desactiva esta opción.",
-  fractured_bones = "Debido a una animación deficiente que tenemos, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
+  fractured_bones = "Debido a una animación deficiente, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
   average_contents = "Activa esta opción si quieres que el juego recuerde que objetos adicionales sueles añadir cuando construyes habitaciones.",  
   back = "Cerrar este menú y volver al menú de Opciones",
 }
@@ -500,8 +500,8 @@ confirmation = {
 
 information = {
   custom_game = "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
-  no_custom_game_in_demo = "Lamentándolo mucho, la versión demo no permite jugar a mapas personalizados.",
-  cannot_restart = "Por desgracia esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
+  no_custom_game_in_demo = "La versión demo no permite jugar a mapas personalizados.",
+  cannot_restart = "Esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
   very_old_save = "Desde que empezaste a jugar en este nivel, el juego ha recibido muchas actualizaciones. Para asegurarte de que todas las características funcionen como es debido, considera empezarlo de nuevo.",
   level_lost = {
     "¡Qué pena! Has fracasado en este nivel. ¡Mejor suerte la próxima vez!",
