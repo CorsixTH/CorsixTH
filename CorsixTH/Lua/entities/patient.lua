@@ -126,13 +126,14 @@ function Patient:completeDiagnosticStep(room)
   -- Did the staff member manage to leave the room before the patient had
   -- a chance to get diagnosed? Then use a default middle value.
   if room.staff_member then
+  local fatigue = room.staff_member.attributes["fatigue"] or 0  
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
     -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
     if room.staff_member.profile.skill >= 0.9 then
-      multiplier = math.random(1, 5) * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
+      multiplier = math.random(1, 5) * (1 - (fatigue -0.5))
     else
-      multiplier = 1 * (1 - (room.staff_member.attributes["fatigue"] - 0.5))
+      multiplier = 1 * (1 - (fatigue -0.5))
     end
     local divisor = math.random(1, 3)
     local attn_detail = room.staff_member.profile.attention_to_detail / divisor
