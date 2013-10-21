@@ -23,7 +23,7 @@
 ;---------------------------------- Definitions for the game -----------------------------------
 
 !define PRODUCT_NAME "CorsixTH"
-!define PRODUCT_VERSION "Trunk"
+!define PRODUCT_VERSION "0.30"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define PRODUCT_STARTMENU_REGVAL "NSIS:StartMenuDir"
