@@ -1,18 +1,76 @@
 -------------------------------------------------------------------------------
-Version 0.XX - released ??
+Version 0.30 - released November 2013
 -------------------------------------------------------------------------------
 
-Another release that will be made at some point...
+This release contains a whole new Level Editor, which means that in combination
+with the already existing Map Editor whole levels can now be created a lot 
+easier. Give it a try! We have also added many new options previously only
+available by manually editing the config file to the options dialog.
+Players will also notice that we have added an automatic update
+check on game launch once we release the version after this one.
+As usual there are of course also numerous minor tweaks here and there.
 
 
+
+--- Gameplay ---
+
+* Change: You can now build more than one desk in the ward. More nurses means
+  a slightly faster throughput.
+* Fix: Doctors should get stuck less often, and handymen should not crash the
+  game as frequently.
+* Fix: It was not possible to replace a surgeon when a patient was in the room.
+* Fix: Patients would sometimes get stuck inside a room when they should 
+  have died.
+
+  
 
 --- User Interface ---
 
+* Added: A new customization menu in the Options dialog. Most options from the
+  configuration file are now available for change in-game.
+* Added: A new directory menu in the Options dialog.
+* Added: The game does now check for a more recent version of itself when
+  launching.
 * Added: A helpful message when the player puts more Researchers in the
   research department than there are desks.
+* Added: The game now does a small integrity check on the Theme Hospital
+  files to make sure that the most common corruptions are not present.
 
 * Fix: The tooltip for the tutorial button was incorrect since the dialog
   has been visually changed.
+* Fix: The announcer has had a few corrections made to his manuscripts.
+  He is very happy about this!
+
+  
+  
+--- Campaign levels ---
+
+* Fix: An error in level 8 made it possible to win without meeting the
+  reputation criterion.
+
+  
+  
+--- Custom levels ---
+
+* Change: For random emergencies each illness now has its own average number of
+  patients to spawn. Previously they were all the same.
+* Fix: If no drug diseases were available on level start researchers would not
+  be able to later on improve discovered such drugs.
+
+  
+  
+--- Languages ---
+
+* Fix: It was not possible to dump strings for a language with unicode 
+  characters in the name.
+
+  
+  
+--- Compiling ---
+
+* Fix: You could not compile the game with WITH_AUDIO=0 if SDL_mixer was
+  not present at all.
+* Fix: WITH_AUDIO=OFF is now illegal in combination with WITH_MOVIES=ON.
 
 
 
