@@ -385,7 +385,9 @@ adviser = {
       in_progress = "Dám Vám vědět, zdali tato osoba bude chtít jít pro Vás pracovat.",
     },
     everyone_failed = "Všichni nedokázali splnit poslední úkol. Takže všichni budou hrát dál !",
+    objective_completed = "Splnili jste úkol. Blahopřejeme!",
     players_failed = "Následující hráč(i) nedokázal(i) splnit poslední úkol : ",
+    objective_failed = "Nesplnili jste úkol.",
   },
   staff_place_advice = {
     only_doctors_in_room = "Pouze Doktoři mohou v %s pracovat",
