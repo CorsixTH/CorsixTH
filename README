@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- CorsixTH - Trunk
+-- CorsixTH - Version 0.30
 ------------------------------------------------------------------------------
 
 CorsixTH aims to reimplement the game engine of Theme Hospital, and be able to
