@@ -228,5 +228,5 @@ ELSE()
   install(DIRECTORY Bitmap DESTINATION CorsixTH
         FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
         PATTERN "*.svn" EXCLUDE)
-  install(FILES CorsixTH.lua LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
+  install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
 ENDIF()
