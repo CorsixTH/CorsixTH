@@ -3207,31 +3207,31 @@ folders_window = {
   screenshots_location = "Vyberte složku, kde budou ukládány snímky obrazovky",
 }
 font_location_window = {
-caption = "Zvolte písmo (%1%)"
+  caption = "Zvolte písmo (%1%)"
 }
 menu_options_wage_increase = {
   deny = "    ZAMÍTNOUT",
   grant = "    VYHOVĚT",
 }
 update_window = {
- caption = "Dostupná aktualizace!",
- new_version = "Nová verze:",
- current_version = "Současná verze:",
- download = "Přejít na stránku ke stažení",
- ignore = "Přeskočit a přejít do hlavní nabídky", 
+  caption = "Dostupná aktualizace!",
+  new_version = "Nová verze:",
+  current_version = "Současná verze:",
+  download = "Přejít na stránku ke stažení",
+  ignore = "Přeskočit a přejít do hlavní nabídky", 
 }
 customise_window = {
- average_contents = "Průměrný obsah",
- option_on = "Zapnuto",
- paused = "Stavět při pozastavení",
- option_off = "Vypnuto",
- intro = "Přehrát úvodní video",
- caption = "Vlastní nastavení",
- back = "Zpět",
- movies = "Globální kontrola videí",
- volume = "Zkrátka snížení hlasitosti",
- aliens = "PAcienti s mimozemskou DNA",
- fractured_bones = "Zlomené kosti",
+  average_contents = "Průměrný obsah",
+  option_on = "Zapnuto",
+  paused = "Stavět při pozastavení",
+  option_off = "Vypnuto",
+  intro = "Přehrát úvodní video",
+  caption = "Vlastní nastavení",
+  back = "Zpět",
+  movies = "Globální kontrola videí",
+  volume = "Zkrátka snížení hlasitosti",
+  aliens = "PAcienti s mimozemskou DNA",
+  fractured_bones = "Zlomené kosti",
 }
 
 
