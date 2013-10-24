@@ -179,6 +179,12 @@ FunctionEnd
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
+
+  ${If} ${FileExists} "$INSTDIR\Lua"
+    RMDir /r "$INSTDIR\Lua"
+    CreateDirectory "$INSTDIR\Lua"
+  ${EndIf}
+
   ${If} ${RunningX64}
     File /r /x .svn x64\*.*
     Goto continued
@@ -221,10 +227,6 @@ Section "MainSection" SEC01
   
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
-  ${If} ${FileExists} "$INSTDIR\Lua"
-    RMDir /r "$INSTDIR\Lua"
-    CreateDirectory "$INSTDIR\Lua"
-  ${EndIf}
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*
   
