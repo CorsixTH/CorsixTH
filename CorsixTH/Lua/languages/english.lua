@@ -75,9 +75,9 @@ menu_file = {
 }
 
 menu_options = {
-  sound = "  (ALT+S) SOUND   ",
-  announcements = "  (ALT+A) ANNOUNCEMENTS   ",
-  music = "  (ALT+M) MUSIC   ",
+  sound = "  (ALT+S)  SOUND   ",
+  announcements = "  (ALT+A)  ANNOUNCEMENTS   ",
+  music = "  (ALT+M)  MUSIC   ",
   jukebox = "  (J) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
