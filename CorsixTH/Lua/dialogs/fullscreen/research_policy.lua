@@ -100,10 +100,11 @@ function UIResearch:updateCategories()
       self:adjustResearch(area, mode)
     end
   end
-  
-  -- Retrieves the localized string dynamically
-  -- i.e., if "tooltip.research.cure_dec" is given as string_name,
-  -- this function returns the value of _S.tooltip.research.cure_dec.
+
+  --[[ Retrieves a translated string dynamically
+  !param string_name (string) The key name (e.g., "tooltip.research.cure_dec")
+  !return (string) The actual translation (e.g., "Decrease cure percentage")
+  ]]
   local function get_localized_string(string_name)
     local var_table = _G["_S"]
     for token in string.gfind(string_name, "[%w_]+") do
