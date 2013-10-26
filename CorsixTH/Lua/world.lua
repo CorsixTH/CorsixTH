@@ -2299,6 +2299,9 @@ function World:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
+  if old < 80 then
+    self:determineWinningConditions()
+  end
   
   self.savegame_version = new
 end
