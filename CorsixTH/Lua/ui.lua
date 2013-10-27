@@ -56,7 +56,7 @@ function UI:initKeyAndButtonCodes()
   end})
   do
     local ourpath = debug.getinfo(1, "S").source:sub(2, -7)
-    local result, err = loadfile_envcall(ourpath .. "key_mapping.lua")
+    local result, err = loadfile_envcall(ourpath .. "key_mapping.txt")
     if not result then
       print("Cannot load key mapping:" .. err)
     else
