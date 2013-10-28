@@ -449,6 +449,7 @@ errors = {
   dialog_missing_graphics   = "Beklager, datafilene i demoen tillater ikke denne dialogen.",
   save_prefix = "Feil under lagring av spill: ",
   load_prefix = "Feil under lasting av spill: ",
+  load_quick_save = "Spillet kunne ikke laste inn sist hurtiglagring, siden den ikke eksisterer. Vi har ikke tenkt til å lage en for deg!",
   map_file_missing = "Kunne ikke finne kartfilen %s for dette nivået!",
   minimum_screen_size = "Vennligst sett opplösningen til minst 640x480.",
   maximum_screen_size = "Vennligst velg en skjermopplösning ikke större enn 3000x2000.",
