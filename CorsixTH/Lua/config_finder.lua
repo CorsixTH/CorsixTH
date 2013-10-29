@@ -125,7 +125,7 @@ local config_defaults = {
   zoom_speed = 80,
   scroll_speed = 2,
   check_for_updates = true,
-  initial_grace = true
+  warmth_complaints_initial_grace = true
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -419,7 +419,7 @@ scroll_speed = ]=].. tostring(config_values.scroll_speed) ..[=[
 -- The initial grace is how long before staff and patients are less likely to be unhappy about
 -- how cold it is in your hospital.
 --
-initial_grace = ]=].. tostring(config_values.initial_grace) ..[=[ 
+warmth_complaints_initial_grace = ]=].. tostring(config_values.warmth_complaints_initial_grace) ..[=[ 
 --
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the 

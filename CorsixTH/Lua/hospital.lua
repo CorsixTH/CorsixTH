@@ -49,7 +49,7 @@ function Hospital:Hospital(world, name)
   self.acc_overdraft = 0
   self.acc_heating = 0
   self.discover_autopsy_risk = 10
-  self.initial_grace = TheApp.config.initial_grace
+  self.warmth_complaints_initial_grace = TheApp.config.warmth_complaints_initial_grace
 
   -- The sum of all material values (tiles, rooms, objects).
   -- Initial value: hospital tile count * tile value + 20000
