@@ -1,0 +1,13 @@
+// Example of a sprite definition with 2 recolouring layers.
+
+sprite 4 {
+	left   = 0;
+	top    = 0;
+	width  = 128;
+	height = 256;
+
+	base = "128_0004.png";
+	recolour = "128p_0004.png";
+	layer 1 = 4;
+	layer 2 = 3;
+}
