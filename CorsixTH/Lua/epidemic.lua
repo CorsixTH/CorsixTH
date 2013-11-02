@@ -122,6 +122,7 @@ function Epidemic:revealEpidemic()
   assert(self.ready_to_reveal)
   print("Epidemic " .. tostring(self) .. " revealed " ..
     self:countInfectedPatients() .. " patients infected")
+  self:sendInitialFax()
 end
 
 
@@ -137,4 +138,45 @@ function Epidemic:countInfectedPatients()
   end
   return infected_count
 end
+
+--[[ Sends the initial fax to the player when the epidemic is revealed.]]
+function Epidemic:sendInitialFax()
+  local num_infected = self:countInfectedPatients()
+  print("Number infected: " .. tostring(num_infected))
+  --Save it in a global variable so we can apply the fine in the declare function
+  self.declare_fine = self:calculateInfectedFine(num_infected)
+  print("Declaration fine: " .. tostring(self.declare_fine))
+
+  local message = {
+    {text = _S.fax.epidemic.disease_name:format(self.disease.name)},
+    {text = _S.fax.epidemic.declare_explanation_fine:format(self.declare_fine)},
+    {text = _S.fax.epidemic.cover_up_explanation_1},
+    {text = _S.fax.epidemic.cover_up_explanation_2},
+    choices = {
+      {text = _S.fax.epidemic.choices.declare, choice = "declare_epidemic"},
+      {text = _S.fax.epidemic.choices.cover_up, choice = "cover_up_epidemic"},
+    },
+  }
+  self.world.ui.bottom_panel:queueMessage("epidemy", message, nil, 24*20,2)
+end
+
+--[[ Calculate the fine for having a given number of infected patients
+--Used to determine the initial declaration fine as the cover up fine.
+--@param infected_count (Integer) number of patients still infected
+--@return fine (Integer) the fine amount ]]
+function Epidemic:calculateInfectedFine(infected_count)
+  local fine_per_infected = self.config.gbv.EpidemicFine or 2000
+  return math.max(2000,math.min(infected_count * fine_per_infected, 20000))
+end
+
+function Epidemic:resolveDeclaration()
+  print("Resolving declaration")
+end
+
+--[[ When the player chooses to begin the cover up over declaring from the
+ initial fax (@see sendInitialFax) ]]
+function Epidemic:startCoverUp()
+  print("Starting cover up")
+end
+
 
