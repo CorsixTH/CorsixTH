@@ -31,6 +31,7 @@ dofile "hospital"
 dofile "epidemic"
 dofile "calls_dispatcher"
 dofile "research_department"
+dofile "entity_map"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -2273,7 +2274,18 @@ function World:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
-  
+
+  if old < 80 then
+    --Populate the entity map
+    self.entity_map = EntityMap(self.map)
+    for _, e in ipairs(self.entities) do
+      local x, y = e.tile_x, e.tile_y
+      if x and y then
+        self.entity_map:addEntity(x,y,e)
+      end
+    end
+  end
+
   self.savegame_version = new
 end
 

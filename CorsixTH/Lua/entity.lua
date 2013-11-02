@@ -73,6 +73,12 @@ function Entity:setTile(x, y)
   if self.user_of then
     print("Warning: Entity tile changed while marked as using an object")
   end
+  local entity_map = self.world.entity_map
+  -- Remove the reference to the entity at it's previous coordinates
+  if entity_map then
+    entity_map:removeEntity(self.tile_x,self.tile_y, self)
+  end
+
   self.tile_x = x
   self.tile_y = y
   self.th:setDrawingLayer(self:getDrawingLayer())
@@ -81,6 +87,12 @@ function Entity:setTile(x, y)
   if self.mood_info then
     self.mood_info:setParent(self.th)
   end
+
+  -- Update the entity map for the new position
+  if entity_map then
+    entity_map:addEntity(x,y,self)
+  end
+
   return self
 end
 
