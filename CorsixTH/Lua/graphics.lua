@@ -21,6 +21,7 @@ SOFTWARE. --]]
 local TH = require "TH"
 local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
+local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 local assert, string_char, table_concat, unpack, type, pairs, ipairs
     = assert, string.char, table.concat, unpack, type, pairs, ipairs
 
@@ -73,6 +74,8 @@ function Graphics:Graphics(app)
     language_fonts = {},
     cursors = setmetatable({}, {__mode = "k"}),
   }
+
+  self.custom_graphics = {}
   -- The load info table records how objects were loaded, and is used to
   -- persist objects as instructions on how to load them.
   self.load_info = setmetatable({}, {__mode = "k"})
@@ -88,6 +91,27 @@ function Graphics:Graphics(app)
   self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
   
   self:loadFontFile()
+
+  -- Check if the config specifies a place to look for graphics in.
+  -- Otherwise check in the default "Graphics" folder.
+
+  local graphics_folder = self.app.config.new_graphics_folder or ourpath .. "Graphics"
+  if graphics_folder:sub(-1) ~= pathsep then
+    graphics_folder = graphics_folder .. pathsep
+  end
+
+  local graphics_config_file = graphics_folder .. "file_mapping.txt"
+  local result, err = loadfile_envcall(graphics_config_file)
+
+  if not result then
+    print("Warning: Failed to read custom graphics configuration:\n" .. err)
+  else
+    result(self.custom_graphics)
+    if not self.custom_graphics.file_mapping then
+      print("Error: An invalid custom graphics mapping file was found")
+    end
+  end
+  self.custom_graphics_folder = graphics_folder
 end
 
 --! Tries to load the font file given in the config file as unicode_font.
@@ -415,7 +439,10 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   
   local sheet = TH.sheet()
   local function loadCustomSprites(path)
-    local file = assert(io.open(path, "rb"))
+    local file, err = io.open(path, "rb")
+    if not file then
+      return nil, err
+    end
     local data = file:read"*a"
     file:close()
     return data
@@ -433,13 +460,18 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
     if not sheet:load(data_tab, data_dat, complex, self.target) then
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
     end
-    -- XXX Needs more Lua to make more generic.
-    -- if dir == "Data" and name == "VBlk-0" then
-    --   local data = loadCustomSprites("ground_tiles/ground_tiles.sprites")
-    --   if not sheet:loadCustom(data, self.target) then
-    --     print("Warning: custom sheet loading failed")
-    --   end
-    -- end
+    if self.app.config.use_new_graphics then
+      if self.custom_graphics.file_mapping and
+         self.custom_graphics.file_mapping[dir .. ":" .. name] then
+        local data, err = loadCustomSprites(self.custom_graphics_folder .. 
+                     self.custom_graphics.file_mapping[dir .. ":" .. name])
+        if not data then
+          print("Error when loading custom graphics:\n" .. err)
+        elseif not sheet:loadCustom(data, self.target) then
+          print("Warning: custom sheet loading failed")
+        end
+      end
+    end
   end
   self.reload_functions[sheet] = reloader
   reloader(sheet)
