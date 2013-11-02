@@ -59,6 +59,7 @@ function UICheats:UICheats(ui)
     {name = "money",          func = self.cheatMoney},
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
+    {name = "epidemic",       func = self.cheatEpidemic},
     {name = "vip",            func = self.cheatVip},
     {name = "earthquake",     func = self.cheatEarthquake},
     {name = "create_patient", func = self.cheatPatient},
@@ -156,6 +157,11 @@ function UICheats:cheatEmergency()
   if not self.ui.hospital:createEmergency() then
     self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
   end
+end
+
+--[[ Creates a new epidemic in the hospital ]]
+function UICheats:cheatEpidemic()
+  self.ui.hospital:createEpidemic()
 end
 
 function UICheats:cheatVip()

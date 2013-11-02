@@ -62,6 +62,10 @@ function Hospital:Hospital(world, name)
   
   self.handymanTasks = {}
   
+  -- Represents the "active" epidemic non-nil if 
+  -- an epidemic is happening currently in the hospital 
+  -- Only one epidemic is ever "active"
+  self.epidemic = nil
   
   -- Initial values
   self.interest_rate = interest_rate
@@ -770,6 +774,7 @@ function Hospital:tick()
       end
     end  
   end    
+  self:manageEpidemics()
 end
 
 function Hospital:purchasePlot(plot_number)
@@ -1228,6 +1233,19 @@ function Hospital:createVip()
   }
   -- auto-refuse after 20 days
   self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
+end
+
+function Hospital:createEpidemic()
+  local patient = self.world:spawnPatient(self)
+  print("Epidemic patient created with disease " .. patient.disease.id)
+  local epidemic = Epidemic(self,patient)
+  self.epidemic = epidemic
+end
+
+function Hospital:manageEpidemics()
+  if(self.epidemic) then
+    self.epidemic:tick()
+  end
 end
 
 function Hospital:spawnPatient()

@@ -28,6 +28,7 @@ dofile "entities/staff"
 dofile "entities/vip"
 dofile "staff_profile"
 dofile "hospital"
+dofile "epidemic"
 dofile "calls_dispatcher"
 dofile "research_department"
 

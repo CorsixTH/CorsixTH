@@ -29,6 +29,8 @@ function Patient:Patient(...)
   self.has_fallen = 1
   self.has_vomitted = 0
   self.action_string = ""
+  self.cured = false
+  self.infected = false
 end              
 
 function Patient:onClick(ui, button)
@@ -186,13 +188,15 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       if self.is_emergency then
         self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
       end
+      self.cured = true
+      self.infected = false
       self:setMood("cured", "activate")
       self.world.ui:playSound "cheer.wav" -- This sound is always heard
       self.attributes["health"] = 1
       self:changeAttribute("happiness", 0.8)
       hospital:changeReputation("cured", self.disease)
       self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(true)
+      self:goHome(self.cured)
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     end
   end
