@@ -29,8 +29,14 @@ function Epidemic:Epidemic(hospital, contagious_patient)
 
   self.infected_patients = {}
 
-  --The contagious disease the epidemic is based around
+  -- The contagious disease the epidemic is based around
   self.disease = contagious_patient.disease
+
+  -- Config to retrieve the custom fines (if they exist)
+  self.config = self.world.map.level_config
+
+  -- Can the epidemic be revealed to the player
+  self.ready_to_reveal = false
 
   --Move the first patient closer (FOR TESTING ONLY) 
   local x,y = self.hospital:getHeliportSpawnPosition()
@@ -42,6 +48,9 @@ end
 --[[ The epidemic tick - currently the same rate as the hospital's tick but
 not necessary dependent on it - could potentially be reduced for performance.]]
 function Epidemic:tick()
+  if not self.ready_to_reveal then
+    self:checkIfReadyToReveal()
+  end
   self:infectOtherPatients()
 end
 
@@ -93,5 +102,39 @@ function Epidemic:infectOtherPatients()
       end
     end
   end
+end
+
+function Epidemic:checkIfReadyToReveal()
+  for _, infected_patient in ipairs(self.infected_patients) do
+    if infected_patient.diagnosed then
+      print(tostring(self) .. " ready to reveal")
+      self.ready_to_reveal = true
+      self:revealEpidemic()
+      break
+    end
+  end
+end
+
+--[[ Show the player the have an epidemic - send a fax
+ This happens when the epidemic is chosen to the be
+ the "active" epidemic out of all the queued ones.]]
+function Epidemic:revealEpidemic()
+  assert(self.ready_to_reveal)
+  print("Epidemic " .. tostring(self) .. " revealed " ..
+    self:countInfectedPatients() .. " patients infected")
+end
+
+
+--[[ Counts the number of patients that have been infected that are still
+-- infected
+-- @return infected_count (Integer) the number of patients still infected.]]
+function Epidemic:countInfectedPatients()
+  local infected_count = 0
+  for _, patient in pairs(self.infected_patients) do
+    if patient.infected and not patient.cured then
+      infected_count = infected_count + 1
+    end
+  end
+  return infected_count
 end
 
