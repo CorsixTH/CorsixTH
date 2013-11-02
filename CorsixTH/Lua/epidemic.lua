@@ -38,7 +38,15 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- Can the epidemic be revealed to the player
   self.ready_to_reveal = false
 
-  --Move the first patient closer (FOR TESTING ONLY) 
+  self.declare_fine = 0
+
+
+  -- Set when we know if the player has passed/failed the epidemic
+  -- generally used to test if infected patients can still infect others
+  self.result_determined = false
+
+
+  --Move the first patient closer (FOR TESTING ONLY)
   local x,y = self.hospital:getHeliportSpawnPosition()
   contagious_patient:setTile(x,y)
 
@@ -51,7 +59,9 @@ function Epidemic:tick()
   if not self.ready_to_reveal then
     self:checkIfReadyToReveal()
   end
-  self:infectOtherPatients()
+  if not self.result_determined then
+    self:infectOtherPatients()
+  end
 end
 
 --[[ Adds a new patient to the epidemic who is actively contagious: infected but
@@ -169,9 +179,44 @@ function Epidemic:calculateInfectedFine(infected_count)
   return math.max(2000,math.min(infected_count * fine_per_infected, 20000))
 end
 
+
+--[[ When the player chooses to declare the epidemic instead of trying
+ to cover up it from the initial faxs - ends the epidemic immediately
+ after applying fine.]]
 function Epidemic:resolveDeclaration()
-  print("Resolving declaration")
+  self.result_determined = true
+  self:clearAllInfectedPatients()
+
+  --No fax for declaration just apply fines and rep hit
+  self.hospital:spendMoney(self.declare_fine, _S.transactions.epidemy_fine)
+  local reputation_hit = self:getBaseReputationFromFine(self.declare_fine)
+  print("Reputation hit " .. tostring(reputation_hit))
+  self.hospital.reputation = self.hospital.reputation - reputation_hit
+  self.hospital.epidemic = nil
 end
+
+--[[ Gets the amount of reputation to add/remove from the player
+ based on a given fine. Reputation gain/loss isn't specified
+ in the configs so we use a percentage of the fine as a base
+ value with extra being gained/lost for specific circumstances.
+ @param fine_amount (Integer) amount the player will be fined
+ @return reputation hit (Integer) reputation to be deducted relative to fine]]
+function Epidemic:getBaseReputationFromFine(fine_amount)
+  return math.round(fine_amount/100)
+end
+
+--[[ Remove all infected patients by vaccinating from the hospital and clear
+ any epidemic-specific icons from their heads.]]
+function Epidemic:clearAllInfectedPatients()
+  for _, infected_patient in ipairs(self.infected_patients) do
+    infected_patient.vaccinated = true
+    infected_patient:setMood("epidemy1","deactivate")
+    infected_patient:setMood("epidemy2","deactivate")
+    infected_patient:setMood("epidemy3","deactivate")
+    infected_patient:setMood("epidemy4","deactivate")
+  end
+end
+
 
 --[[ When the player chooses to begin the cover up over declaring from the
  initial fax (@see sendInitialFax) ]]
