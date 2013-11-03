@@ -561,14 +561,13 @@ function Epidemic:createVaccinationActions(patient,nurse)
     patient.reserved_for = nil
     -- Otherwise send the nurse to vaccinate
   else
+    local vaccination_fee = self.config.gbv.VacCost or 50
     nurse:setNextAction({name="walk", x=x, y=y,
                         must_happen=true,
                         walking_to_vaccinate = true})
-    nurse:queueAction({name="meander"})
-    patient:setMood("epidemy2","deactivate")
-    patient:setMood("epidemy3","deactivate")
-    patient:setMood("epidemy1","activate")
-    patient.vaccinated = true
+   nurse:queueAction({name="vaccinate",
+                      vaccination_fee=vaccination_fee,
+                      patient=patient, must_happen=true})
   end
 end
 
