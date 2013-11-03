@@ -40,9 +40,16 @@ function Patient:onClick(ui, button)
     if self.message_callback then
       self:message_callback()
     else
-      ui:addWindow(UIPatient(ui, self))
+      local epidemic = self.hospital and self.hospital.epidemic
+      if epidemic and epidemic.coverup_in_progress and
+        self.infected and not self.marked_for_vaccination then
+        epidemic:markForVaccination(self)
+      end
+      if not epidemic or
+        (epidemic and not epidemic.vaccination_mode_active) then
+        ui:addWindow(UIPatient(ui, self))
+      end
     end
-  
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.

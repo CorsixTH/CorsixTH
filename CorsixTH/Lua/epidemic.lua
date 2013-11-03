@@ -61,6 +61,9 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- generally used to test if infected patients can still infect others
   self.result_determined = false
 
+  -- Vaccination mode is activated when the icon on the timer
+  -- is clicked - used to determine what the cursor should look like
+  self.vaccination_mode_active = false
 
   --Move the first patient closer (FOR TESTING ONLY)
   local x,y = self.hospital:getHeliportSpawnPosition()
@@ -193,6 +196,30 @@ function Epidemic:checkPatientsForRemoval()
     end
 end
 
+--[[ Toggle the vaccination mode changes how the cursor interacts with
+ the hospital. Toggled by pressing the button on the watch
+(@see UIWatch:UIWatch) ]]
+function Epidemic:toggleVaccinationMode()
+  self.vaccination_mode_active = not self.vaccination_mode_active
+  print("Vacc Mode: " .. tostring(self.vaccination_mode_active))
+  local cursor = self.vaccination_mode_active and "epidemic_hover" or "default"
+  self.world.ui:setCursor(self.world.ui.app.gfx:loadMainCursor(cursor))
+end
+
+--[[ Show a patient is able to be vaccinated, this is shown to the player by
+ changing the icon, once a player has been marked for vaccination they may
+ possibly become the vaccination candidate. Marking is done by clicking
+ the player and can only happen during a cover up. ]]
+function Epidemic:markForVaccination(patient)
+  if patient.infected and not patient.vaccinated
+    and not patient.marked_for_vaccination then
+    print("Clicked and epidemic is active")
+    patient.marked_for_vaccination = true
+    patient:setMood("epidemy4","deactivate")
+    patient:setMood("epidemy2","activate")
+  end
+end
+
 
 
 --[[ Counts the number of patients that have been infected that are still
@@ -313,6 +340,11 @@ function Epidemic:finishCoverUp()
   local watch = self.world.ui:getWindow(UIWatch)
   if watch then
     watch:close()
+  end
+
+  -- Turn vaccination mode off
+  if self.vaccination_mode_active then
+    self:toggleVaccinationMode()
   end
 
   local total_infected = #self.infected_patients
