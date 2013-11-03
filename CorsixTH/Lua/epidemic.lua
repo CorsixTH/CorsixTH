@@ -282,9 +282,6 @@ function Epidemic:finishCoverUp()
 
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
-  self:applyOutcome()
-  --Remove epidemic from hospital so another epidemic may be assigned
-  self.hospital.epidemic = nil
 end
 
 --[[ Calculates the contents of the fax and the appropriate fines based on the
@@ -360,6 +357,8 @@ function Epidemic:applyOutcome()
   end
   -- Finally send the fax confirming the outcome
   self:sendResultFax()
+  --Remove epidemic from hospital so another epidemic may be assigned
+  self.hospital.epidemic = nil
 end
 
 --[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
@@ -385,4 +384,16 @@ function Epidemic:sendResultFax()
   self.world.ui.bottom_panel:queueMessage("report", self.cover_up_result_fax, nil, 24*20, 1)
 end
 
+--[[ Spawns the inspector who will walk to the reception desk. ]]
+function Epidemic:spawnInspector()
+  self.world.ui.adviser:say(_A.information.epidemic_health_inspector)
+  print("Spawning Inspector")
+  local inspector = self.world:newEntity("Inspector", 2)
+  inspector:setType "VIP"
+
+  local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+  inspector:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  inspector:setHospital(self.hospital)
+  inspector:queueAction{name = "seek_reception"}
+end
 

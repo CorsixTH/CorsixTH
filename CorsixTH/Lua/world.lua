@@ -26,6 +26,7 @@ local ipairs, _G, table_remove
 dofile "entities/patient"
 dofile "entities/staff"
 dofile "entities/vip"
+dofile "entities/inspector"
 dofile "staff_profile"
 dofile "hospital"
 dofile "epidemic"

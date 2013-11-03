@@ -152,8 +152,8 @@ local function action_queue_leave_bench(action, humanoid)
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
-  -- Find out if we have to be standing up
-  local must_stand = class.is(humanoid, Staff) or class.is(humanoid, Vip) or  (humanoid.disease and humanoid.disease.must_stand)
+  -- Find out if we have to be standing up - considering humanoid_class covers both health inspector and VIP
+  local must_stand = class.is(humanoid, Staff) or humanoid.humanoid_class == "VIP" or (humanoid.disease and humanoid.disease.must_stand)
   local queue = action.queue
   if not must_stand then
     for i = 1, queue.bench_threshold do

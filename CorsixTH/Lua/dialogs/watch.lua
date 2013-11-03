@@ -66,7 +66,7 @@ function UIWatch:onCountdownEnd()
   elseif self.count_type == "epidemic" then
     local epidemic = self.hospital.epidemic
     if epidemic then
-      epidemic:finishCoverUp()
+      epidemic:spawnInspector()
     end
   elseif self.count_type == "initial_opening" then
     self.ui.hospital.opened = true
