@@ -65,6 +65,10 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- is clicked - used to determine what the cursor should look like
   self.vaccination_mode_active = false
 
+  -- During a cover up the infected patient who is marked for
+  -- vaccination that has been chosen to be vaccinated
+  self.vaccination_candidate = nil
+
   --Move the first patient closer (FOR TESTING ONLY)
   local x,y = self.hospital:getHeliportSpawnPosition()
   contagious_patient:setTile(x,y)
@@ -83,6 +87,7 @@ function Epidemic:tick()
   end
   if self.coverup_in_progress and not self.result_determined then
     self:checkNoInfectedPlayerHasLeft()
+    self:determineNextVaccinationCandidate()
   end
   self:checkPatientsForRemoval()
 end
@@ -472,3 +477,49 @@ function Epidemic:spawnInspector()
   inspector:queueAction{name = "seek_reception"}
 end
 
+--[[ Is the patient "still" either idle queuing or sitting on a bench
+  Typically this is used to determine if a patient can be vaccinated
+  @param patient (Patient) the patient we wish to determine if they are static.]]
+local function is_static(patient)
+  local patient_action = patient.action_queue[1]
+  return patient_action.name == "queue" or patient_action.name == "idle" or
+  (patient_action.name == "use_object" and
+  patient_action.object.object_type.id == "bench")
+end
+
+--[[ Determine if the current vaccination candidate (if exists) should
+  remain the vaccination candidate and deselect if not.
+  Then determine which infected patient will be chosen to be vaccinated
+  next, hence becoming the new vaccination candidate.]]
+function Epidemic:determineNextVaccinationCandidate()
+    local function violates_candidate_criteria(patient)
+      -- A vaccination candidate shouldn't be in a room,
+      -- already vaccinated or walking anywhere
+      return patient:getRoom() or patient.vaccinated
+      or patient.going_home or not is_static(patient)
+    end
+
+    local vacc_candidate = self.vaccination_candidate
+    if vacc_candidate then
+      if violates_candidate_criteria(vacc_candidate) then
+        --Restore normal epidemic mood icon
+        vacc_candidate:setMood("epidemy3","deactivate")
+        local restore_mood = vacc_candidate.vaccinated and "epidemy1" or "epidemy2"
+        self.vaccination_candidate:setMood(restore_mood,"activate")
+        self.vaccination_candidate = nil
+      end
+    else
+      -- Choose a new vaccination_candidate
+      for i, infected_patient in ipairs(self.infected_patients) do
+        if infected_patient.marked_for_vaccination and
+          not violates_candidate_criteria(infected_patient) then
+          -- Give selected patient the cursor with the arrow
+          infected_patient:setMood("epidemy2","deactivate")
+          infected_patient:setMood("epidemy3","activate")
+          self.vaccination_candidate = infected_patient
+          -- We've found one - no need to search for another
+          break
+        end
+      end
+    end
+end
