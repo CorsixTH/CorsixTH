@@ -186,6 +186,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
 dynamic_info.staff.actions.heading_for = "Heading for %s"
 dynamic_info.staff.actions.fired = "Fired"
+dynamic_info.patient.actions.epidemic_vaccinated = "I am no longer contagious"
 
 progress_report.free_build = "FREE BUILD"
 
