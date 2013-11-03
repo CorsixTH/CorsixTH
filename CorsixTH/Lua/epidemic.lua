@@ -78,6 +78,10 @@ function Epidemic:tick()
   if not self.result_determined then
     self:infectOtherPatients()
   end
+  if self.coverup_in_progress and not self.result_determined then
+    self:checkNoInfectedPlayerHasLeft()
+  end
+  self:checkPatientsForRemoval()
 end
 
 --[[ Adds a new patient to the epidemic who is actively contagious: infected but
@@ -150,6 +154,45 @@ function Epidemic:revealEpidemic()
     self:countInfectedPatients() .. " patients infected")
   self:sendInitialFax()
 end
+
+--[[ Checks for conditions that could end the epidemic earlier than
+ the length of the timer. If an infected patient leaves the
+ hospital it's discovered instantly and will result in a fail.]]
+function Epidemic:checkNoInfectedPlayerHasLeft()
+  local function infected_patient_left()
+    for _, infected_patient in ipairs(self.infected_patients) do
+      local px, py = infected_patient.tile_x, infected_patient.tile_y
+      -- If leaving and longer in the hospital
+      if infected_patient.going_home
+          and not infected_patient.cured
+          and px and py and (not self.hospital:isInHospital(px,py)) then
+        return true
+      end
+    end
+    return false
+  end
+
+  if infected_patient_left() then
+    self.result_determined = true
+    self:spawnInspector()
+    self:finishCoverUp()
+  end
+end
+
+--[[Remove any patients which were already on their way out or died before the
+epidemic was started to be fair on the players so they don't instantly fail.
+Additionally if any patients die during an epidemic we also remove them,
+otherwise a player may never win the epidemic in such a case.]]
+function Epidemic:checkPatientsForRemoval()
+    for i, infected_patient in ipairs(self.infected_patients) do
+      if (not self.coverup_in_progress and infected_patient.going_home)
+          or infected_patient.dead then
+        print("Removing patient from epidemic")
+        table.remove(self.infected_patients,i)
+      end
+    end
+end
+
 
 
 --[[ Counts the number of patients that have been infected that are still

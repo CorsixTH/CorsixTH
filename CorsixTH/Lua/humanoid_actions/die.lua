@@ -81,6 +81,7 @@ local function action_die_start(action, humanoid)
   end
   action.phase = 0
   humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+  humanoid.dead = true
 end
 
 return action_die_start

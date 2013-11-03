@@ -31,7 +31,9 @@ function Patient:Patient(...)
   self.action_string = ""
   self.cured = false
   self.infected = false
-end              
+  -- To distingish between actually being dead and having a nil hospital
+  self.dead = false
+end
 
 function Patient:onClick(ui, button)
   if button == "left" then
