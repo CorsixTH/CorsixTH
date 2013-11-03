@@ -44,6 +44,9 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   self.coverup_fine = 0
   self.compensation = 0
 
+  -- Is the epidemic bad enough to deserve the whole hospital to be evacuated
+  self.will_be_evacuated = false
+
   -- Fax sent when the result of the cover up is revealed to the player
   self.cover_up_result_fax = {}
 
@@ -280,10 +283,13 @@ function Epidemic:finishCoverUp()
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
   self:applyOutcome()
+  --Remove epidemic from hospital so another epidemic may be assigned
+  self.hospital.epidemic = nil
 end
 
 --[[ Calculates the contents of the fax and the appropriate fines based on the
-result of a cover up, results are stored globally to the class to be applied later.]]
+result of a cover up, results are stored globally to the class to be applied later.
+ @param still_infected (Integer) the number of patients still infected]]
 function Epidemic:determineFaxAndFines(still_infected)
   -- Losing text
   local fail_text_1 = _S.fax.epidemic_result.failed.part_1_name:format(self.disease.name)
@@ -333,8 +339,50 @@ function Epidemic:determineFaxAndFines(still_infected)
 end
 
 --[[ Apply the compensation or fines where appropriate to the player as
-  determined when the cover up was completed (@see finishCoverUp) ]]
+determined when the cover up was completed (@see finishCoverUp) ]]
 function Epidemic:applyOutcome()
+  -- If there is any cover up fine then the epidemic has been failed
+  if self.coverup_fine > 0 then
+    -- Apply fine and reputation hit
+    self.hospital:spendMoney(self.coverup_fine,_S.transactions.epidemy_coverup_fine)
+    self.reputation_hit = self.reputation_hit + self:getBaseReputationFromFine(self.coverup_fine)
+    self.hospital.reputation =  self.hospital.reputation - self.reputation_hit
+
+    print("Reputation hit :" .. tostring(self.reputation_hit))
+    print("Cover up fine :" .. tostring(self.coverup_fine))
+
+    if self.will_be_evacuated then
+      self:evacuateHospital()
+    end
+  else
+    self.hospital:receiveMoney(self.compensation, _S.transactions.compensation)
+    print("Compensation: " .. tostring(self.compensation))
+  end
+  -- Finally send the fax confirming the outcome
+  self:sendResultFax()
+end
+
+--[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
+function Epidemic:evacuateHospital()
+  print("Evacuating hospital")
+  for _, patient in ipairs(self.hospital.patients) do
+    patient:clearDynamicInfo()
+    patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
+    patient:setMood("exit","activate")
+    patient:setNextAction{
+      name = "spawn",
+      mode = "despawn",
+      point = self.world.spawn_points[math.random(1, #self.world.spawn_points)],
+      must_happen = true,
+    }
+  end
+end
+
+--[[ Send the results of the cover up to the player - will be a
+success/compensation or fail/fines + reputation hit]]
+function Epidemic:sendResultFax()
+  print("Sending result fax")
   self.world.ui.bottom_panel:queueMessage("report", self.cover_up_result_fax, nil, 24*20, 1)
 end
+
 
