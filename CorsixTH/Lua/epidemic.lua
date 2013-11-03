@@ -88,6 +88,7 @@ function Epidemic:tick()
   if self.coverup_in_progress and not self.result_determined then
     self:checkNoInfectedPlayerHasLeft()
     self:determineNextVaccinationCandidate()
+    self:makeVaccinationCandidateCallForNurse()
   end
   self:checkPatientsForRemoval()
 end
@@ -523,3 +524,31 @@ function Epidemic:determineNextVaccinationCandidate()
       end
     end
 end
+
+--[[ When someone is suitable for vaccination we create a call
+  calling the nurse to come vaccinate.]]
+function Epidemic:makeVaccinationCandidateCallForNurse()
+  if self.vaccination_candidate and not self.vaccination_candidate.reserved_for
+      and is_static(self.vaccination_candidate) then
+    local call = self.world.
+    dispatcher:callNurseForVaccination(self.vaccination_candidate)
+  end
+end
+
+--[[ In response to a vaccination call by the vaccination candidate
+  (@see makeVaccinationCandidateCallForNurse) perform the vaccination
+  actions or deal with call if unable to vaccinate.
+  @param patient (Patient) the patient who make the original call
+  @param nurse (Nurse) the nurse attempting to vaccinate the patient]]
+function Epidemic:createVaccinationActions(patient,nurse)
+  -- Just vaccinate the player then end the call - still walking to player and interrupts to add
+  patient:setMood("epidemy2","deactivate")
+  patient:setMood("epidemy3","deactivate")
+  patient:setMood("epidemy1","activate")
+  patient.vaccinated = true
+
+  CallsDispatcher.queueCallCheckpointAction(nurse)
+  nurse:queueAction{name = "answer_call"}
+  nurse:finishAction()
+end
+
