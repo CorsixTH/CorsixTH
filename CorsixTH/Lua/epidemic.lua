@@ -627,3 +627,14 @@ function Epidemic:getBestVaccinationTile(nurse, patient)
   return get_best_usage_no_bench(nurse, patient)
 end
 
+--[[When the nurse is interrupted unreserve the patient and unassign the call.
+  @param nurse (Nurse) the nurse whose vaccination actions we are interrupting]]
+function Epidemic:interruptVaccinationActions(nurse)
+  assert(nurse.humanoid_class == "Nurse")
+  if nurse.on_call then
+    nurse.on_call.assigned = nil
+    nurse.on_call.object.reserved_for = nil
+    nurse.on_call = nil
+  end
+end
+

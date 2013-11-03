@@ -55,6 +55,15 @@ function(nurse,patient)
   end
 end)
 
+
+local interrupt_vaccination = permanent"action_interrupt_vaccination"(
+function(action, humanoid)
+  local epidemic = humanoid.hospital.epidemic
+  epidemic:interruptVaccinationActions(humanoid)
+  humanoid:setTimer(1, humanoid.finishAction)
+end)
+
+
 local function vaccinate(action, nurse)
   assert(nurse.humanoid_class == "Nurse")
 
@@ -89,6 +98,7 @@ local function vaccinate(action, nurse)
                        direction=face_direction,
                        count=5,
                        after_use=perform_vaccination,
+                       on_interrupt=interrupt_vaccination,
                        must_happen=true})
   else
     print("Vaccination unsuccessful")
