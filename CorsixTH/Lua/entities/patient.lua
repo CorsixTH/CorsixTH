@@ -33,6 +33,9 @@ function Patient:Patient(...)
   self.infected = false
   -- To distingish between actually being dead and having a nil hospital
   self.dead = false
+  -- Is the patient reserved for a particular nurse when being vaccinated
+  self.reserved_for = false
+  self.vaccinated = false
 end
 
 function Patient:onClick(ui, button)

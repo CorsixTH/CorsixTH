@@ -541,14 +541,90 @@ end
   @param patient (Patient) the patient who make the original call
   @param nurse (Nurse) the nurse attempting to vaccinate the patient]]
 function Epidemic:createVaccinationActions(patient,nurse)
-  -- Just vaccinate the player then end the call - still walking to player and interrupts to add
-  patient:setMood("epidemy2","deactivate")
-  patient:setMood("epidemy3","deactivate")
-  patient:setMood("epidemy1","activate")
-  patient.vaccinated = true
+  patient.reserved_for=nurse
+  -- Check square is reachable first
+  local x,y = self:getBestVaccinationTile(nurse,patient)
+  -- If unreachable patient keep the call open for now
+  if not x or not y then
+    print("Vaccination unsuccessful")
+    nurse:setCallCompleted()
+    patient.reserved_for = nil
+    nurse:queueAction({name="meander"})
+    -- If the patient isn't the current vaccination candidate just
+    -- end the call - the nurse may be answering the call when they
+    -- were the vaccination candidate
+  elseif not (patient == self.vaccination_candidate) then
+    print("Not vacc candidate")
+    CallsDispatcher.queueCallCheckpointAction(nurse)
+    nurse:queueAction{name = "answer_call"}
+    nurse:finishAction()
+    patient.reserved_for = nil
+    -- Otherwise send the nurse to vaccinate
+  else
+    nurse:setNextAction({name="walk", x=x, y=y,
+                        must_happen=true,
+                        walking_to_vaccinate = true})
+    nurse:queueAction({name="meander"})
+    patient:setMood("epidemy2","deactivate")
+    patient:setMood("epidemy3","deactivate")
+    patient:setMood("epidemy1","activate")
+    patient.vaccinated = true
+  end
+end
 
-  CallsDispatcher.queueCallCheckpointAction(nurse)
-  nurse:queueAction{name = "answer_call"}
-  nurse:finishAction()
+--[[Find the best tile to stand on to vaccinate a patient
+ @param nurse (Nurse) the nurse performing the vaccination
+ @param patient (Patient) the patient to be vaccinated
+ @return best_x,best_y (Integer,nil) the best tiles to vaccinate from.]]
+function Epidemic:getBestVaccinationTile(nurse, patient)
+  -- General usage tile finder, used in the other cases
+  -- when the patient isn't sitting on a bench
+  local function get_best_usage_no_bench(nurse,patient)
+    -- Tile patient is standing on
+    local px, py = patient.tile_x, patient.tile_y
+    -- Location of the nurse
+    local nx, ny = nurse.tile_x, nurse.tile_y
+
+    local best_x, best_y = nil
+    local shortest_distance = nil
+    local free_tiles = self.world.entity_map:getAdjacentFreeTiles(px,py)
+
+    for _, coord in ipairs(free_tiles) do
+      local x = coord['x']
+      local y = coord['y']
+
+      local distance = self.world:getPathDistance(nx,ny,x,y)
+      -- If the tile is reachable for the nurse
+      if distance then
+        -- If the tile is closer then it's a better choice
+        if not shortest_distance or distance < shortest_distance then
+          shortest_distance = distance
+          best_x, best_y = x, y
+        end
+      end
+    end
+    return best_x, best_y
+  end
+
+  local action = patient.action_queue[1]
+  local px, py = patient.tile_x, patient.tile_y
+  -- If the patient is using a bench the best tile to use is
+  -- directly in front of them
+  if action.name == "use_object" then
+    local object_in_use = action.object
+    if object_in_use.object_type.id == "bench" then
+      local direction = object_in_use.direction
+       if direction == "north" then
+         return px, py-1
+       elseif direction == "south" then
+         return px, py+1
+       elseif direction == "east" then
+         return px+1, py
+       elseif direction == "west" then
+         return px-1, py
+       end
+    end
+  end
+  return get_best_usage_no_bench(nurse, patient)
 end
 
