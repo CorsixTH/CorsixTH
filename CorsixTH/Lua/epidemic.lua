@@ -38,8 +38,21 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- Can the epidemic be revealed to the player
   self.ready_to_reveal = false
 
+  -- Various values for the different outcomes - used when result fax is sent
   self.declare_fine = 0
+  self.reputation_hit = 0
+  self.coverup_fine = 0
+  self.compensation = 0
 
+  -- Fax sent when the result of the cover up is revealed to the player
+  self.cover_up_result_fax = {}
+
+  -- Set if the user choses the cover up option instead of declaring
+  self.coverup_in_progress = false
+
+  --Cover up timer and amount of intervals the timer has
+  self.timer = nil
+  self.countdown_intervals = 0
 
   -- Set when we know if the player has passed/failed the epidemic
   -- generally used to test if infected patients can still infect others
@@ -149,6 +162,20 @@ function Epidemic:countInfectedPatients()
   return infected_count
 end
 
+--[[Counts the number of patients that have been infected that are now cured.
+@return cured_count (Integer) the number of cured patients that were once
+infected]]
+function Epidemic:countCuredPatients()
+  local cured_count = 0
+  for _, infected_patient in ipairs(self.infected_patients) do
+    if infected_patient.cured then
+      cured_count = cured_count + 1
+    end
+  end
+  return cured_count
+end
+
+
 --[[ Sends the initial fax to the player when the epidemic is revealed.]]
 function Epidemic:sendInitialFax()
   local num_infected = self:countInfectedPatients()
@@ -221,7 +248,93 @@ end
 --[[ When the player chooses to begin the cover up over declaring from the
  initial fax (@see sendInitialFax) ]]
 function Epidemic:startCoverUp()
-  print("Starting cover up")
+  self.timer = UIWatch(self.world.ui, "epidemic")
+  self.countdown_intervals = self.timer.open_timer
+  self.world.ui:addWindow(self.timer)
+  self.coverup_in_progress = true
+  --Set the mood icon for all infected patients
+  for _, infected_patient in ipairs(self.infected_patients) do
+    infected_patient:updateDynamicInfo()
+    infected_patient:setMood("epidemy4","activate")
+  end
 end
 
+--[[ Ends the cover up of the epidemic with the result to be applied
+later (@see applyOutcome) ]]
+function Epidemic:finishCoverUp()
+  self.result_determined = true
+
+  local watch = self.world.ui:getWindow(UIWatch)
+  if watch then
+    watch:close()
+  end
+
+  local total_infected = #self.infected_patients
+  local still_infected = self:countInfectedPatients()
+  local total_cured = self:countCuredPatients()
+
+  print("Total infected " .. total_infected)
+  print("Still infected patient count: " .. still_infected)
+  print("Cured patient count: " .. total_cured)
+
+  self:determineFaxAndFines(still_infected)
+  self:clearAllInfectedPatients()
+  self:applyOutcome()
+end
+
+--[[ Calculates the contents of the fax and the appropriate fines based on the
+result of a cover up, results are stored globally to the class to be applied later.]]
+function Epidemic:determineFaxAndFines(still_infected)
+  -- Losing text
+  local fail_text_1 = _S.fax.epidemic_result.failed.part_1_name:format(self.disease.name)
+  local fail_text_2 = _S.fax.epidemic_result.failed.part_2
+  local close_option = {text = _S.fax.epidemic_result.close_text, choice = "close"}
+
+  -- Losing fine (if epidemic is "lost")
+  self.coverup_fine = self:calculateInfectedFine(still_infected)
+
+  if still_infected == 0 then
+    -- Compensation fine (if epidemic is "won")
+    local compensation_low_value = self.config.gbv.EpidemicCompLo or 1000
+    local compensation_high_value = self.config.gbv.EpidemicCompHi or 5000
+    self.compensation = math.random(compensation_low_value,compensation_high_value)
+
+    self.cover_up_result_fax = {
+      {text = _S.fax.epidemic_result.succeeded.part_1_name:format(self.disease.name)},
+      {text = _S.fax.epidemic_result.succeeded.part_2},
+      {text = _S.fax.epidemic_result.compensation_amount:format(self.compensation)},
+      choices = {close_option}
+    }
+  elseif still_infected < 5 then
+    self.cover_up_result_fax = {
+      {text = fail_text_1},
+      {text = fail_text_2},
+      {text = _S.fax.epidemic_result.fine_amount:format(self.coverup_fine)},
+      choices = {close_option}
+    }
+  elseif still_infected >=5 and still_infected < 10 then
+    self.cover_up_result_fax = {
+      {text = fail_text_1},
+      {text = fail_text_2},
+      {text = _S.fax.epidemic_result.rep_loss_fine_amount:format(self.coverup_fine)},
+      choices = {close_option}
+    }
+  else
+    self.will_be_evacuated = true
+    self.cover_up_result_fax = {
+      {text = fail_text_1},
+      {text = fail_text_2},
+      {text = _S.fax.epidemic_result.hospital_evacuated},
+      choices = {close_option}
+    }
+    -- The reputation hit will be 1/3 of the total reputation
+    self.reputation_hit = self.reputation_hit + math.round(self.hospital.reputation * (1/3))
+  end
+end
+
+--[[ Apply the compensation or fines where appropriate to the player as
+  determined when the cover up was completed (@see finishCoverUp) ]]
+function Epidemic:applyOutcome()
+  self.world.ui.bottom_panel:queueMessage("report", self.cover_up_result_fax, nil, 24*20, 1)
+end
 
