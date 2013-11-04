@@ -144,12 +144,16 @@ function Epidemic:infectOtherPatients()
   end
 end
 
+--[[ The epidemic is ready to be revealed to the player if any infected patient
+ is fully diagnosed. N.B. because multiple epidemics are queued to become
+ the "active" one, being ready to reveal does NOT guarantee an epidemic
+ WILL be revealed to the player and may even terminate before they are even
+ aware it existed. ]]
 function Epidemic:checkIfReadyToReveal()
   for _, infected_patient in ipairs(self.infected_patients) do
     if infected_patient.diagnosed then
       print(tostring(self) .. " ready to reveal")
       self.ready_to_reveal = true
-      self:revealEpidemic()
       break
     end
   end

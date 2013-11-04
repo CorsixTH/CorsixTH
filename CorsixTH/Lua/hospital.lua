@@ -1247,11 +1247,16 @@ function Hospital:createVip()
   self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
 end
 
+--[[ Creates a new epidemic by creating a new contagious patient with
+ a random disease and adds the epidemic to the pool of future epidemics
+ does NOT guarantee the created epidemic will be the next revealed epidemic.]]
 function Hospital:createEpidemic()
   local patient = self.world:spawnPatient(self)
   print("Epidemic patient created with disease " .. patient.disease.id)
+  -- Queue the new epidemic
   local epidemic = Epidemic(self,patient)
-  self.epidemic = epidemic
+  print("Epidemic queued:" .. tostring(epidemic))
+  self.future_epidemics_pool[#self.future_epidemics_pool + 1] = epidemic
 end
 
 --[[ Make the active epidemic (if exists) and any future epidemics tick. If there
@@ -1294,6 +1299,83 @@ function Hospital:manageEpidemics()
     end
   end
 end
+
+--[[ Determines if a patient is contagious and then attempts to add them the
+ appropriate epidemic if so.
+ @param patient (Patient) patient to determine if contagious]]
+function Hospital:determineIfContagious(patient)
+  -- ContRate treated like a percentage with ContRate% of patients with
+  -- a disease having the contagious strain
+  local config = self.world.map.level_config
+  local expertise = config.expertise
+  local disease = patient.disease
+  local contRate = expertise[disease.expertise_id].ContRate
+
+  -- The patient is potentially contagious as we do not yet know if there
+  -- is a suitable epidemic which they can belong to
+  local potentially_contagious = contRate and contRate >= math.random(1,100)
+
+  -- The patient isn't contagious if these conditions aren't passed
+  local reduce_months = config.ReduceContMonths or 14
+  local reduce_people = config.ReduceContPeepCount or 20
+  local date_in_months = self.world.month + (self.world.year - 1)*12
+
+  if potentially_contagious and date_in_months > reduce_months and
+      self.num_visitors > reduce_people then
+    print("Contagious")
+    self:addToEpidemic(patient)
+  end
+end
+
+--[[ Determines if there is a suitable epidemic the contagious patient can
+ belong to and adds them to it if possible. N.B. a patient isn't actually
+ contagious until they belong to an epidemic. So if it isn't possible to add a
+ patient to an epidemic they are just treated as a normal patient.
+ @param patient (Patient) patient to attempt to add to an epidemic  ]]
+function Hospital:addToEpidemic(patient)
+
+  --[[ See if there exists a future epidemic with the same
+   disease as the contagious patient - if so add them to it
+   @param patient (Patient) the patient to add to the epidemic
+   @return true if patient was successfully added to a future epidemic
+   false otherwise (boolean) ]]
+  local function add_to_existing_future_epidemic(patient)
+    for _, future_epidemic in ipairs(self.future_epidemics_pool) do
+      if future_epidemic.disease == patient.disease then
+        print("Adding patient to future epidemic for " .. patient.disease.id)
+        future_epidemic:addContagiousPatient(patient)
+        return true
+      end
+    end
+    return false
+  end
+
+  --[[ Create a new epidemic and add it to the pool of future epidemics
+   @param patient (Patient) the patient who will be the first
+   contagious patient of the new epidemic]]
+  local function add_new_epidemic_to_pool(patient)
+    print("Creating new epidemic for " .. patient.disease.id)
+    local new_epidemic = Epidemic(self,patient)
+    self.future_epidemics_pool[#self.future_epidemics_pool + 1] = new_epidemic
+  end
+
+  local epidemic = self.epidemic
+  -- Don't add a new contagious patient if the player is trying to cover up
+  -- an existing epidemic - not really fair
+  if epidemic and not epidemic.coverup_in_progress and
+      (patient.disease == epidemic.disease) then
+    print("Adding patient to current epidemic for " .. patient.disease.id)
+    epidemic:addContagiousPatient(patient)
+  elseif self.future_epidemics_pool and
+      not (epidemic and epidemic.coverup_in_progress) then
+    local added_to_future_epidemic = add_to_existing_future_epidemic(patient)
+    -- Make a new epidemic as one doesn't exist with this disease
+    if not added_to_future_epidemic then
+      add_new_epidemic_to_pool(patient)
+    end
+  end
+end
+
 
 function Hospital:spawnPatient()
   self.world:spawnPatient(self)
@@ -1459,6 +1541,9 @@ function Hospital:addPatient(patient)
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
   self.num_visitors_ty = self.num_visitors_ty + 1
+
+  -- Decide if the patient belongs in an epidemic
+  self:determineIfContagious(patient)
 end
 
 function Hospital:humanoidDeath(humanoid)
