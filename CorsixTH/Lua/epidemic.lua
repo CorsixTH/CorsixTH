@@ -89,6 +89,7 @@ function Epidemic:tick()
     self:checkNoInfectedPlayerHasLeft()
     self:determineNextVaccinationCandidate()
     self:makeVaccinationCandidateCallForNurse()
+    self:showAppropriateAdviceMessages()
   end
   self:checkPatientsForRemoval()
 end
@@ -635,6 +636,26 @@ function Epidemic:interruptVaccinationActions(nurse)
     nurse.on_call.assigned = nil
     nurse.on_call.object.reserved_for = nil
     nurse.on_call = nil
+  end
+end
+
+--[[ Make the advisor show appropriate messages under certain
+  conditions of the epidemic.]]
+function Epidemic:showAppropriateAdviceMessages()
+  if self.countdown_intervals then
+    if not self.has_said_hurry_up and
+      -- If only 1/4 of the countdown_intervals remaining on the timer
+      self.timer.open_timer == math.floor(self.countdown_intervals * 1/4) then
+      self.world.ui.adviser:say(_A.epidemic.hurry_up)
+      self.has_said_hurry_up = true
+      -- Wait until at least 1/4 of the countdown_intervals has expired before giving
+      -- this warning so it doesn't happen straight away
+    elseif self.timer.open_timer <= math.floor(self.countdown_intervals * 3/4)
+      and not self.has_said_serious
+      and self:countInfectedPatients() > 10 then
+      self.world.ui.adviser:say(_A.epidemic.serious_warning)
+      self.has_said_serious = true
+    end
   end
 end
 
