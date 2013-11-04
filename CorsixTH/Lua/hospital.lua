@@ -62,10 +62,17 @@ function Hospital:Hospital(world, name)
   
   self.handymanTasks = {}
   
-  -- Represents the "active" epidemic non-nil if 
-  -- an epidemic is happening currently in the hospital 
+  -- Represents the "active" epidemic non-nil if
+  -- an epidemic is happening currently in the hospital
   -- Only one epidemic is ever "active"
   self.epidemic = nil
+
+  -- The pool of epidemics which may happen in the future.
+  -- Epidemic in this table continue in the background its
+  -- patients infecting each other. Epidemics are chosen from
+  -- this pool to become the "active" epidemic
+  self.future_epidemics_pool = {}
+
   
   -- Initial values
   self.interest_rate = interest_rate
@@ -606,6 +613,11 @@ function Hospital:afterLoad(old, new)
   if old < 76 then
     self.msg_counter = 0
   end    
+
+  if old < 81 then
+    self.future_epidemics_pool = {}
+  end
+
 end
 
 function Hospital:countPatients()
@@ -1242,9 +1254,44 @@ function Hospital:createEpidemic()
   self.epidemic = epidemic
 end
 
+--[[ Make the active epidemic (if exists) and any future epidemics tick. If there
+is no current epidemic determines if any epidemic in the pool of future
+epidemics can become the active one. Also removes any epidemics from the
+future pool which have no infected patients and thus, will have no effect on
+the hospital. ]]
 function Hospital:manageEpidemics()
+  --[[ Can the future epidemic be revealed to the player
+  @param future_epidemic (Epidemic) the epidemic to attempt to reveal
+  @return true if can be revealed false otherwise (boolean) ]]
+  local function can_be_revealed(future_epidemic)
+    -- Epidemics need to use the timer so nothing else timer-based can be going
+    -- on, there also shouldn't be a current epidemic
+    return not self.world.ui:getWindow(UIWatch) and not self.epidemic and
+      future_epidemic.ready_to_reveal
+  end
+
   if(self.epidemic) then
     self.epidemic:tick()
+  end
+  if self.future_epidemics_pool then
+    for i, future_epidemic in ipairs(self.future_epidemics_pool) do
+      -- If the epidemic has no infected patients nothing will
+      -- happen, we can just discard it
+      if future_epidemic:hasNoInfectedPatients() then
+        print("Removing epidemic: " .. tostring(future_epidemic))
+        table.remove(self.future_epidemics_pool,i)
+        -- If we can reveal an epidemic, move from the pool to
+        -- being the current epidemic
+      elseif can_be_revealed(future_epidemic) then
+        print("Can be revealed: " .. tostring(future_epidemic))
+        self.epidemic = future_epidemic
+        self.epidemic:revealEpidemic()
+        table.remove(self.future_epidemics_pool,i)
+      else
+        -- Other future epidemics continue to tick in the background
+        future_epidemic:tick()
+      end
+    end
   end
 end
 

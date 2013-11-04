@@ -659,3 +659,9 @@ function Epidemic:showAppropriateAdviceMessages()
   end
 end
 
+--[[ Are no infected patients, cured or still infected in the hospital?
+@returns true if so, false otherwise. (boolean) ]]
+function Epidemic:hasNoInfectedPatients()
+  return #self.infected_patients == 0
+end
+
