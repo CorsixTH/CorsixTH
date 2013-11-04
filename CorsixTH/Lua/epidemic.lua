@@ -420,8 +420,8 @@ end
 --[[ Apply the compensation or fines where appropriate to the player as
 determined when the cover up was completed (@see finishCoverUp) ]]
 function Epidemic:applyOutcome()
-  -- If there is any cover up fine then the epidemic has been failed
-  if self.coverup_fine > 0 then
+  -- If there is no compensation to apply the epidemic has been failed
+  if self.compensation == 0 then
     -- Apply fine and reputation hit
     self.hospital:spendMoney(self.coverup_fine,_S.transactions.epidemy_coverup_fine)
     self.reputation_hit = self.reputation_hit + self:getBaseReputationFromFine(self.coverup_fine)
