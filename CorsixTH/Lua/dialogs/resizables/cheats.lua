@@ -60,6 +60,7 @@ function UICheats:UICheats(ui)
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
     {name = "epidemic",       func = self.cheatEpidemic},
+    {name = "toggle_infected", func = self.cheatToggleInfected},
     {name = "vip",            func = self.cheatVip},
     {name = "earthquake",     func = self.cheatEarthquake},
     {name = "create_patient", func = self.cheatPatient},
@@ -162,6 +163,27 @@ end
 --[[ Creates a new epidemic in the hospital ]]
 function UICheats:cheatEpidemic()
   self.ui.hospital:createEpidemic()
+end
+
+--[[ Before an epidemic has been revealed toggle the infected icons
+  to easily distinguish the infected patients -- will toggle icons
+  for ALL future epidemics you cannot distingush between epidemics
+  by disease ]]
+function UICheats:cheatToggleInfected()
+  local hospital = self.ui.hospital
+
+  if hospital.future_epidemics_pool and #hospital.future_epidemics_pool > 0 then
+    for _, future_epidemic in ipairs(hospital.future_epidemics_pool) do
+      local show_mood = future_epidemic.cheat_always_show_mood
+      future_epidemic.cheat_always_show_mood = not show_mood
+      local mood_action = show_mood and "deactivate" or "activate"
+      for _, patient in ipairs(future_epidemic.infected_patients) do
+        patient:setMood("epidemy4",mood_action)
+      end
+    end
+  else
+    print("Unable to toggle icons - no epidemics in progress that are not revealed")
+  end
 end
 
 function UICheats:cheatVip()

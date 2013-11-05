@@ -69,6 +69,9 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- vaccination that has been chosen to be vaccinated
   self.vaccination_candidate = nil
 
+  -- For Cheat - Show the contagious icon even before the epidemic is revealed?
+  self.cheat_always_show_mood = false
+
   --Move the first patient closer (FOR TESTING ONLY)
   local x,y = self.hospital:getHeliportSpawnPosition()
   contagious_patient:setTile(x,y)
@@ -95,13 +98,14 @@ function Epidemic:tick()
 end
 
 --[[ Adds a new patient to the epidemic who is actively contagious: infected but
-not vaccinated or cured]]
+  not vaccinated or cured]]
 function Epidemic:addContagiousPatient(patient)
   patient.infected = true
-  -- This is conditional on cover up being active -- remove after testing
-  patient:setMood("epidemy4","activate")
   patient:updateDynamicInfo()
   self.infected_patients[#self.infected_patients + 1] = patient
+  if self.coverup_in_progress or self.cheat_always_show_mood then
+    patient:setMood("epidemy4","activate")
+  end
 end
 
 --[[ Goes through all infected patients checking if there are any other patients
