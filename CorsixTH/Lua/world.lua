@@ -1319,7 +1319,7 @@ function World:nextEarthquake()
     self.current_map_earthquake = self.current_map_earthquake + 1
   else
     if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
-    (not tonumber(self.map.level_number)) then
+    (not tonumber(self.map.level_number)) and self.map.level_config.quake_control.Severity == 0  then
       local current_month = (self.year - 1) * 12 + self.month
 
       -- Support standard values for mean and variance
