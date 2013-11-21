@@ -36,7 +36,7 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
 
   -- We actually don't want any dynamic info just yet
   self:clearDynamicInfo()
-  -- TODO: Smoke, 3424
+  
   -- Change hover cursor once the room has been finished.
   local callback
   callback = --[[persistable:machine_build_callback]] function(room)
@@ -77,14 +77,14 @@ end
 
 function Machine:machineUsed(room)
   if room.crashed then
-    -- Do nothing if the room has already crashed.
+    -- ! Do nothing if the room has already crashed.
     return
   end
   self:updateDynamicInfo()
-  local threshold = self.times_used/self.strength
-
+  local threshold =  self.strength - self.times_used
+  -- ! Too late it is about to explode
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  if threshold >= 0.9 then
+  if threshold < 1 then
     self.hospital:removeHandymanTask(taskIndex, "repairing")
     room:crashRoom()
     self:setCrashedAnimation()
@@ -96,16 +96,17 @@ function Machine:machineUsed(room)
     end
     self:setRepairing(nil)
     return true
-  elseif threshold >= 0.70 then
-    -- TODO: 3428 is smoke, add it when additional objects can be made
-    -- Urgent
+  -- ! Urgent repair needed    
+  elseif threshold < 4 then
+    -- !TODO: Smoke, up to three animations per machine 
+    -- i.e.< 4 one plume, < 3 two plumes or < 2 three plumes of smoke
     if taskIndex == -1 then
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
     else 
       self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
     end
-  elseif threshold >= 0.4 then
+  elseif threshold < 6 then
     -- Not urgent
     if taskIndex == -1 then
       local call = self.world.dispatcher:callForRepair(self)
