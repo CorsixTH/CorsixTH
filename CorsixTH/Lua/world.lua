@@ -1318,8 +1318,9 @@ function World:nextEarthquake()
     self.earthquake_size = control.Severity
     self.current_map_earthquake = self.current_map_earthquake + 1
   else
-    if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
-    (not tonumber(self.map.level_number)) and self.map.level_config.quake_control.Severity == 0  then
+  -- ! Stops any earthquakes in the early levels (less than level 5) 
+  -- ! of the TH campaign and allows the map creator to stop them if desired
+    if self.map.level_config.quake_control.Severity == 0  then
       local current_month = (self.year - 1) * 12 + self.month
 
       -- Support standard values for mean and variance
