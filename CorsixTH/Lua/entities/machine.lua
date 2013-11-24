@@ -23,6 +23,10 @@ local TH = require "TH"
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
+function Machine:getDrawingLayer()
+  return 3
+end
+
 function Machine:Machine(world, object_type, x, y, direction, etc)
   
   self.total_usage = -1 -- Incremented in the constructor of Object.
@@ -96,7 +100,9 @@ function Machine:machineUsed(room)
     end
     self:setRepairing(nil)
     return true
-  -- ! Urgent repair needed    
+  -- ! Urgent repair needed 
+  elseif  threshold < 14 then
+    self:smoking()
   elseif threshold < 4 then
     -- !TODO: Smoke, up to three animations per machine 
     -- i.e.< 4 one plume, < 3 two plumes or < 2 three plumes of smoke
@@ -113,6 +119,17 @@ function Machine:machineUsed(room)
       self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
     end
   end
+end
+
+function Machine:smoking()
+
+  self.ticks = true
+ -- self:setAnimation(self.world.anims, 3424, self:setLayer(10, 2))
+ -- self:setMoodInfo(3424, self:setLayer(10, 2))
+ -- self:setAnimation(self.object_type.smoke_animation)
+--  self:setLayer(10, 2)
+--  self:setLayer(11, 2)
+ -- self:setLayer(12, 2)
 end
 
 function Machine:getRepairTile()
