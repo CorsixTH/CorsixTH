@@ -87,13 +87,15 @@ local function MakePermanentObjectsTable(inverted)
     if not name:find(".", 1, true) then
       permanent[lib] = name
     end
-    for k, v in pairs(lib) do
-      local type = type(v)
-      if type == "function" or type == "table" or type == "userdata" then
-        permanent[v] = name ..".".. k
-        if name == "TH" and type == "table" then
-          -- C class metatables
-          permanent[debug.getfenv(getmetatable(v).__call)] = name ..".".. k ..".<mt>"
+    if type(lib) == "table" then
+      for k, v in pairs(lib) do
+        local type = type(v)
+        if type == "function" or type == "table" or type == "userdata" then
+          permanent[v] = name ..".".. k
+          if name == "TH" and type == "table" then
+            -- C class metatables
+            permanent[debug.getfenv(getmetatable(v).__call)] = name ..".".. k ..".<mt>"
+          end
         end
       end
     end
