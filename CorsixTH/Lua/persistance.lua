@@ -98,6 +98,8 @@ local function MakePermanentObjectsTable(inverted)
           end
         end
       end
+    else
+      print("Warning: Expected table but got " .. type(lib) .. ". A library probably failed to load.")
     end
   end
   
