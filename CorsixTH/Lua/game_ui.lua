@@ -76,8 +76,9 @@ function GameUI:setupGlobalKeyHandlers()
 
   self:addKeyHandler("esc", self, self.setEditRoom, false)
   self:addKeyHandler("esc", self, self.showMenuBar)
+  self:addKeyHandler("z", self, self.keySpeedUp)
+  self:addKeyHandler("x", self, self.keyTransparent)
   self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
-
   self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
   self:addKeyHandler({"alt", "a"}, self, self.togglePlayAnnouncements)
@@ -86,7 +87,6 @@ function GameUI:setupGlobalKeyHandlers()
 
   if self.app.config.debug then
     self:addKeyHandler("f11", self, self.showCheatsWindow)
-    self:addKeyHandler("x", self, self.toggleWallsTransparent)
   end
 end
 
@@ -219,6 +219,18 @@ function GameUI:updateKeyScroll()
   end
 end
 
+function GameUI:keySpeedUp()
+  if self.key_codes[122] then
+    self.app.world:speedUp()
+  end
+end
+
+function GameUI:keyTransparent()
+  if self.key_codes[120] then
+    self:makeTransparentWalls()
+  end
+end
+
 function GameUI:onKeyDown(code, rawchar)
   if UI.onKeyDown(self, code, rawchar) then
     -- Key has been handled already
@@ -238,10 +250,15 @@ function GameUI:onKeyUp(code)
     return true
   end
   local key = self:_translateKeyCode(code, rawchar)
-  
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
+  end
+  if self.app.world:isCurrentSpeed("Speed Up")  then
+    self.app.world:previousSpeed()
+  end
+  if self.transparent_walls then
+    self:removeTransparentWalls()
   end
 end
 
@@ -685,7 +702,11 @@ function GameUI:setWallsTransparent(mode)
 end
 
 --! Toggles transparency of walls, i.e. enables if currently disabled, and vice versa
-function GameUI:toggleWallsTransparent()
+function GameUI:makeTransparentWalls()
+  self:setWallsTransparent(true)
+end
+
+function GameUI:removeTransparentWalls()
   self:setWallsTransparent(not self.transparent_walls)
 end
 
@@ -962,8 +983,11 @@ function GameUI:afterLoad(old, new)
   if old < 78 then
     self.current_momentum = { x = 0, y = 0, z = 0}
   end
-
-  
+  if old < 81 then 
+    self:removeKeyHandler("x", self, self.toggleWallsTransparent)
+    self:addKeyHandler("z", self, self.keySpeedUp)
+    self:addKeyHandler("x", self, self.keyTransparent)
+  end
   return UI.afterLoad(self, old, new)
 end
 

@@ -778,7 +778,7 @@ end
 
 function Hospital:purchasePlot(plot_number)
   local map = self.world.map
-  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) then
+  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) and not self.world.ui.transparent_walls then
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
