@@ -639,7 +639,8 @@ function UIMenuBar:makeMenu(app)
       return app.world.map.temperature_display_method == method
     end      
   end
-
+  -- TODO: Game should remember the players choice between games, instead of having to make the 
+  -- change direct in the config file to make it stick
   local function wageIncreaseRequests(grant)
     return grant, function() 
       app.world:getLocalPlayerHospital().policies.grant_wage_increase = grant
@@ -650,17 +651,18 @@ function UIMenuBar:makeMenu(app)
       return app.world:getLocalPlayerHospital().policies.grant_wage_increase == grant
     end
   end
-   
+
   options:appendMenu(_S.menu_options.wage_increase, UIMenu()
     :appendCheckItem(_S.menu_options_wage_increase.grant, wageIncreaseRequests(true))
     :appendCheckItem(_S.menu_options_wage_increase.deny, wageIncreaseRequests(false))
   )
-    
+ 
   options:appendMenu(_S.menu_options.warmth_colors, UIMenu()
     :appendCheckItem(_S.menu_options_warmth_colors.choice_1, temperatureDisplay(1))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_2, temperatureDisplay(2))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_3, temperatureDisplay(3))
   )
+  app:saveConfig()
   
   local function rate(speed)
     return speed == "Normal", function()
