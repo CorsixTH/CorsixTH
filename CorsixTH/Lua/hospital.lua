@@ -1299,12 +1299,11 @@ function Hospital:determineIfContagious(patient)
   local config = self.world.map.level_config
   local expertise = config.expertise
   local disease = patient.disease
-  local contRate = expertise[disease.expertise_id].ContRate
+  local contRate = expertise[disease.expertise_id].ContRate or 0
 
   -- The patient is potentially contagious as we do not yet know if there
   -- is a suitable epidemic which they can belong to
-  local potentially_contagious = contRate and contRate >= math.random(1,100)
-
+  local potentially_contagious = contRate > 0 and (100/contRate) >= math.random(1,100)
   -- The patient isn't contagious if these conditions aren't passed
   local reduce_months = config.ReduceContMonths or 14
   local reduce_people = config.ReduceContPeepCount or 20
