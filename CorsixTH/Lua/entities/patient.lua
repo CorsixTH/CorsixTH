@@ -36,6 +36,8 @@ function Patient:Patient(...)
   -- Is the patient reserved for a particular nurse when being vaccinated
   self.reserved_for = false
   self.vaccinated = false
+  -- Has the patient been sent to the wrong room and needs redirecting
+  self.needs_redirecting = false
 end
 
 function Patient:onClick(ui, button)
