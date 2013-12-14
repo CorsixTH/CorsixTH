@@ -171,15 +171,14 @@ end
   by disease ]]
 function UICheats:cheatToggleInfected()
   local hospital = self.ui.hospital
+  local epidemic = hospital.epidemic
 
-  if hospital.future_epidemics_pool and #hospital.future_epidemics_pool > 0 then
-    for _, future_epidemic in ipairs(hospital.future_epidemics_pool) do
-      local show_mood = future_epidemic.cheat_always_show_mood
-      future_epidemic.cheat_always_show_mood = not show_mood
-      local mood_action = show_mood and "deactivate" or "activate"
-      for _, patient in ipairs(future_epidemic.infected_patients) do
-        patient:setMood("epidemy4",mood_action)
-      end
+  if epidemic and not epidemic.revealed then
+    local show_mood = epidemic.cheat_always_show_mood
+    epidemic.cheat_always_show_mood = not show_mood
+    local mood_action = show_mood and "deactivate" or "activate"
+    for _, patient in ipairs(epidemic.infected_patients) do
+      patient:setMood("epidemy4",mood_action)
     end
   else
     print("Unable to toggle icons - no epidemics in progress that are not revealed")

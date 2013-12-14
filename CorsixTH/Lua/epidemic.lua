@@ -23,7 +23,6 @@ class "Epidemic"
 --[[Manages the epidemics that occur in hospitals. Generally, any epidemic
 logic that happens outside this class will call functions contained here.]]
 function Epidemic:Epidemic(hospital, contagious_patient)
-  print("Creating a new epidemic")
   self.hospital = hospital
   self.world = self.hospital.world
 
@@ -37,6 +36,9 @@ function Epidemic:Epidemic(hospital, contagious_patient)
 
   -- Can the epidemic be revealed to the player
   self.ready_to_reveal = false
+
+  -- Is the epidemic revealed to the player?
+  self.revealed = false
 
   -- Various values for the different outcomes - used when result fax is sent
   self.declare_fine = 0
@@ -142,6 +144,7 @@ function Epidemic:infectOtherPatients()
       for _, patient in ipairs(adjacent_patients) do
         if canInfectOther(infected_patient,patient) then
           self:addContagiousPatient(patient)
+          print("Infected other, currently infected: " .. self:countInfectedPatients())
         end
       end
     end
@@ -168,7 +171,7 @@ end
  the "active" epidemic out of all the queued ones.]]
 function Epidemic:revealEpidemic()
   assert(self.ready_to_reveal)
-  print("Epidemic " .. tostring(self) .. " revealed " ..
+  print("Epidemic " .. self.disease.id .. " revealed " ..
     self:countInfectedPatients() .. " patients infected")
   self:sendInitialFax()
 end
@@ -205,7 +208,11 @@ function Epidemic:checkPatientsForRemoval()
     for i, infected_patient in ipairs(self.infected_patients) do
       if (not self.coverup_in_progress and infected_patient.going_home)
           or infected_patient.dead then
-        print("Removing patient from epidemic")
+          if infected_patient.dead then
+            print("Removing patient from epidemic - dead!")
+          else
+            print("Removing patient from epidemic - got fed up and left!")
+          end
         table.remove(self.infected_patients,i)
       end
     end

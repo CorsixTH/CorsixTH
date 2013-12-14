@@ -1252,11 +1252,13 @@ end
  does NOT guarantee the created epidemic will be the next revealed epidemic.]]
 function Hospital:createEpidemic()
   local patient = self.world:spawnPatient(self)
-  print("Epidemic patient created with disease " .. patient.disease.id)
-  -- Queue the new epidemic
-  local epidemic = Epidemic(self,patient)
-  print("Epidemic queued:" .. tostring(epidemic))
-  self.future_epidemics_pool[#self.future_epidemics_pool + 1] = epidemic
+
+  if not self.epidemic then
+    self.epidemic = Epidemic(self,patient)
+    print("Epidemic created with disease " .. patient.disease.id)
+  else
+    print("Cannot create new epidemic, one already in progress")
+  end
 end
 
 --[[ Make the active epidemic (if exists) and any future epidemics tick. If there
@@ -1268,34 +1270,22 @@ function Hospital:manageEpidemics()
   --[[ Can the future epidemic be revealed to the player
   @param future_epidemic (Epidemic) the epidemic to attempt to reveal
   @return true if can be revealed false otherwise (boolean) ]]
-  local function can_be_revealed(future_epidemic)
-    -- Epidemics need to use the timer so nothing else timer-based can be going
-    -- on, there also shouldn't be a current epidemic
-    return not self.world.ui:getWindow(UIWatch) and not self.epidemic and
-      future_epidemic.ready_to_reveal
+  local function can_be_revealed(epidemic)
+    return not self.world.ui:getWindow(UIWatch) and
+    self.epidemic == epidemic and epidemic.ready_to_reveal
   end
 
-  if(self.epidemic) then
-    self.epidemic:tick()
-  end
-  if self.future_epidemics_pool then
-    for i, future_epidemic in ipairs(self.future_epidemics_pool) do
-      -- If the epidemic has no infected patients nothing will
-      -- happen, we can just discard it
-      if future_epidemic:hasNoInfectedPatients() then
-        print("Removing epidemic: " .. tostring(future_epidemic))
-        table.remove(self.future_epidemics_pool,i)
-        -- If we can reveal an epidemic, move from the pool to
-        -- being the current epidemic
-      elseif can_be_revealed(future_epidemic) then
-        print("Can be revealed: " .. tostring(future_epidemic))
-        self.epidemic = future_epidemic
-        self.epidemic:revealEpidemic()
-        table.remove(self.future_epidemics_pool,i)
-      else
-        -- Other future epidemics continue to tick in the background
-        future_epidemic:tick()
-      end
+  local epidemic = self.epidemic
+
+  if(epidemic) then
+    epidemic:tick()
+    if not epidemic.ready_to_reveal and epidemic:hasNoInfectedPatients() then
+      print("Epidemic has no infected patients, removing")
+      self.epidemic = nil
+    elseif can_be_revealed(epidemic) and not epidemic.revealed then
+      print("Can be revealed: " .. tostring(epidemic))
+      epidemic:revealEpidemic()
+      epidemic.revealed = true
     end
   end
 end
@@ -1322,7 +1312,7 @@ function Hospital:determineIfContagious(patient)
 
   if potentially_contagious and date_in_months > reduce_months and
       self.num_visitors > reduce_people then
-    print("Contagious")
+    print("Contagious " .. patient.disease.id .. " patient spawned")
     self:addToEpidemic(patient)
   end
 end
@@ -1333,32 +1323,6 @@ end
  patient to an epidemic they are just treated as a normal patient.
  @param patient (Patient) patient to attempt to add to an epidemic  ]]
 function Hospital:addToEpidemic(patient)
-
-  --[[ See if there exists a future epidemic with the same
-   disease as the contagious patient - if so add them to it
-   @param patient (Patient) the patient to add to the epidemic
-   @return true if patient was successfully added to a future epidemic
-   false otherwise (boolean) ]]
-  local function add_to_existing_future_epidemic(patient)
-    for _, future_epidemic in ipairs(self.future_epidemics_pool) do
-      if future_epidemic.disease == patient.disease then
-        print("Adding patient to future epidemic for " .. patient.disease.id)
-        future_epidemic:addContagiousPatient(patient)
-        return true
-      end
-    end
-    return false
-  end
-
-  --[[ Create a new epidemic and add it to the pool of future epidemics
-   @param patient (Patient) the patient who will be the first
-   contagious patient of the new epidemic]]
-  local function add_new_epidemic_to_pool(patient)
-    print("Creating new epidemic for " .. patient.disease.id)
-    local new_epidemic = Epidemic(self,patient)
-    self.future_epidemics_pool[#self.future_epidemics_pool + 1] = new_epidemic
-  end
-
   local epidemic = self.epidemic
   -- Don't add a new contagious patient if the player is trying to cover up
   -- an existing epidemic - not really fair
@@ -1366,13 +1330,12 @@ function Hospital:addToEpidemic(patient)
       (patient.disease == epidemic.disease) then
     print("Adding patient to current epidemic for " .. patient.disease.id)
     epidemic:addContagiousPatient(patient)
-  elseif self.future_epidemics_pool and
-      not (epidemic and epidemic.coverup_in_progress) then
-    local added_to_future_epidemic = add_to_existing_future_epidemic(patient)
-    -- Make a new epidemic as one doesn't exist with this disease
-    if not added_to_future_epidemic then
-      add_new_epidemic_to_pool(patient)
-    end
+  elseif not epidemic then
+    print("Creating new epidemic for " .. patient.disease.id)
+    self.epidemic = Epidemic(self,patient)
+  else
+    print("Cannot create epidemic " .. patient.disease.id ..
+      ". Epidemic already in progress")
   end
 end
 
