@@ -362,7 +362,8 @@ function Room:onHumanoidEnter(humanoid)
     -- An infect patient's disease may have changed so they might have
     -- been sent to an incorrect diagnosis room, they should leave and go
     -- back to the gp for redirection
-    if (humanoid.infected) and not self:isDiagnosisRoomForPatient(humanoid) then
+    if (humanoid.infected) and not humanoid.diagnosed and
+        not self:isDiagnosisRoomForPatient(humanoid) then
       humanoid:queueAction(self:createLeaveAction())
       humanoid.needs_redirecting = true
       humanoid:queueAction({name = "seek_room", room_type = "gp"})
