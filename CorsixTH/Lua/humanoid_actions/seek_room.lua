@@ -83,6 +83,9 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
     humanoid.world.dispatcher:callForStaff(room)
   end
   if diagnosis_room then
+    if humanoid == humanoid.world.superpatient then
+      print("removing " .. humanoid.available_diagnosis_rooms[diagnosis_room]) 
+    end
     -- The diagnosis room was found, remove it from the list
     table.remove(humanoid.available_diagnosis_rooms, diagnosis_room)
   end

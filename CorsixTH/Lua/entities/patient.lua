@@ -41,6 +41,7 @@ function Patient:Patient(...)
 end
 
 function Patient:onClick(ui, button)
+  self.world.superpatient = self
   if button == "left" then
     if self.message_callback then
       self:message_callback()
@@ -61,6 +62,8 @@ function Patient:onClick(ui, button)
     self.user_of:onClick(ui, button)
   end
   Humanoid.onClick(self, ui, button)
+  --local transparency = self.world.available_diseases[16]
+  --self:changeDisease(transparency)
 end
 
 function Patient:setDisease(disease)
@@ -87,6 +90,51 @@ function Patient:setDisease(disease)
     self.attributes["toilet_need"] = math.random()*0.2
   end
   self:updateDynamicInfo()
+end
+
+function Patient:changeDisease(new_disease)
+  print("Changing " .. self.disease.id .. " to " .. new_disease.id)
+  --assert(not self.diagnosed, "Cannot change the disease of a diagnosed patient")
+  ---- These assertions should hold until handling of visual diseases is implemented.
+  --assert(not self.disease.visuals_id, "Cannot change the disease of a patient with a visual disease")
+  --assert(not new_disease.visuals_id, "Cannot change a disease to a visual disease")
+
+  local function get_visited_or_unavailable_rooms()
+    local visited_rooms = {}
+
+    for _, disease_room in ipairs(self.disease.diagnosis_rooms) do
+      local found = false
+      for i, room in ipairs(self.available_diagnosis_rooms) do
+        if disease_room == room then
+          found = true
+        end
+      end
+      if not found then
+        visited_rooms[#visited_rooms + 1] = disease_room
+      end
+    end
+
+    return visited_rooms
+  end
+
+
+  local new_diagnosis_rooms = {}
+  for i, new_diag_room in ipairs(new_disease.diagnosis_rooms) do
+    new_diagnosis_rooms[#new_diagnosis_rooms+1] = new_diag_room
+  end
+
+  for i, new_diag_room in ipairs(new_diagnosis_rooms) do
+    for _, visited_room in ipairs(get_visited_or_unavailable_rooms()) do
+      if(new_diag_room == visited_room) then
+        print("removing " .. new_diag_room)
+        table.remove(new_diagnosis_rooms,i)
+      end
+    end
+  end
+
+
+  --self.available_diagnosis_rooms = new_diagnosis_rooms
+  --self.disease = new_disease
 end
 
 function Patient:setdiagDiff()
