@@ -126,6 +126,7 @@ function Epidemic:infectOtherPatients()
     if spread_factor >= math.random(1,1000) then
       if (not other.infected) and (not other.cured) and (not other.vaccinated)
           and (not patient.cured) and (patient.disease == other.disease) and (not patient.vaccinated)
+          and (not other.is_emergency)
           -- Both patients are outside (nil rooms) or in the same room - don't infect through walls.
           and (patient:getRoom() == other:getRoom()) then
         can_infect=true

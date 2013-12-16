@@ -1294,6 +1294,9 @@ end
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
+  if patient.is_emergency then
+    return false
+  end
   -- ContRate treated like a percentage with ContRate% of patients with
   -- a disease having the contagious strain
   local config = self.world.map.level_config
