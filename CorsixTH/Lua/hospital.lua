@@ -1306,7 +1306,7 @@ function Hospital:determineIfContagious(patient)
 
   -- The patient is potentially contagious as we do not yet know if there
   -- is a suitable epidemic which they can belong to
-  local potentially_contagious = contRate > 0 and (100/contRate) >= math.random(1,100)
+  local potentially_contagious = contRate > 0 and (math.random(1,contRate) == contRate)
   -- The patient isn't contagious if these conditions aren't passed
   local reduce_months = config.ReduceContMonths or 14
   local reduce_people = config.ReduceContPeepCount or 20
