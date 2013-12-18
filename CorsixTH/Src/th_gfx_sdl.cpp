@@ -698,8 +698,8 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     if (m_pTexture == NULL)
         return;
 
-    const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth,   iHeight };
-    const SDL_Rect rcDest = { iX,    iY,    m_iWidth, m_iHeight };
+    const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth, iHeight };
+    const SDL_Rect rcDest = { iX,    iY,    iWidth, iHeight };
 
     pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);
 }

@@ -27,7 +27,7 @@ SOFTWARE.
 #include "xmi2mid.h"
 #include <SDL_mixer.h>
 #ifdef _MSC_VER
-#pragma comment(lib, "SDL_mixer")
+#pragma comment(lib, "SDL2_mixer")
 #pragma warning(disable: 4996) // CRT deprecation
 #endif
 

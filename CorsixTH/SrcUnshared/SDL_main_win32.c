@@ -244,8 +244,9 @@ int console_main(int argc, char *argv[])
 	   We still need to pass in the application handle so that
 	   DirectInput will initialize properly when SDL_RegisterApp()
 	   is called later in the video initialization.
+	   Edvin: In SDL2 this call has become obsolete.
 	 */
-	SDL_SetModuleHandle(GetModuleHandle(NULL));
+	//SDL_SetModuleHandle(GetModuleHandle(NULL));
 
 	/* Run the application main() code */
 	status = SDL_main(argc, argv);
