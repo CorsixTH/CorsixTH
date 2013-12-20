@@ -174,6 +174,7 @@ function Epidemic:revealEpidemic()
   assert(self.ready_to_reveal)
   print("Epidemic " .. self.disease.id .. " revealed " ..
     self:countInfectedPatients() .. " patients infected")
+  self.revealed = true
   self:sendInitialFax()
 end
 

@@ -1279,13 +1279,12 @@ function Hospital:manageEpidemics()
 
   if(epidemic) then
     epidemic:tick()
-    if not epidemic.ready_to_reveal and epidemic:hasNoInfectedPatients() then
+    if not epidemic.revealed and epidemic:hasNoInfectedPatients() then
       print("Epidemic has no infected patients, removing")
       self.epidemic = nil
     elseif can_be_revealed(epidemic) and not epidemic.revealed then
-      print("Can be revealed: " .. tostring(epidemic))
+      print("Can be revealed epidemic " .. epidemic.disease.id)
       epidemic:revealEpidemic()
-      epidemic.revealed = true
     end
   end
 end
