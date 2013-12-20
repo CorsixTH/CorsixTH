@@ -94,37 +94,47 @@ end
 
 function Patient:changeDisease(new_disease)
   print("Changing " .. self.disease.id .. " to " .. new_disease.id)
-  --assert(not self.diagnosed, "Cannot change the disease of a diagnosed patient")
-  ---- These assertions should hold until handling of visual diseases is implemented.
-  --assert(not self.disease.visuals_id, "Cannot change the disease of a patient with a visual disease")
-  --assert(not new_disease.visuals_id, "Cannot change a disease to a visual disease")
+  assert(not self.diagnosed, "Cannot change the disease of a diagnosed patient")
+  -- These assertions should hold until handling of visual diseases is implemented.
+  assert(not self.disease.visuals_id, "Cannot change the disease of a patient with a visual disease")
+  assert(not new_disease.visuals_id, "Cannot change a disease to a visual disease")
 
+  --[[ Go through the list of diagnosis rooms for the current disease
+  -- and check if they are in the list of avaliable rooms for the patient
+  -- if they are not on there they must be visited already or unavaiable 
+  -- @return visited_or_unavailable_rooms (table of strings) names of visited
+  -- or unavaiable rooms]]
   local function get_visited_or_unavailable_rooms()
-    local visited_rooms = {}
-
-    for _, disease_room in ipairs(self.disease.diagnosis_rooms) do
+    local visited = ""
+    local visited_or_unavailable_rooms = {}
+    for j, disease_room in ipairs(self.disease.diagnosis_rooms) do
       local found = false
+
       for i, room in ipairs(self.available_diagnosis_rooms) do
-        if disease_room == room then
+        if room == disease_room then
           found = true
         end
       end
       if not found then
-        visited_rooms[#visited_rooms + 1] = disease_room
+        visited_or_unavailable_rooms[#visited_or_unavailable_rooms + 1] = disease_room
+        visited = visited == "" and disease_room or visited .. "," .. disease_room
       end
     end
-
-    return visited_rooms
+    return visited_or_unavailable_rooms
   end
 
-
+  -- Copy the diagnosis rooms from the new disease
   local new_diagnosis_rooms = {}
   for i, new_diag_room in ipairs(new_disease.diagnosis_rooms) do
     new_diagnosis_rooms[#new_diagnosis_rooms+1] = new_diag_room
   end
 
+  -- The set of new diagnosis rooms is the diagnosis rooms
+  -- for the new disease MINUS the ones they have already visited or
+  -- are unavailable.
+  local visited_rooms = get_visited_or_unavailable_rooms()
   for i, new_diag_room in ipairs(new_diagnosis_rooms) do
-    for _, visited_room in ipairs(get_visited_or_unavailable_rooms()) do
+    for _, visited_room in ipairs(visited_rooms) do
       if(new_diag_room == visited_room) then
         print("removing " .. new_diag_room)
         table.remove(new_diagnosis_rooms,i)
@@ -132,9 +142,8 @@ function Patient:changeDisease(new_disease)
     end
   end
 
-
-  --self.available_diagnosis_rooms = new_diagnosis_rooms
-  --self.disease = new_disease
+  self.available_diagnosis_rooms = new_diagnosis_rooms
+  self.disease = new_disease
 end
 
 function Patient:setdiagDiff()
