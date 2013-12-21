@@ -74,6 +74,15 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- For Cheat - Show the contagious icon even before the epidemic is revealed?
   self.cheat_always_show_mood = false
 
+  -- Number of times an infect patient has successfully infected another
+  self.total_infections = 0
+  -- Number of times any infected patient has tried to infected another - successful or not
+  self.attempted_infections = 0
+
+  -- How often is the epidemic disease passed on? Represents a percentage
+  -- spread_factor% of the time a disease is passed on to a suitable target
+  self.spread_factor = self.config.gbv.ContagiousSpreadFactor or 25
+
   --Move the first patient closer (FOR TESTING ONLY)
   local x,y = self.hospital:getHeliportSpawnPosition()
   contagious_patient:setTile(x,y)
@@ -119,20 +128,31 @@ function Epidemic:infectOtherPatients()
    @param patient (Patient) already infected patient
    @param other (Patient) target to possibly infect
    @return true if patient can infect other, false otherwise (boolean) ]]
-  local function canInfectOther(patient,other)
-    local can_infect = false
-    local spread_factor = self.config.gbv.ContagiousSpreadFactor or 25
-    --Take into account how the spread factor how likely it is to infect someone else
-    if spread_factor >= math.random(1,1000) then
-      if (not other.infected) and (not other.cured) and (not other.vaccinated)
-          and (not patient.cured) and (patient.disease == other.disease) and (not patient.vaccinated)
-          and (not other.is_emergency)
-          -- Both patients are outside (nil rooms) or in the same room - don't infect through walls.
-          and (patient:getRoom() == other:getRoom()) then
-        can_infect=true
-      end
+   local function canInfectOther(patient,other)
+     local can_infect = false
+     if (not other.infected) and (not other.cured) and (not other.vaccinated)
+       and (not patient.cured) and (not patient.vaccinated) and (not other.is_emergency) and
+       ((patient.disease == other.disease) or
+       (not patient:hasVisualDisease() and not other:hasVisualDisease() and not other.diagnosed))
+       and not other.attempted_to_infect
+       -- Both patients are outside (nil rooms) or in the same room - don't infect through walls.
+       and (patient:getRoom() == other:getRoom()) then
+       can_infect=true
+     end
+     return can_infect
+   end
+
+  local function infect_other(infected_patient,patient)
+    if (infected_patient.disease == patient.disease) then
+      self:addContagiousPatient(patient)
+      print("Infected other with same disease: " .. self:countInfectedPatients())
+      self.total_infections = self.total_infections + 1
+    else
+      patient:changeDisease(infected_patient.disease)
+      self:addContagiousPatient(patient)
+      print("Infected other and changed disease: " .. self:countInfectedPatients())
+      self.total_infections = self.total_infections + 1
     end
-    return can_infect
   end
 
   -- Go through all infected patients making the check if they can infect
@@ -141,15 +161,21 @@ function Epidemic:infectOtherPatients()
   if entity_map then
     for _, infected_patient in ipairs(self.infected_patients) do
       local adjacent_patients =
-          entity_map:getPatientsInAdjacentSquares(infected_patient.tile_x, infected_patient.tile_y)
+      entity_map:getPatientsInAdjacentSquares(infected_patient.tile_x, infected_patient.tile_y)
       for _, patient in ipairs(adjacent_patients) do
         if canInfectOther(infected_patient,patient) then
-          self:addContagiousPatient(patient)
-          print("Infected other, currently infected: " .. self:countInfectedPatients())
+          patient.attempted_to_infect = true
+          self.attempted_infections = self.attempted_infections + 1
+     --   print("Infections/Attempted :" .. self.total_infections .. "/" .. self.attempted_infections)
+          if self.total_infections == 0 or
+              (self.total_infections/self.attempted_infections) < (self.spread_factor/100) then
+            infect_other(infected_patient,patient)
+          end
         end
       end
     end
   end
+
 end
 
 --[[ The epidemic is ready to be revealed to the player if any infected patient

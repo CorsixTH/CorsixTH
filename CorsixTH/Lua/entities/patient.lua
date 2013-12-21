@@ -38,10 +38,12 @@ function Patient:Patient(...)
   self.vaccinated = false
   -- Has the patient been sent to the wrong room and needs redirecting
   self.needs_redirecting = false
+  self.attempted_to_infect= false
 end
 
 function Patient:onClick(ui, button)
   self.world.superpatient = self
+  print("Visual? " .. self.disease.id .. " " .. tostring(self:hasVisualDisease()))
   if button == "left" then
     if self.message_callback then
       self:message_callback()
@@ -96,7 +98,7 @@ function Patient:changeDisease(new_disease)
   print("Changing " .. self.disease.id .. " to " .. new_disease.id)
   assert(not self.diagnosed, "Cannot change the disease of a diagnosed patient")
   -- These assertions should hold until handling of visual diseases is implemented.
-  assert(not self.disease.visuals_id, "Cannot change the disease of a patient with a visual disease")
+  assert(not self:hasVisualDisease(), "Cannot change the disease of a patient with a visual disease")
   assert(not new_disease.visuals_id, "Cannot change a disease to a visual disease")
 
   --[[ Go through the list of diagnosis rooms for the current disease
@@ -1013,6 +1015,13 @@ function Patient:updateMessage(choice)
     end
     
   end
+end
+
+--[[ Does the patient have a visual disease
+--  @return result (boolean) true if so, false otherwise]]
+function Patient:hasVisualDisease()
+  -- Only patients with visual diseases have this field
+  return (self.disease.visuals_id ~= nil)
 end
 
 function Patient:afterLoad(old, new)
