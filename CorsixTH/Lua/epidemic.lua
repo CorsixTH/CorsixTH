@@ -138,7 +138,7 @@ function Epidemic:infectOtherPatients()
        -- Both patients are outside (nil rooms) or in the same room - don't infect through walls.
        and (patient:getRoom() == other:getRoom()) then
        can_infect=true
-     end
+     end 
      return can_infect
    end
 
@@ -163,14 +163,10 @@ function Epidemic:infectOtherPatients()
       local adjacent_patients =
       entity_map:getPatientsInAdjacentSquares(infected_patient.tile_x, infected_patient.tile_y)
       for _, patient in ipairs(adjacent_patients) do
-        if canInfectOther(infected_patient,patient) then
+        if canInfectOther(infected_patient,patient) and math.random(1, 5000) <= self.spread_factor then
           patient.attempted_to_infect = true
           self.attempted_infections = self.attempted_infections + 1
-     --   print("Infections/Attempted :" .. self.total_infections .. "/" .. self.attempted_infections)
-          if self.total_infections == 0 or
-              (self.total_infections/self.attempted_infections) < (self.spread_factor/100) then
-            infect_other(infected_patient,patient)
-          end
+          infect_other(infected_patient,patient)
         end
       end
     end
@@ -707,4 +703,3 @@ end
 function Epidemic:hasNoInfectedPatients()
   return #self.infected_patients == 0
 end
-
