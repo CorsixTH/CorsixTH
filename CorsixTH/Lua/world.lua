@@ -68,7 +68,7 @@ function World:World(app)
   }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
-
+  self.entity_map = EntityMap(self.map)
   -- Time
   self.hours_per_day = 50
   self.hours_per_tick = 1
@@ -2276,7 +2276,7 @@ function World:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
 
-  if old < 80 then
+  if old < 81 then
     --Populate the entity map
     self.entity_map = EntityMap(self.map)
     for _, e in ipairs(self.entities) do
