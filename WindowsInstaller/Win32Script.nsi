@@ -59,7 +59,7 @@ RequestExecutionLevel admin
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\LICENSE"
+!insertmacro MUI_PAGE_LICENSE "..\LICENSE.txt"
 ; Directory page
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateDirectory
 !insertmacro MUI_PAGE_DIRECTORY
@@ -243,8 +243,8 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
   File ..\CorsixTH\changelog.txt
-  File ..\LICENSE
-  File ..\README
+  File ..\LICENSE.txt
+  File ..\README.txt
   
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -302,6 +302,8 @@ Section Uninstall
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
   RMDir /r "$INSTDIR\Levels"
+  RMDir /r "$INSTDIR\mime"
+  RMDir /r "$INSTDIR\socket"
   RMDir /r "$INSTDIR\Src"
   
   Delete "$INSTDIR\*.*"
