@@ -24,13 +24,13 @@ Inherit("original_strings", 1)
 
 ----------------------------------------------------------- Override -----------------------------------------------------------
 adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MEDECIN." -- Fix the famous "Level 5 bug"
-misc.save_failed = "ERREUR : Partie non sauvegardée" -- Much more french
+misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostic aient été essayées. " -- Remove a superfluous word
 room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour un autre diagnostic soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
 room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
 adviser.goals.win = { -- Why are this strings upcase?
-  reputation = "Portez votre réputation à %d pour pouvoir gagner",
-  value = "Portez la valeur de votre hôpital à %d",
+  reputation = "Portez votre réputation à %d pour pouvoir gagner.",
+  value = "Portez la valeur de votre hôpital à %d.",
 }
 adviser.warnings.handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer." -- Add a missing letter
 
@@ -61,8 +61,8 @@ letter = {
   },
   [4] = { -- Level four: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
-    [2] = "Félicitations ! Le Ministère de la Santé est très impressionné par vos capacités à gérer cet hôpital. Vous Etes un exemple de réussite dans ce domaine. Vous voudrez peut-être une situation plus élevée, toutefois. Vous seriez payé %d$, et la décision vous revient.",
-    [3] = "Etes-vous prêt à accepter un poste à l'hôpital de %s ?",
+    [2] = "Félicitations ! Le Ministère de la Santé est très impressionné par vos capacités à gérer cet hôpital. Vous êtes un exemple de réussite dans ce domaine. Vous voudrez peut-être une situation plus élevée, toutefois. Vous seriez payé %d$, et la décision vous revient.",
+    [3] = "Êtes-vous prêt à accepter un poste à l'hôpital de %s ?",
   },
   [5] = { -- Level five: Add missing spaces before punctuation marks and between words
     [1] = "Estimable %s",
@@ -71,13 +71,13 @@ letter = {
   },
   [6] = { -- Level six: Add missing spaces before punctuation marks, fix last string which contained an anglicism
     [1] = "Estimable %s",
-    [2] = "Nous savons que vous Etes heureux de vous occuper de cette délicieuse institution mais nous pensons que vous devez penser à l'avenir. Vous pourriez prétendre au salaire de %d$ si vous acceptez de changer de situation. Pensez-y.",
+    [2] = "Nous savons que vous êtes heureux de vous occuper de cette délicieuse institution mais nous pensons que vous devez penser à l'avenir. Vous pourriez prétendre au salaire de %d$ si vous acceptez de changer de situation. Pensez-y.",
     [3] = "Voulez-vous un poste à l'hôpital de %s ?",
   },
   [7] = { -- Level seven: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
     [2] = "Le Ministère de la Santé souhaite que vous reconsidériez votre décision de rester dans cet hôpital. Nous savons que vous avez un charmant établissement mais il est temps de relever un nouveau défi, avec un salaire attrayant de %d$.",
-    [3] = "Etes-vous prêt à travailler à l'hôpital de %s ?",
+    [3] = "Êtes-vous prêt à travailler à l'hôpital de %s ?",
   },
   [8] = { -- Level height: Add missing spaces before punctuation marks
     [1] = "Estimable %s",
@@ -121,9 +121,9 @@ tooltip.objects = {
   video_game = "Jeu vidéo : l'équipe se relaxe en jouant à Hi-Octane.",
   lamp = "Lampe : vous avez déjà essayé de travailler dans le noir ?",
   door = "Porte : les gens aiment les ouvrir et les fermer.",
-  auto_autopsy = "Autopsie : très utile pour la recherche",
+  auto_autopsy = "Autopsie : très utile pour la recherche.",
   tv = "TV : votre équipe ne doit pas manquer ses programmes favoris.",
-  litter_bomb = "Bombe à détritus: pour saboter les hôpitaux concurrents",
+  litter_bomb = "Bombe à détritus : pour saboter les hôpitaux concurrents.",
   inflator = "Gonfleur : pour soigner l'encéphalantiasis.",
   desk = "Bureau : essentiel pour poser un ordinateur.",
   pool_table = "Billard : pour la relaxation du personnel.",
@@ -131,9 +131,9 @@ tooltip.objects = {
   bookcase = "Etagère : pour les ouvrages de référence.",
   drinks_machine = "Distributeurs : contre la soif et pour ramasser des gros sous.",
   skeleton = "Squelette : utile pour l'enseignement et pour Halloween.",
-  computer = "Ordinateur : une composante essentielle de la recherche",
+  computer = "Ordinateur : une composante essentielle de la recherche.",
   bin = "Poubelle : les patients y jettent leurs détritus.",
-  pharmacy_cabinet = "Pharmacie: c'est là qu'on dispense les médicaments",
+  pharmacy_cabinet = "Pharmacie : c'est là qu'on dispense les médicaments.",
   radiator = "Radiateur : permet de garder l'hôpital au chaud.",
   atom_analyser = "Mélangeur : installé au Département Recherche, cette machine accélère tout le processus d'étude.",
   plant = "Plante : plaît aux patients et purifie l'air.",
@@ -151,7 +151,7 @@ progress_report.too_hot = "Réglez le chauffage : on étouffe."
 adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infermière."
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
 adviser.staff_advice.too_many_doctors = "Il y a trop de médecins. Certains n'ont rien à faire !"
-adviser.earthquake.ended = "Ouh là ! J'ai cru que c'était la fin! C'était du %d sur l'échelle de Richter."
+adviser.earthquake.ended = "Ouh là ! J'ai cru que c'était la fin ! C'était du %d sur l'échelle de Richter."
 adviser.multiplayer.poaching = {
   not_interested = "Ha ! Ils ne veulent pas travailler pour vous, ils sont satisfaits comme ça.",
   already_poached_by_someone = "Eh non ! Quelqu'un s'intéresse déjà à cette personne.",
@@ -195,7 +195,7 @@ fax = {
     },
   vip_visit_result = {
     telegram = "Télégramme !",
-    vip_remarked_name = "Après avoir visité votre hôpital, %s a dit :",
+    vip_remarked_name = "Après avoir visité votre hôpital, %s a dit : ",
     remarks = {
       very_bad = {
         [1] = "Quelle déception ! On devrait fermer cet endroit.",
@@ -221,10 +221,10 @@ fax = {
 dynamic_info = {
   patient = {
     actions = {
-      prices_too_high = "C'est trop cher : je rentre chez moi",
-      no_diagnoses_available = "Plus de diagnostic : je rentre chez moi",
+      prices_too_high = "C'est trop cher : je rentre chez moi.",
+      no_diagnoses_available = "Plus de diagnostic : je rentre chez moi.",
       cured = "Guéri !",
-      no_treatment_available = "Pas de traitement : je rentre chez moi",
+      no_treatment_available = "Pas de traitement : je rentre chez moi.",
     },
     diagnosed = "Ausculté : %s",
   } 
@@ -269,148 +269,148 @@ diseases = {
     cause = "Cause : petits bestioles à dents aiguës.",
     cure = "Traitement : un sirop gluant est administré pour empêcher les démangeaisons.",
     name = "Morpionnite",
-    symptoms = "Symptômes: le patient se gratte jusqu'au sang.",
+    symptoms = "Symptômes : le patient se gratte jusqu'au sang.",
   },
   the_squits = {
-    cause = "Cause: avoir mangé de la pizza ramassée derrière la cuisinière.",
-    cure = "Traitement: un mélange gluant de diverses substances synthétiques est administré au patient pour solidifier son, euh, contenu.",
+    cause = "Cause : avoir mangé de la pizza ramassée derrière la cuisinière.",
+    cure = "Traitement : un mélange gluant de diverses substances synthétiques est administré au patient pour solidifier son, euh, contenu.",
     name = "Courante",
-    symptoms = "Symptômes: Hum. Vous voyez le genre.",
+    symptoms = "Symptômes : hum. Vous voyez le genre.",
   },
   spare_ribs = {
-    cause = "Cause: trop de temps passé sur un sol froid.",
-    cure = "Traitement: deux chirurgiens retirent les côtes flottantes et les donnent au patient dans un sac à emporter.",
+    cause = "Cause : trop de temps passé sur un sol froid.",
+    cure = "Traitement : deux chirurgiens retirent les côtes flottantes et les donnent au patient dans un sac à emporter.",
     name = "Excès costal",
-    symptoms = "Symptômes: déplaisante sensation de flottement.",
+    symptoms = "Symptômes : déplaisante sensation de flottement.",
   },
   diag_blood_machine = {
     name = "Diag Sanguimachine",
   },
   king_complex = {
-    cause = "Cause: l'esprit du King s'est emparé de celui du patient et l'a envahi.",
-    cure = "Traitement: un psychiatre explique au patient à quel point tout ceci est ridicule.",
+    cause = "Cause : l'esprit du King s'est emparé de celui du patient et l'a envahi.",
+    cure = "Traitement : un psychiatre explique au patient à quel point tout ceci est ridicule.",
     name = "Syndrome du King",
-    symptoms = "Symptômes: passion pour les chaussures en daim bleu et pour les cheeseburgers.",
+    symptoms = "Symptômes : passion pour les chaussures en daim bleu et pour les cheeseburgers.",
   },
   diag_x_ray = {
     name = "Diag Rayons X",
   },
   pregnancy = {
-    cause = "Cause: pannes de courant en zones urbaines.",
-    cure = "Traitement: le bébé est prélevé en salle d'opération puis soigneusement nettoyé pour faire son entrée dans le monde.",
+    cause = "Cause : pannes de courant en zones urbaines.",
+    cure = "Traitement : le bébé est prélevé en salle d'opération puis soigneusement nettoyé pour faire son entrée dans le monde.",
     name = "Grossesse",
-    symptoms = "Symptômes: gloutonnerie avec hypertrophie du ventre.",
+    symptoms = "Symptômes : gloutonnerie avec hypertrophie du ventre.",
   },
   fake_blood = {
-    cause = "Cause: avoir été victime d'une très mauvaise plaisanterie.",
-    cure = "Traitement: seule une cure psychiatrique peut calmer le patient.",
+    cause = "Cause : avoir été victime d'une très mauvaise plaisanterie.",
+    cure = "Traitement : seule une cure psychiatrique peut calmer le patient.",
     name = "Sang factice",
-    symptoms = "Symptômes: le patient voit son sang s'évaporer.",
+    symptoms = "Symptômes : le patient voit son sang s'évaporer.",
   },
   diag_psych = {
     name = "Diag Psychiatre",
   },
   invisibility = {
-    cause = "Cause: morsure par une fourmi radioactive (et invisible).",
-    cure = "Traitement: il suffit de faire boire au patient un liquide coloré dispensé à la pharmacie pour le rendre pleinement observable.",
+    cause = "Cause : morsure par une fourmi radioactive (et invisible).",
+    cure = "Traitement : il suffit de faire boire au patient un liquide coloré dispensé à la pharmacie pour le rendre pleinement observable.",
     name = "Invisibilité",
-    symptoms = "Symptômes: le patient ne souffre pas mais a une forte propension à utiliser son état pour faire des farces à son entourage.",
+    symptoms = "Symptômes : le patient ne souffre pas mais a une forte propension à utiliser son état pour faire des farces à son entourage.",
   },
   golf_stones = {
-    cause = "Cause: exposition au gaz empoisonné contenu dans les balles de golf.",
-    cure = "Traitement: résection des surplus par une équipe de deux chirurgiens.",
+    cause = "Cause : exposition au gaz empoisonné contenu dans les balles de golf.",
+    cure = "Traitement : résection des surplus par une équipe de deux chirurgiens.",
     name = "Pierres de golf",
-    symptoms = "Symptômes: formation nodules excédentaires.",
+    symptoms = "Symptômes : formation nodules excédentaires.",
   },
   diag_general_diag = {
     name = "Diag Généraliste",
   },
   infectious_laughter = {
-    cause = "Cause: exposition à un comique de situation.",
-    cure = "Traitement: un psychiatre doit faire comprendre au patient à quel point son état est sérieux.",
+    cause = "Cause : exposition à un comique de situation.",
+    cure = "Traitement : un psychiatre doit faire comprendre au patient à quel point son état est sérieux.",
     name = "Fou rire",
-    symptoms = "Symptômes: gloussement irrépressible et répétition compulsive d'accroches même pas drôles.",
+    symptoms = "Symptômes : gloussement irrépressible et répétition compulsive d'accroches même pas drôles.",
   },
   general_practice = {
     name = "Généraliste",
   },
   baldness = {
-    cause = "Cause: avoir raconté trop de mensonges pour se rendre intéressant.",
-    cure = "Traitement: pose très douloureuse de cheveux à l'aide d'un moumouteur.",
+    cause = "Cause : avoir raconté trop de mensonges pour se rendre intéressant.",
+    cure = "Traitement : pose très douloureuse de cheveux à l'aide d'un moumouteur.",
     name = "Calvitie",
-    symptoms = "Symptômes: tête en boule de billard et gros complexe.",
+    symptoms = "Symptômes : tête en boule de billard et gros complexe.",
   },
   heaped_piles = {
-    cause = "Cause: s'être assis sur un jet de jacuzzi.",
-    cure = "Traitement: une potion agréable bien que puissamment acide dissout les rectoïdes de l'intérieur.",
+    cause = "Cause : s'être assis sur un jet de jacuzzi.",
+    cure = "Traitement : une potion agréable bien que puissamment acide dissout les rectoïdes de l'intérieur.",
     name = "Rectoïdes",
-    symptoms = "Symptômes: le patient a l'impression de s'asseoir sur un sac de billes.",
+    symptoms = "Symptômes : le patient a l'impression de s'asseoir sur un sac de billes.",
   },
   unexpected_swelling = {
-    cause = "Cause: n'importe quoi d'inattendu.",
-    cure = "Traitement: le dégonflement est obtenu par une délicate opération pratiquée par deux chirurgiens.",
+    cause = "Cause : n'importe quoi d'inattendu.",
+    cure = "Traitement : le dégonflement est obtenu par une délicate opération pratiquée par deux chirurgiens.",
     name = "Bouffissure",
-    symptoms = "Symptômes: bouffissure généralisée.",
+    symptoms = "Symptômes : bouffissure généralisée.",
   },
   jellyitis = {
-    cause = "Cause: abus de produits riches en gélifiant et trop d'exercice.",
-    cure = "Traitement: le patient est immergé dans un dégélifiant.",
+    cause = "Cause : abus de produits riches en gélifiant et trop d'exercice.",
+    cure = "Traitement : le patient est immergé dans un dégélifiant.",
     name = "Gélatine",
-    symptoms = "Symptômes: grande mollesse et tendance à l'écroulement.",
+    symptoms = "Symptômes : grande mollesse et tendance à l'écroulement.",
   },
   hairyitis = {
-    cause = "Cause: exposition prolongée au clair de lune.",
-    cure = "Traitement: on fait disparaître les poils avec un électrolyseur et les pores sont scellés.",
+    cause = "Cause : exposition prolongée au clair de lune.",
+    cure = "Traitement : on fait disparaître les poils avec un électrolyseur et les pores sont scellés.",
     name = "Pilose",
-    symptoms = "Symptômes: le patient développe un odorat accru.",
+    symptoms = "Symptômes : le patient développe un odorat accru.",
   },
   alien_dna = {
-    cause = "Cause: agrippeurs faciaux munis de sang extraterrestre intelligent.",
-    cure = "Traitement: l'ADN est retiré par un correcteur pour être nettoyé puis restitué rapidement.",
+    cause = "Cause : agrippeurs faciaux munis de sang extraterrestre intelligent.",
+    cure = "Traitement : l'ADN est retiré par un correcteur pour être nettoyé puis restitué rapidement.",
     name = "ADN Alien",
-    symptoms = "Symptômes: le patient se métamorphose progressivement en sale machin d'outre-espace et veut tout détruire.",
+    symptoms = "Symptômes : le patient se métamorphose progressivement en sale machin d'outre-espace et veut tout détruire.",
   },
   bloaty_head = {
-    cause = "Cause: avoir reniflé du fromage et bu de l'eau de pluie.",
-    cure = "Traitement: la tête est éclatée puis regonflée à la bonne dimension à l'aide d'une astucieuse machine.",
+    cause = "Cause : avoir reniflé du fromage et bu de l'eau de pluie.",
+    cure = "Traitement : la tête est éclatée puis regonflée à la bonne dimension à l'aide d'une astucieuse machine.",
     name = "Encéphalantiasis",
-    symptoms = "Symptômes: affreux maux de tête.",
+    symptoms = "Symptômes : affreux maux de tête.",
   },
   gastric_ejections = {
-    cause = "Cause: nourriture mexicaine ou indienne très épicée.",
-    cure = "Traitement: administration par voie orale d'une solution spéciale pour endiguer les rejets.",
+    cause = "Cause : nourriture mexicaine ou indienne très épicée.",
+    cure = "Traitement : administration par voie orale d'une solution spéciale pour endiguer les rejets.",
     name = "Ejections gastriques",
-    symptoms = "Symptômes: le patient rejette par accès des bribes de nourriture mal digérée.",
+    symptoms = "Symptômes : le patient rejette par accès des bribes de nourriture mal digérée.",
   },
   uncommon_cold = {
-    cause = "Cause: divers trucmuches volant dans l'air",
-    cure = "Traitement: absorption d'une grande rasade d'un sirop spécial élaboré à la pharmacie.",
+    cause = "Cause : divers trucmuches volant dans l'air",
+    cure = "Traitement : absorption d'une grande rasade d'un sirop spécial élaboré à la pharmacie.",
     name = "Catarhume",
-    symptoms = "Symptômes: nez qui coule, éternuements, poumons décolorés.",
+    symptoms = "Symptômes : nez qui coule, éternuements, poumons décolorés.",
   },
   corrugated_ankles = {
-    cause = "Cause: avoir roulé trop vite sur des ralentisseurs.",
-    cure = "Traitement: le patient doit absorber un mélange d'herbes et d'épices légèrement toxique dont l'effet redressera illico les chevilles.",
+    cause = "Cause : avoir roulé trop vite sur des ralentisseurs.",
+    cure = "Traitement : le patient doit absorber un mélange d'herbes et d'épices légèrement toxique dont l'effet redressera illico les chevilles.",
     name = "Chevilles ondulées",
-    symptoms = "Symptômes: les chaussures ne s'ajustent plus.",
+    symptoms = "Symptômes : les chaussures ne s'ajustent plus.",
   },
   sleeping_illness = {
-    cause = "Cause: hypertrophie de la glande palatale de Morphée.",
-    cure = "Traitement: une infermière administre une forte dose d'un puissant stimulant.",
+    cause = "Cause : hypertrophie de la glande palatale de Morphée.",
+    cure = "Traitement : une infermière administre une forte dose d'un puissant stimulant.",
     name = "Roupillance",
-    symptoms = "Symptômes: tendance irrépressible à tomber de sommeil.",
+    symptoms = "Symptômes : tendance irrépressible à tomber de sommeil.",
   },
   sweaty_palms = {
-    cause = "Cause: terreur des entretiens d'embauche.",
-    cure = "Traitement: un psychiatre détend le patient en lui racontant celle du fou qui repeint son plafond.",
+    cause = "Cause : terreur des entretiens d'embauche.",
+    cure = "Traitement : un psychiatre détend le patient en lui racontant celle du fou qui repeint son plafond.",
     name = "Mains moites",
-    symptoms = "Symptômes: serrer la main du patient revient à presser une éponge détrempée.",
+    symptoms = "Symptômes : serrer la main du patient revient à presser une éponge détrempée.",
   },
   serious_radiation = {
-    cause = "Cause: avoir pris du plutonium pour des bonbons.",
-    cure = "Traitement: le patient est passé à la douche de décontamination et consciencieusement récuré.",
+    cause = "Cause : avoir pris du plutonium pour des bonbons.",
+    cure = "Traitement : le patient est passé à la douche de décontamination et consciencieusement récuré.",
     name = "Radionite",
-    symptoms = "Symptômes: le patient ne se sent vraiment, vraiment pas bien.",
+    symptoms = "Symptômes : le patient ne se sent vraiment, vraiment pas bien.",
   },
   diag_cardiogram = {
     name = "Diag Cardio",
@@ -419,80 +419,80 @@ diseases = {
     name = "Diag Scanner",
   },
   gut_rot = {
-    cause = "Cause: la Bonne Vieille Bibine de la Mère Sam.",
-    cure = "Traitement: une infermière doit administrer diverses substances chimiques pour tenter de colmater le tout.",
+    cause = "Cause : la Bonne Vieille Bibine de la Mère Sam.",
+    cure = "Traitement : une infermière doit administrer diverses substances chimiques pour tenter de colmater le tout.",
     name = "Tripurulente",
-    symptoms = "Symptômes: aucun microbe mais plus de paroi intestinale non plus.",
+    symptoms = "Symptômes : aucun microbe mais plus de paroi intestinale non plus.",
   },
   iron_lungs = {
-    cause = "Cause: pollution atmosphérique combinée aux remugles de kébab.",
-    cure = "Traitement: deux chirurgiens enlèvent le blindage en salle d'opération.",
+    cause = "Cause : pollution atmosphérique combinée aux remugles de kébab.",
+    cure = "Traitement : deux chirurgiens enlèvent le blindage en salle d'opération.",
     name = "Poumons de fer",
-    symptoms = "Symptômes: envie de respirer du feu et de hurler sous l'eau.",
+    symptoms = "Symptômes : envie de respirer du feu et de hurler sous l'eau.",
   },
   broken_wind = {
-    cause = "Cause: utilisation d'un appareil de musculation juste après un repas.",
-    cure = "Traitement: une mixture d'eau lourde est administrée à la pharmacie.",
+    cause = "Cause : utilisation d'un appareil de musculation juste après un repas.",
+    cure = "Traitement : une mixture d'eau lourde est administrée à la pharmacie.",
     name = "Pétomanie",
-    symptoms = "Symptômes: pollution de l'air des personnes situées derrière le patient.",
+    symptoms = "Symptômes : pollution de l'air des personnes situées derrière le patient.",
   },
   kidney_beans = {
-    cause = "Cause: avoir croqué les glaçons de son cocktail.",
-    cure = "Traitement: deux chirurgiens extraient les cristaux sans endommager le rein.",
+    cause = "Cause : avoir croqué les glaçons de son cocktail.",
+    cure = "Traitement : deux chirurgiens extraient les cristaux sans endommager le rein.",
     name = "Cristaux rénaux",
-    symptoms = "Symptômes: douleur et fréquentes visites aux toilettes.",
+    symptoms = "Symptômes : douleur et fréquentes visites aux toilettes.",
   },
   transparency = {
-    cause = "Cause: avoir léché le yaourt adhérent au couvercle à l'ouverture d'un pot.",
-    cure = "Traitement: administration d'une potion fraîche et colorée préparée à la pharmacie.",
+    cause = "Cause : avoir léché le yaourt adhérent au couvercle à l'ouverture d'un pot.",
+    cure = "Traitement : administration d'une potion fraîche et colorée préparée à la pharmacie.",
     name = "Transparence",
-    symptoms = "Symptômes: la chair est horrible et transparente.",
+    symptoms = "Symptômes : la chair est horrible et transparente.",
   },
   broken_heart = {
-    cause = "Cause: avoir croisé quelqu'un de plus riche, plus jeune et plus beau.",
-    cure = "Traitement: deux chirurgiens ouvrent la poitrine et réparent doucement le coeur en retenant leur souffle.",
+    cause = "Cause : avoir croisé quelqu'un de plus riche, plus jeune et plus beau.",
+    cure = "Traitement : deux chirurgiens ouvrent la poitrine et réparent doucement le coeur en retenant leur souffle.",
     name = "Coeur brisé",
-    symptoms = "Symptômes: pleurnicheries et crampes causées par des heures à regarder de vieilles photos de vacances.",
+    symptoms = "Symptômes : pleurnicheries et crampes causées par des heures à regarder de vieilles photos de vacances.",
   },
   slack_tongue = {
-    cause = "Cause: trop de discussion à propos des romans-feuilletons.",
-    cure = "Traitement: la langue est placée dans un taille-langue puis elle est coupée rapidement, efficacement et douloureusement.",
+    cause = "Cause : trop de discussion à propos des romans-feuilletons.",
+    cure = "Traitement : la langue est placée dans un taille-langue puis elle est coupée rapidement, efficacement et douloureusement.",
     name = "Hyperlangue",
-    symptoms = "Symptômes: la langue s'étire jusqu'à cinq fois sa longueur normale.",
+    symptoms = "Symptômes : la langue s'étire jusqu'à cinq fois sa longueur normale.",
   },
   tv_personalities = {
-    cause = "Cause: avoir abusé des programmes télévisés.",
-    cure = "Traitement: un psychiatre doit convaincre le patient d'échanger sa télévision contre une radio.",
+    cause = "Cause : avoir abusé des programmes télévisés.",
+    cure = "Traitement : un psychiatre doit convaincre le patient d'échanger sa télévision contre une radio.",
     name = "Téléincarnation",
-    symptoms = "Symptômes: le patient a l'illusion d'être capable de présenter une émission de cuisine.",
+    symptoms = "Symptômes : le patient a l'illusion d'être capable de présenter une émission de cuisine.",
   },
   ruptured_nodules = {
-    cause = "Cause: saut à l'élastique par temps froid.",
-    cure = "Traitement: deux chirurgiens doivent réajuster les parties concernées d'une main sûre.",
+    cause = "Cause : saut à l'élastique par temps froid.",
+    cure = "Traitement : deux chirurgiens doivent réajuster les parties concernées d'une main sûre.",
     name = "Casse-boules",
-    symptoms = "Symptômes: impossibilité de s'asseoir confortablement.",
+    symptoms = "Symptômes : impossibilité de s'asseoir confortablement.",
   },
   fractured_bones = {
-    cause = "Cause: chute spectaculaire sur du béton.",
-    cure = "Traitement: un plâtre est posé puis ôté à l'aide d'un équipement au laser.",
+    cause = "Cause : chute spectaculaire sur du béton.",
+    cure = "Traitement : un plâtre est posé puis ôté à l'aide d'un équipement au laser.",
     name = "Fractures",
-    symptoms = "Symptômes: affreux craquement et incapacité à utiliser les membres touchés.",
+    symptoms = "Symptômes : affreux craquement et incapacité à utiliser les membres touchés.",
   },
   chronic_nosehair = {
-    cause = "Cause: avoir reniflé avec dédain à la vue de plus malheureux que soi.",
-    cure = "Traitement: une épouvantable potion dépilatoire est administrée par une infermière à la pharmacie.",
+    cause = "Cause : avoir reniflé avec dédain à la vue de plus malheureux que soi.",
+    cure = "Traitement : une épouvantable potion dépilatoire est administrée par une infermière à la pharmacie.",
     name = "Poilonisme",
-    symptoms = "Symptômes: poils au nez si drus qu'un oiseau pourrait y nicher.",
+    symptoms = "Symptômes : poils au nez si drus qu'un oiseau pourrait y nicher.",
   },
 }
 
 confirmation = {
   quit = "Vous avez choisi Quitter. Voulez-vous vraiment quitter le jeu ?",
-  return_to_blueprint = "Etes-vous sûr de vouloir revenir au mode Tracé ?",
-  restart_level = "Etes-vous sûr de vouloir relancer ce niveau ?",
-  overwrite_save = "Il y a déjà une partie sauvegardée ici. Etes-vous sûr de vouloir l'écraser ?",
+  return_to_blueprint = "Êtes-vous sûr de vouloir revenir au mode Tracé ?",
+  restart_level = "Êtes-vous sûr de vouloir relancer ce niveau ?",
+  overwrite_save = "Il y a déjà une partie sauvegardée ici. Êtes-vous sûr de vouloir l'écraser ?",
   delete_room = "Voulez-vous vraiment détruire cette salle ?",
-  sack_staff = "Etes-vous sûr de vouloir licencier ?",
+  sack_staff = "Êtes-vous sûr de vouloir licencier ?",
   replace_machine = "Voulez-vous vraiment remplacer cette machine ?",
 }
 
@@ -523,7 +523,7 @@ date_format = {
 
 -- Objects
 object.litter = "Déchet"
-tooltip.objects.litter = "Déchet : Laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
+tooltip.objects.litter = "Déchet : laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
 
 -- Adviser
 adviser = {
@@ -776,7 +776,7 @@ handyman_window = {
 }
 
 tooltip.handyman_window = {
-  parcel_select = "Les parcelles où les agents de maintenance peuvent travailler : cliquez pour changer le paramètre",
+  parcel_select = "Les parcelles où les agents de maintenance peuvent travailler : cliquez pour changer le paramètre.",
 }
 
 -- Debug patient window
@@ -787,10 +787,10 @@ debug_patient_window = {
 -- Cheats window
 cheats_window = {
   caption = "Triches",
-  warning = "Attention : Vous n'aurez aucun point de bonus à la fin du niveau si vous trichez !",
+  warning = "Attention : vous n'aurez aucun point de bonus à la fin du niveau si vous trichez !",
   cheated = {
-    no = "Triches utilisées : Non",
-    yes = "Triches utilisées : Oui",
+    no = "Triches utilisées : non",
+    yes = "Triches utilisées : oui",
   },
   cheats = {
     money = "Plus d'argent",
@@ -810,7 +810,7 @@ cheats_window = {
 tooltip.cheats_window = {
   close = "Fermer le dialogue de triches",
   cheats = {
-    money = "Ajoute 10.000 à votre solde bancaire.",
+    money = "Ajoute $10.000 à votre solde bancaire.",
     all_research = "Termine toutes les recherches.",
     emergency = "Crée une urgence.",
     vip = "Crée un VIP.",
@@ -835,7 +835,7 @@ totd_window = {
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (corsix-th sur freenode).",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (#corsix-th sur freenode).",
     "Si vous avez trouvé un bug, SVP, reportez-le sur notre gestionnaire de bugs : th-issues.corsix.org.",
     "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
     "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
@@ -869,7 +869,7 @@ tooltip.lua_console = {
 
 -- Confirmation dialog
 confirmation = {
-  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Etes-vous sûr de vouloir faire cela ?",
+  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
 }
 
@@ -882,7 +882,7 @@ information = {
   cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
   level_lost = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
-    "Voilà pourquoi vous avez perdu :",
+    "Voilà pourquoi vous avez perdu : ",
     reputation = "Votre réputation est tombée en dessous de %d.",
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
