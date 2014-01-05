@@ -80,10 +80,10 @@ function Machine:machineUsed(room)
     return
   end
   self:updateDynamicInfo()
-  local threshold =  self.strength - self.times_used
+  local threshold = self.strength - self.times_used
   -- ! Too late it is about to explode
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-   if threshold < 1 then
+  if threshold < 1 then
     self.hospital:removeHandymanTask(taskIndex, "repairing")
     room:crashRoom()
     self:setCrashedAnimation()
