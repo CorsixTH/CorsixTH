@@ -108,14 +108,14 @@ ELSE(SDL_FOUND)
 ENDIF(SDL_FOUND)
 
 # Find Lua
-FIND_PACKAGE(Lua51 REQUIRED)
-IF(LUA51_FOUND)
+FIND_PACKAGE(Lua REQUIRED)
+IF(Lua_FOUND)
   TARGET_LINK_LIBRARIES(CorsixTH ${LUA_LIBRARY})
   INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-  message("  Lua 5.1 found")
-ELSE(LUA51_FOUND)
+  message("  ${LUA_INTERPRETER_TYPE} found")
+ELSE(Lua_FOUND)
   message(FATAL_ERROR "Error: Lua library not found, it is required to build")
-ENDIF(LUA51_FOUND)
+ENDIF(Lua_FOUND)
 
 # Find SDL_mixer
 IF(CORSIX_TH_USE_SDL_MIXER)
@@ -216,7 +216,7 @@ IF(APPLE)
     ENDIF()
   ENDIF()
 
-  IF(LUA51_FOUND)
+  IF(LUA_FOUND)
     IF(${LUA_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
   	  install(DIRECTORY ${LUA_LIBRARY} DESTINATION CorsixTH.app/Contents/Frameworks)
     ENDIF()
