@@ -744,7 +744,7 @@ function Room:crashRoom()
   end
   
   local map = self.world.map.th
-  -- TODO: Explosion, animations: 4612, 3280
+  -- TODO: Explosion, animations: 4612, 3280, 302
   
   -- Make every floor tile have soot on them
   for x = self.x, self.x + self.width - 1 do
