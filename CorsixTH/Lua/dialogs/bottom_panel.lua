@@ -571,7 +571,7 @@ function UIBottomPanel:dialogResearch(enable)
   else
     self.ui:playSound("wrong2.wav")
     self:updateButtonStates()
-    self:giveResearchAdvice()  
+    self:giveResearchAdvice()
   end
 end
 
