@@ -158,6 +158,7 @@ THRenderTarget::THRenderTarget()
     m_pFormat = NULL;
     m_pCursor = NULL;
     m_bShouldScaleBitmaps = false;
+    m_bBlueFilterActive = false;
 }
 
 THRenderTarget::~THRenderTarget()
