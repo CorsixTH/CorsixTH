@@ -128,7 +128,7 @@ end
 
 function UIBottomPanel:openJukebox()
   self.ui:addWindow(UIJukebox(self.ui.app))
-end
+end  
 
 function UIBottomPanel:openSave()
   self.ui:addWindow(UISaveGame(self.ui))
@@ -555,6 +555,9 @@ function UIBottomPanel:dialogResearch(enable)
     self:updateButtonStates()
     return
   end
+  if TheApp.using_demo_files then
+    self.ui:addWindow(UIInformation(self.ui, {_S.errors.dialog_missing_graphics}))
+  end
   if self.ui.hospital.research_dep_built then
     if enable then
       self:addDialog("UIResearch")
@@ -581,7 +584,9 @@ function UIBottomPanel:giveResearchAdvice()
     end
   end
   local msg = can_build_research and _A.warnings.research_screen_open_1 or _A.warnings.research_screen_open_2
-  self.ui.adviser:say(msg)
+  if not TheApp.using_demo_files then
+    self.ui.adviser:say(msg) 
+  end  
 end
 
 function UIBottomPanel:dialogStatus(enable)
