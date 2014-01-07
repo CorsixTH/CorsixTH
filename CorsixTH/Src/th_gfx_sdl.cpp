@@ -238,7 +238,7 @@ bool THRenderTarget::endFrame()
     if(m_bBlueFilterActive)
     {
         SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(m_pRenderer, 255*0.7f, 255*0.7f, 255*1.0f, 255*0.5f);
+        SDL_SetRenderDrawColor(m_pRenderer, 255*0.2f, 255*0.2f, 255*1.0f, 255*0.5f);
         SDL_RenderFillRect(m_pRenderer, NULL);
     }
 
