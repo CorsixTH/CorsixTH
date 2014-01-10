@@ -199,10 +199,20 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
     m_bShouldScaleBitmaps = false;
     if(0.999 <= fScale && fScale <= 1.001)
+    {
         return true;
+    }
+    else if(eWhatToScale & ~THSI_Bitmaps)
+    {
+        return false;
+    }
+    else
+    {
+        m_bShouldScaleBitmaps = true;
+        m_fBitmapScaleFactor = fScale;
 
-    // TODO: Fix this.
-    return false;
+        return true;
+    }
 }
 
 void THRenderTarget::setCaption(const char* sCaption)
@@ -684,22 +694,23 @@ bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
-    if(m_pTexture == NULL)
-        return;
-
-    const SDL_Rect rcDest = { iX, iY, m_iWidth, m_iHeight };
-
-    pCanvas->draw(m_pTexture, NULL, &rcDest, 0);
+    draw(pCanvas, iX, iY, 0, 0, m_iWidth, m_iHeight);
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
                        int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
+    float fScaleFactor;
     if (m_pTexture == NULL)
         return;
 
+    if(!pCanvas->shouldScaleBitmaps(&fScaleFactor))
+    {
+        fScaleFactor = 1;
+    }
+
     const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth, iHeight };
-    const SDL_Rect rcDest = { iX,    iY,    iWidth, iHeight };
+    const SDL_Rect rcDest = { iX,    iY,    iWidth * fScaleFactor, iHeight * fScaleFactor };
 
     pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);
 }
