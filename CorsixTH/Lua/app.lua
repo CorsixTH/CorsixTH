@@ -47,6 +47,7 @@ function App:App()
     keyup = self.onKeyUp,
     buttonup = self.onMouseUp,
     buttondown = self.onMouseDown,
+    mousewheel = self.onMouseWheel,
     motion = self.onMouseMove,
     active = self.onWindowActive,
     music_over = self.onMusicOver,
@@ -878,6 +879,10 @@ end
 
 function App:onMouseMove(...)
   return self.ui:onMouseMove(...)
+end
+
+function App:onMouseWheel(...)
+  return self.ui:onMouseWheel(...)
 end
 
 function App:onWindowActive(...)

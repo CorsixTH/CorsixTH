@@ -120,8 +120,6 @@ function UI:UI(app, minimal)
   self.screen_offset_x = 0
   self.screen_offset_y = 0
   self.cursor = nil
-  self.cursor_x = 0
-  self.cursor_y = 0
   self.cursor_entity = nil
   self.debug_cursor_entity = nil
   -- through trial and error, this palette seems to give the desired result (white background, black text)
@@ -602,6 +600,10 @@ function UI:onMouseUp(code, x, y)
   return repaint
 end
 
+function UI:onMouseWheel(x, y)
+  Window.onMouseWheel(self, x, y)
+end
+
 function UI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y
 end
@@ -636,9 +638,6 @@ end
 
 function UI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
-  
-  self.cursor_x = x
-  self.cursor_y = y
   
   if self.drag_mouse_move then
     self.drag_mouse_move(x, y)

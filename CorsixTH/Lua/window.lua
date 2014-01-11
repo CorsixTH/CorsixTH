@@ -30,6 +30,10 @@ Window.buttons_down = permanent"Window.buttons_down" {}
 function Window:Window()
   self.x = 0
   self.y = 0
+
+  self.cursor_x = 0
+  self.cursor_y = 0
+
   self.panels = {
   }
   self.buttons = {
@@ -1410,6 +1414,19 @@ function Window:onMouseUp(button, x, y)
   return repaint
 end
 
+function Window:onMouseWheel(x, y)
+  local repaint = false
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if window:onMouseWheel(x, y) then
+        repaint = true
+        break -- Scroll has been handled. No need to look any further.
+      end
+    end
+  end
+  return repaint
+end
+
 local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, size, dim_size)
   if size == dim_size then
     return 0.5
@@ -1485,6 +1502,10 @@ corner of the window.
 ]]
 function Window:onMouseMove(x, y, dx, dy)
   local repaint = false
+
+  self.cursor_x = x
+  self.cursor_y = y
+
   if self.windows then
     for _, window in ipairs(self.windows) do
       if window:onMouseMove(x - window.x, y - window.y, dx, dy) then

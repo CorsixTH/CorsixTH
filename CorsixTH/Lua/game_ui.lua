@@ -464,18 +464,6 @@ function GameUI:onMouseUp(code, x, y)
   if self.app.moviePlayer.playing then
     return UI.onMouseUp(self, code, x, y)
   end
-
-  if code == 4 or code == 5 then
-    -- Mouse wheel
-    local window = self:getWindow(UIFullscreen)
-    if not window or not window:hitTest(x - window.x, y - window.y) then
-      
-      -- Apply momentum to the zoom
-      if math.abs(self.current_momentum.z) < 12 then
-        self.current_momentum.z = self.current_momentum.z + (4.5 - code)*2
-      end
-    end
-  end
   
   local button = self.button_codes[code]
   if button == "right" and not _MAP_EDITOR and highlight_x then
@@ -508,6 +496,25 @@ function GameUI:onMouseUp(code, x, y)
   end
   
   return UI.onMouseUp(self, code, x, y)
+end
+
+function GameUI:onMouseWheel(x, y)
+  local inside_window = false
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if window:hitTest(self.cursor_x - window.x, self.cursor_y - window.y) then
+        inside_window = true
+        break
+      end
+    end
+  end
+  if not inside_window then
+    -- Apply momentum to the zoom
+    if math.abs(self.current_momentum.z) < 12 then
+      self.current_momentum.z = self.current_momentum.z + y
+    end
+  end
+  return UI.onMouseWheel(self, x, y)
 end
 
 function GameUI:setRandomAnnouncementTarget()
