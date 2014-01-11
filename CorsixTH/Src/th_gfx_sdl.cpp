@@ -157,6 +157,7 @@ THRenderTarget::THRenderTarget()
     m_pRenderer = NULL;
     m_pFormat = NULL;
     m_pCursor = NULL;
+    m_pZoomTexture = NULL;
     m_bShouldScaleBitmaps = false;
     m_bBlueFilterActive = false;
 }
@@ -166,6 +167,7 @@ THRenderTarget::~THRenderTarget()
     SDL_FreeFormat(m_pFormat);
     SDL_DestroyRenderer(m_pRenderer);
     SDL_DestroyWindow(m_pWindow);
+    SDL_DestroyTexture(m_pZoomTexture);
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -193,26 +195,62 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     SDL_RenderSetLogicalSize(m_pRenderer, pParams->iWidth, pParams->iHeight);
     m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
 
+    SDL_RendererInfo info;
+    SDL_GetRendererInfo(m_pRenderer, &info);
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
+
+    m_iWidth = pParams->iWidth;
+    m_iHeight = pParams->iHeight;
+
     return true;
 }
 
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
+    _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
     if(0.999 <= fScale && fScale <= 1.001)
     {
         return true;
     }
-    else if(eWhatToScale & ~THSI_Bitmaps)
+    else if(fScale <= 0.000)
     {
         return false;
     }
-    else
+    else if(eWhatToScale == THSI_Bitmaps)
     {
         m_bShouldScaleBitmaps = true;
         m_fBitmapScaleFactor = fScale;
 
         return true;
+    }
+    else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
+    {
+        //Draw everything from now until the next scale to m_pZoomTexture
+        //with the appropriate virtual size, which will be copied scaled to
+        //fit the window.
+        float virtWidth = static_cast<float>(m_iWidth) / fScale;
+        float virtHeight = static_cast<float>(m_iHeight) / fScale;
+
+        m_pZoomTexture = SDL_CreateTexture(m_pRenderer,
+                                           SDL_PIXELFORMAT_ABGR8888,
+                                           SDL_TEXTUREACCESS_TARGET,
+                                           virtWidth,
+                                           virtHeight
+                                          );
+        SDL_RenderSetLogicalSize(m_pRenderer, virtWidth, virtHeight);
+        if(SDL_SetRenderTarget(m_pRenderer, m_pZoomTexture) != 0)
+        {
+            SDL_DestroyTexture(m_pZoomTexture);
+            m_pZoomTexture = NULL;
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
@@ -241,6 +279,8 @@ bool THRenderTarget::startFrame()
 
 bool THRenderTarget::endFrame()
 {
+    _flushZoomBuffer();
+
     // End the frame by adding the cursor and possibly a filter.
     if(m_pCursor)
     {
@@ -348,6 +388,18 @@ bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
     if(pFactor)
         *pFactor = m_fBitmapScaleFactor;
     return true;
+}
+
+void THRenderTarget::_flushZoomBuffer()
+{
+    if(m_pZoomTexture == NULL) { return; }
+
+    SDL_SetRenderTarget(m_pRenderer, NULL);
+    SDL_RenderSetScale(m_pRenderer, 1, 1);
+    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_NONE);
+    SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
+    SDL_DestroyTexture(m_pZoomTexture);
+    m_pZoomTexture = NULL;
 }
 
 //! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.

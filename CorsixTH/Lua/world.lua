@@ -181,6 +181,8 @@ function World:setUI(ui)
   self.ui:addKeyHandler("4", self, self.setSpeed, "Max speed")
   self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
   
+  self.ui:addKeyHandler("=", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler({"shift", "="}, self, self.adjustZoom, 5)
   self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
   self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
   self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
