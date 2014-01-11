@@ -759,7 +759,7 @@ void THMovie::readStreams()
 
     while(!m_fAborting)
     {
-        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_pMoviePictureBuffer->empty())
+        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_pMoviePictureBuffer->getNextPts() == 0)
         {
             break;
         }

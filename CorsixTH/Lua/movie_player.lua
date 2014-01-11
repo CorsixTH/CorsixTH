@@ -213,7 +213,6 @@ function MoviePlayer:deallocatePictureBuffer()
 end
 
 function MoviePlayer:onMovieOver()
-  self.moviePlayer:unload()
   self.wait_for_over = false
   if not self.wait_for_stop then
     self:_destroyMovie()
@@ -231,6 +230,7 @@ function MoviePlayer:stop()
 end
 
 function MoviePlayer:_destroyMovie()
+  self.moviePlayer:unload()
   if self.opengl_mode_index then
     self.app.modes[self.opengl_mode_index] = "opengl"
   end
