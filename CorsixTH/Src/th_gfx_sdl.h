@@ -205,13 +205,19 @@ public: // Internal (this rendering engine only) API
 protected:
     SDL_Window *m_pWindow;
     SDL_Renderer *m_pRenderer;
+    SDL_Texture *m_pZoomTexture;
     SDL_PixelFormat *m_pFormat;
     bool m_bBlueFilterActive;
     THCursor* m_pCursor;
     float m_fBitmapScaleFactor;
+    int m_iWidth;
+    int m_iHeight;
     int m_iCursorX;
     int m_iCursorY;
     bool m_bShouldScaleBitmaps;
+    bool m_bSupportsTargetTextures;
+
+    void _flushZoomBuffer();
 };
 
 //! 32bpp ARGB colour. See #THPalette::packARGB
