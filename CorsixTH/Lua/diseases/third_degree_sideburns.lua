@@ -28,6 +28,7 @@ disease.symptoms = _S.diseases.third_degree_sideburns.symptoms
 disease.cure = _S.diseases.third_degree_sideburns.cure
 disease.cure_price = 550
 disease.emergency_sound = "emerg030.wav"
+disease.emergency_number = 13
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

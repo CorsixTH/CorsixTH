@@ -9,9 +9,15 @@ editing a text file, which can be quite error prone the level creator can use
 this tool to set all available variables used in CorsixTH and then save it
 as a .level file.
 
-The tool is written in Java, and a project for Eclipse is supplied here, though
-it should work just as well to use any other IDE or command line tool to
-compile it.
+The tool is written in Java. The supplied project for Eclipse can be used
+to compile. An alternative is to issue the following commands while in this
+folder:
+
+Compile:
+javac -d bin -sourcepath src src/com/corsixth/leveledit/Main.java
+
+Run:
+java -cp bin com.corsixth.leveledit.Main
 
 ------------------------------------------------------------------------------
 -- Contact Details

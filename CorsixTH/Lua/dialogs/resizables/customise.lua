@@ -81,7 +81,7 @@ function UICustomise:UICustomise(ui, mode)
   self.movies_panel =
     self:addBevelPanel(160, 40, 135, 20, col_bg):setLabel(app.config.movies and _S.customise_window.option_on or _S.customise_window.option_off)
   self.movies_button = self.movies_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonMoviesGlobal)
-    :setToggleState(app.config.movies):setTooltip(_S.tooltip.customise_window.movies_button)
+    :setToggleState(app.config.movies):setTooltip(_S.tooltip.customise_window.movies)
   
   -- Intro movie
   self:addBevelPanel(20, 65, 135, 20, col_shadow, col_bg, col_bg)
@@ -89,7 +89,7 @@ function UICustomise:UICustomise(ui, mode)
   self.intro_panel =
     self:addBevelPanel(160, 65, 135, 20, col_bg):setLabel(app.config.play_intro and _S.customise_window.option_on or _S.customise_window.option_off)
   self.intro_button = self.intro_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonIntro)
-    :setToggleState(app.config.play_intro):setTooltip(_S.tooltip.customise_window.intro_button)  
+    :setToggleState(app.config.play_intro):setTooltip(_S.tooltip.customise_window.intro)  
   
   -- Allow user actions when paused
   self:addBevelPanel(20, 90, 135, 20, col_shadow, col_bg, col_bg)
@@ -97,7 +97,7 @@ function UICustomise:UICustomise(ui, mode)
   self.paused_panel =
     self:addBevelPanel(160, 90, 135, 20, col_bg):setLabel(app.config.allow_user_actions_while_paused and _S.customise_window.option_on or _S.customise_window.option_off)
   self.paused_button = self.paused_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonPaused)
-    :setToggleState(app.config.allow_user_actions_while_paused):setTooltip(_S.tooltip.customise_window.paused_button)   
+    :setToggleState(app.config.allow_user_actions_while_paused):setTooltip(_S.tooltip.customise_window.paused)   
   
   -- Volume down is opening casebook
   self:addBevelPanel(20, 115, 135, 20, col_shadow, col_bg, col_bg)
@@ -105,7 +105,7 @@ function UICustomise:UICustomise(ui, mode)
   self.volume_panel =
     self:addBevelPanel(160, 115, 135, 20, col_bg):setLabel(app.config.volume_opens_casebook and _S.customise_window.option_on or _S.customise_window.option_off)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonVolume)
-    :setToggleState(app.config.volume_opens_casebook):setTooltip(_S.tooltip.customise_window.volume_button)    
+    :setToggleState(app.config.volume_opens_casebook):setTooltip(_S.tooltip.customise_window.volume)    
   
   -- Alien DNA from emergencies only/must stand/can knock on doors
   self:addBevelPanel(20, 140, 135, 20, col_shadow, col_bg, col_bg)
@@ -113,7 +113,7 @@ function UICustomise:UICustomise(ui, mode)
   self.aliens_panel =
     self:addBevelPanel(160, 140, 135, 20, col_bg):setLabel(app.config.alien_dna_only_by_emergency and _S.customise_window.option_on or _S.customise_window.option_off)
   self.aliens_button = self.aliens_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAliens)
-    :setToggleState(app.config.alien_dna_only_by_emergency):setTooltip(_S.tooltip.customise_window.aliens_button) 
+    :setToggleState(app.config.alien_dna_only_by_emergency):setTooltip(_S.tooltip.customise_window.aliens) 
 
   -- Allow female patients with Fractured Bones
   self:addBevelPanel(20, 165, 135, 20, col_shadow, col_bg, col_bg)
@@ -121,7 +121,7 @@ function UICustomise:UICustomise(ui, mode)
   self.fractured_bones_panel =
     self:addBevelPanel(160, 165, 135, 20, col_bg):setLabel(app.config.disable_fractured_bones_females and _S.customise_window.option_on or _S.customise_window.option_off)
   self.fractured_bones_button = self.fractured_bones_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFractured_bones)
-    :setToggleState(app.config.disable_fractured_bones_females):setTooltip(_S.tooltip.customise_window.fractured_bones_button)   
+    :setToggleState(app.config.disable_fractured_bones_females):setTooltip(_S.tooltip.customise_window.fractured_bones)   
 
   -- Allow average contents when building rooms
   self:addBevelPanel(20, 190, 135, 20, col_shadow, col_bg, col_bg)
@@ -129,7 +129,7 @@ function UICustomise:UICustomise(ui, mode)
   self.average_contents_panel =
     self:addBevelPanel(160, 190, 135, 20, col_bg):setLabel(app.config.enable_avg_contents and _S.customise_window.option_on or _S.customise_window.option_off)
   self.average_contents_button = self.average_contents_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonAverage_contents)
-    :setToggleState(app.config.enable_avg_contents):setTooltip(_S.tooltip.customise_window.average_contents_button)     
+    :setToggleState(app.config.enable_avg_contents):setTooltip(_S.tooltip.customise_window.average_contents)     
   
   -- "Back" button
   self:addBevelPanel(20, 220, 280, 40, col_bg):setLabel(_S.customise_window.back)

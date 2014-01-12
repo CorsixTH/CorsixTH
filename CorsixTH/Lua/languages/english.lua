@@ -47,6 +47,13 @@ confirmation.restart_level = "Are you sure you want to restart the level?"
 -- TODO adviser.multiplayer.objective_completed
 -- TODO adviser.multiplayer.objective_failed
 
+-- Replace Billy Savile
+-- this is only relevant to the English game so does not need adding
+-- in other language files
+vip_names = {
+ [6] = "Sir Lancelot Spratt",
+}
+
 -- A small error in the introduction text of level 2
 introduction_texts.level2[6] = "Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
 -- An override for the squits becoming the the squits see issue 1646
@@ -75,9 +82,9 @@ menu_file = {
 }
 
 menu_options = {
-  sound = "  (ALT+S)  SOUND   ",
-  announcements = "  (ALT+A)  ANNOUNCEMENTS   ",
-  music = "  (ALT+M)  MUSIC   ",
+  sound = "  (ALT+S) SOUND   ",
+  announcements = "  (ALT+A) ANNOUNCEMENTS   ",
+  music = "  (ALT+M) MUSIC   ",
   jukebox = "  (J) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
@@ -168,7 +175,7 @@ adviser = {
     falling_4 = "This is an Hospital, not a Theme Park!",
     falling_5 = "This is not the place for knocking people over, they're ill you know!",
     falling_6 = "This is not a bowling alley, sick people should not be treated like that!",
-    research_screen_open_1 = "You have to build a Research Department before you can access the Reasearch screen.",
+    research_screen_open_1 = "You have to build a Research Department before you can access the Research screen.",
     research_screen_open_2 = "Research is disabled for the current level.",
     researcher_needs_desk_1 = "A Researcher needs to have a desk to work at.",
     researcher_needs_desk_2 = "Your Researcher is pleased that you have allowed him to have a break. If you were intending to have more staff researching, then you need to provide them each with a desk to work from.",
@@ -178,14 +185,8 @@ adviser = {
   },
   cheats = {  
     th_cheat = "Congratulations, you have unlocked cheats!",
-    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
-    crazy_off_cheat = "Phew... the doctors regained their sanity.",
     roujin_on_cheat = "Roujin's challenge activated! Good luck...",
     roujin_off_cheat = "Roujin's challenge deactivated.",
-    hairyitis_cheat = "Hairyitis cheat activated!",
-    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
   },
 }
 
@@ -249,6 +250,7 @@ tooltip.main_menu = {
   load_game = "Load a saved game",
   options = "Tweak various settings",
   exit = "No, no, please don't leave!",
+  quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
 
 load_game_window = {
@@ -346,19 +348,12 @@ customise_window = {
 
 tooltip.customise_window = {
   movies = "Global movie control, this will allow you to disable all the movies",  
-  movies_button = "Click to turn on or off all the game movies",
   intro = "Turn off or on the intro movie, global movies will need to be on if you want the intro movie to play each time you load CorsixTH",
-  intro_button = "Click to turn on or off",
   paused = "In Theme Hospital the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
-  paused_button = "Allow user actions while game is paused",
-  volume = "If the volume down button is opening the casebook as well, use this to change the hotkey to Shift +C",
-  volume_button = "Click to switch hotkey",
+  volume = "If the volume down button is opening the casebook as well, turn this on to change the hotkey for the casebook to Shift + C",
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA so that they can only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
-  aliens_button = "Click to turn this option on or off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no patients with Fractured Bones that are female. To allow female patients with Fractured Bones to visit your hospital, turn this off",
-  fractured_bones_button = "Click to turn this option on or off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",  
-  average_contents_button =  "Click to turn this option on or off", 
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -450,6 +445,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
@@ -583,6 +579,18 @@ tooltip.calls_dispatcher = {
   close = "Close the calls dispatcher dialog",
 }
 
+update_window = {
+  caption = "Update Available!",
+  new_version = "New Version:",
+  current_version = "Current Version:",
+  download = "Go to download page",
+  ignore = "Skip and go to main menu",
+}
+
+tooltip.update_window = {
+  download = "Go to the download page for the very latest version of CorsixTH",
+  ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
+}
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------

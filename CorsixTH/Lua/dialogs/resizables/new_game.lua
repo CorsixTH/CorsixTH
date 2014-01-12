@@ -78,13 +78,20 @@ function UINewGame:UINewGame(ui)
 
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.start_tutorial = false
-  self.difficulty = 2
+  self.difficulty = 1
   
-  self.available_difficulties = {
-    {text = _S.new_game_window.easy,   tooltip = _S.tooltip.new_game_window.easy,   param = "easy"},
+  
+  local avail_diff = {
     {text = _S.new_game_window.medium, tooltip = _S.tooltip.new_game_window.medium, param = "full"},
-    {text = _S.new_game_window.hard,   tooltip = _S.tooltip.new_game_window.hard,   param = "hard"},
   }
+  if TheApp.fs:getFilePath("Levels", "Easy01.SAM") then
+    table.insert(avail_diff, 1, {text = _S.new_game_window.easy, tooltip = _S.tooltip.new_game_window.easy, param = "easy"})
+    self.difficulty = 2
+  end
+  if TheApp.fs:getFilePath("Levels", "Hard01.SAM") then
+    avail_diff[#avail_diff + 1] = {text = _S.new_game_window.hard, tooltip = _S.tooltip.new_game_window.hard, param = "hard"}
+  end
+  self.available_difficulties = avail_diff
 
   self.default_button_sound = "selectx.wav"
   -- Window parts definition
@@ -168,7 +175,7 @@ function UINewGame:buttonTutorial(checked, button)
 end
 
 function UINewGame:dropdownDifficulty(activate, button)
-  if activate then
+  if activate and #self.available_difficulties > 1 then
     self.difficulty_dropdown = UIDropdown(self.ui, self, button, self.available_difficulties, self.selectDifficulty)
     self:addWindow(self.difficulty_dropdown)
   else

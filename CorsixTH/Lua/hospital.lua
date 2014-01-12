@@ -81,7 +81,6 @@ function Hospital:Hospital(world, name)
   self.num_explosions = 0
   self.announce_vip = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
-  self.visitingVIP = ""
   self.percentage_cured = 0
   self.percentage_killed = 0
   self.msg_counter = 0
@@ -202,7 +201,7 @@ function Hospital:Hospital(world, name)
   self.research = ResearchDepartment(self)
 end
 
--- Seasoned players will know these things, but it does not arm things to be reminded if there is no staff room or toilet!
+-- Seasoned players will know these things, but it does not harm to be reminded if there is no staff room or toilet!
 function Hospital:noStaffroom_msg()
   local staffroom_msg = {
     (_A.warnings.build_staffroom),
@@ -241,26 +240,30 @@ function Hospital:praiseBench()
   end  
 end
 
--- Messages regarding numbers cured and killed
+--! Messages regarding numbers cured and killed
 function Hospital:msgCured()
   local msg_chance = math.random(1, 15)
-  if msg_chance == 3 and self.msg_counter > 10 then
-    self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
-    self.msg_counter = 0
-  elseif msg_chance == 12 and self.msg_counter > 10 then
-    self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
-    self.msg_counter = 0   
+  if self.num_cured > 1 then
+    if msg_chance == 3 and self.msg_counter > 10 then
+      self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
+      self.msg_counter = 0
+    elseif msg_chance == 12 and self.msg_counter > 10 then
+      self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
+      self.msg_counter = 0
+    end      
   end 
 end
--- So the messages don't show too often there will need to be at least 10 days before one can show again.
+--! So the messages don't show too often there will need to be at least 10 days before one can show again.
 function Hospital:msgKilled()
-  local msg_chance = math.random(1, 10)      
-  if msg_chance < 4 and self.msg_counter > 10 then
-    self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
-    self.msg_counter = 0
-  elseif msg_chance > 7 and self.msg_counter > 10 then
-    self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
-    self.msg_counter = 0    
+  local msg_chance = math.random(1, 10) 
+  if self.num_deaths > 1 then  
+    if msg_chance < 4 and self.msg_counter > 10 then
+      self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
+      self.msg_counter = 0
+    elseif msg_chance > 7 and self.msg_counter > 10 then
+      self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
+      self.msg_counter = 0 
+    end      
   end   
 end
 
@@ -396,10 +399,10 @@ function Hospital:afterLoad(old, new)
     end
     -- Redefine the research table
     self.research = {
-      improvements = {frac = 20, points = 0, current = "inflation"},
-      drugs = {frac = 20, points = 0, current = "invisibility"},
-      diagnosis = {frac = 20, points = 0, current = next_diag},
-      cure = {frac = 20, points = 0, current = next_cure},
+      improvements =   {frac = 20, points = 0, current = "inflation"},
+      drugs =          {frac = 20, points = 0, current = "invisibility"},
+      diagnosis =      {frac = 20, points = 0, current = next_diag},
+      cure =           {frac = 20, points = 0, current = next_cure},
       specialisation = {frac = 20, points = 0, current = "special"},
       global = 100,
     }
@@ -621,32 +624,22 @@ end
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
-  if self:isPlayerHospital() then
-    -- Check to see if a staff room has been built
-    self.is_staff_room = false
-    if self:hasRoomOfType("staff_room") then
-      self.is_staff_room = true
-    end
-    -- Check to see if toilets have been built
-    self.is_toilet = false
-    if self:hasRoomOfType("toilets") then
-      self.is_toilet = true
-    end
+  if self.hospital and self:isPlayerHospital() then
     -- If there is no staff room, remind player of the need to build one
-    if self.world.year == 1 and self.world.month > 4 and self.world.day == 3
-    and not self.is_staff_room and not self.staff_room_msg then
-      self:noStaffroom_msg()
-    elseif self.world.year > 1 and self.world.day == 3
-    and not self.is_staff_room then
-      self:noStaffroom_msg()
+    if self.world.day == 3 and not self:hasRoomOfType("staff_room") then
+      if self.world.month > 4 and not self.staff_room_msg then
+        self:noStaffroom_msg()
+      elseif self.world.year > 1 then
+        self:noStaffroom_msg()
+      end
     end
     -- If there is no toilet, remind player of the need to build one
-    if self.world.month > 4 and self.world.day == 8
-    and not self.is_toilet and not self.toilet_msg then
-      self:noToilet_msg()
-    elseif self.world.year > 1 and self.world.day == 8
-    and not self.is_toilet then
-      self:noToilet_msg()
+    if self.world.day == 8 and not self:hasRoomOfType("toilets") then
+      if self.world.month > 4 and not self.toilet_msg then
+        self:noToilet_msg()
+      elseif self.world.year > 1 then
+        self:noToilet_msg()
+      end
     end
     -- How are we for seating, if there are plenty then praise is due, if not the player is warned
     -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
@@ -785,7 +778,7 @@ end
 
 function Hospital:purchasePlot(plot_number)
   local map = self.world.map
-  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) then
+  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) and not self.world.ui.transparent_walls then
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
@@ -808,7 +801,8 @@ function Hospital:getPlayerIndex()
   return 1
 end
 
--- Returns the heliport x and y coordinates or nil if none exist.
+--! Returns the heliport x and y coordinates or nil if none exist.
+--!return (pair of integers, or nil) The x,y position of the tile with the heliport, if it exists.
 function Hospital:getHeliportPosition()
   local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
   -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
@@ -819,7 +813,8 @@ function Hospital:getHeliportPosition()
   end
 end
 
--- Returns the tile on which patients should spawn when getting out of the helicopter.
+--! Returns the tile on which patients should spawn when getting out of the helicopter.
+--!return (pair of integers, or nil) The x,y position to use for spawning emergency patients from the heliport, if available.
 function Hospital:getHeliportSpawnPosition()
   local x, y = self:getHeliportPosition()
   if x and y then
@@ -927,14 +922,15 @@ function Hospital:onEndDay()
   end
 
   -- check if we still have to anounce VIP visit
-  if self.announce_vip == 1 then
+  if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for i, e in ipairs(self.world.entities) do
-      if e.humanoid_class == "VIP" then
+      if e.humanoid_class == "VIP" and e.announced == false then
         if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
           -- play VIP arrival sound and show tooltips
           e:announce()
-          self.announce_vip = 0
+          e.announced = true
+          self.announce_vip = self.announce_vip - 1
         end
       end
     end
@@ -1071,22 +1067,24 @@ function Hospital:onEndMonth()
   self.money_out = 0
 
   -- make players aware of the need for a receptionist and desk.
-  if (self:isPlayerHospital() and not self:hasStaffedDesk()) then
-    if self.receptionist_count ~= 0 and self.world.month > 2 and self.world.year == 1 and not self.receptionist_msg then
+  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world.year == 1 then
+    if self.receptionist_count ~= 0 and self.world.month > 2 and not self.receptionist_msg then
       self.world.ui.adviser:say(_A.warnings.no_desk_6)
       self.receptionist_msg = true 
-    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.year == 1 and self.world.object_counts["reception_desk"] ~= 0  then
+    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
       self.world.ui.adviser:say(_A.warnings.no_desk_7)
     --  self.receptionist_msg = true     
-    elseif self.world.month == 3 and self.world.year == 1 then
+    elseif self.world.month == 3 then
       self.world.ui.adviser:say(_A.warnings.no_desk, true)
-    elseif self.world.month == 8 and self.world.year == 1 then
+    elseif self.world.month == 8 then
       self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
-    elseif self.world.month == 11 and self.world.year == 1 and self.visitors == 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
-    elseif self.world.month == 11 and self.world.year == 1 and self.visitors ~= 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
-    end      
+    elseif self.world.month == 11 then
+      if self.visitors == 0 then
+        self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
+      else
+        self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
+      end
+    end
   end
 end
 
@@ -1120,14 +1118,15 @@ end
 -- to cure them and the fax.
 function Hospital:createEmergency(emergency)
   local created_one = false
+  local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
+  local disease = TheApp.diseases[random_disease.id]
+  local number = math.random(2, disease.emergency_number)
   if self:getHeliportSpawnPosition() and self:hasStaffedDesk() then
     if not emergency then
       -- Create a random emergency if parameters are not specified already.
-      local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
-      -- TODO: The following should depend on disease (e.g. operating theatre is harder)
       emergency = {
-        disease = TheApp.diseases[random_disease.id],
-        victims = math.random(4,6),
+        disease = disease,
+        victims = number, 
         bonus = 1000,
         percentage = 0.75,
         killed_emergency_patients = 0,
@@ -1225,10 +1224,10 @@ end
 
 -- Creates VIP
 function Hospital:createVip()
-  self.visitingVIP = _S.vip_names[math.random(1,10)]
+  local vipName =  _S.vip_names[math.random(1,10)]
   local message = {
-    {text = _S.fax.vip_visit_query.vip_name:format(self.visitingVIP)},
-    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip"},
+    {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
+    choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
                {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip"}}
   }
   -- auto-refuse after 20 days
@@ -1598,7 +1597,7 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
     table.remove(subTable, taskIndex)
     if task.assignedHandyman then
       if task.object.ticks ~= true then 
-        task.assignedHandyman:intreruptHandymanTask()
+        task.assignedHandyman:interruptHandymanTask()
       end
     end
   end
@@ -1626,7 +1625,7 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
       subTable[taskIndex].assignedHandyman  = handyman
-      formerHandyman:intreruptHandymanTask()
+      formerHandyman:interruptHandymanTask()
     end
   end
 end

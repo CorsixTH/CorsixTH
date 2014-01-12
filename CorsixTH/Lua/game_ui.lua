@@ -76,8 +76,9 @@ function GameUI:setupGlobalKeyHandlers()
 
   self:addKeyHandler("escape", self, self.setEditRoom, false)
   self:addKeyHandler("escape", self, self.showMenuBar)
+  self:addKeyHandler("z", self, self.keySpeedUp)
+  self:addKeyHandler("x", self, self.keyTransparent)
   self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
-
   self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
   self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
   self:addKeyHandler({"alt", "a"}, self, self.togglePlayAnnouncements)
@@ -86,7 +87,6 @@ function GameUI:setupGlobalKeyHandlers()
 
   if self.app.config.debug then
     self:addKeyHandler("f11", self, self.showCheatsWindow)
-    self:addKeyHandler("x", self, self.toggleWallsTransparent)
   end
 end
 
@@ -217,6 +217,14 @@ function GameUI:updateKeyScroll()
   end
 end
 
+function GameUI:keySpeedUp()
+  self.app.world:speedUp()
+end
+
+function GameUI:keyTransparent()
+  self:makeTransparentWalls()
+end
+
 function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
   if UI.onKeyDown(self, rawchar, modifiers, is_repeat) then
     -- Key has been handled already
@@ -238,6 +246,12 @@ function GameUI:onKeyUp(rawchar)
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
+  end
+  if self.app.world:isCurrentSpeed("Speed Up")  then
+    self.app.world:previousSpeed()
+  end
+  if self.transparent_walls then
+    self:removeTransparentWalls()
   end
 end
 
@@ -688,7 +702,11 @@ function GameUI:setWallsTransparent(mode)
 end
 
 --! Toggles transparency of walls, i.e. enables if currently disabled, and vice versa
-function GameUI:toggleWallsTransparent()
+function GameUI:makeTransparentWalls()
+  self:setWallsTransparent(true)
+end
+
+function GameUI:removeTransparentWalls()
   self:setWallsTransparent(not self.transparent_walls)
 end
 
@@ -965,8 +983,11 @@ function GameUI:afterLoad(old, new)
   if old < 78 then
     self.current_momentum = { x = 0, y = 0, z = 0}
   end
-
-  
+  if old < 81 then 
+    self:removeKeyHandler("x", self, self.toggleWallsTransparent)
+    self:addKeyHandler("z", self, self.keySpeedUp)
+    self:addKeyHandler("x", self, self.keyTransparent)
+  end
   return UI.afterLoad(self, old, new)
 end
 

@@ -28,6 +28,7 @@ disease.symptoms = _S.diseases.transparency.symptoms
 disease.cure = _S.diseases.transparency.cure
 disease.cure_price = 800
 disease.emergency_sound = "emerg022.wav"
+disease.emergency_number = 12
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Transparent Male Patient")

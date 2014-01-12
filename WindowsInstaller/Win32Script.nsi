@@ -59,7 +59,7 @@ RequestExecutionLevel admin
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\CorsixTH\LICENSE.txt"
+!insertmacro MUI_PAGE_LICENSE "..\LICENSE.txt"
 ; Directory page
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ValidateDirectory
 !insertmacro MUI_PAGE_DIRECTORY
@@ -106,6 +106,7 @@ Icon "..\CorsixTH\corsixTH.ico"
 !insertmacro MUI_LANGUAGE "German"
 !insertmacro MUI_LANGUAGE "Hungarian"
 !insertmacro MUI_LANGUAGE "Italian"
+!insertmacro MUI_LANGUAGE "Korean"
 !insertmacro MUI_LANGUAGE "Norwegian"
 !insertmacro MUI_LANGUAGE "Polish"
 !insertmacro MUI_LANGUAGE "Portuguese"
@@ -178,6 +179,12 @@ FunctionEnd
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
+
+  ${If} ${FileExists} "$INSTDIR\Lua"
+    RMDir /r "$INSTDIR\Lua"
+    CreateDirectory "$INSTDIR\Lua"
+  ${EndIf}
+
   ${If} ${RunningX64}
     File /r /x .svn x64\*.*
     Goto continued
@@ -220,10 +227,6 @@ Section "MainSection" SEC01
   
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
-  ${If} ${FileExists} "$INSTDIR\Lua"
-    RMDir /r "$INSTDIR\Lua"
-    CreateDirectory "$INSTDIR\Lua"
-  ${EndIf}
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*
   
@@ -240,8 +243,8 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
   File ..\CorsixTH\changelog.txt
-  File ..\CorsixTH\LICENSE.txt
-  File ..\CorsixTH\README.txt
+  File ..\LICENSE.txt
+  File ..\README.txt
   
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -259,6 +262,7 @@ Section -AdditionalIcons
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk" "$INSTDIR\CorsixTH_DirectX.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Map Editor.lnk" "$INSTDIR\MapEdit.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Level Editor.lnk" "$INSTDIR\LevelEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
   CreateShortcut "$SMPROGRAMS\${PRODUCT_NAME}\CorsixTH AppData Folder.lnk" "$APPDATA\CorsixTH"
   !insertmacro MUI_STARTMENU_WRITE_END
@@ -298,6 +302,8 @@ Section Uninstall
   RMDir /r "$INSTDIR\Lua"
   RMDir /r "$INSTDIR\Bitmap"
   RMDir /r "$INSTDIR\Levels"
+  RMDir /r "$INSTDIR\mime"
+  RMDir /r "$INSTDIR\socket"
   RMDir /r "$INSTDIR\Src"
   
   Delete "$INSTDIR\*.*"

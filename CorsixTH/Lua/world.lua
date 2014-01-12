@@ -223,6 +223,7 @@ function World:initLevel(app)
         vis = disease.visuals_id and visual[disease.visuals_id].Value 
         or non_visual[disease.non_visuals_id].Value
       end
+      -- TODO: Where the value is greater that 0 should determine the frequency of the patients
       if vis ~= 0 then
         self.available_diseases[#self.available_diseases + 1] = disease
         self.available_diseases[disease.id] = disease
@@ -296,67 +297,69 @@ function World:initStaff()
   end
 end
 
+--! Load goals to win and lose from the map, and store them in 'self.goals'.
+--! Also set 'self.winning_goal_count'.
 function World:determineWinningConditions()
+  local winning_goal_count = 0
   -- No conditions if in free build mode!
   if self.free_build_mode then
     self.goals = {}
-    self.winning_goals = {}
+    self.winning_goal_count = winning_goal_count
     return
   end
   -- Determine winning and losing conditions
-  local win = self.map.level_config.win_criteria
-  local lose = self.map.level_config.lose_criteria
-  local active = {}
-  local total = 0
-  local criteria = self.level_criteria
+  local world_goals = {}
+
   -- There might be no winning criteria (i.e. the demo), then
   -- we don't have to worry about the progress report dialog
   -- since it doesn't exist anyway.
+  local win = self.map.level_config.win_criteria
   if win then
     for _, values in pairs(win) do
       if values.Criteria ~= 0 then
-        total = total + 1
-        local criterion = criteria[values.Criteria].name
-        active[criterion] = {
-          name = criterion,
+        winning_goal_count = winning_goal_count + 1
+        local crit_name = self.level_criteria[values.Criteria].name
+        world_goals[crit_name] = {
+          name = crit_name,
           win_value = values.Value, 
           boundary = values.Bound, 
           criterion = values.Criteria,
           max_min_win = values.MaxMin,
           group = values.Group,
-          number = total,
+          number = winning_goal_count,
         }
-        active[#active + 1] = active[criterion]
+        world_goals[#world_goals + 1] = world_goals[crit_name]
       end
     end
   end
   -- Likewise there might be no losing criteria (i.e. the demo)
+  local lose = self.map.level_config.lose_criteria
   if lose then
     for _, values in pairs(lose) do
       if values.Criteria ~= 0 then
-        local criterion = criteria[values.Criteria].name
-        if not active[criterion] then
-          active[criterion] = {number = #active + 1, name = criterion}
-          active[#active + 1] = active[criterion]
+        local crit_name = self.level_criteria[values.Criteria].name
+        if not world_goals[crit_name] then
+          world_goals[crit_name] = {number = #world_goals + 1, name = crit_name}
+          world_goals[#world_goals + 1] = world_goals[crit_name]
         end
-        active[criterion].lose_value = values.Value
-        active[criterion].boundary = values.Bound
-        active[criterion].criterion = values.Criteria
-        active[criterion].max_min_lose = values.MaxMin
-        active[criterion].group = values.Group
-        active[active[criterion].number].lose_value = values.Value
-        active[active[criterion].number].boundary = values.Bound
-        active[active[criterion].number].criterion = values.Criteria
-        active[active[criterion].number].max_min_lose = values.MaxMin
-        active[active[criterion].number].group = values.Group
+        world_goals[crit_name].lose_value = values.Value
+        world_goals[crit_name].boundary = values.Bound
+        world_goals[crit_name].criterion = values.Criteria
+        world_goals[crit_name].max_min_lose = values.MaxMin
+        world_goals[crit_name].group = values.Group
+        world_goals[world_goals[crit_name].number].lose_value = values.Value
+        world_goals[world_goals[crit_name].number].boundary = values.Bound
+        world_goals[world_goals[crit_name].number].criterion = values.Criteria
+        world_goals[world_goals[crit_name].number].max_min_lose = values.MaxMin
+        world_goals[world_goals[crit_name].number].group = values.Group
       end
     end
   end
   
   -- Order the criteria (some icons in the progress report shouldn't be next to each other)
-  table.sort(active, function(a,b) return a.criterion < b.criterion end)
-  self.goals = active
-  self.winning_goals = total
+  table.sort(world_goals, function(a,b) return a.criterion < b.criterion end)
+  self.goals = world_goals
+  self.winning_goal_count = winning_goal_count
 end
 
 function World:initRooms()
@@ -487,12 +490,38 @@ function World:spawnPatient(hospital)
   if not hospital then
     hospital = self:getLocalPlayerHospital()
   end
+  --! What is the current month?
+  local current_month = (self.year - 1) * 12 + self.month 
+  --! level files can delay visuals to a given month
+  --! and / or until a given number of patients have arrived
+  local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
+  local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
+  --! Function to determine whether a given disease is visible and available.
+  --!param disease (disease) Disease to test.
+  --!return (boolean) Whether the disease is visible and available.
+  local function isVisualDiseaseAvailable(disease)
+    if not disease.visuals_id then 
+      return true
+    end
+    --! if the month is greater than either of these values then visuals will not appear in the game
+    if hold_visual_months and hold_visual_months > current_month or
+    hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors then
+      return false
+    end
+    --! the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
+    local level_config = self.map.level_config 
+    if level_config.visuals_available[disease.visuals_id].Value >= current_month then 
+      return false
+    end   
+    return true
+  end 
+
   if hospital:hasStaffedDesk() then
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-    while disease.only_emergency do
-      disease = self.available_diseases[math.random(1, #self.available_diseases)]
+    while disease.only_emergency or not isVisualDiseaseAvailable(disease) do
+      disease = self.available_diseases[math.random(1, #self.available_diseases)] 
     end
     patient:setDisease(disease)
     patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
@@ -502,16 +531,13 @@ function World:spawnPatient(hospital)
   end
 end
 
-function World:spawnVIP(hospital)
-  if not hospital then
-    hospital = self:getLocalPlayerHospital()
-  end
-
-  hospital.announce_vip = 1
+function World:spawnVIP(name)
+  local hospital = self:getLocalPlayerHospital()
   
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local vip = self:newEntity("Vip", 2)
   vip:setType "VIP"
+  vip.name = name
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
@@ -521,6 +547,8 @@ function World:spawnVIP(hospital)
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
   vip:setHospital(hospital)
+  vip:updateDynamicInfo()
+  hospital.announce_vip = hospital.announce_vip + 1
   vip:queueAction{name = "seek_reception"}
 end
 
@@ -877,11 +905,22 @@ local tick_rates = {
   ["Normal"]             = {1, 3},
   ["Max speed"]          = {1, 1},
   ["And then some more"] = {3, 1},
+  ["Speed Up"]           = {4, 1},
 }
 
 -- Return the length of the current month
 function World:getCurrentMonthLength()
   return month_length[self.month]
+end
+
+function World:speedUp()
+  self:setSpeed("Speed Up")
+end
+
+function World:previousSpeed()
+  if self:isCurrentSpeed("Speed Up") then
+    self:setSpeed(self.prev_speed)
+  end
 end
 
 -- Return if the selected speed the same as the current speed.
@@ -1109,7 +1148,8 @@ function World:onEndDay()
     -- Postpone it if anything clock related is already underway.
     if self.ui:getWindow(UIWatch) then
       self.next_emergency_month = self.next_emergency_month + 1
-      self.next_emergency_day = math.random(1, month_length[self.next_emergency_month])
+      local month_of_year = 1 + ((self.next_emergency_month - 1) % 12)
+      self.next_emergency_day = math.random(1, month_length[month_of_year])
     else
       -- Do it only for the player hospital for now. TODO: Multiplayer
       local control = self.map.level_config.emergency_control
@@ -1457,6 +1497,9 @@ function World:winGame(player_no)
       end
     end
     self.hospitals[player_no].game_won = true
+    if self:isCurrentSpeed("Speed Up") then
+      self:previousSpeed()
+    end
     self:setSpeed("Pause")
     self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
@@ -1740,6 +1783,9 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
   return room
 end
 
+--! Setup an animated floating money amount above a patient.
+--!param patient Patient to float above.
+--!param amount Amount of money to display.
 function World:newFloatingDollarSign(patient, amount)
   if not self.floating_dollars then
     self.floating_dollars = {}
@@ -2268,6 +2314,9 @@ function World:afterLoad(old, new)
   if old < 77 then
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
+  end
+  if old < 80 then
+    self:determineWinningConditions()
   end
   
   self.savegame_version = new

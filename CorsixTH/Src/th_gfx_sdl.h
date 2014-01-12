@@ -545,7 +545,7 @@ protected:
         //! SDL structure containing the sprite with alternative palette.
         SDL_Texture *pAltTexture;
 
-        //! Sprite data (copied from the chunk data file).
+        //! Data of the sprite (width * height bytes).
         unsigned char *pData;
 
         //! Alternative palette (if available).
@@ -564,7 +564,7 @@ protected:
     //! Target to render to.
     THRenderTarget* m_pTarget;
 
-    //! Number of sprites at the sheet.
+    //! Number of sprites in the sprite sheet.
     unsigned int m_iSpriteCount;
 
     //! Free memory of a single sprite.
@@ -573,7 +573,7 @@ protected:
     */
     void _freeSingleSprite(unsigned int iNumber);
 
-    //! Free memory used for storing all sprite information.
+    //! Free the memory used by the sprites. Also releases the SDL bitmaps.
     void _freeSprites();
 
     //! Construct an alternative version (with its alternative palette map) of the sprite.

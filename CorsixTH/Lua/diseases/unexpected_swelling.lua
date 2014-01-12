@@ -28,6 +28,7 @@ disease.symptoms = _S.diseases.unexpected_swelling.symptoms
 disease.cure = _S.diseases.unexpected_swelling.cure
 disease.cure_price = 500
 disease.emergency_sound = "emerg018.wav"
+disease.emergency_number = 5
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

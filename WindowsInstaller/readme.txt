@@ -11,9 +11,9 @@ LanguageStrings.nsh file, and then insert
 '!insertmacro MUI_LANGUAGE "<Language_name>"' at roughly line 97 
 in Win32Script.nsi.
 
-When packaging, make sure that architecture specific files are in the 
-x64 and x86 folders. All other files (lua etc) should be as they
-are when checked out, i.e. "../CorsixTH/*".
+When packaging, make sure that architecture specific files are in two
+folders called x64 and x86 respectively. All other files (lua etc) 
+should be as they are when checked out, i.e. "../CorsixTH/*".
 
 You can find more information about creating a Windows installer here:
 http://code.google.com/p/corsix-th/wiki/HowToPackageWindows.

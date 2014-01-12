@@ -97,6 +97,20 @@ function FileSystem:listFiles(virtual_path, ...)
 end
 
 function FileSystem:readContents(virtual_path, ...)
+  local file, err = self:getFilePath(virtual_path, ...)
+  if not file then
+    return file, err
+  end
+  local f, e = io.open(file, "rb")
+  if not f then
+    return nil, e
+  end
+  local data = f:read"*a"
+  f:close()
+  return data
+end
+
+function FileSystem:getFilePath(virtual_path, ...)
   if ... then
     virtual_path = table.concat({virtual_path, ...}, pathsep)
   end
@@ -126,11 +140,5 @@ function FileSystem:readContents(virtual_path, ...)
   if not is_file then
     return nil, ("Attempt to access directory '%s' as if it were a file"):format(virtual_path)
   end
-  local f, e = io.open(self, "rb")
-  if not f then
-    return nil, e
-  end
-  local data = f:read"*a"
-  f:close()
-  return data
+  return self
 end

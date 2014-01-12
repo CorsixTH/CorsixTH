@@ -30,9 +30,10 @@ SOFTWARE.
 #include "config.h"
 #include "th_gfx.h"
 #include "th_sound.h"
-#include "SDL_mixer.h"
 
 #ifdef CORSIX_TH_USE_FFMPEG
+#include "SDL_mixer.h"
+
 extern "C"
 {
 #include <libavformat/avformat.h>

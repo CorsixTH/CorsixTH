@@ -25,7 +25,9 @@ class "UIInformation" (Window)
 --!param text The text to show, held in a table. All elements of the table will be written
 -- beneath each other. If instead a table within the table is supplied the texts
 -- will be shown in consecutive dialogs.
-function UIInformation:UIInformation(ui, text)
+--!param use_built_in_font Whether the built-in font should be used to make sure that 
+-- the given message can be read without distortions.
+function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:Window()
   
   local app = ui.app
@@ -34,8 +36,12 @@ function UIInformation:UIInformation(ui, text)
   self.on_top = true
   self.ui = ui
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "PulldV", true)
-  self.black_font = app.gfx:loadFont("QData", "Font00V")
-  
+  if not use_built_in_font then
+    self.black_font = app.gfx:loadFont("QData", "Font00V")
+  else
+    self.black_font = app.gfx:loadBuiltinFont()
+    self.black_background = true
+  end
   if type(text[1]) == "table" then
     self.text = text[1][1]
     table.remove(text[1], 1)
@@ -92,8 +98,8 @@ end
 
 function UIInformation:draw(canvas, x, y)
   local dx, dy = x + self.x, y + self.y
-  local white = canvas:mapRGB(255, 255, 255)
-  canvas:drawRect(white, dx + 4, dy + 4, self.width - 8, self.height - 8)
+  local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(255, 255, 255)
+  canvas:drawRect(background, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + self.spacing.t
   for i, text in ipairs(self.text) do
     last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)

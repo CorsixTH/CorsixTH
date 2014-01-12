@@ -126,6 +126,7 @@ local config_defaults = {
   scroll_speed = 2,
   new_graphics_folder = nil,
   use_new_graphics = false,
+  check_for_updates = true
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -256,6 +257,12 @@ scrolling_momentum = ]=] .. tostring(config_values.scrolling_momentum) .. [=[
 --
 twentyfour_hour_clock = ]=].. tostring(config_values.twentyfour_hour_clock) ..[=[ 
  
+-------------------------------------------------------------------------------------------------------------------------
+-- Automatically check for updates.
+-- If set to true, CorsixTH will automatically check for and alert you to newer
+-- versions on startup.
+check_for_updates = ]=].. tostring(config_values.check_for_updates) ..[=[ 
+
 -------------------------------------------------------------------------------------------------------------------------
 -- Warmth Colors display settings.
 -- This specifies which display method is set for warmth colours by default. 
