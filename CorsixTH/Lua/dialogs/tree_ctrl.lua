@@ -537,32 +537,31 @@ end
 
 function TreeControl:onMouseUp(button, x, y)
   local redraw = Window.onMouseUp(self, button, x, y)
-  if button == 4 or button == 5 then
-    -- Scrollwheel
-    self.scrollbar:setXorY(self.scrollbar:getXorY() + (button - 4.5) * 8)
-  else
-    local node, expand = self:hitTestTree(x, y)
-    if self.mouse_down_in_self and node then
-      if expand then
-        if node:hasChildren() then
-          if node:isExpanded() then
-            node:contract()
-          else
-            node:expand()
-          end
-          redraw = true
+  local node, expand = self:hitTestTree(x, y)
+  if self.mouse_down_in_self and node then
+    if expand then
+      if node:hasChildren() then
+        if node:isExpanded() then
+          node:contract()
+        else
+          node:expand()
         end
-      elseif self.selected_node == node and self.select_callback then
-        self.select_callback(node)
-      else
-        self.selected_node = node
-        node:select()
         redraw = true
       end
+    elseif self.selected_node == node and self.select_callback then
+      self.select_callback(node)
+    else
+      self.selected_node = node
+      node:select()
+      redraw = true
     end
-    self.mouse_down_in_self = false
   end
+  self.mouse_down_in_self = false
   return redraw
+end
+
+function TreeControl:onMouseWheel(x, y)
+  self.scrollbar:setXorY(self.scrollbar:getXorY() - y * 8)
 end
 
 function TreeControl:onNumVisibleNodesChange()

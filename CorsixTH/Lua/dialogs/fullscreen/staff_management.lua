@@ -419,14 +419,13 @@ function UIStaffManagement:onMouseDown(code, x, y)
   return UIFullscreen.onMouseDown(self, code, x, y)
 end
 
-function UIStaffManagement:onMouseUp(code, x, y)
-  if not UIFullscreen.onMouseUp(self, code, x, y) then
-    if self:hitTest(x, y) then
-      if code == 4 then
-        -- Mouse wheel, scroll.
+function UIStaffManagement:onMouseWheel(x, y)
+  if not UIFullscreen.onMouseWheel(self, x, y) then
+    if self:hitTest(self.cursor_x, self.cursor_y) then
+      if y > 0 then
         self:scrollUp()
         return true
-      elseif code == 5 then
+      else
         self:scrollDown()
         return true
       end

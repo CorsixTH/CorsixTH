@@ -181,6 +181,12 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.button.y);
                 nargs = 4;
                 break;
+            case SDL_MOUSEWHEEL:
+                lua_pushliteral(dispatcher, "mousewheel");
+                lua_pushinteger(dispatcher, e.wheel.x);
+                lua_pushinteger(dispatcher, e.wheel.y);
+                nargs = 3;
+                break;
             case SDL_MOUSEMOTION:
                 lua_pushliteral(dispatcher, "motion");
                 lua_pushinteger(dispatcher, e.motion.x);
