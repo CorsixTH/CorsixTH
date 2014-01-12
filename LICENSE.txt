@@ -1,6 +1,6 @@
 CorsixTH is free software, distributed under the following terms:
 
-Copyright (C) 2009-2012 Peter "Corsix" Cawley, Edvin "Lego3" Linge, 
+Copyright (C) 2009-2014 Peter "Corsix" Cawley, Edvin "Lego3" Linge, 
   Haico "brainball" van Roeden, Manuel "Roujin" Wolf, et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
