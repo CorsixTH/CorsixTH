@@ -1195,7 +1195,10 @@ function Hospital:resolveEmergency()
   local total = emer.victims
   local max_bonus = emer.bonus * total
   local emergency_success = rescued_patients/total >= emer.percentage
-  local earned = math.floor((emergency_success and rescued_patients/total or 0) * 10) * max_bonus/10
+  local earned = 0
+  if emergency_success then
+    earned = emer.bonus * rescued_patients
+  end
   local message = {
     {text = _S.fax.emergency_result.saved_people
       :format(rescued_patients, total)},
