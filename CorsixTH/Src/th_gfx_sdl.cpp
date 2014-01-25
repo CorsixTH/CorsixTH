@@ -376,8 +376,33 @@ void THRenderTarget::setCursorPosition(int iX, int iY)
 
 bool THRenderTarget::takeScreenshot(const char* sFile)
 {
-    // TODO: Implement this.
-    return false;
+    //The window surface is all black.  We need it for the appropriate
+    //parameters but all the pixel data is in the the renderer where we
+    //cannot directly save it.  Instead we have to create a new surface based
+    //on the pixel data in the renderer and save that.
+    SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
+    SDL_Surface* pRgbSurface = NULL;
+    int iPitch = pWindowSurface->w * pWindowSurface->format->BitsPerPixel;
+    unsigned char* pPixels = new unsigned char[pWindowSurface->h * iPitch];
+    SDL_RenderReadPixels(m_pRenderer,
+                         &pWindowSurface->clip_rect,
+                         pWindowSurface->format->format,
+                         pPixels,
+                         iPitch);
+    pRgbSurface = SDL_CreateRGBSurfaceFrom(pPixels,
+                                           pWindowSurface->w,
+                                           pWindowSurface->h,
+                                           pWindowSurface->format->BitsPerPixel,
+                                           iPitch,
+                                           pWindowSurface->format->Rmask,
+                                           pWindowSurface->format->Gmask,
+                                           pWindowSurface->format->Bmask,
+                                           pWindowSurface->format->Amask);
+    SDL_SaveBMP(pRgbSurface, sFile);
+    SDL_FreeSurface(pRgbSurface);
+    delete[] pPixels;
+    SDL_FreeSurface(pWindowSurface);
+    return true;
 }
 
 
