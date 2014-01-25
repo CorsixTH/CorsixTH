@@ -636,6 +636,7 @@ function UIMenuBar:makeMenu(app)
     return method == 1, function()
       app.world.map:setTemperatureDisplayMethod(method)
     end, "", function () 
+      app:saveConfig()
       return app.world.map.temperature_display_method == method
     end      
   end
@@ -662,8 +663,7 @@ function UIMenuBar:makeMenu(app)
     :appendCheckItem(_S.menu_options_warmth_colors.choice_2, temperatureDisplay(2))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_3, temperatureDisplay(3))
   )
-  app:saveConfig()
-  
+
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)
