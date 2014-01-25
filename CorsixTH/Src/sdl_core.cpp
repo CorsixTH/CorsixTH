@@ -167,6 +167,18 @@ static int l_mainloop(lua_State *L)
                 lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
                 nargs = 2;
                 break;
+            case SDL_TEXTINPUT:
+                lua_pushliteral(dispatcher, "textinput");
+                lua_pushstring(dispatcher, e.text.text);
+                nargs = 2;
+                break;
+            case SDL_TEXTEDITING:
+                lua_pushliteral(dispatcher, "textediting");
+                lua_pushstring(dispatcher, e.edit.text);
+                lua_pushinteger(dispatcher, e.edit.start);
+                lua_pushinteger(dispatcher, e.edit.length);
+                nargs = 4;
+                break;
             case SDL_MOUSEBUTTONDOWN:
                 lua_pushliteral(dispatcher, "buttondown");
                 lua_pushinteger(dispatcher, e.button.button);

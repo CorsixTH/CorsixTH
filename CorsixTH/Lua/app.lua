@@ -46,6 +46,8 @@ function App:App()
     timer = self.onTick,
     keydown = self.onKeyDown,
     keyup = self.onKeyUp,
+    textediting = self.onEditingText,
+    textinput = self.onTextInput,
     buttonup = self.onMouseUp,
     buttondown = self.onMouseDown,
     mousewheel = self.onMouseWheel,
@@ -882,6 +884,14 @@ end
 
 function App:onKeyUp(...)
   return self.ui:onKeyUp(...)
+end
+
+function App:onEditingText(...)
+  return self.ui:onEditingText(...)
+end
+
+function App:onTextInput(...)
+  return self.ui:onTextInput(...)
 end
 
 function App:onMouseUp(...)

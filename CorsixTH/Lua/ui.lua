@@ -493,6 +493,7 @@ end
 --!param rawchar (string) The name of the key the user pressed.
 --!param is_repeat (boolean) True if this is a key repeat event
 function UI:onKeyDown(rawchar, modifiers, is_repeat)
+  local handled = false
   -- Apply key-remapping and normalisation
   local key = rawchar:lower()
   do
@@ -504,35 +505,34 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
     key = self.key_remaps[key] or key
   end
   
-  -- If there is one, the current textbox gets the key
+  -- If there is one, the current textbox gets the key.
+  -- It will not process any text at this point though.
   for _, box in ipairs(self.textboxes) do
-    if box.enabled and box.active then
-      local handled = box:input(key, rawchar)
-      if handled then
-        return true
-      end
+    if box.enabled and box.active and not handled then
+      handled = box:keyInput(key, rawchar)
     end
   end
 
   -- Otherwise, if there is a key handler bound to the given key, then it gets
   -- the key.
-  local keyHandlers = self.key_handlers[key]
-  if keyHandlers then
-    -- Iterate over key handlers and call each one whose modifier(s) are pressed
-    -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
-    local handled = false
-    for _, handler in ipairs(keyHandlers) do
-      if compare_tables(handler.modifiers, modifiers) then
-        handler.callback(handler.window, unpack(handler))
-        handled = true
+  if not handled then
+    local keyHandlers = self.key_handlers[key]
+    if keyHandlers then
+      -- Iterate over key handlers and call each one whose modifier(s) are pressed
+      -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
+      for _, handler in ipairs(keyHandlers) do
+        if compare_tables(handler.modifiers, modifiers) then
+          handler.callback(handler.window, unpack(handler))
+          handled = true
+        end
       end
-    end
-    if handled then
-      return true
     end
   end
   
   self.buttons_down[key] = true
+  self.modifiers_down = modifiers
+  self.key_press_handled = handled
+  return handled
 end
 
 --! Called when the user releases a key on the keyboard
@@ -548,6 +548,37 @@ function UI:onKeyUp(rawchar)
     key = self.key_remaps[key] or key
   end
   self.buttons_down[key] = nil
+end
+
+function UI:onEditingText(text, start, length)
+  -- Does nothing at the moment. We are handling text input ourselves.
+end
+
+--! Called in-between onKeyDown and onKeyUp. The argument 'text' is a 
+--! string containing the input localized according to the keyboard layout
+--! the user uses.
+function UI:onTextInput(text)
+  -- It's time for any active textbox to get input.
+  for _, box in ipairs(self.textboxes) do
+    if box.enabled and box.active then
+      box:textInput(text)
+    end
+  end
+
+  -- Finally it might happen that a hotkey was not recognized because of
+  -- differing local keyboard layout. Give it another shot.
+  if not self.key_press_handled then
+    local keyHandlers = self.key_handlers[text]
+    if keyHandlers then
+      -- Iterate over key handlers and call each one whose modifier(s) are pressed
+      -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
+      for _, handler in ipairs(keyHandlers) do
+        if compare_tables(handler.modifiers, self.modifiers_down) then
+          handler.callback(handler.window, unpack(handler))
+        end
+      end
+    end
+  end
 end
 
 function UI:onMouseDown(code, x, y)

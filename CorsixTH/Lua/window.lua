@@ -944,7 +944,9 @@ function Textbox:clicked()
   end
 end
 
-function Textbox:input(char, rawchar)
+--! Handles special characters such as Enter. Normal text input is processed in the textInput function.
+--! Note though that this function still returns true if it appears to be a characters being entered.
+function Textbox:keyInput(char, rawchar)
   if not self.active then
     return false
   end
@@ -972,10 +974,6 @@ function Textbox:input(char, rawchar)
       if rawchar == "space" or rawchar == "-" then
         handled = true
       end
-    end
-    if handled then
-      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
-      self.cursor_pos[2] = self.cursor_pos[2] + 1
     end
   end
   -- Backspace (delete last char, or last word if ctrl is pressed)
@@ -1043,6 +1041,7 @@ function Textbox:input(char, rawchar)
         self.cursor_pos[1] = self.cursor_pos[1] - 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
+      handled = true
     elseif char == "down" then -- down
       if type(self.text) ~= "table" or self.cursor_pos[1] == #self.text then
         -- to end of line
@@ -1052,6 +1051,7 @@ function Textbox:input(char, rawchar)
         self.cursor_pos[1] = self.cursor_pos[1] + 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
+      handled = true
     elseif char == "right" then -- right
       if self.cursor_pos[2] == string.len(line) then
         -- next line
@@ -1068,6 +1068,7 @@ function Textbox:input(char, rawchar)
           self.cursor_pos[2] = self.cursor_pos[2] + 1
         end
       end
+      handled = true
     elseif char == "left" then -- left
       if self.cursor_pos[2] == 0 then
         -- previous line
@@ -1084,12 +1085,12 @@ function Textbox:input(char, rawchar)
           self.cursor_pos[2] = self.cursor_pos[2] - 1
         end
       end
+      handled = true
     end
-    handled = true
   end
   -- Tab (reserved)
   if not handled and char == "tab" then
-    return true
+    handled = true
   end
   -- Home (beginning of line)
   if not handled and char == "home" then
@@ -1105,8 +1106,6 @@ function Textbox:input(char, rawchar)
     -- Experimental "all" category
     if not handled and self.allowed_input.all
        and not (char == "shift" or char == "ctrl" or char == "alt") then -- F-Keys
-      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
-      self.cursor_pos[2] = self.cursor_pos[2] + 1
       handled = true
     end
   end
@@ -1120,9 +1119,27 @@ function Textbox:input(char, rawchar)
   -- make cursor visible
   self.cursor_counter = 0
   self.cursor_state = true
+  return handled
+end
+
+--! Handles actual text input.
+function Textbox:textInput(text)
+  if not self.active then
+    return false
+  end
+
+  local line = type(self.text) == "table" and self.text[self.cursor_pos[1]] or self.text
+  local new_line = line:sub(1, self.cursor_pos[2]) .. text .. line:sub(self.cursor_pos[2] + 1, -1)
+  self.cursor_pos[2] = self.cursor_pos[2] + 1
+  
+  if type(self.text) == "table" then
+    self.text[self.cursor_pos[1]] = new_line
+  else
+    self.text = new_line
+  end
+
   -- update label
   self.panel:setLabel(self.text)
-  return handled
 end
 
 --[[ Limit input handled by textbox to specific classes of characters
