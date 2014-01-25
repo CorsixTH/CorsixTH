@@ -93,9 +93,20 @@ high_score = {
 --String text gets outside of window
 confirmation.quit = "¿Seguro que quieres salir del juego?                       "
 
---Typo found on the official translation
+--Typos found on the official Spanish translation
 tooltip.rooms.dna_fixer = "El médico usa el Reparador de ADN para curar a los pacientes con ADN alienígena"
+diseases.broken_heart.cause = "Causa - alguien más rico, más joven y más delgado que el paciente.",
+fax.vip_visit_result.remarks.very_bad[3] = "Estoy horrorizado. ¡Y a esto lo llama un hospital! Me voy de cañas...",
+fax.emergency.locations[1] = "Planta química González",
+fax.emergency.locations[3] = "Centro de plantas acuáticas",
+fax.emergency.locations[5] = "Congreso de bailarines rusos",
+fax.emergency.locations[8] = "La casa del curry",
+fax.emergency.locations[9] = "Emporio petroquímico usado Díaz y Díaz",
+fax.epidemic.cover_up_explanation_2 = "Si un inspector sanitario te visita y encuentra una epidemia encubierta tomará medidas drásticas en tu contra.",
+fax.epidemic.disease_name = "Tus médicos han descubierto una variedad contagiosa de %s.",
 
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = drug_improved = "Tu Departamento de Investigación ha mejorado el medicamento para la %s.",
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
@@ -114,9 +125,9 @@ tooltip.research_policy.research_progress = "Progreso para terminar el siguiente
 
 menu_file = {
   load =    " (MAYUS+L) CARGAR   ",
-  save =    " (MAYUS+S) GUARDAR  ",
+  save =    " (MAYUS+S) GUARDAR   ",
   restart = " (MAYUS+R) REINICIAR",
-  quit =    " (MAYUS+Q) SALIR    "
+  quit =    " (MAYUS+Q) SALIR   "
 }
 
 menu_options = {
@@ -197,27 +208,27 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación en este lugar, bloquearás el acceso a ciertas partes del hospital.",
   warnings = {
-    no_desk = "¡Deberías construir en algún momento una mesa de recepción y contratar a una recepcionista!",
-    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas una recepcionista y construir una mesa donde pueda trabajar!",
+    no_desk = "¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
+    no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
     no_desk_2 = "¡Enhorabuena, has batido un récord mundial: ha pasado un año y no ha aparecido ni un paciente! ¡Si quieres seguir mandando en este hospital, tendrás que contratar a una recepcionista y construir una mesa donde pueda trabajar!",
     no_desk_3 = "¡Fabuloso, casi ha pasado un año y no tienes recepcionistas! ¿Cómo quieres que vengan los pacientes? ¡Arréglalo y deja de perder el tiempo!",
     no_desk_4 = "Una recepcionista necesita una mesa para atender a los pacientes que vengan.",
     no_desk_5 = "¡Ya era hora! Los pacientes empezarán a llegar pronto.", 
     no_desk_6 = "Tienes una recepcionista, ¿qué tal si construyes una mesa de recepción para que pueda trabajar?",
     no_desk_7 = "Has construido una mesa de recepción, ¿y si contratas a una recepcionista? No verás a ningún paciente hasta que lo arregles, ¿lo sabes, no?",
-    cannot_afford = "¡No tienes dinero en el banco para contratar a esa persona!",
-    cannot_afford_2 = "¡No tienes dinero en el banco para comprar eso!", 
-    falling_1 = "¡Eh! Eso no tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacer daño a alguien!",
+    cannot_afford = "¡No tienes dinero para contratar a esa persona!", -- I can't see anything like this in the original strings
+    cannot_afford_2 = "¡No tienes dinero para comprar eso!", 
+    falling_1 = "¡Eh! No tiene gracia. Mira dónde haces clic con ese ratón, ¡vas a hacer daño a alguien!",
     falling_2 = "¿Te importaría dejar de perder el tiempo?",
     falling_3 = "¡Ay! Eso ha tenido que doler. ¡Llamen a un médico!",
     falling_4 = "¡Esto es un hospital, no un parque de atracciones!",
-    falling_5 = "¡Este no es lugar para tumbar personas, que están enfermas!",
+    falling_5 = "¡Este no es lugar para tirar personas al suelo, que están enfermas!",
     falling_6 = "¡Esto no es una bolera, no trates así a los enfermos!",
     research_screen_open_1 = "Para acceder a la pantalla de investigación, tienes que construir un Departamento de Investigación.",
     research_screen_open_2 = "No se pueden realizar investigaciones en este nivel.",
     researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
     researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que dar a cada uno una mesa para que trabajen.",
-    researcher_needs_desk_3 = "Cada investigador necesita su propia mesa para trabajar.",
+    researcher_needs_desk_3 = "Cada investigador necesita una mesa para trabajar.",
     nurse_needs_desk_1 = "Cada enfermera necesita una mesa para trabajar.",
     nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que dar a cada una una mesa para que trabajen.",
   },
@@ -328,7 +339,7 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  name = "Pulsa aquí para ordenar la lista por los nombres.",
+  name = "Pulsa aquí para ordenar la lista por nombres.",
   save_date = "Pulsa aquí para ordenar la lista por la última fecha de modificación.",
   back = "Cerrar esta ventana.",
 }
@@ -342,7 +353,7 @@ options_window = {
   custom_resolution = "Personalizada...",
   width = "Ancho",
   height = "Alto",
-  audio = "Sonido global",  
+  audio = "Sonido",  
   customise = "Personalizar",
   folder = "Carpetas",
   language = "Idioma del juego",
