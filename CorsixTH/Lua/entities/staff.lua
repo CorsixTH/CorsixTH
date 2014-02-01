@@ -382,6 +382,12 @@ end
 
 function Staff:die()
   self:setHospital(nil)
+  if self.task then
+    -- If the staff member had a task outstanding, unassigning them from that task. 
+    -- Tasks with no handyman assigned will be eligable for reassignment by the hospital.
+    self.task.assignedHandyman = nil
+    self.task = nil
+  end
   -- Update the staff management screen (if present) accordingly
   local window = self.world.ui:getWindow(UIStaffManagement)
   if window then

@@ -227,7 +227,8 @@ function CallsDispatcher:answerCall(staff)
   local min_call = nil
   local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
-
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call"); 
+  
   if staff.humanoid_class == "Handyman" then
    staff:searchForHandymanTask()
    return true
