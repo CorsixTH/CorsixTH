@@ -1,4 +1,56 @@
-HOW TO CONTRIBUTE
+ISSUE REPORT:
+
+
+BUG REPORT
+
+Please answer the questions below when you want to report a bug. A bug could 
+be for example an error crash, graphical glitch or unexpected behavior. Please copy
+the following questions to your issue and answer them when you want to report a bug:
+
+What steps will reproduce the problem?
+1.
+2.
+3.
+
+What is the expected output? What do you see instead?
+
+What version of CorsixTH are you using (e.g. "0.30", "SVN r123")?
+
+What operating system / compile settings are you using?
+
+What level was this on (e.g. "Demo level", "Full game level 12")?
+
+Attach a saved game file (preferably an autosave from before the error) if
+you have one and it is relevant.
+
+If possible, also attach the gamelog.
+
+Please provide any additional information below.
+
+
+SUGGESTION
+
+If you want to do a suggestion, please copy these questions to your
+issue and answer them:
+
+What is it you would like in the game?
+
+What version of the product are you using? On what operating system?
+
+
+PULL REQUEST
+
+If you want to do a pull request (see at bottom of this file how to do this,)
+please create a pull request and add the following questions to it and answer them:
+
+What are the major things which your pull request changes / adds?
+
+What version of the product are you using? On what operating system?
+
+Please provide any additional information below.
+
+
+HOW TO CONTRIBUTE:
 
 First Time
 1. Ensure you have a GitHub account (https://github.com/signup/free)
