@@ -1,4 +1,70 @@
-HOW TO CONTRIBUTE
+ISSUE REPORT:
+
+GitHub currently doesn't support automatic issue templates, so follow the instructions
+below when you want to do a suggestions, a bug report or a pull request.
+
+Please report not more then one bug, suggestion or pull request per issue,
+but make a new issue for every new one.
+
+BUG REPORT
+
+Please answer the questions below when you want to report a bug. A bug could 
+be for example an error crash, graphical glitch or unexpected behavior. Please copy
+the questions below to your issue and answer them when you want to report a bug:
+
+What steps will reproduce the problem?
+1.
+2.
+3.
+
+What is the expected output? What do you see instead?
+
+What version of CorsixTH are you using (e.g. "0.30", "SVN r123")?
+
+What operating system / compile settings are you using?
+
+What level was this on (e.g. "Demo level", "Full game level 12")?
+
+Upload a saved game file (preferably an autosave from before the error) if
+you have one and it is relevant. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES 
+for how to do this.
+
+If possible, also upload the gamelog. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES 
+for how to do this.
+
+Please provide any additional information below.
+
+
+SUGGESTION
+
+If you want to do a suggestion, please copy these questions to your
+issue and answer them:
+
+What is it you would like in the game?
+
+What version of the product are you using? On what operating system?
+
+
+PULL REQUEST
+
+When providing a pull request insure the description field describes the major 
+changes from the request. If your pull request relates to any existing 
+issues, include those issues in the description. e.g. "Fixes issue #1"
+
+
+HOW TO UPLOAD GAMELOG AND/OR SAVES
+
+As GitHub currently only supports uploading of images, you will have to upload 
+your gamelog(.txt) and your savegames to an another source like Google Drive, 
+Dropbox, SkyDrive/OneDrive or something else. Then you have to add the link to 
+your issue and make the file(s) public, so we can acces your gamelog or savegame. 
+The most important thing is to not remove these files after you uploaded them!
+
+Also make sure you don't use a filesharing service which delete your uploaded 
+file after a while!
+
+
+HOW TO CONTRIBUTE:
 
 First Time
 1. Ensure you have a GitHub account (https://github.com/signup/free)
