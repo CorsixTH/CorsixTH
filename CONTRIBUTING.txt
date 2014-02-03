@@ -26,7 +26,8 @@ Upload a saved game file (preferably an autosave from before the error) if
 you have one and it is relevant. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES 
 for how to do this.
 
-If possible, also upload the gamelog.
+If possible, also upload the gamelog. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES 
+for how to do this.
 
 Please provide any additional information below.
 
