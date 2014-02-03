@@ -47,14 +47,9 @@ What version of the product are you using? On what operating system?
 
 PULL REQUEST
 
-If you want to do a pull request (see at bottom of this file how to do this,)
-please create a pull request, add the following questions to it and answer them:
-
-What are the major things which your pull request changes / adds?
-
-What version of the product are you using? On what operating system?
-
-Please provide any additional information below.
+When providing a pull request insure the description field describes the major 
+changes from the request. If your pull request relates to any existing 
+issues, include those issues in the description. e.g. "Fixes issue #1"
 
 
 HOW TO UPLOAD GAMELOG AND/OR SAVES
