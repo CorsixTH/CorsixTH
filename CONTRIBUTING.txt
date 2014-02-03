@@ -3,6 +3,9 @@ ISSUE REPORT:
 GitHub currently doesn't support automatic issue templates, so follow the instructions
 below when you want to do a suggestions, a bug report or a pull request.
 
+Please report not more then one bug, suggestion or pull request per issue,
+but make a new issue for every new one.
+
 BUG REPORT
 
 Please answer the questions below when you want to report a bug. A bug could 
@@ -45,7 +48,7 @@ What version of the product are you using? On what operating system?
 PULL REQUEST
 
 If you want to do a pull request (see at bottom of this file how to do this,)
-please create a pull request and add the following questions to it and answer them:
+please create a pull request, add the following questions to it and answer them:
 
 What are the major things which your pull request changes / adds?
 
@@ -56,9 +59,14 @@ Please provide any additional information below.
 
 HOW TO UPLOAD GAMELOG AND/OR SAVES
 
-As GitHub currently only supports uploading of images, you will have to upload your gamelog(.txt)
-and your savegames to an another source like Google Drive, Dropbox or something else. The
-most important thing is too not remove these files after you uploaded them!
+As GitHub currently only supports uploading of images, you will have to upload 
+your gamelog(.txt) and your savegames to an another source like Google Drive, 
+Dropbox, SkyDrive/OneDrive or something else. Then you have to add the link to 
+your issue and make the file(s) public, so we can acces your gamelog or savegame. 
+The most important thing is to not remove these files after you uploaded them!
+
+Also make sure you don't use a filesharing service which delete your uploaded 
+file after a while!
 
 
 HOW TO CONTRIBUTE:
