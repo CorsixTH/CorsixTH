@@ -95,18 +95,18 @@ confirmation.quit = "¿Seguro que quieres salir del juego?                      
 
 --Typos found on the official Spanish translation
 tooltip.rooms.dna_fixer = "El médico usa el Reparador de ADN para curar a los pacientes con ADN alienígena"
-diseases.broken_heart.cause = "Causa - alguien más rico, más joven y más delgado que el paciente.",
-fax.vip_visit_result.remarks.very_bad[3] = "Estoy horrorizado. ¡Y a esto lo llama un hospital! Me voy de cañas...",
-fax.emergency.locations[1] = "Planta química González",
-fax.emergency.locations[3] = "Centro de plantas acuáticas",
-fax.emergency.locations[5] = "Congreso de bailarines rusos",
-fax.emergency.locations[8] = "La casa del curry",
-fax.emergency.locations[9] = "Emporio petroquímico usado Díaz y Díaz",
-fax.epidemic.cover_up_explanation_2 = "Si un inspector sanitario te visita y encuentra una epidemia encubierta tomará medidas drásticas en tu contra.",
-fax.epidemic.disease_name = "Tus médicos han descubierto una variedad contagiosa de %s.",
+diseases.broken_heart.cause = "Causa - alguien más rico, más joven y más delgado que el paciente."
+fax.vip_visit_result.remarks.very_bad = "Estoy horrorizado. ¡Y a esto lo llama un hospital! Me voy de cañas..."
+fax.emergency.locations[1] = "Planta química González"
+fax.emergency.locations[3] = "Centro de plantas acuáticas"
+fax.emergency.locations[5] = "Congreso de bailarines rusos"
+fax.emergency.locations[8] = "La casa del curry"
+fax.emergency.locations[9] = "Emporio petroquímico usado Díaz y Díaz"
+fax.epidemic.cover_up_explanation_2 = "Si un inspector sanitario te visita y encuentra una epidemia encubierta tomará medidas drásticas en tu contra."
+fax.epidemic.disease_name = "Tus médicos han descubierto una variedad contagiosa de %s."
 
 -- An override for the squits becoming the the squits see issue 1646
-adviser.research.drug_improved_1 = drug_improved = "Tu Departamento de Investigación ha mejorado el medicamento para la %s.",
+adviser.research.drug_improved_1 = "Tu Departamento de Investigación ha mejorado el medicamento para la %s."
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
