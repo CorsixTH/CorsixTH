@@ -39,7 +39,6 @@ function UIMakeDebugPatient:buttonClicked(num)
   local patient = self.ui.app.world:newEntity("Patient", 2)
   patient.is_debug = true
   table.insert(self.ui.hospital.debug_patients, patient)
-  item.disease.initPatient(patient)
   patient:setDisease(item.disease)
   patient.diagnosed = true
   local x, y = self.ui:ScreenToWorld(self.x + self.width / 2, self.y + self.height + 100)
