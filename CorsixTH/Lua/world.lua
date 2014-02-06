@@ -2309,10 +2309,6 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
-  if old < 77 then
-    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
-    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
-  end
   if old < 80 then
     self:determineWinningConditions()
   end
