@@ -1,0 +1,7 @@
+powdertoy (89.1.278~ppa) saucy; urgency=low
+  * Initial Release
+  * New Upstream Release
+  * debian/*: Redo all the files in the debian subfoder
+
+ -- CorsixTH developers <th@corsix.org> Fri, 7 Feb 2014 21:41:09 -0500
+
