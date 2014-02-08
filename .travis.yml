@@ -79,4 +79,4 @@ after_success:
   - sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/
 env:
   global:
-    secure: "SnQve7CSWXvEMOoJI4rJnO0OC5bPEhwOScUNBpbsPDMCa5DKBUDJALgRSGZYBriOxIVAxqh/W6Y3twa5QkRECJnyNEppK/5vXQxRyNEhmMZaqgaqeg85FrYvn866Qp7YeVy+Xbth3Jay7uRB/eXh+gaaVtlxBc9cX57K1ls6aJg="
+    secure: "mPtzSeDJKVeUu6KHJEbmHa91O+QK2XM0advYdr+13yr83w3C7cGFFjWgqzirsFUHVqPgdtSJIkom0DIxX7JtRoBZmt/xon+zfLq+Q4aSkJoYezWBqp2gavS8o1kSjtW7XuIuq995yjWvn7nehyoTYkKNtz/EzX5ZIVZ/iX73iyo="
