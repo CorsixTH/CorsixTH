@@ -1,0 +1,32 @@
+<project name="LevelEdit" default="dist" basedir=".">
+  <description>CorsixTH Level Editor</description>
+
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist" location="dist"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile LevelEdit">
+    <javac srcdir="${src}" destdir="${build}" includeantruntime="false"/>
+    <copy todir="${build}">
+        <fileset dir="${src}" includes="*.png" />
+    </copy>
+  </target>
+
+  <target name="dist" depends="compile" description="generate JAR">
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/LevelEdit.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="com.corsixth.leveledit.Main"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
