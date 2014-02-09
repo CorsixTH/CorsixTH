@@ -397,12 +397,12 @@ font_location_window = {
 }
 
 handyman_window = {
-  all_parcels = "All parcels",
-  parcel = "Parcel"
+  all_parcels = "All plots",
+  parcel = "Plot"
 }
 
 tooltip.handyman_window = {
-  parcel_select = "The parcel where the handyman accepts tasks, click to change setting"
+  parcel_select = "The plot where the handyman accepts tasks, click to change setting"
 }
 
 new_game_window = {
