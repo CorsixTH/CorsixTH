@@ -1,4 +1,4 @@
-powdertoy (89.1.278~ppa) saucy; urgency=low
+corsixth (0.30) saucy; urgency=low
   * Initial Release
   * New Upstream Release
   * debian/*: Redo all the files in the debian subfoder
