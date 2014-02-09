@@ -1,0 +1,82 @@
+language: cpp
+before_install:
+  # Get build dependencies
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install cmake p7zip-full build-essential libsdl1.2-dev libsdl-mixer1.2-dev libsdl-mixer1.2 sshpass lua5.1
+  - mkdir libs
+  - cd libs
+  # Get FFmpeg
+  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.3-win32-dev.7z
+  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.3-win32-shared.7z
+  - /usr/bin/7za x ffmpeg-2.1.3-win32-dev.7z
+  - /usr/bin/7za x ffmpeg-2.1.3-win32-shared.7z
+  - mv ffmpeg-2.1.3-win32-dev ffmpeg-dev
+  - mv ffmpeg-2.1.3-win32-shared ffmpeg-bin
+  # Get freetype
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-dep.zip
+  - unzip -n freetype-2.3.5-1-lib.zip -d freetype
+  - unzip -n freetype-2.3.5-1-bin.zip -d freetype
+  - unzip -n freetype-2.3.5-1-dep.zip -d freetype
+  # Get SDL
+  - wget http://www.libsdl.org/release/SDL-devel-1.2.15-mingw32.tar.gz
+  - tar xfz SDL-devel-1.2.15-mingw32.tar.gz
+  - sudo cp SDL-1.2.15/bin/* /usr/i586-mingw32msvc/bin/
+  - sudo cp -r SDL-1.2.15/include/SDL/* /usr/i586-mingw32msvc/include/
+  - sudo cp SDL-1.2.15/lib/* /usr/i586-mingw32msvc/lib/
+  - sudo chmod +x /usr/i586-mingw32msvc/bin/sdl-config
+  # Get SDL Mixer
+  - wget http://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip
+  - unzip SDL_mixer-devel-1.2.12-VC.zip
+  - sudo cp -r SDL_mixer-1.2.12/include/* /usr/i586-mingw32msvc/include/
+  - sudo cp SDL_mixer-1.2.12/lib/x86/* /usr/i586-mingw32msvc/lib/
+  - mkdir lua
+  # Get LUA
+  - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
+  - tar xJf lua-5.1.4-4-mingw32-dll-51.tar.xz -C lua
+  - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dev.tar.xz
+  - tar xJf lua-5.1.4-4-mingw32-dev.tar.xz -C lua
+  - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
+install:
+  - cd $TRAVIS_BUILD_DIR
+  # Create unix makefiles
+  - cmake -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL-1.2.15/lib/libSDL.dll.a -DSDL_INCLUDE_DIR=libs/SDL-1.2.15/include/SDL -DSDLMAIN_LIBRARY=libs/SDL-1.2.15/lib/libSDLmain.a -DSDLMIXER_INCLUDE_DIR=libs/SDL_mixer-1.2.12/include -DSDLMIXER_LIBRARY=libs/SDL_mixer-1.2.12/lib/x86/SDL_mixer.lib -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
+before_script:
+  # Don't ask for confirmation when using scp
+  - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - echo -e "Host server2.armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - cd fresh
+script: 
+  # Build CorsixTH
+  - make
+  # Validate lua files
+  - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
+  # Build LevelEdit
+  - cd $TRAVIS_BUILD_DIR/LevelEdit
+  - ant dist
+after_success:
+  - mkdir -p $TRAVIS_BUILD_DIR/fresh/CorsixTH
+  - cd $TRAVIS_BUILD_DIR
+  # Package LevelEdit
+  - cp LevelEdit/dist/LevelEdit.jar fresh/CorsixTH/
+  # Copy required DLLs
+  - cp libs/SDL-1.2.15/bin/SDL.dll fresh/CorsixTH/
+  - cp libs/SDL_mixer-1.2.12/lib/x86/SDL_mixer.dll fresh/CorsixTH/
+  - cp libs/ffmpeg-bin/bin/*.dll fresh/CorsixTH/
+  - cp libs/freetype/bin/*.dll fresh/CorsixTH/
+  # Copy CTH
+  - cd CorsixTH/
+  - cp -r * ../fresh/CorsixTH/
+  - cd ../fresh/CorsixTH
+  - ls -lha
+  # Prepare ZIP archive
+  - ZIPNAME=CTH-`date +"%Y%m%d"`-$TRAVIS_BRANCH-${TRAVIS_COMMIT:0:10}.zip
+  - if [ $TRAVIS_PULL_REQUEST != "false" ]; then ZIPNAME=CTH-pull-$TRAVIS_PULL_REQUEST-`date +"%Y%m%d"`-${TRAVIS_COMMIT:0:10}.zip; fi;
+  - zip -r $ZIPNAME *
+  - chmod 666 $ZIPNAME
+  # Upload to server
+  - sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/
+env:
+  global:
+    secure: "mPtzSeDJKVeUu6KHJEbmHa91O+QK2XM0advYdr+13yr83w3C7cGFFjWgqzirsFUHVqPgdtSJIkom0DIxX7JtRoBZmt/xon+zfLq+Q4aSkJoYezWBqp2gavS8o1kSjtW7XuIuq995yjWvn7nehyoTYkKNtz/EzX5ZIVZ/iX73iyo="
