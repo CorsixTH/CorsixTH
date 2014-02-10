@@ -1,9 +1,9 @@
 [Desktop Entry]
 Name=MapEdit
-Version=0.41-r1078
-Exec=/usr/games/CorsixTH/MapEdit
+Version=0.30
+Exec=/usr/share/games/CorsixTH/MapEdit
 Comment=A Map Editor for the Theme Hospital Clone
-Icon=/usr/games/CorsixTH/CorsixTH.ico
+Icon=/usr/games/CorsixTH/MapEdit.ico
 Type=Application
 Terminal=false
 StartupNotify=true

@@ -1,0 +1,226 @@
+Copyright (c) 2010 Manuel "Roujin" Wolf
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Only lines beginning with % or # as explained below will be considered by the game.
+
+Each line beginning with a %-sign are directives to use when loading the game, such as what
+the level is called and where to find the map file. Available commands:
+- Name: What the level should be called (within quotes)
+- LevelFile: The name of the binary map file to load. First the Levels directory of the 
+  original game will be searched, and then the Levels directory of CorsixTH.
+  
+Lines that begin with # defines all parameters for the level. By default there are no diseases
+and only some basic rooms are available. Note that if a player is using the demo files 
+on the contrary everything is available unless specified otherwise in the level file.
+
+
+---------------------- General Information -------------------------
+%Name = "Avatar"
+%LevelFile = "avatar.map"
+
+Note that the below introduction text at the moment must reside on a single line within this file!
+%LevelBriefing = "In this town, there are no doctors available for hire, so you have decided to take the matter into your own hands. Luckily, you happen to be a fully skilled consultant. Try to earn 50.000 - and don't worry too much about killing off your patients, you're only in for the money."
+
+Town properties
+InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
+300 means 3 %
+#town.StartCash.InterestRate 20000 300
+
+-------------------- Disease Configuration -------------------------
+
+When a drug is researched, what effectiveness does it have
+#gbv.StartRating 100 
+
+The following table contains all diagnoses and treatments that shows up inte drug casebook
+in the game. Known specifies whether it should show up from the beginning of the level and
+RschReqd how much research is required to discover the treatment room for the disease.
+#expertise[1].Known.RschReqd 1 0 GENERAL_PRACTICE
+#expertise[2].Known.RschReqd 0 40000 BLOATY_HEAD
+#expertise[3].Known.RschReqd 0 40000 HAIRYITUS
+#expertise[4].Known.RschReqd 0 60000 ELVIS
+#expertise[5].Known.RschReqd 0 60000 INVIS
+#expertise[6].Known.RschReqd 0 60000 RADIATION
+#expertise[7].Known.RschReqd 0 40000 SLACK_TONGUE
+#expertise[8].Known.RschReqd 0 60000 ALIEN
+#expertise[9].Known.RschReqd 0 20000 BROKEN_BONES
+#expertise[10].Known.RschReqd 0 40000 BALDNESS
+#expertise[11].Known.RschReqd 0 40000 DISCRETE_ITCHING
+#expertise[12].Known.RschReqd 0 40000 JELLYITUS
+#expertise[13].Known.RschReqd 0 40000 SLEEPING_ILLNESS
+#expertise[14].Known.RschReqd 0 30000 PREGNANT
+#expertise[15].Known.RschReqd 0 40000 TRANSPARENCY
+#expertise[16].Known.RschReqd 0 20000 UNCOMMON_COLD
+#expertise[17].Known.RschReqd 0 60000 BROKEN_WIND
+#expertise[18].Known.RschReqd 0 20000 SPARE_RIBS
+#expertise[19].Known.RschReqd 0 20000 KIDNEY_BEANS
+#expertise[20].Known.RschReqd 0 20000 BROKEN_HEART
+#expertise[21].Known.RschReqd 0 20000 RUPTURED_NODULES
+#expertise[22].Known.RschReqd 0 40000 MULTIPLE_TV_PERSONALITIES
+#expertise[23].Known.RschReqd 0 60000 INFECTIOUS_LAUGHTER
+#expertise[24].Known.RschReqd 0 40000 CORRUGATED_ANKLES
+#expertise[25].Known.RschReqd 0 40000 CHRONIC_NOSEHAIR
+#expertise[26].Known.RschReqd 0 40000 3RD_DEGREE_SIDEBURNS
+#expertise[27].Known.RschReqd 0 40000 FAKE_BLOOD
+#expertise[28].Known.RschReqd 0 40000 GASTRIC_EJECTIONS
+#expertise[29].Known.RschReqd 0 20000 THE_SQUITS
+#expertise[30].Known.RschReqd 0 20000 IRON_LUNGS
+#expertise[31].Known.RschReqd 0 40000 SWEATY_PALMS
+#expertise[32].Known.RschReqd 0 20000 HEAPED_PILES
+#expertise[33].Known.RschReqd 0 20000 GUT_ROT
+#expertise[34].Known.RschReqd 0 20000 GOLF_STONES
+#expertise[35].Known.RschReqd 0 20000 UNEXPECTED_SWELLING
+#expertise[36].Known.RschReqd 1 40000 I_D_SCANNER             DIAGNOSIS
+#expertise[37].Known.RschReqd 1 50000 I_D_BLOOD_MACHINE       DIAGNOSIS
+#expertise[38].Known.RschReqd 1 20000 I_D_CARDIO              DIAGNOSIS
+#expertise[39].Known.RschReqd 1 30000 I_D_XRAY                DIAGNOSIS
+#expertise[40].Known.RschReqd 1 60000 I_D_ULTRASCAN           DIAGNOSIS
+#expertise[41].Known.RschReqd 1 20000 I_D_STANDARD            DIAGNOSIS
+#expertise[42].Known.RschReqd 1 20000 I_D_WARD                DIAGNOSIS
+#expertise[43].Known.RschReqd 1 20000 I_D_SHRINK              DIAGNOSIS
+
+| Objects available | Available from the start | Strength | Available for this level | Comment
+#objects[9].StartAvail.StartStrength.AvailableForLevel 1 8 1 Inflator Machine
+#objects[13].StartAvail.StartStrength.AvailableForLevel 1 13 1 Cardiogram
+#objects[14].StartAvail.StartStrength.AvailableForLevel 1 12 1 Scanner
+#objects[22].StartAvail.StartStrength.AvailableForLevel 0 9 1 Ultrascan
+#objects[23].StartAvail.StartStrength.AvailableForLevel 0 7 1 DNA Restorer
+#objects[24].StartAvail.StartStrength.AvailableForLevel 1 11 1 Cast Remover
+#objects[25].StartAvail.StartStrength.AvailableForLevel 0 8 1 Hair restorer
+#objects[26].StartAvail.StartStrength.AvailableForLevel 1 10 1 Slicer for slack tongues
+#objects[27].StartAvail.StartStrength.AvailableForLevel 0 12 1 X-Ray
+#objects[30].StartAvail.StartStrength.AvailableForLevel 0 12 0 Operating Table
+#objects[37].StartAvail.StartStrength.AvailableForLevel 0 0 0 Projector
+#objects[42].StartAvail.StartStrength.AvailableForLevel 0 10 1 Blood Machine
+#objects[46].StartAvail.StartStrength.AvailableForLevel 0 8 1 Electrolysis Machine
+#objects[47].StartAvail.StartStrength.AvailableForLevel 0 7 1 Jellyitus Moulding Machine
+#objects[54].StartAvail.StartStrength.AvailableForLevel 0 10 1 Decontamination Shower
+#objects[55].StartAvail.StartStrength.AvailableForLevel 1 10 1 Autopsy Research Machine
+
+| Diseases available | Value property to be determined | Comment
+#visuals[0]  1 I_BLOATY_HEAD
+#visuals[1]  1 I_HAIRYITUS
+#visuals[2]  1 I_ELVIS
+#visuals[3]  1 I_INVIS
+#visuals[4]  1 I_RADIATION
+#visuals[5]  1 I_SLACK_TONGUE
+#visuals[6]  1 I_ALIEN
+#visuals[7]  1 I_BROKEN_BONES
+#visuals[8]  1 I_BALDNESS
+#visuals[9]  1 I_DISCRETE_ITCHING
+#visuals[10] 1 I_JELLYITUS
+#visuals[11] 1 I_SLEEPING_ILLNESS
+#visuals[12] 1 I_PREGNANT
+#visuals[13] 1 I_TRANSPARENCY
+#non_visuals[0] 1 I_UNCOMMON_COLD
+#non_visuals[1] 1 I_BROKEN_WIND
+#non_visuals[2] 0 I_SPARE_RIBS
+#non_visuals[3] 0 I_KIDNEY_BEANS
+#non_visuals[4] 0 I_BROKEN_HEART
+#non_visuals[5] 0 I_RUPTURED_NODULES
+#non_visuals[6] 1 I_MULTIPLE_TV_PERSONALITIES
+#non_visuals[7] 1 I_INFECTIOUS_LAUGHTER
+#non_visuals[8] 1 I_CORRUGATED_ANKLES
+#non_visuals[9] 1 I_CHRONIC_NOSEHAIR
+#non_visuals[10] 1 I_3RD_DEGREE_SIDEBURNS
+#non_visuals[11] 1 I_FAKE_BLOOD
+#non_visuals[12] 1 I_GASTRIC_EJECTIONS
+#non_visuals[13] 1 I_THE_SQUITS
+#non_visuals[14] 0 I_IRON_LUNGS
+#non_visuals[15] 1 I_SWEATY_PALMS
+#non_visuals[16] 1 I_HEAPED_PILES
+#non_visuals[17] 1 I_GUT_ROT
+#non_visuals[18] 0 I_GOLF_STONES
+#non_visuals[19] 0 I_UNEXPECTED_SWELLING
+
+
+---------------------- Staff Configuration -------------------------
+
+#start_staff[1].Doctor.Nurse.Handyman.Receptionist.Shrink.Surgeon.Researcher.Junior.Consultant.Skill 1 0 0 0 1 1 1 0 1 100
+
+Each entry states how many staff members of each category are available
+a given month. The number of entries is not fixed.
+| A list | Month it gets active (start at 0) | Each group |
+#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 0 4 0 3 3 10 10 10 10 5
+
+The minimum salary for each staff type
+#staff[0].MinSalary 60 Nurse
+#staff[1].MinSalary -100 Doctor
+#staff[2].MinSalary 25 Handyman
+#staff[3].MinSalary 20 Receptionist
+
+Salary modifiers for different doctor attributes
+#gbv.SalaryAdd[3] 0 Junior
+#gbv.SalaryAdd[4] 0 Doctor
+#gbv.SalaryAdd[5] 0 Surgeon
+#gbv.SalaryAdd[6] 0 Psychiatrist
+#gbv.SalaryAdd[7] 0 Consultant
+#gbv.SalaryAdd[8] 0 Researcher
+
+How much the skill of the doctor adds to the salary. skill * 1000 / divisor
+#gbv.SalaryAbilityDivisor 10
+
+#gbv.TrainingRate         40
+#gbv.AbilityThreshold[0]  75 Surgeon
+#gbv.AbilityThreshold[1]  60 Psychiatrist
+#gbv.AbilityThreshold[2]  45 Researcher
+#gbv.TrainingValue[0]     10 Projector
+#gbv.TrainingValue[1]     15 Skeleton
+#gbv.TrainingValue[2]     20 Bookcase
+
+--------------------- Research Configuration -----------------------
+
+Divides research input to get the amount of research points. must be > 0
+#gbv.ResearchPointsDivisor 1 
+
+---------------------- Awards and Trophies -------------------------
+
+#awards_trophies.CansofCoke             200
+#awards_trophies.CansofCokeBonus        10000
+#awards_trophies.Reputation             850
+#awards_trophies.TrophyReputationBonus  20000
+
+------------------ Winning and Losing Conditions -------------------
+1 Total reputation
+2 Balance total
+3 Percentage people your hospital has handled
+4 Percentage people have been cured
+5 Percentage people have been killed
+6 Hospital value
+
+#win_criteria[0].Criteria.MaxMin.Value.Group.Bound	2	1	50000	1	0
+#win_criteria[1].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#win_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#win_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#win_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+
+#lose_criteria[0].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[2].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[3].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[4].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+#lose_criteria[5].Criteria.MaxMin.Value.Group.Bound	0	0	0	0	0
+
+--------------------- Competitor Information -----------------------
+
+| Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
+#computer[12].Playing 1 CORSIX
+#computer[13].Playing 1 ROUJIN
+#computer[14].Playing 1 EDVIN
