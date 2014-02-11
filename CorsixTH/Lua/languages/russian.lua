@@ -95,7 +95,7 @@ tooltip = {
     change_resolution = "Сменить разрешение экрана на указанное слева",
     height = "Введите разрешение экрана по вертикали",
     width = "Введите разрешение экрана по горизонтали",
-    language = "Select %s as language",
+    language = "Выбрать %s язык",
     back = "Закрыть окно настроек",
   },
   save_game_window = {
@@ -188,7 +188,7 @@ menu_file_save = {
   [8] = "  ИГРА 8  ",
 }
 install = {
-  title = "--------------------------------- CorsixTH Setup ---------------------------------",
+  title = "--------------------------------- Установка CorsixTH ---------------------------------",
   th_directory = "CorsixTH для нормальной работы требуется оригинальная установленная игра Theme Hospital. Нажмите кнопку и выберите папку, в которую установлена оригинальная игра.",
   exit = "Выход",
 }
@@ -290,7 +290,7 @@ misc = {
 }
 errors = {
   unavailable_screen_size = "Установленный размер экрана не поддерживается в полноэкранном режиме.",
-  dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
+  dialog_missing_graphics = "Сожалеем, но файлы демо версии не содержат этот диалог.",
   maximum_screen_size = "Максимальный размер экрана не должен превышать 3000x2000.",
   load_prefix = "Ошибка загрузки игры: ",
   save_prefix = "Ошибка сохранения игры: ",
@@ -1925,22 +1925,22 @@ menu_options_volume = {
 }
 cheats_window = {
   cheats = {
-    end_month = "End of Month",
-    emergency = "Create Emergency",
-    win_level = "Win Level",
-    create_patient = "Create Patient",
-    money = "Money Cheat",
-    lose_level = "Lose Level",
-    all_research = "All Research Cheat",
-    end_year = "End of Year",
+    end_month = "Закончить Месяц",
+    emergency = "Создать Критическое положение",
+    win_level = "Выиграть Уровень",
+    create_patient = "Создать Пациента",
+    money = "Чит на Деньги",
+    lose_level = "Проиграть Уровень",
+    all_research = "Чит на Все Исследования",
+    end_year = "Закончить Год",
   },
-  close = "Close",
-  caption = "Cheats",
+  close = "Закрыть",
+  caption = "Читы",
   cheated = {
-    no = "Cheats used: No",
-    yes = "Cheats used: Yes",
+    no = "Использование читов: Нет",
+    yes = "Использование читов: Да",
   },
-  warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
+  warning = "Внимание: Вы не получите бонусные очки в конце уровня, если Вы будете использовать читы!",
 }
 original_credits = {
   [1] = " ",
@@ -2359,16 +2359,16 @@ tooltip = {
     start_game_with_name = "Загрузить уровень %s",
   },
   cheats_window = {
-    close = "Close the cheats dialog",
+    close = "Закрыть окно с читами",
     cheats = {
-      end_month = "Jumps to the end of the month.",
-      emergency = "Creates an emergency.",
-      win_level = "Win the current level.",
-      create_patient = "Creates a Patient at the map border.",
-      money = "Adds 10.000 to your bank balance.",
-      lose_level = "Lose the current level.",
-      all_research = "Completes all research.",
-      end_year = "Jumps to the end of the year.",
+      end_month = "Перепрыгивает в конец месяца.",
+      emergency = "Создает критическое положение.",
+      win_level = "Выиграть уровень.",
+      create_patient = "Создает Пациента в конце карты.",
+      money = "Добавляет 10.000 к Вашему балансу.",
+      lose_level = "Проиграть уровень.",
+      all_research = "Завершает все исследования.",
+      end_year = "Перепрыгивает в конец года.",
     },
   },
   menu_list_window = {
@@ -2380,17 +2380,17 @@ tooltip = {
     epidemic = "Эпидемия: время на остановку эпидемии. Когда время закончится или зараженный пациент покинет больницу, приедет инспектор. Кнопка включает/отключает режим вакцинации. Щелкните на пациенте, и медсестра введет ему вакцину.",
   },
   calls_dispatcher = {
-    assigned = "This box is marked if someone is assigned to the corresponding task.",
-    task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
-    close = "Close the calls dispatcher dialog",
+    assigned = "Это поле отмечено, если кому-то присвоено соответствующее задание.",
+    task = "Список заданий - нажмите на задание, чтобы открыть окно назначенного персонала и прокрутить до расположения задачи",
+    close = "Закрыть окно диспетчера",
   },
   information = {
     close = "Закрыть окно информации",
   },
   lua_console = {
-    textbox = "Enter Lua code to run here",
-    execute_code = "Run the code you have entered",
-    close = "Close the console",
+    textbox = "ВВедите здесь Lua код для запуска",
+    execute_code = "Запустить введенный Вами код",
+    close = "Закрыть консоль",
   },
   staff_window = {
     doctor_seniority = "Авторитет (Студент, Доктор, Консультант)",
@@ -2580,7 +2580,7 @@ insurance_companies = {
   [9] = "Бивис и Батт-хед Ко",
   [10] = "ООО Застрахуй-ка",
   [11] = "ООО Страховой Синдикат",
-  out_of_business = "OUT OF BUSINESS",
+  out_of_business = "ВЫШЕЛ ИЗ БИЗНЕСА",
 }
 competitor_names = {
   [1] = "ПРОФИТ",
@@ -2739,10 +2739,10 @@ lua_console = {
   close = "Закрыть",
 }
 calls_dispatcher = {
-  repair = "Repair %s",
-  summary = "%d calls; %d assigned",
-  close = "Close",
-  watering = "Watering @ %d,%d",
+  repair = "Починить %s",
+  summary = "%d вызовов; %d назначено",
+  close = "Закрыть",
+  watering = "Полить @ %d,%d",
   staff = "%s - %s",
 }
 information = {
@@ -2751,9 +2751,9 @@ information = {
     [2] = "Причина проигрыша:",
     reputation = "Ваша репутация упала ниже %d.",
     balance = "Ваш банковский баланс опустился ниже %d.",
-    percentage_killed = "Более %d вагих пациентов отошли в мир иной.",
+    percentage_killed = "Более %d ваших пациентов отошли в мир иной.",
   },
-  cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  cannot_restart = "К сожалению, эта пользовательская игра была сохранена до реализации функции перезапуска.",
   custom_game = "Добро пожаловать в CorsixTH. Развлекайтесь по полной на пользовательской карте!",
 }
 
