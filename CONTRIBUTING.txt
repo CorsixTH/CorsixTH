@@ -13,8 +13,8 @@ http://mac.github.com)
 
 Every Time
 6. Sync your master branch with the CorisxTH repository's master branch
-     - git fetch upstream
-     - git rebase upstream/master
+        - git fetch upstream
+        - git rebase upstream/master
 7. Create feature branch
 	- git branch myfeature upstream/master
 8. Checkout your feature branch
