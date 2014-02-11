@@ -12,8 +12,9 @@ http://mac.github.com)
 	- git remote add upstream https://github.com/CorsixTH/CorsixTH.git
 
 Every Time
-6. Sync with upstream
-	- git fetch upstream
+6. Sync your master branch with the CorisxTH repository's master branch
+        - git fetch upstream
+        - git rebase upstream/master
 7. Create feature branch
 	- git branch myfeature upstream/master
 8. Checkout your feature branch
