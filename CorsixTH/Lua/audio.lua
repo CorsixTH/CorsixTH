@@ -233,9 +233,9 @@ function Audio:dumpSoundArchive(out_dir)
   local info,warning = io.open(out_dir .. "info.csv", "wt")
   
   if info == nil then
-  	print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
-  	print(warning)
-  	return
+    print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
+    print(warning)
+    return
   end
   
   for i = 1, #self.sound_archive - 1 do
