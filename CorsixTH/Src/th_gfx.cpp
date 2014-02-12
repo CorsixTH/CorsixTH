@@ -1003,7 +1003,11 @@ void THAnimation::tick()
             m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
     }
 
-    m_iSoundToPlay = m_pManager->getFrameSound(m_iFrame);
+    //Female flying to heaven sound fix:
+    if(m_iFrame == 6987)
+        m_iSoundToPlay = 123;
+    else
+        m_iSoundToPlay = m_pManager->getFrameSound(m_iFrame);
 }
 
 void THAnimationBase::removeFromTile()
