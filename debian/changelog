@@ -1,9 +1,15 @@
+<<<<<<< HEAD
+corsixth (0.30) saucy; urgency=low
+  * New Maintainer
+  * New Package Name
+=======
 corsix-th (0.30) saucy; urgency=low
   * New maintainer
+>>>>>>> 382ec4543fdda9bfd0bb8d420ba7266ed1358a66
   * New Upstream Release
-  * debian/*: Redo all the files in the debian subfoder
+  * debian/*: Redo all the files in the debian subfolder
 
- -- CorsixTH developers <th@corsix.org> Fri, 7 Feb 2014 21:41:09 -0500
+ -- CorsixTH developers <th@corsix.org>  Fri, 7 Feb 2014 21:41:09 -0500
 
 corsix-th (0.21-1stable) squeeze-backports; urgency=low
 

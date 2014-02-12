@@ -1,0 +1,2 @@
+?package(corsixth):needs="X11" section="Games/Strategy"\
+  title="MapEdit" command="/usr/games/CorsixTH/MapEdit" icon="/usr/share/pixmaps/MapEdit.xpm"

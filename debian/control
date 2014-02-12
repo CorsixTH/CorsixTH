@@ -1,4 +1,4 @@
-Source: corsix-th
+Source: corsixth
 Section: games
 Priority: optional
 Maintainer: CorsixTH developers <th@corsix.org>
@@ -9,10 +9,11 @@ Build-Depends: debhelper (>= 8.0.0)
 	       liblua5.1-0-dev (>= 5.1),
 	       libsdl-mixer1.2-dev (>=1.2.12),
 	       libfreetype6-dev (>= 2.5.2)
+	       make (>= 3.8)
 Standards-Version: 3.9.4
 Homepage: http://github.cm/CorsixTH/CorsixTH
 
-Package: corsix-th
+Package: corsixth
 Version: 0.30
 Installed-Size: 13320
 Priority: optional
