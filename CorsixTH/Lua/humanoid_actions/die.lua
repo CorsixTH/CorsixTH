@@ -73,6 +73,11 @@ local function action_die_start(action, humanoid)
   -- TODO: Right now the angel version of death is the only possibility
   -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
+  
+  --If this isn't done their bald head will become bloated instead of suddenly having hair:
+  if humanoid.disease.id == "baldness" and humanoid.layers[0] == 12 then 
+    humanoid:setLayer(0,2) 
+  end
 
   if direction == "east" then
     humanoid:setAnimation(anims.fall_east, 0)
