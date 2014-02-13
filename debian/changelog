@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 corsixth (0.30) saucy; urgency=low
-  * New Maintainer
+
   * New Package Name
-=======
-corsix-th (0.30) saucy; urgency=low
-  * New maintainer
->>>>>>> 382ec4543fdda9bfd0bb8d420ba7266ed1358a66
+  * New Maintainer
   * New Upstream Release
   * debian/*: Redo all the files in the debian subfolder
 

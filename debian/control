@@ -2,8 +2,8 @@ Source: corsixth
 Section: games
 Priority: optional
 Maintainer: CorsixTH developers <th@corsix.org>
-Build-Depends: debhelper (>= 8.0.0)
-	       cmake (>= 2.8.12),
+Build-Depends: debhelper (>= 9.20130630),
+	       cmake (>= 2.7),
 	       libsdl1.2-dev (>=1.2.14),
 	       gcc (>= 4.4),
 	       liblua5.1-0-dev (>= 5.1),
@@ -17,13 +17,14 @@ Package: corsixth
 Version: 0.30
 Installed-Size: 13320
 Priority: optional
-Architecture: all
-Depends: libc6 (>= 2.2.5)
+Architecture: any
+Depends: libc6 (>= 2.2.5),
 	 libfreetype6 (>= 2.2.1),
 	 libgcc1 (>= 1:4.1.1),
 	 liblua5.1-0,
 	 liblua5.1-filesystem0,
 	 liblua5.1-lpeg2,
+	 lua-socket,
 	 libsdl-mixer1.2 (>= 1.2.6),
 	 libsdl1.2debian (>= 1.2.10-1),
 	 libstdc++6 (>= 4.1.1)
