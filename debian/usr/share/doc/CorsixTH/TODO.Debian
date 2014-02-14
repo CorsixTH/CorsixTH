@@ -1,0 +1,9 @@
+Stuff left to do before uploading to Debian
+
+• replace the bundled libraries with packaged versions: LFS, LPEG, AGG
+• decide on version number scheme: 0.5-beta? 0.1~beta5?
+
+maybe leave 'til later:
+
+• debconf questions for installing original game files to /usr/share/CorsixTH
+• dev tools package?

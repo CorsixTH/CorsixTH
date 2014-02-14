@@ -1,0 +1,20 @@
+corsixth (0.30) saucy; urgency=low
+
+  * New Package Name
+  * New Maintainer
+  * New Upstream Release
+  * debian/*: Redo all the files in the debian subfolder
+
+ -- CorsixTH developers <th@corsix.org>  Fri, 7 Feb 2014 21:41:09 -0500
+
+corsix-th (0.21-1stable) squeeze-backports; urgency=low
+
+  * Append stable to version number; no source changes
+
+ -- Chris Butler <chrisb@debian.org>  Mon, 06 May 2013 12:25:54 +0100
+
+corsix-th (0.21-1) unstable; urgency=low
+
+  * Initial release (Closes: #610087)
+
+ -- Chris Butler <chrisb@debian.org>  Thu, 24 Mar 2011 10:17:25 +0000

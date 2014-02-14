@@ -1,0 +1,39 @@
+Source: corsixth
+Section: games
+Priority: optional
+Maintainer: CorsixTH developers <th@corsix.org>
+Build-Depends: debhelper (>= 9.20130630),
+	       cmake (>= 2.7),
+	       libsdl1.2-dev (>=1.2.14),
+	       gcc (>= 4.4),
+	       liblua5.1-0-dev (>= 5.1),
+	       libsdl-mixer1.2-dev (>=1.2.12),
+	       libfreetype6-dev (>= 2.5.2)
+	       make (>= 3.8)
+Standards-Version: 3.9.4
+Homepage: http://github.cm/CorsixTH/CorsixTH
+
+Package: corsixth
+Version: 0.30
+Installed-Size: 13320
+Priority: optional
+Architecture: any
+Depends: libc6 (>= 2.2.5),
+	 libfreetype6 (>= 2.2.1),
+	 libgcc1 (>= 1:4.1.1),
+	 liblua5.1-0,
+	 liblua5.1-filesystem0,
+	 liblua5.1-lpeg2,
+	 lua-socket,
+	 libsdl-mixer1.2 (>= 1.2.6),
+	 libsdl1.2debian (>= 1.2.10-1),
+	 libstdc++6 (>= 4.1.1)
+Description: An Open-Source clone of Theme Hospital
+ Theme Hospital was a simulation computer game developed by Bullfrog
+ Productions and published by Electronic Arts in 1997, in which the player
+ designs and operates a hospital.
+ .
+ CorsixTH is an open source reimplementation of the Theme Hospital engine.
+ It requires data files from the original game or demo to run.
+ Note that the game is still in beta, and all features are not yet
+ present.

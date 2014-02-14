@@ -1,0 +1,2 @@
+?package(corsixth):needs="X11" section="Games/Strategy"\
+  title="CorsixTH" command="/usr/games/CorsixTH/CorsixTH" icon="/usr/share/pixmaps/CorsixTH.xpm"
