@@ -85,7 +85,12 @@ local function action_die_start(action, humanoid)
     humanoid:setAnimation(anims.fall_east, 1)
   end
   action.phase = 0
-  humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+  
+  if humanoid.humanoid_class == "Chewbacca Patient" then
+    humanoid:setTimer(21, action_die_tick)
+  else
+    humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+  end
 end
 
 return action_die_start
