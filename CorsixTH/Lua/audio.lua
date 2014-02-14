@@ -230,15 +230,24 @@ function Audio:initSpeech(speech_file)
 end
 
 function Audio:dumpSoundArchive(out_dir)
-  local info = io.open(out_dir .. "info.csv", "wt")
+  local info,warning = io.open(out_dir .. "info.csv", "wt")
+  
+  if info == nil then
+    print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
+    print(warning)
+    return
+  end
+  
   for i = 1, #self.sound_archive - 1 do
     local filename = self.sound_archive:getFilename(i)
     info:write(i, ",", filename, ",", self.sound_archive:getDuration(i), ",\n")
     local file = io.open(out_dir .. i .. "_" .. filename, "wb")
     file:write(self.sound_archive:getFileData(i))
     file:close()
+    print("".. i .. "/" .. #self.sound_archive - 1)
   end
   info:close()
+  print("Sounds dumped to: " .. out_dir)
 end
 
 local wilcard_cache = permanent "audio_wildcard_cache" {}

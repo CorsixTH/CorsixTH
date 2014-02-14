@@ -174,7 +174,7 @@ function UIStaff:draw(canvas, x_, y_)
   font:draw(canvas, profile.name, x + 42, y + 28) -- Name
   if profile.humanoid_class == "Handyman" then
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
-    font:draw(canvas, self:getParcelText(), x + 25, y + 215, 50, 0)
+    font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
     -- The concentration areas
     local cleaning_width, watering_width, repairing_width = 0, 0, 0
     if self.staff.attributes["cleaning"] then -- Backwards compatibility
