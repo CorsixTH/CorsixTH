@@ -75,8 +75,8 @@ local function action_die_start(action, humanoid)
   local fall = anims.fall_east
   
   --If this isn't done their bald head will become bloated instead of suddenly having hair:
-  if humanoid.disease.id == "baldness" and humanoid.layers[0] == 12 then 
-    humanoid:setLayer(0,2) 
+  if humanoid.disease.id == "baldness" and humanoid.layers[0] == 12 then
+    humanoid:setLayer(0,2)
   end
 
   if direction == "east" then
