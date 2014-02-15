@@ -30,6 +30,7 @@ SOFTWARE.
 #pragma comment(lib, "SDL2_mixer")
 #pragma warning(disable: 4996) // CRT deprecation
 #endif
+#include <cstring>
 
 struct music_t
 {

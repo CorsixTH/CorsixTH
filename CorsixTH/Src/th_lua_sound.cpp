@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_sound.h"
+#include <cstring>
 
 static int l_soundarc_new(lua_State *L)
 {
