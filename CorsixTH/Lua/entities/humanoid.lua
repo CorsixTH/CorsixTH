@@ -138,7 +138,7 @@ die_anims("Transparent Male Patient",  4412, 2434, 2438, 2446,  2450,  4416) -- 
 die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220)
 die_anims("Slack Female Patient",      4288, 3208, 3212, 3216,  3220)
 die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- Extra = Transformation
-die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450, 1682) -- Only males die... (1222 is the Female)
+die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450) -- Only males die... (1222 is the Female)
 die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
 die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
 die_anims("Alien Male Patient",        4882, 2434, 2438, 2446,  2450)
@@ -320,9 +320,6 @@ function Humanoid:afterLoad(old, new)
       self.build_callbacks[self.toilet_callback] = true
       self.toilet_callback = nil
     end
-  end
-  if old < 83 and self.humanoid_class == "Chewbacca Patient" then
-    self.die_anims.extra_east = 1682
   end
   Entity.afterLoad(self, old, new)
 end
