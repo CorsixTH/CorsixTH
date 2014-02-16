@@ -944,7 +944,7 @@ function Patient:afterLoad(old, new)
       self.waiting = nil
     end
   end
-  if old < 84 then
+--[[  if old < 84 then
     -- Hell Death rise Animations Added:
     if self:isMalePatient() then
       if self.humanoid_class ~= "Alternate Male Patient" then
@@ -955,6 +955,6 @@ function Patient:afterLoad(old, new)
     else  
       self.die_anims.rise_east = 580
     end
-  end
+  end]]
   Humanoid.afterLoad(self, old, new)
 end
