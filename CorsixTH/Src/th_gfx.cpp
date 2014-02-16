@@ -1004,8 +1004,6 @@ void THAnimation::tick()
     }
 
     m_iSoundToPlay = m_pManager->getFrameSound(m_iFrame);
-    //3320 Female flying to heaven sound fix:
-    if(m_iFrame == 6987) m_iSoundToPlay = 123;
 }
 
 void THAnimationBase::removeFromTile()
