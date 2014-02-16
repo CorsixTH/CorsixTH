@@ -26,6 +26,7 @@ local ipairs, _G, table_remove
 dofile "entities/patient"
 dofile "entities/staff"
 dofile "entities/vip"
+dofile "entities/grimreaper"
 dofile "staff_profile"
 dofile "hospital"
 dofile "calls_dispatcher"
@@ -169,6 +170,10 @@ function World:World(app)
   }
   
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
+end
+
+function World:newObjectType(new_object)
+  self.object_types[new_object.id] = new_object
 end
 
 --! Register key shortcuts for controling the world (game speed, etc.)
@@ -527,6 +532,44 @@ function World:spawnPatient(hospital)
     
     return patient
   end
+end
+
+function World:getHellDeathSpawnPoints(patient)
+  local hole_x, hole_y = self.pathfinder:findIdleTile(patient.tile_x, patient.tile_y + 4, 0)
+  local grim_x, grim_y = self.pathfinder:findIdleTile(hole_x - 5, hole_y + 2, 0)
+  
+    -- Check spawn tiles aren't in rooms:
+  if not self:getRoom(hole_x, hole_y) and not self:getRoom(grim_x, grim_y)
+    -- Grim's adjacent tile check:
+    and not self:getRoom(hole_x, hole_y + 1) and self:getPath(grim_x, grim_y, hole_x, hole_y + 1)
+    --Patient's adjacent tile check:
+    and ((self:getPath(patient.tile_x, patient.tile_y, hole_x, hole_y - 1) and not self:getRoom(hole_x, hole_y - 1))
+      or (self:getPath(patient.tile_x, patient.tile_y, hole_x - 1, hole_y) and not self:getRoom(hole_x - 1, hole_y)))
+    then
+    return {["hole_x"] = hole_x, ["hole_y"] = hole_y, ["grim_spawn_x"] = grim_x, ["grim_spawn_y"] = grim_y}
+  else
+    return nil
+  end
+end
+
+function World:spawnGrimReaperAndLavaHole(hospital, patient, hell_death_spawns)
+  if not hospital then 
+    hospital = self:getLocalPlayerHospital() 
+  end
+  
+  local lava_hole = self:newObject("gates_to_hell", hell_death_spawns["hole_x"], hell_death_spawns["hole_y"], "north")
+  local grim_reaper = self:newEntity("GrimReaper", 1660)
+  grim_reaper:setNextAction({name = "idle_spawn",
+                             count = 40, 
+                             spawn_animation = 1660,
+                             point = { x = hell_death_spawns["grim_spawn_x"], 
+                                       y = hell_death_spawns["grim_spawn_y"], 
+                                       direction="east"}})
+  grim_reaper.patient = patient
+  grim_reaper:setHospital(hospital)
+  grim_reaper.lava_hole = lava_hole
+  patient.grim_reaper = grim_reaper
+  return grim_reaper
 end
 
 function World:spawnVIP(name)
@@ -943,6 +986,7 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
+  local pause_state_changed = nil
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
     if self.active_earthquake then
@@ -950,8 +994,10 @@ function World:setSpeed(speed)
     end
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
+    pause_state_changed = true
   elseif self:getCurrentSpeed() == "Pause" then
     self.user_actions_allowed = true
+    pause_state_changed = false
   end
   self.prev_speed = self:getCurrentSpeed()
   local numerator, denominator = unpack(tick_rates[speed])
@@ -959,6 +1005,14 @@ function World:setSpeed(speed)
   self.tick_rate = denominator
   -- Set the blue filter according to whether the user can build or not.
   TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
+  if pause_state_changed ~= nil then
+    TheApp.audio:onGamePausedStateChanged(pause_state_changed)
+  end
+  return false
+end
+
+function World:isPaused()
+  return self:isCurrentSpeed("Pause")
 end
 
 -- Dedicated function to allow unpausing by pressing 'p' again
@@ -1890,6 +1944,19 @@ function World:objectPlaced(entity, id)
   if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
     self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
   end
+  
+  if id == "gates_to_hell" then
+    entity:playSoundsAtEntityInRandomSequenceWhileFlagATrue("LAVA00*.WAV",
+                                                            {0,1350,1150,950,750,350},
+                                                            {0,1450,1250,1050,850,450},
+                                                            40)
+    entity:setTimer(entity.world:getAnimLength(2550),
+                    --[[persistable:lava_hole_spawn_animation_end]]
+                    function(entity)
+                      entity:setAnimation(1602) 
+                    end)
+    entity:setAnimation(2550)
+  end
 end
 
 --! Notify the world of an object being removed from a tile
@@ -2303,6 +2370,7 @@ function World:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom,  5)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
   end
+  
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
     for _, obj in pairs(cat) do
@@ -2313,7 +2381,14 @@ function World:afterLoad(old, new)
     self:determineWinningConditions()
   end
   
+  self:playLoadedEntitySounds()
   self.savegame_version = new
+end
+
+function World:playLoadedEntitySounds()
+  for _, entity in pairs(self.entities) do 
+    entity:playAfterLoadSound() 
+  end
 end
 
 --[[ There is a problem with room editing in that it resets all the partial passable flags

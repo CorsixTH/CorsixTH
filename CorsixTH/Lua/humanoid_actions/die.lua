@@ -59,6 +59,105 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
   end
 end)
 
+-- What happens when patients go to hell is based on what happens in Theme Hospital:
+local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick_reaper"( function(humanoid)
+  local action = humanoid.action_queue[1]
+  local mirror = humanoid.last_move_direction == "east" and 0 or 1
+  local phase = action.phase
+  
+  if phase == 0 then
+    action.phase = 1
+    
+    if humanoid.die_anims.extra_east ~= nil then
+      humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.extra_east), action_die_tick_reaper)
+      humanoid:setAnimation(humanoid.die_anims.extra_east, mirror)
+    else
+      action_die_tick_reaper(humanoid)
+    end
+  --1: The grim reaper and lava hole appear, if spawn points are available:
+  elseif phase == 1 then
+    if humanoid.humanoid_class ~= "Standard Male Patient" then 
+      humanoid:setType("Standard Male Patient") 
+    end
+    humanoid:setAnimation(humanoid.on_ground_anim, mirror)
+    local hell_death_spawns = humanoid.world:getHellDeathSpawnPoints(humanoid)
+    if hell_death_spawns == nil then
+      action_die_tick(humanoid)
+    else
+      action.phase = 2
+      
+      --After spawning the Grim Reaper will stand idle for 40 ticks before doing his next action.
+      humanoid.world:spawnGrimReaperAndLavaHole(humanoid.hospital, humanoid, hell_death_spawns)
+    
+      --The Grim Reaper then walks to the tile where he will be standing next to the lava hole when the patient walks into it.
+      humanoid.grim_reaper:queueAction({name = "walk",
+                                        x = humanoid.grim_reaper.lava_hole.tile_x,
+                                        y = humanoid.grim_reaper.lava_hole.tile_y + 1,
+                                        no_truncate = true})
+      humanoid.grim_reaper:queueAction({name = "idle", loop_callback = 
+                                                      --[[persistable:reaper_wait]]function() 
+                                                           humanoid.grim_reaper:setAnimation(1002) 
+                                                           humanoid:setTimer(1, action_die_tick_reaper) 
+                                                         end})
+    end
+  --2: When the Grim Reaper has walked up to the lava hole, there will be a brief pause before the patient stands up:
+  elseif phase == 2 then
+    action.phase = 3 
+    humanoid:setTimer(20, action_die_tick_reaper)
+  
+--  -- 3: The dead patient will now stand up:
+  elseif phase == 3 then
+    action.phase = 4
+    humanoid:setTimer(humanoid.world:getAnimLength(humanoid.die_anims.rise_hell_east), action_die_tick_reaper)
+    humanoid:setAnimation(humanoid.die_anims.rise_hell_east, mirror)
+  
+  --4: The dead patient will now walk in to the lava pool, falling in as the grim reaper does his "sending patient to hell" animation:  
+  elseif phase == 4 then
+    --The Grim Reaper's final actions:
+    humanoid.grim_reaper:queueAction({name = "idle",
+                                      count = humanoid.grim_reaper.world:getAnimLength(1670),
+                                      loop_callback = 
+                                      --[[persistable:reaper_swipe]]function() 
+                                          humanoid.grim_reaper:setAnimation(1670) 
+                                        end})
+   
+    humanoid.grim_reaper:queueAction({name = "idle",
+                                      count = humanoid.grim_reaper.world:getAnimLength(1678),
+                                      loop_callback = 
+                                      --[[persistable:reaper_leave]]function() 
+                                          humanoid.grim_reaper:setAnimation(1678) 
+                                        end})
+                                                      
+    humanoid.grim_reaper:queueAction({name = "idle",
+                                      loop_callback = 
+                                      --[[persistable:reaper_destroy]]function() 
+                                          humanoid.grim_reaper.lava_hole:setFlagA(false)
+                                          humanoid.grim_reaper.lava_hole:setTimer(humanoid.grim_reaper.lava_hole.world:getAnimLength(2552),
+                                                                                  --[[persistable:lava_destroy]]function() 
+                                                                                    humanoid.world:destroyEntity(humanoid.grim_reaper.lava_hole) 
+                                                                                  end)
+                                          humanoid.grim_reaper.lava_hole:setAnimation(2552)
+                                          humanoid.grim_reaper.world:destroyEntity(humanoid.grim_reaper) 
+                                        end})
+    --The patient's final actions:
+    if humanoid.world:getPath(humanoid.tile_x, humanoid.tile_y, humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1)
+      and not humanoid.world:getRoom(humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1) then
+      humanoid:walkTo(humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1, true)
+    else
+      humanoid:walkTo(humanoid.grim_reaper.lava_hole.tile_x - 1, humanoid.grim_reaper.lava_hole.tile_y, true)
+    end
+    
+    humanoid:queueAction({name = "use_object", 
+                          object = humanoid.grim_reaper.lava_hole,
+                          destroy_user_after_use = true,
+                          after_walk_in = 
+                          --[[persistable:walk_into_lava]]function() 
+                              humanoid.grim_reaper:finishAction() 
+                            end})
+    humanoid:finishAction()
+  end	          
+end)
+ 
 local function action_die_start(action, humanoid)
   humanoid:setMoodInfo() -- clear all mood icons
   if math.random(0, 1) == 1 then
@@ -74,6 +173,7 @@ local function action_die_start(action, humanoid)
   -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
 <<<<<<< HEAD
+<<<<<<< HEAD
   
   --If this isn't done their bald head will become bloated instead of suddenly having hair:
   if humanoid.disease.id == "baldness" and humanoid.layers[0] == 12 then
@@ -82,13 +182,28 @@ local function action_die_start(action, humanoid)
 =======
 >>>>>>> parent of 488a6c3... Patches for hell death
 
+=======
+  
+  --If this isn't done their bald head will become bloated instead of suddenly having hair:
+  if humanoid.disease.id == "baldness" then humanoid:setLayer(0,2) end
+ 
+>>>>>>> 9d855d75de183547307dddce6e517b37f68eed96
   if direction == "east" then
     humanoid:setAnimation(anims.fall_east, 0)
   elseif direction == "south" then
     humanoid:setAnimation(anims.fall_east, 1)
   end
   action.phase = 0
-  humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+
+  if humanoid:isMalePatient() and humanoid.disease.id ~= "bloaty_head" then
+    if math.random(0, 1) == 1 then
+      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
+    else
+      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
+    end
+  else
+    humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+  end
 end
 
 return action_die_start
