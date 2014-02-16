@@ -28,7 +28,20 @@ function Entity:Entity(animation)
   self.layers = {}
   animation:setHitTestResult(self)
   self.ticks = true
+  self.flag_a = false
+  self.waiting_for_sound_effects_to_be_turned_on = false
+  self.playing_sounds_in_random_sequence = nil
   self.dynamic_info = nil;
+end
+
+function Entity:playAfterLoadSound()
+  if self.playing_sounds_in_random_sequence ~= nil then
+    self.flag_a = true
+    self:playSoundsAtEntityInRandomSequenceWhileFlagATrue(self.playing_sounds_in_random_sequence["namePattern"],
+                                                          self.playing_sounds_in_random_sequence["minSilence"],
+                                                          self.playing_sounds_in_random_sequence["maxSilence"],
+                                                          self.playing_sounds_in_random_sequence["numSilences"])
+  end
 end
 
 -- This plays a sound "at" the entity, meaning the sound will not be played
@@ -36,10 +49,42 @@ end
 -- the entity is from the center of the screen. If this is not what you want
 -- then use UI:playSound instead.
 -- !param name (string, integer) The filename or ordinal of the sound to play.
-function Entity:playSound(name)
+-- !param played_callback (function) a optional parameter.
+-- !param played_callback_delay (integer) a optional milliseconds parameter.
+function Entity:playSound(name, played_callback, played_callback_delay)
   if TheApp.config.play_sounds then
-    TheApp.audio:playSound(name, self)
+    TheApp.audio:playSound(name, self, played_callback, played_callback_delay)
   end
+end
+
+function Entity:setFlagA(state)
+  self.flag_a = state
+  if state == false then 
+    self.playing_sounds_in_random_sequence = nil 
+  end
+end
+
+function Entity:setWaitingForSoundsEffectsToBeTurnedOn(state)
+  self.waiting_for_sound_effects_to_be_turned_on = true
+end
+
+-- !param namePattern (String) example: LAVA00*.WAV 
+-- !param num_silences (integer) how many different silence lengths should be used, this can be a nil parameter.
+-- !parm min_silence_lengths (table) the desired mininum silences length for the different tick rates, [3] = Normal
+-- !parm max_silence_lengths (table) the desired maximum silences length for the different tick rates, [3] = Normal
+function Entity:playSoundsAtEntityInRandomSequenceWhileFlagATrue(name_pattern, min_silence_lengths, max_silence_lengths, num_silences)
+  self:setFlagA(true)
+  self.playing_sounds_in_random_sequence = {}
+  self.playing_sounds_in_random_sequence["namePattern"] = name_pattern
+  self.playing_sounds_in_random_sequence["minSilence"] = min_silence_lengths
+  self.playing_sounds_in_random_sequence["maxSilence"] = max_silence_lengths
+  self.playing_sounds_in_random_sequence["numSilences"] = num_silences
+  
+  TheApp.audio:playSoundsAtEntityInRandomSequenceWhileFlagATrue(name_pattern,
+                                                                self, 
+                                                                min_silence_lengths, 
+                                                                max_silence_lengths, 
+                                                                num_silences)
 end
 
 --[[ Set which animation is used to give the entity a visual appearance.
@@ -232,6 +277,9 @@ function Entity:onDestroy()
   getmetatable(self.gc_dummy).__gc = function()
     print("Entity " .. tostring(self) .. " has been garbage collected.")
   end --]]
+  if self.waiting_for_sound_effects_to_be_turned_on == true then 
+    TheApp.audio:entityNoLongerWaitingForSoundsToBeTurnedOn(self) 
+  end
 end
 
 -- Function which is called at the end of each ingame day. Should be used to
@@ -271,6 +319,16 @@ end
 
 --! Stub to be extended in subclasses, if needed.
 function Entity:afterLoad(old, new)
+end
+
+function Entity:playAfterLoadSound()
+  if self.playing_sounds_in_random_sequence ~= nil then
+    self.flag_a = true
+    self:playSoundsAtEntityInRandomSequenceWhileFlagATrue(self.playing_sounds_in_random_sequence["namePattern"],
+                                                          self.playing_sounds_in_random_sequence["minSilence"],
+                                                          self.playing_sounds_in_random_sequence["maxSilence"],
+                                                          self.playing_sounds_in_random_sequence["numSilences"])
+  end
 end
 
 function Entity:resetAnimation()

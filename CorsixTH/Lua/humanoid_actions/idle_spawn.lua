@@ -25,8 +25,7 @@ local function action_idle_spawn_start(action, humanoid)
   
   if action.spawn_animation then
     humanoid:queueAction({name="idle",count = humanoid.world:getAnimLength(action.spawn_animation),
-                                      loop_callback=--[[persistable:idle_spawn_animation]]
-                                      function()
+                                      loop_callback=--[[persistable:idle_spawn_animation]]function()
                                         if action.spawn_sound then humanoid:playSound(action.spawn_sound) end      
                                         humanoid:setAnimation(action.spawn_animation)
                                       end})
