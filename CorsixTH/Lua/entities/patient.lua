@@ -944,7 +944,7 @@ function Patient:afterLoad(old, new)
         self.die_anims.rise_hell_east = 3404
       end
     else  
-      self.die_anims.rise_east = 580
+      self.die_anims.rise_hell_east = 580
     end
   end
   Humanoid.afterLoad(self, old, new)
