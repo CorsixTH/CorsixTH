@@ -187,7 +187,7 @@ local function action_die_start(action, humanoid)
     if math.random(1, 100) <= 65 then
       humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
     else
-      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
+      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
     end
   else
     humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
