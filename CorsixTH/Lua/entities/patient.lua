@@ -939,9 +939,9 @@ function Patient:afterLoad(old, new)
     -- Hell Death rise Animations Added:
     if self:isMalePatient() then
       if self.humanoid_class ~= "Alternate Male Patient" then
-        self.die_anims.rise_east = 384
+        self.die_anims.rise_hell_east = 384
       else
-        self.die_anims.rise_east = 3404
+        self.die_anims.rise_hell_east = 3404
       end
     else  
       self.die_anims.rise_east = 580
