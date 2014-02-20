@@ -395,7 +395,7 @@ tooltip = {
       load_slot = "WCZYTAJ GRĘ",
       empty_slot = "PUSTY",
     },
-    new_game = "Start a completely new game from scratch",
+    new_game = "Zacznij grę od samego początku‏",
     load_game = "Wczytaj zapisaną grę",
   },
   patient_window = {
