@@ -65,6 +65,7 @@ after_success:
   - cp libs/SDL_mixer-1.2.12/lib/x86/SDL_mixer.dll fresh/CorsixTH/
   - cp libs/ffmpeg-bin/bin/*.dll fresh/CorsixTH/
   - cp libs/freetype/bin/*.dll fresh/CorsixTH/
+  - cp libs/lua/bin/*.dll fresh/CorsixTH/
   # Copy CTH
   - cd CorsixTH/
   - cp -r * ../fresh/CorsixTH/
