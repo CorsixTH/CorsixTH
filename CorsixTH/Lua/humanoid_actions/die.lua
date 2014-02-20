@@ -184,7 +184,7 @@ local function action_die_start(action, humanoid)
   action.phase = 0
 
   if humanoid:isMalePatient() and humanoid.disease.id ~= "bloaty_head" then
-    if math.random(0, 1) == 1 then
+    if math.random(1, 100) <= 65 then
       humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
     else
       humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
