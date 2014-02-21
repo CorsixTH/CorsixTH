@@ -586,15 +586,6 @@ function World:getHellDeathSpawnPoints(patient)
     and not self:getRoom(hole_x, hole_y + 1)
     -- One of the patient's use tiles should be accesible and not in a room:
     and (((not self:getRoom(hole_x, hole_y - 1) and p_north_use_tile_usable)) or ((not self:getRoom(hole_x - 1, hole_y)) and p_east_use_tile_usable))
-=======
-    -- Check spawn tiles aren't in rooms:
-  if not self:getRoom(hole_x, hole_y) and not self:getRoom(grim_x, grim_y)
-    -- Grim's adjacent tile check:
-    and not self:getRoom(hole_x, hole_y + 1) and self:getPath(grim_x, grim_y, hole_x, hole_y + 1)
-    --Patient's adjacent tile check:
-    and ((self:getPath(patient.tile_x, patient.tile_y, hole_x, hole_y - 1) and not self:getRoom(hole_x, hole_y - 1))
-      or (self:getPath(patient.tile_x, patient.tile_y, hole_x - 1, hole_y) and not self:getRoom(hole_x - 1, hole_y)))
->>>>>>> bd886759806a9b10a10be43504832f8021407c63
     then
     return {["hole_x"] = hole_x, ["hole_y"] = hole_y, ["grim_spawn_x"] = grim_x, ["grim_spawn_y"] = grim_y}
   else
