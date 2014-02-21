@@ -929,15 +929,6 @@ function Patient:updateMessage(choice)
   end
 end
 
-function Patient:isMalePatient()
-  if string.find(self.humanoid_class,"Female") then return false
-  elseif string.find(self.humanoid_class,"Male") then return true  
-  else
-    local male_patient_classes = {["Chewbacca Patient"] = true,["Elvis Patient"] = true,["Invisible Patient"] = true}
-    return male_patient_classes[self.humanoid_class] ~= nil
-  end
-end
-
 function Patient:afterLoad(old, new)
   if old < 68 then
     if self.going_home then
@@ -957,4 +948,13 @@ function Patient:afterLoad(old, new)
     end
   end
   Humanoid.afterLoad(self, old, new)
+end
+
+function Patient:isMalePatient()
+  if string.find(self.humanoid_class,"Female") then return false
+  elseif string.find(self.humanoid_class,"Male") then return true  
+  else
+    local male_patient_classes = {["Chewbacca Patient"] = true,["Elvis Patient"] = true,["Invisible Patient"] = true}
+    return male_patient_classes[self.humanoid_class] ~= nil
+  end
 end
