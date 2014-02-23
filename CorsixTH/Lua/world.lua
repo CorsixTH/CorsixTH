@@ -535,76 +535,50 @@ function World:spawnPatient(hospital)
 end
 
 --TODO the last if statement's checks could be done before the path checks to prevent the more time consuming path checks from happening unnecessarily.
-function World:getHellDeathSpawnPoints(patient)
-  local hole_x, hole_y = self.pathfinder:findIdleTile(patient.tile_x, patient.tile_y + 4, 0)
-  local grim_x, grim_y = self.pathfinder:findIdleTile(hole_x - 5, hole_y + 2, 0)
+function World:checkHellDeathSpawnPoints(patient, hole_x, hole_y, grim_x, grim_y)
+  if self:getRoom(hole_x, hole_y) or self:getRoom(grim_x, grim_y) then
+    return false
+  end
 
-  -- Are the use tiles or the paths to them blocked? or will the paths be blocked when the hole has spawned?
-  -- South use tile:
-  local g_path_x, g_path_y = self:getPath(grim_x, grim_y, hole_x, hole_y + 1) --south use tile
-  if g_path_y == "no path" then
-    return nil
-  else
-    for i, _ in ipairs(g_path_x) do
-      if g_path_x[i] == hole_x and g_path_y[i] == hole_y then
-        return nil
-      end
-    end
-  end
-  
-  local p_north_use_tile_usable = true
-  local p_east_use_tile_usable = true
-  
-  -- North use tile:
-  local p_north_tile_path_x, p_north_tile_path_y = self:getPath(patient.tile_x, patient.tile_y, hole_x, hole_y - 1) 
-  if p_north_tile_path_y == "no path" then
-    p_north_use_tile_usable = false
-  else  
-    for i, _ in ipairs(p_north_tile_path_x) do
-      if p_north_tile_path_x[i] == hole_x and p_north_tile_path_y[i] == hole_y then
-        p_north_use_tile_usable = false
-      end
-    end
-  end
-  
-  --TODO this check isn't necessary if the north tile is usable:
-  --West use tile:
-  local p_west_tile_path_x, p_west_tile_path_y = self:getPath(patient.tile_x, patient.tile_y, hole_x - 1, hole_y) 
-  if p_west_tile_path_y == "no path" then
-    p_east_use_tile_usable = false
-  else  
-    for i, _ in ipairs(p_west_tile_path_x) do
-      if p_west_tile_path_x[i] == hole_x and p_west_tile_path_y[i] == hole_y then
-        p_east_use_tile_usable = false
-      end
-    end
-  end
-  
-  -- Check that the spawn tiles aren't in rooms:
-  if not self:getRoom(hole_x, hole_y) and not self:getRoom(grim_x, grim_y)
-    -- Grim's south use tile shouldn't be in a room:
-    and not self:getRoom(hole_x, hole_y + 1)
-    -- One of the patient's use tiles should be accesible and not in a room:
-    and (((not self:getRoom(hole_x, hole_y - 1) and p_north_use_tile_usable)) or ((not self:getRoom(hole_x - 1, hole_y)) and p_east_use_tile_usable))
-    then
-    return {["hole_x"] = hole_x, ["hole_y"] = hole_y, ["grim_spawn_x"] = grim_x, ["grim_spawn_y"] = grim_y}
-  else
-    return nil
-  end
+  local p_north_use_tile_usable = self:lavaHoleUseTileUsable(hole_x, hole_y, patient.tile_x, patient.tile_y, hole_x, hole_y - 1)
+  local p_west_use_tile_usable = self:lavaHoleUseTileUsable(hole_x, hole_y, patient.tile_x, patient.tile_y, hole_x - 1, hole_y)
+  local g_south_use_tile_usable = self:lavaHoleUseTileUsable(hole_x, hole_y, grim_x, grim_y, hole_x, hole_y + 1)
+  local g_east_use_tile_usable = self:lavaHoleUseTileUsable(hole_x, hole_y, grim_x, grim_y, hole_x + 1, hole_y)
+
+  return (p_north_use_tile_usable or p_west_use_tile_usable) and (g_south_use_tile_usable or g_east_use_tile_usable)
 end
 
-function World:spawnGrimReaperAndLavaHole(hospital, patient, hell_death_spawns)
+function World:lavaHoleUseTileUsable(hole_x, hole_y, start_x, start_y, use_tile_x, use_tile_y)
+  -- In room?
+  if self:getRoom(use_tile_x, use_tile_y) then
+    return false
+  end
+  -- Accessible?
+  local path_x_list, path_y_list = self:getPath(start_x, start_y, use_tile_x, use_tile_y)
+  if path_y_list == "no path" then
+    return false
+  else
+    for i, _ in ipairs(path_x_list) do
+      if path_x_list[i] == hole_x and path_y_list[i] == hole_y then
+        return false
+      end
+    end
+  end
+  return true
+end
+
+function World:spawnGrimReaperAndLavaHole(hospital, patient, hole_x, hole_y, grim_x, grim_y)
   if not hospital then 
     hospital = self:getLocalPlayerHospital() 
   end
   
-  local lava_hole = self:newObject("gates_to_hell", hell_death_spawns["hole_x"], hell_death_spawns["hole_y"], "north")
+  local lava_hole = self:newObject("gates_to_hell", hole_x, hole_y, "north")
   local grim_reaper = self:newEntity("GrimReaper", 1660)
   grim_reaper:setNextAction({name = "idle_spawn",
                              count = 40, 
                              spawn_animation = 1660,
-                             point = { x = hell_death_spawns["grim_spawn_x"], 
-                                       y = hell_death_spawns["grim_spawn_y"], 
+                             point = { x = grim_x, 
+                                       y = grim_y, 
                                        direction="east"}})
   grim_reaper.patient = patient
   grim_reaper:setHospital(hospital)
