@@ -80,23 +80,80 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
       humanoid:setType("Standard Male Patient") 
     end
     humanoid:setAnimation(humanoid.on_ground_anim, mirror)
-    local hell_death_spawns = humanoid.world:getHellDeathSpawnPoints(humanoid)
-    if hell_death_spawns == nil then
+    
+    -- Find suitable spawn points if they are available:
+    -- 1. South spawns plenty of space scenario (based on spawn point positions I've seen in TH):
+    local hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x, humanoid.tile_y + 4, 0)
+    local grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x - 5, hole_y + 2, 0)
+    local hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
+    
+    -- 2. South spawns corridor space scenario:
+    if not hell_death_spawns_available then
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x, hole_y + 5)
+      hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
+    end
+    
+    -- 3. East spawns corridor space scenario:
+    if not hell_death_spawns_available then
+      hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x + 4, humanoid.tile_y, 0)
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x + 5, hole_y, 0)
+      hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
+    end
+    
+    if hell_death_spawns_available == false then
       action_die_tick(humanoid)
+    
+    -- If this hell death can happen:
     else
       action.phase = 2
       
       --After spawning the Grim Reaper will stand idle for 40 ticks before doing his next action.
-      humanoid.world:spawnGrimReaperAndLavaHole(humanoid.hospital, humanoid, hell_death_spawns)
+      humanoid.world:spawnGrimReaperAndLavaHole(humanoid.hospital, humanoid, hole_x, hole_y, grim_x, grim_y)
+      
+      --Decide which use tile the Grim Reaper will use:
+      local grim_use_tile_x = nil
+      local grim_use_tile_y = nil
+      local east_tile_used = 0
+      
+      local s_use_tile_path_distance = humanoid.world:getPathDistance(humanoid.grim_reaper.tile_x, 
+                                                                      humanoid.grim_reaper.tile_y, 
+                                                                      hole_x, hole_y + 1)
+      local e_use_tile_path_distance = humanoid.world:getPathDistance(humanoid.grim_reaper.tile_x, 
+                                                                      humanoid.grim_reaper.tile_y, 
+                                                                      hole_x + 1, hole_y)
+      
+      local s_use_tile_in_room = humanoid.world:getRoom(humanoid.grim_reaper.tile_x, humanoid.grim_reaper.tile_y, hole_x, hole_y + 1) ~= nil
+      
+      if s_use_tile_path_distance == false then
+        --East tile
+        grim_use_tile_x = hole_x + 1
+        grim_use_tile_y = hole_y
+        east_tile_used = 1
+      elseif e_use_tile_path_distance == false then  
+        --South tile
+        grim_use_tile_x = hole_x
+        grim_use_tile_y = hole_y + 1
+      else
+        if s_use_tile_path_distance < e_use_tile_path_distance and not s_use_tile_in_room then
+          --South tile
+          grim_use_tile_x = hole_x
+          grim_use_tile_y = hole_y + 1
+        else
+          --East tile
+          grim_use_tile_x = hole_x + 1
+          grim_use_tile_y = hole_y
+          east_tile_used = 1
+        end
+      end
     
-      --The Grim Reaper then walks to the tile where he will be standing next to the lava hole when the patient walks into it.
+      --The Grim Reaper then walks to the use tile where he will stand wait for the patient to walk into the lava hole.
       humanoid.grim_reaper:queueAction({name = "walk",
-                                        x = humanoid.grim_reaper.lava_hole.tile_x,
-                                        y = humanoid.grim_reaper.lava_hole.tile_y + 1,
+                                        x = grim_use_tile_x,
+                                        y = grim_use_tile_y,
                                         no_truncate = true})
       humanoid.grim_reaper:queueAction({name = "idle", loop_callback = 
                                                       --[[persistable:reaper_wait]]function() 
-                                                           humanoid.grim_reaper:setAnimation(1002) 
+                                                           humanoid.grim_reaper:setAnimation(1002, east_tile_used) 
                                                            humanoid:setTimer(1, action_die_tick_reaper) 
                                                          end})
     end
@@ -113,19 +170,25 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   
   --4: The dead patient will now walk in to the lava pool, falling in as the grim reaper does his "sending patient to hell" animation:  
   elseif phase == 4 then
+    -- If Grim on south tile then mirror = false:
+    local east_tile_used = 0
+    if humanoid.grim_reaper.tile_x == humanoid.grim_reaper.lava_hole.tile_x + 1 then
+      east_tile_used = 1
+    end
+    
     --The Grim Reaper's final actions:
     humanoid.grim_reaper:queueAction({name = "idle",
                                       count = humanoid.grim_reaper.world:getAnimLength(1670),
                                       loop_callback = 
                                       --[[persistable:reaper_swipe]]function() 
-                                          humanoid.grim_reaper:setAnimation(1670) 
+                                          humanoid.grim_reaper:setAnimation(1670,east_tile_used) 
                                         end})
    
     humanoid.grim_reaper:queueAction({name = "idle",
                                       count = humanoid.grim_reaper.world:getAnimLength(1678),
                                       loop_callback = 
                                       --[[persistable:reaper_leave]]function() 
-                                          humanoid.grim_reaper:setAnimation(1678) 
+                                          humanoid.grim_reaper:setAnimation(1678,east_tile_used) 
                                         end})
                                                       
     humanoid.grim_reaper:queueAction({name = "idle",
@@ -139,14 +202,45 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
                                           humanoid.grim_reaper.lava_hole:setAnimation(2552)
                                           humanoid.grim_reaper.world:destroyEntity(humanoid.grim_reaper) 
                                         end})
-    --The patient's final actions:
-    if humanoid.world:getPath(humanoid.tile_x, humanoid.tile_y, humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1)
-      and not humanoid.world:getRoom(humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1) then
-      humanoid:walkTo(humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1, true)
+    
+    -- Decide which use tile the patient will use:
+    local use_tile_x = nil
+    local use_tile_y = nil
+    
+    local n_use_tile_path_distance = humanoid.world:getPathDistance(humanoid.tile_x, 
+                                                                    humanoid.tile_y, 
+                                                                    humanoid.grim_reaper.lava_hole.tile_x, 
+                                                                    humanoid.grim_reaper.lava_hole.tile_y - 1)
+    
+    local w_use_tile_path_distance = humanoid.world:getPathDistance(humanoid.tile_x, 
+                                                                    humanoid.tile_y, 
+                                                                    humanoid.grim_reaper.lava_hole.tile_x - 1, 
+                                                                    humanoid.grim_reaper.lava_hole.tile_y)
+                                                                    
+    local n_use_tile_in_room = humanoid.world:getRoom(humanoid.grim_reaper.lava_hole.tile_x, humanoid.grim_reaper.lava_hole.tile_y - 1) ~= nil
+    
+    if n_use_tile_path_distance == false then
+      -- West tile
+      use_tile_x = humanoid.grim_reaper.lava_hole.tile_x - 1
+      use_tile_y = humanoid.grim_reaper.lava_hole.tile_y
+    elseif w_use_tile_path_distance == false then
+      --North tile
+      use_tile_x = humanoid.grim_reaper.lava_hole.tile_x
+      use_tile_y = humanoid.grim_reaper.lava_hole.tile_y - 1  
     else
-      humanoid:walkTo(humanoid.grim_reaper.lava_hole.tile_x - 1, humanoid.grim_reaper.lava_hole.tile_y, true)
+      if n_use_tile_path_distance < w_use_tile_path_distance and not n_use_tile_in_room then
+        --North tile
+        use_tile_x = humanoid.grim_reaper.lava_hole.tile_x
+        use_tile_y = humanoid.grim_reaper.lava_hole.tile_y - 1
+      else
+        --West tile
+        use_tile_x = humanoid.grim_reaper.lava_hole.tile_x - 1
+        use_tile_y = humanoid.grim_reaper.lava_hole.tile_y
+      end
     end
     
+    --Give the patient their final actions:
+    humanoid:walkTo(use_tile_x, use_tile_y, true)
     humanoid:queueAction({name = "use_object", 
                           object = humanoid.grim_reaper.lava_hole,
                           destroy_user_after_use = true,
@@ -187,7 +281,7 @@ local function action_die_start(action, humanoid)
     if math.random(1, 100) <= 65 then
       humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
     else
-      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
+      humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick_reaper)
     end
   else
     humanoid:setTimer(humanoid.world:getAnimLength(fall), action_die_tick)
