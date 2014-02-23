@@ -146,7 +146,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
         end
       end
     
-      --The Grim Reaper then walks to the use tile where he will stand wait for the patient to walk into the lava hole.
+      --The Grim Reaper then walks to his hole tile where he will stand waiting for the patient to walk into the lava hole.
       humanoid.grim_reaper:queueAction({name = "walk",
                                         x = grim_use_tile_x,
                                         y = grim_use_tile_y,
