@@ -87,16 +87,30 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     local grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x - 5, hole_y + 2, 0)
     local hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
     
-    -- 2. South spawns corridor space scenario:
+    -- 2. South spawns 1 tile wide corridor space scenario:
     if not hell_death_spawns_available then
-      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x, hole_y + 5)
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x, hole_y + 3)
       hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
     end
     
-    -- 3. East spawns corridor space scenario:
+    --3. North spawns not much space scenario:
+    if not hell_death_spawns_available then
+      hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x, humanoid.tile_y - 3, 0)
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x + 1, hole_y, 0)
+      hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
+    end
+    
+    -- 4. East spawns 1 tile wide corridor space scenario:
     if not hell_death_spawns_available then
       hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x + 4, humanoid.tile_y, 0)
-      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x + 5, hole_y, 0)
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x + 3, hole_y, 0)
+      hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
+    end
+    
+    -- 5. West spawns not much space scenario:
+    if not hell_death_spawns_available then
+      hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x - 3, humanoid.tile_y, 0)
+      grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x, hole_y + 1, 0)
       hell_death_spawns_available = humanoid.world:checkHellDeathSpawnPoints(humanoid, hole_x, hole_y, grim_x, grim_y)
     end
     
