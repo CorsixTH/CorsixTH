@@ -34,6 +34,15 @@ function Audio:Audio(app)
   
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
+  self.unused_played_callback_id = 0
+  self.played_sound_callbacks = {}
+  self.entities_waiting_for_sound_to_be_enabled = {}
+end
+
+function Audio:gameEnded()
+  self.unused_played_callback_id = 0
+  self.played_sound_callbacks = {}
+  self.entities_waiting_for_sound_to_be_enabled = {}
 end
 
 local function GetFileData(path)
@@ -230,15 +239,24 @@ function Audio:initSpeech(speech_file)
 end
 
 function Audio:dumpSoundArchive(out_dir)
-  local info = io.open(out_dir .. "info.csv", "wt")
+  local info,warning = io.open(out_dir .. "info.csv", "wt")
+  
+  if info == nil then
+    print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
+    print(warning)
+    return
+  end
+  
   for i = 1, #self.sound_archive - 1 do
     local filename = self.sound_archive:getFilename(i)
     info:write(i, ",", filename, ",", self.sound_archive:getDuration(i), ",\n")
     local file = io.open(out_dir .. i .. "_" .. filename, "wb")
     file:write(self.sound_archive:getFileData(i))
     file:close()
+    print("".. i .. "/" .. #self.sound_archive - 1)
   end
   info:close()
+  print("Sounds dumped to: " .. out_dir)
 end
 
 local wilcard_cache = permanent "audio_wildcard_cache" {}
@@ -248,18 +266,7 @@ function Audio:playSound(name, where, is_announcement)
   if sound_fx then
     if name:find("*") then
       -- Resolve wildcard to one particular sound
-      local list = wilcard_cache[name]
-      if not list then
-        list = {}
-        wilcard_cache[name] = list
-        local pattern = ("^" .. name:gsub("%*",".*") .. "$"):upper()
-        for i = 1, #self.sound_archive - 1 do
-          local filename = self.sound_archive:getFilename(i):upper()
-          if filename:find(pattern) then
-            list[#list + 1] = filename
-          end
-        end
-      end
+      local list = self:cacheSoundFilenamesAssociatedWithName(name)
       name = list[1] and list[math.random(1, #list)] or name
     end
     local _, warning
@@ -277,6 +284,145 @@ function Audio:playSound(name, where, is_announcement)
     if warning then
       -- Indicates something happened
       self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
+    end
+  end
+end
+
+function Audio:cacheSoundFilenamesAssociatedWithName(name)
+  local list = wilcard_cache[name]
+  if not list then
+    local filename
+    list = {}
+    wilcard_cache[name] = list
+    local pattern = ("^" .. name:gsub("%*",".*") .. "$"):upper()
+    for i = 1, #self.sound_archive - 1 do
+      filename = self.sound_archive:getFilename(i):upper()
+      if filename:find(pattern) then 
+        list[#list + 1] = filename 
+      end
+    end
+  end
+  return list
+end
+
+-- Plays sounds at an entity in a random sequence, with random length silences between the sounds.
+--!param num_silences (integer) how many different silence lengths should be used, this can be a nil parameter.
+--!param min_silence_lengths (integer array) the desired minimum silence lengths for this game's different speeds.
+--!param max_silence_lengths (integer array) the desired maximum silence lengths for this game's different speeds.
+--[1] Slowest [2] Slow [3] Normal [4] Fast [5] Maximum Speed
+function Audio:playSoundsAtEntityInRandomSequenceWhileFlagATrue(names, entity, min_silence_lengths, max_silence_lengths, num_silences)
+  if self.sound_fx then
+    self:cacheSoundFilenamesAssociatedWithName(names)
+    self:playSoundsAtEntityInRandomSequenceRecursionHandler(wilcard_cache[names],
+                                                            entity,
+                                                            self:getRandomSilenceLengths(min_silence_lengths,
+                                                                                         max_silence_lengths, 
+                                                                                         num_silences),
+                                                            TheApp.world.tick_rate,
+                                                            min_silence_lengths,
+                                                            max_silence_lengths,
+                                                            num_silences,
+                                                            1)
+  end
+end
+
+--param silences (integer) the number of random length (affected by tick rate) silences to use between the played sounds.
+--!param min_silence_lengths (integer array) the desired minimum silence lengths for this game's different speeds.
+--!param max_silence_lengths (integer array) the desired maximum silence lengths for this game's different speeds.
+--[1] Slowest [2] Slow [3] Normal [4] Fast [5] Maximum Speed
+function Audio:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds, entity, silences, tick_rate, min_silence_lengths, max_silence_lengths, num_silence_lengths, silences_pointer)
+  if entity.flag_a == true then
+    if self:canSoundsBePlayed() then
+      local _, warning
+      local x, y = Map:WorldToScreen(entity.tile_x, entity.tile_y)
+      local dx, dy = entity.th:getPosition()
+      x = x + dx - self.app.ui.screen_offset_x
+      y = y + dy - self.app.ui.screen_offset_y
+      if TheApp.world.tick_rate ~= tick_rate then
+        tick_rate = TheApp.world.tick_rate
+        silences = self:getRandomSilenceLengths(min_silence_lengths,max_silence_lengths, num_silence_lengths)
+      end
+      
+      self.played_sound_callbacks[tostring(self.unused_played_callback_id)] = 
+        function() 
+          self:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds,
+                                                                  entity,
+                                                                  silences,
+                                                                  TheApp.world.tick_rate,
+                                                                  min_silence_lengths,
+                                                                  max_silence_lengths,
+                                                                  num_silence_lengths,
+                                                                  silences_pointer) 
+        end   
+      _, warning = self.sound_fx:play(sounds[math.random(1,#sounds)],
+                                      self.app.config.sound_volume,
+                                      x,
+                                      y,
+                                      self.unused_played_callback_id,
+                                      silences_pointer)
+
+      self.unused_played_callback_id = self.unused_played_callback_id + 1
+      if #silences > 1 then
+      	if (silences_pointer + 1) > #silences then 
+      	  silences_pointer = 1 
+      	else  
+      	  silences_pointer = silences_pointer + 1
+      	end
+      end
+    else
+      self.entities_waiting_for_sound_to_be_enabled[entity] = 
+        function() 
+          self:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds,
+                                                                  entity,
+                                                                  silences,
+                                                                  TheApp.world.tick_rate,
+                                                                  min_silence_lengths,
+                                                                  max_silence_lengths,
+                                                                  num_silence_lengths,
+                                                                  silences_pointer) 
+        end
+	  entity:setWaitingForSoundsEffectsToBeTurnedOn(true)
+	end
+  else
+    if self.entities_waiting_for_sound_to_be_enabled[entity] then 
+      self.entities_waiting_for_sound_to_be_enabled[entity] = nil
+    end 	
+  end
+end
+
+function Audio:canSoundsBePlayed()
+  return TheApp.config.play_sounds == true and TheApp.world:isPaused() == false
+end
+
+--param min_silence_lengths (integer) A table containing the desired mininum silence lengths for this game's different speeds.
+--param max_silence_lengths (integer) A table containing the desired maximum silence lengths for this game's different speeds.
+function Audio:getRandomSilenceLengths(min_silence_lengths, max_silence_lengths, num_silences)
+  local min_silence = min_silence_lengths[TheApp.world.tick_rate]
+  local max_silence = max_silence_lengths[TheApp.world.tick_rate]
+  
+  local silences = {}
+  if min_silence == max_silence then
+    silences[1] = min_silence
+  else	
+    for i = 1, num_silences do 
+      silences[i] = math.random(min_silence,max_silence) 
+    end
+  end	
+  
+  return silences
+end
+
+function Audio: onGamePausedStateChanged(paused)
+  if paused == false and TheApp.config.play_sounds then 
+    self:tellInterestedEntitiesTheyCanNowPlaySounds() 
+  end
+end
+
+function Audio:onSoundPlayed(played_callbacks_id)
+  if TheApp.world ~= nil then
+    if self.played_sound_callbacks[tostring(played_callbacks_id)] then
+      self.played_sound_callbacks[tostring(played_callbacks_id)]()
+      self.played_sound_callbacks[tostring(played_callbacks_id)] = nil
     end
   end
 end
@@ -494,6 +640,22 @@ function Audio:playSoundEffects(play_effects)
     -- As above.
     self.sound_fx:setSoundEffectsOn(play_effects)
   end
+  if play_effects == true then 
+    self:tellInterestedEntitiesTheyCanNowPlaySounds() 
+  end
+end
+
+function Audio:tellInterestedEntitiesTheyCanNowPlaySounds()
+  if table_length(self.entities_waiting_for_sound_to_be_enabled) > 0 then
+    for entity,callback in pairs(self.entities_waiting_for_sound_to_be_enabled) do
+      callback()
+      self.entities_waiting_for_sound_to_be_enabled[entity] = nil
+    end
+  end
+end
+
+function Audio:entityNoLongerWaitingForSoundsToBeTurnedOn(entity)
+  self.entities_waiting_for_sound_to_be_enabled[entity] = nil
 end
 
 function Audio:setAnnouncementVolume(volume)

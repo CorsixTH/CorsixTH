@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 82
+local SAVEGAME_VERSION = 84
 
 class "App"
 
@@ -50,7 +50,8 @@ function App:App()
     motion = self.onMouseMove,
     active = self.onWindowActive,
     music_over = self.onMusicOver,
-    movie_over = self.onMovieOver
+    movie_over = self.onMovieOver,
+    sound_over = self.onSoundOver
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
@@ -399,7 +400,13 @@ function App:initLanguage()
   return success
 end
 
+function App:gameEnded()
+  self.audio:gameEnded()
+end
+
 function App:loadMainMenu(message)
+  if self.world then self:gameEnded() end
+  
   -- Make sure there is no blue filter active.
   self.video:setBlueFilterActive(false)
 
@@ -426,6 +433,8 @@ end
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
 function App:loadLevel(level, ...)
+  if self.world then self:gameEnded() end 
+  
   -- Check that we can load the data before unloading current map
   local new_map = Map(self)
   local map_objects, errors = new_map:load(level, ...)
@@ -903,6 +912,10 @@ function App:onMovieOver(...)
   self.moviePlayer:onMovieOver(...)
 end
 
+function App:onSoundOver(...)
+  return self.audio:onSoundPlayed(...)
+end
+
 function App:checkInstallFolder()
   self.fs = FileSystem()
   local status, err
@@ -1159,6 +1172,7 @@ function App:quickSave()
 end
 
 function App:load(filename)
+  if self.world then self:gameEnded() end
   return LoadGameFile(self.savegame_dir .. filename)
 end
 
@@ -1177,6 +1191,7 @@ function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
   self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart_level,
   --[[persistable:app_confirm_restart]] function()
+    self:gameEnded()
     local level = self.map.level_number
     local difficulty = self.map.difficulty
     local name, file, intro
@@ -1227,6 +1242,7 @@ function App:afterLoad()
   if new == old then
     self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() 
       .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
+    self.world:playLoadedEntitySounds()
     return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
@@ -1240,6 +1256,13 @@ function App:afterLoad()
   end
   self.world.savegame_version = new
   
+  if old < 84 then
+    local new_object = dofile "objects/gates_to_hell"
+    Object.processTypeDefinition(new_object)
+    self.objects[new_object.id] = new_object
+    self.world:newObjectType(new_object)
+  end
+
   self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
