@@ -103,6 +103,15 @@ function print_table(obj, max_level, level)
   pt_reflist[#pt_reflist] = nil
 end
 
+-- Can return the length of any table, where as #table_name is only suitable for use with arrays of one contiguous part without nil values.
+function table_length(table)
+  local count = 0
+  for _,_ in pairs(table) do 
+    count = count + 1 
+  end
+  return count
+end
+
 -- Variation on loadfile() which allows for the loaded file to have global
 -- references resolved in supplied tables. On failure, returns nil and an
 -- error. On success, returns the file as a function just like loadfile() does

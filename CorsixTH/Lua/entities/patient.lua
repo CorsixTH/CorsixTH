@@ -935,5 +935,26 @@ function Patient:afterLoad(old, new)
       self.waiting = nil
     end
   end
+  if old < 84 then
+    -- Hell Death rise Animations Added:
+    if self:isMalePatient() then
+      if self.humanoid_class ~= "Alternate Male Patient" then
+        self.die_anims.rise_hell_east = 384
+      else
+        self.die_anims.rise_hell_east = 3404
+      end
+    else  
+      self.die_anims.rise_hell_east = 580
+    end
+  end
   Humanoid.afterLoad(self, old, new)
+end
+
+function Patient:isMalePatient()
+  if string.find(self.humanoid_class,"Female") then return false
+  elseif string.find(self.humanoid_class,"Male") then return true  
+  else
+    local male_patient_classes = {["Chewbacca Patient"] = true,["Elvis Patient"] = true,["Invisible Patient"] = true}
+    return male_patient_classes[self.humanoid_class] ~= nil
+  end
 end

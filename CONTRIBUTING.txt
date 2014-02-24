@@ -1,9 +1,73 @@
-HOW TO CONTRIBUTE
+ISSUE REPORTING:
+
+GitHub currently doesn't support automatic issue templates, so follow the
+instructions below when you want to make a suggestion, bug report, or pull
+request.
+
+Please report only one bug, suggestion or pull request per issue,
+
+BUG REPORT
+
+Please answer the questions below when you want to report a bug. A bug could
+be for example an error crash, graphical glitch or unexpected behavior. Please
+copy the questions below to your issue and answer them when you want to report
+a bug:
+
+What steps will reproduce the problem?
+1.
+2.
+3.
+
+What is the expected output? What do you see instead?
+
+What version of CorsixTH are you using (e.g. "0.30", "4c66e39985")?
+
+What operating system / compile settings are you using?
+
+What level was this on (e.g. "Demo level", "Full game level 12")?
+
+Upload a saved game file (preferably an autosave from before the error) if you
+have one and it is relevant. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES for how
+to do this.
+
+If possible, also upload the gamelog. Look at HOW TO UPLOAD GAMELOG AND/OR
+SAVES for how to do this.
+
+Please provide any additional information below.
+
+SUGGESTION
+
+If you want to make a suggestion, please copy the following  questions into
+your issue and answer them:
+
+What is it you would like in the game?
+
+What version of the product are you using? On what operating system?
+
+PULL REQUEST
+
+When providing a pull request ensure the description field describes the major
+changes from the request. If your pull request relates to any existing
+issues, include those issues in the description. e.g. "Fixes issue #1"
+
+HOW TO UPLOAD GAMELOG AND/OR SAVES
+
+As GitHub currently only supports uploading of images, you will have to upload
+your gamelog(.txt) and your savegames to an another source such as Google
+Drive, Dropbox, or SkyDrive/OneDrive. Add the link to the file to your issue
+and make the file(s) public, so we can access your gamelog or savegame. The
+most important thing is to not remove these files after you uploaded them!
+
+Also make sure you don't use a file hosting service which will automatically
+delete your file after a time.
+
+
+CONTRIBUTING CODE:
 
 First Time
 1. Ensure you have a GitHub account (https://github.com/signup/free)
 2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
-3. Ensure you have a git client.  (http://windows.github.com or 
+3. Ensure you have a git client.  (http://windows.github.com or
 http://mac.github.com)
 4. Clone your fork to your computer
 	- If using github client, run Git Shell
@@ -12,8 +76,9 @@ http://mac.github.com)
 	- git remote add upstream https://github.com/CorsixTH/CorsixTH.git
 
 Every Time
-6. Sync with upstream
-	- git fetch upstream
+6. Sync your master branch with the CorisxTH repository's master branch
+        - git fetch upstream
+        - git rebase upstream/master
 7. Create feature branch
 	- git branch myfeature upstream/master
 8. Checkout your feature branch
@@ -26,31 +91,31 @@ Every Time
 	Write an informative commit message and save
 11. Push your changes to your fork
 	- git push origin myfeature
-12. Create a pull request 
+12. Create a pull request
 (https://github.com/mygithubuser/CorsixTH/compare/CorsixTH:master...myfeature)
 
 Now watch to see if your feature is accepted.
 
 Notes:
 Multiple commits:
-If your feature is very big, break it into subprojects and do a separate commit 
-for every independent operation.  This means doing step 10 several times as you 
+If your feature is very big, break it into subprojects and do a separate commit
+for every independent operation.  This means doing step 10 several times as you
 go.  You still only need to do one pull request at the end.
 
 Syncing with Upstream:
-If it takes a long time between when you start your feature and when you finish 
-there might be other important changes other people are making to CorsixTH.  It 
-is a good idea to make sure your code will still operate correctly with the 
+If it takes a long time between when you start your feature and when you finish
+there might be other important changes other people are making to CorsixTH.  It
+is a good idea to make sure your code will still operate correctly with the
 latest changes.  To do this:
 	- git fetch upstream
 	- git rebase upstream/master
-What this does is downloads all the changes from CorsixTH\CorsixTH since you 
-started, and pretends that all your changes were made after them.  If there are 
-conflicts, for example if someone else changed the same line in the same file 
+What this does is downloads all the changes from CorsixTH\CorsixTH since you
+started, and pretends that all your changes were made after them.  If there are
+conflicts, for example if someone else changed the same line in the same file
 that you did you will be asked to resolve those conflicts.
 
-If you follow these guidelines then you should be well on your way to producing 
+If you follow these guidelines then you should be well on your way to producing
 good pull requests.
 
-If you need more help just ask the friendly people on 
+If you need more help just ask the friendly people on
 corsix-th-dev@googlegroups.com or via IRC in #corsix-th on freenode.
