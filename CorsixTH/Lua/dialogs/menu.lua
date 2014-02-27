@@ -557,7 +557,7 @@ function UIMenuBar:makeMenu(app)
     
   options:appendCheckItem(_S.menu_options.sound,
     app.config.play_sounds,
-    function(item) 
+    function(item)
       app.audio:playSoundEffects(item.checked) 
       app:saveConfig()
     end,
