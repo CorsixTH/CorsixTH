@@ -235,22 +235,24 @@ misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.  It might be that you need to build a reception desk and hire a receptionist"
 
 main_menu = {
-  new_game = "Campaign",
-  custom_level = "Single Scenario",
-  load_game = "Load Game",
-  options = "Settings",
+  new_game         = "Campaign",
+  custom_level     = "Single Scenario",
+  continue         = "Continue Game",
+  load_game        = "Load Game",
+  options          = "Settings",
   savegame_version = "Savegame version: ",
-  version = "Version: ",
-  exit = "Exit",
+  version          = "Version: ",
+  exit             = "Exit",
 }
 
 tooltip.main_menu = {
-  new_game = "Start the first level on the campaign",
-  custom_level = "Build your hospital in a single scenario",
-  load_game = "Load a saved game",
-  options = "Tweak various settings",
-  exit = "No, no, please don't leave!",
-  quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
+  new_game      = "Start the first level on the campaign",
+  custom_level  = "Build your hospital in a single scenario",
+  continue      = "Continue your latest saved game",
+  load_game     = "Load a saved game",
+  options       = "Tweak various settings",
+  exit          = "No, no, please don't leave!",
+  quit          = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
 
 load_game_window = {

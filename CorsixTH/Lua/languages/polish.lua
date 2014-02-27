@@ -822,6 +822,7 @@ main_menu = {
   custom_level = "Gra niestandardowa",
   version = "Wersja: ",
   new_game = "Nowa gra",
+  continue = "Wczytaj ostatnią grę‏",
   load_game = "Wczytaj grę",
   options = "Ustawienia",
   savegame_version = "Wersja zapisu: ",
