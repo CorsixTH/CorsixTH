@@ -80,6 +80,7 @@ function Hospital:Hospital(world, name)
   self.seating_warning = 0
   self.num_explosions = 0
   self.announce_vip = 0
+  self.vip_declined = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
@@ -556,21 +557,21 @@ function Hospital:afterLoad(old, new)
   if old < 41 then
     self.boiler_can_break = true
   end
-  
+
   if old < 45 then
     self.num_explosions = 0
     self.num_vips = 0
   end
-  
+
   if old < 48 then
     self.seating_warning = 0
   end
-  
+
   if old < 50 then
-    self.num_vips_ty  = 0
-    self.pleased_vips_ty  = 0
+    self.num_vips_ty = 0
+    self.pleased_vips_ty = 0
     self.num_cured_ty = 0
-    self.not_cured_ty = 0 
+    self.not_cured_ty = 0
     self.num_visitors_ty = 0
 
     self.reception_desks = {}
@@ -582,12 +583,12 @@ function Hospital:afterLoad(old, new)
       end
     end
   end
-  
+
   if old < 52 then
     self:initOwnedPlots()
     self.handymanTasks = {}
   end
-  
+
   if old < 54 then
     local current = self.research.research_policy.specialisation.current
       if current and not current.dummy and not current.thob and not current.drug then
@@ -601,11 +602,14 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 56 then
-    self.research_dep_built = false 
-  end 
+    self.research_dep_built = false
+  end
   if old < 76 then
     self.msg_counter = 0
-  end    
+  end
+  if old < 85 then
+    self.vip_declined = 0
+  end
 end
 
 function Hospital:countPatients()
@@ -1231,7 +1235,7 @@ function Hospital:createVip()
   local message = {
     {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
     choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip"}}
+               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}}
   }
   -- auto-refuse after 20 days
   self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)
