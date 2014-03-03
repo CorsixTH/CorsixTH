@@ -27,7 +27,7 @@ class "UIMenuBar" (Window)
 
 function UIMenuBar:UIMenuBar(ui)
   self:Window()
-  
+
   local app = ui.app
   self.ui = ui
   self.on_top = true
@@ -47,7 +47,7 @@ function UIMenuBar:UIMenuBar(ui)
   -- The list of menus which should be displayed
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
-  
+
   self:makeMenu(app)
 end
 
@@ -160,14 +160,14 @@ function UIMenuBar:draw(canvas)
   panel_sprites_draw(panel_sprites, canvas, 3, x,  0)
   panel_sprites_draw(panel_sprites, canvas, 6, x,  6)
   panel_sprites_draw(panel_sprites, canvas, 9, x, 10)
-  
+
   for _, menu in ipairs(self.menus) do
     self.white_font:draw(canvas, menu.title, menu.x, menu.y, 0, menu.height)
   end
   for _, menu in ipairs(self.open_menus) do
     self:drawMenu(menu, canvas)
   end
-  
+
   -- Draw clock
   if self.ui.app.config.twentyfour_hour_clock then  
     self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
@@ -189,7 +189,7 @@ function UIMenuBar:drawMenu(menu, canvas)
     panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
   end
   panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
-  
+
   x = menu.x
   y = menu.y + 4
   for i, item in ipairs(menu.items) do
@@ -625,43 +625,42 @@ function UIMenuBar:makeMenu(app)
       return not app.config.adviser_disabled
     end)
 
-  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock, 
+  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
     app.config.twentyfour_hour_clock,
     function(item)
       app.config.twentyfour_hour_clock = item.checked
       app:saveConfig()
     end)
-    
+
+  local function wageIncreaseRequests(grant)
+    return grant, function()
+      app.config.grant_wage_increase = grant
+    end, "", function ()
+      app:saveConfig()
+      return app.config.grant_wage_increase == grant
+    end
+  end
+
   local function temperatureDisplay(method)
     return method == 1, function()
       app.world.map:setTemperatureDisplayMethod(method)
-    end, "", function () 
-      return app.world.map.temperature_display_method == method
-    end      
-  end
-
-  local function wageIncreaseRequests(grant)
-    return grant, function() 
-      app.world:getLocalPlayerHospital().policies.grant_wage_increase = grant
     end, "", function ()
-      if app.world:getLocalPlayerHospital().policies.grant_wage_increase == nil then
-        app.world:getLocalPlayerHospital().policies.grant_wage_increase = app.config.grant_wage_increase
-      end
-      return app.world:getLocalPlayerHospital().policies.grant_wage_increase == grant
+      app:saveConfig()
+      return app.world.map.temperature_display_method == method
     end
   end
-   
+
   options:appendMenu(_S.menu_options.wage_increase, UIMenu()
     :appendCheckItem(_S.menu_options_wage_increase.grant, wageIncreaseRequests(true))
     :appendCheckItem(_S.menu_options_wage_increase.deny, wageIncreaseRequests(false))
   )
-    
+
   options:appendMenu(_S.menu_options.warmth_colors, UIMenu()
     :appendCheckItem(_S.menu_options_warmth_colors.choice_1, temperatureDisplay(1))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_2, temperatureDisplay(2))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_3, temperatureDisplay(3))
   )
-  
+
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)
@@ -669,7 +668,7 @@ function UIMenuBar:makeMenu(app)
       return app.world:isCurrentSpeed(speed)
     end
   end
-  
+
   options:appendMenu(_S.menu_options.game_speed, UIMenu()
     :appendCheckItem(_S.menu_options_game_speed.pause,              rate("Pause"))
     :appendCheckItem(_S.menu_options_game_speed.slowest,            rate("Slowest"))
