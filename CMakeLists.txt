@@ -126,3 +126,17 @@ IF(BUILD_MAPEDITOR)
     message(FATAL_ERROR "The map editor can only be built when using OpenGL as renderer")
   ENDIF(WITH_OPENGL)
 ENDIF(BUILD_MAPEDITOR)
+
+# Documentation generation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  add_custom_target(doc
+    DEPENDS doc_corsixth_engine
+  )
+
+  add_custom_target(doc_corsixth_engine
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/corsixth_engine.doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for corsixth_engine" VERBATIM
+  )
+endif(DOXYGEN_FOUND)

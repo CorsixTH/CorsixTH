@@ -17,6 +17,7 @@ CorsixTH/config.txt
 /SDL
 /SDL_mixer-1.2.8
 /cmake_install.cmake
+/doc
 
 # For CorsixTH directory and Windows
 *.dll
