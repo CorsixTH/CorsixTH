@@ -30,9 +30,14 @@ local lua_files = {
 }
 
 local lfs = require "lfs"
+
+local output_dir = lfs.currentdir() .. "/corsixth_lua/"
+lfs.mkdir(output_dir)
+
 local our_dir = debug.getinfo(1).source
-our_dir = our_dir:match("@(.*)"..package.config:sub(1, 1)) or "."
+our_dir = our_dir:match("@(.*)[/"..package.config:sub(1,1).."]") or "."
 lfs.chdir(our_dir)
+
 
 dofile "../CorsixTH/Lua/strict.lua"
 dofile "../CorsixTH/Lua/class.lua"
@@ -69,7 +74,7 @@ for _, dir_path in ipairs(directories) do
 end
 
 local function WriteHTML(name, content)
-  local f = assert(io.open("output/".. name ..".html", "w"))
+  local f = assert(io.open(output_dir .. name ..".html", "w"))
   f:write((content:gsub("([\r\n])%s*[\r\n]","%1"):gsub("   *"," ")))
   f:close()
 end
@@ -116,6 +121,28 @@ WriteHTML("file_globals", template "page" {
   section = "globals",
   content = "TODO",
 })
+
+-- copy class_list.html to index.html
+local infile, outfile, result, err
+infile, err = io.open(output_dir .. "class_list.html", "r")
+if infile == nil then
+  print("Cannot open " .. output_dir .. "class_list.html for read: " .. err)
+else
+  local content = infile:read("*a")
+  infile:close()
+
+  outfile, err = io.open(output_dir .. "index.html", "w")
+  if outfile == nil then
+    print("Cannot open " .. output_dir .. "index.html for write: " .. err)
+  else
+    result, err = outfile:write(content)
+    if result == nil then
+      print("Writing index.html failed: " .. err)
+    else
+      outfile:close()
+    end
+  end
+end
 
 do return end
 -- Old code, to be integrated into new code at later date:
