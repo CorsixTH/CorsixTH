@@ -134,7 +134,7 @@ ENDIF(BUILD_MAPEDITOR)
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
   add_custom_target(doc
-    DEPENDS doc_corsixth_engine doc_animview doc_leveledit doc_mapedit
+    DEPENDS doc_corsixth_engine doc_corsixth_lua doc_animview doc_leveledit doc_mapedit
   )
 
   add_custom_target(doc_animview
@@ -160,4 +160,11 @@ if(DOXYGEN_FOUND)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
     COMMENT "Generating API documentation for corsixth_engine" VERBATIM
   )
+
+  add_custom_target(doc_corsixth_lua
+    lua ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/main.lua
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for corsixth_lua" VERBATIM
+  )
+
 endif(DOXYGEN_FOUND)
