@@ -109,6 +109,7 @@ local config_defaults = {
   grant_wage_increase = false,  
   movies = true,
   play_intro = true,
+  pause_on_focus_lost = false,
   allow_user_actions_while_paused = false,
   volume_opens_casebook = false,  
   alien_dna_only_by_emergency = true,
@@ -287,6 +288,13 @@ movies = ]=].. tostring(config_values.movies) ..[=[
 play_intro = ]=].. tostring(config_values.play_intro) ..[=[ 
  
 -------------------------------------------------------------------------------------------------------------------------
+-- Pause when window loses focus.
+-- If set to true, the game will pause when the window loses focus (e.g. when
+-- minimised).
+pause_on_focus_lost = ]=].. tostring(config_values.pause_on_focus_lost) ..[=[ 
+--
+--
+-------------------------------------------------------------------------------
 -- Allow user actions while game is paused
 -- In Theme Hospital the player would only be allowed to use the top menu if
 -- the game was paused. That is the default setting in CorsixTH too, but by

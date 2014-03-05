@@ -231,8 +231,11 @@ install = {
   cancel = "Cancel",
 }
 
-misc.not_yet_implemented = "(not yet implemented)"
-misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.  It might be that you need to build a reception desk and hire a receptionist"
+
+misc = {
+not_yet_implemented = "(not yet implemented)",
+no_heliport = "You are not able to create an emergency for one or more of the following reasons: there are either no diseases that have been discovered yet, or there is no accessible heliport on this map or you need a staffed reception desk.",
+}
 
 main_menu = {
   new_game = "Campaign",
@@ -322,10 +325,10 @@ tooltip.options_window = {
   height = "Enter desired screen height",
   apply = "Apply the entered resolution",
   cancel = "Return without changing the resolution",
-  audio_button = "Turn on or off all game audio", 
-  audio_toggle = "Toggle on or off",   
+  audio_button = "Turn on or off all game audio",
+  audio_toggle = "Toggle on or off", 
   customise_button = "More settings you can change to customise your game play experience",
-  folder_button = "Folder Options",  
+  folder_button = "Folder Options",
   language = "The language texts in the game will appear in",
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
@@ -344,16 +347,20 @@ customise_window = {
   aliens = "Alien Patients",
   fractured_bones = "Fractured Bones",
   average_contents = "Average contents",
+  updates = "Check for updates",
+  on_focus_lost = "Pause on lost focus",
 }
 
 tooltip.customise_window = {
-  movies = "Global movie control, this will allow you to disable all the movies",  
+  movies = "Global movie control, this will allow you to disable all the movies",
   intro = "Turn off or on the intro movie, global movies will need to be on if you want the intro movie to play each time you load CorsixTH",
   paused = "In Theme Hospital the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
   volume = "If the volume down button is opening the casebook as well, turn this on to change the hotkey for the casebook to Shift + C",
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA so that they can only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no patients with Fractured Bones that are female. To allow female patients with Fractured Bones to visit your hospital, turn this off",
-  average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",  
+  average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
+  updates = "Checks for updates and notifies you when there is a newer version of CorsixTH available",
+  on_focus_lost = "Option to pause the game when minimized and the focus on the game window is lost",
   back = "Close this menu and go back to the Settings Menu",
 }
 
