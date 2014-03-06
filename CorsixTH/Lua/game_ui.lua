@@ -63,10 +63,13 @@ function GameUI:GameUI(app, local_hospital)
   self.limit_to_visible_diamond = not _MAP_EDITOR
   self.transparent_walls = false
   self.do_world_hit_test = true
-  
+
   self:setRandomAnnouncementTarget()
   self.ticks_since_last_announcement = 0
-  
+
+  self.window_in_focus = true
+  self.mouse_in_window = true
+
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
 end
@@ -387,10 +390,20 @@ local UpdateCursorPosition = TH.cursor.setPosition
 local highlight_x, highlight_y
 
 --! Called when the mouse enters or leaves the game window.
-function GameUI:onWindowActive(gain)
-  if gain == 0 then
-    self.tick_scroll_amount_mouse = false
+function GameUI:onWindowActive(gain, state)
+  if gain == 1 then
+    self.mouse_in_window = (gain == 1)
+  elseif state == 2 or state == 6 then
+    self.window_in_focus = (gain == 1)
+    if (self.app.config.pause_on_focus_lost) then
+      if (self.window_in_focus and self.app.world:getCurrentSpeed() == "Pause") then
+        self.app.world:setSpeed(self.app.world.prev_speed)
+      else
+        self.app.world:setSpeed("Pause")
+      end
+    end
   end
+  UI:onWindowActive(gain, state)
 end
 
 -- TODO: try to remove duplication with UI:onMouseMove
@@ -431,7 +444,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
   end
   if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
-  or y >= self.app.config.height - scroll_region_size) then
+  or y >= self.app.config.height - scroll_region_size)
+  and self.mouse_in_window and self.window_in_focus then
     local dx = 0
     local dy = 0
     local scroll_power = 7
@@ -571,7 +585,7 @@ function GameUI:onTick()
       self.ticks_since_last_announcement = ticks_since_last_announcement + 1
     end
   end
-  if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
+  if self.tick_scroll_amount or self.tick_scroll_amount_mouse and self.mouse_in_window then
     -- The scroll amount per tick gradually increases as the duration of the
     -- scroll increases due to this multiplier.
     local mult = self.tick_scroll_mult
@@ -987,6 +1001,10 @@ function GameUI:afterLoad(old, new)
     self:removeKeyHandler("x", self, self.toggleWallsTransparent)
     self:addKeyHandler("z", self, self.keySpeedUp)
     self:addKeyHandler("x", self, self.keyTransparent)
+  end
+  if old < 83 then
+    self.window_in_focus = true
+    self.mouse_in_window = true  
   end
   return UI.afterLoad(self, old, new)
 end
