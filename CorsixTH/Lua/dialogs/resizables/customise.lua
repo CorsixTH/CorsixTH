@@ -239,7 +239,7 @@ end
 function UICustomise:buttonOnFocusLost(checked)
   local app = self.ui.app
   app.config.pause_on_focus_lost = not app.config.pause_on_focus_lost
-  self.on_focus_lost:toggle()
+  self.on_focus_lost_button:toggle()
   self.on_focus_lost_panel:setLabel(app.config.on_focus_lost and _S.customise_window.option_on or _S.customise_window.option_off)
   app:saveConfig()
   self:reload()  
