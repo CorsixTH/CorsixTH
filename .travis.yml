@@ -24,7 +24,7 @@ before_install:
   - unzip -n freetype-2.3.5-1-bin.zip -d freetype
   - unzip -n freetype-2.3.5-1-dep.zip -d freetype
   # Get SDL
-  - wget http://libsdl.org/release/SDL2-devel-2.0.1-mingw.tar.gz
+  - wget http://libsdl.org/release/SDL2-devel-2.0.2-mingw.tar.gz
   - tar xfz SDL2-devel-2.0.2-mingw.tar.gz
   - sudo mkdir /usr/i686-w64-mingw32/bin/
   - sudo cp SDL2-2.0.2/i686-w64-mingw32/bin/* /usr/i686-w64-mingw32/bin/
