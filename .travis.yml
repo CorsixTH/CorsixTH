@@ -17,12 +17,12 @@ before_install:
   - mv ffmpeg-2.1.4-win32-dev ffmpeg-dev
   - mv ffmpeg-2.1.4-win32-shared ffmpeg-bin
   # Get freetype
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-dep.zip
-  - unzip -n freetype-2.3.5-1-lib.zip -d freetype
-  - unzip -n freetype-2.3.5-1-bin.zip -d freetype
-  - unzip -n freetype-2.3.5-1-dep.zip -d freetype
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.5.3-1/freetype-2.5.3-1-lib.zip
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.5.3-1/freetype-2.5.3-1-bin.zip
+  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.5.3-1/freetype-2.5.3-1-dep.zip
+  - unzip -n freetype-2.5.3-1-lib.zip -d freetype
+  - unzip -n freetype-2.5.3-1-bin.zip -d freetype
+  - unzip -n freetype-2.5.3-1-dep.zip -d freetype
   # Get SDL
   - wget http://libsdl.org/release/SDL2-devel-2.0.2-mingw.tar.gz
   - tar xfz SDL2-devel-2.0.2-mingw.tar.gz
@@ -38,10 +38,10 @@ before_install:
   - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
   - mkdir lua
   # Get LUA
-  - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
-  - tar xJf lua-5.1.4-4-mingw32-dll-51.tar.xz -C lua
-  - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dev.tar.xz
-  - tar xJf lua-5.1.4-4-mingw32-dev.tar.xz -C lua
+  - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.5-4/lua-5.1.5-4-mingw32-dll-51.tar.xz
+  - tar xJf lua-5.1.5-4-mingw32-dll-51.tar.xz -C lua
+  - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.5-4/lua-5.1.5-4-mingw32-dev.tar.xz
+  - tar xJf lua-5.1.5-4-mingw32-dev.tar.xz -C lua
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
 install:
   - cd $TRAVIS_BUILD_DIR
