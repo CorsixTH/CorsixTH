@@ -38,10 +38,10 @@ before_install:
   - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
   - mkdir lua
   # Get LUA
-  - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.5-4/lua-5.1.5-4-mingw32-dll-51.tar.xz
-  - tar xJf lua-5.1.5-4-mingw32-dll-51.tar.xz -C lua
-  - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.5-4/lua-5.1.5-4-mingw32-dev.tar.xz
-  - tar xJf lua-5.1.5-4-mingw32-dev.tar.xz -C lua
+  - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
+  - tar xJf lua-5.1.4-4-mingw32-dll-51.tar.xz -C lua
+  - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dev.tar.xz
+  - tar xJf lua-5.1.4-4-mingw32-dev.tar.xz -C lua
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
 install:
   - cd $TRAVIS_BUILD_DIR
