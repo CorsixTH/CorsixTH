@@ -544,10 +544,10 @@ function GameUI:setRandomAnnouncementTarget()
   self.random_announcement_ticks_target = math.random(8000, 12000)
 end
 
-function GameUI:playAnnouncement(name)
+function GameUI:playAnnouncement(name, played_callback, played_callback_delay)
   self.ticks_since_last_announcement = 0
   if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
-    UI.playAnnouncement(self, name)
+    UI.playAnnouncement(self, name, played_callback, played_callback_delay)
   end
 end
 

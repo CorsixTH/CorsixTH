@@ -1,4 +1,4 @@
---[[ Copyright (c) 2009 Peter "Corsix" Cawley
+	--[[ Copyright (c) 2009 Peter "Corsix" Cawley
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -34,6 +34,13 @@ function Audio:Audio(app)
 
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
+  self.unused_played_callback_id = 0
+  self.played_sound_callbacks = {}
+end
+
+function Audio:clearCallbacks()
+  self.unused_played_callback_id = 0
+  self.played_sound_callbacks = {}
 end
 
 local function GetFileData(path)
@@ -252,7 +259,7 @@ end
 
 local wilcard_cache = permanent "audio_wildcard_cache" {}
 
-function Audio:playSound(name, where, is_announcement)
+function Audio:playSound(name, where, is_announcement, played_callback, played_callback_delay)
   local sound_fx = self.sound_fx
   if sound_fx then
     if name:find("*") then
@@ -273,19 +280,34 @@ function Audio:playSound(name, where, is_announcement)
     end
     local _, warning
     local volume = is_announcement and self.app.config.announcement_volume or self.app.config.sound_volume
+    local x, y
+    local played_callbacks_id
+    if played_callback then
+      played_callbacks_id = self.unused_played_callback_id
+      self.unused_played_callback_id = self.unused_played_callback_id + 1
+      self.played_sound_callbacks[tostring(played_callbacks_id)] = played_callback
+    end
     if where then
-      local x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
+      x, y = Map:WorldToScreen(where.tile_x, where.tile_y)
       local dx, dy = where.th:getPosition()
       local ui = self.app.ui
       x = x + dx - ui.screen_offset_x
       y = y + dy - ui.screen_offset_y
-      _, warning = sound_fx:play(name, volume, x, y)
-    else
-      _, warning = sound_fx:play(name, volume)
     end
+    _, warning = sound_fx:play(name, volume, x, y, played_callbacks_id, played_callback_delay)
+
     if warning then
       -- Indicates something happened
       self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
+    end
+  end
+end
+
+function Audio:onSoundPlayed(played_callbacks_id)
+  if TheApp.world ~= nil then
+    if self.played_sound_callbacks[tostring(played_callbacks_id)] then
+      self.played_sound_callbacks[tostring(played_callbacks_id)]()
+      self.played_sound_callbacks[tostring(played_callbacks_id)] = nil
     end
   end
 end
