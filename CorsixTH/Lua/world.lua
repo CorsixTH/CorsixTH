@@ -949,6 +949,7 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
+  local pause_state_changed = nil
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
     if self.active_earthquake then
@@ -956,20 +957,32 @@ function World:setSpeed(speed)
     end
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
+    pause_state_changed = true
   elseif self:getCurrentSpeed() == "Pause" then
     self.user_actions_allowed = true
   end
-  
+
   local currentSpeed = self:getCurrentSpeed()
   if currentSpeed ~= "Pause" and currentSpeed ~= "Speed Up" then
     self.prev_speed = self:getCurrentSpeed()
   end
 
+  local was_paused = currentSpeed == "Pause"
   local numerator, denominator = unpack(tick_rates[speed])
   self.hours_per_tick = numerator
   self.tick_rate = denominator
+  
+  if was_paused then
+    TheApp.audio:onEndPause()
+  end
+
   -- Set the blue filter according to whether the user can build or not.
   TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
+  return false
+end
+
+function World:isPaused()
+  return self:isCurrentSpeed("Pause")
 end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
@@ -2358,8 +2371,16 @@ function World:afterLoad(old, new)
   if old < 80 then
     self:determineWinningConditions()
   end
-
+  if old >= 87 then
+    self:playLoadedEntitySounds()
+  end
   self.savegame_version = new
+end
+
+function World:playLoadedEntitySounds()
+  for _, entity in pairs(self.entities) do
+    entity:playAfterLoadSound()
+  end
 end
 
 --[[ There is a problem with room editing in that it resets all the partial passable flags

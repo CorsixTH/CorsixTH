@@ -725,7 +725,7 @@ end
 
 function UI:togglePlaySounds()
   self.app.config.play_sounds = not self.app.config.play_sounds
-
+  self.app.audio:playSoundEffects(self.app.config.play_sounds)
   self.app:saveConfig()
 end
 

@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 86
+local SAVEGAME_VERSION = 87
 
 class "App"
 
@@ -1248,6 +1248,7 @@ function App:afterLoad()
   if new == old then
     self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion()
       .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
+    self.world:playLoadedEntitySounds()
     return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
