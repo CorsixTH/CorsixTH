@@ -36,6 +36,8 @@ SOFTWARE.
 #define SDL_USEREVENT_CPCALL (SDL_USEREVENT + 2)
 // SDL USEREVENT_MOVIE_OVER - informs script of THMovie movie finishing
 #define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 3)
+// SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
+#define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
 
 int luaopen_sdl(lua_State *L);
 

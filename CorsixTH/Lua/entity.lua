@@ -36,9 +36,11 @@ end
 -- the entity is from the center of the screen. If this is not what you want
 -- then use UI:playSound instead.
 -- !param name (string, integer) The filename or ordinal of the sound to play.
-function Entity:playSound(name)
+-- !param played_callback (function) a optional parameter.
+-- !param played_callback_delay (integer) a optional milliseconds parameter.
+function Entity:playSound(name, played_callback, played_callback_delay)
   if TheApp.config.play_sounds then
-    TheApp.audio:playSound(name, self)
+    TheApp.audio:playSound(name, self, false, played_callback, played_callback_delay)
   end
 end
 
