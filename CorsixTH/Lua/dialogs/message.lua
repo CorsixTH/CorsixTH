@@ -89,6 +89,12 @@ function UIMessage:draw(canvas, x, y)
 end
 
 function UIMessage:close(...)
+--  if not TheApp.world:isCurrentSpeed("Pause") then
+--    TheApp.world:setSpeed("Pause")
+--    TheApp.video:setBlueFilterActive(false)
+--  elseif TheApp.world:isCurrentSpeed("Pause") then
+--    TheApp.world:setSpeed(TheApp.world.prev_speed)
+--  end
   assert(self.onClose == nil, "UIMessage closed improperly")
   return Window.close(self, ...)
 end
@@ -102,8 +108,22 @@ function UIMessage:adjustToggle()
 end
 
 function UIMessage:openMessage()
+  if TheApp.world:isCurrentSpeed("Speed Up") then
+    TheApp.world:previousSpeed()
+    TheApp.world:setSpeed("Pause")
+    TheApp.video:setBlueFilterActive(false)
+  end
+  if not TheApp.world:isCurrentSpeed("Pause") then
+    TheApp.world:setSpeed("Pause")
+    TheApp.video:setBlueFilterActive(false)
+  elseif TheApp.world:isCurrentSpeed("Pause") then
+    TheApp.world:setSpeed(TheApp.world.prev_speed)
+    TheApp.video:setBlueFilterActive(false)
+  end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
+    TheApp.world:setSpeed("Pause")
+    TheApp.video:setBlueFilterActive(false)
     self:removeMessage()
   else
     if self.fax then
