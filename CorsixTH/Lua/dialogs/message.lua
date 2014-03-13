@@ -102,8 +102,15 @@ function UIMessage:adjustToggle()
 end
 
 function UIMessage:openMessage()
+  if TheApp.world:isCurrentSpeed("Speed Up") then
+    TheApp.world:previousSpeed()
+    TheApp.world:setSpeed("Pause")
+    TheApp.video:setBlueFilterActive(false)
+  end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
+    TheApp.world:setSpeed("Pause")
+    TheApp.video:setBlueFilterActive(false)
     self:removeMessage()
   else
     if self.fax then
