@@ -113,13 +113,6 @@ function UIMessage:openMessage()
     TheApp.world:setSpeed("Pause")
     TheApp.video:setBlueFilterActive(false)
   end
-  if not TheApp.world:isCurrentSpeed("Pause") then
-    TheApp.world:setSpeed("Pause")
-    TheApp.video:setBlueFilterActive(false)
-  elseif TheApp.world:isCurrentSpeed("Pause") then
-    TheApp.world:setSpeed(TheApp.world.prev_speed)
-    TheApp.video:setBlueFilterActive(false)
-  end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
     TheApp.world:setSpeed("Pause")
