@@ -2,16 +2,20 @@ language: cpp
 before_install:
   # Get build dependencies
   - sudo apt-get -qq update
-  - sudo apt-get -qq install cmake p7zip-full build-essential libsdl1.2-dev libsdl-mixer1.2-dev libsdl-mixer1.2 sshpass lua5.1
+  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+  # The packages in ubuntu's repositories seem a little broken
+  # so use a bleeding edge version
+  - wget http://ftp.jp.debian.org/debian/pool/main/m/mingw-w64/mingw-w64_3.1.0-1_all.deb
+  - sudo dpkg -i mingw-w64_3.1.0-1_all.deb
   - mkdir libs
   - cd libs
   # Get FFmpeg
-  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.3-win32-dev.7z
-  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.3-win32-shared.7z
-  - /usr/bin/7za x ffmpeg-2.1.3-win32-dev.7z
-  - /usr/bin/7za x ffmpeg-2.1.3-win32-shared.7z
-  - mv ffmpeg-2.1.3-win32-dev ffmpeg-dev
-  - mv ffmpeg-2.1.3-win32-shared ffmpeg-bin
+  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.4-win32-dev.7z
+  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.4-win32-shared.7z
+  - /usr/bin/7za x ffmpeg-2.1.4-win32-dev.7z
+  - /usr/bin/7za x ffmpeg-2.1.4-win32-shared.7z
+  - mv ffmpeg-2.1.4-win32-dev ffmpeg-dev
+  - mv ffmpeg-2.1.4-win32-shared ffmpeg-bin
   # Get freetype
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
@@ -20,17 +24,18 @@ before_install:
   - unzip -n freetype-2.3.5-1-bin.zip -d freetype
   - unzip -n freetype-2.3.5-1-dep.zip -d freetype
   # Get SDL
-  - wget http://www.libsdl.org/release/SDL-devel-1.2.15-mingw32.tar.gz
-  - tar xfz SDL-devel-1.2.15-mingw32.tar.gz
-  - sudo cp SDL-1.2.15/bin/* /usr/i586-mingw32msvc/bin/
-  - sudo cp -r SDL-1.2.15/include/SDL/* /usr/i586-mingw32msvc/include/
-  - sudo cp SDL-1.2.15/lib/* /usr/i586-mingw32msvc/lib/
-  - sudo chmod +x /usr/i586-mingw32msvc/bin/sdl-config
+  - wget http://libsdl.org/release/SDL2-devel-2.0.2-mingw.tar.gz
+  - tar xfz SDL2-devel-2.0.2-mingw.tar.gz
+  - sudo mkdir /usr/i686-w64-mingw32/bin/
+  - sudo cp SDL2-2.0.2/i686-w64-mingw32/bin/* /usr/i686-w64-mingw32/bin/
+  - sudo cp -r SDL2-2.0.2/i686-w64-mingw32/include/SDL2/* /usr/i686-w64-mingw32/include/
+  - sudo cp -r SDL2-2.0.2/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
+  - sudo chmod +x /usr/i686-w64-mingw32/bin/sdl2-config
   # Get SDL Mixer
-  - wget http://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip
-  - unzip SDL_mixer-devel-1.2.12-VC.zip
-  - sudo cp -r SDL_mixer-1.2.12/include/* /usr/i586-mingw32msvc/include/
-  - sudo cp SDL_mixer-1.2.12/lib/x86/* /usr/i586-mingw32msvc/lib/
+  - wget http://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.0-mingw.tar.gz
+  - tar xfz SDL2_mixer-devel-2.0.0-mingw.tar.gz
+  - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2/* /usr/i686-w64-mingw32/include/
+  - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
   - mkdir lua
   # Get LUA
   - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
@@ -41,7 +46,7 @@ before_install:
 install:
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
-  - cmake -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL-1.2.15/lib/libSDL.dll.a -DSDL_INCLUDE_DIR=libs/SDL-1.2.15/include/SDL -DSDLMAIN_LIBRARY=libs/SDL-1.2.15/lib/libSDLmain.a -DSDLMIXER_INCLUDE_DIR=libs/SDL_mixer-1.2.12/include -DSDLMIXER_LIBRARY=libs/SDL_mixer-1.2.12/lib/x86/SDL_mixer.lib -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
+  - cmake -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2-2.0.2/i686-w64-mingw32/lib/libSDL2.dll.a -DSDL_INCLUDE_DIR=libs/SDL2-2.0.2/i686-w64-mingw32/include/SDL2 -DSDLMAIN_LIBRARY=libs/SDL2-2.0.2/i686-w64-mingw32/lib/libSDL2main.a -DSDLMIXER_INCLUDE_DIR=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2 -DSDLMIXER_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/libSDL2_mixer.dll.a -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
 before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
@@ -61,10 +66,11 @@ after_success:
   # Package LevelEdit
   - cp LevelEdit/dist/LevelEdit.jar fresh/CorsixTH/
   # Copy required DLLs
-  - cp libs/SDL-1.2.15/bin/SDL.dll fresh/CorsixTH/
-  - cp libs/SDL_mixer-1.2.12/lib/x86/SDL_mixer.dll fresh/CorsixTH/
+  - cp libs/SDL2-2.0.2/i686-w64-mingw32/bin/*.dll fresh/CorsixTH/
+  - cp libs/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll fresh/CorsixTH/
   - cp libs/ffmpeg-bin/bin/*.dll fresh/CorsixTH/
   - cp libs/freetype/bin/*.dll fresh/CorsixTH/
+  - cp libs/lua/bin/*.dll fresh/CorsixTH/
   # Copy CTH
   - cd CorsixTH/
   - cp -r * ../fresh/CorsixTH/
