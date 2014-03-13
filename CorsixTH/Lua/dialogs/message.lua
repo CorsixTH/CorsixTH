@@ -89,12 +89,6 @@ function UIMessage:draw(canvas, x, y)
 end
 
 function UIMessage:close(...)
---  if not TheApp.world:isCurrentSpeed("Pause") then
---    TheApp.world:setSpeed("Pause")
---    TheApp.video:setBlueFilterActive(false)
---  elseif TheApp.world:isCurrentSpeed("Pause") then
---    TheApp.world:setSpeed(TheApp.world.prev_speed)
---  end
   assert(self.onClose == nil, "UIMessage closed improperly")
   return Window.close(self, ...)
 end
