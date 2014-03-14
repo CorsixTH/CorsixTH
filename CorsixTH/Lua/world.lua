@@ -26,6 +26,7 @@ local ipairs, _G, table_remove
 dofile "entities/patient"
 dofile "entities/staff"
 dofile "entities/vip"
+dofile "entities/grim_reaper"
 dofile "staff_profile"
 dofile "hospital"
 dofile "calls_dispatcher"
@@ -1882,6 +1883,10 @@ function World:destroyEntity(entity)
   entity:onDestroy()
 end
 
+function World:newObjectType(new_object)
+  self.object_types[new_object.id] = new_object
+end
+
 --! Creates a new object by finding the object_type from the "id" variable and
 --  calls its class constructor.
 --!param id (string) The unique id of the object to be created.
@@ -2112,6 +2117,18 @@ function World:objectPlaced(entity, id)
   -- If it is a plant it might be advisable to hire a handyman
   if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
     self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
+  end
+  if id == "gates_to_hell" then
+    entity:playSoundsAtEntityInRandomSequence("LAVA00*.WAV",
+                                              {0,1350,1150,950,750,350},
+                                              {0,1450,1250,1050,850,450},
+                                              40)
+    entity:setTimer(entity.world:getAnimLength(2550),
+                    --[[persistable:lava_hole_spawn_animation_end]]
+                    function(entity)
+                      entity:setAnimation(1602)
+                    end)
+    entity:setAnimation(2550)
   end
 end
 

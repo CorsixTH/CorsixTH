@@ -934,6 +934,22 @@ function Patient:afterLoad(old, new)
       self.waiting = nil
     end
   end
+  if old < 87 then
+    if self.die_anims == nil then
+      self.die_anims = {}
+    end
+
+    -- New humanoid animation: rise_hell_east:
+    if self:isMalePatient() then
+      if self.humanoid_class ~= "Alternate Male Patient" then
+        self.die_anims.rise_hell_east = 384
+      else
+        self.die_anims.rise_hell_east = 3404
+      end
+    else
+      self.die_anims.rise_hell_east = 580
+    end
+  end
   Humanoid.afterLoad(self, old, new)
 end
 
