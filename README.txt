@@ -29,7 +29,7 @@ Briefly:
     Linux and OS X users simply run the game and set the location of the 
     original game files when requested.
 4b) If you have a source code distribution, compile it.
-    See http://code.google.com/p/corsix-th/wiki/HowToCompile for details.
+    See https://github.com/CorsixTH/CorsixTH/wiki/How-To-Compile for details.
     Start the game for the first time. You will be asked for the location of
     the Theme Hospital data files. Select the directory you chose in step 3.
 5)  Go play! If this doesn't go smoothly, then consult:
