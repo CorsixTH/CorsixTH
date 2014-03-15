@@ -812,19 +812,23 @@ function Humanoid:tickDay()
 
   -- If it is too hot or too cold, start to decrease happiness and
   -- show the corresponding icon. Otherwise we could get happier instead.
-  -- Let the player get into the level first though, don't decrease happiness the first year.
-  if self.attributes["warmth"] and self.hospital and not self.hospital.initial_grace then
-    -- Cold: less than 11 degrees C
-    if self.attributes["warmth"] < 0.22 then
-      self:changeAttribute("happiness", -0.02 * (0.22 - self.attributes["warmth"]) / 0.14)
+  local min_comfort_temp = 0.22 -- 11 degrees Celcius.
+  local max_comfort_temp = 0.36 -- 18 degrees Celcius.
+  local decrease_factor = 0.10
+  local increase_happiness = 0.005
+
+  if self.attributes["warmth"] and self.hospital then
+    -- Cold: less than comfortable.
+    if self.attributes["warmth"] < min_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (min_comfort_temp - self.attributes["warmth"]))
       self:setMood("cold", "activate")
-    -- Hot: More than 18 degrees C
-    elseif self.attributes["warmth"] > 0.36 then
-      self:changeAttribute("happiness", -0.02 * (self.attributes["warmth"] - 0.36) / 0.14)
+    -- Hot: More than comfortable.
+    elseif self.attributes["warmth"] > max_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (self.attributes["warmth"] - max_comfort_temp))
       self:setMood("hot", "activate")
-    -- Ideal: Between 11 and 18
+    -- Ideal: Not too cold or too warm.
     else
-      self:changeAttribute("happiness", 0.005)
+      self:changeAttribute("happiness", increase_happiness)
       self:setMood("cold", "deactivate")
       self:setMood("hot", "deactivate")
     end

@@ -1033,11 +1033,6 @@ function World:onTick()
         self.month = self.month + 1
         if self.month > 12 then
           self.month = 12
-          if self.year == 1 then
-            for _, hospital in ipairs(self.hospitals) do
-              hospital.initial_grace = false
-            end
-          end
           -- It is crucial that the annual report gets to initialize before onEndYear is called.
           -- Yearly statistics are reset there.
           self.ui:addWindow(UIAnnualReport(self.ui, self))
