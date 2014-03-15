@@ -102,7 +102,7 @@ class "UIDirectoryBrowser" (UIResizable)
 --!param mode Whether the dialog has been opened from the main_menu or somewhere else. Currently
 --! valid are "menu" or "dir_browser".
 --!param instruction The textual instruction what the user should do in the dialog.
---!param treenode_type What TreeNode type the nodes will be built from. E.g. "InstallDirTreeNode"
+--!param treenode_class What TreeNode subclass the nodes will be built from. E.g. "InstallDirTreeNode"
 --!param callback The function that is called when the user has chosen a directory. Gets
 --! a path string as argument.
 function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_class, callback)
