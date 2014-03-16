@@ -1,9 +1,9 @@
 Package: corsix-th
 Version: 0.41-r1078
 Installed-Size: 13320
-Source: http://corsix-th.googlecode.com/svn
+Source: https://github.com/CorsixTH/CorsixTH
 Maintainer: CorsixTH developers <th@corsix.org>
-Homepage: http://code.google.com/p/corsix-th
+Homepage: https://github.com/CorsixTH/CorsixTH
 Priority: optional
 Architecture: i386
 Depends: timidity, liblua5.1-0, libsdl-mixer1.2, libsdl1.2debian
