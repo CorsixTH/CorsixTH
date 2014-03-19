@@ -195,7 +195,8 @@ static int l_mainloop(lua_State *L)
             case SDL_ACTIVEEVENT:
                 lua_pushliteral(dispatcher, "active");
                 lua_pushinteger(dispatcher, e.active.gain);
-                nargs = 2;
+                lua_pushinteger(dispatcher, e.active.state);
+                nargs = 3;
                 break;
             case SDL_USEREVENT_MUSIC_OVER:
                 lua_pushliteral(dispatcher, "music_over");

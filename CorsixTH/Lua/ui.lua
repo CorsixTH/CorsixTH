@@ -745,7 +745,7 @@ end
 local UpdateCursorPosition = TH.cursor.setPosition
 
 --! Called when the mouse enters or leaves the game window.
-function UI:onWindowActive(gain)
+function UI:onWindowActive(gain, state)
 end
 
 function UI:onMouseMove(x, y, dx, dy)
