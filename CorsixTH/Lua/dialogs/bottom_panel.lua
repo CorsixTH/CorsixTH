@@ -123,7 +123,7 @@ function UIBottomPanel:UIBottomPanel(ui)
   -- misc. keyhandlers
   ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
   ui:addKeyHandler("I", self, self.toggleInformation)   -- I for Information when you first build
-  ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
+  ui:addKeyHandler({"alt", "J"}, self, self.openJukebox)   -- open the jukebox
 end
 
 function UIBottomPanel:openJukebox()
@@ -723,7 +723,7 @@ function UIBottomPanel:afterLoad(old, new)
       self.additional_buttons[i] = self.buttons[5 + i]:makeToggle() -- made them toggle buttons
     end
     self.bank_button = self.buttons[1]:makeToggle()
-    
+
     -- keyboard shortcuts have been added/changed
     self.ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
     self.ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank manager
@@ -757,12 +757,16 @@ function UIBottomPanel:afterLoad(old, new)
     self.ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
     self.ui:addKeyHandler({"shift", "L"}, self, self.openLoad)  -- Shift + L for Load saved game menu
     self.ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
-    self.ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level 
-    self.ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu    
-  end  
+    self.ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level
+    self.ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu
+  end
   if old < 82 then
     self.ui:addKeyHandler({"shift","alt", "S"}, self, self.quickSave)  -- Shift+Alt+S quick save
     self.ui:addKeyHandler({"shift","alt", "L"}, self, self.quickLoad)  -- Shift+Alt+L load last quick save
+  end
+  if old < 86 then
+    self.ui:removeKeyHandler("J", self)
+    self.ui:addKeyHandler({"alt", "J"}, self, self.openJukebox)   -- open the jukebox
   end    
   Window.afterLoad(self, old, new)
 end
