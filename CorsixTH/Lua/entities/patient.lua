@@ -540,11 +540,12 @@ function Patient:tickDay()
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
     local room = self:getRoom()
+    -- people who are in a room should not die:
+    -- 1. they are being cured in this moment. dying in the last few seconds
+    --    before the cure makes only a subtle difference for gameplay
+    -- 2. they will leave the room soon (toilets, diagnostics) and will die then
     if not self:getRoom() and not self.action_queue[1].is_leaving then
       self:die()
-    elseif self.in_room and self.attributes["health"] == 0.0 then
-      room:makeHumanoidLeave(self)
-      self:die()     
     end
     --dead people aren't thirsty
     return

@@ -486,6 +486,12 @@ local function Humanoid_startAction(self)
 
   -- Handle an empty action queue in some way instead of crashing.
   if not action then
+    -- if this is a patient hat is going home, an empty
+    -- action queue is not a problem
+    if class.is(self, Patient) and self.going_home then
+      return
+    end
+
     ---- Empty action queue! ----
     -- First find out if this humanoid is in a room.
     local room = self:getRoom()
