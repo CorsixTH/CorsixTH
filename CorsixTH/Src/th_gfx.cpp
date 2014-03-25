@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_gfx.h"
+#include "persist_lua.h"
 #include "th_map.h"
 #include "th_sound.h"
 #include <new>

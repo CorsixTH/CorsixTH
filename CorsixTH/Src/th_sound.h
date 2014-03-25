@@ -22,7 +22,6 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_SOUND_H_
 #define CORSIX_TH_TH_SOUND_H_
-#include "th.h"
 #include <SDL.h>
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
