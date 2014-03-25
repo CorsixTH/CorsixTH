@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_pathfind.h"
+#include "persist_lua.h"
 #include "lua.hpp"
 #include <stdlib.h>
 #include <queue>

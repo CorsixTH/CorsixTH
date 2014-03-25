@@ -22,9 +22,11 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_MAP_OVERLAYS_H_
 #define CORSIX_TH_TH_MAP_OVERLAYS_H_
-#include "th_gfx.h"
 
+class THFont;
 class THMap;
+class THRenderTarget;
+class THSpriteSheet;
 
 class THMapOverlay
 {

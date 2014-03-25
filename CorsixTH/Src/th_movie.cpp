@@ -56,7 +56,7 @@ int th_movie_video_thread(void* pState)
 void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
 {
     THMovie *pMovie = (THMovie *)pUserData;
-    pMovie->copyAudioToStream((Uint8*)pStream, iStreamSize);
+    pMovie->copyAudioToStream((uint8_t*)pStream, iStreamSize);
 }
 
 THMoviePicture::THMoviePicture():
@@ -431,7 +431,7 @@ THMovie::THMovie():
     m_flushPacket->data = (uint8_t *)"FLUSH";
     m_flushPacket->size = 5;
 
-    m_pbChunkBuffer = (Uint8*)malloc(AUDIO_BUFFER_SIZE);
+    m_pbChunkBuffer = (uint8_t*)malloc(AUDIO_BUFFER_SIZE);
     memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
 }
 
@@ -864,7 +864,7 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     return 0;
 }
 
-void THMovie::copyAudioToStream(Uint8 *pbStream, int iStreamSize)
+void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 {
     int iAudioSize;
     int iCopyLength;
@@ -1058,7 +1058,7 @@ void THMovie::allocatePictureBuffer() {}
 void THMovie::deallocatePictureBuffer() {}
 void THMovie::readStreams() {}
 void THMovie::runVideo() {}
-void THMovie::copyAudioToStream(Uint8 *stream, int length) {}
+void THMovie::copyAudioToStream(uint8_t *stream, int length) {}
 #endif //CORSIX_TH_USE_FFMPEG
 
 

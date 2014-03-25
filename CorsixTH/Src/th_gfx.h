@@ -24,6 +24,9 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
 
+class LuaPersistReader;
+class LuaPersistWriter;
+
 enum THScaledItems
 {
     THSI_None = 0,
@@ -36,7 +39,6 @@ enum THScaledItems
 #include "th_gfx_ogl.h"
 #include "th_gfx_sdl.h"
 #include "th_gfx_font.h"
-#include "persist_lua.h"
 #include <stddef.h>
 
 #ifndef CORSIX_TH_HAS_RENDERING_ENGINE
@@ -418,7 +420,7 @@ public:
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor = 1);
     void setFrame(unsigned int iFrame);
-    
+
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 
