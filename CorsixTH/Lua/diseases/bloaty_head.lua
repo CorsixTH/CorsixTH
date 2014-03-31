@@ -52,7 +52,7 @@ disease.treatment_rooms = {
   "inflation",
 }
 
- 
+
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

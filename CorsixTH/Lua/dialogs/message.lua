@@ -23,10 +23,10 @@ class "UIMessage" (Window)
 
 function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeout, default_choice, callback)
   self:Window()
-  
+
   local app = ui.app
   ui:playSound("NewFax.wav")
-  
+
   self.esc_closes = false
   self.on_top = false
   self.onClose = onClose
@@ -57,12 +57,12 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self.y = 4
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.type = type
-  
+
   local types = { emergency = 43, epidemy = 45, strike = 47, personality = 49, information = 51, disease = 53, report = 55 }
   local type = types[type]
-  
+
   self.can_dismiss = self.type ~= "strike" and #self.message.choices == 1
-  
+
   self.button = self:addPanel(type, 0, 0)
     :setTooltip(self.can_dismiss and _S.tooltip.message.button_dismiss or _S.tooltip.message.button) -- FIXME: tooltip doesn't work very well here
     :makeToggleButton(0, 0, 30, 28, type + 1, self.openMessage, nil, self.dismissMessage)

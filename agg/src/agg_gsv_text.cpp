@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -25,7 +25,7 @@
 
 namespace agg
 {
-    int8u gsv_default_font[] = 
+    int8u gsv_default_font[] =
     {
         0x40,0x00,0x6c,0x0f,0x15,0x00,0x0e,0x00,0xf9,0xff,
         0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -585,7 +585,7 @@ namespace agg
     {
         m_status = initial;
         if(m_font == 0) return;
-        
+
         m_indices = (int8u*)m_font;
         double base_height = value(m_indices + 4);
         m_indices += value(m_indices);
@@ -603,13 +603,13 @@ namespace agg
         int8 yc, yf;
         int dx, dy;
         bool quit = false;
-        
+
         while(!quit)
         {
             switch(m_status)
             {
             case initial:
-                if(m_font == 0) 
+                if(m_font == 0)
                 {
                     quit = true;
                     break;
@@ -617,7 +617,7 @@ namespace agg
                 m_status = next_char;
 
             case next_char:
-                if(*m_cur_chr == 0) 
+                if(*m_cur_chr == 0)
                 {
                     quit = true;
                     break;
@@ -649,7 +649,7 @@ namespace agg
                 }
                 dx = int(*m_bglyph++);
                 yf = (yc = *m_bglyph++) & 0x80;
-                yc <<= 1; 
+                yc <<= 1;
                 yc >>= 1;
                 dy = int(yc);
                 m_x += double(dx) * m_w;

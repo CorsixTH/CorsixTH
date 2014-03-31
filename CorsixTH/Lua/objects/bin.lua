@@ -55,7 +55,7 @@ function SideObject:getDrawingLayer()
       if self.object_type.thob == 50 then
       --[[ bins have two orientations north and east by they are displayed in
         the north and west part of the tile respectively which could lead to
-        a graphical glitch in which a bin in the west part of the tile is 
+        a graphical glitch in which a bin in the west part of the tile is
         displayed over a doctor in the middle of the tile ]]
         return 2
       else

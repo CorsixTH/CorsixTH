@@ -59,8 +59,8 @@ function Door:updateDynamicInfo()
       })
     else
       self:setDynamicInfo('text', {
-        self.room.room_info.name, 
-        _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()), 
+        self.room.room_info.name,
+        _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()),
         _S.dynamic_info.object.queue_expected:format(self.queue.expected_count)
       })
     end
@@ -125,7 +125,7 @@ function Door:getWalkableTiles()
     x = x - 1
   else
     y = y - 1
-  end  
+  end
   return { {self.tile_x, self.tile_y}, {x, y} }
 end
 

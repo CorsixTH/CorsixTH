@@ -83,7 +83,7 @@ bool THAnimationManager::loadFromTHFile(
         return false;
     }
 
-    delete[] m_pFirstFrames; 
+    delete[] m_pFirstFrames;
     delete[] m_pFrames;
     delete[] m_pElementList;
     delete[] m_pElements;
@@ -774,7 +774,7 @@ static bool THAnimation_isMultipleFrameAnimation(THDrawable* pSelf)
     }
     else
         return false;
-   
+
 }
 
 THAnimationBase::THAnimationBase()
@@ -1244,7 +1244,7 @@ void THSpriteRenderList::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
 {
     if(!m_pSpriteSheet)
         return;
-  
+
     iDestX += m_iX;
     iDestY += m_iY;
     for(_sprite_t *pSprite = m_pSprites, *pLast = m_pSprites + m_iNumSprites;

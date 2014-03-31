@@ -52,7 +52,7 @@ function JellyVatRoom:commandEnteringPatient(patient)
   local moulder, stf_x, stf_y = self.world:findObjectNear(patient, "jelly_moulder")
   local orientation = moulder.object_type.orientations[moulder.direction]
   local pat_x, pat_y = moulder:getSecondaryUsageTile()
-  
+
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
   staff:queueAction{
     name = "multi_use_object",
@@ -66,7 +66,7 @@ function JellyVatRoom:commandEnteringPatient(patient)
   }
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
   patient:queueAction{name = "idle", direction = moulder.direction == "north" and "west" or "north"}
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

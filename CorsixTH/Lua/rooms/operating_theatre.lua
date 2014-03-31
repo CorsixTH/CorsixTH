@@ -96,8 +96,8 @@ end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
   self.staff_member_set[staff] = true
-  
-  -- Put surgeon outfit on 
+
+  -- Put surgeon outfit on
   local obj, ox, oy = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(ox, oy)
   staff:queueAction(wait_for_object(staff, obj))
@@ -105,16 +105,16 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     name = "use_screen",
     object = obj
   }
-  
+
   -- Wait around for patients
-  local meander = {name = "meander", must_happen = true, 
+  local meander = {name = "meander", must_happen = true,
     loop_callback = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
       self.staff_member_set[staff] = "ready"
       self:tryAdvanceQueue()
     end
   }
   staff:queueAction(meander)
-  
+
   -- Ensure that surgeons turn back into doctors when they leave
   staff:queueAction{
     name = "walk",
@@ -125,7 +125,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     is_leaving = true,
   }
   staff:queueAction{name = "use_screen", object = obj, must_happen = true, is_leaving = true}
-  
+
   return Room.commandEnteringStaff(self, staff, true)
 end
 
@@ -156,17 +156,17 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   if self.x_ray_viewer then
     self.x_ray_viewer:setLayer(11, 2)
   end
-  
+
   -- Identify the staff
   local surgeon1 = next(self.staff_member_set)
   local surgeon2 = next(self.staff_member_set, surgeon1)
   assert(surgeon1 and surgeon2, "Not enough staff in operating theatre")
-  
+
   -- Patient changes into surgical gown
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
   patient:walkTo(sx, sy)
   patient:queueAction{name = "use_screen", object = screen}
-  
+
   -- Meanwhile, surgeons wash their hands
   local obj, ox, oy = self.world:findObjectNear(surgeon1, "op_sink1")
   surgeon1:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 1)
@@ -175,10 +175,10 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   surgeon1:queueAction({name = "use_object", object = obj, must_happen = true}, 3)
   surgeon2:queueAction(wait_for_object(surgeon2, obj, true), 2)
   surgeon2:queueAction({name = "use_object", object = obj, must_happen = true}, 3)
-  
+
   local num_ready = {0}
   ----- BEGIN Save game compatibility -----
-  -- These function are merely for save game compability. 
+  -- These function are merely for save game compability.
   -- And they does not participate in the current game logic.
   -- Do not move or edit
   local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)
@@ -195,7 +195,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   local after_use = --[[persistable:operatring_theatre_after_multi_use]] function()
     self:dealtWithPatient(patient)
     patient:finishAction()
-  end 
+  end
   ----- END Save game compatibility -----
 
   local room = self
@@ -249,7 +249,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
         must_happen = true,
         no_truncate = true,
       }, 1)
-      
+
       -- Kick off
       surgeon1:finishAction()
       surgeon2:finishAction()
@@ -267,7 +267,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   ox, oy = obj:getSecondaryUsageTile()
   patient:queueAction{name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}
   patient:queueAction{name = "idle", loop_callback = operation_standby, must_happen = true}
-      
+
   -- Patient changes out of the gown afterwards
   patient:queueAction{
     name = "walk",
@@ -276,13 +276,13 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     must_happen = true,
     no_truncate = true,
   }
-  patient:queueAction{name = "use_screen", object = screen, must_happen = true}  
+  patient:queueAction{name = "use_screen", object = screen, must_happen = true}
 
   -- Meanwhile, second surgeon walks over to other side of operating table
   obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
   surgeon2:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 4)
   surgeon2:queueAction({name = "idle", loop_callback = operation_standby, must_happen = true}, 5)
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

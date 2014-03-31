@@ -422,7 +422,7 @@ FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
     }
     if(iAverageNum == 0)
         return FT_Err_Divide_By_Zero;
-    
+
     return setPixelSize((iWidthSum + iAverageNum / 2) / iAverageNum,
                         (iHeightSum + iAverageNum / 2) / iAverageNum);
 }
@@ -531,7 +531,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         pEntry->iMessageLength = iMessageLength;
         pEntry->iWidth = iWidth;
         pEntry->eAlign = eAlign;
-        
+
         // Split the message into lines, and determine the position within the
         // line for each character.
         std::vector<std::pair<const char*, const char*> > vLines;
@@ -707,7 +707,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
                 }
             }
         }
-        
+
         // Free all glyphs.
         for(std::map<unsigned int, codepoint_glyph_t>::const_iterator itr =
             mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd; ++itr)

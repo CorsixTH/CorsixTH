@@ -32,7 +32,7 @@ disease.emergency_number = 12
 disease.initPatient = function(patient)
   patient:setType("Chewbacca Patient")
   -- NB: Layers have no effect on the appearance until cured, at which point
-  -- they are standard male patient layers. The clinic does however sometimes  
+  -- they are standard male patient layers. The clinic does however sometimes
   -- change this so that a female emerge.
   patient:setLayer(0, math.random(1, 5) * 2)
   patient:setLayer(1, math.random(0, 3) * 2)
@@ -52,7 +52,7 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "electrolysis",
 }
-  
+
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

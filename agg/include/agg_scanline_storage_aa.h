@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -13,12 +13,12 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 //
-// Adaptation for 32-bit screen coordinates has been sponsored by 
+// Adaptation for 32-bit screen coordinates has been sponsored by
 // Liberty Technology Systems, Inc., visit http://lib-sys.com
 //
 // Liberty Technology Systems, Inc. is the provider of
 // PostScript and PDF technology for software developers.
-// 
+//
 //----------------------------------------------------------------------------
 
 #ifndef AGG_SCANLINE_STORAGE_AA_INCLUDED
@@ -68,7 +68,7 @@ namespace agg
         }
 
         //---------------------------------------------------------------
-        const scanline_cell_storage<T>& 
+        const scanline_cell_storage<T>&
         operator = (const scanline_cell_storage<T>& v)
         {
             remove_all();
@@ -313,8 +313,8 @@ namespace agg
                 sp.x         = span_iterator->x;
                 sp.len       = span_iterator->len;
                 int len      = abs(int(sp.len));
-                sp.covers_id = 
-                    m_covers.add_cells(span_iterator->covers, 
+                sp.covers_id =
+                    m_covers.add_cells(span_iterator->covers,
                                        unsigned(len));
                 m_spans.add(sp);
                 int x1 = sp.x;
@@ -454,7 +454,7 @@ namespace agg
             for(i = 0; i < m_scanlines.size(); ++i)
             {
                 const scanline_data& sl_this = m_scanlines[i];
-                
+
                 int8u* size_ptr = data;
                 data += sizeof(int32);  // Reserve space for scanline size in bytes
 
@@ -553,7 +553,7 @@ namespace agg
                 {
                     int32    x;
                     int32    len; // If negative, it's a solid span, "covers" is valid
-                    const T* covers; 
+                    const T* covers;
                 };
 
                 const_iterator() : m_ptr(0) {}
@@ -569,11 +569,11 @@ namespace agg
 
                 void operator ++ ()
                 {
-                    if(m_span.len < 0) 
+                    if(m_span.len < 0)
                     {
                         m_ptr += sizeof(T);
                     }
-                    else 
+                    else
                     {
                         m_ptr += m_span.len * sizeof(T);
                     }
@@ -711,7 +711,7 @@ namespace agg
             ((int8u*)&val)[3] = *m_ptr++;
             return val;
         }
-        
+
     public:
         // Iterate scanlines interface
         //--------------------------------------------------------------------
@@ -720,7 +720,7 @@ namespace agg
             m_ptr = m_data;
             if(m_ptr < m_end)
             {
-                m_min_x = read_int32() + m_dx; 
+                m_min_x = read_int32() + m_dx;
                 m_min_y = read_int32() + m_dy;
                 m_max_x = read_int32() + m_dx;
                 m_max_y = read_int32() + m_dy;

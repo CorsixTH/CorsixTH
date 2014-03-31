@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -47,7 +47,7 @@ namespace agg
         marker_dash,
         marker_dot,
         marker_pixel,
-        
+
         end_of_markers
     };
 
@@ -71,14 +71,14 @@ namespace agg
         bool visible(int x, int y, int r) const
         {
             rect_i rc(x-r, y-r, x+y, y+r);
-            return rc.clip(base_type::ren().bounding_clip_box());  
+            return rc.clip(base_type::ren().bounding_clip_box());
         }
 
         //--------------------------------------------------------------------
         void square(int x, int y, int r)
         {
-            if(visible(x, y, r)) 
-            {  
+            if(visible(x, y, r))
+            {
                 if(r) base_type::outlined_rectangle(x-r, y-r, x+r, y+r);
                 else  base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
@@ -99,7 +99,7 @@ namespace agg
                         base_type::ren().blend_pixel(x + dx, y + dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dx, y - dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x + dx, y - dy, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y+dy, x+dx-1, base_type::fill_color(), cover_full);
@@ -168,10 +168,10 @@ namespace agg
                     {
                         dx += ei.dx();
                         dy += ei.dy();
-                        
+
                         base_type::ren().blend_pixel(x + dy, y + dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x + dy, y - dx, base_type::line_color(), cover_full);
-                        
+
                         if(ei.dy() && dx)
                         {
                             base_type::ren().blend_vline(x+dy, y-dx+1, y+dx-1, base_type::fill_color(), cover_full);
@@ -204,10 +204,10 @@ namespace agg
                     {
                         dx += ei.dx();
                         dy += ei.dy();
-                        
+
                         base_type::ren().blend_pixel(x - dy, y + dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dy, y - dx, base_type::line_color(), cover_full);
-                        
+
                         if(ei.dy() && dx)
                         {
                             base_type::ren().blend_vline(x-dy, y-dx+1, y+dx-1, base_type::fill_color(), cover_full);
@@ -240,10 +240,10 @@ namespace agg
                     {
                         dx += ei.dx();
                         dy += ei.dy();
-                        
+
                         base_type::ren().blend_pixel(x + dx, y - dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dx, y - dy, base_type::line_color(), cover_full);
-                        
+
                         if(ei.dy() && dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y-dy, x+dx-1, base_type::fill_color(), cover_full);
@@ -276,10 +276,10 @@ namespace agg
                     {
                         dx += ei.dx();
                         dy += ei.dy();
-                        
+
                         base_type::ren().blend_pixel(x + dx, y + dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dx, y + dy, base_type::line_color(), cover_full);
-                        
+
                         if(ei.dy() && dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y+dy, x+dx-1, base_type::fill_color(), cover_full);
@@ -312,7 +312,7 @@ namespace agg
                     {
                         base_type::ren().blend_pixel(x + dy, y - dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x + dy, y + dx, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_vline(x+dy, y-dx+1, y+dx-1, base_type::fill_color(), cover_full);
@@ -347,7 +347,7 @@ namespace agg
                     {
                         base_type::ren().blend_pixel(x - dy, y - dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dy, y + dx, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_vline(x-dy, y-dx+1, y+dx-1, base_type::fill_color(), cover_full);
@@ -382,7 +382,7 @@ namespace agg
                     {
                         base_type::ren().blend_pixel(x - dx, y - dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x + dx, y - dy, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y-dy, x+dx-1, base_type::fill_color(), cover_full);
@@ -417,7 +417,7 @@ namespace agg
                     {
                         base_type::ren().blend_pixel(x - dx, y + dy, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x + dx, y + dy, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y+dy, x+dx-1, base_type::fill_color(), cover_full);
@@ -458,7 +458,7 @@ namespace agg
                         base_type::ren().blend_pixel(x + dy, y + dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dy, y - dx, base_type::line_color(), cover_full);
                         base_type::ren().blend_pixel(x - dy, y + dx, base_type::line_color(), cover_full);
-                        
+
                         if(dx)
                         {
                             base_type::ren().blend_hline(x-dx+1, y+dy,   x+dx-1, base_type::fill_color(), cover_full);
@@ -497,8 +497,8 @@ namespace agg
                 }
             }
         }
-        
-        
+
+
         //--------------------------------------------------------------------
         void xing(int x, int y, int r)
         {
@@ -520,35 +520,35 @@ namespace agg
                 base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
         }
-        
-        
+
+
         //--------------------------------------------------------------------
         void dash(int x, int y, int r)
         {
-            if(visible(x, y, r)) 
+            if(visible(x, y, r))
             {
                 if(r) base_type::ren().blend_hline(x-r, y, x+r, base_type::line_color(), cover_full);
                 else  base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
         }
-        
-        
+
+
         //--------------------------------------------------------------------
         void dot(int x, int y, int r)
         {
-            if(visible(x, y, r)) 
+            if(visible(x, y, r))
             {
                 if(r) base_type::solid_ellipse(x, y, r, r);
                 else  base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
         }
-        
+
         //--------------------------------------------------------------------
         void pixel(int x, int y, int)
         {
             base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
         }
-        
+
         //--------------------------------------------------------------------
         void marker(int x, int y, int r, marker_e type)
         {
@@ -592,7 +592,7 @@ namespace agg
                 while(--n);
                 return;
             }
-            
+
             switch(type)
             {
                 case marker_square:            do { square           (int(*x), int(*y), int(r)); ++x; ++y; } while(--n); break;
@@ -613,9 +613,9 @@ namespace agg
                 case marker_dash:              do { dash             (int(*x), int(*y), int(r)); ++x; ++y; } while(--n); break;
                 case marker_dot:               do { dot              (int(*x), int(*y), int(r)); ++x; ++y; } while(--n); break;
                 case marker_pixel:             do { pixel            (int(*x), int(*y), int(r)); ++x; ++y; } while(--n); break;
-            }                                                                                  
+            }
         }
-        
+
         //--------------------------------------------------------------------
         template<class T>
         void markers(int n, const T* x, const T* y, const T* r, marker_e type)
@@ -641,9 +641,9 @@ namespace agg
                 case marker_dash:              do { dash             (int(*x), int(*y), int(*r)); ++x; ++y; ++r; } while(--n); break;
                 case marker_dot:               do { dot              (int(*x), int(*y), int(*r)); ++x; ++y; ++r; } while(--n); break;
                 case marker_pixel:             do { pixel            (int(*x), int(*y), int(*r)); ++x; ++y; ++r; } while(--n); break;
-            }                                                                                  
+            }
         }
-        
+
         //--------------------------------------------------------------------
         template<class T>
         void markers(int n, const T* x, const T* y, const T* r, const color_type* fc, marker_e type)
@@ -671,7 +671,7 @@ namespace agg
                 case marker_pixel:             do { base_type::fill_color(*fc); pixel            (int(*x), int(*y), int(*r)); ++x; ++y; ++r; ++fc; } while(--n); break;
             }
         }
-        
+
         //--------------------------------------------------------------------
         template<class T>
         void markers(int n, const T* x, const T* y, const T* r, const color_type* fc, const color_type* lc, marker_e type)

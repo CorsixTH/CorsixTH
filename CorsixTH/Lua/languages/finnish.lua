@@ -22,9 +22,9 @@ SOFTWARE.
    READ BEFORE DOING ANY CHANGES
 -------------------------------------------------------------------------------
 
-Since the Finnish language isn't in the original Theme Hospital game, this 
-file is split in two sections (A and B). The first section contains all the new 
-language strings, made by the Corsix-TH team, and the second section contains 
+Since the Finnish language isn't in the original Theme Hospital game, this
+file is split in two sections (A and B). The first section contains all the new
+language strings, made by the Corsix-TH team, and the second section contains
 the override translation of all the original english strings.
 
 FORMATING AND FINNISH LETTERS
@@ -33,7 +33,7 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 -------------------------------------------------------------------------------
     Table of Contents
 -------------------------------------------------------------------------------
- 
+
  -- SECTION A - NEW STRINGS
 
         1. Global settings
@@ -51,9 +51,9 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
         13. Information
         14. Handyman window
         15. Misc
- 
+
  -- SECTION B - OLD STRINGS (OVERRIDE)
- 
+
         Huge section with all original strings, translated from english.
         New strings to existing string sets have been placed here instead of
         section A to keep similar strings close to each other.
@@ -813,7 +813,7 @@ staff_descriptions = {
     [14] = "Viekas ja ovela. Puhuu muista pahaa. ",
     [15] = "Ylimielinen ja mahtaileva. ",
   },
-} 
+}
 
 -- Staff list
 staff_list = {
@@ -951,7 +951,7 @@ graphs = {
   cures         = "Parantumisia",
   deaths        = "Kuolemia",
   reputation    = "Maine",
-  
+
   time_spans = {
     "1 vuosi",
     "12 vuotta",
@@ -1026,7 +1026,7 @@ town_map = {
   chat         = "Chat",
   for_sale     = "Myytävänä",
   not_for_sale = "Ei myytävänä",
-  number       = "Tonttinumero", 
+  number       = "Tonttinumero",
   owner        = "Omistaja",
   area         = "Pinta-ala",
   price        = "Hinta",
@@ -1040,7 +1040,7 @@ rooms_short = {
   reception         = "Vastaanotto",
   destroyed         = "Tuhoutunut",
   corridor_objects  = "Käytäväkalusteet",
-  
+
   gps_office        = "Yleislääkäri",
   psychiatric       = "Psykiatria",
   ward              = "Vuodeosasto",
@@ -1072,7 +1072,7 @@ rooms_long = {
   general           = "Yleinen", -- unused?
   emergency         = "Hätätilanne",
   corridors         = "Käytävät",
-  
+
   gps_office        = "Yleislääkärin vastaanotto",
   psychiatric       = "Psykiatrin vastaanotto",
   ward              = "Vuodeosasto",
@@ -1131,7 +1131,7 @@ research = {
     improvements    = "Laitteisto",
     specialisation  = "Erikoistuminen",
   },
-  
+
   funds_allocation  = "Myönnettävissä rahastosta",
   allocated_amount  = "Myönnetty rahasumma",
 }
@@ -1143,7 +1143,7 @@ policy = {
   diag_termination  = "hoidon lopettaminen",
   staff_rest        = "taukokäytäntö",
   staff_leave_rooms = "salli tauolle poistuminen",
-  
+
   sliders = {
     guess           = "ARVAA HOITO", -- belongs to diag_procedure
     send_home       = "LÄHETÄ KOTIIN", -- also belongs to diag_procedure
@@ -1282,7 +1282,7 @@ high_score = {
   best_scores   = "HALL OF FAME",
   worst_scores  = "HALL OF SHAME",
   killed        = "Kuolleita", -- is this used?
-  
+
   categories = {
     money               = "RIKKAIN",
     salary              = "KORKEIN PALKKA",
@@ -1411,7 +1411,7 @@ casebook = {
 
 -- Tooltips
 tooltip = {
-  
+
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -1423,7 +1423,7 @@ tooltip = {
     cost                = "Kustannukset nykyisestä huoneesta",
     close               = "Keskeytä toiminto ja palaa peliin",
   },
-  
+
   -- Toolbar
   toolbar = {
     bank_button         = "Vasen klikkaus: pankinjohtaja, oikea klikkaus: tiliote",
@@ -1442,7 +1442,7 @@ tooltip = {
     charts              = "Kuvaajat",
     policy              = "Sairaalan käytännöt",
   },
-  
+
   -- Hire staff window
   hire_staff_window = {
     doctors             = "Näytä työtä etsivät lääkärit",
@@ -1461,7 +1461,7 @@ tooltip = {
     psychiatrist        = "Psykiatri",
     researcher          = "Tutkija",
   },
-  
+
   -- Buy objects window
   buy_objects_window = {
     price               = "Kalusteen hinta",
@@ -1471,47 +1471,47 @@ tooltip = {
     increase            = "Kasvata valitun kalusteen ostetavaa määrää",
     decrease            = "Pienennä valitun kalusteen ostettavaa määrää",
   },
-  
+
   -- Staff list
   staff_list = {
     doctors             = "Näytä katsaus lääkäreistäsi",
     nurses              = "Näytä katsaus sairaanhoitajistasi",
     handymen            = "Näytä katsaus huoltomiehistäsi",
     receptionists       = "Näytä katsaus vastaanottoapulaisistasi",
-    
+
     happiness           = "Näyttää, kuinka tyytyväisiä työntekijäsi ovat",
     tiredness           = "Näyttää, kuinka väsyneitä työntekijäsi ovat",
     ability             = "Näyttää työntekijöidesi kyvyt",
     salary              = "Työntekijälle maksettava palkka",
-    
+
     happiness_2         = "Työntekijän tyytyväisyys",
     tiredness_2         = "Työntekijän väsymys",
     ability_2           = "Työntekijän kyvyt",
-    
+
     prev_person         = "Näytä edellinen sivu",
     next_person         = "Näytä seuraava sivu",
-    
+
     bonus               = "Anna työntekijälle 10%:n bonus",
     sack                = "Anna työntekijälle potkut",
     pay_rise            = "Nosta työntekijän palkkaa 10%",
-    
+
     close               = "Sulje ikkuna",
-    
+
     doctor_seniority    = "Lääkärin kokemus",
     detail              = "Yksityiskohtien huomioimiskyky",
-    
+
     view_staff          = "Näytä työntekijä",
-    
+
     surgeon             = "Erikoistunut kirurgiaan",
     psychiatrist        = "Erikoistunut psykiatriaan",
     researcher          = "Erikoistunut tutkimukseen",
     surgeon_train       = "%d%% suoritettu kirurgiaan erikoistumisesta", -- %d (percentage trained)
     psychiatrist_train  = "%d%% suoritettu psykiatriaan erikoistumisesta", -- %d (percentage trained)
     researcher_train    = "%d%% suoritettu tutkimukseen erikoistumisesta", -- %d (percentage trained)
-    
+
     skills              = "Taidot",
   },
-  
+
   -- Queue window
   queue_window = {
     num_in_queue        = "Jonottavien potilaiden määrä",
@@ -1532,7 +1532,7 @@ tooltip = {
       hospital_3        = "Lähetä potilas toiseen sairaalaan",
     },
   },
-  
+
   -- Main menu
   main_menu = {
     new_game            = "Aloita uusi peli",
@@ -1594,8 +1594,8 @@ tooltip = {
     repair              = "Kutsu huoltomies huoltamaan kone",
     replace             = "Korvaa kone uudella",
   },
-  
-  
+
+
   -- Handyman window
   -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
@@ -1615,7 +1615,7 @@ tooltip = {
     salary              = "Kuukausipalkka",
     tiredness           = "Väsymys",
   },
-  
+
   -- Place objects window
   place_objects_window = {
     cancel              = "Peruuta",
@@ -1623,7 +1623,7 @@ tooltip = {
     pick_up             = "Poimi kaluste",
     confirm             = "Vahvista",
   },
-  
+
   -- Casebook
   casebook = {
     up                  = "Vieritä ylös",
@@ -1645,7 +1645,7 @@ tooltip = {
       surgery           = "Tämä tauti vaatii leikkauksen",
       machine           = "Tämä tauti vaatii erikoislaitteen",
     },
-    
+
     cure_requirement = {
       possible          = "Voit hoitaa potilaan terveeksi",
       research_machine  = "Sinun täytyy kehittää erikoislaite hoitaaksesi sairautta",
@@ -1658,12 +1658,12 @@ tooltip = {
       not_possible      = "Et voi vielä hoitaa sairautta", -- unused
     },
   },
-  
+
   -- Statement
   statement = {
     close               = "Sulje tiliote",
   },
-  
+
   -- Research
   research = {
     close               = "Poistu tutkimusosastolta",
@@ -1679,7 +1679,7 @@ tooltip = {
     specialisation_inc  = "Nosta erikoistumistutkimuksen tärkeysastetta",
     allocated_amount    = "Tutkimukseen suunnattu rahoitus",
   },
-  
+
   -- Graphs
   graphs = {
     close               = "Sulje kuvaajaikkuna",
@@ -1708,7 +1708,7 @@ tooltip = {
     balance             = "Tilin saldo",
     close               = "Sulje kartta",
   },
-  
+
   -- Jukebox.
   jukebox = {
     current_title       = "Jukeboksi",
@@ -1719,7 +1719,7 @@ tooltip = {
     stop                = "Pysäytä jukeboksi",
     loop                = "Toista jukeboksia silmukassa",
   },
-  
+
   -- Bank Manager
   bank_manager = {
     hospital_value      = "Sairaalasi tämänhetkinen arvo",
@@ -1736,7 +1736,7 @@ tooltip = {
     graph               = "Velallisen %s maksusuunnitelma", -- %s (name of debitor)
     graph_return        = "Palaa edelliseen näyttöön",
   },
-  
+
   -- Status
   status = {
     win_progress_own    = "Näytä pelaajan edistyminen tämän tason vaatimusten suhteen",
@@ -1754,7 +1754,7 @@ tooltip = {
     value               = "Sairaalasi arvon tulee olla vähintään $%d. Nyt se on $%d",
     percentage_cured    = "Sinun pitää parantaa %d%% sairaalaasi saapuneista potilaista. Tähän mennessä olet parantanut %d%% heistä",
   },
-  
+
   -- Policy
   policy = {
     close               = "Sulje käytännöt-ikkuna",
@@ -1764,20 +1764,20 @@ tooltip = {
     diag_termination    = "Potilaan diagnoosia jatketaan, kunnes lääkärit ovat yhtä varmoja kuin KESKEYTÄ PROSESSI-prosentti tai kaikkia diagnoosikoneita on kokeiltu",
     staff_rest          = "Kuinka väsynyttä henkilöstön pitää olla ennen kuin he saavat levätä",
   },
-  
+
   -- Pay rise window
   pay_rise_window = {
     accept              = "Myönny vaatimuksiin",
     decline             = "Kieltäydy vaatimuksista - Anna lopputili sen sijaan",
   },
-  
+
   -- Watch
   watch = {
     hospital_opening    = "Rakennusaika: sinulla on tämän verran aikaa jäljellä ennen kuin sairaala avataan potilaille. Paina vihreää AVAA-nappia avataksesi sairaalasi välittömästi.",
     emergency           = "Hätätilanne: Akuuttien potilaiden parantamiseen jäljellä oleva aika.",
     epidemic            = "Epidemia: Epidemian taltuttamiseen jäljellä oleva aika. Kun aika kuluu loppuun TAI tartunnan saanut potilas poistuu sairaalasta, terveystarkastaja saapuu vierailulle. Paina nappia aloittaaksesi ja lopettaaksesi rokotukset. Klikkaa potilaita kutsuaksesi sairaanhoitajan rokottamaan heidät.",
   },
-  
+
   -- Rooms
   rooms = {
     gps_office          = "Potilaat tutkitaan ja diagnosoidaan alustavasti yleislääkärin toimistossa.",
@@ -1805,7 +1805,7 @@ tooltip = {
     toilets             = "Rakenna käymälä, jotta potilaat eivät sotke sairaalaasi!",
     decontamination     = "Säteilyklinikalla lääkäri hoitaa vakavasta säteilystä kärsiviä potilaita",
   },
-  
+
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
@@ -1875,7 +1875,7 @@ tooltip = {
 
 -- 32. Adviser
 adviser = {
-  
+
   -- Tutorial
   tutorial = {
     start_tutorial                      = "Lue tason kuvaus ja klikkaa hiiren vasemmalla painikkeella aloittaaksesi esittelyn.",
@@ -1906,7 +1906,7 @@ adviser = {
     doctor_in_invalid_position          = "Hei! Et voi laittaa lääkäriä tähän. Koeta sijoittaa hänet tyhjälle lattia-alueelle.",
     place_objects                       = "Klikkaa hiiren oikeaa painikketta pyörittääksesi kalusteita ja vasenta asettaaksesi ne paikalleen.",
     room_too_small                      = "Tämä pohjapiirrustus näkyy punaisena, koska se on liian pieni. Vedä hiirtä pidempi matka saadaksesi suurempi huone.",
-    click_gps_office                    = "Klikkaa hiiren vasemmalla painikkeella vilkkuvaa aluetta valitaksesi yleislääkärin toimiston.",    
+    click_gps_office                    = "Klikkaa hiiren vasemmalla painikkeella vilkkuvaa aluetta valitaksesi yleislääkärin toimiston.",
     room_too_small_and_invalid          = "Pohjapiirrustus on liian pieni ja väärin aseteltu. Kokeile uudestaan.",
     object_in_invalid_position          = "Tämä kaluste on väärin asetettu. Ole hyvä ja sijoita se toiseen paikkaan tai pyöritä sitä saadaksesi se sopimaan.",
     place_door                          = "Siirrä hiiri pohjapiirrustuksen reunalle asettaaksesi ovi haluamaasi paikkaan.",
@@ -1914,14 +1914,14 @@ adviser = {
     build_pharmacy                      = "Onnittelut! Seuraavaksi kannattaa rakentaa Apteekki ja palkata sairaanhoitaja, jotta sairaalasi on täysin toimintavalmis.",
     information_window                  = "Tiedoteikkunassa kerrotaan lisätietoja juuri rakentamastasi yleislääkärin toimistosta.",
   },
-  
+
   -- Epidemic
   epidemic = {
     hurry_up            = "Jos et ota nopeasti epidemiaa hallintaasi, siitä seuraa suuria ongelmia. Kiirehdi!",
     serious_warning     = "Tartuntatauti leviää sairaalassasi ja alkaa muodostua vakavaksi ongelmaksi. Sinun on tehtävä jotain ja pian!",
     multiple_epidemies  = "Sinulla näyttää olevan useampi kuin yksi epidemia riesanasi. Tästä voi seurata pahaa jälkeä, joten nyt on tulenpalava kiire.",
   },
-  
+
   -- Staff advice
   staff_advice = {
     need_handyman_machines      = "Sinun täytyy palkata huoltomiehiä, jos haluat koneidesi pysyvän kunnossa.",
@@ -1932,40 +1932,40 @@ adviser = {
     too_many_doctors            = "Sairaalassasi on liikaa lääkäreitä. Osalla heistä ei ole mitään tekemistä.",
     too_many_nurses             = "Uskoisin, että sinulla on liikaa sairaanhoitajia palkkalistoillasi.",
   },
-  
+
   -- Earthquake
   earthquake = {
     damage      = "Maanjäristys on vioittanut %d laitetta ja %d potilasta on loukkaantunut sairaalassasi.", -- %d (count machines), &d (count patients)
     alert       = "Maanjäristysvaroitus. Maanjäristys vahingoittaa laitteitasi ja ne voivat lakata toimimasta kokonaan, jos niitä ei ole huollettu kunnolla.",
     ended       = "Huh. Se tuntui voimakkaalta järistykseltä - magnitudiksi mitattiin %d Richterin asteikolla.",
   },
-  
+
   -- Multiplayer
   multiplayer = {
     objective_completed = "Olet saavuttanut kaikki tämän tason tavoitteet. Onnittelut!",
     everyone_failed     = "Kukaan ei ole saavuttanut asetettuja tavoitteita. Kaikki saavat siis jatkaa yrittämistä!",
     players_failed      = "Seuraavat pelaajat eivät ole saavuttaneet asetettuja tavoitteita: ",
     objective_failed    = "Et ole onnistunut saavuttamaan tämän tason tavoitteita.",
-    
+
     poaching = {
       in_progress                       = "Yritän tiedustella josko tämä henkilö olisi kiinnostunut siirtymään palvelukseesi.",
       not_interested                    = "Hah! Häntä ei kiinnosta tulla töihin sinulle - hänellä on kaikki hyvin nykyisissä työpaikassaan.",
       already_poached_by_someone        = "Turha haaveilla! Joku muu yrittää jo parhaillaan viedä tätä työntekijää.",
     },
   },
-  
+
   -- Surgery requirements
   surgery_requirements = {
     need_surgeons_ward_op       = "Tarvitset kaksi kirurgia ja vuodeosaston leikkaussalin lisäksi voidaksesi suorittaa kirurgisia toimenpiteitä.",
     need_surgeon_ward           = "Tarvitset vuodeosaston ja yhden kirurgin lisää voidaksesi suorittaa kirurgisia toimenpiteitä.",
   },
-  
+
   -- Vomit wave
   vomit_wave = {
     started     = "Sairaalaasi näyttää levinneen oksennustautia aiheuttava virus. Jos olisit palkannut lisää huoltomiehiä pitämään paikat puhtaina, näin ei olisi päässyt käymään.",
     ended       = "Huh! Viruksen aiheuttama oksennustauti on saatu kuriin. Pidä sairaalasi puhtaampana jatkossa.",
   },
-  
+
   -- Level progress
   level_progress = {
     nearly_won          = "Olet miltei saavuttanut tämän tason tavoitteet.",
@@ -1975,7 +1975,7 @@ adviser = {
     nearly_lost         = "Tappiosi on viimeistä naulaa vaille valmis.",
     three_quarters_won  = "Vain yksi neljännes tavoitteista on enää suorittamatta.",
   },
-  
+
   -- Staff place advice
   staff_place_advice = {
     receptionists_only_at_desk  = "Vain vastaanottoapulaiset voivat työskennellä vastaanotossa.",
@@ -1987,7 +1987,7 @@ adviser = {
     nurses_cannot_work_in_room  = "%s ei sovellu sairaanhoitajan hoidettavaksi.",
     doctors_cannot_work_in_room = "%s ei sovellu lääkärin hoidettavaksi.",
   },
-  
+
   -- Research
   research = {
     machine_improved            = "Kehittyneempi %s on valmistunut tutkimusosastollasi.",
@@ -1998,21 +1998,21 @@ adviser = {
     new_available               = "Uusi %s on nyt saatavilla.",
     new_drug_researched         = "Sairauteen %s on kehitetty uusi lääke.",
   },
-  
+
   -- Boiler issue
   boiler_issue = {
     minimum_heat        = "Keskuslämmitys on sanonut työsopimuksensa irti. Vaikuttaisi siltä, että sairaalassasi oleville ihmisille tulee pian jäiset oltavat.",
     maximum_heat        = "Kellarissa oleva lämmitysuuni on hajonnut. Uuni on jumiutunut täydelle teholle ja ihmiset sulavat sairaalassasi! Sijoita runsaasti juoma-automaatteja kaikkialle.",
     resolved            = "Hyviä uutisia. Keskuslämmitys toimii taas niin kuin pitääkin. Lämpötilan ei enää pitäisi vaivata potilaita eikä henkilökuntaa.",
   },
-  
+
   -- Competitors
   competitors = {
     staff_poached       = "Yksi työntekijöistäsi on palkattu kilpailevaan sairaalaan.",
     hospital_opened     = "Kilpaileva sairaala on avattu lähellä aluetta %s.",
     land_purchased      = "%s on ostanut itselleen tontin.",
   },
-  
+
   -- Room requirements
   room_requirements = {
     research_room_need_researcher       = "Sinun täytyy palkata tutkimukseen erikoistunut lääkäri ennen kuin voit ottaa tutkimusosaston käyttöön.",
@@ -2026,7 +2026,7 @@ adviser = {
     training_room_need_consultant       = "Tarvitset konsultti-lääkärin opettamaan nuorempia lääkäreitäsi koulutushuoneessa.",
     gps_office_need_doctor              = "Sinun täytyy palkata lääkäri tekemään alustavia diagnooseja yleislääkärin toimistossa.",
   },
-  
+
   -- Goals
   goals = {
     win = {
@@ -2039,7 +2039,7 @@ adviser = {
       kill = "Jos sairaalassasi kuolee vielä %d potilasta, häviät tämän tason!",
     },
   },
-  
+
   -- Warnings
   warnings = {
     charges_too_low             = "Veloitat palveluistasi liian vähän. Tämä houkuttelee kyllä sairaalaasi runsaasti potilaita, mutta ansaitset vähemmän jokaista potilasta kohden.",
@@ -2073,7 +2073,7 @@ adviser = {
     patients_unhappy            = "Potilaasi ovat tyytymättömiä sairaalaasi. Sinun pitäisi tehdä jotakin saadaksesi sairaalasi mukavammaksi.",
     pay_back_loan               = "Sinulla on runsaasti rahaa. Voisit harkita lainasi lyhentämistä.",
   },
-  
+
   -- Placement info
   placement_info = {
     door_can_place              = "Voit asettaa oven tähän, jos haluat.",
@@ -2089,14 +2089,14 @@ adviser = {
     window_cannot_place         = "Et voi rakentaa ikkunaa tähän.",
     reception_cannot_place      = "Vastaanottoa ei voi sijoittaa tähän.",
   },
-  
+
   -- Praise
   praise = {
     many_benches        = "Potilailla on tarpeeksi istumapaikkoja. Hienoa.",
     many_plants         = "Mahtavaa. Sinulla on paljon kasveja. Potilaasi arvostavat sitä varmasti.",
     patients_cured      = "%d potilasta parannettu.",
   },
-  
+
   -- Information
   information = {
     larger_rooms                        = "Suurempi huone saa työntekijät tuntemaan itsensä tärkeämmiksi, mikä parantaa heidän suoritustasoaan.",
@@ -2135,7 +2135,7 @@ adviser = {
       first_VIP                 = "Sairaalaasi on saapumassa ensimmäinen VIP-potilas. Yritä varmistaa, ettei hän pääse näkemään mitään epähygienistä tai yhtään tyytymättömiä potilaita.",
     },
   },
-  
+
   -- Build advice
   build_advice = {
     placing_object_blocks_door  = "Jos sijoitat kalusteita tähän, kukaan ei pääse ovesta sisään eikä ulos.",
@@ -2343,211 +2343,211 @@ vip_names = {
 
 -- Deseases
 diseases = {
-  general_practice = { 
-    name = "Yleishoito", 
+  general_practice = {
+    name = "Yleishoito",
   },
-  alien_dna = { 
-    name        = "Alienin DNA", 
-    cause       = "Aiheuttaja - joutuminen facehugger-alienin uhriksi.", 
-    symptoms    = "Oireet - vaiheittainen muodonmuutos täysikasvuiseksi alieniksi ja halu tuhota kaikki kaupunkimme.", 
+  alien_dna = {
+    name        = "Alienin DNA",
+    cause       = "Aiheuttaja - joutuminen facehugger-alienin uhriksi.",
+    symptoms    = "Oireet - vaiheittainen muodonmuutos täysikasvuiseksi alieniksi ja halu tuhota kaikki kaupunkimme.",
     cure        = "Hoito - DNA poistetaan mekaanisesti, puhdistetaan ja siirretään nopeasti takaisin.",
   },
-  baldness = { 
-    name        = "Kaljuus", 
-    cause       = "Aiheuttaja - valehteleminen ja tarinoiden keksiminen suosion toivossa.", 
-    symptoms    = "Oireet - kiiltävä kupoli ja nolotus.", 
+  baldness = {
+    name        = "Kaljuus",
+    cause       = "Aiheuttaja - valehteleminen ja tarinoiden keksiminen suosion toivossa.",
+    symptoms    = "Oireet - kiiltävä kupoli ja nolotus.",
     cure        = "Hoito - Uudet hiukset sulautetaan saumattomasti potilaan päähän käyttäen kivuliasta konetta.",
   },
-  bloaty_head = { 
-    name        = "Pallopäisyys", 
-    cause       = "Aiheuttaja - juuston haistelu ja puhdistamattoman sadeveden juominen.", 
-    symptoms    = "Oireet - hyvin epämukavat potilaalle.", 
-    cure        = "Hoito - Pää puhkaistaan ja pumpataan takaisin oikeaan paineeseen nokkelalla laitteella.", 
+  bloaty_head = {
+    name        = "Pallopäisyys",
+    cause       = "Aiheuttaja - juuston haistelu ja puhdistamattoman sadeveden juominen.",
+    symptoms    = "Oireet - hyvin epämukavat potilaalle.",
+    cure        = "Hoito - Pää puhkaistaan ja pumpataan takaisin oikeaan paineeseen nokkelalla laitteella.",
   },
-  broken_heart = { 
+  broken_heart = {
     name        = "Särkynyt sydän",
-    cause       = "Aiheuttaja - joku rikkaampi, nuorempi ja laihempi kuin potilas.", 
-    symptoms    = "Oireet - hallitsematon itku ja rasitusvamma jatkuvan lomakuvien repimisen johdosta.", 
-    cure        = "Hoito - Kaksi kirurgia avaa rintakehän ja korjaa sydämen hellästi pidättäen hengitystään.", 
+    cause       = "Aiheuttaja - joku rikkaampi, nuorempi ja laihempi kuin potilas.",
+    symptoms    = "Oireet - hallitsematon itku ja rasitusvamma jatkuvan lomakuvien repimisen johdosta.",
+    cure        = "Hoito - Kaksi kirurgia avaa rintakehän ja korjaa sydämen hellästi pidättäen hengitystään.",
   },
-  broken_wind = { 
-    name        = "Kaasujen karkailu", 
-    cause       = "Aiheuttaja - kuntosalin juoksumaton käyttäminen heti ruoan jälkeen.", 
-    symptoms    = "Oireet - takana seisovien ihmisten ärsyyntyminen.", 
+  broken_wind = {
+    name        = "Kaasujen karkailu",
+    cause       = "Aiheuttaja - kuntosalin juoksumaton käyttäminen heti ruoan jälkeen.",
+    symptoms    = "Oireet - takana seisovien ihmisten ärsyyntyminen.",
     cure        = "Hoito - Potilas juo nopeasti raskaan sekoituksen erityisiä vetisiä atomeja apteekissa.",
   },
-  chronic_nosehair = { 
-    name        = "Krooniset nenäkarvat", 
-    cause       = "Aiheuttaja - nenän nyrpistäminen itseään heikompiosaisille ihmisille.", 
-    symptoms    = "Oireet - nenäparta, johon orava voisi tehdä pesän.", 
+  chronic_nosehair = {
+    name        = "Krooniset nenäkarvat",
+    cause       = "Aiheuttaja - nenän nyrpistäminen itseään heikompiosaisille ihmisille.",
+    symptoms    = "Oireet - nenäparta, johon orava voisi tehdä pesän.",
     cure        = "Hoito - Sairaanhoitaja valmistaa apteekissa ällöttävän rohdon, joka nautitaan suun kautta.",
   },
-  corrugated_ankles = { 
-    name        = "Taipuneet nilkat", 
-    cause       = "Aiheuttaja - liiallinen hidastetöyssyjen yli ajaminen.", 
-    symptoms    = "Oireet - kengät eivät sovi hyvin jalkaan.", 
+  corrugated_ankles = {
+    name        = "Taipuneet nilkat",
+    cause       = "Aiheuttaja - liiallinen hidastetöyssyjen yli ajaminen.",
+    symptoms    = "Oireet - kengät eivät sovi hyvin jalkaan.",
     cure        = "Hoito - Lievästi myrkyllinen seos yrttejä ja mausteita juodaan nilkkojen oikaisemiseksi.",
   },
-  discrete_itching = { 
-    name        = "Paikallinen kutina", 
-    cause       = "Aiheuttaja - pienet hyönteiset, joilla on terävät hampaat.", 
-    symptoms    = "Oireet - raapiminen, joka johtaa ruumiinosien tulehduksiin.", 
+  discrete_itching = {
+    name        = "Paikallinen kutina",
+    cause       = "Aiheuttaja - pienet hyönteiset, joilla on terävät hampaat.",
+    symptoms    = "Oireet - raapiminen, joka johtaa ruumiinosien tulehduksiin.",
     cure        = "Hoito - Potilaalle juotetaan lääkesiirappia kutinan ehkäisemiseksi.",
   },
-  fake_blood = { 
-    name        = "Valeveri", 
-    cause       = "Aiheuttaja - potilas on yleensä joutunut käytännön pilan uhriksi.", 
-    symptoms    = "Oireet - suonissa punaista nestettä, joka haihtuu joutuessaan kosketuksiin kankaan kanssa.", 
+  fake_blood = {
+    name        = "Valeveri",
+    cause       = "Aiheuttaja - potilas on yleensä joutunut käytännön pilan uhriksi.",
+    symptoms    = "Oireet - suonissa punaista nestettä, joka haihtuu joutuessaan kosketuksiin kankaan kanssa.",
     cure        = "Hoito - Psykiatrinen rauhoittelu on ainoa keino hoitaa ongelmaa.",
   },
-  fractured_bones = { 
+  fractured_bones = {
     name        = "Murtuneet luut",
-    cause       = "Aiheuttaja - putoaminen korkealta betonille.", 
-    symptoms    = "Oireet - voimakas napsahdus ja kyvyttömyys käyttää kyseisiä raajoja.", 
-    cure        = "Hoito - Potilaalle asetetaan kipsi, joka sitten poistetaan laser-toimisella kipsinpoistokoneella.", 
+    cause       = "Aiheuttaja - putoaminen korkealta betonille.",
+    symptoms    = "Oireet - voimakas napsahdus ja kyvyttömyys käyttää kyseisiä raajoja.",
+    cure        = "Hoito - Potilaalle asetetaan kipsi, joka sitten poistetaan laser-toimisella kipsinpoistokoneella.",
   },
-  gastric_ejections = { 
-    name        = "Vääntelehtivä vatsa", 
-    cause       = "Aiheuttaja - mausteinen meksikolainen tai intialainen ruoka.", 
-    symptoms    = "Oireet - puolittain sulanutta ruokaa poistuu potilaan elimistöstä satunnaisesti.", 
+  gastric_ejections = {
+    name        = "Vääntelehtivä vatsa",
+    cause       = "Aiheuttaja - mausteinen meksikolainen tai intialainen ruoka.",
+    symptoms    = "Oireet - puolittain sulanutta ruokaa poistuu potilaan elimistöstä satunnaisesti.",
     cure        = "Hoito - Erityisen sitouttamisnesteen juominen estää ruokapäästöjen syntymisen.",
   },
-  golf_stones = { 
-    name        = "Golf-kivet", 
-    cause       = "Aiheuttaja - altistuminen golfpallojen sisältämälle myrkkykaasulle.", 
-    symptoms    = "Oireet - sekavuus ja edistynyt häpeä.", 
+  golf_stones = {
+    name        = "Golf-kivet",
+    cause       = "Aiheuttaja - altistuminen golfpallojen sisältämälle myrkkykaasulle.",
+    symptoms    = "Oireet - sekavuus ja edistynyt häpeä.",
     cure        = "Hoito - Kivet poistetaan leikkauksella, johon tarvitaan kaksi kirurgia.",
   },
-  gut_rot = { 
-    name        = "Mahamätä", 
-    cause       = "Aiheuttaja - rouva Malisen 'Hauskaa iltaa' -viskiyskänlääke.", 
-    symptoms    = "Oireet - ei yskää, mutta ei vatsan limakalvojakaan.", 
+  gut_rot = {
+    name        = "Mahamätä",
+    cause       = "Aiheuttaja - rouva Malisen 'Hauskaa iltaa' -viskiyskänlääke.",
+    symptoms    = "Oireet - ei yskää, mutta ei vatsan limakalvojakaan.",
     cure        = "Hoito - Sairaanhoitaja sekoittaa apteekissa lääkeliemen, joka päälystää mahalaukun sisäpinnan.",
   },
-  hairyitis = { 
-    name        = "Turkinkasvu", 
-    cause       = "Aiheuttaja - pitkittynyt altistuminen kuun valolle.", 
-    symptoms    = "Oireet - potilaille kehittyy herkistynyt hajuaisti.", 
-    cure        = "Hoito - Elektrolyysikone poistaa karvat ja sulkee huokoset.", 
+  hairyitis = {
+    name        = "Turkinkasvu",
+    cause       = "Aiheuttaja - pitkittynyt altistuminen kuun valolle.",
+    symptoms    = "Oireet - potilaille kehittyy herkistynyt hajuaisti.",
+    cure        = "Hoito - Elektrolyysikone poistaa karvat ja sulkee huokoset.",
   },
-  heaped_piles = { 
-    name        = "Kasautuneet pukamat", 
-    cause       = "Aiheuttaja - vesiautomaatin lähellä seisoskeleminen.", 
-    symptoms    = "Oireet - potilaasta tuntuu kuin hän istuisi marmorikuulapussin päällä.", 
+  heaped_piles = {
+    name        = "Kasautuneet pukamat",
+    cause       = "Aiheuttaja - vesiautomaatin lähellä seisoskeleminen.",
+    symptoms    = "Oireet - potilaasta tuntuu kuin hän istuisi marmorikuulapussin päällä.",
     cure        = "Hoito - Miellyttävä, mutta vahvasti hapokas juoma sulattaa pukamat sisältä.",
   },
-  infectious_laughter = { 
-    name        = "Tarttuva nauru", 
-    cause       = "Aiheuttaja - klassiset TV:n komediasarjat.", 
-    symptoms    = "Oireet - avuton hihitys ja kuluneiden fraasien toistelu.", 
+  infectious_laughter = {
+    name        = "Tarttuva nauru",
+    cause       = "Aiheuttaja - klassiset TV:n komediasarjat.",
+    symptoms    = "Oireet - avuton hihitys ja kuluneiden fraasien toistelu.",
     cure        = "Hoito - Ammattitaitoisen psykiatrin täytyy muistuttaa potilaalle, kuinka vakava hänen tilansa on.",
   },
-  invisibility = { 
+  invisibility = {
     name        = "Näkymättömyys",
     cause       = "Aiheuttaja - radioaktiivisen (ja näkymättömän) muurahaisen purema",
     symptoms    = "Oireet - potilaat eivät kärsi lainkaan ja monet heistä hyödyntävät tilaansa tekemällä kepposia perheelleen",
     cure        = "Hoito - Apteekista saatava värikäs juoma palauttaa potilaat pikaisesti näkyviin",
   },
-  iron_lungs = { 
-    name        = "Rautakeuhkot", 
-    cause       = "Aiheuttaja - kantakaupungin savusumu yhdistettynä kebabin jäänteisiin.", 
-    symptoms    = "Oireet - kyky syöstä tulta ja huutaa kovaa veden alla.", 
+  iron_lungs = {
+    name        = "Rautakeuhkot",
+    cause       = "Aiheuttaja - kantakaupungin savusumu yhdistettynä kebabin jäänteisiin.",
+    symptoms    = "Oireet - kyky syöstä tulta ja huutaa kovaa veden alla.",
     cure        = "Hoito - Kaksi kirurgia poistaa jähmettyneet keuhkot leikkaussalissa.",
   },
-  jellyitis = { 
-    name        = "Hyytelöityminen", 
-    cause       = "Aiheuttaja - Runsaasti gelatiinia sisältävä ruokavalio ja liiallinen liikunta.", 
-    symptoms    = "Oireet - liiallinen hytkyminen ja runsas kaatuilu.", 
+  jellyitis = {
+    name        = "Hyytelöityminen",
+    cause       = "Aiheuttaja - Runsaasti gelatiinia sisältävä ruokavalio ja liiallinen liikunta.",
+    symptoms    = "Oireet - liiallinen hytkyminen ja runsas kaatuilu.",
     cure        = "Hoito - Potilas asetetaan vähäksi aikaa hyytelömuovaimeen erityisessä hyytelömuovainhuoneessa.",
   },
-  kidney_beans = { 
+  kidney_beans = {
     name        = "Munuaispavut",
-    cause       = "Aiheuttaja - jääkuutioiden murskaaminen juomaan.", 
-    symptoms    = "Oireet - kipuja ja jatkuvaa vessassa käymistä.", 
+    cause       = "Aiheuttaja - jääkuutioiden murskaaminen juomaan.",
+    symptoms    = "Oireet - kipuja ja jatkuvaa vessassa käymistä.",
     cure        = "Hoito - Kahden kirurgin täytyy poistaa pavut koskematta munuaisiin.",
   },
-  king_complex = { 
-    name        = "Kuningas-kompleksi", 
-    cause       = "Aiheuttaja - Kuninkaan henki tunkeutuu potilaan tajuntaan ja ottaa vallan.", 
-    symptoms    = "Oireet - värikkäisiin samettikenkiin pukeutuminen ja juustohampurilaisten syöminen", 
-    cure        = "Hoito - Psykiatri kertoo vastaanotollaan potilaalle, kuinka älyttömän typerältä tämä näyttää", 
+  king_complex = {
+    name        = "Kuningas-kompleksi",
+    cause       = "Aiheuttaja - Kuninkaan henki tunkeutuu potilaan tajuntaan ja ottaa vallan.",
+    symptoms    = "Oireet - värikkäisiin samettikenkiin pukeutuminen ja juustohampurilaisten syöminen",
+    cure        = "Hoito - Psykiatri kertoo vastaanotollaan potilaalle, kuinka älyttömän typerältä tämä näyttää",
   },
-  pregnancy = { 
-    name        = "Raskaus", 
-    cause       = "Aiheuttaja - sähkökatkot kaupungistuneilla alueilla.", 
-    symptoms    = "Oireet - taukoamaton syöminen ja siihen liittyvä kaljamaha.", 
+  pregnancy = {
+    name        = "Raskaus",
+    cause       = "Aiheuttaja - sähkökatkot kaupungistuneilla alueilla.",
+    symptoms    = "Oireet - taukoamaton syöminen ja siihen liittyvä kaljamaha.",
     cure        = "Hoito - Lapsi poistetaan keisarinleikkauksella, pestään ja ojennetaan potilaalle.",
   },   -- unused
-  ruptured_nodules = { 
-    name        = "Repeytyneet kyhmyt", 
-    cause       = "Aiheuttaja - benjihyppääminen kylmässä säässä.", 
-    symptoms    = "Oireet - potilaan on mahdotonta istua mukavasti.", 
+  ruptured_nodules = {
+    name        = "Repeytyneet kyhmyt",
+    cause       = "Aiheuttaja - benjihyppääminen kylmässä säässä.",
+    symptoms    = "Oireet - potilaan on mahdotonta istua mukavasti.",
     cure        = "Hoito - Kaksi kirurgia poistaa kyhmyt vakain käsin.",
   },
-  serious_radiation = { 
-    name        = "Vakava säteily", 
-    cause       = "Aiheuttaja - erehtyminen plutonium-isotooppien ja purukumin välillä.", 
-    symptoms    = "Oireet - potilaat tuntevat itsensä hyvin, hyvin huonovointisiksi.", 
-    cure        = "Hoito - Potilas tulee asettaa puhdistussuihkuun ja pestä huolellisesti.", 
+  serious_radiation = {
+    name        = "Vakava säteily",
+    cause       = "Aiheuttaja - erehtyminen plutonium-isotooppien ja purukumin välillä.",
+    symptoms    = "Oireet - potilaat tuntevat itsensä hyvin, hyvin huonovointisiksi.",
+    cure        = "Hoito - Potilas tulee asettaa puhdistussuihkuun ja pestä huolellisesti.",
   },
-  slack_tongue = { 
-    name        = "Velttokielisyys", 
-    cause       = "Aiheuttaja - krooninen saippuaoopperoista puhuminen.", 
-    symptoms    = "Oireet - kieli turpoaa viisi kertaa pidemmäksi kuin normaalisti.", 
+  slack_tongue = {
+    name        = "Velttokielisyys",
+    cause       = "Aiheuttaja - krooninen saippuaoopperoista puhuminen.",
+    symptoms    = "Oireet - kieli turpoaa viisi kertaa pidemmäksi kuin normaalisti.",
     cure        = "Hoito - Kieli asetetaan paloittelijaan, joka lyhentää sen nopeasti, tehokkaasti ja kivuliaasti.",
   },
-  sleeping_illness = { 
-    name        = "Unitauti", 
-    cause       = "Aiheuttaja - yliaktiivinen unirauhanen kitalaessa.", 
-    symptoms    = "Oireet - ylitsepääsemätön tarve käydä nukkumaan kaikkialla.", 
+  sleeping_illness = {
+    name        = "Unitauti",
+    cause       = "Aiheuttaja - yliaktiivinen unirauhanen kitalaessa.",
+    symptoms    = "Oireet - ylitsepääsemätön tarve käydä nukkumaan kaikkialla.",
     cure        = "Hoito - Sairaanhoitaja annostelee suuren annoksen voimakasta piristysainetta.",
   },
-  spare_ribs = { 
-    name        = "Liikakyljykset", 
-    cause       = "Aiheuttaja - kylmillä kivilattioilla istuminen.", 
-    symptoms    = "Oireet - epämiellyttävä rintavuuden tunne.", 
+  spare_ribs = {
+    name        = "Liikakyljykset",
+    cause       = "Aiheuttaja - kylmillä kivilattioilla istuminen.",
+    symptoms    = "Oireet - epämiellyttävä rintavuuden tunne.",
     cure        = "Hoito - Kaksi kirurgia poistaa kyljykset ja antaa ne folioon käärittynä potilaalle kotiin vietäväksi.",
   },
-  sweaty_palms = { 
-    name        = "Hikiset kädet", 
-    cause       = "Aiheuttaja - työhaastattelujen kammo.", 
-    symptoms    = "Oireet - kätteleminen potilaan kanssa on kuin pitelisi vastakasteltua pesusientä.", 
+  sweaty_palms = {
+    name        = "Hikiset kädet",
+    cause       = "Aiheuttaja - työhaastattelujen kammo.",
+    symptoms    = "Oireet - kätteleminen potilaan kanssa on kuin pitelisi vastakasteltua pesusientä.",
     cure        = "Hoito - Psykiatrin pitää saada potilas luopumaan päässään luomastaan sairaudesta.",
   },
-  the_squits = { 
-    name        = "Oksennustauti", 
-    cause       = "Aiheuttaja - lattialta löytyneen pizzan syöminen.", 
-    symptoms    = "Oireet - yäk, osaat varmaan arvatakin.", 
+  the_squits = {
+    name        = "Oksennustauti",
+    cause       = "Aiheuttaja - lattialta löytyneen pizzan syöminen.",
+    symptoms    = "Oireet - yäk, osaat varmaan arvatakin.",
     cure        = "Hoito - Kuitupitoinen sekoitus lankamaisia lääkekemikaaleja kiinteyttää potilaan sisuskalut.",
   },
-  third_degree_sideburns = { 
-    name        = "Kolmannen asteen pulisongit", 
-    cause       = "Aiheuttaja - kaipuu takaisin 1970-luvulle.", 
-    symptoms    = "Oireet - iso kampaus, leveälahkeiset housut, korokepohjakengät ja kiillemeikit.", 
+  third_degree_sideburns = {
+    name        = "Kolmannen asteen pulisongit",
+    cause       = "Aiheuttaja - kaipuu takaisin 1970-luvulle.",
+    symptoms    = "Oireet - iso kampaus, leveälahkeiset housut, korokepohjakengät ja kiillemeikit.",
     cure        = "Hoito - Psykiatrin täytyy vakuuttaa potilas siitä, että hänen karvakehyksensä ovat inhottavat.",
   },
-  transparency = { 
-    name        = "Läpinäkyvyys", 
-    cause       = "Aiheuttaja - jogurtin nuoleminen purkkien kansista.", 
-    symptoms    = "Oireet - potilaan liha muuttuu läpinäkyväksi ja kammottavaksi.", 
+  transparency = {
+    name        = "Läpinäkyvyys",
+    cause       = "Aiheuttaja - jogurtin nuoleminen purkkien kansista.",
+    symptoms    = "Oireet - potilaan liha muuttuu läpinäkyväksi ja kammottavaksi.",
     cure        = "Hoito - Apteekista saatava erityisellä tavalla jäähdytetty ja värjätty vesi parantaa taudin.",
   },
-  tv_personalities = { 
-    name        = "TV-kasvous", 
-    cause       = "Aiheuttaja - päiväsaikaan lähetettävä ohjelmatarjonta.", 
-    symptoms    = "Oireet - kuvitelma, että potilas pystyy juontamaan ruoanlaitto-ohjelman.", 
+  tv_personalities = {
+    name        = "TV-kasvous",
+    cause       = "Aiheuttaja - päiväsaikaan lähetettävä ohjelmatarjonta.",
+    symptoms    = "Oireet - kuvitelma, että potilas pystyy juontamaan ruoanlaitto-ohjelman.",
     cure        = "Hoito - Psykiatrin tulee suostutella potilas myymään televisionsa ja ostamaan radio sen tilalle.",
   },
-  uncommon_cold = { 
+  uncommon_cold = {
     name        = "Epätavallinen flunssa",
-    cause       = "Aiheuttaja - pienet räkähiukkaset ilmassa.", 
-    symptoms    = "Oireet - vuotava nenä, aivastelu ja värjäytyneet keuhkot.", 
+    cause       = "Aiheuttaja - pienet räkähiukkaset ilmassa.",
+    symptoms    = "Oireet - vuotava nenä, aivastelu ja värjäytyneet keuhkot.",
     cure        = "Hoito - Iso kulaus apteekissa valmisteltua epätavallista flunssalääkettä tekee taudista menneen talven lumia.",
   },
-  unexpected_swelling = { 
-    name        = "Odottamaton turvotus", 
-    cause       = "Aiheuttaja - mikä tahansa odottamaton.", 
-    symptoms    = "Oireet - turvotus.", 
+  unexpected_swelling = {
+    name        = "Odottamaton turvotus",
+    cause       = "Aiheuttaja - mikä tahansa odottamaton.",
+    symptoms    = "Oireet - turvotus.",
     cure        = "Hoito - Kahden kirurgin suorittama puhkomistoimenpide poistaa turvotuksen.",
   },
   diag_scanner = {
@@ -2599,34 +2599,34 @@ fax = {
     text10      = "KUOLEMAT %d SALLITTU (KK) %d (%d) VÄHENNYS %d", -- %d %d %d %d
     text11      = "IHMISIÄ TÄSSÄ KUUSSA %d", -- %d
   },
-  
+
   -- Emergency
   emergency = {
     choices = {
-      accept        = "Kyllä, minä pystyn hoitamaan sen", 
+      accept        = "Kyllä, minä pystyn hoitamaan sen",
       refuse        = "Ei, en voi ottaa potilaita vastaan",
     },
-    location                            = "%s on sattunut onnettomuus.", 
+    location                            = "%s on sattunut onnettomuus.",
     num_disease                         = "%d ihmisellä on diagnosoitu %s, joka vaatii välitöntä hoitoa.",
     num_disease_singular                = "Yhdellä henkilöllä on havaittu %s, joka vaatii välitöntä hoitoa.",
-    cure_possible_drug_name_efficiency  = "Sinulla on jo tarvittavat laitteet ja taidot. Tarvittava lääke on %s ja sen teho on %d%%.", 
-    cure_possible                       = "Sinulla on jo tarvittavat laitteet ja taidot, joten sinun pitäisi selviytyä tilanteesta ongelmitta.", 
+    cure_possible_drug_name_efficiency  = "Sinulla on jo tarvittavat laitteet ja taidot. Tarvittava lääke on %s ja sen teho on %d%%.",
+    cure_possible                       = "Sinulla on jo tarvittavat laitteet ja taidot, joten sinun pitäisi selviytyä tilanteesta ongelmitta.",
     cure_not_possible_build_and_employ  = "Sinun täytyy rakentaa %s ja palkata %s.",
     cure_not_possible_build             = "Sinun täytyy rakentaa %s.",
     cure_not_possible_employ            = "Sinun täytyy palkata %s.",
     cure_not_possible                   = "Et pysty hoitamaan tätä sairautta tällä hetkellä.",
     bonus                               = "Jos pystyt hoitamaan tämän hätätapauksen täydellisesti, saat bonuksena %d$. Jos kuitenkin epäonnistut, sairaalasi maine saa aimo kolauksen.",
-    
-    locations = {      
+
+    locations = {
       "Tomin asekellarissa",
-      "Innovaatioyliopistossa",       
-      "Puskalan puutarhakeskuksessa", 
-      "Vaarallisten aineiden tutkimuskesuksessa", 
-      "Tanssimessuilla", 
-      "Mykkä Papukaija -baarissa", 
+      "Innovaatioyliopistossa",
+      "Puskalan puutarhakeskuksessa",
+      "Vaarallisten aineiden tutkimuskesuksessa",
+      "Tanssimessuilla",
+      "Mykkä Papukaija -baarissa",
       "Ison Taunon hautajaispaviljongissa",
-      "Taj-curryravintolassa", 
-      "Pekan petrokemikaalikirpputorilla", 
+      "Taj-curryravintolassa",
+      "Pekan petrokemikaalikirpputorilla",
     },
   },
 
@@ -2634,8 +2634,8 @@ fax = {
     close_text          = "Sulje ikkuna",
     earned_money        = "Enimmäisbonus oli %d$ ja ansaitsit %d$.",
     saved_people        = "Pelastit %d ihmistä, kun potilaita oli %d.",
-  },  
-  
+  },
+
   -- Deseace discovered
   disease_discovered_patient_choice = {
     choices = {
@@ -2651,7 +2651,7 @@ fax = {
     what_to_do_question         = "Miten haluat meidän toimivan potilaan kanssa?",
     guessed_percentage_name     = "Työntekijäsi ovat joutuneet arvaamaan, mikä potilasta vaivaa. %d%%:n todennäköisyydellä sairaus on %s.",
   },
-  
+
   disease_discovered = {
     close_text                  = "Uusi sairaus on löydetty.",
     can_cure                    = "Pystyt parantamaan sairauden.",
@@ -2660,24 +2660,24 @@ fax = {
     need_to_employ              = "Palkkaa %s hoitamaan potilaita, joilla on tämä sairaus.",
     discovered_name             = "Työntekijäsi ovat havainneet uuden sairauden, jonka nimi on %s.",
   },
-  
+
   -- Epidemic
   epidemic = {
     choices = {
       declare   = "Julkista epidemia, maksa sakko ja hyväksy vahinko sairaalasi maineelle.",
       cover_up  = "Yritä hoitaa kaikki tartunnan saaneet potilaat ennen kuin annettu aika loppuu tai kukaan lähtee sairaalastasi.",
     },
-    
+
     disease_name                = "Lääkärisi ovat löytäneet helposti tarttuvan %s-kannan.",
     declare_explanation_fine    = "Jos julkistat epidemian, sinun täytyy maksaa sakkoja %d$, sairaalasi maine kokee kolauksen ja kaikki potilaasi rokotetaan automaattisesti.",
     cover_up_explanation_1      = "Toisaalta, jos yrität salata epidemian, sinulla on rajoitetusti aikaa parantaa kaikki tartunnan saaneet potilaat.",
     cover_up_explanation_2      = "Jos vierailulle saapuva terveystarkastaja saa selville, että olet salaillut epidemiaa, seuraukset voivat olla hyvin vakavat.",
   },
-  
+
   -- Epidemic result
   epidemic_result = {
     close_text = "Hurraa!",
-    
+
     failed = {
       part_1_name       = "Yrittäessään salata sairaalassasi riehuneen helposti tarttuvan %s-epidemian",
       part_2            = "henkilökuntasi on päästänyt sairauden leviämään sairaalan ympärillä asuvaan väestöön.",
@@ -2686,13 +2686,13 @@ fax = {
       part_1_name       = "Terveystarkastaja on kuullut huhuja, että sairaalassasi on riehunut %s-epidemia",
       part_2            = "Hän ei ole kuitenkaan pystynyt näyttämään näitä huhuja todeksi.",
     },
-    
+
     compensation_amount         = "Hallitus on myöntänyt sinulle %d$ korvauksena vahingoista, joita nämä valheet ovat sairaalasi maineelle aiheuttaneet.",
     fine_amount                 = "Hallitus on julistanut kansallisen hätätilan ja määrännyt sinulle %d$ sakkoja.",
     rep_loss_fine_amount        = "Sanomalehdet pääsevät huomenna kirjoittamaan tästä etusivullaan. Maineesi tahrautuu pahasti ja joudut maksamaan %d$ sakkoja.",
     hospital_evacuated          = "Terveyslautakunnalla ei ole muuta vaihtoehtoa kuin evakuoida sairaalasi.",
   },
-  
+
   -- VIP visit query
   vip_visit_query = {
     choices = {
@@ -2701,7 +2701,7 @@ fax = {
     },
     vip_name = "%s on esittänyt toiveen päästä käymään sairaalassasi.",
   },
-  
+
   -- VIP visit result
   vip_visit_result = {
     close_text          = "Kiitos käynnistä ja tervetuloa uudestaan.",
@@ -2710,7 +2710,7 @@ fax = {
     cash_grant          = "Sairaalallesi on tehty käteislahjoitus, jonka arvo on %d$.",
     rep_boost           = "Sairaalasi maine on parantunut.",
     rep_loss            = "Sairaalasi maine on huonontunut.",
-    
+
     remarks = {
       super = {
         "Mikä mahtava sairaala. Seuraavan kerran, kun olen sairas, haluan sinne hoitoon.",
@@ -2739,7 +2739,7 @@ fax = {
       },
     },
   },
-  
+
   -- Diagnosis failed
   diagnosis_failed = {
     choices = {
@@ -2789,7 +2789,7 @@ dynamic_info = {
   },
   vip                   = "Vieraileva VIP",
   health_inspector      = "Terveystarkastaja",
-  
+
   staff = {
     psychiatrist_abbrev = "Psyk.",
     tiredness           = "Väsymys",
@@ -2802,7 +2802,7 @@ dynamic_info = {
       fired                     = "Erotettu",
     },
   },
-  
+
   object = {
     strength            = "Kestävyys: %d", -- %d (max. uses)
     times_used          = "Käyttökertoja: %d", -- %d (times used)
@@ -2823,20 +2823,20 @@ misc = {
   },
   done  = "Valmis",
   pause = "Keskeytä",
-  
+
   send_message          = "Lähetä viesti pelaajalle %d", -- %d (player number)
   send_message_all      = "Lähetä viesti kaikille pelaajille",
-  
+
   save_success  = "Peli tallennettu",
   save_failed   = "VIRHE: Pelin tallentaminen ei onnistunut",
-  
+
   hospital_open = "Sairaala avattu",
   out_of_sync   = "Peli ei ole synkronisoitu",
-  
+
   load_failed   = "VIRHE: Pelin lataaminen ei onnistunut",
   low_res       = "Matala resol.",
   balance       = "Tasapainotiedosto:",
-  
+
   mouse = "Hiiri",
   force = "Voima",
 }

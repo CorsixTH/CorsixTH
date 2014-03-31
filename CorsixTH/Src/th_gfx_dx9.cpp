@@ -195,7 +195,7 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     {
         SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)WindowProcIntercept);
     }
-    
+
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
     if(m_pD3D == NULL)
     {
@@ -285,11 +285,11 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     if (m_pPixelShader == NULL) {
         LPD3DXBUFFER m_pCode;
         m_pResult = D3DXCompileShaderFromFile("Src/shaders/blue_filter.psh",
-                                   NULL,          //macro's            
-                                   NULL,          //includes           
-                                   "ps_main",     //main function      
-                                   "ps_2_0",      //shader profile     
-                                   0,             //flags              
+                                   NULL,          //macro's
+                                   NULL,          //includes
+                                   "ps_main",     //main function
+                                   "ps_2_0",      //shader profile
+                                   0,             //flags
                                    &m_pCode,      //compiled operations
                                    NULL,          //errors
                                    NULL);         //constants
@@ -930,7 +930,7 @@ void THRenderTarget::flushSprites()
 {
     if(m_iVertexCount == 0)
         return;
-  
+
     IDirect3DTexture9 *pTexture = m_pVerticies[0].tex;
     m_pDevice->SetTexture(0, pTexture);
     size_t iStart = 0;

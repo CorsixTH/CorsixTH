@@ -83,7 +83,7 @@ function Helicopter:spawnPatient()
   hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
   local x, y = hospital:getHeliportSpawnPosition()
   patient:setNextAction{
-    name = "spawn", 
+    name = "spawn",
     mode = "spawn",
     point = {x = x, y = y},
     offset = {y = 1},

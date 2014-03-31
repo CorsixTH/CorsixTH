@@ -806,7 +806,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
         if(!itrNode2.isLastOnScanline())
             continue;
-        
+
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward, iCanvasX, iCanvasY); itrNode; ++itrNode)
         {
             unsigned int iH;
@@ -841,7 +841,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
         THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY);
         if(!bFirst) {
-            //since the scanline count from one THMapScanlineIterator to another can differ 
+            //since the scanline count from one THMapScanlineIterator to another can differ
             //syncronization between the current iterator and the former one is neeeded
              if(itrNode.x() < -64)
                  ++itrNode;
@@ -889,7 +889,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
             //if the current tile contained a multiple frame animation (e.g. a doctor walking)
             //check to see if in the tile to its left and above it there are items that need to
-            //be redrawn (i.e. in the tile to its left side objects to the south of the tile and 
+            //be redrawn (i.e. in the tile to its left side objects to the south of the tile and
             //in the tile above it side objects to the east of the tile).
             if(bRedrawAnimations && !bFirst)
             {
@@ -898,7 +898,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 //check if an object in the adjacent tile to the left of the current tile needs to be redrawn
                 //and if necessary draw it
                 pItem = (THDrawable*)(formerIterator.getPreviousNode()->m_pNext);
-                while(pItem) 
+                while(pItem)
                 {
                     if (pItem->getDrawingLayer() == 9)
                     {
@@ -944,7 +944,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                             m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 96,
                                 itrNode.y() - 56, THDF_Alpha75);
                             pCanvas->setClipRect(&rcOldClip);
-                        }   
+                        }
                     }
                     pItem = (THDrawable*)(itrNode.getPreviousNode()->oEarlyEntities.m_pNext);
                     while(pItem)
@@ -954,7 +954,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     }
 
                     pItem = (THDrawable*)(itrNode.getPreviousNode())->m_pNext;
-                    for(; pItem; pItem = (THDrawable*)(pItem->m_pNext)) 
+                    for(; pItem; pItem = (THDrawable*)(pItem->m_pNext))
                         pItem->m_fnDraw(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
                 }
             }
@@ -990,7 +990,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
     {
         if(!itrNode2.isLastOnScanline())
             continue;
-        
+
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward); itrNode; ++itrNode)
         {
             if(itrNode->m_pNext != NULL)
@@ -1145,7 +1145,7 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         }
         else
             iMergeTemp = iAirTemperature;
-        
+
         // Diffuse 25% with neighbours
         pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
         if(iNeighbourCount != 0)
@@ -1485,7 +1485,7 @@ THMapNodeIterator& THMapNodeIterator::operator ++ ()
 void THMapNodeIterator::_advanceUntilVisible()
 {
     m_pNode = NULL;
-    
+
     while(true)
     {
         m_iXs = m_iX;
@@ -1580,7 +1580,7 @@ THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
         m_pNode = itrNodes.m_pNode - m_iNodeStep * (itrNodes.m_iScanlineCount - 1);
         m_iXs = itrNodes.x() - m_iXStep * (itrNodes.m_iScanlineCount - 1);
     }
-   
+
     m_iXs += iXOffset;
     m_iYs = itrNodes.y() + iYOffset;
 
@@ -1597,12 +1597,12 @@ THMapScanlineIterator& THMapScanlineIterator::operator ++ ()
     return *this;
 }
 
-//copies the members of the given THMapScanlineIterator and resets the node member to the 
+//copies the members of the given THMapScanlineIterator and resets the node member to the
 //first element.
 THMapScanlineIterator THMapScanlineIterator::operator= (const THMapScanlineIterator &iterator)
  {
      m_pNode = iterator.m_pNodeFirst;
-     m_pNodeEnd = iterator.m_pNodeEnd;    
+     m_pNodeEnd = iterator.m_pNodeEnd;
      m_iXs = iterator.m_iXs - iterator.m_takenSteps * iterator.m_iXStep;
      m_iYs = iterator.m_iYs;
      m_iXStep = iterator.m_iXStep;

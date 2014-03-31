@@ -44,7 +44,7 @@ SOFTWARE.
 #include <SDL_opengl.h>
 #include "persist_lua.h"
 
-//Darrell: The wxWindows OGL includes can stop these from being defined in 
+//Darrell: The wxWindows OGL includes can stop these from being defined in
 //SDL_opengl.h so as a temporary solution I'm defining them here.
 #ifdef __APPLE__
 typedef GLboolean (APIENTRYP PFNGLISRENDERBUFFEREXTPROC) (GLuint renderbuffer);

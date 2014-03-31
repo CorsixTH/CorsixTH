@@ -155,7 +155,7 @@ function Entity:tick()
   if self.mood_info then
     self.mood_info:tick()
   end
-  
+
   local timer = self.timer_time
   if timer then
     timer = timer - 1
@@ -280,11 +280,11 @@ function Entity:resetAnimation()
 end
 
 --[[
-  Returns the drawing layer for this particular entity. Should be overriden in derived classes. The drawing layer 
+  Returns the drawing layer for this particular entity. Should be overriden in derived classes. The drawing layer
   specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
   Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
-  normal objects should have layers between 3 and 7, east side object should have layer 8 and south side 
-  objects layer 9.  
+  normal objects should have layers between 3 and 7, east side object should have layer 8 and south side
+  objects layer 9.
 ]]
 function Entity:getDrawingLayer()
   return 4

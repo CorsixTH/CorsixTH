@@ -132,7 +132,7 @@ static unsigned long blong (const unsigned char *p)
     return n;
 }
 
-//! Return the big-endian 16 bit word at p. 
+//! Return the big-endian 16 bit word at p.
 /*!
     @param p Pointer to data containing the word
 */
@@ -144,7 +144,7 @@ static unsigned long bword (const unsigned char *p)
     return n;
 }
 
-//! Return the little-endian 16 bit word at p. 
+//! Return the little-endian 16 bit word at p.
 /*!
     @param p Pointer to data containing the word
  */
@@ -250,7 +250,7 @@ static void bit_advance (bit_stream *bs, int n)
         // anything more into the buffer.  If we are on the last
         // byte the lword matches what is in that byte.
         bs->p += 2;
-    
+
         if(bs->p < bs->endpos)
         {
             bs->bitbuf |= (lword(bs->p)<<bs->bitcount);

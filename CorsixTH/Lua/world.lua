@@ -35,15 +35,15 @@ dofile "research_department"
 class "World"
 
 local local_criteria_variable = {
-  {name = "reputation",       icon = 10, formats = 2}, 
-  {name = "balance",          icon = 11, formats = 2}, 
-  {name = "percentage_cured", icon = 12, formats = 2}, 
-  {name = "num_cured" ,       icon = 13, formats = 2}, 
-  {name = "percentage_killed",icon = 14, formats = 2}, 
-  {name = "value",            icon = 15, formats = 2}, 
+  {name = "reputation",       icon = 10, formats = 2},
+  {name = "balance",          icon = 11, formats = 2},
+  {name = "percentage_cured", icon = 12, formats = 2},
+  {name = "num_cured" ,       icon = 13, formats = 2},
+  {name = "percentage_killed",icon = 14, formats = 2},
+  {name = "value",            icon = 15, formats = 2},
   {name = "population",       icon = 11, formats = 1},
 }
-  
+
 function World:World(app)
   self.map = app.map
   self.wall_types = app.walls
@@ -101,7 +101,7 @@ function World:World(app)
   self.savegame_version = app.savegame_version
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
-  
+
   self:initLevel(app)
   self.hospitals[1] = Hospital(self, app.config.player_name) -- Player's hospital
   self:initCompetitors()
@@ -138,7 +138,7 @@ function World:World(app)
       end
     end
   end
-  
+
   self.object_id_by_thob = {}
   for _, object_type in ipairs(self.object_types) do
     self.object_id_by_thob[object_type.thob] = object_type.id
@@ -159,7 +159,7 @@ function World:World(app)
   -- Assumes that the first entry is always the first month.
   self.spawn_rate = self.map.level_config.popn[0].Change
   self.monthly_spawn_increase = self.spawn_rate
-  
+
   self.spawn_hours = {}
   self.spawn_dates = {}
   self:updateSpawnDates()
@@ -167,7 +167,7 @@ function World:World(app)
   self.cheat_announcements = {
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }
-  
+
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
@@ -180,7 +180,7 @@ function World:setUI(ui)
   self.ui:addKeyHandler("3", self, self.setSpeed, "Normal")
   self.ui:addKeyHandler("4", self, self.setSpeed, "Max speed")
   self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
-  
+
   self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
   self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
   self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
@@ -191,10 +191,10 @@ function World:adjustZoom(delta)
   local scr_w = self.ui.app.config.width
   local factor = self.ui.app.config.zoom_speed
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
-  
+
   -- The modifier is a normal distribution to make it more difficult to zoom at the extremes
   local modifier = math.exp(1)^(-((self.ui.zoom_factor-1)^2)/(2 * 1))/(math.sqrt(2*math.pi)*1)
-  
+
   if modifier < 0.05 or modifier > 1 then
     modifier = 0.05
   end
@@ -203,7 +203,7 @@ function World:adjustZoom(delta)
   if virtual_width < 200 then
     return false
   end
-  
+
   return self.ui:setZoom(scr_w/virtual_width)
 end
 
@@ -218,7 +218,7 @@ function World:initLevel(app)
     if not disease.pseudo then
       local vis = 1
       if visual and (visual[disease.visuals_id] or non_visual[disease.non_visuals_id]) then
-        vis = disease.visuals_id and visual[disease.visuals_id].Value 
+        vis = disease.visuals_id and visual[disease.visuals_id].Value
         or non_visual[disease.non_visuals_id].Value
       end
       -- TODO: Where the value is greater that 0 should determine the frequency of the patients
@@ -253,8 +253,8 @@ function World:initStaff()
       if conf.Skill then
         skill = conf.Skill / 100
       end
-      
-      if conf.Nurse == 1 then 
+
+      if conf.Nurse == 1 then
         profile = StaffProfile(self, "Nurse", _S.staff_class["nurse"])
         profile:init(skill)
       elseif conf.Receptionist == 1 then
@@ -262,19 +262,19 @@ function World:initStaff()
         profile:init(skill)
       elseif conf.Handyman == 1 then
         profile = StaffProfile(self, "Handyman", _S.staff_class["handyman"])
-        profile:init(skill)      
+        profile:init(skill)
       elseif conf.Doctor == 1 then
         profile = StaffProfile(self, "Doctor", _S.staff_class["doctor"])
-        
+
         local shrink = 0
         local rsch = 0
         local surg = 0
         local jr, cons
-        
+
         if conf.Shrink == 1 then shrink = 1 end
         if conf.Surgeon == 1 then surg = 1 end
         if conf.Researcher == 1 then rsch = 1 end
-        
+
         if conf.Junior == 1 then jr = 1
         elseif conf.Consultant == 1 then cons = 1
         end
@@ -319,8 +319,8 @@ function World:determineWinningConditions()
         local crit_name = self.level_criteria[values.Criteria].name
         world_goals[crit_name] = {
           name = crit_name,
-          win_value = values.Value, 
-          boundary = values.Bound, 
+          win_value = values.Value,
+          boundary = values.Bound,
           criterion = values.Criteria,
           max_min_win = values.MaxMin,
           group = values.Group,
@@ -353,7 +353,7 @@ function World:determineWinningConditions()
       end
     end
   end
-  
+
   -- Order the criteria (some icons in the progress report shouldn't be next to each other)
   table.sort(world_goals, function(a,b) return a.criterion < b.criterion end)
   self.goals = world_goals
@@ -363,13 +363,13 @@ end
 function World:initRooms()
   -- Combination of set and list. Use ipairs to iterate through all available rooms.
   self.available_rooms = {}
-  
+
   local obj = self.map.level_config.objects
   local rooms = self.map.level_config.rooms
   for i, room in ipairs(TheApp.rooms) do
     -- Add build cost based on level files for all rooms.
     -- For now, sum it up so that the result is the same as before.
-    -- TODO: Change the whole build process so that this value is 
+    -- TODO: Change the whole build process so that this value is
     -- the room cost only? (without objects)
     local build_cost = rooms[room.level_config_id].Cost
     local available = true
@@ -397,7 +397,7 @@ function World:initRooms()
     if available then
       self.available_rooms[#self.available_rooms + 1] = room
       self.available_rooms[room.id] = room
-      
+
       if is_discovered then
         for _, hospital in ipairs(self.hospitals) do
           hospital.discovered_rooms[room] = true
@@ -465,7 +465,7 @@ function World:calculateSpawnTiles()
       x = x + edge.step[1]
       y = y + edge.step[2]
     until x < 1 or x > w or y < 1 or y > h
-    
+
     -- Choose at most 8 points for the edge
     local num = math.min(8, #xs)
     for i = 1, num do
@@ -489,7 +489,7 @@ function World:spawnPatient(hospital)
     hospital = self:getLocalPlayerHospital()
   end
   --! What is the current month?
-  local current_month = (self.year - 1) * 12 + self.month 
+  local current_month = (self.year - 1) * 12 + self.month
   --! level files can delay visuals to a given month
   --! and / or until a given number of patients have arrived
   local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
@@ -498,7 +498,7 @@ function World:spawnPatient(hospital)
   --!param disease (disease) Disease to test.
   --!return (boolean) Whether the disease is visible and available.
   local function isVisualDiseaseAvailable(disease)
-    if not disease.visuals_id then 
+    if not disease.visuals_id then
       return true
     end
     --! if the month is greater than either of these values then visuals will not appear in the game
@@ -507,31 +507,31 @@ function World:spawnPatient(hospital)
       return false
     end
     --! the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
-    local level_config = self.map.level_config 
-    if level_config.visuals_available[disease.visuals_id].Value >= current_month then 
+    local level_config = self.map.level_config
+    if level_config.visuals_available[disease.visuals_id].Value >= current_month then
       return false
-    end   
+    end
     return true
-  end 
+  end
 
   if hospital:hasStaffedDesk() then
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
     while disease.only_emergency or not isVisualDiseaseAvailable(disease) do
-      disease = self.available_diseases[math.random(1, #self.available_diseases)] 
+      disease = self.available_diseases[math.random(1, #self.available_diseases)]
     end
     patient:setDisease(disease)
     patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
     patient:setHospital(hospital)
-    
+
     return patient
   end
 end
 
 function World:spawnVIP(name)
   local hospital = self:getLocalPlayerHospital()
-  
+
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local vip = self:newEntity("Vip", 2)
   vip:setType "VIP"
@@ -555,7 +555,7 @@ function World:createEarthquake()
   if not self.earthquake_size then
     return false
   end
-  
+
   -- the bigger the earthquake, the longer it lasts. We add one
   -- further day, as we use those to give a small earthquake first,
   -- before the bigger one begins
@@ -587,7 +587,7 @@ function World:createEarthquake()
       end
     end
   end
-  
+
   -- set a flag to indicate that we are now having an earthquake
   self.active_earthquake = true
   return true
@@ -613,7 +613,7 @@ function World:tickEarthquake()
         end
       end
     end
-  
+
     -- set up the next earthquake date
     self:nextEarthquake()
   else
@@ -819,7 +819,7 @@ function World:newRoom(x, y, w, h, room_info, ...)
   -- TODO: Take hospital based on the owner of the plot the room is built on
   local hospital = self.hospitals[1]
   local room = class(x, y, w, h, id, room_info, self, hospital, ...)
-  
+
   self.rooms[id] = room
   self:clearCaches()
   return room
@@ -895,7 +895,7 @@ end
 
 -- Game speeds. The second value is the number of world clicks that pass for each
 -- in-game tick and the first is the number of hours to progress when this
--- happens. 
+-- happens.
 local tick_rates = {
   ["Pause"]              = {0, 1},
   ["Slowest"]            = {1, 9},
@@ -1141,7 +1141,7 @@ function World:onEndDay()
   end
 
   -- Maybe it's time for an emergency?
-  if (self.year - 1) * 12 + self.month == self.next_emergency_month 
+  if (self.year - 1) * 12 + self.month == self.next_emergency_month
   and self.day == self.next_emergency_day then
     -- Postpone it if anything clock related is already underway.
     if self.ui:getWindow(UIWatch) then
@@ -1257,7 +1257,7 @@ function World:updateSpawnDates()
   end
 end
 
--- Called when it is time to determine what the 
+-- Called when it is time to determine what the
 -- next emergency should look like.
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
@@ -1270,7 +1270,7 @@ function World:nextEmergency()
     -- How many days until next emergency?
     local days = math.round(math.n_random(mean, variance))
     local next_month = self.month
-    
+
     -- Walk forward to get the resulting month and day.
     if days > month_length[next_month] - self.day then
       days = days - (month_length[next_month] - self.day)
@@ -1290,7 +1290,7 @@ function World:nextEmergency()
       repeat
         self.next_emergency_no = self.next_emergency_no + 1
         -- Level three is missing [5].
-        if not control[self.next_emergency_no] 
+        if not control[self.next_emergency_no]
         and control[self.next_emergency_no + 1] then
           self.next_emergency_no = self.next_emergency_no + 1
         end
@@ -1400,7 +1400,7 @@ function World:checkWinningConditions(player_no)
     return {state = "nothing"}
   end
 
-  -- Default is to win. 
+  -- Default is to win.
   -- As soon as a goal that doesn't support this is found it is changed.
   local result = {state = "win"}
   local hospital = self.hospitals[player_no]
@@ -1491,7 +1491,7 @@ function World:winGame(player_no)
         world.hospitals[player_no].game_won = false
         if world:isCurrentSpeed("Pause") then
           world:setSpeed(world.prev_speed)
-        end  
+        end
       end
     end
     self.hospitals[player_no].game_won = true
@@ -1501,7 +1501,7 @@ function World:winGame(player_no)
     self:setSpeed("Pause")
     self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
-    self.ui.bottom_panel:openLastMessage()    
+    self.ui.bottom_panel:openLastMessage()
   end
 end
 
@@ -1515,9 +1515,9 @@ function World:loseGame(player_no, reason, limit)
     local message = {_S.information.level_lost[1]}
     if reason then
       message[2] = _S.information.level_lost[2]
-      message[3] = _S.information.level_lost[reason]:format(limit)    
-    else   
-      message[2] = _S.information.level_lost["cheat"]     
+      message[3] = _S.information.level_lost[reason]:format(limit)
+    else
+      message[2] = _S.information.level_lost["cheat"]
      end
     self.ui.app:loadMainMenu(message)
   end
@@ -1637,7 +1637,7 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
     end
     thob = obj_type.thob
   end
-  
+
   local callback = function(x, y, d)
     local obj = self:getObject(x, y, object_type_name)
     if obj then
@@ -1652,7 +1652,7 @@ end
 Note that regardless of distance, only the room which the humanoid is in
 is searched (or the corridor if the humanoid is not in a room).
 
-When no callback is specified then the first object found is returned, 
+When no callback is specified then the first object found is returned,
 along with its usage tile position. This may return an object already being
 used - if you want to find an object not in use (in order to use it),
 then call findFreeObjectNearToUse instead.
@@ -1804,7 +1804,7 @@ function World:newFloatingDollarSign(patient, amount)
     spritelist:append(2 + digit, xbase + 5 * (len - i), 5)
   end
   spritelist:setTile(self.map.th, patient.tile_x, patient.tile_y)
-  
+
   self.floating_dollars[spritelist] = true
 end
 
@@ -1827,7 +1827,7 @@ function World:destroyEntity(entity)
   entity:onDestroy()
 end
 
---! Creates a new object by finding the object_type from the "id" variable and 
+--! Creates a new object by finding the object_type from the "id" variable and
 --  calls its class constructor.
 --!param id (string) The unique id of the object to be created.
 --!return The created object.
@@ -1849,7 +1849,7 @@ function World:newObject(id, ...)
   return entity
 end
 
---! Notifies the world that an object has been placed, notifying 
+--! Notifies the world that an object has been placed, notifying
 --  interested entities in the vicinity of the new arrival.
 --!param entity (Entity) The entity that was just placed.
 --!param id (string) That entity's id.
@@ -1866,7 +1866,7 @@ function World:objectPlaced(entity, id)
   if id == "bench" and entity.tile_x and entity.tile_y then
     for _, patient in ipairs(self.entities) do
       if class.is(patient, Patient) then
-        if math.abs(patient.tile_x - entity.tile_x) < 7 and 
+        if math.abs(patient.tile_x - entity.tile_x) < 7 and
           math.abs(patient.tile_y - entity.tile_y) < 7 then
           patient:notifyNewObject(id)
         end
@@ -1874,11 +1874,11 @@ function World:objectPlaced(entity, id)
     end
   end
   if id == "reception_desk" then
-    if not self.ui.start_tutorial 
+    if not self.ui.start_tutorial
     and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and self.object_counts["reception_desk"] == 1 
+    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and self.object_counts["reception_desk"] == 1
     and not self.hospitals[1].receptionist_msg and self.month > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
@@ -1971,7 +1971,7 @@ function World:getObjectsById(id)
   if not id then
       return self.objects
   end
-  
+
   local ret = {}
   if type(id) == "table" then
     for position, obj_list in pairs(self.objects) do
@@ -1990,7 +1990,7 @@ function World:getObjectsById(id)
       end
     end
   end
-  
+
   return ret
 end
 
@@ -2054,7 +2054,7 @@ function World:dumpGameLog()
   end
 end
 
--- Because the save file only saves one thob per tile if they are more that information 
+-- Because the save file only saves one thob per tile if they are more that information
 -- will be lost. To solve this after a load we need to set again all the thobs on each tile.
 function World:resetAnimations()
   for _, entity in ipairs(self.entities) do
@@ -2106,7 +2106,7 @@ function World:afterLoad(old, new)
 
     self.hospitals[1].value = value
   end
-  
+
   if old < 7 then
     self.level_criteria = local_criteria_variable
     self:determineWinningConditions()
@@ -2205,7 +2205,7 @@ function World:afterLoad(old, new)
     local popn = self.map.level_config.popn
     self.spawn_rate = popn[index].Change
     self.monthly_spawn_increase = self.spawn_rate
-    
+
     -- Bring the spawn rate "up to speed".
     for month = 1, self.month + (self.year-1)*12 do
       -- Check if the next entry should be used.
@@ -2229,7 +2229,7 @@ function World:afterLoad(old, new)
         if not self.entities[i].tile_x then
           self:destroyEntity(self.entities[i])
         end
-      end      
+      end
     end
   end
   if old < 53 then
@@ -2301,7 +2301,7 @@ function World:afterLoad(old, new)
   end
   if old < 77 then
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom,  5)
-    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)  
+    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)
   end
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
@@ -2312,14 +2312,14 @@ function World:afterLoad(old, new)
   if old < 80 then
     self:determineWinningConditions()
   end
-  
+
   self.savegame_version = new
 end
 
 --[[ There is a problem with room editing in that it resets all the partial passable flags
 (travelNorth, travelSouth etc.) in the corridor, a workaround is calling this function
 after the room was edited so that all edge only objects, that set partial passable flags set
-those flags again]] 
+those flags again]]
 function World:resetSideObjects()
   for _, objects in pairs(self.objects) do
     for _, obj in ipairs(objects) do

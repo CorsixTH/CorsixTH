@@ -54,7 +54,7 @@ function CallsDispatcher:callForStaff(room)
     anyone_missed = true
     for i = 1, count do
       self:callForStaffEachRoom(room, attribute, attribute .. i)
-    end    
+    end
   end
   local sound = room.room_info.call_sound
   if anyone_missed and sound and not room.sound_played then
@@ -91,7 +91,7 @@ end
 --  If urgent or manual is specified, lock_room will be true automatically
 function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   lock_room = manual or lock_room
-  
+
   local call = {
     verification = --[[persistable:call_dispatcher_repair_verification]] function(staff) return false end,
     priority = --[[persistable:call_dispatcher_repair_priority]] function(staff) return 1 end,
@@ -104,7 +104,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     assigned = nil,
     dropped = nil
   }
-  
+
   object:setRepairingMode(lock_room and true or false)
   local message
   local ui = object.world.ui
@@ -112,7 +112,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     -- Advise about hiring Handyman
     message = _A.warnings.machinery_damaged2
   end
-  
+
   if not manual and urgent then
     local room = object:getRoom();
     local sound = room.room_info.handyman_call_sound
@@ -125,7 +125,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   if message then
     ui.adviser:say(message)
   end
-  
+
   if not self.call_queue[object] then
     self.call_queue[object] = {}
   end
@@ -135,9 +135,9 @@ end
 
 function CallsDispatcher:callForWatering(plant)
   local call = {
-    verification = --[[persistable:call_dispatcher_watering_verification]]function(staff) 
+    verification = --[[persistable:call_dispatcher_watering_verification]]function(staff)
       return false end,
-    priority = --[[persistable:call_dispatcher_watering_priority]] function(staff) 
+    priority = --[[persistable:call_dispatcher_watering_priority]] function(staff)
       return 1 end,
     execute = --[[persistable:call_dispatcher_watering_execute]] function(staff) return CallsDispatcher.sendStaffToWatering(plant, staff) end,
     object = plant,
@@ -182,15 +182,15 @@ function CallsDispatcher:enqueue(object, key, description, verification, priorit
 end
 
 -- Find suitable (best) staff for working on a specific call
--- True 
+-- True
 function CallsDispatcher:findSuitableStaff(call)
-  if call.dropped then 
+  if call.dropped then
     -- If a call was thought needed to be reinserted, but actually it was dropped...
     return
-  end 
+  end
 
   -- TODO: Preempt staff those even on_call already.
-  --       Say - when an machine broke down, preempt the nearby handyman for repairing 
+  --       Say - when an machine broke down, preempt the nearby handyman for repairing
   --         even if he was going to water a far away plant
   -- TODO: Doctor could go to other room with real needs, even there are patients queued up
   --       (think of emergency? or surgeons still in GP office?)
@@ -255,8 +255,8 @@ function CallsDispatcher:answerCall(staff)
 
   if min_call then
     if debug then self:dump() CallsDispatcher.dumpCall(min_call, 'answered') end
-    if min_call.assigned then 
-      CallsDispatcher.unassignCall(min_call) 
+    if min_call.assigned then
+      CallsDispatcher.unassignCall(min_call)
     end
     -- Check if the object is still in the world, live and not destroy
     assert(min_call.object.tile_x or min_call.object.x, "An destroyed object still has requested in the dispatching queue. Please check the Entity:onDestroy function")
@@ -290,19 +290,19 @@ function CallsDispatcher.dumpCall(call, message)
   if call.object.x then
     position = call.object.x ..','..call.object.y
   end
-  print((call.object.room_info and call.object.room_info.id or call.object.object_type.id) .. '-' .. call.key .. 
+  print((call.object.room_info and call.object.room_info.id or call.object.object_type.id) .. '-' .. call.key ..
     '@' .. position .. message)
 end
 
 -- Add checkpoint action
--- All call execution method should add this action in apporiate place to signify 
+-- All call execution method should add this action in apporiate place to signify
 --   the job is finished.
--- A interrupt handler could be supplied if special handling is needed. 
+-- A interrupt handler could be supplied if special handling is needed.
 -- If not, the default would be reinsert the call into the queue
 function CallsDispatcher.queueCallCheckpointAction(humanoid, interrupt_handler)
   return humanoid:queueAction{
-    name = "call_checkpoint", 
-    call = humanoid.on_call, 
+    name = "call_checkpoint",
+    call = humanoid.on_call,
     on_remove = interrupt_handler or CallsDispatcher.actionInterruptHandler
   }
 end
@@ -339,7 +339,7 @@ end
 
 -- Drop any call associated with the object (and/or key).
 --
--- Expected to be called when the call is no longer needed 
+-- Expected to be called when the call is no longer needed
 --   (like a machine that needed repaired were replaced),
 --   or when the object is destroyed, etc.
 function CallsDispatcher:dropFromQueue(object, key)
@@ -348,7 +348,7 @@ function CallsDispatcher:dropFromQueue(object, key)
     local call = self.call_queue[object][key]
     if call then
       call.dropped = true
-      if call.assigned then 
+      if call.assigned then
         CallsDispatcher.unassignCall(call)
       end
       self.call_queue[object][key] = nil
@@ -388,7 +388,7 @@ end
 function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
   local score = 0;
   local x, y = room:getEntranceXY()
-  
+
   -- Doctor prefer serving nearby rooms
   local distance = room.world:getPathDistance(staff.tile_x, staff.tile_y, x, y);
   if distance then
@@ -419,11 +419,11 @@ end
 function CallsDispatcher.sendStaffToRoom(room, staff)
   if staff:getRoom() == room then
     room:onHumanoidLeave(staff)
-    CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)  
+    CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)
     room:onHumanoidEnter(staff)
   else
     staff:setNextAction(room:createEnterAction(staff))
-    CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)  
+    CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)
   end
   staff:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
 end

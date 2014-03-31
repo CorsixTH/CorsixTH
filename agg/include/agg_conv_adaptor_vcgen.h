@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -33,8 +33,8 @@ namespace agg
 
 
     //------------------------------------------------------conv_adaptor_vcgen
-    template<class VertexSource, 
-             class Generator, 
+    template<class VertexSource,
+             class Generator,
              class Markers=null_markers> class conv_adaptor_vcgen
     {
         enum status
@@ -46,7 +46,7 @@ namespace agg
 
     public:
         explicit conv_adaptor_vcgen(VertexSource& source) :
-            m_source(&source), 
+            m_source(&source),
             m_status(initial)
         {}
         void attach(VertexSource& source) { m_source = &source; }
@@ -56,10 +56,10 @@ namespace agg
 
         Markers& markers() { return m_markers; }
         const Markers& markers() const { return m_markers; }
-        
-        void rewind(unsigned path_id) 
-        { 
-            m_source->rewind(path_id); 
+
+        void rewind(unsigned path_id)
+        {
+            m_source->rewind(path_id);
             m_status = initial;
         }
 
@@ -68,7 +68,7 @@ namespace agg
     private:
         // Prohibit copying
         conv_adaptor_vcgen(const conv_adaptor_vcgen<VertexSource, Generator, Markers>&);
-        const conv_adaptor_vcgen<VertexSource, Generator, Markers>& 
+        const conv_adaptor_vcgen<VertexSource, Generator, Markers>&
             operator = (const conv_adaptor_vcgen<VertexSource, Generator, Markers>&);
 
         VertexSource* m_source;
@@ -85,7 +85,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VertexSource, class Generator, class Markers> 
+    template<class VertexSource, class Generator, class Markers>
     unsigned conv_adaptor_vcgen<VertexSource, Generator, Markers>::vertex(double* x, double* y)
     {
         unsigned cmd = path_cmd_stop;

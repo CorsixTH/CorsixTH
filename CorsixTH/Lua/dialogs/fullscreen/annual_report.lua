@@ -61,20 +61,20 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   -- stand alone dialog since it has (2) sprites in another sprite file?
   self.state = 2
   self.default_button_sound = "selectx.wav"
-  
+
   -- Close button, in the future different behaviours for different screens though
   --self.first_close = self:addPanel(0, 609, 449):makeButton(0, 0, 26, 26, 1, self.changePage)
   self.second_close = self:addPanel(0, 608, 449):makeButton(0, 0, 26, 26, 1, self.close)
   self:setActive(self.second_close, true)
-  
+
   -- Change page buttons for the second and third pages
   local --[[persistable:annual_report_change_page]] function change() self:changePage(3) end
   self.second_change = self:addPanel(0, 274, 435):makeButton(0, 0, 91, 42, 3, change)
   self:setActive(self.second_change, true)
-  
+
   self.third_change = self:addPanel(0, 272, 367):makeButton(0, 0, 91, 42, 3, self.changePage)
   self:setActive(self.third_change, false)
-  
+
   -- The plaque showed after the player has clicked on a trophy
   local plaque = {}
   plaque[1] = self:addPanel(19, 206, 87)
@@ -115,7 +115,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   self:checkTrophiesAndAwards(world)
 
   -- Get and sort values used on the statistics screen.
-  -- The six categories. The extra tables are used to be able to sort the values. 
+  -- The six categories. The extra tables are used to be able to sort the values.
     self.money = {}
     self.money_sort = {}
     self.visitors = {}
@@ -128,7 +128,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     self.cures_sort = {}
     self.value = {}
     self.value_sort = {}
-    
+
     -- TODO: Right now there are no real competitors, they all have initial values.
     for i, hospital in ipairs(world.hospitals) do
       self.money[hospital.name] = hospital.balance - hospital.loan
@@ -144,7 +144,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
       self.salary[hospital.name] = hospital.player_salary
       self.salary_sort[i] = hospital.player_salary
     end
-    
+
     local sort_order = function(a,b) return a>b end
     table.sort(self.money_sort, sort_order)
     table.sort(self.visitors_sort, sort_order)
@@ -152,7 +152,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     table.sort(self.cures_sort, sort_order)
     table.sort(self.value_sort, sort_order)
     table.sort(self.salary_sort, sort_order)
-    
+
   -- Pause the game to allow the player plenty of time to check all statistics and trophies won
   if world and world:isCurrentSpeed("Speed Up") then
     world:setSpeed("Pause")
@@ -226,7 +226,7 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
       self.rep_amount = self.rep_amount + win_value
     elseif hosp.value < prices.HospValuePoor then
       -- added some here so you get odd amounts as in TH!
-      local lose_value = prices.HospValuePenalty * math.random(1, 15)  
+      local lose_value = prices.HospValuePenalty * math.random(1, 15)
       self:addAward(_S.trophy_room.hosp_value.penalty[1], "reputation", lose_value)
       self.rep_amount = self.rep_amount + lose_value
     end
@@ -279,8 +279,8 @@ function UIAnnualReport:updateAwards()
   if self.rep_amount ~= 0 then
     hosp:changeReputation("year_end", nil, math.floor(self.rep_amount))
   end
-end  
-    
+end
+
 -- A table defining which type of shadow each award should have.
 local award_shadows = {
   { shadow = 4 },
@@ -502,18 +502,18 @@ end
 function UIAnnualReport:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
-  
+
   x, y = self.x + x, self.y + y
   local font = self.stat_font
   local world = self.ui.app.world
-    
+
   if self.state == 1 then -- Fame screen
     -- Title and column names
     font:draw(canvas, _S.high_score.best_scores, x + 220, y + 104, 200, 0)
     font:draw(canvas, _S.high_score.pos, x + 218, y + 132)
     font:draw(canvas, _S.high_score.player, x + 260, y + 132)
     font:draw(canvas, _S.high_score.score, x + 360, y + 132)
-    
+
     -- Players and their score
     local i = 1
     local dy = 0
@@ -562,9 +562,9 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
 
   local font = self.stat_font
   local world = self.ui.app.world
-  
+
   -- Draw titles
-  font:draw(canvas, _S.menu.charts .. " " 
+  font:draw(canvas, _S.menu.charts .. " "
   .. (world.year + 1999), x + 210, y + 30, 200, 0)
   font:draw(canvas, _S.high_score.categories.money, x + 140, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.salary, x + 328, y + 98, 170, 0)
@@ -572,7 +572,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   font:draw(canvas, _S.high_score.categories.deaths, x + 328, y + 205, 170, 0)
   font:draw(canvas, _S.high_score.categories.visitors, x + 140, y + 310, 170, 0)
   font:draw(canvas, _S.high_score.categories.total_value, x + 328, y + 310, 170, 0)
-  
+
   -- TODO: Add possibility to right align text.
 
   -- Helper function to find where the person is in the array.
@@ -603,52 +603,52 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   local dup_value = 0
   for _, player in ipairs(world.hospitals) do
     local name = player.name
-    
+
     -- Most Money
     local index, dup_m = getindex(self.money_sort, self.money[name])
     -- index is the returned value of the sorted place for this player.
     -- However there might be many players with the same value, so each iteration a
     -- duplicate has been found, one additional row lower is the right place to be.
-    font:draw(canvas, name:upper(), x + 140, 
+    font:draw(canvas, name:upper(), x + 140,
       y + row_y + row_dy*(index-1) + row_dy*(dup_money))
-    font:draw(canvas, self.money[name], x + 240, 
+    font:draw(canvas, self.money[name], x + 240,
       y + row_y + row_dy*(index-1) + row_dy*(dup_money), 70, 0, "right")
-    
+
     -- Highest Salary
     local index, dup_s = getindex(self.salary_sort, self.salary[name])
-    font:draw(canvas, name:upper(), x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x,
       y + row_y + row_dy*(index-1) + row_dy*(dup_salary))
-    font:draw(canvas, self.salary[name], x + 240 + col_x, 
+    font:draw(canvas, self.salary[name], x + 240 + col_x,
       y + row_y + row_dy*(index-1) + row_dy*(dup_salary), 70, 0, "right")
-    
+
     -- Most Cures
     local index, dup_c = getindex(self.cures_sort, self.cures[name])
-    font:draw(canvas, name:upper(), x + 140, 
+    font:draw(canvas, name:upper(), x + 140,
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures))
-    font:draw(canvas, self.cures[name], x + 240, 
+    font:draw(canvas, self.cures[name], x + 240,
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures), 70, 0, "right")
-    
+
     -- Most Deaths
     local index, dup_d = getindex(self.deaths_sort, self.deaths[name])
-    font:draw(canvas, name:upper(), x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x,
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths))
-    font:draw(canvas, self.deaths[name], x + 240 + col_x, 
+    font:draw(canvas, self.deaths[name], x + 240 + col_x,
       y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths), 70, 0, "right")
-    
+
     -- Most Visitors
     local index, dup_v = getindex(self.visitors_sort, self.visitors[name])
-    font:draw(canvas, name:upper(), x + 140, 
+    font:draw(canvas, name:upper(), x + 140,
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors))
-    font:draw(canvas, self.visitors[name], x + 240, 
+    font:draw(canvas, self.visitors[name], x + 240,
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors), 70, 0, "right")
-    
+
     -- Highest Value
     local index, dup_v2 = getindex(self.value_sort, self.value[name])
-    font:draw(canvas, name:upper(), x + 140 + col_x, 
+    font:draw(canvas, name:upper(), x + 140 + col_x,
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value))
-    font:draw(canvas, self.value[name], x + 240 + col_x, 
+    font:draw(canvas, self.value[name], x + 240 + col_x,
       y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value), 70, 0, "right")
-    
+
     if dup_m > 1 then dup_money = dup_money + 1 else dup_money = 0 end
     if dup_s > 1 then dup_salary = dup_salary + 1 else dup_salary = 0 end
     if dup_c > 1 then dup_cures = dup_cures + 1 else dup_cures = 0 end

@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -106,8 +106,8 @@ namespace agg
 
             case cap1:
                 m_stroker.calc_cap(m_out_vertices,
-                                   m_src_vertices[0], 
-                                   m_src_vertices[1], 
+                                   m_src_vertices[0],
+                                   m_src_vertices[1],
                                    m_src_vertices[0].dist);
                 m_src_vertex = 1;
                 m_prev_status = outline1;
@@ -117,8 +117,8 @@ namespace agg
 
             case cap2:
                 m_stroker.calc_cap(m_out_vertices,
-                                   m_src_vertices[m_src_vertices.size() - 1], 
-                                   m_src_vertices[m_src_vertices.size() - 2], 
+                                   m_src_vertices[m_src_vertices.size() - 1],
+                                   m_src_vertices[m_src_vertices.size() - 2],
                                    m_src_vertices[m_src_vertices.size() - 2].dist);
                 m_prev_status = outline2;
                 m_status = out_vertices;
@@ -143,10 +143,10 @@ namespace agg
                         break;
                     }
                 }
-                m_stroker.calc_join(m_out_vertices, 
-                                    m_src_vertices.prev(m_src_vertex), 
-                                    m_src_vertices.curr(m_src_vertex), 
-                                    m_src_vertices.next(m_src_vertex), 
+                m_stroker.calc_join(m_out_vertices,
+                                    m_src_vertices.prev(m_src_vertex),
+                                    m_src_vertices.curr(m_src_vertex),
+                                    m_src_vertices.next(m_src_vertex),
                                     m_src_vertices.prev(m_src_vertex).dist,
                                     m_src_vertices.curr(m_src_vertex).dist);
                 ++m_src_vertex;
@@ -169,10 +169,10 @@ namespace agg
 
                 --m_src_vertex;
                 m_stroker.calc_join(m_out_vertices,
-                                    m_src_vertices.next(m_src_vertex), 
-                                    m_src_vertices.curr(m_src_vertex), 
-                                    m_src_vertices.prev(m_src_vertex), 
-                                    m_src_vertices.curr(m_src_vertex).dist, 
+                                    m_src_vertices.next(m_src_vertex),
+                                    m_src_vertices.curr(m_src_vertex),
+                                    m_src_vertices.prev(m_src_vertex),
+                                    m_src_vertices.curr(m_src_vertex).dist,
                                     m_src_vertices.prev(m_src_vertex).dist);
 
                 m_prev_status = m_status;

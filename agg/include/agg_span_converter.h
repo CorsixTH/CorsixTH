@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -26,16 +26,16 @@ namespace agg
     public:
         typedef typename SpanGenerator::color_type color_type;
 
-        span_converter(SpanGenerator& span_gen, SpanConverter& span_cnv) : 
+        span_converter(SpanGenerator& span_gen, SpanConverter& span_cnv) :
             m_span_gen(&span_gen), m_span_cnv(&span_cnv) {}
 
         void attach_generator(SpanGenerator& span_gen) { m_span_gen = &span_gen; }
         void attach_converter(SpanConverter& span_cnv) { m_span_cnv = &span_cnv; }
 
         //--------------------------------------------------------------------
-        void prepare() 
-        { 
-            m_span_gen->prepare(); 
+        void prepare()
+        {
+            m_span_gen->prepare();
             m_span_cnv->prepare();
         }
 

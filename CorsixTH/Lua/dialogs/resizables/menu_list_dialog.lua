@@ -54,7 +54,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self.default_button_sound = "selectx.wav"
   self.items = items
   self.num_rows = num_rows and num_rows or 10
-  
+
   local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
@@ -62,33 +62,33 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
-  
+
   self:addBevelPanel(20, 10, 240, 20, col_caption):setLabel(title)
     .lowered = true
-  
+
   local scrollbar_base = self:addBevelPanel(240, 40 + extra_above_list, 20, self.num_rows*17, self.col_bg)
   scrollbar_base.lowered = true
   self.scrollbar = scrollbar_base:makeScrollbar(col_scrollbar, --[[persistable:menu_list_scrollbar_callback]] function()
     self:updateButtons()
   end, 1, math.max(#items, 1), self.num_rows)
-  
+
   local function button_clicked(num)
     return --[[persistable:menu_list_button]] function(self)
       self:buttonClicked(num)
     end
   end
-  
+
   self.item_panels = {}
   self.item_buttons = {}
-  
+
   for num = 1, self.num_rows do
     self.item_panels[num] = self:addBevelPanel(20, 40 + extra_above_list + (num - 1) * 17, 210, 17, self.col_bg):setLabel(nil, nil, "centre")
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 220, 17, nil, button_clicked(num))
   end
-  
+
   self:addBevelPanel(20, 220 + extra_above_list, 240, 40, self.col_bg):setLabel(_S.menu_list_window.back)
     :makeButton(0, 0, 240, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
-  
+
   self:updateButtons()
 end
 

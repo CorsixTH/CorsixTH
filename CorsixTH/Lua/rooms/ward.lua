@@ -25,12 +25,12 @@ room.class = "WardRoom"
 room.name = _S.rooms_short.ward
 room.tooltip = _S.tooltip.rooms.ward
 room.long_name = _S.rooms_long.ward
-room.objects_additional = { 
-  "extinguisher", 
-  "radiator", 
-  "plant", 
+room.objects_additional = {
+  "extinguisher",
+  "radiator",
+  "plant",
   "desk",
-  "bin", 
+  "bin",
   "bed" }
 room.objects_needed = { desk = 1, bed = 1 }
 room.build_preview_animation = 910
@@ -63,14 +63,14 @@ function WardRoom:roomFinished()
   for object, value in pairs(objects) do
     if object.object_type.id == "bed" then
       beds = beds + 1
-    end  
+    end
     if object.object_type.id == "desk" then
       desks = desks + 1
     end
   end
   self.maximum_staff = {
     Nurse = desks,
-  } 
+  }
   self.maximum_patients = beds
   if not self.hospital:hasStaffOfCategory("Nurse") then
     self.world.ui.adviser
@@ -92,7 +92,7 @@ end
 function WardRoom:doStaffUseCycle(humanoid)
   local meander_time = math.random(4, 10)
   local desk_use_time = math.random(8, 16)
-  
+
   humanoid:setNextAction{
     name = "meander",
     count = meander_time,
@@ -112,8 +112,8 @@ function WardRoom:doStaffUseCycle(humanoid)
         self:doStaffUseCycle(humanoid)
       end
     end,
-  }    
-  end  
+  }
+  end
 
   end
   local num_meanders = math.random(2, 4)
@@ -125,7 +125,7 @@ function WardRoom:doStaffUseCycle(humanoid)
         self:doStaffUseCycle(humanoid)
       end
     end
-  }    
+  }
 end
 
 
@@ -142,20 +142,20 @@ function WardRoom:commandEnteringPatient(patient)
   else
     bed.reserved_for = patient
     self:countWorkingNurses()
-    local length = (math.random(200, 800) * (1.5 - staff.profile.skill))  / self.nursecount -- reduce time in ward if there is more than one nurse on duty 
-    local --[[persistable:ward_loop_callback]] function loop_callback(action)  
-    -- TODO Perhaps it should take longer if there are more used beds! 
+    local length = (math.random(200, 800) * (1.5 - staff.profile.skill))  / self.nursecount -- reduce time in ward if there is more than one nurse on duty
+    local --[[persistable:ward_loop_callback]] function loop_callback(action)
+    -- TODO Perhaps it should take longer if there are more used beds!
       if length <= 0 then
         action.prolonged_usage = false
       end
       length = length - 1
-    end    
+    end
     local after_use = --[[persistable:ward_after_use]] function()
       self:dealtWithPatient(patient)
     end
     patient:walkTo(pat_x, pat_y)
     patient:queueAction{
-      name = "use_object", 
+      name = "use_object",
       object = bed,
       prolonged_usage = true,
       loop_callback = loop_callback,
@@ -179,28 +179,28 @@ function WardRoom:getStaffMember()
     end
   end
   return staff
-end 
+end
 
 function WardRoom:setStaffMember(staff)
   self.staff_member_set[staff] = true
 end
 
 function WardRoom:countWorkingNurses()
-  local staff = next(self.staff_member_set) 
+  local staff = next(self.staff_member_set)
   self.nursecount = 0
   for staff_member, _ in pairs(self.staff_member_set) do
     if staff then
       staff = staff_member
-      self.nursecount = self.nursecount + 1   
-    end  
-  end 
+      self.nursecount = self.nursecount + 1
+    end
+  end
 end
 
 function WardRoom:setStaffMembersAttribute(attribute, value)
   for staff_member, _ in pairs(self.staff_member_set) do
     staff_member[attribute] = value
   end
-end 
+end
 
 function WardRoom:onHumanoidLeave(humanoid)
   self.staff_member_set[humanoid] = nil
@@ -218,7 +218,7 @@ function WardRoom:afterLoad(old, new)
     local flags = {}
 
     local function checkLocation(x, y)
-      if self.world:getRoom(x, y) 
+      if self.world:getRoom(x, y)
       or not map:getCellFlags(x, y, flags).passable then
         local message = "Warning: An update has resolved a problem concerning "
         .. "swing doors, but not all tiles adjacent to them could be fixed."
@@ -254,15 +254,15 @@ function WardRoom:afterLoad(old, new)
     self.staff_member_set = {}
     self.nursecount = 0
     -- reset any wards that already exist
-    self:roomFinished()  
+    self:roomFinished()
     -- if there is already a nurse in the ward
     -- make her leave so she gets counted properly
     local nurse = self.staff_member
-    if nurse then 
+    if nurse then
       nurse:setNextAction(self:createLeaveAction())
       nurse:queueAction({name = "meander"})
     end
-  end  
+  end
   Room.afterLoad(self, old, new)
 end
 

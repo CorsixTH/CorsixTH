@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -13,7 +13,7 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 //
-// General Polygon Clipper based on the GPC library by Alan Murta 
+// General Polygon Clipper based on the GPC library by Alan Murta
 // Union, Intersection, XOR, A-B, B-A
 // Contact the author if you intend to use it in commercial applications!
 // http://www.cs.man.ac.uk/aig/staff/alan/software/
@@ -28,9 +28,9 @@
 #include "agg_basics.h"
 #include "agg_array.h"
 
-extern "C" 
-{ 
-#include "gpc.h" 
+extern "C"
+{
+#include "gpc.h"
 }
 
 namespace agg
@@ -185,13 +185,13 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::free_polygon(gpc_polygon& p)
     {
         int i;
         for(i = 0; i < p.num_contours; i++)
         {
-            pod_allocator<gpc_vertex>::deallocate(p.contour[i].vertex, 
+            pod_allocator<gpc_vertex>::deallocate(p.contour[i].vertex,
                                                   p.contour[i].num_vertices);
         }
         pod_allocator<gpc_vertex_list>::deallocate(p.contour, p.num_contours);
@@ -200,7 +200,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::free_result()
     {
         if(m_result.contour)
@@ -212,7 +212,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::free_gpc_data()
     {
         free_polygon(m_poly_a);
@@ -222,7 +222,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::start_contour()
     {
         contour_header_type h;
@@ -233,7 +233,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     inline void conv_gpc<VSA, VSB>::add_vertex(double x, double y)
     {
         gpc_vertex v;
@@ -244,14 +244,14 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::end_contour(unsigned orientation)
     {
         if(m_contour_accumulator.size())
         {
             if(m_vertex_accumulator.size() > 2)
             {
-                contour_header_type& h = 
+                contour_header_type& h =
                     m_contour_accumulator[m_contour_accumulator.size() - 1];
 
                 h.num_vertices = m_vertex_accumulator.size();
@@ -280,7 +280,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::make_polygon(gpc_polygon& p)
     {
         free_polygon(p);
@@ -305,7 +305,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::start_extracting()
     {
         m_status = status_move_to;
@@ -315,7 +315,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     bool conv_gpc<VSA, VSB>::next_contour()
     {
         if(++m_contour < m_result.num_contours)
@@ -328,7 +328,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     inline bool conv_gpc<VSA, VSB>::next_vertex(double* x, double* y)
     {
         const gpc_vertex_list& vlist = m_result.contour[m_contour];
@@ -344,7 +344,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     void conv_gpc<VSA, VSB>::rewind(unsigned path_id)
     {
         free_result();
@@ -394,12 +394,12 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VSA, class VSB> 
+    template<class VSA, class VSB>
     unsigned conv_gpc<VSA, VSB>::vertex(double* x, double* y)
     {
         if(m_status == status_move_to)
         {
-            if(next_contour()) 
+            if(next_contour())
             {
                 if(next_vertex(x, y))
                 {
@@ -425,7 +425,7 @@ namespace agg
         return path_cmd_stop;
     }
 
-   
+
 }
 
 

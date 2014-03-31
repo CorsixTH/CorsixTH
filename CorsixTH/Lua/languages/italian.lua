@@ -82,7 +82,7 @@ menu_charts = {
   research      = "  (F6) RICERCA  ",
   status        = "  (F7) RIEPILOGO  ",
   graphs        = "  (F8) GRAFICI  ",
-  policy        = "  (F9) GESTIONE  ",  
+  policy        = "  (F9) GESTIONE  ",
 }
 
 
@@ -136,7 +136,7 @@ adviser = {
     research_screen_open_1 = "Devi costruire un Reparto Ricerca prima di poter accedere alla schermata Ricerca.",
     research_screen_open_2 = "La Ricerca è disabilitata in questo livello.",
   },
-  cheats = {  
+  cheats = {
     th_cheat = "Congratulazioni, hai sbloccato i cheat!",
     crazy_on_cheat = "Oh no! Tutti i dottori sono impazziti!",
     crazy_off_cheat = "Phew... i dottori sono di nuovo sani.",
@@ -299,11 +299,11 @@ font_location_window = {
 handyman_window = {
   all_parcels = "Tutti i lotti",
   parcel = "Lotto"
-} 
+}
 
 tooltip.handyman_window = {
   parcel_select = "Il lotto dove l'inserviente può operare. Clicca per cambiarlo."
-} 
+}
 
 new_game_window = {
   caption = "Campagna",

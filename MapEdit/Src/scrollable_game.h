@@ -73,7 +73,7 @@ protected:
     static int _l_on_ui_scroll_map(lua_State *L);
 
     DECLARE_EVENT_TABLE();
-    
+
 private:
     void _positionMap();
 };

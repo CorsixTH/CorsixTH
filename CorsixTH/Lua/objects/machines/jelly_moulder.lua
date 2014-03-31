@@ -58,7 +58,7 @@ object.idle_animations = copy_north_to_south {
 -- patient steps out               1358  3982
 -- door closes                     1306
 
-object.walk_in_to_use = true -- This is only considered by use_object, not multi_use_object. 
+object.walk_in_to_use = true -- This is only considered by use_object, not multi_use_object.
 object.usage_animations = copy_north_to_south {
   north = {
     in_use  = {["Handyman"] = 3502}, -- (3508: duplicate with error?)

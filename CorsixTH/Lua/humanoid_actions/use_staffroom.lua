@@ -27,9 +27,9 @@ local decide_next_target = permanent"use_staffroom_action_decide_next_target"( f
   local cur_type = action.target_type
   assert(class.is(humanoid, Staff), "decide_next_target called for non-staff humanoid")
   local h_class = humanoid.humanoid_class
-  
+
   local chance = math.random(1, 10)
-  
+
   -- take sofa as default
   local new_type = "sofa"
 
@@ -44,7 +44,7 @@ local decide_next_target = permanent"use_staffroom_action_decide_next_target"( f
   if (h_class == "Doctor" or h_class == "Nurse") and cur_type ~= "video_game" and 2 < chance and chance <= 4 then
     new_type = "video_game"
   end
-  
+
   -- Take the a near object but not always the nearest (decreasing probability over distance) for some variation.
   local obj, ox, oy = humanoid.world:findFreeObjectNearToUse(humanoid, new_type, "near")
   return obj, ox, oy, new_type
@@ -84,13 +84,13 @@ local function use_staffroom_action_start(action, humanoid)
     action.target_obj, action.ox, action.oy, action.target_type = action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type
     action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = nil
   end
-  
+
   -- If no target was found, then walk around for a bit and try again later
   if not action.target_obj then
     humanoid:queueAction({name = "meander", count = 2}, 0)
     return
   end
-  
+
   -- Otherwise, walk to and use the object:
   -- Note: force prolonged_usage, because video_game wouldn't get it by default (because it has no begin and end animation)
   local object_action
@@ -109,7 +109,7 @@ local function use_staffroom_action_start(action, humanoid)
         -- (applies to training and research only)
         -- Make sure that the room is still there though.
         -- If not, just answer the call
-        if room and room.is_active and 
+        if room and room.is_active and
         (room.room_info.id == "research" or room.room_info.id == "training")
         and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
           humanoid:queueAction(room:createEnterAction(humanoid))

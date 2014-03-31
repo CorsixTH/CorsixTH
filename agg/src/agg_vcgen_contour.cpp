@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -65,7 +65,7 @@ namespace agg
                 if(is_end_poly(cmd))
                 {
                     m_closed = get_close_flag(cmd);
-                    if(m_orientation == path_flags_none) 
+                    if(m_orientation == path_flags_none)
                     {
                         m_orientation = get_orientation(cmd);
                     }
@@ -84,8 +84,8 @@ namespace agg
             {
                 if(!is_oriented(m_orientation))
                 {
-                    m_orientation = (calc_polygon_area(m_src_vertices) > 0.0) ? 
-                                    path_flags_ccw : 
+                    m_orientation = (calc_polygon_area(m_src_vertices) > 0.0) ?
+                                    path_flags_ccw :
                                     path_flags_cw;
                 }
             }
@@ -126,10 +126,10 @@ namespace agg
                     m_status = end_poly;
                     break;
                 }
-                m_stroker.calc_join(m_out_vertices, 
-                                    m_src_vertices.prev(m_src_vertex), 
-                                    m_src_vertices.curr(m_src_vertex), 
-                                    m_src_vertices.next(m_src_vertex), 
+                m_stroker.calc_join(m_out_vertices,
+                                    m_src_vertices.prev(m_src_vertex),
+                                    m_src_vertices.curr(m_src_vertex),
+                                    m_src_vertices.next(m_src_vertex),
                                     m_src_vertices.prev(m_src_vertex).dist,
                                     m_src_vertices.curr(m_src_vertex).dist);
                 ++m_src_vertex;

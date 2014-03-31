@@ -26,7 +26,7 @@ function CommandStack:CommandStack()
 end
 
 function CommandStack:redo()
-  if (#self.redo_stack == 0) then 
+  if (#self.redo_stack == 0) then
     print "Nothing left to redo!"
     return
   end
@@ -38,7 +38,7 @@ function CommandStack:redo()
 end
 
 function CommandStack:undo()
-  if (#self.undo_stack == 0) then 
+  if (#self.undo_stack == 0) then
     print "Nothing left to undo!"
     return
   end

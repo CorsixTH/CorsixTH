@@ -78,7 +78,7 @@ object.orientations = {
   },
   east = {
     render_attach_position = { {0, 0}, {1, 0}, {-1, 1} },
-    footprint = { {-1, -1, complete_cell = true}, {0, -1, only_passable = true, need_north_side = true}, 
+    footprint = { {-1, -1, complete_cell = true}, {0, -1, only_passable = true, need_north_side = true},
                   {1, -1, only_passable = true, need_north_side = true},
                   {-1, 0, complete_cell = true}, {0, 0}, {1, 0, only_passable = true},
                   {-1, 1, only_passable = true, complete_cell = true}, {0, 1, only_passable = true} },

@@ -75,13 +75,13 @@ function HairRestorationRoom:commandEnteringPatient(patient)
 
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = hair_restorer.direction == "north" and "east" or "south",
     loop_callback = loop_callback,
   }
   staff:walkTo(stf_x, stf_y)
   staff:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = console.direction == "north" and "east" or "south",
     loop_callback = loop_callback,
   }

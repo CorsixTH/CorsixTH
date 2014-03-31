@@ -37,7 +37,7 @@ end
 object.idle_animations = copy_north_to_south {
   north = 2492,
 }
-object.walk_in_to_use = true -- This is only considered by use_object, not multi_use_object. 
+object.walk_in_to_use = true -- This is only considered by use_object, not multi_use_object.
 object.usage_animations = copy_north_to_south {
   north = {
     in_use  = {["Handyman"] = 3514},
@@ -74,9 +74,9 @@ object.orientations = {
     use_position_secondary = {0, -1},
     finish_use_position_secondary = {1, -1},
     footprint = { {-1, -1, complete_cell = true}, {0, -1, only_passable = true}, {1, -1, only_passable = true},
-                  {-1, 0, complete_cell = true}, {0, 0, only_passable = true, complete_cell = true}, 
-                  {-1, 1, only_passable = true, need_west_side = true}, 
-                  {-1, -2, only_passable = true, invisible = true, optional = true}, 
+                  {-1, 0, complete_cell = true}, {0, 0, only_passable = true, complete_cell = true},
+                  {-1, 1, only_passable = true, need_west_side = true},
+                  {-1, -2, only_passable = true, invisible = true, optional = true},
                   {-2, -1, only_passable = true, invisible = true, optional = true} },
     list_bottom = true,
     render_attach_position = {-1, 1},
@@ -90,7 +90,7 @@ object.orientations = {
     footprint = { {-1, -1}, {0, -1, complete_cell = true}, {1, -1, only_passable = true, need_north_side = true},
                   {-1, 0, only_passable = true}, {0, 0, only_passable = true, complete_cell = true},
                   {-1, 1, only_passable = true},
-                  {-2, -1, only_passable = true, invisible = true, optional = true}, 
+                  {-2, -1, only_passable = true, invisible = true, optional = true},
                   {-1, -2, only_passable = true, invisible = true, optional = true} },
     early_list = true,
     list_bottom = true,

@@ -22,7 +22,7 @@ class "UIMachine" (Window)
 
 function UIMachine:UIMachine(ui, machine, room)
   self:Window()
-  
+
   local app = ui.app
   self.esc_closes = true
   self.machine = machine
@@ -34,7 +34,7 @@ function UIMachine:UIMachine(ui, machine, room)
   self:setDefaultPosition(-20, 30)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req03V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  
+
   self:addPanel(333,    0,   0) -- Dialog header
   self:addPanel(334,    0,  74) -- The next part
   for y = 131, 180, 7 do
@@ -55,7 +55,7 @@ function UIMachine:UIMachine(ui, machine, room)
   -- Close button
   self:addPanel(337, 146,  18):makeButton(0, 0, 24, 24, 338, self.close)
     :setTooltip(_S.tooltip.machine_window.close)
-  
+
   self:makeTooltip(_S.tooltip.machine_window.name, 18, 19, 139, 42)
   self:makeTooltip(_S.tooltip.machine_window.times_used, 18, 49, 139, 77)
   self:makeTooltip(_S.tooltip.machine_window.status, 24, 88, 128, 115)
@@ -65,7 +65,7 @@ function UIMachine:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
   local mach = self.machine
-  
+
   local font = self.white_font
   local output
   if self.room.needs_repair then
@@ -110,7 +110,7 @@ function UIMachine:replaceMachine()
   self.ui:addWindow(UIConfirmDialog(self.ui,
     _S.confirmation.replace_machine:format(machine.object_type.name, cost),
     --[[persistable:replace_machine_confirm_dialog]]function()
-      
+
       hosp:spendMoney(cost, _S.transactions.machine_replacement)
       machine.total_usage = 0
       machine.times_used = 0

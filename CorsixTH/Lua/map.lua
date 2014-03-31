@@ -132,7 +132,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
   local errors
   if type(level) == "number" then
     -- Playing the original campaign.
-    -- Add TH's base config if possible, otherwise our own config 
+    -- Add TH's base config if possible, otherwise our own config
     -- roughly corresponds to "full".
     errors, base_config = self:loadMapConfig(difficulty .. "00.SAM", base_config)
     -- If it couldn't be loaded the new difficulty level is full no matter what.
@@ -151,7 +151,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     self.level_name = _S.level_names[level]:upper()
     -- Check if we're using the demo files. If we are, that special config should be loaded.
     if self.app.using_demo_files then
-      -- Try to load our own configuration file for the demo. 
+      -- Try to load our own configuration file for the demo.
       local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "demo.level"
       errors, result = self:loadMapConfig(p, base_config, true)
       if errors then
@@ -426,13 +426,13 @@ end
 
 --[[!
   @arguments canvas, screen_x, screen_y, screen_width, screen_height, destination_x, destination_y
-  
+
   Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
-  
+
   -- Draw any debug overlays
   if self.debug_font and (self.debug_text or self.debug_flags) then
     local startX = 0

@@ -38,30 +38,30 @@ function UIMapEditor:UIMapEditor(ui)
   self.width = math.huge
   self.height = math.huge
   self.ui = ui
-  
+
   self.command_stack = CommandStack()
 
 
-  
+
   -- For when there are multiple things which could be sampled from a tile,
   -- keep track of the index of which one was most recently sampled, so that
   -- next time a different one is sampled.
   self.sample_i = 1
-  
+
   -- The block to put on the UI layer as a preview for what will be placed
   -- by the current drawing operation.
   self.block_brush_preview = 0
-  
+
   self:classifyBlocks()
-  
+
   -- A sprite table containing a "cell outline" sprite
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  
+
   -- Coordinates in Lua tile space of the mouse cursor.
   self.mouse_cell_x = 0
   self.mouse_cell_y = 0
 end
-  
+
 function UIMapEditor:classifyBlocks()
   -- Classify each block / tile with a type, subtype, and category.
   -- Type and subtype are used by this file, and by the UI code to determine
@@ -139,17 +139,17 @@ function UIMapEditor:classifyBlocks()
     block_info[i] = {"floor", "simple", "Outside"}
   end
   block_info[208].base = 3
--- adds street lights, could do with mirrors of these to have lamps facing different directions  
+-- adds street lights, could do with mirrors of these to have lamps facing different directions
   for i = 209, 210 do
   local pair
   local category = "External"
-  local dir = i % 2 == 0 and "north" or "west" 
-  if i ~= 209 then 
+  local dir = i % 2 == 0 and "north" or "west"
+  if i ~= 209 then
     pair = i - 1
-  end   
+  end
   block_info[i] = {"wall", dir, category, pair = pair}
   end
- 
+
   MapEditorSetBlocks(self.ui.app.map.blocks, block_info) -- pass data to UI
   self.block_info = block_info
 end
@@ -158,20 +158,20 @@ function UIMapEditor:draw(canvas, ...)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
-  
+
   Window.draw(self, canvas, ...)
 end
 
 
 function UIMapEditor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
-  
+
   local ui = self.ui
   local wxr, wyr = ui:ScreenToWorld(self.x + x, self.y + y)
   local wx = math_floor(wxr)
   local wy = math_floor(wyr)
   local map = self.ui.app.map
-  
+
   -- Update the stored state of cursor position, and trigger a repaint as the
   -- cell outline sprite should track the cursor position.
   if wx ~= self.mouse_cell_x or wy ~= self.mouse_cell_y then
@@ -227,7 +227,7 @@ function UIMapEditor:onMouseMove(x, y, dx, dy)
       repaint = true
     end
   end
-  
+
   return repaint
 end
 
@@ -262,7 +262,7 @@ function UIMapEditor:onMouseDown(button, x, y)
     self:setPaintRect(0, 0, 0, 0)
     repaint = true
   end
-  
+
   return Window.onMouseDown(self, button, x, y) or repaint
 end
 
@@ -279,7 +279,7 @@ function UIMapEditor:onMouseUp(button, x, y)
     self.command_stack:add(self.current_command)
     repaint = true
   end
-  
+
   return Window.onMouseUp(self, button, x, y) or repaint
 end
 
@@ -318,7 +318,7 @@ end
 function UIMapEditor:doLargePaint(x, y)
   -- Perform a "large" paint. At the moment, this is triggered by a double
   -- left click, and results in a floor tile "flood fill" operation.
-  
+
   -- Get the Lua tile coordinate of the tile to start filling from.
   x, y = self.ui:ScreenToWorld(x, y)
   x = math_floor(x)
@@ -326,7 +326,7 @@ function UIMapEditor:doLargePaint(x, y)
   if x <= 0 or y <= 0 then
     return
   end
-  
+
   -- The click which preceeded the double click should have set "old_floors"
   -- with the contents of the tile prior to the single click.
   if not self.old_floors then
@@ -349,12 +349,12 @@ function UIMapEditor:doLargePaint(x, y)
   if match_f == brush_f then
     return
   end
-  
+
   -- Reset the starting tile as to simplify the upcoming loop.
   self.current_command_cell:addTile(x, y, 1, match_f)
   map:setCell(x, y, 1, match_f)
-  
-  
+
+
   local to_visit = {[key] = {x, y}}
   local visited = {[key] = true}
   -- Mark the tiles beyond the edge of the map as visited, as to prevent the
@@ -412,13 +412,13 @@ function UIMapEditor:finishPaint(apply)
   local step_base_y = math.floor(self.paint_start_wy)
   local xstep = self.paint_step_x
   local ystep = self.paint_step_y
-  
+
   -- Determine what kind of thing is being painted.
   local is_wall = self.block_info[self.block_brush_preview]
   is_wall = is_wall and is_wall[1] == "wall" and is_wall[2]
   local is_simple_floor = self.block_info[self.block_brush_preview]
   is_simple_floor = is_simple_floor and is_simple_floor[1] == "floor" and is_simple_floor[2] == "simple"
-  
+
   -- To allow the double click handler to know what was present before the
   -- single click which preceeds it, the prior contents of the floor layer is
   -- saved.
@@ -500,7 +500,7 @@ function UIMapEditor:setPaintRect(x, y, w, h, xstep, ystep)
   local step_base_y = math.floor(self.paint_start_wy)
   xstep = xstep or old_xstep
   ystep = ystep or old_ystep
-  
+
   -- Create a rectangle which contains both the old and new rectangles, as
   -- this contains all tiles which may need to change.
   local left, right, top, bottom = x, x + w - 1, y, y + h - 1
@@ -518,7 +518,7 @@ function UIMapEditor:setPaintRect(x, y, w, h, xstep, ystep)
       bottom = rect.y + rect.h - 1
     end
   end
-  
+
   -- Determine what kind of thing is being painted
   local is_wall = self.block_info[self.block_brush_preview]
   local block_brush_preview_pair = is_wall and is_wall.pair
@@ -610,7 +610,7 @@ function UIMapEditor:sampleBlock(x, y)
       end
     end
   end
-  
+
   if wx == self.recent_sample_x and wy == self.recent_sample_y then
     self.sample_i = self.sample_i + 1
   else

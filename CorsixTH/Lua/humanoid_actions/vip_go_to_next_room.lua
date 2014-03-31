@@ -29,7 +29,7 @@ local function action_vip_go_to_next_room_start(action, humanoid)
   else
     -- Walk to the entrance of the room and stay there for a while.
     local x, y = humanoid.next_room:getEntranceXY()
-    local callback = --[[persistable:vip_next_room_enroute_cancel]] function() 
+    local callback = --[[persistable:vip_next_room_enroute_cancel]] function()
       humanoid:setNextAction({name = "idle"})
       humanoid.waiting = 1;
     end
@@ -58,11 +58,11 @@ local function action_vip_go_to_next_room_start(action, humanoid)
       end
     end
     humanoid:queueAction{
-      name = "idle", 
-      loop_callback = evaluate, 
+      name = "idle",
+      loop_callback = evaluate,
       direction = dir,
     }
-    
+
     -- Finish this action and start the above sequence.
     humanoid:finishAction()
   end

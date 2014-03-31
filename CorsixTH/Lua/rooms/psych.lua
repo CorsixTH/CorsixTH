@@ -79,11 +79,11 @@ end
 
 function PsychRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
-  
+
   local obj, ox, oy = self.world:findObjectNear(patient, "couch")
   patient:walkTo(ox, oy)
   patient:queueAction{name = "use_object", object = obj}
-  
+
   local duration = math.random(16, 72)
   local bookcase, bx, by
   local --[[persistable:psych_loop_callback]] function loop_callback()
@@ -130,7 +130,7 @@ function PsychRoom:commandEnteringPatient(patient)
     object = obj,
     loop_callback = loop_callback,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

@@ -37,7 +37,7 @@ end
 function Object:Object(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)
-  
+
   if etc == "map object" then
     if direction % 2 == 0 then
       direction = "north"
@@ -45,7 +45,7 @@ function Object:Object(world, object_type, x, y, direction, etc)
       direction = "west"
     end
   end
-  
+
   self.ticks = object_type.ticks
   self.object_type = object_type
   self.world = world
@@ -113,7 +113,7 @@ function Object.slaveMixinClass(class_method_table)
   local name = class.name(class_method_table)
   local super = class.superclass(class_method_table)
   local super_constructor = super[class.name(super)]
-  
+
   -- Constructor
   class_method_table[name] = function(self, world, object_type, x, y, direction, ...)
     super_constructor(self, world, object_type, x, y, direction, ...)
@@ -128,7 +128,7 @@ function Object.slaveMixinClass(class_method_table)
       self.slave.master = self
     end
   end
-  
+
   -- Slave -> Master redirects
   local function slave_to_master(method)
     local super_method = super[method]
@@ -144,7 +144,7 @@ function Object.slaveMixinClass(class_method_table)
   slave_to_master("onClick")
   slave_to_master("updateDynamicInfo")
   slave_to_master("getDynamicInfo")
-  
+
   -- Master -> Slave notifications
   local function master_to_slave(method)
     local super_method = super[method]
@@ -181,7 +181,7 @@ function Object.slaveMixinClass(class_method_table)
     end
     return super.setTile(self, x, y)
   end
-  
+
   return slave_to_master, master_to_slave
 end
 
@@ -293,13 +293,13 @@ end
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, x, y)
     for i, xy in ipairs(object_footprint) do
-      if(xy[1] == x and xy[2] == y) then 
+      if(xy[1] == x and xy[2] == y) then
         return true
       end
-    end 
+    end
     return false
-  end 
-  
+  end
+
   local function isEmpty(table)
     for _, _ in pairs(table) do
       return false
@@ -314,7 +314,7 @@ function Object:setTile(x, y)
       return passable_flag == "travelEast" and "travelWest" or "travelEast"
     end
   end
-  
+
   local function setPassableFlags(passable_flag, x, y, next_x, next_y, value)
     local flags1 = {}
     flags1[passable_flag] = value
@@ -323,27 +323,27 @@ function Object:setTile(x, y)
     flags2[getComplementaryPassableFlag(passable_flag)] = value
     self.world.map.th:setCellFlags(next_x, next_y, flags2)
   end
-  
+
   local direction_parameters = {
             north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
             east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
             south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
             west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
             }
-            
+
   local direction = self.direction
   if self.object_type.thob == 50 and direction == "east" then
     direction = "west"
   end
-  
+
   if self.tile_x ~= nil then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
     if self.footprint then
       local map = self.world.map.th
       for _, xy in ipairs(self.footprint) do
         local x, y = self.tile_x + xy[1], self.tile_y + xy[2]
-        
-        if xy.only_side then 
+
+        if xy.only_side then
           if self.set_passable_flags then
             self.set_passable_flags = nil
             local par = direction_parameters[direction]
@@ -356,15 +356,15 @@ function Object:setTile(x, y)
         else
           local flags_to_set = {}
           for _, value in pairs(direction_parameters) do
-            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or 
+            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or
             xy.complete_cell or xy[value["needed_side"]] then
               flags_to_set[value["buildable_flag"]] = true
             end
           end
-    
+
           if not isEmpty(flags_to_set) then
             map:setCellFlags(x, y, flags_to_set)
-          end    
+          end
           if not map:getCellFlags(x, y).passable then
             map:setCellFlags(x, y, {
               buildable = true,
@@ -385,7 +385,7 @@ function Object:setTile(x, y)
   end
   self.tile_x = x
   self.tile_y = y
-  if x then 
+  if x then
     self.th:setDrawingLayer(self:getDrawingLayer())
     self.th:setTile(self.world.map.th, self:getRenderAttachTile())
     self.world:addObjectToTile(self, x, y)
@@ -397,14 +397,14 @@ function Object:setTile(x, y)
       local roomId = room and room.id
       local next_tile_x, next_tile_y = x,y
       local passable_flag
-      
+
       for _, xy in ipairs(self.footprint) do
         local change_flags = true
         local flags_to_set = {}
         local lx = x + xy[1]
         local ly = y + xy[2]
         local flag
-        
+
         if xy.optional then
           if optional_found then
             -- An optional tile has been accepted, we don't need anymore such tiles.
@@ -415,7 +415,7 @@ function Object:setTile(x, y)
             if xy.only_passable then
               flag = "passable"
             end
-            
+
             local cell_flags = map:getCellFlags(lx, ly, flags)[flag]
             local is_object_allowed = true
             if roomId and flags.roomId ~= roomId then
@@ -423,7 +423,7 @@ function Object:setTile(x, y)
             elseif xy.only_passable and not self.world.pathfinder:isReachableFromHospital(lx, ly) then
               is_object_allowed = false
             end
-            
+
             if is_object_allowed then
               change_flags = true
               optional_found = true
@@ -432,15 +432,15 @@ function Object:setTile(x, y)
             end
           end
         end
-        
+
         map:getCellFlags(lx, ly, flags)
         if xy.only_side then
           local par = direction_parameters[direction]
           flags_to_set[par["buildable_flag"]] = false
           passable_flag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
-        else 
+        else
           for _, value in pairs(direction_parameters) do
-            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or 
+            if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or
             xy.complete_cell or xy[value["needed_side"]] then
               if map:getCellFlags(x, y, flags)[value["buildable_flag"]] == 0 then
                 change_flags = false
@@ -448,10 +448,10 @@ function Object:setTile(x, y)
               flags_to_set[value["buildable_flag"]] = false
             end
           end
-        end 
-        
+        end
+
         if change_flags then
-          if not xy.only_side then 
+          if not xy.only_side then
             map:setCellFlags(lx, ly, {
               buildable = false,
               passable = not not xy.only_passable,
@@ -459,7 +459,7 @@ function Object:setTile(x, y)
           end
           if not isEmpty(flags_to_set) then
             map:setCellFlags(lx, ly, flags_to_set)
-          end    
+          end
           if xy.only_side then
             if map:getCellFlags(lx, ly)[passable_flag] == true then
               self.set_passable_flags = true
@@ -553,7 +553,7 @@ end
 
 -- If multiple_users_allowed is true: Removes the user specified from this object's list of reserved users.
 -- If the argument is nil it is assumed that the list should be emptied.
--- Note that if there are many humanoids reserving this object reserved_for might still be set after a 
+-- Note that if there are many humanoids reserving this object reserved_for might still be set after a
 -- call to this function.
 -- Otherwise: sets reserved_for to nil.
 function Object:removeReservedUser(user)
@@ -622,7 +622,7 @@ function Object:onClick(ui, button, data)
     local room = self:getRoom()
     window = window and window.visible and window
     local direction = self.direction
-    if (not room and window) 
+    if (not room and window)
     or (room and not (window and window.room == room) and not self.object_type.corridor_object)
     or (not room and not self.object_type.corridor_object) then
       return
@@ -636,14 +636,14 @@ function Object:onClick(ui, button, data)
     if self.object_type.class == "Plant" or self.object_type.class == "Machine" then
       local taskType = "watering"
       if self.object_type.class == "Machine" then
-        taskType = "repairing"    
+        taskType = "repairing"
       end
       local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, taskType)
       if index ~= -1 then
         self.hospital:removeHandymanTask(index, taskType)
       end
     end
-    
+
     self.picked_up = true
     self.world:destroyEntity(self)
     -- NB: the object has to be destroyed before updating/creating the window,
@@ -693,9 +693,9 @@ function Object:onDestroy()
     self.reserved_for:handleRemovedObject(self)
   end
   self.reserved_for = nil
-  
+
   Entity.onDestroy(self)
-  
+
 end
 
 function Object:afterLoad(old, new)
@@ -715,7 +715,7 @@ function Object:afterLoad(old, new)
       if object_type.class == "SideObject" then
         local flags = {buildable = true}
         self.world.map.th:setCellFlags(self.tile_x, self.tile_y, flags)
-      end         
+      end
       self:setTile(self.tile_x, self.tile_y)
     end
   end
@@ -727,8 +727,8 @@ local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
 function Object.processTypeDefinition(object_type)
   if object_type.id == "extinguisher"
   or object_type.id == "radiator"
-  or object_type.id == "plant" 
-  or object_type.id == "reception_desk" 
+  or object_type.id == "plant"
+  or object_type.id == "reception_desk"
   or object_type.id == "bench" then
     object_type.count_category = object_type.id
   elseif object_type.id ~= "bin"
@@ -757,7 +757,7 @@ function Object.processTypeDefinition(object_type)
       elseif not details.use_position then
         details.use_position = {0, 0}
       end
-      -- Set handyman repair tile 
+      -- Set handyman repair tile
       if object_type.default_strength and not details.handyman_position then
         details.handyman_position = details.use_position
       end

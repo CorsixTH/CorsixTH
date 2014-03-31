@@ -30,7 +30,7 @@ local assert, string_char, table_concat, unpack, type, pairs, ipairs
 -- the other Lua code.
 class "Graphics"
 
-local cursors_name = { 
+local cursors_name = {
   default = 1,
   clicked = 2,
   resize_room = 3,
@@ -86,7 +86,7 @@ function Graphics:Graphics(app)
   -- Cursors need to be reloaded after sprite sheets, as they are created
   -- from a sprite sheet.
   self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
-  
+
   self:loadFontFile()
 end
 
@@ -171,7 +171,7 @@ function Graphics:makeGreyscaleGhost(pal)
     local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
       local entry = entries[j]
-      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2 
+      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2
       if diff < g_diff then
         g_diff = diff
         g_index = j
@@ -189,7 +189,7 @@ function Graphics:loadPalette(dir, name)
     return self.cache.palette[name],
       self.cache.palette_greyscale_ghost[name]
   end
-  
+
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
@@ -213,15 +213,15 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   if self.cache.raw[name] then
     return self.cache.raw[name]
   end
-  
+
   width = width or 640
   height = height or 480
   dir = dir or "QData"
   local data = self.app:readDataFile(dir, name .. ".dat")
   data = data:sub(1, width * height)
-  
+
   local bitmap = TH.bitmap()
-  local palette 
+  local palette
   if pal and paldir then
     palette = self:loadPalette(paldir, pal)
   else
@@ -236,7 +236,7 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
     assert(bitmap:load(data, width, self.target))
   end
   self.reload_functions[bitmap] = reloader
-  
+
   self.cache.raw[name] = bitmap
   self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal}
   return bitmap
@@ -277,9 +277,9 @@ function Graphics:hasLanguageFont(font)
       -- file exists, it cannot be loaded or drawn.
       return false
     end
-    
+
     -- TODO: Handle more than one font
-    
+
     return not not self.ttf_font_data
   end
 end
@@ -359,7 +359,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
       x_sep, y_sep = nil
     end
   end
-  
+
   local font
   local use_bitmap_font = true
   if not sprite_table:isVisible(46) then -- uppercase M
@@ -389,7 +389,7 @@ function Graphics:loadAnimations(dir, prefix)
   if self.cache.anims[prefix] then
     return self.cache.anims[prefix]
   end
-  
+
   local sheet = self:loadSpriteTable(dir, prefix .. "Spr-0")
   local anims = TH.anims()
   anims:setSheet(sheet)
@@ -401,7 +401,7 @@ function Graphics:loadAnimations(dir, prefix)
   then
     error("Cannot load animations " .. prefix)
   end
-  
+
   self.cache.anims[prefix] = anims
   self.load_info[anims] = {self.loadAnimations, self, dir, prefix}
   return anims
@@ -412,7 +412,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   if cached then
     return cached
   end
-  
+
   local sheet = TH.sheet()
   local function reloader(sheet)
     sheet:setPalette(palette or self:loadPalette())
@@ -425,7 +425,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
   self.reload_functions[sheet] = reloader
   reloader(sheet)
-  
+
   if name ~= "SPointer" then
     self.cache.tabled[name] = sheet
   end
@@ -475,17 +475,17 @@ end
   setMarker(anim_number, position)
   setMarker(anim_number, start_position, end_position)
   setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
-  
+
   position should be a table; {x, y} for a tile position, {x, y, "px"} for a
   pixel position, with (0, 0) being the origin in both cases.
-  
+
   The first variant of setMarker sets the same marker for each frame.
   The second variant does linear interpolation of the two positions between
   the first frame and the last frame.
   The third variant does linear interpolation between keyframes, and then the
   final position for frames after the last keyframe. The keyframe arguments
   should be 0-based integers, as in the animation viewer.
-  
+
   To set the markers for multiple animations at once, the anim_number argument
   can be a table, in which case the marker is set for all values in the table.
   Alternatively, the values function (defined in utility.lua) can be used in

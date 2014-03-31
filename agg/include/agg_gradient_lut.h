@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -30,8 +30,8 @@ namespace agg
     public:
         typedef ColorT color_type;
 
-        color_interpolator(const color_type& c1, 
-                           const color_type& c2, 
+        color_interpolator(const color_type& c1,
+                           const color_type& c2,
                            unsigned len) :
             m_c1(c1),
             m_c2(c2),
@@ -63,8 +63,8 @@ namespace agg
     public:
         typedef rgba8 color_type;
 
-        color_interpolator(const color_type& c1, 
-                           const color_type& c2, 
+        color_interpolator(const color_type& c1,
+                           const color_type& c2,
                            unsigned len) :
             r(c1.r, c2.r, len),
             g(c1.g, c2.g, len),
@@ -93,8 +93,8 @@ namespace agg
     public:
         typedef gray8 color_type;
 
-        color_interpolator(const color_type& c1, 
-                           const color_type& c2, 
+        color_interpolator(const color_type& c1,
+                           const color_type& c2,
                            unsigned len) :
             v(c1.v, c2.v, len),
             a(c1.a, c2.a, len)
@@ -115,7 +115,7 @@ namespace agg
     };
 
     //============================================================gradient_lut
-    template<class ColorInterpolator, 
+    template<class ColorInterpolator,
              unsigned ColorLutSize=256> class gradient_lut
     {
     public:
@@ -127,10 +127,10 @@ namespace agg
         gradient_lut() : m_color_lut(color_lut_size) {}
 
         // Build Gradient Lut
-        // First, call remove_all(), then add_color() at least twice, 
-        // then build_lut(). Argument "offset" in add_color must be 
-        // in range [0...1] and defines a color stop as it is described 
-        // in SVG specification, section Gradients and Patterns. 
+        // First, call remove_all(), then add_color() at least twice,
+        // then build_lut(). Argument "offset" in add_color must be
+        // in range [0...1] and defines a color stop as it is described
+        // in SVG specification, section Gradients and Patterns.
         // The simplest linear gradient is:
         //    gradient_lut.add_color(0.0, start_color);
         //    gradient_lut.add_color(1.0, end_color);
@@ -139,17 +139,17 @@ namespace agg
         void add_color(double offset, const color_type& color);
         void build_lut();
 
-        // Size-index Interface. This class can be used directly as the 
-        // ColorF in span_gradient. All it needs is two access methods 
+        // Size-index Interface. This class can be used directly as the
+        // ColorF in span_gradient. All it needs is two access methods
         // size() and operator [].
         //--------------------------------------------------------------------
-        static unsigned size() 
-        { 
-            return color_lut_size; 
+        static unsigned size()
+        {
+            return color_lut_size;
         }
-        const color_type& operator [] (unsigned i) const 
-        { 
-            return m_color_lut[i]; 
+        const color_type& operator [] (unsigned i) const
+        {
+            return m_color_lut[i];
         }
 
     private:
@@ -160,7 +160,7 @@ namespace agg
             color_type color;
 
             color_point() {}
-            color_point(double off, const color_type& c) : 
+            color_point(double off, const color_type& c) :
                 offset(off), color(c)
             {
                 if(offset < 0.0) offset = 0.0;
@@ -189,8 +189,8 @@ namespace agg
     //------------------------------------------------------------------------
     template<class T, unsigned S>
     void gradient_lut<T,S>::remove_all()
-    { 
-        m_color_profile.remove_all(); 
+    {
+        m_color_profile.remove_all();
     }
 
     //------------------------------------------------------------------------
@@ -212,15 +212,15 @@ namespace agg
             unsigned start = uround(m_color_profile[0].offset * color_lut_size);
             unsigned end;
             color_type c = m_color_profile[0].color;
-            for(i = 0; i < start; i++) 
+            for(i = 0; i < start; i++)
             {
                 m_color_lut[i] = c;
             }
             for(i = 1; i < m_color_profile.size(); i++)
             {
                 end  = uround(m_color_profile[i].offset * color_lut_size);
-                interpolator_type ci(m_color_profile[i-1].color, 
-                                     m_color_profile[i  ].color, 
+                interpolator_type ci(m_color_profile[i-1].color,
+                                     m_color_profile[i  ].color,
                                      end - start + 1);
                 while(start < end)
                 {

@@ -17,32 +17,32 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. 
+SOFTWARE.
 
 -------------------------------------------------------------------------------
    A FEW NOTES
 -------------------------------------------------------------------------------
 
-As the Nowegian translation seemd very well structured, i've used that file. 
+As the Nowegian translation seemd very well structured, i've used that file.
 Thanks for the Norwegian translators for their work.
 
 -------------------------------------------------------------------------------
    READ BEFORE DOING ANY CHANGES
 -------------------------------------------------------------------------------
 
-Since the Hungarian language isn't in the original Theme Hospital game, this 
-file is split in two sections (A and B). The first section contains all the new 
-language strings, made by the Corsix-TH team, and the second section contains 
+Since the Hungarian language isn't in the original Theme Hospital game, this
+file is split in two sections (A and B). The first section contains all the new
+language strings, made by the Corsix-TH team, and the second section contains
 the override translation of all the original english strings.
 
 FORMATING AND HUNGARIAN LETTERS
-This file contains UTF-8 text. Make sure your editor is set to UTF-8. 
+This file contains UTF-8 text. Make sure your editor is set to UTF-8.
 
 
 -------------------------------------------------------------------------------
     Table of Contents
 -------------------------------------------------------------------------------
- 
+
  -- SECTION A - NEW STRINGS
 
    1. Global settings
@@ -52,11 +52,11 @@ This file contains UTF-8 text. Make sure your editor is set to UTF-8.
    5. Adviser
    6. Dynamic info
    7. Tooltip
- 
+
  -- SECTION B - OLD STRINGS (OVERRIDE)
- 
+
    Huge section with all original strings, translated from english.
- 
+
 
 
 -----------------------------------------------------------------------------]]
@@ -105,7 +105,7 @@ tooltip.fax.close     = "Ablak bezárása az üzenet törlése nélkül"
 tooltip.message.button    = "Bal klikk az üzenet megnyitásához"
 tooltip.message.button_dismiss  = "Bal klikk az üzenet megnyitásához, jobb klikk a figyelmen kívül hagyáshoz"
 
--- 4. Menu 
+-- 4. Menu
 menu_options = {
   lock_windows     = "  Ablak rögzítése  ",
   edge_scrolling     = "  Görgetés széleknél  ",
@@ -168,7 +168,7 @@ tooltip.objects.litter     = "Szemét: Egy haszontalan tárgy, amit a beteg azé
 
 -- Misc
 misc.not_yet_implemented   = "(Még nem beépített)"
-misc.no_heliport       = "Nem lett még új betegség felfedezve, vagy nincs helikopterleszálló ezen a pályán." 
+misc.no_heliport       = "Nem lett még új betegség felfedezve, vagy nincs helikopterleszálló ezen a pályán."
 
 
 -- Main menu
@@ -295,7 +295,7 @@ tooltip.cheats_window = {
     win_level = "Pálya megnyerése.",
   }
 }
-  
+
 new_game_window = {
   easy = "Rezidens (Könnyű)",
   medium = "Doktor (Közepes)",
@@ -325,7 +325,7 @@ tooltip.lua_console = {
 
 errors = {
   dialog_missing_graphics = "Sajnálom, a demó fájlok nem tartalmazzák ezt a párbeszédet",
-  save_prefix = "Hiba mentés közben", 
+  save_prefix = "Hiba mentés közben",
   load_prefix = "Hiba betöltés közben",
   map_file_missing = "Nem találom a %s fájlt ehhez a pályához!",
   minimum_screen_size = "Kérlek írj be olyan felbontást ami nagyobb mint 640x480.",
@@ -343,7 +343,7 @@ information = {
   cannot_restart = "Sajnos ez az egyedi pálya az újrakezdés funkció implementálása előtt lett mentve.",
   level_lost = {
     "A fenébe! Elbuktál a pályán. Több szerencsét legközelebb!",
-    "A vesztés oka:", 
+    "A vesztés oka:",
     reputation = "A hírneved %d alá esett.",
     balance = "A banki egyenleged %d alá esett.",
     percentage_killed = "Több mint %d százalékát ölted meg a betegeknek.",
@@ -504,7 +504,7 @@ staff_descriptions = {
      [14] = "Zsémbes, ravasz és mindenki agyára megy.",
      [15] = "Arogáns és felsőbbrendűsködő.",
   },
-} 
+}
 
 -- Staff list
 staff_list = {
@@ -621,7 +621,7 @@ graphs = {
   cures      = "Gyógyulások",
   deaths     = "Halálesetek",
   reputation = "Hírnév",
-  
+
   time_spans = {
     "1 óra",
     "12 óra",
@@ -673,7 +673,7 @@ town_map = {
   chat         = "Térképcsevegés",
   for_sale     = "Eladó",
   not_for_sale = "Nem eladó",
-  number       = "Telekszám", 
+  number       = "Telekszám",
   owner        = "Tulajdonos",
   area         = "Telekfelszín",
   price        = "Telekár",
@@ -687,7 +687,7 @@ rooms_short = {
   reception         = "Recepció",
   destroyed         = "Megsemmisült",
   corridor_objects  = "Folyosói tárgyak",
-  
+
   gps_office        = "Orvosi iroda",
   psychiatric       = "Pszichiátria",
   ward              = "Kórterem",
@@ -719,7 +719,7 @@ rooms_long = {
   general           = "ÁLtalános", -- unused?
   emergency         = "Vészhelyzet",
   corridors         = "Folyosó",
-  
+
   gps_office        = "Orvosi iroda",
   psychiatric       = "Pszichiátria",
   ward              = "Kórterem",
@@ -777,7 +777,7 @@ research = {
     improvements    = "Fejlesztések",
     specialisation  = "Specializáció",
   },
-  
+
   funds_allocation  = "Tőke elosztás",
   allocated_amount  = "Elosztott összeg",
 }
@@ -795,7 +795,7 @@ policy = {
   diag_termination  = "Diagnózis lezárása",
   staff_rest        = "Személyzet pihenőre küldése",
   staff_leave_rooms = "Személyzet szobákból való kiküldése",
-  
+
   sliders = {
     guess           = "Gyógykezelés megtippelése", -- belongs to diag_procedure
     send_home       = "Hazaküldés", -- also belongs to diag_procedure
@@ -966,7 +966,7 @@ high_score = {
   best_scores  = "Legjobbak csarnoka",
   worst_scores = "Szégyenfal",
   killed       = "Megölt", -- is this used?
-  
+
   categories = {
     money             = "Pénz",
     salary            = "Kereset",
@@ -1006,7 +1006,7 @@ casebook = {
 
 -- Tooltips
 tooltip = {
-  
+
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -1018,7 +1018,7 @@ tooltip = {
     cost               = "Ár",
     close              = "Bezárás",
   },
-  
+
   -- Toolbar
   toolbar = {
     bank_button        = "Bal gombbal a bankmenedzser-ablakod nyitod meg, jobbal pedig a banki kimutatást",
@@ -1037,7 +1037,7 @@ tooltip = {
     charts             = "Grafikonok",
     policy             = "Házirend",
   },
-  
+
   -- Hire staff window
   hire_staff_window = {
     doctors            = "Az elérhető doktorok áttekintése",
@@ -1056,7 +1056,7 @@ tooltip = {
     psychiatrist       = "Pszichológus",
     researcher         = "Kutató",
   },
-  
+
   -- Buy objects window
   buy_objects_window = {
     price              = "A tárgy ára",
@@ -1066,47 +1066,47 @@ tooltip = {
     increase           = "Eggyel több tárgy vásárlása ebből",
     decrease           = "Eggyel kevesebb tárgy vásárlása ebből",
   },
-  
+
   -- Staff list
   staff_list = {
     doctors            = "Az alkalmazott doktorok listájának megjelenítése",
     nurses             = "Az alkalmazott nővérek listájának megjelenítése",
     handymen           = "Az alkalmazott ezermesterek listájának megjelenítése",
     receptionists      = "Az alkalmazott recepciósok listájának megjelenítése",
-    
+
     happiness          = "A kiválasztott alkalmazottak boldogsága",
     tiredness          = "A kiválasztott alkalmazottak fáradtsága",
     ability            = "A kiválasztott alkalmazottak képessége",
     salary             = "Az alkalmazott jelenlegi fizetése",
-    
+
     happiness_2        = "Az alkalmazott morálja",
     tiredness_2        = "Az alkalmazottak fáradtsága",
     ability_2          = "Az alkalmazott képessége",
-    
+
     prev_person        = "Következő oldal",
     next_person        = "Előző oldal",
-    
+
     bonus              = "10 suzázalékos bónusz fizetése ennek az alkalmazottnak",
     sack               = "Az alkalmazott kirúgása",
     pay_rise           = "Az alkalmazott fizetésének megemelése 10 százalékkal",
-    
+
     close              = "Kilépés és visszatérés a játékba",
-    
+
     doctor_seniority   = "A doktor fokozata",
     detail             = "Részleteknek odafigyelés",
-    
+
     view_staff         = "Személyre közelítés",
-    
+
     surgeon            = "Képzett sebész",
     psychiatrist       = "Képzett pszichológus",
     researcher         = "Képzett kutató",
     surgeon_train      = "Sebésszé képzés mértéke: %d%%", -- %d (percentage trained)
     psychiatrist_train = "Pszichológussá képzés mértéke: %d%%", -- %d (percentage trained)
     researcher_train   = "Kutatóvá képzés mértéke: %d%%", -- %d (percentage trained)
-    
+
     skills             = "További készségek",
   },
-  
+
   -- Queue window
   queue_window = {
     num_in_queue       = "A sor hossza",
@@ -1127,7 +1127,7 @@ tooltip = {
       hospital_3       = "Beteg átirányítása egy másik kórházba",
     },
   },
-  
+
   -- Main menu
   main_menu = {
     new_game           = "Új kampány kezdése",
@@ -1185,8 +1185,8 @@ tooltip = {
     repair             = "Ezermester hívása, hogy megjavítsa a gépet",
     replace            = "Gép kicserélése",
   },
-  
-  
+
+
   -- Handyman window
   -- Spparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
@@ -1205,7 +1205,7 @@ tooltip = {
     sack               = "Kirúgás",
     pick_up            = "Felkapás",
   },
-  
+
   -- Place objects window
   place_objects_window = {
     cancel             = "Mégsem",
@@ -1213,7 +1213,7 @@ tooltip = {
     pick_up            = "Tárgy felemelése",
     confirm            = "Megerősít",
   },
-  
+
   -- Casebook
   casebook = {
     up                 = "Felfelé gördítés",
@@ -1236,7 +1236,7 @@ tooltip = {
       machine          = "Ehhez a kezeléshez egy gépre van szükség",
       unknown          = "Egyelőre nem tudod, hogy miként kell kezelni ezt a betegséget",
     },
-    
+
     cure_requirement = {
       possible         = "Kezelni tudod ezt a betegséget",
       research_machine = "Fel kell találnod pár gépet, hogy ezt a betegséget kezelni tudd",
@@ -1250,12 +1250,12 @@ tooltip = {
       not_possible     = "Még nem tudod kezelni ezt a betegséget",
     },
   },
-  
+
   -- Statement
   statement = {
     close              = "Bezárás",
   },
-  
+
   -- Research
   research = {
     close              = "Kutatás ablak bezárása",
@@ -1271,7 +1271,7 @@ tooltip = {
     specialisation_inc = "Specializációs kutatás mértékének növelése",
     allocated_amount   = "A büdzséből erre szánt összeg",
   },
-  
+
   -- Graphs
   graphs = {
     close              = "Grafikonok ablak bezárása",
@@ -1300,7 +1300,7 @@ tooltip = {
     balance            = "Egyenleg",
     close              = "Térkép bezárása",
   },
-  
+
   -- Jukebox.
   jukebox = {
     current_title      = "Zenegép",
@@ -1311,7 +1311,7 @@ tooltip = {
     stop               = "Zenedoboz megállítása",
     loop               = "Lejtászás végtelenítése",
   },
-  
+
   -- Bank Manager
   bank_manager = {
     hospital_value     = "A kórház pillanatnyi értéke",
@@ -1328,7 +1328,7 @@ tooltip = {
     graph              = "%s várható kifizetéseinek grafikonja", -- %s (name of debitor)
     graph_return       = "Visszatérés az előző nézetre",
   },
-  
+
   -- Status
   status = {
     percentage_cured   = "A betegek %d% -át kell meggyógyítanod. Egyelőre %d% -ot gyógyítottál meg",
@@ -1346,7 +1346,7 @@ tooltip = {
     num_cured        = "Legalább %d beteget kell meggyógyítanod. Eddig ennyit gyógyítottál meg: %d",
     happiness          = "A kórházad betegeinek boldogsága",
   },
-  
+
   -- Policy
   policy = {
     close              = "Ablak bezárása",
@@ -1356,20 +1356,20 @@ tooltip = {
     diag_termination   = "Egy beteg diagnosztizálása addig tart, ameddig a doktorok bizonyossága el nem éri a FOLYAMAT LEÁLLÍTÁSA szintet vagy pedig meg nem próbálnak minden lehetséges diagnósztizáló eszközt",
     staff_rest         = "Azt mutatja, hogy mennyire lehet fáradt a személyzet, mielőtt a személyzeti szobába menne",
   },
-  
+
   -- Pay rise window
   pay_rise_window = {
     accept             = "Beleegyezés a fizetésemelésbe",
     decline            = "Nem emeled a fizetést - inkább kirúgod",
   },
-  
+
   -- Watch
   watch = {
     hospital_opening   = "Építési idő: ennyi időd maradt a kórházad nyitásáig. Kattintással azonnal megnyithatod a kórházat.",
     emergency          = "Vészhelyzet: azt mutatja, hogy mennyi időd van az összes veszélyeztetett beteged meggyógyítására",
     epidemic           = "Járvány: ennyi időd maradt felszámolni a járványt. Ha az időd lejárt VAGY egy fertőző beteg elhagyja a kórházadat, egy tisztiorvos jön látogatóba. A gombbal az beoltás üzemmódot tudod be illetve kikapcsolni. Kattints egy betegre, hogy beoltasd egy nővérrel.",
   },
-  
+
   -- Rooms
   rooms = {
     gps_office         = "A betegek az orvosi irodában konzultálnak orvosaikkal és kapják meg leleteik eredményét",
@@ -1397,7 +1397,7 @@ tooltip = {
     toilets            = "Építs WC-t annak érdekében, hogy a betegeid ne csináljanak nagy felfordulást a kórházadban!",
     decontamination    = "Egy doktor kezeli a fertőtlenítő készüléket a radioaktív betegek gyógyításához",
   },
-  
+
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
@@ -1405,7 +1405,7 @@ tooltip = {
     cabinet              = "Szekrény: Kórlapokat, jegyzeteket és kutatási anyagokat tartalmaz.",
     door                 = "Ajtó: az emberek gyakran nyitják és csukják ezeket.",
     bench                = "Pad: helyet teremt a várakozó betegeknek, kényelmesebbé téve ezzel a múló perceket.",
-    table1               = "Asztal (eltávolított): magazinokat tartalmaz, hogy a betegeknek gyorsabban teljes az idő.", 
+    table1               = "Asztal (eltávolított): magazinokat tartalmaz, hogy a betegeknek gyorsabban teljes az idő.",
     chair                = "Szék: ide ül a beteg, hogy elmondja a bajait.",
     drinks_machine       = "Italautomata: Csökkenti a betegek szomját és egy kis bevételt hoz neked.",
     bed                  = "Ágy: az igazán beteg emberek ezen fekszenek.",
@@ -1437,20 +1437,20 @@ misc = {
   },
   done  = "Kész",
   pause = "Megállít",
-  
+
   send_message     = "Üzenet küldése %d játékosnak", -- %d (player number)
   send_message_all = "Üzenet küldése az összes játékosnak",
-  
+
   save_success = "Mentés sikeres",
   save_failed  = "HIBA: Mentés sikertelen",
-  
+
   hospital_open = "Korház megnyitott",
   out_of_sync   = "A játék kiesett a szinkronból",
-  
+
   load_failed  = "Nem tudtam betölteni az állást",
   low_res      = "Alacsony felbontás.",
   balance      = "Egyenleg:",
-  
+
   mouse        = "Egér",
   force        = "Kényszerít",
 }

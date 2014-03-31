@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local lfs = require "lfs"
 
---! A tree node representing a file (or directory) in the physical file-system 
+--! A tree node representing a file (or directory) in the physical file-system
 --  that meets a given file extension criterion.
 class "FilteredFileTreeNode" (FileTreeNode)
 
@@ -83,7 +83,7 @@ function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
 
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
-  
+
   -- Add the two column headers and make buttons on them.
   if show_dates then
     self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name)
@@ -178,7 +178,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   self:UIResizable(ui, h_size, 380, self.col_bg)
 
   self.default_button_sound = "selectx.wav"
-  
+
   local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
@@ -186,7 +186,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
-  
+
   self:addBevelPanel((h_size - 190) / 2, 10, 190, 20, col_caption):setLabel(title)
     .lowered = true
 
@@ -203,7 +203,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
       end
     end)
   self:addWindow(self.control)
-  
+
   -- Create the back button.
   self:addBevelPanel((h_size - 160) / 2, 340, 160, 30, self.col_bg):setLabel(_S.menu_list_window.back)
     :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)

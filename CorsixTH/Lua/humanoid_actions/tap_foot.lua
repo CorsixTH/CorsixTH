@@ -28,7 +28,7 @@ local function action_tap_foot_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.tap_foot_anim, "Error: foot tapping animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.tap_foot_anim, humanoid.last_move_direction == "east" and 0 or 1)

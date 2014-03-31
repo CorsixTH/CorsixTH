@@ -129,7 +129,7 @@ static int l_anims_draw(lua_State *L)
     int iX = luaL_checkint(L, 5);
     int iY = luaL_checkint(L, 6);
     int iFlags = luaL_optint(L, 7, 0);
-    
+
     pAnims->drawFrame(pCanvas, (unsigned int)iFrame, *pLayers, iX, iY, iFlags);
 
     lua_settop(L, 1);

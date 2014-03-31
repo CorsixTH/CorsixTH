@@ -33,33 +33,33 @@ object.idle_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0}, {0, -1, only_passable = true}, 
+    footprint = { {0, 0}, {0, -1, only_passable = true},
                   {0, 1, only_passable = true}, {1, 0, need_north_side = true, need_south_side = true},
-                  {-1, 0, need_north_side = true, need_south_side = true} 
+                  {-1, 0, need_north_side = true, need_south_side = true}
                 },
     use_position = {0, -1},
     use_position_secondary = {0, 1},
   },
   east = {
-    footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true}, 
-                  {0, 1, need_west_side = true, need_east_side = true}, {1, 0, only_passable = true}, 
-                  {-1, 0, only_passable = true} 
+    footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true},
+                  {0, 1, need_west_side = true, need_east_side = true}, {1, 0, only_passable = true},
+                  {-1, 0, only_passable = true}
                 },
     use_position = {1, 0},
     use_position_secondary = {-1, 0},
   },
   south = {
     footprint = { {0, 0}, {0, -1, only_passable = true}, {0, 1, only_passable = true},
-                  {1, 0, need_north_side = true, need_south_side = true}, 
-                  {-1, 0, need_north_side = true, need_south_side = true} 
+                  {1, 0, need_north_side = true, need_south_side = true},
+                  {-1, 0, need_north_side = true, need_south_side = true}
                 },
     use_position = {0, 1},
     use_position_secondary = {0, -1},
   },
   west = {
     footprint = { {0, 0}, {0, -1, need_west_side = true, need_east_side = true},
-                   {0, 1, need_west_side = true, need_east_side = true}, 
-                  {1, 0, only_passable = true}, {-1, 0, only_passable = true} 
+                   {0, 1, need_west_side = true, need_east_side = true},
+                  {1, 0, only_passable = true}, {-1, 0, only_passable = true}
                 },
     use_position = {-1, 0},
     use_position_secondary = {1, 0},
@@ -125,7 +125,7 @@ function ReceptionDesk:checkForNearbyStaff()
     -- Already got staff, or a staff member is on the way
     return true
   end
-  
+
   local nearest_staff, nearest_d
   local world = self.world
   local use_x, use_y = self:getSecondaryUsageTile()
@@ -141,7 +141,7 @@ function ReceptionDesk:checkForNearbyStaff()
   if not nearest_staff then
     return false
   end
-  
+
   self:occupy(nearest_staff)
   return true
 end

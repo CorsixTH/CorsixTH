@@ -92,7 +92,7 @@ frmMain::frmMain()
 	pSplitter->SetSashPosition(250);
 	pMainSizer->Add(pSplitter, 1, wxEXPAND);
 
-	SetSizer(pMainSizer);	
+	SetSizer(pMainSizer);
 }
 
 void frmMain::_setFilename(const wxString& sFilename)
@@ -501,7 +501,7 @@ int frmMain::_l_init_with_lua_app(lua_State *L)
 	pFileButtons->AddButton(wxID_UNDO, wxT("Undo"), BITMAP("undo"));
 	pFileButtons->AddButton(wxID_REDO, wxT("Redo"), BITMAP("redo"));
 
-    
+
     wxRibbonPanel* pViewPanel = new wxRibbonPanel(pHomePage, wxID_ANY, wxT("View"));
     wxRibbonButtonBar* pViewButtons = new FullSizeButtonBar(pViewPanel, wxID_ANY);
     pViewButtons->AddToggleButton(ID_VIEW_WALLS, wxT("Walls"), BITMAP("transparent_walls"));
@@ -512,7 +512,7 @@ int frmMain::_l_init_with_lua_app(lua_State *L)
     pViewButtons->ToggleButton(ID_VIEW_PARCELS, pThis->m_bViewParcels = false);
     pViewButtons->AddToggleButton(ID_VIEW_POSITIONS, wxT("Positions"), BITMAP("positions"));
     pViewButtons->ToggleButton(ID_VIEW_POSITIONS, pThis->m_bViewPositions = false);
-    
+
 
 #undef BITMAP
     pThis->m_pRibbon->Realise();

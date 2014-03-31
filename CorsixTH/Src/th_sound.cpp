@@ -139,7 +139,7 @@ size_t THSoundArchive::getSoundDuration(size_t iIndex)
         return 0;
     }
 #define mul64(a, b) (static_cast<uint64_t>(a) * static_cast<uint64_t>(b))
-    return static_cast<size_t>(mul64(iWaveDataLength, 8000) / 
+    return static_cast<size_t>(mul64(iWaveDataLength, 8000) /
         mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate));
 #undef mul64
 }

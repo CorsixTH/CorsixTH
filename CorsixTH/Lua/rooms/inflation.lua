@@ -52,7 +52,7 @@ function InflationRoom:commandEnteringPatient(patient)
   local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
   local orientation = inflator.object_type.orientations[inflator.direction]
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
-  
+
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
   staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
@@ -66,7 +66,7 @@ function InflationRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

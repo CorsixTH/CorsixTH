@@ -218,7 +218,7 @@ static int l_load_music_async(lua_State *L)
             [2] = callback_function,
             [3] = empty music_t userdata,
           }
-        
+
         New thread will load music, and inform the main loop, which will then
         call the callback and remove the new entries from the registry.
     */

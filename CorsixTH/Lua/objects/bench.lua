@@ -181,13 +181,13 @@ function Bench:onDestroy()
   end
 
   -- if patient is heading for the destroyed bench then do the same
-  -- things as if they were sitting on it 
+  -- things as if they were sitting on it
   if self.reserved_for ~= nil then
     self.reserved_for:handleRemovedObject(self)
     self:removeUser(self.reserved_for)
   end
 
-  
+
   Object.onDestroy(self)
 end
 

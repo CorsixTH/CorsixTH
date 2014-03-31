@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -13,12 +13,12 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 //
-// Adaptation for high precision colors has been sponsored by 
+// Adaptation for high precision colors has been sponsored by
 // Liberty Technology Systems, Inc., visit http://lib-sys.com
 //
 // Liberty Technology Systems, Inc. is the provider of
 // PostScript and PDF technology for software developers.
-// 
+//
 //----------------------------------------------------------------------------
 
 #ifndef AGG_PIXFMT_RGB_PACKED_INCLUDED
@@ -39,9 +39,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int16u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type rgb = *p;
@@ -56,15 +56,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xF8) << 7) | 
-                                ((g & 0xF8) << 2) | 
+            return (pixel_type)(((r & 0xF8) << 7) |
+                                ((g & 0xF8) << 2) |
                                  (b >> 3) | 0x8000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 7) & 0xF8, 
-                              (p >> 2) & 0xF8, 
+            return color_type((p >> 7) & 0xF8,
+                              (p >> 2) & 0xF8,
                               (p << 3) & 0xF8);
         }
     };
@@ -78,9 +78,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int16u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -96,15 +96,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xF8) << 7) | 
-                                ((g & 0xF8) << 2) | 
+            return (pixel_type)(((r & 0xF8) << 7) |
+                                ((g & 0xF8) << 2) |
                                  (b >> 3) | 0x8000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 7) & 0xF8, 
-                              (p >> 2) & 0xF8, 
+            return color_type((p >> 7) & 0xF8,
+                              (p >> 2) & 0xF8,
                               (p << 3) & 0xF8);
         }
     };
@@ -125,9 +125,9 @@ namespace agg
         blender_rgb555_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type rgb = *p;
@@ -142,15 +142,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xF8) << 7) | 
-                                ((g & 0xF8) << 2) | 
+            return (pixel_type)(((r & 0xF8) << 7) |
+                                ((g & 0xF8) << 2) |
                                  (b >> 3) | 0x8000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 7) & 0xF8, 
-                              (p >> 2) & 0xF8, 
+            return color_type((p >> 7) & 0xF8,
+                              (p >> 2) & 0xF8,
                               (p << 3) & 0xF8);
         }
 
@@ -170,9 +170,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int16u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type rgb = *p;
@@ -192,8 +192,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 8) & 0xF8, 
-                              (p >> 3) & 0xFC, 
+            return color_type((p >> 8) & 0xF8,
+                              (p >> 3) & 0xFC,
                               (p << 3) & 0xF8);
         }
     };
@@ -208,9 +208,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int16u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -231,8 +231,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 8) & 0xF8, 
-                              (p >> 3) & 0xFC, 
+            return color_type((p >> 8) & 0xF8,
+                              (p >> 3) & 0xFC,
                               (p << 3) & 0xF8);
         }
     };
@@ -252,9 +252,9 @@ namespace agg
         blender_rgb565_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type rgb = *p;
@@ -274,8 +274,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 8) & 0xF8, 
-                              (p >> 3) & 0xFC, 
+            return color_type((p >> 8) & 0xF8,
+                              (p >> 3) & 0xFC,
                               (p << 3) & 0xF8);
         }
 
@@ -293,9 +293,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type rgb = *p;
@@ -310,15 +310,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((r & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (b >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 14) & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p >> 14) & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p << 6)  & 0xFFC0);
         }
     };
@@ -333,9 +333,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -352,15 +352,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((r & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (b >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 14) & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p >> 14) & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p << 6)  & 0xFFC0);
         }
     };
@@ -380,9 +380,9 @@ namespace agg
         blender_rgbAAA_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type rgb = *p;
@@ -397,15 +397,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((r & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((r & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (b >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 14) & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p >> 14) & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p << 6)  & 0xFFC0);
         }
     private:
@@ -421,9 +421,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type bgr = *p;
@@ -438,15 +438,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((b & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((b & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (r >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p << 6)  & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p << 6)  & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p >> 14) & 0xFFC0);
         }
     };
@@ -461,9 +461,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -480,15 +480,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((b & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((b & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (r >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p << 6)  & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p << 6)  & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p >> 14) & 0xFFC0);
         }
     };
@@ -508,9 +508,9 @@ namespace agg
         blender_bgrAAA_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type bgr = *p;
@@ -525,15 +525,15 @@ namespace agg
 
         static AGG_INLINE pixel_type make_pix(unsigned r, unsigned g, unsigned b)
         {
-            return (pixel_type)(((b & 0xFFC0) << 14) | 
-                                ((g & 0xFFC0) << 4) | 
+            return (pixel_type)(((b & 0xFFC0) << 14) |
+                                ((g & 0xFFC0) << 4) |
                                  (r >> 6) | 0xC0000000);
         }
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p << 6)  & 0xFFC0, 
-                              (p >> 4)  & 0xFFC0, 
+            return color_type((p << 6)  & 0xFFC0,
+                              (p >> 4)  & 0xFFC0,
                               (p >> 14) & 0xFFC0);
         }
 
@@ -551,9 +551,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type rgb = *p;
@@ -573,8 +573,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 16) & 0xFFE0, 
-                              (p >> 5)  & 0xFFE0, 
+            return color_type((p >> 16) & 0xFFE0,
+                              (p >> 5)  & 0xFFE0,
                               (p << 6)  & 0xFFC0);
         }
     };
@@ -588,9 +588,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -612,8 +612,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 16) & 0xFFE0, 
-                              (p >> 5)  & 0xFFE0, 
+            return color_type((p >> 16) & 0xFFE0,
+                              (p >> 5)  & 0xFFE0,
                               (p << 6)  & 0xFFC0);
         }
     };
@@ -633,9 +633,9 @@ namespace agg
         blender_rgbBBA_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type rgb = *p;
@@ -655,8 +655,8 @@ namespace agg
 
         static AGG_INLINE color_type make_color(pixel_type p)
         {
-            return color_type((p >> 16) & 0xFFE0, 
-                              (p >> 5)  & 0xFFE0, 
+            return color_type((p >> 16) & 0xFFE0,
+                              (p >> 5)  & 0xFFE0,
                               (p << 6)  & 0xFFC0);
         }
 
@@ -673,9 +673,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned)
         {
             pixel_type bgr = *p;
@@ -696,7 +696,7 @@ namespace agg
         static AGG_INLINE color_type make_color(pixel_type p)
         {
             return color_type((p << 5)  & 0xFFE0,
-                              (p >> 6)  & 0xFFE0, 
+                              (p >> 6)  & 0xFFE0,
                               (p >> 16) & 0xFFC0);
         }
     };
@@ -710,9 +710,9 @@ namespace agg
         typedef color_type::calc_type calc_type;
         typedef int32u pixel_type;
 
-        static AGG_INLINE void blend_pix(pixel_type* p, 
+        static AGG_INLINE void blend_pix(pixel_type* p,
                                          unsigned cr, unsigned cg, unsigned cb,
-                                         unsigned alpha, 
+                                         unsigned alpha,
                                          unsigned cover)
         {
             alpha = color_type::base_mask - alpha;
@@ -735,7 +735,7 @@ namespace agg
         static AGG_INLINE color_type make_color(pixel_type p)
         {
             return color_type((p << 5)  & 0xFFE0,
-                              (p >> 6)  & 0xFFE0, 
+                              (p >> 6)  & 0xFFE0,
                               (p >> 16) & 0xFFC0);
         }
     };
@@ -755,9 +755,9 @@ namespace agg
         blender_bgrABB_gamma() : m_gamma(0) {}
         void gamma(const gamma_type& g) { m_gamma = &g; }
 
-        AGG_INLINE void blend_pix(pixel_type* p, 
+        AGG_INLINE void blend_pix(pixel_type* p,
                                   unsigned cr, unsigned cg, unsigned cb,
-                                  unsigned alpha, 
+                                  unsigned alpha,
                                   unsigned)
         {
             pixel_type bgr = *p;
@@ -778,7 +778,7 @@ namespace agg
         static AGG_INLINE color_type make_color(pixel_type p)
         {
             return color_type((p << 5)  & 0xFFE0,
-                              (p >> 6)  & 0xFFE0, 
+                              (p >> 6)  & 0xFFE0,
                               (p >> 16) & 0xFFC0);
         }
 
@@ -787,7 +787,7 @@ namespace agg
     };
 
 
-    
+
     //===========================================pixfmt_alpha_blend_rgb_packed
     template<class Blender,  class RenBuf> class pixfmt_alpha_blend_rgb_packed
     {
@@ -800,7 +800,7 @@ namespace agg
         typedef int                               order_type; // A fake one
         typedef typename color_type::value_type   value_type;
         typedef typename color_type::calc_type    calc_type;
-        enum base_scale_e 
+        enum base_scale_e
         {
             base_shift = color_type::base_shift,
             base_scale = color_type::base_scale,
@@ -839,7 +839,7 @@ namespace agg
             if(r.clip(rect_i(0, 0, pixf.width()-1, pixf.height()-1)))
             {
                 int stride = pixf.stride();
-                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1), 
+                m_rbuf->attach(pixf.pix_ptr(r.x1, stride < 0 ? r.y2 : r.y1),
                                (r.x2 - r.x1) + 1,
                                (r.y2 - r.y1) + 1,
                                stride);
@@ -887,7 +887,7 @@ namespace agg
         AGG_INLINE void copy_pixel(int x, int y, const color_type& c)
         {
             ((pixel_type*)
-                m_rbuf->row_ptr(x, y, 1))[x] = 
+                m_rbuf->row_ptr(x, y, 1))[x] =
                     m_blender.make_pix(c.r, c.g, c.b);
         }
 
@@ -898,8 +898,8 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void copy_hline(int x, int y, 
-                                   unsigned len, 
+        AGG_INLINE void copy_hline(int x, int y,
+                                   unsigned len,
                                    const color_type& c)
         {
             pixel_type* p = (pixel_type*)m_rbuf->row_ptr(x, y, len) + x;
@@ -913,7 +913,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         AGG_INLINE void copy_vline(int x, int y,
-                                   unsigned len, 
+                                   unsigned len,
                                    const color_type& c)
         {
             pixel_type v = m_blender.make_pix(c.r, c.g, c.b);
@@ -927,7 +927,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_hline(int x, int y,
-                         unsigned len, 
+                         unsigned len,
                          const color_type& c,
                          int8u cover)
         {
@@ -958,7 +958,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_vline(int x, int y,
-                         unsigned len, 
+                         unsigned len,
                          const color_type& c,
                          int8u cover)
         {
@@ -979,7 +979,7 @@ namespace agg
                     do
                     {
                         m_blender.blend_pix(
-                            (pixel_type*)m_rbuf->row_ptr(x, y++, 1), 
+                            (pixel_type*)m_rbuf->row_ptr(x, y++, 1),
                             c.r, c.g, c.b, alpha, cover);
                     }
                     while(--len);
@@ -989,12 +989,12 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_solid_hspan(int x, int y,
-                               unsigned len, 
+                               unsigned len,
                                const color_type& c,
                                const int8u* covers)
         {
             pixel_type* p = (pixel_type*)m_rbuf->row_ptr(x, y, len) + x;
-            do 
+            do
             {
                 copy_or_blend_pix(p, c, *covers++);
                 ++p;
@@ -1004,13 +1004,13 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_solid_vspan(int x, int y,
-                               unsigned len, 
+                               unsigned len,
                                const color_type& c,
                                const int8u* covers)
         {
-            do 
+            do
             {
-                copy_or_blend_pix((pixel_type*)m_rbuf->row_ptr(x, y++, 1) + x, 
+                copy_or_blend_pix((pixel_type*)m_rbuf->row_ptr(x, y++, 1) + x,
                                   c, *covers++);
             }
             while(--len);
@@ -1018,11 +1018,11 @@ namespace agg
 
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y,
-                              unsigned len, 
+                              unsigned len,
                               const color_type* colors)
         {
             pixel_type* p = (pixel_type*)m_rbuf->row_ptr(x, y, len) + x;
-            do 
+            do
             {
                 *p++ = m_blender.make_pix(colors->r, colors->g, colors->b);
                 ++colors;
@@ -1032,10 +1032,10 @@ namespace agg
 
         //--------------------------------------------------------------------
         void copy_color_vspan(int x, int y,
-                              unsigned len, 
+                              unsigned len,
                               const color_type* colors)
         {
-            do 
+            do
             {
                 pixel_type* p = (pixel_type*)m_rbuf->row_ptr(x, y++, 1) + x;
                 *p = m_blender.make_pix(colors->r, colors->g, colors->b);
@@ -1046,13 +1046,13 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_color_hspan(int x, int y,
-                               unsigned len, 
+                               unsigned len,
                                const color_type* colors,
                                const int8u* covers,
                                int8u cover)
         {
             pixel_type* p = (pixel_type*)m_rbuf->row_ptr(x, y, len) + x;
-            do 
+            do
             {
                 copy_or_blend_pix(p++, *colors++, covers ? *covers++ : cover);
             }
@@ -1061,22 +1061,22 @@ namespace agg
 
         //--------------------------------------------------------------------
         void blend_color_vspan(int x, int y,
-                               unsigned len, 
+                               unsigned len,
                                const color_type* colors,
                                const int8u* covers,
                                int8u cover)
         {
-            do 
+            do
             {
-                copy_or_blend_pix((pixel_type*)m_rbuf->row_ptr(x, y++, 1) + x, 
+                copy_or_blend_pix((pixel_type*)m_rbuf->row_ptr(x, y++, 1) + x,
                                   *colors++, covers ? *covers++ : cover);
             }
             while(--len);
         }
-        
+
         //--------------------------------------------------------------------
         template<class RenBuf2>
-        void copy_from(const RenBuf2& from, 
+        void copy_from(const RenBuf2& from,
                        int xdst, int ydst,
                        int xsrc, int ysrc,
                        unsigned len)
@@ -1084,15 +1084,15 @@ namespace agg
             const int8u* p = from.row_ptr(ysrc);
             if(p)
             {
-                memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width, 
-                        p + xsrc * pix_width, 
+                memmove(m_rbuf->row_ptr(xdst, ydst, len) + xdst * pix_width,
+                        p + xsrc * pix_width,
                         len * pix_width);
             }
         }
 
         //--------------------------------------------------------------------
         template<class SrcPixelFormatRenderer>
-        void blend_from(const SrcPixelFormatRenderer& from, 
+        void blend_from(const SrcPixelFormatRenderer& from,
                         int xdst, int ydst,
                         int xsrc, int ysrc,
                         unsigned len,
@@ -1104,22 +1104,22 @@ namespace agg
             if(psrc)
             {
                 psrc += xsrc * 4;
-                pixel_type* pdst = 
+                pixel_type* pdst =
                     (pixel_type*)m_rbuf->row_ptr(xdst, ydst, len) + xdst;
-                do 
+                do
                 {
                     value_type alpha = psrc[src_order::A];
                     if(alpha)
                     {
                         if(alpha == base_mask && cover == 255)
                         {
-                            *pdst = m_blender.make_pix(psrc[src_order::R], 
+                            *pdst = m_blender.make_pix(psrc[src_order::R],
                                                        psrc[src_order::G],
                                                        psrc[src_order::B]);
                         }
                         else
                         {
-                            m_blender.blend_pix(pdst, 
+                            m_blender.blend_pix(pdst,
                                                 psrc[src_order::R],
                                                 psrc[src_order::G],
                                                 psrc[src_order::B],
@@ -1136,7 +1136,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         template<class SrcPixelFormatRenderer>
-        void blend_from_color(const SrcPixelFormatRenderer& from, 
+        void blend_from_color(const SrcPixelFormatRenderer& from,
                               const color_type& color,
                               int xdst, int ydst,
                               int xsrc, int ysrc,
@@ -1147,12 +1147,12 @@ namespace agg
             const src_value_type* psrc = (src_value_type*)from.row_ptr(ysrc);
             if(psrc)
             {
-                pixel_type* pdst = 
+                pixel_type* pdst =
                     (pixel_type*)m_rbuf->row_ptr(xdst, ydst, len) + xdst;
 
-                do 
+                do
                 {
-                    m_blender.blend_pix(pdst, 
+                    m_blender.blend_pix(pdst,
                                         color.r, color.g, color.b, color.a,
                                         cover);
                     ++psrc;
@@ -1164,7 +1164,7 @@ namespace agg
 
         //--------------------------------------------------------------------
         template<class SrcPixelFormatRenderer>
-        void blend_from_lut(const SrcPixelFormatRenderer& from, 
+        void blend_from_lut(const SrcPixelFormatRenderer& from,
                             const color_type* color_lut,
                             int xdst, int ydst,
                             int xsrc, int ysrc,
@@ -1175,13 +1175,13 @@ namespace agg
             const src_value_type* psrc = (src_value_type*)from.row_ptr(ysrc);
             if(psrc)
             {
-                pixel_type* pdst = 
+                pixel_type* pdst =
                     (pixel_type*)m_rbuf->row_ptr(xdst, ydst, len) + xdst;
 
-                do 
+                do
                 {
                     const color_type& color = color_lut[*psrc];
-                    m_blender.blend_pix(pdst, 
+                    m_blender.blend_pix(pdst,
                                         color.r, color.g, color.b, color.a,
                                         cover);
                     ++psrc;
@@ -1216,14 +1216,14 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_rgb555_gamma
-    template<class Gamma> class pixfmt_rgb555_gamma : 
-    public pixfmt_alpha_blend_rgb_packed<blender_rgb555_gamma<Gamma>, 
+    template<class Gamma> class pixfmt_rgb555_gamma :
+    public pixfmt_alpha_blend_rgb_packed<blender_rgb555_gamma<Gamma>,
                                          rendering_buffer>
     {
     public:
         pixfmt_rgb555_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_rgb555_gamma<Gamma>, 
-                                          rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_rgb555_gamma<Gamma>,
+                                          rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }
@@ -1231,12 +1231,12 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_rgb565_gamma
-    template<class Gamma> class pixfmt_rgb565_gamma : 
+    template<class Gamma> class pixfmt_rgb565_gamma :
     public pixfmt_alpha_blend_rgb_packed<blender_rgb565_gamma<Gamma>, rendering_buffer>
     {
     public:
         pixfmt_rgb565_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_rgb565_gamma<Gamma>, rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_rgb565_gamma<Gamma>, rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }
@@ -1244,14 +1244,14 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_rgbAAA_gamma
-    template<class Gamma> class pixfmt_rgbAAA_gamma : 
-    public pixfmt_alpha_blend_rgb_packed<blender_rgbAAA_gamma<Gamma>, 
+    template<class Gamma> class pixfmt_rgbAAA_gamma :
+    public pixfmt_alpha_blend_rgb_packed<blender_rgbAAA_gamma<Gamma>,
                                          rendering_buffer>
     {
     public:
         pixfmt_rgbAAA_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_rgbAAA_gamma<Gamma>, 
-                                          rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_rgbAAA_gamma<Gamma>,
+                                          rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }
@@ -1259,14 +1259,14 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_bgrAAA_gamma
-    template<class Gamma> class pixfmt_bgrAAA_gamma : 
-    public pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_gamma<Gamma>, 
+    template<class Gamma> class pixfmt_bgrAAA_gamma :
+    public pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_gamma<Gamma>,
                                          rendering_buffer>
     {
     public:
         pixfmt_bgrAAA_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_gamma<Gamma>, 
-                                          rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_gamma<Gamma>,
+                                          rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }
@@ -1274,14 +1274,14 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_rgbBBA_gamma
-    template<class Gamma> class pixfmt_rgbBBA_gamma : 
-    public pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_gamma<Gamma>, 
+    template<class Gamma> class pixfmt_rgbBBA_gamma :
+    public pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_gamma<Gamma>,
                                          rendering_buffer>
     {
     public:
         pixfmt_rgbBBA_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_gamma<Gamma>, 
-                                          rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_gamma<Gamma>,
+                                          rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }
@@ -1289,14 +1289,14 @@ namespace agg
 
 
     //-----------------------------------------------------pixfmt_bgrABB_gamma
-    template<class Gamma> class pixfmt_bgrABB_gamma : 
-    public pixfmt_alpha_blend_rgb_packed<blender_bgrABB_gamma<Gamma>, 
+    template<class Gamma> class pixfmt_bgrABB_gamma :
+    public pixfmt_alpha_blend_rgb_packed<blender_bgrABB_gamma<Gamma>,
                                          rendering_buffer>
     {
     public:
         pixfmt_bgrABB_gamma(rendering_buffer& rb, const Gamma& g) :
-            pixfmt_alpha_blend_rgb_packed<blender_bgrABB_gamma<Gamma>, 
-                                          rendering_buffer>(rb) 
+            pixfmt_alpha_blend_rgb_packed<blender_bgrABB_gamma<Gamma>,
+                                          rendering_buffer>(rb)
         {
             this->blender().gamma(g);
         }

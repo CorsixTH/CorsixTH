@@ -36,10 +36,10 @@ function UIPolicy:UIPolicy(ui, disease_selection)
     self:close()
     return
   end
-  
+
   local hosp = ui.hospital
   self.hospital = hosp
-  
+
   local --[[persistable:hospital_policy_allow_staff]] function allowStaff(name, state, btn)
     if name == "Allow" then
       if self.prohibit_button.toggled then -- Changing setting from prohibit to allow
@@ -57,24 +57,24 @@ function UIPolicy:UIPolicy(ui, disease_selection)
       end
     end
   end
-  
+
   -- Buttons
   self:addPanel(0, 607, 447):makeButton(0, 0, 26, 26, 6, self.close):setTooltip(_S.tooltip.policy.close)
   self.allow_button = self:addPanel(0, 348, 379):makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow"):setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
   self.prohibit_button = self:addPanel(0, 395, 379):makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit"):setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
-  
+
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
   else
     self.prohibit_button:toggle()
   end
-  
+
   -- Slider positions
   local guess = 129 + hosp.policies["guess_cure"]*299
   local home = 129 + hosp.policies["send_home"]*299
   local stop = 124 + (hosp.policies["stop_procedure"] - 1)*299
   local staffroom = 149 + hosp.policies["goto_staffroom"]*250
-  
+
   -- Sliders
   self.sliders = {}
   self.sliders["guess_cure"] = self:addPanel(2, guess, 119, 82, 44)
@@ -82,7 +82,7 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["stop_procedure"] = self:addPanel(3, stop, 210, 92, 28)
   self.sliders["goto_staffroom"] = self:addPanel(3, staffroom, 285, 92, 28)
   self.sliders["guess_cure"].min_x = home
-  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set when 
+  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set when
   -- windows is closed.
   self.sliders["guess_cure"].max_x = 428
   self.sliders["send_home"].min_x = 129
@@ -93,7 +93,7 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["stop_procedure"].addition = true -- This value goes from 1 to 2.
   self.sliders["goto_staffroom"].min_x = 149
   self.sliders["goto_staffroom"].max_x = 399
-  
+
   -- Tooltips for slider bars
   self:makeTooltip(_S.tooltip.policy.diag_procedure,   161, 119, 479, 174)
   self:makeTooltip(_S.tooltip.policy.diag_termination, 161, 210, 479, 249)
@@ -104,7 +104,7 @@ function UIPolicy:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
+
   local text = self.text_font
   local label = self.label_font
 
@@ -117,7 +117,7 @@ function UIPolicy:draw(canvas, x, y)
   label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
   added_x, added_y = self.sliders["goto_staffroom"].x, self.sliders["goto_staffroom"].y
   label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
-  
+
   -- All other text
   text:draw(canvas, _S.policy.header,            x + 160, y + 78, 300, 0)
   text:draw(canvas, _S.policy.diag_procedure,    x + 161, y + 100)

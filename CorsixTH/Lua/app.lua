@@ -69,7 +69,7 @@ end
 
 function App:init()
   -- App initialisation 1st goal: Get the loading screen up
-  
+
   print("")
   print("")
   print("---------------------------------------------------------------")
@@ -99,11 +99,11 @@ function App:init()
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
-  
+
   self:initSavegameDir()
-  
+
   self:initScreenshotsDir()
-  
+
   -- Create the window
   if not SDL.init("audio", "video", "timer") then
     return false, "Cannot initialise SDL"
@@ -150,13 +150,13 @@ function App:init()
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
-  
-  
+
+
   -- Prereq 2: Load and initialise the graphics subsystem
   dofile "persistance"
   dofile "graphics"
   self.gfx = Graphics(self)
-  
+
   -- Put up the loading screen
   if good_install_folder then
     self.video:startFrame()
@@ -180,15 +180,15 @@ function App:init()
       self.video:endFrame()
     end
   end
-  
+
   -- App initialisation 2nd goal: Load remaining systems and data in an appropriate order
-  
+
   math.randomseed(os.time() + SDL.getTicks())
   -- Add math.n_random globally. It generates pseudo random normally distributed
   -- numbers using the Box-Muller transform.
   strict_declare_global "math.n_random"
   math.n_random = function(mean, variance)
-    return mean + math.sqrt(-2 * math.log(math.random())) 
+    return mean + math.sqrt(-2 * math.log(math.random()))
     * math.cos(2 * math.pi * math.random()) * variance
   end
   -- Also add the nice-to-have function math.round
@@ -200,7 +200,7 @@ function App:init()
   dofile "audio"
   self.audio = Audio(self)
   self.audio:init()
-  
+
   -- Load movie player
   dofile "movie_player"
   self.moviePlayer = MoviePlayer(self, self.audio)
@@ -219,10 +219,10 @@ function App:init()
     -- (or insert "true or" after the "if" in the above)
     self:dumpStrings()
   end
-  
+
   -- Load map before world
   dofile "map"
-  
+
   -- Load additional Lua before world
   if good_install_folder then
     self.anims = self.gfx:loadAnimations("Data", "V")
@@ -235,7 +235,7 @@ function App:init()
 
     local objects = self:loadLuaFolder"objects"
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
-    -- Doors are in their own folder to ensure that the swing doors (which 
+    -- Doors are in their own folder to ensure that the swing doors (which
     -- depend on the door) are loaded after the door object.
     self.objects = self:loadLuaFolder("objects/doors", nil, objects)
     for _, v in ipairs(self.objects) do
@@ -253,7 +253,7 @@ function App:init()
     -- Load world before UI
     dofile "world"
   end
-  
+
   -- Load UI
   dofile "ui"
   if good_install_folder then
@@ -272,7 +272,7 @@ function App:init()
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
-  
+
   -- Load main menu (which creates UI)
   if _MAP_EDITOR then
     self:loadLevel("")
@@ -287,7 +287,7 @@ function App:init()
         " to English because the desired language could not be loaded. "..
         "Please make sure you have specified a font file in the config file."}))
       end
-      
+
       -- If a savegame was specified, load it
       if self.command_line.load then
         local status, err = pcall(self.load, self, self.command_line.load)
@@ -375,7 +375,7 @@ function App:initLanguage()
   -- For immediate compatibility:
   getmetatable(_S).__call = function(_, sec, str, ...)
     assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
-    
+
     str = _S.deprecated[sec][str]
     if ... then
       str = str:format(...)
@@ -412,10 +412,10 @@ function App:loadMainMenu(message)
   self.ui:setMenuBackground()
   self.ui:addWindow(UIMainMenu(self.ui))
   self.ui:addWindow(UITipOfTheDay(self.ui))
-  
+
   -- Show update window if there's an update
   self:checkForUpdates()
-  
+
   -- If a message was supplied, show it
   if message then
     self.ui:addWindow(UIInformation(self.ui, message))
@@ -445,7 +445,7 @@ function App:loadLevel(level, ...)
       },
     }
   end
-  
+
   -- Make sure there is no blue filter active.
   self.video:setBlueFilterActive(false)
 
@@ -453,24 +453,24 @@ function App:loadLevel(level, ...)
   self.ui = nil
   self.world = nil
   self.map = nil
-  
+
   -- Load map
   self.map = new_map
   self.map:setBlocks(self.gfx:loadSpriteTable("Data", "VBlk-0"))
   self.map:setDebugFont(self.gfx:loadFont("QData", "Font01V"))
-  
+
   -- Load world
   self.world = World(self)
   self.world:createMapObjects(map_objects)
-  
+
   -- Load UI
   self.ui = GameUI(self, self.world:getLocalPlayerHospital())
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
- 
+
   if tonumber(level) then
     self.moviePlayer:playAdvanceMovie(level)
   end
- 
+
   -- Now restore progress from previous levels.
   if carry_to_next_level then
     self.world:initFromPreviousLevel(carry_to_next_level)
@@ -501,7 +501,7 @@ function App:dumpStrings()
     fi:write"\n"
   end
   fi:close()
-  
+
   local function dump_by_line(file, obj, prefix)
     for n, o in pairs(obj) do
       if n ~= "deprecated" then
@@ -519,7 +519,7 @@ function App:dumpStrings()
       end
     end
   end
-  
+
   local function dump_grouped(file, obj, prefix)
     for n, o in pairs(obj) do
       if n ~= "deprecated" then
@@ -540,15 +540,15 @@ function App:dumpStrings()
       end
     end
   end
-  
+
   fi = assert(io.open(dir .. "debug-strings-new-lines.txt", "wt"))
   dump_by_line(fi, _S, "")
   fi:close()
-  
+
   fi = assert(io.open(dir .. "debug-strings-new-grouped.txt", "wt"))
   dump_grouped(fi, _S, "")
   fi:close()
-  
+
   self:checkMissingStringsInLanguage(dir, self.config.language)
   -- Uncomment these lines to get diffs for all languages in the game
   -- for _, lang in ipairs(self.strings.languages_english) do
@@ -606,7 +606,7 @@ function App:checkMissingStringsInLanguage(dir, language)
         end
       end
     end
-    
+
     -- if possible, use the English name of the language for the file name.
     local language_english = language
     for _, lang_eng in ipairs(self.strings.languages_english) do
@@ -615,7 +615,7 @@ function App:checkMissingStringsInLanguage(dir, language)
         break
       end
     end
-    
+
     local fi = assert(io.open(dir .. "debug-strings-diff-" .. language_english:lower() .. ".txt", "wt"))
     fi:write("------------------------------------\n")
     fi:write("MISSING STRINGS IN LANGUAGE \"" .. language:upper() .. "\":\n")
@@ -637,7 +637,7 @@ function App:fixConfig()
       self.config[k] = v
     end
   end
-  
+
   for key, value in pairs(self.config) do
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
@@ -646,17 +646,17 @@ function App:fixConfig()
         self.config[key] = value:match"^[%s]*(.-)[%s]*$"
       end
     end
-    
+
     -- For language, make language name lower case
     if key == "language" and type(value) == "string" then
       self.config[key] = value:lower()
     end
-    
+
     -- For resolution, check that resolution is at least 640x480
     if key == "width" and type(value) == "number" and value < 640 then
       self.config[key] = 640
     end
-    
+
     if key == "height" and type(value) == "number" and value < 480 then
       self.config[key] = 480
     end
@@ -681,7 +681,7 @@ function App:saveConfig()
           -- Remove enclosing [[]], if necessary
           local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
           value = temp or value
-          
+
           -- If identifier also exists in runtime options, compare their values and
           -- replace the line, if needed
           --if self.config[identifier] ~= nil then
@@ -740,12 +740,12 @@ function App:run()
       repaint = dispatch(self, yield(repaint))
     end
   end)
-  
+
   if self.config.track_fps then
     SDL.trackFPS(true)
     SDL.limitFPS(false)
   end
-  
+
   self.running = true
   do
     local num_iterations = 0
@@ -856,7 +856,7 @@ function App:drawFrame()
     self.ui:draw(self.video)
     self.video:endFrame()
   end
-  
+
   if self.config.track_fps then
     fps_sum = fps_sum - fps_history[fps_next]
     fps_history[fps_next] = SDL.getFPS()
@@ -918,7 +918,7 @@ function App:checkInstallFolder()
     -- app, and give the user a dialog asking for the correct directory.
     return false
   end
-  
+
   -- Check that a few core files are present
   local missing = {}
   local function check(path)
@@ -938,14 +938,14 @@ function App:checkInstallFolder()
     print("Trying to let the user select a new one.")
     return false, {message}
   end
-    
+
   -- Check for demo version
   if self.fs:readContents("DataM", "Demo.dat") then
     self.using_demo_files = true
     print "Notice: Using data files from demo version of Theme Hospital."
     print "Consider purchasing a full copy of the game to support EA."
   end
-  
+
   -- Do a few more checks to make sure that commonly corrupted files are OK.
   local corrupt = {}
 
@@ -954,7 +954,7 @@ function App:checkInstallFolder()
       local real_path = self.fs:getFilePath(path)
       -- If the file exists but is smaller than usual it is probably corrupt
       if real_path then
-        local real_size = lfs.attributes(real_path, "size") 
+        local real_size = lfs.attributes(real_path, "size")
         if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
           corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size/1024) .. " kB / Correct: about " .. math.floor(correct_size/1024) .. " kB)"
         end
@@ -968,14 +968,14 @@ function App:checkInstallFolder()
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
     check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
     check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
-    
+
     if #corrupt ~= 0 then
-      table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " .. 
+      table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " ..
       "so don't be suprised if CorsixTH crashes. At least the following files are wrong:")
       table.insert(corrupt, message)
     end
   end
-  
+
   return true, #corrupt ~= 0 and corrupt or nil
 end
 
@@ -986,7 +986,7 @@ function App:checkLanguageFile()
   -- providing every language file. If the user has selected a language which
   -- isn't present, then we should detect this and inform the user of their
   -- options.
-  
+
   local filename = self:getDataFilename("Lang-" .. self.config.language .. ".dat")
   local file, err = io.open(filename, "rb")
   if file then
@@ -994,7 +994,7 @@ function App:checkLanguageFile()
     file:close()
     return
   end
-  
+
   print "Theme Hospital install seems to be missing the language file for the language which you requested."
   print "The following language files are present:"
   local none = true
@@ -1165,9 +1165,9 @@ end
 function App:quickLoad()
   local filename = "quicksave"
   if lfs.attributes(self.savegame_dir .. filename) then
-    self:load(filename)  
-  else 
-    self:quickSave()  
+    self:load(filename)
+  else
+    self:quickSave()
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.load_quick_save}))
   end
 end
@@ -1214,7 +1214,7 @@ end
 function App:afterLoad()
   local old = self.world.savegame_version or 0
   local new = self.savegame_version
-  
+
   if old == 0 then
     -- Game log was not present before introduction of savegame versions, so create it now.
     self.world.game_log = {}
@@ -1225,13 +1225,13 @@ function App:afterLoad()
   end
   local first = self.world.original_savegame_version
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() 
+    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion()
       .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
-                       ") to " .. new .. " (" .. self:getVersion() .. 
-                       "). The save was created using " .. first .. 
+                       ") to " .. new .. " (" .. self:getVersion() ..
+                       "). The save was created using " .. first ..
                        " (" .. self:getVersion(first) .. ")")
   else
     -- TODO: This should maybe be forbidden completely.
@@ -1239,7 +1239,7 @@ function App:afterLoad()
                        ")" .. " in older version " .. new .. " (" .. self:getVersion() .. ").")
   end
   self.world.savegame_version = new
-  
+
   self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
@@ -1249,15 +1249,15 @@ function App:checkForUpdates()
   -- Only check for updates once per application launch
   if not self.check_for_updates or not self.config.check_for_updates then return end
   self.check_for_updates = false
-  
+
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
   local update_url = 'http://www.corsixth.com/check-for-updates'
   local current_version = self:getVersion()
-  
+
   -- Only URLs that match this list of trusted domains will be accepted.
   local trusted_domains = { 'corsixth.com', 'code.google.com' }
-  
+
   -- Only check for updates against released versions
   if current_version == "Trunk" then
     print "Will not check for updates since this is the Trunk version."
@@ -1284,14 +1284,14 @@ function App:checkForUpdates()
   end
 
   local update_table = loadstring_envcall(update_body, "@updatechecker"){}
-  local changelog = update_table["changelog_" .. default_language] 
+  local changelog = update_table["changelog_" .. default_language]
   local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
-  
+
   if (new_version <= current_version) then
     print "You are running the latest version of CorsixTH."
     return
   end
-  
+
   -- Check to make sure download URL is trusted
   local download_url = url.parse(update_table["download_url"])
   local valid_url = false
@@ -1301,11 +1301,11 @@ function App:checkForUpdates()
       break
     end
   end
-  if not valid_url then 
+  if not valid_url then
     print ("Update download url is not on the trusted domains list (" .. updateTable["download_url"] .. ")")
     return
   end
-  
+
   -- Check to see if there's a changelog in the user's language
   local current_langs = self.strings:getLanguageNames(self.config.language)
   for _,v in ipairs(current_langs) do
@@ -1314,7 +1314,7 @@ function App:checkForUpdates()
       break
     end
   end
-  
+
   print ("New version found: " .. new_version)
   -- Display the update window
   self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))

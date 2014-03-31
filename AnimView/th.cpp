@@ -481,7 +481,7 @@ bool THAnimations::loadXMLFile(TiXmlDocument* xmlDocument)
     return m_bXmlLoaded;
 }
 
-void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, 
+void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml,
     size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int *iListIndex)
 {
     if(iAnimation >= m_iAnimCount)
@@ -504,7 +504,7 @@ void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLo
         if(pElement->flags >> 4 != 1)
         {
             uint16_t iElementIndex = m_pElementList[iOldListIndex];
-            outputXml->WriteString(wxString::Format(L"\t\t<el id='%u' tb='%u' fl='%u' ox='%u' oy='%u' ly='%u' ", 
+            outputXml->WriteString(wxString::Format(L"\t\t<el id='%u' tb='%u' fl='%u' ox='%u' oy='%u' ly='%u' ",
                     iElementIndex, pElement->table_position, pElement->flags, pElement->offx, pElement->offy, pElement->layerid ));
             uint16_t iSpriteIndex = pElement->table_position / sizeof(th_sprite_t);
             wxString spriteFile = aPath + wxString::Format(L"a%04ue.png", iSpriteIndex);
@@ -518,7 +518,7 @@ void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLo
                 iFarY = iBottom;
             //if(pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
             //    continue;
-            outputXml->WriteString(wxString::Format(L"sp='%u' of='%u' w='%u' h='%u'/>\n", 
+            outputXml->WriteString(wxString::Format(L"sp='%u' of='%u' w='%u' h='%u'/>\n",
                     iSpriteIndex, pSprite->offset, pSprite->width, pSprite->height ));
             if(!wxFileName::FileExists(spriteFile) && pSprite->width > 0 && pSprite->height > 0)
             {
@@ -539,8 +539,8 @@ void THAnimations::writeElementData(wxString aPath, wxTextOutputStream *outputLo
                 getSpriteBitmap(iSpriteIndex)->blit(imgSprite, 0, 0, m_pGhostMaps + m_iGhostMapOffset, m_pColours, 0 & 0xF);
                 if(!imgSprite.SaveFile(spriteFile,wxBITMAP_TYPE_PNG))
                     return;
-                outputLog->WriteString(wxString::Format(L"E%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\n", iSpriteIndex,  
-                        pElement->table_position, pElement->flags, pElement->layerid, pElement->offx, pElement->offy, 
+                outputLog->WriteString(wxString::Format(L"E%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\t%u\n", iSpriteIndex,
+                        pElement->table_position, pElement->flags, pElement->layerid, pElement->offx, pElement->offy,
                         iNewListIndex, sizeof(th_sprite_t), pSprite->width, pSprite->height, pSprite->offset));
             }
             iNewListIndex++;
@@ -750,7 +750,7 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFram
 }
 
 void THAnimations::copySpriteToCanvas(wxString spriteFile, int iSpriteIndex, wxImage& imgCanvas, int iX, int iY, int iFlags) {
-    if(!m_pSpriteImages[iSpriteIndex].IsOk()) 
+    if(!m_pSpriteImages[iSpriteIndex].IsOk())
     {
         th_sprite_t* pSprite = m_pSprites + iSpriteIndex;
         if(m_pSpriteScaleFactors[iSpriteIndex] > 1)
@@ -764,7 +764,7 @@ void THAnimations::copySpriteToCanvas(wxString spriteFile, int iSpriteIndex, wxI
             m_pSpriteImages[iSpriteIndex].LoadFile(spriteFile,wxBITMAP_TYPE_PNG);
         }
         //m_pSpriteImages[iSpriteIndex].SetMaskColour(0,0,0);
-        if(!m_pSpriteImages[iSpriteIndex].HasAlpha()) 
+        if(!m_pSpriteImages[iSpriteIndex].HasAlpha())
         {
             m_pSpriteImages[iSpriteIndex].InitAlpha();
         }
