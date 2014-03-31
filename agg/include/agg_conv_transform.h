@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -33,9 +33,9 @@ namespace agg
             m_source(&source), m_trans(&tr) {}
         void attach(VertexSource& source) { m_source = &source; }
 
-        void rewind(unsigned path_id) 
-        { 
-            m_source->rewind(path_id); 
+        void rewind(unsigned path_id)
+        {
+            m_source->rewind(path_id);
         }
 
         unsigned vertex(double* x, double* y)
@@ -55,7 +55,7 @@ namespace agg
 
     private:
         conv_transform(const conv_transform<VertexSource>&);
-        const conv_transform<VertexSource>& 
+        const conv_transform<VertexSource>&
             operator = (const conv_transform<VertexSource>&);
 
         VertexSource*      m_source;

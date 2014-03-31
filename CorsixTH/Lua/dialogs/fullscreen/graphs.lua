@@ -51,24 +51,24 @@ function UIGraphs:UIGraphs(ui)
     self:close()
     return
   end
-  
+
   local hosp = ui.hospital
   self.hospital = hosp
-  
+
   -- Buttons
   self:addPanel(0, 63, 384):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.graphs.close)
-  
+
   -- The possible scales are:
   -- 1: Increments of four years per line
   -- 2: Increments of one year per line
   -- 3: Increments of one month per line
   self.graph_scale = 3
-  
+
   self.graph_scale_panel = self:addPanel(0, 371, 384)
   self.graph_scale_button = self.graph_scale_panel:makeButton(0, 0, 65, 26, 2, self.toggleGraphScale):setTooltip(_S.tooltip.graphs.scale)
-  
+
   self.hide_graph = {}
-  
+
   local function buttons(name)
     return --[[persistable:graphs_button]] function()
       self:toggleGraph(name)
@@ -84,7 +84,7 @@ function UIGraphs:UIGraphs(ui)
     self:addPanel(0, 590, 347):makeToggleButton(0, 0, 42, 42, 1, buttons("deaths")):setTooltip(_S.tooltip.graphs.deaths),
     self:addPanel(0, 590, 400):makeToggleButton(0, 0, 42, 42, 1, buttons("reputation")):setTooltip(_S.tooltip.graphs.reputation)
   }
-  
+
   self:updateLines()
 end
 
@@ -117,7 +117,7 @@ function UIGraphs:updateLines()
     values[#values + 1] = statistics[i]
   end
   self.values = values
-  
+
   -- Decide maximum and minimum for normalisation of each line
   for _, part in ipairs(values) do
     if type(part) == "table" then
@@ -131,14 +131,14 @@ function UIGraphs:updateLines()
       end
     end
   end
-  
+
   -- Start from the right part of the graph window
   local top_y = 85
   local bottom_y = 353
   local first_x = 346
   local dx = -25
   local text = {}
-  
+
   -- First start at the correct place
   local part = values[1]
   for stat, value in pairs(part) do
@@ -158,7 +158,7 @@ function UIGraphs:updateLines()
   table.sort(text, compare)
   self.text_positions = text
 
-  
+
   local aux_lines = {}
   -- Then add all the nodes available for each graph
   for i, part in ipairs(values) do
@@ -222,7 +222,7 @@ function UIGraphs:draw(canvas, x, y)
 
   local dx = -25
   local number = math.floor(#self.hospital.statistics / 12)
-  
+
   local decrements = -4 -- Four years
   if self.graph_scale == 2 then
     decrements = -1 -- One year
@@ -231,7 +231,7 @@ function UIGraphs:draw(canvas, x, y)
     number = #self.hospital.statistics - number * 12
   end
   local no = 1
-  
+
   -- Draw numbers (or month names) below the graph
   for _, _ in ipairs(self.values) do
     self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")

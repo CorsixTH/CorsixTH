@@ -30,7 +30,7 @@ local function fixGermanStrings(lang_num)
   if lang_num ~= 2 then
     return
   end
-  
+
   -- Strings [44][168] (which contains a %s) and [44][169] (contains %d) were
   -- replaced with a single string [44][168] with %s and %d in german full version.
   -- Due to this, the remaining strings in section 44 were also off by one.
@@ -43,7 +43,7 @@ local function fixGermanStrings(lang_num)
     S[44][169] = S[44][168]:sub(46)
     S[44][168] = S[44][168]:sub(1, 45)
   end
-  
+
   -- German spelling reform: eszett changed to double s in a number of words.
   -- Mass-apply this change here, so we don't have to override all those strings.
   local repl = {
@@ -62,7 +62,7 @@ local function fixGermanStrings(lang_num)
     ["Schlußlicht"] = "Schlusslicht",
     ["unerläßlich"] = "unerlässlich",
   }
-  
+
   for c, cat in ipairs(S) do
     for s, str in ipairs(cat) do
       for from, to in pairs(repl) do
@@ -73,7 +73,7 @@ local function fixGermanStrings(lang_num)
       S[c][s] = str
     end
   end
-  
+
   -- good and bad (but not misc) staff description strings are missing space at the end
   for s, _ in ipairs(S[47]) do
     S[47][s] = S[47][s] .. " "
@@ -213,20 +213,20 @@ misc = {
   },
   done  = S[3][21],
   pause = S[3][22],
-  
+
   send_message     = S[3][23], -- %d (player number)
   send_message_all = S[3][24],
-  
+
   save_success = S[3][25],
   save_failed  = S[3][26],
-  
+
   hospital_open = S[3][27],
   out_of_sync   = S[3][28],
-  
+
   load_failed  = S[3][29],
   low_res      = S[3][30],
   balance      = S[3][31],
-  
+
   mouse        = S[11][5],
   force        = S[11][6],
 }
@@ -348,7 +348,7 @@ graphs = {
   cures      = S[7][ 9],
   deaths     = S[7][10],
   reputation = S[7][11],
-  
+
   time_spans = {
     S[7][12],
     S[7][13],
@@ -407,7 +407,7 @@ adviser = {
     accept_purchase               = S[11][43],
     rotate_and_place_reception    = S[11][42],
     reception_invalid_position    = S[11][47],
-    
+
     -- 2) hire receptionist
     hire_receptionist             = S[11][31],
     select_receptionists          = S[11][34],
@@ -416,13 +416,13 @@ adviser = {
     choose_receptionist           = S[11][35],
     place_receptionist            = S[11][37],
     receptionist_invalid_position = S[11][61],
-    
+
     -- 3) build GP's office
     -- 3.1) room window
     build_gps_office              = S[11][33],
     select_diagnosis_rooms        = S[11][44],
     click_gps_office              = S[11][45],
-    
+
     -- 3.2) blueprint
     -- [11][58] was maybe planned to be used in this place, but is not needed.
     click_and_drag_to_build       = S[11][48],
@@ -430,31 +430,31 @@ adviser = {
     room_too_small                = S[11][53],
     room_too_small_and_invalid    = S[11][62],
     room_big_enough               = S[11][57],
-    
+
     -- 3.3) door and windows
     place_door                    = S[11][49],
     door_in_invalid_position      = S[11][54],
     place_windows                 = S[11][50],
     window_in_invalid_position    = S[11][55],
-    
+
     -- 3.4) objects
     place_objects                 = S[11][51],
     object_in_invalid_position    = S[11][56],
     confirm_room                  = S[11][59],
     information_window            = S[11][64],
-    
+
     -- 4) hire doctor
     hire_doctor                   = S[11][32],
     select_doctors                = S[11][36],
     choose_doctor                 = S[11][46],
     place_doctor                  = S[11][40],
     doctor_in_invalid_position    = S[11][60],
-    
+
     -- (currently) unused
     start_tutorial                = S[11][63],
     build_pharmacy                = S[11][65],
   },
-  
+
   staff_advice = {
     need_doctors                  = S[11][  8],
     too_many_doctors              = S[11][  9],
@@ -465,7 +465,7 @@ adviser = {
     need_nurses                   = S[11][101],
     too_many_nurses               = S[11][102],
   },
-  
+
   -- used when you place staff in a wrong place
   staff_place_advice = {
     only_researchers              = S[11][124], -- in research center
@@ -477,14 +477,14 @@ adviser = {
     only_doctors_in_room          = S[11][130], -- %s (room name)
     receptionists_only_at_desk    = S[11][131],
   },
-  
+
   build_advice = {
     blueprint_invalid             = S[21][5],
     blueprint_would_block         = S[21][6],
     door_not_reachable            = S[21][7],
     placing_object_blocks_door    = S[21][8],
   },
-  
+
   -- these are used when completing a room with certain requirements (if they are not met yet)
   room_requirements = {
     psychiatry_need_psychiatrist  = S[11][ 79],
@@ -498,12 +498,12 @@ adviser = {
     gps_office_need_doctor        = S[11][105],
     reception_need_receptionist   = S[11][106],
   },
-  
+
   surgery_requirements = {
     need_surgeons_ward_op         = S[11][103],
     need_surgeon_ward             = S[11][104],
   },
-  
+
   warnings = {
     money_low                     = S[11][  2],
     money_very_low_take_loan      = S[11][ 73],
@@ -512,25 +512,25 @@ adviser = {
     financial_trouble             = S[28][ 29], -- %d amount left before level is lost
     finanical_trouble2            = S[28][ 30], -- %d same as above
     financial_trouble3            = S[28][ 31], -- %d same again
-    
+
     pay_back_loan                 = S[28][ 57],
-    
+
     machines_falling_apart        = S[11][  4],
     no_patients_last_month        = S[11][ 10],
     nobody_cured_last_month       = S[11][ 11],
     queues_too_long               = S[11][ 12],
     patient_stuck                 = S[11][ 13],
-    
+
     patients_unhappy              = S[11][ 15],
     patient_leaving               = S[28][ 50],
     patients_leaving              = S[28][ 51],
     patients_really_thirsty       = S[28][ 52],
     patients_annoyed              = S[28][  8],
-    
+
     patients_thirsty              = S[11][ 16],
     patients_thirsty2             = S[28][  5],
     patients_very_thirsty         = S[28][  6],
-    
+
     patients_too_hot              = S[11][ 18],
     patients_getting_hot          = S[28][ 53],
     patients_very_cold            = S[28][ 54],
@@ -538,113 +538,113 @@ adviser = {
 
     staff_overworked              = S[11][ 17],
     staff_tired                   = S[28][  9],
-    
+
     staff_too_hot                 = S[11][ 19],
     staff_very_cold               = S[28][ 55],
     staff_unhappy                 = S[11][ 89],
     staff_unhappy2                = S[28][ 15],
     doctor_crazy_overwork         = S[11][ 95],
-    
+
     reduce_staff_rest_threshold   = S[28][ 45],
     nurses_tired                  = S[11][ 96],
     doctors_tired                 = S[11][ 97],
     handymen_tired                = S[11][ 98],
     receptionists_tired           = S[11][ 99],
-    
+
     nurses_tired2                 = S[28][ 46],
     doctors_tired2                = S[28][ 47],
     handymen_tired2               = S[28][ 48],
     receptionists_tired2          = S[28][ 49], -- What?
-    
+
     need_toilets                  = S[11][ 20],
     build_toilets                 = S[28][ 11],
     build_toilet_now              = S[28][ 39],
     more_toilets                  = S[28][ 12],
     people_did_it_on_the_floor    = S[28][ 13],
-    
+
     need_staffroom                = S[11][ 74],
     build_staffroom               = S[28][ 10],
-    
+
     many_killed                   = S[11][ 77], -- %d (number of killed patients)
-    
+
     plants_thirsty                = S[11][ 91],
     too_many_plants               = S[11][ 92],
-    
+
     charges_too_high              = S[11][119],
     charges_too_low               = S[11][120],
-    
+
     machine_severely_damaged      = S[11][121], -- %s (name of machine)
     machinery_slightly_damaged    = S[28][ 32],
     machinery_damaged             = S[28][ 33],
     machinery_damaged2            = S[28][ 34],
     machinery_very_damaged        = S[28][ 35],
     machinery_deteriorating       = S[28][ 36],
-    
+
     queue_too_long_send_doctor    = S[11][132], -- %s (name of room)
     queue_too_long_at_reception   = S[11][133],
     reception_bottleneck          = S[11][134], -- TODO find out why there's 133 and 134.
-    
+
     epidemic_getting_serious      = S[28][  2],
     deal_with_epidemic_now        = S[28][  3],
     many_epidemics                = S[28][  4],
 
     hospital_is_rubbish           = S[28][  7],
-    
+
     more_benches                  = S[28][ 25],
     people_have_to_stand          = S[28][ 28],
-    
+
     too_much_litter               = S[28][ 17],
     litter_everywhere             = S[28][ 18],
     litter_catastrophy            = S[28][ 19],
     some_litter                   = S[28][ 20],
-    
+
     place_plants_to_keep_people   = S[28][ 21],
     place_plants2                 = S[28][ 22],
     place_plants3                 = S[28][ 23],
     place_plants4                 = S[28][ 24],
-    
+
     desperate_need_for_watering   = S[28][ 40],
     change_priorities_to_plants   = S[28][ 41],
     plants_dying                  = S[28][ 42],
 
   },
-  
+
   praise = {
     many_plants                   = S[11][75],
     plants_are_well               = S[28][43],
     plants_thriving               = S[28][44],
-    
+
     many_benches                  = S[11][76],
     plenty_of_benches             = S[28][26],
     few_have_to_stand             = S[28][27],
-    
+
     patients_cured                = S[11][82], -- %d (number of cured patients)
   },
-  
+
   information = {
     epidemic                      = S[11][ 14],
     emergency                     = S[11][ 22],
     promotion_to_doctor           = S[11][ 23],
     promotion_to_specialist       = S[11][ 69], -- %s (type: psychiatrist, scientist, surgeon)
     promotion_to_consultant       = S[11][138],
-    
+
     first_death                   = S[11][ 72],
     first_cure                    = S[11][ 83],
-    
+
     place_windows                 = S[11][108],
     larger_rooms                  = S[11][109],
     extra_items                   = S[11][110],
-    
+
     patient_abducted              = S[11][111], -- what the heck is this? I never got that far in the original...
     patient_leaving_too_expensive = S[11][118],
-    
+
     pay_rise                      = S[11][ 29], -- TODO only in tutorial / first time?
     handyman_adjust               = S[11][ 71], -- TODO only in tutorial / first time?
     fax_received                  = S[11][136], -- Once only
-    
+
     vip_arrived                   = S[21][  9], -- %s (name of VIP)
     epidemic_health_inspector     = S[21][ 10],
-    
+
     initial_general_advice = {
       research_now_available      = S[62][02],
       research_symbol             = S[62][03],
@@ -664,24 +664,24 @@ adviser = {
       first_emergency             = S[62][17],
     },
   },
-  
+
   earthquake = {
     alert                         = S[11][107],
     damage                        = S[11][100], -- %d (damaged machines) %d (injured people)
     ended                         = S[11][ 78], -- %d (severance of earthquake)
   },
-  
+
   boiler_issue = {
     maximum_heat                  = S[21][ 11],
     minimum_heat                  = S[21][ 12],
     resolved                      = S[21][ 13],
   },
-  
+
   vomit_wave = {
     started                       = S[21][ 14],
     ended                         = S[21][ 15],
   },
-  
+
   goals = {
     win = {
       money                       = S[11][ 21], -- %d (remaining amount)
@@ -693,7 +693,7 @@ adviser = {
       kill                        = S[11][ 66], -- %d (remaining amount)
     },
   },
-  
+
   level_progress = {
     nearly_won                    = S[11][112],
     three_quarters_won            = S[11][113],
@@ -701,10 +701,10 @@ adviser = {
     nearly_lost                   = S[11][115],
     three_quarters_lost           = S[11][116],
     halfway_lost                  = S[11][117],
-    
+
     another_patient_cured         = S[28][37],
     another_patient_killed        = S[28][38],
-    
+
     financial_criteria_met        = S[28][56], -- %d money threshold for the level
     cured_enough_patients         = S[28][58],
     dont_kill_more_patients       = S[28][59],
@@ -712,9 +712,9 @@ adviser = {
     improve_reputation            = S[28][61], -- %d amount to improve by
     hospital_value_enough         = S[28][62], -- %d keep it above this value
     close_to_win_increase_value   = S[28][63],
-    
+
   },
-  
+
   research = {
     new_machine_researched        = S[11][ 24], -- %s (machine(?) name)
     new_drug_researched           = S[11][ 25], -- %s (disease name)
@@ -726,28 +726,28 @@ adviser = {
     drug_fully_researched         = S[11][122], -- %s (drug(?) name)
     autopsy_discovered_rep_loss   = S[11][123],
   },
-  
+
   competitors = {
     hospital_opened               = S[11][135], -- %s (competitor name)
     land_purchased                = S[11][  7], -- %s (competitor name)
     staff_poached                 = S[11][ 90],
   },
-  
+
   multiplayer = {
     -- S[21][1] unused
     everyone_failed               = S[21][ 2],
     players_failed                = S[21][ 3],
-    
+
     poaching = {
       already_poached_by_someone  = S[21][16],
       not_interested              = S[21][17],
       in_progress                 = S[21][18],
     },
-    
+
     objective_completed           = S[21][19], -- missing in some TH versions
     objective_failed              = S[21][20], -- missing in some TH versions
   },
-  
+
   placement_info = {
     -- S[22][1] unused
     room_cannot_place             = S[22][ 2],
@@ -796,7 +796,7 @@ town_map = {
   chat         = S[13][ 2],
   for_sale     = S[13][ 3],
   not_for_sale = S[13][ 4],
-  number       = S[13][ 5], 
+  number       = S[13][ 5],
   owner        = S[13][ 6],
   area         = S[13][ 7],
   price        = S[13][ 8],
@@ -810,7 +810,7 @@ rooms_short = {
   reception         = S[14][ 2],
   destroyed         = S[14][ 4],
   corridor_objects  = S[14][29],
-  
+
   gps_office        = S[14][ 5],
   psychiatric       = S[14][ 6],
   ward              = S[14][ 7],
@@ -842,7 +842,7 @@ rooms_long = {
   general           = S[53][2], -- unused?
   emergency         = S[53][3],
   corridors         = S[53][29],
-  
+
   gps_office        = S[53][ 5],
   psychiatric       = S[53][ 6],
   ward              = S[53][ 7],
@@ -899,7 +899,7 @@ research = {
     improvements    = S[17][4],
     specialisation  = S[17][5],
   },
-  
+
   funds_allocation  = S[17][6],
   allocated_amount  = S[17][7],
 }
@@ -910,7 +910,7 @@ policy = {
   diag_termination  = S[18][3],
   staff_rest        = S[18][4],
   staff_leave_rooms = S[18][5],
-  
+
   sliders = {
     guess           = S[18][6], -- belongs to diag_procedure
     send_home       = S[18][7], -- also belongs to diag_procedure
@@ -1096,7 +1096,7 @@ high_score = {
   best_scores  = S[25][5],
   worst_scores = S[25][6],
   killed       = S[25][7], -- is this used?
-  
+
   categories = {
     money             = S[26][ 1],
     salary            = S[26][ 2],
@@ -1120,8 +1120,8 @@ trophy_room = {
       S[55][ 6],
     },
     penalty = {
-      S[56][ 5],  
-      S[56][ 6],  
+      S[56][ 5],
+      S[56][ 6],
     },
     trophies = {
       S[27][ 2],          -- for around 100% cure rate
@@ -1146,7 +1146,7 @@ trophy_room = {
       S[55][20],
     },
     penalty = {
-      S[56][20],     
+      S[56][20],
     },
     regional = {
       S[55][22],
@@ -1154,13 +1154,13 @@ trophy_room = {
   },
    best_value_hosp = {  -- not implemented
     trophies = {
-      S[27][ 6],  
+      S[27][ 6],
     },
     regional = {
-      S[55][21],   
+      S[55][21],
     },
-    penalty = {  
-      S[56][21], 
+    penalty = {
+      S[56][21],
     },
   },
   consistant_rep = {
@@ -1189,13 +1189,13 @@ trophy_room = {
       S[55][25],
     },
     penalty = {
-      S[56][23],  
+      S[56][23],
     },
     regional_good = {
-      S[55][24],   
+      S[55][24],
     },
     regional_bad = {
-      S[56][24],    
+      S[56][24],
     },
     trophies = {
       S[27][ 8],
@@ -1267,7 +1267,7 @@ trophy_room = {
     },
     penalty = {
       S[56][11],
-      S[56][12],     
+      S[56][12],
     },
   },
   gen_repairs = {     -- not implemented
@@ -1278,15 +1278,15 @@ trophy_room = {
     },
     penalty = {
       S[56][38],
-      S[56][39],     
+      S[56][39],
     },
   },
-  curesvdeaths = {     
+  curesvdeaths = {
     awards = {
       S[55][14],
     },
     penalty = {
-      S[56][14],     
+      S[56][14],
     },
   },
   research = {         -- not implemented
@@ -1298,10 +1298,10 @@ trophy_room = {
       S[56][35],
     },
     regional_good = {
-      S[55][35],    
+      S[55][35],
     },
     regional_bad = {
-      S[56][36],    
+      S[56][36],
     },
   },
   cleanliness = {      -- not implemented
@@ -1309,10 +1309,10 @@ trophy_room = {
       S[55][26],
     },
     regional_good = {
-      S[56][26],    
+      S[56][26],
     },
     regional_bad = {
-      S[56][27],    
+      S[56][27],
     },
   },
   emergencies = {      -- not implemented
@@ -1324,10 +1324,10 @@ trophy_room = {
       S[56][32],
     },
     regional_good = {
-      S[55][33],     
+      S[55][33],
     },
     regional_bad = {
-      S[56][33],    
+      S[56][33],
     },
   },
   wait_times = {      -- not implemented
@@ -1341,11 +1341,11 @@ trophy_room = {
   happy_patients = {     -- not implemented
     awards = {
       S[55][17],
-      S[55][18], 
+      S[55][18],
     },
     penalty = {
       S[56][17],
-      S[56][18],  
+      S[56][18],
     },
   },
   -- Strings used in the plaques to show what has been won
@@ -1391,7 +1391,7 @@ tooltip = {
     cost               = S[32][  6],
     close              = S[32][  7],
   },
-  
+
   toolbar = {
     bank_button        = S[32][  8],
     balance            = S[32][  9],
@@ -1409,7 +1409,7 @@ tooltip = {
     charts             = S[32][ 21],
     policy             = S[32][ 22],
   },
-  
+
   hire_staff_window = {
     doctors            = S[32][ 23],
     nurses             = S[32][ 24],
@@ -1427,7 +1427,7 @@ tooltip = {
     psychiatrist       = S[32][ 36],
     researcher         = S[32][ 37],
   },
-  
+
   buy_objects_window = {
     price              = S[32][ 38],
     total_value        = S[32][ 39],
@@ -1436,46 +1436,46 @@ tooltip = {
     decrease           = S[32][ 42],
     increase           = S[32][ 43],
   },
-  
+
   staff_list = {
     doctors            = S[32][ 44],
     nurses             = S[32][ 45],
     handymen           = S[32][ 46],
     receptionists      = S[32][ 47],
-    
+
     happiness          = S[32][ 48],
     tiredness          = S[32][ 49],
     ability            = S[32][ 50],
     salary             = S[32][ 51],
-    
+
     happiness_2        = S[32][ 52],
     tiredness_2        = S[32][ 53],
     ability_2          = S[32][ 54],
-    
+
     prev_person        = S[32][ 55],
     next_person        = S[32][ 56],
-    
+
     bonus              = S[32][ 57],
     sack               = S[32][ 58],
     pay_rise           = S[32][ 59],
-    
+
     close              = S[32][ 60],
-    
+
     doctor_seniority   = S[32][ 61],
     detail             = S[32][ 62],
-    
+
     view_staff         = S[32][ 63],
-    
+
     surgeon            = S[32][ 64],
     psychiatrist       = S[32][ 65],
     researcher         = S[32][ 66],
     surgeon_train      = S[32][ 67], -- %d (percentage trained)
     psychiatrist_train = S[32][ 68], -- %d (percentage trained)
     researcher_train   = S[32][ 69], -- %d (percentage trained)
-    
+
     skills             = S[32][ 70],
   },
-  
+
   queue_window = {
     num_in_queue       = S[32][ 71],
     num_expected       = S[32][ 72],
@@ -1495,7 +1495,7 @@ tooltip = {
       hospital_3       = S[32][190],
     },
   },
-  
+
   main_menu = {
     new_game           = S[32][ 81],
     load_game          = S[32][ 82],
@@ -1507,12 +1507,12 @@ tooltip = {
       empty_slot       = S[41][  2],
     },
   },
-  
+
   window_general = {
     cancel             = S[32][ 86],
     confirm            = S[32][ 87],
   },
-  
+
   patient_window = {
     close              = S[32][ 88],
     graph              = S[32][ 89],
@@ -1525,7 +1525,7 @@ tooltip = {
     abort_diagnosis    = S[32][ 96],
     queue              = S[32][ 97],
   },
-  
+
   staff_window = {
     name               = S[32][ 98],
     close              = S[32][ 99],
@@ -1543,7 +1543,7 @@ tooltip = {
     sack               = S[32][111],
     pick_up            = S[32][112],
   },
-  
+
   machine_window = {
     name               = S[32][113],
     close              = S[32][114],
@@ -1552,7 +1552,7 @@ tooltip = {
     repair             = S[32][117],
     replace            = S[32][118],
   },
-  
+
   -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
   handyman_window = {
@@ -1570,14 +1570,14 @@ tooltip = {
     sack               = S[32][130],
     pick_up            = S[32][131],
   },
-  
+
   place_objects_window = {
     cancel             = S[32][132],
     buy_sell           = S[32][133],
     pick_up            = S[32][134],
     confirm            = S[32][135],
   },
-  
+
   casebook = {
     up                 = S[32][136],
     down               = S[32][137],
@@ -1610,11 +1610,11 @@ tooltip = {
       not_possible     = S[32][161], -- unused
     },
   },
-  
+
   statement = {
     close              = S[32][162],
   },
-  
+
   research = {
     close              = S[32][163],
     cure_dec           = S[32][164],
@@ -1631,7 +1631,7 @@ tooltip = {
     -- S[32][174] unused
     allocated_amount   = S[32][175],
   },
-  
+
   graphs = {
     close              = S[32][176],
     scale              = S[32][177],
@@ -1644,9 +1644,9 @@ tooltip = {
     deaths             = S[32][184],
     reputation         = S[32][185],
   },
-  
+
   -- S[32][186] through S[32][190] inserted further above
-  
+
   town_map = {
     people             = S[32][191],
     plants             = S[32][192],
@@ -1660,7 +1660,7 @@ tooltip = {
     balance            = S[32][200],
     close              = S[32][201],
   },
-  
+
   -- S[32][202] unused.
   jukebox = {
     current_title      = S[32][203],
@@ -1671,7 +1671,7 @@ tooltip = {
     stop               = S[32][208],
     loop               = S[32][209],
   },
-  
+
   bank_manager = {
     hospital_value     = S[32][210],
     balance            = S[32][211],
@@ -1687,7 +1687,7 @@ tooltip = {
     graph              = S[32][221], -- %s (name of debitor)
     graph_return       = S[32][222],
   },
-  
+
   status = {
     win_progress_own   = S[32][223],
     win_progress_other = S[32][224], -- %s (name of competitor)
@@ -1696,7 +1696,7 @@ tooltip = {
     thirst             = S[32][227],
     warmth             = S[32][228],
     close              = S[32][229],
-    
+
     -- Criteria to win
     reputation         = S[64][  1],
     balance            = S[64][  2],
@@ -1706,7 +1706,7 @@ tooltip = {
     value              = S[64][  6],
     percentage_cured   = S[64][  7],
   },
-  
+
   policy = {
     close              = S[32][230],
     staff_leave        = S[32][231],
@@ -1715,18 +1715,18 @@ tooltip = {
     diag_termination   = S[32][234],
     staff_rest         = S[32][235],
   },
-  
+
   pay_rise_window = {
     accept             = S[32][236],
     decline            = S[32][237],
   },
-  
+
   watch = {
     hospital_opening   = S[32][238],
     emergency          = S[32][239],
     epidemic           = S[32][240],
   },
-  
+
   rooms = {
     -- S[33][1] through S[33][7] unused.
     gps_office         = S[33][ 8],
@@ -1754,7 +1754,7 @@ tooltip = {
     toilets            = S[33][30],
     decontamination    = S[33][31],
   },
-  
+
   objects = {
     -- S[40][1] unused.
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
@@ -1934,7 +1934,7 @@ fax = {
     text10     = S[44][12], -- %d %d %d %d
     text11     = S[44][13], -- %d
   },
-    
+
   emergency = {
     choices = {
       accept = S[44][15],
@@ -1950,7 +1950,7 @@ fax = {
     cure_not_possible_employ           = S[44][24],
     cure_not_possible                  = S[44][25],
     bonus                              = S[44][26],
-    
+
     locations = {
       S[44][27],
       S[44][28],
@@ -1969,52 +1969,52 @@ fax = {
 
     earned_money = S[44][40],
     saved_people = S[44][41],
-  },  
-  
+  },
+
   disease_discovered_patient_choice = {
     choices = {
       send_home = S[44][43],
       wait      = S[44][44],
       research  = S[44][45],
     },
-    
+
     need_to_build_and_employ = S[44][47],
     need_to_build            = S[44][48],
     need_to_employ           = S[44][49],
     can_not_cure             = S[44][50],
-    
+
     disease_name             = S[44][51],
     what_to_do_question      = S[44][52],
     guessed_percentage_name  = S[44][53],
   },
-  
+
   disease_discovered = {
     close_text = S[44][55],
-    
+
     can_cure = S[44][57],
     need_to_build_and_employ = S[44][58],
     need_to_build            = S[44][59],
     need_to_employ           = S[44][60],
-    
+
     discovered_name          = S[44][61],
     -- After this come cause, symptoms and cure of disease
   },
-  
+
   epidemic = {
     choices = {
       declare  = S[44][165],
       cover_up = S[44][166],
     },
-    
+
     disease_name             = S[44][168],
     declare_explanation_fine = S[44][169],
     cover_up_explanation_1   = S[44][170],
     cover_up_explanation_2   = S[44][171],
   },
-  
+
   epidemic_result = {
     close_text = S[44][173],
-    
+
     failed = {
       part_1_name = S[44][175],
       part_2      = S[44][176],
@@ -2023,32 +2023,32 @@ fax = {
       part_1_name = S[44][177],
       part_2      = S[44][178],
     },
-    
+
     compensation_amount  = S[44][179],
     fine_amount          = S[44][180],
     rep_loss_fine_amount = S[44][181],
     hospital_evacuated   = S[44][182],
   },
-  
+
   vip_visit_query = {
     choices = {
       invite = S[44][184],
       refuse = S[44][185],
     },
-    
+
     vip_name = S[44][187],
   },
-  
+
   vip_visit_result = {
     close_text = S[44][189],
-    
+
     telegram          = S[44][191],
     vip_remarked_name = S[44][192],
-    
+
     cash_grant = S[44][193],
     rep_boost  = S[44][194],
     rep_loss   = S[44][195],
-    
+
     remarks = {
       super = {
         S[44][196],
@@ -2077,14 +2077,14 @@ fax = {
       },
     },
   },
-  
+
   diagnosis_failed = {
     choices = {
       send_home   = S[44][212],
       take_chance = S[44][213],
       wait        = S[44][214],
     },
-    
+
     situation           = S[44][216],
     what_to_do_question = S[44][217],
     partial_diagnosis_percentage_name = S[44][218],
@@ -2138,12 +2138,12 @@ local R = {}
 -- Note that if an id of a room is changed this will need to be changed too.
 -- TODO: A better solution maybe?
 local ids = {
-  "gp", 
-  "psych", 
-  "ward", 
-  "operating_theatre", 
-  "pharmacy", 
-  "cardiogram", 
+  "gp",
+  "psych",
+  "ward",
+  "operating_theatre",
+  "pharmacy",
+  "cardiogram",
   "scanner",
   "ultrascan",
   "blood_machine",
@@ -2214,7 +2214,7 @@ dynamic_info = {
   },
   vip                           = S[59][21],
   health_inspector              = S[59][22],
-  
+
   staff = {
     psychiatrist_abbrev         = S[59][27],
     actions = {
@@ -2225,7 +2225,7 @@ dynamic_info = {
     tiredness                   = S[59][29],
     ability                     = S[59][30], -- unused?
   },
-  
+
   object = {
     strength                    = S[59][31], -- %d (max. uses)
     times_used                  = S[59][32], -- %d (times used)

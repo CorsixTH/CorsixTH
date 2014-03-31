@@ -67,34 +67,34 @@ function UICheats:UICheats(ui)
     {name = "lose_level",     func = self.cheatLose},
     {name = "win_level",      func = self.cheatWin},
   }
-  
-  
+
+
   self:UIResizable(ui, 300, 200, col_bg)
 
   self.default_button_sound = "selectx.wav"
-  
+
   local app = ui.app
   self.modal_class = "cheats"
   self.esc_closes = true
   self.resizable = false
   self:setDefaultPosition(0.2, 0.4)
-  
+
   local y = 10
   self:addBevelPanel(20, y, 260, 20, col_caption):setLabel(_S.cheats_window.caption)
     .lowered = true
-  
+
   y = y + 30
   self:addColourPanel(20, y, 260, 40, col_bg.red, col_bg.green, col_bg.blue):setLabel({_S.cheats_window.warning})
-  
+
   y = y + 40
   self.cheated_panel = self:addBevelPanel(20, y, 260, 18, col_cheated_no, col_border, col_border)
-  
+
   local function button_clicked(num)
     return --[[persistable:cheats_button]] function(self)
       self:buttonClicked(num)
     end
   end
-  
+
   self.item_panels = {}
   self.item_buttons = {}
 
@@ -106,11 +106,11 @@ function UICheats:UICheats(ui)
       :setTooltip(_S.tooltip.cheats_window.cheats[self.cheats[num].name])
     y = y + 20
   end
-  
+
   y = y + 20
   self:addBevelPanel(20, y, 260, 40, col_bg):setLabel(_S.cheats_window.close)
     :makeButton(0, 0, 260, 40, nil, self.buttonBack):setTooltip(_S.tooltip.cheats_window.close)
-  
+
   y = y + 60
   self:setSize(300, y)
   self:updateCheatedStatus()
@@ -135,7 +135,7 @@ function UICheats:buttonClicked(num)
     end
   else
     -- It was not possible to use this cheat.
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.cheat_not_possible})) 
+    self.ui:addWindow(UIInformation(self.ui, {_S.information.cheat_not_possible}))
   end
 end
 

@@ -29,7 +29,7 @@ local col_bg = {
 
 function UIMainMenu:UIMainMenu(ui)
   self:UIResizable(ui, 200, 300, col_bg)
-  
+
   local app = ui.app
   self.esc_closes = false
   self.modal_class = "main menu"
@@ -39,7 +39,7 @@ function UIMainMenu:UIMainMenu(ui)
   -- The main menu also shows the version number of the player's copy of the game.
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
   self.version_number = TheApp:getVersion()
-  
+
   -- individual buttons
   self.default_button_sound = "selectx.wav"
   self:addBevelPanel(20, 20, 160, 40, col_bg):setLabel(_S.main_menu.new_game):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
@@ -71,7 +71,7 @@ end
 function UIMainMenu:buttonNewGame()
   local window = UINewGame(self.ui)
   self.ui:addWindow(window)
-  
+
 end
 
 function UIMainMenu:buttonCustomGame()

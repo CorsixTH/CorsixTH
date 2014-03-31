@@ -135,7 +135,7 @@ totd_window = {
     "Staffs descontentes irao pedir aumentos de salário frequentemente , assegura que tens um bom ambiente de trabalho para isto não acontecer!",
     "Os pacientes ficarao com sede enquanto esperam no hospital,ainda mais se os radiadores estiverem muito quentes.Coloca máquinas de bebidas em locais estratégicos para ganhares mais uns trocos.",
     "Podes abortar o processo de diagnóstico para um paciente e tentar adivinhar a cura caso já tenhas descoberto a doença. Cuidado que este processo pode aumentar o risco de uma cura errada levando à morte do paciente.",
-    "Emergencias sao uma boa forma de ganhar algum dinheiro extra,garante que o teu hospital tem condiçoes para as completar.", 
+    "Emergencias sao uma boa forma de ganhar algum dinheiro extra,garante que o teu hospital tem condiçoes para as completar.",
   },
   previous = "Dica anterior",
   next = "Próxima dica",
@@ -184,10 +184,10 @@ tooltip = {
     start_game_with_name = "Ir para o nível %s",
   },
 
-  
+
   cheats_window = {
     close = "Fecha a janela dos truques",
-    
+
     cheats = {
       end_month = "Salta para o final do mês.",
       create_patient =  "Cria um paciente no mapa.",
@@ -198,11 +198,11 @@ tooltip = {
       vip = "Cria um VIP.",
       all_research = "Completa toda a pesquisa.",
       end_year = "Salta para o final do ano.",
-      }, 
+      },
     },
-    
-    
-   
+
+
+
 
 
   menu_list_window = {
@@ -220,7 +220,7 @@ tooltip = {
     medium = "Se já te sentes à vontade tenta a opção média!",
     },
 
-    
+
   save_game_window = {
     new_save_game = "Nome para salvar o jogo.",
     save_game = "Gravar por cima da gravação? %s",
@@ -239,13 +239,13 @@ tooltip = {
     no_research = "Não está a ser feita nenhuma pesquisa de momento.",
     },
 
-     
+
     lua_console = {
     textbox = "Coloca aqui o código Lua para executar",
     execute_code = "Executa o código colocado.",
     close =  "Fecha a consola.",
     },
-    
+
 
     fax = {
       close = "Fecha esta janela sem apagar a mensagem.",
@@ -286,12 +286,12 @@ cheats_window = {
 
     close = "Fechar",
     caption = "Truques",
-    
+
   cheated = {
     no = "Truques usados?: Nao",
     yes = "Truques usados?: Sim",
-    },  
-    
+    },
+
     warning = "Aviso:Se utilizares truques não irás ganhar pontos de reputação no final do nível!",
 }
 
@@ -584,7 +584,7 @@ rooms_short = {
   reception         = "Recepçao",
   destroyed         = "Destruído",
   corridor_objects  = "Objectos de Corredor",
-  
+
   gps_office        = "Consultório Geral",
   psychiatric       = "Psiquiatria",
   ward              = "Enfermaria",

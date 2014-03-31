@@ -25,9 +25,9 @@ class "UIAdviser" (Window)
 
 function UIAdviser:UIAdviser(ui)
   self:Window()
-  
+
   local app = ui.app
-  
+
   self.esc_closes = false
   self.modal_class = "adviser"
   self.tick_rate = app.world.tick_rate
@@ -50,7 +50,7 @@ function UIAdviser:UIAdviser(ui)
   self.balloon_width = 0
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Panel02V", true)
   self.black_font = app.gfx:loadFont("QData", "Font50V")
-  
+
   local th = TH.animation()
   self.th = th
 end
@@ -85,7 +85,7 @@ function UIAdviser:talk()
   self.stay_up = self.queued_messages[best].stay_up
   table.remove(self.queued_messages, best)
   self.speech = speech
-  -- Calculate number of lines needed for the text. 
+  -- Calculate number of lines needed for the text.
   -- Each "/" at end of string indicates a blank line
   local number_lines = 3
   local speech_trimmed = speech:gsub("/*$", "")
@@ -126,7 +126,7 @@ end
 --!param speech The table containing the text he should say and the priority.
 --!param talk_until_next_announce Whether he should stay up
 -- until the next say() call is made. Useful for the tutorial.
---!param override_current Cancels previous messages (if any) immediately 
+--!param override_current Cancels previous messages (if any) immediately
 -- and shows this new one instead.
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
   assert(type(speech) == "table")
@@ -162,7 +162,7 @@ end
 
 function UIAdviser:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  
+
   x, y = x + self.x, y + self.y
   self.th:draw(canvas, x + 200, y)
   if self.phase == 2 then
@@ -186,7 +186,7 @@ function UIAdviser:onMouseDown(button, x, y)
   end
   -- Normal operation outside the adviser bounds
   if x + self.balloon_width < 128 or x > 200 or y + self.y > 0 or y + self.y + 40 < 0 then
-    if x < self.x - 200 or y < self.y - 40 or x > self.x - 200 + self.width 
+    if x < self.x - 200 or y < self.y - 40 or x > self.x - 200 + self.width
       or y > self.y + self.height - 40 then
       return Window.onMouseDown(self, button, x, y)
     end
@@ -228,7 +228,7 @@ function UIAdviser:onTick()
       -- Adviser is now up, let him speak.
       self:talk()
     elseif self.phase == 2 then
-      -- Adviser finished to talk so make him idle unless 
+      -- Adviser finished to talk so make him idle unless
       -- there's another message waiting.
       if #self.queued_messages > 0 then
         -- Show the next queued message
@@ -238,7 +238,7 @@ function UIAdviser:onTick()
         self:idle()
       end
     elseif self.phase == 4 then
-      -- The adviser is getting down so we want to hide him, but we have 
+      -- The adviser is getting down so we want to hide him, but we have
       -- to wait until the animation ends.
       if self.up_again then
         -- Another message arrived while getting down.

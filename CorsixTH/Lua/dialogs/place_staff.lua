@@ -78,7 +78,7 @@ function UIPlaceStaff:draw(canvas)
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
     local room = self.world:getRoom(self.tile_x, self.tile_y)
     local valid = flag_cache.hospital and flag_cache.passable and
-      (self.allow_in_rooms or flag_cache.roomId == 0) and 
+      (self.allow_in_rooms or flag_cache.roomId == 0) and
       (not room and true or not room.crashed)
     self.anim:setFlag(valid and 0 or flag_altpal)
     local zoom = self.ui.zoom_factor
@@ -104,7 +104,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
       local room = self.world:getRoom(self.tile_x, self.tile_y)
       if flag_cache.hospital and flag_cache.passable
-      and (self.allow_in_rooms or flag_cache.roomId == 0) 
+      and (self.allow_in_rooms or flag_cache.roomId == 0)
       and (not room and true or not room.crashed) then
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)

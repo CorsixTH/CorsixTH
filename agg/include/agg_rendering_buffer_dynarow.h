@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -54,7 +54,7 @@ namespace agg
 
         // Allocate and clear the buffer
         //--------------------------------------------------------------------
-        rendering_buffer_dynarow(unsigned width, unsigned height, 
+        rendering_buffer_dynarow(unsigned width, unsigned height,
                                  unsigned byte_width) :
             m_rows(height),
             m_width(width),
@@ -69,7 +69,7 @@ namespace agg
         void init(unsigned width, unsigned height, unsigned byte_width)
         {
             unsigned i;
-            for(i = 0; i < m_height; ++i) 
+            for(i = 0; i < m_height; ++i)
             {
                 pod_allocator<int8u>::deallocate((int8u*)m_rows[i].ptr, m_byte_width);
             }
@@ -88,7 +88,7 @@ namespace agg
         unsigned height()     const { return m_height; }
         unsigned byte_width() const { return m_byte_width; }
 
-        // The main function used for rendering. Returns pointer to the 
+        // The main function used for rendering. Returns pointer to the
         // pre-allocated span. Memory for the row is allocated as needed.
         //--------------------------------------------------------------------
         int8u* row_ptr(int x, int y, unsigned len)

@@ -213,7 +213,7 @@ function Plant:callForWatering()
       self.plant_announced = true
     end
     self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
-  else 
+  else
     if self.current_state > 1 and not self.plant_announced then
       self.world.ui.adviser:say(_A.warnings.plants_thirsty)
       self.plant_announced = true
@@ -225,7 +225,7 @@ end
 
 --! When a handyman is about to be summoned this function queues the complete set of actions necessary,
 --  including entering and leaving any room involved. It also queues a meander action at the end.
---  Note that if there are more plants that need watering inside the room he will continue to water 
+--  Note that if there are more plants that need watering inside the room he will continue to water
 --  those too before leaving.
 --!param handyman (Staff) The handyman that is about to get the actions.
 function Plant:createHandymanActions(handyman)
@@ -253,8 +253,8 @@ function Plant:createHandymanActions(handyman)
   self.reserved_for = handyman
   local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
   local water_action = {
-    name = "use_object", 
-    object = self, 
+    name = "use_object",
+    object = self,
     watering_plant = true,
   }
   if handyman_room and handyman_room ~= this_room then
@@ -265,7 +265,7 @@ function Plant:createHandymanActions(handyman)
   end
   handyman:queueAction(water_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}  
+  handyman:queueAction{name = "answer_call"}
 end
 
 --! When a handyman should go to the plant he should approach it from the closest reachable tile.

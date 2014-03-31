@@ -303,7 +303,7 @@ public:
     image_accessor_clip_rgb24_pal8() {}
     explicit image_accessor_clip_rgb24_pal8(const palbuf_type& buf,
                                             const pal_type& pal,
-                                            const color_type& bk) : 
+                                            const color_type& bk) :
         m_pixf(&buf), m_pal(&pal)
     {
         pixfmt_type::make_pix(m_bk_buf, bk);
@@ -496,7 +496,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
         m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
 }
 
-void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY, 
+void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
                        int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
     if(m_pBitmap == NULL)

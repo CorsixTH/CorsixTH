@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -26,20 +26,20 @@
 namespace agg
 {
 
-    // See Implementation agg_image_filters.cpp 
+    // See Implementation agg_image_filters.cpp
 
     enum image_filter_scale_e
     {
         image_filter_shift = 14,                      //----image_filter_shift
-        image_filter_scale = 1 << image_filter_shift, //----image_filter_scale 
-        image_filter_mask  = image_filter_scale - 1   //----image_filter_mask 
+        image_filter_scale = 1 << image_filter_shift, //----image_filter_scale
+        image_filter_mask  = image_filter_scale - 1   //----image_filter_mask
     };
 
     enum image_subpixel_scale_e
     {
         image_subpixel_shift = 8,                         //----image_subpixel_shift
-        image_subpixel_scale = 1 << image_subpixel_shift, //----image_subpixel_scale 
-        image_subpixel_mask  = image_subpixel_scale - 1   //----image_subpixel_mask 
+        image_subpixel_scale = 1 << image_subpixel_shift, //----image_subpixel_scale
+        image_subpixel_mask  = image_subpixel_scale - 1   //----image_subpixel_mask
     };
 
 
@@ -58,12 +58,12 @@ namespace agg
             {
                 double x = double(i) / double(image_subpixel_scale);
                 double y = filter.calc_weight(x);
-                m_weight_array[pivot + i] = 
+                m_weight_array[pivot + i] =
                 m_weight_array[pivot - i] = (int16)iround(y * image_filter_scale);
             }
             unsigned end = (diameter() << image_subpixel_shift) - 1;
             m_weight_array[0] = m_weight_array[end];
-            if(normalization) 
+            if(normalization)
             {
                 normalize();
             }
@@ -71,7 +71,7 @@ namespace agg
 
         image_filter_lut() : m_radius(0), m_diameter(0), m_start(0) {}
 
-        template<class FilterF> image_filter_lut(const FilterF& filter, 
+        template<class FilterF> image_filter_lut(const FilterF& filter,
                                                  bool normalization=true)
         {
             calculate(filter, normalization);
@@ -150,7 +150,7 @@ namespace agg
             return (2.0 * x - 3.0) * x * x + 1.0;
         }
     };
-   
+
     //------------------------------------------------image_filter_quadric
     struct image_filter_quadric
     {
@@ -177,7 +177,7 @@ namespace agg
         static double calc_weight(double x)
         {
             return
-                (1.0/6.0) * 
+                (1.0/6.0) *
                 (pow3(x + 2) - 4 * pow3(x + 1) + 6 * pow3(x) - 4 * pow3(x - 1));
         }
     };
@@ -211,7 +211,7 @@ namespace agg
             sum = 1.;
             y = x * x / 4.;
             t = y;
-        
+
             for(i = 2; t > epsilon; i++)
             {
                 sum += t;
@@ -298,7 +298,7 @@ namespace agg
     struct image_filter_gaussian
     {
         static double radius() { return 2.0; }
-        static double calc_weight(double x) 
+        static double calc_weight(double x)
         {
             return exp(-2.0 * x * x) * sqrt(2.0 / pi);
         }
@@ -308,7 +308,7 @@ namespace agg
     //------------------------------------------------image_filter_bessel
     struct image_filter_bessel
     {
-        static double radius() { return 3.2383; } 
+        static double radius() { return 3.2383; }
         static double calc_weight(double x)
         {
             return (x == 0.0) ? pi / 4.0 : besj(pi * x, 1) / (2.0 * x);

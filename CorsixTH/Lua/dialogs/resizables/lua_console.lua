@@ -58,17 +58,17 @@ function UILuaConsole:UILuaConsole(ui)
   self.min_width = 200
   self.min_height = 150
   self:setDefaultPosition(0.1, 0.1)
-  
+
   -- Window parts definition
   self.default_button_sound = "selectx.wav"
-  
+
   -- Textbox for entering code
   self.textbox = self:addBevelPanel(20, 20, 280, 140, col_textbox, col_highlight, col_shadow)
     :setLabel("", app.gfx:loadBuiltinFont(), "left"):setTooltip(_S.tooltip.lua_console.textbox):setAutoClip(true)
     :makeTextbox():allowedInput("all"):setText({""})
-  
+
   self.textbox:setActive(true) -- activated by default
-  
+
   -- "Execute" button
   self.execute_button = self:addBevelPanel(20, self.height - 60, 130, 40, col_bg):setLabel(_S.lua_console.execute_code)
     :makeButton(0, 0, 130, 40, nil, self.buttonExecute):setTooltip(_S.tooltip.lua_console.execute_code)
@@ -79,14 +79,14 @@ end
 
 function UILuaConsole:setSize(width, height)
   UIResizable.setSize(self, width, height)
-  
+
   self.textbox:setSize(self.width - 40, self.height - 100)
-  
+
   local button_width = math.floor((self.width - 60) / 2)
-  
+
   self.execute_button:setPosition(20, self.height - 60)
   self.execute_button:setSize(button_width, 40)
-  
+
   self.close_button:setPosition(self.width - 20 - button_width, self.height - 60)
   self.close_button:setSize(button_width, 40)
 end

@@ -108,7 +108,7 @@ menu_options_warmth_colors = {
   choice_2 = "  BLUE GREEN RED  ",
   choice_3 = "  YELLOW ORANGE RED  ",
 }
- 
+
 menu_options_wage_increase = {
   grant = "    GRANT ",
   deny =  "    DENY ",
@@ -164,11 +164,11 @@ adviser = {
     no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!",
     no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!",
     no_desk_4 = "A Receptionist needs to have her own work station to greet your patients as they arrive",
-    no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!", 
+    no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
     no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
     no_desk_7 = "You've built the reception desk, so how about hiring a receptionist?  You won't see any patients until you get this sorted out you know!",
     cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
-    cannot_afford_2 = "You don't have enough money in the bank to make that purchase!", 
+    cannot_afford_2 = "You don't have enough money in the bank to make that purchase!",
     falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!",
     falling_2 = "Stop messing about, how would you like it?",
     falling_3 = "Ouch, that had to hurt, someone call a Doctor!",
@@ -183,7 +183,7 @@ adviser = {
     nurse_needs_desk_1 = "Each Nurse needs to have her own desk to work from.",
     nurse_needs_desk_2 = "Your Nurse is pleased that you have allowed her to have a break. If you were intending to have more than one working in the ward, then you need to provide them each with a desk to work from.",
   },
-  cheats = {  
+  cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",
     roujin_on_cheat = "Roujin's challenge activated! Good luck...",
     roujin_off_cheat = "Roujin's challenge deactivated.",
@@ -322,10 +322,10 @@ tooltip.options_window = {
   height = "Enter desired screen height",
   apply = "Apply the entered resolution",
   cancel = "Return without changing the resolution",
-  audio_button = "Turn on or off all game audio", 
-  audio_toggle = "Toggle on or off",   
+  audio_button = "Turn on or off all game audio",
+  audio_toggle = "Toggle on or off",
   customise_button = "More settings you can change to customise your game play experience",
-  folder_button = "Folder Options",  
+  folder_button = "Folder Options",
   language = "The language texts in the game will appear in",
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
@@ -347,27 +347,27 @@ customise_window = {
 }
 
 tooltip.customise_window = {
-  movies = "Global movie control, this will allow you to disable all the movies",  
+  movies = "Global movie control, this will allow you to disable all the movies",
   intro = "Turn off or on the intro movie, global movies will need to be on if you want the intro movie to play each time you load CorsixTH",
   paused = "In Theme Hospital the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
   volume = "If the volume down button is opening the casebook as well, turn this on to change the hotkey for the casebook to Shift + C",
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA so that they can only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no patients with Fractured Bones that are female. To allow female patients with Fractured Bones to visit your hospital, turn this off",
-  average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",  
+  average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   back = "Close this menu and go back to the Settings Menu",
 }
 
 folders_window = {
   caption = "Folder Locations",
   data_label = "TH Data",
-  font_label = "Font",  
+  font_label = "Font",
   music_label = "MP3's",
   savegames_label = "Saves",
   screenshots_label = "Screenshots",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.", 
+  new_th_location = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
   savegames_location = "Select the directory you want to use for Saves",
-  music_location = "Select the directory you want to use for your Music", 
+  music_location = "Select the directory you want to use for your Music",
   screenshots_location = "Select the directory you want to use for Screenshots",
   back  = "Back",
 }
@@ -375,16 +375,16 @@ folders_window = {
 tooltip.folders_window = {
   browse = "Browse for folder location",
   data_location = "The directory of the original Theme Hospital installation, which is required to run CorsixTH",
-  font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",    
-  savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Should this not be suitable, then you can choose your own, just browse to the directory which you want to use.", 
-  screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Should this not be suitable, then you can choose your own, just browse to the directory which you want to use.",  
+  font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
+  savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Should this not be suitable, then you can choose your own, just browse to the directory which you want to use.",
+  screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Should this not be suitable, then you can choose your own, just browse to the directory which you want to use.",
   music_location = "Select a location for your mp3 music files.  You must have created the directory already, then browse to the directory which you just created.",
-  browse_data = "Browse for another location of a Theme Hospital installation (current location: %1%)", 
+  browse_data = "Browse for another location of a Theme Hospital installation (current location: %1%)",
   browse_font = "Browse for another font file ( current location: %1% )",
   browse_saves = "Browse for another location for your Saves directory  ( Current location: %1% ) ",
   browse_screenshots = "Browse for another location for your Screenshots directory  ( Current location: %1% ) ",
-  browse_music = "Browse for another location for your Music directory  ( Current location: %1% ) ",  
-  no_font_specified = "No font location specified yet!",  
+  browse_music = "Browse for another location for your Music directory  ( Current location: %1% ) ",
+  no_font_specified = "No font location specified yet!",
   not_specified = "No folder location specified yet!",
   default = "Default location",
   reset_to_default = "Reset the directory to its default location",
@@ -449,7 +449,7 @@ errors = {
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
-  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file", 
+  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file",
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
 }
 

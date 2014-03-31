@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -33,7 +33,7 @@ namespace agg
 
     private:
         conv_close_polygon(const conv_close_polygon<VertexSource>&);
-        const conv_close_polygon<VertexSource>& 
+        const conv_close_polygon<VertexSource>&
             operator = (const conv_close_polygon<VertexSource>&);
 
         VertexSource* m_source;
@@ -47,7 +47,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class VertexSource> 
+    template<class VertexSource>
     void conv_close_polygon<VertexSource>::rewind(unsigned path_id)
     {
         m_source->rewind(path_id);
@@ -56,9 +56,9 @@ namespace agg
     }
 
 
-    
+
     //------------------------------------------------------------------------
-    template<class VertexSource> 
+    template<class VertexSource>
     unsigned conv_close_polygon<VertexSource>::vertex(double* x, double* y)
     {
         unsigned cmd = path_cmd_stop;

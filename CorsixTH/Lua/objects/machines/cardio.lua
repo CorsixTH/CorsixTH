@@ -123,7 +123,7 @@ object.multi_usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {-1, -1, complete_cell = true}, {-1, 0, complete_cell = true}, {1, -1, only_passable = true}, 
+    footprint = { {-1, -1, complete_cell = true}, {-1, 0, complete_cell = true}, {1, -1, only_passable = true},
                   {0, -1, need_north_side = true}, {0, 0, only_passable = true} },
     render_attach_position = {-1, 0},
     use_position = {1, -1},
@@ -131,7 +131,7 @@ object.orientations = {
     added_handyman_animate_offset_while_in_use = {1, -1},
   },
   east = {
-    footprint = { {-1, -1, complete_cell = true}, {-1, 0}, {0, -1, complete_cell = true}, 
+    footprint = { {-1, -1, complete_cell = true}, {-1, 0}, {0, -1, complete_cell = true},
                   {0, 0, only_passable = true}, {-1, 1, only_passable = true} },
     render_attach_position = {0, -1},
     use_position = {-1, 1},

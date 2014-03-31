@@ -36,7 +36,7 @@ function UIJukebox:UIJukebox(app)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req13V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.blue_font = app.gfx:loadFont("QData", "Font02V")
-  
+
   -- Dialog head (current track title & exit button)
   self:addPanel(389, 0, 0)
   for x = 30, self.width - 61, 24 do
@@ -44,7 +44,7 @@ function UIJukebox:UIJukebox(app)
   end
   self:addPanel(391, self.width - 61, 0)
   self:addPanel(409, self.width - 42, 19):makeButton(0, 0, 24, 24, 410, self.close):setTooltip(_S.tooltip.jukebox.close)
-  
+
   self.play_btn =
   self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.play)
   self:updatePlayButton()
@@ -52,7 +52,7 @@ function UIJukebox:UIJukebox(app)
   self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.fast_forward)
   self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.stop)
   self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.loop)
-  
+
   -- Track list
   self.track_buttons = {}
   for i, info in ipairs(self.audio.background_playlist) do
@@ -69,7 +69,7 @@ function UIJukebox:UIJukebox(app)
       self:toggleTrack(i, info, not off)
     end
   end
-  
+
   -- Dialog footer
   local y = 74 + 30 * #self.audio.background_playlist
   self:addPanel(406, 0, y)
@@ -77,7 +77,7 @@ function UIJukebox:UIJukebox(app)
     self:addPanel(407, x, y)
   end
   self:addPanel(408, self.width - 61, y)
-  
+
   self:makeTooltip(_S.tooltip.jukebox.current_title, 17, 17, 212, 46)
 end
 
@@ -124,7 +124,7 @@ end
 function UIJukebox:loopTrack()
   local index = self.audio:findIndexOfCurrentTrack()
   local playlist = self.audio.background_playlist
-  
+
   if playlist[index].loop then
     playlist[index].loop = false
 
@@ -134,7 +134,7 @@ function UIJukebox:loopTrack()
         self:toggleTrack(i, list_entry, true)
         self.track_buttons[i]:toggle()
       end
-    end 
+    end
   else
     playlist[index].loop = true
 
@@ -151,7 +151,7 @@ end
 function UIJukebox:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
+
   local playing = self.audio.background_music or ""
   for i, info in ipairs(self.audio.background_playlist) do
     local y = y + 47 + i * 30

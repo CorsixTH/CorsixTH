@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -39,10 +39,10 @@ namespace agg
 
     private:
         conv_marker(const conv_marker<MarkerLocator, MarkerShapes>&);
-        const conv_marker<MarkerLocator, MarkerShapes>& 
+        const conv_marker<MarkerLocator, MarkerShapes>&
             operator = (const conv_marker<MarkerLocator, MarkerShapes>&);
 
-        enum status_e 
+        enum status_e
         {
             initial,
             markers,
@@ -61,7 +61,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class MarkerLocator, class MarkerShapes> 
+    template<class MarkerLocator, class MarkerShapes>
     conv_marker<MarkerLocator, MarkerShapes>::conv_marker(MarkerLocator& ml, MarkerShapes& ms) :
         m_marker_locator(&ml),
         m_marker_shapes(&ms),
@@ -73,7 +73,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class MarkerLocator, class MarkerShapes> 
+    template<class MarkerLocator, class MarkerShapes>
     void conv_marker<MarkerLocator, MarkerShapes>::rewind(unsigned)
     {
         m_status = initial;
@@ -83,7 +83,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    template<class MarkerLocator, class MarkerShapes> 
+    template<class MarkerLocator, class MarkerShapes>
     unsigned conv_marker<MarkerLocator, MarkerShapes>::vertex(double* x, double* y)
     {
         unsigned cmd = path_cmd_move_to;

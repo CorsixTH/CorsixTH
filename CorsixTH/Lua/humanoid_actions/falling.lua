@@ -29,7 +29,7 @@ local function action_falling_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.falling_anim, "Error: no falling animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.falling_anim, humanoid.last_move_direction == "east" and 0 or 1)

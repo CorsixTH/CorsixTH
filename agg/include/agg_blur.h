@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -13,14 +13,14 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 //
-// The Stack Blur Algorithm was invented by Mario Klingemann, 
+// The Stack Blur Algorithm was invented by Mario Klingemann,
 // mario@quasimondo.com and described here:
 // http://incubator.quasimondo.com/processing/fast_blur_deluxe.php
-// (search phrase "Stackblur: Fast But Goodlooking"). 
+// (search phrase "Stackblur: Fast But Goodlooking").
 // The major improvement is that there's no more division table
-// that was very expensive to create for large blur radii. Insted, 
-// for 8-bit per channel and radius not exceeding 254 the division is 
-// replaced by multiplication and shift. 
+// that was very expensive to create for large blur radii. Insted,
+// for 8-bit per channel and radius not exceeding 254 the division is
+// replaced by multiplication and shift.
 //
 //----------------------------------------------------------------------------
 
@@ -40,8 +40,8 @@ namespace agg
     };
 
     //------------------------------------------------------------------------
-    template<class T> 
-    int16u const stack_blur_tables<T>::g_stack_blur8_mul[255] = 
+    template<class T>
+    int16u const stack_blur_tables<T>::g_stack_blur8_mul[255] =
     {
         512,512,456,512,328,456,335,512,405,328,271,456,388,335,292,512,
         454,405,364,328,298,271,496,456,420,388,360,335,312,292,273,512,
@@ -62,21 +62,21 @@ namespace agg
     };
 
     //------------------------------------------------------------------------
-    template<class T> 
-    int8u const stack_blur_tables<T>::g_stack_blur8_shr[255] = 
+    template<class T>
+    int8u const stack_blur_tables<T>::g_stack_blur8_shr[255] =
     {
-          9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17, 
-         17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 
+          9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17,
+         17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
          19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
          20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21,
          21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
-         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 
+         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22,
          22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 
+         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23,
          23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
          23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 
-         23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 
+         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+         23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
          24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
          24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
          24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
@@ -154,7 +154,7 @@ namespace agg
                     else        sum.calc_pix(m_buf[x], div_sum);
 
                     sum.sub(sum_out);
-           
+
                     stack_start = stack_ptr + div - radius;
                     if(stack_start >= div) stack_start -= div;
                     stack_pix = &m_stack[stack_start];
@@ -164,12 +164,12 @@ namespace agg
                     xp = x + radius + 1;
                     if(xp > wm) xp = wm;
                     pix = img.pixel(xp, y);
-            
+
                     *stack_pix = pix;
-            
+
                     sum_in.add(pix);
                     sum.add(sum_in);
-            
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix = &m_stack[stack_ptr];
@@ -207,9 +207,9 @@ namespace agg
         typedef T value_type;
         value_type r,g,b,a;
 
-        AGG_INLINE void clear() 
-        { 
-            r = g = b = a = 0; 
+        AGG_INLINE void clear()
+        {
+            r = g = b = a = 0;
         }
 
         template<class ArgT> AGG_INLINE void add(const ArgT& v)
@@ -245,7 +245,7 @@ namespace agg
             v.a = value_type(a / div);
         }
 
-        template<class ArgT> 
+        template<class ArgT>
         AGG_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
@@ -263,9 +263,9 @@ namespace agg
         typedef T value_type;
         value_type r,g,b;
 
-        AGG_INLINE void clear() 
-        { 
-            r = g = b = 0; 
+        AGG_INLINE void clear()
+        {
+            r = g = b = 0;
         }
 
         template<class ArgT> AGG_INLINE void add(const ArgT& v)
@@ -297,7 +297,7 @@ namespace agg
             v.b = value_type(b / div);
         }
 
-        template<class ArgT> 
+        template<class ArgT>
         AGG_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
@@ -314,9 +314,9 @@ namespace agg
         typedef T value_type;
         value_type v;
 
-        AGG_INLINE void clear() 
-        { 
-            v = 0; 
+        AGG_INLINE void clear()
+        {
+            v = 0;
         }
 
         template<class ArgT> AGG_INLINE void add(const ArgT& a)
@@ -340,7 +340,7 @@ namespace agg
             a.v = value_type(v / div);
         }
 
-        template<class ArgT> 
+        template<class ArgT>
         AGG_INLINE void calc_pix(ArgT& a, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
@@ -351,7 +351,7 @@ namespace agg
 
 
     //========================================================stack_blur_gray8
-    template<class Img> 
+    template<class Img>
     void stack_blur_gray8(Img& img, unsigned rx, unsigned ry)
     {
         unsigned x, y, xp, yp, i;
@@ -399,8 +399,8 @@ namespace agg
                 }
                 for(i = 1; i <= rx; i++)
                 {
-                    if(i <= wm) src_pix_ptr += Img::pix_step; 
-                    pix = *src_pix_ptr; 
+                    if(i <= wm) src_pix_ptr += Img::pix_step;
+                    pix = *src_pix_ptr;
                     stack[i + rx] = pix;
                     sum    += pix * (rx + 1 - i);
                     sum_in += pix;
@@ -417,23 +417,23 @@ namespace agg
                     dst_pix_ptr += Img::pix_step;
 
                     sum -= sum_out;
-       
+
                     stack_start = stack_ptr + div - rx;
                     if(stack_start >= div) stack_start -= div;
                     sum_out -= stack[stack_start];
 
-                    if(xp < wm) 
+                    if(xp < wm)
                     {
                         src_pix_ptr += Img::pix_step;
                         pix = *src_pix_ptr;
                         ++xp;
                     }
-        
+
                     stack[stack_start] = pix;
-        
+
                     sum_in += pix;
                     sum    += sum_in;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix = stack[stack_ptr];
@@ -467,8 +467,8 @@ namespace agg
                 }
                 for(i = 1; i <= ry; i++)
                 {
-                    if(i <= hm) src_pix_ptr += stride; 
-                    pix = *src_pix_ptr; 
+                    if(i <= hm) src_pix_ptr += stride;
+                    pix = *src_pix_ptr;
                     stack[i + ry] = pix;
                     sum    += pix * (ry + 1 - i);
                     sum_in += pix;
@@ -485,23 +485,23 @@ namespace agg
                     dst_pix_ptr += stride;
 
                     sum -= sum_out;
-       
+
                     stack_start = stack_ptr + div - ry;
                     if(stack_start >= div) stack_start -= div;
                     sum_out -= stack[stack_start];
 
-                    if(yp < hm) 
+                    if(yp < hm)
                     {
                         src_pix_ptr += stride;
                         pix = *src_pix_ptr;
                         ++yp;
                     }
-        
+
                     stack[stack_start] = pix;
-        
+
                     sum_in += pix;
                     sum    += sum_in;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix = stack[stack_ptr];
@@ -516,16 +516,16 @@ namespace agg
 
 
     //========================================================stack_blur_rgb24
-    template<class Img> 
+    template<class Img>
     void stack_blur_rgb24(Img& img, unsigned rx, unsigned ry)
     {
         typedef typename Img::color_type color_type;
         typedef typename Img::order_type order_type;
-        enum order_e 
-        { 
-            R = order_type::R, 
-            G = order_type::G, 
-            B = order_type::B 
+        enum order_e
+        {
+            R = order_type::R,
+            G = order_type::G,
+            B = order_type::B
         };
 
         unsigned x, y, xp, yp, i;
@@ -567,14 +567,14 @@ namespace agg
 
             for(y = 0; y < h; y++)
             {
-                sum_r = 
-                sum_g = 
-                sum_b = 
-                sum_in_r = 
-                sum_in_g = 
-                sum_in_b = 
-                sum_out_r = 
-                sum_out_g = 
+                sum_r =
+                sum_g =
+                sum_b =
+                sum_in_r =
+                sum_in_g =
+                sum_in_b =
+                sum_out_r =
+                sum_out_g =
                 sum_out_b = 0;
 
                 src_pix_ptr = img.pix_ptr(0, y);
@@ -593,7 +593,7 @@ namespace agg
                 }
                 for(i = 1; i <= rx; i++)
                 {
-                    if(i <= wm) src_pix_ptr += Img::pix_width; 
+                    if(i <= wm) src_pix_ptr += Img::pix_width;
                     stack_pix_ptr = &stack[i + rx];
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
@@ -621,7 +621,7 @@ namespace agg
                     sum_r -= sum_out_r;
                     sum_g -= sum_out_g;
                     sum_b -= sum_out_b;
-       
+
                     stack_start = stack_ptr + div - rx;
                     if(stack_start >= div) stack_start -= div;
                     stack_pix_ptr = &stack[stack_start];
@@ -630,23 +630,23 @@ namespace agg
                     sum_out_g -= stack_pix_ptr->g;
                     sum_out_b -= stack_pix_ptr->b;
 
-                    if(xp < wm) 
+                    if(xp < wm)
                     {
                         src_pix_ptr += Img::pix_width;
                         ++xp;
                     }
-        
+
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
                     stack_pix_ptr->b = src_pix_ptr[B];
-        
+
                     sum_in_r += src_pix_ptr[R];
                     sum_in_g += src_pix_ptr[G];
                     sum_in_b += src_pix_ptr[B];
                     sum_r    += sum_in_r;
                     sum_g    += sum_in_g;
                     sum_b    += sum_in_b;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix_ptr = &stack[stack_ptr];
@@ -672,14 +672,14 @@ namespace agg
             int stride = img.stride();
             for(x = 0; x < w; x++)
             {
-                sum_r = 
-                sum_g = 
-                sum_b = 
-                sum_in_r = 
-                sum_in_g = 
-                sum_in_b = 
-                sum_out_r = 
-                sum_out_g = 
+                sum_r =
+                sum_g =
+                sum_b =
+                sum_in_r =
+                sum_in_g =
+                sum_in_b =
+                sum_out_r =
+                sum_out_g =
                 sum_out_b = 0;
 
                 src_pix_ptr = img.pix_ptr(x, 0);
@@ -698,7 +698,7 @@ namespace agg
                 }
                 for(i = 1; i <= ry; i++)
                 {
-                    if(i <= hm) src_pix_ptr += stride; 
+                    if(i <= hm) src_pix_ptr += stride;
                     stack_pix_ptr = &stack[i + ry];
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
@@ -726,7 +726,7 @@ namespace agg
                     sum_r -= sum_out_r;
                     sum_g -= sum_out_g;
                     sum_b -= sum_out_b;
-       
+
                     stack_start = stack_ptr + div - ry;
                     if(stack_start >= div) stack_start -= div;
 
@@ -735,23 +735,23 @@ namespace agg
                     sum_out_g -= stack_pix_ptr->g;
                     sum_out_b -= stack_pix_ptr->b;
 
-                    if(yp < hm) 
+                    if(yp < hm)
                     {
                         src_pix_ptr += stride;
                         ++yp;
                     }
-        
+
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
                     stack_pix_ptr->b = src_pix_ptr[B];
-        
+
                     sum_in_r += src_pix_ptr[R];
                     sum_in_g += src_pix_ptr[G];
                     sum_in_b += src_pix_ptr[B];
                     sum_r    += sum_in_r;
                     sum_g    += sum_in_g;
                     sum_b    += sum_in_b;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix_ptr = &stack[stack_ptr];
@@ -770,17 +770,17 @@ namespace agg
 
 
     //=======================================================stack_blur_rgba32
-    template<class Img> 
+    template<class Img>
     void stack_blur_rgba32(Img& img, unsigned rx, unsigned ry)
     {
         typedef typename Img::color_type color_type;
         typedef typename Img::order_type order_type;
-        enum order_e 
-        { 
-            R = order_type::R, 
-            G = order_type::G, 
+        enum order_e
+        {
+            R = order_type::R,
+            G = order_type::G,
             B = order_type::B,
-            A = order_type::A 
+            A = order_type::A
         };
 
         unsigned x, y, xp, yp, i;
@@ -825,17 +825,17 @@ namespace agg
 
             for(y = 0; y < h; y++)
             {
-                sum_r = 
-                sum_g = 
-                sum_b = 
-                sum_a = 
-                sum_in_r = 
-                sum_in_g = 
-                sum_in_b = 
-                sum_in_a = 
-                sum_out_r = 
-                sum_out_g = 
-                sum_out_b = 
+                sum_r =
+                sum_g =
+                sum_b =
+                sum_a =
+                sum_in_r =
+                sum_in_g =
+                sum_in_b =
+                sum_in_a =
+                sum_out_r =
+                sum_out_g =
+                sum_out_b =
                 sum_out_a = 0;
 
                 src_pix_ptr = img.pix_ptr(0, y);
@@ -857,7 +857,7 @@ namespace agg
                 }
                 for(i = 1; i <= rx; i++)
                 {
-                    if(i <= wm) src_pix_ptr += Img::pix_width; 
+                    if(i <= wm) src_pix_ptr += Img::pix_width;
                     stack_pix_ptr = &stack[i + rx];
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
@@ -890,7 +890,7 @@ namespace agg
                     sum_g -= sum_out_g;
                     sum_b -= sum_out_b;
                     sum_a -= sum_out_a;
-       
+
                     stack_start = stack_ptr + div - rx;
                     if(stack_start >= div) stack_start -= div;
                     stack_pix_ptr = &stack[stack_start];
@@ -900,17 +900,17 @@ namespace agg
                     sum_out_b -= stack_pix_ptr->b;
                     sum_out_a -= stack_pix_ptr->a;
 
-                    if(xp < wm) 
+                    if(xp < wm)
                     {
                         src_pix_ptr += Img::pix_width;
                         ++xp;
                     }
-        
+
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
                     stack_pix_ptr->b = src_pix_ptr[B];
                     stack_pix_ptr->a = src_pix_ptr[A];
-        
+
                     sum_in_r += src_pix_ptr[R];
                     sum_in_g += src_pix_ptr[G];
                     sum_in_b += src_pix_ptr[B];
@@ -919,7 +919,7 @@ namespace agg
                     sum_g    += sum_in_g;
                     sum_b    += sum_in_b;
                     sum_a    += sum_in_a;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix_ptr = &stack[stack_ptr];
@@ -947,17 +947,17 @@ namespace agg
             int stride = img.stride();
             for(x = 0; x < w; x++)
             {
-                sum_r = 
-                sum_g = 
-                sum_b = 
-                sum_a = 
-                sum_in_r = 
-                sum_in_g = 
-                sum_in_b = 
-                sum_in_a = 
-                sum_out_r = 
-                sum_out_g = 
-                sum_out_b = 
+                sum_r =
+                sum_g =
+                sum_b =
+                sum_a =
+                sum_in_r =
+                sum_in_g =
+                sum_in_b =
+                sum_in_a =
+                sum_out_r =
+                sum_out_g =
+                sum_out_b =
                 sum_out_a = 0;
 
                 src_pix_ptr = img.pix_ptr(x, 0);
@@ -979,7 +979,7 @@ namespace agg
                 }
                 for(i = 1; i <= ry; i++)
                 {
-                    if(i <= hm) src_pix_ptr += stride; 
+                    if(i <= hm) src_pix_ptr += stride;
                     stack_pix_ptr = &stack[i + ry];
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
@@ -1012,7 +1012,7 @@ namespace agg
                     sum_g -= sum_out_g;
                     sum_b -= sum_out_b;
                     sum_a -= sum_out_a;
-       
+
                     stack_start = stack_ptr + div - ry;
                     if(stack_start >= div) stack_start -= div;
 
@@ -1022,17 +1022,17 @@ namespace agg
                     sum_out_b -= stack_pix_ptr->b;
                     sum_out_a -= stack_pix_ptr->a;
 
-                    if(yp < hm) 
+                    if(yp < hm)
                     {
                         src_pix_ptr += stride;
                         ++yp;
                     }
-        
+
                     stack_pix_ptr->r = src_pix_ptr[R];
                     stack_pix_ptr->g = src_pix_ptr[G];
                     stack_pix_ptr->b = src_pix_ptr[B];
                     stack_pix_ptr->a = src_pix_ptr[A];
-        
+
                     sum_in_r += src_pix_ptr[R];
                     sum_in_g += src_pix_ptr[G];
                     sum_in_b += src_pix_ptr[B];
@@ -1041,7 +1041,7 @@ namespace agg
                     sum_g    += sum_in_g;
                     sum_b    += sum_in_b;
                     sum_a    += sum_in_a;
-        
+
                     ++stack_ptr;
                     if(stack_ptr >= div) stack_ptr = 0;
                     stack_pix_ptr = &stack[stack_ptr];
@@ -1084,16 +1084,16 @@ namespace agg
             calc_type q2 = calc_type(q * q);
             calc_type q3 = calc_type(q2 * q);
 
-            calc_type b0 = calc_type(1.0 / (1.578250 + 
-                                            2.444130 * q + 
-                                            1.428100 * q2 + 
+            calc_type b0 = calc_type(1.0 / (1.578250 +
+                                            2.444130 * q +
+                                            1.428100 * q2 +
                                             0.422205 * q3));
 
-            calc_type b1 = calc_type( 2.44413 * q + 
-                                      2.85619 * q2 + 
+            calc_type b1 = calc_type( 2.44413 * q +
+                                      2.85619 * q2 +
                                       1.26661 * q3);
 
-            calc_type b2 = calc_type(-1.42810 * q2 + 
+            calc_type b2 = calc_type(-1.42810 * q2 +
                                      -1.26661 * q3);
 
             calc_type b3 = calc_type(0.422205 * q3);
@@ -1128,7 +1128,7 @@ namespace agg
                     c.from_pix(img.pixel(x, y));
                     m_sum1[x].calc(b, b1, b2, b3, c, m_sum1[x-1], m_sum1[x-2], m_sum1[x-3]);
                 }
-    
+
                 m_sum2[wm  ].calc(b, b1, b2, b3, m_sum1[wm  ], m_sum1[wm  ], m_sum1[wm], m_sum1[wm]);
                 m_sum2[wm-1].calc(b, b1, b2, b3, m_sum1[wm-1], m_sum2[wm  ], m_sum2[wm], m_sum2[wm]);
                 m_sum2[wm-2].calc(b, b1, b2, b3, m_sum1[wm-2], m_sum2[wm-1], m_sum2[wm], m_sum2[wm]);
@@ -1175,7 +1175,7 @@ namespace agg
 
         value_type r,g,b,a;
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void from_pix(const ColorT& c)
         {
             r = c.r;
@@ -1184,13 +1184,13 @@ namespace agg
             a = c.a;
         }
 
-        AGG_INLINE void calc(value_type b1, 
-                             value_type b2, 
-                             value_type b3, 
+        AGG_INLINE void calc(value_type b1,
+                             value_type b2,
+                             value_type b3,
                              value_type b4,
-                             const self_type& c1, 
-                             const self_type& c2, 
-                             const self_type& c3, 
+                             const self_type& c1,
+                             const self_type& c2,
+                             const self_type& c3,
                              const self_type& c4)
         {
             r = b1*c1.r + b2*c2.r + b3*c3.r + b4*c4.r;
@@ -1199,7 +1199,7 @@ namespace agg
             a = b1*c1.a + b2*c2.a + b3*c3.a + b4*c4.a;
         }
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;
@@ -1219,7 +1219,7 @@ namespace agg
 
         value_type r,g,b;
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void from_pix(const ColorT& c)
         {
             r = c.r;
@@ -1227,13 +1227,13 @@ namespace agg
             b = c.b;
         }
 
-        AGG_INLINE void calc(value_type b1, 
-                             value_type b2, 
-                             value_type b3, 
+        AGG_INLINE void calc(value_type b1,
+                             value_type b2,
+                             value_type b3,
                              value_type b4,
-                             const self_type& c1, 
-                             const self_type& c2, 
-                             const self_type& c3, 
+                             const self_type& c1,
+                             const self_type& c2,
+                             const self_type& c3,
                              const self_type& c4)
         {
             r = b1*c1.r + b2*c2.r + b3*c3.r + b4*c4.r;
@@ -1241,7 +1241,7 @@ namespace agg
             b = b1*c1.b + b2*c2.b + b3*c3.b + b4*c4.b;
         }
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;
@@ -1260,25 +1260,25 @@ namespace agg
 
         value_type v;
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void from_pix(const ColorT& c)
         {
             v = c.v;
         }
 
-        AGG_INLINE void calc(value_type b1, 
-                             value_type b2, 
-                             value_type b3, 
+        AGG_INLINE void calc(value_type b1,
+                             value_type b2,
+                             value_type b3,
                              value_type b4,
-                             const self_type& c1, 
-                             const self_type& c2, 
-                             const self_type& c3, 
+                             const self_type& c1,
+                             const self_type& c2,
+                             const self_type& c3,
                              const self_type& c4)
         {
             v = b1*c1.v + b2*c2.v + b3*c3.v + b4*c4.v;
         }
 
-        template<class ColorT> 
+        template<class ColorT>
         AGG_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;

@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -13,12 +13,12 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 //
-// Adaptation for 32-bit screen coordinates has been sponsored by 
+// Adaptation for 32-bit screen coordinates has been sponsored by
 // Liberty Technology Systems, Inc., visit http://lib-sys.com
 //
 // Liberty Technology Systems, Inc. is the provider of
 // PostScript and PDF technology for software developers.
-// 
+//
 //----------------------------------------------------------------------------
 
 
@@ -492,7 +492,7 @@ namespace agg
             ((int8u*)&val)[3] = *m_ptr++;
             return val;
         }
-       
+
     public:
         // Iterate scanlines interface
         //--------------------------------------------------------------------
@@ -501,7 +501,7 @@ namespace agg
             m_ptr = m_data;
             if(m_ptr < m_end)
             {
-                m_min_x = read_int32() + m_dx; 
+                m_min_x = read_int32() + m_dx;
                 m_min_y = read_int32() + m_dy;
                 m_max_x = read_int32() + m_dx;
                 m_max_y = read_int32() + m_dy;

@@ -112,7 +112,7 @@ frmMain::frmMain()
     m_bPlayingAnimation = true;
     //m_bPlayingAnimation = false;
     pSidebarSizer->Add(pFrame, 0, wxEXPAND | wxALL, 0);
-    
+
 #define ID(layer, id) (ID_LAYER_CHECKS + (layer) * 25 + (id))
     wxStaticBoxSizer *pLayer0 = new wxStaticBoxSizer(wxHORIZONTAL, this, L"Layer 0 (Patient Head)");
     pLayer0->Add(new wxCheckBox(this, ID(0,  0), L"0"), 0, wxALIGN_CENTER | wxALL, 1);
@@ -263,7 +263,7 @@ frmMain::frmMain()
 
     SetBackgroundColour(m_btnPlayPause->GetBackgroundColour());
     SetSizer(pMainSizer);
-    
+
     SetMinSize(ClientToWindowSize(pMainSizer->CalcMin()));
     SetSize(GetMinSize());
 
@@ -405,7 +405,7 @@ your hard disk (~250MB). \n If you click No, it will write the XML and element f
 the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hospital data files.",
         L"Export Warning", wxYES_NO | wxCANCEL);
     if( response == wxYES) { bWriteFrames = true; }
-    if( response != wxCANCEL) 
+    if( response != wxCANCEL)
     {
         //Start with animations, then move on to sprite sheets (map tiles)
         if(!m_oAnims.loadAnimationFile(_getCaseSensitivePath(L"VSTART-1.ANI", sdPath))
@@ -439,7 +439,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
         wxTextOutputStream outputXml(fosxml);
         outputXml.WriteString(wxString::Format(L"<?xml version='1.0' encoding='ISO-8859-1' standalone='no'?>\n"));
         outputXml.WriteString(wxString::Format(L"<theme_hospital_graphics scale_factor='1'>\n"));
-    
+
         int iAnimationCount = 0;
         int iFrameCountTotal = 1;
         int iElementCount = 0;
@@ -454,7 +454,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
                 {
                     wxFileName::Mkdir(aiPath);
                 }
-                outputXml.WriteString(wxString::Format(L"<an id='%u' fr='%u' un='%u'>\n", 
+                outputXml.WriteString(wxString::Format(L"<an id='%u' fr='%u' un='%u'>\n",
                     iAnimation, m_oAnims.getFrameField(iAnimation), m_oAnims.getUnknownField(iAnimation)));
                 aiPath += wxFileName::GetPathSeparator();
                 size_t iFrameCount = m_oAnims.getFrameCount(iAnimation);
@@ -462,7 +462,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
                 {
                     wxImage imgCanvas;
                     th_frame_t* pFrame = m_oAnims.getFrameStruct(iAnimation,iFrame);
-                    outputXml.WriteString(wxString::Format(L"\t<fr id='%u' li='%u' w='%u' h='%u' fl='%u' nx='%u'>\n", 
+                    outputXml.WriteString(wxString::Format(L"\t<fr id='%u' li='%u' w='%u' h='%u' fl='%u' nx='%u'>\n",
                         iFrameCountTotal, iListIndex, pFrame->width, pFrame->height, pFrame->flags, pFrame->next));
 
                     wxSize oSize;
@@ -488,7 +488,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
                         }
 
                         m_oAnims.drawFrame(imgCanvas, iAnimation, iFrame, &m_mskLayers, oSize, 0, 0);
-                        outputLog.WriteString(wxString::Format(L"%s\t%u\t%u\t%u\t%u\t%u\n", L"VSPR-0", iAnimation, iFrame, 
+                        outputLog.WriteString(wxString::Format(L"%s\t%u\t%u\t%u\t%u\t%u\n", L"VSPR-0", iAnimation, iFrame,
                                 oSize.x, oSize.y, m_oAnims.getUnknownField(iAnimation)));
                     }
 
@@ -506,7 +506,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
                 iAnimationCount++;
             }
         }
-        //outputXml.WriteString(wxString::Format(L"\t<graphics_totals animations='%u' frames='%u' elements='%u' sprites='%u'>\n", 
+        //outputXml.WriteString(wxString::Format(L"\t<graphics_totals animations='%u' frames='%u' elements='%u' sprites='%u'>\n",
         //    iAnimationCount, iFrameCount, iElementCount, iSpriteCount));
         outputXml.WriteString(wxString::Format(L"</theme_hospital_graphics>\n"));
 
@@ -520,7 +520,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
         exportSpritesPage(true, sdPath, L"WATCH01V");
         //Skip DataM directory because it appears to be low-res versions of same
 
-        //Sprite sheet code for QData directory 
+        //Sprite sheet code for QData directory
         wxString sqPath = _getCaseSensitivePath(L"QDATA", sPath);
         sqPath += wxFileName::GetPathSeparator();
         exportSpritesPage(true, sqPath, L"AWARD03V", L"", L"AWARD02V.PAL");
@@ -604,7 +604,7 @@ the DATA folder, the Animation Viewer will use PNG sprites instead of Theme Hosp
 
 void frmMain::exportSpritesPage(bool bComplex, wxString sPath, wxString sFilename, wxString spPath, wxString sPalette)
 {
-    if(spPath.length() == 0) 
+    if(spPath.length() == 0)
     {
         spPath = sPath;
     }
@@ -660,7 +660,7 @@ void frmMain::_onToggleMask(wxCommandEvent& evt)
     int iID = evt.GetId() - ID_LAYER_CHECKS;
     int iLayer = iID / 25;
     iID %= 25;
-    
+
     if(evt.IsChecked())
         m_mskLayers.set(iLayer, iID);
     else
@@ -985,11 +985,11 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
 {
   bool found;
   bool cont;
-  
+
   if(!wxFileName::IsCaseSensitive()) { return sPath + sInsensitivePathPart; }
-  
+
   wxString retStr(sPath);
-  
+
   wxStringTokenizer pathTokenizer(sInsensitivePathPart, wxFileName::GetPathSeparator());
   while(pathTokenizer.HasMoreTokens())
   {
@@ -998,9 +998,9 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
     {
       break;
     }
-    
+
     wxString pathPart = pathTokenizer.GetNextToken();
-    
+
     wxString realName;
     cont = dir.GetFirst(&realName, wxEmptyString, wxDIR_DIRS|wxDIR_FILES|wxDIR_HIDDEN|wxDIR_DOTDOT);
     found = false;
@@ -1018,7 +1018,7 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
       }
       cont = dir.GetNext(&realName);
     }
-    
+
     if(!found)
     {
       retStr += wxFileName::GetPathSeparator();
@@ -1026,7 +1026,7 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
       break;
     }
   }
-  
+
   while(pathTokenizer.HasMoreTokens())
   {
     wxString pathPart = pathTokenizer.GetNextToken();
@@ -1036,6 +1036,6 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart, co
     }
     retStr += pathPart;
   }
-  
+
   return retStr;
 }

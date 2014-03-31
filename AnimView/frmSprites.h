@@ -66,7 +66,7 @@ protected:
 
     std::vector<_sprite_t> m_vSprites;
     THAnimations m_oAnims;
-    
+
     wxTextCtrl* m_txtTable;
     wxTextCtrl* m_txtData;
     wxTextCtrl* m_txtPalette;

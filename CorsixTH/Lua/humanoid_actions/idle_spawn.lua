@@ -19,21 +19,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 local function action_idle_spawn_start(action, humanoid)
   action.must_happen = true
-  
+
   humanoid.last_move_direction = action.point.direction
   humanoid:setTilePositionSpeed(action.point.x,action.point.y)
-  
+
   if action.spawn_animation then
     humanoid:queueAction({name="idle",count = humanoid.world:getAnimLength(action.spawn_animation),
                                       loop_callback=--[[persistable:idle_spawn_animation]]
                                       function()
-                                        if action.spawn_sound then humanoid:playSound(action.spawn_sound) end      
+                                        if action.spawn_sound then humanoid:playSound(action.spawn_sound) end
                                         humanoid:setAnimation(action.spawn_animation)
                                       end})
   elseif action.spawn_sound then
-    humanoid:playSound(action.spawn_sound)                                                                                                                  
+    humanoid:playSound(action.spawn_sound)
   end
-  
+
   humanoid:queueAction({name="idle",count = action.count,loop_callback = action.loop_callback})
   humanoid:finishAction()
 end

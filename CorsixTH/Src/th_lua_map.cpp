@@ -498,7 +498,7 @@ static int l_map_remove_cell_thob(lua_State *L)
     {
         int i, nr = *pNode->pExtendedObjectList & 7;
         if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
-        {    
+        {
             pNode->iFlags &= 0x00FFFFFF;
             pNode->iFlags |= (*pNode->pExtendedObjectList & (255 << 3)) << 21;
             if(nr == 1)
@@ -520,7 +520,7 @@ static int l_map_remove_cell_thob(lua_State *L)
             }
 
         }
-        else 
+        else
         {
             bool found = false;
             for(i = 0; i < nr; i++)
@@ -580,14 +580,14 @@ static int l_map_setcellflags(lua_State *L)
     } else
 
     lua_pushnil(L);
-   
+
     while(lua_next(L, 4))
     {
         if(lua_type(L, 5) == LUA_TSTRING)
         {
             const char *field = lua_tostring(L, 5);
 
-            
+
             Flag(THMN_Passable, "passable")
             Flag(THMN_Hospital, "hospital")
             Flag(THMN_Buildable, "buildable")
@@ -606,7 +606,7 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_BuildableS, "buildableSouth")
             Flag(THMN_BuildableW, "buildableWest")
             /* else */ if(strcmp(field, "thob") == 0)
-            {           
+            {
                 uint64_t x;
                 uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
                 if((pNode->iFlags >> 24) != 0)
@@ -626,7 +626,7 @@ static int l_map_setcellflags(lua_State *L)
                         x = (x & (~7)) | nr;
                         uint64_t orAmount = thob << (3 + ((nr - 1) << 3));
                         x |= orAmount;
-                       *pNode->pExtendedObjectList = x;                    
+                       *pNode->pExtendedObjectList = x;
                      }
                  }
                 else

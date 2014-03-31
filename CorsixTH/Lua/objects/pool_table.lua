@@ -31,7 +31,7 @@ object.idle_animations = {
 }
 -- There are five animations, for each the doctor and the handyman.
 -- The nurses don't like pool, appearently.
--- 
+--
 -- anim      | doctor | handyman
 -- -----------------------------
 -- aim       |  1230  |   3924
@@ -93,7 +93,7 @@ object.orientations = {
   north = {
     footprint = { {-1, -2, only_passable = true}, {0, -2, need_north_side = true},{1, -2, only_passable = true},
                   {-1, -1, only_passable = true}, {0, -1},                        {1, -1, only_passable = true},
-                  {-1,  0, only_passable = true}, {0,  0, only_passable = true, complete_cell = true},  
+                  {-1,  0, only_passable = true}, {0,  0, only_passable = true, complete_cell = true},
                   {1,  0, only_passable = true} },
     render_attach_position = {-1, 0},
     use_position = {0, 0},

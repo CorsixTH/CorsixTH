@@ -227,7 +227,7 @@ dynamic_info = {
       no_treatment_available = "Pas de traitement : je rentre chez moi.",
     },
     diagnosed = "Ausculté : %s",
-  } 
+  }
 }
 introduction_texts = {
   level1 = {
@@ -528,7 +528,7 @@ tooltip.objects.litter = "Déchet : laissé sur le sol par un patient car il n'a
 -- Adviser
 adviser = {
   room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
-  
+
   warnings = {
     no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
     no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
@@ -578,7 +578,7 @@ menu_options = {
   choice_2 = "  BLEU VERT ROUGE  ",
   choice_3 = "  JAUNE ORANGE ROUGE  ",
 }
-  
+
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
   slowest             = "  (1) AU PLUS LENT  ",

@@ -437,7 +437,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
   self.width = width
   self.height = height
   self.y_offset = y_offset or 0
-  
+
   -- Load the graphical resources
   local gfx = TheApp.gfx
   if not has_font then
@@ -447,7 +447,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
   end
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
     gfx:loadPalette("Bitmap", "tree_ctrl.pal"))
-    
+
   -- Calculate sizes and counts
   local scrollbar_width = 20
   self.row_height = 14
@@ -591,7 +591,7 @@ end
 function TreeControl:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y + self.y_offset
-  
+
   local node = self.first_visible_node
   local num_nodes_drawn = 0
   local y = y + self.tree_rect.y
@@ -601,7 +601,7 @@ function TreeControl:draw(canvas, x, y)
     for i = 0, level - 1 do
       self.tree_sprites:draw(canvas, 1, x + i * 14, y)
     end
-    
+
     if node == self.highlighted_node then
       local offset = (level + 1) * 14
       local colour = node:getHighlightColour(canvas) or self.scrollbar.slider.colour
@@ -612,7 +612,7 @@ function TreeControl:draw(canvas, x, y)
       local colour = node:getSelectColour(canvas) or self.scrollbar.slider.colour
       canvas:drawRect(colour, x + offset - 1, y, self.tree_rect.w - offset - 1, self.row_height)
     end
-    
+
     local icon
     if not node:hasChildren() then
       icon = 2

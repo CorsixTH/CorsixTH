@@ -47,7 +47,7 @@ disease.initPatient = function(patient)
     patient:setLayer(2, num1 * 2)
     local num2 = math.random(0, 5) -- The second bandage yes/no
     -- 6 does not exist, a few more arm bandages instead
-    if num2 == 3 then num2 = 4 end 
+    if num2 == 3 then num2 = 4 end
     patient:setLayer(3, num2 * 2)
     -- There needs to be at least one bandage on the patient
     local num3 = math.random(0, 5)
@@ -67,7 +67,7 @@ disease.diagnosis_rooms = {
 disease.treatment_rooms = {
   "fracture_clinic",
 }
- 
+
 -- If a machine is required a small icon should appear in the drug casebook.
 disease.requires_machine = true
 

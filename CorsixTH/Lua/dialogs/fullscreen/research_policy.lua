@@ -38,31 +38,31 @@ function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
-    self.background = gfx:loadRaw("Res01V", 640, 480)  
+    self.background = gfx:loadRaw("Res01V", 640, 480)
     local palette = gfx:loadPalette("QData", "Res01V.pal")
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
     self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
     self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
-    self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)  
+    self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()
     return
   end
-  
+
   self.hospital = ui.hospital
   self.research = ui.hospital.research
-  
+
   -- stubs for backwards compatibility
   local --[[persistable:research_policy_adjust]] function adjust(name) end
   local --[[persistable:research_less_stub]] function less_stub() end
   local --[[persistable:research_more_stub]] function more_stub() end
-  
+
   -- Close button
   self:addPanel(0, 607, 447):makeButton(0, 0, 40, 40, 4, self.close):setTooltip(_S.tooltip.research.close)
   self.adjust_buttons = {}
   self:updateCategories()
-  
+
   self.waterclk = 0
   self.ratclk = 0
   self.waterpanel= self:addPanel(5, 2, 312)
@@ -94,7 +94,7 @@ function UIResearch:updateCategories()
   local spacing = 41
   local c1 = 372
   local c2 = 450
-  
+
   local function handler_factory(area, mode)
     return --[[persistable:research_policy_adjust_handler]] function(self)
       self:adjustResearch(area, mode)
@@ -154,7 +154,7 @@ function UIResearch:adjustResearch(area, mode)
       self.ui:playSound("Wrong2.wav")
     end
   end
-  
+
   res.research_policy.global = 0
   for _, category in ipairs(research_categories) do
     res.research_policy.global = res.research_policy.global + res.research_policy[category].frac
@@ -163,18 +163,18 @@ end
 
 function UIResearch:onTick()
   -- sprite index for the water are between 5 and 12
-  -- We use a sub clock 
+  -- We use a sub clock
   self.waterclk = self.waterclk + 1
   if self.waterclk > 3 then
     self.waterclk = 0
     self.waterpanel.sprite_index = self.waterpanel.sprite_index + 1
     if self.waterpanel.sprite_index > 12 then
       self.waterpanel.sprite_index = 5
-    end  
+    end
   end
-  
+
   -- sprite index for the rat  are between 10 and 15
-  -- We use a sub clock 
+  -- We use a sub clock
   self.ratclk = self.ratclk + 1
   if self.ratclk > 3 then
     self.ratclk = 0
@@ -182,9 +182,9 @@ function UIResearch:onTick()
     self.ratpanel.sprite_index = self.ratpanel.sprite_index + 1
     if self.ratpanel.sprite_index > 20 then
       self.ratpanel.sprite_index = 13
-    end  
+    end
   end
-  
+
   return UIFullscreen.onTick(self)
 end
 
@@ -192,7 +192,7 @@ function UIResearch:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
+
   local num_font = self.number_font
   local lbl_font = self.label_font
 
@@ -200,7 +200,7 @@ function UIResearch:draw(canvas, x, y)
   local spacing = 41
   local config = self.hospital.world.map.level_config
   local research = self.research.research_policy
-  
+
   for i, category in ipairs(research_categories) do
     local y = y + ytop + i * spacing
     lbl_font:draw(canvas, _S.research.categories[category], x + 170, y)
@@ -210,7 +210,7 @@ function UIResearch:draw(canvas, x, y)
       num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
     end
     -- Display research progress.
-    if research[category].current 
+    if research[category].current
     and not research[category].current.dummy then
       local ly = y + 26
       local lx = x + 172
@@ -224,7 +224,7 @@ function UIResearch:draw(canvas, x, y)
       end
     end
   end
-  
+
   num_font:draw(canvas, research.global, x + 270, y + 288, 300, 0)
 end
 

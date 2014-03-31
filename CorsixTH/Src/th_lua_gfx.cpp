@@ -560,7 +560,7 @@ static int l_surface_new(lua_State *L)
 #define FLAG(name, field, flag) \
     else if(stricmp(sOption, name) == 0) \
         oParams.field = true, oParams.iSDLFlags |= flag
-    
+
     for(int iArgCount = lua_gettop(L); iArg <= iArgCount; ++iArg)
     {
         const char* sOption = luaL_checkstring(L, iArg);

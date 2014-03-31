@@ -42,14 +42,14 @@ function EntranceDoor:EntranceDoor(world, object_type, x, y, direction, etc)
   if self.is_master then -- The master will check for an adjacent slave
     local slave_type = "entrance_left_door"
     self.slave = world:getObject(x - 1, y, slave_type) or world:getObject(x, y - 1, slave_type) or nil
-    
+
     if self.slave then
       self.slave.master = self
     end
   else -- The slave will check for an adjacent master
     local master_type = "entrance_right_door"
     self.master = world:getObject(x + 1, y, master_type) or world:getObject(x, y + 1, master_type) or nil
-    
+
     if self.master then
       self.master.slave = self
     end
@@ -102,7 +102,7 @@ function EntranceDoor:setTile(x, y)
   local offsets = self.is_master and additional_walkable_tiles_master or additional_walkable_tiles
   offsets = offsets[self.direction]
   local flag_name = self.direction == "north" and "tallNorth" or "tallWest"
-  
+
   if self.tile_x then
     if self.is_master then
       -- NB: only the tile of the door itself and the one additional tile from additional_walkable_tiles notify the door

@@ -55,7 +55,7 @@ end
 --                 to top/left edge of screen
 -- Integers < 0 - Absolute pixel positions of right/bottom edge of window
 --                relative to right/bottom edge of screen. Use -0.1 to mean -0.
--- Reals in [0, 1) - 
+-- Reals in [0, 1) -
 function Window:setPosition(x, y)
   -- Save values to recalculate x and y on screen resolution change
   self.x_original = x
@@ -267,13 +267,13 @@ function Panel:drawLabel(canvas, x, y, limit)
   local multi_line = type(text) == "table"
   local wrapped = not self.auto_clip
   local center_y = false
-  
+
   if not multi_line then
     text = {text}
     wrapped = false
     center_y = true
   end
-  
+
   local next_y = y + self.y + 1
   local last_x = x + self.x + 2
   for i, line in ipairs(text) do
@@ -284,7 +284,7 @@ function Panel:drawLabel(canvas, x, y, limit)
     if self.auto_clip then
       line = self:clipLine(line, self.w - 4)
     end
-    
+
     if wrapped then
       next_y, last_x = self.label_font:drawWrapped(canvas, line, x + self.x + 2, old_y, self.w - 4, self.align)
     else
@@ -421,7 +421,7 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
     green = sanitize(math.floor((colour.green + 100) / 2)),
     blue = sanitize(math.floor((colour.blue + 100) / 2)),
   }
-  
+
   local panel = setmetatable({
     window = self,
     x = x,
@@ -745,18 +745,18 @@ end
 function Scrollbar:setRange(min_value, max_value, page_size, value)
   page_size = math.min(page_size, max_value - min_value + 1) -- page size must be number of elements at most
   value = math.min(value or min_value, math.max(min_value, max_value - page_size + 1))
-  
+
   self.min_value = min_value
   self.max_value = max_value
   self.page_size = page_size
   self.value = value
-  
+
   local slider = self.slider
   slider.w = slider.max_w
   slider.h = slider.max_h
   slider.max_x = slider.min_x + slider.max_w - slider.w
   slider.max_y = slider.min_y + slider.max_h - slider.h
-  
+
   if self.direction == "y" then
     slider.h = math.ceil((page_size / (max_value - min_value + 1)) * slider.max_h)
     slider.max_y = slider.min_y + slider.max_h - slider.h
@@ -766,7 +766,7 @@ function Scrollbar:setRange(min_value, max_value, page_size, value)
     slider.max_x = slider.min_x + slider.max_w - slider.w
     slider.x = (value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_x - slider.min_x) + slider.min_x
   end
-  
+
   return self
 end
 
@@ -829,7 +829,7 @@ function Window:makeScrollbarOnPanel(panel, slider_colour, callback, min_value, 
   slider.max_h = slider.h
   scrollbar:setRange(min_value, max_value, page_size, value)
   self.scrollbars[#self.scrollbars + 1] = scrollbar
-  
+
   return scrollbar
 end
 
@@ -923,7 +923,7 @@ function Textbox:setActive(active)
     -- Disable Keyboard repeat
     ui:disableKeyboardRepeat()
   end
-  
+
   self.active = active
   -- Update button if necessary
   if self.button.toggled ~= active then
@@ -1201,10 +1201,10 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
     cursor_state = false,
     cursor_pos = {1, 1},
   }, textbox_mt)
-  
+
   local button = panel:makeToggleButton(0, 0, panel.w, panel.h, nil, textbox.clicked, textbox)
   textbox.button = button
-  
+
   self.textboxes[#self.textboxes + 1] = textbox
   self.ui:registerTextBox(textbox)
   return textbox
@@ -1347,7 +1347,7 @@ function Window:onMouseDown(button, x, y)
     end
     repaint = true
   end
-  
+
   if repaint then
     self:bringToTop()
   end
@@ -1366,7 +1366,7 @@ end
 
 function Window:onMouseUp(button, x, y)
   local repaint = false
-  
+
   if self.dragging then
     self.ui.drag_mouse_move = nil
     self.dragging = false
@@ -1393,7 +1393,7 @@ function Window:onMouseUp(button, x, y)
       end
     end
   end
-  
+
   if button == "left" or button == "right" then
     local btn = self.active_button
     if btn then
@@ -1415,7 +1415,7 @@ function Window:onMouseUp(button, x, y)
       bar.down_y = nil
     end
   end
-  
+
   return repaint
 end
 
@@ -1423,7 +1423,7 @@ local --[[persistable:window_drag_position_representation]] function getNicestPo
   if size == dim_size then
     return 0.5
   end
-  
+
   local left_rel = pos
   local right_rel = pos + size - dim_size
   local rel = pos / (dim_size - size)
@@ -1453,7 +1453,7 @@ function Window:beginDrag(x, y)
     -- Need width, height and UI to do a drag
     return false
   end
-  
+
   self.dragging = true
   self.ui.drag_mouse_move = --[[persistable:window_drag_mouse_move]] function (sx, sy)
     -- sx and sy are cursor screen co-ords. Convert to window's new abs co-ords
@@ -1501,7 +1501,7 @@ function Window:onMouseMove(x, y, dx, dy)
       end
     end
   end
-  
+
   if self.active_button then
     local btn = self.active_button
     local index = btn.sprite_index_blink or btn.sprite_index_normal
@@ -1528,7 +1528,7 @@ function Window:onMouseMove(x, y, dx, dy)
       repaint = true
     end
   end
-  
+
   if self.active_scrollbar then
     local bar = self.active_scrollbar
     if bar.direction == "x" then
@@ -1537,7 +1537,7 @@ function Window:onMouseMove(x, y, dx, dy)
       bar:setXorY(y - bar.down_y)
     end
   end
-  
+
   return repaint
 end
 
@@ -1642,7 +1642,7 @@ function Window:sendToBottom(window)
 end
 
 function Window:startButtonBlinking(button_index)
-  
+
   self.blinking_button = button_index
   self.blink_counter = 0
   local btn = self.buttons[button_index]
@@ -1769,7 +1769,7 @@ function Window:afterLoad(old, new)
       btn.ui = self.ui
     end
   end
-  
+
   if self.windows then
     for _, w in pairs(self.windows) do
       w:afterLoad(old, new)

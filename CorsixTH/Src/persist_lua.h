@@ -129,7 +129,7 @@ public:
     {
         T tTemp(0);
         uint8_t iByte;
-        
+
         while(true)
         {
             if(!readByteStream(&iByte, 1))

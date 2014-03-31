@@ -29,7 +29,7 @@ local function seek_toilets_action_start(action, humanoid)
     return
   end
   action.must_happen = true
-  
+
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
@@ -46,7 +46,7 @@ local function seek_toilets_action_start(action, humanoid)
     end
     humanoid:finishAction()
   else
-    -- This should happen only in rare cases, e.g. if the target toilet room was 
+    -- This should happen only in rare cases, e.g. if the target toilet room was
     -- removed while heading there and none other exists. In that case, go back
     -- to the previous room or go to the reception.
     if humanoid.next_room_to_visit then

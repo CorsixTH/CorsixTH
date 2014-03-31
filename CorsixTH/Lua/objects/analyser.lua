@@ -44,7 +44,7 @@ object.usage_animations = copy_north_to_south {
       Doctor =  {4878, object_visible = true}
     },
   },
-} 
+}
 object.orientations = {
   north = {
     footprint = { {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0, only_passable = true}, {1, 0} },

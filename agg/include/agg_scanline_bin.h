@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -17,12 +17,12 @@
 //
 //----------------------------------------------------------------------------
 //
-// Adaptation for 32-bit screen coordinates (scanline32_bin) has been sponsored by 
+// Adaptation for 32-bit screen coordinates (scanline32_bin) has been sponsored by
 // Liberty Technology Systems, Inc., visit http://lib-sys.com
 //
 // Liberty Technology Systems, Inc. is the provider of
 // PostScript and PDF technology for software developers.
-// 
+//
 //----------------------------------------------------------------------------
 
 #ifndef AGG_SCANLINE_BIN_INCLUDED
@@ -34,11 +34,11 @@ namespace agg
 {
 
     //=============================================================scanline_bin
-    // 
-    // This is binary scaline container which supports the interface 
-    // used in the rasterizer::render(). See description of agg_scanline_u8 
+    //
+    // This is binary scaline container which supports the interface
+    // used in the rasterizer::render(). See description of agg_scanline_u8
     // for details.
-    // 
+    //
     //------------------------------------------------------------------------
     class scanline_bin
     {
@@ -112,9 +112,9 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        void finalize(int y) 
-        { 
-            m_y = y; 
+        void finalize(int y)
+        {
+            m_y = y;
         }
 
         //--------------------------------------------------------------------
@@ -227,9 +227,9 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        void finalize(int y) 
-        { 
-            m_y = y; 
+        void finalize(int y)
+        {
+            m_y = y;
         }
 
         //--------------------------------------------------------------------

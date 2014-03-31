@@ -37,11 +37,11 @@ function UICasebook:UICasebook(ui, disease_selection)
     self:close()
     return
   end
-  
+
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   self:updateDiseaseList()
-  
+
   -- Buttons
   self:addPanel(0, 607, 449):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.casebook.close)
   self:addPanel(0, 439, 29):makeRepeatButton(0, 0, 70, 46, 1, self.scrollUp):setTooltip(_S.tooltip.casebook.up)
@@ -50,14 +50,14 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addPanel(0, 237, 133):makeRepeatButton(0, 0, 22, 22, 4, self.decreasePay):setTooltip(_S.tooltip.casebook.decrease)
   self:addPanel(0, 235, 400):makeButton(0, 0, 140, 20, 0, self.concentrateResearch)
     :setTooltip(_S.tooltip.casebook.research)
-  
+
   -- Hotkeys
   self:addKeyHandler("up", self.scrollUp)
   self:addKeyHandler("down", self.scrollDown)
   self:addKeyHandler("right", self.increasePay)
   self:addKeyHandler("left", self.decreasePay)
   self.ui:enableKeyboardRepeat() -- To quickly change values
-  
+
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
   self.machinery.visible = false
@@ -71,21 +71,21 @@ function UICasebook:UICasebook(ui, disease_selection)
   self.unknown.visible = false
   self.psychiatry = self:addPanel(10, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.psychiatrist)
   self.psychiatry.visible = false
-  
+
   self.curable = self:addPanel(11, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.possible)
   self.curable.visible = false
   self.not_curable = self:addPanel(12, 335, 352):setTooltip(_S.tooltip.casebook.cure_requirement.not_possible) -- TODO: split up in more specific requirements
   self.not_curable.visible = false
-  
+
   self.percentage_counter = false -- Counter for displaying cure price percentage for a certain time before switching to price.
-  
+
   self:makeTooltip(_S.tooltip.casebook.reputation,       249,  72, 362, 117)
   self:makeTooltip(_S.tooltip.casebook.treatment_charge, 249, 117, 362, 161)
   self:makeTooltip(_S.tooltip.casebook.earned_money,     247, 161, 362, 205)
   self:makeTooltip(_S.tooltip.casebook.cured,            247, 205, 362, 249)
   self:makeTooltip(_S.tooltip.casebook.deaths,           247, 249, 362, 293)
   self:makeTooltip(_S.tooltip.casebook.sent_home,        247, 293, 362, 337)
-  
+
   if disease_selection then
     self:selectDisease(disease_selection)
   else
@@ -140,7 +140,7 @@ function UICasebook:updateIcons()
   local disease = self.selected_disease
   local hosp = self.hospital
   local world = hosp.world
-  
+
   local known = true
   -- Curable / not curable icons and their tooltip
   if self.casebook[disease].pseudo then
@@ -154,7 +154,7 @@ function UICasebook:updateIcons()
     else
       self.curable.visible = false
       self.not_curable.visible = true
-      
+
       -- Strings for the tooltip
       local research = false
       local build = false
@@ -173,7 +173,7 @@ function UICasebook:updateIcons()
       end
       research = research and (_S.tooltip.casebook.cure_requirement.research_machine .. research .. "). ") or ""
       build    = build    and (_S.tooltip.casebook.cure_requirement.build_room .. build .. "). ") or ""
-      
+
       local staffclass_to_string = {
         Nurse        = _S.staff_title.nurse,
         Doctor       = _S.staff_title.doctor,
@@ -187,17 +187,17 @@ function UICasebook:updateIcons()
         staff = (staff and (staff .. ", ") or " (") .. staffclass_to_string[sclass] .. ": " .. amount
       end
       staff = staff and (_S.tooltip.casebook.cure_requirement.hire_staff .. staff .. "). ") or ""
-      
+
       self.not_curable:setTooltip(research .. build .. staff)
     end
   end
-  
+
   self.unknown.visible    = not known
   self.drug.visible       = known and not not self.casebook[disease].drug
   self.machinery.visible  = known and not not self.casebook[disease].machine and not self.casebook[disease].pseudo
   self.psychiatry.visible = known and not not self.casebook[disease].psychiatrist
   self.surgery.visible    = known and not not self.casebook[disease].surgeon
-  
+
   self.ui:updateTooltip() -- for the case that mouse is hovering over icon while player scrolls through list with keys
   self.percentage_counter = 50
 end
@@ -205,13 +205,13 @@ end
 function UICasebook:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
-  
+
   x, y = self.x + x, self.y + y
   local titles = self.title_font
   local book = self.casebook
   local disease = self.selected_disease
   local selected = self.selected_index
-  
+
   -- All titles
   titles:draw(canvas, _S.casebook.reputation,       x + 278, y + 68)
   titles:draw(canvas, _S.casebook.treatment_charge, x + 260, y + 113)
@@ -220,7 +220,7 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, _S.casebook.deaths,           x + 279, y + 245)
   titles:draw(canvas, _S.casebook.sent_home,        x + 270, y + 289)
   titles:draw(canvas, _S.casebook.cure,             x + 255, y + 354)
-  
+
   -- Specific disease information
   if self.hospital:canConcentrateResearch(disease) then
     if book[disease].concentrate_research then  -- Concentrate research
@@ -242,12 +242,12 @@ function UICasebook:draw(canvas, x, y)
   local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100)
                       or "$" .. self.hospital:getTreatmentPrice(disease)
   titles:draw(canvas, price_text, x + 262, y + 137, 90, 0) -- Treatment Charge
-  
+
   titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
   titles:draw(canvas, book[disease].recoveries, x + 248, y + 225, 114, 0) -- Recoveries
   titles:draw(canvas, book[disease].fatalities, x + 248, y + 269, 114, 0) -- Fatalities
   titles:draw(canvas, book[disease].turned_away, x + 248, y + 313, 114, 0) -- Turned away
-  
+
   -- Cure percentage
   if self.drug.visible then
     self.drug_font:draw(canvas, book[disease].cure_effectiveness, x + 313, y + 364, 16, 0)

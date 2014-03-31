@@ -933,7 +933,7 @@ fax = {
   disease_discovered = {
     discovered_name = "Sua equipe descobriu uma nova condição : %s",
   },
-  
+
   disease_discovered_patient_choice = {
     need_to_build = "Você precisa construir um %s para lidar com ela.",
     --need_to_employ = "Наймите %s чтобы вылечить это.",
@@ -1053,7 +1053,7 @@ adviser = {
     research_screen_open_1 = "Você precisa construir um Departamento de Pesquisas antes de acessar a tela de Pesquisas.",
     research_screen_open_2 = "Pesquisas estão desabilitadas nesta fase.",
   },
-  cheats = {  
+  cheats = {
     th_cheat = "Parabéns, você habilitou os códigos de trapaça!",
     crazy_on_cheat = "Oh não! Todos os médicos ficaram malucos!",
     crazy_off_cheat = "Ufa… o médicos recobraram sua sanidade.",
@@ -1319,7 +1319,7 @@ rooms_short = {
   reception         = "Recepção",
   destroyed         = "Destruído",
   corridor_objects  = "Objetos de Corredor",
-  
+
   gps_office        = "Clínica Geral",
   psychiatric       = "Psiquiatria",
   ward              = "Enfermaria",
@@ -1373,7 +1373,7 @@ introduction_texts = {
     [3] = "Ambas precisarão ser pesquisadas antes de serem construídas. Agora você poderá comprar lotes de terreno extras para expandir seu hospital - use o Mapa da Cidade para fazê-lo.",
     [4] = "Tenha como objetivo uma reputação de 300, um saldo bancário de $10.000,00 e 40 pessoas curadas.",
     [5] = "",
-    [6] = "",    
+    [6] = "",
   },
   level3 = {
     [1] = "Desta vez, você irá construir seu hospital em uma área nobre da cidade.",
@@ -1468,7 +1468,7 @@ graphs = {
   cures      = "Curas",
   deaths     = "Óbitos",
   reputation = "Reputação",
-  
+
   time_spans = {
     S[7][12],
     S[7][13],

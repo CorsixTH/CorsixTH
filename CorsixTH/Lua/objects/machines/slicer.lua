@@ -68,7 +68,7 @@ object.orientations = {
   },
   east = {
     footprint = {
-      {-1, -1, only_passable = true}, {0, -1}, {1, -1}, 
+      {-1, -1, only_passable = true}, {0, -1}, {1, -1},
       {-1, 0, only_passable = true}, {0, 0, only_passable = true, need_south_side = true}, {1, 0, only_passable = true},
     },
     use_position = {0, 0},

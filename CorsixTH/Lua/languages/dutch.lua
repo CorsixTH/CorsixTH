@@ -1,5 +1,5 @@
 ﻿--[[ Copyright (c) 2010 RAS
-                   2011 FlyingBastard, L_konings, Nossah, KasperVld 
+                   2011 FlyingBastard, L_konings, Nossah, KasperVld
                    2012-2013 Omni, Maarten
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,7 +18,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. 
+SOFTWARE.
 
 ---------------------------------------------------------------------------------
 
@@ -694,7 +694,7 @@ fax = {
     can_cure = "Je kunt deze ziekte genezen.",
   },
   emergency = {
-    locations = {  
+    locations = {
       [1] = "Bakker's Chemische Fabriek.",
       [2] = "Schamper Universiteit.",
       [3] = "het Paraquat Tuincentrum.",
@@ -818,9 +818,9 @@ tooltip = {
     },
   },
   new_game_window = {
-    player_name = "Voer de naam in die je wild gebruiken in het spel", 
-    difficulty = "Moeilijkheid", 
-    cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel starten!", 
+    player_name = "Voer de naam in die je wild gebruiken in het spel",
+    difficulty = "Moeilijkheid",
+    cancel = "Oh, ik wilde eigenlijk helemaal geen nieuw spel starten!",
     tutorial = "Klik hier als je wat hulp nodig hebt in het spel",
     start = "Begin het spel met de geselecteerde instellingen",
     easy = "Als je dit spel nog nooit gespeeld hebt, is deze optie voor jou",
@@ -950,8 +950,8 @@ tooltip = {
       hospital_3 = "Patiënt naar een ander ziekenhuis verwijzen",
     },
   },
-  jukebox = {               
-    rewind = "Vorig nummer",             
+  jukebox = {
+    rewind = "Vorig nummer",
     loop = "Nummer herhalen",
     stop = "Stoppen",
     close = "Sluiten",
@@ -1132,7 +1132,7 @@ tooltip = {
     toilets = "Bouw toiletten, zodat mensen geen zooi maken van je ziekenhuis!",
     electrolysis = "Een arts gebruikt de elektrolysekamer om pilitis te genezen",
     x_ray = "Een arts gebruikt de röntgenkamer om een diagnose te stellen",
-    blood_machine = "Een arts gebruikt de bloedmachinekamer om een diagnose te stellen", 
+    blood_machine = "Een arts gebruikt de bloedmachinekamer om een diagnose te stellen",
   },
   statement = {
     close = "Afschriftenscherm sluiten",
@@ -1631,19 +1631,19 @@ adviser = {
     falling_6 = "Het is hier geen bowlingbaan! Zieken horen niet zo behandeld te worden!",
     no_desk = "Je zult op enig moment wel een receptiebalie moeten bouwen en een receptioniste moeten aannemen!",
     no_desk_1 = "Als je wilt dat patiënten je ziekenhuis bezoeken, moet je een receptioniste inhuren en een receptiebalie bouwen, zodat ze haar werk kan doen!",
-    no_desk_2 = "Lekker gedaan, dit moet een nieuw record zijn: bijna een jaar zonder patiënten! Als je hier manager wilt blijven, neem dan nu een receptioniste aan en bouw een receptiebalie waar ze kan werken!", 
+    no_desk_2 = "Lekker gedaan, dit moet een nieuw record zijn: bijna een jaar zonder patiënten! Als je hier manager wilt blijven, neem dan nu een receptioniste aan en bouw een receptiebalie waar ze kan werken!",
     no_desk_3 = "Fantastisch, bijna een jaar voorbij en je hebt nog steeds geen bemande receptie. Hoe denk je dat je patiënten gaat krijgen? Los het onmiddellijk op, en stop met dat gerommel!",
-    no_desk_4 = "Een receptioniste moet haar eigen werkplek hebben om de patiënten te begroeten bij binnenkomst.", 
-	no_desk_5 = "Nou, het werd tijd! Je zult binnekort een paar patiënten zien arriveren!", 
-	no_desk_6 = "Je hebt een receptioniste aangenomen, dus zou je niet een receptiebalie bouwen waar ze haar werk kan doen?", 
-	no_desk_7 = "Je hebt een receptiebalie gebouwd, dus zou je niet een receptioniste aannemen? Je zult geen patiënten zien binnenkomen tot je dit opgelost hebt!", 
+    no_desk_4 = "Een receptioniste moet haar eigen werkplek hebben om de patiënten te begroeten bij binnenkomst.",
+	no_desk_5 = "Nou, het werd tijd! Je zult binnekort een paar patiënten zien arriveren!",
+	no_desk_6 = "Je hebt een receptioniste aangenomen, dus zou je niet een receptiebalie bouwen waar ze haar werk kan doen?",
+	no_desk_7 = "Je hebt een receptiebalie gebouwd, dus zou je niet een receptioniste aannemen? Je zult geen patiënten zien binnenkomen tot je dit opgelost hebt!",
 	cannot_afford = "Je hebt niet genoeg geld op je rekening staan om dit personeelslid aan te nemen.",
     cannot_afford_2 = "Je hebt niet genoeg geld op de bank staan om dit te kopen!",
 	research_screen_open_1 = "Je moet eerst een laboratorium bouwen, voordat je het onderzoeksscherm kunt bekijken.",
     research_screen_open_2 = "Onderzoek is in dit level nog niet toegankelijk.",
 	researcher_needs_desk_1 = "Een onderzoeker heeft een bureau nodig om aan te werken.",
 	researcher_needs_desk_2 = "Je onderzoeker is blij dat je hem op pauze laat gaan. Als het je bedoeling was om meer onderzoekers tegelijk te laten werken, dan moet je voor elk van hen een bureau neerzetten zodat ze hun werk kunnen doen.",
-	researcher_needs_desk_3 = "Elke onderzoeker heeft zijn eigen bureau nodig om aan te werken.",	
+	researcher_needs_desk_3 = "Elke onderzoeker heeft zijn eigen bureau nodig om aan te werken.",
     nurse_needs_desk_2 = "Je zuster is blij dat je haar een pauze gunt. Als het je bedoeling was om meer zusters tegelijk in de slaapzaal te laten werken, dan moet je voor elk van hen een bureau neerzetten.",
     nurse_needs_desk_1 = "Elke zuster heeft haar eigen bureau nodig om aan te werken.",
   },
@@ -1893,18 +1893,18 @@ introduction_texts = {
     [5] = "Waarschijnlijk zal je heel wat patiënten tegenkomen die nogal doorzichtig zijn. ",
     [6] = "Bouw je reputatie op tot deze de 500 heeft bereikt.",
   },
-  
+
   --[[ Level 13 and 14 are rat shooting galleries and are thus not available through the File menu as of yet. --]]
-  
+
   level14 = {
     [1] = "Je hebt nog een uitdaging gekregen; een compleet onverwacht verrassingsziekenhuis! ",
     [2] = "Als je hier een succes van kunt maken ben je de winnaar van alle winnaars. ",
     [3] = "Maar denk niet dat het een eitje is. Het is de moeilijkste opdracht die je ooit zult aannemen. ",
     [4] = "Veel succes!",
   },
- 
+
 --[[ Level 15 is most likely just removed content. I translated it as usual just in case the team finds something to do with it. --]]
- 
+
   level15 = {
     [1] = "Goed, dat is dus de basis van een ziekenhuis bouwen.//",
     [2] = "Je artsen zullen alle hulp nodig hebben die ze kunnen gebruiken bij het stellen van diagnoses. Je kunt ze helpen ",
@@ -2061,7 +2061,7 @@ transactions = {  --[[Hier geen veranderingen in aanbrengen. Sommige woorden zij
   severance = "Ontslagpremie",
   research = "Onderzoekskosten",
   eoy_trophy_bonus = "Prijzengeld",
-  buy_object = "Aankoop", 
+  buy_object = "Aankoop",
   cure_colon = "Genezen:",
   epidemy_coverup_fine = "Boete verbergen epidemie",
   final_treat_colon = "Laatste behandeling:",
@@ -2194,7 +2194,7 @@ casebook = {
 }
 errors = {
   dialog_missing_graphics = "Sorry, de demobestanden bevatten geen data voor dit scherm.",
-  load_quick_save = "Error, kan de quicksave niet laden, omdat het niet bestaat. Maak je maar geen zorgen, we hebben er eentje voor je aangemaakt!", 
+  load_quick_save = "Error, kan de quicksave niet laden, omdat het niet bestaat. Maak je maar geen zorgen, we hebben er eentje voor je aangemaakt!",
   load_prefix = "Fout bij het laden van het spel: ",
   save_prefix = "Fout bij het opslaan van het spel: ",
   map_file_missing = "Bestand %s voor dit level is niet gevonden!",
@@ -2564,7 +2564,7 @@ high_score = {
 --[[ Ik denk niet dat het belangrijk is om dit stukje te vertalen.
      Als iemand geen Engels spreekt, zou hij sowieso niet met debug
      tools moeten zitten klooien. ]]--
-   
+
 menu_debug = {
   porter_pagers = "  PORTER PAGERS        ",  --[[ Wat? "portier biepers"? --]]
   display_pager = "  TOON PAGER        ", --[[ Een pager is zo een apparaatje dat in de nineties razend populair was... --]]
@@ -2679,10 +2679,10 @@ menu_options_game_speed = {
   max_speed = "  MAX SNELHEID ",
   and_then_some_more = "  EN NOG EEN BEETJE ",
 }
-menu_options_warmth_colors = { 
-  choice_1 = "   ROOD ", 
-  choice_2 = "   BLAUW, GROEN EN ROOD ", 
-  choice_3 = "   GEEL, ORANJE EN ROOD ", 
+menu_options_warmth_colors = {
+  choice_1 = "   ROOD ",
+  choice_2 = "   BLAUW, GROEN EN ROOD ",
+  choice_3 = "   GEEL, ORANJE EN ROOD ",
 }
 menu = {
   debug = "  DEBUG  ",

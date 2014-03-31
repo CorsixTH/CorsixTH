@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -31,7 +31,7 @@ namespace agg
 {
 
     //--------------------------------------------------------------color_conv
-    template<class RenBuf, class CopyRow> 
+    template<class RenBuf, class CopyRow>
     void color_conv(RenBuf* dst, const RenBuf* src, CopyRow copy_row_functor)
     {
         unsigned width = src->width();
@@ -45,8 +45,8 @@ namespace agg
             unsigned y;
             for(y = 0; y < height; y++)
             {
-                copy_row_functor(dst->row_ptr(0, y, width), 
-                                 src->row_ptr(y), 
+                copy_row_functor(dst->row_ptr(0, y, width),
+                                 src->row_ptr(y),
                                  width);
             }
         }
@@ -54,8 +54,8 @@ namespace agg
 
 
     //---------------------------------------------------------color_conv_row
-    template<class CopyRow> 
-    void color_conv_row(int8u* dst, 
+    template<class CopyRow>
+    void color_conv_row(int8u* dst,
                         const int8u* src,
                         unsigned width,
                         CopyRow copy_row_functor)
@@ -68,7 +68,7 @@ namespace agg
     template<int BPP> class color_conv_same
     {
     public:
-        void operator () (int8u* dst, 
+        void operator () (int8u* dst,
                           const int8u* src,
                           unsigned width) const
         {

@@ -196,7 +196,7 @@ static int l_str_index(lua_State *L)
             return l_str_index(L);
         }
     }
-    
+
     // Fetch desired value
     lua_pushvalue(L, 2);
     lua_gettable(L, 4);
@@ -407,7 +407,7 @@ static int l_str_tostring(lua_State *L)
 static int l_str_call(lua_State *L)
 {
     luaL_checkany(L, 1);
-    
+
     // Fetch the proxied value
     aux_push_weak_table(L, 0);
     lua_pushvalue(L, 1);
@@ -670,7 +670,7 @@ static int l_str_reload(lua_State *L)
     lua_setmetatable(L, -2);
 
     aux_push_weak_table(L, 0);
-    luaL_loadstring(L, 
+    luaL_loadstring(L,
        "local reload, all_proxies, _ = ...\n"
        // Make a copy of all_proxies which isn't a weak table
        "local proxies_copy = {}\n"

@@ -189,7 +189,7 @@ end
 function Vip:announce()
   local announcements = {
     "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
-  }   -- there is also vip008 which announces a man from the ministry 
+  }   -- there is also vip008 which announces a man from the ministry
   self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
   if self.hospital.num_vips < 1 then
     self.world.ui.adviser:say(_A.information.initial_general_advice.first_VIP)
@@ -517,7 +517,7 @@ function Vip:afterLoad(old, new)
   end
   if old < 79 then
     self.name = self.hospital.visitingVIP
-  end 
+  end
   Humanoid.afterLoad(self, old, new)
 end
 

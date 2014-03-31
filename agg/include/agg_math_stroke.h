@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -81,15 +81,15 @@ namespace agg
         double approximation_scale() const { return m_approx_scale; }
 
         void calc_cap(VertexConsumer& vc,
-                      const vertex_dist& v0, 
-                      const vertex_dist& v1, 
+                      const vertex_dist& v0,
+                      const vertex_dist& v1,
                       double len);
 
         void calc_join(VertexConsumer& vc,
-                       const vertex_dist& v0, 
-                       const vertex_dist& v1, 
+                       const vertex_dist& v0,
+                       const vertex_dist& v1,
                        const vertex_dist& v2,
-                       double len1, 
+                       double len1,
                        double len2);
 
     private:
@@ -99,15 +99,15 @@ namespace agg
         }
 
         void calc_arc(VertexConsumer& vc,
-                      double x,   double y, 
-                      double dx1, double dy1, 
+                      double x,   double y,
+                      double dx1, double dy1,
                       double dx2, double dy2);
 
         void calc_miter(VertexConsumer& vc,
-                        const vertex_dist& v0, 
-                        const vertex_dist& v1, 
+                        const vertex_dist& v0,
+                        const vertex_dist& v1,
                         const vertex_dist& v2,
-                        double dx1, double dy1, 
+                        double dx1, double dy1,
                         double dx2, double dy2,
                         line_join_e lj,
                         double mlimit,
@@ -142,8 +142,8 @@ namespace agg
 
     //-----------------------------------------------------------------------
     template<class VC> void math_stroke<VC>::width(double w)
-    { 
-        m_width = w * 0.5; 
+    {
+        m_width = w * 0.5;
         if(m_width < 0)
         {
             m_width_abs  = -m_width;
@@ -159,15 +159,15 @@ namespace agg
 
     //-----------------------------------------------------------------------
     template<class VC> void math_stroke<VC>::miter_limit_theta(double t)
-    { 
+    {
         m_miter_limit = 1.0 / sin(t * 0.5) ;
     }
 
     //-----------------------------------------------------------------------
-    template<class VC> 
+    template<class VC>
     void math_stroke<VC>::calc_arc(VC& vc,
-                                   double x,   double y, 
-                                   double dx1, double dy1, 
+                                   double x,   double y,
+                                   double dx1, double dy1,
                                    double dx2, double dy2)
     {
         double a1 = atan2(dy1 * m_width_sign, dx1 * m_width_sign);
@@ -206,12 +206,12 @@ namespace agg
     }
 
     //-----------------------------------------------------------------------
-    template<class VC> 
+    template<class VC>
     void math_stroke<VC>::calc_miter(VC& vc,
-                                     const vertex_dist& v0, 
-                                     const vertex_dist& v1, 
+                                     const vertex_dist& v0,
+                                     const vertex_dist& v1,
                                      const vertex_dist& v2,
-                                     double dx1, double dy1, 
+                                     double dx1, double dy1,
                                      double dx2, double dy2,
                                      line_join_e lj,
                                      double mlimit,
@@ -245,8 +245,8 @@ namespace agg
         else
         {
             // Calculation of the intersection failed, most probably
-            // the three points lie one straight line. 
-            // First check if v0 and v2 lie on the opposite sides of vector: 
+            // the three points lie one straight line.
+            // First check if v0 and v2 lie on the opposite sides of vector:
             // (v1.x, v1.y) -> (v1.x+dx1, v1.y-dy1), that is, the perpendicular
             // to the line determined by vertices v0 and v1.
             // This condition determines whether the next line segments continues
@@ -254,10 +254,10 @@ namespace agg
             //----------------
             double x2 = v1.x + dx1;
             double y2 = v1.y - dy1;
-            if((cross_product(v0.x, v0.y, v1.x, v1.y, x2, y2) < 0.0) == 
+            if((cross_product(v0.x, v0.y, v1.x, v1.y, x2, y2) < 0.0) ==
                (cross_product(v1.x, v1.y, v2.x, v2.y, x2, y2) < 0.0))
             {
-                // This case means that the next segment continues 
+                // This case means that the next segment continues
                 // the previous one (straight line)
                 //-----------------
                 add_vertex(vc, v1.x + dx1, v1.y - dy1);
@@ -272,7 +272,7 @@ namespace agg
             switch(lj)
             {
             case miter_join_revert:
-                // For the compatibility with SVG, PDF, etc, 
+                // For the compatibility with SVG, PDF, etc,
                 // we use a simple bevel join instead of
                 // "smart" bevel
                 //-------------------
@@ -290,9 +290,9 @@ namespace agg
                 if(intersection_failed)
                 {
                     mlimit *= m_width_sign;
-                    add_vertex(vc, v1.x + dx1 + dy1 * mlimit, 
+                    add_vertex(vc, v1.x + dx1 + dy1 * mlimit,
                                    v1.y - dy1 + dx1 * mlimit);
-                    add_vertex(vc, v1.x + dx2 - dy2 * mlimit, 
+                    add_vertex(vc, v1.x + dx2 - dy2 * mlimit,
                                    v1.y - dy2 - dx2 * mlimit);
                 }
                 else
@@ -302,9 +302,9 @@ namespace agg
                     double x2 = v1.x + dx2;
                     double y2 = v1.y - dy2;
                     di = (lim - dbevel) / (di - dbevel);
-                    add_vertex(vc, x1 + (xi - x1) * di, 
+                    add_vertex(vc, x1 + (xi - x1) * di,
                                    y1 + (yi - y1) * di);
-                    add_vertex(vc, x2 + (xi - x2) * di, 
+                    add_vertex(vc, x2 + (xi - x2) * di,
                                    y2 + (yi - y2) * di);
                 }
                 break;
@@ -313,10 +313,10 @@ namespace agg
     }
 
     //--------------------------------------------------------stroke_calc_cap
-    template<class VC> 
+    template<class VC>
     void math_stroke<VC>::calc_cap(VC& vc,
-                                   const vertex_dist& v0, 
-                                   const vertex_dist& v1, 
+                                   const vertex_dist& v0,
+                                   const vertex_dist& v1,
                                    double len)
     {
         vc.remove_all();
@@ -354,7 +354,7 @@ namespace agg
                 a1 += da;
                 for(i = 0; i < n; i++)
                 {
-                    add_vertex(vc, v0.x + cos(a1) * m_width, 
+                    add_vertex(vc, v0.x + cos(a1) * m_width,
                                    v0.y + sin(a1) * m_width);
                     a1 += da;
                 }
@@ -365,7 +365,7 @@ namespace agg
                 a1 -= da;
                 for(i = 0; i < n; i++)
                 {
-                    add_vertex(vc, v0.x + cos(a1) * m_width, 
+                    add_vertex(vc, v0.x + cos(a1) * m_width,
                                    v0.y + sin(a1) * m_width);
                     a1 -= da;
                 }
@@ -375,12 +375,12 @@ namespace agg
     }
 
     //-----------------------------------------------------------------------
-    template<class VC> 
+    template<class VC>
     void math_stroke<VC>::calc_join(VC& vc,
-                                    const vertex_dist& v0, 
-                                    const vertex_dist& v1, 
+                                    const vertex_dist& v0,
+                                    const vertex_dist& v1,
                                     const vertex_dist& v2,
-                                    double len1, 
+                                    double len1,
                                     double len2)
     {
         double dx1 = m_width * (v1.y - v0.y) / len1;
@@ -410,8 +410,8 @@ namespace agg
 
             case inner_miter:
                 calc_miter(vc,
-                           v0, v1, v2, dx1, dy1, dx2, dy2, 
-                           miter_join_revert, 
+                           v0, v1, v2, dx1, dy1, dx2, dy2,
+                           miter_join_revert,
                            limit, 0);
                 break;
 
@@ -421,8 +421,8 @@ namespace agg
                 if(cp < len1 * len1 && cp < len2 * len2)
                 {
                     calc_miter(vc,
-                               v0, v1, v2, dx1, dy1, dx2, dy2, 
-                               miter_join_revert, 
+                               v0, v1, v2, dx1, dy1, dx2, dy2,
+                               miter_join_revert,
                                limit, 0);
                 }
                 else
@@ -450,7 +450,7 @@ namespace agg
             // Outer join
             //---------------
 
-            // Calculate the distance between v1 and 
+            // Calculate the distance between v1 and
             // the central point of the bevel line segment
             //---------------
             double dx = (dx1 + dx2) / 2;
@@ -459,21 +459,21 @@ namespace agg
 
             if(m_line_join == round_join || m_line_join == bevel_join)
             {
-                // This is an optimization that reduces the number of points 
+                // This is an optimization that reduces the number of points
                 // in cases of almost collinear segments. If there's no
                 // visible difference between bevel and miter joins we'd rather
-                // use miter join because it adds only one point instead of two. 
+                // use miter join because it adds only one point instead of two.
                 //
-                // Here we calculate the middle point between the bevel points 
-                // and then, the distance between v1 and this middle point. 
-                // At outer joins this distance always less than stroke width, 
+                // Here we calculate the middle point between the bevel points
+                // and then, the distance between v1 and this middle point.
+                // At outer joins this distance always less than stroke width,
                 // because it's actually the height of an isosceles triangle of
                 // v1 and its two bevel points. If the difference between this
-                // width and this value is small (no visible bevel) we can 
-                // add just one point. 
+                // width and this value is small (no visible bevel) we can
+                // add just one point.
                 //
-                // The constant in the expression makes the result approximately 
-                // the same as in round joins and caps. You can safely comment 
+                // The constant in the expression makes the result approximately
+                // the same as in round joins and caps. You can safely comment
                 // out this entire "if".
                 //-------------------
                 if(m_approx_scale * (m_width_abs - dbevel) < m_width_eps)
@@ -499,9 +499,9 @@ namespace agg
             case miter_join:
             case miter_join_revert:
             case miter_join_round:
-                calc_miter(vc, 
-                           v0, v1, v2, dx1, dy1, dx2, dy2, 
-                           m_line_join, 
+                calc_miter(vc,
+                           v0, v1, v2, dx1, dy1, dx2, dy2,
+                           m_line_join,
                            m_miter_limit,
                            dbevel);
                 break;

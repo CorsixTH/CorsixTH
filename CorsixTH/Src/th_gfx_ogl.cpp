@@ -258,7 +258,7 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
             glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &fMaximumAnistropy);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, fMaximumAnistropy);
 
-            glTexImage2D(GL_TEXTURE_2D, 0, 4, iZoomTextureSize, iZoomTextureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); 
+            glTexImage2D(GL_TEXTURE_2D, 0, 4, iZoomTextureSize, iZoomTextureSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
             if(getGLError() != GL_NO_ERROR)
                 return false;
 
@@ -349,7 +349,7 @@ bool THRenderTarget::endFrame()
             glVertex3f((GLfloat) (GLfloat) getWidth(), 0.0f, 0.0f);
             glVertex3f((GLfloat) getWidth(), (GLfloat) getHeight(), 0.0f);
             glVertex3f(0.0f, (GLfloat) getHeight(), 0.0f);
-        glEnd(); 
+        glEnd();
         glEnable(GL_TEXTURE_2D);
     }
 
@@ -362,7 +362,7 @@ bool THRenderTarget::flushSprites()
 {
     if(m_iVertexCount == 0)
         return true;
-  
+
     GLuint iTexture = m_pVerticies[0].tex;
     glBindTexture(GL_TEXTURE_2D, iTexture);
     if(getGLError() != GL_NO_ERROR)
@@ -563,7 +563,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
     bool bResult = SDL_SaveBMP(pSurfaceFlipped, sFile) == 0;
     SDL_FreeSurface(pSurface);
     SDL_FreeSurface(pSurfaceFlipped);
-    
+
     return bResult;
 }
 
@@ -916,7 +916,7 @@ bool THSpriteSheet::loadFromTHFile(
     _freeSprites();
     if(pCanvas == NULL)
         return false;
-    
+
     m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
     m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
     if(m_pSprites == NULL)
@@ -1355,7 +1355,7 @@ void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
 
     // Strangely drawing at 0,0 would draw outside of the screen
     // so we start at 1,0. This makes OpenGl behave like DirectX.
-    iX++; 
+    iX++;
 
     glDisable(GL_TEXTURE_2D);
     glColor4ub(m_iR, m_iG, m_iB, m_iA);

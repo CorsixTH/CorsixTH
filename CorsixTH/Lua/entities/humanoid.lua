@@ -103,7 +103,7 @@ anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   
 anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
 anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
 anims("Stripped Male Patient 2",      818,  820,  826,  828)                           -- 0-16
-anims("Stripped Male Patient 3",      818,  820,  826,  828)    
+anims("Stripped Male Patient 3",      818,  820,  826,  828)
 anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
 anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
 anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
@@ -112,7 +112,7 @@ anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   
 anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
 anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
 anims("Stripped Female Patient 2",    834,  836,  842,  844)                           -- 0-16
-anims("Stripped Female Patient 3",    834,  836,  842,  844)    
+anims("Stripped Female Patient 3",    834,  836,  842,  844)
 anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
 anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
 anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
@@ -151,19 +151,19 @@ die_anims("Alien Female Patient",      4886, 3208, 3212, 3216,  3220)
 --  | Falling Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-falling_anim("Standard Male Patient",     1682) 
+falling_anim("Standard Male Patient",     1682)
 falling_anim("Standard Female Patient",   3116)
 
 --  | On_ground Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-on_ground_anim("Standard Male Patient",     1258) 
+on_ground_anim("Standard Male Patient",     1258)
 on_ground_anim("Standard Female Patient",   3116)
 
 --  | Get_up Animations                   |
 --  | Name                                 |Anim| Notes
 ----+--------------------------------+-----+-----+-----+-----+------+------+
-get_up_anim("Standard Male Patient",     384) 
+get_up_anim("Standard Male Patient",     384)
 get_up_anim("Standard Female Patient",   580)
 
 --  | Shake_fist Animations                   |
@@ -214,7 +214,7 @@ check_watch_anim("Slack Male Patient",         4060)
 pee_anim("Elvis Patient",              970)
 pee_anim("Standard Female Patient",    4744)
 pee_anim("Slack Female Patient",       4744)
-pee_anim("Standard Male Patient",      2244) 
+pee_anim("Standard Male Patient",      2244)
 pee_anim("Alternate Male Patient",     4472)
 pee_anim("Slack Male Patient",         4328)
 pee_anim("Chewbacca Patient",          4178)
@@ -284,7 +284,7 @@ function Humanoid:Humanoid(...)
   self.should_knock_on_doors = false
 
   self.speed = "normal"
-  
+
   self.build_callbacks  = {--[[set]]}
   self.remove_callbacks = {--[[set]]}
 end
@@ -293,7 +293,7 @@ end
 function Humanoid:afterLoad(old, new)
   if old < 38 then
     -- should existing patients be updated and be getting really ill?
-    -- adds the new variables for health icons 
+    -- adds the new variables for health icons
     self.attributes["health"] = math.random(60, 100) /100
   end
   -- make sure female slack patients have the correct animation
@@ -365,7 +365,7 @@ function Humanoid:dump()
   print("Actions:")
   for i = 1, #self.action_queue do
     local action = self.action_queue[i]
-    local flag = 
+    local flag =
       (action.must_happen and "  must_happen" or "  ") ..
       (action.todo_interrupt and "  " or "  ")
     if action.room_type then
@@ -380,7 +380,7 @@ function Humanoid:dump()
         distance = "nil"
       end
       local standing = "false"
-      if action:isStanding() then 
+      if action:isStanding() then
         standing = "true"
       end
       print(action.name .. " - Bench distance: " .. distance .. " Standing: " .. standing)
@@ -424,9 +424,9 @@ function Humanoid:setHospital(hospital)
 end
 
 -- Function to activate/deactivate moods of a humanoid.
--- If mood_name is nil it is considered a refresh only. 
+-- If mood_name is nil it is considered a refresh only.
 function Humanoid:setMood(mood_name, activate)
-  if mood_name then 
+  if mood_name then
     if activate and activate ~= "deactivate" then
       if self.active_moods[mood_name] then
         return -- No use doing anything if it already exists.
@@ -457,7 +457,7 @@ end
 
 function Humanoid:setCallCompleted()
   if self.on_call then
-    CallsDispatcher.onCheckpointCompleted(self.on_call)    
+    CallsDispatcher.onCheckpointCompleted(self.on_call)
   end
 end
 
@@ -542,12 +542,12 @@ local function Humanoid_startAction(self)
       end
     ))
     action = self.action_queue[1]
-    
+
   end
   ---- There is an action to start ----
   -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
-  
+
   if action == self.action_queue[1] and action.todo_interrupt then
     local high_priority = action.todo_interrupt == "high"
     action.todo_interrupt = nil
@@ -566,13 +566,13 @@ function Humanoid:setNextAction(action, high_priority)
   local i = 1
   local queue = self.action_queue
   local interrupted = false
-  
+
   -- Skip over any actions which must happen
   while queue[i] and queue[i].must_happen do
     interrupted = true
     i = i + 1
   end
-  
+
   -- Remove actions which are no longer going to happen
   local done_set = {}
   for j = #queue, i, -1 do
@@ -595,10 +595,10 @@ function Humanoid:setNextAction(action, high_priority)
       end
     end
   end
-  
+
   -- Add the new action to the queue
   queue[i] = action
-  
+
   -- Interrupt the current action and queue other actions to be interrupted
   -- when they start.
   if interrupted then
@@ -668,13 +668,13 @@ function Humanoid:setType(humanoid_class)
   self.vomit_anim = vomit_animations[humanoid_class]
   self.yawn_anim = yawn_animations[humanoid_class]
   self.tap_foot_anim = tap_foot_animations[humanoid_class]
-  self.check_watch_anim = check_watch_animations[humanoid_class]  
+  self.check_watch_anim = check_watch_animations[humanoid_class]
   self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
     self:setNextAction {name = "idle"}
   end
-  
+
   self.th:setPartialFlag(self.permanent_flags or 0, false)
   if humanoid_class == "Invisible Patient" then
     -- Invisible patients do not have very many pixels to hit, box works better
@@ -775,11 +775,11 @@ function Humanoid:tickDay()
   if self.going_home then
     return false
   end
-  
+
   local temperature = self.world.map.th:getCellTemperature(self.tile_x, self.tile_y)
   self.attributes.warmth = self.attributes.warmth * 0.75 + temperature * 0.25
-  
-  -- If it is too hot or too cold, start to decrease happiness and 
+
+  -- If it is too hot or too cold, start to decrease happiness and
   -- show the corresponding icon. Otherwise we could get happier instead.
   -- Let the player get into the level first though, don't decrease happiness the first year.
   if self.attributes["warmth"] and self.hospital and not self.hospital.initial_grace then

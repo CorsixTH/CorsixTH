@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -46,7 +46,7 @@ namespace agg
         double dy = *y - m_yc;
         double r = sqrt(dx * dx + dy * dy);
 
-        if(r < m_radius * m_magn) 
+        if(r < m_radius * m_magn)
         {
             *x = m_xc + dx / m_magn;
             *y = m_yc + dy / m_magn;
@@ -54,7 +54,7 @@ namespace agg
         else
         {
             double rnew = r - m_radius * (m_magn - 1.0);
-            *x = m_xc + rnew * dx / r; 
+            *x = m_xc + rnew * dx / r;
             *y = m_yc + rnew * dy / r;
         }
 

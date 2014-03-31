@@ -105,7 +105,7 @@ end
 
 function GPRoom:dealtWithPatient(patient)
   patient = patient or self:getPatient()
-  
+
   -- If patients are slow to leave the chair, and staff are quick in their
   -- usage cycle, then dealtWithPatient() might get called twice for the
   -- same patient, in which case the second call must be ignored (otherwise
@@ -116,13 +116,13 @@ function GPRoom:dealtWithPatient(patient)
   else
     self.just_dealt_with = patient
   end
-  
+
   patient:setNextAction(self:createLeaveAction())
   patient:addToTreatmentHistory(self.room_info)
 
   if patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
-    
+
     patient:completeDiagnosticStep(self)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed(true)
@@ -142,7 +142,7 @@ function GPRoom:dealtWithPatient(patient)
       self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
       local next_room = math.random(1, #patient.available_diagnosis_rooms)
       patient:queueAction{
-        name = "seek_room", 
+        name = "seek_room",
         room_type = patient.available_diagnosis_rooms[next_room],
         diagnosis_room = next_room,
       }

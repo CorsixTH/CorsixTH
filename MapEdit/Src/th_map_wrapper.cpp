@@ -179,7 +179,7 @@ void THMapWrapper::_do_set_cell(lua_State *L, THMap* pMap, int iX, int iY, uint1
         uint16_t iNew = iNewBlocks[1 + iDir] & 0xFF;
         if(iOld == iNew)
             continue;
-        
+
         bShouldCheckHospitality = true;
         if(_isDoorframe(iOld) || _isDoorframe(iNew))
             bShouldCheckNeighbourDoors = true;

@@ -29,7 +29,7 @@ local function action_seek_reception_start(action, humanoid)
 
   local best_desk
   local score
-  
+
   -- Go through all receptions desks.
   for desk, _ in pairs(humanoid.hospital.reception_desks) do
     if (not desk.receptionist and not desk.reserved_for) then
@@ -61,7 +61,7 @@ local function action_seek_reception_start(action, humanoid)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(best_desk.object_type.name))
     humanoid.waiting = nil
-    
+
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
@@ -78,7 +78,7 @@ local function action_seek_reception_start(action, humanoid)
     else
       local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
       humanoid:queueAction(walk, 0)
-      
+
       -- Trim the walk to finish once it is possible to join the queue
       for i = #walk.path_x, 2, -1 do
         if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], x, y) then

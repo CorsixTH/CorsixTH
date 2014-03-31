@@ -133,19 +133,19 @@ local function action_use_phase(action, humanoid, phase)
         phase)
     end
   end
-  
+
   local anim_length = 1
   if type(anim) == "table" and anim.length then
     anim_length = anim.length
   end
-  
+
   if type(anim) == "table" and anim[1] ~= "morph" and #anim > 1 then
     -- If an animation list is provided rather than a single animation, then
     -- choose an animation from the list at random.
     is_list = true
     anim = anim[math.random(1, #anim)]
   end
-  
+
   local flags = action.mirror_flags
   if type(anim) == "table" then
     if anim.mirror then
@@ -164,7 +164,7 @@ local function action_use_phase(action, humanoid, phase)
   else
     object.th:makeInvisible()
   end
-  
+
   if object.split_anims then
     flags = flags + DrawFlags.Crop
     local anims = humanoid.world.anims
@@ -198,7 +198,7 @@ local function action_use_phase(action, humanoid, phase)
   else
     humanoid:setAnimation(anim, flags)
   end
-  
+
   local offset = object.object_type.orientations
   if offset then
     local tx, ty
@@ -208,7 +208,7 @@ local function action_use_phase(action, humanoid, phase)
     else
       tx, ty = object:getRenderAttachTile()
     end
-    if humanoid.humanoid_class == "Handyman" and 
+    if humanoid.humanoid_class == "Handyman" and
       offset.added_handyman_animate_offset_while_in_use then
       tx = tx + offset.added_handyman_animate_offset_while_in_use[1]
       ty = ty + offset.added_handyman_animate_offset_while_in_use[2]
@@ -219,18 +219,18 @@ local function action_use_phase(action, humanoid, phase)
     end
     offset = offset.animation_offset
     if added_offset then
-      humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1], 
+      humanoid:setTilePositionSpeed(tx, ty, offset[1] + added_offset[1],
         offset[2] + added_offset[2])
     else
       humanoid:setTilePositionSpeed(tx, ty, offset[1], offset[2])
-    end 
+    end
   else
     humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
   end
   humanoid.user_of = object
   local length = anim_length * humanoid.world:getAnimLength(anim)
   if action.min_length and phase == 0 and action.min_length > length then
-    -- A certain length is desired. 
+    -- A certain length is desired.
     -- Even it out so that an integer number of animation sequences are done.
     length = action.min_length + action.min_length % length
   end
@@ -296,7 +296,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
   end
   if phase == 100 then
     humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
-    
+
     -- Check if the room is about to be destroyed
     local room_destroyed = false
     if object.strength then
@@ -369,7 +369,7 @@ local function action_use_object_start(action, humanoid)
   local anims = object.object_type.usage_animations[orient]
   action.anims = anims
   action.mirror_flags = flags
-  if action.prolonged_usage == nil and anims.begin_use and 
+  if action.prolonged_usage == nil and anims.begin_use and
     anims.in_use and anims.finish_use then
     action.prolonged_usage = true
   end

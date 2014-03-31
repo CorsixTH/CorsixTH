@@ -191,7 +191,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     lua_insert(L, 1);
     return lua_gettop(L);
 }
-    
+
 int CorsixTH_lua_main(lua_State *L)
 {
     lua_call(L, CorsixTH_lua_main_no_eval(L) - 1, LUA_MULTRET);

@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -17,12 +17,12 @@
 //
 //----------------------------------------------------------------------------
 //
-// Adaptation for 32-bit screen coordinates (scanline32_p) has been sponsored by 
+// Adaptation for 32-bit screen coordinates (scanline32_p) has been sponsored by
 // Liberty Technology Systems, Inc., visit http://lib-sys.com
 //
 // Liberty Technology Systems, Inc. is the provider of
 // PostScript and PDF technology for software developers.
-// 
+//
 //----------------------------------------------------------------------------
 #ifndef AGG_SCANLINE_P_INCLUDED
 #define AGG_SCANLINE_P_INCLUDED
@@ -33,11 +33,11 @@ namespace agg
 {
 
     //=============================================================scanline_p8
-    // 
-    // This is a general purpose scaline container which supports the interface 
+    //
+    // This is a general purpose scaline container which supports the interface
     // used in the rasterizer::render(). See description of scanline_u8
     // for details.
-    // 
+    //
     //------------------------------------------------------------------------
     class scanline_p8
     {
@@ -122,8 +122,8 @@ namespace agg
         //--------------------------------------------------------------------
         void add_span(int x, unsigned len, unsigned cover)
         {
-            if(x == m_last_x+1 && 
-               m_cur_span->len < 0 && 
+            if(x == m_last_x+1 &&
+               m_cur_span->len < 0 &&
                cover == *m_cur_span->covers)
             {
                 m_cur_span->len -= (int16)len;
@@ -140,9 +140,9 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        void finalize(int y) 
-        { 
-            m_y = y; 
+        void finalize(int y)
+        {
+            m_y = y;
         }
 
         //--------------------------------------------------------------------
@@ -275,9 +275,9 @@ namespace agg
         //--------------------------------------------------------------------
         void add_span(int x, unsigned len, unsigned cover)
         {
-            if(x == m_last_x+1 && 
+            if(x == m_last_x+1 &&
                m_spans.size() &&
-               m_spans.last().len < 0 && 
+               m_spans.last().len < 0 &&
                cover == *m_spans.last().covers)
             {
                 m_spans.last().len -= coord_type(len);
@@ -291,9 +291,9 @@ namespace agg
         }
 
         //--------------------------------------------------------------------
-        void finalize(int y) 
-        { 
-            m_y = y; 
+        void finalize(int y)
+        {
+            m_y = y;
         }
 
         //--------------------------------------------------------------------

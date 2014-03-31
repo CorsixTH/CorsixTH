@@ -83,30 +83,30 @@ anim_mgr:setMarker(3250, 0, kf3, 3, kf2, 8, kf1)
 
 object.orientations = {
   north = {
-    footprint = { {-2, -1, complete_cell = true}, {-1, -1, complete_cell = true}, 
-                  {-1, 0, complete_cell = true}, {0, -1, need_north_side = true}, 
+    footprint = { {-2, -1, complete_cell = true}, {-1, -1, complete_cell = true},
+                  {-1, 0, complete_cell = true}, {0, -1, need_north_side = true},
                   {0, 0, only_passable = true} },
     render_attach_position = {0, -1},
     use_position = "passable",
   },
   east = {
-    footprint = { {0, -2, need_east_side = true}, {-1, -1, complete_cell = true}, 
-                  {0, -1, complete_cell = true}, {-1, 0, only_passable = true}, 
+    footprint = { {0, -2, need_east_side = true}, {-1, -1, complete_cell = true},
+                  {0, -1, complete_cell = true}, {-1, 0, only_passable = true},
                   {0, 0, complete_cell = true}, {-1, -2, only_passable = true}},
     render_attach_position = {0, -1},
     use_position = {-1, 0},
     finish_use_position = {-1, -2},
   },
   south = {
-    footprint = { {0, -1, only_passable = true}, {-2, 0, need_south_side = true}, 
-                  {-1, -1, complete_cell = true}, {-1, 0, complete_cell = true}, 
+    footprint = { {0, -1, only_passable = true}, {-2, 0, need_south_side = true},
+                  {-1, -1, complete_cell = true}, {-1, 0, complete_cell = true},
                   {0, 0, complete_cell = true}, {-2, -1, only_passable = true} },
     render_attach_position = {-2, 0},
     use_position = {0, -1},
     finish_use_position = {-2, -1},
   },
   west = {
-    footprint = { {-1, -2, complete_cell = true}, {0, 0, only_passable = true}, 
+    footprint = { {-1, -2, complete_cell = true}, {0, 0, only_passable = true},
                   {-1, -1, complete_cell = true}, {0, -1, complete_cell = true},
                   {-1, 0, need_west_side = true} },
     render_attach_position = {-1, 0},

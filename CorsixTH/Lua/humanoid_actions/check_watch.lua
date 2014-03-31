@@ -28,7 +28,7 @@ local function action_check_watch_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.check_watch_anim, "Error: watch checking animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.check_watch_anim, humanoid.last_move_direction == "east" and 0 or 1)

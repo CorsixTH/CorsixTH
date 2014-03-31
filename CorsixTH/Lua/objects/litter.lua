@@ -109,7 +109,7 @@ function Litter:vomitInducing()
 end
 
 function Litter:isCleanable()
-  return self:vomitInducing() or self:anyLitter() 
+  return self:vomitInducing() or self:anyLitter()
 end
 
 function Litter:anyLitter()

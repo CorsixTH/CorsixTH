@@ -146,7 +146,7 @@ static int l_mainloop(lua_State *L)
     fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
     SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, NULL);
     SDL_Event e;
-    
+
     while(SDL_WaitEvent(&e) != 0)
     {
         bool do_frame = false;
@@ -311,7 +311,7 @@ static int l_get_ticks(lua_State *L)
 
 /*
     Enable or disable the keyboard modifier.
-    
+
     Takes two parameters: delay and interval. Both are integers in miliseconds
     where nil gives default values, and delay of 0 disables the repeat.
 */
@@ -319,7 +319,7 @@ static int l_modify_keyboardrepeat(lua_State *L)
 {
     int delay = luaL_optint(L, 1, SDL_DEFAULT_REPEAT_DELAY);
     int interval = luaL_optint(L, 2, SDL_DEFAULT_REPEAT_INTERVAL);
-    
+
     lua_pushboolean(L, SDL_EnableKeyRepeat(delay, interval) == 0 ? 1 : 0);
     return 1;
 }

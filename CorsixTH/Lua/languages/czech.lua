@@ -1083,7 +1083,7 @@ tooltip = {
     browse_music = "Procházet pro zvolení jiného umístění vašeho adresáře s hudbou  ( Současné umístění: %1% ) ",
     not_specified = "Žádné umístění adresáře zatím nezadáno!",
     browse_saves = "Procházet pro zvolení jiného umístění vašeho adresáře uložených her  ( Současné umístění: %1% ) ",
-    default = "Výchozí umístění",    
+    default = "Výchozí umístění",
   },
   customise_window = {
     aliens = "Kvůli chybějícím správným animacím standardně pacienti s Mimozemskou DNA přicházejí pouze při pohotovosti. Abyste je povolili i jako normální pacienty, stačí toto vypnout.",
@@ -1100,21 +1100,21 @@ tooltip = {
     language_dropdown_item = "Zvolit %s jako jazyk",
     width = "Zadejte požadovanou šířku obrazovky",
     select_language = "Vybrat jazyk hry",
-    select_resolution = "Vybrat nové rozlišení", 
-    back = "Zavřít okno možností", 
-    resolution = "Rozlišení v kterém by hra měla být spuštěna", 
+    select_resolution = "Vybrat nové rozlišení",
+    back = "Zavřít okno možností",
+    resolution = "Rozlišení v kterém by hra měla být spuštěna",
     fullscreen = "Zdali má být hra spuštěna v režimu v okně nebo celé obrazovky",
     fullscreen_button = "Klikněte pro přepnutí režimu celé obrazovky",
-    change_resolution = "Změnit rozlišení okna na rozměry zadané vlevo", 
+    change_resolution = "Změnit rozlišení okna na rozměry zadané vlevo",
     apply = "Použít zadané rozlišení",
-    cancel = "Vrátit se zpět bez změny rozlišení", 
+    cancel = "Vrátit se zpět bez změny rozlišení",
     height = "Zadejte požadovanou výšku obrazovky",
     audio_button = "Zapnout nebo vypnout všechny zvuky ve hře",
     audio_toggle = "Zapnout/vypnout",
     folder_button = "Možnosti složky",
     customise_button = "Další nastavení, pomocí kterých si můžete svoji hru přizpůsobit",
     },
-  update_window = {  
+  update_window = {
     download = "Přejít na stránku stahování pro získání nejnovější verze CorsixTH",
     ignore = "Zatím si této aktualizace nevšímat. Při příštím spuštění CorsixTH budete znovu informováni.",
     },
@@ -2524,7 +2524,7 @@ room_descriptions = {
   staff_room = {
     [1] = "Místnost pro Zaměstnance//",
     [2] = "Vaši zaměstnanci se při provádění jejich práce unaví. Tuto místnost potřebují, aby si odpočinuli a obnovili síly. Unavení zaměstnanci jsou pomalí, požadují více peněz a nakonec odejdou. Také dělají více chyb. Postavením místnosti, aby tam měli co dělat se, dobře vyplatí. Ujistěte se, že je tam místo pro více zaměstnanců najednou. ",
-  },                                                                                                                                                                                                                                                                     
+  },
   pharmacy = {
     [1] = "Lékárna//",
     [2] = "Pacienti, kteří byly vyšetřeni a jejichž léčba je lék musí navštívit Lékárnu, aby si ho vzali. Jak více a více léků pro léčbu je objeveno a stanou se dostupnými, tato místnost bude více zaneprázdněná. Možná byste mohli chtít později postavit další Lékárnu.//",
@@ -2622,7 +2622,7 @@ menu_options = {
   jukebox = "    JUKEBOX  ",
   warmth_colors = "    BARVY TEPLOTY",
   twentyfour_hour_clock = "    24HODINOVÝ REŽIM  ",
-  wage_increase = "  MZDOVÉ POŽADAVKY",  
+  wage_increase = "  MZDOVÉ POŽADAVKY",
 }
 menu_options_warmth_colors = {
   choice_2 = "     MODRÁ ZELENÁ ČERVENÁ ",
@@ -2821,7 +2821,7 @@ fax = {
       free_build = {
         [1] = "Máte tady velmi hezkou nemocnici! Není to ale zas tak těžké ji postavit, když nejste omezeni penězi, co?",
         [2] = "Sice nejsem ekonom, ale myslím si, že bych tuto nemocnici také mohl řídit, víte, co tím myslím...",
-        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano... Vy se ji nemusíte obávat.", 
+        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano... Vy se ji nemusíte obávat.",
         },
       good = {
         [1] = "Jaká to dobře provozovaná nemocnice. Děkuji, že jste mě do ní pozvali.",
@@ -3218,7 +3218,7 @@ update_window = {
   new_version = "Nová verze:",
   current_version = "Současná verze:",
   download = "Přejít na stránku ke stažení",
-  ignore = "Přeskočit a přejít do hlavní nabídky", 
+  ignore = "Přeskočit a přejít do hlavní nabídky",
 }
 customise_window = {
   average_contents = "Průměrný obsah",
