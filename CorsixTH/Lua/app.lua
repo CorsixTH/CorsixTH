@@ -57,6 +57,18 @@ function App:App()
   self.check_for_updates = true
 end
 
+--[[CorsixTH programmers can help the testers of their pull requests by
+   providing testing code for each of their commits using this function which
+   testers can execute via the debug console by using the console
+   command: TheApp:testCommit()
+
+   For each commit in your pull requests, please change the contents of this
+   function to either test the commit's new change set or to
+   print "--- App:testCommit(): No test provided. ---"]]
+function App:testCommit()
+  print "--- App:testCommit(): No test provided. ---"
+end
+
 function App:setCommandLine(...)
   self.command_line = {...}
   for i, arg in ipairs(self.command_line) do
