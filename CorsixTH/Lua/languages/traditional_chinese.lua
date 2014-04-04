@@ -32,16 +32,16 @@ date_format = {
   daymonth = "%2%月 %1%日",
 }
 misc = {
-  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.",
+  no_heliport = "可能這裡沒有發現任何疾病，或者這個地圖沒有直升機坪。",
   not_yet_implemented = "(尚未實現)",
 }
 debug_patient_window = {
-  caption = "Debug Patient",
+  caption = "除錯用病人", -- xd
 }
 totd_window = {
   previous = "上一個提示",
   tips = {
-    [1] = "Every hospital needs a reception desk and a GP's office to get going. After that, it depends on what kind of patients are visiting your hospital. A pharmacy is always a good choice, though.",
+    [1] = "每間醫院需要一個服務台和一般診斷室來開始，之後，你需要跟著病人的種類選擇，但是一個藥房永遠都是一個好的選擇。",
     [2] = "Machines such as the Inflation need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
     [3] = "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
     [4] = "Place enough radiators to keep your staff and patients warm, or they will become unhappy. Use the town map to locate any spots in your hospital that need more heating.",
@@ -219,22 +219,22 @@ lua_console = {
 }
 install = {
   title = "--------------------------------- CorsixTH 遊戲設定 ---------------------------------",
-  th_directory = "運行游戲需要原版杏林也瘋狂。請指定原版杏林也瘋狂游戲安裝資料夾。",
+  th_directory = "運行游戲需要原版杏林也瘋狂。請指定原版杏林也瘋狂游戲安裝資料夾。", -- The name of the game is hilarious.
 }
 load_game_window = {
   caption = "裝載遊戲",
 }
 adviser = {
   cheats = {
-    th_cheat = "Congratulations, you have unlocked cheats!",
-    hairyitis_cheat = "Hairyitis cheat activated!",
-    roujin_on_cheat = "Roujin's challenge activated! Good luck...",
-    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    crazy_off_cheat = "Phew... the doctors regained their sanity.",
-    roujin_off_cheat = "Roujin's challenge deactivated.",
-    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
+    th_cheat = "你開啟了作弊模式，恭喜！",
+    hairyitis_cheat = "Hairyitis 已開啟。",
+    roujin_on_cheat = "Roujin's challenge 已開啟！ 祝您好運......",
+    crazy_on_cheat = "糟糕了！所有的醫生都瘋了！",
+    bloaty_off_cheat = "頭部腫脹的作弊已開關閉。",
+    bloaty_cheat = "頭部腫脹的作弊已開啟。",
+    crazy_off_cheat = "幸好我們的醫生現在不再瘋了！",
+    roujin_off_cheat = "Roujin's challenge 已關閉。",
+    hairyitis_off_cheat = "Hairyitis 已關閉。",
   },
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
 }
