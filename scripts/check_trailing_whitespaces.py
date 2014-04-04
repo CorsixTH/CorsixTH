@@ -3,7 +3,8 @@
 """
   Usage: check_trailing_whitespaces.py [root]
   This script will check the presence of trailing whitespaces in any file
-  below |root|. It will return 0 if none is find. Something else otherwise.
+  below |root|. It will return 0 if none is found. Otherwise, it will print the
+  path of the violating file and return an error code.
   If root is not specified, it will use the current directory.
 """
 
