@@ -50,7 +50,9 @@ before_script:
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - echo -e "Host server2.armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - cd fresh
-script: 
+script:
+  # Check if there are trailing whitespaces.
+  - ${TRAVIS_BUILD_DIR}/scripts/check_trailing_whitespaces.py $TRAVIS_BUILD_DIR
   # Build CorsixTH
   - make
   # Validate lua files
