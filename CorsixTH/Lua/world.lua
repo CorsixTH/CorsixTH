@@ -1579,6 +1579,27 @@ function World:getIdleTile(x, y, idx)
   return cache.x[idx], cache.y[idx]
 end
 
+--[[
+This function checks if a tile has an entity on it and (optionally) if it is in
+a room.
+!param x (integer) the queried tile's x coardinate.
+!param y (integer) the queried tile's y coardinate.
+!param not_in_room (boolean) default = false, should this function also check that
+the tile isn't in a room?
+!return boolean
+--]]
+function World:isTileEmpty(x, y, not_in_room)
+  for _, entity in ipairs(self.entities) do
+    if entity.tile_x == x and entity.tile_y == y then
+      return false
+    end
+  end
+  if not_in_room then
+    return self:getRoom(x, y) == nil
+  end
+  return true
+end
+
 local face_dir = {
   [0] = "south",
   [1] = "west",
