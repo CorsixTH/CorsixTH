@@ -124,7 +124,8 @@ local config_defaults = {
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
-  check_for_updates = true
+  check_for_updates = true,
+  warmth_complaints_initial_grace = true
 }
 local fi = io.open(config_filename, "r")
 local config_values = {}
@@ -412,6 +413,13 @@ zoom_speed = ]=].. tostring(config_values.zoom_speed) ..[=[
 -- Press shift when you are scrolling and it will be a lot quicker
 --
 scroll_speed = ]=].. tostring(config_values.scroll_speed) ..[=[
+--
+-------------------------------------------------------------------------------------------------------------------------
+-- Initial Grace Period: By default this is set at True and is in place for 12 months
+-- The initial grace is how long before staff and patients are less likely to be unhappy about
+-- how cold it is in your hospital.
+--
+warmth_complaints_initial_grace = ]=].. tostring(config_values.warmth_complaints_initial_grace) ..[=[ 
 --
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the
