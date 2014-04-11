@@ -30,9 +30,14 @@ local lua_files = {
 }
 
 local lfs = require "lfs"
+
+local output_dir = lfs.currentdir() .. "/corsixth_lua/"
+lfs.mkdir(output_dir)
+
 local our_dir = debug.getinfo(1).source
 our_dir = our_dir:match("@(.*)"..package.config:sub(1, 1)) or "."
 lfs.chdir(our_dir)
+
 
 dofile "../CorsixTH/Lua/strict.lua"
 dofile "../CorsixTH/Lua/class.lua"
@@ -69,7 +74,7 @@ for _, dir_path in ipairs(directories) do
 end
 
 local function WriteHTML(name, content)
-  local f = assert(io.open("output/".. name ..".html", "w"))
+  local f = assert(io.open(output_dir .. name ..".html", "w"))
   f:write((content:gsub("([\r\n])%s*[\r\n]","%1"):gsub("   *"," ")))
   f:close()
 end
@@ -116,6 +121,15 @@ WriteHTML("file_globals", template "page" {
   section = "globals",
   content = "TODO",
 })
+
+-- copy class_list.html to index.html
+local infile = io.open(output_dir .. "class_list.html", "r")
+local content = infile:read("*a")
+infile:close()
+
+local outfile = io.open(output_dir .. "index.html", "w")
+outfile = outfile:write(content)
+outfile:close()
 
 do return end
 -- Old code, to be integrated into new code at later date:

@@ -126,3 +126,42 @@ IF(BUILD_MAPEDITOR)
     message(FATAL_ERROR "The map editor can only be built when using OpenGL as renderer")
   ENDIF(WITH_OPENGL)
 ENDIF(BUILD_MAPEDITOR)
+
+# Documentation generation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  add_custom_target(doc
+    DEPENDS doc_corsixth_engine doc_corsixth_lua doc_animview doc_leveledit doc_mapedit
+  )
+
+  add_custom_target(doc_animview
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/animview.doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for AnimView" VERBATIM
+  )
+
+  add_custom_target(doc_leveledit
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/leveledit.doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for LevelEdit" VERBATIM
+  )
+
+  add_custom_target(doc_mapedit
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/mapedit.doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for MapEdit" VERBATIM
+  )
+
+  add_custom_target(doc_corsixth_engine
+    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/corsixth_engine.doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for corsixth_engine" VERBATIM
+  )
+
+  add_custom_target(doc_corsixth_lua
+    lua ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/main.lua
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    COMMENT "Generating API documentation for corsixth_lua" VERBATIM
+  )
+
+endif(DOXYGEN_FOUND)
