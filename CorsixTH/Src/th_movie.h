@@ -28,8 +28,6 @@ SOFTWARE.
 #include <string>
 #include <queue>
 #include "config.h"
-#include "th_gfx.h"
-#include "th_sound.h"
 
 #ifdef CORSIX_TH_USE_FFMPEG
 #include "SDL_mixer.h"
@@ -45,6 +43,13 @@ extern "C"
 #include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
 }
+
+struct SDL_Renderer;
+struct SDL_Texture;
+struct SDL_Window;
+struct SDL_mutex;
+struct SDL_cond;
+typedef void* SDL_GLContext;
 
 class THMoviePicture
 {
@@ -142,7 +147,7 @@ public:
 
     void readStreams();
     void runVideo();
-    void copyAudioToStream(Uint8 *pbStream, int iStreamSize);
+    void copyAudioToStream(uint8_t *pbStream, int iStreamSize);
 protected:
 #ifdef CORSIX_TH_USE_FFMPEG
     int decodeAudioFrame(bool fFirst);
@@ -198,7 +203,7 @@ protected:
 
     //empty raw chunk for SDL_mixer
     Mix_Chunk* m_pChunk;
-    Uint8* m_pbChunkBuffer;
+    uint8_t* m_pbChunkBuffer;
 
     //SDL_mixer parameters
     int m_iChannel;

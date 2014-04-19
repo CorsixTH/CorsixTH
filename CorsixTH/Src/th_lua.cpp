@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "th.h"
 #include "th_lua_internal.h"
 #include "bootstrap.h"
 #include <string.h>

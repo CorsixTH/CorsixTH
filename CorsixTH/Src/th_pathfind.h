@@ -23,7 +23,9 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_PATHFIND_H_
 #define CORSIX_TH_TH_PATHFIND_H_
 #include "th_map.h"
-#include "persist_lua.h"
+
+class LuaPersistReader;
+class LuaPersistWriter;
 
 //! Finds paths through maps
 /*!

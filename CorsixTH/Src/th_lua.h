@@ -23,7 +23,6 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_LUA_H_
 #define CORSIX_TH_TH_LUA_H_
 #include "lua.hpp"
-#include "th.h"
 #include <new>
 
 int luaopen_th(lua_State *L);

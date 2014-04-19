@@ -24,6 +24,9 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
 
+class LuaPersistReader;
+class LuaPersistWriter;
+
 enum THScaledItems
 {
     THSI_None = 0,
@@ -34,7 +37,6 @@ enum THScaledItems
 
 #include "th_gfx_sdl.h"
 #include "th_gfx_font.h"
-#include "persist_lua.h"
 #include <stddef.h>
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
