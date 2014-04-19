@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local TH = require "TH"
 local math_floor
     = math.floor
-    
+
 dofile "dialogs/place_objects"
 
 class "UIEditRoom" (UIPlaceObjects)
@@ -121,7 +121,7 @@ end
      dialog is being opened. If the room is in the objects phase and all
      required objects have been placed it will be completed. Otherwise
      it is cancelled instead.
---]]     
+--]]
 function UIEditRoom:verifyOrAbortRoom()
   if self.phase == "objects" and self.confirm_button.enabled then
     -- The room can be finished
@@ -237,7 +237,7 @@ function UIEditRoom:confirm(force)
       self.ui.hospital:spendMoney(cost, _S.transactions.build_room .. ": " .. self.title_text, cost)
       self.paid = true
     end
-    
+
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
     -- If information dialogs are disabled, go ahead.
@@ -289,7 +289,7 @@ function UIEditRoom:clearArea()
       if class.is(entity, Humanoid)
       and self:isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
-        
+
         -- Try to make the humanoid leave the area
         local meander = entity.action_queue[2]
         if meander and meander.name == "meander" then
@@ -328,13 +328,13 @@ function UIEditRoom:clearArea()
       end
     end
   end
-  
+
   if next(humanoids_to_watch) == nil then
     -- No humanoids within the area, so continue with the room placement
     self:confirm(true)
     return
   end
-  
+
   self.check_for_clear_area_timer = 10
   self.humanoids_to_watch = humanoids_to_watch
   self.ui:setDefaultCursor "sleep"
@@ -504,7 +504,7 @@ function UIEditRoom:purchaseItems()
     local object = TheApp.objects[o]
     local research = self.ui.hospital.research
     local avail = research.level_config.objects[object.thob].AvailableForLevel
-    if avail == 1 and (not research.research_progress[object] 
+    if avail == 1 and (not research.research_progress[object]
     or research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
@@ -513,10 +513,10 @@ function UIEditRoom:purchaseItems()
           cur_qty = p.qty
         end
       end
-      
+
       -- look up minimum quantity (required objects list)
       local min_qty = self.room.room_info.objects_needed[o] or 0
-      
+
       -- subtract number of objects in room from minimum quantity
       for obj, _ in pairs(self.room.objects) do
         if min_qty == 0 then break end
@@ -527,13 +527,13 @@ function UIEditRoom:purchaseItems()
       object_list[i] = { object = TheApp.objects[o], qty = cur_qty, min_qty = min_qty }
     end
   end
-  
+
   self.ui:addWindow(UIFurnishCorridor(self.ui, object_list, self))
 end
 
 -- callback for item pick up button
 function UIEditRoom:pickupItems()
-  if self.in_pickup_mode then 
+  if self.in_pickup_mode then
     self:stopPickupItems()
   else
     self.in_pickup_mode = true
@@ -586,10 +586,10 @@ function UIEditRoom:returnToDoorPhase()
   if room.door and room.door.queue then
     room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
   end
-  
+
   self.purchase_button:enable(false)
   self.pickup_button:enable(false)
-  
+
   -- Remove any placed objects (add them to list again)
   for x = room.x, room.x + room.width - 1 do
     for y = room.y, room.y + room.height - 1 do
@@ -612,15 +612,15 @@ function UIEditRoom:returnToDoorPhase()
   if self.room.door2 then
     self.world:destroyEntity(self.room.door2)
   end
-  
+
   -- backup list of objects
   self.objects_backup = {}
   for k, o in pairs(self.objects) do
     self.objects_backup[k] = { object = o.object, qty = o.qty }
   end
-  
+
   UIPlaceObjects.removeAllObjects(self, true)
-  
+
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
     for i = 1, n_steps do
@@ -653,17 +653,17 @@ function UIEditRoom:returnToDoorPhase()
   remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1)
   remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0)
   remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0)
-  
+
   -- Reset floor tiles and flags
   self.world.map.th:unmarkRoom(room.x, room.y, room.width, room.height)
-  
+
   -- Re-create blueprint
   local rect = self.blueprint_rect
   local old_w, old_h = rect.w, rect.h
   rect.w = 0
   rect.h = 0
   self:setBlueprintRect(rect.x, rect.y, old_w, old_h)
-  
+
   -- We've gone all the way back to wall phase, so step forward to door phase
   self.phase = "door"
   self:enterDoorPhase()
@@ -674,13 +674,13 @@ function UIEditRoom:screenToWall(x, y)
   cellx = math_floor(cellx)
   celly = math_floor(celly)
   local rect = self.blueprint_rect
-  
+
   if cellx == rect.x or cellx == rect.x - 1 or cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1 or
      celly == rect.y or celly == rect.y - 1 or celly == rect.y + rect.h or celly == rect.y + rect.h - 1 then
   else
     return
   end
-  
+
   -- NB: Doors and windows cannot be placed on corner tiles, hence walls of corner tiles
   -- are never returned, and the nearest non-corner wall is returned instead. If they
   -- could be placed on corner tiles, then you would have to consider the interaction of
@@ -761,7 +761,7 @@ function UIEditRoom:screenToWall(x, y)
     if cellx == rect.x then
       cellx = rect.x + 1
     elseif cellx == rect.x + rect.w - 1 then
-      cellx = rect.x + rect.w - 2 
+      cellx = rect.x + rect.w - 2
     end
     return cellx, rect.y + rect.h - 1, "south"
   end
@@ -772,12 +772,12 @@ end
 function UIEditRoom:checkReachability()
   local map = self.ui.app.map.th
   local world = self.ui.app.world
-  
+
   local rect = self.blueprint_rect
   local prev_x, prev_y
   local x, y = rect.x, rect.y - 1
   local flags = {}
-  
+
   local function check(flag)
     if map:getCellFlags(x, y, flags).passable and flags[flag] then
       if prev_x and not world:getPathDistance(prev_x, prev_y, x, y) then
@@ -787,7 +787,7 @@ function UIEditRoom:checkReachability()
     end
     return true
   end
-  
+
   while x < rect.x + rect.w do
     if not check"travelSouth" then return false end
     x = x + 1
@@ -807,7 +807,7 @@ function UIEditRoom:checkReachability()
     if not check"travelEast" then return false end
     y = y - 1
   end
-  
+
   return true
 end
 
@@ -819,7 +819,7 @@ function UIEditRoom:enterDoorPhase()
       self.ui.app.map:setCellFlags(x, y, {passable = false})
     end
   end
-  
+
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
     -- undo passable flags and go back to walls phase
@@ -829,10 +829,10 @@ function UIEditRoom:enterDoorPhase()
     self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
     return
   end
-  
+
   self.desc_text = _S.place_objects_window.place_door
   self.confirm_button:enable(false) -- Confirmation is via placing door
-  
+
   -- Change the floor tiles to opaque blue
   local map = self.ui.app.map.th
   for y = self.blueprint_rect.y, self.blueprint_rect.y + self.blueprint_rect.h - 1 do
@@ -840,7 +840,7 @@ function UIEditRoom:enterDoorPhase()
       map:setCell(x, y, 4, 24)
     end
   end
-  
+
   -- Re-organise wall anims to index by x and y
   local walls = {}
   for _, wall in ipairs(self.blueprint_wall_anims) do
@@ -872,7 +872,7 @@ function UIEditRoom:enterObjectsPhase()
     self.purchase_button:enable(true)
   end
   self.pickup_button:enable(true)
-  
+
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
   else
@@ -937,7 +937,7 @@ function UIEditRoom:draw(canvas, ...)
     self.cell_outline:draw(canvas, 2, x - 32, y)
     canvas:scale(1)
   end
-  
+
   UIPlaceObjects.draw(self, canvas, ...)
 end
 
@@ -979,12 +979,12 @@ function UIEditRoom:onMouseUp(button, x, y)
     self.mouse_down_x = false
     self.mouse_down_y = false
   end
-  
+
   if self.move_rect_x then
     self.move_rect_x = false
     self.move_rect_y = false
   end
-  
+
   return UIPlaceObjects.onMouseUp(self, button, x, y)
 end
 
@@ -999,14 +999,14 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   local map = self.ui.app.map
   if x + w > map.width  then w = map.width  - x end
   if y + h > map.height then h = map.height - y end
-  
+
   if rect.x == x and rect.y == y and rect.w == w and rect.h == h then
     -- Nothing to do
     return
   end
-  
+
   local too_small = w < self.room_type.minimum_size or h < self.room_type.minimum_size
-  
+
   -- Entire update of floor tiles and wall animations done in C to replace
   -- several hundred calls into C with just a single call. The price for this
   -- is reduced flexibility. See l_map_updateblueprint in th_lua.cpp for code.
@@ -1025,9 +1025,9 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
       self.ui:tutorialStep(3, {4, 5, 6}, 8)
     end
   end
-  
+
   self.confirm_button:enable(is_valid)
-  
+
   rect.x = x
   rect.y = y
   rect.w = w
@@ -1052,7 +1052,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   local orig_x = x
   local orig_y = y
   local orig_wall = wall
-  
+
   -- Used to get the adjacent tiles when placing swing doors.
   local x_mod
   local y_mod
@@ -1070,7 +1070,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     y_mod = 2
   end
   local map = self.ui.app.map.th
-  
+
   if self.blueprint_door.anim then
     if self.room_type.swing_doors then
       if self.blueprint_door.anim[1] then
@@ -1137,7 +1137,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     end
     -- If it is a swing door there are two more locations to check.
     if self.room_type.swing_doors then
-      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 
+      if map:getCell(x, y - 1, 3) % 0x100 ~= 0
       or map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
         self.blueprint_door.valid = false
       end
@@ -1150,7 +1150,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     end
     -- If it is a swing door there are two more locations to check.
     if self.room_type.swing_doors then
-      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 
+      if map:getCell(x - 1, y, 2) % 0x100 ~= 0
       or map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
         self.blueprint_door.valid = false
       end
@@ -1159,7 +1159,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
     local flags = {}
-    local flag_names 
+    local flag_names
     if wall == "west" then
       flag_names = {"buildableNorth", "buildableSouth"}
     else
@@ -1195,7 +1195,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     anim:setAnimation(self.anims, 126, flags)
   end
   if self.blueprint_door.valid then
-    map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 
+    map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4,
       door_floor_blueprint_markers[orig_wall])
   end
 end
@@ -1213,7 +1213,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   local orig_x = x
   local orig_y = y
   local orig_wall = wall
-  
+
   if wall == "south" then
     y = y + 1
     wall = "north"
@@ -1221,10 +1221,10 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
     x = x + 1
     wall = "west"
   end
-  
+
   local map = self.ui.app.map.th
   local world = self.ui.app.world
-  
+
   if self.blueprint_window.anim then
     self.blueprint_window.anim:setAnimation(self.anims, self.blueprint_window.old_anim,
       self.blueprint_window.old_flags)
@@ -1232,12 +1232,12 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
     self.blueprint_window.anim = nil
     map:setCell(self.blueprint_window.floor_x, self.blueprint_window.floor_y, 4, 24)
   end
-  
+
   local anim = x and self.blueprint_wall_anims[x][y]
   if anim and anim:getTag() then
     x, y, wall, orig_x, orig_y, orig_wall = nil
   end
-  
+
   self.blueprint_window.x = x
   self.blueprint_window.y = y
   self.blueprint_window.wall = wall
@@ -1247,7 +1247,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   if not wall then
     return
   end
-  
+
   if anim ~= self.blueprint_window.anim then
     self.blueprint_window.anim = anim
     self.blueprint_window.anim:setTag"window"
@@ -1271,16 +1271,16 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
   end
   anim:setAnimation(self.anims, 130, flags)
   if self.blueprint_window.valid then
-    map:setCell(self.blueprint_window.floor_x, self.blueprint_window.floor_y, 4, 
+    map:setCell(self.blueprint_window.floor_x, self.blueprint_window.floor_y, 4,
       window_floor_blueprint_markers[orig_wall])
   end
 end
 
 function UIEditRoom:onCursorWorldPositionChange(x, y)
   local repaint = UIPlaceObjects.onCursorWorldPositionChange(self, x, y)
-  
+
   local ui = self.ui
-  
+
   -- Is the game paused?
   if not self.world.user_actions_allowed or self.confirm_dialog_open then
     ui:setCursor(ui.default_cursor)
@@ -1289,7 +1289,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
   local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
   wx = math_floor(wx)
   wy = math_floor(wy)
-  
+
   if self.phase == "walls" then
     local rect = self.blueprint_rect
     if not self.mouse_down_x then
@@ -1312,7 +1312,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
           w = (wx == rect.x),
           e = (wx == rect.x + rect.w - 1) and not (wx == rect.x),
         }
-        
+
         if (self.resize_rect.w or self.resize_rect.e) and (self.resize_rect.n or self.resize_rect.s) then
           ui:setCursor(ui.app.gfx:loadMainCursor("nswe_arrow"))
         elseif self.resize_rect.w or self.resize_rect.e then
@@ -1328,9 +1328,9 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
       self:setDoorBlueprint(cell_x, cell_y, wall)
     elseif self.phase == "windows" then
       self:setWindowBlueprint(cell_x, cell_y, wall)
-    end    
+    end
   end
-  
+
   if self.mouse_down_x and self.move_rect then
     local rect = self.blueprint_rect
     self:setBlueprintRect(wx - self.move_rect_x, wy - self.move_rect_y, rect.w, rect.h)
@@ -1364,13 +1364,13 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
     if y1 > y2 then y1, y2 = y2, y1 end
     self:setBlueprintRect(x1, y1, x2 - x1 + 1, y2 - y1 + 1)
   end
-  
+
   if wx ~= self.mouse_cell_x or wy ~= self.mouse_cell_y then
     repaint = true
   end
   self.mouse_cell_x = wx
   self.mouse_cell_y = wy
-  
+
   return repaint
 end
 
@@ -1381,7 +1381,7 @@ function UIEditRoom:checkEnableConfirm()
   for k, v in pairs(self.room.room_info.objects_needed) do
     needed[k] = v
   end
-  
+
   -- subtract existing objects from the required numbers
   for o in pairs(self.room.objects) do
     local id = o.object_type.id
@@ -1392,16 +1392,16 @@ function UIEditRoom:checkEnableConfirm()
       end
     end
   end
-  
+
   -- disable if there are not fulfilled requirements
   local confirm = not next(needed)
-  
+
   if confirm then
     self.ui:tutorialStep(3, {13, 14}, 15)
   else
     self.ui:tutorialStep(3, {14, 15}, 13)
   end
-  
+
   self.confirm_button:enable(confirm)
   return confirm
 end

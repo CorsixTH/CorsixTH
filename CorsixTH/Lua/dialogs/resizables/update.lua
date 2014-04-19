@@ -72,31 +72,31 @@ function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, dow
   self.app = app
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.download_url = download_url
-  
+
   local pathsep = package.config:sub(1, 1)
-  
+
   if pathsep == "\\" then
     self.os_is_windows = true
   else
     self.os_is_windows = false
   end
-  
+
   self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.update_window.current_version).lowered = true
   self:addBevelPanel(20, 70, 140, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.update_window.new_version).lowered = true
-	
+
   self:addBevelPanel (160,50,140,20, col_old_version, col_bg, col_bg):setLabel(this_version)
   self:addBevelPanel (160,70,140,20, col_new_version, col_bg, col_bg):setLabel(new_version)
-  
+
   -- Title
   self:addBevelPanel(80, 10, 160, 20, col_caption):setLabel(_S.update_window.caption)
     .lowered = true
-  
+
   -- Download button
   self:addBevelPanel(20, 225, 280, 40, col_bg):setLabel(_S.update_window.download)
     :makeButton(0, 0, 280, 40, nil, self.buttonDownload):setTooltip(_S.tooltip.update_window.download)
-  
+
   -- Ignore button
   self:addBevelPanel(20, 270, 280, 40, col_bg):setLabel(_S.update_window.ignore)
     :makeButton(0, 0, 280, 40, nil, self.buttonIgnore):setTooltip(_S.tooltip.update_window.ignore)
@@ -105,7 +105,7 @@ end
 function UIUpdate:draw(canvas, x, y)
   -- Draw window components
   UIResizable.draw(self, canvas, x, y)
-  
+
   -- Draw description
   x, y = self.x + x, self.y + y
   self.white_font:drawWrapped(canvas, self.description_text, x + 20, y + 100, self.width - 20)
@@ -118,7 +118,7 @@ function UIUpdate:buttonDownload()
   else
     os.execute("xdg-open " .. self.download_url)
   end
-  
+
 end
 
 function UIUpdate:buttonIgnore()

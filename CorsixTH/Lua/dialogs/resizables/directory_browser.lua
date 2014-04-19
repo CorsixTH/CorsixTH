@@ -31,7 +31,7 @@ end
 
 function DirTreeNode:isValidFile(name)
   -- Check parent criteria and that it's a directory.
-  if FileTreeNode.isValidFile(self, name) 
+  if FileTreeNode.isValidFile(self, name)
   and lfs.attributes(self:childPath(name), "mode") == "directory" then
     -- Make sure that we are allowed to read the directory.
     local status, result = pcall(lfs.dir, self:childPath(name))
@@ -69,7 +69,7 @@ function InstallDirTreeNode:getHighlightColour(canvas)
   local highlight_colour = self.highlight_colour
   if highlight_colour == nil then
     highlight_colour = false
-    
+
     if self:getLevel() == 0 and not self.has_looked_for_children then
       -- Assume root-level things are not TH directories, unless we've already
       -- got a list of their children.
@@ -91,7 +91,7 @@ function InstallDirTreeNode:getHighlightColour(canvas)
     end
     self.highlight_colour = highlight_colour
   end
-  return highlight_colour or nil 
+  return highlight_colour or nil
 end
 
 --! Prompter for Theme Hospital install directory
@@ -140,7 +140,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
     self:addKeyHandler("escape", self.exit)
     self.exit_button:setLabel(_S.install.exit, self.font):makeButton(0, 0, 100, 18, nil, self.exit)
   end
-   
+
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
   local root
@@ -160,10 +160,10 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
       self:close()
     end
   end
-  
+
   local control = TreeControl(root, 5, 55, 490, 340, self.col_bg, self.col_scrollbar)
     :setSelectCallback(select_function)
-    
+
   local ok_function = function()
     if control.selected_node then
       select_function(control.selected_node)

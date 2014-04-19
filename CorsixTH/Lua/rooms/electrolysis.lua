@@ -51,7 +51,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local electrolyser, pat_x, pat_y = self.world:findObjectNear(patient, "electrolyser")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
-  
+
   local --[[persistable:electrolysis_shared_loop_callback]] function loop_callback()
     -- If the other humanoid has already started to idle we move on
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
@@ -88,7 +88,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
           staff:setNextAction{name = "meander"}
         end,
       }
-    
+
       staff:setNextAction{
         name = "use_object",
         object = console,
@@ -98,17 +98,17 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = electrolyser.direction == "north" and "east" or "south",
     loop_callback = loop_callback,
   }
   staff:walkTo(stf_x, stf_y)
   staff:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = console.direction == "north" and "east" or "south",
     loop_callback = loop_callback,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

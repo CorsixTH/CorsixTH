@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 local action_pee_end = permanent"action_pee_end"( function(humanoid)
   local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
-  litter:setLitterType("pee", humanoid.last_move_direction == "south" and 0 or 1)  
-  
+  litter:setLitterType("pee", humanoid.last_move_direction == "south" and 0 or 1)
+
   humanoid:finishAction()
 end)
 
@@ -31,7 +31,7 @@ local function action_pee_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.pee_anim, "Error: no pee animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.pee_anim, humanoid.last_move_direction == "east" and 0 or 1)

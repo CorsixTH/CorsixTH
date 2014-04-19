@@ -25,9 +25,9 @@ class "UIWatch" (Window)
 --!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
 function UIWatch:UIWatch(ui, count_type)
   self:Window()
-  
+
   local app = ui.app
-  
+
   self.esc_closes = false
   self.modal_class = "open_countdown"
   self.tick_rate = math.floor((100 * app.world.hours_per_day) / 13)
@@ -41,15 +41,15 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
-  
+
   local end_sprite = (count_type == "epidemic") and 14 or 16
-  
+
   local tooltips = {
     ["initial_opening"] = _S.tooltip.watch.hospital_opening,
     ["emergency"]       = _S.tooltip.watch.emergency,
     ["epidemic"]        = _S.tooltip.watch.epidemic,
   }
-  
+
   if count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)

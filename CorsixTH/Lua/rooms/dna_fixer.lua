@@ -52,7 +52,7 @@ function DNAFixerRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local dna_fixer, pat_x, pat_y = self.world:findObjectNear(patient, "dna_fixer")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
-  
+
   local --[[persistable:dna_fixer_shared_loop_callback]] function loop_callback()
     -- If the other humanoid has already started to idle we move on
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
@@ -68,7 +68,7 @@ function DNAFixerRoom:commandEnteringPatient(patient)
           staff:setNextAction{name = "meander"}
         end,
       }
-    
+
       staff:setNextAction{
         name = "use_object",
         object = console,
@@ -78,17 +78,17 @@ function DNAFixerRoom:commandEnteringPatient(patient)
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = dna_fixer.direction == "north" and "north" or "west",
     loop_callback = loop_callback,
   }
   staff:walkTo(stf_x, stf_y)
   staff:queueAction{
-    name = "idle", 
+    name = "idle",
     direction = console.direction == "north" and "north" or "west",
     loop_callback = loop_callback,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

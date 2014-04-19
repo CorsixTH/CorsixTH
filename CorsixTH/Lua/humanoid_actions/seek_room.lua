@@ -22,7 +22,7 @@ local function action_seek_room_find_room(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
     local tried_rooms = 0
-    -- Make numbers for each available diagnosis room. A random index from this list will be chosen, 
+    -- Make numbers for each available diagnosis room. A random index from this list will be chosen,
     -- and then the corresponding room index is taken as next room. (The list decrease for each room
     -- missing)
     local available_rooms = {}
@@ -102,7 +102,7 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   local output_text = strings.can_not_cure
   -- TODO: can we really assert this? Or should we just make the patient go home?
   local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
-  
+
   local room_discovered = false
   if humanoid.hospital.discovered_rooms[room] then
     room_discovered = true
@@ -144,7 +144,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Send home automatically
     humanoid:goHome()
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
-  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] 
+  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"]
     or not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
     -- If the disease hasn't been discovered yet it cannot be guessed, go here instead.
     -- Ask the player
@@ -176,7 +176,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
     humanoid:setDiagnosed(true)
     humanoid:queueAction({
-      name = "seek_room", 
+      name = "seek_room",
       room_type = humanoid.disease.treatment_rooms[1],
       treatment_room = true,
     }, 1)
@@ -218,7 +218,7 @@ local function action_seek_room_start(action, humanoid)
     if not action.done_init then
       action.done_init = true
       action.must_happen = true
-      
+
       local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(room)
         if room.room_info.id == "research" then
           humanoid:updateMessage("research")
@@ -226,14 +226,14 @@ local function action_seek_room_start(action, humanoid)
       end -- End of remove_callback function
       action.remove_callback = remove_callback
       humanoid:registerRoomRemoveCallback(remove_callback)
-      
+
       local build_callback
       build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
         -- if research room was built, message may need to be updated
         if room.room_info.id == "research" then
           humanoid:updateMessage("research")
         end
-        
+
         local found = false
         if room.room_info.id == action.room_type then
           found = true
@@ -248,7 +248,7 @@ local function action_seek_room_start(action, humanoid)
           action_seek_room_start(action, humanoid)
         elseif not humanoid.diagnosed then
           -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
-          if action.room_type ~= "gp" then 
+          if action.room_type ~= "gp" then
             for i = 1, #humanoid.available_diagnosis_rooms do
               if humanoid.available_diagnosis_rooms[i].id == room.room_info.id then
                 found = true
@@ -256,7 +256,7 @@ local function action_seek_room_start(action, humanoid)
             end
           end
         end
-        if found then 
+        if found then
           action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
@@ -265,10 +265,10 @@ local function action_seek_room_start(action, humanoid)
       end -- End of build_callback function
       action.build_callback = build_callback
       humanoid:registerRoomBuildCallback(build_callback)
-      
+
       action.on_interrupt = action_seek_room_interrupt
     end
-    
+
     -- Things needed to get the patient to the correct room in due time are done. Now it's
     -- time to let the player know about it too.
     -- If done_walk is set the meander action that takes place after not finding any room has been

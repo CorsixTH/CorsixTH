@@ -1,4 +1,4 @@
-﻿--[[ 
+﻿--[[
 Copyright (c) 2010 Robin Madsen (RobseRob)
 Copyright (c) 2010-2011 Ole Frandsen (Froksen)
 Copyright (c) 2011 Rene Bergfort (Kleeze)
@@ -27,17 +27,17 @@ SOFTWARE.
 
 This danish translation is based apon the Norwegian file by Erlend Mongstad. I have changed it
 so that is match the formating of the norwegian file. Danish translations is done by the danish team.
-Mostly Robin Madsen (RobseRob) or by Ole Frandsen (Froksen). Please read Mongstads description 
-of how the formating is done. 
+Mostly Robin Madsen (RobseRob) or by Ole Frandsen (Froksen). Please read Mongstads description
+of how the formating is done.
 
-Since the norwegian/DANISH language isn't in the original Theme Hospital game, this 
-file is split in two sections (A and B). The first section contains all the new 
-language strings, made by the Corsix-TH team, and the second section contains 
+Since the norwegian/DANISH language isn't in the original Theme Hospital game, this
+file is split in two sections (A and B). The first section contains all the new
+language strings, made by the Corsix-TH team, and the second section contains
 the override translation of all the original english strings.
 
 FORMATING AND NORWEGIAN/DANISH LETTERS
-This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the 
-norwegian/danish letters ø and Ø, you must use the old-style ö and Ö instead. That is 
+This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the
+norwegian/danish letters ø and Ø, you must use the old-style ö and Ö instead. That is
 because the letters ø and Ø is not included in the original ingame-font.
 
 
@@ -45,7 +45,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 -------------------------------------------------------------------------------
     Table of Contents
 -------------------------------------------------------------------------------
- 
+
  -- SECTION A - NEW STRINGS
 
    1. Global settings
@@ -58,7 +58,7 @@ because the letters ø and Ø is not included in the original ingame-font.
    8. Cheats
    9. Dispatcher
  -- SECTION B - OLD STRINGS (OVERRIDE)
- 
+
    Huge section with all original strings, translated from english.
 
 
@@ -92,7 +92,7 @@ letter = {
   custom_level_completed = "Godt arbejde! Du har opfyldt alle mål på denne speicalbane!",
   return_to_main_menu = "Vil du gå tilbage til hovedmenuen eller fortsætte med at spille?",
 }
-  
+
 
 install = {
   title = "--------------------------------- CorsixTH Installation ---------------------------------",
@@ -109,7 +109,7 @@ tooltip.fax.close = "Luk dette vindue uden at fjerne beskeden"
 tooltip.message.button = "Venstreklik for at læse faxen"
 tooltip.message.button_dismiss = "Venstreklik for at åbne faxen.Höjreklik for at ignorere den"
 
--- 4. Menu 
+-- 4. Menu
 menu_options = {
   lock_windows = "  LÅS VINDUER  ",
   edge_scrolling = "  KANTSCROLLING  ",
@@ -161,7 +161,7 @@ menu_debug_overlay = {
 adviser = {
   room_forbidden_non_reachable_parts = "Hvis du placerede rummet her, ville det resultere i, at dele af dit hospital ikke ville være tilgængelige.",
 
-  cheats = {  
+  cheats = {
     th_cheat = "Tillykke, du har nu muligheden for at snyde",
     crazy_on_cheat = "åh nej! Alle lægerne er blevet sköre!",
     crazy_off_cheat = "Puha... Alle lægerne er blevet normale igen.",
@@ -174,7 +174,7 @@ adviser = {
   },
 }
 
-  
+
 -- 6. Dynamic info
 dynamic_info.patient.actions.no_gp_available = "Venter på du bygger en lægekonsultation"
 dynamic_info.staff.actions.heading_for = "På vej til %s"
@@ -231,7 +231,7 @@ tooltip.save_game_window = {
   save_game = "Overskriv gemmet %s",
   new_save_game = "Skriv navnet for det nye gem",
 }
-  
+
 menu_list_window = {
   back = "Tilbage",
 }
@@ -239,7 +239,7 @@ menu_list_window = {
 tooltip.menu_list_window = {
   back = "Luk dette vindue",
 }
-  
+
 options_window = {
   fullscreen = "Fuldskærm",
   width = "Bredde",
@@ -250,7 +250,7 @@ options_window = {
   cancel = "Annullér",
   back = "Tilbage",
 }
-  
+
 tooltip.options_window = {
   fullscreen_button = "Klik for at skifte imellem fuldskærmsvisning",
   width = "Indtast den önskede skærmbrede",
@@ -305,7 +305,7 @@ confirmation = {
   restart = "Er du sikker på at du vil pröve på ny?",
 }
 confirmation.restart_level = "Er du sikker på at du vil begynde forfra?"
-  
+
 information = {
   custom_game = "Velkommen til CorsixTH. Hav det sjovt med denne specialbane!",
   cannot_restart = "Beklageligvis er denne specialbane lavet för genstartfuntionen blev implanteret.",
@@ -365,7 +365,7 @@ tooltip.totd_window = {
   previous = "Vis det forrige tip",
   next = "Vis det næste tip",
 }
-  
+
     tooltip.cheats_window = {
   close = "Lukker dialogen",
   cheats = {
@@ -378,8 +378,8 @@ tooltip.totd_window = {
     lose_level = "Du taber banen.",
     win_level = "Du vinder banen.",
   },
- }  
-  
+ }
+
 -- Cheats
   cheats_window = {
   caption = "Snyd",
@@ -399,7 +399,7 @@ tooltip.totd_window = {
     win_level = "Vind runden",
   },
   close = "Luk",
-}  
+}
 
 -- dispatcher
     calls_dispatcher = {
@@ -539,7 +539,7 @@ staff_descriptions = {
     [14] = "Snu, udspekuleret og bagtaler andre. ",
     [15] = "Arrogant og er en karl-smart. ",
   },
-}   
+}
 
 -- Staff list
 staff_list = {
@@ -657,7 +657,7 @@ graphs = {
   cures      = "Helbredte",
   deaths     = "Döde",
   reputation = "Omdömme",
-  
+
   time_spans = {
     "1 år",
     "12 år",
@@ -717,7 +717,7 @@ town_map = {
   chat         = "Oversigtskort",
   for_sale     = "Til salg",
   not_for_sale = "Ikke til salg",
-  number       = "Grundnummer", 
+  number       = "Grundnummer",
   owner        = "Grundejer",
   area         = "Grundområde",
   price        = "Grundpris",
@@ -732,7 +732,7 @@ rooms_short = {
   reception         = "Reception",
   destroyed         = "Ödelagt",
   corridor_objects  = "Korridorgenstande",
-  
+
   gps_office        = "Lægekonsultation",
   psychiatric       = "Psykiatri",
   ward              = "Sengeafsnit",
@@ -764,7 +764,7 @@ rooms_long = {
   general           = "Generelt", -- unused?
   emergency         = "Akuttilfælde",
   corridors         = "Korridorer",
-  
+
   gps_office        = "Lægekonsultationen",
   psychiatric       = "Psykiateren",
   ward              = "Sengeafsnittet",
@@ -947,7 +947,7 @@ research = {
     improvements    = "Forbedringer",
     specialisation  = "Specialisering",
   },
-  
+
   funds_allocation  = "Forskningsbudget",
   allocated_amount  = "Totale budget",
 }
@@ -959,7 +959,7 @@ policy = {
   diag_termination  = "Diagnose annullering",
   staff_rest        = "Send personale til personalerum",
   staff_leave_rooms = "Personale må forlade rum",
-  
+
   sliders = {
     guess           = "GæT PÅ KUR", -- belongs to diag_procedure
     send_home       = "SEND HJEM", -- also belongs to diag_procedure
@@ -1013,7 +1013,7 @@ menu_file = {
   quit                = "  AFSLUT  ",
 }
 
-  
+
 menu_file_load = {
   [1]              = "  Gemt spil 1  ",
   [2]              = "  Gemt spil 2  ",
@@ -1048,7 +1048,7 @@ menu_options_game_speed = {
   normal              = "  (3) NORMAL  ",
   max_speed           = "  (4) HURTIGST  ",
   and_then_some_more  = "  (5) OG SÅ LIGE LIDT MERE  ",
-}  
+}
 
 -- Menu Display
 menu_display = {
@@ -1112,7 +1112,7 @@ high_score = {
   best_scores  = "HALL OF FAME",
   worst_scores = "HALL OF SHAME",
   killed       = "DRÆBT", -- is this used? No its not.
-  
+
   categories = {
     money             = "RIGESTE",
     salary            = "HÖJESTE LÖN",
@@ -1247,10 +1247,10 @@ casebook = {
     improve_cure       = "Forbedre kur.",
   },
 }
-    
+
 -- Tooltips
 tooltip = {
-  
+
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -1262,7 +1262,7 @@ tooltip = {
     cost               = "Samlede omkostninger for rummet",
     close              = "Afbryd processen og vend tilbage til spillet",
   },
-  
+
   -- Toolbar
   toolbar = {
     bank_button        = "Venstreklik for bankkonsulent, höjreklik for kontoudskrift",
@@ -1281,7 +1281,7 @@ tooltip = {
     charts             = "Diagrammer",
     policy             = "Politik",
   },
-  
+
   -- Hire staff window
   hire_staff_window = {
     doctors            = "Vis tilgængelige læger på arbejdsmarkedet",
@@ -1300,7 +1300,7 @@ tooltip = {
     psychiatrist       = "Psykiater",
     researcher         = "Forsker",
   },
-  
+
   -- Buy objects window
   buy_objects_window = {
     price              = "Pris for genstand",
@@ -1310,47 +1310,47 @@ tooltip = {
     increase           = "Köb en til af denne genstand",
     decrease           = "Köb en færre af denne genstand",
   },
-  
+
   -- Staff list
   staff_list = {
     doctors            = "Se en oversigt over dine læger",
     nurses             = "Se en oversigt over dine sygeplejersker",
     handymen           = "Se en oversigt over dine pedeller",
     receptionists      = "Se en oversigt over dine receptionister",
-    
+
     happiness          = "Viser hvor tilfredse dine ansatte er",
     tiredness          = "Viser hvor trætte dine ansatte er",
     ability            = "Viser de ansattes evner",
     salary             = "Den pågældendes lön",
-    
+
     happiness_2        = "Den ansattes moral",
     tiredness_2        = "Den ansattes træthedssniveau",
     ability_2          = "Den ansattes evner",
-    
+
     prev_person        = "Forrige ansatte",
     next_person        = "Næste ansatte",
-    
+
     bonus              = "Giv den ansatte 10% i bonus",
     sack               = "Giv den ansatte sparket",
     pay_rise           = "Hæv den ansattes lön med 10%",
-    
+
     close              = "Luk og vend tilbage til spillet",
-    
+
     doctor_seniority   = "Lægens evner",
     detail             = "Lægens öje for detaljer",
-    
+
     view_staff         = "Fölg den ansatte",
-    
+
     surgeon            = "Kvalificeret Kirurg",
     psychiatrist       = "Kvalificeret Psykiater",
     researcher         = "Kvalificeret Forsker",
     surgeon_train      = "%d%% gennemfört uddannelse som kirurg", -- %d (percentage trained)
     psychiatrist_train = "%d%% gennemfört uddannelse som psykiater", -- %d (percentage trained)
     researcher_train   = "%d%% gennemfört uddannelse som forsker", -- %d (percentage trained)
-    
+
     skills             = "Ekstra evner",
   },
-  
+
   -- Queue window
     queue_window = {
     num_in_queue       = "Antal patienter i köen",
@@ -1371,7 +1371,7 @@ tooltip = {
       hospital_3       = "Henvis patienten til et andet hospital",
     },
   },
-  
+
   -- Main menu
   main_menu = {
     new_game           = "Begynd et nyt spil",
@@ -1429,8 +1429,8 @@ tooltip = {
     repair             = "Kald en pedel til at vedligeholde maskinen",
     replace            = "Udskift maskinen med en ny",
   },
-  
-  
+
+
   -- Handyman window
   -- Spparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
@@ -1449,7 +1449,7 @@ tooltip = {
     sack               = "Fyr pedellen",
     pick_up            = "Saml pedellen op",
   },
-  
+
   -- Place objects window
   place_objects_window = {
     cancel             = "Afbryd",
@@ -1457,7 +1457,7 @@ tooltip = {
     pick_up            = "Flyt genstand",
     confirm            = "Godkend",
   },
-  
+
   -- Casebook
   casebook = {
     up                 = "Rul op",
@@ -1479,7 +1479,7 @@ tooltip = {
       surgery          = "Sygdommen kræver operation",
       machine          = "Sygdommen behandles med en maskine",
     },
-    
+
     cure_requirement = {
       possible         = "Du kan genneföre behandlingen",
       research_machine = "Du skal forske i maskiner for at kunne behandle denne sygdom",
@@ -1492,12 +1492,12 @@ tooltip = {
       not_possible     = "Du kan ikke håndtere denne behandling endnu",
     },
   },
-  
+
   -- Statement
   statement = {
     close              = "Luk kontoudskriften",
   },
-  
+
   -- Research
   research = {
     close              = "Luk vinduet",
@@ -1513,7 +1513,7 @@ tooltip = {
     specialisation_inc = "Opprioriter forskning i specialiseringer",
     allocated_amount   = "Penge afsat til forskning",
   },
-  
+
   -- Graphs
   graphs = {
     close              = "Gå til diagramvinduet",
@@ -1543,7 +1543,7 @@ tooltip = {
     balance            = "Balance",
     close              = "Luk oversigtskortet",
   },
-  
+
   -- Jukebox.
   jukebox = {
     current_title      = "Jukebox",
@@ -1554,7 +1554,7 @@ tooltip = {
     stop               = "Stop jukebox",
     loop               = "Gentag jukebox",
   },
-  
+
   -- Bank Manager
   bank_manager = {
   hospital_value       = "Hospitalets samlede værdi",
@@ -1571,7 +1571,7 @@ tooltip = {
     graph              = "Forventet tilbagebetalingsplan fra %s", -- %s (name of debitor)
     graph_return       = "Vend tilbage til forrige billede",
   },
-  
+
   -- Status
   status = {
     percentage_cured   = "Du skal helbrede %d % af de besögende på dit hospital. Indtil nu har du helbredt %d %",
@@ -1589,7 +1589,7 @@ tooltip = {
     num_cured          = "Kriteriet er blandet andet at helbrede %d mennesker. Indtil nu har du helbredt %d",
     happiness          = "Gennemsnitligt humör på personene på dit sygehus",
   },
-  
+
     -- Policy
   policy = {
     close              = "Luk sygehuspolitik",
@@ -1599,21 +1599,21 @@ tooltip = {
     diag_termination   = "Dine læger vil blive ved med at söge efter en diagnose indtil lægerne er helt sikre på en kur, eller indtil alle maskiner er afprövet. Du kan dog altid afbryde diagnosticeringen",
     staff_rest         = "Hvor træt dit personale skal være för de går til personalerummet",
   },
-  
-  
+
+
   -- Pay rise window
   pay_rise_window = {
     accept             = "Accepter kravet",
     decline            = "Afvis krav og afsked vedkommende",
   },
-  
+
   -- Watch
   watch = {
     hospital_opening   = "Tid indtil hospitalet åbner og patienter begynder at ankomme. Klik på knappen for at åbne hospitalet med det samme.",
     emergency          = "Tilbageværende tid til at få behandlet de akutte patienter.",
     epidemic           = "Resterende tid til at få styr på epidemien. Når tiden er udlöbet, eller når en smittet patient forlader hospitalet, kommer der en sundhedsindpektör forbi og inspicerer hospitalet. Knappen tænder og slukker for vaccinationstilstanden. Tryk på patienterne for at få en sygeplejerske til at vaccinere dem.",
   },
-  
+
   -- Rooms
   rooms = {
     gps_office         = "Patienterne modtager deres förste konsultation og resultaterne af efterfölgende undersögelser i lægekonsultationen.",
@@ -1641,7 +1641,7 @@ tooltip = {
     toilets            = "Lav toiletter så patienterne ikke skal bruge deres kræfter på at klemme balderne sammen.",
     decontamination    = "En læge bruger dekontaminering til at behandle patienter som har været udsat for radioaktiv stråling.",
   },
-  
+
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
@@ -1709,8 +1709,8 @@ tooltip = {
   },
 }
 
--- 32. 
-    
+-- 32.
+
 adviser = {
   -- Epidemic
   epidemic = {
@@ -1718,7 +1718,7 @@ adviser = {
     serious_warning     = "Den smitsomme sygdom begynder at blive et seriöst problem. Du må göre noget snart!",
     multiple_epidemies     = "Det ser ud som om du har mere end en epidemi i gang. Dette kan blive en enorm katastrofe for hospitalet!",
   },
-  
+
   -- Staff advice
   staff_advice = {
     need_handyman_machines   = "Du bör ansætte flere pedeller til at tage sig af dine maskiner.",
@@ -1729,20 +1729,20 @@ adviser = {
     too_many_doctors     = "Jeg tror du har for mange læger. Nogle af dem har ikke noget at lave.",
     too_many_nurses     = "Jeg tror du har ansat for mange sygeplejersker.",
   },
-  
+
   -- Earthquake
   earthquake = {
     damage     = "Jordskælvet har skadet %d maskiner og %d patienter i hospitalet.", -- %d (count machines), &d (count patients)
     alert     = "Jordskælvsvarsel! Under et jordskælv tager dine maskiner skade. De kan brænde sammen hvis de ikke er ordentligt vedligeholdt.",
     ended     = "Puha! Det var et stort skælv - det målte %d på Richters skala.",
   },
-  
+
   -- Multiplayer
   multiplayer = {
     objective_completed       = "Du har klaret udfordringerne for denne bane - tillykke!",
     everyone_failed         = "Ingen klarede udfordringerne, så alle kan spille videre!",
     players_failed           = "Fölgende spiller(e) klarede ikke den forrige udfordring : ",
-    
+
     poaching = {
       in_progress           = "Jeg skal sige fra denne person, at han gerne vil arbejde for dig.",
       not_interested         = "Ha! De er ikke interesserede i at arbejde for dig..",
@@ -1750,7 +1750,7 @@ adviser = {
     },
     objective_failed         = "Det lykkedes ikke for dig at klare udfordringerne.",
   },
-    
+
   -- Goals
   goals = {
     win = {
@@ -1783,7 +1783,7 @@ adviser = {
     pay_rise             = "En af dine ansatte truer med at sige op. Du skal vælge om du vil gå med til lönkravene eller om du vil fyre vedkommende. Klik på ikonet nede i venstre hjörne for at se, hvem som truer med at sige op.",
     place_windows           = "Vinduer gör rum lysere og forbedrer arbejdsglæden hos dine ansatte.",
     fax_received           = "Du har modtaget en fax. Du finder den i bunden af skærmen. En fax kan indeholde vigtig information som du skal forholde dig til.",
-    
+
     initial_general_advice = {
       rats_have_arrived = "Rotterne har invaderet dit hospital! Pröv at skyde dem med musen.",
       autopsy_available = "Obduktionsautomaten er færdigudviklet. Med denne kan du få det bedste ud af patienter, som du ikke kan finde ud af hvad fejler.  Advarsel! - Brug af denne maskine er meget kontrovatielt, hvis offentligheden får kendskab til den, kan det få negative konsekvenser for dit omdömme.",
@@ -1803,8 +1803,8 @@ adviser = {
       first_VIP = "Du er ved at modtage dit förste VIP-besög. Sörg for at VIP'en ikke ser noget uhygiejnisk eller triste patienter.",
     },
   },
-  
-  
+
+
   -- Build advice
   build_advice = {
     placing_object_blocks_door     = "Hvis du placerer genstanden der, kan folk ikke komme til dören.",
@@ -1997,211 +1997,211 @@ vip_names = {
 
 -- Deseases
 diseases = {
-  general_practice       = { 
-    name     = "Lægekonsultation", 
+  general_practice       = {
+    name     = "Lægekonsultation",
   },
-  bloaty_head        = { 
-    name        = "Opsvulmet hoved", 
-    cause       = "Årsag - Patienten har sniffet ost og drukket forurenet vand.", 
-    symptoms    = "Symptomer - Den ramte har det meget ukomfortabelt. Föler mildest talt en vis oppustethed i hovedregionen.", 
-    cure        = "Behandling - Der stikkes hul på det opsvulmede hoved, og ved hjælp af en genial maskine bliver hovedet sat tilbage til den korekte PSI.", 
+  bloaty_head        = {
+    name        = "Opsvulmet hoved",
+    cause       = "Årsag - Patienten har sniffet ost og drukket forurenet vand.",
+    symptoms    = "Symptomer - Den ramte har det meget ukomfortabelt. Föler mildest talt en vis oppustethed i hovedregionen.",
+    cure        = "Behandling - Der stikkes hul på det opsvulmede hoved, og ved hjælp af en genial maskine bliver hovedet sat tilbage til den korekte PSI.",
   },
-  hairyitis              = { 
-    name      = "Ekstrem hårvækst", 
-    cause     = "Årsag - Lange gåture i måneskin medförer en uhensigtsmæssig udsættelse for månens stråler, som beskadiger hovedbunden og forårsager hårvækst i ukontrollabelt omfang på resten af kroppen.", 
-    symptoms  = "Symptomer - Nedsat fremdrift i vand.", 
-    cure      = "Behandling - En elektrolysemaskine fjerner hårvæksten og tilbageförer porene til deres normale stadie.", 
+  hairyitis              = {
+    name      = "Ekstrem hårvækst",
+    cause     = "Årsag - Lange gåture i måneskin medförer en uhensigtsmæssig udsættelse for månens stråler, som beskadiger hovedbunden og forårsager hårvækst i ukontrollabelt omfang på resten af kroppen.",
+    symptoms  = "Symptomer - Nedsat fremdrift i vand.",
+    cure      = "Behandling - En elektrolysemaskine fjerner hårvæksten og tilbageförer porene til deres normale stadie.",
   },
-  king_complex           = { 
-    name     = "Kongekompleks", 
-    cause     = "Årsag - Elivs' ånd har taget kontrollen over patienten", 
-    symptoms   = "Symptomer - Går med farvede lædersko, spiser cheesebrugere og udsætter hofter og knæ for ganske akavede stillinger", 
-    cure     = "Behandling - En psykiater fortæller patienten hvor tåbelig han ser ud", 
+  king_complex           = {
+    name     = "Kongekompleks",
+    cause     = "Årsag - Elivs' ånd har taget kontrollen over patienten",
+    symptoms   = "Symptomer - Går med farvede lædersko, spiser cheesebrugere og udsætter hofter og knæ for ganske akavede stillinger",
+    cure     = "Behandling - En psykiater fortæller patienten hvor tåbelig han ser ud",
   },
-  invisibility           = { 
-    name     = "Usynlighed", 
-    cause     = "Årsag - Bidt af en radioaktiv (og usynlig) myre", 
-    symptoms   = "Symptomer - Patienten lider ikke - tværtimod! De udnytter situationen og lurer på deres familie og venner!", 
-    cure     = "Behandling - En farverig drik fra apoteket gör patienten fuldt synlig igen", 
+  invisibility           = {
+    name     = "Usynlighed",
+    cause     = "Årsag - Bidt af en radioaktiv (og usynlig) myre",
+    symptoms   = "Symptomer - Patienten lider ikke - tværtimod! De udnytter situationen og lurer på deres familie og venner!",
+    cure     = "Behandling - En farverig drik fra apoteket gör patienten fuldt synlig igen",
   },
-  serious_radiation      = { 
+  serious_radiation      = {
     name     = "Alvorlig bestråling",
-    cause     = "Årsag - Har forvekslet plutonium-isotoper med tyggegummi", 
-    symptoms   = "Symptomer - Patienten föler sig meget ukomfortabel", 
-    cure     = "Behandling - Patienten placeres i en saniteringsbruser og renset fuldstændigt.", 
+    cause     = "Årsag - Har forvekslet plutonium-isotoper med tyggegummi",
+    symptoms   = "Symptomer - Patienten föler sig meget ukomfortabel",
+    cure     = "Behandling - Patienten placeres i en saniteringsbruser og renset fuldstændigt.",
   },
-  slack_tongue           = { 
-    name     = "Slap tunge", 
-    cause     = "Årsag - Kronisk overivrighed i diskussioner om sæbeoperaer.", 
-    symptoms   = "Symptomer - Tungen hæver til det femdobbelte.", 
+  slack_tongue           = {
+    name     = "Slap tunge",
+    cause     = "Årsag - Kronisk overivrighed i diskussioner om sæbeoperaer.",
+    symptoms   = "Symptomer - Tungen hæver til det femdobbelte.",
     cure     = "Behandling - Tungen bliver placeret i en tungeskærer. Hævelsen fjernes derefter hurtigt, effektivt og smertefuldt.",
   },
-  alien_dna              = { 
-    name     = "Udenjordisk DNA", 
-    cause     = "Årsag - Patienten er blevet bidt af iler udstyret med intelligent rumvæsenblod.", 
-    symptoms   = "Symptomer - Er under gradvis forvandling til et rumvæsen, og udvikler et önske om at overtage verdensherredömmet", 
+  alien_dna              = {
+    name     = "Udenjordisk DNA",
+    cause     = "Årsag - Patienten er blevet bidt af iler udstyret med intelligent rumvæsenblod.",
+    symptoms   = "Symptomer - Er under gradvis forvandling til et rumvæsen, og udvikler et önske om at overtage verdensherredömmet",
     cure     = "Behandling - Alt DNA fjernes mekanisk, renses for rumvæsenceller, og bliver hurtig erstattet",
   },
-  fractured_bones        = { 
+  fractured_bones        = {
     name     = "Knoglebrud",
-    cause     = "Årsag - Fald fra höjder ned på beton", 
-    symptoms   = "Symptomer - Höje knaselyde og meget lidt bevægelighed på de udsatte steder", 
-    cure     = "Behandling - Gipsen fjernes ved hjælp af en laserstyret gipsfjerner", 
+    cause     = "Årsag - Fald fra höjder ned på beton",
+    symptoms   = "Symptomer - Höje knaselyde og meget lidt bevægelighed på de udsatte steder",
+    cure     = "Behandling - Gipsen fjernes ved hjælp af en laserstyret gipsfjerner",
   },
-  baldness               = { 
-    name     = "Ekstremt hårtab", 
-    cause     = "Årsag - Fortæller lögne og opdigter historier for at forbedre sin popularitet.", 
-    symptoms   = "Symptomer - Forlegen patient med skinnende pande.", 
+  baldness               = {
+    name     = "Ekstremt hårtab",
+    cause     = "Årsag - Fortæller lögne og opdigter historier for at forbedre sin popularitet.",
+    symptoms   = "Symptomer - Forlegen patient med skinnende pande.",
     cure     = "Behandling - Håret bliver hurtigt smeltet fast til patientens hoved med en smertefuld hårmaskine.",
   },
-  discrete_itching       = { 
-    name     = "Skrabesyge", 
-    cause     = "Årsag - Små insekter med skarpe tænder.", 
-    symptoms   = "Symptomer - Patienten klör intenst, og huden slår revner.", 
+  discrete_itching       = {
+    name     = "Skrabesyge",
+    cause     = "Årsag - Små insekter med skarpe tænder.",
+    symptoms   = "Symptomer - Patienten klör intenst, og huden slår revner.",
     cure     = "Behandling - En sygeplejeske giver patienten en sirupagtig drik som heler huden og som hindrer flere revner.",
   },
-  jellyitis              = { 
-    name     = "Gelésyndrom", 
-    cause     = "Årsag - Geletholdig kost og megen motion.", 
-    symptoms   = "Symptomer - Meget ustabil og falder ofte.", 
+  jellyitis              = {
+    name     = "Gelésyndrom",
+    cause     = "Årsag - Geletholdig kost og megen motion.",
+    symptoms   = "Symptomer - Meget ustabil og falder ofte.",
     cure     = "Behandling - Patienten bliver presset ned i et gelérör i et specielt rum.",
   },
-  sleeping_illness       = { 
-    name     = "Sövnsyge", 
-    cause     = "Årsag - Forårsaget af overaktive sövnkirtler i ganen.", 
-    symptoms   = "Symptomer - Stærkt önske om at sove, hvor og når som helst.", 
+  sleeping_illness       = {
+    name     = "Sövnsyge",
+    cause     = "Årsag - Forårsaget af overaktive sövnkirtler i ganen.",
+    symptoms   = "Symptomer - Stærkt önske om at sove, hvor og når som helst.",
     cure     = "Behandling - En stærk dosis af stimulerende medicin uddelt af en sygeplejerske.",
   },
-  pregnancy              = { 
-    name     = "Graviditet", 
-    cause     = "Årsag - Forårsaget af strömafbrydelser i bebyggede områder.", 
-    symptoms   = "Symptomer - Spiser ustandseligt og udvikler en ölmave.", 
+  pregnancy              = {
+    name     = "Graviditet",
+    cause     = "Årsag - Forårsaget af strömafbrydelser i bebyggede områder.",
+    symptoms   = "Symptomer - Spiser ustandseligt og udvikler en ölmave.",
     cure     = "Behandling - Sprædbanet fjernes ved kejsersnit, vaskes og præsenteres derefter for sin mor.",
   },   -- unused
-  transparency           = { 
-    name     = "Gennemsigtighed", 
-    cause     = "Årsag - Slikket på folien på gamle yougurtkartoner.", 
-    symptoms   = "Symptomer - Kroppen bliver gennemsigtig og ækel.", 
+  transparency           = {
+    name     = "Gennemsigtighed",
+    cause     = "Årsag - Slikket på folien på gamle yougurtkartoner.",
+    symptoms   = "Symptomer - Kroppen bliver gennemsigtig og ækel.",
     cure     = "Behandling - En kölig, farverige drik fra apoteket skulle göre underværker.",
   },
-  uncommon_cold          = { 
+  uncommon_cold          = {
     name     = "Forkölelse",
-    cause     = "Årsag - Små smörpartikler i luften.", 
-    symptoms   = "Symptomer - Rendende næse, hoste og misfarvet slim fra lungerne.", 
-    cure     = "Behandling - En rigtig stor mundfuld hostesaft fra apoteket medförer öjeblikkelig lindring.", 
+    cause     = "Årsag - Små smörpartikler i luften.",
+    symptoms   = "Symptomer - Rendende næse, hoste og misfarvet slim fra lungerne.",
+    cure     = "Behandling - En rigtig stor mundfuld hostesaft fra apoteket medförer öjeblikkelig lindring.",
   },
-  broken_wind            = { 
-    name     = "Forurenende gasser", 
-    cause     = "Årsag - Löb på en trædemölle umiddelbart efter indtagelse af frokost.", 
-    symptoms   = "Symptomer - Ubehag hos folk som befinder sig i patientens nærhed.", 
+  broken_wind            = {
+    name     = "Forurenende gasser",
+    cause     = "Årsag - Löb på en trædemölle umiddelbart efter indtagelse af frokost.",
+    symptoms   = "Symptomer - Ubehag hos folk som befinder sig i patientens nærhed.",
     cure     = "Behandling - En stærk blandning af specielle vandatomer der drikkes hurtigt.",
   },
-  spare_ribs             = { 
-    name     = "Spareribs", 
-    cause     = "Årsag - Patienten har siddet for længe på et koldt gulv.", 
-    symptoms   = "Symptomer - Ubehagelig fölelse i brystet.", 
+  spare_ribs             = {
+    name     = "Spareribs",
+    cause     = "Årsag - Patienten har siddet for længe på et koldt gulv.",
+    symptoms   = "Symptomer - Ubehagelig fölelse i brystet.",
     cure     = "Behandling - Ribbenene fjernes af to kirurger, og leveres til patienten i en doggybag.",
   },
-  kidney_beans           = { 
-    name     = "Kikærter", 
-    cause     = "Årsag - patienten har spist isterninger.", 
-    symptoms   = "Symptomer - Smerte og hyppige ture til toilettet", 
+  kidney_beans           = {
+    name     = "Kikærter",
+    cause     = "Årsag - patienten har spist isterninger.",
+    symptoms   = "Symptomer - Smerte og hyppige ture til toilettet",
     cure     = "Behandling - To kirurger fjerner de ærtelignende parasitter, uden at beröre nyrerne!",
   },
-  broken_heart           = { 
+  broken_heart           = {
     name     = "Knust hjerte",
-    cause     = "Årsag - Nogen er rigere, yngre og slankere end patienten.", 
-    symptoms   = "Symptomer - Hysterisk grædende. Blodsprængte fingerspidser efter at have revet feriebilleder i stykker.", 
-    cure     = "Behandling - To kirurger sprætter brystet op og sætter derefter hjertet forsigtigt sammen, mens de holder vejret.", 
+    cause     = "Årsag - Nogen er rigere, yngre og slankere end patienten.",
+    symptoms   = "Symptomer - Hysterisk grædende. Blodsprængte fingerspidser efter at have revet feriebilleder i stykker.",
+    cure     = "Behandling - To kirurger sprætter brystet op og sætter derefter hjertet forsigtigt sammen, mens de holder vejret.",
   },
-  ruptured_nodules       = { 
-    name     = "Ödelagte nödder", 
-    cause     = "Årsag - Skihop om vinteren.", 
-    symptoms   = "Symptomer - Umulig at sidde ned med vedbehag.", 
+  ruptured_nodules       = {
+    name     = "Ödelagte nödder",
+    cause     = "Årsag - Skihop om vinteren.",
+    symptoms   = "Symptomer - Umulig at sidde ned med vedbehag.",
     cure     = "Behandling - To kvalificerede kirurger må fjerne nödderne med forsigtige hænder.",
   },
-  tv_personalities       = { 
-    name     = "Programledersyndrom", 
-    cause     = "Årsag - Ser TV i dagstimerne.", 
-    symptoms   = "Symptomer - Forestiller sig at han/hun er programleder på formiddagstv og elsker at introducere madseancen.", 
+  tv_personalities       = {
+    name     = "Programledersyndrom",
+    cause     = "Årsag - Ser TV i dagstimerne.",
+    symptoms   = "Symptomer - Forestiller sig at han/hun er programleder på formiddagstv og elsker at introducere madseancen.",
     cure     = "Behandling - En psykiater må overtale patienten til at köbe en radio og sælge fjernsynet.",
   },
-  infectious_laughter    = { 
-    name     = "Smitsom latter", 
-    cause     = "Årsag - Klassisk komedie på TV.", 
-    symptoms   = "Symptomer - Ler hjælpelöst hele tiden og gentager dårlige passager som absolut ikke er morsomme.", 
+  infectious_laughter    = {
+    name     = "Smitsom latter",
+    cause     = "Årsag - Klassisk komedie på TV.",
+    symptoms   = "Symptomer - Ler hjælpelöst hele tiden og gentager dårlige passager som absolut ikke er morsomme.",
     cure     = "Behandling - En kvalificeret psykiater må göre det klart for patienten, at det faktisk er en alvorlig tilstand.",
   },
-  corrugated_ankles      = { 
-    name      = "Böjede ankler", 
-    cause     = "Årsag - Kört med bus over fartbump.", 
-    symptoms   = "Symptomer - Skoene passer ikke.", 
+  corrugated_ankles      = {
+    name      = "Böjede ankler",
+    cause     = "Årsag - Kört med bus over fartbump.",
+    symptoms   = "Symptomer - Skoene passer ikke.",
     cure     = "Behandling - En giftig blanding af urter og krydderier må drikkes for at udrette anklerne.",
   },
-  chronic_nosehair       = { 
-    name     = "Kronisk næsehår", 
-    cause     = "Årsag - Snöfter med foragt af folk med lavere indlægt.", 
-    symptoms   = "Symptomer - Så mange næsehår at en grævling kunne bo der.", 
+  chronic_nosehair       = {
+    name     = "Kronisk næsehår",
+    cause     = "Årsag - Snöfter med foragt af folk med lavere indlægt.",
+    symptoms   = "Symptomer - Så mange næsehår at en grævling kunne bo der.",
     cure     = "Behandling - En ækel, hårfjernende kur som skal drikkes. Fås på apoteket.",
   },
-  third_degree_sideburns = { 
-    name     = "Tredjegrads bakkenbarter", 
-    cause     = "Årsag - Længes efter 70-erne.", 
-    symptoms   = "Symptomer - Stort hår, farverigt töj, lange bakkenbarter og glitter.", 
+  third_degree_sideburns = {
+    name     = "Tredjegrads bakkenbarter",
+    cause     = "Årsag - Længes efter 70-erne.",
+    symptoms   = "Symptomer - Stort hår, farverigt töj, lange bakkenbarter og glitter.",
     cure     = "Behandling - Psykiatrisk personale må, ved brug af moderne teknikker, overbevise patienten om, at paryk yt.",
   },
-  fake_blood             = { 
-    name     = "Teaterblod", 
-    cause     = "Årsag - Patienten er ofte udsat for narrestreger.", 
-    symptoms   = "Symptomer - Rödt blod som fremkommer når der er kontakt med töj.", 
+  fake_blood             = {
+    name     = "Teaterblod",
+    cause     = "Årsag - Patienten er ofte udsat for narrestreger.",
+    symptoms   = "Symptomer - Rödt blod som fremkommer når der er kontakt med töj.",
     cure     = "Behandling - Eneste måde at behandle dette på er at få en psykiater til at berolige patienten.",
   },
-  gastric_ejections      = { 
-    name     = "Sure opstöd", 
-    cause     = "Årsag - Stærk krydret mexikansk eller indisk mad.", 
-    symptoms   = "Symptomer - Gylper karrykylling og tacostykker op..", 
+  gastric_ejections      = {
+    name     = "Sure opstöd",
+    cause     = "Årsag - Stærk krydret mexikansk eller indisk mad.",
+    symptoms   = "Symptomer - Gylper karrykylling og tacostykker op..",
     cure     = "Behandling - En sygeplejerske giver patienten en speciel indisk komælk som forhindrer sure opstöd.",
   },
-  the_squits             = { 
-    name     = "Tynd mave", 
-    cause     = "Årsag - Har spist pizzastykker som har været på gulvet.", 
-    symptoms   = "Symptomer - Uh. Tror du kender symptomerne.", 
+  the_squits             = {
+    name     = "Tynd mave",
+    cause     = "Årsag - Har spist pizzastykker som har været på gulvet.",
+    symptoms   = "Symptomer - Uh. Tror du kender symptomerne.",
     cure     = "Behandling - En klæbrig blanding af kemikalier der skal drikkes for at stabilisere maven.",
   },
-  iron_lungs             = { 
-    name     = "Jernlunger", 
-    cause     = "Årsag - Forurenet luft indeholdende bly og kebabrester.", 
-    symptoms   = "Symptomer - Kan lave flammer og råbe höjlydt under vand.", 
+  iron_lungs             = {
+    name     = "Jernlunger",
+    cause     = "Årsag - Forurenet luft indeholdende bly og kebabrester.",
+    symptoms   = "Symptomer - Kan lave flammer og råbe höjlydt under vand.",
     cure     = "Behandling - To kirurger blödgör de hårde lunger i operationsstuen.",
   },
-  sweaty_palms           = { 
-    name     = "Svedige håndflader", 
-    cause     = "Årsag - Har lige været til jobsamtale.", 
-    symptoms   = "Symptomer - At give hånd til patienten er som at give hånd til en våd svamp.", 
+  sweaty_palms           = {
+    name     = "Svedige håndflader",
+    cause     = "Årsag - Har lige været til jobsamtale.",
+    symptoms   = "Symptomer - At give hånd til patienten er som at give hånd til en våd svamp.",
     cure     = "Behandling - En pskiater taler med patienten om lidelsen.",
   },
-  heaped_piles           = { 
-    name     = "Hæmorider", 
-    cause     = "Årsag - Siddet for længe på det kolde gulv.", 
-    symptoms   = "Symptomer - Patienten föler, at han/hun sidder på en pose sten.", 
+  heaped_piles           = {
+    name     = "Hæmorider",
+    cause     = "Årsag - Siddet for længe på det kolde gulv.",
+    symptoms   = "Symptomer - Patienten föler, at han/hun sidder på en pose sten.",
     cure     = "Behandling - En behagelig, men syrlig væske som löser hæmorideproblemet.",
   },
-  gut_rot                = { 
-    name     = "Dårlig mave", 
-    cause     = "Årsag - Onkel Georges blanding af hostesaft og whisky.", 
-    symptoms   = "Symptomer - Ingen hoste, men heller ingen mavesæk.", 
+  gut_rot                = {
+    name     = "Dårlig mave",
+    cause     = "Årsag - Onkel Georges blanding af hostesaft og whisky.",
+    symptoms   = "Symptomer - Ingen hoste, men heller ingen mavesæk.",
     cure     = "Behandling - En sygeplejerske udskriver en række kemikalier som genskaber væggene i mavesækken.",
   },
-  golf_stones            = { 
-    name     = "Golfsten", 
-    cause     = "Årsag - Udsat for giftige gasser fra golfbolde.", 
-    symptoms   = "Symptomer - Forvirring og en kraftig skamfölelse.", 
+  golf_stones            = {
+    name     = "Golfsten",
+    cause     = "Årsag - Udsat for giftige gasser fra golfbolde.",
+    symptoms   = "Symptomer - Forvirring og en kraftig skamfölelse.",
     cure     = "Behandling - Stenene fjernes hurtigt og effektivt af to kirurger.",
   },
-  unexpected_swelling    = { 
-    name     = "Uventet hævelse", 
-    cause     = "Årsag - Hvad som helst uventet.", 
-    symptoms   = "Symptomer - Hævelse.", 
+  unexpected_swelling    = {
+    name     = "Uventet hævelse",
+    cause     = "Årsag - Hvad som helst uventet.",
+    symptoms   = "Symptomer - Hævelse.",
     cure     = "Behandling - Hævelsen må skæres bort af to kirurger.",
   },
   diag_scanner           = { name = "Diag Skanner", },
@@ -2235,33 +2235,33 @@ fax = {
     text10     = "KILLS %d ALLOWED (MTHS) %d (%d) REDUCTION %d", -- %d %d %d %d
     text11     = "PEOPLE THIS MONTH %d", -- %d
   },
-  
+
   -- Emergency
   emergency = {
     choices = {
-      accept = "Ja, jeg kan håndtere dette akkuttilfælde", 
+      accept = "Ja, jeg kan håndtere dette akkuttilfælde",
       refuse = "Nej, jeg nægter at tage mig af dette akkuttilfælde",
     },
-    location                = "Der er sket en ulykke ved %s", 
+    location                = "Der er sket en ulykke ved %s",
     num_disease              = "Der er %d mennesker med %s som har brug for behandling med det samme.",
-    cure_possible_drug_name_efficiency = "Du har den medicin som er nödvendig for at behandle patienterne. Det er %s og medicinen er %d procent effektiv.", 
-    cure_possible              = "Du har det nödvendige udstyr og de færdigheder som skal bruges for at håndtere akuttilfældet.", 
+    cure_possible_drug_name_efficiency = "Du har den medicin som er nödvendig for at behandle patienterne. Det er %s og medicinen er %d procent effektiv.",
+    cure_possible              = "Du har det nödvendige udstyr og de færdigheder som skal bruges for at håndtere akuttilfældet.",
     cure_not_possible_build_and_employ = "Det vil være nödvendigt at bygge %s og ansætte en %s",
     cure_not_possible_build            = "Du mangler %s for at håndtere dette",
     cure_not_possible_employ           = "Du mangler en %s for at kunne håndtere dette",
     cure_not_possible                  = "Du kan ikke behandle denne sygdom i öjeblikket",
     bonus                              = "Hvis du klarer dette akkuttilfælde, vil du modtage en bonus på maksimalt %d. Hvis du derimod fejler, vil det få negative fölger for dit omdömme.",
-    
-    locations = {      
+
+    locations = {
       "A.Tom's Våbenkælder",
-      "Snoppeuniversitetet",       
-      "Buskerud Hagecenter", 
-      "Forskningsinstituttet For Farlige Emner", 
-      "Foreningen For Folkedansende Mænd", 
-      "Puben Frosk Og Kyr", 
+      "Snoppeuniversitetet",
+      "Buskerud Hagecenter",
+      "Forskningsinstituttet For Farlige Emner",
+      "Foreningen For Folkedansende Mænd",
+      "Puben Frosk Og Kyr",
       "Hallgeir Juniors Begravelses- og Spritbutik",
-      "Mamma-Tai Krydderhus", 
-      "Berts Varehus For Brugt Petrokemi", 
+      "Mamma-Tai Krydderhus",
+      "Berts Varehus For Brugt Petrokemi",
     },
   },
 
@@ -2269,8 +2269,8 @@ fax = {
     close_text     = "Klik for at lukke",
     earned_money   = "Af den maksimale bonus på %d, har du tjent %d.",
     saved_people   = "Du reddede %d mennesker af i alt %d.",
-  },  
-  
+  },
+
   -- Deseace discovered
   disease_discovered_patient_choice = {
     choices = {
@@ -2286,7 +2286,7 @@ fax = {
     what_to_do_question      = "Hvad skal vi göre med patienten?",
     guessed_percentage_name  = "Dine læger mener, at de ved hvad patienten fejler. Der er %d procent sandsynlighed for at det er %s",
   },
-  
+
   disease_discovered = {
     close_text          = "Luk.",
     can_cure          = "Du kan behandle denne sygdom.",
@@ -2295,24 +2295,24 @@ fax = {
     need_to_employ           = "Ansæt en %s for at behandle patienter med denne sygdom.",
     discovered_name          = "Dine læger har oppdaget et tilfælde af %s.",
   },
-  
+
   -- Epidemic
   epidemic = {
     choices = {
       declare  = "Offentliggör epidemien og betal en böde. Dit omrömme vil blive svækket.",
       cover_up = "Forsög at behandle alle inficerede patienter inden tiden löber ud, og för nogen smittede forlader hospitalet.",
     },
-    
+
     disease_name             = "Dine læger har opdaget en meget smitsom form for %s.",
     declare_explanation_fine = "Hvis du offentliggör epidemien, skal du betale en böde på %d og dit omdömme lider et knæk, men samtlige patienter bliver vaccineret automatisk.",
     cover_up_explanation_1   = "Hvis du derimod forsöger at holde epidemien skjult, skal du behandle samtlige vaccinerede patienter för sundhedsmyndighederne opdager, hvad der foregår.",
     cover_up_explanation_2   = "Hvis en sundhedsinspektör kommer på besög og finder ud af, at du har forsögt at skjule epidemien, vil han gå drastisk til værks.",
   },
-  
+
   -- Epidemic result
   epidemic_result = {
     close_text = "Hurra!",
-    
+
     failed = {
       part_1_name = "Du forsögte at skjule det faktum, at vi stod overfor et smitsomt udbrud af %s.",
       part_2      = "Selvfölgelig var dine medarbejdere i stand til at sprede epidemien til alle hospitalets naboer.",
@@ -2321,23 +2321,23 @@ fax = {
       part_1_name = "Sundhedsinspektören hörte rygter om at dit hospital kæmpede med et alvorligt tilfælde af %s.",
       part_2      = "Han har dog ikke fundet noget, som har kunne bekræfte rygterne.",
     },
-    
+
     compensation_amount  = "Myndigherne har besluttet at give dig en kompensation på %d for den skade, dit ellers gode rygte har lidt.",
     fine_amount          = "Myndighederne har erklæret en national undtagelsestilstand og forlanger, at du betaler en böde på %d.",
     rep_loss_fine_amount = "Velkommen på forsiden! Dit rygte har fået en ordenligt lussing! Samtidigt får du en böde på %d.",
     hospital_evacuated   = "Sundhedsmyndighederne ser ingen anden mulighed end at evakuere dit hospital.",
   },
-  
+
   -- VIP visit query
   vip_visit_query = {
     choices = {
       invite = "Send en officiel invitation.",
       refuse = "Afvis besöget med en dårlig undskyldning.",
     },
-    
+
     vip_name = "%s har ytret et önske om at besöge dit hospital",
   },
-  
+
   -- VIP visit result
   vip_visit_result = {
     close_text = "Tak fordi du besögte hospitalet.",
@@ -2346,7 +2346,7 @@ fax = {
     cash_grant = "Du får %d i kontanter.",
     rep_boost  = "Dit ry i nærområdet har fået en optur.",
     rep_loss   = "Dit ry i nærområdet har taget skade.",
-    
+
     remarks = {
       super = {
         "Det er et meget flot hospital. Næste gang jeg bliver alvorligt syg, vil jeg indlægges der.",
@@ -2375,7 +2375,7 @@ fax = {
       },
     },
   },
-  
+
   -- Diagnosis failed
   diagnosis_failed = {
     choices = {
@@ -2424,7 +2424,7 @@ dynamic_info = {
   },
   vip                           = "Besögende VIP",
   health_inspector              = "Sundhedsinspektör",
-  
+
   staff = {
     psychiatrist_abbrev         = "Psyk.",
     actions = {
@@ -2435,7 +2435,7 @@ dynamic_info = {
     tiredness                   = "Udbrændthed",
     ability                     = "Evner", -- unused?
   },
-  
+
   object = {
     strength                    = "Udholdenhed: %d", -- %d (max. uses)
     times_used                  = "Timer brugt: %d", -- %d (times used)
@@ -2566,8 +2566,8 @@ dynamic_info = {
     [7] = "Dit hospital skal være mindst 240,000 værd, og du skal have mindst 500,000 i banken samt et omdömme på 700 för syndhedsmyndighederne er tilfredse.",
   },
   level18 = {
-  },     
-      }    
+  },
+      }
 
 -- Miscellangelous
 -- Category of strings that fit nowhere else or we are not sure where they belong.
@@ -2581,24 +2581,24 @@ misc = {
   },
   done  = "Færdig",
   pause = "Pause",
-  
+
   send_message     = "Beskeden er sendt til: %d", -- %d (player number)
   send_message_all = "Beskeden er sendt til alle",
-  
+
   save_success = "Gemt med success",
   save_failed  = "Mislykkedes at gemme",
-  
+
   hospital_open = "Åbent hospital",
   out_of_sync   = "Spillet er ikke synkroniseret",
-  
+
   load_failed  =  "Indlæsning fejlede",
   low_res      = "Lav oplösning",
   balance      = "Balance fil: ",
-  
+
   mouse        = "Mus",
   force        = "Styrke",
 }
- 
+
 ----- Old but strings that failed with previous setup
 progress_report.quite_unhappy = "Folk er ret triste. "
 progress_report.header = "Progessionsrapport"

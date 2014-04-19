@@ -57,7 +57,7 @@ object.orientations = {
   north = {
     render_attach_position = {0, -1},
     footprint = { {-2, -1}, {-1, -1}, {0, -1},
-                  {-2, 0}, {-1, 0}, {0, 0, only_passable = true}, 
+                  {-2, 0}, {-1, 0}, {0, 0, only_passable = true},
                   {-2, 1}, {-1, 1}, {0, 1}},
     use_position = {0, 0}
   },

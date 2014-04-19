@@ -177,7 +177,7 @@ public:
     bool loadGhostFile(wxString sFilename, int iIndex);
     bool loadXMLFile(TiXmlDocument* xmlDocument);
 
-    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml, 
+    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml,
         size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int* iListIndex);
     void writeTableDataHeader(wxTextOutputStream *outputLog);
 

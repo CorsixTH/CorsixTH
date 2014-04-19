@@ -21,13 +21,13 @@ SOFTWARE.
 */
 
 #include "app.h"
-//Darrell: This macro has to be called before the frmMain.h include otherwise 
+//Darrell: This macro has to be called before the frmMain.h include otherwise
 //a subsequent SDL include causes main() to be replaced with SDLmain().
 IMPLEMENT_APP(ThemeHospitalMapEditApp)
 #include "frmMain.h"
 
 bool ThemeHospitalMapEditApp::OnInit()
-{   
+{
     wxImage::AddHandler(new wxPNGHandler);
     wxTopLevelWindow *pForm = new frmMain;
 

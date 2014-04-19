@@ -52,7 +52,7 @@ function UltrascanRoom:commandEnteringPatient(patient)
   local ultrascan, pat_x, pat_y = self.world:findObjectNear(patient, "ultrascanner")
   local orientation = ultrascan.object_type.orientations[ultrascan.direction]
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
-  
+
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
   staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
@@ -65,7 +65,7 @@ function UltrascanRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

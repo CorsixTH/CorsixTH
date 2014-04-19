@@ -27,7 +27,7 @@ class "UIFurnishCorridor" (Window)
 
 function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:Window()
-  
+
   local app = ui.app
   if edit_dialog then
     self.modal_class = "furnish"
@@ -49,10 +49,10 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self.total_text = (_S.buy_objects_window.total .. " "):gsub("  $", " ")
   self.item_price = 0
   self.total_price = 0
-  
+
   self.list_hover_index = 0
   self.preview_anim = TH.animation()
-  
+
   self.objects = {
   }
   if objects then
@@ -69,7 +69,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
       return o1.object.corridor_object < o2.object.corridor_object
     end)
   end
-  
+
   self:addPanel(228, 0, 0) -- Grid top
   for y = 33, 103, 10 do
     self:addPanel(229, 0, y) -- Grid body
@@ -81,12 +81,12 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:addPanel(234, 0, 248) -- Close button background
   self:addPanel(234, 0, 252) -- Close button background extension
   self:addPanel(242, 9, 237):makeButton(0, 0, 129, 28, 243, self.close):setTooltip(_S.tooltip.buy_objects_window.cancel)
-  
+
   self:addPanel(235, 146, 0) -- List top
   self:addPanel(236, 146, 223) -- List bottom
   self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
   local i = 1
-  local function item_callback(index, qty)  
+  local function item_callback(index, qty)
   local is_negative_quantity = qty < 0
     return --[[persistable:furnish_corridor_item_callback]] function(self)
       if self:purchaseItem(index, qty) == 0 and not is_negative_quantity then
@@ -110,7 +110,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
     end
     i = i + 1
   end
-  
+
   self:makeTooltip(_S.tooltip.buy_objects_window.price,       20, 168, 127, 187)
   self:makeTooltip(_S.tooltip.buy_objects_window.total_value, 20, 196, 127, 215)
 
@@ -151,7 +151,7 @@ end
 
 function UIFurnishCorridor:confirm()
   self.ui:tutorialStep(1, 3, 4)
-  
+
   local to_purchase = {}
   local to_sell = {}
   for i, o in ipairs(self.objects) do
@@ -166,7 +166,7 @@ function UIFurnishCorridor:confirm()
       self.ui.hospital:receiveMoney(build_cost * diff_qty, _S.transactions.sell_object .. ": " .. o.object.name, build_cost * diff_qty)
     end
   end
-  
+
   if self.edit_dialog then
     self.edit_dialog:addObjects(to_purchase, false) -- payment already handled here
     self.edit_dialog:removeObjects(to_sell, false) -- payment already handled here
@@ -190,12 +190,12 @@ end
 
 function UIFurnishCorridor:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  
+
   x, y = x + self.x, y + self.y
   self.white_font:draw(canvas, self.title_text, x + 163, y + 18)
   self.white_font:draw(canvas, self.price_text .. self.item_price, x + 24, y + 173)
   self.white_font:draw(canvas, self.total_text .. self.total_price, x + 24, y + 202)
-  
+
   for i, o in ipairs(self.objects) do
     local font = self.white_font
     if i == self.list_hover_index then
@@ -204,18 +204,18 @@ function UIFurnishCorridor:draw(canvas, x, y)
     font:draw(canvas, o.object.name, x + 163, y + 20 + i * 19)
     font:draw(canvas, o.qty, x + 306, y + 20 + i * 19, 19, 0)
   end
-  
+
   self.preview_anim:draw(canvas, x + 72, y + 57)
 end
 
 function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
-  
+
   local hover_idx = 0
   if 158 <= x and x < 346 and 34 <= y and y < 224 then
     hover_idx = math_floor((y - 15) / 19)
   end
-  
+
   if hover_idx ~= self.list_hover_index then
     if 1 <= hover_idx and hover_idx <= #self.objects then
       local obj = self.objects[hover_idx].object
@@ -225,6 +225,6 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
     self.list_hover_index = hover_idx
     repaint = true
   end
-  
+
   return repaint
 end

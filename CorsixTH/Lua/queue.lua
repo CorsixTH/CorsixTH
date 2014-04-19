@@ -254,7 +254,7 @@ function Queue:rerouteAllPatients(action)
     -- slight delay so the desk is really destroyed before rerouting
     humanoid:setNextAction({name = "idle", count = 1})
     -- Don't queue the same action table, but clone it for each patient.
-    local clone = {} 
+    local clone = {}
     for k, v in pairs(action) do clone[k] = v end
     humanoid:queueAction(clone)
   end

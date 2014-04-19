@@ -106,8 +106,8 @@ end
 -- Can return the length of any table, where as #table_name is only suitable for use with arrays of one contiguous part without nil values.
 function table_length(table)
   local count = 0
-  for _,_ in pairs(table) do 
-    count = count + 1 
+  for _,_ in pairs(table) do
+    count = count + 1
   end
   return count
 end
@@ -142,7 +142,7 @@ function loadfile_envcall(filename)
   f:close()
   return loadstring_envcall(result, "@".. filename)
 end
-    
+
 if rawget(_G, "loadin") then
   function loadstring_envcall(contents, chunkname)
     -- Lua 5.2 lacks setfenv(), but does provide loadin()

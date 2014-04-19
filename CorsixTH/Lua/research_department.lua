@@ -23,8 +23,8 @@ Original game times at 20 % in all categories with a medium doctor at level 3:
 Slicer discovered in about 120 days. (10000 points)
 Pump improved in about 60 days. (30000 points * 20 % as first improvement)
 Invisibility improved in about 90 days. (10000 points)
-Note that the original requires a nurse and a pharmacy before drugs 
-get improved. On the other hand it appears that the research is 
+Note that the original requires a nurse and a pharmacy before drugs
+get improved. On the other hand it appears that the research is
 stored for future use anyway.
 --]]
 
@@ -52,7 +52,7 @@ function ResearchDepartment:initResearch()
     if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
     and object.research_category then
       self.research_progress[object] = {
-        points = 0, 
+        points = 0,
         start_strength = config[object.thob].StartStrength,
         cost = not self.world.free_build_mode and config[object.thob].StartCost or 0,
         discovered = config[object.thob].StartAvail == 1,
@@ -91,7 +91,7 @@ function ResearchDepartment:initResearch()
   local drain = {dummy = true}
   self.research_progress[drain] = {points = 0}
   self.drain = drain
-  
+
   local policy = {
     cure = {frac = cure and 20 or 0, current = cure},
     diagnosis = {frac = diagnosis and 20 or 0, current = diagnosis},
@@ -158,7 +158,7 @@ end
 function ResearchDepartment:redistributeResearchPoints()
   local sum, all_finished = 0, true
   local policy = {"cure", "diagnosis", "drugs", "improvements", "specialisation"}
-  for _, research_category in ipairs(policy) do    
+  for _, research_category in ipairs(policy) do
     sum = sum + self.research_policy[research_category].frac
     if self.research_policy[research_category].current and self.research_policy[research_category].current ~= self.drain then
       all_finished = false
@@ -195,12 +195,12 @@ function ResearchDepartment:redistributeResearchPoints()
           max_value = research_cat.frac
           max_category = categ
         end
-        research_cat.frac = math.floor(self.research_policy.global * research_cat.frac / sum) 
+        research_cat.frac = math.floor(self.research_policy.global * research_cat.frac / sum)
         new_sum = new_sum + research_cat.frac
       end
       --if there are still some points left redistribute them to the research category with the maximum points
       if new_sum < self.research_policy.global then
-        local frac = self.research_policy[max_category].frac + self.research_policy.global - new_sum 
+        local frac = self.research_policy[max_category].frac + self.research_policy.global - new_sum
         self.research_policy[max_category].frac = frac
       end
     end
@@ -260,7 +260,7 @@ function ResearchDepartment:nextResearch(category)
     end
   end
   if found_one and not self.research_policy[category].current then
-    -- There is a drug or machine which needs improving, but it 
+    -- There is a drug or machine which needs improving, but it
     -- has not been discovered yet.
     self.research_policy[category].current = self.drain
     self.research_progress[self.drain] = {points = 0}
@@ -271,7 +271,7 @@ function ResearchDepartment:nextResearch(category)
     cat.current = nil
     cat.frac = 0
     self:redistributeResearchPoints()
-    
+
     if self.hospital == self.world.ui.hospital then
       self.world.ui.adviser:say(_A.research.drug_fully_researched
       :format(_S.research.categories[category]))
@@ -324,10 +324,10 @@ function ResearchDepartment:getResearchRequired(thing)
   return required
 end
 
---[[ Add some more research points to research progress. If 
+--[[ Add some more research points to research progress. If
 autopsy_room is specified points are not used. Instead research
-progresses according to the level config for autopsies. 
-Otherwise they will be divided according to the research policy 
+progresses according to the level config for autopsies.
+Otherwise they will be divided according to the research policy
 into the different research areas.
 !param points (integer) The total amount of points (before applying
 any level specific divisors to add to research.
@@ -354,7 +354,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
             local required = self:getResearchRequired(TheApp.objects[object])
             local advance = required * level_config.gbv.AutopsyRschPercent/100
             research.points = research.points + advance
-            
+
             -- Maybe we now have enough to discover the object?
             if research.points > required then
               self:discoverObject(TheApp.objects[object])
@@ -366,7 +366,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
     end
   else
     --------------------------- General research ------------------------------
-    -- Divide the points into the different areas. If global is not at 100 % 
+    -- Divide the points into the different areas. If global is not at 100 %
     -- the total amount is lowered, but then cost is also reduced.
 
     -- Fetch the level research divisor.
@@ -374,14 +374,14 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
 
     points = math.ceil(points*self.research_policy.global/(100*divisor))
 
-    -- Divide the points into the different categories and check if 
+    -- Divide the points into the different categories and check if
     -- it is time to discover something
     for name, info in pairs(areas) do
       -- Don't touch the value "global".
       if type(info) == "table" then
         -- Some categories may be finished
         if info.current then
-          -- Add new points to this category's current focus. 
+          -- Add new points to this category's current focus.
           local research_info = self.research_progress[info.current]
           local stored = research_info.points
           -- Add just a little randomness
@@ -432,7 +432,7 @@ function ResearchDepartment:improveDrug(drug)
   else
     -- Time to improve effectiveness
     local improve_rate = self.level_config.gbv.DrugImproveRate
-    disease.cure_effectiveness = math.min(100, 
+    disease.cure_effectiveness = math.min(100,
       disease.cure_effectiveness + improve_rate)
     research_info.effect_imp = research_info.effect_imp + 1
   end
@@ -442,8 +442,8 @@ function ResearchDepartment:improveDrug(drug)
       :format(drug.disease.name))
     else
       self.world.ui.adviser:say(_A.research.drug_improved
-      :format(drug.disease.name)) 
-    end      
+      :format(drug.disease.name))
+    end
   end
 end
 
@@ -500,7 +500,7 @@ end
 --[[ Called when it is time to discoer an object. This may currently only
 happen from research.
 !param object The object to discover, a table from TheApp.objects
-!param automatic If true the discovery was not made by 
+!param automatic If true the discovery was not made by
 the player's research department.
 --]]
 function ResearchDepartment:discoverObject(object, automatic)
@@ -510,7 +510,7 @@ function ResearchDepartment:discoverObject(object, automatic)
   for room, _ in pairs(self.hospital.undiscovered_rooms) do
     local discovery = true
     for needed, _ in pairs(room.objects_needed) do
-      if self.research_progress[TheApp.objects[needed]] 
+      if self.research_progress[TheApp.objects[needed]]
       and not self.research_progress[TheApp.objects[needed]].discovered then
         discovery = false
         break
@@ -526,7 +526,7 @@ function ResearchDepartment:discoverObject(object, automatic)
         else
           self.world.ui.adviser:say(_A.research.new_machine_researched
           :format(object.name))
-        end  
+        end
       end
       -- It may now be possible to continue researching machine improvements
       local current_improvement_research = self.research_policy.improvements.current
@@ -534,7 +534,7 @@ function ResearchDepartment:discoverObject(object, automatic)
       local max_strength = self.level_config.gbv.MaxObjectStrength
       -- If we're not researching any improvement right now, and the newest discovery was
       -- a machine that requires an improvement, switch the current policy.
-      if (not current_improvement_research or current_improvement_research.dummy) then 
+      if (not current_improvement_research or current_improvement_research.dummy) then
         for object, progress in pairs(self.research_progress) do
           if object.default_strength then
           -- Don't improve those that already have the max strength
@@ -542,13 +542,13 @@ function ResearchDepartment:discoverObject(object, automatic)
               if progress.discovered and progress.start_strength < min_strength then
                 self.research_policy["improvements"].current = object
                 min_strength = progress.start_strength
-              end                
-            end   
-          end              
+              end
+            end
+          end
         end
       end
-    end 
-  end      
+    end
+  end
   -- Now find out what to do next.
   self:nextResearch(object.research_category)
 end
@@ -590,7 +590,7 @@ function ResearchDepartment:discoverDisease(disease)
 end
 
 --[[! It also costs to research.
-TODO: This is now just $3 per day and doctor (if at 100%), 
+TODO: This is now just $3 per day and doctor (if at 100%),
 what should it be?
 --]]
 function ResearchDepartment:researchCost()
@@ -675,7 +675,7 @@ function ResearchDepartment:concentrateResearch(disease_id)
       -- A drug should be improved
       self.research_policy.specialisation.current = book_entry
     else
-      -- No matter if it's a drug or some machine - 
+      -- No matter if it's a drug or some machine -
       -- we want to discover (including the cabinet) or improve it.
       self.research_policy.specialisation.current = object
     end

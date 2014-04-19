@@ -56,14 +56,14 @@ local function MakePermanentObjectsTable(inverted)
       rawset(t, v, k)
     end
   end
-  
+
   -- Global functions
   for k, v in pairs(_G) do
     if type(v) == "function" then
       permanent[v] = k
     end
   end
-   
+
   -- Lua class methods
   for name, class in pairs(_G) do repeat
     if type(class) ~= "table" then
@@ -81,7 +81,7 @@ local function MakePermanentObjectsTable(inverted)
       end
     end
   until true end
-  
+
   -- C/class/library methods
   for name, lib in pairs(package.loaded) do
     if not name:find(".", 1, true) then
@@ -102,7 +102,7 @@ local function MakePermanentObjectsTable(inverted)
       print("Warning: Expected table but got " .. type(lib) .. ". A library probably failed to load.")
     end
   end
-  
+
   -- Bits of the app
   permanent[TheApp] = "TheApp"
   for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx", "fs"} do
@@ -122,7 +122,7 @@ local function MakePermanentObjectsTable(inverted)
     menu_bar = UIMenuBar({app = TheApp})
   end
   permanent[menu_bar] = "TheApp.ui.menu_bar"
-  
+
   -- Graphics bits are persisted as instructions to reload them or re-use if already loaded
   if inverted then
     -- as the object was persisted as a table, we need to add some magic to
@@ -138,19 +138,19 @@ local function MakePermanentObjectsTable(inverted)
       permanent[obj] = load_info
     end
   end
-  
+
   -- Things requested to be permanent by other bits of code
   for name, value in pairs(saved_permanents) do
     permanent[value] = name
   end
-  
+
   return return_val
 end
 
 local function NameOf(obj) -- Debug aid
   local explored = {[_G] = true}
   local to_explore = {[_G] = "_G"}
-  
+
   while true do
     local exploring, name = next(to_explore)
     if exploring == nil then
@@ -160,7 +160,7 @@ local function NameOf(obj) -- Debug aid
     if exploring == obj then
       return name
     end
-    
+
     if type(exploring) == "table" then
       for key, val in pairs(exploring) do
         if not explored[val] then
@@ -193,7 +193,7 @@ local function NameOf(obj) -- Debug aid
       explored[mt] = true
     end
   end
-  
+
   return "<no name>"
 end
 
@@ -237,7 +237,7 @@ function LoadGame(data)
   TheApp.world = state.world
   TheApp.map = state.map
   math.randomseed(state.random)
-  
+
   local cursor = TheApp.ui.cursor
   TheApp.ui.cursor = nil
   TheApp.ui:setCursor(cursor)

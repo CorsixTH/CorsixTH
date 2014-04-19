@@ -110,7 +110,7 @@ local format_pattern = lpeg.Cs(
 --! NB: %s and %d are only replaced if none of the new keywords (%[num]% and %[num]:[tab]%) are present.
 --! NB: Always escape percent sign (i.e. use %% instead of %) in strings with formatting keywords! Failure
 --!     to do so can cause unwanted behavior.
---! 
+--!
 --! Keywords:
 --!  %s, %d        : replaced with the n-th parameter, if the type matches (%s = string, %d = number).
 --!  %%            : replaced by single percent sign "%". Needed for escaping.

@@ -118,7 +118,7 @@ local function action_multi_use_phase(action, humanoid, phase)
     end
   end
   humanoid:setAnimation(anim, action.mirror_flags)
-  
+
   local offset = object.object_type.orientations
   if offset then
     local tx, ty
@@ -133,7 +133,7 @@ local function action_multi_use_phase(action, humanoid, phase)
   else
     humanoid:setTilePositionSpeed(object.tile_x, object.tile_y, 0, 0)
   end
-  
+
   humanoid.user_of = object
   local length = humanoid.world:getAnimLength(anim)
   local secondary_anim = action.anims.secondary and action.anims.secondary[anim_name]
@@ -246,7 +246,7 @@ action_multi_use_object_tick = permanent"action_multi_use_object_tick"( function
       humanoid:setLayer(3, action.old_layer3_humanoid)
       use_with:setLayer(3, action.old_layer3_use_with)
     end
-    
+
     use_with.th:makeVisible()
     use_with.action_queue[1].on_interrupt = action.idle_interrupt
     use_with.action_queue[1].must_happen = action.idle_must_happen
@@ -325,7 +325,7 @@ local function action_multi_use_object_start(action, humanoid)
   local anims = object.object_type.multi_usage_animations[anim_set][orient]
   action.anims = anims
   action.mirror_flags = flags
-  
+
   object:setUser(humanoid)
   humanoid.user_of = object
   copy_layers(humanoid, use_with)
@@ -343,7 +343,7 @@ local function action_multi_use_object_start(action, humanoid)
     end
     object.ticks = true
   end
-  
+
   action_multi_use_phase(action, humanoid, action_multi_use_next_phase(action, -100))
 end
 

@@ -455,7 +455,7 @@ public:
         wait until this method returns true, then use a THMapScanlineIterator.
     */
     inline bool isLastOnScanline() const;
-  
+
 protected:
     // Maximum extents of the visible parts of a node (pixel distances relative
     // to the top-most corner of an isometric cell)

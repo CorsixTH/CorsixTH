@@ -24,7 +24,7 @@ local TH = require "TH"
 class "Machine" (Object)
 
 function Machine:Machine(world, object_type, x, y, direction, etc)
-  
+
   self.total_usage = -1 -- Incremented in the constructor of Object.
   self:Object(world, object_type, x, y, direction, etc)
 
@@ -102,7 +102,7 @@ function Machine:machineUsed(room)
     if taskIndex == -1 then
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
-    else 
+    else
       self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
     end
   elseif threshold >= 0.4 then
@@ -131,7 +131,7 @@ function Machine:createHandymanActions(handyman)
 
   local --[[persistable:handyman_repair_after_use]] function after_use()
     handyman:setCallCompleted()
-    handyman:setDynamicInfoText("") 
+    handyman:setDynamicInfoText("")
     self:machineRepaired(self:getRoom())
   end
   local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
@@ -158,7 +158,7 @@ function Machine:createHandymanActions(handyman)
     loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
       if not self.user then
         -- The machine is ready to be repaired.
-        -- The following statement will finish the meander action in the handyman's 
+        -- The following statement will finish the meander action in the handyman's
         -- action queue.
         handyman:finishAction()
       end
@@ -246,7 +246,7 @@ function Machine:updateDynamicInfo(only_update)
   end
   if self.strength then
     self:setDynamicInfo("text", {
-      self.object_type.name, 
+      self.object_type.name,
       _S.dynamic_info.object.strength:format(self.strength),
       _S.dynamic_info.object.times_used:format(self.times_used),
     })

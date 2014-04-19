@@ -60,7 +60,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
   local orientation = cabinet.object_type.orientations[cabinet.direction]
   pat_x = stf_x - orientation.use_position[1] + orientation.use_position_secondary[1]
   pat_y = stf_y - orientation.use_position[2] + orientation.use_position_secondary[2]
-  
+
   local layer3
   local patient_class = patient.humanoid_class
   if patient_class == "Standard Female Patient" or patient_class == "Transparent Female Patient" then
@@ -70,7 +70,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
   else
     layer3 = math.random(0, 2) * 2
   end
-  
+
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
   patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
@@ -92,7 +92,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

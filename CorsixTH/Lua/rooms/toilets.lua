@@ -61,7 +61,7 @@ end
 function ToiletRoom:freeLoos()
   local number = 0
   for humanoid in pairs(self.humanoids) do
-    if class.is(humanoid, Patient) then 
+    if class.is(humanoid, Patient) then
       if (humanoid.action_queue[1].name == "use_object"
       and humanoid.action_queue[1].object.object_type.id ~= "loo") then
         number = number + 1
@@ -84,7 +84,7 @@ end
 
 function ToiletRoom:onHumanoidEnter(humanoid)
   if class.is(humanoid, Patient) then
-    local loo, lx, ly = self.world:findFreeObjectNearToUse(humanoid, "loo")      
+    local loo, lx, ly = self.world:findFreeObjectNearToUse(humanoid, "loo")
     if loo and lx and ly then
       humanoid:walkTo(lx, ly)
       loo.reserved_for = humanoid
@@ -126,16 +126,16 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                   if math.random(1, 4) > 2 then
                   -- Wait for a while before trying again.
                     humanoid:setNextAction{
-                      name = "idle", 
+                      name = "idle",
                       count = 5,
                       after_use = after_use,
                       direction = loo.direction == "north" and "south" or "east",
                       }
-                    else 
+                    else
                       self:dealtWithPatient(humanoid)
-                      humanoid:changeAttribute("happiness", -0.08) 
+                      humanoid:changeAttribute("happiness", -0.08)
                       humanoid:setMood("patient_wait", "deactivate")
-                    end  
+                    end
                   -- For now, activate the wait icon to show the player that the patient hasn't
                   -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
                   humanoid:setMood("patient_wait", "activate")
@@ -153,7 +153,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       Now there is no free loo, so wait for a bit and then leave the room to wait outside.  No need for a warning
       as this is what happens in busy toilets]]
       humanoid:setNextAction{
-        name = "meander", 
+        name = "meander",
         count = 1
         }
       humanoid:queueAction(self:createLeaveAction())
@@ -171,16 +171,16 @@ function ToiletRoom:getPatientCount()
   local true_space = 0
   for humanoid in pairs(self.humanoids) do
     if class.is(humanoid, Patient) then
-      count = count + 1 
+      count = count + 1
       self:freeLoos()
-      if self.maximum_patients > 1 then      
+      if self.maximum_patients > 1 then
         true_space = count - room.free_loos
-      else 
+      else
         true_space = count
       end
     end
   end
-  return true_space 
+  return true_space
 end
 
 function ToiletRoom:afterLoad(old, new)

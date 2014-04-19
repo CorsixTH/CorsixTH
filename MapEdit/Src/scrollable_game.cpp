@@ -45,10 +45,10 @@ ScrollableGamePanel::ScrollableGamePanel(wxWindow *pParent)
         reinterpret_cast<void*>(this));
     pSizer->Add(m_pMapScrollY = new wxScrollBar(this, ID_Y_SCROLL,
         wxDefaultPosition, wxDefaultSize, wxVERTICAL), 0, wxEXPAND);
-    pSizer->Add(m_pMapScrollX = new wxScrollBar(this, ID_X_SCROLL, 
+    pSizer->Add(m_pMapScrollX = new wxScrollBar(this, ID_X_SCROLL,
         wxDefaultPosition, wxDefaultSize, wxHORIZONTAL), 0, wxEXPAND);
     pSizer->AddSpacer(0);
-    
+
     m_pTimer = new wxTimer(this, wxID_ANY);
     m_pTimer->Start(100, false);
 
@@ -236,7 +236,7 @@ int ScrollableGamePanel::_l_on_ui_scroll_map(lua_State *L)
 }
 
 void ScrollableGamePanel::_onScroll(wxScrollEvent& evt)
-{    
+{
     _positionMap();
 }
 
@@ -246,7 +246,7 @@ void ScrollableGamePanel::_onTimer(wxTimerEvent& evt)
     int x = m_pMapScrollX->GetThumbPosition();
     int y = m_pMapScrollY->GetThumbPosition();
     bool bChanges = false;
-    
+
     if(wxGetKeyState(WXK_LEFT))
     {
         m_pMapScrollX->SetThumbPosition(std::max(0, x - KEY_SENSITIVITY));

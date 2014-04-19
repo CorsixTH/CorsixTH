@@ -53,8 +53,8 @@ object.usage_animations = copy_north_to_south {
       ["Standard Female Patient"] = 1278,
       ["Standard Male Patient"  ] = 1278,
       ["Handyman"               ] = 3554,
-    }, 
-    finish_use_2 = { -- Hair falls off 
+    },
+    finish_use_2 = { -- Hair falls off
       ["Standard Female Patient"] = 2940,
       ["Standard Male Patient"  ] = 1286,
     },

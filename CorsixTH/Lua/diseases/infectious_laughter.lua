@@ -53,7 +53,7 @@ disease.diagnosis_rooms = {
   "blood_machine",
   "x_ray",
   "psych",
-  "ward", 
+  "ward",
 }
 -- Treatment rooms are the rooms which must be visited, in the given order, to
 -- cure the disease.

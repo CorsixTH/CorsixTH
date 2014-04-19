@@ -41,7 +41,7 @@ object.idle_animations = copy_north_to_south {
  --[[This is incomplete as the scanner and console should be in sync with each other
  i.e. Dr sits down and pushes some buttons and the scanner scans, the he pushes the lever and it
  will tip back etc.]]
-object.usage_animations = copy_north_to_south { 
+object.usage_animations = copy_north_to_south {
   north = {
     begin_use = { -- goes down
       ["Transparent Male Patient"] = 874,
@@ -51,7 +51,7 @@ object.usage_animations = copy_north_to_south {
       ["Stripped Male Patient 2"] = 1406,
       ["Stripped Female Patient 2"] = 1446,
       ["Stripped Male Patient 3"] = 1402,
-      ["Stripped Female Patient 3"] = 1442,      
+      ["Stripped Female Patient 3"] = 1442,
       ["Elvis Patient"] = 4914,
       ["Transparent Female Patient"] = 4926,
       ["Invisible Patient"] = 4942,
@@ -67,7 +67,7 @@ object.usage_animations = copy_north_to_south {
       ["Stripped Male Patient 2"] = 1410,
       ["Stripped Female Patient 2"] = 1450,
       ["Stripped Male Patient 3"] = 1402,
-      ["Stripped Female Patient 3"] = 1442,      
+      ["Stripped Female Patient 3"] = 1442,
       ["Elvis Patient"] = 4914,
       ["Transparent Female Patient"] = 4926,
       ["Invisible Patient"] = 4942,
@@ -84,7 +84,7 @@ object.usage_animations = copy_north_to_south {
       ["Stripped Male Patient 2"] = 1414,
       ["Stripped Female Patient 2"] = 1454,
       ["Stripped Male Patient 3"] = 1418,
-      ["Stripped Female Patient 3"] = 1458,      
+      ["Stripped Female Patient 3"] = 1458,
       ["Elvis Patient"] = 4916,
       ["Transparent Female Patient"] = 4930,
       ["Invisible Patient"] = 4946,

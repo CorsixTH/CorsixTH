@@ -32,7 +32,7 @@ class "UIPatient" (Window)
 
 function UIPatient:UIPatient(ui, patient)
   self:Window()
-  
+
   local app = ui.app
   self.esc_closes = true
   self.ui = ui
@@ -44,7 +44,7 @@ function UIPatient:UIPatient(ui, patient)
   self.font = app.gfx:loadFont("QData", "Font74V") -- Font used in the treatment history
   self.patient = patient
   self.visible_diamond = ui:makeVisibleDiamond(75, 76)
-  
+
   self:addPanel(320,  15,   0) -- Graph top
   self:addPanel(321,  15,  61) -- Graph bottom
 
@@ -58,7 +58,7 @@ function UIPatient:UIPatient(ui, patient)
   self:addPanel(323,   0, 201) -- View circle top
   self:addPanel(324,   0, 254) -- View circle bottom
   self:addPanel(325, 147,  21):makeButton(0, 0, 24, 24, 326, self.close):setTooltip(_S.tooltip.patient_window.close)
-  
+
   -- If the patient has been diagnosed the "guess cure" button is not visible and
   -- if the patient is going home it is not possible to kick him/her anymore.
   self:addPanel(411, 14 + 132, 61 + 19):makeButton(0, 0, 25, 31, 412, self.viewQueue):setTooltip(_S.tooltip.patient_window.queue)
@@ -74,21 +74,21 @@ function UIPatient:UIPatient(ui, patient)
 
   self.guess_button = self:addPanel(413, 14 + 117, 61 + 58):makeButton(0, 0, 38, 38, 414, self.guessDisease):setTooltip(_S.tooltip.patient_window.abort_diagnosis)
   self.guess_blanker = self:addColourPanel(14 + 115, 61 + 56, 45, 45, 113, 117, 170)
-  
+
   -- Set correct initial visibility/enabledness of the three buttons and their blankers
   self:updateInformation()
-  
+
   self:makeTooltip(_S.tooltip.patient_window.happiness, 33, 117, 124, 141)
   self:makeTooltip(_S.tooltip.patient_window.thirst,    33, 141, 124, 169)
   self:makeTooltip(_S.tooltip.patient_window.warmth,    33, 169, 124, 203)
-  
+
   -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
   self:makeDynamicTooltip(--[[persistable:patient_window_center_tooltip]]function(x, y)
     if is_in_view_circle(x, y) then
       return _S.tooltip.patient_window.center_view
     end
   end, 17, 216, 92, 292)
-  
+
   -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
@@ -132,8 +132,8 @@ function UIPatient:draw(canvas, x_, y_)
   px, py = self.ui.limitPointToDiamond(px, py, self.visible_diamond, true)
   self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
   Window.draw(self, canvas, x_, y_)
-  
-  -- The patients happiness. Each bar is by default half way if the actual value 
+
+  -- The patients happiness. Each bar is by default half way if the actual value
   -- cannot be found.
   local happiness_bar_width = 22
   if patient.attributes["happiness"] then
@@ -291,7 +291,7 @@ function UIPatient:guessDisease()
   end
   patient:setDiagnosed(true)
   patient:setNextAction({
-    name = "seek_room", 
+    name = "seek_room",
     room_type = patient.disease.treatment_rooms[1],
     treatment_room = true,
   }, 1)

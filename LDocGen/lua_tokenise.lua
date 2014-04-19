@@ -50,18 +50,18 @@ local identifier_type = {
 }
 
 local tokens = P { "tokens";
-  
+
   -- Comment of form --xyz or --[[ xyz ]] or #xyz (unix shebang)
   comment = Ct(C(P"--" * (V"long_string_body" + (1 - V"newline")^0))  * Cc"comment"),
   file_start = Ct(C(P"#" * (1 - S"\r\n")^0) * Cc"comment"),
   utf8_bom = P"\239\187\191",
-  
+
   -- Single platform independant line break which increments line number
   newline = (P"\r\n" + P"\n\r" + S"\r\n") * (Cp() * Carg(1)) / function(pos, state)
     state.line = state.line + 1
     state.line_start = pos
   end,
-  
+
   -- Whitespace of any length (includes newlines)
   whitespace = Ct(C((S" \t" + V"newline")^1) * Cc"whitespace"),
 
@@ -69,10 +69,10 @@ local tokens = P { "tokens";
   identifier = Ct((R("az","AZ","__") * R("09","az","AZ","__")^0) / function(id)
     return id, identifier_type[id] or "identifier"
   end),
-  
+
   -- Single character in a string
   string_char = (1 - S[[\"']]) + (P"\\" * (S[[abfnrtv\"'0123456789]] + V"newline")),
-  
+
   -- String literal
   string = Ct(C(P"'" * (V"string_char" + P'"')^0 * P"'" +
                 P'"' * (V"string_char" + P"'")^0 * P'"' +
@@ -80,19 +80,19 @@ local tokens = P { "tokens";
   long_string = Ct(C(V"long_string_body") * Cc"string"),
   long_string_body = "[" * Cg(P"="^0, "ls_init") * "[" * ((V"newline" + 1) - V"long_string_close")^0 * "]" * P"="^0 * "]",
   long_string_close = Cmt("]" * C(P"="^0) * "]" * Cb("ls_init"), function (s, i, a, b) return a == b end),
-  
+
   -- Operator
   operator = Ct(C(P".." + P"<=" + P">=" + P"==" + P"~=" + S"+-*/^%<>#") * Cc"operator"),
-  
+
   -- Vararg (...)
   vararg = Ct(C(P"...") * Cc"vararg"),
 
   -- Misc. char (token type is the character itself)
   char = Ct(C(S"[]{}();,=:.") / function(x) return x, x end),
-  
+
   -- Hex or decimal number
   int = Ct(C((P"0x" * R("09","af","AF")^1) + R"09"^1) * Cc"integer"),
-  
+
   -- Floating point number
   float = Ct(C(P"."^-1 * R"09" * R("09","..")^0)* Cc"float"),
 
@@ -107,16 +107,16 @@ local tokens = P { "tokens";
             V"operator" +
             V"char" +
             V"int") * Carg(1)) / function(t, s) t.line = s.line return t end,
-  
+
   -- Error for when nothing else matches
   error = (Cp() * C(P(1) ^ -8) * Carg(1)) / function(pos, where, state)
     error(("Tokenising error on line %i, position %i, near '%s'")
       :format(state.line, pos - state.line_start + 1, where))
   end,
-  
+
   -- Match end of input or throw error
   finish = -P(1) + V"error",
-  
+
   -- Match stream of tokens into a table
   tokens = V"utf8_bom"^-1 * Ct(V"file_start" ^ -1 * V"token" ^ 0) * V"finish",
 }

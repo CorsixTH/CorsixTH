@@ -27,7 +27,7 @@ class "UIQueue" (Window)
 
 function UIQueue:UIQueue(ui, queue)
   self:Window()
-  
+
   local app = ui.app
   self.esc_closes = true
   self.ui = ui
@@ -37,9 +37,9 @@ function UIQueue:UIQueue(ui, queue)
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  
+
   self.queue = queue
-  
+
   self:addPanel(364,  0,  0) -- Right extremity of the panel
   for x = 21, 83, 4 do
     self:addPanel(365,  x, 0)
@@ -52,12 +52,12 @@ function UIQueue:UIQueue(ui, queue)
   self:addPanel(369, 97,  self.height - 33):makeButton(0, 0, 17, 17, 370, self.decreaseMaxSize):setTooltip(_S.tooltip.queue_window.dec_queue_size)
   self:addPanel(371, 144, self.height - 33):makeButton(0, 0, 17, 17, 372, self.increaseMaxSize):setTooltip(_S.tooltip.queue_window.inc_queue_size)
   self:addPanel(373, self.width - 42, 17):makeButton(0, 0, 24, 24, 374, self.close):setTooltip(_S.tooltip.queue_window.close)
-  
+
   self:makeTooltip(_S.tooltip.queue_window.num_in_queue, 15, 15, 163, 36)
   self:makeTooltip(_S.tooltip.queue_window.num_expected, 15, 39, 163, 60)
   self:makeTooltip(_S.tooltip.queue_window.num_entered,  15, 62, 163, 83)
   self:makeTooltip(_S.tooltip.queue_window.max_queue_size, 15, 87, 163, 108)
-  
+
   self:makeTooltip(_S.tooltip.queue_window.front_of_queue, 168, 25, 213, 105)
   self:makeTooltip(_S.tooltip.queue_window.end_of_queue, 543, 51, 586, 105)
   self:makeTooltip(_S.tooltip.queue_window.patient        .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
@@ -86,23 +86,23 @@ end
 function UIQueue:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
+
   local font = self.white_font
-  local queue = self.queue  
+  local queue = self.queue
   local num_patients = queue:reportedSize()
 
   font:draw(canvas, _S.queue_window.num_in_queue, x + 22, y + 22)
   font:draw(canvas, num_patients, x + 140, y + 22)
-    
+
   font:draw(canvas, _S.queue_window.num_expected, x + 22, y + 45)
   font:draw(canvas, queue.expected_count, x + 140, y + 45)
-    
+
   font:draw(canvas, _S.queue_window.num_entered, x + 22, y + 68)
   font:draw(canvas, queue.visitor_count, x + 140, y + 68)
-  
+
   font:draw(canvas, _S.queue_window.max_queue_size, x + 22, y + 93)
   font:draw(canvas, queue.max_size, x + 119, y + 93)
-  
+
   self:drawPatients(canvas, x, y)
 
   -- Draw dragged patient in the cursor location

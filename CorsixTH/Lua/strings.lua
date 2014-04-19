@@ -53,7 +53,7 @@ function Strings:init()
       end
     end
   end
-  
+
   -- Build the language table from Language() calls
   -- Every file in the languages folder should have a call to Language() near
   -- the start of the file which gives the names for the language. These names

@@ -31,7 +31,7 @@ class "Audio"
 
 function Audio:Audio(app)
   self.app = app
-  
+
   self.has_bg_music = false
   self.not_loaded = not app.config.audio
 end
@@ -79,18 +79,18 @@ function Audio:init()
     end
     return t
   end
-    
+
   --[[
     Find the music files on disk.
     -----------------------------
-      
+
     - Will search through all the files in music_dir.
     - Adds xmi and mp3 files.
     - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
-  
+
   local _f, _s, _v
   if music_dir then
     _f, _s, _v = lfs.dir(music_dir)
@@ -101,7 +101,7 @@ function Audio:init()
     local filename, ext = file:match"^(.*)%.([^.]+)$"
     ext = ext and ext:upper()
     -- Music file found (mp3/xmi).
-    if ext == "MP3" or ext == "XMI" then  
+    if ext == "MP3" or ext == "XMI" then
       local info = musicFileTable(filename)
       info.title = filename
       if ext == "MP3" then
@@ -122,16 +122,16 @@ function Audio:init()
     elseif ext == "TXT" and (file:sub(1, 4):upper() == "MIDI" or
                              file:sub(1, 5):upper() == "NAMES") then
       -- If it Looks like the midi.txt or equiv, then remember it for later.
-      midi_txt = file                                    
+      midi_txt = file
     end
   end
-    
+
   -- Enable music files and add them to the playlist.
   for _, info in pairs(music_array) do
     info.enabled = true
     self.background_playlist[#self.background_playlist + 1] = info
   end
-    
+
   -- This is later. If we found a midi.txt, go through it and add the titles to the files we know
   if midi_txt then
     local data
@@ -159,7 +159,7 @@ function Audio:init()
     end)
     self.has_bg_music = true
   end
-  
+
   local status, err = SDL.audio.init(self.app.config.audio_frequency,
     self.app.config.audio_channels, self.app.config.audio_buffer_size)
   if status then
@@ -180,7 +180,7 @@ function Audio:initSpeech(speech_file)
   if self.not_loaded then
     return
   end
-  
+
   local function load_sound_file(file)
     return self.app.fs:readContents("Sound", "Data", file)
   end
@@ -190,8 +190,8 @@ function Audio:initSpeech(speech_file)
     return
   end
   local archive_data, err = load_sound_file(speech_file)
-  
-  -- If sound file not found and language choosen is not English, 
+
+  -- If sound file not found and language choosen is not English,
   -- maybe we can have more chance loading English sounds
   if not archive_data and speech_file ~= "Sound-0.dat" and self.app.good_install_folder then
     if self.speech_file_name == "Sound-0.dat" then
@@ -201,7 +201,7 @@ function Audio:initSpeech(speech_file)
     speech_file = "Sound-0.dat"
     archive_data = load_sound_file(speech_file)
   end
-  
+
   if not archive_data then
     if self.app.good_install_folder then
       print("Notice: No sound effects as no SOUND/DATA/".. speech_file ..
@@ -215,7 +215,7 @@ function Audio:initSpeech(speech_file)
     self.sound_archive = TH.soundArchive()
     if not self.sound_archive:load(archive_data) then
       print("Notice: No sound effects as SOUND/DATA/" .. speech_file .. " could not be loaded")
-      if #self.background_playlist == 0 then 
+      if #self.background_playlist == 0 then
         self.not_loaded = true
       end
     else
@@ -231,13 +231,13 @@ end
 
 function Audio:dumpSoundArchive(out_dir)
   local info,warning = io.open(out_dir .. "info.csv", "wt")
-  
+
   if info == nil then
     print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
     print(warning)
     return
   end
-  
+
   for i = 1, #self.sound_archive - 1 do
     local filename = self.sound_archive:getFilename(i)
     info:write(i, ",", filename, ",", self.sound_archive:getDuration(i), ",\n")
@@ -325,7 +325,7 @@ function Audio:findIndexOfCurrentTrack()
       return i
     end
   end
-  
+
   return 1
 end
 
@@ -333,14 +333,14 @@ function Audio:playNextOrPreviousBackgroundTrack(direction)
   if self.not_loaded or #self.background_playlist == 0 then
     return
   end
-  
+
   if not self.background_music then
     self:playRandomBackgroundTrack()
     return
   end
-  
+
   local index = self:findIndexOfCurrentTrack()
-  
+
   -- Find next/previous track
   for i = 1, #self.background_playlist do
     i = ((index + direction * i - 1) % #self.background_playlist) + 1
@@ -379,7 +379,7 @@ function Audio:pauseBackgroundTrack()
     status = SDL.audio.pauseMusic()
     self.background_paused = true
   end
-  
+
   -- NB: Explicit false check, as old C side returned nil in all cases
   if status == false then
     -- SDL doesn't seem to support pausing/resuming for this format/driver,
@@ -440,11 +440,11 @@ function Audio:playBackgroundTrack(index)
       end
       -- Loading of music files can incur a slight pause, which is why it is
       -- done asynchronously.
-      -- Someone might want to stop the player from 
+      -- Someone might want to stop the player from
       -- starting to play once it's loaded though.
       self.load_music = true
       SDL.audio.loadMusicAsync(data, function(music, e)
-        
+
         if music == nil then
           error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
             .. (e and (" (" .. e .. ")" or "")))

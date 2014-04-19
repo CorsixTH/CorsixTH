@@ -56,14 +56,14 @@ function ScannerRoom:commandEnteringPatient(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
   local do_change = (patient.humanoid_class == "Standard Male Patient") or
     (patient.humanoid_class == "Standard Female Patient")
-  
+
   local --[[persistable:scanner_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].scanner_ready and patient.action_queue[1].scanner_ready then
       staff:finishAction()
       patient:finishAction()
     end
   end
-  
+
   staff:walkTo(stf_x, stf_y)
   staff:queueAction{
     name = "idle",
@@ -75,7 +75,7 @@ function ScannerRoom:commandEnteringPatient(patient)
     name = "use_object",
     object = console,
   }
-  
+
   if do_change then
     patient:walkTo(sx, sy)
     patient:queueAction{
@@ -128,7 +128,7 @@ end
 
 function ScannerRoom:makeHumanoidLeave(patient)
   local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-  
+
   if (patient.humanoid_class == "Stripped Male Patient" or
     patient.humanoid_class == "Stripped Male Patient 2" or
     patient.humanoid_class == "Stripped Female Patient" or
@@ -136,7 +136,7 @@ function ScannerRoom:makeHumanoidLeave(patient)
     patient.humanoid_class == "Stripped Female Patient 2" or
     patient.humanoid_class == "Stripped Female Patient 3") and
     not patient.action_queue[1].is_leaving then
-    
+
     patient:setNextAction{
       name = "walk",
       x = sx,
@@ -169,7 +169,7 @@ function ScannerRoom:dealtWithPatient(patient)
     patient.humanoid_class == "Stripped Female Patient 2" or
     patient.humanoid_class == "Stripped Male Patient 3" or
     patient.humanoid_class == "Stripped Female Patient 3" then
-    
+
     patient:setNextAction{
       name = "walk",
       x = sx,

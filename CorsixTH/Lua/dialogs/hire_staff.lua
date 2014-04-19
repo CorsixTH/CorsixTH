@@ -33,13 +33,13 @@ function UIHireStaff:UIHireStaff(ui)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   self:addKeyHandler("Enter", self.hire)
-  
+
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
   self:addPanel(254, 0,  83)
   self:addPanel(254, 0, 162)
   self:addPanel(255, 0, 241)
-  
+
   -- Left hand side tabs
   local --[[persistable:hire_staff_category]] function category(name, state, btn)
     if #self.world.available_staff[name] == 0 then
@@ -58,15 +58,15 @@ function UIHireStaff:UIHireStaff(ui)
     self:addPanel(268, 8, 166):makeToggleButton(0, 0, 40, 69, 269, category, "Handyman"):setTooltip(_S.tooltip.hire_staff_window.handymen),
     self:addPanel(270, 8, 245):makeToggleButton(0, 0, 40, 69, 271, category, "Receptionist"):setTooltip(_S.tooltip.hire_staff_window.receptionists),
   }
-  
+
   -- Right hand side
   self:addPanel(256,  56,   0) -- Dialog header
   for y = 49, 113, 11 do
     self:addPanel(257,56,   y) -- Dialog background
   end
-  self.ability_bg_panel = 
+  self.ability_bg_panel =
   self:addPanel(260,  55, 114) -- Abilities background
-  self.skill_bg_panel = 
+  self.skill_bg_panel =
   self:addPanel(259,  68,  95):setTooltip(_S.tooltip.hire_staff_window.staff_ability, 109, 95) -- Skill background
   self.skill_bg_panel.visible = false
   self:addPanel(261,  55, 160) -- Wage background
@@ -83,7 +83,7 @@ function UIHireStaff:UIHireStaff(ui)
   self:addPanel(274, 106, 277):makeButton(0, 10, 58, 27, 275, self.hire):setTooltip(_S.tooltip.hire_staff_window.hire)
   self:addPanel(276, 163, 277):makeButton(0, 10, 28, 27, 277, self.close):setTooltip(_S.tooltip.hire_staff_window.cancel)
   self:addPanel(278, 190, 277):makeButton(0, 10, 44, 27, 279, self.moveNext):setTooltip(_S.tooltip.hire_staff_window.next_person)
-  
+
   self:makeTooltip(_S.tooltip.hire_staff_window.salary, 68, 173, 227, 194)
   self:makeTooltip(_S.tooltip.hire_staff_window.doctor_seniority, 68, 44, 151, 95)
   self:makeTooltip(_S.tooltip.hire_staff_window.qualifications, 68, 134, 107, 167)
@@ -91,14 +91,14 @@ function UIHireStaff:UIHireStaff(ui)
   self:makeTooltip(_S.tooltip.hire_staff_window.surgeon, 120, 136, 137, 167)
   self:makeTooltip(_S.tooltip.hire_staff_window.psychiatrist, 137, 136, 164, 167)
   self:makeTooltip(_S.tooltip.hire_staff_window.researcher, 164, 136, 191, 167)
-  
+
   self:updateTooltips()
 end
 
 function UIHireStaff:updateTooltips()
   local cond = not not self.category
   self.tooltip_regions[1].enabled = cond
-  
+
   cond = cond and self.category == "Doctor"
   self.tooltip_regions[2].enabled = cond
   self.tooltip_regions[3].enabled = cond
@@ -126,8 +126,8 @@ function UIHireStaff:hire()
   if not profile then
     self.ui:playSound "wrong2.wav"
     return
-  end  
-  if self.ui.hospital.balance < profile.wage then  
+  end
+  if self.ui.hospital.balance < profile.wage then
     self:cannotAfford()
     self.ui:playSound "wrong2.wav"
     return
@@ -143,12 +143,12 @@ function UIHireStaff:cannotAfford()
   }
   if msg then
     self.world.ui.adviser:say(msg[math.random(1, #msg)])
-  end  
+  end
 end
 function UIHireStaff:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
-  
+
   local font = self.white_font
   local staff = self.world.available_staff
   font:draw(canvas, #staff.Doctor      , x + 16, y +  58, 26, 0)

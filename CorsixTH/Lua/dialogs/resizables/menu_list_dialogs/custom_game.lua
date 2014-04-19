@@ -51,7 +51,7 @@ function UICustomGame:UICustomGame(ui)
       end
       if level_name and level_file then
         items[#items + 1] = {
-          name = level_name, 
+          name = level_name,
           tooltip = _S.tooltip.custom_game_window.start_game_with_name:format(level_file, level_intro),
           level_file = level_file,
           path = path .. file,
@@ -61,7 +61,7 @@ function UICustomGame:UICustomGame(ui)
     end
   end
   self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items, 10, 30)
-  
+
   -- Now add the free build button above the list.
   if not pcall(function()
     local palette = ui.app.gfx:loadPalette("QData", "DrugN01V.pal")
@@ -71,7 +71,7 @@ function UICustomGame:UICustomGame(ui)
     self:close()
     return
   end
-  
+
   self:addBevelPanel(20, 40, 200, 20, self.col_bg):setLabel(_S.custom_game_window.free_build).lowered = true
   local button =  self:addPanel(12, 230, 36):makeToggleButton(0, 0, 29, 29, 11, self.buttonFreebuild)
     :setTooltip(_S.tooltip.custom_game_window.free_build)

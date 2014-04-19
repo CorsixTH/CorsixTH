@@ -23,7 +23,7 @@ class "UIConfirmDialog" (Window)
 
 function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
-  
+
   local app = ui.app
   self.modal_class = "information"
   self.esc_closes = true
@@ -55,7 +55,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
     :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
-  
+
   self:addKeyHandler("Enter", self.ok)
 end
 
@@ -85,7 +85,7 @@ end
 
 function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  
+
   x, y = x + self.x, y + self.y
   self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153)
 end

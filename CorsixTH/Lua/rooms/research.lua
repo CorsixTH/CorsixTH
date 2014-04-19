@@ -25,15 +25,15 @@ room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
 room.long_name = _S.rooms_long.research_room
 room.tooltip = _S.tooltip.rooms.research_room
-room.objects_additional = { 
-  "extinguisher", 
-  "radiator", 
-  "plant", 
-  "bin", 
-  "computer", 
-  "desk", 
+room.objects_additional = {
+  "extinguisher",
+  "radiator",
+  "plant",
+  "bin",
+  "computer",
+  "desk",
   "cabinet",
-  "analyser" } 
+  "analyser" }
 room.objects_needed = { desk = 1, cabinet = 1, autopsy = 1 }
 room.build_preview_animation = 5102
 room.categories = {
@@ -65,7 +65,7 @@ local staff_usage_objects = {
 function ResearchRoom:doStaffUseCycle(staff, previous_object)
   local obj, ox, oy = self.world:findFreeObjectNearToUse(staff,
     staff_usage_objects, "near", previous_object)
-  
+
   if obj then
     obj.reserved_for = staff
     staff:walkTo(ox, oy)
@@ -89,7 +89,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
       staff:queueAction {
         name = "use_object",
         object = obj,
-        after_use = --[[persistable:research_obj_after_use]] function() 
+        after_use = --[[persistable:research_obj_after_use]] function()
           if obj.object_type.id == "computer" then
             self.hospital.research:addResearchPoints(500)
           elseif obj.object_type.id == "analyser" then
@@ -100,7 +100,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
       }
     end
   end
-  
+
   local num_meanders = math.random(2, 4)
   staff:queueAction {
     name = "meander",
@@ -225,7 +225,7 @@ end
 
 function ResearchRoom:afterLoad(old, new)
   if old < 56 then
-    self.hospital.research_dep_built = true 
+    self.hospital.research_dep_built = true
   end
 end
 return room

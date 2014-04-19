@@ -42,7 +42,7 @@ function UIStaff:changeParcel()
   if not self.staff.hospital.ownedPlots[index + 1] then
     self.staff.parcelNr = 0
   else
-    self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1] 
+    self.staff.parcelNr = self.staff.hospital.ownedPlots[index + 1]
   end
 end
 
@@ -59,7 +59,7 @@ end
 
 function UIStaff:UIStaff(ui, staff)
   self:Window()
-  
+
   local app = ui.app
   local profile = staff.profile
   self.esc_closes = true
@@ -76,7 +76,7 @@ function UIStaff:UIStaff(ui, staff)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req01V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
-  
+
   self:addPanel(297,   15,   0) -- Dialog header
   for y = 51, 121, 10 do
     self:addPanel(298, 15,   y) -- Dialog background
@@ -85,7 +85,7 @@ function UIStaff:UIStaff(ui, staff)
   self:addPanel(300,  105,  82) -- Tiredness
   self:addPanel(301,   15, 114) -- Skills/Abilities
   self:addColourPanel(35, 51, 71, 81, 208, 252, 252):makeButton(0, 0, 71, 81, nil, self.openStaffManagement):setTooltip(_S.tooltip.staff_window.face) -- Portrait background
-  
+
   if profile.humanoid_class == "Handyman" then
     self:addPanel(311,  15, 131) -- Tasks top
     for y = 149, 184, 5 do
@@ -113,16 +113,16 @@ function UIStaff:UIStaff(ui, staff)
   end
 
   self:addPanel(305, 178,  18):makeButton(0, 0, 24, 24, 306, self.close):setTooltip(_S.tooltip.staff_window.close)
-  
+
   self:makeTooltip(_S.tooltip.staff_window.name, 33, 19, 172, 42)
   self:makeTooltip(_S.tooltip.staff_window.happiness, 113,  49, 204,  74)
   self:makeTooltip(_S.tooltip.staff_window.tiredness, 113,  74, 204, 109)
   self:makeTooltip(_S.tooltip.staff_window.ability,   113, 109, 204, 134)
-  
+
   if profile.humanoid_class == "Doctor" then
     self:makeTooltip(_S.tooltip.staff_window.doctor_seniority, 30, 141, 111, 182)
     self:makeTooltip(_S.tooltip.staff_window.skills, 111, 146, 141, 179)
-    
+
     local skill_to_string = {
       is_surgeon = _S.tooltip.staff_window.surgeon,
       is_psychiatrist = _S.tooltip.staff_window.psychiatrist,
@@ -135,15 +135,15 @@ function UIStaff:UIStaff(ui, staff)
         end
       end
     end
-    
+
     self:makeDynamicTooltip(skill_tooltip("is_surgeon"),      143, 148, 155, 177)
     self:makeDynamicTooltip(skill_tooltip("is_psychiatrist"), 155, 148, 177, 177)
     self:makeDynamicTooltip(skill_tooltip("is_researcher"),   177, 148, 202, 177)
   end
-  
+
   -- window for handyman is slightly different
   local offset = profile.humanoid_class == "Handyman" and 27 or 0
-  
+
   self:makeTooltip(_S.tooltip.staff_window.salary, 90, 191 + offset, 204, 214 + offset)
   -- Non-rectangular tooltip has to be realized with dynamic tooltip at the moment
   self:makeDynamicTooltip(--[[persistable:staff_dialog_center_tooltip]]function(x, y)
@@ -151,7 +151,7 @@ function UIStaff:UIStaff(ui, staff)
       return _S.tooltip.staff_window.center_view
     end
   end, 17, 211 + offset, 92, 286 + offset)
-  
+
 end
 
 function UIStaff:getStaffPosition(dx, dy)
@@ -167,7 +167,7 @@ function UIStaff:draw(canvas, x_, y_)
   local px, py = self:getStaffPosition(37, 61)
   self.ui.app.map:draw(canvas, px, py, 75, 75, x + 17, y + self.height - 93)
   Window.draw(self, canvas, x_, y_)
-  
+
   local profile = self.staff.profile
   local font = self.white_font
 
@@ -200,7 +200,7 @@ function UIStaff:draw(canvas, x_, y_)
   else
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 199) -- Wage
   end
-  
+
   if self.staff.attributes["happiness"] then
     local happiness_bar_width = math_floor(self.staff.attributes["happiness"] * 40 + 0.5)
     if happiness_bar_width ~= 0 then
@@ -209,7 +209,7 @@ function UIStaff:draw(canvas, x_, y_)
       end
     end
   end
-  
+
   local fatigue_bar_width = 40.5
   if self.staff.attributes["fatigue"] then
     fatigue_bar_width = math_floor((1 - self.staff.attributes["fatigue"]) * 40 + 0.5)
@@ -219,14 +219,14 @@ function UIStaff:draw(canvas, x_, y_)
       self.panel_sprites:draw(canvas, 349, x + 139 + dx, y + 89)
     end
   end
-  
+
   local skill_bar_width = math_floor(profile.skill * 40 + 0.5)
   if skill_bar_width ~= 0 then
     for dx = 0, skill_bar_width - 1 do
       self.panel_sprites:draw(canvas, 350, x + 139 + dx, y + 120)
     end
   end
-  
+
   if profile.humanoid_class == "Doctor" then
     -- Junior / Doctor / Consultant marker
     if profile.is_junior then
@@ -247,7 +247,7 @@ function UIStaff:draw(canvas, x_, y_)
       self.panel_sprites:draw(canvas, 346, x + 178, y + 153)
     end
   end
-  
+
   profile:drawFace(canvas, x + 38, y + 54, self.face_parts) -- Portrait
 end
 

@@ -27,7 +27,7 @@ class "UIMenuBar" (Window)
 
 function UIMenuBar:UIMenuBar(ui)
   self:Window()
-  
+
   local app = ui.app
   self.ui = ui
   self.on_top = true
@@ -47,7 +47,7 @@ function UIMenuBar:UIMenuBar(ui)
   -- The list of menus which should be displayed
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
-  
+
   self:makeMenu(app)
 end
 
@@ -160,20 +160,20 @@ function UIMenuBar:draw(canvas)
   panel_sprites_draw(panel_sprites, canvas, 3, x,  0)
   panel_sprites_draw(panel_sprites, canvas, 6, x,  6)
   panel_sprites_draw(panel_sprites, canvas, 9, x, 10)
-  
+
   for _, menu in ipairs(self.menus) do
     self.white_font:draw(canvas, menu.title, menu.x, menu.y, 0, menu.height)
   end
   for _, menu in ipairs(self.open_menus) do
     self:drawMenu(menu, canvas)
   end
-  
+
   -- Draw clock
-  if self.ui.app.config.twentyfour_hour_clock then  
+  if self.ui.app.config.twentyfour_hour_clock then
     self.white_font:draw(canvas, os.date("%H:%M"), self.width-45, 2,  0)
   else
     self.white_font:draw(canvas, os.date("%I:%M %p"), self.width-65, 2,  0)
-  end  
+  end
 end
 
 function UIMenuBar:drawMenu(menu, canvas)
@@ -184,12 +184,12 @@ function UIMenuBar:drawMenu(menu, canvas)
   menu.render_list:draw(canvas, x, y)
   canvas:nonOverlapping(false)
   local btmy = y + h - 6
-  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)  
+  panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
   for y = y + 6, y + h - 6, 4 do
     panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
   end
   panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
-  
+
   x = menu.x
   y = menu.y + 4
   for i, item in ipairs(menu.items) do
@@ -433,7 +433,7 @@ function UIMenuBar:calculateMenuSize(menu)
     local render_list = TH.spriteList()
     menu.render_list = render_list
     render_list:setSheet(self.panel_sprites)
-    
+
     render_list:append(1, 0, 0)
     for x = 10, w - 10, 10 do
       render_list:append(2, x, 0)
@@ -448,8 +448,8 @@ function UIMenuBar:calculateMenuSize(menu)
     render_list:append(7, 0, btmy)
     for x = 10, w - 10, 10 do
       render_list:append(8, x, btmy)
-    end    
-    
+    end
+
   end
 end
 
@@ -519,7 +519,7 @@ function UIMenuBar:makeMenu(app)
     :appendItem(_S.menu_file.restart, function() app:restart() end)
     :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
-  
+
   local options = UIMenu()
   if app.audio.has_bg_music then
     local function vol(level, setting)
@@ -546,7 +546,7 @@ function UIMenuBar:makeMenu(app)
           ""
       end
     end
-    
+
     local function appendVolume(setting)
       local menu = UIMenu() -- The three Volume menus
       for level = 10, 100, 10 do
@@ -554,53 +554,53 @@ function UIMenuBar:makeMenu(app)
       end
       return menu
     end
-    
+
   options:appendCheckItem(_S.menu_options.sound,
     app.config.play_sounds,
-    function(item) 
-      app.audio:playSoundEffects(item.checked) 
+    function(item)
+      app.audio:playSoundEffects(item.checked)
       app:saveConfig()
     end,
     nil,
-    function() 
-      return app.config.play_sounds 
+    function()
+      return app.config.play_sounds
     end)
-     
-    
+
+
   options:appendCheckItem(_S.menu_options.announcements,
-    app.config.play_announcements, 
-    function(item)  
-      app.config.play_announcements = item.checked 
-      app:saveConfig()   
+    app.config.play_announcements,
+    function(item)
+      app.config.play_announcements = item.checked
+      app:saveConfig()
     end,
     nil,
-    function() 
-      return app.config.play_announcements 
+    function()
+      return app.config.play_announcements
     end)
-    
+
   local function musicStatus(item)
     return not not app.audio.background_music and not app.audio.background_paused
-  end 
-    
+  end
+
  options:appendCheckItem(_S.menu_options.music,
-    app.config.play_music, 
+    app.config.play_music,
     function(item)
       app.config.play_music = item.checked
       self.ui:togglePlayMusic(item)
-      app:saveConfig()    
+      app:saveConfig()
     end,
     nil,
-    function(musicStatus) 
-      return app.config.play_music 
-    end) 
-    
-    options    
+    function(musicStatus)
+      return app.config.play_music
+    end)
+
+    options
     :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
     :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
-    :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))    
+    :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
     :appendItem(_S.menu_options.jukebox, function() self.ui:addWindow(UIJukebox(app)) end)
   end
-  
+
   local function boolean_runtime_config(option)
     return not not app.runtime_config[option], function(item)
       app.runtime_config[option] = item.checked
@@ -613,35 +613,35 @@ function UIMenuBar:makeMenu(app)
     function(item) app.config.prevent_edge_scrolling = not item.checked end,
     nil,
     function() return not app.config.prevent_edge_scrolling end)
-       
-  options:appendCheckItem(_S.menu_options.adviser_disabled, 
+
+  options:appendCheckItem(_S.menu_options.adviser_disabled,
     not app.config.adviser_disabled,
-    function(item) 
+    function(item)
       app.config.adviser_disabled = not item.checked
-      app:saveConfig() 
+      app:saveConfig()
     end,
     nil,
-    function() 
+    function()
       return not app.config.adviser_disabled
     end)
 
-  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock, 
+  options:appendCheckItem(_S.menu_options.twentyfour_hour_clock,
     app.config.twentyfour_hour_clock,
     function(item)
       app.config.twentyfour_hour_clock = item.checked
       app:saveConfig()
     end)
-    
+
   local function temperatureDisplay(method)
     return method == 1, function()
       app.world.map:setTemperatureDisplayMethod(method)
-    end, "", function () 
+    end, "", function ()
       return app.world.map.temperature_display_method == method
-    end      
+    end
   end
 
   local function wageIncreaseRequests(grant)
-    return grant, function() 
+    return grant, function()
       app.world:getLocalPlayerHospital().policies.grant_wage_increase = grant
     end, "", function ()
       if app.world:getLocalPlayerHospital().policies.grant_wage_increase == nil then
@@ -650,18 +650,18 @@ function UIMenuBar:makeMenu(app)
       return app.world:getLocalPlayerHospital().policies.grant_wage_increase == grant
     end
   end
-   
+
   options:appendMenu(_S.menu_options.wage_increase, UIMenu()
     :appendCheckItem(_S.menu_options_wage_increase.grant, wageIncreaseRequests(true))
     :appendCheckItem(_S.menu_options_wage_increase.deny, wageIncreaseRequests(false))
   )
-    
+
   options:appendMenu(_S.menu_options.warmth_colors, UIMenu()
     :appendCheckItem(_S.menu_options_warmth_colors.choice_1, temperatureDisplay(1))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_2, temperatureDisplay(2))
     :appendCheckItem(_S.menu_options_warmth_colors.choice_3, temperatureDisplay(3))
   )
-  
+
   local function rate(speed)
     return speed == "Normal", function()
       app.world:setSpeed(speed)
@@ -669,7 +669,7 @@ function UIMenuBar:makeMenu(app)
       return app.world:isCurrentSpeed(speed)
     end
   end
-  
+
   options:appendMenu(_S.menu_options.game_speed, UIMenu()
     :appendCheckItem(_S.menu_options_game_speed.pause,              rate("Pause"))
     :appendCheckItem(_S.menu_options_game_speed.slowest,            rate("Slowest"))

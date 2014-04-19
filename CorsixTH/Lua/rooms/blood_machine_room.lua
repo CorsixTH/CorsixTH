@@ -52,7 +52,7 @@ function BloodMachineRoom:commandEnteringPatient(patient)
   local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")
   local orientation = machine.object_type.orientations[machine.direction]
   local pat_x, pat_y = machine:getSecondaryUsageTile()
-  
+
   staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
   patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
   patient:queueAction{name = "idle", direction = machine.direction == "north" and "west" or "north"}
@@ -69,13 +69,13 @@ function BloodMachineRoom:commandEnteringPatient(patient)
         action.prolonged_usage = false
       end
       length = length - 1
-    end, 
+    end,
     after_use = --[[persistable:blood_machine_after_use]] function()
       staff:setNextAction{name = "meander"}
       self:dealtWithPatient(patient)
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

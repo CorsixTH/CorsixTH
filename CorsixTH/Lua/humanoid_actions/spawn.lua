@@ -45,7 +45,7 @@ local function action_spawn_start(action, humanoid)
     return
   end
   action.must_happen = true
-  
+
   local anims = humanoid.walk_anims
   local walk_dir = action.point.direction
   if action.mode == "spawn" then

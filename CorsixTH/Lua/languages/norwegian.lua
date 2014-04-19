@@ -22,14 +22,14 @@ SOFTWARE.
    READ BEFORE DOING ANY CHANGES
 -------------------------------------------------------------------------------
 
-Since the norwegian language isn't in the original Theme Hospital game, this 
-file is split in two sections (A and B). The first section contains all the new 
-language strings, made by the Corsix-TH team, and the second section contains 
+Since the norwegian language isn't in the original Theme Hospital game, this
+file is split in two sections (A and B). The first section contains all the new
+language strings, made by the Corsix-TH team, and the second section contains
 the override translation of all the original english strings.
 
 FORMATING AND NORWEGIAN LETTERS
-This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the 
-norwegian letters ø and Ø, you must use the old-style ö and Ö instead. That is 
+This file contains UTF-8 text. Make sure your editor is set to UTF-8. For the
+norwegian letters ø and Ø, you must use the old-style ö and Ö instead. That is
 because the letters ø and Ø is not included in the original ingame-font.
 
 
@@ -37,7 +37,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 -------------------------------------------------------------------------------
     Table of Contents
 -------------------------------------------------------------------------------
- 
+
  -- SECTION A - NEW STRINGS
 
    1. Global settings
@@ -47,9 +47,9 @@ because the letters ø and Ø is not included in the original ingame-font.
    5. Adviser
    6. Dynamic info
    7. Tooltip
- 
+
  -- SECTION B - OLD STRINGS (OVERRIDE)
- 
+
    Huge section with all original strings, translated from english.
 
 
@@ -99,7 +99,7 @@ tooltip.fax.close = "Lukk dette vinduet uten å slette meldingen"
 tooltip.message.button = "Venstreklikk for å lese faksen"
 tooltip.message.button_dismiss = "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den"
 
--- 4. Menu 
+-- 4. Menu
 menu_options = {
   lock_windows = "  LÅS VINDUER  ",
   edge_scrolling = "  KANTSCROLLING  ",
@@ -284,7 +284,7 @@ folders_window = {
   music_location = "Velg banen du vil bruke for musikk",
   data_label = "TH-data", --todo: annet ordvalg? "TH Data"
 }
-  
+
 tooltip.folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
   browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
   screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
@@ -341,19 +341,19 @@ cheats_window = {
   close = "Lukk",
   caption = "Juksekoder",
   warning = "Advarsel: Du vil ikke få noen bonuspoeng på slutten av nivået om du bruker juksekoder!",
-  
+
   cheated = {
     no = "Juksekoder benyttet: Nei",
     yes = "Juksekoder benyttet: Ja",
   },
-  
+
   cheats = {
     end_month = "Slutten av måneden",
     emergency = "Lag nödstilfelle",
     win_level = "Vinn nivå",
     create_patient = "Lag pasient",
     vip = "Lag VIP",
-    money = "Penger", 
+    money = "Penger",
     lose_level = "Tap nivå",
     all_research = "All forskning",
     end_year = "Slutten av året",
@@ -376,7 +376,7 @@ tooltip.cheats_window = {
   earthquake = "Forårsaker et jordskjelv.",
   },
 }
-  
+
 new_game_window = {
   easy = "Turnuslege (Lett)",
   medium = "Lege (Medium)",
@@ -401,7 +401,7 @@ customise_window = {
   volume = "Hurtigtast volumsenking",
   caption = "Egendefinerte innstillinger",
   fractured_bones = "Benbrudd",
-  average_contents = "Gjennomsnittlig rominnhold", 
+  average_contents = "Gjennomsnittlig rominnhold",
   aliens = "Utenomjordiske pasienter",
 }
 
@@ -420,7 +420,7 @@ volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du 
 fractured_bones_button = "Slå denne innstillingen på eller av",
 fractured_bones = "På grunn av mangelfulle animasjoner har vi gjort stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
 aliens_button = "Slå denne innstillingen på eller av",
-average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne", 
+average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
 }
 
 tooltip.new_game_window = {
@@ -631,7 +631,7 @@ staff_descriptions = {
     [14] = "Slu, utspekulert og baksnakker andre. ",
     [15] = "Arrogant og ovenpå. ",
   },
-} 
+}
 
 -- Staff list
 staff_list = {
@@ -774,7 +774,7 @@ graphs = {
   cures      = "Kurerte",
   deaths     = "Dödsfall",
   reputation = "Omdömme",
-  
+
   time_spans = {
     "1 år",
     "12 år",
@@ -849,7 +849,7 @@ town_map = {
   chat         = "Bykart Chat",
   for_sale     = "Til salgs",
   not_for_sale = "Ikke til salgs",
-  number       = "Tomt nummer", 
+  number       = "Tomt nummer",
   owner        = "Tomt eier",
   area         = "Tomt område",
   price        = "Tomt pris",
@@ -863,7 +863,7 @@ rooms_short = {
   reception         = "Resepsjon",
   destroyed         = "Ödelagt",
   corridor_objects  = "Korridorgjenstander",
-  
+
   gps_office        = "Allmennpraksis",
   psychiatric       = "Psykiatri",
   ward              = "Sykestue",
@@ -895,7 +895,7 @@ rooms_long = {
   general           = "Generell", -- unused?
   emergency         = "Nödstilfelle",
   corridors         = "Korridorer",
-  
+
   gps_office        = "Allmennpraksis",
   psychiatric       = "Psykiatri",
   ward              = "Sykestue",
@@ -1076,7 +1076,7 @@ research = {
     improvements    = "Forbedringer",
     specialisation  = "Spesialisering",
   },
-  
+
   funds_allocation  = "Tildelt fondmiddel",
   allocated_amount  = "Tildelt belöp",
 }
@@ -1094,7 +1094,7 @@ policy = {
   diag_termination  = "diagnostisering",
   staff_rest        = "pauserutiner",
   staff_leave_rooms = "forlate rom",
-  
+
   sliders = {
     guess           = "GJETT KUR", -- belongs to diag_procedure
     send_home       = "SEND HJEM", -- also belongs to diag_procedure
@@ -1281,7 +1281,7 @@ high_score = {
   best_scores  = "HALL OF FAME",
   worst_scores = "HALL OF SHAME",
   killed       = "Drepte", -- is this used?
-  
+
   categories = {
     money             = "RIKEST",
     salary            = "HÖYESTE LÖNN",
@@ -1412,7 +1412,7 @@ trophy_room = {
       trophies = {
         [1] = "Du er herved tildelt statsrådens pris for de mest plettfrie standarder og höyest mulig omdömme i år. Bra gjort.",
         [2] = "Gratulerer. Du mottar GnukkiRen-Troféet for sykehuset med best omdömme det siste året. Vel fortjent er det også.",
-      }, 
+      },
   },
   all_cured = {
     awards = {
@@ -1569,7 +1569,7 @@ casebook = {
 
 -- Tooltips
 tooltip = {
-  
+
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -1581,7 +1581,7 @@ tooltip = {
     cost               = "Kostnad for gjeldende rom",
     close              = "Avbryt prosessen og returner til spillet",
   },
-  
+
   -- Toolbar
   toolbar = {
     bank_button        = "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
@@ -1600,7 +1600,7 @@ tooltip = {
     charts             = "Diagrammer",
     policy             = "Sykehuspolicy",
   },
-  
+
   -- Hire staff window
   hire_staff_window = {
     doctors            = "Vis Leger tilgjengelig på arbeidsmarkedet",
@@ -1619,7 +1619,7 @@ tooltip = {
     psychiatrist       = "Psykiater",
     researcher         = "Forsker",
   },
-  
+
   -- Buy objects window
   buy_objects_window = {
     price              = "Pris på gjenstand",
@@ -1629,7 +1629,7 @@ tooltip = {
     increase           = "Kjöp en til av denne gjenstanden",
     decrease           = "Kjöp en mindre av denne gjenstanden",
   },
-  
+
   -- Staff list
   staff_list = {
     doctors            = "Se en oversikt over dine Leger",
@@ -1660,7 +1660,7 @@ tooltip = {
     researcher_train   = "%d%% ferdig med fordypning innen forskning", -- %d (percentage trained)
     skills             = "Ekstra evner",
   },
-  
+
   -- Queue window
   queue_window = {
     num_in_queue       = "Antall pasienter i köen",
@@ -1681,7 +1681,7 @@ tooltip = {
       hospital_3       = "Henvis pasienten til et annet sykehus",
     },
   },
-  
+
   -- Main menu
   main_menu = {
     new_game           = "Start en ny karriere",
@@ -1739,8 +1739,8 @@ tooltip = {
     repair             = "Kall på Vaktmester for å fikse maskinen",
     replace            = "Erstatt maskin",
   },
-  
-  
+
+
   -- Handyman window
   -- Apparently handymen have their own set of strings (partly) containing "handyman".
   -- We could just get rid of this category and include the three prios into staff_window.
@@ -1760,7 +1760,7 @@ tooltip = {
     pick_up            = "Plukk opp",
     parcel_select      = "Steder hvor Vaktmesteren utförer oppgaver. Klikk for å endre innstilling.",
   },
-  
+
   -- Place objects window
   place_objects_window = {
     cancel             = "Avbryt",
@@ -1768,7 +1768,7 @@ tooltip = {
     pick_up            = "Plukk opp en gjenstand",
     confirm            = "Bekreft",
   },
-  
+
   -- Casebook
   casebook = {
     up                 = "Rull oppover",
@@ -1791,7 +1791,7 @@ tooltip = {
       machine          = "Denne sykdommen krever en maskin for behandling",
       unknown          = "Du vet ikke hvordan du skal behandle denne sykdommen enda",
     },
-    
+
     cure_requirement = {
       possible         = "Du kan gjennomföre behandling",
       research_machine = "Du må forske på maskiner for å gjennomföre behandlingen",
@@ -1805,12 +1805,12 @@ tooltip = {
       not_possible     = "Du kan ikke håndtere denne behandlingen enda",
     },
   },
-  
+
   -- Statement
   statement = {
     close              = "Lukk kontoutskriften",
   },
-  
+
   -- Research
   research = {
     close              = "Gå ut av forskningsavdelingen",
@@ -1826,7 +1826,7 @@ tooltip = {
     specialisation_inc = "Ök prioritering av forskning på spesialiseringer",
     allocated_amount   = "Penger satt av til forskning",
   },
-  
+
   -- Graphs
   graphs = {
     close              = "Gå ut av diagramvinduet",
@@ -1855,7 +1855,7 @@ tooltip = {
     balance            = "Balanse",
     close              = "Lukk områdekart",
   },
-  
+
   -- Jukebox.
   jukebox = {
     current_title      = "Jukebox",
@@ -1866,7 +1866,7 @@ tooltip = {
     stop               = "Stopp jukebox",
     loop               = "Repeter jukebox",
   },
-  
+
   -- Bank Manager
   bank_manager = {
     hospital_value     = "Nåværende verdi på sykehuset ditt",
@@ -1883,7 +1883,7 @@ tooltip = {
     graph              = "Forventet tilbakebetalingsplan fra %s", -- %s (name of debitor)
     graph_return       = "Returner til forrige visning",
   },
-  
+
   -- Status
   status = {
     percentage_cured   = "Du må kurere %d% besökende på sykehuset ditt. Nå har du kurert %d%",
@@ -1901,7 +1901,7 @@ tooltip = {
     num_cured        = "Du må kurere %d mennesker. Så langt har du kurert %d",
     happiness          = "Gjennomsnittlig humör på personene på ditt sykehus",
   },
-  
+
   -- Policy
   policy = {
     close              = "Lukk sykehuspolicy",
@@ -1911,20 +1911,20 @@ tooltip = {
     diag_termination   = "En pasients diagnostisering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
     staff_rest         = "Hvor trött personalet må være för de kan hvile",
   },
-  
+
   -- Pay rise window
   pay_rise_window = {
     accept             = "Imötekom kravene",
     decline            = "Ikke godta kravene - Si opp istedenfor",
   },
-  
+
   -- Watch
   watch = {
     hospital_opening   = "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE-knappen, så vil sykehuset åpne umiddelbart.",
     emergency          = "Nödstilfelle: Tid som gjenstår til å behandle alle akutte pasienter.",
     epidemic           = "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, så kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en Sykepleier til å vaksinere dem.",
   },
-  
+
   -- Rooms
   rooms = {
     gps_office         = "Pasientene får sin förste konsultasjon og tilhörende resultater på Allmennpraksisen",
@@ -1952,7 +1952,7 @@ tooltip = {
     toilets            = "Bygg toaletter for å få pasientene til å stoppe å skitne til sykehuset!",
     decontamination    = "En Lege bruker Saneringsdusjen for å behandle pasienter med Alvorlig Stråling",
   },
-  
+
   -- Objects
   objects = {
     -- NB: most objects do not have a tooltip because they're not (extra-)buyable
@@ -2022,7 +2022,7 @@ tooltip = {
 
 -- 32. Adviser
 adviser = {
-  
+
   -- Tutorial
   tutorial = {
     start_tutorial         = "Les Oppdragsbriefingen og klikk venstre museknapp for å starte innföring.",
@@ -2061,7 +2061,7 @@ adviser = {
     room_big_enough         = "Blåkopien er nå stor nok. Når du slipper museknappen, plasserer du den. Du kan allikevel fortsette å flytte den eller endre störrelse om du vil.",
     build_pharmacy           = "Gratulerer! Nå må du bygge et Apotek og ansette en Sykepleier for å ha et fungerende sykehus.",
   },
-  
+
   -- Cheats
   cheats = {
     th_cheat = "Gratulerer du har låst opp juksekodene!",
@@ -2074,14 +2074,14 @@ adviser = {
     bloaty_cheat = "Ballonghode-kode aktivert!",
     bloaty_off_cheat = "Ballonghode-kode deaktivert.",
   },
-  
+
   -- Epidemic
   epidemic = {
     hurry_up         = "Om du ikke tar deg av epidemien nå, får du store problemer. Fort deg!",
     serious_warning     = "Den smittsomme sykdomen begynner å bli et seriöst problem. Du må gjöre noe snart!",
     multiple_epidemies     = "Det ser ut som at du har mer enn en epidemi gående samtidig. Dette kan bli en enorm katastrofe, så fort deg.",
   },
-  
+
   -- Staff advice
   staff_advice = {
     need_handyman_machines   = "Du må ansette Vaktmestre om du vil holde maskinene dine ved like.",
@@ -2092,20 +2092,20 @@ adviser = {
     too_many_doctors     = "Du har for mange Leger. Noen av dem har ingenting å gjöre.",
     too_many_nurses     = "Jeg tror du har for mange Sykepleiere.",
   },
-  
+
   -- Earthquake
   earthquake = {
     damage     = "Det jordskjelvet skadet %d maskiner og %d pasienter på sykehuset.", -- %d (count machines), &d (count patients)
     alert     = "Jordskjelv-varsel. Under et jordskjelv blir maskinene dine skadet. De kan bli ödelagt om de er dårlig vedlikeholdt.",
     ended     = "Puh. Jeg trodde det var et stort skjelv - Det målte %d på Richters skala.",
   },
-  
+
   -- Multiplayer
   multiplayer = {
     objective_completed       = "Du har fullfört utfordringene for dette nivået. Gratulerer!",
     everyone_failed         = "Ingen klarte de forrige utfordringene. Så alle får spille videre !",
     players_failed           = "Fölgende spiller(e) klarte ikke den forrige utfordringen : ",
-    
+
     poaching = {
       in_progress           = "Jeg skal si ifra om denne personen vil komme å jobbe for deg.",
       not_interested         = "Ha! De er ikke interessert i å jobbe for deg - de har det bra der de er.",
@@ -2113,19 +2113,19 @@ adviser = {
     },
     objective_failed         = "Du har ikke lykkes i å fullföre utfordringene.",
   },
-  
+
   -- Surgery requirements
   surgery_requirements = {
     need_surgeons_ward_op   = "Du trenger to Kirurger og en Sykestue i tillegg til Operasjonssal for å gjöre kirurgiske inngrep.",
     need_surgeon_ward     = "Du trenger en Kirurg til og en Sykestue for å gjöre kirurgiske inngrep.",
   },
-  
+
   -- Vomit wave
   vomit_wave = {
     started   = "Ser ut som du har et magevirus på sykehuset ditt. Om du hadde holdt det renere ville ikke dette skjedd. Kanskje du burde hatt flere Vaktmestre.",
     ended     = "Puh! Ser ut som viruset som forårsaket bölgen med oppkast er så godt som borte. Hold sykehuset ditt rent i fremtiden.",
   },
-  
+
   -- Level progress
   level_progress = {
     nearly_won       = "Du har nesten fullfört dette nivået nå.",
@@ -2144,7 +2144,7 @@ adviser = {
     cured_enough_patients   = "Du har kurert nok pasienter, men du trenger å få sykehuset ditt i bedre stand for å vinne dette nivået.",
     improve_reputation   = "Du må forbedre omdömmet ditt med %d for å ha en sjanse til å vinne dette nivået.",
   },
-  
+
   -- Staff place advice
   staff_place_advice = {
     receptionists_only_at_desk     = "Resepsjonister kan kun jobbe i Resepsjoner.",
@@ -2156,7 +2156,7 @@ adviser = {
     nurses_cannot_work_in_room     = "%s kan ikke håndteres av Sykepleiere",
     doctors_cannot_work_in_room   = "%s kan ikke håndteres av Leger",
   },
-  
+
   -- Research
   research = {
     machine_improved         = "%s er forbedret av Forskningsavdelingen.",
@@ -2168,21 +2168,21 @@ adviser = {
     new_available           = "En ny %s er tilgjengelig.",
     new_drug_researched       = "En ny medisin for å kurere %s er utviklet.",
   },
-  
+
   -- Boiler issue
   boiler_issue = {
     minimum_heat   = "Der er du! Sentralfyren i kjelleren er gått i stykker. Ser ut som at personene på sykehuset ditt kommer til å fryse litt.",
     maximum_heat   = "Sentralfyren i kjelleren er löpt löpsk. Radiatorene har hengt seg opp på maksimal varme. Folk kommer til å smelte! Plasser ut flere Brusautomater.",
     resolved     = "Gode nyheter. Sentralvarmen fungerer slik som den skal nå. Temperaturen skal nå være grei både for pasientene og personalet.",
   },
-  
+
   -- Competitors
   competitors = {
     staff_poached     = "En av dine ansatte har fått seg jobb på et annet sykehus.",
     hospital_opened   = "Et konkurrerende sykehus er åpnet i området av %s.",
     land_purchased     = "%s har akkurat kjöpt en tomt.",
   },
-  
+
   -- Room requirements
   room_requirements = {
     research_room_need_researcher   = "Du må ansette en Lege med spesialisering innenfor Forskning for å kunne ta i bruk Forskningsavdelingen.",
@@ -2196,7 +2196,7 @@ adviser = {
     training_room_need_consultant   = "Du må ansette en Konsulent som kan undervise i Klasserommet.",
     gps_office_need_doctor       = "Du må ansette en Lege som kan jobbe på Allmennpraksisen.",
   },
-  
+
   -- Goals
   goals = {
     win = {
@@ -2209,7 +2209,7 @@ adviser = {
       kill       = "Drep %d pasienter til for å tape dette nivået!",
     },
   },
-  
+
   -- Warnings
   warnings = {
     charges_too_low       = "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre pr. pasient.",
@@ -2298,7 +2298,7 @@ adviser = {
     no_desk_4 = "En Resepsjonist må ha sin egen arbeidsplass for å motta pasientene som ankommer",
     no_desk_5 = "Det var på tide! Du burde se noen pasienter ankomme snart.",
     no_desk_6 = "Du har en Resepsjonist, så hva med å sette opp en resepsjon hun kan jobbe i?",
-    no_desk_7 = "Du har bygd en resepsjon, så hva med å ansette en Resepsjonist? Du får ingen pasienter för du har fikset dette!", 
+    no_desk_7 = "Du har bygd en resepsjon, så hva med å ansette en Resepsjonist? Du får ingen pasienter för du har fikset dette!",
     nurse_needs_desk_1 = "Hver Sykepleier trenger sin egen kontorpult å arbeide ved.",
     nurse_needs_desk_2 = "Sykepleieren din er glad for at du har gitt henne en pause. Om hensikten var å ha mer enn én Sykepleier arbeidende her, så må du gi dem begge en kontorpult.",
     cannot_afford = "Du har ikke nok penger på konto til å ansette denne personen!",
@@ -2315,7 +2315,7 @@ adviser = {
     researcher_needs_desk_1 = "En Forsker må ha et skrivebord for å kunne arbeide.",
     researcher_needs_desk_3 = "Hver Forsker må ha hvert sitt skrivebord for å kunne gjöre jobben sin.",
   },
-  
+
   -- Placement info
   placement_info = {
     door_can_place       = "Du kan plassere dören her, om du vil.",
@@ -2331,14 +2331,14 @@ adviser = {
     window_cannot_place   = "Ah. Du kan faktisk ikke plassere vinduet her.",
     reception_cannot_place   = "Du kan ikke plassere Resepsjonen her.",
   },
-  
+
   -- Praise
   praise = {
     many_benches   = "Pasientene har nok sitteplasser nå. Fint.",
     many_plants   = "Flott. Du har mange planter. Pasientene vil sette pris på det.",
     patients_cured   = "%d pasienter kurert.",
   },
-  
+
   -- Information
   information = {
     larger_rooms           = "Större rom gjör at de ansatte föler seg viktigere, og det forbedrer deres prestasjoner.",
@@ -2358,7 +2358,7 @@ adviser = {
     pay_rise             = "En av dine ansatte truer med å si opp. Velg om du vil gå med på lönnskravene eller om du vil sparke han/henne. Klikk på ikonet nede i venstre hjörne for å se hvem som truer med oppsigelse.",
     place_windows           = "Vinduer gjör rommene lysere og öker arbeidslysten til dine ansatte.",
     fax_received           = "Ikonet som akkurat poppet opp nede i venstre hjörne av skjermen, varsler deg om viktig informasjon og beslutninger du må ta.",
-    
+
     initial_general_advice = {
       rats_have_arrived = "Rotter har infisert sykehuset ditt. Pröv å skyt dem med musen din.",
       autopsy_available = "Obduksjonsautomaten er nå ferdigutviklet. Med denne kan du kvitte deg med tröblete eller ikke-velkomne pasienter, og gjöre forskning ut av restene. Advarsel - Å benytte denne er svært kontroversielt.",
@@ -2378,8 +2378,8 @@ adviser = {
       first_VIP = "Du er i ferd med å ta imot ditt förste VIP-besök. Sörg for at VIP-er ikke ser noe uhygienisk eller pasienter som henger med hodet.",
     },
   },
-  
-  
+
+
   -- Build advice
   build_advice = {
     placing_object_blocks_door     = "Om du plasserer gjenstander der, kommer ikke folk seg til dören.",
@@ -2605,211 +2605,211 @@ vip_names = {
 
 -- Deseases
 diseases = {
-  general_practice       = { 
-    name     = "Allmennpraksis", 
+  general_practice       = {
+    name     = "Allmennpraksis",
   },
-  bloaty_head        = { 
-    name     = "Ballonghode", 
-    cause     = "Årsak - Pasienten har sniffet ost og drukket forurenset vann.", 
-    symptoms   = "Symptomer - Den rammede er meget ukomfortabel.", 
-    cure     = "Behandling - Man stikker hull på det oppsvulmede hodet, og pumper det opp igjen til korrekt PSI med en intelligent maskin.", 
+  bloaty_head        = {
+    name     = "Ballonghode",
+    cause     = "Årsak - Pasienten har sniffet ost og drukket forurenset vann.",
+    symptoms   = "Symptomer - Den rammede er meget ukomfortabel.",
+    cure     = "Behandling - Man stikker hull på det oppsvulmede hodet, og pumper det opp igjen til korrekt PSI med en intelligent maskin.",
   },
-  hairyitis              = { 
-    name     = "Pelssyndrom", 
-    cause     = "Årsak - Fullmåne.", 
-    symptoms   = "Symptomer - Ökt luktesans.", 
-    cure    = "Behandling - En elektrosjokkmaskin fjerner håret og tetter igjen porene.", 
+  hairyitis              = {
+    name     = "Pelssyndrom",
+    cause     = "Årsak - Fullmåne.",
+    symptoms   = "Symptomer - Ökt luktesans.",
+    cure    = "Behandling - En elektrosjokkmaskin fjerner håret og tetter igjen porene.",
   },
-  king_complex           = { 
-    name     = "Rock'n'Roll syndrom", 
-    cause     = "Årsak - Elivs' ånd tar over kontrollen over pasientens hode", 
-    symptoms   = "Symptomer - Går med fargede lærsko, og spiser cheeseburgere", 
-    cure     = "Behandling - En Psykiater forteller pasienten hvor tåpelig han eller hun ser ut", 
+  king_complex           = {
+    name     = "Rock'n'Roll syndrom",
+    cause     = "Årsak - Elivs' ånd tar over kontrollen over pasientens hode",
+    symptoms   = "Symptomer - Går med fargede lærsko, og spiser cheeseburgere",
+    cure     = "Behandling - En Psykiater forteller pasienten hvor tåpelig han eller hun ser ut",
   },
-  invisibility           = { 
-    name     = "Usynlighet", 
-    cause     = "Årsak - Bitt av en radioaktiv (og usynlig) maur", 
-    symptoms   = "Symptomer - Pasienten lider ikke - tvert imot! De utnytter situasjonen, og lurer familie og venner trill rundt", 
-    cure     = "Behandling - En fargerik kur fra apoteket gjör pasienten fullt synlig igjen", 
+  invisibility           = {
+    name     = "Usynlighet",
+    cause     = "Årsak - Bitt av en radioaktiv (og usynlig) maur",
+    symptoms   = "Symptomer - Pasienten lider ikke - tvert imot! De utnytter situasjonen, og lurer familie og venner trill rundt",
+    cure     = "Behandling - En fargerik kur fra apoteket gjör pasienten fullt synlig igjen",
   },
-  serious_radiation      = { 
-    name     = "Alvorlig stråling", 
-    cause     = "Årsak - Har forvekslet plutonium-isotoper med tyggegummi.", 
-    symptoms   = "Symptomer - Pasienten föler seg meget ukomfortabel.", 
-    cure     = "Behandling - Pasienten blir plassert i en saneringsdusj og renset fullstendig.", 
+  serious_radiation      = {
+    name     = "Alvorlig stråling",
+    cause     = "Årsak - Har forvekslet plutonium-isotoper med tyggegummi.",
+    symptoms   = "Symptomer - Pasienten föler seg meget ukomfortabel.",
+    cure     = "Behandling - Pasienten blir plassert i en saneringsdusj og renset fullstendig.",
   },
-  slack_tongue           = { 
-    name     = "Lös tunge", 
-    cause     = "Årsak - Kronisk overivrig i diskusjoner om såpeopera.", 
-    symptoms   = "Symptomer - Tungen hever seg til det femdoble.", 
+  slack_tongue           = {
+    name     = "Lös tunge",
+    cause     = "Årsak - Kronisk overivrig i diskusjoner om såpeopera.",
+    symptoms   = "Symptomer - Tungen hever seg til det femdoble.",
     cure     = "Behandling - Tungen blir plassert i en tungekutter. Hevelsen fjernes deretter hurtig, effektivt og smertefullt.",
   },
-  alien_dna              = { 
-    name     = "Utenomjordisk DNA", 
-    cause     = "Årsak - Bitt av facehuggere utstyrt med intelligent utenomjordisk blod.", 
-    symptoms   = "Symptomer - Er under gradvis forvandling til romvesen, og har et önske om å ta over våre byer.", 
+  alien_dna              = {
+    name     = "Utenomjordisk DNA",
+    cause     = "Årsak - Bitt av facehuggere utstyrt med intelligent utenomjordisk blod.",
+    symptoms   = "Symptomer - Er under gradvis forvandling til romvesen, og har et önske om å ta over våre byer.",
     cure     = "Behandling - Alt DNA blir fjernet mekanisk, renset for utenomjordiske celler, og blir hurtig erstattet.",
   },
-  fractured_bones        = { 
+  fractured_bones        = {
     name     = "Benbrudd",
-    cause     = "Årsak - Fall fra store höyder mot betong.", 
-    symptoms   = "Symptomer - Höye knaselyder og liten bevegelighet på utsatte steder.", 
-    cure     = "Behandling - Gipsen blir fjernet ved hjelp av en laserstyrt gipsfjerner.", 
+    cause     = "Årsak - Fall fra store höyder mot betong.",
+    symptoms   = "Symptomer - Höye knaselyder og liten bevegelighet på utsatte steder.",
+    cure     = "Behandling - Gipsen blir fjernet ved hjelp av en laserstyrt gipsfjerner.",
   },
-  baldness               = { 
-    name     = "Flintskalle", 
-    cause     = "Årsak - Forteller lögner og dikter opp historier for å öke sin popularitet.", 
-    symptoms   = "Symptomer - Forlegen pasient med skinnende skalle.", 
+  baldness               = {
+    name     = "Flintskalle",
+    cause     = "Årsak - Forteller lögner og dikter opp historier for å öke sin popularitet.",
+    symptoms   = "Symptomer - Forlegen pasient med skinnende skalle.",
     cure     = "Behandling - Hår blir hurtig smeltet fast til pasientens hode med en smertefull hårmaskin.",
   },
-  discrete_itching       = { 
-    name     = "Skrapesyke", 
-    cause     = "Årsak - Små insekter med skarpe tenner.", 
-    symptoms   = "Symptomer - Pasienten klör intenst, og huden flasser.", 
+  discrete_itching       = {
+    name     = "Skrapesyke",
+    cause     = "Årsak - Små insekter med skarpe tenner.",
+    symptoms   = "Symptomer - Pasienten klör intenst, og huden flasser.",
     cure     = "Behandling - En Sykepleier gir pasienten en sirupaktig drikk som leger huden og hindrer videre klöe.",
   },
-  jellyitis              = { 
-    name     = "Gelésyndrom", 
-    cause     = "Årsak - Gelatinrik diett og for mye mosjon.", 
-    symptoms   = "Symptomer - Meget ustödig og faller mye.", 
+  jellyitis              = {
+    name     = "Gelésyndrom",
+    cause     = "Årsak - Gelatinrik diett og for mye mosjon.",
+    symptoms   = "Symptomer - Meget ustödig og faller mye.",
     cure     = "Behandling - Pasienten blir presset ned i en gelétönne i et spesielt rom.",
   },
-  sleeping_illness       = { 
-    name     = "Sövnsyke", 
-    cause     = "Forårsaket av overaktive sövnkjertler i munnens gane.", 
-    symptoms   = "Symptomer - Sterkt önske om å sove, hvor og når som helst.", 
+  sleeping_illness       = {
+    name     = "Sövnsyke",
+    cause     = "Forårsaket av overaktive sövnkjertler i munnens gane.",
+    symptoms   = "Symptomer - Sterkt önske om å sove, hvor og når som helst.",
     cure     = "Behandling - En sterk dose stimulerende medisin blir delt ut av en Sykepleier.",
   },
-  pregnancy              = { 
-    name     = "Graviditet", 
-    cause     = "Forårsaket av strömbrudd i urbane strök.", 
-    symptoms   = "Symptomer - Lei av å spise med konstant ölmage.", 
+  pregnancy              = {
+    name     = "Graviditet",
+    cause     = "Forårsaket av strömbrudd i urbane strök.",
+    symptoms   = "Symptomer - Lei av å spise med konstant ölmage.",
     cure     = "Behandling - Spedbarnet blir fjernet med keisersnitt, blir deretter vasket og presentert for sin nye mor.",
   },   -- unused
-  transparency           = { 
-    name     = "Gjennomsiktighet", 
-    cause     = "Årsak - Slikket folien på et gammelt yoghurtbeger.", 
-    symptoms   = "Symptomer - Kroppen blir gjennomsiktig og ekkel.", 
+  transparency           = {
+    name     = "Gjennomsiktighet",
+    cause     = "Årsak - Slikket folien på et gammelt yoghurtbeger.",
+    symptoms   = "Symptomer - Kroppen blir gjennomsiktig og ekkel.",
     cure     = "Behandling - En kald og fargerik drikk fra apoteket gjör susen.",
   },
-  uncommon_cold          = { 
+  uncommon_cold          = {
     name     = "Forkjölelse",
-    cause     = "Årsak - Små snörrpartikler i luften.", 
-    symptoms   = "Symptomer - Rennende nese, hoste og misfarget slim fra lungene.", 
-    cure     = "Behandling - En real slurk hostesaft fra apoteket vil gjöre susen.", 
+    cause     = "Årsak - Små snörrpartikler i luften.",
+    symptoms   = "Symptomer - Rennende nese, hoste og misfarget slim fra lungene.",
+    cure     = "Behandling - En real slurk hostesaft fra apoteket vil gjöre susen.",
   },
-  broken_wind            = { 
-    name     = "Forurensende gasser", 
-    cause     = "Årsak - Har löpt på 3d-mölle rett etter middag.", 
-    symptoms   = "Symptomer - Ubehag hos folk som befinner seg rett bak pasienten.", 
+  broken_wind            = {
+    name     = "Forurensende gasser",
+    cause     = "Årsak - Har löpt på 3d-mölle rett etter middag.",
+    symptoms   = "Symptomer - Ubehag hos folk som befinner seg rett bak pasienten.",
     cure     = "Behandling - En sterk blanding av spesielle vannatomer må svelges hurtig.",
   },
-  spare_ribs             = { 
-    name     = "Juleribbe", 
-    cause     = "Årsak - Pasienten har sittet på kalde steingulv.", 
-    symptoms   = "Symptomer - Ubehagelig fölelse i brystet.", 
+  spare_ribs             = {
+    name     = "Juleribbe",
+    cause     = "Årsak - Pasienten har sittet på kalde steingulv.",
+    symptoms   = "Symptomer - Ubehagelig fölelse i brystet.",
     cure     = "Behandling - Ribben fjernes av to Kirurger, og leveres til pasienten i en doggybag.",
   },
-  kidney_beans           = { 
-    name     = "Kikkerter", 
-    cause     = "Årsak - Pasienten har spist isbiter.", 
-    symptoms   = "Symptomer - Smerte og hyppige turer til toalettet.", 
+  kidney_beans           = {
+    name     = "Kikkerter",
+    cause     = "Årsak - Pasienten har spist isbiter.",
+    symptoms   = "Symptomer - Smerte og hyppige turer til toalettet.",
     cure     = "Behandling - To Kirurger fjerner de erteliknende parasittene, uten å beröre nyrene!",
   },
-  broken_heart           = { 
+  broken_heart           = {
     name     = "Knust hjerte",
-    cause     = "Årsak - Noen er rikere, yngre og slankere enn pasienten.", 
-    symptoms   = "Symptomer - Hysterisk gråtende. Blodsprengte fingertupper etter å ha revet opp feriebilder.", 
-    cure     = "Behandling - To Kirurger spretter opp brystet og setter deretter hjertet forsiktig sammen, mens de holder pusten.", 
+    cause     = "Årsak - Noen er rikere, yngre og slankere enn pasienten.",
+    symptoms   = "Symptomer - Hysterisk gråtende. Blodsprengte fingertupper etter å ha revet opp feriebilder.",
+    cure     = "Behandling - To Kirurger spretter opp brystet og setter deretter hjertet forsiktig sammen, mens de holder pusten.",
   },
-  ruptured_nodules       = { 
-    name     = "Knekte nötter", 
-    cause     = "Årsak - Strikkhopp om vinteren.", 
-    symptoms   = "Symptomer - Umulig å sitte behagelig.", 
+  ruptured_nodules       = {
+    name     = "Knekte nötter",
+    cause     = "Årsak - Strikkhopp om vinteren.",
+    symptoms   = "Symptomer - Umulig å sitte behagelig.",
     cure     = "Behandling - To kvalifiserte Kirurger må fjerne nöttene med stödige hender.",
   },
-  tv_personalities       = { 
-    name     = "Programledersyndrom", 
-    cause     = "Årsak - TV-titting på dagtid.", 
-    symptoms   = "Symptomer - Forestiller seg at han eller hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.", 
+  tv_personalities       = {
+    name     = "Programledersyndrom",
+    cause     = "Årsak - TV-titting på dagtid.",
+    symptoms   = "Symptomer - Forestiller seg at han eller hun er programleder i frokost-tv, og elsker å introdusere kjökkenseansen.",
     cure     = "Behandling - En Psykiater må overtale pasienten til å selge fjernsynet og heller kjöpe radio.",
   },
-  infectious_laughter    = { 
-    name     = "Smittsom latter", 
-    cause     = "Årsak - Klassisk situasjonskomedie på TV.", 
-    symptoms   = "Symptomer - Ler hjelpelöst hele tiden, og repeterer stadig dårlige poeng som absolutt ikke er morsomme.", 
+  infectious_laughter    = {
+    name     = "Smittsom latter",
+    cause     = "Årsak - Klassisk situasjonskomedie på TV.",
+    symptoms   = "Symptomer - Ler hjelpelöst hele tiden, og repeterer stadig dårlige poeng som absolutt ikke er morsomme.",
     cure     = "Behandling - En kvalifisert Psykiater må minne pasienten på at dette faktisk er en alvorlig tilstand.",
   },
-  corrugated_ankles      = { 
-    name      = "Böyde ankler", 
-    cause     = "Årsak - Busskjöring over fartsdempere.", 
-    symptoms   = "Symptomer - Skoene passer ikke.", 
+  corrugated_ankles      = {
+    name      = "Böyde ankler",
+    cause     = "Årsak - Busskjöring over fartsdempere.",
+    symptoms   = "Symptomer - Skoene passer ikke.",
     cure     = "Behandling - En giftig blanding av urter og krydder må drikkes for å rette ut anklene.",
   },
-  chronic_nosehair       = { 
-    name     = "Kronisk nesehår", 
-    cause     = "Årsak - Snöfter med forakt på folk med lavere inntekt.", 
-    symptoms   = "Symptomer - Så mye nesehår at en grevling kunne bodd der.", 
+  chronic_nosehair       = {
+    name     = "Kronisk nesehår",
+    cause     = "Årsak - Snöfter med forakt på folk med lavere inntekt.",
+    symptoms   = "Symptomer - Så mye nesehår at en grevling kunne bodd der.",
     cure     = "Behandling - En ekkel hårfjernende drikk blir inntatt gjennom munnen. Fås på apoteket.",
   },
-  third_degree_sideburns = { 
-    name     = "Tredjegrads koteletter", 
-    cause     = "Årsak - Lengter tilbake til 70-tallet.", 
-    symptoms   = "Symptomer - Stort hår, tettsittende klær, langt skinnskjegg og glitter.", 
+  third_degree_sideburns = {
+    name     = "Tredjegrads koteletter",
+    cause     = "Årsak - Lengter tilbake til 70-tallet.",
+    symptoms   = "Symptomer - Stort hår, tettsittende klær, langt skinnskjegg og glitter.",
     cure     = "Behandling - Psykiatrisk personell må, ved hjelp av nymoderne teknikker, overbevise pasienten om at parykk er noe tull.",
   },
-  fake_blood             = { 
-    name     = "Teaterblod", 
-    cause     = "Årsak - Pasienten er ofte utsatt for narrestreker.", 
-    symptoms   = "Symptomer - Rödt blod som dunster ved kontakt med klær.", 
+  fake_blood             = {
+    name     = "Teaterblod",
+    cause     = "Årsak - Pasienten er ofte utsatt for narrestreker.",
+    symptoms   = "Symptomer - Rödt blod som dunster ved kontakt med klær.",
     cure     = "Behandling - Eneste måten å behandle dette på, er å få en Psykiater til å roe ned pasienten.",
   },
-  gastric_ejections      = { 
-    name     = "Krydrede oppstöt", 
-    cause     = "Årsak - Sterkt krydret meksikansk eller indisk mat har skylden.", 
-    symptoms   = "Symptomer - Gulper karrikylling og tacolefser.", 
+  gastric_ejections      = {
+    name     = "Krydrede oppstöt",
+    cause     = "Årsak - Sterkt krydret meksikansk eller indisk mat har skylden.",
+    symptoms   = "Symptomer - Gulper karrikylling og tacolefser.",
     cure     = "Behandling - En Sykepleier gir pasienten en bindende indisk kumelk-blanding som forhindrer nye oppstöt.",
   },
-  the_squits             = { 
-    name     = "Lös mage", 
-    cause     = "Årsak - Har spist pizzabiter som har falt bak komfyren.", 
-    symptoms   = "Symptomer - Æsj! Tipper du vet symptomene.", 
+  the_squits             = {
+    name     = "Lös mage",
+    cause     = "Årsak - Har spist pizzabiter som har falt bak komfyren.",
+    symptoms   = "Symptomer - Æsj! Tipper du vet symptomene.",
     cure     = "Behandling - En klebrig blanding kjemikalier må drikkes for å stabilisere magen innvendig.",
   },
-  iron_lungs             = { 
-    name     = "Jernlunger", 
-    cause     = "Årsak - Forurenset byluft blandet med kebabrester.", 
-    symptoms   = "Symptomer - Kan puste flammer og bröle höyt under vann.", 
+  iron_lungs             = {
+    name     = "Jernlunger",
+    cause     = "Årsak - Forurenset byluft blandet med kebabrester.",
+    symptoms   = "Symptomer - Kan puste flammer og bröle höyt under vann.",
     cure     = "Behandling - To Kirurger mykner de solide lungene i operasjonssalen.",
   },
-  sweaty_palms           = { 
-    name     = "Håndsvette", 
-    cause     = "Årsak - Er livredd jobbintervjuer.", 
-    symptoms   = "Symptomer - Å håndhilse på pasienten er som å ta tak i en våt svamp.", 
+  sweaty_palms           = {
+    name     = "Håndsvette",
+    cause     = "Årsak - Er livredd jobbintervjuer.",
+    symptoms   = "Symptomer - Å håndhilse på pasienten er som å ta tak i en våt svamp.",
     cure     = "Behandling - En Psykiater må snakke pasienten ut av denne oppdiktede lidelsen.",
   },
-  heaped_piles           = { 
-    name     = "Hemoroider", 
-    cause     = "Årsak - Står i nærheten av drikkevannskjölere.", 
-    symptoms   = "Symptomer - Pasienten föler at han eller hun sitter på en pose med stein.", 
+  heaped_piles           = {
+    name     = "Hemoroider",
+    cause     = "Årsak - Står i nærheten av drikkevannskjölere.",
+    symptoms   = "Symptomer - Pasienten föler at han eller hun sitter på en pose med stein.",
     cure     = "Behandling - En behagelig, men meget syrlig drikk, lösner opp hemoroidene innenifra.",
   },
-  gut_rot                = { 
-    name     = "Mageråte", 
-    cause     = "Årsak - Onkel Georgs miks av hostesaft og whisky.", 
-    symptoms   = "Symptomer - Ingen hoste, men ingen magesekk heller.", 
+  gut_rot                = {
+    name     = "Mageråte",
+    cause     = "Årsak - Onkel Georgs miks av hostesaft og whisky.",
+    symptoms   = "Symptomer - Ingen hoste, men ingen magesekk heller.",
     cure     = "Behandling - En Sykepleier skriver ut en rekke kjemikalier og gjenskaper veggen i magesekken.",
   },
-  golf_stones            = { 
-    name     = "Golfsteiner", 
-    cause     = "Årsak - Utsatt for giftige gasser fra golfballer.", 
-    symptoms   = "Symptomer - Forvirring og kraftig skamfölelse.", 
+  golf_stones            = {
+    name     = "Golfsteiner",
+    cause     = "Årsak - Utsatt for giftige gasser fra golfballer.",
+    symptoms   = "Symptomer - Forvirring og kraftig skamfölelse.",
     cure     = "Behandling - Steinene fjernes kjapt og effektivt av to Kirurger.",
   },
-  unexpected_swelling    = { 
-    name     = "Uventet hevelse", 
-    cause     = "Årsak - Hva som helst uventet.", 
-    symptoms   = "Symptomer - Hevelse.", 
+  unexpected_swelling    = {
+    name     = "Uventet hevelse",
+    cause     = "Årsak - Hva som helst uventet.",
+    symptoms   = "Symptomer - Hevelse.",
     cure     = "Behandling - Hevelsen må skjæres bort av to Kirurger.",
   },
   diag_scanner           = { name = "Diag Skanner", },
@@ -2843,18 +2843,18 @@ fax = {
     text10     = "KILLS %d ALLOWED (MTHS) %d (%d) REDUCTION %d", -- %d %d %d %d
     text11     = "PEOPLE THIS MONTH %d", -- %d
   },
-  
+
   -- Emergency
   emergency = {
     choices = {
-      accept = "Ja, jeg er klar til å håndtere dette", 
+      accept = "Ja, jeg er klar til å håndtere dette",
       refuse = "Nei, jeg nekter å ta meg av dette",
     },
-    location = "Det har skjedd en ulykke ved %s", 
+    location = "Det har skjedd en ulykke ved %s",
     num_disease = "Det er %d mennesker med %s som trenger akutt behandling.",
     num_disease_singular = "Det er 1 person med %s som trenger akutt behandling.",
-    cure_possible_drug_name_efficiency = "Du har det som trengs av nödvendig utstyr og ferdigheter, og du har medisinen de trenger. Det er %s og medisinen er %d prosent effektiv.", 
-    cure_possible = "Du har nödvendig utstyr og de ferdigheter som trengs for å ta deg av dette.", 
+    cure_possible_drug_name_efficiency = "Du har det som trengs av nödvendig utstyr og ferdigheter, og du har medisinen de trenger. Det er %s og medisinen er %d prosent effektiv.",
+    cure_possible = "Du har nödvendig utstyr og de ferdigheter som trengs for å ta deg av dette.",
     cure_not_possible_build_and_employ = "Du vil måtte bygge  %s og ansette en %s",
     cure_not_possible_build = "Du mangler %s for å håndtere dette",
     cure_not_possible_employ = "Du mangler en %s for å kunne håndtere dette",
@@ -2862,16 +2862,16 @@ fax = {
     bonus = "Om du klarer å håndtere dette nödstilfellet, vil du få en bonus på maksimalt %d. Om du feiler derimot, vil ryktet ditt få en kraftig smell.",
   free_build = "Hvis du lykkes, vil ditt omdömme vil öke. Men hvis du mislykkes, vil ditt omdömme bli alvorlig svekket!",
 
-    locations = {      
+    locations = {
       "A.Toms Våpenkjeller",
-      "Snobbeuniversitetet",       
-      "Buskerud Hagesenter", 
-      "Forskningsinstituttet For Farlige Emner", 
-      "Foreningen For Folkedansende Menn", 
-      "puben Frosk Og Kyr", 
+      "Snobbeuniversitetet",
+      "Buskerud Hagesenter",
+      "Forskningsinstituttet For Farlige Emner",
+      "Foreningen For Folkedansende Menn",
+      "puben Frosk Og Kyr",
       "Hallgeir Juniors Begravelsesbyrå Og Spritbutikk",
-      "Mama-Tai Krydderhus", 
-      "Berts Varehus For Brukt Petrokjemi", 
+      "Mama-Tai Krydderhus",
+      "Berts Varehus For Brukt Petrokjemi",
     },
   },
 
@@ -2879,8 +2879,8 @@ fax = {
     close_text     = "Klikk for å gå ut",
     earned_money   = "Av en maksimal bonus på %d, har du tjent %d.",
     saved_people   = "Du reddet %d personer av totalt %d.",
-  },  
-  
+  },
+
   -- Disease discovered
   disease_discovered_patient_choice = {
     choices = {
@@ -2896,7 +2896,7 @@ fax = {
     what_to_do_question      = "Hva vil du gjöre med pasienten?",
     guessed_percentage_name  = "Teamet ditt mener de vet hva som feiler pasienten. Det er %d prosent sannsynlighet for at det er %s",
   },
-  
+
   disease_discovered = {
     close_text          = "En ny sykdom er oppdaget.",
     can_cure          = "Du kan behandle denne sykdommen.",
@@ -2905,24 +2905,24 @@ fax = {
     need_to_employ           = "Ansett en %s for å behandle pasienter med denne sykdommen.",
     discovered_name          = "Ditt team har oppdaget et tilfelle av %s.",
   },
-  
+
   -- Epidemic
   epidemic = {
     choices = {
       declare  = "Offentliggjör epidemi, betal boten og godta at ryktet ditt blir svekket.",
       cover_up = "Forsök å behandle alle infiserte pasienter för tiden renner ut, og för noen forlater sykehuset.",
     },
-    
+
     disease_name             = "Dine Leger har oppdaget en svært smittsom form for %s.",
     declare_explanation_fine = "Om du offentliggjör epidemien, må du betale en bot på %d, ditt rykte får en smell, og samtlige pasienter blir vaksinert automatisk.",
     cover_up_explanation_1   = "Om du derimot forsöker å holde epidemien skjult, må du behandle samtlige infiserte pasienter för helsemyndighetene får rede på det.",
     cover_up_explanation_2   = "Om en Helseinspektör kommer på besök og finner ut at du pröver å skjule epidemien, kan han gå drastisk til verks.",
   },
-  
+
   -- Epidemic result
   epidemic_result = {
     close_text = "Hurra!",
-    
+
     failed = {
       part_1_name = "Gjennom forsöket på å skjule det faktum at vi sto ovenfor et smittsomt utbrudd av %s",
       part_2      = "klarte personalet ditt selvfölgelig å spre epidemien ut til alle sykehusets naboer.",
@@ -2931,23 +2931,23 @@ fax = {
       part_1_name = "Helseinspektören hörte rykter om at institusjonen din slet med et alvorlig tilfelle av %s.",
       part_2      = "Han har derimot ikke lykkes i å finne beviser som bekrefter ryktene.",
     },
-    
+
     compensation_amount  = "Myndighetene har besluttet å gi deg %d i kompensasjon for skaden disse lögnene har påfört ditt gode rykte.",
     fine_amount          = "Myndighetene har erklært nasjonal unntakstilstand og bötelegger deg med %d.",
     rep_loss_fine_amount = "Avisene har nå nytt forsidestoff, og ditt rykte får en kraftig smell. I tillegg blir du bötelagt med %d.",
     hospital_evacuated   = "Helserådet har ikke annet valg enn å evakuere sykehuset ditt.",
   },
-  
+
   -- VIP visit query
   vip_visit_query = {
     choices = {
       invite = "Send offisiell invitasjon til V.I.P.",
       refuse = "Avvis forespörselen fra V.I.P med dårlige unnskyldninger.",
     },
-    
+
     vip_name = "%s har ytret et önske om å få besöke sykehuset ditt",
   },
-  
+
   -- VIP visit result
   vip_visit_result = {
     close_text = "Takk for at du besökte sykehuset.",
@@ -2956,7 +2956,7 @@ fax = {
     cash_grant = "Du er blitt tildelt %d i kontanter.",
     rep_boost  = "Ditt rykte i nærområdet har fått en opptur.",
     rep_loss   = "Ditt rykte har fått seg en smell.",
-    
+
     remarks = {
     free_build = {
         [1] = "Det er et veldig fint sykehus du har der! Men det er ikke veldig vanskelig å få det til å fungerer uten pengebegrensninger.",
@@ -2990,7 +2990,7 @@ fax = {
       },
     },
   },
-  
+
   -- Diagnosis failed
   diagnosis_failed = {
     choices = {
@@ -3044,7 +3044,7 @@ dynamic_info = {
   },
   vip                           = "Besökende VIP",
   health_inspector              = "Helseinspektör",
-  
+
   staff = {
     psychiatrist_abbrev         = "Psyk.",
     actions = {
@@ -3055,7 +3055,7 @@ dynamic_info = {
     tiredness                   = "Tretthet",
     ability                     = "Evner", -- unused?
   },
-  
+
   object = {
     strength                    = "Holdbarhet: %d", -- %d (max. uses)
     times_used                  = "Ganger brukt: %d", -- %d (times used)
@@ -3210,20 +3210,20 @@ misc = {
   },
   done  = "Ferdig",
   pause = "Pause",
-  
+
   send_message     = "Send beskjed til spiller %d", -- %d (player number)
   send_message_all = "Send beskjed til alle spillere",
-  
+
   save_success = "Spill lagret",
   save_failed  = "FEIL: Kunne ikke lagre spill",
-  
+
   hospital_open = "Sykehus åpent",
   out_of_sync   = "Spillet ute av synk",
-  
+
   load_failed  = "Kunne ikke laste tidligere spill",
   low_res      = "Lav oppl.",
   balance      = "Balansefil:",
-  
+
   mouse        = "Mus",
   force        = "Styrke",
 }

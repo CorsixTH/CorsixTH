@@ -37,7 +37,7 @@ object.idle_animations = copy_north_to_south {
 object.multi_usage_animations = {
   ["Stripped Male Patient - Doctor"] = copy_north_to_south {
     north = {
-      begin_use   = {3740, 3736, 3818}, 
+      begin_use   = {3740, 3736, 3818},
       -- Also possibly 548, 556 and 560 for a more smooth animation?
       in_use      = {540, 544, 552},
       finish_use  = {3802, 3806, 3826},
@@ -52,7 +52,7 @@ object.multi_usage_animations = {
   },
   ["Stripped Male Patient 2 - Doctor"] = copy_north_to_south {
     north = {
-      begin_use   = {3740, 3736, 3818}, 
+      begin_use   = {3740, 3736, 3818},
       -- Also possibly 548, 556 and 560 for a more smooth animation?
       in_use      = {540, 544, 552},
       finish_use  = {3802, 3806, 3826},
@@ -67,7 +67,7 @@ object.multi_usage_animations = {
   },
   ["Stripped Male Patient 3 - Doctor"] = copy_north_to_south {
     north = {
-      begin_use   = {3740, 3736, 3818}, 
+      begin_use   = {3740, 3736, 3818},
       -- Also possibly 548, 556 and 560 for a more smooth animation?
       in_use      = {540, 544, 552},
       finish_use  = {3802, 3806, 3826},
@@ -84,7 +84,7 @@ object.multi_usage_animations = {
 object.orientations = {
   north = {
     render_attach_position = { {0, 0}, {-1, 1} },
-    footprint = { {-1, 0, complete_cell = true}, {-1, 1, only_passable = true}, 
+    footprint = { {-1, 0, complete_cell = true}, {-1, 1, only_passable = true},
       {0, 0, only_passable = true}, {0, 1, only_passable = true} },
     use_position = {-1, 1},
     use_position_secondary = {0, 0},
@@ -92,7 +92,7 @@ object.orientations = {
   },
   east = {
     render_attach_position = { {0, 0}, {1, -1} },
-    footprint = { {0, -1, complete_cell = true}, {0, 0, only_passable = true}, 
+    footprint = { {0, -1, complete_cell = true}, {0, 0, only_passable = true},
       {1, -1, only_passable = true}, {1, 0, only_passable = true} },
     use_position = {1, -1},
     use_position_secondary = {0, 0},

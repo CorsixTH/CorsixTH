@@ -36,7 +36,7 @@ function StaffProfile:setDoctorAbilities(psychiatrist, surgeon, researcher, juni
   self.is_surgeon = surgeon
   self.is_researcher = researcher
   self.is_junior = junior
-  self.is_consultant = consultant 
+  self.is_consultant = consultant
 end
 
 function StaffProfile:initDoctor(psychiatrist, surgeon, researcher, junior, consultant, skill)
@@ -82,19 +82,19 @@ end
 
 function StaffProfile:randomise(month)
   local level_config = self.world.map.level_config
-  
+
   -- decide general skill for all staff
   self.skill = math.random()
   --self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
-  
+
   if self.humanoid_class == "Doctor" then
     -- find the correct config line (based on month) for generation of the doctor
     local i = 0
-    while i < #level_config.staff_levels and 
+    while i < #level_config.staff_levels and
     level_config.staff_levels[i+1].Month <= month do
       i = i+1
     end
-    
+
     -- list of level_config values and the corresponding staff modifiers, plus the value set for "no"
     local mods = {
       {"ShrkRate", "is_psychiatrist", 0},
@@ -103,7 +103,7 @@ function StaffProfile:randomise(month)
       {"JrRate",   "is_junior",     nil},
       {"ConsRate", "is_consultant", nil},
     }
-    
+
     -- The following assumes ascending month order of the staff_levels table.
     -- TODO don't assume this but sort when loading map config
     for _, m in ipairs(mods) do
@@ -118,13 +118,13 @@ function StaffProfile:randomise(month)
       rate = (rate == 0) and 0 or 1 / rate
       self[m[2]] = math.random() < rate and 1.0 or m[3]
     end
-    
+
     -- is_consultant is forced to nil if is_junior is already 1
     self.is_consultant = not self.is_junior and self.is_consultant or nil
-    
+
     local jr_limit = level_config.gbv.DoctorThreshold / 1000
     local cons_limit = level_config.gbv.ConsultantThreshold / 1000
-    
+
     -- put the doctor in the right skill level box
     if self.is_junior then
       self.skill = jr_limit * self.skill
@@ -222,7 +222,7 @@ function StaffProfile:getFairWage()
   if self.world.free_build_mode then
     return 0
   end
-  
+
   local level_config = self.world.map.level_config
   local wage = level_config.staff[conf_id[self.humanoid_class]].MinSalary
   wage = wage + self.skill * 1000 / level_config.gbv.SalaryAbilityDivisor

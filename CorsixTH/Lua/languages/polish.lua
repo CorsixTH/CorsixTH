@@ -7,7 +7,7 @@ The study, diagnosis and surgery on the translation performed by:
 - Johnny, as a doctor - correction (grajpopolsku.pl)
 - Machiner, as a GP - translation, corrections (grajpopolsku.pl)
 - Mziab, as a surgeon - translation, font, corrections, tools and preparing script to CAT software (mziab.grajpopolsku.pl)
-- Spec0071, as a doctor - correction, tests 
+- Spec0071, as a doctor - correction, tests
 - Twig, as a consultant - technical issues (grajpopolsku.pl)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

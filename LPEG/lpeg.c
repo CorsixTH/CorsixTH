@@ -639,7 +639,7 @@ static int verify (lua_State *L, Instruction *op, const Instruction *p,
         if (p->i.offset == 0) goto fail;
         /* else goto dojmp; go through */
       }
-      case IJmp: 
+      case IJmp:
       dojmp: {
         p += p->i.offset;
         continue;
@@ -1755,7 +1755,7 @@ static Capture *nextcap (Capture *cap) {
         if (n-- == 0) return cap + 1;
       }
       else if (!isfullcap(cap)) n++;
-    } 
+    }
   }
 }
 

@@ -48,7 +48,7 @@ function UISaveGame:UISaveGame(ui)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
-  
+
   -- Textbox for entering new savegame name
   self.new_savegame_textbox = self:addBevelPanel(5, 310, self.width - 10, 17, col_textbox, col_highlight, col_shadow)
     :setLabel(_S.save_game_window.new_save_game, nil, "left"):setTooltip(_S.tooltip.save_game_window.new_save_game)
@@ -92,7 +92,7 @@ function UISaveGame:doSave(filename)
   local ui = self.ui
   local app = ui.app
   self:close()
-  
+
   local status, err = pcall(app.save, app, filename)
   if not status then
     err = _S.errors.save_prefix .. err

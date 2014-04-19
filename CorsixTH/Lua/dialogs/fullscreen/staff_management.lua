@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local math_floor = math.floor
-    
+
 --! Staff management screen
 class "UIStaffManagement" (UIFullscreen)
 
@@ -38,19 +38,19 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
     self:close()
     return
   end
-  
+
   local hosp = ui.hospital
   self.ui = ui
   self.hospital = hosp
-  
+
   -- Order the staff
   self:updateStaffList()
-  
+
   self.default_button_sound = "selectx.wav"
-  
+
   -- Close button
   self:addPanel(0, 603, 443):makeButton(0, 0, 26, 26, 10, self.close):setTooltip(_S.tooltip.staff_list.close)
-  
+
   -- Top categories
   local --[[persistable:staff_management_category]] function category(name, state, btn)
     self:setCategory(name)
@@ -67,16 +67,16 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self:addPanel(0, 319, 372):makeButton(0, 0, 112, 39, 7, self.payBonus):setTooltip(_S.tooltip.staff_list.bonus)
   self:addPanel(0, 319, 418):makeButton(0, 0, 112, 39, 8, self.increaseSalary):setTooltip(_S.tooltip.staff_list.pay_rise)
   self:addPanel(0, 438, 372):makeButton(0, 0, 45, 85, 9, self.fire):setTooltip(_S.tooltip.staff_list.sack)
-  
+
   -- "Arrow" to show title of doctors
   self.arrow = self:addPanel(12, 259, 397)
   self.arrow_position = 259
   self.arrow.visible = false
-  
+
   -- Scroll bar dot
   self.scroll_dot = self:addPanel(11, 21, 168)
   self.scroll_dot.visible = false
-  
+
   -- Doctors' skills or progress towards them
   self.progress_surgeon = self:addPanel(17, 188, 408)
   self.progress_surgeon.visible = false
@@ -90,7 +90,7 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self.progress_researcher.visible = false
   self.qualified_researcher = self:addPanel(22, 268, 408):setTooltip(_S.tooltip.staff_list.researcher)
   self.qualified_researcher.visible = false
-  
+
   -- Blankers for each row
   local row_blankers = {}
   local i
@@ -98,22 +98,22 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
     row_blankers[i] = self:addColourPanel(50, 55 + i*27, 580, 27, 60, 174, 203)
   end
   self.row_blankers = row_blankers
-  
+
   -- Extra background for the portrait
   self.portrait_back = self:addColourPanel(65, 374, 71, 81, 210, 255, 255)
   self.portrait_back.visible = false
-  
+
   -- Doctor skill blankers
   self.title_blanker = self:addColourPanel(225, 365, 90, 39, 57, 166, 198)
   self.skill_blanker = self:addColourPanel(142, 406, 168, 54, 57, 166, 198)
-  
+
   -- Tooltip regions
   self:makeTooltip(_S.tooltip.staff_list.happiness,  321, 51, 421, 75)
   self:makeTooltip(_S.tooltip.staff_list.tiredness,  426, 51, 526, 75)
   self:makeTooltip(_S.tooltip.staff_list.ability,    530, 51, 629, 75)
   self:makeTooltip(_S.tooltip.staff_list.detail,     146, 367, 226, 407)
   self:makeTooltip(_S.tooltip.staff_list.view_staff, 495, 371, 583, 458)
-  
+
   self.row_tooltips = {}
   for line_num = 1, 10 do
     self.row_tooltips[line_num] = {
@@ -123,7 +123,7 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
       self:makeTooltip(_S.tooltip.staff_list.ability_2,   529, 84 + 27 * (line_num - 1), 628, 108 + 27 * (line_num - 1)),
     }
   end
-  
+
   self.seniority_tooltip =
     self:makeTooltip(_S.tooltip.staff_list.doctor_seniority, 230, 367, 310, 407)
   self.skills_tooltip =
@@ -154,7 +154,7 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
       selected_staff = nil
     end
   end
-  
+
   local hosp = self.hospital
   local staff_members = {
     Doctor = {},
@@ -196,7 +196,7 @@ function UIStaffManagement:setCategory(name)
   else
     self.scroll_dot.visible = false
   end
-  
+
   self:updateTooltips()
 end
 
@@ -224,18 +224,18 @@ function UIStaffManagement:draw(canvas, x, y)
   UIFullscreen.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
   local titles = self.title_font
-  
+
   -- Titles
   titles:draw(canvas, _S.staff_list.morale,      x + 323, y + 31, 95, 0)
   titles:draw(canvas, _S.staff_list.tiredness,   x + 427, y + 31, 95, 0)
   titles:draw(canvas, _S.staff_list.skill,       x + 530, y + 31, 95, 0)
-  
+
   -- Number of employees
   titles:draw(canvas, #self.staff_members["Doctor"], x + 79, y + 57)
   titles:draw(canvas, #self.staff_members["Nurse"], x + 145, y + 57)
   titles:draw(canvas, #self.staff_members["Handyman"], x + 211, y + 57)
   titles:draw(canvas, #self.staff_members["Receptionist"], x + 277, y + 57)
-  
+
   local total_happiness = 0
   local total_fatigue = 0
   local total_skill = 0
@@ -265,7 +265,7 @@ function UIStaffManagement:draw(canvas, x, y)
       titles:draw(canvas, row_no + 10*(self.page-1), x + 58, y + 63 + row_no*27)
       titles:draw(canvas, staff.profile.name,        x + 88, y + 63 + row_no*27)
       titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + row_no*27, 80, 0)
-    
+
       -- Draw the morale, tiredness and skill for this staff member
       if happiness_bar_width ~= 0 then
         for dx = 0, happiness_bar_width - 1 do
@@ -296,7 +296,7 @@ function UIStaffManagement:draw(canvas, x, y)
         self.panel_sprites:draw(canvas, 16, x + 351 + dx, y + 59)
       end
     end
-    
+
     local fatigue_bar_width = math_floor((1 - (total_fatigue/#staff_list)) * 40 + 0.5)
     if fatigue_bar_width ~= 0 then
       for dx = 0, fatigue_bar_width - 1 do
@@ -336,11 +336,11 @@ function UIStaffManagement:draw(canvas, x, y)
     -- Portrait
     self.portrait_back.visible = true
     profile:drawFace(canvas, x + 68, y + 377, self.face_parts)
-    
+
     -- 10 % increase in salary or a bonus:
     titles:draw(canvas, "$" .. math_floor(profile.wage*0.1), x + 377, y + 387, 45, 0)
     titles:draw(canvas, "$" .. math_floor(profile.wage*0.1 + profile.wage), x + 377, y + 432, 45, 0)
-    
+
     -- Attention to detail
     local attention_bar_width = math_floor(profile.attention_to_detail * 40 + 0.5)
     if attention_bar_width ~= 0 then

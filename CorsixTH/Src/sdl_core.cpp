@@ -143,7 +143,7 @@ static int l_mainloop(lua_State *L)
     fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
     SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, NULL);
     SDL_Event e;
-    
+
     while(SDL_WaitEvent(&e) != 0)
     {
         bool do_frame = false;

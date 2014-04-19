@@ -25,11 +25,11 @@ class "UIInformation" (Window)
 --!param text The text to show, held in a table. All elements of the table will be written
 -- beneath each other. If instead a table within the table is supplied the texts
 -- will be shown in consecutive dialogs.
---!param use_built_in_font Whether the built-in font should be used to make sure that 
+--!param use_built_in_font Whether the built-in font should be used to make sure that
 -- the given message can be read without distortions.
 function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:Window()
-  
+
   local app = ui.app
   self.modal_class = "information"
   self.esc_closes = true
@@ -49,7 +49,7 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   else
     self.text = text
   end
-  
+
   -- Window size parameters
   self.text_width = 300
   self.spacing = {
@@ -58,9 +58,9 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
     t = 20,
     b = 20,
   }
-  
+
   self:onChangeLanguage()
-  
+
   -- Enter closes the window
   self:addKeyHandler("Enter", self.close)
 end
@@ -72,13 +72,13 @@ function UIInformation:onChangeLanguage()
     rows = rows + math.floor(self.black_font:sizeOf(text) / 300 + 1)
     rows = rows + 1
   end
-  
+
   self.width = self.spacing.l + self.text_width + self.spacing.r
   self.height = self.spacing.t + rows*12 + self.spacing.b
   self:setDefaultPosition(0.5, 0.5)
-  
+
   self:removeAllPanels()
-  
+
   for x = 4, self.width - 4, 4 do
     self:addPanel(12, x, 0)  -- Dialog top and bottom borders
     self:addPanel(16, x, self.height-4)
@@ -91,7 +91,7 @@ function UIInformation:onChangeLanguage()
   self:addPanel(17, 0, self.height-4)  -- Border bottom left corner
   self:addPanel(13, self.width-4, 0)  -- Border top right corner
   self:addPanel(15, self.width-4, self.height-4)  -- Border bottom right corner
-  
+
   -- Close button
   self:addPanel(19, self.width - 30, self.height - 30):makeButton(0, 0, 18, 18, 20, self.close):setTooltip(_S.tooltip.information.close)
 end
@@ -105,7 +105,7 @@ function UIInformation:draw(canvas, x, y)
     last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)
     last_y = self.black_font:drawWrapped(canvas, " ",                 dx + self.spacing.l, last_y, self.text_width)
   end
-  
+
   Window.draw(self, canvas, x, y)
 end
 

@@ -1,4 +1,4 @@
-/* 
+/*
    A C-program for MT19937, with initialization improved 2002/1/26.
    Coded by Takuji Nishimura and Makoto Matsumoto.
    Lua interface by Peter Cawley.
@@ -65,8 +65,8 @@ void init_genrand(uint32_t s)
 {
     mt[0]= s;
     for (mti=1; mti<N; mti++) {
-        mt[mti] = 
-        (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti); 
+        mt[mti] =
+        (1812433253UL * (mt[mti-1] ^ (mt[mti-1] >> 30)) + mti);
         /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
         /* In the previous versions, MSBs of the seed affect   */
         /* only MSBs of the array mt[].                        */
@@ -99,7 +99,7 @@ uint32_t genrand_int32(void)
 
         mti = 0;
     }
-  
+
     y = mt[mti++];
 
     /* Tempering */
@@ -112,18 +112,18 @@ uint32_t genrand_int32(void)
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
-double genrand_res53(void) 
-{ 
-    uint32_t a=genrand_int32()>>5, b=genrand_int32()>>6; 
-    return(a*67108864.0+b)*(1.0/9007199254740992.0); 
-} 
+double genrand_res53(void)
+{
+    uint32_t a=genrand_int32()>>5, b=genrand_int32()>>6;
+    return(a*67108864.0+b)*(1.0/9007199254740992.0);
+}
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
 /**
   @function math.random
   @arguments [[range_start, ] range_end]
   @return number
-  
+
   If called with no arguments, returns a random number in the range [0, 1).
   If called with one argument, returns a random integer in the range
   [1, range_end]. If called with two or more arguments, returns a random
@@ -158,7 +158,7 @@ static int l_random(lua_State *L)
   @function math.randomdump
   @arguments
   @return string
-  
+
   Returns a string which can later be passed to math.randomseed() to restore
   the random number generator to its current state.
 */
@@ -175,7 +175,7 @@ static int l_randomdump(lua_State *L)
   @arguments number
   @arguments string
   @return
-  
+
   Seeds the random number generator using the given seed number, or restores
   the random number generator state from a string previously generated from
   math.randomdump().

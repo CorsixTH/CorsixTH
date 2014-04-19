@@ -96,7 +96,7 @@ function MoviePlayer:playAdvanceMovie(level)
   if self.audio.background_music then
     self.holding_bg_music = self.audio:pauseBackgroundTrack()
   else
-    
+
   end
   if level == 12 then
     self.audio:playSound("DICE122M.WAV")
@@ -184,7 +184,7 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
   self.wait_for_over = true
-  
+
   self.callback_on_destroy_movie = callback
 
   self.opengl_mode_index = nil

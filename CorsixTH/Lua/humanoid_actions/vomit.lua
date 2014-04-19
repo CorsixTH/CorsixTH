@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local action_vomit_end = permanent"action_vomit_end"( function(humanoid)
   local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
   litter:setLitterType("puke", humanoid.last_move_direction == "south" and 0 or 1)  --For some reason the vomit is inverted.
-  
+
   humanoid:finishAction()
 end)
 
@@ -31,7 +31,7 @@ local function action_vomit_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.vomit_anim, "Error: no vomit animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.vomit_anim, humanoid.last_move_direction == "east" and 0 or 1)

@@ -409,7 +409,7 @@ public:
     void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor = 1);
     void setFrame(unsigned int iFrame);
-    
+
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 

@@ -68,7 +68,7 @@ object.orientations = {
     early_list = true,
   },
   east = {
-    footprint = { {-1,  -2, complete_cell = true}, {0,  -2, complete_cell = true}, 
+    footprint = { {-1,  -2, complete_cell = true}, {0,  -2, complete_cell = true},
                   {-1,  -1, complete_cell = true}, {0,  -1, complete_cell = true},
                   {-1,  0}, {0,  0},
                   {1,  -1, only_passable = true} },

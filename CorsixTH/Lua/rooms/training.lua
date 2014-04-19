@@ -154,7 +154,7 @@ function TrainingRoom:onHumanoidEnter(humanoid)
     -- use default behavior for staff other than doctors
     return Room.onHumanoidEnter(self, humanoid)
   end
-  
+
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
@@ -163,7 +163,7 @@ function TrainingRoom:onHumanoidEnter(humanoid)
   if self.humanoids_enroute[humanoid] then
     self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
   end
-  
+
   humanoid:setCallCompleted()
   self:commandEnteringStaff(humanoid)
   self.humanoids[humanoid] = true
@@ -178,7 +178,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
     -- Consultants try to use the projector and/or skeleton
     if profile.is_consultant then
       obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "projector")
-      if self.staff_member then 
+      if self.staff_member then
         if self.waiting_staff_member then
           local staff = self.waiting_staff_member
           staff.waiting_on_other_staff = nil
@@ -235,7 +235,7 @@ function TrainingRoom:onHumanoidLeave(humanoid)
         object:removeReservedUser()
       end
     end
-    
+
     if humanoid.profile.is_consultant and humanoid == self.staff_member then
       local humanoid = self.waiting_staff_member
       self:setStaffMember(nil)

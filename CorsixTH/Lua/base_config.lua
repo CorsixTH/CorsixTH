@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- To keep in line with the original, tables start their indexing at 0. 
+-- To keep in line with the original, tables start their indexing at 0.
 -- NOTE: This makes index iterations over tables omit the first element!
 local configuration = {
 
@@ -29,12 +29,12 @@ local configuration = {
     InterestRate = 0.01,
     StartCash = 40000,
   },
-  
+
   -- New value, but should only be defined if starting staff is included.
   --start_staff = {
   --  {Doctor = 0, Shrink = 0, Skill = 0},
   --},
-  
+
   -----------------------------------------------------------
   --           Original configuration values               --
   -----------------------------------------------------------
@@ -56,59 +56,59 @@ local configuration = {
       20,  -- Research
     },
     -- Divides ability to find an extra salary addition. must be > 0
-    SalaryAbilityDivisor   = 10, 
+    SalaryAbilityDivisor   = 10,
     -- Divides research input to arrive at research points. must be > 0
-    ResearchPointsDivisor  = 5, 
+    ResearchPointsDivisor  = 5,
     -- When a drug is researched what rating does it have
-    StartRating            = 100, 
+    StartRating            = 100,
     -- When a drug is researched how much does it cost
-    StartCost              = 100, 
+    StartCost              = 100,
     -- Minimum Drug Cost
-    MinDrugCost            = 50, 
+    MinDrugCost            = 50,
     -- If contagious how much - rand up to this figure. higher = more contagious. must be > 0
-    HowContagious          = 25, 
+    HowContagious          = 25,
     -- 0-100 Higher equals more chance of spreading.
-    ContagiousSpreadFactor = 25, 
+    ContagiousSpreadFactor = 25,
     -- Reduce cont illnesses until X months have passed
-    ReduceContMonths       = 14, 
+    ReduceContMonths       = 14,
     -- Reduce cont illnesses until X peep have arrived
-    ReduceContPeepCount    = 20, 
+    ReduceContPeepCount    = 20,
     -- Rate to reduce cont illneses to - 0 means do not produce contagious illnesses at all
-    ReduceContRate         = 0, 
+    ReduceContRate         = 0,
     -- Hold all visual illnesses until x months. 0 never hold
-    HoldVisualMonths       = 2, 
+    HoldVisualMonths       = 2,
     -- Hold all visual illnesses until x peeps have arrived. 0 never hold
-    HoldVisualPeepCount    = 6, 
+    HoldVisualPeepCount    = 6,
     -- Maximum strength value an object can be improved to (by research)
-    MaxObjectStrength      = 20, 
+    MaxObjectStrength      = 20,
     -- Increase object strength by this amount when researching
-    ResearchIncrement      = 2, 
+    ResearchIncrement      = 2,
     -- x Start Score for level = ceiling for normal score increases (2 dp)
-    ScoreMaxInc            = 300, 
+    ScoreMaxInc            = 300,
     -- Cost per vaccination
-    VacCost                = 50, 
+    VacCost                = 50,
     -- If epidemic coverup fails - how much per person you are fined max 20000
-    EpidemicFine           = 2000, 
-    -- If an epidemic coverup succeeds how much compensation is received - lo value 
-    EpidemicCompLo         = 1000, 
+    EpidemicFine           = 2000,
+    -- If an epidemic coverup succeeds how much compensation is received - lo value
+    EpidemicCompLo         = 1000,
     -- If an epidemic coverup succeeds how much compensation is received - hi value max 20000
-    EpidemicCompHi         = 15000, 
+    EpidemicCompHi         = 15000,
     -- % of research completed for an autopsy
-    AutopsyRschPercent     = 33, 
+    AutopsyRschPercent     = 33,
     -- % rep hit for discovered autopsy
-    AutopsyRepHitPercent   = 25, 
+    AutopsyRepHitPercent   = 25,
     -- Frequency of Mayor visits. Lower is more frequent.
-    MayorLaunch            = 150, 
+    MayorLaunch            = 150,
     -- Add to student doctor's ability when being taught MIN 1 MAX 255
-    TrainingRate           = 40, 
+    TrainingRate           = 40,
     -- MIN 1 MAX 100 (Percentage)
-    DrugImproveRate        = 5, 
+    DrugImproveRate        = 5,
     -- How many months until population allocation is done for real
     AllocDelay             = 3,
 
     AbilityThreshold = {
       [0] = {Value = 75}, -- SURGEON
-      {Value = 60}, -- PSYCHIATRIST  
+      {Value = 60}, -- PSYCHIATRIST
       {Value = 45}, -- RESEARCHER
     },
     TrainingValue = {
@@ -117,15 +117,15 @@ local configuration = {
       {Value = 20}, -- Bookcase
     },
     -- >This value gives doctor
-    DoctorThreshold = 250, 
+    DoctorThreshold = 250,
     -- >This value gives consultant
-    ConsultantThreshold = 750, 
+    ConsultantThreshold = 750,
     -- % of original rsch cost required to improve
-    RschImproveCostPercent = 10, 
+    RschImproveCostPercent = 10,
     -- %-point increase in improve cost per improvement
-    RschImproveIncrementPercent = 10, 
+    RschImproveIncrementPercent = 10,
   },
-  
+
   towns = {
     {StartCash = 40000, InterestRate = 100}, -- Level 1
     {StartCash = 40000, InterestRate = 200}, --  Level 2
@@ -181,7 +181,7 @@ local configuration = {
     {StartPrice = 350, Known = 0, RschReqd = 20000, MaxDiagDiff = 1000}, --  GUT_ROT
     {StartPrice = 1600, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  GOLF_STONES
     {StartPrice = 500, Known = 0, RschReqd = 20000, MaxDiagDiff = 700}, --  UNEXPECTED_SWELLING
-    {StartPrice = 300, Known = 0, RschReqd = 40000}, --    I_D_SCANNER  
+    {StartPrice = 300, Known = 0, RschReqd = 40000}, --    I_D_SCANNER
     {StartPrice = 250, Known = 0, RschReqd = 50000}, --    I_D_BLOOD_MACHINE       DIAGNOSIS
     {StartPrice = 150, Known = 0, RschReqd = 20000}, --    I_D_CARDIO              DIAGNOSIS
     {StartPrice = 200, Known = 0, RschReqd = 30000}, --    I_D_XRAY                DIAGNOSIS
@@ -234,7 +234,7 @@ local configuration = {
     {StartCost = 200, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  38 Bed Screen Open
     {StartCost = 1000, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  39 Pharmacy Cabinet
     {StartCost = 5000, StartAvail = 0, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 0}, --  40 Research Computer
-    {StartCost = 10000, StartAvail = 0, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 0}, --  41 Chemical Mixer 
+    {StartCost = 10000, StartAvail = 0, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 0}, --  41 Chemical Mixer
     {StartCost = 3000, StartAvail = 0, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 0}, --  42 Blood Machine
     {StartCost = 25, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  43 Fire Extinguisher
     {StartCost = 20, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  44 Radiator
@@ -257,7 +257,7 @@ local configuration = {
     {StartCost = 100, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  61 Comfy Chair
   },
   -- Cost for the room itself without any objects.
-  -- For some reason it starts at 7, 
+  -- For some reason it starts at 7,
   -- but that must be retained in order to work with the original.
   rooms = {
     [7] = {Cost = 2280}, -- GP_OFFICE
@@ -358,10 +358,10 @@ local configuration = {
   },
 
   staff_levels = {
-    [0] = {Month = 0, Nurses = 8, Doctors = 8, Handymen = 3, Receptionists = 2, 
+    [0] = {Month = 0, Nurses = 8, Doctors = 8, Handymen = 3, Receptionists = 2,
            ShrkRate = 10, SurgRate = 10, RschRate = 10, ConsRate = 10, JrRate = 5},
   },
-  
+
   emergency_control = {
     [0] = {StartMonth = 0, EndMonth = 0, Min = 0, Max = 0, Illness = 0, PercWin = 0, Bonus = 0},
   },
@@ -383,28 +383,28 @@ local configuration = {
     {Playing = 0}, -- EDVIN
   },
   awards_trophies = {
-  
+
     -- Trophy win conditions
     -- Kill more than this number of rats in a year to win this award
     -- MIN 0
     RatKillsAbsolute  = 25,
     -- Sell more than this number of cans to win the award MIN 0
-    CansofCoke = 100, 
+    CansofCoke = 100,
     -- If player's reputation is >x all through the year then win trophy MIN 0 MAX 1000
-    Reputation = 400, 
+    Reputation = 400,
     -- Percentage - keep your plants >x or more watered MIN 0 MAX 100
     Plant = 80,
-    -- Percentage - keep mean staff happiness >x throughout the year to win the trophy 
+    -- Percentage - keep mean staff happiness >x throughout the year to win the trophy
     -- MIN 0 MAX 100
     TrophyStaffHappiness = 85,
-    -- Percentage - Rats shot:Rats killed - only valid if player kills at least 
+    -- Percentage - Rats shot:Rats killed - only valid if player kills at least
     -- half the number of rats needed to win the other rats trophy
     RatKillsPercentage =  11,
     -- TODO: this one is hard to understand! percentage of what exactly?
     -- Percentage  (0-100) low is good needs at 2 mayor visits to be triggered
     -- So for now, it is super visits that will trigger this prize
-    -- Please all of the VIPs that visit your hospital during the year 
-    -- you will have to get a super feedback for each visit 
+    -- Please all of the VIPs that visit your hospital during the year
+    -- you will have to get a super feedback for each visit
     -- TrophyMayor = 25,
 
     -- Trophy win bonuses
@@ -424,14 +424,14 @@ local configuration = {
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
     -- Bonus to money for approximately 100% Cure Rate in the year (MONEY BONUS)
-    TrophyCuresBonus = 6000, 
+    TrophyCuresBonus = 6000,
     -- Bonus to reputation for pleasing VIPs in the year (REPUTATION BONUS)
-    TrophyMayorBonus = 5, 
+    TrophyMayorBonus = 5,
 
 
     ------------------- Award win/loss criteria -------------------
-    
-    
+
+
     -- >x to win the award MIN 0 MAX 255
     CuresAward = 50,
     -- <x to win this award MIN 0 MAX 255
@@ -479,11 +479,11 @@ local configuration = {
     -- Percentages - low is well looked after, high is bad
     WellKeptTechAward = 20,
     WellKeptTechPoor = 70,
-    
-    
+
+
     ---------------- Award bonuses and penalties --------------------
-    
-    
+
+
     -- MIN -32000 MAX +32000 - MONEY
     CuresBonus = 2000,
     -- MIN -32000 MAX +32000 - MONEY

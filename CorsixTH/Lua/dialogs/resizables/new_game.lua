@@ -59,14 +59,14 @@ local col_shadow = {
 
 function UINewGame:UINewGame(ui)
   self:UIResizable(ui, 320, 220, col_bg)
-  
+
   local app = ui.app
   self.esc_closes = true
   self.resizable = false
   self.modal_class = "main menu"
   self.on_top = true
   self:setDefaultPosition(0.5, 0.25)
-  
+
   if TheApp.using_demo_files then
     -- We're using the demo version of TH. Load directly and activate the tutorial.
     -- Those who use the demo files probably want that anyway.
@@ -79,8 +79,8 @@ function UINewGame:UINewGame(ui)
   self.border_sprites = app.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   self.start_tutorial = false
   self.difficulty = 1
-  
-  
+
+
   local avail_diff = {
     {text = _S.new_game_window.medium, tooltip = _S.tooltip.new_game_window.medium, param = "full"},
   }

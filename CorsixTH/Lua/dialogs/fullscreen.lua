@@ -23,7 +23,7 @@ class "UIFullscreen" (Window)
 
 function UIFullscreen:UIFullscreen(ui)
   self:Window()
-  
+
   local app = ui.app
   self.esc_closes = true
   self.ui = ui
@@ -31,7 +31,7 @@ function UIFullscreen:UIFullscreen(ui)
 
   self.width = 640
   self.height = 480
-  
+
   self:onChangeResolution()
 end
 
@@ -51,7 +51,7 @@ function UIFullscreen:onChangeResolution()
   end
   -- not draggable in actual fullscreen mode
   self.draggable = not not self.border_sprites
-  
+
   local config = self.ui.app.runtime_config.window_position
   if config then
     config = config[self:getSavedWindowPositionName()]
@@ -59,9 +59,9 @@ function UIFullscreen:onChangeResolution()
       return self:setPosition(config.x, config.y)
     end
   end
-  
+
   self.x = (app.config.width - self.width) / 2
-  
+
   -- NB: Bottom panel is 48 pixels high
   if app.config.height > 480 + 48 then
     self.y = (app.config.height - 48 - self.height) / 2

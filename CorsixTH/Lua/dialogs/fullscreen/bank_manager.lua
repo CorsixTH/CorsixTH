@@ -32,8 +32,8 @@ function UIBankManager:UIBankManager(ui)
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
     self.panel_sprites = gfx:loadSpriteTable("QData", "Bank02V", true, palette)
     self.font = gfx:loadFont("QData", "Font36V", false, palette)
-  
-    -- The statistics font 
+
+    -- The statistics font
     palette = gfx:loadPalette("QData", "Stat01V.pal")
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
     self.stat_font = gfx:loadFont("QData", "Font37V", false, palette)
@@ -47,12 +47,12 @@ function UIBankManager:UIBankManager(ui)
   self.browsclk = 0
   self.smilesclk = 0
   self.eyesclk = 0
-  
+
    -- sprites for the animation
   self.smiles = self:addPanel(12, 303, 199)
   self.eyesblink = self:addPanel(7, 298, 173)
   self.browslift = self:addPanel(9, 296, 165)
-  
+
   -- Button so that the user can click in the middle and get the statistics page and
   -- vice versa
   self.stat_button = self:addPanel(0, 230, 100)
@@ -60,36 +60,36 @@ function UIBankManager:UIBankManager(ui)
   self.return_from_stat_button = self:addPanel(0, 0, 0)
     :makeButton(0, 0, 640, 440, 0, self.hideStatistics)
   self.return_from_stat_button.enabled = false
-  
+
   -- Buttons
   -- The close button needs to be movable
   self.close_panel = self:addPanel(0, 607, 448)
   self.close_button = self.close_panel:makeButton(0, 0, 26, 26, 4, self.close):setTooltip(_S.tooltip.bank_manager.close)
-  
+
   self:addPanel(0, 250, 390):makeButton(0, 0, 200, 50, 0, self.openTownMap):setTooltip(_S.tooltip.toolbar.town_map)
   self:addPanel(0, 192, 265):makeButton(0, 0, 21, 21, 6, self.increaseLoan):setTooltip(_S.tooltip.bank_manager.borrow_5000)
   self:addPanel(0, 50, 265):makeButton(0, 0, 21, 21, 5, self.decreaseLoan):setTooltip(_S.tooltip.bank_manager.repay_5000)
-  
+
   self.graph_buttons = {
     self:addPanel(0, 547, 157):makeButton(0, 0, 42, 23, 3, self.showGraph1):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[1])),
     self:addPanel(0, 547, 217):makeButton(0, 0, 42, 23, 3, self.showGraph2):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[2])),
     self:addPanel(0, 547, 277):makeButton(0, 0, 42, 23, 3, self.showGraph3):setTooltip(_S.tooltip.bank_manager.show_graph:format(self.ui.hospital.insurance[3]))
   }
-  
+
   self.graph = self:addPanel(1, 417, 150)
-  
+
   self.graph.visible = false
   self.graph.enabled = false
   self.return_from_graph_button = self:addPanel(0, 547, 277)
   self.return_from_graph_button:makeButton(0, 0, 42, 23, 2, self.returnFromGraph):setTooltip(_S.tooltip.bank_manager.graph_return)
   self.return_from_graph_button.visible = false
   self.return_from_graph_button.enabled = false
-  
+
   self:makeTooltip(_S.tooltip.bank_manager.hospital_value,   60, 105, 203, 157)
   self:makeTooltip(_S.tooltip.bank_manager.balance,          60, 170, 203, 222)
   self:makeTooltip(_S.tooltip.bank_manager.current_loan,     60, 235, 203, 287)
   self:makeTooltip(_S.tooltip.bank_manager.interest_payment, 60, 300, 203, 352)
-  
+
   local --[[persistable:insurance_tooltip_template]] function insurance_tooltip(i)
     return --[[persistable:insurance_tooltip]] function()
       if not self.graph.visible then
@@ -97,7 +97,7 @@ function UIBankManager:UIBankManager(ui)
       end
     end
   end
-  
+
   self:makeDynamicTooltip(insurance_tooltip(1), 430, 128, 589, 180)
   self:makeDynamicTooltip(insurance_tooltip(2), 430, 188, 589, 240)
   self:makeDynamicTooltip(insurance_tooltip(3), 430, 248, 589, 300)
@@ -123,7 +123,7 @@ end
 
 local function sum(t)
   local sum = 0
-  for _, entry in ipairs(t) do 
+  for _, entry in ipairs(t) do
     sum = sum + entry
   end
   return sum
@@ -138,7 +138,7 @@ function UIBankManager:onTick()
     if self.eyesclk > 2 then
       self.eyesclk = 0
       self.eyesblink.sprite_index = self.eyesblink.sprite_index + 1
-      if self.eyesblink.sprite_index > 8 then 
+      if self.eyesblink.sprite_index > 8 then
         self.eyesblink.sprite_index = 7
       end
     end
@@ -160,7 +160,7 @@ function UIBankManager:onTick()
     if self.smilesclk > 3 then
       self.smilesclk = 0
       self.smiles.sprite_index = self.smiles.sprite_index + 1
-      if self.smiles.sprite_index > 15 then 
+      if self.smiles.sprite_index > 15 then
         self.smiles.sprite_index = 12
       end
     end
@@ -178,7 +178,7 @@ function UIBankManager:onTick()
   -- up and down once
   elseif self.counter  >= 88 and self.counter < 100 then
     animateBrows()
-  -- smile 
+  -- smile
   elseif self.counter  >= 132 and  self.counter < 140 then
     animateSmile()
   -- two blinks
@@ -200,7 +200,7 @@ function UIBankManager:onTick()
   elseif self.counter  >= 298 and self.counter < 322 then
     animateBrows()
   -- two blinks
-  elseif self.counter  >= 340 and self.counter < 352 then 
+  elseif self.counter  >= 340 and self.counter < 352 then
     animateEyes()
   end
   -- reset the animation counter
@@ -211,21 +211,21 @@ end
 
 function UIBankManager:draw(canvas, x, y)
   local hospital = self.ui.hospital
-  
+
   -- Either draw the statistics page or the normal bank page
   if self.showingStatistics then
     local font = self.stat_font
     self.stat_background:draw(canvas, self.x + x, self.y + y)
     UIFullscreen.draw(self, canvas, x, y)
     x, y = self.x + x, self.y + y
-    
+
     -- Titles
     font:draw(canvas, _S.bank_manager.statistics_page.date, x + 44, y + 37, 65, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.details, x + 125, y + 40, 230, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.money_out, x + 373, y + 42, 70, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.money_in, x + 449, y + 41, 70, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.balance, x + 525, y + 40, 70, 0)
-    
+
     -- Each transaction
     -- A for loop going backwards
     for no = 1, #hospital.transactions do
@@ -240,7 +240,7 @@ function UIBankManager:draw(canvas, x, y)
       end
       font:draw(canvas, "$ " .. values.balance, x + 529, current_y)
     end
-    
+
     -- Summary
     font:draw(canvas, _S.bank_manager.statistics_page.current_balance, x + 373, y + 420, 140, 0)
     font:draw(canvas, "$ " .. hospital.balance, x + 526, y + 421, 70, 0)
@@ -249,7 +249,7 @@ function UIBankManager:draw(canvas, x, y)
     self.background:draw(canvas, self.x + x, self.y + y)
     UIFullscreen.draw(self, canvas, x, y)
     x, y = self.x + x, self.y + y
-    
+
     -- The left side
     font:draw(canvas, _S.bank_manager.hospital_value, x + 60, y + 109, 143, 0)
     font:draw(canvas, "$ " .. hospital.value, x + 60, y + 139, 143, 0)
@@ -260,7 +260,7 @@ function UIBankManager:draw(canvas, x, y)
     font:draw(canvas, _S.bank_manager.interest_payment, x + 60, y + 305, 143, 0)
     local interest = math.floor(hospital.loan * hospital.interest_rate / 12)
     font:draw(canvas, "$ " .. interest, x + 60, y + 334, 143, 0)
-    
+
     -- The right side
     font:draw(canvas, _S.bank_manager.insurance_owed, x + 430, y + 102, 158, 0)
     if self.graph.visible then
@@ -312,10 +312,10 @@ function UIBankManager:showStatistics(keep_cursor)
   self.showingStatistics = true
   self.return_from_stat_button.enabled = true
   self.stat_button.enabled = false
-  -- hides the animated parts of the bank manager when viewing the statement  
+  -- hides the animated parts of the bank manager when viewing the statement
   self.smiles.visible = false
   self.eyesblink.visible = false
-  self.browslift.visible = false  
+  self.browslift.visible = false
   -- The close button has been slightly moved.
   local panel = self.close_panel
   panel.x = panel.x - 6
@@ -339,9 +339,9 @@ function UIBankManager:hideStatistics()
   -- shows the animated parts of the bank manager when viewing the main screen
   self.smiles.visible = true
   self.eyesblink.visible = true
-  self.browslift.visible = true  
-  -- resets the animation counter if the screen is switched to the statement and back 
-  self.counter = -1  
+  self.browslift.visible = true
+  -- resets the animation counter if the screen is switched to the statement and back
+  self.counter = -1
   -- return the close button again
   local panel = self.close_panel
   panel.x = panel.x + 6

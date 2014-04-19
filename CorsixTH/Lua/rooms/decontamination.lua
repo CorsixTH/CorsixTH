@@ -57,14 +57,14 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local shower, pat_x, pat_y = self.world:findObjectNear(patient, "shower")
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
-  
+
   local --[[persistable:decontamination_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].shower_ready and patient.action_queue[1].shower_ready then
       staff:finishAction()
       patient:finishAction()
     end
   end
-  
+
   staff:walkTo(stf_x, stf_y)
   staff:queueAction{
     name = "idle",
@@ -76,7 +76,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
     name = "use_object",
     object = console,
   }
-  
+
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{
     name = "idle",
@@ -84,7 +84,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
     loop_callback = loop_callback,
     shower_ready = true,
   }
-  
+
   local prolonged = true
   local length = math.random() * 3 - staff.profile.skill
   if length < 1 then
@@ -112,7 +112,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
       end
     end,
   }
-  
+
   return Room.commandEnteringPatient(self, patient)
 end
 

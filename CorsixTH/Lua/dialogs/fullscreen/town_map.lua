@@ -45,7 +45,7 @@ function UITownMap:UITownMap(ui)
     self:close()
     return
   end
-  
+
   self.default_button_sound = "selectx.wav"
   self.default_buy_sound    = "buy.wav"
 
@@ -58,7 +58,7 @@ function UITownMap:UITownMap(ui)
   -- TODO display the areas, in the right color
   -- TODO display everything in the areas
   -- TODO multiplayer mode
-  
+
   -- NB: original TH closed the town map on right click of balance button.
   -- This is likely a bug and we do not copy this behavior.
   self:addPanel(0, 30,  420):makeButton(0, 0, 200, 50, 0, self.bankManager, nil, self.bankStats):setTooltip(_S.tooltip.town_map.balance)
@@ -79,7 +79,7 @@ function UITownMap:UITownMap(ui)
   toggle_button(3, 140, 141, "fire_ext_enabled", _S.tooltip.town_map.fire_extinguishers)
   toggle_button(4, 140, 193, "objects_enabled", _S.tooltip.town_map.objects)
   toggle_button(5, 140, 246, "radiators_enabled", _S.tooltip.town_map.radiators)
-  
+
   self:makeTooltip(_S.tooltip.town_map.heat_level, 94, 318, 167, 331)
   self:makeTooltip(_S.tooltip.town_map.heating_bill, 72, 351, 167, 374)
 end
@@ -95,7 +95,7 @@ function UITownMap:initRuntimeConfig()
     config.plants_enabled = true
     config.fire_ext_enabled = true
     config.objects_enabled = true
-    config.radiators_enabled = true  
+    config.radiators_enabled = true
   end
   return config
 end
@@ -144,17 +144,17 @@ function UITownMap:onMouseUp(button, x, y)
         local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
         self.ui:scrollMapTo(sx, sy)
         self:close()
-      end  
+      end
     end
   end
-  
+
   return UIFullscreen.onMouseUp(self, button, x, y) or redraw
 end
 
 function UITownMap:draw(canvas, x, y)
   self.background:draw(canvas, self.x + x, self.y + y)
   UIFullscreen.draw(self, canvas, x, y)
-  
+
   x, y = self.x + x, self.y + y
   local app      = self.ui.app
   local hospital = self.ui.hospital
@@ -166,7 +166,7 @@ function UITownMap:draw(canvas, x, y)
   if not config then
     config = self:initRuntimeConfig()
   end
-  
+
   -- We need to draw number of people, plants, fire extinguisers, other objects
   -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
@@ -182,7 +182,7 @@ function UITownMap:draw(canvas, x, y)
   self.info_font:draw(canvas, fireext,      x +  95, y + 157)
   self.info_font:draw(canvas, objs,         x +  95, y + 211)
   self.info_font:draw(canvas, radiators,    x +  95, y + 265)
-  
+
   -- Heating costs
   local heating_costs = math.floor(((hospital.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
@@ -213,7 +213,7 @@ function UITownMap:draw(canvas, x, y)
         town_map_offset_y + ent.tile_y * 3 + 1, size, size)
     end
   end
-  
+
   local function draw_entities_in_hospital(list, color, size)
     for i, ent in ipairs(list) do
       local tile_x, tile_y = ent.tile_x, ent.tile_y
@@ -231,22 +231,22 @@ function UITownMap:draw(canvas, x, y)
     draw_entities_in_hospital(self.ui.hospital.staff, staff_color, 2)
     draw_entities_in_hospital(self.ui.hospital.patients, patient_color, 2)
   end
-  
+
   if config.radiators_enabled then
     local radiator_color = canvas:mapRGB(255, 0, 70)
     draw_entities(world:getObjectsById("radiator"), radiator_color, 1)
   end
-  
+
   if config.fire_ext_enabled then
     local fire_ext_color = canvas:mapRGB(216, 0, 0)
     draw_entities(world:getObjectsById("extinguisher"), fire_ext_color, 2)
   end
-  
+
   if config.plants_enabled then
     local plant_color = canvas:mapRGB(127, 180, 73)
     draw_entities(world:getObjectsById("plant"), plant_color, 2)
   end
-  
+
   if config.objects_enabled then
     local machine_list = {}
     for _, obj_list in pairs(world.objects) do
@@ -260,7 +260,7 @@ function UITownMap:draw(canvas, x, y)
     local machine_color = canvas:mapRGB(142, 182, 182)
     draw_entities(machine_list, machine_color, 3)
   end
-  
+
   -- plot number, owner, area and price
   local plot_num = "-"
   local tile_count = "-"

@@ -274,7 +274,7 @@ end
 
 function MakeLuaCodeModel(lua_file_names)
   local project = LuaProject()
-  
+
   tokens_gfind_mode "Lua"
   local lua_file_tokens = {}
   for _, filename in ipairs(lua_file_names) do

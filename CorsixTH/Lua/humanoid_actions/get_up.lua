@@ -29,7 +29,7 @@ local function action_get_up_start(action, humanoid)
   else
     humanoid.last_move_direction = "south"
   end
-  
+
   assert(humanoid.get_up_anim, "Error: no getting up animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.get_up_anim, humanoid.last_move_direction == "east" and 0 or 1)

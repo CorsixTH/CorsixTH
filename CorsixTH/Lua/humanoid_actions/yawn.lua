@@ -23,7 +23,7 @@ end)
 
 
 local function action_yawn_start(action, humanoid)
-  
+
   assert(humanoid.yawn_anim, "Error: yawning animation for humanoid " .. humanoid.humanoid_class)
   action.must_happen = true
   humanoid:setAnimation(humanoid.yawn_anim, humanoid.last_move_direction == "east" and 0 or 1)

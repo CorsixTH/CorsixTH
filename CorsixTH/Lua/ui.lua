@@ -86,13 +86,13 @@ function UI:initKeyAndButtonCodes()
 
   self.key_remaps = key_remaps
   self.key_to_button_remaps = key_to_button_remaps
-  
+
   self.button_codes = {
     left = 1,
     middle = 2,
     right = 3,
   }
-  
+
   -- Apply button remaps directly to codes, as mouse button codes are reliable
   -- (keyboard key codes are not).
   local original_button_codes = {}
@@ -107,7 +107,7 @@ function UI:initKeyAndButtonCodes()
     end
     self.button_codes[behave_as] = code
   end
-  
+
   self.button_codes = invert(self.button_codes)
 end
 
@@ -156,7 +156,7 @@ function UI:UI(app, minimal)
     self.waiting_cursor = app.gfx:loadMainCursor("sleep")
   end
   self.editing_allowed = true
-  
+
   if not LOADED_DIALOGS then
     app:loadLuaFolder("dialogs", true)
     app:loadLuaFolder("dialogs/fullscreen", true)
@@ -165,12 +165,12 @@ function UI:UI(app, minimal)
     app:loadLuaFolder("dialogs/resizables/file_browsers", true)
     LOADED_DIALOGS = true
   end
-  
+
   self:setCursor(self.default_cursor)
-  
+
   -- to avoid a bug which causes open fullscreen windows to display incorrectly, load
   -- the sprite sheet associated with all fullscreen windows so they are correctly cached.
-  -- Darrell: Only do this if we have a valid data directory otherwise we won't be able to 
+  -- Darrell: Only do this if we have a valid data directory otherwise we won't be able to
   -- display the directory browser to even find the data directory.
   -- Edvin: Also, the demo does not contain any of the dialogs.
   if self.app.good_install_folder and not self.app.using_demo_files then
@@ -209,7 +209,7 @@ function UI:UI(app, minimal)
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
     gfx:loadSpriteTable("QData", "Award03V", true, palette)
   end
-  
+
   self:setupGlobalKeyHandlers()
 end
 
@@ -222,7 +222,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler({"alt", "enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
-  
+
   if self.app.config.debug then
     self:addKeyHandler("f12", self, self.showLuaConsole)
   end
@@ -277,13 +277,13 @@ function UI:drawTooltip(canvas)
   if not self.tooltip or not self.tooltip_counter or self.tooltip_counter > 0 then
     return
   end
-  
+
   local x, y = self.tooltip.x, self.tooltip.y
   if not self.tooltip.x then
     -- default to cursor position for (lower left corner of) tooltip
     x, y = self:getCursorPosition()
   end
-  
+
   if self.tooltip_font then
     self.tooltip_font:drawTooltip(canvas, self.tooltip.text, x, y)
   end
@@ -429,15 +429,15 @@ function UI:changeResolution(width, height)
   self:setCursor(cursor)
   -- Save new setting in config
   self.app:saveConfig()
-  
+
   self:onChangeResolution()
-  
+
   return true
 end
 
 function UI:toggleFullscreen()
   local modes = self.app.modes
-  
+
   local function toggleMode(index)
     self.app.fullscreen = not self.app.fullscreen
     if self.app.fullscreen then
@@ -446,7 +446,7 @@ function UI:toggleFullscreen()
       modes[index] = ""
     end
   end
-  
+
   -- Search in modes table if it contains a fullscreen value and keep the index
   -- If not found, we will add an index at end of table
   local index = #modes + 1
@@ -456,12 +456,12 @@ function UI:toggleFullscreen()
       break
     end
   end
-  
+
   -- Toggle Fullscreen mode
   toggleMode(index)
   self.app.video:endFrame()
   self.app.moviePlayer:deallocatePictureBuffer();
-  
+
   local success = true
   local video = TH.surface(self.app.config.width, self.app.config.height, unpack(modes))
   if not video then
@@ -472,7 +472,7 @@ function UI:toggleFullscreen()
     toggleMode(index)
     video = TH.surface(self.app.config.width, self.app.config.height, unpack(self.app.modes))
   end
-  
+
   self.app.video = video -- Apply changes
   self.app.gfx:updateTarget(self.app.video)
   self.app.moviePlayer:allocatePictureBuffer();
@@ -481,11 +481,11 @@ function UI:toggleFullscreen()
   local cursor = self.cursor
   self.cursor = nil
   self:setCursor(cursor)
-  
+
   -- Save new setting in config
   self.app.config.fullscreen = self.app.fullscreen
   self.app:saveConfig()
-  
+
   return success
 end
 
@@ -504,7 +504,7 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
     end
     key = self.key_remaps[key] or key
   end
-  
+
   -- If there is one, the current textbox gets the key.
   -- It will not process any text at this point though.
   for _, box in ipairs(self.textboxes) do
@@ -528,7 +528,7 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
       end
     end
   end
-  
+
   self.buttons_down[key] = true
   self.modifiers_down = modifiers
   self.key_press_handled = handled
@@ -554,7 +554,7 @@ function UI:onEditingText(text, start, length)
   -- Does nothing at the moment. We are handling text input ourselves.
 end
 
---! Called in-between onKeyDown and onKeyUp. The argument 'text' is a 
+--! Called in-between onKeyDown and onKeyUp. The argument 'text' is a
 --! string containing the input localized according to the keyboard layout
 --! the user uses.
 function UI:onTextInput(text)
@@ -599,7 +599,7 @@ function UI:onMouseDown(code, x, y)
   if x >= 3 and y >= 3 and x < self.app.config.width - 3 and y < self.app.config.height - 3 then
     self.buttons_down["mouse_"..button] = true
   end
-  
+
   self:updateTooltip()
   return Window.onMouseDown(self, button, x, y) or repaint
 end
@@ -616,17 +616,17 @@ function UI:onMouseUp(code, x, y)
     self.down_count = 0
   end
   self.buttons_down["mouse_"..button] = nil
-  
+
   if Window.onMouseUp(self, button, x, y) then
     repaint = true
   else
-    if self.cursor_entity and self.cursor_entity.onClick 
+    if self.cursor_entity and self.cursor_entity.onClick
     and self.app.world.user_actions_allowed then
       self.cursor_entity:onClick(self, button)
       repaint = true
     end
   end
-  
+
   self:updateTooltip()
   return repaint
 end
@@ -669,18 +669,18 @@ end
 
 function UI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
-  
+
   if self.drag_mouse_move then
     self.drag_mouse_move(x, y)
     return true
   end
-  
+
   if Window.onMouseMove(self, x, y, dx, dy) then
     repaint = true
   end
 
   self:updateTooltip()
-  
+
   return repaint
 end
 
@@ -763,11 +763,11 @@ function UI:afterLoad(old, new)
     self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
     self:removeKeyHandler("a", self)
   end
-  -- changing this so that it is quit application and Shift + Q is quit to main menu  
+  -- changing this so that it is quit application and Shift + Q is quit to main menu
   if old < 71 then
     self:removeKeyHandler({"alt", "f4"}, self, self.quit)
     self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
-  end    
+  end
   Window.afterLoad(self, old, new)
 end
 

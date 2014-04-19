@@ -69,9 +69,9 @@ function UIOptions:UIOptions(ui, mode)
   self:setDefaultPosition(0.5, 0.25)
   self.default_button_sound = "selectx.wav"
   self.app = app
-  
+
   self:checkForAvailableLanguages()
-  
+
   -- Set up list of resolutions
   self.available_resolutions = {
     {text = "640x480 (4:3)",    width = 640,  height = 480},
@@ -89,12 +89,12 @@ function UIOptions:UIOptions(ui, mode)
     {text = "1920x1200 (16:10)", width = 1920, height = 1200},
     {text = _S.options_window.custom_resolution, custom = true},
   }
-  
+
   -- Window parts definition
   -- Title
   self:addBevelPanel(80, 10, 165, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
-  
+
   -- Fullscreen
   self:addBevelPanel(20, 45, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen).lowered = true
@@ -102,14 +102,14 @@ function UIOptions:UIOptions(ui, mode)
     self:addBevelPanel(165, 45, 135, 20, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
   self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFullscreen)
     :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
-  
+
   -- Screen resolution
   self:addBevelPanel(20, 70, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
-  
+
   self.resolution_panel = self:addBevelPanel(165, 70, 135, 20, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
-  
+
   -- Language
   local lang = string.upper(app.config.language)
   self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
@@ -123,17 +123,17 @@ function UIOptions:UIOptions(ui, mode)
   self.volume_panel =
     self:addBevelPanel(165, 120, 135, 20, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, 135, 20, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle) 
-  
+    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
+
   -- "Customise" button
   self:addBevelPanel(20, 150, 135, 30, col_bg):setLabel(_S.options_window.customise)
-    :makeButton(0, 0, 135, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button) 
+    :makeButton(0, 0, 135, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
 
   -- "Folders" button
   self:addBevelPanel(165, 150, 135, 30, col_bg):setLabel(_S.options_window.folder)
-    :makeButton(0, 0, 135, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button) 
-  
-   
+    :makeButton(0, 0, 135, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
+
+
   -- "Back" button
   self:addBevelPanel(20, 190, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
@@ -195,15 +195,15 @@ end
 
 function UIOptions:selectResolution(number)
   local res = self.available_resolutions[number]
-  
+
   local callback = --[[persistable:options_resolution_callback]] function(width, height)
     if not self.ui:changeResolution(width, height) then
       local err = {_S.errors.unavailable_screen_size}
-      self.ui:addWindow(UIInformation(self.ui, err)) 
+      self.ui:addWindow(UIInformation(self.ui, err))
     end
     self.resolution_panel:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
   end
-  
+
   if res.custom then
     self.resolution_panel:setLabel(self.ui.app.config.width .. "x" .. self.ui.app.config.height)
     self.ui:addWindow(UIResolution(self.ui, callback))
@@ -274,7 +274,7 @@ class "UIResolution" (UIResizable)
 
 function UIResolution:UIResolution(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)
-  
+
   local app = ui.app
   self.modal_class = "resolution"
   self.on_top = true
@@ -282,9 +282,9 @@ function UIResolution:UIResolution(ui, callback)
   self.resizable = false
   self:setDefaultPosition(0.5, 0.5)
   self.default_button_sound = "selectx.wav"
-  
+
   self.callback = callback
-  
+
   -- Window parts definition
   -- Title
   self:addBevelPanel(20, 10, 160, 20, col_caption):setLabel(_S.options_window.resolution)
@@ -300,7 +300,7 @@ function UIResolution:UIResolution(ui, callback)
   self.height_textbox = self:addBevelPanel(100, 60, 80, 20, col_textbox, col_highlight, col_shadow)
     :setTooltip(_S.tooltip.options_window.height)
     :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(app.config.height))
-  
+
   -- Apply and cancel
   self:addBevelPanel(20, 90, 80, 40, col_bg):setLabel(_S.options_window.apply)
     :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.options_window.apply)
@@ -318,8 +318,8 @@ function UIResolution:ok()
     local err = {_S.errors.minimum_screen_size}
     self.ui:addWindow(UIInformation(self.ui, err))
   elseif width > 3000 or height > 2000 then
-    self.ui:addWindow(UIConfirmDialog(self.ui, 
-      _S.confirmation.maximum_screen_size, 
+    self.ui:addWindow(UIConfirmDialog(self.ui,
+      _S.confirmation.maximum_screen_size,
       --[[persistable:maximum_screen_size_confirm_dialog]]function()
       self:close(true)
       self:close(false)
