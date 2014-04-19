@@ -403,7 +403,7 @@ local configuration = {
     -- TODO: this one is hard to understand! percentage of what exactly?
     -- Percentage  (0-100) low is good needs at 2 mayor visits to be triggered
     -- So for now, it is super visits that will trigger this prize
-    -- Please all of the VIP’s that visit your hospital during the year 
+    -- Please all of the VIPs that visit your hospital during the year 
     -- you will have to get a super feedback for each visit 
     -- TrophyMayor = 25,
 
