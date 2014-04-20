@@ -24,6 +24,7 @@ SOFTWARE.
 #include <memory.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif
