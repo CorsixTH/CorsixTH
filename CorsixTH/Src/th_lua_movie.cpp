@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_movie.h"
+#include "th_gfx.h"
 
 static int l_movie_new(lua_State *L)
 {

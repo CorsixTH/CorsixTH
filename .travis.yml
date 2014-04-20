@@ -2,7 +2,12 @@ language: cpp
 before_install:
   # Get build dependencies
   - sudo apt-get -qq update
-  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks
+  # These are requred for LDocGen
+  - sudo luarocks install lpeg
+  - sudo luarocks install luafilesystem
+  # Install the mingw-w64 packages.
+  - sudo apt-get -q install g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
   # The packages in ubuntu's repositories seem a little broken
   # so use a bleeding edge version
   - wget http://ftp.jp.debian.org/debian/pool/main/m/mingw-w64/mingw-w64_3.1.0-1_all.deb
@@ -10,12 +15,12 @@ before_install:
   - mkdir libs
   - cd libs
   # Get FFmpeg
-  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.3-win32-dev.7z
-  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.3-win32-shared.7z
-  - /usr/bin/7za x ffmpeg-2.1.3-win32-dev.7z
-  - /usr/bin/7za x ffmpeg-2.1.3-win32-shared.7z
-  - mv ffmpeg-2.1.3-win32-dev ffmpeg-dev
-  - mv ffmpeg-2.1.3-win32-shared ffmpeg-bin
+  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.4-win32-dev.7z
+  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.4-win32-shared.7z
+  - /usr/bin/7za x ffmpeg-2.1.4-win32-dev.7z
+  - /usr/bin/7za x ffmpeg-2.1.4-win32-shared.7z
+  - mv ffmpeg-2.1.4-win32-dev ffmpeg-dev
+  - mv ffmpeg-2.1.4-win32-shared ffmpeg-bin
   # Get freetype
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
@@ -52,14 +57,17 @@ before_script:
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - echo -e "Host server2.armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - cd fresh
-script: 
+script:
+  # Check if there are trailing whitespaces.
+  - ${TRAVIS_BUILD_DIR}/scripts/check_trailing_whitespaces.py $TRAVIS_BUILD_DIR
   # Build CorsixTH
   - make
   # Validate lua files
   - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
   # Build LevelEdit
-  - cd $TRAVIS_BUILD_DIR/LevelEdit
-  - ant dist
+  - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
+  # Build documentation
+  - cd $TRAVIS_BUILD_DIR/LDocGen && lua main.lua
 after_success:
   - mkdir -p $TRAVIS_BUILD_DIR/fresh/CorsixTH
   - cd $TRAVIS_BUILD_DIR
@@ -75,14 +83,15 @@ after_success:
   - cd CorsixTH/
   - cp -r * ../fresh/CorsixTH/
   - cd ../fresh/CorsixTH
-  - ls -lha
   # Prepare ZIP archive
   - ZIPNAME=CTH-`date +"%Y%m%d"`-$TRAVIS_BRANCH-${TRAVIS_COMMIT:0:10}.zip
   - if [ $TRAVIS_PULL_REQUEST != "false" ]; then ZIPNAME=CTH-pull-$TRAVIS_PULL_REQUEST-`date +"%Y%m%d"`-${TRAVIS_COMMIT:0:10}.zip; fi;
   - zip -r $ZIPNAME *
   - chmod 666 $ZIPNAME
   # Upload to server
-  - sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/
+  - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" ]; then sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/; fi;
+  # Upload new docs
+  - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" -a $TRAVIS_BRANCH == "master" ]; then sshpass -p "$SCP_PASS" scp -v -P12349 $TRAVIS_BUILD_DIR/LDocGen/output/* cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/docs/; fi;
 env:
   global:
     secure: "mPtzSeDJKVeUu6KHJEbmHa91O+QK2XM0advYdr+13yr83w3C7cGFFjWgqzirsFUHVqPgdtSJIkom0DIxX7JtRoBZmt/xon+zfLq+Q4aSkJoYezWBqp2gavS8o1kSjtW7XuIuq995yjWvn7nehyoTYkKNtz/EzX5ZIVZ/iX73iyo="

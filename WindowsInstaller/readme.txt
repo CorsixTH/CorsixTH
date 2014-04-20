@@ -16,4 +16,4 @@ folders called x64 and x86 respectively. All other files (lua etc)
 should be as they are when checked out, i.e. "../CorsixTH/*".
 
 You can find more information about creating a Windows installer here:
-http://code.google.com/p/corsix-th/wiki/HowToPackageWindows.
+https://github.com/CorsixTH/CorsixTH/wiki/How-To-Create-Windows-Installer
