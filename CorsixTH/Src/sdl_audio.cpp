@@ -51,8 +51,16 @@ struct music_t
     }
 };
 
+static int halting_music = 0;
+
 static void audio_music_over_callback()
 {
+    // This is a workaround for a change to SDL_Mixer where they started
+    // calling this method when you `halt' the music yourself.
+    // https://github.com/CorsixTH/CorsixTH/issues/129
+    if (halting_music)
+        return;
+
     SDL_Event e;
     e.type = SDL_USEREVENT_MUSIC_OVER;
     SDL_PushEvent(&e);
@@ -276,7 +284,10 @@ static int l_resume_music(lua_State *L)
 
 static int l_stop_music(lua_State *L)
 {
+    halting_music = 1;
     Mix_HaltMusic();
+    halting_music = 0;
+
     return 0;
 }
 
