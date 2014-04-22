@@ -112,6 +112,12 @@ FIND_PACKAGE(Lua REQUIRED)
 IF(Lua_FOUND)
   TARGET_LINK_LIBRARIES(CorsixTH ${LUA_LIBRARY})
   INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
+  # Special link flags needed on OSX/64bit, according to: http://luajit.org/install.html
+  # If these are not specified, luaL_newstate() returns NULL and we get this:
+  #   Fatal error starting CorsixTH: Cannot open Lua state.
+  IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND LUA_INTERPRETER_TYPE STREQUAL "LuaJIT" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    TARGET_LINK_LIBRARIES(CorsixTH "-pagezero_size 10000" "-image_base 100000000")
+  ENDIF()
   message("  ${LUA_INTERPRETER_TYPE} found")
 ELSE(Lua_FOUND)
   message(FATAL_ERROR "Error: Lua library not found, it is required to build")
