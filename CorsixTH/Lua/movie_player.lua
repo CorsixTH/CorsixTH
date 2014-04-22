@@ -263,3 +263,6 @@ function MoviePlayer:refresh()
   self.moviePlayer:refresh()
 end
 
+function MoviePlayer:updateRenderer()
+  self.moviePlayer:setRenderer(self.video)
+end

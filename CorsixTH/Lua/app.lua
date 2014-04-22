@@ -1343,6 +1343,20 @@ function App:checkForUpdates()
   self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))
 end
 
+-- Free up / stop any resources relying on the current video object
+function App:prepareVideoUpdate()
+  self.video:endFrame()
+  self.moviePlayer:deallocatePictureBuffer()
+end
+
+-- Update / start any resources relying on a video object
+function App:finishVideoUpdate()
+  self.gfx:updateTarget(self.video)
+  self.moviePlayer:updateRenderer()
+  self.moviePlayer:allocatePictureBuffer()
+  self.video:startFrame()
+end
+
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end

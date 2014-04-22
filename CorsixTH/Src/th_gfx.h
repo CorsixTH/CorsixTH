@@ -83,7 +83,6 @@ struct THRenderTargetCreationParams
     int iWidth;
     int iHeight;
     int iBPP;
-    uint32_t iSDLFlags;
     bool bFullscreen;
     bool bPresentImmediate;
     bool bReuseContext;
