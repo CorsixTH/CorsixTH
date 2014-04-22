@@ -131,6 +131,9 @@ public: // External API
     //! Initialise the render target
     bool create(const THRenderTargetCreationParams* pParams);
 
+    //! Shut down the render target
+    void destroy();
+
     //! Get the reason for the last operation failing
     const char* getLastError();
 

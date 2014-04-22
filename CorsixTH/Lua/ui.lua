@@ -395,7 +395,8 @@ end
 
 function UI:changeResolution(width, height)
   local old_width, old_height = self.app.config.width, self.app.config.height
-  self.app.video:endFrame()
+  self.app.video:destroy()
+  -- TODO: Don't re-create the window every time we change modes, create a new THRenderTarget API to change resolution.
   local video, error_message = TH.surface(width, height, unpack(self.app.modes))
   if video then
     self.app.config.width = width
@@ -446,7 +447,8 @@ function UI:toggleFullscreen()
 
   -- Toggle Fullscreen mode
   toggleMode(index)
-  self.app.video:endFrame()
+  -- TODO: Don't re-create the window every time we change to/from FS, create a new THRenderTarget API to toggle modes.
+  self.app.video:destroy()
   self.app.moviePlayer:deallocatePictureBuffer();
 
   local success = true

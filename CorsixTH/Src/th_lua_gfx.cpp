@@ -609,6 +609,14 @@ static int l_surface_new(lua_State *L)
     return 2;
 }
 
+static int l_surface_destroy(lua_State *L)
+{
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
+    pCanvas->endFrame();
+    pCanvas->destroy();
+    return 1;
+}
+
 static int l_surface_fill_black(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
@@ -913,6 +921,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 
     // Surface
     luaT_class(THRenderTarget, l_surface_new, "surface", MT_Surface);
+    luaT_setfunction(l_surface_destroy, "destroy");
     luaT_setfunction(l_surface_fill_black, "fillBlack");
     luaT_setfunction(l_surface_start_frame, "startFrame");
     luaT_setfunction(l_surface_end_frame, "endFrame");

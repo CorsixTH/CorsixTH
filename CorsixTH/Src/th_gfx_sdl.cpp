@@ -164,10 +164,7 @@ THRenderTarget::THRenderTarget()
 
 THRenderTarget::~THRenderTarget()
 {
-    SDL_FreeFormat(m_pFormat);
-    SDL_DestroyRenderer(m_pRenderer);
-    SDL_DestroyWindow(m_pWindow);
-    SDL_DestroyTexture(m_pZoomTexture);
+    destroy();
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
@@ -203,6 +200,33 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     m_iHeight = pParams->iHeight;
 
     return true;
+}
+
+void THRenderTarget::destroy()
+{
+    if (m_pFormat)
+    {
+        SDL_FreeFormat(m_pFormat);
+        m_pFormat = NULL;
+    }
+
+    if (m_pZoomTexture)
+    {
+        SDL_DestroyTexture(m_pZoomTexture);
+        m_pZoomTexture = NULL;
+    }
+
+    if (m_pRenderer)
+    {
+        SDL_DestroyRenderer(m_pRenderer);
+        m_pRenderer = NULL;
+    }
+
+    if (m_pWindow)
+    {
+        SDL_DestroyWindow(m_pWindow);
+        m_pWindow = NULL;
+    }
 }
 
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
