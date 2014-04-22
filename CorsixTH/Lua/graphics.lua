@@ -86,9 +86,9 @@ function Graphics:Graphics(app)
   -- be done with a different graphics engine, or might only need to grab an
   -- object from the cache.
   self.reload_functions = setmetatable({}, {__mode = "k"})
-  -- Cursors need to be reloaded after sprite sheets, as they are created
-  -- from a sprite sheet.
-  self.reload_functions_cursors = setmetatable({}, {__mode = "k"})
+  -- Cursors and fonts need to be reloaded after sprite sheets, as they are
+  -- created from sprite sheets.
+  self.reload_functions_last = setmetatable({}, {__mode = "k"})
 
   self:loadFontFile()
 
@@ -169,7 +169,7 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
       local function reloader(res)
         assert(res:load(sheet, index, hot_x, hot_y))
       end
-      self.reload_functions_cursors[cursor] = reloader
+      self.reload_functions_last[cursor] = reloader
     end
     sheet_cache[index] = cursor
     self.load_info[cursor] = {self.loadCursor, self, sheet, index, hot_x, hot_y}
@@ -353,6 +353,11 @@ function Graphics:loadLanguageFont(name, sprite_table, ...)
       -- TODO: Choose face based on "name" rather than always using same face.
       font:setFace(self.ttf_font_data)
       font:setSheet(sprite_table)
+      local function reloader(font)
+        font:clearCache()
+      end
+      self.reload_functions_last[font] = reloader
+
       if not cache then
         cache = {}
         self.cache.language_fonts[name] = cache
@@ -480,7 +485,7 @@ end
 
 function Graphics:updateTarget(target)
   self.target = target
-  for _, res_set in ipairs{"reload_functions", "reload_functions_cursors"} do
+  for _, res_set in ipairs{"reload_functions", "reload_functions_last"} do
     for resource, reloader in pairs(self[res_set]) do
       reloader(resource)
     end

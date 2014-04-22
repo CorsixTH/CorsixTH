@@ -319,6 +319,14 @@ static int l_freetype_font_set_face(lua_State *L)
     luaT_setenvfield(L, 1, "face");
     return 1;
 }
+
+static int l_freetype_font_clear_cache(lua_State *L)
+{
+    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
+    pFont->clearCache();
+    return 0;
+}
+
 #endif
 
 static int l_font_get_size(lua_State *L)
@@ -916,6 +924,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", MT_Sheet);
     luaT_setfunction(l_freetype_font_set_face, "setFace");
     luaT_setfunction(l_freetype_font_get_copyright, "getCopyrightNotice");
+    luaT_setfunction(l_freetype_font_clear_cache, "clearCache");
     luaT_endclass();
 #endif
 
