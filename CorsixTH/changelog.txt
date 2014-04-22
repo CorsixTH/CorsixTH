@@ -17,7 +17,7 @@ As usual there are of course also numerous minor tweaks here and there.
 * Change: You can now build more than one desk in the ward. More nurses means
   a slightly faster throughput.
 * Change: Patients would previously queue outside toilets even though there were
-  free loos since it was dependant on number of people in the room. Now, as soon
+  free loos since it was dependent on number of people in the room. Now, as soon
   as a loo becomes free another patient enters the room to use it, 
   even if there is a long queue for the sink). 
   If there is a queue for the sinks there is a chance the patient will leave 
