@@ -242,9 +242,6 @@ function MoviePlayer:_destroyMovie()
   if self.opengl_mode_index then
     self.app.modes[self.opengl_mode_index] = "opengl"
   end
-  if(self.moviePlayer:requiresVideoReset()) then
-    self.app.ui:resetVideo()
-  end
   if self.channel >= 0 then
     self.audio:releaseChannel(self.channel)
     self.channel = -1

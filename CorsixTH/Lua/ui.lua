@@ -393,19 +393,6 @@ function UI:unregisterTextBox(box)
   end
 end
 
-function UI:resetVideo()
-  local width, height = self.app.config.width, self.app.config.height
-
-  self.app.video:endFrame()
-  self.app.video = TH.surface(width, height, unpack(self.app.modes))
-  self.app.gfx:updateTarget(self.app.video)
-  self.app.video:startFrame()
-  -- Redraw cursor
-  local cursor = self.cursor
-  self.cursor = nil
-  self:setCursor(cursor)
-end
-
 function UI:changeResolution(width, height)
   local old_width, old_height = self.app.config.width, self.app.config.height
   self.app.video:endFrame()
