@@ -473,7 +473,7 @@ function Audio:playBackgroundTrack(index)
 end
 
 function Audio:onMusicOver()
-  if self.not_loaded or #self.background_playlist == 0 then
+  if self.not_loaded or #self.background_playlist == 0 or self.background_music == nil then
     return
   end
   self:playNextBackgroundTrack()
