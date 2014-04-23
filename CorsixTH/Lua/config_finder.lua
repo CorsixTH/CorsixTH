@@ -176,6 +176,7 @@ if needs_rewrite then
 fullscreen = ]=].. tostring(config_values.fullscreen) ..[=[
 
 width = ]=].. tostring(config_values.width) ..[=[
+
 height = ]=].. tostring(config_values.height) ..[=[
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -218,17 +219,20 @@ free_build_mode = ]=].. tostring(config_values.free_build_mode) ..[=[
 -------------------------------------------------------------------------------------------------------------------------
 -- Sounds: By default enabled and set at level 0.5
 play_sounds = ]=].. tostring(config_values.play_sounds) ..[=[
+
 sound_volume = ]=].. tostring(config_values.sound_volume) ..[=[
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Announcements: By default set at level 0.5
 play_announcements = ]=].. tostring(config_values.play_announcements) ..[=[
+
 announcement_volume = ]=].. tostring(config_values.announcement_volume) ..[=[
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Background music: By default enabled and set at level 0.5
 --
 play_music = ]=].. tostring(config_values.play_music) ..[=[
+
 music_volume = ]=].. tostring(config_values.music_volume) ..[=[
 
 -------------------------------------------------------------------------------------------------------------------------
@@ -385,7 +389,9 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 -- sound effects and MP3 audio. If you are experiencing poor audio playback,
 -- then try doubling the buffer size.
 audio_frequency = ]=].. tostring(config_values.audio_frequency) ..[=[
+
 audio_channels = ]=].. tostring(config_values.audio_channels) ..[=[
+
 audio_buffer_size = ]=].. tostring(config_values.audio_buffer_size) ..[=[
 
  ------------------------------------------------------------------------------------------------------------------------
