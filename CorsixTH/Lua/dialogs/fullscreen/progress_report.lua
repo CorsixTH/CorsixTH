@@ -201,10 +201,6 @@ function UIProgressReport:draw(canvas, x, y)
     if world_goals[crit_name].visible then
       local sprite_offset = world_goals[crit_name].red and 2 or 0
       local cur_value = hospital[crit_name]
-      -- Balance is special
-      if crit_name == "balance" then
-        cur_value = cur_value - hospital.loan
-      end
       local height
       if world_goals[crit_name].red then
         local lose = world_goals[crit_name].lose_value

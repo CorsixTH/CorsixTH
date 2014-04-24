@@ -817,8 +817,8 @@ end
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
   self.world.ui:playSound "cashreg.wav"
-  if self.profile.wage > 2000 then -- What cap here?
-    self.profile.wage = 2000
+  if self.profile.wage > 90000 then -- Set the cap to be the same as in TH
+    self.profile.wage = 90000
   else -- If the cap has been reached this member of staff won't get unhappy
        -- ever again...
     self:changeAttribute("happiness", 0.99)
