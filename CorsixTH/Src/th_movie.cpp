@@ -986,7 +986,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
             if(!iGotFrame)
             {
-                if(m_pAudioPacket->data && m_pAudioCodecContext->codec->capabilities & CODEC_CAP_DELAY)
+                if(m_pAudioPacket->data && (m_pAudioCodecContext->codec->capabilities & CODEC_CAP_DELAY))
                 {
                     fFlushComplete = true;
                 }
