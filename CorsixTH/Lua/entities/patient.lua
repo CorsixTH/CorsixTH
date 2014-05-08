@@ -535,7 +535,6 @@ function Patient:tickDay()
   -- its not looking good
   elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
     self:setMood("sad6", "deactivate")
-    self:setMood("dead", "activate")
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
