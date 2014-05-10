@@ -1036,6 +1036,11 @@ function Hospital:onEndMonth()
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
+  -- check if the adviser should complain about costs
+  if self.reputation < math.floor(self.reputation_max/3) then
+   self.world.ui.adviser:say(_A.warnings.low_reputation)
+  end
+
   -- TODO: do you get interest on the balance owed?
   for i, company in ipairs(self.insurance_balance) do
     -- Get the amount that is about to be payed to the player
@@ -1490,7 +1495,7 @@ function Hospital:changeReputation(reason, disease, valueChange)
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  self:addReputation(amount)
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1504,6 +1509,10 @@ function Hospital:changeReputation(reason, disease, valueChange)
   if self.reputation_above_threshold then
     self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
   end
+end
+
+function Hospital:addReputation(value)
+  self.reputation = self.reputation + value
 end
 
 function Hospital:updatePercentages()

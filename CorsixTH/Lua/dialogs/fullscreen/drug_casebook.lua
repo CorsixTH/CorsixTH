@@ -301,6 +301,7 @@ end
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
+  local repChange = 0
   if self.buttons_down.ctrl then
     amount = amount * 25
   elseif self.buttons_down.shift then
@@ -313,6 +314,10 @@ function UICasebook:increasePay()
   else
     self.ui:playSound("selectx.wav")
   end
+  if price < 2 and price > 0.5 and self.hospital.reputation > self.hospital.reputation_min then
+    repChange = ((self.hospital.reputation_max/100)*(amount*10))/-1
+  end
+  self.hospital:addReputation(repChange)
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
 end
@@ -320,6 +325,7 @@ end
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
+  local repChange = 0
   if self.buttons_down.ctrl then
     amount = amount * 25
   elseif self.buttons_down.shift then
@@ -332,6 +338,10 @@ function UICasebook:decreasePay()
   else
     self.ui:playSound("selectx.wav")
   end
+  if price < 2 and price > 0.5 and self.hospital.reputation < self.hospital.reputation_max then
+    repChange = ((self.hospital.reputation_max/100)*(amount*10))
+  end
+  self.hospital:addReputation(repChange)
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
 end
