@@ -1037,8 +1037,12 @@ function Hospital:onEndMonth()
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
   -- check if the adviser should complain about costs
-  if self.reputation < math.floor(self.reputation_max/3) then
-   self.world.ui.adviser:say(_A.warnings.low_reputation)
+  for _, patient in pairs(self.patients) do
+    if patient.attributes["happiness"] < 0.3 and math.random(0,5) == 0
+    and self.disease_casebook[patient.disease.id].price > 1.5 then
+     self.world.ui.adviser:say(_A.warnings.low_happiness)
+     break
+    end
   end
 
   -- TODO: do you get interest on the balance owed?
@@ -1406,6 +1410,14 @@ function Hospital:addPatient(patient)
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
   self.num_visitors_ty = self.num_visitors_ty + 1
+  -- Compare patients' happiness with costs of hospital
+  local diseasePrice = self.disease_casebook[patient.disease.id].price
+  if diseasePrice >= 1 and diseasePrice <= 2 then
+    local newHappiness = diseasePrice - 1
+    patient.attributes["happiness"] = patient.attributes["happiness"] - newHappiness
+  elseif diseasePrice < 1 then
+    patient.attributes["happiness"] = 1.0
+  end
 end
 
 function Hospital:humanoidDeath(humanoid)

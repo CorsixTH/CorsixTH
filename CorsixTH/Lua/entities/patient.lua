@@ -64,6 +64,7 @@ function Patient:setDisease(disease)
   if company < 4 then
     self.insurance_company = company
   end
+
   -- Randomise thirst and the need to visit the loo soon.
   -- Alien patients do not have the needed animations for these things, so exclude them
   if not self.disease.only_emergency then

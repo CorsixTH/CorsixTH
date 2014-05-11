@@ -314,10 +314,14 @@ function UICasebook:increasePay()
   else
     self.ui:playSound("selectx.wav")
   end
-  if price < 2 and price > 0.5 and self.hospital.reputation > self.hospital.reputation_min then
-    repChange = ((self.hospital.reputation_max/100)*(amount*10))/-1
+  if price < 2 and price > 0.5 then
+    repChange = ((self.hospital.reputation_max/100)*(amount/10))/-1
+    for _, patient in pairs(self.hospital.patients) do
+      if patient.disease.id == self.selected_disease and math.random(0,1) == 0 then
+        patient:changeAttribute("happiness", repChange)
+      end
+    end
   end
-  self.hospital:addReputation(repChange)
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
 end
@@ -338,10 +342,14 @@ function UICasebook:decreasePay()
   else
     self.ui:playSound("selectx.wav")
   end
-  if price < 2 and price > 0.5 and self.hospital.reputation < self.hospital.reputation_max then
-    repChange = ((self.hospital.reputation_max/100)*(amount*10))
+  if price < 2 and price > 0.5 then
+    repChange = ((self.hospital.reputation_max/100)*(amount/10))
+    for _, patient in pairs(self.hospital.patients) do
+      if patient.disease.id == self.selected_disease then
+        patient:changeAttribute("happiness", repChange)
+      end
+    end
   end
-  self.hospital:addReputation(repChange)
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
 end
