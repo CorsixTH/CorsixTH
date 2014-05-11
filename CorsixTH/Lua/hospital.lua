@@ -1410,13 +1410,26 @@ function Hospital:addPatient(patient)
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
   self.num_visitors_ty = self.num_visitors_ty + 1
+  -- Give patient a wealth value
+  local wVal = math.random(0,2)
+  if wVal == 1 then patient.wealth = "low"
+  elseif wVal == 2 then patient.wealth = "mid"
+  elseif wVal == 3 then patient.wealth = "high"
+  end
   -- Compare patients' happiness with costs of hospital
   local diseasePrice = self.disease_casebook[patient.disease.id].price
-  if diseasePrice >= 1 and diseasePrice <= 2 then
-    local newHappiness = diseasePrice - 1
-    patient.attributes["happiness"] = patient.attributes["happiness"] - newHappiness
-  elseif diseasePrice < 1 then
-    patient.attributes["happiness"] = 1.0
+  if not patient.insurance_company then
+    if diseasePrice >= 1 and diseasePrice <= 2 then
+      local newHappiness = diseasePrice - 1.0
+      if patient.wealth == "high" then 
+        newHappiness = 0.0
+      elseif patient.wealth == "mid" then
+        newHappiness = math.random(0.0,diseasePrice - 1.0) 
+      end
+      patient.attributes["happiness"] = patient.attributes["happiness"] - newHappiness
+    elseif diseasePrice < 1 then
+      patient.attributes["happiness"] = 1.0
+    end
   end
 end
 
