@@ -1,5 +1,6 @@
 --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 Copyright (c) 2012 Henrique Poyatos
+Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,20 +19,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-Language(utf8 "Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
  --]]
 
 Language("Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
 Inherit("English")
 Encoding(utf8)
-
---[[
-1. Menus e Janelas de Sistema
-2. Menu Superior
-
---]]
-
--- 1. Menus e Janelas de Sistema
 
 main_menu = {
   new_game = "Novo Jogo",
@@ -1319,7 +1311,6 @@ rooms_short = {
   reception         = "Recepção",
   destroyed         = "Destruído",
   corridor_objects  = "Objetos de Corredor",
-
   gps_office        = "Clínica Geral",
   psychiatric       = "Psiquiatria",
   ward              = "Enfermaria",
@@ -1761,3 +1752,43 @@ staff_descriptions = {
     [15] = "Arrogante e convencido. ",
   },
 }
+-- ASAP Organize this part of the Language File ;)
+high_score.player = "PLAYER"
+high_score.pos = "POS"
+high_score.best_scores = "HALL DA FAMA"
+high_score.killed = "Óbitos"
+high_score.categories.salary = "MAIOR SALÁRIO"
+high_score.categories.total_value = "VALOR TOTAL"
+high_score.categories.money = "MAIS RICO"
+high_score.categories.clean = "MAIS LIMPO"
+high_score.categories.cures = "NÚMERO DE CURAS"
+high_score.categories.patient_happiness = "SASTISFAÇÃO DOS PACIENTES"
+high_score.categories.deaths = "NÚMERO DE MORTES"
+high_score.categories.cure_death_ratio = "RELAÇÃO DE CURAS/MORTES"
+high_score.categories.staff_happiness = "SASTISFAÇÃO DOS EMPREGADOS"
+high_score.categories.visitors = "MAIS VISITANTES"
+high_score.categories.staff_number = "MAIS EMPREGADOS"
+high_score.worst_scores = "HALL DA VERGONHA"
+high_score.score = "SCORE"
+dynamic_info.object.strength = "Força %d"
+dynamic_info.patient.guessed_diagnosis = "Diagnóstico advinhado: %s "
+dynamic_info.patient.actions.waiting_for_treatment_rooms = "Esperando você para construir uma sala de diagnóstico para mim"
+dynamic_info.patient.actions.fed_up = "Cansado e indo embora"
+dynamic_info.patient.actions.prices_too_high = "Seus preços estão muito alto - Estou indo para casa"
+dynamic_info.patient.actions.dying = "Morrendo!"
+dynamic_info.patient.actions.epidemic_contagious = "Eu sou contagioso"
+dynamic_info.patient.actions.sent_to_other_hospital = "Mandando para outro lugar"
+dynamic_info.patient.actions.epidemic_sent_home = "Mandado para casa pelo o inspetor"
+dynamic_info.patient.emergency = "Emergência: %s"
+dynamic_info.staff.ability = "Habilidade"
+dynamic_info.vip = "Visitante VIP"
+dynamic_info.health_inspector = "Inspetor de Saúde"
+confirmation.maximum_screen_size = "O Tamanho da Tela que você colocou é maior de 3000 x 2000.  Resoluções grandes são possíveis, mais irá requerer um hardware melhor para ter um framerate bom, você deseja continuar?"
+confirmation.music_warning = "Antes de escolher usar os seus mp3's para usar na música do jogo, você precisará ter o smpeg.dll or equivalente para o seu sistema operacional, se não tiver, você não terá música no jogo.  No momento não existe equivalente para sistemas operacionas de 64bit.  Você deseja continuar?"
+menu_options_wage_increase.deny = "    RECUSAR "
+menu_options_wage_increase.grant = "    CONCEDER "
+build_room_window.cost = "Custo: "
+tooltip.options_window.select_language = "Seleciona a linguagem do jogo"
+tooltip.options_window.select_resolution = "Selecione uma nova resolução"
+tooltip.options_window.language_dropdown_item = "Escolha %s como uma linguagem"
+tooltip.options_window.audio_button = "Liga ou Desliga o som do jogo"
