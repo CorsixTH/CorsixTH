@@ -24,14 +24,6 @@ SOFTWARE.
 Language(utf8 "Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
 Inherit("English")
 
---[[
-1. Menus e Janelas de Sistema
-2. Menu Superior
-
---]]
-
--- 1. Menus e Janelas de Sistema
-
 main_menu = {
   new_game = "Novo Jogo",
   custom_level = "Fase Personalizada",
