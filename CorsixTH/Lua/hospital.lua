@@ -664,7 +664,7 @@ function Hospital:checkFacilities()
       if numberStanding > math.min(numberSitting / 5) then
         self.seating_warning = self.seating_warning + 1
       end
-    elseif self.patientcount >= 50 then
+    else
       if numberStanding > math.min(numberSitting / 20) then
         self.seating_warning = self.seating_warning + 1
       end
@@ -672,7 +672,8 @@ function Hospital:checkFacilities()
         self:warningBench()
         self.seating_warning = 0
       end
-    elseif self.world.year == 1 and self.world.month > 4
+    end
+    if self.world.year == 1 and self.world.month > 4
     and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
