@@ -673,8 +673,8 @@ function Hospital:checkFacilities()
         self.seating_warning = 0
       end
     end
-    if self.world.year == 1 and self.world.month > 4
-    and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
+    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg
+    and (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -683,14 +683,8 @@ function Hospital:checkFacilities()
       elseif self.world.object_counts.bench < self.patientcount then
         self:warningBench()
       end
-    elseif self.world.year > 1 and self.world.day == 12
-    and show_msg  == 4  and not self.bench_msg then
-      if self.world.object_counts.bench > self.patientcount then
-        self:praiseBench()
-      elseif self.world.object_counts.bench < self.patientcount then
-        self:warningBench()
-      end
     end
+
     -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
     -- If there are no radiators remind the player from May onwards
     if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
