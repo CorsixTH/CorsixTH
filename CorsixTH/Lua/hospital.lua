@@ -1017,17 +1017,15 @@ function Hospital:onEndMonth()
   -- add to score each month
   -- rate varies on some performance factors i.e. reputation above 500 increases the score
   -- and the number of deaths will reduce the score.
-  local sal_inc = self.salary_incr /10
-  local sal_mult = ((self.reputation)-500)/((self.num_deaths)+1) -- added 1 so that you don't multipy by 0
+  local sal_inc = self.salary_incr / 10
+  local sal_mult = (self.reputation - 500) / (self.num_deaths + 1) -- added 1 so that you don't divide by 0
   local month_incr = sal_inc + sal_mult
-  -- To ensure that you can't recieve less than 50 or
+  -- To ensure that you can't receive less than 50 or
   -- more than 300 per month
   if month_incr < self.sal_min then
     month_incr = self.sal_min
   elseif month_incr > self.salary_incr then
     month_incr = self.salary_incr
-  else
-    month_incr = month_incr
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
