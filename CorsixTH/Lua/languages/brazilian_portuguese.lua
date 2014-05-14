@@ -21,8 +21,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  --]]
 
-Language(utf8 "Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
+Language("Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
 Inherit("English")
+Encoding(utf8)
 
 main_menu = {
   new_game = "Novo Jogo",
