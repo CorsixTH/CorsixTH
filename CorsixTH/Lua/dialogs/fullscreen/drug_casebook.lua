@@ -318,13 +318,13 @@ function UICasebook:increasePay()
     repChange = ((self.hospital.reputation_max/100)*(amount/10))/-1
     for _, patient in pairs(self.hospital.patients) do
       if patient.disease.id == self.selected_disease then
-        if patient.wealth == "low" then
-          repChange = repChange * 2
-        elseif patient.wealth == "mid" then
-          repChange = repChange
-        elseif patient.wealth == "high" then
-          repChange = 0
-        end
+          if patient.wealth == "low" then
+            repChange = repChange * 2 - self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "mid" then
+            repChange = repChange - self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "high" then
+            repChange = 0
+          end
         patient:changeAttribute("happiness", repChange)
       end
     end
@@ -353,6 +353,13 @@ function UICasebook:decreasePay()
     repChange = ((self.hospital.reputation_max/100)*(amount/10))
     for _, patient in pairs(self.hospital.patients) do
       if patient.disease.id == self.selected_disease then
+          if patient.wealth == "low" then
+            repChange = repChange * 2 + self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "mid" then
+            repChange = repChange + self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "high" then
+            repChange = 0
+          end
         patient:changeAttribute("happiness", repChange)
       end
     end

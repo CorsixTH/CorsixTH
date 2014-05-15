@@ -1424,7 +1424,10 @@ function Hospital:addPatient(patient)
       if patient.wealth == "high" then 
         newHappiness = 0.0
       elseif patient.wealth == "mid" then
-        newHappiness = math.random(0.0,diseasePrice - 1.0) 
+        newHappiness = math.random(0.0,diseasePrice - 1.0)
+      elseif patient.wealth == "low" then
+        newHappiness = math.random(0.0,diseasePrice - 1.0) + 
+          self.disease_casebook[patient.disease.id].reputation / 5000 
       end
       patient.attributes["happiness"] = patient.attributes["happiness"] - newHappiness
     elseif diseasePrice < 1 then
