@@ -608,7 +608,7 @@ function Hospital:afterLoad(old, new)
   end
 end
 
---!Update the Hospital.patientcount variable.
+--! Update the Hospital.patientcount variable.
 function Hospital:countPatients()
   -- I have taken the patient count out of town map, from memory it does not work the other way round.
   -- i.e. calling it from town map to use here
@@ -623,7 +623,7 @@ function Hospital:countPatients()
   end
 end
 
---!Count number of sitting and standing patients in the hospital.
+--! Count number of sitting and standing patients in the hospital.
 --!return (integer, integer) Number of sitting and number of standing patient in the hospital.
 function Hospital:countSittingStanding()
   local numberSitting = 0
