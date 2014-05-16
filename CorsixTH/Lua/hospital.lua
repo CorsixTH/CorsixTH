@@ -608,6 +608,7 @@ function Hospital:afterLoad(old, new)
   end
 end
 
+--!Update the Hospital.patientcount variable.
 function Hospital:countPatients()
   -- I have taken the patient count out of town map, from memory it does not work the other way round.
   -- i.e. calling it from town map to use here
