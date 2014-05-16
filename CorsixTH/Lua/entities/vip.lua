@@ -397,16 +397,7 @@ function Vip:setVIPRating()
 
   -- check the seating : standing ratio of waiting patients
   -- find all the patients who are currently waiting around
-  local numberSitting = 0
-  local numberStanding = 0
-  for _, patient in ipairs(self.hospital.patients) do
-    if (patient.action_queue[1].name == "idle") then
-      numberStanding = numberStanding + 1
-    elseif (patient.action_queue[1].name == "use_object" and
-      patient.action_queue[1].object.object_type.id == "bench") then
-      numberSitting = numberSitting + 1
-    end
-  end
+  local numberSitting, numberStanding = self.hospital:countSittingStanding()
 
   if (numberSitting - numberStanding > 0) then
     self.vip_rating = self.vip_rating + 4
