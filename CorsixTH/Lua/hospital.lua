@@ -664,7 +664,7 @@ function Hospital:checkFacilities()
       if numberStanding > math.min(numberSitting / 5) then
         self.seating_warning = self.seating_warning + 1
       end
-    elseif self.patientcount >= 50 then
+    else
       if numberStanding > math.min(numberSitting / 20) then
         self.seating_warning = self.seating_warning + 1
       end
@@ -672,8 +672,9 @@ function Hospital:checkFacilities()
         self:warningBench()
         self.seating_warning = 0
       end
-    elseif self.world.year == 1 and self.world.month > 4
-    and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
+    end
+    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg
+    and (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -682,14 +683,8 @@ function Hospital:checkFacilities()
       elseif self.world.object_counts.bench < self.patientcount then
         self:warningBench()
       end
-    elseif self.world.year > 1 and self.world.day == 12
-    and show_msg  == 4  and not self.bench_msg then
-      if self.world.object_counts.bench > self.patientcount then
-        self:praiseBench()
-      elseif self.world.object_counts.bench < self.patientcount then
-        self:warningBench()
-      end
     end
+
     -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
     -- If there are no radiators remind the player from May onwards
     if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
@@ -1022,17 +1017,15 @@ function Hospital:onEndMonth()
   -- add to score each month
   -- rate varies on some performance factors i.e. reputation above 500 increases the score
   -- and the number of deaths will reduce the score.
-  local sal_inc = self.salary_incr /10
-  local sal_mult = ((self.reputation)-500)/((self.num_deaths)+1) -- added 1 so that you don't multipy by 0
+  local sal_inc = self.salary_incr / 10
+  local sal_mult = (self.reputation - 500) / (self.num_deaths + 1) -- added 1 so that you don't divide by 0
   local month_incr = sal_inc + sal_mult
-  -- To ensure that you can't recieve less than 50 or
+  -- To ensure that you can't receive less than 50 or
   -- more than 300 per month
   if month_incr < self.sal_min then
     month_incr = self.sal_min
   elseif month_incr > self.salary_incr then
     month_incr = self.salary_incr
-  else
-    month_incr = month_incr
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
