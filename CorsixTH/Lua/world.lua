@@ -207,13 +207,14 @@ function World:adjustZoom(delta)
   return self.ui:setZoom(scr_w/virtual_width)
 end
 
+--! Initialize the game level (available diseases, winning conditions).
+--!param app Game application.
 function World:initLevel(app)
   local level_config = self.map.level_config
   -- Determine available diseases
   self.available_diseases = {}
   local visual = level_config.visuals
   local non_visual = level_config.non_visuals
-  local added_diseases = 0
   for i, disease in ipairs(app.diseases) do
     if not disease.pseudo then
       local vis = 1
@@ -225,11 +226,10 @@ function World:initLevel(app)
       if vis ~= 0 then
         self.available_diseases[#self.available_diseases + 1] = disease
         self.available_diseases[disease.id] = disease
-        added_diseases = added_diseases + 1
       end
     end
   end
-  if added_diseases == 0 and not _MAP_EDITOR then
+  if #self.available_diseases == 0 and not _MAP_EDITOR then
     -- No diseases are needed if we're actually in the map editor!
     print("Warning: This level does not contain any diseases")
   end
@@ -437,13 +437,15 @@ function World:initFromPreviousLevel(carry)
   end
 end
 
+--! Get the hospital controlled by the (single) player.
+--!return (Hospital) The hospital controlled by the (single) player.
 function World:getLocalPlayerHospital()
   -- NB: UI code can get the hospital to use via ui.hospital
   -- TODO: Make this work in multiplayer?
   return self.hospitals[1]
 end
 
--- Identify the tiles on the map suitable for spawning `Humanoid`s from.
+--! Identify the tiles on the map suitable for spawning `Humanoid`s from.
 function World:calculateSpawnTiles()
   self.spawn_points = {}
   local w, h = self.map.width, self.map.height
@@ -475,6 +477,9 @@ function World:calculateSpawnTiles()
   end
 end
 
+--! Spawn a patient from a spawn point for the given hospital.
+--!param hospital (Hospital) Hospital that the new patient should visit.
+--!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
 function World:spawnPatient(hospital)
   -- The level might not contain any diseases
   if #self.available_diseases < 1 then
@@ -598,7 +603,7 @@ function World:tickEarthquake()
   if (self.day == self.earthquake_stop_day) then
     self.active_earthquake = false
     self.ui.tick_scroll_amount = false
-    -- if the earthqake measured more than 7 on the richter scale, tell the user about it
+    -- if the earthquake measured more than 7 on the righter scale, tell the user about it
     if (self.earthquake_size > 7) then
       self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.earthquake_size)))
     end
@@ -729,7 +734,7 @@ end
 !param y (integer) The 1-based Y co-ordinate of the tile to monitor.
 !param object (Object) Something with an `onOccupantChange` method, which will
 be called whenever a `Humanoid` enters or leaves the given tile. The method
-will recieve one argument (after `self`), which will be `1` for an enter event
+will receive one argument (after `self`), which will be `1` for an enter event
 and `-1` for a leave event.
 ]]
 function World:notifyObjectOfOccupants(x, y, object)
@@ -961,7 +966,7 @@ function World:setSpeed(speed)
   TheApp.video:setBlueFilterActive(not self.user_actions_allowed)
 end
 
--- Dedicated function to allow unpausing by pressing 'p' again
+--! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
@@ -987,7 +992,7 @@ local outside_temperatures = {
    4.75 / 50, -- December
 }
 
--- World ticks are translated to game ticks (or hours) depending on the
+--! World ticks are translated to game ticks (or hours) depending on the
 -- current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
   if self.tick_timer == 0 then
@@ -1015,7 +1020,7 @@ function World:onTick()
     self.tick_timer = self.tick_rate
     self.hour = self.hour + self.hours_per_tick
 
-    -- if an earthqake is supposed to be going on, call the earthquake function
+    -- if an earthquake is supposed to be going on, call the earthquake function
     if self.active_earthquake then
       self:tickEarthquake()
     end
@@ -1580,13 +1585,12 @@ function World:getIdleTile(x, y, idx)
 end
 
 --[[
-This function checks if a tile has an entity on it and (optionally) if it is in
-a room.
-!param x (integer) the queried tile's x coardinate.
-!param y (integer) the queried tile's y coardinate.
-!param not_in_room (boolean) default = false, should this function also check that
-the tile isn't in a room?
-!return boolean
+This function checks if a tile has no entity on it and (optionally) if it is not
+in a room.
+!param x (integer) the queried tile's x coordinate.
+!param y (integer) the queried tile's y coordinate.
+!param not_in_room (boolean) If set, also check the tile is not in a room.
+!return (boolean) whether all checks hold.
 --]]
 function World:isTileEmpty(x, y, not_in_room)
   for _, entity in ipairs(self.entities) do
@@ -1626,7 +1630,12 @@ function World:getFreeBench(x, y, distance)
   return bench, rx, ry, bench_distance
 end
 
--- This helper function checks if the given tile is part of a nearby object (walkable tiles count as part of the object)
+--! Checks whether the given tile is part of a nearby object (walkable tiles
+--  count as part of the object)
+--!param x X position of the given tile.
+--!param y Y position of the given tile.
+--!param distance The number of tiles away from the tile to search.
+--!return (boolean) Whether the tile is part of a nearby object.
 function World:isTilePartOfNearbyObject(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
     for _, xy in ipairs(o:getWalkableTiles()) do
@@ -1734,7 +1743,7 @@ end
 function World:findFreeObjectNearToUse(humanoid, object_type_name, which, current_object)
   -- If which == nil or false, then the nearest object is taken.
   -- If which == "far", then the furthest object is taken.
-  -- If which == "near", then the nearest object is taken with 50% probabilty, the second nearest with 25%, and so on
+  -- If which == "near", then the nearest object is taken with 50% probability, the second nearest with 25%, and so on
   -- Other values for which may be added in the future.
   -- Specify current_object if you want to exclude the currently used object from the search
   local object, ox, oy
@@ -2015,6 +2024,10 @@ function World:getObjectsById(id)
   return ret
 end
 
+--! Get the room at a given tile location.
+--!param x X position of the queried tile.
+--!param y Y position of the queried tile.
+--!return (Room) Room of the tile, or 'nil'.
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
 end
