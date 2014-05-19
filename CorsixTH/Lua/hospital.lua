@@ -608,6 +608,7 @@ function Hospital:afterLoad(old, new)
   end
 end
 
+--! Update the Hospital.patientcount variable.
 function Hospital:countPatients()
   -- I have taken the patient count out of town map, from memory it does not work the other way round.
   -- i.e. calling it from town map to use here
@@ -621,6 +622,23 @@ function Hospital:countPatients()
     end
   end
 end
+
+--! Count number of sitting and standing patients in the hospital.
+--!return (integer, integer) Number of sitting and number of standing patient in the hospital.
+function Hospital:countSittingStanding()
+  local numberSitting = 0
+  local numberStanding = 0
+  for _, patient in ipairs(self.patients) do
+    if patient.action_queue[1].name == "idle" then
+      numberStanding = numberStanding + 1
+    elseif patient.action_queue[1].name == "use_object"
+    and patient.action_queue[1].object.object_type.id == "bench" then
+      numberSitting = numberSitting + 1
+    end
+  end
+  return numberSitting, numberStanding
+end
+
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
@@ -646,16 +664,8 @@ function Hospital:checkFacilities()
     -- check the seating : standing ratio of waiting patients
     -- find all the patients who are currently waiting around
     local show_msg = math.random(1, 4)
-    local numberSitting = 0
-    local numberStanding = 0
-    for _, patient in ipairs(self.patients) do
-      if (patient.action_queue[1].name == "idle") then
-        numberStanding = numberStanding + 1
-      elseif (patient.action_queue[1].name == "use_object"
-      and patient.action_queue[1].object.object_type.id == "bench") then
-        numberSitting = numberSitting + 1
-      end
-    end
+    local numberSitting, numberStanding = self:countSittingStanding()
+
     -- If there are patients standing then maybe the seating is in the wrong place!
     -- set to 5% (standing:seated) if there are more than 50 patients or 20% if there are less than 50.
     -- If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
