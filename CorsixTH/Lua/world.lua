@@ -598,13 +598,14 @@ function World:createEarthquake()
   return true
 end
 
+--! Perform actions to simulate an active earthquake.
 function World:tickEarthquake()
   -- check if this is the day that the earthquake is supposed to stop
-  if (self.day == self.earthquake_stop_day) then
+  if self.day == self.earthquake_stop_day then
     self.active_earthquake = false
     self.ui.tick_scroll_amount = false
-    -- if the earthquake measured more than 7 on the righter scale, tell the user about it
-    if (self.earthquake_size > 7) then
+    -- if the earthquake measured more than 7 on the richter scale, tell the user about it
+    if self.earthquake_size > 7 then
       self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.earthquake_size)))
     end
     -- Make sure that machines got all the damage they should get.
@@ -1423,7 +1424,7 @@ function World:checkWinningConditions(player_no)
       -- -1000 too, but how often does that happen? Probably not more often
       -- than having exactly e.g. 200 in reputation,
       -- which is handled correctly.
-      if (current_value - goal.lose_value)*max_min > 0 then
+      if (current_value - goal.lose_value) * max_min > 0 then
         result.state = "lose"
         result.reason = goal.name
         result.limit = goal.lose_value
@@ -1437,7 +1438,7 @@ function World:checkWinningConditions(player_no)
         current_value = current_value - hospital.loan
       end
       -- Is this goal not fulfilled yet?
-      if (current_value - goal.win_value)*max_min <= 0 then
+      if (current_value - goal.win_value) * max_min <= 0 then
         result.state = "nothing"
       end
     end
@@ -1735,7 +1736,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   end
   self.pathfinder:findObject(humanoid.tile_x, humanoid.tile_y, thob, distance,
     callback)
-  -- These return values are only relevent for the default callback - are nil
+  -- These return values are only relevant for the default callback - are nil
   -- for custom callbacks
   return obj, ox, oy
 end
@@ -2088,7 +2089,7 @@ function World:dumpGameLog()
   end
 end
 
--- Because the save file only saves one thob per tile if they are more that information
+--! Because the save file only saves one thob per tile if they are more that information
 -- will be lost. To solve this after a load we need to set again all the thobs on each tile.
 function World:resetAnimations()
   for _, entity in ipairs(self.entities) do
