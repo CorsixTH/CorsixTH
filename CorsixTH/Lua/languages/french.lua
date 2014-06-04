@@ -23,10 +23,9 @@ Inherit("english")
 Inherit("original_strings", 1)
 
 ----------------------------------------------------------- Override -----------------------------------------------------------
-adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MEDECIN." -- Fix the famous "Level 5 bug"
+adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MÉDECIN." -- Fix the famous "Level 5 bug"
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostiques aient été essayées. " -- Remove a superfluous word
-room_descriptions.gp[2] = "C'est une salle de diagnostique fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour un autre diagnostique soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
 room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
 adviser.goals.win = { -- Why are this strings upcase?
   reputation = "Portez votre réputation à %d pour pouvoir gagner.",
@@ -40,7 +39,7 @@ tooltip.staff_list.prev_person = "Voir la page précédente"
 
 -- Improve tooltips in staff window to mention hidden features
 tooltip.staff_window.face = "Visage - cliquez pour ouvrir la fenêtre de gestion"
-tooltip.staff_window.center_view = "Clique gauche pour focaliser sur la personne, pour faire défiler les membres du personnel"
+tooltip.staff_window.center_view = "clic gauche pour focaliser sur la personne, pour faire défiler les membres du personnel"
 
 -- Fix Winning texts
 letter = {
@@ -222,7 +221,7 @@ dynamic_info = {
   patient = {
     actions = {
       prices_too_high = "C'est trop cher : je rentre chez moi.",
-      no_diagnoses_available = "Plus de diagnostique : je rentre chez moi.",
+      no_diagnoses_available = "Plus de diagnostic : je rentre chez moi.",
       cured = "Guéri !",
       no_treatment_available = "Pas de traitement : je rentre chez moi.",
     },
@@ -505,9 +504,9 @@ tooltip.status.num_cured = "L'objectif est de soigner %d personnes. Pour le mome
 dynamic_info.staff.actions.going_to_repair = "Pour réparer %s"
 adviser.staff_place_advice.only_doctors_in_room = "Seuls les médecins peuvent travailler en %s"
 adviser.staff_place_advice.nurses_cannot_work_in_room = "Les infirmières ne peuvent travailler en %s"
-room_descriptions.gp[2] = "C'est une salle de diagnostique fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle soit pour un autre diagnostique soit pour Etre soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
+room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle, soit pour un autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
 room_descriptions.pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard."
-room_descriptions.general_diag[3] = "La salle de diagnostique nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
+room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
 place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
 fax.emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats."
@@ -845,7 +844,7 @@ totd_window = {
     "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
     "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
     "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
-    "Vous pouvez interrompre le processus de diagnostique d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
+    "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
     "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
   },
   previous = "Astuce précédente",
@@ -948,8 +947,8 @@ fax = {
 }
 
 tooltip.fax.close = "Fermer cette fenêtre sans supprimer le message"
-tooltip.message.button = "Clique gauche pour ouvrir le message"
-tooltip.message.button_dismiss = "Clique gauche pour ouvrir le message, clique droit pour le rejeter"
+tooltip.message.button = "clic gauche pour ouvrir le message"
+tooltip.message.button_dismiss = "clic gauche pour ouvrir le message, clic droit pour le rejeter"
 tooltip.casebook.cure_requirement.hire_staff = "Vous devez embaucher du personnel pour gérer ce traitement"
 tooltip.casebook.cure_type.unknown = "Vous ne savez pas encore comment traiter cette maladie"
 tooltip.research_policy.no_research = "Aucune recherche n'est actuellement effectuée dans cette catégorie"
