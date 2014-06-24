@@ -123,7 +123,7 @@ public:
     THMovie();
     ~THMovie();
 
-    void setRenderer(SDL_Renderer *pRenderer);
+    void setRenderer(struct SDL_Renderer *pRenderer);
 
     bool moviesEnabled();
 
