@@ -1350,40 +1350,36 @@ function World:nextEarthquake()
   self.map.level_config.quake_control[self.current_map_earthquake] and
   self.map.level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
       -- this map has rules to follow when making earthquakes, let's follow them
+      -- if severity is 0 there should be no earthquakes, not even with the cheat
     local control = self.map.level_config.quake_control[self.current_map_earthquake]
     self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)
     self.next_earthquake_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
     self.earthquake_size = control.Severity
     self.current_map_earthquake = self.current_map_earthquake + 1
-  else
-  -- ! Stops any earthquakes in the early levels (less than level 5) 
-  -- ! of the TH campaign and allows the map creator to stop them if desired
-    if self.map.level_config.quake_control and self.map.level_config.quake_control.Severity == 0  then
-      local current_month = (self.year - 1) * 12 + self.month
 
-      -- Support standard values for mean and variance
-      local mean = 180
-      local variance = 30
-      -- How many days until next earthquake?
-      local days = math.round(math.n_random(mean, variance))
-      local next_month = self.month
+    local current_month = (self.year - 1) * 12 + self.month
+    -- Support standard values for mean and variance
+    local mean = 180
+    local variance = 30
+    -- How many days until next earthquake?
+    local days = math.round(math.n_random(mean, variance))
+    local next_month = self.month
 
-      -- Walk forward to get the resulting month and day.
-      if days > month_length[next_month] - self.day then
-        days = days - (month_length[next_month] - self.day)
-        next_month = next_month + 1
-      end
-      while days > month_length[(next_month - 1) % 12 + 1] do
-        days = days - month_length[(next_month - 1) % 12 + 1]
-        next_month = next_month + 1
-      end
-      self.next_earthquake_month = next_month + (self.year - 1) * 12
-      self.next_earthquake_day = days
-
-      -- earthquake can be between 1 and 10 (non-inclusive) on the richter scale
-      -- Make quakes at around 4 more probable.
-      self.earthquake_size = math.round(math.min(math.max(math.n_random(4,2), 1), 9))
+    -- Walk forward to get the resulting month and day.
+    if days > month_length[next_month] - self.day then
+      days = days - (month_length[next_month] - self.day)
+      next_month = next_month + 1
     end
+    while days > month_length[(next_month - 1) % 12 + 1] do
+      days = days - month_length[(next_month - 1) % 12 + 1]
+      next_month = next_month + 1
+    end
+    self.next_earthquake_month = next_month + (self.year - 1) * 12
+    self.next_earthquake_day = days
+
+    -- earthquake can be between 1 and 10 (non-inclusive) on the richter scale
+    -- Make quakes at around 4 more probable.
+    self.earthquake_size = math.round(math.min(math.max(math.n_random(4,2), 1), 9))
   end
 end
 
