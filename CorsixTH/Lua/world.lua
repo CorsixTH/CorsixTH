@@ -1356,14 +1356,16 @@ function World:nextEarthquake()
   self.map.level_config.quake_control[self.current_map_earthquake] and
   self.map.level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
       -- this map has rules to follow when making earthquakes, let's follow them
+      -- if severity is 0 there should be no earthquakes, not even with the cheat
     local control = self.map.level_config.quake_control[self.current_map_earthquake]
     self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)
     self.next_earthquake_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
     self.earthquake_size = control.Severity
     self.current_map_earthquake = self.current_map_earthquake + 1
   else
-    if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
-    (not tonumber(self.map.level_number)) then
+    -- ! Stops any earthquakes in the early levels (less than level 5)
+    -- ! of the TH campaign and allows the map creator to stop them if desired
+    if self.map.level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
       local current_month = (self.year - 1) * 12 + self.month
 
       -- Support standard values for mean and variance
