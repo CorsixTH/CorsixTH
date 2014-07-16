@@ -85,62 +85,17 @@ function UIMainMenu:buttonCustomGame()
 end
 
 function UIMainMenu:buttonContinueGame()
-  local save_dir_treenode = FileTreeNode(self.ui.app.savegame_dir)
-  save_dir_treenode:checkForChildren()
-  save_dir_treenode:reSortChildren("date", "descending")
-  local auto_save_dir_treenode = save_dir_treenode:getChildByIndex(1)
-  local auto_save_dir_exists = false
-  
-  if auto_save_dir_treenode then
-    auto_save_dir_exists = auto_save_dir_treenode:getLabel() == "Autosaves"
-  end
+  local most_recent_saved_game = FileTreeNode(self.ui.app.savegame_dir):getMostRecentlyModifiedChildFile(".sav")
+  if most_recent_saved_game then
+    local _, prefix_end_i = string.find(most_recent_saved_game.path, self.ui.app.savegame_dir)
+    local path = string.sub(most_recent_saved_game.path, prefix_end_i + 1, string.len(most_recent_saved_game.path))
 
-  if save_dir_treenode:hasChildren() then
-    -- 1. Get latest saved game:
-    local latest_save_dir_game = nil
-    local name = nil
-    
-    if auto_save_dir_exists then
-      latest_save_dir_game = save_dir_treenode:getChildByIndex(2)
-    else
-      latest_save_dir_game = save_dir_treenode:getChildByIndex(1)
-    end
-
-    if latest_save_dir_game then
-      name = latest_save_dir_game:getLabel()
-    end
-  
-    --2. If the auto save folder has the latest saved game:
-    if auto_save_dir_exists then
-      auto_save_dir_treenode:checkForChildren()
-      if auto_save_dir_treenode:hasChildren() then
-        auto_save_dir_treenode:reSortChildren("date", "descending")
-        local pathsep = package.config:sub(1, 1)
-        local latest_auto_save = auto_save_dir_treenode:getChildByIndex(1)
-        if latest_save_dir_game then
-          if tonumber(lfs.attributes(latest_auto_save.path, "modification")) > tonumber(lfs.attributes(latest_save_dir_game.path, "modification")) then
-            name = pathsep .. "Autosaves" .. pathsep .. latest_auto_save:getLabel()
-          end
-        else
-          name = pathsep .. "Autosaves" .. pathsep .. latest_auto_save:getLabel()  
-        end
-      end
-    end
-  
-    if name then
-      --3. Try to load the latest saved game:
-      local app = self.ui.app
-
-      local status, err = pcall(app.load, app, name)
-      if not status then
-        err = _S.errors.load_prefix .. err
-        print(err)
-        app.ui:addWindow(UIInformation(self.ui, {err}))
-      end
-    else  
-      local error = _S.errors.load_prefix .. _S.errors.no_games_to_contine
-      print(error)
-      self.ui.app.ui:addWindow(UIInformation(self.ui, {error}))    
+    local app = self.ui.app
+    local status, err = pcall(app.load, app, path)
+    if not status then
+      err = _S.errors.load_prefix .. err
+      print(err)
+      app.ui:addWindow(UIInformation(self.ui, {err}))
     end
   else
     local error = _S.errors.load_prefix .. _S.errors.no_games_to_contine
