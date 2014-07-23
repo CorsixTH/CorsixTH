@@ -959,7 +959,12 @@ function World:setSpeed(speed)
   elseif self:getCurrentSpeed() == "Pause" then
     self.user_actions_allowed = true
   end
-  self.prev_speed = self:getCurrentSpeed()
+  
+  local currentSpeed = self:getCurrentSpeed()
+  if currentSpeed ~= "Pause" and currentSpeed ~= "Speed Up" then
+    self.prev_speed = self:getCurrentSpeed()
+  end
+
   local numerator, denominator = unpack(tick_rates[speed])
   self.hours_per_tick = numerator
   self.tick_rate = denominator

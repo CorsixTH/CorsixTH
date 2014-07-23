@@ -459,7 +459,11 @@ function UIAnnualReport:close()
     end
     TheApp.world.ui.bottom_panel:openLastMessage()
   elseif TheApp.world:isCurrentSpeed("Pause") then
-    TheApp.world:setSpeed(TheApp.world.prev_speed)
+    if TheApp.ui.speed_up_key_pressed then
+      TheApp.world:setSpeed("Speed Up")
+    else
+      TheApp.world:setSpeed(TheApp.world.prev_speed)
+    end
   end
   self:updateAwards()
   Window.close(self)
