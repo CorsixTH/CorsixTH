@@ -136,6 +136,7 @@ menu_debug = {
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (F11) CHEATS  ",
   lua_console                 = "  (F12) LUA CONSOLE  ",
+  debug_script                = "  (SHIFT + D) RUN DEBUG SCRIPT  ",
   calls_dispatcher            = "  CALLS DISPATCHER  ",
   dump_strings                = "  DUMP STRINGS  ",
   dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
