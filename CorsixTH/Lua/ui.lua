@@ -248,6 +248,15 @@ function UI:UI(app, minimal)
   self:setupGlobalKeyHandlers()
 end
 
+function UI:runDebugScript()
+  print("Executing Debug Script...") 
+  local path_sep = package.config:sub(1, 1)
+  local lua_dir = debug.getinfo(1, "S").source:sub(2, -8)
+  _ = TheApp.ui and TheApp.ui.debug_cursor_entity
+  local script = assert(loadfile(lua_dir .. path_sep .. "debug_script.lua"))
+  script()
+end
+
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
   self:addKeyHandler("esc", self, self.closeWindow)
@@ -260,6 +269,7 @@ function UI:setupGlobalKeyHandlers()
 
   if self.app.config.debug then
     self:addKeyHandler("f12", self, self.showLuaConsole)
+    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
   end
 end
 
@@ -859,6 +869,9 @@ function UI:afterLoad(old, new)
   if old < 71 then
     self:removeKeyHandler({"alt", "f4"}, self, self.quit)
     self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  end
+  if old < 85 and self.app.config.debug then
+    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
   end
   Window.afterLoad(self, old, new)
 end
