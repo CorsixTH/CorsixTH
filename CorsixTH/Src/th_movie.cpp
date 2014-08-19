@@ -680,15 +680,6 @@ bool THMovie::hasAudioTrack()
     return (m_iAudioStream >= 0);
 }
 
-bool THMovie::requiresVideoReset()
-{
-#ifdef CORSIX_TH_USE_OGL_RENDERER
-    return true;
-#else
-    return false;
-#endif
-}
-
 const char* THMovie::getLastError()
 {
     return m_sLastError.c_str();
@@ -1041,7 +1032,6 @@ void THMovie::stop() {}
 int THMovie::getNativeHeight() { return 0; }
 int THMovie::getNativeWidth() { return 0; }
 bool THMovie::hasAudioTrack() { return false; }
-bool THMovie::requiresVideoReset() { return false; }
 const char* THMovie::getLastError() { return NULL; }
 void THMovie::clearLastError() {}
 void THMovie::refresh() {}

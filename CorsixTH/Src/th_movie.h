@@ -136,7 +136,6 @@ public:
     int getNativeHeight();
     int getNativeWidth();
     bool hasAudioTrack();
-    bool requiresVideoReset();
 
     const char* getLastError();
     void clearLastError();

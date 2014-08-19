@@ -105,13 +105,6 @@ static int l_movie_has_audio_track(lua_State *L)
     return 1;
 }
 
-static int l_movie_requires_video_reset(lua_State *L)
-{
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushboolean(L, pMovie->requiresVideoReset());
-    return 1;
-}
-
 static int l_movie_refresh(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
@@ -145,7 +138,6 @@ void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_movie_get_native_height, "getNativeHeight");
     luaT_setfunction(l_movie_get_native_width, "getNativeWidth");
     luaT_setfunction(l_movie_has_audio_track, "hasAudioTrack");
-    luaT_setfunction(l_movie_requires_video_reset, "requiresVideoReset");
     luaT_setfunction(l_movie_refresh, "refresh");
     luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
     luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");

@@ -172,6 +172,9 @@ public:
     */
     FT_Error initialise();
 
+    //! Remove all cached strings, as our graphics context has changed
+    void clearCache();
+
     //! Set the font face to be used.
     /*!
         @param pData Pointer to the start of a font file loaded into memory.

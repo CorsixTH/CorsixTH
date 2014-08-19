@@ -160,49 +160,114 @@ THRenderTarget::THRenderTarget()
     m_pZoomTexture = NULL;
     m_bShouldScaleBitmaps = false;
     m_bBlueFilterActive = false;
+    m_iWidth = -1;
+    m_iHeight = -1;
 }
 
 THRenderTarget::~THRenderTarget()
 {
-    SDL_FreeFormat(m_pFormat);
-    SDL_DestroyRenderer(m_pRenderer);
-    SDL_DestroyWindow(m_pWindow);
-    SDL_DestroyTexture(m_pZoomTexture);
+    destroy();
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 {
-    if(m_pRenderer != NULL)
+    if (m_pRenderer != NULL)
         return false;
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
+    m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     m_pWindow = SDL_CreateWindow("CorsixTH",
                                  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                 pParams->iWidth, pParams->iHeight,
-                                 SDL_WINDOW_OPENGL | pParams->iSDLFlags);
+                                 pParams->iWidth, pParams->iHeight, SDL_WINDOW_OPENGL);
     if (!m_pWindow)
     {
         return false;
     }
 
-    m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC));
-    if (!m_pRenderer)
+    return update(pParams);
+}
+
+bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
+{
+    if (m_pWindow == NULL)
     {
         return false;
     }
 
-    SDL_RenderSetLogicalSize(m_pRenderer, pParams->iWidth, pParams->iHeight);
-    m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
-
-    SDL_RendererInfo info;
-    SDL_GetRendererInfo(m_pRenderer, &info);
-    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
-
+    bool bUpdateSize = (m_iWidth != pParams->iWidth) || (m_iHeight != pParams->iHeight);
     m_iWidth = pParams->iWidth;
     m_iHeight = pParams->iHeight;
 
+    bool bIsFullscreen = ((SDL_GetWindowFlags(m_pWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP);
+    if (bIsFullscreen != pParams->bFullscreen)
+    {
+        SDL_SetWindowFullscreen(m_pWindow, (pParams->bFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    }
+
+    if (bUpdateSize)
+    {
+        SDL_SetWindowSize(m_pWindow, m_iWidth, m_iHeight);
+    }
+
+    Uint32 iRendererFlags = (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+
+    bool bCreateRenderer = false;
+    SDL_RendererInfo info;
+    if (!m_pRenderer)
+    {
+        bCreateRenderer = true;
+    }
+    else
+    {
+        SDL_GetRendererInfo(m_pRenderer, &info);
+        if (info.flags != iRendererFlags)
+        {
+            SDL_DestroyRenderer(m_pRenderer);
+            bCreateRenderer = true;
+        }
+    }
+
+    if (bCreateRenderer)
+    {
+        m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, iRendererFlags);
+        SDL_GetRendererInfo(m_pRenderer, &info);
+    }
+
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
+
+    if (bCreateRenderer || bUpdateSize)
+    {
+        SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
+    }
+
     return true;
+}
+
+void THRenderTarget::destroy()
+{
+    if (m_pFormat)
+    {
+        SDL_FreeFormat(m_pFormat);
+        m_pFormat = NULL;
+    }
+
+    if (m_pZoomTexture)
+    {
+        SDL_DestroyTexture(m_pZoomTexture);
+        m_pZoomTexture = NULL;
+    }
+
+    if (m_pRenderer)
+    {
+        SDL_DestroyRenderer(m_pRenderer);
+        m_pRenderer = NULL;
+    }
+
+    if (m_pWindow)
+    {
+        SDL_DestroyWindow(m_pWindow);
+        m_pWindow = NULL;
+    }
 }
 
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)

@@ -393,36 +393,23 @@ function UI:unregisterTextBox(box)
   end
 end
 
-function UI:resetVideo()
-  local width, height = self.app.config.width, self.app.config.height
-
-  self.app.video:endFrame()
-  self.app.video = TH.surface(width, height, unpack(self.app.modes))
-  self.app.gfx:updateTarget(self.app.video)
-  self.app.video:startFrame()
-  -- Redraw cursor
-  local cursor = self.cursor
-  self.cursor = nil
-  self:setCursor(cursor)
-end
-
 function UI:changeResolution(width, height)
   local old_width, old_height = self.app.config.width, self.app.config.height
-  self.app.video:endFrame()
-  local video, error_message = TH.surface(width, height, unpack(self.app.modes))
-  if video then
-    self.app.config.width = width
-    self.app.config.height = height
-  else
-    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ". Reverting to previous resolution.")
+
+  self.app:prepareVideoUpdate()
+  local error_message = self.app.video:update(width, height, unpack(self.app.modes))
+  self.app:finishVideoUpdate()
+
+  if error_message then
+    print("Warning: Could not change resolution to " .. width .. "x" .. height .. ".")
     print("The error was: ")
     print(error_message)
-    video = TH.surface(old_width, old_height, unpack(self.app.modes))
     return false
   end
-  self.app.video = video
-  self.app.gfx:updateTarget(self.app.video)
-  self.app.video:startFrame()
+
+  self.app.config.width = width
+  self.app.config.height = height
+
   -- Redraw cursor
   local cursor = self.cursor
   self.cursor = nil
@@ -459,32 +446,34 @@ function UI:toggleFullscreen()
 
   -- Toggle Fullscreen mode
   toggleMode(index)
-  self.app.video:endFrame()
-  self.app.moviePlayer:deallocatePictureBuffer();
 
   local success = true
-  local video = TH.surface(self.app.config.width, self.app.config.height, unpack(modes))
-  if not video then
+  self.app:prepareVideoUpdate()
+  local error_message = self.app.video:update(self.app.config.width, self.app.config.height, unpack(modes))
+  self.app:finishVideoUpdate()
+
+  if error_message then
     success = false
     local mode_string = modes[index] or "windowed"
     print("Warning: Could not toggle to " .. mode_string .. " mode with resolution of " .. self.app.config.width .. "x" .. self.app.config.height .. ".")
     -- Revert fullscreen mode modifications
     toggleMode(index)
-    video = TH.surface(self.app.config.width, self.app.config.height, unpack(self.app.modes))
   end
 
-  self.app.video = video -- Apply changes
   self.app.gfx:updateTarget(self.app.video)
-  self.app.moviePlayer:allocatePictureBuffer();
+  self.app.moviePlayer:updateRenderer()
+  self.app.moviePlayer:allocatePictureBuffer()
   self.app.video:startFrame()
   -- Redraw cursor
   local cursor = self.cursor
   self.cursor = nil
   self:setCursor(cursor)
 
-  -- Save new setting in config
-  self.app.config.fullscreen = self.app.fullscreen
-  self.app:saveConfig()
+  if success then
+    -- Save new setting in config
+    self.app.config.fullscreen = self.app.fullscreen
+    self.app:saveConfig()
+  end
 
   return success
 end
