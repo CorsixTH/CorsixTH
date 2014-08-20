@@ -1,6 +1,7 @@
 language: cpp
 before_install:
   # Get build dependencies
+  - echo "yes" | sudo apt-add-repository ppa:zoogie/sdl2-snapshots
   - sudo apt-get -qq update
   - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks
   # These are requred for LDocGen
@@ -29,7 +30,6 @@ before_install:
   - unzip -n freetype-2.3.5-1-bin.zip -d freetype
   - unzip -n freetype-2.3.5-1-dep.zip -d freetype
   # Get SDL
-  - echo "yes" | sudo apt-add-repository ppa:zoogie/sdl2-snapshots
   - sudo apt-get install -q -y libsdl2-dev libsdl2-mixer
   # Get LUA
   - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
