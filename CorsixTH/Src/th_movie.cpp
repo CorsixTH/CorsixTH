@@ -432,6 +432,17 @@ THMovie::~THMovie()
 void THMovie::setRenderer(SDL_Renderer *pRenderer)
 {
     m_pRenderer = pRenderer;
+
+    SDL_GLContext prevContext = SDL_GL_GetCurrentContext();
+    m_pShareWindow = SDL_GL_GetCurrentWindow();
+
+    /* We create a new context that we can use on our video thread, that shares
+     * a texture namespace with the main thread's context. */
+    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
+    m_shareContext = SDL_GL_CreateContext(m_pShareWindow);
+
+    /* Unfortunately, SDL_GL_CreateContext implicitly makes the new context current, so we revert it. */
+    SDL_GL_MakeCurrent(m_pShareWindow, prevContext);
 }
 
 bool THMovie::moviesEnabled()
@@ -582,8 +593,13 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
     m_iY = iY;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
-
     m_frame = NULL;
+
+    if(!m_pRenderer)
+    {
+        m_sLastError = std::string("Cannot play before setting the renderer");
+        return;
+    }
 
     m_pVideoQueue = new THAVPacketQueue();
     m_pMoviePictureBuffer->reset();
@@ -628,20 +644,6 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
         {
             Mix_RegisterEffect(m_iChannel, th_movie_audio_callback, NULL, this);
         }
-    }
-
-    if (!m_shareContext)
-    {
-        SDL_GLContext prevContext = SDL_GL_GetCurrentContext();
-        m_pShareWindow = SDL_GL_GetCurrentWindow();
-
-        /* We create a new context that we can use on our video thread, that shares
-         * a texture namespace with the main thread's context. */
-        SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-        m_shareContext = SDL_GL_CreateContext(m_pShareWindow);
-
-        /* Unfortunately, SDL_GL_CreateContext implicitly makes the new context current, so we revert it. */
-        SDL_GL_MakeCurrent(m_pShareWindow, prevContext);
     }
 
     m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, "Stream", this);
