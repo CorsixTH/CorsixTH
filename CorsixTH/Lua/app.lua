@@ -57,18 +57,29 @@ function App:App()
   self.check_for_updates = true
 end
 
-function App:setCommandLine(...)
-  self.command_line = {...}
-  for i, arg in ipairs(self.command_line) do
-    local setting, value = arg:match"^%-%-([^=]*)=(.*)$" --setting=value
-    if value then
-      self.command_line[setting] = value
+function App:setCommandLine(args)
+  self.command_line = {}
+  local currently_parsing = nil
+
+  for i, arg in ipairs(args) do
+    if currently_parsing then
+      self.command_line[currently_parsing] = arg
+      currently_parsing = nil
+    else
+      local setting, value = arg:match"^%-%-([^ =]*)=(.*)$" --setting=value
+      if not setting then
+        currently_parsing = arg:match"^%-%-([^ =]*) *$" --setting value
+      elseif value then
+        self.command_line[setting] = value
+      end
     end
   end
 end
 
-function App:init()
+function App:init(args)
   -- App initialisation 1st goal: Get the loading screen up
+
+  self.setCommandLine(args)
 
   print("")
   print("")

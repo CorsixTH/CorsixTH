@@ -54,12 +54,16 @@ end
 
 _MAP_EDITOR = _MAP_EDITOR or false
 
+-- Get the arguments and remove the binary name from them.
+local args = {...}
+table.remove(args, 1)
+
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
 local pathsep = package.config:sub(1, 1)
 local base_dir = debug.getinfo(1, "S").source:sub(2, -13)
 local code_dir = base_dir .. "Lua" .. pathsep
-for _, arg in ipairs{...} do
+for _, arg in ipairs(args) do
   local dir = arg:match"^%-%-lua%-dir=(.*)$"
   if dir then
     code_dir = dir .. pathsep
@@ -109,14 +113,19 @@ dofile "app"
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
-TheApp:setCommandLine(
+
+-- We want to pass some command line options to the applications. The later
+-- option's value in the command line is used. Hence, if the user sets one
+-- option passed by default, the user's option will be used.
+local command_line = {
   "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..dofile"config_finder",
-  -- If a command line option is given twice, the later one is used, hence
-  -- if the user gave one of the above, that will be used instead.
-  ...
-)
-assert(TheApp:init())
+  "--config-file="..dofile"config_finder"
+}
+for i, arg in ipairs(args) do
+  table.insert(command_line, arg)
+end
+
+assert(TheApp:init(command_line))
 return TheApp:run()
 
 --[[!file
