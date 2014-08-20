@@ -80,6 +80,7 @@ function Hospital:Hospital(world, name)
   self.seating_warning = 0
   self.num_explosions = 0
   self.announce_vip = 0
+  self.vip_declined = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
@@ -567,8 +568,8 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 50 then
-    self.num_vips_ty  = 0
-    self.pleased_vips_ty  = 0
+    self.num_vips_ty = 0
+    self.pleased_vips_ty = 0
     self.num_cured_ty = 0
     self.not_cured_ty = 0
     self.num_visitors_ty = 0
@@ -606,8 +607,12 @@ function Hospital:afterLoad(old, new)
   if old < 76 then
     self.msg_counter = 0
   end
+  if old < 84 then
+    self.vip_declined = 0
+  end
 end
 
+--! Update the Hospital.patientcount variable.
 function Hospital:countPatients()
   -- I have taken the patient count out of town map, from memory it does not work the other way round.
   -- i.e. calling it from town map to use here
@@ -621,6 +626,23 @@ function Hospital:countPatients()
     end
   end
 end
+
+--! Count number of sitting and standing patients in the hospital.
+--!return (integer, integer) Number of sitting and number of standing patient in the hospital.
+function Hospital:countSittingStanding()
+  local numberSitting = 0
+  local numberStanding = 0
+  for _, patient in ipairs(self.patients) do
+    if patient.action_queue[1].name == "idle" then
+      numberStanding = numberStanding + 1
+    elseif patient.action_queue[1].name == "use_object"
+    and patient.action_queue[1].object.object_type.id == "bench" then
+      numberSitting = numberSitting + 1
+    end
+  end
+  return numberSitting, numberStanding
+end
+
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
@@ -646,16 +668,8 @@ function Hospital:checkFacilities()
     -- check the seating : standing ratio of waiting patients
     -- find all the patients who are currently waiting around
     local show_msg = math.random(1, 4)
-    local numberSitting = 0
-    local numberStanding = 0
-    for _, patient in ipairs(self.patients) do
-      if (patient.action_queue[1].name == "idle") then
-        numberStanding = numberStanding + 1
-      elseif (patient.action_queue[1].name == "use_object"
-      and patient.action_queue[1].object.object_type.id == "bench") then
-        numberSitting = numberSitting + 1
-      end
-    end
+    local numberSitting, numberStanding = self:countSittingStanding()
+
     -- If there are patients standing then maybe the seating is in the wrong place!
     -- set to 5% (standing:seated) if there are more than 50 patients or 20% if there are less than 50.
     -- If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
@@ -664,7 +678,7 @@ function Hospital:checkFacilities()
       if numberStanding > math.min(numberSitting / 5) then
         self.seating_warning = self.seating_warning + 1
       end
-    elseif self.patientcount >= 50 then
+    else
       if numberStanding > math.min(numberSitting / 20) then
         self.seating_warning = self.seating_warning + 1
       end
@@ -672,8 +686,9 @@ function Hospital:checkFacilities()
         self:warningBench()
         self.seating_warning = 0
       end
-    elseif self.world.year == 1 and self.world.month > 4
-    and self.world.day == 12 and show_msg  == 4 and not self.bench_msg then
+    end
+    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg
+    and (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -682,14 +697,8 @@ function Hospital:checkFacilities()
       elseif self.world.object_counts.bench < self.patientcount then
         self:warningBench()
       end
-    elseif self.world.year > 1 and self.world.day == 12
-    and show_msg  == 4  and not self.bench_msg then
-      if self.world.object_counts.bench > self.patientcount then
-        self:praiseBench()
-      elseif self.world.object_counts.bench < self.patientcount then
-        self:warningBench()
-      end
     end
+
     -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
     -- If there are no radiators remind the player from May onwards
     if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
@@ -1022,17 +1031,15 @@ function Hospital:onEndMonth()
   -- add to score each month
   -- rate varies on some performance factors i.e. reputation above 500 increases the score
   -- and the number of deaths will reduce the score.
-  local sal_inc = self.salary_incr /10
-  local sal_mult = ((self.reputation)-500)/((self.num_deaths)+1) -- added 1 so that you don't multipy by 0
+  local sal_inc = self.salary_incr / 10
+  local sal_mult = (self.reputation - 500) / (self.num_deaths + 1) -- added 1 so that you don't divide by 0
   local month_incr = sal_inc + sal_mult
-  -- To ensure that you can't recieve less than 50 or
+  -- To ensure that you can't receive less than 50 or
   -- more than 300 per month
   if month_incr < self.sal_min then
     month_incr = self.sal_min
   elseif month_incr > self.salary_incr then
     month_incr = self.salary_incr
-  else
-    month_incr = month_incr
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
@@ -1231,7 +1238,7 @@ function Hospital:createVip()
   local message = {
     {text = _S.fax.vip_visit_query.vip_name:format(vipName)},
     choices = {{text = _S.fax.vip_visit_query.choices.invite, choice = "accept_vip", additionalInfo = {name=vipName}},
-               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip"}}
+               {text = _S.fax.vip_visit_query.choices.refuse, choice = "refuse_vip", additionalInfo = {name=vipName}}}
   }
   -- auto-refuse after 20 days
   self.world.ui.bottom_panel:queueMessage("personality", message, nil, 24*20, 2)

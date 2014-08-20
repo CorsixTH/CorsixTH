@@ -214,7 +214,7 @@ function Vip:evaluateRoom()
       self.room_eval = self.room_eval + 3
     end
     if room.staff_member.attributes["fatigue"] then
-      if (room.staff_member.attributes["fatigue"] < 0.4) then
+      if room.staff_member.attributes["fatigue"] < 0.4 then
         self.room_eval = self.room_eval + 2
       end
     end
@@ -325,54 +325,54 @@ function Vip:setVIPRating()
   -- now we check for toilet presence
   local toiletsFound = 0
   for i, room in pairs(self.world.rooms) do
-    if (room.room_info.id == "toilets") then
+    if room.room_info.id == "toilets" then
       for object, value in pairs(room.objects) do
-        if (object.object_type.id == "loo") then
+        if object.object_type.id == "loo" then
           toiletsFound = toiletsFound + 1
         end
       end
     end
   end
-  if (toiletsFound == 0) then
+  if toiletsFound == 0 then
     self.vip_rating = self.vip_rating - 6
   else
     local patientToToilet = #self.hospital.patients / toiletsFound
-    if (patientToToilet <= 10) then
+    if patientToToilet <= 10 then
       self.vip_rating = self.vip_rating + 6
-    elseif (patientToToilet <= 20) then
+    elseif patientToToilet <= 20 then
       self.vip_rating = self.vip_rating + 3
-    elseif (patientToToilet > 40) then
+    elseif patientToToilet > 40 then
       self.vip_rating = self.vip_rating - 3
     end
   end
 
   -- check the levels of non-vomit inducing litter in the hospital
-  if (self.num_vomit_noninducing < 3) then
+  if self.num_vomit_noninducing < 3 then
     self.vip_rating = self.vip_rating + 4
   else
-    if (self.num_vomit_noninducing <5) then
+    if self.num_vomit_noninducing < 5 then
       self.vip_rating = self.vip_rating + 2
-    elseif (self.num_vomit_noninducing >= 7 and self.num_vomit_noninducing <= 8) then
+    elseif self.num_vomit_noninducing >= 7 and self.num_vomit_noninducing <= 8 then
       self.vip_rating = self.vip_rating - 2
-    elseif (self.num_vomit_noninducing > 8) then
+    elseif self.num_vomit_noninducing > 8 then
       self.vip_rating = self.vip_rating - 4
     end
   end
 
   -- check the levels of vomit inducing litter in the hospital
-  if (self.num_vomit_inducing < 3) then
+  if self.num_vomit_inducing < 3 then
     self.vip_rating = self.vip_rating + 8
   else
-    if (self.num_vomit_inducing < 5) then
+    if self.num_vomit_inducing < 5 then
       self.vip_rating = self.vip_rating + 4
     else
-      if (self.num_vomit_inducing >= 6 and self.num_vomit_inducing <= 7) then
+      if self.num_vomit_inducing >= 6 and self.num_vomit_inducing <= 7 then
         self.vip_rating = self.vip_rating - 6
-      elseif (self.num_vomit_inducing < 10) then
+      elseif self.num_vomit_inducing < 10 then
         self.vip_rating = self.vip_rating - 12
-      elseif (self.num_vomit_inducing <= 12) then
+      elseif self.num_vomit_inducing <= 12 then
         self.vip_rating = self.vip_rating - 16
-      elseif (self.num_vomit_inducing > 12) then
+      elseif self.num_vomit_inducing > 12 then
         self.vip_rating = self.vip_rating - 20
       end
     end
@@ -380,7 +380,7 @@ function Vip:setVIPRating()
 
   -- if there were explosions, hit the user hard
   local explosionsDiff =  self.hospital.num_explosions - self.enter_explosions
-  if (explosionsDiff > 0) then
+  if explosionsDiff > 0 then
     self.vip_rating = self.vip_rating - 70
   end
 
@@ -397,27 +397,17 @@ function Vip:setVIPRating()
 
   -- check the seating : standing ratio of waiting patients
   -- find all the patients who are currently waiting around
-  local numberSitting = 0
-  local numberStanding = 0
-  for _, patient in ipairs(self.hospital.patients) do
-    if (patient.action_queue[1].name == "idle") then
-      numberStanding = numberStanding + 1
-    elseif (patient.action_queue[1].name == "use_object" and
-      patient.action_queue[1].object.object_type.id == "bench") then
-      numberSitting = numberSitting + 1
-    end
-  end
-
-  if (numberSitting - numberStanding > 0) then
+  local numberSitting, numberStanding = self.hospital:countSittingStanding()
+  if numberSitting >= numberStanding then
     self.vip_rating = self.vip_rating + 4
-  elseif (numberSitting - numberStanding < 0) then
+  else
     self.vip_rating = self.vip_rating - 4
   end
 
   -- check average patient thirst
   local totalThirst = 0
   for _, patient in ipairs(self.hospital.patients) do
-    if (patient.attributes["thirst"]) then
+    if patient.attributes["thirst"] then
       totalThirst = totalThirst + patient.attributes["thirst"]
     end
   end
@@ -489,13 +479,13 @@ function Vip:setVIPRating()
   end
 
   -- give the rating between 1 and 5
-  if (self.vip_rating < 25) then
+  if self.vip_rating < 25 then
     self.vip_rating = 1
-  elseif (self.vip_rating < 45) then
+  elseif self.vip_rating < 45 then
     self.vip_rating = 2
-  elseif (self.vip_rating < 65) then
+  elseif self.vip_rating < 65 then
     self.vip_rating = 3
-  elseif (self.vip_rating < 85) then
+  elseif self.vip_rating < 85 then
     self.vip_rating = 4
   else
     self.vip_rating = 5

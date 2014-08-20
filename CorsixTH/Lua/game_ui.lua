@@ -69,6 +69,8 @@ function GameUI:GameUI(app, local_hospital)
 
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
+
+  self.speed_up_key_pressed = false
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -218,6 +220,7 @@ function GameUI:updateKeyScroll()
 end
 
 function GameUI:keySpeedUp()
+  self.speed_up_key_pressed = true
   self.app.world:speedUp()
 end
 
@@ -247,9 +250,14 @@ function GameUI:onKeyUp(rawchar)
     self:updateKeyScroll()
     return
   end
-  if self.app.world:isCurrentSpeed("Speed Up")  then
+
+  -- Guess that the "Speed Up" key was released because the 
+  -- code parameter can't provide UTF-8 key codes:
+  self.speed_up_key_pressed = false
+  if self.app.world:isCurrentSpeed("Speed Up") then
     self.app.world:previousSpeed()
   end
+
   if self.transparent_walls then
     self:removeTransparentWalls()
   end

@@ -154,7 +154,7 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     table.sort(self.salary_sort, sort_order)
 
   -- Pause the game to allow the player plenty of time to check all statistics and trophies won
-  if world and world:isCurrentSpeed("Speed Up") then
+  if world and not world:isCurrentSpeed("Pause") then
     world:setSpeed("Pause")
   end
   TheApp.video:setBlueFilterActive(false)
@@ -459,7 +459,11 @@ function UIAnnualReport:close()
     end
     TheApp.world.ui.bottom_panel:openLastMessage()
   elseif TheApp.world:isCurrentSpeed("Pause") then
-    TheApp.world:setSpeed(TheApp.world.prev_speed)
+    if TheApp.ui.speed_up_key_pressed then
+      TheApp.world:setSpeed("Speed Up")
+    else
+      TheApp.world:setSpeed(TheApp.world.prev_speed)
+    end
   end
   self:updateAwards()
   Window.close(self)

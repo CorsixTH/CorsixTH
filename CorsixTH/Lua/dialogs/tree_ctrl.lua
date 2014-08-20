@@ -196,6 +196,63 @@ function FileTreeNode:FileTreeNode(path)
   self.order = "ascending"
 end
 
+function FileTreeNode:isDirectory()
+  return lfs.attributes(self.path, "mode") == "directory"
+end
+
+---
+--@param <file_name_filter> (optional) return the most recently modified child file which has this string in its name.
+--@return nil if no child file is found otherwise return the FileTreedNode for mostly recently modified child file.
+function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
+  self:checkForChildren()
+  self:reSortChildren("date", "descending")
+  local current_child_dir_file = nil
+  local most_recently_mod_child_dir_file = nil
+  local root_child = nil
+  --A. Search for files matching the file name filter in the root directory and its child directories:
+  for i = 1, self:getChildCount(), 1 do
+    root_child = self:getChildByIndex(i)
+    -- 1. Get the most recently modified child directory file which matches the name filter:
+    if root_child:isDirectory() then
+      current_child_dir_file = root_child:getMostRecentlyModifiedChildFile(file_name_filter)
+      if current_child_dir_file ~= nil then
+        if most_recently_mod_child_dir_file == nil then
+          most_recently_mod_child_dir_file = current_child_dir_file
+        elseif current_child_dir_file:getLastModification() > most_recently_mod_child_dir_file:getLastModification() then
+          most_recently_mod_child_dir_file = current_child_dir_file
+        end
+      end
+
+	-- Sort always puts directories first so when this else closure is reached in this iterative for loop
+	-- all the sub directories will have been checked:
+    else
+      -- 2. Get the most recently modified root directory file which matches the name filter:
+      local matches_filter = true
+      if(file_name_filter) then
+        matches_filter = string.find(root_child:getLabel(), file_name_filter)
+      end
+      -- End this for loop to begin step B:
+      if matches_filter then
+        break
+      end
+    end
+    root_child = nil
+  end
+  --B. Return the most recently modified file or nil if no file matching the name filter was found:
+  if most_recently_mod_child_dir_file then
+    if root_child then
+      if root_child:getLastModification() > most_recently_mod_child_dir_file:getLastModification() then
+        return root_child
+      end
+    end
+    return most_recently_mod_child_dir_file
+  elseif root_child then
+    return root_child
+  else
+    return nil
+  end
+end
+
 function FileTreeNode:childPath(item)
   if self.path:sub(-1, -1) == pathsep then
     return self.path .. item

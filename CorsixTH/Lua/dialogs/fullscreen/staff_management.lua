@@ -130,6 +130,12 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
     self:makeTooltip(_S.tooltip.staff_list.skills, 146, 406, 186, 460)
 
   self:setCategory("Doctor")
+
+  -- Hotkeys.
+  self:addKeyHandler("left", self.previousCategory)
+  self:addKeyHandler("right", self.nextCategory)
+  self:addKeyHandler("up", self.previousStaff)
+  self:addKeyHandler("down", self.nextStaff)
 end
 
 function UIStaffManagement:updateTooltips()
@@ -203,6 +209,9 @@ end
 -- Function to select given list index in the current category.
 -- Includes jumping to correct page.
 function UIStaffManagement:selectIndex(idx)
+  if idx > #self.staff_members[self.category] or idx <= 0 then
+    return
+  end
   self.page = math.floor((idx - 1) / 10) + 1
   self.selected_staff = idx
 end
@@ -441,6 +450,44 @@ function UIFullscreen:getStaffPosition(dx, dy)
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
   local px, py = staff.th:getMarker()
   return x + px - (dx or 0), y + py - (dy or 0)
+end
+
+function UIStaffManagement:previousCategory()
+  if self.category == "Nurse" then
+    self:setCategory("Doctor")
+  elseif self.category == "Handyman" then
+    self:setCategory("Nurse")
+  elseif self.category == "Receptionist" then
+    self:setCategory("Handyman")
+  end
+end
+
+function UIStaffManagement:nextCategory()
+  if self.category == "Doctor" then
+    self:setCategory("Nurse")
+  elseif self.category == "Nurse" then
+    self:setCategory("Handyman")
+  elseif self.category == "Handyman" then
+    self:setCategory("Receptionist")
+  end
+end
+
+function UIStaffManagement:previousStaff()
+  -- If nothing currently selected, select the last one, otherwise the previous.
+  if self.selected_staff == nil then
+    self:selectIndex(#self.staff_members[self.category])
+  else
+    self:selectIndex(self.selected_staff - 1)
+  end
+end
+
+function UIStaffManagement:nextStaff()
+  -- If nothing currently selected, select the first one, otherwise the next.
+  if self.selected_staff == nil then
+    self:selectIndex(1)
+  else
+    self:selectIndex(self.selected_staff + 1)
+  end
 end
 
 function UIStaffManagement:scrollUp()

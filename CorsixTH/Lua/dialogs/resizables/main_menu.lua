@@ -28,7 +28,7 @@ local col_bg = {
 }
 
 function UIMainMenu:UIMainMenu(ui)
-  self:UIResizable(ui, 200, 300, col_bg)
+  self:UIResizable(ui, 200, 341, col_bg)
 
   local app = ui.app
   self.esc_closes = false
@@ -44,9 +44,10 @@ function UIMainMenu:UIMainMenu(ui)
   self.default_button_sound = "selectx.wav"
   self:addBevelPanel(20, 20, 160, 40, col_bg):setLabel(_S.main_menu.new_game):makeButton(0, 0, 160, 40, nil, self.buttonNewGame):setTooltip(_S.tooltip.main_menu.new_game)
   self:addBevelPanel(20, 65, 160, 40, col_bg):setLabel(_S.main_menu.custom_level):makeButton(0, 0, 160, 40, nil, self.buttonCustomGame):setTooltip(_S.tooltip.main_menu.custom_level)
-  self:addBevelPanel(20, 110, 160, 40, col_bg):setLabel(_S.main_menu.load_game):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
-  self:addBevelPanel(20, 155, 160, 40, col_bg):setLabel(_S.main_menu.options):makeButton(0, 0, 160, 40, nil, self.buttonOptions):setTooltip(_S.tooltip.main_menu.options)
-  self:addBevelPanel(20, 220, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
+  self:addBevelPanel(20, 110, 160, 40, col_bg):setLabel(_S.main_menu.continue):makeButton(0, 0, 160, 40, nil, self.buttonContinueGame):setTooltip(_S.tooltip.main_menu.continue)
+  self:addBevelPanel(20, 155, 160, 40, col_bg):setLabel(_S.main_menu.load_game):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
+  self:addBevelPanel(20, 200, 160, 40, col_bg):setLabel(_S.main_menu.options):makeButton(0, 0, 160, 40, nil, self.buttonOptions):setTooltip(_S.tooltip.main_menu.options)
+  self:addBevelPanel(20, 265, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
 end
 
 function UIMainMenu:getSavedWindowPositionName()
@@ -60,7 +61,7 @@ function UIMainMenu:draw(canvas, x, y)
   x, y = self.x + x, self.y + y
 
   -- Move the version string up a bit if also showing the savegame version.
-  local ly = y + 285
+  local ly = y + 325
   if TheApp.config.debug then
     self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
     ly = ly - 15
@@ -80,6 +81,26 @@ function UIMainMenu:buttonCustomGame()
   else
     local window = UICustomGame(self.ui)
     self.ui:addWindow(window)
+  end
+end
+
+function UIMainMenu:buttonContinueGame()
+  local most_recent_saved_game = FileTreeNode(self.ui.app.savegame_dir):getMostRecentlyModifiedChildFile(".sav")
+  if most_recent_saved_game then
+    local _, prefix_end_i = string.find(most_recent_saved_game.path, self.ui.app.savegame_dir)
+    local path = string.sub(most_recent_saved_game.path, prefix_end_i + 1, string.len(most_recent_saved_game.path))
+
+    local app = self.ui.app
+    local status, err = pcall(app.load, app, path)
+    if not status then
+      err = _S.errors.load_prefix .. err
+      print(err)
+      app.ui:addWindow(UIInformation(self.ui, {err}))
+    end
+  else
+    local error = _S.errors.load_prefix .. _S.errors.no_games_to_contine
+    print(error)
+    self.ui.app.ui:addWindow(UIInformation(self.ui, {error}))  
   end
 end
 
