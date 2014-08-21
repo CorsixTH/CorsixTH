@@ -32,6 +32,7 @@ before_install:
   # Get SDL
   - sudo apt-get install -q -y libsdl2-dev libsdl2-mixer
   # Get LUA
+  - mkdir lua
   - wget http://skylink.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
   - tar xJf lua-5.1.4-4-mingw32-dll-51.tar.xz -C lua
   - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dev.tar.xz
