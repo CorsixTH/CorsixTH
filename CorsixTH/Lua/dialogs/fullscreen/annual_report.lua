@@ -467,6 +467,7 @@ function UIAnnualReport:close()
   end
   self:updateAwards()
   Window.close(self)
+  self.ui.app.world:checkIfGameWon()
 end
 
 --! Changes the page of the annual report
