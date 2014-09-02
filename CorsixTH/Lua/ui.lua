@@ -584,6 +584,14 @@ local workaround_shift = {
   ["/"] = "?",
 }
 
+function UI:numPadValue(code)
+  if 256 <= code and code <= 265 then
+    return code - 256
+  end
+  
+  return false 
+end
+
 --! Called when the user presses a key on the keyboard
 --!param code (integer) The hardware key-code for the pressed key. Note that
 -- these codes only coincide with ASCII for certain keyboard layouts.
@@ -602,6 +610,10 @@ function UI:onKeyDown(code, rawchar)
         else
           rawchar = workaround_shift[rawchar] or rawchar
         end
+      end
+    else
+      if type(self:numPadValue(code)) == "number" then
+        rawchar = tostring(self:numPadValue(code))
       end
     end
   end
