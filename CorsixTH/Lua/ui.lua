@@ -591,8 +591,6 @@ local workaround_shift = {
 function UI:numPadValue(code)
   if (self:isCodeFromNumPad(code)) then
     return tostring(code - 256)
-  else
-    return nil
   end
 end
 
