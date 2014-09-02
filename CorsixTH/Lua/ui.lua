@@ -584,7 +584,7 @@ local workaround_shift = {
   ["/"] = "?",
 }
 
--- ! Get the numpad value (0, 1, 2, etc.) 
+-- ! Returns the numpad value (0, 1, 2, etc.) 
 -- ! from key-code (256, 257, etc.) (as string)
 -- ! If key-code is not from the numpad, returns nil
 -- !param code (integer) The hardware key-code
