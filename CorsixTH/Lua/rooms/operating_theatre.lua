@@ -115,7 +115,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     object = screen
   }
   
-  -- Resume operation is an operation is already ongoing
+  -- Resume operation if already ongoing
   if self:isOperating() then
     local surgeon1 = next(self.staff_member_set) 
     local ongoing_action = surgeon1.action_queue[1]
@@ -308,11 +308,11 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
       local obj, ox, oy = room.world:findObjectNear(surgeon1, "operating_table")
       
-      local multi_use_object = self:buildTableAction1(surgeon1, patient, obj)
-      surgeon1:queueAction(multi_use_object, 1)
+      local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
+      surgeon1:queueAction(table_action1, 1)
 
       obj, ox, oy = self.world:findObjectNear(surgeon2, "operating_table_b")
-      surgeon2:queueAction(self:buildTableAction2(multi_use_object, obj), 1)
+      surgeon2:queueAction(self:buildTableAction2(table_action1, obj), 1)
 
       -- Kick off
       surgeon1:finishAction()
