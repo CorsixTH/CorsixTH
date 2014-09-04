@@ -94,21 +94,15 @@ local function wait_for_object(humanoid, obj, must_happen)
   }
 end
 
---! Returns true if an operation is ongoing 
+--! Returns true if an operation is ongoing
 function OperatingTheatreRoom:isOperating()
   for k, v in pairs(self.staff_member_set) do
-    if k.action_queue[1].name == "multi_use_object" or k.action_queue[1].name == "use_object"  then
+    if k.action_queue[1].name == "multi_use_object" then
       return true
     end
   end
   
   return false
-end
-
-function OperatingTheatreRoom:getCurrentAction()
-  for k, v in pairs(self.staff_member_set) do
-    return k.action_queue[1] 
-  end
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
@@ -121,24 +115,16 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     object = screen
   }
   
-  -- LOG
-  for k, v in pairs(self.staff_member_set) do
-     print(k.action_queue[1].name, v)
-  end
-  -- // LOG
-  
+  -- Resume operation is an operation is already ongoing
   if self:isOperating() then
-    -- Resume operation
-    local current_action = self:getCurrentAction()
-    print("current is doing " .. current_action.name)
+    local surgeon1 = next(self.staff_member_set) 
+    local ongoing_action = surgeon1.action_queue[1]
+    assert(ongoing_action.name == "multi_use_object")
     
-    if current_action.name == "multi_use_object" then
-        local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
-    
-        self:washHands(staff, false)
-        staff:queueAction({name = "walk", x = table_x, y = table_y})
-        staff:queueAction(self:buildTableAction2(current_action, table))
-    end
+    local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
+    self:queueWashHands(staff, false)
+    staff:queueAction({name = "walk", x = table_x, y = table_y})
+    staff:queueAction(self:buildTableAction2(ongoing_action, table))
   end
   
   self.staff_member_set[staff] = true
@@ -211,7 +197,7 @@ function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_tabl
   }
 end
 
-function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
+function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
   local num_loops = math.random(2, 5)
 
   return {
@@ -224,7 +210,7 @@ function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
       end
     end,
     after_use = --[[persistable:operatring_theatre_after_use]] function()
-      multi_use.prolonged_usage = false
+      first_action.prolonged_usage = false
     end,
     must_happen = true,
     no_truncate = true,
@@ -233,22 +219,26 @@ end
 
 --! Sends the surgeon to the nearest operation sink ("op_sink1") 
 --! and makes him wash his hands 
-function OperatingTheatreRoom:washHands(surgeon, m)
-  -- FIXME: is this the best way of managing default arg in Lua?
-  if m == nil then
-    m = true
+--!param at_front (boolean): If true, add the actions at the front the action queue.
+--! Add the actions at the end of the queue otherwise.
+--! Default value is true.
+function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
+  -- FIXME: is this the best way to manage default parameter values in Lua?
+  if at_front == nil then
+    at_front = true
   end
 
   local sink, sink_x, sink_y = self.world:findObjectNear(surgeon, "op_sink1")
+  local walk = {name = "walk", x = sink_x, y = sink_y, must_happen = true, no_truncate = true}
+  local wait = wait_for_object(surgeon, sink, true)
+  local wash = {name = "use_object", object = sink, must_happen = true}
   
-  if m then
-    surgeon:queueAction({name = "walk", x = sink_x, y = sink_y, must_happen = true, no_truncate = true}, 1)
-    surgeon:queueAction(wait_for_object(surgeon, sink, true), 2)
-    surgeon:queueAction({name = "use_object", object = sink, must_happen = true}, 3)
-  else
-    surgeon:queueAction({name = "walk", x = sink_x, y = sink_y, must_happen = true, no_truncate = true})
-    surgeon:queueAction(wait_for_object(surgeon, sink, true))
-    surgeon:queueAction({name = "use_object", object = sink, must_happen = true})
+  for pos, action in pairs({walk, wait, wash}) do
+    if (at_front) then
+      surgeon:queueAction(action, pos)
+    else
+      surgeon:queueAction(action)
+    end
   end
 end
 
@@ -265,7 +255,7 @@ function OperatingTheatreRoom:switchXRay(value)
 end
 
 function OperatingTheatreRoom:commandEnteringPatient(patient)
-  -- Turn on x-ray viewer - if it has been found.
+  -- Turn on x-ray viewer
   self:switchXRay(true)
 
   -- Identify the staff
@@ -279,14 +269,15 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   patient:queueAction{name = "use_screen", object = screen}
 
   -- Meanwhile, surgeons wash their hands
-  self:washHands(surgeon1)
-  self:washHands(surgeon2)
+  -- TODO: They sometimes overlap each other when doing that. Can we avoid that?
+  self:queueWashHands(surgeon1)
+  self:queueWashHands(surgeon2)
 
   local num_ready = {0}
   ----- BEGIN Save game compatibility -----
   -- These function are merely for save game compability.
   -- And they does not participate in the current game logic.
-  -- Do not move or edit
+  -- Do not move or edit 
   local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)
     action.on_interrupt = nil
     if not action.done_ready then
