@@ -122,7 +122,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     assert(ongoing_action.name == "multi_use_object")
     
     local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
-    self:queueWashHands(staff, false)
+    self:queueWashHands(staff)
     staff:queueAction({name = "walk", x = table_x, y = table_y})
     staff:queueAction(self:buildTableAction2(ongoing_action, table))
   end
@@ -223,11 +223,6 @@ end
 --! Add the actions at the end of the queue otherwise.
 --! Default value is true.
 function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
-  -- FIXME: is this the best way to manage default parameter values in Lua?
-  if at_front == nil then
-    at_front = true
-  end
-
   local sink, sink_x, sink_y = self.world:findObjectNear(surgeon, "op_sink1")
   local walk = {name = "walk", x = sink_x, y = sink_y, must_happen = true, no_truncate = true}
   local wait = wait_for_object(surgeon, sink, true)
@@ -243,20 +238,16 @@ function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
 end
 
 --! Turn on/off x-ray viewer - if it's been found
---!param value (boolean): true to switch on and false to switch off
-function OperatingTheatreRoom:switchXRay(value)
+--!param turn_on (boolean): true to switch on and false to switch off
+function OperatingTheatreRoom:setXRayOn(turn_on)
   if self.x_ray_viewer then
-    if value then
-      self.x_ray_viewer:setLayer(11, 2)
-    else
-      self.x_ray_viewer:setLayer(11, 0)
-    end
+    self.x_ray_viewer:setLayer(11, (turn_on and 2 or 0))
   end
 end
 
 function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- Turn on x-ray viewer
-  self:switchXRay(true)
+  self:setXRayOn(true)
 
   -- Identify the staff
   local surgeon1 = next(self.staff_member_set)
@@ -270,8 +261,8 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   -- Meanwhile, surgeons wash their hands
   -- TODO: They sometimes overlap each other when doing that. Can we avoid that?
-  self:queueWashHands(surgeon1)
-  self:queueWashHands(surgeon2)
+  self:queueWashHands(surgeon1, true)
+  self:queueWashHands(surgeon2, true)
 
   local num_ready = {0}
   ----- BEGIN Save game compatibility -----
@@ -356,7 +347,7 @@ function OperatingTheatreRoom:onHumanoidLeave(humanoid)
   if class.is(humanoid, Patient) then
     -- Turn off x-ray viewer
     -- (FIXME: would be better when patient dress back?)     
-    self:switchXRay(false)
+    self:setXRayOn(false)
        
     local surgeon1 = next(self.staff_member_set)
     local surgeon2 = next(self.staff_member_set, surgeon1)
