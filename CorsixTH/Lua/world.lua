@@ -1204,20 +1204,26 @@ function World:onEndDay()
   -- staff at the moment and making plants need water.
 end
 
+function World:checkIfGameWon()
+  for i, hospital in ipairs(self.hospitals) do
+    local res = self:checkWinningConditions(i)
+    if res.state == "win" then
+      self:winGame(i)
+    end
+  end
+end
+
 -- Called immediately prior to the ingame month changing.
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
-  -- Check if a player has won the level.
+  -- Check if a player has won the level if the year hasn't ended, if it has the
+  -- annual report window will perform this check when it has been closed.
+
   -- TODO.... this is a step closer to the way TH would check.
   -- What is missing is that if offer is declined then the next check should be
   -- either 6 months later or at the end of month 12 and then every 6 months
-  if self.month % 3 == 0 then
-    for i, hospital in ipairs(self.hospitals) do
-      local res = self:checkWinningConditions(i)
-      if res.state == "win" then
-        self:winGame(i)
-      end
-    end
+  if self.month % 3 == 0 and self.month < 12 then
+    self:checkIfGameWon()
   end
 
   -- Change population share for the hospitals, TODO according to reputation.
