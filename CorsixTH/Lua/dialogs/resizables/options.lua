@@ -85,6 +85,7 @@ function UIOptions:UIOptions(ui, mode)
     {text = "1600x900 (16:9)",  width = 1600, height = 900},
     {text = "1920x1080 (16:9)", width = 1920, height = 1080},
     {text = "1280x800 (16:10)",  width = 1280, height = 800},
+    {text = "1440x900 (16:10)",  width = 1440, height = 900},
     {text = "1680x1050 (16:10)",  width = 1680, height = 1050},
     {text = "1920x1200 (16:10)", width = 1920, height = 1200},
     {text = _S.options_window.custom_resolution, custom = true},
