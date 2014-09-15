@@ -50,7 +50,8 @@ function UIMainMenu:UIMainMenu(ui)
   self:addBevelPanel(20, 110, 160, 40, col_bg):setLabel(_S.main_menu.continue):makeButton(0, 0, 160, 40, nil, self.buttonContinueGame):setTooltip(_S.tooltip.main_menu.continue)
   self:addBevelPanel(20, 155, 160, 40, col_bg):setLabel(_S.main_menu.load_game):makeButton(0, 0, 160, 40, nil, self.buttonLoadGame):setTooltip(_S.tooltip.main_menu.load_game)
   self:addBevelPanel(20, 200, 160, 40, col_bg):setLabel(_S.main_menu.options):makeButton(0, 0, 160, 40, nil, self.buttonOptions):setTooltip(_S.tooltip.main_menu.options)
-  self:addBevelPanel(20, 265, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
+  self:addBevelPanel(20, 245, 160, 40, col_bg):setLabel(_S.main_menu.map_edit):makeButton(0, 0, 160, 40, nil, self.buttonMapEdit):setTooltip(_S.tooltip.main_menu.map_edit)
+  self:addBevelPanel(20, 305, 160, 40, col_bg):setLabel(_S.main_menu.exit):makeButton(0, 0, 160, 40, nil, self.buttonExit):setTooltip(_S.tooltip.main_menu.exit)
 end
 
 function UIMainMenu:getSavedWindowPositionName()
@@ -113,6 +114,10 @@ end
 function UIMainMenu:buttonOptions()
   local window = UIOptions(self.ui, "menu")
   self.ui:addWindow(window)
+end
+
+function UIMainMenu:buttonMapEdit()
+  self.ui.app:mapEdit()
 end
 
 function UIMainMenu:buttonExit()

@@ -451,14 +451,14 @@ end
 -- Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:loadLevel(level, ...)
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()
   end
 
   -- Check that we can load the data before unloading current map
   local new_map = Map(self)
-  local map_objects, errors = new_map:load(level, ...)
+  local map_objects, errors = new_map:load(level, difficulty, level_name, level_file, level_intro, map_editor)
   if not map_objects then
     error(errors)
   end
@@ -497,7 +497,7 @@ function App:loadLevel(level, ...)
   self.audio:playSoundEffects(self.config.play_sounds)
 
   -- Load UI
-  self.ui = GameUI(self, self.world:getLocalPlayerHospital())
+  self.ui = GameUI(self, self.world:getLocalPlayerHospital(), map_editor)
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 
   if tonumber(level) then
@@ -1265,6 +1265,11 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, {err}))
     end
   end))
+end
+
+--! Begin the map editor
+function App:mapEdit()
+  self:loadLevel("", nil, nil, nil, nil, true);
 end
 
 --! Exits the game completely (no confirmation window)

@@ -139,7 +139,7 @@ the original game levels are considered.
 !param level_name (string) The name of the actual map/area/hospital as written in the config file.
 !param level_file (string) The path to the map file as supplied by the config file.
 ]]
-function Map:load(level, difficulty, level_name, level_file, level_intro)
+function Map:load(level, difficulty, level_name, level_file, level_intro, map_editor)
   local objects, i
   if not difficulty then
     difficulty = "full"
@@ -195,7 +195,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
       errors, result = self:loadMapConfig(p, result, true)
       self.level_config = result
     end
-  elseif _MAP_EDITOR then
+  elseif map_editor then
     -- We're being fed data by the map editor.
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
@@ -229,7 +229,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
   self.parcelTileCounts = {}
   for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
-    if plot > 1 and not _MAP_EDITOR then
+    if plot > 1 and not map_editor then
       -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
       self.th:setPlotOwner(plot, 0)
     end

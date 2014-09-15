@@ -142,7 +142,7 @@ function UIMapEditor:classifyBlocks()
     block_info[i] = {"floor", "simple", "Outside"}
   end
   block_info[208].base = 3
--- adds street lights, could do with mirrors of these to have lamps facing different directions
+  -- adds street lights, could do with mirrors of these to have lamps facing different directions
   for i = 209, 210 do
   local pair
   local category = "External"
@@ -153,7 +153,7 @@ function UIMapEditor:classifyBlocks()
   block_info[i] = {"wall", dir, category, pair = pair}
   end
 
-  MapEditorSetBlocks(self.ui.app.map.blocks, block_info) -- pass data to UI
+  --XXX: MapEditorSetBlocks(self.ui.app.map.blocks, block_info) -- pass data to UI
   self.block_info = block_info
 end
 
@@ -621,10 +621,10 @@ function UIMapEditor:sampleBlock(x, y)
     self.recent_sample_x = wx
     self.recent_sample_y = wy
   end
-  MapEditorSetBlockBrush(
-    floor_list[1 + (self.sample_i - 1) % #floor_list] or 0,
-    wall_list [1 + (self.sample_i - 1) % #wall_list ] or 0
-  )
+  -- XXX: MapEditorSetBlockBrush(
+  --  floor_list[1 + (self.sample_i - 1) % #floor_list] or 0,
+  --  wall_list [1 + (self.sample_i - 1) % #wall_list ] or 0
+  -- )
 end
 
 -- Called by the UI to set what should be painted.

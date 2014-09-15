@@ -243,6 +243,7 @@ main_menu = {
   continue = "Continue Game",
   load_game = "Load Game",
   options = "Settings",
+  map_edit = "Map Editor",
   savegame_version = "Savegame version: ",
   version = "Version: ",
   exit = "Exit",
@@ -254,6 +255,7 @@ tooltip.main_menu = {
   continue = "Continue your latest saved game",
   load_game = "Load a saved game",
   options = "Tweak various settings",
+  map_edit = "Create a custom map",
   exit = "No, no, please don't leave!",
   quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
