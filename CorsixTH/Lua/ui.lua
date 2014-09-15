@@ -584,6 +584,22 @@ local workaround_shift = {
   ["/"] = "?",
 }
 
+-- ! Returns the numpad value (0, 1, 2, etc.) 
+-- ! from key-code (256, 257, etc.) (as string)
+-- ! If key-code is not from the numpad, returns nil
+-- !param code (integer) The hardware key-code
+function UI:numPadValue(code)
+  if (self:isCodeFromNumPad(code)) then
+    return tostring(code - 256)
+  end
+end
+
+-- ! Test if key-code is from numpad
+-- !param code (integer) The hardware key-code 
+function UI:isCodeFromNumPad(code)
+  return 256 <= code and code <= 265
+end
+
 --! Called when the user presses a key on the keyboard
 --!param code (integer) The hardware key-code for the pressed key. Note that
 -- these codes only coincide with ASCII for certain keyboard layouts.
@@ -602,6 +618,10 @@ function UI:onKeyDown(code, rawchar)
         else
           rawchar = workaround_shift[rawchar] or rawchar
         end
+      end
+    else
+      if self:isCodeFromNumPad(code) then
+        rawchar = self:numPadValue(code)
       end
     end
   end
