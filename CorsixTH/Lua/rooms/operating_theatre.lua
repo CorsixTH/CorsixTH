@@ -137,7 +137,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     end
   }
   staff:queueAction(meander)
-    
+  
   -- Ensure that surgeons turn back into doctors when they leave
   staff:queueAction{
     name = "walk",
@@ -174,6 +174,12 @@ function OperatingTheatreRoom:getStaffMember()
   return staff
 end
 
+--! Builds the first operation action (i.e. with the surgeon whose we see the front).
+--!param surgeon (Staff): the surgeon who does this operation action. He must
+--! be the same as the surgeon who gets the action on his queue.
+--!param patient (Patient): the patient to be operated.
+--!param operation_table (OperatingTable): master object representing
+--! the operation table.
 function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_table)
   return {
     name = "multi_use_object",
@@ -197,6 +203,12 @@ function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_tabl
   }
 end
 
+--! Builds the second operation action (i.e. with the surgeon whose we 
+--! see the back). Called either when the operation starts or when the 
+--! operation is resumed after interruption caused by the picking up of
+--! the second surgeon.
+--!param first_action (action): the first operation action (built with via buildTableAction1()).
+--!param operation_table_b (OperatingTable): slave object representing the operation table.
 function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
   local num_loops = math.random(2, 5)
 
@@ -268,7 +280,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   ----- BEGIN Save game compatibility -----
   -- These function are merely for save game compability.
   -- And they does not participate in the current game logic.
-  -- Do not move or edit 
+  -- Do not move or edit
   local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)
     action.on_interrupt = nil
     if not action.done_ready then
