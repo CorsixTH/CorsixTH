@@ -162,6 +162,17 @@ function UIMapEditor:draw(canvas, ...)
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
 
+  if self.block_info then
+    local white = canvas:mapRGB(255,255,255)
+    local blocks = self.ui.app.map.blocks
+    local blocks_draw = blocks.draw
+    canvas:drawRect(white, 25, 25, 190, 130)
+    blocks_draw(blocks, canvas, 1, 50, 50)
+    blocks_draw(blocks, canvas, 2, 120, 50)
+    blocks_draw(blocks, canvas, 3, 50, 90)
+    blocks_draw(blocks, canvas, 4, 120, 90)
+  end
+
   Window.draw(self, canvas, ...)
 end
 
