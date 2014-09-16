@@ -535,7 +535,10 @@ adviser = {
     no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
     cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
     research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches.",
-    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours."
+    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours.",
+    low_prices = "Certains patients pensent que %s est bon marché. Ils en sont contents, mais on perd de l'argent !",
+    high_prices = "Certains patients pensent que %s est cher. Ils râlent mais au moins vous faites de l'argent !",
+    fair_prices = "Certains patients pensent que %s a un prix normal. Bien bien.",
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloqué les triches !",
