@@ -1342,22 +1342,22 @@ function Hospital:receiveMoneyForTreatment(patient)
               "not in a room")
           return
         end
-      room_info = room_info.room_info
-      disease_id = "diag_" .. room_info.id
-      reason = _S.transactions.treat_colon .. " " .. room_info.name
+        room_info = room_info.room_info
+        disease_id = "diag_" .. room_info.id
+        reason = _S.transactions.treat_colon .. " " .. room_info.name
       end
-    local casebook = self.disease_casebook[disease_id]
-    local amount = self:getTreatmentPrice(disease_id)
-    casebook.money_earned = casebook.money_earned + amount
-    patient.world:newFloatingDollarSign(patient, amount)
-    -- 25% of the payments now go through insurance
-    if patient.insurance_company then
-      self:addInsuranceMoney(patient.insurance_company, amount)
-    else
-      self:computePriceLevelImpact(patient, disease_id)
-      self:receiveMoney(amount, reason)
+      local casebook = self.disease_casebook[disease_id]
+      local amount = self:getTreatmentPrice(disease_id)
+      casebook.money_earned = casebook.money_earned + amount
+      patient.world:newFloatingDollarSign(patient, amount)
+      -- 25% of the payments now go through insurance
+      if patient.insurance_company then
+        self:addInsuranceMoney(patient.insurance_company, amount)
+      else
+        self:computePriceLevelImpact(patient, disease_id)
+        self:receiveMoney(amount, reason)
+      end
     end
-   end
   end
 end
 
