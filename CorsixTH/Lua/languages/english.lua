@@ -198,6 +198,9 @@ adviser = {
     researcher_needs_desk_3 = "Each Researcher needs to have his own desk to work from.",
     nurse_needs_desk_1 = "Each Nurse needs to have her own desk to work from.",
     nurse_needs_desk_2 = "Your Nurse is pleased that you have allowed her to have a break. If you were intending to have more than one working in the ward, then you need to provide them each with a desk to work from.",
+    low_prices = "You're charging too little for %s. This will bring people to your hospital, but you won't make a lot of profit from each one.",
+    high_prices = "Your charges for %s are high. This will make big profits in the short-term, but ultimately you'll start to drive people away.",
+    fair_prices = "Your charges for %s seem fair and balanced.",
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",

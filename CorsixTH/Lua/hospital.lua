@@ -83,6 +83,17 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+
+  -- Price distortion level under which the patients might consider the
+  -- treatment to be under-priced (TODO: This could depend on difficulty and/or
+  -- level; e.g. Easy: -0.3 / Difficult: -0.5)
+  self.under_priced_threshold = -0.4
+
+  -- Price distortion level over which the patients might consider the
+  -- treatment to be over-priced (TODO: This could depend on difficulty and/or
+  -- level; e.g. Easy: 0.4 / Difficult: 0.2)
+  self.over_priced_threshold = 0.3
+
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
@@ -631,6 +642,12 @@ function Hospital:afterLoad(old, new)
 
   if old < 107 then
     self.reception_desks = nil
+  end
+
+  if old < 109 then
+    -- price distortion
+    self.under_priced_threshold = -0.4
+    self.over_priced_threshold = 0.3
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1558,6 +1575,7 @@ function Hospital:receiveMoneyForTreatment(patient)
     if patient.insurance_company then
       self:addInsuranceMoney(patient.insurance_company, amount)
     else
+      self:computePriceLevelImpact(patient, casebook)
       self:receiveMoney(amount, reason)
     end
   end
@@ -1740,6 +1758,8 @@ local reputation_changes = {
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
   ["emergency_success"] = 15,
   ["emergency_failed"] = -20,
+  ["over_priced"] = -2,
+  ["under_priced"] = 1,
 }
 
 --! Normally reputation is changed based on a reason, and the affected
@@ -2062,4 +2082,31 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+--! Change patient happiness and hospital reputation based on price distortion.
+--! The patient happiness is adjusted proportionally. The hospital reputation
+--! can only be affected when the distortion level reaches some threshold.
+--!param patient (patient) The patient paying the bill. His/her happiness level
+--! is adjusted.
+--!param casebook (object) Disease casebook entry. It's used to display the
+--! localised disease name when Adviser tells the warning message.
+function Hospital:computePriceLevelImpact(patient, casebook)
+  local price_distortion = patient:getPriceDistortion(casebook)
+  patient:changeAttribute("happiness", -(price_distortion / 2))
+
+  if price_distortion < self.under_priced_threshold then
+    if math.random(1, 100) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+      self:changeReputation("under_priced")
+    end
+  elseif price_distortion > self.over_priced_threshold then
+    if math.random(1, 100) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+      self:changeReputation("over_priced")
+    end
+  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 200) == 1 then
+    -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
+    self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+  end
 end
