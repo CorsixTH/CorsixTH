@@ -985,6 +985,7 @@ function Room:isDiagnosisRoomForPatient(patient)
   end
 end
 
+
 --! Returns the average staff service quality of the staff members
 --! in the room.
 --! Returns a float between [0-1].
