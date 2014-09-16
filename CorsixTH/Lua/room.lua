@@ -985,3 +985,26 @@ function Room:isDiagnosisRoomForPatient(patient)
   end
 end
 
+--! Returns the average staff service quality of the staff members
+--! in the room.
+--! Returns a float between [0-1].
+function Room:getStaffServiceQuality()
+  local quality = nil
+  
+  if self.staff_member_set then
+    -- For rooms with multiple staff member (like operating theatre)
+    quality = 0
+    local count = 0
+    for member, _ in pairs(self.staff_member_set) do
+      quality = quality + member:getServiceQuality()
+      count = count + 1
+    end
+    
+    quality = quality / count
+  elseif self.staff_member then
+    -- For rooms with one staff member
+    quality = self.staff_member:getServiceQuality()
+  end
+  
+  return quality
+end

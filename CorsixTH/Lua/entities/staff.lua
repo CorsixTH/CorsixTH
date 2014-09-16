@@ -987,5 +987,20 @@ function Staff:getDrawingLayer()
   end
 end
 
+--! Estimate staff service quality based on skills, fatigue and happiness.
+--! Returns a float between [0-1]
+function Staff:getServiceQuality()
+  -- weights
+  local skill_weight = 0.7
+  local fatigue_weight = 0.2
+  local happiness_weight = 0.1
+
+  local weighted_skill = skill_weight * self.profile.skill
+  local weighted_fatigue = fatigue_weight * self.attributes["fatigue"]
+  local weighted_happiness = happiness_weight * self.attributes["happiness"]
+
+  return weighted_skill + weighted_fatigue + weighted_happiness
+end
+
 -- Dummy callback for savegame compatibility
 local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function(room) end
