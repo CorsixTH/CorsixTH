@@ -1,4 +1,5 @@
 --[[ Copyright (c) 2010 Peter "Corsix" Cawley
+Copyright (c) 2014 Stephen Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -32,19 +33,28 @@ local UIMapEditor = _G["UIMapEditor"]
 local math_floor
     = math.floor
 
+local col_scrollbar = {
+  red = 164,
+  green = 156,
+  blue = 208,
+}
+
+local col_bg = {
+  red = 154,
+  green = 146,
+  blue = 198,
+}
+
+local num_blocks = 8
+local num_visible_blocks = 2
+
 function UIMapEditor:UIMapEditor(ui)
   -- Put ourselves in an easily findable global for the UI code to find.
-  _MAP_EDITOR = self
   self:Window()
-  self.x = 0
-  self.y = 0
-  self.width = math.huge
-  self.height = math.huge
   self.ui = ui
+  self.panel_sprites = self.ui.app.map.blocks
 
   self.command_stack = CommandStack()
-
-
 
   -- For when there are multiple things which could be sampled from a tile,
   -- keep track of the index of which one was most recently sampled, so that
@@ -63,6 +73,25 @@ function UIMapEditor:UIMapEditor(ui)
   -- Coordinates in Lua tile space of the mouse cursor.
   self.mouse_cell_x = 0
   self.mouse_cell_y = 0
+
+  self.block_panel = self:addBevelPanel(25, 25, 190, 130, col_bg)
+  self.scroll_base = self:addBevelPanel(215, 25, 20, 130, col_bg)
+  self.scroll_base.lowered = true
+  self.block_scroll = self.scroll_base:makeScrollbar(col_scrollbar, --[[persistable:map_editor_scrollbar_callback]] function()
+    self:updateBlocks()
+  end, 1, num_blocks, 1, 1)
+  self.block_buttons = {}
+  self.block_panels = {}
+
+  for i = 1, num_visible_blocks do
+    self.block_buttons[i] = self:addBevelPanel(30, 30 + 78 * (i - 1), 64, 40, col_bg):makeToggleButton(0, 0, 64, 64, nil, --[[persistable:map_editor_block_clicked]] function()
+      self:blockClicked(i)
+    end)
+    self.block_buttons[i].lowered = true
+    self.block_panels[i] = self:addPanel(i, 30, 33 + 78 * (i - 1), 64, 32)
+  end
+
+  self:updateBlocks()
 end
 
 function UIMapEditor:classifyBlocks()
@@ -162,20 +191,37 @@ function UIMapEditor:draw(canvas, ...)
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
 
-  if self.block_info then
-    local white = canvas:mapRGB(255,255,255)
-    local blocks = self.ui.app.map.blocks
-    local blocks_draw = blocks.draw
-    canvas:drawRect(white, 25, 25, 190, 130)
-    blocks_draw(blocks, canvas, 1, 50, 50)
-    blocks_draw(blocks, canvas, 2, 120, 50)
-    blocks_draw(blocks, canvas, 3, 50, 90)
-    blocks_draw(blocks, canvas, 4, 120, 90)
-  end
-
   Window.draw(self, canvas, ...)
 end
 
+function UIMapEditor:updateBlocks()
+  for i = 1, num_visible_blocks do
+    local block_num = self.block_scroll.value + i - 1
+    if block_num < num_blocks then
+      self.block_buttons[i]:enable(true)
+      self.block_buttons[i].visable = true
+      self.block_panels[i].visible = true
+      self.block_panels[i].sprite_index = block_num
+      self.block_buttons[i]:setToggleState(self.block_brush_preview == block_num)
+    else
+      self.block_buttons[i]:enable(false)
+      self.block_buttons[i].visable = false
+      self.block_panels[i].visible = false
+    end
+  end
+end
+
+function UIMapEditor:blockClicked(num)
+  local block_clicked = self.block_scroll.value + num - 1
+  if self.block_buttons[num].toggled then
+    -- TODO: What are w1 and w2?
+    self:setBlockBrush(block_clicked, 0, 0)
+  else
+    self:setBlockBrush(0, 0, 0)
+  end
+
+  self:updateBlocks()
+end
 
 function UIMapEditor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
