@@ -790,6 +790,56 @@ function Room:makeHumanoidLeave(patient)
   patient:setNextAction(leave)
 end
 
+function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
+  if not humanoid:isLeaving() then
+    local leave = self:createLeaveAction()
+    leave.must_happen = true
+
+    if not string.find(humanoid.humanoid_class, "Stripped") then
+      humanoid:setNextAction(leave)
+      return
+    end
+
+    local screen, sx, sy = self.world:findObjectNear(humanoid, "screen")
+    local use_screen = {
+      name = "use_screen",
+      object = screen,
+      must_happen = true,
+      is_leaving = true
+    }
+
+    --Make old saved game action queues compatible with the changes made by the #293 fix commit:
+    for actions_index, action in ipairs(humanoid.action_queue) do
+      if action.name == "use screen" or (action.name == "walk" and action.x == sx and action.y == sy) then
+        if not action.is_leaving then
+          humanoid.humanoid_actions[actions_index].is_leaving = true
+        end
+        if action.name == "walk" and action.must_happen then
+          action.must_happen = false
+        end
+      end
+    end
+
+    if humanoid.action_queue[1].name == "use_screen" then
+      --The humanoid must be using the screen to undress because this isn't a leaving action:
+      humanoid.action_queue[1].after_use = nil
+      humanoid:setNextAction(use_screen)
+    else
+      humanoid:setNextAction{
+        name = "walk",
+        x = sx,
+        y = sy,
+        must_happen = true,
+        no_truncate = true,
+        is_leaving = true
+      }
+      humanoid:queueAction(use_screen)
+    end
+
+    humanoid:queueAction(leave)
+  end
+end
+
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
