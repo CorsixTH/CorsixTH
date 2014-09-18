@@ -27,6 +27,7 @@ disease.cure = _S.diseases.pregnancy.cure
 disease.cure_price = 200
 disease.emergency_sound = "emerg021.wav"
 disease.emergency_number = 8
+disease.contagious = false
 disease.initPatient = function(patient)
   patient:setType("Standard Female Patient")
   patient:setLayer(0, math.random(1, 4) * 2)

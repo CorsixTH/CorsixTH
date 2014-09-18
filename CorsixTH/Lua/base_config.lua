@@ -93,6 +93,12 @@ local configuration = {
     EpidemicCompLo         = 1000,
     -- If an epidemic coverup succeeds how much compensation is received - hi value max 20000
     EpidemicCompHi         = 15000,
+    -- How many patients still infected cause a reputation loss as well as a fine if less than EpidemicEvacMinimum then ignored
+    EpidemicRepLossMinimum = 5,
+    -- How many patients still infected and not-cured cause the hospital to be evacuated
+    EpidemicEvacMinimum = 10,
+    --How many epidemics can exists at the same time - both active and quietly in the background
+    EpidemicConcurrentLimit = 1,
     -- % of research completed for an autopsy
     AutopsyRschPercent     = 33,
     -- % rep hit for discovered autopsy

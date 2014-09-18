@@ -267,6 +267,7 @@ end
 
 function Room:onHumanoidEnter(humanoid)
   assert(not self.humanoids[humanoid], "Humanoid entering a room that they are already in")
+
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
   -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
@@ -358,6 +359,16 @@ function Room:onHumanoidEnter(humanoid)
   self.humanoids[humanoid] = true
   self:tryAdvanceQueue()
   if class.is(humanoid, Patient) then
+    -- An infect patient's disease may have changed so they might have
+    -- been sent to an incorrect diagnosis room, they should leave and go
+    -- back to the gp for redirection
+    if (humanoid.infected) and not humanoid.diagnosed and
+        not self:isDiagnosisRoomForPatient(humanoid) then
+      humanoid:queueAction(self:createLeaveAction())
+      humanoid.needs_redirecting = true
+      humanoid:queueAction({name = "seek_room", room_type = "gp"})
+      return
+    end
     -- Check if the staff requirements are still fulfilled (the staff might have left / been picked up meanwhile)
     if self:testStaffCriteria(self:getRequiredStaffCriteria()) then
       if self.staff_member  then
@@ -888,6 +899,24 @@ end
 function Room:afterLoad(old, new)
   if old and old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
+  end
+end
+
+--[[ Is the room one of the diagnosis rooms for the patient?
+-- This used for epidemics when the disease and therefore the diagnosis
+-- rooms of a patient may change.
+-- @param patient (Patient) patient to verify if treatment room ]]
+-- @return result (boolean) true if is suitable diagnosis room, false otherwise
+function Room:isDiagnosisRoomForPatient(patient)
+  if self.room_info.id ~= "gp" then
+    for _, room_name in ipairs(patient.disease.diagnosis_rooms) do
+      if self.room_info.id == room_name then
+        return true
+      end
+    end
+    return false
+  else
+    return true
   end
 end
 

@@ -120,7 +120,12 @@ function GPRoom:dealtWithPatient(patient)
   patient:setNextAction(self:createLeaveAction())
   patient:addToTreatmentHistory(self.room_info)
 
-  if patient.disease and not patient.diagnosed then
+  -- If the patient got sent to the wrong room and needs telling where
+  -- to go next - this happens when a disease changes for an epidemic
+  if patient.needs_redirecting then
+    self:sendPatientToNextDiagnosisRoom(patient)
+    patient.needs_redirecting = false
+  elseif patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
 
     patient:completeDiagnosticStep(self)
@@ -133,19 +138,8 @@ function GPRoom:dealtWithPatient(patient)
       if not self.hospital.disease_casebook[patient.disease.id].discovered then
         self.hospital.research:discoverDisease(patient.disease)
       end
-    elseif #patient.available_diagnosis_rooms == 0 then
-      -- The very rare case where the patient has visited all his/her possible diagnosis rooms
-      -- There's not much to do then... Send home
-      patient:goHome()
-      patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
     else
-      self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
-      local next_room = math.random(1, #patient.available_diagnosis_rooms)
-      patient:queueAction{
-        name = "seek_room",
-        room_type = patient.available_diagnosis_rooms[next_room],
-        diagnosis_room = next_room,
-      }
+      self:sendPatientToNextDiagnosisRoom(patient)
     end
   else
     patient:queueAction{name = "meander", count = 2}
@@ -160,6 +154,23 @@ function GPRoom:dealtWithPatient(patient)
   end
   -- Maybe the staff member can go somewhere else
   self:findWorkForStaff()
+end
+
+function GPRoom:sendPatientToNextDiagnosisRoom(patient)
+  if #patient.available_diagnosis_rooms == 0 then
+    -- The very rare case where the patient has visited all his/her possible diagnosis rooms
+    -- There's not much to do then... Send home
+    patient:goHome()
+    patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
+  else
+    self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
+    local next_room = math.random(1, #patient.available_diagnosis_rooms)
+    patient:queueAction{
+      name = "seek_room",
+      room_type = patient.available_diagnosis_rooms[next_room],
+      diagnosis_room = next_room,
+    }
+  end
 end
 
 function GPRoom:onHumanoidLeave(humanoid)

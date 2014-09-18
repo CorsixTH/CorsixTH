@@ -155,6 +155,110 @@ function CallsDispatcher:callForWatering(plant)
   return call
 end
 
+--[[ Queues a call for vaccination of a patient
+  @param patient (Patient) the patient who wishes to be vaccinated
+  @return call (table) the call which was queued ]]
+function CallsDispatcher:callNurseForVaccination(patient)
+  local call = {
+    object = patient,
+    key = "vaccinate",
+    description = "Vaccinating patient at: "
+                   .. tostring(patient.tile_x) .. ","
+                   .. tostring(patient.tile_y),
+    verification = --[[persistable:call_dispatcher_vaccinate_verification]] function(staff)
+      return CallsDispatcher.verifyStaffForVaccination(patient, staff)
+    end,
+    priority = --[[persistable:call_dispatcher_vaccinate_priority]] function(staff)
+      return CallsDispatcher.getPriorityForVaccination(patient,staff)
+    end,
+    execute = --[[persistable:call_dispatcher_vaccinate_execute]] function(staff)
+      return CallsDispatcher.sendNurseToVaccinate(patient, staff)
+    end,
+    dispatcher = self,
+    created = self.tick,
+    assigned = nil,
+    dropped = nil
+  }
+  if not self.call_queue[patient] then
+    self.call_queue[patient] = {}
+  end
+  self.call_queue[patient]["vaccinate"] = call
+
+  return call
+end
+
+--[[Determines if a member of staff is suitable to vaccinate a patient they
+  must be a nurse and not busy or too far away.
+  @param patient (Patient) the patient calling for vaccination
+  @param staff (Staff) staff member to verify if suitable to vaccinate
+  @return true if suitable for vaccination false otherwise (boolean) ]]
+function CallsDispatcher.verifyStaffForVaccination(patient, staff)
+  local function close_to_patient(patient,staff)
+
+    local px,py = patient.tile_x, patient.tile_y
+    local nx,ny = staff.tile_x, staff.tile_y
+    local x_diff = math.abs(px-nx)
+    local y_diff = math.abs(py-ny)
+    local test_radius = 5
+
+    -- Test if the patient's room is still empty incase they are just entering
+    -- a room when they call for a staff to vaccinate them
+    return x_diff and y_diff and x_diff <= test_radius
+    and y_diff <= test_radius and not patient:getRoom()
+  end
+
+  return staff.humanoid_class == "Nurse" and staff:isIdle() and not
+    staff:getRoom() and close_to_patient(patient,staff)
+end
+
+--[[ Determine which nurse has the highest priority to vaccinate a patient
+  the patient should be easily reachable from the nurse
+  @param patient (Patient) the patient calling for vaccination
+  @param nurse (Staff, humanoid_class Nurse) the nurse to verify if they
+  have priority to vaccinate
+  @return score (Integer) lowest score has higher priority to vaccinate ]]
+function CallsDispatcher.getPriorityForVaccination(patient, nurse)
+  assert(nurse.humanoid_class == "Nurse")
+  --Lower the priority "score" the more urgent it is
+  --The closest nurse to the patient has the highest priority for vaccination
+  --Any nurse who cannot reach the paitient suffers a priority penalty
+  local score = 0;
+  local nil_penalty = 10000
+  local x, y = patient.tile_x, patient.tile_y
+
+  -- Nurses prefer to vaccinate the closest patient
+  local distance =
+    patient.world:getPathDistance(nurse.tile_x, nurse.tile_y, x, y);
+  if distance then
+    score = score + distance
+  else
+    score = score + nil_penalty
+  end
+  return score
+end
+
+--[[ Once a nurse has been verified and priority decided do the actions to
+  perform the actually vaccination, delegated to Epidemic class (@see
+  Epidemic:createVaccinationActions) @param patient (Patient) the patient calling
+  for vaccination @param nurse (Staff, humanoid_class Nurse) the nurse to perform
+  the vaccination actions ]]
+function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
+  assert(nurse.humanoid_class == "Nurse")
+
+  local epidemic = nurse.hospital.epidemic
+  if epidemic then
+    epidemic:createVaccinationActions(patient,nurse)
+  else
+    -- The epidemic may have ended before the call can be executed
+    -- so just finish the call immediately
+    CallsDispatcher.queueCallCheckpointAction(nurse)
+    nurse:queueAction{name = "answer_call"}
+    nurse:finishAction()
+    patient.reserved_for = nil
+  end
+end
+
+
 -- Enqueue the call
 -- returns: True if the call is inserted and queued, but not served
 --          False if the call is served right away, or has been queued and assigned
@@ -291,8 +395,12 @@ function CallsDispatcher.dumpCall(call, message)
   if call.object.x then
     position = call.object.x ..','..call.object.y
   end
+  if(class.is(call.object,Humanoid)) then
+    print(call.key .. '@' .. position .. message)
+  else
   print((call.object.room_info and call.object.room_info.id or call.object.object_type.id) .. '-' .. call.key ..
     '@' .. position .. message)
+  end
 end
 
 -- Add checkpoint action

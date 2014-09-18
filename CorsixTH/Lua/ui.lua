@@ -735,8 +735,7 @@ function UI:onMouseUp(code, x, y)
   if Window.onMouseUp(self, button, x, y) then
     repaint = true
   else
-    if self.cursor_entity and self.cursor_entity.onClick
-    and self.app.world.user_actions_allowed then
+    if self:ableToClickEntity(self.cursor_entity) then
       self.cursor_entity:onClick(self, button)
       repaint = true
     end
@@ -745,6 +744,22 @@ function UI:onMouseUp(code, x, y)
   self:updateTooltip()
   return repaint
 end
+
+--[[ Determines if a cursor entity can be clicked
+@param entity (Entity,nil) cursor entity clicked on if any
+@return true if can be clicked on, false otherwise (boolean) ]]
+function UI:ableToClickEntity(entity)
+  if self.cursor_entity and self.cursor_entity.onClick then
+    local hospital = entity.hospital
+    local epidemic = hospital and hospital.epidemic
+
+    return self.app.world.user_actions_allowed and not epidemic or
+      (epidemic and not epidemic.vaccination_mode_active)
+  else
+    return false
+  end
+end
+
 
 function UI:getScreenOffset()
   return self.screen_offset_x, self.screen_offset_y

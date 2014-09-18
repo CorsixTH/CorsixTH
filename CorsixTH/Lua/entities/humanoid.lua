@@ -125,6 +125,7 @@ anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   
 anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288,   nil,   nil, 3518,  3520)
 anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
 anims("VIP",                        266,  268,  274,  276)
+anims("Inspector",                  266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
 
 --  | Die Animations                 |
@@ -240,10 +241,10 @@ moods("queue",          4568,      70)             -- no matter what other prior
 moods("poo",            3996,       5)
 moods("money",          4018,      30)
 moods("patient_wait",   5006,      40)
-moods("epidemy1",       4566,      38)
-moods("epidemy2",       4570,      40)
-moods("epidemy3",       4572,      40)
-moods("epidemy4",       4574,      40)
+moods("epidemy1",       4566,      55)
+moods("epidemy2",       4570,      55)
+moods("epidemy3",       4572,      55)
+moods("epidemy4",       4574,      55)
 moods("sad1",           3992,      40)
 moods("sad2",           4000,      41)
 moods("sad3",           4002,      42)

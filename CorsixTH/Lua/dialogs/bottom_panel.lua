@@ -288,7 +288,7 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     self.world.ui.adviser:say(_A.information.fax_received)
     self.ui.hospital.message_popup = true
   end
-  self.message_queue[#self.message_queue + 1] = {
+  local fax = {
     type = type,
     message = message,
     owner = owner,
@@ -296,11 +296,69 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
     default_choice = default_choice,
     callback = callback,
   }
-  -- create reference to message in owner
-  if owner then
-    owner.message = message
+
+  if self:canQueueFax(fax) then
+    self.message_queue[#self.message_queue + 1] = fax
+    -- create reference to message in owner
+    if owner then
+      owner.message = message
+    end
+  else
+    self:cancelFax(fax.type)
   end
 end
+
+--[[ A fax can be queued if the event the fax causes does not effect
+an event caused by any other fax that is queued. i.e both emergency
+and epidemics use the timer, so both faxes cannot appear at the same time.
+@param fax (table) the fax we want to determine if can be queued.
+@return true if fax can be queued, false otherwise (boolean) ]]
+function UIBottomPanel:canQueueFax(fax)
+  --[[ Determine if fax of a particular type is queued either in the
+  message queue or the message window (ui)
+  @param fax_type (string) the fax type to check if any queued
+  @return true if any of fax_type is queued false otherwise (boolean) ]]
+  local function isFaxTypeQueued(fax_type)
+    -- Check the queued messages
+    for _, fax in ipairs(self.message_queue) do
+      if fax.type == fax_type then
+        return true
+      end
+    end
+    -- Then the messages displayed on the bottom bar
+    for _, fax in ipairs(self.message_windows) do
+      if fax.type == fax_type then
+        return true
+      end
+    end
+    return false
+  end
+
+  if fax.type == "epidemy" then
+    if isFaxTypeQueued("emergency") then
+      return false
+    end
+  elseif fax.type == "emergency" then
+    if isFaxTypeQueued("epidemy") then
+      return false
+    end
+  end
+  return true
+end
+
+--[[ Cancels a fax of a particular type currently only "emergency" and "epidemy"
+Handles the cancelling of the event which the fax pertains to.
+@param fax_type (string) type of fax event to be cancelled]]
+function UIBottomPanel:cancelFax(fax_type)
+  local hospital = self.ui.hospital
+  if fax_type == "epidemy" then
+    hospital.epidemic:clearAllInfectedPatients()
+    hospital.epidemic = nil
+  elseif fax_type == "emergency" then
+    self.world:nextEmergency()
+  end
+end
+
 -- Opens the last available message. Currently used to open the level completed message.
 function UIBottomPanel:openLastMessage()
   if #self.message_queue > 0 then
