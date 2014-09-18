@@ -30,6 +30,7 @@ dofile "staff_profile"
 dofile "hospital"
 dofile "calls_dispatcher"
 dofile "research_department"
+dofile "entity_map"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -65,6 +66,7 @@ function World:World(app)
   }
   self.objects_notify_occupants = {}
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
+  self.entity_map = EntityMap(self.map)
 
   -- Time
   self.hours_per_day = 50
@@ -2355,10 +2357,21 @@ function World:afterLoad(old, new)
       obj:afterLoad(old, new)
     end
   end
+
   if old < 80 then
     self:determineWinningConditions()
   end
 
+  if old < 88 then
+    --Populate the entity map
+    self.entity_map = EntityMap(self.map)
+    for _, e in ipairs(self.entities) do
+      local x, y = e.tile_x, e.tile_y
+      if x and y then
+        self.entity_map:addEntity(x,y,e)
+      end
+    end
+  end
   self.savegame_version = new
 end
 
