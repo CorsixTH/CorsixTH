@@ -260,6 +260,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     end
     humanoid:queueAction({
       name = "queue",
+      is_leaving = humanoid:isLeaving(),
       x = x1,
       y = y1,
       queue = queue,

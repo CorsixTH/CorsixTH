@@ -357,6 +357,7 @@ local function action_queue_start(action, humanoid)
   end
   humanoid:queueAction({
     name = "idle",
+    is_leaving = humanoid:isLeaving(),
     must_happen = true,
   }, 0)
   action:onChangeQueuePosition(humanoid)

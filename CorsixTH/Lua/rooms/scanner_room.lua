@@ -110,6 +110,7 @@ function ScannerRoom:commandEnteringPatient(patient)
       if not self.staff_member or patient.going_home then
         -- If we aborted somehow, don't do anything here.
         -- The patient already has orders to change back if necessary and leave.
+        -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
         return
       end
       self.staff_member:setNextAction{name = "meander"}
@@ -126,50 +127,17 @@ function ScannerRoom:onHumanoidLeave(humanoid)
   Room.onHumanoidLeave(self, humanoid)
 end
 
-function ScannerRoom:makeHumanoidLeave(patient)
-  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
+function ScannerRoom:makeHumanoidLeave(humanoid)
+  if humanoid.action_queue[1].name == "use_object" and humanoid.action_queue[1].object == self.world:findObjectNear(humanoid, "scanner") then
+    humanoid.action_queue[1].after_use = nil
+  end 
 
-  if (patient.humanoid_class == "Stripped Male Patient" or
-    patient.humanoid_class == "Stripped Male Patient 2" or
-    patient.humanoid_class == "Stripped Female Patient" or
-    patient.humanoid_class == "Stripped Male Patient 3" or
-    patient.humanoid_class == "Stripped Female Patient 2" or
-    patient.humanoid_class == "Stripped Female Patient 3") and
-    not patient.action_queue[1].is_leaving then
-
-    patient:setNextAction{
-      name = "walk",
-      x = sx,
-      y = sy,
-      must_happen = true,
-      no_truncate = true,
-      is_leaving = true,
-    }
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      must_happen = true,
-      is_leaving = true,
-    }
-    local leave = self:createLeaveAction()
-    leave.must_happen = true
-    patient:queueAction(leave)
-  else
-    local leave = self:createLeaveAction()
-    leave.must_happen = true
-    patient:setNextAction(leave)
-  end
+  self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
 end
 
 function ScannerRoom:dealtWithPatient(patient)
-  local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-  if patient.humanoid_class == "Stripped Male Patient" or
-    patient.humanoid_class == "Stripped Female Patient" or
-    patient.humanoid_class == "Stripped Male Patient 2" or
-    patient.humanoid_class == "Stripped Female Patient 2" or
-    patient.humanoid_class == "Stripped Male Patient 3" or
-    patient.humanoid_class == "Stripped Female Patient 3" then
-
+  if string.find(patient.humanoid_class, "Stripped") then
+    local screen, sx, sy = self.world:findObjectNear(patient, "screen")
     patient:setNextAction{
       name = "walk",
       x = sx,
@@ -189,6 +157,10 @@ function ScannerRoom:dealtWithPatient(patient)
   else
     Room.dealtWithPatient(self, patient)
   end
+end
+
+function ScannerRoom:shouldHavePatientReenter(patient)
+  return not patient:isLeaving()
 end
 
 return room

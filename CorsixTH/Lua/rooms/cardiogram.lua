@@ -55,18 +55,6 @@ function CardiogramRoom:commandEnteringPatient(patient)
     object = screen,
     after_use = --[[persistable:cardiogram_screen_after_use1]] function()
       local staff = self.staff_member
-      if not staff or patient.going_home then
-        -- If, by some fluke, the staff member left the room while the
-        -- patient used the screen, then the patient should get changed
-        -- again (they will already have been instructed to leave by the
-        -- staff leaving).
-        patient:queueAction({
-          name = "use_screen",
-          object = screen,
-          must_happen = true,
-        }, 1)
-        return
-      end
       local cardio, cx, cy = self.world:findObjectNear(patient, "cardio")
       staff:walkTo(cardio:getSecondaryUsageTile())
       local staff_idle = {name = "idle"}
@@ -78,7 +66,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         name = "multi_use_object",
         object = cardio,
         use_with = staff,
-        must_happen = true, -- set so that the second use_screen always happens
+        must_happen = false,
         prolonged_usage = true,
         loop_callback = --[[persistable:cardiogram_cardio_loop_callback]] function(action)
           if not action.on_interrupt then
@@ -111,12 +99,14 @@ function CardiogramRoom:commandEnteringPatient(patient)
         name = "walk",
         x = sx,
         y = sy,
-        must_happen = true,
+        is_leaving = true,
+        must_happen = false,
         no_truncate = true,
       }
       patient:queueAction{
         name = "use_screen",
         object = screen,
+        is_leaving = true,
         must_happen = true,
         after_use = --[[persistable:cardiogram_screen_after_use2]] function()
           if #patient.action_queue == 1 then
@@ -129,11 +119,19 @@ function CardiogramRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
+function CardiogramRoom:makeHumanoidLeave(humanoid)
+  self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
+end
+
 function CardiogramRoom:onHumanoidLeave(humanoid)
   if self.staff_member == humanoid then
     self.staff_member = nil
   end
   Room.onHumanoidLeave(self, humanoid)
+end
+
+function CardiogramRoom:shouldHavePatientReenter(patient)
+  return not patient:isLeaving()
 end
 
 return room
