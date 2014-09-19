@@ -1760,7 +1760,9 @@ function Hospital:changeReputation(reason, disease, valueChange)
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  if self:isReputationChangeAllowed(amount) then
+    self.reputation = self.reputation + amount
+  end
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1783,6 +1785,40 @@ function Hospital:checkReputation()
     return
   end
   self.reputation_above_threshold = false
+end
+
+--! Decide whether a reputation change is effective or not. As we approach 1000,
+--! a gain is less likely. As we approach 0, a loss is less likely.
+--! Under 500, a gain is always effective.  Over 500, a loss is always effective.
+--!param amount (int): The amount of reputation change.
+function Hospital:isReputationChangeAllowed(amount)
+  if (amount > 0 and self.reputation <= 500) or (amount < 0 and self.reputation >= 500) or (amount == 0) then
+    return true
+  else
+    return math.random() <= self:getReputationChangeLikelihood()
+  end
+end
+
+--! Compute the likelihood for a reputation change to be effective.
+--! Result is smaller as hospital reputation gets closer to extreme values.
+--! The result follows a quadratic function, for a curved and smooth evolution.
+--! If reputation == 500, the result is 100%.
+--! Between [380-720], the result is still over 80%.
+--! At 100 or 900, it's under 40%.
+--! At 0 or 1000, it's 0%.
+function Hospital:getReputationChangeLikelihood()
+  -- The a, b and c coefficients have been computed to include points
+  -- (x=0, y=1), (x=500, y=0) and (x=1000, y=1) where x is the current
+  -- reputation and y the likelihood of the reputation change to be
+  -- refused, based a discriminant (aka "delta") == 0
+  local a = 0.000004008
+  local b = 0.004008
+  local c = 1
+
+  local x = self.reputation
+
+  -- The result is "reversed" for more readability
+  return 1 - (a * x * x - b * x + c)
 end
 
 function Hospital:updatePercentages()
