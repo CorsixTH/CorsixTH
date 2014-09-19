@@ -1205,12 +1205,10 @@ function World:onEndMonth()
     self:checkIfGameWon()
   end
 
-  -- Change population share for the hospitals, TODO according to reputation.
-  -- Since there are no competitors yet the player's hospital can be considered
-  -- to be fairly good no matter what it looks like, so after gbv.AllocDelay
-  -- months, change the share to half of the new people.
+  local local_hospital = self:getLocalPlayerHospital();
+  local_hospital.population = 0.25
   if self.month >= self.map.level_config.gbv.AllocDelay then
-    self:getLocalPlayerHospital().population = 0.5
+    local_hospital.population = local_hospital.population * self:getReputationImpact(local_hospital)
   end
 
   -- Also possibly change world spawn rate according to the level configuration.
@@ -1250,6 +1248,28 @@ function World:updateSpawnDates()
     -- We are interested in the coming month, pick days from it at random.
     local day = math.random(1, month_length[self.month % 12 + 1])
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
+  end
+end
+
+--! Computes the impact of hospital reputation on the spawn rate.
+--! The relation between reputation and its impact is linear.
+--! Returns a percentage (as a float):
+--!     1% if reputation < 253
+--!    60% if reputation == 400
+--!   100% if reputation == 500
+--!   140% if reputation == 600
+--!   180% if reputation == 700
+--!   300% if reputation == 1000
+--!param hospital (hospital): the hospital used to compute the
+--! reputation impact
+function World:getReputationImpact(hospital)
+  local result = 1 + ((hospital.reputation - 500) / 250)
+
+  -- The result must be positive
+  if result <= 0 then
+    return 0.01
+  else
+    return result
   end
 end
 
