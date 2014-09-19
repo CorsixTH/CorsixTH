@@ -2114,16 +2114,26 @@ function Hospital:computePriceLevelImpact(patient, disease_id)
   local casebook = self.disease_casebook[disease_id]
   local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
   patient:changeAttribute("happiness", -(price_distortion / 2))
-  
-  if price_distortion < -0.3 and math.random(1, 10) == 1 then
+
+  if price_distortion < -0.3 then
     -- under-priced threshold
-    self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
-    self:changeReputation("under_priced")
-  elseif price_distortion > 0.3 and math.random(1, 10) == 1 then
+    if math.random(1, 10) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+    end
+
+    if math.random(1, 5) == 1 then
+      self:changeReputation("under_priced")
+    end
+  elseif price_distortion > 0.3 then
     -- over-priced threshold
-    self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
-    self:changeReputation("over_priced")
-  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 25) == 1 then
+    if math.random(1, 10) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+    end
+
+    if math.random(1, 5) == 1 then
+      self:changeReputation("over_priced")
+    end
+  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 20) == 1 then
     -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
     self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
   end
