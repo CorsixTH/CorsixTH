@@ -105,8 +105,8 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
     self:addPanel(239, x, y) -- List body
     if i <= #self.objects then
       self:addPanel(240, x + 12, y):makeButton(0, 0, 125, 19, 241, item_callback(i, 1), nil, item_callback(i, -1)):setTooltip(self.objects[i].object.tooltip)
-      self:addPanel(244, x + 139, y + 1):makeButton(0, 0, 17, 17, 245, item_callback(i, -1)):setTooltip(_S.tooltip.buy_objects_window.decrease)
-      self:addPanel(246, x + 183, y + 1):makeButton(0, 0, 17, 17, 247, item_callback(i, 1)):setTooltip(_S.tooltip.buy_objects_window.increase)
+      self:addPanel(244, x + 139, y + 1):makeRepeatButton(0, 0, 17, 17, 245, item_callback(i, -1)):setTooltip(_S.tooltip.buy_objects_window.decrease)
+      self:addPanel(246, x + 183, y + 1):makeRepeatButton(0, 0, 17, 17, 247, item_callback(i, 1)):setTooltip(_S.tooltip.buy_objects_window.increase)
     end
     i = i + 1
   end
