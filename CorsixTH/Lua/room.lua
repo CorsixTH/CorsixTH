@@ -544,15 +544,17 @@ function Room:onHumanoidLeave(humanoid)
     end
     -- Make patients leave the room if there are no longer enough staff
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
-      -- Call for staff if needed
-      if self.is_active and self.door.queue:patientSize() > 0 then
-        self.world.dispatcher:callForStaff(self)
-      end
+      local patient_needs_to_reenter = false
       for humanoid in pairs(self.humanoids) do
         if class.is(humanoid, Patient) and self:shouldHavePatientReenter(humanoid) then
           self:makeHumanoidLeave(humanoid)
           humanoid:queueAction(self:createEnterAction(humanoid))
+          patient_needs_to_reenter = true
         end
+      end
+      -- Call for staff if needed
+      if self.is_active and (patient_needs_to_reenter or self.door.queue:patientSize() > 0) then
+        self.world.dispatcher:callForStaff(self)
       end
     end
     -- Remove any unwanted moods the staff member might have
