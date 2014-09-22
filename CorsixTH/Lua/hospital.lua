@@ -1043,6 +1043,15 @@ function Hospital:onEndMonth()
   end
   self.player_salary = self.player_salary + math.ceil(month_incr)
 
+  -- check if the adviser should complain about costs
+  for _, patient in pairs(self.patients) do
+    if patient.attributes["happiness"] < 0.3 and math.random(0,5) == 0
+    and self.disease_casebook[patient.disease.id].price > 1.5 then
+     self.world.ui.adviser:say(_A.warnings.low_happiness)
+     break
+    end
+  end
+
   -- TODO: do you get interest on the balance owed?
   for i, company in ipairs(self.insurance_balance) do
     -- Get the amount that is about to be payed to the player
@@ -1408,6 +1417,30 @@ function Hospital:addPatient(patient)
   -- Add to the hospital's visitor count
   self.num_visitors = self.num_visitors + 1
   self.num_visitors_ty = self.num_visitors_ty + 1
+  -- Give patient a wealth value
+  local wVal = math.random(0,2)
+  if wVal == 1 then patient.wealth = "low"
+  elseif wVal == 2 then patient.wealth = "mid"
+  elseif wVal == 3 then patient.wealth = "high"
+  end
+  -- Compare patients' happiness with costs of hospital
+  local diseasePrice = self.disease_casebook[patient.disease.id].price
+  if not patient.insurance_company then
+    if diseasePrice >= 1 and diseasePrice <= 2 then
+      local newHappiness = diseasePrice - 1.0
+      if patient.wealth == "high" then 
+        newHappiness = 0.0
+      elseif patient.wealth == "mid" then
+        newHappiness = math.random(0.0,diseasePrice - 1.0)
+      elseif patient.wealth == "low" then
+        newHappiness = math.random(0.0,diseasePrice - 1.0) + 
+          self.disease_casebook[patient.disease.id].reputation / 5000 
+      end
+      patient.attributes["happiness"] = patient.attributes["happiness"] - newHappiness
+    elseif diseasePrice < 1 then
+      patient.attributes["happiness"] = 1.0
+    end
+  end
 end
 
 function Hospital:humanoidDeath(humanoid)
@@ -1497,7 +1530,7 @@ function Hospital:changeReputation(reason, disease, valueChange)
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  self:addReputation(amount)
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1511,6 +1544,10 @@ function Hospital:changeReputation(reason, disease, valueChange)
   if self.reputation_above_threshold then
     self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
   end
+end
+
+function Hospital:addReputation(value)
+  self.reputation = self.reputation + value
 end
 
 function Hospital:updatePercentages()

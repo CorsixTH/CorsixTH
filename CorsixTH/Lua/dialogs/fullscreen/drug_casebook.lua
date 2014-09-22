@@ -301,6 +301,7 @@ end
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
+  local repChange = 0
   if self.buttons_down.ctrl then
     amount = amount * 25
   elseif self.buttons_down.shift then
@@ -313,6 +314,21 @@ function UICasebook:increasePay()
   else
     self.ui:playSound("selectx.wav")
   end
+  if price < 2 and price > 0.5 then
+    repChange = ((self.hospital.reputation_max/100)*(amount/10))/-1
+    for _, patient in pairs(self.hospital.patients) do
+      if patient.disease.id == self.selected_disease then
+          if patient.wealth == "low" then
+            repChange = repChange * 2 - self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "mid" then
+            repChange = repChange - self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "high" then
+            repChange = 0
+          end
+        patient:changeAttribute("happiness", repChange)
+      end
+    end
+  end
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
 end
@@ -320,6 +336,7 @@ end
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
+  local repChange = 0
   if self.buttons_down.ctrl then
     amount = amount * 25
   elseif self.buttons_down.shift then
@@ -331,6 +348,21 @@ function UICasebook:decreasePay()
     self.ui:playSound("Wrong2.wav")
   else
     self.ui:playSound("selectx.wav")
+  end
+  if price < 2 and price > 0.5 then
+    repChange = ((self.hospital.reputation_max/100)*(amount/10))
+    for _, patient in pairs(self.hospital.patients) do
+      if patient.disease.id == self.selected_disease then
+          if patient.wealth == "low" then
+            repChange = repChange * 2 + self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "mid" then
+            repChange = repChange + self.casebook[self.selected_disease].reputation/5000
+          elseif patient.wealth == "high" then
+            repChange = 0
+          end
+        patient:changeAttribute("happiness", repChange)
+      end
+    end
   end
   self.casebook[self.selected_disease].price = price
   self.percentage_counter = 50
