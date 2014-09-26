@@ -186,7 +186,7 @@ adviser = {
     low_prices = "Some patients think %s is cheap. That makes them happier but we're loosing money!",
     high_prices = "Some patients think %s is expensive. That makes them unhappy but at least you're making money!",
     fair_prices = "Some patients think %s price is fair. That sounds good.",
-    patient_not_paying = "A patient left without paying for %s because it's too expansive! We lost %d$!",
+    patient_not_paying = "A patient left without paying for s% because it's too expansive!",
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",

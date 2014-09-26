@@ -539,7 +539,7 @@ adviser = {
     low_prices = "Certains patients pensent que %s est bon marché. Ils en sont contents, mais on perd de l'argent !",
     high_prices = "Certains patients pensent que %s est cher. Ils râlent mais au moins vous faites de l'argent !",
     fair_prices = "Certains patients pensent que %s a un prix normal. Bien bien.",
-    patient_not_paying = "Un patient est parti sans payer pour %s parce que c'est trop cher! Nous avons perdu %d$ !",
+    patient_not_paying = "Un patient est parti sans payer pour %s parce que c'est trop cher !",
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloqué les triches !",
