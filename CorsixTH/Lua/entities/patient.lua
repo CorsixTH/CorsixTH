@@ -268,6 +268,7 @@ end
 --! depending on whether they consider the price reasonable.
 function Patient:treatDisease()
   local hospital = self.hospital
+
   hospital:receiveMoneyForTreatment(self)
 
   -- Either the patient is no longer sick, or he/she dies.
@@ -284,6 +285,16 @@ function Patient:treatDisease()
   if self.is_emergency then
     hospital:checkEmergencyOver()
   end
+end
+
+--! Returns true if patient agrees to pay for the given treatment.
+--!param disease_id (string): The id of the disease to test
+function Patient:agreesToPay(disease_id)
+  local casebook = self.hospital.disease_casebook[disease_id]
+  local price_distortion = self:getPriceDistortion(casebook)
+  local is_over_priced = price_distortion > self.hospital.over_priced_threshold
+
+  return not (is_over_priced and math.random(1, 5) == 1)
 end
 
 --! Either the patient is cured, or he/she dies.
@@ -544,7 +555,9 @@ end
 --! either when no treatment can be found for her/him, etc.
 --! -"over_priced": When the patient decided to leave because he/she believes
 --! the last treatment is over-priced.
-function Patient:goHome(reason)
+--param disease_id (string): When the reason is "over_priced" this is the
+--! id of the disease/diagnosis that the patient considered over_priced
+function Patient:goHome(reason, disease_id)
   local hosp = self.hospital
   if self.going_home then
     -- The patient should be going home already! Anything related to the hospital
@@ -574,6 +587,17 @@ function Patient:goHome(reason)
       local casebook = hosp.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end
+  elseif reason == "over_priced" then
+    self:setMood("sad_money", "activate")
+    self:changeAttribute("happiness", -0.5)
+    local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
+    self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
+    if not self.is_debug then
+      hosp:changeReputation("over_priced", self.disease)
+      self:incrementNotCuredCounts()
+    end
+    self:clearDynamicInfo()
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end

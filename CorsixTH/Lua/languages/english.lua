@@ -201,6 +201,7 @@ adviser = {
     low_prices = "You're charging too little for %s. This will bring people to your hospital, but you won't make a lot of profit from each one.",
     high_prices = "Your charges for %s are high. This will make big profits in the short-term, but ultimately you'll start to drive people away.",
     fair_prices = "Your charges for %s seem fair and balanced.",
+    patient_not_paying = "A patient left without paying for %s because it's too expensive!",
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",

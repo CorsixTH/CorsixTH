@@ -119,7 +119,11 @@ function ReceptionDesk:tick()
             end
             -- VIP has his own list, don't add the gp office twice
           elseif queue_front.humanoid_class ~= "VIP" then
-            queue_front:queueAction{name = "seek_room", room_type = "gp"}
+            if queue_front:agreesToPay("diag_gp") then
+              queue_front:queueAction{name = "seek_room", room_type = "gp"}
+            else
+              queue_front:goHome("over_priced", "diag_gp")
+            end
           else
             -- the VIP will realise that he is idle, and start going round rooms
             queue_front:queueAction{name = "idle"}

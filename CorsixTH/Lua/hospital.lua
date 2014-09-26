@@ -1569,15 +1569,18 @@ function Hospital:receiveMoneyForTreatment(patient)
       reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
     local amount = self:getTreatmentPrice(disease_id)
-    casebook.money_earned = casebook.money_earned + amount
-    patient.world:newFloatingDollarSign(patient, amount)
+
     -- 25% of the payments now go through insurance
     if patient.insurance_company then
       self:addInsuranceMoney(patient.insurance_company, amount)
     else
+      -- patient is paying normally (but still, he could feel like it's
+      -- under- or over-priced and it could impact happiness and reputation)
       self:computePriceLevelImpact(patient, casebook)
       self:receiveMoney(amount, reason)
     end
+    casebook.money_earned = casebook.money_earned + amount
+    patient.world:newFloatingDollarSign(patient, amount)
   end
 end
 

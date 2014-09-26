@@ -299,11 +299,15 @@ function UIPatient:guessDisease()
     return
   end
   patient:setDiagnosed(true)
-  patient:setNextAction({
-    name = "seek_room",
-    room_type = patient.disease.treatment_rooms[1],
-    treatment_room = true,
-  }, 1)
+  if patient:agreesToPay(patient.disease.id) then
+    patient:setNextAction({
+      name = "seek_room",
+      room_type = patient.disease.treatment_rooms[1],
+      treatment_room = true,
+    }, 1)
+  else
+    patient:goHome("over_priced")
+  end
 end
 
 function UIPatient:hitTest(x, y)
