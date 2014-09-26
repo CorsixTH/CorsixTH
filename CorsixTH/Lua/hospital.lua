@@ -1365,7 +1365,7 @@ function Hospital:receiveMoneyForTreatment(patient)
         local is_over_priced = price_distortion > self.over_priced_threshold
         local is_diag = string.sub(disease_id, 0, 4) == "diag"
 
-        if not is_diag and is_over_priced and math.random(1, 1) == 1 then
+        if not is_diag and is_over_priced and math.random(1, 5) == 1 then
           -- patient thinks it's too expansive, so he's not paying
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
           patient:changeAttribute("happiness", -0.5)
