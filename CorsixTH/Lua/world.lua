@@ -2378,6 +2378,13 @@ function World:afterLoad(old, new)
   if old < 80 then
     self:determineWinningConditions()
   end
+  if old < 86 then
+    -- Added these two hospital variables, related to price distortion
+    for _, hospital in ipairs(self.hospitals) do
+      hospital.under_priced_threshold = -0.3
+      hospital.over_priced_threshold = 0.3
+    end
+  end
 
   self.savegame_version = new
 end
