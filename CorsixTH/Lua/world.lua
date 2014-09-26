@@ -1904,6 +1904,174 @@ function World:newObject(id, ...)
   return entity
 end
 
+function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_rooms_id)
+  local object = self.object_types[objects_id]
+  local objects_footprint = object.orientations[orientation].footprint
+  for _, tile in ipairs(objects_footprint) do
+    local tiles_world_x = x + tile[1]
+    local tiles_world_y = y + tile[2]
+    if self:areFootprintTilesCoardinatesInvalid(tiles_world_x, tiles_world_y) then
+      return false
+    end
+
+    if not self:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, spawn_rooms_id).within_room then
+      return false
+    end
+
+    if not self:isFootprintTileBuildableOrPassable(x, y, tile, objects_footprint, "buildable") then
+      return false
+    end
+  end
+  return not self:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, orientation, spawn_rooms_id)
+end
+
+function World:areFootprintTilesCoardinatesInvalid(x, y)
+  return x < 1 or x > self.map.width or y < 1 or y > self.map.height
+end
+
+---
+-- @param allowed_rooms_id_parameter optional
+-- @return {within_room, roomId}
+---
+function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, allowed_rooms_id_parameter)
+  local xy_rooms_id = self.map.th:getCellFlags(x, y, {}).roomId
+
+  if allowed_rooms_id_parameter then
+    return {within_room = allowed_rooms_id_parameter == xy_rooms_id, roomId = allowed_rooms_id_parameter}
+  elseif xy_rooms_id == 0 then
+    return {within_room = object.corridor_object, roomId = xy_rooms_id}
+  else
+    for _, object in pairs(self.rooms[xy_rooms_id].room_info.objects_additional) do
+      if TheApp.objects[object].thob == object.thob then
+        return {within_room = true, roomId = xy_rooms_id}
+      end
+    end
+    for object, _ in pairs(self.rooms[xy_rooms_id].room_info.objects_needed) do
+      if TheApp.objects[object].thob == object.thob then
+        return {within_room = true, roomId = xy_rooms_id}
+      end
+    end
+    return {within_room = false, roomId = xy_rooms_id}
+  end
+end
+
+---
+-- A footprint tile will either need to be buildable or passable so this function
+-- checks if its buildable/passable using the tile's appropriate flag and then returns this
+-- flag's boolean value or false if the tile isn't valid.
+---
+function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag)
+  local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)
+    if complete_cell or need_side then
+      return flags[flag_name]
+    end
+    for _, tile in ipairs(footprint) do
+      if(tile[1] == x and tile[2] == y) then
+        return flags[flag_name]
+      end
+    end
+    return true
+  end
+
+  local direction_parameters = {
+      north = { x = 0, y = -1, buildable_flag = "buildableNorth", passable_flag = "travelNorth", needed_side = "need_north_side"},
+      east = { x = 1, y = 0, buildable_flag =  "buildableEast", passable_flag = "travelEast", needed_side = "need_east_side"},
+      south = { x = 0, y = 1, buildable_flag = "buildableSouth", passable_flag = "travelSouth", needed_side = "need_south_side"},
+      west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
+    }
+  local flags = {}
+  local requirement_met = self.map.th:getCellFlags(x, y, flags)[requirement_flag]
+
+  if requirement_met then
+    -- For each direction check that the tile is valid:
+    for _, direction in pairs(direction_parameters) do
+      local x1, y1 = tile[1] + direction["x"], tile[2] + direction["y"]
+      if not isTileValid(x1, y1, tile.complete_cell, flags, direction["buildable_flag"], tile[direction["needed_side"]]) then
+        return false
+      end
+    end
+    return true
+  else
+    return false
+  end
+end
+
+--- 
+-- Check that pathfinding still works, i.e. that placing the object
+-- wouldn't disconnect one part of the hospital from another. To do
+-- this, we provisionally mark the footprint as unpassable (as it will
+-- become when the object is placed), and then check that the cells
+-- surrounding the footprint have not had their connectedness changed.
+---
+function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objects_orientation, spawn_rooms_id)
+  local objects_footprint = object.orientations[objects_orientation].footprint
+  local map = self.map.th
+
+  local function setFootprintTilesPassable(passable)
+    for _, tile in ipairs(objects_footprint) do
+      if not tile.only_passable then
+        map:setCellFlags(x + tile[1], y + tile[2], {passable = passable})
+      end
+    end
+  end
+
+  local function isIsolated(x, y)
+    setFootprintTilesPassable(false)
+    local result = not self.pathfinder:isReachableFromHospital(x, y)
+    setFootprintTilesPassable(true)
+    return result
+  end
+
+  local all_good = true
+
+  --1. Find out which footprint tiles are passable now before this function makes some unpassable
+  --during its test:
+  local tiles_passable_flags = {}
+  for _, tile in ipairs(objects_footprint) do
+    table.insert(tiles_passable_flags, map:getCellFlags(x + tile[1], y + tile[2], {}).passable)
+  end
+
+  --2. Find out which tiles adjacent to the footprint would become isolated:
+  setFootprintTilesPassable(false)
+  local prev_x, prev_y
+  for _, tile in ipairs(object.orientations[objects_orientation].adjacent_to_solid_footprint) do
+    local x = x + tile[1]
+    local y = y + tile[2]
+    local flags = {}
+    if map:getCellFlags(x, y, flags).roomId == spawn_rooms_id and flags.passable then
+      if prev_x then
+        if not self.pathfinder:findDistance(x, y, prev_x, prev_y) then
+          -- There is no route between the two map nodes. In most cases,
+          -- this means that connectedness has changed, though there is
+          -- one rare situation where the above test is insufficient. If
+          -- (x, y) is a passable but isolated node outside the hospital
+          -- and (prev_x, prev_y) is in the corridor, then the two will
+          -- not be connected now, but critically, neither were they
+          -- connected before.
+          if not isIsolated(x, y) then
+            if not isIsolated(prev_x, prev_y) then
+              all_good = false
+              break
+            end
+          else
+            x = prev_x
+            y = prev_y
+          end
+        end
+      end
+      prev_x = x
+      prev_y = y
+    end
+  end
+
+  -- 3. For each footprint tile passable flag set to false by step 2 undo this change:
+  for tiles_index, tile in ipairs(objects_footprint) do
+    map:setCellFlags(x + tile[1], y + tile[2], {passable = tiles_passable_flags[tiles_index]})
+  end
+
+  return not all_good
+end
+
 --! Notifies the world that an object has been placed, notifying
 --  interested entities in the vicinity of the new arrival.
 --!param entity (Entity) The entity that was just placed.
