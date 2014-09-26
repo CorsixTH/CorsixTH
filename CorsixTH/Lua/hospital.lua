@@ -83,6 +83,12 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.under_priced_threshold = -0.3 -- Price distortion level under which the
+  -- patients might consider the treatment to be under-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: -0.2 / Difficult: -0.4)
+  self.over_priced_threshold = 0.3 -- Price distortion level over which the
+  -- patients might consider the treatment to be over-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
@@ -1550,14 +1556,29 @@ function Hospital:receiveMoneyForTreatment(patient)
       end
       local casebook = self.disease_casebook[disease_id]
       local amount = self:getTreatmentPrice(disease_id)
-      casebook.money_earned = casebook.money_earned + amount
-      patient.world:newFloatingDollarSign(patient, amount)
+
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
+        patient.world:newFloatingDollarSign(patient, amount)
+        casebook.money_earned = casebook.money_earned + amount
         self:addInsuranceMoney(patient.insurance_company, amount)
       else
-        self:computePriceLevelImpact(patient, disease_id)
-        self:receiveMoney(amount, reason)
+        local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
+        local is_over_priced = price_distortion > self.over_priced_threshold
+        local is_diag = string.sub(disease_id, 0, 4) == "diag"
+
+        if not is_diag and is_over_priced and math.random(1, 5) == 1 then
+          -- patient thinks it's too expansive, so he's not paying
+          self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name, amount))
+          patient:changeAttribute("happiness", -0.5)
+        else
+          -- patient is paying normally (but still, he could feel like it's
+          -- under- or over-priced and it could impact happiness and reputation)
+          patient.world:newFloatingDollarSign(patient, amount)
+          casebook.money_earned = casebook.money_earned + amount
+          self:computePriceLevelImpact(patient, casebook, price_distortion)
+          self:receiveMoney(amount, reason)
+        end
       end
     end
   end
@@ -2108,15 +2129,15 @@ end
 --!param patient (patient): the patient paying the bill. His/her happiness level
 --! is adjusted. We also need the patient to access the staff present 
 --! in the room where the patient is.
---!param disease_id (string): the disease id of the treatment the patient 
+--!param casebook (object): disease casebook entry. It's used to display the
+-- localised disease name when Adviser tells the warning message.
 --! is paying for
-function Hospital:computePriceLevelImpact(patient, disease_id)
-  local casebook = self.disease_casebook[disease_id]
-  local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
+--!param price_distortion (float): the price distortion
+-- (see Hospital:getPriceDistortion(casebook, room) for more info)
+function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
   patient:changeAttribute("happiness", -(price_distortion / 2))
 
-  if price_distortion < -0.3 then
-    -- under-priced threshold
+  if price_distortion < self.under_priced_threshold then
     if math.random(1, 10) == 1 then
       self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
     end
@@ -2124,7 +2145,7 @@ function Hospital:computePriceLevelImpact(patient, disease_id)
     if math.random(1, 5) == 1 then
       self:changeReputation("under_priced")
     end
-  elseif price_distortion > 0.3 then
+  elseif price_distortion > self.over_priced_threshold then
     -- over-priced threshold
     if math.random(1, 10) == 1 then
       self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
