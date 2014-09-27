@@ -1369,6 +1369,7 @@ function Hospital:receiveMoneyForTreatment(patient)
           -- patient thinks it's too expansive, so he's not paying
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
           patient:changeAttribute("happiness", -0.5)
+          patient:setMood("sad_money", "activate")
         else
           -- patient is paying normally (but still, he could feel like it's
           -- under- or over-priced and it could impact happiness and reputation)
@@ -1868,7 +1869,8 @@ function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
       self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
-    -- over-priced threshold
+    patient:setMood("sad_money", "activate")
+
     if math.random(1, 10) == 1 then
       self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
     end
