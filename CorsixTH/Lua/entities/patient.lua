@@ -103,9 +103,11 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
-    self.diagnosis_progress + incrementValue)
-  self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  if self.hospital ~= nil then
+    self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
+      self.diagnosis_progress + incrementValue)
+    self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  end
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -165,36 +167,39 @@ function Patient:treated() -- If a drug was used we also need to pay for this
     hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
   end
 
-  -- Either the patient is no longer sick, or he/she dies.
+  -- Either the patient is no longer sick, either he/she dies, either he/she
+  -- already left this hospital (in this case self.hospital is nil)
 
-  local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
-  cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) > cure_chance then
-    self:die()
-  else
-    -- to guess the cure is risky and the patient could die
-    if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
+  if self.hospital ~= nil then
+    local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
+    cure_chance = cure_chance * self.diagnosis_progress
+    if self.die_anims and math.random(1, 100) > cure_chance then
       self:die()
     else
-      if hospital.num_cured < 1 then
-        self.world.ui.adviser:say(_A.information.first_cure)
+      -- to guess the cure is risky and the patient could die
+      if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
+        self:die()
+      else
+        if hospital.num_cured < 1 then
+          self.world.ui.adviser:say(_A.information.first_cure)
+        end
+        self.hospital.num_cured = hospital.num_cured + 1
+        self.hospital.num_cured_ty = hospital.num_cured_ty + 1
+        self.hospital:msgCured()
+        local casebook = hospital.disease_casebook[self.disease.id]
+        casebook.recoveries = casebook.recoveries + 1
+        if self.is_emergency then
+          self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
+        end
+        self:setMood("cured", "activate")
+        self.world.ui:playSound "cheer.wav" -- This sound is always heard
+        self.attributes["health"] = 1
+        self:changeAttribute("happiness", 0.8)
+        hospital:changeReputation("cured", self.disease)
+        self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
+        self:goHome(true)
+        self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
       end
-      self.hospital.num_cured = hospital.num_cured + 1
-      self.hospital.num_cured_ty = hospital.num_cured_ty + 1
-      self.hospital:msgCured()
-      local casebook = hospital.disease_casebook[self.disease.id]
-      casebook.recoveries = casebook.recoveries + 1
-      if self.is_emergency then
-        self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
-      end
-      self:setMood("cured", "activate")
-      self.world.ui:playSound "cheer.wav" -- This sound is always heard
-      self.attributes["health"] = 1
-      self:changeAttribute("happiness", 0.8)
-      hospital:changeReputation("cured", self.disease)
-      self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(true)
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     end
   end
 
