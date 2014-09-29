@@ -253,7 +253,7 @@ moods("cold",           3994,       0,       true) -- These have no priority sin
 moods("hot",            3988,       0,       true) -- they will be shown when hovering
 moods("queue",          4568,      70)             -- no matter what other priorities.
 moods("poo",            3996,       5)
-moods("sad_money",      4018,      30)
+moods("sad_money",      4018,      50)
 moods("patient_wait",   5006,      40)
 moods("epidemy1",       4566,      55)
 moods("epidemy2",       4570,      55)
@@ -555,7 +555,7 @@ local function Humanoid_startAction(self)
           -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
           self.going_home = false
           self.hospital = self.world:getLocalPlayerHospital()
-          self:goHome()
+          self:goHome("kicked")
         end
         if TheApp.world:isCurrentSpeed("Pause") then
         TheApp.world:setSpeed(TheApp.world.prev_speed)

@@ -990,7 +990,7 @@ end
 --! in the room.
 --! Returns a float between [0-1].
 function Room:getStaffServiceQuality()
-  local quality = nil
+  local quality = 0.5
   
   if self.staff_member_set then
     -- For rooms with multiple staff member (like operating theatre)
