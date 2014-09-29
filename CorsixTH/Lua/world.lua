@@ -1263,7 +1263,7 @@ end
 -- during the coming month.
 function World:updateSpawnDates()
   -- Set dates when people arrive
-  local no_of_spawns = math.n_random(self.spawn_rate, 2)
+  local no_of_spawns = math.n_random(self.spawn_rate * self:getReputationImpact(self:getLocalPlayerHospital()), 2)
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
@@ -1271,6 +1271,26 @@ function World:updateSpawnDates()
     -- We are interested in the coming month, pick days from it at random.
     local day = math.random(1, month_length[self.month % 12 + 1])
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
+  end
+end
+
+--! Computes the impact of hospital reputation on the spawn rate.
+--! The relation between reputation and its impact is linear.
+--! Returns a percentage (as a float):
+--!    60% if reputation == 400
+--!   100% if reputation == 500
+--!   140% if reputation == 600
+--!   180% if reputation == 700
+--!param hospital (hospital): the hospital used to compute the
+--! reputation impact
+function World:getReputationImpact(hospital)
+  local result = 1 + ((hospital.reputation - 500) / 250)
+
+  -- The result must be positive
+  if result <= 0 then
+    return 0.01
+  else
+    return result
   end
 end
 
@@ -2357,6 +2377,13 @@ function World:afterLoad(old, new)
   end
   if old < 80 then
     self:determineWinningConditions()
+  end
+  if old < 86 then
+    -- Added these two hospital variables, related to price distortion
+    for _, hospital in ipairs(self.hospitals) do
+      hospital.under_priced_threshold = -0.3
+      hospital.over_priced_threshold = 0.3
+    end
   end
 
   self.savegame_version = new

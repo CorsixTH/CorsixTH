@@ -71,6 +71,12 @@ function Hospital:Hospital(world, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.under_priced_threshold = -0.3 -- Price distortion level under which the
+  -- patients might consider the treatment to be under-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: -0.2 / Difficult: -0.4)
+  self.over_priced_threshold = 0.3 -- Price distortion level over which the
+  -- patients might consider the treatment to be over-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
@@ -1346,15 +1352,31 @@ function Hospital:receiveMoneyForTreatment(patient)
         disease_id = "diag_" .. room_info.id
         reason = _S.transactions.treat_colon .. " " .. room_info.name
       end
-     local casebook = self.disease_casebook[disease_id]
-     local amount = self:getTreatmentPrice(disease_id)
-      casebook.money_earned = casebook.money_earned + amount
-      patient.world:newFloatingDollarSign(patient, amount)
+      local casebook = self.disease_casebook[disease_id]
+      local amount = self:getTreatmentPrice(disease_id)
+
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
+        patient.world:newFloatingDollarSign(patient, amount)
+        casebook.money_earned = casebook.money_earned + amount
         self:addInsuranceMoney(patient.insurance_company, amount)
       else
-        self:receiveMoney(amount, reason)
+        local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
+        local is_over_priced = price_distortion > self.over_priced_threshold
+
+        if is_over_priced and math.random(1, 5) == 1 then
+          -- patient thinks it's too expansive, so he/she's not paying and he/she leaves
+          self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
+          patient:changeAttribute("happiness", -0.5)
+          patient:goHome("over_priced")
+        else
+          -- patient is paying normally (but still, he could feel like it's
+          -- under- or over-priced and it could impact happiness and reputation)
+          patient.world:newFloatingDollarSign(patient, amount)
+          casebook.money_earned = casebook.money_earned + amount
+          self:computePriceLevelImpact(patient, casebook, price_distortion)
+          self:receiveMoney(amount, reason)
+        end
       end
     end
   end
@@ -1479,6 +1501,8 @@ local reputation_changes = {
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
   ["emergency_success"] = 15,
   ["emergency_failed"] = -20,
+  ["over_priced"] = -2,
+  ["under_priced"] = 1,
 }
 
 --! Normally reputation is changed based on a reason, and the affected
@@ -1497,7 +1521,9 @@ function Hospital:changeReputation(reason, disease, valueChange)
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  if self:isReputationChangeAllowed(amount) then
+    self.reputation = self.reputation + amount
+  end
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1511,6 +1537,40 @@ function Hospital:changeReputation(reason, disease, valueChange)
   if self.reputation_above_threshold then
     self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
   end
+end
+
+--! Decide whether a reputation change is effective or not. As we approach 1000,
+--! a gain is less likely. As we approach 0, a loss is less likely.
+--! Under 500, a gain is always effective.  Over 500, a loss is always effective.
+--!param amount (int): The amount of reputation change.
+function Hospital:isReputationChangeAllowed(amount)
+  if (amount > 0 and self.reputation <= 500) or (amount < 0 and self.reputation >= 500) or (amount == 0) then
+    return true
+  else
+    return math.random() <= self:getReputationChangeLikelihood()
+  end
+end
+
+--! Compute the likelihood for a reputation change to be effective.
+--! Result is smaller as hospital reputation gets closer to extreme values.
+--! The result follows a quadratic function, for a curved and smooth evolution.
+--! If reputation == 500, the result is 100%.
+--! Between [380-720], the result is still over 80%.
+--! At 100 or 900, it's under 40%.
+--! At 0 or 1000, it's 0%.
+function Hospital:getReputationChangeLikelihood()
+  -- The a, b and c coefficients have been computed to include points
+  -- (x=0, y=1), (x=500, y=0) and (x=1000, y=1) where x is the current
+  -- reputation and y the likelihood of the reputation change to be
+  -- refused, based a discriminant (aka "delta") == 0
+  local a = 0.000004008
+  local b = 0.004008
+  local c = 1
+
+  local x = self.reputation
+
+  -- The result is "reversed" for more readability
+  return 1 - (a * x * x - b * x + c)
 end
 
 function Hospital:updatePercentages()
@@ -1789,4 +1849,72 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+--! Change patient happiness and hospital reputation based on price distortion.
+--! The patient happiness is adjusted proportionally. The hospital reputation
+--! can only be affected when the distortion level reaches some threshold.
+--!param patient (patient): the patient paying the bill. His/her happiness level
+--! is adjusted. We also need the patient to access the staff present 
+--! in the room where the patient is.
+--!param casebook (object): disease casebook entry. It's used to display the
+-- localised disease name when Adviser tells the warning message.
+--! is paying for
+--!param price_distortion (float): the price distortion
+-- (see Hospital:getPriceDistortion(casebook, room) for more info)
+function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
+  patient:changeAttribute("happiness", -(price_distortion / 2))
+
+  if price_distortion < self.under_priced_threshold then
+    if math.random(1, 10) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+    end
+
+    if math.random(1, 5) == 1 then
+      self:changeReputation("under_priced")
+    end
+  elseif price_distortion > self.over_priced_threshold then
+    if math.random(1, 10) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+    end
+
+    if math.random(1, 5) == 1 then
+      self:changeReputation("over_priced")
+    end
+  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 20) == 1 then
+    -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
+    self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+  end
+end
+
+--! Estimate the subjective perceived distortion between the price level the
+--! patient might expect considering the reputation and the cure effectiveness 
+--! of a given treatment and the staff internal state.
+--! Returns a float between [-1, 1]. The smaller the value is, the more the 
+--! patient considers the bill to be under-priced. The bigger the value is, the 
+--! more the patient patient considers the bill to be over-priced.
+--!param casebook (table): casebook entry for the treatment.
+--!param room (room): the room we use to get the staff service quality estimation.
+function Hospital:getPriceDistortion(casebook, room)
+  -- weights
+  local staff_quality_weight = 0.40
+  local reputation_weight = 0.35
+  local effectiveness_weight = 0.10
+  local randomness_weight = 0.15
+ 
+  -- map the different variables to [0-1] and merge them
+  local reputation = casebook.reputation or self.reputation
+  local effectiveness = casebook.cure_effectiveness
+ 
+  local weighted_staff_quality = staff_quality_weight * room:getStaffServiceQuality()
+  local weighted_reputation = reputation_weight * (reputation / 1000)
+  local weighted_effectiveness = effectiveness_weight * (effectiveness / 100)
+  local weighted_randomness = randomness_weight * math.random()
+
+  local expected_price_level = weighted_staff_quality + weighted_reputation + weighted_effectiveness + weighted_randomness
+  
+  -- map to [0-1]
+  local price_level = ((casebook.price - 0.5) / 3) * 2
+
+  return price_level - expected_price_level
 end

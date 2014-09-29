@@ -103,9 +103,11 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
-    self.diagnosis_progress + incrementValue)
-  self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  if self.hospital ~= nil then
+    self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
+      self.diagnosis_progress + incrementValue)
+    self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  end
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -156,49 +158,45 @@ function Patient:setHospital(hospital)
   end
 end
 
-function Patient:treated() -- If a drug was used we also need to pay for this
+function Patient:treated()
   local hospital = self.hospital
-  local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
-  hospital:receiveMoneyForTreatment(self)
-  if amount ~= 0 then
-  local str = _S.drug_companies[math.random(1 , 5)]
-  hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
-  end
 
-  -- Either the patient is no longer sick, or he/she dies.
-
+  -- to guess the cure is risky and the patient could die
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) > cure_chance then
-    self:die()
-  else
-    -- to guess the cure is risky and the patient could die
-    if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
-      self:die()
-    else
-      if hospital.num_cured < 1 then
-        self.world.ui.adviser:say(_A.information.first_cure)
-      end
-      self.hospital.num_cured = hospital.num_cured + 1
-      self.hospital.num_cured_ty = hospital.num_cured_ty + 1
-      self.hospital:msgCured()
-      local casebook = hospital.disease_casebook[self.disease.id]
-      casebook.recoveries = casebook.recoveries + 1
-      if self.is_emergency then
-        self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
-      end
-      self:setMood("cured", "activate")
-      self.world.ui:playSound "cheer.wav" -- This sound is always heard
-      self.attributes["health"] = 1
-      self:changeAttribute("happiness", 0.8)
-      hospital:changeReputation("cured", self.disease)
-      self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(true)
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
-    end
+  local will_die = self.die_anims and ((math.random(1, 100) > cure_chance) or (math.random(1, 100) > (self.diagnosis_progress * 100)))
+  
+  if not will_die then
+    self.attributes["health"] = 1
   end
 
-  hospital:updatePercentages()
+  hospital:receiveMoneyForTreatment(self)
+  
+  -- If a drug was used we also need to pay for this
+  local drug_cost = hospital.disease_casebook[self.disease.id].drug_cost or 0
+  if drug_cost ~= 0 then
+    local str = _S.drug_companies[math.random(1 , 5)]
+    hospital:spendMoney(drug_cost, _S.transactions.drug_cost .. ": " .. str)
+  end
+  
+  -- Either the patient is no longer sick, or he/she dies
+  if will_die then
+    self:die(hospital)
+  else
+    if hospital.num_cured < 1 then
+      self.world.ui.adviser:say(_A.information.first_cure)
+    end
+    hospital:msgCured()
+    self.world.ui:playSound "cheer.wav" -- This sound is always heard
+    self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+
+    -- If he refused to pay, he's been sent home already.
+    if self.hospital ~= nil then
+      self:changeAttribute("happiness", 0.8)
+      self:goHome("cured")
+    end
+  end
 
   if self.is_emergency then
     local killed = hospital.emergency.killed_emergency_patients
@@ -212,10 +210,12 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   end
 end
 
-function Patient:die()
-  -- It may happen that this patient was just cured and then the room blew up.
-  -- (Hospital not set when going home)
-  local hospital = self.hospital or self.world:getLocalPlayerHospital()
+function Patient:die(hospital)
+  -- It may happen that this patient was just cured and then the room blew up
+  -- or that he/she refused to pay the bill (Hospital not set when going home)
+  if hospital ~= nil then
+    hospital = self.hospital or self.world:getLocalPlayerHospital()
+  end
 
   if hospital.num_deaths < 1 then
     self.world.ui.adviser:say(_A.information.first_death)
@@ -423,7 +423,16 @@ function Patient:tapFoot()
   end
 end
 
-function Patient:goHome(cured)
+--! Make the patient leave the hospital. This function also handles some
+--! statistics (number of cured/kicked out patients, etc.)
+--! The mood icon is updated accordingly. Reputation is impacted accordingly.
+--!param reason (string): the reason why the patient is sent home, which could be:
+--! -"cured": When the patient is cured.
+--! -"kicked": When the patient is kicked anyway, either manually,
+--! either when no treatment can be found for her/him, etc.
+--! -"over_priced": When the patient decided to leave because he/she believes
+--! the last treatment is over-priced.
+function Patient:goHome(reason)
   local hosp = self.hospital
   if not hosp and self.going_home then
     -- The patient should be going home already! Anything related to the hospital
@@ -432,15 +441,44 @@ function Patient:goHome(cured)
     self:setHospital(nil)
     return
   end
-  if not cured then
+  if reason == "cured" then
+    self:setMood("cured", "activate")
+    if not self.is_debug then
+      hosp:changeReputation("cured", self.disease)
+      hosp.num_cured = hosp.num_cured + 1
+      hosp.num_cured_ty = hosp.num_cured_ty + 1
+      local casebook = hosp.disease_casebook[self.disease.id]
+      casebook.recoveries = casebook.recoveries + 1
+      if self.is_emergency then
+        hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
+      end
+    end
+  elseif reason == "kicked" then
     self:setMood("exit", "activate")
     if not self.is_debug then
       hosp:changeReputation("kicked", self.disease)
-      self.hospital.not_cured = hosp.not_cured + 1
-      self.hospital.not_cured_ty = hosp.not_cured_ty + 1
-      local casebook = self.hospital.disease_casebook[self.disease.id]
+      hosp.not_cured = hosp.not_cured + 1
+      hosp.not_cured_ty = hosp.not_cured_ty + 1
+      local casebook = hosp.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end
+  elseif reason == "over_priced" then
+    self:setMood("sad_money", "activate")
+    if not self.is_debug then
+      hosp:changeReputation("over_priced", self.disease)
+      if self.attributes["health"] == 1 then
+        -- He/She refused to pay for the final cure, but he/she must be counted
+        -- as cured nevertheless
+        hosp.num_cured = hosp.num_cured + 1
+        hosp.num_cured_ty = hosp.num_cured_ty + 1
+      else
+        -- He/She refused to pay for diagnostic or an "intermediate" treatment
+        hosp.not_cured = hosp.not_cured + 1
+        hosp.not_cured_ty = hosp.not_cured_ty + 1
+      end
+    end    
+  else
+    TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end
 
   hosp:updatePercentages()
@@ -469,7 +507,7 @@ function Patient:tickDay()
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
-      self:goHome()
+      self:goHome("kicked")
       if self.diagnosed then
         -- No treatment rooms
         self:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)
@@ -515,7 +553,7 @@ function Patient:tickDay()
     if math.random(1,30) == 1 then
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
-      self:goHome()
+      self:goHome("kicked")
     end
   elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
     self:setMood("sad2", "deactivate")

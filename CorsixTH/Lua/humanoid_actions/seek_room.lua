@@ -142,7 +142,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
   -- Otherwise, depending on hospital policy three things can happen:
   if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
-    humanoid:goHome()
+    humanoid:goHome("kicked")
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
   elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"]
     or not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then

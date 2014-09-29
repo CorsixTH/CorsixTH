@@ -136,7 +136,7 @@ function GPRoom:dealtWithPatient(patient)
     elseif #patient.available_diagnosis_rooms == 0 then
       -- The very rare case where the patient has visited all his/her possible diagnosis rooms
       -- There's not much to do then... Send home
-      patient:goHome()
+      patient:goHome("kicked")
       patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
     else
       self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
