@@ -1673,6 +1673,12 @@ function Hospital:searchForHandymanTask(handyman, taskType)
       if v.assignedHandyman then
         if v.assignedHandyman.fired then
           v.assignedHandyman = nil
+        elseif not v.assignedHandyman.hospital then
+          -- This should normally never be the case. If the handyman doesn't belong to a hsopital
+          -- then they should not have any tasks assigned to them however it was previously possible
+          -- We need to tidy up to make sure the task can be reassigned.
+          print("Warning: Orphaned handyman is still assigned a task. Removing.");
+          v.assignedHandyman = nil
         else
           local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
           if assignedDistance ~= false then
