@@ -280,7 +280,7 @@ function UIPatient:goHome()
   end
   self:close()
   self.patient:playSound("sack.wav")
-  self.patient:goHome()
+  self.patient:goHome("kicked")
   self.patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
 end
 
