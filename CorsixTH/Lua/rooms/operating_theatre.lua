@@ -101,7 +101,7 @@ function OperatingTheatreRoom:isOperating()
       return true
     end
   end
-  
+
   return false
 end
 
@@ -114,22 +114,22 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     name = "use_screen",
     object = screen
   }
-  
+
   -- Resume operation if already ongoing
   if self:isOperating() then
     local surgeon1 = next(self.staff_member_set) 
     local ongoing_action = surgeon1.action_queue[1]
     assert(ongoing_action.name == "multi_use_object")
-    
+
     local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
     self:queueWashHands(staff)
     staff:queueAction({name = "walk", x = table_x, y = table_y})
     staff:queueAction(self:buildTableAction2(ongoing_action, table))
   end
-  
+
   self.staff_member_set[staff] = true
-  
-    -- Wait around for patients
+
+  -- Wait around for patients
   local meander = {name = "meander", must_happen = true,
     loop_callback = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
       self.staff_member_set[staff] = "ready"
@@ -137,7 +137,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     end
   }
   staff:queueAction(meander)
-  
+
   -- Ensure that surgeons turn back into doctors when they leave
   staff:queueAction{
     name = "walk",
@@ -239,7 +239,7 @@ function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
   local walk = {name = "walk", x = sink_x, y = sink_y, must_happen = true, no_truncate = true}
   local wait = wait_for_object(surgeon, sink, true)
   local wash = {name = "use_object", object = sink, must_happen = true}
-  
+
   for pos, action in pairs({walk, wait, wash}) do
     if (at_front) then
       surgeon:queueAction(action, pos)
@@ -310,7 +310,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
     elseif num_ready[1] == 3 then
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
       local obj, ox, oy = room.world:findObjectNear(surgeon1, "operating_table")
-      
+
       local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
       surgeon1:queueAction(table_action1, 1)
 
@@ -360,7 +360,7 @@ function OperatingTheatreRoom:onHumanoidLeave(humanoid)
     -- Turn off x-ray viewer
     -- (FIXME: would be better when patient dress back?)     
     self:setXRayOn(false)
-       
+
     local surgeon1 = next(self.staff_member_set)
     local surgeon2 = next(self.staff_member_set, surgeon1)
     if surgeon1 then
