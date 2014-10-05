@@ -329,12 +329,26 @@ function GameUI:onCursorWorldPositionChange()
       self.debug_cursor_entity = entity
     end
 
+    local epidemic = self.hospital.epidemic
+    local infected_cursor = TheApp.gfx:loadMainCursor("epidemic")
+    local epidemic_cursor = TheApp.gfx:loadMainCursor("epidemic_hover")
+
     self.cursor_entity = entity
     if self.cursor ~= self.edit_room_cursor and self.cursor ~= self.waiting_cursor then
       local cursor = self.default_cursor
       if self.app.world.user_actions_allowed then
-        cursor = entity and entity.hover_cursor or
-        (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+        --- If the patient is infected show the infected cursor
+        if epidemic and epidemic.coverup_in_progress and
+          entity and entity.infected and not epidemic.timer.closed then
+          cursor = infected_cursor
+          -- In vaccination mode display epidemic hover cursor for all entities
+        elseif epidemic and epidemic.vaccination_mode_active then
+          cursor = epidemic_cursor
+          -- Otherwise just show the normal cursor and hover if appropriate
+        else
+          cursor = entity and entity.hover_cursor or
+          (self.down_count ~= 0 and self.down_cursor or self.default_cursor)
+        end
       end
       self:setCursor(cursor)
     end
@@ -533,6 +547,26 @@ function GameUI:onMouseUp(code, x, y)
       else -- right click, we don't want to edit a room after all.
         self:setEditRoom(false)
       end
+    end
+  end
+
+  -- During vaccination mode you can only interact with
+  -- infected patients
+  local epidemic = self.hospital.epidemic
+  -- infected patients
+  local epidemic = self.hospital.epidemic
+  if epidemic and epidemic.vaccination_mode_active then
+    if button == "left" then
+      if self.cursor_entity then
+        -- Allow click behaviour for infected patients
+        if self.cursor_entity.infected then
+          self.cursor_entity:onClick(self,button)
+        end
+      end
+    elseif button == "right" then
+      --Right click turns vaccination mode off
+      local watch = TheApp.ui:getWindow(UIWatch)
+      watch:toggleVaccinationMode()
     end
   end
 

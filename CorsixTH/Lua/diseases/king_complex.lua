@@ -29,6 +29,7 @@ disease.cure = _S.diseases.king_complex.cure
 disease.cure_price = 1600
 disease.emergency_sound = "emerg009.wav"
 disease.emergency_number = 18
+disease.contagious = false
 disease.initPatient = function(patient)
   patient:setType("Elvis Patient")
   patient:setLayer(0, math.random(1, 3)*2)

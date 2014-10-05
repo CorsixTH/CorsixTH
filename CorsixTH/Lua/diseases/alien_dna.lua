@@ -29,6 +29,7 @@ disease.cure = _S.diseases.alien_dna.cure
 disease.cure_price = 2000
 disease.emergency_sound = "emerg020.wav"
 disease.emergency_number = 16
+disease.contagious = false
 disease.must_stand = TheApp.config.alien_dna_must_stand -- Alien Patients are forced to stand while queueing because of missing animation
 disease.only_emergency = TheApp.config.alien_dna_only_by_emergency -- TODO implement (there are no normal door animations, so they cannot go to GP)
 disease.initPatient = function(patient)

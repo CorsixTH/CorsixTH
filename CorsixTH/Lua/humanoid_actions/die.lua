@@ -315,6 +315,7 @@ local function action_die_start(action, humanoid)
   else
     humanoid:setTimer(fall_anim_duration, action_die_tick)
   end
+  humanoid.dead = true
 end
 
 return action_die_start

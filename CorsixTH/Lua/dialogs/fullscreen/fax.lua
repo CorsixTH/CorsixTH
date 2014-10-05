@@ -174,6 +174,16 @@ function UIFax:choice(choice,additionalInfo)
   elseif choice == "accept_vip" then
     self.ui.hospital.num_vips = self.ui.hospital.num_vips + 1
     self.ui.app.world:spawnVIP(additionalInfo.name)
+  elseif choice == "declare_epidemic" then
+    local epidemic = self.ui.hospital.epidemic
+    if epidemic then
+      epidemic:resolveDeclaration()
+    end
+  elseif choice == "cover_up_epidemic" then
+    local epidemic = self.ui.hospital.epidemic
+    if epidemic then
+      epidemic:startCoverUp()
+    end
   elseif choice == "accept_new_level" then
     -- Set the new salary.
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer

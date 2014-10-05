@@ -49,7 +49,8 @@ local function action_idle_start(action, humanoid)
     humanoid:setTimer(action.count, action_timer)
     action.must_happen = true
   end
-  if action.must_happen then
+  -- If an interrupt is already specified for the idle action don't replace it
+  if action.must_happen and not action.on_interrupt then
     action.on_interrupt = action_idle_interrupt
   end
   if action.loop_callback then

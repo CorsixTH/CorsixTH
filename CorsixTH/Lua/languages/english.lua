@@ -194,6 +194,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
 dynamic_info.staff.actions.heading_for = "Heading for %s"
 dynamic_info.staff.actions.fired = "Fired"
+dynamic_info.patient.actions.epidemic_vaccinated = "I am no longer contagious"
 
 progress_report.free_build = "FREE BUILD"
 
@@ -532,6 +533,8 @@ cheats_window = {
     emergency = "Create Emergency",
     vip = "Create VIP",
     earthquake = "Create Earthquake",
+    epidemic = "Spawn contagious patient",
+    toggle_infected = "Toggle infected icons",
     create_patient = "Create Patient",
     end_month = "End of Month",
     end_year = "End of Year",
@@ -549,6 +552,8 @@ tooltip.cheats_window = {
     emergency = "Creates an emergency.",
     vip = "Creates a VIP.",
     earthquake = "Creates an earthquake.",
+    epidemic = "Creates an contagious patient who may cause an epidemic to happen",
+    toggle_infected = "Toggle the infected icons for the active, discovered epidemic",
     create_patient = "Creates a Patient at the map border.",
     end_month = "Jumps to the end of the month.",
     end_year = "Jumps to the end of the year.",

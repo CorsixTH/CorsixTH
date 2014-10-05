@@ -344,6 +344,10 @@ local action_use_object_interrupt = permanent"action_use_object_interrupt"( func
   elseif not humanoid.timer_function then
     humanoid:setTimer(1, action_use_object_tick)
   end
+  -- Only patients can be vaccination candidates so no need to check
+  if humanoid.vaccination_candidate then
+    humanoid:removeVaccinationCandidateStatus()
+  end
 end)
 
 local function action_use_object_start(action, humanoid)

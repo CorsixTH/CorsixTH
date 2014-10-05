@@ -29,6 +29,7 @@ disease.cure = _S.diseases.spare_ribs.cure
 disease.cure_price = 1100
 disease.emergency_sound = "emerg023.wav"
 disease.emergency_number = 4
+disease.contagious = true
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

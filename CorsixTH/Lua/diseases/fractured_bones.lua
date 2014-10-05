@@ -29,6 +29,7 @@ disease.cure = _S.diseases.fractured_bones.cure
 disease.cure_price = 450
 disease.emergency_sound = "emerg005.wav"
 disease.emergency_number = 16
+disease.contagious = false
 disease.initPatient = function(patient)
   if not TheApp.config.disable_fractured_bones_females and math.random(1, 2) == 2 then -- The female animation in the cast remover is bad
   -- so by default it is disabled.  They can though be allowed by turning them on in config

@@ -50,7 +50,11 @@ function UIWatch:UIWatch(ui, count_type)
     ["epidemic"]        = _S.tooltip.watch.epidemic,
   }
 
-  if count_type ~= "emergency" then
+  if count_type == "epidemic" then
+    self.end_button = self:addPanel(end_sprite, 4, 0)
+    :makeButton(4, 0, 27, 28, end_sprite + 1, self.toggleVaccinationMode)
+    :setTooltip(tooltips[count_type])
+  elseif count_type ~= "emergency" then
     self.end_button = self:addPanel(end_sprite, 4, 0)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
       :setTooltip(tooltips[count_type])
@@ -63,6 +67,14 @@ function UIWatch:onCountdownEnd()
   self:close()
   if self.count_type == "emergency" then
     self.ui.hospital:resolveEmergency()
+  elseif self.count_type == "epidemic" then
+    local epidemic = self.hospital.epidemic
+    if epidemic and not epidemic.inspector then
+      epidemic:spawnInspector()
+      if epidemic.vaccination_mode_active then
+        epidemic:toggleVaccinationMode()
+      end
+    end
   elseif self.count_type == "initial_opening" then
     self.ui.hospital.opened = true
     self.ui.hospital.boiler_can_break = true -- boiler can't break whilst build timer is open
@@ -89,4 +101,12 @@ function UIWatch:onWorldTick()
   else
     self.tick_timer = self.tick_timer - 1
   end
+end
+
+--[[ Toggles vaccination mode by toggling the button then
+toggling the mode in the current epidemic.]]
+function UIWatch:toggleVaccinationMode()
+  local epidemic = self.hospital.epidemic
+  self.end_button:toggle()
+  epidemic:toggleVaccinationMode()
 end
