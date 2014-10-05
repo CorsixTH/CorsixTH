@@ -22,6 +22,13 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_sound.h"
+#include "th_lua.h"
+#include "lua_sdl.h"
+#include <map>
+
+static int m_a_iPlayedSoundCallbackIDs[1000];
+static int m_iPlayedSoundCallbackIDsPointer = 0;
+static std::map<int,SDL_TimerID> m_mapSoundTimers;
 
 static int l_soundarc_new(lua_State *L)
 {
@@ -178,14 +185,27 @@ static int l_soundfx_set_sound_effects_on(lua_State *L)
     return 1;
 }
 
+static Uint32 played_sound_callback(Uint32 interval, void* param)
+{
+    SDL_Event e;
+    e.type = SDL_USEREVENT_SOUND_OVER;
+    e.user.data1 = param;
+    short iSoundID = *(static_cast<int*>(param));
+    SDL_RemoveTimer(m_mapSoundTimers[iSoundID]);
+    m_mapSoundTimers.erase(iSoundID);
+    SDL_PushEvent(&e);
+
+    return interval;
+}
+
 static int l_soundfx_play(lua_State *L)
 {
     THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-    lua_settop(L, 5);
+    lua_settop(L, 7);
     lua_getfenv(L, 1);
     lua_pushliteral(L, "archive");
-    lua_rawget(L, 6);
-    THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 7);
+    lua_rawget(L,8);
+    THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 9);
     if(pArchive == NULL)
     {
         return 0;
@@ -203,6 +223,26 @@ static int l_soundfx_play(lua_State *L)
     {
         pEffects->playSoundAt(iIndex, luaL_checknumber(L, 3), luaL_checkint(L, 4), luaL_checkint(L, 5));
     }
+    //SDL SOUND_OVER Callback Timer:
+    //6: unusedPlayedCallbackID
+    if(lua_isnil(L, 6) == false)
+    {
+        //7: Callback delay
+        int iPlayedCallbackDelay = 0; //ms
+        if(lua_isnil(L, 7) == false)
+            iPlayedCallbackDelay = luaL_checknumber(L, 7);
+
+        if(m_iPlayedSoundCallbackIDsPointer == sizeof(m_a_iPlayedSoundCallbackIDs))
+            m_iPlayedSoundCallbackIDsPointer = 0;
+
+        m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer] = luaL_checkint(L, 6);
+        SDL_TimerID timersID = SDL_AddTimer(pArchive->getSoundDuration(iIndex) + iPlayedCallbackDelay,
+                                            played_sound_callback,
+                                            &(m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer]));
+        m_mapSoundTimers.insert(std::pair<int, SDL_TimerID>(m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer], timersID));
+        m_iPlayedSoundCallbackIDsPointer++;
+    }
+
     lua_pushboolean(L, 1);
     return 1;
 }
