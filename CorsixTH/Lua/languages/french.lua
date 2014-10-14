@@ -25,7 +25,7 @@ Inherit("original_strings", 1)
 ----------------------------------------------------------- Override -----------------------------------------------------------
 adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MÉDECIN." -- Fix the famous "Level 5 bug"
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
-tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostiques aient été essayées. " -- Remove a superfluous word
+tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostic aient été essayées. " -- Remove a superfluous word
 room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
 adviser.goals.win = { -- Why are this strings upcase?
   reputation = "Portez votre réputation à %d pour pouvoir gagner.",
@@ -172,7 +172,7 @@ adviser.warnings = {
   falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
   falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
 }
-adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas mettre cet objet ici."
+adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas placer cet objet ici."
 adviser.information = {
   epidemic = "Une maladie contagieuse sévit dans votre hôpital. Vous devez l'enrayer immédiatement !",
   emergency = "C'est une urgence ! Vite ! Vite ! VITE !",
@@ -190,7 +190,7 @@ buy_objects_window = {
 fax = {
   epidemic_result = {
     close_text = "Hourrah !",
-    rep_loss_fine_amount = "Les journaux vont s'en donner à coeur joie avec cette affaire. Votre réputation va en prendre un coup ! Sans oublier l'amende de %d.",
+    rep_loss_fine_amount = "Les journaux vont s'en donner à cœur joie avec cette affaire. Votre réputation va en prendre un coup ! Sans oublier l'amende de %d.",
     },
   vip_visit_result = {
     telegram = "Télégramme !",
@@ -526,27 +526,31 @@ tooltip.objects.litter = "Déchet : laissé sur le sol par un patient car il n'a
 
 -- Adviser
 adviser = {
-  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit va empêcher des parties de l'hôpital d'être atteintes.",
+  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital",
 
   warnings = {
     no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
     no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
     no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
     no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
+    no_desk_4 = "Une réceptionniste aura besoin d'un bureau pour accueillir des patients",
+    no_desk_5 = "Il était temps, maintenant les patients devraient commencer à arriver bientôt !",
+    no_desk_6 = "Vous avez une réceptionniste, peut-être il est temps de construire un bureau où elle peut travailler ?",
+    no_desk_7 = "Maintenant, que vous avez une réception, que diriez-vous d'embaucher une réceptionniste également ? Vous n'aurez pas de patients avant de l'avoir fait !",
     cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
+    cannot_afford_2 = "Vous n'avez pas assez d'argent à la banque pour effectuer l'achat !",
     research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches.",
-    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours."
+    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours.",
+    researcher_needs_desk_1 = "Chaque chercheur a besoin d'un bureau pour travailler.",
+    researcher_needs_desk_2 = "Vos chercheurs sont heureux d'obtenir une pause bien méritée. Si vous voulez que plusieurs chercheurs puissent travailler en même temps.",
+    researcher_needs_desk_3 = "Un chercheur a toujours besoin d'un bureau.",
+    nurse_needs_desk_1 = "Chaque infirmière a besoin de son propre bureau.",
+    nurse_needs_desk_2 = "Votre infirmière est heureuse d'avoir une pause. Si vous comptez y faire travailler plusieurs personnes en même temps, vous devez leur construire un bureau à chacune.",
   },
   cheats = {
     th_cheat = "Félicitations, vous avez débloqué les triches !",
-    crazy_on_cheat = "Oh non ! Tous les médecins sont devenus fous !",
-    crazy_off_cheat = "Ouf... les médecins ont retrouvé leur santé mentale.",
     roujin_on_cheat = "Défi de Roujin activé ! Bonne chance...",
     roujin_off_cheat = "Défi de Roujin désactivé.",
-    hairyitis_cheat = "Triche Pilose activée !",
-    hairyitis_off_cheat = "Triche Pilose désactivée.",
-    bloaty_cheat = "Triche Encéphalantiasis activée !",
-    bloaty_off_cheat = "Triche Encéphalantiasis désactivée.",
   },
 }
 
@@ -555,6 +559,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = "Va vers %s"
 dynamic_info.staff.actions.fired = "Renvoyé"
+dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis pas plus contagieux"
 
 -- Progress report
 progress_report.free_build = "CONSTRUCTION LIBRE"
@@ -570,6 +575,8 @@ menu_options = {
   settings = "  PARAMETRES  ",
   adviser_disabled = "  ASSISTANT  ",
   warmth_colors = "  COULEURS CHAUDES  ",
+  wage_increase = " AUGMENTATION DE SALAIRE ",
+  twentyfour_hour_clock = " HORLOGE 24 HEURES ",
   }
 
  menu_options_warmth_colors = {
@@ -578,6 +585,10 @@ menu_options = {
   choice_3 = "  JAUNE ORANGE ROUGE  ",
 }
 
+menu_options_wage_increase = {
+  grant = " ACCORDER ",
+  deny = " NIER ",
+}
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
   slowest             = "  (1) AU PLUS LENT  ",
@@ -611,6 +622,7 @@ menu_debug = {
   make_debug_patient          = "  CREER UN PATIENT DE TEST  ",
   cheats                      = "  (F11) TRICHES  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
+  debug_script                = "  (MAJ + DS) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
   calls_dispatcher            = "  REPARTITION DES TACHES  ",
   dump_strings                = "  EXTRAIRE LES TEXTES  ",
   dump_gamelog                = "  (CTRL+D) EXTRAIRE LE JOURNAL DE JEU  ",
@@ -727,12 +739,10 @@ tooltip.menu_list_window = {
 
 -- Options window
 options_window = {
-  fullscreen = "Plein écran",
+  fullscreen = "Plein Écran",
   width = "Largeur",
   height = "Hauteur",
   change_resolution = "Changer la résolution",
-  browse = "Parcourir...",
-  new_th_directory = "Ici, vous pouvez spécifier un nouveau dossier d'installation de Theme Hospital. Dès que vous aurez changé le répertoire, le jeu sera redémarré.",
   cancel = "Annuler",
   back = "Précédent",
   custom_resolution = "Personnaliser...",
@@ -741,31 +751,90 @@ options_window = {
   caption = "Paramètres",
   language = "Langue du jeu",
   apply = "Appliquer",
-  data_location = "Emplacement des données",
-  font_location = "Emplacement de la police",
   resolution = "Résolution",
+  audio = "Audio Globale",
+  customize = "Personnaliser",
+  folder = "Dossier",
 }
 
 tooltip.options_window = {
+  fullscreen = "Mode plein écran ou mode fenêtré",
   fullscreen_button = "Basculer en mode plein écran/fenêtré",
+  resolution = "La résolution vidéo pour le jeu",
+  select_resolution = "Sélectionner une nouvelle résolution",
   width = "Entrez la largeur désirée",
   height = "Entrez la hauteur désirée",
   change_resolution = "Changer la résolution pour les dimensions entrées à gauche",
   language = "Utiliser la langue %s",
   original_path = "Le dossier d'installation du Theme Hospital originel qui est actuellement sélectionné",
-  browse = "Choisir un autre emplacement d'installation de Theme Hospital %1%",
   back = "Fermer la fenêtre des options",
-  fullscreen = "Mode plein écran ou mode fenêtré",
   cancel = "Retour sans changement de résolution",
-  font_location = "Emplacement d'un fichier de police capable d'afficher des caractères Unicodes requis par votre langue. Si rien n'est spécifié, vous ne serez pas capable de sélectionner une langue qui nécessite plus de caractères que ne peut en fournir le jeu original. Par exemple : Russe et Chinois",
   apply = "Appliquer la résolution choisie",
-  browse_font = "Parcourir les dossiers pour un autre fichier de police (Emplacement actuel : ù1ù)",
-  data_location = "Le dossier d'installation du jeu original Theme Hospital, requis pour lancer CorsixTH",
   language_dropdown_item = "Choisir %s comme langue",
   select_language = "Sélectionner la langue du jeu",
-  select_resolution = "Sélectionner une nouvelle résolution",
-  resolution = "La résolution vidéo pour le jeu",
-  no_font_specified = "Aucun emplacement spécifié !",
+  audio_button = "Activer ou désactiver le système audio dans le jeu",
+  audio_toggle = "Activer ou désactiver",
+  customize_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
+  folder_button = "Dossier des paramètres",
+}
+
+customize_window = {
+  caption = "Paramètres Supplémentaires",
+  option_on = "Activer",
+  option_off = "Désactiver",
+  back = "Retour",
+  movies = "Contrôle de film globale",
+  intro = "Jouer le film d'intro",
+  paused = "Construction en pause",
+  volume = "Touche de raccourci pour diminuer le volume",
+  aliens = "Extraterrestres",
+  fractured_bones = "Patient écrasé",
+  average_contents = "Teneurs moyennes",
+}
+
+tooltip.customise_window = {
+  movies = "Sélectionnez si les films doit êtres joués.",
+  intro = "Passer le film d'introduction lorsque vous démarrez le jeu. La contrôle de film mondial doit être activée si vous jouez le film d'introduction à chaque fois que vous chargez CorsixTH",
+  paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu a été interrompu. C'est le paramètre par défaut dans CorsixTH aussi, mais en activant tout est permis alors que le jeu est en pause",
+  volume = "Si vous arrivé à avoir la touche qui réduit le volume qui ouvre également le journal de médecine, activer cette option pour modifier le raccourci de dossiers médicaux à Maj + C",
+  aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
+  fractured_bones = "En raison d'une mauvaise animation, nous avons fait les patientes avec fractures (des patients concassée). Désactivez cette option, il apparaîtra même les femmes atteintes de la maladie",
+  average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
+  back = "Fermer ce menu et revenir au menu d'options",
+}
+
+folders_window = {
+  caption = "Parametres de dossier",
+  data_label = "Données de TH",
+  font_label = "Police",
+  music_label = "MP3",
+  savegames_label = "Sauvegarde",
+  screenshots_label = "Captures d'écran",
+  -- next four are the captions for the browser window, which are called from the folder setting menu
+  new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de Theme Hospital. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré.",
+  savegames_location = "Sélectionner le repertoire que vous voulez utiliser pour les sauvegardes",
+  music_location = "Sélectionner le répertoire que vous voulez utiliser pour la musique",
+  screenshots_location = "Sélectionner le réportoire que vous voulez utiliser pour les captures d'écran",
+  back  = "Retour",
+}
+
+tooltip.folders_window = {
+  browse = "Parcourir l'emplacement du dossier",
+  data_location = "Le répertoire d'origine de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
+  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si elle ne figure pas vous ne serez pas en mesure de choisir les langues qui ont besoin de plus de caractères que le jeu original peut fournir. Exemple:.. Russe et chinois",
+  savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela ne serait pas approprié, alors vous pouvez choisir votre propre, suffit juste de parcourir le répertoire que vous voulez utiliser.",
+  screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas, alors vous pouvez choisir votre propre, il suffit de parcourir le répertoire que vous voulez utiliser.",
+  music_location = "Sélectionnez un emplacement pour vos fichiers MP3. Vous devez avoir créé le répertoire déjà, puis naviguez vers le répertoire que vous venez de créer.",
+  browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel: %1%)",
+  browse_font = "Parcourir un autre fichier de police (emplacement actuel: %1%)",
+  browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel: %1%)",
+  browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel: %1%)",
+  browse_music = "Parcourir un autre répertoire de musique (emplacement actuel: %1%)",
+  no_font_specified = "Aucun répertoire de police spécifier !",
+  not_specified = "Aucun répertoire spécifier !",
+  default = "Emplacement par défaut",
+  reset_to_default = "Réinitialiser le répertoire à son emplacement par défaut",
+  back  = "Fermer ce menu et revenir au menu Paramètres",
 }
 
 font_location_window.caption = "Choisir une police (%1%)"
@@ -965,7 +1034,9 @@ letter = {
 install = {
   title = "----------------------------- Installation de CorsixTH -----------------------------",
   th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  ok = "OK",
   exit = "Quitter",
+  cancel = "Annuler",
 }
 
 -- Errors
