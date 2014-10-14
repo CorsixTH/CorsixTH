@@ -61,6 +61,7 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.objects = {--[[a set rather than a list]]}
   -- the set of humanoids walking to this room
   self.humanoids_enroute = {--[[a set rather than a list]]}
+  self.rat_holes = {}
 end
 
 function Room:getEntranceXY(inside)
@@ -920,3 +921,120 @@ function Room:isDiagnosisRoomForPatient(patient)
   end
 end
 
+-- Returns all wall tiles available for placing a rat hole. This includes tiles
+-- on the south and east edges of the room and doesn't include the tiles where
+-- the doors are and locations where there is already a rat hole.
+function Room:getAvailableRatWalls()
+  local walls = {}
+
+  -- Add the location (x, y) with the correct edge (i.e. direction) if the
+  -- location is not where the doors are
+  local function addWall(x, y, edge)
+    if not self:hasRatHoleAt(x, y) then
+      if x ~= self.door.tile_x and y ~= self.door_tile_y then
+        if self.door2 == nil or (x ~= self.door2.tile_x and y ~= self.door2.tile_y) then
+          local wall = {
+            x = x,
+            y = y,
+            room = self,
+            room_edge = edge,
+          }
+          walls[#walls + 1] = wall
+        end
+      end
+    end
+  end
+
+  -- south edge locations
+  local x_from = self.x
+  local x_to = self.x + self.width - 1
+  local y = self.y + self.height
+
+  for x = x_from, x_to, 1 do
+    addWall(x, y, "south")
+  end
+
+  -- east edge locations
+  local x = self.x + self.width
+  local y_from = self.y
+  local y_to = self.y + self.height - 1
+
+  for y = y_from, y_to, 1 do
+    addWall(x, y, "east")
+  end
+
+  return walls
+end
+
+-- Return true if point (point.x, point.y) is located on the on the opposite
+-- edge of the room (point.room_edge).
+--!param point ({x (int), y (int), room_edge (string)}): room_edge is either
+-- "south" or "east". (x, y) is the location of the point.
+function Room:isOnOppositeEdge(point)
+  if point.room_edge == "south" then
+    -- is the point on the north edge of the room?
+    return point.y == self.y and point.x >= self.x and point.x <= self.x + self.width - 1
+  elseif point.room_edge == "east" then
+    -- is the point on the west edge of the room?
+    return point.x == self.x and point.y >= self.y and point.y <= self.y + self.height - 1
+  end
+end
+
+-- Return true if the room has a rat hole on (x, y).
+--!param x (int): X axis location of the rat hole
+--!param y (int): Y axis location of the rat hole
+function Room:hasRatHoleAt(x, y)
+  for _, hole in ipairs(self.rat_holes) do
+    if x == hole.tile_x and y == hole.tile_y then
+      return true
+    end
+  end
+
+  return false
+end
+
+-- Add a rat hole to the room.
+--!param point ({x (int), y (int), room_edge (string)}): room_edge is either
+-- "south" or "east". (x, y) is the location of the rat hole.
+function Room:addRatHole(point)
+  local rat_hole = self.world:newObject("rat_hole", point.x, point.y, point.room_edge)
+  table.insert(self.rat_holes, rat_hole)
+end
+
+-- Remove rat hole located at (x, y). A rat hole is identified by
+-- its coordinates. If there is no rat hole at this location, nothing
+-- happens.
+--!param x (int): X axis location of the rat hole
+--!param y (int): Y axis location of the rat hole
+function Room:removeRatHoleAt(x, y)
+  for i, hole in ipairs(self.rat_holes) do
+    if x == hole.tile_x and y == hole.tile_y then
+      table.remove(self.rat_holes, i)
+      self.world:destroyEntity(hole)
+      break
+    end
+  end
+end
+
+-- Decrease life span of rat holes of the room. Rat holes with life span
+-- getting at 0 are removed.
+function Room:tickRatHoles()
+  local to_remove = {}
+
+  for i, hole in ipairs(self.rat_holes) do
+    if hole.life_span <= 1 then
+      table.insert(to_remove, {
+        x = hole.tile_x,
+        y = hole.tile_y,
+      })
+    else
+      hole.life_span = hole.life_span - 1
+    end
+  end
+
+  -- we have to remove the holes in two phases, to avoid concurrency
+  -- on self.rat_holes table index
+  for _, point in ipairs(to_remove) do
+    self:removeRatHoleAt(point.x, point.y)
+  end
+end

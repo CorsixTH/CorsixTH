@@ -629,6 +629,11 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
+  if old < 89 then
+    for _, room in pairs(self.world.rooms) do
+      room.rat_holes = {}
+    end
+  end
 end
 
 --! Update the Hospital.patientcount variable.
@@ -1112,6 +1117,12 @@ function Hospital:onEndMonth()
         self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
       end
     end
+  end
+
+  -- rats
+  if self:isPlayerHospital() then
+    self:tickRatHoles()
+    self:spawnRatHoles()
   end
 end
 
@@ -1965,4 +1976,87 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+-- Decrease life span of rat holes of the hospital. Rat holes with life span
+-- getting at 0 are removed.
+function Hospital:tickRatHoles()
+  for _, room in pairs(self.world.rooms) do
+    room:tickRatHoles()
+  end
+end
+
+-- Return the litter rate (i.e. the dirt rate) in the hospital,
+-- i.e. the percentage of littered tiles, as a float [0-100].
+function Hospital:getLitterRate()
+  local function isOwned(plot)
+    for _, i in ipairs(self.ownedPlots) do
+      if i == plot then
+        return true
+      end
+    end
+
+    return false
+  end
+
+  local surface = 0
+  for plot = 1, self.world.map.th:getPlotCount() do
+    if isOwned(plot) then
+      surface = surface + self.world.map.th:getParcelTileCount(plot)
+    end
+  end
+
+  return (#self.world:getObjectsById("litter") / surface) * 100
+end
+
+-- Spawn a few rat holes here and there if the litter level is high.
+function Hospital:spawnRatHoles()
+  local litter_rate = self:getLitterRate()
+  print("litter rate: " .. tostring(litter_rate) .. " %")
+  if litter_rate > 1 then
+    local rat_hole_spawn_rate = math.floor(litter_rate * 2)
+    local available_walls = self:getAvailableRatWalls()
+
+    print("rat_hole_spawn_rate: " .. tostring(rat_hole_spawn_rate))
+    local nbr = math.random(0, rat_hole_spawn_rate)
+    print("rat holes to make: " .. tostring(nbr))
+
+    if #available_walls >= nbr then
+      for i = 0, nbr, 1 do
+        local point = available_walls[math.random(#available_walls)]
+        if point then
+          point.room:addRatHole(point)
+        end
+      end
+    end
+  end
+end
+
+-- Returns all available wall tiles where a rat hole can be placed.
+-- TODO: returns corridors walls as well
+function Hospital:getAvailableRatWalls()
+  local results = {}
+
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self and room.is_active then
+      for _, point in pairs(room:getAvailableRatWalls()) do
+        local isAvailable = true
+        for _, otherRoom in pairs(self.world.rooms) do
+          if otherRoom.id ~= room.id then
+            if otherRoom:isOnOppositeEdge(point) then
+              isAvailable = false
+              break
+            end
+          end
+        end
+
+        if isAvailable then
+          table.insert(results, point)
+        end
+      end
+
+    end
+  end
+
+  return results
 end

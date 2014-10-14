@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 88
+local SAVEGAME_VERSION = 89
 
 class "App"
 
@@ -1267,6 +1267,13 @@ function App:afterLoad()
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
+  end
+
+  if old < 89 then
+    local rat_hole_type = dofile "objects/rat_hole"
+    Object.processTypeDefinition(rat_hole_type)
+    self.objects[rat_hole_type.id] = rat_hole_type
+    self.world:newObjectType(rat_hole_type)
   end
 
   self.map:afterLoad(old, new)
