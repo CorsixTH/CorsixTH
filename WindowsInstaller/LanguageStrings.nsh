@@ -76,7 +76,7 @@ LangString options_title      ${LANG_FINNISH} "Lisäasetukset"
 LangString options_subtitle   ${LANG_FINNISH} "Valitse alkuperäisen pelin asennushakemisto."
 LangString save_in_appdata    ${LANG_FINNISH} "Pelitietojen ja asetusten tallennushakemisto: %APPDATA% (Suositus)"
 LangString remove_saves       ${LANG_FINNISH} "Haluatko säilyttää tallennetut pelit?"
-LangString overwrite_install  ${LANG_FINNISH} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString overwrite_install  ${LANG_FINNISH} "Asennat olemassaolevan CorsixTH asennuksen päälle. Muutokset tiedostoihin saatetaan menettää. Haluatko jatkaa?"
 
 LangString install_language   ${LANG_FRENCH} "French"
 LangString original_text      ${LANG_FRENCH} "Pour pouvoir jouer, une installation du jeu original est nécessaire. Spécifiez cet emplacement ici."
@@ -196,7 +196,7 @@ LangString options_title      ${LANG_RUSSIAN} "Дополнительные оп
 LangString options_subtitle   ${LANG_RUSSIAN} "Укажите расположение оригинальной игры."
 LangString save_in_appdata    ${LANG_RUSSIAN} "Сохранять игровые данные и настройки в %APPDATA% (рекомендовано)"
 LangString remove_saves       ${LANG_RUSSIAN} "Оставить сохраненные игры?"
-LangString overwrite_install  ${LANG_RUSSIAN} "You seem to be installing on an existing installation of CorsixTH. Any changes made among the files might be lost. Continue?"
+LangString overwrite_install  ${LANG_RUSSIAN} "Кажется, у Вас уже есть установленная версия CorsixTH. Любые изменения могут привести к потере данных. Продолжить?"
 
 LangString install_language   ${LANG_SIMPCHINESE} "Chinese (simplified)"
 LangString original_text      ${LANG_SIMPCHINESE} "运行游戏需要原版主题医院。请指定原版主题医院游戏安装文件夹。"
