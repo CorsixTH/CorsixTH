@@ -2628,7 +2628,7 @@ menu_options = {
   jukebox = "    JUKEBOX  ",
   warmth_colors = "    BARVY TEPLOTY",
   twentyfour_hour_clock = "    24HODINOVÝ REŽIM  ",
-  wage_increase = "  MZDOVÉ POŽADAVKY",
+  wage_increase = "    MZDOVÉ POŽADAVKY",
 }
 menu_options_warmth_colors = {
   choice_2 = "     MODRÁ ZELENÁ ČERVENÁ ",
