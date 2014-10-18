@@ -105,8 +105,8 @@ cheats_window = {
     create_patient = "Vytvořit Pacienta",
     end_month = "Konec Měsíce",
     vip = "Vytvořit VIP",
-	epidemic = "Vytvořit nakažlivého pacienta",
-	toggle_infected = "Zapnout/Vypnout ikony nakažení",
+    epidemic = "Vytvořit nakažlivého pacienta",
+    toggle_infected = "Zapnout/Vypnout ikony nakažení",
   },
 }
 menu_file_save = {
@@ -246,7 +246,7 @@ dynamic_info = {
       awaiting_decision = "Čekám na Vaše rozhodnutí",
       sent_to_other_hospital = "Odkázán jinam",
       epidemic_sent_home = "Poslán domů Inspektorem",
-	  epidemic_vaccinated = "Již nejsem nakažlivý",
+      epidemic_vaccinated = "Již nejsem nakažlivý",
     },
     emergency = "Havárie: %s",
   },
@@ -1142,8 +1142,8 @@ tooltip = {
       all_research = "Dokončí veškerý výzkum.",
       create_patient = "Vytvoří Pacienta na kraji mapy.",
       end_month = "Přeskočí na konec měsíce.",
-	  epidemic = "Vytvoří nakažlivého pacienta, který může způsobit epidemii",
-	  toggle_infected = "Zobrazí/Skryje ikony nakažení pro aktivní, zjištěné epidemie",
+      epidemic = "Vytvoří nakažlivého pacienta, který může způsobit epidemii",
+      toggle_infected = "Zobrazí/Skryje ikony nakažení pro aktivní, zjištěné epidemie",
     },
   },
   buy_objects_window = {
