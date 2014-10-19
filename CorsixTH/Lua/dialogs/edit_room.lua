@@ -241,10 +241,10 @@ function UIEditRoom:confirm(force)
     self.world:markRoomAsBuilt(self.room)
     self.closed_cleanly = true
     -- If information dialogs are disabled, go ahead.
-    if self.world.room_information_dialogs_off then
-      self.ui:tutorialStep(3, 15, "next")
-    else
+    if self.ui:getWindow(UIInformation) then
       self.ui:tutorialStep(3, 15, 16)
+    else
+      self.ui:tutorialStep(3, 15, "next")
     end
     self:close()
   end
