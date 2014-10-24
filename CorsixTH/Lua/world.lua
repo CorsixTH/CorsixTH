@@ -1935,7 +1935,7 @@ function World:areFootprintTilesCoardinatesInvalid(x, y)
 end
 
 ---
--- @param allowed_rooms_id_parameter optional
+-- @param allowed_rooms_id_parameter Should be nil when the object is allowed to be placed in any room.
 -- @return {within_room, roomId}
 ---
 function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, allowed_rooms_id_parameter)
@@ -1944,15 +1944,15 @@ function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, o
   if allowed_rooms_id_parameter then
     return {within_room = allowed_rooms_id_parameter == xy_rooms_id, roomId = allowed_rooms_id_parameter}
   elseif xy_rooms_id == 0 then
-    return {within_room = object.corridor_object, roomId = xy_rooms_id}
+    return {within_room = object.corridor_object ~= nil, roomId = xy_rooms_id}
   else
-    for _, object in pairs(self.rooms[xy_rooms_id].room_info.objects_additional) do
-      if TheApp.objects[object].thob == object.thob then
+    for _, additional_objects_name in pairs(self.rooms[xy_rooms_id].room_info.objects_additional) do
+      if TheApp.objects[additional_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
     end
-    for object, _ in pairs(self.rooms[xy_rooms_id].room_info.objects_needed) do
-      if TheApp.objects[object].thob == object.thob then
+    for needed_objects_name, _ in pairs(self.rooms[xy_rooms_id].room_info.objects_needed) do
+      if TheApp.objects[needed_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
     end
