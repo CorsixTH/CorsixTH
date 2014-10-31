@@ -359,6 +359,8 @@ cheats_window = {
     all_research = "All forskning",
     end_year = "Slutten av året",
     earthquake = "Lag jordskjelv",
+    epidemic = "Lag smittsom pasient",
+    toggle_infected = "Slå av/på smitte-ikoner",
   },
 }
 
@@ -375,6 +377,8 @@ tooltip.cheats_window = {
   all_research = "Fullförer all forskning.",
   end_year = "Gå til slutten av dette året.",
   earthquake = "Forårsaker et jordskjelv.",
+  epidemic = "Lager en smittsom pasient som kan forårsake en epidemi",
+  toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
   },
 }
 
@@ -3039,6 +3043,7 @@ dynamic_info = {
       prices_too_high             = "Prisene er for höye - Jeg går hjem",
       epidemic_sent_home          = "Sendt hjem av inspektör",
       epidemic_contagious         = "Jeg er smittsom",
+      epidemic_vaccinated         = "Jeg er ikke smittsom lenger",
     },
     diagnosed                   = "Diagnose: %s", -- %s
     guessed_diagnosis           = "Gjettet diagnose: %s", -- %s
