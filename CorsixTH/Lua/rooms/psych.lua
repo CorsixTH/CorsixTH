@@ -102,13 +102,14 @@ function PsychRoom:commandEnteringPatient(patient)
           name = "use_screen",
           object = obj,
           after_use = --[[persistable:psych_screen_after_use]] function()
+            self:getStaffMember():setNextAction{name = "meander"}
             self:dealtWithPatient(patient)
           end,
         }
       else
+        self:getStaffMember():setNextAction{name = "meander"}
         self:dealtWithPatient(patient)
       end
-      self:getStaffMember():setNextAction{name = "meander"}
       return
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then
