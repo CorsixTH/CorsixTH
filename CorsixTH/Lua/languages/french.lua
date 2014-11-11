@@ -559,7 +559,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = "Va vers %s"
 dynamic_info.staff.actions.fired = "Renvoyé"
-dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis pas plus contagieux"
+dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis plus contagieux"
 
 -- Progress report
 progress_report.free_build = "CONSTRUCTION LIBRE"
@@ -587,7 +587,7 @@ menu_options = {
 
 menu_options_wage_increase = {
   grant = " ACCORDER ",
-  deny = " NIER ",
+  deny = " REFUSER ",
 }
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
@@ -623,7 +623,7 @@ menu_debug = {
   cheats                      = "  (F11) TRICHES  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
   debug_script                = "  (MAJ + DS) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
-  calls_dispatcher            = "  REPARTITION DES TACHES  ",
+  calls_dispatcher            = "  RÉPARTITION DES TÂCHES  ",
   dump_strings                = "  EXTRAIRE LES TEXTES  ",
   dump_gamelog                = "  (CTRL+D) EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay                 = "  INCRUSTATIONS DE CARTE  ",
@@ -672,8 +672,8 @@ new_game_window = {
   hard = "Consultant (Difficile)",
   tutorial = "Tutoriel",
   cancel = "Annuler",
-  option_on = "Marche",
-  option_off = "Arrêt",
+  option_on = "Activer",
+  option_off = "Désactiver",
   difficulty = "Difficulté",
   caption = "Campagne",
   player_name = "Nom du joueur",
@@ -746,8 +746,8 @@ options_window = {
   cancel = "Annuler",
   back = "Précédent",
   custom_resolution = "Personnaliser...",
-  option_on = "Marche",
-  option_off = "Arrêt",
+  option_on = "Activer",
+  option_off = "Désactiver",
   caption = "Paramètres",
   language = "Langue du jeu",
   apply = "Appliquer",
@@ -783,22 +783,22 @@ customize_window = {
   option_on = "Activer",
   option_off = "Désactiver",
   back = "Retour",
-  movies = "Contrôle de film globale",
+  movies = "Contrôle des films",
   intro = "Jouer le film d'intro",
   paused = "Construction en pause",
   volume = "Touche de raccourci pour diminuer le volume",
   aliens = "Extraterrestres",
-  fractured_bones = "Patient écrasé",
-  average_contents = "Teneurs moyennes",
+  fractured_bones = "Fractures",
+  average_contents = "Achats mémorisés",
 }
 
 tooltip.customise_window = {
-  movies = "Sélectionnez si les films doit êtres joués.",
-  intro = "Passer le film d'introduction lorsque vous démarrez le jeu. La contrôle de film mondial doit être activée si vous jouez le film d'introduction à chaque fois que vous chargez CorsixTH",
-  paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu a été interrompu. C'est le paramètre par défaut dans CorsixTH aussi, mais en activant tout est permis alors que le jeu est en pause",
-  volume = "Si vous arrivé à avoir la touche qui réduit le volume qui ouvre également le journal de médecine, activer cette option pour modifier le raccourci de dossiers médicaux à Maj + C",
+  movies = "Sélectionnez si les films doivent être joués.",
+  intro = "Passer le film d'introduction lorsque vous démarrez le jeu. Le contrôle des films doit être activé si vous jouez le film d'introduction à chaque fois que vous chargez CorsixTH",
+  paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu est en pause. C'est le paramètre par défaut dans CorsixTH aussi, mais en l'activant tout est permis pendant que le jeu est en pause",
+  volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
-  fractured_bones = "En raison d'une mauvaise animation, nous avons fait les patientes avec fractures (des patients concassée). Désactivez cette option, il apparaîtra même les femmes atteintes de la maladie",
+  fractured_bones = "En raison de la qualité faible de l'animation il n'y a pas de patientes avec des fractures. Désactivez cette option si vous désirez avoir des femmes avec des fractures.",
   average_contents = "Si vous voulez que le jeu se rappelle des articles supplémentaires que vous avez tendance à normalement magasiner pour une nouvelle salle, activer cette option",
   back = "Fermer ce menu et revenir au menu d'options",
 }
@@ -821,17 +821,17 @@ folders_window = {
 tooltip.folders_window = {
   browse = "Parcourir l'emplacement du dossier",
   data_location = "Le répertoire d'origine de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
-  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si elle ne figure pas vous ne serez pas en mesure de choisir les langues qui ont besoin de plus de caractères que le jeu original peut fournir. Exemple:.. Russe et chinois",
-  savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela ne serait pas approprié, alors vous pouvez choisir votre propre, suffit juste de parcourir le répertoire que vous voulez utiliser.",
-  screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas, alors vous pouvez choisir votre propre, il suffit de parcourir le répertoire que vous voulez utiliser.",
-  music_location = "Sélectionnez un emplacement pour vos fichiers MP3. Vous devez avoir créé le répertoire déjà, puis naviguez vers le répertoire que vous venez de créer.",
+  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si aucun emplacement n'est spécifié vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple: Russe et Chinois",
+  savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela n'est pas approprié vous pouvez modifier ce répertoire.",
+  screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas vous pouvez choisir votre propre dossier.",
+  music_location = "Sélectionnez un emplacement pour vos fichiers MP3.",
   browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel: %1%)",
   browse_font = "Parcourir un autre fichier de police (emplacement actuel: %1%)",
   browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel: %1%)",
   browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel: %1%)",
   browse_music = "Parcourir un autre répertoire de musique (emplacement actuel: %1%)",
-  no_font_specified = "Aucun répertoire de police spécifier !",
-  not_specified = "Aucun répertoire spécifier !",
+  no_font_specified = "Aucun répertoire de police spécifié !",
+  not_specified = "Aucun répertoire spécifié !",
   default = "Emplacement par défaut",
   reset_to_default = "Réinitialiser le répertoire à son emplacement par défaut",
   back  = "Fermer ce menu et revenir au menu Paramètres",
@@ -865,7 +865,7 @@ cheats_window = {
   cheats = {
     money = "Plus d'argent",
     all_research = "Toutes les recherches",
-    emergency = "Créer une urgence",
+    emergency = "Créer une situation d'urgence",
     vip = "Créer un VIP",
     earthquake = "Créer un tremblement de terre",
     create_patient = "Créer un patient",
@@ -882,7 +882,7 @@ tooltip.cheats_window = {
   cheats = {
     money = "Ajoute $10.000 à votre solde bancaire.",
     all_research = "Termine toutes les recherches.",
-    emergency = "Crée une urgence.",
+    emergency = "Créer une situation d'urgence.",
     vip = "Crée un VIP.",
     earthquake = "Crée un tremblement de terre.",
     create_patient = "Crée un patient au bord de la carte.",
@@ -905,7 +905,7 @@ totd_window = {
     "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
     "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
     "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé par coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (#corsix-th sur freenode).",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (#corsix-th sur freenode).",
     "Si vous avez trouvé un bug, SVP, reportez-le sur notre gestionnaire de bugs : th-issues.corsix.org.",
     "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
     "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
@@ -949,14 +949,13 @@ information = {
   no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
   cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
   very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
-  cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
+  cheat_not_possible = "Vous ne pouvez pas utiliser ce code de triche dans ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
   level_lost = {
     "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
     "Voilà pourquoi vous avez perdu : ",
     reputation = "Votre réputation est tombée en dessous de %d.",
     balance = "Votre solde bancaire est tombé en dessous %d.",
     percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
-    cheat_not_possible = "Vous ne pouvez pas utiliser cette triche à ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
     cheat = "Étais-ce votre choix, ou bien avez-vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
   },
 }
