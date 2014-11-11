@@ -711,6 +711,19 @@ function Room:crashRoom()
     self.door2.hover_cursor = nil
   end
 
+  -- A patient might be about to use the door (staff are dealt with elsewhere):
+  if self.door.reserved_for then
+    local person = self.door.reserved_for
+    if not person:isLeaving() then
+      if class.is(person, Patient) then
+        person:queueAction({name = "idle", count = 1}) --Delay so that room is destroyed before the seek_room search.
+        person:queueAction({name = "seek_room", room_type = self.room_info.id})
+      end
+    end
+    person:finishAction()
+    self.door.reserved_for = nil
+  end
+
   local remove_humanoid = function(humanoid)
     humanoid:queueAction({name = "idle"}, 1)
     humanoid.user_of = nil
