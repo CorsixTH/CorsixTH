@@ -68,10 +68,9 @@ local function action_queue_find_idle(action, humanoid)
     end
   end
   if found_any then
-    error "Proper idle not in action_queue"
-  else
-    return -1
+    print("Warning: Proper idle not in action_queue")
   end
+  return -1
 end
 
 local function action_queue_find_drink_action(action, humanoid)
