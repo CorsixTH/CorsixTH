@@ -152,6 +152,11 @@ local function action_queue_leave_bench(action, humanoid)
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
+  -- Only proceed with this handler if the patient is still in the queue
+  if not action.is_in_queue then
+    return
+  end
+
   -- Find out if we have to be standing up - considering humanoid_class covers both health inspector and VIP
   local must_stand = class.is(humanoid, Staff) or humanoid.humanoid_class == "Inspector" or
     humanoid.humanoid_class == "VIP" or (humanoid.disease and humanoid.disease.must_stand)
