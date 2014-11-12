@@ -34,6 +34,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self:addKeyHandler("Enter", self.confirm) -- UIPlaceObjects does not need this
 
   local app = ui.app
+  self.buildable_litter = {}
   -- Set alt palette on wall blueprint to make it red
   self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
   -- Set on door and window blueprints too
@@ -172,6 +173,10 @@ function UIEditRoom:cancel()
       self.ui:addWindow(UIConfirmDialog(self.ui,
         _S.confirmation.delete_room,
         --[[persistable:delete_room_confirm_dialog]]function()
+          for litter, _ in pairs(self.buildable_litter) do
+            self.ui.app.world.map.th:setCellFlags(litter.tile_x, litter.tile_y, {buildable = false})
+          end
+          self.buildable_litter = {}
           self:abortRoom()
         end,
         --[[persistable:delete_room_confirm_dialog_cancel]]function()
@@ -180,6 +185,10 @@ function UIEditRoom:cancel()
         end
       ))
     else
+      for litter, _ in pairs(self.buildable_litter) do
+        self.ui.app.world.map.th:setCellFlags(litter.tile_x, litter.tile_y, {buildable = false})
+      end
+      self.buildable_litter = {}
       self:close()
     end
   elseif self.phase == "objects" then
@@ -219,6 +228,11 @@ function UIEditRoom:confirm(force)
     self.phase = "clear_area"
     self:clearArea()
   elseif self.phase == "clear_area" then
+    for litter, _ in pairs(self.buildable_litter) do
+      self.ui.app.world:removeObjectFromTile(litter, litter.tile_x, litter.tile_y)
+      self.ui.app.world:destroyEntity(litter)
+    end
+    self.buildable_litter = {}
     self.ui:setDefaultCursor(nil)
     self.phase = "objects"
     self:finishRoom()
@@ -1006,6 +1020,20 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   end
 
   local too_small = w < self.room_type.minimum_size or h < self.room_type.minimum_size
+
+  if not too_small then
+    local world = self.ui.app.world
+    local found_litter = list_to_set(self.world:findObjectsInArea("litter", x, y, x + (w - 1), y + (h - 1)))
+    --Deal with litter which is now inside the blueprint:
+    for _, litter in ipairs(set_get_missing_from(found_litter, self.buildable_litter)) do
+      world.map.th:setCellFlags(litter.tile_x, litter.tile_y, {buildable = true})
+    end
+    --Deal with litter which is now outside the blueprint:
+    for _, litter in ipairs(set_get_missing_from(self.buildable_litter, found_litter)) do
+      world.map.th:setCellFlags(litter.tile_x, litter.tile_y, {buildable = false})
+    end
+    self.buildable_litter = found_litter
+  end
 
   -- Entire update of floor tiles and wall animations done in C to replace
   -- several hundred calls into C with just a single call. The price for this
