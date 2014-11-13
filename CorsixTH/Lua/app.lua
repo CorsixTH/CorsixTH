@@ -1233,6 +1233,7 @@ end
 
 --! This function is automatically called after loading a game and serves for compatibility.
 function App:afterLoad()
+  self.ui:addOrRemoveDebugModeKeyHandlers()
   local old = self.world.savegame_version or 0
   local new = self.savegame_version
 
