@@ -605,7 +605,7 @@ menu_charts = {
   statement     = "  (F2) DECLARATION  ",
   staff_listing = "  (F3) LISTE DU PERSONNEL  ",
   town_map      = "  (F4) CARTE DE LA VILLE  ",
-  casebook      = "  (F5) MALETTE  ",
+  casebook      = "  (F5) MALLETTE  ",
   research      = "  (F6) RECHERCHE  ",
   status        = "  (F7) STATUTS  ",
   graphs        = "  (F8) GRAPHIQUES  ",
@@ -752,7 +752,7 @@ options_window = {
   language = "Langue du jeu",
   apply = "Appliquer",
   resolution = "Résolution",
-  audio = "Audio Globale",
+  audio = "Audio Global",
   customize = "Personnaliser",
   folder = "Dossier",
 }
