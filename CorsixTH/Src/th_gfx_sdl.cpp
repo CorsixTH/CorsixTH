@@ -621,6 +621,21 @@ static unsigned int readWord(const unsigned char* pData)
     return *pData | (pData[1] << 8);
 }
 
+//! Helper function to read a signed word from memory.
+/*! @param pData Pointer to the word to read.
+    @return The read word value.
+ */
+static int readSignedWord(const unsigned char* pData)
+{
+    unsigned int value = readWord(pData);
+    if ((value & 0x8000) == 0) return value; // Positive number.
+
+    // Negative number, extend sign above 16 bits.
+    int ret = -1;
+    ret = (ret & ~0xFFFF) | value;
+    return ret;
+}
+
 //! Helper function to read a long word from memory.
 /*! @param pData Pointer to the word to read.
     @return The read word value.
@@ -697,6 +712,9 @@ THRawBitmap::THRawBitmap()
     m_pTarget = NULL;
     m_iWidth = 0;
     m_iHeight = 0;
+    m_bUseOffsets = false;
+    m_iXOffset = 0;
+    m_iYOffset = 0;
 }
 
 THRawBitmap::~THRawBitmap()
@@ -809,25 +827,27 @@ bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
     if(pEventualCanvas == NULL)
         return false;
 
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
+    static const unsigned char header[] = {'C', 'T', 'H', 'G', 3, 0};
 
     if(iLength < 6 || memcmp(header, pData, 6) != 0)
         return false;
     pData += 6; iLength -= 6;
 
-    if (iLength < 4+2+2+2) // Length of a sprite header.
+    if (iLength < 4 + 10) // Length of a sprite header.
         return false;
 
     uint32_t iSprLength = readLong(pData);
     pData += 4; iLength -= 4;
-    if (iSprLength < 2+2+2 || iSprLength > iLength)
+    if (iSprLength < 10 || iSprLength > iLength)
         return false;
 
     unsigned int iSprite = readWord(pData);
     int iWidth = readWord(pData + 2);
     int iHeight = readWord(pData + 4);
-    pData += 6; iLength -= 6;
-    iSprLength -= 6;
+    int iXOffset = readSignedWord(pData + 6);
+    int iYOffset = readSignedWord(pData + 8);
+    pData += 10; iLength -= 10;
+    iSprLength -= 10;
 
     if (iSprite > 0)
         return false; // Only load sprite 0.
@@ -841,6 +861,9 @@ bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
 
     m_iWidth = iWidth;
     m_iHeight = iHeight;
+    m_iXOffset = iXOffset;
+    m_iYOffset = iYOffset;
+    m_bUseOffsets = true;
     m_pTarget = pEventualCanvas;
     return true;
 }
@@ -946,6 +969,9 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
         pSprite->pAltPaletteMap = NULL;
         pSprite->iWidth = pTHSprite->width;
         pSprite->iHeight = pTHSprite->height;
+        pSprite->bUseOffsets = false;
+        pSprite->iXOffset = 0;
+        pSprite->iYOffset = 0;
 
         if(pSprite->iWidth == 0 || pSprite->iHeight == 0)
             continue;
@@ -968,24 +994,28 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
 bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
                                  THRenderTarget *pEventualCanvas)
 {
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
+    static const unsigned char header[] = {'C', 'T', 'H', 'G', 3, 0};
 
-    if(iLength < 6 || memcmp(header, pData, 6) != 0)
+    if(iLength < 6 || memcmp(header, pData, 6) != 0) {
+        printf("Custom file has wrong version\n");
         return false;
+    }
     pData += 6; iLength -= 6;
 
-    while (iLength >= 4+2+2+2) // Length of a sprite header.
+    while (iLength >= 4 + 10) // Length of a sprite header.
     {
         uint32_t iSprLength = readLong(pData);
         pData += 4; iLength -= 4;
-        if (iSprLength < 2+2+2 || iSprLength > iLength)
+        if (iSprLength < 10 || iSprLength > iLength)
             return false;
 
         unsigned int iSprite = readWord(pData);
         int iWidth = readWord(pData + 2);
         int iHeight = readWord(pData + 4);
-        pData += 6; iLength -= 6;
-        iSprLength -= 6;
+        int iXOffset = readSignedWord(pData + 6);
+        int iYOffset = readSignedWord(pData + 8);
+        pData += 10; iLength -= 10;
+        iSprLength -= 10;
 
         if (iSprite >= m_iSpriteCount)
             break;
@@ -1008,6 +1038,9 @@ bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
 
         pSprite->iWidth = iWidth;
         pSprite->iHeight = iHeight;
+        pSprite->iXOffset = iXOffset;
+        pSprite->iYOffset = iYOffset;
+        pSprite->bUseOffsets = true;
     }
     return true;
 }
@@ -1085,7 +1118,7 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
     return true;
 }
 
-void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
+void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iXPos, int iYPos, int iXOffset, int iYOffset, unsigned long iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
         return;
@@ -1112,9 +1145,14 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
                 return;
         }
     }
+    if (sprite.bUseOffsets)
+    {
+        iXOffset = sprite.iXOffset;
+        iYOffset = sprite.iYOffset;
+    }
 
     SDL_Rect rcSrc  = { 0,  0,  sprite.iWidth, sprite.iHeight };
-    SDL_Rect rcDest = { iX, iY, sprite.iWidth, sprite.iHeight };
+    SDL_Rect rcDest = { iXPos + iXOffset, iYPos + iYOffset, sprite.iWidth, sprite.iHeight };
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 }

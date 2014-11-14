@@ -85,7 +85,7 @@ void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(m_pSprites && m_iBackgroundSprite)
     {
         m_pSprites->drawSprite(pCanvas, m_iBackgroundSprite, iCanvasX,
-            iCanvasY, 0);
+            iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0);
     }
     if(m_pFont)
     {
@@ -124,16 +124,16 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(m_pSprites)
     {
         if(pNode->iFlags & THMN_Passable)
-            m_pSprites->drawSprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
+            m_pSprites->drawSprite(pCanvas, 3, iCanvasX, iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0);
         if(pNode->iFlags & THMN_Hospital)
-            m_pSprites->drawSprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
+            m_pSprites->drawSprite(pCanvas, 8, iCanvasX, iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0);
         if(pNode->iFlags & THMN_Buildable)
-            m_pSprites->drawSprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
+            m_pSprites->drawSprite(pCanvas, 9, iCanvasX, iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0);
 #define TRAVEL(flag, dx, dy, sprite) \
         if(pNode->iFlags & flag && pMap->getNode(iNodeX + dx, iNodeY + dy)-> \
             iFlags & THMN_Passable) \
         { \
-            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, 0); \
+            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0); \
         }
         TRAVEL(THMN_CanTravelN,  0, -1, 4);
         TRAVEL(THMN_CanTravelE,  1,  0, 5);
@@ -165,7 +165,7 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 #define DIR(dx, dy, sprite) \
         pNode = pMap->getNode(iNodeX + dx, iNodeY + dy); \
         if(!pNode || pNode->iParcelId != iParcel) \
-            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
+            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, 0)
         DIR( 0, -1, 18);
         DIR( 1,  0, 19);
         DIR( 0,  1, 20);

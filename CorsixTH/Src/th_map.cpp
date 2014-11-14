@@ -760,7 +760,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
         m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
             itrNode1.x() + iCanvasX - 32,
-            itrNode1.y() + iCanvasY - iH + 32, iBlock >> 8);
+            itrNode1.y() + iCanvasY - iH + 32, ZERO_XOFFSET, ZERO_YOFFSET, iBlock >> 8);
     }
     pCanvas->finishNonOverlapping();
 
@@ -772,12 +772,12 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         if(itrNode2->iFlags & THMN_ShadowFull)
         {
             m_pBlocks->drawSprite(pCanvas, 74, itrNode2.x() + iCanvasX - 32,
-                itrNode2.y() + iCanvasY, THDF_Alpha75);
+                itrNode2.y() + iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, THDF_Alpha75);
         }
         else if(itrNode2->iFlags & THMN_ShadowHalf)
         {
             m_pBlocks->drawSprite(pCanvas, 75, itrNode2.x() + iCanvasX - 32,
-                itrNode2.y() + iCanvasY, THDF_Alpha75);
+                itrNode2.y() + iCanvasY, ZERO_XOFFSET, ZERO_YOFFSET, THDF_Alpha75);
         }
 
         if(!itrNode2.isLastOnScanline())
@@ -791,7 +791,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 NULL, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                    itrNode.y() - iH + 32, iBlock >> 8);
+                    itrNode.y() - iH + 32, ZERO_XOFFSET, ZERO_YOFFSET, iBlock >> 8);
                 if(itrNode->iFlags & THMN_ShadowWall)
                 {
                     THClipRect rcOldClip, rcNewClip;
@@ -803,7 +803,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     IntersectTHClipRect(rcNewClip, rcOldClip);
                     pCanvas->setClipRect(&rcNewClip);
                     m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 32,
-                        itrNode.y() - 56, THDF_Alpha75);
+                        itrNode.y() - 56, ZERO_XOFFSET, ZERO_YOFFSET, THDF_Alpha75);
                     pCanvas->setClipRect(&rcOldClip);
                 }
             }
@@ -834,14 +834,14 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 NULL, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                    itrNode.y() - iH + 32, iBlock >> 8);
+                    itrNode.y() - iH + 32, ZERO_XOFFSET, ZERO_YOFFSET, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[3];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
                 NULL, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                    itrNode.y() - iH + 32, iBlock >> 8);
+                    itrNode.y() - iH + 32, ZERO_XOFFSET, ZERO_YOFFSET, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[1];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
@@ -906,7 +906,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                         NULL, &iH) && iH > 0)
                     {
                         m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
-                            itrNode.y() - iH + 32, iBlock >> 8);
+                            itrNode.y() - iH + 32, ZERO_XOFFSET, ZERO_YOFFSET, iBlock >> 8);
                         if(itrNode.getPreviousNode()->iFlags & THMN_ShadowWall)
                         {
                             THClipRect rcOldClip, rcNewClip;
@@ -918,7 +918,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                             IntersectTHClipRect(rcNewClip, rcOldClip);
                             pCanvas->setClipRect(&rcNewClip);
                             m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 96,
-                                itrNode.y() - 56, THDF_Alpha75);
+                                itrNode.y() - 56, ZERO_XOFFSET, ZERO_YOFFSET, THDF_Alpha75);
                             pCanvas->setClipRect(&rcOldClip);
                         }
                     }

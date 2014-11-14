@@ -414,7 +414,19 @@ protected:
 
     //! Height of the stored image.
     int m_iHeight;
+
+    //! Whether to use the m_iXOffset and m_iYOffset.
+    bool m_bUseOffsets;
+
+    //! Horizontal offset of the stored image, if m_bUseOffsets is set.
+    int m_iXOffset;
+    //
+    //! Vertical offset of the stored image, if m_bUseOffsets is set.
+    int m_iYOffset;
 };
+
+#define ZERO_XOFFSET 0
+#define ZERO_YOFFSET 0
 
 //! Sheet of sprites.
 class THSpriteSheet
@@ -495,11 +507,14 @@ public: // External API
     /*!
         @param pCanvas Canvas to draw on.
         @param iSprite Sprite to draw.
-        @param iX X position to draw the sprite.
-        @param iY Y position to draw the sprite.
+        @param iXPos X position to draw the sprite.
+        @param iYPos Y position to draw the sprite.
+        @param iXOffset X offset to draw the sprite.
+        @param iYOffset Y offset to draw the sprite.
         @param iFlags Flags to apply for drawing.
     */
-    void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
+    void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iXPos, int iYPos,
+                    int iXOffset, int iYOffset, unsigned long iFlags);
 
     //! Test whether a sprite was hit.
     /*!
@@ -562,6 +577,15 @@ protected:
 
         //! Height of the sprite.
         unsigned int iHeight;
+
+        //! Whether to use the supplied offsets.
+        bool bUseOffsets;
+
+        //! Horizontal offset of the sprite if bUseOffsets is true.
+        unsigned int iXOffset;
+
+        //! Vertical offset of the sprite if bUseOffsets is true.
+        unsigned int iYOffset;
     } *m_pSprites;
 
     //! Original palette.
