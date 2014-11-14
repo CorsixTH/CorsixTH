@@ -199,7 +199,7 @@ static int l_spritesheet_draw(lua_State *L)
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     int iSprite = luaL_checkint(L, 3); // No array adjustment
 
-    pSheet->drawSprite(pCanvas, iSprite, luaL_optint(L, 4, 0), luaL_optint(L, 5, 0), luaL_optint(L, 6, 0));
+    pSheet->drawSprite(pCanvas, iSprite, luaL_optint(L, 4, 0), luaL_optint(L, 5, 0), ZERO_XOFFSET, ZERO_YOFFSET, luaL_optint(L, 6, 0));
 
     lua_settop(L, 1);
     return 1;

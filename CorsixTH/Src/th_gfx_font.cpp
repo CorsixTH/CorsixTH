@@ -220,7 +220,7 @@ void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_
             {
                 iChar -= iFirstASCII;
                 unsigned int iWidth, iHeight;
-                m_pSpriteSheet->drawSprite(pCanvas, iChar, iX, iY, 0);
+                m_pSpriteSheet->drawSprite(pCanvas, iChar, iX, iY, ZERO_XOFFSET, ZERO_YOFFSET, 0);
                 m_pSpriteSheet->getSpriteSizeUnchecked(iChar, &iWidth, &iHeight);
                 iX += iWidth + m_iCharSep;
             }

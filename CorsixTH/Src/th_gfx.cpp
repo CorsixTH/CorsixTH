@@ -365,13 +365,13 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
             unsigned int iWidth, iHeight;
             m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth, &iHeight);
 
-            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite, iX - pElement->iX - iWidth,
-                iY + pElement->iY, iPassOnFlags | (pElement->iFlags ^ THDF_FlipHorizontal));
+            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite, iX, iY, -pElement->iX - iWidth,
+               pElement->iY, iPassOnFlags | (pElement->iFlags ^ THDF_FlipHorizontal));
         }
         else
         {
-            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite,
-                iX + pElement->iX, iY + pElement->iY, iPassOnFlags | pElement->iFlags);
+            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite, iX, iY,
+                pElement->iX, pElement->iY, iPassOnFlags | pElement->iFlags);
         }
     }
 }
@@ -1256,7 +1256,7 @@ void THSpriteRenderList::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
         pSprite != pLast; ++pSprite)
     {
         m_pSpriteSheet->drawSprite(pCanvas, pSprite->iSprite,
-            iDestX + pSprite->iX, iDestY + pSprite->iY, m_iFlags);
+            iDestX, iDestY, pSprite->iX, pSprite->iY, m_iFlags);
     }
 }
 
