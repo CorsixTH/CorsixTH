@@ -685,7 +685,13 @@ function Room:tryToFindNearbyPatients()
             if i ~= 1 then
               action.todo_interrupt = true
             end
-            if action.name == "walk" and action.x == other_x and action.y == other_y then
+            -- The patient will most likely have a queue action for the other
+            -- room that must be cancelled. To prevent the after_use callback
+            -- of the drinks machine to enqueue the patient in the other queue
+            -- again, is_in_queue is set to false so the callback won't run
+            if action.name == 'queue' then
+              action.is_in_queue = false
+            elseif action.name == "walk" and action.x == other_x and action.y == other_y then
               local action = self:createEnterAction(patient)
               patient:queueAction(action, i)
               break
