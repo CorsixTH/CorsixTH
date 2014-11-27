@@ -175,12 +175,14 @@ function OperatingTheatreRoom:getStaffMember()
 end
 
 --! Builds the first operation action (i.e. with the surgeon whose we see the front).
---!param surgeon (Staff): the surgeon who does this operation action. He must
+--!param surgeon1 (Staff): the surgeon who does this operation action. He must
 --! be the same as the surgeon who gets the action on his queue.
 --!param patient (Patient): the patient to be operated.
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
-function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_table)
+function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
+  local room = self
+
   return {
     name = "multi_use_object",
     object = operation_table,
@@ -188,10 +190,10 @@ function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_tabl
     prolonged_usage = true,
     loop_callback = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
       -- dirty hack to make the truncated animation work
-      surgeon.animation_idx = nil
+      surgeon1.animation_idx = nil
     end,
     after_use = --[[persistable:operatring_theatre_table_after_use]] function()
-      self:dealtWithPatient(patient)
+      room:dealtWithPatient(patient)
       -- Tell the patient that it's time to leave, but only if the first action
       -- is really an idle action.
       if patient.action_queue[1].name == "idle" then
@@ -207,9 +209,9 @@ end
 --! see the back). Called either when the operation starts or when the 
 --! operation is resumed after interruption caused by the picking up of
 --! the second surgeon.
---!param first_action (action): the first operation action (built with via buildTableAction1()).
+--!param multi_use (action): the first operation action (built with via buildTableAction1()).
 --!param operation_table_b (OperatingTable): slave object representing the operation table.
-function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
+function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
   local num_loops = math.random(2, 5)
 
   return {
@@ -222,7 +224,7 @@ function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
       end
     end,
     after_use = --[[persistable:operatring_theatre_after_use]] function()
-      first_action.prolonged_usage = false
+      multi_use.prolonged_usage = false
     end,
     must_happen = true,
     no_truncate = true,
