@@ -305,12 +305,18 @@ static int l_font_get_size(lua_State *L)
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
-    int iWidth, iHeight;
-    pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
+    int iMaxWidth = INT_MAX;
+    if(!lua_isnoneornil(L, 3))
+        iMaxWidth = static_cast<int>(luaL_checkinteger(L, 3));
+
+    int iWidth, iHeight, iNumRows;
+    pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight, &iNumRows, iMaxWidth);
 
     lua_pushinteger(L, iWidth);
     lua_pushinteger(L, iHeight);
-    return 2;
+    lua_pushinteger(L, iNumRows);
+
+    return 3;
 }
 
 static int l_font_draw(lua_State *L)
@@ -393,14 +399,27 @@ static int l_font_draw_wrapped(lua_State *L)
         else
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
     }
+    int iMaxRows = INT_MAX;
+    if(!lua_isnoneornil(L, 8))
+    {
+      iMaxRows = static_cast<int>(luaL_checkinteger(L, 8));
+    }
+
+    int iSkipRows = 0;
+    if(!lua_isnoneornil(L, 9))
+    {
+        iSkipRows = static_cast<int>(luaL_checkinteger(L, 9));
+    }
 
     int iLastX;
+    int iNumRows;
     int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
-                                              iW, nullptr, &iLastX, eAlign);
+                                        iW, iMaxRows, iSkipRows, nullptr, &iLastX, &iNumRows, eAlign);
     lua_pushinteger(L, iLastY);
     lua_pushinteger(L, iLastX);
+    lua_pushinteger(L, iNumRows);
 
-    return 2;
+    return 3;
 }
 
 static int l_font_draw_tooltip(lua_State *L)
@@ -417,7 +436,7 @@ static int l_font_draw_tooltip(lua_State *L)
     int iRealW;
     uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
-    int iLastY = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
+    int iLastY = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, INT_MAX, 0, &iRealW);
     int iLastX = iX + iRealW + 3;
     int iFirstY = iY - (iLastY - iY) - 1;
 
