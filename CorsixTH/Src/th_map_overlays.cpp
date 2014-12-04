@@ -184,10 +184,10 @@ void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
     va_start(args, sFormat);
     size_t iLen = (int)std::vsprintf(sBuffer, sFormat, args);
     va_end(args);
-    int iW, iH;
-    m_pFont->getTextSize(sBuffer, iLen, &iW, &iH);
-    m_pFont->drawText(pCanvas, sBuffer, iLen, iX + (64 - iW) / 2,
-        iY + (32 - iH) / 2);
+
+    THFontDrawArea oArea = m_pFont->getTextSize(sBuffer, iLen);
+    m_pFont->drawText(pCanvas, sBuffer, iLen, iX + (64 - oArea.iEndX) / 2,
+        iY + (32 - oArea.iEndY) / 2);
 }
 
 void THMapTypicalOverlay::setSprites(THSpriteSheet* pSheet, bool bTakeOwnership)
