@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010-2014 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -271,11 +271,13 @@ tooltip.load_game_window = {
 custom_game_window = {
   caption = "Custom Game",
   free_build = "Free Build",
+  load_selected_level = "Start",
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Information about this scenario which is using: %s           Briefing: %s",
+  choose_game = "Click a level to read more about it",
   free_build = "Tick this box if you want to play without money or winning and losing conditions",
+  load_selected_level = "Load and play the selected level",
 }
 
 save_game_window = {

@@ -43,16 +43,16 @@ local col_scrollbar = {
 !param items (table) A list of items to include in the list. Each listing should be a table with
 keys "name" and "tooltip" with the corresponding values.
 !param num_rows (integer) The number of rows displayed at a given time. Default is 10.
-!param extra_above_list (integer) How much space, if any, the dialog will need above the list.
+!param extra_beside_list (integer) How much space, if any, the dialog will need to the right of the list, e.g. information space.
 ]]
-function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_list)
+function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_beside_list)
   self.col_bg = {
     red = 154,
     green = 146,
     blue = 198,
   }
-  extra_above_list = extra_above_list or 0
-  self:UIResizable(ui, 280, 270 + extra_above_list, self.col_bg)
+  extra_beside_list = extra_beside_list or 0
+  self:UIResizable(ui, 280 + extra_beside_list, 270, self.col_bg)
 
   self.default_button_sound = "selectx.wav"
   self.items = items
@@ -69,7 +69,7 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self:addBevelPanel(20, 10, 240, 20, col_caption):setLabel(title)
     .lowered = true
 
-  local scrollbar_base = self:addBevelPanel(240, 40 + extra_above_list, 20, self.num_rows*17, self.col_bg)
+  local scrollbar_base = self:addBevelPanel(240, 40, 20, self.num_rows * 17, self.col_bg)
   scrollbar_base.lowered = true
   self.scrollbar = scrollbar_base:makeScrollbar(col_scrollbar, --[[persistable:menu_list_scrollbar_callback]] function()
     self:updateButtons()
@@ -85,11 +85,11 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_above_lis
   self.item_buttons = {}
 
   for num = 1, self.num_rows do
-    self.item_panels[num] = self:addBevelPanel(20, 40 + extra_above_list + (num - 1) * 17, 210, 17, self.col_bg):setLabel(nil, nil, "center")
+    self.item_panels[num] = self:addBevelPanel(20, 40 + (num - 1) * 17, 210, 17, self.col_bg):setLabel(nil, nil, "center")
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 220, 17, nil, button_clicked(num))
   end
 
-  self:addBevelPanel(20, 220 + extra_above_list, 240, 40, self.col_bg):setLabel(_S.menu_list_window.back)
+  self:addBevelPanel(20, 220, 240, 40, self.col_bg):setLabel(_S.menu_list_window.back)
     :makeButton(0, 0, 240, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
 
   self:updateButtons()
