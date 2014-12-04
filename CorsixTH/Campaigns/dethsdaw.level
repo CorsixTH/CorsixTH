@@ -1,0 +1,299 @@
+Copyright (c) 2013 Chris "ChrizmanTV" Wilkinson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---------------------- General -------------------------
+
+%Name = "Dethsdaw"
+%MapFile = "Dethsdaw.map"
+
+%LevelBriefing = "The end is almost in sight, but first, some of the residents of Dethsdaw are coming down with a wobbly kind of illness. As always, the pinnacle of medical technologies are available to you as top scientists have created a new invention called the Atom Analyser. To move on to the final level, we want 900 cures, 90% treated, $450,000 in the bank, $750,000 worth of hospital and a reputation of 900. The Ministry expects total perfection!"
+
+%LevelDebriefing = "Exemplary! On the eve of your final mission, you've received a note from the Ministry of Health saying that they're putting you in charge of the largest and most complex hospital of them all!
+
+A country mansion awaits you... after you've finished Royal Hospital."
+
+#town.StartCash.InterestRate 80000 1400
+
+#gbv.StartRating 70 When a drug is researched, what effectiveness does it have
+#gbv.DrugImproveRate 5
+#gbv.StartCost 100
+#gbv.MinDrugCost 50
+#gbv.LandCostPerTile 45 Cost to buy a single map square
+#gbv.RschImproveCostPercent 10 How many percent of the original research points that are required to improve the machine.
+#gbv.RschImproveIncrementPercent 10 How many additional percentage points are added to the above value for each upgrade.
+#gbv.MaxObjectStrength 20 Maximum strength value an object can be improved to (by research)
+#gbv.ResearchIncrement 2 Increase object strength by this amount when researching
+#gbv.AutopsyRschPercent 33 % of research completed for an autopsy
+#gbv.AutopsyRepHitPercent 25 % rep hit for discovered autopsy
+
+
+---------------------- Diseases -------------------------
+
+The following table contains all diagnoses and treatments that shows up in the drug casebook in the game. Known specifies whether it should show up from the beginning of the level and RschReqd how much research is required to discover the treatment room for the disease.
+#expertise[1].Known.RschReqd 1 0
+#expertise[2].Known.RschReqd 1 40000
+#expertise[3].Known.RschReqd 1 40000
+#expertise[4].Known.RschReqd 1 60000
+#expertise[5].Known.RschReqd 1 60000
+#expertise[6].Known.RschReqd 0 60000
+#expertise[7].Known.RschReqd 1 40000
+#expertise[8].Known.RschReqd 0 60000
+#expertise[9].Known.RschReqd 1 20000
+#expertise[10].Known.RschReqd 1 40000
+#expertise[11].Known.RschReqd 1 40000
+#expertise[12].Known.RschReqd 0 40000
+#expertise[13].Known.RschReqd 1 40000
+#expertise[14].Known.RschReqd 1 30000
+#expertise[15].Known.RschReqd 1 40000
+#expertise[16].Known.RschReqd 1 20000
+#expertise[17].Known.RschReqd 1 60000
+#expertise[18].Known.RschReqd 1 20000
+#expertise[19].Known.RschReqd 1 20000
+#expertise[20].Known.RschReqd 1 20000
+#expertise[21].Known.RschReqd 1 20000
+#expertise[22].Known.RschReqd 1 40000
+#expertise[23].Known.RschReqd 1 60000
+#expertise[24].Known.RschReqd 1 40000
+#expertise[25].Known.RschReqd 1 40000
+#expertise[26].Known.RschReqd 1 40000
+#expertise[27].Known.RschReqd 1 40000
+#expertise[28].Known.RschReqd 1 40000
+#expertise[29].Known.RschReqd 1 20000
+#expertise[30].Known.RschReqd 1 20000
+#expertise[31].Known.RschReqd 1 40000
+#expertise[32].Known.RschReqd 1 20000
+#expertise[33].Known.RschReqd 1 20000
+#expertise[34].Known.RschReqd 1 20000
+#expertise[35].Known.RschReqd 1 20000
+#expertise[36].Known.RschReqd 0 40000
+#expertise[37].Known.RschReqd 0 50000
+#expertise[38].Known.RschReqd 1 20000
+#expertise[39].Known.RschReqd 0 30000
+#expertise[40].Known.RschReqd 0 60000
+#expertise[41].Known.RschReqd 1 20000
+#expertise[42].Known.RschReqd 1 20000
+#expertise[43].Known.RschReqd 1 20000
+#expertise[44].Known.RschReqd 0 0
+#expertise[45].Known.RschReqd 0 0
+#expertise[46].Known.RschReqd 0 0
+
+
+| Diseases available | Value property to be determined | Comment
+#visuals[0] 1
+#visuals[1] 1
+#visuals[2] 1
+#visuals[3] 1
+#visuals[4] 1
+#visuals[5] 1
+#visuals[6] 0
+#visuals[7] 1
+#visuals[8] 1
+#visuals[9] 1
+#visuals[10] 1
+#visuals[11] 1
+#visuals[12] 1
+#visuals[13] 1
+#non_visuals[0] 1
+#non_visuals[1] 1
+#non_visuals[2] 1
+#non_visuals[3] 1
+#non_visuals[4] 1
+#non_visuals[5] 1
+#non_visuals[6] 1
+#non_visuals[7] 1
+#non_visuals[8] 1
+#non_visuals[9] 1
+#non_visuals[10] 1
+#non_visuals[11] 1
+#non_visuals[12] 1
+#non_visuals[13] 1
+#non_visuals[14] 1
+#non_visuals[15] 1
+#non_visuals[16] 1
+#non_visuals[17] 1
+#non_visuals[18] 1
+#non_visuals[19] 1
+
+
+#visuals_available[0] 0
+#visuals_available[1] 12
+#visuals_available[2] 3
+#visuals_available[3] 12
+#visuals_available[4] 18
+#visuals_available[5] 6
+#visuals_available[6] 0
+#visuals_available[7] 6
+#visuals_available[8] 12
+#visuals_available[9] 0
+#visuals_available[10] 18
+#visuals_available[11] 0
+#visuals_available[12] 0
+#visuals_available[13] 6
+
+
+---------------------- Objects -------------------------
+
+| Objects available | Available from the start | Strength | Available for this level | Comment
+#objects[1].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[2].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[3].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[4].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[5].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[6].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[7].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[8].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 20000
+#objects[9].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 8 1 40000
+#objects[10].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[11].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[12].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[13].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 13 1 20000
+#objects[14].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 12 1 40000
+#objects[15].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[16].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[17].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[18].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 20000
+#objects[19].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[20].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 20000
+#objects[21].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[22].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 9 1 60000
+#objects[23].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 7 0 60000
+#objects[24].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 11 1 20000
+#objects[25].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 8 1 40000
+#objects[26].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 40000
+#objects[27].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 12 1 30000
+#objects[28].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[29].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[30].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 12 1 20000
+#objects[31].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[32].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[33].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[34].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[35].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[36].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[37].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 0 1 20000
+#objects[38].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[39].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 20000
+#objects[40].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 1 1 30000
+#objects[41].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 1 1 30000
+#objects[42].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 10 1 50000
+#objects[43].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[44].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[45].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[46].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 8 1 40000
+#objects[47].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 7 1 40000
+#objects[48].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[49].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[50].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[51].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[52].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[53].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[54].StartAvail.StartStrength.AvailableForLevel.RschReqd 0 10 1 60000
+#objects[55].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[56].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[57].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 57 1 0
+#objects[58].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[59].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[60].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+#objects[61].StartAvail.StartStrength.AvailableForLevel.RschReqd 1 10 1 0
+
+
+---------------------- Staff Configuration -------------------------
+
+
+
+The minimum salary for each staff type
+#staff[0].MinSalary 60
+#staff[1].MinSalary 75
+#staff[2].MinSalary 30
+#staff[3].MinSalary 30
+
+
+Salary modifiers for different doctor attributes
+#gbv.SalaryAdd[3] -30
+#gbv.SalaryAdd[4] 25
+#gbv.SalaryAdd[5] 75
+#gbv.SalaryAdd[6] 50
+#gbv.SalaryAdd[7] 120
+#gbv.SalaryAdd[8] 30
+
+
+Each entry states how many staff members of each category are available a given month. The number of entries is not fixed.
+| A list | Month it gets active (start at 0) | Each group |
+#staff_levels[0].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 0 8 8 3 2 10 10 10 10 3
+#staff_levels[1].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 3 7 5 5 3 10 10 10 10 3
+#staff_levels[2].Month.Nurses.Doctors.Handymen.Receptionists.ShrkRate.SurgRate.RschRate.ConsRate.JrRate 5 5 8 7 4 10 10 10 10 3
+
+
+#gbv.TrainingRate	45
+#gbv.AbilityThreshold[0]  75 Surgeon
+#gbv.AbilityThreshold[1]  60 Psychiatrist
+#gbv.AbilityThreshold[2]  45 Researcher
+#gbv.TrainingValue[0]     10 Projector
+#gbv.TrainingValue[1]     25 Skeleton
+#gbv.TrainingValue[2]     30 Bookcase
+
+----------------------- Emergency Control --------------------------
+
+#emergency_control[0].Random 0
+
+
+----------------------- Quake Control --------------------------
+
+#quake_control[0].StartMonth.EndMonth.Severity 10 12 6
+#quake_control[1].StartMonth.EndMonth.Severity 22 24 7
+#quake_control[2].StartMonth.EndMonth.Severity 34 36 8
+#quake_control[3].StartMonth.EndMonth.Severity 46 48 7
+#quake_control[4].StartMonth.EndMonth.Severity 58 60 6
+#quake_control[5].StartMonth.EndMonth.Severity 70 72 6
+
+
+----------------------- Population Growth ----------------------------
+
+#popn[0].Month.Change 0 4
+#popn[1].Month.Change 1 1
+
+
+---------------------- Awards and Trophies -------------------------
+
+#awards_trophies.CansofCoke 2500
+#awards_trophies.CansofCokeBonus 5000
+#awards_trophies.Reputation 2500
+#awards_trophies.TrophyReputationBonus 20000
+#awards_trophies.TrophyDeathBonus 10000
+
+
+------------------ Winning and Losing Conditions -------------------
+
+1 Total reputation
+2 Balance total
+3 Percentage people your hospital has handled
+4 Cure count
+5 Percentage people have been killed
+6 Hospital value
+
+#win_criteria[0].Criteria.MaxMin.Value.Group.Bound 1 1 900 1 0
+#win_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 1 450000 1 0
+#win_criteria[2].Criteria.MaxMin.Value.Group.Bound 3 1 90 1 0
+#win_criteria[3].Criteria.MaxMin.Value.Group.Bound 4 1 900 1 0
+#win_criteria[4].Criteria.MaxMin.Value.Group.Bound 6 1 750000 1 0
+
+#lose_criteria[0].Criteria.MaxMin.Value.Group.Bound 1 0 450 1 500
+#lose_criteria[1].Criteria.MaxMin.Value.Group.Bound 2 0 -40000 2 -20000
+#lose_criteria[2].Criteria.MaxMin.Value.Group.Bound 5 1 20 3 10
