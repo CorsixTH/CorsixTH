@@ -889,15 +889,15 @@ tutorial_phases = {
         -- The demo uses a single string for the post-tutorial info while
         -- the real game uses three.
         local texts = TheApp.using_demo_files and {
-          _S.introduction_texts["level15"],
-          _S.introduction_texts["demo"],
+          {_S.introduction_texts["level15"]},
+          {_S.introduction_texts["demo"]},
         } or {
-          _S.introduction_texts["level15"],
-          _S.introduction_texts["level16"],
-          _S.introduction_texts["level17"],
-          _S.introduction_texts["level1"],
+          {_S.introduction_texts["level15"]},
+          {_S.introduction_texts["level16"]},
+          {_S.introduction_texts["level17"]},
+          {_S.introduction_texts["level1"]},
         }
-        TheApp.ui:addWindow(UIInformation(TheApp.ui, {texts}))
+        TheApp.ui:addWindow(UIInformation(TheApp.ui, texts))
         TheApp.ui:addWindow(UIWatch(TheApp.ui, "initial_opening"))
       end,
     },
@@ -1042,7 +1042,7 @@ function GameUI:showBriefing()
   local level = self.app.world.map.level_number
   local text = {_S.information.custom_game}
   if type(level) == "number" then
-    text = _S.introduction_texts[TheApp.using_demo_files and "demo" or "level" .. level]
+    text = {_S.introduction_texts[TheApp.using_demo_files and "demo" or "level" .. level]}
   elseif self.app.world.map.level_intro then
     text = {self.app.world.map.level_intro}
   end

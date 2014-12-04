@@ -194,66 +194,137 @@ letter = {
 tooltip.staff_window.ability = "Nivel de cualificación"
 tooltip.policy.diag_termination = "Se mantendrá el diagnóstico de un paciente hasta que los médicos estén seguros del porcentaje de DETENER, o hasta que se hayan usado todos los diagnosticadores"
 tooltip.staff_list.ability = "Muestra el nivel de habilidad de estos empleados"
+
 introduction_texts = {
-  level6 = {
-    [4] = "Procura obtener unos ingresos de 20.000 dólares y que el valor de tu hospital supere los 140.000 dólares. ",
-  },
-  level10 = {
-    [3] = "También debes asegurarte de que tu hospital tenga una reputación intachable. Procura que mueran pocos pacientes. ",
-    [5] = "Para ganar, tus medicinas deberán tener una eficacia de, al menos, un 80%, tienes que conseguir una reputación de 650 y guardar 500.000 dólares en el banco.",
-  },
-  level2 = {
-    [5] = "Estas dos consultas deberán ser investigadas antes de construirlas. También puedes comprar más terreno para ampliar tu hospital. Para ello, utiliza un mapa de la ciudad. ",
-    [6] = "Intenta alcanzar una reputación de 300, un saldo bancario de 10.000 dólares y cura a 40 personas.",
-  },
-  level5 = {
-    [3] = "Sólo tienes tres especialistas para enseñar a tu personal inexperto, así que procura que estén contentos. ",
-    [7] = "Aumenta tu reputación hasta 400 y consigue unos ingresos de 50.000 dólares para triunfar. También debes curar a 200 pacientes. ",
-  },
-  level1 = {
-    [2] = "Para hacer que empiece a funcionar, coloca una recepción, construye una consulta y contrata a una recepcionista y a un médico. ",
-    [7] = "Tendrás que curar a 10 personas y asegurarte de que tu reputación no sea inferior a 200.",
-  },
-  level16 = {
-    [1] = "Una vez que hayas diagnosticado a alguno de los pacientes necesitarás construir salas de tratamiento y clínicas para curarles: ",
-  },
-  level11 = {
-    [7] = "Tu hospital tendrá que alcanzar un valor de 240.000 dólares, necesitarás tener 500.000 dólares en el banco y una reputación de 700.",
-  },
-  level4 = {
-    [1] = "Haz que todos tus pacientes estén contentos, atiéndelos con la mayor eficacia e intenta que mueran los menos posibles.//",
-    [2] = "Tu reputación está en juego, así que procura aumentarla todo lo que puedas. ",
-    [4] = "También podrás formar a tus médicos para ampliar sus conocimientos: ",
-    [5] = "ellos podrán curar a los pacientes más difíciles. ",
-  },
-  level9 = {
-    [1] = "Después de ingresar dinero en la cuenta bancaria del Ministerio y pagar una nueva limusina para el Ministro, ahora puedes dedicarte a crear un buen hospital para cuidar a los enfermos y necesitados. ",
-    [4] = "Tu hospital tendrá que valer 200.000 dólares y necesitarás tener 400.000 dólares en el banco. ",
-  },
-  level7 = {
-    [1] = "Aquí estarás bajo la estricta vigilancia del Ministerio de Sanidad, así que procura que tus cuentas tengan unos ingresos excelentes y que aumente tu reputación.//",
-    [2] = "No podemos permitirnos que haya muertes innecesarias; no son nada buenas para el negocio. ",
-    [4] = "Consigue una reputación de 600, y un saldo bancario de 200.000 dólares.",
-  },
-  level12 = {
-    [2] = "El Ministerio ha quedado impresionado con tus logros y tiene una tarea difícil para ti, quieren que se construya otro magnífico hospital, que tenga unos excelentes ingresos y una reputación increíble. ",
-    [5] = "Gana 650.000 dólares, cura a 750 personas y consigue una reputación de 800 para ganar este nivel. ",
-  },
-  level8 = {
-    [2] = "La gente de por aquí es bastante adinerada, así que sabléalos todo lo que puedas. ",
-    [3] = "Recuerda, curar a la gente está muy bien, pero lo que de verdad NECESITAS es su dinero. ",
-    [4] = "Despluma vivos a estos pacientes. ",
-    [5] = "Acumula 300.000 dólares para completar este nivel. ",
-  },
-  level17 = {
-    [1] = "Un último aviso: estate atento a tu Reputación, es lo que atraerá pacientes a tu establecimiento. ",
-  },
-  level3 = {
-    [6] = "Si los curas dentro de un plazo determinado, conseguirás aumentar tu reputación y ganar una prima extra. ",
-    [7] = "Habrá enfermedades, como el síndrome de rey, y deberás tener presupuesto para construir un quirófano y una enfermería adyacente. ",
-    [8] = "Tienes que ganar 20.000 dólares para superar este nivel.",
-  },
+  level1 =
+    "¡Bienvenido a tu primer hospital! " ..
+    "Para hacer que empiece a funcionar, coloca una recepción, construye una consulta y contrata a una recepcionista y a un médico. " ..
+    "Luego espera a que lleguen los pacientes. " ..
+    "Sería una buena idea que construyeras una consulta de psiquiatría y contrataras a un psiquiatra. " ..
+    "Una farmacia y una enfermera son fundamentales para curar a tus pacientes. " ..
+    "Cuidado con los casos malignos de pacientes cabezudos; se solucionan pronto en la consulta de inflatoterapia. " ..
+    "Tendrás que curar a 10 personas y asegurarte de que tu reputación no sea inferior a 200.",
+
+  level2 =
+    "Hay una gran variedad de indisposiciones en esta zona.//" ..
+    "Prepara tu hospital para tratar a más pacientes y proyecta la construcción de un Departamento de Investigación. " ..
+    "Recuerda que debes mantener limpio el hospital y procura conseguir que tu reputación sea lo más alta posible. Tratarás enfermedades como la Lengua Larga, así que necesitarás una consulta de laringología. " ..
+    "También puedes construir un cardiómetro para diagnosticar nuevas enfermedades. " ..
+    "Estas dos consultas deberán ser investigadas antes de construirlas. También puedes comprar más terreno para ampliar tu hospital. Para ello, utiliza un mapa de la ciudad. ",
+    "Intenta alcanzar una reputación de 300, un saldo bancario de 10.000 dólares y cura a 40 personas.",
+
+  level3 =
+    "Esta vez colocarás tu hospital en una zona acaudalada.//" ..
+    "El Ministerio de Sanidad espera que consigas curar a muchos pacientes. " ..
+    "Tendrás que ganarte una buena reputación para empezar, pero una vez que el hospital empiece a funcionar, concéntrate en ganar todo el dinero que puedas. " ..
+    "También puede haber urgencias. " ..
+    "Se producen cuando llega mucha gente que padece la misma enfermedad. " ..
+    "Si los curas dentro de un plazo determinado, conseguirás aumentar tu reputación y ganar una prima extra. " ..
+    "Habrá enfermedades, como el síndrome de rey, y deberás tener presupuesto para construir un quirófano y una enfermería adyacente. " ..
+    "Tienes que ganar 20.000 dólares para superar este nivel.",
+
+  level4 =
+    "Haz que todos tus pacientes estén contentos, atiéndelos con la mayor eficacia e intenta que mueran los menos posibles.//" ..
+    "Tu reputación está en juego, así que procura aumentarla todo lo que puedas. " ..
+    "No te preocupes demasiado por el dinero; Lo irás ganando a medida que crezca tu reputación. " ..
+    "También podrás formar a tus médicos para ampliar sus conocimientos: " ..
+    "ellos podrán curar a los pacientes más difíciles. " ..
+    "Alcanza una reputación por encima de 500.",
+
+  level5 =
+    "Este será un hospital concurrido, que tratará casos muy variados.//" ..
+    "Tus médicos acaban de salir de la facultad, por lo que es fundamental que construyas una sala de formación para que alcancen el nivel de formación necesario. " ..
+    "Sólo tienes tres especialistas para enseñar a tu personal inexperto, así que procura que estén contentos. " ..
+    "Tienes que tener en cuenta que el hospital está ubicado encima de la falla geológica de San Androide. " ..
+    "Siempre hay riesgo de terremoto. " ..
+    "Los terremotos provocarán daños importantes en tus máquinas y alterarán el buen funcionamiento de tu hospital. " ..
+    "Aumenta tu reputación hasta 400 y consigue unos ingresos de 50.000 dólares para triunfar. También debes curar a 200 pacientes. ",
+
+  level6 =
+    "Utiliza toda tu capacidad para conseguir un hospital que funcione bien y consiga curar a muchos pacientes y que pueda tratar cualquier caso que presenten los enfermos.//" ..
+    "Estás avisado de que el ambiente, aquí, es especialmente propenso a gérmenes e infecciones. " ..
+    "A menos que mantengas una escrupulosa limpieza en tu institución, tendrás que hacer frente a una serie de epidemias entre los pacientes. " ..
+    "Procura obtener unos ingresos de 20.000 dólares y que el valor de tu hospital supere los 140.000 dólares. ",
+
+  level7 =
+    "Aquí estarás bajo la estricta vigilancia del Ministerio de Sanidad, así que procura que tus cuentas tengan unos ingresos excelentes y que aumente tu reputación.//" ..
+    "No podemos permitirnos que haya muertes innecesarias; no son nada buenas para el negocio. " ..
+    "Asegúrate de que tu personal está en plena forma y de que tienes todos los equipos necesarios. " ..
+    "Consigue una reputación de 600, y un saldo bancario de 200.000 dólares.",
+
+  level8 =
+    "De ti depende que puedas construir el hospital más eficiente y rentable posible.//" ..
+    "La gente de por aquí es bastante adinerada, así que sabléalos todo lo que puedas. " ..
+    "Recuerda, curar a la gente está muy bien, pero lo que de verdad NECESITAS es su dinero. " ..
+    "Despluma vivos a estos pacientes. " ..
+    "Acumula 300.000 dólares para completar este nivel. ",
+
+  level9 =
+    "Después de ingresar dinero en la cuenta bancaria del Ministerio y pagar una nueva limusina para el Ministro, ahora puedes dedicarte a crear un buen hospital para cuidar a los enfermos y necesitados. " ..
+    "Aquí tendrás un montón de problemas diferentes. " ..
+    "Si tu personal tiene una buena formación y cuentas con suficientes consultas, podrás resolver cualquier situación. " ..
+    "Tu hospital tendrá que valer 200.000 dólares y necesitarás tener 400.000 dólares en el banco. " ..
+    "Si no lo consigues no podrás terminar el nivel.",
+
+  level10 =
+    "Además de ocuparte de curar todas las enfermedades que pueda haber, el Ministerio te pide que emplees algo de tiempo en aumentar la eficacia de tus medicinas.//" ..
+    "Ha habido algunas quejas por parte de D. Salutísimo, el Perro Guardián de la Salud, así que debes procurar que todas tus medicinas sean sumamente eficaces para quedar bien. " ..
+    "También debes asegurarte de que tu hospital tenga una reputación intachable. Procura que mueran pocos pacientes. " ..
+    "Como sugerencia, deberías dejar espacio para un baño gelatinoso. " ..
+    "Para ganar, tus medicinas deberán tener una eficacia de, al menos, un 80%, tienes que conseguir una reputación de 650 y guardar 500.000 dólares en el banco.",
+
+  level11 =
+    "Tienes la oportunidad de construir el no va más en hospitales. " ..
+    "Esta es una zona de enorme prestigio y al Ministerio le gustaría que éste fuera el mejor hospital. " ..
+    "Esperamos que ganes mucho dinero, alcances una excelente reputación y te ocupes de todos los casos que se presenten. " ..
+    "Este es un trabajo importante. " ..
+    "Tendrás que ser muy hábil para llevarlo a cabo. " ..
+    "También debes tener en cuenta que se han visto ovnis en la zona. Asegúrate de que tu personal esté preparado para recibir alguna visita inesperada. " ..
+    "Tu hospital tendrá que alcanzar un valor de 240.000 dólares, necesitarás tener 500.000 dólares en el banco y una reputación de 700.",
+
+  level12 =
+    "Ahora te enfrentas al mayor de los retos. " ..
+    "El Ministerio ha quedado impresionado con tus logros y tiene una tarea difícil para ti, quieren que se construya otro magnífico hospital, que tenga unos excelentes ingresos y una reputación increíble. " ..
+    "También se espera que compres todo el terreno que puedas, cures todo (y queremos decir todas las enfermedades) y ganes todos los premios. " ..
+    "¿Crees que podrás conseguirlo? " ..
+    "Gana 650.000 dólares, cura a 750 personas y consigue una reputación de 800 para ganar este nivel. ",
+
+  level13 =
+    "Tu increíble habilidad como director de hospital ha atraído la atención de la División Secreta Especial del Servicio Secreto Especial. " ..
+    "Tienen un trabajo especial para ti. Hay un hospital infestado de ratas que necesita un exterminador eficiente. " ..
+    "Tienes que matar todas las ratas que puedas antes de que el personal de Mantenimiento limpie toda la suciedad. " ..
+    "¿Crees que eres apto para la misión?",
+
+  level14 =
+    "Aún tienes un reto más: el hospital sorpresa totalmente imprevisible. " ..
+    "Si consigues tener éxito, serás el ganador de todos los ganadores. " ..
+    "Y no esperes que sea pan comido, porque es la tarea más difícil que jamás afrontarás. " ..
+    "¡Buena suerte!",
+
+  level15 =
+    "Bien, estos son los mecanismos básicos para poner en marcha un hospital.//" ..
+    "Tus Médicos van a necesitar toda la ayuda que puedan obtener para diagnosticar a algunos de los pacientes. " ..
+    "Puedes ayudarles construyendo otros equipos de diagnóstico como la Sala de Diagnóstico General.",
+
+  level16 =
+    "Una vez que hayas diagnosticado a alguno de los pacientes necesitarás construir salas de tratamiento y clínicas para curarles: " ..
+    "puedes comenzar con una Farmacia, y necesitarás una Enfermera que dispense las medicinas en la Farmacia.",
+
+  level17 =
+    "Un último aviso: estate atento a tu Reputación, es lo que atraerá pacientes a tu establecimiento. " ..
+    "¡Si no matas a mucha gente y los mantienes razonablemente felices no deberías tener muchos problemas en este nivel!//" ..
+    "Ahora es cosa tuya, buena suerte y todo eso.",
+
+  demo =
+    "¡Bienvenido al hospital de demostración!" ..
+    "Por desgracia, la versión de demostración solo contiene este nivel. Sin embargo, tienes más que suficiente para estar entretenido por un rato." ..
+    "Te enfrentarás a varias enfermedades que necesitan de ciertas habitaciones para su cura. De vez en cuando pueden surgir emergencias. Y necesitarás " ..
+    "investigar sobre las enfermedades construyendo un Departamento de investigación." ..
+    "Tu objetivo es ganar 100.000 dólares, que el valor de tu hospital llegue hasta 70.000 dólares y tengas una reputación de 700, con un porcentaje de pacientes curados del 75%." ..
+    "Procura que tu reputación no caiga por debajo de 300 y que no mates a más del 40% de tus pacientes, o fracasarás." ..
+    "¡Buena suerte!",
 }
+
 town_map.area = "Zona"
 trophy_room = {
   rats_killed = {
@@ -1066,17 +1137,6 @@ tooltip.cheats_window = {
     lose_level = "Hace que pierdas el nivel actual.",
     win_level = "Hace que ganes el nivel actual.",
   }
-}
-
-introduction_texts = {
-  demo = {
-    "¡Bienvenido al hospital de demostración!",
-    "Por desgracia, la versión de demostración solo contiene este nivel. Sin embargo, tienes más que suficiente para estar entretenido por un rato.",
-    "Te enfrentarás a varias enfermedades que necesitan de ciertas habitaciones para su cura. De vez en cuando pueden surgir emergencias. Y necesitarás investigar sobre las enfermedades construyendo un Departamento de investigación.",
-    "Tu objetivo es ganar 100.000 dólares, que el valor de tu hospital llegue hasta 70.000 dólares y tengas una reputación de 700, con un porcentaje de pacientes curados del 75%.",
-    "Procura que tu reputación no caiga por debajo de 300 y que no mates a más del 40% de tus pacientes, o fracasarás.",
-    "¡Buena suerte!",
-  },
 }
 
 calls_dispatcher = {

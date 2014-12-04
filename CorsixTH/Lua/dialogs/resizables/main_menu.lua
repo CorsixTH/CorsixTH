@@ -37,12 +37,13 @@ function UIMainMenu:UIMainMenu(ui)
   -- First define all menu entries with a label, a callback and a tooltip.
   -- That way we can call the UIResizable constructor with a good height argument.
   local menu_items = {
-    {_S.main_menu.new_game,     self.buttonNewGame,      _S.tooltip.main_menu.new_game},
-    {_S.main_menu.custom_level, self.buttonCustomGame,   _S.tooltip.main_menu.custom_level},
-    {_S.main_menu.continue,     self.buttonContinueGame, _S.tooltip.main_menu.continue},
-    {_S.main_menu.load_game,    self.buttonLoadGame,     _S.tooltip.main_menu.load_game},
-    {_S.main_menu.options,      self.buttonOptions,      _S.tooltip.main_menu.options},
-    {_S.main_menu.exit,         self.buttonExit,         _S.tooltip.main_menu.exit}
+    {_S.main_menu.new_game,        self.buttonNewGame,        _S.tooltip.main_menu.new_game},
+    {_S.main_menu.custom_campaign, self.buttonCustomCampaign, _S.tooltip.main_menu.custom_campaign},
+    {_S.main_menu.custom_level,    self.buttonCustomGame,     _S.tooltip.main_menu.custom_level},
+    {_S.main_menu.continue,        self.buttonContinueGame,   _S.tooltip.main_menu.continue},
+    {_S.main_menu.load_game,       self.buttonLoadGame,       _S.tooltip.main_menu.load_game},
+    {_S.main_menu.options,         self.buttonOptions,        _S.tooltip.main_menu.options},
+    {_S.main_menu.exit,            self.buttonExit,           _S.tooltip.main_menu.exit}
   }
   self.no_menu_entries = #menu_items
   self:UIResizable(ui, 200, (menu_item_height + 10) * (#menu_items + 1), col_bg)
@@ -100,6 +101,15 @@ end
 function UIMainMenu:buttonNewGame()
   local window = UINewGame(self.ui)
   self.ui:addWindow(window)
+end
+
+function UIMainMenu:buttonCustomCampaign()
+  if TheApp.using_demo_files then
+    self.ui:addWindow(UIInformation(self.ui, {_S.information.no_custom_game_in_demo}))
+  else
+    local window = UICustomCampaign(self.ui)
+    self.ui:addWindow(window)
+  end
 end
 
 function UIMainMenu:buttonCustomGame()

@@ -47,28 +47,15 @@ function UICustomGame:UICustomGame(ui)
   local items = {}
   for file in lfs.dir(path) do
     if file:match"%.level$" then
-      local level_name, level_file, level_intro
-      for line in io.lines(path .. pathsep .. file) do
-        -- Get level name and name of the level file to load
-        if line:sub(1, 1) == "%" then
-          for text in line:gmatch("\".+\"") do
-            if line:find("Name") then
-              level_name = text
-            elseif line:find("LevelFile") then
-              level_file = text
-            elseif line:find("LevelBriefing") then
-              level_intro = text
-            end
-          end
-        end
-      end
-      if level_name and level_file then
+      local level_info = TheApp:readLevelFile(file)
+      if level_info.name and level_info.map_file then
         items[#items + 1] = {
-          name = level_name,
+          name = level_info.name,
           tooltip = _S.tooltip.custom_game_window.choose_game,
-          level_file = level_file,
-          path = path .. file,
-          intro = level_intro,
+          map_file = level_info.map_file,
+          level_file = file,
+          intro = level_info.briefing,
+          deprecated_variable_used = level_info.deprecated_variable_used,
         }
       end
     end
@@ -118,8 +105,8 @@ end
 function UICustomGame:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
   self.chosen_index = num
-  self.chosen_level_name = item.name:sub(2, -2)
-  self.chosen_level_description = item.intro and item.intro:sub(2, -2)
+  self.chosen_level_name = item.name
+  self.chosen_level_description = item.intro
   local filename = item.path
   if self.chosen_level_description then
     local x, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
@@ -130,21 +117,23 @@ function UICustomGame:buttonClicked(num)
     self.details_scrollbar:setRange(1, 1, 1, 1)
   end
   self.description_offset = 0
+
+  if item.deprecated_variable_used then
+    self.ui:addWindow(UIInformation(self.ui, {_S.warnings.levelfile_variable_is_deprecated:format(item.name)}))
+  end
 end
 
 function UICustomGame:buttonLoadLevel()
   if self.chosen_index then
     -- First make sure the map file exists.
     local item = self.items[self.chosen_index + self.scrollbar.value - 1]
-    local level_file = item.level_file:sub(2, -2)
-    local filename = item.path
     local app = self.ui.app
-    local _, errors = app:readLevelDataFile(level_file)
+    local _, errors = app:readMapDataFile(item.map_file)
     if errors then
       self.ui:addWindow(UIInformation(self.ui, {errors}))
       return
     end
-    app:loadLevel(filename, nil, self.chosen_level_name, level_file, self.chosen_level_description)
+    app:loadLevel(item.level_file, nil, self.chosen_level_name, item.map_file, self.chosen_level_description)
   end
 end
 

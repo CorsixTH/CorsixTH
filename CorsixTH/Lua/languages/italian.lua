@@ -451,14 +451,14 @@ tooltip.cheats_window = {
 }
 
 introduction_texts = {
-  demo = {
-    "Benvenuto nell'ospedale demo!",
-    "Sfortunatamente la versione demo contiene solo questo livello. Ad ogni modo c'è abbastanza da fare per tenerti occupato per un bel po'!",
-    "Incontrerai diverse malattie che richiederanno diverse cliniche per essere curate. Ogni tanto potrebbero presentarsi delle emergenze. E avrai bisogno di ricercare nuove strumentazioni tramite il centro ricerche.",
-    "Il tuo obiettivo è di guadagnare $100,000, avere un ospedale che valga $70,000 e una reputazione di 700, oltre che curare almeno il 75% dei tuoi pazienti.",
-    "Assicurati che la tua reputazione non scenda al di sotto di 300 e di non uccidere più del 40% dei tuoi pazienti, o perderai.",
+  demo =
+    "Benvenuto nell'ospedale demo!" ..
+    "Sfortunatamente la versione demo contiene solo questo livello. Ad ogni modo c'è abbastanza da fare per tenerti occupato per un bel po'!" ..
+    "Incontrerai diverse malattie che richiederanno diverse cliniche per essere curate. Ogni tanto potrebbero presentarsi delle emergenze. " ..
+    "E avrai bisogno di ricercare nuove strumentazioni tramite il centro ricerche." ..
+    "Il tuo obiettivo è di guadagnare $100,000, avere un ospedale che valga $70,000 e una reputazione di 700, oltre che curare almeno il 75% dei tuoi pazienti." ..
+    "Assicurati che la tua reputazione non scenda al di sotto di 300 e di non uccidere più del 40% dei tuoi pazienti, o perderai." ..
     "Buona fortuna!",
-  },
 }
 
 calls_dispatcher = {

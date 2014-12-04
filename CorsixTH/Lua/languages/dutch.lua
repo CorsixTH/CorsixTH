@@ -1844,141 +1844,122 @@ room_descriptions = {
   },
 }
 introduction_texts = {
-  level17 = {
-    [1] = "Nog een laatste waarschuwing: hou een oogje op je reputatie. Je reputatie is namelijk iets wat patiënten van heinde en verre naar je ziekenhuis laat komen. ",
-    [2] = "Als je niet teveel mensen doodt en ze redelijk gelukkig houdt, zou je niet al teveel problemen moeten hebben met dit level!//",
-    [3] = "En nu mag je het zelf opknappen. Veel succes ermee!",
-  },
-  level1 = {
-    [1] = "Welkom in je eerste ziekenhuis!",
-    [2] = "Zorg dat de boel op gang komt door een receptie te plaatsen en een spreekkamer te bouwen. Neem ook een receptioniste en een arts in dienst. ",
-    [3] = "Wacht dan tot er mensen langskomen.",
-    [4] = "Het is een goed idee om een psychiatrische afdeling te bouwen en een arts in te huren met de benodigde kwalificaties. ",
-    [5] = "Een apotheek en een zuster zijn essentieel voor het genezen van je patiënten. ",
-    [6] = "Kijk uit voor ernstige gevallen van plofkop. Een inflatiekliniek lost deze probleempjes op. ",
-    [7] = "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
-  },
-  level9 = {
-    [1] = "Nu je de kas van het ministerie flink hebt gespekt en de minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke patiënten geeft.",
-    [2] = "Verwacht dat er een boel problemen de kop opsteken.",
-    [3] = "Als je genoeg kamers en een goed getrainde staf hebt, zal je die problemen makkelijk het hoofd moeten kunnen bieden. ",
-    [4] = "Je ziekenhuis moet uiteindelijk $200,000 waard zijn. Verzamel ook een comfortabele $400.000 op je bankrekening. ",
-    [5] = "Met minder dan dat kun je het level niet uitspelen.",
-  },
-  level2 = {
-    [1] = "Er zijn hier in de omgeving een stuk meer ziektes. ",
-    [2] = "Zet je ziekenhuis zo op dat je de grotere hoeveelheid patiënten kunt behapstukken en bouw ook nog een laboratorium. ",
-    [3] = "Hou je ziekenhuis schoon en je reputatie zo hoog mogelijk. Je zult te maken krijgen met ziektes zoals lamme tong, dus je hebt een lamme tongkliniek nodig. ",
-    [4] = "Je hebt ook een cardio nodig zodat je betere diagnoses kunt stellen en nieuwe ziektes kunt ontdekken. ",
-    [5] = "Beide kamers moeten worden onderzocht voor je ze kunt bouwen. Je kunt nu ook extra gebouwen kopen om je ziekenhuis uit te breiden. Gebruik hier het kaartscherm voor. ",
-    [6] = "Probeer een reputatie van 300 te behalen, een saldo van 10,000 op de teller te hebben staan en 40 mensen te genezen.",
-  },
-  level7 = {
-    [1] = "Je wordt in de gaten gehouden door het Ministerie van Volksgezondheid, dus zorg ervoor dat je flinke winst draait en dat je reputatie constant hoog blijft. ",
-    [2] = "We kunnen ons geen doden veroorloven; dat is slecht voor zaken. ",
-    [3] = "Zorg dat je personeel in vorm is en dat je alle apparatuur hebt die nodig is. ",
-    [4] = "Zorg voor een reputatie van 600 en een saldo $200.000.",
-  },
-  level5 = {
-    [1] = "Dit wordt een druk ziekenhuis met een grote variatie aan ziektebeelden. ",
-    [2] = "Je artsen komen allemaal net van school af, dus bouw een klaslokaal en geef ze een opleiding tot een acceptabel niveau. ",
-    [3] = "Je hebt maar drie specialisten om de rest van je personeel op te leiden, dus hou ze tevreden. ",
-    [4] = "Daarbij is je ziekenhuis gebouwd op de San Androïde-breuk. ",
-    [5] = "Aardbevingen kunnen dus elk moment toeslaan. ",
-    [6] = "Deze zullen je machines beschadigen en je goedlopende ziekenhuis flink verstoren. ",
-    [7] = "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 op je bankrekening. Zorg daarnaast dat je 200 patiënten geneest.",
-  },
-  level4 = {
-    [1] = "Hou al je patiënten tevreden en werk ze zo efficiënt mogelijk af. Voorkom sterfgevallen zoveel mogelijk.",
-    [2] = "Je reputatie staat op het spel, dus hou die zo hoog mogelijk. ",
-    [3] = "Maak je niet al teveel zorgen over geld; dat komt wel als die o zo belangrijke reputatie groeit. ",
-    [4] = "Je kunt nu je ook artsen trainen, zodat ze beter gekwalificeerd zullen zijn. ",
-    [5] = "Waarschijnlijk zal je heel wat patiënten tegenkomen die nogal doorzichtig zijn. ",
-    [6] = "Bouw je reputatie op tot deze de 500 heeft bereikt.",
-  },
+  level17 =
+    "Nog een laatste waarschuwing: hou een oogje op je reputatie. Je reputatie is namelijk iets wat patiënten van heinde en verre naar je ziekenhuis laat komen. " ..
+    "Als je niet teveel mensen doodt en ze redelijk gelukkig houdt, zou je niet al teveel problemen moeten hebben met dit level!//" ..
+    "En nu mag je het zelf opknappen. Veel succes ermee!",
+  level1 =
+    "Welkom in je eerste ziekenhuis!" ..
+    "Zorg dat de boel op gang komt door een receptie te plaatsen en een spreekkamer te bouwen. Neem ook een receptioniste en een arts in dienst. " ..
+    "Wacht dan tot er mensen langskomen." ..
+    "Het is een goed idee om een psychiatrische afdeling te bouwen en een arts in te huren met de benodigde kwalificaties. " ..
+    "Een apotheek en een zuster zijn essentieel voor het genezen van je patiënten. " ..
+    "Kijk uit voor ernstige gevallen van plofkop. Een inflatiekliniek lost deze probleempjes op. " ..
+    "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
+  level9 =
+    "Nu je de kas van het ministerie flink hebt gespekt en de minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke patiënten geeft." ..
+    "Verwacht dat er een boel problemen de kop opsteken." ..
+    "Als je genoeg kamers en een goed getrainde staf hebt, zal je die problemen makkelijk het hoofd moeten kunnen bieden. " ..
+    "Je ziekenhuis moet uiteindelijk $200,000 waard zijn. Verzamel ook een comfortabele $400.000 op je bankrekening. " ..
+    "Met minder dan dat kun je het level niet uitspelen.",
+  level2 =
+    "Er zijn hier in de omgeving een stuk meer ziektes. " ..
+    "Zet je ziekenhuis zo op dat je de grotere hoeveelheid patiënten kunt behapstukken en bouw ook nog een laboratorium. " ..
+    "Hou je ziekenhuis schoon en je reputatie zo hoog mogelijk. Je zult te maken krijgen met ziektes zoals lamme tong, dus je hebt een lamme tongkliniek nodig. " ..
+    "Je hebt ook een cardio nodig zodat je betere diagnoses kunt stellen en nieuwe ziektes kunt ontdekken. " ..
+    "Beide kamers moeten worden onderzocht voor je ze kunt bouwen. Je kunt nu ook extra gebouwen kopen om je ziekenhuis uit te breiden. Gebruik hier het kaartscherm voor. " ..
+    "Probeer een reputatie van 300 te behalen, een saldo van 10,000 op de teller te hebben staan en 40 mensen te genezen.",
+  level7 =
+    "Je wordt in de gaten gehouden door het Ministerie van Volksgezondheid, dus zorg ervoor dat je flinke winst draait en dat je reputatie constant hoog blijft. " ..
+    "We kunnen ons geen doden veroorloven; dat is slecht voor zaken. " ..
+    "Zorg dat je personeel in vorm is en dat je alle apparatuur hebt die nodig is. " ..
+    "Zorg voor een reputatie van 600 en een saldo $200.000.",
+  level5 =
+    "Dit wordt een druk ziekenhuis met een grote variatie aan ziektebeelden. " ..
+    "Je artsen komen allemaal net van school af, dus bouw een klaslokaal en geef ze een opleiding tot een acceptabel niveau. " ..
+    "Je hebt maar drie specialisten om de rest van je personeel op te leiden, dus hou ze tevreden. " ..
+    "Daarbij is je ziekenhuis gebouwd op de San Androïde-breuk. " ..
+    "Aardbevingen kunnen dus elk moment toeslaan. " ..
+    "Deze zullen je machines beschadigen en je goedlopende ziekenhuis flink verstoren. " ..
+    "Bouw je reputatie op tot boven de 400 en zorg voor een nette $50.000 op je bankrekening. Zorg daarnaast dat je 200 patiënten geneest.",
+  level4 =
+    "Hou al je patiënten tevreden en werk ze zo efficiënt mogelijk af. Voorkom sterfgevallen zoveel mogelijk." ..
+    "Je reputatie staat op het spel, dus hou die zo hoog mogelijk. " ..
+    "Maak je niet al teveel zorgen over geld; dat komt wel als die o zo belangrijke reputatie groeit. " ..
+    "Je kunt nu je ook artsen trainen, zodat ze beter gekwalificeerd zullen zijn. " ..
+    "Waarschijnlijk zal je heel wat patiënten tegenkomen die nogal doorzichtig zijn. " ..
+    "Bouw je reputatie op tot deze de 500 heeft bereikt.",
 
   --[[ Level 13 and 14 are rat shooting galleries and are thus not available through the File menu as of yet. --]]
 
-  level14 = {
-    [1] = "Je hebt nog een uitdaging gekregen; een compleet onverwacht verrassingsziekenhuis! ",
-    [2] = "Als je hier een succes van kunt maken ben je de winnaar van alle winnaars. ",
-    [3] = "Maar denk niet dat het een eitje is. Het is de moeilijkste opdracht die je ooit zult aannemen. ",
-    [4] = "Veel succes!",
-  },
+  level14 =
+    "Je hebt nog een uitdaging gekregen; een compleet onverwacht verrassingsziekenhuis! " ..
+    "Als je hier een succes van kunt maken ben je de winnaar van alle winnaars. " ..
+    "Maar denk niet dat het een eitje is. Het is de moeilijkste opdracht die je ooit zult aannemen. " ..
+    "Veel succes!",
 
 --[[ Level 15 is most likely just removed content. I translated it as usual just in case the team finds something to do with it. --]]
 
-  level15 = {
-    [1] = "Goed, dat is dus de basis van een ziekenhuis bouwen.//",
-    [2] = "Je artsen zullen alle hulp nodig hebben die ze kunnen gebruiken bij het stellen van diagnoses. Je kunt ze helpen ",
-    [3] = "door meerdere diagnostische kamers te bouwen, zoals de algemene diagnose.",
-  },
-  level8 = {
-    [1] = "Het is aan jou om het meeste efficiënte ziekenhuis op te zetten voor zo weinig mogelijk geld. ",
-    [2] = "De mensen zitten hier goed in de slappe was, dus pers zoveel mogelijk geld uit ze als mogelijk is. ",
-    [3] = "Ja, mensen genezen is heel leuk, maar je hebt het geld dat ze binnenbrengen echt NODIG. ",
-    [4] = "Schudt die zieke mensen dus maar flink uit. ",
-    [5] = "Verzamel een fortuin van $300.000 om dit level uit te spelen.",
-  },
-  level13 = {
-    [1] = "Je fantastische werk als directeur is ondertussen bij de Speciale Geheime Divisie van de Geheime Speciale Dienst bekend. ",
-    [2] = "Ze hebben een bonus voor je; er is een ziekenhuis geïnfecteerd met ratten en ze hebben een echte Terminator nodig. ",
-    [3] = "Vermorzel zoveel mogelijk ratten voordat de conciërges de boel hebben opgeruimd. ",
-    [4] = "Denk je dat je die taak aankunt?",
-  },
-  level16 = {
-    [1] = "Zodra je wat diagnoses hebt gesteld zal je behandelkamers en klinieken moeten bouwen om voor de mensen te zorgen. Een goede om mee te beginnen is de apotheek. ",
-    [2] = "Je moet ook een zuster inhuren zodat ze de verschillende medicijnen kan toedienen.",
-  },
-  level6 = {
-    [1] = "Gebruik al je kennis om je ziekenhuis soepel te laten draaien, een gezonde winst te maken en alle ziektes te genezen die de mensen met zich meedragen. ",
-    [2] = "Wees je ervan bewust dat de atmosfeer hier erg geschikt is voor het overdragen van bacteriën en infecties. ",
-    [3] = "Hou je ziekenhuis dus schoon, tenzij je een lange rits van epidemieën onder je patiënten wilt brengen. ",
-    [4] = "Zorg ervoor dat je $150.000 verdient en dat je ziekenhuis meer dan $140.000 waard is.",
-  },
-  level12 = {
-    [1] = "Dit is de moeder van alle uitdagingen. ",
-    [2] = "Het ministerie is zo onder de indruk van je succes, dat ze je de hoogste positie hebben aangeboden. Ze willen iemand hebben die nog een ultiem ziekenhuis kan bouwen, veel geld kan verdienen en een fantastische reputatie kan opbouwen. ",
-    [3] = "Je wordt verwacht alle, maar dan ook echt alle ziektes te kunnen genezen en alle prijzen in de wacht te slepen. ",
-    [4] = "Denk je dat je dat aankunt?",
-    [5] = "Verdien $650.000, genees 750 mensen en verdien krijg een reputatie van 800 om dit te winnen.",
-  },
-  level3 = {
-    [1] = "Dit keer bouw je een ziekenhuis in een rijke buurt. ",
-    [2] = "Het Ministerie van Volksgezondheid vraagt een gezonde winst van je. ",
-    [3] = "Je zult eerst een goede reputatie moeten opbouwen, maar schakel zodra je ziekenhuis volloopt over op zoveel mogelijk geld binnenhalen. ",
-    [4] = "Er kunnen zich ook noodgevallen voordoen. ",
-    [5] = "Dit zijn gevallen waarin er meerdere patiënten binnenkomen met dezelfde ziekte. ",
-    [6] = "Als je ze allemaal binnen een bepaalde tijd geneest, zit er een vette bonus aan vast en gaat je reputatie erop vooruit. ",
-    [7] = "Ziektes als het King Complex kunnen voorkomen en er wordt aangeraden om wat geld opzij te zetten voor een operatiekamer in de buurt van een slaapzaal. ",
-    [8] = "Verdien $20.000 om het level te halen.",
-  },
-  level10 = {
-    [1] = "Het ministerie vraagt nu niet alleen dat je alle ziektes in deze buurt aanpakt, maar ook dat je je concentreert op de efficiëntie van je medicijnen. ",
-    [2] = "Er zijn wat klachten binnengekomen van Ofziek, de waakhond van de gezondheidszorg, dus als je goed over wil komen, zorg je ervoor dat je medicijnen goed werken. ",
-    [3] = "Zorg ook dat er niets te klagen valt over je ziekenhuis zelf. Hou die sterfgevallen zeldzaam. ",
-    [4] = "Hint: Hou wat ruimte vrij voor een gelatinetank. ",
-    [5] = "Ontwikkel al je medicijnen door tot ze ten minste 80 procent effectief zijn, behaal een reputatie van 650 en behaal een saldo van $500.000. ",
-  },
-  level11 = {
-    [1] = "Je hebt de kans gekregen het ultieme ziekenhuis te bouwen. ",
-    [2] = "Dit is een zeer prestigieuze omgeving, en het ministerie wil een zo goed mogelijk ziekenhuis zien. ",
-    [3] = "We verwachten dat je flink geld binnenhaalt, een fantastische reputatie hebt en elke situatie aan kunt. ",
-    [4] = "Dit is een belangrijke taak. ",
-    [5] = "Je bent heel wat als je dit lukt. ",
-    [6] = "Opmerkenswaardig is dat er UFO's in de omgeving gezien zijn. Zorg ervoor dat je personeel klaar is voor onverwachte bezoekers. ",
-    [7] = "Je ziekenhuis moet $240.000 waard zijn en je moet $500.000 op de bank hebben staan. Ook moet je reputatie minimaal 700 bedragen.",
-  },
-  level18 = {
-  },
-  demo = {
-    [1] = "Welkom in het demo ziekenhuis!",
-    [2] = "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, maar er is meer dan genoeg te doen om je voorlopig bezig te houden!",
-    [3] = "Je zult verschillende kwalen tegenkomen die verschillende ruimtes nodig hebben om genezen te worden, af en toe kunnen zich noodgevallen voordoen, en je zult nieuwe ruimtes uit moeten vinden met het laboratorium",
-    [4] = "Jouw doel is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patiënten geneest",
-    [5] = "Zorg er voor dat je reputatie niet lager wordt dan 300 en dat je niet meer dan 40% van je patiënten vermoord, anders zal je ontslagen worden!",
-    [6] = "Succes!",
-  },
+  level15 =
+    "Goed, dat is dus de basis van een ziekenhuis bouwen.//" ..
+    "Je artsen zullen alle hulp nodig hebben die ze kunnen gebruiken bij het stellen van diagnoses. Je kunt ze helpen " ..
+    "door meerdere diagnostische kamers te bouwen, zoals de algemene diagnose.",
+  level8 =
+    "Het is aan jou om het meeste efficiënte ziekenhuis op te zetten voor zo weinig mogelijk geld. " ..
+    "De mensen zitten hier goed in de slappe was, dus pers zoveel mogelijk geld uit ze als mogelijk is. " ..
+    "Ja, mensen genezen is heel leuk, maar je hebt het geld dat ze binnenbrengen echt NODIG. " ..
+    "Schudt die zieke mensen dus maar flink uit. " ..
+    "Verzamel een fortuin van $300.000 om dit level uit te spelen.",
+  level13 =
+    "Je fantastische werk als directeur is ondertussen bij de Speciale Geheime Divisie van de Geheime Speciale Dienst bekend. " ..
+    "Ze hebben een bonus voor je; er is een ziekenhuis geïnfecteerd met ratten en ze hebben een echte Terminator nodig. " ..
+    "Vermorzel zoveel mogelijk ratten voordat de conciërges de boel hebben opgeruimd. " ..
+    "Denk je dat je die taak aankunt?",
+  level16 =
+    "Zodra je wat diagnoses hebt gesteld zal je behandelkamers en klinieken moeten bouwen om voor de mensen te zorgen. Een goede om mee te beginnen is de apotheek. " ..
+    "Je moet ook een zuster inhuren zodat ze de verschillende medicijnen kan toedienen.",
+  level6 =
+    "Gebruik al je kennis om je ziekenhuis soepel te laten draaien, een gezonde winst te maken en alle ziektes te genezen die de mensen met zich meedragen. " ..
+    "Wees je ervan bewust dat de atmosfeer hier erg geschikt is voor het overdragen van bacteriën en infecties. " ..
+    "Hou je ziekenhuis dus schoon, tenzij je een lange rits van epidemieën onder je patiënten wilt brengen. " ..
+    "Zorg ervoor dat je $150.000 verdient en dat je ziekenhuis meer dan $140.000 waard is.",
+  level12 =
+    "Dit is de moeder van alle uitdagingen. " ..
+    "Het ministerie is zo onder de indruk van je succes, dat ze je de hoogste positie hebben aangeboden. Ze willen iemand hebben die nog een ultiem ziekenhuis kan bouwen, veel geld kan verdienen en een fantastische reputatie kan opbouwen. " ..
+    "Je wordt verwacht alle, maar dan ook echt alle ziektes te kunnen genezen en alle prijzen in de wacht te slepen. " ..
+    "Denk je dat je dat aankunt?" ..
+    "Verdien $650.000, genees 750 mensen en verdien krijg een reputatie van 800 om dit te winnen.",
+  level3 =
+    "Dit keer bouw je een ziekenhuis in een rijke buurt. " ..
+    "Het Ministerie van Volksgezondheid vraagt een gezonde winst van je. " ..
+    "Je zult eerst een goede reputatie moeten opbouwen, maar schakel zodra je ziekenhuis volloopt over op zoveel mogelijk geld binnenhalen. " ..
+    "Er kunnen zich ook noodgevallen voordoen. " ..
+    "Dit zijn gevallen waarin er meerdere patiënten binnenkomen met dezelfde ziekte. " ..
+    "Als je ze allemaal binnen een bepaalde tijd geneest, zit er een vette bonus aan vast en gaat je reputatie erop vooruit. " ..
+    "Ziektes als het King Complex kunnen voorkomen en er wordt aangeraden om wat geld opzij te zetten voor een operatiekamer in de buurt van een slaapzaal. " ..
+    "Verdien $20.000 om het level te halen.",
+  level10 =
+    "Het ministerie vraagt nu niet alleen dat je alle ziektes in deze buurt aanpakt, maar ook dat je je concentreert op de efficiëntie van je medicijnen. " ..
+    "Er zijn wat klachten binnengekomen van Ofziek, de waakhond van de gezondheidszorg, dus als je goed over wil komen, zorg je ervoor dat je medicijnen goed werken. " ..
+    "Zorg ook dat er niets te klagen valt over je ziekenhuis zelf. Hou die sterfgevallen zeldzaam. " ..
+    "Hint: Hou wat ruimte vrij voor een gelatinetank. " ..
+    "Ontwikkel al je medicijnen door tot ze ten minste 80 procent effectief zijn, behaal een reputatie van 650 en behaal een saldo van $500.000. ",
+  level11 =
+    "Je hebt de kans gekregen het ultieme ziekenhuis te bouwen. " ..
+    "Dit is een zeer prestigieuze omgeving, en het ministerie wil een zo goed mogelijk ziekenhuis zien. " ..
+    "We verwachten dat je flink geld binnenhaalt, een fantastische reputatie hebt en elke situatie aan kunt. " ..
+    "Dit is een belangrijke taak. " ..
+    "Je bent heel wat als je dit lukt. " ..
+    "Opmerkenswaardig is dat er UFO's in de omgeving gezien zijn. Zorg ervoor dat je personeel klaar is voor onverwachte bezoekers. " ..
+    "Je ziekenhuis moet $240.000 waard zijn en je moet $500.000 op de bank hebben staan. Ook moet je reputatie minimaal 700 bedragen.",
+  level18 = "",
+  demo =
+    "Welkom in het demo ziekenhuis!" ..
+    "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, maar er is meer dan genoeg te doen om je voorlopig bezig te houden!" ..
+    "Je zult verschillende kwalen tegenkomen die verschillende ruimtes nodig hebben om genezen te worden, af en toe kunnen zich noodgevallen voordoen, en je zult nieuwe ruimtes uit moeten vinden met het laboratorium" ..
+    "Jouw doel is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patiënten geneest" ..
+    "Zorg er voor dat je reputatie niet lager wordt dan 300 en dat je niet meer dan 40% van je patiënten vermoord, anders zal je ontslagen worden!" ..
+    "Succes!",
 }
 humanoid_name_starts = {
   [1] = "GOUD",

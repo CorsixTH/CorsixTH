@@ -2131,11 +2131,11 @@ while true do
   local text = S[54][text_index]
   if text == "." then
     level_index = level_index + 1
-    T["level" .. level_index] = {}
+    T["level" .. level_index] = ""
   elseif text == ".." then
     break
   else
-    T["level" .. level_index][#T["level" .. level_index] + 1] = text
+    T["level" .. level_index] = T["level" .. level_index] .. " " .. text
   end
   text_index = text_index + 1
 end

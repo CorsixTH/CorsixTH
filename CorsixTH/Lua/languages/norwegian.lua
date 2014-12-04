@@ -3075,135 +3075,127 @@ dynamic_info = {
 
 
 introduction_texts = {
-  level17 = {
-    [1] = "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. ",
-    [2] = "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået!//",
-    [3] = "Nå må du klare deg selv. Lykke til med det.",
-  },
-  level1 = {
-    [1] = "Velkommen til ditt förste sykehus!//",
-    [2] = "Få stedet opp og gå ved å plassere en Resepsjon, bygge en Allmennpraksis, og ansette en Resepsjonist og en Lege. ",
-    [3] = "Vent så til det begynner å skje ting.",
-    [4] = "Det er smart å bygge Psykiatri og ansette en Lege med fordypning innenfor psykiatri. ",
-    [5] = "Et Apotek og en Sykepleier er essensielt for å kurere pasientene dine. ",
-    [6] = "Se opp for mange tilfeller av Ballonghode - et Pumperom vil fort kunne være til stor hjelp. ",
-    [7] = "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
-  },
-  level9 = {
-    [1] = "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousin, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. ",
-    [2] = "Du må forvente å stöte på en rekke problemer her.",
-    [3] = "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. ",
-    [4] = "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. ",
-    [5] = "Med noe mindre får du ikke fullfört dette nivået.",
-  },
-  level2 = {
-    [1] = "Det er et större spekter av plager i dette området. ",
-    [2] = "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen Forskningsavdeling. ",
-    [3] = "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som Lös tunge, så du trenger en Tungeklinikk. ",
-    [4] = "Du kan også bygge Kardiorom for å forbedre diagnostisering. ",
-    [5] = "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk Områdekartet til dette. ",
-    [6] = "Streb etter et omdömme på 300 og en banksaldo på $10,000, samt 40 kurerte pasienter. ",
-  },
-  level7 = {
-    [1] = "Her vil du være under nöye gransking fra Helsedepartementet, så sörg for at kontoene dine viser at du tjener en masse penger, og at omdömmet ditt er svært bra. ",
-    [2] = "Vi har ikke råd til unödvendige dödsfall - det er dårlig for forretningene. ",
-    [3] = "Sörg for at personalet er i tipp-topp form, og at du har alt utstyret du trenger. ",
-    [4] = "Få et omdömme på 600, pluss $200,000 i banken.",
-  },
-  level5 = {
-    [1] = "Dette blir et travelt sykehus, siden du må håndtere et bredt spekter av tilfeller. ",
-    [2] = "Legene du kan ansette kommer rett fra skolen, så det kommer til å være avgjörende for deg å bygge et Klasserom og skolere dem til et akseptabelt nivå. ",
-    [3] = "Du har kun tre Konsulenter til å lære opp de uerfarne medarbeiderne, så hold dem lykkelige slik at de ikke slutter. ",
-    [4] = "Merk deg også at sykehusets fundament står på en grunn full av geologiske feil. ",
-    [5] = "Faren for jordskjelv er alltid tilstedeværende. ",
-    [6] = "De vil forårsake betydelig skade på maskiner, og forstyrre den jevne driften av sykehuset. ",
-    [7] = "Få omdömmet ditt opp til 400, og ha $50,000 i banken for å lykkes. Du må også kurere 200 pasienter.",
-  },
-  level4 = {
-    [1] = "Hold alle pasientene dine fornöyde, ta deg av dem så effektivt som mulig og hold dödsfall til et absolutt minimum. ",
-    [2] = "Ditt omdömme står på spill, så sörg for at du får det så höyt som mulig. ",
-    [3] = "Ikke bekymre deg for mye over penger - det vil komme etter som ditt vitale omdömme vokser. ",
-    [4] = "Du vil kunne skolere Leger til å utvide sine evner. ",
-    [5] = "Du kan komme til få pasienter som synes å være mer gjennomsiktig enn de fleste. ", --sjekk english.lua er det bra nok oversettelse?
-    [6] = "Oppnå et omdömme på over 500.",
-  },
-  level14 = {
-    [1] = "Det er nok en utfordring - det helt uventede overraskelsessykehuset. ",
-    [2] = "Om du klarer å gjöre en suksess ut av dette, vil du bli vinneren over alle andre vinnere. ",
-    [3] = "Ikke forvent at det skal være fort gjort, ettersom det er det töffeste oppdraget du noensinne vil få. ",
-    [4] = "Lykke til!",
-  },
-  level15 = {
-    [1] = "Ok, det var den grunnleggende teknikken i å sette et sykehus sammen.//",
-    [2] = "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnostisere noen av disse pasientene. Du kan hjelpe dem ved å ",
-    [3] = "bygg et ny diagnoserom, for eksempel Generell Diagnose.",
-  },
-  level8 = {
-    [1] = "Det er opp til deg å sette opp det mest effektive og kostnadseffektive sykehuset som mulig. ",
-    [2] = "Menneskene rundt her er ganske velstående, så flå dem for så mye grunker du bare klarer. ",
-    [3] = "Husk at det å kurere mennesker er veldig fint, men du trenger virkelig pengene det bringer. ",
-    [4] = "Behandle disse syke personene med Pengeutsugeren. ",
-    [5] = "Samle opp en pengehaug på $300,000 for å fullföre dette nivået.",
-  },
-  level13 = {
-    [1] = "Din enestående dyktighet som sykehusadministrator har blitt oppdaget av Hemmelig Super-avdeling fra Superhemmelige Tjenester. ",
-    [2] = "De har en spesiell bonus for deg; det er et rotteinfisert sykehus som trenger en effektiv Terminator. ",
-    [3] = "Du må skyte så mange rotter som mulig för Vaktmesterne rydder opp all söpla. ",
-    [4] = "Tror du at du klarer oppgaven?",
-  },
-  level16 = {
-    [1] = "Når du har diagnostisert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne ",
-    [2] = "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
-  },
-  level6 = {
-    [1] = "Bruk all din kunnskap til å sette opp et velsmurt og kompetent sykehus som gjör et sunt overskudd og kan håndtere alt som den sykelige offentligheten kan kaste på det. ",  --todo - godt nok oversatt?
-    [2] = "Du bör være klar over at atmosfæren rundt her er kjent for å bære med seg bakterier og infeksjoner. ",
-    [3] = "Med mindre du klarer å holde institusjonen din omhyggelig ren, kan du stå overfor en rekke epidemier blant pasientene. ",
-    [4] = "Pass på at du skaffer deg $150,000, og at sykehuset er verdt over $140,000.",
-  },
-  level12 = {
-    [1] = "Du har fått moderen av alle utfordringer nå. ",
-    [2] = "Departementet er imponert over din suksess, og har skaffet toppjobben for deg; de vil at du skal bygge enda et storslagent sykehus, skaffe en stor haug med penger og få et bra utrolig rykte. ",
-    [3] = "Det forventes at du kjöper opp alle områdene du klarer, kurerer alle sykdommer (og da mener vi alle) og vinner alle premiene. ",
-    [4] = "Tror du at du klarer det?",
-    [5] = "Tjen $650,000, kurer 750 pasienter og få et omdömme på 800 for å vinne dette nivået.",
-  },
-  level3 = {
-    [1] = "Du setter opp et sykehus i et velstående område denne gangen. ",
-    [2] = "Helsedepartementet er ute etter at du klarer å sikre en sunn profitt her. ",
-    [3] = "Du må få et godt rykte til å begynne med, men når sykehuset går av seg selv, så konsentrer deg om å tjene så mye penger du klarer. ",
-    [4] = "Det er også en sjanse for at nödssituasjoner oppstår. ",
-    [5] = "Dette er når store mengder mennesker kommer på en gang med samme tilstand. ",
-    [6] = "Kurerer du alle innen tidsfristen så får du et bedre rykte, og en stor xbonus. ",
-    [7] = "Sykdommer som Rock'n'Roll-syndrom kan inntreffe og du bör budsjettere for en Operasjonssal med en Sykestue i nærheten. ",
-    [8] = "Tjen opp $20,000 for å klare nivået.",
-  },
-  level10 = {
-    [1] = "I tillegg til å få bukt med alle sykdommene som dukker opp i denne skogkanten, så vil Departementet at du bruker litt tid på å konsentrere deg om effektiviteten av legemidlene dine. ",
-    [2] = "Det har kommet noen klager fra Ofsick, Helsedepartementets vakthund, så for at alt skal se bra ut du må sörge for at alle legemidler er svært effektive. ", --todo (bytte ut "Ofsick" med et norskt navn).
-    [3] = "Kontroller også at sykehuset i tillegg er uklanderlig. Hold dödsfallene nede. ",
-    [4] = "Som et hint, så kanskje du bör holde av litt plass til en Gelétönne. ",
-    [5] = "Utvikle alle dine medisiner til minst 80 prosent effektivitet, få et omdömme på 650 og gjem unna $500,000 i banken for å vinne. ",
-  },
-  level11 = {
-    [1] = "Du har fått muligheten til å bygge det ultimate innen sykehus. ",
-    [2] = "Dette er et meget prestisjefylt område, og Departementet önsker å se det best mulige sykehuset. ",
-    [3] = "Vi vil forvente at du gjör store penger, har et ypperlig og godt omdömme og dekker alle mulige hendelser. ",
-    [4] = "Dette er en viktig jobb. ",
-    [5] = "Du må være virkelig begavet for å gjennomföre det. ",
-    [6] = "Merk også at det har vært observasjoner av UFO-er i området. Sörg for at personalet er forberedt på noen uventede gjester. ",
-    [7] = "Sykehuset ditt må være verdt $240,000, du må ha $500,000 i banken og ditt omdömme må være på minst 700.",
-  },
-  level18 = {
-  },
-  demo = {
-    [1] = "Velkommen til demonstrasjonssykehuset!",
-    [2] = "Uheldigvis inneholder demoversjonen kun dette nivået. Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!",
-    [3] = "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling.",
-    [4] = "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene.",
-    [5] = "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået.",
-    [6] = "Lykke til!",
-  },
+  level17 = "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. " ..
+            "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået!//" ..
+            "Nå må du klare deg selv. Lykke til med det.",
+  level1 = "Velkommen til ditt förste sykehus!//" ..
+           "Få stedet opp og gå ved å plassere en Resepsjon, bygge en Allmennpraksis, og ansette en Resepsjonist og en Lege. " ..
+           "Vent så til det begynner å skje ting." ..
+           "Det er smart å bygge Psykiatri og ansette en Lege med fordypning innenfor psykiatri. " ..
+           "Et Apotek og en Sykepleier er essensielt for å kurere pasientene dine. " ..
+           "Se opp for mange tilfeller av Ballonghode - et Pumperom vil fort kunne være til stor hjelp. " ..
+           "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
+  level9 =
+          "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousin, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. " ..
+          "Du må forvente å stöte på en rekke problemer her." ..
+          "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. " ..
+          "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. " ..
+          "Med noe mindre får du ikke fullfört dette nivået.",
+
+  level2 =
+          "Det er et större spekter av plager i dette området. " ..
+          "Bygg sykehuset for å behandle flere pasienter, og planlegg en egen Forskningsavdeling. " ..
+          "Husk å holde institusjonen ren, og streb etter så höyt omdömme som mulig - du vil måtte håndtere plager som Lös tunge, så du trenger en Tungeklinikk. " ..
+          "Du kan også bygge Kardiorom for å forbedre diagnostisering. " ..
+          "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk Områdekartet til dette. " ..
+          "Streb etter et omdömme på 300 og en banksaldo på $10,000, samt 40 kurerte pasienter. ",
+
+  level7 =
+          "Her vil du være under nöye gransking fra Helsedepartementet, så sörg for at kontoene dine viser at du tjener en masse penger, og at omdömmet ditt er svært bra. " ..
+          "Vi har ikke råd til unödvendige dödsfall - det er dårlig for forretningene. " ..
+          "Sörg for at personalet er i tipp-topp form, og at du har alt utstyret du trenger. " ..
+          "Få et omdömme på 600, pluss $200,000 i banken.",
+
+  level5 =
+          "Dette blir et travelt sykehus, siden du må håndtere et bredt spekter av tilfeller. " ..
+          "Legene du kan ansette kommer rett fra skolen, så det kommer til å være avgjörende for deg å bygge et Klasserom og skolere dem til et akseptabelt nivå. " ..
+          "Du har kun tre Konsulenter til å lære opp de uerfarne medarbeiderne, så hold dem lykkelige slik at de ikke slutter. " ..
+          "Merk deg også at sykehusets fundament står på en grunn full av geologiske feil. " ..
+          "Faren for jordskjelv er alltid tilstedeværende. " ..
+          "De vil forårsake betydelig skade på maskiner, og forstyrre den jevne driften av sykehuset. " ..
+          "Få omdömmet ditt opp til 400, og ha $50,000 i banken for å lykkes. Du må også kurere 200 pasienter.",
+
+  level4 =
+          "Hold alle pasientene dine fornöyde, ta deg av dem så effektivt som mulig og hold dödsfall til et absolutt minimum. " ..
+          "Ditt omdömme står på spill, så sörg for at du får det så höyt som mulig. " ..
+          "Ikke bekymre deg for mye over penger - det vil komme etter som ditt vitale omdömme vokser. " ..
+          "Du vil kunne skolere Leger til å utvide sine evner. " ..
+          "Du kan komme til få pasienter som synes å være mer gjennomsiktig enn de fleste. " .. --sjekk english.lua er det bra nok oversettelse?
+          "Oppnå et omdömme på over 500.",
+
+  level14 =
+          "Det er nok en utfordring - det helt uventede overraskelsessykehuset. " ..
+          "Om du klarer å gjöre en suksess ut av dette, vil du bli vinneren over alle andre vinnere. " ..
+          "Ikke forvent at det skal være fort gjort, ettersom det er det töffeste oppdraget du noensinne vil få. " ..
+          "Lykke til!",
+
+  level15 =
+          "Ok, det var den grunnleggende teknikken i å sette et sykehus sammen.//" ..
+          "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnostisere noen av disse pasientene. Du kan hjelpe dem ved å " ..
+          "bygg et ny diagnoserom, for eksempel Generell Diagnose.",
+
+  level8 =
+          "Det er opp til deg å sette opp det mest effektive og kostnadseffektive sykehuset som mulig. " ..
+          "Menneskene rundt her er ganske velstående, så flå dem for så mye grunker du bare klarer. " ..
+          "Husk at det å kurere mennesker er veldig fint, men du trenger virkelig pengene det bringer. " ..
+          "Behandle disse syke personene med Pengeutsugeren. " ..
+          "Samle opp en pengehaug på $300,000 for å fullföre dette nivået.",
+
+  level13 =
+          "Din enestående dyktighet som sykehusadministrator har blitt oppdaget av Hemmelig Super-avdeling fra Superhemmelige Tjenester. " ..
+          "De har en spesiell bonus for deg; det er et rotteinfisert sykehus som trenger en effektiv Terminator. " ..
+          "Du må skyte så mange rotter som mulig för Vaktmesterne rydder opp all söpla. " ..
+          "Tror du at du klarer oppgaven?",
+
+  level16 =
+          "Når du har diagnostisert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne " ..
+          "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
+
+  level6 =
+          "Bruk all din kunnskap til å sette opp et velsmurt og kompetent sykehus som gjör et sunt overskudd og kan håndtere alt som den sykelige offentligheten kan kaste på det. " ..  --todo - godt nok oversatt?
+          "Du bör være klar over at atmosfæren rundt her er kjent for å bære med seg bakterier og infeksjoner. " ..
+          "Med mindre du klarer å holde institusjonen din omhyggelig ren, kan du stå overfor en rekke epidemier blant pasientene. " ..
+          "Pass på at du skaffer deg $150,000, og at sykehuset er verdt over $140,000.",
+
+  level12 =
+          "Du har fått moderen av alle utfordringer nå. " ..
+          "Departementet er imponert over din suksess, og har skaffet toppjobben for deg; de vil at du skal bygge enda et storslagent sykehus, skaffe en stor haug med penger og få et bra utrolig rykte. " ..
+          "Det forventes at du kjöper opp alle områdene du klarer, kurerer alle sykdommer (og da mener vi alle) og vinner alle premiene. " ..
+          "Tror du at du klarer det?" ..
+          "Tjen $650,000, kurer 750 pasienter og få et omdömme på 800 for å vinne dette nivået.",
+
+  level3 =
+          "Du setter opp et sykehus i et velstående område denne gangen. " ..
+          "Helsedepartementet er ute etter at du klarer å sikre en sunn profitt her. " ..
+          "Du må få et godt rykte til å begynne med, men når sykehuset går av seg selv, så konsentrer deg om å tjene så mye penger du klarer. " ..
+          "Det er også en sjanse for at nödssituasjoner oppstår. " ..
+          "Dette er når store mengder mennesker kommer på en gang med samme tilstand. " ..
+          "Kurerer du alle innen tidsfristen så får du et bedre rykte, og en stor xbonus. " ..
+          "Sykdommer som Rock'n'Roll-syndrom kan inntreffe og du bör budsjettere for en Operasjonssal med en Sykestue i nærheten. " ..
+          "Tjen opp $20,000 for å klare nivået.",
+
+  level10 =
+          "I tillegg til å få bukt med alle sykdommene som dukker opp i denne skogkanten, så vil Departementet at du bruker litt tid på å konsentrere deg om effektiviteten av legemidlene dine. " ..
+          "Det har kommet noen klager fra Ofsick, Helsedepartementets vakthund, så for at alt skal se bra ut du må sörge for at alle legemidler er svært effektive. " .. --todo (bytte ut "Ofsick" med et norskt navn)..
+          "Kontroller også at sykehuset i tillegg er uklanderlig. Hold dödsfallene nede. " ..
+          "Som et hint, så kanskje du bör holde av litt plass til en Gelétönne. " ..
+          "Utvikle alle dine medisiner til minst 80 prosent effektivitet, få et omdömme på 650 og gjem unna $500,000 i banken for å vinne. ",
+
+  level11 =
+          "Du har fått muligheten til å bygge det ultimate innen sykehus. " ..
+          "Dette er et meget prestisjefylt område, og Departementet önsker å se det best mulige sykehuset. " ..
+          "Vi vil forvente at du gjör store penger, har et ypperlig og godt omdömme og dekker alle mulige hendelser. " ..
+          "Dette er en viktig jobb. " ..
+          "Du må være virkelig begavet for å gjennomföre det. " ..
+          "Merk også at det har vært observasjoner av UFO-er i området. Sörg for at personalet er forberedt på noen uventede gjester. " ..
+          "Sykehuset ditt må være verdt $240,000, du må ha $500,000 i banken og ditt omdömme må være på minst 700.",
+
+  demo = "Velkommen til demonstrasjonssykehuset!" ..
+          "Uheldigvis inneholder demoversjonen kun dette nivået. Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!" ..
+          "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling." ..
+          "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene." ..
+          "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået." ..
+          "Lykke til!",
 }
 
 

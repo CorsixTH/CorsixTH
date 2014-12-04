@@ -20,22 +20,32 @@ SOFTWARE.
 
 Only lines beginning with % or # as explained below will be considered by the game.
 
-Each line beginning with a %-sign are directives to use when loading the game, such as what
-the level is called and where to find the map file. Available commands:
+Each line beginning with a %-sign is a directive to use when loading the game,
+such as the name of the level and where to find the map file. Available commands:
 - Name: What the level should be called (within quotes)
-- LevelFile: The name of the binary map file to load. First the Levels directory of the 
+- MapFile: The name of the binary map file to load. First the Levels directory of the
   original game will be searched, and then the Levels directory of CorsixTH.
-  
-Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available.
+- LevelBriefing: The body of text shown before you start a custom scenario,
+  and as first information when you have just started a new level.
+  Everything between the citation marks will get included. If you use new lines:
+  One new line is simply discarded, while two new lines in a row creates
+  a new paragraph. So does the special expression // (legacy from Theme Hospital)
+- LevelDebriefing: Text shown in the fax when you win a level.
+
+Lines that begin with # defines all parameters for the level.
+By default there are no diseases and only some basic rooms are available.
 
 
 ---------------------- General Information -------------------------
 %Name = "Example Town"
-%LevelFile = "Example.map"
+%MapFile = "Example.map"
 
-Note that the below introduction text at the moment must reside on a single line within this file!
-%LevelBriefing = "This is an example map that shows aspiring map makers what can be done when making new fantastic creations!"
+Everything within citation marks will be the briefing/debriefing.
+Two new lines creates a new paragraph, but additional new lines in a row are discarded.
+%LevelBriefing = "This is an example map that shows aspiring map makers
+ what can be done when making new fantastic creations!"
+
+%LevelDebriefing = "Congratulations! You played through the example map. Time to do your own?"
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
@@ -186,7 +196,7 @@ How much the skill of the doctor adds to the salary. skill * 1000 / divisor
 --------------------- Research Configuration -----------------------
 
 Divides research input to get the amount of research points. must be > 0
-#gbv.ResearchPointsDivisor 5 
+#gbv.ResearchPointsDivisor 5
 
 ---------------------- Awards and Trophies -------------------------
 

@@ -100,7 +100,7 @@ function Strings:init()
         for _, name in pairs(names) do
           self.language_to_chunk[name:lower()] = chunk
         end
-		self.chunk_to_names[chunk] = names
+        self.chunk_to_names[chunk] = names
         error(good_error_marker)
       end,
       Font = function(...)

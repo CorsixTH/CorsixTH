@@ -530,14 +530,14 @@ dynamic_info.staff.actions.fired = "Despedido"
 
 
 
-introduction_texts.demo = {
-  "Bem-vindo ao hospital do demo!",
-  "Infelizmente este demo só tem este nível.Contudo existe aqui muito trabalho para te manter ocupado!",
-  "Encontrarás várias doenças que requerem salas diferentes para os seus tratamentos.Ao longo do tempo irão ocorrer algumas emergências e precisarás de descobrir novos tratamentos atráves da sala de pesquisa.",
-  "O teu objectivo é ganhar 100,000$,ter um hospital avaliado em 70,000$,uma reputação de 700 e uma cura de 75% dos pacientes.",
-  "Garante que a tua reputação não cai abaixo de 300 e que não mates 40% dos teus pacientes senão perderás o nível.",
-  "Boa sorte!",
-}
+introduction_texts.demo =
+  "Bem-vindo ao hospital do demo!" ..
+  "Infelizmente este demo só tem este nível.Contudo existe aqui muito trabalho para te manter ocupado!" ..
+  "Encontrarás várias doenças que requerem salas diferentes para os seus tratamentos.Ao longo do tempo " ..
+  "irão ocorrer algumas emergências e precisarás de descobrir novos tratamentos atráves da sala de pesquisa." ..
+  "O teu objectivo é ganhar 100,000$,ter um hospital avaliado em 70,000$,uma reputação de 700 e uma cura de 75% dos pacientes." ..
+  "Garante que a tua reputação não cai abaixo de 300 e que não mates 40% dos teus pacientes senão perderás o nível." ..
+  "Boa sorte!"
 
 
 

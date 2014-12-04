@@ -258,28 +258,7 @@ dynamic_info = {
     diagnosed = "Ausculté : %s",
   }
 }
-introduction_texts = {
-  level1 = {
-    [1] = "Bienvenue dans votre premier hôpital !",
-  },
-  level8 = {
-    [4] = "Ratissez tous ces malades !",
-  },
-  level12 = {
-    [1] = "Côté défi, vous allez être servi !",
-    [4] = "Alors, heureux ?",
-  },
-  level13 = {
-    [4] = "Vous pensez y arriver ?",
-  },
-  level14 = {
-    [1] = "Et encore un défi ! Eh oui, voici l'hôpital-surprise !",
-    [4] = "Bonne chance !",
-  },
-  level17 = {
-    [3] = "A vous de jouer, maintenant. Bonne chance et tout ça, quoi !",
-  }
-}
+
 transactions = {
   cure_colon = "Guérison :",
   final_treat_colon = "Trait final :",
@@ -1062,14 +1041,40 @@ tooltip.cheats_window = {
 
 -- Introduction Texts
 introduction_texts = {
-  demo = {
-    "Bienvenue dans l'hôpital de démonstration !",
-    "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !",
-    "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles.",
-    "Votre but est de gagner 100,000$, de faire monter la valeur de votre hôpital à 70,000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients.",
-    "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez.",
+  demo =
+    "Bienvenue dans l'hôpital de démonstration !" ..
+    "Malheureusement, la version démo ne contient que ce niveau. Malgré tout, il y a assez à faire ici pour vous occuper un moment !" ..
+    "Vous allez rencontrer différentes maladies qui nécessitent des salles pour les soigner. De temps en temps, des urgences peuvent se produire. Et vous aurez besoin d'une salle de recherche pour trouver des nouvelles salles." ..
+    "Votre but est de gagner 100,000$, de faire monter la valeur de votre hôpital à 70,000$ et d'obtenir une réputation de 700, tout en ayant soigné au moins 75% de vos patients." ..
+    "Veillez à ce que votre réputation ne tombe pas en dessous de 300 et de ne pas tuer plus de 40% de vos patients, ou vous perdrez." ..
     "Bonne chance !",
-  },
+  level1 =
+    "Bienvenue dans votre premier hôpital !//Démarrez l'activité en installant un bureau de réception et " ..
+    "en construisant un cabinet de médecine générale. Embauchez une réceptionniste et un médecin. Il vous " ..
+    "suffit d'attendre des admissions. Il serait bon de construire un cabinet de psychiatrie et d'embaucher " ..
+    "un médecin formé dans ce domaine. Une pharmacie et une infermière sont également indispensables pour soigner " ..
+    "les patients. Attention aux cas d'encéphalantiasis: une salle de gonflage suffit pour traiter cette maladie. " ..
+    "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en-dessous de 200",
+  level8 =
+    "A vous de gérer l'hôpital le plus efficace et le plus rentable possible.//Les gens du coin sont bien nantis alors " ..
+    "pompez-leur tout le fric que vous pourrez. Soigner les gens c'est bien joli mais vous avez BESOIN de l'argent que ça " ..
+    "rapporte. Ratissez tous ces malades ! Amassez un joli paquet de $300.000 pour terminer ce niveau. ",
+  level12 =
+    "Côté défi, vous allez être servi ! Impressionné par votre succès, le Ministère veut vous assigner une mission de confiance. " ..
+    "Vous devrez construire un autre hôpital de pointe, gagner des sommes scandaleuses et vous faire une réputation fabuleuse. " ..
+    "Vous devrez également acheter tout le terrain possible, soigner toutes les maladies (nous avons bien dit TOUTES) et remporter " ..
+    "toutes les récompenses. Alors, heureux ? Gagnez $650.000, soignez 750 personnes et affichez une réputation de 800 pour gagner ce niveau. ",
+  level13 =
+    "Votre incroyable talent en tant que directeur d'hôpital a attiré l'attention de la Division Spéciale Secrète des " ..
+    "Services Spéciaux Secrets. On vous propose un bonus: il y a un hôpital infesté de rats qui réclame un Nettoyeur efficace. " ..
+    "Vous devez descendre le plus de rats possible avant que les agents de maintenance fassent leur boulot. Vous pensez y arriver ?",
+  level14 =
+    "Et encore un défi ! Eh oui, voici l'hôpital-surprise ! Si vous réussissez cette épreuve, vous serez le gagnant des gagnants. " ..
+    "Mais ça ne sera pas du gâteau car vous n'aviez encore rien vu de pareil... Bonne chance !",
+  level17 =
+    "Un bon conseil: veillez à votre réputation car c'est elle qui vous garantira une clientèle. Si vous ne tuez pas trop de " ..
+    "gens et les gardez raisonnablement satisfaits, vous n'aurez pas trop de difficultés à ce niveau. //A vous de jouer, maintenant. " ..
+    "Bonne chance et tout ça, quoi !",
 }
 
 -- Calls Dispatcher Dialog
