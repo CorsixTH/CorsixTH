@@ -668,8 +668,10 @@ function Room:tryToFindNearbyPatients()
       while queue:reportedSize() > 1 do
         local patient = queue:back()
         local px, py = patient.tile_x, patient.tile_y
-        if world:getPathDistance(px, py, our_x, our_y) + our_score <
-        world:getPathDistance(px, py, other_x, other_y) + other_score then
+        -- Don't reroute the patient if he just decided to go to the toilet
+        if not patient.going_to_toilet and
+          world:getPathDistance(px, py, our_x, our_y) + our_score <
+          world:getPathDistance(px, py, other_x, other_y) + other_score then
           -- Update the queues
           queue:removeValue(patient)
           patient.next_room_to_visit = self
