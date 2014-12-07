@@ -28,6 +28,9 @@ local rawset, rawget
 --! Layer which handles the loading of localised text.
 class "Strings"
 
+---@type Strings
+local Strings = _G["Strings"]
+
 function Strings:Strings(app)
   self.app = app
 end

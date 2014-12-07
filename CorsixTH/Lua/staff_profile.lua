@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "StaffProfile"
 
+---@type StaffProfile
+local StaffProfile = _G["StaffProfile"]
+
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.world = world
   self.humanoid_class = humanoid_class

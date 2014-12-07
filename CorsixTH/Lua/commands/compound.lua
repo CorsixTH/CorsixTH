@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "CompoundCommand" (Command)
 
+---@type CompoundCommand
+local CompoundCommand = _G["CompoundCommand"]
+
 function CompoundCommand:CompoundCommand()
   self:Command(true)
   self.command_list = {}

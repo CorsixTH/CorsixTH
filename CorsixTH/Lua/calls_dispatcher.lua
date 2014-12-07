@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "CallsDispatcher"
 
+---@type CallsDispatcher
+local CallsDispatcher = _G["CallsDispatcher"]
+
 local debug = false -- Turn on for debug message
 
 function CallsDispatcher:CallsDispatcher(world, entities)

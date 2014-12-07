@@ -30,6 +30,9 @@ local assert, string_char, table_concat, unpack, type, pairs, ipairs
 -- the other Lua code.
 class "Graphics"
 
+---@type Graphics
+local Graphics = _G["Graphics"]
+
 local cursors_name = {
   default = 1,
   clicked = 2,
@@ -444,6 +447,9 @@ end
 
 --! Utility class for setting animation markers and querying animation length.
 class "AnimationManager"
+
+---@type AnimationManager
+local AnimationManager = _G["AnimationManager"]
 
 function AnimationManager:AnimationManager(anims)
   self.anim_length_cache = {}

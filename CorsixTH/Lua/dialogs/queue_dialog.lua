@@ -25,6 +25,9 @@ local math_floor
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 
+---@type UIQueue
+local UIQueue = _G["UIQueue"]
+
 function UIQueue:UIQueue(ui, queue)
   self:Window()
 
@@ -339,6 +342,9 @@ function UIQueue:drawPatient(canvas, x, y, patient)
 end
 
 class "UIQueuePopup" (Window)
+
+---@type UIQueuePopup
+local UIQueuePopup = _G["UIQueuePopup"]
 
 function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:Window()

@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
 class "UIConfirmDialog" (Window)
 
+---@type UIConfirmDialog
+local UIConfirmDialog = _G["UIConfirmDialog"]
+
 function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
 

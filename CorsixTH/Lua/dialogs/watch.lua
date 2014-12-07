@@ -22,6 +22,9 @@ SOFTWARE. --]]
 --! The timer lasts approximately 100 days, split into 13 segments
 class "UIWatch" (Window)
 
+---@type UIWatch
+local UIWatch = _G["UIWatch"]
+
 --!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
 function UIWatch:UIWatch(ui, count_type)
   self:Window()

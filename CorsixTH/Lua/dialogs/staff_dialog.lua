@@ -31,6 +31,9 @@ end
 --! Individual staff information dialog
 class "UIStaff" (Window)
 
+---@type UIStaff
+local UIStaff = _G["UIStaff"]
+
 function UIStaff:changeParcel()
   local index = 0
   for i, v in ipairs(self.staff.hospital.ownedPlots) do

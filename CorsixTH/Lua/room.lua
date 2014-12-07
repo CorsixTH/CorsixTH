@@ -22,6 +22,9 @@ local TH = require "TH"
 
 class "Room"
 
+---@type Room
+local Room = _G["Room"]
+
 function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world

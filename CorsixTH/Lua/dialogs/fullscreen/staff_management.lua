@@ -23,6 +23,9 @@ local math_floor = math.floor
 --! Staff management screen
 class "UIStaffManagement" (UIFullscreen)
 
+---@type UIStaffManagement
+local UIStaffManagement = _G["UIStaffManagement"]
+
 function UIStaffManagement:UIStaffManagement(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx

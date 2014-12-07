@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Customise window used in the main menu and ingame.
 class "UICustomise" (UIResizable)
 
+---@type UICustomise
+local UICustomise = _G["UICustomise"]
+
 local col_bg = {
   red = 154,
   green = 146,

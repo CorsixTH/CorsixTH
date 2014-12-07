@@ -34,6 +34,9 @@ dofile "queue"
 
 class "Door" (Object)
 
+---@type Door
+local Door = _G["Door"]
+
 function Door:Door(...)
   self:Object(...)
   self.queue = Queue()

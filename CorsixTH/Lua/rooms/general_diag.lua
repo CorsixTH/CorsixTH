@@ -42,6 +42,9 @@ room.call_sound = "reqd021.wav"
 
 class "GeneralDiagRoom" (Room)
 
+---@type GeneralDiagRoom
+local GeneralDiagRoom = _G["GeneralDiagRoom"]
+
 function GeneralDiagRoom:GeneralDiagRoom(...)
   self:Room(...)
 end

@@ -23,6 +23,9 @@ dofile "window"
 --! Top-level container for all other user-interface components.
 class "UI" (Window)
 
+---@type UI
+local UI = _G["UI"]
+
 local TH = require "TH"
 local WM = require "sdl".wm
 local SDL = require "sdl"

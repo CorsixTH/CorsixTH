@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Save Game Window
 class "UISaveGame" (UIFileBrowser)
 
+---@type UISaveGame
+local UISaveGame = _G["UISaveGame"]
+
 local pathsep = package.config:sub(1, 1)
 
 local col_textbox = {

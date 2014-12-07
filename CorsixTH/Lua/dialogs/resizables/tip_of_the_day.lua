@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Tip of the Day Window
 class "UITipOfTheDay" (UIResizable)
 
+---@type UITipOfTheDay
+local UITipOfTheDay = _G["UITipOfTheDay"]
+
 local col_bg = {
   red = math.random(20, 200),
   green = math.random(20, 200),

@@ -33,6 +33,9 @@ local SAVEGAME_VERSION = 89
 
 class "App"
 
+---@type App
+local App = _G["App"]
+
 function App:App()
   self.command_line = {}
   self.config = {}

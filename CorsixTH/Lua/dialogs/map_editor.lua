@@ -26,6 +26,9 @@ dofile "commands/compound"
 
 class "UIMapEditor" (Window)
 
+---@type UIMapEditor
+local UIMapEditor = _G["UIMapEditor"]
+
 local math_floor
     = math.floor
 

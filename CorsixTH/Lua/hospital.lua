@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "Hospital"
 
+---@type Hospital
+local Hospital = _G["Hospital"]
+
 function Hospital:Hospital(world, name)
   self.world = world
   local level_config = world.map.level_config
@@ -1743,6 +1746,9 @@ function Hospital:checkDiseaseRequirements(disease)
 end
 
 class "AIHospital" (Hospital)
+
+---@type AIHospital
+local AIHospital = _G["AIHospital"]
 
 function AIHospital:AIHospital(competitor, ...)
   self:Hospital(...)
