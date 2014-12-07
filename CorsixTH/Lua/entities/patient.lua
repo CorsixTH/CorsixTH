@@ -870,12 +870,13 @@ function Patient:tickDay()
     end
   end
 
-  -- If the patient is sitting on a bench and queued,
+  -- If the patient is sitting on a bench or standing and queued,
   -- it may be a situation where he/she is not in the queue
   -- anymore, but should be. If this is the case for more than
   -- 2 ticks, go to reception
-  if #self.action_queue > 1 and self.action_queue[1].name == "use_object"
-    and self.action_queue[2].name == "queue" then
+  if #self.action_queue > 1 and (self.action_queue[1].name == "use_object" or
+    self.action_queue[1].name == "idle") and
+    self.action_queue[2].name == "queue" then
     local found = false
     for _, humanoid in ipairs(self.action_queue[2].queue) do
       if humanoid == self then
