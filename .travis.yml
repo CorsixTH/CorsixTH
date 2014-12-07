@@ -53,6 +53,8 @@ before_script:
 script:
   # Check if there are trailing whitespaces.
   - ${TRAVIS_BUILD_DIR}/scripts/check_trailing_whitespaces.py $TRAVIS_BUILD_DIR
+  # Check if there are lua classes with invalid/improper declarations.
+  - python ${TRAVIS_BUILD_DIR}/scripts/check_lua_classes.py
   # Build CorsixTH
   - make
   # Validate lua files
