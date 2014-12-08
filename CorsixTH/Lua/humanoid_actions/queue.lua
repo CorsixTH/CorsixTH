@@ -292,14 +292,17 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   -- Callback function used after the drinks machine has been used.
   local --[[persistable:action_queue_get_soda_after_use]] function after_use()
     fun_after_use() -- Defined in patient:tickDay
-    -- Insert an idle action so that change_position can do its work.
+    -- If the patient is still in the queue, insert an idle action so that
+    -- change_position can do its work.
     -- Note that it is inserted after the currently executing use_object action.
-    humanoid:queueAction({
-      name = "idle",
-      --direction = machine,
-      must_happen = true,
-    }, 1)
-    action_queue_on_change_position(action, humanoid)
+    if action.is_in_queue then
+      humanoid:queueAction({
+        name = "idle",
+        --direction = machine,
+        must_happen = true,
+      }, 1)
+      action_queue_on_change_position(action, humanoid)
+    end
   end
 
   -- Walk to the machine and then use it.
