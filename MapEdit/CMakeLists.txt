@@ -163,14 +163,20 @@ IF(CORSIX_TH_USE_OGL_RENDERER)
 ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
 # Find Lua
-FIND_PACKAGE(Lua51 REQUIRED)
-IF(LUA51_FOUND)
-  TARGET_LINK_LIBRARIES( MapEdit ${LUA_LIBRARY})
+FIND_PACKAGE(Lua REQUIRED)
+IF(Lua_FOUND)
+  TARGET_LINK_LIBRARIES(MapEdit ${LUA_LIBRARY})
   INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-  message( "  Lua 5.1 found" )
-ELSE(LUA51_FOUND)
-  message( FATAL_ERROR "error: Lua library not found, it is required to build")
-ENDIF(LUA51_FOUND)
+  # Special link flags needed on OSX/64bit, according to: http://luajit.org/install.html
+  # If these are not specified, luaL_newstate() returns NULL and we get this:
+  #   Fatal error starting CorsixTH: Cannot open Lua state.
+  IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND LUA_INTERPRETER_TYPE STREQUAL "LuaJIT" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    TARGET_LINK_LIBRARIES(MapEdit "-pagezero_size 10000" "-image_base 100000000")
+  ENDIF()
+  message("  ${LUA_INTERPRETER_TYPE} found")
+ELSE(Lua_FOUND)
+  message(FATAL_ERROR "Error: Lua library not found, it is required to build")
+ENDIF(Lua_FOUND)
 
 # Find msinttypes for MSVC
 IF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
@@ -182,30 +188,15 @@ IF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
 ENDIF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
 
 IF(APPLE)
-
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
   install(TARGETS MapEdit BUNDLE DESTINATION .)
 
-  #Copy the required frameworks into the bundle.
-  IF(SDL_FOUND)
-    IF(SDL_LIBRARY MATCHES "\\.framework") #Only copy if it's an actual framework.
-      string(REPLACE "-framework Cocoa" "" SDL_FRAMEWORK_LOC ${SDL_LIBRARY})
-      install(DIRECTORY ${SDL_FRAMEWORK_LOC} DESTINATION MapEdit.app/Contents/Frameworks)
-    ENDIF()
-  ENDIF()
-
-  IF(SDLMIXER_FOUND)
-    IF(${SDLMIXER_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
-      install(DIRECTORY ${SDLMIXER_LIBRARY} DESTINATION MapEdit.app/Contents/Frameworks)
-    ENDIF()
-  ENDIF()
-
-  IF(LUA51_FOUND)
-    IF(${LUA_LIBRARY} MATCHES "\\.framework$") #Only copy if it's an actual framework.
-      install(DIRECTORY ${LUA_LIBRARY} DESTINATION MapEdit.app/Contents/Frameworks)
-    ENDIF()
-  ENDIF()
-
+  # Fix the OS X bundle to include required libraries (create a redistributable app)
+  install(CODE "
+    INCLUDE(BundleUtilities)
+    SET(BU_CHMOD_BUNDLE_ITEMS ON)
+    FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/MapEdit.app \"\" \"\")
+    ")
 ELSE()
   install(TARGETS MapEdit RUNTIME DESTINATION CorsixTH)
 ENDIF()
