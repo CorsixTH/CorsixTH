@@ -111,7 +111,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     // will call the appropriate luaopen_X function in C.
 #define PRELOAD(name, fn) \
     luaT_execute(L, "package.preload." name " = ...", fn)
-    PRELOAD("lfs", luaopen_lfs_ext);
+    PRELOAD("lfs", luaopen_lfs);
     PRELOAD("lpeg", luaopen_lpeg);
     PRELOAD("rnc", luaopen_rnc);
     PRELOAD("TH", luaopen_th);
