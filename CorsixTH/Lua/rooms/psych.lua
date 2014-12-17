@@ -102,12 +102,16 @@ function PsychRoom:commandEnteringPatient(patient)
           name = "use_screen",
           object = obj,
           after_use = --[[persistable:psych_screen_after_use]] function()
-            self:getStaffMember():setNextAction{name = "meander"}
+            if self:getStaffMember() then
+              self:getStaffMember():setNextAction{name = "meander"}
+            end
             self:dealtWithPatient(patient)
           end,
         }
       else
-        self:getStaffMember():setNextAction{name = "meander"}
+        if self:getStaffMember() then
+          self:getStaffMember():setNextAction{name = "meander"}
+        end
         self:dealtWithPatient(patient)
       end
       return
