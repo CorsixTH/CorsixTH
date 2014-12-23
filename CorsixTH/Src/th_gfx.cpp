@@ -106,6 +106,7 @@ bool THAnimationManager::loadFromTHFile(
         return false;
     }
 
+    // Read animations.
     for(unsigned int i = 0; i < m_iAnimationCount; ++i)
     {
         unsigned int iFirstFrame = reinterpret_cast<const th_anim_t*>(pStartData)[i].frame;
@@ -114,6 +115,7 @@ bool THAnimationManager::loadFromTHFile(
         m_pFirstFrames[i] = iFirstFrame;
     }
 
+    // Read frames.
     for(unsigned int i = 0; i < m_iFrameCount; ++i)
     {
         const th_frame_t* pFrame = reinterpret_cast<const th_frame_t*>(pFrameData) + i;
@@ -128,9 +130,11 @@ bool THAnimationManager::loadFromTHFile(
         m_pFrames[i].iSecondaryMarkerY = 0;
     }
 
+    // Read element list.
     memcpy(m_pElementList, pListData, iListCount * 2);
     m_pElementList[iListCount] = 0xFFFF;
 
+    // Read elements.
     for(unsigned int i = 0; i < m_iElementCount; ++i)
     {
         const th_element_t* pTHElement = reinterpret_cast<const th_element_t*>(pElementData) + i;
@@ -145,6 +149,7 @@ bool THAnimationManager::loadFromTHFile(
         pElement->iLayerId = pTHElement->layerid;
     }
 
+    // Compute bounding box of the animations using the sprite sheet.
     unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     for(unsigned int i = 0; i < m_iFrameCount; ++i)
     {

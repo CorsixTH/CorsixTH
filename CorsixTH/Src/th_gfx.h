@@ -200,13 +200,14 @@ public:
 
     void setSpriteSheet(THSpriteSheet* pSpriteSheet);
 
-    //! Load animation information
+    //! Load original animations.
     /*!
         setSpriteSheet() must be called before calling this.
         @param pStartData Animation first frame indicies (e.g. VSTART-1.ANI)
         @param pFrameData Frame details (e.g. VFRA-1.ANI)
         @param pListData Element indicies list (e.g. VLIST-1.ANI)
         @param pElementData Element details (e.g. VELE-1.ANI)
+        @return Loading was successful.
     */
     bool loadFromTHFile(const unsigned char* pStartData, size_t iStartDataLength,
                         const unsigned char* pFrameData, size_t iFrameDataLength,
@@ -314,44 +315,48 @@ protected:
 
     struct frame_t
     {
-        unsigned int iListIndex;
-        unsigned int iNextFrame;
-        unsigned int iSound;
-        unsigned int iFlags;
+        unsigned int iListIndex; ///< First entry in #m_vElementList (pointing to an element) for this frame.
+        unsigned int iNextFrame; ///< Number of the next frame.
+        unsigned int iSound;     ///< Sound to play, if non-zero.
+        unsigned int iFlags;     ///< Flags of the frame. Bit 0=start of animation.
+
         // Bounding rectangle is with all layers / options enabled - used as a
         // quick test prior to a full pixel perfect test.
-        int iBoundingLeft;
-        int iBoundingRight;
-        int iBoundingTop;
-        int iBoundingBottom;
+        int iBoundingLeft;       ///< Left edge of the bounding rectangle of this frame.
+        int iBoundingRight;      ///< Right edge of the bounding rectangle of this frame.
+        int iBoundingTop;        ///< Top edge of the bounding rectangle of this frame.
+        int iBoundingBottom;     ///< Bottom edge of the bounding rectangle of this frame.
+
         // Markers are used to know where humanoids are on an frame. The
         // positions are pixels offsets from the centre of the frame's base
         // tile to the centre of the humanoid's feet.
-        int iMarkerX;
-        int iMarkerY;
-        int iSecondaryMarkerX;
-        int iSecondaryMarkerY;
+        int iMarkerX;            ///< X position of the first center of a humanoids feet.
+        int iMarkerY;            ///< Y position of the first center of a humanoids feet.
+        int iSecondaryMarkerX;   ///< X position of the second center of a humanoids feet.
+        int iSecondaryMarkerY;   ///< Y position of the second center of a humanoids feet.
     };
 
     struct element_t
     {
-        unsigned int iSprite;
-        unsigned int iFlags;
-        int iX;
-        int iY;
-        unsigned char iLayer;
-        unsigned char iLayerId;
+        unsigned int iSprite;   ///< Sprite number of the sprite sheet to display.
+        unsigned int iFlags;    ///< Flags of the sprite.
+                                ///< bit 0=flip vertically, bit 1=flip horizontally,
+                                ///< bit 2=draw 50% alpha, bit 3=draw 75% alpha.
+        int iX;                 ///< X offset of the sprite.
+        int iY;                 ///< Y offset of the sprite.
+        unsigned char iLayer;   ///< Layer class (0..12).
+        unsigned char iLayerId; ///< Value of the layer class to match.
     };
 
-    unsigned int* m_pFirstFrames;
-    frame_t* m_pFrames;
-    uint16_t* m_pElementList;
-    element_t* m_pElements;
-    THSpriteSheet* m_pSpriteSheet;
+    unsigned int* m_pFirstFrames;  ///< First frame number of an animation.
+    frame_t* m_pFrames;            ///< The loaded frames.
+    uint16_t* m_pElementList;      ///< List of elements for a frame.
+    element_t* m_pElements;        ///< Sprite Elements.
+    THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
 
-    unsigned int m_iAnimationCount;
-    unsigned int m_iFrameCount;
-    unsigned int m_iElementCount;
+    unsigned int m_iAnimationCount; ///< Number of animations.
+    unsigned int m_iFrameCount;     ///< Number of frames.
+    unsigned int m_iElementCount;   ///< Number of sprite elements.
 };
 
 struct THMapNode;
