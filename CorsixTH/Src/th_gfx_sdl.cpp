@@ -1154,6 +1154,109 @@ SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
     return pSprite->pAltTexture;
 }
 
+/**
+ * Get the colour data of pixel \a iPixelNumber (\a iWidth * y + x)
+ * @param pImg 32bpp image data.
+ * @param iWidth Width of the image.
+ * @param iHeight Height of the image.
+ * @param pPalette Palette of the image, or \c NULL.
+ * @param iPixelNumber Numer of the pixel to retrieve.
+ */
+static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHeight,
+                                  const THPalette *pPalette, int iPixelNumber)
+{
+    if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 || iPixelNumber >= iWidth * iHeight)
+        return THPalette::packARGB(0, 0, 0,0);
+
+    for (;;) {
+        unsigned char iType = *pImg++;
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += 3 * iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                while (iLength > 0)
+                {
+                    if (iPixelNumber == 0)
+                        return THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
+
+                    iPixelNumber--;
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+
+            case 1: // Fixed partially transparent 32bpp pixels
+            {
+                unsigned char iOpacity = *pImg++;
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += 3 * iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                while (iLength > 0)
+                {
+                    if (iPixelNumber == 0)
+                        return THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
+
+                    iPixelNumber--;
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+            }
+
+            case 2: // Fixed fully transparent pixels
+            {
+                if (iPixelNumber >= iLength)
+                {
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                return THPalette::packARGB(0, 0, 0, 0);
+            }
+
+            case 3: // Recolour layer
+            {
+                unsigned char iTable = *pImg++;
+                pImg++; // Skip reading the opacity for now.
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                if (iTable == 0xFF && pPalette != NULL)
+                {
+                    // Legacy sprite data. Use the palette to recolour the layer.
+                    // Note that the iOpacity is ignored here.
+                    const uint32_t* pColours = pPalette->getARGBData();
+                    return pColours[pImg[iPixelNumber]];
+                }
+                else
+                {
+                    // TODO: Add proper recolour layers, where RGB comes from
+                    // table 'iTable' at index *pImg (iLength times), and
+                    // opacity comes from the byte after the iTable byte.
+                    //
+                    // For now just draw black pixels, so it won't go unnoticed.
+                    return THPalette::packARGB(0xFF, 0, 0, 0);
+                }
+            }
+        }
+    }
+}
+
 bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
 {
     if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
@@ -1168,10 +1271,9 @@ bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned
         iX = iWidth - iX - 1;
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
-    unsigned char cPalIndex = sprite.pData[iY * iWidth + iX];
 
-    const uint32_t* pColours = m_pPalette->getARGBData();
-    return THPalette::getA(pColours[cPalIndex]) != 0;
+    unsigned int iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
+    return THPalette::getA(iCol) != 0;
 }
 
 THCursor::THCursor()

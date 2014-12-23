@@ -551,7 +551,7 @@ protected:
         //! SDL structure containing the sprite with alternative palette.
         SDL_Texture *pAltTexture;
 
-        //! Data of the sprite (width * height bytes).
+        //! Data of the sprite.
         unsigned char *pData;
 
         //! Alternative palette (if available).
