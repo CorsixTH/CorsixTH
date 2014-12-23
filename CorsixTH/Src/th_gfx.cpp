@@ -55,18 +55,6 @@ void THAnimationManager::setSpriteSheet(THSpriteSheet* pSpriteSheet)
     m_pSpriteSheet = pSpriteSheet;
 }
 
-inline static void _setmin(int& iLeft, int iRight)
-{
-    if(iRight < iLeft)
-        iLeft = iRight;
-}
-
-inline static void _setmax(int& iLeft, int iRight)
-{
-    if(iRight > iLeft)
-        iLeft = iRight;
-}
-
 bool THAnimationManager::loadFromTHFile(
                         const unsigned char* pStartData, size_t iStartDataLength,
                         const unsigned char* pFrameData, size_t iFrameDataLength,
@@ -174,29 +162,7 @@ bool THAnimationManager::loadFromTHFile(
     // Compute bounding box of the animations using the sprite sheet.
     for(unsigned int i = 0; i < iFrameCount; ++i)
     {
-        frame_t& oFrame = m_vFrames[iFrameStart + i];
-        oFrame.iBoundingLeft   = INT_MAX;
-        oFrame.iBoundingRight  = INT_MIN;
-        oFrame.iBoundingTop    = INT_MAX;
-        oFrame.iBoundingBottom = INT_MIN;
-        unsigned int iListIndex = oFrame.iListIndex;
-        for(; ; ++iListIndex)
-        {
-            uint16_t iElement = m_vElementList[iListIndex];
-            if(iElement >= iElementCount)
-                break;
-
-            element_t& oElement = m_vElements[iElement];
-            if(oElement.pSpriteSheet == NULL)
-                continue;
-
-            unsigned int iWidth, iHeight;
-            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
-            _setmin(oFrame.iBoundingLeft  , oElement.iX);
-            _setmin(oFrame.iBoundingTop   , oElement.iY);
-            _setmax(oFrame.iBoundingRight , oElement.iX - 1 + (int)iWidth);
-            _setmax(oFrame.iBoundingBottom, oElement.iY - 1 + (int)iHeight);
-        }
+        setBoundingBox(m_vFrames[iFrameStart + i]);
     }
 
     m_iAnimationCount += iAnimationCount;
@@ -210,6 +176,54 @@ bool THAnimationManager::loadFromTHFile(
     assert(m_vElements.size() == m_iElementCount);
 
     return true;
+}
+
+//! Update \a iLeft with the smallest of both values.
+/*!
+   @param [inout] iLeft Left value to check and update.
+   @param iRight Second value to check.
+ */
+inline static void _setmin(int& iLeft, int iRight)
+{
+    if(iRight < iLeft)
+        iLeft = iRight;
+}
+
+//! Update \a iLeft with the biggest of both values.
+/*!
+   @param [inout] iLeft Left value to check and update.
+   @param iRight Second value to check.
+ */
+inline static void _setmax(int& iLeft, int iRight)
+{
+    if(iRight > iLeft)
+        iLeft = iRight;
+}
+
+void THAnimationManager::setBoundingBox(frame_t &oFrame)
+{
+    oFrame.iBoundingLeft   = INT_MAX;
+    oFrame.iBoundingRight  = INT_MIN;
+    oFrame.iBoundingTop    = INT_MAX;
+    oFrame.iBoundingBottom = INT_MIN;
+    unsigned int iListIndex = oFrame.iListIndex;
+    for(; ; ++iListIndex)
+    {
+        uint16_t iElement = m_vElementList[iListIndex];
+        if(iElement >= m_vElements.size())
+            break;
+
+        element_t& oElement = m_vElements[iElement];
+        if(oElement.pSpriteSheet == NULL)
+            continue;
+
+        unsigned int iWidth, iHeight;
+        oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+        _setmin(oFrame.iBoundingLeft  , oElement.iX);
+        _setmin(oFrame.iBoundingTop   , oElement.iY);
+        _setmax(oFrame.iBoundingRight , oElement.iX - 1 + (int)iWidth);
+        _setmax(oFrame.iBoundingBottom, oElement.iY - 1 + (int)iHeight);
+    }
 }
 
 unsigned int THAnimationManager::getAnimationCount() const

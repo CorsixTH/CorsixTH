@@ -362,6 +362,12 @@ protected:
     unsigned int m_iFrameCount;       ///< Number of frames.
     unsigned int m_iElementListCount; ///< Number of list elements.
     unsigned int m_iElementCount;     ///< Number of sprite elements.
+
+    //! Compute the bounding box of the frame.
+    /*!
+       @param oFrame Frame to inspect/set.
+     */
+    void setBoundingBox(frame_t &oFrame);
 };
 
 struct THMapNode;
