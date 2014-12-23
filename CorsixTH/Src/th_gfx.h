@@ -347,6 +347,8 @@ protected:
         int iY;                 ///< Y offset of the sprite.
         unsigned char iLayer;   ///< Layer class (0..12).
         unsigned char iLayerId; ///< Value of the layer class to match.
+
+        THSpriteSheet *pSpriteSheet; ///< Sprite sheet to use for this element.
     };
 
     std::vector<unsigned int> m_vFirstFrames; ///< First frame number of an animation.

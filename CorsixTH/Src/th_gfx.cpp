@@ -134,9 +134,12 @@ bool THAnimationManager::loadFromTHFile(
     for(unsigned int i = 0; i < iListCount; ++i)
     {
         uint16_t iElmNumber = *(reinterpret_cast<const uint16_t*>(pListData) + i);
-        if (iElmNumber >= iElementCount) {
+        if (iElmNumber >= iElementCount)
+        {
             iElmNumber = 0xFFFF;
-        } else {
+        }
+        else
+        {
             iElmNumber += iElementStart;
         }
 
@@ -145,6 +148,7 @@ bool THAnimationManager::loadFromTHFile(
     m_vElementList.push_back(0xFFFF);
 
     // Read elements.
+    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     for(unsigned int i = 0; i < iElementCount; ++i)
     {
         const th_element_t* pTHElement = reinterpret_cast<const th_element_t*>(pElementData) + i;
@@ -158,12 +162,16 @@ bool THAnimationManager::loadFromTHFile(
         if(oElement.iLayer > 12)
             oElement.iLayer = 6; // Nothing lives on layer 6
         oElement.iLayerId = pTHElement->layerid;
+        if (oElement.iSprite < iSpriteCount) {
+            oElement.pSpriteSheet = m_pSpriteSheet;
+        } else {
+            oElement.pSpriteSheet = NULL;
+        }
 
         m_vElements.push_back(oElement);
     }
 
     // Compute bounding box of the animations using the sprite sheet.
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     for(unsigned int i = 0; i < iFrameCount; ++i)
     {
         frame_t& oFrame = m_vFrames[iFrameStart + i];
@@ -179,11 +187,11 @@ bool THAnimationManager::loadFromTHFile(
                 break;
 
             element_t& oElement = m_vElements[iElement];
-            if(oElement.iSprite >= iSpriteCount)
+            if(oElement.pSpriteSheet == NULL)
                 continue;
 
             unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
             _setmin(oFrame.iBoundingLeft  , oElement.iX);
             _setmin(oFrame.iBoundingTop   , oElement.iY);
             _setmax(oFrame.iBoundingRight , oElement.iX - 1 + (int)iWidth);
@@ -232,7 +240,7 @@ unsigned int THAnimationManager::getNextFrame(unsigned int iFrame) const
 
 void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap)
 {
-    if(iAnimation >= m_iAnimationCount || m_pSpriteSheet == NULL)
+    if(iAnimation >= m_iAnimationCount)
         return;
 
     unsigned int iFrame = m_vFirstFrames[iAnimation];
@@ -247,7 +255,8 @@ void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, cons
                 break;
 
             element_t& oElement = m_vElements[iElement];
-            m_pSpriteSheet->setSpriteAltPaletteMap(oElement.iSprite, pMap);
+            if (oElement.pSpriteSheet != NULL)
+                oElement.pSpriteSheet->setSpriteAltPaletteMap(oElement.iSprite, pMap);
         }
         iFrame = m_vFrames[iFrame].iNextFrame;
     } while(iFrame != iFirstFrame);
@@ -318,7 +327,6 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
         return true;
 
     unsigned int iListIndex = oFrame.iListIndex;
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     for(; ; ++iListIndex)
     {
         uint16_t iElement = m_vElementList[iListIndex];
@@ -327,7 +335,7 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
 
         const element_t &oElement = m_vElements[iElement];
         if((oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
-         || oElement.iSprite >= iSpriteCount)
+         || oElement.pSpriteSheet == NULL)
         {
             continue;
         }
@@ -335,8 +343,8 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
         if(iFlags & THDF_FlipHorizontal)
         {
             unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
-            if(m_pSpriteSheet->hitTestSprite(oElement.iSprite, oElement.iX + iWidth - iTestX,
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+            if(oElement.pSpriteSheet->hitTestSprite(oElement.iSprite, oElement.iX + iWidth - iTestX,
                 iTestY - oElement.iY, oElement.iFlags ^ THDF_FlipHorizontal))
             {
                 return true;
@@ -344,7 +352,7 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
         }
         else
         {
-            if(m_pSpriteSheet->hitTestSprite(oElement.iSprite, iTestX - oElement.iX,
+            if(oElement.pSpriteSheet->hitTestSprite(oElement.iSprite, iTestX - oElement.iX,
                 iTestY - oElement.iY, oElement.iFlags))
             {
                 return true;
@@ -357,10 +365,9 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
 
 void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const
 {
-    if(iFrame >= m_iFrameCount || m_pSpriteSheet == NULL)
+    if(iFrame >= m_iFrameCount)
         return;
 
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     unsigned int iPassOnFlags = iFlags & THDF_AltPalette;
 
     unsigned int iListIndex = m_vFrames[iFrame].iListIndex;
@@ -371,8 +378,10 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
             break;
 
         const element_t &oElement = m_vElements[iElement];
-        if((oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
-         || oElement.iSprite >= iSpriteCount)
+        if (oElement.pSpriteSheet == NULL)
+            continue;
+
+        if(oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
         {
             // Some animations involving doctors (i.e. #72, #74, maybe others)
             // only provide versions for heads W1 and B1, not W2 and B2. The
@@ -389,14 +398,14 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
         if(iFlags & THDF_FlipHorizontal)
         {
             unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
 
-            m_pSpriteSheet->drawSprite(pCanvas, oElement.iSprite, iX - oElement.iX - iWidth,
+            oElement.pSpriteSheet->drawSprite(pCanvas, oElement.iSprite, iX - oElement.iX - iWidth,
                 iY + oElement.iY, iPassOnFlags | (oElement.iFlags ^ THDF_FlipHorizontal));
         }
         else
         {
-            m_pSpriteSheet->drawSprite(pCanvas, oElement.iSprite,
+            oElement.pSpriteSheet->drawSprite(pCanvas, oElement.iSprite,
                 iX + oElement.iX, iY + oElement.iY, iPassOnFlags | oElement.iFlags);
         }
     }
@@ -416,9 +425,8 @@ void THAnimationManager::getFrameExtent(unsigned int iFrame, const THLayers_t& o
     int iMaxX = INT_MIN;
     int iMinY = INT_MAX;
     int iMaxY = INT_MIN;
-    if(iFrame < m_iFrameCount && m_pSpriteSheet != NULL)
+    if(iFrame < m_iFrameCount)
     {
-        unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
         unsigned int iListIndex = m_vFrames[iFrame].iListIndex;
 
         for(; ; ++iListIndex)
@@ -429,7 +437,7 @@ void THAnimationManager::getFrameExtent(unsigned int iFrame, const THLayers_t& o
 
             const element_t &oElement = m_vElements[iElement];
             if((oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
-                || oElement.iSprite >= iSpriteCount)
+                || oElement.pSpriteSheet == NULL)
             {
                 continue;
             }
@@ -437,7 +445,7 @@ void THAnimationManager::getFrameExtent(unsigned int iFrame, const THLayers_t& o
             int iX = oElement.iX;
             int iY = oElement.iY;
             unsigned int iWidth_, iHeight_;
-            m_pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth_, &iHeight_);
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth_, &iHeight_);
             int iWidth = static_cast<int>(iWidth_);
             int iHeight = static_cast<int>(iHeight_);
             if(iFlags & THDF_FlipHorizontal)
