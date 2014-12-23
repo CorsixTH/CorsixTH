@@ -185,6 +185,7 @@ menu_debug = {
   make_debug_patient          = "  CREAR PACIENTE DE DEPURACIóN  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",
+  debug_script                = "  (MAYúS + D) EJECUTAR SCRIPT DE DEPURACIóN  ",
   calls_dispatcher            = "  LLAMAR A CONTROLADOR  ",
   dump_strings                = "  VOLCAR TEXTOS DEL JUEGO  ",
   dump_gamelog                = "  (CTRL+D) VOLCAR REGISTRO DEL JUEGO  ",
@@ -206,7 +207,7 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 adviser = {
-  room_forbidden_non_reachable_parts = "Si colocas la habitación en este lugar, bloquearás el acceso a ciertas partes del hospital.",
+  room_forbidden_non_reachable_parts = "Si colocas la habitación ahí bloquearás el acceso a ciertas partes del hospital.",
   warnings = {
     no_desk = "¡Deberías construir una mesa de recepción y contratar a una recepcionista en algún momento!",
     no_desk_1 = "¡Si quieres que los pacientes vayan a tu hospital, necesitas contratar a una recepcionista y construir una mesa donde pueda trabajar!",
@@ -242,6 +243,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Esperando a que construyas una consulta"
 dynamic_info.staff.actions.heading_for = "Dirigiéndose a %s"
 dynamic_info.staff.actions.fired = "Despedido"
+dynamic_info.patient.actions.epidemic_vaccinated = "Ya no soy contagioso"
 
 progress_report.free_build = "CONSTRUCCIÓN LIBRE"
 
@@ -365,7 +367,7 @@ options_window = {
 }
 
 tooltip.options_window = {
-  fullscreen = "Hace que el juego se ejecute en pantalla completa o en una ventana.",
+  fullscreen = "Ejecuta el juego en pantalla completa o en una ventana.",
   fullscreen_button = "Pulsa aquí para activar el modo de pantalla completa.",
   resolution = "Cambia la resolución en la que funcionará el juego.",
   select_resolution = "Selecciona una nueva resolución.",
@@ -580,6 +582,8 @@ cheats_window = {
     emergency = "Crear una emergencia",
     vip = "Crear un VIP",
     earthquake = "Crear terremoto",
+    epidemic = "Generar un paciente contagioso",
+    toggle_infected = "Mostrar/ocultar iconos de infección",
     create_patient = "Crear un paciente",
     end_month = "Fin de mes",
     end_year = "Fin del año",
@@ -597,6 +601,8 @@ tooltip.cheats_window = {
     emergency = "Crea una emergencia.",
     vip = "Crea un VIP.",
     earthquake = "Crea un terremoto.",
+    epidemic = "Crea un paciente contagioso que podría provocar una epidemia.",
+    toggle_infected = "Muestra u oculta los iconos de infección para la epidemia activa.",
     create_patient = "Crea un paciente en el borde del mapa.",
     end_month = "Avanza hasta el fin del mes actual.",
     end_year = "Avanza hasta el final del año actual.",
