@@ -215,6 +215,12 @@ public:
                         const unsigned char* pListData, size_t iListDataLength,
                         const unsigned char* pElementData, size_t iElementDataLength);
 
+    //! Set the video target.
+    /*!
+       @param pCanvas Video surface to use.
+     */
+    void setCanvas(THRenderTarget *pCanvas);
+
     //! Get the total numer of animations
     unsigned int getAnimationCount() const;
 
@@ -355,8 +361,10 @@ protected:
     std::vector<frame_t> m_vFrames;           ///< The loaded frames.
     std::vector<uint16_t> m_vElementList;     ///< List of elements for a frame.
     std::vector<element_t> m_vElements;       ///< Sprite Elements.
+    std::vector<THSpriteSheet *> m_vCustomSheets; ///< Sprite sheets with custom graphics.
 
     THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
+    THRenderTarget *m_pCanvas;     ///< Video surface to use.
 
     unsigned int m_iAnimationCount;   ///< Number of animations.
     unsigned int m_iFrameCount;       ///< Number of frames.
@@ -365,7 +373,7 @@ protected:
 
     //! Compute the bounding box of the frame.
     /*!
-       @param oFrame Frame to inspect/set.
+        @param oFrame Frame to inspect/set.
      */
     void setBoundingBox(frame_t &oFrame);
 };

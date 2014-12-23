@@ -37,6 +37,7 @@ THAnimationManager::THAnimationManager()
     m_vFrames.clear();
     m_vElementList.clear();
     m_vElements.clear();
+    m_vCustomSheets.clear();
 
     m_pSpriteSheet = NULL;
 
@@ -48,6 +49,8 @@ THAnimationManager::THAnimationManager()
 
 THAnimationManager::~THAnimationManager()
 {
+    for (int i = 0; i < m_vCustomSheets.size(); i++)
+        delete m_vCustomSheets[i];
 }
 
 void THAnimationManager::setSpriteSheet(THSpriteSheet* pSpriteSheet)
@@ -180,8 +183,8 @@ bool THAnimationManager::loadFromTHFile(
 
 //! Update \a iLeft with the smallest of both values.
 /*!
-   @param [inout] iLeft Left value to check and update.
-   @param iRight Second value to check.
+    @param [inout] iLeft Left value to check and update.
+    @param iRight Second value to check.
  */
 inline static void _setmin(int& iLeft, int iRight)
 {
@@ -191,8 +194,8 @@ inline static void _setmin(int& iLeft, int iRight)
 
 //! Update \a iLeft with the biggest of both values.
 /*!
-   @param [inout] iLeft Left value to check and update.
-   @param iRight Second value to check.
+    @param [inout] iLeft Left value to check and update.
+    @param iRight Second value to check.
  */
 inline static void _setmax(int& iLeft, int iRight)
 {
@@ -224,6 +227,11 @@ void THAnimationManager::setBoundingBox(frame_t &oFrame)
         _setmax(oFrame.iBoundingRight , oElement.iX - 1 + (int)iWidth);
         _setmax(oFrame.iBoundingBottom, oElement.iY - 1 + (int)iHeight);
     }
+}
+
+void THAnimationManager::setCanvas(THRenderTarget *pCanvas)
+{
+    m_pCanvas = pCanvas;
 }
 
 unsigned int THAnimationManager::getAnimationCount() const

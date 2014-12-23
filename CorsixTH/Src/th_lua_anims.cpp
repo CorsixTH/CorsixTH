@@ -45,6 +45,21 @@ static int l_anims_set_spritesheet(lua_State *L)
     return 1;
 }
 
+//! Set the video target for the sprites.
+/*!
+    setCanvas(<video-surface>)
+ */
+static int l_anims_set_canvas(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    lua_settop(L, 2);
+
+    pAnims->setCanvas(pCanvas);
+    luaT_setenvfield(L, 1, "target");
+    return 1;
+}
+
 static int l_anims_load(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
@@ -591,6 +606,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_class(THAnimationManager, l_anims_new, "anims", MT_Anims);
     luaT_setfunction(l_anims_load, "load");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_anims_set_canvas, "setCanvas", MT_Surface);
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
     luaT_setfunction(l_anims_getnext, "getNextFrame");
     luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
