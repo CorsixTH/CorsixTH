@@ -918,6 +918,36 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
+bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
+{
+    _freeSprites();
+
+    if(pCanvas == NULL)
+        return false;
+    m_pTarget = pCanvas;
+
+    m_iSpriteCount = iCount;
+    m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
+    if(m_pSprites == NULL)
+    {
+        m_iSpriteCount = 0;
+        return false;
+    }
+
+    for (int i = 0; i < m_iSpriteCount; i++)
+    {
+        sprite_t &spr = m_pSprites[i];
+        spr.pTexture = NULL;
+        spr.pAltTexture = NULL;
+        spr.pData = NULL;
+        spr.pAltPaletteMap = NULL;
+        spr.iWidth = 0;
+        spr.iHeight = 0;
+    }
+
+    return true;
+}
+
 bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                                    const unsigned char* pChunkData, size_t iChunkDataLength,
                                    bool bComplexChunks, THRenderTarget* pCanvas)
@@ -926,14 +956,9 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
     if(pCanvas == NULL)
         return false;
 
-    m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
-    m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
-    if(m_pSprites == NULL)
-    {
-        m_iSpriteCount = 0;
+    unsigned int iCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    if (!setSpriteCount(iCount, pCanvas))
         return false;
-    }
-    m_pTarget = pCanvas;
 
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
@@ -990,25 +1015,45 @@ bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
         if (iSprite >= m_iSpriteCount)
             break;
 
-        if (!testSprite(pData, iSprLength, iWidth, iHeight))
-        {
-            printf("Sprite number %d has a bad encoding, skipping remainder of the file", iSprite);
-            return false;
-        }
-
-        _freeSingleSprite(iSprite);
-        sprite_t *pSprite = m_pSprites + iSprite;
-        pSprite->pData = new (std::nothrow) unsigned char[iSprLength];
-        if (pSprite->pData == NULL)
+        if (!setSpriteData(iSprite, pData, false, iSprLength, iWidth, iHeight))
             return false;
 
-        memcpy(pSprite->pData, pData, iSprLength);
         iLength -= iSprLength;
         pData += iSprLength;
-
-        pSprite->iWidth = iWidth;
-        pSprite->iHeight = iHeight;
     }
+    return true;
+}
+
+bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
+                                  int iDataLength, int iWidth, int iHeight)
+{
+    if (iSprite >= m_iSpriteCount)
+        return false;
+
+    if (!testSprite(pData, iDataLength, iWidth, iHeight))
+    {
+        printf("Sprite number %d has a bad encoding, skipping", iSprite);
+        return false;
+    }
+
+    _freeSingleSprite(iSprite);
+    sprite_t *pSprite = m_pSprites + iSprite;
+    if (bTakeData)
+    {
+        pSprite->pData = pData;
+    }
+    else
+    {
+        unsigned char *pNewData = new (std::nothrow) unsigned char[iDataLength];
+        if (pNewData == NULL)
+            return false;
+
+        memcpy(pNewData, pData, iDataLength);
+        pSprite->pData = pNewData;
+    }
+
+    pSprite->iWidth = iWidth;
+    pSprite->iHeight = iHeight;
     return true;
 }
 

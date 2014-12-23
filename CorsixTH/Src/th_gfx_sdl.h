@@ -453,6 +453,19 @@ public: // External API
     bool loadFullColour(const unsigned char* pData, size_t iLength,
                         THRenderTarget *pEventualCanvas);
 
+    //! Set the data of a sprite.
+    /*!
+        @param iSprite Number of the sprite to set.
+        @param pData Data of the sprite.
+        @param bTakeData Whether the data block may be taken (must be new[] then).
+        @param iDataLength Length of the data.
+        @param iWidth Width of the sprite.
+        @param iHeight Height of the sprite.
+        @return Setting the sprite succeeded.
+    */
+    bool setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
+                       int iDataLength, int iWidth, int iHeight);
+
     //! Supply a new mapped palette to a sprite.
     /*!
         @param iSprite Sprite getting the mapped palette.
@@ -465,6 +478,14 @@ public: // External API
         @return The number of sprites available at the sheet.
     */
     unsigned int getSpriteCount() const;
+
+    //! Set the number of sprites in the sheet.
+    /*!
+        @param iCount The desired number of sprites.
+        @param pCanvas Canvas to draw at.
+        @return Whether the number of sprites could be allocated.
+    */
+    bool setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas);
 
     //! Get size of a sprite.
     /*!
@@ -552,7 +573,7 @@ protected:
         SDL_Texture *pAltTexture;
 
         //! Data of the sprite (width * height bytes).
-        unsigned char *pData;
+        const unsigned char *pData;
 
         //! Alternative palette (if available).
         const unsigned char *pAltPaletteMap;
