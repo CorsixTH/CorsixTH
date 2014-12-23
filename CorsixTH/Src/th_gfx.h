@@ -38,6 +38,7 @@ enum THScaledItems
 #include "th_gfx_sdl.h"
 #include "th_gfx_font.h"
 #include <stddef.h>
+#include <vector>
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
@@ -348,15 +349,17 @@ protected:
         unsigned char iLayerId; ///< Value of the layer class to match.
     };
 
-    unsigned int* m_pFirstFrames;  ///< First frame number of an animation.
-    frame_t* m_pFrames;            ///< The loaded frames.
-    uint16_t* m_pElementList;      ///< List of elements for a frame.
-    element_t* m_pElements;        ///< Sprite Elements.
+    std::vector<unsigned int> m_vFirstFrames; ///< First frame number of an animation.
+    std::vector<frame_t> m_vFrames;           ///< The loaded frames.
+    std::vector<uint16_t> m_vElementList;     ///< List of elements for a frame.
+    std::vector<element_t> m_vElements;       ///< Sprite Elements.
+
     THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
 
-    unsigned int m_iAnimationCount; ///< Number of animations.
-    unsigned int m_iFrameCount;     ///< Number of frames.
-    unsigned int m_iElementCount;   ///< Number of sprite elements.
+    unsigned int m_iAnimationCount;   ///< Number of animations.
+    unsigned int m_iFrameCount;       ///< Number of frames.
+    unsigned int m_iElementListCount; ///< Number of list elements.
+    unsigned int m_iElementCount;     ///< Number of sprite elements.
 };
 
 struct THMapNode;
