@@ -677,6 +677,20 @@ bool THAnimationManager::loadCustomAnimations(const unsigned char* pData, size_t
     return true;
 }
 
+const AnimationStartFrames &THAnimationManager::getNamedAnimations(const std::string &sName, int iTilesize) const
+{
+    static const AnimationStartFrames oNoneAnimations = {-1, -1, -1, -1};
+
+    AnimationKey oKey;
+    oKey.sName = sName;
+    oKey.iTilesize = iTilesize;
+
+    NamedAnimationsMap::const_iterator iter = m_oNamedAnimations.find(oKey);
+    if (iter == m_oNamedAnimations.end())
+        return oNoneAnimations;
+    return (*iter).second;
+}
+
 unsigned int THAnimationManager::getAnimationCount() const
 {
     return m_iAnimationCount;

@@ -328,6 +328,14 @@ public:
     bool getFrameMarker(unsigned int iFrame, int* pX, int* pY);
     bool getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY);
 
+    //! Retrieve a custom animation by name and tile size.
+    /*!
+        @param sName Name of the animation.
+        @param iTilesize Tile size of the animation.
+        @return A set starting frames for the queried animation.
+     */
+    const AnimationStartFrames &getNamedAnimations(const std::string &sName, int iTilesize) const;
+
 protected:
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
