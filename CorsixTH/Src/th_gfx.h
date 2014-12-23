@@ -38,6 +38,9 @@ enum THScaledItems
 #include "th_gfx_sdl.h"
 #include "th_gfx_font.h"
 #include <stddef.h>
+#include <vector>
+#include <map>
+#include <string>
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
@@ -186,6 +189,45 @@ struct THLayers_t
     unsigned char iLayerContents[13];
 };
 
+class Input;
+
+/** Key value for finding an animation. */
+struct AnimationKey
+{
+    std::string sName; ///< Name of the animations.
+    int iTilesize;     ///< Size of a tile.
+};
+
+//! Less-than operator for map-sorting.
+/*!
+    @param oK First key value.
+    @param oL Second key value.
+    @return Whether \a oK should be before \a oL.
+ */
+inline bool operator<(const AnimationKey &oK, const AnimationKey &oL)
+{
+    if (oK.iTilesize != oL.iTilesize) return oK.iTilesize < oL.iTilesize;
+    return oK.sName < oL.sName;
+}
+
+/**
+ * Start frames of an animation, in each view direction.
+ * A negative number indicates there is no animation in that direction.
+ */
+struct AnimationStartFrames
+{
+    int iNorth; ///< Animation start frame for the 'north' view.
+    int iEast;  ///< Animation start frame for the 'east' view.
+    int iSouth; ///< Animation start frame for the 'south' view.
+    int iWest;  ///< Animation start frame for the 'west' view.
+};
+
+/** Map holding the custom animations. */
+typedef std::map<AnimationKey, AnimationStartFrames> NamedAnimationsMap;
+
+/** Insertion data structure. */
+typedef std::pair<AnimationKey, AnimationStartFrames> NamedAnimationPair;
+
 //! Theme Hospital sprite animation manager
 /*!
     An animation manager takes a sprite sheet and four animation information
@@ -200,18 +242,34 @@ public:
 
     void setSpriteSheet(THSpriteSheet* pSpriteSheet);
 
-    //! Load animation information
+    //! Load original animations.
     /*!
         setSpriteSheet() must be called before calling this.
         @param pStartData Animation first frame indicies (e.g. VSTART-1.ANI)
         @param pFrameData Frame details (e.g. VFRA-1.ANI)
         @param pListData Element indicies list (e.g. VLIST-1.ANI)
         @param pElementData Element details (e.g. VELE-1.ANI)
+        @return Loading was successful.
     */
     bool loadFromTHFile(const unsigned char* pStartData, size_t iStartDataLength,
                         const unsigned char* pFrameData, size_t iFrameDataLength,
                         const unsigned char* pListData, size_t iListDataLength,
                         const unsigned char* pElementData, size_t iElementDataLength);
+
+    //! Set the video target.
+    /*!
+       @param pCanvas Video surface to use.
+     */
+    void setCanvas(THRenderTarget *pCanvas);
+
+    //! Load free animations.
+    /*!
+        @param pData Start of the loaded data.
+        @param iDataLength Length of the loaded data.
+        @param pCanvas The render target to draw onto.
+        @return Loading was successful.
+    */
+    bool loadCustomAnimations(const unsigned char* pData, size_t iDataLength);
 
     //! Get the total numer of animations
     unsigned int getAnimationCount() const;
@@ -270,6 +328,14 @@ public:
     bool getFrameMarker(unsigned int iFrame, int* pX, int* pY);
     bool getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY);
 
+    //! Retrieve a custom animation by name and tile size.
+    /*!
+        @param sName Name of the animation.
+        @param iTilesize Tile size of the animation.
+        @return A set starting frames for the queried animation.
+     */
+    const AnimationStartFrames &getNamedAnimations(const std::string &sName, int iTilesize) const;
+
 protected:
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
@@ -314,44 +380,95 @@ protected:
 
     struct frame_t
     {
-        unsigned int iListIndex;
-        unsigned int iNextFrame;
-        unsigned int iSound;
-        unsigned int iFlags;
+        unsigned int iListIndex; ///< First entry in #m_vElementList (pointing to an element) for this frame.
+        unsigned int iNextFrame; ///< Number of the next frame.
+        unsigned int iSound;     ///< Sound to play, if non-zero.
+        unsigned int iFlags;     ///< Flags of the frame. Bit 0=start of animation.
+
         // Bounding rectangle is with all layers / options enabled - used as a
         // quick test prior to a full pixel perfect test.
-        int iBoundingLeft;
-        int iBoundingRight;
-        int iBoundingTop;
-        int iBoundingBottom;
+        int iBoundingLeft;       ///< Left edge of the bounding rectangle of this frame.
+        int iBoundingRight;      ///< Right edge of the bounding rectangle of this frame.
+        int iBoundingTop;        ///< Top edge of the bounding rectangle of this frame.
+        int iBoundingBottom;     ///< Bottom edge of the bounding rectangle of this frame.
+
         // Markers are used to know where humanoids are on an frame. The
         // positions are pixels offsets from the centre of the frame's base
         // tile to the centre of the humanoid's feet.
-        int iMarkerX;
-        int iMarkerY;
-        int iSecondaryMarkerX;
-        int iSecondaryMarkerY;
+        int iMarkerX;            ///< X position of the first center of a humanoids feet.
+        int iMarkerY;            ///< Y position of the first center of a humanoids feet.
+        int iSecondaryMarkerX;   ///< X position of the second center of a humanoids feet.
+        int iSecondaryMarkerY;   ///< Y position of the second center of a humanoids feet.
     };
 
     struct element_t
     {
-        unsigned int iSprite;
-        unsigned int iFlags;
-        int iX;
-        int iY;
-        unsigned char iLayer;
-        unsigned char iLayerId;
+        unsigned int iSprite;   ///< Sprite number of the sprite sheet to display.
+        unsigned int iFlags;    ///< Flags of the sprite.
+                                ///< bit 0=flip vertically, bit 1=flip horizontally,
+                                ///< bit 2=draw 50% alpha, bit 3=draw 75% alpha.
+        int iX;                 ///< X offset of the sprite.
+        int iY;                 ///< Y offset of the sprite.
+        unsigned char iLayer;   ///< Layer class (0..12).
+        unsigned char iLayerId; ///< Value of the layer class to match.
+
+        THSpriteSheet *pSpriteSheet; ///< Sprite sheet to use for this element.
     };
 
-    unsigned int* m_pFirstFrames;
-    frame_t* m_pFrames;
-    uint16_t* m_pElementList;
-    element_t* m_pElements;
-    THSpriteSheet* m_pSpriteSheet;
+    std::vector<unsigned int> m_vFirstFrames; ///< First frame number of an animation.
+    std::vector<frame_t> m_vFrames;           ///< The loaded frames.
+    std::vector<uint16_t> m_vElementList;     ///< List of elements for a frame.
+    std::vector<element_t> m_vElements;       ///< Sprite Elements.
+    std::vector<THSpriteSheet *> m_vCustomSheets; ///< Sprite sheets with custom graphics.
+    NamedAnimationsMap m_oNamedAnimations;    ///< Collected named animations.
 
-    unsigned int m_iAnimationCount;
-    unsigned int m_iFrameCount;
-    unsigned int m_iElementCount;
+    THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
+    THRenderTarget *m_pCanvas;     ///< Video surface to use.
+
+    unsigned int m_iAnimationCount;   ///< Number of animations.
+    unsigned int m_iFrameCount;       ///< Number of frames.
+    unsigned int m_iElementListCount; ///< Number of list elements.
+    unsigned int m_iElementCount;     ///< Number of sprite elements.
+
+    //! Compute the bounding box of the frame.
+    /*!
+        @param oFrame Frame to inspect/set.
+     */
+    void setBoundingBox(frame_t &oFrame);
+
+    //! Load sprite elements from the input.
+    /*!
+        @param [inout] input Data to read.
+        @param pSpriteSheet Sprite sheet to use.
+        @param iNumElements Number of elements to read.
+        @param [inout] iLoadedElements Number of loaded elements so far.
+        @param iElementStart Offset of the first element.
+        @param iElementCount Number of elements to load.
+        @return Index of the first loaded element in #m_vElements. Negative value means failure.
+     */
+    int loadElements(Input &input, THSpriteSheet *pSpriteheet,
+                    int iNumElements, unsigned int &iLoadedElements,
+                    unsigned int iElementStart, unsigned int iElementCount);
+
+    //! Construct a list element for every element, and a 0xFFFF at the end.
+    /*!
+        @param iFirstElement Index of the first element in #m_vElements.
+        @param iNumElements Number of elements to add.
+        @param [inout] iLoadedListElements Number of created list elements so far.
+        @param iListStart Offset of the first created list element.
+        @param iListCount Expected number of list elements to create.
+        @return Index of the list elements, or a negative value to indicate failure.
+     */
+    int makeListElements(int iFirstElement, int iNumElements,
+                         unsigned int &iLoadedListElements,
+                         unsigned int iListStart, unsigned int iListCount);
+
+    //! Fix the flags of the first frame, and set the next frame of the last frame back to the first frame.
+    /*!
+        @param iFirst First frame of the animation, or 0xFFFFFFFFu.
+        @param iLength Number of frames in the animation.
+     */
+    void fixNextFrame(unsigned int iFirst, unsigned int iLength);
 };
 
 struct THMapNode;

@@ -19,11 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 
--- This file specifies a mapping from original sprite sheet to new one
--- The below example uses a file called ground_tiles.sprites to replace
--- the original files DATA/VBlk-0.DAT and DATA/VBlk-0.TAB.
-
+-- This table specifies the custom animation files to load.
 file_mapping = {
-  ["Data:VBlk-0"] = "ground_tiles.sprites"
+  "plant_anim.dat"
 }
 
