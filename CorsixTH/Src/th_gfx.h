@@ -39,6 +39,8 @@ enum THScaledItems
 #include "th_gfx_font.h"
 #include <stddef.h>
 #include <vector>
+#include <map>
+#include <string>
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
@@ -187,6 +189,45 @@ struct THLayers_t
     unsigned char iLayerContents[13];
 };
 
+class Input;
+
+/** Key value for finding an animation. */
+struct AnimationKey
+{
+    std::string sName; ///< Name of the animations.
+    int iTilesize;     ///< Size of a tile.
+};
+
+//! Less-than operator for map-sorting.
+/*!
+    @param oK First key value.
+    @param oL Second key value.
+    @return Whether \a oK should be before \a oL.
+ */
+inline bool operator<(const AnimationKey &oK, const AnimationKey &oL)
+{
+    if (oK.iTilesize != oL.iTilesize) return oK.iTilesize < oL.iTilesize;
+    return oK.sName < oL.sName;
+}
+
+/**
+ * Start frames of an animation, in each view direction.
+ * A negative number indicates there is no animation in that direction.
+ */
+struct AnimationStartFrames
+{
+    int iNorth; ///< Animation start frame for the 'north' view.
+    int iEast;  ///< Animation start frame for the 'east' view.
+    int iSouth; ///< Animation start frame for the 'south' view.
+    int iWest;  ///< Animation start frame for the 'west' view.
+};
+
+/** Map holding the custom animations. */
+typedef std::map<AnimationKey, AnimationStartFrames> NamedAnimationsMap;
+
+/** Insertion data structure. */
+typedef std::pair<AnimationKey, AnimationStartFrames> NamedAnimationPair;
+
 //! Theme Hospital sprite animation manager
 /*!
     An animation manager takes a sprite sheet and four animation information
@@ -220,6 +261,15 @@ public:
        @param pCanvas Video surface to use.
      */
     void setCanvas(THRenderTarget *pCanvas);
+
+    //! Load free animations.
+    /*!
+        @param pData Start of the loaded data.
+        @param iDataLength Length of the loaded data.
+        @param pCanvas The render target to draw onto.
+        @return Loading was successful.
+    */
+    bool loadCustomAnimations(const unsigned char* pData, size_t iDataLength);
 
     //! Get the total numer of animations
     unsigned int getAnimationCount() const;
@@ -362,6 +412,7 @@ protected:
     std::vector<uint16_t> m_vElementList;     ///< List of elements for a frame.
     std::vector<element_t> m_vElements;       ///< Sprite Elements.
     std::vector<THSpriteSheet *> m_vCustomSheets; ///< Sprite sheets with custom graphics.
+    NamedAnimationsMap m_oNamedAnimations;    ///< Collected named animations.
 
     THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
     THRenderTarget *m_pCanvas;     ///< Video surface to use.
@@ -376,6 +427,40 @@ protected:
         @param oFrame Frame to inspect/set.
      */
     void setBoundingBox(frame_t &oFrame);
+
+    //! Load sprite elements from the input.
+    /*!
+        @param [inout] input Data to read.
+        @param pSpriteSheet Sprite sheet to use.
+        @param iNumElements Number of elements to read.
+        @param [inout] iLoadedElements Number of loaded elements so far.
+        @param iElementStart Offset of the first element.
+        @param iElementCount Number of elements to load.
+        @return Index of the first loaded element in #m_vElements. Negative value means failure.
+     */
+    int loadElements(Input &input, THSpriteSheet *pSpriteheet,
+                    int iNumElements, unsigned int &iLoadedElements,
+                    unsigned int iElementStart, unsigned int iElementCount);
+
+    //! Construct a list element for every element, and a 0xFFFF at the end.
+    /*!
+        @param iFirstElement Index of the first element in #m_vElements.
+        @param iNumElements Number of elements to add.
+        @param [inout] iLoadedListElements Number of created list elements so far.
+        @param iListStart Offset of the first created list element.
+        @param iListCount Expected number of list elements to create.
+        @return Index of the list elements, or a negative value to indicate failure.
+     */
+    int makeListElements(int iFirstElement, int iNumElements,
+                         unsigned int &iLoadedListElements,
+                         unsigned int iListStart, unsigned int iListCount);
+
+    //! Fix the flags of the first frame, and set the next frame of the last frame back to the first frame.
+    /*!
+        @param iFirst First frame of the animation, or 0xFFFFFFFFu.
+        @param iLength Number of frames in the animation.
+     */
+    void fixNextFrame(unsigned int iFirst, unsigned int iLength);
 };
 
 struct THMapNode;

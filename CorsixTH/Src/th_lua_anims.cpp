@@ -82,6 +82,28 @@ static int l_anims_load(lua_State *L)
     return 1;
 }
 
+//! Load custom animations.
+/*!
+    loadCustom(<data-of-an-animation-file>) -> true/false
+ */
+static int l_anims_loadcustom(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    size_t iDataLength;
+    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLength);
+
+    if (pAnims->loadCustomAnimations(pData, iDataLength))
+    {
+        lua_pushboolean(L, 1);
+    }
+    else
+    {
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
 static int l_anims_getfirst(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
@@ -605,6 +627,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     // Anims
     luaT_class(THAnimationManager, l_anims_new, "anims", MT_Anims);
     luaT_setfunction(l_anims_load, "load");
+    luaT_setfunction(l_anims_loadcustom, "loadCustom");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", MT_Sheet);
     luaT_setfunction(l_anims_set_canvas, "setCanvas", MT_Surface);
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");

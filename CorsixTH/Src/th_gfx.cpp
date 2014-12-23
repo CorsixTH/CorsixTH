@@ -30,6 +30,118 @@ SOFTWARE.
 #include <memory.h>
 #include <limits.h>
 #include <cassert>
+#include <string>
+
+/** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
+class Input
+{
+public:
+    Input(const unsigned char *pData, int iLength)
+    {
+        m_pData = pData;
+        m_iLength = iLength;
+    }
+
+    const unsigned char *m_pData; /// Pointer to the remaining data.
+    int m_iLength;                ///< Remaining number of bytes.
+
+    //! Can \a iSize bytes be read from the file?
+    /*!
+        @param iSize Number of bytes that are queried.
+        @return Whether the requested number of bytes is still available.
+     */
+    inline bool Available(int iSize)
+    {
+        return iSize <= m_iLength;
+    }
+
+    //! Is EOF reached?
+    /*!
+        @return Whether EOF has been reached.
+     */
+    inline bool AtEOF()
+    {
+        return m_iLength == 0;
+    }
+
+    //! Get an 8 bit value from the file.
+    /*!
+        @return Read 8 bit value.
+        @pre There should be at least a byte available for reading.
+     */
+    inline int Uint8()
+    {
+        assert(m_iLength > 0);
+
+        int iVal = *m_pData;
+        m_pData++;
+        m_iLength--;
+        return iVal;
+    }
+
+    //! Get a 16 bit value from the file.
+    /*!
+        @return Read 16 bit value.
+        @pre There should be at least 2 bytes available for reading.
+     */
+    inline int Uint16()
+    {
+        int iVal = Uint8();
+        int iVal2 = Uint8();
+        return iVal | (iVal2 << 8);
+    }
+
+    //! Get a signed 16 bit value from the file.
+    /*!
+        @return The read signed 16 bit value.
+        @pre There should be at least 2 bytes available for reading.
+     */
+    inline int Int16()
+    {
+        int val = Uint16();
+        if (val < 0x7FFF)
+            return val;
+
+        int ret = -1;
+        return (ret & ~0xFFFF) | val;
+    }
+
+    //! Get a 32 bit value from the file.
+    /*!
+        @return Read 32 bit value.
+        @pre There should be at least 4 bytes available for reading.
+     */
+    inline unsigned int Uint32()
+    {
+        unsigned int iVal = Uint16();
+        unsigned int iVal2 = Uint16();
+        return iVal | (iVal2 << 16);
+    }
+
+    //! Load string from the input.
+    /*!
+        @param [out] pStr String to load.
+        @return Whether the string could be loaded.
+     */
+    inline bool String(std::string *pStr)
+    {
+        char buff[256];
+
+        if (AtEOF())
+            return false;
+
+        int iLength = Uint8();
+        if (!Available(iLength))
+            return false;
+
+        int idx;
+        for (idx = 0; idx < iLength; idx++)
+            buff[idx] = Uint8();
+        buff[idx] = '\0';
+        *pStr = std::string(buff);
+        return true;
+    }
+};
 
 THAnimationManager::THAnimationManager()
 {
@@ -232,6 +344,337 @@ void THAnimationManager::setBoundingBox(frame_t &oFrame)
 void THAnimationManager::setCanvas(THRenderTarget *pCanvas)
 {
     m_pCanvas = pCanvas;
+}
+
+//! Load the header.
+/*!
+    @param [inout] input Data to read.
+    @return Number of consumed bytes, a negative number indicates an error.
+ */
+static int loadHeader(Input &input)
+{
+    static const unsigned char aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
+
+    if (!input.Available(6))
+        return false;
+    for (int i = 0; i < 6; i++)
+    {
+        if (input.Uint8() != aHdr[i])
+            return false;
+    }
+    return true;
+}
+
+int THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
+                                     int iNumElements, unsigned int &iLoadedElements,
+                                     unsigned int iElementStart, unsigned int iElementCount)
+{
+    int iFirst = iLoadedElements + iElementStart;
+
+    unsigned int iSpriteCount = pSpriteSheet->getSpriteCount();
+    while (iNumElements > 0)
+    {
+        if (iLoadedElements >= iElementCount || !input.Available(12))
+            return -1;
+
+        unsigned int iSprite = input.Uint32();
+        int iX = input.Int16();
+        int iY = input.Int16();
+        int iLayerClass = input.Uint8();
+        int iLayerId = input.Uint8();
+        int iFlags = input.Uint16();
+
+        if (iLayerClass > 12)
+            iLayerClass = 6; // Nothing lives on layer 6
+
+        element_t oElement;
+        oElement.iSprite = iSprite;
+        oElement.iFlags = iFlags;
+        oElement.iX = iX;
+        oElement.iY = iY;
+        oElement.iLayer = iLayerClass;
+        oElement.iLayerId = iLayerId;
+        if (oElement.iSprite >= iSpriteCount)
+            oElement.pSpriteSheet = NULL;
+        else
+            oElement.pSpriteSheet = pSpriteSheet;
+
+        m_vElements.push_back(oElement);
+        iLoadedElements++;
+        iNumElements--;
+    }
+    return iFirst;
+}
+
+int THAnimationManager::makeListElements(int iFirstElement, int iNumElements,
+                                         unsigned int &iLoadedListElements,
+                                         unsigned int iListStart,
+                                         unsigned int iListCount)
+{
+    int iFirst = iLoadedListElements + iListStart;
+
+    // Verify there is enough room for all list elements + 0xFFFF
+    if (iLoadedListElements + iNumElements + 1 > iListCount)
+        return -1;
+    assert(iFirstElement + iNumElements < 0xFFFF); // Overflow for list elements.
+
+    while (iNumElements > 0)
+    {
+        m_vElementList.push_back(iFirstElement);
+        iLoadedListElements++;
+        iFirstElement++;
+        iNumElements--;
+    }
+    // Add 0xFFFF.
+    m_vElementList.push_back(0xFFFF);
+    iLoadedListElements++;
+
+    return iFirst;
+}
+
+//! Shift the first frame if all frames are available.
+/*!
+    @param iFirst First frame number, or 0xFFFFFFFFu if no animation.
+    @param iLength Number of frames in the animation.
+    @param iStart Start of the frames for this file.
+    @param iLoaded Number of loaded frames.
+    @return The shifted first frame, or 0xFFFFFFFFu.
+ */
+static unsigned int shiftFirst(unsigned int iFirst, unsigned int iLength,
+                               unsigned int iStart, unsigned int iLoaded)
+{
+    if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded)
+        return 0xFFFFFFFFu;
+    return iFirst + iStart;
+}
+
+void THAnimationManager::fixNextFrame(unsigned int iFirst, unsigned int iLength)
+{
+    if (iFirst == 0xFFFFFFFFu)
+        return;
+
+    frame_t &oFirst = m_vFrames[iFirst];
+    oFirst.iFlags |= 0x1; // Start of animation flag.
+
+    frame_t &oLast = m_vFrames[iFirst + iLength - 1];
+    oLast.iNextFrame = iFirst; // Loop last frame back to the first.
+}
+
+bool THAnimationManager::loadCustomAnimations(const unsigned char* pData, size_t iDataLength)
+{
+    Input input(pData, iDataLength);
+
+    if (!loadHeader(input))
+        return false;
+
+    if (!input.Available(5*4))
+        return false;
+
+    unsigned int iAnimationCount = input.Uint32();
+    unsigned int iFrameCount = input.Uint32();
+    unsigned int iElementCount = input.Uint32();
+    unsigned int iSpriteCount = input.Uint32();
+    input.Uint32(); // Total number of bytes sprite data is not used.
+
+    // Every element is referenced once, and one 0xFFFF for every frame.
+    unsigned int iListCount = iElementCount + iFrameCount;
+
+    unsigned int iFrameStart = m_iFrameCount;
+    unsigned int iListStart = m_iElementListCount;
+    unsigned int iElementStart = m_iElementCount;
+
+    if (iAnimationCount == 0 || iFrameCount == 0 || iElementCount == 0 || iSpriteCount == 0)
+        return false;
+
+    if (iElementStart + iElementCount >= 0xFFFF) // Overflow of list elements.
+        return false;
+
+    // Create new space for the elements.
+    m_vFirstFrames.reserve(m_vFirstFrames.size() + iAnimationCount * 4); // Be optimistic in reservation.
+    m_vFrames.reserve(iFrameStart + iFrameCount);
+    m_vElementList.reserve(iListStart + iListCount);
+    m_vElements.reserve(iElementStart + iElementCount);
+
+    // Construct a sprite sheet for the sprites to be loaded.
+    THSpriteSheet *pSheet = new THSpriteSheet;
+    pSheet->setSpriteCount(iSpriteCount, m_pCanvas);
+    m_vCustomSheets.push_back(pSheet);
+
+    unsigned int iLoadedFrames = 0;
+    unsigned int iLoadedListElements = 0;
+    unsigned int iLoadedElements = 0;
+    unsigned int iLoadedSprites = 0;
+
+    // Read the blocks of the file, until hitting EOF.
+    for (;;)
+    {
+        if (input.AtEOF())
+            break;
+
+        // Read identification bytes at the start of each block, and dispatch loading.
+        if (!input.Available(2))
+            return false;
+        int first = input.Uint8();
+        int second = input.Uint8();
+
+        // Recognized a grouped animation block, load it.
+        if (first == 'C' && second == 'A')
+        {
+            AnimationKey oKey;
+
+            if (!input.Available(2+4))
+                return false;
+            oKey.iTilesize = input.Uint16();
+            unsigned int iNumFrames = input.Uint32();
+            if (iNumFrames == 0)
+                return false;
+
+            if (!input.String(&oKey.sName))
+                return false;
+
+            if (!input.Available(4*4))
+                return false;
+            unsigned int iNorthFirst = input.Uint32();
+            unsigned int iEastFirst  = input.Uint32();
+            unsigned int iSouthFirst = input.Uint32();
+            unsigned int iWestFirst  = input.Uint32();
+
+            iNorthFirst = shiftFirst(iNorthFirst, iNumFrames, iFrameStart, iLoadedFrames);
+            iEastFirst  = shiftFirst(iEastFirst,  iNumFrames, iFrameStart, iLoadedFrames);
+            iSouthFirst = shiftFirst(iSouthFirst, iNumFrames, iFrameStart, iLoadedFrames);
+            iWestFirst  = shiftFirst(iWestFirst,  iNumFrames, iFrameStart, iLoadedFrames);
+
+            AnimationStartFrames oFrames;
+            oFrames.iNorth = -1;
+            oFrames.iEast  = -1;
+            oFrames.iSouth = -1;
+            oFrames.iWest  = -1;
+
+            if (iNorthFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iNorthFirst, iNumFrames);
+                oFrames.iNorth = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iNorthFirst);
+            }
+            if (iEastFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iEastFirst, iNumFrames);
+                oFrames.iEast = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iEastFirst);
+            }
+            if (iSouthFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iSouthFirst, iNumFrames);
+                oFrames.iSouth = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iSouthFirst);
+            }
+            if (iWestFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iWestFirst, iNumFrames);
+                oFrames.iWest = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iWestFirst);
+            }
+
+            NamedAnimationPair p(oKey, oFrames);
+            m_oNamedAnimations.insert(p);
+            continue;
+        }
+
+        // Recognized a frame block, load it.
+        else if (first == 'F' && second == 'R')
+        {
+            if (iLoadedFrames >= iFrameCount)
+                return false;
+
+            if (!input.Available(2+2))
+                return false;
+            int iSound = input.Uint16();
+            int iNumElements = input.Uint16();
+
+            int iElm = loadElements(input, pSheet, iNumElements,
+                                    iLoadedElements, iElementStart, iElementCount);
+            if (iElm < 0)
+                return false;
+
+            int iListElm = makeListElements(iElm, iNumElements,
+                                            iLoadedListElements, iListStart, iListCount);
+            if (iListElm < 0)
+                return false;
+
+            frame_t oFrame;
+            oFrame.iListIndex = iListElm;
+            oFrame.iNextFrame = iFrameStart + iLoadedFrames + 1; // Point to next frame (changed later).
+            oFrame.iSound = iSound;
+            oFrame.iFlags = 0; // Set later.
+            oFrame.iMarkerX = 0;
+            oFrame.iMarkerY = 0;
+            oFrame.iSecondaryMarkerX = 0;
+            oFrame.iSecondaryMarkerY = 0;
+
+            setBoundingBox(oFrame);
+
+            m_vFrames.push_back(oFrame);
+            iLoadedFrames++;
+            continue;
+        }
+
+        // Recognized a Sprite block, load it.
+        else if (first == 'S' && second == 'P')
+        {
+            if (iLoadedSprites >= iSpriteCount)
+                return false;
+
+            if (!input.Available(2+2+4))
+                return false;
+            int iWidth = input.Uint16();
+            int iHeight = input.Uint16();
+            unsigned int iSize = input.Uint32();
+            if (iSize > INT_MAX) // Check it is safe to use as 'int'
+                return false;
+
+            // Load data.
+            unsigned char *pData = new (std::nothrow) unsigned char[iSize];
+            if (pData == NULL)
+                return false;
+            if (!input.Available(iSize))
+                return false;
+            for (int i = 0; i < iSize; i++)
+                pData[i] = input.Uint8();
+
+            if (!pSheet->setSpriteData(iLoadedSprites, pData, true, iSize,
+                                       iWidth, iHeight))
+                return false;
+
+            iLoadedSprites++;
+            continue;
+        }
+
+        // Unrecognized block, fail.
+        else
+        {
+            return false;
+        }
+    }
+
+    assert(iLoadedFrames == iFrameCount);
+    assert(iLoadedListElements == iListCount);
+    assert(iLoadedElements = iElementCount);
+    assert(iLoadedSprites = iSpriteCount);
+
+    // Fix the next pointer of the last frame in case it points to non-existing frames.
+    frame_t &oFrame = m_vFrames[iFrameStart + iFrameCount - 1];
+    if (iFrameCount > 0 && oFrame.iNextFrame >= iFrameStart + iFrameCount)
+        oFrame.iNextFrame = iFrameStart; // Useless, but maybe less crashy.
+
+    m_iAnimationCount = m_vFirstFrames.size();
+    m_iFrameCount += iFrameCount;
+    m_iElementListCount += iListCount;
+    m_iElementCount += iElementCount;
+    assert(m_vFrames.size() == m_iFrameCount);
+    assert(m_vElementList.size() == m_iElementListCount);
+    assert(m_vElements.size() == m_iElementCount);
+
+    return true;
 }
 
 unsigned int THAnimationManager::getAnimationCount() const
