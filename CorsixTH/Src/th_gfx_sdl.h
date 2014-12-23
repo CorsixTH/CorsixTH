@@ -368,16 +368,6 @@ public:
     bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
                         int iWidth, THRenderTarget *pEventualCanvas);
 
-    //! Load the image from the supplied full colour pixel data.
-    /*!
-        @param pData Image data.
-        @param iLength Size of the loaded image data.
-        @param pEventualCanvas Canvas to render the image to (eventually).
-        @return Loading was a success.
-    */
-    bool loadFullColour(const unsigned char* pData, size_t iLength,
-                        THRenderTarget *pEventualCanvas);
-
     //! Draw the image at a given position at the given canvas.
     /*!
         @param pCanvas Canvas to draw at.
@@ -442,16 +432,6 @@ public: // External API
     bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                         const unsigned char* pChunkData, size_t iChunkDataLength,
                         bool bComplexChunks, THRenderTarget* pEventualCanvas);
-
-    //! Load the image from the supplied full colour pixel data.
-    /*!
-        @param pData Image data.
-        @param iLength Size of the loaded image data.
-        @param pEventualCanvas Canvas to render the image to (eventually).
-        @return Loading was a success.
-    */
-    bool loadFullColour(const unsigned char* pData, size_t iLength,
-                        THRenderTarget *pEventualCanvas);
 
     //! Set the data of a sprite.
     /*!

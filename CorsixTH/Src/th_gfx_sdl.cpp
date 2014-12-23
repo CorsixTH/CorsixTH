@@ -612,24 +612,6 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
     }
 }
 
-//! Helper function to read a word from memory.
-/*! @param pData Pointer to the word to read.
-    @return The read word value.
- */
-static unsigned int readWord(const unsigned char* pData)
-{
-    return *pData | (pData[1] << 8);
-}
-
-//! Helper function to read a long word from memory.
-/*! @param pData Pointer to the word to read.
-    @return The read word value.
- */
-static unsigned int readLong(const unsigned char* pData)
-{
-    return readWord(pData) | (readWord(pData + 2) << 16);
-}
-
 THPalette::THPalette()
 {
     m_iNumColours = 0;
@@ -802,49 +784,6 @@ static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidt
     return iDataLength == 0;
 }
 
-
-bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
-                                 THRenderTarget *pEventualCanvas)
-{
-    if(pEventualCanvas == NULL)
-        return false;
-
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
-
-    if(iLength < 6 || memcmp(header, pData, 6) != 0)
-        return false;
-    pData += 6; iLength -= 6;
-
-    if (iLength < 4+2+2+2) // Length of a sprite header.
-        return false;
-
-    uint32_t iSprLength = readLong(pData);
-    pData += 4; iLength -= 4;
-    if (iSprLength < 2+2+2 || iSprLength > iLength)
-        return false;
-
-    unsigned int iSprite = readWord(pData);
-    int iWidth = readWord(pData + 2);
-    int iHeight = readWord(pData + 4);
-    pData += 6; iLength -= 6;
-    iSprLength -= 6;
-
-    if (iSprite > 0)
-        return false; // Only load sprite 0.
-
-    if (!testSprite(pData, iSprLength, iWidth, iHeight))
-        return false;
-
-    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pData, m_pPalette);
-    if(!m_pTexture)
-        return false;
-
-    m_iWidth = iWidth;
-    m_iHeight = iHeight;
-    m_pTarget = pEventualCanvas;
-    return true;
-}
-
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
     draw(pCanvas, iX, iY, 0, 0, m_iWidth, m_iHeight);
@@ -986,40 +925,6 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
             delete pData;
         }
-    }
-    return true;
-}
-
-bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
-                                 THRenderTarget *pEventualCanvas)
-{
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
-
-    if(iLength < 6 || memcmp(header, pData, 6) != 0)
-        return false;
-    pData += 6; iLength -= 6;
-
-    while (iLength >= 4+2+2+2) // Length of a sprite header.
-    {
-        uint32_t iSprLength = readLong(pData);
-        pData += 4; iLength -= 4;
-        if (iSprLength < 2+2+2 || iSprLength > iLength)
-            return false;
-
-        unsigned int iSprite = readWord(pData);
-        int iWidth = readWord(pData + 2);
-        int iHeight = readWord(pData + 4);
-        pData += 6; iLength -= 6;
-        iSprLength -= 6;
-
-        if (iSprite >= m_iSpriteCount)
-            break;
-
-        if (!setSpriteData(iSprite, pData, false, iSprLength, iWidth, iHeight))
-            return false;
-
-        iLength -= iSprLength;
-        pData += iSprLength;
     }
     return true;
 }
