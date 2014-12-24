@@ -869,6 +869,35 @@ function Patient:tickDay()
       end
     end
   end
+
+  -- If the patient is sitting on a bench or standing and queued,
+  -- it may be a situation where he/she is not in the queue
+  -- anymore, but should be. If this is the case for more than
+  -- 2 ticks, go to reception
+  if #self.action_queue > 1 and (self.action_queue[1].name == "use_object" or
+    self.action_queue[1].name == "idle") and
+    self.action_queue[2].name == "queue" then
+    local found = false
+    for _, humanoid in ipairs(self.action_queue[2].queue) do
+      if humanoid == self then
+        found = true
+        break
+      end
+    end
+
+    if not found then
+      if not self.noqueue_ticks then
+        self.noqueue_ticks = 1
+      elseif self.noqueue_ticks > 2 then
+        self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
+        self:setNextAction{name = 'seek_reception'}
+      else
+        self.noqueue_ticks = self.noqueue_ticks + 1
+      end
+    else
+      self.noqueue_ticks = 0
+    end
+  end
 end
 
 -- Called each time the patient moves to a new tile.

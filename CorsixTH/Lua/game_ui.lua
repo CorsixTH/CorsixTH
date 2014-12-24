@@ -604,7 +604,7 @@ function GameUI:onTick()
       self.app.world:adjustZoom(self.current_momentum.z)
     end
   end
-  do
+  if not self.app.world:isCurrentSpeed("Pause") then
     local ticks_since_last_announcement = self.ticks_since_last_announcement
     if ticks_since_last_announcement >= self.random_announcement_ticks_target then
       self:playAnnouncement("rand*.wav")

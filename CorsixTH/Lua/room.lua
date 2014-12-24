@@ -669,7 +669,9 @@ function Room:tryToFindNearbyPatients()
       while queue:reportedSize() > 1 do
         local patient = queue:back()
         local px, py = patient.tile_x, patient.tile_y
-        if world:getPathDistance(px, py, our_x, our_y) + our_score <
+        -- Don't reroute the patient if he just decided to go to the toilet
+        if not patient.going_to_toilet and
+          world:getPathDistance(px, py, our_x, our_y) + our_score <
           world:getPathDistance(px, py, other_x, other_y) + other_score then
           -- Update the queues
           queue:removeValue(patient)
@@ -686,7 +688,13 @@ function Room:tryToFindNearbyPatients()
             if i ~= 1 then
               action.todo_interrupt = true
             end
-            if action.name == "walk" and action.x == other_x and action.y == other_y then
+            -- The patient will most likely have a queue action for the other
+            -- room that must be cancelled. To prevent the after_use callback
+            -- of the drinks machine to enqueue the patient in the other queue
+            -- again, is_in_queue is set to false so the callback won't run
+            if action.name == 'queue' then
+              action.is_in_queue = false
+            elseif action.name == "walk" and action.x == other_x and action.y == other_y then
               local action = self:createEnterAction(patient)
               patient:queueAction(action, i)
               break
@@ -710,6 +718,19 @@ function Room:crashRoom()
   self.door:closeDoor()
   if self.door2 then
     self.door2.hover_cursor = nil
+  end
+
+  -- A patient might be about to use the door (staff are dealt with elsewhere):
+  if self.door.reserved_for then
+    local person = self.door.reserved_for
+    if not person:isLeaving() then
+      if class.is(person, Patient) then
+        person:queueAction({name = "idle", count = 1}) --Delay so that room is destroyed before the seek_room search.
+        person:queueAction({name = "seek_room", room_type = self.room_info.id})
+      end
+    end
+    person:finishAction()
+    self.door.reserved_for = nil
   end
 
   local remove_humanoid = function(humanoid)

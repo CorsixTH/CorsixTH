@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 89
+local SAVEGAME_VERSION = 91
 
 class "App"
 
@@ -1148,8 +1148,10 @@ end
 -- a specific savegame verion is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 78 then
+  if ver > 91 then
     return "Trunk"
+  elseif ver > 78 then
+    return "0.40"
   elseif ver > 72 then
     return "0.30"
   elseif ver > 66 then
@@ -1234,6 +1236,7 @@ end
 
 --! This function is automatically called after loading a game and serves for compatibility.
 function App:afterLoad()
+  self.ui:addOrRemoveDebugModeKeyHandlers()
   local old = self.world.savegame_version or 0
   local new = self.savegame_version
 
@@ -1270,7 +1273,7 @@ function App:afterLoad()
     self.world:newObjectType(new_object)
   end
 
-  if old < 89 then
+  if old < 91 then
     local rat_hole_type = dofile "objects/rat_hole"
     Object.processTypeDefinition(rat_hole_type)
     self.objects[rat_hole_type.id] = rat_hole_type

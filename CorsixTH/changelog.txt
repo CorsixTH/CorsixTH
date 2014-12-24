@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.40 - released October 2014
+Version 0.40 - released December 2014
 -------------------------------------------------------------------------------
 
 It has been a while since our last release, but good things come to those who wait!
@@ -10,7 +10,6 @@ get a visit from the Grim Reaper.
 Also, don't forget to try out the new map St. Peter's near Cawley!
 
 Happy gaming!
-
 
 
 --- Gameplay
@@ -42,6 +41,14 @@ Happy gaming!
   could crash.
 * Fix: A surgeon that is removed in mid-operation will now get properly replaced
   by a new one.
+* Fix: If the GP room was built too early in the tutorial the game would crash
+  when building a GP room later on if debug mode was turned off.
+* Fix: Patients would try to enter an exploding room.  As you can imagine,
+  this was bad.
+* Fix: Psychiatrists would become shut-ins and just wander about their office
+  forever.
+* Fix: Patients leaving the queue to get a drink could be left to sit on a
+  bench forever.
 
 
 --- User Interface ---
@@ -52,7 +59,9 @@ Happy gaming!
 * Added: 'Continue Game' in the main menu.
 
 * Fix: Sometimes the game would not pause on year end.
-
+* Fix: Staff raise description was hard to read in some languages
+* Fix: The current language setting is translated and consistent with the
+  options in the list.
 
 
 --- Graphics ---
@@ -61,7 +70,6 @@ Happy gaming!
   with gracious hair.
 * Fix: Patients will no longer fall through walls when dying.
 * Fix: Dying Hairyitis patients should not lose their head when on the floor.
-
 
 
 --- Hotkeys ---
@@ -77,7 +85,6 @@ Happy gaming!
 * Change: Quick Save is now Shift+Alt+S, Quick Load is Shift+Alt+L.
 
 
-
 --- Languages ---
 
 * Change: "Plot" is used instead of "Parcel" to indicate where a handyman has
@@ -85,7 +92,6 @@ Happy gaming!
 
 Most languages have been updated since our last release, but if you find that
 your language has not, please help us to finish it!
-
 
 
 --- CorsixTH Development ---

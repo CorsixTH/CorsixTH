@@ -105,6 +105,8 @@ cheats_window = {
     create_patient = "Vytvořit Pacienta",
     end_month = "Konec Měsíce",
     vip = "Vytvořit VIP",
+    epidemic = "Vytvořit nakažlivého pacienta",
+    toggle_infected = "Zapnout/Vypnout ikony nakažení",
   },
 }
 menu_file_save = {
@@ -244,6 +246,7 @@ dynamic_info = {
       awaiting_decision = "Čekám na Vaše rozhodnutí",
       sent_to_other_hospital = "Odkázán jinam",
       epidemic_sent_home = "Poslán domů Inspektorem",
+      epidemic_vaccinated = "Již nejsem nakažlivý",
     },
     emergency = "Havárie: %s",
   },
@@ -1139,6 +1142,8 @@ tooltip = {
       all_research = "Dokončí veškerý výzkum.",
       create_patient = "Vytvoří Pacienta na kraji mapy.",
       end_month = "Přeskočí na konec měsíce.",
+      epidemic = "Vytvoří nakažlivého pacienta, který může způsobit epidemii",
+      toggle_infected = "Zobrazí/Skryje ikony nakažení pro aktivní, zjištěné epidemie",
     },
   },
   buy_objects_window = {
@@ -2595,6 +2600,7 @@ errors = {
   alien_dna = "POZNÁMKA: Pro animaci s Mimozemskou DNA neexistují animace pro sednutí, otevírání nebo klepání na dveře atd. Proto se při těchto činnostech, stejně jako v Theme Hospital, dočasně změní na normálně vypadající pacienty a pak se změní zpět. Tyto pacienti se v nemocnici objeví pouze při nastavení v souboru úrovně",
   fractured_bones = "POZNÁMKA: Animace ženských pacientů se Zlomenými kostmi není dokonalá",
   load_quick_save = "Chyba! Rychle uloženou pozici nelze načíst, protože neexistuje. Není třeba se obávat, hned jsme jednu pro Vás vytvořili!",
+  no_games_to_contine = "Žádné uložené hry.",
 }
 menu = {
   charts = "  GRAFY  ",
@@ -2622,7 +2628,7 @@ menu_options = {
   jukebox = "    JUKEBOX  ",
   warmth_colors = "    BARVY TEPLOTY",
   twentyfour_hour_clock = "    24HODINOVÝ REŽIM  ",
-  wage_increase = "  MZDOVÉ POŽADAVKY",
+  wage_increase = "    MZDOVÉ POŽADAVKY",
 }
 menu_options_warmth_colors = {
   choice_2 = "     MODRÁ ZELENÁ ČERVENÁ ",
@@ -2671,6 +2677,7 @@ menu_debug = {
   mapwho_checking = "    KONTROLA MAPYKDO      ",
   display_big_cells = "    ZOBRAZIT VELKÉ BUŇKY    ",
   porter_pagers = "    PAGERY OBSLUHY        ",
+  debug_script = "    (SHIFT + D) SPUSTIT SKRIPT PRO LADĚNÍ  "
 }
 save_game_window = {
   caption = "Uložit Hru (%1%)",
@@ -2684,6 +2691,7 @@ main_menu = {
   version = "Verze: ",
   exit = "Ukončit",
   new_game = "Nová Hra",
+  continue = "Pokračovat ve hře",
 }
 letter = {
   [1] = {

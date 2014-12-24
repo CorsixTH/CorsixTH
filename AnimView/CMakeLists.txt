@@ -95,6 +95,13 @@ ENDIF(UNIX)
 
 IF(APPLE)
   install(TARGETS AnimView BUNDLE DESTINATION .)
+  
+  # Fix the OS X bundle to include required libraries (create a redistributable app)
+  install(CODE "
+    INCLUDE(BundleUtilities)
+    SET(BU_CHMOD_BUNDLE_ITEMS ON)
+    FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/AnimView.app \"\" \"\")
+    ")
 ELSE()
   install(TARGETS AnimView RUNTIME DESTINATION AnimView)
   install(FILES LICENSE.txt DESTINATION AnimView )

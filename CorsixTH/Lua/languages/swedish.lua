@@ -48,6 +48,9 @@ tooltip.staff_window.center_view = "Vänsterklicka för att komma till personen,
 
 confirmation.restart_level = "Är du säker på att du vill starta om nivån?"
 
+-- In English the squits becomes the the squits, see issue 1646. In Swedish it stays the same, but it
+-- still needs to be defined.
+adviser.research.drug_improved_1 = "Medicinen mot %s har förbättrats av din forskaravdelning."
 -------------------------------  NEW STRINGS  -------------------------------
 object.litter = "Skräp"
 tooltip.objects.litter = "Skräp: Lämnat åt sitt öde eftersom patienten inte kunde hitta någon papperskorg."
@@ -70,9 +73,10 @@ new_game_window.player_name = "Namn"
 menu_options = {
   lock_windows = "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",
-  settings = "  INSTÄLLNINGAR  ",
   adviser_disabled = "  MEDHJÄLPARE  ",
   warmth_colors = "  VÄRMEFÄRGER  ",
+  wage_increase = "  LÖNFÖRFRÅGNINGAR  ",
+  twentyfour_hour_clock = "  24-TIMMARSKLOCKA  "
 }
 
 menu_options_game_speed = {
@@ -88,6 +92,11 @@ menu_options_warmth_colors = {
   choice_1 = "  RÖD  ",
   choice_2 = "  BLÅ GRÖN RÖD  ",
   choice_3 = "  GUL ORANGE RÖD  ",
+}
+
+menu_options_wage_increase = {
+  grant = "    BEVIJLA ",
+  deny =  "    NEKA ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
@@ -114,6 +123,7 @@ menu_debug = {
   make_debug_patient          = "  SKAPA DEBUGPATIENT  ",
   cheats                      = "  (F11) FUSK  ",
   lua_console                 = "  (F12) LUATERMINAL  ",
+  debug_script                = "  (SHIFT + D) KÖR DEBUGSKRIPT  ",
   calls_dispatcher            = "  ANROPSKLARERARE  ",
   dump_strings                = "  SKAPA TEXTFILER  ",
   dump_gamelog                = "  (CTRL+D) DUMPA SPELLOGG  ",
@@ -142,7 +152,12 @@ adviser = {
     no_desk_1 = "Om du vill att det ska komma patienter till sjukhuset så behövs en receptionist och en reception där hon kan jobba!",
     no_desk_2 = "Snyggt jobbat, det måste vara ett världsrekord: nästan ett år och inte en enda patient! Om du vill fortsätta som chef på det här sjukhuset så måste du anställa en receptionist och bygga en reception som hon kan jobba i!",
     no_desk_3 = "Helt otroligt, nästan ett år och du har fortfarande ingen bemannad reception! Tror du det kommer några patienter då? Sluta leka omkring och fixa till det här nu!",
+    no_desk_4 = "En receptionist behöver ha en egen disk som hon kan hälsa patienterna välkomna vid",
+    no_desk_5 = "Det var på tiden, nu borde det snart börja dyka upp patienter!",
+    no_desk_6 = "Du har en receptionist, det kanske är dags att bygga en reception som hon kan arbeta vid?",
+    no_desk_7 = "Nu har du en reception, vad sägs om att anlita en receptionist också? Det lär inte komma några patienter förrän du gjort det!",
     cannot_afford = "Du har inte tillräckligt med pengar på banken för att anställa den personen!",
+    cannot_afford_2 = "du har inte tillräckligt med pengar på banken för att genomföra det köpet!",
     falling_1 = "Nämen! Det där inte kul, om du inte ser dig för var du klickar så kan någon skada sig!",
     falling_2 = "Sluta strula omkring, hur tror du det känns?",
     falling_3 = "Ajaj, det måste ha gjort ont. Ring en läkare!",
@@ -151,23 +166,23 @@ adviser = {
     falling_6 = "Det här är inte en bowlinghall, sjuka människor ska inte behandlas så!",
     research_screen_open_1 = "Du behöver bygga en forskningsavdelning innan du får tillgång till forskningsskärmen.",
     research_screen_open_2 = "På den här nivån finns det ingen möjlighet till forskning.",
+    researcher_needs_desk_1 = "Varje forskare behöver ett skrivbord att jobba vid.",
+    researcher_needs_desk_2 = "Din forskare är nöjd över att få en välbehövlig paus. Om du ville ha flera forskare aktiva samtidigt så behöver de få var sitt skrivbord.",
+    researcher_needs_desk_3 = "En forskare behöver alltid ett skrivbord.",
+    nurse_needs_desk_1 = "Varje sköterska behöver ett eget skrivbord.",
+    nurse_needs_desk_2 = "Din sköterska är glad att få en paus. Du kanske ville ha flera personer att jobba på avdelningen? Då behöver de var sitt skrivbord.",
   },
   cheats = {
     th_cheat = "Ojoj, nån vill fuska sig till segern!",
-    crazy_on_cheat = "Åh nej!! Alla läkare har blivit galna!",
-    crazy_off_cheat = "Vilken tur... läkarna har återfått förståndet.",
     roujin_on_cheat = "Roujin's utmaning aktiverad! Lycka till...",
     roujin_off_cheat = "Roujin's utmaning avaktiverad.",
-    hairyitis_cheat = "Pälssyndromsfusket aktiverat!",
-    hairyitis_off_cheat = "Pälssyndromsfusket avaktiverat.",
-    bloaty_cheat = "Pöshuvudsfusket aktiverat!",
-    bloaty_off_cheat = "Pöshuvudsfusket avaktiverat.",
   },
 }
 
 dynamic_info.patient.actions.no_gp_available = "Väntar på att du ska bygga en allmänpraktik"
 dynamic_info.staff.actions.heading_for = "På väg till %s"
 dynamic_info.staff.actions.fired = "Sparkad"
+dynamic_info.patient.actions.epidemic_vaccinated = "Jag smittar inte längre"
 
 progress_report.free_build = "FRITT BYGGANDE"
 
@@ -201,7 +216,9 @@ letter = {
 install = {
   title = "--------------------------------- CorsixTH Setup ---------------------------------",
   th_directory = "CorsixTH behöver en kopia av filerna från det ursprungliga spelet (eller dess demo) för att kunna köras. Använd väljaren nedan för att lokalisera mappen där Theme Hospital installerats.",
+  ok = "OK",
   exit = "Avsluta",
+  cancel = "Avbryt",
 }
 
 misc.not_yet_implemented = "(ej tillgänglig ännu)"
@@ -210,6 +227,7 @@ misc.no_heliport = "Antingen har inga sjukdomar upptäckts ännu, eller så finn
 main_menu = {
   new_game = "Kampanj",
   custom_level = "Enskild nivå",
+  continue = "Fortsätt spel",
   load_game = "Ladda spel",
   options = "Alternativ",
   savegame_version = "Sparningsversion: ",
@@ -269,42 +287,98 @@ tooltip.menu_list_window = {
 
 options_window = {
   caption = "Alternativ",
-  fullscreen = "Helskärm",
   option_on = "På",
   option_off = "Av",
-  data_location = "Speldatakälla",
-  font_location = "Typsnittsplats",
+  fullscreen = "Helskärm",
+  resolution = "Upplösning",
+  custom_resolution = "Anpassad...",
   width = "Bredd",
   height = "Höjd",
-  resolution = "Upplösning",
+  audio = "Globalt ljud",
+  customise = "Anpassa",
+  folder = "Mappar",
   language = "Spelspråk",
   apply = "Tillämpa",
-  browse = "Bläddra...",
-  custom_resolution = "Anpassad...",
-  new_th_directory = "Här kan du välja en ny plats här Theme Hospital installerats. Så fort du väljer den nya mappen kommer spelet att startas om.",
-  back = "Tillbaka",
   cancel = "Avbryt",
+  back = "Tillbaka",
 }
 
 tooltip.options_window = {
+  fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
   fullscreen_button = "Klicka för att gå mellan fönster och helskärm",
+  resolution = "Upplösning spelet ska köras i",
+  select_resolution = "Välj en ny upplösning",
   width = "Fyll i önskad skärmbredd",
   height = "Fyll i önskad skärmhöjd",
-  data_location = "Mapp som en installation av Theme Hospital finns i, krävs för att köra CorsixTH",
-  font_location = "För att kunna använda språk som inte fanns i originalspelet och som kräver fler Unicodebokstäver måste en typsnittsfil väljas. Annars går det inte att välja språk som till exempel ryska och kinesiska",
-  fullscreen = "Om spelet ska köras i fullskärmsläge eller fönsterläge",
-  language = "Text i spelet kommer att visas på det här språket",
   apply = "Tillämpa den valda upplösningen",
-  resolution = "Upplösning spelet ska köras i",
+  cancel = "Återvänd utan att ändra upplösning",
+  audio_button = "Stäng av eller sätt på allt ljud i spelet",
+  audio_toggle = "Slå av eller på",
+  customise_button = "Fler inställningar som kan ändras för att anpassa din spelupplevelse",
+  folder_button = "Mappinställningar",
+  language = "Text i spelet kommer att visas på det här språket",
   select_language = "Väljs spelspråk",
   language_dropdown_item = "Ändra till %s som språk",
-  select_resolution = "Välj en ny upplösning",
-  cancel = "Återvänd utan att ändra upplösning",
-  original_path = "Den just nu valda mappen där Theme Hospital installerats",
-  browse = "Bläddra efter en annan Theme Hospital installation. (Nuvarande: %1%)",
-  browse_font = "Bläddra efter en (annan) typsnittsfil. (Nuvarande: %1%)",
-  no_font_specified = "Ingen sökväg har valts ännu!",
   back = "Stäng alternativmenyn",
+}
+
+customise_window = {
+  caption = "Extra inställningar",
+  option_on = "På",
+  option_off = "Av",
+  back = "Tillbaka",
+  movies = "Global filmkontroll",
+  intro = "Spela introfilmen",
+  paused = "Bygg i pausläge",
+  volume = "Tangent: volym ner",
+  aliens = "Utomjordingar",
+  fractured_bones = "Krossad patient",
+  average_contents = "Genomsnittsinnehåll",
+}
+
+tooltip.customise_window = {
+  movies = "Välj om filmer ska spelas överhuvudtaget",
+  intro = "Skippa introfilmen när du startar spelet. Global filmkontroll måste vara påslagen om du spela introfilmen varje gång du laddar CorsixTH",
+  paused = "I Theme Hospital fick spelaren bara använda verktygsfältet längst upp när spelet var pausat. Så är det i CorsixTH också såvida du inte aktiverar funktionen att bygga även när spelet är pausat här",
+  volume = "Om du råkat ut för att tangenten som sänker volymen även öppnar medicinjournalen, slå på det här alternativet för att ändra snabbkommando till medicinjournalen till Shift + C",
+  aliens = "Eftersom det inte finns ordentliga animeringar har vi gjort så att patienter med utomjordiskt DNA endast dyker upp som akutfall. Stäng av det här för att kunna få utomjordiskt DNA-fall även som vanliga besök",
+  fractured_bones = "På grund av en dålig animering har vi stängt av kvinnliga patienter med frakturer (Krossad patient). Stäng av det här, så kommer det att dyka upp även kvinnor med den åkomman",
+  average_contents = "Om du vill att spelet ska komma ihåg vilka extra föremål du normalt sett brukar handla till nya rum, slå på detta alternativ",
+  back = "Stäng den här menyn och gå tillbaka till Alternativmenyn",
+}
+
+folders_window = {
+  caption = "Mappinställningar",
+  data_label = "TH Data",
+  font_label = "Typsnitt",
+  music_label = "MP3",
+  savegames_label = "Sparningar",
+  screenshots_label = "Skärmbilder",
+  -- next four are the captions for the browser window, which are called from the folder setting menu
+  new_th_location = "Här kan du välja en ny sökväg där Theme Hospital ligger. Så fort du väljer en ny mapp kommer spelet att startas om!",
+  savegames_location = "Välj var sparade spel ska läggas.",
+  music_location = "Välj en mapp med musik i för att spela den i spelet.",
+  screenshots_location = "Välj vilken mapp du vill spara skärmbilder till.",
+  back  = "Tillbaka",
+}
+
+tooltip.folders_window = {
+  browse = "Bläddra efter mappsökväg",
+  data_location = "Mapp där originalspelet Theme Hospital finns. Krävs för att spela CorsixTH",
+  font_location = "Sökväg till en typsnittsfil som kan visa Unicode-tecken som krävs för ditt språk. Om detta inte är specificerat kommer du inte att kunna välja sådana språk, till exempel ryska och kinesiska",
+  savegames_location = "Som standard läggs sparade spel i en mapp som ligger bredvid konfigurationsfilen. Om det inte fungerar kan du välja en egen här",
+  screenshots_location = "Skärmbilder sparas som standard i en mapp bredvid konfigurationsfilen. Här kan du välja en annan mapp istället",
+  music_location = "Välj en sökväg där du har mp3-filer. Mappen måste redan finnas",
+  browse_data = "Bläddra efter en ny sökväg till Theme Hospital  ( nuvarande sökväg: %1% )",
+  browse_font = "Bläddra efter en annan typsnittsfil  ( nuvarande sökväg:: %1% )",
+  browse_saves = "Bläddra efter en annan mapp att lägga sparade spel i  ( nuvarande sökväg:: %1% ) ",
+  browse_screenshots = "Bläddra efter en annan mapp för skärmbilder  ( nuvarande sökväg:: %1% ) ",
+  browse_music = "Bläddra efter en annan mapp med musik  ( nuvarande sökväg:: %1% ) ",
+  no_font_specified = "Ingen typsnittsfil vald än!",
+  not_specified = "Ingen sökväg vald än!",
+  default = "Standardsökväg",
+  reset_to_default = "Återställ mappen till standardsökvägen",
+  back  = "Stäng den här dialogen och återgå till alternativmenyn",
 }
 
 font_location_window = {
@@ -349,15 +423,20 @@ errors = {
   dialog_missing_graphics = "Tyvärr innehåller demon inte den här dialogrutan.",
   save_prefix = "Fel när spelet skulle sparas: ",
   load_prefix = "Fel när spelet skulle laddas: ",
+  no_games_to_contine = "Det finns inga sparade spel.",
+  load_quick_save = "Fel, kan inte ladda en snabbsparning eftersom det inte finns någon. Men oroa dig inte, nu har vi skapat en åt dig!",
   map_file_missing = "Kunde inte hitta kartfilen %s till den här nivån!",
   minimum_screen_size = "Skärmupplösningen måste vara åtminstone 640x480.",
-  maximum_screen_size = "Skärmupplösningen kan inte vara större än 3000x2000.",
   unavailable_screen_size = "Skärmupplösningen du valde finns inte i fullskärmsläge.",
+  alien_dna = "NOTERA: Det finns inga animeringar för patienter med utomjordiskt DNA när de sitter ner, öppnar dörrar osv. Precis som i Theme Hospital gör de därför det i mänsklig skepnad. Dessa patienter anländer som vanligt endast om nivån du spelar definierat att sjukdomen ska finnas",
+  fractured_bones = "NOTERA: Animeringen för kvinnliga Krossade patienter är inte perfekt",
 }
 
 confirmation = {
   needs_restart = "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
   abort_edit_room = "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
+  maximum_screen_size = "Upplösningen du valt är större än 3000 x 2000. Större upplösningar är möjliga, men kräver bättre hårdvara. Är du säker på att du vill fortsätta?",
+  music_warning = "Innan du väljer att använda mp3-filer som spelmusik behövs smpeg.dll eller motsvarande för ditt operativsystem, annars blir det ingen musik i spelet. Det finns i dagsläget ingen 64-bitarsversion. Vill du fortsätta?",
 }
 
 information = {
@@ -428,6 +507,8 @@ cheats_window = {
     emergency = "Skapa akutfall",
     vip = "Skapa VIP",
     earthquake = "Skapa jordbävning",
+    epidemic = "Skapa en smittande patient",
+    toggle_infected = "Visa infekterad-ikonen",
     create_patient = "Skapa patient",
     end_month = "Månadsslut",
     end_year = "Hoppa till nyår",
@@ -445,6 +526,8 @@ tooltip.cheats_window = {
     emergency = "Skapar ett akutfall.",
     vip = "Skapar en Mycket Viktig Person (VIP)",
     earthquake = "Skapar en jordbävning med slumpad styrka",
+    epidemic = "Skapar en person som smittar så att en epidemi kan starta",
+    toggle_infected = "Växlar mellan att visa ikoner vid en upptäckt, aktiv epidemi",
     create_patient = "Skapar en patient vid kanten av kartan.",
     end_month = "Hoppar till slutet av månaden.",
     end_year = "Hoppar till slutet av året.",
@@ -477,6 +560,19 @@ tooltip.calls_dispatcher = {
   task = "Lista över uppgifter - klicka på en uppgift för att öppna tilldelad personals fönster och flytta vyn till det ställe där uppgiften finns.",
   assigned = "Denna ruta är markerad om någon har fått uppgiften tilldelad till sig.",
   close = "Stäng anropsklarerardialogen",
+}
+
+update_window = {
+  caption = "Updatering tillgänglig!",
+  new_version = "Ny version:",
+  current_version = "Din version:",
+  download = "Gå till nedladdningssidan",
+  ignore = "Skippa och gå till huvudmenyn",
+}
+
+tooltip.update_window = {
+  download = "gå till nedladdningssidan där du hittar den absolut senaste versionen av CorsixTH",
+  ignore = "Skippa updateringen just nu. Du kommer att få en ny notis nästa gång du öppnar CorsixTH",
 }
 
 date_format.daymonth = "%1% %2:months%"

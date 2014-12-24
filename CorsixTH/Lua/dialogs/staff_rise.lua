@@ -46,6 +46,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.black_font = app.gfx:loadFont("QData", "Font00V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   -- Left hand side
@@ -136,7 +137,7 @@ function UIStaffRise:draw(canvas, x, y)
   end
 
   -- Complaint text
-  font:drawWrapped(canvas, self.text, x + 200, y + 20, 140)
+  self.black_font:drawWrapped(canvas, self.text, x + 200, y + 20, 140)
 end
 
 function UIStaffRise:drawDoctorAttributes(canvas)

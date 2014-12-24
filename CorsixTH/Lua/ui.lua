@@ -872,6 +872,15 @@ function UI:getCursorPosition(window)
   return x, y
 end
 
+function UI:addOrRemoveDebugModeKeyHandlers()
+  self:removeKeyHandler("f12", self)
+  self:removeKeyHandler({"shift", "d"}, self)
+  if self.app.config.debug then
+    self:addKeyHandler("f12", self, self.showLuaConsole)
+    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
+  end
+end
+
 function UI:afterLoad(old, new)
   if old < 5 then
     self.editing_allowed = true
@@ -887,6 +896,8 @@ function UI:afterLoad(old, new)
       end
     end
     -- some global key shortcuts were converted to use keyHandlers
+    self:removeKeyHandler("f12", self)
+    self:removeKeyHandler({"shift", "d"}, self)
     self:setupGlobalKeyHandlers()
   end
 
@@ -905,9 +916,7 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler({"alt", "f4"}, self, self.quit)
     self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   end
-  if old < 85 and self.app.config.debug then
-    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
-  end
+
   Window.afterLoad(self, old, new)
 end
 
