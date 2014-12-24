@@ -28,7 +28,7 @@ object.tooltip = "rate hole" -- TODO
 object.ticks = false
 object.class = "RatHole"
 object.idle_animations = {
-  south = 1950,
+  south = 1904,
 }
 object.orientations = {
   north = {
@@ -62,7 +62,7 @@ function RatHole:RatHole(world, object_type, x, y, direction, etc)
 
   -- Life span of the rat hole (in months)
   -- TODO: This could depend on difficulty and level
-  self.life_span = math.random(1, 3)
+  self.life_span = math.random(1, 6)
 end
 
 return object

@@ -321,12 +321,12 @@ function Room:onHumanoidEnter(humanoid)
       if self:getStaffMember() and self:staffMeetsRoomRequirements(humanoid) then
         local staff_member = self:getStaffMember()
         self.humanoids[humanoid] = true
-          if staff_member.profile.is_researcher and self.room_info.id == "research" then
-            self.world.ui.adviser:say(msg[math.random(1, #msg)])
-          end
-          if staff_member.humanoid_class == "Nurse" and self.room_info.id == "ward" then
-            self.world.ui.adviser:say(msg_nurse[math.random(1, #msg_nurse)])
-          end
+        if staff_member.profile.is_researcher and self.room_info.id == "research" then
+          self.world.ui.adviser:say(msg[math.random(1, #msg)])
+        end
+        if staff_member.humanoid_class == "Nurse" and self.room_info.id == "ward" then
+          self.world.ui.adviser:say(msg_nurse[math.random(1, #msg_nurse)])
+        end
         if not staff_member.dealing_with_patient then
           staff_member:setNextAction(self:createLeaveAction())
           staff_member:queueAction{name = "meander"}
@@ -364,7 +364,7 @@ function Room:onHumanoidEnter(humanoid)
     -- been sent to an incorrect diagnosis room, they should leave and go
     -- back to the gp for redirection
     if (humanoid.infected) and not humanoid.diagnosed and
-        not self:isDiagnosisRoomForPatient(humanoid) then
+      not self:isDiagnosisRoomForPatient(humanoid) then
       humanoid:queueAction(self:createLeaveAction())
       humanoid.needs_redirecting = true
       humanoid:queueAction({name = "seek_room", room_type = "gp"})
@@ -438,7 +438,7 @@ end
 -- Tests whether this room is awaiting more staff to be able to do business
 function Room:isWaitingToGetStaff(staff)
   if not self.is_active or (self.door.queue:patientSize() == 0
-  and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false)) then
+    and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false)) then
     return false
   end
   return self:staffFitsInRoom(staff, true)
@@ -474,13 +474,13 @@ function Room:commandEnteringPatient(humanoid)
         humanoid:setMood("staff_wait", "deactivate")
         humanoid:setDynamicInfoText("")
       end
-    end
+  end
   end
 end
 
 function Room:tryAdvanceQueue()
   if self.door.queue:size() > 0 and not self.door.user
-  and not self.door.reserved_for then
+    and not self.door.reserved_for then
     local front = self.door.queue:front()
     -- These two conditions differ by the waiting symbol
 
@@ -495,7 +495,7 @@ function Room:tryAdvanceQueue()
               humanoid:setMood("staff_wait", "activate")
               humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.waiting_for_patient)
             end
-          end
+        end
         end
       end
     elseif self.humanoids[front] then
@@ -662,7 +662,7 @@ function Room:tryToFindNearbyPatients()
   local our_x, our_y = self:getEntranceXY(true)
   for _, room in pairs(self.world.rooms) do
     if room.hospital == self.hospital and room.room_info == self.room_info
-    and room.door.queue and room.door.queue:reportedSize() >= 2 then
+      and room.door.queue and room.door.queue:reportedSize() >= 2 then
       local other_score = room:getUsageScore()
       local other_x, other_y = room:getEntranceXY(true)
       local queue = room.door.queue
@@ -670,7 +670,7 @@ function Room:tryToFindNearbyPatients()
         local patient = queue:back()
         local px, py = patient.tile_x, patient.tile_y
         if world:getPathDistance(px, py, our_x, our_y) + our_score <
-        world:getPathDistance(px, py, other_x, other_y) + other_score then
+          world:getPathDistance(px, py, other_x, other_y) + other_score then
           -- Update the queues
           queue:removeValue(patient)
           patient.next_room_to_visit = self
@@ -748,7 +748,7 @@ function Room:crashRoom()
       object.unreachable = true
     end
     if object.object_type.id ~= "door" and not object.strength
-    and object.object_type.class ~= "SwingDoor" then
+      and object.object_type.class ~= "SwingDoor" then
       object.user = nil
       object.user_list = nil
       object.reserved_for = nil
@@ -933,13 +933,15 @@ function Room:getAvailableRatWalls()
     if not self:hasRatHoleAt(x, y) then
       if x ~= self.door.tile_x and y ~= self.door_tile_y then
         if self.door2 == nil or (x ~= self.door2.tile_x and y ~= self.door2.tile_y) then
-          local wall = {
-            x = x,
-            y = y,
-            room = self,
-            room_edge = edge,
-          }
-          walls[#walls + 1] = wall
+          if self.world.pathfinder:isReachableFromHospital(x, y) then
+            local wall = {
+              x = x,
+              y = y,
+              room = self,
+              room_edge = edge,
+            }
+            walls[#walls + 1] = wall
+          end
         end
       end
     end

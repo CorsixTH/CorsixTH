@@ -230,6 +230,7 @@ function App:init()
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder"walls"
     dofile "entity"
+    dofile "entities/creature"
     dofile "entities/humanoid"
     dofile "entities/object"
     dofile "entities/machine"

@@ -1011,6 +1011,11 @@ function Hospital:onEndDay()
   local radiators = self.world.object_counts.radiator
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
   self.acc_heating = self.acc_heating + heating_costs
+  
+  -- rats
+  if self:isPlayerHospital() then
+    self:spawnRats()
+  end
 end
 
 -- Called at the end of each month.
@@ -2013,16 +2018,16 @@ end
 function Hospital:spawnRatHoles()
   local litter_rate = self:getLitterRate()
   print("litter rate: " .. tostring(litter_rate) .. " %")
-  if litter_rate > 1 then
-    local rat_hole_spawn_rate = math.floor(litter_rate * 2)
+  if litter_rate > 0.1 then
+    local rat_hole_spawn_rate = math.floor(litter_rate * 3)
     local available_walls = self:getAvailableRatWalls()
 
     print("rat_hole_spawn_rate: " .. tostring(rat_hole_spawn_rate))
-    local nbr = math.random(0, rat_hole_spawn_rate)
+    local nbr = math.random(math.floor(rat_hole_spawn_rate / 4), rat_hole_spawn_rate)
     print("rat holes to make: " .. tostring(nbr))
 
     if #available_walls >= nbr then
-      for i = 0, nbr, 1 do
+      for i = 1, nbr do
         local point = available_walls[math.random(#available_walls)]
         if point then
           point.room:addRatHole(point)
@@ -2030,6 +2035,52 @@ function Hospital:spawnRatHoles()
       end
     end
   end
+end
+
+function Hospital:spawnRats()
+  if math.random(4) == 1 then
+    local holes = self:getRatHoles()
+    if #holes >= 10 then
+      local found = false
+      while not found do
+        local hole1 = holes[math.random(1, #holes)]
+        local hole2 = holes[math.random(1, #holes)]
+
+        local x1, y1 = hole1.tile_x, hole1.tile_y
+        local x2, y2 = hole2.tile_x, hole2.tile_y
+
+        if x1 == x2 and y1 == y2 then
+          break
+        end
+
+        local distance = self.world:getPathDistance(x1, y1, x2, y2)
+
+        if distance and distance >= 6 then
+          found = true
+          print("hole1: " .. tostring(x1) .. ", " .. tostring(y1))
+          print("hole2: " .. tostring(x2) .. ", " .. tostring(y2))
+          print("distance: " .. tostring(distance))
+          print("---")
+          -- self.world:getPath(x1, y1, x2, y2)
+          local rat = self.world:newEntity("Rat", 2)
+        end
+      end
+    end
+  end
+end
+
+function Hospital:getRatHoles()
+  local holes = {}
+
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self then
+      for _, hole in pairs(room.rat_holes) do
+        table.insert(holes, hole)
+      end
+    end
+  end
+
+  return holes
 end
 
 -- Returns all available wall tiles where a rat hole can be placed.
@@ -2054,7 +2105,6 @@ function Hospital:getAvailableRatWalls()
           table.insert(results, point)
         end
       end
-
     end
   end
 
