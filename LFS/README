@@ -14,25 +14,29 @@ LuaRocks Installation
 ---------------------
 luarocks install luafilesystem
 
-Unix Installation
------------------
-To install on Linux/OSX/BSD, please edit the config file and then call
-
-make
-make install
-
-The last step may require root privileges.
-
-Windows Installation
---------------------
-To install on Windows, please copy lfs.dll to your package.cpath directory
 
 Documentation
 -------------
-Please check the documentation at /doc/us/ for more information.
+Please check the documentation at doc/us/ for more information.
 
 History
 -------
+
+Version 1.6.2 [??/Oct/2012]
+	* Full Lua 5.2 compatibility (with Lua 5.1 fallbacks)
+
+Version 1.6.1 [01/Oct/2012]
+	* fix build for Lua 5.2
+
+Version 1.6.0 [26/Sep/2012]
+        * getcwd fix for Android
+        * support for Lua 5.2
+        * add lfs.link
+        * other bug fixes
+
+Version 1.5.0 [20/Oct/2009]
+	* added explicit next and close methods to second return value of lfs.dir (the directory object), for explicit iteration or explicit closing.
+	* added directory locking via lfs.lock_dir function (see the manual).
 
 Version 1.4.2 [03/Feb/2009]
 
