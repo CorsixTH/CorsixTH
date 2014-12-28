@@ -580,14 +580,29 @@ static int l_surface_new(lua_State *L)
     if(SDL_WasInit(SDL_INIT_VIDEO))
     {
         char *sTitle, *sIcon;
+        char *sTitle2 = NULL, *sIcon2 = NULL;
+        size_t iLen;
         SDL_WM_GetCaption(&sTitle, &sIcon);
-        if(sTitle) sTitle = strdup(sTitle);
-        if(sIcon) sIcon = strdup(sIcon);
+        if(sTitle)
+        {
+            iLen = strlen(sTitle) + 1;
+            sTitle2 = (char*)malloc(iLen);
+            memcpy(sTitle2, sTitle, iLen);
+        }
+
+        if(sIcon)
+        {
+            iLen = strlen(sIcon) + 1;
+            sIcon2 = (char*)malloc(iLen);
+            memcpy(sIcon2, sIcon, iLen);
+        }
+
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
         SDL_InitSubSystem(SDL_INIT_VIDEO);
-        SDL_WM_SetCaption(sTitle, sIcon);
-        if(sTitle) free(sTitle);
-        if(sIcon) free(sIcon);
+        SDL_WM_SetCaption(sTitle2, sIcon2);
+
+        free(sTitle2);
+        free(sIcon2);
     }
 #endif
 
