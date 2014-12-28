@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Copyright (c) 2010 Robin Madsen (RobseRob)
 Copyright (c) 2010-2011 Ole Frandsen (Froksen)
 Copyright (c) 2011 Rene Bergfort (Kleeze)
