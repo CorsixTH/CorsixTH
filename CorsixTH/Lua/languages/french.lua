@@ -573,12 +573,11 @@ misc.no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n
 menu_options = {
   lock_windows = "  FIGER LES FENETRES  ",
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
-  settings = "  PARAMETRES  ",
   adviser_disabled = "  ASSISTANT  ",
   warmth_colors = "  COULEURS CHAUDES  ",
   wage_increase = " AUGMENTATION DE SALAIRE ",
   twentyfour_hour_clock = " HORLOGE 24 HEURES ",
-  }
+}
 
  menu_options_warmth_colors = {
   choice_1 = "  ROUGE  ",
@@ -754,7 +753,6 @@ options_window = {
   apply = "Appliquer",
   resolution = "Résolution",
   audio = "Audio Global",
-  customize = "Personnaliser",
   folder = "Dossier",
   customise = "Personnaliser",
 }
@@ -768,7 +766,6 @@ tooltip.options_window = {
   height = "Entrez la hauteur désirée",
   change_resolution = "Changer la résolution pour les dimensions entrées à gauche",
   language = "Utiliser la langue %s",
-  original_path = "Le dossier d'installation du Theme Hospital originel qui est actuellement sélectionné",
   back = "Fermer la fenêtre des options",
   cancel = "Retour sans changement de résolution",
   apply = "Appliquer la résolution choisie",
@@ -776,26 +773,11 @@ tooltip.options_window = {
   select_language = "Sélectionner la langue du jeu",
   audio_button = "Activer ou désactiver le système audio dans le jeu",
   audio_toggle = "Activer ou désactiver",
-  customize_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
   folder_button = "Dossier des paramètres",
   customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
 }
 
 customise_window = {
-  caption = "Paramètres Supplémentaires",
-  option_on = "Activer",
-  option_off = "Désactiver",
-  back = "Retour",
-  movies = "Contrôle des films",
-  intro = "Jouer le film d'intro",
-  paused = "Construction en pause",
-  volume = "Touche de raccourci pour diminuer le volume",
-  aliens = "Extraterrestres",
-  fractured_bones = "Fractures",
-  average_contents = "Achats mémorisés",
-}
-
-customize_window = {
   caption = "Paramètres Supplémentaires",
   option_on = "Activer",
   option_off = "Désactiver",
@@ -1069,7 +1051,6 @@ errors = {
   no_games_to_contine = "Pas de parties sauvegardées.",
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
-  maximum_screen_size = "Veuillez entrer une résolution inférieure à 3000x2000.",
   unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
   alien_dna = "NOTE: Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
   fractured_bones = "NOTE: L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
