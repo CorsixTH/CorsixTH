@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 RAS
+--[[ Copyright (c) 2010 RAS
                    2011 FlyingBastard, L_konings, Nossah, KasperVld
                    2012-2013 Omni, Maarten
 

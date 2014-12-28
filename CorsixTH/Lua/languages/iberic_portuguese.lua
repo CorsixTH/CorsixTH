@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, "Fabiomsouto"
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, "Fabiomsouto"
 Copyright (c) 2011 Sérgio "Get_It" Ribeiro
 Copyright (c) 2012 <Filipe "Aka" Carvalho>
 
