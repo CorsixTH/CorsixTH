@@ -157,6 +157,7 @@ adviser.multiplayer.poaching = {
 }
 adviser.vomit_wave.ended = "Ouf ! On dirait que le virus qui provoquait des nausées est enfin enrayé. Gardez l'hôpital propre, à l'avenir."
 adviser.research.new_available = "Nouveau : un(e) %s est disponible."
+adviser.research.drug_improved_1 = "la drogue %s a été améliorée par votre département de recherche."
 adviser.goals.lose.kill = "Tuez encore %d patients pour perdre !"
 adviser.warnings = {
   money_low = "Les fonds sont en baisse !",
@@ -755,6 +756,7 @@ options_window = {
   audio = "Audio Global",
   customize = "Personnaliser",
   folder = "Dossier",
+  customise = "Personnaliser",
 }
 
 tooltip.options_window = {
@@ -776,6 +778,21 @@ tooltip.options_window = {
   audio_toggle = "Activer ou désactiver",
   customize_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
   folder_button = "Dossier des paramètres",
+  customise_button = "Paramètres supplémentaires qui peuvent être modifiés pour personnaliser votre expérience de jeu",
+}
+
+customise_window = {
+  caption = "Paramètres Supplémentaires",
+  option_on = "Activer",
+  option_off = "Désactiver",
+  back = "Retour",
+  movies = "Contrôle des films",
+  intro = "Jouer le film d'intro",
+  paused = "Construction en pause",
+  volume = "Touche de raccourci pour diminuer le volume",
+  aliens = "Extraterrestres",
+  fractured_bones = "Fractures",
+  average_contents = "Achats mémorisés",
 }
 
 customize_window = {
@@ -873,6 +890,8 @@ cheats_window = {
     end_year = "Fin de l'année",
     lose_level = "Perdre le niveau",
     win_level = "Gagner le niveau",
+	epidemic = "Reproduire des patients contagieux",
+	toggle_infected = "Faire apparaître des patients contagieux.",
   },
   close = "Fermer",
 }
@@ -882,7 +901,7 @@ tooltip.cheats_window = {
   cheats = {
     money = "Ajoute $10.000 à votre solde bancaire.",
     all_research = "Termine toutes les recherches.",
-    emergency = "Créer une situation d'urgence.",
+    emergency = "Crée une situation d'urgence.",
     vip = "Crée un VIP.",
     earthquake = "Crée un tremblement de terre.",
     create_patient = "Crée un patient au bord de la carte.",
@@ -890,6 +909,8 @@ tooltip.cheats_window = {
     end_year = "Va directement à la fin de l'année.",
     lose_level = "Vous fait perdre le niveau actuel.",
     win_level = "Vous fait gagner le niveau actuel.",
+    epidemic = "Crée un patient contagieux qui peut causer une épidémie.",
+    toggle_infected = "Bascule les icônes infectés pour l'épidémie, découverte active.",
   }
 }
 
@@ -941,6 +962,8 @@ tooltip.lua_console = {
 confirmation = {
   needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
+  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
+  music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Actuellement, il n'y a pas de fichier équivalent pour les systèmes 64 bits. Voulez-vous continuer?",
 }
 
 -- Information dialog
@@ -1048,4 +1071,22 @@ errors = {
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
   maximum_screen_size = "Veuillez entrer une résolution inférieure à 3000x2000.",
   unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
+  alien_dna = "NOTE: Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
+  fractured_bones = "NOTE: L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
+  load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
 }
+
+-- Updates
+update_window = {
+  caption = "Une mise à jour est disponible !",
+  new_version = "Nouvelle version:",
+  current_version = "Version actuelle:",
+  download = "Aller à la page de téléchargement",
+  ignore = "Sauter et aller au menu principal",
+}
+
+tooltip.update_window = {
+  download = "Accédez à la page de téléchargement pour la toute dernière version de CorsixTH",
+  ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau",
+}
+
