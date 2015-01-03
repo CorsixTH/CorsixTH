@@ -50,6 +50,7 @@ function Hospital:Hospital(world, name)
   self.acc_heating = 0
   self.discover_autopsy_risk = 10
   self.initial_grace = true
+  self.vending_money = 0
 
   -- The sum of all material values (tiles, rooms, objects).
   -- Initial value: hospital tile count * tile value + 20000
@@ -628,7 +629,9 @@ function Hospital:afterLoad(old, new)
     self.future_epidemics_pool = {}
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
-
+  if old < 92 then
+    self.vending_money = 0
+  end
 end
 
 --! Update the Hospital.patientcount variable.
@@ -949,7 +952,6 @@ function Hospital:onEndDay()
       end
     end
   end
-
   -- check if we still have to anounce VIP visit
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
@@ -1008,9 +1010,9 @@ function Hospital:onEndDay()
   self.acc_heating = self.acc_heating + heating_costs
 end
 
--- Called at the end of each month.
+--! Called at the end of each month.
 function Hospital:onEndMonth()
-  -- Spend wages
+  -- Pay the staff their wages
   local wages = 0
   for i, staff in ipairs(self.staff) do
     wages = wages + staff.profile.wage
@@ -1023,6 +1025,8 @@ function Hospital:onEndMonth()
     self:spendMoney(math.round(self.acc_heating), _S.transactions.heating)
     self.acc_heating = 0
   end
+  -- Receive vending machine income
+  self:collectVendingReceipts()
   -- how is the bank balance
   if self:isPlayerHospital() then
     if self.balance < 1000 and not self.cash_msg then
@@ -1551,9 +1555,18 @@ function Hospital:addInsuranceMoney(company, amount)
   self.insurance_balance[company][1] = old_balance + amount
 end
 
-function Hospital:receiveMoneyForProduct(patient, amount, reason)
+-- At this time the only product is income from the drinks machines
+--! Keep a record of the amount spent via drinks machines during the month
+function Hospital:receiveMoneyForProduct(patient, amount)
   patient.world:newFloatingDollarSign(patient, amount)
-  self:receiveMoney(amount, reason)
+  self.vending_money = self.vending_money + amount
+end
+
+--! Once a month the drinks machines are emptied and the takings are banked
+function Hospital:collectVendingReceipts()
+  local amount = self.vending_money
+  self:receiveMoney(amount, _S.transactions.drinks)
+  self.vending_money = self.vending_money - amount
 end
 
 --[[ Add a transaction to the hospital's transaction log.
