@@ -669,6 +669,9 @@ end
 function UI:onMouseMove(x, y, dx, dy)
   local repaint = UpdateCursorPosition(self.app.video, x, y)
 
+  self.cursor_x = x
+  self.cursor_y = y
+
   if self.drag_mouse_move then
     self.drag_mouse_move(x, y)
     return true
