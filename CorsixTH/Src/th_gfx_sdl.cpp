@@ -204,7 +204,7 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
         SDL_SetWindowFullscreen(m_pWindow, (pParams->bFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
     }
 
-    if (bUpdateSize)
+    if (bUpdateSize || bIsFullscreen != pParams->bFullscreen)
     {
         SDL_SetWindowSize(m_pWindow, m_iWidth, m_iHeight);
     }
