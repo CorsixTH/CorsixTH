@@ -1334,7 +1334,7 @@ function App:checkForUpdates()
     end
   end
   if not valid_url then
-    print ("Update download url is not on the trusted domains list (" .. updateTable["download_url"] .. ")")
+    print ("Update download url is not on the trusted domains list (" .. update_table["download_url"] .. ")")
     return
   end
 
