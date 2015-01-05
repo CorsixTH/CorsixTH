@@ -612,24 +612,6 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
     }
 }
 
-//! Helper function to read a word from memory.
-/*! @param pData Pointer to the word to read.
-    @return The read word value.
- */
-static unsigned int readWord(const unsigned char* pData)
-{
-    return *pData | (pData[1] << 8);
-}
-
-//! Helper function to read a long word from memory.
-/*! @param pData Pointer to the word to read.
-    @return The read word value.
- */
-static unsigned int readLong(const unsigned char* pData)
-{
-    return readWord(pData) | (readWord(pData + 2) << 16);
-}
-
 THPalette::THPalette()
 {
     m_iNumColours = 0;
@@ -802,49 +784,6 @@ static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidt
     return iDataLength == 0;
 }
 
-
-bool THRawBitmap::loadFullColour(const unsigned char* pData, size_t iLength,
-                                 THRenderTarget *pEventualCanvas)
-{
-    if(pEventualCanvas == NULL)
-        return false;
-
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
-
-    if(iLength < 6 || memcmp(header, pData, 6) != 0)
-        return false;
-    pData += 6; iLength -= 6;
-
-    if (iLength < 4+2+2+2) // Length of a sprite header.
-        return false;
-
-    uint32_t iSprLength = readLong(pData);
-    pData += 4; iLength -= 4;
-    if (iSprLength < 2+2+2 || iSprLength > iLength)
-        return false;
-
-    unsigned int iSprite = readWord(pData);
-    int iWidth = readWord(pData + 2);
-    int iHeight = readWord(pData + 4);
-    pData += 6; iLength -= 6;
-    iSprLength -= 6;
-
-    if (iSprite > 0)
-        return false; // Only load sprite 0.
-
-    if (!testSprite(pData, iSprLength, iWidth, iHeight))
-        return false;
-
-    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pData, m_pPalette);
-    if(!m_pTexture)
-        return false;
-
-    m_iWidth = iWidth;
-    m_iHeight = iHeight;
-    m_pTarget = pEventualCanvas;
-    return true;
-}
-
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
     draw(pCanvas, iX, iY, 0, 0, m_iWidth, m_iHeight);
@@ -918,6 +857,36 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
+bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
+{
+    _freeSprites();
+
+    if(pCanvas == NULL)
+        return false;
+    m_pTarget = pCanvas;
+
+    m_iSpriteCount = iCount;
+    m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
+    if(m_pSprites == NULL)
+    {
+        m_iSpriteCount = 0;
+        return false;
+    }
+
+    for (int i = 0; i < m_iSpriteCount; i++)
+    {
+        sprite_t &spr = m_pSprites[i];
+        spr.pTexture = NULL;
+        spr.pAltTexture = NULL;
+        spr.pData = NULL;
+        spr.pAltPaletteMap = NULL;
+        spr.iWidth = 0;
+        spr.iHeight = 0;
+    }
+
+    return true;
+}
+
 bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
                                    const unsigned char* pChunkData, size_t iChunkDataLength,
                                    bool bComplexChunks, THRenderTarget* pCanvas)
@@ -926,14 +895,9 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
     if(pCanvas == NULL)
         return false;
 
-    m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
-    m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
-    if(m_pSprites == NULL)
-    {
-        m_iSpriteCount = 0;
+    unsigned int iCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    if (!setSpriteCount(iCount, pCanvas))
         return false;
-    }
-    m_pTarget = pCanvas;
 
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
@@ -965,50 +929,36 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
     return true;
 }
 
-bool THSpriteSheet::loadFullColour(const unsigned char* pData, size_t iLength,
-                                 THRenderTarget *pEventualCanvas)
+bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
+                                  int iDataLength, int iWidth, int iHeight)
 {
-    static const unsigned char header[] = {'C', 'T', 'H', 'G', 2, 0};
-
-    if(iLength < 6 || memcmp(header, pData, 6) != 0)
+    if (iSprite >= m_iSpriteCount)
         return false;
-    pData += 6; iLength -= 6;
 
-    while (iLength >= 4+2+2+2) // Length of a sprite header.
+    if (!testSprite(pData, iDataLength, iWidth, iHeight))
     {
-        uint32_t iSprLength = readLong(pData);
-        pData += 4; iLength -= 4;
-        if (iSprLength < 2+2+2 || iSprLength > iLength)
-            return false;
-
-        unsigned int iSprite = readWord(pData);
-        int iWidth = readWord(pData + 2);
-        int iHeight = readWord(pData + 4);
-        pData += 6; iLength -= 6;
-        iSprLength -= 6;
-
-        if (iSprite >= m_iSpriteCount)
-            break;
-
-        if (!testSprite(pData, iSprLength, iWidth, iHeight))
-        {
-            printf("Sprite number %d has a bad encoding, skipping remainder of the file", iSprite);
-            return false;
-        }
-
-        _freeSingleSprite(iSprite);
-        sprite_t *pSprite = m_pSprites + iSprite;
-        pSprite->pData = new (std::nothrow) unsigned char[iSprLength];
-        if (pSprite->pData == NULL)
-            return false;
-
-        memcpy(pSprite->pData, pData, iSprLength);
-        iLength -= iSprLength;
-        pData += iSprLength;
-
-        pSprite->iWidth = iWidth;
-        pSprite->iHeight = iHeight;
+        printf("Sprite number %d has a bad encoding, skipping", iSprite);
+        return false;
     }
+
+    _freeSingleSprite(iSprite);
+    sprite_t *pSprite = m_pSprites + iSprite;
+    if (bTakeData)
+    {
+        pSprite->pData = pData;
+    }
+    else
+    {
+        unsigned char *pNewData = new (std::nothrow) unsigned char[iDataLength];
+        if (pNewData == NULL)
+            return false;
+
+        memcpy(pNewData, pData, iDataLength);
+        pSprite->pData = pNewData;
+    }
+
+    pSprite->iWidth = iWidth;
+    pSprite->iHeight = iHeight;
     return true;
 }
 

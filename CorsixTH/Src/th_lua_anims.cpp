@@ -45,6 +45,21 @@ static int l_anims_set_spritesheet(lua_State *L)
     return 1;
 }
 
+//! Set the video target for the sprites.
+/*!
+    setCanvas(<video-surface>)
+ */
+static int l_anims_set_canvas(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    lua_settop(L, 2);
+
+    pAnims->setCanvas(pCanvas);
+    luaT_setenvfield(L, 1, "target");
+    return 1;
+}
+
 static int l_anims_load(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
@@ -66,6 +81,48 @@ static int l_anims_load(lua_State *L)
 
     return 1;
 }
+
+//! Load custom animations.
+/*!
+    loadCustom(<data-of-an-animation-file>) -> true/false
+ */
+static int l_anims_loadcustom(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    size_t iDataLength;
+    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLength);
+
+    if (pAnims->loadCustomAnimations(pData, iDataLength))
+    {
+        lua_pushboolean(L, 1);
+    }
+    else
+    {
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
+//! Lua interface for getting a set of animations by name and tile size (one for
+//! each view direction, 'nil' if no animation is available for a direction).
+/*!
+    getAnimations(<tile-size>, <animation-name>) -> (<anim-north>, <anim-east>,  <anim-south>, <anim-west>)
+ */
+static int l_anims_getanims(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    int iTileSize = luaL_checkint(L, 2);
+    const char *pName = luaL_checkstring(L, 3);
+
+    const AnimationStartFrames &oFrames = pAnims->getNamedAnimations(pName, iTileSize);
+    if (oFrames.iNorth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iNorth); }
+    if (oFrames.iEast  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iEast);  }
+    if (oFrames.iSouth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iSouth); }
+    if (oFrames.iWest  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iWest);  }
+    return 4;
+}
+
 
 static int l_anims_getfirst(lua_State *L)
 {
@@ -590,7 +647,10 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     // Anims
     luaT_class(THAnimationManager, l_anims_new, "anims", MT_Anims);
     luaT_setfunction(l_anims_load, "load");
+    luaT_setfunction(l_anims_loadcustom, "loadCustom");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_anims_set_canvas, "setCanvas", MT_Surface);
+    luaT_setfunction(l_anims_getanims, "getAnimations");
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
     luaT_setfunction(l_anims_getnext, "getNextFrame");
     luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");

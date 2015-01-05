@@ -419,6 +419,18 @@ function Graphics:loadAnimations(dir, prefix)
     return self.cache.anims[prefix]
   end
 
+  --! Load a custom animation file (if it can be found)
+  --!param path Path to the file.
+  local function loadCustomAnims(path)
+    local file, err = io.open(path, "rb")
+    if not file then
+      return nil, err
+    end
+    local data = file:read"*a"
+    file:close()
+    return data
+  end
+
   local sheet = self:loadSpriteTable(dir, prefix .. "Spr-0")
   local anims = TH.anims()
   anims:setSheet(sheet)
@@ -428,7 +440,21 @@ function Graphics:loadAnimations(dir, prefix)
   self.app:readDataFile(dir, prefix .. "List-1.ani"),
   self.app:readDataFile(dir, prefix .. "Ele-1.ani"))
   then
-    error("Cannot load animations " .. prefix)
+    error("Cannot load original animations " .. prefix)
+  end
+
+  if self.app.config.use_new_graphics then
+    if self.custom_graphics.file_mapping then
+      for _, fname in pairs(self.custom_graphics.file_mapping) do
+        anims:setCanvas(self.target)
+        local data, err = loadCustomAnims(self.custom_graphics_folder .. fname)
+        if not data then
+          print("Error when loading custom animations:\n" .. err)
+        elseif not anims:loadCustom(data) then
+          print("Warning: custom animations loading failed")
+        end
+      end
+    end
   end
 
   self.cache.anims[prefix] = anims
@@ -443,15 +469,6 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
 
   local sheet = TH.sheet()
-  local function loadCustomSprites(path)
-    local file, err = io.open(path, "rb")
-    if not file then
-      return nil, err
-    end
-    local data = file:read"*a"
-    file:close()
-    return data
-  end
   local function reloader(sheet)
     sheet:setPalette(palette or self:loadPalette())
     local data_tab, data_dat
@@ -459,18 +476,6 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
     data_dat = self.app:readDataFile(dir, name .. ".dat")
     if not sheet:load(data_tab, data_dat, complex, self.target) then
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
-    end
-    if self.app.config.use_new_graphics then
-      if self.custom_graphics.file_mapping and
-         self.custom_graphics.file_mapping[dir .. ":" .. name] then
-        local data, err = loadCustomSprites(self.custom_graphics_folder ..
-                     self.custom_graphics.file_mapping[dir .. ":" .. name])
-        if not data then
-          print("Error when loading custom graphics:\n" .. err)
-        elseif not sheet:loadCustom(data, self.target) then
-          print("Warning: custom sheet loading failed")
-        end
-      end
     end
   end
   self.reload_functions[sheet] = reloader
