@@ -617,21 +617,22 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       end
     end
 
-    for i, xy in ipairs(object_footprint) do
-      local x = x + xy[1]
-      local y = y + xy[2]
-      if x < 1 or x > w or y < 1 or y > h then
-        setAllGood(xy)
+    for i, tile in ipairs(object_footprint) do
+      local x = x + tile[1]
+      local y = y + tile[2]
+      -- Check 1: Does the tile have valid map coordinates?:
+      if world:areFootprintTilesCoardinatesInvalid(x, y) then
+        setAllGood(tile)
         x = 0
         y = 0
       else
         local flag = "buildable"
         local good_tile = 24 + flag_alpha75
         local bad_tile = 67 + flag_alpha75
-        if xy.only_passable then
+        if tile.only_passable then
           flag = "passable"
         end
-        if xy.only_side then
+        if tile.only_side then
           if object.thob == 50 and direction == "east" then
             direction = "west"
           end
@@ -639,62 +640,28 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           passable_flag = direction_parameters[direction]["passable_flag"]
         end
 
-        local cell_flags = map:getCellFlags(x, y, flags)[flag]
-        local is_object_allowed = false
-        if roomId and flags.roomId ~= roomId then
-          is_object_allowed = false
-        elseif flags.roomId == 0 and object.corridor_object then
-          is_object_allowed = true
-          roomId = flags.roomId
-        elseif flags.roomId == 0 and not object.corridor_object then
-          is_object_allowed = false
-        else
-          roomId = flags.roomId
-          for _, o in pairs(world.rooms[roomId].room_info.objects_additional) do
-            if TheApp.objects[o].thob == object.thob then
-              is_object_allowed = true
-              break
-            end
-          end
-          for o, num in pairs(world.rooms[roomId].room_info.objects_needed) do
-            if TheApp.objects[o].thob == object.thob then
-              is_object_allowed = true
-              break
-            end
-          end
+        -- Check 2: Is the tile in the object's allowed room?:
+        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, roomId)
+        local is_object_allowed = result.within_room
+        roomId = result.roomId
+
+        -- Check 3: The footprint tile should either be buildable or passable, is it?:
+        if not tile.only_side and is_object_allowed then
+           is_object_allowed = world:isFootprintTileBuildableOrPassable(x, y, tile, object_footprint, flag)
+        elseif is_object_allowed then
+          is_object_allowed = map:getCellFlags(x, y, flags)[flag]
         end
 
-        local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)
-          if complete_cell or need_side then
-            return flags[flag_name]
-          end
-          for i, xy in ipairs(object_footprint) do
-              if(xy[1] == x and xy[2] == y) then
-              return flags[flag_name]
-            end
-          end
-          return true
-        end
-
-        if cell_flags and not xy.only_side then
-          for _, value in pairs(direction_parameters) do
-            local x1, y1 = xy[1] + value["x"], xy[2] + value["y"]
-            if not isTileValid(x1, y1, xy.complete_cell, flags, value["buildable_flag"], xy[value["needed_side"]]) then
-              is_object_allowed = false
-              break
-            end
-          end
-        end
-
-        if cell_flags and is_object_allowed then
-          if not xy.invisible then
+        -- Having checked if the tile is good set its blueprint appearance flag: 
+        if is_object_allowed then
+          if not tile.invisible then
             map:setCell(x, y, 4, good_tile)
           end
         else
-          if not xy.invisible then
+          if not tile.invisible then
             map:setCell(x, y, 4, bad_tile)
           end
-          setAllGood(xy)
+          setAllGood(tile)
         end
       end
       self.object_footprint[i][1] = x
@@ -702,59 +669,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     end
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
-        -- Check that pathfinding still works, i.e. that placing the object
-        -- wouldn't disconnect one part of the hospital from another. To do
-        -- this, we provisionally mark the footprint as unpassable (as it will
-        -- become when the object is placed), and then check that the cells
-        -- surrounding the footprint have not had their connectedness changed.
-        local function setPassable(passable)
-          local flags_to_set = {passable = passable}
-          for _, xy in ipairs(object_footprint) do
-            local x = x + xy[1]
-            local y = y + xy[2]
-            if not xy.only_passable then
-              map:setCellFlags(x, y, flags_to_set)
-            end
-          end
-        end
-        local function isIsolated(x, y)
-          setPassable(true)
-          local result = not world.pathfinder:isReachableFromHospital(x, y)
-          setPassable(false)
-          return result
-        end
-        setPassable(false)
-        local prev_x, prev_y
-        for _, xy in ipairs(object.orientations[self.object_orientation].adjacent_to_solid_footprint) do
-          local x = x + xy[1]
-          local y = y + xy[2]
-          if map:getCellFlags(x, y, flags).roomId == roomId and flags.passable then
-            if prev_x then
-              if not world.pathfinder:findDistance(x, y, prev_x, prev_y) then
-                -- There is no route between the two map nodes. In most cases,
-                -- this means that connectedness has changed, though there is
-                -- one rare situation where the above test is insufficient. If
-                -- (x, y) is a passable but isolated node outside the hospital
-                -- and (prev_x, prev_y) is in the corridor, then the two will
-                -- not be connected now, but critically, neither were they
-                -- connected before.
-                if not isIsolated(x, y) then
-                  if not isIsolated(prev_x, prev_y) then
-                    allgood = false
-                    break
-                  end
-                else
-                  x = prev_x
-                  y = prev_y
-                end
-              end
-            end
-            prev_x = x
-            prev_y = y
-          end
-        end
-        setPassable(true)
-      end
+        allgood = not world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId)
+ 	    end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)
       end

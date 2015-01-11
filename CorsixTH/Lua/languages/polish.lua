@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Copyright (c) 2013 - translation -  BuTcHeR (extragry.pl)
 
 The study, diagnosis and surgery on the translation performed by:

@@ -55,10 +55,21 @@ local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, kno
   }
 end
 
-local function die_anims(name, fall, rise, wings, hands, fly, extra)
+---
+-- @param name The name of the patient class these death animations are for.
+-- @param fall The patient's fall animation.
+-- @param rise The transparent getting up animation for heaven death patients who have been lying dead on the ground.
+-- @param rise_hell The opaque getting up animation for hell death patients who have been lying dead on the ground.
+-- @param wings The heaven death animation in which the patient's wings appear.
+-- @param hands The heaven death animation which occurs after the wings animation when the patient puts their hands together.
+-- @param fly The heaven death animation which makes patients fly upwards to heaven.
+-- @param extra Dead untreated patients who don't transform before falling over use this animation afterwards to transform into a standard male/female.
+---
+local function die_anims(name, fall, rise, rise_hell, wings, hands, fly, extra)
   die_animations[name] = {
     fall_east = fall,
     rise_east = rise,
+    rise_hell_east = rise_hell,
     wings_east = wings,
     hands_east = hands,
     fly_east = fly,
@@ -125,24 +136,25 @@ anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   
 anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288,   nil,   nil, 3518,  3520)
 anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
 anims("VIP",                        266,  268,  274,  276)
+anims("Inspector",                  266,  268,  274,  276)
 anims("Grim Reaper",                994,  996, 1002, 1004)
 
 --  | Die Animations                 |
---  | Name                           |FallE|RiseE|WingsE|HandsE|FlyE|ExtraE| Notes
-----+--------------------------------+-----+-----+-----+-----+------+------+
-die_anims("Standard Male Patient",     1682, 2434, 2438, 2446,  2450) -- Always facing east or south
-die_anims("Alternate Male Patient",    1682, 2434, 2438, 2446,  2450)
-die_anims("Slack Male Patient",        1682, 2434, 2438, 2446,  2450)
+--  | Name                           |FallE|RiseE|RiseE Hell|WingsE|HandsE|FlyE|ExtraE| Notes 2248
+----+--------------------------------+-----+-----+----------+-----+------+-----+------
+die_anims("Standard Male Patient",     1682, 2434,       384, 2438,  2446, 2450) -- Always facing east or south
+die_anims("Alternate Male Patient",    1682, 2434,      3404, 2438,  2446, 2450)
+die_anims("Slack Male Patient",        1682, 2434,       384, 2438,  2446, 2450)
 -- TODO: Where is slack male transformation? Uses alternate male for now.
-die_anims("Transparent Male Patient",  4412, 2434, 2438, 2446,  2450,  4416) -- Extra = Transformation
-die_anims("Standard Female Patient",   3116, 3208, 3212, 3216,  3220)
-die_anims("Slack Female Patient",      4288, 3208, 3212, 3216,  3220)
-die_anims("Transparent Female Patient",4420, 3208, 3212, 3216,  3220,  4428) -- Extra = Transformation
-die_anims("Chewbacca Patient",         4182, 2434, 2438, 2446,  2450, 1682) -- Only males die... (1222 is the Female)
-die_anims("Elvis Patient",              974, 2434, 2438, 2446,  2450,  4186) -- Extra = Transformation
-die_anims("Invisible Patient",         4200, 2434, 2438, 2446,  2450)
-die_anims("Alien Male Patient",        4882, 2434, 2438, 2446,  2450)
-die_anims("Alien Female Patient",      4886, 3208, 3212, 3216,  3220)
+die_anims("Transparent Male Patient",  4412, 2434,       384, 2438,  2446, 2450,  4416) -- Extra = Transformation
+die_anims("Standard Female Patient",   3116, 3208,       580, 3212,  3216, 3220)
+die_anims("Slack Female Patient",      4288, 3208,       580, 3212,  3216, 3220)
+die_anims("Transparent Female Patient",4420, 3208,       580, 3212,  3216, 3220,  4428) -- Extra = Transformation
+die_anims("Chewbacca Patient",         4182, 2434,       384, 2438,  2446, 2450,  1682) -- Only males die... (1222 is the Female)
+die_anims("Elvis Patient",              974, 2434,       384, 2438,  2446, 2450,  4186) -- Extra = Transformation
+die_anims("Invisible Patient",         4200, 2434,       384, 2438,  2446, 2450)
+die_anims("Alien Male Patient",        4882, 2434,       384, 2438,  2446, 2450)
+die_anims("Alien Female Patient",      4886, 3208,       580, 3212,  3216, 3220)
 
 -- The next fours sets belong together, but are done like this so we can use them on there own
 -- I also had difficulty in keeping them together, as the patient needs to on the floor
@@ -240,10 +252,10 @@ moods("queue",          4568,      70)             -- no matter what other prior
 moods("poo",            3996,       5)
 moods("money",          4018,      30)
 moods("patient_wait",   5006,      40)
-moods("epidemy1",       4566,      38)
-moods("epidemy2",       4570,      40)
-moods("epidemy3",       4572,      40)
-moods("epidemy4",       4574,      40)
+moods("epidemy1",       4566,      55)
+moods("epidemy2",       4570,      55)
+moods("epidemy3",       4572,      55)
+moods("epidemy4",       4574,      55)
 moods("sad1",           3992,      40)
 moods("sad2",           4000,      41)
 moods("sad3",           4002,      42)
@@ -489,15 +501,23 @@ local function Humanoid_startAction(self)
 
   -- Handle an empty action queue in some way instead of crashing.
   if not action then
+    -- if this is a patient that is going home, an empty
+    -- action queue is not a problem
+    if class.is(self, Patient) and self.going_home then
+      return
+    end
+
     ---- Empty action queue! ----
     -- First find out if this humanoid is in a room.
     local room = self:getRoom()
     if room then
       room:makeHumanoidLeave(self)
     end
-    -- Is it a member of staff or a patient?
+    -- Is it a member of staff, grim or a patient?
     if class.is(self, Staff) then
       self:queueAction({name = "meander"})
+    elseif class.is(self,GrimReaper) then
+      self:queueAction({name = "idle"})
     else
       self:queueAction({name = "seek_reception"})
     end

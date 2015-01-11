@@ -1,5 +1,4 @@
-/*
-Copyright (c) 2009 Peter "Corsix" Cawley
+--[[ Copyright (c) 2012 Luís "Driver" Duarte
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -17,28 +16,23 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+SOFTWARE. --]]
 
-#ifndef CORSIX_TH_LUA_SDL_H_
-#define CORSIX_TH_LUA_SDL_H_
+class "GrimReaper" (Humanoid)
+local TH = require "TH"
 
-#include "lua.hpp"
-#include <SDL.h>
+function GrimReaper:GrimReaper(...)
+  self:Humanoid(...)
+  self.attributes = {}
+  self.hover_cursor = TheApp.gfx:loadMainCursor("default")
+  self.walk_anims = {
+    	walk_east = 996,
+    	walk_north = 994,
+    	idle_east = 1004,
+    	idle_north = 1002,
+  	}
+end
 
-// SDL event codes used for delivering custom events to l_mainloop in
-// sdl_core.cpp
-// SDL_USEREVENT_TICK - informs script of a timer tick
-#define SDL_USEREVENT_TICK (SDL_USEREVENT + 0)
-// SDL_USEREVENT_MUSIC_OVER - informs script of SDL_Mixer music finishing
-#define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
-// SDL_USEREVENT_CPCALL - calls lua_cpcall with SDL_Event user.data1 and data2
-#define SDL_USEREVENT_CPCALL (SDL_USEREVENT + 2)
-// SDL USEREVENT_MOVIE_OVER - informs script of THMovie movie finishing
-#define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 3)
-// SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
-#define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
-
-int luaopen_sdl(lua_State *L);
-
-#endif // CORSIX_TH_LUA_SDL_H_
+function GrimReaper:tickDay()
+  return false
+end

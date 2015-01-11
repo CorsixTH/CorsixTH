@@ -161,7 +161,11 @@ static int load_music_async_thread(void* arg)
     async->music = Mix_LoadMUS_RW(async->rwop, 1);
     async->rwop = NULL;
     if(async->music == NULL)
-        async->err = strdup(Mix_GetError());
+    {
+        size_t iLen = strlen(Mix_GetError()) + 1;
+        async->err = (char*)malloc(iLen);
+        memcpy(async->err, Mix_GetError(), iLen);
+    }
     SDL_Event e;
     e.type = SDL_USEREVENT_CPCALL;
     e.user.data1 = (void*)l_load_music_async_callback;

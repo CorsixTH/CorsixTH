@@ -29,6 +29,20 @@ function Patient:Patient(...)
   self.has_fallen = 1
   self.has_vomitted = 0
   self.action_string = ""
+  self.cured = false
+  self.infected = false
+  -- To distingish between actually being dead and having a nil hospital
+  self.dead = false
+  -- Is the patient reserved for a particular nurse when being vaccinated
+  self.reserved_for = false
+  self.vaccinated = false
+  -- Has the patient been sent to the wrong room and needs redirecting
+  self.needs_redirecting = false
+  self.attempted_to_infect= false
+  -- Is the patient about to be vaccinated?
+  self.vaccination_candidate = false
+  -- Has the patient passed reception?
+  self.has_passed_reception = false
 end
 
 function Patient:onClick(ui, button)
@@ -36,9 +50,21 @@ function Patient:onClick(ui, button)
     if self.message_callback then
       self:message_callback()
     else
-      ui:addWindow(UIPatient(ui, self))
+      local hospital = self.hospital or self.world:getLocalPlayerHospital()
+      local epidemic = hospital and hospital.epidemic
+      if not epidemic or
+        (not epidemic.coverup_in_progress
+        or (not self.infected or self.marked_for_vaccination)
+        and not epidemic.vaccination_mode_active) then
+        ui:addWindow(UIPatient(ui, self))
+      end
+      if epidemic and epidemic.coverup_in_progress and
+        self.infected and not self.marked_for_vaccination and
+        -- Prevent further vaccinations when the timer ends
+        not epidemic.timer.closed then
+        epidemic:markForVaccination(self)
+      end
     end
-
   elseif self.user_of then
     -- The object we're using is made invisible, as the animation contains both
     -- the humanoid and the object. Hence send the click onto the object.
@@ -71,6 +97,58 @@ function Patient:setDisease(disease)
     self.attributes["toilet_need"] = math.random()*0.2
   end
   self:updateDynamicInfo()
+end
+
+function Patient:changeDisease(new_disease)
+  assert(not self.diagnosed, "Cannot change the disease of a diagnosed patient")
+  -- These assertions should hold until handling of visual diseases is implemented.
+  assert(self.disease.contagious, "Cannot change the disease of a patient who has a non-contagious disease")
+  assert(new_disease.contagious, "Cannot change a disease to a non-contagious disease")
+
+  --[[ Go through the list of diagnosis rooms for the current disease
+  -- and check if they are in the list of available rooms for the patient
+  -- if they are not on there they must be visited already or unavailable
+  -- @return visited_or_unavailable_rooms (table of strings) names of visited
+  -- or unavailable rooms]]
+  local function get_visited_or_unavailable_rooms()
+    local visited = ""
+    local visited_or_unavailable_rooms = {}
+    for j, disease_room in ipairs(self.disease.diagnosis_rooms) do
+      local found = false
+
+      for i, room in ipairs(self.available_diagnosis_rooms) do
+        if room == disease_room then
+          found = true
+        end
+      end
+      if not found then
+        visited_or_unavailable_rooms[#visited_or_unavailable_rooms + 1] = disease_room
+        visited = visited == "" and disease_room or visited .. "," .. disease_room
+      end
+    end
+    return visited_or_unavailable_rooms
+  end
+
+  -- Copy the diagnosis rooms from the new disease
+  local new_diagnosis_rooms = {}
+  for i, new_diag_room in ipairs(new_disease.diagnosis_rooms) do
+    new_diagnosis_rooms[#new_diagnosis_rooms+1] = new_diag_room
+  end
+
+  -- The set of new diagnosis rooms is the diagnosis rooms
+  -- for the new disease MINUS the ones they have already visited or
+  -- are unavailable.
+  local visited_rooms = get_visited_or_unavailable_rooms()
+  for i, new_diag_room in ipairs(new_diagnosis_rooms) do
+    for _, visited_room in ipairs(visited_rooms) do
+      if(new_diag_room == visited_room) then
+        table.remove(new_diagnosis_rooms,i)
+      end
+    end
+  end
+
+  self.available_diagnosis_rooms = new_diagnosis_rooms
+  self.disease = new_disease
 end
 
 function Patient:setdiagDiff()
@@ -187,13 +265,15 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       if self.is_emergency then
         self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
       end
+      self.cured = true
+      self.infected = false
       self:setMood("cured", "activate")
       self.world.ui:playSound "cheer.wav" -- This sound is always heard
       self.attributes["health"] = 1
       self:changeAttribute("happiness", 0.8)
       hospital:changeReputation("cured", self.disease)
       self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(true)
+      self:goHome(self.cured)
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     end
   end
@@ -534,16 +614,15 @@ function Patient:tickDay()
     self:setMood("sad6", "activate")
   -- its not looking good
   elseif self.attributes["health"] > 0.00 and self.attributes["health"] < 0.01 then
-    self:setMood("sad6", "deactivate")
-    self:setMood("dead", "activate")
     self.attributes["health"] = 0.0
   -- is there time to say a prayer
   elseif self.attributes["health"] == 0.0 then
-    local room = self:getRoom()
+    -- people who are in a room should not die:
+    -- 1. they are being cured in this moment. dying in the last few seconds
+    --    before the cure makes only a subtle difference for gameplay
+    -- 2. they will leave the room soon (toilets, diagnostics) and will die then
     if not self:getRoom() and not self.action_queue[1].is_leaving then
-      self:die()
-    elseif self.in_room and self.attributes["health"] == 0.0 then
-      room:makeHumanoidLeave(self)
+      self:setMood("sad6", "deactivate")
       self:die()
     end
     --dead people aren't thirsty
@@ -790,6 +869,35 @@ function Patient:tickDay()
       end
     end
   end
+
+  -- If the patient is sitting on a bench or standing and queued,
+  -- it may be a situation where he/she is not in the queue
+  -- anymore, but should be. If this is the case for more than
+  -- 2 ticks, go to reception
+  if #self.action_queue > 1 and (self.action_queue[1].name == "use_object" or
+    self.action_queue[1].name == "idle") and
+    self.action_queue[2].name == "queue" then
+    local found = false
+    for _, humanoid in ipairs(self.action_queue[2].queue) do
+      if humanoid == self then
+        found = true
+        break
+      end
+    end
+
+    if not found then
+      if not self.noqueue_ticks then
+        self.noqueue_ticks = 1
+      elseif self.noqueue_ticks > 2 then
+        self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
+        self:setNextAction{name = 'seek_reception'}
+      else
+        self.noqueue_ticks = self.noqueue_ticks + 1
+      end
+    else
+      self.noqueue_ticks = 0
+    end
+  end
 end
 
 -- Called each time the patient moves to a new tile.
@@ -887,7 +995,19 @@ function Patient:updateDynamicInfo(action_string)
       self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
     end
   end
-  self:setDynamicInfo('text', {action_string, "", info})
+  -- Set the centre line of dynamic info based on contagiousness, if appropriate
+  local epidemic = self.hospital and self.hospital.epidemic
+  if epidemic and epidemic.coverup_in_progress then
+    if self.infected and not self.vaccinated then
+      self:setDynamicInfo('text',
+        {action_string, _S.dynamic_info.patient.actions.epidemic_contagious, info})
+    elseif self.vaccinated then
+      self:setDynamicInfo('text',
+        {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
+    end
+  else
+    self:setDynamicInfo('text', {action_string, "", info})
+  end
 end
 
 --[[ Update availability of a choice in message owned by this patient, if any
@@ -929,10 +1049,52 @@ function Patient:updateMessage(choice)
   end
 end
 
+--[[ Does the patient have a visual disease
+--  @return result (boolean) true if so, false otherwise]]
+function Patient:hasVisualDisease()
+  -- Only patients with visual diseases have this field
+  return (self.disease.visuals_id ~= nil)
+end
+
+
+--[[ If the patient is not a vaccination candidate then
+  give them the arrow icon and candidate status ]]
+function Patient:giveVaccinationCandidateStatus()
+  self:setMood("epidemy2","deactivate")
+  self:setMood("epidemy3","activate")
+  self.vaccination_candidate = true
+end
+
+--[[Remove the vaccination candidate icon and status from the patient]]
+function Patient:removeVaccinationCandidateStatus()
+  if not self.vaccinated then
+    self:setMood("epidemy3","deactivate")
+    self:setMood("epidemy2","activate")
+    self.vaccination_candidate = false
+  end
+end
+
+
 function Patient:afterLoad(old, new)
   if old < 68 then
     if self.going_home then
       self.waiting = nil
+    end
+  end
+  if old < 87 then
+    if self.die_anims == nil then
+      self.die_anims = {}
+    end
+
+    -- New humanoid animation: rise_hell_east:
+    if self:isMalePatient() then
+      if self.humanoid_class ~= "Alternate Male Patient" then
+        self.die_anims.rise_hell_east = 384
+      else
+        self.die_anims.rise_hell_east = 3404
+      end
+    else
+      self.die_anims.rise_hell_east = 580
     end
   end
   Humanoid.afterLoad(self, old, new)

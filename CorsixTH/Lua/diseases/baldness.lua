@@ -29,6 +29,7 @@ disease.cure = _S.diseases.baldness.cure
 disease.cure_price = 950
 disease.emergency_sound = "emerg012.wav"
 disease.emergency_number = 18
+disease.contagious = false
 disease.initPatient = function(patient)
   patient:setType("Slack Male Patient")
   patient:setLayer(0, 12)

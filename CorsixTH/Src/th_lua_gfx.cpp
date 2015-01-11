@@ -570,7 +570,6 @@ static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int 
     }
 
 #undef FLAG
-
     return oParams;
 }
 

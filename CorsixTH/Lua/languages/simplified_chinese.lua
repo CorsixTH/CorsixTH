@@ -69,8 +69,8 @@ tooltip = {
     next = "显示下一个提示",
   },
   message = {
-    button = "Left click to open message",
-    button_dismiss = "Left click to open message, right click to dismiss it",
+    button = "点击打开消息",
+    button_dismiss = "点击打开消息，右键点击忽略",
   },
   custom_game_window = {
     start_game_with_name = "%s",
@@ -134,8 +134,8 @@ tooltip = {
   },
   load_game_window = {
     load_game = "%s",
-    load_autosave = "Load autosave",
-    load_game_number = "Load game %d",
+    load_autosave = "载入自动保存的游戏",
+    load_game_number = "载入游戏 %d",
   },
   fax = {
     close = "关闭此窗口，但不删除消息",
@@ -175,20 +175,21 @@ cheats_window = {
   warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
 }
 errors = {
-  unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
+  unavailable_screen_size = "你设置的屏幕大小无法应用于全屏模式。",
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
-  maximum_screen_size = "Please enter a screen size of at most 3000x2000.",
-  load_prefix = "Error while loading game: ",
-  save_prefix = "Error while saving game: ",
-  map_file_missing = "Could not find the map file %s for this level!",
-  minimum_screen_size = "Please enter a screen size of at least 640x480.",
+  load_prefix = "载入游戏失败：",
+  save_prefix = "保存游戏失败：",
+  map_file_missing = "找不到该关卡的地图文件 %s！",
+  minimum_screen_size = "最小屏幕大小为 640x480。",
 }
 main_menu = {
-  exit = "退出",
-  custom_level = "自定义游戏",
   new_game = "开始游戏",
-  load_game = "装载游戏",
+  custom_level = "自定义游戏",
+  continue = "继续游戏",
+  load_game = "载入游戏",
   options = "选项",
+  version = "版本: ",
+  exit = "退出"
 }
 menu_debug = {
   lua_console = "  (F12) LUA CONSOLE  ",
@@ -208,7 +209,6 @@ menu_debug = {
 menu_options = {
   edge_scrolling = "    开启鼠标滚动",
   lock_windows = "    锁定窗口",
-  settings = "    选项",
 }
 menu_options_game_speed = {
   pause = "    暂停",
@@ -218,11 +218,14 @@ lua_console = {
   close = "Close",
 }
 install = {
-  title = "--------------------------------- CorsixTH 游戏设置 ---------------------------------",
+  title = "-------------------------------- CorsixTH  游戏设置 -------------------------------",
   th_directory = "运行游戏需要原版主题医院。请指定原版主题医院游戏安装文件夹。",
+  ok = "确定",
+  exit = "退出",
+  cancel = "取消"
 }
 load_game_window = {
-  caption = "装载游戏",
+  caption = "载入游戏",
 }
 adviser = {
   cheats = {
@@ -254,25 +257,46 @@ information = {
     percentage_killed = "杀死了%d的病人。",
   },
   cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
-  custom_game = "Welcome to CorsixTH. Have fun with this custom map!",
+  custom_game = "欢迎来到 CorsixTH。尽情享受自定义地图吧！",
 }
 new_game_window = {
-  hard = "专家（难）",
-  cancel = "返回",
-  tutorial = "第一次游戏",
+  caption = "Campaign",
+  player_name = "玩家名称",
+  option_on = "开",
+  option_off = "关",
+  difficulty = "难度",
   easy = "实习医生（容易）",
   medium = "医生（一般）",
+  hard = "专家（难）",
+  tutorial = "游戏教程",
+  start = "开始",
+  cancel = "返回",
 }
+
 options_window = {
+  caption = "设置",
+  option_on = "开",
+  option_off = "关",
   fullscreen = "全屏幕",
-  height = "",
-  width = "",
-  change_resolution = "更改分辨率",
+  resolution = "分辨率",
+  custom_resolution = "自定义...",
+  width = "宽度",
+  height = "高度",
+  audio = "全局音效",
+  customise = "自定义",
+  folder = "文件夹",
+  language = "语言",
+  apply = "应用",
+  cancel = "取消",
   back = "返回",
 }
+
 menu_list_window = {
+  name = "名称",
+  save_date = "已修改",
   back = "返回",
 }
+
 save_game_window = {
   caption = "保存游戏",
   new_save_game = "",
@@ -329,17 +353,23 @@ object = {
   litter = "Litter",
 }
 letter = {
-  custom_level_completed = "Well done! You've completed all goals on this custom level!",
-  dear_player = "Dear %s",
-  return_to_main_menu = "Would you like to return to the main menu or continue playing?",
+  custom_level_completed = "做的好！你已完成自定义游戏的所有目标！",
+  dear_player = "亲爱的 %s",
+  return_to_main_menu = "你想要回到主菜单还是继续游戏?",
+}
+
+update_window = {
+  caption = "可升级新版本！",
+  new_version = "新版本：",
+  current_version = "当前版本：",
+  download = "打开下载页面",
+  ignore = "回到主菜单"
 }
 
 tooltip.custom_game_window.free_build = "Tick this box if you want to play without money or winning and losing conditions"
 tooltip.cheats_window.cheats.vip = "Creates a VIP."
 tooltip.menu_list_window.save_date = "Click here to sort the list by last modification date"
 tooltip.menu_list_window.name = "Click here to sort the list by name"
-tooltip.options_window.original_path = "The currently chosen directory of the original Theme Hospital installation"
-tooltip.options_window.browse = "Browse for another location of a Theme Hospital installation. %1%"
 custom_game_window.free_build = "Free Build"
 cheats_window.cheats.vip = "Create VIP"
 main_menu.version = "Version: "
@@ -360,8 +390,6 @@ adviser.warnings.no_desk_1 = "If you want patients to come to your hospital, you
 adviser.warnings.falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!"
 information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
 options_window.cancel = "取消"
-options_window.browse = "浏览..."
-options_window.new_th_directory = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted."
 menu_list_window.save_date = "修改日期"
 menu_list_window.name = "名称"
 fax.vip_visit_result.remarks.free_build[1] = "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?"
@@ -659,15 +687,16 @@ tooltip = {
     insurance_owed = "%s欠款的金额",
   },
   main_menu = {
+    new_game = "开始新游戏",
+    load_game = "载入进度",
     network = "开始网络游戏",
-    quit = "退出",
-    continue = "继续游戏",
+    exit = "不要，不要，请不要退出游戏！",
+    quit = "确定要退出游戏吗？",
+    continue = "继续游戏最近的游戏",
     load_menu = {
       load_slot = "读取进度",
-      empty_slot = "空",
-    },
-    new_game = "开始新游戏",
-    load_game = "读入进度",
+      empty_slot = "空"
+    }
   },
   patient_window = {
     graph = "通过点击可以在健康情况和病史之间切换",
@@ -2754,13 +2783,13 @@ humanoid_name_ends = {
   [26] = "林",
 }
 confirmation = {
-  return_to_blueprint = "您是否确定返回蓝图模式？",
-  restart_level = "您是否希望重新开始这个任务？",
-  delete_room = "您是否希望拆除这个房间？",
-  quit = "您已经选择了退出。您是否确定真的要退出游戏？",
-  overwrite_save = "该位置已储存游戏进度。您是否确定要将其覆盖？",
-  sack_staff = "您是否确定要解雇该员工？",
-  replace_machine = "您是否确定将%s更新，需花费$%d？",
+  return_to_blueprint = "您定要返回蓝图模式吗？",
+  restart_level = "确定要重新开始这个任务吗？",
+  delete_room = "确定要拆除这个房间吗？",
+  quit = "确定要退出游戏吗？",
+  overwrite_save = "该位置已有游戏进度。是否覆盖？",
+  sack_staff = "确定要解雇该员工吗？",
+  replace_machine = "确定要更新%s，并花费$%d？",
 }
 months = {
   [1] = "1 月",
@@ -3181,9 +3210,50 @@ build_room_window = {
   cost = "花费：",
 }
 menu = {
-  debug = "    DEBUG",
-  display = "    显示",
-  file = "    文件",
-  options = "    选项",
-  charts = "    图表",
+  debug = "DEBUG",
+  display = "显示",
+  file = "文件",
+  options = "选项",
+  charts = "图表",
 }
+menu_display.shadows = "  影子  "
+menu_display.mcga_lo_res = "  MCGA低解像度  "
+cheats_window.cheats.earthquake = "製作地震"
+confirmation.maximum_screen_size = "你輸入的屏幕解像度比 3000 x 2000 大。大的解像度是可行的，但是要維持一個可以接受的幀率你需要好點的硬體。是否繼續？"
+confirmation.music_warning = "選擇MP3檔為你的音樂之前，你需要有 smpeg.dll 或者你的作業系統的版本，否則你在遊戲裡不會有任何音樂。現在沒有64bit系統的版本。是否繼續?"
+menu_options_wage_increase.deny = "    拒絕 "
+menu_options_wage_increase.grant = "    容許 "
+tooltip.options_window.select_language = "選擇語言"
+tooltip.options_window.select_resolution = "選擇解像度"
+tooltip.options_window.language_dropdown_item = "選擇 %s 為語言"
+tooltip.options_window.audio_button = "開關所有聲音"
+tooltip.options_window.resolution = "運行遊戲應該在的解像度"
+tooltip.options_window.audio_toggle = "開關"
+tooltip.options_window.fullscreen = "應該在全屏還是窗口模式運行"
+tooltip.options_window.apply = "套用輸入的解像度"
+tooltip.options_window.cancel = "取消"
+tooltip.options_window.folder_button = "文件夾選項"
+tooltip.options_window.customise_button = "更多可以改變遊戲體驗的設定"
+tooltip.cheats_window.cheats.earthquake = "創造地震"
+tooltip.new_game_window.difficulty = "選擇遊戲難度"
+tooltip.new_game_window.player_name = "輸入你遊戲中的名字"
+tooltip.new_game_window.start = "用所選的設定開始遊戲"
+tooltip.update_window.download = "前往下載頁下載最新版CorsixTH"
+tooltip.update_window.ignore = "現在忽略這更新。你會在下一次開啟CorsixTH是再次被通知"
+tooltip.folders_window.browse_font = "尋找另一個字型 ( 現在的位置: %1% )"
+tooltip.folders_window.screenshots_location = "屏幕截圖預設跟配置文件放在一起。如果這不適合你，瀏覽至你想儲存屏幕截圖的位置。"
+tooltip.folders_window.reset_to_default = "把目錄重置到預設的位置"
+tooltip.folders_window.back = "關閉和返回設定選單"
+tooltip.folders_window.music_location = "選擇儲存MP3檔案的位置。你必須已經創建了目錄，然後瀏覽至你創建了的目錄。"
+tooltip.folders_window.font_location = "可以顯示你的語言所需的Unicode字元的字型的位置。如果這沒有填寫，你不可以選擇需要比原本遊戲提供的字元的語言，例如中文和俄語。（你一定已經填寫了，要不怎麼可以看到這句話呢？）"
+tooltip.folders_window.savegames_location = "遊戲存檔預設跟配置文件放在一起。如果這不適合你，瀏覽至你想儲存遊戲存檔的位置。"
+tooltip.folders_window.browse_data = "尋找杏林也瘋狂的安裝位置 ( 現在的位置: %1% )"
+tooltip.folders_window.browse = "尋找文件夾的位置"
+tooltip.folders_window.browse_screenshots = "尋找另一個儲存屏幕截圖的位置 ( 現在的位置: %1% )"
+tooltip.folders_window.browse_music = "尋找另一個儲存音樂的位置 ( 現在的位置: %1% )"
+tooltip.folders_window.no_font_specified = "沒有填寫字型位置！"
+tooltip.folders_window.not_specified = "沒有填寫文件夾位置！"
+tooltip.folders_window.browse_saves = "尋找另一個儲存遊戲存檔的位置  ( 現在的位置: %1% ) "
+tooltip.folders_window.default = "預設位置"
+tooltip.folders_window.data_location = "需要用來運行CorsixTH的杏林也瘋狂的位置"
+tooltip.customise_window.aliens = "因為缺少正常動畫，我們預設有外星人DNA的病人只可以從緊急事件中來。要在緊急事件以外容許有外星人DNA的病人來你的醫院，關閉這選項。"

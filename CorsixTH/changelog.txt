@@ -1,4 +1,109 @@
 -------------------------------------------------------------------------------
+Version 0.40 - released December 2014
+-------------------------------------------------------------------------------
+
+It has been a while since our last release, but good things come to those who wait!
+Or... in this case it's contagious diseases. Watch out for epidemics on the
+later levels in the campaign! Your patients are not as good as they used to be
+either, so those who are not lucky enough to get vaccinated and cured might
+get a visit from the Grim Reaper.
+Also, don't forget to try out the new map St. Peter's near Cawley!
+
+Happy gaming!
+
+
+--- Gameplay
+
+* Added: Epidemics. You can either choose to pay a fine to the authorities or
+  try to cover up the epidemic by vaccinating and curing the contagious patients.
+  Patients going between buildings will NOT trigger the alarm to the authorities.
+* Added: The Grim Reaper. Previously patients have always gone to heaven when
+  they die. No more! Sometimes they will instead fall down to the middle of the
+  earth in a Lava Hole.
+* Added: People with visual diseases will no longer arrive at the beginning of
+  the level if that has been specified in the level file. Instead they arrive
+  once a certain amount of months have passed.
+* Added: If you refuse VIP visits a few times he can sometimes show up anyway.
+
+* Change: Machine usage and explosions are now based on absolute number of uses.
+  A machine that goes down to 0 will explode. Previously they were percentage based.
+
+* Fix: The game would crash if you sacked a doctor in a room while a patient
+  was using some equipment in that room.
+* Fix: Sometimes the emergency bonus was not correctly calculated.
+* Fix: Patients could die inside a room. They will now die outside the room
+  unless they are just being cured.
+* Fix: If winning the level at end of year the annual report would hide the
+  winning fax.
+* Fix: If there was no queue to a room a leaving staff member would not trigger
+  a call for staff for the patient who had to abort their procedure in that room.
+* Fix: If a handyman had pending tasks when he died in an exploding room the game
+  could crash.
+* Fix: A surgeon that is removed in mid-operation will now get properly replaced
+  by a new one.
+* Fix: If the GP room was built too early in the tutorial the game would crash
+  when building a GP room later on if debug mode was turned off.
+* Fix: Patients would try to enter an exploding room.  As you can imagine,
+  this was bad.
+* Fix: Psychiatrists would become shut-ins and just wander about their office
+  forever.
+* Fix: Patients leaving the queue to get a drink could be left to sit on a
+  bench forever.
+
+
+--- User Interface ---
+
+* Added: Tooltips for the increase and decrease buttons in the research screen.
+* Added: A sound that indicates if a screenshot was taken successfully.
+* Added: Any dialog that pops up, such as the award screen, pauses the game.
+* Added: 'Continue Game' in the main menu.
+
+* Fix: Sometimes the game would not pause on year end.
+* Fix: Staff raise description was hard to read in some languages
+* Fix: The current language setting is translated and consistent with the
+  options in the list.
+
+
+--- Graphics ---
+
+* Fix: Instead of turning into a Bloaty Head, Baldness patients will die
+  with gracious hair.
+* Fix: Patients will no longer fall through walls when dying.
+* Fix: Dying Hairyitis patients should not lose their head when on the floor.
+
+
+--- Hotkeys ---
+
+* Added: 'Z' temporarily moves the game at maximum speed. Release to go back
+  to the previous speed.
+* Added: 'X' makes walls transparent until released.
+* Added: Use the Numpad to change game speed.
+* Added: Arrow key hotkeys in the staff management screen.
+* Added: Press and hold on '+' and '-' when buying furniture to
+  repeat the action.
+
+* Change: Quick Save is now Shift+Alt+S, Quick Load is Shift+Alt+L.
+
+
+--- Languages ---
+
+* Change: "Plot" is used instead of "Parcel" to indicate where a handyman has
+  been zoned to work in the Handyman staff dialog.
+
+Most languages have been updated since our last release, but if you find that
+your language has not, please help us to finish it!
+
+
+--- CorsixTH Development ---
+
+* Added: New flag for CMAKE: 'WITH_LUAJIT'. This way you can choose to use
+  either LuaJIT or Lua5.1.
+* Added: CMake toolchain for building with MinGW.
+* Added: New debug menu option 'Run debug Script' that executes
+  <install_directory>/Lua/debug_script.lua
+
+
+-------------------------------------------------------------------------------
 Version 0.30 - released November 2013
 -------------------------------------------------------------------------------
 

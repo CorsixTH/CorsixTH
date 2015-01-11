@@ -59,6 +59,14 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     humanoid:setTimer(nil)
     timer_function(humanoid)
   end
+
+  if action.walking_to_vaccinate then
+    local hospital = humanoid.hospital or humanoid.last_hospital
+    local epidemic = hospital.epidemic
+    if epidemic then
+      epidemic:interruptVaccinationActions(humanoid)
+    end
+  end
 end)
 
 local flag_list_bottom = 2048
@@ -260,6 +268,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     end
     humanoid:queueAction({
       name = "queue",
+      is_leaving = humanoid:isLeaving(),
       x = x1,
       y = y1,
       queue = queue,

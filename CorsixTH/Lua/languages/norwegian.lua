@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 Erlend Mongstad, Ola Skogrand
+--[[ Copyright (c) 2014 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -174,6 +174,7 @@ main_menu = {
   load_game   = "Last inn",
   options     = "Innstillinger",
   version = "Versjon: ",
+  continue = "Fortsett spill",
   savegame_version = "Lagringsversjon: ", --todo: en bedre oversettelse eller omskriving?
   exit       = "Avslutt",
 }
@@ -358,6 +359,8 @@ cheats_window = {
     all_research = "All forskning",
     end_year = "Slutten av året",
     earthquake = "Lag jordskjelv",
+    epidemic = "Lag smittsom pasient",
+    toggle_infected = "Slå av/på smitte-ikoner",
   },
 }
 
@@ -374,6 +377,8 @@ tooltip.cheats_window = {
   all_research = "Fullförer all forskning.",
   end_year = "Gå til slutten av dette året.",
   earthquake = "Forårsaker et jordskjelv.",
+  epidemic = "Lager en smittsom pasient som kan forårsake en epidemi",
+  toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
   },
 }
 
@@ -456,6 +461,7 @@ errors = {
   unavailable_screen_size = "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
   alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
   fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
+  no_games_to_contine = "Det fins ingen lagrede spill",
 }
 
 confirmation = {
@@ -1250,14 +1256,15 @@ menu_debug = {
   plant_pagers        = "  PLANT PAGERS        ",
   porter_pagers       = "  PORTER PAGERS       ",
   pixbuf_cells        = "  PIXBUE CELLS        ",
-  enter_nav_debug     = "  ENTER NAV DEBUG     ",
-  show_nav_cells      = "  SHOW NAV CELLS      ",
+  enter_nav_debug     = "  SKRIV INN NAV DEBUG     ",
+  show_nav_cells      = "  VIS NAV CELLS      ",
   machine_pagers      = "  MASKIN PAGERS       ",
   display_room_status = "  VIS ROMSTATUS       ",
   display_big_cells   = "  VIS STORE CELLER    ",
   show_help_hotspot   = "  VIS HJELP HOTSPOTS  ",
-  win_game_anim       = "  WIN GAME ANIM       ",
-  win_level_anim      = "  WIN LEVEL ANIM      ",
+  win_game_anim       = "  VINN SPILL ANIM       ",
+  win_level_anim      = "  VINN BANE ANIM      ",
+  debug_script = "  (SHIFT + D) KJÖR DEBUG SCRIPT  ",
   lose_game_anim = {
     [1]  = "  TAPT SPILL 1 ANIM  ",
     [2]  = "  TAPT SPILL 2 ANIM  ",
@@ -3036,6 +3043,7 @@ dynamic_info = {
       prices_too_high             = "Prisene er for höye - Jeg går hjem",
       epidemic_sent_home          = "Sendt hjem av inspektör",
       epidemic_contagious         = "Jeg er smittsom",
+      epidemic_vaccinated         = "Jeg er ikke smittsom lenger",
     },
     diagnosed                   = "Diagnose: %s", -- %s
     guessed_diagnosis           = "Gjettet diagnose: %s", -- %s

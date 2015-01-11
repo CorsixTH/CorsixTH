@@ -85,6 +85,7 @@ function UIOptions:UIOptions(ui, mode)
     {text = "1600x900 (16:9)",  width = 1600, height = 900},
     {text = "1920x1080 (16:9)", width = 1920, height = 1080},
     {text = "1280x800 (16:10)",  width = 1280, height = 800},
+    {text = "1440x900 (16:10)",  width = 1440, height = 900},
     {text = "1680x1050 (16:10)",  width = 1680, height = 1050},
     {text = "1920x1200 (16:10)", width = 1920, height = 1200},
     {text = _S.options_window.custom_resolution, custom = true},
@@ -111,7 +112,14 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
   -- Language
-  local lang = string.upper(app.config.language)
+  -- Get language name in the language to normalize display.
+  -- If it doesn't exist, display the current config option.
+  local lang = self.app.strings:getLanguageNames(app.config.language)
+  if lang then
+    lang = lang[1]
+  else
+    lang = app.config.language
+  end
   self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
   self.language_panel = self:addBevelPanel(165, 95, 135, 20, col_bg):setLabel(lang)

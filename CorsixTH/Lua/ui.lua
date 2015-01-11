@@ -239,16 +239,16 @@ function UI:setupGlobalKeyHandlers()
 end
 
 -- Used for everything except music and announcements
-function UI:playSound(name)
+function UI:playSound(name, played_callback, played_callback_delay)
   if self.app.config.play_sounds then
-    self.app.audio:playSound(name)
+    self.app.audio:playSound(name, nil, false, played_callback, played_callback_delay)
   end
 end
 
 -- Used for announcements only
-function UI:playAnnouncement(name)
+function UI:playAnnouncement(name, played_callback, played_callback_delay)
   if self.app.config.play_announcements then
-    self.app.audio:playSound(name, nil, true)
+    self.app.audio:playSound(name, nil, true, played_callback, played_callback_delay)
   end
 end
 
@@ -619,8 +619,7 @@ function UI:onMouseUp(code, x, y)
   if Window.onMouseUp(self, button, x, y) then
     repaint = true
   else
-    if self.cursor_entity and self.cursor_entity.onClick
-    and self.app.world.user_actions_allowed then
+    if self:ableToClickEntity(self.cursor_entity) then
       self.cursor_entity:onClick(self, button)
       repaint = true
     end
@@ -632,6 +631,21 @@ end
 
 function UI:onMouseWheel(x, y)
   Window.onMouseWheel(self, x, y)
+end
+
+--[[ Determines if a cursor entity can be clicked
+@param entity (Entity,nil) cursor entity clicked on if any
+@return true if can be clicked on, false otherwise (boolean) ]]
+function UI:ableToClickEntity(entity)
+  if self.cursor_entity and self.cursor_entity.onClick then
+    local hospital = entity.hospital
+    local epidemic = hospital and hospital.epidemic
+
+    return self.app.world.user_actions_allowed and not epidemic or
+      (epidemic and not epidemic.vaccination_mode_active)
+  else
+    return false
+  end
 end
 
 function UI:getScreenOffset()
@@ -745,6 +759,15 @@ function UI:getCursorPosition(window)
   return x, y
 end
 
+function UI:addOrRemoveDebugModeKeyHandlers()
+  self:removeKeyHandler("f12", self)
+  self:removeKeyHandler({"shift", "d"}, self)
+  if self.app.config.debug then
+    self:addKeyHandler("f12", self, self.showLuaConsole)
+    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
+  end
+end
+
 function UI:afterLoad(old, new)
   if old < 5 then
     self.editing_allowed = true
@@ -757,6 +780,8 @@ function UI:afterLoad(old, new)
       end
     end
     -- some global key shortcuts were converted to use keyHandlers
+    self:removeKeyHandler("f12", self)
+    self:removeKeyHandler({"shift", "d"}, self)
     self:setupGlobalKeyHandlers()
   end
 
@@ -770,9 +795,7 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler({"alt", "f4"}, self, self.quit)
     self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   end
-  if old < 85 and self.app.config.debug then
-    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
-  end
+  
   if old < 100 then
     self:removeKeyHandler({"alt", "enter"}, self)
     self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)
